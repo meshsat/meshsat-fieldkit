@@ -2,7 +2,7 @@
 
 Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying the real devices on paper; the copper sheets and the assembly drawings are for the design review (appendix section 21.3 / 22.4: the six order-gate items are the agenda).
 
-## PCB-A POWER + I/O Rev A (A17), folder `PCB-A-POWER-A17/`, 285 x 160 mm, 4 layers
+## PCB-A POWER + I/O Rev A (A18), folder `PCB-A-POWER-A18/`, 285 x 160 mm, 4 layers
 
 - `pcb-a-power-1to1-top.pdf`, `pcb-a-power-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-a-power-assembly-top.pdf`, `pcb-a-power-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -61,7 +61,7 @@ Sources: https://pip.raspberrypi.com/categories/1083-raspberry-pi-touch-display-
 - `pcb-e1-dock-render-top-A4.png`, `pcb-e1-dock-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-e1-dock-schematic.pdf`: full schematic; `pcb-e1-dock-drc.rpt`: the DRC report of the exported board
 
-## PCB-E2 RF JUNCTION Rev A (E2), folder `PCB-E2-RFJUNCTION-E2/`, 330 x 32 mm, 2 layers
+## PCB-E2 RF JUNCTION Rev A (E3), folder `PCB-E2-RFJUNCTION-E3/`, 330 x 32 mm, 2 layers
 
 - `pcb-e2-rfjunction-1to1-top.pdf`, `pcb-e2-rfjunction-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-e2-rfjunction-assembly-top.pdf`, `pcb-e2-rfjunction-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out

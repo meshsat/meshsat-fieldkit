@@ -8,7 +8,7 @@ PCB
 - Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
 
 ASSEMBLY (economic or standard PCBA, both sides)
-- BOM: pcb-c-display-bom.csv (40 lines, 19 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- BOM: pcb-c-display-bom.csv (50 lines, 19 with an LCSC number, the rest must be matched in the JLC parts library at order time)
 - CPL: pcb-c-display-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
 - Parts on the TOP side: 18, on the BOTTOM side: 70
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none

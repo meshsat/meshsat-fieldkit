@@ -23948,7 +23948,7 @@
 		(pad "1" thru_hole circle
 			(at -3.81 1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 55 "/SHORE_12V")
@@ -23957,7 +23957,7 @@
 		(pad "2" thru_hole circle
 			(at -1.27 1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 55 "/SHORE_12V")
@@ -23966,7 +23966,7 @@
 		(pad "3" thru_hole circle
 			(at 1.27 1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 55 "/SHORE_12V")
@@ -23975,7 +23975,7 @@
 		(pad "4" thru_hole circle
 			(at 3.81 1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 55 "/SHORE_12V")
@@ -23984,7 +23984,7 @@
 		(pad "5" thru_hole circle
 			(at -3.81 -1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 78 "GND")
@@ -23993,7 +23993,7 @@
 		(pad "6" thru_hole circle
 			(at -1.27 -1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 78 "GND")
@@ -24002,7 +24002,7 @@
 		(pad "7" thru_hole circle
 			(at 1.27 -1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 78 "GND")
@@ -24011,7 +24011,7 @@
 		(pad "8" thru_hole circle
 			(at 3.81 -1.27)
 			(size 2.2 2.2)
-			(drill 1.5)
+			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 56 "/SHORE_INHIBIT")
@@ -24970,7 +24970,7 @@
 			)
 		)
 	)
-	(gr_text "MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A17)"
+	(gr_text "MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A18)"
 		(at 205 33.5 0)
 		(layer "F.SilkS")
 		(uuid "4e3e2e5e-dab3-40d6-b98a-82f8f8cec76a")
