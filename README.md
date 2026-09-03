@@ -11,7 +11,7 @@ MeshSat is a prototype. Nothing here has been through a field deployment yet. Th
 
 ## V1: tesseract and parallax
 
-![MeshSat field kit V1](v1/images/meshsat_field_kit.jpg)
+![tesseract, one of the two V1 kits, in its IP67 case with the Touch Display 2 under the top plate](v1/images/tesseract-parallax-case.jpg)
 
 Two hand-built kits that differ only in the satellite modem (tesseract: RockBLOCK 9603 SBD, parallax: RockBLOCK 9704 IMT). Pi 5 with a Geekworm X1202 UPS, LilyGO T-Call A7670E, u-blox GPS, Quansheng UV-K5(8) with an AIOC for APRS, ESP32-S3 LoRa for Meshtastic, RTL-SDR v4, ZigBee CC2652P, DCF77 receiver, WeAct 3.7 inch e-paper, Raspberry Pi Touch Display 2, all on three HDPE plates in an IP67 case with SMA bulkheads. Details, BOM and pinouts in [`v1/README.md`](v1/README.md).
 
