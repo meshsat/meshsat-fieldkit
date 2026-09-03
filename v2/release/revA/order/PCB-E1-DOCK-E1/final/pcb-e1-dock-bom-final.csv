@@ -1,0 +1,15 @@
+Comment,Designator,Footprint,LCSC Part #
+10u 50V,C1,C_1206_3216Metric,C13585
+100n,C2,C_0603_1608Metric,C14663
+22u 25V,C3,C_1206_3216Metric,C12891
+"SMCJ33A (input surge, datasheet 50 V 100 ms)",D1,D_SMC,C438109
+12 V zener gate clamp,D2,D_SOD-123,C43491
+SMBJ15A,D3,D_SMC,C2760888
+12 V aux out (XH2.5) for a Rev B MPPT module,J_AUX,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,C265283
+"shore DC in 9-36 V, lead from the IP68 bulkhead (JST-VH, 10 A): + -",J_DCIN,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,C265357
+green: shore 12 V present,LED1,LED_0603_1608Metric,C12624
+"AO4409 SO-8 P-FET -60 V 4 A (alt DMP4015SSS): reverse-polarity, symbol pinout 1-3 S, 4 G, 5-8 D",Q1,SOIC-8_3.9x4.9mm_P1.27mm,C347462
+100k,"R1,R4",R_0603_1608Metric,C25803
+2.2k,R2,R_0603_1608Metric,C4190
+330R,R3,R_0603_1608Metric,C23138
+"EL817S / PC817 optocoupler: LED from PCB-A SHORE_INHIBIT (kit side), transistor shorts the converter remote pin to -Vin (isolated side); LED on = converter OFF, LED off or Pi dead = ON",U2,SOP-4_3.8x4.1mm_P2.54mm,C63268

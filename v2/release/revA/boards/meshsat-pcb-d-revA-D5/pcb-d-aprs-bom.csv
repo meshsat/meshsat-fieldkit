@@ -1,0 +1,47 @@
+Comment,Designator,Footprint,LCSC Part #
+22p NP0,"C1,C2",C_0603_1608Metric,C1653
+4.7u,"C4-C7,C10,C13,C14,C31",C_0603_1608Metric,C19666
+100n,"C8,C9,C12,C15-C18,C25,C32",C_0603_1608Metric,C14663
+4.7n NP0,C11,C_0603_1608Metric,C53987
+100n 25V,"C20,C30",C_0603_1608Metric,C14663
+1u,C21,C_0603_1608Metric,C15849
+4.7n,C22,C_0603_1608Metric,C53987
+22u 10V X7R 1210,"C23,C24",C_1210_3225Metric,
+22u 25V X7R 1210,C26-C29,C_1210_3225Metric,
+green,D1,LED_0603_1608Metric,C72043
+red,D2,LED_0603_1608Metric,C2286
+600R@100MHz,"FB1,FB2",L_0603_1608Metric,C1002
+channel bit CH8 to GND (open = default),JP1,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+channel bit CH4 to GND (open = default),JP2,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+channel bit CH2 to GND (open = default),JP3,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+channel bit CH1 to GND (open = default),JP4,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+CS to GND = module sleep,JP5,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+harness to PCB-A J_MEZZ1 (IDC 2x8); UART pair and PCB-A 3V3 unused,J_HARN1,IDC-Header_2x08_P2.54mm_Vertical,
+cell node from PCB-A J_MEZZ_PWR (JST-VH),J_PWR1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+SWD/DFU 1.27 mm: BOOT0 SWO NRST SWDIO GND SWCLK 3V3 (short 1-7 = DFU),J_SWD1,PinHeader_1x07_P1.27mm_Vertical,
+"1.5uH XAL6030-152MEB (Isat 12 A, 5.6 mOhm)",L1,L_Coilcraft_XAL6030-XXX,
+"BC847 (PTT2, spare)",Q1,SOT-23,
+BC847 (PTT to the module),Q2,SOT-23,
+2N7002 (EMCON inhibit in Q2 emitter),Q3,SOT-23,
+BC857 (TR mirror from RADIO_PTT),Q4,SOT-23,
+1.5k,"R1,R4,R10,R11,R18,R19",R_0603_1608Metric,C22843
+4.7k,R2,R_0603_1608Metric,C23162
+100R,"R3,R8,R9,R15,R17,R41",R_0603_1608Metric,C22775
+5.1k,"R5,R14,R16",R_0603_1608Metric,C23186
+22R,"R12,R13",R_0603_1608Metric,C23345
+DNP 100R (mirror now via Q4),R22,R_0603_1608Metric,
+301k 1% (500 kHz),R30,R_0603_1608Metric,
+"100k 1% (ILIM 10 A peak, 9 A min)",R31,R_0603_1608Metric,
+17.4k,R32,R_0603_1608Metric,
+105k 1%,R33,R_0603_1608Metric,
+20k 1%,R34,R_0603_1608Metric,
+100k,"R35,R38,R39",R_0603_1608Metric,C25803
+10k,"R36,R40",R_0603_1608Metric,C25804
+1k,R37,R_0603_1608Metric,C21190
+TPS61089 boost 7.6 V / 2 A,U1,Texas_VQFN-RNR0011A-11,
+DNP bench: DMR858M 5 W UHF module on 2 x 1x12 2.54 mm female headers 8.5 mm + M2.5 x 11 mm standoffs,U2,DMR858M,
+AP2112K-3.3 digital,U3,SOT-23-5,
+AP2112K-3.3 analog,U4,SOT-23-5,
+"STM32F302CBT6 128 KB (AIOC firmware 1.4.1 is 128,016 bytes; DFU)",U5,LQFP-48_7x7mm_P0.5mm,C94046
+USBLC6-2SC6,U6,SOT-23-6,C7519
+8MHz 20pF 5032,Y1,Crystal_SMD_5032-2Pin_5.0x3.2mm,C115962

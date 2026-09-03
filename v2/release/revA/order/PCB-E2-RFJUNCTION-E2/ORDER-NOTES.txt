@@ -1,0 +1,16 @@
+MeshSat field-kit carrier PCB-E2 RF JUNCTION Rev A, phase E2: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-e2-rfjunction-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 330.1 x 32.1 mm, 2 copper layers, 2.0 mm FR-4
+- no copper on this board: any surface finish (pick the cheapest, HASL lead-free), matte black solder mask, white silkscreen, no castellations, remove order number: yes
+- Impedance control: none (no controlled-impedance nets)
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY
+- None: mechanical board (holes, window, tabs). PCB only.
+- Fitted at the bench: bare board, no assembly: seven SMA female-female bulkhead couplers in the D-holes (UHF SDR WIFI1 WIFI2 LTE IRID LORA), six M3 into the 1520 +Z wall drill points
+
+SOURCE
+- Deliverable folder: ~/Downloads/meshsat-pcb/meshsat-pcb-e2-revA-E2 (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: docs/hardware/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709

@@ -1,0 +1,16 @@
+# Rotation offsets added to the KiCad CPL rotation before upload to JLCPCB (degrees, CCW positive).
+# Derived from JLCPCB's placement preview (2D view: KiCad silk pin-1 triangle vs JLC's pink pin-1 dot); re-verify after every change.
+# footprint_regex,offset
+^IDC-Header_2x,270
+^SOIC-8,270
+^SSOP-28,270
+^TSSOP-24,270
+^LQFP-48,270
+^Texas_VQFN,0
+^WSON-6,270
+^SOT-23-[568],270
+^SOT-23,180
+^SOT-223,180
+^LED_0603,180
+^USB_C_Receptacle,180
+^SOP-4,0
