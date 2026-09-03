@@ -578,3 +578,7 @@ Change against section 5.1 (1184.74): -0.12, component price drift on A16, B10 a
 - Re-uploading a gerber on JLCPCB means a new order line every time (section 6 method finding). Any further gerber revision costs the full rebuild again: five assembled boards with the reload traps (duplicate-code rows unticked, FE1.1S swapped to the out-of-stock C6706491 on A16 and B10, D5 L1 auto-matched to C139207). All three traps hit again in this pass and were handled the same way.
 - Unfitted parts unchanged: A16 F1/F2 (Keystone 3568, JLC stock 2), C4 D10/D11 (3 mm white LEDs), D5 L1 (Coilcraft). Section 3.2 items unchanged.
 - The bare boards save from the quote page without a product description; the assembled boards carry "Development Board, HS 847330" as before.
+
+## 4 Sep 2026 00:20: A16 and B10 superseded by A17 and B11 (appendix 32)
+
+The cart lines for PCB-A and PCB-B were prepared from A16 and B10 and must be rebuilt from `PCB-A-POWER-A17/` and `PCB-B-COMPUTE-B11/` when the owner says so; the other five lines stand. The A16 and B10 folders with the `upload/` and `final/` copies of what went into the cart are kept under `superseded/` as the record of those lines. Reasons: the X1202's real outline (the Geekworm DXF) and the 5 V module rail ruling, appendix 32.2 to 32.4.

@@ -44,5 +44,5 @@ for v in d.get("unconnected_items", []):
     if not done: print("    could not close %s" % net.GetNetname())
 pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(BOARD, b)
 h, u, _ = drc(BOARD); print("fix_pad_escapes: closed %d, final hard %d unrouted %d" % (closed, h, u))
-for x in (BOARD + ".try.kicad_pcb", BOARD + ".try.kicad_pcb.drc.json"):
+for x in (BOARD + ".try.kicad_pcb", BOARD + ".try.kicad_pcb.drc.json", BOARD + ".drc.json", BOARD + ".try.kicad_pro"):
     if os.path.exists(x): os.remove(x)
