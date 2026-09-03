@@ -94,7 +94,7 @@ FP = {
  "HUB": "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm", "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
  "SOT236": "Package_TO_SOT_SMD:SOT-23-6", "SOT238": "Package_TO_SOT_SMD:SOT-23-8", "SOT23": "Package_TO_SOT_SMD:SOT-23",
  "WSON6": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
- "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "XH4": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
+ "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "XH4": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
  "IDC40": "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical", "IDC14": "Connector_IDC:IDC-Header_2x07_P2.54mm_Vertical", "IDC16": "Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical", "IDC20": "Connector_IDC:IDC-Header_2x10_P2.54mm_Vertical",
  "PICO10": "Connector_Molex:Molex_PicoBlade_53047-1010_1x10_P1.25mm_Vertical",
  "USBA": "Connector_USB:USB_A_Stewart_SS-52100-001_Horizontal", "USBC": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "USBCP": "Connector_USB:USB_C_Plug_Molex_105444", "PH4": "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
@@ -121,8 +121,8 @@ def ina219(ref, inp, inn, a0, a1): part(ref, "Sensor_Energy", "INA219AxDCN", "IN
 
 # --- power input
 # no trunk polyfuse (audits 17.5 and round 5): a PPTC sized to the X1202 derates below the load in a sealed case; every branch has its own polyfuse or limited switch plus an INA219
-part("J_5V_IN1", "Connector_Generic", "Conn_01x02", "X1202 5V OUT (XH2.54)", "XH2", {"1": "+5V", "2": "GND"})
-part("J_5V_IN2", "Connector_Generic", "Conn_01x02", "X1202 5V OUT (XH2.54)", "XH2", {"1": "+5V", "2": "GND"})
+part("J_5V_IN1", "Connector_Generic", "Conn_01x02", "X1202 5 V OUT sense (XH2.54): enables the module-rail boost on PCB-A over J_AB1.12, 110k load only", "XH2", {"1": "X1202_5V", "2": "GND"})   # B11
+part("J_5V_MOD", "Connector_Generic", "Conn_01x02", "5 V module rail from PCB-A J_5V_MOD1 (JST-VH, 18 AWG): + -", "VH2", {"1": "+5V", "2": "GND"})   # B11: the whole board runs on the node-fed rail
 part("D1", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V", "2": "GND"})
 c("C1", "100u 10V", "+5V", "GND", "C100u"); c("C2", "100u 10V", "+5V", "GND", "C100u")
 r("R1", "1k", "+5V", "LED_5V_A"); part("LED1", "Device", "LED", "green 5V", "LED", {"2": "LED_5V_A", "1": "GND"})
@@ -184,7 +184,7 @@ r("R24", "0.05R 1% 1206", "SW_A", "5V_A", "RS"); ina219("U19", "SW_A", "5V_A", "
 part("U20", "Interface_Expansion", "PCA9555PW", "PCA9555PW", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "GND", "3": "GND",
  "4": "EN_RTL", "5": "EN_ZB", "6": "EN_XIAO", "7": "EN_RB", "8": "EN_TC", "9": "EN_A", "10": "EXP_SPARE0", "11": "EXP_SPARE1",
- "13": "FLT_RTL", "14": "FLT_ZB", "15": "FLT_XIAO", "16": "FLT_RB", "17": "BANK_ALERT", "18": "EXP_SPARE2", "19": "EXP_SPARE3", "20": "EXP_SPARE4"}, "C5626")
+ "13": "FLT_RTL", "14": "FLT_ZB", "15": "FLT_XIAO", "16": "FLT_RB", "17": "EXP_SPARE5", "18": "EXP_SPARE2", "19": "EXP_SPARE3", "20": "EXP_SPARE4"}, "C5626")
 c("C26", "100n", "+3V3", "GND"); r("R25", "10k", "EXP_INT", "+3V3")
 for i in range(5): part("TP%d" % (6 + i), "Connector", "TestPoint", "EXP_SPARE%d" % i, "TP", {"1": "EXP_SPARE%d" % i})
 # --- RockBLOCK site
@@ -200,7 +200,7 @@ r("R26", "100R", "RB_CTRL", "Q1_G"); r("R27", "100k", "Q1_G", "GND"); r("R28", "
 # --- DCF77, interconnect
 part("J_DCF77", "Connector_Generic", "Conn_01x04", "DCF77 remote (XH2.5): 3V3 GND T P1", "XH4", {"1": "+3V3", "2": "GND", "3": "DCF_T", "4": "DCF_PON"}); r("R29", "10k", "DCF_T", "+3V3")
 part("J_AB1", "Connector_Generic", "Conn_02x07_Odd_Even", "A-B interconnect (IDC 2x7, underside)", "IDC14", {
- "1": "5V_A", "2": "5V_A", "3": "GND", "4": "USB_A_P", "5": "USB_A_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS", "11": "VBUS_A_SENSE", "12": "BANK_ALERT", "13": "GND", "14": "TX_INHIBIT_n"})
+ "1": "5V_A", "2": "5V_A", "3": "GND", "4": "USB_A_P", "5": "USB_A_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS", "11": "VBUS_A_SENSE", "12": "X1202_5V", "13": "GND", "14": "TX_INHIBIT_n"})
 
 # ----------------------------------------------------------------- emit
 POWER = {"GND": ("power", "GND"), "+5V": ("power", "+5V"), "+3V3": ("power", "+3V3")}
@@ -270,7 +270,7 @@ def emit_pwr_flag(p, x, y):
     else: label(net, x, y + STUB, 270)
 
 # layout: columns, top-down cursor; group order = list order with section titles
-SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_IN1", "J_5V_IN2", "D1", "C1", "C2", "R1", "LED1", "J_TD2", "TP1", "TP2", "TP3", "TP4", "TP5", "TP11", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05", "#FLG06", "#FLG07", "#FLG08", "#FLG09", "#FLG10", "#FLG11", "#FLG12", "#FLG13"]),
+SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_IN1", "J_5V_MOD", "D1", "C1", "C2", "R1", "LED1", "J_TD2", "TP1", "TP2", "TP3", "TP4", "TP5", "TP11", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05", "#FLG06", "#FLG07", "#FLG08", "#FLG09", "#FLG10", "#FLG11", "#FLG12", "#FLG13"]),
             ("Pi 5 GPIO RIBBON", ["J_GPIO1"]),
             ("USB 2.0 HUB FE1.1s + UPSTREAM PORTS", ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "R3", "C11", "R4", "JP1", "R5", "R6", "R7", "R8", "LED2", "J_USB_UP1", "R9", "R10", "U2", "J_USB_UP2", "R11", "R12", "U3"]),
             ("CH1 SDR BAY: RTL-SDR V4 or LimeSDR Mini 2.0  (0x40)", ["U4", "R13", "R30", "C33", "R14", "U5", "C12", "C13", "J_RTL1", "U6"]),
@@ -312,7 +312,7 @@ max_x = x + COLW
 PAPER = "A1" if max_x <= 820 else "A0"
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-B COMPUTE") (date "2026-09-02") (rev "A") (company "MeshSat") (comment 1 "Phase B2 schematic (B4 re-layout), generated by tools/gen_sch_b.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709. FE1.1s hub on internal regulators; TPS2065C x2 + TPS22810 x4 switches (B4: LoRa and RockBLOCK channels at 2 A for the T-Beam 1W and 9704 bursts); INA219 per channel; PCA9555 EN/FAULT; both Pi UARTs to the RockBLOCK site via JP3/JP4."))\n'
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-B COMPUTE") (date "2026-09-02") (rev "A") (company "MeshSat") (comment 1 "Phase B2 schematic (B4 re-layout), generated by tools/gen_sch_b.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709. B11: +5V from the PCB-A module-rail boost over J_5V_MOD (VH); the X1202 XH output is only a sense line (X1202_5V to J_AB1.12) that enables that boost. FE1.1s hub on internal regulators; TPS2065C x2 + TPS22810 x4 switches (B4: LoRa and RockBLOCK channels at 2 A for the T-Beam 1W and 9704 bursts); INA219 per channel; PCA9555 EN/FAULT; both Pi UARTs to the RockBLOCK site via JP3/JP4."))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'

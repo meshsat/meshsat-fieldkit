@@ -45,14 +45,12 @@ def slot_footprint(w, h):
 
 # ---------------------------------------------------------------- sites (case frame)
 # Pi 5 + X1202 stack: Pi long axis along Y, centred (-78.5, 0); Pi holes 3.5 mm in from the Pi edges
-STACK_C = (-78.5, 0.0)
-PI_RECT = (-106.5, -42.5, -50.5, 42.5)          # 56 x 85
-X1202_RECT = (-121.0, -48.5, -36.0, 48.5)       # 85 x 97 (CAD envelope, 25 mm tall, cells included)
+STACK_C = (-88.5, 0.0)                          # B11: 10 mm west of B10 so the X1202 extension clears J_RTL1
+PI_RECT = (-116.5, -42.5, -60.5, 42.5)          # 56 x 85; HDMI long edge west, GPIO header edge east, SD-card end south
+X1202_RECT = (-117.2, -42.5, -21.2, 42.5)       # B11: Geekworm X1202 V1.1 DXF (vendor/x1202): 96 x 85, the Pi flush on its west long edge (0.7 mm), 39.3 mm of board past the header edge; cells hang underneath to board level
 STACK_HOLES = [(STACK_C[0] + dx, STACK_C[1] + dy) for dx in (-24.5, 24.5) for dy in (-29.0, 29.0)]   # 49 x 58, Ø2.7
-X1202_USBC_IN = (-104.5, -48.5)                 # CAD _PORTS, faces -Y
-PASS_X1202 = (-104.5, -57.0, 14.0, 6.0)         # obround slot for the bank -> X1202 USB-C cable
 # GPIO ribbon breakout, 2x20 IDC box header, pins along Y
-J_GPIO = (-28.0, 0.0)
+J_GPIO = (-52.0, 48.5)                          # B11: north of the stack, pins along X (the B10 spot is under the X1202)
 # SDR bay, dual: RTL-SDR Blog V4 (69 x 27 x 13) or LimeSDR Mini 2.0 (69 x 31.4 x 11). Both have the USB-A plug
 # centred on one short end (points -X into the receptacle) and the SMA(s) on the other. Bay 84 x 32 on centreline Y 0.
 SDR_RECEPT = (-12.0, 0.0)                       # receptacle centre, opening faces +X
@@ -106,7 +104,7 @@ PASS_CENTRE = (-13.0, -50.0, 15.0)              # Ø15 general pass-through (mov
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(4)
 tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-B COMPUTE"); tb.SetRevision("A")
-tb.SetDate("2026-09-02"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-709. Case-centred frame. B4 re-layout: T-Beam 1W strip, dual SDR bay. tools/gen_pcb_b.py")
+tb.SetDate("2026-09-02"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-709. Case-centred frame. B11: real X1202 envelope (Geekworm DXF), stack 10 mm west, module rail from PCB-A. tools/gen_pcb_b.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.45), ("m_MinThroughDrill", 0.25),
@@ -203,21 +201,17 @@ for i, (x, y) in enumerate(ROD_HOLES, 1):
 # pass-throughs (Edge.Cuts)
 circle(PASS_CENTRE[0], PASS_CENTRE[1], PASS_CENTRE[2], pcbnew.Edge_Cuts)
 keepout_circle(PASS_CENTRE[0], PASS_CENTRE[1], PASS_CENTRE[2] + 2.0, "keep-out: centre pass-through")
-px, py, pw, ph = PASS_X1202
-rounded_rect(px - pw / 2, py - ph / 2, px + pw / 2, py + ph / 2, ph / 2 - 0.01, pcbnew.Edge_Cuts)
-keepout_rect(px - pw / 2 - 1.0, py - ph / 2 - 1.0, px + pw / 2 + 1.0, py + ph / 2 + 1.0, "keep-out: X1202 cable slot")
-text("X1202 USB-C cable", px, py - 5.5, pcbnew.F_SilkS, 0.9, 0.16)
 
 # ---------------------------------------------------------------- stack
 n = 5
 for (x, y) in STACK_HOLES:
     hole("H%d" % n, x, y, 2.7, "M2.5 standoff, Pi/X1202 stack"); n += 1
 rect(X1202_RECT, pcbnew.F_SilkS, 0.12); rect(PI_RECT, pcbnew.Dwgs_User, 0.1)
-text("GEEKWORM X1202 UPS + Pi 5 + cooler  (stack on 4x M2.5 standoffs, 49 x 58)", STACK_C[0], 40.0, pcbnew.F_SilkS, 1.3, 0.22)
-text("X1202 envelope 85 x 97, 25 mm tall, cells inside; USB-C IN faces -Y at (-104.5, -48.5)", STACK_C[0], -40.0, pcbnew.F_SilkS, 1.0, 0.18)
+text("GEEKWORM X1202 V1.1 (96 x 85) + Pi 5 + cooler on 4x M2.5 x 22 standoffs (49 x 58): Pi HDMI edge WEST, header edge EAST, SD card SOUTH", STACK_C[0] + 19.0, 40.0, pcbnew.F_SilkS, 1.1, 0.18)
+text("cells hang under the whole X1202 to board level: NO PART inside this outline; DC jack NE corner faces +X; USB-A sockets overhang the south edge 9 mm", STACK_C[0] + 19.0, -40.0, pcbnew.F_SilkS, 1.0, 0.18)
 # ribbon header
-place("Connector_IDC", "IDC-Header_2x20_P2.54mm_Vertical", "J_GPIO1", J_GPIO[0], J_GPIO[1], "Pi 5 GPIO ribbon 2x20", rot=0)
-text("Pi 40-pin ribbon", J_GPIO[0], J_GPIO[1] - 32.5, pcbnew.F_SilkS, 1.2, 0.2)
+place("Connector_IDC", "IDC-Header_2x20_P2.54mm_Vertical", "J_GPIO1", J_GPIO[0], J_GPIO[1], "Pi 5 GPIO ribbon 2x20", rot=90)
+text("Pi 40-pin ribbon", J_GPIO[0], J_GPIO[1] - 7.0, pcbnew.F_SilkS, 1.2, 0.2)
 # SDR bay (RTL-SDR V4 or LimeSDR Mini 2.0)
 site(SDR_RECT, "SDR BAY: RTL-SDR Blog V4 (69 x 27) or LimeSDR Mini 2.0 (69 x 31.4)", "USB-A plug -> receptacle west; SMA east -> SDR bulkhead (Lime: RX + TX, 2 bulkheads)", lx=36.0, ly=0.0)
 for i, (x, y) in enumerate(SDR_SLOTS): slot("S_RTL%d" % (i + 1), x, y, 5.0, 1.8)
@@ -231,7 +225,7 @@ usb_b = place("Connector_USB", "USB_A_Stewart_SS-52100-001_Horizontal", "J_ZB1",
 if usb_b is None: rect((ZB_RECEPT[0] - 7, ZB_RECEPT[1] - 7.5, ZB_RECEPT[0] + 7, ZB_RECEPT[1] + 7.5), pcbnew.F_SilkS, 0.15)
 text("J_ZB1", ZB_RECEPT[0], ZB_RECEPT[1] - 9.5, pcbnew.F_SilkS, 1.0, 0.18)
 # T-Call
-site(TCALL_RECT, "LILYGO T-Call A7670E V1.0  74.78 x 29.01", "4x M3 on 69.46 x 24.97; USB-C west; LTE pigtail -> LTE bulkhead")
+site(TCALL_RECT, "LILYGO T-Call A7670E (V1.0 / V1.1, one outline)  74.78 x 29.01", "4x M3 on 69.46 x 24.97; USB-C west; LTE pigtail -> LTE bulkhead")
 for (x, y) in TCALL_HOLES:
     hole("H%d" % n, x, y, 3.2, "M3, T-Call corner"); n += 1
 # T-Beam 1W strip (alternative to the XIAO)
@@ -274,8 +268,8 @@ rect((J_USB_UP[0] - 4.5, J_USB_UP[1] - 4, J_USB_UP[0] + 4.5, J_USB_UP[1] + 4), p
 text("J_AB1 2x7 to PCB-A (underside)", J_AB[0], J_AB[1] + 8.0, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
 # datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("PCB-B COMPUTE  REV A (B10)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
-text("MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-03", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
+text("PCB-B COMPUTE  REV A (B11)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
+text("MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-04", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -10, 83.0, pcbnew.F_SilkS, 1.2, 0.2); text("FRONT WALL (-Y)   v v v", -100, -83.2, pcbnew.F_SilkS, 1.5, 0.25)
 text("PORT (-X)", -hx + 5.5, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 6.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
 text("PCB-B UNDERSIDE - faces PCB-A", 0, -hy + 9.0, pcbnew.B_SilkS, 1.6, 0.25, mirror=True)
