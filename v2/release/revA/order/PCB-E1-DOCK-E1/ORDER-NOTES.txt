@@ -1,0 +1,19 @@
+MeshSat field-kit carrier PCB-E1 DOCK Rev A, phase E1: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-e1-dock-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 250.1 x 44.1 mm, 2 copper layers, 1.6 mm FR-4
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: none (no controlled-impedance nets)
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (economic or standard PCBA, both sides)
+- BOM: pcb-e1-dock-bom.csv (14 lines, 6 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-e1-dock-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation); check rotations of polarised parts in the JLC preview
+- Parts on the TOP side: 15, on the BOTTOM side: 0
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Not assembled by JLC, fitted at the bench: TRACO TEN 40-2412WIN, Keystone 3568 holder + 7.5 A mini blade, JST-VH shore lead from the IP68 bulkhead, four VHB pads to the floor, the two south rods through H1/H2; the EL817 optocoupler U2 is JLC-fitted
+
+SOURCE
+- Deliverable folder: ~/Downloads/meshsat-pcb/meshsat-pcb-e-revA-E1 (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: docs/hardware/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709

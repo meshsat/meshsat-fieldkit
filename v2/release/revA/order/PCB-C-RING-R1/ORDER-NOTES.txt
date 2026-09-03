@@ -1,0 +1,16 @@
+MeshSat field-kit carrier PCB-C SPACER RING Rev A, phase R1: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-c-ring-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 105.9 x 53.9 mm, 2 copper layers, 1.0 mm FR-4
+- no copper on this board: any surface finish (pick the cheapest, HASL lead-free), matte black solder mask, white silkscreen, no castellations, remove order number: yes
+- Impedance control: none (no controlled-impedance nets)
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY
+- None: mechanical board (holes, window, tabs). PCB only.
+- Fitted at the bench: bare 1.0 mm FR-4 frame, no copper, black: taped between the WeAct 3.7 module lands and the PCB-C underside so the glass ends flush; four Ø3.2 holes match the module for alignment pins
+
+SOURCE
+- Deliverable folder: ~/Downloads/meshsat-pcb/meshsat-pcb-c-ring-revA-R1 (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: docs/hardware/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709

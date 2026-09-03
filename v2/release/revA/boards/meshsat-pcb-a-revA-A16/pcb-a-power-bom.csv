@@ -1,0 +1,35 @@
+Comment,Designator,Footprint,LCSC Part #
+10u,"C7,C14,C15,C25,C27,C29,C31",C_0805_2012Metric,C15850
+100u 10V,C13,C_1206_3216Metric,
+22p,"C16,C17",C_0603_1608Metric,C1653
+100n,"C18,C20,C22,C24,C26,C28,C30,C32,C34-C37",C_0603_1608Metric,C14663
+1u,"C19,C21,C23",C_0603_1608Metric,C15849
+SMBJ5.0A,D2,D_SMB,
+15 A mini blade (Keystone 3568 holder): pack node to the X1202 lead,F1,Fuseholder_Blade_Mini_Keystone_3568,
+10 A mini blade (Keystone 3568 holder): pack node to the 8 V boost feed,F2,Fuseholder_Blade_Mini_Keystone_3568,
+BUSJ to GND = bus-powered,JP1,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+"A-B interconnect (IDC 2x7, top side)",J_AB1,IDC-Header_2x07_P2.54mm_Vertical,
+"spring pins to the PCB-E1 dock: 1-4 SHORE_12V, 5-7 GND, 8 SHORE_INHIBIT (expander 0x21 bit 0.4, high = dock converter off) (underside)",J_DOCK?,PogoPins_2x4,
+"USB-A receptacle, GPS",J_GPS1,USB_A_Stewart_SS-52100-001_Horizontal,
+front-wall LED row (XH2.5): PWR MESH SAT LTE SYS,J_LEDS1,JST_XH_B10B-XH-A_1x10_P2.50mm_Vertical,
+APRS mezzanine harness (IDC 2x8),J_MEZZ1,IDC-Header_2x08_P2.54mm_Vertical,
+mezzanine 8 V boost feed (JST-VH): cell node through F2 (R15),J_MEZZ_PWR1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"welded 1S8P pack, 8 x Samsung 35E, 1S BMS 15 A with NTC cutoff inside (XT60-M): + -",J_PACK?,AMASS_XT60-M_1x02_P7.20mm_Vertical,
+"USB-A receptacle, WiFi",J_WIFI1,USB_A_Stewart_SS-52100-001_Horizontal,
+"lead to the X1202 battery terminals B+ / B- (holder solder tabs), 16 AWG (XT60-M): + - (through F1)",J_X1202BAT?,AMASS_XT60-M_1x02_P7.20mm_Vertical,
+12 V shore lead to the X1202 DC jack (XH2.5 -> 5521 plug),J_X1202DC?,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+amber hub,LED2,LED_0603_1608Metric,
+10k,"R12,R20-R23,R26,R28,R30,R32,R34",R_0603_1608Metric,C25804
+1k,"R18,R25",R_0603_1608Metric,C21190
+"2.7k 1% (REXT, verify datasheet)",R19,R_0603_1608Metric,
+4.7k,R24,R_0603_1608Metric,C23162
+0.1R 1% 1206,"R27,R29,R31,R33",R_1206_3216Metric,
+330R,R35-R38,R_0603_1608Metric,C23138
+100k,R39-R43,R_0603_1608Metric,C25803
+AMS1117-3.3,U5,SOT-223-3_TabPin2,
+FE1.1s,U6,SSOP-28_5.3x10.2mm_P0.65mm,C2848
+TPS2065CDBV,"U7,U10,U13,U16",SOT-23-6,
+INA219AIDCN,"U8,U11,U14,U17",SOT-23-8,C138024
+USBLC6-2SC6,"U9,U12,U15,U18",SOT-23-6,C7519
+PCA9555PW (0x21),U19,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+12 MHz 3225,Y1,Crystal_SMD_3225-4Pin_3.2x2.5mm,

@@ -1,0 +1,96 @@
+** Drc report for pcb-c-display.kicad_pcb **
+** Created on 2026-09-03T17:54:27+0200 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 27 DRC violations **
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(518,0000 mm, 348,5000 mm): Segment on Edge.Cuts
+    @(488,3600 mm, 139,0425 mm): Segment of J_PANEL on B.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(518,0000 mm, 348,5000 mm): Segment on Edge.Cuts
+    @(507,0500 mm, 137,7325 mm): Segment of J_PANEL on B.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(518,0000 mm, 348,5000 mm): Segment on Edge.Cuts
+    @(520,3400 mm, 131,2325 mm): Segment of J_PANEL on B.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(518,0000 mm, 348,5000 mm): Segment on Edge.Cuts
+    @(521,6400 mm, 129,9225 mm): Segment of J_PANEL on B.Silkscreen
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(454,8750 mm, 74,5000 mm): Via [/EPD_BUSY] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(465,8750 mm, 73,3750 mm): Via [/EPD_DC] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(445,8750 mm, 80,3500 mm): Via [/EXP_INT] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442,7500 mm, 75,8000 mm): Via [/LIGHT_DAY_n] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(443,4500 mm, 76,4500 mm): Via [/LIGHT_NIGHT_n] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(482,1750 mm, 75,2750 mm): Via [/PANEL_PWM] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(482,1750 mm, 73,3750 mm): Via [/PWM1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442,7500 mm, 77,1000 mm): Via [/RAIL_SENSE] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(479,2250 mm, 75,2750 mm): Via [/SDA] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442,7500 mm, 73,2000 mm): Via [/SOS_SW] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(455,5750 mm, 75,1500 mm): Via [/SPARE1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(455,5750 mm, 76,4500 mm): Via [/SPARE3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(454,8750 mm, 77,1000 mm): Via [/SPARE4] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(455,5750 mm, 77,7500 mm): Via [/SPARE5] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457,7250 mm, 73,3750 mm): Via [/SPI_MOSI] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(462,9250 mm, 73,3750 mm): Via [/SPI_MOSI] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457,7250 mm, 75,2750 mm): Via [/SPI_SCLK] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(462,9250 mm, 75,2750 mm): Via [/SPI_SCLK] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(443,4500 mm, 75,1500 mm): Via [/TEST_SW] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(443,4500 mm, 73,8500 mm): Via [/TX_INHIBIT_n] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(454,8750 mm, 73,2000 mm): Via [/TX_LAMPTEST] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442,7500 mm, 74,5000 mm): Via [/ZEROIZE_SW] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(445,1750 mm, 73,2000 mm): Via [GND] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

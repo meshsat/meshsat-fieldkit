@@ -1,0 +1,90 @@
+** Drc report for pcb-a-power.kicad_pcb **
+** Created on 2026-09-03T17:42:49+0200 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 26 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(117,7000 mm, 118,0000 mm): Reference field of J_PACK
+    @(118,0000 mm, 147,0000 mm): Segment on F.Silkscreen
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(58,2750 mm, 37,6500 mm): Via [/HUB_OVCJ] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(135,4250 mm, 145,1300 mm): Via [/SW_CODEC] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(183,4250 mm, 146,1050 mm): Via [/SW_GPS] on F.Cu - B.Cu
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

@@ -1,0 +1,19 @@
+MeshSat field-kit carrier PCB-C CONTROL PANEL Rev A, phase C4: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-c-display-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 442.1 x 311.1 mm, 2 copper layers, 2.0 mm FR-4
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: none (no controlled-impedance nets)
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (economic or standard PCBA, both sides)
+- BOM: pcb-c-display-bom.csv (40 lines, 19 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-c-display-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation); check rotations of polarised parts in the JLC preview
+- Parts on the TOP side: 18, on the BOTTOM side: 70
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Not assembled by JLC, fitted at the bench: Touch Display 2 through the aperture on 0.05 mm transfer tape (3M 467MP / 9495LE), connector end to port; SW_MAIN 19 mm green ring, SW_PI 16 mm amber ring, SW_TEST 16 mm white ring (IP67 anti-vandal, flying leads to the four pads); SW_LIGHT DPDT ON-ON-ON sealed toggle; SW_SOS / SW_EMCON / SW_ZERO guarded toggles with red covers; WeAct 3.7 e-paper module under the panel: glass into the recessed window, both PCB lands taped (3M 9495LE), optional 1.0 mm spacer ring for a flush face, 2x4 lead to J_EPD; 16 x M3 frame screws with the GND ring pads; XH leads from J_X1202SW and J_PIJ2
+
+SOURCE
+- Deliverable folder: ~/Downloads/meshsat-pcb/meshsat-pcb-c-revA-C4 (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: docs/hardware/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
