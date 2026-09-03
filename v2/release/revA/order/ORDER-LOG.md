@@ -582,3 +582,7 @@ Change against section 5.1 (1184.74): -0.12, component price drift on A16, B10 a
 ## 4 Sep 2026 00:20: A16 and B10 superseded by A17 and B11 (appendix 32)
 
 The cart lines for PCB-A and PCB-B were prepared from A16 and B10 and must be rebuilt from `PCB-A-POWER-A17/` and `PCB-B-COMPUTE-B11/` when the owner says so; the other five lines stand. The A16 and B10 folders with the `upload/` and `final/` copies of what went into the cart are kept under `superseded/` as the record of those lines. Reasons: the X1202's real outline (the Geekworm DXF) and the 5 V module rail ruling, appendix 32.2 to 32.4.
+
+## 4 Sep 2026 afternoon: A17 and E2 superseded by A18 and E3 (appendix 32.10)
+
+The dock connector is now the Preci-Dip 813-S1-008-10-016101 (solder tails 0.8 mm), so the eight `J_DOCK` holes went from 1.5 to 1.1 mm on the routed board (no part moved): **A18** replaces A17. The junction strip's D-hole flat follows the Amphenol Connex 132170 drawing (6.00 across instead of 6.25): **E3** replaces the strip's E2 issue. The cart lines for PCB-A and PCB-E2 must be rebuilt from `PCB-A-POWER-A18/` and `PCB-E2-RFJUNCTION-E3/` when the owner says so, together with PCB-B from `PCB-B-COMPUTE-B11/`. C4's schematic PDF carries the switch part numbers now; its gerbers, JLC BOM (same row set) and CPL are unchanged, the panel line stands. `PCB-A-POWER-A17/` and `PCB-E2-RFJUNCTION-E2/` are under `superseded/`.

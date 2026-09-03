@@ -6,13 +6,13 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 
 | Board | Rev | Size (mm) | Layers | Project | Deliverable folder |
 |---|---|---|---|---|---|
-| PCB-A POWER + I/O | A17 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A17/` |
+| PCB-A POWER + I/O | A18 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A18/` |
 | PCB-B COMPUTE | B11 | 245 x 170 | 4 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B11/` |
 | PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C4/` |
 | PCB-C SPACER RING | R1 | 106 x 54 | 2 | `ecad/pcb-c-ring/` | `release/revA/boards/meshsat-pcb-c-ring-revA-R1/` |
 | PCB-D APRS | D5 | 80 x 62 | 4 | `ecad/pcb-d-aprs/` | `release/revA/boards/meshsat-pcb-d-revA-D5/` |
 | PCB-E1 DOCK | E1 | 250 x 44 | 2 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E1/` |
-| PCB-E2 RF JUNCTION | E2 | 330 x 32 | 2 | `ecad/pcb-e2-rfjunction/` | `release/revA/boards/meshsat-pcb-e2-revA-E2/` |
+| PCB-E2 RF JUNCTION | E3 | 330 x 32 | 2 | `ecad/pcb-e2-rfjunction/` | `release/revA/boards/meshsat-pcb-e2-revA-E3/` |
 
 **Build guide: [`BUILD.md`](BUILD.md)** walks from an empty cart to a running kit. This page is the map of the folder.
 
