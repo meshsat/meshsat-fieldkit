@@ -13,7 +13,7 @@ MeshSat is a prototype. Nothing here has been through a field deployment yet. Th
 
 ![tesseract, one of the two V1 kits, in its IP67 case with the Touch Display 2 under the top plate](v1/images/tesseract-parallax-case.jpg)
 
-Two hand-built kits that differ only in the satellite modem (tesseract: RockBLOCK 9603 SBD, parallax: RockBLOCK 9704 IMT). Pi 5 with a Geekworm X1202 UPS, LilyGO T-Call A7670E, u-blox GPS, Quansheng UV-K5(8) with an AIOC for APRS, ESP32-S3 LoRa for Meshtastic, RTL-SDR v4, ZigBee CC2652P, DCF77 receiver, WeAct 3.7 inch e-paper, Raspberry Pi Touch Display 2, all on three HDPE plates in an IP67 case with SMA bulkheads. Details, BOM and pinouts in [`v1/README.md`](v1/README.md).
+Two hand-built kits that differ only in the satellite modem (tesseract: RockBLOCK 9603 SBD, parallax: RockBLOCK 9704 IMT). Pi 5 with a Geekworm X1202 UPS, LilyGO T-Call A7670E, u-blox GPS, Quansheng UV-K5(8) with an AIOC for APRS, ESP32-S3 LoRa for Meshtastic, RTL-SDR v4, ZigBee CC2652P, DCF77 receiver, WeAct 3.7 inch e-paper, Raspberry Pi Touch Display 2, all on three HDPE plates in an IP67 case with SMA bulkheads. Details, BOM and pinouts in [`v1/README.md`](v1/README.md). **To build one: [`v1/BUILD.md`](v1/BUILD.md)** (parts, case drilling, plates, harness tables, software provisioning, checks).
 
 ## V2: the carrier set
 
@@ -40,7 +40,14 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 | ![PCB-E2](v2/images/pcb-e2-rfjunction-top.png) | |
 | PCB-E2 RF JUNCTION (E2) | |
 
-Sources, generators, vendor references, the Rev A release and the order record are described in [`v2/README.md`](v2/README.md). The design record is [`v2/docs/MESHSAT-709-geometry-appendix.md`](v2/docs/MESHSAT-709-geometry-appendix.md), the build procedure [`v2/docs/ASSEMBLY.md`](v2/docs/ASSEMBLY.md), the panel software contract [`v2/docs/PANEL.md`](v2/docs/PANEL.md).
+**To build one: [`v2/BUILD.md`](v2/BUILD.md)** (ordering the boards at JLCPCB, the parts to buy, case preparation, the pack, assembly order, coating, software, bench checks). Sources, generators, vendor references, the Rev A release and the order record are described in [`v2/README.md`](v2/README.md). The design record is [`v2/docs/MESHSAT-709-geometry-appendix.md`](v2/docs/MESHSAT-709-geometry-appendix.md), the build procedure [`v2/docs/ASSEMBLY.md`](v2/docs/ASSEMBLY.md), the panel software contract [`v2/docs/PANEL.md`](v2/docs/PANEL.md).
+
+## How to build one
+
+| | Guide | What it covers |
+|---|---|---|
+| V1 | [`v1/BUILD.md`](v1/BUILD.md) | the 33-line parts list per kit, bulkhead and hole schedule, the three HDPE plates and the rod stack, what goes on which floor, the GPIO harness tables for both kits as wired, the Pi 5 provisioning sequence and its traps, the checks that prove the kit works |
+| V2 | [`v2/BUILD.md`](v2/BUILD.md) | ordering the seven boards at JLCPCB with the exact settings, everything else to buy, case and frame preparation, the welded pack and its bench checks, the assembly order with torques, leads and pigtails, coating and labels, software bring-up, the open items of Rev A |
 
 ## Working with this repository
 

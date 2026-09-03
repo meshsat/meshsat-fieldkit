@@ -4,6 +4,8 @@ Two hand-built kits (YouTrack MESHSAT-403), built in April 2026 and in use as be
 
 Per kit: Raspberry Pi 5 8 GB with active cooler, Geekworm X1202 UPS (4 x 18650), LilyGO T-Call A7670E (4G/2G, KPN SIM), u-blox USB GPS, Quansheng UV-K5(8) with an AIOC v1.2 for APRS (Nagoya NA-771), ESP32-S3 LoRa (Meshtastic), RTL-SDR v4, ZigBee CC2652P coordinator, DCF77 receiver, WeAct 3.7 inch e-paper (SPI), Raspberry Pi Touch Display 2 in the lid, Sabrent HB-UM43 hub, TAOGLAS Iridium antenna, three HDPE plates on four M3 rods in an IP67 case with five SMA bulkheads, a USB-C inlet and a vent plug. Ubuntu Server 24.04.
 
+**Build guide: [`BUILD.md`](BUILD.md).** The rest of this page is the inventory.
+
 ## Files
 
 | Path | Content |
