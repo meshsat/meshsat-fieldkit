@@ -48,10 +48,10 @@ def poly(mask, sps, grow):
 fps = {fp.GetReference(): fp for fp in b.GetFootprints()}
 def item_of(it):
     d = it.get("description", ""); pos = it.get("pos", {}); x, y = pos.get("x"), pos.get("y")
-    m = re.match(r"(?:PTH pad|Pad) (\S+) \[([^\]]+)\] of (\S+) on (\S+)", d)
+    m = re.match(r"(?:PTH pad|Pad) (\S+) \[([^\]]+)\] of (\S+)(?: on (\S+))?", d)
     if m:
         fp = fps.get(m.group(3)); pad = next((p for p in fp.Pads() if p.GetNumber() == m.group(1)), None) if fp else None
-        return dict(kind="pad", net=m.group(2), pad=pad, x=x, y=y, layer=m.group(4).rstrip(","))
+        return dict(kind="pad", net=m.group(2), pad=pad, x=x, y=y, layer=(m.group(4) or "*").rstrip(","))   # PTH pads carry no layer in the DRC text
     m = re.match(r"Via \[([^\]]+)\]", d)
     if m: return dict(kind="via", net=m.group(1), x=x, y=y, layer="*")
     m = re.match(r"Track \[([^\]]+)\] on (\S+)", d)

@@ -15,10 +15,10 @@ base_hard, base_unr = run_drc(BOARD); print("baseline: hard %d, unrouted %d" % (
 d = json.load(open(DRC))
 def item_of(b, it):
     desc = it.get("description", ""); pos = it.get("pos", {}); x, y = FromMM(pos.get("x", 0)), FromMM(pos.get("y", 0))
-    m = re.match(r"(?:PTH pad|Pad) (\S+) \[([^\]]+)\] of (\S+) on (\S+)", desc)
+    m = re.match(r"(?:PTH pad|Pad) (\S+) \[([^\]]+)\] of (\S+)(?: on (\S+))?", desc)
     if m:
         fp = next((f for f in b.GetFootprints() if f.GetReference() == m.group(3)), None); pad = next((p for p in fp.Pads() if p.GetNumber() == m.group(1)), None) if fp else None
-        return ("pad", pad, m.group(2), m.group(4).rstrip(","))
+        return ("pad", pad, m.group(2), (m.group(4) or "*").rstrip(","))
     m = re.match(r"Via \[([^\]]+)\]", desc)
     if m: return ("via", VECTOR2I(x, y), m.group(1), "*")
     m = re.match(r"Track \[([^\]]+)\] on (\S+)", desc)
