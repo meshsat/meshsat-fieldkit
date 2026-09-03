@@ -6,8 +6,8 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 
 | Board | Rev | Size (mm) | Layers | Project | Deliverable folder |
 |---|---|---|---|---|---|
-| PCB-A POWER + I/O | A16 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A16/` |
-| PCB-B COMPUTE | B10 | 245 x 170 | 4 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B10/` |
+| PCB-A POWER + I/O | A17 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A17/` |
+| PCB-B COMPUTE | B11 | 245 x 170 | 4 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B11/` |
 | PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C4/` |
 | PCB-C SPACER RING | R1 | 106 x 54 | 2 | `ecad/pcb-c-ring/` | `release/revA/boards/meshsat-pcb-c-ring-revA-R1/` |
 | PCB-D APRS | D5 | 80 x 62 | 4 | `ecad/pcb-d-aprs/` | `release/revA/boards/meshsat-pcb-d-revA-D5/` |

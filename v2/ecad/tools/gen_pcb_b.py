@@ -70,7 +70,7 @@ XIAO_C = (-93.0, 58.0)
 XIAO_RECT = (XIAO_C[0] - 10.72, XIAO_C[1] - 8.89, XIAO_C[0] + 10.72, XIAO_C[1] + 8.89)
 XIAO_HOLE = (XIAO_C[0] - 10.72 + 3.76, XIAO_C[1])
 XIAO_SLOTS = [(-88.0, 46.0), (-88.0, 70.0)]
-XIAO_USBC = (-76.0, 58.0)
+XIAO_USBC = (-76.0, 60.0)                       # B11: 2 mm north, clear of the ribbon header
 # LilyGO T-Beam 1W (alternative LoRa radio, one of XIAO / T-Beam fitted): strip on the east edge, long axis Y,
 # component side up, SMA end north (SMA at the NE corner, Y to 67.2: use a RIGHT-ANGLE SMA plug on the pigtail),
 # USB-C on its west edge at Y -3.5..5.4 (right-angle USB-C plug), ON/OFF slide switch on its west edge at Y -18..-12.
@@ -247,7 +247,7 @@ text("J_PANEL ribbon up to PCB-C", 86.0, 75.5, pcbnew.F_SilkS, 0.9, 0.16)
 site(XIAO_RECT, "XIAO ESP32S3 + Wio-SX1262", "1x M2 + tie slots; u.FL -> LoRa bulkhead", lx=-62.0, ly=44.5)
 hole("H%d" % n, XIAO_HOLE[0], XIAO_HOLE[1], 2.2, "M2 standoff, Wio-SX1262"); n += 1
 for i, (x, y) in enumerate(XIAO_SLOTS): slot("S_XIAO%d" % (i + 1), x, y, 5.0, 1.8)
-text("J_XIAO1 pigtail", XIAO_USBC[0], XIAO_USBC[1] - 8.0, pcbnew.F_SilkS, 1.0, 0.18)
+text("J_XIAO1 pigtail", XIAO_USBC[0], XIAO_USBC[1] + 7.5, pcbnew.F_SilkS, 1.0, 0.18)
 # RockBLOCK dual site
 rect(RB9704_RECT, pcbnew.F_SilkS, 0.12); rect(RB9603_RECT, pcbnew.Dwgs_User, 0.1)
 text("ROCKBLOCK SITE", RB_C[0], RB_C[1] + 2.0, pcbnew.F_SilkS, 1.4, 0.22)
