@@ -50,7 +50,7 @@ PI_RECT = (-116.5, -42.5, -60.5, 42.5)          # 56 x 85; HDMI long edge west, 
 X1202_RECT = (-117.2, -42.5, -21.2, 42.5)       # B11: Geekworm X1202 V1.1 DXF (vendor/x1202): 96 x 85, the Pi flush on its west long edge (0.7 mm), 39.3 mm of board past the header edge; cells hang underneath to board level
 STACK_HOLES = [(STACK_C[0] + dx, STACK_C[1] + dy) for dx in (-24.5, 24.5) for dy in (-29.0, 29.0)]   # 49 x 58, Ø2.7
 # GPIO ribbon breakout, 2x20 IDC box header, pins along Y
-J_GPIO = (-52.0, 48.5)                          # B11: north of the stack, pins along X (the B10 spot is under the X1202)
+J_GPIO = (-51.0, 48.5)                          # B11: north of the stack, pins along X (the B10 spot is under the X1202)
 # SDR bay, dual: RTL-SDR Blog V4 (69 x 27 x 13) or LimeSDR Mini 2.0 (69 x 31.4 x 11). Both have the USB-A plug
 # centred on one short end (points -X into the receptacle) and the SMA(s) on the other. Bay 84 x 32 on centreline Y 0.
 SDR_RECEPT = (-12.0, 0.0)                       # receptacle centre, opening faces +X
@@ -59,7 +59,7 @@ SDR_SLOTS = [(20.0, -18.0), (74.0, -18.0), (20.0, 18.0), (66.0, 18.0)]   # tie-w
 # Sonoff ZBDongle-P in the north band: body ~70 x 25.5 at X -40..30, plug points +X, receptacle at the east end
 ZB_RECT = (-40.0, 55.0, 30.0, 80.5)
 ZB_RECEPT = (38.0, 67.75)                       # opening faces -X
-ZB_SLOTS = [(-22.0, 52.5), (18.0, 52.5), (-22.0, 82.0), (18.0, 82.0)]
+ZB_SLOTS = [(-10.0, 52.5), (18.0, 52.5), (-10.0, 82.0), (18.0, 82.0)]   # B11: the west pair east of the ribbon header
 # LilyGO T-Call A7670E V1.0: 74.78 x 29.01, 4x Ø3.0 on 69.46 x 24.97; USB-C at the west end (CAD)
 TCALL_C = (39.39, 35.5)
 TCALL_RECT = (TCALL_C[0] - 37.39, TCALL_C[1] - 14.505, TCALL_C[0] + 37.39, TCALL_C[1] + 14.505)
@@ -211,7 +211,7 @@ text("GEEKWORM X1202 V1.1 (96 x 85) + Pi 5 + cooler on 4x M2.5 x 22 standoffs (4
 text("cells hang under the whole X1202 to board level: NO PART inside this outline; DC jack NE corner faces +X; USB-A sockets overhang the south edge 9 mm", STACK_C[0] + 19.0, -40.0, pcbnew.F_SilkS, 1.0, 0.18)
 # ribbon header
 place("Connector_IDC", "IDC-Header_2x20_P2.54mm_Vertical", "J_GPIO1", J_GPIO[0], J_GPIO[1], "Pi 5 GPIO ribbon 2x20", rot=90)
-text("Pi 40-pin ribbon", J_GPIO[0], J_GPIO[1] - 7.0, pcbnew.F_SilkS, 1.2, 0.2)
+text("Pi 40-pin ribbon", J_GPIO[0], J_GPIO[1] + 7.5, pcbnew.F_SilkS, 1.2, 0.2)
 # SDR bay (RTL-SDR V4 or LimeSDR Mini 2.0)
 site(SDR_RECT, "SDR BAY: RTL-SDR Blog V4 (69 x 27) or LimeSDR Mini 2.0 (69 x 31.4)", "USB-A plug -> receptacle west; SMA east -> SDR bulkhead (Lime: RX + TX, 2 bulkheads)", lx=36.0, ly=0.0)
 for i, (x, y) in enumerate(SDR_SLOTS): slot("S_RTL%d" % (i + 1), x, y, 5.0, 1.8)

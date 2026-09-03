@@ -39,7 +39,7 @@ minweb = min(((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2) ** 0.5 - (dp + dq) / 2 fo
 check(minweb >= 2.0, "minimum web between any two holes %.2f mm (>= 2.0)" % minweb)
 # device rectangles: inside the outline with 3 mm margin, pairwise non-overlapping, clear of nut keep-outs
 R = {"X1202": (-117.2, -42.5, -21.2, 42.5), "SDR": (-4, -16, 78, 16), "ZB": (-40, 55, 30, 80.5), "TCALL": (2.0, 20.995, 76.78, 50.005),
-     "XIAO": (-103.72, 49.11, -82.28, 66.89), "RB9704": (26, -76, 78, -20), "HUB": (-96, -81, -46, -52), "JGPIO": (-78.5, 44, -25.5, 53),
+     "XIAO": (-103.72, 49.11, -82.28, 66.89), "RB9704": (26, -76, 78, -20), "HUB": (-96, -81, -46, -52), "JGPIO": (-80.5, 44, -21.5, 53),
      "JRTL": (-19, -6.5, -5, 6.5), "JZB": (31, 61, 45, 74.5), "TCALL_USBC": (-18.5, 41, -13.5, 51), "XIAO_USBC": (-82, 53.5, -70, 62.5),
      "TBEAM": (79.3, -64, 122.36, 52.75), "TB_SMA": (110.95, 52.75, 120.19, 67.22), "JTBEAM": (65, 52.5, 75, 57.5),
      "JRB9704": (-0.5, -52.5, 20.5, -43.5), "JRB9603": (3.5, -62.5, 16.5, -57.5), "PASS": (-20.5, -57.5, -5.5, -42.5), "JTD2": (-54, 74, -46, 80), "JPANEL": (81, 54.5, 91, 81.5)}
@@ -55,8 +55,8 @@ def rect_circle_clear(r, c, rad):
 for k, r in R.items():
     check(all(rect_circle_clear(r, rod, 4.5) for rod in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]), "%s clear of the 9 mm nut keep-outs" % k)
 # slots and connectors at their intended centres (footprints are centred by the generator)
-exp_fp = {"S_RTL1": (20, -18), "S_RTL2": (74, -18), "S_RTL3": (20, 18), "S_RTL4": (66, 18), "S_ZB1": (-22, 52.5), "S_ZB2": (18, 52.5), "S_ZB3": (-22, 82), "S_ZB4": (18, 82),
-          "S_XIAO1": (-88, 46), "S_XIAO2": (-88, 70), "J_GPIO1": (-52, 48.5), "J_DCF77": (-85, 77), "J_RTL1": (-12, 0), "J_ZB1": (38, 67.75), "J_PANEL": (86, 68)}
+exp_fp = {"S_RTL1": (20, -18), "S_RTL2": (74, -18), "S_RTL3": (20, 18), "S_RTL4": (66, 18), "S_ZB1": (-10, 52.5), "S_ZB2": (18, 52.5), "S_ZB3": (-10, 82), "S_ZB4": (18, 82),
+          "S_XIAO1": (-88, 46), "S_XIAO2": (-88, 70), "J_GPIO1": (-51, 48.5), "J_DCF77": (-85, 77), "J_RTL1": (-12, 0), "J_ZB1": (38, 67.75), "J_PANEL": (86, 68)}
 for ref, (ex, ey) in exp_fp.items():
     fp = next((f for f in b.GetFootprints() if f.GetReference() == ref), None)
     if fp is None: check(False, "%s present" % ref); continue
