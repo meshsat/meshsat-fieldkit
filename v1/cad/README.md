@@ -107,4 +107,4 @@ in FreeCAD's tree view. Changes won't propagate back to the script.
 
 ## Where this lives now (3 September 2026)
 
-Moved from the laptop `Team Shared Root/Projects/MeshSat/Field Kit/CAD/` into the `meshsat-fieldkit` repository as `v1/cad/`. The Python virtualenv was not carried over: the scripts import FreeCAD (system install) and `build123d`, so recreate it with `python3 -m venv .venv && .venv/bin/pip install build123d` (`.venv/` is gitignored). `field_kit.step` is stored with Git LFS.
+Moved from the laptop `Team Shared Root/Projects/MeshSat/Field Kit/CAD/` into the `meshsat-fieldkit` repository as `v1/cad/`. The Python virtualenv was not carried over: the scripts import FreeCAD (system install) and `build123d`, so recreate it with `python3 -m venv .venv && .venv/bin/pip install build123d` (`.venv/` is gitignored). `field_kit.step` is a plain git object (38 MB).

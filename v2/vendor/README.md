@@ -1,6 +1,6 @@
 # Vendor reference material
 
-Third-party CAD models, drawings and datasheets that the V2 design was measured against. They are here so the generators and the appendix can be checked against the same files years from now. **They are not covered by this repository's licence.** Each file belongs to its manufacturer under that manufacturer's terms; redistribution has not been cleared with any of them. Keep this repository private, or strip this folder, before publishing it.
+Third-party CAD models, drawings and datasheets that the V2 design was measured against. They are here so the generators and the appendix can be checked against the same files years from now. **They are not covered by this repository's licence.** Each file belongs to its manufacturer under that manufacturer's terms and is kept here as reference material for the design record. If you hold the rights to one of these files and want it removed, open an issue and it goes.
 
 | Folder | Source | Used for |
 |---|---|---|
@@ -17,4 +17,4 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `dmr858/` | NiceRF DMR858M and DMR858S datasheets and mechanical drawing, the vendor pages as saved | the APRS module on PCB-D |
 | `probes/` | our own STEP probe scripts (build123d), kept with the models they read | reproducing the numbers in the appendix |
 
-Large files in this folder are stored with Git LFS.
+The files are ordinary git objects (the largest is about 50 MB).
