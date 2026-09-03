@@ -14,6 +14,8 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 | PCB-E1 DOCK | E1 | 250 x 44 | 2 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E1/` |
 | PCB-E2 RF JUNCTION | E2 | 330 x 32 | 2 | `ecad/pcb-e2-rfjunction/` | `release/revA/boards/meshsat-pcb-e2-revA-E2/` |
 
+**Build guide: [`BUILD.md`](BUILD.md)** walks from an empty cart to a running kit. This page is the map of the folder.
+
 ## Layout
 
 | Path | Content |
