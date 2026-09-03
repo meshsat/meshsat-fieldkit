@@ -7,7 +7,7 @@ MeshSat is a prototype. The V2 boards have not been fabricated; expect Rev A to 
 ## 0. Before you start
 
 - Three rulings are not open for redesign: the Geekworm X1202 is the only charger and UPS and the welded pack sits in parallel with its cells; EMCON is a hardware line from the panel toggle to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`.
-- Two things gate the first order: a paper fit check of the 1:1 prints in `release/revA/review/` against the real parts and the case, and the X1202 bench items in `docs/ASSEMBLY.md` section 8 (items 1 to 3), which need an X1202 in hand and set the pack's charge behaviour.
+- Nothing on the bench gates the first order (appendix 32): every COTS site was checked against the manufacturer's own drawing (the documents are in `vendor/`), and the X1202's undocumented figures are absorbed by the design, chiefly by the A17 module rail that takes every 5 V load but the Pi off the X1202. What the owner still names, without measuring anything: the panel switch parts, the SMA coupler for E2, the dock spring pin.
 - The panel software (expanders, LED semantics, e-paper, sounder) is specified in `docs/PANEL.md` but not yet written in the Bridge (MESHSAT-773). A Rev A kit powers up and runs the Bridge; the panel lights and switches come alive with that software.
 
 ## 1. Order the boards
@@ -16,8 +16,8 @@ Seven boards, five assembled by JLCPCB (top side, standard PCBA; the economic ti
 
 | Board | Folder | Size (mm) | Layers | Stackup | Assembly |
 |---|---|---|---|---|---|
-| PCB-A POWER + I/O A16 | `PCB-A-POWER-A16/` | 285 x 160 | 4 | JLC04161H-7628 | top, 92 parts |
-| PCB-B COMPUTE B10 | `PCB-B-COMPUTE-B10/` | 245 x 170 | 4 | JLC04161H-7628 | top 122, bottom 1 |
+| PCB-A POWER + I/O A17 | `PCB-A-POWER-A17/` | 285 x 160 | 4 | JLC04161H-7628 | top |
+| PCB-B COMPUTE B11 | `PCB-B-COMPUTE-B11/` | 245 x 170 | 4 | JLC04161H-7628 | top, bottom 1 |
 | PCB-C CONTROL PANEL C4 | `PCB-C-DISPLAY-C4/` | 442 x 311 | 2 | standard | top 18, bottom 70 |
 | PCB-C SPACER RING R1 | `PCB-C-RING-R1/` | 106 x 54 | 2 | standard, 1.0 mm | none |
 | PCB-D APRS D5 | `PCB-D-APRS-D5/` | 80 x 62 | 4 | JLC04161H-7628 | top 78, bottom 1 |
@@ -38,11 +38,11 @@ Modules that mount on the boards (one kit): Raspberry Pi 5 8 GB with active cool
 
 Pack: eight Samsung INR18650-35E, matched to the four in the X1202 (same model, same age, within 50 mV), 0.15 x 8 mm nickel strip, fish paper, a 1S BMS 15 A with NTC cutoff, a 10k NTC 103AT-2, XT60 male on 16 AWG silicone leads, blue PVC shrink sleeve. Spot welder or a shop that welds packs.
 
-Hardware per `docs/ASSEMBLY.md` section 1: four M3 stainless rods with Nyloc nuts, 6.0 mm spacers for the dock, 35 mm and 59 mm bay spacers, 16 x M3 x 8 pan head for the panel, 6 x M3 x 12 for the junction strip, 4 x M3 x 6 for PCB-D, 2 x M2.5 x 11 standoffs with M2.5 x 4 screws for the DMR858M, Loctite 243, four M3 standoffs under PCB-D, two 7.6 mm cable ties for the pack strap and a 1 mm silicone sheet.
+Hardware per `docs/ASSEMBLY.md` section 1: four M3 stainless rods with Nyloc nuts, 6.0 mm spacers for the dock, 35 mm and 59 mm bay spacers, four M2.5 x 22 female-female standoffs with M2.5 x 6 screws for the X1202 stack (confirm the 22 mm against the module's holder side), 16 x M3 x 8 pan head for the panel, 6 x M3 x 12 for the junction strip, 4 x M3 x 6 for PCB-D, 2 x M2.5 x 11 standoffs with M2.5 x 4 screws for the DMR858M, Loctite 243, four M3 standoffs under PCB-D, two 7.6 mm cable ties for the pack strap and a 1 mm silicone sheet.
 
 Consumables: 3M 467MP or 9495LE transfer tape (display and e-paper), 3M VHB 5952 pads (dock strip), MG Chemicals 422B acrylic conformal coating, kapton for the masks, IPA.
 
-Electrical: eight spring pins for `J_DOCK` (2.54 pitch, rating per the A16 BOM), Keystone 3568 mini blade holders with 15 A, 10 A and 7.5 A blades, XT60 pairs, JST-XH 2.5 and JST-VH housings and crimps, 16 / 18 / 20 / 24 AWG silicone wire, a 20-way 1.27 mm ribbon with 2x10 IDC ends (350 mm), a 16-way ribbon with 2x8 IDC ends, a 5.5 x 2.1 barrel plug, an IP68 2-pin DC bulkhead (Bulgin PX0 or Amphenol C016 class) with a 12 V PD trigger lead for USB-C sources, seven SMA female-female bulkhead couplers for E2, SMA female bulkheads for the wall, RG-316 pigtails (SMA male ends, u.FL where the module has it).
+Electrical: eight spring pins for `J_DOCK` (2.54 pitch, the part named in appendix 32.6 once picked), Keystone 3568 mini blade holders with two 15 A, one 10 A and one 7.5 A blade, an 18 AWG JST-VH lead for the module rail (PCB-A `J_5V_MOD1` to PCB-B `J_5V_MOD`, 150 mm) and a 24 AWG XH lead for the X1202 5 V sense (one X1202 XH output to PCB-B `J_5V_IN1`), XT60 pairs, JST-XH 2.5 and JST-VH housings and crimps, 16 / 18 / 20 / 24 AWG silicone wire, a 20-way 1.27 mm ribbon with 2x10 IDC ends (350 mm), a 16-way ribbon with 2x8 IDC ends, a 5.5 x 2.1 barrel plug, an IP68 2-pin DC bulkhead (Bulgin PX0 or Amphenol C016 class) with a 12 V PD trigger lead for USB-C sources, seven SMA female-female bulkhead couplers for E2, SMA female bulkheads for the wall, RG-316 pigtails (SMA male ends, u.FL where the module has it).
 
 Panel hardware: SW_MAIN 19 mm anti-vandal with green ring, SW_PI 16 mm amber ring, SW_TEST 16 mm white ring, one sealed DPDT ON-ON-ON toggle (SW_LIGHT), three SPDT guarded toggles with red covers (SW_SOS momentary, SW_EMCON latching, SW_ZERO momentary), an 85 dB piezo if not fitted by JLCPCB, the two white 3 mm LEDs D10 and D11.
 
@@ -54,9 +54,9 @@ Panel hardware: SW_MAIN 19 mm anti-vandal with green ring, SW_PI 16 mm amber rin
 4. Dock strip E1 on the floor: degrease with IPA, four VHB pads at the corners, locate it by dropping two rods through its south rod holes before the pads touch.
 5. Bulkhead legend strip (UHF SDR WIFI1 WIFI2 LTE IRID LORA) beside the SMA row, the "RF HAZARD DURING TX" label next to the UHF bulkhead, the asset label in Peli's recess (`docs/ASSEMBLY.md` section 6).
 
-## 4. The pack and the X1202 bench checks
+## 4. The pack
 
-Do `docs/ASSEMBLY.md` section 8 items 1 to 3 with the X1202 alone before the pack is welded: charge current from the barrel at 12.0 V (sets the charge time, 42 Ah at 3 A is about 14 h), one full charge of the node without a timer cutoff, and the over-current test (12.5 A from the node at 3.2 V for 5 s; the X1202 must not trip). Then build the pack per section 3 (1S8P, two rows of four, 130 x 74 x 18.5 mm, BMS on the negative lead, NTC inside, XT60 out) and repeat items 2 and 3 with the pack and its BMS in circuit, watching the BMS reconnect after a trip.
+No X1202 measurement is needed before the pack is built (appendix 32.3): the charge current only sets the charge time (13 to 18 h for 42 Ah at Geekworm's 2.3 to 3.2 A), the bridge restarts the charger over GPIO 16 if it ever stops early, the pack and the APRS boost hang on the holder tabs behind F1 and F2 where the X1202's own protection never sees them, and every 5 V load but the Pi runs on the A17 module rail. Build the pack per `docs/ASSEMBLY.md` section 3 (1S8P, two rows of four, 130 x 74 x 18.5 mm, BMS on the negative lead, NTC inside, XT60 out), match it to the X1202's four cells within 50 mV, and commission everything together per section 8 of the same document after assembly.
 
 ## 5. Assemble
 
@@ -64,9 +64,9 @@ Follow `docs/ASSEMBLY.md` section 2 step by step; the short form:
 
 1. Dock strip E1: solder the leads, fit the TEN 40-2412WIN, the fuse holder and a 7.5 A blade, test 12 V at the targets with 9 V and 36 V in, then stick it down.
 2. Rods through the strip's holes with the 6.0 mm spacers (washer stack under the two north rods so all four sit level).
-3. PCB-A A16: press the eight spring pins in from the underside, fit F1 (15 A) and F2 (10 A) before anything is energised, strap the pack on, plug `J_PACK`, route the `J_X1202BAT` and `J_X1202DC` leads up the stack's edge. Nyloc on top.
-4. 35 mm spacers, PCB-B B10 with the Pi 5 and X1202 stack, the modules, the panel ribbon in `J_PANEL`. Nyloc on top.
-5. X1202 leads: battery lead to the B+ / B- holder tabs (16 AWG, XT60 at PCB-A, fused by F1 at the source), 12 V lead to the barrel, switch lead to the external-switch pins, Pi J2 lead to the Pi's J2 pads.
+3. PCB-A A17: press the eight spring pins in from the underside, fit F1 (15 A), F2 (10 A) and F3 (15 A) before anything is energised, strap the pack on, plug `J_PACK`, route the `J_X1202BAT`, `J_X1202DC` and module-rail (`J_5V_MOD1`, VH) leads up the stack's edge. Nyloc on top.
+4. 35 mm spacers, PCB-B B11 with the Pi 5 and X1202 stack on its 22 mm standoffs (Pi HDMI edge west, GPIO header edge east, SD card south; nothing under the X1202), the module-rail lead into `J_5V_MOD`, the modules, the panel ribbon in `J_PANEL`. Nyloc on top.
+5. X1202 leads: battery lead to the B+ / B- holder tabs (16 AWG, XT60 at PCB-A, fused by F1 at the source), 12 V lead to the barrel, switch lead to the external-switch pins, Pi J2 lead to the Pi's J2 pads, and the 5 V sense lead from one XH 5 V output to PCB-B `J_5V_IN1` (it enables the module rail; PCB-B draws nothing through it).
 6. Junction strip pigtails: wall side torqued once at 0.45 N m, device side finger tight; RG-316 with a 12.5 mm bend radius, tied at both ends.
 7. Panel C4: switches with their boots and covers (covers open toward the operator), the e-paper module taped face-up under its window (spacer ring R1 first if a flush face is wanted, header to the east, 2x4 lead to `J_EPD`), the Touch Display 2 glass taped over its full flange, ribbon and the two XH leads plugged, 16 frame screws at 0.4 N m with a drop of Loctite 243.
 8. Lid: the lid foam is pocketed over the switch strips (nothing on the panel face is taller than 20 mm).
@@ -89,7 +89,7 @@ The Pi provisioning is the V1 sequence in `../v1/BUILD.md` section 7 (Ubuntu Ser
 
 ## 8. Bring-up checks
 
-From `docs/ASSEMBLY.md` section 8, after assembly: E1 gives 12 V at the targets with 9, 12, 24 and 36 V in, survives reverse polarity for 10 s and blows its fuse on a bolted short; the lamp test lights all 17 LEDs, BLACKOUT kills the rail, the EMCON cover closed keeps the DMR858M in receive while the Bridge asserts PTT; `gpioget --bias=pull-up gpiochip4 6` follows the shore input; the shore inhibit drops and restores the dock 12 V and the kit keeps running inhibited (record the current, it sets the survival time on shore power); at full load measure the current on each of the three GND spring pins (about 1.1 A each at 40 W) against the pin's rating. Then the V1 checks (`../v1/BUILD.md` section 8) for the radios, the modem, the display and the demo.
+From `docs/ASSEMBLY.md` section 8, after assembly (the full commissioning list, including the module-rail and burst checks, is there): E1 gives 12 V at the targets with 9, 12, 24 and 36 V in, survives reverse polarity for 10 s and blows its fuse on a bolted short; the lamp test lights all 17 LEDs, BLACKOUT kills the rail, the EMCON cover closed keeps the DMR858M in receive while the Bridge asserts PTT; `gpioget --bias=pull-up gpiochip4 6` follows the shore input; the shore inhibit drops and restores the dock 12 V and the kit keeps running inhibited (record the current, it sets the survival time on shore power); at full load measure the current on each of the three GND spring pins (about 1.1 A each at 40 W) against the pin's rating. Then the V1 checks (`../v1/BUILD.md` section 8) for the radios, the modem, the display and the demo.
 
 Removal for maintenance (`docs/ASSEMBLY.md` section 7): lid, 16 screws, ribbon and two leads, panel out, seven pigtails at the strip, lift the A+B stack straight up; the south rods through the dock strip align the spring pins on refit.
 
@@ -97,6 +97,8 @@ Removal for maintenance (`docs/ASSEMBLY.md` section 7): lid, 16 screws, ribbon a
 
 - RF is not blind-mate: the seven paths go through SMA couplers on the wall strip and must be unscrewed to lift the stack out. SMP blind-mate is Rev B (MESHSAT-775).
 - The spring-pin return path is three pins; confirm the pin rating before the first full-load run (section 8).
-- The X1202 bench items (MESHSAT-774) and the panel software (MESHSAT-773) are open.
+- The module rail's boost (TPS61089, 10 A peak limit) carries one bearer burst at a time over the whole discharge; three at once is tolerated only above about 3.8 V cell voltage, and the bridge serialises them (`docs/PANEL.md` section 10). The TPS61288 is the Rev B option if that ever matters.
+- The panel switch parts, the SMA coupler for E2 (its D-hole flat follows the part) and the dock spring pin (the footprint drill follows the part) are not yet named.
+- The commissioning list (MESHSAT-774) and the panel software (MESHSAT-773) are open.
 - The DMR858M carrier (PCB-D) has not been powered yet; the modules arrive mid September 2026 and the first bring-up uses the AIOC as a temporary codec into the existing Direwolf pipeline.
 - Nothing here has been built. Report what does not fit on MESHSAT-709.

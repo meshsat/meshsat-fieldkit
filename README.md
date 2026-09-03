@@ -21,8 +21,8 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 
 | Board | Rev | Size (mm) | Layers | JLCPCB assembly | Role |
 |---|---|---|---|---|---|
-| PCB-A POWER + I/O | A16 | 285 x 160 | 4 | top, 92 parts | pack node with fuses, USB hub with eFuses and current sense, GPIO expander, dock spring pins |
-| PCB-B COMPUTE | B10 | 245 x 170 | 4 | top 122, bottom 1 | Pi 5 + X1202 stack, module carriers (T-Call, RTL-SDR, ZigBee, RockBLOCK, LoRa), panel ribbon |
+| PCB-A POWER + I/O | A17 | 285 x 160 | 4 | top | pack node with fuses, 5 V module-rail boost, USB hub with eFuses and current sense, GPIO expander, dock spring pins |
+| PCB-B COMPUTE | B11 | 245 x 170 | 4 | top, bottom 1 | Pi 5 + X1202 stack, module carriers (T-Call, RTL-SDR, ZigBee, RockBLOCK, LoRa), panel ribbon |
 | PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | top 18, bottom 70 | the 1520PF panel: Touch Display 2 flush, recessed 3.7 inch e-paper window, MIL-STD-1472 controls, two GPIO expanders, MeshSat logo |
 | PCB-C SPACER RING | R1 | 106 x 54 | 2 | none | 1.0 mm ring that brings the e-paper glass flush with the panel face |
 | PCB-D APRS | D5 | 80 x 62 | 4 | top 78, bottom 1 | NiceRF DMR858M carrier: CM108 codec, PTT with hardware inhibit, USB-UART, boost, SMA |
@@ -32,7 +32,7 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 | | |
 |---|---|
 | ![PCB-A](v2/images/pcb-a-power-top.png) | ![PCB-B](v2/images/pcb-b-compute-top.png) |
-| PCB-A POWER + I/O (A16) | PCB-B COMPUTE (B10) |
+| PCB-A POWER + I/O (A17) | PCB-B COMPUTE (B11) |
 | ![PCB-C](v2/images/pcb-c-display-top.png) | ![PCB-C ring](v2/images/pcb-c-ring-top.png) |
 | PCB-C CONTROL PANEL (C4) | PCB-C SPACER RING (R1) |
 | ![PCB-D](v2/images/pcb-d-aprs-top.png) | ![PCB-E1](v2/images/pcb-e1-dock-top.png) |
