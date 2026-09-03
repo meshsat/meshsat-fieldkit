@@ -15,7 +15,7 @@ Per kit: Raspberry Pi 5 8 GB with active cooler, Geekworm X1202 UPS (4 x 18650),
 | `docs/MeshSat-Field-Kit-GPIO-Pinout.docx` | GPIO harness table, Rev C |
 | `docs/MeshSat-Field-Kit-GPIO-Pinout-Parallax.docx` | GPIO harness table for parallax, Rev D |
 | `docs/direwolf-aioc-setup.md` | the APRS chain: Direwolf with the AIOC |
-| `cad/` | FreeCAD model of the three plates and the component layout (`field_kit.FCStd`, build scripts, renders; `field_kit.step` through Git LFS) |
+| `cad/` | FreeCAD model of the three plates and the component layout (`field_kit.FCStd`, build scripts, renders, `field_kit.step`) |
 | `images/` | photos: the kit in its case with the display plate, both kits opened on the bench, the operator dashboard on the Touch Display 2 |
 
 ## Photos

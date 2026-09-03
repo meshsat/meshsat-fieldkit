@@ -51,9 +51,9 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 
 ## Working with this repository
 
-- Large binaries (STEP, FreeCAD, DXF, zip, vendor PDFs, review renders) are stored with Git LFS. After cloning: `git lfs install --local && git lfs pull`.
+- Binaries (STEP, FreeCAD, DXF, zips, PDFs, renders) are ordinary git objects; a clone is about 400 MB and needs no Git LFS.
 - KiCad 9 and the generator scripts run on the design laptop; see `v2/README.md` for the pipeline and the prerequisites.
-- `v2/vendor/` holds third-party reference material (manufacturer CAD, datasheets) under the vendors' own terms; see `v2/vendor/README.md` before redistributing anything from there.
+- `v2/vendor/` holds third-party reference material (manufacturer CAD, datasheets) under the vendors' own terms; see `v2/vendor/README.md`.
 
 ## Licence
 
@@ -63,3 +63,4 @@ The hardware design, documentation and generator scripts in this repository are 
 
 - Project site: [meshsat.net](https://meshsat.net)
 - Bridge software: [github.com/meshsat/meshsat](https://github.com/meshsat/meshsat)
+- This repository on GitHub: [github.com/meshsat/meshsat-fieldkit](https://github.com/meshsat/meshsat-fieldkit) (mirror of the GitLab original)
