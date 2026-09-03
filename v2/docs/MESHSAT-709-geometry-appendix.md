@@ -2053,3 +2053,13 @@ None of the three new items is copper, none blocks the upload, and none moves th
 | 4 | Owner decision on whether the round 29 edits are committed now or stay untracked until the boards are ordered, which is what MESHSAT-773 currently says (30.1) | 29.5's closing paragraph |
 
 Agenda, after 26.8 as corrected by 27.6 and 28.6: item 2 is now better asked as 30.4 rather than as a straight fail-safe question. Put the three-part rule in front of Nick and ask whether a one-way sensor used only in the asserting direction is something he would accept in a design review, because that is the part of it a verification engineer will either endorse or dismantle in one sentence, and it is cheaper to hear which on 12 September than after the software is written.
+
+## 29. Repository home and handover state, 2026-09-03 evening (ECAD session, close-out)
+
+The record, the sources and the deliverables moved into the `meshsat-fieldkit` repository on 3 September 2026 (GitLab `products/meshsat/meshsat-fieldkit`, public mirror `github.com/meshsat/meshsat-fieldkit`). Paths quoted in earlier sections map as stated at the top of this file. The seven Rev A boards (A16, B10, C4, R1, D5, E1, E2) are the release `revA` on GitHub; the JLCPCB upload set is `v2/release/revA/order/`, the review prints `v2/release/revA/review/`, the build guide `v2/BUILD.md`.
+
+State at close-out: every board routes clean (0 unrouted, 0 hard DRC), the legend pass is done on all seven, every gerber zip carries every copper layer of its board, the JLC BOM and CPL are normalised with the rotation offsets applied. The JLCPCB cart holds seven lines at five pieces each with both free confirmations on and is not paid.
+
+The gate before payment, in order: the owner's paper fit check on the 1:1 prints; the X1202 bench items of ASSEMBLY.md section 8 (MESHSAT-774); the two reviews (Nick Panagiotopoulos, 12 September; Kyriakos Pavlidis, KiCad files from the public repository); one more verification round on the final files, written as section 30 with the posture of sections 23 to 28 (what was checked, what closed, what stays open, what the owner decides). Board changes after that go into the generators first, then through the pipeline, then to the ordering session as a list of cart lines to rebuild.
+
+Open beyond the gate: the case purchase (Peli 1520EU without foam, orange, with the 1520PF frame), the SMP blind-mate set for Rev B (25.2, MESHSAT-775), the DMR858M bring-up when the modules arrive (MESHSAT-748), the JLCPCB sponsorship answer (MESHSAT-776), the panel software (PANEL.md, MESHSAT-773).
