@@ -188,7 +188,7 @@ part("J_MEZZ1", "Connector_Generic", "Conn_02x08_Odd_Even", "APRS mezzanine harn
  "9": "GND", "10": "TR_APRS", "11": "MEZZ_EN", "12": "+3V3", "13": "GND", "14": "MEZZ_SPARE1", "15": "TX_INHIBIT_n", "16": "GND"})
 r("R39", "100k", "TR_APRS", "GND")
 # dock (PCB-E1): spring pins on the underside land on the dock targets; 12 V shore rail up to the X1202 DC jack by a lead
-part("J_DOCK", "Connector_Generic", "Conn_01x08", "spring pins to the PCB-E1 dock: 1-4 SHORE_12V, 5-7 GND, 8 SHORE_INHIBIT (expander 0x21 bit 0.4, high = dock converter off) (underside)", "POGO", {"1": "SHORE_12V", "2": "SHORE_12V", "3": "SHORE_12V", "4": "SHORE_12V", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT"})
+part("J_DOCK", "Connector_Generic", "Conn_01x08", "spring pins to the PCB-E1 dock: 1-4 SHORE_12V, 5-7 GND, 8 SHORE_INHIBIT (expander 0x21 bit 0.4, high = dock converter off) (underside); Preci-Dip 813-S1-008-10-016101 spring-loaded 2x4 (7.0 mm, 1.4 mm stroke, 3.5 A per contact, solder tails in the 1.1 mm holes)", "POGO", {"1": "SHORE_12V", "2": "SHORE_12V", "3": "SHORE_12V", "4": "SHORE_12V", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT"})
 part("J_X1202DC", "Connector_Generic", "Conn_01x02", "12 V shore lead to the X1202 DC jack (XH2.5 -> 5521 plug)", "XH2", {"1": "SHORE_12V", "2": "GND"})
 part("J_AB1", "Connector_Generic", "Conn_02x07_Odd_Even", "A-B interconnect (IDC 2x7, top side)", "IDC14", {
  "1": "+5V", "2": "+5V", "3": "GND", "4": "USB_A_P", "5": "USB_A_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS", "11": "VBUS_A_SENSE", "12": "X1202_5V", "13": "GND", "14": "TX_INHIBIT_n"})

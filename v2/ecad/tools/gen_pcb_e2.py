@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """PCB-E2 RF JUNCTION STRIP: a 2.0 mm FR-4 shelf on the Peli 1520's +Z (front) wall, 57.8 mm below the rim, carrying seven SMA female-female
-bulkhead couplers (vertical, D-hole 6.5 mm with a 0.5 mm flat) so the device pigtails plug from above and the wall pigtails from below.
+bulkhead couplers (vertical; D-hole per the Amphenol Connex 132170 drawing rev D: Ø6.50 with the flat at 6.00 across, i.e. 2.75 mm off centre; panel 2.0 to 6.5 mm) so the device pigtails plug from above and the wall pigtails from below.
 Mounts on the case's pre-marked wall drill points (1521-931 Bottom STEP: X +-8.6, +-133.3, +-152.4 at Y -57.4/-57.8 on the +Z wall) with M3 screws.
 Usage: gen_pcb_e2.py <out.kicad_pcb>. Frame: strip-local, +X along the wall (case X), +Y away from the wall into the cavity."""
 import math, sys, os, pcbnew
@@ -12,7 +12,7 @@ COUPLERS = [(-135, "UHF"), (-90, "SDR"), (-45, "WIFI1"), (0, "WIFI2"), (45, "LTE
 OX, OY = 200.0, 100.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 board = pcbnew.BOARD()
-tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E2 RF JUNCTION STRIP"); tb.SetRevision("A (E2)"); tb.SetDate("2026-09-03"); tb.SetCompany("MeshSat")
+tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E2 RF JUNCTION STRIP"); tb.SetRevision("A (E3)"); tb.SetDate("2026-09-04"); tb.SetCompany("MeshSat")
 tb.SetComment(0, "MESHSAT-709. Mechanical strip on the 1520 front wall: 7 SMA F-F bulkhead couplers, device pigtails from above. tools/gen_pcb_e2.py"); board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(2.0)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 def shape(layer, width=0.1):
@@ -43,7 +43,7 @@ def mounting_hole(ref, x, y, d, value):
 rounded_rect(-L / 2, 0, L / 2, W, R, pcbnew.Edge_Cuts)
 for i, (x, y) in enumerate(WALL_PTS, 1): mounting_hole("H%d" % i, x, y, 3.4, "M3 to the case wall drill point"); circle(x, y, 7.0, pcbnew.F_SilkS, 0.12)
 for i, (x, name) in enumerate(COUPLERS, 1):
-    dhole(x, 18.0, 6.5, 3.0); circle(x, 18.0, 9.0, pcbnew.F_SilkS, 0.15); text(name, x, 27.5, pcbnew.F_SilkS, 2.5, 0.4)
+    dhole(x, 18.0, 6.5, 2.75); circle(x, 18.0, 9.0, pcbnew.F_SilkS, 0.15); text(name, x, 27.5, pcbnew.F_SilkS, 2.5, 0.4)   # E3: flat 6.00 across per the 132170 drawing (was 6.25)
 text("MESHSAT PCB-E2 RF JUNCTION  -  device pigtails above, wall pigtails below  -  RF HAZARD DURING TX", 0, 9.5, pcbnew.F_SilkS, 1.4, 0.22)
 t_ = text("front wall (+Z) side  |  screws M3 into the 1520 wall drill points 57.8 below the rim", 0, 30.0, pcbnew.B_SilkS, 1.6, 0.25); t_.SetMirrored(True)
 pcbnew.SaveBoard(OUT, board)

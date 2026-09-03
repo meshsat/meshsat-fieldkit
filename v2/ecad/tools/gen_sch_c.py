@@ -131,7 +131,7 @@ part("JP1", "Jumper", "SolderJumper_2_Open", "PANEL_ID strap (closed = variant B
 part("JP2", "Jumper", "SolderJumper_2_Open", "EPD RES from BCM7 instead of U2 (close to use)", "JP2", {"1": "EPD_RES_ALT", "2": "EPD_RES"})
 
 # --- LED rail: +5V -> LIGHTING toggle (open in BLACKOUT) -> LED_RAIL_SW -> Q1 P-FET (PWM from PANEL_PWM through Q2) -> LED_RAIL
-part("SW_LIGHT", "Connector_Generic", "Conn_01x06", "LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense)", "TGL6",
+part("SW_LIGHT", "Connector_Generic", "Conn_01x06", "LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 + AT401A boot", "TGL6",
      {"1": "LED_RAIL_SW", "2": "+5V", "3": "NC", "4": "GND", "5": "LIGHT_DAY_n", "6": "LIGHT_NIGHT_n"})
 part("Q1", "Transistor_FET", "AO3401A", "AO3401A P-FET high side", "SOT23", {"1": "Q1_G", "2": "LED_RAIL_SW", "3": "LED_RAIL"}, "C15127")
 r("R9", "2.2k", "LED_RAIL_SW", "Q1_G", "R", "C4190"); r("R10", "47R", "Q1_G", "Q2_D", "R", "C25118")
@@ -151,15 +151,15 @@ nfet("Q3", "Q3_G", "GND", "TX_K"); r("R%d" % rn, "1k", "TR_APRS", "Q3_G", "R", "
 part("D17", "Device", "D_Schottky", "BAT54 lamp-test tie", "SOD123", {"2": "TX_K", "1": "TX_LAMPTEST"}, "C2166")
 
 # --- switches (bench parts on flying leads; footprints = panel hole + lead pads)
-part("SW_MAIN", "Connector_Generic", "Conn_01x04", "MAIN PWR 19 mm momentary, green ring (to X1202 external switch)", "SW19", {"1": "X1202SW_A", "2": "X1202SW_B", "3": "MAINRING_A", "4": "GND"})
+part("SW_MAIN", "Connector_Generic", "Conn_01x04", "MAIN PWR 19 mm momentary, green ring (to X1202 external switch); C&K ATP19-SL1-603-B0SA-03G", "SW19", {"1": "X1202SW_A", "2": "X1202SW_B", "3": "MAINRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL_SW", "MAINRING_A", "R", "C23179"); rn += 1
-part("SW_PI", "Connector_Generic", "Conn_01x04", "PI 16 mm recessed momentary, amber ring (to Pi 5 J2)", "SW16", {"1": "PIJ2_A", "2": "PIJ2_B", "3": "PIRING_A", "4": "PIRING_K"})
+part("SW_PI", "Connector_Generic", "Conn_01x04", "PI 16 mm recessed momentary, amber ring (to Pi 5 J2); C&K ATP16-SL1-403-M0SA-04G (orange ring)", "SW16", {"1": "PIJ2_A", "2": "PIJ2_B", "3": "PIRING_A", "4": "PIRING_K"})
 r("R%d" % rn, "300R", "LED_RAIL", "PIRING_A", "R", "C23025"); rn += 1
-part("SW_TEST", "Connector_Generic", "Conn_01x04", "TEST/ACK 16 mm momentary, white ring", "SW16", {"1": "TEST_SW", "2": "GND", "3": "TESTRING_A", "4": "GND"})
+part("SW_TEST", "Connector_Generic", "Conn_01x04", "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G", "SW16", {"1": "TEST_SW", "2": "GND", "3": "TESTRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL", "TESTRING_A", "R", "C23179"); rn += 1
-part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS guarded momentary toggle (red cover)", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
-part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON guarded latching toggle (closed = TX inhibit)", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
-part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE guarded momentary toggle (hold 5 s)", "TGL3", {"1": "ZEROIZE_SW", "2": "GND", "3": "NC"})
+part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS guarded momentary toggle (red cover); NKK M2015SD3A01, guard per ASSEMBLY.md section 9", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
+part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON guarded latching toggle (closed = TX inhibit); NKK M2012SD3A01, guard per ASSEMBLY.md section 9", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
+part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE guarded momentary toggle (hold 5 s); NKK M2015SD3A01, guard per ASSEMBLY.md section 9", "TGL3", {"1": "ZEROIZE_SW", "2": "GND", "3": "NC"})
 # power-button leads: ferrite + 100 nF at the panel end (the leads pass the antenna feeds)
 part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "X1202SW_A", "2": "X1202SW_A2"}, "C1017"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "X1202SW_B", "2": "X1202SW_B2"}, "C1017")
 c("C11", "100n", "X1202SW_A2", "X1202SW_B2", "C", "C14663")

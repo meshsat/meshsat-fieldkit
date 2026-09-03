@@ -15,7 +15,9 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `traco/` | TRACO TEN 40WIN datasheet | the shore-power converter on PCB-E1 |
 | `rpi5/` | Raspberry Pi 5 mechanical drawing and product brief (datasheets.raspberrypi.com) | the Pi 5 / X1202 stack pattern on PCB-B (58 x 49, Ø2.7, 3.5 mm from the edges) |
 | `x1202/` | Geekworm X1202 V1.1 PCB DXF and the wiki page as archived by the Wayback Machine on 9 May 2026 (the live wiki refuses non-browser clients), plus an overview photo | the Pi 5 / X1202 stack envelope on PCB-B: 96 x 85 with the Pi flush on one long edge and 39 mm of board past the GPIO-header edge, which B10 did not allow for (B11) |
-| `rf/` | Rosenberger 19S102-40ML5 SMP data sheet; Radiall SMP-MAX series catalogue (R222M) and the R222.M40.050 adapter data sheet | the Rev B blind-mate RF joint between the dock and PCB-A (MESHSAT-775) |
+| `rf/` | Amphenol Connex 132170 SMA bulkhead female-female adapter drawing (rev D, the E2 D-hole: 6.50 with the flat at 6.00 across, panel 2 to 6.5 mm); Rosenberger 19S102-40ML5 SMP data sheet; Radiall SMP-MAX series catalogue (R222M) and the R222.M40.050 adapter data sheet | the Rev B blind-mate RF joint between the dock and PCB-A (MESHSAT-775) |
+| `switches/` | C&K ATP19 and ATP16 anti-vandal pushbutton data sheets (ordering codes, panel holes 19.2 and 16.2); NKK M series miniature toggle data sheet (circuits, levers, bushings) and the NKK accessories and hardware catalogue (boots, nuts, guards) | the PCB-C panel controls named in `ASSEMBLY.md` section 9 |
+| `precidip/` | Preci-Dip spring-loaded connector catalogue, pages 31 (general specifications) and 34 (813 series, 2.54 mm double row, solder tail, heights 6 to 7.5 mm) | the `J_DOCK` pin set on PCB-A (813-S1-008-10-016101) |
 | `aioc/` | AIOC (All-In-One-Cable) KiCad sources and schematic, its own `LICENSE.md` applies | the CM108 audio path on PCB-D |
 | `dmr858/` | NiceRF DMR858M and DMR858S datasheets and mechanical drawing, the vendor pages as saved | the APRS module on PCB-D |
 | `probes/` | our own STEP probe scripts (build123d), kept with the models they read | reproducing the numbers in the appendix |
