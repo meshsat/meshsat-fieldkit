@@ -11,9 +11,10 @@ b = pcbnew.LoadBoard(sys.argv[1]); nets = b.GetNetInfo()
 pads = {}
 for fp in b.GetFootprints():
     for pd in fp.Pads(): pads[(fp.GetReference(), pd.GetNumber())] = (pd.GetPosition().x / 1e6 - OX, OY - pd.GetPosition().y / 1e6)
-existing = {}
+existing = {}; vias = []
 for t in b.GetTracks():
-    if t.Type() == pcbnew.PCB_VIA_T: continue
+    if t.Type() == pcbnew.PCB_VIA_T:
+        vias.append(((t.GetPosition().x / 1e6 - OX, OY - t.GetPosition().y / 1e6), t.GetNetname(), t.GetWidth() / 1e6)); continue   # A17: vias block bars on every layer
     existing.setdefault(t.GetLayer(), []).append(((t.GetStart().x / 1e6 - OX, OY - t.GetStart().y / 1e6), (t.GetEnd().x / 1e6 - OX, OY - t.GetEnd().y / 1e6), t.GetNetname(), t.GetWidth() / 1e6))
 def segdist(a, b_, c, d):
     """minimum distance between segments ab and cd"""
@@ -29,6 +30,9 @@ def clear(p, q, w, net, layer):
     for (a, b_, n, ew) in existing.get(layer, []):
         if n == net: continue
         if segdist(p, q, a, b_) < w / 2 + ew / 2 + 0.25: return False
+    for (c, n, vw) in vias:
+        if n == net: continue
+        if segdist(p, q, c, c) < w / 2 + vw / 2 + 0.25: return False
     return True
 def track(x1, y1, x2, y2, w, layer, netname):
     t = pcbnew.PCB_TRACK(b); t.SetStart(P(x1, y1)); t.SetEnd(P(x2, y2)); t.SetWidth(FromMM(w)); t.SetLayer(layer); t.SetNet(nets.GetNetItem(netname)); b.Add(t)
