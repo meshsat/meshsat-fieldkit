@@ -150,7 +150,7 @@ part("J_5V_MOD1", "Connector_Generic", "Conn_01x02", "5 V module rail to PCB-B J
 c("C13", "100u 10V", "+5V", "GND", "C100u"); part("D2", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V", "2": "GND"})
 part("U5", "Regulator_Linear", "AMS1117-3.3", "AMS1117-3.3", "SOT223", {"3": "+5V", "2": "+3V3", "1": "GND"})
 c("C14", "10u", "+5V", "GND", "C10u"); c("C15", "10u", "+3V3", "GND", "C10u")
-r("R18", "1k", "+5V", "LED_PWR_A")
+r("R18", "1k", "+5V_MOD", "LED_PWR_A")   # A17: hub, its decoupling and the PWR LED on the module-rail plane; the ribbon +5V feeds only the LDO in the PWR zone (keeps the hub escape lanes free)
 for ref, net in (("TP1", "+5V"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "CELL_N"), ("TP5", "CELL+"), ("TP6", "SHORE_INHIBIT"), ("TP7", "EXP_SP2"), ("TP8", "MEZZ_SPARE1"), ("TP9", "TX_INHIBIT_n"), ("TP10", "SHORE_12V"), ("TP11", "EXP_SP3"), ("TP12", "+5V_MOD"), ("TP13", "BOOST_CELL")):
     part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
 for i, net in enumerate(("+5V", "CELL_N", "GND", "CELL+", "5V_WIFI", "5V_GPS", "5V_CODEC", "5V_UART", "BOOST_CELL", "X1202_5V"), 1):
@@ -159,10 +159,10 @@ for i, net in enumerate(("+5V", "CELL_N", "GND", "CELL+", "5V_WIFI", "5V_GPS", "
 part("U6", "Interface_USB", "FE1.1s", "FE1.1s", "HUB", {
  "1": "GND", "2": "XOUT", "3": "XIN", "4": "USB_UART_N", "5": "USB_UART_P", "6": "USB_CODEC_N", "7": "USB_CODEC_P", "8": "USB_GPS_N", "9": "USB_GPS_P",
  "10": "USB_WIFI_N", "11": "USB_WIFI_P", "12": "HUB_VD18", "13": "HUB_VD33", "14": "HUB_REXT", "15": "USB_A_N", "16": "USB_A_P", "17": "HUB_RST",
- "18": "HUB_VBUSM", "19": "HUB_BUSJ", "20": "+5V", "21": "HUB_VD33", "22": "NC", "23": "HUB_LED1", "24": "NC", "25": "NC", "26": "HUB_OVCJ", "27": "HUB_TESTJ", "28": "HUB_VD18"}, "C2848")
+ "18": "HUB_VBUSM", "19": "HUB_BUSJ", "20": "+5V_MOD", "21": "HUB_VD33", "22": "NC", "23": "HUB_LED1", "24": "NC", "25": "NC", "26": "HUB_OVCJ", "27": "HUB_TESTJ", "28": "HUB_VD18"}, "C2848")
 part("Y1", "Device", "Crystal_GND24", "12 MHz 3225", "XTAL", {"1": "XIN", "3": "XOUT", "2": "GND", "4": "GND"})
 c("C16", "22p", "XIN", "GND"); c("C17", "22p", "XOUT", "GND"); r("R19", "2.7k 1% (REXT, verify datasheet)", "HUB_REXT", "GND")
-c("C18", "100n", "HUB_VD33", "GND"); c("C19", "1u", "HUB_VD33", "GND"); c("C20", "100n", "HUB_VD18", "GND"); c("C21", "1u", "HUB_VD18", "GND"); c("C22", "100n", "+5V", "GND")
+c("C18", "100n", "HUB_VD33", "GND"); c("C19", "1u", "HUB_VD33", "GND"); c("C20", "100n", "HUB_VD18", "GND"); c("C21", "1u", "HUB_VD18", "GND"); c("C22", "100n", "+5V_MOD", "GND")
 r("R20", "10k", "HUB_RST", "HUB_VD33"); c("C23", "1u", "HUB_RST", "GND"); r("R21", "10k", "HUB_BUSJ", "HUB_VD33"); part("JP1", "Jumper", "SolderJumper_2_Open", "BUSJ to GND = bus-powered", "JP2", {"1": "HUB_BUSJ", "2": "GND"})
 r("R22", "10k", "HUB_TESTJ", "HUB_VD33"); r("R23", "10k", "HUB_OVCJ", "HUB_VD33"); r("R24", "4.7k", "VBUS_A_SENSE", "HUB_VBUSM")
 r("R25", "1k", "HUB_VD33", "LED_HUB_A"); part("LED2", "Device", "LED", "amber hub", "LED", {"2": "LED_HUB_A", "1": "HUB_LED1"})
