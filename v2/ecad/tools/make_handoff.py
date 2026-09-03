@@ -10,7 +10,7 @@ RELEASE = os.path.join(V2, "release", os.environ.get("MESHSAT_FK_REV", "revA"))
 DL = os.path.join(RELEASE, "boards")                                                 # deliverable folders
 
 # bench-fitted or non-part references that must not reach the JLC BOM / CPL (the deliverable BOM keeps them)
-EXCLUDE = {"pcb-a-power": {"J_DOCK"}, "pcb-c-display": {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "EPD1"}, "pcb-e1-dock": {"U1", "F1", "J_DOCK"}}
+EXCLUDE = {"pcb-a-power": {"J_DOCK", "L2"}, "pcb-d-aprs": {"L1"}, "pcb-c-display": {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "EPD1"}, "pcb-e1-dock": {"U1", "F1", "J_DOCK"}}
 NONPART_PREFIX = ("TP", "H", "JP", "#")
 def norm_refs(field, stem):
     """KiCad writes 'R1-R5' ranges and 'J_PANEL?' for references without a number; JLC wants plain comma-separated designators."""
