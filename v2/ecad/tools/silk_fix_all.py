@@ -7,14 +7,14 @@ OX, OY = {"c": (297.0, 210.0), "e2": (200.0, 20.0), "ring": (60.0, 30.0)}.get(sy
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 F, B = pcbnew.F_SilkS, pcbnew.B_SilkS
 RULES = {
- "a": [("MESHSAT FIELD KIT  -  CARRIER PCB-A", dict(text="MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A16)", pos=(55, 76.5), size=2.2)),
-       ("MESHSAT-709  |  240 x 160", dict(text="MESHSAT-709  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-03", pos=(55, 73.3), size=1.1)),
+ "a": [("MESHSAT FIELD KIT  -  PCB-A POWER", dict(text="MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A17)", pos=(55, 76.5), size=2.2)),
+       ("MESHSAT-709  |  285 x 160", dict(text="MESHSAT-709  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-04", pos=(55, 73.3), size=1.1)),
        ("BACK WALL (+Y)", dict(pos=(-20, 77.0))),
        ("FRONT WALL (-Y)   v v v   LED row", dict(text="FRONT WALL (-Y)   v v v", pos=(20, -76.0))),
        ("PCB-A UNDERSIDE - sits 2.4 mm", dict(text="PCB-A UNDERSIDE - on 6 mm spacers over the dock strip; spring pins J_DOCK land on PCB-E1", pos=(60, -76.0)))],
  "b": [("J_PANEL ribbon up to PCB-C", dict(pos=(86, 75.5), angle=0)),
-       ("PCB-B COMPUTE  REV A (B4)", dict(text="PCB-B COMPUTE  REV A (B10)")),
-       ("MESHSAT-709 | 245x170x1.6 4L", dict(text="MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-03")),
+       ("PCB-B COMPUTE  REV A (", dict(text="PCB-B COMPUTE  REV A (B11)")),
+       ("MESHSAT-709 | 245x170x1.6 4L", dict(text="MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-04")),
        ("BACK WALL (+Y)", dict(pos=(-68, 83.0))),
        ("FRONT WALL (-Y)   v v v", dict(pos=(45, -81.5))),
        ("J_RTL1", dict(pos=(-12, 9.5)))],

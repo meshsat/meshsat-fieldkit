@@ -62,7 +62,8 @@ def place(ref, x, y, rot=0.0, back=False):
     return fp
 # --- fixed positions (case frame)
 FIXED = {"J_AB1": (-72, -73, 90), "J_LEDS1": (-44, -74, 0), "J_MEZZ_PWR1": (-8, -18, 90),
-         "J_PACK": (-27, -8, 90), "J_X1202BAT": (-27, 14, 270), "F1": (-26, 33, 90), "F2": (-8, 30, 0), "J_DOCK": (-12, -70, 0), "J_X1202DC": (-125, -60, 0)}
+         "J_PACK": (-27, -8, 90), "J_X1202BAT": (-27, 14, 270), "F1": (-26, 33, 90), "F2": (-8, 30, 0), "J_DOCK": (-12, -70, 0), "J_X1202DC": (-125, -60, 0),
+         "F3": (-32, -44, 0), "J_5V_MOD1": (-29, -63, 0), "U20": (-47, -58, 0), "L2": (-47, -50, 0)}   # A17 module-rail block, south-west of the fuse row
 BACK = {"J_DOCK"}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
@@ -77,7 +78,10 @@ for ref in comps:
         fp.SetValue(val); placed[ref] = fp
 # --- regions for the rest: (x0, y0, x1, y1), refs
 REGIONS = [
- ("PWR",   (-104, -66, -62, -47), ["U5", "C13", "C14", "C15", "D2", "TP1", "TP2", "TP3", "TP6", "TP7", "TP10", "TP11", "R12"]),
+ ("PWR",   (-104, -66, -70, -47), ["U5", "C13", "C14", "C15", "D2", "TP1", "TP2", "TP3", "TP6", "TP7", "TP10", "TP11", "TP12", "TP13", "R49", "R50"]),
+ ("BOOSTI", (-58, -61, -51, -48), ["C41", "C42", "C43"]),                       # A17 boost input caps, west of U20
+ ("BOOSTO", (-43, -70.5, -34, -48), ["C44", "C45", "C46", "C47", "C48", "C49"]), # output caps, east of U20, next to J_5V_MOD1
+ ("BOOSTR", (-58, -70.5, -44, -62), ["C38", "C39", "R44", "R45", "R46", "C40", "R47", "R48"]),   # FB, COMP, BOOT, VCC, FSW, ILIM parts south of U20
  ("HUB",   (-104, 50, -30, 77), ["U6", "Y1", "C16", "C17", "R19", "C18", "C19", "C20", "C21", "C22", "R20", "C23", "R21", "JP1", "R22", "R23", "R24", "R25", "LED2", "U19", "C32", "R34", "R35", "R36", "R37", "R38", "R18"]),
  ("WIFI",  (-28, 44, 4, 70), ["U7", "R26", "R40", "C34", "R27", "U8", "C24", "C25", "U9"]),
  ("GPS",   (5, -61, 22, -36), ["U10", "R28", "R41", "C35", "R29"]),
@@ -144,15 +148,15 @@ def plane(layer, netname, name, rect=(-167.5, -85, 122.5, 85), priority=0):
         p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority)
     board.Add(z); return z
-plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+5V", "+5V plane In2")
+plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+5V_MOD", "+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)")
 plane(pcbnew.In2_Cu, "CELL+", "CELL+ pour In2 (pack node)", rect=(-38, -24, -2, 22), priority=1)
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
-CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.3, 4.0, 1.2, 0.6, 0.5, 0.25)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
-PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("+5V", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("5V_IN", "PWR"), ("CELL*", "BANK"), ("MEZZ_CELL", "BANK")]
+CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.3, 4.0, 1.2, 0.6, 0.5, 0.25), "BOOST": (0.2, 1.5, 1.0, 0.5, 1.2, 0.3)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
+PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("+5V", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("5V_IN", "PWR"), ("CELL*", "BANK"), ("MEZZ_CELL", "BANK"), ("BOOST_CELL", "BOOST"), ("SW5", "BOOST"), ("+5V_MOD", "PWR")]
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)
@@ -169,7 +173,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.15, 0.5, 0.9, 0.5, 0.5, 0.25)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.15, 0.5, 0.9, 0.5, 0.5, 0.25), C("BOOST", 3, 0.2, 1.5, 1.0, 0.5, 1.2, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127

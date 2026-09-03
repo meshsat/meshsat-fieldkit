@@ -19,7 +19,7 @@ holes = {r: v for r, v in fps.items() if r.startswith("H")}
 def near(p, q, tol=0.01): return abs(p[0] - q[0]) < tol and abs(p[1] - q[1]) < tol
 def find(pos, drill): return any(near(v[0], pos) and abs(v[1][0] - drill) < 0.01 for v in holes.values())
 for (x, y) in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]: check(find((x, y), 3.2), "rod hole 3.2 at (%.1f, %.1f)" % (x, y))
-st = [(-103.0, -29.0), (-54.0, -29.0), (-103.0, 29.0), (-54.0, 29.0)]
+st = [(-113.0, -29.0), (-64.0, -29.0), (-113.0, 29.0), (-64.0, 29.0)]   # B11: stack 10 mm west
 for p in st: check(find(p, 2.7), "Pi/X1202 stack hole 2.7 at %s" % (p,))
 check(abs(st[1][0] - st[0][0] - 49) < 0.01 and abs(st[2][1] - st[0][1] - 58) < 0.01, "stack pattern is 49 x 58 (Pi 5)")
 tc = [(4.66, 23.015), (74.12, 23.015), (4.66, 47.985), (74.12, 47.985)]
@@ -38,8 +38,8 @@ hl = [(v[0], v[1][0]) for v in holes.values()]
 minweb = min(((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2) ** 0.5 - (dp + dq) / 2 for (p, dp), (q, dq) in itertools.combinations(hl, 2))
 check(minweb >= 2.0, "minimum web between any two holes %.2f mm (>= 2.0)" % minweb)
 # device rectangles: inside the outline with 3 mm margin, pairwise non-overlapping, clear of nut keep-outs
-R = {"X1202": (-121, -48.5, -36, 48.5), "SDR": (-4, -16, 78, 16), "ZB": (-40, 55, 30, 80.5), "TCALL": (2.0, 20.995, 76.78, 50.005),
-     "XIAO": (-103.72, 49.11, -82.28, 66.89), "RB9704": (26, -76, 78, -20), "HUB": (-96, -81, -46, -52), "JGPIO": (-32.5, -29.4, -23.5, 29.4),
+R = {"X1202": (-117.2, -42.5, -21.2, 42.5), "SDR": (-4, -16, 78, 16), "ZB": (-40, 55, 30, 80.5), "TCALL": (2.0, 20.995, 76.78, 50.005),
+     "XIAO": (-103.72, 49.11, -82.28, 66.89), "RB9704": (26, -76, 78, -20), "HUB": (-96, -81, -46, -52), "JGPIO": (-78.5, 44, -25.5, 53),
      "JRTL": (-19, -6.5, -5, 6.5), "JZB": (31, 61, 45, 74.5), "TCALL_USBC": (-18.5, 41, -13.5, 51), "XIAO_USBC": (-82, 53.5, -70, 62.5),
      "TBEAM": (79.3, -64, 122.36, 52.75), "TB_SMA": (110.95, 52.75, 120.19, 67.22), "JTBEAM": (65, 52.5, 75, 57.5),
      "JRB9704": (-0.5, -52.5, 20.5, -43.5), "JRB9603": (3.5, -62.5, 16.5, -57.5), "PASS": (-20.5, -57.5, -5.5, -42.5), "JTD2": (-54, 74, -46, 80), "JPANEL": (81, 54.5, 91, 81.5)}
@@ -56,7 +56,7 @@ for k, r in R.items():
     check(all(rect_circle_clear(r, rod, 4.5) for rod in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]), "%s clear of the 9 mm nut keep-outs" % k)
 # slots and connectors at their intended centres (footprints are centred by the generator)
 exp_fp = {"S_RTL1": (20, -18), "S_RTL2": (74, -18), "S_RTL3": (20, 18), "S_RTL4": (66, 18), "S_ZB1": (-22, 52.5), "S_ZB2": (18, 52.5), "S_ZB3": (-22, 82), "S_ZB4": (18, 82),
-          "S_XIAO1": (-88, 46), "S_XIAO2": (-88, 70), "J_GPIO1": (-28, 0), "J_DCF77": (-85, 77), "J_RTL1": (-12, 0), "J_ZB1": (38, 67.75), "J_PANEL": (86, 68)}
+          "S_XIAO1": (-88, 46), "S_XIAO2": (-88, 70), "J_GPIO1": (-52, 48.5), "J_DCF77": (-85, 77), "J_RTL1": (-12, 0), "J_ZB1": (38, 67.75), "J_PANEL": (86, 68)}
 for ref, (ex, ey) in exp_fp.items():
     fp = next((f for f in b.GetFootprints() if f.GetReference() == ref), None)
     if fp is None: check(False, "%s present" % ref); continue
@@ -64,6 +64,14 @@ for ref, (ex, ey) in exp_fp.items():
     check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s body centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
     for pad in fp.Pads():
         pp = case(pad.GetPosition()); check(abs(pp[0] - ex) < 40 and abs(pp[1] - ey) < 40, "%s pad near its footprint" % ref)
+# B11: nothing but the four standoff holes may sit under the X1202 (its cells hang to board level)
+x1202 = R["X1202"]; under = []
+for fp in b.GetFootprints():
+    ref = fp.GetReference()
+    if ref.startswith(("H", "S_")): continue
+    bb = fp.GetBoundingBox(False, False); rr = (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
+    if overlap(rr, x1202): under.append(ref)
+check(not under, "no part under the X1202 envelope (found: %s)" % (under[:8] if under else "none"))
 check(b.GetCopperLayerCount() == 4, "4 copper layers")
 check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

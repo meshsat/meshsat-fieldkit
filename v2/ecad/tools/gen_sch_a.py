@@ -102,6 +102,7 @@ FP = {
  "TP": "TestPoint:TestPoint_Pad_D1.5mm", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "XH10": "Connector_JST:JST_XH_B10B-XH-A_1x10_P2.50mm_Vertical",
  "CELL": "Battery:BatteryHolder_Keystone_1042_1x18650", "XT60": "Connector_AMASS:AMASS_XT60-M_1x02_P7.20mm_Vertical", "POGO": "meshsat:PogoPins_2x4", "FUSE": "Fuse:Fuseholder_Blade_Mini_Keystone_3568", "CHG": "Package_DFN_QFN:Texas_RTW_WQFN-24-1EP_4x4mm_P0.5mm_EP2.7x2.7mm", "PROT": "Package_SON:WSON-6_1.5x1.5mm_P0.5mm",
  "BOOST": "Package_DFN_QFN:Texas_RWU0007A_VQFN-7_2x2mm_P0.5mm", "GAUGE": "Package_SON:Texas_S-PDSO-N12", "SOT223": "Package_TO_SOT_SMD:SOT-223-3_TabPin2", "L4020": "Inductor_SMD:L_Coilcraft_XAL4020-XXX", "RS10m": "Resistor_SMD:R_2512_6332Metric",
+ "QFN11": "Package_DFN_QFN:Texas_VQFN-RNR0011A-11", "L6030": "Inductor_SMD:L_Coilcraft_XAL6030-XXX", "C1210": "Capacitor_SMD:C_1210_3225Metric",
 }
 P = []   # (ref, lib, symbol, value, footprint, nets{pin: net}, lcsc)
 def part(ref, lib, sym, value, fp, nets, lcsc=""):
@@ -117,7 +118,7 @@ def esd(ref, dp, dm, vbus):
     part(ref, "Power_Protection", "USBLC6-2SC6", "USBLC6-2SC6", "SOT236", {"1": dp, "6": dp, "3": dm, "4": dm, "5": vbus, "2": "GND"}, "C7519")
 def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
 def c(ref, val, a, b, fp="C", lcsc=""): part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
-def tps2065(ref, en, out, flt): part(ref, "Power_Management", "TPS2065CDBV", "TPS2065CDBV", "SOT236", {"5": "+5V", "4": en, "1": out, "3": flt, "2": "GND"})
+def tps2065(ref, en, out, flt): part(ref, "Power_Management", "TPS2065CDBV", "TPS2065CDBV", "SOT236", {"5": "+5V_MOD", "4": en, "1": out, "3": flt, "2": "GND"})   # A17: the channels hang on the module rail
 def tps22810(ref, vin, en, out, ct): part(ref, "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": vin, "5": en, "1": out, "2": "NC", "3": ct, "4": "GND", "7": "GND"})
 def ina219(ref, inp, inn, a0, a1): part(ref, "Sensor_Energy", "INA219AxDCN", "INA219AIDCN", "SOT238", {"1": inp, "2": inn, "3": "GND", "4": "+3V3", "5": "SCL", "6": "SDA", "7": a0, "8": a1}, "C138024")
 
@@ -129,15 +130,30 @@ part("F1", "Device", "Fuse", "15 A mini blade (Keystone 3568 holder): pack node 
 part("F2", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): pack node to the 8 V boost feed", "FUSE", {"1": "CELL+", "2": "MEZZ_CELL"})
 part("J_MEZZ_PWR1", "Connector_Generic", "Conn_01x02", "mezzanine 8 V boost feed (JST-VH): cell node through F2 (R15)", "VH2", {"1": "MEZZ_CELL", "2": "GND"})
 c("C7", "10u", "CELL+", "GND", "C10u")
-r("R12", "10k", "BANK_ALERT", "+3V3")   # J_AB1.12 idles high: no gauge on PCB-A any more, the X1202 gauge (0x36) reads the node
+# --- A17 (owner ruling 3 Sep 2026 evening, option B of the 5 V budget): the 5 V MODULE RAIL comes from the cell node, not from the X1202.
+#     F3 + TPS61089 boost -> +5V_MOD feeds this board's four channel switches and, over J_5V_MOD1 (JST-VH) to PCB-B's J_5V_MOD, the whole of
+#     PCB-B (modules, hub, display, panel). The X1202's 5.1 V output then carries only the Pi. EN follows the X1202's 5 V (sense line X1202_5V
+#     from PCB-B over J_AB1.12) so the rail dies with the kit. RILIM 100k = 10 A typ / 9 A min peak (the part's maximum): 5 V at about 4.2 A
+#     continuous from 3.3 V cells (7 A switch current), bursts to the limit; the unserialised burst case sags the modules, never the Pi.
+part("F3", "Device", "Fuse", "15 A mini blade (Keystone 3568 holder): pack node to the 5 V module-rail boost", "FUSE", {"1": "CELL+", "2": "BOOST_CELL"})
+part("U20", "Regulator_Switching", "TPS61089", "TPS61089 boost 5.05 V module rail", "QFN11",
+     {"1": "FSW5", "2": "BST5_VCC", "3": "FB5", "4": "COMP5", "5": "GND", "6": "+5V_MOD", "7": "MOD_EN", "8": "ILIM5", "9": "BOOST_CELL", "10": "BOOT5", "11": "SW5"})
+part("L2", "Device", "L", "1.5uH XAL6030-152MEB (Isat 12 A, 5.6 mOhm)", "L6030", {"1": "BOOST_CELL", "2": "SW5"})
+c("C38", "100n 25V", "BOOT5", "SW5"); c("C39", "1u", "BST5_VCC", "GND"); r("R44", "301k 1% (500 kHz)", "FSW5", "SW5"); r("R45", "100k 1% (ILIM 10 A peak, 9 A min)", "ILIM5", "GND")
+r("R46", "17.4k", "COMP5", "COMP5C"); c("C40", "4.7n", "COMP5C", "GND"); r("R47", "63.4k 1%", "+5V_MOD", "FB5"); r("R48", "20k 1%", "FB5", "GND")   # 1.212 V x (1 + 63.4/20) = 5.05 V
+r("R49", "100k", "MOD_EN", "GND"); r("R50", "10k", "X1202_5V", "MOD_EN")   # EN follows the X1202 5 V sense (EN abs max 7 V), off when the kit is off
+c("C41", "22u 10V X7R 1210", "BOOST_CELL", "GND", "C1210"); c("C42", "22u 10V X7R 1210", "BOOST_CELL", "GND", "C1210"); c("C43", "100n", "BOOST_CELL", "GND")
+for i in range(4): c("C%d" % (44 + i), "22u 10V X7R 1210", "+5V_MOD", "GND", "C1210")
+c("C48", "100n", "+5V_MOD", "GND"); c("C49", "100u 10V", "+5V_MOD", "GND", "C100u")
+part("J_5V_MOD1", "Connector_Generic", "Conn_01x02", "5 V module rail to PCB-B J_5V_MOD (JST-VH, 18 AWG): + -", "VH2", {"1": "+5V_MOD", "2": "GND"})
 # --- 5V_A rail from PCB-B, local 3.3 V
 c("C13", "100u 10V", "+5V", "GND", "C100u"); part("D2", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V", "2": "GND"})
 part("U5", "Regulator_Linear", "AMS1117-3.3", "AMS1117-3.3", "SOT223", {"3": "+5V", "2": "+3V3", "1": "GND"})
 c("C14", "10u", "+5V", "GND", "C10u"); c("C15", "10u", "+3V3", "GND", "C10u")
 r("R18", "1k", "+5V", "LED_PWR_A")
-for ref, net in (("TP1", "+5V"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "CELL_N"), ("TP5", "CELL+"), ("TP6", "SHORE_INHIBIT"), ("TP7", "EXP_SP2"), ("TP8", "MEZZ_SPARE1"), ("TP9", "TX_INHIBIT_n"), ("TP10", "SHORE_12V"), ("TP11", "EXP_SP3")):
+for ref, net in (("TP1", "+5V"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "CELL_N"), ("TP5", "CELL+"), ("TP6", "SHORE_INHIBIT"), ("TP7", "EXP_SP2"), ("TP8", "MEZZ_SPARE1"), ("TP9", "TX_INHIBIT_n"), ("TP10", "SHORE_12V"), ("TP11", "EXP_SP3"), ("TP12", "+5V_MOD"), ("TP13", "BOOST_CELL")):
     part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
-for i, net in enumerate(("+5V", "CELL_N", "GND", "CELL+", "5V_WIFI", "5V_GPS", "5V_CODEC", "5V_UART"), 1):
+for i, net in enumerate(("+5V", "CELL_N", "GND", "CELL+", "5V_WIFI", "5V_GPS", "5V_CODEC", "5V_UART", "BOOST_CELL", "X1202_5V"), 1):
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 # --- hub (upstream from PCB-B over J_AB1)
 part("U6", "Interface_USB", "FE1.1s", "FE1.1s", "HUB", {
@@ -151,12 +167,12 @@ r("R20", "10k", "HUB_RST", "HUB_VD33"); c("C23", "1u", "HUB_RST", "GND"); r("R21
 r("R22", "10k", "HUB_TESTJ", "HUB_VD33"); r("R23", "10k", "HUB_OVCJ", "HUB_VD33"); r("R24", "4.7k", "VBUS_A_SENSE", "HUB_VBUSM")
 r("R25", "1k", "HUB_VD33", "LED_HUB_A"); part("LED2", "Device", "LED", "amber hub", "LED", {"2": "LED_HUB_A", "1": "HUB_LED1"})
 # --- channels: WiFi (0x46), GPS (0x47), codec (0x48), UART (0x49)
-tps2065("U7", "EN_WIFI", "SW_WIFI", "FLT_WIFI"); r("R26", "10k", "FLT_WIFI", "+3V3"); r("R40", "100k", "EN_WIFI", "+3V3"); c("C34", "100n", "+5V", "GND"); r("R27", "0.1R 1% 1206", "SW_WIFI", "5V_WIFI", "RS"); ina219("U8", "SW_WIFI", "5V_WIFI", "SDA", "+3V3"); c("C24", "100n", "+3V3", "GND"); c("C25", "10u", "5V_WIFI", "GND", "C10u")
+tps2065("U7", "EN_WIFI", "SW_WIFI", "FLT_WIFI"); r("R26", "10k", "FLT_WIFI", "+3V3"); r("R40", "100k", "EN_WIFI", "+3V3"); c("C34", "100n", "+5V_MOD", "GND"); r("R27", "0.1R 1% 1206", "SW_WIFI", "5V_WIFI", "RS"); ina219("U8", "SW_WIFI", "5V_WIFI", "SDA", "+3V3"); c("C24", "100n", "+3V3", "GND"); c("C25", "10u", "5V_WIFI", "GND", "C10u")
 part("J_WIFI1", "Connector", "USB_A", "USB-A receptacle, WiFi", "USBA", {"1": "5V_WIFI", "2": "USB_WIFI_N", "3": "USB_WIFI_P", "4": "GND", "5": "GND"}); esd("U9", "USB_WIFI_P", "USB_WIFI_N", "5V_WIFI")
-tps2065("U10", "EN_GPS", "SW_GPS", "FLT_GPS"); r("R28", "10k", "FLT_GPS", "+3V3"); r("R41", "100k", "EN_GPS", "+3V3"); c("C35", "100n", "+5V", "GND"); r("R29", "0.1R 1% 1206", "SW_GPS", "5V_GPS", "RS"); ina219("U11", "SW_GPS", "5V_GPS", "SCL", "+3V3"); c("C26", "100n", "+3V3", "GND"); c("C27", "10u", "5V_GPS", "GND", "C10u")
+tps2065("U10", "EN_GPS", "SW_GPS", "FLT_GPS"); r("R28", "10k", "FLT_GPS", "+3V3"); r("R41", "100k", "EN_GPS", "+3V3"); c("C35", "100n", "+5V_MOD", "GND"); r("R29", "0.1R 1% 1206", "SW_GPS", "5V_GPS", "RS"); ina219("U11", "SW_GPS", "5V_GPS", "SCL", "+3V3"); c("C26", "100n", "+3V3", "GND"); c("C27", "10u", "5V_GPS", "GND", "C10u")
 part("J_GPS1", "Connector", "USB_A", "USB-A receptacle, GPS", "USBA", {"1": "5V_GPS", "2": "USB_GPS_N", "3": "USB_GPS_P", "4": "GND", "5": "GND"}); esd("U12", "USB_GPS_P", "USB_GPS_N", "5V_GPS")
-tps2065("U13", "EN_CODEC", "SW_CODEC", "FLT_CODEC"); r("R30", "10k", "FLT_CODEC", "+3V3"); r("R42", "100k", "EN_CODEC", "+3V3"); c("C36", "100n", "+5V", "GND"); r("R31", "0.1R 1% 1206", "SW_CODEC", "5V_CODEC", "RS"); ina219("U14", "SW_CODEC", "5V_CODEC", "GND", "SDA"); c("C28", "100n", "+3V3", "GND"); c("C29", "10u", "5V_CODEC", "GND", "C10u"); esd("U15", "USB_CODEC_P", "USB_CODEC_N", "5V_CODEC")
-tps2065("U16", "EN_UART", "SW_UART", "FLT_UART"); r("R32", "10k", "FLT_UART", "+3V3"); r("R43", "100k", "EN_UART", "+3V3"); c("C37", "100n", "+5V", "GND"); r("R33", "0.1R 1% 1206", "SW_UART", "5V_UART", "RS"); ina219("U17", "SW_UART", "5V_UART", "+3V3", "SDA"); c("C30", "100n", "+3V3", "GND"); c("C31", "10u", "5V_UART", "GND", "C10u"); esd("U18", "USB_UART_P", "USB_UART_N", "5V_UART")
+tps2065("U13", "EN_CODEC", "SW_CODEC", "FLT_CODEC"); r("R30", "10k", "FLT_CODEC", "+3V3"); r("R42", "100k", "EN_CODEC", "+3V3"); c("C36", "100n", "+5V_MOD", "GND"); r("R31", "0.1R 1% 1206", "SW_CODEC", "5V_CODEC", "RS"); ina219("U14", "SW_CODEC", "5V_CODEC", "GND", "SDA"); c("C28", "100n", "+3V3", "GND"); c("C29", "10u", "5V_CODEC", "GND", "C10u"); esd("U15", "USB_CODEC_P", "USB_CODEC_N", "5V_CODEC")
+tps2065("U16", "EN_UART", "SW_UART", "FLT_UART"); r("R32", "10k", "FLT_UART", "+3V3"); r("R43", "100k", "EN_UART", "+3V3"); c("C37", "100n", "+5V_MOD", "GND"); r("R33", "0.1R 1% 1206", "SW_UART", "5V_UART", "RS"); ina219("U17", "SW_UART", "5V_UART", "+3V3", "SDA"); c("C30", "100n", "+3V3", "GND"); c("C31", "10u", "5V_UART", "GND", "C10u"); esd("U18", "USB_UART_P", "USB_UART_N", "5V_UART")
 # --- expander 0x21, LEDs
 part("U19", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x21)", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "+3V3", "2": "GND", "3": "GND",
@@ -175,7 +191,7 @@ r("R39", "100k", "TR_APRS", "GND")
 part("J_DOCK", "Connector_Generic", "Conn_01x08", "spring pins to the PCB-E1 dock: 1-4 SHORE_12V, 5-7 GND, 8 SHORE_INHIBIT (expander 0x21 bit 0.4, high = dock converter off) (underside)", "POGO", {"1": "SHORE_12V", "2": "SHORE_12V", "3": "SHORE_12V", "4": "SHORE_12V", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT"})
 part("J_X1202DC", "Connector_Generic", "Conn_01x02", "12 V shore lead to the X1202 DC jack (XH2.5 -> 5521 plug)", "XH2", {"1": "SHORE_12V", "2": "GND"})
 part("J_AB1", "Connector_Generic", "Conn_02x07_Odd_Even", "A-B interconnect (IDC 2x7, top side)", "IDC14", {
- "1": "+5V", "2": "+5V", "3": "GND", "4": "USB_A_P", "5": "USB_A_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS", "11": "VBUS_A_SENSE", "12": "BANK_ALERT", "13": "GND", "14": "TX_INHIBIT_n"})
+ "1": "+5V", "2": "+5V", "3": "GND", "4": "USB_A_P", "5": "USB_A_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS", "11": "VBUS_A_SENSE", "12": "X1202_5V", "13": "GND", "14": "TX_INHIBIT_n"})
 
 # ----------------------------------------------------------------- emit
 POWER = {"GND": ("power", "GND"), "+5V": ("power", "+5V"), "+3V3": ("power", "+3V3")}
@@ -245,8 +261,9 @@ def emit_pwr_flag(p, x, y):
     else: label(net, x, y + STUB, 270)
 
 # layout: columns, top-down cursor; group order = list order with section titles
-SECTIONS = [("PACK NODE (A15): WELDED 1S8P PACK IN PARALLEL WITH THE X1202 CELLS, MEZZANINE FEED", ["J_PACK", "F1", "J_X1202BAT", "F2", "J_MEZZ_PWR1", "C7", "R12"]),
-            ("5V_A RAIL FROM PCB-B, 3.3 V LDO, TEST POINTS, FLAGS", ["C13", "D2", "U5", "C14", "C15", "R18", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05", "#FLG06", "#FLG07", "#FLG08"]),
+SECTIONS = [("PACK NODE (A17): WELDED 1S8P PACK IN PARALLEL WITH THE X1202 CELLS, MEZZANINE FEED", ["J_PACK", "F1", "J_X1202BAT", "F2", "J_MEZZ_PWR1", "C7"]),
+            ("5 V MODULE RAIL (A17): F3 + TPS61089 BOOST FROM THE CELL NODE, EN FROM THE X1202 5 V SENSE (J_AB1.12)", ["F3", "U20", "L2", "C38", "C39", "R44", "R45", "R46", "C40", "R47", "R48", "R49", "R50", "C41", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "J_5V_MOD1"]),
+            ("5V_A RAIL FROM PCB-B, 3.3 V LDO, TEST POINTS, FLAGS", ["C13", "D2", "U5", "C14", "C15", "R18", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12", "TP13", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05", "#FLG06", "#FLG07", "#FLG08", "#FLG09", "#FLG10"]),
             ("USB 2.0 HUB FE1.1s (upstream over J_AB1)", ["U6", "Y1", "C16", "C17", "R19", "C18", "C19", "C20", "C21", "C22", "R20", "C23", "R21", "JP1", "R22", "R23", "R24", "R25", "LED2"]),
             ("CH1 WIFI (0x46)", ["U7", "R26", "R40", "C34", "R27", "U8", "C24", "C25", "J_WIFI1", "U9"]),
             ("CH2 GPS (0x47)", ["U10", "R28", "R41", "C35", "R29", "U11", "C26", "C27", "J_GPS1", "U12"]),
@@ -283,7 +300,7 @@ max_x = x + COLW
 PAPER = "A1" if max_x <= 820 else "A0"
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026-09-02") (rev "A") (company "MeshSat") (comment 1 "Phase A2 schematic (A4: 16.3 fixes), generated by tools/gen_sch_a.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709. A15: welded 1S8P pack in parallel with the X1202 cells (the X1202 is the only charger and UPS), USB hub with eFuses + INA219, PCA9555 0x21, mezzanine harness, dock spring pins for the 12 V shore lead."))\n'
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026-09-02") (rev "A") (company "MeshSat") (comment 1 "Phase A2 schematic (A4: 16.3 fixes), generated by tools/gen_sch_a.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709. A17: 5 V module rail (F3, TPS61089 boost from the cell node, EN from the X1202 5 V sense over J_AB1.12), option B of the 3 Sep 5 V budget ruling. A15: welded 1S8P pack in parallel with the X1202 cells (the X1202 is the only charger and UPS), USB hub with eFuses + INA219, PCA9555 0x21, mezzanine harness, dock spring pins for the 12 V shore lead."))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'
