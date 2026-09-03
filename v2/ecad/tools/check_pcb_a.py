@@ -17,11 +17,11 @@ def fpc(ref):
 def hole_at(x, y, d): return any(r.startswith("H") and abs(case(f.GetPosition())[0] - x) < 0.01 and abs(case(f.GetPosition())[1] - y) < 0.01 and abs(list(f.Pads())[0].GetDrillSize().x / 1e6 - d) < 0.01 for r, f in fps.items())
 for (x, y) in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]: check(hole_at(x, y, 3.2), "rod hole at (%.1f, %.1f)" % (x, y))
 for (x, y) in [(10, -26), (80, -26), (10, 26), (80, 26)]: check(hole_at(x, y, 3.2), "mezzanine M3 at (%d, %d)" % (x, y))
-for ref, (ex, ey) in {"J_PACK": (-27, -8), "J_X1202BAT": (-27, 14), "F1": (-26, 33), "F2": (-8, 30), "J_DOCK": (-12, -70), "J_X1202DC": (-125, -60), "F3": (-32, -44), "J_5V_MOD1": (-29, -63), "U20": (-47, -58), "L2": (-47, -50), "J_MEZZ1": (-8, 8), "J_GPS1": (30, -52), "J_WIFI1": (8, 52.5),
+for ref, (ex, ey) in {"J_PACK": (-27, -8), "J_X1202BAT": (-27, 14), "F1": (-26, 33), "F2": (-8, 30), "J_DOCK": (-12, -70), "J_X1202DC": (-125, -60), "F3": (-32, -44), "J_5V_MOD1": (-28, -63), "U20": (-47, -58), "L2": (-47, -50), "J_MEZZ1": (-8, 8), "J_GPS1": (30, -52), "J_WIFI1": (8, 52.5),
                       "S_GPS1": (58, -70), "S_WIFI4": (85, 69), "S_GPSC3": (100, -60)}.items():
     if ref not in fps: print("SKIP %s (placed at the netlist stage)" % ref); continue
     cx, cy = fpc(ref); check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
-R = {"PACK": (-162, -37, -32, 37), "JPACK": (-31, -16, -23, 20), "MEZZ": (5, -31, 85, 31), "GPS": (50, -65, 90, -39), "WIFI": (20, 39.5, 105, 65.5), "HUB": (-104, 50, -30, 78), "PWR": (-104, -76, -70, -48), "BOOST": (-58, -71, -34, -47), "JMOD": (-33, -67, -25, -59), "F3": (-39, -49, -25, -39),
+R = {"PACK": (-162, -37, -32, 37), "JPACK": (-31, -16, -23, 20), "MEZZ": (5, -31, 85, 31), "GPS": (50, -65, 90, -39), "WIFI": (20, 39.5, 105, 65.5), "HUB": (-104, 50, -30, 78), "PWR": (-104, -76, -70, -48), "BOOST": (-58, -71, -33, -48), "JMOD": (-32.5, -67, -24, -59), "F3": (-40, -48, -24, -40),
      "JGPS": (23, -59.5, 37, -44.5), "JWIFI": (1, 45, 15, 60), "JMEZZ": (-13.5, -6.5, -2.5, 22.5), "JMEZZPWR": (-13, -22.5, -3, -13.5), "JAB": (-85.5, -71.5, -58.5, -60.5), "JLEDS": (-53, -77, -27, -71)}
 for k, r in R.items(): check(r[0] >= -163 and r[2] <= 118 and r[1] >= -78 and r[3] <= 78, "%s inside outline with 2 mm margin" % k)
 def overlap(a, c): return not (a[2] <= c[0] or c[2] <= a[0] or a[3] <= c[1] or c[3] <= a[1])

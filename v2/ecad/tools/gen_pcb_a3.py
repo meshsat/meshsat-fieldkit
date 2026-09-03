@@ -63,7 +63,7 @@ def place(ref, x, y, rot=0.0, back=False):
 # --- fixed positions (case frame)
 FIXED = {"J_AB1": (-72, -73, 90), "J_LEDS1": (-44, -74, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          "J_PACK": (-27, -8, 90), "J_X1202BAT": (-27, 14, 270), "F1": (-26, 33, 90), "F2": (-8, 30, 0), "J_DOCK": (-12, -70, 0), "J_X1202DC": (-125, -60, 0),
-         "F3": (-32, -44, 0), "J_5V_MOD1": (-29, -63, 0), "U20": (-47, -58, 0), "L2": (-47, -50, 0)}   # A17 module-rail block, south-west of the fuse row
+         "F3": (-32, -44, 0), "J_5V_MOD1": (-28, -63, 0), "U20": (-47, -58, 0), "L2": (-47, -50, 0)}   # A17 module-rail block, south-west of the fuse row
 BACK = {"J_DOCK"}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
@@ -80,7 +80,7 @@ for ref in comps:
 REGIONS = [
  ("PWR",   (-104, -66, -70, -47), ["U5", "C13", "C14", "C15", "D2", "TP1", "TP2", "TP3", "TP6", "TP7", "TP10", "TP11", "TP12", "TP13", "R49", "R50"]),
  ("BOOSTI", (-58, -61, -51, -48), ["C41", "C42", "C43"]),                       # A17 boost input caps, west of U20
- ("BOOSTO", (-43, -70.5, -34, -48), ["C44", "C45", "C46", "C47", "C48", "C49"]), # output caps, east of U20, next to J_5V_MOD1
+ ("BOOSTO", (-44, -70.5, -33, -48), ["C44", "C45", "C46", "C47", "C48", "C49"]), # output caps, east of U20, next to J_5V_MOD1
  ("BOOSTR", (-58, -70.5, -44, -62), ["C38", "C39", "R44", "R45", "R46", "C40", "R47", "R48"]),   # FB, COMP, BOOT, VCC, FSW, ILIM parts south of U20
  ("HUB",   (-104, 50, -30, 77), ["U6", "Y1", "C16", "C17", "R19", "C18", "C19", "C20", "C21", "C22", "R20", "C23", "R21", "JP1", "R22", "R23", "R24", "R25", "LED2", "U19", "C32", "R34", "R35", "R36", "R37", "R38", "R18"]),
  ("WIFI",  (-28, 44, 4, 70), ["U7", "R26", "R40", "C34", "R27", "U8", "C24", "C25", "U9"]),

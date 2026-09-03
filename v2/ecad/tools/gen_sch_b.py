@@ -127,14 +127,14 @@ part("D1", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V", "2": "GND"})
 c("C1", "100u 10V", "+5V", "GND", "C100u"); c("C2", "100u 10V", "+5V", "GND", "C100u")
 r("R1", "1k", "+5V", "LED_5V_A"); part("LED1", "Device", "LED", "green 5V", "LED", {"2": "LED_5V_A", "1": "GND"})
 part("J_TD2", "Connector_Generic", "Conn_01x02", "Touch Display 2 5V (XH2.54)", "XH2", {"1": "+5V", "2": "GND"})
-for ref, net in (("TP1", "+5V"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "SDA"), ("TP5", "SCL"), ("TP11", "TX_INHIBIT_n")):
+for ref, net in (("TP1", "+5V"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "SDA"), ("TP5", "SCL"), ("TP11", "TX_INHIBIT_n"), ("TP12", "EXP_SPARE5"), ("TP13", "PI_GPIO_SPARE1")):
     part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
 for i, net in enumerate(("+5V", "+3V3", "GND", "5V_RTL", "5V_ZB", "5V_XIAO", "5V_RB", "5V_TC", "5V_A", "TC_FUSED", "A_FUSED", "XIAO_FUSED", "RB_FUSED"), 1):
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 # --- Pi GPIO ribbon
 part("J_GPIO1", "Connector_Generic", "Conn_02x20_Odd_Even", "Pi 5 GPIO ribbon 2x20", "IDC40", {
  "1": "+3V3", "2": "NC", "3": "SDA", "4": "NC", "5": "SCL", "6": "GND", "7": "UART2_TX", "8": "UART0_TX", "9": "GND", "10": "UART0_RX",
- "11": "BANK_ALERT", "12": "RB_XMTG", "13": "TR_APRS", "14": "GND", "15": "RB_NETAV", "16": "RB_STATUS", "17": "+3V3", "18": "RB_CTRL", "19": "SPI_MOSI", "20": "GND",
+ "11": "PI_GPIO_SPARE1", "12": "RB_XMTG", "13": "TR_APRS", "14": "GND", "15": "RB_NETAV", "16": "RB_STATUS", "17": "+3V3", "18": "RB_CTRL", "19": "SPI_MOSI", "20": "GND",
  "21": "EPD_DC", "22": "EXP_INT", "23": "SPI_SCLK", "24": "SPI_CE0", "25": "GND", "26": "EPD_RES_ALT", "27": "NC", "28": "NC", "29": "UART2_RX", "30": "GND",
  "31": "NC", "32": "PANEL_PWM", "33": "PWM1", "34": "GND", "35": "DCF_PON", "36": "NC", "37": "RB_IEN", "38": "NC", "39": "GND", "40": "DCF_T"})
 # --- hub
@@ -270,7 +270,7 @@ def emit_pwr_flag(p, x, y):
     else: label(net, x, y + STUB, 270)
 
 # layout: columns, top-down cursor; group order = list order with section titles
-SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_IN1", "J_5V_MOD", "D1", "C1", "C2", "R1", "LED1", "J_TD2", "TP1", "TP2", "TP3", "TP4", "TP5", "TP11", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05", "#FLG06", "#FLG07", "#FLG08", "#FLG09", "#FLG10", "#FLG11", "#FLG12", "#FLG13"]),
+SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_IN1", "J_5V_MOD", "D1", "C1", "C2", "R1", "LED1", "J_TD2", "TP1", "TP2", "TP3", "TP4", "TP5", "TP11", "TP12", "TP13", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05", "#FLG06", "#FLG07", "#FLG08", "#FLG09", "#FLG10", "#FLG11", "#FLG12", "#FLG13"]),
             ("Pi 5 GPIO RIBBON", ["J_GPIO1"]),
             ("USB 2.0 HUB FE1.1s + UPSTREAM PORTS", ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "R3", "C11", "R4", "JP1", "R5", "R6", "R7", "R8", "LED2", "J_USB_UP1", "R9", "R10", "U2", "J_USB_UP2", "R11", "R12", "U3"]),
             ("CH1 SDR BAY: RTL-SDR V4 or LimeSDR Mini 2.0  (0x40)", ["U4", "R13", "R30", "C33", "R14", "U5", "C12", "C13", "J_RTL1", "U6"]),

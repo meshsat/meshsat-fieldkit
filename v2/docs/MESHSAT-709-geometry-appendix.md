@@ -2063,3 +2063,104 @@ State at close-out: every board routes clean (0 unrouted, 0 hard DRC), the legen
 The gate before payment, in order: the owner's paper fit check on the 1:1 prints; the X1202 bench items of ASSEMBLY.md section 8 (MESHSAT-774); the two reviews (Nick Panagiotopoulos, 12 September; Kyriakos Pavlidis, KiCad files from the public repository); one more verification round on the final files, written as section 32 with the posture of sections 23 to 30 (what was checked, what closed, what stays open, what the owner decides). Board changes after that go into the generators first, then through the pipeline, then to the ordering session as a list of cart lines to rebuild.
 
 Open beyond the gate: the case purchase (Peli 1520EU without foam, orange, with the 1520PF frame), the SMP blind-mate set for Rev B (25.2, MESHSAT-775), the DMR858M bring-up when the modules arrive (MESHSAT-748), the JLCPCB sponsorship answer (MESHSAT-776), the panel software (PANEL.md, MESHSAT-773).
+
+## 32. Document check in place of the paper fit check, the X1202 envelope, the 5 V budget and the module rail, 2026-09-03 night (ECAD session, owner interactive)
+
+Posture: the owner's printer is dead, and the owner asked three things: why a paper check was needed when manufacturers publish drawings; what the MESHSAT-774 bench items were for and why the design should not instead be robust to the unknowns; and what SMP blind-mate is and which set to review. This section records the answers, the two rulings that came out of them, the defects the document check found, and the board changes those defects and rulings cause (A17, B11). Sources: `v2/vendor/` as extended tonight (`rpi5/`, `x1202/`, `tcall/`, `rf/`), the generators, the A16 and B10 board files, and Geekworm's wiki as archived by the Wayback Machine on 9 May 2026 (the live wiki answers HTTP 400 to anything but a browser, from the runner and from the laptop alike).
+
+### 32.1 Ruling: the paper fit check is struck; the gate item becomes a document check plus part identities
+
+Owner ruling 3 Sep 2026, 22:20: the paper fit check of section 31 is replaced by a check of every COTS site against the manufacturer's own document, plus the owner naming the exact product and version of each module from the purchase records. No measurement of any COTS part is asked of the owner.
+
+| Part | Document | Board | Result |
+|---|---|---|---|
+| Raspberry Pi 5 | `rpi5/raspberry-pi-5-mechanical-drawing.pdf`: 85 x 56, holes Ø2.7 on 58 x 49, 3.5 mm from the edges | B10 stack pattern 49 x 58, Ø2.7 | match |
+| Geekworm X1202 | `x1202/X1202-pcb-V1.1.dxf` and the archived wiki: PCB 96.0 x 85.0, R3 corners; Pi-pattern holes at (42.8, 3.5), (42.8, 61.5), (91.8, 3.5), (91.8, 61.5) in the DXF frame; two more holes at X 3.05; pogo pins at X 94, Y 9 to 25; USB-C input on the X 96 edge at Y 52; DC jack, two XH 5 V outputs and the switch pins on the X 0 to 28 strip; four 18650 holders underneath spanning X 8 to 88 | B10: 85 x 97 box centred on the Pi | **mismatch, 32.2** |
+| LilyGO T-Call A7670 | `tcall/T-Call-A7670-ESP32.dxf` and `T-Call-A767X-ESP32.png` (LilyGo-Modem-Series; one drawing serves V1.0 and V1.1, which differ in pin wiring only): 74.78 x 29.01, four R1.5 corner holes on 69.46 x 24.97 (the other edge pair reads 69.53 x 25.01) | B10 site 74.78 x 29.01, Ø3 on 69.46 x 24.97 | match; the "confirm on the board" note of 15.1 is closed by the document. The owner's order (LilyGO official store, 4 Mar 2026, "T-Call A7670E", code H700) names the board |
+| RockBLOCK 9704 bracket | `rockblock/rb9704-sma-dims.pdf` Rev A: 52.0 x 56.0, four Ø4.60 on 32.00 x 32.00 | B10 site, same numbers | match |
+| Sonoff ZBDongle-P | Sonoff hardware specification page: 87 x 25.5 x 13.5 | B10 site 87 x 25.5, tie slots | match |
+| Alfa AWUS036ACM, RTL-SDR Blog V4, u-blox puck | no manufacturer drawing exists; Alfa's sheet gives 62 x 85.3 x 24 with the antennas | slot-and-tie sites | no action, the sites forgive 5 mm |
+| Peli 1520, Touch Display 2, WeAct 3.7, DMR858M, TRACO, RockBLOCK STEP, T-Beam, Wio-SX1262 | in the repository since the design | probed in sections 14, 15, 22.6 and 25 | already document checks |
+
+Vendor folder defect found and fixed: `tcall/tcall-a7670x-3d.stp` was LilyGO's `T-A7670X-Board-3D.stp`, the model of the T-A7670X (an 18650-holder board, internally the SIM7000G PCB, 33 x 110, no mounting holes), filed under a T-Call name, while the T-Call drawing the design was read from was not in the repository. The STEP now carries its real name and the drawing is filed (commit 8f6e116).
+
+Still to be named by the owner, no measurement involved: the panel switches (the holes are the class standards, 19.2, 16.2 and 6.5 mm), the SMA female-female bulkhead coupler for E2 (32.5), the dock spring pin (32.6). The X1202 hardware version is recorded nowhere in the repository, the V1 documents or the software repository; Geekworm's wiki has shown only the V1.1 board since spring 2024 and the kits were built in 2026, so B11 goes by the V1.1 DXF.
+
+### 32.2 Finding AJ: the X1202 envelope on B10 was a placeholder, and the real board covers the ribbon header, the SDR receptacle and 22 small parts
+
+The design carried the X1202 as an 85 x 97 box centred on the Pi (section 6, from the CAD config, "visualisation placeholders rather than detailed geometry"), and nothing after that checked it against a Geekworm document; the wiki was read for the electrical figures only (item 11 of section 10). Geekworm's DXF says: 96 x 85, the Pi flush on one long edge (0.7 mm of X1202 beyond the Pi's HDMI edge), 39.3 mm of X1202 beyond the Pi's GPIO-header edge, and the four 18650 holders underneath spanning the whole width, so the cells sit at carrier-board level under the entire outline, extension included. On the X1202 the DC jack, the two XH 5 V outputs and the external-switch pins sit on that extension, on top.
+
+On B10 the ribbon breakout J_GPIO1 sits east of the Pi, so the Pi's header edge faces east and the real X1202 covers X -107.2 to -11.2 at |Y| up to 42.5. In that zone B10 carries J_GPIO1 (2x20 IDC), J_RTL1 (the SDR USB-A receptacle), J_TCALL1 and about 22 parts of the eFuse and monitor cluster (U4 to U6, U13 to U17, F2, JP4 and their passives). Turning the stack around puts the 39.3 mm off the board edge. Either way B10 cannot host the module it was drawn for. Class: PCB-B re-placement and re-route, B11 (32.4).
+
+This is exactly the defect the paper check was meant to catch. The document check found it in an hour, once the document was in the repository; the record's earlier "match" on the outline size alone (given to the owner this afternoon) was wrong and is withdrawn here.
+
+### 32.3 Ruling: the kit's 5 V comes from a node-fed module rail (option B); the X1202 keeps the Pi
+
+The owner asked whether the design could be made robust to the X1202's undocumented figures instead of measuring them. It can, and the answer changed the design.
+
+| Unknown of MESHSAT-774 | How the design absorbs it |
+|---|---|
+| Charge current, 2.3 to 3.2 A per Geekworm | any value in that range works: E1 gives 40 W, charging takes at most 15 W; it only sets the charge time, 13 to 18 h for 42 Ah |
+| Charger safety timer | Geekworm documents GPIO 16 as charge enable (high = disabled); a bridge rule cycles it while an input is present and the node is not full (PANEL.md section 10); the 4.1 V recharge threshold covers the rest |
+| Over-current trip | the pack and the APRS boost hang on the holder tabs, the cell terminals, upstream of anything the X1202 protects, and A16 fuses both leads; the X1202's own protection only carries what Geekworm rates it for |
+| GPIO 6 power-loss line | documented on the wiki hardware page: pin 31, low when the supply fails, high when it is fine |
+| Tab solder points, gauge with twelve cells | the tab pads are in the DXF; the MAX17040 gauge is voltage-based and needs no capacity setting |
+
+The exposure that remained was the 5 V output rating. After 25.6 every 5 V load in the kit hung on the X1202's one 5.1 V 5 A output: the Pi about 1.5 A, the display 0.7, the panel 0.5, PCB-A's feed 0.8, PCB-B's modules 0.9 continuous with LTE 2.0, Iridium 1.0 and LoRa 1.3 A bursts; about 3.8 A continuous, 5.8 A with the bursts serialised, 8 A without. What the X1202 does above 5 A is undocumented.
+
+Owner ruling 3 Sep 2026, 22:35, option B: a boost stage from the cell node feeds a 5 V module rail and the X1202 feeds only the Pi. Because one rail cannot be fed from two sources, the split is by board, not by load: the whole of PCB-B (modules, hub, display lead, panel polyfuse) and PCB-A's four channel switches run on the module rail; the X1202's XH output becomes a sense line that enables the boost, so the rail dies when the X1202 shuts the kit down. Ruling 25.6 is amended accordingly: "no boost" meant no boost in the charge path; a boost from the node to a load rail is the same pattern as the 8 V APRS boost of 18.1 and is allowed.
+
+Numbers: continuous rail load about 2.2 A; serialised burst peak about 4.2 A; unserialised about 6.5 A. The boost is the TPS61089 already on PCB-D (symbol, footprint and LCSC match exist): RILIM 100 k gives 10 A typical, 9 A minimum peak, the part's maximum, with 7 A continuous switch current, so 5.05 V at about 4.2 A continuous from 3.3 V cells, about 5.5 A from 3.6 V, bursts to the current limit. The serialised case is covered over the whole discharge and the unserialised case above about 3.8 V; beyond that the module rail sags, never the Pi. The X1202 carries about 1.5 to 2.5 A of its 5 A. On the dock the X1202 input converter's 5.5 A no longer feeds the modules, so the node charges at full rate with the kit running, which closes 23.5 for good. The TPS61288 (15 A peak, 35 W, LCSC C5219223) is the Rev B option if the unserialised case is ever wanted in hardware; it needs a HotRod footprint drawn from its land pattern, which is why it was not chosen tonight.
+
+Two software rules stay as belt and braces (PANEL.md section 10): the charge kick, and the serialisation of LTE, Iridium and LoRa transmissions. Nothing is measured before payment. The bench list of ASSEMBLY.md section 8 becomes a commissioning list of the built kit.
+
+### 32.4 What A17 and B11 change
+
+A17 (`gen_sch_a.py`, `gen_pcb_a.py`, `gen_pcb_a3.py`, `check_pcb_a.py`, `fix_a17_node.py`, `full_a6.sh`):
+- F3, 15 A mini blade in a Keystone 3568 holder at (-32, -44), pack node to BOOST_CELL; the CELL+ bar of `fix_a17_node.py` runs from the pack pad's west detour south to F3's node pad, and a 2.5 mm BOOST_CELL bar from F3 to the inductor where the copper allows.
+- U20 TPS61089 at (-47, -58), L2 XAL6030-152 (1.5 uH, 12 A) at (-47, -50), input capacitors 2 x 22 uF west of U20, output capacitors 4 x 22 uF plus 100 uF east of it, FB 63.4 k / 20 k for 5.05 V, FSW 301 k (500 kHz), ILIM 100 k, COMP 17.4 k + 4.7 nF, BOOT 100 nF, VCC 1 uF; EN from X1202_5V through 10 k with 100 k to ground (EN absolute maximum 7 V).
+- J_5V_MOD1, JST-VH at (-29, -63): +5V_MOD and GND to PCB-B.
+- The four TPS2065 channel switches and their decoupling take +5V_MOD; the In2 plane becomes +5V_MOD; +5V, the logic supply from PCB-B's channel A over the ribbon (about 0.3 A, hub, expander, LDO), is routed. J_AB1 pin 12 is X1202_5V (it was BANK_ALERT, idle since A15); R12 is gone. Net class BOOST (1.5 mm, 0.2 mm clearance) for BOOST_CELL and SW5. Silk: A17, 2026-09-04.
+
+B11 (`gen_sch_b.py`, `gen_pcb_b.py`, `gen_pcb_b3.py`, `check_pcb_b.py`, `full_b5.sh`):
+- The stack moves 10 mm west: STACK_C (-88.5, 0), the Pi at X -116.5 to -60.5, holes at (-113, +-29) and (-64, +-29). Orientation fixed and on the silk: HDMI long edge west, GPIO-header edge east, SD-card end south, so the X1202's USB-A sockets overhang south (9 mm; the hub zone starts 0.3 mm beyond) and its DC jack sits at the north-east corner facing east, 8 mm short of the T-Call site.
+- X1202 envelope (-117.2, -42.5) to (-21.2, 42.5) from the DXF; nothing but the four standoff holes inside it. `check_pcb_b.py` fails on any footprint overlapping it, and `full_b5.sh` runs that check again after placement.
+- J_GPIO1 moves to (-52, 48.5) with its pins along X, north of the stack between the XIAO site and the T-Call pigtail header. The SDR, T-Call and RockBLOCK small-part regions start at X -20 or -19. The X1202 USB-C cable slot and its keep-out are gone (no such cable since 25.15).
+- J_5V_IN2 becomes J_5V_MOD, a JST-VH at (-92, -68): +5V for the whole board from A17. J_5V_IN1 stays an XH at (-92, -58) and carries X1202_5V, the sense line, to J_AB1 pin 12. The expander's pin 17 (was BANK_ALERT) is spare.
+- Everything else on B10 is unchanged; the +5V plane, the channel switches, the panel polyfuse and the display lead are as before, fed from the VH.
+
+Stack standoffs: four M2.5 x 22 mm female-female on the Pi pattern, the X1202 underside clear of the carrier by its holder height; the DXF carries no heights, so the length is confirmed against the module before the standoffs are bought (ASSEMBLY.md section 1).
+
+### 32.5 E2: the D-hole flat does not match a standard SMA bulkhead
+
+`gen_pcb_e2.py` cuts Ø6.5 with the flat 3.0 mm from the centre, 6.25 mm across the flat. A standard SMA bulkhead thread is 1/4-36 (6.35 mm) with a D-flat of about 5.6 mm across, so the flat would not lock the coupler against rotation; the coupler still passes and clamps between its nuts. The fix is one number once the coupler is named, the flat distance taken from the part's drawing. Documented candidates: Amphenol RF 132170 and Cinch 142-0901-401, both SMA jack-to-jack bulkhead feed-throughs; the L-com BA21 wants a 7.62 mm D-hole and does not fit. E2 stays in the cart as it is until then; it is the cheapest line to rebuild.
+
+### 32.6 Dock spring pins: the A16 footprint names a Mill-Max series it does not fit
+
+`meshsat:PogoPins_2x4` has Ø1.5 through holes at 2.54 mm pitch. The Mill-Max 0906 series named in 25.5 is a standard-tail pin with a 0.508 mm mounting hole; the through-hole series (0921, 0926, 0975) want 1.78 to 2.31 mm holes. The pin is picked from a datasheet and the footprint drill follows it as a post-route pad edit on A17 (a drill change moves no copper); the E1 targets (2.0 mm pads) are unaffected.
+
+### 32.7 SMP blind-mate for Rev B, MESHSAT-775: what it is and which set to review
+
+Today the seven antenna paths reach the stack through the E2 strip, seven SMA couplers unscrewed by hand before the stack lifts out. Blind-mate means the RF joints close by themselves when the stack lands on the dock, as the spring pins close the DC: two receptacles face each other, one under PCB-A and one on E1, and a short bullet between them slides into both, tilting and sliding enough that the boards need no better alignment than the rods give. SMP is the MIL-STD-348 push-on interface for this; SMP-MAX is Radiall's version for badly aligned boards.
+
+| Set | Axial tolerance | Tilt | Minimum board gap | Cycles | Power | Verdict |
+|---|---|---|---|---|---|---|
+| Radiall SMP-MAX: R222M00080 snap-on receptacle, R222M00720 slide-on receptacle, R222M40010 adapter 9.5 mm (`vendor/rf/`, series catalogue and adapter sheet) | 2.0 mm | 3 degrees | 13 mm | 100 | over 300 W at 2.7 GHz | review first |
+| Amphenol RF SMP: SMP-FS-LDPCT limited detent, SMP-MSSB-PCS smooth bore, SMP-FSBA-645 bullet 6.45 mm (Amphenol's site refuses non-browser clients; the owner downloads) | 0.25 mm total | about 4 degrees | about 11 to 12 mm, drawing needed | 500 (limited detent) | ample at 144 MHz | alternative |
+| Rosenberger 19S102-40ML5 (`vendor/rf/`) | as SMP | | | 500 | | drop: quote only, reels of 3000 |
+| LCSC C7333735 = Radiall R222M00160 | an SMP-MAX receptacle | | | | | out of stock at USD 15.57; buy the R222M parts from Digikey, RS or Mouser |
+
+Why SMP-MAX first: the stack's height over the dock is set by two board thicknesses, the spacer and the rod nuts, which together vary by a few tenths of a millimetre, and its sideways position by the rods, about 0.3 mm. SMP tolerates 0.25 mm axial in total, which the stack cannot promise; SMP-MAX tolerates 2 mm, covers all seven paths up to the 5.8 GHz WiFi band, and carries the 5 W VHF with a hundredfold margin. Its price: 100 mating cycles instead of 500 (still decades of removals), the dock gap grows from 6 to 13 mm (inside the 9.3 mm spare of 25.1, with longer spring pins), and lifting the stack pulls seven slide-on joints at up to 9 N each, about 6 kg on top of the stack's weight. Snap-on receptacles go on the dock and keep the adapters; slide-on receptacles go under PCB-A and let go. Budget roughly EUR 40 per path at distributor prices, about EUR 280 per kit, to be checked on Mouser. Decision owed by the owner at Rev B time: the family, and the 13 mm gap.
+
+### 32.8 The gate after this section
+
+| # | Board | Item | State | Owner |
+|---|---|---|---|---|
+| 1 | all | paper fit check | **struck** (32.1), replaced by the document check above | done |
+| 2 | kit | MESHSAT-774 bench items before payment | **closed by design** (32.3); the commissioning list is ASSEMBLY.md section 8 | done |
+| 3 | A, B | A17 and B11 through the chain, route, finish, handoff | in progress tonight, result in 32.9 | Claude, laptop |
+| 4 | C, E2, A | part identities: switches, coupler, spring pin | open; the owner names them or Claude picks documented parts (32.5, 32.6) | owner or Claude |
+| 5 | order | cart lines A and B rebuilt | when the owner says so ("we update the order when the time comes") | owner |
+| 6 | kit | reviews: Nick 12 Sep (agenda: 28.6 item 2 restated, plus 32.3), Pavlidis on the public repository | as planned | owner |
+| 7 | kit | JLCPCB sponsorship (776), case ordered 3 Sep, DMR858M modules about 15 Sep | as planned | owner |
+| 8 | Rev B | SMP-MAX or SMP (32.7), the 13 mm gap | owner decision at Rev B time | owner |
