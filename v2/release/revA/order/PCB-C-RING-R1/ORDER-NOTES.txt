@@ -12,5 +12,5 @@ ASSEMBLY
 - Fitted at the bench: bare 1.0 mm FR-4 frame, no copper, black: taped between the WeAct 3.7 module lands and the PCB-C underside so the glass ends flush; four Ø3.2 holes match the module for alignment pins
 
 SOURCE
-- Deliverable folder: ~/Downloads/meshsat-pcb/meshsat-pcb-c-ring-revA-R1 (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
-- Design record: docs/hardware/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-c-ring-revA-R1 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709

@@ -2,7 +2,7 @@
 
 Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying the real devices on paper; the copper sheets and the assembly drawings are for the design review (appendix section 21.3 / 22.4: the six order-gate items are the agenda).
 
-## PCB-A POWER + I/O Rev A (A16), folder `PCB-A-POWER-A16/`, 285 x 160 mm, 4 layers
+## PCB-A POWER + I/O Rev A (A17), folder `PCB-A-POWER-A17/`, 285 x 160 mm, 4 layers
 
 - `pcb-a-power-1to1-top.pdf`, `pcb-a-power-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-a-power-assembly-top.pdf`, `pcb-a-power-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -10,7 +10,7 @@ Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying 
 - `pcb-a-power-render-top-A4.png`, `pcb-a-power-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-a-power-schematic.pdf`: full schematic; `pcb-a-power-drc.rpt`: the DRC report of the exported board
 
-## PCB-B COMPUTE Rev A (B10), folder `PCB-B-COMPUTE-B10/`, 245 x 170 mm, 4 layers
+## PCB-B COMPUTE Rev A (B11), folder `PCB-B-COMPUTE-B11/`, 245 x 170 mm, 4 layers
 
 - `pcb-b-compute-1to1-top.pdf`, `pcb-b-compute-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-b-compute-assembly-top.pdf`, `pcb-b-compute-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -26,7 +26,7 @@ Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying 
 - `pcb-c-display-render-top-A4.png`, `pcb-c-display-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-c-display-schematic.pdf`: full schematic; `pcb-c-display-drc.rpt`: the DRC report of the exported board
 
-### Official Raspberry Pi documents for the Touch Display 2 (7-inch), copied from `ECAD/vendor/td2-docs/`
+### Official Raspberry Pi documents for the Touch Display 2 (7-inch), kept in `v2/vendor/td2/` (not copied into this folder)
 
 Raspberry Pi publishes no schematic for the Touch Display 2 (the driver board is closed) and no separate mechanical-drawing PDF; the drawing is a page inside the 2024 and 2025 product-brief editions, and the 3D geometry is the STEP model. The 2026 editions ("7-inch Portrait") carry photos, specification and safety text only.
 

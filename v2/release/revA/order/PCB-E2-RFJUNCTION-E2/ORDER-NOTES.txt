@@ -12,5 +12,5 @@ ASSEMBLY
 - Fitted at the bench: bare board, no assembly: seven SMA female-female bulkhead couplers in the D-holes (UHF SDR WIFI1 WIFI2 LTE IRID LORA), six M3 into the 1520 +Z wall drill points
 
 SOURCE
-- Deliverable folder: ~/Downloads/meshsat-pcb/meshsat-pcb-e2-revA-E2 (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
-- Design record: docs/hardware/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-e2-revA-E2 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709

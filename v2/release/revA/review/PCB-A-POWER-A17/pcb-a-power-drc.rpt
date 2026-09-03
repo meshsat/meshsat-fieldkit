@@ -1,0 +1,325 @@
+** Drc report for pcb-a-power.kicad_pcb **
+** Created on 2026-09-04T00:03:55+0200 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 104 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(118,0000 mm, 147,0000 mm): Segment on F.Silkscreen
+    @(117,7000 mm, 118,0000 mm): Reference field of J_PACK
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(205,0000 mm, 33,5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A17)' on F.Silkscreen
+    @(260,5000 mm, 37,0000 mm): Circle on F.Silkscreen
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(100,2500 mm, 167,6380 mm): Via [/BST5_VCC] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(117,5000 mm, 121,6000 mm): Track [/CELL+] on F.Cu, length 34,1000 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(58,9750 mm, 37,0000 mm): Via [/HUB_TESTJ] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(183,4250 mm, 146,1050 mm): Via [/SW_GPS] on F.Cu - B.Cu
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_MOD plane In2 (A17 module rail; +5V is the ribbon logic supply, routed)' [+5V_MOD] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(112,0000 mm, 134,0000 mm): Zone 'CELL+ pour In2 (pack node)' [CELL+] on In2.Cu, priority 1
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

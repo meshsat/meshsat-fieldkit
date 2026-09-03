@@ -1,0 +1,46 @@
+Comment,Designator,Footprint,LCSC Part #
+100u 10V,"C1,C2",C_1206_3216Metric,
+22p,"C3,C4",C_0603_1608Metric,C1653
+100n,"C5,C7,C9,C12,C14,C16,C18,C21,C24,C26,C33,C34",C_0603_1608Metric,C14663
+1u,"C6,C8,C11,C29-C32",C_0603_1608Metric,C15849
+10u,"C10,C13,C15,C17,C19,C22,C25",C_0805_2012Metric,C15850
+1n,"C20,C23,C27,C28",C_0603_1608Metric,
+SMBJ5.0A,D1,D_SMB,
+2A hold 1812,"F2,F4,F5",Fuse_1812_4532Metric,
+1.1A hold 1812,F3,Fuse_1812_4532Metric,
+0.5A hold 1812,F6,Fuse_1812_4532Metric,
+BUSJ to GND = bus-powered,JP1,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+UART TX select: A=UART2 (BCM4) B=UART0 (BCM14),JP3,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
+UART RX select: A=UART2 (BCM5) B=UART0 (BCM15),JP4,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
+"X1202 5 V OUT sense (XH2.54): enables the module-rail boost on PCB-A over J_AB1.12, 110k load only",J_5V_IN1,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+"5 V module rail from PCB-A J_5V_MOD1 (JST-VH, 18 AWG): + -",J_5V_MOD?,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"A-B interconnect (IDC 2x7, underside)",J_AB1,IDC-Header_2x07_P2.54mm_Vertical,
+DCF77 remote (XH2.5): 3V3 GND T P1,J_DCF77,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,
+Pi 5 GPIO ribbon 2x20,J_GPIO1,IDC-Header_2x20_P2.54mm_Vertical,
+panel ribbon to PCB-C (IDC 2x10),J_PANEL?,IDC-Header_2x10_P2.54mm_Vertical,
+RockBLOCK 9603 PicoBlade 10,J_RB9603,Molex_PicoBlade_53047-1010_1x10_P1.25mm_Vertical,
+RockBLOCK 9704 16-pin (IDC 2x8),J_RB9704,IDC-Header_2x08_P2.54mm_Vertical,
+USB-A receptacle RTL-SDR,J_RTL1,USB_A_Stewart_SS-52100-001_Horizontal,
+USB-C pigtail header (JST-PH 2.0): VBUS D- D+ GND,"J_TBEAM1,J_TCALL1,J_XIAO1",JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical,
+Touch Display 2 5V (XH2.54),J_TD2,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+USB-C 2.0 receptacle,"J_USB_UP1,J_USB_UP2",USB_C_Receptacle_HRO_TYPE-C-31-M-12,C165948
+USB-A receptacle ZigBee,J_ZB1,USB_A_Stewart_SS-52100-001_Horizontal,
+green 5V,LED1,LED_0603_1608Metric,C72043
+amber hub,LED2,LED_0603_1608Metric,
+2N7002 (SOT-23) OnOff open-drain buffer,Q1,SOT-23,
+1k,"R1,R8",R_0603_1608Metric,C21190
+"2.7k 1% (REXT, verify datasheet)",R2,R_0603_1608Metric,
+10k,"R3-R6,R13,R15,R17,R20,R25,R28,R29",R_0603_1608Metric,C25804
+4.7k,R7,R_0603_1608Metric,C23162
+5.1k,R9-R12,R_0603_1608Metric,C23186
+0.1R 1% 1206,"R14,R16",R_1206_3216Metric,
+0.05R 1% 1206,"R18,R21,R22,R24",R_1206_3216Metric,
+100R,R26,R_0603_1608Metric,C22775
+100k,"R27,R30-R35",R_0603_1608Metric,C25803
+FE1.1s,U1,SSOP-28_5.3x10.2mm_P0.65mm,C2848
+USBLC6-2SC6,"U2,U3,U6,U9,U12,U17",SOT-23-6,C7519
+TPS2065CDBV,"U4,U7",SOT-23-6,
+INA219AIDCN,"U5,U8,U11,U14,U16,U19",SOT-23-8,C138024
+TPS22810DRV,"U10,U13,U15,U18",WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm,
+PCA9555PW,U20,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+12 MHz 3225,Y1,Crystal_SMD_3225-4Pin_3.2x2.5mm,

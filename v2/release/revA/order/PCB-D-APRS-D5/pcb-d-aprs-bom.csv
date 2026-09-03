@@ -14,7 +14,6 @@ red,D2,LED_0603_1608Metric,C2286
 harness to PCB-A J_MEZZ1 (IDC 2x8); UART pair and PCB-A 3V3 unused,J_HARN1,IDC-Header_2x08_P2.54mm_Vertical,
 cell node from PCB-A J_MEZZ_PWR (JST-VH),J_PWR1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
 SWD/DFU 1.27 mm: BOOT0 SWO NRST SWDIO GND SWCLK 3V3 (short 1-7 = DFU),J_SWD1,PinHeader_1x07_P1.27mm_Vertical,
-"1.5uH XAL6030-152MEB (Isat 12 A, 5.6 mOhm)",L1,L_Coilcraft_XAL6030-XXX,
 "BC847 (PTT2, spare)",Q1,SOT-23,
 BC847 (PTT to the module),Q2,SOT-23,
 2N7002 (EMCON inhibit in Q2 emitter),Q3,SOT-23,
