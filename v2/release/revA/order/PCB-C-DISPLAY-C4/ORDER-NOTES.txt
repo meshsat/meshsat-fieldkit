@@ -7,10 +7,11 @@ PCB
 - Impedance control: none (no controlled-impedance nets)
 - Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
 
-ASSEMBLY (economic or standard PCBA, both sides)
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
 - BOM: pcb-c-display-bom.csv (40 lines, 19 with an LCSC number, the rest must be matched in the JLC parts library at order time)
 - CPL: pcb-c-display-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
 - Parts on the TOP side: 18, on the BOTTOM side: 70
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
 - Not assembled by JLC, fitted at the bench: Touch Display 2 through the aperture on 0.05 mm transfer tape (3M 467MP / 9495LE), connector end to port; SW_MAIN 19 mm green ring, SW_PI 16 mm amber ring, SW_TEST 16 mm white ring (IP67 anti-vandal, flying leads to the four pads); SW_LIGHT DPDT ON-ON-ON sealed toggle; SW_SOS / SW_EMCON / SW_ZERO guarded toggles with red covers; WeAct 3.7 e-paper module under the panel: glass into the recessed window, both PCB lands taped (3M 9495LE), optional 1.0 mm spacer ring for a flush face, 2x4 lead to J_EPD; 16 x M3 frame screws with the GND ring pads; XH leads from J_X1202SW and J_PIJ2
 

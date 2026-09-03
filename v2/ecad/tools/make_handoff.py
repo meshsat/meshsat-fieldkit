@@ -90,10 +90,11 @@ for folder, stem, prj, title, phase, hand in BOARDS:
              "- Impedance control: %s" % ("USB 2.0 pairs %s designed 0.2 mm track / 0.15 mm gap on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup" % ", ".join(diff) if diff else "none (no controlled-impedance nets)"),
              "- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more", ""]
     if assembled:
-        notes += ["ASSEMBLY (economic or standard PCBA, both sides)",
+        notes += ["ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)",
                   "- BOM: %s-bom.csv (%d lines, %d with an LCSC number, the rest must be matched in the JLC parts library at order time)" % (stem, nl, lcsc),
                   "- CPL: %s-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview" % stem,
                   "- Parts on the TOP side: %d, on the BOTTOM side: %d%s" % (len(top), len(bot), (" (" + ", ".join(sorted(f.GetReference() for f in bot))[:200] + ")") if bot and len(bot) <= 40 else ""),
+                  "- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).",
                   "- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): %s" % ("; ".join(removed) if removed else "none"),
                   "- Not assembled by JLC, fitted at the bench: %s" % hand, ""]
     else:

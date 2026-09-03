@@ -7,10 +7,11 @@ PCB
 - Impedance control: none (no controlled-impedance nets)
 - Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
 
-ASSEMBLY (economic or standard PCBA, both sides)
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
 - BOM: pcb-e1-dock-bom.csv (14 lines, 6 with an LCSC number, the rest must be matched in the JLC parts library at order time)
 - CPL: pcb-e1-dock-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
 - Parts on the TOP side: 15, on the BOTTOM side: 0
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
 - Not assembled by JLC, fitted at the bench: TRACO TEN 40-2412WIN, Keystone 3568 holder + 7.5 A mini blade, JST-VH shore lead from the IP68 bulkhead, four VHB pads to the floor, the two south rods through H1/H2; the EL817 optocoupler U2 is JLC-fitted
 

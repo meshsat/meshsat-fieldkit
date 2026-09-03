@@ -7,10 +7,11 @@ PCB
 - Impedance control: USB 2.0 pairs /USB_A_N, /USB_A_P, /USB_RTL_N, /USB_RTL_P, /USB_TC_N, /USB_TC_P, /USB_UP_N, /USB_UP_P, /USB_XIAO_N, /USB_XIAO_P, /USB_ZB_N, /USB_ZB_P designed 0.2 mm track / 0.15 mm gap on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup
 - Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
 
-ASSEMBLY (economic or standard PCBA, both sides)
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
 - BOM: pcb-b-compute-bom.csv (42 lines, 16 with an LCSC number, the rest must be matched in the JLC parts library at order time)
 - CPL: pcb-b-compute-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
 - Parts on the TOP side: 122, on the BOTTOM side: 1 (J_AB1)
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
 - Not assembled by JLC, fitted at the bench: Pi 5 + X1202 stack on four M2.5 x 22 standoffs (Pi HDMI edge west, header edge east, SD card south; nothing under the X1202), XH sense lead from the X1202 5 V output to J_5V_IN1, T-Call, T-Beam 1W, RTL-SDR / LimeSDR Mini, ZigBee dongle, RockBLOCK 9603 / 9704 with the GC bracket, Wio-SX1262, the 2x10 panel ribbon on J_PANEL
 

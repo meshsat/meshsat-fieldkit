@@ -7,10 +7,11 @@ PCB
 - Impedance control: USB 2.0 pairs /USB_A_N, /USB_A_P, /USB_CODEC_N, /USB_CODEC_P, /USB_GPS_N, /USB_GPS_P, /USB_UART_N, /USB_UART_P, /USB_WIFI_N, /USB_WIFI_P designed 0.2 mm track / 0.15 mm gap on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup
 - Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
 
-ASSEMBLY (economic or standard PCBA, both sides)
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
 - BOM: pcb-a-power-bom.csv (43 lines, 21 with an LCSC number, the rest must be matched in the JLC parts library at order time)
 - CPL: pcb-a-power-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
 - Parts on the TOP side: 113, on the BOTTOM side: 0
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
 - Not assembled by JLC, fitted at the bench: welded 1S8P pack strapped through the slots (XT60 to J_PACK), 15 A mini blades in F1 and F3 and a 10 A in F2, VH lead from J_5V_MOD1 to PCB-B J_5V_MOD (module rail), 16 AWG lead from J_X1202BAT to the X1202 B+/B- holder tabs, 8 spring pins in J_DOCK (underside), XH lead from J_X1202DC to the X1202 barrel, GPS puck, WiFi dongle, PCB-D on its four M3 standoffs, harness ribbons
 
