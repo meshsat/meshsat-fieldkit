@@ -207,8 +207,8 @@ n = 5
 for (x, y) in STACK_HOLES:
     hole("H%d" % n, x, y, 2.7, "M2.5 standoff, Pi/X1202 stack"); n += 1
 rect(X1202_RECT, pcbnew.F_SilkS, 0.12); rect(PI_RECT, pcbnew.Dwgs_User, 0.1)
-text("GEEKWORM X1202 V1.1 (96 x 85) + Pi 5 + cooler on 4x M2.5 x 22 standoffs (49 x 58): Pi HDMI edge WEST, header edge EAST, SD card SOUTH", STACK_C[0] + 19.0, 40.0, pcbnew.F_SilkS, 1.1, 0.18)
-text("cells hang under the whole X1202 to board level: NO PART inside this outline; DC jack NE corner faces +X; USB-A sockets overhang the south edge 9 mm", STACK_C[0] + 19.0, -40.0, pcbnew.F_SilkS, 1.0, 0.18)
+text("X1202 V1.1 96x85 + Pi 5 + cooler on 4x M2.5x22 (49x58); Pi HDMI edge WEST, header edge EAST, SD card SOUTH", STACK_C[0] + 19.5, 40.0, pcbnew.F_SilkS, 0.9, 0.16)
+text("NO PART under the X1202 (cells at board level); DC jack NE corner faces +X; USB-A sockets overhang south 9 mm", STACK_C[0] + 19.5, -40.0, pcbnew.F_SilkS, 0.9, 0.16)
 # ribbon header
 place("Connector_IDC", "IDC-Header_2x20_P2.54mm_Vertical", "J_GPIO1", J_GPIO[0], J_GPIO[1], "Pi 5 GPIO ribbon 2x20", rot=90)
 text("Pi 40-pin ribbon", J_GPIO[0], J_GPIO[1] + 7.5, pcbnew.F_SilkS, 1.2, 0.2)
