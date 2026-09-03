@@ -1,50 +1,51 @@
-Comment,Designator,Footprint,LCSC Part #
-active piezo 5 V 85 dB,BZ1,Buzzer_12x9.5RM7.6,
-10u,"C1,C2",C_0805_2012Metric,C15850
-100n,"C3,C4,C11-C13",C_0603_1608Metric,C14663
-10n,C5-C10,C_0603_1608Metric,C57112
-"3 mm MWARN red, sunlight viewable",D1,LED_D3.0mm,
-"3 mm MCAUT amber, sunlight viewable",D2,LED_D3.0mm,
-"3 mm TX red (RF hazard), sunlight viewable",D3,LED_D3.0mm,
-"3 mm SOSACT red, sunlight viewable",D4,LED_D3.0mm,
-"3 mm SAT green, sunlight viewable",D5,LED_D3.0mm,
-"3 mm MESH green, sunlight viewable",D6,LED_D3.0mm,
-"3 mm LTE green, sunlight viewable",D7,LED_D3.0mm,
-"3 mm GPS green, sunlight viewable",D8,LED_D3.0mm,
-"3 mm SHORE green, sunlight viewable",D9,LED_D3.0mm,
-"3 mm CHG white, sunlight viewable",D10,LED_D3.0mm,
-"3 mm MSG white, sunlight viewable",D11,LED_D3.0mm,
-"3 mm BAT1 amber, sunlight viewable",D12,LED_D3.0mm,
-"3 mm BAT2 green, sunlight viewable",D13,LED_D3.0mm,
-"3 mm BAT3 green, sunlight viewable",D14,LED_D3.0mm,
-"3 mm BAT4 green, sunlight viewable",D15,LED_D3.0mm,
-"3 mm BAT5 green, sunlight viewable",D16,LED_D3.0mm,
-BAT54 lamp-test tie,D17,D_SOD-123,C2166
-ferrite 600R,FB1-FB4,L_0603_1608Metric,C1017
-PANEL_ID strap (closed = variant B),JP1,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
-EPD RES from BCM7 instead of U2 (close to use),JP2,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
-e-paper module lead: BUSY RES D/C CS SCL SDA GND VCC,J_EPD?,PinHeader_1x08_P2.54mm_Vertical,
-"panel ribbon from PCB-B (IDC 2x10, underside)",J_PANEL?,IDC-Header_2x10_P2.54mm_Vertical,
-lead to the Pi 5 J2 power-button pads (XH2.5),J_PIJ2,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
-lead to the X1202 external-switch pins (XH2.5),J_X1202SW?,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
-AO3401A P-FET high side,Q1,SOT-23,C15127
-2N7002,Q2-Q4,SOT-23,C8545
-10k,"R1-R5,R7,R8",R_0603_1608Metric,C25804
-100k,"R6,R12,R30,R39",R_0603_1608Metric,C25803
-2.2k,R9,R_0603_1608Metric,C4190
-47R,R10,R_0603_1608Metric,C25118
-100R,"R11,R34-R38",R_0603_1608Metric,C22775
-300R,"R13-R15,R23,R28,R32",R_0603_1608Metric,C23025
-180R,"R16-R22,R24-R27",R_0603_1608Metric,C25270
-1k,R29,R_0603_1608Metric,C11702
-470R,"R31,R33",R_0603_1608Metric,C23179
-EMCON guarded latching toggle (closed = TX inhibit),SW_EMCON?,GuardedToggle_SPDT,
-"LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense)",SW_LIGHT?,PanelToggle_DPDT,
-"MAIN PWR 19 mm momentary, green ring (to X1202 external switch)",SW_MAIN?,PanelSwitch_19mm,
-"PI 16 mm recessed momentary, amber ring (to Pi 5 J2)",SW_PI?,PanelSwitch_16mm,
-SOS guarded momentary toggle (red cover),SW_SOS?,GuardedToggle_SPDT,
-"TEST/ACK 16 mm momentary, white ring",SW_TEST?,PanelSwitch_16mm,
-ZEROIZE guarded momentary toggle (hold 5 s),SW_ZERO?,GuardedToggle_SPDT,
-PCA9555PW 0x22: LEDs + switches,U1,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
-"PCA9555PW 0x23: LEDs, bar, e-paper control",U2,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
-USBLC6-2SC6 (2-line TVS),U5-U8,SOT-23-6,C7519
+"Reference","Value","Footprint","LCSC","QUANTITY"
+"BZ1","active piezo 5 V 85 dB","Buzzer_Beeper:Buzzer_12x9.5RM7.6","","1"
+"C1,C2","10u","Capacitor_SMD:C_0805_2012Metric","C15850","2"
+"C3,C4,C11-C13","100n","Capacitor_SMD:C_0603_1608Metric","C14663","5"
+"C5-C10","10n","Capacitor_SMD:C_0603_1608Metric","C57112","6"
+"D1","3 mm MWARN red, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D2","3 mm MCAUT amber, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D3","3 mm TX red (RF hazard), sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D4","3 mm SOSACT red, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D5","3 mm SAT green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D6","3 mm MESH green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D7","3 mm LTE green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D8","3 mm GPS green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D9","3 mm SHORE green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D10","3 mm CHG white, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D11","3 mm MSG white, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D12","3 mm BAT1 amber, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D13","3 mm BAT2 green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D14","3 mm BAT3 green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D15","3 mm BAT4 green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D16","3 mm BAT5 green, sunlight viewable","LED_THT:LED_D3.0mm","","1"
+"D17","BAT54 lamp-test tie","Diode_SMD:D_SOD-123","C2166","1"
+"FB1-FB4","ferrite 600R","Inductor_SMD:L_0603_1608Metric","C1017","4"
+"H1-H16","frame screw M3, GND bond","MountingHole:MountingHole_3.2mm_M3_Pad","","16"
+"JP1","PANEL_ID strap (closed = variant B)","Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm","","1"
+"JP2","EPD RES from BCM7 instead of U2 (close to use)","Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm","","1"
+"J_EPD?","e-paper module lead: BUSY RES D/C CS SCL SDA GND VCC","Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical","","1"
+"J_PANEL?","panel ribbon from PCB-B (IDC 2x10, underside)","Connector_IDC:IDC-Header_2x10_P2.54mm_Vertical","","1"
+"J_PIJ2","lead to the Pi 5 J2 power-button pads (XH2.5)","Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical","","1"
+"J_X1202SW?","lead to the X1202 external-switch pins (XH2.5)","Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical","","1"
+"Q1","AO3401A P-FET high side","Package_TO_SOT_SMD:SOT-23","C15127","1"
+"Q2-Q4","2N7002","Package_TO_SOT_SMD:SOT-23","C8545","3"
+"R1-R5,R7,R8","10k","Resistor_SMD:R_0603_1608Metric","C25804","7"
+"R6,R12,R30,R39","100k","Resistor_SMD:R_0603_1608Metric","C25803","4"
+"R9","2.2k","Resistor_SMD:R_0603_1608Metric","C4190","1"
+"R10","47R","Resistor_SMD:R_0603_1608Metric","C25118","1"
+"R11,R34-R38","100R","Resistor_SMD:R_0603_1608Metric","C22775","6"
+"R13-R15,R23,R28,R32","300R","Resistor_SMD:R_0603_1608Metric","C23025","6"
+"R16-R22,R24-R27","180R","Resistor_SMD:R_0603_1608Metric","C25270","11"
+"R29","1k","Resistor_SMD:R_0603_1608Metric","C11702","1"
+"R31,R33","470R","Resistor_SMD:R_0603_1608Metric","C23179","2"
+"SW_EMCON?","EMCON guarded latching toggle (closed = TX inhibit); NKK M2012SD3A01, guard per ASSEMBLY.md section 9","meshsat:GuardedToggle_SPDT","","1"
+"SW_LIGHT?","LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 + AT401A boot","meshsat:PanelToggle_DPDT","","1"
+"SW_MAIN?","MAIN PWR 19 mm momentary, green ring (to X1202 external switch); C&K ATP19-SL1-603-B0SA-03G","meshsat:PanelSwitch_19mm","","1"
+"SW_PI?","PI 16 mm recessed momentary, amber ring (to Pi 5 J2); C&K ATP16-SL1-403-M0SA-04G (orange ring)","meshsat:PanelSwitch_16mm","","1"
+"SW_SOS?","SOS guarded momentary toggle (red cover); NKK M2015SD3A01, guard per ASSEMBLY.md section 9","meshsat:GuardedToggle_SPDT","","1"
+"SW_TEST?","TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G","meshsat:PanelSwitch_16mm","","1"
+"SW_ZERO?","ZEROIZE guarded momentary toggle (hold 5 s); NKK M2015SD3A01, guard per ASSEMBLY.md section 9","meshsat:GuardedToggle_SPDT","","1"
+"U1","PCA9555PW 0x22: LEDs + switches","Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm","C50993","1"
+"U2","PCA9555PW 0x23: LEDs, bar, e-paper control","Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm","C50993","1"
+"U5-U8","USBLC6-2SC6 (2-line TVS)","Package_TO_SOT_SMD:SOT-23-6","C7519","4"
