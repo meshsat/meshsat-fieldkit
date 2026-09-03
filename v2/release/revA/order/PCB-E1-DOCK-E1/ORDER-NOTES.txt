@@ -9,11 +9,11 @@ PCB
 
 ASSEMBLY (economic or standard PCBA, both sides)
 - BOM: pcb-e1-dock-bom.csv (14 lines, 6 with an LCSC number, the rest must be matched in the JLC parts library at order time)
-- CPL: pcb-e1-dock-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation); check rotations of polarised parts in the JLC preview
+- CPL: pcb-e1-dock-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
 - Parts on the TOP side: 15, on the BOTTOM side: 0
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
 - Not assembled by JLC, fitted at the bench: TRACO TEN 40-2412WIN, Keystone 3568 holder + 7.5 A mini blade, JST-VH shore lead from the IP68 bulkhead, four VHB pads to the floor, the two south rods through H1/H2; the EL817 optocoupler U2 is JLC-fitted
 
 SOURCE
-- Deliverable folder: ~/Downloads/meshsat-pcb/meshsat-pcb-e-revA-E1 (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
-- Design record: docs/hardware/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-e-revA-E1 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
