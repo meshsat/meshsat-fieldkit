@@ -7,7 +7,7 @@ OX, OY = {"c": (297.0, 210.0), "e2": (200.0, 20.0), "ring": (60.0, 30.0)}.get(sy
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 F, B = pcbnew.F_SilkS, pcbnew.B_SilkS
 RULES = {
- "a": [("MESHSAT FIELD KIT  -  PCB-A POWER", dict(text="MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A17)", pos=(55, 76.5), size=2.2)),
+ "a": [("MESHSAT FIELD KIT  -  PCB-A POWER", dict(text="MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A18)", pos=(55, 76.5), size=2.2)),
        ("MESHSAT-709  |  285 x 160", dict(text="MESHSAT-709  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-04", pos=(55, 73.3), size=1.1)),
        ("BACK WALL (+Y)", dict(pos=(-20, 77.0))),
        ("FRONT WALL (-Y)   v v v   LED row", dict(text="FRONT WALL (-Y)   v v v", pos=(20, -76.0))),

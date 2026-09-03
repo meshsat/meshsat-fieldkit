@@ -194,7 +194,7 @@ rect(HUB_ZONE, pcbnew.Dwgs_User, 0.15); text("HUB ZONE (phase A2): 4-port USB 2.
 rect(BANK_ZONE, pcbnew.Dwgs_User, 0.15); text("PWR ZONE: 3.3 V LDO, test points; A17: F3 + TPS61089 5 V module-rail boost from the cell node, J_5V_MOD1 (VH) to PCB-B", (BANK_ZONE[0] + BANK_ZONE[2]) / 2, BANK_ZONE[1] - 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A17)", 48, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
+text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A18)", 48, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
 text("MESHSAT-709  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-04", 48, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -20, 77.0, pcbnew.F_SilkS, 1.4, 0.22); text("FRONT WALL (-Y)   v v v", 20, -76.0, pcbnew.F_SilkS, 1.3, 0.22)
 text("PORT (-X)", -hx + 5.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 5.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
