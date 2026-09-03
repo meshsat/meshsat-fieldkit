@@ -1,0 +1,10 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "eca1308b-e557-4d50-93ca-b33e2e28af09")
+	(paper "A4")
+	(title_block (title "MeshSat Field Kit carrier - PCB-B COMPUTE") (date "2026-09-02") (rev "A") (company "MeshSat") (comment 1 "Phase B1: mechanical + placement. Schematic follows in phase B2."))
+	(lib_symbols)
+	(sheet_instances (path "/" (page "1")))
+)
