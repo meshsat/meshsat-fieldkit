@@ -72,6 +72,15 @@ Samsung's specification forbids soldering to the cell can: the cells are welded 
 
 Every lead tied at both ends; the rod stack's edge carries the vertical runs with a tie base per bay.
 
+**External cables (appendix 32.32, sheets in `vendor/d38999/`).** Two cables leave the case through the connector plate on the back wall.
+
+| Cable | Kit end | Cable | Far end |
+|---|---|---|---|
+| Shore lead | Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-352 size 16 socket contacts, key N, electroless nickel), crimped with the M22520/1-01 tool and the M22520/1-04 positioner, seated with M81969/14-03; Glenair M85049/38S13N self-locking straight strain relief on the plug's M18 x 1 thread | Lapp OLFLEX ROBUST 210 4 x 1.0 (article 0021917, 6.6 mm, TPE, outdoor), or Alpha Wire 25064 (18 AWG 4C, TPU, 6.58 mm) or 5064C (PVC); 2 m | the four cores split under adhesive-lined shrink into two 0.3 m tails: the DC pair to the shore supply, the solar pair to the panel; those two connectors follow the supply and the panel in use and are not fixed here |
+| USB host lead | Glenair 233-340 plug (shell 15, USB 2.0 Type A male front and Type A female back, key N, horizontal, with the 770-028 shrink boot; code 233-340 M G6 -15 2 A A N H T per the sheet's part number development), screwed onto the feed-through | a standard USB 2.0 Type A male to Type A female extension, 1.5 m, its plug in the back of the 233-340 and the boot shrunk over its jacket | the extension's Type A female, into which the device's own lead plugs; where the outside device has an A or B receptacle instead, Glenair's potted cordsets 2330-0015 (A-male far end) or 2330-0069 (B-male far end) replace the whole lead |
+
+Contact assignment of the shore plug (design, 32.32): A shore DC positive, B shore DC return (the dock's isolated DC_N), C solar positive, D solar return; Lapp cores 1 to 4 in that order, Alpha colours black, red, white, green. The cable's insulated cores must lie inside the size 16 grommet window of 1.65 to 2.77 mm (MIL-DTL-38999 Table IV); the Alpha cores are 2.0 mm, the Lapp core diameter is not on its sheet and is measured on the reel before that cable is used.
+
 The dock interface is not a lead but belongs in the same reading. Twelve Preci-Dip 813 contacts in `J_DOCK` on A19's underside land on the raised block's targets: pins 1 to 4 are `SHORE_12V`, 5 to 7 and 10 are ground, 8 is `SHORE_INHIBIT`, 9 the module thermistor, 11 the cell sense and 12 spare. Beside them, nine Mill-Max 0858 class pins carry the module current: four on `CELL+`, four on the return, and one longer pre-charge pin that mates first through a 10 ohm resistor so the converters' input capacitance does not draw an arc across the main pins. The seven RF joints mate at the same time, and the whole set parts when the stack is lifted.
 
 ## 5. Conformal coating
