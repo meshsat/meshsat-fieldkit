@@ -20,4 +20,5 @@ for t in ('courtyards_overlap', 'shorting_items', 'clearance', 'copper_edge_clea
 hard = sum(c[t] for t in ('courtyards_overlap', 'shorting_items', 'clearance', 'copper_edge_clearance', 'hole_clearance', 'hole_to_hole', 'items_not_allowed'))
 open('out/preroute-gate.txt', 'w').write('OK' if hard == 0 else 'BLOCK %d' % hard)
 PY
+python3 ../tools/check_zone_nets.py $N.kicad_pcb 2>&1 | grep -E "FAIL|zone nets" || echo "BLOCK zone-nets" > out/preroute-gate.txt
 echo PREROUTE-DONE $(cat out/preroute-gate.txt)

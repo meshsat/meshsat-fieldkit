@@ -19,4 +19,5 @@ for t in ('courtyards_overlap', 'shorting_items', 'clearance', 'copper_edge_clea
     for v in [v for v in d['violations'] if v['type'] == t][:5]: print('  ', t, '|', ' / '.join(i.get('description', '')[:60] for i in v.get('items', [])))
 open('out/preroute-gate.txt', 'w').write('OK' if hard == 0 else 'BLOCK %d' % hard)
 PY
+python3 ../tools/check_zone_nets.py $N.kicad_pcb 2>&1 | grep -E "FAIL|zone nets" || echo "BLOCK zone-nets" > out/preroute-gate.txt
 echo PREROUTE-DONE $(cat out/preroute-gate.txt)

@@ -126,10 +126,12 @@ if missing: raise SystemExit("unplaced: %s" % missing)
 # --- nets
 ni = board.GetNetInfo()
 def net_for(name):
-    n = board.FindNet(name)
-    if n is None or n.GetNetCode() <= 0 and name != "":
-        n = pcbnew.NETINFO_ITEM(board, name); board.Add(n)
-    return n
+    """The board's net for a schematic name. A local label lands in the board as "/NAME", a power symbol as "NAME"; a pour on a
+    name that matches neither would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 5 Sep 2026, 32.33)."""
+    for cand in (name, "/" + name):
+        n = board.FindNet(cand)
+        if n is not None and n.GetNetCode() > 0: return n
+    raise SystemExit("zone net %r is not in the netlist (neither %r nor %r): fix the name, do not pour on a phantom" % (name, name, "/" + name))
 padmap = {}
 for ref, fp in placed.items():
     for pad in fp.Pads(): padmap.setdefault(ref, {}).setdefault(pad.GetNumber(), []).append(pad)
