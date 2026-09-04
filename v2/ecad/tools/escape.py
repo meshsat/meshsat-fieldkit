@@ -29,7 +29,7 @@ allpads = [(p, p.GetPosition(), pad_poly(p), p.GetNetname(), fp.GetReference()) 
 def ep_numbers(fp):
     """Pad numbers that belong to an exposed pad (any pad of that number >= 2 mm): their small pieces are not pins."""
     return {p.GetNumber() for p in fp.Pads() if max(p.GetSize().x, p.GetSize().y) >= FromMM(2.0)}
-rule_areas = [z for z in b.Zones() if z.GetIsRuleArea()]
+rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout
 edges = b.GetBoardEdgesBoundingBox()
 vias = [(t.GetPosition(), t.GetWidth(pcbnew.F_Cu) / 2, t.GetNetname()) for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
 tracks = [(t.GetStart(), t.GetEnd(), t.GetWidth() / 2, t.GetNetname()) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]
