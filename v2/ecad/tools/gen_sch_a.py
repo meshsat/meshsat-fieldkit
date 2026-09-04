@@ -151,7 +151,8 @@ for k in range(5): c("C%d" % (56 + k), "10u 25V 1210", "SYS_CHG", "GND", "C1210"
 c("C61", "10u", "CELL+", "GND", "C10u"); c("C62", "10u", "CELL+", "GND", "C10u")
 c("C63", "47n", "BTST1", "SW1_CHG"); c("C64", "47n", "BTST2", "SW2_CHG"); c("C65", "4.7u", "REGN", "GND", "C10u"); c("C66", "1n", "SDRV", "GND"); c("C67", "100n", "CELL_SENSE_P", "GND")
 r("R53", "4.7k 1% (PROG: 1S, 750 kHz)", "PROG", "GND"); r("R54", "16.5k 1%", "REGN", "ILIM_HIZ"); r("R55", "34.8k 1%", "ILIM_HIZ", "GND")   # 1 V + 0.8 R x 3 A = 3.4 V from REGN 5 V
-r("R56", "5.23k 1% (RT1 JEITA)", "REGN", "TS_CHG"); r("R57", "30.1k 1% (RT2 JEITA)", "TS_CHG", "GND")   # E96 values: TI's worked example asks 5.24k and 30.31k, which are not buyable; the substitution moves the trips about a quarter of a degree; r("R58", "100k", "REGN", "QON")
+# E96 values for the JEITA divider: TI's worked example asks 5.24k and 30.31k, which are not buyable; the substitution moves the trips about a quarter of a degree (32.28)
+r("R56", "5.23k 1% (RT1 JEITA)", "REGN", "TS_CHG"); r("R57", "30.1k 1% (RT2 JEITA)", "TS_CHG", "GND"); r("R58", "100k", "REGN", "QON")
 r("R59", "10k", "CHG_STAT", "REGN"); r("R60", "10k", "CHG_INT", "+3V3")
 part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 SHORE_12V, 5-7 GND, 8 SHORE_INHIBIT, 9 module thermistor (103AT to GND), 10 GND, 11 Kelvin cell sense +, 12 spare", "POGO12",
      {"1": "SHORE_12V", "2": "SHORE_12V", "3": "SHORE_12V", "4": "SHORE_12V", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "TS_CHG", "10": "GND", "11": "CELL_SENSE_P", "12": "DOCK_SPARE"})
@@ -210,7 +211,8 @@ part("U6", "Connector_Generic", "Conn_02x33_Odd_Even", "USB2517I-JZX seven-port 
  "26": "NC", "27": "FLT_GPS", "28": "FLT_WIFI", "29": "NC", "30": "NC", "31": "NC", "32": "NC", "33": "NC", "34": "NC", "35": "FLT_WALL", "36": "NC", "37": "NC", "38": "NC", "39": "NC", "40": "NC", "41": "HUB_CFG0", "42": "HUB_CFG1", "43": "+3V3", "44": "+3V3", "45": "NC",
  "46": "+3V3", "47": "NC", "48": "NC", "49": "NC", "50": "NC", "51": "NC", "52": "+3V3", "53": "HUB_DIS6M", "54": "HUB_DIS6P", "55": "HUB_DIS7M", "56": "HUB_DIS7P", "57": "+3V3", "58": "USB_A_N", "59": "USB_A_P", "60": "XOUT", "61": "XIN", "62": "HUB_VD18PLL", "63": "HUB_RBIAS", "64": "+3V3", "65": "GND", "66": "NC"}, "C1521556")
 part("Y1", "Device", "Crystal_GND24", "24 MHz 3225", "XTAL", {"1": "XIN", "3": "XOUT", "2": "GND", "4": "GND"})
-c("C16", "27p", "XIN", "GND"); c("C17", "27p", "XOUT", "GND")   # matched to an 18 pF load crystal: 2 x (18 - 4 stray); r("R19", "12.0k 1% (RBIAS)", "HUB_RBIAS", "GND")
+# crystal loading matched to an 18 pF load part: 2 x (18 - 4 stray) = 28, so 27 pF
+c("C16", "27p", "XIN", "GND"); c("C17", "27p", "XOUT", "GND"); r("R19", "12.0k 1% (RBIAS)", "HUB_RBIAS", "GND")
 for k, net in enumerate(("+3V3", "+3V3", "+3V3", "+3V3", "+3V3", "+3V3", "+3V3"), 18): c("C%d" % k, "100n", net, "GND")   # C18..C24 at VDD33, VDDA33 x4, VDD33CR, VDD33PLL
 c("C25", "1u", "HUB_VD18", "GND"); c("C26", "1u", "HUB_VD18PLL", "GND"); c("C27", "1u", "+3V3", "GND")
 r("R20", "10k", "HUB_CFG0", "GND"); r("R21", "10k", "HUB_CFG1", "GND")
