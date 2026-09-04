@@ -2273,3 +2273,21 @@ Order of the design work follows the audit's suggestion: the SMP-MAX part set an
 **Ruling on G (owner, 4 Sep night):** the wall USB is a **host port**. A19 carries a seven-port hub (USB2517 class, values from its data sheet on the laptop) with a fifth protected channel for the wall port; the wall side is the Glenair SuperSeal 233-370 USB receptacle, and shore DC gets its own 38999 shell (or a custom insert if one is documented). The Pi's gadget path is not brought to the wall.
 
 **Ruling on F (owner, 4 Sep night):** a **bespoke maximum-power tracker on the dock strip**, an LT8705A buck-boost stage designed from the ADI data sheet with its input-voltage loop set to the panel's maximum-power voltage and a constant-voltage output into the TEN 40's input, ORed against the shore inlet. The dock strip becomes a four-layer board. The plain-input and no-tracker options were declined.
+
+### 32.17 Ruling, 4 Sep 2026 night (owner): the Geekworm X1202 is removed; the boards carry their own UPS
+
+Owner: "removal of the Geekworm X1202 UPS completely; the PCB we build will have their own UPS", confirmed after the consequences were restated. This replaces the one-pack-one-charger ruling of 3 Sep (25.6, "inception") in its X1202 half and the X1202 side of ruling 32.3 (option B). What the X1202 did and what takes it over:
+
+| X1202 role today | On the boards |
+|---|---|
+| charges the cells from the dock's 12 V at about 3 A | a single-cell Li-ion charger block on PCB-A (A19) from SHORE_12V, 3 A or more, with a thermistor input at the pack (cold-charge protection in hardware; the 28 and 32.15 E inhibit and pad remain the warm-up path) |
+| makes the Pi's 5 V | a dedicated 5 V at 5 A boost on PCB-A for the Pi, separate from the module rail (never one rail from two sources) |
+| holds the Pi up when shore drops | inherent: every load hangs on the cell node, the charger sits in parallel |
+| power button input, GPIO 6 power-loss line, battery telemetry over I2C (0x36), the monitor script | MAIN button drives a main power control on PCB-A; a power-loss line to the Pi from the gauge or the shore detect; a fuel gauge on I2C; PANEL.md SHORE, CHARGING and the battery bar read the charger and gauge |
+| four of the twelve cells | the welded pack alone (eight cells, 28 Ah) unless the owner welds twelve; the charger is sized for either |
+
+Board consequences: A19 gains the charger, the Pi rail, the gauge, the main power control and the power-loss line; **PCB-B is respun (B12)**: the X1202 leaves the stack, the Pi sits alone on its standoffs, its 5 V arrives by a lead from PCB-A into a new connector, `J_5V_IN1` and the X1202 envelope go, the ribbon stays. The panel is unchanged (MAIN button, PI button to the Pi's J2). MESHSAT-774 becomes the charger's commissioning list. Appendix 25 stack numbers, ASSEMBLY leads and BUILD follow at the respin. Cost about two days on top of the plan of 32.13.
+
+### 32.18 Gateway finding, 4 Sep 2026 night: the dock's tallest parts stand under PCB-A inside the 6.0 mm gap
+
+Document level, from the repo: PCB-A spans Y -80 to +80 (`gen_pcb_a.py`), the dock strip Y -95 to -51 (25.5), so 29 mm of the strip lies under PCB-A at the 6.0 mm spacer gap and only a 15 mm band (Y -95 to -80) is clear. The dock generator fixes J_DOCK (-12, -70), J_DCIN (-105, -60), F1 (-80, -70), U1 (-45, -70) and J_AUX (118, -58), all in the covered band. U1, the TEN 40-2412WIN, is 10.2 mm tall (25.5, filed data sheet): about 4.2 mm into PCB-A's underside. F1, a Keystone 3568 holder with a blade standing in it, is taller still (height to be read from the Keystone sheet on the laptop; keyelco.com refuses both hosts). Nothing catches it: `check_pcb_e.py` has no height rule, DRC is two-dimensional within one board, and 25.1's Z closure counts the dock as 1.6 mm plus the 6.0 mm spacer with nothing standing on it. So the E1 and A18 pair as released does not assemble; it is not ordered (the dock line is rebuilt after the respin), and the respin rule is now: **the dock gap is the larger of the RF receptacle-plus-plug stack and the tallest dock component plus margin**, and the converter, the fuse holder, the tracker's inductor and bulk capacitors are placed either in the clear band or under a stated gap. Credited as a gateway round.
