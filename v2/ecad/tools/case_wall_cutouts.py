@@ -45,41 +45,47 @@ def rect(x0, z0, x1, z1, w=0.4, dash=None):
     c.setLineWidth(w)
     if dash: c.setDash(*dash)
     (ax, az), (bx, bz) = P(x0, z0), P(x1, z1); c.rect(min(ax, bx), min(az, bz), abs(bx - ax), abs(bz - az), stroke=1, fill=0); c.setDash()
-def text(x, z, s, size=8, angle=0, anchor="l"):
-    px, pz = P(x, z); c.saveState(); c.translate(px, pz); c.rotate(angle); c.setFont("Helvetica", size)
+def text(x, z, s, size=8, angle=0, anchor="l", paper=False):
+    """Text at a case position (mirrored with the view) or, with paper=True, at a paper offset x in mm from the sheet centre."""
+    px, pz = (W / 2 + x * mm, oz + z * mm) if paper else P(x, z); c.saveState(); c.translate(px, pz); c.rotate(angle); c.setFont("Helvetica", size)
     {"c": c.drawCentredString, "r": c.drawRightString}.get(anchor, c.drawString)(0, 0, s); c.restoreState()
 def cross(x, z, r=4):
     line(x - r, z, x + r, z, 0.2); line(x, z - r, x, z + r, 0.2)
 def dim(x1, x2, z, label):
     line(x1, z, x2, z, 0.25); line(x1, z - 1.5, x1, z + 1.5, 0.25); line(x2, z - 1.5, x2, z + 1.5, 0.25); text((x1 + x2) / 2, z + 1.5, label, 7, anchor="c")
 def vdim(x, z1, z2, label):
-    line(x, z1, x, z2, 0.25); line(x - 1.5, z1, x + 1.5, z1, 0.25); line(x - 1.5, z2, x + 1.5, z2, 0.25); text(x + 1.8, (z1 + z2) / 2, label, 7, angle=90, anchor="c")
+    line(x, z1, x, z2, 0.25); line(x - 1.5, z1, x + 1.5, z1, 0.25); line(x - 1.5, z2, x + 1.5, z2, 0.25); text(x - VIEW * 1.8, (z1 + z2) / 2, label, 7, angle=90, anchor="c")
+def _unused():
+    pass
 def scale_bar(x, z):
-    line(x, z, x + 100, z, 1.0); line(x, z - 2, x, z + 2, 0.6); line(x + 100, z - 2, x + 100, z + 2, 0.6); text(x + 50, z - 5, "100 mm at 1:1 (print at 100 percent, no fit to page)", 7, anchor="c")
+    """A 100 mm bar drawn in paper coordinates at paper offset x (mm from the sheet centre)."""
+    c.setLineWidth(1.0); c.line(W / 2 + x * mm, oz + z * mm, W / 2 + (x + 100) * mm, oz + z * mm)
+    c.setLineWidth(0.6); c.line(W / 2 + x * mm, oz + (z - 2) * mm, W / 2 + x * mm, oz + (z + 2) * mm); c.line(W / 2 + (x + 100) * mm, oz + (z - 2) * mm, W / 2 + (x + 100) * mm, oz + (z + 2) * mm)
+    text(x + 50, z - 5, "100 mm at 1:1 (print at 100 percent, no fit to page)", 7, anchor="c", paper=True)
 def notes(lines, z0):
     import textwrap
     k = 0
     for n in lines:
-        for part in textwrap.wrap(n, 150): text(PLATE["cx"] - 70, z0 - 3.6 * k, part, 6.2); k += 1
+        for part in textwrap.wrap(n, 150): text(-140, z0 - 3.6 * k, part, 6.2, paper=True); k += 1
         k += 0.4
 
 # ---------------- sheet 1: the wall, seen from outside the case
 x0, x1 = PLATE["cx"] - 70, PLATE["cx"] + 70
-line(x0, 0, x1, 0, 0.8); text(x1 + 1, -1, "cavity floor, Z 0", 7)
-line(x0, CHAMFER, x1, CHAMFER, 0.3, (2, 2)); text(x1 + 1, CHAMFER - 1, "inner chamfer ends, Z 16.7", 6)
-line(x0, FLOOR_TO_RIM, x1, FLOOR_TO_RIM, 0.8); text(x1 + 1, FLOOR_TO_RIM - 1, "rim, Z 124.87", 7)
+line(x0, 0, x1, 0, 0.8); text(72, -1, "cavity floor, Z 0", 7, paper=True)
+line(x0, CHAMFER, x1, CHAMFER, 0.3, (2, 2)); text(72, CHAMFER - 1, "inner chamfer ends, Z 16.7", 6, paper=True)
+line(x0, FLOOR_TO_RIM, x1, FLOOR_TO_RIM, 0.8); text(72, FLOOR_TO_RIM - 1, "rim, Z 124.87", 7, paper=True)
 for bx in BOSS_X:
-    if x0 < bx < x1: rect(bx - 3, 30, bx + 3, 71, 0.3, (1, 1)); text(bx, 73, "inner rib", 5, anchor="c"); text(bx, 27, "(inside)", 5, anchor="c")
+    if x0 < bx < x1: rect(bx - 3, 30, bx + 3, 71, 0.3, (1, 1)); text(bx, 100, "inner rib", 5, anchor="c"); text(bx, 96, "(inside)", 5, anchor="c"); line(bx, 95, bx, 72, 0.15, (1, 1))
 rect(PLATE["cx"] - PLATE["w"] / 2, PLATE["cz"] - PLATE["h"] / 2, PLATE["cx"] + PLATE["w"] / 2, PLATE["cz"] + PLATE["h"] / 2, 0.3, (3, 2))
-text(PLATE["cx"] + PLATE["w"] / 2 + 2, PLATE["cz"] + PLATE["h"] / 2 - 3, "plate outline 82 x 54, gasket the same", 6.5)
+text(PLATE["cx"], PLATE["cz"] - PLATE["h"] / 2 - 4, "plate outline 82 x 54, gasket the same", 6.5, anchor="c")
 for r in (DC, USB):
     circle(r["x"], r["z"], r["wall_hole"], 0.7); cross(r["x"], r["z"], 8); text(r["x"], r["z"] - r["wall_hole"] / 2 - 4, "hole saw %.0f" % r["wall_hole"], 7, anchor="c")
 for sx, sz in SCREWS: circle(sx, sz, 4.5, 0.5); cross(sx, sz, 3)
-text(SCREWS[0][0] - 8, SCREWS[0][1] - 1, "6 x 4.5 for M4", 6.5, anchor="r")
-dim(DC["x"], USB["x"], 22, "36.0"); dim(SCREWS[0][0], SCREWS[2][0], 86, "56.0 (28.0 pitch)"); vdim(x0 + 4, 0, DC["z"], "55.0 above the floor"); vdim(x1 - 4, SCREWS[3][1], SCREWS[0][1], "46.0")
+text(PLATE["cx"], PLATE["cz"] + PLATE["h"] / 2 + 10, "6 x 4.5 for M4, rows 46 apart", 6.5, anchor="c")
+dim(DC["x"], USB["x"], 20, "36.0"); dim(SCREWS[0][0], SCREWS[2][0], 84, "56.0 (28.0 pitch)"); vdim(x0 + 4, 0, DC["z"], "55.0 above the floor"); vdim(x1 - 4, SCREWS[3][1], SCREWS[0][1], "46.0")
 text(DC["x"], FLOOR_TO_RIM + 3, "DC hole X %.1f" % DC["x"], 7, anchor="c"); text(USB["x"], FLOOR_TO_RIM + 9, "USB hole X %.1f" % USB["x"], 7, anchor="c")
-text(x0, FLOOR_TO_RIM + 3, "X %.0f" % x0, 7, anchor="r"); text(x1, FLOOR_TO_RIM + 3, "X %.0f  (case +X is to your left: you face the back wall from outside)" % x1, 7)
-scale_bar(x0, -10)
+text(x0, FLOOR_TO_RIM + 3, "X %.0f" % x0, 7); text(x1, FLOOR_TO_RIM + 3, "X %.0f" % x1, 7, anchor="r"); text(0, FLOOR_TO_RIM + 16, "seen from OUTSIDE the back wall: case +X is to your left", 7, anchor="c", paper=True)
+scale_bar(-140, -10)
 notes(["SHEET 1 of 2: WALL. MeshSat field kit, Peli 1520 base, the BACK long wall (hinge side), seen from OUTSIDE, so case +X is on your left. Case frame: X along the long axis from the case centre, Z up from the cavity floor.",
        "Two hole-saw holes for the receptacle bodies and six M4 clearance holes for the connector plate. Tape this sheet on the outer skin with its floor line level with the inside floor (transfer the height from inside).",
        "The plate, not the wall, carries the sealing faces: the 1520 inner wall drafts about 2 degrees and the outer skin is ribbed (envelope STEP, vendor/peli/wall2.py), so a flanged receptacle cannot seal on the case itself.",
@@ -99,7 +105,7 @@ for r in (DC, USB):
 for sx, sz in SCREWS: circle(sx, sz, 4.5, 0.5); cross(sx, sz, 3)
 dim(PLATE["cx"] - PLATE["w"] / 2, PLATE["cx"] + PLATE["w"] / 2, PLATE["cz"] + PLATE["h"] / 2 + 12, "82.0"); vdim(PLATE["cx"] + PLATE["w"] / 2 + 8, PLATE["cz"] - PLATE["h"] / 2, PLATE["cz"] + PLATE["h"] / 2, "54.0")
 dim(DC["x"], USB["x"], PLATE["cz"] - PLATE["h"] / 2 - 6, "36.0"); dim(PLATE["cx"] - PLATE["w"] / 2, DC["x"], PLATE["cz"] - PLATE["h"] / 2 - 12, "23.0"); dim(SCREWS[3][0], SCREWS[5][0], PLATE["cz"] - PLATE["h"] / 2 - 18, "56.0 (28.0 pitch), screw rows 4.0 in from the top and bottom edges")
-scale_bar(PLATE["cx"] - 70, -10)
+scale_bar(-140, -10)
 notes(["SHEET 2 of 2: CONNECTOR PLATE, 82 x 54 x 3 mm aluminium (5052 or 6061), edges broken, seen from OUTSIDE the case. Gasket: 2 mm closed-cell neoprene or EPDM, same outline and holes, between plate and wall.",
        "Shore DC: Glenair D38999/20 shell 13 wall mount with round holes (D0), front panel mount: hole 19.05, four M3 clearance holes on a 23.01 square, flange 28.9 square. Its own gasket seals to the plate.",
        "USB host: Glenair 233-370 shell 15 wall mount D0, front panel mount: hole 23.01, four M3 clearance holes on a 24.61 square, flange 31.29 square; the 3 mm plate is inside its 1.6 to 6.35 mm panel range.",
