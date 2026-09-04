@@ -17,6 +17,10 @@ for ref, (x, y) in (("H1", (-110.5, -73.0)), ("H2", (110.5, -73.0))):
 jd = fps.get("J_DOCK"); bb = jd.GetBoundingBox(False, False) if jd else None
 check(all(not fp.IsFlipped() for fp in b.GetFootprints()), "no part on the underside (it sits on the floor)")
 for ref in ("J_DCIN", "F1", "U1", "U2", "R3", "R4", "U3", "Q1", "D1", "U4", "Q2", "U5", "L1", "R5", "J_SOLAR", "F2", "J_BATT", "J_BLK", "P_CP", "P_CN", "J_TS", "J_KS"): check(ref in fps, "%s present" % ref)
+def find(xy, d):
+    for r, f in fps.items():
+        if r.startswith("H") and abs(case(f.GetPosition())[0] - xy[0]) < 0.05 and abs(case(f.GetPosition())[1] - xy[1]) < 0.05 and abs(list(f.Pads())[0].GetDrillSize().x / 1e6 - d) < 0.05: return f
+    return None
 # E4 height rule (32.18, 32.19 AO): every part north of Y -80 is under PCB-A at 13.4 mm; the tall parts must sit south of it
 TALL = {"F1": 16.3, "F2": 16.3, "J_BATT": 10.5, "J_DCIN": 8.0, "J_SOLAR": 8.0, "J_TS": 7.5, "J_KS": 7.5, "C11": 7.7, "C12": 7.7, "C24": 6.9, "C25": 6.9, "L1": 10.0, "U1": 10.2}
 for ref, h in TALL.items():
