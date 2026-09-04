@@ -1,0 +1,140 @@
+** Drc report for pcb-d-aprs.kicad_pcb **
+** Created on 2026-09-05T01:27:55+0200 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 34 DRC violations **
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2321 mm)
+    Rule: board setup constraints hole; error
+    @(112,5479 mm, 95,3479 mm): Track [/I2S_LRCLK] on In1.Cu, length 0,6358 mm
+    @(112,2300 mm, 95,8300 mm): Via [/I2S_DOUT] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2407 mm)
+    Rule: board setup constraints hole; error
+    @(114,5989 mm, 91,2989 mm): Track [GND] on In2.Cu, length 0,8572 mm
+    @(115,2050 mm, 91,1050 mm): Via [/+3.3VA] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2373 mm)
+    Rule: board setup constraints hole; error
+    @(110,1427 mm, 96,3173 mm): Track [/I2S_BCLK] on In2.Cu, length 9,6595 mm
+    @(109,8300 mm, 95,8300 mm): Via [/MCLK] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2396 mm)
+    Rule: board setup constraints hole; error
+    @(78,8567 mm, 71,9247 mm): Track [/SW] on F.Cu, length 1,6976 mm
+    @(79,1750 mm, 72,9000 mm): Via [/VIN_CELL] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2407 mm)
+    Rule: board setup constraints hole; error
+    @(115,2050 mm, 90,3050 mm): Track [GND] on In2.Cu, length 0,8572 mm
+    @(115,2050 mm, 91,1050 mm): Via [/+3.3VA] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2463 mm)
+    Rule: board setup constraints hole; error
+    @(115,7013 mm, 93,0087 mm): Track [/SCL] on B.Cu, length 19,2508 mm
+    @(115,2050 mm, 91,1050 mm): Via [/+3.3VA] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2347 mm)
+    Rule: board setup constraints hole; error
+    @(115,6897 mm, 92,2203 mm): Track [/SDA] on In1.Cu, length 14,5734 mm
+    @(115,2050 mm, 91,1050 mm): Via [/+3.3VA] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2463 mm)
+    Rule: board setup constraints hole; error
+    @(115,7013 mm, 93,0087 mm): Track [/SCL] on B.Cu, length 19,2508 mm
+    @(115,2050 mm, 92,7050 mm): Via [/SDA] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2407 mm)
+    Rule: board setup constraints hole; error
+    @(109,9000 mm, 97,5000 mm): Track [GND] on In1.Cu, length 2,3617 mm
+    @(109,0300 mm, 95,8300 mm): Via [/+3V3_AB] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2410 mm)
+    Rule: board setup constraints hole; error
+    @(112,1710 mm, 86,9890 mm): Track [/VMID] on F.Cu, length 0,5356 mm
+    @(112,4800 mm, 87,4800 mm): Via [/+3.3VA] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2407 mm)
+    Rule: board setup constraints hole; error
+    @(110,8800 mm, 87,4800 mm): Track [GND] on In2.Cu, length 1,8573 mm
+    @(111,6800 mm, 87,4800 mm): Via [/VMID] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2373 mm)
+    Rule: board setup constraints hole; error
+    @(110,1427 mm, 96,3173 mm): Track [/I2S_BCLK] on In2.Cu, length 9,6595 mm
+    @(109,0300 mm, 95,8300 mm): Via [/+3V3_AB] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2315 mm)
+    Rule: board setup constraints hole; error
+    @(108,7985 mm, 92,8209 mm): Track [/MCLK] on In1.Cu, length 5,5661 mm
+    @(109,2800 mm, 87,4800 mm): Via [/+3.3VA] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2373 mm)
+    Rule: board setup constraints hole; error
+    @(110,1427 mm, 96,3173 mm): Track [/I2S_BCLK] on In2.Cu, length 9,6595 mm
+    @(108,2300 mm, 95,8300 mm): Via [GND] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2473 mm)
+    Rule: board setup constraints hole; error
+    @(76,8922 mm, 76,6912 mm): Track [GND] on In2.Cu, length 0,7314 mm
+    @(77,0750 mm, 76,1000 mm): Via [/V8] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2347 mm)
+    Rule: board setup constraints hole; error
+    @(115,6897 mm, 92,2203 mm): Track [/SDA] on In1.Cu, length 14,5734 mm
+    @(115,2050 mm, 90,3050 mm): Via [GND] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2402 mm)
+    Rule: board setup constraints hole; error
+    @(109,7702 mm, 87,9702 mm): Track [/+3.3VA] on In2.Cu, length 2,2196 mm
+    @(110,0800 mm, 87,4800 mm): Via [/AFOUT] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2463 mm)
+    Rule: board setup constraints hole; error
+    @(115,7013 mm, 93,0087 mm): Track [/SCL] on B.Cu, length 19,2508 mm
+    @(115,2050 mm, 91,9050 mm): Via [GND] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2416 mm)
+    Rule: board setup constraints hole; error
+    @(110,8523 mm, 99,5029 mm): Track [/SDA] on In2.Cu, length 5,4429 mm
+    @(113,8300 mm, 95,8300 mm): Via [/I2S_DIN] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2347 mm)
+    Rule: board setup constraints hole; error
+    @(115,6897 mm, 92,2203 mm): Track [/SDA] on In1.Cu, length 14,5734 mm
+    @(115,2050 mm, 91,9050 mm): Via [GND] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2463 mm)
+    Rule: board setup constraints hole; error
+    @(115,7013 mm, 93,0087 mm): Track [/SCL] on B.Cu, length 19,2508 mm
+    @(115,2050 mm, 90,3050 mm): Via [GND] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2402 mm)
+    Rule: board setup constraints hole; error
+    @(109,7702 mm, 87,9702 mm): Track [/+3.3VA] on In2.Cu, length 2,2196 mm
+    @(111,6800 mm, 87,4800 mm): Via [/VMID] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2301 mm)
+    Rule: board setup constraints hole; error
+    @(109,0351 mm, 89,8249 mm): Track [/SPK_IN] on In2.Cu, length 11,1053 mm
+    @(115,2050 mm, 90,3050 mm): Via [GND] on F.Cu - B.Cu
+[hole_clearance]: Hole clearance violation (board setup constraints hole clearance 0,2500 mm; actual 0,2402 mm)
+    Rule: board setup constraints hole; error
+    @(109,7702 mm, 87,9702 mm): Track [/+3.3VA] on In2.Cu, length 2,2196 mm
+    @(110,8800 mm, 87,4800 mm): Via [GND] on F.Cu - B.Cu
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(67,0000 mm, 77,5000 mm): PCB text 'J_HARN1 to PCB-A J_MEZZ1' on B.Silkscreen
+    @(65,0000 mm, 74,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(81,9450 mm, 83,2550 mm): Rectangle of U2 on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,7500 mm)
+    Rule: board setup constraints silk text height; warning
+    @(110,0000 mm, 108,5000 mm): PCB text 'DMR858M on 2x 1x12 sockets + M2.5 x 11 standoffs, heatsink up' on B.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,7500 mm)
+    Rule: board setup constraints silk text height; warning
+    @(110,0000 mm, 111,5000 mm): PCB text 'SMA east -> UHF bulkhead | USB-C west | pin 1 = VCC (NE)' on B.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,7500 mm)
+    Rule: board setup constraints silk text height; warning
+    @(110,0000 mm, 114,5000 mm): PCB text 'rows and holes per NiceRF datasheet V1.2 p.10' on B.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(60,0000 mm, 72,0000 mm): Segment on Edge.Cuts
+    @(67,0000 mm, 77,5000 mm): PCB text 'J_HARN1 to PCB-A J_MEZZ1' on B.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(60,0000 mm, 72,0000 mm): Segment on Edge.Cuts
+    @(67,0000 mm, 107,5000 mm): PCB text 'J_PWR1 MEZZ_CELL GND' on B.Silkscreen
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(110,0800 mm, 87,4800 mm): Via [/AFOUT] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(79,1750 mm, 72,9000 mm): Via [/VIN_CELL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(111,6800 mm, 87,4800 mm): Via [/VMID] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

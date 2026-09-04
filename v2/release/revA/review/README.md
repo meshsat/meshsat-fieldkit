@@ -2,7 +2,7 @@
 
 Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying the real devices on paper; the copper sheets and the assembly drawings are for the design review (appendix section 21.3 / 22.4: the six order-gate items are the agenda).
 
-## PCB-A POWER + I/O Rev A (A19), folder `PCB-A-POWER-A19/`, 285 x 160 mm, 4 layers
+## PCB-A POWER + I/O Rev A (A20), folder `PCB-A-POWER-A20/`, 285 x 160 mm, 4 layers
 
 - `pcb-a-power-1to1-top.pdf`, `pcb-a-power-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-a-power-assembly-top.pdf`, `pcb-a-power-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -10,7 +10,7 @@ Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying 
 - `pcb-a-power-render-top-A4.png`, `pcb-a-power-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-a-power-schematic.pdf`: full schematic; `pcb-a-power-drc.rpt`: the DRC report of the exported board
 
-## PCB-B COMPUTE Rev A (B12), folder `PCB-B-COMPUTE-B12/`, 245 x 170 mm, 4 layers
+## PCB-B COMPUTE Rev A (B13), folder `PCB-B-COMPUTE-B13/`, 245 x 170 mm, 4 layers
 
 - `pcb-b-compute-1to1-top.pdf`, `pcb-b-compute-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-b-compute-assembly-top.pdf`, `pcb-b-compute-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -37,7 +37,7 @@ Raspberry Pi publishes no schematic for the Touch Display 2 (the driver board is
 
 Sources: https://pip.raspberrypi.com/categories/1083-raspberry-pi-touch-display-2 and https://datasheets.raspberrypi.com/display/touch-display-2-product-brief.pdf (checked 2 Sep 2026).
 
-## PCB-D APRS Rev A (D5), folder `PCB-D-APRS-D5/`, 80 x 62 mm, 4 layers
+## PCB-D APRS Rev A (D6), folder `PCB-D-APRS-D6/`, 80 x 62 mm, 4 layers
 
 - `pcb-d-aprs-1to1-top.pdf`, `pcb-d-aprs-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-d-aprs-assembly-top.pdf`, `pcb-d-aprs-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
