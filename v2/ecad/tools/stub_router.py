@@ -5,7 +5,7 @@ import sys, re, math, json, heapq, pcbnew, numpy as np
 from pcbnew import VECTOR2I, FromMM
 BOARD, DRC = sys.argv[1], sys.argv[2]
 PLANES = set((sys.argv[3] if len(sys.argv) > 3 else "GND,+5V,+3V3,CELL+").split(","))
-G = 0.05                     # grid, mm
+G = float(__import__("os").environ.get("STUB_GRID", "0.05"))   # grid, mm (STUB_GRID=0.1 for long connections)
 CLR = 0.16                   # clearance to other copper, mm (board rule 0.15)
 b = pcbnew.LoadBoard(BOARD); drc = json.load(open(DRC))
 eb = b.GetBoardEdgesBoundingBox()
@@ -212,7 +212,7 @@ def route(net, src, goal_cells, trk, via, window):
         if d > dist.get(s, 1e18): continue
         L, i, j = s; n += 1
         if goal[L, i, j]: found = s; break
-        if n > 4_000_000: break
+        if n > int(__import__("os").environ.get("STUB_MAXN", "4000000")): break
         for di, dj, c in steps:
             ni, nj = i + di, j + dj
             if not (imin <= ni <= imax and jmin <= nj <= jmax): continue
