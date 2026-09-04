@@ -24,7 +24,8 @@ while True:
     changed = False
     for v in V:
         if v[0] in gone: continue
-        n = sum(1 for t in T if t[0] not in gone and t[1] == v[1] and (at_via(t[2], t[3], v) or at_via(t[4], t[5], v)))
+        # a track that passes over the via (the stub router's closing via lands on the middle of an inner-layer run) is a connection too
+        n = sum(1 for t in T if t[0] not in gone and t[1] == v[1] and (at_via(t[2], t[3], v) or at_via(t[4], t[5], v) or on_seg(v[2], v[3], t)))
         if n <= 1: gone.add(v[0]); rv += 1; changed = True
     for t in T:
         if t[0] in gone: continue
