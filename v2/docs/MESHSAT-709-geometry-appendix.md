@@ -177,7 +177,7 @@ The CAD holds a full routing polyline for each of the six pigtails, with a bend-
 | Feature | Position | Note |
 |---|---|---|
 | Front-panel LED row, 5 x 8.0 mm | X = -44, -22, 0, +22, +44 at Y = -110 (front wall), **Z = -35.0** | Pitch 22.0 mm |
-| USB-C power inlet | X = +100, front wall, Z = +25.0 | The one cable that survives |
+| USB-C power inlet | X = +100, front wall, Z = +25.0 | The one cable that survives *(superseded: removed by the one-pack ruling of 3 Sep, slot deleted on B11 (32.4); the wall data port is the 38999 connector of ruling 6, 32.13)* |
 | Case external | 287 x 220 x 152 mm `[SPEC]` | Base cavity 110.0, lid cavity 32.0, both `[COMPUTED]` |
 
 **The front-panel LED row is at Z = -35.0, which lands between PCB-A's top face (-49.6) and PCB-B's underside (-7.3).** It is in the PCB-A to PCB-B bay. So the operator-visible status LEDs, the ones you can see with the case closed, must be driven from **PCB-A**, not from PCB-C. See section 10, item 5.
@@ -1436,7 +1436,7 @@ Routing: the first C3 route left one open (PIRING_K to SW_PI pad 4) and one shor
 - Contacts: J_DOCK `meshsat:PogoTargets_2x4` (2.0 mm ENIG pads at 2.54 pitch) centred at (-12, -70), mirrored on A15's J_DOCK `meshsat:PogoPins_2x4` (Ø1.5 THT at 2.54 pitch, underside): 1-4 SHORE_12V, 5-8 GND. Pin spec: 2.54-pitch spring pin, 7.0 mm free length, 1.5 mm stroke or more, 3 A each (Mill-Max 0906 class), compressed 1.0 mm by the 6.0 mm spacer gap. The first target footprint had 3.0 mm pads that overlapped at 2.54 pitch (caught by the pre-route gate); 2.0 mm now.
 - Shore entry (MIL-STD-1275 flavour, isolated): IP68 2-pin bulkhead lead -> J_DCIN (JST-VH, 10 A) -> F1 7.5 A mini blade in a Keystone 3568 holder (3.7 A at 12 V full load, 5 A at 9 V) -> Q1 AO4409 SO-8 P-FET reverse polarity (R1 100k, D2 12 V zener gate clamp; alt DMP4015SSS) -> D1 SMCJ33A + C1 10 u 50 V -> U1 TRACO TEN 40-2412WIN -> C3 22 u, D3 SMBJ15A, LED1 -> SHORE_12V on the targets and on J_AUX (XH2, Rev B MPPT slot). The input return DC_N stays isolated from the kit GND (1500 V), so a vehicle chassis never becomes the kit ground.
 - TEN 40-2412WIN (datasheet rev 7 Aug 2025 archived at `ECAD/vendor/traco/ten40win_datasheet-3049699.pdf`): 9 to 36 V in, 12 V 3.33 A out, 89 percent, -40 to +75 C, 1500 VDC isolation, output current limit 150 percent typ with continuous short-circuit protection and automatic recovery, UVLO 8.3 V, surge 50 V 100 ms, remote on/off open = on, 1 x 2 inch case 10.2 mm high, 30 g. Footprint: KiCad `Converter_DCDC_TRACO_TEN40-110xxWIRH_THT`, whose pad pattern (two columns 45.72 apart, pins 1-3 at 0 / 5.08 / 15.24, pins 4-6 at -2.54 / 7.62 / 17.78, Ø1.0 pins) is the WIN outline drawing exactly; pinout 1 +Vin, 2 -Vin, 3 remote, 4 +Vout, 5 -Vout, 6 trim. Budget: the X1202 barrel takes 6 to 18 V at 3 A or more (Geekworm wiki), the converter gives 40 W.
-- Solar (owner question): regulated-12 V or USB-C PD panels charge through this inlet or the USB-C inlet; a raw panel needs an MPPT module, which is the Rev B slot on J_AUX, not a special socket.
+- Solar (owner question): regulated-12 V or USB-C PD panels charge through this inlet or the USB-C inlet; a raw panel needs an MPPT module, which is the Rev B slot on J_AUX, not a special socket. *(Superseded 4 Sep: ruling 4 of 32.13 puts the MPPT inside the case on the converter's input side, not on J_AUX (32.15 F); the USB-C inlet no longer exists.)*
 
 ### 25.6 Battery topology ruling (owner, 3 Sep 00:50): one pack, the X1202 charges everything
 
@@ -1459,8 +1459,8 @@ Bench items before the pack is built (X1202 in hand): (1) charge current from th
 | MIL-STD-1275 | shore entry 9 to 36 V with fuse, reverse polarity, 50 V surge, isolated converter; not a full 1275 qualification | DO |
 | MIL-STD-130 | nameplate field on the panel, P/N S/N REV silk on every board, asset label spot on the case | DO |
 | MIL-DTL-3950 / MIL-PRF-22885 | layout and behaviour with IP67 COTS switches; qualified parts are a BOM swap | DO (COTS) |
-| MIL-DTL-38999 | external ports stay SMA / USB-C IP67 / circular DC inlet; 38999 is Rev B | REV B |
-| MIL-STD-348 / MIL-PRF-39012 | SMP blind-mate RF joints once a documented set is in hand (25.2) | REV B |
+| MIL-DTL-38999 | shore DC and USB data on a keyed sealed 38999 wall connector, antennas stay SMA (ruling 6 of 32.13, 4 Sep); the USB-C inlet is gone since the one-pack ruling | REV A |
+| MIL-STD-348 / MIL-PRF-39012 | SMP-MAX blind-mate RF joints between PCB-A and the dock (ruling 5 of 32.13, 4 Sep; 32.7, 32.14, 32.15) | REV A |
 | IPC-A-610 class 3 | JLC assembles class 2; class-3 geometry kept (annular ring >= 0.15, ENIG) | DO (design) |
 
 ### 25.8 Results of this session
@@ -2245,3 +2245,21 @@ A gateway session compared 32.13 with the day's work and reported by message. Co
 4. **Cart instruction corrected** (handover, ordering prompt, ORDER-LOG): line A is not rebuilt from A18, E2 is deleted, E1 is rebuilt after the dock respin, B from B11; C4, R1 and D5 stand. The gateway's suggestion to order the four untouched boards now, so that D5 is in hand for the DMR858M modules around 15 Sep, and to carry rulings 2 to 6 plus the review findings into one A19 and dock respin, is put to the owner.
 
 Not confirmed: the public README and BUILD lines it called stale were already corrected in commit a7540c1; the handover lines likewise.
+
+### 32.15 Gateway audit of the respin brief, 4 Sep 2026 late evening: nine findings and their disposition
+
+A read-only gateway session audited appendix 7, 8, 25 and 32 against the rulings of 32.13 before any respin work started. Findings, with what is done about each:
+
+| # | Finding | Disposition |
+|---|---|---|
+| A | 32.7's board-to-board scheme (receptacles on both boards, adapter between) and 32.14's cable-mount dock side are different parts | 32.14 stands: the Radiall catalogue in `vendor/rf/` lists straight and right-angle female plugs for flexible cable and bulkhead slide-on jacks (its pages 176 to 206 in text order), so the dock carries cable-mount plugs in float mounts and no RF copper; PCB-A carries the receptacles. Exact numbers at the design step |
+| B | 32.7 names adapter R222M40010 (9.5 mm) while the filed data sheet is R222M40050 | with cable-mount plugs on the dock the in-series adapter drops out; the 13 mm minimum between boards is the catalogue's own figure for the board-to-board scheme (its line "Minimum distance between PCB 13 mm") and no longer binds. The gap is set by the receptacle and plug heights, derived at the design step from the filed sheets; 32.14's Z figure is provisional |
+| C | RG-316 cannot bend inside a 13 mm gap (minimum radius 12.5 mm, section 7) | right-angle cable plugs on the dock side, cable exiting sideways along the floor; confirmed available in the catalogue (finding A) |
+| D | seven RF launches on PCB-A's underside, four of the paths start on PCB-B; In2 under a bottom launch is the +5V_MOD plane | design rule for A19: each RF joint is a receptacle on the bottom with a local ground pour and In1 stitching under it, fed by a pigtail to a top-side SMA or U.FL launch through a via-stitched transition, near-zero copper run; the four PCB-B pigtails run down the stack's edge. The blind-mate datum is the rod-located PCB-A |
+| E | the heating pad on a TPS2065 channel would draw 5 W from the cells through the boost, at the moment charging is held off | decided, designer's call: the pad runs from SHORE_12V (present only with shore power, about 25 W spare on the dock converter) through a high-side switch and its own fuse on PCB-A; a 12 V pad, about 15 to 20 W; the "shore present" condition becomes hardware |
+| F | J_AUX on the converter output was called the MPPT slot; ruling 4 puts the MPPT on the converter's input side; two sources on the converter input; most COTS MPPT modules are battery chargers without a defined output when no battery hangs on them | the MPPT sits on the input side (isolation kept); the shore inlet and the MPPT output are ORed or interlocked for 3.7 A at 12 V; the module must hold a constant voltage inside 9 to 36 V against the converter's 8.3 V lockout. Whether such a documented module exists decides the question, which goes to the owner with the part names |
+| G | the 38999 USB data port has no hub port: all four FE1.1s ports are used | A19 moves to a seven-port hub or the wall port takes a spare Pi port without limiting and monitoring; decided at the schematic step with the owner's preference asked once the cost is known. Shell bonding to a plastic case and the ribbed curved Peli wall need a stated answer in the case drawing |
+| H | the TPS61288 is not a value swap, and L2 (XAL6030-152, 12 A) is at or over its rating at the 6.5 A unserialised burst from a 3.0 V node | the whole programming network and the inductor are re-selected from the TPS61288 sheet at the schematic step; the worst case (about 12 A input at 3.0 V) is stated, not inherited; F3 and the 2.5 mm bar are checked against it; the LCSC status of the part is checked on the laptop |
+| I | stale pages Nick will read: section 7 and 8 USB-C inlet, 25.7's two rows, 25.5's solar bullet | corrected in this commit (superseded notes on the lines themselves, 25.7 rows now REV A) |
+
+Order of the design work follows the audit's suggestion: the SMP-MAX part set and the gap first, then the dock connector and cable exits, then the A19 schematic items E to H, with F and G brought to the owner once the parts are named.
