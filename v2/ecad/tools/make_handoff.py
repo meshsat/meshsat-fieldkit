@@ -2,7 +2,7 @@
 """Build v2/release/<rev>/order (JLCPCB order files) and v2/release/<rev>/review (prints for the design review)
 from the deliverable folders in v2/release/<rev>/boards. Run on the laptop from anywhere: python3 make_handoff.py
 (rev = $MESHSAT_FK_REV, default revA; every path is derived from this file's location in the meshsat-fieldkit repo)."""
-import re, os, csv, shutil, subprocess, sys, pcbnew
+import sys, re, os, csv, shutil, subprocess, sys, pcbnew
 HOME = os.path.expanduser("~")
 RT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))                     # v2/ecad (projects, tools, meshsat.pretty)
 V2 = os.path.dirname(RT)                                                             # v2/
@@ -44,6 +44,13 @@ BOARDS = [  # (deliverable folder, file stem, project dir, title, phase, hand-fi
     ("meshsat-pcb-e5-revA-E5", "pcb-e5-block", "pcb-e5-block", "PCB-E5 DOCK BLOCK", "E5", "bare 2 oz board, no assembly: it sits on four M3 standoffs 6 mm above the dock strip so its face is at 7.4 mm, PCB-A's spring pins land on the twelve signal targets and the nine power targets, and the wires from the strip are soldered into the plated lands underneath (the underside legend names each one)"),
 ]
 JLC = os.path.join(RELEASE, "order"); REV = os.path.join(RELEASE, "review")
+# The deliverable folders are written by finish_board.sh on the laptop. Building order/ and review/ from a clone that has
+# not received them yet silently falls back to the project board file (older, and with no gerbers), so stop here instead.
+missing = [f for f, stem, *_ in BOARDS if not os.path.exists(os.path.join(DL, f, stem + "-gerbers.zip"))]
+if missing and os.environ.get("HANDOFF_ALLOW_MISSING") != "1":
+    sys.exit("make_handoff: no finished deliverable for %s in %s.\n"
+             "Finish those boards and commit their folders from the laptop first, then pull here and rerun.\n"
+             "Set HANDOFF_ALLOW_MISSING=1 only if you mean to build the set without them." % (", ".join(missing), DL))
 shutil.rmtree(REV, ignore_errors=True); os.makedirs(REV, exist_ok=True); os.makedirs(JLC, exist_ok=True)   # JLCPCB/ is never wiped: ORDER-LOG.md and upload/ copies live there
 def run(cmd): r = subprocess.run(cmd, capture_output=True, text=True); return r.returncode == 0, (r.stdout + r.stderr)[-300:]
 order_index = ["# MeshSat field-kit carrier boards, JLCPCB order set (generated %s)" % subprocess.run(["date", "+%Y-%m-%d %H:%M"], capture_output=True, text=True).stdout.strip(), "",
