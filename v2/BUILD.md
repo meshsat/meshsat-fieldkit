@@ -36,7 +36,7 @@ Case and frame: Peli 1520EU without foam and the 1520PF special application pane
 
 Modules that mount on the boards (one kit): Raspberry Pi 5 8 GB with active cooler, LilyGO T-Call A7670E, LilyGO T-Beam 1W (LoRa), RTL-SDR Blog V4, ZigBee CC2652P USB coordinator, RockBLOCK 9704 (or 9603) with the Ground Control bracket, Seeed Wio-SX1262, Raspberry Pi Touch Display 2, WeAct 3.7 inch e-paper, a GPS puck and a WiFi dongle on the USB-A receptacles. There is no separate uninterruptible supply module: PCB-A is the charger, the gauge and the power control.
 
-Battery module: twelve Samsung INR18650-35E in parallel (1S12P, 40.2 Ah minimum from the specification, about 0.6 kg of cells), 0.15 x 8 mm nickel strip, fish paper, blue PVC sleeve, a Littelfuse MAXI 40 A blade with its in-line holder on the positive lead, an Amass XT60 pair on 12 AWG silicone, and a Semitec 103AT-2 thermistor taped to a cell for the charger's temperature window. The single-cell protection board is the one open choice: no documented off-the-shelf module reaches 30 A continuous, so it is either a small board built around a TI BQ29700 with two CSD17570Q5B switches, or a documented 15 A module with the requirement relaxed (appendix 32.27). Spot welder or a shop that welds packs. The module lives in a cradle on the case floor and blind-mates to the dock, so it is not strapped to a board.
+Battery module: twelve Samsung INR18650-35E in parallel (1S12P, 40.2 Ah minimum from the specification, about 0.6 kg of cells), 0.15 x 8 mm nickel strip, fish paper, blue PVC sleeve, a Littelfuse MAXI 40 A blade with its in-line holder on the positive lead, an Amass XT60 pair on 12 AWG silicone, and a Semitec 103AT-2 thermistor taped to a cell for the charger's temperature window. The single-cell protection board is the documented Batteryspace PCB-LIS1A15 (15 A continuous, 20 A for five minutes, 35 A trip, 65 x 10 x 2.5 mm; appendix 32.31). Spot welder or a shop that welds packs. The module lives in a cradle on the case floor and blind-mates to the dock, so it is not strapped to a board.
 
 Hardware per `docs/ASSEMBLY.md` section 1: four M3 stainless rods with Nyloc nuts, spacers for the 13.4 mm dock gap, 35 mm and 59 mm bay spacers, four M2.5 x 22 female-female standoffs with M2.5 x 6 screws for the Pi, four M3 x 6 standoffs for the raised dock block, 16 x M3 x 8 pan head for the panel frame.
 
@@ -100,8 +100,7 @@ Removal for maintenance (`docs/ASSEMBLY.md` section 7): lid, 16 screws, ribbon a
 ## 9. Known gaps of Rev A
 
 - Nothing here has been built and no board has been fabricated. Report what does not fit on MESHSAT-709.
-- The single-cell protection board for the battery module is not chosen: no documented off-the-shelf module reaches 30 A continuous, so it is a small bespoke board or a documented 15 A module with the requirement relaxed (appendix 32.27).
 - The spring-pin return path is three contacts at about 1.1 A each, inside the Preci-Dip contact's 3.5 A rating; the module current runs on the separate 9 A pins.
 - The commissioning list (MESHSAT-774) and the panel software (MESHSAT-773) are open. A Rev A kit powers up and runs the Bridge; the panel lights and switches come alive with that software.
 - The DMR858M carrier (PCB-D) has not been powered yet; the modules arrive mid September 2026 and the first bring-up uses the AIOC as a temporary codec into the existing Direwolf pipeline.
-- The case cut-outs for the MIL-DTL-38999 wall receptacles are not drawn yet, and the battery module's cradle and enclosure are still to be modelled.
+- The case wall receptacles and the battery module cradle are drawn and modelled (`release/revA/case/`, `release/revA/module/`) but nothing has been cut or printed.

@@ -14,8 +14,10 @@ USB host: Glenair 233-370 shell 15 wall-mount receptacle D0: flange 31.29 square
 Case: cavity 124.87 deep, inner wall from the shoulder to 108 mm down at a 2 degree draft, then a 17 mm chamfer to the
 floor; frame-leg bosses on the inner walls at X +-8.6, +-48.7, +-51.4, +-133.3, +-148.8, +-151.5, +-152.4 between 67 and
 71 mm above the floor (appendix 25.1, vendor/peli/wall2.py section). Every through-hole here keeps 7 mm or more from them.
-Frame: case-centred, X along the long axis, Z up from the cavity floor. Sheet 1 is the wall, sheet 2 the plate, both 1:1 on
-A4 landscape; check the 100 mm bar with a rule.  Usage: case_wall_cutouts.py <out.pdf>"""
+Wall: the BACK long wall, the hinge side (case +Y). The front wall carries the handle, the pressure valve, two rib clusters and
+both latch straps (Peli customer drawing 1521-931), and its inner ribs leave no centre leg, so nothing flat and free is left there.
+Frame: case-centred, X along the long axis, Z up from the cavity floor. Both sheets are drawn as seen from OUTSIDE the back
+wall, so case +X is on the viewer's left. 1:1 on A4 landscape; check the 100 mm bar with a rule.  Usage: case_wall_cutouts.py <out.pdf>"""
 import sys
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.units import mm
@@ -25,13 +27,14 @@ PLATE = dict(cx=-92.0, cz=55.0, w=82.0, h=54.0, t=3.0)
 SCREWS = [(-120.0, 78.0), (-92.0, 78.0), (-64.0, 78.0), (-120.0, 32.0), (-92.0, 32.0), (-64.0, 32.0)]   # M4, wall and plate
 DC = dict(name="DC: D38999/20 sh. 13 D0", x=-110.0, z=55.0, hole=19.05, flange=28.9, pattern=23.01, screw=3.3, wall_hole=29.0)
 USB = dict(name="USB: 233-370 sh. 15 D0", x=-74.0, z=55.0, hole=23.01, flange=31.29, pattern=24.61, screw=3.3, wall_hole=29.0)
-BOSS_X = [-133.3, -51.4]          # the two frame-leg bosses nearest the plate (the others sit beyond X -148 and at -8.6)
+BOSS_X = [-133.3, -8.6]           # the back wall's inner ribs nearest the plate (frame-leg drill points at X +-8.6, +-133.3, +-152.4)
+VIEW = -1.0                        # seen from outside the back wall: case +X to the viewer's left
 FLOOR_TO_RIM = 124.87; CHAMFER = 16.7
 
 out = sys.argv[1] if len(sys.argv) > 1 else "wall-cutouts-1to1.pdf"
 c = canvas.Canvas(out, pagesize=landscape(A4)); W, H = landscape(A4)
 ox = W / 2 - PLATE["cx"] * mm; oz = 64 * mm
-def P(x, z): return ox + x * mm, oz + z * mm
+def P(x, z): return ox + VIEW * (x - PLATE["cx"]) * mm + PLATE["cx"] * mm, oz + z * mm
 def line(x1, z1, x2, z2, w=0.3, dash=None):
     c.setLineWidth(w)
     if dash: c.setDash(*dash)
@@ -41,7 +44,7 @@ def circle(x, z, d, w=0.4):
 def rect(x0, z0, x1, z1, w=0.4, dash=None):
     c.setLineWidth(w)
     if dash: c.setDash(*dash)
-    px, pz = P(x0, z0); c.rect(px, pz, (x1 - x0) * mm, (z1 - z0) * mm, stroke=1, fill=0); c.setDash()
+    (ax, az), (bx, bz) = P(x0, z0), P(x1, z1); c.rect(min(ax, bx), min(az, bz), abs(bx - ax), abs(bz - az), stroke=1, fill=0); c.setDash()
 def text(x, z, s, size=8, angle=0, anchor="l"):
     px, pz = P(x, z); c.saveState(); c.translate(px, pz); c.rotate(angle); c.setFont("Helvetica", size)
     {"c": c.drawCentredString, "r": c.drawRightString}.get(anchor, c.drawString)(0, 0, s); c.restoreState()
@@ -66,7 +69,7 @@ line(x0, 0, x1, 0, 0.8); text(x1 + 1, -1, "cavity floor, Z 0", 7)
 line(x0, CHAMFER, x1, CHAMFER, 0.3, (2, 2)); text(x1 + 1, CHAMFER - 1, "inner chamfer ends, Z 16.7", 6)
 line(x0, FLOOR_TO_RIM, x1, FLOOR_TO_RIM, 0.8); text(x1 + 1, FLOOR_TO_RIM - 1, "rim, Z 124.87", 7)
 for bx in BOSS_X:
-    if x0 < bx < x1: rect(bx - 3, 67, bx + 3, 71, 0.3, (1, 1)); text(bx, 73, "leg boss", 5, anchor="c"); text(bx, 63, "(inside)", 5, anchor="c")
+    if x0 < bx < x1: rect(bx - 3, 30, bx + 3, 71, 0.3, (1, 1)); text(bx, 73, "inner rib", 5, anchor="c"); text(bx, 27, "(inside)", 5, anchor="c")
 rect(PLATE["cx"] - PLATE["w"] / 2, PLATE["cz"] - PLATE["h"] / 2, PLATE["cx"] + PLATE["w"] / 2, PLATE["cz"] + PLATE["h"] / 2, 0.3, (3, 2))
 text(PLATE["cx"] + PLATE["w"] / 2 + 2, PLATE["cz"] + PLATE["h"] / 2 - 3, "plate outline 82 x 54, gasket the same", 6.5)
 for r in (DC, USB):
@@ -75,12 +78,12 @@ for sx, sz in SCREWS: circle(sx, sz, 4.5, 0.5); cross(sx, sz, 3)
 text(SCREWS[0][0] - 8, SCREWS[0][1] - 1, "6 x 4.5 for M4", 6.5, anchor="r")
 dim(DC["x"], USB["x"], 22, "36.0"); dim(SCREWS[0][0], SCREWS[2][0], 86, "56.0 (28.0 pitch)"); vdim(x0 + 4, 0, DC["z"], "55.0 above the floor"); vdim(x1 - 4, SCREWS[3][1], SCREWS[0][1], "46.0")
 text(DC["x"], FLOOR_TO_RIM + 3, "DC hole X %.1f" % DC["x"], 7, anchor="c"); text(USB["x"], FLOOR_TO_RIM + 9, "USB hole X %.1f" % USB["x"], 7, anchor="c")
-text(x0, FLOOR_TO_RIM + 3, "X %.0f" % x0, 7); text(x1, FLOOR_TO_RIM + 3, "X %.0f" % x1, 7, anchor="r")
+text(x0, FLOOR_TO_RIM + 3, "X %.0f" % x0, 7, anchor="r"); text(x1, FLOOR_TO_RIM + 3, "X %.0f  (case +X is to your left: you face the back wall from outside)" % x1, 7)
 scale_bar(x0, -10)
-notes(["SHEET 1 of 2: WALL. MeshSat field kit, Peli 1520 base, long wall on the dock entry side, seen from OUTSIDE. Case frame: X along the long axis from the case centre, Z up from the cavity floor.",
+notes(["SHEET 1 of 2: WALL. MeshSat field kit, Peli 1520 base, the BACK long wall (hinge side), seen from OUTSIDE, so case +X is on your left. Case frame: X along the long axis from the case centre, Z up from the cavity floor.",
        "Two hole-saw holes for the receptacle bodies and six M4 clearance holes for the connector plate. Tape this sheet on the outer skin with its floor line level with the inside floor (transfer the height from inside).",
        "The plate, not the wall, carries the sealing faces: the 1520 inner wall drafts about 2 degrees and the outer skin is ribbed (envelope STEP, vendor/peli/wall2.py), so a flanged receptacle cannot seal on the case itself.",
-       "Every through-hole keeps 7 mm or more from the frame-leg bosses on the inner walls (X -133.3 and -51.4 nearest, 67 to 71 mm above the floor, appendix 25.1). Check on the case that no latch or handle boss falls inside the plate outline before cutting.",
+       "Why the back wall: the front wall carries the handle, the pressure valve, two rib clusters and both latch straps (Peli drawing 1521-931), and the end walls are too narrow between their ribs. Every through-hole here keeps 7 mm or more from the back wall's inner ribs (X -133.3 and -8.6 nearest, frame-leg drill points at 67 to 71 mm above the floor, appendix 25.1); the hinge sits at the rim, 43 mm above the plate.",
        "Cut order: mark, drill the six 4.5 holes, hole-saw the two 29 holes from outside, deburr both faces, dry-fit the plate, then gasket. The chamfer at the floor begins 16.7 mm up; nothing here reaches it."], -17)
 c.showPage()
 
@@ -101,5 +104,5 @@ notes(["SHEET 2 of 2: CONNECTOR PLATE, 82 x 54 x 3 mm aluminium (5052 or 6061), 
        "Shore DC: Glenair D38999/20 shell 13 wall mount with round holes (D0), front panel mount: hole 19.05, four M3 clearance holes on a 23.01 square, flange 28.9 square. Its own gasket seals to the plate.",
        "USB host: Glenair 233-370 shell 15 wall mount D0, front panel mount: hole 23.01, four M3 clearance holes on a 24.61 square, flange 31.29 square; the 3 mm plate is inside its 1.6 to 6.35 mm panel range.",
        "Both receptacles: flange outside, gasket, plate, then the receptacle's own nuts inside; M3 x 10 stainless with spring washers. Plate to wall: six M4 x 16 stainless, washers both sides, Nyloc nuts inside; torque 1.2 N m in a cross pattern so the gasket loads evenly.",
-       "Pin functions, cables and the dock leads: appendix 32.29 and ASSEMBLY.md section 4. Nothing here has been cut yet; confirm the plate outline against the case in hand before machining."], -17)
+       "Pin functions, cables and the dock leads: appendix 32.29 and ASSEMBLY.md section 4. Seen from outside the back wall (case +X to your left), as sheet 1. Nothing here has been cut yet."], -17)
 c.showPage(); c.save(); print("wrote", out)
