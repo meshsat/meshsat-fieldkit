@@ -283,7 +283,6 @@ SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_M1", "J_5V_M2", "J_5V_PI"
             ("CH3 LoRa: XIAO Wio-SX1262 or T-BEAM 1W  (0x45, 2A)", ["F4", "U10", "C27", "C29", "R32", "R17", "R18", "U11", "C16", "C17", "J_XIAO1", "J_TBEAM1", "U12"]),
             ("CH4 ROCKBLOCK 5V  (0x42, 2A)", ["F5", "U13", "C28", "C30", "R33", "R20", "R21", "U14", "C18", "C19"]),
             ("CH5 T-CALL LTE  (0x44, 2A)", ["F2", "U15", "C20", "C31", "R34", "R22", "U16", "C21", "C22", "J_TCALL1", "U17"]),
-            ("CH6 PCB-A FEED  (0x43)", []),
             ("I2C EXPANDER PCA9555 (0x20): EN + FAULT", ["U20", "C26", "R25", "TP6", "TP7", "TP8", "TP9", "TP10"]),
             ("ROCKBLOCK SITE: UART SELECT, 9704 + 9603 CONNECTORS, OnOff BUFFER", ["JP3", "JP4", "J_RB9704", "J_RB9603", "Q1", "R26", "R27", "R28"]),
             ("PANEL RIBBON (PCB-C CONTROL PANEL)", ["F6", "J_PANEL"]),
