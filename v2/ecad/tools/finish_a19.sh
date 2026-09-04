@@ -15,7 +15,6 @@ hard=sum(c[t] for t in ('clearance','shorting_items','tracks_crossing','hole_cle
 PY
 read H < out/par-score.txt; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; fi
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
-python3 ../tools/fix_a19_node.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -4
 python3 ../tools/silk_fix_all.py $N.kicad_pcb a 2>&1 | grep -vE 'Debug|leak' | tail -2
 cd ..; ./tools/finish_board.sh pcb-a-power pcb-a-power post_fix_a.py meshsat-pcb-a-revA-A19 2>&1 | tail -16
 echo FINISH-A19-DONE

@@ -171,6 +171,29 @@ def plane(layer, netname, name, rect=(-167.5, -85, 122.5, 85), priority=0):
 plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+5V_M1", "+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)")
 for k, rect in enumerate(((-108, -74, -76, -58), (-34, -74, -4, -58), (62, -74, 78, -58), (84, -74, 111, -56)), 1): plane(pcbnew.In2_Cu, "GND", "GND island In2 under blind-mate sites, group %d" % k, rect=rect, priority=1)
 plane(pcbnew.In2_Cu, "CELL+", "CELL+ pour In2 (node bar under the fuse row, west of the RF islands)", rect=(-160, -56, -116, -44), priority=1)
+# A19 node copper as pre-route pours on both outer layers (the router keeps clear of them): CELL+ from the four 9 A pins (Y -73) south to a bar at Y -77,
+# up the west edge to a bar at Y -40 above the fuse row, with taps down to each fuse's node pad; CELL_N from the return pins (Y -67) north to the shunt R52.
+def outer_pour(netname, name, rect, layers=(pcbnew.F_Cu, pcbnew.B_Cu)):
+    for L in layers:
+        z = pcbnew.ZONE(board); z.SetLayer(L); z.SetNet(net_for(netname)); z.SetZoneName(name + " " + board.GetLayerName(L)); z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL)
+        z.SetMinThickness(FromMM(0.5)); z.SetLocalClearance(FromMM(0.3)); o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
+        for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
+        z.SetAssignedPriority(2); board.Add(z)
+outer_pour("CELL+", "node bar south", (-160, -79, -133, -75)); outer_pour("CELL+", "node riser west", (-163, -79, -158, -38.5)); outer_pour("CELL+", "node bar north", (-163, -42, -50, -38.5))
+for k in range(4): outer_pour("CELL+", "pin tap %d" % (k + 1), (-148.5 + 4 * k, -77, -145.5 + 4 * k, -72))
+for ref in ("F3", "F4", "F5", "F2"):
+    fx = placed[ref].Pads()[0].GetPosition().x / 1e6 - OX if ref in placed else None
+    for pad in placed[ref].Pads():
+        if pad.GetNumber() == "1": fx = pad.GetPosition().x / 1e6 - OX
+    outer_pour("CELL+", "fuse tap " + ref, (fx - 1.5, -47, fx + 1.5, -38.5))
+outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
+for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60))
+# no tracks on the inner layers (planes and islands only; vias may pass)
+for L in (pcbnew.In1_Cu, pcbnew.In2_Cu):
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+    z.SetLayer(L); z.SetZoneName("no tracks on " + board.GetLayerName(L)); o = z.Outline(); o.NewOutline()
+    for x, y in ((-167.5, -85), (122.5, -85), (122.5, 85), (-167.5, 85)): p = P(x, y); o.Append(p.x, p.y)
+    board.Add(z)
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
