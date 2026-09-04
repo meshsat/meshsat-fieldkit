@@ -157,9 +157,9 @@ part("SW_PI", "Connector_Generic", "Conn_01x04", "PI 16 mm recessed momentary, a
 r("R%d" % rn, "300R", "LED_RAIL", "PIRING_A", "R", "C23025"); rn += 1
 part("SW_TEST", "Connector_Generic", "Conn_01x04", "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G", "SW16", {"1": "TEST_SW", "2": "GND", "3": "TESTRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL", "TESTRING_A", "R", "C23179"); rn += 1
-part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS guarded momentary toggle (red cover); NKK M2015SD3A01, guard per ASSEMBLY.md section 9", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
-part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON guarded latching toggle (closed = TX inhibit); NKK M2012SD3A01, guard per ASSEMBLY.md section 9", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
-part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE guarded momentary toggle (hold 5 s); NKK M2015SD3A01, guard per ASSEMBLY.md section 9", "TGL3", {"1": "ZEROIZE_SW", "2": "GND", "3": "NC"})
+part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot; ruling 32.13); the bridge acts after 2 s closed", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
+part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON locking toggle (closed = TX inhibit; APEM 5636ADKB-2V, both positions locked; ruling 32.13)", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
+part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, both positions locked; ruling 32.13); the bridge acts after 5 s closed", "TGL3", {"1": "ZEROIZE_SW", "2": "GND", "3": "NC"})
 # power-button leads: ferrite + 100 nF at the panel end (the leads pass the antenna feeds)
 part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "X1202SW_A", "2": "X1202SW_A2"}, "C1017"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "X1202SW_B", "2": "X1202SW_B2"}, "C1017")
 c("C11", "100n", "X1202SW_A2", "X1202SW_B2", "C", "C14663")
