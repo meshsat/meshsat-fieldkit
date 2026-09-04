@@ -7,12 +7,23 @@ import sys, re, math, pcbnew
 from pcbnew import VECTOR2I, FromMM
 b = pcbnew.LoadBoard(sys.argv[1]); CLR = FromMM(0.16)
 NCC = {}
+def _load_classes():
+    """Net class clearances and patterns from the project file beside the board (the Python API hides NETCLASS in KiCad 9)."""
+    import json, os
+    try:
+        d = json.load(open(os.path.splitext(sys.argv[1])[0] + ".kicad_pro")).get("net_settings", {})
+        cls = {c["name"]: FromMM(c.get("clearance", 0.15)) for c in d.get("classes", [])}
+        pats = [(e["pattern"], e["netclass"]) for e in d.get("netclass_patterns", [])]
+        return cls, pats
+    except Exception: return {}, []
+NC_CLS, NC_PATS = _load_classes()
 def net_clr(name):
-    """Clearance a net needs: the board default 0.16 or its net class value, whichever is larger (A19: the BANK and RAIL classes ask 0.2)."""
+    """Clearance a net needs: the escape default 0.16 or its net class value, whichever is larger (A19: BANK and RAIL ask 0.2)."""
     if name in NCC: return NCC[name]
+    import fnmatch
     v = CLR
-    try: v = max(CLR, b.GetNetInfo().GetNetItem(name).GetNetClass().GetClearance())
-    except Exception: pass
+    for pat, cl in NC_PATS:
+        if fnmatch.fnmatchcase(name, pat) or fnmatch.fnmatchcase(name.lstrip("/"), pat): v = max(CLR, NC_CLS.get(cl, CLR)); break
     NCC[name] = v; return v
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
