@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Cross-board contract check for the Rev A set (A19, B12, C4, D5, E4, plus the E5 block, appendix 32.26).
+"""Cross-board contract check for the Rev A set (A20, B13, C5, D6, E4, plus the E5 block, appendix 32.26 and 32.35).
 
 Reads the KiCad netlists in <board>/out/<board>.net and verifies the connections that no single board's gate can see:
-the panel ribbon map, the transmit inhibit chain, the three 5 V rails, the dock signal and power contacts, and the
-shutdown pair on the A to B ribbon. Prints one line per contract and exits non-zero on any FAIL.
+the panel ribbon map, the transmit inhibit chain, the three 5 V rails, the dock signal and power contacts, the
+shutdown pair on the A to B ribbon, the 2x9 ribbon map itself, the mezzanine harness map and the I2S and wall-port pairs (32.35). Prints one line per contract and exits non-zero on any FAIL.
 Usage: check_contracts.py [ecad dir]   (default: the directory above this script)"""
 import sys, os, re, collections
 
@@ -107,6 +107,30 @@ for net in ("PI_SHDN_REQ", "PI_KILL"):
     a = [r for r, p in B["A"][0].get(net, set())]
     b = [r for r, p in B["B"][0].get(net, set())]
     check(bool(a) and bool(b), "ribbon net %s exists on A and B" % net, "A %s, B %s" % (sorted(a), sorted(b)))
+
+# 7. the A to B ribbon (2x9 since A20/B13): identical map on both boards, all eighteen pins named
+ma, mb = pinmap("A", "J_AB1", range(1, 19)), pinmap("B", "J_AB1", range(1, 19))
+diff = [p for p in range(1, 19) if not same(ma[p], mb[p])]
+check(ma and mb and all(ma.values()) and all(mb.values()) and not diff, "J_AB1 2x9 map identical on A and B",
+      "differs on pins %s: %s" % (diff, {p: (ma[p], mb[p]) for p in diff[:4]}))
+# 8. the mezzanine harness: A's J_MEZZ1 and D's J_HARN1 carry the same sixteen nets
+ma, md = pinmap("A", "J_MEZZ1", range(1, 17)), pinmap("D", "J_HARN1", range(1, 17))
+diff = [p for p in range(1, 17) if not same(ma[p], md[p])]
+check(ma and md and all(ma.values()) and all(md.values()) and not diff, "J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical",
+      "differs on pins %s: %s" % (diff, {p: (ma[p], md[p]) for p in diff[:4]}))
+# 9. I2S from the module to the codec: the four lines exist on B (the module), A (pass-through) and D (the WM8960)
+for net in ("I2S_BCLK", "I2S_LRCLK", "I2S_DOUT", "I2S_DIN"):
+    have = {k: bool(B[k][0].get(net)) for k in ("A", "B", "D")}
+    check(all(have.values()), "I2S line %s on B, A and D" % net, str(have))
+check(any(r.startswith("U30") for r, _ in B["B"][0].get("I2S_BCLK", set())), "B: I2S_BCLK leaves a module connector pin", str(sorted(B["B"][0].get("I2S_BCLK", set()))[:4]))
+check(any(r == "U5" for r, _ in B["D"][0].get("I2S_BCLK", set())), "D: I2S_BCLK reaches the codec U5", str(sorted(B["D"][0].get("I2S_BCLK", set()))[:4]))
+# 10. the wall host port: its USB pair comes from B's hub over the ribbon and ends on A's J_WALL1
+for net in ("USB_WALL_P", "USB_WALL_N"):
+    a = [r for r, p in B["A"][0].get(net, set())]; b = [r for r, p in B["B"][0].get(net, set())]
+    check("J_WALL1" in a and "J_AB1" in a and "U1" in b and "J_AB1" in b, "wall-port pair %s: B hub -> J_AB1 -> A J_WALL1" % net, "A %s, B %s" % (sorted(a), sorted(b)))
+# 11. the gated codec rail: B13's +3V3_AB crosses the ribbon and the harness to the codec on D
+for k, ref in (("B", "J_AB1"), ("A", "J_AB1"), ("A", "J_MEZZ1"), ("D", "J_HARN1")):
+    check(any(r == ref for r, _ in B[k][0].get("+3V3_AB", set())), "+3V3_AB on %s %s" % (k, ref))
 
 print("\n%d contract(s) FAILED" % len(fails) if fails else "\nALL CONTRACTS PASS")
 sys.exit(1 if fails else 0)

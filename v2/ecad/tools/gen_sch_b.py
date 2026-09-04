@@ -187,7 +187,7 @@ r("R1", "1k", "+5V_M1", "LED_5V_A"); part("LED1", "Device", "LED", "green 5V", "
 part("J_TD2", "Connector_Generic", "Conn_01x02", "Touch Display 2 5V (XH2.54)", "XH2", {"1": "+5V_M1", "2": "GND"})
 for i, net in enumerate(("+5V_M1", "GND", "+3V3", "SDA", "SCL", "TX_INHIBIT_n", "PI_KILL", "+5V_M2", "+5V_PI", "+3V3_CM", "+1V8_CM", "VBUS_EN", "PMIC_EN", "PWR_BUT", "GNSS_PPS", "GNSS_TXD", "I2S_BCLK", "I2S_LRCLK", "VBUS_FLASH", "SDA_CM", "SCL_CM", "+3V3_LTE", "EXP_INT"), 1):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
-for i, net in enumerate(("+5V_M1", "+5V_M2", "+5V_PI", "+3V3", "GND", "5V_RTL", "+3V3_CM", "+1V8_CM", "+3V3_LTE", "VBAT", "SW_RTL", "5V_LTE_IN", "+3V3_AB"), 1):
+for i, net in enumerate(("+5V_M1", "+5V_M2", "+5V_PI", "+3V3", "GND", "5V_RTL", "+3V3_CM", "+1V8_CM", "+3V3_LTE", "VBAT", "RB_FUSED", "5V_LTE_IN", "+3V3_AB", "SIM_VCC", "5V_RB"), 1):
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 
 # --- 3.3 V rails: U31 board logic and radios, enabled by the module's own 3.3 V so the rail follows the module (no back-feed when it is off);
@@ -211,14 +211,14 @@ for n, nm in CM5_PINS.items():
     elif nm == "5V": CM5[n] = "+5V_PI"
     elif nm == "CM5_3.3V": CM5[n] = "+3V3_CM"
     elif nm == "CM5_1.8V": CM5[n] = "+1V8_CM"
-    elif nm.startswith("GPIO"): CM5[n] = GPIO[int(nm[4:])]
+    elif nm.startswith("GPIO") and nm[4:].isdigit(): CM5[n] = GPIO[int(nm[4:])]
     elif nm.startswith("MIPI0_"): CM5[n] = "DSI0_" + nm[6:]
     else: CM5[n] = "NC"          # Ethernet, HDMI, PCIe, USB 3.0 super-speed, MIPI1, SD (eMMC variant), CC
 CM5.update({36: GPIO[0], 35: GPIO[1], 16: "FAN_TACHO", 19: "FAN_PWM", 20: "EEPROM_nWP", 21: "LED_nACT", 76: "VBAT", 78: "+3V3_CM", 80: "DISP_SCL", 82: "DISP_SDA",
             89: "WL_nDIS", 91: "BT_nDIS", 92: "PWR_BUT", 93: "nRPIBOOT", 95: "LED_nPWR", 97: "CAM_GPIO0", 99: "PMIC_EN", 103: "USB_OTG_N", 105: "USB_OTG_P",
             111: "VBUS_EN", 134: "USB_UP_P", 136: "USB_UP_N", 163: "USB_LTE_P", 165: "USB_LTE_N"})
-part("U30A", "meshsat_gen", "CM5A", "Amphenol 10164227-1004A1RLF receptacle A (CM5 pins 1-100, GPIO side); module CM5108064 8 GB 64 GB eMMC wireless, bench-fitted", "CM5A", {str(k): v for k, v in CM5.items() if k <= 100}, "C7435219")
-part("U30B", "meshsat_gen", "CM5B", "Amphenol 10164227-1004A1RLF receptacle B (CM5 pins 101-200, high-speed side)", "CM5B", {str(k): v for k, v in CM5.items() if k > 100}, "C7435219")
+part("U30A", "Connector_Generic", "CM5A", "Amphenol 10164227-1004A1RLF receptacle A (CM5 pins 1-100, GPIO side); module CM5108064 8 GB 64 GB eMMC wireless, bench-fitted", "CM5A", {str(k): v for k, v in CM5.items() if k <= 100}, "C7435219")
+part("U30B", "Connector_Generic", "CM5B", "Amphenol 10164227-1004A1RLF receptacle B (CM5 pins 101-200, high-speed side)", "CM5B", {str(k): v for k, v in CM5.items() if k > 100}, "C7435219")
 # module support: RTC cell (shared with the GNSS backup pin), LEDs, fan, flashing port, bench headers
 part("BT1", "Device", "Battery_Cell", "CR2032 holder Keystone 3034 (VBAT, also the NEO-M9N V_BCKP)", "CR2032", {"1": "VBAT", "2": "GND"})
 r("R46", "1k", "+3V3_CM", "LED_ACT_A"); part("LED5", "Device", "LED", "green ACT (LED_nACT sinks)", "LED", {"2": "LED_ACT_A", "1": "LED_nACT"})
@@ -307,7 +307,7 @@ part("U20", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x20", "EXP", {
  "4": "EN_RTL", "5": "EN_LTE", "6": "LTE_W_DIS_n", "7": "LTE_PERST_n", "8": "LTE_DTR", "9": "ZB_nRST", "10": "ZB_BSL", "11": "GNSS_nRST",
  "13": "FLT_RTL", "14": "LTE_RI", "15": "LTE_WAKE_n", "16": "RB_STATUS", "17": "RB_NETAV", "18": "RB_XMTG", "19": "RB_CTRL", "20": "RB_IEN"}, "C5626")
 part("U21", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x25", "EXP", {
- "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "+3V3", "21": "GND", "3": "+3V3",
+ "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "+3V3", "3": "+3V3",   # A0 = pin 21, A1 = pin 2, A2 = pin 3: 0x25
  "4": "WL_nDIS", "5": "BT_nDIS", "6": "DCF_PON", "7": "EPD_RES_ALT", "8": "EXP_SPARE0", "9": "EXP_SPARE1", "10": "EXP_SPARE2", "11": "EXP_SPARE3",
  "13": "DCF_T", "14": "EXP_SPARE4", "15": "EXP_SPARE5", "16": "EXP_SPARE6", "17": "EXP_SPARE7", "18": "EXP_SPARE8", "19": "EXP_SPARE9", "20": "EXP_SPARE10"}, "C5626")
 c("C26", "100n", "+3V3", "GND"); c("C27", "100n", "+3V3", "GND")
@@ -319,11 +319,11 @@ part("J_RB9704", "Connector_Generic", "Conn_02x08_Odd_Even", "RockBLOCK 9704 16-
 part("J_RB9603", "Connector_Generic", "Conn_01x10", "RockBLOCK 9603 PicoBlade 10", "PICO10", {
  "1": "UART2_RX", "2": "NC", "3": "NC", "4": "RB_NETAV", "5": "RB_STATUS", "6": "UART2_TX", "7": "RB_ONOFF", "8": "5V_RB", "9": "NC", "10": "GND"})
 nfet("Q1", "Q1_G", "GND", "RB_ONOFF", "2N7002 OnOff open-drain buffer"); r("R26", "100R", "RB_CTRL", "Q1_G"); r("R27", "100k", "Q1_G", "GND"); r("R28", "10k", "RB_STATUS", "+3V3")
-# CH4 RockBLOCK 5 V (0x42, 2 A): 9704 transmit bursts exceed the TPS2065C 1 A limit
+# CH4 RockBLOCK 5 V (0x43, 2 A): 9704 transmit bursts exceed the TPS2065C 1 A limit
 part("F5", "Device", "Polyfuse", "2A hold 1812", "F1812", {"1": "+5V_M2", "2": "RB_FUSED"})
 part("U13", "Power_Management", "TPS22810DRV", "TPS22810DRV", "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", {"6": "RB_FUSED", "5": "EN_RB", "1": "SW_RB", "2": "NC", "3": "RB_CT", "4": "GND", "7": "GND"})
 c("C28", "1n", "RB_CT", "GND"); c("C30", "1u", "RB_FUSED", "GND"); r("R33", "100k", "EN_RB", "+3V3")
-r("R21", "0.05R 1% 1206", "SW_RB", "5V_RB", "RS"); ina219("U14", "SW_RB", "5V_RB", "SDA", "GND"); c("C18", "100n", "+3V3", "GND"); c("C19", "10u", "5V_RB", "GND", "C10u")
+r("R21", "0.05R 1% 1206", "SW_RB", "5V_RB", "RS"); ina219("U14", "SW_RB", "5V_RB", "SCL", "GND")   # 0x43 on B13 (0x42 on B12): the NEO-M9N answers at 0x42 on the same bus; c("C18", "100n", "+3V3", "GND"); c("C19", "10u", "5V_RB", "GND", "C10u")
 # --- panel ribbon (PCB-C C5): fused 5 V, the kit I2C, SPI0 for the e-paper, the PWM dimmer, the TX mirror and the EMCON line; EPD_RES_ALT now from U21
 part("F6", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_M1", "2": "PANEL_5V"})
 part("J_PANEL", "Connector_Generic", "Conn_02x10_Odd_Even", "panel ribbon to PCB-C (IDC 2x10)", "IDC20", {
@@ -344,7 +344,7 @@ libsyms = {}; out = []; ROOT = str(uuid.uuid4())
 def U(): return str(uuid.uuid4())
 def ensure(lib, name):
     key = lib + ":" + name
-    if key not in libsyms: libsyms[key] = synth_symbol(lib, name) if lib == "meshsat_gen" else flatten(lib, name)
+    if key not in libsyms: libsyms[key] = synth_symbol(lib, name) if name in SYNTH else flatten(lib, name)
     return libsyms[key]
 def extents(sym):
     pins = pins_of(sym)
@@ -406,7 +406,7 @@ def emit_pwr_flag(p, x, y):
     else: label(net, x, y + STUB, 270)
 
 # layout: columns, top-down cursor; group order = list order with section titles
-SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_M1", "J_5V_M2", "J_5V_PI", "D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "R1", "LED1", "J_TD2"] + ["TP%d" % k for k in range(1, 24)] + ["#FLG%02d" % k for k in range(1, 14)]),
+SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_M1", "J_5V_M2", "J_5V_PI", "D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "R1", "LED1", "J_TD2"] + ["TP%d" % k for k in range(1, 24)] + ["#FLG%02d" % k for k in range(1, 16)]),
             ("3.3 V BUCKS: U31 BOARD (FOLLOWS THE CM5 3.3 V), U32 LTE SOCKET (EN_LTE, 0x44)", ["U31", "L31", "C31", "C32", "C33", "C34", "R35", "R36", "R37", "R38", "R41", "U33", "U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "R42", "C50", "C51", "C52", "C53", "C49", "C39"]),
             ("COMPUTE MODULE 5 (2x AMPHENOL 10164227-1004A1RLF)", ["U30A", "U30B"]),
             ("CM5 SUPPORT: RTC CELL, LEDS, FAN, FLASH PORT, BENCH HEADERS", ["BT1", "R46", "LED5", "Q2", "R47", "R48", "LED6", "J_FAN", "R49", "J_FLASH", "R50", "R51", "U9", "J_RPIBOOT", "J_WP", "J_PMIC", "J_PWRBTN", "J_DBG"]),
@@ -419,36 +419,39 @@ SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_M1", "J_5V_M2", "J_5V_PI"
             ("ZIGBEE EBYTE E72-2G4M20S1E (CC2652P, ZNP) ON UART1", ["U42", "C65", "C66", "R68", "R69", "R70", "LED3", "R71", "LED4", "J_ZBDBG"]),
             ("TOUCH DISPLAY 2 ON MIPI0 (22-PIN FPC)", ["J_DISP", "U10"]),
             ("I2C EXPANDERS PCA9555 0x20 + 0x25", ["U20", "U21", "C26", "C27"] + ["TP%d" % (30 + k) for k in range(11)]),
-            ("ROCKBLOCK SITE ON UART2: 9704 + 9603 CONNECTORS, OnOff BUFFER, CH4 5 V (0x42, 2A)", ["J_RB9704", "J_RB9603", "Q1", "R26", "R27", "R28", "F5", "U13", "C28", "C30", "R33", "R21", "U14", "C18", "C19"]),
+            ("ROCKBLOCK SITE ON UART2: 9704 + 9603 CONNECTORS, OnOff BUFFER, CH4 5 V (0x43, 2A)", ["J_RB9704", "J_RB9603", "Q1", "R26", "R27", "R28", "F5", "U13", "C28", "C30", "R33", "R21", "U14", "C18", "C19"]),
             ("PANEL RIBBON (PCB-C CONTROL PANEL)", ["F6", "J_PANEL"]),
             ("DCF77 + A-B INTERCONNECT 2x9 (I2S, GATED 3.3 V FOR THE CODEC)", ["J_DCF77", "R29", "F7", "J_AB1"])]
 byref = {p["ref"]: p for p in P}
-placed = set()
-COLW = 88.0; x = 20.0; y = 30.0; PAGE_H = 560.0   # A1 landscape is 841 x 594; A0 is chosen below if the columns overflow
-for title, refs in SECTIONS:
-    # estimate section height
-    hs = []
-    for ref in refs:
-        p = byref[ref]; x0, x1, y0, y1 = extents(ensure(p["lib"], p["sym"])); hs.append((y1 - y0) + 2 * STUB + 12.0)
-    if y + sum(hs) + 10 > PAGE_H and y > 30.0:
-        x += COLW; y = 30.0
-    text(title, round((x - 15.0) / 1.27) * 1.27, round((y - 4.0) / 1.27) * 1.27)
-    y += 4.0
-    for ref, h in zip(refs, hs):
-        p = byref[ref]; x0, x1, y0, y1 = extents(ensure(p["lib"], p["sym"]))
-        if y + h > PAGE_H:
-            x += COLW; y = 34.0
-        cy = y + (y1 + STUB) + 4.0               # symbol origin so its top pin+stub sits at y
-        gx = round((x + 20.0) / 1.27) * 1.27; gy = round(cy / 1.27) * 1.27   # 1.27 mm grid, so every pin end and label is on grid
-        if p["sym"] == "PWR_FLAG": emit_pwr_flag(p, gx, gy)
-        else: emit_part(p, gx, gy)
-        placed.add(ref); y += h
-    y += 8.0
-missing = [p["ref"] for p in P if p["ref"] not in placed]
-if missing: raise SystemExit("unplaced parts: %s" % missing)
-
-max_x = x + COLW
-PAPER = "A1" if max_x <= 820 else "A0"
+def layout(page_h):
+    """Columns of sections, top-down cursor; returns the layout width. A1 landscape takes 560 mm columns, A0 800 mm."""
+    global out, pf_n
+    out = []; pf_n = [0]; placed = set()
+    COLW = 88.0; x = 20.0; y = 30.0
+    for title, refs in SECTIONS:
+        hs = []
+        for ref in refs:
+            p = byref[ref]; x0, x1, y0, y1 = extents(ensure(p["lib"], p["sym"])); hs.append((y1 - y0) + 2 * STUB + 12.0)
+        if y + sum(hs) + 10 > page_h and y > 30.0:
+            x += COLW; y = 30.0
+        text(title, round((x - 15.0) / 1.27) * 1.27, round((y - 4.0) / 1.27) * 1.27)
+        y += 4.0
+        for ref, h in zip(refs, hs):
+            p = byref[ref]; x0, x1, y0, y1 = extents(ensure(p["lib"], p["sym"]))
+            if y + h > page_h:
+                x += COLW; y = 34.0
+            cy = y + (y1 + STUB) + 4.0               # symbol origin so its top pin+stub sits at y
+            gx = round((x + 20.0) / 1.27) * 1.27; gy = round(cy / 1.27) * 1.27   # 1.27 mm grid, so every pin end and label is on grid
+            if p["sym"] == "PWR_FLAG": emit_pwr_flag(p, gx, gy)
+            else: emit_part(p, gx, gy)
+            placed.add(ref); y += h
+        y += 8.0
+    missing = [p["ref"] for p in P if p["ref"] not in placed]
+    if missing: raise SystemExit("unplaced parts: %s" % missing)
+    return x + COLW
+max_x = layout(560.0); PAPER = "A1"
+if max_x > 820:
+    max_x = layout(800.0); PAPER = "A0"      # A0 landscape is 1189 x 841
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
 hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-B COMPUTE") (date "2026-09-04") (rev "A") (company "MeshSat") (comment 1 "Phase B13 schematic (Compute Module 5 carrier, appendix 32.35), generated by tools/gen_sch_b.py. Netlist style: every pin carries a stub and a label; power pins carry power symbols."))\n'

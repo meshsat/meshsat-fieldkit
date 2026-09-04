@@ -69,7 +69,7 @@ FIXED = {"J_AB1": (-72, -73, 90), "J_LEDS1": (-44, -74, 0), "J_MEZZ_PWR1": (-8, 
          "U20": (-50, -58, 0), "L5": (-40, -58, 0), "U21": (-112, -60, 0), "R52": (-120, -60, 0),
          "J_5V_M1": (-150, 44, 0), "J_5V_M2": (-135, 44, 0), "J_5V_PI": (-120, 44, 0),
          "U25": (-150, 19, 0), "J_MAINSW": (-159, 8, 90), "U26": (-140, 28, 0), "J_HEAT": (-159, 28, 90), "U5": (-150, 4, 0), "L6": (-142, 4, 0),
-         "J_WALL1": (-156, 62, 270), "U6": (-70, 52, 0), "Y1": (-60, 60, 0), "U31": (-45, 41, 0)}
+         "J_WALL1": (-156, 62, 270), "U31": (-45, 41, 0)}   # A20: no hub (U6, Y1)
 for k in range(4): FIXED["J_CP%d" % (k + 1)] = (-147 + 4 * k, -73, 0); FIXED["J_CN%d" % (k + 1)] = (-147 + 4 * k, -67, 0)
 for k, (x, jx, jy, by) in enumerate(zip(RF_X, RF_JX, RF_JY, RF_BY), 1): FIXED["J_BM%d" % k] = (x, by, 0); FIXED["J_RF%d" % k] = (jx, jy, 0)
 BACK = {"J_DOCK", "J_PRE1"} | {"J_CP%d" % k for k in range(1, 5)} | {"J_CN%d" % k for k in range(1, 5)} | {"J_BM%d" % k for k in range(1, 8)}
@@ -100,13 +100,10 @@ REGIONS = rail(1, -148) + rail(2, -116) + rail(3, -84) + [
  ("HEAT",  (-134, 22, -120, 34), ["C99", "R71", "R72", "R73", "C100", "F6"]),
  ("BUCK",  (-136, 1, -118, 14), ["C13", "C14", "C15", "C101", "R74", "R75", "D2", "R18"]),
  ("TPS",   (-162, 32, -128, 39.5), ["TP1", "TP2", "TP3", "TP6", "TP7", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"]),
- ("HUB",   (-104, 45, -30, 77), ["C16", "C17", "R19", "C18", "C19", "C20", "C21", "C22", "C23", "C24", "C25", "C26", "C27", "R20", "R21", "R22", "R23", "R25", "R79", "U27", "U19", "C107", "R34", "R35", "R36", "R37", "R38", "TP17", "TP18"]),
+ ("HUB",   (-104, 45, -30, 77), ["U19", "C107", "R34", "R35", "R36", "R37", "R38", "TP17", "TP18"] + ["TP%d" % k for k in range(29, 37)]),   # A20: the expander and LED drivers alone
  ("WALL",  (-104, 25, -80, 45), ["U28", "R76", "R77", "C104", "R78", "U29", "C105", "C106", "U30"]),
  ("EXP2",  (-78, 25, -32, 35), ["C108", "TP19", "TP20", "TP21", "TP22", "TP23", "TP24", "TP25", "TP26", "TP27"]),
- ("WIFI",  (-28, 44, 4, 70), ["U7", "R26", "R40", "C34", "R27", "U8", "C28", "C29", "U9"]),
- ("GPS",   (5, -61, 22, -36), ["U10", "R28", "R41", "C35", "R29"]),
- ("GPS2",  (24, -44, 48, -33), ["U11", "C30", "C31", "U12"]),
- ("MEZZCH", (-24, -51, 4, -24), ["U13", "R30", "R42", "C36", "R31", "U14", "C32", "C33", "U15", "U16", "R32", "R43", "C37", "R33", "U17", "C102", "C103", "U18", "R39", "TP8", "TP9", "TP28", "R24"]),
+ ("MEZZCH", (-24, -51, 4, -24), ["R39", "TP8", "TP9"]),   # A20: the codec and UART channels are gone
 ]
 GAP = 1.2                      # between any two packed parts (was 0.7: fine-pitch ICs ended wall to wall with passives)
 FINE_MARGIN = 1.6              # extra all round a fine-pitch IC so every side keeps a via lane for its escapes

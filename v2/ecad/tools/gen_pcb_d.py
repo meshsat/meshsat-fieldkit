@@ -80,7 +80,7 @@ def dmr858m_footprint():
 # ---------------------------------------------------------------- other placed items (board frame)
 J_HARN = (-33.0, 6.0)        # IDC 2x8 box header, pins along Y (11 x 29), ribbon to PCB-A J_MEZZ1 at case (-8, 8)
 J_PWR = (-33.0, -14.0)       # JST-VH 2-pin (9.4 x 9.6) under the header, cable to PCB-A J_MEZZ_PWR at case (-8, -18)
-N_STRIP = (-30.0, 18.6, 30.0, 30.4)     # north strip: AIOC-derived core (top: LDOs, USB, LEDs, SWD; bottom: MCU, clock, audio, PTT, UART)
+N_STRIP = (-30.0, 18.6, 30.0, 30.4)     # north strip: D6 core (top: clock, bead, PCA9536, LED; bottom: codec, audio, PTT, UART header)
 S_STRIP = (-17.0, -30.4, 30.0, -22.6)   # south strip: DNP speaker/host headers (top); jumpers + test points (bottom)
 W_COL = (-27.0, -30.4, -18.0, 17.5)     # west column: TPS61089 boost (top)
 
@@ -172,7 +172,7 @@ text("J_HARN1 to PCB-A J_MEZZ1", J_HARN[0] + 2.0, J_HARN[1] + 12.5, pcbnew.B_Sil
 place("Connector_JST", "JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "J_PWR1", J_PWR[0], J_PWR[1], "cell node from PCB-A J_MEZZ_PWR (VH)", rot=0)
 text("J_PWR1 MEZZ_CELL GND", J_PWR[0], J_PWR[1] + 6.5, pcbnew.B_SilkS, 0.8, 0.15, mirror=True)
 # ---------------------------------------------------------------- reserved regions
-for r, label in ((N_STRIP, "N: core (top LDO/USB/LED/SWD, bottom MCU/audio/PTT)"), (S_STRIP, "S: DNP headers (top), jumpers + TPs (bottom)"), (W_COL, "W: 8 V boost")):
+for r, label in ((N_STRIP, "N: D6 core (top clock/expander/LED, bottom codec/audio/PTT)"), (S_STRIP, "S: DNP headers (top), jumpers + TPs (bottom)"), (W_COL, "W: 8 V boost")):
     rect(r, pcbnew.Dwgs_User, 0.1); text(label, (r[0] + r[2]) / 2, (r[1] + r[3]) / 2, pcbnew.Dwgs_User, 0.8, 0.14, angle=90 if r is W_COL else 0)
 # ---------------------------------------------------------------- legends
 text("PCB-D APRS BOARD REV A (D5) | MESHSAT-709/748 | 2026-09-03", 10, -1.5, pcbnew.B_SilkS, 1.0, 0.17, mirror=True)

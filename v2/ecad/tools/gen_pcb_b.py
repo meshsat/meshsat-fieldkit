@@ -65,11 +65,11 @@ RB9603_HOLES = [(RB9603_C[0] - 19.35, RB9603_C[1] + 22.5 - 3.15), (RB9603_C[0] +
 # DCF77 remote-mount connector, JST-XH 4-pin, north edge
 J_DCF77 = (-85.0, 77.0)
 # zones of the schematic phase (gen_pcb_b3.py packs the parts into them): hub east of the module, bucks and bench headers south of it, control west
-HUB_ZONE = (-66.0, -34.0, -22.0, -14.0)
-BUCK_ZONE = (-58.0, -84.0, -36.0, -60.0)
+HUB_ZONE = (-66.0, -36.0, -22.0, -12.0)
+BUCK_ZONE = (-58.0, -82.0, -36.0, -52.0)
 CTRL_ZONE = (-119.5, -64.0, -100.0, -30.0)
 J_AB = (-72.0, -78.0)                           # 2x9 IDC on the UNDERSIDE, ribbon down to PCB-A
-J_FLASH = (-30.0, -78.0)                        # USB-C on the south edge: rpiboot eMMC flashing only, opening faces -Y
+J_FLASH = (-30.0, -77.5)                        # USB-C on the south edge: rpiboot eMMC flashing only, opening faces -Y
 PASS_CENTRE = (-13.0, -50.0, 15.0)              # Ø15 general pass-through
 
 # ---------------------------------------------------------------- plumbing (as PCB-C)
@@ -79,8 +79,8 @@ tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-B COMPUT
 tb.SetDate("2026-09-04"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-795. Case-centred frame. B13: Compute Module 5 carrier (appendix 32.35), radios on the module's buses, three rails from PCB-A. tools/gen_pcb_b.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
-for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.45), ("m_MinThroughDrill", 0.25),
-                  ("m_HoleToHoleMin", 0.3), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.25), ("m_SolderMaskMinWidth", 0.1)):
+for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.40), ("m_MinThroughDrill", 0.20),   # B13: the 0.4 mm connector rows take 0.40/0.20 vias at the pad tips (the CM5IO scheme)
+                  ("m_HoleToHoleMin", 0.3), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.19), ("m_SolderMaskMinWidth", 0.1)):   # hole clearance 0.19 as the CM5IO project (its 0.4 mm rows put a 0.20 drill 0.24 mm from the neighbour track)
     try: setattr(ds, attr, FromMM(val))
     except Exception as e: print("note:", attr, e)
 

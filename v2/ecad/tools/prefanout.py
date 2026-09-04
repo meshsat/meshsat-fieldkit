@@ -18,7 +18,7 @@ def is_fine(fp):
     return best <= FromMM(0.7)
 VIA_D, VIA_DRILL, TRACK_W = FromMM(0.8), FromMM(0.4), FromMM(0.4)
 allpads = [(p, p.GetPosition(), max(p.GetSize().x, p.GetSize().y) / 2) for fp in b.GetFootprints() for p in fp.Pads()]
-rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout
+rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()] + [z for fp in b.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout; B13: footprint keep-outs (the E72 antenna) count too
 edges = b.GetBoardEdgesBoundingBox()
 placed = [t.GetPosition() for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]; placed_nets = []   # escapes already on the board count as placed vias
 def clear(v, me, r=None):

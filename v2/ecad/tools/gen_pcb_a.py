@@ -60,7 +60,7 @@ WIFI_RECT = (20.0, 39.5, 105.0, 65.5)
 WIFI_SLOTS = [(45.0, 36.0), (85.0, 36.0), (45.0, 69.0), (85.0, 69.0)]
 J_WIFI = (8.0, 52.5)          # USB-A receptacle, opening +X
 # power connectors
-J_AB = (-72.0, -66.0)         # 2x7 IDC top side, ribbon up to PCB-B's underside header at (-72, -78)
+J_AB = (-72.0, -66.0)         # 2x9 IDC top side (A20), ribbon up to PCB-B's underside header at (-72, -78)
 J_LEDS = (-40.0, -74.0)       # XH 1x10: five front-wall LEDs (R5)
 HUB_ZONE = (-104.0, 25.0, -30.0, 77.0)     # A19: seven-port hub, five eFuse + INA219 channels, PCA9555 0x21 and 0x24, LED drivers (grown south into the former pack area)
 BANK_ZONE = (-70.0, -72.0, -30.0, -46.0)    # A19: charger BQ25792 zone, next to the 12 V dock pins and the node bar
@@ -181,21 +181,11 @@ for (x, y) in MEZZ_HOLES:
 place("Connector_IDC", "IDC-Header_2x08_P2.54mm_Vertical", "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=0)
 text("J_MEZZ1", J_MEZZ[0] - 8.0, J_MEZZ[1], pcbnew.F_SilkS, 1.0, 0.18, angle=90)
 text("J_MEZZ_PWR VH2 (cell node)", J_MEZZ_PWR[0], J_MEZZ_PWR[1] + 7.0, pcbnew.F_SilkS, 1.0, 0.18)
-# ---------------------------------------------------------------- GPS
-site(GPS_RECT, "u-blox GPS puck 40 x 26 x 18", "cable -> J_GPS1, coil on east slots", ly=-52.0)
-for i, (x, y) in enumerate(GPS_SLOTS): slot("S_GPS%d" % (i + 1), x, y, 5.0, 1.8)
-for i, (x, y) in enumerate(GPS_COIL_SLOTS): slot("S_GPSC%d" % (i + 1), x, y, 5.0, 1.8, "cable coil tie")
-usb_g = place("Connector_USB", "USB_A_Stewart_SS-52100-001_Horizontal", "J_GPS1", J_GPS[0], J_GPS[1], "USB-A receptacle, GPS", rot=90)
-text("J_GPS1", J_GPS[0], J_GPS[1] + 10.0, pcbnew.F_SilkS, 1.0, 0.18)
-# ---------------------------------------------------------------- WiFi
-site(WIFI_RECT, "ALFA AWUS036ACM  85 x 26 x 12 (MT7612U)", "USB-A 3.0 plug west -> J_WIFI1; 2x RP-SMA east -> WiFi bulkheads 1+2 (R16)", ly=52.5)
-for i, (x, y) in enumerate(WIFI_SLOTS): slot("S_WIFI%d" % (i + 1), x, y, 5.0, 1.8)
-usb_w = place("Connector_USB", "USB_A_Stewart_SS-52100-001_Horizontal", "J_WIFI1", J_WIFI[0], J_WIFI[1], "USB-A receptacle, WiFi", rot=90)
-text("J_WIFI1", J_WIFI[0], J_WIFI[1] - 12.0, pcbnew.F_SilkS, 1.0, 0.18)
+# ---------------------------------------------------------------- A20: the GPS puck and the WiFi dongle sites are gone (GNSS and WiFi live on B13's module); their floor stays free
 # ---------------------------------------------------------------- power connectors, interconnect, LEDs
-rect((J_AB[0] - 13.5, J_AB[1] - 5.5, J_AB[0] + 13.5, J_AB[1] + 5.5), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x7 -> PCB-B underside (-72,-78)", J_AB[0], J_AB[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
+rect((J_AB[0] - 13.5, J_AB[1] - 5.5, J_AB[0] + 13.5, J_AB[1] + 5.5), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x9 -> PCB-B underside (-72,-78)", J_AB[0], J_AB[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
 rect((J_LEDS[0] - 13.0, J_LEDS[1] - 3.0, J_LEDS[0] + 13.0, J_LEDS[1] + 3.0), pcbnew.Dwgs_User, 0.1); text("J_LEDS XH1x10 -> front-wall LED row (R5)", J_LEDS[0], J_LEDS[1] + 5.0, pcbnew.Dwgs_User, 0.9, 0.15)
-rect(HUB_ZONE, pcbnew.Dwgs_User, 0.15); text("HUB ZONE (A19): USB2517I seven-port hub, 5x eFuse + INA219 (WiFi GPS codec UART wall), PCA9555 0x21 + 0x24, LED drivers", (HUB_ZONE[0] + HUB_ZONE[2]) / 2, HUB_ZONE[3] + 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
+rect(HUB_ZONE, pcbnew.Dwgs_User, 0.15); text("CONTROL ZONE (A20): wall-port eFuse + INA219, PCA9555 0x21 + 0x24, LED drivers (the hub went to B13)", (HUB_ZONE[0] + HUB_ZONE[2]) / 2, HUB_ZONE[3] + 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
 rect(BANK_ZONE, pcbnew.Dwgs_User, 0.15); text("CHARGER ZONE (A19): BQ25792 from the dock 12 V into the node, JEITA on the module thermistor", (BANK_ZONE[0] + BANK_ZONE[2]) / 2, BANK_ZONE[1] - 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)

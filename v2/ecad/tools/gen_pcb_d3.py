@@ -61,7 +61,7 @@ def place(ref, x, y, rot=0.0, back=False):
         print("  %-10s centred at (%.1f, %.1f) size %.1f x %.1f %s" % (ref, (bb.GetLeft() + bb.GetRight()) / 2e6 - OX, OY - (bb.GetTop() + bb.GetBottom()) / 2e6, bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, "BACK" if fp.IsFlipped() else ""))
     return fp
 # --- fixed positions (case frame)
-FIXED = {"J_SWD1": (24, -26.5, 90)}   # THT header away from every bottom-side region
+FIXED = {"J_UART1": (24, -26.5, 90)}   # THT bench header away from every bottom-side region (D6: the module UART instead of SWD)
 BACK = set()
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
@@ -76,15 +76,15 @@ for ref in comps:
         fp.SetValue(val); placed[ref] = fp
 # --- regions for the rest: (x0, y0, x1, y1), refs
 REGIONS = [
- ("N_TOP_W", (-17, 18.6, -7, 30.4), ["U3", "C4", "C6", "FB2", "C31"], False),
- ("N_TOP_E", (7, 18.6, 30, 30.4), ["U4", "C5", "FB1", "C9", "C10", "U6", "R1", "D1", "D2", "R15"], False),
+ ("N_TOP_W", (-17, 18.6, -7, 30.4), ["X1", "C38", "C7", "C8"], False),
+ ("N_TOP_E", (7, 18.6, 30, 30.4), ["FB1", "C9", "C10", "U7", "C39", "R3", "D1", "R15"], False),
  # the MCU core sits on the TOP side under the module since D4 (module 11 mm up on sockets and standoffs; its back-side parts hang 5 mm, so 6 mm remain):
  # the free field between the two socket rows (Y -18.6 .. 14.6) and clear of the two M2.5 standoff holes at (-15.8, -18.6) and (36.8, 14.4)
- ("CORE_W", (-13.5, -17.5, 5.0, 13.5), ["Y1", "C1", "C2", "C15", "R14", "C7", "C8", "C17", "C18", "R10", "R11", "Q1", "Q2", "R12", "R13", "R19", "R18", "R22", "Q3", "Q4", "R37", "R38", "R39", "R40", "R41", "C32", "R8", "R9"], False),
- ("CORE_C", (5.5, -17.5, 19.0, 13.5), ["U5"], False),
- ("CORE_E", (19.5, -17.5, 34.0, 13.5), ["R2", "C12", "R17", "R4", "C13", "C14", "R5", "R16", "C16", "R3", "C11"], False),
+ ("CORE_W", (-13.5, -17.5, 5.0, 13.5), ["C17", "C18", "R10", "R11", "Q1", "Q2", "R12", "R13", "Q3", "Q4", "R37", "R38", "R39", "R40", "R41", "C32", "R8", "R9"], False),
+ ("CORE_C", (5.5, -17.5, 19.0, 13.5), ["U5", "C33", "C34", "C35", "C36", "C37"], False),
+ ("CORE_E", (19.5, -17.5, 34.0, 13.5), ["R2", "R4", "C13", "C14"], False),
  ("BOOST_W", (-27, -30.4, -18, 30.4), ["L1", "U1", "C23", "C24", "C26", "C27", "C28", "C29", "C20", "C21", "C22", "C25", "C30", "R30", "R31", "R32", "R33", "R34", "R35"], False),
- ("BENCH_BOT", (-30, -30.4, 19, -22.6), ["JP1", "JP2", "JP3", "JP4", "JP5", "R36", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12"], True),
+ ("BENCH_BOT", (-30, -30.4, 19, -22.6), ["JP1", "JP2", "JP3", "JP4", "JP5", "R36", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"], True),
 ]
 GAP = 1.2                      # between any two packed parts (0.7 left fine-pitch ICs wall to wall with passives)
 FINE_MARGIN = 1.4              # extra on the pin sides of a fine-pitch IC so its escapes (escape.py) keep a via lane

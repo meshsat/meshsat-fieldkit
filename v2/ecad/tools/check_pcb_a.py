@@ -18,16 +18,16 @@ def hole_at(x, y, d): return any(r.startswith("H") and abs(case(f.GetPosition())
 for (x, y) in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]: check(hole_at(x, y, 3.2), "rod hole at (%.1f, %.1f)" % (x, y))
 for (x, y) in [(10, -26), (80, -26), (10, 26), (80, 26)]: check(hole_at(x, y, 3.2), "mezzanine M3 at (%d, %d)" % (x, y))
 for ref, (ex, ey) in {"J_DOCK": (-124, -70), "J_PRE1": (-151, -70), "J_CP1": (-147, -73), "J_CN4": (-135, -67), "F3": (-150, -46), "F4": (-125, -46), "F5": (-100, -46), "F2": (-75, -46), "U22": (-148, -20), "U23": (-116, -20), "U24": (-84, -20), "U20": (-50, -58), "U21": (-112, -60), "R52": (-130, -60), "J_BM1": (-100, -66), "J_RF1": (-100, -56), "J_BM7": (103, -64), "J_RF7": (107, -54), "J_RF5": (70, -74), "J_WALL1": (-156, 62), "U6": (-70, 52), "J_MEZZ1": (-8, 8), "J_GPS1": (30, -52), "J_WIFI1": (8, 52.5),
-                      "S_GPS1": (58, -70), "S_WIFI4": (85, 69), "S_GPSC3": (100, -58)}.items():
+                      }.items():   # A20: no GPS puck or WiFi dongle slots
     if ref not in fps: print("SKIP %s (placed at the netlist stage)" % ref); continue
     cx, cy = fpc(ref); check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
-R = {"POWER": (-162, -40, -32, 2), "CTRL": (-162, 2, -118, 36), "DOCKBLK": (-155, -76, -116, -64), "MEZZ": (5, -31, 85, 31), "GPS": (50, -65, 90, -39), "WIFI": (20, 39.5, 105, 65.5), "HUB": (-104, 25, -30, 78), "CHG": (-70, -72, -30, -46),
-     "JGPS": (23, -59.5, 37, -44.5), "JWIFI": (1, 45, 15, 60), "JMEZZ": (-13.5, -6.5, -2.5, 22.5), "JMEZZPWR": (-13, -22.5, -3, -13.5), "JAB": (-85.5, -71.5, -58.5, -60.5), "JLEDS": (-53, -77, -27, -71),
+R = {"POWER": (-162, -40, -32, 2), "CTRL": (-162, 2, -118, 36), "DOCKBLK": (-155, -76, -116, -64), "MEZZ": (5, -31, 85, 31), "HUB": (-104, 25, -30, 78), "CHG": (-70, -72, -30, -46),
+     "JMEZZ": (-13.5, -6.5, -2.5, 22.5), "JMEZZPWR": (-13, -22.5, -3, -13.5), "JAB": (-85.5, -71.5, -58.5, -60.5), "JLEDS": (-53, -77, -27, -71),
      "BM1": (-106, -72, -94, -60), "BM2": (-90, -72, -78, -60), "BM3": (-32, -72, -20, -60), "BM4": (-18, -72, -6, -60), "BM5": (64, -72, 76, -60), "BM6": (86, -72, 98, -60), "BM7": (98, -69, 108, -59)}
 for k, r in R.items(): check(r[0] >= -163 and r[2] <= 118 and r[1] >= -78 and r[3] <= 78, "%s inside outline with 2 mm margin" % k)
 def overlap(a, c): return not (a[2] <= c[0] or c[2] <= a[0] or a[3] <= c[1] or c[3] <= a[1])
 for (ka, a), (kb, c) in itertools.combinations(R.items(), 2):
-    if {ka, kb} in ({"HUB", "JWIFI"}, {"CHG", "JAB"}, {"CHG", "JLEDS"}, {"POWER", "DOCKBLK"}, {"GPS", "BM5"}, {"GPS", "BM6"}, {"JAB", "BM2"}, {"JLEDS", "BM3"}, {"CHG", "BM3"}): continue
+    if {ka, kb} in ({"CHG", "JAB"}, {"CHG", "JLEDS"}, {"POWER", "DOCKBLK"}, {"JAB", "BM2"}, {"JLEDS", "BM3"}, {"CHG", "BM3"}): continue
     check(not overlap(a, c), "%s and %s do not overlap" % (ka, kb))
 def rc(r, c, rad):
     cx = max(r[0], min(c[0], r[2])); cy = max(r[1], min(c[1], r[3])); return ((cx - c[0]) ** 2 + (cy - c[1]) ** 2) ** 0.5 >= rad
