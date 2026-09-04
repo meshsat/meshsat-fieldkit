@@ -11,7 +11,7 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 | PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C4/` |
 | PCB-C SPACER RING | R1 | 106 x 54 | 2 | `ecad/pcb-c-ring/` | `release/revA/boards/meshsat-pcb-c-ring-revA-R1/` |
 | PCB-D APRS | D5 | 80 x 62 | 4 | `ecad/pcb-d-aprs/` | `release/revA/boards/meshsat-pcb-d-revA-D5/` |
-| PCB-E1 DOCK STRIP | E4 | 285 x 60 | 4 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E4/` |
+| PCB-E1 DOCK STRIP | E4 | 278 x 60 | 4 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E4/` |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | `ecad/pcb-e5-block/` | `release/revA/boards/meshsat-pcb-e5-revA-E5/` |
 
 **Build guide: [`BUILD.md`](BUILD.md)** walks from an empty cart to a running kit. This page is the map of the folder.
