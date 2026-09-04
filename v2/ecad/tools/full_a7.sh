@@ -6,7 +6,8 @@ python3 ../tools/gen_sch_a.py $N.kicad_sch $N 2>&1 | tail -1
 ../tools/build_sch.sh . $N 2>&1 | grep -E 'ERC|netlist'
 python3 ../tools/gen_pcb_a.py $N.kicad_pcb 2>&1 | grep -E 'saved|WARN|Trace'
 python3 ../tools/check_pcb_a.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'
-python3 ../tools/gen_pcb_a3.py $N.kicad_pcb out/$N.net 2>&1 | grep -E 'saved|WARN|overflow|unplaced|Trace'
+python3 ../tools/gen_pcb_a3.py $N.kicad_pcb out/$N.net > out/gen3.log 2>&1; GEN3=$?; grep -E 'saved|WARN|overflow|unplaced|Trace|SystemExit|zone net|not in the netlist' out/gen3.log
+[ "$GEN3" -eq 0 ] || { echo "BLOCK placement generator exit $GEN3" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND,+5V_M1,CELL+' fine 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb

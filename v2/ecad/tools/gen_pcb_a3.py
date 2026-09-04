@@ -139,12 +139,15 @@ missing = [r for r in comps if r not in placed and not r.startswith("#")]
 if missing: raise SystemExit("unplaced: %s" % missing)
 # --- nets
 ni = board.GetNetInfo()
-def net_for(name):
-    """The board's net for a schematic name. A local label lands in the board as "/NAME", a power symbol as "NAME"; a pour on a
-    name that matches neither would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 5 Sep 2026, 32.33)."""
+def net_for(name, create=True):
+    """The board's net for a schematic name: a local label lands in the board as "/NAME", a power symbol as "NAME".
+    The netlist import creates nets (create=True); a zone must find its net (create=False), because a pour on a name that
+    matches nothing would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 5 Sep 2026, 32.33)."""
     for cand in (name, "/" + name):
         n = board.FindNet(cand)
         if n is not None and n.GetNetCode() > 0: return n
+    if create:
+        n = pcbnew.NETINFO_ITEM(board, name); board.Add(n); return n
     raise SystemExit("zone net %r is not in the netlist (neither %r nor %r): fix the name, do not pour on a phantom" % (name, name, "/" + name))
 padmap = {}
 for ref, fp in placed.items():
@@ -160,7 +163,7 @@ for name, nodes in nets.items():
 if unassigned: print("WARNING pads not found for nodes:", unassigned[:12])
 # --- planes: In1 GND, In2 +5V
 def plane(layer, netname, name, rect=(-167.5, -85, 122.5, 85), priority=0):
-    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname)); z.SetZoneName(name)
+    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.3))
     try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
     except Exception: pass
@@ -177,7 +180,7 @@ plane(pcbnew.In2_Cu, "CELL+", "CELL+ pour In2 (node bar under the fuse row, west
 # up the west edge to a bar at Y -40 above the fuse row, with taps down to each fuse's node pad; CELL_N from the return pins (Y -67) north to the shunt R52.
 def outer_pour(netname, name, rect, layers=(pcbnew.F_Cu, pcbnew.B_Cu), priority=2):
     for L in layers:
-        z = pcbnew.ZONE(board); z.SetLayer(L); z.SetNet(net_for(netname)); z.SetZoneName(name + " " + board.GetLayerName(L)); z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL)
+        z = pcbnew.ZONE(board); z.SetLayer(L); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name + " " + board.GetLayerName(L)); z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL)
         z.SetMinThickness(FromMM(0.5)); z.SetLocalClearance(FromMM(0.3)); o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
         for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
         z.SetAssignedPriority(priority); board.Add(z)   # bars 2, taps 3: intersecting zones must carry distinct priorities
