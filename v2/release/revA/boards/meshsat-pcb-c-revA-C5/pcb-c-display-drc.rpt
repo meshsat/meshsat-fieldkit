@@ -1,0 +1,84 @@
+** Drc report for pcb-c-display.kicad_pcb **
+** Created on 2026-09-04T22:16:30+0200 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 24 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(335,0000 mm, 331,0000 mm): Segment on F.Silkscreen
+    @(262,0000 mm, 329,0000 mm): PCB text 'S/N label: outdoor polyester (3M 7871), data matrix' on F.Silkscreen
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(455,5750 mm, 80,3500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(443,4500 mm, 80,3500 mm): Via [+3V3] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(467,3375 mm, 73,3750 mm): Track [/EPD_DC] on B.Cu, length 1,4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(433,7500 mm, 73,8500 mm): Via [/GPS_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(445,1750 mm, 77,1000 mm): Via [/PIRING_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(487,3750 mm, 73,3750 mm): Via [/PWM1] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(483,6375 mm, 73,3750 mm): Track [/PWM1] on B.Cu, length 1,4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441,1125 mm, 77,1000 mm): Track [/RAIL_SENSE] on B.Cu, length 1,6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(433,0500 mm, 75,8000 mm): Via [/SAT_K] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441,1125 mm, 73,2000 mm): Track [/SOS_SW] on B.Cu, length 1,6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(453,2375 mm, 75,8000 mm): Track [/SPARE2] on B.Cu, length 1,6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(453,2375 mm, 76,4500 mm): Track [/SPARE3] on B.Cu, length 2,3375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(453,2375 mm, 77,1000 mm): Track [/SPARE4] on B.Cu, length 1,6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(455,5750 mm, 77,7500 mm): Via [/SPARE5] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(469,6125 mm, 75,2750 mm): Track [/SPI_CE0] on B.Cu, length 1,4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(467,3375 mm, 75,2750 mm): Track [/SPI_CE0] on B.Cu, length 1,4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(462,9250 mm, 73,3750 mm): Via [/SPI_MOSI] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(459,1875 mm, 73,3750 mm): Track [/SPI_MOSI] on B.Cu, length 1,4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457,7250 mm, 75,2750 mm): Via [/SPI_SCLK] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(461,4625 mm, 75,2750 mm): Track [/SPI_SCLK] on B.Cu, length 1,4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441,1125 mm, 75,1500 mm): Track [/TEST_SW] on B.Cu, length 2,3375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441,1125 mm, 73,8500 mm): Track [/TX_INHIBIT_n] on B.Cu, length 2,3375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(454,8750 mm, 73,2000 mm): Via [/TX_LAMPTEST] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
