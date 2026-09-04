@@ -104,115 +104,7 @@
 	(net 14 "CELL_N")
 	(footprint "Mill-Max_0858_target"
 		(layer "F.Cu")
-		(uuid "0204c83f-36b1-4c8b-ad2f-741c54eecbc4")
-		(at 3 177)
-		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
-		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_CN1"
-			(at 0 -3.1 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "cb8dc45e-3c5f-4a47-af4c-2204a55905a1")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "return target (9 A pin)"
-			(at 0 3.1 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "6f93c4a9-ce18-468e-99ee-b9ab2f10a13d")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "06ca9a49-e806-4615-bd3a-d42933a6b294")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "066c4065-dbcc-4e49-9614-413a42b3450b")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr smd exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 2.4 0)
-			(stroke
-				(width 0.12)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.SilkS")
-			(uuid "34749d81-cf61-4728-974d-0884af9785ff")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 1.95 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "653c508d-759a-43fc-a3fb-2829f944d0f2")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 0.635 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "4c655593-a27a-4fd0-ace4-fc20603fb738")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 2.1 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "81a7babb-0d52-4ea6-ad9c-6e3f1c1f27a8")
-		)
-		(pad "1" smd circle
-			(at 0 0)
-			(size 4.2 4.2)
-			(layers "F.Cu" "F.Mask")
-			(net 14 "CELL_N")
-			(uuid "5cc949b1-cd79-4fa4-afb9-e3b8151f12f3")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "Mill-Max_0858_target"
-		(layer "F.Cu")
-		(uuid "022239a4-2160-4e12-9441-90f6367be382")
+		(uuid "03a5c839-1f1b-4875-805d-d2ec0a572dad")
 		(at 3 183)
 		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
 		(tags "Mill-Max 0858 target pad pogo")
@@ -220,7 +112,7 @@
 			(at 0 -3.1 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "33bff48d-49e6-4052-b3b9-f840a2921ea9")
+			(uuid "f6b382c7-9795-427d-ae79-a91287bef9e6")
 			(effects
 				(font
 					(size 1 1)
@@ -232,7 +124,7 @@
 			(at 0 3.1 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "e019a8cd-b432-4f0d-9c0d-826df3fdf397")
+			(uuid "b92a5b8e-2313-418d-b339-603b6a8a271e")
 			(effects
 				(font
 					(size 1 1)
@@ -244,7 +136,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "156ca2ad-f4ff-48ab-b414-7a138eb0daef")
+			(uuid "3bb9fec2-7fa2-4723-83f6-b7871a698387")
 			(effects
 				(font
 					(size 1 1)
@@ -256,7 +148,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "adac5936-c896-4aed-8001-38ae52b01f08")
+			(uuid "a3e7b2a9-bbea-457b-bf03-cf6c4a149fdb")
 			(effects
 				(font
 					(size 1 1)
@@ -274,7 +166,7 @@
 			)
 			(fill no)
 			(layer "F.SilkS")
-			(uuid "980f84cd-4ca0-4d8f-9b53-e50c45adb7a3")
+			(uuid "e14c8c89-581d-4baa-994f-e6bebf409947")
 		)
 		(fp_circle
 			(center 0 0)
@@ -285,7 +177,7 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "00a9a465-177c-4919-9e91-0aefe22bfb34")
+			(uuid "1619c4c6-8471-4ea8-9234-a18959c2b826")
 		)
 		(fp_circle
 			(center 0 0)
@@ -296,7 +188,7 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "70cd538e-8b03-4a01-9beb-6b5869165b2c")
+			(uuid "29a7d231-2b01-4f1f-95bb-91edde0acb6c")
 		)
 		(fp_circle
 			(center 0 0)
@@ -307,423 +199,20 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "63505930-7ace-42c8-b14a-a92f85230071")
+			(uuid "a8272781-9054-472c-b609-9c289e941e4b")
 		)
 		(pad "1" smd circle
 			(at 0 0)
 			(size 4.2 4.2)
 			(layers "F.Cu" "F.Mask")
 			(net 13 "CELL+")
-			(uuid "f2bcc269-cb0d-4238-bd48-361dc94f3b35")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "Mill-Max_0858_target"
-		(layer "F.Cu")
-		(uuid "284b733f-3673-4852-ba58-59482c221914")
-		(at 15 183)
-		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
-		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_CP4"
-			(at 0 -3.1 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "e6c43f04-e798-48cb-b2b3-e3587758b1eb")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "CELL+ target (9 A pin)"
-			(at 0 3.1 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "045bb41d-fa46-4171-b365-224271e3416c")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "6df308ab-323a-4375-abdd-b5d7457c6608")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "904b4554-3e08-4f3f-9492-a3dafc96ca17")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr smd exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 2.4 0)
-			(stroke
-				(width 0.12)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.SilkS")
-			(uuid "1aadbb4e-06b8-4f82-8d67-6a051561446d")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 1.95 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "b6190371-c520-4b73-8c6e-bc24bdca79f8")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 0.635 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "cb4d9b4c-d256-4e4e-9b05-4d19e5ee8fe9")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 2.1 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "fdae42dd-a666-4886-a8c2-91d3cf468b53")
-		)
-		(pad "1" smd circle
-			(at 0 0)
-			(size 4.2 4.2)
-			(layers "F.Cu" "F.Mask")
-			(net 13 "CELL+")
-			(uuid "ef6e662a-8e0f-4d23-b783-759a7a95b99b")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "Mill-Max_0858_target"
-		(layer "F.Cu")
-		(uuid "2c313e63-f87f-431c-aa69-10bd610436a3")
-		(at 15 177)
-		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
-		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_CN4"
-			(at 0 -3.1 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "ede4e0a9-1a65-4b07-a364-09ca8186f1dd")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "return target (9 A pin)"
-			(at 0 3.1 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "df262dcd-ccf2-4ec5-854a-23e744f3691b")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "f0bb6380-39e0-4c8d-ace7-abffbe2d0e78")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "aa9bface-6b36-4b1b-934a-21141155bf5d")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr smd exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 2.4 0)
-			(stroke
-				(width 0.12)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.SilkS")
-			(uuid "413ff387-5e60-4109-bdd3-8bbb7e147901")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 1.95 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "5132b5bd-a447-42d1-b70d-18fb11994f3f")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 0.635 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "e8ab528c-0d16-4861-ace3-aaf9e4454c16")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 2.1 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "78846f8f-865e-4c7b-a845-cd2ade9d8f51")
-		)
-		(pad "1" smd circle
-			(at 0 0)
-			(size 4.2 4.2)
-			(layers "F.Cu" "F.Mask")
-			(net 14 "CELL_N")
-			(uuid "dca412dc-72f0-4fef-b993-5febe1fd66ae")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "WireLands_2x6"
-		(layer "F.Cu")
-		(uuid "38ca0c46-ccb9-4067-b9eb-4ef6d02e076a")
-		(at 26 186.5)
-		(descr "twelve plated wire lands, 2 x 6 at 2.54 mm, 1.0 mm holes with 1.7 mm rings: hook-up wires soldered from the underside of the dock block")
-		(tags "wire land dock block")
-		(property "Reference" "L_SIG"
-			(at 0 -5 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "e8b8544e-e448-4645-854d-9cf629b621cb")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "plated wire lands to the strip J_BLK (net names on the underside silk)"
-			(at 0 5 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "b690c98a-6195-43b4-b9c3-2f5af8603ca7")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "1787486a-493e-4bb4-81d5-a801226effdb")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "bb26b7ba-2251-4627-8471-3f9197369db2")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr through_hole)
-		(fp_rect
-			(start -7.5 -2.4)
-			(end 7.5 2.4)
-			(stroke
-				(width 0.05)
-				(type default)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "1fa90b41-875c-49d9-af89-36065f91d5b9")
-		)
-		(fp_rect
-			(start -7.5 -2.4)
-			(end 7.5 2.4)
-			(stroke
-				(width 0.1)
-				(type default)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "39e2cb20-c0f5-4fa5-bafe-b00b42e9b5b3")
-		)
-		(pad "1" thru_hole circle
-			(at -6.35 -1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 1 "GND_P7")
-			(uuid "5cbd0cfe-9234-477a-9239-1b0b59835974")
-		)
-		(pad "2" thru_hole circle
-			(at -3.81 -1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 2 "SHORE_INHIBIT_P8")
-			(uuid "fc0b642f-c892-48e9-a705-060c2b52b8cd")
-		)
-		(pad "3" thru_hole circle
-			(at -1.27 -1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 3 "TS_CHG_P9")
-			(uuid "4295f88b-767c-4ace-9157-ec62aadf40b2")
-		)
-		(pad "4" thru_hole circle
-			(at 1.27 -1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 4 "GND_P10")
-			(uuid "d5e5c8ee-f5e1-4a7a-b450-21df2d9d1ab8")
-		)
-		(pad "5" thru_hole circle
-			(at 3.81 -1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 5 "CELL_SENSE_P_P11")
-			(uuid "5eb62c78-65ac-4a84-a0e1-d2a3ea82a5cc")
-		)
-		(pad "6" thru_hole circle
-			(at 6.35 -1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 6 "DOCK_SPARE_P12")
-			(uuid "9f8266a0-11df-47f4-8878-ad242b465e9b")
-		)
-		(pad "7" thru_hole circle
-			(at -6.35 1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 7 "SHORE_12V_P1")
-			(uuid "2e078165-bcf4-4b39-addb-590d288d5032")
-		)
-		(pad "8" thru_hole circle
-			(at -3.81 1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 8 "SHORE_12V_P2")
-			(uuid "88f156d8-fff5-47f6-8fbc-08179fc3aae0")
-		)
-		(pad "9" thru_hole circle
-			(at -1.27 1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 9 "SHORE_12V_P3")
-			(uuid "a433aa9b-ddbf-43ce-a968-8c2714c63edc")
-		)
-		(pad "10" thru_hole circle
-			(at 1.27 1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 10 "SHORE_12V_P4")
-			(uuid "980b29e6-d651-48b2-9dab-0dddf12b048b")
-		)
-		(pad "11" thru_hole circle
-			(at 3.81 1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 11 "GND_P5")
-			(uuid "d60f9baf-a7a0-4a97-ae55-d089c09b3e22")
-		)
-		(pad "12" thru_hole circle
-			(at 6.35 1.27)
-			(size 1.7 1.7)
-			(drill 1)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 12 "GND_P6")
-			(uuid "14e77553-2fc1-4ce3-8214-f5369b7ced18")
+			(uuid "39c65827-0252-4e11-af0d-ee9fcb9dc6b5")
 		)
 		(embedded_fonts no)
 	)
 	(footprint "MountingHole_3.2mm_M3"
 		(layer "F.Cu")
-		(uuid "44cda430-ee8c-4833-92a3-1fc1621352c1")
+		(uuid "063515e0-6ba9-4beb-8c14-c0845a7bbd94")
 		(at -5.5 173)
 		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
 		(tags "mountinghole M3")
@@ -731,7 +220,7 @@
 			(at 0 -4.15 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "b3144d0e-1e33-42c9-abb7-9a0348ff9147")
+			(uuid "e1073875-da8a-484c-8abe-3b5a193d29c4")
 			(effects
 				(font
 					(size 1 1)
@@ -743,7 +232,7 @@
 			(at 0 4.15 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "2901c893-3568-407a-9b4d-2d0daa011dab")
+			(uuid "e80e01f6-a688-41c9-9706-57c16de15b18")
 			(effects
 				(font
 					(size 1 1)
@@ -755,7 +244,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "549442a6-da70-4a7b-89e7-330f288a5739")
+			(uuid "deb70700-d074-43b2-9fb1-0f422eaa4fdd")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -767,7 +256,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "d1cd4347-e9fd-47f7-8d59-17498d5d06b9")
+			(uuid "c941066e-3bb0-4a4c-8f57-e87d2bedd40d")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -785,7 +274,7 @@
 			)
 			(fill no)
 			(layer "Cmts.User")
-			(uuid "5d4ca80f-924d-4e19-8c23-106ff834fed3")
+			(uuid "81020f3f-14b3-44af-89ab-426aa8939c33")
 		)
 		(fp_circle
 			(center 0 0)
@@ -796,12 +285,12 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "fb4f5b8a-111b-4627-9cce-93338e63fe9e")
+			(uuid "b1e6f89c-77bb-44a8-b70f-7c47c543572b")
 		)
 		(fp_text user "${REFERENCE}"
 			(at 0 0 0)
 			(layer "F.Fab")
-			(uuid "39465276-79b0-416e-9b25-240843ea2c56")
+			(uuid "518222e5-4e84-45c3-bbf0-6198a302c855")
 			(effects
 				(font
 					(size 1 1)
@@ -814,21 +303,21 @@
 			(size 3.2 3.2)
 			(drill 3.2)
 			(layers "*.Cu" "*.Mask")
-			(uuid "26fc129c-1307-44a2-b00a-360dbdec90fb")
+			(uuid "bed9ec9d-d1ee-4c08-add2-635e32cd2590")
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Mill-Max_0858_target"
+	(footprint "MountingHole_3.2mm_M3"
 		(layer "F.Cu")
-		(uuid "48dc1704-4014-442a-8bf6-4d8387187868")
-		(at 7 177)
-		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
-		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_CN2"
-			(at 0 -3.1 0)
+		(uuid "06e8e34b-7e62-47cf-91e4-96a5d74955a5")
+		(at 32.5 173)
+		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
+		(tags "mountinghole M3")
+		(property "Reference" "H2"
+			(at 0 -4.15 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "3715d08f-472b-40fa-bef2-10a515ad0090")
+			(uuid "12e6de23-e4b2-4062-9428-bcf843a31fdd")
 			(effects
 				(font
 					(size 1 1)
@@ -836,11 +325,11 @@
 				)
 			)
 		)
-		(property "Value" "return target (9 A pin)"
-			(at 0 3.1 0)
+		(property "Value" "M3 standoff 6 mm to the dock strip"
+			(at 0 4.15 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "20cd457e-a475-4833-8b95-eebbfce1762a")
+			(uuid "394858cc-b99e-4a0b-add0-36d15b15cc27")
 			(effects
 				(font
 					(size 1 1)
@@ -852,7 +341,104 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "860c9801-b780-433b-b293-31d90f2b476d")
+			(uuid "abe414a3-8391-4a32-9451-99fdcb886323")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e5ba1e9d-9a02-4832-acab-067551496312")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 3.2 0)
+			(stroke
+				(width 0.15)
+				(type solid)
+			)
+			(fill no)
+			(layer "Cmts.User")
+			(uuid "924918f6-25ef-4364-9a84-f13bfa4264cc")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 3.45 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "982573bf-7051-427c-b8a9-87988ffe96c1")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "3afe86b6-821a-4e3c-9607-0caf5c5ddb77")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "" np_thru_hole circle
+			(at 0 0)
+			(size 3.2 3.2)
+			(drill 3.2)
+			(layers "*.Cu" "*.Mask")
+			(uuid "f35d41ee-b913-4511-a0ce-96a47af3d804")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "Mill-Max_0858_target"
+		(layer "F.Cu")
+		(uuid "0849d8e0-37b5-4c5d-9a03-e5be8e9e11a6")
+		(at 15 177)
+		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
+		(tags "Mill-Max 0858 target pad pogo")
+		(property "Reference" "T_CN4"
+			(at 0 -3.1 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "5dba4cb6-8591-4a3e-ad14-01d008a323fc")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "return target (9 A pin)"
+			(at 0 3.1 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "d0cffb8f-6a22-4fcf-b6ba-893ab732ad77")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e7101f4a-ed56-4efd-92b7-3ec8c250b209")
 			(effects
 				(font
 					(size 1 1)
@@ -864,7 +450,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "b905bf1a-98e8-41ae-bc70-3a3b4fecb35c")
+			(uuid "da6f3bf7-447a-49c7-8a79-cb16ce1e1bd0")
 			(effects
 				(font
 					(size 1 1)
@@ -882,7 +468,7 @@
 			)
 			(fill no)
 			(layer "F.SilkS")
-			(uuid "420350b5-3ab0-4df2-ab99-31b9443a750b")
+			(uuid "ae0964c6-87a0-4a50-bf29-13450610d144")
 		)
 		(fp_circle
 			(center 0 0)
@@ -893,7 +479,7 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "9e9ace3b-46f7-4776-bb11-8e9387f2eba7")
+			(uuid "c0484aa0-0968-468f-a323-55e2545ebc91")
 		)
 		(fp_circle
 			(center 0 0)
@@ -904,7 +490,7 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "4e93045f-1868-49b1-9fea-0b21234c1c00")
+			(uuid "7c5f1b17-6f07-49a4-93ca-4310a461f772")
 		)
 		(fp_circle
 			(center 0 0)
@@ -915,28 +501,28 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "46e39b3c-773e-46a3-9465-bb635b9831af")
+			(uuid "abb6d93b-8d00-4abb-9e09-0c4e4943ab37")
 		)
 		(pad "1" smd circle
 			(at 0 0)
 			(size 4.2 4.2)
 			(layers "F.Cu" "F.Mask")
 			(net 14 "CELL_N")
-			(uuid "2a1a7e55-afb2-4f5f-bcd1-0eca680799c4")
+			(uuid "dc879c2e-6db5-4754-bcae-883e43fa3ce9")
 		)
 		(embedded_fonts no)
 	)
-	(footprint "PogoTargets_2x6"
+	(footprint "Mill-Max_0858_target"
 		(layer "F.Cu")
-		(uuid "4f5a784a-5c0b-4b84-b78d-895fd408a6fe")
-		(at 26 180)
-		(descr "spring-pin dock, 2 x 6 contacts at 2.54 mm: pins on the stack side, flat gold targets on the dock")
-		(tags "pogo dock")
-		(property "Reference" "T_SIG"
-			(at 0 -5 0)
+		(uuid "1c51ba6a-f12a-4b72-ba6b-fa702af64e3f")
+		(at 11 183)
+		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
+		(tags "Mill-Max 0858 target pad pogo")
+		(property "Reference" "T_CP3"
+			(at 0 -3.1 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "556ffdd1-3b99-4afd-abe6-7852e4b491a7")
+			(uuid "ac8b8d78-9fc1-4bb8-bf53-0a3d558c910b")
 			(effects
 				(font
 					(size 1 1)
@@ -944,11 +530,11 @@
 				)
 			)
 		)
-		(property "Value" "signal targets (A19 J_DOCK lands here)"
-			(at 0 5 0)
+		(property "Value" "CELL+ target (9 A pin)"
+			(at 0 3.1 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "a9c83858-8a0f-45fa-b96f-765cfcd8229e")
+			(uuid "132f291d-0b32-4a65-9e24-dd57cdd6a318")
 			(effects
 				(font
 					(size 1 1)
@@ -960,7 +546,223 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "42410d6f-f6a8-4094-bdf8-7d2f8a4d3b46")
+			(uuid "8ceb47b3-958a-47a0-b9d8-8fafdb969752")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "4bc4dcf1-8c1f-4fb9-b652-539cc573f666")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr smd exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 2.4 0)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.SilkS")
+			(uuid "bd8d775b-e160-45a0-9212-cb7c54ebb903")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 1.95 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "3bd2db04-595a-4adf-80e4-eb3b66f89434")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 0.635 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "8e60a165-3800-49e8-ae1e-705dcb4a0002")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 2.1 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "38ef2de6-7975-4b88-b6b5-7c09ed123ffb")
+		)
+		(pad "1" smd circle
+			(at 0 0)
+			(size 4.2 4.2)
+			(layers "F.Cu" "F.Mask")
+			(net 13 "CELL+")
+			(uuid "f5009d53-1e7f-4ecf-a1cb-8ec261679159")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "Mill-Max_0858_target"
+		(layer "F.Cu")
+		(uuid "4e2dfcdc-0ee3-4fa0-bfea-37803d3a4ee3")
+		(at -1 180)
+		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
+		(tags "Mill-Max 0858 target pad pogo")
+		(property "Reference" "T_PRE"
+			(at 0 -3.1 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "c64cebc9-6305-4386-aabf-1b9c060f7fac")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "pre-charge target (longer pin, mates first)"
+			(at 0 3.1 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "35b24c98-1402-4cd9-a9dd-480dd4169a6d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "1e7edfe1-b9ff-4e84-8185-1c230394f530")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "8ea70936-f4f2-4d50-9ae7-21eefad2f521")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr smd exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 2.4 0)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.SilkS")
+			(uuid "bd15a75c-1f4b-48f9-8b4f-db1e0f6e0a3c")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 1.95 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "69ccb001-9013-46d6-adbb-dd960a338a18")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 0.635 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "c6fe602a-5de4-4b28-978d-aa4036574cd8")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 2.1 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "8ff2dbef-c15c-40b4-91b0-fb412e78a8be")
+		)
+		(pad "1" smd circle
+			(at 0 0)
+			(size 4.2 4.2)
+			(layers "F.Cu" "F.Mask")
+			(net 13 "CELL+")
+			(uuid "ba3bf68d-0c34-4d3f-9ce0-0bffca687e4e")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "PogoTargets_2x6"
+		(layer "F.Cu")
+		(uuid "64adceb4-ce9b-43c8-9152-8011f4bcf133")
+		(at 26 180)
+		(descr "spring-pin dock, 2 x 6 contacts at 2.54 mm: pins on the stack side, flat gold targets on the dock")
+		(tags "pogo dock")
+		(property "Reference" "T_SIG"
+			(at 0 -5 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "ba60a4d0-f1cb-4b8e-934e-a303813c9cd9")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "signal targets (A19 J_DOCK lands here)"
+			(at 0 5 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "d32a7f74-20e9-4dff-b2e0-1be3e3f99a15")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "a02a9584-fbec-43ea-a8cc-3b8115081b25")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -972,7 +774,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "23de2435-a711-4aa4-a612-88e8eab0a685")
+			(uuid "b11d87e7-ec0f-4d55-b2fb-879b0787c345")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -990,7 +792,7 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "d7f3678b-6803-4a1d-be2b-e1046b89663b")
+			(uuid "4e75a198-df14-4981-a860-48bba02533b7")
 		)
 		(fp_rect
 			(start -8.89 -3)
@@ -1001,592 +803,105 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "cbfe281e-c786-4341-b9c7-34680b701ef2")
+			(uuid "0bf9ff5a-765b-4901-b65f-a8a32e0e8c90")
 		)
 		(pad "1" smd circle
 			(at -6.35 -1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 1 "GND_P7")
-			(uuid "a77d98d4-2023-423d-bfa9-9675abe64229")
+			(uuid "1deca9dc-9b2e-4812-99f4-cc7a0cc16678")
 		)
 		(pad "2" smd circle
 			(at -3.81 -1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 2 "SHORE_INHIBIT_P8")
-			(uuid "29d3e621-f08e-4c68-98c7-0a77f84e5999")
+			(uuid "bad2b9fb-d093-4380-9f36-5cfdd8aae08f")
 		)
 		(pad "3" smd circle
 			(at -1.27 -1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 3 "TS_CHG_P9")
-			(uuid "7ee09e30-c4c4-44ac-96bd-ba833998e9ad")
+			(uuid "8daa0c49-9f5d-4e86-a9b6-af656b947fb9")
 		)
 		(pad "4" smd circle
 			(at 1.27 -1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 4 "GND_P10")
-			(uuid "423ab789-0665-4d8f-bd99-9a2d06ce92ec")
+			(uuid "ba0a7476-27f2-4104-8bdb-50b38e53c330")
 		)
 		(pad "5" smd circle
 			(at 3.81 -1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 5 "CELL_SENSE_P_P11")
-			(uuid "4e647db1-cda6-4864-b590-82de1d5d09cf")
+			(uuid "00b10a5f-bb58-4287-a055-4834e4df1980")
 		)
 		(pad "6" smd circle
 			(at 6.35 -1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 6 "DOCK_SPARE_P12")
-			(uuid "70d79a18-d1b2-484b-8481-4d040e169782")
+			(uuid "f583a04b-3cf9-4bcd-801c-e19494da64ef")
 		)
 		(pad "7" smd circle
 			(at -6.35 1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 7 "SHORE_12V_P1")
-			(uuid "b98ccad7-7dcb-4a4c-9025-268a35f34172")
+			(uuid "5d4792f9-72ec-40cb-9033-374f48c56178")
 		)
 		(pad "8" smd circle
 			(at -3.81 1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 8 "SHORE_12V_P2")
-			(uuid "76df42a0-5f4a-4142-88bc-2d6b4c4470b1")
+			(uuid "bfb8ac57-0662-4f82-8e14-d5926e7184d9")
 		)
 		(pad "9" smd circle
 			(at -1.27 1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 9 "SHORE_12V_P3")
-			(uuid "8ed57883-7c09-48b3-a7dd-4b1dc8c3e586")
+			(uuid "771428f3-86d9-428c-a7e9-835ced56a020")
 		)
 		(pad "10" smd circle
 			(at 1.27 1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 10 "SHORE_12V_P4")
-			(uuid "f7ab15f7-78d4-4728-b58a-8953fcf5fa2d")
+			(uuid "6182b0da-7593-49c3-a1c6-ecb4f656cfa9")
 		)
 		(pad "11" smd circle
 			(at 3.81 1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 11 "GND_P5")
-			(uuid "71ba2bad-a8d4-4e56-bc1c-b9dc81e67850")
+			(uuid "903d8b94-9d15-4456-bf93-e642dc0adc1a")
 		)
 		(pad "12" smd circle
 			(at 6.35 1.27)
 			(size 2 2)
 			(layers "F.Cu" "F.Mask")
 			(net 12 "GND_P6")
-			(uuid "1cf9d217-7597-4279-99e1-3aa7efd50020")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "WireHole_2mm"
-		(layer "F.Cu")
-		(uuid "74ed9264-6429-4abb-afd9-d94fc3ebe013")
-		(at 10 191)
-		(descr "plated hole for a 12 AWG wire (2.05 mm), drill 2.3, ring 4.6 mm, hand soldered")
-		(tags "wire hole")
-		(property "Reference" "WH_CP"
-			(at 0 -3.5 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "0c96435d-30cd-4048-8715-a9d478cb8d4d")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "12 AWG to the strip P_CP"
-			(at 0 3.5 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "29c91ae0-a679-40f6-b948-984143dc585c")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "0d67c2b5-8e37-4652-a673-dd00d8f3dbc5")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "8a8fe2f4-73f0-421b-b883-0ab0ac41af54")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr through_hole exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 2.55 0)
-			(stroke
-				(width 0.05)
-				(type default)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "5fb4ab3a-afcc-47eb-9300-a5846ce06ad0")
-		)
-		(pad "1" thru_hole circle
-			(at 0 0)
-			(size 4.6 4.6)
-			(drill 2.3)
-			(layers "*.Cu" "*.Mask")
-			(remove_unused_layers no)
-			(net 13 "CELL+")
-			(uuid "69d5c285-70c5-429f-83be-2797d26998f6")
+			(uuid "18f6df67-368b-41cd-bfca-f940870b4e56")
 		)
 		(embedded_fonts no)
 	)
 	(footprint "Mill-Max_0858_target"
 		(layer "F.Cu")
-		(uuid "86d4c783-8c26-43eb-8deb-b37b7b5c55f0")
-		(at 7 183)
+		(uuid "66544f16-a63b-4904-bc86-ca2d8640218a")
+		(at 3 177)
 		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
 		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_CP2"
+		(property "Reference" "T_CN1"
 			(at 0 -3.1 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "ac25301b-5c82-4014-bc38-5a59861303b0")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "CELL+ target (9 A pin)"
-			(at 0 3.1 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "39c5849e-b326-4a0b-b7b0-bd7506570407")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "ce5a9749-5e35-45a5-acdd-d8553ece0368")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "671d540a-0016-4da8-9a14-cc5ebbaa5753")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr smd exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 2.4 0)
-			(stroke
-				(width 0.12)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.SilkS")
-			(uuid "8cdd6036-e4c1-465f-aeb5-ecda79a2d141")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 1.95 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "7df4a587-7125-4dc1-b616-48562d15c393")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 0.635 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "91fcd384-8beb-4059-913f-87b6d13cb2fd")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 2.1 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "f7c1b937-5619-458f-85c0-8e8877a76797")
-		)
-		(pad "1" smd circle
-			(at 0 0)
-			(size 4.2 4.2)
-			(layers "F.Cu" "F.Mask")
-			(net 13 "CELL+")
-			(uuid "9277478b-fad4-48e1-8a79-b3021c042c6b")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "MountingHole_3.2mm_M3"
-		(layer "F.Cu")
-		(uuid "9537cadc-20e2-4250-8ff2-0cdec13476d3")
-		(at 32.5 173)
-		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
-		(tags "mountinghole M3")
-		(property "Reference" "H2"
-			(at 0 -4.15 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "b608cfa1-0bf1-44eb-908b-b2e0401d1e86")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "M3 standoff 6 mm to the dock strip"
-			(at 0 4.15 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "fae8552d-5aa6-4079-9bab-3dd3230d62a8")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "6f1d5870-f676-4470-abbb-a8d483297435")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "c11af5aa-3225-4be4-aba6-dc8ce240329e")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 3.2 0)
-			(stroke
-				(width 0.15)
-				(type solid)
-			)
-			(fill no)
-			(layer "Cmts.User")
-			(uuid "9798c3e3-b77a-4deb-909a-aa7b88802038")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 3.45 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "a77e9a23-d576-426f-9001-e375fc12d3ef")
-		)
-		(fp_text user "${REFERENCE}"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(uuid "9a1e5d06-6aa9-42e8-9698-83e2ee58eae1")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(pad "" np_thru_hole circle
-			(at 0 0)
-			(size 3.2 3.2)
-			(drill 3.2)
-			(layers "*.Cu" "*.Mask")
-			(uuid "d606ae16-f82c-4fe0-8ca0-5cbb5cc49027")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "MountingHole_3.2mm_M3"
-		(layer "F.Cu")
-		(uuid "9f93d9b9-3a6b-4812-9df8-ba631b6e49ca")
-		(at -5.5 193)
-		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
-		(tags "mountinghole M3")
-		(property "Reference" "H3"
-			(at 0 -4.15 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "bd2b9aef-f90b-4f1a-b98e-0e8b05ac3c13")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "M3 standoff 6 mm to the dock strip"
-			(at 0 4.15 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "fdc1ba22-2124-48c8-8ff5-9fb75bf8cb78")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "26536eb0-b948-4caa-a982-8c3e0a202b58")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "d22cdedd-f5ad-44b6-87c1-995156657545")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 3.2 0)
-			(stroke
-				(width 0.15)
-				(type solid)
-			)
-			(fill no)
-			(layer "Cmts.User")
-			(uuid "616faeae-66f4-4dd9-b6e1-b35c7e05bdaa")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 3.45 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "abfe549b-9339-4650-b22a-f1be350ab824")
-		)
-		(fp_text user "${REFERENCE}"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(uuid "03895819-c2d7-427b-83c4-b7ce46484f3d")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(pad "" np_thru_hole circle
-			(at 0 0)
-			(size 3.2 3.2)
-			(drill 3.2)
-			(layers "*.Cu" "*.Mask")
-			(uuid "dac0ad4f-279b-44cf-9569-7d5594adb9ff")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "Mill-Max_0858_target"
-		(layer "F.Cu")
-		(uuid "aca28679-8cc1-4091-8498-b7dbc862755a")
-		(at -1 180)
-		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
-		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_PRE"
-			(at 0 -3.1 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "fe4611be-1c0f-4b3b-ae2a-d1f99f47b5cc")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "pre-charge target (longer pin, mates first)"
-			(at 0 3.1 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "22d68e09-f977-438d-ab56-ea5679cb3152")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "75757dd7-27ad-47d2-835d-67c2e38a9859")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "e1b205c4-fbc2-4dad-b290-d1584c0cc112")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr smd exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 2.4 0)
-			(stroke
-				(width 0.12)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.SilkS")
-			(uuid "5f6c9d5d-33be-44cc-b02e-f7bba967697e")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 1.95 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "f7a9711b-fd5d-4a73-a1e3-4416a03ba40e")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 0.635 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "f9c580a9-4d12-4c42-8cee-c6400bca8acd")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 2.1 0)
-			(stroke
-				(width 0.1)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.Fab")
-			(uuid "323f0f23-97f5-4dfa-ab87-d2f27b64ab3e")
-		)
-		(pad "1" smd circle
-			(at 0 0)
-			(size 4.2 4.2)
-			(layers "F.Cu" "F.Mask")
-			(net 13 "CELL+")
-			(uuid "8643c7c8-a9e4-4855-871a-268742951684")
-		)
-		(embedded_fonts no)
-	)
-	(footprint "Mill-Max_0858_target"
-		(layer "F.Cu")
-		(uuid "c0ea355e-9674-41c7-a119-80f3d5e29fb2")
-		(at 11 177)
-		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
-		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_CN3"
-			(at 0 -3.1 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "5a0fadd8-ac05-48c8-836d-73971743976e")
+			(uuid "23e433bc-1931-44b2-8c99-1f31e4774fb4")
 			(effects
 				(font
 					(size 1 1)
@@ -1598,7 +913,7 @@
 			(at 0 3.1 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "a71fde45-3265-4cb8-bc5d-e26b8d40363a")
+			(uuid "b8e5a236-55cb-41c1-9fe1-b0d2d62c65c3")
 			(effects
 				(font
 					(size 1 1)
@@ -1610,7 +925,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "6ae6cd07-9db3-4873-8129-42b680335382")
+			(uuid "1d3844af-524c-4315-8466-3acf5b8c82aa")
 			(effects
 				(font
 					(size 1 1)
@@ -1622,7 +937,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "03843de4-5356-47e5-b282-575a10580ef4")
+			(uuid "9b88b2a3-7665-4ad3-b97e-d2d5c7d10606")
 			(effects
 				(font
 					(size 1 1)
@@ -1640,7 +955,7 @@
 			)
 			(fill no)
 			(layer "F.SilkS")
-			(uuid "8cbb121b-06db-4c09-b3af-4b1984a46cd5")
+			(uuid "0b716de1-61d7-4bab-8c06-04ca507ed91a")
 		)
 		(fp_circle
 			(center 0 0)
@@ -1651,7 +966,7 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "cef29e38-c38e-4358-9f61-9745b9ca587e")
+			(uuid "8d67ae31-d8ff-457f-acee-9cc2243a681f")
 		)
 		(fp_circle
 			(center 0 0)
@@ -1662,7 +977,7 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "23342356-9f98-4a8c-b1ac-28f4ed14b63a")
+			(uuid "e0ddcef3-e7c7-4383-bee9-e1e7a570eb10")
 		)
 		(fp_circle
 			(center 0 0)
@@ -1673,28 +988,28 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "7e1bd43f-89d0-4c74-8541-10949922d84b")
+			(uuid "87eb832d-73f0-4876-8757-90c6b3710cdb")
 		)
 		(pad "1" smd circle
 			(at 0 0)
 			(size 4.2 4.2)
 			(layers "F.Cu" "F.Mask")
 			(net 14 "CELL_N")
-			(uuid "fceb4b05-34fe-473f-b2b3-2d9eb220bf35")
+			(uuid "d64003e1-1c61-43e7-9539-db98f214c97f")
 		)
 		(embedded_fonts no)
 	)
 	(footprint "Mill-Max_0858_target"
 		(layer "F.Cu")
-		(uuid "e0afee10-54f5-4f5a-951b-d3a0ec42828e")
-		(at 11 183)
+		(uuid "6b1fc142-e226-4fd0-a99c-4ad20b68f410")
+		(at 7 183)
 		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
 		(tags "Mill-Max 0858 target pad pogo")
-		(property "Reference" "T_CP3"
+		(property "Reference" "T_CP2"
 			(at 0 -3.1 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "db93d6e5-e792-4d69-a66e-589e8b9435e5")
+			(uuid "7fec5ab9-d658-4700-b11b-4c5e65e68044")
 			(effects
 				(font
 					(size 1 1)
@@ -1706,7 +1021,7 @@
 			(at 0 3.1 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "ace5dc98-b3d5-4033-8a2d-cd60a7db2c2e")
+			(uuid "cd0534ff-ebfd-46d6-ba81-11ab16064e9c")
 			(effects
 				(font
 					(size 1 1)
@@ -1718,7 +1033,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "ba8dea8b-4ed8-480d-967e-8760cf9d97dd")
+			(uuid "7a8e52cd-5e94-44f4-90d1-e5318670f70f")
 			(effects
 				(font
 					(size 1 1)
@@ -1730,7 +1045,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "433d5a72-bee1-40d9-b771-32a7e304b05e")
+			(uuid "110e8a5e-9d92-485f-8302-3de5b30b8d10")
 			(effects
 				(font
 					(size 1 1)
@@ -1748,7 +1063,7 @@
 			)
 			(fill no)
 			(layer "F.SilkS")
-			(uuid "0d7f3bed-648d-437e-880d-94c3685dc83b")
+			(uuid "14ff0dca-fe82-4d51-afd1-b1c2f7a06d37")
 		)
 		(fp_circle
 			(center 0 0)
@@ -1759,7 +1074,7 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "ea1895e5-3ffc-4320-9f97-11808cf47f90")
+			(uuid "931c3353-06f7-4c12-bf72-295d381d3977")
 		)
 		(fp_circle
 			(center 0 0)
@@ -1770,7 +1085,7 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "1a85faa3-ca9c-4450-bd46-aa5df864a6e5")
+			(uuid "281bf22f-1c19-4bd4-948c-fec19a390dac")
 		)
 		(fp_circle
 			(center 0 0)
@@ -1781,28 +1096,28 @@
 			)
 			(fill no)
 			(layer "F.Fab")
-			(uuid "2fa13acd-5f4d-4d9f-bf1c-6d882a03ff1a")
+			(uuid "20e9985c-e854-4cc4-805c-ec2de7509bc4")
 		)
 		(pad "1" smd circle
 			(at 0 0)
 			(size 4.2 4.2)
 			(layers "F.Cu" "F.Mask")
 			(net 13 "CELL+")
-			(uuid "ee8d1723-8fb1-48ad-becf-9740a9e22402")
+			(uuid "b9a36060-7239-4845-bb56-e8cae03c82c1")
 		)
 		(embedded_fonts no)
 	)
-	(footprint "MountingHole_3.2mm_M3"
+	(footprint "Mill-Max_0858_target"
 		(layer "F.Cu")
-		(uuid "f2e12616-7b91-4ce9-95fb-85d65c6f1d84")
-		(at 32.5 193)
-		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
-		(tags "mountinghole M3")
-		(property "Reference" "H4"
-			(at 0 -4.15 0)
+		(uuid "6dd2e0ab-b301-460f-a529-2c06243c54e3")
+		(at 7 177)
+		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
+		(tags "Mill-Max 0858 target pad pogo")
+		(property "Reference" "T_CN2"
+			(at 0 -3.1 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "5ee313c2-8ab4-4450-9523-a3fbdf6a0641")
+			(uuid "976bdd0c-a5e6-4625-8be8-53a837a54896")
 			(effects
 				(font
 					(size 1 1)
@@ -1810,11 +1125,11 @@
 				)
 			)
 		)
-		(property "Value" "M3 standoff 6 mm to the dock strip"
-			(at 0 4.15 0)
+		(property "Value" "return target (9 A pin)"
+			(at 0 3.1 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "c3ea8af3-d26a-4049-aed0-b14ba7a17f6f")
+			(uuid "22047e15-5798-48c5-8119-d29c977d0794")
 			(effects
 				(font
 					(size 1 1)
@@ -1826,53 +1141,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "f0e66704-cad6-4a83-977a-fa45699c233f")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "b6075d8d-af39-492c-b1c8-11c209486de6")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(attr exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 3.2 0)
-			(stroke
-				(width 0.15)
-				(type solid)
-			)
-			(fill no)
-			(layer "Cmts.User")
-			(uuid "c4753220-6d0d-4ea9-a8d5-a6cf2d8d4b8a")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 3.45 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "3ffefd8c-377a-4142-8ed9-712150a83bc6")
-		)
-		(fp_text user "${REFERENCE}"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(uuid "5dd97a03-cbcf-44f9-8a23-15eeb8c84592")
+			(uuid "7af964d8-4d1c-47a9-a370-782ef16ef492")
 			(effects
 				(font
 					(size 1 1)
@@ -1880,18 +1149,75 @@
 				)
 			)
 		)
-		(pad "" np_thru_hole circle
+		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "14aa2b02-62ef-428d-b602-f018ae9ed093")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr smd exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 2.4 0)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.SilkS")
+			(uuid "470aca6c-dc78-4fb9-b11b-195d0961cc90")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 1.95 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0e09e011-87eb-4bc8-9f3b-266d29560685")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 0.635 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "4881d520-258d-4948-9d4d-5de46e49d8b2")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 2.1 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "c0aefa1e-9495-4725-8ac7-d0cea3df005b")
+		)
+		(pad "1" smd circle
 			(at 0 0)
-			(size 3.2 3.2)
-			(drill 3.2)
-			(layers "*.Cu" "*.Mask")
-			(uuid "415f91c1-671d-4447-bca2-92ab2544fc94")
+			(size 4.2 4.2)
+			(layers "F.Cu" "F.Mask")
+			(net 14 "CELL_N")
+			(uuid "af1cb0e7-9c3c-4b78-8814-f426c1432345")
 		)
 		(embedded_fonts no)
 	)
 	(footprint "WireHole_2mm"
 		(layer "F.Cu")
-		(uuid "f33700b7-a1e8-4448-b50c-21cb2954e356")
+		(uuid "86e63598-020a-4676-99c5-fcd1cee17b17")
 		(at 9 172.5)
 		(descr "plated hole for a 12 AWG wire (2.05 mm), drill 2.3, ring 4.6 mm, hand soldered")
 		(tags "wire hole")
@@ -1899,7 +1225,7 @@
 			(at 0 -3.5 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "0e2efa1a-5e54-4b71-9ca7-7dcbd0dcdf38")
+			(uuid "2189fa9b-e305-41fc-a330-da487011afd4")
 			(effects
 				(font
 					(size 1 1)
@@ -1911,7 +1237,7 @@
 			(at 0 3.5 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "06c375fc-18d1-4695-a102-e193c5d9fb59")
+			(uuid "ecd6dfa2-f32e-4dde-874c-e287376c524c")
 			(effects
 				(font
 					(size 1 1)
@@ -1923,7 +1249,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "2fbe2d38-493b-4703-b6b2-ab66d262b406")
+			(uuid "cb8d8c41-ce10-4553-9bc3-2bd91bc1f398")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1935,7 +1261,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "53b1e169-bf78-4c0d-9e69-ecfa2f2a93d7")
+			(uuid "7e9b72b9-d9fe-4378-9583-4ecb21c60427")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1953,7 +1279,7 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "c762110d-8c50-4d15-bf05-010af5867424")
+			(uuid "50d66b93-f466-4f5e-9c3e-6052c3530089")
 		)
 		(pad "1" thru_hole circle
 			(at 0 0)
@@ -1962,7 +1288,681 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(net 14 "CELL_N")
-			(uuid "ce992737-fb6c-41c4-911b-ce6ffe376c86")
+			(uuid "37c52a44-b240-4cf5-a155-bb9c23dfc584")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "WireLands_2x6"
+		(layer "F.Cu")
+		(uuid "871e3c21-2f40-4421-94fb-58733c2a53c2")
+		(at 26 186.5)
+		(descr "twelve plated wire lands, 2 x 6 at 2.54 mm, 1.0 mm holes with 1.7 mm rings: hook-up wires soldered from the underside of the dock block")
+		(tags "wire land dock block")
+		(property "Reference" "L_SIG"
+			(at 0 -5 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "6ecb37db-35e8-4239-98d5-d4fb1c3081e8")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "plated wire lands to the strip J_BLK (net names on the underside silk)"
+			(at 0 5 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "2b24fd39-d4f0-48b9-bece-d6636e27578c")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "16cfeea2-33d7-4573-b419-0cae3cc685ff")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "536b70e1-a38a-4636-9abc-3af67474b672")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr through_hole)
+		(fp_rect
+			(start -7.5 -2.4)
+			(end 7.5 2.4)
+			(stroke
+				(width 0.05)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "fa57fd75-b607-4135-832e-b86c93380425")
+		)
+		(fp_rect
+			(start -7.5 -2.4)
+			(end 7.5 2.4)
+			(stroke
+				(width 0.1)
+				(type default)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "b346d0dd-6099-47d1-8d16-3f5b2bd3ce4d")
+		)
+		(pad "1" thru_hole circle
+			(at -6.35 -1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 1 "GND_P7")
+			(uuid "a2cea491-02e3-4586-9728-60ebceacb8e7")
+		)
+		(pad "2" thru_hole circle
+			(at -3.81 -1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 2 "SHORE_INHIBIT_P8")
+			(uuid "9160c918-75e6-4e9b-aa85-2d75f93fac7b")
+		)
+		(pad "3" thru_hole circle
+			(at -1.27 -1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 3 "TS_CHG_P9")
+			(uuid "221a5fdb-80dd-4176-a557-29dd8328cefc")
+		)
+		(pad "4" thru_hole circle
+			(at 1.27 -1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 4 "GND_P10")
+			(uuid "ff39eb2b-f8e0-4e32-96c7-b031fb46ee87")
+		)
+		(pad "5" thru_hole circle
+			(at 3.81 -1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 5 "CELL_SENSE_P_P11")
+			(uuid "327e3dc7-3b9f-478a-af01-f95f418b770c")
+		)
+		(pad "6" thru_hole circle
+			(at 6.35 -1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 6 "DOCK_SPARE_P12")
+			(uuid "e13324a9-e047-4653-9b91-28ac0a05c90d")
+		)
+		(pad "7" thru_hole circle
+			(at -6.35 1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 7 "SHORE_12V_P1")
+			(uuid "cebf7def-ca71-4ca0-b7a3-48676dc90349")
+		)
+		(pad "8" thru_hole circle
+			(at -3.81 1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 8 "SHORE_12V_P2")
+			(uuid "5a49f858-7cda-4dac-90f1-2030f43995f9")
+		)
+		(pad "9" thru_hole circle
+			(at -1.27 1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 9 "SHORE_12V_P3")
+			(uuid "b6fa01f1-8552-44b6-816d-b7db96a1316e")
+		)
+		(pad "10" thru_hole circle
+			(at 1.27 1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 10 "SHORE_12V_P4")
+			(uuid "a58b319e-624e-46d4-a848-b0f1553024cf")
+		)
+		(pad "11" thru_hole circle
+			(at 3.81 1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 11 "GND_P5")
+			(uuid "d08957d5-e0d7-4691-9d3b-8e51c8929d80")
+		)
+		(pad "12" thru_hole circle
+			(at 6.35 1.27)
+			(size 1.7 1.7)
+			(drill 1)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 12 "GND_P6")
+			(uuid "67f71e9c-46f1-4dcd-974e-7f3a766f218e")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "Mill-Max_0858_target"
+		(layer "F.Cu")
+		(uuid "abb9844f-4f97-4c7a-bc18-d946512a855b")
+		(at 11 177)
+		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
+		(tags "Mill-Max 0858 target pad pogo")
+		(property "Reference" "T_CN3"
+			(at 0 -3.1 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "5c50fc99-877f-45e3-9e8e-3a0f3a6a3be5")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "return target (9 A pin)"
+			(at 0 3.1 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "10f87781-9fca-462a-8c16-346f07cc203e")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "0d299059-cf1d-428d-9bd2-2cc8f048eeba")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "2cabf545-d1a1-4ef4-a287-e51fd7383bd8")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr smd exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 2.4 0)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.SilkS")
+			(uuid "3c1271cc-d240-406e-936e-f6451a116b92")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 1.95 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0ce4d21e-c6c8-4f08-ae68-f45bdba99e2f")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 0.635 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "cafddb3c-ee15-4ffd-948b-818882ae5fe4")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 2.1 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "1735b35d-0c0b-4876-ac68-b99c7b0f6f26")
+		)
+		(pad "1" smd circle
+			(at 0 0)
+			(size 4.2 4.2)
+			(layers "F.Cu" "F.Mask")
+			(net 14 "CELL_N")
+			(uuid "0518bca8-c383-45f8-814c-133b33173bb5")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "Mill-Max_0858_target"
+		(layer "F.Cu")
+		(uuid "c0868937-8ce8-4d67-ba70-ea190995882c")
+		(at 15 183)
+		(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
+		(tags "Mill-Max 0858 target pad pogo")
+		(property "Reference" "T_CP4"
+			(at 0 -3.1 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "a32ad8f5-ae83-4a19-b91a-19d0fdbfd9cd")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "CELL+ target (9 A pin)"
+			(at 0 3.1 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "0047536b-8077-46dd-ab8c-bbc9ef6575fd")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "4c2203de-32d8-4106-94c6-fa47ef58985a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "faeddb6c-f888-492a-b86d-532823caa29c")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr smd exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 2.4 0)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.SilkS")
+			(uuid "965e352a-7e21-41dd-a275-bc03da944f11")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 1.95 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c7eeaacf-ccc7-444f-bb59-c2c3bf3de365")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 0.635 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "4c83ab71-5242-45b6-9cbc-3700761aaa47")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 2.1 0)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "7704ee0e-9eb1-4bef-a410-8b750cfc0c0d")
+		)
+		(pad "1" smd circle
+			(at 0 0)
+			(size 4.2 4.2)
+			(layers "F.Cu" "F.Mask")
+			(net 13 "CELL+")
+			(uuid "49b77520-7c07-4434-9df8-e3e5f5450ee4")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "MountingHole_3.2mm_M3"
+		(layer "F.Cu")
+		(uuid "ca392bc3-503d-4345-b768-39585484276d")
+		(at -5.5 193)
+		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
+		(tags "mountinghole M3")
+		(property "Reference" "H3"
+			(at 0 -4.15 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "d2d6e49f-404a-4d1e-b91f-07a35341347b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "M3 standoff 6 mm to the dock strip"
+			(at 0 4.15 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "f9cd5e63-8111-42ab-89aa-22fef334c2e7")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "548cce89-a02b-42d4-b1d9-20c6753ca2a3")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "26d6637b-20b1-493c-9fc8-8f036709c34b")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 3.2 0)
+			(stroke
+				(width 0.15)
+				(type solid)
+			)
+			(fill no)
+			(layer "Cmts.User")
+			(uuid "38517924-ab24-425b-8ac3-bdeb3c6fb6f5")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 3.45 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "f42022d3-99d2-44fb-96c8-f987fbfcf619")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "998c400c-bb8b-459f-a72e-2ba62067bc22")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "" np_thru_hole circle
+			(at 0 0)
+			(size 3.2 3.2)
+			(drill 3.2)
+			(layers "*.Cu" "*.Mask")
+			(uuid "55907372-a419-41e1-aff6-7cd4894737be")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "MountingHole_3.2mm_M3"
+		(layer "F.Cu")
+		(uuid "d208813d-938f-4118-88e3-8bfcb77d30aa")
+		(at 32.5 193)
+		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
+		(tags "mountinghole M3")
+		(property "Reference" "H4"
+			(at 0 -4.15 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "e8da46d2-faf0-4df0-9f1d-7d244d63d59a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "M3 standoff 6 mm to the dock strip"
+			(at 0 4.15 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "b9adb2bf-5918-47af-b198-d0efdbb2f950")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "8d8a79f5-c4f9-4871-ab7b-fe54610348f2")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "2bf6b397-3097-49ec-b02e-4a55d0f2d536")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 3.2 0)
+			(stroke
+				(width 0.15)
+				(type solid)
+			)
+			(fill no)
+			(layer "Cmts.User")
+			(uuid "d086b693-fdc3-4ac9-834a-c1240c7029a2")
+		)
+		(fp_circle
+			(center 0 0)
+			(end 3.45 0)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "d1b5a1ac-5096-44b5-a3e2-1802ea846bc3")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "7ce90224-465a-487f-bce3-8117b425ea33")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "" np_thru_hole circle
+			(at 0 0)
+			(size 3.2 3.2)
+			(drill 3.2)
+			(layers "*.Cu" "*.Mask")
+			(uuid "db2a7269-1596-483e-92b8-ade1932b017b")
+		)
+		(embedded_fonts no)
+	)
+	(footprint "WireHole_2mm"
+		(layer "F.Cu")
+		(uuid "f6f9d487-cd0e-4352-926e-50819d41b788")
+		(at 10 191)
+		(descr "plated hole for a 12 AWG wire (2.05 mm), drill 2.3, ring 4.6 mm, hand soldered")
+		(tags "wire hole")
+		(property "Reference" "WH_CP"
+			(at 0 -3.5 0)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "8d50c46e-c277-450d-8b42-0b996254b119")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "12 AWG to the strip P_CP"
+			(at 0 3.5 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "d02095e1-2d22-488e-b2f7-bb51b69815bb")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "6f6e9bb7-8343-417e-b8c9-44b402b670a3")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "68b2d199-49cb-4cff-a420-3e6a59468f8c")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(attr through_hole exclude_from_pos_files exclude_from_bom)
+		(fp_circle
+			(center 0 0)
+			(end 2.55 0)
+			(stroke
+				(width 0.05)
+				(type default)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0a26ca60-2b7e-44bb-9b17-af1d69041680")
+		)
+		(pad "1" thru_hole circle
+			(at 0 0)
+			(size 4.6 4.6)
+			(drill 2.3)
+			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
+			(net 13 "CELL+")
+			(uuid "5911b0c1-c5b6-4157-abe0-f789c1831ea7")
 		)
 		(embedded_fonts no)
 	)
@@ -1974,7 +1974,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "566eefb9-95ba-43ab-b1ea-ffbfe8b17d4a")
+		(uuid "536ac5e9-b775-43e1-bf6f-1fa315be23f4")
 	)
 	(gr_arc
 		(start -8 170.5)
@@ -1985,7 +1985,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "56254588-1afc-4169-8276-e27e54be1f00")
+		(uuid "919a5386-f29e-401c-ba81-f19426bfe146")
 	)
 	(gr_arc
 		(start -6.5 195)
@@ -1996,7 +1996,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "c4dfbd19-39c2-4c73-be86-7e749b76f632")
+		(uuid "c8ded63f-5a0c-46da-bbf8-b39ee58586c3")
 	)
 	(gr_line
 		(start -6.5 195)
@@ -2006,7 +2006,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "0519c2c1-80ab-44c6-a804-6b49fb650410")
+		(uuid "37b81bd0-b45c-47d2-b149-f169a7945afc")
 	)
 	(gr_line
 		(start 33.5 169)
@@ -2016,7 +2016,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "24dd0638-9b53-41b7-babf-8bbc2558af8f")
+		(uuid "5a980516-5cf8-4a3d-86f9-c7b57caa938d")
 	)
 	(gr_arc
 		(start 33.5 169)
@@ -2027,7 +2027,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "a764f11a-a5e2-457e-afec-0bb39b909cfe")
+		(uuid "dcdf3bca-df41-4c81-9868-daccb325da77")
 	)
 	(gr_arc
 		(start 35 193.5)
@@ -2038,7 +2038,7 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "77b1b252-b34b-4844-a6bf-a9a7f99eebec")
+		(uuid "31e47589-d4ee-49c5-af5d-34409ef7e214")
 	)
 	(gr_line
 		(start 35 193.5)
@@ -2048,12 +2048,12 @@
 			(type default)
 		)
 		(layer "Edge.Cuts")
-		(uuid "a8d62bb9-3a49-4f8f-b773-3f1f3d1f2527")
+		(uuid "6ccf3df0-32bf-47eb-a2ca-5955a0a78469")
 	)
 	(gr_text "RETURN 12 AWG"
 		(at 3 173.5 0)
 		(layer "F.SilkS")
-		(uuid "4030be81-feec-41b8-bf5c-be002914d0df")
+		(uuid "bb8bb64c-60d3-48a6-a459-dd69eb01423c")
 		(effects
 			(font
 				(size 0.9 0.9)
@@ -2064,7 +2064,7 @@
 	(gr_text "CELL+ 12 AWG"
 		(at 3 193 0)
 		(layer "F.SilkS")
-		(uuid "6adc0ba7-9480-4bdc-960f-a0e912697537")
+		(uuid "9205ddac-5c28-4255-8c09-b6c9529bd671")
 		(effects
 			(font
 				(size 0.9 0.9)
@@ -2075,7 +2075,7 @@
 	(gr_text "E5 DOCK BLOCK  face 7.4 mm"
 		(at 26 171 0)
 		(layer "F.SilkS")
-		(uuid "0f79f5ad-7ec6-40f3-92c3-e90e96da9234")
+		(uuid "c4899a83-3182-4101-853a-4db6d0a0709a")
 		(effects
 			(font
 				(size 0.9 0.9)
@@ -2086,7 +2086,7 @@
 	(gr_text "GND7"
 		(at 19.65 181.5 90)
 		(layer "B.SilkS")
-		(uuid "fad7f564-3a2b-4768-aa5e-7d0ac81ef3c5")
+		(uuid "8464a49c-9035-4bc8-a25f-b321dfcebebb")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2098,7 +2098,7 @@
 	(gr_text "12V1"
 		(at 19.65 191 90)
 		(layer "B.SilkS")
-		(uuid "d5eddfb4-4141-4dd9-945f-60b4e365bfcc")
+		(uuid "27c279fc-81bb-4832-a4ac-aca3619780ba")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2110,7 +2110,7 @@
 	(gr_text "INH8"
 		(at 22.189999 181.5 90)
 		(layer "B.SilkS")
-		(uuid "0bd2f2e2-3024-4a67-9ec2-bd4bda799220")
+		(uuid "8a24e992-2721-4727-8ff3-8431ec084098")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2122,7 +2122,7 @@
 	(gr_text "12V2"
 		(at 22.189999 191 90)
 		(layer "B.SilkS")
-		(uuid "29e798ca-eb32-4ae0-9f6a-c8098a0ec874")
+		(uuid "1ff58c9d-7edc-4b3d-a768-2afd992b6497")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2134,7 +2134,7 @@
 	(gr_text "TS9"
 		(at 24.73 181.5 90)
 		(layer "B.SilkS")
-		(uuid "13b18f34-dc0d-4514-87cb-0e9a6d525151")
+		(uuid "6fcf5d95-c0ab-46a6-b626-fc000ef5c09f")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2146,7 +2146,7 @@
 	(gr_text "12V3"
 		(at 24.73 191 90)
 		(layer "B.SilkS")
-		(uuid "5c139e5b-6f6d-4237-b6b1-6bff91a3fd1a")
+		(uuid "f5dcb328-c6e7-46a8-aa98-17ca86918ca2")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2158,7 +2158,7 @@
 	(gr_text "GND10"
 		(at 27.269999 181.5 90)
 		(layer "B.SilkS")
-		(uuid "1f478b14-fe06-4737-8dc3-97d3e5109baa")
+		(uuid "455bba74-5272-44c5-80ce-5b7580d8a248")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2170,7 +2170,7 @@
 	(gr_text "12V4"
 		(at 27.269999 191 90)
 		(layer "B.SilkS")
-		(uuid "89117d91-8104-4f3b-9d70-de09c11c43ca")
+		(uuid "ac357a23-66d8-46a6-963e-ff1a215ff7b8")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2182,7 +2182,7 @@
 	(gr_text "KS+11"
 		(at 29.81 181.5 90)
 		(layer "B.SilkS")
-		(uuid "3c6a889a-d0a5-4793-a14b-8bbd9e31f469")
+		(uuid "99311ab5-6f46-4f00-8aee-a95ebefef52d")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2194,7 +2194,7 @@
 	(gr_text "GND5"
 		(at 29.81 191 90)
 		(layer "B.SilkS")
-		(uuid "4861123b-a704-40f9-8652-d5b929221961")
+		(uuid "fb7d453f-10fb-4f2e-8669-6eece6c24698")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2206,7 +2206,7 @@
 	(gr_text "SP12"
 		(at 32.349999 181.5 90)
 		(layer "B.SilkS")
-		(uuid "22b0edd0-b4d0-4b49-84ce-305f5d83460e")
+		(uuid "75e13f43-41c7-4f34-a7c3-1db33690deca")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2218,7 +2218,7 @@
 	(gr_text "GND6"
 		(at 32.349999 191 90)
 		(layer "B.SilkS")
-		(uuid "655c9701-9982-40e2-b82c-3d940b7e21b0")
+		(uuid "fa1dad89-b4a3-4eb5-b2a7-6f3213e5ba85")
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -2230,7 +2230,7 @@
 	(gr_text "A19 pins land on these targets"
 		(at 26 168 0)
 		(layer "B.SilkS")
-		(uuid "f0de3716-6678-4e5d-a2b9-02eb7a1ab847")
+		(uuid "7c3f40be-3a0f-4f0f-9125-569a0b34662d")
 		(effects
 			(font
 				(size 0.9 0.9)
@@ -2245,7 +2245,7 @@
 		(width 0.4)
 		(layer "F.Cu")
 		(net 1)
-		(uuid "69949732-9c2a-46b8-a560-4d00061b0b1c")
+		(uuid "04ca28bd-ee4e-48a1-85b3-974622665c93")
 	)
 	(via
 		(at 19.65 176.5)
@@ -2253,7 +2253,7 @@
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
 		(net 1)
-		(uuid "eef174e8-715b-44ab-ae24-83185b8564e7")
+		(uuid "e6b5ee08-2ff0-479c-9ef7-361ca16bb780")
 	)
 	(segment
 		(start 19.65 176.5)
@@ -2261,7 +2261,7 @@
 		(width 0.4)
 		(layer "B.Cu")
 		(net 1)
-		(uuid "565c37a3-7240-4e17-9a45-604bebd0b048")
+		(uuid "0532364b-f93d-4d0a-becd-a43cf3ee5b77")
 	)
 	(segment
 		(start 22.189999 178.73)
@@ -2269,7 +2269,7 @@
 		(width 0.4)
 		(layer "F.Cu")
 		(net 2)
-		(uuid "5675f4f9-3ebf-4cfe-b8b7-e56f70780f30")
+		(uuid "6f5ad34e-c4cc-4451-b2d8-301fafbd16a2")
 	)
 	(via
 		(at 22.189999 176.5)
@@ -2277,7 +2277,7 @@
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
 		(net 2)
-		(uuid "cb5c9703-b98e-4c94-a254-31d6e6a3f7ec")
+		(uuid "c7a7918e-7c09-469e-8995-c4f720df9e39")
 	)
 	(segment
 		(start 22.189999 176.5)
@@ -2285,7 +2285,7 @@
 		(width 0.4)
 		(layer "B.Cu")
 		(net 2)
-		(uuid "f3ad4017-b98c-4d38-bfd2-7d22b33eec10")
+		(uuid "0c741658-4870-4905-a137-056bcd3b36e4")
 	)
 	(segment
 		(start 24.73 178.73)
@@ -2293,7 +2293,7 @@
 		(width 0.4)
 		(layer "F.Cu")
 		(net 3)
-		(uuid "0e304237-b261-4a42-ba0b-c46b79ff2f11")
+		(uuid "ddc9ba8b-92a8-432e-9068-0b239204c0c9")
 	)
 	(via
 		(at 24.73 176.5)
@@ -2301,7 +2301,7 @@
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
 		(net 3)
-		(uuid "2d4111c7-4706-400e-8aa5-9806b934a18f")
+		(uuid "7b01fcf9-baf8-4a0e-b4a3-4d21264f29f7")
 	)
 	(segment
 		(start 24.73 176.5)
@@ -2309,7 +2309,7 @@
 		(width 0.4)
 		(layer "B.Cu")
 		(net 3)
-		(uuid "6dee3ac8-b64a-4b86-b777-16991fec3b0c")
+		(uuid "7ef17b41-fde7-43a1-a925-57bdca29a93b")
 	)
 	(segment
 		(start 27.269999 178.73)
@@ -2317,7 +2317,7 @@
 		(width 0.4)
 		(layer "F.Cu")
 		(net 4)
-		(uuid "6896ee3f-031b-43ce-b475-653f5ccbbf8c")
+		(uuid "c30bbd2f-fde0-4014-917a-ed40fdbcbcd7")
 	)
 	(via
 		(at 27.269999 176.5)
@@ -2325,7 +2325,7 @@
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
 		(net 4)
-		(uuid "510c7b8c-19cf-4da4-bed1-0c7c5a28cfb4")
+		(uuid "83f60c83-be7c-45ca-b51c-d06e4e64849b")
 	)
 	(segment
 		(start 27.269999 176.5)
@@ -2333,7 +2333,7 @@
 		(width 0.4)
 		(layer "B.Cu")
 		(net 4)
-		(uuid "d2751179-ec06-44e1-86ff-5de926662428")
+		(uuid "69a57216-f8f7-4138-a56a-4386dbf5eb45")
 	)
 	(segment
 		(start 29.81 178.73)
@@ -2341,7 +2341,7 @@
 		(width 0.4)
 		(layer "F.Cu")
 		(net 5)
-		(uuid "0c71f04e-d851-45f4-b4d6-3acdefe3140c")
+		(uuid "d796ece6-eae1-46e7-b25a-dbfd310067e4")
 	)
 	(via
 		(at 29.81 176.5)
@@ -2349,7 +2349,7 @@
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
 		(net 5)
-		(uuid "053ae5fd-4ae6-4b09-91ca-7efbb0541ab0")
+		(uuid "fd0205bf-4bdd-453b-8d4e-3bc41e7fd91d")
 	)
 	(segment
 		(start 29.81 176.5)
@@ -2357,7 +2357,7 @@
 		(width 0.4)
 		(layer "B.Cu")
 		(net 5)
-		(uuid "57455056-7899-4314-bc23-028938bae63a")
+		(uuid "529dcefb-718b-4a63-ad53-7f2ea611178b")
 	)
 	(segment
 		(start 32.349999 178.73)
@@ -2365,7 +2365,7 @@
 		(width 0.4)
 		(layer "F.Cu")
 		(net 6)
-		(uuid "3239af70-208d-44e4-9411-7eff6e84fb1a")
+		(uuid "cd74f1c3-b125-4db7-b157-fd6149402c73")
 	)
 	(via
 		(at 32.349999 176.5)
@@ -2373,7 +2373,7 @@
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
 		(net 6)
-		(uuid "42db7498-4d41-4662-894c-dffb9fc3f852")
+		(uuid "91867b14-d8af-4fae-8220-b3e05003e148")
 	)
 	(segment
 		(start 32.349999 176.5)
@@ -2381,23 +2381,7 @@
 		(width 0.4)
 		(layer "B.Cu")
 		(net 6)
-		(uuid "182592ff-ff8a-4477-a5aa-7832bae8301d")
-	)
-	(segment
-		(start 19.65 183)
-		(end 20.92 184)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 7)
-		(uuid "1f8040dc-095f-40ea-9b57-64e69539197b")
-	)
-	(segment
-		(start 19.65 181.27)
-		(end 19.65 183)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 7)
-		(uuid "2b7d8dd7-a217-42f9-8dec-7d7d5f7a8f05")
+		(uuid "f4f9239f-ac3f-4971-b823-0d6835dfbb7e")
 	)
 	(segment
 		(start 20.92 186.6)
@@ -2405,7 +2389,23 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 7)
-		(uuid "98281f12-d23e-46b6-9b35-99ddfea381e9")
+		(uuid "2cb4d172-8332-40ee-a89d-aba7eaf3a6c4")
+	)
+	(segment
+		(start 19.65 183)
+		(end 20.92 184)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 7)
+		(uuid "79096530-419e-473c-8773-cc9af468b5a9")
+	)
+	(segment
+		(start 19.65 181.27)
+		(end 19.65 183)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 7)
+		(uuid "91adbcc2-5232-4b2c-8977-3a9a68405680")
 	)
 	(segment
 		(start 20.92 184)
@@ -2413,23 +2413,7 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 7)
-		(uuid "e2d34bf3-aa3f-4e8f-91f5-b022c80cde88")
-	)
-	(segment
-		(start 23.459999 184)
-		(end 23.459999 186.6)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 8)
-		(uuid "3ca4d179-dd7f-40bd-b817-bc65629f32ec")
-	)
-	(segment
-		(start 23.459999 186.6)
-		(end 22.189999 187.77)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 8)
-		(uuid "7aafd88f-9844-4c39-82f2-8e8db770d14b")
+		(uuid "bf0380a0-0e1a-4535-8439-d9e21647477a")
 	)
 	(segment
 		(start 22.189999 181.27)
@@ -2437,7 +2421,23 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 8)
-		(uuid "d294d695-7344-4c66-8fdd-4154783e03b8")
+		(uuid "38387e7f-ac6b-4d60-9378-954010ed9dd1")
+	)
+	(segment
+		(start 23.459999 186.6)
+		(end 22.189999 187.77)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 8)
+		(uuid "70f5024a-3f03-4269-918d-99739d9ecc96")
+	)
+	(segment
+		(start 23.459999 184)
+		(end 23.459999 186.6)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 8)
+		(uuid "71817b15-957f-4528-803c-8744b90917bf")
 	)
 	(segment
 		(start 22.189999 183)
@@ -2445,31 +2445,7 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 8)
-		(uuid "f0c3e953-2446-46e6-926f-3a2aaeae3b85")
-	)
-	(segment
-		(start 24.73 181.27)
-		(end 24.73 183)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 9)
-		(uuid "9860032e-8341-4ece-817f-48077af84ede")
-	)
-	(segment
-		(start 26 184)
-		(end 26 186.6)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 9)
-		(uuid "a62c3b34-883c-4aa9-b4b8-5f46d9acf0a4")
-	)
-	(segment
-		(start 26 186.6)
-		(end 24.73 187.77)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 9)
-		(uuid "af2a42b6-86fe-41be-8614-650c2d7d2769")
+		(uuid "9132e466-9137-4381-a086-9aa4dd2843ce")
 	)
 	(segment
 		(start 24.73 183)
@@ -2477,23 +2453,31 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 9)
-		(uuid "f92255b2-00e4-4c10-8945-b7bebff34a88")
+		(uuid "069d0d7a-0b64-433a-9e55-6314cef40c0b")
 	)
 	(segment
-		(start 28.539999 184)
-		(end 28.539999 186.6)
+		(start 26 184)
+		(end 26 186.6)
 		(width 0.3)
 		(layer "F.Cu")
-		(net 10)
-		(uuid "4f9e6113-076d-469e-893f-836c0942fd30")
+		(net 9)
+		(uuid "8e98f5a6-739a-486e-bcb5-a8627546be64")
 	)
 	(segment
-		(start 28.539999 186.6)
-		(end 27.269999 187.77)
+		(start 24.73 181.27)
+		(end 24.73 183)
 		(width 0.3)
 		(layer "F.Cu")
-		(net 10)
-		(uuid "8e6a14cf-be4b-407a-9f72-9c99790a0e47")
+		(net 9)
+		(uuid "a43c8143-23e3-4528-a6b2-9153f4a9eca6")
+	)
+	(segment
+		(start 26 186.6)
+		(end 24.73 187.77)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 9)
+		(uuid "c7efe86b-5a1e-4254-ab60-d4efe73ddda7")
 	)
 	(segment
 		(start 27.269999 181.27)
@@ -2501,7 +2485,7 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 10)
-		(uuid "de9f597e-637a-482c-8996-792fe61e1a01")
+		(uuid "2b6db20d-b664-4e25-8eaa-83b5230335a2")
 	)
 	(segment
 		(start 27.269999 183)
@@ -2509,15 +2493,23 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 10)
-		(uuid "e3c80ee2-0eaa-4763-8ba9-c673c1209c1e")
+		(uuid "2c825075-a863-441b-8edb-983e1a26e2f6")
 	)
 	(segment
-		(start 31.08 186.6)
-		(end 29.81 187.77)
+		(start 28.539999 186.6)
+		(end 27.269999 187.77)
 		(width 0.3)
 		(layer "F.Cu")
-		(net 11)
-		(uuid "6e712721-70bc-4cdb-81a9-76c2326ece81")
+		(net 10)
+		(uuid "77c9cbca-bfb8-4a18-a029-9cc08881cb3c")
+	)
+	(segment
+		(start 28.539999 184)
+		(end 28.539999 186.6)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 10)
+		(uuid "f83a1182-3d4c-4216-a983-f847836ba38f")
 	)
 	(segment
 		(start 29.81 181.27)
@@ -2525,7 +2517,15 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 11)
-		(uuid "6f50f588-a3c2-4443-9513-068896052910")
+		(uuid "17d92d04-f7f5-4fa4-88af-f33f9af9b795")
+	)
+	(segment
+		(start 31.08 186.6)
+		(end 29.81 187.77)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 11)
+		(uuid "1a1c694a-248e-49b4-a90e-d83d7f6add76")
 	)
 	(segment
 		(start 31.08 184)
@@ -2533,7 +2533,7 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 11)
-		(uuid "84b4e513-882d-41b8-96c0-7a2cd8d881e4")
+		(uuid "42fee717-da8e-4ddc-be33-1a934cfb5f40")
 	)
 	(segment
 		(start 29.81 183)
@@ -2541,7 +2541,7 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 11)
-		(uuid "bb963663-ffab-4ea0-bae4-964f84451a9e")
+		(uuid "8b5ec3bf-90f3-4dc9-bd7f-d4483f219c1f")
 	)
 	(segment
 		(start 33.619999 184)
@@ -2549,23 +2549,7 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 12)
-		(uuid "82e98087-a959-45d9-82f2-6084c17da1cd")
-	)
-	(segment
-		(start 33.619999 186.6)
-		(end 32.349999 187.77)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 12)
-		(uuid "867861e4-e367-4090-b872-37db16c137dd")
-	)
-	(segment
-		(start 32.349999 183)
-		(end 33.619999 184)
-		(width 0.3)
-		(layer "F.Cu")
-		(net 12)
-		(uuid "c490e0a9-06a1-4571-b4c6-aadcf3962127")
+		(uuid "1377ba20-d0de-406a-b16a-ee177fcc9500")
 	)
 	(segment
 		(start 32.349999 181.27)
@@ -2573,39 +2557,23 @@
 		(width 0.3)
 		(layer "F.Cu")
 		(net 12)
-		(uuid "fb37a76c-8685-4803-ae53-2b0842fcd1d3")
+		(uuid "c3dbc625-ba16-4f66-b6f6-f03ff9425c34")
 	)
-	(via
-		(at 1 181.8)
-		(size 0.8)
-		(drill 0.4)
-		(layers "F.Cu" "B.Cu")
-		(net 13)
-		(uuid "48afb421-8f03-4ea1-9dcd-9885e79f98de")
+	(segment
+		(start 33.619999 186.6)
+		(end 32.349999 187.77)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 12)
+		(uuid "d70ca0d8-cfff-4ca7-8dd6-7d0633ae2f0b")
 	)
-	(via
-		(at 9 181.8)
-		(size 0.8)
-		(drill 0.4)
-		(layers "F.Cu" "B.Cu")
-		(net 13)
-		(uuid "906c3cae-ea64-44aa-bfbf-2b67cbc33232")
-	)
-	(via
-		(at 5 190)
-		(size 0.8)
-		(drill 0.4)
-		(layers "F.Cu" "B.Cu")
-		(net 13)
-		(uuid "922ea1d9-ac9e-4d95-a615-0cb60b732e7a")
-	)
-	(via
-		(at 1 190)
-		(size 0.8)
-		(drill 0.4)
-		(layers "F.Cu" "B.Cu")
-		(net 13)
-		(uuid "9f40c83d-58a7-4033-9c8e-dd907eefc7f9")
+	(segment
+		(start 32.349999 183)
+		(end 33.619999 184)
+		(width 0.3)
+		(layer "F.Cu")
+		(net 12)
+		(uuid "dfca6f5f-8722-47fa-b80f-c7540eaa2dda")
 	)
 	(via
 		(at -3 190)
@@ -2613,15 +2581,39 @@
 		(drill 0.4)
 		(layers "F.Cu" "B.Cu")
 		(net 13)
-		(uuid "fd29f6a0-6d47-46d9-997f-643668fac34c")
+		(uuid "023bcdb3-3d67-4c54-97a3-a4fc534b50d2")
 	)
 	(via
-		(at -3 171.5)
+		(at 1 181.8)
 		(size 0.8)
 		(drill 0.4)
 		(layers "F.Cu" "B.Cu")
-		(net 14)
-		(uuid "c106b335-1063-4787-8da9-02d71546c5f8")
+		(net 13)
+		(uuid "4c4042b2-01c5-4e38-8ec7-356f75f99415")
+	)
+	(via
+		(at 9 181.8)
+		(size 0.8)
+		(drill 0.4)
+		(layers "F.Cu" "B.Cu")
+		(net 13)
+		(uuid "63e90bce-4577-4e9c-b347-494c059ee038")
+	)
+	(via
+		(at 5 190)
+		(size 0.8)
+		(drill 0.4)
+		(layers "F.Cu" "B.Cu")
+		(net 13)
+		(uuid "a6bb7d99-4a45-4354-882f-3c86ad4772b4")
+	)
+	(via
+		(at 1 190)
+		(size 0.8)
+		(drill 0.4)
+		(layers "F.Cu" "B.Cu")
+		(net 13)
+		(uuid "d06c6b59-b0d7-41fc-8219-4ffb3e208d5f")
 	)
 	(via
 		(at 1 171.5)
@@ -2629,7 +2621,15 @@
 		(drill 0.4)
 		(layers "F.Cu" "B.Cu")
 		(net 14)
-		(uuid "c6cc1dad-6a89-468d-b219-8e171c6d1f70")
+		(uuid "3ba5ecb8-8d74-4893-9b8b-d6daf9792d13")
+	)
+	(via
+		(at -3 171.5)
+		(size 0.8)
+		(drill 0.4)
+		(layers "F.Cu" "B.Cu")
+		(net 14)
+		(uuid "7442bf6c-fff5-4830-9db6-1b3c9794f348")
 	)
 	(via
 		(at 5 171.5)
@@ -2637,13 +2637,13 @@
 		(drill 0.4)
 		(layers "F.Cu" "B.Cu")
 		(net 14)
-		(uuid "f335f973-feb3-48fe-8182-3c5de7d53a12")
+		(uuid "8754f899-04dc-4dae-a462-8e3f6262c15e")
 	)
 	(zone
 		(net 13)
 		(net_name "CELL+")
 		(layer "F.Cu")
-		(uuid "b69b8fc3-e836-4493-90a0-7a398ebdc165")
+		(uuid "77cecae4-fcb4-45a3-a191-37da07503921")
 		(name "CELL+ pour F.Cu")
 		(hatch edge 0.5)
 		(connect_pads yes
@@ -2683,7 +2683,7 @@
 		(net 14)
 		(net_name "CELL_N")
 		(layer "F.Cu")
-		(uuid "ce8aa3ca-e162-4011-aba7-28e788bf69f7")
+		(uuid "8c655d4b-a478-4deb-b333-b9912c77a740")
 		(name "CELL_N pour F.Cu")
 		(hatch edge 0.5)
 		(connect_pads yes
@@ -2728,87 +2728,7 @@
 		(net 0)
 		(net_name "")
 		(layers "F.Cu" "B.Cu")
-		(uuid "2d4dde32-e214-4493-ae5b-a90fbf906196")
-		(name "standoff H4: no pour")
-		(hatch edge 0.5)
-		(connect_pads
-			(clearance 0)
-		)
-		(min_thickness 0.25)
-		(filled_areas_thickness no)
-		(keepout
-			(tracks allowed)
-			(vias allowed)
-			(pads allowed)
-			(copperpour not_allowed)
-			(footprints allowed)
-		)
-		(placement
-			(enabled no)
-			(sheetname "")
-		)
-		(fill
-			(thermal_gap 0.5)
-			(thermal_bridge_width 0.5)
-		)
-		(polygon
-			(pts
-				(xy 34.9 193) (xy 34.863538 192.583244) (xy 34.755262 192.179151) (xy 34.57846 191.8) (xy 34.338506 191.457309)
-				(xy 34.04269 191.161493) (xy 33.7 190.921539) (xy 33.320848 190.744737) (xy 32.916755 190.636461)
-				(xy 32.5 190.6) (xy 32.083244 190.636461) (xy 31.679151 190.744737) (xy 31.299999 190.921539) (xy 30.957309 191.161493)
-				(xy 30.661493 191.457309) (xy 30.421539 191.8) (xy 30.244737 192.179151) (xy 30.136461 192.583244)
-				(xy 30.099999 193) (xy 30.136461 193.416755) (xy 30.244737 193.820848) (xy 30.421539 194.2) (xy 30.661493 194.54269)
-				(xy 30.957309 194.838506) (xy 31.299999 195.07846) (xy 31.679151 195.255262) (xy 32.083244 195.363538)
-				(xy 32.5 195.4) (xy 32.916755 195.363538) (xy 33.320848 195.255262) (xy 33.7 195.07846) (xy 34.04269 194.838506)
-				(xy 34.338506 194.54269) (xy 34.57846 194.2) (xy 34.755262 193.820848) (xy 34.863538 193.416755)
-			)
-		)
-	)
-	(zone
-		(net 0)
-		(net_name "")
-		(layers "F.Cu" "B.Cu")
-		(uuid "43ab5d43-5f3c-4db0-ba27-a2fd7744e350")
-		(name "standoff H1: no pour")
-		(hatch edge 0.5)
-		(connect_pads
-			(clearance 0)
-		)
-		(min_thickness 0.25)
-		(filled_areas_thickness no)
-		(keepout
-			(tracks allowed)
-			(vias allowed)
-			(pads allowed)
-			(copperpour not_allowed)
-			(footprints allowed)
-		)
-		(placement
-			(enabled no)
-			(sheetname "")
-		)
-		(fill
-			(thermal_gap 0.5)
-			(thermal_bridge_width 0.5)
-		)
-		(polygon
-			(pts
-				(xy -3.099999 173) (xy -3.136461 172.583244) (xy -3.244737 172.179151) (xy -3.421539 171.8) (xy -3.661493 171.457309)
-				(xy -3.957309 171.161493) (xy -4.3 170.921539) (xy -4.679151 170.744737) (xy -5.083244 170.636461)
-				(xy -5.5 170.6) (xy -5.916755 170.636461) (xy -6.320848 170.744737) (xy -6.699999 170.921539) (xy -7.04269 171.161493)
-				(xy -7.338506 171.457309) (xy -7.57846 171.8) (xy -7.755262 172.179151) (xy -7.863538 172.583244)
-				(xy -7.9 173) (xy -7.863538 173.416755) (xy -7.755262 173.820848) (xy -7.57846 174.2) (xy -7.338506 174.54269)
-				(xy -7.04269 174.838506) (xy -6.699999 175.07846) (xy -6.320848 175.255262) (xy -5.916755 175.363538)
-				(xy -5.5 175.4) (xy -5.083244 175.363538) (xy -4.679151 175.255262) (xy -4.3 175.07846) (xy -3.957309 174.838506)
-				(xy -3.661493 174.54269) (xy -3.421539 174.2) (xy -3.244737 173.820848) (xy -3.136461 173.416755)
-			)
-		)
-	)
-	(zone
-		(net 0)
-		(net_name "")
-		(layers "F.Cu" "B.Cu")
-		(uuid "c387c927-052c-4c8b-9125-f464aa98797d")
+		(uuid "01a18ec8-0bc3-486a-a21a-d7de4990476f")
 		(name "standoff H2: no pour")
 		(hatch edge 0.5)
 		(connect_pads
@@ -2848,7 +2768,87 @@
 		(net 0)
 		(net_name "")
 		(layers "F.Cu" "B.Cu")
-		(uuid "fecf75e2-d825-4174-8460-1bce350225eb")
+		(uuid "0384170c-6af4-487e-a61b-686351c5c02a")
+		(name "standoff H1: no pour")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(filled_areas_thickness no)
+		(keepout
+			(tracks allowed)
+			(vias allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+		)
+		(polygon
+			(pts
+				(xy -3.099999 173) (xy -3.136461 172.583244) (xy -3.244737 172.179151) (xy -3.421539 171.8) (xy -3.661493 171.457309)
+				(xy -3.957309 171.161493) (xy -4.3 170.921539) (xy -4.679151 170.744737) (xy -5.083244 170.636461)
+				(xy -5.5 170.6) (xy -5.916755 170.636461) (xy -6.320848 170.744737) (xy -6.699999 170.921539) (xy -7.04269 171.161493)
+				(xy -7.338506 171.457309) (xy -7.57846 171.8) (xy -7.755262 172.179151) (xy -7.863538 172.583244)
+				(xy -7.9 173) (xy -7.863538 173.416755) (xy -7.755262 173.820848) (xy -7.57846 174.2) (xy -7.338506 174.54269)
+				(xy -7.04269 174.838506) (xy -6.699999 175.07846) (xy -6.320848 175.255262) (xy -5.916755 175.363538)
+				(xy -5.5 175.4) (xy -5.083244 175.363538) (xy -4.679151 175.255262) (xy -4.3 175.07846) (xy -3.957309 174.838506)
+				(xy -3.661493 174.54269) (xy -3.421539 174.2) (xy -3.244737 173.820848) (xy -3.136461 173.416755)
+			)
+		)
+	)
+	(zone
+		(net 0)
+		(net_name "")
+		(layers "F.Cu" "B.Cu")
+		(uuid "c2e36586-fb9e-4493-a94f-a714913b11c4")
+		(name "standoff H4: no pour")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(filled_areas_thickness no)
+		(keepout
+			(tracks allowed)
+			(vias allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+		)
+		(polygon
+			(pts
+				(xy 34.9 193) (xy 34.863538 192.583244) (xy 34.755262 192.179151) (xy 34.57846 191.8) (xy 34.338506 191.457309)
+				(xy 34.04269 191.161493) (xy 33.7 190.921539) (xy 33.320848 190.744737) (xy 32.916755 190.636461)
+				(xy 32.5 190.6) (xy 32.083244 190.636461) (xy 31.679151 190.744737) (xy 31.299999 190.921539) (xy 30.957309 191.161493)
+				(xy 30.661493 191.457309) (xy 30.421539 191.8) (xy 30.244737 192.179151) (xy 30.136461 192.583244)
+				(xy 30.099999 193) (xy 30.136461 193.416755) (xy 30.244737 193.820848) (xy 30.421539 194.2) (xy 30.661493 194.54269)
+				(xy 30.957309 194.838506) (xy 31.299999 195.07846) (xy 31.679151 195.255262) (xy 32.083244 195.363538)
+				(xy 32.5 195.4) (xy 32.916755 195.363538) (xy 33.320848 195.255262) (xy 33.7 195.07846) (xy 34.04269 194.838506)
+				(xy 34.338506 194.54269) (xy 34.57846 194.2) (xy 34.755262 193.820848) (xy 34.863538 193.416755)
+			)
+		)
+	)
+	(zone
+		(net 0)
+		(net_name "")
+		(layers "F.Cu" "B.Cu")
+		(uuid "dbb5a34c-a4be-4795-a3dc-0c3286a70e25")
 		(name "standoff H3: no pour")
 		(hatch edge 0.5)
 		(connect_pads
@@ -2885,10 +2885,50 @@
 		)
 	)
 	(zone
+		(net 13)
+		(net_name "CELL+")
+		(layer "B.Cu")
+		(uuid "7a104325-e883-44dc-9bcc-73a8267970a6")
+		(name "CELL+ pour B.Cu")
+		(hatch edge 0.5)
+		(connect_pads yes
+			(clearance 0.3)
+		)
+		(min_thickness 0.25)
+		(filled_areas_thickness no)
+		(fill yes
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+		)
+		(polygon
+			(pts
+				(xy -7 194) (xy 17 194) (xy 17 181) (xy -7 181)
+			)
+		)
+		(filled_polygon
+			(layer "B.Cu")
+			(pts
+				(xy 16.943039 181.019685) (xy 16.988794 181.072489) (xy 17 181.124) (xy 17 193.876) (xy 16.980315 193.943039)
+				(xy 16.927511 193.988794) (xy 16.876 194) (xy -3.133636 194) (xy -3.200675 193.980315) (xy -3.24643 193.927511)
+				(xy -3.256374 193.858353) (xy -3.246019 193.823597) (xy -3.244737 193.820848) (xy -3.244736 193.820844)
+				(xy -3.244734 193.82084) (xy -3.136462 193.41676) (xy -3.13646 193.41675) (xy -3.099999 193) (xy -3.099999 192.999999)
+				(xy -3.13646 192.583248) (xy -3.136462 192.583238) (xy -3.244734 192.179158) (xy -3.244738 192.179149)
+				(xy -3.421538 191.8) (xy -3.421539 191.799998) (xy -3.661493 191.457307) (xy -3.957307 191.161493)
+				(xy -4.299998 190.921539) (xy -4.3 190.921538) (xy -4.679149 190.744738) (xy -4.679158 190.744734)
+				(xy -5.083238 190.636462) (xy -5.083249 190.63646) (xy -5.499998 190.6) (xy -5.500002 190.6) (xy -5.916749 190.63646)
+				(xy -5.916754 190.63646) (xy -5.916755 190.636461) (xy -5.916756 190.636461) (xy -5.91676 190.636462)
+				(xy -6.32084 190.744734) (xy -6.320844 190.744736) (xy -6.320848 190.744737) (xy -6.639653 190.893399)
+				(xy -6.699999 190.921539) (xy -6.700003 190.921542) (xy -6.804877 190.994974) (xy -6.871083 191.017301)
+				(xy -6.938851 191.00029) (xy -6.986663 190.949342) (xy -7 190.893399) (xy -7 181.124) (xy -6.980315 181.056961)
+				(xy -6.927511 181.011206) (xy -6.876 181) (xy 16.876 181)
+			)
+		)
+	)
+	(zone
 		(net 14)
 		(net_name "CELL_N")
 		(layer "B.Cu")
-		(uuid "1c98d6d5-5f97-4f64-80d3-995acda249b2")
+		(uuid "adb76c59-e919-4c72-a7c6-346d4b6b7641")
 		(name "CELL_N pour B.Cu")
 		(hatch edge 0.5)
 		(connect_pads yes
@@ -2926,46 +2966,6 @@
 				(xy -6.700003 170.921542) (xy -6.804877 170.994974) (xy -6.871083 171.017301) (xy -6.938851 171.00029)
 				(xy -6.986663 170.949342) (xy -7 170.893399) (xy -7 170.124) (xy -6.980315 170.056961) (xy -6.927511 170.011206)
 				(xy -6.876 170) (xy 16.876 170)
-			)
-		)
-	)
-	(zone
-		(net 13)
-		(net_name "CELL+")
-		(layer "B.Cu")
-		(uuid "ab6caabf-77fa-415a-b215-12534a5ddd53")
-		(name "CELL+ pour B.Cu")
-		(hatch edge 0.5)
-		(connect_pads yes
-			(clearance 0.3)
-		)
-		(min_thickness 0.25)
-		(filled_areas_thickness no)
-		(fill yes
-			(thermal_gap 0.5)
-			(thermal_bridge_width 0.5)
-		)
-		(polygon
-			(pts
-				(xy -7 194) (xy 17 194) (xy 17 181) (xy -7 181)
-			)
-		)
-		(filled_polygon
-			(layer "B.Cu")
-			(pts
-				(xy 16.943039 181.019685) (xy 16.988794 181.072489) (xy 17 181.124) (xy 17 193.876) (xy 16.980315 193.943039)
-				(xy 16.927511 193.988794) (xy 16.876 194) (xy -3.133636 194) (xy -3.200675 193.980315) (xy -3.24643 193.927511)
-				(xy -3.256374 193.858353) (xy -3.246019 193.823597) (xy -3.244737 193.820848) (xy -3.244736 193.820844)
-				(xy -3.244734 193.82084) (xy -3.136462 193.41676) (xy -3.13646 193.41675) (xy -3.099999 193) (xy -3.099999 192.999999)
-				(xy -3.13646 192.583248) (xy -3.136462 192.583238) (xy -3.244734 192.179158) (xy -3.244738 192.179149)
-				(xy -3.421538 191.8) (xy -3.421539 191.799998) (xy -3.661493 191.457307) (xy -3.957307 191.161493)
-				(xy -4.299998 190.921539) (xy -4.3 190.921538) (xy -4.679149 190.744738) (xy -4.679158 190.744734)
-				(xy -5.083238 190.636462) (xy -5.083249 190.63646) (xy -5.499998 190.6) (xy -5.500002 190.6) (xy -5.916749 190.63646)
-				(xy -5.916754 190.63646) (xy -5.916755 190.636461) (xy -5.916756 190.636461) (xy -5.91676 190.636462)
-				(xy -6.32084 190.744734) (xy -6.320844 190.744736) (xy -6.320848 190.744737) (xy -6.639653 190.893399)
-				(xy -6.699999 190.921539) (xy -6.700003 190.921542) (xy -6.804877 190.994974) (xy -6.871083 191.017301)
-				(xy -6.938851 191.00029) (xy -6.986663 190.949342) (xy -7 190.893399) (xy -7 181.124) (xy -6.980315 181.056961)
-				(xy -6.927511 181.011206) (xy -6.876 181) (xy 16.876 181)
 			)
 		)
 	)
