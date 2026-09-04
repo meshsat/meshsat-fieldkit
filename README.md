@@ -22,11 +22,11 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 | Board | Rev | Size (mm) | Layers | JLCPCB assembly | Role |
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O | A18 | 285 x 160 | 4 | top | pack node with fuses, 5 V module-rail boost, USB hub with eFuses and current sense, GPIO expander, dock spring pins |
-| PCB-B COMPUTE | B11 | 245 x 170 | 4 | top, bottom 1 | Pi 5 + X1202 stack, module carriers (T-Call, RTL-SDR, ZigBee, RockBLOCK, LoRa), panel ribbon |
+| PCB-B COMPUTE | B11 | 245 x 170 | 4 | top, bottom 1 | Pi 5 + X1202 stack, module carriers (T-Call, RTL-SDR, ZigBee, RockBLOCK, LoRa), panel ribbon | *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
 | PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | top 18, bottom 70 | the 1520PF panel: Touch Display 2 flush, recessed 3.7 inch e-paper window, MIL-STD-1472 controls, two GPIO expanders, MeshSat logo |
 | PCB-C SPACER RING | R1 | 106 x 54 | 2 | none | 1.0 mm ring that brings the e-paper glass flush with the panel face |
 | PCB-D APRS | D5 | 80 x 62 | 4 | top 78, bottom 1 | NiceRF DMR858M carrier: CM108 codec, PTT with hardware inhibit, USB-UART, boost, SMA |
-| PCB-E1 DOCK | E1 | 250 x 44 | 2 | top 15 | floor strip: spring-pin targets, isolated 9 to 36 V shore entry to the X1202, fuse, remote inhibit |
+| PCB-E1 DOCK | E1 | 250 x 44 | 2 | top 15 | floor strip: spring-pin targets, isolated 9 to 36 V shore entry to the X1202, fuse, remote inhibit | *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
 | PCB-E2 RF JUNCTION | E3 | 330 x 32 | 2 | none | wall strip carrying the SMA bulkhead couplers |
 
 | | |

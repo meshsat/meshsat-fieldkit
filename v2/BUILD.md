@@ -6,7 +6,7 @@ MeshSat is a prototype. The V2 boards have not been fabricated; expect changes a
 
 ## 0. Before you start
 
-- Three rulings are not open for redesign: the Geekworm X1202 is the only charger and UPS and the welded pack sits in parallel with its cells; EMCON is a hardware line from the panel toggle to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`.
+- Three rulings are not open for redesign: the Geekworm X1202 is the only charger and UPS and the welded pack sits in parallel with its cells; EMCON is a hardware line from the panel toggle to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`. *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
 - Nothing on the bench gates the first order (appendix 32): every COTS site was checked against the manufacturer's own drawing (the documents are in `vendor/`), and the X1202's undocumented figures are absorbed by the design, chiefly by the A17 module rail that takes every 5 V load but the Pi off the X1202. What the owner still names, without measuring anything: the panel switch parts, the SMA coupler for E2, the dock spring pin.
 - The panel software (expanders, LED semantics, e-paper, sounder) is specified in `docs/PANEL.md` but not yet written in the Bridge (MESHSAT-773). A Rev A kit powers up and runs the Bridge; the panel lights and switches come alive with that software.
 
@@ -56,7 +56,7 @@ Panel hardware: two 19 mm and 16 mm anti-vandal switches with LED rings (SW_MAIN
 
 ## 4. The pack
 
-No X1202 measurement is needed before the pack is built (appendix 32.3): the charge current only sets the charge time (13 to 18 h for 42 Ah at Geekworm's 2.3 to 3.2 A), the bridge restarts the charger over GPIO 16 if it ever stops early, the pack and the APRS boost hang on the holder tabs behind F1 and F2 where the X1202's own protection never sees them, and every 5 V load but the Pi runs on the A17 module rail. Build the pack per `docs/ASSEMBLY.md` section 3 (1S8P, two rows of four, 130 x 74 x 18.5 mm, BMS on the negative lead, NTC inside, XT60 out), match it to the X1202's four cells within 50 mV, and commission everything together per section 8 of the same document after assembly.
+No X1202 measurement is needed before the pack is built (appendix 32.3): the charge current only sets the charge time (13 to 18 h for 42 Ah at Geekworm's 2.3 to 3.2 A), the bridge restarts the charger over GPIO 16 if it ever stops early, the pack and the APRS boost hang on the holder tabs behind F1 and F2 where the X1202's own protection never sees them, and every 5 V load but the Pi runs on the A17 module rail. Build the pack per `docs/ASSEMBLY.md` section 3 (1S8P, two rows of four, 130 x 74 x 18.5 mm, BMS on the negative lead, NTC inside, XT60 out), match it to the X1202's four cells within 50 mV, and commission everything together per section 8 of the same document after assembly. *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
 
 ## 5. Assemble
 
