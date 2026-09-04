@@ -14,7 +14,7 @@ def circle(cx, cy, r, layer, w=0.12): return '\t(fp_circle (center %.3f %.3f) (e
 def rect(x0, y0, x1, y1, layer, w=0.1): return '\t(fp_rect (start %.3f %.3f) (end %.3f %.3f) (stroke (width %g) (type default)) (fill no) (layer "%s"))' % (x0, y0, x1, y1, w, layer)
 def npth(x, y, d): return '\t(pad "" np_thru_hole circle (at %.3f %.3f) (size %.2f %.2f) (drill %.2f) (layers "*.Cu" "*.Mask"))' % (x, y, d, d, d)
 def tht(num, x, y, drill=1.1, size=2.0, shape="circle"): return '\t(pad "%s" thru_hole %s (at %.3f %.3f) (size %.2f %.2f) (drill %.2f) (layers "*.Cu" "*.Mask"))' % (num, shape, x, y, size, size, drill)
-def text(t, x, y, layer="F.Fab", size=1.0): return '\t(fp_text user "%s" (at %.3f %.3f) (layer "%s") (effects (font (size %g %g) (thickness 0.15))))' % (t, x, y, layer, size, size)
+def text(t, x, y, layer="F.Fab", size=1.0): return '\t(fp_text user "%s" (at %.3f %.3f) (layer "%s") (effects (font (size %g %g) (thickness 0.15))%s))' % (t, x, y, layer, size, size, " (justify mirror)" if layer.startswith("B.") else "")
 def write(name, lines):
     s = "\n".join(lines) + "\n)\n"; open(os.path.join(OUT, name + ".kicad_mod"), "w").write(s); print("wrote", name)
 def smd_back(num, x, y, w=2.0, h=3.0):
@@ -33,7 +33,7 @@ KEYWAY_W, KEYWAY_D = 2.70, 1.10          # APEM 5000 series K seal cut-out (cata
 NKK_D_FLAT = 5.8                        # NKK M series D3 bushing cut-out (A58): 6.5 with the flat at 5.8 across
 def panel_switch(name, hole, body_d, npads, pad_r, descr, keyway=None, dflat=None):
     """Panel-mount pushbutton or toggle (C5, sealed face): NPTH hole, courtyard = body plus nut, solder lands on the underside for the flying leads.
-    keyway = angle in degrees of a KEYWAY_W x KEYWAY_D notch on the hole edge (Edge.Cuts, routed by the fab; 0 = +X, 90 = +Y in footprint coordinates);
+    keyway = angle in degrees of a KEYWAY_W x KEYWAY_D notch on the hole edge (Edge.Cuts, routed by the fab; 0 = +X, 90 = +y in footprint coordinates, which is KiCad's y-down, i.e. case -Y);
     dflat = angle of an NKK D flat (the drilled hole shrinks to the inscribed circle, the D outline goes on Edge.Cuts for the router)."""
     L = head(name, descr, "panel switch bench sealed", "through_hole"); L[8] %= (body_d / 2 + 2.0); L[9] %= (body_d / 2 + 2.0)
     if dflat is not None:
@@ -58,7 +58,7 @@ panel_switch("PanelSwitch_19mm", 19.2, 24.0, 4, 16.0, "19 mm anti-vandal momenta
 panel_switch("PanelSwitch_16mm", 16.2, 20.0, 4, 14.0, "16 mm anti-vandal momentary pushbutton with LED ring, IP67, panel hole 16.2, nut 20, gasket washer under the bezel, four lead lands underneath")
 # 6.35 mm bushing toggles: NKK M2044SD3A01 DPDT ON-ON-ON on a D3 splashproof bushing (D flat toward +X, its O-ring under the nut); APEM 5636ADKB-2V locking toggles with the K seal (keyway toward -Y, the operator)
 panel_switch("PanelToggle_DPDT", 6.5, 13.0, 6, 11.0, "NKK M2044SD3A01 DPDT ON-ON-ON, D3 bushing IP67 with the AT516 O-ring and the AT428H boot, D hole 6.5 / 5.8 flat toward +X, six lead lands underneath", dflat=0.0)
-panel_switch("GuardedToggle_SPDT", 6.5, 13.0, 3, 11.0, "APEM 5636ADKB-2V locking toggle, K front seal (O-ring + U360 gasket), 6.5 hole with the 2.70 x 1.10 keyway toward -Y, three lead lands underneath", keyway=-90.0)
+panel_switch("GuardedToggle_SPDT", 6.5, 13.0, 3, 11.0, "APEM 5636ADKB-2V locking toggle, K front seal (O-ring + U360 gasket), 6.5 hole with the 2.70 x 1.10 keyway toward the operator (case -Y), three lead lands underneath", keyway=90.0)   # footprint +y is KiCad down = case -Y
 # panel-mount IP68 sounder Floyd Bell MC-09-530-Q (docs/respin-research-seal-2026-09-05.md f): 1-1/8 in hole (28.575), bezel gasket 61663 on the face,
 # body about 34 mm deep behind the panel plus 11 mm of solder tabs, two lead lands underneath outside the body
 SOUNDER_HOLE, SOUNDER_BODY, SOUNDER_PAD_R = 28.6, 34.0, 21.5
