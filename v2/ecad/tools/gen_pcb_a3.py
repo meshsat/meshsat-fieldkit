@@ -61,17 +61,17 @@ def place(ref, x, y, rot=0.0, back=False):
         print("  %-10s centred at (%.1f, %.1f) size %.1f x %.1f %s" % (ref, (bb.GetLeft() + bb.GetRight()) / 2e6 - OX, OY - (bb.GetTop() + bb.GetBottom()) / 2e6, bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, "BACK" if fp.IsFlipped() else ""))
     return fp
 # --- fixed positions (case frame)
-RF_X = [-100, -84, 8, 24, 40, 66, 96]
+RF_X = [-100, -84, -26, -12, 70, 92, 108]; RF_JY = [-56, -56, -56, -56, -74, -74, -56]
 FIXED = {"J_AB1": (-72, -73, 90), "J_LEDS1": (-44, -74, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          "J_DOCK": (-124, -70, 0), "J_PRE1": (-149, -70, 0),
          "F3": (-150, -46, 0), "F4": (-125, -46, 0), "F5": (-100, -46, 0), "F2": (-75, -46, 0),
          "U22": (-148, -20, 0), "L2": (-148, -6, 0), "U23": (-116, -20, 0), "L3": (-116, -6, 0), "U24": (-86, -20, 0), "L4": (-86, -6, 0),
          "U20": (-50, -58, 0), "L5": (-40, -58, 0), "U21": (-112, -60, 0), "R52": (-130, -60, 0),
          "J_5V_M1": (-150, 44, 0), "J_5V_M2": (-135, 44, 0), "J_5V_PI": (-120, 44, 0),
-         "U25": (-150, 18, 0), "J_MAINSW": (-159, 10, 90), "U26": (-140, 28, 0), "J_HEAT": (-159, 28, 90), "U5": (-150, 4, 0), "L6": (-142, 4, 0),
-         "J_WALL1": (-156, 62, 270), "U6": (-70, 52, 0), "Y1": (-60, 60, 0), "U31": (-45, 40, 0)}
+         "U25": (-150, 19, 0), "J_MAINSW": (-159, 8, 90), "U26": (-140, 28, 0), "J_HEAT": (-159, 28, 90), "U5": (-150, 4, 0), "L6": (-142, 4, 0),
+         "J_WALL1": (-156, 62, 270), "U6": (-70, 52, 0), "Y1": (-60, 60, 0), "U31": (-45, 41, 0)}
 for k in range(4): FIXED["J_CP%d" % (k + 1)] = (-145 + 4 * k, -73, 0); FIXED["J_CN%d" % (k + 1)] = (-145 + 4 * k, -67, 0)
-for k, x in enumerate(RF_X, 1): FIXED["J_BM%d" % k] = (x, -66, 0); FIXED["J_RF%d" % k] = (x, -56, 0)
+for k, (x, jy) in enumerate(zip(RF_X, RF_JY), 1): FIXED["J_BM%d" % k] = (x, -66, 0); FIXED["J_RF%d" % k] = (x, jy, 0)
 BACK = {"J_DOCK", "J_PRE1"} | {"J_CP%d" % k for k in range(1, 5)} | {"J_CN%d" % k for k in range(1, 5)} | {"J_BM%d" % k for k in range(1, 8)}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
@@ -90,19 +90,20 @@ def rail(n, ic_x):
     I = ["C42", "C43", "C44"] if n == 1 else (["C75", "C76", "C77"] if n == 2 else ["C88", "C89", "C90"])
     O = (["C45", "C46", "C47", "C48", "C49", "C70", "C95"] if n == 1 else (["C78", "C79", "C80", "C81", "C82", "C83", "C96"] if n == 2 else ["C91", "C92", "C93", "C94", "C97"]))
     S = (["C38", "C39", "R44", "C40", "C41", "R47", "R48"] if n == 1 else (["C71", "C72", "R61", "C73", "C74", "R62", "R63"] if n == 2 else ["C84", "C85", "R64", "C86", "C87", "R65", "R66"]))
-    return [("M%dI" % n, (ic_x - 14, -30, ic_x - 4, -12), I), ("M%dO" % n, (ic_x + 4, -32, ic_x + 18, 0), O), ("M%dS" % n, (ic_x - 14, -38, ic_x + 4, -30), S)]
+    return [("M%dI" % n, (ic_x - 14, -30, ic_x - 6, -12), I), ("M%dO" % n, (ic_x + 6, -32, ic_x + 20, 0), O), ("M%dS" % n, (ic_x - 14, -38, ic_x + 4, -30), S)]
 REGIONS = rail(1, -148) + rail(2, -116) + rail(3, -86) + [
- ("CHGW",  (-70, -71, -54, -47), ["C51", "C52", "C53", "C54", "C55", "C63", "C65", "R53", "R54", "R55", "R56", "R57", "R58", "R59"]),
- ("CHGE",  (-36, -71, -30, -47), ["C56", "C57", "C58", "C59", "C60", "C61", "C62", "C64", "C66", "C67", "R60"]),
- ("GAUGE", (-118, -64, -104, -52), ["C68", "C69", "RT1", "TP16", "TP4", "TP5", "R51"]),
+ ("CHGW",  (-70, -71, -54, -50), ["C51", "C52", "C53", "C54", "C55", "C63", "C65", "R53", "R54", "R55", "R56", "R57", "R58", "R59"]),
+ ("CHGE",  (-38, -70, -26, -52), ["C56", "C57", "C58", "C59", "C60", "C61", "C62"]),
+ ("CHGS",  (-64, -46, -40, -40), ["C64", "C66", "C67", "R60"]),
+ ("GAUGE", (-148, -64, -134, -56), ["C68", "C69", "RT1", "TP16", "TP4", "TP5", "R51"]),
  ("NODE",  (-160, -64, -152, -52), ["C7", "C50"]),
- ("CTRL",  (-162, 12, -130, 16), ["C98", "R67", "R68", "R69", "Q5", "R70"]),
+ ("CTRL",  (-154, 12, -130, 16), ["C98", "R67", "R68", "R69", "Q5", "R70"]),
  ("HEAT",  (-134, 22, -120, 34), ["C99", "R71", "R72", "R73", "C100", "F6"]),
- ("BUCK",  (-136, -2, -120, 10), ["C13", "C14", "C15", "C101", "R74", "R75", "D2", "R18"]),
- ("TPS",   (-162, 36, -130, 42), ["TP1", "TP2", "TP3", "TP6", "TP7", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"]),
+ ("BUCK",  (-136, -4, -118, 10), ["C13", "C14", "C15", "C101", "R74", "R75", "D2", "R18"]),
+ ("TPS",   (-162, 34, -128, 41), ["TP1", "TP2", "TP3", "TP6", "TP7", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"]),
  ("HUB",   (-104, 45, -30, 77), ["C16", "C17", "R19", "C18", "C19", "C20", "C21", "C22", "C23", "C24", "C25", "C26", "C27", "R20", "R21", "R22", "R23", "R25", "R79", "U27", "U19", "C107", "R34", "R35", "R36", "R37", "R38", "TP17", "TP18"]),
  ("WALL",  (-104, 25, -80, 45), ["U28", "R76", "R77", "C104", "R78", "U29", "C105", "C106", "U30"]),
- ("EXP2",  (-78, 25, -32, 38), ["C108", "TP19", "TP20", "TP21", "TP22", "TP23", "TP24", "TP25", "TP26", "TP27"]),
+ ("EXP2",  (-78, 25, -32, 35), ["C108", "TP19", "TP20", "TP21", "TP22", "TP23", "TP24", "TP25", "TP26", "TP27"]),
  ("WIFI",  (-28, 44, 4, 70), ["U7", "R26", "R40", "C34", "R27", "U8", "C28", "C29", "U9"]),
  ("GPS",   (5, -61, 22, -36), ["U10", "R28", "R41", "C35", "R29"]),
  ("GPS2",  (24, -44, 48, -33), ["U11", "C30", "C31", "U12"]),
@@ -170,7 +171,7 @@ def plane(layer, netname, name, rect=(-167.5, -85, 122.5, 85), priority=0):
     board.Add(z); return z
 plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+5V_M1", "+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)")
 for k, x in enumerate(RF_X, 1): plane(pcbnew.In2_Cu, "GND", "GND island In2 under blind-mate site %d" % k, rect=(x - 8, -74, x + 8, -58), priority=1)
-plane(pcbnew.In2_Cu, "CELL+", "CELL+ pour In2 (node bar from the dock block to the fuse row)", rect=(-160, -64, -60, -44), priority=1)
+plane(pcbnew.In2_Cu, "CELL+", "CELL+ pour In2 (node bar under the fuse row, west of the RF islands)", rect=(-160, -56, -116, -44), priority=1)
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
