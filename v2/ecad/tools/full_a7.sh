@@ -7,7 +7,7 @@ python3 ../tools/gen_sch_a.py $N.kicad_sch $N 2>&1 | tail -1
 python3 ../tools/gen_pcb_a.py $N.kicad_pcb 2>&1 | grep -E 'saved|WARN|Trace'
 python3 ../tools/check_pcb_a.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'
 python3 ../tools/gen_pcb_a3.py $N.kicad_pcb out/$N.net 2>&1 | grep -E 'saved|WARN|overflow|unplaced|Trace'
-ESCAPE_SKIP=U20 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
+python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND,+5V_M1,CELL+' fine 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
