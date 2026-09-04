@@ -106,7 +106,7 @@ if missing: raise SystemExit("unplaced: %s" % missing)
 def net_for(name, create=True):
     """The board's net for a schematic name: a local label lands in the board as "/NAME", a power symbol as "NAME".
     The netlist import creates nets (create=True); a zone must find its net (create=False), because a pour on a name that
-    matches nothing would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 5 Sep 2026, 32.33)."""
+    matches nothing would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 4 Sep 2026, 32.33)."""
     for cand in (name, "/" + name):
         n = board.FindNet(cand)
         if n is not None and n.GetNetCode() > 0: return n

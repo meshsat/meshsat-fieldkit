@@ -1,5 +1,5 @@
 Comment,Designator,Footprint,LCSC Part #
-"IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (part per docs/respin-research-seal-2026-09-05.md)",BZ1,PanelSounder,
+"IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (part per docs/respin-research-seal-2026-09-04.md)",BZ1,PanelSounder,
 10u,"C1,C2",C_0805_2012Metric,C15850
 100n,"C3,C4,C11-C13",C_0603_1608Metric,C14663
 10n,C5-C10,C_0603_1608Metric,C57112

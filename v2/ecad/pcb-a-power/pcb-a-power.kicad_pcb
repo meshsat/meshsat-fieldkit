@@ -49191,7 +49191,7 @@
 			)
 		)
 	)
-	(gr_text "MESHSAT-709 / 789  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-05"
+	(gr_text "MESHSAT-709 / 789  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-04"
 		(at 198 36.7 0)
 		(layer "F.SilkS")
 		(uuid "38b9d476-a617-4136-94e1-59ce8194800f")

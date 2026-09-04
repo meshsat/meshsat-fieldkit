@@ -16,7 +16,7 @@ BLOCK_C = (-135.5, -70.0)                      # raised block centre: A19 J_DOCK
 OX, OY = 150.0, 110.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 board = pcbnew.BOARD()
-tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E1 DOCK"); tb.SetRevision("A (E4)"); tb.SetDate("2026-09-05"); tb.SetCompany("MeshSat")
+tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E1 DOCK"); tb.SetRevision("A (E4)"); tb.SetDate("2026-09-04"); tb.SetCompany("MeshSat")
 tb.SetComment(0, "MESHSAT-709 / 790. E4 floor dock strip: shore entry, panel tracker, battery module entry to the raised block, seven blind-mate float clamps, rods pass through. tools/gen_pcb_e.py + gen_pcb_e3.py"); board.SetTitleBlock(tb)
 board.SetCopperLayerCount(4)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))

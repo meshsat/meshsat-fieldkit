@@ -142,7 +142,7 @@ ni = board.GetNetInfo()
 def net_for(name, create=True):
     """The board's net for a schematic name: a local label lands in the board as "/NAME", a power symbol as "NAME".
     The netlist import creates nets (create=True); a zone must find its net (create=False), because a pour on a name that
-    matches nothing would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 5 Sep 2026, 32.33)."""
+    matches nothing would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 4 Sep 2026, 32.33)."""
     for cand in (name, "/" + name):
         n = board.FindNet(cand)
         if n is not None and n.GetNetCode() > 0: return n
@@ -193,7 +193,7 @@ for ref in ("F3", "F4", "F5", "F2"):
     outer_pour("CELL+", "fuse tap " + ref, (fx - 1.5, -47, fx + 1.5, -38.5), priority=3)
 outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
-# The inner layers stay open to the router. Banning tracks there (tried 5 Sep) leaves Freerouting two layers for 148 nets and 279
+# The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
 # footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
 # carves clearance around the inner tracks (the isolated_copper notes, cosmetic).
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)

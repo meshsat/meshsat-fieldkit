@@ -9,7 +9,7 @@
 	(paper "A4")
 	(title_block
 		(title "MeshSat Field Kit carrier - PCB-E1 DOCK")
-		(date "2026-09-05")
+		(date "2026-09-04")
 		(rev "A (E4)")
 		(company "MeshSat")
 		(comment 1 "MESHSAT-709 / 790. E4 floor dock strip: shore entry, panel tracker, battery module entry to the raised block, seven blind-mate float clamps, rods pass through. tools/gen_pcb_e.py + gen_pcb_e3.py")

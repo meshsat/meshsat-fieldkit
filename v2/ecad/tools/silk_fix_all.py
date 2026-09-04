@@ -23,7 +23,7 @@ RULES = {
  "c": [("MESHSAT FIELD KIT  -  CONTROL PANEL PCB-C", dict(text="MESHSAT FIELD KIT  -  CONTROL PANEL")),
        ("TD2 7in glass 189.32", dict(layer=B)), ("CONNECTOR END = PORT", dict(layer=B)), ("TAPE", dict(delete=True)),
        ("BACK WALL (+Y)", dict(layer=B, pos=(-160, 139.6))), ("FRONT WALL (-Y)   v v v", dict(layer=B)), ("PORT (-X)", dict(layer=B)), ("STARBOARD (+X)", dict(layer=B)),
-       ("PCB-C UNDERSIDE", dict(text="PCB-C UNDERSIDE (REV A, C5, MESHSAT-709, 2026-09-05) - sealed face: plugged vias, gasket band, silicone beads on the LED joints - faces PCB-B - ribbon J_PANEL (SMD), leads J_MAINSW / J_PIJ2 on solder lands"))],
+       ("PCB-C UNDERSIDE", dict(text="PCB-C UNDERSIDE (REV A, C5, MESHSAT-709, 2026-09-04) - sealed face: plugged vias, gasket band, silicone beads on the LED joints - faces PCB-B - ribbon J_PANEL (SMD), leads J_MAINSW / J_PIJ2 on solder lands"))],
  "d": [("DMR858M 5 W UHF on 2 x 1x12 sockets", dict(text="DMR858M on 2x 1x12 sockets 8.5 mm + M2.5 x 11 standoffs, heatsink up", layer=B, pos=(10, -8.5), size=0.85)),
        ("SMA east -> UHF bulkhead", dict(text="SMA east -> UHF bulkhead | USB-C west (unplug the module to configure) | pin 1 = VCC (NE)", layer=B, pos=(10, -11.5), size=0.8)),
        ("rows and holes per NiceRF", dict(text="rows and holes per NiceRF datasheet V1.2 p.10", layer=B, pos=(10, -14.5), size=0.8)),

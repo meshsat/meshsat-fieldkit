@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Gate: every copper zone must sit on a net that has pads, and no two same-net zones on one layer may share a priority.
 A pour whose net name missed the netlist gets a phantom net and becomes dead copper that DRC only reports as isolated
-islands (A19 and B12 rail planes, 5 Sep 2026, appendix 32.33). Usage: check_zone_nets.py <board.kicad_pcb>; exits 1 on FAIL."""
+islands (A19 and B12 rail planes, 4 Sep 2026, appendix 32.33). Usage: check_zone_nets.py <board.kicad_pcb>; exits 1 on FAIL."""
 import sys, collections, pcbnew
 b = pcbnew.LoadBoard(sys.argv[1]); fails = 0
 pads = collections.Counter(p.GetNetname() for f in b.GetFootprints() for p in f.Pads())

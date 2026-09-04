@@ -30,7 +30,7 @@ while True:
     for t in T:
         if t[0] in gone: continue
         # a track that another same-net track branches from (its end lies on this track) carries that branch: keep it whole, dead tail and all
-        # (C5, 5 Sep: the router left a locked escape stub's via unused and started its own track from the stub's middle; removing the stub cut the pad off)
+        # (C5, 4 Sep: the router left a locked escape stub's via unused and started its own track from the stub's middle; removing the stub cut the pad off)
         if any(u[0] not in gone and u is not t and u[1] == t[1] and (on_seg(u[2], u[3], t) or on_seg(u[4], u[5], t)) for u in T): continue
         for (x, y) in ((t[2], t[3]), (t[4], t[5])):
             touched = any(u[0] not in gone and u is not t and u[1] == t[1] and (same(u[2], u[3], x, y) or same(u[4], u[5], x, y) or on_seg(x, y, u)) for u in T)
