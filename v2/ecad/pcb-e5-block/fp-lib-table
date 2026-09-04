@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "meshsat")(type "KiCad")(uri "${KIPRJMOD}/../meshsat.pretty")(options "")(descr "MeshSat carrier in-code footprints"))
+)
