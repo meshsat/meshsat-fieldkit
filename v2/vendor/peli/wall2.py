@@ -6,8 +6,9 @@ from build123d import import_step, Box, Location, Vector
 shape = import_step(sys.argv[1])
 def station(name, box):
     sect = shape.intersect(box)
-    vs = sorted({(round(v.X, 2), round(v.Y, 2), round(v.Z, 2)) for v in sect.vertices()}, key=lambda t: (-t[1], t[2], t[0]))
-    print("== %s: %d vertices, volume %.0f mm3" % (name, len(vs), sect.volume))
+    parts = list(sect) if hasattr(sect, "__iter__") else [sect]
+    vs = sorted({(round(v.X, 2), round(v.Y, 2), round(v.Z, 2)) for pt in parts for v in pt.vertices()}, key=lambda t: (-t[1], t[2], t[0]))
+    print("== %s: %d solids, %d vertices, volume %.0f mm3" % (name, len(parts), len(vs), sum(getattr(pt, "volume", 0.0) for pt in parts)))
     for v in vs: print("   X %8.2f  Y %8.2f  Z %8.2f" % v)
 for x in (-100.0, -80.0, -120.0):
     station("long wall (-Z side) at X %.0f" % x, Box(0.02, 135.0, 80.0).moved(Location(Vector(x, -65.0, -165.0))))
