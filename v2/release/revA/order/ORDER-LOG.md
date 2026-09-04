@@ -586,3 +586,7 @@ The cart lines for PCB-A and PCB-B were prepared from A16 and B10 and must be re
 ## 4 Sep 2026 afternoon: A17 and E2 superseded by A18 and E3 (appendix 32.10)
 
 The dock connector is now the Preci-Dip 813-S1-008-10-016101 (solder tails 0.8 mm), so the eight `J_DOCK` holes went from 1.5 to 1.1 mm on the routed board (no part moved): **A18** replaces A17. The junction strip's D-hole flat follows the Amphenol Connex 132170 drawing (6.00 across instead of 6.25): **E3** replaces the strip's E2 issue. The cart lines for PCB-A and PCB-E2 must be rebuilt from `PCB-A-POWER-A18/` and `PCB-E2-RFJUNCTION-E3/` when the owner says so, together with PCB-B from `PCB-B-COMPUTE-B11/`. C4's schematic PDF carries the switch part numbers now; its gerbers, JLC BOM (same row set) and CPL are unchanged, the panel line stands. `PCB-A-POWER-A17/` and `PCB-E2-RFJUNCTION-E2/` are under `superseded/`.
+
+## 4 Sep 2026 evening: the deferral list moved into this build (appendix 32.13, 32.14)
+
+Owner rulings: TPS61288 boost, heating-pad output and SMP-MAX blind-mate on a PCB-A respin (A19); dock respin with the MPPT carrier and a 13 mm gap; MIL-DTL-38999 wall connector; APEM 5636ADKB-2V locking toggles (bench part swap, C4 unchanged). Cart consequences: line A is not rebuilt from A18 (A19 supersedes), line E2 is deleted (E3 retired), line E1 is rebuilt after the dock respin, line B is rebuilt from B11, C4, R1 and D5 stand. Whether B11, C4, R1 and D5 are ordered ahead of the respin is the owner's decision.

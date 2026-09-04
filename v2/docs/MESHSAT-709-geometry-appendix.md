@@ -2234,3 +2234,14 @@ Asked one at a time with a full explanation each (owner rule of the same evening
 Rev B is therefore empty except what the reviews add. Ruling of section 5 of the handover "RF: SMA couplers on E2 for Rev A; SMP blind-mate deferred to Rev B" is replaced by ruling 5 above.
 
 **Ruling, later the same evening (owner):** there was never a Rev B; it was a misunderstanding of the sessions. All work is Rev A. An item is Rev B only when the owner says so explicitly, and the session must ask a second time to confirm before recording it. Every "Rev B" left in this record before this line is either superseded (marked) or moved into Rev A by 32.13; the review findings of 12 Sep are decided when they exist.
+
+### 32.14 Collisions between the 4 Sep evening rulings and the afternoon's work (gateway audit, read-only)
+
+A gateway session compared 32.13 with the day's work and reported by message. Confirmed and handled:
+
+1. **The Preci-Dip dock connector of 32.10 does not survive ruling 5.** SMP-MAX board-to-board needs a 13 mm gap (32.7); the 813 family reaches 7.5 mm (code 017) with a 1.4 mm stroke, so at 13 mm it never touches. The dock's DC joint is re-selected at the A19 design step for the 13 mm gap (taller spring-loaded connector families, or the DC pins on a raised block that keeps a 6 mm local gap); A18's 1.1 mm drills are superseded by A19 whichever way. Z budget: 25.1's 104.8 mm becomes about 111.8 against the 114.1 mm panel underside, 2.3 mm spare, to be confirmed in the 25.1 redo.
+2. **The dock strip carries seven RF joints and the MPPT carrier.** The RF stays off the copper: the dock side uses cable-mount SMP-MAX plugs in float mounts, with cables straight to the wall bulkheads, so the strip stays two-layer; it will grow within the 413.8 x 283.6 floor. Extraction force: seven joints at up to 9 N each is about 60 N added to the lift of 25.3 step 6; the lowest-retention SMP-MAX variant is chosen and lift handles are considered. Both are agenda items for the 12 Sep review.
+3. **PANEL.md was out of step with ruling 1.** SOS_SW and ZEROIZE_SW are now maintained locking toggles in the pin table, the SOS row reads "switch closed for 2 s, flip back to cancel", the ZEROIZE row "switch closed for 5 s, flip back inside 5 s aborts, return the switch to re-arm". The C4 legend "HOLD 5 s / HOLD 2 s" still describes the wait and stays.
+4. **Cart instruction corrected** (handover, ordering prompt, ORDER-LOG): line A is not rebuilt from A18, E2 is deleted, E1 is rebuilt after the dock respin, B from B11; C4, R1 and D5 stand. The gateway's suggestion to order the four untouched boards now, so that D5 is in hand for the DMR858M modules around 15 Sep, and to carry rulings 2 to 6 plus the review findings into one A19 and dock respin, is put to the owner.
+
+Not confirmed: the public README and BUILD lines it called stale were already corrected in commit a7540c1; the handover lines likewise.

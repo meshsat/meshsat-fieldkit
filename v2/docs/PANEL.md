@@ -8,9 +8,9 @@ U1 at 0x22. Port 0 = LED cathodes (sinks), port 1 = inputs.
 
 | Bit | Port 0 (output, LED sink) | Port 1 (input, active low unless stated) |
 |---|---|---|
-| 0 | SOS ACTIVE (red) | SOS_SW: guarded momentary, closed = low |
+| 0 | SOS ACTIVE (red) | SOS_SW: locking toggle, maintained, closed = low (APEM 5636ADKB-2V, both positions locked; ruling 32.13) |
 | 1 | MASTER WARN (red) | TX_INHIBIT_n: EMCON cover closed = low (hardware inhibit is already active) |
-| 2 | MASTER CAUT (amber) | ZEROIZE_SW: guarded momentary, closed = low |
+| 2 | MASTER CAUT (amber) | ZEROIZE_SW: locking toggle, maintained, closed = low (APEM 5636ADKB-2V; ruling 32.13) |
 | 3 | CHARGING (white) | TEST_SW: TEST / ACK button, pressed = low |
 | 4 | SAT (green) | LIGHT_DAY_n: LIGHTING at DAY = low |
 | 5 | MESH (green) | LIGHT_NIGHT_n: LIGHTING at NIGHT = low (both high = BLACKOUT) |
@@ -80,9 +80,9 @@ A flasher that fails must fail to steady-on: the bridge writes steady-on before 
 | TEST / ACK | short press (< 1 s) | acknowledge: MASTER WARN and MASTER CAUT stop flashing (steady if still active), sounder muted, MSG cleared, battery bar shown 5 s |
 | TEST / ACK | hold 2 s | lamp test: all 17 LEDs on for 3 s (U1, U2 and TX_LAMPTEST), sounder chirp, battery bar shows charge after |
 | TEST / ACK | hold 5 s after a touchscreen "show QR" request in the last 60 s | e-paper shows the provisioning QR while held; cleared on release |
-| SOS | hold 2 s | SOS mode on (existing SOS activation path); hold 2 s again to cancel; the e-paper confirms both |
+| SOS | switch closed for 2 s | SOS mode on (existing SOS activation path); flipping the switch back cancels; the e-paper confirms both. The switch is a maintained locking toggle: pull, flip, leave |
 | EMCON | latched closed | hardware: the DMR858M cannot key. Software on TX_INHIBIT_n low: stop direwolf TX, hold LoRa, LTE and satellite sends (queue them), show EMCON on the e-paper, MASTER CAUT steady |
-| ZEROIZE | hold 5 s | zeroize keys (existing keystore wipe), then a full-refresh blank of the e-paper; MASTER WARN flashes while armed (0 to 5 s) |
+| ZEROIZE | switch closed for 5 s | zeroize keys (existing keystore wipe), then a full-refresh blank of the e-paper; MASTER WARN flashes while armed (0 to 5 s); flipping back inside 5 s aborts; after the wipe the switch must be returned before the kit re-arms |
 | PI | hardware to the Pi J2 pads | shutdown / wake, no bridge involvement |
 | MAIN PWR | hardware to the X1202 switch pins | kit power, no bridge involvement |
 | LIGHTING | DAY / NIGHT / BLACKOUT | section 3 |
