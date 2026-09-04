@@ -309,7 +309,8 @@ for it1, it2 in pairs:
     nt, nv = emit(netobj, path)
     L_end, i_end, j_end = path[-1]
     end_is_inner = c.get("inner") and INNER_GOAL is not None and INNER_GOAL[i_end, j_end]
-    if ((netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad")) or end_is_inner) and nv == 0:   # plane or inner-track goal reached on an outer layer: drop a via at the end
+    last_is_via = len(path) >= 2 and path[-1][0] != path[-2][0]   # the path's own last step already put a via on the end cell
+    if ((netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad")) or end_is_inner) and not last_is_via:   # plane or inner-track goal reached on an outer layer: drop a via at the end (A19, 5 Sep: a path that changed layer half-way reached an In2 track on B.Cu and got no closing via because the old test was "no via in the path")
         L, i, j = path[-1]; v2 = pcbnew.PCB_VIA(b); v2.SetPosition(VECTOR2I(FromMM(float(X0 + j * G)), FromMM(float(Y0 + i * G)))); v2.SetDrill(FromMM(VIA_DR)); v2.SetWidth(FromMM(VIA_D))
         v2.SetViaType(pcbnew.VIATYPE_THROUGH); v2.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v2.SetNet(netobj); b.Add(v2); nv += 1
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))
