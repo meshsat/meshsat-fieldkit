@@ -2,7 +2,7 @@
 
 Rev A of the carrier set has been designed, reviewed and prepared for order; no kit has been built from it yet. This page is the path from an empty JLCPCB cart to a running kit, in order, pointing at the documents that carry the detail. Read it together with `docs/ASSEMBLY.md` (fasteners, build order, the pack, leads, coating, labels, removal, bench checks, bench-fit lists) and `docs/PANEL.md` (what the software does with the panel). The design record with every number and every ruling is `docs/MESHSAT-709-geometry-appendix.md`, section 25 for the current design.
 
-MeshSat is a prototype. The V2 boards have not been fabricated; expect Rev A to need a Rev B.
+MeshSat is a prototype. The V2 boards have not been fabricated; expect changes after the first build.
 
 ## 0. Before you start
 
@@ -44,7 +44,7 @@ Consumables: 3M 467MP or 9495LE transfer tape (display and e-paper), 3M VHB 5952
 
 Electrical: the Preci-Dip 813-S1-008-10-016101 spring-loaded connector for `J_DOCK` (2 x 4 at 2.54 mm, 7.0 mm high, solder tails), Keystone 3568 mini blade holders with two 15 A, one 10 A and one 7.5 A blade, an 18 AWG JST-VH lead for the module rail (PCB-A `J_5V_MOD1` to PCB-B `J_5V_MOD`, 150 mm), two Coilcraft XAL6030-152MEB inductors (L2 on PCB-A, L1 on PCB-D; JLCPCB has no equivalent, hand-soldered) and a 24 AWG XH lead for the X1202 5 V sense (one X1202 XH output to PCB-B `J_5V_IN1`), XT60 pairs, JST-XH 2.5 and JST-VH housings and crimps, 16 / 18 / 20 / 24 AWG silicone wire, a 20-way 1.27 mm ribbon with 2x10 IDC ends (350 mm), a 16-way ribbon with 2x8 IDC ends, a 5.5 x 2.1 barrel plug, an IP68 2-pin DC bulkhead (Bulgin PX0 or Amphenol C016 class) with a 12 V PD trigger lead for USB-C sources, seven SMA female-female bulkhead couplers for E2, SMA female bulkheads for the wall, RG-316 pigtails (SMA male ends, u.FL where the module has it).
 
-Panel hardware: two 19 mm and 16 mm anti-vandal switches with LED rings (SW_MAIN C&K ATP19-SL1-603-B0SA-03G green, SW_PI C&K ATP16-SL1-403-M0SA-04G orange as the amber, SW_TEST C&K ATP16-SL1-203-M0SA-04G white; solder lugs, gold, 3 V ring type because C4's 470 and 300 ohm resistors set the ring current), one DPDT ON-ON-ON sealed toggle (SW_LIGHT NKK M2044SD3A01 with the AT401A boot), three SPDT sealed toggles (SW_SOS NKK M2015SD3A01 momentary, SW_EMCON NKK M2012SD3A01 latching, SW_ZERO NKK M2015SD3A01 momentary; S bat lever, D3 IP67 bushing, gold-over-silver contacts, solder lugs) without flip covers in Rev A (no maker documents a cover for a 1/4-40 miniature bushing; the PANEL.md hold times protect SOS and ZEROIZE, EMCON is safe-side; the NKK locking lever with its 7.5 mm bushing is the Rev B option), seven Amphenol Connex 132170 SMA bulkhead couplers for the junction strip, an 85 dB piezo if not fitted by JLCPCB, the two white 3 mm LEDs D10 and D11.
+Panel hardware: two 19 mm and 16 mm anti-vandal switches with LED rings (SW_MAIN C&K ATP19-SL1-603-B0SA-03G green, SW_PI C&K ATP16-SL1-403-M0SA-04G orange as the amber, SW_TEST C&K ATP16-SL1-203-M0SA-04G white; solder lugs, gold, 3 V ring type because C4's 470 and 300 ohm resistors set the ring current), one DPDT ON-ON-ON sealed toggle (SW_LIGHT NKK M2044SD3A01 with the AT401A boot), three locking toggles APEM 5636ADKB-2V (SW_SOS, SW_EMCON, SW_ZERO: single pole ON-NONE-ON with both positions locked, pull the lever before it moves; gold-plated contacts, front-panel seal, epoxy terminals, 1/4-40 bushing in the same 6.5 mm holes; owner ruling of 4 Sep 2026, design record 32.13; SOS and ZEROIZE are maintained switches, the bridge acts after 2 s / 5 s in position), seven Amphenol Connex 132170 SMA bulkhead couplers for the junction strip, an 85 dB piezo if not fitted by JLCPCB, the two white 3 mm LEDs D10 and D11.
 
 ## 3. Prepare the case
 
@@ -95,10 +95,10 @@ Removal for maintenance (`docs/ASSEMBLY.md` section 7): lid, 16 screws, ribbon a
 
 ## 9. Known gaps of Rev A
 
-- RF is not blind-mate: the seven paths go through SMA couplers on the wall strip and must be unscrewed to lift the stack out. SMP blind-mate is Rev B (MESHSAT-775).
+- RF is not yet blind-mate on the boards in this folder: the seven paths go through SMA couplers on the wall strip and must be unscrewed to lift the stack out. The owner ruled on 4 Sep 2026 that the SMP-MAX blind-mate joint goes into this first build (PCB-A respin A19 and the dock, MESHSAT-775, design record 32.13); the folders here are replaced when that work lands.
 - The spring-pin return path is three contacts at about 1.1 A each, inside the Preci-Dip contact's 3.5 A rating.
-- The module rail's boost (TPS61089, 10 A peak limit) carries one bearer burst at a time over the whole discharge; three at once is tolerated only above about 3.8 V cell voltage, and the bridge serialises them (`docs/PANEL.md` section 10). The TPS61288 is the Rev B option if that ever matters.
-- The three guarded toggles (SOS, EMCON, ZEROIZE) have no flip cover in Rev A: no switch maker documents one for a 1/4-40 miniature bushing (`docs/ASSEMBLY.md` section 9). The hold times of `docs/PANEL.md` are the accident protection; the NKK locking lever, which needs a 7.5 mm bushing hole, is the Rev B option for the panel.
+- The module rail's boost (TPS61089, 10 A peak limit) carries one bearer burst at a time over the whole discharge; three at once is tolerated only above about 3.8 V cell voltage, and the bridge serialises them (`docs/PANEL.md` section 10). The owner ruled on 4 Sep 2026 that the TPS61288 replaces it in the PCB-A respin A19 (design record 32.13).
+- The three guarded toggles (SOS, EMCON, ZEROIZE) have no flip cover in Rev A: no switch maker documents one for a 1/4-40 miniature bushing (`docs/ASSEMBLY.md` section 9). The owner ruled on 4 Sep 2026 that APEM 5636ADKB-2V locking toggles replace them, same holes, with SOS and ZEROIZE as maintained locked switches (design record 32.13).
 - The commissioning list (MESHSAT-774) and the panel software (MESHSAT-773) are open.
 - The DMR858M carrier (PCB-D) has not been powered yet; the modules arrive mid September 2026 and the first bring-up uses the AIOC as a temporary codec into the existing Direwolf pipeline.
 - Nothing here has been built. Report what does not fit on MESHSAT-709.

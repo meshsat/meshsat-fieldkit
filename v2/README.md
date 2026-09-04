@@ -45,4 +45,4 @@ Prerequisites on the laptop: KiCad 9.0.9 (`kicad-cli` and `pcbnew` importable fr
 
 ## Case
 
-Peli 1520EU without foam plus the 1520PF special application panel frame (CAD in `vendor/peli/1520/`). The panel is 442 x 311 mm on the frame's 16-hole pattern; the stack closes at 104.8 mm of the 114.1 mm available under the panel. RF blind-mate (SMP) is deferred to Rev B (MESHSAT-775); Rev A uses SMA couplers on the wall strip.
+Peli 1520EU without foam plus the 1520PF special application panel frame (CAD in `vendor/peli/1520/`). The panel is 442 x 311 mm on the frame's 16-hole pattern; the stack closes at 104.8 mm of the 114.1 mm available under the panel. RF blind-mate (SMP-MAX) goes into this first build by the owner's ruling of 4 Sep 2026 (MESHSAT-775, design record 32.13); the boards in this folder still use SMA couplers on the wall strip until the PCB-A and dock respin lands.

@@ -2232,3 +2232,5 @@ Asked one at a time with a full explanation each (owner rule of the same evening
 | 7 | Review findings | open until 12 Sep | |
 
 Rev B is therefore empty except what the reviews add. Ruling of section 5 of the handover "RF: SMA couplers on E2 for Rev A; SMP blind-mate deferred to Rev B" is replaced by ruling 5 above.
+
+**Ruling, later the same evening (owner):** there was never a Rev B; it was a misunderstanding of the sessions. All work is Rev A. An item is Rev B only when the owner says so explicitly, and the session must ask a second time to confirm before recording it. Every "Rev B" left in this record before this line is either superseded (marked) or moved into Rev A by 32.13; the review findings of 12 Sep are decided when they exist.
