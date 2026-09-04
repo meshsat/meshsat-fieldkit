@@ -491,3 +491,207 @@ lines match exactly one entry, none match zero, and none match two.
 Nothing in the list failed to load. The LCSC search page will not render without JavaScript
 and returned no part codes, but it was only needed as a cross check and the JLCPCB catalogue
 answered every query directly.
+
+---
+
+## 6. Follow ups of 4 September, and one correction to section 3.4
+
+Three questions came back from the coordinator after the first pass. Same method: every code
+below was read from its own JLCPCB catalogue record, and this time the structured attribute
+fields were pulled rather than the free text `describe` string, because on one part the two
+disagree (see the Littelfuse note in 6.1). Section 5 above is unchanged; the counts there
+still stand.
+
+### 6.1 A 30 V class 1812 PTC for the SHORE_12V heating pad feed
+
+The net is now known: the PTC sits between SHORE_12V and the heating pad feed, and the TVS on
+that rail is the SMCJ15A of 3.3, which clamps at **24.4 V maximum**. The C210838 named in
+section 1 is a 16 V part, so it is indeed under rated for a clamp event and must be replaced.
+
+Recommended swap, an exact hold current match for the part it replaces:
+
+| item | value |
+|---|---|
+| LCSC code | **C52748011** |
+| manufacturer part | LUTE 1812L250/30GR |
+| package | 1812 (4.73 x 3.41 x 1.5 mm) |
+| library | Extended |
+| stock seen | 19,625 |
+| **hold current** | **2.5 A** |
+| **trip current** | **5 A** |
+| **maximum voltage** | **30 V** |
+| maximum fault current | 40 A |
+| resistance, initial minimum | 15 mOhm |
+| resistance, post trip maximum | 90 mOhm |
+| time to trip, maximum | 2.5 s |
+| power dissipation | 1 W |
+| operating temperature | -40 to +85 C |
+| source | https://jlcpcb.com/partdetail/C52748011 |
+
+30 V against a 24.4 V clamp leaves about 5.6 V of margin, which is the answer to the
+question asked. Note what the rating means: a PTC maximum voltage is the voltage the device
+must be able to interrupt while tripped, so the comparison against the TVS clamp voltage is
+the right one, and a brief clamp event is well inside it.
+
+Alternative, if higher stock and lower series resistance matter more than an exact 2.5 A:
+
+| item | value |
+|---|---|
+| LCSC code | **C20617446** |
+| manufacturer part | LUTE 1812L260/30GR |
+| library | Extended |
+| stock seen | 34,079 |
+| hold current | 2.6 A |
+| trip current | 5 A |
+| maximum voltage | 30 V |
+| maximum fault current | 40 A |
+| resistance, initial minimum | 10 mOhm |
+| resistance, post trip maximum | 70 mOhm |
+| time to trip, maximum | 2.5 s |
+| source | https://jlcpcb.com/partdetail/C20617446 |
+
+Series resistance is worth one thought on a heating pad feed, because a PTC is a resistor in
+the path all the time. The post trip maximum of 90 mOhm on C52748011 means that after a trip
+and reset the worst case drop at 2 A is 180 mV and the part dissipates 0.36 W into its own
+1 W budget. C20617446 is better on both counts (70 mOhm, and 10 mOhm initial rather than 15).
+
+Two candidates were looked at and rejected, both worth recording:
+
+- **C54300299** (LUTE 1812L260/33GR) would be the 33 V version of the same family, and its
+  part number implies 2.6 A at 33 V. JLCPCB carries **no attribute fields and no datasheet
+  link** for this code, only the package and a stock figure of 2,385. Its ratings are
+  therefore **unverified** and it is not recommended. Reading a hold current and a voltage
+  out of the part number would be exactly the guessing the brief rules out.
+- **C315954** (Littelfuse MINISMDC260F-2) looked like a 60 V, 2.6 A part in the free text
+  `describe` string. Its structured attributes give **Voltage - Max = 6 V**, not 60 V, which
+  matches Littelfuse's own MINISMDC260F specification. The `describe` string concatenates
+  numbers without units in a way that can be read wrongly, and this is the one case in this
+  whole exercise where it would have produced a wrong answer. Stock is 1 in any case.
+
+No 1812 PTC at 2.5 A class and 60 V is stocked. 30 V is the best available in this case size
+at this current, and it clears the clamp voltage.
+
+### 6.2 Crystal load capacitance, and the 33 pF loading capacitor
+
+Both load capacitances confirmed from the parts' own attribute fields, not from the search
+summary:
+
+| code | part | frequency | **load capacitance** | tolerance | stability | ESR | library | stock seen |
+|---|---|---|---|---|---|---|---|---|
+| C9002 | YXC X322512MSB4SI | 12 MHz (PCB-B) | **20 pF** | plus or minus 10 ppm | plus or minus 20 ppm | 80 Ohm | Basic | 167,759 |
+| C70571 | YXC X322524MRB4SI | 24 MHz (PCB-A) | **18 pF** | plus or minus 10 ppm | plus or minus 20 ppm | 50 Ohm | Extended | 34,453 |
+
+Both are -40 to +85 C. Datasheets:
+https://www.lcsc.com/datasheet/lcsc_datasheet_2403291504_YXC-Crystal-Oscillators-X322512MSB4SI_C9002.pdf
+and
+https://www.lcsc.com/datasheet/lcsc_datasheet_2403291504_YXC-Crystal-Oscillators-X322524MRB4SI_C70571.pdf
+
+Loading capacitor for the 20 pF part:
+
+| value | footprint | LCSC code | manufacturer part | package | Basic or Extended | stock seen | source URL |
+|---|---|---|---|---|---|---|---|
+| 33p | C_0603 | **C1663** | Samsung CL10C330JB8NNNC | 0603 | **Basic** | 1,433,141 | https://jlcpcb.com/partdetail/C1663 |
+
+Read from its own attribute fields: Capacitance 33 pF, Voltage Rating 50 V, Tolerance plus or
+minus 5 percent, Temperature Coefficient **C0G**. It is a Basic part, so this line costs no
+feeder fee. The best Extended alternative is C107047 (YAGEO CC0603JRNPO9BN330, NP0, 50 V,
+plus or minus 5 percent, 3,153,779 seen) if Samsung stock ever moves.
+
+The existing 27 pF part is confirmed as asked:
+
+| code | part | capacitance | voltage | dielectric | tolerance | library | stock seen |
+|---|---|---|---|---|---|---|---|
+| C107045 | YAGEO CC0603JRNPO9BN270 | 27 pF | **50 V** | **NP0** | plus or minus 5 percent | Preferred | 1,014,256 |
+
+NP0 and C0G are the same EIA characteristic under two names, C0G being the EIA code and NP0
+the older industry term, so this part is a genuine class 1 dielectric and is correct on a
+crystal rather than only in a feedforward path. Nothing needs to change on that line.
+
+Arithmetic for the record, using the usual `CL = C/2 + Cstray`:
+
+- PCB-B, 12 MHz, C9002 at 20 pF, with 33 pF each leg: 33/2 + 4 = 20.5 pF against a 20 pF
+  specification.
+- PCB-A, 24 MHz, C70571 at 18 pF, with the existing 27 pF each leg: 27/2 + 4 = 17.5 pF
+  against an 18 pF specification.
+
+Both land within half a pF of the crystal specification, which at these frequencies and a
+plus or minus 20 ppm stability grade is well inside the pulling range. The 4 pF stray figure
+is an **assumption**, being a typical allowance for short 0603 traces plus oscillator pin
+capacitance; it was not measured and is not on any datasheet. If the real layout stray is
+nearer 2 pF or 6 pF the numbers move by about plus or minus 2 pF, which is still inside range
+for both, so the choice of 33 pF and 27 pF is robust to that uncertainty either way.
+
+### 6.3 C13564, the gauge thermistor, and a correction to section 3.4
+
+Confirmed from the part's own attribute fields:
+
+| item | value |
+|---|---|
+| LCSC code | C13564 |
+| manufacturer part | Murata NCP18XH103F03RB |
+| package | 0603 (1.6 x 0.8 mm) |
+| **library type** | **Extended** (not Basic, not Preferred) |
+| stock seen | 395,089 |
+| resistance at 25 C | 10 kOhm |
+| **resistance tolerance** | **plus or minus 1 percent** |
+| **B constant tolerance** | **plus or minus 1 percent** |
+| **B constant (25/50 C)** | **3380 K** |
+| **B constant (25/85 C)** | **3434 K** |
+| **B constant (25/100 C)** | **3455 K** |
+| operating temperature | -40 to +125 C |
+| power | 100 mW, dissipation factor 1 mW per degree C |
+| maximum steady state current | 310 uA |
+| datasheet | https://www.lcsc.com/datasheet/lcsc_datasheet_1810311113_Murata-Electronics-NCP18XH103F03RB_C13564.pdf |
+| source | https://jlcpcb.com/partdetail/C13564 |
+
+**Correction to section 3.4.** That section said the part has "a beta of 3380 K" against the
+103AT-2's 3435 K and warned the curves diverge. That comparison was between two different
+intervals and overstated the problem. Murata does not quote one beta for this part, it quotes
+three, and the interval that matches how a 103AT is normally specified is **B(25/85), which
+is 3434 K against the 103AT-2's 3435 K**. Over the 25 to 85 C span the two curves are within
+1 K of each other, which is inside the plus or minus 1 percent B tolerance of the Murata part
+and is effectively no difference at all.
+
+What this means for the gauge configuration:
+
+- Do not write the gauge against a single beta figure. Use the interval that covers the
+  operating window, or better, use Murata's own resistance versus temperature table for the
+  XH curve, which is what the plus or minus 1 percent B tolerance is specified against.
+- From 25 C up to 85 C, a configuration already written for a 103AT at 3435 K will track this
+  part almost exactly.
+- The divergence is at the cold end, below 25 C, where the 25/50 interval figure of 3380 K
+  applies. That is the region to check if the kit is expected to report pack temperature
+  below freezing, which given the heating pad on the same board it plainly is.
+- Both tolerances are plus or minus 1 percent, resistance and B constant, so the part is a
+  precision grade rather than a plus or minus 5 percent commodity thermistor. The gauge can
+  be trusted to about a quarter of a degree near 25 C from the part alone.
+
+Section 3.4 should be read as superseded by this entry. The rest of 3.4 stands: this is the
+board mounted gauge sensor on PCB-A, and the leaded 103AT on the E4 charger lead is a
+separate part in the skipped list and is unaffected.
+
+### 6.4 Dict block for the follow ups
+
+Paste alongside the block in section 4. The first entry replaces the `2.5A hold 1812` line
+that is already there, it does not sit next to it.
+
+```python
+LCSC_FOLLOWUP = {
+    # 6.1 replaces C210838 (16 V) on the SHORE_12V heating pad feed.
+    # 30 V max, clears the SMCJ15A 24.4 V clamp. Hold 2.5 A, trip 5 A.
+    (r"^2\.5A hold 1812$", "Fuse_1812"): "C52748011",
+
+    # 6.2 loading capacitors for the 20 pF crystal C9002 on PCB-B.
+    # 33 pF, 50 V, C0G, plus or minus 5 percent, and a Basic part.
+    (r"^33p$", "C_0603"): "C1663",
+}
+```
+
+Two notes on pasting this. The `2.5A hold 1812` key is byte for byte the key already in
+section 4, so a plain `dict.update()` does the replacement cleanly and nothing else needs
+editing. The `^33p$` key assumes the generator writes the new PCB-B loading capacitors as a
+bare `33p`, matching how the existing `27p` line is written; if it writes them as
+`33p 50V` or similar the anchor needs relaxing to `^33p\b`.
+
+No change is needed for C9002, C70571, C107045 or C13564. All four codes in section 4 stay
+as they are; this follow up only confirmed their specifications.

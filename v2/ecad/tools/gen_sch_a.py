@@ -158,7 +158,9 @@ part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block
 # --- gauge BQ34Z100-G1 (bq34z100-g1.pdf): low-side shunt, Kelvin cell sense, on-board 103AT, I2C 0x55, ALERT to the second expander
 part("U21", "Connector_Generic", "Conn_01x14", "BQ34Z100-G1 gauge (I2C 0x55, SCALED for 42 Ah, 3 mOhm shunt)", "TSSOP14", {
  "1": "GAUGE_ALERT", "2": "NC", "3": "NC", "4": "CELL_SENSE_P", "5": "CELL+", "6": "CELL+", "7": "REG25", "8": "CELL_N", "9": "CELL_N", "10": "GND", "11": "TS_GAUGE", "12": "NC", "13": "SCL", "14": "SDA"}, "C91302")
-c("C68", "100n", "CELL+", "CELL_N"); c("C69", "1u", "REG25", "CELL_N"); part("RT1", "Device", "Thermistor_NTC", "10k NTC 0603 B3380 (gauge temperature, beside the dock pins; the JEITA sensor is the module's own 103AT-2)", "R", {"1": "REG25", "2": "TS_GAUGE"})
+c("C68", "100n", "CELL+", "CELL_N"); c("C69", "1u", "REG25", "CELL_N"); # The gauge reads this bead through its own table, not a single beta: Murata quotes 3380 K over 25 to 50 C and 3434 K over
+# 25 to 85 C for it, against the module thermistor's 3435 K, so configure the gauge from the R/T table over its own window (32.28).
+part("RT1", "Device", "Thermistor_NTC", "10k NTC 0603 1% (gauge temperature, beside the dock pins; the JEITA sensor is the module's own 103AT-2)", "R", {"1": "REG25", "2": "TS_GAUGE"})
 # --- three converters TPS61288L (tps61288.pdf): M1 (this board's logic and hub, PCB-B's hub, display, panel, the LTE channel), M2 (PCB-B's SDR, ZigBee, LoRa, RockBLOCK), Pi 5.1 V 5 A
 part("F3", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): pack node to the M1 converter", "FUSE", {"1": "CELL+", "2": "BOOST1_IN"})
 part("F4", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): pack node to the M2 converter", "FUSE", {"1": "CELL+", "2": "BOOST2_IN"})
@@ -187,7 +189,7 @@ c("C98", "1u", "CELL+", "GND"); r("R67", "100k", "BOOST_EN", "CELL+"); r("R68", 
 part("Q5", "Transistor_FET", "2N7002", "2N7002: Pi GPIO high = pull KILL low = power off", "SOT23", {"1": "PI_KILL", "2": "KILL", "3": "GND"}); r("R70", "100k", "PI_KILL", "GND")
 part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead from the panel (XH2.5): PB, GND", "XH2", {"1": "MAIN_PB", "2": "GND"})
 # --- heating pad on the shore rail (tps2595.pdf, TPS259571: 12 V eFuse, 2 A limit, auto-retry), enable from the second expander
-part("F6", "Device", "Polyfuse", "2.5A hold 1812", "F1812", {"1": "SHORE_12V", "2": "HEAT_IN"})
+part("F6", "Device", "Polyfuse", "2.5A hold 30V 1812", "F1812", {"1": "SHORE_12V", "2": "HEAT_IN"})   # 30 V class: the clamp on SHORE_12V lets through about 24 V, which a 16 V part would not survive (32.28)
 part("U26", "Connector_Generic", "Conn_01x09", "TPS259571DSGR eFuse 12 V 2.0 A for the heating pad", "DSG8", {"1": "HEAT_DVDT", "2": "HEAT_EN", "3": "HEAT_IN", "4": "HEAT_IN", "5": "HEAT_OUT", "6": "HEAT_FLT", "7": "HEAT_ILM", "8": "GND", "9": "GND"}, "C471038")
 c("C99", "10n", "HEAT_DVDT", "GND"); r("R71", "1.02k 1% (2.0 A)", "HEAT_ILM", "GND"); r("R72", "10k", "HEAT_FLT", "+3V3"); r("R73", "100k", "HEAT_EN", "GND"); c("C100", "100n", "HEAT_IN", "GND")
 part("J_HEAT", "Connector_Generic", "Conn_01x02", "12 V heating pad on the battery module (XH2.5): + -", "XH2", {"1": "HEAT_OUT", "2": "GND"})
