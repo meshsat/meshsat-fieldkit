@@ -100,7 +100,7 @@ Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
 
 - The panel's 3V3 is never switched while the ribbon is attached (an unpowered PCA9555 clamps the kit I2C bus).
 - With the ribbon unplugged nothing on PCB-B depends on the panel: I2C reads of 0x22 and 0x23 NACK, TR_APRS is held low by PCB-A's pull-down, TX_INHIBIT_n is held high by PCB-D's pull-up. The bridge must treat a NACK as "no panel" and keep running.
-- I2C map after A19: 0x20 (B), 0x21 and 0x24 (A), 0x22 and 0x23 (C), 0x40 to 0x49 (INA219s), plus the BQ25792 charger and the BQ34Z100-G1 fuel gauge on PCB-A. The panel addresses did not move.
+- I2C map after B13 (appendix 32.35): 0x1A (WM8960 on D), 0x20 and 0x25 (B), 0x21 and 0x24 (A), 0x22 and 0x23 (C), 0x40 SDR, 0x41 PCA9536 on D, 0x42 NEO-M9N, 0x43 RockBLOCK and 0x44 LTE INA219s on B, 0x4A the wall-port INA219 on A, plus the BQ25792 charger and the BQ34Z100-G1 fuel gauge on PCB-A. The panel addresses did not move.
 
 ## 8. Existing code to reuse
 

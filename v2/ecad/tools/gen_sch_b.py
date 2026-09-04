@@ -323,7 +323,7 @@ nfet("Q1", "Q1_G", "GND", "RB_ONOFF", "2N7002 OnOff open-drain buffer"); r("R26"
 part("F5", "Device", "Polyfuse", "2A hold 1812", "F1812", {"1": "+5V_M2", "2": "RB_FUSED"})
 part("U13", "Power_Management", "TPS22810DRV", "TPS22810DRV", "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", {"6": "RB_FUSED", "5": "EN_RB", "1": "SW_RB", "2": "NC", "3": "RB_CT", "4": "GND", "7": "GND"})
 c("C28", "1n", "RB_CT", "GND"); c("C30", "1u", "RB_FUSED", "GND"); r("R33", "100k", "EN_RB", "+3V3")
-r("R21", "0.05R 1% 1206", "SW_RB", "5V_RB", "RS"); ina219("U14", "SW_RB", "5V_RB", "SCL", "GND")   # 0x43 on B13 (0x42 on B12): the NEO-M9N answers at 0x42 on the same bus; c("C18", "100n", "+3V3", "GND"); c("C19", "10u", "5V_RB", "GND", "C10u")
+r("R21", "0.05R 1% 1206", "SW_RB", "5V_RB", "RS"); ina219("U14", "SW_RB", "5V_RB", "SCL", "GND"); c("C18", "100n", "+3V3", "GND"); c("C19", "10u", "5V_RB", "GND", "C10u")   # U14 at 0x43 on B13 (0x42 on B12): the NEO-M9N answers at 0x42 on the same bus
 # --- panel ribbon (PCB-C C5): fused 5 V, the kit I2C, SPI0 for the e-paper, the PWM dimmer, the TX mirror and the EMCON line; EPD_RES_ALT now from U21
 part("F6", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_M1", "2": "PANEL_5V"})
 part("J_PANEL", "Connector_Generic", "Conn_02x10_Odd_Even", "panel ribbon to PCB-C (IDC 2x10)", "IDC20", {
