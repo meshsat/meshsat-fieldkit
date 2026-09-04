@@ -275,6 +275,9 @@ for it1, it2 in pairs:
     a, c = (it1, it2) if it1["kind"] == "pad" else (it2, it1)
     src = copper_cells(a, net)
     if not src: print("  skip: no source copper for", a); continue
+    if a.get("inner"):                                             # the source is an inner-layer track: start only where the joining via may stand
+        for L in list(src): src[L] &= ~via
+        if not any(M.any() for M in src.values()): print("  skip: no via-legal cell on the inner-layer source", a); continue
     if netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad"):   # pad-to-pad on a plane net: route it, do not just drop a via
         goal_cells = {pcbnew.F_Cu: ~via, pcbnew.B_Cu: ~via}
         for L in LAYERS: goal_cells[L] &= ~trk[L]
@@ -313,5 +316,9 @@ for it1, it2 in pairs:
     if ((netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad")) or end_is_inner) and not last_is_via:   # plane or inner-track goal reached on an outer layer: drop a via at the end (A19, 5 Sep: a path that changed layer half-way reached an In2 track on B.Cu and got no closing via because the old test was "no via in the path")
         L, i, j = path[-1]; v2 = pcbnew.PCB_VIA(b); v2.SetPosition(VECTOR2I(FromMM(float(X0 + j * G)), FromMM(float(Y0 + i * G)))); v2.SetDrill(FromMM(VIA_DR)); v2.SetWidth(FromMM(VIA_D))
         v2.SetViaType(pcbnew.VIATYPE_THROUGH); v2.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v2.SetNet(netobj); b.Add(v2); nv += 1
+    first_is_via = len(path) >= 2 and path[0][0] != path[1][0]
+    if a.get("inner") and not first_is_via:                        # inner-layer source reached on an outer layer: the joining via at the start (A19, 5 Sep: a B.Cu stub end 0.02 mm from an In2 track stayed open)
+        L, i, j = path[0]; v3 = pcbnew.PCB_VIA(b); v3.SetPosition(VECTOR2I(FromMM(float(X0 + j * G)), FromMM(float(Y0 + i * G)))); v3.SetDrill(FromMM(VIA_DR)); v3.SetWidth(FromMM(VIA_D))
+        v3.SetViaType(pcbnew.VIATYPE_THROUGH); v3.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v3.SetNet(netobj); b.Add(v3); nv += 1
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))
 pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(BOARD, b); print("stub_router: closed %d of %d" % (closed, len(pairs)))
