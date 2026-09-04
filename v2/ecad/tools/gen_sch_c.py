@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PCB-C CONTROL PANEL, phase C3: generate the KiCad 9 schematic (netlist-style: every pin gets a
+"""PCB-C CONTROL PANEL, phase C5 (sealed face): generate the KiCad 9 schematic (netlist-style: every pin gets a
 stub and a net label; power pins get power symbols). Runs on the laptop (needs the KiCad libs).
 Usage: gen_sch_c.py <out.kicad_sch> <project-name>
 """
@@ -91,9 +91,9 @@ FP = {
  "R": "Resistor_SMD:R_0603_1608Metric", "C": "Capacitor_SMD:C_0603_1608Metric", "C10u": "Capacitor_SMD:C_0805_2012Metric",
  "LED3": "LED_THT:LED_D3.0mm", "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm", "SOT23": "Package_TO_SOT_SMD:SOT-23", "SOT236": "Package_TO_SOT_SMD:SOT-23-6",
  "SOD123": "Diode_SMD:D_SOD-123", "FB": "Inductor_SMD:L_0603_1608Metric", "JP2": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm", "TP": "TestPoint:TestPoint_Pad_D1.5mm",
- "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "IDC20": "Connector_IDC:IDC-Header_2x10_P2.54mm_Vertical", "HDR8": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+ "XH2": "meshsat:LeadLands_1x02", "IDC20": "Connector_IDC:IDC-Header_2x10_P2.54mm_Vertical_SMD", "HDR8": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical_SMD_Pin1Left",
  "SW19": "meshsat:PanelSwitch_19mm", "SW16": "meshsat:PanelSwitch_16mm", "TGL6": "meshsat:PanelToggle_DPDT", "TGL3": "meshsat:GuardedToggle_SPDT",
- "BZ": "Buzzer_Beeper:Buzzer_12x9.5RM7.6", "MHPAD": "MountingHole:MountingHole_3.2mm_M3_Pad",
+ "BZ": "meshsat:PanelSounder", "MHPAD": "meshsat:FrameScrew_M3_GND",   # C5 (sealed face): every connector SMD on the underside, the sounder a panel-mount IP67 part, the frame screws masked on the face
 }
 P = []   # (ref, lib, symbol, value, footprint, nets{pin: net}, lcsc)
 def part(ref, lib, sym, value, fp, nets, lcsc=""):
@@ -131,7 +131,7 @@ part("JP1", "Jumper", "SolderJumper_2_Open", "PANEL_ID strap (closed = variant B
 part("JP2", "Jumper", "SolderJumper_2_Open", "EPD RES from BCM7 instead of U2 (close to use)", "JP2", {"1": "EPD_RES_ALT", "2": "EPD_RES"})
 
 # --- LED rail: +5V -> LIGHTING toggle (open in BLACKOUT) -> LED_RAIL_SW -> Q1 P-FET (PWM from PANEL_PWM through Q2) -> LED_RAIL
-part("SW_LIGHT", "Connector_Generic", "Conn_01x06", "LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 + AT401A boot", "TGL6",
+part("SW_LIGHT", "Connector_Generic", "Conn_01x06", "LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 on the D3 splashproof bushing, its O-ring (spare AT516) under the nut on the face, AT428H boot; D hole, flat toward +X", "TGL6",
      {"1": "LED_RAIL_SW", "2": "+5V", "3": "NC", "4": "GND", "5": "LIGHT_DAY_n", "6": "LIGHT_NIGHT_n"})
 part("Q1", "Transistor_FET", "AO3401A", "AO3401A P-FET high side", "SOT23", {"1": "Q1_G", "2": "LED_RAIL_SW", "3": "LED_RAIL"}, "C15127")
 r("R9", "2.2k", "LED_RAIL_SW", "Q1_G", "R", "C4190"); r("R10", "47R", "Q1_G", "Q2_D", "R", "C25118")
@@ -151,36 +151,36 @@ nfet("Q3", "Q3_G", "GND", "TX_K"); r("R%d" % rn, "1k", "TR_APRS", "Q3_G", "R", "
 part("D17", "Device", "D_Schottky", "BAT54 lamp-test tie", "SOD123", {"2": "TX_K", "1": "TX_LAMPTEST"}, "C2166")
 
 # --- switches (bench parts on flying leads; footprints = panel hole + lead pads)
-part("SW_MAIN", "Connector_Generic", "Conn_01x04", "MAIN PWR 19 mm momentary, green ring (to X1202 external switch); C&K ATP19-SL1-603-B0SA-03G", "SW19", {"1": "X1202SW_A", "2": "X1202SW_B", "3": "MAINRING_A", "4": "GND"})
+part("SW_MAIN", "Connector_Generic", "Conn_01x04", "MAIN PWR 19 mm momentary, green ring (to PCB-A J_MAINSW); C&K ATP19-SL1-603-B0SA-03G; silicone gasket washer under the bezel", "SW19", {"1": "MAINSW_A", "2": "MAINSW_B", "3": "MAINRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL_SW", "MAINRING_A", "R", "C23179"); rn += 1
-part("SW_PI", "Connector_Generic", "Conn_01x04", "PI 16 mm recessed momentary, amber ring (to Pi 5 J2); C&K ATP16-SL1-403-M0SA-04G (orange ring)", "SW16", {"1": "PIJ2_A", "2": "PIJ2_B", "3": "PIRING_A", "4": "PIRING_K"})
+part("SW_PI", "Connector_Generic", "Conn_01x04", "PI 16 mm recessed momentary, amber ring (to Pi 5 J2); C&K ATP16-SL1-403-M0SA-04G (orange ring); silicone gasket washer under the bezel", "SW16", {"1": "PIJ2_A", "2": "PIJ2_B", "3": "PIRING_A", "4": "PIRING_K"})
 r("R%d" % rn, "300R", "LED_RAIL", "PIRING_A", "R", "C23025"); rn += 1
-part("SW_TEST", "Connector_Generic", "Conn_01x04", "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G", "SW16", {"1": "TEST_SW", "2": "GND", "3": "TESTRING_A", "4": "GND"})
+part("SW_TEST", "Connector_Generic", "Conn_01x04", "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer under the bezel", "SW16", {"1": "TEST_SW", "2": "GND", "3": "TESTRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL", "TESTRING_A", "R", "C23179"); rn += 1
-part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot; ruling 32.13); the bridge acts after 2 s closed", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
-part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON locking toggle (closed = TX inhibit; APEM 5636ADKB-2V, both positions locked; ruling 32.13)", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
-part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, both positions locked; ruling 32.13); the bridge acts after 5 s closed", "TGL3", {"1": "ZEROIZE_SW", "2": "GND", "3": "NC"})
+part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot; ruling 32.13); K front seal in the keyed 6.5 hole; the bridge acts after 2 s closed", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
+part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON locking toggle (closed = TX inhibit; APEM 5636ADKB-2V, both positions locked; ruling 32.13); K front seal in the keyed 6.5 hole", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
+part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, both positions locked; ruling 32.13); K front seal in the keyed 6.5 hole; the bridge acts after 5 s closed", "TGL3", {"1": "ZEROIZE_SW", "2": "GND", "3": "NC"})
 # power-button leads: ferrite + 100 nF at the panel end (the leads pass the antenna feeds)
-part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "X1202SW_A", "2": "X1202SW_A2"}, "C1017"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "X1202SW_B", "2": "X1202SW_B2"}, "C1017")
-c("C11", "100n", "X1202SW_A2", "X1202SW_B2", "C", "C14663")
-part("J_X1202SW", "Connector_Generic", "Conn_01x02", "lead to the X1202 external-switch pins (XH2.5)", "XH2", {"1": "X1202SW_A2", "2": "X1202SW_B2"})
+part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_A", "2": "MAINSW_A2"}, "C1017"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_B", "2": "MAINSW_B2"}, "C1017")
+c("C11", "100n", "MAINSW_A2", "MAINSW_B2", "C", "C14663")
+part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead to PCB-A J_MAINSW (XH2.5 at the PCB-A end): two solder lands on the underside, soldered and beaded", "XH2", {"1": "MAINSW_A2", "2": "MAINSW_B2"})
 part("FB3", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_A", "2": "PIJ2_A2"}, "C1017"); part("FB4", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_B", "2": "PIJ2_B2"}, "C1017")
 c("C12", "100n", "PIJ2_A2", "PIJ2_B2", "C", "C14663")
-part("J_PIJ2", "Connector_Generic", "Conn_01x02", "lead to the Pi 5 J2 power-button pads (XH2.5)", "XH2", {"1": "PIJ2_A2", "2": "PIJ2_B2"})
+part("J_PIJ2", "Connector_Generic", "Conn_01x02", "lead to the Pi 5 J2 power-button pins: two solder lands on the underside, soldered and beaded", "XH2", {"1": "PIJ2_A2", "2": "PIJ2_B2"})
 
 # --- e-paper 3.7 in (module on standoffs, wired by an 8-way lead to J_EPD; 100R series on the Pi lines)
 r("R%d" % rn, "100R", "SPI_SCLK", "EPD_SCL_F", "R", "C22775"); rn += 1; r("R%d" % rn, "100R", "SPI_MOSI", "EPD_SDA_F", "R", "C22775"); rn += 1
 r("R%d" % rn, "100R", "SPI_CE0", "EPD_CS_F", "R", "C22775"); rn += 1; r("R%d" % rn, "100R", "EPD_DC", "EPD_DC_F", "R", "C22775"); rn += 1
-part("J_EPD", "Connector_Generic", "Conn_01x08", "e-paper module lead: BUSY RES D/C CS SCL SDA GND VCC", "HDR8",
+part("J_EPD", "Connector_Generic", "Conn_01x08", "e-paper module lead: BUSY RES D/C CS SCL SDA GND VCC (SMD header on the underside)", "HDR8",
      {"1": "EPD_BUSY", "2": "EPD_RES", "3": "EPD_DC_F", "4": "EPD_CS_F", "5": "EPD_SCL_F", "6": "EPD_SDA_F", "7": "GND", "8": "+3V3"})
 c("C13", "100n", "+3V3", "GND", "C", "C14663")
 
-# --- sounder (85 dB active piezo on +5V, keyed by PWM1 through Q4; ACK mutes in software)
-part("BZ1", "Device", "Buzzer", "active piezo 5 V 85 dB", "BZ", {"1": "BZ_K", "2": "+5V"})
+# --- sounder: IP67 panel-mount part in its own sealed hole on the face (C5), driven on +5V through Q4 from PWM1; ACK mutes in software
+part("BZ1", "Device", "Buzzer", "IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (part per docs/respin-research-seal-2026-09-05.md)", "BZ", {"1": "BZ_K", "2": "+5V"})
 nfet("Q4", "Q4_G", "GND", "BZ_K"); r("R%d" % rn, "100R", "PWM1", "Q4_G", "R", "C22775"); rn += 1; r("R%d" % rn, "100k", "Q4_G", "GND", "R", "C25803"); rn += 1
 
 # --- chassis bond: the 16 frame screws through GND ring pads (MIL-STD-461 bonding of the aluminium frame)
-for i in range(1, 17): part("H%d" % i, "Mechanical", "MountingHole_Pad", "frame screw M3, GND bond", "MHPAD", {"1": "GND"})
+for i in range(1, 17): part("H%d" % i, "Mechanical", "MountingHole_Pad", "frame screw M3 x 10, GND bond through the bonded sealing washer on the underside land", "MHPAD", {"1": "GND"})
 for i, net in enumerate(("+5V", "+3V3", "GND", "EXP_INT", "TX_INHIBIT_n", "SPARE1", "SPARE2", "SPARE3", "SPARE4", "SPARE5", "EPD_BUSY"), 3): tp("TP%d" % i, net)
 
 # ----------------------------------------------------------------- emit
@@ -256,7 +256,7 @@ SECTIONS = [("RIBBON FROM PCB-B, RAILS, TVS, TEST POINTS", ["J_PANEL", "C1", "C2
             ("LED RAIL: LIGHTING TOGGLE, PWM HIGH-SIDE SWITCH", ["SW_LIGHT", "Q1", "R9", "R10", "Q2", "R11", "R12"]),
             ("INDICATORS (MIL-STD-1472 COLOUR CODE) + BATTERY BAR", [x for pair in zip(["R%d" % (13 + i) for i in range(15)], [d for d, _, _, _ in LEDS]) for x in pair]),
             ("TX LAMP (HARDWARE FROM THE PTT MIRROR) + LAMP TEST", ["R28", "D3", "Q3", "R29", "R30", "D17"]),
-            ("SWITCHES: MAIN PWR, PI, TEST/ACK, SOS, EMCON, ZEROIZE + POWER-BUTTON LEADS", ["SW_MAIN", "R31", "SW_PI", "R32", "SW_TEST", "R33", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C11", "J_X1202SW", "FB3", "FB4", "C12", "J_PIJ2"]),
+            ("SWITCHES: MAIN PWR, PI, TEST/ACK, SOS, EMCON, ZEROIZE + POWER-BUTTON LEADS", ["SW_MAIN", "R31", "SW_PI", "R32", "SW_TEST", "R33", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C11", "J_MAINSW", "FB3", "FB4", "C12", "J_PIJ2"]),
             ("E-PAPER 3.7in LEAD + SOUNDER", ["R34", "R35", "R36", "R37", "J_EPD", "C13", "BZ1", "Q4", "R38", "R39"]),
             ("FRAME SCREWS, GND BOND", ["H%d" % i for i in range(1, 17)])]
 byref = {p["ref"]: p for p in P}
@@ -288,7 +288,7 @@ max_x = x + COLW
 PAPER = "A1" if max_x <= 820 else "A0"
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-C CONTROL PANEL") (date "2026-09-02") (rev "A") (company "MeshSat") (comment 1 "Phase C3 schematic, generated by tools/gen_sch_c.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709. FE1.1s hub on internal regulators; TPS2065C x2 + TPS22810 x4 switches (B4: LoRa and RockBLOCK channels at 2 A for the T-Beam 1W and 9704 bursts); INA219 per channel; PCA9555 EN/FAULT; both Pi UARTs to the RockBLOCK site via JP3/JP4."))\n'
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-C CONTROL PANEL") (date "2026-09-05") (rev "A") (company "MeshSat") (comment 1 "Phase C5 schematic (sealed face: no through-hole connector, panel-mount sounder, masked frame rings), generated by tools/gen_sch_c.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709. FE1.1s hub on internal regulators; TPS2065C x2 + TPS22810 x4 switches (B4: LoRa and RockBLOCK channels at 2 A for the T-Beam 1W and 9704 bursts); INA219 per channel; PCA9555 EN/FAULT; both Pi UARTs to the RockBLOCK site via JP3/JP4."))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'

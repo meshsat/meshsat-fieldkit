@@ -1,0 +1,282 @@
+Via Covering in PCBs: Tented, Untented, Plugged, Epoxy-Filled & Copper-Epoxy Options | JLCPCB
+This website requires JavaScript.
+Account Restriction Notice
+Get Coupon Here
+Coupons
+Country / Region
+Language
+undefined
+Currency
+USD $
+The currency you select is for reference only, payments must be made in US dollars.
+Save
+Language Coming Soon
+Ship to
+JLCPCB
+PCB Service
+FR-4 PCBs
+Flexible PCBs
+Metal Core PCBs
+High-Frequency PCBs
+PCBA Service
+PCB Assembly
+Parts Library
+More
+SMT Stencil
+PCB Layout
+Mechanical Services
+JLC3DP - 3D Printing
+JLCCNC - CNC Machining
+JLCCNC - Sheet Metal
+JLCMC - Mechanical Components
+Tools
+EasyEDA - PCB Design Tool
+JLCDFM -  DFM Check
+Impedance Calculator
+PI Stiffener Calculator
+More
+OSHWLAB - Open Source Hardware
+JLCPCB - Flexible Heater
+Products
+Capabilities
+Contact Us
+Online Chat>
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+Email Us>
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+WhatsApp>
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+Support
+Help Center
+Get instant answers. 24/7 Available.
+Blog
+Support
+About Us
+JLCPCB delivers one-stop electronic and mechanical manufacturing solutions to empower hardware innovators worldwide.
+Explore Us
+Why JLCPCB?
+Quality Assurance
+How We Work
+Certifications
+Company News
+About Us
+Search
+0
+Order Now
+Sign In
+Sign In
+Help Center
+Help Center
+PCB Capabilities & Instructions
+Via Covering: Tented, Untented, Plugged, Epoxy-Filled and Copper-epoxy-filled
+Help Center
+Get Started
+Register
+Know Before Ordering
+Account Setting
+Ordering
+PCB Ordering
+PCB Assembly Ordering
+PCB Stencil Ordering
+PCB Manufacturing
+PCB Files Preparation
+PCB Capabilities & Instructions
+PCB Technical Guidelines
+PCB Assembly
+PCB Assembly FAQs
+PCBA Price Details
+PCBA Parts Sourcing
+PCBA Capabilities & Instructions
+PCBA Technical Guidelines
+PCBA Files Preparation
+PCBA Lead Time
+PCBA After-Sale FAQs
+FPC Manufacturing
+FPC Materials & Options
+FPC Design Guidelines
+SMT Stencil
+Stencil Ordering
+Stencil Technical Guidelines
+PCB Layout
+PCB Layout Ordering
+PCB Layout FAQs
+JLCDFM Tool
+DFM Tool Help
+DFM FAQs
+JLCONE
+JLCONE Download and Installation
+Shipping & Delivery
+Shipping Policies
+Shipping Instructions
+Payment & Invoice
+Payments
+Collab & Activities
+JLCPCB API
+Coupons & Promotions
+Policies & Certifications
+Policies
+Certifications
+Information
+Notice
+Flexible Heater
+Flexible Heater Ordering
+Via Covering: Tented, Untented, Plugged, Epoxy-Filled and Copper-epoxy-filled
+Last updated on Aug 18, 2026
+When ordering a PCB there are generally five via covering options available: Tented, Untented, Plugged, Epoxy-filled & Capped, and Copper-filled & Capped.
+Finish Type
+Untented
+Tented
+Plugged
+Epoxy/Copper-filled & Capped
+Appearance
+Description
+Vias without solder mask  ink covered
+Vias with solder mask ink covered
+Tented+via filled with ink
+Tented/Untented+via Epoxy/Copper filled & capped
+Notes
+[Pros]
+1) Easy to test individual line after assembly
+2) Provides certain heat dissipation functionality
+[Cons]
+1) Risk of short circuits when closely assembling with metal components;
+2) Risk of flowing tin and filled vias when assembly
+[Pros]
+1) This is the general way
+2) Avoid solder splatter on pads.
+[Cons]
+Minimal Risk of short circuits when closely assembling with metal components;
+[Pros]
+1) No solder leakage during assembly;
+2) Protects copper surface of hole wall.
+[Cons]
+1) Prone to bubble formation and ink emergence;
+2) ink sealing surface may not be completely level with the pad.
+[Pros]
+No solder leakage, protects copper surface of hole wall; forms flat surface after plugging, suitable for BGA and SMT holes.
+[Cons]
+Complex process, high cost.
+[Solution]
+For our 6-layer and above multi-layer boards, resin filling is now available for free, addressing this drawback.
+Process
+No specific requirements
+Insufficient spacing between through-hole pads and solder mask openings, cannot fully cover.
+No ink filling for single or double-sided pad openings; <0.35mm distance from through-hole pads cannot be plugged.
+Both double-sided openings and half-covered openings allow hole plugging. Please specify the plugging diameter in order remarks.
+Ordering
+Follow system options for accurate selections.
+Follow system options for accurate selections.
+All through-hole solder pads are covered and filled with ink.
+Gerber files: Specify diameter of plugging hole in order remarks.
+All through-hole solder pads are covered and filled with Epoxy/Copper.
+Gerber files: Specify diameter of plugging hole in order remarks.
+Quality Standard
+No soldermask ink on through-hole pads,  solder plugging inside the holes is normal.
+No solder on through-hole pads in reflow oven (slight yellowing at some through-hole openings is normal), and ink plugging inside the holes is normal.
+Hole opening yellowing rate < 5%, no solder bridging allowed. Opacity of hole plugging > 95%.
+Hole surface copper thickness ≥ 5um, leveled solder pads have a 127um depression and protrusion within 50um. 'Copper plugging' offers higher thermal conductivity (8 W/mK) compared to 'Epoxy plugging'.
+Note:
+There are no special requirements for the production process of Untented via. The via holes of the remaining four should be less than or equal to 0.5mm. (For holes larger than 0.5mm, plugging is not recommended as it may cause uneven plugging, bubble formation, and potential issues. Please note that complaints regarding such cases will not be accepted.)
+- For untented vias or tented vias, there may be tin beads remaining in the hole due to the hole is not plugged fully. If such a situation is not allowed, please perform the hole plugging process.
+- Single-sided or double-sided vias, holes in pad, and vias with a distance less than 0.35mm from the pad cannot be plugged with ink. Such vias can be plugged with epoxy or copper.
+1. Untented Vias
+Definition:
+This option removes soldermask over all vias, exposing them to the same surface finish as all other exposed copper such as solder pads. Available surface finishes include HASL and ENIG.
+Quality standard:
+Vias should be wettable both in wave soldering and with a soldering iron.
+Important Notes:
+Vias are treated differently from pads (through-holes where components are installed), and the via finish option does not apply to pads. Vias don’t have a specified tolerance whereas pad through-holes are +0.13/–0.08 mm. Vias should not be used to hold components; pads should be used instead.
+To avoid shorts during HASL, bare vias should be spaced at least 0.2 mm away from other exposed copper. To achieve clearances lower than 0.2 mm, use ENIG instead of HASL.
+2. Tented Vias
+Definition:
+This option is the most commonly used. Vias are covered with soldermask, and surface finish such as HASL is not applied to vias.
+Quality standard:
+Solder should not adhere to vias, either in wave soldering or with a soldering iron.
+Important Notes:
+Vias holes should ideally be 0.4 mm or less and no larger than 0.5 mm if permitted by routing and current-carrying requirements. Larger vias are not guaranteed to be fully covered;
+no complaints are accepted regarding this type of defect.
+Why some tented vias appear yellow/brown: solder-resist is applied as a liquid and levelled by heating the board in an oven allowing the liquid to flow. During this process, the solder-resist can flow down the via hole, leaving a thinner layer on the annular ring than in other parts of the board. This allows the colour of the copper underneath to show through, making the vias look yellow/brown. This is a normal consequence of tented vias.
+3. Plugged Vias
+Definition:
+During production, aluminum sheets are first used to plug the solder mask ink into the via hole, and then the solder mask ink is printed on the entire board. The hole plugging rate can reach more than 98% (excluding the Vias In Pad). Can completely solve the problem of yellowing of orifices.
+Quality standard:
+The yellowing rate of the plated through-hole solder mask opening should be less than 2%. Solder should not wet or adhere to the via. Vias should have > 95% opacity.
+4. Epoxy-Filled & Capped Vias
+Definition:
+Vias are filled with non-conductive epoxy resin, and then plated over with copper. Suitable for any type of untented via on one side or vias in pad on both sides.
+Quality standard:
+Vias should be completely opaque. Vias with soldermask can be printed over with silkscreen; those without soldermask should have the same surface finish (HASL / ENIG) as other exposed copper.
+5.
+Copper-Paste-Filled & Capped Vias
+Definition:
+Vias are filled with conductive copper, and then plated over with copper. Suitable for any type of untented via on one side or vias in pad on both sides.
+Quality standard:
+Vias should be completely opaque. Vias with soldermask can be printed over with silkscreen; those without soldermask should have the same surface finish (HASL / ENIG) as other exposed copper. This type of epoxy has an excellent thermal conductivity of 8 W/(m·K).
+Important Notes:
+Plugged and epoxy-filled vias holes should
+not be larger than 0.5 mm
+as larger holes may be incompletely filled.
+No complaints are accepted for this problem.
+For epoxy-filled vias, please leave a note or upload an image along with your design files to explain which vias should be filled. Alternatively, you can specify to fill all vias of a particular diameter.
+For plugged vias, original CAD files are preferred over Gerber files as this lets us know which holes are vias and which are solderable through-holes. If you do upload Gerber files, please attach an image highlighting which vias should be plugged, and leave a note to specify which via diameters should be plugged.
+We recommend you select "Confirm production files" so that you can check the via finish is correct before the board goes to production.
+Online Chat >
+Chat with our live agent for fast reply.
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+Email Us >
+Contact us at support
+jlcpcb.com
+Typically reply within hours.
+Help Center >
+Get instant answers.
+24/7 Available.
+Products
+FR-4 PCBs
+Flexible PCBs
+Metal Core PCBs
+High-Frequency PCBs
+PCBA Service
+PCB Layout
+SMT Stencil
+Flex Heater
+Support
+Help Center
+Contact Us
+Shipping & Delivery
+Payment Methods
+How to Order
+How to Track
+After-Sales Service
+Blog
+Company
+About Us
+Quality Assurance
+How We Work
+Certifications
+Security
+Environment
+JLCAPI
+News
+Cooperation
+Electronics
+EasyEDA
+JLCPCB
+JLCDFM
+LCSC
+OSHWLAB
+Mechanical
+JLC3DP
+JLCCNC
+JLCMC
+CONNECT WITH US
+© 2026 JLCPCB.COM All Rights Reserved.
+Privacy Policy
+Terms & Conditions
+Cookies Policy
+Get Coupon >
+Live Chat >
+Home
+Cart
+Files
+Message
+Me

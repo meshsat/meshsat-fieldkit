@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# RETIRED with C5 (5 Sep 2026, appendix 32.34): the sealed e-paper window carries a lens on the face, so the flush-glass spacer ring R1 has no use
+# and its 0.1 mm web could not be fabricated. Kept for the record; no chain calls it.
 """PCB-C spacer ring (R1): a 1.0 mm FR-4 frame, no copper, between the WeAct 3.7 module's lands and the panel underside so the glass face ends flush
 with the panel face (0.95 glass + 0.05 tape + 1.0 ring + 0.05 tape = 2.05 against the 2.0 mm panel). Same window as the panel, same module outline.
 Usage: gen_pcb_cring.py <out.kicad_pcb>"""

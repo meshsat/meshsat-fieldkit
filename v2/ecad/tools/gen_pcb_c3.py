@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PCB-C phase C3: bring the panel netlist into the mechanical board, place the panel items at their MIL-STD-1472 positions,
+"""PCB-C phase C5 (sealed face): bring the panel netlist into the mechanical board, place the panel items at their MIL-STD-1472 positions,
 pack the SMD cluster on the underside, add the GND pours. Usage: gen_pcb_c3.py <board.kicad_pcb> <netlist.net>"""
 import sys, re, math, os, pcbnew
 from pcbnew import VECTOR2I, FromMM
@@ -60,23 +60,28 @@ for ref in comps:                                                   # H1..H16 an
 # ---------------------------------------------------------------- panel layout (case mm), MIL-STD-1472: >= 25 mm switch pitch, labels on the far (+Y) side, 3.5 mm for critical
 FIXED = {"SW_MAIN": (-150, 100, 45, False), "SW_PI": (-110, 100, 45, False), "SW_TEST": (-70, 100, 45, False), "SW_LIGHT": (120, 100, 0, False),
          "SW_SOS": (170, 42, 0, False), "SW_EMCON": (170, 0, 0, False), "SW_ZERO": (170, -42, 0, False),
-         "R32": (-99, 78, 0, True), "R33": (-59, 78, 0, True), "J_EPD": (95, 100, 90, False), "BZ1": (120, 72, 0, False), "J_PANEL": (208, 75, 90, True), "J_X1202SW": (-150, -110, 0, True), "J_PIJ2": (-125, -110, 0, True)}
+         "R32": (-99, 78, 0, True), "R33": (-59, 78, 0, True), "J_EPD": (100, 100, 90, True), "BZ1": (-180, -100, 0, False), "J_PANEL": (203, 75, 0, True), "J_MAINSW": (-150, -110, 0, True), "J_PIJ2": (-125, -110, 0, True)}
+# C5: J_EPD and J_PANEL are SMD parts on the underside (no pin on the face; J_PANEL's rows run along Y so its body stays inside the frame's bearing ring),
+# BZ1 is the IP68 panel-mount sounder on the face at the west end, where 45 mm of depth is free below the panel (the battery module fills the east end),
+# J_MAINSW and J_PIJ2 are solder lands on the underside. Panel-mount parts are placed by their hole centre, not by their bounding box.
+PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1"}
 LED_COL = -120.0
 LEDS = [("D1", 45, "MSTR WARN"), ("D2", 36, "MSTR CAUT"), ("D3", 27, "TX"), ("D4", 18, "SOS ACTIVE"), ("D5", 9, "SAT"), ("D6", 0, "MESH"), ("D7", -9, "LTE"), ("D8", -18, "GPS"), ("D9", -27, "SHORE"), ("D10", -36, "CHARGE"), ("D11", -45, "MSG")]
 BAR = [("D12", -82), ("D13", -76), ("D14", -70), ("D15", -64), ("D16", -58)]; BAR_Y = 123.0
-for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
+for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
 for ref, y, label in LEDS: placed[ref] = place(ref, LED_COL, y, 0); text(label, LED_COL - 5.0, y, pcbnew.F_SilkS, 2.5, 0.4, halign="right")   # labels west of the LEDs: east runs into the display frame
 for ref, x in BAR: placed[ref] = place(ref, x, BAR_Y, 0)
 text("BATT %", -88.0, BAR_Y, pcbnew.F_SilkS, 2.0, 0.3, halign="right")
 for (ref, x), pct in zip(BAR, ("20", "40", "60", "80", "100")): text(pct, x, BAR_Y + 4.5, pcbnew.F_SilkS, 1.5, 0.25)
 for ref, label, size in (("SW_MAIN", "MAIN PWR", 3.5), ("SW_PI", "PI", 3.5), ("SW_TEST", "TEST / ACK", 3.0), ("SW_LIGHT", "LIGHTING", 3.0)):
     x, y = FIXED[ref][0], FIXED[ref][1]; text(label, x, y + 16.5, pcbnew.F_SilkS, size, 0.5)
-text("DAY", 120, 92, pcbnew.F_SilkS, 2.0, 0.3); text("NIGHT", 133, 100, pcbnew.F_SilkS, 2.0, 0.3, halign="left"); text("BLACKOUT", 120, 84, pcbnew.F_SilkS, 2.0, 0.3)
+text("DAY", 120, 90.5, pcbnew.F_SilkS, 2.0, 0.3); text("NIGHT", 134, 100, pcbnew.F_SilkS, 2.0, 0.3, halign="left"); text("BLACKOUT", 120, 83, pcbnew.F_SilkS, 2.0, 0.3)   # clear of the boot base
 for ref, label in (("SW_SOS", "SOS"), ("SW_EMCON", "EMCON"), ("SW_ZERO", "ZEROIZE")):
-    x, y = FIXED[ref][0], FIXED[ref][1]; text(label, x, y + 13.0, pcbnew.F_SilkS, 3.5, 0.5); text("guard closed = safe", x, y - 13.0, pcbnew.F_SilkS, 1.5, 0.25)   # 42 mm pitch: 13 mm keeps the label off the neighbour
-text("E-PAPER: STATUS / PROVISIONING QR (HOLD TEST 5 s)", 30, 130.0, pcbnew.F_SilkS, 2.0, 0.3)
+    x, y = FIXED[ref][0], FIXED[ref][1]; text(label, x, y + 13.0, pcbnew.F_SilkS, 3.5, 0.5)   # 42 mm pitch: 13 mm keeps the label off the neighbour; nothing under the K seal
+text("SOUNDER", FIXED["BZ1"][0], FIXED["BZ1"][1] - 21.0, pcbnew.F_SilkS, 2.0, 0.3)
+text("E-PAPER: STATUS / PROVISIONING QR (HOLD TEST 5 s)", 30, 60.5, pcbnew.F_SilkS, 2.0, 0.3)   # between the display band and the lens
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
-REGIONS = [("CLUSTER", (135, 55, 200, 138), [r for r in comps if r not in placed and not r.startswith("H")], True)]
+REGIONS = [("CLUSTER", (135, 55, 195, 138), [r for r in comps if r not in placed and not r.startswith("H")], True)]   # J_PANEL takes X 198 to 208
 GAP = 1.2; FINE_MARGIN = 1.4
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True

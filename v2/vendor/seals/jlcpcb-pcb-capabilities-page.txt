@@ -1,0 +1,470 @@
+PCB Manufacturing & Assembly Capabilities - JLCPCB
+This website requires JavaScript.
+Account Restriction Notice
+Get Coupon Here
+Coupons
+Country / Region
+Language
+undefined
+Currency
+USD $
+The currency you select is for reference only, payments must be made in US dollars.
+Save
+Language Coming Soon
+Ship to
+JLCPCB
+PCB Service
+FR-4 PCBs
+Flexible PCBs
+Metal Core PCBs
+High-Frequency PCBs
+PCBA Service
+PCB Assembly
+Parts Library
+More
+SMT Stencil
+PCB Layout
+Mechanical Services
+JLC3DP - 3D Printing
+JLCCNC - CNC Machining
+JLCCNC - Sheet Metal
+JLCMC - Mechanical Components
+Tools
+EasyEDA - PCB Design Tool
+JLCDFM -  DFM Check
+Impedance Calculator
+PI Stiffener Calculator
+More
+OSHWLAB - Open Source Hardware
+JLCPCB - Flexible Heater
+Products
+Capabilities
+Contact Us
+Online Chat>
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+Email Us>
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+WhatsApp>
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+Support
+Help Center
+Get instant answers. 24/7 Available.
+Blog
+Support
+About Us
+JLCPCB delivers one-stop electronic and mechanical manufacturing solutions to empower hardware innovators worldwide.
+Explore Us
+Why JLCPCB?
+Quality Assurance
+How We Work
+Certifications
+Company News
+About Us
+Search
+0
+Order Now
+Sign In
+Sign In
+Rigid PCB
+Manufacturing Capabilities
+JLCPCB offers 1-32 layer rigid PCB manufacturing and assembly services with various substrate thicknesses, surface finishes, and impedance control.
+Green
+Purple
+Red
+Yellow
+Blue
+White
+Black
+Get Instant Quote
+Rigid PCB Capabilities
+Flex PCB Capabilities
+PCBA Capabilities
+Stencil Capabilities
+PCB Layout Capabilities
+Flexible Heaters Capabilities
+PCB Specifications
+Features
+Capability
+Description
+Patterns
+Layer count
+1-32 Layers
+The number of copper layers in the PCB
+Controlled Impedance
+4/6/8/10/12/14/16/18/20/.../32 layers
+User Guide to the JLCPCB Impedance Calculator
+JLCPCB Impedance Calculator
+Impedance Tolerance
+±10%
+Material
+FR-4
+Grade A laminates from suppliers including Nan Ya, KB, Shengyi and etc.
+Aluminum-Core
+1-layer Aluminum-core PCBs
+Copper-Core
+1-layer copper-core PCBs with direct heatsink contacts to core (≥ 1 × 1 mm)
+RF PCB
+1 oz copper, 2-layer RF PCBs with Rogers and PTFE cores
+FR-4 Dielectric Constants
+4.5 (2-Layer PCB)
+7628 Prepreg 4.4
+3313 Perpreg 4.1
+2116 Perpreg 4.16
+Maximum Dimensions
+FR4(1-layer): 606 × 510 mm
+FR4(2-layer): 670 × 600 mm
+FR4(4-layer): 663 × 593 mm
+FR4(6-layer and above): 656 × 586 mm
+Rogers / PTFE Teflon PCB: 590 × 438 mm
+Aluminum PCB: 602 × 506 mm
+Copper PCB: 480 × 286 mm
+These limits apply to PCBs with thickness ≥ 0.8 mm. The thinner FR4 PCBs are 599 × 497 mm maximum.
+2-layer FR4 PCBs can reach a maximum size of 1020 × 600 mm.
+4-layer FR4 PCBs can reach a maximum size of 1016 × 596 mm.
+Minimum Dimensions
+FR4/Rogers/PTFE: 3 × 3 mm
+Castellated / Plated Edges: 10 × 10 mm
+Aluminum/Copper PCB: 5 × 5 mm
+These limits apply to PCBs with thickness ≥ 0.6 mm. Manual review required for thinner PCBs. Panelization is recommended for small-sized boards.
+Dimension Tolerance
+±0.1mm
+±0.1mm(Precision) and ±0.2mm(Regular) for CNC routing, and ±0.4mm for V-scoring
+Thickness
+0.4 – 4.5 mm
+Thickness for FR4 are: 0.4/0.6/0.8/1.0/1.2/1.6/2.0 mm (2.5 mm and above are for 12+ layer PCBs only)
+Thickness Tolerance
+(Thickness≥1.0mm)
+± 10%
+e.g. For the 1.6mm board thickness, the finished board thickness ranges from 1.44mm(T-1.6×10%) to 1.76mm(T+1.6×10%)
+Thickness Tolerance
+(Thickness
+± 0.1mm
+e.g. For the 0.8mm board thickness, the finished board thickness ranges from 0.7mm(T-0.1) to 0.9mm(T+0.1).
+Finished Outer Layer Copper
+2-layer: 1 oz / 2 oz / 2.5 oz / 3.5 oz / 4.5oz
+Multi-layer: 1 oz / 2 oz
+Finished Inner Layer Copper
+0.5 oz / 1 oz / 2 oz
+Finished copper weight of inner layer is 0.5oz by default.
+Soldermask
+Green, Purple, Red, Yellow, Blue, White, and Black.
+We use LPI (Liquid Photo Imageable) solder mask. This is the most common type of mask used today. Heat-cured ink soldermask is usually found on low-cost, single-sided PCBs.
+Surface Finish
+HASL (leaded / lead-free), ENlG, OSP (Single-sided FR-4, FPC, and aluminum PCBs are currently not supported for OSP)
+Aluminum PCBs:
+HASL only; FR-4/HDI boards with 6 or more layers, boards with a thickness ≤ 0.4 mm, high-frequency boards, copper-based PCBs, and FPCs do not support HASL.
+Drilling
+Features
+Capability
+Description
+Patterns
+Drill Diameter
+1-layer: 0.3 – 6.3 mm
+2-layer: 0.15 – 6.3 mm
+Multilayer: 0.15 – 6.3 mm
+Holes with diameter ≥ 6.3 mm are CNC routed from a smaller drilled hole.
+Min. drill diameter for 2- or more-layer PCBs is 0.15 mm (more costly!)
+Min. drill diameter for aluminum-core PCBs is 0.65 mm
+Min. drill diameter for copper-core PCBs is 1.0 mm
+Hole size Tolerance
+Through-holes: +0.13 / -0.08 mm
+Press-fit holes：±0.05 mm (Finished hole size: 0.55-2.0mm. Multilayer ENIG boards and circular holes only. Mention the specific holes in PCB Remark)
+e.g. for the 0.6mm hole size, the finished hole size between 0.52mm to 0.73mm is acceptable.
+To avoid soldermask or tin stuck in the hole, recommended PTH size≥0.5mm.
+Average Hole Plating Thickness
+18μm
+Hole Position Tolerance
+±0.05 mm
+Blind/Buried Vias
+Not supported
+Currently we don't support Blind/Buried Vias, only make through holes.
+Min. Via hole size/diameter
+0.15mm / 0.25mm
+1-layer (NPTH only): 0.3 mm hole size / 0.5 mm via diameter
+2-layer: 0.15mm hole size / 0.25mm via diameter
+Multilayer: 0.15 mm hole size / 0.25 mm via diameter
+① Via diameter should be 0.1mm(0.15mm preferred) larger than Via hole size.
+② Preferred Min. Via hole size: 0.2mm
+③ 0.15mm hole size with any size via diameter, and 0.2mm or 0.25mm hole size with via diameter less than 0.45mm, will cost more. Please select corresponding via size option when placing order.
+Min. Non-plated holes
+0.50mm
+Please draw NPTHs in the mechanical layer or keep out layer.
+Min. Plated Slots Width
+2-layer: 0.5mm
+Multi-layer: 0.35mm
+The minimum plated slot width is 0.5mm, which is drawn with a pad.
+The length of the slot should be at least 2 times of the width.
+Min. Non-Plated Slots
+1.0mm
+The minimum Non-Plated Slot Width is 1.0mm, please draw the slot outline in the mechanical layer(GM1 or GKO)
+Slot Hole size Tolerance
+Plated: +0.13 / -0.08 mm
+Non-plated: ±0.2mm
+Plated slot is made by drill tools.
+Non-plated slot is made by CNC.
+Via Hole-to-Hole Spacing
+0.2mm
+Pad Hole-to-Hole Spacing
+0.45mm
+Min. Castellated Holes
+0.5mm
+Castellated holes are metalized half-holes on PCB edges, commonly used on daughter boards to be soldered onto carrier PCBs.
+① Hole diameter (Φ): ≥ 0.5 mm
+② Hole to board edge (L): ≥ 1 mm
+③ Hole to hole (D): ≥ 0.5 mm
+④ Min. PCB size：10 × 10 mm
+⑤ Min. PCB thickness: 0.6 mm
+Plated Edges
+10 x 10mm
+Plated edges are copper-plated and ENIG treated. HASL is not supported.
+① Min. PCB size: 10 × 10 mm
+② Min. PCB thickness: 0.6 mm
+③ At least 3 breaks (more for larger PCBs) in the edge plating are required for support tab connections
+Blind Slot
+① Blind slot width (W): ≥1.0mm
+② Blind slot depth (D): ≥0.2mm
+③ Blind slot annular width (A): ≥0.3mm (The pad width of PTH blind slots)
+④ Safety distance (S): ≥0.2mm (The distance from NPTH blind slots to pad/traces/copper plane)
+⑤ Blind slot remaining thickness (R): ≥0.2mm (The distance from the bottom of the blind slot to the nearest inner copper layer/surface substrate)
+⑥ Supports 2-32-layer FR4 boards with a thickness of ≥0.8mm
+Backdrill
+Backdrill uses a secondary drilling process to control the depth of the hole, removing excess copper from the other layers of the via, thereby reducing its interference with the signal.
+①Supports 4-32-layer FR4 boards with a thickness of ≥0.8mm
+②Through-Hole Diaemter(D): 0.2-0.5mm(Epoxy filled after backdrilling)
+③Backdrill Diameter(W): typically 0.2mm larger than through-hole diameter
+④Backdrill Depth(L):layers with backdrilling, customizable
+⑤Dielectric Thickness(T): ≥0.15mm(from bottom of backdrill to the adjacent inner copper layer)
+⑥Safety Distance(S): ≥0.2mm(edge to pad/trace/copper safety distance)
+Rectangular Holes / Slots
+Not supported
+Rectangular holes and slots without rounded corners are not supported.
+Traces
+Features
+Capability
+Description
+Patterns
+Min. track width and spacing (1 oz)
+0.10 / 0.10 mm (4 / 4 mil)
+1- and 2-layer: 0.10 / 0.10 mm (4 / 4 mil)
+Multilayer: 0.09 / 0.09 mm (3.5 / 3.5 mil). 3 mil is acceptable in BGA fan-outs.
+Min. track width and spacing (2 oz)
+0.16 / 0.16 mm (6.5 / 6.5 mil)
+2-layer: 0.16 / 0.16 mm (6.5 / 6.5 mil)
+Multilayer: 0.15 / 0.15 mm (6 / 6 mil)
+Min. track width and spacing (2.5 oz)
+2 layer: 0.2/0.2mm(8mil/8mil)
+Min. track width and spacing (3.5 oz)
+2 layer: 0.25/0.25mm(10mil/10mil)
+Min. track width and spacing (4.5 oz)
+2 layer: 0.3/0.3mm(12mil/12mil)
+Track width tolerance
+±20%
+e.g. For a 0.1 mm track, the finished track width ranges from 0.08 and 0.12 mm.
+PTH annular ring
+≧0.20mm
+2-layer:
+1 oz: Recommended 0.25 mm or above; absolute minimum 0.18 mm
+2 oz: 0.254 mm or above
+Multilayer:
+1 oz: Recommended 0.20 mm or above; absolute minimum 0.15 mm
+2 oz: 0.254 mm or above
+NPTH pad annular ring
+≧0.45mm
+Recommended 0.45 mm or more. This is to allow a 0.2 mm ring of copper to be removed around the hole for the sealing film to attach. Pad sizes smaller than the recommended value can result in the annular ring being very thin or completely missing.
+BGA
+0.2mm
+① 0.2mm-0.25mm BGA pad diameter requires ENIG
+② BGA pad to trace clearance ≥ 0.1 mm (min. 0.09 mm for multilayer boards)
+③ Vias can be placed within BGA pads using filled and plated-over vias
+Trace coils
+0.15/0.15mm
+Minimum trace width/clearance: 0.15/0.15mm,  when traces are covered by solder mask (1oz).
+Minimum trace width/clearance: 0.25/0.25mm,  when traces are NOT covered by solder mask (1oz). ENIG only(high risk of short circuit with HASL)
+Hatched grid width and spacing
+0.25 mm
+Same-net track spacing
+0.25mm
+Inner layer via hole to copper clearance
+0.2mm
+Inner layer PTH pad hole to copper clearance
+0.3mm
+Pad to track clearance
+0.1mm
+Min. 0.1 mm (stay well above if possible). Min. 0.09 mm locally for BGA pads
+SMD pad to pad clearance (different nets)
+0.15mm
+More details of SMD pad spacing:
+SMD Components Minimum Spacing
+Minimum SMD pad: 0.25mm × 0.25mm
+Via hole to Track
+0.2mm
+PTH to Track
+0.28mm
+0.35mm is recommended, minimum 0.28mm
+NPTH to Track
+0.2mm
+Soldermask
+Features
+Capability
+Description
+Patterns
+Soldermask Expansion
+1:1
+LDI equipment upgraded in June 2025. Pad size:soldermask opening can be 1:1(Previous production file will be followed in Reorder).
+Keep at least 0.09 mm clearance between soldermask openings and neighboring traces.
+Soldermask bridge
+0.10mm
+1oz:
+Min. pad spacing: 0.10 mm (green, red, yellow, blue, purple)
+Min. pad spacing: 0.13 mm (black, white)
+2oz:
+Min. pad spacing: 0.20 mm (any color)
+Plugged vias
+Filled with soldermask
+Vias are filled with soldermask for an opaque finish.
+Click for detailed explanation
+① Filled vias must not have soldermask openings on either side
+② Filled vias should have ≥ 0.35 mm clearance from other soldermask openings (e.g. pads)
+③ Filled vias must be no wider than 0.5 mm diameter
+JLCPCB Via-in-Pad Process
+Epoxy Filled & Capped
+Copper paste Filled&Capped
+Vias are filled with epoxy resin or copper paste and then plated over to achieve an opaque and smooth finish.
+Click for detailed explanation
+① Vias are filled and plated over. Choose copper paste filling for applications requiring high thermal conductivity.
+② This process is the default for 6-layer and above multilayer boards.
+③ Compatible with via diameters from 0.15 to 0.55 mm.
+Solder mask dielectric constant
+3.8
+Solder mask ink thickness
+≥ 10μm
+Legend
+Features
+Capability
+Description
+Patterns
+Minimum Line Width
+≥0.15mm
+Characters width less than 0.15mm will be unidentifiable.
+Minimum text height
+40 mil (1.0mm)
+Characters height less than 40 mil(1.0mm) will be unidentifiable.
+Character width to height ratio
+1:6
+The preferred ratio of width to height is 1:6.
+Hollow-carved Character width to height ratio
+1:6
+The preferred ratio of width to height is 1:6
+Pad To Silkscreen
+0.15mm
+The Minimum Distance Between Pad and Silkscreen is 0.15mm.
+Outline
+Features
+Capability
+Description
+Patterns
+Routed
+0.2mm
+① Copper clearance from routed board edges: ≧0.2 mm
+② Copper clearance from routed slots: ≧0.2 mm
+③ Dimension tolerance for routed board edges: ±0.2 mm (regular precision); ±0.1 mm (high precision)
+④ Minimum dimension 50*50mm for high precision, and at least 3 tooling holes with minimum 1.5mm diameter on different corners.
+⑤ Minimum slot width for aluminum/copper core PCB: 1.6mm.
+V-Cut
+0.4mm
+① Copper clearance from V-cut board edges: ≧0.4 mm
+② Dimension tolerance for V-cut board edges: ±0.4 mm. PCB thickness ≥ 0.6 mm
+③ Zero panel board spacing by default. Alternatively, V-cut along one direction with no spacing and route along the other direction with 1.6 or 2 mm board spacing.
+④ Min. panel dimensions: 70 × 70 mm; max. panel dimensions: 475 × 475 mm
+⑤ V-cut groove angle: 25°
+⑥Minimum spacing between two v-cuts: 2mm(3mm is recommended)
+Mouse bites Panel
+0.2mm
+① Copper clearance from non-mouse-bite board edges: ≧0.2 mm
+② Dimension tolerance for non-mouse-bite board edges: ±0.2 mm (regular precision); ±0.1 mm (high precision)
+③ Panel board spacing: 1.6 or 2 mm
+④ Serrated edges will remain after depanelization
+⑤ Minimum tooling edge width: 3 mm. For SMT assembly at JLCPCB, use 5 mm tooling edges, 2 mm tooling holes, and 1 mm fiducials centered at 3.85 mm from the panel edges.
+⑥ Recommended diameter of mouse bite is 0.5mm-0.8mm; Recommended distance between the two mouse-bites is 0.2-0.3mm. The minimum width of breakaway tab is 4mm. For breakaway with mouse-bites, the minimum width is 5mm.
+Panelization with space
+2mm
+The spacing between boards should be ≥ 2 mm, as narrow spacing results in difficulties for routing and V-cut.
+Panel of Circular PCBs
+≥20mmx20mm
+The single round board size should be≥20mmx20mm when choose panel by JLCPCB.
+Panelize with stamp holes and add tooling strips on four board edges
+FAQs about Rigid PCB Capabilities
+What is the maximum number of layers supported by JLCPCB for standard production?
+JLCPCB supports up to 32 layers in standard production. Layers from 1 to 6 offer the optimal balance between cost, lead time, and reliability. For designs exceeding 10 layers, we recommend submitting the stack-up diagram for engineering review prior to ordering to ensure manufacturability and controlled impedance performance.
+Does JLCPCB provide impedance control, and what tolerance can be achieved?
+Yes, JLCPCB offers impedance control for multi-layer boards. The standard tolerance is ±10%. Tighter tolerance of ±5% is available upon special request, which requires controlled dielectric materials, precise stack-up design, and may involve additional verification.
+What are the key differences in manufacturing capabilities between standard and advanced options?
+Standard options include mechanical drilling, regular trace/space, and common surface finishes with faster lead times. Advanced options such as blind/buried vias, HDI (laser vias), heavy copper (up to 3oz), and tight impedance control provide higher design density and performance but typically require DFM review and may increase both cost and production time.
+Which factors most significantly affect PCB board thickness and how can it be controlled?
+Board thickness is primarily determined by the number of layers, copper weight, core and prepreg thickness, and surface finish. JLCPCB offers standard thicknesses from 0.4 mm to 3.2 mm. We recommend specifying the desired finished thickness in the order notes or stack-up drawing so our engineers can optimize the build-up accordingly.
+How does panelization affect pricing and manufacturing quality?
+Proper panelization significantly reduces unit cost by maximizing material utilization and improving production efficiency. JLCPCB supports V-Scoring and Stamp Hole (Mouse Bite) panelization. We recommend maintaining a minimum 2 mm spacing between boards and 5–8 mm handling rails to ensure mechanical stability during assembly and shipping.
+Rigid PCBs to Your Specs
+Upload your rigid board Gerber files now to experience industry-leading production speed and certified quality control.
+See PCB Fab FAQs
+Get Instant Quote
+Online Chat >
+Chat with our live agent for fast reply.
+Mon-Fri: 24 hours, Sat: 9am-6pm, GMT+8
+Email Us >
+Contact us at support
+jlcpcb.com
+Typically reply within hours.
+Help Center >
+Get instant answers.
+24/7 Available.
+Products
+FR-4 PCBs
+Flexible PCBs
+Metal Core PCBs
+High-Frequency PCBs
+PCBA Service
+PCB Layout
+SMT Stencil
+Flex Heater
+Support
+Help Center
+Contact Us
+Shipping & Delivery
+Payment Methods
+How to Order
+How to Track
+After-Sales Service
+Blog
+Company
+About Us
+Quality Assurance
+How We Work
+Certifications
+Security
+Environment
+JLCAPI
+News
+Cooperation
+Electronics
+EasyEDA
+JLCPCB
+JLCDFM
+LCSC
+OSHWLAB
+Mechanical
+JLC3DP
+JLCCNC
+JLCMC
+CONNECT WITH US
+© 2026 JLCPCB.COM All Rights Reserved.
+Privacy Policy
+Terms & Conditions
+Cookies Policy
+Get Coupon >
+Live Chat >
+Home
+Cart
+Files
+Message
+Me

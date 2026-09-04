@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Legend (PCB_TEXT) corrections on the routed boards, by text content, no re-route. Usage: silk_fix_all.py <board.kicad_pcb> <key>
-key: a|b|c|d|e1|e2|ring. Rules: ("match", {"text"?, "pos"?, "layer"?, "size"?, "angle"?, "halign"?, "delete"?}); match = prefix of the current text."""
+key: a|b|c|d|e1|e2 (the spacer ring R1 is retired with C5). Rules: ("match", {"text"?, "pos"?, "layer"?, "size"?, "angle"?, "halign"?, "delete"?}); match = prefix of the current text."""
 import sys, pcbnew
 from pcbnew import VECTOR2I, FromMM
-OX, OY = {"c": (297.0, 210.0), "e2": (200.0, 20.0), "ring": (60.0, 30.0)}.get(sys.argv[2], (150.0, 110.0))
+OX, OY = {"c": (297.0, 210.0), "e2": (200.0, 20.0)}.get(sys.argv[2], (150.0, 110.0))
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 F, B = pcbnew.F_SilkS, pcbnew.B_SilkS
 RULES = {
@@ -23,7 +23,7 @@ RULES = {
  "c": [("MESHSAT FIELD KIT  -  CONTROL PANEL PCB-C", dict(text="MESHSAT FIELD KIT  -  CONTROL PANEL")),
        ("TD2 7in glass 189.32", dict(layer=B)), ("CONNECTOR END = PORT", dict(layer=B)), ("TAPE", dict(delete=True)),
        ("BACK WALL (+Y)", dict(layer=B, pos=(-160, 139.6))), ("FRONT WALL (-Y)   v v v", dict(layer=B)), ("PORT (-X)", dict(layer=B)), ("STARBOARD (+X)", dict(layer=B)),
-       ("PCB-C UNDERSIDE - faces PCB-B", dict(text="PCB-C UNDERSIDE (REV A, C4, MESHSAT-709, 2026-09-03) - faces PCB-B - panel electronics, ribbon J_PANEL, leads J_X1202SW / J_PIJ2"))],
+       ("PCB-C UNDERSIDE", dict(text="PCB-C UNDERSIDE (REV A, C5, MESHSAT-709, 2026-09-05) - sealed face: plugged vias, gasket band, silicone beads on the LED joints - faces PCB-B - ribbon J_PANEL (SMD), leads J_MAINSW / J_PIJ2 on solder lands"))],
  "d": [("DMR858M 5 W UHF on 2 x 1x12 sockets", dict(text="DMR858M on 2x 1x12 sockets 8.5 mm + M2.5 x 11 standoffs, heatsink up", layer=B, pos=(10, -8.5), size=0.85)),
        ("SMA east -> UHF bulkhead", dict(text="SMA east -> UHF bulkhead | USB-C west (unplug the module to configure) | pin 1 = VCC (NE)", layer=B, pos=(10, -11.5), size=0.8)),
        ("rows and holes per NiceRF", dict(text="rows and holes per NiceRF datasheet V1.2 p.10", layer=B, pos=(10, -14.5), size=0.8)),
@@ -35,7 +35,6 @@ RULES = {
         ("F1 5A", dict(text="F1 7.5A"))],
  "e2": [("SMA F-F", dict(delete=True)),
         ("MESHSAT PCB-E2 RF JUNCTION", dict(text="MESHSAT PCB-E2 RF JUNCTION  -  device pigtails above, wall pigtails below  -  RF HAZARD DURING TX", pos=(0, 9.5), size=1.4))],
- "ring": [("MESHSAT PCB-C RING", dict(text="RING 1.0", pos=(-50.2, 0), angle=90, size=1.0))],
  "a2": [("MESHSAT FIELD KIT  -  PCB-A POWER", dict(pos=(48, 76.5))),
         ("MESHSAT-709  |  285 x 160", dict(pos=(48, 73.3))),
         ("PCB-A UNDERSIDE - on 6 mm spacers", dict(text="PCB-A UNDERSIDE - 6 mm spacers on the dock strip; J_DOCK pins land on PCB-E1", pos=(45, -76.0))),
