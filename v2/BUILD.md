@@ -38,6 +38,8 @@ Modules that mount on the boards (one kit): Raspberry Pi 5 8 GB with active cool
 
 Battery module: twelve Samsung INR18650-35E in parallel (1S12P, 40.2 Ah minimum from the specification, about 0.6 kg of cells), 0.15 x 8 mm nickel strip, fish paper, blue PVC sleeve, a Littelfuse MAXI 40 A blade with its in-line holder on the positive lead, an Amass XT60 pair on 12 AWG silicone, and a Semitec 103AT-2 thermistor taped to a cell for the charger's temperature window. The single-cell protection board is the documented Batteryspace PCB-LIS1A15 (15 A continuous, 20 A for five minutes, 35 A trip, 65 x 10 x 2.5 mm; appendix 32.31). Spot welder or a shop that welds packs. The module lives in a cradle on the case floor and blind-mates to the dock, so it is not strapped to a board.
 
+Solar (optional): a bare 12 V class photovoltaic panel of your choice, up to about 40 W, wired to the second contact pair of the shore plug; the tracker on the dock strip regulates it (appendix 32.16 F). No panel part is prescribed.
+
 Hardware per `docs/ASSEMBLY.md` section 1: four M3 stainless rods with Nyloc nuts, spacers for the 13.4 mm dock gap, 35 mm and 59 mm bay spacers, four M2.5 x 22 female-female standoffs with M2.5 x 6 screws for the Pi, four M3 x 6 standoffs for the raised dock block, 16 x M3 x 8 pan head for the panel frame.
 
 Consumables: 3M 467MP or 9495LE transfer tape (display and e-paper), 3M VHB 5952 pads (dock strip), MG Chemicals 422B acrylic conformal coating, kapton for the masks, IPA.
