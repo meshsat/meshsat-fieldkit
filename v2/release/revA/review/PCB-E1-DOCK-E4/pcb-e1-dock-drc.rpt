@@ -1,15 +1,15 @@
 ** Drc report for pcb-e1-dock.kicad_pcb **
-** Created on 2026-09-04T17:36:34+0200 **
+** Created on 2026-09-04T19:03:03+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 117 DRC violations **
-[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; 3 spokes connected to isolated island)
-    Local override; error
-    @(213,0000 mm, 221,0000 mm): Zone 'GND pour B east' [GND] on B.Cu, priority 0
-    @(217,2500 mm, 213,4750 mm): PTH pad 2 [GND] of J_TS
+** Found 13 DRC violations **
 [starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; 3 spokes connected to isolated island)
     Local override; error
     @(213,0000 mm, 221,0000 mm): Zone 'GND pour F east' [GND] on F.Cu, priority 0
+    @(217,2500 mm, 213,4750 mm): PTH pad 2 [GND] of J_TS
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; 3 spokes connected to isolated island)
+    Local override; error
+    @(213,0000 mm, 221,0000 mm): Zone 'GND pour B east' [GND] on B.Cu, priority 0
     @(217,2500 mm, 213,4750 mm): PTH pad 2 [GND] of J_TS
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
@@ -21,16 +21,16 @@
     @(150,0000 mm, 219,3000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> TEN 40  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker 15 V -> ideal diode  |  battery module XT60 -> block lands  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(150,0000 mm, 219,3000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> TEN 40  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker 15 V -> ideal diode  |  battery module XT60 -> block lands  |  VHB pads to the floor' on F.Silkscreen
     @(95,9000 mm, 219,4700 mm): Segment of F2 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(70,0000 mm, 162,5000 mm): PCB text 'F1 7.5A' on F.Silkscreen
-    @(150,0000 mm, 162,3000 mm): PCB text 'MESHSAT PCB-E1 DOCK (E4)  -  shore 9-36 V and panel tracker -> 12 V 40 W -> raised block -> PCB-A  -  seven blind-mate clamps  -  rods through H1/H2' on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(158,1900 mm, 220,3100 mm): Segment of L1 on F.Silkscreen
     @(150,0000 mm, 219,3000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> TEN 40  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker 15 V -> ideal diode  |  battery module XT60 -> block lands  |  VHB pads to the floor' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(150,0000 mm, 162,3000 mm): PCB text 'MESHSAT PCB-E1 DOCK (E4)  -  shore 9-36 V and panel tracker -> 12 V 40 W -> raised block -> PCB-A  -  seven blind-mate clamps  -  rods through H1/H2' on F.Silkscreen
+    @(70,0000 mm, 162,5000 mm): PCB text 'F1 7.5A' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(150,0000 mm, 219,3000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> TEN 40  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker 15 V -> ideal diode  |  battery module XT60 -> block lands  |  VHB pads to the floor' on F.Silkscreen
+    @(158,1900 mm, 220,3100 mm): Segment of L1 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(173,8100 mm, 203,6900 mm): Segment of L1 on F.Silkscreen
@@ -41,329 +41,17 @@
     @(210,0000 mm, 185,0000 mm): PCB text 'SHORE' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(112,1000 mm, 219,4700 mm): Segment of F2 on F.Silkscreen
     @(150,0000 mm, 219,3000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> TEN 40  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker 15 V -> ideal diode  |  battery module XT60 -> block lands  |  VHB pads to the floor' on F.Silkscreen
+    @(112,1000 mm, 219,4700 mm): Segment of F2 on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(150,0000 mm, 219,3000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> TEN 40  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker 15 V -> ideal diode  |  battery module XT60 -> block lands  |  VHB pads to the floor' on F.Silkscreen
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(152,9880 mm, 207,1500 mm): Via [/TRK_BOOST2] on F.Cu - B.Cu
-[isolated_copper]: Isolated copper fill
+[via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour F (isolated side)' [DC_N] on F.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N pour B (isolated side)' [DC_N] on B.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(35,0000 mm, 221,0000 mm): Zone 'DC_N plane In1 (isolated side)' [DC_N] on In1.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(90,0000 mm, 221,0000 mm): Zone 'PV_P pour In2 (panel input)' [PV_P] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(34,0000 mm, 210,0000 mm): Zone 'SHORE_12V pour In2 (converter output to the block lands)' [SHORE_12V] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(180,0000 mm, 221,0000 mm): Zone 'TRK_OUT pour In2 (tracker output)' [TRK_OUT] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(180,0000 mm, 221,0000 mm): Zone 'TRK_OUT pour In2 (tracker output)' [TRK_OUT] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(180,0000 mm, 221,0000 mm): Zone 'TRK_OUT pour In2 (tracker output)' [TRK_OUT] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(180,0000 mm, 221,0000 mm): Zone 'TRK_OUT pour In2 (tracker output)' [TRK_OUT] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(180,0000 mm, 221,0000 mm): Zone 'TRK_OUT pour In2 (tracker output)' [TRK_OUT] on In2.Cu, priority 0
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(180,0000 mm, 221,0000 mm): Zone 'TRK_OUT pour In2 (tracker output)' [TRK_OUT] on In2.Cu, priority 0
+    @(148,0380 mm, 199,4410 mm): Via [/TRK_CSP] on F.Cu - B.Cu
 
 ** Found 0 unconnected pads **
 
