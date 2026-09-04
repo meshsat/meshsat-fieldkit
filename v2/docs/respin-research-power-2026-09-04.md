@@ -99,7 +99,9 @@ BQ25798 (or the BQ25792 when MPPT/backup are not wanted and stock decides; the p
 ### Recommendation, item 2
 BQ34Z100-G1 with a 5 mOhm 3 W 2512 low-side shunt (RALEC LR2512-23R005F4), Kelvin-connected SRP/SRN, external NTC, I2C to the Pi; the 42 Ah capacity is entered with the SCALED configuration (p15). Fallback with no shunt: MAX17048 (voltage-based, any capacity, but no coulomb counting under 15 A bursts). The BQ27441-G1 is ruled out by its plus or minus 25 mV sense range (p7).
 
-## 3. TPS61288 rails (tps61288.pdf, SLVSFP3C)
+## 3. TPS61288 rails
+
+*(Note 4 Sep night: the rail A caveat below (13.1 A peak against the 12 A guaranteed limit) was written for a single module rail; the owner's ruling of appendix 32.21 splits the module loads over two converters, each about 6.5 A on the cell side at 3.0 V, so the caveat and the open decision at the end of this item are closed.)* (tps61288.pdf, SLVSFP3C)
 
 ### Device facts
 - 18 V, 15 A fully integrated synchronous boost, 2.5 x 3.0 mm VQFN-HR 11-pin (RQQ) (p1, p5); VIN 2.0 to 18 V, 2.4 V minimum for start-up (p1); recommended operating: VOUT 4.5 to 18 V, effective L 0.8 to 5.6 uH, effective CIN 1 to 10 uF, effective COUT 10 to 1000 uF (p5).
