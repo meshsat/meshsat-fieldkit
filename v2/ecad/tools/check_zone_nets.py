@@ -11,9 +11,12 @@ for z in b.Zones():
     n = z.GetNetname()
     if pads[n] == 0:
         print("FAIL zone %r on %s: net %r has no pads (phantom net)" % (z.GetZoneName(), b.GetLayerName(z.GetLayer()), n)); fails += 1
-    seen[(n, z.GetLayer(), z.GetAssignedPriority())].append(z.GetZoneName())
-for (n, L, pr), names in seen.items():
-    if len(names) > 1:
-        print("FAIL %d zones of net %r on %s share priority %d: %s" % (len(names), n, b.GetLayerName(L), pr, names)); fails += 1
+    seen[(n, z.GetLayer(), z.GetAssignedPriority())].append(z)
+# KiCad's rule: zones that INTERSECT must carry distinct priorities; side-by-side zones of one net may share one
+for (n, L, pr), zs in seen.items():
+    for i in range(len(zs)):
+        for j in range(i + 1, len(zs)):
+            if zs[i].GetBoundingBox().Intersects(zs[j].GetBoundingBox()):
+                print("FAIL zones %r and %r of net %r on %s overlap at the same priority %d" % (zs[i].GetZoneName(), zs[j].GetZoneName(), n, b.GetLayerName(L), pr)); fails += 1
 print("zone nets: %s (%d zones checked)" % ("ALL PASS" if not fails else "%d FAIL" % fails, sum(1 for z in b.Zones() if not z.GetIsRuleArea())))
 sys.exit(1 if fails else 0)

@@ -184,7 +184,7 @@ def outer_pour(netname, name, rect, layers=(pcbnew.F_Cu, pcbnew.B_Cu), priority=
         z.SetMinThickness(FromMM(0.5)); z.SetLocalClearance(FromMM(0.3)); o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
         for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
         z.SetAssignedPriority(priority); board.Add(z)   # bars 2, taps 3: intersecting zones must carry distinct priorities
-outer_pour("CELL+", "node bar south", (-160, -79, -133, -75)); outer_pour("CELL+", "node riser west", (-163, -79, -158, -38.5)); outer_pour("CELL+", "node bar north", (-163, -42, -50, -38.5))
+outer_pour("CELL+", "node bar south", (-160, -79, -133, -75)); outer_pour("CELL+", "node riser west", (-163, -79, -158, -38.5), priority=1); outer_pour("CELL+", "node bar north", (-163, -42, -50, -38.5))
 for k in range(4): outer_pour("CELL+", "pin tap %d" % (k + 1), (-148.5 + 4 * k, -77, -145.5 + 4 * k, -72), priority=3)
 for ref in ("F3", "F4", "F5", "F2"):
     fx = placed[ref].Pads()[0].GetPosition().x / 1e6 - OX if ref in placed else None
