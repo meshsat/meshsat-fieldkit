@@ -1,0 +1,255 @@
+# Meshtastic on Linux-Native Devices
+
+This page outlines the setup of Meshtastic on Linux-native devices, utilizing portduino to run the Meshtastic firmware under Linux.
+
+## Prerequisites and Hardware Compatibility
+
+Before proceeding with the setup, ensure the device meets the following requirements:
+
+### Tested Devices
+
+-   Raspberry Pi zero, zero 2 , 3,4, Pi 400, and Pi 5.<sup><a href="#user-content-fn-1" id="user-content-fnref-1" aria-describedby="footnote-label" data-footnote-ref="true">1</a></sup>
+-   Ubuntu 22.04 X86_64 with a CH341-SX1262 DIY dongle.<sup><a href="#user-content-fn-2" id="user-content-fnref-2" aria-describedby="footnote-label" data-footnote-ref="true">2</a></sup>
+-   Debian GNU/Linux trixie/sid riscv64 on Cvitek CV180X ASIC, C906 (Milk-V Duo), on the SPI bus.
+
+### Hardware Compatibility
+
+<span class="admonitionIcon_x0Jt"></span>Warning
+
+UART HATs and SX1302/SX1303 chip-based HATs are not supported. Only hats that use a SPI radio can work with Meshtastic.
+
+-   Tested radios include the Waveshare SX126X (SPI version), Adafruit RFM9x, and Elecrow Lora RFM95 IOT.
+-   Support for I2C displays, SPI displays, and keyboard input has been confirmed. It is necessary to be aware of potential pin conflicts when stacking hats.
+
+### System Requirements
+
+-   The Meshtastic binary, `meshtasticd`, necessitates root access or a user with permissions to access GPIO, SPI, and other interfaces.
+-   A Linux distribution compatible with the Meshtastic installation package, which is compiled for Debian Bookworm and not compatible with Bullseye.
+
+## Installation
+
+### Installing Meshtasticd
+
+-   Necessary system libraries should be installed before building or installing Meshtastic.
+
+``` prism-code
+sudo apt install libgpiod-dev libyaml-cpp-dev libbluetooth-dev
+```
+
+-   And optionally for web server support
+
+``` prism-code
+sudo apt install openssl libssl-dev libulfius-dev liborcania-dev
+```
+
+-   The .deb Package is available as <a href="https://github.com/meshtastic/firmware/releases/latest" rel="noopener noreferrer" target="_blank">part of the release</a>, installing the binary, a systemd service, and a config file. It is compiled for Debian Bookworm and incompatible with Bullseye.
+
+``` prism-code
+wget https://github.com/meshtastic/firmware/releases/download/v{version}/meshtasticd_{version}_arm64.deb
+sudo apt install ./meshtasticd_{version}arm64.deb
+```
+
+## Configuration
+
+### Hardware Interfaces
+
+For devices requiring SPI or I2C:
+
+-   This can be done by running the below commands on a Raspberry Pi (2-5)
+
+``` prism-code
+sudo raspi-config nonint set_config_var dtparam=spi on /boot/firmware/config.txt # Enable SPI
+sudo raspi-config nonint set_config_var dtparam=i2c_arm on /boot/firmware/config.txt # Enable i2c_arm
+
+# Ensure dtoverlay=spi0-0cs is set in /boot/firmware/config.txt without altering dtoverlay=vc4-kms-v3d or dtparam=uart0
+sudo sed -i -e '/^\s*#\?\s*dtoverlay\s*=\s*vc4-kms-v3d/! s/^\s*#\?\s*(dtoverlay|dtparam\s*=\s*uart0)\s*=.*/dtoverlay=spi0-0cs/' /boot/firmware/config.txt
+
+# Insert dtoverlay=spi0-0cs after dtparam=spi=on if not already present
+if ! sudo grep -q '^\s*dtoverlay=spi0-0cs' /boot/firmware/config.txt; then
+    sudo sed -i '/^\s*dtparam=spi=on/a dtoverlay=spi0-0cs' /boot/firmware/config.txt
+fi
+```
+
+-   Or this can be accomplished by manually enabling SPI support in `/boot/firmware/config.txt`:
+
+``` prism-code
+dtparam=spi=on
+dtoverlay=spi0-0cs
+```
+
+-   I2C support is enabled with:
+
+``` prism-code
+dtparam=i2c_arm=on
+```
+
+### Meshtasticd Configuration
+
+-   The meshtasticd configuration is at `/etc/meshtasticd/config.yaml` by default. If a `config.yaml` is found in the current directory, that takes precedence. And a config file specified with the `-c/--config` option has the highest precedence.
+
+To enable a LoRa radio connected to your device, uncomment the appropriate lines in the config file, including the Module line. As an example, the Waveshare SX126X module would have a Lora section that looks like this:
+
+``` prism-code
+Lora:
+  Module: sx1262 # Waveshare SX126X XXXM
+  DIO2_AS_RF_SWITCH: true
+  CS: 21
+  IRQ: 16
+  Busy: 20
+  Reset: 18
+```
+
+<span class="admonitionIcon_x0Jt"></span>info
+
+The config.yaml file is sensitive to spacing, so ensure that the indentation and spacing are correct.
+
+### Web Server
+
+-   Meshtasticd has web server support starting with release 2.3.0 To enable this:
+
+``` prism-code
+Webserver:
+  Port: 443 # Port for Webserver & Webservices
+  RootPath: /usr/share/doc/meshtasticd/web # Root Dir of WebServer
+```
+
+### GPS Support
+
+-   You can enable UART by running the below commands (which additionally will disable serial console tty)
+
+``` prism-code
+sudo raspi-config nonint do_serial_hw 0 # Enable Serial Port (enable_uart=1)
+sudo raspi-config nonint do_serial_cons 1 # Disable Serial Console
+```
+
+-   Or you can manually enable UART for GPS hats by making modifications in `/boot/firmware/config.txt`:
+
+``` prism-code
+# Needed for all Pi device.
+enable_uart=1
+
+# Needed for the Pi 5 only.
+dtoverlay=uart0
+```
+
+-   The correct port for UART GPS on the Pi 5 after a reboot is `/dev/ttyAMA0`.
+-   The correct port for UART GPS on earlier Pi versions after a reboot is `/dev/ttyS0`.
+-   You may need to disable the serial console on a Pi and then reboot
+
+``` prism-code
+sudo raspi-config nonint do_serial_cons 1 # Disable Serial Console
+```
+
+### Persistence
+
+-   The persistent .proto db files of the portduino version of meshtasticd are stored under: `/root/.portduino/default/prefs/`.
+
+### Advanced Setup and Troubleshooting
+
+#### Creating and Enabling a Systemctl Script (non .deb installs)
+
+To configure the device to start and stop meshtasticd as as service using systemctl you can setup the service unit using the instructions below.
+
+Create the service unit file:
+
+Create a new file in the /etc/systemd/system/ directory with a name like meshtasticd.service.
+
+``` prism-code
+sudo nano /etc/systemd/system/meshtasticd.service
+```
+
+Add the following content to the file:
+
+``` prism-code
+[Unit]
+Description=Meshtastic Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/meshtasticd
+Restart=always
+User=root
+Group=root
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Reload systemd to recognize the new service:
+
+``` prism-code
+sudo systemctl daemon-reload
+```
+
+Enable the service to start on boot:
+
+``` prism-code
+sudo systemctl enable meshtasticd
+```
+
+##### Starting and Stopping the Service
+
+Start the service:
+
+``` prism-code
+sudo systemctl start meshtasticd
+```
+
+Check the status of the service:
+
+``` prism-code
+sudo systemctl status meshtasticd
+```
+
+Stop the service:
+
+``` prism-code
+sudo systemctl stop meshtasticd
+```
+
+This will give you a detailed view of the service status and any potential errors.
+
+By following these steps, you set up a systemd service for meshtasticd that will start automatically at boot and restart if it crashes. You can manage it using the standard systemctl commands (start, stop, restart, status, etc.).
+
+#### View Logs of Mesthastic
+
+To view the log output of the meshtasticd service, use the below command to read them out of the system journal.
+
+``` prism-code
+journalctl -u meshtasticd -b
+```
+
+#### Installation of drivers
+
+-   Installation of drivers for CH341 is required for Ubuntu 22.04 and other systems for SPI/I2C/GPIO support.
+
+``` prism-code
+git clone https://github.com/frank-zago/ch341-i2c-spi-gpio.git
+cd ch341-i2c-spi-gpio
+make
+sudo insmod ch341-core.ko
+sudo insmod gpio-ch341.ko
+sudo insmod i2c-ch341.ko
+sudo insmod spi-ch341.ko
+```
+
+-   Devices with kernels older than 5.16 may need to blacklist ch341, while kernels 6.0 and newer are observed to work more reliably.
+
+## CLI Configuration
+
+Interaction with Meshtastic can be conducted via the command line:
+
+``` prism-code
+meshtastic --host localhost ...
+```
+
+## Footnotes
+
+1.  <div id="user-content-fn-1">
+
+    While the Raspberry Pi Zero has been tested with meshtasticd, building as a native ARM32 binary has proven challenging. As a workaround, consider building on a Raspberry Pi 4 or 5 with a 32-bit OS and copying the output file to the Pi Zero. <a href="#user-content-fnref-1" class="data-footnote-backref" aria-label="Back to reference 1" data-footnote-backref="">↩︎</a>
+
+2.  <div id="user-content-fn-2">
+
+    **Limited Functionality with CH341-SX1262 Device:** Please be aware that the CH341-SX1262 device is currently experiencing partial functionality issues. For reasons yet to be determined, this device struggles with sending packets larger than a few bytes. <a href="#user-content-fnref-2" class="data-footnote-backref" aria-label="Back to reference 2" data-footnote-backref="">↩︎</a>

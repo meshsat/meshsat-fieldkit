@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""PCB-B phase B3 (B4 re-layout positions): bring the schematic netlist into the B1 mechanical board.
+"""PCB-B phase B3 (B13 positions): bring the schematic netlist into the B1 mechanical board.
 Usage: gen_pcb_b3.py <board.kicad_pcb> <netlist.net>
-- reuses footprints already on the board by reference (J_GPIO1, J_RTL1, J_ZB1, J_DCF77)
-- places connectors at planned case-frame positions, small parts packed into regions near their connectors
-- creates nets, assigns pads, adds GND (In1) and +5V (In2) planes, saves
+- reuses footprints already on the board by reference (J_RTL1, J_DCF77, the slots and holes)
+- places the connectors and the module site at planned case-frame positions, small parts packed into regions near them
+- creates nets, assigns pads, adds the GND (In1) and +5V_M1 (In2) planes and the +5V_PI pour at the module, saves
 """
-import sys, re, math, pcbnew
+import sys, re, math, os, pcbnew
 from pcbnew import VECTOR2I, FromMM
 BOARD, NET = sys.argv[1], sys.argv[2]
 OX, OY = 150.0, 110.0
@@ -37,9 +37,10 @@ print("netlist: %d components, %d nets" % (len(comps), len(nets)))
 board = pcbnew.LoadBoard(BOARD)
 existing = {fp.GetReference(): fp for fp in board.GetFootprints()}
 LIBS = "/usr/share/kicad/footprints/"
+MSLIB = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(BOARD)), "..", "meshsat.pretty"))
 def load(fpid):
     lib, name = fpid.split(":")
-    fp = pcbnew.FootprintLoad(LIBS + lib + ".pretty", name)
+    fp = pcbnew.FootprintLoad(MSLIB if lib == "meshsat" else LIBS + lib + ".pretty", name)
     if fp is None: raise SystemExit("footprint missing: " + fpid)
     return fp
 def centre_on(fp, x, y):
@@ -58,9 +59,14 @@ def place(ref, x, y, rot=0.0, back=False):
         bb = fp.GetBoundingBox(False, False)
         print("  %-10s centred at (%.1f, %.1f) size %.1f x %.1f %s" % (ref, (bb.GetLeft() + bb.GetRight()) / 2e6 - OX, OY - (bb.GetTop() + bb.GetBottom()) / 2e6, bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, "BACK" if fp.IsFlipped() else ""))
     return fp
-# --- fixed positions (case frame)
-FIXED = {"J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-92, -48, 0), "J_PANEL": (86, 68, 0), "J_TD2": (-50, 77, 0), "J_USB_UP1": (-30, -78, 180), "J_USB_UP2": (30, -78, 180),
-         "J_TCALL1": (-16, 46, 90), "J_XIAO1": (-76, 60, 90), "J_TBEAM1": (100, 57, 0), "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90)}
+# --- fixed positions (case frame), appendix 32.35: the module centred (-88, 0) with its GPIO connector west and the high-speed connector east
+#     (the two receptacles are separate parts U30A and U30B so JLC places two connectors; connector centres 17 mm off the module centre, 2.5 mm south),
+#     the display FPC east of the module with the cable toward the back wall, the LTE card in the north band with its socket at the west end,
+#     the flashing USB-C on the south edge, the rail leads on the west, the Pi rail lead beside the module's 5 V pins
+FIXED = {"J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -78, 180),
+         "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90),
+         "U30A": (-105, -2.5, 0), "U30B": (-71, -2.5, 0), "J_DISP": (-50, 10, 180), "J_LTE1": (-3, 67, -90), "J_SIM1": (-45, 60, 0), "BT1": (-46, 28, 0), "J_FAN": (-64, 34, 0),
+         "U42": (95, 34, 180)}
 BACK = {"J_AB1"}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
@@ -75,16 +81,21 @@ for ref in comps:
         fp.SetValue(val); placed[ref] = fp
 # --- regions for the rest: (x0, y0, x1, y1), refs
 REGIONS = [
- ("PWR",  (-86, -84, -76, -44), ["D1", "C1", "C2", "R1", "LED1", "D3", "C40", "C41", "D4", "C42"]),
- ("HUB",  (-75, -71.5, -46, -50), ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "R3", "C11", "R4", "JP1", "R5", "R6", "R7", "R8", "LED2"]),
- ("STRIP", (-22, -84, 25, -63.5), ["F6", "U2", "U3", "R9", "R10", "R11", "R12", "U20", "C26", "R25"]),
- ("TPS", (-45, -84, -36.5, -52), ["TP1", "TP2", "TP3", "TP4", "TP5", "TP11", "TP6", "TP7", "TP8", "TP9", "TP10", "TP12", "TP13", "TP14", "TP15", "TP16", "TP17"]),
+ ("PWR",  (-86, -72, -62, -44), ["D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "R1", "LED1"]),
+ ("MODC", (-119.5, -18, -110, 0), ["C43", "C44", "C45", "C46", "C47", "C48"]),                  # the module's 5 V bulk beside its 5 V pins, inside the +5V_PI pour
+ ("CTRL", (-119.5, -64, -100, -30), ["U20", "U21", "U34", "Q3", "R52", "Q4", "R53", "Q5", "R54", "R55", "R56", "C54", "C55", "R57", "R58", "R25", "C26", "C27"]),
+ ("BUCK", (-58, -84, -36, -60), ["U31", "L31", "C31", "C32", "C33", "C34", "R35", "R36", "R37", "R38", "R41", "U33", "U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "R42", "C49", "C39", "F7"]),
+ ("FLASH", (-24, -84, -14, -66), ["U9", "R50", "R51"]),
+ ("CM5X", (-58, -58, -22, -36), ["R46", "LED5", "Q2", "R47", "R48", "LED6", "R49", "J_RPIBOOT", "J_WP", "J_PMIC", "J_PWRBTN", "J_DBG"]),
+ ("HUB",  (-66, -34, -22, -14), ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "R3", "R4", "R5", "R6", "R7", "R8", "U2", "U7", "U10"]),
  ("SDR",  (-20, -19, -3, -9.5), ["U4", "U5"]),
- ("SDR2", (-20, 8, -3, 19), ["U6", "R13", "R30", "C33", "R14", "C12", "C13"]),
- ("ZB",   (46, 58.5, 78, 84), ["U7", "R15", "R31", "C34", "R16", "U8", "C14", "C15", "U9"]),
- ("TC",   (-20, 19, 0.5, 40.5), ["F2", "U15", "C20", "C31", "R34", "R22", "U16", "C21", "C22", "U17"]),
- ("XIAO", (-70, 50, -42, 73), ["F4", "U10", "C27", "C29", "R32", "R17", "R18", "U11", "C16", "C17", "U12"]),
- ("RB",   (-19, -40, 15, -19.5), ["F5", "U13", "C28", "C30", "R33", "R20", "R21", "U14", "C18", "C19", "JP3", "JP4", "Q1", "R26", "R27", "R28"]),
+ ("SDR2", (-20, 8, -3, 19), ["U6", "R13", "R30", "C15", "R14", "C16", "C17"]),
+ ("LTEP", (-62, 40, -20, 51), ["C50", "C51", "C52", "C53", "C56", "C57", "C58", "C59", "R59", "R60", "R61", "R62", "R63", "R64", "LED2", "J_LTEDBG", "U8"]),
+ ("GNSS", (-118, 44, -96, 66), ["U40", "R65", "C60", "C61", "R66", "L40", "C62", "J_GNSS1"]),
+ ("LORA", (-94, 44, -74, 66), ["U41", "C63", "C64", "R67"]),
+ ("ZBP",  (105, 16, 118, 40), ["C65", "C66", "R68", "R69", "R70", "LED3", "R71", "LED4", "J_ZBDBG", "F6"]),
+ ("TPS",  (84, -60, 104, -30), ["TP%d" % k for k in range(1, 24)] + ["TP%d" % k for k in range(30, 41)]),
+ ("RB",   (-19, -40, 15, -19.5), ["F5", "U13", "C28", "C30", "R33", "R21", "U14", "C18", "C19", "Q1", "R26", "R27", "R28"]),
  ("DCF",  (-72, 74, -60, 80), ["R29"]),
 ]
 GAP = 1.2                      # between any two packed parts (was 0.7: fine-pitch ICs ended wall to wall with passives)
@@ -147,7 +158,7 @@ for name, nodes in nets.items():
         if not pads: unassigned.append((ref, pin, name)); continue
         for pad in pads: pad.SetNet(n)
 if unassigned: print("WARNING pads not found for nodes:", unassigned[:12])
-# --- planes: In1 GND, In2 +5V
+# --- planes: In1 GND, In2 +5V_M1; the module's 5 V (2.5 A design point) as a front pour from the J_5V_PI lead to the 5 V pins of the west connector
 def plane(layer, netname, name, rect=(-122.5, -85, 122.5, 85), priority=0):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.3))
@@ -160,13 +171,15 @@ def plane(layer, netname, name, rect=(-122.5, -85, 122.5, 85), priority=0):
     z.SetAssignedPriority(priority)
     board.Add(z); return z
 plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+5V_M1", "+5V plane In2")
+plane(pcbnew.F_Cu, "+5V_PI", "+5V_PI pour F.Cu (J_5V_PI to the module 5 V pins)", rect=(-120, -30, -100, 0), priority=1)
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
-CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25)}   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
-PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("+5V_M1", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("5V_IN", "PWR")]
+# USB 90 ohm and DSI 100 ohm on JLC's 7628 four-layer stack (0.20/0.15 and 0.17/0.15, the CM5IO's own classes are 0.147 and 0.127 on its 90 um dielectric; confirm with JLC's calculator at upload)
+CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "DSI": (0.15, 0.17, 0.7, 0.3, 0.17, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25)}   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
+PATTERNS = [("USB_*", "USB"), ("DSI0_*", "DSI"), ("5V_*", "PWR"), ("+5V_M1", "PWR"), ("+5V_M2", "PWR"), ("+5V_PI", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("+3V3_LTE", "PWR"), ("+3V3_AB", "PWR"), ("PANEL_5V", "PWR")]
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)
@@ -174,16 +187,15 @@ try:
     print("net classes set via API")
 except Exception as e:
     print("note: net class API:", e)
-# placeholder USB-C plug footprints have 0.12 mm pad gaps: local clearance so DRC reports the real issues (part is an open BOM item)
 pcbnew.SaveBoard(BOARD, board)
 print("saved", BOARD, "footprints:", len(list(board.GetFootprints())), "nets:", board.GetNetCount())
-import json, os
+import json
 pro = os.path.splitext(BOARD)[0] + ".kicad_pro"
 if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("DSI", 1, 0.15, 0.17, 0.7, 0.3, 0.17, 0.15), C("PWR", 2, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
