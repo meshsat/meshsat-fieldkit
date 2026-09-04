@@ -26,7 +26,7 @@ One kit, 33 lines. Numbers are the BOM numbers from `docs/MeshSat-Field-Kit-BOM.
 | 7 | AIOC v1.2 | audio and PTT for APRS | hub port 1 |
 | 26 | LilyGO T-Call A7670E, V1.0 | 4G/2G modem (SMS, data) | Pi USB-A, direct |
 | 18 | KPN prepaid SIM | | T-Call slot |
-| 9 | RTL-SDR Blog V4 | spectrum monitor | Pi USB-A, direct or hub |
+| 9 | RTL-SDR Blog V4 | spectrum monitor | hub port 3 (read from the USB tree on 25 April 2026) |
 | 10 | RTL-SDR antenna set | | |
 | 11 | ZigBee CC2652P coordinator (USB) | ZigBee | hub port 2 |
 | 25 | Tuya ZigBee temperature and humidity sensor, IP65 | | paired to the coordinator |
@@ -179,6 +179,31 @@ DSI ribbon (22 to 15 way) into the Pi 5 DSI connector; no GPIO signal pins. Powe
 ### X1202 (both kits)
 
 Pogo pins to the Pi header carry the supply; the I2C fuel gauge is at 0x36 (BCM 2/3), AC-loss on BCM 6 (read with pull-up), charging control on BCM 16 held low.
+
+### Every device on the Pi (both kits)
+
+What each device uses on the Pi, and what else it could use. "Used" is the wiring above and the USB tree read from `lsusb -t` on parallax on 25 April 2026; "offers" comes from the makers' documents where this repository holds them (the 9704 schematic and the X1202 page in `../v2/vendor/`, the AIOC sources, the Touch Display 2 brief) and from the makers' product pages otherwise.
+
+| Device | Used on the Pi | Protocol used | Interfaces the device offers |
+|---|---|---|---|
+| Geekworm X1202 UPS | pogo pins (5 V to the Pi); header pins 3 and 5, 31, 36 | power; I2C1 fuel gauge 0x36; GPIO in (AC loss); GPIO out (charge control) | pogo-pin 5 V out to the Pi; USB-C in 5 V 5 A; DC 6 to 18 V in (XH2.54, also a 5.5 x 2.1 jack); two 5 V outputs (XH2.54); I2C to the fuel gauge; GPIO for AC loss and charge control; auto power-on |
+| Raspberry Pi Touch Display 2 | DSI connector; header pins 4 and 14 | DSI video and touch; 5 V | DSI only (touch rides on the same ribbon); no HDMI, no USB |
+| RockBLOCK 9704 (parallax) | header UART2 pins 7 and 29; GPIO pins 16, 18, 37; 5 V pin 2 | UART 230400 8N1; three GPIO lines; 5 V | 16-pin main connector: 3.3 V UART, control lines, power in; USB-C (USB to UART bridge on the board); RS232 as an alternative transceiver fit; battery connector; SMA |
+| RockBLOCK 9603 (tesseract) | header UART0 pins 8 and 10; GPIO pins 15, 16; 5 V pin 2 | UART 19200 8N1; two GPIO inputs; 5 V | 10-way PicoBlade only: 3.3 V UART, NetAv, RI, OnOff, 5 V; no USB on the board (USB needs the maker's adapter); SMA |
+| DCF77 receiver | header 3.3 V and GND; data pin 40 (parallax) or 32 (tesseract); enable pin 35 or 38 | GPIO bit stream; 3.3 V | four wires only: V, G, data out, enable; no bus |
+| Pi 5 active cooler | fan header | 5 V, PWM, tacho | fan header only |
+| LilyGO T-Call A7670E | Pi USB-A, direct | USB CDC serial (CH343 bridge) | USB-C to the ESP32; ESP32 header pins (UART, I2C, SPI, GPIO); the modem is reached only through the ESP32 firmware; u.FL antenna; SIM slot; battery connector |
+| Alfa AWUS036ACM WiFi (MT7612U) | Pi USB-A, direct | USB | USB only (USB 3.0 plug, runs at USB 2.0 here); two RP-SMA antennas |
+| XIAO ESP32-S3 LoRa (Meshtastic) | Pi USB-A, direct | USB CDC serial | USB-C native; header pins (UART, I2C, SPI, GPIO); own WiFi and BLE radios; u.FL |
+| Sabrent HB-UM43 hub | Pi USB-A, direct | USB, bus-powered | USB 3.0 upstream; four USB-A downstream; optional 5 V aux input |
+| AIOC v1.2 | hub port 1 | USB audio class plus CDC serial | USB only on the Pi side; radio side 3.5 and 2.5 mm Kenwood plugs (audio in, audio out, PTT, radio programming pass-through) |
+| Gmouse u-blox 7 GPS | hub port 2 | USB CDC serial (NMEA) | USB only on the puck (the u-blox 7 chip also has UART, I2C and SPI, not brought out) |
+| RTL-SDR Blog V4 | hub port 3 | USB bulk | USB only; SMA; bias-T out |
+| ZigBee CC2652P coordinator | hub port 4 | USB CDC serial | USB only on the dongle (the CC2652P has UART and SPI, not brought out); SMA |
+| Quansheng UV-K5(8) | none (through the AIOC) | none | Kenwood 2-pin: audio in, audio out, PTT, UART programming; no USB |
+| microSD 64 GB | SD slot | SDIO | SDIO only |
+
+All four Pi USB-A ports are taken (T-Call, WiFi dongle, XIAO, hub). Unused on both kits: the Pi's own USB-C power input (the X1202 feeds the pogo pins instead), Ethernet, both HDMI, the CSI and second DSI connector, PCIe, the 3-pin debug UART, and the SPI0 pins freed when the e-paper was retired.
 
 ## 7. Software
 
