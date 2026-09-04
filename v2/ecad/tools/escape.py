@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Deterministic escapes for fine-pitch parts, before autorouting: every connected pad of a fine-pitch footprint gets a short
 track straight out along its axis to a via, offsets staggered on alternate pads so neighbouring escapes never touch.
+Escapes are LOCKED: KiCad exports locked tracks and vias as (type fix) in the DSN and Freerouting keeps them (5 Sep: unlocked
+escapes were ripped up on A19 and the pads they served ended unrouted).
 Fine pitch: minimum SMD pad centre distance <= 0.7 mm, or SOT-23-6/8. Exposed pads (>= 2 mm) are left alone.
 Usage: escape.py <board.kicad_pcb>"""
 import sys, re, math, pcbnew
@@ -59,14 +61,15 @@ def seg_dist(p, a, c):
 import os
 DEBUG_REF = os.environ.get("DEBUG_REF", "")
 LAST = [""]
-def clear(v, r, me, me_ref, net):
-    """Circle (v, r) clear of: board edge, other-net pads (own footprint: plain clearance; other footprints: 0.75 mm lane rule), all vias, all tracks, rule areas."""
+def clear(v, r, me, me_ref, net, lane=0.75):
+    """Circle (v, r) clear of: board edge, other-net pads (own footprint: plain clearance; other footprints: the lane rule, 0.75 mm by default,
+    relaxed to 0.35 on a second pass when a fine-pitch row has a neighbour part right past its tips), all vias, all tracks, rule areas."""
     LAST[0] = ""
     if not (edges.GetLeft() + FromMM(1.0) < v.x < edges.GetRight() - FromMM(1.0) and edges.GetTop() + FromMM(1.0) < v.y < edges.GetBottom() - FromMM(1.0)): LAST[0] = "edge"; return False
     for q, qp, qpoly, qnet, qref in allpads:
         if qp.x == me.GetPosition().x and qp.y == me.GetPosition().y: continue
         if qnet == net and qref == me_ref: continue
-        gap = CLR if qref == me_ref else (FromMM(0.3) if qnet == net else FromMM(0.75))
+        gap = CLR if qref == me_ref else (FromMM(0.3) if qnet == net else FromMM(lane))
         if abs(v.x - qp.x) > FromMM(6) or abs(v.y - qp.y) > FromMM(6): continue
         if qpoly.Collide(VECTOR2I(int(v.x), int(v.y)), int(r + gap)): LAST[0] = "pad %s.%s(%s)" % (qref, q.GetNumber(), qnet); return False
     for vp, vr, vnet in vias:
@@ -82,6 +85,8 @@ added = skipped = 0
 for fp in b.GetFootprints():
     if not is_fine(fp) or fp.GetReference().startswith("J"): continue      # connectors route fine without escapes
     if fp.GetReference() in set(filter(None, __import__("os").environ.get("ESCAPE_SKIP", "").split(","))): continue   # A19: parts the router escapes itself (mixed pad sizes)
+    ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))
+    if ONLY and fp.GetReference() not in ONLY: continue                    # test runs on one part
     pitch = min_pitch(fp); fc = fp.GetPosition()
     if pitch <= FromMM(0.7): VIA_D, VIA_DR, TW, OFFS = FromMM(0.45), FromMM(0.25), FromMM(0.2), (0.9, 1.6, 2.3)
     else: VIA_D, VIA_DR, TW, OFFS = FromMM(0.6), FromMM(0.3), FromMM(0.25), (0.8, 1.5, 2.2)
@@ -112,15 +117,17 @@ for fp in b.GetFootprints():
                 c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
                 s_k = (idx - (n - 1) / 2.0) * FromMM(0.8) - (along - centre_along)     # lateral shift from the pad's own lane
                 done = False
-                for depth in (1.3, 1.7, 2.1):
+                for lane, depth in [(ln, dp) for ln in (0.75, 0.35) for dp in (1.3, 1.7, 2.1)]:
+                    # A19 (5 Sep): the BQ25792's south row had a 1210 capacitor 1.4 mm past its tips; the 0.75 mm lane rule rejected every
+                    # depth, the row went to the router without escapes and SDA could not be routed at all. Second pass with the lane at 0.35.
                     knee = VECTOR2I(int(c.x + L[0] * (half + FromMM(0.3))), int(c.y + L[1] * (half + FromMM(0.3))))
                     v = VECTOR2I(int(c.x + L[0] * (half + FromMM(depth)) + side_dir[0] * s_k), int(c.y + L[1] * (half + FromMM(depth)) + side_dir[1] * s_k))
                     mids = [VECTOR2I(int(knee.x + (v.x - knee.x) * k / 5.0), int(knee.y + (v.y - knee.y) * k / 5.0)) for k in range(1, 5)]
-                    if clear(v, VIA_D / 2, pad, fp.GetReference(), net) and clear(knee, TW / 2, pad, fp.GetReference(), net) and all(clear(m, TW / 2, pad, fp.GetReference(), net) for m in mids):
+                    if clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and clear(knee, TW / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids):
                         layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
-                        via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DR); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via)
+                        via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DR); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); via.SetLocked(True); b.Add(via)
                         for s0, e0 in ((c, knee), (knee, v)):
-                            t = pcbnew.PCB_TRACK(b); t.SetStart(s0); t.SetEnd(e0); t.SetWidth(TW); t.SetLayer(layer); t.SetNet(pad.GetNet()); b.Add(t); tracks.append((s0, e0, TW / 2, net))
+                            t = pcbnew.PCB_TRACK(b); t.SetStart(s0); t.SetEnd(e0); t.SetWidth(TW); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t); tracks.append((s0, e0, TW / 2, net))
                         vias.append((v, VIA_D / 2, net)); added += 1; done = True; break
                 if not done:
                     skipped += 1; print("  no escape for %s pad %s (%s)%s" % (fp.GetReference(), pad.GetNumber(), net, ("  last reject: " + LAST[0]) if fp.GetReference() == DEBUG_REF else ""))
@@ -129,13 +136,13 @@ for fp in b.GetFootprints():
             c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
             order = (OFFS[0], OFFS[1], OFFS[2]) if idx % 2 == 0 else (OFFS[1], OFFS[0], OFFS[2])
             done = False
-            for off in order:
+            for lane, off in [(ln, o) for ln in (0.75, 0.35) for o in order]:
                 v = VECTOR2I(int(c.x + L[0] * (half + FromMM(off))), int(c.y + L[1] * (half + FromMM(off))))
                 mids = [VECTOR2I(int(c.x + (v.x - c.x) * k / 6.0), int(c.y + (v.y - c.y) * k / 6.0)) for k in range(2, 6)]
-                if clear(v, VIA_D / 2, pad, fp.GetReference(), net) and all(clear(m, TW / 2, pad, fp.GetReference(), net) for m in mids):
+                if clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids):
                     layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
-                    via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DR); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via)
-                    t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TW); t.SetLayer(layer); t.SetNet(pad.GetNet()); b.Add(t)
+                    via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DR); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); via.SetLocked(True); b.Add(via)
+                    t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TW); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t)
                     vias.append((v, VIA_D / 2, net)); tracks.append((c, v, TW / 2, net)); added += 1; done = True; break
             if not done:
                 skipped += 1; print("  no escape for %s pad %s (%s)%s" % (fp.GetReference(), pad.GetNumber(), net, ("  last reject: " + LAST[0]) if fp.GetReference() == DEBUG_REF else ""))
