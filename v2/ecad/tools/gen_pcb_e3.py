@@ -57,7 +57,7 @@ placed = {}
 for ref in comps:                                                   # H1..H16 and EPD1 already on the board from gen_pcb_c.py
     if ref in existing: existing[ref].SetValue(comps[ref][0]); placed[ref] = existing[ref]
 # ---------------------------------------------------------------- dock layout (case mm): the target block under PCB-A's J_DOCK, the DC entry at the port end, the buck in the middle
-FIXED = {"U1": (29, -70, 90, False), "J_BLK": (-135, -88, 0, False), "P_CP": (-118, -88, 0, False), "P_CN": (-118, -97, 0, False), "J_BATT": (-150, -103, 0, False),
+FIXED = {"U1": (29, -70, 90, False), "J_BLK": (-135, -88, 0, False), "P_CP": (-133, -96, 0, False), "P_CN": (-121, -96, 0, False), "J_BATT": (-150, -103, 0, False),
          "J_DCIN": (-104, -106, 0, False), "F1": (-88, -106, 0, False), "J_SOLAR": (-64, -106, 0, False), "F2": (-46, -106, 0, False),
          "U5": (2, -92, 0, False), "L1": (16, -102, 0, False), "J_TS": (66, -104, 0, False), "J_KS": (78, -104, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)

@@ -20,6 +20,6 @@
 	(pad "10" thru_hole circle (at 1.270 1.270) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
 	(pad "11" thru_hole circle (at 3.810 1.270) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
 	(pad "12" thru_hole circle (at 6.350 1.270) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
-	(fp_rect (start -8.890 -3.000) (end 8.890 3.000) (stroke (width 0.1) (type default)) (fill no) (layer "F.Fab"))
-	(fp_rect (start -8.890 -3.500) (end 8.890 3.500) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))
+	(fp_rect (start -7.500 -2.400) (end 7.500 2.400) (stroke (width 0.1) (type default)) (fill no) (layer "F.Fab"))
+	(fp_rect (start -7.500 -2.400) (end 7.500 2.400) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))
 )
