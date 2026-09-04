@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
-"""PCB-E5 DOCK BLOCK (appendix 32.25, MESHSAT-790): the raised contact board on 6 mm standoffs above the dock strip, face at 7.4 mm, so PCB-A's
-spring contacts (Preci-Dip 813 signal pins, 7.0 mm; Mill-Max 0858 class 9 A power pins) land on flat gold targets at the 13.4 mm blind-mate gap.
-Top: the 2 x 6 signal targets (mirror of A19 J_DOCK at (-124, -70): A19's pins are on its underside, so its row order is mirrored: block pad k meets
-A19 pin k+6 for k = 1..6 and pin k-6 for k = 7..12), four CELL+ targets, four return targets and the pre-charge target. Bottom: a 2 x 6 wire land
-(2.54 mm, plated) and two 2.3 mm plated holes for the 12 AWG wires down to the strip's lands. No schematic: nets are named here. 2 oz copper.
-Usage: gen_pcb_e5.py <out.kicad_pcb>. Case-centred frame like the strip."""
+"""PCB-E5 DOCK BLOCK (appendix 32.25 and 32.26, MESHSAT-790): the raised contact board on 6 mm M3 standoffs above the dock strip, face at
+7.4 mm, so PCB-A's spring contacts (Preci-Dip 813 signal pins, 7.0 mm; Mill-Max 0858 class 9 A power pins) land on flat gold targets at the
+13.4 mm blind-mate gap. Top: the 2 x 6 signal targets under A19's J_DOCK (-124, -70); their nets are copied from the A19 board by position
+(A19's connector sits on its underside, so its pin order is mirrored on the block), four CELL+ targets, four return targets and the
+pre-charge target. Twelve plated wire lands (2 x 6 at 2.54 mm, 1.0 mm holes) at (-124, -76.4) carry the same nets straight down each
+column to the strip's J_BLK lands (the underside silk names every land); two 2.3 mm plated holes take the 12 AWG CELL+ / CELL_N wires to
+the strip's P_CP / P_CN. No schematic: nets are named here. 2 oz copper, 45 x 16 mm, X -156..-111, Y -80..-64.
+Usage: gen_pcb_e5.py <out.kicad_pcb>   (reads ../pcb-a-power/pcb-a-power.kicad_pcb for the pin order). Case-centred frame like the strip."""
 import sys, os, math, pcbnew
 from pcbnew import VECTOR2I, FromMM
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-e5-block.kicad_pcb"
 PRJDIR = os.path.dirname(os.path.abspath(OUT)); MSLIB = os.path.normpath(os.path.join(PRJDIR, "..", "meshsat.pretty"))
+A19_PCB = os.path.normpath(os.path.join(PRJDIR, "..", "pcb-a-power", "pcb-a-power.kicad_pcb"))
 open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version 7)\n  (lib (name "meshsat")(type "KiCad")(uri "${KIPRJMOD}/../meshsat.pretty")(options "")(descr "MeshSat carrier in-code footprints"))\n)\n')
 OX, OY = 150.0, 110.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
-X0, X1, Y0, Y1, R = -156.0, -115.0, -80.0, -64.0, 1.5
-HOLES = [(-153.0, -74.5), (-118.0, -74.5), (-153.0, -65.5), (-118.0, -65.5)]
+X0, X1, Y0, Y1, R = -156.0, -111.0, -80.0, -64.0, 1.5
+HOLES = [(-153.0, -74.5), (-114.0, -74.5), (-153.0, -65.5), (-114.0, -65.5)]      # = BLOCK_HOLES of gen_pcb_e.py (the strip's standoffs)
 board = pcbnew.BOARD()
 tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E5 DOCK BLOCK"); tb.SetRevision("A (E5)"); tb.SetDate("2026-09-05"); tb.SetCompany("MeshSat")
-tb.SetComment(0, "MESHSAT-709 / 790. Raised contact block on the dock strip: targets for PCB-A's signal and 9 A power pins, wire lands below. tools/gen_pcb_e5.py"); board.SetTitleBlock(tb)
+tb.SetComment(0, "MESHSAT-709 / 790. Raised contact block on the dock strip: targets for PCB-A's signal and 9 A power pins, plated wire lands below. tools/gen_pcb_e5.py"); board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.2), ("m_TrackMinWidth", 0.2), ("m_ViasMinSize", 0.5), ("m_MinThroughDrill", 0.3), ("m_HoleToHoleMin", 0.5), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.25), ("m_SolderMaskMinWidth", 0.1)):
     try: setattr(ds, attr, FromMM(val))
@@ -45,18 +48,31 @@ def place(lib, name, ref, x, y, value="", back=False, rot=0.0):
     fp.SetReference(ref); fp.SetValue(value); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, y)); board.Add(fp)
     if back: fp.Flip(P(x, y), False)
     fp.SetOrientationDegrees(rot); return fp
+def no_pour_circle(cx, cy, d, name):
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(True); z.SetDoNotAllowTracks(False); z.SetDoNotAllowVias(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+    z.SetLayerSet(pcbnew.LSET.AllCuMask(2)); z.SetZoneName(name); o = z.Outline(); o.NewOutline()
+    for i in range(36):
+        a = math.radians(i * 10); p = P(cx + d / 2 * math.cos(a), cy + d / 2 * math.sin(a)); o.Append(p.x, p.y)
+    board.Add(z); return z
 rounded_rect(X0, Y0, X1, Y1, R, pcbnew.Edge_Cuts)
 for i, (x, y) in enumerate(HOLES, 1):
-    fp = place("MountingHole", "MountingHole_3.2mm_M3", "H%d" % i, x, y, "M3 standoff 6 mm to the dock strip")
-# A19 pin nets by pin number (its J_DOCK): 1-4 SHORE_12V, 5-7 GND, 8 SHORE_INHIBIT, 9 TS_MOD, 10 GND, 11 CELL_SENSE_P, 12 spare
-A19 = {1: "SHORE_12V", 2: "SHORE_12V", 3: "SHORE_12V", 4: "SHORE_12V", 5: "GND", 6: "GND", 7: "GND", 8: "SHORE_INHIBIT", 9: "TS_MOD", 10: "GND", 11: "CELL_SENSE_P", 12: "BLK_SPARE"}
-mirror = {k: (k + 6 if k <= 6 else k - 6) for k in range(1, 13)}   # block pad k faces A19 pin mirror[k]
+    place("MountingHole", "MountingHole_3.2mm_M3", "H%d" % i, x, y, "M3 standoff 6 mm to the dock strip"); no_pour_circle(x, y, 4.8, "standoff H%d: no pour" % i)
+# --- A19's J_DOCK pin under every target, by position (the A19 connector is flipped to its underside; whatever KiCad's flip does, the match is geometric)
+if not os.path.exists(A19_PCB): raise SystemExit("A19 board not found, the block copies its pin order from it: " + A19_PCB)
+a19b = pcbnew.LoadBoard(A19_PCB); jd = a19b.FindFootprintByReference("J_DOCK")
+if jd is None: raise SystemExit("A19 board has no J_DOCK")
+jp = jd.GetPosition(); a19 = {}
+for p in jd.Pads(): a19[(round((p.GetPosition().x - jp.x) / 1e4), round((p.GetPosition().y - jp.y) / 1e4))] = (int(p.GetNumber()), p.GetNetname())
 tgt = place("meshsat", "PogoTargets_2x6", "T_SIG", -124.0, -70.0, "signal targets (A19 J_DOCK lands here)")
-for pad in tgt.Pads(): pad.SetNet(net(A19[mirror[int(pad.GetNumber())]]))
-land = place("meshsat", "PogoTargets_2x6", "L_SIG", -124.0, -77.0, "wire lands to the strip J_BLK (same order as A19 pins)", back=True)
-for pad in land.Pads():
-    pad.SetNet(net(A19[mirror[int(pad.GetNumber())]]))   # flipped: the same pad number sits under the same X, mirrored row, so it meets its own target's net
-power = []
+PIN = {}   # block pad number -> (A19 pin number, net)
+for pad in tgt.Pads():
+    key = (round((pad.GetPosition().x - tgt.GetPosition().x) / 1e4), round((pad.GetPosition().y - tgt.GetPosition().y) / 1e4))
+    if key not in a19: raise SystemExit("no A19 pin above block target pad %s" % pad.GetNumber())
+    num, n = a19[key]; n = n.lstrip("/")
+    if not n or n.startswith("unconnected-"): n = "BLK_SPARE"
+    PIN[int(pad.GetNumber())] = (num, n); pad.SetNet(net(n))
+land = place("meshsat", "WireLands_2x6", "L_SIG", -124.0, -76.4, "plated wire lands to the strip J_BLK (net names on the underside silk)")
+for pad in land.Pads(): pad.SetNet(net(PIN[int(pad.GetNumber())][1]))
 for k in range(4):
     x = -147.0 + 4.0 * k
     t = place("meshsat", "Mill-Max_0858_target", "T_CP%d" % (k + 1), x, -73.0, "CELL+ target (9 A pin)"); [p.SetNet(net("CELL+")) for p in t.Pads()]
@@ -64,26 +80,34 @@ for k in range(4):
 t = place("meshsat", "Mill-Max_0858_target", "T_PRE", -151.0, -70.0, "pre-charge target (longer pin, mates first)"); [p.SetNet(net("CELL+")) for p in t.Pads()]
 w = place("meshsat", "WireHole_2mm", "WH_CP", -143.0, -77.5, "12 AWG to the strip P_CP"); [p.SetNet(net("CELL+")) for p in w.Pads()]
 w = place("meshsat", "WireHole_2mm", "WH_CN", -137.0, -77.5, "12 AWG to the strip P_CN"); [p.SetNet(net("CELL_N")) for p in w.Pads()]
-# copper: signal targets to lands (straight tracks, same X, top pad row to the land row through a via), power pours
+# --- copper: every target to the land of its own column. North row: up to a via, then down on B.Cu under the south target to the north land.
+# South row: down on F.Cu, jog half a pitch east to pass between the north lands, back into the south land. Power: pours plus stitching vias.
 def track(x1, y1, x2, y2, w, layer, n):
     t = pcbnew.PCB_TRACK(board); t.SetStart(P(x1, y1)); t.SetEnd(P(x2, y2)); t.SetWidth(FromMM(w)); t.SetLayer(layer); t.SetNet(net(n)); board.Add(t)
 def via(x, y, n, d=0.6, dr=0.3):
     v = pcbnew.PCB_VIA(board); v.SetPosition(P(x, y)); v.SetWidth(FromMM(d)); v.SetDrill(FromMM(dr)); v.SetNet(net(n)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); board.Add(v)
+def dxy(p): q = p.GetPosition(); return q.x / 1e6 - OX, OY - q.y / 1e6
 tp = {int(p.GetNumber()): p for p in tgt.Pads()}; lp = {int(p.GetNumber()): p for p in land.Pads()}
-for k in range(1, 13):
-    a, b = tp[k].GetPosition(), lp[k].GetPosition(); ax, ay = a.x / 1e6 - OX, OY - a.y / 1e6; bx, by = b.x / 1e6 - OX, OY - b.y / 1e6
-    n = A19[mirror[k]]; vy = -73.6 if k <= 6 else -72.6
-    track(ax, ay, ax, vy, 0.4, pcbnew.F_Cu, n); via(ax, vy, n); track(bx, vy, bx, by, 0.4, pcbnew.B_Cu, n)
+SHORT = {"SHORE_12V": "12V", "GND": "GND", "SHORE_INHIBIT": "INH", "TS_MOD": "TS", "CELL_SENSE_P": "KS+", "BLK_SPARE": "SP"}
+for k in range(1, 7):
+    n = tp[k].GetNetname(); x, yn = dxy(tp[k]); _, yln = dxy(lp[k])
+    track(x, yn, x, -67.0, 0.4, pcbnew.F_Cu, n); via(x, -67.0, n); track(x, -67.0, x, yln, 0.4, pcbnew.B_Cu, n)
+    n = tp[k + 6].GetNetname(); x, ys = dxy(tp[k + 6]); _, yls = dxy(lp[k + 6]); xj = x + 1.27
+    pts = [(x, ys), (x, -72.7), (xj, -73.6), (xj, -76.3), (x, yls)]
+    for (x1, y1), (x2, y2) in zip(pts, pts[1:]): track(x1, y1, x2, y2, 0.3, pcbnew.F_Cu, n)
+    text(SHORT.get(tp[k].GetNetname(), "?"), x, -73.3, pcbnew.B_SilkS, 0.5, 0.1, mirror=True); text(SHORT.get(tp[k + 6].GetNetname(), "?"), x, -79.2, pcbnew.B_SilkS, 0.5, 0.1, mirror=True)
 def pour(layer, n, name, rect):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net(n)); z.SetZoneName(name); z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.3))
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     board.Add(z); return z
-pour(pcbnew.F_Cu, "CELL+", "CELL+ pour F", (-155, -79.5, -133, -70.5)); pour(pcbnew.B_Cu, "CELL+", "CELL+ pour B", (-155, -79.5, -140, -70.5))
-pour(pcbnew.F_Cu, "CELL_N", "CELL_N pour F", (-155, -69.5, -133, -64.5)); pour(pcbnew.B_Cu, "CELL_N", "CELL_N pour B", (-139, -79.5, -133, -64.5))
-for k in range(6): via(-153.0 + 3.0 * k, -75.5, "CELL+", 0.8, 0.4)
-for k in range(3): via(-136.0 + 1.0 * k, -70.0, "CELL_N", 0.6, 0.3)
-text("PCB-E5 DOCK BLOCK  face 7.4 mm  A19 pins land here", -135.5, -62.5, pcbnew.F_SilkS, 0.9, 0.15)
-text("wires down to the strip: 12 signal + CELL+ / CELL_N 12 AWG", -135.5, -81.5, pcbnew.B_SilkS, 0.8, 0.13, mirror=True)
+pour(pcbnew.F_Cu, "CELL+", "CELL+ pour F", (-155, -79.2, -133, -70.5)); pour(pcbnew.B_Cu, "CELL+", "CELL+ pour B", (-155, -79.2, -140, -70.5))
+pour(pcbnew.F_Cu, "CELL_N", "CELL_N pour F", (-155, -69.5, -133, -64.8)); pour(pcbnew.B_Cu, "CELL_N", "CELL_N pour B", (-139, -79.2, -133, -64.8))
+for x in (-151.0, -148.0): via(x, -77.0, "CELL+", 0.8, 0.4)
+for y in (-65.5, -68.5): via(-138.5, y, "CELL_N", 0.8, 0.4)
+text("E5 DOCK BLOCK 7.4 mm", -124.0, -65.2, pcbnew.F_SilkS, 0.7, 0.12)
+text("CELL+", -148.0, -79.0, pcbnew.F_SilkS, 0.7, 0.12); text("RET", -139.5, -64.9, pcbnew.F_SilkS, 0.6, 0.1)
 pcbnew.SaveBoard(OUT, board); b2 = pcbnew.LoadBoard(OUT); pcbnew.ZONE_FILLER(b2).Fill(b2.Zones()); pcbnew.SaveBoard(OUT, b2)
 print("saved", OUT, "footprints:", len(list(b2.GetFootprints())), "nets:", b2.GetNetCount())
+print("block target / land k -> A19 J_DOCK pin, net (wire land k to the strip J_BLK pin of that number):")
+for k in range(1, 13): print("  %2d -> pin %2d  %s" % (k, PIN[k][0], PIN[k][1]))
