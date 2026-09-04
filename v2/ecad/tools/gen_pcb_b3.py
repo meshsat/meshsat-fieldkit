@@ -60,7 +60,7 @@ def place(ref, x, y, rot=0.0, back=False):
     return fp
 # --- fixed positions (case frame)
 FIXED = {"J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-92, -48, 0), "J_PANEL": (86, 68, 0), "J_TD2": (-50, 77, 0), "J_USB_UP1": (-30, -78, 180), "J_USB_UP2": (30, -78, 180),
-         "J_TCALL1": (-16, 46, 90), "J_XIAO1": (-76, 60, 90), "J_TBEAM1": (70, 55, 0), "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90)}
+         "J_TCALL1": (-16, 46, 90), "J_XIAO1": (-76, 60, 90), "J_TBEAM1": (100, 57, 0), "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90)}
 BACK = {"J_AB1"}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
