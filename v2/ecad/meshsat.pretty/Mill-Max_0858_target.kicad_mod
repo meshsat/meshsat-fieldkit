@@ -1,0 +1,105 @@
+(footprint "Mill-Max_0858_target"
+	(version 20241229)
+	(generator "meshsat")
+	(generator_version "1.0")
+	(layer "F.Cu")
+	(descr "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block")
+	(tags "Mill-Max 0858 target pad pogo")
+	(attr smd exclude_from_pos_files exclude_from_bom)
+	(property "Reference" "REF**"
+		(at 0 -3.1 0)
+		(layer "F.SilkS")
+		(uuid "795e248b-e47a-48cd-8918-9b8c366cb177")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Mill-Max_0858_target"
+		(at 0 3.1 0)
+		(layer "F.Fab")
+		(uuid "3d84c8a1-fd15-49b8-9045-63efc9498e1e")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "426111e5-25eb-4a83-a0a6-f326a2e11de8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Target pad for the Mill-Max 0858 power spring pin: bare copper disc 4.2 mm (flange 3.18 mm plus 1.0 mm), no paste, for the dock's raised block"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4c31ca2a-6514-45d6-9c59-d6346b2117b3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_circle
+		(center 0 0)
+		(end 2.1 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "534ed295-4f84-4e23-936f-5c3befb6e0f8")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 0.635 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "88e12c9b-df44-4d7d-bf02-69c4d1324313")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 2.4 0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "a58cf2ef-21e9-4e65-9be8-c6211afd560d")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 2.35 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "679d1826-4151-41bd-a3c7-44ee32e25810")
+	)
+	(pad "1" smd circle
+		(at 0 0)
+		(size 4.2 4.2)
+		(layers "F.Cu" "F.Mask")
+		(uuid "906f6744-12a6-4d22-8753-fc9fb096f349")
+	)
+)
