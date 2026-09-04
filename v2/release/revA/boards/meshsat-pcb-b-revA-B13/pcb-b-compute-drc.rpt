@@ -1,8 +1,8 @@
 ** Drc report for pcb-b-compute.kicad_pcb **
-** Created on 2026-09-05T00:55:21+0200 **
+** Created on 2026-09-05T01:16:56+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 56 DRC violations **
+** Found 55 DRC violations **
 [solder_mask_bridge]: Front solder mask aperture bridges items with different nets
     Rule: board setup solder mask min width; error
     @(49,6800 mm, 46,1850 mm): Rectangle of J_GNSS1 on F.Mask
@@ -101,9 +101,6 @@
     @(34,0875 mm, 152,0500 mm): Track [+3V3] on F.Cu, length 2,3375 mm
 [track_dangling]: Track has unconnected end
     Local override; warning
-    @(137,4591 mm, 93,9151 mm): Track [/5V_RTL] on F.Cu, length 0,7619 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
     @(121,5375 mm, 125,4500 mm): Track [/DISP_SCL] on F.Cu, length 1,4625 mm
 [track_dangling]: Track has unconnected end
     Local override; warning
@@ -149,7 +146,7 @@
     @(92,1071 mm, 135,4750 mm): Via [/HUB_VD18] on F.Cu - B.Cu
 [track_dangling]: Track has unconnected end
     Local override; warning
-    @(133,6675 mm, 134,3195 mm): Track [/RB_CT] on F.Cu, length 0,5995 mm
+    @(133,6680 mm, 134,3200 mm): Track [/RB_CT] on F.Cu, length 0,0007 mm
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(42,1500 mm, 144,4500 mm): Via [/RB_CTRL] on F.Cu - B.Cu
@@ -190,15 +187,7 @@
     Local override; warning
     @(34,0875 mm, 146,4000 mm): Track [/ZB_nRST] on F.Cu, length 2,3375 mm
 
-** Found 2 unconnected pads **
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(137,8512 mm, 95,9947 mm): Track [/5V_RTL] on In1.Cu, length 2,2185 mm
-    @(137,4591 mm, 93,9151 mm): Track [/5V_RTL] on F.Cu, length 0,7619 mm
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(39,8125 mm, 141,8500 mm): Pad 23 [/SDA] of U20 on F.Cu
-    @(41,2239 mm, 150,2699 mm): Track [/SDA] on In1.Cu, length 1,0360 mm
+** Found 0 unconnected pads **
 
 ** Found 0 Footprint errors **
 
