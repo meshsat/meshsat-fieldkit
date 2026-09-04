@@ -121,3 +121,22 @@ SHORE and CHARGING sources: both now come from the BQ25792 charger on PCB-A over
 - Charge kick: this rule existed because the previous charger had a safety timer that could stop a long charge early and no way to read it. The charger on PCB-A reports its own state and its timer is configured directly, so there is nothing to kick: the bridge watches the charger's status and raises a fault instead.
 - Bearer serialisation: no longer a hardware requirement (owner ruling of 4 September 2026, appendix 32.21). PCB-A carries three converters, each specified with every radio transmitting down to 3.0 V per cell, so no rail needs the queue. The bridge may keep the rule as a receiver-protection preference, so that a LoRa or Iridium receive window is not desensed by an LTE burst; if it does, that is a radio choice and it is documented as one.
 - The rails: PCB-A carries three TPS61288L converters from the cell node. M1 (fused by F3) feeds the hub, the display, the panel and the LTE channel; M2 (F4) feeds the SDR, ZigBee, LoRa and RockBLOCK channels; the Pi rail (F5) feeds the Pi alone at 5.1 V. The main power controller enables all three together, so the bridge does not control them; it sees them come up and go down with the kit.
+
+## 11. PCB-A's second expander and the heating pad (A19, appendix 32.13 ruling 3, 32.23)
+
+U31 at 0x24 on PCB-A (the first, U19 at 0x21, keeps the map of section 9). Port 0 carries the wall port, the heating pad, the charger and the gauge; port 1 is spare (eight test points).
+
+| Bit | Port 0 | Direction | Meaning |
+|---|---|---|---|
+| 0 | EN_WALL | output | enables the wall USB host port's protected 5 V channel (TPS2065C); high = on; boot state on |
+| 1 | HEAT_EN | output | enables the 12 V heating pad feed (TPS259571 eFuse, 2.0 A limit, from SHORE_12V); high = on; boot state off |
+| 2 | FLT_WALL | input, active low | wall channel fault (over-current or over-temperature), pulled up |
+| 3 | HEAT_FLT | input, active low | heating pad eFuse fault, pulled up; the eFuse retries on its own |
+| 4 | CHG_INT | input, active low | BQ25792 charger interrupt (read the charger's status registers over I2C) |
+| 5 | GAUGE_ALERT | input, active low | BQ34Z100-G1 alert |
+| 6 | CHG_STAT | input, active low | BQ25792 charge status pin: low while charging |
+| 7 | EXP2_SP0 | spare | test point |
+
+Port 1 bits 0 to 7: EXP2_SP1 to EXP2_SP8, spare, on test points.
+
+**Heating pad rule.** The pad lies under the cells inside the battery module and is fed from the dock's 12 V, so it can only ever run on shore power. The bridge turns HEAT_EN on when all three hold: shore 12 V is present (the charger reports its input), the module thermistor reads below 0 C (the charger's TS reading over I2C, which is the same sensor that makes it refuse to charge below 0 C), and the pad has not been on for more than 2 hours in this docking. It turns HEAT_EN off when the thermistor reads above +5 C (hysteresis), when shore power goes, on HEAT_FLT, or at the 2 hour limit, and it never charges the pad from the cells because the hardware cannot. The CHARGING indicator stays off while the pad runs and the charger is inhibited; the e-paper shows "warming pack" with the module temperature. A pad that has run 2 hours without the thermistor crossing 0 C is a fault: MASTER CAUT and a log entry, not a retry.

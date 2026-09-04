@@ -17,7 +17,7 @@ floor; frame-leg bosses on the inner walls at X +-8.6, +-48.7, +-51.4, +-133.3, 
 Wall: the BACK long wall, the hinge side (case +Y). The front wall carries the handle, the pressure valve, two rib clusters and
 both latch straps (Peli customer drawing 1521-931), and its inner ribs leave no centre leg, so nothing flat and free is left there.
 Frame: case-centred, X along the long axis, Z up from the cavity floor. Both sheets are drawn as seen from OUTSIDE the back
-wall, so case +X is on the viewer's left. 1:1 on A4 landscape; check the 100 mm bar with a rule.  Usage: case_wall_cutouts.py <out.pdf>"""
+wall, so case +X is on the viewer's left. Sheets 3 and 4 put the seven SMA antenna bulkheads on the two end walls. 1:1 on A4 landscape; check the 100 mm bar with a rule.  Usage: case_wall_cutouts.py <out.pdf>"""
 import sys
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.units import mm
@@ -86,7 +86,7 @@ dim(DC["x"], USB["x"], 20, "36.0"); dim(SCREWS[0][0], SCREWS[2][0], 84, "56.0 (2
 text(DC["x"], FLOOR_TO_RIM + 3, "DC hole X %.1f" % DC["x"], 7, anchor="c"); text(USB["x"], FLOOR_TO_RIM + 9, "USB hole X %.1f" % USB["x"], 7, anchor="c")
 text(x0, FLOOR_TO_RIM + 3, "X %.0f" % x0, 7); text(x1, FLOOR_TO_RIM + 3, "X %.0f" % x1, 7, anchor="r"); text(0, FLOOR_TO_RIM + 16, "seen from OUTSIDE the back wall: case +X is to your left", 7, anchor="c", paper=True)
 scale_bar(-140, -10)
-notes(["SHEET 1 of 2: WALL. MeshSat field kit, Peli 1520 base, the BACK long wall (hinge side), seen from OUTSIDE, so case +X is on your left. Case frame: X along the long axis from the case centre, Z up from the cavity floor.",
+notes(["SHEET 1 of 4: BACK WALL. MeshSat field kit, Peli 1520 base, the BACK long wall (hinge side), seen from OUTSIDE, so case +X is on your left. Case frame: X along the long axis from the case centre, Z up from the cavity floor.",
        "Two hole-saw holes for the receptacle bodies and six M4 clearance holes for the connector plate. Tape this sheet on the outer skin with its floor line level with the inside floor (transfer the height from inside).",
        "The plate, not the wall, carries the sealing faces: the 1520 inner wall drafts about 2 degrees and the outer skin is ribbed (envelope STEP, vendor/peli/wall2.py), so a flanged receptacle cannot seal on the case itself.",
        "Why the back wall: the front wall carries the handle, the pressure valve, two rib clusters and both latch straps (Peli drawing 1521-931), and the end walls are too narrow between their ribs. Every through-hole here keeps 7 mm or more from the back wall's inner ribs (X -133.3 and -8.6 nearest, frame-leg drill points at 67 to 71 mm above the floor, appendix 25.1); the hinge sits at the rim, 43 mm above the plate.",
@@ -106,9 +106,40 @@ for sx, sz in SCREWS: circle(sx, sz, 4.5, 0.5); cross(sx, sz, 3)
 dim(PLATE["cx"] - PLATE["w"] / 2, PLATE["cx"] + PLATE["w"] / 2, PLATE["cz"] + PLATE["h"] / 2 + 12, "82.0"); vdim(PLATE["cx"] + PLATE["w"] / 2 + 8, PLATE["cz"] - PLATE["h"] / 2, PLATE["cz"] + PLATE["h"] / 2, "54.0")
 dim(DC["x"], USB["x"], PLATE["cz"] - PLATE["h"] / 2 - 6, "36.0"); dim(PLATE["cx"] - PLATE["w"] / 2, DC["x"], PLATE["cz"] - PLATE["h"] / 2 - 12, "23.0"); dim(SCREWS[3][0], SCREWS[5][0], PLATE["cz"] - PLATE["h"] / 2 - 18, "56.0 (28.0 pitch), screw rows 4.0 in from the top and bottom edges")
 scale_bar(-140, -10)
-notes(["SHEET 2 of 2: CONNECTOR PLATE, 82 x 54 x 3 mm aluminium (5052 or 6061), edges broken, seen from OUTSIDE the case. Gasket: 2 mm closed-cell neoprene or EPDM, same outline and holes, between plate and wall.",
+notes(["SHEET 2 of 4: CONNECTOR PLATE, 82 x 54 x 3 mm aluminium (5052 or 6061), edges broken, seen from OUTSIDE the case. Gasket: 2 mm closed-cell neoprene or EPDM, same outline and holes, between plate and wall.",
        "Shore DC: Glenair D38999/20 shell 13 wall mount with round holes (D0), front panel mount: hole 19.05, four M3 clearance holes on a 23.01 square, flange 28.9 square. Its own gasket seals to the plate.",
        "USB host: Glenair 233-370 shell 15 wall mount D0, front panel mount: hole 23.01, four M3 clearance holes on a 24.61 square, flange 31.29 square; the 3 mm plate is inside its 1.6 to 6.35 mm panel range.",
        "Both receptacles: flange outside, gasket, plate, then the receptacle's own nuts inside; M3 x 10 stainless with spring washers. Plate to wall: six M4 x 16 stainless, washers both sides, Nyloc nuts inside; torque 1.2 N m in a cross pattern so the gasket loads evenly.",
        "Pin functions, cables and the dock leads: appendix 32.29 and ASSEMBLY.md section 4. Seen from outside the back wall (case +X to your left), as sheet 1. Nothing here has been cut yet."], -17)
+c.showPage()
+
+# ---------------- sheet 3: the seven SMA antenna bulkheads on the two end walls (the wall strip E3 is retired, 32.13 ruling 5)
+# Amphenol Connex 132170 SMA female-female bulkhead coupler: 6.5 mm D-hole with the flat at 6.00 across (vendor/rf drawing), 8 mm nut.
+# Four sites per end wall at Y -60, -30, +30, +60 between the wall's inner ribs (Y 0 and +-89, appendix 25.1), 55 mm above the floor.
+SMA_Z = 55.0
+WEST = [(-60.0, "UHF"), (-30.0, "WIFI 2.4"), (30.0, "WIFI 5.8"), (60.0, "SDR")]        # west end wall (case -X): the strip's four western clamps
+EAST = [(-60.0, "LTE"), (-30.0, "IRIDIUM"), (30.0, "LORA"), (60.0, "spare, plugged")]  # east end wall (case +X)
+def end_wall(title, sites, y_sign, ox_paper):
+    """One end wall seen from OUTSIDE: paper x = case Y times y_sign (so the viewer's left is the right case direction)."""
+    def Q(y, z): return W / 2 + (ox_paper + y_sign * y) * mm, oz + z * mm
+    c.setLineWidth(0.8); c.line(*Q(-100, 0), *Q(100, 0)); c.line(*Q(-100, FLOOR_TO_RIM), *Q(100, FLOOR_TO_RIM))
+    c.setLineWidth(0.3); c.setDash(1, 1)
+    for ry in (-89.0, 0.0, 89.0):
+        qx, qz = Q(ry, 30); c.rect(qx - 3 * mm, qz, 6 * mm, 41 * mm, stroke=1, fill=0)
+    c.setDash()
+    for (y, name) in sites:
+        qx, qz = Q(y, SMA_Z); c.setLineWidth(0.7); c.circle(qx, qz, 3.25 * mm, stroke=1, fill=0)
+        c.setLineWidth(0.5); c.line(qx + 2.75 * mm, qz - 1.73 * mm, qx + 2.75 * mm, qz + 1.73 * mm)   # the D flat at 6.00 across
+        c.setLineWidth(0.2); c.line(qx - 5 * mm, qz, qx + 5 * mm, qz); c.line(qx, qz - 5 * mm, qx, qz + 5 * mm)
+        c.setFont("Helvetica", 6.5); c.drawCentredString(qx, qz + 5 * mm, name); c.drawCentredString(qx, qz - 7 * mm, "Y %+.0f" % y)
+    c.setFont("Helvetica", 7); qx, qz = Q(0, FLOOR_TO_RIM + 4); c.drawCentredString(qx, qz, title)
+    qx, qz = Q(0, -4); c.drawCentredString(qx, qz, "cavity floor, Z 0; holes at Z %.0f" % SMA_Z)
+for k, (title, sites, sign) in enumerate((("WEST end wall (case -X), seen from outside: case +Y to your right", WEST, 1.0), ("EAST end wall (case +X), seen from outside: case +Y to your left", EAST, -1.0))):
+    if k: c.showPage()
+    end_wall(title, sites, sign, 0.0)
+    scale_bar(-140, -14)
+    notes(["SHEET %d of 4: the SMA antenna bulkheads on this end wall, 55 mm above the floor, four sites at Y -60, -30, +30 and +60 (the east +60 site is a spare, plugged). Print at 100 percent." % (3 + k),
+       "Coupler: Amphenol Connex 132170 SMA female-female bulkhead (vendor/rf), 6.5 mm D-hole with the flat filed to 6.00 across so the coupler cannot turn when a pigtail is torqued; 8 mm nut and lock washer inside, the O-ring seal outside.",
+       "The sites sit between the end walls' inner ribs (Y 0 and +-89, appendix 25.1) and above the battery module (26 mm) and the dock strip. Inside, an RG-316 jumper runs from each coupler to its float nest on the strip: west wall to the UHF, WIFI 2.4, WIFI 5.8 and SDR nests, east wall to LTE, IRIDIUM and LORA (about 150 to 250 mm each).",
+       "Outside, the antenna pigtails screw on as before, 0.45 N m once. The retired wall strip E3 carried these same seven couplers; only their home changed."], -22)
 c.showPage(); c.save(); print("wrote", out)
