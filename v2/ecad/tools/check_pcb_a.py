@@ -22,7 +22,7 @@ for ref, (ex, ey) in {"J_DOCK": (-124, -70), "J_PRE1": (-151, -70), "J_CP1": (-1
     if ref not in fps: print("SKIP %s (placed at the netlist stage)" % ref); continue
     cx, cy = fpc(ref); check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
 R = {"POWER": (-162, -40, -32, 2), "CTRL": (-162, 2, -118, 36), "DOCKBLK": (-155, -76, -116, -64), "MEZZ": (5, -31, 85, 31), "HUB": (-104, 25, -30, 78), "CHG": (-70, -72, -30, -46),
-     "JMEZZ": (-13.5, -6.5, -2.5, 22.5), "JMEZZPWR": (-13, -22.5, -3, -13.5), "JAB": (-85.5, -71.5, -58.5, -60.5), "JLEDS": (-53, -77, -27, -71),
+     "JMEZZ": (-13.5, -6.5, -2.5, 22.5), "JMEZZPWR": (-13, -22.5, -3, -13.5), "JAB": (-85.5, -71.5, -58.5, -60.5), "JLEDS": (-52, -77, -24, -71),
      "BM1": (-106, -72, -94, -60), "BM2": (-90, -72, -78, -60), "BM3": (-32, -72, -20, -60), "BM4": (-18, -72, -6, -60), "BM5": (64, -72, 76, -60), "BM6": (86, -72, 98, -60), "BM7": (98, -69, 108, -59)}
 for k, r in R.items(): check(r[0] >= -163 and r[2] <= 118 and r[1] >= -78 and r[3] <= 78, "%s inside outline with 2 mm margin" % k)
 def overlap(a, c): return not (a[2] <= c[0] or c[2] <= a[0] or a[3] <= c[1] or c[3] <= a[1])

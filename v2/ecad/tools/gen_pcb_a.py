@@ -61,7 +61,7 @@ WIFI_SLOTS = [(45.0, 36.0), (85.0, 36.0), (45.0, 69.0), (85.0, 69.0)]
 J_WIFI = (8.0, 52.5)          # USB-A receptacle, opening +X
 # power connectors
 J_AB = (-72.0, -66.0)         # 2x9 IDC top side (A20), ribbon up to PCB-B's underside header at (-72, -78)
-J_LEDS = (-40.0, -74.0)       # XH 1x10: five front-wall LEDs (R5)
+J_LEDS = (-38.0, -74.0)       # XH 1x10: five front-wall LEDs (R5); A20: 2 mm east of the A19 spot, clear of the 2x9 J_AB1 box header
 HUB_ZONE = (-104.0, 25.0, -30.0, 77.0)     # A19: seven-port hub, five eFuse + INA219 channels, PCA9555 0x21 and 0x24, LED drivers (grown south into the former pack area)
 BANK_ZONE = (-70.0, -72.0, -30.0, -46.0)    # A19: charger BQ25792 zone, next to the 12 V dock pins and the node bar
 # ---------------------------------------------------------------- plumbing (as PCB-C)

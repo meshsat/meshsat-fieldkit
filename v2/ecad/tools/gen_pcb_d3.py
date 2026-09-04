@@ -160,8 +160,8 @@ plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+3V3", "+3V3
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
-cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
-CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "CELL": (0.2, 1.2, 1.0, 0.5, 1.2, 0.3)}   # CELL: the 5 A boost loop
+cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)   # D6: the JLC floor, as B13 (a D5-style route ended 2.6 um short of 0.15)
+CLASSES = {"USB": (0.127, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "CELL": (0.2, 1.2, 1.0, 0.5, 1.2, 0.3)}   # CELL: the 5 A boost loop
 PATTERNS = [("USB_*", "USB"), ("VIN_CELL", "CELL"), ("SW", "CELL"), ("V8", "CELL"), ("+5V_USB", "PWR"), ("+3V3", "PWR"), ("+3.3VA", "PWR"), ("VIN_LDO", "PWR"), ("LDO_A", "PWR"), ("GND", "PWR")]
 try:
     for name, vals in CLASSES.items():
@@ -179,7 +179,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("CELL", 2, 0.2, 1.2, 1.0, 0.5, 1.2, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.127, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.127, 0.4, 0.8, 0.4, 0.4, 0.25), C("CELL", 2, 0.2, 1.2, 1.0, 0.5, 1.2, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
