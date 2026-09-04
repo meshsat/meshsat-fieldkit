@@ -3,23 +3,20 @@
 
 Case-centred frame as in the geometry appendix (+Y = case back wall). Millimetres.
 Phase B1: outline, rod holes + nut keep-outs, every COTS site with its real hole pattern,
-cradle slots for the USB sticks, ribbon header, DCF77 connector, pass-throughs, reserved
-hub / eFuse / monitor zone. Phase B2 adds the schematic-driven copper.
+cradle slots for the USB stick, pass-through, the reserved zones. Phase B2 adds the schematic-driven copper.
 
-Sources: appendix s.2/3/6 (outline, rods, CAD device rectangles); CAD _PORTS map (Pi USB
-face, X1202 USB-C IN on the south edge); Raspberry Pi 5 hole pattern 58 x 49 at 3.5 mm
-from the edges; RockBLOCK 9603 drawing (45 x 45, 2x Ø2.5 at 3.15 from the edges, 38.7 apart);
-RockBLOCK 9704 STEP (52.0 x 47.8, no holes, ACC-RB9704SMA-MOUNT bracket 52 x 56 with 4x Ø4.6
-on 32 x 32); LilyGO T-Call A767X drawing (74.78 x 29.01, 4x Ø3 on 69.46 x 24.97); Seeed
-Wio-SX1262 for XIAO STEP (17.78 x 21.44, one Ø2.2 hole 3.76 mm from a short edge); RTL-SDR
-Blog V4 69 x 27 x 13 body; Sonoff ZBDongle-P 87 x 25.5 x 13.5 incl. plug; LimeSDR Mini 2.0 STEP
-(69.0 x 31.37 PCB, USB 3.0 A plug centred on the width, RX/TX SMA at the far end, 11 mm tall);
-LilyGO T-Beam 1W STEP H768-01 (PCB 43.06 x 116.75, holes Ø3.5 (32.18,113.66) Ø3 (-0.30,102.42)
-Ø3 (35.20,83.92) Ø2 (2.62,3.00) Ø2 (32.28,2.99) in the PCB frame, SMA on the right of the top
-edge, USB-C on the left edge at y 60.5..69.4, battery plate and shell hang 10 mm below the PCB
-and are NOT fitted). Owner rulings R2 (hub per board), R4/R17 (Z), R11 (dual RockBLOCK site),
-2026-09-02; re-layout B4 (owner go 2026-09-02): T-Beam 1W strip on the east edge, SDR bay dual
-RTL-SDR / LimeSDR, ZigBee to the north band, RockBLOCK site west, pass-through south.
+B13 (appendix 32.35, MESHSAT-795): the Raspberry Pi 5 on standoffs is replaced by a Compute Module 5
+site (55 x 40 module on two Amphenol 10164227-1004A1RLF, 4.0 mm stack, four M2.5 holes on 33 x 48; the
+CM5 Cooler 41 x 56 x 12.7 over it; footprint from the CM5IO design files, appendix 32.35 and vendor/cm5/).
+The T-Call, XIAO, T-Beam and ZigBee dongle sites, the 40-pin ribbon header, the two upstream USB-C
+receptacles and the pigtail headers are gone. New sites: the mini PCIe LTE card (30 x 50.95 full-size
+card on its socket, north band), the nano-SIM holder, the NEO-M9N GNSS module with its U.FL, the
+Wio-SX1262 LoRa module, the E72-2G4M20S1E ZigBee module (east strip, PCB antenna to the back wall),
+the 22-pin display FPC, the RTC cell holder, the fan header, the flashing USB-C on the south edge.
+Kept from B12: outline 245 x 170, rods, SDR bay (RTL-SDR Blog V4 69 x 27 x 13 or LimeSDR Mini 2.0
+69.0 x 31.37), RockBLOCK dual site (9603 drawing 45 x 45, 2x Ø2.5 at 3.15 from the edges, 38.7 apart;
+9704 STEP 52.0 x 47.8 on the ACC-RB9704SMA-MOUNT bracket 52 x 56 with 4x Ø4.6 on 32 x 32), the DCF77
+connector, the panel ribbon, the pass-through, the three rail leads from PCB-A, J_AB1 underneath.
 """
 import math, sys
 import pcbnew
@@ -40,50 +37,24 @@ def slot_footprint(w, h):
     name = "Slot_%gx%g_NPTH" % (w, h)
     path = os.path.join(MSLIB, name + ".kicad_mod")
     if not os.path.exists(path):
-        open(path, "w").write('(footprint "%s"\n\t(version 20241229)\n\t(generator "meshsat")\n\t(generator_version "9.0")\n\t(layer "F.Cu")\n\t(descr "NPTH slot %g x %g mm for a cable tie or strap")\n\t(attr exclude_from_pos_files exclude_from_bom)\n\t(pad "" np_thru_hole oval (at 0 0) (size %g %g) (drill oval %g %g) (layers "*.Cu" "*.Mask"))\n\t(fp_rect (start %g %g) (end %g %g) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))\n)\n' % (name, w, h, w, h, w, h, -w/2-0.25, -h/2-0.25, w/2+0.25, h/2+0.25))
+        open(path, "w").write('(footprint "%s"\n\t(version 20241229)\n\t(generator "meshsat")\n\t(generator_version "9.0")\n\t(layer "F.Cu")\n\t(descr "NPTH slot %g x %g mm for a cable tie or strap")\n\t(attr exclude_from_pos_files exclude_from_bom)\n\t(pad "" np_thru_hole roundrect (at 0 0) (size %g %g) (drill oval %g %g) (layers "*.Cu" "*.Mask") (roundrect_rratio 0.5))\n)\n' % (name, w, h, w, h, w, h))
     return name
 
 # ---------------------------------------------------------------- sites (case frame)
-# Pi 5 + X1202 stack: Pi long axis along Y, centred (-78.5, 0); Pi holes 3.5 mm in from the Pi edges
-STACK_C = (-88.5, 0.0)                          # B11: 10 mm west of B10 so the X1202 extension clears J_RTL1
-PI_RECT = (-116.5, -42.5, -60.5, 42.5)          # 56 x 85; HDMI long edge west, GPIO header edge east, SD-card end south
-X1202_RECT = (-117.2, -42.5, -21.2, 42.5)       # B11: Geekworm X1202 V1.1 DXF (vendor/x1202): 96 x 85, the Pi flush on its west long edge (0.7 mm), 39.3 mm of board past the header edge; cells hang underneath to board level
-STACK_HOLES = [(STACK_C[0] + dx, STACK_C[1] + dy) for dx in (-24.5, 24.5) for dy in (-29.0, 29.0)]   # 49 x 58, Ø2.7
-# GPIO ribbon breakout, 2x20 IDC box header, pins along Y
-J_GPIO = (-51.0, 48.5)                          # B11: north of the stack, pins along X (the B10 spot is under the X1202)
-# SDR bay, dual: RTL-SDR Blog V4 (69 x 27 x 13) or LimeSDR Mini 2.0 (69 x 31.4 x 11). Both have the USB-A plug
-# centred on one short end (points -X into the receptacle) and the SMA(s) on the other. Bay 84 x 32 on centreline Y 0.
+# Compute Module 5: module 55 x 40 with the long axis along Y, centred (-88, 0), holes 33 x 48 (M2.5, 3.5 mm inset), connectors along the long edges
+# (GPIO connector west, high-speed connector east); the CM5 Cooler 41 x 56 x 12.7 sits on the module. Nothing else inside the cooler outline.
+CM5_C = (-88.0, 0.0)
+CM5_RECT = (CM5_C[0] - 20.0, CM5_C[1] - 27.5, CM5_C[0] + 20.0, CM5_C[1] + 27.5)
+COOLER_RECT = (CM5_C[0] - 20.5, CM5_C[1] - 28.0, CM5_C[0] + 20.5, CM5_C[1] + 28.0)
+CM5_HOLES = [(CM5_C[0] + dx, CM5_C[1] + dy) for dx in (-16.5, 16.5) for dy in (-24.0, 24.0)]   # M2.5, 33 x 48 (datasheet 4.1.1)
+# SDR bay: receptacle west (RTL-SDR plug faces -X), stick body eastwards, SMA end at the east; tie slots
 SDR_RECEPT = (-12.0, 0.0)                       # receptacle centre, opening faces +X
 SDR_RECT = (-4.0, -16.0, 78.0, 16.0)
 SDR_SLOTS = [(20.0, -18.0), (74.0, -18.0), (20.0, 18.0), (66.0, 18.0)]   # tie-wrap slots 5 x 1.8
-# Sonoff ZBDongle-P in the north band: body ~70 x 25.5 at X -40..30, plug points +X, receptacle at the east end
-ZB_RECT = (-40.0, 55.0, 30.0, 80.5)
-ZB_RECEPT = (38.0, 67.75)                       # opening faces -X
-ZB_SLOTS = [(-10.0, 52.5), (18.0, 52.5), (-10.0, 82.0), (18.0, 82.0)]   # B11: the west pair east of the ribbon header
-# LilyGO T-Call A7670E V1.0: 74.78 x 29.01, 4x Ø3.0 on 69.46 x 24.97; USB-C at the west end (CAD)
-TCALL_C = (39.39, 35.5)
-TCALL_RECT = (TCALL_C[0] - 37.39, TCALL_C[1] - 14.505, TCALL_C[0] + 37.39, TCALL_C[1] + 14.505)
-TCALL_HOLES = [(TCALL_C[0] + dx, TCALL_C[1] + dy) for dx in (-34.73, 34.73) for dy in (-12.485, 12.485)]
-TCALL_USBC = (-16.0, 46.0)                      # pigtail header (JST-PH), cable to the T-Call USB-C at its west end
-# Seeed Wio-SX1262 + XIAO ESP32S3: 21.44 x 17.78, one Ø2.2 hole 3.76 mm from the west short edge; USB-C east
-XIAO_C = (-93.0, 58.0)
-XIAO_RECT = (XIAO_C[0] - 10.72, XIAO_C[1] - 8.89, XIAO_C[0] + 10.72, XIAO_C[1] + 8.89)
-XIAO_HOLE = (XIAO_C[0] - 10.72 + 3.76, XIAO_C[1])
-XIAO_SLOTS = [(-88.0, 46.0), (-88.0, 70.0)]
-XIAO_USBC = (-76.0, 60.0)                       # B11: 2 mm north, clear of the ribbon header
-# LilyGO T-Beam 1W (alternative LoRa radio, one of XIAO / T-Beam fitted): strip on the east edge, long axis Y,
-# component side up, SMA end north (SMA at the NE corner, Y to 67.2: use a RIGHT-ANGLE SMA plug on the pigtail),
-# USB-C on its west edge at Y -3.5..5.4 (right-angle USB-C plug), ON/OFF slide switch on its west edge at Y -18..-12.
-# Fitted BARE: no battery plate, no shell (both hang 10 mm below the PCB). Five standoffs: 3x M2.5, 2x M2, 6 mm.
-TB_X0, TB_Y0 = 79.3, -64.0                      # carrier position of the T-Beam PCB's SW corner (STEP face min corner)
-def tb(sx, sy): return (TB_X0 + 4.08 + sx, TB_Y0 - 0.03 + sy)   # T-Beam PCB frame (STEP) -> carrier frame
-TB_RECT = (TB_X0, TB_Y0, TB_X0 + 43.06, TB_Y0 + 116.75)
-TB_HOLES_M25 = [tb(32.18, 113.66), tb(-0.30, 102.42), tb(35.20, 83.92)]   # Ø3.5, Ø3, Ø3 on the module
-TB_HOLES_M2 = [tb(2.62, 3.00), tb(32.28, 2.99)]                           # Ø2 on the module
-TB_SMA = (tb(27.57, 116.78), tb(36.81, 131.25))                           # SMA body beyond the PCB end
-TB_USBC = (tb(-4.97, 60.50), tb(2.60, 69.44))
-TB_PINROWS = [(tb(-4.0, 2.5), tb(-1.3, 41.2)), (tb(36.2, 2.5), tb(38.9, 41.2))]   # header pin rows: top-side copper keep-out
-J_TBEAM = (70.0, 55.0)                          # JST-PH 4-pin pigtail header for the T-Beam USB-C (CH3, parallel to J_XIAO1)
+# LTE mini PCIe card (north band): socket at the west end, full-size card 30 x 50.95 extending east, two M2.5 standoffs in the socket footprint
+LTE_RECT = (-32.0, 52.0, 26.0, 82.0)
+# ZigBee module (east strip): E72-2G4M20S1E 28.7 x 17.5, long axis along Y, PCB antenna toward the back wall
+ZB_RECT = (84.0, 16.0, 104.0, 52.0)   # the module body plus its 3 mm antenna keep-out; its small parts pack east of it
 # RockBLOCK dual site centred (52, -48): 9704 on the GC bracket (4x Ø4.6 on 32 x 32), 9603 offset +6 in Y
 RB_C = (52.0, -48.0)
 RB9704_RECT = (RB_C[0] - 26.0, RB_C[1] - 28.0, RB_C[0] + 26.0, RB_C[1] + 28.0)      # bracket 52 x 56
@@ -93,18 +64,19 @@ RB9603_RECT = (RB9603_C[0] - 22.5, RB9603_C[1] - 22.5, RB9603_C[0] + 22.5, RB960
 RB9603_HOLES = [(RB9603_C[0] - 19.35, RB9603_C[1] + 22.5 - 3.15), (RB9603_C[0] + 19.35, RB9603_C[1] + 22.5 - 3.15)]
 # DCF77 remote-mount connector, JST-XH 4-pin, north edge
 J_DCF77 = (-85.0, 77.0)
-# hub / eFuse / monitor zone (schematic phase), south-west, with the upstream USB-C and the A-B header
-HUB_ZONE = (-96.0, -81.0, -46.0, -52.0)
-# B12: no X1202; the three rail leads from PCB-A sit on the west edge (J_5V_M1, J_5V_M2, J_5V_PI, placed by gen_pcb_b3.py)
-J_USB_UP = (-48.0, -66.0)                       # USB-C receptacle, upstream to a Pi port, opening faces +X
-J_AB = (-72.0, -78.0)                           # 2x7 IDC on the UNDERSIDE, ribbon down to PCB-A
-PASS_CENTRE = (-13.0, -50.0, 15.0)              # Ø15 general pass-through (moved south-west in B4)
+# zones of the schematic phase (gen_pcb_b3.py packs the parts into them): hub east of the module, bucks and bench headers south of it, control west
+HUB_ZONE = (-66.0, -34.0, -22.0, -14.0)
+BUCK_ZONE = (-58.0, -84.0, -36.0, -60.0)
+CTRL_ZONE = (-119.5, -64.0, -100.0, -30.0)
+J_AB = (-72.0, -78.0)                           # 2x9 IDC on the UNDERSIDE, ribbon down to PCB-A
+J_FLASH = (-30.0, -78.0)                        # USB-C on the south edge: rpiboot eMMC flashing only, opening faces -Y
+PASS_CENTRE = (-13.0, -50.0, 15.0)              # Ø15 general pass-through
 
 # ---------------------------------------------------------------- plumbing (as PCB-C)
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(4)
 tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-B COMPUTE"); tb.SetRevision("A")
-tb.SetDate("2026-09-02"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-709. Case-centred frame. B12: the Pi alone on the stack (the X1202 is gone, appendix 32.17), three rails from PCB-A. tools/gen_pcb_b.py")
+tb.SetDate("2026-09-04"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-795. Case-centred frame. B13: Compute Module 5 carrier (appendix 32.35), radios on the module's buses, three rails from PCB-A. tools/gen_pcb_b.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.45), ("m_MinThroughDrill", 0.25),
@@ -202,52 +174,26 @@ for i, (x, y) in enumerate(ROD_HOLES, 1):
 circle(PASS_CENTRE[0], PASS_CENTRE[1], PASS_CENTRE[2], pcbnew.Edge_Cuts)
 keepout_circle(PASS_CENTRE[0], PASS_CENTRE[1], PASS_CENTRE[2] + 2.0, "keep-out: centre pass-through")
 
-# ---------------------------------------------------------------- stack
+# ---------------------------------------------------------------- Compute Module 5 site (the two receptacles U30A/U30B are placed by gen_pcb_b3.py; holes and outline here)
 n = 5
-for (x, y) in STACK_HOLES:
-    hole("H%d" % n, x, y, 2.7, "M2.5 standoff, Pi 5"); n += 1
-rect(PI_RECT, pcbnew.F_SilkS, 0.12); rect(PI_RECT, pcbnew.Dwgs_User, 0.1)
-text("Pi 5 + cooler on 4x M2.5 standoffs (49x58); HDMI edge WEST, header edge EAST, SD card SOUTH; 5 V by the J_5V_PI lead into the Pi USB-C", STACK_C[0] + 19.5, 40.0, pcbnew.F_SilkS, 0.9, 0.16)
-text("B12: no X1202 (appendix 32.17); the kit charger, gauge and rails live on PCB-A", STACK_C[0] + 19.5, -40.0, pcbnew.F_SilkS, 0.9, 0.16)
-# ribbon header
-place("Connector_IDC", "IDC-Header_2x20_P2.54mm_Vertical", "J_GPIO1", J_GPIO[0], J_GPIO[1], "Pi 5 GPIO ribbon 2x20", rot=90)
-text("Pi 40-pin ribbon", J_GPIO[0], J_GPIO[1] + 7.5, pcbnew.F_SilkS, 1.2, 0.2)
+rect(CM5_RECT, pcbnew.Dwgs_User, 0.1); rect(COOLER_RECT, pcbnew.F_SilkS, 0.12)
+for (x, y) in CM5_HOLES:
+    hole("H%d" % n, x, y, 2.7, "M2.5 standoff 4.0 mm, CM5"); n += 1
+text("COMPUTE MODULE 5 on 2x Amphenol 10164227-1004A1RLF (4.0 mm stack), M2.5 x 4 on 33 x 48; CM5 Cooler 41 x 56 over it", CM5_C[0], CM5_C[1] + 31.5, pcbnew.F_SilkS, 0.9, 0.16)
+text("GPIO connector WEST, high-speed connector EAST; U.FL antenna lead to the WiFi bulkhead (dtparam=ant2)", CM5_C[0], CM5_C[1] - 31.5, pcbnew.F_SilkS, 0.9, 0.16)
+text("B13: no Pi 5, no ribbon, no USB plug on the compute side (appendix 32.35)", CM5_C[0], CM5_C[1] - 34.5, pcbnew.F_SilkS, 0.9, 0.16)
 # SDR bay (RTL-SDR V4 or LimeSDR Mini 2.0)
 site(SDR_RECT, "SDR BAY: RTL-SDR Blog V4 (69 x 27) or LimeSDR Mini 2.0 (69 x 31.4)", "USB-A plug -> receptacle west; SMA east -> SDR bulkhead (Lime: RX + TX, 2 bulkheads)", lx=36.0, ly=0.0)
 for i, (x, y) in enumerate(SDR_SLOTS): slot("S_RTL%d" % (i + 1), x, y, 5.0, 1.8)
 usb_a = place("Connector_USB", "USB_A_Stewart_SS-52100-001_Horizontal", "J_RTL1", SDR_RECEPT[0], SDR_RECEPT[1], "USB-A receptacle, SDR", rot=90)
 if usb_a is None: rect((SDR_RECEPT[0] - 7, SDR_RECEPT[1] - 7.5, SDR_RECEPT[0] + 7, SDR_RECEPT[1] + 7.5), pcbnew.F_SilkS, 0.15)
 text("J_RTL1", SDR_RECEPT[0], SDR_RECEPT[1] + 9.5, pcbnew.F_SilkS, 1.0, 0.18)
-# ZigBee (north band)
-site(ZB_RECT, "SONOFF ZBDongle-P  CC2652P", "plug east -> receptacle; antenna west (2.4 GHz, in-case)", ly=67.75)
-for i, (x, y) in enumerate(ZB_SLOTS): slot("S_ZB%d" % (i + 1), x, y, 5.0, 1.8)
-usb_b = place("Connector_USB", "USB_A_Stewart_SS-52100-001_Horizontal", "J_ZB1", ZB_RECEPT[0], ZB_RECEPT[1], "USB-A receptacle, ZigBee", rot=-90)
-if usb_b is None: rect((ZB_RECEPT[0] - 7, ZB_RECEPT[1] - 7.5, ZB_RECEPT[0] + 7, ZB_RECEPT[1] + 7.5), pcbnew.F_SilkS, 0.15)
-text("J_ZB1", ZB_RECEPT[0], ZB_RECEPT[1] - 9.5, pcbnew.F_SilkS, 1.0, 0.18)
-# T-Call
-site(TCALL_RECT, "LILYGO T-Call A7670E (V1.0 / V1.1, one outline)  74.78 x 29.01", "4x M3 on 69.46 x 24.97; USB-C west; LTE pigtail -> LTE bulkhead")
-for (x, y) in TCALL_HOLES:
-    hole("H%d" % n, x, y, 3.2, "M3, T-Call corner"); n += 1
-# T-Beam 1W strip (alternative to the XIAO)
-rect(TB_RECT, pcbnew.F_SilkS, 0.12)
-text("LILYGO T-BEAM 1W (alt. LoRa)", TB_X0 + 21.5, -6.0, pcbnew.F_SilkS, 1.3, 0.22, angle=90)
-text("bare PCB + fan, 5 standoffs 6 mm; SMA N (right-angle plug); USB-C W", TB_X0 + 25.5, -6.0, pcbnew.F_SilkS, 0.9, 0.16, angle=90)
-for (x, y) in TB_HOLES_M25:
-    hole("H%d" % n, x, y, 2.7, "M2.5 standoff, T-Beam 1W"); n += 1
-for (x, y) in TB_HOLES_M2:
-    hole("H%d" % n, x, y, 2.2, "M2 standoff, T-Beam 1W"); n += 1
-rect((TB_SMA[0][0], TB_SMA[0][1], TB_SMA[1][0], TB_SMA[1][1]), pcbnew.Dwgs_User, 0.1); text("SMA", (TB_SMA[0][0] + TB_SMA[1][0]) / 2, TB_SMA[1][1] + 1.5, pcbnew.Dwgs_User, 0.8, 0.15)
-rect((TB_USBC[0][0], TB_USBC[0][1], TB_USBC[1][0], TB_USBC[1][1]), pcbnew.Dwgs_User, 0.1); text("USB-C", TB_USBC[0][0] - 4.0, (TB_USBC[0][1] + TB_USBC[1][1]) / 2, pcbnew.Dwgs_User, 0.8, 0.15)
-for (a, b) in TB_PINROWS:
-    keepout_rect(a[0], a[1], b[0], b[1], "keep-out: T-Beam header pins")
-    rect((a[0], a[1], b[0], b[1]), pcbnew.Dwgs_User, 0.1)
-text("J_TBEAM1 pigtail", J_TBEAM[0], J_TBEAM[1] + 5.0, pcbnew.F_SilkS, 1.0, 0.18)
-text("J_PANEL ribbon up to PCB-C", 86.0, 75.5, pcbnew.F_SilkS, 0.9, 0.16)
-# XIAO + Wio-SX1262
-site(XIAO_RECT, "XIAO ESP32S3 + Wio-SX1262", "1x M2 + tie slots; u.FL -> LoRa bulkhead", lx=-62.0, ly=44.5)
-hole("H%d" % n, XIAO_HOLE[0], XIAO_HOLE[1], 2.2, "M2 standoff, Wio-SX1262"); n += 1
-for i, (x, y) in enumerate(XIAO_SLOTS): slot("S_XIAO%d" % (i + 1), x, y, 5.0, 1.8)
-text("J_XIAO1 pigtail", XIAO_USBC[0], XIAO_USBC[1] + 7.5, pcbnew.F_SilkS, 1.0, 0.18)
+# LTE card (north band) and ZigBee module (east strip): outlines for the fit check; the footprints come with the netlist
+rect(LTE_RECT, pcbnew.Dwgs_User, 0.1)
+text("LTE: Quectel EG25-G mini PCIe (full-size card 30 x 50.95) on J_LTE1, 2x M2.5 standoffs; SIM in J_SIM1; pigtails -> LTE bulkhead", (LTE_RECT[0] + LTE_RECT[2]) / 2, LTE_RECT[3] + 1.6, pcbnew.F_SilkS, 0.9, 0.16)
+rect(ZB_RECT, pcbnew.Dwgs_User, 0.1)
+text("ZIGBEE: Ebyte E72-2G4M20S1E (CC2652P), PCB antenna to the back wall", (ZB_RECT[0] + ZB_RECT[2]) / 2, ZB_RECT[3] + 1.6, pcbnew.F_SilkS, 0.9, 0.16)
+text("GNSS NEO-M9N + U.FL -> GPS bulkhead   |   LoRa Wio-SX1262, IPEX -> LoRa bulkhead", -96.0, 68.5, pcbnew.F_SilkS, 0.9, 0.16)
 # RockBLOCK dual site
 rect(RB9704_RECT, pcbnew.F_SilkS, 0.12); rect(RB9603_RECT, pcbnew.Dwgs_User, 0.1)
 text("ROCKBLOCK SITE", RB_C[0], RB_C[1] + 2.0, pcbnew.F_SilkS, 1.4, 0.22)
@@ -260,16 +206,18 @@ for (x, y) in RB9603_HOLES:
 # DCF77
 place("Connector_JST", "JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical", "J_DCF77", J_DCF77[0], J_DCF77[1], "DCF77 remote: 3V3 GND T P1")
 text("DCF77: 3V3 GND T P1", -66.0, 82.5, pcbnew.F_SilkS, 0.9, 0.16)
-# hub zone (reserved)
-rect(HUB_ZONE, pcbnew.Dwgs_User, 0.15)
-text("HUB / eFUSE / MONITOR ZONE  (phase B2: 4-port USB 2.0 hub, 4x eFuse, INA3221 x2, PCA9554)", (HUB_ZONE[0] + HUB_ZONE[2]) / 2, HUB_ZONE[3] + 2.5, pcbnew.Dwgs_User, 1.1, 0.2)
-text("J_5V_M1 / J_5V_M2 / J_5V_PI (VH): three rails from PCB-A", -92.0, -40.0, pcbnew.Dwgs_User, 0.9, 0.15)
-rect((J_USB_UP[0] - 4.5, J_USB_UP[1] - 4, J_USB_UP[0] + 4.5, J_USB_UP[1] + 4), pcbnew.Dwgs_User, 0.1); text("J_USB_UP1", J_USB_UP[0], J_USB_UP[1] - 6, pcbnew.Dwgs_User, 0.9, 0.15)
-text("J_AB1 2x7 to PCB-A (underside)", J_AB[0], J_AB[1] + 8.0, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
+# zones (drawn for the record; gen_pcb_b3.py packs into them)
+rect(HUB_ZONE, pcbnew.Dwgs_User, 0.15); text("USB2517I HUB (upstream = CM5 USB3-0 pair)", (HUB_ZONE[0] + HUB_ZONE[2]) / 2, HUB_ZONE[3] + 2.0, pcbnew.Dwgs_User, 1.0, 0.18)
+rect(BUCK_ZONE, pcbnew.Dwgs_User, 0.15); text("3.3 V BUCKS", (BUCK_ZONE[0] + BUCK_ZONE[2]) / 2, BUCK_ZONE[3] + 2.0, pcbnew.Dwgs_User, 1.0, 0.18)
+rect(CTRL_ZONE, pcbnew.Dwgs_User, 0.15); text("EXPANDERS, I2C BUFFER, LEVEL STAGES", (CTRL_ZONE[0] + CTRL_ZONE[2]) / 2, CTRL_ZONE[3] + 2.0, pcbnew.Dwgs_User, 0.9, 0.16)
+text("J_5V_M1 / J_5V_M2 (VH) from PCB-A; J_5V_PI (VH) beside the module", -92.0, -40.0, pcbnew.Dwgs_User, 0.9, 0.15)
+rect((J_FLASH[0] - 4.5, J_FLASH[1] - 4, J_FLASH[0] + 4.5, J_FLASH[1] + 4), pcbnew.Dwgs_User, 0.1); text("J_FLASH: rpiboot only", J_FLASH[0], J_FLASH[1] - 6, pcbnew.Dwgs_User, 0.9, 0.15)
+text("J_AB1 2x9 to PCB-A (underside)", J_AB[0], J_AB[1] + 8.0, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
+text("J_PANEL ribbon up to PCB-C", 86.0, 75.5, pcbnew.F_SilkS, 0.9, 0.16)
 # datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("PCB-B COMPUTE  REV A (B12)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
-text("MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-04", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
+text("PCB-B COMPUTE  REV A (B13)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
+text("MESHSAT-795 | 245x170x1.6 4L | matte black | 2026-09-04", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -10, 83.0, pcbnew.F_SilkS, 1.2, 0.2); text("FRONT WALL (-Y)   v v v", -100, -83.2, pcbnew.F_SilkS, 1.5, 0.25)
 text("PORT (-X)", -hx + 5.5, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 6.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
 text("PCB-B UNDERSIDE - faces PCB-A", 0, -hy + 9.0, pcbnew.B_SilkS, 1.6, 0.25, mirror=True)

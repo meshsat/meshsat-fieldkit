@@ -86,7 +86,7 @@ The dock interface is not a lead but belongs in the same reading. Twelve Preci-D
 
 ## 5. Conformal coating
 
-IPC-CC-830 acrylic (MG Chemicals 422B or equal) on A, B, D and the dock strip after the bench fit, two thin coats. Masks (kapton) before coating: every connector face and its keying, the spring-pin targets on E1 and the pins on A, the SMA bodies, the DMR858M sockets, the X1202 and Pi stack areas (assembled parts are not coated), the test points that the bench list uses. PCB-C (C5): the face is not coated (the seals sit on bare mask); the whole underside is coated after the silicone beads have cured, with J_PANEL, J_EPD, the two lead lands and the 16 frame rings masked (the star washers bond there). E2 has no copper.
+IPC-CC-830 acrylic (MG Chemicals 422B or equal) on A, B, D, the dock strip E4 and the dock block E5 after the bench fit, two thin coats. Masks (kapton) before coating: every connector face and its keying, the spring-pin targets and the pack targets on E5 and the pins on A, the SMP-MAX receptacles and the SMA bodies, the DMR858M sockets, the Pi 5 site and its standoffs (assembled parts are not coated), the test points that the bench list uses. PCB-C (C5): the face is not coated (the seals sit on bare mask); the whole underside is coated after the silicone beads have cured, with J_PANEL, J_EPD, the two lead lands and the 16 frame rings masked (the star washers bond there). The wall receptacles sit on the aluminium plate of the back wall (appendix 32.29); there is no wall strip to coat.
 
 ## 6. Labels (MIL-STD-130 style)
 

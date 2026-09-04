@@ -73,6 +73,9 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^AP2112K-3\.3\b", "SOT-23-5"): "C51118",
  (r"^TPS2065CDBV\b", "SOT-23-5"): "C353882",   # TI SLVSAU6I: the DBV package is a 5 pin SOT-23, the land was corrected on A19, B12 and D5
  (r"^TPS563201\b", "SOT-23-6"): "C116592",
+ (r"^Amphenol 10164227-1004A1RLF", "CM5_Conn"): "C7435219",   # B13: the CM5 receptacles, 4.0 mm stack (BergStak sheet in vendor/cm5/)
+ (r"^Ebyte E72-2G4M20S1E", "E72"): "C5352930",   # B13: CC2652P ZigBee module
+ (r"^CM5 cooler fan", "JST_SH_BM04B"): "C160404",   # B13: JST BM04B-SRSS-TB fan header
  (r"^TPS22810DRV\b", "WSON-6"): "C527679",
  (r"^EL817S / PC817", "SOP-4"): "C109227",
  (r"^amber hub$", "LED_0603"): "C965802",
