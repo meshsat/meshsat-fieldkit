@@ -8,8 +8,7 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O | A19 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A19/` |
 | PCB-B COMPUTE | B12 | 245 x 170 | 4 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B12/` |
-| PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C4/` |
-| PCB-C SPACER RING | R1 | 106 x 54 | 2 | `ecad/pcb-c-ring/` | `release/revA/boards/meshsat-pcb-c-ring-revA-R1/` |
+| PCB-C CONTROL PANEL | C5 | 442 x 311 | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C5/` |
 | PCB-D APRS | D5 | 80 x 62 | 4 | `ecad/pcb-d-aprs/` | `release/revA/boards/meshsat-pcb-d-revA-D5/` |
 | PCB-E1 DOCK STRIP | E4 | 278 x 60 | 4 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E4/` |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | `ecad/pcb-e5-block/` | `release/revA/boards/meshsat-pcb-e5-revA-E5/` |
@@ -32,7 +31,7 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 
 The set was respun on 4 and 5 September after a round of owner rulings recorded in appendix section 32. PCB-A now carries the kit's own charger, fuel gauge, three 5 V converters, main power control and a seven port USB hub, with blind-mate RF receptacles underneath; PCB-B carries the Pi alone on three rails from PCB-A; the dock strip grew to four layers and took a solar tracker, and a small raised block on it presents the contacts that the stack lands on. The cells left the boards entirely and became a battery module on the case floor.
 
-PCB-A, the dock strip and the dock block route clean (0 unrouted, 0 hard DRC violations). PCB-B is regenerated and waits for its route. PCB-C, the spacer ring and PCB-D are unchanged from the earlier round and route clean.
+All six boards route clean (0 unrouted, 0 hard DRC violations). PCB-C was respun on 5 September as the case's sealed weather face (C5, appendix 32.34): no plated hole on the face but the LEDs and the frame screws, keyed holes for the sealed switches, foam tape frames under both lenses, a panel-mount IP68 sounder, plugged vias and a gasket ring to the frame; the spacer ring R1 is retired. The sealing is a construction, not a test result: the bench procedure of 32.34 has not been run.
 
 The JLCPCB cart from 3 September is prepared but not paid, and it holds the earlier phases of the respun boards, so its lines for PCB-A, PCB-B and the dock are rebuilt before anything is ordered. Parts fitted at the bench rather than by the assembler are listed per board in `ORDER-NOTES.txt` and in `docs/ASSEMBLY.md`.
 

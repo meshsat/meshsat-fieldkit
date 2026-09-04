@@ -7,7 +7,7 @@ MeshSat is a prototype. Nothing here has been through a field deployment yet. Th
 | Folder | What it is | State |
 |---|---|---|
 | `v1/` | tesseract and parallax as built: IP67 case, HDPE plates on M3 rods, UV-K5 + AIOC APRS chain, per-kit BOM and GPIO pinouts, FreeCAD plate model | built April 2026, in use |
-| `v2/` | the Peli 1520 go-box: seven carrier PCBs, a control panel in the 1520PF panel frame, a removable stack on a floor dock | Rev A designed, JLCPCB order prepared September 2026, not yet built |
+| `v2/` | the Peli 1520 go-box: six carrier PCBs, a control panel in the 1520PF panel frame, a removable stack on a floor dock | Rev A designed, JLCPCB order prepared September 2026, not yet built |
 
 ## V1: tesseract and parallax
 
@@ -17,14 +17,13 @@ Two hand-built kits that differ only in the satellite modem (tesseract: RockBLOC
 
 ## V2: the carrier set
 
-Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The stack (PCB-A power, PCB-B compute) lifts straight out of the case, and a dock strip on the case floor carries the shore power, the solar tracker and the contact block that the stack lands on. None of it has been built yet.
+Six KiCad 9 boards replace the plates, the loose wiring and the USB hub. The stack (PCB-A power, PCB-B compute) lifts straight out of the case, and a dock strip on the case floor carries the shore power, the solar tracker and the contact block that the stack lands on. None of it has been built yet.
 
 | Board | Rev | Size (mm) | Layers | JLCPCB assembly | Role |
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O | A19 | 285 x 160 | 4 | top | charger and fuel gauge for the pack, three 5 V converters, main power control, USB hub with eFuses, GPIO expanders, blind-mate RF receptacles, dock contacts |
 | PCB-B COMPUTE | B12 | 245 x 170 | 4 | top, bottom 1 | Pi 5 on three rails from PCB-A, module carriers (T-Call, RTL-SDR, ZigBee, RockBLOCK, LoRa), panel ribbon |
-| PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | top 18, bottom 70 | the 1520PF panel: Touch Display 2 flush, recessed 3.7 inch e-paper window, MIL-STD-1472 controls, two GPIO expanders, MeshSat logo |
-| PCB-C SPACER RING | R1 | 106 x 54 | 2 | none | 1.0 mm ring that brings the e-paper glass flush with the panel face |
+| PCB-C CONTROL PANEL | C5 | 442 x 311 | 2 | top (LEDs), bottom (cluster, connectors) | the 1520PF panel as the case's sealed weather face: Touch Display 2 and the 3.7 inch e-paper lens on foam tape frames, keyed sealed switches, IP68 sounder, plugged vias, a gasket ring to the frame, MIL-STD-1472 controls, two GPIO expanders, MeshSat logo |
 | PCB-D APRS | D5 | 80 x 62 | 4 | top 78, bottom 1 | NiceRF DMR858M carrier: CM108 codec, PTT with hardware inhibit, USB-UART, boost, SMA |
 | PCB-E1 DOCK STRIP | E4 | 278 x 60 | 4 | top | floor strip: isolated 9 to 36 V shore entry, solar tracker, battery module entry, seven blind-mate clamps, the raised contact block |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | none | the raised block on the strip: the targets the stack's spring pins land on, wire lands underneath |
@@ -33,8 +32,8 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 |---|---|
 | ![PCB-A](v2/images/pcb-a-power-top.png) | ![PCB-B](v2/images/pcb-b-compute-top.png) |
 | PCB-A POWER + I/O (A19) | PCB-B COMPUTE (B12) |
-| ![PCB-C](v2/images/pcb-c-display-top.png) | ![PCB-C ring](v2/images/pcb-c-ring-top.png) |
-| PCB-C CONTROL PANEL (C4) | PCB-C SPACER RING (R1) |
+| ![PCB-C](v2/images/pcb-c-display-top.png) | ![PCB-E5](v2/images/pcb-e5-block-top.png) |
+| PCB-C CONTROL PANEL (C5) | PCB-E5 DOCK BLOCK (E5) |
 | ![PCB-D](v2/images/pcb-d-aprs-top.png) | ![PCB-E1](v2/images/pcb-e1-dock-top.png) |
 | PCB-D APRS (D5) | PCB-E1 DOCK STRIP (E4) |
 | ![PCB-E5](v2/images/pcb-e5-block-top.png) | |
@@ -47,7 +46,7 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 | | Guide | What it covers |
 |---|---|---|
 | V1 | [`v1/BUILD.md`](v1/BUILD.md) | the 33-line parts list per kit, bulkhead and hole schedule, the three HDPE plates and the rod stack, what goes on which floor, the GPIO harness tables for both kits as wired, the Pi 5 provisioning sequence and its traps, the checks that prove the kit works |
-| V2 | [`v2/BUILD.md`](v2/BUILD.md) | ordering the seven boards at JLCPCB with the exact settings, everything else to buy, case and frame preparation, the welded pack and its bench checks, the assembly order with torques, leads and pigtails, coating and labels, software bring-up, the open items of Rev A |
+| V2 | [`v2/BUILD.md`](v2/BUILD.md) | ordering the six boards at JLCPCB with the exact settings, everything else to buy, case and frame preparation, the welded pack and its bench checks, the assembly order with torques, leads and pigtails, coating and labels, software bring-up, the open items of Rev A |
 
 ## Working with this repository
 

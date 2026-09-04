@@ -7,3 +7,5 @@ The plate goes on the **back long wall, the hinge side**. The front wall carries
 Why a plate: the 1520's inner wall drafts about 2 degrees and its outer skin is ribbed, so a flanged receptacle cannot seal on the case itself. The plate is flat, the receptacles seal on it with their own gaskets, and a 2 mm closed-cell gasket between plate and wall takes up the wall.
 
 Nothing has been cut yet.
+
+Seals named 5 Sep 2026 (appendix 32.34, `docs/respin-research-seal-2026-09-05.md`): each receptacle sits on a Glenair 930-001 silicone flange gasket (930-001S06 for the D38999/20 shell 13, 930-001S07 for the 233-370 shell 15), the six M4 plate screws carry EPDM-bonded sealing washers under their outside heads, and each Amphenol Connex 132170 coupler in the end walls gets an NBR O-ring 6.5 x 1.0 under its outside hex. The hose test of 32.34 decides whether the end walls need a plate like the back wall's.
