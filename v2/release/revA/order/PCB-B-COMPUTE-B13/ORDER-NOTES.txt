@@ -1,0 +1,26 @@
+MeshSat field-kit carrier PCB-B COMPUTE Rev A, phase B13: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-b-compute-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 245.1 x 170.1 mm, 4 copper layers, 1.6 mm FR-4, JLC04161H-7628 stackup
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: USB 2.0 pairs /USB_LTE_N, /USB_LTE_P, /USB_OTG_N, /USB_OTG_P, /USB_RTL_N, /USB_RTL_P, /USB_UP_N, /USB_UP_P, /USB_WALL_N, /USB_WALL_P designed 0.2 mm track / 0.15 mm gap on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
+- BOM: pcb-b-compute-bom.csv (78 lines, 44 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-b-compute-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
+- Parts on the TOP side: 181, on the BOTTOM side: 1 (J_AB1)
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): none
+- Not assembled by JLC, fitted at the bench: Compute Module 5 (CM5108064, 8 GB, 64 GB eMMC, wireless) pressed onto the two Amphenol receptacles and screwed to four M2.5 x 4.0 standoffs, the CM5 Cooler on it with its fan lead in J_FAN and its antenna lead to the WiFi bulkhead; Quectel EG25-G mini PCIe card in J_LTE1 on two M2.5 standoffs with a nano-SIM in J_SIM1 and pigtails to the LTE bulkhead; RTL-SDR or LimeSDR in the SDR bay; RockBLOCK on its site; the Touch Display 2 flex in J_DISP; CR2032 in BT1; the three JST-VH rail leads from PCB-A into J_5V_M1, J_5V_M2 and J_5V_PI (no plug on the module); J_AB1 2x9 and J_PANEL ribbons; NEO-M9N, Wio-SX1262 and E72 antenna pigtails to their bulkheads (appendix 32.35)
+
+FABRICATION NOTES (B13, Compute Module 5 carrier, appendix 32.35)
+- The two Compute Module receptacles U30A and U30B (Amphenol 10164227-1004A1RLF, 0.40 mm pitch) are escaped as on Raspberry Pi's own CM5 IO board: 0.40 mm vias with 0.20 mm drills at the pad tips, 0.127 mm tracks, 0.127 mm clearance, 0.19 mm hole-to-copper clearance. All within the standard four-layer capability; do not let a DFM tool widen them.
+- Differential pairs: USB 2.0 pairs 0.20/0.15 mm (90 ohm), display DSI pairs 0.17/0.15 mm (100 ohm) on the JLC04161H-7628 stack; ask for impedance tuning of both if offered.
+- The Compute Module itself, its cooler, the LTE card, the SIM, the SDR stick, the RockBLOCK, the display flex and the CR2032 are fitted at the bench (not in the BOM/CPL).
+
+SOURCE
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-b-revA-B13 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
