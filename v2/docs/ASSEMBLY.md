@@ -41,7 +41,7 @@ Twelve Samsung INR18650-35E in parallel (1S12P), spot-welded nickel strip 0.15 x
 
 The module is a unit of its own, not a part of a board: it sits in a cradle on the case floor beside the dock strip and connects through one XT60 pair on 12 AWG and one thermistor pair. On the positive lead, at the module, sit a Littelfuse MAXI 40 A blade and its in-line holder, so the cable is protected at the source. A Semitec 103AT-2 thermistor is taped to a cell in the middle of the block and its pair runs out with the power leads, because the charger on PCB-A holds the Samsung charge window of 0 to 45 C from that reading.
 
-The single-cell protection board is not chosen yet. No documented off-the-shelf module reaches 30 A continuous, so it is either a small board built around a TI BQ29700 with two CSD17570Q5B switches back to back, or a documented 15 A module with the requirement relaxed (appendix 32.27, MESHSAT-791).
+The single-cell protection board is the documented Batteryspace PCB-LIS1A15 (owner ruling 5 Sep, appendix 32.31): 15 A continuous, 20 A for five minutes, 35 A trip, 65 x 10 x 2.5 mm, in the pocket at the module's south end. It has no thermistor input; the charge window is held by the charger on PCB-A through the module's own thermistor.
 
 Samsung's specification forbids soldering to the cell can: the cells are welded and the leads are soldered to the strip, never to a cell.
 
@@ -51,8 +51,8 @@ Samsung's specification forbids soldering to the cell can: the cells are welded 
 |---|---|---|---|---|
 | Module power (**fused at the module: 40 A MAXI blade**) | battery module XT60 | dock strip J_BATT (XT60) | 12 AWG silicone, 300 mm | XT60 pair |
 | Module thermistor | 103AT-2 on a cell | dock strip J_TS (XH2.5) | 26 AWG twisted, 300 mm | XH2.5 |
-| Shore inlet | MIL-DTL-38999 receptacle on the -Z wall, DC pair | dock strip J_DCIN (JST-VH) | 18 AWG, 400 mm | VH crimp |
-| Solar inlet | MIL-DTL-38999 receptacle, panel pair | dock strip J_SOLAR (JST-VH) | 18 AWG, 400 mm | VH crimp |
+| Shore inlet | MIL-DTL-38999 receptacle on the back-wall plate, DC pair | dock strip J_DCIN (JST-VH), the lead tied along the back wall, the west end wall and the front wall | 18 AWG, 500 mm | VH crimp |
+| Solar inlet | MIL-DTL-38999 receptacle, panel pair | dock strip J_SOLAR (JST-VH), with the shore lead | 18 AWG, 500 mm | VH crimp |
 | Block signal wires | dock strip J_BLK (twelve lands) | dock block wire lands, underside | 24 AWG, 60 mm each, named on the block's legend | soldered both ends |
 | Block power pair | dock strip P_CP and P_CN | dock block wire holes | 12 AWG silicone, 60 mm | soldered both ends |
 | MAIN button | PCB-C J_MAINSW (XH2.5) | PCB-A J_MAINSW (XH2.5) | 24 AWG twisted | XH2.5 both ends |
@@ -66,7 +66,7 @@ Samsung's specification forbids soldering to the cell can: the cells are welded 
 | Pi rail (**F5, 15 A**; 5.1 V, 5 A) | PCB-A J_5V_PI (VH) | Pi 5 USB-C power input | 18 AWG, 200 mm | VH at PCB-A, USB-C plug at the Pi |
 | Heating pad | PCB-A J_HEAT (XH2.5) | pad on the battery module | 20 AWG, 350 mm | XH2.5 |
 | Wall USB | PCB-A J_WALL1 (USB-A) | Glenair 233-370 receptacle on the connector plate | USB 2.0 cable, 300 mm | USB-A both ends |
-| Connector plate | 82 x 54 x 3 aluminium over the wall window (appendix 32.29, `release/revA/case/`) | the long wall on the dock entry side, plate centre 55 mm above the floor | six M4 x 16 stainless, washers both sides, Nyloc inside, 1.2 N m in a cross pattern; 2 mm closed-cell gasket | carries the shore DC receptacle (D38999/20 shell 13) and the USB receptacle (233-370 shell 15), each on its own gasket with M3 x 10 and spring washers |
+| Connector plate | 82 x 54 x 3 aluminium over the wall window (appendix 32.29, `release/revA/case/`) | the back long wall (hinge side), plate centre 55 mm above the floor, X -92 | six M4 x 16 stainless, washers both sides, Nyloc inside, 1.2 N m in a cross pattern; 2 mm closed-cell gasket | carries the shore DC receptacle (D38999/20 shell 13) and the USB receptacle (233-370 shell 15), each on its own gasket with M3 x 10 and spring washers |
 | RF pigtails | device SMA on B / D | PCB-A J_RF1 to J_RF7 (SMA jacks) | RG-316, bend radius 12.5 mm | SMA male |
 | Blind-mate jumpers | dock strip float clamps (Radiall R222M80500 right-angle plugs) | MIL-DTL-38999 wall receptacles | RG-316 | SMP-MAX at the clamp, wall connector at the other end |
 
