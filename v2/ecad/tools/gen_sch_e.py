@@ -114,7 +114,7 @@ ideal_diode("U3", "Q1", "C4", "R1", "DC_F", "DC_P", "DC_N")
 part("D1", "Device", "D_TVS", "SMCJ33A (input surge, datasheet 50 V 100 ms)", "TVS", {"1": "DC_N", "2": "DC_P"})
 c("C1", "10u 50V", "DC_P", "DC_N", "C10u50"); c("C2", "100n", "DC_P", "DC_N", "C", "C14663")
 part("U1", "Connector_Generic", "Conn_01x06", "TRACO TEN 40-2412WIN: isolated 9-36 V in, 12 V 3.33 A out, -40..+75 C, 10.2 mm tall under the 13.4 mm gap. Pins 1 +Vin, 2 -Vin, 3 remote (open = on), 4 +Vout, 5 -Vout, 6 trim", "BUCK", {"1": "DC_P", "2": "DC_N", "3": "REMOTE", "4": "SHORE_12V", "5": "GND", "6": "NC"})
-c("C3", "22u 25V", "SHORE_12V", "GND", "C10u50"); part("D3", "Device", "D_TVS", "SMBJ15A", "TVS", {"1": "GND", "2": "SHORE_12V"})
+c("C3", "22u 25V", "SHORE_12V", "GND", "C10u50"); part("D3", "Device", "D_TVS", "SMCJ15A", "TVS", {"1": "GND", "2": "SHORE_12V"})   # the land is D_SMC (DO-214AB) like the two SMCJ33A parts; SMBJ is the smaller SMB body
 r("R2", "2.2k", "SHORE_12V", "LED_A", "R", "C4190"); part("LED1", "Device", "LED", "green: shore 12 V present", "LED", {"2": "LED_A", "1": "GND"})
 r("R3", "330R", "SHORE_INHIBIT", "OPTO_A"); r("R4", "100k", "SHORE_INHIBIT", "GND")
 part("U2", "Isolator", "PC817", "EL817S / PC817 optocoupler: LED from PCB-A SHORE_INHIBIT (kit side), transistor shorts the converter remote pin to -Vin (isolated side); LED on = converter OFF, LED off or Pi dead = ON", "OPTO", {"1": "OPTO_A", "2": "GND", "3": "DC_N", "4": "REMOTE"})
