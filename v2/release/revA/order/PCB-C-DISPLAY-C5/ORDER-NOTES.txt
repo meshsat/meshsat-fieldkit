@@ -1,0 +1,26 @@
+MeshSat field-kit carrier PCB-C CONTROL PANEL Rev A, phase C5: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-c-display-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 442.1 x 311.1 mm, 2 copper layers, 2.0 mm FR-4
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: none (no controlled-impedance nets)
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
+- BOM: pcb-c-display-bom.csv (39 lines, 21 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-c-display-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
+- Parts on the TOP side: 16, on the BOTTOM side: 71
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): BZ1, SW_EMCON, SW_LIGHT, SW_MAIN, SW_PI, SW_SOS, SW_TEST, SW_ZERO
+- Not assembled by JLC, fitted at the bench: sealed face (appendix 32.34): Touch Display 2 through the aperture on a die-cut 0.5 mm closed-cell foam tape frame (3M VHB class, outline on User.2 / pcb-c-display-seals.dxf), connector end to port, glass about 1.2 mm proud; SW_MAIN C&K ATP19-SL1-603-B0SA-03G (19 mm, green ring), SW_PI C&K ATP16-SL1-403-M0SA-04G (16 mm, orange ring as the amber), SW_TEST C&K ATP16-SL1-203-M0SA-04G (16 mm, white ring), each on a die-cut 1.0 mm silicone gasket washer under the bezel, flying leads to the solder lands on the underside; SW_LIGHT NKK M2044SD3A01 DPDT ON-ON-ON on the D3 splashproof bushing in the D hole (flat east), its O-ring under the nut, AT428H boot; SW_SOS, SW_EMCON and SW_ZERO APEM 5636ADKB-2V locking toggles with the K front seal keyed into the notch (both positions locked, 1/4-40 bushing 9 mm; SOS and ZEROIZE are maintained and the bridge times them, ruling 32.13); BZ1 IP67 panel-mount sounder in its own hole with its bezel gasket, two flying leads; WeAct 3.7 e-paper module under the panel: glass into the recessed window, both PCB lands taped, 1.5 mm hard-coated polycarbonate lens on a 0.5 mm foam tape frame over the window on the face, 1x8 lead to the SMD header J_EPD; a neutral-cure silicone bead on each of the 32 LED joints on the underside, then the acrylic conformal coat over the whole underside with the connector faces masked; the die-cut 0.5 mm PORON gasket ring on the frame's bearing ring (User.2 outline), 16 x M3 x 10 with bonded sealing washers from below, 0.4 N m; ribbon on J_PANEL (SMD box header), the MAIN and PI leads soldered to J_MAINSW and J_PIJ2 and beaded
+
+FABRICATION OPTIONS (C5, sealed face)
+- Via covering: PLUGGED (solder-mask plugged and covered on both sides, IPC-4761 Type VI-b) on every via. The face of this board is the weather face of the case with the lid open and no open via barrel is acceptable. If the order form offers only tented or untented for this build (2 layers, 2.0 mm, black, ENIG), choose Epoxy Filled and Capped (Type VII) and record the price. The gerbers already tent every via on both faces; do not pick an option that reopens them.
+- Outline: three 6.5 mm switch holes carry a 2.70 x 1.10 mm keyway notch and one carries a D flat (5.8 across), all on Edge.Cuts over the drilled hole (routed; the router radius on the notch corners is accepted). The 16 frame screw holes are plated GND rings with the face-side mask closed.
+- pcb-c-display-seals.dxf in the deliverable folder carries the die-cut outlines (User.2: frame gasket ring, display tape frame, e-paper tape frame; User.3: the e-paper lens) for the gasket cutter and the lens supplier; it is not a JLC file.
+
+SOURCE
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-c-revA-C5 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
