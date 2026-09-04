@@ -13,7 +13,8 @@ ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the 
 - Parts on the TOP side: 77, on the BOTTOM side: 1 (R36)
 - Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): R22 (DNP 100R (mirror now via Q4)); U2 (DNP bench: DMR858M 5 W UHF module on 2 x 1x12 2.54)
-- Not assembled by JLC, fitted at the bench: DMR858M on 2 x 1x12 female headers 8.5 mm + 2 x M2.5 x 11 mm standoffs (male headers soldered into the module rows from its back face), SMA pigtail, four M3 x 6 into the PCB-A standoffs
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): L1
+- Not assembled by JLC, fitted at the bench: DMR858M on 2 x 1x12 female headers 8.5 mm + 2 x M2.5 x 11 mm standoffs (male headers soldered into the module rows from its back face), the boost inductor L1 (Coilcraft XAL6030-152MEB, no JLC equivalent, hand-soldered; left out of the JLC BOM/CPL), SMA pigtail, four M3 x 6 into the PCB-A standoffs
 
 SOURCE
 - Deliverable folder: v2/release/revA/boards/meshsat-pcb-d-revA-D5 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
