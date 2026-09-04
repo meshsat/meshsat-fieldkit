@@ -24,7 +24,7 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `precidip/` | Preci-Dip spring-loaded connector catalogue, pages 31 (general specifications) and 34 (813 series, 2.54 mm double row, solder tail, heights 6 to 7.5 mm) | the `J_DOCK` pin set on PCB-A (813-S1-008-10-016101) |
 | `aioc/` | AIOC (All-In-One-Cable) KiCad sources and schematic, its own `LICENSE.md` applies | the CM108 audio path on PCB-D |
 | `dmr858/` | NiceRF DMR858M and DMR858S datasheets and mechanical drawing, the vendor pages as saved | the APRS module on PCB-D |
-| `seals/` | 3M VHB and 467MP tape sheets, polycarbonate sheet data, Silex silicone sheet, NKK IP sheet and the APEM 5000 catalogue, Floyd Bell sounder and gasket, Rogers PORON and BISCO, DOWSIL 3145, Loctite SI 5145, RTV162, MG 422B, the Centric RF adapter, Glenair 930-001 gaskets, 3M 7871 and Brady labels, JLCPCB via-covering and capability text extracts; see `seals/README.md` | the sealed panel face C5 (appendix 32.34, `docs/respin-research-seal-2026-09-05.md`) |
+| `seals/` | 3M VHB and 467MP tape sheets, polycarbonate sheet data, Silex silicone sheet, NKK IP sheet and the APEM 5000 catalogue, Floyd Bell sounder and gasket, Rogers PORON and BISCO, DOWSIL 3145, Loctite SI 5145, RTV162, MG 422B, the Centric RF adapter, Glenair 930-001 gaskets, 3M 7871 and Brady labels, JLCPCB via-covering and capability text extracts; see `seals/README.md` | the sealed panel face C5 (appendix 32.34, `docs/respin-research-seal-2026-09-04.md`) |
 | `probes/` | our own STEP probe scripts (build123d), kept with the models they read | reproducing the numbers in the appendix |
 
 The files are ordinary git objects (the largest is about 50 MB).

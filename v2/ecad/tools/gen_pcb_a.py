@@ -200,7 +200,7 @@ rect(BANK_ZONE, pcbnew.Dwgs_User, 0.15); text("CHARGER ZONE (A19): BQ25792 from 
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
 text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A19)", 48, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
-text("MESHSAT-709 / 789  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-05", 48, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
+text("MESHSAT-709 / 789  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-04", 48, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -20, 77.0, pcbnew.F_SilkS, 1.4, 0.22); text("FRONT WALL (-Y)   v v v", 20, -76.0, pcbnew.F_SilkS, 1.3, 0.22)
 text("PORT (-X)", -hx + 5.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 5.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
 text("PCB-A UNDERSIDE - 13.4 mm above the dock strip (32.21); dock block pins and seven SMP-MAX receptacles land on the dock", 45, -76.0, pcbnew.B_SilkS, 1.5, 0.25, mirror=True)

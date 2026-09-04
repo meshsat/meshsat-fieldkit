@@ -7,7 +7,7 @@ BOARD, DRC = sys.argv[1], sys.argv[2]
 PLANES = set((sys.argv[3] if len(sys.argv) > 3 else "GND,+5V,+3V3,CELL+").split(","))
 G = float(__import__("os").environ.get("STUB_GRID", "0.05"))   # grid, mm (STUB_GRID=0.1 for long connections)
 CLR = 0.16                   # clearance to other copper, mm (board rule 0.15)
-HOLE_CLR = 0.30              # clearance to a drilled pad or a mounting hole: the board's hole clearance rule is 0.25, and the 0.1 mm grid needs a margin over it (B12, 5 Sep: six 0.24 mm misses against two NPTH holes)
+HOLE_CLR = 0.30              # clearance to a drilled pad or a mounting hole: the board's hole clearance rule is 0.25, and the 0.1 mm grid needs a margin over it (B12, 4 Sep: six 0.24 mm misses against two NPTH holes)
 b = pcbnew.LoadBoard(BOARD); drc = json.load(open(DRC))
 eb = b.GetBoardEdgesBoundingBox()
 X0, Y0 = eb.GetLeft() / 1e6 - 1.0, eb.GetTop() / 1e6 - 1.0
@@ -313,11 +313,11 @@ for it1, it2 in pairs:
     L_end, i_end, j_end = path[-1]
     end_is_inner = c.get("inner") and INNER_GOAL is not None and INNER_GOAL[i_end, j_end]
     last_is_via = len(path) >= 2 and path[-1][0] != path[-2][0]   # the path's own last step already put a via on the end cell
-    if ((netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad")) or end_is_inner) and not last_is_via:   # plane or inner-track goal reached on an outer layer: drop a via at the end (A19, 5 Sep: a path that changed layer half-way reached an In2 track on B.Cu and got no closing via because the old test was "no via in the path")
+    if ((netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad")) or end_is_inner) and not last_is_via:   # plane or inner-track goal reached on an outer layer: drop a via at the end (A19, 4 Sep: a path that changed layer half-way reached an In2 track on B.Cu and got no closing via because the old test was "no via in the path")
         L, i, j = path[-1]; v2 = pcbnew.PCB_VIA(b); v2.SetPosition(VECTOR2I(FromMM(float(X0 + j * G)), FromMM(float(Y0 + i * G)))); v2.SetDrill(FromMM(VIA_DR)); v2.SetWidth(FromMM(VIA_D))
         v2.SetViaType(pcbnew.VIATYPE_THROUGH); v2.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v2.SetNet(netobj); b.Add(v2); nv += 1
     first_is_via = len(path) >= 2 and path[0][0] != path[1][0]
-    if a.get("inner") and not first_is_via:                        # inner-layer source reached on an outer layer: the joining via at the start (A19, 5 Sep: a B.Cu stub end 0.02 mm from an In2 track stayed open)
+    if a.get("inner") and not first_is_via:                        # inner-layer source reached on an outer layer: the joining via at the start (A19, 4 Sep: a B.Cu stub end 0.02 mm from an In2 track stayed open)
         L, i, j = path[0]; v3 = pcbnew.PCB_VIA(b); v3.SetPosition(VECTOR2I(FromMM(float(X0 + j * G)), FromMM(float(Y0 + i * G)))); v3.SetDrill(FromMM(VIA_DR)); v3.SetWidth(FromMM(VIA_D))
         v3.SetViaType(pcbnew.VIATYPE_THROUGH); v3.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v3.SetNet(netobj); b.Add(v3); nv += 1
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))

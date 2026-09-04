@@ -9,7 +9,7 @@
 	(paper "A4")
 	(title_block
 		(title "MeshSat Field Kit carrier - PCB-E5 DOCK BLOCK")
-		(date "2026-09-05")
+		(date "2026-09-04")
 		(rev "A (E5)")
 		(company "MeshSat")
 		(comment 1 "MESHSAT-709 / 790. Raised contact block on the dock strip: targets for PCB-A's signal and 9 A power pins, plated wire lands below. tools/gen_pcb_e5.py")

@@ -1,4 +1,4 @@
-JLCPCB parts library search, 5 September 2026, POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList
+JLCPCB parts library search, 4 September 2026, POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList
 columns: LCSC code | model | brand | library type (expand = Extended) | stock | description | unit price USD at qty 1
 --- keyword: S2B-XH-SM4-TB(LF)(SN)
 total 2

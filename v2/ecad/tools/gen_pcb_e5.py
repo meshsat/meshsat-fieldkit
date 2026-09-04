@@ -18,7 +18,7 @@ def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 X0, X1, Y0, Y1, R = -158.0, -115.0, -85.0, -59.0, 1.5
 HOLES = [(-155.5, -63.0), (-117.5, -63.0), (-155.5, -83.0), (-117.5, -83.0)]      # = BLOCK_HOLES of gen_pcb_e.py (the strip's standoffs), in the four corners so nothing crowds the contact field
 board = pcbnew.BOARD()
-tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E5 DOCK BLOCK"); tb.SetRevision("A (E5)"); tb.SetDate("2026-09-05"); tb.SetCompany("MeshSat")
+tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E5 DOCK BLOCK"); tb.SetRevision("A (E5)"); tb.SetDate("2026-09-04"); tb.SetCompany("MeshSat")
 tb.SetComment(0, "MESHSAT-709 / 790. Raised contact block on the dock strip: targets for PCB-A's signal and 9 A power pins, plated wire lands below. tools/gen_pcb_e5.py"); board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.2), ("m_TrackMinWidth", 0.2), ("m_ViasMinSize", 0.5), ("m_MinThroughDrill", 0.3), ("m_HoleToHoleMin", 0.5), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.25), ("m_SolderMaskMinWidth", 0.1)):

@@ -67,7 +67,7 @@ panel_switch("PanelSwitch_16mm", 16.2, 20.0, 4, 14.0, "16 mm anti-vandal momenta
 # 6.35 mm bushing toggles: NKK M2044SD3A01 DPDT ON-ON-ON on a D3 splashproof bushing (D flat toward +X, its O-ring under the nut); APEM 5636ADKB-2V locking toggles with the K seal (keyway toward -Y, the operator)
 panel_switch("PanelToggle_DPDT", 6.5, 13.0, 6, 11.0, "NKK M2044SD3A01 DPDT ON-ON-ON, D3 bushing IP67 with the AT516 O-ring and the AT428H boot, D hole 6.5 / 5.8 flat toward +X, six lead lands underneath", dflat=0.0)
 panel_switch("GuardedToggle_SPDT", 6.5, 13.0, 3, 11.0, "APEM 5636ADKB-2V locking toggle, K front seal (O-ring + U360 gasket), 6.5 hole with the 2.70 x 1.10 keyway toward the operator (case -Y), three lead lands underneath", keyway=90.0)   # footprint +y is KiCad down = case -Y
-# panel-mount IP68 sounder Floyd Bell MC-09-530-Q (docs/respin-research-seal-2026-09-05.md f): 1-1/8 in hole (28.575), bezel gasket 61663 on the face,
+# panel-mount IP68 sounder Floyd Bell MC-09-530-Q (docs/respin-research-seal-2026-09-04.md f): 1-1/8 in hole (28.575), bezel gasket 61663 on the face,
 # body about 34 mm deep behind the panel plus 11 mm of solder tabs, two lead lands underneath outside the body
 SOUNDER_HOLE, SOUNDER_BODY, SOUNDER_PAD_R = 28.6, 34.0, 21.5
 panel_switch("PanelSounder", SOUNDER_HOLE, SOUNDER_BODY, 2, SOUNDER_PAD_R, "IP68 panel-mount sounder (Floyd Bell MC-09-530-Q class), threaded body through a %.1f mm hole, bezel gasket on the face, two lead lands underneath" % SOUNDER_HOLE)

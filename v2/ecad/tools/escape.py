@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Deterministic escapes for fine-pitch parts, before autorouting: every connected pad of a fine-pitch footprint gets a short
 track straight out along its axis to a via, offsets staggered on alternate pads so neighbouring escapes never touch.
-Escapes are LOCKED: KiCad exports locked tracks and vias as (type fix) in the DSN and Freerouting keeps them (5 Sep: unlocked
+Escapes are LOCKED: KiCad exports locked tracks and vias as (type fix) in the DSN and Freerouting keeps them (4 Sep: unlocked
 escapes were ripped up on A19 and the pads they served ended unrouted).
 Fine pitch: minimum SMD pad centre distance <= 0.7 mm, or SOT-23-6/8. Exposed pads (>= 2 mm) are left alone.
 Usage: escape.py <board.kicad_pcb>"""
@@ -118,7 +118,7 @@ for fp in b.GetFootprints():
                 c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
                 done = False
                 for lane, vpitch, depth in [(0.75, 0.8, dp) for dp in (1.3, 1.7, 2.1)] + [(0.35, 0.8, 1.3), (0.35, 0.8, 1.7), (0.35, 0.7, 1.2), (0.35, 0.7, 1.0), (0.35, 0.7, 0.85), (0.35, 0.8, 2.1)]:
-                    # A19 (5 Sep): the BQ25792's south row had a 1210 capacitor 1.7 mm past its tips; the 0.75 mm lane rule rejected every
+                    # A19 (4 Sep): the BQ25792's south row had a 1210 capacitor 1.7 mm past its tips; the 0.75 mm lane rule rejected every
                     # depth, the row went to the router without escapes and SDA could not be routed at all. Second pass with the lane at 0.35,
                     # the via row at 0.7 mm pitch (smaller splay) and shallower depths, for a row whose neighbour sits closer than the standard depth allows.
                     s_k = (idx - (n - 1) / 2.0) * FromMM(vpitch) - (along - centre_along)     # lateral shift from the pad's own lane
