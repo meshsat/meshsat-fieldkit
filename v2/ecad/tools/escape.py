@@ -21,12 +21,13 @@ def _load_classes():
 NC_CLS, NC_PATS = _load_classes()
 def net_clr(name):
     """Clearance a net needs: the escape default 0.16 or its net class value, whichever is larger (A19: BANK and RAIL ask 0.2)."""
-    if name in NCC: return NCC[name]
-    import fnmatch
-    v = CLR
-    for pat, cl in NC_PATS:
-        if fnmatch.fnmatchcase(name, pat) or fnmatch.fnmatchcase(name.lstrip("/"), pat): v = max(CLR, NC_CLS.get(cl, CLR)); break
-    NCC[name] = v; return v
+    if name not in NCC:                      # cache the class value only: the floor CLR changes per footprint (0.127 on 0.4 mm rows, 0.16 elsewhere)
+        import fnmatch
+        v = 0
+        for pat, cl in NC_PATS:
+            if fnmatch.fnmatchcase(name, pat) or fnmatch.fnmatchcase(name.lstrip("/"), pat): v = NC_CLS.get(cl, 0); break
+        NCC[name] = v
+    return max(CLR, NCC[name])
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
     pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]
@@ -50,7 +51,7 @@ allpads = [(p, p.GetPosition(), pad_poly(p), p.GetNetname(), fp.GetReference()) 
 def ep_numbers(fp):
     """Pad numbers that belong to an exposed pad (any pad of that number >= 2 mm): their small pieces are not pins."""
     return {p.GetNumber() for p in fp.Pads() if max(p.GetSize().x, p.GetSize().y) >= FromMM(2.0)}
-rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout
+rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()] + [z for fp in b.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout; B13: footprint keep-outs (the E72 antenna) count too
 edges = b.GetBoardEdgesBoundingBox()
 vias = [(t.GetPosition(), t.GetWidth(pcbnew.F_Cu) / 2, t.GetNetname()) for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
 tracks = [(t.GetStart(), t.GetEnd(), t.GetWidth() / 2, t.GetNetname()) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]
@@ -88,7 +89,12 @@ for fp in b.GetFootprints():
     ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))
     if ONLY and fp.GetReference() not in ONLY: continue                    # test runs on one part
     pitch = min_pitch(fp); fc = fp.GetPosition()
-    if pitch <= FromMM(0.7): VIA_D, VIA_DR, TW, OFFS = FromMM(0.45), FromMM(0.25), FromMM(0.2), (0.9, 1.6, 2.3)
+    FAN_OK = True; CLR = FromMM(0.127) if pitch <= FromMM(0.45) else FromMM(0.16)   # the 0.4 mm rows need the JLC floor itself; every other part keeps the 0.16 margin
+    if pitch <= FromMM(0.45): VIA_D, VIA_DR, TW, OFFS, FAN_OK = FromMM(0.40), FromMM(0.20), FromMM(0.127), (0.3, 1.0, 1.7), False
+    # 0.4 mm board-to-board rows (the CM5 receptacles, B13, appendix 32.35): the CM5IO scheme, a 0.40/0.20 via right past every pad tip,
+    # neighbours alternating 0.3 and 1.0 mm deep, 0.127 mm tracks; a straight 0.127 track passes a neighbour's 0.40 via at 0.4 mm lateral
+    # with 0.137 mm to spare, so the board's class clearance must be 0.127 (gen_pcb_b3.py sets it). No fan: a 50-pad row cannot splay.
+    elif pitch <= FromMM(0.7): VIA_D, VIA_DR, TW, OFFS = FromMM(0.45), FromMM(0.25), FromMM(0.2), (0.9, 1.6, 2.3)
     else: VIA_D, VIA_DR, TW, OFFS = FromMM(0.6), FromMM(0.3), FromMM(0.25), (0.8, 1.5, 2.2)
     if b.GetCopperLayerCount() == 2: VIA_D, VIA_DR = max(VIA_D, FromMM(0.5)), max(VIA_DR, FromMM(0.3))   # JLC 2-layer floor (C5: 48 escape vias were at 0.25 on the 2-layer panel)
     # group pads by side (outward direction), order along the side, alternate the offset
@@ -109,7 +115,7 @@ for fp in b.GetFootprints():
         sides.setdefault(key, []).append((along, pad, L))
     for key, lst in sides.items():
         lst.sort(key=lambda t: t[0])
-        if pitch <= FromMM(0.5) and len(lst) >= 2:
+        if FAN_OK and pitch <= FromMM(0.5) and len(lst) >= 2:
             # FAN: 0.4 / 0.5 mm pitch rows cannot pass each other with staggered straight escapes; every pin goes straight out
             # 0.3 mm past its tip, then splays to a via row at 0.8 mm pitch, 1.3 mm past the tips (agent review, item 1)
             n = len(lst); L0 = lst[0][2]; side_dir = (-L0[1], L0[0])
@@ -144,7 +150,9 @@ for fp in b.GetFootprints():
             for lane, off in [(ln, o) for ln in (0.75, 0.35) for o in order]:
                 v = VECTOR2I(int(c.x + L[0] * (half + FromMM(off))), int(c.y + L[1] * (half + FromMM(off))))
                 mids = [VECTOR2I(int(c.x + (v.x - c.x) * k / 6.0), int(c.y + (v.y - c.y) * k / 6.0)) for k in range(2, 6)]
-                if clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids):
+                ok = clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids)
+                if not ok and fp.GetReference() == DEBUG_REF: print("    %s pad %s lane %.2f off %.2f: %s" % (fp.GetReference(), pad.GetNumber(), lane, off, LAST[0]))
+                if ok:
                     layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
                     via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DR); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); via.SetLocked(True); b.Add(via)
                     t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TW); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t)

@@ -95,7 +95,7 @@ FP = {
  "SOT236": "Package_TO_SOT_SMD:SOT-23-6", "SOT235": "Package_TO_SOT_SMD:SOT-23-5", "SOT238": "Package_TO_SOT_SMD:SOT-23-8", "SOT23": "Package_TO_SOT_SMD:SOT-23",
  "WSON6": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
  "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "XH4": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
- "IDC40": "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical", "IDC14": "Connector_IDC:IDC-Header_2x07_P2.54mm_Vertical", "IDC16": "Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical",
+ "IDC18": "Connector_IDC:IDC-Header_2x09_P2.54mm_Vertical", "IDC40": "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical", "IDC14": "Connector_IDC:IDC-Header_2x07_P2.54mm_Vertical", "IDC16": "Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical",
  "PICO10": "Connector_Molex:Molex_PicoBlade_53047-1010_1x10_P1.25mm_Vertical",
  "USBA": "Connector_USB:USB_A_Stewart_SS-52100-001_Horizontal", "USBC": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "USBCP": "Connector_USB:USB_C_Plug_Molex_105444", "PH4": "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
  "JP2": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm", "JP3": "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm",
@@ -125,7 +125,7 @@ def tps2065(ref, en, out, flt): part(ref, "Power_Management", "TPS2065CDBV", "TP
 def tps22810(ref, vin, en, out, ct): part(ref, "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": vin, "5": en, "1": out, "2": "NC", "3": ct, "4": "GND", "7": "GND"})
 def ina219(ref, inp, inn, a0, a1): part(ref, "Sensor_Energy", "INA219AxDCN", "INA219AIDCN", "SOT238", {"1": inp, "2": inn, "3": "GND", "4": "+3V3", "5": "SCL", "6": "SDA", "7": a0, "8": a1}, "C138024")
 
-# ================================================================ A19 (appendix 32.13 to 32.25): the kit UPS on PCB-A
+# ================================================================ A19 (appendix 32.13 to 32.25): the kit UPS on PCB-A; A20 (32.35): no hub, no dongle channels, J_AB1 2x9
 # The Geekworm X1202 is gone (32.17). The battery is a floor module (twelve Samsung 35E, 1S12P, 42 Ah, BMS 30 A) reaching this board over the
 # dock's 9 A blind-mate power pins (32.22, 32.24). This board carries the charger, the gauge, three 5 V converters (M1, M2, Pi), the heating-pad
 # switch, the main power control, a seven-port hub with the wall host port, and the seven blind-mate RF receptacles. Every value below is from
@@ -187,7 +187,7 @@ part("J_5V_PI", "Connector_Generic", "Conn_01x02", "Pi rail 5.1 V 5 A to PCB-B J
 # --- main power control LTC2954-1 (ltc2954.pdf): panel MAIN button, EN to the three converters, INT = shutdown request to the Pi, KILL pulled low by the Pi through Q5
 part("U25", "Connector_Generic", "Conn_01x08", "LTC2954CTS8-1 push-button on/off controller", "TSOT8", {"1": "CELL+", "2": "MAIN_PB", "3": "NC", "4": "GND", "5": "PI_SHDN_REQ", "6": "BOOST_EN", "7": "NC", "8": "KILL"}, "C683782")
 c("C98", "1u", "CELL+", "GND"); r("R67", "100k", "BOOST_EN", "CELL+"); r("R68", "100k", "PI_SHDN_REQ", "+3V3"); r("R69", "100k", "KILL", "CELL+")
-part("Q5", "Transistor_FET", "2N7002", "2N7002: Pi GPIO high = pull KILL low = power off", "SOT23", {"1": "PI_KILL", "2": "KILL", "3": "GND"}); r("R70", "100k", "PI_KILL", "GND")
+part("Q5", "Transistor_FET", "2N7002", "2N7002: Pi GPIO high = pull KILL low = power off (1 G, 2 S, 3 D; source and drain were swapped on A19, appendix 32.36)", "SOT23", {"1": "PI_KILL", "2": "GND", "3": "KILL"}); r("R70", "100k", "PI_KILL", "GND")
 part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead from the panel (XH2.5): PB, GND", "XH2", {"1": "MAIN_PB", "2": "GND"})
 # --- heating pad on the shore rail (tps2595.pdf, TPS259571: 12 V eFuse, 2 A limit, auto-retry), enable from the second expander
 part("F6", "Device", "Polyfuse", "2.5A hold 30V 1812", "F1812", {"1": "SHORE_12V", "2": "HEAT_IN"})   # 30 V class: the clamp on SHORE_12V lets through about 24 V, which a 16 V part would not survive (32.28)
@@ -200,39 +200,21 @@ part("L6", "Device", "L", "3.3uH XAL4020-332MEB", "L4020", {"1": "SW33", "2": "+
 r("R74", "33.2k 1%", "+3V3", "FB33"); r("R75", "10k 1%", "FB33", "GND")   # 0.768 V x (1 + 33.2/10) = 3.32 V
 part("D2", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V_M1", "2": "GND"})
 r("R18", "1k", "+5V_M1", "LED_PWR_A")   # PWR LED on the M1 rail
-for ref, net in (("TP1", "+5V_M1"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "CELL_N"), ("TP5", "CELL+"), ("TP6", "SHORE_INHIBIT"), ("TP7", "GAUGE_ALERT"), ("TP8", "MEZZ_SPARE1"), ("TP9", "TX_INHIBIT_n"), ("TP10", "SHORE_12V"), ("TP11", "CHG_INT"), ("TP12", "+5V_M2"), ("TP13", "+5V_PI"), ("TP14", "DOCK_SPARE"), ("TP15", "BOOST_EN"), ("TP16", "CELL_SENSE_P")):
+for ref, net in (("TP1", "+5V_M1"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "CELL_N"), ("TP5", "CELL+"), ("TP6", "SHORE_INHIBIT"), ("TP7", "GAUGE_ALERT"), ("TP8", "I2S_DIN"), ("TP9", "TX_INHIBIT_n"), ("TP10", "SHORE_12V"), ("TP11", "CHG_INT"), ("TP12", "+5V_M2"), ("TP13", "+5V_PI"), ("TP14", "DOCK_SPARE"), ("TP15", "BOOST_EN"), ("TP16", "CELL_SENSE_P")):
     part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
-for i, net in enumerate(("CELL+", "CELL_N", "GND", "+3V3", "+5V_M1", "+5V_M2", "+5V_PI", "5V_WIFI", "5V_GPS", "5V_CODEC", "5V_UART", "5V_WALL", "BOOST1_IN", "BOOST2_IN", "BOOST3_IN", "SHORE_12V", "HEAT_IN", "HEAT_OUT", "REGN", "SYS_CHG", "PMID", "REG25"), 1):
+for i, net in enumerate(("CELL+", "CELL_N", "GND", "+3V3", "+5V_M1", "+5V_M2", "+5V_PI", "5V_WALL", "BOOST1_IN", "BOOST2_IN", "BOOST3_IN", "SHORE_12V", "HEAT_IN", "HEAT_OUT", "REGN", "SYS_CHG", "PMID", "REG25", "+3V3_AB"), 1):
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
-# --- seven-port hub USB2517I (usb2517 sheet): CFG_SEL 000 = internal defaults with straps; ports 6 and 7 disabled by the PRT_DIS straps; upstream from the Pi over J_AB1
-part("U6", "Connector_Generic", "Conn_02x33_Odd_Even", "USB2517I-JZX seven-port USB 2.0 hub (strap defaults, ports 6-7 disabled)", "QFN64", {
- "1": "USB_WIFI_N", "2": "USB_WIFI_P", "3": "USB_GPS_N", "4": "USB_GPS_P", "5": "+3V3", "6": "USB_CODEC_N", "7": "USB_CODEC_P", "8": "USB_UART_N", "9": "USB_UART_P", "10": "+3V3",
- "11": "USB_WALL_N", "12": "USB_WALL_P", "13": "GND", "14": "NC", "15": "NC", "16": "NC", "17": "NC", "18": "NC", "19": "GND", "20": "NC", "21": "FLT_UART", "22": "FLT_CODEC", "23": "NC", "24": "+3V3", "25": "HUB_VD18",
- "26": "NC", "27": "FLT_GPS", "28": "FLT_WIFI", "29": "NC", "30": "NC", "31": "NC", "32": "NC", "33": "NC", "34": "NC", "35": "FLT_WALL", "36": "NC", "37": "NC", "38": "NC", "39": "NC", "40": "NC", "41": "HUB_CFG0", "42": "HUB_CFG1", "43": "+3V3", "44": "+3V3", "45": "NC",
- "46": "+3V3", "47": "NC", "48": "NC", "49": "NC", "50": "NC", "51": "NC", "52": "+3V3", "53": "HUB_DIS6M", "54": "HUB_DIS6P", "55": "HUB_DIS7M", "56": "HUB_DIS7P", "57": "+3V3", "58": "USB_A_N", "59": "USB_A_P", "60": "XOUT", "61": "XIN", "62": "HUB_VD18PLL", "63": "HUB_RBIAS", "64": "+3V3", "65": "GND", "66": "NC"}, "C1521556")
-part("Y1", "Device", "Crystal_GND24", "24 MHz 3225", "XTAL", {"1": "XIN", "3": "XOUT", "2": "GND", "4": "GND"})
-# crystal loading matched to an 18 pF load part: 2 x (18 - 4 stray) = 28, so 27 pF
-c("C16", "27p", "XIN", "GND"); c("C17", "27p", "XOUT", "GND"); r("R19", "12.0k 1% (RBIAS)", "HUB_RBIAS", "GND")
-for k, net in enumerate(("+3V3", "+3V3", "+3V3", "+3V3", "+3V3", "+3V3", "+3V3"), 18): c("C%d" % k, "100n", net, "GND")   # C18..C24 at VDD33, VDDA33 x4, VDD33CR, VDD33PLL
-c("C25", "1u", "HUB_VD18", "GND"); c("C26", "1u", "HUB_VD18PLL", "GND"); c("C27", "1u", "+3V3", "GND")
-r("R20", "10k", "HUB_CFG0", "GND"); r("R21", "10k", "HUB_CFG1", "GND")
-for ref, net in (("R22", "HUB_DIS6M"), ("R23", "HUB_DIS6P"), ("R25", "HUB_DIS7M"), ("R79", "HUB_DIS7P")): r(ref, "10k", net, "+3V3")   # PRT_DIS straps: ports 6 and 7 disabled
-esd("U27", "USB_A_P", "USB_A_N", "+3V3")
-# --- channels on the M1 rail: WiFi (0x46), GPS (0x47), codec (0x48), UART (0x49), wall host port (0x4A)
-tps2065("U7", "EN_WIFI", "SW_WIFI", "FLT_WIFI"); r("R26", "10k", "FLT_WIFI", "+3V3"); r("R40", "100k", "EN_WIFI", "+3V3"); c("C34", "100n", "+5V_M1", "GND"); r("R27", "0.1R 1% 1206", "SW_WIFI", "5V_WIFI", "RS"); ina219("U8", "SW_WIFI", "5V_WIFI", "SDA", "+3V3"); c("C28", "100n", "+3V3", "GND"); c("C29", "10u", "5V_WIFI", "GND", "C10u")
-part("J_WIFI1", "Connector", "USB_A", "USB-A receptacle, WiFi", "USBA", {"1": "5V_WIFI", "2": "USB_WIFI_N", "3": "USB_WIFI_P", "4": "GND", "5": "GND"}); esd("U9", "USB_WIFI_P", "USB_WIFI_N", "5V_WIFI")
-tps2065("U10", "EN_GPS", "SW_GPS", "FLT_GPS"); r("R28", "10k", "FLT_GPS", "+3V3"); r("R41", "100k", "EN_GPS", "+3V3"); c("C35", "100n", "+5V_M1", "GND"); r("R29", "0.1R 1% 1206", "SW_GPS", "5V_GPS", "RS"); ina219("U11", "SW_GPS", "5V_GPS", "SCL", "+3V3"); c("C30", "100n", "+3V3", "GND"); c("C31", "10u", "5V_GPS", "GND", "C10u")
-part("J_GPS1", "Connector", "USB_A", "USB-A receptacle, GPS", "USBA", {"1": "5V_GPS", "2": "USB_GPS_N", "3": "USB_GPS_P", "4": "GND", "5": "GND"}); esd("U12", "USB_GPS_P", "USB_GPS_N", "5V_GPS")
-tps2065("U13", "EN_CODEC", "SW_CODEC", "FLT_CODEC"); r("R30", "10k", "FLT_CODEC", "+3V3"); r("R42", "100k", "EN_CODEC", "+3V3"); c("C36", "100n", "+5V_M1", "GND"); r("R31", "0.1R 1% 1206", "SW_CODEC", "5V_CODEC", "RS"); ina219("U14", "SW_CODEC", "5V_CODEC", "GND", "SDA"); c("C32", "100n", "+3V3", "GND"); c("C33", "10u", "5V_CODEC", "GND", "C10u"); esd("U15", "USB_CODEC_P", "USB_CODEC_N", "5V_CODEC")
-tps2065("U16", "EN_UART", "SW_UART", "FLT_UART"); r("R32", "10k", "FLT_UART", "+3V3"); r("R43", "100k", "EN_UART", "+3V3"); c("C37", "100n", "+5V_M1", "GND"); r("R33", "0.1R 1% 1206", "SW_UART", "5V_UART", "RS"); ina219("U17", "SW_UART", "5V_UART", "+3V3", "SDA"); c("C102", "100n", "+3V3", "GND"); c("C103", "10u", "5V_UART", "GND", "C10u"); esd("U18", "USB_UART_P", "USB_UART_N", "5V_UART")
+# --- A20 (appendix 32.35): the hub and its four dongle channels left for PCB-B's B13; the wall host port keeps its channel, fed by the USB pair on J_AB1
+# --- channel on the M1 rail: wall host port (0x4A); WiFi, GPS, codec and UART channels retired with the dongles (A20)
 tps2065("U28", "EN_WALL", "SW_WALL", "FLT_WALL"); r("R76", "10k", "FLT_WALL", "+3V3"); r("R77", "100k", "EN_WALL", "+3V3"); c("C104", "100n", "+5V_M1", "GND"); r("R78", "0.1R 1% 1206", "SW_WALL", "5V_WALL", "RS"); ina219("U29", "SW_WALL", "5V_WALL", "SDA", "SDA"); c("C105", "100n", "+3V3", "GND"); c("C106", "10u", "5V_WALL", "GND", "C10u")
 part("J_WALL1", "Connector", "USB_A", "USB-A receptacle, internal cable to the Glenair 233-370 wall host port", "USBA", {"1": "5V_WALL", "2": "USB_WALL_N", "3": "USB_WALL_P", "4": "GND", "5": "GND"}); esd("U30", "USB_WALL_P", "USB_WALL_N", "5V_WALL")
 # --- expanders: U19 0x21 (as A18) and U31 0x24 (A19: wall port, heating pad, charger, gauge)
 part("U19", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x21)", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "+3V3", "2": "GND", "3": "GND",
- "4": "EN_WIFI", "5": "EN_GPS", "6": "EN_CODEC", "7": "EN_UART", "8": "SHORE_INHIBIT", "9": "EXP_SP2", "10": "MEZZ_EN", "11": "LED_MESH_K",
- "13": "LED_SAT_K", "14": "LED_LTE_K", "15": "LED_SYS_K", "16": "FLT_WIFI", "17": "FLT_GPS", "18": "FLT_CODEC", "19": "FLT_UART", "20": "EXP_SP3"}, "C5626")
+ "4": "EXP_SP4", "5": "EXP_SP5", "6": "EXP_SP6", "7": "EXP_SP7", "8": "SHORE_INHIBIT", "9": "EXP_SP2", "10": "MEZZ_EN", "11": "LED_MESH_K",
+ "13": "LED_SAT_K", "14": "LED_LTE_K", "15": "LED_SYS_K", "16": "EXP_SP8", "17": "EXP_SP9", "18": "EXP_SP10", "19": "EXP_SP11", "20": "EXP_SP3"}, "C5626")
 c("C107", "100n", "+3V3", "GND"); r("R34", "10k", "EXP_INT", "+3V3"); part("TP17", "Connector", "TestPoint", "EXP_SP2", "TP", {"1": "EXP_SP2"}); part("TP18", "Connector", "TestPoint", "EXP_SP3", "TP", {"1": "EXP_SP3"})
+for k in range(4, 12): part("TP%d" % (25 + k), "Connector", "TestPoint", "EXP_SP%d" % k, "TP", {"1": "EXP_SP%d" % k})   # TP29..TP36: the bits the dongle channels used
 part("U31", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x24): wall port, heating pad, charger, gauge", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "GND", "2": "GND", "3": "+3V3",
  "4": "EN_WALL", "5": "HEAT_EN", "6": "FLT_WALL", "7": "HEAT_FLT", "8": "CHG_INT", "9": "GAUGE_ALERT", "10": "CHG_STAT", "11": "EXP2_SP0",
@@ -243,13 +225,13 @@ r("R35", "330R", "+3V3", "LED_MESH_A"); r("R36", "330R", "+3V3", "LED_SAT_A"); r
 part("J_LEDS1", "Connector_Generic", "Conn_01x10", "front-wall LED row (XH2.5): PWR MESH SAT LTE SYS", "XH10",
      {"1": "LED_PWR_A", "2": "GND", "3": "LED_MESH_A", "4": "LED_MESH_K", "5": "LED_SAT_A", "6": "LED_SAT_K", "7": "LED_LTE_A", "8": "LED_LTE_K", "9": "LED_SYS_A", "10": "LED_SYS_K"})
 # --- mezzanine harness and interconnect (ribbon: no 5 V any more; 1 = shutdown request, 2 = Pi KILL)
-part("J_MEZZ1", "Connector_Generic", "Conn_02x08_Odd_Even", "APRS mezzanine harness (IDC 2x8)", "IDC16", {
- "1": "GND", "2": "5V_CODEC", "3": "USB_CODEC_P", "4": "USB_CODEC_N", "5": "GND", "6": "5V_UART", "7": "USB_UART_P", "8": "USB_UART_N",
- "9": "GND", "10": "TR_APRS", "11": "MEZZ_EN", "12": "+3V3", "13": "GND", "14": "MEZZ_SPARE1", "15": "TX_INHIBIT_n", "16": "GND"})
+part("J_MEZZ1", "Connector_Generic", "Conn_02x08_Odd_Even", "APRS mezzanine harness (IDC 2x8): I2S and I2C for the D6 codec, its gated 3.3 V, PTT lines", "IDC16", {
+ "1": "GND", "2": "+3V3_AB", "3": "I2S_BCLK", "4": "I2S_LRCLK", "5": "GND", "6": "I2S_DOUT", "7": "I2S_DIN", "8": "GND",
+ "9": "SDA", "10": "TR_APRS", "11": "MEZZ_EN", "12": "+3V3", "13": "GND", "14": "SCL", "15": "TX_INHIBIT_n", "16": "GND"})
 r("R39", "100k", "TR_APRS", "GND")
-part("J_AB1", "Connector_Generic", "Conn_02x07_Odd_Even", "A-B interconnect (IDC 2x7, top side)", "IDC14", {
- "1": "PI_SHDN_REQ", "2": "PI_KILL", "3": "GND", "4": "USB_A_P", "5": "USB_A_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS", "11": "VBUS_A_SENSE", "12": "AB_SPARE", "13": "GND", "14": "TX_INHIBIT_n"})
-part("TP28", "Connector", "TestPoint", "AB_SPARE", "TP", {"1": "AB_SPARE"}); r("R24", "4.7k", "VBUS_A_SENSE", "GND")
+part("J_AB1", "Connector_Generic", "Conn_02x09_Odd_Even", "A-B interconnect (IDC 2x9, top side)", "IDC18", {
+ "1": "PI_SHDN_REQ", "2": "PI_KILL", "3": "GND", "4": "USB_WALL_P", "5": "USB_WALL_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS",
+ "11": "I2S_BCLK", "12": "I2S_LRCLK", "13": "GND", "14": "TX_INHIBIT_n", "15": "I2S_DOUT", "16": "I2S_DIN", "17": "+3V3_AB", "18": "GND"})   # A20: the wall-port USB pair comes down from B13's hub, I2S and the gated 3.3 V go on to the mezzanine
 # --- seven blind-mate RF sites (32.23): top-side SMA jack for the module pigtail, bottom-side Radiall R222M00720 receptacle to the dock plug
 RF = (("UHF", "RF_UHF"), ("WIFI24", "RF_WIFI24"), ("WIFI58", "RF_WIFI58"), ("SDR", "RF_SDR"), ("LTE", "RF_LTE"), ("IRID", "RF_IRIDIUM"), ("LORA", "RF_LORA"))
 for k, (nm, net) in enumerate(RF, 1):
@@ -331,15 +313,10 @@ SECTIONS = [("PACK NODE (A19): MODULE CURRENT OVER THE DOCK PINS, PRE-CHARGE, GA
             ("RAIL M2: F4 + TPS61288L 5.05 V (PCB-B M2)", ["F4", "U23", "L3", "C71", "C72", "R61", "C73", "C74", "R62", "R63", "C75", "C76", "C77", "C78", "C79", "C80", "C81", "C82", "C83", "C96", "J_5V_M2"]),
             ("RAIL PI: F5 + TPS61288L 5.1 V 5 A", ["F5", "U24", "L4", "C84", "C85", "R64", "C86", "C87", "R65", "R66", "C88", "C89", "C90", "C91", "C92", "C93", "C94", "C97", "J_5V_PI"]),
             ("MAIN POWER CONTROL LTC2954 + HEATING PAD SWITCH TPS259571", ["U25", "C98", "R67", "R68", "R69", "Q5", "R70", "J_MAINSW", "F6", "U26", "C99", "R71", "R72", "R73", "C100", "J_HEAT"]),
-            ("3.3 V BUCK TPS563201 FROM M1, TEST POINTS, FLAGS", ["U5", "L6", "C13", "C14", "C15", "C101", "R74", "R75", "D2", "R18"] + ["TP%d" % k for k in range(1, 17)] + ["#FLG%02d" % k for k in range(1, 23)]),
-            ("USB 2.0 HUB USB2517I (upstream over J_AB1, ports 6-7 disabled)", ["U6", "Y1", "C16", "C17", "R19", "C18", "C19", "C20", "C21", "C22", "C23", "C24", "C25", "C26", "C27", "R20", "R21", "R22", "R23", "R25", "R79", "U27"]),
-            ("CH1 WIFI (0x46)", ["U7", "R26", "R40", "C34", "R27", "U8", "C28", "C29", "J_WIFI1", "U9"]),
-            ("CH2 GPS (0x47)", ["U10", "R28", "R41", "C35", "R29", "U11", "C30", "C31", "J_GPS1", "U12"]),
-            ("CH3 MEZZANINE CODEC (0x48)", ["U13", "R30", "R42", "C36", "R31", "U14", "C32", "C33", "U15"]),
-            ("CH4 MEZZANINE UART (0x49)", ["U16", "R32", "R43", "C37", "R33", "U17", "C102", "C103", "U18"]),
+            ("3.3 V BUCK TPS563201 FROM M1, TEST POINTS, FLAGS", ["U5", "L6", "C13", "C14", "C15", "C101", "R74", "R75", "D2", "R18"] + ["TP%d" % k for k in range(1, 17)] + ["#FLG%02d" % k for k in range(1, 20)]),
             ("CH5 WALL HOST PORT (0x4A)", ["U28", "R76", "R77", "C104", "R78", "U29", "C105", "C106", "J_WALL1", "U30"]),
-            ("I2C EXPANDERS PCA9555 0x21 AND 0x24, LEDs", ["U19", "C107", "R34", "TP17", "TP18", "U31", "C108"] + ["TP%d" % k for k in range(19, 28)] + ["R35", "R36", "R37", "R38", "J_LEDS1"]),
-            ("MEZZANINE HARNESS + A-B INTERCONNECT", ["J_MEZZ1", "R39", "J_AB1", "TP28", "R24"]),
+            ("I2C EXPANDERS PCA9555 0x21 AND 0x24, LEDs", ["U19", "C107", "R34", "TP17", "TP18"] + ["TP%d" % k for k in range(29, 37)] + ["U31", "C108"] + ["TP%d" % k for k in range(19, 28)] + ["R35", "R36", "R37", "R38", "J_LEDS1"]),
+            ("MEZZANINE HARNESS + A-B INTERCONNECT 2x9 (A20)", ["J_MEZZ1", "R39", "J_AB1"]),
             ("SEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 8)] + ["J_BM%d" % k for k in range(1, 8)])]
 byref = {p["ref"]: p for p in P}
 placed = set()
@@ -370,7 +347,7 @@ max_x = x + COLW
 PAPER = "A1" if max_x <= 820 else "A0"
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026-09-04") (rev "A") (company "MeshSat") (comment 1 "Phase A2 schematic (A4: 16.3 fixes), generated by tools/gen_sch_a.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709 / MESHSAT-789. A19 (4 Sep 2026 rulings, appendix 32.13 to 32.25): the kit UPS. BQ25792 charger from the dock 12 V, BQ34Z100-G1 gauge, three TPS61288L rails (M1, M2, Pi), LTC2954 main power control, TPS259571 heating-pad switch, USB2517I seven-port hub with the wall host port, PCA9555 0x21 and 0x24, seven SMP-MAX blind-mate sites, 9 A power pins to the floor battery module. No X1202."))\n'
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026-09-04") (rev "A") (company "MeshSat") (comment 1 "Phase A20 schematic (appendix 32.35: hub and dongle channels gone to B13, J_AB1 2x9 with I2S, Q5 pin order corrected per 32.36), generated by tools/gen_sch_a.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709 / MESHSAT-789. A19 (4 Sep 2026 rulings, appendix 32.13 to 32.25): the kit UPS. BQ25792 charger from the dock 12 V, BQ34Z100-G1 gauge, three TPS61288L rails (M1, M2, Pi), LTC2954 main power control, TPS259571 heating-pad switch, USB2517I seven-port hub with the wall host port, PCA9555 0x21 and 0x24, seven SMP-MAX blind-mate sites, 9 A power pins to the floor battery module. No X1202."))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'

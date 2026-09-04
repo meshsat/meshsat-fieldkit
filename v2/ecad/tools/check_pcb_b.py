@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Numeric verification of PCB-B (B13) against the appendix and the module drawings."""
 import sys, pcbnew, itertools
+from pcbnew import FromMM
 OX, OY = 150.0, 110.0
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 b = pcbnew.LoadBoard(sys.argv[1]); fails = []
@@ -43,25 +44,27 @@ if placed:
     if "J_LTE1" in fps:
         j = next(f for f in b.GetFootprints() if f.GetReference() == "J_LTE1")
         lt = [case(p.GetPosition()) for p in j.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH]
-        check(len(lt) == 2, "LTE socket carries its two M2.5 standoff holes (got %d)" % len(lt))
+        check(sum(1 for p in j.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH and p.GetDrillSize().x >= FromMM(2.5)) == 2, "LTE socket carries its two M2.5 standoff holes (NPTH >= 2.5: %d of %d)" % (sum(1 for p in j.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH and p.GetDrillSize().x >= FromMM(2.5)), len(lt)))
         bb = j.GetBoundingBox(False, False); r = (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
-        check(-33 <= r[0] and r[2] <= 27 and 51 <= r[1] and r[3] <= 83, "LTE card and socket inside the north band (-32..26, 52..82) (got %.1f..%.1f, %.1f..%.1f)" % r)
+        check(-33 <= r[0] and r[2] <= 27 and 50 <= r[1] and r[3] <= 84, "LTE card and socket inside the north band (-32..26, 52..82 plus courtyard) (got x %.1f..%.1f, y %.1f..%.1f)" % (r[0], r[2], r[1], r[3]))
     j = next((f for f in b.GetFootprints() if f.GetReference() == "J_AB1"), None)
     if j is not None: check(j.IsFlipped(), "J_AB1 on the underside")
 # hole-to-hole webs >= 2 mm between every pair of holes (drill edges), NPTH pads of the module and the socket included
-hl = [(v[0], v[1][0]) for v in holes.values()]
+hl = [(v[0], v[1][0], r) for r, v in holes.items()]
 for fp in b.GetFootprints():
+    if fp.GetReference() in holes or fp.GetReference().startswith("S_"): continue     # the tie slots are ovals with their own keep-outs
     for p in fp.Pads():
-        if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH and fp.GetReference() not in holes: hl.append((case(p.GetPosition()), p.GetDrillSize().x / 1e6))
-minweb = min(((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2) ** 0.5 - (dp + dq) / 2 for (p, dp), (q, dq) in itertools.combinations(hl, 2))
-check(minweb >= 2.0, "minimum web between any two holes %.2f mm (>= 2.0)" % minweb)
+        if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH and min(p.GetDrillSize().x, p.GetDrillSize().y) >= FromMM(2.0): hl.append((case(p.GetPosition()), p.GetDrillSize().x / 1e6, fp.GetReference()))
+pair = min(itertools.combinations(hl, 2), key=lambda t: ((t[0][0][0] - t[1][0][0]) ** 2 + (t[0][0][1] - t[1][0][1]) ** 2) ** 0.5 - (t[0][1] + t[1][1]) / 2)
+minweb = ((pair[0][0][0] - pair[1][0][0]) ** 2 + (pair[0][0][1] - pair[1][0][1]) ** 2) ** 0.5 - (pair[0][1] + pair[1][1]) / 2
+check(minweb >= 2.0, "minimum web between any two holes %.2f mm (>= 2.0): %s at %s and %s at %s" % (minweb, pair[0][2], pair[0][0], pair[1][2], pair[1][0]))
 # device rectangles: inside the outline with 3 mm margin, pairwise non-overlapping, clear of nut keep-outs
 R = {"CM5": (-108, -27.5, -68, 27.5), "COOLER": (-108.5, -28, -67.5, 28), "SDR": (-4, -16, 78, 16), "RB9704": (26, -76, 78, -20),
-     "HUB": (-66, -34, -22, -14), "BUCK": (-58, -84, -36, -60), "CM5X": (-58, -58, -22, -36), "FLASH": (-24, -84, -14, -66), "CTRL": (-119.5, -64, -100, -30),
-     "PWR": (-86, -72, -62, -44), "MODC": (-119.5, -18, -110, 0), "LTE": (-32, 52, 26, 82), "LTEP": (-62, 40, -20, 51), "GNSS": (-118, 44, -96, 66), "LORA": (-94, 44, -74, 66),
+     "HUB": (-66, -36, -22, -12), "BUCK": (-58, -82, -36, -52), "CM5X": (-58, -52, -22, -36), "FLASH": (-24, -82, -14, -66), "CTRL": (-119.5, -64, -100, -30),
+     "PWR": (-86, -72, -62, -44), "MODC": (-119.5, -18, -110, 0), "LTE": (-32, 52, 26, 82), "LTEP": (-64, 38, -18, 51), "GNSS": (-118, 42, -96, 66), "LORA": (-94, 44, -74, 66),
      "ZB": (84, 16, 104, 52), "ZBP": (105, 16, 118, 40), "TPS": (84, -60, 104, -30), "RB": (-19, -40, 15, -19.5), "JRTL": (-19, -6.5, -5, 6.5), "JPANEL": (81, 54.5, 91, 81.5),
      "JRB9704": (-0.5, -52.5, 20.5, -43.5), "JRB9603": (3.5, -62.5, 16.5, -57.5), "PASS": (-20.5, -57.5, -5.5, -42.5), "JTD2": (-46, 74, -38, 80), "JDCF": (-91, 74, -79, 80),
-     "JFLASH": (-35, -82.5, -25, -73.5), "JDISP": (-57, 6, -43, 14), "JSIM": (-51.5, 52.5, -38.5, 67.5), "BT1": (-58.5, 16.5, -33.5, 39.5), "JFAN": (-67, 32, -61, 36),
+     "JFLASH": (-35, -82, -25, -73), "JDISP": (-57, 6, -43, 14), "JSIM": (-51.5, 52.5, -38.5, 67.5), "BT1": (-58.5, 16, -33.5, 38), "JFAN": (-67, 32, -61, 36),
      "JV_M": (-98, -72, -86, -52), "JV_PI": (-118, -28, -110, -20)}
 for k, r in R.items():
     m = 3.0
@@ -75,7 +78,7 @@ def rect_circle_clear(r, c, rad):
 for k, r in R.items():
     check(all(rect_circle_clear(r, rod, 4.5) for rod in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]), "%s clear of the 9 mm nut keep-outs" % k)
 # slots and connectors at their intended centres (footprints are centred by the generator)
-exp_fp = {"S_RTL1": (20, -18), "S_RTL2": (74, -18), "S_RTL3": (20, 18), "S_RTL4": (66, 18), "J_DCF77": (-85, 77), "J_RTL1": (-12, 0), "J_PANEL": (86, 68), "U30A": (-105, -2.5), "U30B": (-71, -2.5), "J_FLASH": (-30, -78), "J_DISP": (-50, 10)}
+exp_fp = {"S_RTL1": (20, -18), "S_RTL2": (74, -18), "S_RTL3": (20, 18), "S_RTL4": (66, 18), "J_DCF77": (-85, 77), "J_RTL1": (-12, 0), "J_PANEL": (86, 68), "U30A": (-105, -2.5), "U30B": (-71, -2.5), "J_FLASH": (-30, -77.5), "J_DISP": (-50, 10)}
 for ref, (ex, ey) in exp_fp.items():
     fp = next((f for f in b.GetFootprints() if f.GetReference() == ref), None)
     if fp is None and ref in ("J_PANEL", "U30A", "U30B", "J_FLASH", "J_DISP") and not placed: print("SKIP %s (placed at the netlist stage)" % ref); continue

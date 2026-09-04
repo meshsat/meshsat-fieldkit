@@ -63,10 +63,10 @@ def place(ref, x, y, rot=0.0, back=False):
 #     (the two receptacles are separate parts U30A and U30B so JLC places two connectors; connector centres 17 mm off the module centre, 2.5 mm south),
 #     the display FPC east of the module with the cable toward the back wall, the LTE card in the north band with its socket at the west end,
 #     the flashing USB-C on the south edge, the rail leads on the west, the Pi rail lead beside the module's 5 V pins
-FIXED = {"J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -78, 180),
+FIXED = {"J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -77.5, 180),
          "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90),
-         "U30A": (-105, -2.5, 0), "U30B": (-71, -2.5, 0), "J_DISP": (-50, 10, 180), "J_LTE1": (-3, 67, -90), "J_SIM1": (-45, 60, 0), "BT1": (-46, 28, 0), "J_FAN": (-64, 34, 0),
-         "U42": (95, 34, 180)}
+         "U30A": (-105, -2.5, 0), "U30B": (-71, -2.5, 0), "J_DISP": (-50, 10, 180), "J_LTE1": (-3, 67, -90), "J_SIM1": (-45, 60, 0), "BT1": (-46, 27, 0), "J_FAN": (-64, 34, 0),
+         "U42": (94, 34, 180)}
 BACK = {"J_AB1"}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
@@ -81,17 +81,17 @@ for ref in comps:
         fp.SetValue(val); placed[ref] = fp
 # --- regions for the rest: (x0, y0, x1, y1), refs
 REGIONS = [
- ("PWR",  (-86, -72, -62, -44), ["D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "R1", "LED1"]),
+ ("PWR",  (-86, -72, -62, -44), ["D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "R1", "LED1", "Q3", "R52", "Q4", "R53", "Q5", "R54", "R55", "R25"]),   # the level stages beside J_AB1
  ("MODC", (-119.5, -18, -110, 0), ["C43", "C44", "C45", "C46", "C47", "C48"]),                  # the module's 5 V bulk beside its 5 V pins, inside the +5V_PI pour
- ("CTRL", (-119.5, -64, -100, -30), ["U20", "U21", "U34", "Q3", "R52", "Q4", "R53", "Q5", "R54", "R55", "R56", "C54", "C55", "R57", "R58", "R25", "C26", "C27"]),
- ("BUCK", (-58, -84, -36, -60), ["U31", "L31", "C31", "C32", "C33", "C34", "R35", "R36", "R37", "R38", "R41", "U33", "U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "R42", "C49", "C39", "F7"]),
- ("FLASH", (-24, -84, -14, -66), ["U9", "R50", "R51"]),
- ("CM5X", (-58, -58, -22, -36), ["R46", "LED5", "Q2", "R47", "R48", "LED6", "R49", "J_RPIBOOT", "J_WP", "J_PMIC", "J_PWRBTN", "J_DBG"]),
- ("HUB",  (-66, -34, -22, -14), ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "R3", "R4", "R5", "R6", "R7", "R8", "U2", "U7", "U10"]),
+ ("CTRL", (-119.5, -64, -100, -30), ["U20", "U21", "U34", "R56", "C54", "C55", "R57", "R58", "C26", "C27"]),
+ ("BUCK", (-58, -82, -36, -52), ["U31", "L31", "C31", "C32", "C33", "C34", "R35", "R36", "R37", "R38", "R41", "U33", "U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "R42", "C49", "C39", "F7"]),
+ ("FLASH", (-24, -82, -14, -66), ["U9", "R50", "R51"]),
+ ("CM5X", (-58, -52, -22, -36), ["R46", "LED5", "Q2", "R47", "R48", "LED6", "R49", "J_RPIBOOT", "J_WP", "J_PMIC", "J_PWRBTN", "J_DBG"]),
+ ("HUB",  (-66, -36, -22, -12), ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "R3", "R4", "R5", "R6", "R7", "R8", "U2", "U7", "U10"]),
  ("SDR",  (-20, -19, -3, -9.5), ["U4", "U5"]),
  ("SDR2", (-20, 8, -3, 19), ["U6", "R13", "R30", "C15", "R14", "C16", "C17"]),
- ("LTEP", (-62, 40, -20, 51), ["C50", "C51", "C52", "C53", "C56", "C57", "C58", "C59", "R59", "R60", "R61", "R62", "R63", "R64", "LED2", "J_LTEDBG", "U8"]),
- ("GNSS", (-118, 44, -96, 66), ["U40", "R65", "C60", "C61", "R66", "L40", "C62", "J_GNSS1"]),
+ ("LTEP", (-64, 38, -18, 51), ["C50", "C51", "C52", "C53", "C56", "C57", "C58", "C59", "R59", "R60", "R61", "R62", "R63", "R64", "LED2", "J_LTEDBG", "U8"]),
+ ("GNSS", (-118, 42, -96, 66), ["U40", "R65", "C60", "C61", "R66", "L40", "C62", "J_GNSS1"]),
  ("LORA", (-94, 44, -74, 66), ["U41", "C63", "C64", "R67"]),
  ("ZBP",  (105, 16, 118, 40), ["C65", "C66", "R68", "R69", "R70", "LED3", "R71", "LED4", "J_ZBDBG", "F6"]),
  ("TPS",  (84, -60, 104, -30), ["TP%d" % k for k in range(1, 24)] + ["TP%d" % k for k in range(30, 41)]),
@@ -176,9 +176,9 @@ plane(pcbnew.F_Cu, "+5V_PI", "+5V_PI pour F.Cu (J_5V_PI to the module 5 V pins)"
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
-cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
+cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)   # B13: 0.127 clearance everywhere (JLC standard), needed by the 0.4 mm connector escapes
 # USB 90 ohm and DSI 100 ohm on JLC's 7628 four-layer stack (0.20/0.15 and 0.17/0.15, the CM5IO's own classes are 0.147 and 0.127 on its 90 um dielectric; confirm with JLC's calculator at upload)
-CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "DSI": (0.15, 0.17, 0.7, 0.3, 0.17, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25)}   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
+CLASSES = {"USB": (0.127, 0.2, 0.7, 0.3, 0.2, 0.15), "DSI": (0.127, 0.17, 0.7, 0.3, 0.17, 0.15), "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25)}   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
 PATTERNS = [("USB_*", "USB"), ("DSI0_*", "DSI"), ("5V_*", "PWR"), ("+5V_M1", "PWR"), ("+5V_M2", "PWR"), ("+5V_PI", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("+3V3_LTE", "PWR"), ("+3V3_AB", "PWR"), ("PANEL_5V", "PWR")]
 try:
     for name, vals in CLASSES.items():
@@ -195,7 +195,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("DSI", 1, 0.15, 0.17, 0.7, 0.3, 0.17, 0.15), C("PWR", 2, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.127, 0.2, 0.7, 0.3, 0.2, 0.15), C("DSI", 1, 0.127, 0.17, 0.7, 0.3, 0.17, 0.15), C("PWR", 2, 0.127, 0.4, 0.8, 0.4, 0.4, 0.25)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
