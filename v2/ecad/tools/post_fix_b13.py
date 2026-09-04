@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""B13 post-route fixes: the B4 tidy-up (sub-1 mm dangling stubs, silk texts) plus two joins the router left open on the first B13 route
-(5 Sep 2026): the 5V_RTL branch end 0.42 mm short of its trunk near the SDR channel, and U20 pin 23 (SDA) to the SDA via of U21 pin 23
-over In1 east of the two expanders (the stub router's 294-cell detour crossed two clearances). Coordinates in KiCad board units (OX 150, OY 110)."""
+"""B13 post-route fixes: the B4 tidy-up (sub-1 mm dangling stubs, silk texts) plus a zone refill at the end, so the DRC that follows
+sees the planes as they will be exported (a stale fill reported every new via as a plane clearance violation on 5 Sep 2026)."""
 import sys, pcbnew
 from pcbnew import VECTOR2I, FromMM
 b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 150.0, 110.0
@@ -13,14 +12,24 @@ for t in tracks:
     for pt in (t.GetStart(), t.GetEnd()): ends[(pt.x, pt.y)] = ends.get((pt.x, pt.y), 0) + 1
 viapos = set((v.GetPosition().x, v.GetPosition().y) for v in vias)
 pads = [p for fp in b.GetFootprints() for p in fp.Pads()]
-def connected(pt, layer):
+def on_track(pt, layer, net, me):
+    """The point lies on the middle of another same-net track of the layer (a T-junction; 5 Sep: the 0.42 mm 5V_RTL branch foot was cut off as a stub)."""
+    for t in tracks:
+        if t is me or t.GetLayer() != layer or t.GetNetCode() != net: continue
+        a, e = t.GetStart(), t.GetEnd(); dx, dy = e.x - a.x, e.y - a.y; L2 = dx * dx + dy * dy
+        if L2 == 0: continue
+        u = max(0.0, min(1.0, ((pt.x - a.x) * dx + (pt.y - a.y) * dy) / L2))
+        if ((a.x + u * dx - pt.x) ** 2 + (a.y + u * dy - pt.y) ** 2) ** 0.5 <= t.GetWidth() / 2: return True
+    return False
+def connected(pt, layer, net=None, me=None):
     if ends.get((pt.x, pt.y), 0) > 1 or (pt.x, pt.y) in viapos: return True
     for v in vias:
         if abs(v.GetPosition().x - pt.x) < FromMM(0.45) and abs(v.GetPosition().y - pt.y) < FromMM(0.45): return True
     for p in pads:
         if p.IsOnLayer(layer) and p.HitTest(pt): return True
+    if net is not None and on_track(pt, layer, net, me): return True
     return False
-rm = [t for t in tracks if t.GetLength() < FromMM(1.0) and (not connected(t.GetStart(), t.GetLayer()) or not connected(t.GetEnd(), t.GetLayer()))]
+rm = [t for t in tracks if t.GetLength() < FromMM(1.0) and (not connected(t.GetStart(), t.GetLayer(), t.GetNetCode(), t) or not connected(t.GetEnd(), t.GetLayer(), t.GetNetCode(), t))]
 for t in rm: b.Remove(t)
 moved = 0
 for d in list(b.GetDrawings()):
@@ -43,12 +52,6 @@ def track(net, layer, a, c, w):
     t = pcbnew.PCB_TRACK(b); t.SetStart(K(*a)); t.SetEnd(K(*c)); t.SetWidth(FromMM(w)); t.SetLayer(layer); t.SetNet(b.FindNet(net)); b.Add(t); return t
 def via(net, x, y, d=0.45, dr=0.25):
     v = pcbnew.PCB_VIA(b); v.SetPosition(K(x, y)); v.SetWidth(FromMM(d)); v.SetDrill(FromMM(dr)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(b.FindNet(net)); b.Add(v); return v
-joins = 0
-if b.FindNet("/5V_RTL") and b.FindNet("/SDA"):
-    # 1. 5V_RTL: the branch (137.46, 93.92)-(136.32, 95.82)-... ends 0.42 mm north of the F.Cu trunk at y 93.50
-    track("/5V_RTL", pcbnew.F_Cu, (137.46, 93.92), (137.46, 93.50), 0.25); joins += 1
-    # 2. SDA: U20 pin 23 (39.81, 141.85) east on F.Cu past the neighbours' escape vias to a via at (43.10, 141.85), In1 south at x 43.10 (clear of
-    #    the UART0_TX via at 43.78 and the +3V3 In1 end at 42.63), under the +3V3 via at (42.15, 152.70), up to the SDA via at (42.15, 151.40)
-    track("/SDA", pcbnew.F_Cu, (39.81, 141.85), (43.10, 141.85), 0.2); via("/SDA", 43.10, 141.85)
-    track("/SDA", pcbnew.In1_Cu, (43.10, 141.85), (43.10, 152.00), 0.2); track("/SDA", pcbnew.In1_Cu, (43.10, 152.00), (42.15, 152.00), 0.2); track("/SDA", pcbnew.In1_Cu, (42.15, 152.00), (42.15, 151.40), 0.2); joins += 1
-pcbnew.SaveBoard(sys.argv[1], b); print("post_fix_b13: removed %d dangling stubs, %d silk texts fixed, %d joins added" % (len(rm), moved, joins))
+joins = 0   # 5 Sep 01:10: no hand joins any more; the stub router closes SDA (hole-to-hole rule added) and the cleanup keeps the 5V_RTL T-junction
+pcbnew.SaveBoard(sys.argv[1], b); b = pcbnew.LoadBoard(sys.argv[1]); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)   # refill the planes around whatever changed before the DRC
+print("post_fix_b13: removed %d dangling stubs, %d silk texts fixed, %d joins added, zones refilled" % (len(rm), moved, joins))
