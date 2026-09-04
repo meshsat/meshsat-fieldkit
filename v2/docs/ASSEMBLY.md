@@ -85,7 +85,7 @@ IPC-CC-830 acrylic (MG Chemicals 422B or equal) on A, B, D and the dock strip af
 
 ## 7. Removal and refit
 
-Appendix 25.3: lid, 16 screws, ribbon + two leads, panel out, seven pigtails at the strip, lift the A+B stack straight up. Refit in reverse; the south rods through the dock strip's holes align the spring pins.
+Appendix 25.3 as amended by 32.13: lid, 16 screws, ribbon and the rail leads, panel out, then lift the A+B stack straight up. No connector is unscrewed any more: the seven RF joints, the twelve signal contacts and the nine power pins all part as the stack rises. Refit in reverse; the rods through the dock strip's holes align everything, and the pre-charge pin meets its target before the four main ones.
 
 ## 8. Commissioning after assembly (appendix 32.3: no bench item gates the order)
 

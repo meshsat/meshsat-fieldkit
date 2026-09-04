@@ -45,7 +45,7 @@ Hardware LEDs, no software: MAIN ring (alive whenever the LED rail is present), 
 | 9 | 8 EPD_DC | E-paper data/command (SPI0 with `no_miso`, `spi0-1cs`). |
 | 10 | 12 SPI_MOSI | E-paper data. |
 | 11 | 10 SPI_SCLK | E-paper clock. |
-| 6 | (X1202) | Existing power-loss input, unchanged. | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
+| 6 | 31 PI_SHDN_REQ | Shutdown request from the power controller on PCB-A: the kit is going down, close cleanly. It replaces the old power-loss input (design record 32.17, software side MESHSAT-788). |
 
 ## 3. Lighting
 
@@ -65,8 +65,8 @@ One dimmer for the whole panel (MIL-STD-1472). The TX lamp is never dimmed below
 | MASTER CAUT | any amber condition acknowledged | any amber condition unacknowledged: bearer lost that was up, shore lost while charging was expected, disk nearly full |
 | SOS ACTIVE | SOS mode on | SOS mode on and no bearer has confirmed delivery |
 | SAT / MESH / LTE / GPS | bearer up (GPS: fix) | never |
-| SHORE | shore 12 V present (from the X1202 monitor: input present) | never | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
-| CHARGING | X1202 reports charging | never | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
+| SHORE | shore 12 V present (the charger on PCB-A reports its input over the bus) | never |
+| CHARGING | the charger on PCB-A reports a charge in progress | never |
 | MSG | unread inbound message | never (ACK clears) |
 | PI ring | heartbeat 0.5 Hz while the bridge runs | never |
 | BAT1..5 | battery bar, shown for 5 s after a lamp test or a short TEST press; otherwise dark | lowest LED flashes below 10 % |
@@ -84,7 +84,7 @@ A flasher that fails must fail to steady-on: the bridge writes steady-on before 
 | EMCON | latched closed | hardware: the DMR858M cannot key. Software on TX_INHIBIT_n low: stop direwolf TX, hold LoRa, LTE and satellite sends (queue them), show EMCON on the e-paper, MASTER CAUT steady |
 | ZEROIZE | switch closed for 5 s | zeroize keys (existing keystore wipe), then a full-refresh blank of the e-paper; MASTER WARN flashes while armed (0 to 5 s); flipping back inside 5 s aborts; after the wipe the switch must be returned before the kit re-arms |
 | PI | hardware to the Pi J2 pads | shutdown / wake, no bridge involvement |
-| MAIN PWR | hardware to the X1202 switch pins | kit power, no bridge involvement | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
+| MAIN PWR | hardware to the LTC2954 power controller on PCB-A | kit power, no bridge involvement |
 | LIGHTING | DAY / NIGHT / BLACKOUT | section 3 |
 
 Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
@@ -100,7 +100,7 @@ Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
 
 - The panel's 3V3 is never switched while the ribbon is attached (an unpowered PCA9555 clamps the kit I2C bus).
 - With the ribbon unplugged nothing on PCB-B depends on the panel: I2C reads of 0x22 and 0x23 NACK, TR_APRS is held low by PCB-A's pull-down, TX_INHIBIT_n is held high by PCB-D's pull-up. The bridge must treat a NACK as "no panel" and keep running.
-- I2C map after A16: 0x20 (B), 0x21 (A), 0x22 and 0x23 (C), 0x36 (X1202 gauge), 0x40 to 0x49 (INA219s). 0x55 and 0x6B are gone. A16 did not move any address; it took the spare bit 0.4 of the expander at 0x21 for `SHORE_INHIBIT` (section 9). *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
+- I2C map after A19: 0x20 (B), 0x21 and 0x24 (A), 0x22 and 0x23 (C), 0x40 to 0x49 (INA219s), plus the BQ25792 charger and the BQ34Z100-G1 fuel gauge on PCB-A. The panel addresses did not move.
 
 ## 8. Existing code to reuse
 
@@ -109,15 +109,15 @@ Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
 ## 9. Shore charge inhibit (A16 / E1, 3 Sep 2026)
 
 PCB-A's expander U19 at 0x21, port 0 bit 4 (pin 8), net SHORE_INHIBIT, reaches the dock over spring pin 8 and drives an optocoupler on E1 whose transistor shorts the Traco converter's remote pin to its isolated -Vin. High = the dock's 12 V is off, so nothing charges. Low, floating, or the Pi dead = the converter runs (the LED is off), so a kit with a crashed bridge still charges. The bridge asserts it:
-- when the in-case temperature is below 0 C (the ZigBee temperature sensor, or any in-case sensor the bridge trusts), since neither the X1202 nor the pack BMS protects the X1202's own four cells from a cold charge; *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
+- when the in-case temperature is below 0 C, as a second line of defence: the charger on PCB-A already holds the Samsung window of 0 to 45 C from the module's own thermistor, and this rule covers the case where that reading is missing or the operator wants charging stopped;
 - when the operator sets "no charge" in the UI;
 - and it clears it with hysteresis (charge again above 3 C).
-Boot state: low. The SHORE indicator on the panel shows the dock's 12 V presence, which after this change is the only charge input: the case USB-C inlet is no longer wired to the X1202 (ASSEMBLY.md section 4); a USB-C PD source feeds the dock inlet through a 12 V PD trigger lead.
+Boot state: low. The SHORE indicator shows the dock's 12 V presence, and the dock is the only charge input: shore power and the solar panel both enter through the wall connectors into the dock strip (ASSEMBLY.md section 4).
 
-SHORE and CHARGING sources (audit 26.4): `x1202-monitor.py` must gain a `charging` field (voltage rising against the open-circuit curve while an input is present) and the GPIO 6 power-loss line must be verified wired on the bench (MESHSAT-774) before SHORE can be trusted; until then SHORE follows the dock 12 V sense that E1's LED shows and CHARGING stays dark.
+SHORE and CHARGING sources: both now come from the BQ25792 charger on PCB-A over the bus, which reports input present, charge in progress and its own fault state directly. The bridge reads the charger and the BQ34Z100-G1 fuel gauge instead of the old monitor script (software side MESHSAT-788).
 
 ## 10. Charge kick, bearer serialisation, module rail (rulings 3 Sep 2026 evening, appendix 32.3)
 
-- Charge kick: while an input is present (SHORE, or GPIO 6 high) and the node is not full (gauge below 95 percent, or the node below 4.15 V), if the node voltage has not risen for 4 h, drive GPIO 16 high for 5 s and low again. GPIO 16 high disables the X1202 charger, low enables it (Geekworm hardware page, pin 36); the pulse restarts any safety timer the charger may have. Boot state low. *(Struck 4 Sep night, appendix 32.19: the X1202 is removed (32.17); the charger on A19 has its own timer behaviour by design, so no charge kick exists. Do not implement.)*
-- Bearer serialisation: LTE, Iridium and LoRa transmissions never start in the same second; the bridge queues them. The A17 module rail is sized for one burst at a time over the whole discharge (about 4.2 A at 5 V); all three at once is tolerated only above about 3.8 V cell voltage, and then the module rail sags, never the Pi. *(Relaxed 4 Sep night, design record 32.21: with the module loads split over two converters on A19, every radio may transmit at once at any cell voltage; serialisation is now a receiver-protection preference of the bridge, not a power requirement.)*
-- Module rail: PCB-A's TPS61089 boost (5.05 V, fused by F3 from the cell node) feeds PCB-A's channel switches and the whole of PCB-B. Its enable follows the X1202's 5 V output over the sense lead into PCB-B J_5V_IN1 and J_AB1 pin 12, so the rail is on exactly while the X1202 powers the Pi; the bridge does not control it. Per-module control stays with the eFuse enables of section 1. *(Superseded 4 Sep night, appendix 32.19: with the X1202 gone, A19 enables the module rail from its own main power control; J_5V_IN1 disappears from PCB-B and J_AB1 pin 12 is spare again; the bridge still does not control the rail.)*
+- Charge kick: this rule existed because the previous charger had a safety timer that could stop a long charge early and no way to read it. The charger on PCB-A reports its own state and its timer is configured directly, so there is nothing to kick: the bridge watches the charger's status and raises a fault instead.
+- Bearer serialisation: withdrawn by the owner ruling of 4 September 2026 (appendix 32.21). PCB-A carries three converters, each specified with every radio transmitting down to 3.0 V per cell, so the bridge no longer queues transmissions to protect a rail.
+- The rails: PCB-A carries three TPS61288L converters from the cell node. M1 (fused by F3) feeds the hub, the display, the panel and the LTE channel; M2 (F4) feeds the SDR, ZigBee, LoRa and RockBLOCK channels; the Pi rail (F5) feeds the Pi alone at 5.1 V. The main power controller enables all three together, so the bridge does not control them; it sees them come up and go down with the kit.
