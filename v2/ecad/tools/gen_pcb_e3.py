@@ -61,7 +61,7 @@ FIXED = {"U1": (29, -70, 90, False), "J_BLK": (-135, -88, 0, False), "P_CP": (-1
          "J_DCIN": (-104, -106, 0, False), "F1": (-88, -106, 0, False), "J_SOLAR": (-64, -106, 0, False), "F2": (-46, -106, 0, False),
          "U5": (2, -92, 0, False), "L1": (16, -102, 0, False), "J_TS": (66, -104, 0, False), "J_KS": (78, -104, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
-text("DC IN", -105, -52.5, pcbnew.F_SilkS, 2.0, 0.3); text("F1 7.5A", -80, -52.5, pcbnew.F_SilkS, 2.0, 0.3); text("12V AUX", 118, -64.5, pcbnew.F_SilkS, 1.6, 0.25); text("SHORE", 60, -75, pcbnew.F_SilkS, 2.0, 0.3)
+text("DC IN", -105, -52.5, pcbnew.F_SilkS, 2.0, 0.3); text("F1 7.5A", -80, -52.5, pcbnew.F_SilkS, 2.0, 0.3); text("12V AUX", 111, -64.5, pcbnew.F_SilkS, 1.6, 0.25); text("SHORE", 60, -75, pcbnew.F_SilkS, 2.0, 0.3)
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
 REGIONS = [
  ("ENTRY",  (-112, -101, -68, -82), ["U3", "Q1", "C4", "R1", "D1", "C1", "C2", "C3", "D3", "R2", "LED1", "R3", "R4", "U2", "TP1", "TP2", "TP3", "TP4"], False),
@@ -69,7 +69,7 @@ REGIONS = [
  ("TRKW",   (-30, -108, -4, -82), ["Q3", "Q4", "Q5", "Q6", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6"], False),
  ("TRKS",   (7, -93, 30, -84), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
  ("TRKOUT", (32, -108, 60, -84), ["C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18", "TP6"], False),
- ("TPS",    (90, -108, 124, -100), ["TP7", "TP8", "TP9"], False),
+ ("TPS",    (90, -108, 116, -100), ["TP7", "TP8", "TP9"], False),
 ]
 rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
 if rest: REGIONS.append(("REST", (90, -98, 124, -82), rest, False))
@@ -132,13 +132,13 @@ def pour(layer, netname, name, rect, priority=0):
 # The module nets CELL_P_MOD / CELL_N_MOD run as bars between J_BATT and the lands (fix_e4_node.py) and touch no ground (32.24 AZ). Nothing under the float clamps (rule areas).
 pour(pcbnew.In1_Cu, "DC_N", "DC_N plane In1 (isolated side)", (-115, -111, 62, -51))
 pour(pcbnew.In1_Cu, "GND", "GND plane In1 west (kit side, block lands)", (-160, -111, -116, -51))
-pour(pcbnew.In1_Cu, "GND", "GND plane In1 east (kit side)", (63, -111, 125, -51))
+pour(pcbnew.In1_Cu, "GND", "GND plane In1 east (kit side)", (63, -111, 118, -51))
 pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-60, -111, -8, -80))
 pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (30, -111, 60, -80))
 pour(pcbnew.In2_Cu, "SHORE_12V", "SHORE_12V pour In2 (converter output to the block lands)", (-116, -100, 4, -82))
 pour(pcbnew.F_Cu, "DC_N", "DC_N pour F (isolated side)", (-115, -111, 62, -80), priority=0); pour(pcbnew.B_Cu, "DC_N", "DC_N pour B (isolated side)", (-115, -111, 62, -51), priority=0)
 pour(pcbnew.F_Cu, "GND", "GND pour F west", (-160, -111, -116, -51)); pour(pcbnew.B_Cu, "GND", "GND pour B west", (-160, -111, -116, -51))
-pour(pcbnew.F_Cu, "GND", "GND pour F east", (63, -111, 125, -51)); pour(pcbnew.B_Cu, "GND", "GND pour B east", (63, -111, 125, -51))
+pour(pcbnew.F_Cu, "GND", "GND pour F east", (63, -111, 118, -51)); pour(pcbnew.B_Cu, "GND", "GND pour B east", (63, -111, 118, -51))
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
