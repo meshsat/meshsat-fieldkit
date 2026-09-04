@@ -9,7 +9,7 @@ def check(c, m):
     if not c: fails.append(m)
 segs = [(case(d.GetStart()), case(d.GetEnd())) for d in b.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_SEGMENT]
 pts = [p for s in segs for p in s]; x0, x1, y0, y1 = min(p[0] for p in pts), max(p[0] for p in pts), min(p[1] for p in pts), max(p[1] for p in pts)
-check(abs(x1 - x0 - 285) < 0.01 and abs(y1 - y0 - 60) < 0.01 and abs(y1 + 51) < 0.01, "strip 285 x 60 at Y -111..-51 (got X %.1f..%.1f Y %.1f..%.1f)" % (x0, x1, y0, y1))
+check(abs(x1 - x0 - 278) < 0.01 and abs(y1 - y0 - 60) < 0.01 and abs(y1 + 51) < 0.01 and abs(x1 - 118) < 0.01, "strip 278 x 60 at X -160..118, Y -111..-51 (got X %.1f..%.1f Y %.1f..%.1f)" % (x0, x1, y0, y1))
 fps = {fp.GetReference(): fp for fp in b.GetFootprints()}
 for ref, (x, y) in (("H1", (-110.5, -73.0)), ("H2", (110.5, -73.0))):
     p = case(fps[ref].GetPosition()) if ref in fps else None
