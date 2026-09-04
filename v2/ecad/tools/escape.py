@@ -89,8 +89,9 @@ for fp in b.GetFootprints():
     ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))
     if ONLY and fp.GetReference() not in ONLY: continue                    # test runs on one part
     pitch = min_pitch(fp); fc = fp.GetPosition()
-    FAN_OK = True; CLR = FromMM(0.127) if pitch <= FromMM(0.45) else FromMM(0.16)   # the 0.4 mm rows need the JLC floor itself; every other part keeps the 0.16 margin
-    if pitch <= FromMM(0.45): VIA_D, VIA_DR, TW, OFFS, FAN_OK = FromMM(0.40), FromMM(0.20), FromMM(0.127), (0.3, 1.0, 1.7), False
+    ROWS04 = pitch <= FromMM(0.45) and b.GetDesignSettings().m_ViasMinSize <= FromMM(0.40)   # only a board set up for it (B13: via 0.40/0.20, class clearance 0.127); A20 keeps the QFN scheme on its 0.4 mm converters
+    FAN_OK = True; CLR = FromMM(0.127) if ROWS04 else FromMM(0.16)   # the 0.4 mm rows need the JLC floor itself; every other part keeps the 0.16 margin
+    if ROWS04: VIA_D, VIA_DR, TW, OFFS, FAN_OK = FromMM(0.40), FromMM(0.20), FromMM(0.127), (0.3, 1.0, 1.7), False
     # 0.4 mm board-to-board rows (the CM5 receptacles, B13, appendix 32.35): the CM5IO scheme, a 0.40/0.20 via right past every pad tip,
     # neighbours alternating 0.3 and 1.0 mm deep, 0.127 mm tracks; a straight 0.127 track passes a neighbour's 0.40 via at 0.4 mm lateral
     # with 0.137 mm to spare, so the board's class clearance must be 0.127 (gen_pcb_b3.py sets it). No fan: a 50-pad row cannot splay.

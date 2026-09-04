@@ -17,5 +17,5 @@ read H < out/par-score.txt; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reve
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -4
 python3 ../tools/silk_fix_all.py $N.kicad_pcb b 2>&1 | grep -vE 'Debug|leak' | tail -2
-cd ..; ./tools/finish_board.sh pcb-b-compute pcb-b-compute post_fix_b4.py meshsat-pcb-b-revA-B13 2>&1 | tail -16
+cd ..; ./tools/finish_board.sh pcb-b-compute pcb-b-compute post_fix_b13.py meshsat-pcb-b-revA-B13 2>&1 | tail -16
 echo FINISH-B13-DONE
