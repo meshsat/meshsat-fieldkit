@@ -115,12 +115,12 @@ for fp in b.GetFootprints():
             centre_along = sum(t[0] for t in lst) / n
             for idx, (along, pad, L) in enumerate(lst):
                 c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
-                s_k = (idx - (n - 1) / 2.0) * FromMM(0.8) - (along - centre_along)     # lateral shift from the pad's own lane
                 done = False
-                for lane, depth in [(0.75, dp) for dp in (1.3, 1.7, 2.1)] + [(0.35, dp) for dp in (1.3, 1.0, 0.8, 1.7)]:
-                    # A19 (5 Sep): the BQ25792's south row had a 1210 capacitor 1.4 mm past its tips; the 0.75 mm lane rule rejected every
-                    # depth, the row went to the router without escapes and SDA could not be routed at all. Second pass with the lane at 0.35
-                    # and shallower via rows (1.0, 0.8 past the tips) for a row whose neighbour sits closer than the standard depth allows.
+                for lane, vpitch, depth in [(0.75, 0.8, dp) for dp in (1.3, 1.7, 2.1)] + [(0.35, 0.7, dp) for dp in (1.2, 1.0, 0.85, 1.5)]:
+                    # A19 (5 Sep): the BQ25792's south row had a 1210 capacitor 1.7 mm past its tips; the 0.75 mm lane rule rejected every
+                    # depth, the row went to the router without escapes and SDA could not be routed at all. Second pass with the lane at 0.35,
+                    # the via row at 0.7 mm pitch (smaller splay) and shallower depths, for a row whose neighbour sits closer than the standard depth allows.
+                    s_k = (idx - (n - 1) / 2.0) * FromMM(vpitch) - (along - centre_along)     # lateral shift from the pad's own lane
                     knee = VECTOR2I(int(c.x + L[0] * (half + FromMM(0.3))), int(c.y + L[1] * (half + FromMM(0.3))))
                     v = VECTOR2I(int(c.x + L[0] * (half + FromMM(depth)) + side_dir[0] * s_k), int(c.y + L[1] * (half + FromMM(depth)) + side_dir[1] * s_k))
                     mids = [VECTOR2I(int(knee.x + (v.x - knee.x) * k / 5.0), int(knee.y + (v.y - knee.y) * k / 5.0)) for k in range(1, 5)]
