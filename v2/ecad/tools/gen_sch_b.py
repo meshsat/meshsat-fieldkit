@@ -208,7 +208,7 @@ part("J_AB1", "Connector_Generic", "Conn_02x07_Odd_Even", "A-B interconnect (IDC
  "1": "PI_SHDN_REQ", "2": "PI_KILL", "3": "GND", "4": "USB_A_P", "5": "USB_A_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS", "11": "VBUS_A_SENSE", "12": "AB_SPARE", "13": "GND", "14": "TX_INHIBIT_n"})   # B12: 1 = shutdown request from PCB-A (LTC2954 INT), 2 = Pi KILL to PCB-A, no 5 V on the ribbon
 
 # ----------------------------------------------------------------- emit
-POWER = {"GND": ("power", "GND"), "+5V_M1": ("power", "+5V_M1"), "+3V3": ("power", "+3V3")}
+POWER = {"GND": ("power", "GND"), "+3V3": ("power", "+3V3")}   # the three rails are plain labels, as on A: there is no power:+5V_M1 symbol and no unqualified 5 V rail on this board
 libsyms = {}; out = []; ROOT = str(uuid.uuid4())
 def U(): return str(uuid.uuid4())
 def ensure(lib, name):
