@@ -12,10 +12,12 @@ def head(name, descr, tags, attr):
             '\t(property "Value" "VAL**" (at 0 %.2f 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))']
 def circle(cx, cy, r, layer, w=0.12): return '\t(fp_circle (center %.3f %.3f) (end %.3f %.3f) (stroke (width %g) (type default)) (fill no) (layer "%s"))' % (cx, cy, cx + r, cy, w, layer)
 def rect(x0, y0, x1, y1, layer, w=0.1): return '\t(fp_rect (start %.3f %.3f) (end %.3f %.3f) (stroke (width %g) (type default)) (fill no) (layer "%s"))' % (x0, y0, x1, y1, w, layer)
-def npth(x, y, d, size=None):
-    """Unplated hole; size > drill gives a copper-free ring that the router respects (KiCad exports the pad shape as the keepout, Freerouting ignores Edge.Cuts inside footprints)."""
-    size = d if size is None else size
-    return '\t(pad "" np_thru_hole circle (at %.3f %.3f) (size %.2f %.2f) (drill %.2f) (layers "*.Cu" "*.Mask"))' % (x, y, size, size, d)
+def npth(x, y, d): return '\t(pad "" np_thru_hole circle (at %.3f %.3f) (size %.2f %.2f) (drill %.2f) (layers "*.Cu" "*.Mask"))' % (x, y, d, d, d)
+def keepout_circle(r, name, n=36):
+    """Rule area in the footprint on both copper layers: no tracks, vias or pour inside radius r. Freerouting ignores Edge.Cuts inside a footprint and KiCad
+    draws an unplated pad larger than its drill as copper, so a routed outline (keyway notch, D flat) needs this to keep copper off its edge clearance."""
+    pts = " ".join("(xy %.3f %.3f)" % (r * math.cos(2 * math.pi * k / n), r * math.sin(2 * math.pi * k / n)) for k in range(n))
+    return '\t(zone (net 0) (net_name "") (layers "F&B.Cu") (name "%s") (hatch edge 0.5) (keepout (tracks not_allowed) (vias not_allowed) (pads allowed) (copperpour not_allowed) (footprints allowed)) (polygon (pts %s)))' % (name, pts)
 def tht(num, x, y, drill=1.1, size=2.0, shape="circle"): return '\t(pad "%s" thru_hole %s (at %.3f %.3f) (size %.2f %.2f) (drill %.2f) (layers "*.Cu" "*.Mask"))' % (num, shape, x, y, size, size, drill)
 def text(t, x, y, layer="F.Fab", size=1.0): return '\t(fp_text user "%s" (at %.3f %.3f) (layer "%s") (effects (font (size %g %g) (thickness 0.15))%s))' % (t, x, y, layer, size, size, " (justify mirror)" if layer.startswith("B.") else "")
 def write(name, lines):
@@ -41,11 +43,12 @@ def panel_switch(name, hole, body_d, npads, pad_r, descr, keyway=None, dflat=Non
     L = head(name, descr, "panel switch bench sealed", "through_hole"); L[8] %= (body_d / 2 + 2.0); L[9] %= (body_d / 2 + 2.0)
     if dflat is not None:
         r = hole / 2.0; c = NKK_D_FLAT - r
-        L.append(npth(0, 0, round(2 * c - 0.05, 2), size=hole + 0.7))                   # inscribed drill, copper-free ring 0.35 past the D outline (C5 route 1: two tracks sat inside the edge clearance)
+        L.append(npth(0, 0, round(2 * c - 0.05, 2)))                                    # inscribed drill: the router's obstacle; the fab routes the D
+        L.append(keepout_circle(hole / 2 + 0.35, "D hole edge clearance"))              # C5 route 1: two tracks sat inside the D outline's edge clearance
         th = math.radians(dflat); pts = [(x * math.cos(th) - y * math.sin(th), x * math.sin(th) + y * math.cos(th)) for x, y in dflat_outline(hole, NKK_D_FLAT)]
         L.append(poly(pts, "Edge.Cuts", 0.05))
     elif keyway is not None:
-        L.append(npth(0, 0, hole, size=2 * (hole / 2 + KEYWAY_D) + 0.7))                 # copper-free ring past the notch's reach
+        L.append(npth(0, 0, hole)); L.append(keepout_circle(hole / 2 + KEYWAY_D + 0.35, "keyway edge clearance"))
     else:
         L.append(npth(0, 0, hole))
     if keyway is not None:
