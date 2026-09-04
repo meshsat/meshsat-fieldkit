@@ -18,7 +18,7 @@ python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
 python3 ../tools/silk_fix_all.py $N.kicad_pcb c 2>&1 | grep -vE 'Debug|leak' | tail -2
 grep -q "(tenting front back)" $N.kicad_pcb && echo "tenting: both faces" || { echo "BLOCK: vias not tented on both faces"; exit 1; }
 python3 ../tools/check_pcb_c.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'
-kicad-cli pcb export dxf --layers User.2,User.3,Edge.Cuts --output-units mm -o out/$N-seals.dxf $N.kicad_pcb >/dev/null 2>&1 && echo "seals DXF: out/$N-seals.dxf ($(grep -c ENTITIES out/$N-seals.dxf) sections)"
+rm -rf out/$N-seals.dxf; kicad-cli pcb export dxf --mode-single --layers User.2,User.3,Edge.Cuts --output-units mm -o out/$N-seals.dxf $N.kicad_pcb >/dev/null 2>&1 && echo "seals DXF: out/$N-seals.dxf ($(grep -c -E '^(LINE|ARC|CIRCLE|LWPOLYLINE|POLYLINE)$' out/$N-seals.dxf) entities)"
 cd ..; ./tools/finish_board.sh pcb-c-display pcb-c-display - meshsat-pcb-c-revA-C5 2>&1 | tail -16
 cp pcb-c-display/out/$N-seals.dxf ../release/${MESHSAT_FK_REV:-revA}/boards/meshsat-pcb-c-revA-C5/ 2>/dev/null && echo "seals DXF copied into the deliverable folder"
 echo FINISH-C5-DONE
