@@ -65,7 +65,8 @@ Samsung's specification forbids soldering to the cell can: the cells are welded 
 | Rail M2 (**F4, 10 A**; SDR, ZigBee, LoRa, RockBLOCK) | PCB-A J_5V_M2 (VH) | PCB-B J_5V_M2 (VH) | 18 AWG, 150 mm | VH crimp both ends |
 | Pi rail (**F5, 15 A**; 5.1 V, 5 A) | PCB-A J_5V_PI (VH) | Pi 5 USB-C power input | 18 AWG, 200 mm | VH at PCB-A, USB-C plug at the Pi |
 | Heating pad | PCB-A J_HEAT (XH2.5) | pad on the battery module | 20 AWG, 350 mm | XH2.5 |
-| Wall USB | PCB-A J_WALL1 (USB-A) | Glenair 233-370 wall receptacle | USB 2.0 cable, 300 mm | USB-A both ends |
+| Wall USB | PCB-A J_WALL1 (USB-A) | Glenair 233-370 receptacle on the connector plate | USB 2.0 cable, 300 mm | USB-A both ends |
+| Connector plate | 82 x 54 x 3 aluminium over the wall window (appendix 32.29, `release/revA/case/`) | the long wall on the dock entry side, plate centre 55 mm above the floor | six M4 x 16 stainless, washers both sides, Nyloc inside, 1.2 N m in a cross pattern; 2 mm closed-cell gasket | carries the shore DC receptacle (D38999/20 shell 13) and the USB receptacle (233-370 shell 15), each on its own gasket with M3 x 10 and spring washers |
 | RF pigtails | device SMA on B / D | PCB-A J_RF1 to J_RF7 (SMA jacks) | RG-316, bend radius 12.5 mm | SMA male |
 | Blind-mate jumpers | dock strip float clamps (Radiall R222M80500 right-angle plugs) | MIL-DTL-38999 wall receptacles | RG-316 | SMP-MAX at the clamp, wall connector at the other end |
 
