@@ -24,13 +24,26 @@ with open("out/jlc/%s-bom.csv" % N, "w", newline="") as f:
         w.writerow([r["Value"], ",".join(refs), r["Footprint"].split(":")[-1], r.get("LCSC", "")])
 print("JLC BOM + CPL written to out/jlc/")
 PY
-cat > out/jlc/README-fab.txt <<'TXT'
-MeshSat field-kit carrier PCB-B COMPUTE Rev A - JLCPCB order notes (generated)
-- Gerbers + drill: out/pcb-b-compute-gerbers.zip (KiCad 9, Protel extensions, Excellon mm)
-- Board: 245 x 170 mm, 4 layers, 1.6 mm FR-4, JLC04161H-7628 stackup, 1 oz outer copper, ENIG, matte black soldermask, white silkscreen
-- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at 0.2 mm / 0.15 mm on outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup
-- Assembly: SMD + THT, top and bottom (J_AB1 is on the bottom). BOM: pcb-b-compute-bom.csv, CPL: pcb-b-compute-cpl.csv
-- LCSC part numbers: only the certain ones are filled; the rest must be matched in the JLC parts library at order time
-- Not assembled by JLC (fit at the bench): the COTS modules, the RockBLOCK bracket, cable ties, the display
-TXT
+python3 - "$N" <<'PY'
+import sys, csv, os, pcbnew
+n = sys.argv[1]; b = pcbnew.LoadBoard(n + ".kicad_pcb"); bb = b.GetBoardEdgesBoundingBox(); ds = b.GetDesignSettings()
+W, H, NL, T = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, b.GetCopperLayerCount(), ds.GetBoardThickness() / 1e6
+title = b.GetTitleBlock().GetTitle() or n
+top = bot = 0
+if os.path.exists("out/jlc/%s-cpl.csv" % n):
+    for r in csv.DictReader(open("out/jlc/%s-cpl.csv" % n)):
+        if r.get("Layer", "").lower().startswith("t"): top += 1
+        else: bot += 1
+usb = any("USB_" in str(k) and str(k).endswith(("_P", "_N")) for k in b.GetNetInfo().NetsByName().keys())
+stack = "JLC04161H-7628 stackup, " if NL == 4 else ""
+asm = "none (bare board)" if top + bot == 0 else ("top %d" % top + (", bottom %d" % bot if bot else ""))
+lines = ["MeshSat field-kit carrier %s Rev A - JLCPCB order notes (generated from the board file)" % title.replace("MeshSat Field Kit carrier - ", ""),
+         "- Gerbers + drill: out/%s-gerbers.zip (KiCad 9, Protel extensions, Excellon mm)" % n,
+         "- Board: %.0f x %.0f mm, %d layers, %.1f mm FR-4, %s1 oz outer copper, ENIG, matte black soldermask, white silkscreen" % (W, H, NL, T, stack)]
+if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at 0.2 mm / 0.15 mm on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup")
+lines += ["- Assembly: %s. BOM: %s-bom.csv, CPL: %s-cpl.csv" % (asm, n, n) if top + bot else "- Assembly: none, bare board",
+          "- LCSC part numbers: verified codes filled by tools/lcsc_fill.py; lines without a code are bench-fitted parts (see ORDER-NOTES.txt in the order folder)",
+          "- Not assembled by JLC: the bench-fit list of the order folder's ORDER-NOTES.txt and docs/ASSEMBLY.md section 9"]
+open("out/jlc/README-fab.txt", "w").write("\n".join(lines) + "\n"); print("README-fab:", lines[2])
+PY
 ls -la out/jlc | awk '{print $5, $9}'
