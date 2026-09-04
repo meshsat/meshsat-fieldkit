@@ -1,18 +1,18 @@
 # V2: the Peli 1520 carrier set (MESHSAT-709)
 
-Seven KiCad 9 boards for the kit V2 go-box: a Peli 1520EU case with the 1520PF panel frame. The power and compute boards stack on four M3 rods and lift out of the case in one piece; a dock strip on the case floor carries the shore-power spring pins and stays wired to the case together with the RF junction strip on the wall. The control panel is the panel of the frame.
+Seven KiCad 9 boards for the kit V2 go-box: a Peli 1520EU case with the 1520PF panel frame. The power and compute boards stack on four M3 rods and lift out of the case in one piece; a dock strip on the case floor carries the shore power, the solar tracker and the raised contact block that the stack blind-mates onto. The control panel is the panel of the frame. Nothing here has been built yet: the boards are designed and checked, and the first set has not been ordered.
 
-Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md`, section 25): the Geekworm X1202 is the only charger and UPS, with the welded 1S8P pack in parallel with its own cells and nothing between them; EMCON is a hardware line from the panel to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`. *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
+Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md`, sections 25 and 32): the kit carries its own charger, gauge and power control on PCB-A, with the cells in a battery module on the case floor that blind-mates through the dock; EMCON is a hardware line from the panel to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`.
 
 | Board | Rev | Size (mm) | Layers | Project | Deliverable folder |
 |---|---|---|---|---|---|
-| PCB-A POWER + I/O | A18 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A18/` |
-| PCB-B COMPUTE | B11 | 245 x 170 | 4 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B11/` |
+| PCB-A POWER + I/O | A19 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A19/` |
+| PCB-B COMPUTE | B12 | 245 x 170 | 4 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B12/` |
 | PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C4/` |
 | PCB-C SPACER RING | R1 | 106 x 54 | 2 | `ecad/pcb-c-ring/` | `release/revA/boards/meshsat-pcb-c-ring-revA-R1/` |
 | PCB-D APRS | D5 | 80 x 62 | 4 | `ecad/pcb-d-aprs/` | `release/revA/boards/meshsat-pcb-d-revA-D5/` |
-| PCB-E1 DOCK | E1 | 250 x 44 | 2 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E1/` |
-| PCB-E2 RF JUNCTION | E3 | 330 x 32 | 2 | `ecad/pcb-e2-rfjunction/` | `release/revA/boards/meshsat-pcb-e2-revA-E3/` |
+| PCB-E1 DOCK STRIP | E4 | 285 x 60 | 4 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E4/` |
+| PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | `ecad/pcb-e5-block/` | `release/revA/boards/meshsat-pcb-e5-revA-E5/` |
 
 **Build guide: [`BUILD.md`](BUILD.md)** walks from an empty cart to a running kit. This page is the map of the folder.
 
@@ -28,9 +28,13 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 | `release/revA/review/` | the review prints: 1:1 sheets, assembly drawings, copper layers, schematics, renders at A4 |
 | `images/` | downscaled top renders for the README |
 
-## State of Rev A (3 September 2026)
+## State of Rev A (5 September 2026)
 
-All seven boards route clean (0 unrouted, 0 hard DRC violations) with the legend positions corrected. The JLCPCB cart holds all seven boards at 5 pieces each with assembly for the five assembled boards, both free confirmation options on; it is prepared but not paid. Before paying: the owner's paper fit check with the 1:1 prints from `release/revA/review/`, and the bench items of MESHSAT-774 (X1202 with the big pack). Parts fitted at the bench rather than by JLCPCB are listed per board in `ORDER-NOTES.txt` and in `docs/ASSEMBLY.md`. *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
+The set was respun on 4 and 5 September after a round of owner rulings recorded in appendix section 32. PCB-A now carries the kit's own charger, fuel gauge, three 5 V converters, main power control and a seven port USB hub, with blind-mate RF receptacles underneath; PCB-B carries the Pi alone on three rails from PCB-A; the dock strip grew to four layers and took a solar tracker, and a small raised block on it presents the contacts that the stack lands on. The cells left the boards entirely and became a battery module on the case floor.
+
+PCB-A, the dock strip and the dock block route clean (0 unrouted, 0 hard DRC violations). PCB-B is regenerated and waits for its route. PCB-C, the spacer ring and PCB-D are unchanged from the earlier round and route clean.
+
+The JLCPCB cart from 3 September is prepared but not paid, and it holds the earlier phases of the respun boards, so its lines for PCB-A, PCB-B and the dock are rebuilt before anything is ordered. Parts fitted at the bench rather than by the assembler are listed per board in `ORDER-NOTES.txt` and in `docs/ASSEMBLY.md`.
 
 ## Regenerating a board
 
