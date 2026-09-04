@@ -92,7 +92,7 @@ FP = {
  "C10u": "Capacitor_SMD:C_0805_2012Metric", "C100u": "Capacitor_SMD:C_1206_3216Metric", "LED": "LED_SMD:LED_0603_1608Metric",
  "TVS": "Diode_SMD:D_SMB", "F1812": "Fuse:Fuse_1812_4532Metric", "F2920": "Fuse:Fuse_2920_7451Metric",
  "HUB": "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm", "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
- "SOT236": "Package_TO_SOT_SMD:SOT-23-6", "SOT238": "Package_TO_SOT_SMD:SOT-23-8", "SOT23": "Package_TO_SOT_SMD:SOT-23",
+ "SOT236": "Package_TO_SOT_SMD:SOT-23-6", "SOT235": "Package_TO_SOT_SMD:SOT-23-5", "SOT238": "Package_TO_SOT_SMD:SOT-23-8", "SOT23": "Package_TO_SOT_SMD:SOT-23",
  "WSON6": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
  "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "XH4": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
  "IDC40": "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical", "IDC14": "Connector_IDC:IDC-Header_2x07_P2.54mm_Vertical", "IDC16": "Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical", "IDC20": "Connector_IDC:IDC-Header_2x10_P2.54mm_Vertical",
@@ -115,7 +115,7 @@ def esd(ref, dp, dm, vbus):
     part(ref, "Power_Protection", "USBLC6-2SC6", "USBLC6-2SC6", "SOT236", {"1": dp, "6": dp, "3": dm, "4": dm, "5": vbus, "2": "GND"}, "C7519")
 def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
 def c(ref, val, a, b, fp="C", lcsc=""): part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
-def tps2065(ref, en, out, flt, rail="+5V_M1"): part(ref, "Power_Management", "TPS2065CDBV", "TPS2065CDBV", "SOT236", {"5": rail, "4": en, "1": out, "3": flt, "2": "GND"})
+def tps2065(ref, en, out, flt, rail="+5V_M1"): part(ref, "Power_Management", "TPS2065CDBV", "TPS2065CDBV", "SOT235", {"5": rail, "4": en, "1": out, "3": flt, "2": "GND"})
 def tps22810(ref, vin, en, out, ct): part(ref, "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": vin, "5": en, "1": out, "2": "NC", "3": ct, "4": "GND", "7": "GND"})
 def ina219(ref, inp, inn, a0, a1): part(ref, "Sensor_Energy", "INA219AxDCN", "INA219AIDCN", "SOT238", {"1": inp, "2": inn, "3": "GND", "4": "+3V3", "5": "SCL", "6": "SDA", "7": a0, "8": a1}, "C138024")
 
@@ -148,7 +148,7 @@ part("U1", "Interface_USB", "FE1.1s", "FE1.1s", "HUB", {
  "10": "USB_RTL_N", "11": "USB_RTL_P", "12": "HUB_VD18", "13": "HUB_VD33", "14": "HUB_REXT", "15": "USB_UP_N", "16": "USB_UP_P", "17": "HUB_RST",
  "18": "HUB_VBUSM", "19": "HUB_BUSJ", "20": "+5V_M1", "21": "HUB_VD33", "22": "NC", "23": "HUB_LED1", "24": "NC", "25": "NC", "26": "HUB_OVCJ", "27": "HUB_TESTJ", "28": "HUB_VD18"}, "C2848")
 part("Y1", "Device", "Crystal_GND24", "12 MHz 3225", "XTAL", {"1": "XIN", "3": "XOUT", "2": "GND", "4": "GND"})
-c("C3", "22p", "XIN", "GND"); c("C4", "22p", "XOUT", "GND")
+c("C3", "33p", "XIN", "GND"); c("C4", "33p", "XOUT", "GND")   # matched to a 20 pF load crystal: 2 x (20 - 4 stray)
 r("R2", "2.7k 1% (REXT, verify datasheet)", "HUB_REXT", "GND")
 c("C5", "100n", "HUB_VD33", "GND"); c("C6", "1u", "HUB_VD33", "GND"); c("C7", "100n", "HUB_VD18", "GND"); c("C8", "1u", "HUB_VD18", "GND")
 c("C9", "100n", "+5V_M1", "GND"); c("C10", "10u", "+5V_M1", "GND", "C10u")
