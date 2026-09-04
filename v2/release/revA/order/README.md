@@ -1,4 +1,4 @@
-# MeshSat field-kit carrier boards, JLCPCB order set (generated 2026-09-04 17:38)
+# MeshSat field-kit carrier boards, JLCPCB order set (generated 2026-09-04 18:37)
 
 One sub-folder per board. Upload the Gerber zip first, then (for the assembled boards) the BOM and CPL files in the assembly step.
 
