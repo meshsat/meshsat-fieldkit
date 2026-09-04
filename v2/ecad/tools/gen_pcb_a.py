@@ -44,7 +44,7 @@ POWER_ZONE = (-162.0, -40.0, -32.0, 2.0)     # charger, gauge, three converters 
 CTRL_ZONE = (-162.0, 2.0, -118.0, 36.0)     # main power control, heating-pad switch, 3.3 V buck
 RF_SITES = [(-100.0, "UHF"), (-84.0, "WIFI 2.4"), (8.0, "WIFI 5.8"), (24.0, "SDR"), (40.0, "LTE"), (66.0, "IRIDIUM"), (96.0, "LORA")]   # SMP-MAX receptacles on the underside at Y -66, SMA jacks on top at Y -56
 RF_Y, SMA_Y = -66.0, -56.0
-DOCK_BLOCK = (-152.0, -76.0, -112.0, -64.0)   # underside: 2x6 signal pins J_DOCK at (-122, -70), 9 A power pins at X -145..-133, pre-charge at (-149, -70)
+DOCK_BLOCK = (-152.0, -76.0, -116.0, -64.0)   # underside: 2x6 signal pins J_DOCK at (-124, -70), 9 A power pins at X -145..-133, pre-charge at (-149, -70); 5.5 mm from the rod nut at (-110.5, -73)
 # APRS mezzanine site (R3): 80 x 62 on four M3 standoffs, harness headers on its west side
 MEZZ_RECT = (5.0, -31.0, 85.0, 31.0)
 MEZZ_HOLES = [(10.0, -26.0), (80.0, -26.0), (10.0, 26.0), (80.0, 26.0)]

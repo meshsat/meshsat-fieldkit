@@ -252,6 +252,74 @@ for k, (nm, net) in enumerate(RF, 1):
     part("J_RF%d" % k, "Connector", "Conn_Coaxial", "SMA jack (Amphenol 132134, vertical), pigtail from the %s module" % nm, "SMAV", {"1": net, "2": "GND"})
     part("J_BM%d" % k, "Connector", "Conn_Coaxial", "SMP-MAX slide-on receptacle R222M00720 (underside), %s to the dock plug" % nm, "SMPMAX", {"1": net, "2": "GND"})
 
+# ----------------------------------------------------------------- emit
+POWER = {"GND": ("power", "GND"), "+5V": ("power", "+5V"), "+3V3": ("power", "+3V3")}
+libsyms = {}; out = []; ROOT = str(uuid.uuid4())
+def U(): return str(uuid.uuid4())
+def ensure(lib, name):
+    key = lib + ":" + name
+    if key not in libsyms: libsyms[key] = flatten(lib, name)
+    return libsyms[key]
+def extents(sym):
+    pins = pins_of(sym)
+    xs = [p[2] for p in pins] or [0]; ys = [p[3] for p in pins] or [0]
+    return min(xs), max(xs), min(ys), max(ys)
+def place_symbol(lib, name, ref, value, fp, x, y, lcsc="", hide_props=False):
+    sym = ensure(lib, name); pins = pins_of(sym)
+    x0, x1, y0, y1 = extents(sym)
+    s = '(symbol (lib_id %s) (at %.2f %.2f 0) (unit 1) (exclude_from_sim no) (in_bom %s) (on_board %s) (dnp no) (fields_autoplaced yes) (uuid "%s")\n' % (
+        q(lib + ":" + name), x, y, "no" if lib == "power" or name in ("TestPoint",) else "yes", "no" if lib == "power" else "yes", U())
+    def prop(k, v, px, py, hide):
+        return '\t(property %s %s (at %.2f %.2f 0) (effects (font (size 1.27 1.27)) (justify left)%s))\n' % (q(k), q(v), px, py, " (hide yes)" if hide else "")
+    s += prop("Reference", ref, x + x1 + 1.27, y - y1 - 1.27, hide_props)
+    s += prop("Value", value, x + x1 + 1.27, y - y1 + 1.27, hide_props)
+    s += prop("Footprint", fp, x, y, True); s += prop("Datasheet", "", x, y, True); s += prop("Description", "", x, y, True)
+    if lcsc: s += prop("LCSC", lcsc, x, y, True)
+    for num, nm, px, py, rot in pins: s += '\t(pin %s (uuid "%s"))\n' % (q(num), U())
+    s += '\t(instances (project %s (path "/%s" (reference %s) (unit 1))))\n)\n' % (q(PROJECT), ROOT, q(ref))
+    out.append(s); return pins
+def wire(x1, y1, x2, y2): out.append('(wire (pts (xy %.2f %.2f) (xy %.2f %.2f)) (stroke (width 0) (type default)) (uuid "%s"))\n' % (x1, y1, x2, y2, U()))
+def label(net, x, y, rot):
+    just = {0: "left bottom", 180: "right bottom", 90: "left bottom", 270: "right bottom"}[rot]
+    out.append('(label %s (at %.2f %.2f %d) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify %s)) (uuid "%s"))\n' % (q(net), x, y, rot, just, U()))
+def noconn(x, y): out.append('(no_connect (at %.2f %.2f) (uuid "%s"))\n' % (x, y, U()))
+def text(t, x, y, size=2.0): out.append('(text %s (exclude_from_sim no) (at %.2f %.2f 0) (effects (font (size %.2f %.2f) bold) (justify left bottom)) (uuid "%s"))\n' % (q(t), x, y, size, size, U()))
+STUB = 5.08
+pf_n = [0]
+def emit_part(p, x, y):
+    pins = place_symbol(p["lib"], p["sym"], p["ref"], p["value"], p["fp"], x, y, p["lcsc"])
+    seen = set()
+    for num, nm, px, py, rot in pins:
+        sx, sy = x + px, y - py                      # KiCad sheet: Y down
+        key = (round(sx, 2), round(sy, 2))
+        net = p["nets"].get(num)
+        if net is None:
+            raise SystemExit("%s pin %s (%s) has no net assignment" % (p["ref"], num, nm))
+        if key in seen: continue                     # stacked pins (USB-C GND/VBUS) share one point
+        seen.add(key)
+        if net == "NC":
+            noconn(sx, sy); continue
+        dx, dy = {0: (-1, 0), 180: (1, 0), 90: (0, 1), 270: (0, -1)}[rot]
+        if net in POWER:
+            lib, nm2 = POWER[net]
+            ex, ey = sx + dx * STUB, sy + dy * STUB
+            wire(sx, sy, ex, ey)
+            place_symbol(lib, nm2, "#PWR%03d" % pf_n[0], net, "", ex, ey); pf_n[0] += 1
+        else:
+            ex, ey = sx + dx * STUB, sy + dy * STUB
+            wire(sx, sy, ex, ey)
+            lrot = {(-1, 0): 180, (1, 0): 0, (0, 1): 270, (0, -1): 90}[(dx, dy)]
+            label(net, ex, ey, lrot)
+# power flag symbols connect at their pin; place them wired to a label of the net
+def emit_pwr_flag(p, x, y):
+    place_symbol("power", "PWR_FLAG", p["ref"], "PWR_FLAG", "", x, y)
+    net = p["nets"]["1"]
+    wire(x, y, x, y + STUB)
+    if net in POWER:
+        lib, nm2 = POWER[net]; place_symbol(lib, nm2, "#PWR%03d" % pf_n[0], net, "", x, y + STUB); pf_n[0] += 1
+    else: label(net, x, y + STUB, 270)
+
+# layout: columns, top-down cursor; group order = list order with section titles
 SECTIONS = [("PACK NODE (A19): MODULE CURRENT OVER THE DOCK PINS, PRE-CHARGE, GAUGE SHUNT, MEZZANINE FEED", ["J_CP1", "J_CP2", "J_CP3", "J_CP4", "J_CN1", "J_CN2", "J_CN3", "J_CN4", "J_PRE1", "R51", "R52", "F2", "J_MEZZ_PWR1", "C7", "C50"]),
             ("CHARGER BQ25792 (SHORE_12V -> CELL+, 3 A, JEITA ON THE MODULE THERMISTOR) + DOCK SIGNAL PINS", ["U20", "L5", "C51", "C52", "C53", "C54", "C55", "C56", "C57", "C58", "C59", "C60", "C61", "C62", "C63", "C64", "C65", "C66", "C67", "R53", "R54", "R55", "R56", "R57", "R58", "R59", "R60", "J_DOCK"]),
             ("GAUGE BQ34Z100-G1 (0x55)", ["U21", "C68", "C69", "RT1"]),
