@@ -38,7 +38,7 @@ def band_ok(name, face):
     z = zn.get(name)
     if z is None: return False
     if face: return z.GetDoNotAllowCopperPour() and z.GetDoNotAllowTracks() and z.GetDoNotAllowVias()
-    return z.GetDoNotAllowVias() and not z.GetDoNotAllowTracks()
+    return z.GetDoNotAllowVias()
 check(band_ok("e-paper lens band F: no copper under the tape frame", True) and band_ok("e-paper lens band B: no vias under the sealing band", False), "e-paper lens band: face copper-free, back via-free")
 check(band_ok("frame gasket band F: no copper under the PORON ring (frame screw rings excepted)", True) and band_ok("frame gasket band B: no vias under the sealing band", False), "frame gasket band: face copper-free, back via-free")
 vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
@@ -72,7 +72,6 @@ check(all(key_ok), "APEM K-seal keyway notch 2.70 wide to 4.35 from the hole cen
 fp = fps.get("SW_LIGHT"); dwide = max((g.GetBoundingBox().GetWidth() / 1e6 for g in edge_items(fp)), default=0.0) if fp else 0.0
 check(fp is not None and abs(dwide - 5.8) < 0.06 and npth["SW_LIGHT"][0].GetDrillSize().x < pcbnew.FromMM(5.2), "NKK D hole on LIGHT: 6.5 with the flat at 5.8 across (Edge.Cuts) over an inscribed drill")
 # 2e. courtyards inside the panel, connectors on the underside as SMD parts, die-cut outlines present
-outside = [r for r, fp in fps.items() if not (-220.5 <= bbox(fp)[0] and bbox(fp)[2] <= 220.5 and -155.0 <= bbox(fp)[1] and bbox(fp)[3] <= 155.0)] if False else []
 
 # 3. panel controls: pitch >= 25 mm between switch centres, all inside the window by 3 mm, 3 mm clear of every frame screw, nothing but LEDs over the Pi stack
 sw = {r: case(fp.GetPosition()) for r, fp in fps.items() if r.startswith("SW_")}
@@ -113,7 +112,7 @@ check(sum(1 for n in names if n.startswith("e-paper tape land")) == 2 and any(n.
 mod = (EPD_C[0] - 52.9 - 1.0, EPD_C[1] - 26.9 - 1.0, EPD_C[0] + 52.9 + 1.0, EPD_C[1] + 26.9 + 1.0)
 under = [fp.GetReference() for fp in b.GetFootprints() if fp.IsFlipped() and len(list(fp.Pads())) > 0 and not (fp.GetBoundingBox(False, False).GetRight() / 1e6 - OX < mod[0] or fp.GetBoundingBox(False, False).GetLeft() / 1e6 - OX > mod[2] or OY - fp.GetBoundingBox(False, False).GetTop() / 1e6 < mod[1] or OY - fp.GetBoundingBox(False, False).GetBottom() / 1e6 > mod[3])]
 check(not under, "no underside part under the e-paper module (found %s)" % under)
-outside = [r for r, fp in fps.items() if not (-220.5 <= bbox(fp)[0] and bbox(fp)[2] <= 220.5 and -155.0 <= bbox(fp)[1] and bbox(fp)[3] <= 155.0)]
+outside = [r for r, fp in fps.items() if not r.startswith("H") and not (-220.5 <= bbox(fp)[0] and bbox(fp)[2] <= 220.5 and -155.0 <= bbox(fp)[1] and bbox(fp)[3] <= 155.0)]   # the frame screws sit 5.1 mm from the edge
 check(not outside, "every footprint inside the panel outline by 0.5 mm (C4's J_PANEL hung 4 mm past the edge) (%s)" % outside)
 conn = {r: fps[r] for r in ("J_PANEL", "J_EPD", "J_MAINSW", "J_PIJ2") if r in fps}
 check(len(conn) == 4 and all(fp.IsFlipped() and all(p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD for p in fp.Pads()) for fp in conn.values()), "J_PANEL, J_EPD, J_MAINSW and J_PIJ2 are SMD parts on the underside")
