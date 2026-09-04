@@ -42,9 +42,9 @@ def slot_footprint(w, h):
 # A19 (appendix 32.17, 32.22, 32.23): no pack on the board; the battery module on the floor reaches this board over the dock block
 POWER_ZONE = (-162.0, -40.0, -32.0, 2.0)     # charger, gauge, three converters and their fuse row (former pack area)
 CTRL_ZONE = (-162.0, 2.0, -118.0, 36.0)     # main power control, heating-pad switch, 3.3 V buck
-RF_SITES = [(-100.0, -56.0, "UHF"), (-84.0, -56.0, "WIFI 2.4"), (-26.0, -56.0, "WIFI 5.8"), (-12.0, -56.0, "SDR"), (70.0, -74.0, "LTE"), (92.0, -74.0, "IRIDIUM"), (108.0, -56.0, "LORA")]   # SMP-MAX receptacles on the underside at Y -66; SMA jacks on top at the given Y (south of the GPS puck for the two under it)
+RF_SITES = [(-100.0, -56.0, "UHF"), (-84.0, -56.0, "WIFI 2.4"), (-26.0, -56.0, "WIFI 5.8"), (-12.0, -56.0, "SDR"), (70.0, -74.0, "LTE"), (92.0, -74.0, "IRIDIUM"), (103.0, -54.0, "LORA")]   # SMP-MAX receptacles on the underside at Y -66; SMA jacks on top at the given Y (south of the GPS puck for the two under it)
 RF_Y = -66.0
-DOCK_BLOCK = (-152.0, -76.0, -116.0, -64.0)   # underside: 2x6 signal pins J_DOCK at (-124, -70), 9 A power pins at X -145..-133, pre-charge at (-149, -70); 5.5 mm from the rod nut at (-110.5, -73)
+DOCK_BLOCK = (-155.0, -76.0, -116.0, -64.0)   # underside: 2x6 signal pins J_DOCK at (-124, -70), 9 A power pins at X -145..-133, pre-charge at (-149, -70); 5.5 mm from the rod nut at (-110.5, -73)
 # APRS mezzanine site (R3): 80 x 62 on four M3 standoffs, harness headers on its west side
 MEZZ_RECT = (5.0, -31.0, 85.0, 31.0)
 MEZZ_HOLES = [(10.0, -26.0), (80.0, -26.0), (10.0, 26.0), (80.0, 26.0)]
@@ -169,9 +169,8 @@ rect(CTRL_ZONE, pcbnew.Dwgs_User, 0.15); text("MAIN POWER CONTROL, HEATING PAD S
 rect(DOCK_BLOCK, pcbnew.Dwgs_User, 0.15); text("DOCK BLOCK (underside): J_DOCK 2x6 signal pins + 9 A power pins + pre-charge pin, land on the dock block", (DOCK_BLOCK[0] + DOCK_BLOCK[2]) / 2, DOCK_BLOCK[1] - 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
 text("BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins", -97.0, -78.0, pcbnew.F_SilkS, 1.1, 0.18)
 for (x, sy, nm) in RF_SITES:
-    circle(x, RF_Y, 12.0, pcbnew.Dwgs_User, 0.1); circle(x, RF_Y, 8.3, pcbnew.B_SilkS, 0.12)
+    circle(x, RF_Y - 2.0 if nm == "LORA" else RF_Y, 12.0, pcbnew.Dwgs_User, 0.1); circle(x, RF_Y - 2.0 if nm == "LORA" else RF_Y, 8.3, pcbnew.B_SilkS, 0.12)
     text("BM %s" % nm, x, RF_Y - 8.0, pcbnew.B_SilkS, 1.0, 0.18, mirror=True); text("SMA %s" % nm, x, sy + 6.0 if sy > -70 else sy - 5.5, pcbnew.F_SilkS, 0.9, 0.16)
-    keepout_rect(x - 8.0, RF_Y - 8.0, x + 8.0, RF_Y + 8.0, "keep-out: blind-mate site %s (local ground island on In2)" % nm)
 # ---------------------------------------------------------------- APRS mezzanine site
 rect(MEZZ_RECT, pcbnew.F_SilkS, 0.12)
 text("APRS MEZZANINE SITE  80 x 62", 45.0, 3.0, pcbnew.F_SilkS, 1.4, 0.22)
