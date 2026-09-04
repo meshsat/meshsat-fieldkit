@@ -306,7 +306,7 @@
       },
       {
         "netclass": "PWR",
-        "pattern": "+5V"
+        "pattern": "+5V_M1"
       },
       {
         "netclass": "PWR",

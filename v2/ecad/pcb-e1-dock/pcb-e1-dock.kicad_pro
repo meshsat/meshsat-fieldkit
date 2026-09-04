@@ -237,39 +237,57 @@
     "classes": [
       {
         "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.15,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
-        "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "wire_width": 6,
-        "diff_pair_via_gap": 0.25,
         "name": "Default",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2147483647,
-        "clearance": 0.15,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.25,
         "via_diameter": 0.6,
         "via_drill": 0.3,
-        "diff_pair_width": 0.2,
-        "diff_pair_gap": 0.15
+        "wire_width": 6
       },
       {
         "bus_width": 12,
+        "clearance": 0.3,
+        "diff_pair_gap": 0.15,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
+        "name": "BANK",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "wire_width": 6,
-        "diff_pair_via_gap": 0.25,
-        "name": "PWR",
-        "priority": 0,
+        "track_width": 4.0,
+        "via_diameter": 1.2,
+        "via_drill": 0.6,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
         "clearance": 0.15,
-        "track_width": 0.5,
+        "diff_pair_gap": 0.15,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "PWR",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.8,
         "via_diameter": 0.8,
         "via_drill": 0.4,
-        "diff_pair_width": 0.2,
-        "diff_pair_gap": 0.15
+        "wire_width": 6
       }
     ],
     "meta": {
@@ -289,6 +307,26 @@
       {
         "netclass": "PWR",
         "pattern": "GND"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PV_*"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "TRK_OUT"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "TRK_SW*"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "TRK_LSENSE"
+      },
+      {
+        "netclass": "BANK",
+        "pattern": "CELL_*_MOD"
       }
     ]
   },

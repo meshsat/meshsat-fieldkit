@@ -1,36 +1,36 @@
 ** Drc report for pcb-b-compute.kicad_pcb **
-** Created on 2026-09-04T15:06:29+0200 **
+** Created on 2026-09-04T17:26:00+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 40 DRC violations **
+** Found 234 DRC violations **
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(89,5000 mm, 152,5000 mm): Segment on F.Silkscreen
     @(81,0000 mm, 70,0000 mm): PCB text 'Pi 5 + cooler on 4x M2.5 standoffs (49x58); HDMI edge WEST, header edge EAST, SD card SOUTH; 5 V by the J_5V_PI lead into the Pi USB-C' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(62,2625 mm, 172,3600 mm): Segment of J_5V_M2 on F.Silkscreen
-    @(58,2225 mm, 172,5500 mm): Reference field of J_5V_M1
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(62,2625 mm, 162,3600 mm): Segment of J_5V_PI on F.Silkscreen
-    @(58,2225 mm, 162,5500 mm): Reference field of J_5V_M2
+    @(58,2225 mm, 152,5500 mm): Reference field of J_5V_PI
+    @(33,5000 mm, 152,5000 mm): Segment on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(33,5000 mm, 67,5000 mm): Segment on F.Silkscreen
     @(81,0000 mm, 70,0000 mm): PCB text 'Pi 5 + cooler on 4x M2.5 standoffs (49x58); HDMI edge WEST, header edge EAST, SD card SOUTH; 5 V by the J_5V_PI lead into the Pi USB-C' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(89,5000 mm, 67,5000 mm): Segment on F.Silkscreen
     @(88,0000 mm, 66,9000 mm): PCB text '1x M2 + tie slots; u.FL -> LoRa bulkhead' on F.Silkscreen
+    @(89,5000 mm, 67,5000 mm): Segment on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(33,5000 mm, 67,5000 mm): Segment on F.Silkscreen
     @(33,0000 mm, 90,0000 mm): PCB text 'PORT (-X)' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(33,5000 mm, 152,5000 mm): Segment on F.Silkscreen
-    @(58,2225 mm, 152,5500 mm): Reference field of J_5V_PI
+    @(58,2225 mm, 162,5500 mm): Reference field of J_5V_M2
+    @(62,2625 mm, 162,3600 mm): Segment of J_5V_PI on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(62,2625 mm, 172,3600 mm): Segment of J_5V_M2 on F.Silkscreen
+    @(58,2225 mm, 172,5500 mm): Reference field of J_5V_M1
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(96,9500 mm, 64,2325 mm): Segment of J_GPIO1 on F.Silkscreen
@@ -41,40 +41,40 @@
     @(88,0000 mm, 63,9000 mm): PCB text 'XIAO ESP32S3 + Wio-SX1262' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(88,0000 mm, 63,9000 mm): PCB text 'XIAO ESP32S3 + Wio-SX1262' on F.Silkscreen
     @(101,0500 mm, 64,2325 mm): Segment of J_GPIO1 on F.Silkscreen
+    @(88,0000 mm, 63,9000 mm): PCB text 'XIAO ESP32S3 + Wio-SX1262' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(96,9500 mm, 65,5425 mm): Segment of J_GPIO1 on F.Silkscreen
     @(88,0000 mm, 63,9000 mm): PCB text 'XIAO ESP32S3 + Wio-SX1262' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(90,4750 mm, 37,9900 mm): Segment of U12 on F.Silkscreen
     @(95,0000 mm, 38,5000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
+    @(90,4750 mm, 37,9900 mm): Segment of U12 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(90,4750 mm, 37,9400 mm): Segment of U12 on F.Silkscreen
     @(95,0000 mm, 38,5000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
+    @(90,4750 mm, 37,9400 mm): Segment of U12 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(99,0250 mm, 37,9200 mm): Segment of U11 on F.Silkscreen
     @(95,0000 mm, 38,5000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(95,0000 mm, 38,5000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
     @(100,8450 mm, 37,9200 mm): Segment of U11 on F.Silkscreen
+    @(95,0000 mm, 38,5000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(88,0000 mm, 66,9000 mm): PCB text '1x M2 + tie slots; u.FL -> LoRa bulkhead' on F.Silkscreen
     @(74,3700 mm, 66,9325 mm): Segment of J_GPIO1 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(74,8700 mm, 65,9325 mm): Segment of J_GPIO1 on F.Silkscreen
     @(88,0000 mm, 66,9000 mm): PCB text '1x M2 + tie slots; u.FL -> LoRa bulkhead' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(136,1744 mm, 100,9000 mm): Segment of C12 on F.Silkscreen
+    @(88,0000 mm, 66,9000 mm): PCB text '1x M2 + tie slots; u.FL -> LoRa bulkhead' on F.Silkscreen
+    @(74,8700 mm, 65,9325 mm): Segment of J_GPIO1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
     @(138,0000 mm, 100,5000 mm): PCB text 'J_RTL1' on F.Silkscreen
+    @(136,1744 mm, 100,9000 mm): Segment of C12 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(233,2675 mm, 39,9500 mm): Segment of J_PANEL on F.Silkscreen
@@ -105,12 +105,12 @@
     @(272,3600 mm, 57,2500 mm): Segment on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(220,0000 mm, 192,5000 mm): PCB text 'MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-04' on F.Silkscreen
     @(195,0000 mm, 191,5000 mm): PCB text 'FRONT WALL (-Y)   v v v' on F.Silkscreen
+    @(220,0000 mm, 192,5000 mm): PCB text 'MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-04' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(176,0000 mm, 130,0000 mm): Segment on F.Silkscreen
     @(184,7000 mm, 183,5400 mm): Segment of J_USB_UP2 on F.Silkscreen
+    @(176,0000 mm, 130,0000 mm): Segment on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(176,0000 mm, 130,0000 mm): Segment on F.Silkscreen
@@ -140,16 +140,598 @@
     @(87,2750 mm, 168,9000 mm): Via [/HUB_RST] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(133,5770 mm, 135,2200 mm): Via [/RB_CT] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
     @(134,9550 mm, 130,9200 mm): Via [/RB_FUSED] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(132,5770 mm, 75,2200 mm): Via [/TC_CT] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(155,9500 mm, 176,9500 mm): Via [/USB_A_N] on F.Cu - B.Cu
+    @(75,8750 mm, 163,0500 mm): Via [/XIN] on F.Cu - B.Cu
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(27,5000 mm, 195,0000 mm): Zone '+5V plane In2' [+5V_M1] on In2.Cu, priority 0
 
 ** Found 0 unconnected pads **
 

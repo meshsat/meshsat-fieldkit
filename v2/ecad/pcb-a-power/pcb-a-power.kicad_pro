@@ -255,7 +255,7 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.15,
+        "clearance": 0.2,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.5,
@@ -266,9 +266,9 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.5,
-        "via_diameter": 0.9,
-        "via_drill": 0.5,
+        "track_width": 1.0,
+        "via_diameter": 1.2,
+        "via_drill": 0.6,
         "wire_width": 6
       },
       {
@@ -309,6 +309,42 @@
       },
       {
         "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.3,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 1.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RAIL",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 4,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 2.0,
+        "via_diameter": 1.0,
+        "via_drill": 0.5,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.3,
+        "diff_pair_gap": 0.15,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 5,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.35,
+        "via_diameter": 0.7,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
         "clearance": 0.15,
         "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
@@ -342,10 +378,6 @@
       },
       {
         "netclass": "PWR",
-        "pattern": "+5V"
-      },
-      {
-        "netclass": "PWR",
         "pattern": "SW_*"
       },
       {
@@ -358,7 +390,23 @@
       },
       {
         "netclass": "PWR",
-        "pattern": "5V_IN"
+        "pattern": "SHORE_12V"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "HEAT_*"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PMID"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "SYS_CHG"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "SW*_CHG"
       },
       {
         "netclass": "BANK",
@@ -370,15 +418,35 @@
       },
       {
         "netclass": "BOOST",
-        "pattern": "BOOST_CELL"
+        "pattern": "BOOST*_IN"
       },
       {
         "netclass": "BOOST",
-        "pattern": "SW5"
+        "pattern": "SW1"
       },
       {
-        "netclass": "PWR",
-        "pattern": "+5V_MOD"
+        "netclass": "BOOST",
+        "pattern": "SW2"
+      },
+      {
+        "netclass": "BOOST",
+        "pattern": "SW3"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+5V_M1"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+5V_M2"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+5V_PI"
+      },
+      {
+        "netclass": "RF",
+        "pattern": "RF_*"
       }
     ]
   },
