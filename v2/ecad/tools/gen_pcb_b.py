@@ -95,7 +95,7 @@ RB9603_HOLES = [(RB9603_C[0] - 19.35, RB9603_C[1] + 22.5 - 3.15), (RB9603_C[0] +
 J_DCF77 = (-85.0, 77.0)
 # hub / eFuse / monitor zone (schematic phase), south-west, with the upstream USB-C and the A-B header
 HUB_ZONE = (-96.0, -81.0, -46.0, -52.0)
-J_5V_IN = (-52.0, -56.0)                        # XH2.54 2-pin from the X1202 5 V output
+# B12: no X1202; the three rail leads from PCB-A sit on the west edge (J_5V_M1, J_5V_M2, J_5V_PI, placed by gen_pcb_b3.py)
 J_USB_UP = (-48.0, -66.0)                       # USB-C receptacle, upstream to a Pi port, opening faces +X
 J_AB = (-72.0, -78.0)                           # 2x7 IDC on the UNDERSIDE, ribbon down to PCB-A
 PASS_CENTRE = (-13.0, -50.0, 15.0)              # Ø15 general pass-through (moved south-west in B4)
@@ -104,7 +104,7 @@ PASS_CENTRE = (-13.0, -50.0, 15.0)              # Ø15 general pass-through (mov
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(4)
 tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-B COMPUTE"); tb.SetRevision("A")
-tb.SetDate("2026-09-02"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-709. Case-centred frame. B11: real X1202 envelope (Geekworm DXF), stack 10 mm west, module rail from PCB-A. tools/gen_pcb_b.py")
+tb.SetDate("2026-09-02"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-709. Case-centred frame. B12: the Pi alone on the stack (the X1202 is gone, appendix 32.17), three rails from PCB-A. tools/gen_pcb_b.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.45), ("m_MinThroughDrill", 0.25),
@@ -205,10 +205,10 @@ keepout_circle(PASS_CENTRE[0], PASS_CENTRE[1], PASS_CENTRE[2] + 2.0, "keep-out: 
 # ---------------------------------------------------------------- stack
 n = 5
 for (x, y) in STACK_HOLES:
-    hole("H%d" % n, x, y, 2.7, "M2.5 standoff, Pi/X1202 stack"); n += 1
-rect(X1202_RECT, pcbnew.F_SilkS, 0.12); rect(PI_RECT, pcbnew.Dwgs_User, 0.1)
-text("X1202 V1.1 96x85 + Pi 5 + cooler on 4x M2.5x22 (49x58); Pi HDMI edge WEST, header edge EAST, SD card SOUTH", STACK_C[0] + 19.5, 40.0, pcbnew.F_SilkS, 0.9, 0.16)
-text("NO PART under the X1202 (cells at board level); DC jack NE corner faces +X; USB-A sockets overhang south 9 mm", STACK_C[0] + 19.5, -40.0, pcbnew.F_SilkS, 0.9, 0.16)
+    hole("H%d" % n, x, y, 2.7, "M2.5 standoff, Pi 5"); n += 1
+rect(PI_RECT, pcbnew.F_SilkS, 0.12); rect(PI_RECT, pcbnew.Dwgs_User, 0.1)
+text("Pi 5 + cooler on 4x M2.5 standoffs (49x58); HDMI edge WEST, header edge EAST, SD card SOUTH; 5 V by the J_5V_PI lead into the Pi USB-C", STACK_C[0] + 19.5, 40.0, pcbnew.F_SilkS, 0.9, 0.16)
+text("B12: no X1202 (appendix 32.17); the kit charger, gauge and rails live on PCB-A", STACK_C[0] + 19.5, -40.0, pcbnew.F_SilkS, 0.9, 0.16)
 # ribbon header
 place("Connector_IDC", "IDC-Header_2x20_P2.54mm_Vertical", "J_GPIO1", J_GPIO[0], J_GPIO[1], "Pi 5 GPIO ribbon 2x20", rot=90)
 text("Pi 40-pin ribbon", J_GPIO[0], J_GPIO[1] + 7.5, pcbnew.F_SilkS, 1.2, 0.2)
@@ -263,12 +263,12 @@ text("DCF77: 3V3 GND T P1", -66.0, 82.5, pcbnew.F_SilkS, 0.9, 0.16)
 # hub zone (reserved)
 rect(HUB_ZONE, pcbnew.Dwgs_User, 0.15)
 text("HUB / eFUSE / MONITOR ZONE  (phase B2: 4-port USB 2.0 hub, 4x eFuse, INA3221 x2, PCA9554)", (HUB_ZONE[0] + HUB_ZONE[2]) / 2, HUB_ZONE[3] + 2.5, pcbnew.Dwgs_User, 1.1, 0.2)
-rect((J_5V_IN[0] - 4, J_5V_IN[1] - 3, J_5V_IN[0] + 4, J_5V_IN[1] + 3), pcbnew.Dwgs_User, 0.1); text("J_5V_IN XH", J_5V_IN[0], J_5V_IN[1] - 5, pcbnew.Dwgs_User, 0.9, 0.15)
+text("J_5V_M1 / J_5V_M2 / J_5V_PI (VH): three rails from PCB-A", -92.0, -40.0, pcbnew.Dwgs_User, 0.9, 0.15)
 rect((J_USB_UP[0] - 4.5, J_USB_UP[1] - 4, J_USB_UP[0] + 4.5, J_USB_UP[1] + 4), pcbnew.Dwgs_User, 0.1); text("J_USB_UP1", J_USB_UP[0], J_USB_UP[1] - 6, pcbnew.Dwgs_User, 0.9, 0.15)
 text("J_AB1 2x7 to PCB-A (underside)", J_AB[0], J_AB[1] + 8.0, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
 # datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("PCB-B COMPUTE  REV A (B11)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
+text("PCB-B COMPUTE  REV A (B12)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
 text("MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-04", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -10, 83.0, pcbnew.F_SilkS, 1.2, 0.2); text("FRONT WALL (-Y)   v v v", -100, -83.2, pcbnew.F_SilkS, 1.5, 0.25)
 text("PORT (-X)", -hx + 5.5, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 6.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
