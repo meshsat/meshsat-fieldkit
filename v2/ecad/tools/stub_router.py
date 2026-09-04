@@ -7,6 +7,7 @@ BOARD, DRC = sys.argv[1], sys.argv[2]
 PLANES = set((sys.argv[3] if len(sys.argv) > 3 else "GND,+5V,+3V3,CELL+").split(","))
 G = float(__import__("os").environ.get("STUB_GRID", "0.05"))   # grid, mm (STUB_GRID=0.1 for long connections)
 CLR = 0.16                   # clearance to other copper, mm (board rule 0.15)
+HOLE_CLR = 0.30              # clearance to a drilled pad or a mounting hole: the board's hole clearance rule is 0.25, and the 0.1 mm grid needs a margin over it (B12, 5 Sep: six 0.24 mm misses against two NPTH holes)
 b = pcbnew.LoadBoard(BOARD); drc = json.load(open(DRC))
 eb = b.GetBoardEdgesBoundingBox()
 X0, Y0 = eb.GetLeft() / 1e6 - 1.0, eb.GetTop() / 1e6 - 1.0
@@ -73,7 +74,7 @@ def build_maps(net):
             if p.GetNetname() == net: continue
             anyL = next((L for L in LAYERS + INNER if p.IsOnLayer(L)), pcbnew.F_Cu)
             for L in LAYERS:
-                if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), CLR + w2)
+                if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) else CLR) + w2)
             if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) or any(p.IsOnLayer(L) for L in INNER + LAYERS): poly(via, p.GetEffectivePolygon(anyL), CLR + vr)
     for t in b.GetTracks():
         if t.GetNetname() == net: continue
