@@ -21,7 +21,7 @@ Seven boards, five assembled by the fabricator (top side, standard assembly; the
 | PCB-C CONTROL PANEL C4 | `PCB-C-DISPLAY-C4/` | 442 x 311 | 2 | standard | top 18, bottom 70 |
 | PCB-C SPACER RING R1 | `PCB-C-RING-R1/` | 106 x 54 | 2 | standard, 1.0 mm | none |
 | PCB-D APRS D5 | `PCB-D-APRS-D5/` | 80 x 62 | 4 | JLC04161H-7628 | top 78, bottom 1 |
-| PCB-E1 DOCK STRIP E4 | `PCB-E1-DOCK-E4/` | 285 x 60 | 4 | JLC04161H-7628 | top |
+| PCB-E1 DOCK STRIP E4 | `PCB-E1-DOCK-E4/` | 278 x 60 | 4 | JLC04161H-7628 | top |
 | PCB-E5 DOCK BLOCK E5 | `PCB-E5-BLOCK-E5/` | 43 x 26 | 2 | standard, 2 oz outer copper | none |
 
 Common settings, from the ORDER-NOTES: 1.6 mm FR-4 (the ring 1.0 mm), 1 oz outer copper, ENIG, matte black solder mask, white silkscreen, no castellations, order number removed, quantity 5 (the JLCPCB minimum). The four-layer boards carry USB 2.0 pairs at 0.2 mm track and 0.15 mm gap on the outer layers; ask for 90 ohm differential tuning on the 7628 stackup. Turn both free confirmation options on (production file review and the BOM/CPL confirmation) so the placement preview is checked before anything is cut. On the JLC preview, check the rotation of every polarised part against `release/revA/review/<board>/*-assembly-top.pdf`.

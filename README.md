@@ -26,7 +26,7 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. The s
 | PCB-C CONTROL PANEL | C4 | 442 x 311 | 2 | top 18, bottom 70 | the 1520PF panel: Touch Display 2 flush, recessed 3.7 inch e-paper window, MIL-STD-1472 controls, two GPIO expanders, MeshSat logo |
 | PCB-C SPACER RING | R1 | 106 x 54 | 2 | none | 1.0 mm ring that brings the e-paper glass flush with the panel face |
 | PCB-D APRS | D5 | 80 x 62 | 4 | top 78, bottom 1 | NiceRF DMR858M carrier: CM108 codec, PTT with hardware inhibit, USB-UART, boost, SMA |
-| PCB-E1 DOCK STRIP | E4 | 285 x 60 | 4 | top | floor strip: isolated 9 to 36 V shore entry, solar tracker, battery module entry, seven blind-mate clamps, the raised contact block |
+| PCB-E1 DOCK STRIP | E4 | 278 x 60 | 4 | top | floor strip: isolated 9 to 36 V shore entry, solar tracker, battery module entry, seven blind-mate clamps, the raised contact block |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | none | the raised block on the strip: the targets the stack's spring pins land on, wire lands underneath |
 
 | | |
