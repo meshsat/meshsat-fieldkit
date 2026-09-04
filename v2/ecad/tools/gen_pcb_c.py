@@ -96,7 +96,7 @@ rule_area_rect(gx0 - 1.0, gy0 - 1.0, gx1 + 1.0, gy1 + 1.0, "tape band: display s
 # frame gasket band: the 0.53 mm PORON ring sits on the face between the frame window edge (1 mm inside it) and the panel edge; no copper on the face, no vias on the back
 GASKET_IN = (-(WIN_L / 2 - 1.0), -(WIN_W / 2 - 1.0), WIN_L / 2 - 1.0, WIN_W / 2 - 1.0)
 rule_area_rect(-hx, -hy, hx, hy, "frame gasket band F: no copper under the PORON ring (frame screw rings excepted)", hole=GASKET_IN, allow_pour=False, pads=True, footprints=True, layer=pcbnew.F_Cu)
-rule_area_rect(-hx, -hy, hx, hy, "frame gasket band B: no vias under the sealing band", hole=GASKET_IN, allow_pour=True, tracks=True, pads=True, footprints=True, layer=pcbnew.B_Cu)
+rule_area_rect(-hx, -hy, hx, hy, "frame gasket band B: no vias under the sealing band", hole=GASKET_IN, allow_pour=True, pads=True, footprints=True, layer=pcbnew.B_Cu)   # no tracks either: Freerouting ignores the edge clearance and ran a track 0.4 mm from the panel edge
 # ---------------------------------------------------------------- module site and reference graphics
 # e-paper recessed window (owner ruling 3 Sep): the WeAct 3.7 module hangs under the panel, its glass (E037A75, 92.99 x 53.0 x 0.95) rises into the
 # aperture, its two 5.8 mm PCB lands (left and right of the glass, WeAct STEP + drawing) are taped to the underside; glass face 1.0 mm below the
