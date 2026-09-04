@@ -108,7 +108,7 @@ Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
 
 ## 9. Shore charge inhibit (A16 / E1, 3 Sep 2026)
 
-PCB-A's expander U19 at 0x21, port 0 bit 4 (pin 8), net SHORE_INHIBIT, reaches the dock over spring pin 8 and drives an optocoupler on E1 whose transistor shorts the Traco converter's remote pin to its isolated -Vin. High = the dock's 12 V is off, so nothing charges. Low, floating, or the Pi dead = the converter runs (the LED is off), so a kit with a crashed bridge still charges. The bridge asserts it:
+PCB-A's expander U19 at 0x21, port 0 bit 4 (pin 8), net SHORE_INHIBIT, reaches the dock over signal contact 8 and drives an optocoupler on the dock strip whose transistor shorts the Traco converter's remote pin to its isolated -Vin. High = the dock's 12 V is off, so nothing charges. Low, floating, or the Pi dead = the converter runs (the LED is off), so a kit with a crashed bridge still charges. The bridge asserts it:
 - when the in-case temperature is below 0 C, as a second line of defence: the charger on PCB-A already holds the Samsung window of 0 to 45 C from the module's own thermistor, and this rule covers the case where that reading is missing or the operator wants charging stopped;
 - when the operator sets "no charge" in the UI;
 - and it clears it with hysteresis (charge again above 3 C).
