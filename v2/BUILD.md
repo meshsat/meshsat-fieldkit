@@ -19,7 +19,7 @@ Six boards, five assembled by the fabricator (standard assembly; the economic ti
 | PCB-A POWER + I/O A20 | `PCB-A-POWER-A20/` | 285 x 160 | 4 | JLC04161H-7628 | top |
 | PCB-B COMPUTE B13 | `PCB-B-COMPUTE-B13/` | 245 x 170 | 4 | JLC04161H-7628 | top, bottom 1 |
 | PCB-C CONTROL PANEL C5 | `PCB-C-DISPLAY-C5/` | 442 x 311 | 2 | standard, 2.0 mm, vias plugged | top (LEDs), bottom (cluster and connectors) |
-| PCB-D APRS D6 | `PCB-D-APRS-D6/` | 80 x 62 | 4 | JLC04161H-7628 | top, bottom (see the ORDER-NOTES) |
+| PCB-D APRS D6 | `PCB-D-APRS-D6/` | 80 x 62 | 4 | JLC04161H-7628 | top 62, bottom 1 |
 | PCB-E1 DOCK STRIP E4 | `PCB-E1-DOCK-E4/` | 278 x 60 | 4 | JLC04161H-7628 | top |
 | PCB-E5 DOCK BLOCK E5 | `PCB-E5-BLOCK-E5/` | 43 x 26 | 2 | standard, 2 oz outer copper | none |
 
