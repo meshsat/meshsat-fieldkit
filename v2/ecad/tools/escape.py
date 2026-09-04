@@ -116,12 +116,15 @@ for fp in b.GetFootprints():
             for idx, (along, pad, L) in enumerate(lst):
                 c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
                 done = False
-                for lane, vpitch, depth in [(0.75, 0.8, dp) for dp in (1.3, 1.7, 2.1)] + [(0.35, 0.7, dp) for dp in (1.2, 1.0, 0.85, 1.5)]:
+                for lane, vpitch, depth in [(0.75, 0.8, dp) for dp in (1.3, 1.7, 2.1)] + [(0.35, 0.8, 1.3), (0.35, 0.8, 1.7), (0.35, 0.7, 1.2), (0.35, 0.7, 1.0), (0.35, 0.7, 0.85), (0.35, 0.8, 2.1)]:
                     # A19 (5 Sep): the BQ25792's south row had a 1210 capacitor 1.7 mm past its tips; the 0.75 mm lane rule rejected every
                     # depth, the row went to the router without escapes and SDA could not be routed at all. Second pass with the lane at 0.35,
                     # the via row at 0.7 mm pitch (smaller splay) and shallower depths, for a row whose neighbour sits closer than the standard depth allows.
                     s_k = (idx - (n - 1) / 2.0) * FromMM(vpitch) - (along - centre_along)     # lateral shift from the pad's own lane
-                    knee = VECTOR2I(int(c.x + L[0] * (half + FromMM(0.3))), int(c.y + L[1] * (half + FromMM(0.3))))
+                    # nested knees: the outermost pin turns 0.3 past its tip, each pin further in turns 0.3 deeper, so a splay never runs
+                    # past its outer neighbour's knee (a 0.4 mm row's second pin sat 0.14 mm from the first pin's knee and was always rejected)
+                    kd = min(0.3 + 0.3 * min(idx, n - 1 - idx), depth - 0.15)
+                    knee = VECTOR2I(int(c.x + L[0] * (half + FromMM(kd))), int(c.y + L[1] * (half + FromMM(kd))))
                     v = VECTOR2I(int(c.x + L[0] * (half + FromMM(depth)) + side_dir[0] * s_k), int(c.y + L[1] * (half + FromMM(depth)) + side_dir[1] * s_k))
                     mids = [VECTOR2I(int(knee.x + (v.x - knee.x) * k / 5.0), int(knee.y + (v.y - knee.y) * k / 5.0)) for k in range(1, 5)]
                     if clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and clear(knee, TW / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids):
