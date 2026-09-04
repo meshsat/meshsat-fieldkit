@@ -1,0 +1,764 @@
+** Drc report for pcb-a-power.kicad_pcb **
+** Created on 2026-09-04T17:38:03+0200 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 238 DRC violations **
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north F.Cu' [CELL+] on F.Cu, priority 2
+    @(68,5400 mm, 157,0000 mm): Zone 'fuse tap F2 F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north F.Cu' [CELL+] on F.Cu, priority 2
+    @(-6,4600 mm, 157,0000 mm): Zone 'fuse tap F3 F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north F.Cu' [CELL+] on F.Cu, priority 2
+    @(18,5400 mm, 157,0000 mm): Zone 'fuse tap F4 F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(10,0000 mm, 178,0000 mm): Zone 'return tap 3 F.Cu' [CELL_N] on F.Cu, priority 2
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north F.Cu' [CELL+] on F.Cu, priority 2
+    @(43,5400 mm, 157,0000 mm): Zone 'fuse tap F5 F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(1,5000 mm, 187,0000 mm): Zone 'pin tap 1 F.Cu' [CELL+] on F.Cu, priority 2
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north F.Cu' [CELL+] on F.Cu, priority 2
+    @(-13,0000 mm, 189,0000 mm): Zone 'node riser west F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(2,0000 mm, 178,0000 mm): Zone 'return tap 1 F.Cu' [CELL_N] on F.Cu, priority 2
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(5,5000 mm, 187,0000 mm): Zone 'pin tap 2 F.Cu' [CELL+] on F.Cu, priority 2
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+    @(6,0000 mm, 178,0000 mm): Zone 'return tap 2 F.Cu' [CELL_N] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 189,0000 mm): Zone 'node riser west F.Cu' [CELL+] on F.Cu, priority 2
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(14,0000 mm, 178,0000 mm): Zone 'return tap 4 F.Cu' [CELL_N] on F.Cu, priority 2
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south F.Cu' [CELL+] on F.Cu, priority 2
+    @(9,5000 mm, 187,0000 mm): Zone 'pin tap 3 F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(13,5000 mm, 187,0000 mm): Zone 'pin tap 4 F.Cu' [CELL+] on F.Cu, priority 2
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south F.Cu' [CELL+] on F.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(6,0000 mm, 178,0000 mm): Zone 'return tap 2 B.Cu' [CELL_N] on B.Cu, priority 2
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar B.Cu' [CELL_N] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(10,0000 mm, 178,0000 mm): Zone 'return tap 3 B.Cu' [CELL_N] on B.Cu, priority 2
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar B.Cu' [CELL_N] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south B.Cu' [CELL+] on B.Cu, priority 2
+    @(5,5000 mm, 187,0000 mm): Zone 'pin tap 2 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south B.Cu' [CELL+] on B.Cu, priority 2
+    @(1,5000 mm, 187,0000 mm): Zone 'pin tap 1 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south B.Cu' [CELL+] on B.Cu, priority 2
+    @(9,5000 mm, 187,0000 mm): Zone 'pin tap 3 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south B.Cu' [CELL+] on B.Cu, priority 2
+    @(13,5000 mm, 187,0000 mm): Zone 'pin tap 4 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north B.Cu' [CELL+] on B.Cu, priority 2
+    @(-13,0000 mm, 189,0000 mm): Zone 'node riser west B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north B.Cu' [CELL+] on B.Cu, priority 2
+    @(18,5400 mm, 157,0000 mm): Zone 'fuse tap F4 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south B.Cu' [CELL+] on B.Cu, priority 2
+    @(-13,0000 mm, 189,0000 mm): Zone 'node riser west B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north B.Cu' [CELL+] on B.Cu, priority 2
+    @(-6,4600 mm, 157,0000 mm): Zone 'fuse tap F3 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north B.Cu' [CELL+] on B.Cu, priority 2
+    @(43,5400 mm, 157,0000 mm): Zone 'fuse tap F5 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north B.Cu' [CELL+] on B.Cu, priority 2
+    @(68,5400 mm, 157,0000 mm): Zone 'fuse tap F2 B.Cu' [CELL+] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(2,0000 mm, 178,0000 mm): Zone 'return tap 1 B.Cu' [CELL_N] on B.Cu, priority 2
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar B.Cu' [CELL_N] on B.Cu, priority 2
+[zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
+    Local override; error
+    @(14,0000 mm, 178,0000 mm): Zone 'return tap 4 B.Cu' [CELL_N] on B.Cu, priority 2
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar B.Cu' [CELL_N] on B.Cu, priority 2
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(41,9000 mm, 159,4700 mm): Segment of F5 on F.Silkscreen
+    @(50,0000 mm, 160,0000 mm): PCB text 'SMA UHF' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(66,0000 mm, 160,0000 mm): PCB text 'SMA WIFI 2.4' on F.Silkscreen
+    @(66,9000 mm, 159,4700 mm): Segment of F2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(66,0000 mm, 160,0000 mm): PCB text 'SMA WIFI 2.4' on F.Silkscreen
+    @(66,9000 mm, 152,5300 mm): Segment of F2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(260,5000 mm, 37,0000 mm): Circle on F.Silkscreen
+    @(205,0000 mm, 33,5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A18)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(39,5000 mm, 183,0000 mm): Circle on F.Silkscreen
+    @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(70,3800 mm, 187,4325 mm): Segment of J_AB1 on F.Silkscreen
+    @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
+    @(69,8800 mm, 188,4325 mm): Segment of J_AB1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(70,8800 mm, 188,4325 mm): Segment of J_AB1 on F.Silkscreen
+    @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(252,9997 mm, 174,0000 mm): Arc of J_BM7 on B.Silkscreen
+    @(253,0000 mm, 178,0000 mm): Circle on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(253,0000 mm, 184,0000 mm): PCB text 'BM LORA' on B.Silkscreen
+    @(260,5000 mm, 183,0000 mm): Circle on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(195,0000 mm, 186,0000 mm): PCB text 'PCB-A UNDERSIDE - 13.4 mm above the dock strip (32.21); dock block pins and seven SMP-MAX receptacles land on the dock' on B.Silkscreen
+    @(260,5000 mm, 183,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(240,0000 mm, 175,0000 mm): Segment on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(50,0000 mm, 176,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(66,0000 mm, 176,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(124,0000 mm, 176,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(138,0000 mm, 176,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(220,0000 mm, 176,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(242,0000 mm, 176,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(253,0000 mm, 178,0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(12,5000 mm, 110,0000 mm): PCB text 'PORT (-X)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(66,0000 mm, 184,0000 mm): PCB text 'BM WIFI 2.4' on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(220,0000 mm, 184,0000 mm): PCB text 'BM LTE' on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(242,0000 mm, 184,0000 mm): PCB text 'BM IRIDIUM' on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(195,0000 mm, 186,0000 mm): PCB text 'PCB-A UNDERSIDE - 13.4 mm above the dock strip (32.21); dock block pins and seven SMP-MAX receptacles land on the dock' on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(242,0000 mm, 179,2500 mm): Reference field of J_RF6
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(220,0000 mm, 179,2500 mm): Reference field of J_RF5
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(65,1700 mm, 177,9225 mm): Segment of J_AB1 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(66,4700 mm, 179,2325 mm): Segment of J_AB1 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(220,0000 mm, 181,8000 mm): Reference field of J_BM5
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(242,0000 mm, 181,8000 mm): Reference field of J_BM6
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(96,6200 mm, 167,8290 mm): Via [/BTST1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(-0,8800 mm, 129,5120 mm): Via [/COMP1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(31,1200 mm, 129,5120 mm): Via [/COMP2] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(63,1200 mm, 129,5120 mm): Via [/COMP3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(100,6880 mm, 67,3750 mm): Via [/EN_WALL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(99,9875 mm, 71,9250 mm): Via [/EXP2_SP0] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(109,6880 mm, 68,0250 mm): Via [/EXP2_SP8] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(56,9500 mm, 38,4000 mm): Via [/EXP_SP3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(2,6000 mm, 107,0380 mm): Via [/FB33] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(12,5500 mm, 81,6575 mm): Via [/HEAT_ILM] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(82,6375 mm, 51,8500 mm): Via [/HUB_DIS6P] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(81,8375 mm, 51,8500 mm): Via [/HUB_DIS7M] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(80,5946 mm, 64,1500 mm): Via [/HUB_VD18] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(76,2375 mm, 51,0500 mm): Via [/HUB_VD18PLL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(98,5200 mm, 164,5000 mm): Via [/PMID] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(143,9750 mm, 137,1050 mm): Via [/SW_CODEC] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(183,4250 mm, 146,1050 mm): Via [/SW_GPS] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(0,9200 mm, 127,2500 mm): Via [/VCC1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(32,9200 mm, 127,2500 mm): Via [/VCC2] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(64,9200 mm, 127,2500 mm): Via [/VCC3] on F.Cu - B.Cu
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(10,0000 mm, 178,0000 mm): Zone 'return tap 3 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(10,0000 mm, 178,0000 mm): Zone 'return tap 3 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(68,5400 mm, 157,0000 mm): Zone 'fuse tap F2 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(43,5400 mm, 157,0000 mm): Zone 'fuse tap F5 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-6,4600 mm, 157,0000 mm): Zone 'fuse tap F3 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(5,5000 mm, 187,0000 mm): Zone 'pin tap 2 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(2,0000 mm, 178,0000 mm): Zone 'return tap 1 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(2,0000 mm, 178,0000 mm): Zone 'return tap 1 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(2,0000 mm, 178,0000 mm): Zone 'return tap 1 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(1,5000 mm, 187,0000 mm): Zone 'pin tap 1 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(14,0000 mm, 178,0000 mm): Zone 'return tap 4 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(14,0000 mm, 178,0000 mm): Zone 'return tap 4 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-13,0000 mm, 189,0000 mm): Zone 'node riser west F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(13,5000 mm, 187,0000 mm): Zone 'pin tap 4 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(6,0000 mm, 178,0000 mm): Zone 'return tap 2 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(6,0000 mm, 178,0000 mm): Zone 'return tap 2 F.Cu' [CELL_N] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(18,5400 mm, 157,0000 mm): Zone 'fuse tap F4 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(9,5000 mm, 187,0000 mm): Zone 'pin tap 3 F.Cu' [CELL+] on F.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(6,0000 mm, 178,0000 mm): Zone 'return tap 2 B.Cu' [CELL_N] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(10,0000 mm, 178,0000 mm): Zone 'return tap 3 B.Cu' [CELL_N] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-10,0000 mm, 189,0000 mm): Zone 'node bar south B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(5,5000 mm, 187,0000 mm): Zone 'pin tap 2 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-13,0000 mm, 152,0000 mm): Zone 'node bar north B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(1,5000 mm, 187,0000 mm): Zone 'pin tap 1 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(2,0000 mm, 178,0000 mm): Zone 'return tap 1 B.Cu' [CELL_N] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(13,5000 mm, 187,0000 mm): Zone 'pin tap 4 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(9,5000 mm, 187,0000 mm): Zone 'pin tap 3 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(14,0000 mm, 178,0000 mm): Zone 'return tap 4 B.Cu' [CELL_N] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-13,0000 mm, 189,0000 mm): Zone 'node riser west B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(1,0000 mm, 176,0000 mm): Zone 'return bar B.Cu' [CELL_N] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(18,5400 mm, 157,0000 mm): Zone 'fuse tap F4 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(43,5400 mm, 157,0000 mm): Zone 'fuse tap F5 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-6,4600 mm, 157,0000 mm): Zone 'fuse tap F3 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(68,5400 mm, 157,0000 mm): Zone 'fuse tap F2 B.Cu' [CELL+] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-17,5000 mm, 195,0000 mm): Zone '+5V_M1 plane In2 (A19 rail M1: logic, hub, channels)' [+5V_M1] on In2.Cu, priority 0
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-10,0000 mm, 166,0000 mm): Zone 'CELL+ pour In2 (node bar under the fuse row, west of the RF islands)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-10,0000 mm, 166,0000 mm): Zone 'CELL+ pour In2 (node bar under the fuse row, west of the RF islands)' [CELL+] on In2.Cu, priority 1
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(-10,0000 mm, 166,0000 mm): Zone 'CELL+ pour In2 (node bar under the fuse row, west of the RF islands)' [CELL+] on In2.Cu, priority 1
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

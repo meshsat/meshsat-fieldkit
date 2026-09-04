@@ -1,0 +1,46 @@
+Comment,Designator,Footprint,LCSC Part #
+10u 50V,"C1,C13,C14",C_1206_3216Metric,C89632
+100n,"C2,C23",C_0603_1608Metric,C14663
+22u 25V,C3,C_1206_3216Metric,C12891
+100n 50V,"C4,C28",C_0603_1608Metric,C14663
+100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm),"C11,C12",CP_Elec_6.3x7.7,C454360
+4.7u 50V,C15,C_1206_3216Metric,C132170
+1n,C16,C_0603_1608Metric,C1588
+470n 25V,"C17,C18",C_0603_1608Metric,C1623
+4.7u 25V,C19,C_1206_3216Metric,C132170
+1u,C20,C_0603_1608Metric,C15849
+4.7n,C21,C_0603_1608Metric,C53987
+100p,C22,C_0603_1608Metric,C14858
+39u 35V Panasonic 35SVPF39M polymer (6.9 mm),"C24,C25",CP_Elec_8x6.7,C189474
+10u 25V,"C26,C27",C_1206_3216Metric,C89632
+"SMCJ33A (input surge, datasheet 50 V 100 ms)",D1,D_SMC,C42371548
+SMCJ15A,D3,D_SMC,C42371550
+SMCJ33A (panel surge),D4,D_SMC,C42371548
+BAT54 boost diode INTVCC -> BOOST1,D5,D_SOD-123,C7502705
+BAT54 boost diode INTVCC -> BOOST2,D6,D_SOD-123,C7502705
+"shore DC in 9-36 V, lead from the D38999/20FC4PN wall receptacle DC pair (JST-VH, 10 A): + -",J_DCIN,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+Kelvin sense lead from the module positive terminal (XH2.5): + (return unused),J_KS,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+"bare 12 V class panel in, lead from the D38999 spare pair (JST-VH, 10 A): + - (36-cell panel, up to about 22 V open circuit, 100 W)",J_SOLAR,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+module thermistor lead (XH2.5): 103AT to the charger TS pin over the block,J_TS,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+green: shore 12 V present,LED1,LED_0603_1608Metric,C72043
+"BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)","Q1,Q2",TDSON-8-1,C534330
+"BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)",Q3,TDSON-8-1,C148250
+"BSC039N06NS 60 V N-FET, M2 buck bottom",Q4,TDSON-8-1,C534330
+"BSC028N06NS 60 V N-FET, M3 boost bottom",Q5,TDSON-8-1,C148250
+"BSC039N06NS 60 V N-FET, M4 boost top",Q6,TDSON-8-1,C534330
+100k,"R1,R4,R18",R_0603_1608Metric,C25803
+2.2k,R2,R_0603_1608Metric,C4190
+330R,R3,R_0603_1608Metric,C23138
+5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4),R5,R_2512_6332Metric,C154688
+100R,"R6,R7",R_0603_1608Metric,C22775
+102k 1% (RFBIN1: panel point 17.6 V),R8,R_0603_1608Metric,C2933126
+7.50k 1% (RFBIN2),R9,R_0603_1608Metric,C23234
+115k 1% (RFBOUT1: 15.1 V),R10,R_0603_1608Metric,C22783
+10.0k 1% (RFBOUT2),R11,R_0603_1608Metric,C25804
+215k 1% (RT: 202 kHz),R12,R_0603_1608Metric,C5713280
+10k,"R13,R16,R17",R_0603_1608Metric,C25804
+100k 1%,R14,R_0603_1608Metric,C25803
+15.0k 1% (SHDN: enable above about 9.5 V),R15,R_0603_1608Metric,C22809
+"EL817S / PC817 optocoupler: LED from PCB-A SHORE_INHIBIT (kit side), transistor shorts the converter remote pin to -Vin (isolated side); LED on = converter OFF, LED off or Pi dead = ON",U2,SOP-4_3.8x4.1mm_P2.54mm,C109227
+LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE,"U3,U4",SOT-23-6,C2760636
+"LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused)",U5,WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm,C674167

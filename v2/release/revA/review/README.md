@@ -2,7 +2,7 @@
 
 Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying the real devices on paper; the copper sheets and the assembly drawings are for the design review (appendix section 21.3 / 22.4: the six order-gate items are the agenda).
 
-## PCB-A POWER + I/O Rev A (A18), folder `PCB-A-POWER-A18/`, 285 x 160 mm, 4 layers
+## PCB-A POWER + I/O Rev A (A19), folder `PCB-A-POWER-A19/`, 285 x 160 mm, 4 layers
 
 - `pcb-a-power-1to1-top.pdf`, `pcb-a-power-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-a-power-assembly-top.pdf`, `pcb-a-power-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -10,7 +10,7 @@ Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying 
 - `pcb-a-power-render-top-A4.png`, `pcb-a-power-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-a-power-schematic.pdf`: full schematic; `pcb-a-power-drc.rpt`: the DRC report of the exported board
 
-## PCB-B COMPUTE Rev A (B11), folder `PCB-B-COMPUTE-B11/`, 245 x 170 mm, 4 layers
+## PCB-B COMPUTE Rev A (B12), folder `PCB-B-COMPUTE-B12/`, 245 x 170 mm, 4 layers
 
 - `pcb-b-compute-1to1-top.pdf`, `pcb-b-compute-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-b-compute-assembly-top.pdf`, `pcb-b-compute-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -53,21 +53,21 @@ Sources: https://pip.raspberrypi.com/categories/1083-raspberry-pi-touch-display-
 - `pcb-d-aprs-render-top-A4.png`, `pcb-d-aprs-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-d-aprs-schematic.pdf`: full schematic; `pcb-d-aprs-drc.rpt`: the DRC report of the exported board
 
-## PCB-E1 DOCK Rev A (E1), folder `PCB-E1-DOCK-E1/`, 250 x 44 mm, 2 layers
+## PCB-E1 DOCK STRIP Rev A (E4), folder `PCB-E1-DOCK-E4/`, 278 x 60 mm, 4 layers
 
 - `pcb-e1-dock-1to1-top.pdf`, `pcb-e1-dock-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-e1-dock-assembly-top.pdf`, `pcb-e1-dock-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
-- `pcb-e1-dock-copper-layers.pdf`: one page per copper layer (F.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
+- `pcb-e1-dock-copper-layers.pdf`: one page per copper layer (F.Cu, In1.Cu, In2.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
 - `pcb-e1-dock-render-top-A4.png`, `pcb-e1-dock-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-e1-dock-schematic.pdf`: full schematic; `pcb-e1-dock-drc.rpt`: the DRC report of the exported board
 
-## PCB-E2 RF JUNCTION Rev A (E3), folder `PCB-E2-RFJUNCTION-E3/`, 330 x 32 mm, 2 layers
+## PCB-E5 DOCK BLOCK Rev A (E5), folder `PCB-E5-BLOCK-E5/`, 43 x 26 mm, 2 layers
 
-- `pcb-e2-rfjunction-1to1-top.pdf`, `pcb-e2-rfjunction-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
-- `pcb-e2-rfjunction-assembly-top.pdf`, `pcb-e2-rfjunction-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
-- `pcb-e2-rfjunction-copper-layers.pdf`: one page per copper layer (F.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
-- `pcb-e2-rfjunction-render-top-A4.png`, `pcb-e2-rfjunction-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
-- `pcb-e2-rfjunction-drc.rpt`: DRC report (mechanical board, no schematic)
+- `pcb-e5-block-1to1-top.pdf`, `pcb-e5-block-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
+- `pcb-e5-block-assembly-top.pdf`, `pcb-e5-block-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
+- `pcb-e5-block-copper-layers.pdf`: one page per copper layer (F.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
+- `pcb-e5-block-render-top-A4.png`, `pcb-e5-block-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
+- `pcb-e5-block-drc.rpt`: DRC report (mechanical board, no schematic)
 
 ## Review agenda (appendix 21.3 / 22.4)
 

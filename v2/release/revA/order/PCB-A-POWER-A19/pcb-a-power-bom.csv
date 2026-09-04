@@ -1,0 +1,77 @@
+Comment,Designator,Footprint,LCSC Part #
+10u,"C7,C14,C29,C31,C33,C61,C62,C103,C106",C_0805_2012Metric,C15850
+100n,"C13,C18,C19,C20,C21,C22,C23,C24,C28,C30,C32,C34,C35,C36,C37,C44,C67,C68,C77,C90,C100,C102,C104,C105,C107,C108",C_0603_1608Metric,C14663
+22u 10V X7R 1210,"C15,C42,C43,C45,C46,C47,C48,C49,C70,C75,C76,C78,C79,C80,C81,C82,C83,C88,C89,C91,C92,C93,C94,C101",C_1210_3225Metric,C2918511
+27p,"C16,C17,C41,C74,C87",C_0603_1608Metric,C107045
+1u,"C25,C26,C27,C69,C98",C_0603_1608Metric,C15849
+100n 25V,"C38,C71,C84",C_0603_1608Metric,C14663
+2.2u,"C39,C72,C85",C_0603_1608Metric,C57895
+3.3n,"C40,C73,C86",C_0603_1608Metric,C1613
+100u 10V,"C50,C95,C96,C97",C_1206_3216Metric,C6119961
+10u 25V 1210,"C51,C52,C53,C54,C55,C56,C57,C58,C59,C60",C_1210_3225Metric,C2918497
+47n,"C63,C64",C_0603_1608Metric,C1622
+4.7u,C65,C_0805_2012Metric,C1779
+1n,C66,C_0603_1608Metric,C1588
+10n,C99,C_0603_1608Metric,C57112
+SMBJ5.0A,D2,D_SMB,C113974
+10 A mini blade (Keystone 3568 holder): pack node to the 8 V boost feed,F2,Fuseholder_Blade_Mini_Keystone_3568,
+10 A mini blade (Keystone 3568 holder): pack node to the M1 converter,F3,Fuseholder_Blade_Mini_Keystone_3568,
+10 A mini blade (Keystone 3568 holder): pack node to the M2 converter,F4,Fuseholder_Blade_Mini_Keystone_3568,
+15 A mini blade (Keystone 3568 holder): pack node to the Pi converter,F5,Fuseholder_Blade_Mini_Keystone_3568,
+2.5A hold 30V 1812,F6,Fuse_1812_4532Metric,C52748011
+"rail M1 to PCB-B J_5V_M1 (JST-VH, 18 AWG): + -",J_5V_M1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"rail M2 to PCB-B J_5V_M2 (JST-VH, 18 AWG): + -",J_5V_M2,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"Pi rail 5.1 V 5 A to PCB-B J_5V_PI (JST-VH, 18 AWG): + -",J_5V_PI,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"A-B interconnect (IDC 2x7, top side)",J_AB1,IDC-Header_2x07_P2.54mm_Vertical,
+"USB-A receptacle, GPS",J_GPS1,USB_A_Stewart_SS-52100-001_Horizontal,
+12 V heating pad on the battery module (XH2.5): + -,J_HEAT,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+front-wall LED row (XH2.5): PWR MESH SAT LTE SYS,J_LEDS1,JST_XH_B10B-XH-A_1x10_P2.50mm_Vertical,
+"MAIN button lead from the panel (XH2.5): PB, GND",J_MAINSW,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+APRS mezzanine harness (IDC 2x8),J_MEZZ1,IDC-Header_2x08_P2.54mm_Vertical,
+mezzanine 8 V boost feed (JST-VH): cell node through F2 (R15),J_MEZZ_PWR1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the UHF module",J_RF1,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the WIFI24 module",J_RF2,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the WIFI58 module",J_RF3,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the SDR module",J_RF4,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the LTE module",J_RF5,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the IRID module",J_RF6,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the LORA module",J_RF7,SMA_Amphenol_132134-11_Vertical,
+"USB-A receptacle, internal cable to the Glenair 233-370 wall host port",J_WALL1,USB_A_Stewart_SS-52100-001_Horizontal,
+"USB-A receptacle, WiFi",J_WIFI1,USB_A_Stewart_SS-52100-001_Horizontal,
+2N7002: Pi GPIO high = pull KILL low = power off,Q5,SOT-23,C8545
+1k,R18,R_0603_1608Metric,C21190
+12.0k 1% (RBIAS),R19,R_0603_1608Metric,C22790
+10k,"R20,R21,R22,R23,R25,R26,R28,R30,R32,R34,R59,R60,R72,R76,R79",R_0603_1608Metric,C25804
+4.7k,R24,R_0603_1608Metric,C23162
+0.1R 1% 1206,"R27,R29,R31,R33,R78",R_1206_3216Metric,C2903496
+330R,"R35,R36,R37,R38",R_0603_1608Metric,C23138
+100k,"R39,R40,R41,R42,R43,R58,R67,R68,R69,R70,R73,R77",R_0603_1608Metric,C25803
+8.87k,"R44,R61,R64",R_0603_1608Metric,C2998144
+102k 1%,"R47,R62",R_0603_1608Metric,C2933126
+13.7k 1%,"R48,R63",R_0603_1608Metric,C22793
+10R 2W 2512,R51,R_2512_6332Metric,C414890
+3 mOhm 1% 3 W 2512 shunt (RALEC LR2512-23R003F4): gauge SRP/SRN Kelvin (32.24 AV),R52,R_2512_6332Metric,C154688
+"4.7k 1% (PROG: 1S, 750 kHz)",R53,R_0603_1608Metric,C23162
+16.5k 1%,R54,R_0603_1608Metric,C22812
+34.8k 1%,R55,R_0603_1608Metric,C2933204
+5.23k 1% (RT1 JEITA),R56,R_0603_1608Metric,C23068
+30.1k 1% (RT2 JEITA),R57,R_0603_1608Metric,C23000
+75k 1%,R65,R_0603_1608Metric,C23242
+10k 1%,"R66,R75",R_0603_1608Metric,C25804
+1.02k 1% (2.0 A),R71,R_0603_1608Metric,C2998111
+33.2k 1%,R74,R_0603_1608Metric,C23003
+TPS563201 3.3 V buck from M1,U5,SOT-23-6,C116592
+"USB2517I-JZX seven-port USB 2.0 hub (strap defaults, ports 6-7 disabled)",U6,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C1521556
+TPS2065CDBV,"U7,U10,U13,U16,U28",SOT-23-5,C353882
+INA219AIDCN,"U8,U11,U14,U17,U29",SOT-23-8,C138024
+USBLC6-2SC6,"U9,U12,U15,U18,U27,U30",SOT-23-6,C7519
+PCA9555PW (0x21),U19,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+"BQ25792 1S charger from SHORE_12V (3 A set over ILIM_HIZ, 750 kHz, I2C 0x6B)",U20,Texas_RQM0029A_QFN-29_4x4mm,C2862876
+"BQ34Z100-G1 gauge (I2C 0x55, SCALED for 42 Ah, 3 mOhm shunt)",U21,TSSOP-14_4.4x5mm_P0.65mm,C91302
+"TPS61288L boost +5V_M1 (15 A switch, 500 kHz, no MODE pin)",U22,Texas_RQQ0011A_VQFN-HR-11_2.5x3mm,C7498841
+"TPS61288L boost +5V_M2 (15 A switch, 500 kHz, no MODE pin)",U23,Texas_RQQ0011A_VQFN-HR-11_2.5x3mm,C7498841
+"TPS61288L boost +5V_PI (15 A switch, 500 kHz, no MODE pin)",U24,Texas_RQQ0011A_VQFN-HR-11_2.5x3mm,C7498841
+LTC2954CTS8-1 push-button on/off controller,U25,TSOT-23-8,C683782
+TPS259571DSGR eFuse 12 V 2.0 A for the heating pad,U26,Texas_DSG0008A_WSON-8-1EP_2x2mm_P0.5mm_EP0.9x1.6mm,C471038
+"PCA9555PW (0x24): wall port, heating pad, charger, gauge",U31,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+24 MHz 3225,Y1,Crystal_SMD_3225-4Pin_3.2x2.5mm,C70571
