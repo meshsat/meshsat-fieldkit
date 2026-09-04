@@ -1,0 +1,41 @@
+Comment,Designator,Footprint,LCSC Part #
+4.7u,"C7,C10,C13,C14,C37",C_0603_1608Metric,C19666
+100n,"C8,C9,C17,C18,C25,C32,C33,C35,C36,C38,C39",C_0603_1608Metric,C14663
+100n 25V,"C20,C30",C_0603_1608Metric,C14663
+1u,C21,C_0603_1608Metric,C15849
+4.7n,C22,C_0603_1608Metric,C53987
+22u 10V X7R 1210,"C23,C24",C_1210_3225Metric,C2918511
+22u 25V X7R 1210,C26-C29,C_1210_3225Metric,C2918511
+10u,C34,C_1210_3225Metric,
+green status (U7 bit 3 sinks),D1,LED_0603_1608Metric,C72043
+600R@100MHz,FB1,L_0603_1608Metric,C1002
+channel bit CH8 to GND (open = default),JP1,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+channel bit CH4 to GND (open = default),JP2,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+channel bit CH2 to GND (open = default),JP3,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+channel bit CH1 to GND (open = default),JP4,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+CS to GND = module sleep,JP5,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+"harness to PCB-A J_MEZZ1 (IDC 2x8): I2S, I2C, the gated 3.3 V from B13, PTT lines",J_HARN1,IDC-Header_2x08_P2.54mm_Vertical,
+cell node from PCB-A J_MEZZ_PWR (JST-VH),J_PWR1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"DMR858M host-upgrade UART (bench, 3.3 V, 100R in series): GND TX RX",J_UART1,PinHeader_1x03_P2.54mm_Vertical,
+"1.5uH XAL6030-152MEB (Isat 12 A, 5.6 mOhm)",L1,L_Coilcraft_XAL6030-XXX,
+"BC847 (PTT2, spare)",Q1,SOT-23,C20069135
+BC847 (PTT to the module),Q2,SOT-23,C20069135
+2N7002 (EMCON inhibit in Q2 emitter),Q3,SOT-23,C8545
+BC857 (TR mirror from RADIO_PTT),Q4,SOT-23,C556165
+4.7k,R2,R_0603_1608Metric,C23162
+100k,"R3,R35,R38,R39",R_0603_1608Metric,C25803
+1.5k,"R4,R10,R11",R_0603_1608Metric,C22843
+100R,"R8,R9,R41",R_0603_1608Metric,C22775
+22R,"R12,R13",R_0603_1608Metric,C23345
+1k,"R15,R37",R_0603_1608Metric,C21190
+301k 1% (500 kHz),R30,R_0603_1608Metric,C2933194
+"100k 1% (ILIM 10 A peak, 9 A min)",R31,R_0603_1608Metric,C25803
+17.4k,R32,R_0603_1608Metric,C304711
+105k 1%,R33,R_0603_1608Metric,C2933128
+20k 1%,R34,R_0603_1608Metric,C4184
+10k,"R36,R40",R_0603_1608Metric,C25804
+TPS61089 boost 7.6 V / 2 A,U1,Texas_VQFN-RNR0011A-11,C165129
+DNP bench: DMR858M 5 W UHF module on 2 x 1x12 2.54 mm female headers 8.5 mm + M2.5 x 11 mm standoffs,U2,DMR858M,
+"WM8960 audio codec QFN-32 (pins per datasheet table: 4 LINPUT1, 11 MCLK, 12 BCLK, 13 DACLRC, 14 DACDAT, 15 ADCLRC, 16 ADCDAT, 17 SCLK, 18 SDIN, 27 VMID, 31 HP_L, 32 AVDD, 33 paddle)",U5,QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm,
+"PCA9536 4-bit I2C expander 0x41: 0 PTT, 1 PTT2 (spare), 2 SPKEN, 3 status LED; a gpiochip for Direwolf's PTT",U7,SOIC-8_3.9x4.9mm_P1.27mm,
+24 MHz 3.3 V oscillator 3225 (ASE-24.000MHZ-LC-T class),X1,Oscillator_SMD_Abracon_ASE-4Pin_3.2x2.5mm,
