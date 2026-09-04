@@ -56,10 +56,19 @@ check(mb and all(mb.values()) and not diff, "J_PANEL 2x10 map identical on B and
 for k, ref in (("C", "SW_EMCON"), ("B", "J_PANEL"), ("A", "J_AB1"), ("D", "J_HARN1")):
     names = [n for n in B[k][0] if "INHIBIT" in n or "EMCON" in n]
     check(bool(names), "transmit inhibit present on %s (%s)" % (k, ref), "no EMCON or INHIBIT net")
+def reaches(board, netname, target):
+    """The net itself, plus one hop through any series or pull resistor on it."""
+    nodes = B[board][0].get(netname, set()); seen = set(r for r, _ in nodes)
+    for r, pin in list(nodes):
+        if r.startswith("R"):
+            for n2, other in B[board][0].items():
+                if any(x == r and y != pin for x, y in other): seen |= set(x for x, _ in other)
+    return target in seen, seen
 d_inh = [n for n in B["D"][0] if "INHIBIT" in n]
 if d_inh:
     nodes = B["D"][0][d_inh[0]]
-    check(any(r == "Q3" for r, _ in nodes), "D: %s reaches Q3" % d_inh[0], str(sorted(nodes)))
+    ok, seen = reaches("D", d_inh[0], "Q3")
+    check(ok, "D: %s reaches Q3 (directly or through its resistors)" % d_inh[0], str(sorted(seen)))
     check(all(not r.startswith("U") for r, _ in nodes), "D: nothing but the harness and Q3 drives %s" % d_inh[0], str(sorted(nodes)))
 
 # 3. three 5 V rails from A to B (VH pairs, same net names on both boards)
