@@ -20,7 +20,7 @@ def near(p, q, tol=0.01): return abs(p[0] - q[0]) < tol and abs(p[1] - q[1]) < t
 def find(pos, drill): return any(near(v[0], pos) and abs(v[1][0] - drill) < 0.01 for v in holes.values())
 for (x, y) in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]: check(find((x, y), 3.2), "rod hole 3.2 at (%.1f, %.1f)" % (x, y))
 st = [(-113.0, -29.0), (-64.0, -29.0), (-113.0, 29.0), (-64.0, 29.0)]   # B11: stack 10 mm west
-for p in st: check(find(p, 2.7), "Pi/X1202 stack hole 2.7 at %s" % (p,))
+for p in st: check(find(p, 2.7), "Pi stack hole 2.7 at %s" % (p,))
 check(abs(st[1][0] - st[0][0] - 49) < 0.01 and abs(st[2][1] - st[0][1] - 58) < 0.01, "stack pattern is 49 x 58 (Pi 5)")
 tc = [(4.66, 23.015), (74.12, 23.015), (4.66, 47.985), (74.12, 47.985)]
 for p in tc: check(find(p, 3.2), "T-Call hole 3.2 at %s" % (p,))
@@ -38,13 +38,13 @@ hl = [(v[0], v[1][0]) for v in holes.values()]
 minweb = min(((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2) ** 0.5 - (dp + dq) / 2 for (p, dp), (q, dq) in itertools.combinations(hl, 2))
 check(minweb >= 2.0, "minimum web between any two holes %.2f mm (>= 2.0)" % minweb)
 # device rectangles: inside the outline with 3 mm margin, pairwise non-overlapping, clear of nut keep-outs
-R = {"X1202": (-117.2, -42.5, -21.2, 42.5), "SDR": (-4, -16, 78, 16), "ZB": (-40, 55, 30, 80.5), "TCALL": (2.0, 20.995, 76.78, 50.005),
+R = {"SDR": (-4, -16, 78, 16), "ZB": (-40, 55, 30, 80.5), "TCALL": (2.0, 20.995, 76.78, 50.005),
      "XIAO": (-103.72, 49.11, -82.28, 66.89), "RB9704": (26, -76, 78, -20), "HUB": (-96, -81, -46, -52), "JGPIO": (-80.5, 44, -21.5, 53),
      "JRTL": (-19, -6.5, -5, 6.5), "JZB": (31, 61, 45, 74.5), "TCALL_USBC": (-18.5, 41, -13.5, 51), "XIAO_USBC": (-82, 55.5, -70, 64.5),
      "TBEAM": (79.3, -64, 122.36, 52.75), "TB_SMA": (110.95, 52.75, 120.19, 67.22), "JTBEAM": (65, 52.5, 75, 57.5),
      "JRB9704": (-0.5, -52.5, 20.5, -43.5), "JRB9603": (3.5, -62.5, 16.5, -57.5), "PASS": (-20.5, -57.5, -5.5, -42.5), "JTD2": (-54, 74, -46, 80), "JPANEL": (81, 54.5, 91, 81.5)}
 for k, r in R.items():
-    m = 1.0 if k == "X1202" else (0.1 if k in ("TBEAM", "TB_SMA") else 3.0)   # X1202 envelope sits 1.5 mm from the edge; the T-Beam PCB ends 0.14 mm short of the edge by design
+    m = 0.1 if k in ("TBEAM", "TB_SMA") else 3.0   # the T-Beam PCB ends 0.14 mm short of the edge by design
     check(r[0] >= -122.5 + m and r[2] <= 122.5 - m and r[1] >= -85 + m and r[3] <= 85 - m, "%s inside outline with %.0f mm margin" % (k, m))
 def overlap(a, b): return not (a[2] <= b[0] or b[2] <= a[0] or a[3] <= b[1] or b[3] <= a[1])
 for (ka, a), (kb, bb) in itertools.combinations(R.items(), 2):
@@ -65,14 +65,7 @@ for ref, (ex, ey) in exp_fp.items():
     check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s body centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
     for pad in fp.Pads():
         pp = case(pad.GetPosition()); check(abs(pp[0] - ex) < 40 and abs(pp[1] - ey) < 40, "%s pad near its footprint" % ref)
-# B11: nothing but the four standoff holes may sit under the X1202 (its cells hang to board level)
-x1202 = R["X1202"]; under = []
-for fp in b.GetFootprints():
-    ref = fp.GetReference()
-    if ref.startswith(("H", "S_")): continue
-    bb = fp.GetBoundingBox(False, False); rr = (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
-    if overlap(rr, x1202): under.append(ref)
-check(not under, "no part under the X1202 envelope (found: %s)" % (under[:8] if under else "none"))
+# B12: the X1202 is gone (appendix 32.17); the Pi alone sits on the four standoffs
 check(b.GetCopperLayerCount() == 4, "4 copper layers")
 check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
