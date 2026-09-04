@@ -91,7 +91,7 @@ def via(x, y, n, d=0.6, dr=0.3):
     v = pcbnew.PCB_VIA(board); v.SetPosition(P(x, y)); v.SetWidth(FromMM(d)); v.SetDrill(FromMM(dr)); v.SetNet(net(n)); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); board.Add(v)
 def dxy(p): q = p.GetPosition(); return q.x / 1e6 - OX, OY - q.y / 1e6
 tp = {int(p.GetNumber()): p for p in tgt.Pads()}; lp = {int(p.GetNumber()): p for p in land.Pads()}
-SHORT = {"SHORE_12V": "12V", "GND": "GND", "SHORE_INHIBIT": "INH", "TS_MOD": "TS", "CELL_SENSE_P": "KS+", "SPARE": "SP"}
+SHORT = {"SHORE_12V": "12V", "GND": "GND", "SHORE_INHIBIT": "INH", "TS_CHG": "TS", "TS_MOD": "TS", "CELL_SENSE_P": "KS+", "DOCK_SPARE": "SP", "SPARE": "SP"}
 def label(k, x, y):
     """Silk name of the wire land, upright at 0.8 mm (the DRC minimum) so the builder reads which wire goes where."""
     t = text("%s%d" % (SHORT.get(PIN[k][1], "?"), PIN[k][0]), x, y, pcbnew.B_SilkS, 0.8, 0.13, mirror=True); t.SetTextAngleDegrees(90); return t

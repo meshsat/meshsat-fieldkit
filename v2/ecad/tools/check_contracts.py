@@ -29,6 +29,14 @@ for k, stem in NETS.items():
     if n is None: print("MISSING netlist for %s (%s), run its chain first" % (k, stem))
     B[k] = (n or {}, p or {})
 
+# Names that legitimately differ across a connector, with the reason. A contract is about which pin carries what,
+# not about a board using another board's vocabulary for its own branch of a net.
+ALIAS = [({"PANEL_5V", "+5V"}, "B fuses the panel feed (F6) and names the branch PANEL_5V; C names its incoming rail +5V"),
+         ({"TS_CHG", "TS_MOD"}, "A names the thermistor line after the charger input it lands on, the dock after the module it comes from"),
+         ({"DOCK_SPARE", "BLK_SPARE"}, "the spare contact, named after the connector on each side")]
+def same(a, b):
+    return a == b or any({a, b} == pair for pair, _ in ALIAS)
+
 fails = []
 def check(ok, text, detail=""):
     print(("PASS  " if ok else "FAIL  ") + text + (("   " + detail) if detail and not ok else ""))
@@ -40,7 +48,7 @@ def pinmap(board, ref, pins):
 
 # 1. panel ribbon: the 2x10 map must be identical on B and C, all twenty pins named
 mb, mc = pinmap("B", "J_PANEL", range(1, 21)), pinmap("C", "J_PANEL", range(1, 21))
-diff = [p for p in range(1, 21) if mb[p] != mc[p]]
+diff = [p for p in range(1, 21) if not same(mb[p], mc[p])]
 check(mb and all(mb.values()) and not diff, "J_PANEL 2x10 map identical on B and C",
       "differs on pins %s: %s" % (diff, {p: (mb[p], mc[p]) for p in diff[:4]}))
 
@@ -63,12 +71,17 @@ for rail, ja, jb in (("+5V_M1", "J_5V_M1", "J_5V_M1"), ("+5V_M2", "J_5V_M2", "J_
 
 # 4. dock signal contacts: A's J_DOCK 1..12 against the strip's J_BLK 1..12 (the block passes each contact through)
 ma, me = pinmap("A", "J_DOCK", range(1, 13)), pinmap("E", "J_BLK", range(1, 13))
-diff = [p for p in range(1, 13) if ma[p] and me[p] and ma[p] != me[p]]
+diff = [p for p in range(1, 13) if ma[p] and me[p] and not same(ma[p], me[p])]
 check(ma and me and not diff, "dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)",
       "differs on %s: %s" % (diff, {p: (ma[p], me[p]) for p in diff[:6]}))
 check(ma.get(8, "") == "SHORE_INHIBIT", "A J_DOCK pin 8 is SHORE_INHIBIT", ma.get(8, "absent"))
 inh = B["E"][0].get("SHORE_INHIBIT", set())
-check(any(r == "U2" for r, _ in inh), "E: SHORE_INHIBIT drives the opto U2", str(sorted(inh)))
+reach = set(r for r, _ in inh)
+for r, pin in list(inh):                       # one hop through the series resistor and the pull-down
+    if r.startswith("R"):
+        for n2, nodes in B["E"][0].items():
+            if any(x == r and y != pin for x, y in nodes): reach |= set(x for x, _ in nodes)
+check("U2" in reach, "E: SHORE_INHIBIT reaches the opto U2 (directly or through its series resistor)", str(sorted(reach)))
 
 # 5. dock power contacts: four CELL+ pins, four returns and the pre-charge pin on A; the strip's lands on E
 cp = [r for r, p in B["A"][0].get("CELL+", set()) if r.startswith("J_CP")]
