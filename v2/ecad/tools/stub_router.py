@@ -71,12 +71,16 @@ def build_maps(net):
     w2, vr = TW / 2, VIA_D / 2
     for fp in b.GetFootprints():
         for p in fp.Pads():
+            if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):   # hole to hole against drilled pads of any net
+                c = p.GetPosition(); d = p.GetDrillSize(); disc(via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + VIA_DR / 2 + 0.30)
             if p.GetNetname() == net: continue
             anyL = next((L for L in LAYERS + INNER if p.IsOnLayer(L)), pcbnew.F_Cu)
             for L in LAYERS:
                 if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) else CLR) + w2)
             if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) or any(p.IsOnLayer(L) for L in INNER + LAYERS): poly(via, p.GetEffectivePolygon(anyL), CLR + vr)
     for t in b.GetTracks():
+        if t.GetClass() == "PCB_VIA":                                  # hole to hole (0.30 mm) against every via, its own net included (B13, 5 Sep: two SDA vias 0.175 mm apart)
+            c = t.GetPosition(); disc(via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + VIA_DR / 2 + 0.30)
         if t.GetNetname() == net: continue
         if t.GetClass() == "PCB_VIA":
             c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2

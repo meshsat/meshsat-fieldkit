@@ -38,6 +38,12 @@ while True:
             touched = touched or any(net == t[1] and pd.HitTest(pcbnew.VECTOR2I(int(x), int(y))) for net, pd in P)
             if not touched: gone.add(t[0]); rt += 1; changed = True; break
     if not changed: break
+import os
+if os.environ.get("CLEANUP_DEBUG"):
+    for v in V:
+        if v[0] in gone: print("  removed via %s at (%.2f, %.2f)" % (v[1], v[2] / 1e6, v[3] / 1e6))
+    for t in T:
+        if t[0] in gone: print("  removed track %s (%.2f, %.2f)-(%.2f, %.2f)" % (t[1], t[2] / 1e6, t[3] / 1e6, t[4] / 1e6, t[5] / 1e6))
 victims = [t for t in b.GetTracks() if str(t.m_Uuid.AsString()) in gone]
 for t in victims: b.Remove(t)
 pcbnew.SaveBoard(sys.argv[1], b); print("cleanup: %d dangling vias and %d hanging tracks removed" % (rv, rt))
