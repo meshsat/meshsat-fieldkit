@@ -27,7 +27,7 @@ for ref, h in TALL.items():
     if ref in fps:
         bb = fps[ref].GetBoundingBox(False, False); top = OY - bb.GetTop() / 1e6
         check(h <= 12.0 or top <= -80.0, "%s (%.1f mm tall) sits south of the PCB-A edge or under 12 mm (top edge at Y %.1f)" % (ref, h, top))
-for (x, y) in [(-153.0, -74.5), (-118.0, -74.5), (-153.0, -65.5), (-118.0, -65.5)]: check(find((x, y), 3.2) is not None, "block standoff hole at (%.1f, %.1f)" % (x, y))
+for (x, y) in [(-153.0, -74.5), (-114.0, -74.5), (-153.0, -65.5), (-114.0, -65.5)]: check(find((x, y), 3.2) is not None, "block standoff hole at (%.1f, %.1f)" % (x, y))
 for x, cy in [(-100, -66), (-84, -66), (-26, -66), (-12, -66), (70, -66), (92, -66), (103, -64)]:
     check(find((x, cy - 10.0), 3.2) is not None and find((x, cy + 10.0), 3.2) is not None, "float clamp holes at X %.0f" % x)
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

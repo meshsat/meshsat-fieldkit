@@ -188,12 +188,9 @@ for ref in ("F3", "F4", "F5", "F2"):
     outer_pour("CELL+", "fuse tap " + ref, (fx - 1.5, -47, fx + 1.5, -38.5))
 outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60))
-# no tracks on the inner layers (planes and islands only; vias may pass)
-for L in (pcbnew.In1_Cu, pcbnew.In2_Cu):
-    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
-    z.SetLayer(L); z.SetZoneName("no tracks on " + board.GetLayerName(L)); o = z.Outline(); o.NewOutline()
-    for x, y in ((-167.5, -85), (122.5, -85), (122.5, 85), (-167.5, 85)): p = P(x, y); o.Append(p.x, p.y)
-    board.Add(z)
+# The inner layers stay open to the router. Banning tracks there (tried 5 Sep) leaves Freerouting two layers for 148 nets and 279
+# footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
+# carves clearance around the inner tracks (the isolated_copper notes, cosmetic).
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):

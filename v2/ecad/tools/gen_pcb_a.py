@@ -44,7 +44,7 @@ POWER_ZONE = (-162.0, -40.0, -32.0, 2.0)     # charger, gauge, three converters 
 CTRL_ZONE = (-162.0, 2.0, -118.0, 36.0)     # main power control, heating-pad switch, 3.3 V buck
 RF_SITES = [(-100.0, -56.0, "UHF"), (-84.0, -56.0, "WIFI 2.4"), (-26.0, -56.0, "WIFI 5.8"), (-12.0, -56.0, "SDR"), (70.0, -74.0, "LTE"), (92.0, -74.0, "IRIDIUM"), (103.0, -54.0, "LORA")]   # SMP-MAX receptacles on the underside at Y -66; SMA jacks on top at the given Y (south of the GPS puck for the two under it)
 RF_Y = -66.0
-DOCK_BLOCK = (-155.0, -76.0, -116.0, -64.0)   # underside: 2x6 signal pins J_DOCK at (-124, -70), 9 A power pins at X -145..-133, pre-charge at (-149, -70); 5.5 mm from the rod nut at (-110.5, -73)
+DOCK_BLOCK = (-156.0, -76.0, -111.0, -64.0)   # underside: 2x6 signal pins J_DOCK at (-124, -70), 9 A power pins at X -145..-133, pre-charge at (-149, -70); 5.5 mm from the rod nut at (-110.5, -73)
 # APRS mezzanine site (R3): 80 x 62 on four M3 standoffs, harness headers on its west side
 MEZZ_RECT = (5.0, -31.0, 85.0, 31.0)
 MEZZ_HOLES = [(10.0, -26.0), (80.0, -26.0), (10.0, 26.0), (80.0, 26.0)]

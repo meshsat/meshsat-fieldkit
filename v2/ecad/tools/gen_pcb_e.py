@@ -9,7 +9,7 @@ PRJDIR = os.path.dirname(os.path.abspath(OUT))
 open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version 7)\n  (lib (name "meshsat")(type "KiCad")(uri "${KIPRJMOD}/../meshsat.pretty")(options "")(descr "MeshSat carrier in-code footprints"))\n)\n')
 X0, X1, Y0, Y1, R = -160.0, 125.0, -111.0, -51.0, 3.0
 RF_SITES = [(-100.0, "UHF"), (-84.0, "WIFI 2.4"), (-26.0, "WIFI 5.8"), (-12.0, "SDR"), (70.0, "LTE"), (92.0, "IRIDIUM"), (103.0, "LORA")]   # float clamps for the R222M80500 plugs, mirroring A19 (site 7 at Y -64)
-BLOCK_HOLES = [(-153.0, -74.5), (-118.0, -74.5), (-153.0, -65.5), (-118.0, -65.5)]   # M3 standoffs of the raised contact block (pcb-e5-block, 39 x 12, face at 7.4 mm)
+BLOCK_HOLES = [(-153.0, -74.5), (-114.0, -74.5), (-153.0, -65.5), (-114.0, -65.5)]   # M3 standoffs of the raised contact block (pcb-e5-block, 45 x 16 at X -156..-111 Y -80..-64, face at 7.4 mm)
 UNDER_A_Y = -80.0   # north of this line PCB-A sits 13.4 mm above the strip: parts at most 12 mm tall
 ROD_HOLES = [(-110.5, -73.0), (110.5, -73.0)]; ROD_D = 3.2; STANDOFF_KEEPOUT_D = 9.0
 BLOCK_C = (-135.5, -70.0)                      # raised block centre: A19 J_DOCK (-124, -70) and the 9 A pins at X -147..-135 land on it
@@ -54,7 +54,7 @@ for i, (x, y) in enumerate(ROD_HOLES, 1):
     fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % i); fp.SetValue("M3 rod pass-through, PCB-A standoff stands here"); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, y)); board.Add(fp)
     circle(x, y, STANDOFF_KEEPOUT_D, pcbnew.F_SilkS, 0.15); rule_area_circle(x, y, STANDOFF_KEEPOUT_D, "standoff keep-out H%d" % i, inner_d=ROD_D + 3.0)
 n = 3
-rounded_rect(BLOCK_C[0] - 19.5, BLOCK_C[1] - 6.0, BLOCK_C[0] + 19.5, BLOCK_C[1] + 6.0, 1.0, pcbnew.Dwgs_User, 0.1); text("RAISED BLOCK pcb-e5-block on 6 mm M3 standoffs: A19 dock pins land here", BLOCK_C[0], BLOCK_C[1] + 8.5, pcbnew.Dwgs_User, 1.0, 0.18)
+rounded_rect(-156.0, -80.0, -111.0, -64.0, 1.5, pcbnew.Dwgs_User, 0.1); text("RAISED BLOCK pcb-e5-block on 6 mm M3 standoffs: A19 dock pins land here", BLOCK_C[0], BLOCK_C[1] + 8.5, pcbnew.Dwgs_User, 1.0, 0.18)
 for (x, y) in BLOCK_HOLES:
     fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % n); fp.SetValue("M3 standoff, raised block"); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, y)); board.Add(fp); n += 1
 for (x, nm) in RF_SITES:
