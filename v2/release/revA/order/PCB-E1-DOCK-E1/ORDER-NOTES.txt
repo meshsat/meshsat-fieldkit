@@ -13,6 +13,7 @@ ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the 
 - Parts on the TOP side: 15, on the BOTTOM side: 0
 - Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): F1, J_DOCK, U1
 - Not assembled by JLC, fitted at the bench: TRACO TEN 40-2412WIN, Keystone 3568 holder + 7.5 A mini blade, JST-VH shore lead from the IP68 bulkhead, four VHB pads to the floor, the two south rods through H1/H2; the EL817 optocoupler U2 is JLC-fitted
 
 SOURCE

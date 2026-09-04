@@ -9,7 +9,7 @@ PCB
 
 ASSEMBLY
 - None: mechanical board (holes, window, tabs). PCB only.
-- Fitted at the bench: bare board, no assembly: seven SMA female-female bulkhead couplers in the D-holes (UHF SDR WIFI1 WIFI2 LTE IRID LORA), six M3 into the 1520 +Z wall drill points
+- Fitted at the bench: bare board, no assembly: seven Amphenol Connex 132170 SMA female-female bulkhead couplers in the D-holes (6.5 mm with the flat at 6.00 across, 8 mm hex nut and lock washer on the cavity side, appendix 32.10) (UHF SDR WIFI1 WIFI2 LTE IRID LORA), six M3 into the 1520 +Z wall drill points
 
 SOURCE
 - Deliverable folder: v2/release/revA/boards/meshsat-pcb-e2-revA-E3 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)

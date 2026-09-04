@@ -13,7 +13,8 @@ ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the 
 - Parts on the TOP side: 113, on the BOTTOM side: 0
 - Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
 - Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
-- Not assembled by JLC, fitted at the bench: welded 1S8P pack strapped through the slots (XT60 to J_PACK), 15 A mini blades in F1 and F3 and a 10 A in F2, VH lead from J_5V_MOD1 to PCB-B J_5V_MOD (module rail), 16 AWG lead from J_X1202BAT to the X1202 B+/B- holder tabs, 8 spring pins in J_DOCK (underside), XH lead from J_X1202DC to the X1202 barrel, GPS puck, WiFi dongle, PCB-D on its four M3 standoffs, harness ribbons
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): J_DOCK, L2
+- Not assembled by JLC, fitted at the bench: welded 1S8P pack strapped through the slots (XT60 to J_PACK), 15 A mini blades in F1 and F3 and a 10 A in F2, VH lead from J_5V_MOD1 to PCB-B J_5V_MOD (module rail), 16 AWG lead from J_X1202BAT to the X1202 B+/B- holder tabs, the Preci-Dip 813-S1-008-10-016101 spring-loaded connector in J_DOCK (underside, tails soldered on the top face), the boost inductor L2 (Coilcraft XAL6030-152MEB, no JLC equivalent, hand-soldered; left out of the JLC BOM/CPL), XH lead from J_X1202DC to the X1202 barrel, GPS puck, WiFi dongle, PCB-D on its four M3 standoffs, harness ribbons
 
 SOURCE
 - Deliverable folder: v2/release/revA/boards/meshsat-pcb-a-revA-A18 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
