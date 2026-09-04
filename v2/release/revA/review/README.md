@@ -18,7 +18,7 @@ Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying 
 - `pcb-b-compute-render-top-A4.png`, `pcb-b-compute-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-b-compute-schematic.pdf`: full schematic; `pcb-b-compute-drc.rpt`: the DRC report of the exported board
 
-## PCB-C CONTROL PANEL Rev A (C4), folder `PCB-C-DISPLAY-C4/`, 442 x 311 mm, 2 layers
+## PCB-C CONTROL PANEL Rev A (C5), folder `PCB-C-DISPLAY-C5/`, 442 x 311 mm, 2 layers
 
 - `pcb-c-display-1to1-top.pdf`, `pcb-c-display-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-c-display-assembly-top.pdf`, `pcb-c-display-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
@@ -36,14 +36,6 @@ Raspberry Pi publishes no schematic for the Touch Display 2 (the driver board is
 - `RP-009106-MM-8-touch-display-2-product-brief.pdf` (June 2026), `RP-010429-MM-1-touch-display-2-7-inch-product-brief.pdf` (August 2026) and `RPi-Touch-Display-2-product-brief-2026-08-datasheets.raspberrypi.com.pdf`: current editions, no drawing.
 
 Sources: https://pip.raspberrypi.com/categories/1083-raspberry-pi-touch-display-2 and https://datasheets.raspberrypi.com/display/touch-display-2-product-brief.pdf (checked 2 Sep 2026).
-
-## PCB-C SPACER RING Rev A (R1), folder `PCB-C-RING-R1/`, 106 x 54 mm, 2 layers
-
-- `pcb-c-ring-1to1-top.pdf`, `pcb-c-ring-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
-- `pcb-c-ring-assembly-top.pdf`, `pcb-c-ring-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
-- `pcb-c-ring-copper-layers.pdf`: one page per copper layer (F.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
-- `pcb-c-ring-render-top-A4.png`, `pcb-c-ring-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
-- `pcb-c-ring-drc.rpt`: DRC report (mechanical board, no schematic)
 
 ## PCB-D APRS Rev A (D5), folder `PCB-D-APRS-D5/`, 80 x 62 mm, 4 layers
 
@@ -74,5 +66,5 @@ Sources: https://pip.raspberrypi.com/categories/1083-raspberry-pi-touch-display-
 1. PCB-A: BQ25601 pin map (PSEL on R45/R46, /QON on TP11), 103AT-2 thermistor network, CSD17303Q5 cell switches, boost/buck chain on shore power.
 2. PCB-B: no F1 (both XH inputs on +5V), 2 A polyfuse + TPS22810 per channel, T-Beam 1W strip and the dual SDR bay, USB pairs.
 3. PCB-D: STM32F302CBT6 (128 KB) for the AIOC firmware, TPS61089 boost at 7.6 V with the 100k ILIM, DMR858M site on sockets and M2.5 x 11 standoffs (rows 36.15 mm, pin 1 north-east), heatsink clearance in the bottom bay (about 35 mm).
-4. PCB-C: window and tab positions against the Touch Display 2.
+4. PCB-C (C5): the sealed face: seal bands and their die-cut outlines, keyed switch holes, the panel-mount sounder, via plugging, the frame gasket ring against the Z closure (32.30).
 
