@@ -229,6 +229,9 @@ def emit_pwr_flag(p, x, y):
 SECTIONS = [("SHORE ENTRY: 38999 DC PAIR, F1, LM74700 IDEAL DIODE, SURGE, TEN 40WIN 12 V 40 W, OPTO INHIBIT", ["J_DCIN", "F1", "U3", "Q1", "C4", "R1", "D1", "C1", "C2", "U1", "C3", "D3", "R2", "LED1", "R3", "R4", "U2"]),
             ("PANEL TRACKER: J_SOLAR, F2, LT8705A BUCK-BOOST (FBIN 17.6 V, FBOUT 15.1 V, 202 kHz), ORed INTO THE CONVERTER INPUT", ["J_SOLAR", "F2", "D4", "C11", "C12", "C13", "C14", "C15", "U5", "Q3", "Q4", "Q5", "Q6", "L1", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6", "C19", "C20", "R8", "R9", "R10", "R11", "R12", "R13", "C21", "C22", "C23", "R14", "R15", "R16", "R17", "C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18"]),
             ("BATTERY MODULE ENTRY, THERMISTOR AND KELVIN LEADS, BLOCK LANDS, TEST POINTS, FLAGS", ["J_BATT", "J_TS", "J_KS", "J_BLK", "P_CP", "P_CN"] + ["TP%d" % k for k in range(1, 10)] + ["#FLG%02d" % k for k in range(1, 14)])]
+byref = {p["ref"]: p for p in P}
+placed = set()
+COLW = 88.0; x = 20.0; y = 30.0; PAGE_H = 560.0   # A1 landscape is 841 x 594; A0 is chosen below if the columns overflow
 for title, refs in SECTIONS:
     # estimate section height
     hs = []
