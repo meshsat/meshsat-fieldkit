@@ -2216,3 +2216,19 @@ A third gateway message (later the same afternoon) found that the two bench-fitt
 ### 32.12 The Rev B list as of 4 Sep 2026 evening
 
 Items 1, 3 and 4 of the list the owner asked for (bank tracks, ideal-diode bypass, cell-contact thermistor) are notes from the retired bank-charger design and are marked superseded above; they are not Rev B work. The live Rev B candidates, each an owner decision to take now or at Rev B time: locking levers for SOS, EMCON and ZEROIZE (32.10); a bigger module-rail boost (32.3); the cold-charge thermal pad output (28); a raw-solar MPPT slot (design table); the SMP blind-mate joint (25.2, 32.7, MESHSAT-775, the owner's own deferral); MIL-DTL-38999 external connectors (design table); and the findings of the 12 Sep review.
+
+### 32.13 Owner rulings, 4 Sep 2026 evening: the Rev B list decided item by item
+
+Asked one at a time with a full explanation each (owner rule of the same evening). The rulings, all owner's:
+
+| # | Item | Ruling | Consequence |
+|---|---|---|---|
+| 1 | Locking levers on SOS, EMCON, ZEROIZE | **Rev A, APEM locks, no board change**: 5636ADKB-2V on all three (APEM 5000 series, single pole ON-NONE-ON, both positions locked, gold-plated contacts, front-panel seal, epoxy terminals; 1/4-40 bushing 9 mm long, 6.5 mm cut-out, European defence listings, not MIL). NKK's lever-lock version was ruled out by fact (1.2 mm panel maximum against the 2.0 mm panel); the MIL-qualified lever-locks (Honeywell TW, MIL-DTL-83731) need 15/32 in bushings and a panel respin, declined | SOS and ZEROIZE become maintained locked switches: the bridge acts after 2 s / 5 s in position and the switch is flipped back to re-arm (PANEL.md, MESHSAT-773); the M2015 codes of 32.10 are replaced; C4 stands, its cart line stands |
+| 2 | Bigger module-rail boost | **Rev A**: TPS61288 class (15 A switch) replaces the TPS61089 on PCB-A | PCB-A respin (A19), reroute; the one-burst-at-a-time rule of PANEL.md section 10 stays for RF reasons |
+| 3 | Heating-pad output for charging below 0 C | **Rev A**, in the same PCB-A respin | one protected 5 V output (TPS2065 channel), a spare expander bit, a 2-pin connector; bridge rule: pad on with shore present and in-case temperature below 0 C, charge released above the threshold, time limit |
+| 4 | Bare-solar MPPT input inside the case | **Rev A**, in the respin | a documented MPPT module on a carrier; placed electrically between the panel input and the dock converter, which puts it on the dock strip unless the design review says otherwise |
+| 5 | SMP blind-mate RF between stack and dock (MESHSAT-775) | **Rev A** (reversing the 3 Sep deferral) | Radiall SMP-MAX set of 32.7 on PCB-A's underside and the dock strip, gap 6 to 13 mm, case numbers of 25.1 redone, the wall strip E3 retired or reduced to a cable anchor; cart lines A and E1 rebuilt, E2 deleted |
+| 6 | MIL-DTL-38999 external connectors | **Rev A** | shore DC and USB data on a keyed sealed circular wall connector; antennas stay SMA; case wall machining, mating cables, dock inlet wiring |
+| 7 | Review findings | open until 12 Sep | |
+
+Rev B is therefore empty except what the reviews add. Ruling of section 5 of the handover "RF: SMA couplers on E2 for Rev A; SMP blind-mate deferred to Rev B" is replaced by ruling 5 above.
