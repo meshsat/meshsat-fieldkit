@@ -122,7 +122,7 @@
         "min_copper_edge_clearance": 0.3,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
-        "min_hole_to_hole": 0.5,
+        "min_hole_to_hole": 0.3,
         "min_microvia_diameter": 0.2,
         "min_microvia_drill": 0.1,
         "min_resolved_spokes": 2,
@@ -132,7 +132,7 @@
         "min_through_hole_diameter": 0.2,
         "min_track_width": 0.127,
         "min_via_annular_width": 0.1,
-        "min_via_diameter": 0.4,
+        "min_via_diameter": 0.45,
         "solder_mask_to_copper_clearance": 0.0,
         "use_height_for_length_calcs": true
       },
@@ -230,14 +230,14 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "pcb-d-aprs.kicad_pro",
+    "filename": "pcb-a-power.kicad_pro",
     "version": 3
   },
   "net_settings": {
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.127,
+        "clearance": 0.15,
         "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -256,24 +256,42 @@
       {
         "bus_width": 12,
         "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.5,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "BANK",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.0,
+        "via_diameter": 1.2,
+        "via_drill": 0.6,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
         "diff_pair_gap": 0.3,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 1.2,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
-        "name": "CELL",
+        "name": "BOOST",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "priority": 2,
+        "priority": 3,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 1.2,
+        "track_width": 1.5,
         "via_diameter": 1.0,
         "via_drill": 0.5,
         "wire_width": 6
       },
       {
         "bus_width": 12,
-        "clearance": 0.127,
+        "clearance": 0.15,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.4,
@@ -291,7 +309,43 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.127,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.3,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 1.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RAIL",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 4,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 2.0,
+        "via_diameter": 1.0,
+        "via_drill": 0.5,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.3,
+        "diff_pair_gap": 0.15,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 5,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.35,
+        "via_diameter": 0.7,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.15,
         "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -319,40 +373,80 @@
         "pattern": "USB_*"
       },
       {
-        "netclass": "CELL",
-        "pattern": "VIN_CELL"
-      },
-      {
-        "netclass": "CELL",
-        "pattern": "SW"
-      },
-      {
-        "netclass": "CELL",
-        "pattern": "V8"
+        "netclass": "PWR",
+        "pattern": "5V_*"
       },
       {
         "netclass": "PWR",
-        "pattern": "+5V_USB"
+        "pattern": "SW_*"
       },
       {
         "netclass": "PWR",
-        "pattern": "+3V3"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "+3.3VA"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "VIN_LDO"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "LDO_A"
+        "pattern": "*_FUSED"
       },
       {
         "netclass": "PWR",
         "pattern": "GND"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "SHORE_12V"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "HEAT_*"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PMID"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "SYS_CHG"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "SW*_CHG"
+      },
+      {
+        "netclass": "BANK",
+        "pattern": "CELL*"
+      },
+      {
+        "netclass": "BANK",
+        "pattern": "MEZZ_CELL"
+      },
+      {
+        "netclass": "BOOST",
+        "pattern": "BOOST*_IN"
+      },
+      {
+        "netclass": "BOOST",
+        "pattern": "SW1"
+      },
+      {
+        "netclass": "BOOST",
+        "pattern": "SW2"
+      },
+      {
+        "netclass": "BOOST",
+        "pattern": "SW3"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+5V_M1"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+5V_M2"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+5V_PI"
+      },
+      {
+        "netclass": "RF",
+        "pattern": "RF_*"
       }
     ]
   },
