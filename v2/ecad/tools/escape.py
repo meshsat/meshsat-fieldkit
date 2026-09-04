@@ -62,6 +62,7 @@ def clear(v, r, me, me_ref, net):
 added = skipped = 0
 for fp in b.GetFootprints():
     if not is_fine(fp) or fp.GetReference().startswith("J"): continue      # connectors route fine without escapes
+    if fp.GetReference() in set(filter(None, __import__("os").environ.get("ESCAPE_SKIP", "").split(","))): continue   # A19: parts the router escapes itself (mixed pad sizes)
     pitch = min_pitch(fp); fc = fp.GetPosition()
     if pitch <= FromMM(0.7): VIA_D, VIA_DR, TW, OFFS = FromMM(0.45), FromMM(0.25), FromMM(0.2), (0.9, 1.6, 2.3)
     else: VIA_D, VIA_DR, TW, OFFS = FromMM(0.6), FromMM(0.3), FromMM(0.25), (0.8, 1.5, 2.2)
