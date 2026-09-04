@@ -109,7 +109,7 @@ scale_bar(-140, -10)
 notes(["SHEET 2 of 4: CONNECTOR PLATE, 82 x 54 x 3 mm aluminium (5052 or 6061), edges broken, seen from OUTSIDE the case. Gasket: 2 mm closed-cell neoprene or EPDM, same outline and holes, between plate and wall.",
        "Shore DC: Glenair D38999/20 shell 13 wall mount with round holes (D0), front panel mount: hole 19.05, four M3 clearance holes on a 23.01 square, flange 28.9 square. Its own gasket seals to the plate.",
        "USB host: Glenair 233-370 shell 15 wall mount D0, front panel mount: hole 23.01, four M3 clearance holes on a 24.61 square, flange 31.29 square; the 3 mm plate is inside its 1.6 to 6.35 mm panel range.",
-       "Both receptacles: flange outside, gasket, plate, then the receptacle's own nuts inside; M3 x 10 stainless with spring washers. Plate to wall: six M4 x 16 stainless, washers both sides, Nyloc nuts inside; torque 1.2 N m in a cross pattern so the gasket loads evenly.",
+       "Both receptacles on a Glenair 930-001 silicone flange gasket (930-001S06 under the shell 13, 930-001S07 under the shell 15, 0.030 in thick; their hole patterns match the receptacles): flange outside, gasket, plate, then the receptacle's own nuts inside; M3 x 10 stainless with spring washers. Plate to wall: six M4 x 16 stainless with EPDM-bonded sealing washers under the outside heads, washers both sides, Nyloc nuts inside; torque 1.2 N m in a cross pattern so the gasket loads evenly.",
        "Pin functions, cables and the dock leads: appendix 32.29 and ASSEMBLY.md section 4. Seen from outside the back wall (case +X to your left), as sheet 1. Nothing here has been cut yet."], -17)
 c.showPage()
 
@@ -139,7 +139,7 @@ for k, (title, sites, sign) in enumerate((("WEST end wall (case -X), seen from o
     end_wall(title, sites, sign, 0.0)
     scale_bar(-140, -14)
     notes(["SHEET %d of 4: the SMA antenna bulkheads on this end wall, 55 mm above the floor, four sites at Y -60, -30, +30 and +60 (the east +60 site is a spare, plugged). Print at 100 percent." % (3 + k),
-       "Coupler: Amphenol Connex 132170 SMA female-female bulkhead (vendor/rf), 6.5 mm D-hole with the flat filed to 6.00 across so the coupler cannot turn when a pigtail is torqued; 8 mm nut and lock washer inside, the O-ring seal outside.",
+       "Coupler: Amphenol Connex 132170 SMA female-female bulkhead (vendor/rf), 6.5 mm D-hole with the flat filed to 6.00 across so the coupler cannot turn when a pigtail is torqued; 8 mm nut and lock washer inside, the NBR O-ring 6.5 x 1.0 under the outside hex.",
        "The sites sit between the end walls' inner ribs (Y 0 and +-89, appendix 25.1) and above the battery module (26 mm) and the dock strip. Inside, an RG-316 jumper runs from each coupler to its float nest on the strip: west wall to the UHF, WIFI 2.4, WIFI 5.8 and SDR nests, east wall to LTE, IRIDIUM and LORA (about 150 to 250 mm each).",
        "Outside, the antenna pigtails screw on as before, 0.45 N m once. The retired wall strip E3 carried these same seven couplers; only their home changed."], -22)
 c.showPage(); c.save(); print("wrote", out)

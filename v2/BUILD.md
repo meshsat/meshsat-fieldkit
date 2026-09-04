@@ -12,19 +12,18 @@ MeshSat is a prototype. The V2 boards have not been fabricated; expect changes a
 
 ## 1. Order the boards
 
-Seven boards, five assembled by the fabricator (top side, standard assembly; the economic tier is not offered for these boards), two bare. Everything you upload is in `release/revA/order/<board>/`: the Gerber zip, the JLC-format BOM and CPL (rotation offsets already applied, bench-fitted parts removed, designator ranges expanded) and `ORDER-NOTES.txt` with the exact settings. `ORDER-LOG.md` in the same folder records the 3 September 2026 run line by line, including what JLCPCB's checks answered.
+Six boards, five assembled by the fabricator (standard assembly; the economic tier is not offered for these boards), one bare. Everything you upload is in `release/revA/order/<board>/`: the Gerber zip, the JLC-format BOM and CPL (rotation offsets already applied, bench-fitted parts removed, designator ranges expanded) and `ORDER-NOTES.txt` with the exact settings. `ORDER-LOG.md` in the same folder records the 3 September 2026 run line by line, including what JLCPCB's checks answered.
 
 | Board | Folder | Size (mm) | Layers | Stackup | Assembly |
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O A19 | `PCB-A-POWER-A19/` | 285 x 160 | 4 | JLC04161H-7628 | top |
 | PCB-B COMPUTE B12 | `PCB-B-COMPUTE-B12/` | 245 x 170 | 4 | JLC04161H-7628 | top, bottom 1 |
-| PCB-C CONTROL PANEL C4 | `PCB-C-DISPLAY-C4/` | 442 x 311 | 2 | standard | top 18, bottom 70 |
-| PCB-C SPACER RING R1 | `PCB-C-RING-R1/` | 106 x 54 | 2 | standard, 1.0 mm | none |
+| PCB-C CONTROL PANEL C5 | `PCB-C-DISPLAY-C5/` | 442 x 311 | 2 | standard, 2.0 mm, vias plugged | top (LEDs), bottom (cluster and connectors) |
 | PCB-D APRS D5 | `PCB-D-APRS-D5/` | 80 x 62 | 4 | JLC04161H-7628 | top 78, bottom 1 |
 | PCB-E1 DOCK STRIP E4 | `PCB-E1-DOCK-E4/` | 278 x 60 | 4 | JLC04161H-7628 | top |
 | PCB-E5 DOCK BLOCK E5 | `PCB-E5-BLOCK-E5/` | 43 x 26 | 2 | standard, 2 oz outer copper | none |
 
-Common settings, from the ORDER-NOTES: 1.6 mm FR-4 (the ring 1.0 mm), 1 oz outer copper, ENIG, matte black solder mask, white silkscreen, no castellations, order number removed, quantity 5 (the JLCPCB minimum). The four-layer boards carry USB 2.0 pairs at 0.2 mm track and 0.15 mm gap on the outer layers; ask for 90 ohm differential tuning on the 7628 stackup. Turn both free confirmation options on (production file review and the BOM/CPL confirmation) so the placement preview is checked before anything is cut. On the JLC preview, check the rotation of every polarised part against `release/revA/review/<board>/*-assembly-top.pdf`.
+Common settings, from the ORDER-NOTES: 1.6 mm FR-4 (the panel 2.0 mm with the via covering set to plugged, appendix 32.34), 1 oz outer copper, ENIG, matte black solder mask, white silkscreen, no castellations, order number removed, quantity 5 (the JLCPCB minimum). The four-layer boards carry USB 2.0 pairs at 0.2 mm track and 0.15 mm gap on the outer layers; ask for 90 ohm differential tuning on the 7628 stackup. Turn both free confirmation options on (production file review and the BOM/CPL confirmation) so the placement preview is checked before anything is cut. On the JLC preview, check the rotation of every polarised part against `release/revA/review/<board>/*-assembly-top.pdf`.
 
 Parts JLCPCB does not fit are listed per board in the ORDER-NOTES ("fitted at the bench") and in `docs/ASSEMBLY.md` section 9. If JLCPCB has no stock for a line at order time (the Keystone 3568 fuse holders and the two white 3 mm LEDs were short in September 2026), let it drop to DNP and fit it at the bench.
 
@@ -48,7 +47,7 @@ Electrical: the Preci-Dip 813-S1-012-10-016101 spring-loaded connector for `J_DO
 
 External cables (`docs/ASSEMBLY.md` section 4): Glenair D38999/26FC4SN plug with its size 16 socket contacts and the M85049/38S13N strain relief, 2 m of Lapp OLFLEX ROBUST 210 4 x 1.0 (or Alpha Wire 25064), the crimp tool M22520/1-01 with positioner M22520/1-04 if you do not have a shop crimp them; a Glenair 233-340 USB plug with its 770-028 boot and a 1.5 m USB 2.0 A-male to A-female extension.
 
-Panel hardware: two 19 mm and 16 mm anti-vandal switches with LED rings (SW_MAIN C&K ATP19-SL1-603-B0SA-03G green, SW_PI C&K ATP16-SL1-403-M0SA-04G orange as the amber, SW_TEST C&K ATP16-SL1-203-M0SA-04G white; solder lugs, gold, 3 V ring type because C4's 470 and 300 ohm resistors set the ring current), one DPDT ON-ON-ON sealed toggle (SW_LIGHT NKK M2044SD3A01 with the AT401A boot), three locking toggles APEM 5636ADKB-2V (SW_SOS, SW_EMCON, SW_ZERO: single pole ON-NONE-ON with both positions locked, pull the lever before it moves; gold-plated contacts, front-panel seal, epoxy terminals, 1/4-40 bushing in the same 6.5 mm holes; owner ruling of 4 Sep 2026, design record 32.13; SOS and ZEROIZE are maintained switches, the bridge acts after 2 s / 5 s in position), seven Amphenol Connex 132170 SMA bulkhead couplers for the junction strip, an 85 dB piezo if not fitted by JLCPCB, the two white 3 mm LEDs D10 and D11.
+Panel hardware: two 19 mm and 16 mm anti-vandal switches with LED rings (SW_MAIN C&K ATP19-SL1-603-B0SA-03G green, SW_PI C&K ATP16-SL1-403-M0SA-04G orange as the amber, SW_TEST C&K ATP16-SL1-203-M0SA-04G white; solder lugs, gold, 3 V ring type because C4's 470 and 300 ohm resistors set the ring current), one DPDT ON-ON-ON sealed toggle (SW_LIGHT NKK M2044SD3A01 on its D3 splashproof bushing, with the AT428H boot and its own O-ring), three locking toggles APEM 5636ADKB-2V (SW_SOS, SW_EMCON, SW_ZERO: single pole ON-NONE-ON with both positions locked, pull the lever before it moves; gold-plated contacts, front-panel seal, epoxy terminals, 1/4-40 bushing in the same 6.5 mm holes; owner ruling of 4 Sep 2026, design record 32.13; SOS and ZEROIZE are maintained switches, the bridge acts after 2 s / 5 s in position), seven Amphenol Connex 132170 SMA bulkhead couplers with NBR O-rings 6.5 x 1.0, the Floyd Bell MC-09-530-Q IP68 sounder with its 61663 gasket, the two white 3 mm LEDs D10 and D11. Panel seals (appendix 32.34, `docs/respin-research-seal-2026-09-05.md`): 3M VHB 5915 tape for the two die-cut frames, a 2.0 mm UV-grade polycarbonate sheet for the e-paper lens with 3M Primer 94, 1.0 mm Silex GP60 silicone sheet for the three bezel washers, PORON 4701-30 on PET (0.53 mm) for the frame gasket ring, all cut from `pcb-c-display-seals.dxf`; DOWSIL 3145 clear silicone; 16 M3 x 10 A2 pan heads with internal-tooth star washers; two Glenair 930-001 flange gaskets (S06, S07) and six M4 bonded washers for the connector plate; a 3M 7871EC polyester label for the serial number.
 
 ## 3. Prepare the case
 
@@ -76,14 +75,14 @@ Follow `docs/ASSEMBLY.md` section 2 step by step; the short form:
 4. 35 mm spacers, PCB-B B12 with the Pi 5 on its 22 mm standoffs (HDMI edge west, GPIO header edge east, SD card south), the three rail leads from PCB-A into `J_5V_M1`, `J_5V_M2` and `J_5V_PI` (the Pi lead ends in a USB-C plug), the modules, the panel ribbon in `J_PANEL` and the 2x7 ribbon in `J_AB1`. Nyloc on top.
 5. Battery module into its cradle, thermistor pair and the XT60 into the dock strip. The module's own fuse is at its positive terminal, so it is fused before the cable.
 6. RF: the seven right-angle plugs sit in their printed clamps on the dock strip and mate blind with the receptacles under PCB-A when the stack is lowered. The wall connectors are the MIL-DTL-38999 receptacles; their pigtails are torqued once at the wall side and finger tight at the device side, RG-316 with a 12.5 mm bend radius, tied at both ends.
-7. Panel C4: switches with their boots (APEM locking levers on SOS, EMCON and ZEROIZE), the e-paper module taped face-up under its window (spacer ring R1 first if a flush face is wanted, header to the east, 2x4 lead to `J_EPD`), the Touch Display 2 glass taped over its aperture, then the 16 frame screws.
-8. Lid: the lid foam is pocketed over the switch strips (nothing on the panel face is taller than 20 mm).
+7. Panel C5: the sealed face of `docs/ASSEMBLY.md` section 2 step 8: the panel-mount parts through the face with their seals, leads soldered to the underside lands and beaded, the LED joints beaded, the e-paper module taped under its window with its lens on the face, the display glass on its tape frame, the underside coated, the PORON ring on the frame, the panel into the frame on 16 x M3 x 10 with star washers. Flood and hose the panel in its frame before the stack goes in (appendix 32.34).
+8. Lid: the case is bought without foam; nothing on the panel face is taller than 20 mm and the lid cavity is 46 mm deep.
 
 Torque table, threadlocker rules and every lead's wire gauge, length and connector are in `docs/ASSEMBLY.md` sections 1 and 4. Never put threadlocker on Nyloc nuts or on the switch nuts.
 
 ## 6. Coating and labels
 
-After the bench fit, two thin coats of acrylic conformal coating on A, B, D and the dock strip with the masks of `docs/ASSEMBLY.md` section 5 (connector faces, the spring pins and their targets, SMA bodies, the DMR858M sockets, the Pi area, the test points). The panel face is not coated; its underside cluster is, with `J_PANEL` masked. Labels per section 6: the panel nameplate with P/N MSK-FK-1520, S/N, REV A and a data matrix; P/N, S/N, REV silk fields on every board.
+After the bench fit, two thin coats of acrylic conformal coating on A, B, D and the dock strip with the masks of `docs/ASSEMBLY.md` section 5 (connector faces, the spring pins and their targets, SMA bodies, the DMR858M sockets, the Pi area, the test points). The panel face is not coated (its seals sit on bare mask); the whole panel underside is, after the silicone beads have cured, with `J_PANEL`, `J_EPD`, the lead lands and the frame rings masked. Labels per section 6: the panel nameplate with P/N MSK-FK-1520, S/N, REV A and a data matrix; P/N, S/N, REV silk fields on every board.
 
 ## 7. Software
 
@@ -102,6 +101,8 @@ From `docs/ASSEMBLY.md` section 8, after assembly (the full commissioning list, 
 Removal for maintenance (`docs/ASSEMBLY.md` section 7): lid, 16 screws, ribbon and the rail leads, panel out, then lift the A+B stack straight up. Nothing has to be unscrewed at the radio side any more: the seven RF joints and the power contacts part as the stack rises, and the rods through the dock strip line them up again on refit.
 
 ## 9. Known gaps of Rev A
+
+- The sealed panel face (C5) is a construction, not a test result: the flood, hose, rain and dust procedure of appendix 32.34 has not been run on any panel, and the tape's peel on the printed glass border and on the black solder mask is untested.
 
 - Nothing here has been built and no board has been fabricated. Report what does not fit on MESHSAT-709.
 - The spring-pin return path is three contacts at about 1.1 A each, inside the Preci-Dip contact's 3.5 A rating; the module current runs on the separate 9 A pins.

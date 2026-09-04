@@ -39,7 +39,7 @@ Hardware LEDs, no software: MAIN ring (alive whenever the LED rail is present), 
 | BCM | Pin on the ribbon | Use |
 |---|---|---|
 | 12 | 17 PANEL_PWM | LED rail dimmer, PWM 2 kHz, 10-bit (`dtoverlay=pwm-2chan`). Boots low: rail dark until the bridge is up. |
-| 13 | 16 PWM1 | Sounder (active piezo through Q4): drive high to sound, PWM for patterns. |
+| 13 | 16 PWM1 | Sounder (IP68 panel-mount sounder on +5V through Q4; C4 had an active piezo): drive high to sound, PWM for patterns. |
 | 7 | 15 EPD_RES_ALT | Alternative e-paper reset (JP2 closed); default is U2 port 1 bit 1. |
 | 8 | 14 SPI_CE0 | E-paper chip select. |
 | 9 | 8 EPD_DC | E-paper data/command (SPI0 with `no_miso`, `spi0-1cs`). |
