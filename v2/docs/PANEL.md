@@ -45,7 +45,7 @@ Hardware LEDs, no software: MAIN ring (alive whenever the LED rail is present), 
 | 9 | 8 EPD_DC | E-paper data/command (SPI0 with `no_miso`, `spi0-1cs`). |
 | 10 | 12 SPI_MOSI | E-paper data. |
 | 11 | 10 SPI_SCLK | E-paper clock. |
-| 6 | (X1202) | Existing power-loss input, unchanged. |
+| 6 | (X1202) | Existing power-loss input, unchanged. | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
 
 ## 3. Lighting
 
@@ -65,8 +65,8 @@ One dimmer for the whole panel (MIL-STD-1472). The TX lamp is never dimmed below
 | MASTER CAUT | any amber condition acknowledged | any amber condition unacknowledged: bearer lost that was up, shore lost while charging was expected, disk nearly full |
 | SOS ACTIVE | SOS mode on | SOS mode on and no bearer has confirmed delivery |
 | SAT / MESH / LTE / GPS | bearer up (GPS: fix) | never |
-| SHORE | shore 12 V present (from the X1202 monitor: input present) | never |
-| CHARGING | X1202 reports charging | never |
+| SHORE | shore 12 V present (from the X1202 monitor: input present) | never | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
+| CHARGING | X1202 reports charging | never | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
 | MSG | unread inbound message | never (ACK clears) |
 | PI ring | heartbeat 0.5 Hz while the bridge runs | never |
 | BAT1..5 | battery bar, shown for 5 s after a lamp test or a short TEST press; otherwise dark | lowest LED flashes below 10 % |
@@ -84,7 +84,7 @@ A flasher that fails must fail to steady-on: the bridge writes steady-on before 
 | EMCON | latched closed | hardware: the DMR858M cannot key. Software on TX_INHIBIT_n low: stop direwolf TX, hold LoRa, LTE and satellite sends (queue them), show EMCON on the e-paper, MASTER CAUT steady |
 | ZEROIZE | switch closed for 5 s | zeroize keys (existing keystore wipe), then a full-refresh blank of the e-paper; MASTER WARN flashes while armed (0 to 5 s); flipping back inside 5 s aborts; after the wipe the switch must be returned before the kit re-arms |
 | PI | hardware to the Pi J2 pads | shutdown / wake, no bridge involvement |
-| MAIN PWR | hardware to the X1202 switch pins | kit power, no bridge involvement |
+| MAIN PWR | hardware to the X1202 switch pins | kit power, no bridge involvement | *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
 | LIGHTING | DAY / NIGHT / BLACKOUT | section 3 |
 
 Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
@@ -100,16 +100,16 @@ Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
 
 - The panel's 3V3 is never switched while the ribbon is attached (an unpowered PCA9555 clamps the kit I2C bus).
 - With the ribbon unplugged nothing on PCB-B depends on the panel: I2C reads of 0x22 and 0x23 NACK, TR_APRS is held low by PCB-A's pull-down, TX_INHIBIT_n is held high by PCB-D's pull-up. The bridge must treat a NACK as "no panel" and keep running.
-- I2C map after A16: 0x20 (B), 0x21 (A), 0x22 and 0x23 (C), 0x36 (X1202 gauge), 0x40 to 0x49 (INA219s). 0x55 and 0x6B are gone. A16 did not move any address; it took the spare bit 0.4 of the expander at 0x21 for `SHORE_INHIBIT` (section 9).
+- I2C map after A16: 0x20 (B), 0x21 (A), 0x22 and 0x23 (C), 0x36 (X1202 gauge), 0x40 to 0x49 (INA219s). 0x55 and 0x6B are gone. A16 did not move any address; it took the spare bit 0.4 of the expander at 0x21 for `SHORE_INHIBIT` (section 9). *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
 
 ## 8. Existing code to reuse
 
-`scripts/x1202-monitor.py` for the battery and input states (feeds SHORE, CHARGING, the bar); the SOS activation path of the operator dashboard for the SOS switch; the keystore wipe for ZEROIZE; the OOB EMCON semantics for the bearer hold. New: a `panel` package with the expander driver, the e-paper driver (UC8253 over spidev) and the gesture state machine, wired in `cmd/meshsat/main.go`.
+`scripts/x1202-monitor.py` for the battery and input states (feeds SHORE, CHARGING, the bar); the SOS activation path of the operator dashboard for the SOS switch; the keystore wipe for ZEROIZE; the OOB EMCON semantics for the bearer hold. New: a `panel` package with the expander driver, the e-paper driver (UC8253 over spidev) and the gesture state machine, wired in `cmd/meshsat/main.go`. *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
 
 ## 9. Shore charge inhibit (A16 / E1, 3 Sep 2026)
 
 PCB-A's expander U19 at 0x21, port 0 bit 4 (pin 8), net SHORE_INHIBIT, reaches the dock over spring pin 8 and drives an optocoupler on E1 whose transistor shorts the Traco converter's remote pin to its isolated -Vin. High = the dock's 12 V is off, so nothing charges. Low, floating, or the Pi dead = the converter runs (the LED is off), so a kit with a crashed bridge still charges. The bridge asserts it:
-- when the in-case temperature is below 0 C (the ZigBee temperature sensor, or any in-case sensor the bridge trusts), since neither the X1202 nor the pack BMS protects the X1202's own four cells from a cold charge;
+- when the in-case temperature is below 0 C (the ZigBee temperature sensor, or any in-case sensor the bridge trusts), since neither the X1202 nor the pack BMS protects the X1202's own four cells from a cold charge; *(Superseded 4 Sep 2026 night, design record 32.17: role taken over by the A19 charger and gauge; software side MESHSAT-788.)*
 - when the operator sets "no charge" in the UI;
 - and it clears it with hysteresis (charge again above 3 C).
 Boot state: low. The SHORE indicator on the panel shows the dock's 12 V presence, which after this change is the only charge input: the case USB-C inlet is no longer wired to the X1202 (ASSEMBLY.md section 4); a USB-C PD source feeds the dock inlet through a 12 V PD trigger lead.

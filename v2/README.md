@@ -2,7 +2,7 @@
 
 Seven KiCad 9 boards for the kit V2 go-box: a Peli 1520EU case with the 1520PF panel frame. The power and compute boards stack on four M3 rods and lift out of the case in one piece; a dock strip on the case floor carries the shore-power spring pins and stays wired to the case together with the RF junction strip on the wall. The control panel is the panel of the frame.
 
-Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md`, section 25): the Geekworm X1202 is the only charger and UPS, with the welded 1S8P pack in parallel with its own cells and nothing between them; EMCON is a hardware line from the panel to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`.
+Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md`, section 25): the Geekworm X1202 is the only charger and UPS, with the welded 1S8P pack in parallel with its own cells and nothing between them; EMCON is a hardware line from the panel to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`. *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
 
 | Board | Rev | Size (mm) | Layers | Project | Deliverable folder |
 |---|---|---|---|---|---|
@@ -30,7 +30,7 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 
 ## State of Rev A (3 September 2026)
 
-All seven boards route clean (0 unrouted, 0 hard DRC violations) with the legend positions corrected. The JLCPCB cart holds all seven boards at 5 pieces each with assembly for the five assembled boards, both free confirmation options on; it is prepared but not paid. Before paying: the owner's paper fit check with the 1:1 prints from `release/revA/review/`, and the bench items of MESHSAT-774 (X1202 with the big pack). Parts fitted at the bench rather than by JLCPCB are listed per board in `ORDER-NOTES.txt` and in `docs/ASSEMBLY.md`.
+All seven boards route clean (0 unrouted, 0 hard DRC violations) with the legend positions corrected. The JLCPCB cart holds all seven boards at 5 pieces each with assembly for the five assembled boards, both free confirmation options on; it is prepared but not paid. Before paying: the owner's paper fit check with the 1:1 prints from `release/revA/review/`, and the bench items of MESHSAT-774 (X1202 with the big pack). Parts fitted at the bench rather than by JLCPCB are listed per board in `ORDER-NOTES.txt` and in `docs/ASSEMBLY.md`. *(Superseded 4 Sep 2026 night, design record 32.17: the X1202 is removed by owner ruling; PCB-A A19 carries the charger, the Pi's 5 V, the gauge and the main power control, and the welded pack becomes twelve cells, 42 Ah. This line describes the boards in this folder until A19 and B12 replace them.)*
 
 ## Regenerating a board
 
