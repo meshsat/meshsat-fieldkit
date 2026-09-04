@@ -2,7 +2,7 @@
 """Build v2/release/<rev>/order (JLCPCB order files) and v2/release/<rev>/review (prints for the design review)
 from the deliverable folders in v2/release/<rev>/boards. Run on the laptop from anywhere: python3 make_handoff.py
 (rev = $MESHSAT_FK_REV, default revA; every path is derived from this file's location in the meshsat-fieldkit repo)."""
-import sys, re, os, csv, shutil, subprocess, sys, pcbnew
+import re, os, csv, shutil, subprocess, sys, pcbnew
 HOME = os.path.expanduser("~")
 RT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))                     # v2/ecad (projects, tools, meshsat.pretty)
 V2 = os.path.dirname(RT)                                                             # v2/
