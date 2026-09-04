@@ -32,12 +32,10 @@ Six KiCad 9 boards replace the plates, the loose wiring and the USB hub. The sta
 |---|---|
 | ![PCB-A](v2/images/pcb-a-power-top.png) | ![PCB-B](v2/images/pcb-b-compute-top.png) |
 | PCB-A POWER + I/O (A20) | PCB-B COMPUTE (B13) |
-| ![PCB-C](v2/images/pcb-c-display-top.png) | ![PCB-E5](v2/images/pcb-e5-block-top.png) |
-| PCB-C CONTROL PANEL (C5) | PCB-E5 DOCK BLOCK (E5) |
-| ![PCB-D](v2/images/pcb-d-aprs-top.png) | ![PCB-E1](v2/images/pcb-e1-dock-top.png) |
-| PCB-D APRS (D6) | PCB-E1 DOCK STRIP (E4) |
-| ![PCB-E5](v2/images/pcb-e5-block-top.png) | |
-| PCB-E5 DOCK BLOCK (E5) | |
+| ![PCB-C](v2/images/pcb-c-display-top.png) | ![PCB-D](v2/images/pcb-d-aprs-top.png) |
+| PCB-C CONTROL PANEL (C5) | PCB-D APRS (D6) |
+| ![PCB-E1](v2/images/pcb-e1-dock-top.png) | ![PCB-E5](v2/images/pcb-e5-block-top.png) |
+| PCB-E1 DOCK STRIP (E4) | PCB-E5 DOCK BLOCK (E5) |
 
 **To build one: [`v2/BUILD.md`](v2/BUILD.md)** (ordering the boards at JLCPCB, the parts to buy, case preparation, the pack, assembly order, coating, software, bench checks). Sources, generators, vendor references, the Rev A release and the order record are described in [`v2/README.md`](v2/README.md). The design record is [`v2/docs/MESHSAT-709-geometry-appendix.md`](v2/docs/MESHSAT-709-geometry-appendix.md), the build procedure [`v2/docs/ASSEMBLY.md`](v2/docs/ASSEMBLY.md), the panel software contract [`v2/docs/PANEL.md`](v2/docs/PANEL.md).
 
