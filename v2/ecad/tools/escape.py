@@ -6,6 +6,14 @@ Usage: escape.py <board.kicad_pcb>"""
 import sys, re, math, pcbnew
 from pcbnew import VECTOR2I, FromMM
 b = pcbnew.LoadBoard(sys.argv[1]); CLR = FromMM(0.16)
+NCC = {}
+def net_clr(name):
+    """Clearance a net needs: the board default 0.16 or its net class value, whichever is larger (A19: the BANK and RAIL classes ask 0.2)."""
+    if name in NCC: return NCC[name]
+    v = CLR
+    try: v = max(CLR, b.GetNetInfo().GetNetItem(name).GetNetClass().GetClearance())
+    except Exception: pass
+    NCC[name] = v; return v
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
     pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]
@@ -51,10 +59,10 @@ def clear(v, r, me, me_ref, net):
         if abs(v.x - qp.x) > FromMM(6) or abs(v.y - qp.y) > FromMM(6): continue
         if qpoly.Collide(VECTOR2I(int(v.x), int(v.y)), int(r + gap)): LAST[0] = "pad %s.%s(%s)" % (qref, q.GetNumber(), qnet); return False
     for vp, vr, vnet in vias:
-        if math.hypot(v.x - vp.x, v.y - vp.y) < vr + r + (CLR if vnet != net else FromMM(0.05)): LAST[0] = "via(%s)" % vnet; return False
+        if math.hypot(v.x - vp.x, v.y - vp.y) < vr + r + (max(net_clr(net), net_clr(vnet)) if vnet != net else FromMM(0.05)): LAST[0] = "via(%s)" % vnet; return False
     for s, e, tr, tnet in tracks:
         if tnet == net: continue
-        if seg_dist(v, s, e) < tr + r + CLR: LAST[0] = "track(%s)" % tnet; return False
+        if seg_dist(v, s, e) < tr + r + max(net_clr(net), net_clr(tnet)): LAST[0] = "track(%s)" % tnet; return False
     for z in rule_areas:
         o = z.Outline()
         if o.Contains(VECTOR2I(int(v.x), int(v.y))) or o.Contains(VECTOR2I(int(v.x + r), int(v.y))) or o.Contains(VECTOR2I(int(v.x - r), int(v.y))) or o.Contains(VECTOR2I(int(v.x), int(v.y + r))) or o.Contains(VECTOR2I(int(v.x), int(v.y - r))): LAST[0] = "rule-area"; return False
