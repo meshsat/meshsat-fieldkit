@@ -24,7 +24,7 @@ Six KiCad 9 boards replace the plates, the loose wiring and the USB hub. The sta
 | PCB-A POWER + I/O | A20 | 285 x 160 | 4 | top | charger and fuel gauge for the pack, three 5 V converters, main power control, the wall host port channel, GPIO expanders, blind-mate RF receptacles, dock contacts |
 | PCB-B COMPUTE | B13 | 245 x 170 | 4 | top, bottom 1 | Raspberry Pi Compute Module 5 on two board-to-board receptacles (no USB socket, plug or cable on the compute side), USB hub for the SDR bay and the wall port, LTE mini PCIe socket, u-blox GNSS, SX1262 LoRa and CC2652P ZigBee modules on the module's own buses, RockBLOCK site, display flex, panel ribbon |
 | PCB-C CONTROL PANEL | C5 | 442 x 311 | 2 | top (LEDs), bottom (cluster, connectors) | the 1520PF panel as the case's sealed weather face: Touch Display 2 and the 3.7 inch e-paper lens on foam tape frames, keyed sealed switches, IP68 sounder, plugged vias, a gasket ring to the frame, MIL-STD-1472 controls, two GPIO expanders, MeshSat logo |
-| PCB-D APRS | D6 | 80 x 62 | 4 | top, bottom (see the ORDER-NOTES) | NiceRF DMR858M carrier: WM8960 codec on I2S, PTT from an I2C expander with hardware inhibit, boost, SMA |
+| PCB-D APRS | D6 | 80 x 62 | 4 | top 62, bottom 1 | NiceRF DMR858M carrier: WM8960 codec on I2S, PTT from an I2C expander with hardware inhibit, boost, SMA |
 | PCB-E1 DOCK STRIP | E4 | 278 x 60 | 4 | top | floor strip: isolated 9 to 36 V shore entry, solar tracker, battery module entry, seven blind-mate clamps, the raised contact block |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | none | the raised block on the strip: the targets the stack's spring pins land on, wire lands underneath |
 
