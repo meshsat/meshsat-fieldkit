@@ -9,6 +9,7 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^10u$", "C_0805"): "C15850", (r"^green", "LED_0603"): "C72043", (r"^red", "LED_0603"): "C2286", (r"^600R@100MHz", "L_0603"): "C1002",
  (r"^8MHz", "5032"): "C115962", (r"^USBLC6-2SC6", "SOT-23-6"): "C7519", (r"^INA219", "SOT-23-8"): "C138024", (r"^PCA9555PW", "TSSOP-24"): "C5626", (r"^FE1\.1s", "SSOP-28"): "C2848",
  (r"^USB-C 2\.0 receptacle", "TYPE-C-31-M-12"): "C165948", (r"^BC847BS", "SOT-363"): "C8653",
+ (r"^panel ribbon", "IDC-Header_2x10_P2.54mm_Vertical_SMD"): "C54803514", (r"^e-paper module lead", "PinHeader_1x08_P2.54mm_Vertical_SMD"): "C41417365",   # C5 underside SMD connectors (research note m, 5 Sep)
  # matched by the 3 Sep 2026 ordering session on PCB-D (ORDER-LOG.md section 2); the XAL6030 inductor has no JLC equivalent and is bench-fitted
  (r"^TPS61089", "VQFN-RNR0011A"): "C165129", (r"^22u (10|25)V X7R 1210", "C_1210"): "C2918511", (r"^301k", "R_0603"): "C2933194",
  (r"^17\.4k", "R_0603"): "C304711", (r"^20k 1%", "R_0603"): "C4184", (r"^105k", "R_0603"): "C2933128", (r"^100k 1%", "R_0603"): "C25803",

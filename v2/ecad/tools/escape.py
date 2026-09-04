@@ -90,6 +90,7 @@ for fp in b.GetFootprints():
     pitch = min_pitch(fp); fc = fp.GetPosition()
     if pitch <= FromMM(0.7): VIA_D, VIA_DR, TW, OFFS = FromMM(0.45), FromMM(0.25), FromMM(0.2), (0.9, 1.6, 2.3)
     else: VIA_D, VIA_DR, TW, OFFS = FromMM(0.6), FromMM(0.3), FromMM(0.25), (0.8, 1.5, 2.2)
+    if b.GetCopperLayerCount() == 2: VIA_D, VIA_DR = max(VIA_D, FromMM(0.5)), max(VIA_DR, FromMM(0.3))   # JLC 2-layer floor (C5: 48 escape vias were at 0.25 on the 2-layer panel)
     # group pads by side (outward direction), order along the side, alternate the offset
     sides = {}; eps = ep_numbers(fp)
     # one escape per pin: footprints like TI's SON draw each pin as several overlapping pieces, keep the largest per number

@@ -1,0 +1,67 @@
+JLCPCB parts library search, 5 September 2026, POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList
+columns: LCSC code | model | brand | library type (expand = Extended) | stock | description | unit price USD at qty 1
+--- keyword: S2B-XH-SM4-TB(LF)(SN)
+total 2
+  C2845683 | HC-XH-2AWT | HCTL | expand |stock 4894 | -25℃~+85℃ 1 10.5mm 10mm 1x2P 2 2.5mm 250V 2P 3A 6.1mm Auxiliary Solder Pin Brass Surface Mount, Right Angle Tin UL94V-0  | 0.1247
+  C7433707 | HCZZ0021-2 | Hong Cheng | expand |stock 16394 | -25℃~+85℃ 1 10.6mm 10mm 1x2P 2 2.5mm 250V 2P 3A 6mm Beige Copper LCP Surface Mount, Right Angle Tin XH SMD,P=2.5mm,卧贴 Wi | 0.0377
+--- keyword: XH-2AWT
+total 6
+  C2831796 | XH-2AWT | FG | expand |stock 3021 | -25℃~+85℃ 1 1x2P 2 2.5mm 250V 2P 3A Brass Surface Mount, Right Angle Tin XH SMD,P=2.5mm,Surface Mount，Right Angle Wire T | 0.0775
+  C2892904 | XH-2AWT | JLCPCB Assembly | expand |stock 0 | SMD-2P SMT ROHS | 0.0007
+  C9900300389 | XH-2AWT | JLCPCB Assembly | expand |stock 0 | SMD-2P SMT ROHS | 0.0395
+  C2845683 | HC-XH-2AWT | HCTL | expand |stock 4894 | -25℃~+85℃ 1 10.5mm 10mm 1x2P 2 2.5mm 250V 2P 3A 6.1mm Auxiliary Solder Pin Brass Surface Mount, Right Angle Tin UL94V-0  | 0.1247
+  C17700920 | XD-XH-2AWT | chxunda | expand |stock 557 | -40℃~+105℃ 1 1x2P 2 2.5mm 250V 2P 3A 6.1mm 7.8mm Brass LCP Surface Mount, Right Angle Tin UL94V-0 SMD,P=2.5mm,Surface Mo | 0.1009
+  C49844027 | TJC3-XH-2AWTCM | CNCM | expand |stock 0 | 1 10mm 1x2P 2 2.5mm 2P 6mm 7.8mm Brass LCP Surface Mount, Right Angle Tin SMD,P=2.5mm,卧贴 Wire To Board Connector ROHS | 0.0426
+--- keyword: S4B-XH-SM4-TB
+total 4
+  C20561980 | S4B-XH-SM4-TB | JST | expand |stock 0 | -25℃~+85℃ 1 10mm 15mm 1x4P 2.5mm 250V 3A 4 4P 6mm Copper alloy PA6T Surface Mount, Right Angle Tin UL94V-0 White XH SMD, | 0.5962
+  C54582908 | XY-S4B-XH-SM4-TB | XYECONN | expand |stock 545 | SMD,P=2.5mm,卧贴 Wire To Board Connector ROHS | 0.0808
+  C161861 | S4B-XH-SM4-TB(LF)(SN) | JST | expand |stock 24346 | -25℃~+85℃ 1 10mm 15mm 1x4P 2.5mm 250V 3A 4 4P 6mm Copper alloy PA6T Surface Mount, Right Angle Tin UL94V-0 White XH SMD, | 0.437
+  C5306499 | S4B-XH-SM4-TB(LF)(SN) | JST | expand |stock 0 | -25℃~+85℃ 1 10mm 15mm 1x4P 2.5mm 250V 3A 4 4P 6mm Copper alloy PA6T Surface Mount, Right Angle Tin UL94V-0 White XH SMD, | 0.632
+--- keyword: JST S2B-XH
+total 5
+  C20089266 | S2B-XH-A | JST | expand |stock 0 | -25℃~+85℃ 1 11.5mm 1x2P 2 2.5mm 250V 2P 3A 6.1mm 7.4mm Brass K Pin PA66 Right Angle Tin UL94V-0 White XH 弯插,P=2.5mm Wire | 0.0395
+  C20089267 | S2B-XH-A-1 | JST | expand |stock 0 | -25℃~+85℃ 1 11.5mm 1x2P 2 2.5mm 250V 2P 3A 6.1mm 7.4mm Brass K Pin PA66 Right Angle Tin UL94V-0 White XH Push-Pull,P=2.5 | 0.1069
+  C157931 | S2B-XH-A(LF)(SN) | JST | expand |stock 53657 | -25℃~+85℃ 1 11.5mm 1x2P 2 2.5mm 250V 2P 3A 6.1mm 7.4mm Brass K Pin PA66 Right Angle Tin UL94V-0 White XH 弯插,P=2.5mm Wire | 0.1013
+  C163035 | S2B-XH-A-1(LF)(SN) | JST | expand |stock 102517 | -25℃~+85℃ 1 11.5mm 1x2P 2 2.5mm 250V 2P 3A 6.1mm 7.4mm Brass K Pin PA66 Right Angle Tin UL94V-0 White XH 弯插,P=2.5mm Wire | 0.0996
+  C493111 | S2B-XH-A-BK(LF)(SN) | JST | expand |stock 0 | -25℃~+85℃ 1 11.5mm 1x2P 2 2.5mm 250V 2P 3A 6.1mm 7.4mm Black Brass K Pin PA66 Right Angle Tin UL94V-0 XH 弯插,P=2.5mm Wire | 0.0465
+--- keyword: 2x10P SMD 2.54mm box header
+total 9
+  C54930267 | 254PZ-2x10P-SMT-H2.5-PA6.0 | LXWCONN | expand |stock 282 | SMD,P=2.54mm Pin Headers ROHS | 0.0991
+  C19630976 | KH-2.54PH-2X10P-L11.0-SMT | Shenzhen Kinghelm Elec | expand |stock 0 | 2 2.54mm 2.5mm 20P 2x10P SMD,P=2.54mm Pin Headers ROHS | 0.1388
+  C41427539 | HX PM2.54-2x10P TP | hanxia | expand |stock 5297 | -40℃~+105℃ 2 2.54mm 2.54mm 20P 2x10P 3A 8.5mm Gold Phosphor bronze Square Hole Surface Mount,Vertical Top SMD,P=2.54mm F | 0.5784
+  C46635855 | HX PM2.54-2x10P WT | hanxia | expand |stock 722 | -40℃~+105℃ 2 2.54mm 2.54mm 20P 2x10P 3A 8.5mm Brass Gold Side Square Hole Surface Mount, Right Angle SMD,P=2.54mm,Surfac | 1.0479
+  C22436157 | HC-PM254-8.5H-2x10PS | Hong Cheng | expand |stock 2970 | -40℃~+105℃ 2 2.54mm 2.54mm 20P 2x10P 3A 8.5mm Brass Gold Square Hole Surface Mount,Vertical Top SMD,P=2.54mm Female Head | 0.3181
+  C42163138 | HC-PM254-5.0H-2x10PS | Hong Cheng | expand |stock 2873 | -40℃~+105℃ 2 2.54mm 2.54mm 20P 2x10P 3A 5mm Brass Gold Square Hole Surface Mount,Vertical Top SMD,P=2.54mm Female Header | 0.2549
+  C54803514 | JXT-IDC2.54-2X10P-A2 | JXTCONN | expand |stock 207 | -40℃~+105℃ 10 2 2.54mm 2.54mm 250V 2x10P 3A Black IDC Header Surface Mount,Vertical SMD,P=2.54mm IDC Connectors ROHS | 0.2658
+  C54930084 | 254PM-2x10P-SMT-H8.5 | LXWCONN | expand |stock 355 | SMD,P=2.54mm Female Headers ROHS | 0.5296
+  C22438052 | HX NJ2.54-2x10P TP-CE | hanxia | expand |stock 191 | -40℃~+105℃ 10 2 2.54mm 2.54mm 2x10P 3A Black Gold IDC Header Phosphor bronze Surface Mount,Vertical SMD,P=2.54mm IDC Con | 0.5394
+--- keyword: 2*10P SMD IDC
+total 5
+  C54803514 | JXT-IDC2.54-2X10P-A2 | JXTCONN | expand |stock 207 | -40℃~+105℃ 10 2 2.54mm 2.54mm 250V 2x10P 3A Black IDC Header Surface Mount,Vertical SMD,P=2.54mm IDC Connectors ROHS | 0.2658
+  C22438052 | HX NJ2.54-2x10P TP-CE | hanxia | expand |stock 191 | -40℃~+105℃ 10 2 2.54mm 2.54mm 2x10P 3A Black Gold IDC Header Phosphor bronze Surface Mount,Vertical SMD,P=2.54mm IDC Con | 0.5394
+  C41376009 | HX JN2.0-2x10P TP H5.7 | hanxia | expand |stock 3564 | -40℃~+105℃ 1.5A 10 2 2mm 2x10P Black Brass Gold IDC Header Surface Mount,Vertical SMD,P=2mm IDC Connectors ROHS | 0.3522
+  C41415769 | HX JN2.0-2x10P TP H6.4 | hanxia | expand |stock 502 | -40℃~+105℃ 1.5A 10 2mm 2x10P Brass IDC Header Surface Mount,Vertical SMD,P=2mm IDC Connectors ROHS | 0.4338
+  C41376033 | HX JN2.54-2x10P TP H8.9 | hanxia | expand |stock 410 | SMD,P=2.54mm IDC Connectors ROHS | 0.3522
+--- keyword: 1*8P SMD 2.54
+total 16
+  C9900038059 | 1x8P-2.54-WT | JLCPCB Assembly | expand |stock 0 | SMD-8P,P-2.54mm New Arrivals ROHS | 0.0395
+  C9900038063 | 1X8PP-2.54-WT | JLCPCB Assembly | expand |stock 0 | SMD-8P,P=2.54mm New Arrivals ROHS | 0.0395
+  C9900122126 | WSMD-2.54-1x8P | JLCPCB Assembly | expand |stock 0 | SMD-8P,P=2.54mm New Arrivals ROHS | 0.0395
+  C46061681 | HX PZ2.54-1x8P WT | hanxia | expand |stock 4130 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 2.5mm 3A 6mm 8P Black Brass Gold Square pin Surface Mount, Right Angle SMD,P=2.54mm,Surface | 0.1672
+  C46061772 | HX PM2.54-1x8P WT | hanxia | expand |stock 1702 | SMD,P=2.54mm,卧贴 Female Headers ROHS | 0.2678
+  C41417365 | HX PZ2.54-1x8P TP-YQ | hanxia | expand |stock 2153 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 2.5mm 3A 6mm 8P Black Brass Gold Square pin Surface Mount,Vertical SMD,P=2.54mm(Staggered p | 0.1053
+  C42380985 | HX PM2.54-1x8P TP-YQ | hanxia | expand |stock 3094 | SMD,P=2.54mm(Staggered pins) Female Headers ROHS | 0.3391
+  C55218892 | PM2.54-1x8PLT-H5.0-R | SHOU HAN | expand |stock 1095 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 3A 5mm 8P Brass Gold Square Hole Surface Mount,Vertical Top SMD,P=2.54mm(Staggered pins) Fe | 0.1804
+  C46635844 | HX PM2.54-1x8P TP H8.5-YQ | hanxia | expand |stock 5799 | 1 1x8P 2.54mm 3A 8.5mm 8P Brass Gold Square Hole Top SMD,P=2.54mm(交错脚) Female Headers ROHS | 0.3365
+  C48641756 | HX PM2.54-1x8P TP H8.5-ZQ | hanxia | expand |stock 12 | -40℃~+105℃ 1 1x8P 2.54mm 3A 8.5mm 8P Gold Phosphor bronze Square Hole Surface Mount,Vertical Top SMD,P=2.54mm(Staggered  | 0.3172
+--- keyword: PZ2.54-1x8P
+total 8
+  C32713267 | HX PZ2.54-1x8P WZ | hanxia | expand |stock 7458 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 2.5mm 3A 3mm 6mm 8P Black Brass Gold Right Angle Square pin Push-Pull,P=2.54mm Pin Headers  | 0.0691
+  C32713274 | HX PZ2.54-1x8P ZZ | hanxia | expand |stock 28429 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 2.5mm 3A 3mm 6mm 8P Black Brass Gold Square pin Through Hole Plugin,P=2.54mm Pin Headers RO | 0.0632
+  C46061681 | HX PZ2.54-1x8P WT | hanxia | expand |stock 4130 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 2.5mm 3A 6mm 8P Black Brass Gold Square pin Surface Mount, Right Angle SMD,P=2.54mm,Surface | 0.1672
+  C54803344 | JXT-PZ2.54-1X8P-A1 | JXTCONN | expand |stock 983 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 2.5mm 3A 3mm 6mm 8P Black Brass Gold Pin Header Through Hole 插件,P=2.54mm Pin Headers ROHS | 0.0645
+  C54876673 | PZ2.54-1x8PZZ-L11.5 | SHOU HAN | expand |stock 5356 | -40℃~+105℃ 1 1x8P 2.54mm 2.54mm 2.5mm 250V 3A 3mm 6mm 8P Black Brass Gold Pin Header Through Hole 插件,P=2.54mm Pin Header | 0.0611
+  C41417365 | HX PZ2.54-1x8P TP-YQ | hanxia | expand |stock 2153 | -40℃~+105℃ 1 1kV 1x8P 2.54mm 2.5mm 3A 6mm 8P Black Brass Gold Square pin Surface Mount,Vertical SMD,P=2.54mm(Staggered p | 0.1053
+  C54907651 | PZ2.54-1x8PWZ-L13.8-A | SHOU HAN | expand |stock 1645 | -40℃~+105℃ 1 1x8P 2.54mm 2.54mm 2.5mm 250V 3A 3mm 6mm 8P Black Brass Gold Pin Header Right Angle 弯插,P=2.54mm Pin Headers | 0.0671
+  C54907658 | PZ2.54-1x8PWZ-L13.8-P | SHOU HAN | expand |stock 4406 | -40℃~+105℃ 1 1x8P 2.54mm 2.54mm 2.5mm 250V 3A 3mm 6mm 8P Black Brass Gold Pin Header Right Angle 弯插,P=2.54mm Pin Headers | 0.0671
