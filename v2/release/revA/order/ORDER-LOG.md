@@ -590,3 +590,5 @@ The dock connector is now the Preci-Dip 813-S1-008-10-016101 (solder tails 0.8 m
 ## 4 Sep 2026 evening: the deferral list moved into this build (appendix 32.13, 32.14)
 
 Owner rulings: TPS61288 boost, heating-pad output and SMP-MAX blind-mate on a PCB-A respin (A19); dock respin with the MPPT carrier and a 13 mm gap; MIL-DTL-38999 wall connector; APEM 5636ADKB-2V locking toggles (bench part swap, C4 unchanged). Cart consequences: line A is not rebuilt from A18 (A19 supersedes), line E2 is deleted (E3 retired), line E1 is rebuilt after the dock respin, line B is rebuilt from B11, C4, R1 and D5 stand. Whether B11, C4, R1 and D5 are ordered ahead of the respin is the owner's decision.
+
+**Owner, 4 Sep 2026 evening, on the order split:** no edits to the JLCPCB cart now; everything is prepared in the repository first (A19, the dock respin, the retired wall strip, the case connector) and the cart is rebuilt once, when the whole set is final.
