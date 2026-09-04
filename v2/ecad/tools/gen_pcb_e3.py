@@ -57,11 +57,22 @@ placed = {}
 for ref in comps:                                                   # H1..H16 and EPD1 already on the board from gen_pcb_c.py
     if ref in existing: existing[ref].SetValue(comps[ref][0]); placed[ref] = existing[ref]
 # ---------------------------------------------------------------- dock layout (case mm): the target block under PCB-A's J_DOCK, the DC entry at the port end, the buck in the middle
-FIXED = {"J_DOCK": (-12, -70, 0, False), "J_DCIN": (-105, -60, 0, False), "F1": (-80, -70, 90, False), "U1": (-45, -70, 90, False), "J_AUX": (118, -58, 0, False)}
+FIXED = {"U1": (29, -70, 90, False), "J_BLK": (-135, -88, 0, False), "P_CP": (-118, -88, 0, False), "P_CN": (-118, -97, 0, False), "J_BATT": (-150, -103, 0, False),
+         "J_DCIN": (-100, -104, 0, False), "F1": (-84, -104, 0, False), "J_SOLAR": (-58, -104, 0, False), "F2": (-42, -104, 0, False),
+         "U5": (-2, -92, 0, False), "L1": (16, -100, 0, False), "J_TS": (66, -104, 0, False), "J_KS": (78, -104, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 text("DC IN", -105, -52.5, pcbnew.F_SilkS, 2.0, 0.3); text("F1 7.5A", -80, -52.5, pcbnew.F_SilkS, 2.0, 0.3); text("12V AUX", 118, -64.5, pcbnew.F_SilkS, 1.6, 0.25); text("SHORE", 60, -75, pcbnew.F_SilkS, 2.0, 0.3)
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
-REGIONS = [("ENTRY", (-18, -92, 100, -54), [r for r in comps if r not in placed and not r.startswith("H")], False)]
+REGIONS = [
+ ("ENTRY",  (-112, -110, -62, -82), ["U3", "Q1", "C4", "R1", "D1", "C1", "C2", "C3", "D3", "R2", "LED1", "R3", "R4", "U2", "TP1", "TP2", "TP3", "TP4"], False),
+ ("TRKIN",  (-56, -98, -28, -82), ["D4", "C11", "C12", "C13", "C14", "C15", "TP5"], False),
+ ("TRKW",   (-26, -110, -8, -82), ["Q3", "Q4", "Q5", "Q6", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6"], False),
+ ("TRKS",   (4, -92, 30, -82), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
+ ("TRKOUT", (32, -110, 60, -82), ["C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18", "TP6"], False),
+ ("TPS",    (90, -110, 124, -100), ["TP7", "TP8", "TP9"], False),
+]
+rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
+if rest: REGIONS.append(("REST", (90, -98, 124, -82), rest, False))
 GAP = 1.2; FINE_MARGIN = 1.4
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
@@ -116,14 +127,26 @@ def pour(layer, netname, name, rect, priority=0):
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
-pour(pcbnew.F_Cu, "GND", "GND pour F", (-125, -95, 125, -51)); pour(pcbnew.B_Cu, "GND", "GND pour B", (-125, -95, 125, -51))
+# E4 (appendix 32.25): four layers. In1 carries the two ground domains side by side: DC_N (the isolated shore and panel side) under the entry, the tracker and the
+# converter, GND (the kit side) under the block lands and the east end. In2 carries the entry and tracker power pours. Outer layers: GND pours only on the kit side.
+# The module nets CELL_P_MOD / CELL_N_MOD run as bars between J_BATT and the lands (fix_e4_node.py) and touch no ground (32.24 AZ). Nothing under the float clamps (rule areas).
+pour(pcbnew.In1_Cu, "DC_N", "DC_N plane In1 (isolated side)", (-115, -111, 62, -51))
+pour(pcbnew.In1_Cu, "GND", "GND plane In1 west (kit side, block lands)", (-160, -111, -116, -51))
+pour(pcbnew.In1_Cu, "GND", "GND plane In1 east (kit side)", (63, -111, 125, -51))
+pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-60, -111, -8, -80))
+pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (30, -111, 60, -80))
+pour(pcbnew.In2_Cu, "SHORE_12V", "SHORE_12V pour In2 (converter output to the block lands)", (-116, -100, 4, -82))
+pour(pcbnew.F_Cu, "DC_N", "DC_N pour F (isolated side)", (-115, -111, 62, -80), priority=0); pour(pcbnew.B_Cu, "DC_N", "DC_N pour B (isolated side)", (-115, -111, 62, -51), priority=0)
+pour(pcbnew.F_Cu, "GND", "GND pour F west", (-160, -111, -116, -51)); pour(pcbnew.B_Cu, "GND", "GND pour B west", (-160, -111, -116, -51))
+pour(pcbnew.F_Cu, "GND", "GND pour F east", (63, -111, 125, -51)); pour(pcbnew.B_Cu, "GND", "GND pour B east", (63, -111, 125, -51))
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.6, 0.3)
-PATTERNS = [("DC_*", "PWR"), ("SHORE_12V", "PWR"), ("GND", "PWR")]
+PATTERNS = [("DC_*", "PWR"), ("SHORE_12V", "PWR"), ("GND", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "PWR"), ("TRK_LSENSE", "PWR"), ("CELL_*_MOD", "BANK")]
 try:
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.15, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)
+    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.15, 0.8, 0.8, 0.4); ns.SetNetclass("PWR", nc)
+    nb = pcbnew.NETCLASS("BANK"); cls(nb, 0.3, 4.0, 1.2, 0.6); ns.SetNetclass("BANK", nb)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
 pcbnew.SaveBoard(BOARD, board)
@@ -134,7 +157,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.2, diff_pair_gap=0.15)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.6, 0.3), C("PWR", 0, 0.15, 0.5, 0.8, 0.4)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.6, 0.3), C("PWR", 0, 0.15, 0.8, 0.8, 0.4), C("BANK", 1, 0.3, 4.0, 1.2, 0.6)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
