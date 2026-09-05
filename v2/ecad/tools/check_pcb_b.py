@@ -123,6 +123,6 @@ for ref, (ex, ey) in exp_fp.items():
     check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s body centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
     for pad in fp.Pads():
         pp = case(pad.GetPosition()); check(abs(pp[0] - ex) < 40 and abs(pp[1] - ey) < 40, "%s pad near its footprint" % ref)
-check(b.GetCopperLayerCount() == 4, "4 copper layers")
+check(b.GetCopperLayerCount() == 6, "6 copper layers (B15, JLC06161H-3313)")
 check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
