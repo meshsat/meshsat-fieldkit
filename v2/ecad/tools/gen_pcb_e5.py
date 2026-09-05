@@ -81,6 +81,8 @@ for k in range(4):
     t = place("meshsat", "Mill-Max_0858_target", "T_CP%d" % (k + 1), x, -73.0, "CELL+ target (9 A pin)"); [p.SetNet(net("CELL+")) for p in t.Pads()]
     t = place("meshsat", "Mill-Max_0858_target", "T_CN%d" % (k + 1), x, -67.0, "return target (9 A pin)"); [p.SetNet(net("CELL_N")) for p in t.Pads()]
 t = place("meshsat", "Mill-Max_0858_target", "T_PRE", -151.0, -70.0, "pre-charge target (longer pin, mates first)"); [p.SetNet(net("CELL+")) for p in t.Pads()]
+# one silk outline around the nine power targets (a ring per 4.2 mm target at the 4.0 mm pitch merged into its neighbours; the target footprint carries no silk since 5 Sep)
+rounded_rect(-153.8, -75.8, -132.2, -64.4, 2.0, pcbnew.F_SilkS, 0.12)
 w = place("meshsat", "WireHole_2mm", "WH_CP", -140.0, -81.0, "12 AWG to the strip P_CP"); [p.SetNet(net("CELL+")) for p in w.Pads()]
 w = place("meshsat", "WireHole_2mm", "WH_CN", -141.0, -62.5, "12 AWG to the strip P_CN"); [p.SetNet(net("CELL_N")) for p in w.Pads()]
 # --- copper: every target to the land of its own column. North row: up to a via, then down on B.Cu under the south target to the north land.
