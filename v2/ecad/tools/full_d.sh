@@ -9,7 +9,7 @@ python3 ../tools/gen_sch_d.py $N.kicad_sch $N 2>&1 | tail -2
 python3 ../tools/gen_pcb_d3.py $N.kicad_pcb out/$N.net 2>&1 | grep -E 'saved|WARN|Trace|Error|overflow|EP|missing'
 python3 ../tools/check_pcb_d.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'   # D7: the content checks need the placed parts
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
-python3 ../tools/prefanout.py $N.kicad_pcb "GND,+3V3" "U2,fine" 2>&1 | grep -E 'fanout:'
+python3 ../tools/prefanout.py $N.kicad_pcb "GND,+3V3,V8,VIN_CELL" "U2,fine"   # D7: the boost loop pads get vias into the B.Cu pours 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 - <<'PY'
