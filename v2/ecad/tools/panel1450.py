@@ -27,7 +27,7 @@ LIGHT_HOLE, LIGHT_FLAT = 6.5, 5.8
 SOUNDER = ("BZ1", (-149.0, -97.0), 28.6, 30.0)   # in the corner where the left and bottom strips meet: its body passes the backer there                                                                                     # Floyd Bell MC-09-530-Q class: 28.6 hole, its 61663 gasket, about 30 deep
 STATUS_LEDS = [("D%d" % (k + 1), (128.0, 45.0 - 9.0 * k), name) for k, name in enumerate(["MSTR WARN", "MSTR CAUT", "TX", "SOS ACTIVE", "SAT", "MESH", "LTE", "GPS", "SHORE", "CHARGE", "MSG"])]   # the status column beside the buttons
 BAR_LEDS = [("D%d" % (12 + k), (-20.0 + 6.0 * k, -101.0), "BAT%d" % (k + 1)) for k in range(5)]                                     # the battery bar in the bottom strip
-LED_HOLE = 4.0                                                                                                                       # press-fit 3 mm light pipe (IP67 part to be named from its sheet)
+LED_HOLE = 2.6                                                                                                                       # Mentor 1282.5004 IP68 front-panel light guide (sheet ll14-14, v2/vendor/mentor/): 2.5 mm shaft pressed into a 2.6 H7 hole, 3.2 mm spherical head on the face, A 7.5 mm reaches 0.2 mm over the 3 mm LED on the backer
 NAMEPLATE = (78.0, -101.0, 76.0, 26.0)     # laser marked: centre X, centre Y, width, height
 LOGO = ((-150.0, 96.0), 36.0)             # laser marked, top of the left strip
 
