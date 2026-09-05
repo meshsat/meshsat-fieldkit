@@ -63,8 +63,8 @@ FIXED = {}
 for ref, (x, y), hole, depth in L.BUTTONS: FIXED[ref] = (x, y, 45, False)           # the four lead lands at 45 degrees clear the neighbours
 for ref, (x, y) in L.TOGGLES: FIXED[ref] = (x, y, 0, False)
 FIXED[L.LIGHT[0]] = (L.LIGHT[1][0], L.LIGHT[1][1], 0, False)
-FIXED[L.SOUNDER[0]] = (L.SOUNDER[1][0], L.SOUNDER[1][1], 0, False)
-FIXED["J_PANEL"] = (L.J_PANEL_POS[0], L.J_PANEL_POS[1], 90, True); FIXED["J_EPD"] = (L.J_EPD_POS[0], L.J_EPD_POS[1], 0, True)
+FIXED[L.SOUNDER[0]] = (L.SOUNDER[1][0], L.SOUNDER[1][1], 90, False)      # lands to the sides (east and west): up and down they met the light switch lands and the board edge
+FIXED["J_PANEL"] = (L.J_PANEL_POS[0], L.J_PANEL_POS[1], 90, True); FIXED["J_EPD"] = (L.J_EPD_POS[0], L.J_EPD_POS[1], 90, True)
 for ref, (x, y) in L.LEAD_LANDS: FIXED[ref] = (x, y, 0, True)
 FIXED["R32"] = (140.0, 26.0, 0, True); FIXED["R33"] = (140.0, -24.0, 0, True)      # the PI and TEST ring resistors beside their buttons, underside
 # C6: the panel-mount parts sit at the plate's sites (their bodies pass this board through the footprints' holes and slots); J_PANEL and J_EPD are SMD
