@@ -148,8 +148,9 @@ part("U2", "Connector_Generic", "Conn_02x12_Odd_Even", "DNP bench: DMR858M 5 W U
       "13": "GND", "14": "RADIO_MIC", "15": "GND", "16": "RADIO_COS", "17": "GND", "18": "RADIO_TX", "19": "RADIO_RX", "20": "NC", "21": "NC", "22": "NC", "23": "NC", "24": "NC"})   # D7 (V1.2 datasheet p.10): 16 SPKEN is the module's receive indication OUTPUT (low, high on a received signal), read as carrier detect; 7 to 10 are the channel knob's 8421 code OUTPUTS, read back; 11/12 speaker OUTP/OUTN and 21/22 HST (upgrade UART, the module's own USB-C) unused
 # D7: no channel jumpers (the pins are outputs); CS pulled up on the kit-domain rail and driven by the expander bit CS_CTL (low = module sleep, 3 s)
 r("R36", "10k", "CS", "+3V3_AB"); r("R48", "1k", "CS_CTL", "CS")
-for k, (net, rr) in enumerate((("CH8", "R43"), ("CH4", "R44"), ("CH2", "R45"), ("CH1", "R46"))): r(rr, "1k", net, net + "_IN")   # knob code outputs into expander inputs, 1k against a software mistake
-# --- D6 rails: +3V3_AB (gated on B13, over J_AB1 and J_MEZZ1) feeds the codec, its clock and the PCA9536, so the I2S lines die with the module (32.35);
+for k, (net, rr, rp) in enumerate((("CH8", "R43", "R49"), ("CH4", "R44", "R50"), ("CH2", "R45", "R51"), ("CH1", "R46", "R52"))):
+    r(rr, "1k", net, net + "_IN"); r(rp, "100k", net + "_IN", "GND")   # knob code outputs into expander inputs: 1k against a software mistake, 100k so the inputs read low with the module unplugged (gateway audit 5 Sep 06:35)
+# --- D6 rails: +3V3_AB (gated on B13, over J_AB1 and J_MEZZ1) feeds the codec, its clock, the PCA9555 and the UART bridge, so the I2S lines die with the module (32.35);
 #     +3V3 (PCB-A's always-on logic rail) keeps the PTT, EMCON and TR-mirror stages as on D5; the codec's analogue rail sits behind a bead
 part("FB1", "Device", "FerriteBead", "600R@100MHz", "FB", {"1": "+3V3_AB", "2": "+3.3VA"}); c("C9", "100n", "+3.3VA", "GND"); c("C10", "4.7u", "+3.3VA", "GND")
 c("C7", "4.7u", "+3V3_AB", "GND"); c("C8", "100n", "+3V3_AB", "GND"); c("C17", "100n", "+3V3", "GND"); c("C18", "100n", "+3V3_AB", "GND")
@@ -175,7 +176,7 @@ r("R3", "100k", "RADIO_COS", "GND"); r("R42", "1k", "RADIO_COS", "RADIO_COS_IN")
 part("U8", "Connector_Generic", "Conn_01x16", "SC16IS740IPW I2C-to-UART bridge 0x48, 24 MHz external clock on XTAL1", "TSSOP16",
      {"1": "+3V3_AB", "2": "+3V3_AB", "3": "+3V3_AB", "4": "NC", "5": "SCL", "6": "SDA", "7": "NC", "8": "+3V3_AB", "9": "GND", "10": "NC", "11": "GND", "12": "BR_TX", "13": "BR_RX", "14": "BR_nRST", "15": "MCLK", "16": "NC"})
 c("C40", "100n", "+3V3_AB", "GND"); r("R47", "10k", "BR_nRST", "+3V3_AB")
-# --- audio paths (D5 values where they stay), PTT from U7, TR mirror, UART header, LED
+# --- audio paths (D5 values where they stay), PTT from U7, TR mirror, the bridge's UART lines, LED
 r("R2", "47k", "AFOUT", "MIC_NODE"); r("R4", "1k", "MIC_NODE", "GND"); c("C13", "4.7u", "MIC_NODE", "RADIO_MIC")   # D7: HP_L line level divided by 48 (about 20 mV rms at full scale) into the module's microphone pin, whose modulation sensitivity is 4 to 10 mV (V1.2 datasheet); the module provides the bias
 c("C14", "4.7u", "RADIO_SPK", "SPK_IN")   # the module's audio out into LINPUT1 (internally biased at VMID)
 r("R10", "1.5k", "OUT2", "Q1_B"); r("R11", "1.5k", "OUT1", "Q2_B")
@@ -260,7 +261,7 @@ def emit_pwr_flag(p, x, y):
 # layout: columns, top-down cursor; group order = list order with section titles
 SECTIONS = [("HARNESS TO PCB-A, CELL FEED, TEST POINTS", ["J_HARN1", "J_PWR1", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05"]),
             ("TPS61089 BOOST: CELL NODE -> 8 V / 2 A  (500 kHz, ILIM 7.9 A, EN = MEZZ_EN)", ["U1", "L1", "C20", "C21", "R30", "R31", "R32", "C22", "R33", "R34", "R35", "C23", "C24", "C25", "C26", "C27", "C28", "C29", "C30"]),
-            ("DMR858M RADIO MODULE (V1.0 BOARD): CS PULL-UP AND CONTROL, KNOB CODE AND COS INTO THE EXPANDER", ["U2", "R36", "R48", "R43", "R44", "R45", "R46", "R42"]),
+            ("DMR858M RADIO MODULE (V1.0 BOARD): CS PULL-UP AND CONTROL, KNOB CODE AND COS INTO THE EXPANDER", ["U2", "R36", "R48", "R43", "R44", "R45", "R46", "R49", "R50", "R51", "R52", "R42"]),
             ("D7 CORE: RAILS, WM8960 CODEC ON I2S + I2C, 24 MHz CLOCK, PCA9555 EXPANDER 0x26, SC16IS740 UART BRIDGE 0x48", ["FB1", "C9", "C10", "C7", "C8", "C17", "C18", "U5", "C33", "C34", "C35", "C36", "C37", "X1", "C38", "U7", "C39", "R3", "U8", "C40", "R47"]),
             ("AUDIO PATHS, PTT + TR MIRROR, BRIDGE UART LINES, LED", ["R2", "R4", "C13", "C14", "R10", "R11", "Q1", "Q2", "R12", "R13", "Q3", "R37", "R38", "C32", "R39", "Q4", "R40", "R41", "R8", "R9", "D1", "R15"])]
 byref = {p["ref"]: p for p in P}
@@ -292,7 +293,7 @@ max_x = x + COLW
 PAPER = "A1" if max_x <= 820 else "A0"
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-D APRS BOARD") (date "2026-09-05") (rev "A") (company "MeshSat") (comment 1 "Phase D7 schematic (MESHSAT-804: the DMR858M V1.0 board as delivered, the CM5 owns the module) on D6 (appendix 32.35: the AIOC-derived STM32 core is replaced by a WM8960 codec on I2S and I2C, a 24 MHz clock and a PCA9536 for the PTT lines; USB is gone), generated by tools/gen_sch_d.py") (comment 2 "MESHSAT-709/748. AIOC rev 1.2 core (MIT, skuep/AIOC) on an STM32F302C8T6; TPS61089 boost 8 V from the cell node; DMR858M castellated; TR_APRS = OUT1 mirror to PCB-A."))\n'
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-D APRS BOARD") (date "2026-09-05") (rev "A") (company "MeshSat") (comment 1 "Phase D7 schematic (MESHSAT-804: the DMR858M V1.0 board as delivered, the CM5 owns the module) on D6 (appendix 32.35: the AIOC-derived STM32 core is replaced by a WM8960 codec on I2S and I2C, a 24 MHz clock and a PCA9555 for the PTT, CS, carrier-detect and channel-code lines and an SC16IS740 bridge for the control UART; USB is gone), generated by tools/gen_sch_d.py") (comment 2 "D7: WM8960 codec on I2S, PCA9555 0x26 (PTT, CS, carrier detect, channel code), SC16IS740 bridge 0x48 on the module control UART, TPS61089 boost; the DMR858M V1.0 board on two 1x12 sockets"))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'
