@@ -196,6 +196,7 @@ def run(profile_fn, rounds, use_services, dry):
                 if fst == "CLEAN":
                     exp = prof.get("expect", {}); met = all(m is None or m <= exp.get("autoroute_minutes_max", 1e9) for m in mins.values())
                     journal(project, dict(run=rid, round=rnd, board=name, stage="expect", status="MET" if met else "MISSED", note="autoroute minutes %s against max %s" % (mins, exp.get("autoroute_minutes_max"))))
+                    quality(project, repo, prof, rid, rnd, name, mins)
                     status = "CLEAN"; break
                 if fst == "TOOL_CRASH": status = fst; break
                 if sig == "CLEAN": sig = "OPEN"   # the router was clean but the finish refused: treat as opens for the table
@@ -211,6 +212,23 @@ def run(profile_fn, rounds, use_services, dry):
         except OSError: pass
     journal(project, dict(run=rid, board=name, stage="end", status=status or "UNKNOWN", note="see out/routeflow/%s/" % rid))
     return 0 if status == "CLEAN" else 1
+
+# ---------------------------------------------------------------- quality (Stage 1 of the programme): metrics of the finished board against the baseline
+def quality(project, repo, prof, rid, rnd, name, mins):
+    tools = os.path.dirname(os.path.abspath(__file__)); board = os.path.join(project, name + ".kicad_pcb"); drc = os.path.join(project, "out", name + "-drc.json")
+    mfile = os.path.join(project, "out", "routeflow", rid, "round%d-metrics.json" % rnd); base = os.path.join(tools, "routeflow", "bench", "baseline.json")
+    argv = ["python3", os.path.join(tools, "route_metrics.py"), board, drc if os.path.exists(drc) else "-", "--json", mfile, "--tag", prof["phase"]]
+    for k, m in mins.items():
+        if m: argv += ["--autoroute", str(m)]; break
+    rc = sh(argv, project, os.path.join(project, "out", "routeflow", rid, "round%d-quality.log" % rnd))
+    if rc != 0 or not os.path.exists(mfile): journal(project, dict(run=rid, round=rnd, board=name, stage="quality", status="UNMEASURABLE", note="route_metrics exit %d" % rc)); return
+    if not os.path.exists(base): journal(project, dict(run=rid, round=rnd, board=name, stage="quality", status="MEASURED", note="no baseline yet: " + (read(mfile) or "")[:200])); return
+    out = os.path.join(project, "out", "routeflow", rid, "round%d-compare.json" % rnd)
+    key = prof.get("baseline_key", prof["phase"])
+    rc = sh(["python3", os.path.join(tools, "bench_compare.py"), base, mfile, "--board", key, "--json", out], project, os.path.join(project, "out", "routeflow", rid, "round%d-quality.log" % rnd))
+    try: c = json.load(open(out)); st = {"MET": "QUALITY_MET", "REGRESSION": "QUALITY_REGRESSED", "INELIGIBLE": "QUALITY_INELIGIBLE"}.get(c["verdict"], "UNMEASURABLE"); note = c["note"]
+    except Exception as e: st, note = "UNMEASURABLE", "compare failed: %s" % e
+    journal(project, dict(run=rid, round=rnd, board=name, stage="quality", status=st, note=note))
 
 # ---------------------------------------------------------------- status, preflight, selftest
 def status(project, markdown):
@@ -288,6 +306,18 @@ def selftest():
     chk("clean flag without a gerber zip refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
     open(os.path.join(t, "deliv", "x-gerbers.zip"), "w").write("z"); chk("clean flag with a deliverable passes", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "CLEAN")
     open(os.path.join(t, "stub.log"), "w").write("Traceback (most recent call last):\n"); chk("stub router traceback is a tool crash", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), os.path.join(t, "stub.log"), os.path.join(t, "deliv"))[0] == "TOOL_CRASH")
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    try:
+        import bench_compare
+        base = {"vias_router": 100, "length_mm": 1000.0, "tracks": 500, "hard": 0, "unrouted": 0}
+        same = dict(base, hard_types_checked=6, connections=300, pairs_over_1mm=0)
+        v, note, q = bench_compare.compare(base, same); chk("board compared with itself is MET with Q 1.0", v == "MET" and abs(q - 1.0) < 1e-9)
+        v, note, q = bench_compare.compare(base, dict(same, unrouted=1)); chk("a deleted track (one open) is INELIGIBLE, not ranked", v == "INELIGIBLE" and q is None)
+        v, note, q = bench_compare.compare(base, dict(same, vias_router=110)); chk("router vias +10 percent is a REGRESSION", v == "REGRESSION")
+        v, note, q = bench_compare.compare(base, dict(same, pairs_over_1mm=2)); chk("a pair over 1 mm is a REGRESSION", v == "REGRESSION")
+        v, note, q = bench_compare.compare(base, dict(same, vias_router=80, length_mm=950.0, tracks=450)); chk("fewer vias, shorter, fewer segments is MET with Q under 1", v == "MET" and q < 1.0)
+        v, note, q = bench_compare.compare(base, {"hard": None, "unrouted": None}); chk("metrics without DRC numbers are UNMEASURABLE", v == "UNMEASURABLE")
+    except ImportError as e: chk("bench_compare importable", False)
     shutil.rmtree(t, ignore_errors=True); ok = sum(1 for _, c in res if c)
     print("selftest: %d of %d predicates block on empty input as required" % (ok, len(res))); return 0 if ok == len(res) else 1
 
