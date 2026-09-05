@@ -1,0 +1,24 @@
+{
+  "board": "pcb-d-aprs",
+  "board_key": "D7",
+  "project": "v2/ecad/pcb-d-aprs",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "preroute": "strip:v2/release/revA/boards/meshsat-pcb-d-revA-D7/pcb-d-aprs.kicad_pcb",
+  "services_script": "~/meshsat-services.sh",
+  "expect": "via_costs 200 cuts router vias by at least 15 percent against base for under 15 percent more length (the probe saw 25 percent fewer vias for 13 percent more length on this board); preferred directions cut length; ripup costs change little",
+  "route": {"passes": 60, "threads": 1, "timeout": 1800},
+  "configs": [
+    {"name": "base"},
+    {"name": "via100", "via_costs": 100},
+    {"name": "via200", "via_costs": 200},
+    {"name": "via400", "via_costs": 400},
+    {"name": "planevia20", "plane_via_costs": 20},
+    {"name": "ripup200", "ripup": 200},
+    {"name": "ripup400", "ripup": 400},
+    {"name": "pref_hvhv", "preferred": "h,v,h,v"},
+    {"name": "pref_vhvh", "preferred": "v,h,v,h"},
+    {"name": "via200_pref_hvhv", "via_costs": 200, "preferred": "h,v,h,v"},
+    {"name": "via200_ripup200", "via_costs": 200, "ripup": 200},
+    {"name": "via400_pref_hvhv", "via_costs": 400, "preferred": "h,v,h,v"}
+  ]
+}
