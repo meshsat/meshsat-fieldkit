@@ -323,26 +323,6 @@
         "pattern": "DSI0_*"
       },
       {
-        "netclass": "USB",
-        "pattern": "PCIe_TX_*"
-      },
-      {
-        "netclass": "USB",
-        "pattern": "PCIe_RX_*"
-      },
-      {
-        "netclass": "USB",
-        "pattern": "PCIe_CLK_P"
-      },
-      {
-        "netclass": "USB",
-        "pattern": "PCIe_CLK_N"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "+3V3_WIFI"
-      },
-      {
         "netclass": "PWR",
         "pattern": "5V_*"
       },
