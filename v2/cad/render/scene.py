@@ -184,6 +184,7 @@ box("cm5_module", (40, 55, 1.24), (-88, 0, ZB + 4.62), M["pcb"]); box("cm5_soc",
 box("cm5_cooler", (41, 56, 4.0), (-88, 0, ZB + 8.24 + 2.0), M["alu"]); box("cm5_fan", (30, 30, 6), (-88, 0, ZB + 8.24 + 12.7 + 3), M["dark"]); cyl("cm5_fan_rotor", 26, 5, (-88, 0, ZB + 8.24 + 12.7 + 3.5), M["gray"], verts=7)
 for i in range(13): box("cm5_fin_%d" % i, (1.2, 52, 8.7), (-88 - 18 + 3.0 * i, 0, ZB + 8.24 + 4.0 + 4.35), M["alu"])
 for (x, y) in ((-104.5, -24), (-104.5, 24), (-71.5, -24), (-71.5, 24)): cyl("cm5_standoff_%d_%d" % (x, y), 4.0, 4.0, (x, y, ZB + 2.0), M["steel"])
+box("wifi_m2_socket", (10, 22, 4.2), (32.4, 60, ZB + 2.1), M["dark"]); box("wifi_m2_card", (26.6, 22, 0.8), (53.7, 60, ZB + 4.6), M["pcb"]); box("wifi_m2_sink", (24, 20, 4.0), (54, 60, ZB + 7.0), M["alu"]); cyl("wifi_m2_standoff", 4.5, 2.4, (65.25, 60, ZB + 5.2), M["steel"], verts=6)
 box("lte_card", (50.95, 30, 1.0), (-3, 67, ZB + 4.5), M["pcb"]); box("lte_can", (30, 24, 2.5), (5, 67, ZB + 6.25), M["tin"]); box("lte_socket", (8, 22, 4.0), (-29.5, 67, ZB + 2.0), M["dark"])
 box("sdr_stick", (69, 27, 13), (37, 0, ZB + 6.5), M["dark"], bevel=2.0); cyl("sdr_sma", 6.5, 10, (76, 0, ZB + 6.5), M["gold"], axis="X"); box("usb_a_recept", (14, 13.5, 7), (-12, 0, ZB + 3.5), M["steel"])
 import_stl("rockblock9704", "rockblock9704.stl", M["dark"], Matrix.Translation((52.0 - 90.3, -48.0 + 91.2, ZB + 6.0 + 10.3)))
@@ -230,16 +231,17 @@ label("nameplate", "MESHSAT FIELD KIT V2   S/N ______   NUCLEAR LIGHTERS", (0, -
 for x, y, txt in ((-150, 86, "MAIN"), (-110, 86, "PI"), (-70, 86, "TEST"), (120, 86, "LIGHT"), (170, 55, "SOS"), (170, 13, "EMCON"), (170, -29, "ZEROIZE")): label("lbl_" + txt, txt, (x, y, FACE + 0.05), 4.0, M["white"])
 # ------------------------------------------------------------------ end-wall antennas: bulkheads at Z 55, Y -60, -30, +30, +60; whips upright on right-angle adapters
 WX = BW / 2
-ANT = {"UHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9)}
-for sx, sites in ((-1, ((-60, "UHF"), (-30, "WIFI 2.4"), (30, "GNSS"), (60, "SDR"))), (1, ((-60, "LTE"), (-30, "IRIDIUM"), (30, "LORA"), (60, "SPARE")))):
-    for y, nm in sites:
-        cyl("bulk_" + nm, 9.5, 3.0, (sx * (WX + 1.5), y, 55), M["steel"], axis="X", verts=6); cyl("bulk_sma_" + nm, 6.5, 11, (sx * (WX + 7), y, 55), M["gold"], axis="X")
+ANT = {"UHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9), "WIFI P2P A": (120, 9), "WIFI P2P B": (120, 9)}
+for sx, sites in ((-1, ((-60, "UHF"), (-30, "WIFI 2.4"), (30, "GNSS"), (60, "SDR"))), (1, ((-60, "LTE"), (-30, "IRIDIUM"), (30, "LORA"), (60, "WIFI P2P A"), (-45, "WIFI P2P B", 90)))):
+    for site in sites:
+        y, nm = site[0], site[1]; z = site[2] if len(site) > 2 else 55
+        cyl("bulk_" + nm, 9.5, 3.0, (sx * (WX + 1.5), y, z), M["steel"], axis="X", verts=6); cyl("bulk_sma_" + nm, 6.5, 11, (sx * (WX + 7), y, z), M["gold"], axis="X")
         ax = sx * (WX + 15)
         if nm in ANT:
-            L, d = ANT[nm]; cyl("ant_elbow_" + nm, 8, 9, (ax, y, 55), M["gold"], axis="X"); cyl("ant_base_" + nm, 12, 24, (ax, y, 55 + 4 + 12), M["dark"]); cyl("ant_" + nm, d, L, (ax, y, 55 + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + nm, d * 1.25, (ax, y, 55 + 16 + L), M["rubber"])
-        elif nm == "IRIDIUM": cyl("ant_elbow_iridium", 8, 9, (ax, y, 55), M["gold"], axis="X"); cyl("ant_iridium", 76, 18, (ax, y, 55 + 10 + 9), M["white"], bevel=2.0)
-        elif nm == "GNSS": cyl("ant_elbow_gnss", 8, 9, (ax, y, 55), M["gold"], axis="X"); cyl("ant_gnss", 48, 14, (ax, y, 55 + 8 + 7), M["dark"], bevel=2.0)
-        else: cyl("ant_plug", 9, 6, (sx * (WX + 13), y, 55), M["steel"], axis="X", verts=6)
+            L, d = ANT[nm]; cyl("ant_elbow_" + nm, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + nm, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + nm, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + nm, d * 1.25, (ax, y, z + 16 + L), M["rubber"])
+        elif nm == "IRIDIUM": cyl("ant_elbow_iridium", 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_iridium", 76, 18, (ax, y, z + 10 + 9), M["white"], bevel=2.0)
+        elif nm == "GNSS": cyl("ant_elbow_gnss", 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_gnss", 48, 14, (ax, y, z + 8 + 7), M["dark"], bevel=2.0)
+        else: cyl("ant_plug", 9, 6, (sx * (WX + 13), y, z), M["steel"], axis="X", verts=6)
 # ------------------------------------------------------------------ world, lights, cameras, views
 S.render.engine = "CYCLES"; S.cycles.samples = int(os.environ.get("SAMPLES", "256")); S.cycles.use_denoising = False; S.cycles.device = "CPU"
 S.render.resolution_x = 2000; S.render.resolution_y = 1400; S.render.resolution_percentage = int(os.environ.get("RESPCT", "100"))
