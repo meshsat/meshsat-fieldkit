@@ -45,7 +45,7 @@ with PdfPages(out_fn) as pdf:
     ax.text(L.BAR_LEDS[2][1][0], L.BAR_LEDS[0][1][1] - 8, "D12..D16 d%.1f H7, 6 mm pitch" % L.LED_HOLE, fontsize=5.5, ha="center", va="top")
     for k, (x, y) in enumerate(L.FRAME_BOSSES): ax.text(x, y + 4, "M3", fontsize=5, ha="center")
     for k, (x, y) in enumerate(L.STANDOFFS): ax.text(x + (4 if k < 4 else 0), y + (0 if k < 4 else 5), "SO-M3 H%d" % (k + 1) if k < 4 else "H%d" % (k + 1), fontsize=5, va="center" if k < 4 else "bottom", ha="left" if k < 4 else "center")
-    ax.text(0, 0, "+", fontsize=9, ha="center", va="center"); ax.text(0, H / 2 + 24, "+ = the case frame origin (X along the case, +Y toward the hinge wall); the plate is symmetric on both axes", fontsize=6, ha="center", va="bottom")
+    ax.text(0, 0, "+", fontsize=9, ha="center", va="center"); ax.text(0, H / 2 + 24, "the cross marks the case frame origin: X along the case, +Y toward the hinge wall; the plate is symmetric on both axes", fontsize=5.5, ha="center", va="bottom")
     ax.plot([-W / 2 - 25, -W / 2 - 25 + 50], [-H / 2 - 25, -H / 2 - 25], lw=2, color="k"); ax.text(-W / 2 - 25 + 25, -H / 2 - 22, "50 mm", fontsize=7, ha="center")
     # the table
     tx = fig.add_axes([0.61, 0.07, 0.38, 0.91]); tx.axis("off")
