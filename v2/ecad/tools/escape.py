@@ -89,7 +89,7 @@ for fp in b.GetFootprints():
     ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))
     if ONLY and fp.GetReference() not in ONLY: continue                    # test runs on one part
     pitch = min_pitch(fp); fc = fp.GetPosition()
-    ROWS04 = pitch <= FromMM(0.45) and b.GetDesignSettings().m_ViasMinSize <= FromMM(0.40) and b.GetDesignSettings().m_HoleClearance <= FromMM(0.19)   # only a board set up for it (B13: via 0.40/0.20, class clearance 0.127, hole clearance 0.19); A20 and D6 keep the QFN scheme
+    ROWS04 = (pitch <= FromMM(0.45) or fp.GetReference() == "J_WIFI1") and b.GetDesignSettings().m_ViasMinSize <= FromMM(0.40) and b.GetDesignSettings().m_HoleClearance <= FromMM(0.19)   # B14: the 0.5 mm M.2 rows take the CM5IO tip-via scheme too (the 0.7 scheme left 0.096 mm between a stub and a neighbour via)   # only a board set up for it (B13: via 0.40/0.20, class clearance 0.127, hole clearance 0.19); A20 and D6 keep the QFN scheme
     FAN_OK = True; CLR = FromMM(0.127) if ROWS04 else FromMM(0.16)   # the 0.4 mm rows need the JLC floor itself; every other part keeps the 0.16 margin
     if ROWS04: VIA_D, VIA_DR, TW, OFFS, FAN_OK = FromMM(0.40), FromMM(0.20), FromMM(0.127), (0.3, 1.0, 1.7), False
     # 0.4 mm board-to-board rows (the CM5 receptacles, B13, appendix 32.35): the CM5IO scheme, a 0.40/0.20 via right past every pad tip,
