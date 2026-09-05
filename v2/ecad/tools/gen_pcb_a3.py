@@ -230,7 +230,7 @@ BOOST = [("BOOST1_IN", 1, 4.1, 9.5, (-3.5, 9.5), (-2.0, 17.0)),     # column x, 
          ("BOOST3_IN", 3, 52.0, 58.0, (52.0, 64.5), (48.0, 67.0))]  # jog east to the L4 tap
 I1 = (pcbnew.In1_Cu,)
 for net, n, cx0, cx1, jog, foot in BOOST:
-    col = K(cx0, 121.0, cx1, 158.5); ft = K(foot[0], 147.5, foot[1], 153.0); bot = K(cx0, 121.0, cx1, 148.2); south = K(cx0, 152.8, cx1, 158.5)
+    col = K(cx0, 121.0, cx1, 158.5); ft = K(foot[0], 147.5, foot[1], 153.0); bot = K(cx0, 121.0, cx1, 148.2); south = K(cx0, 152.3, cx1, 158.5)
     outer_pour(net, "boost %d column" % n, col, layers=I2, priority=2); track_keepout("boost %d column" % n, col, layer=pcbnew.In2_Cu)
     outer_pour(net, "boost %d foot" % n, ft, layers=I2, priority=3); track_keepout("boost %d foot" % n, ft, layer=pcbnew.In2_Cu)          # under the node bar only (y 148.5 to 152)
     outer_pour(net, "spare foot boost %d" % n, ft, layers=I1, priority=3)                                                                # In1 in parallel, best effort: no keep-out, not gated
@@ -241,7 +241,7 @@ for net, n, cx0, cx1, jog, foot in BOOST:
         outer_pour(net, "boost %d jog" % n, jg, layers=I2, priority=4); track_keepout("boost %d jog" % n, jg, layer=pcbnew.In2_Cu)
         outer_pour(net, "boost %d bottom jog" % n, jg, layers=B, priority=3); track_keepout("boost %d bottom jog" % n, jg)
     stitch(net, [(cx0 + 1.2, 146.0), (cx1 - 1.2, 146.0), (cx0 + 1.2, 147.5), (cx1 - 1.2, 147.5)])   # In2 to B.Cu north of the bar
-    stitch(net, [(cx0 + 1.2, 153.2), (cx1 - 1.2, 153.2)])                                          # In2 and In1 feet to the B.Cu south segment
+    stitch(net, [(cx0 + 0.6, 152.6), (cx1 - 0.6, 152.6)])                                          # In2 and In1 feet to the B.Cu south segment, at the column edges: the fuse pin sits on the column axis 1.7 mm south (hole to hole 0.3)
 # --- A21 output islands (5 Sep 2026, appendix 32.39): the TPS61288L VOUT pin is a 1.25 x 0.40 mm pad with its neighbours 0.25 mm away, so no 1.0 mm track
 #     can leave it (the six opens of the 14:20 run, every one at pad 5 of U22/U23/U24) and the escape scheme had given each rail one 0.2 mm stub and one
 #     0.45/0.25 via as its whole current path. Each converter gets a top-side copper island: a 0.5 mm neck over the east end of pad 5 (between pad 6 and the
