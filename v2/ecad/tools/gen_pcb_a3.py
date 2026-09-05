@@ -194,11 +194,22 @@ outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
 #     Rails M2 and PI run from their output capacitors (C96 at (-107, -15), C97 at (-75, -11)) west along the boost row and north to the VH connectors at y 44.5;
 #     rail M1 has its In2 plane. Boost inputs: fuse (THT, y -44.3) north to the inductor pad (fanned out to a via). CELL+ gets a tap to the mezzanine fuse F2.
 B = (pcbnew.B_Cu,)
-outer_pour("+5V_M2", "rail M2 collector", (-140.0, -18.5, -103.0, -14.6), layers=B); outer_pour("+5V_M2", "rail M2 riser", (-140.0, -18.5, -134.0, 46.5), layers=B, priority=3)
-outer_pour("+5V_PI", "rail PI collector", (-125.0, -14.0, -71.5, -9.5), layers=B); outer_pour("+5V_PI", "rail PI riser", (-125.0, -14.0, -119.0, 46.5), layers=B, priority=3)
-outer_pour("BOOST1_IN", "boost 1 feed", (-158.0, -46.5, -152.0, -3.5), layers=B); outer_pour("BOOST1_IN", "boost 1 inductor", (-158.0, -9.0, -145.0, -3.5), layers=B, priority=3)
-outer_pour("BOOST2_IN", "boost 2 feed", (-133.0, -46.5, -127.0, -3.5), layers=B); outer_pour("BOOST2_IN", "boost 2 inductor", (-133.0, -9.0, -113.0, -3.5), layers=B, priority=3)
-outer_pour("BOOST3_IN", "boost 3 feed", (-108.0, -46.5, -102.0, -19.5), layers=B); outer_pour("BOOST3_IN", "boost 3 link", (-108.0, -22.5, -80.0, -19.5), layers=B, priority=3); outer_pour("BOOST3_IN", "boost 3 inductor", (-86.0, -22.5, -80.0, -3.5), layers=B, priority=4)
+# The bands (board frame, x = KiCad x - 150, y = 110 - KiCad y). Run 8 of 5 Sep showed that the PI collector at KiCad y 119.5 to 124 was cut by the boost 3
+# inductor band and its riser by the boost 2 inductor band (same layer, other net), so the PI rail now runs north of the boost row (KiCad y 109.5 to 112.8)
+# with a tap east of the boost 3 inductor band down to the U24 island's stitch vias; the M2 collector is widened north to 6.5 mm so U23's escape via row
+# (KiCad y 127.25) leaves 4.7 mm of it. Every band also gets a B.Cu track keep-out (vias allowed, so escape.py and prefanout.py ignore it): the router
+# may not cut a band with another net's track; it crosses on F.Cu, In1 or In2.
+BANDS = [("+5V_M2", "rail M2 collector", (-140.0, -18.5, -103.0, -12.0), 2), ("+5V_M2", "rail M2 riser", (-140.0, -18.5, -134.0, 46.5), 3),
+         ("+5V_PI", "rail PI collector", (-125.0, -2.8, -70.5, 0.5), 2), ("+5V_PI", "rail PI riser", (-125.0, -2.8, -119.0, 46.5), 3), ("+5V_PI", "rail PI tap", (-79.5, -14.0, -70.5, 0.5), 3),
+         ("BOOST1_IN", "boost 1 feed", (-158.0, -46.5, -152.0, -3.5), 2), ("BOOST1_IN", "boost 1 inductor", (-158.0, -9.0, -145.0, -3.5), 3),
+         ("BOOST2_IN", "boost 2 feed", (-133.0, -46.5, -127.0, -3.5), 2), ("BOOST2_IN", "boost 2 inductor", (-133.0, -9.0, -113.0, -3.5), 3),
+         ("BOOST3_IN", "boost 3 feed", (-108.0, -46.5, -102.0, -19.5), 2), ("BOOST3_IN", "boost 3 link", (-108.0, -22.5, -80.0, -19.5), 3), ("BOOST3_IN", "boost 3 inductor", (-86.0, -22.5, -80.0, -3.5), 4)]
+def track_keepout(name, rect, layer=pcbnew.B_Cu):
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+    z.SetLayer(layer); z.SetZoneName("keep tracks off " + name); o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
+    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
+    board.Add(z)
+for net, name, rect, prio in BANDS: outer_pour(net, name, rect, layers=B, priority=prio); track_keepout(name, rect)
 # --- A21 output islands (5 Sep 2026, appendix 32.39): the TPS61288L VOUT pin is a 1.25 x 0.40 mm pad with its neighbours 0.25 mm away, so no 1.0 mm track
 #     can leave it (the six opens of the 14:20 run, every one at pad 5 of U22/U23/U24) and the escape scheme had given each rail one 0.2 mm stub and one
 #     0.45/0.25 via as its whole current path. Each converter gets a top-side copper island: a 0.5 mm neck over the east end of pad 5 (between pad 6 and the
@@ -214,9 +225,9 @@ def stitch(netname, pts_k):
     for x, y in pts_k:
         v = pcbnew.PCB_VIA(board); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetDrill(FromMM(0.4)); v.SetWidth(FromMM(0.8)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
         v.SetNet(net_for(netname, create=False)); v.SetLocked(True); board.Add(v)
-for ref, net, vias in (("U22", "+5V_M1", [(14.88, -6.0), (16.38, -6.0), (14.88, -4.4), (16.38, -4.4), (14.88, -2.8), (16.38, -2.8)]),      # into the In2 plane, east of the M2 riser
-                       ("U23", "+5V_M2", [(4.38 + 1.5 * k, -2.6) for k in range(6)]),                                                   # into the M2 collector (B.Cu, y 124.6 to 128.5)
-                       ("U24", "+5V_PI", [(4.38 + 1.5 * k, -7.0) for k in range(6)])):                                                  # into the PI collector (B.Cu, y 119.5 to 124.0)
+for ref, net, vias in (("U22", "+5V_M1", [(4.5, -13.5 + 2.0 * k) for k in range(6)]),                                                  # into the In2 plane, in the column between the converter and its capacitors (clear of the M2 collector)
+                       ("U23", "+5V_M2", [(4.38 + 1.5 * k, -2.6) for k in range(6)]),                                                   # into the M2 collector (B.Cu, KiCad y 122.0 to 128.5)
+                       ("U24", "+5V_PI", [(5.13 + 1.5 * k, -7.0) for k in range(6)])):                                                  # into the PI tap (B.Cu, KiCad x 70.5 to 79.5, y 109.5 to 124)
     x0 = placed[ref].GetPosition().x / 1e6; y0 = placed[ref].GetPosition().y / 1e6
     island(net, "VOUT island " + ref, [(x0 + 1.4, y0 - 0.05), (x0 + 3.6, y0 - 0.05), (x0 + 3.6, y0 - 15.4), (x0 + 17.5, y0 - 15.4), (x0 + 17.5, y0 + 4.0), (x0 + 3.6, y0 + 4.0), (x0 + 3.6, y0 + 0.45), (x0 + 1.4, y0 + 0.45)])
     stitch(net, [(x0 + dx, y0 + dy) for dx, dy in vias])
