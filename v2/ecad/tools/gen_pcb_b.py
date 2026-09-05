@@ -53,6 +53,7 @@ SDR_RECT = (-4.0, -16.0, 78.0, 16.0)
 SDR_SLOTS = [(20.0, -18.0), (74.0, -18.0), (20.0, 18.0), (66.0, 18.0)]   # tie-wrap slots 5 x 1.8
 # LTE mini PCIe card (north band): socket at the west end, full-size card 30 x 50.95 extending east, two M2.5 standoffs in the socket footprint
 LTE_RECT = (-32.0, 52.0, 26.0, 82.0)
+WIFI_RECT = (27.0, 49.0, 64.0, 71.0)   # B14: M.2 E-key socket at (34, 60) rot -90, the 2230 card along +X to 64, standoff hole at (62.25, 60); IPEX leads east
 # ZigBee module (east strip): E72-2G4M20S1E 28.7 x 17.5, long axis along Y, PCB antenna toward the back wall
 ZB_RECT = (84.0, 16.0, 104.0, 52.0)   # the module body plus its 3 mm antenna keep-out; its small parts pack east of it
 # RockBLOCK dual site centred (52, -48): 9704 on the GC bracket (4x Ø4.6 on 32 x 32), 9603 offset +6 in Y
@@ -76,7 +77,7 @@ PASS_CENTRE = (-13.0, -50.0, 15.0)              # Ø15 general pass-through
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(4)
 tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-B COMPUTE"); tb.SetRevision("A")
-tb.SetDate("2026-09-04"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-795. Case-centred frame. B13: Compute Module 5 carrier (appendix 32.35), radios on the module's buses, three rails from PCB-A. tools/gen_pcb_b.py")
+tb.SetDate("2026-09-05"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-802. Case-centred frame. B14: M.2 WiFi P2P socket on the CM5 PCIe lane (appendix 32.37) on B13: Compute Module 5 carrier (appendix 32.35), radios on the module's buses, three rails from PCB-A. tools/gen_pcb_b.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.40), ("m_MinThroughDrill", 0.20),   # B13: the 0.4 mm connector rows take 0.40/0.20 vias at the pad tips (the CM5IO scheme)
@@ -190,6 +191,8 @@ if usb_a is None: rect((SDR_RECEPT[0] - 7, SDR_RECEPT[1] - 7.5, SDR_RECEPT[0] + 
 text("J_RTL1", SDR_RECEPT[0], SDR_RECEPT[1] + 9.5, pcbnew.F_SilkS, 1.0, 0.18)
 # LTE card (north band) and ZigBee module (east strip): outlines for the fit check; the footprints come with the netlist
 rect(LTE_RECT, pcbnew.Dwgs_User, 0.1)
+rect(WIFI_RECT, pcbnew.Dwgs_User, 0.1)
+text("WIFI P2P: AsiaRF AW7915-AED M.2 2230 on J_WIFI1 (CM5 PCIe), M2.5 standoff; 2x IPEX pigtails -> WIFI P2P bulkheads (east wall)", (WIFI_RECT[0] + WIFI_RECT[2]) / 2, WIFI_RECT[1] - 1.6, pcbnew.F_SilkS, 0.9, 0.16)
 text("LTE: Quectel EG25-G mini PCIe (full-size card 30 x 50.95) on J_LTE1, 2x M2.5 standoffs; SIM in J_SIM1; pigtails -> LTE bulkhead", (LTE_RECT[0] + LTE_RECT[2]) / 2, LTE_RECT[3] + 1.6, pcbnew.F_SilkS, 0.9, 0.16)
 rect(ZB_RECT, pcbnew.Dwgs_User, 0.1)
 text("ZIGBEE: Ebyte E72-2G4M20S1E (CC2652P), PCB antenna to the back wall", (ZB_RECT[0] + ZB_RECT[2]) / 2, ZB_RECT[3] + 1.6, pcbnew.F_SilkS, 0.9, 0.16)
@@ -216,7 +219,7 @@ text("J_AB1 2x9 to PCB-A (underside)", J_AB[0], J_AB[1] + 8.0, pcbnew.B_SilkS, 0
 text("J_PANEL ribbon up to PCB-C", 86.0, 75.5, pcbnew.F_SilkS, 0.9, 0.16)
 # datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("PCB-B COMPUTE  REV A (B13)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
+text("PCB-B COMPUTE  REV A (B14)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
 text("MESHSAT-795 | 245x170x1.6 4L | matte black | 2026-09-04", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -10, 83.0, pcbnew.F_SilkS, 1.2, 0.2); text("FRONT WALL (-Y)   v v v", -100, -83.2, pcbnew.F_SilkS, 1.5, 0.25)
 text("PORT (-X)", -hx + 5.5, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 6.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)

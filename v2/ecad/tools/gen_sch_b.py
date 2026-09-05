@@ -141,7 +141,8 @@ FP = {
  # B13 sites
  "CM5A": "meshsat:CM5_Conn_A_10164227", "CM5B": "meshsat:CM5_Conn_B_10164227",   # the two 100-pin Amphenol 10164227 receptacles of the module site (CM5IO design files); holes and outline by gen_pcb_b.py
  "FPC22": "meshsat:Hirose_FH12-22S-0.5SH_1x22-1MP_P0.50mm_Horizontal",      # Touch Display 2 FPC, 22-pin 0.5 mm (CM5IO design files)
- "MPCIE": "meshsat:MiniPCIe_Socket_52P_H4.0_Standoff",                     # PCI Express Mini Card socket + the two M2.5 standoffs of a full-size card
+ "MPCIE": "meshsat:MiniPCIe_Socket_52P_H4.0_Standoff",
+ "M2E": "meshsat:M2_E-Key_Socket_2230",                                      # M.2 E-key socket, 2230 card, plated M2.5 standoff hole 28.25 mm from the datum (B14)                     # PCI Express Mini Card socket + the two M2.5 standoffs of a full-size card
  "NANOSIM": "Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00",
  "NEO": "RF_GPS:ublox_NEO", "WIO": "meshsat:Seeed_Wio-SX1262", "E72": "meshsat:Ebyte_E72-2G4M20S1E",
  "UFL": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical", "CR2032": "Battery:BatteryHolder_Keystone_3034_1x20mm",
@@ -187,7 +188,7 @@ r("R1", "1k", "+5V_M1", "LED_5V_A"); part("LED1", "Device", "LED", "green 5V", "
 part("J_TD2", "Connector_Generic", "Conn_01x02", "Touch Display 2 5V (XH2.54)", "XH2", {"1": "+5V_M1", "2": "GND"})
 for i, net in enumerate(("+5V_M1", "GND", "+3V3", "SDA", "SCL", "TX_INHIBIT_n", "PI_KILL", "+5V_M2", "+5V_PI", "+3V3_CM", "+1V8_CM", "VBUS_EN", "PMIC_EN", "PWR_BUT", "GNSS_PPS", "GNSS_TXD", "I2S_BCLK", "I2S_LRCLK", "VBUS_FLASH", "SDA_CM", "SCL_CM", "+3V3_LTE", "EXP_INT"), 1):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
-for i, net in enumerate(("+5V_M1", "+5V_M2", "+5V_PI", "+3V3", "GND", "5V_RTL", "+3V3_CM", "+1V8_CM", "+3V3_LTE", "VBAT", "RB_FUSED", "5V_LTE_IN", "+3V3_AB", "SIM_VCC", "5V_RB"), 1):
+for i, net in enumerate(("+5V_M1", "+5V_M2", "+5V_PI", "+3V3", "GND", "5V_RTL", "+3V3_CM", "+1V8_CM", "+3V3_LTE", "VBAT", "RB_FUSED", "5V_LTE_IN", "+3V3_AB", "SIM_VCC", "5V_RB", "+3V3_WIFI", "5V_WIFI_IN"), 1):
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 
 # --- 3.3 V rails: U31 board logic and radios, enabled by the module's own 3.3 V so the rail follows the module (no back-feed when it is off);
@@ -198,6 +199,12 @@ r("R41", "0.05R 1% 1206", "+5V_M1", "5V_LTE_IN", "RS"); ina219("U33", "+5V_M1", 
 buck("U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "5V_LTE_IN", "EN_LTE", "+3V3_LTE", "SW_LTE", "FB_LTE", "BST_LTE", "3.3 V buck for the LTE socket (EN_LTE)")
 r("R42", "100k", "EN_LTE", "GND")
 c("C50", "100u 6.3V", "+3V3_LTE", "GND", "C100u"); c("C51", "100n", "+3V3_LTE", "GND"); c("C52", "33p", "+3V3_LTE", "GND", "C0402"); c("C53", "10p", "+3V3_LTE", "GND", "C0402")   # Quectel EG25-G mini PCIe HD 3.3: bulk + RF decoupling at the socket
+#     U36 the M.2 WiFi socket (B14, appendix 32.37: AsiaRF AW7915-AED, 3.3 V at up to 3 A, 9 W maximum), on rail M2 through its own shunt and INA219 (0x45),
+#     enabled by the module's PCIE_PWR_EN output (3.3 V, active high) so the card rail follows the module and its PCIe link state
+r("R72", "0.05R 1% 1206", "+5V_M2", "5V_WIFI_IN", "RS"); ina219("U35", "+5V_M2", "5V_WIFI_IN", "+3V3", "+3V3")   # A0 = A1 = VS: 0x45
+buck("U36", "L36", "C67", "C68", "C69", "C70", "R73", "R74", "5V_WIFI_IN", "PCIE_PWR_EN", "+3V3_WIFI", "SW_WIFI", "FB_WIFI", "BST_WIFI", "3.3 V buck for the M.2 WiFi socket (PCIE_PWR_EN)")
+r("R75", "100k", "PCIE_PWR_EN", "GND")
+c("C71", "100u 6.3V", "+3V3_WIFI", "GND", "C100u"); c("C72", "100n", "+3V3_WIFI", "GND")   # bulk at the socket's four 3.3 V pins
 c("C49", "10u", "+3V3_CM", "GND", "C10u"); c("C39", "100n", "+3V3_CM", "GND")
 
 # --- the Compute Module 5 (U30): pin functions per Table 4 of the datasheet; GPIO map per appendix 32.35 (I2S on 18 to 21, SPI0 for the e-paper and LoRa,
@@ -275,6 +282,21 @@ r("R64", "1k", "+3V3_LTE", "LED_LTE_A"); part("LED2", "Device", "LED", "amber LT
 part("J_LTEDBG", "Connector_Generic", "Conn_01x03", "EG25-G main UART (3.3 V, bench): GND TX RX", "PH1x3", {"1": "GND", "2": "LTE_UART_TX", "3": "LTE_UART_RX"})
 esd("U8", "USB_LTE_P", "USB_LTE_N", "+3V3_LTE")
 
+# --- WiFi P2P (B14): M.2 E-key socket on the module's PCIe Gen 2 x1 lane for the AsiaRF AW7915-AED (MediaTek MT7915DAN, 2T2R DBDC, vendor/wifi/),
+#     the kit-to-kit link without an access point (IBSS as on V1, mesh or P2P as the bridge decides). Socket-side names of the KiCad Bus_M.2_Socket_E symbol
+#     (M.2 specification): PETp/n0 35/37 = the card's transmit pair = the module's PCIe_RX, PERp/n0 41/43 = the module's PCIe_TX, REFCLK 47/49,
+#     PERST0# 52 from PCIe_nRST, CLKREQ0# 53 to PCIe_CLK_nREQ, PEWAKE0# 55 to PCIE_nWAKE (unsupported in software, wired anyway), W_DISABLE1# 56 pulled up and
+#     driven low by Q6 from the expander bit WIFI_DIS (radio off), W_DISABLE2# 54 pulled up, LED_1# 6 sinks LED7, 3.3 V on 2/4/72/74 from U36, USB and the rest NC.
+#     AC coupling: the module's TX pair has its capacitors on the module, the card's TX pair has them on the card (CM5 datasheet 2.3).
+M2 = {n: "NC" for n in list(range(1, 24)) + list(range(32, 76))}
+M2.update({1: "GND", 7: "GND", 18: "GND", 33: "GND", 39: "GND", 45: "GND", 51: "GND", 57: "GND", 63: "GND", 69: "GND", 75: "GND",
+           2: "+3V3_WIFI", 4: "+3V3_WIFI", 72: "+3V3_WIFI", 74: "+3V3_WIFI", 6: "WIFI_nLED",
+           35: "PCIe_RX_P", 37: "PCIe_RX_N", 41: "PCIe_TX_P", 43: "PCIe_TX_N", 47: "PCIe_CLK_P", 49: "PCIe_CLK_N",
+           52: "PCIe_nRST", 53: "PCIe_CLK_nREQ", 54: "WIFI_W_DIS2_n", 55: "PCIE_nWAKE", 56: "WIFI_W_DIS_n"})
+part("J_WIFI1", "Connector", "Bus_M.2_Socket_E", "M.2 E-key socket 2230, M2.5 standoff: AsiaRF AW7915-AED (MT7915, WiFi 6 2x2 DBDC) on the CM5 PCIe lane, kit-to-kit link", "M2E", {str(k): v for k, v in M2.items()})
+r("R76", "10k", "WIFI_W_DIS_n", "+3V3_WIFI"); r("R77", "10k", "WIFI_W_DIS2_n", "+3V3_WIFI"); nfet("Q6", "WIFI_DIS", "GND", "WIFI_W_DIS_n")   # expander bit high = radio disabled, no back-feed when the card rail is off
+r("R78", "1k", "+3V3_WIFI", "LED7_A"); part("LED7", "Device", "LED", "blue WiFi link", "LED", {"2": "LED7_A", "1": "WIFI_nLED"})
+
 # --- GNSS: u-blox NEO-M9N-00B (UBX-19014285, vendor/gnss/) on the module-side I2C (0x42), TIMEPULSE to GPIO22, active antenna bias from VCC_RF through a tee to the U.FL
 part("U40", "RF_GPS", "NEO-M9N", "u-blox NEO-M9N-00B: I2C + PPS, external active antenna", "NEO",
      {"1": "NC", "2": "NC", "3": "GNSS_PPS", "4": "NC", "5": "NC", "6": "NC", "7": "GND", "8": "GNSS_nRST", "9": "GNSS_VCC_RF", "10": "GND", "11": "GNSS_RF_IN", "12": "GND",
@@ -308,10 +330,12 @@ part("U20", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x20", "EXP", {
  "13": "FLT_RTL", "14": "LTE_RI", "15": "LTE_WAKE_n", "16": "RB_STATUS", "17": "RB_NETAV", "18": "RB_XMTG", "19": "RB_CTRL", "20": "RB_IEN"}, "C5626")
 part("U21", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x25", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "+3V3", "3": "+3V3",   # A0 = pin 21, A1 = pin 2, A2 = pin 3: 0x25
- "4": "WL_nDIS", "5": "BT_nDIS", "6": "DCF_PON", "7": "EPD_RES_ALT", "8": "EXP_SPARE0", "9": "EXP_SPARE1", "10": "EXP_SPARE2", "11": "EXP_SPARE3",
+ "4": "WL_nDIS", "5": "BT_nDIS", "6": "DCF_PON", "7": "EPD_RES_ALT", "8": "WIFI_DIS", "9": "EXP_SPARE1", "10": "EXP_SPARE2", "11": "EXP_SPARE3",
  "13": "DCF_T", "14": "EXP_SPARE4", "15": "EXP_SPARE5", "16": "EXP_SPARE6", "17": "EXP_SPARE7", "18": "EXP_SPARE8", "19": "EXP_SPARE9", "20": "EXP_SPARE10"}, "C5626")
 c("C26", "100n", "+3V3", "GND"); c("C27", "100n", "+3V3", "GND")
-for i in range(11): part("TP%d" % (30 + i), "Connector", "TestPoint", "EXP_SPARE%d" % i, "TP", {"1": "EXP_SPARE%d" % i})
+for i in range(11):
+    net = "WIFI_DIS" if i == 0 else "EXP_SPARE%d" % i   # B14: spare 0 became the WiFi radio disable
+    part("TP%d" % (30 + i), "Connector", "TestPoint", net, "TP", {"1": net})
 # --- RockBLOCK site (as B12, on UART2 fixed; the five status and control lines on U20)
 part("J_RB9704", "Connector_Generic", "Conn_02x08_Odd_Even", "RockBLOCK 9704 16-pin (IDC 2x8)", "IDC16", {
  "1": "GND", "2": "NC", "3": "RB_IEN", "4": "GND", "5": "NC", "6": "RB_CTRL", "7": "RB_STATUS", "8": "RB_XMTG", "9": "NC", "10": "GND", "11": "NC", "12": "NC",
@@ -414,6 +438,7 @@ SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_M1", "J_5V_M2", "J_5V_PI"
             ("USB 2.0 HUB USB2517I ON THE CM5 USB3-0 PAIR", ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "R3", "R4", "R5", "R6", "R7", "R8", "U2", "U7"]),
             ("CH1 SDR BAY: RTL-SDR V4 or LimeSDR Mini 2.0  (0x40)", ["U4", "R13", "R30", "C15", "R14", "U5", "C16", "C17", "J_RTL1", "U6"]),
             ("LTE: MINI PCIe SOCKET (QUECTEL EG25-G) ON THE CM5 USB3-1 PAIR, NANO-SIM", ["J_LTE1", "J_SIM1", "C56", "C57", "C58", "C59", "R59", "R60", "R61", "R62", "R63", "R64", "LED2", "J_LTEDBG", "U8"]),
+            ("WIFI P2P: M.2 E-KEY SOCKET ON THE CM5 PCIe LANE (ASIARF AW7915-AED), 3.3 V BUCK ON PCIE_PWR_EN, 0x45", ["J_WIFI1", "R72", "U35", "U36", "L36", "C67", "C68", "C69", "C70", "R73", "R74", "R75", "C71", "C72", "R76", "R77", "Q6", "R78", "LED7"]),
             ("GNSS u-blox NEO-M9N ON I2C (0x42) + PPS, ANTENNA BIAS TEE", ["U40", "R65", "C60", "C61", "R66", "L40", "C62", "J_GNSS1"]),
             ("LoRa SEEED Wio-SX1262 ON SPI0 CE1", ["U41", "C63", "C64", "R67"]),
             ("ZIGBEE EBYTE E72-2G4M20S1E (CC2652P, ZNP) ON UART1", ["U42", "C65", "C66", "R68", "R69", "R70", "LED3", "R71", "LED4", "J_ZBDBG"]),

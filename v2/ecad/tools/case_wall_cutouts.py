@@ -118,7 +118,7 @@ c.showPage()
 # Four sites per end wall at Y -60, -30, +30, +60 between the wall's inner ribs (Y 0 and +-89, appendix 25.1), 55 mm above the floor.
 SMA_Z = 55.0
 WEST = [(-60.0, "UHF"), (-30.0, "WIFI 2.4"), (30.0, "GNSS"), (60.0, "SDR")]        # west end wall (case -X): the strip's four western clamps; since B13 the third path carries the NEO-M9N antenna (the CM5 antenna is dual-band, one path)
-EAST = [(-60.0, "LTE"), (-30.0, "IRIDIUM"), (30.0, "LORA"), (60.0, "spare, plugged")]  # east end wall (case +X)
+EAST = [(-60.0, "LTE"), (-30.0, "IRIDIUM"), (30.0, "LORA"), (60.0, "WIFI P2P A"), (-45.0, "WIFI P2P B", 90.0)]  # east end wall (case +X); B14: the spare took the first WiFi P2P lead, the second sits in a second row at Z 90 (clear of the Iridium patch, whose top is at Z 82)
 def end_wall(title, sites, y_sign, ox_paper):
     """One end wall seen from OUTSIDE: paper x = case Y times y_sign (so the viewer's left is the right case direction)."""
     def Q(y, z): return W / 2 + (ox_paper + y_sign * y) * mm, oz + z * mm
@@ -127,19 +127,20 @@ def end_wall(title, sites, y_sign, ox_paper):
     for ry in (-89.0, 0.0, 89.0):
         qx, qz = Q(ry, 30); c.rect(qx - 3 * mm, qz, 6 * mm, 41 * mm, stroke=1, fill=0)
     c.setDash()
-    for (y, name) in sites:
-        qx, qz = Q(y, SMA_Z); c.setLineWidth(0.7); c.circle(qx, qz, 3.25 * mm, stroke=1, fill=0)
+    for site in sites:
+        y, name = site[0], site[1]; z = site[2] if len(site) > 2 else SMA_Z
+        qx, qz = Q(y, z); c.setLineWidth(0.7); c.circle(qx, qz, 3.25 * mm, stroke=1, fill=0)
         c.setLineWidth(0.5); c.line(qx + 2.75 * mm, qz - 1.73 * mm, qx + 2.75 * mm, qz + 1.73 * mm)   # the D flat at 6.00 across
         c.setLineWidth(0.2); c.line(qx - 5 * mm, qz, qx + 5 * mm, qz); c.line(qx, qz - 5 * mm, qx, qz + 5 * mm)
-        c.setFont("Helvetica", 6.5); c.drawCentredString(qx, qz + 5 * mm, name); c.drawCentredString(qx, qz - 7 * mm, "Y %+.0f" % y)
+        c.setFont("Helvetica", 6.5); c.drawCentredString(qx, qz + 5 * mm, name); c.drawCentredString(qx, qz - 7 * mm, "Y %+.0f" % y if z == SMA_Z else "Y %+.0f  Z %.0f" % (y, z))
     c.setFont("Helvetica", 7); qx, qz = Q(0, FLOOR_TO_RIM + 4); c.drawCentredString(qx, qz, title)
     qx, qz = Q(0, -4); c.drawCentredString(qx, qz, "cavity floor, Z 0; holes at Z %.0f" % SMA_Z)
 for k, (title, sites, sign) in enumerate((("WEST end wall (case -X), seen from outside: case +Y to your right", WEST, 1.0), ("EAST end wall (case +X), seen from outside: case +Y to your left", EAST, -1.0))):
     if k: c.showPage()
     end_wall(title, sites, sign, 0.0)
     scale_bar(-140, -14)
-    notes(["SHEET %d of 4: the SMA antenna bulkheads on this end wall, 55 mm above the floor, four sites at Y -60, -30, +30 and +60 (the east +60 site is a spare, plugged). Print at 100 percent." % (3 + k),
+    notes(["SHEET %d of 4: the SMA antenna bulkheads on this end wall, 55 mm above the floor, four sites at Y -60, -30, +30 and +60; since B14 the east +60 site carries the first WiFi P2P lead and a fifth east site at Y -45, Z 90 the second (appendix 32.37). Print at 100 percent." % (3 + k),
        "Coupler: Amphenol Connex 132170 SMA female-female bulkhead (vendor/rf), 6.5 mm D-hole with the flat filed to 6.00 across so the coupler cannot turn when a pigtail is torqued; 8 mm nut and lock washer inside, the NBR O-ring 6.5 x 1.0 under the outside hex.",
-       "The sites sit between the end walls' inner ribs (Y 0 and +-89, appendix 25.1) and above the battery module (26 mm) and the dock strip. Inside, an RG-316 jumper runs from each coupler to its float nest on the strip: west wall to the UHF, WIFI 2.4, GNSS and SDR nests, east wall to LTE, IRIDIUM and LORA (about 150 to 250 mm each).",
+       "The sites sit between the end walls' inner ribs (Y 0 and +-89, appendix 25.1) and above the battery module (26 mm) and the dock strip. Inside, an RG-316 jumper runs from each coupler to its float nest on the strip: west wall to the UHF, WIFI 2.4, GNSS and SDR nests, east wall to LTE, IRIDIUM and LORA (about 150 to 250 mm each); the two WIFI P2P couplers take IPEX pigtails straight from the M.2 card on PCB-B, no nest.",
        "Outside, the antenna pigtails screw on as before, 0.45 N m once. The retired wall strip E3 carried these same seven couplers; only their home changed."], -22)
 c.showPage(); c.save(); print("wrote", out)
