@@ -1,59 +1,80 @@
 #!/usr/bin/env python3
-"""Post-route length matching (B14, 5 Sep 2026): Freerouting does not length-match a differential pair, so the short leg gets a trombone
-meander inserted into one of its straight segments where the layer is free beside it. Usage: meander.py <board.kicad_pcb> <net name> <extra mm> [amplitude mm]
-The board is rewritten in place; the caller runs DRC afterwards and reverts if the hard count rose. Prints 'meander: ...' lines."""
+"""Post-route length matching (B14, 5 Sep 2026): Freerouting does not length-match a differential pair, so the short leg gets trombone meanders
+inserted into its straight segments (any angle) wherever the layer is free beside them, until the requested extra length is reached.
+Usage: meander.py <board.kicad_pcb> <net name> <extra mm> [amplitude mm]   (run in the project directory; the caller runs DRC and reverts on harm)
+Prints 'meander: ...' lines and exits 1 when the extra length could not be placed."""
 import sys, math, pcbnew
 FromMM, ToMM = pcbnew.FromMM, pcbnew.ToMM
-b = pcbnew.LoadBoard(sys.argv[1]); netname = sys.argv[2]; extra = float(sys.argv[3]); A = float(sys.argv[4]) if len(sys.argv) > 4 else 1.4
+b = pcbnew.LoadBoard(sys.argv[1]); netname = sys.argv[2]; remaining = float(sys.argv[3]); A_MAX = float(sys.argv[4]) if len(sys.argv) > 4 else 1.5
 net = b.GetNetInfo().GetNetItem(netname) or b.GetNetInfo().GetNetItem("/" + netname)
 if not net: print("meander: net not found", netname); sys.exit(1)
-tracks = [t for t in b.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetNetCode() == net.GetNetCode() and not t.IsLocked()]
-n_bumps = max(1, math.ceil(extra / (2 * A))); A = extra / (2 * n_bumps)          # 2A per bump
-w = tracks[0].GetWidth() / 1e6 if tracks else 0.2; clr = 0.15; p = w + clr + 0.25   # pitch between the legs of one bump
-need_len = 2 * p * n_bumps + 2.0; depth = A + w + clr + 0.1
-def items_on(layer):
+CLR = 0.15; MARGIN = 0.8
+def strip_shape(x0, y0, x1, y1, w_out):
+    """polygon covering the band from the segment's far edge out to w_out on side v (mm in, polygon in nm)"""
+    p = pcbnew.SHAPE_POLY_SET(); p.NewOutline()
+    for x, y in ((x0, y0), (x1, y1), (x1 + w_out[0], y1 + w_out[1]), (x0 + w_out[0], y0 + w_out[1])): p.Append(int(round(x * 1e6)), int(round(y * 1e6)))
+    return p
+def obstacles(layer, me):
     out = []
     for t in b.GetTracks():
-        if t.Type() == pcbnew.PCB_VIA_T: bb = t.GetBoundingBox(); out.append(("via", t.GetNetCode(), bb))
-        elif t.GetLayer() == layer: out.append(("trk", t.GetNetCode(), t.GetBoundingBox(), t))
+        if t is me: continue
+        if t.Type() == pcbnew.PCB_VIA_T or t.GetLayer() == layer: out.append(t.GetEffectiveShape(layer))
     for fp in b.GetFootprints():
         for pd in fp.Pads():
-            if pd.IsOnLayer(layer) or pd.GetAttribute() == pcbnew.PAD_ATTRIB_PTH: out.append(("pad", pd.GetNetCode(), pd.GetBoundingBox()))
+            if pd.IsOnLayer(layer) or pd.GetAttribute() == pcbnew.PAD_ATTRIB_PTH: out.append(pd.GetEffectiveShape(layer))
     for z in b.Zones():
-        if z.GetIsRuleArea() and z.IsOnLayer(layer) and z.GetDoNotAllowTracks(): out.append(("keep", -1, z.GetBoundingBox()))
+        if z.GetIsRuleArea() and z.IsOnLayer(layer) and z.GetDoNotAllowTracks(): out.append(z.Outline())
     return out
-def free(layer, x0, y0, x1, y1, me):
-    box = pcbnew.BOX2I(pcbnew.VECTOR2I(int(min(x0, x1) * 1e6), int(min(y0, y1) * 1e6)), pcbnew.VECTOR2I(int(abs(x1 - x0) * 1e6), int(abs(y1 - y0) * 1e6)))
-    for it in items_on(layer):
-        if len(it) == 4 and it[3] is me: continue
-        if it[2].Intersects(box): return False
-    edge = b.GetBoardEdgesBoundingBox()
-    return edge.Contains(box.GetOrigin()) and edge.Contains(box.GetEnd())
-best = None
-for t in sorted(tracks, key=lambda t: -t.GetLength()):
-    L = ToMM(t.GetLength())
-    if L < need_len: break
-    s, e = t.GetStart(), t.GetEnd(); sx, sy, ex, ey = ToMM(s.x), ToMM(s.y), ToMM(e.x), ToMM(e.y)
-    if abs(sx - ex) > 0.01 and abs(sy - ey) > 0.01: continue        # axis-parallel segments only
-    horizontal = abs(sy - ey) < 0.01
-    for side in (1, -1):
-        if horizontal: x0, x1 = min(sx, ex) + 1.0, max(sx, ex) - 1.0; y0, y1 = sy + side * (w / 2 + clr), sy + side * depth
-        else: y0, y1 = min(sy, ey) + 1.0, max(sy, ey) - 1.0; x0, x1 = sx + side * (w / 2 + clr), sx + side * depth
-        if free(t.GetLayer(), x0, y0, x1, y1, t): best = (t, side, horizontal); break
-    if best: break
-if not best: print("meander: no straight segment of %.1f mm with %.1f mm free beside it on net %s" % (need_len, depth, netname)); sys.exit(1)
-t, side, horizontal = best; s, e = t.GetStart(), t.GetEnd(); layer, width = t.GetLayer(), t.GetWidth()
-sx, sy, ex, ey = ToMM(s.x), ToMM(s.y), ToMM(e.x), ToMM(e.y)
-# walk from the start toward the end: u along the track, v toward the free side
-if horizontal: u = (1.0 if ex > sx else -1.0, 0.0); v = (0.0, side)
-else: u = (0.0, 1.0 if ey > sy else -1.0); v = (side, 0.0)
-pts = [(sx, sy)]; cx, cy = sx + u[0] * 1.0, sy + u[1] * 1.0; pts.append((cx, cy))
-for i in range(n_bumps):
-    pts.append((cx + v[0] * A, cy + v[1] * A)); cx, cy = cx + u[0] * p, cy + u[1] * p; pts.append((cx + v[0] * A, cy + v[1] * A)); pts.append((cx, cy)); cx, cy = cx + u[0] * p, cy + u[1] * p; pts.append((cx, cy))
-pts.append((ex, ey))
-b.Remove(t)
-for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
-    if abs(x1 - x0) < 1e-6 and abs(y1 - y0) < 1e-6: continue
-    nt = pcbnew.PCB_TRACK(b); nt.SetStart(pcbnew.VECTOR2I(int(round(x0 * 1e6)), int(round(y0 * 1e6)))); nt.SetEnd(pcbnew.VECTOR2I(int(round(x1 * 1e6)), int(round(y1 * 1e6)))); nt.SetWidth(width); nt.SetLayer(layer); nt.SetNet(net); b.Add(nt)
+edge = b.GetBoardEdgesBoundingBox()
+def free_window(t, side, depth, need):
+    """the longest free run (start offset, length) along track t on the given side, at least `need` long, or None"""
+    s, e = t.GetStart(), t.GetEnd(); sx, sy, ex, ey = ToMM(s.x), ToMM(s.y), ToMM(e.x), ToMM(e.y); L = math.hypot(ex - sx, ey - sy)
+    if L < need + 2 * MARGIN: return None
+    ux, uy = (ex - sx) / L, (ey - sy) / L; vx, vy = -uy * side, ux * side
+    obs = obstacles(t.GetLayer(), t); step = 0.5; n = int(L / step)
+    ok = []
+    for i in range(n + 1):
+        a = i * step; x0, y0 = sx + ux * a, sy + uy * a; x1, y1 = sx + ux * min(a + step, L), sy + uy * min(a + step, L)
+        strip = strip_shape(x0 + vx * (CLR + 0.1), y0 + vy * (CLR + 0.1), x1 + vx * (CLR + 0.1), y1 + vy * (CLR + 0.1), (vx * depth, vy * depth))
+        inside = all(edge.Contains(pcbnew.VECTOR2I(int(x * 1e6), int(y * 1e6))) for x, y in ((x0 + vx * depth, y0 + vy * depth), (x1 + vx * depth, y1 + vy * depth)))
+        ok.append(inside and not any(strip.Collide(o, int(CLR * 1e6)) for o in obs))
+    best = None; run = 0
+    for i, f in enumerate(ok + [False]):
+        if f: run += 1
+        else:
+            if run * step >= need + 2 * MARGIN and (best is None or run > best[1]): best = ((i - run) * step, run)
+            run = 0
+    return (best[0], best[1] * step) if best else None
+placed = 0.0; passes = 0
+while remaining > 0.1 and passes < 12:
+    passes += 1; w = 0.2
+    tracks = [t for t in b.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetNetCode() == net.GetNetCode() and not t.IsLocked()]
+    if tracks: w = ToMM(tracks[0].GetWidth())
+    p = w + CLR + 0.25                       # pitch between the two legs of one bump; a bump adds 2 A
+    choice = None
+    for A in (A_MAX, 1.0, 0.7, 0.5):
+        n_want = max(1, math.ceil(remaining / (2 * A))); need = 2 * p * n_want
+        for t in sorted(tracks, key=lambda t: -t.GetLength()):
+            for side in (1, -1):
+                fw = free_window(t, side, A + w + CLR + 0.1, min(need, 2 * p * 2))
+                if fw:
+                    n_fit = min(n_want, int((fw[1] - 2 * MARGIN) / (2 * p)))
+                    if n_fit >= 1 and (choice is None or n_fit > choice[3]): choice = (t, side, fw, n_fit, A)
+            if choice and choice[3] >= n_want: break
+        if choice: break
+    if not choice: break
+    t, side, (off, wlen), n_fit, A = choice; A = min(A, remaining / (2 * n_fit))
+    s, e = t.GetStart(), t.GetEnd(); sx, sy, ex, ey = ToMM(s.x), ToMM(s.y), ToMM(e.x), ToMM(e.y); L = math.hypot(ex - sx, ey - sy)
+    ux, uy = (ex - sx) / L, (ey - sy) / L; vx, vy = -uy * side, ux * side; layer, width = t.GetLayer(), t.GetWidth()
+    a0 = off + MARGIN; pts = [(sx, sy), (sx + ux * a0, sy + uy * a0)]; cx, cy = pts[-1]
+    for i in range(n_fit):
+        pts.append((cx + vx * A, cy + vy * A)); cx, cy = cx + ux * p, cy + uy * p; pts.append((cx + vx * A, cy + vy * A)); pts.append((cx, cy)); cx, cy = cx + ux * p, cy + uy * p; pts.append((cx, cy))
+    pts.append((ex, ey)); b.Remove(t)
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        if math.hypot(x1 - x0, y1 - y0) < 1e-4: continue
+        nt = pcbnew.PCB_TRACK(b); nt.SetStart(pcbnew.VECTOR2I(int(round(x0 * 1e6)), int(round(y0 * 1e6)))); nt.SetEnd(pcbnew.VECTOR2I(int(round(x1 * 1e6)), int(round(y1 * 1e6)))); nt.SetWidth(width); nt.SetLayer(layer); nt.SetNet(net); b.Add(nt)
+    added = 2 * A * n_fit; placed += added; remaining -= added
+    print("meander: %s +%.2f mm as %d bumps of %.2f mm on %s along (%.1f, %.1f)-(%.1f, %.1f) side %+d, %.2f mm still to place" % (netname, added, n_fit, A, b.GetLayerName(layer), sx, sy, ex, ey, side, max(remaining, 0)))
 pcbnew.SaveBoard(sys.argv[1], b)
-print("meander: %s +%.2f mm as %d bumps of %.2f mm on %s from (%.1f, %.1f) to (%.1f, %.1f), side %+d" % (netname, extra, n_bumps, A, b.GetLayerName(layer), sx, sy, ex, ey, side))
+if remaining > 0.1: print("meander: could not place the last %.2f mm on %s" % (remaining, netname)); sys.exit(1)
+print("meander: %s lengthened by %.2f mm in %d passes" % (netname, placed, passes))
