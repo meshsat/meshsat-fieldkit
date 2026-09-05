@@ -52,7 +52,7 @@ check(not bad, "all footprints inside the outline and off the standoff faces (%s
 check(b.GetCopperLayerCount() == 4, "4 copper layers"); check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
 # ---------------------------------------------------------------- D7 content (MESHSAT-804, appendix 32.38): the parts and nets that fit the DMR858M V1.0 board
 def nets_of(ref):
-    fp = fps.get(ref); return {pd.GetNumber(): pd.GetNetname() for pd in fp.Pads()} if fp else {}
+    fp = fps.get(ref); return {pd.GetNumber(): pd.GetNetname().lstrip("/") for pd in fp.Pads()} if fp else {}   # root-sheet labels read "/NAME" on the board
 def reach(net, ref):
     """True if a pad of footprint `ref` sits on `net`."""
     return net in nets_of(ref).values()
