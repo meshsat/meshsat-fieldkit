@@ -60,12 +60,12 @@ if any(not z.GetIsRuleArea() and z.GetFilledArea() > 0 for z in b.Zones()):
             check(_fp.OutlineCount() == 1 and _area >= 0.5 * _rect, "band '%s' is one piece over at least half its outline (%d pieces, %.0f of %.0f mm2)" % (_n, _fp.OutlineCount(), _area, _rect))
     for _t in b.GetTracks():
         if _t.Type() == pcbnew.PCB_VIA_T and _t.IsLocked() and abs(_t.GetDrillValue() / 1e6 - 0.4) < 0.01 and _t.GetNetname().lstrip("/") in ("+5V_M2", "+5V_PI"):
-            _zs = [z for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == _t.GetNetname() and z.GetZoneName().startswith("rail ")]
+            _zs = [z for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == _t.GetNetname() and z.GetZoneName().startswith("rail ") and z.GetFirstLayer() == pcbnew.B_Cu]
             check(any(z.GetFilledPolysList(pcbnew.B_Cu).Contains(_t.GetPosition()) for z in _zs), "stitch via %s at (%.1f, %.1f) sits in a filled rail band" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
         if _t.Type() == pcbnew.PCB_VIA_T and _t.IsLocked() and abs(_t.GetDrillValue() / 1e6 - 0.4) < 0.01 and _t.GetNetname().lstrip("/").startswith("BOOST"):
             _zs = [z for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == _t.GetNetname() and z.GetZoneName().startswith("boost ")]
-            check(any(z.GetFilledPolysList(pcbnew.In2_Cu).Contains(_t.GetPosition()) for z in _zs), "feed stitch via %s at (%.1f, %.1f) sits in a filled In2 feed" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
-            check(any(z.GetFilledPolysList(pcbnew.B_Cu).Contains(_t.GetPosition()) for z in _zs), "feed stitch via %s at (%.1f, %.1f) sits in a filled B.Cu feed" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
+            check(any(z.GetFilledPolysList(pcbnew.In2_Cu).Contains(_t.GetPosition()) for z in _zs if z.GetFirstLayer() == pcbnew.In2_Cu), "feed stitch via %s at (%.1f, %.1f) sits in a filled In2 feed" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
+            check(any(z.GetFilledPolysList(pcbnew.B_Cu).Contains(_t.GetPosition()) for z in _zs if z.GetFirstLayer() == pcbnew.B_Cu), "feed stitch via %s at (%.1f, %.1f) sits in a filled B.Cu feed" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
     # the pieces of one rail or feed must touch: a vertex of the higher-priority fill lies on (or in) the other fill
     def _touch(_z1, _z2):
         _f1 = _z1.GetFilledPolysList(_z1.GetFirstLayer()); _f2 = _z2.GetFilledPolysList(_z2.GetFirstLayer())   # zones on different layers touch through the stitch vias: their outlines overlap in plan
