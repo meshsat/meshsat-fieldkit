@@ -199,6 +199,27 @@ outer_pour("+5V_PI", "rail PI collector", (-125.0, -14.0, -71.5, -9.5), layers=B
 outer_pour("BOOST1_IN", "boost 1 feed", (-158.0, -46.5, -152.0, -3.5), layers=B); outer_pour("BOOST1_IN", "boost 1 inductor", (-158.0, -9.0, -145.0, -3.5), layers=B, priority=3)
 outer_pour("BOOST2_IN", "boost 2 feed", (-133.0, -46.5, -127.0, -3.5), layers=B); outer_pour("BOOST2_IN", "boost 2 inductor", (-133.0, -9.0, -113.0, -3.5), layers=B, priority=3)
 outer_pour("BOOST3_IN", "boost 3 feed", (-108.0, -46.5, -102.0, -19.5), layers=B); outer_pour("BOOST3_IN", "boost 3 link", (-108.0, -22.5, -80.0, -19.5), layers=B, priority=3); outer_pour("BOOST3_IN", "boost 3 inductor", (-86.0, -22.5, -80.0, -3.5), layers=B, priority=4)
+# --- A21 output islands (5 Sep 2026, appendix 32.39): the TPS61288L VOUT pin is a 1.25 x 0.40 mm pad with its neighbours 0.25 mm away, so no 1.0 mm track
+#     can leave it (the six opens of the 14:20 run, every one at pad 5 of U22/U23/U24) and the escape scheme had given each rail one 0.2 mm stub and one
+#     0.45/0.25 via as its whole current path. Each converter gets a top-side copper island: a 0.5 mm neck over the east end of pad 5 (between pad 6 and the
+#     package edge), widening east of the escape vias over the output capacitor group, stitched to the rail's bottom band (M2, PI) or the In2 plane (M1) by six
+#     locked 0.8/0.4 vias. The RAIL class is the link width only (0.5 mm); the islands, bands and planes carry the current. route_one.sh keeps zones of this
+#     size in the DSN, so the router treats them as conduction areas and routes the other nets around them. Coordinates in the KiCad frame, relative to the part.
+def island(netname, name, pts_k, priority=3, layer=pcbnew.F_Cu):
+    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name + " " + board.GetLayerName(layer))
+    z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.15)); o = z.Outline(); o.NewOutline()
+    for x, y in pts_k: o.Append(FromMM(x), FromMM(y))
+    z.SetAssignedPriority(priority); board.Add(z)
+def stitch(netname, pts_k):
+    for x, y in pts_k:
+        v = pcbnew.PCB_VIA(board); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetDrill(FromMM(0.4)); v.SetWidth(FromMM(0.8)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
+        v.SetNet(net_for(netname, create=False)); v.SetLocked(True); board.Add(v)
+for ref, net, vias in (("U22", "+5V_M1", [(14.88, -6.0), (16.38, -6.0), (14.88, -4.4), (16.38, -4.4), (14.88, -2.8), (16.38, -2.8)]),      # into the In2 plane, east of the M2 riser
+                       ("U23", "+5V_M2", [(4.38 + 1.5 * k, -2.6) for k in range(6)]),                                                   # into the M2 collector (B.Cu, y 124.6 to 128.5)
+                       ("U24", "+5V_PI", [(4.38 + 1.5 * k, -7.0) for k in range(6)])):                                                  # into the PI collector (B.Cu, y 119.5 to 124.0)
+    x0 = placed[ref].GetPosition().x / 1e6; y0 = placed[ref].GetPosition().y / 1e6
+    island(net, "VOUT island " + ref, [(x0 + 1.4, y0 - 0.05), (x0 + 3.6, y0 - 0.05), (x0 + 3.6, y0 - 15.4), (x0 + 17.5, y0 - 15.4), (x0 + 17.5, y0 + 4.0), (x0 + 3.6, y0 + 4.0), (x0 + 3.6, y0 + 0.45), (x0 + 1.4, y0 + 0.45)])
+    stitch(net, [(x0 + dx, y0 + dy) for dx, dy in vias])
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
 # The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
 # footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
@@ -208,7 +229,7 @@ ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
-CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.15, 0.6, 1.2, 0.6, 0.5, 0.25), "BOOST": (0.15, 0.8, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.15, 1.0, 1.0, 0.5, 1.0, 0.3), "RF": (0.3, 0.35, 0.7, 0.3, 0.2, 0.15)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
+CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.15, 0.6, 1.2, 0.6, 0.5, 0.25), "BOOST": (0.15, 0.8, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.15, 0.5, 1.0, 0.5, 0.5, 0.3), "RF": (0.3, 0.35, 0.7, 0.3, 0.2, 0.15)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
 PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("SHORE_12V", "PWR"), ("HEAT_*", "PWR"), ("PMID", "PWR"), ("SYS_CHG", "PWR"), ("SW*_CHG", "PWR"), ("CELL+", "BANK"), ("CELL_N", "BANK"), ("MEZZ_CELL", "BANK"), ("BOOST*_IN", "BOOST"), ("SW1", "BOOST"), ("SW2", "BOOST"), ("SW3", "BOOST"), ("+5V_M1", "RAIL"), ("+5V_M2", "RAIL"), ("+5V_PI", "RAIL"), ("RF_*", "RF")]
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
@@ -227,7 +248,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.15, 0.6, 1.2, 0.6, 0.5, 0.25), C("BOOST", 3, 0.15, 0.8, 1.0, 0.5, 0.8, 0.3), C("RAIL", 4, 0.15, 1.0, 1.0, 0.5, 1.0, 0.3), C("RF", 5, 0.3, 0.35, 0.7, 0.3, 0.2, 0.15)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.15, 0.6, 1.2, 0.6, 0.5, 0.25), C("BOOST", 3, 0.15, 0.8, 1.0, 0.5, 0.8, 0.3), C("RAIL", 4, 0.15, 0.5, 1.0, 0.5, 0.5, 0.3), C("RF", 5, 0.3, 0.35, 0.7, 0.3, 0.2, 0.15)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
