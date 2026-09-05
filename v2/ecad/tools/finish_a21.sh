@@ -18,6 +18,7 @@ hard=sum(c[t] for t in ('clearance','shorting_items','tracks_crossing','hole_cle
 PY
 read H < out/par-score.txt; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; fi
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
+bash ../tools/quality_pass.sh "$PWD" $N 2>&1 | grep "quality:" | tail -4   # Stage 3 of the quality programme (6 Sep 2026): straighten and via passes on a copy, DRC-gated, reverted when anything rises
 python3 ../tools/silk_fix_all.py $N.kicad_pcb a 2>&1 | grep -vE 'Debug|leak' | tail -2
 # A21 (5 Sep 2026): refill, then the board gate on the routed board (band continuity, stitch vias in their bands, link widths); an open or a FAIL stops the finish
 python3 - "$N" <<'PYX' 2>&1 | grep -vE 'Debug|leak'
