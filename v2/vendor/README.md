@@ -35,3 +35,5 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `probes/` | our own STEP probe scripts (build123d), kept with the models they read | reproducing the numbers in the appendix |
 
 The files are ordinary git objects (the largest is about 50 MB).
+
+- `peli/1450/`, `peli/1430/`, `peli/1500/`, `peli/1400/`, `peli/1550/`: Peli's own CAD of the panel frames and the EU case bodies (files `1451-931`, `1431-932`, `1501-931` of 24 Jul 2025, the 1450 customer drawing 1451-931 of 15 Jan 2025), supplied by the owner on 5 Sep 2026 for the case study of appendix 32.41 that moved the kit from the 1520 to the 1450. Published as-is; takedown on request as for every vendor file here.
