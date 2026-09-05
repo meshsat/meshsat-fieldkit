@@ -3673,7 +3673,7 @@
 				)
 			)
 		)
-		(property "Value" "M3, float clamp WIFI 5.8"
+		(property "Value" "M3, float clamp GNSS"
 			(at 0 4.15 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -14442,7 +14442,7 @@
 				)
 			)
 		)
-		(property "Value" "M3, float clamp WIFI 5.8"
+		(property "Value" "M3, float clamp GNSS"
 			(at 0 4.15 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -18379,7 +18379,7 @@
 			)
 		)
 	)
-	(gr_text "CLAMP WIFI 5.8"
+	(gr_text "CLAMP GNSS"
 		(at 124 190.5 0)
 		(layer "F.SilkS")
 		(uuid "ea3c8bd5-ca3f-4a21-9127-45e93eaf6742")
@@ -29009,7 +29009,7 @@
 		(net_name "")
 		(layers "F.Cu" "B.Cu")
 		(uuid "96873f49-81ac-452a-aeab-b818fe4c4d7c")
-		(name "clamp WIFI 5.8: no copper under the float clamp")
+		(name "clamp GNSS: no copper under the float clamp")
 		(hatch edge 0.5)
 		(connect_pads
 			(clearance 0)

@@ -1,15 +1,15 @@
 ** Drc report for pcb-e1-dock.kicad_pcb **
-** Created on 2026-09-04T19:03:03+0200 **
+** Created on 2026-09-05T04:26:41+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
 ** Found 13 DRC violations **
-[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; 3 spokes connected to isolated island)
-    Local override; error
-    @(213,0000 mm, 221,0000 mm): Zone 'GND pour F east' [GND] on F.Cu, priority 0
-    @(217,2500 mm, 213,4750 mm): PTH pad 2 [GND] of J_TS
 [starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; 3 spokes connected to isolated island)
     Local override; error
     @(213,0000 mm, 221,0000 mm): Zone 'GND pour B east' [GND] on B.Cu, priority 0
+    @(217,2500 mm, 213,4750 mm): PTH pad 2 [GND] of J_TS
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; 3 spokes connected to isolated island)
+    Local override; error
+    @(213,0000 mm, 221,0000 mm): Zone 'GND pour F east' [GND] on F.Cu, priority 0
     @(217,2500 mm, 213,4750 mm): PTH pad 2 [GND] of J_TS
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning

@@ -36100,7 +36100,7 @@
 			)
 		)
 	)
-	(gr_text "SMA WIFI 5.8"
+	(gr_text "SMA GNSS"
 		(at 124 160 0)
 		(layer "F.SilkS")
 		(uuid "48290fcb-b489-49c9-be88-cf52aa018e66")
@@ -36355,7 +36355,7 @@
 			(justify mirror)
 		)
 	)
-	(gr_text "BM WIFI 5.8"
+	(gr_text "BM GNSS"
 		(at 124 184 0)
 		(layer "B.SilkS")
 		(uuid "1577e0ac-d957-4748-97b7-dbc2bcc7cc31")
