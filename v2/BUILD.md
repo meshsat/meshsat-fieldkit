@@ -16,7 +16,7 @@ Six boards, five assembled by the fabricator (standard assembly; the economic ti
 
 | Board | Folder | Size (mm) | Layers | Stackup | Assembly |
 |---|---|---|---|---|---|
-| PCB-A POWER + I/O A20 | `PCB-A-POWER-A20/` | 285 x 160 | 4 | JLC04161H-7628 | top |
+| PCB-A POWER + I/O A21 | `PCB-A-POWER-A21/` | 285 x 160 | 4 | JLC04161H-7628 | top |
 | PCB-B COMPUTE B14 | `PCB-B-COMPUTE-B14/` | 245 x 170 | 4 | JLC04161H-7628 | top, bottom 1 |
 | PCB-C CONTROL PANEL C5 | `PCB-C-DISPLAY-C5/` | 442 x 311 | 2 | standard, 2.0 mm, vias plugged | top (LEDs), bottom (cluster and connectors) |
 | PCB-D APRS D7 | `PCB-D-APRS-D7/` | 80 x 62 | 4 | JLC04161H-7628 | top 62, bottom 1 |
