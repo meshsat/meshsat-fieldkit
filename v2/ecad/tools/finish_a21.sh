@@ -30,9 +30,9 @@ python3 - "$N" <<'PYX'
 import json, collections, sys
 d = json.load(open('out/%s-drc.json' % sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])
 hard = sum(c[t] for t in ('clearance', 'shorting_items', 'tracks_crossing', 'hole_clearance', 'hole_to_hole', 'copper_edge_clearance')); un = len(d.get('unconnected_items', []))
-print('routed-board gate: hard', hard, 'unrouted', un); open('out/a21-clean.txt', 'w').write('clean' if hard == 0 and un == 0 else 'open')
+print('routed-board gate: hard', hard, 'unrouted', un); open('out/a21-clean.txt', 'w').write(('clean' if hard == 0 and un == 0 else 'open') + '\n')
 PYX
 if ! python3 ../tools/check_pcb_a.py $N.kicad_pcb 2>/dev/null | grep -q 'RESULT: ALL PASS'; then echo 'A21 GATE FAIL on the routed board'; echo open > out/a21-clean.txt; fi
-read CLEAN < out/a21-clean.txt; if [ "$CLEAN" != clean ]; then echo 'A21 NOT CLEAN, not finishing'; echo FINISH-A21-DONE; exit 1; fi
+CLEAN=$(cat out/a21-clean.txt); if [ "$CLEAN" != clean ]; then echo 'A21 NOT CLEAN, not finishing'; echo FINISH-A21-DONE; exit 1; fi
 cd ..; ./tools/finish_board.sh pcb-a-power pcb-a-power post_fix_a.py meshsat-pcb-a-revA-A21 2>&1 | tail -16
 echo FINISH-A21-DONE
