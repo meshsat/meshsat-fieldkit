@@ -1,0 +1,527 @@
+{
+"A21": {
+ "board": "pcb-a-power.kicad_pcb",
+ "tag": "A21",
+ "copper_layers": 4,
+ "nets": 117,
+ "connections": 487,
+ "pads": 604,
+ "unrouted": 0,
+ "hard": 0,
+ "hard_by_type": {},
+ "hard_types_checked": 6,
+ "vias": 404,
+ "vias_locked": 272,
+ "vias_router": 132,
+ "vias_per_net": 3.453,
+ "tracks": 2051,
+ "tracks_locked": 304,
+ "length_mm": 10693.5,
+ "length_locked_mm": 495.6,
+ "length_per_pad_mm": 17.7,
+ "length_by_layer_mm": {
+  "F.Cu": 1824.4,
+  "B.Cu": 294.6,
+  "In1.Cu": 5950.6,
+  "In2.Cu": 2624.0
+ },
+ "layer_share": {
+  "F.Cu": 0.171,
+  "B.Cu": 0.028,
+  "In1.Cu": 0.556,
+  "In2.Cu": 0.245
+ },
+ "layer_balance": 19.86,
+ "micro_segments": 68,
+ "bends": 1243,
+ "longest_nets_mm": [
+  [
+   1514.2,
+   "GND"
+  ],
+  [
+   445.0,
+   "+3V3"
+  ],
+  [
+   335.5,
+   "/CELL+"
+  ],
+  [
+   314.0,
+   "/SDA"
+  ],
+  [
+   308.0,
+   "/SCL"
+  ],
+  [
+   272.8,
+   "/SHORE_12V"
+  ],
+  [
+   255.5,
+   "/EXP_INT"
+  ],
+  [
+   208.0,
+   "/CHG_INT"
+  ],
+  [
+   207.8,
+   "/GAUGE_ALERT"
+  ],
+  [
+   206.2,
+   "/+5V_M1"
+  ]
+ ],
+ "detour_median": 1.198,
+ "detour_p90": 1.435,
+ "detour_nets": 117,
+ "pair_skew_mm": {
+  "/USB_WALL": 6.992
+ },
+ "pairs_over_1mm": 1,
+ "wall_seconds": 0.0,
+ "autoroute_minutes": 0.0,
+ "optimizer_minutes": 0.0
+},
+"B14": {
+ "board": "pcb-b-compute.kicad_pcb",
+ "tag": "B14",
+ "copper_layers": 4,
+ "nets": 184,
+ "connections": 720,
+ "pads": 904,
+ "unrouted": 0,
+ "hard": 0,
+ "hard_by_type": {},
+ "hard_types_checked": 6,
+ "vias": 704,
+ "vias_locked": 434,
+ "vias_router": 270,
+ "vias_per_net": 3.826,
+ "tracks": 4046,
+ "tracks_locked": 512,
+ "length_mm": 24674.7,
+ "length_locked_mm": 711.4,
+ "length_per_pad_mm": 27.29,
+ "length_by_layer_mm": {
+  "F.Cu": 3386.6,
+  "B.Cu": 1013.5,
+  "In1.Cu": 7950.4,
+  "In2.Cu": 12324.2
+ },
+ "layer_share": {
+  "F.Cu": 0.137,
+  "B.Cu": 0.041,
+  "In1.Cu": 0.322,
+  "In2.Cu": 0.499
+ },
+ "layer_balance": 12.17,
+ "micro_segments": 138,
+ "bends": 2622,
+ "longest_nets_mm": [
+  [
+   1911.5,
+   "GND"
+  ],
+  [
+   990.2,
+   "+3V3"
+  ],
+  [
+   472.6,
+   "/EXP_INT"
+  ],
+  [
+   443.7,
+   "/SDA"
+  ],
+  [
+   440.9,
+   "/SCL"
+  ],
+  [
+   435.0,
+   "/+3V3_CM"
+  ],
+  [
+   422.1,
+   "/+5V_PI"
+  ],
+  [
+   400.1,
+   "/+3V3_LTE"
+  ],
+  [
+   342.5,
+   "/+5V_M1"
+  ],
+  [
+   337.1,
+   "/SDA_CM"
+  ]
+ ],
+ "detour_median": 1.164,
+ "detour_p90": 1.392,
+ "detour_nets": 184,
+ "pair_skew_mm": {
+  "/DSI0_C": 7.832,
+  "/DSI0_D0": 3.182,
+  "/DSI0_D1": 1.728,
+  "/DSI0_D2": 5.107,
+  "/DSI0_D3": 4.967,
+  "/PCIe_CLK": 0.247,
+  "/PCIe_RX": 0.002,
+  "/PCIe_TX": 0.002,
+  "/USB_LTE": 1.711,
+  "/USB_OTG": 7.617,
+  "/USB_RTL": 4.352,
+  "/USB_UP": 0.969,
+  "/USB_WALL": 9.967
+ },
+ "pairs_over_1mm": 9,
+ "wall_seconds": 0.0,
+ "autoroute_minutes": 0.0,
+ "optimizer_minutes": 0.0
+},
+"C5": {
+ "board": "pcb-c-display.kicad_pcb",
+ "tag": "C5",
+ "copper_layers": 2,
+ "nets": 86,
+ "connections": 234,
+ "pads": 320,
+ "unrouted": 0,
+ "hard": 0,
+ "hard_by_type": {},
+ "hard_types_checked": 6,
+ "vias": 330,
+ "vias_locked": 58,
+ "vias_router": 272,
+ "vias_per_net": 3.837,
+ "tracks": 2015,
+ "tracks_locked": 72,
+ "length_mm": 21436.4,
+ "length_locked_mm": 136.1,
+ "length_per_pad_mm": 66.99,
+ "length_by_layer_mm": {
+  "F.Cu": 13086.2,
+  "B.Cu": 8350.1
+ },
+ "layer_share": {
+  "F.Cu": 0.61,
+  "B.Cu": 0.39
+ },
+ "layer_balance": 1.56,
+ "micro_segments": 95,
+ "bends": 1417,
+ "longest_nets_mm": [
+  [
+   844.6,
+   "GND"
+  ],
+  [
+   679.3,
+   "+5V"
+  ],
+  [
+   549.3,
+   "/BZ_K"
+  ],
+  [
+   518.3,
+   "/MAINSW_A2"
+  ],
+  [
+   513.9,
+   "/MAINSW_B2"
+  ],
+  [
+   509.1,
+   "/PIJ2_A2"
+  ],
+  [
+   501.5,
+   "/PIJ2_B2"
+  ],
+  [
+   456.7,
+   "/SHORE_K"
+  ],
+  [
+   433.6,
+   "/LTE_A"
+  ],
+  [
+   429.6,
+   "/MSG_K"
+  ]
+ ],
+ "detour_median": 1.266,
+ "detour_p90": 1.451,
+ "detour_nets": 86,
+ "pair_skew_mm": {},
+ "pairs_over_1mm": 0,
+ "wall_seconds": 0.0,
+ "autoroute_minutes": 0.0,
+ "optimizer_minutes": 0.0
+},
+"D7": {
+ "board": "pcb-d-aprs.kicad_pcb",
+ "tag": "D7",
+ "copper_layers": 4,
+ "nets": 61,
+ "connections": 194,
+ "pads": 255,
+ "unrouted": 0,
+ "hard": 0,
+ "hard_by_type": {},
+ "hard_types_checked": 6,
+ "vias": 148,
+ "vias_locked": 58,
+ "vias_router": 90,
+ "vias_per_net": 2.426,
+ "tracks": 958,
+ "tracks_locked": 88,
+ "length_mm": 3617.6,
+ "length_locked_mm": 109.4,
+ "length_per_pad_mm": 14.19,
+ "length_by_layer_mm": {
+  "F.Cu": 820.2,
+  "B.Cu": 362.8,
+  "In1.Cu": 1398.5,
+  "In2.Cu": 1036.2
+ },
+ "layer_share": {
+  "F.Cu": 0.227,
+  "B.Cu": 0.1,
+  "In1.Cu": 0.387,
+  "In2.Cu": 0.286
+ },
+ "layer_balance": 3.87,
+ "micro_segments": 32,
+ "bends": 620,
+ "longest_nets_mm": [
+  [
+   454.6,
+   "GND"
+  ],
+  [
+   241.5,
+   "/+3V3_AB"
+  ],
+  [
+   147.3,
+   "/VIN_CELL"
+  ],
+  [
+   131.8,
+   "/MEZZ_EN"
+  ],
+  [
+   126.7,
+   "/V8"
+  ],
+  [
+   106.6,
+   "/CH2_IN"
+  ],
+  [
+   96.9,
+   "/CH1_IN"
+  ],
+  [
+   95.2,
+   "/CH8_IN"
+  ],
+  [
+   94.7,
+   "/I2S_BCLK"
+  ],
+  [
+   92.1,
+   "/SDA"
+  ]
+ ],
+ "detour_median": 1.186,
+ "detour_p90": 1.584,
+ "detour_nets": 61,
+ "pair_skew_mm": {},
+ "pairs_over_1mm": 0,
+ "wall_seconds": 0.0,
+ "autoroute_minutes": 0.0,
+ "optimizer_minutes": 0.0
+},
+"E4": {
+ "board": "pcb-e1-dock.kicad_pcb",
+ "tag": "E4",
+ "copper_layers": 4,
+ "nets": 44,
+ "connections": 173,
+ "pads": 217,
+ "unrouted": 0,
+ "hard": 0,
+ "hard_by_type": {},
+ "hard_types_checked": 6,
+ "vias": 142,
+ "vias_locked": 0,
+ "vias_router": 142,
+ "vias_per_net": 3.227,
+ "tracks": 773,
+ "tracks_locked": 0,
+ "length_mm": 3771.8,
+ "length_locked_mm": 0,
+ "length_per_pad_mm": 17.38,
+ "length_by_layer_mm": {
+  "F.Cu": 921.6,
+  "In2.Cu": 1492.0,
+  "In1.Cu": 1256.4,
+  "B.Cu": 101.8
+ },
+ "layer_share": {
+  "F.Cu": 0.244,
+  "In2.Cu": 0.396,
+  "In1.Cu": 0.333,
+  "B.Cu": 0.027
+ },
+ "layer_balance": 14.67,
+ "micro_segments": 41,
+ "bends": 444,
+ "longest_nets_mm": [
+  [
+   343.2,
+   "/DC_N"
+  ],
+  [
+   284.3,
+   "/CELL_P_MOD"
+  ],
+  [
+   276.7,
+   "GND"
+  ],
+  [
+   258.0,
+   "/CELL_N_MOD"
+  ],
+  [
+   225.8,
+   "/BLK_SPARE"
+  ],
+  [
+   214.7,
+   "/CELL_SENSE_P"
+  ],
+  [
+   213.3,
+   "/DC_P"
+  ],
+  [
+   209.4,
+   "/SHORE_12V"
+  ],
+  [
+   206.9,
+   "/TS_MOD"
+  ],
+  [
+   133.4,
+   "/TRK_OUT"
+  ]
+ ],
+ "detour_median": 1.222,
+ "detour_p90": 1.392,
+ "detour_nets": 44,
+ "pair_skew_mm": {
+  "/DC": 129.828
+ },
+ "pairs_over_1mm": 1,
+ "wall_seconds": 0.0,
+ "autoroute_minutes": 0.0,
+ "optimizer_minutes": 0.0
+},
+"E5": {
+ "board": "pcb-e5-block.kicad_pcb",
+ "tag": "E5",
+ "copper_layers": 2,
+ "nets": 14,
+ "connections": 21,
+ "pads": 35,
+ "unrouted": 0,
+ "hard": 0,
+ "hard_by_type": {},
+ "hard_types_checked": 6,
+ "vias": 14,
+ "vias_locked": 0,
+ "vias_router": 14,
+ "vias_per_net": 1.0,
+ "tracks": 36,
+ "tracks_locked": 0,
+ "length_mm": 111.8,
+ "length_locked_mm": 0,
+ "length_per_pad_mm": 3.19,
+ "length_by_layer_mm": {
+  "F.Cu": 59.4,
+  "B.Cu": 52.4
+ },
+ "layer_share": {
+  "F.Cu": 0.531,
+  "B.Cu": 0.469
+ },
+ "layer_balance": 1.13,
+ "micro_segments": 0,
+ "bends": 18,
+ "longest_nets_mm": [
+  [
+   11.0,
+   "TS_CHG_P9"
+  ],
+  [
+   11.0,
+   "SHORE_INHIBIT_P8"
+  ],
+  [
+   11.0,
+   "GND_P7"
+  ],
+  [
+   11.0,
+   "GND_P10"
+  ],
+  [
+   11.0,
+   "DOCK_SPARE_P12"
+  ],
+  [
+   11.0,
+   "CELL_SENSE_P_P11"
+  ],
+  [
+   7.7,
+   "SHORE_12V_P4"
+  ],
+  [
+   7.7,
+   "SHORE_12V_P3"
+  ],
+  [
+   7.7,
+   "SHORE_12V_P2"
+  ],
+  [
+   7.7,
+   "SHORE_12V_P1"
+  ]
+ ],
+ "detour_median": 1.433,
+ "detour_p90": 1.686,
+ "detour_nets": 12,
+ "pair_skew_mm": {},
+ "pairs_over_1mm": 0,
+ "wall_seconds": 0.0,
+ "autoroute_minutes": 0.0,
+ "optimizer_minutes": 0.0
+}}

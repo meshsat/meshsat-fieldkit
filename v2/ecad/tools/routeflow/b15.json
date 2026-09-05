@@ -52,5 +52,6 @@
     "autoroute_minutes_max": 60
   },
   "budget_rounds": 2,
-  "notes": "B15 six layers: In1 and In4 are planes handed to Freerouting as power layers (5 Sep 2026 E1 test); one thread because the multi-thread optimiser knotted +3V3 and WIFI_DIS on In3 in run 3; the stub router closes the fine-pitch opens with the coarse grid. Freerouting is deterministic: run 3's three attempts at 80, 90 and 100 passes returned identical boards (39 hard, 5 opens, 261 vias) because the autorouter completed before any ceiling, so one attempt is the rule unless the ceiling binds."
+  "notes": "B15 six layers: In1 and In4 are planes handed to Freerouting as power layers (5 Sep 2026 E1 test); one thread because the multi-thread optimiser knotted +3V3 and WIFI_DIS on In3 in run 3; the stub router closes the fine-pitch opens with the coarse grid. Freerouting is deterministic: run 3's three attempts at 80, 90 and 100 passes returned identical boards (39 hard, 5 opens, 261 vias) because the autorouter completed before any ceiling, so one attempt is the rule unless the ceiling binds.",
+  "baseline_key": "B14"
 }
