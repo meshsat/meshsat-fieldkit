@@ -35,5 +35,6 @@
       "jar": "freerouting-2.4.1.jar",
       "fanout": true
     }
-  ]
+  ],
+  "stub_grid": "0.1"
 }

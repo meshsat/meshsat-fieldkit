@@ -2,7 +2,7 @@
 """bench_compare: grade a routed board's metrics against the baseline (Freerouting quality programme, Stage 1).
 
 Gates first: any hard violation or open connection makes the run INELIGIBLE for quality ranking (it is recorded, never ranked); a differential
-pair over 1 mm after matching is a REGRESSION; router vias or total length up by more than 5 percent is a REGRESSION. Otherwise MET, with
+pair over 1 mm is a REGRESSION when the baseline board has fewer such pairs (the released boards carry their own: E4 one, A21 one, B14 nine before matching); router vias or total length up by more than 5 percent is a REGRESSION. Otherwise MET, with
   Q = 0.5 x (router vias / baseline router vias) + 0.3 x (length / baseline length) + 0.2 x (segments / baseline segments)
 lower is better, 1.0 is the released board. Time is printed beside Q and never folded into it.
 Usage: bench_compare.py <baseline.json> <metrics.json> [--board KEY] [--json out]   (KEY defaults to the metrics' tag, then its board stem)"""
@@ -12,8 +12,8 @@ def arg(name, default=None): return sys.argv[sys.argv.index(name) + 1] if name i
 
 def compare(base, m):
     if m.get("hard") is None or m.get("unrouted") is None: return "UNMEASURABLE", "no DRC numbers in the metrics", None
-    if m["hard"] > 0 or m["unrouted"] > 0: return "INELIGIBLE", "hard %d of %d types, unrouted %d of %d connections" % (m["hard"], m["hard_types_checked"], m["unrouted"], m["connections"]), None
-    if m.get("pairs_over_1mm", 0) > 0: return "REGRESSION", "%d differential pairs over 1 mm" % m["pairs_over_1mm"], None
+    if m["hard"] > 0 or m["unrouted"] > 0: return "INELIGIBLE", "hard %d (over %d types), unrouted %d of %d connections" % (m["hard"], m["hard_types_checked"], m["unrouted"], m["connections"]), None
+    if m.get("pairs_over_1mm", 0) > base.get("pairs_over_1mm", 0): return "REGRESSION", "%d differential pairs over 1 mm (baseline %d)" % (m["pairs_over_1mm"], base.get("pairs_over_1mm", 0)), None
     bv, bl, bs = max(1, base["vias_router"]), max(1e-9, base["length_mm"]), max(1, base["tracks"])
     rv, rl, rs = m["vias_router"] / bv, m["length_mm"] / bl, m["tracks"] / bs
     q = round(0.5 * rv + 0.3 * rl + 0.2 * rs, 4)

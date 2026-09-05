@@ -39,5 +39,7 @@
       "jar": "freerouting-2.4.1.jar",
       "fanout": true
     }
-  ]
+  ],
+  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "stub_grid": "0.1"
 }
