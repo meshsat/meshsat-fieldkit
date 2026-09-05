@@ -77,12 +77,12 @@ for ref in comps:
 # --- regions for the rest: (x0, y0, x1, y1), refs
 REGIONS = [
  ("N_TOP_W", (-17, 18.6, -7, 30.4), ["X1", "C38", "C7", "C8"], False),
- ("N_TOP_E", (7, 18.6, 30, 30.4), ["FB1", "C9", "C10", "U7", "C39", "R3", "D1", "R15", "R42", "R43", "R44", "R45", "R46", "R48"], False),
+ ("N_TOP_E", (7, 18.6, 30, 30.4), ["FB1", "C9", "C10", "U7", "C39", "R3", "D1", "R15"], False),
  # the MCU core sits on the TOP side under the module since D4 (module 11 mm up on sockets and standoffs; its back-side parts hang 5 mm, so 6 mm remain):
  # the free field between the two socket rows (Y -18.6 .. 14.6) and clear of the two M2.5 standoff holes at (-15.8, -18.6) and (36.8, 14.4)
  ("CORE_W", (-13.5, -17.5, 5.0, 13.5), ["C17", "C18", "R10", "R11", "Q1", "Q2", "R12", "R13", "Q3", "Q4", "R37", "R38", "R39", "R40", "R41", "C32", "R8", "R9", "U8", "C40", "R47"], False),
  ("CORE_C", (5.5, -17.5, 19.0, 13.5), ["U5", "C33", "C34", "C35", "C36", "C37"], False),
- ("CORE_E", (19.5, -17.5, 34.0, 13.5), ["R2", "R4", "C13", "C14"], False),
+ ("CORE_E", (19.5, -17.5, 34.0, 13.5), ["R2", "R4", "C13", "C14", "R42", "R43", "R44", "R45", "R46", "R48"], False),
  ("BOOST_W", (-27, -30.4, -18, 30.4), ["L1", "U1", "C23", "C24", "C26", "C27", "C28", "C29", "C20", "C21", "C22", "C25", "C30", "R30", "R31", "R32", "R33", "R34", "R35"], False),
  ("BENCH_BOT", (-30, -30.4, 19, -22.6), ["R36", "R49", "R50", "R51", "R52", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"], True),
 ]
