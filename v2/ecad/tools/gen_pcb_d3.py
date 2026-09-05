@@ -77,7 +77,7 @@ for ref in comps:
 # --- regions for the rest: (x0, y0, x1, y1), refs
 REGIONS = [
  ("N_TOP_W", (-17, 18.6, -7, 30.4), ["X1", "C38", "C7", "C8"], False),
- ("N_TOP_E", (7, 18.6, 30, 30.4), ["FB1", "C9", "C10", "U7", "C39", "R3", "D1", "R15"], False),
+ ("N_TOP_E", (6, 18.6, 30, 30.4), ["FB1", "C9", "C10", "U7", "C39", "R3", "D1", "R15"], False),
  # the MCU core sits on the TOP side under the module since D4 (module 11 mm up on sockets and standoffs; its back-side parts hang 5 mm, so 6 mm remain):
  # the free field between the two socket rows (Y -18.6 .. 14.6) and clear of the two M2.5 standoff holes at (-15.8, -18.6) and (36.8, 14.4)
  ("CORE_W", (-13.5, -17.5, 5.0, 13.5), ["C17", "C18", "R10", "R11", "Q1", "Q2", "R12", "R13", "Q3", "Q4", "R37", "R38", "R39", "R40", "R41", "C32", "R8", "R9", "U8", "C40", "R47"], False),
