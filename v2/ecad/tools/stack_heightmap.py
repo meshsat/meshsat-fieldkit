@@ -5,7 +5,7 @@ antennas, rulers, cables). Usage: stack_heightmap.py <bbox.json> <out.json>; the
 import json, sys, math
 objs = json.load(open(sys.argv[1]))
 SKIP = ("case", "lid", "frame", "panel", "pcb_c", "td2", "epaper", "lens", "switch", "sw_", "led_", "ruler", "grid", "whip", "ant_", "bulkhead", "cable", "plate", "title", "floor", "hinge", "latch", "handle", "valve", "rib", "boss", "foot", "spacer_", "display_flex", "panel_ribbon", "rod", "nut", "sounder", "toggle", "button", "light")
-SKIP = SKIP + ("valve", "ant_", "conn_", "recept", "handle", "hinge", "latch", "padlock", "corner", "rib_", "case", "lid_", "frame", "led_d", "epaper", "lens", "cradle_lid")
+SKIP = SKIP + ("valve", "ant_", "conn_", "recept", "handle", "hinge", "latch", "padlock", "corner", "rib_", "case", "lid_", "frame", "led_d", "epaper", "lens", "cradle_lid", "bulk")
 # the stack is what stands on the floor below the panel: drop everything whose bottom is above 95 mm (panel parts, lid, antennas) and the case shell by name
 stack = [o for o in objs if not any(k in o["name"].lower() for k in SKIP) and o["z"][0] < 95 and o["z"][1] < 95]
 step = 5.0; x0, y0 = -180.0, -130.0; nx, ny = int(360 / step) + 1, int(260 / step) + 1
