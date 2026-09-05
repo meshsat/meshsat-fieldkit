@@ -189,6 +189,17 @@ for ref in ("F3", "F4", "F5", "F2"):
         if pad.GetNumber() == "1": fx = pad.GetPosition().x / 1e6 - OX
     outer_pour("CELL+", "fuse tap " + ref, (fx - 1.5, -47, fx + 1.5, -38.5), priority=3)
 outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
+# --- A21 (5 Sep 2026, appendix 32.39): the rails and the boost inputs get bottom-side copper bands so the router only closes short stubs into them
+#     (the RAIL and BOOST classes at 2.0 and 1.5 mm left 20 connections open; the classes are now 1.0 and 0.8 and these bands carry the current).
+#     Rails M2 and PI run from their output capacitors (C96 at (-107, -15), C97 at (-75, -11)) west along the boost row and north to the VH connectors at y 44.5;
+#     rail M1 has its In2 plane. Boost inputs: fuse (THT, y -44.3) north to the inductor pad (fanned out to a via). CELL+ gets a tap to the mezzanine fuse F2.
+B = (pcbnew.B_Cu,)
+outer_pour("+5V_M2", "rail M2 collector", (-140.0, -18.5, -103.0, -14.6), layers=B); outer_pour("+5V_M2", "rail M2 riser", (-140.0, -18.5, -134.0, 46.5), layers=B)
+outer_pour("+5V_PI", "rail PI collector", (-125.0, -14.0, -71.5, -9.5), layers=B); outer_pour("+5V_PI", "rail PI riser", (-125.0, -14.0, -119.0, 46.5), layers=B)
+outer_pour("BOOST1_IN", "boost 1 feed", (-158.0, -46.5, -152.0, -3.5), layers=B); outer_pour("BOOST1_IN", "boost 1 inductor", (-158.0, -9.0, -145.0, -3.5), layers=B)
+outer_pour("BOOST2_IN", "boost 2 feed", (-133.0, -46.5, -127.0, -3.5), layers=B); outer_pour("BOOST2_IN", "boost 2 inductor", (-133.0, -9.0, -113.0, -3.5), layers=B)
+outer_pour("BOOST3_IN", "boost 3 feed", (-108.0, -46.5, -102.0, -19.5), layers=B); outer_pour("BOOST3_IN", "boost 3 link", (-108.0, -22.5, -80.0, -19.5), layers=B); outer_pour("BOOST3_IN", "boost 3 inductor", (-86.0, -22.5, -80.0, -3.5), layers=B)
+outer_pour("CELL+", "node tap to F2", (-83.0, -46.5, -77.0, -38.0), priority=3)
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
 # The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
 # footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
@@ -198,8 +209,8 @@ ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
-CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.15, 1.0, 1.2, 0.6, 0.5, 0.25), "BOOST": (0.2, 1.5, 1.0, 0.5, 1.2, 0.3), "RAIL": (0.2, 2.0, 1.0, 0.5, 1.2, 0.3), "RF": (0.3, 0.35, 0.7, 0.3, 0.2, 0.15)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
-PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("SHORE_12V", "PWR"), ("HEAT_*", "PWR"), ("PMID", "PWR"), ("SYS_CHG", "PWR"), ("SW*_CHG", "PWR"), ("CELL*", "BANK"), ("MEZZ_CELL", "BANK"), ("BOOST*_IN", "BOOST"), ("SW1", "BOOST"), ("SW2", "BOOST"), ("SW3", "BOOST"), ("+5V_M1", "RAIL"), ("+5V_M2", "RAIL"), ("+5V_PI", "RAIL"), ("RF_*", "RF")]
+CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.15, 0.6, 1.2, 0.6, 0.5, 0.25), "BOOST": (0.15, 0.8, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.15, 1.0, 1.0, 0.5, 1.0, 0.3), "RF": (0.3, 0.35, 0.7, 0.3, 0.2, 0.15)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
+PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("SHORE_12V", "PWR"), ("HEAT_*", "PWR"), ("PMID", "PWR"), ("SYS_CHG", "PWR"), ("SW*_CHG", "PWR"), ("CELL+", "BANK"), ("CELL_N", "BANK"), ("MEZZ_CELL", "BANK"), ("BOOST*_IN", "BOOST"), ("SW1", "BOOST"), ("SW2", "BOOST"), ("SW3", "BOOST"), ("+5V_M1", "RAIL"), ("+5V_M2", "RAIL"), ("+5V_PI", "RAIL"), ("RF_*", "RF")]
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     for name, vals in CLASSES.items():
@@ -217,7 +228,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.15, 1.0, 1.2, 0.6, 0.5, 0.25), C("BOOST", 3, 0.2, 1.5, 1.0, 0.5, 1.2, 0.3), C("RAIL", 4, 0.2, 2.0, 1.0, 0.5, 1.2, 0.3), C("RF", 5, 0.3, 0.35, 0.7, 0.3, 0.2, 0.15)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.15, 0.6, 1.2, 0.6, 0.5, 0.25), C("BOOST", 3, 0.15, 0.8, 1.0, 0.5, 0.8, 0.3), C("RAIL", 4, 0.15, 1.0, 1.0, 0.5, 1.0, 0.3), C("RF", 5, 0.3, 0.35, 0.7, 0.3, 0.2, 0.15)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
