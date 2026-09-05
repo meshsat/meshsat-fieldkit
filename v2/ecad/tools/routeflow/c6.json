@@ -1,0 +1,65 @@
+{
+  "board": "pcb-c-display",
+  "project": "v2/ecad/pcb-c-display",
+  "phase": "C6",
+  "issue": "MESHSAT-813",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "services_script": "~/meshsat-services.sh",
+  "pre": {
+    "cwd": "<PROJECT>",
+    "must_contain": [
+      "footprint self-test",
+      "single-pin nets",
+      "PREROUTE-DONE OK"
+    ],
+    "min_all_pass": 1,
+    "gen_logs": [
+      {
+        "file": "out/gen_pcb_c.log",
+        "must": "saved"
+      },
+      {
+        "file": "out/gen_pcb_c3.log",
+        "must": "saved"
+      }
+    ],
+    "steps": [
+      [
+        "python3",
+        "../tools/gen_footprints_panel.py",
+        "../meshsat.pretty"
+      ],
+      [
+        "bash",
+        "../tools/full_c3.sh",
+        "."
+      ]
+    ]
+  },
+  "route": {
+    "attempts": [
+      80
+    ],
+    "threads": 1,
+    "timeout": 4500,
+    "log": "out/par-c6.log"
+  },
+  "finish": {
+    "argv": [
+      "../tools/finish_c6.sh",
+      "..",
+      "out/par-c6.log"
+    ],
+    "cwd": "<PROJECT>",
+    "clean_flag": "out/c6-clean.txt",
+    "stub_log": "out/pcb-c-display-stub.log"
+  },
+  "deliverable": "v2/release/revA/boards/meshsat-pcb-c-revA-C6",
+  "expect": {
+    "hard": 0,
+    "unrouted": 0,
+    "autoroute_minutes_max": 45
+  },
+  "budget_rounds": 2,
+  "notes": "C6 two-layer backer: one route attempt (the panel rule), one thread; the footprint generator runs first because gen_pcb_c.py loads BackerScrew_M3_GND from meshsat.pretty; the two generator logs must carry a saved line (run 1 lesson)."
+}
