@@ -9,8 +9,8 @@
 	(paper "A4")
 	(title_block
 		(title "MeshSat Field Kit carrier - PCB-D APRS BOARD")
-		(date "2026-09-02")
-		(rev "A")
+		(date "2026-09-05")
+		(rev "A (D7)")
 		(company "MeshSat")
 		(comment 1 "MESHSAT-709 / MESHSAT-748. Board-local frame, +X = case east. Phase D1 mechanical + placement. tools/gen_pcb_d.py")
 	)
@@ -16085,7 +16085,7 @@
 			(justify mirror)
 		)
 	)
-	(gr_text "PCB-D APRS BOARD REV A (D5) | MESHSAT-709/748 | 2026-09-03"
+	(gr_text "PCB-D APRS BOARD REV A (D7) | MESHSAT-709/748/804 | 2026-09-05"
 		(at 110 101.5 0)
 		(layer "B.SilkS")
 		(uuid "38a088a0-c696-41c5-b562-0a1d4b78bcb2")
