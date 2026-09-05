@@ -87,4 +87,11 @@ if any(not z.GetIsRuleArea() and z.GetFilledArea() > 0 for z in b.Zones()):
     _byname = {z.GetZoneName(): z for z in b.Zones() if not z.GetIsRuleArea()}
     for _p, _q in (("rail M2 collector B.Cu", "rail M2 riser B.Cu"), ("rail M2 collector B.Cu", "rail M2 tap B.Cu"), ("rail PI collector B.Cu", "rail PI riser B.Cu"), ("rail PI collector B.Cu", "rail PI tap B.Cu"), ("boost 1 column In2.Cu", "boost 1 jog In2.Cu"), ("boost 3 column In2.Cu", "boost 3 jog In2.Cu"), ("boost 1 column In2.Cu", "boost 1 foot In2.Cu"), ("boost 2 column In2.Cu", "boost 2 foot In2.Cu"), ("boost 3 column In2.Cu", "boost 3 foot In2.Cu"), ("boost 1 bottom B.Cu", "boost 1 bottom jog B.Cu"), ("boost 3 bottom B.Cu", "boost 3 bottom jog B.Cu"), ("boost 1 foot In2.Cu", "boost 1 bottom south B.Cu"), ("boost 2 foot In2.Cu", "boost 2 bottom south B.Cu"), ("boost 3 foot In2.Cu", "boost 3 bottom south B.Cu")):
         if _p in _byname and _q in _byname: check(_touch(_byname[_p], _byname[_q]), "'%s' and '%s' touch" % (_p, _q))
+# every differential pair on the board (6 Sep 2026, the quality programme): the same report as check_pcb_b.py, read by pair_match.sh; a mismatch over 1 mm is a WARN the finish meanders
+_tl = {}
+for _t in b.GetTracks():
+    if _t.GetClass() == "PCB_TRACK": _tl[_t.GetNetname().lstrip("/")] = _tl.get(_t.GetNetname().lstrip("/"), 0.0) + _t.GetLength() / 1e6
+for _pair in sorted(set(n[:-2] for n in _tl if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in _tl and (n[:-2] + "_N") in _tl)):
+    _lp, _ln = _tl.get(_pair + "_P", 0.0), _tl.get(_pair + "_N", 0.0)
+    print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(_lp - _ln) > 1.0 else "PASS ") + _pair, _lp, _ln, abs(_lp - _ln), "" if abs(_lp - _ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
