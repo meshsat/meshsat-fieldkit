@@ -14,7 +14,11 @@ X0, Y0 = eb.GetLeft() / 1e6 - 1.0, eb.GetTop() / 1e6 - 1.0
 NX, NY = int(eb.GetWidth() / 1e6 / G) + 20, int(eb.GetHeight() / 1e6 / G) + 20
 def cell(x_mm, y_mm): return int(round((x_mm - X0) / G)), int(round((y_mm - Y0) / G))
 def mm(v): return v / 1e6
-LAYERS = [pcbnew.F_Cu, pcbnew.B_Cu]; INNER = [pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.In3_Cu, pcbnew.In4_Cu]   # inner layers up to six-layer boards (B15)
+_ALL = {"F.Cu": pcbnew.F_Cu, "In1.Cu": pcbnew.In1_Cu, "In2.Cu": pcbnew.In2_Cu, "In3.Cu": pcbnew.In3_Cu, "In4.Cu": pcbnew.In4_Cu, "B.Cu": pcbnew.B_Cu}
+# STUB_LAYERS (6 Sep 2026): the layers the stub router may route on, default the two outer ones; B15 passes F.Cu,In2.Cu,In3.Cu,B.Cu (In1 and In4 are planes).
+LAYERS = [_ALL[x.strip()] for x in __import__("os").environ.get("STUB_LAYERS", "F.Cu,B.Cu").split(",") if x.strip() in _ALL] or [pcbnew.F_Cu, pcbnew.B_Cu]
+INNER = [l for l in _ALL.values() if l not in LAYERS]
+LI = {L: i for i, L in enumerate(LAYERS)}; LR = {i: L for L, i in LI.items()}
 # ---- rasterisation helpers (grid index j = x, i = y)
 def disc(mask, cx, cy, r):
     i0, i1 = max(0, int((cy - r - Y0) / G)), min(NY - 1, int((cy + r - Y0) / G) + 1); j0, j1 = max(0, int((cx - r - X0) / G)), min(NX - 1, int((cx + r - X0) / G) + 1)
@@ -92,8 +96,9 @@ def build_maps(net):
             segment(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + vr)
     for z in b.Zones():
         if z.GetIsRuleArea():
-            for L in LAYERS: poly(trk[L], z.Outline(), CLR + w2)
-            poly(via, z.Outline(), CLR + vr)
+            for L in LAYERS:
+                if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): poly(trk[L], z.Outline(), CLR + w2)   # a rule area binds only on its own layers (the board-wide In1/In4 track keep-outs must not block In2/In3)
+            if z.GetDoNotAllowVias(): poly(via, z.Outline(), CLR + vr)
     for d in b.GetDrawings():
         if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE:
             c = d.GetCenter(); r = mm(d.GetRadius())
@@ -114,7 +119,7 @@ def copper_cells(item, net):
         for L in LAYERS:
             M = np.zeros((NY, NX), dtype=bool); disc(M, item["x"], item["y"], 0.25); out[L] = M
     else:
-        L = pcbnew.F_Cu if item["layer"] == "F.Cu" else pcbnew.B_Cu if item["layer"] == "B.Cu" else None
+        L = _ALL.get(item["layer"]); L = L if L in LAYERS else None
         if L is not None:
             M = np.zeros((NY, NX), dtype=bool); disc(M, item["x"], item["y"], 0.15); out[L] = M
         else:                                   # inner layer: every cell along the segment(s) of this net near the point, on both outer layers (reached with a via)
@@ -125,7 +130,8 @@ def copper_cells(item, net):
                 u = 0 if L2 == 0 else max(0, min(1, ((item["x"] - mm(a.x)) * dx + (item["y"] - mm(a.y)) * dy) / L2))
                 if math.hypot(item["x"] - (mm(a.x) + u * dx), item["y"] - (mm(a.y) + u * dy)) < 0.3:
                     segment(M, mm(a.x), mm(a.y), mm(e.x), mm(e.y), 0.05); found += 1
-            item["inner"] = True; out[pcbnew.F_Cu] = M.copy(); out[pcbnew.B_Cu] = M.copy()
+            item["inner"] = True
+            for L2 in LAYERS: out[L2] = M.copy()
     return out
 
 INNER_GOAL = None
@@ -200,13 +206,15 @@ def other_cluster_cells(a, net, viamap):
 
 def route(net, src, goal_cells, trk, via, window):
     (jmin, imin), (jmax, imax) = window
-    LI = {pcbnew.F_Cu: 0, pcbnew.B_Cu: 1}; LR = {0: pcbnew.F_Cu, 1: pcbnew.B_Cu}
-    starts = [(LI[L], i, j) for L, M in src.items() for i, j in zip(*np.nonzero(M)) if not trk[L][i, j] or True]
-    goal = np.zeros((2, NY, NX), dtype=bool)
-    for L, M in goal_cells.items(): goal[LI[L]] |= M
-    passable = {0: ~trk[pcbnew.F_Cu], 1: ~trk[pcbnew.B_Cu]}
-    for L, M in src.items(): passable[LI[L]] |= M          # own pad copper is always enterable
-    for L, M in goal_cells.items(): passable[LI[L]] |= M
+    starts = [(LI[L], i, j) for L, M in src.items() if L in LI for i, j in zip(*np.nonzero(M))]
+    goal = np.zeros((len(LAYERS), NY, NX), dtype=bool)
+    for L, M in goal_cells.items():
+        if L in LI: goal[LI[L]] |= M
+    passable = {LI[L]: ~trk[L] for L in LAYERS}
+    for L, M in src.items():
+        if L in LI: passable[LI[L]] |= M          # own pad copper is always enterable
+    for L, M in goal_cells.items():
+        if L in LI: passable[LI[L]] |= M
     dist = {}; prev = {}; pq = []
     for s in starts:
         dist[s] = 0.0; heapq.heappush(pq, (0.0, s))
@@ -226,8 +234,8 @@ def route(net, src, goal_cells, trk, via, window):
             nd = d + c; t = (L, ni, nj)
             if nd < dist.get(t, 1e18): dist[t] = nd; prev[t] = s; heapq.heappush(pq, (nd, t))
         if not via[i, j] and not src_is_here(src, L, i, j):
-            oL = 1 - L
-            if passable[oL][i, j]:
+            for oL in range(len(LAYERS)):   # a through via reaches every routing layer
+                if oL == L or not passable[oL][i, j]: continue
                 nd = d + VIA_COST; t = (oL, i, j)
                 if nd < dist.get(t, 1e18): dist[t] = nd; prev[t] = s; heapq.heappush(pq, (nd, t))
     if found is None: return None
@@ -235,10 +243,10 @@ def route(net, src, goal_cells, trk, via, window):
     while path[-1] in prev: path.append(prev[path[-1]])
     return list(reversed(path))
 def src_is_here(src, L, i, j):
-    M = src.get({0: pcbnew.F_Cu, 1: pcbnew.B_Cu}[L])
+    M = src.get(LR[L])
     return M is not None and M[i, j]
 def emit(net_item, path):
-    net = net_item; LR = {0: pcbnew.F_Cu, 1: pcbnew.B_Cu}
+    net = net_item
     # merge straight runs
     segs = []; cur = [path[0]]
     for k in range(1, len(path)):
@@ -283,7 +291,7 @@ for it1, it2 in pairs:
         for L in list(src): src[L] &= ~via
         if not any(M.any() for M in src.values()): print("  skip: no via-legal cell on the inner-layer source", a); continue
     if netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad"):   # pad-to-pad on a plane net: route it, do not just drop a via
-        goal_cells = {pcbnew.F_Cu: ~via, pcbnew.B_Cu: ~via}
+        goal_cells = {L: ~via for L in LAYERS}
         for L in LAYERS: goal_cells[L] &= ~trk[L]
         win = 8.0
     else:
@@ -292,7 +300,8 @@ for it1, it2 in pairs:
             goal_cells = copper_cells(c, net)
             if c.get("inner"):
                 for L in LAYERS: goal_cells[L] &= ~via
-                INNER_GOAL = goal_cells[pcbnew.F_Cu] | goal_cells[pcbnew.B_Cu]
+                INNER_GOAL = np.zeros((NY, NX), dtype=bool)
+                for M in goal_cells.values(): INNER_GOAL |= M
         else:
             c = dict(c); c["inner"] = True                      # any goal may sit on an inner layer or need a via: allow the closing via
     xs = [a["x"], c["x"]]; ys = [a["y"], c["y"]]
