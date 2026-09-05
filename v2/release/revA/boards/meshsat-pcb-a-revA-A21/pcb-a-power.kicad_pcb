@@ -9,8 +9,8 @@
 	(paper "A4")
 	(title_block
 		(title "MeshSat Field Kit carrier - PCB-B COMPUTE")
-		(date "2026-09-02")
-		(rev "A")
+		(date "2026-09-05")
+		(rev "A (A21)")
 		(company "MeshSat")
 		(comment 1 "MESHSAT-709. Case-centred frame. Phase B1 mechanical + placement. tools/gen_pcb_b.py")
 	)
@@ -36210,7 +36210,7 @@
 			)
 		)
 	)
-	(gr_text "MESHSAT-709 / 789  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-04"
+	(gr_text "MESHSAT-709 / 795  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-05"
 		(at 198 36.7 0)
 		(layer "F.SilkS")
 		(uuid "f2fad220-17c5-4f8e-bbd7-79ca1b449dfb")
@@ -36320,7 +36320,7 @@
 			)
 		)
 	)
-	(gr_text "MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A18)"
+	(gr_text "MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A21)"
 		(at 205 33.5 0)
 		(layer "F.SilkS")
 		(uuid "d8f62900-066b-424b-bebc-9b980f84a682")
