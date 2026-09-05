@@ -57,7 +57,13 @@ if any(not z.GetIsRuleArea() and z.GetFilledArea() > 0 for z in b.Zones()):
         _n = z.GetZoneName()
         if not z.GetIsRuleArea() and _n.startswith(("rail ", "VOUT island ", "boost ", "inductor tap ")):
             _fp = z.GetFilledPolysList(z.GetFirstLayer()); _bb = z.GetBoundingBox(); _rect = _bb.GetWidth() / 1e6 * _bb.GetHeight() / 1e6; _area = z.GetFilledArea() / 1e12
-            check(_fp.OutlineCount() == 1 and _area >= 0.5 * _rect, "band '%s' is one piece over at least half its outline (%d pieces, %.0f of %.0f mm2)" % (_n, _fp.OutlineCount(), _area, _rect))
+            # a same-net zone of higher priority on the same layer (a foot across a column) legitimately splits the fill: then every piece must touch that zone's fill
+            _others = [o for o in b.Zones() if o is not z and not o.GetIsRuleArea() and o.GetNetname() == z.GetNetname() and o.GetFirstLayer() == z.GetFirstLayer()]
+            def _piece_touches(_i):
+                _o = _fp.Outline(_i)
+                return any(any(o.GetFilledPolysList(o.GetFirstLayer()).Collide(_o.GetPoint(_k), int(0.06e6)) for _k in range(_o.PointCount())) for o in _others)
+            _joined = _fp.OutlineCount() == 1 or all(_piece_touches(_i) for _i in range(_fp.OutlineCount()))
+            check(_joined and _area >= 0.5 * _rect, "band '%s' is one piece (or every piece touches a same-net zone) over at least half its outline (%d pieces, %.0f of %.0f mm2)" % (_n, _fp.OutlineCount(), _area, _rect))
     for _t in b.GetTracks():
         if _t.Type() == pcbnew.PCB_VIA_T and _t.IsLocked() and abs(_t.GetDrillValue() / 1e6 - 0.4) < 0.01 and _t.GetNetname().lstrip("/") in ("+5V_M2", "+5V_PI"):
             _zs = [z for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == _t.GetNetname() and z.GetZoneName().startswith("rail ") and z.GetFirstLayer() == pcbnew.B_Cu]
