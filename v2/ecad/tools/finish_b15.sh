@@ -10,7 +10,7 @@ python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
 cp $N.kicad_pcb out/$N-cleaned.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
-nice -n 10 python3 ../tools/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || echo "stub router CRASHED, exit $? (out/$N-stub.log)"; grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
+STUB_GRID=0.1 nice -n 10 python3 ../tools/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || echo "stub router CRASHED, exit $? (out/$N-stub.log)"; grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
 python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'
 import pcbnew, sys
 b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b); print('zones refilled after the stub router')
