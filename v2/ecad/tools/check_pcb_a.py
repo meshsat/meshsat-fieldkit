@@ -50,4 +50,16 @@ for _t in b.GetTracks():
 if _w:
     for _n, _min in (("+5V_PI", 0.5), ("+5V_M1", 0.5), ("+5V_M2", 0.5), ("CELL+", 0.6)):   # link widths; the islands, bands and planes carry the current (locked escapes excluded)
         if _n in _w: check(min(_w[_n]) >= _min - 0.01, "%s routed at its class width (>= %.1f mm; widths %s)" % (_n, _min, sorted(_w[_n])))
+# A21 (5 Sep 2026): on a filled board every rail band, boost band and output island must be one piece over at least half its outline, and every
+# locked 0.8/0.4 stitch via of the M2 and PI rails must sit in the fill of one of its rail's bottom bands (the current path converter -> island -> vias -> band -> riser -> VH).
+if any(not z.GetIsRuleArea() and z.GetFilledArea() > 0 for z in b.Zones()):
+    for z in b.Zones():
+        _n = z.GetZoneName()
+        if not z.GetIsRuleArea() and _n.startswith(("rail ", "VOUT island ", "boost ")):
+            _fp = z.GetFilledPolysList(z.GetFirstLayer()); _bb = z.GetBoundingBox(); _rect = _bb.GetWidth() / 1e6 * _bb.GetHeight() / 1e6; _area = z.GetFilledArea() / 1e12
+            check(_fp.OutlineCount() == 1 and _area >= 0.5 * _rect, "band '%s' is one piece over at least half its outline (%d pieces, %.0f of %.0f mm2)" % (_n, _fp.OutlineCount(), _area, _rect))
+    for _t in b.GetTracks():
+        if _t.Type() == pcbnew.PCB_VIA_T and _t.IsLocked() and abs(_t.GetDrillValue() / 1e6 - 0.4) < 0.01 and _t.GetNetname().lstrip("/") in ("+5V_M2", "+5V_PI"):
+            _zs = [z for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == _t.GetNetname() and z.GetZoneName().startswith("rail ")]
+            check(any(z.GetFilledPolysList(pcbnew.B_Cu).Contains(_t.GetPosition()) for z in _zs), "stitch via %s at (%.1f, %.1f) sits in a filled rail band" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

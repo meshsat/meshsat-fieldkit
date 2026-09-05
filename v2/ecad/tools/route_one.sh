@@ -6,10 +6,8 @@ cp "out/$N-preroute.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad
 python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" <<'PY'
 import sys, pcbnew
 b = pcbnew.LoadBoard(sys.argv[1])
-bb = b.GetBoardEdgesBoundingBox(); big = 0.15 * bb.GetWidth() * bb.GetHeight()
 for z in list(b.Zones()):
-    zb = z.GetBoundingBox()
-    if not z.GetIsRuleArea() and zb.GetWidth() * zb.GetHeight() > big: b.Remove(z)          # planes out of the DSN (GND/+5V route as ordinary nets); bands and islands under 15 % of the board stay as conduction areas (A21, 5 Sep 2026)
+    if not z.GetIsRuleArea(): b.Remove(z)          # planes, bands and islands out of the DSN: GND/+5V route as ordinary nets (A21 run 8 of 5 Sep 2026: bands exported as planes made the router end tracks at band edges the fill never reached; bands are protected by track keep-outs instead)
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
 b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
 PY
