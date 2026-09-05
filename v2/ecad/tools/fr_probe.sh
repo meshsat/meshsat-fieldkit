@@ -5,8 +5,11 @@
 # file if any run produced no session. Usage (on the build VM, service group stopped): fr_probe.sh [repo dir] [jar]
 set -uo pipefail
 R=${1:-$(cd "$(dirname "$0")/../../.." && pwd)}; T=$R/v2/ecad/tools; JAR=${2:-$HOME/bin/freerouting-1.9.0.jar}; OUT=$T/routeflow/bench; mkdir -p "$OUT"
-W=${FR_PROBE_DIR:-$HOME/fr_probe}; rm -rf "$W"; mkdir -p "$W"; cd "$W"
+W=${FR_PROBE_DIR:-$HOME/fr_probe}
+if [ "${3:-}" = "--assemble" ]; then cd "$W"; JAR=${2:-$HOME/bin/freerouting-1.9.0.jar}; ASSEMBLE_ONLY=1; else rm -rf "$W"; mkdir -p "$W"; cd "$W"; ASSEMBLE_ONLY=0; fi
 SRC=$(ls "$R"/v2/release/revA/boards/meshsat-pcb-d-revA-D7/*.kicad_pcb | head -1); N=pcb-d-aprs
+JAVA=$(java -version 2>&1 | head -1 | tr -d '"'); SHA=$(sha256sum "$JAR" | cut -c1-16)
+if [ $ASSEMBLE_ONLY = 0 ]; then
 cp "$(dirname "$SRC")/$N.kicad_pro" .; python3 "$T/strip_route.py" "$SRC" "$N.kicad_pcb" 2>&1 | grep -v "Debug\|assert"
 python3 - "$N.kicad_pcb" "$N.dsn" <<'PY' 2>&1 | grep -v "Debug\|assert"
 import sys, pcbnew
@@ -20,8 +23,7 @@ LAYERS=$(grep -o "(layer [A-Za-z0-9_.]*" "$N.dsn" | awk '{print $2}' | sort -u)
 { echo "(rules PCB $N"; echo "  (snap_angle fortyfive_degree)"; echo "  (autoroute_settings (fanout off) (autoroute on) (postroute on) (vias on) (via_costs 200) (plane_via_costs 5) (start_ripup_costs 100) (start_pass_no 1)";
   for L in $LAYERS; do echo "    (layer_rule $L (active on) (preferred_direction horizontal) (preferred_direction_trace_costs 1.0) (against_preferred_direction_trace_costs 2.5))"; done; echo "  )"; echo ")"; } > via200.rules
 declare -A KNOBS=( [base]="" [oit_0.5]="-oit 0.5" [us_global]="-us global" [us_hybrid_1_1]="-us hybrid -hr 1:1" [is_sequential]="-is sequential" [is_random]="-is random" [inc_PWR]="-inc PWR" [im]="-im" [mp_10]="-mp 10" )
-JAVA=$(java -version 2>&1 | head -1); SHA=$(sha256sum "$JAR" | cut -c1-16); nosession=0
-echo "{" > caps.json; echo "\"jar\": \"$(basename "$JAR")\", \"jar_sha256_16\": \"$SHA\", \"java\": \"$JAVA\", \"board\": \"D7 stripped\", \"date\": \"$(date -Iseconds)\"," >> caps.json; echo "\"runs\": {" >> caps.json; first=1
+nosession=0
 run_one() {   # name, extra args...
   local name=$1; shift; local d="$W/$name"; mkdir -p "$d"; cp "$N.kicad_pcb" "$N.kicad_pro" "$d/"
   local t0=$(date +%s); timeout 600 xvfb-run -a java -jar "$JAR" -de "$N.dsn" -do "$d/$N.ses" -mp ${MP:-40} -mt 1 -oit 2 -dct 0 "$@" > "$d/fr.log" 2>&1; local rc=$?; local t1=$(date +%s)
@@ -44,18 +46,24 @@ run_one rules_via200 -dr via200.rules
 # checkpoint probe: kill the jar after 20 s with -im and see whether any session or checkpoint file exists
 mkdir -p "$W/kill_im"; cp "$N.kicad_pcb" "$N.kicad_pro" "$W/kill_im/"; timeout 20 xvfb-run -a java -jar "$JAR" -de "$N.dsn" -do "$W/kill_im/$N.ses" -mp 200 -mt 1 -oit 0.01 -dct 0 -im > "$W/kill_im/fr.log" 2>&1; sleep 1
 echo "\"kill_im\": {\"session_after_kill\": $([ -s "$W/kill_im/$N.ses" ] && echo true || echo false), \"files\": \"$(ls "$W/kill_im" | tr '\n' ' ')\"}" > "$W/kill_im/row.json"
-for d in base oit_0.5 us_global us_hybrid_1_1 is_sequential is_random inc_PWR im mp_10 rules_via200 kill_im; do [ -f "$W/$d/row.json" ] || continue; [ $first = 1 ] || echo "," >> caps.json; first=0; if grep -q '^"' "$W/$d/row.json"; then cat "$W/$d/row.json" >> caps.json; else printf '"%s": ' "$d" >> caps.json; cat "$W/$d/row.json" >> caps.json; fi; done
-echo "}" >> caps.json
-python3 - caps.json <<'PY'
-import json, sys
-c = json.load(open(sys.argv[1])); runs = c["runs"]; base = runs.get("base", {})
+fi
+nosession=$(grep -l '"session": false' "$W"/*/row.json 2>/dev/null | wc -l)
+python3 - "$W" "$(basename "$JAR")" "$SHA" "$JAVA" <<'PY'
+import json, sys, os, glob, datetime
+W, jar, sha, java = sys.argv[1:5]; runs = {}
+for d in sorted(glob.glob(os.path.join(W, "*", "row.json"))):
+    name = os.path.basename(os.path.dirname(d)); t = open(d).read().strip()
+    if t.startswith('"'): t = "{" + t + "}"; runs.update(json.loads(t)); continue
+    runs[name] = json.loads(t)
+c = {"jar": jar, "jar_sha256_16": sha, "java": java, "board": "D7 stripped", "date": datetime.datetime.now().isoformat(timespec="seconds"), "runs": runs}
+base = runs.get("base", {})
 verdict = {}
 for k, r in runs.items():
     if k in ("base", "kill_im"): continue
     if not r.get("session"): verdict[k] = "REJECTED_OR_NO_SESSION"; continue
     changed = any(r.get(f) != base.get(f) for f in ("vias", "length_mm", "tracks", "hard", "unrouted"))
     verdict[k] = "PROBED (changes the result)" if changed else "NO_EFFECT (identical to base)"
-c["verdict"] = verdict; json.dump(c, open(sys.argv[1], "w"), indent=1)
+c["verdict"] = verdict; json.dump(c, open(os.path.join(W, "caps.json"), "w"), indent=1)
 for k, v in verdict.items(): print("  %-16s %s  %s" % (k, v, {f: runs[k].get(f) for f in ("vias", "length_mm", "tracks", "wall_s")}))
 print("  base:", {f: base.get(f) for f in ("vias", "length_mm", "tracks", "wall_s", "autoroute")}); print("  kill_im:", runs.get("kill_im"))
 PY
