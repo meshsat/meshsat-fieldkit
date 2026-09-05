@@ -140,6 +140,6 @@ for k, (title, sites, sign) in enumerate((("WEST end wall (case -X), seen from o
     scale_bar(-140, -14)
     notes(["SHEET %d of 4: the SMA antenna bulkheads on this end wall, 55 mm above the floor, four sites at Y -60, -30, +30 and +60 (the east +60 site is a spare, plugged). Print at 100 percent." % (3 + k),
        "Coupler: Amphenol Connex 132170 SMA female-female bulkhead (vendor/rf), 6.5 mm D-hole with the flat filed to 6.00 across so the coupler cannot turn when a pigtail is torqued; 8 mm nut and lock washer inside, the NBR O-ring 6.5 x 1.0 under the outside hex.",
-       "The sites sit between the end walls' inner ribs (Y 0 and +-89, appendix 25.1) and above the battery module (26 mm) and the dock strip. Inside, an RG-316 jumper runs from each coupler to its float nest on the strip: west wall to the UHF, WIFI 2.4, WIFI 5.8 and SDR nests, east wall to LTE, IRIDIUM and LORA (about 150 to 250 mm each).",
+       "The sites sit between the end walls' inner ribs (Y 0 and +-89, appendix 25.1) and above the battery module (26 mm) and the dock strip. Inside, an RG-316 jumper runs from each coupler to its float nest on the strip: west wall to the UHF, WIFI 2.4, GNSS and SDR nests, east wall to LTE, IRIDIUM and LORA (about 150 to 250 mm each).",
        "Outside, the antenna pigtails screw on as before, 0.45 N m once. The retired wall strip E3 carried these same seven couplers; only their home changed."], -22)
 c.showPage(); c.save(); print("wrote", out)
