@@ -29,6 +29,11 @@
       "name": "fr24_via200",
       "jar": "freerouting-2.4.1.jar",
       "via_costs": 200
+    },
+    {
+      "name": "fr24_fanout",
+      "jar": "freerouting-2.4.1.jar",
+      "fanout": true
     }
   ]
 }
