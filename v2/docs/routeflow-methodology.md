@@ -45,6 +45,7 @@ DRC types, pairs within 1 mm.
 | `ROUTED_HARD` where every hard item lies on one layer, between two nets, in fragments under 0.5 mm | `threads` = 1 | B15 run 3: 39 items, all In3, +3V3 against WIFI_DIS, the documented multi-thread optimiser defect |
 | `ROUTED_OPEN` after the finish (the stub router could not close them) | `passes` +30 percent, one more attempt | B15 runs 2 and 3: the same five opens at 60 and 100 passes |
 | hard items dominated by `copper_edge_clearance` | stop, `STOPPED_NEEDS_GENERATOR` (an edge keep-out band belongs in the outline generator) | C6 run 3: six tracks 0.3 mm from the right edge |
+| the same opens on every run at adjacent same-net pins (a connector's paired pins, a fine-pitch part's consecutive rail pads, a pass-through ESD diode) | stop, `STOPPED_NEEDS_GENERATOR`; the fix is `tools/join_adjacent_pins.py` in the pre-route chain (a locked joiner makes each group one island) | B15 runs 2 and 3: J_PANEL pins 1 and 2, the hub's +3V3 escapes; 26 joins on B15, no DRC change |
 | the generator log has no `saved` line | stop, `GATE_BLOCKED` with the log's tail | C6 run 1: the footprint that KiCad could not load |
 | a stage exits non-zero or prints `Traceback` | stop, `TOOL_CRASH` with the traceback | the stub router without numpy |
 | a gate prints any `FAIL` line, whatever else it prints | stop, `GATE_BLOCKED` with the FAIL lines | B14 run 1 lesson: two `RESULT: ALL PASS` lines and a FAIL between them |
