@@ -66,7 +66,6 @@ FIXED = {"J_AB1": (-72, -73, 90), "J_LEDS1": (-38, -74, 0), "J_MEZZ_PWR1": (-8, 
          "J_DOCK": (-124, -70, 0), "J_PRE1": (-151, -70, 0),
          "F3": (-150, -46, 0), "F4": (-125, -46, 0), "F5": (-100, -46, 0), "F2": (-75, -46, 0),
          "U22": (-148, -20, 0), "L2": (-148, -6, 0), "U23": (-116, -20, 0), "L3": (-116, -6, 0), "U24": (-84, -20, 0), "L4": (-84, -6, 0),
-         "C38": (-148, -24.2, 0), "C71": (-116, -24.2, 0), "C84": (-84, -24.2, 0),   # the bootstrap capacitors right under their converters (A21 runs 10 and 14: 13 mm away in the compensation row, BST1/BST2 could not cross the boost feed columns)
          "U20": (-50, -58, 0), "L5": (-40, -58, 0), "U21": (-112, -60, 0), "R52": (-120, -60, 0),
          "J_5V_M1": (-150, 44, 0), "J_5V_M2": (-135, 44, 0), "J_5V_PI": (-120, 44, 0),
          "U25": (-150, 19, 0), "J_MAINSW": (-159, 8, 90), "U26": (-140, 28, 0), "J_HEAT": (-159, 28, 90), "U5": (-150, 4, 0), "L6": (-142, 4, 0),
@@ -194,6 +193,10 @@ outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
 #     (the RAIL and BOOST classes at 2.0 and 1.5 mm left 20 connections open; the classes are now 1.0 and 0.8 and these bands carry the current).
 #     Rails M2 and PI run from their output capacitors (C96 at (-107, -15), C97 at (-75, -11)) west along the boost row and north to the VH connectors at y 44.5;
 #     rail M1 has its In2 plane. Boost inputs: fuse (THT, y -44.3) north to the inductor pad (fanned out to a via). CELL+ gets a tap to the mezzanine fuse F2.
+# The bootstrap capacitors go right under their converters after the packer has run (A21 runs 10 and 14: 13 mm away in the compensation row, BST1 and
+# BST2 could not cross the boost feed columns; a FIXED entry made a second, netless instance and the DSN export failed in run 16)
+for _ref, _xb in (("C38", -148.0), ("C71", -116.0), ("C84", -84.0)):
+    if _ref in placed: placed[_ref].SetOrientationDegrees(0); centre_on(placed[_ref], _xb, -24.2)
 B = (pcbnew.B_Cu,); I2 = (pcbnew.In2_Cu,)
 def K(x0, y0, x1, y1): return (x0 - OX, OY - y1, x1 - OX, OY - y0)      # a rectangle given in the KiCad frame, for outer_pour and track_keepout
 def track_keepout(name, rect, layer=pcbnew.B_Cu):
