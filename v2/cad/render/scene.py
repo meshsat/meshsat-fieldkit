@@ -244,6 +244,15 @@ for sx, sites in ((-1, ((-60, "UHF"), (-30, "WIFI 2.4"), (30, "GNSS"), (60, "SDR
         else: cyl("ant_plug", 9, 6, (sx * (WX + 13), y, z), M["steel"], axis="X", verts=6)
 # ------------------------------------------------------------------ world, lights, cameras, views
 S.render.engine = "CYCLES"; S.cycles.samples = int(os.environ.get("SAMPLES", "256")); S.cycles.use_denoising = False; S.cycles.device = "CPU"
+if os.environ.get("CYCLES_GPU"):   # the build host nllei01gpu01 (RTX 3090 Ti): OptiX, else CUDA; run with the ollama containers stopped
+    cp = bpy.context.preferences.addons["cycles"].preferences
+    for dev_type in ("OPTIX", "CUDA"):
+        try:
+            cp.compute_device_type = dev_type; cp.get_devices()
+            if any(d.type == dev_type for d in cp.devices): break
+        except Exception: continue
+    for d in cp.devices: d.use = d.type in ("OPTIX", "CUDA")
+    S.cycles.device = "GPU"; print("cycles on", cp.compute_device_type, [d.name for d in cp.devices if d.use], flush=True)
 S.render.resolution_x = 2000; S.render.resolution_y = 1400; S.render.resolution_percentage = int(os.environ.get("RESPCT", "100"))
 S.view_settings.view_transform = "Filmic" if "Filmic" in [i.identifier for i in bpy.types.ColorManagedViewSettings.bl_rna.properties["view_transform"].enum_items] else "AgX"
 for lk in ("Medium High Contrast", "AgX - Medium High Contrast", "None"):
