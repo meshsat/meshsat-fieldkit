@@ -4,8 +4,10 @@ set -uo pipefail
 cd "$1"; N=pcb-c-display
 python3 ../tools/gen_sch_c.py $N.kicad_sch $N 2>&1 | tail -2
 ../tools/build_sch.sh . $N 2>&1 | grep -E 'ERC|netlist'
-python3 ../tools/gen_pcb_c.py $N.kicad_pcb 2>&1 | grep -E 'saved|WARN|Trace|Error|note'
-python3 ../tools/gen_pcb_c3.py $N.kicad_pcb out/$N.net 2>&1 | grep -E 'saved|WARN|Trace|Error|overflow|unplaced|missing'
+python3 ../tools/gen_pcb_c.py $N.kicad_pcb > out/gen_pcb_c.log 2>&1; grep -E 'saved|WARN|Trace|Error|note|not found' out/gen_pcb_c.log
+grep -q '^saved' out/gen_pcb_c.log || { echo "BLOCK: gen_pcb_c.py did not save the board (see out/gen_pcb_c.log)"; tail -3 out/gen_pcb_c.log; echo 'BLOCK generator' > out/preroute-gate.txt; echo PREROUTE-DONE BLOCK generator; exit 1; }
+python3 ../tools/gen_pcb_c3.py $N.kicad_pcb out/$N.net > out/gen_pcb_c3.log 2>&1; grep -E 'saved|WARN|Trace|Error|overflow|unplaced|missing|single-pin' out/gen_pcb_c3.log
+grep -q '^saved' out/gen_pcb_c3.log || { echo "BLOCK: gen_pcb_c3.py did not save the board (see out/gen_pcb_c3.log)"; tail -3 out/gen_pcb_c3.log; echo 'BLOCK generator' > out/preroute-gate.txt; echo PREROUTE-DONE BLOCK generator; exit 1; }
 python3 ../tools/check_pcb_c.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND' fine 2>&1 | grep -E 'fanout:'
