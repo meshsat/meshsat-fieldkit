@@ -109,8 +109,9 @@ def remedy(sig, prof, applied):
         if int(r.get("threads", 6)) != 1: r["threads"] = 1; return r, "single-thread optimiser (multi-thread knot)"
         return None, "knot with one thread: needs the session"
     if sig == "OPEN":
+        if "via_costs" not in applied and not r.get("via_costs"): r["via_costs"] = 100; return r, "via_costs 100 through a rules file (a different solution; the router is deterministic, so more passes alone repeat the result)"
         if "passes" not in applied: r["attempts"] = [int(p * 1.3) for p in r["attempts"]]; return r, "passes +30 percent"
-        return None, "opens survive more passes: needs the generators (escapes, keep-outs) or the stub router"
+        return None, "opens survive a different via cost and more passes: needs the generators (escapes, joins) or the stub router"
     if sig == "EDGE": return None, "edge clearance dominates: an edge keep-out band belongs in the outline generator"
     return None, "hard violations of mixed kind: needs the session (route_audit.py)"
 
@@ -168,7 +169,14 @@ def run(profile_fn, rounds, use_services, dry):
             if st != "GATED": status = st; break
             env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(route.get("timeout", 4500))}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
-            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"))))
+            if any(k in route for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive")) and not dry:   # the rules-file knobs the probe found the router honours
+                tools = os.path.dirname(os.path.abspath(__file__)); pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); dsn0 = os.path.join(rdir, "round%d-rules.dsn" % rnd); rules = os.path.join(rdir, "round%d.rules" % rnd)
+                sh(["python3", "-c", "import pcbnew,sys; b=pcbnew.LoadBoard(sys.argv[1]); [b.Remove(z) for z in list(b.Zones()) if not z.GetIsRuleArea()]; pcbnew.SaveBoard(sys.argv[1]+'.np.kicad_pcb', b); print(pcbnew.ExportSpecctraDSN(pcbnew.LoadBoard(sys.argv[1]+'.np.kicad_pcb'), sys.argv[2]))", pre, dsn0], project, os.path.join(rdir, "round%d-rules.log" % rnd))
+                argv = ["python3", os.path.join(tools, "fr_rules.py"), dsn0, rules, "--via-costs", str(route.get("via_costs", 50)), "--plane-via-costs", str(route.get("plane_via_costs", 5)), "--ripup", str(route.get("ripup", 100))]
+                if route.get("preferred"): argv += ["--preferred", route["preferred"]]
+                if route.get("inactive"): argv += ["--inactive", route["inactive"]]
+                if sh(argv, project, os.path.join(rdir, "round%d-rules.log" % rnd)) == 0 and os.path.exists(rules): env["FR_RULES"] = rules
+            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s rules %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"), {k: route[k] for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive") if k in route} or "none")))
             if use_services: services(prof.get("services_script"), "stop", os.path.join(rdir, "services.log"))
             rlog = os.path.join(project, prof["route"].get("log", "out/parallel-routeflow.log"))
             if not dry:
@@ -204,7 +212,7 @@ def run(profile_fn, rounds, use_services, dry):
             if rnd > rounds: status = "STOPPED_BUDGET"; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="%d automatic rounds spent on %s" % (rounds, sig))); break
             new_route, why = remedy(sig, prof, applied)
             if new_route is None: status = "STOPPED_NEEDS_GENERATOR"; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note=why)); break
-            for k in ("power_layers", "timeout", "threads", "attempts"):
+            for k in ("power_layers", "timeout", "threads", "attempts", "via_costs"):
                 if new_route.get(k) != route.get(k): applied.add("passes" if k == "attempts" else k)
             prof["route"] = new_route; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status="REMEDY", note="%s -> %s" % (sig, why)))
     finally:
@@ -368,8 +376,9 @@ def selftest():
     r, why = remedy("KNOT", prof, set()); chk("knot -> one thread", r and r["threads"] == 1)
     r, why = remedy("KNOT", {"route": {"attempts": [50], "threads": 1}}, set()); chk("knot with one thread stops", r is None)
     r, why = remedy("EDGE", prof, set()); chk("edge stops for the generator", r is None)
-    r, why = remedy("OPEN", prof, set()); chk("opens -> more passes once", r and r["attempts"] == [65])
-    r, why = remedy("OPEN", prof, {"passes"}); chk("opens twice stops", r is None)
+    r, why = remedy("OPEN", prof, set()); chk("opens -> via costs 100 first", r and r.get("via_costs") == 100)
+    r, why = remedy("OPEN", {"route": {"attempts": [50], "via_costs": 100}}, {"via_costs"}); chk("opens after via costs -> more passes once", r and r["attempts"] == [65])
+    r, why = remedy("OPEN", {"route": {"attempts": [65], "via_costs": 100}}, {"via_costs", "passes"}); chk("opens three times stops", r is None)
     chk("missing clean flag refuses", judge_finish(os.path.join(t, "nofinish.log"), os.path.join(t, "noflag"), None, None)[0] == "FINISH_REFUSED")
     open(os.path.join(t, "flag"), "w").write("open\n"); chk("open flag refuses", judge_finish(os.path.join(t, "nofinish.log"), os.path.join(t, "flag"), None, None)[0] == "FINISH_REFUSED")
     open(os.path.join(t, "flag"), "w").write("clean\n"); open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\n"); os.makedirs(os.path.join(t, "deliv"))
