@@ -43,6 +43,8 @@ Both kits on the bench and stacked outside in the rain during the 4 September 20
 | ![the bench with the parts before the session](images/20260904-call-bench-parts.jpg) | |
 | the bench before the session: leads, modules and boxes under the banner | |
 
+Video of the same session: [20260904-call-session-1080p.mp4](images/20260904-call-session-1080p.mp4) (53 s, 1080p, 30 MB, metadata removed).
+
 ## Software side
 
 The kit provisioning lives with the software in the meshsat repository: `scripts/install-kiosk.sh` (Touch Display 2 kiosk), `scripts/install-kit-network.sh` (WiFi reliability), `scripts/x1202-monitor.py` (UPS monitor), `deploy/kiosk/`, and the hardware pages of the documentation site.
