@@ -8,6 +8,8 @@ from PIL import Image, ImageDraw
 b = pcbnew.LoadBoard(sys.argv[1]); out = sys.argv[2]; drc = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] != "-" else None; ppm = float(sys.argv[4]) if len(sys.argv) > 4 else 6.0
 mm = pcbnew.ToMM
 bb = b.GetBoardEdgesBoundingBox(); x0, y0, x1, y1 = mm(bb.GetLeft()) - 5, mm(bb.GetTop()) - 5, mm(bb.GetRight()) + 5, mm(bb.GetBottom()) + 5
+if len(sys.argv) > 8:   # a region in KiCad mm: x0 y0 x1 y1 (use the board's own coordinates; case frame = KiCad minus the user origin)
+    x0, y0, x1, y1 = [float(v) for v in sys.argv[5:9]]
 W, H = int((x1 - x0) * ppm), int((y1 - y0) * ppm) + 60
 im = Image.new("RGB", (W, H), (250, 250, 248)); d = ImageDraw.Draw(im)
 def P(x, y): return ((x - x0) * ppm, (y - y0) * ppm + 60)
