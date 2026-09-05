@@ -50,7 +50,7 @@ PCB_OPTIONS = {"pcb-b-compute": ["FABRICATION NOTES (B15, Compute Module 5 carri
     "- The Compute Module itself, its cooler, the LTE card, the SIM, the SDR stick, the RockBLOCK, the display flex and the CR2032 are fitted at the bench (not in the BOM/CPL).", ""],
     "pcb-c-display": ["FABRICATION NOTES (C6, the backer under the aluminium face plate)",
     "- A plain two-layer 1.6 mm board (any colour, HASL or ENIG); nothing on it is a weather face any more (the aluminium plate is), so no via plugging and no special mask rules.",
-    "- Outline: a U (344 x 228 outside, 252 x 202 void open toward +Y) with R3 outer corners; the two 15 x 22 and one 15 x 12 body slots and the 19.2, 16.2, 16.2 and 28.6 mm holes are on Edge.Cuts (routed). The six 3.2 mm holes H1 to H6 carry 6.0 mm rings on both faces: they are the ground bond to the plate through the PEM standoffs.",
+    "- Outline: a U (344 x 228 outside, 240 x 202 void open toward +Y) with R3 outer corners; the two 15 x 22 and one 15 x 12 body slots and the 19.2, 16.2, 16.2 and 28.6 mm holes are on Edge.Cuts (routed). The six 3.2 mm holes H1 to H6 carry 6.0 mm rings on both faces: they are the ground bond to the plate through the PEM standoffs.",
     "- The face plate is a separate CNC part (release/revA/case/face-plate/: STEP, DXF, marking SVG, drawing); it is not a JLC PCB order.", ""]}
 JLC = os.path.join(RELEASE, "order"); REV = os.path.join(RELEASE, "review")
 # The deliverable folders are written by finish_board.sh on the laptop. Building order/ and review/ from a clone that has

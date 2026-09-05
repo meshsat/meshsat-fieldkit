@@ -19,7 +19,7 @@ open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version
 BOARD_T = L.BACKER_T
 SL, SB, SR = L.STRIP_L, L.STRIP_B, L.STRIP_R          # (x0, y0, x1, y1) each
 OUTER = (SL[0], SB[1], SR[2], SL[3])                  # -172, -114, 172, 114
-VOID = (SL[2], SB[3], SR[0], SL[3])                   # -126, -88, 126, 114: open over the display and the e-paper
+VOID = (SL[2], SB[3], SR[0], SL[3])                   # -120, -88, 120, 114: open over the display and the e-paper
 # ---------------------------------------------------------------- KiCad plumbing (A2 sheet holds the 344 x 228 U at 1:1 with room for the plate outline)
 OX, OY = 297.0, 210.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
