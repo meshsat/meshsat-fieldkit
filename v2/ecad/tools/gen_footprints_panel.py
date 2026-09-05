@@ -66,6 +66,21 @@ panel_switch("PanelSwitch_19mm", 19.2, 24.0, 4, 16.0, "19 mm anti-vandal momenta
 panel_switch("PanelSwitch_16mm", 16.2, 20.0, 4, 14.0, "16 mm anti-vandal momentary pushbutton with LED ring, IP67, panel hole 16.2, nut 20, gasket washer under the bezel, four lead lands underneath")
 # 6.35 mm bushing toggles: NKK M2044SD3A01 DPDT ON-ON-ON on a D3 splashproof bushing (D flat toward +X, its O-ring under the nut); APEM 5636ADKB-2V locking toggles with the K seal (keyway toward -Y, the operator)
 panel_switch("PanelToggle_DPDT", 6.5, 13.0, 6, 11.0, "NKK M2044SD3A01 DPDT ON-ON-ON, D3 bushing IP67 with the AT516 O-ring and the AT428H boot, D hole 6.5 / 5.8 flat toward +X, six lead lands underneath", dflat=0.0)
+
+# C6 (5 Sep 2026, the backer board under the aluminium face plate): the toggles pass THROUGH the backer, so their footprints carry a body slot instead of a
+# bushing hole; the plate (v2/cad/face_plate.py) carries the keyed and D holes. The buttons and the sounder pass their own bushing holes.
+def body_slot(name, w, h, npads, pad_r, descr):
+    L = head(name, descr, "panel switch body slot backer", "through_hole"); L[8] %= (max(w, h) / 2 + 2.0); L[9] %= (max(w, h) / 2 + 2.0)
+    L.append('\t(pad "" np_thru_hole oval (at 0 0) (size %.2f %.2f) (drill oval %.2f %.2f) (layers "*.Cu" "*.Mask"))' % (w, h, w, h))
+    L.append(rect(-w / 2 - 0.5, -h / 2 - 0.5, w / 2 + 0.5, h / 2 + 0.5, "F.CrtYd", 0.05)); L.append(rect(-w / 2 - 0.5, -h / 2 - 0.5, w / 2 + 0.5, h / 2 + 0.5, "B.CrtYd", 0.05))
+    for k in range(npads):
+        a = math.radians(-90 + 360.0 * k / npads); x, y = pad_r * math.cos(a), pad_r * math.sin(a)
+        L.append(smd_back(str(k + 1), x, y, 2.4 if k == 0 else 2.0, 3.0))
+    L.append(text("body slot %.0f x %.0f, lands 1..%d underneath" % (w, h, npads), 0, pad_r + 2.5, "B.Fab", 0.8)); write(name, L)
+body_slot("ToggleBody_SPDT", 15.0, 22.0, 3, 15.0, "APEM 5636ADKB-2V body passing the backer board: 15 x 22 slot, three lead lands underneath; the keyed 6.5 hole is in the face plate")
+body_slot("ToggleBody_DPDT", 15.0, 12.0, 6, 11.5, "NKK M2044SD3A01 body passing the backer board: 15 x 12 slot, six lead lands underneath; the D hole is in the face plate")
+L = head("BackerScrew_M3_GND", "C6 backer screw M3 into the plate's self-clinching standoff: plated hole 3.2, 6.0 mm ring both sides, GND", "backer screw gnd", "through_hole")
+L.append('\t(pad "1" thru_hole circle (at 0 0) (size 6.0 6.0) (drill 3.2) (layers "*.Cu" "*.Mask"))'); L.append(circle(0, 0, 3.5, "F.CrtYd", 0.05)); write("BackerScrew_M3_GND", L)
 panel_switch("GuardedToggle_SPDT", 6.5, 13.0, 3, 11.0, "APEM 5636ADKB-2V locking toggle, K front seal (O-ring + U360 gasket), 6.5 hole with the 2.70 x 1.10 keyway toward the operator (case -Y), three lead lands underneath", keyway=90.0)   # footprint +y is KiCad down = case -Y
 # panel-mount IP68 sounder Floyd Bell MC-09-530-Q (docs/respin-research-seal-2026-09-04.md f): 1-1/8 in hole (28.575), bezel gasket 61663 on the face,
 # body about 34 mm deep behind the panel plus 11 mm of solder tabs, two lead lands underneath outside the body

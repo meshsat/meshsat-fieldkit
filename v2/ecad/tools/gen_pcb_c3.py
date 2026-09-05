@@ -57,31 +57,24 @@ def place(ref, x, y, rot=0.0, back=False, centre=True):
 placed = {}
 for ref in comps:                                                   # H1..H16 and EPD1 already on the board from gen_pcb_c.py
     if ref in existing: existing[ref].SetValue(comps[ref][0]); placed[ref] = existing[ref]
-# ---------------------------------------------------------------- panel layout (case mm), MIL-STD-1472: >= 25 mm switch pitch, labels on the far (+Y) side, 3.5 mm for critical
-FIXED = {"SW_MAIN": (-150, 100, 45, False), "SW_PI": (-110, 100, 45, False), "SW_TEST": (-70, 100, 45, False), "SW_LIGHT": (120, 100, 0, False),
-         "SW_SOS": (170, 42, 0, False), "SW_EMCON": (170, 0, 0, False), "SW_ZERO": (170, -42, 0, False),
-         "R32": (-99, 78, 0, True), "R33": (-59, 78, 0, True), "J_EPD": (100, 100, 90, True), "BZ1": (-180, -100, 0, False), "J_PANEL": (203, 75, 0, True), "J_MAINSW": (-150, -110, 0, True), "J_PIJ2": (-125, -110, 0, True)}
-# C5: J_EPD and J_PANEL are SMD parts on the underside (no pin on the face; J_PANEL's rows run along Y so its body stays inside the frame's bearing ring),
-# BZ1 is the IP68 panel-mount sounder on the face at the west end, where 45 mm of depth is free below the panel (the battery module fills the east end),
-# J_MAINSW and J_PIJ2 are solder lands on the underside. Panel-mount parts are placed by their hole centre, not by their bounding box.
+# ---------------------------------------------------------------- panel layout (case mm): the sites of tools/panel1450.py, shared with the face plate (C6, 5 Sep 2026)
+import panel1450 as L
+FIXED = {}
+for ref, (x, y), hole, depth in L.BUTTONS: FIXED[ref] = (x, y, 45, False)           # the four lead lands at 45 degrees clear the neighbours
+for ref, (x, y) in L.TOGGLES: FIXED[ref] = (x, y, 0, False)
+FIXED[L.LIGHT[0]] = (L.LIGHT[1][0], L.LIGHT[1][1], 0, False)
+FIXED[L.SOUNDER[0]] = (L.SOUNDER[1][0], L.SOUNDER[1][1], 0, False)
+FIXED["J_PANEL"] = (L.J_PANEL_POS[0], L.J_PANEL_POS[1], 90, True); FIXED["J_EPD"] = (L.J_EPD_POS[0], L.J_EPD_POS[1], 0, True)
+for ref, (x, y) in L.LEAD_LANDS: FIXED[ref] = (x, y, 0, True)
+FIXED["R32"] = (140.0, 26.0, 0, True); FIXED["R33"] = (140.0, -24.0, 0, True)      # the PI and TEST ring resistors beside their buttons, underside
+# C6: the panel-mount parts sit at the plate's sites (their bodies pass this board through the footprints' holes and slots); J_PANEL and J_EPD are SMD
+# parts on the underside; J_MAINSW and J_PIJ2 are solder lands on the underside. Panel-mount parts are placed by their hole centre, not by their bounding box.
 PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1"}
-LED_COL = -120.0
-LEDS = [("D1", 45, "MSTR WARN"), ("D2", 36, "MSTR CAUT"), ("D3", 27, "TX"), ("D4", 18, "SOS ACTIVE"), ("D5", 9, "SAT"), ("D6", 0, "MESH"), ("D7", -9, "LTE"), ("D8", -18, "GPS"), ("D9", -27, "SHORE"), ("D10", -36, "CHARGE"), ("D11", -45, "MSG")]
-BAR = [("D12", -82), ("D13", -76), ("D14", -70), ("D15", -64), ("D16", -58)]; BAR_Y = 123.0
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
-for ref, y, label in LEDS: placed[ref] = place(ref, LED_COL, y, 0); text(label, LED_COL - 5.0, y, pcbnew.F_SilkS, 2.5, 0.4, halign="right")   # labels west of the LEDs: east runs into the display frame
-for ref, x in BAR: placed[ref] = place(ref, x, BAR_Y, 0)
-text("BATT %", -88.0, BAR_Y, pcbnew.F_SilkS, 2.0, 0.3, halign="right")
-for (ref, x), pct in zip(BAR, ("20", "40", "60", "80", "100")): text(pct, x, BAR_Y + 4.5, pcbnew.F_SilkS, 1.5, 0.25)
-for ref, label, size in (("SW_MAIN", "MAIN PWR", 3.5), ("SW_PI", "PI", 3.5), ("SW_TEST", "TEST / ACK", 3.0), ("SW_LIGHT", "LIGHTING", 3.0)):
-    x, y = FIXED[ref][0], FIXED[ref][1]; text(label, x, y + 16.5, pcbnew.F_SilkS, size, 0.5)
-text("DAY", 120, 90.5, pcbnew.F_SilkS, 2.0, 0.3); text("NIGHT", 134, 100, pcbnew.F_SilkS, 2.0, 0.3, halign="left"); text("BLACKOUT", 120, 83, pcbnew.F_SilkS, 2.0, 0.3)   # clear of the boot base
-for ref, label in (("SW_SOS", "SOS"), ("SW_EMCON", "EMCON"), ("SW_ZERO", "ZEROIZE")):
-    x, y = FIXED[ref][0], FIXED[ref][1]; text(label, x, y + 13.0, pcbnew.F_SilkS, 3.5, 0.5)   # 42 mm pitch: 13 mm keeps the label off the neighbour; nothing under the K seal
-text("SOUNDER", FIXED["BZ1"][0], FIXED["BZ1"][1] - 21.0, pcbnew.F_SilkS, 2.0, 0.3)
-text("E-PAPER: STATUS / PROVISIONING QR (HOLD TEST 5 s)", 30, 60.5, pcbnew.F_SilkS, 2.0, 0.3)   # between the display band and the lens
+for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light pipes; the legends are laser marked on the plate
+text("C6 BACKER: LEDs under the plate light pipes, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
-REGIONS = [("CLUSTER", (135, 55, 195, 138), [r for r in comps if r not in placed and not r.startswith("H")], True)]   # J_PANEL takes X 198 to 208
+REGIONS = [("CLUSTER", L.CLUSTER, [r for r in comps if r not in placed and not r.startswith("H")], True)]   # the right strip below SW_TEST
 GAP = 1.2; FINE_MARGIN = 1.4
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
@@ -136,7 +129,7 @@ def pour(layer, netname, name, rect, priority=0):
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
-pour(pcbnew.F_Cu, "GND", "GND pour F", (-221, -155.5, 221, 155.5)); pour(pcbnew.B_Cu, "GND", "GND pour B", (-221, -155.5, 221, 155.5))
+pour(pcbnew.F_Cu, "GND", "GND pour F", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3])); pour(pcbnew.B_Cu, "GND", "GND pour B", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3]))   # clipped to the U by the outline
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
