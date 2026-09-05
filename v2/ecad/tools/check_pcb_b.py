@@ -39,7 +39,7 @@ if placed:
         check(len(xs) == 2 and abs(xs[1] - xs[0] - 3.08) < 0.02 and abs((xs[0] + xs[1]) / 2 - cx) < 0.05, "%s rows 3.08 mm apart centred x %.1f (got %s)" % (ref, cx, xs))
         check(len(ys) == 50 and abs(ys[-1] - ys[0] - 19.6) < 0.02 and abs((ys[0] + ys[-1]) / 2 + 2.5) < 0.05, "%s 50 positions at 0.4 mm over 19.6 mm centred y -2.5 (got %d over %.2f)" % (ref, len(ys), ys[-1] - ys[0]))
         check(all(-108 < p[0] < -68 and -27.5 < p[1] < 27.5 for p in smd), "%s pads inside the module outline" % ref)
-    for ref in ("J_LTE1", "J_SIM1", "U40", "U41", "U42", "J_DISP", "J_FLASH", "J_AB1", "BT1", "J_FAN", "U1", "U20", "U21", "U31", "U32", "U34"):
+    for ref in ("J_LTE1", "J_WIFI1", "U36", "J_SIM1", "U40", "U41", "U42", "J_DISP", "J_FLASH", "J_AB1", "BT1", "J_FAN", "U1", "U20", "U21", "U31", "U32", "U34"):
         check(ref in fps, "%s present" % ref)
     if "J_LTE1" in fps:
         j = next(f for f in b.GetFootprints() if f.GetReference() == "J_LTE1")
@@ -47,6 +47,14 @@ if placed:
         check(sum(1 for p in j.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH and p.GetDrillSize().x >= FromMM(2.5)) == 2, "LTE socket carries its two M2.5 standoff holes (NPTH >= 2.5: %d of %d)" % (sum(1 for p in j.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH and p.GetDrillSize().x >= FromMM(2.5)), len(lt)))
         bb = j.GetBoundingBox(False, False); r = (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
         check(-33 <= r[0] and r[2] <= 27 and 50 <= r[1] and r[3] <= 84, "LTE card and socket inside the north band (-32..26, 52..82 plus courtyard) (got x %.1f..%.1f, y %.1f..%.1f)" % (r[0], r[2], r[1], r[3]))
+    if "J_WIFI1" in fps:
+        j = next(f for f in b.GetFootprints() if f.GetReference() == "J_WIFI1")
+        pos = case(j.GetPosition()); check(abs(pos[0] - 34) < 0.05 and abs(pos[1] - 60) < 0.05, "M.2 socket J_WIFI1 at (34, 60) (got %.2f, %.2f)" % pos)
+        check(sum(1 for pd in j.Pads() if pd.GetNumber().isdigit()) == 67, "M.2 E-key socket carries 67 contacts (positions 1-23, 32-75)")
+        st = [case(pd.GetPosition()) for pd in j.Pads() if pd.GetNumber() == "M1"]
+        check(len(st) == 1 and abs(st[0][0] - 62.25) < 0.05 and abs(st[0][1] - 60) < 0.05, "2230 standoff hole at (62.25, 60) (got %s)" % st)
+        bb = j.GetBoundingBox(False, False); r = (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
+        check(26 <= r[0] and r[2] <= 65 and 48 <= r[1] and r[3] <= 72, "M.2 socket and card inside WIFI_RECT (27..64, 49..71 plus courtyard) (got x %.1f..%.1f, y %.1f..%.1f)" % (r[0], r[2], r[1], r[3]))
     j = next((f for f in b.GetFootprints() if f.GetReference() == "J_AB1"), None)
     if j is not None: check(j.IsFlipped(), "J_AB1 on the underside")
 # hole-to-hole webs >= 2 mm between every pair of holes (drill edges), NPTH pads of the module and the socket included
@@ -61,7 +69,7 @@ check(minweb >= 2.0, "minimum web between any two holes %.2f mm (>= 2.0): %s at 
 # device rectangles: inside the outline with 3 mm margin, pairwise non-overlapping, clear of nut keep-outs
 R = {"CM5": (-108, -27.5, -68, 27.5), "COOLER": (-108.5, -28, -67.5, 28), "SDR": (-4, -16, 78, 16), "RB9704": (26, -76, 78, -20),
      "HUB": (-66, -36, -22, -12), "BUCK": (-58, -82, -36, -52), "CM5X": (-58, -52, -22, -36), "FLASH": (-24, -82, -14, -66), "CTRL": (-119.5, -64, -100, -30),
-     "PWR": (-86, -72, -62, -44), "MODC": (-119.5, -18, -110, 0), "LTE": (-32, 52, 26, 82), "LTEP": (-64, 38, -18, 51), "GNSS": (-118, 42, -96, 66), "LORA": (-94, 44, -74, 66),
+     "PWR": (-86, -72, -62, -44), "MODC": (-119.5, -18, -110, 0), "LTE": (-32, 52, 26, 82), "WIFI": (27, 49, 64, 71), "WIFIP": (40, 20, 70, 46), "LTEP": (-64, 38, -18, 51), "GNSS": (-118, 42, -96, 66), "LORA": (-94, 44, -74, 66),
      "ZB": (84, 16, 104, 52), "ZBP": (105, 16, 118, 40), "TPS": (84, -60, 104, -30), "RB": (-19, -40, 15, -19.5), "JRTL": (-19, -6.5, -5, 6.5), "JPANEL": (81, 54.5, 91, 81.5),
      "JRB9704": (-0.5, -52.5, 20.5, -43.5), "JRB9603": (3.5, -62.5, 16.5, -57.5), "PASS": (-20.5, -57.5, -5.5, -42.5), "JTD2": (-46, 74, -38, 80), "JDCF": (-91, 74, -79, 80),
      "JFLASH": (-35, -82, -25, -73), "JDISP": (-57, 6, -43, 14), "JSIM": (-51.5, 52.5, -38.5, 67.5), "BT1": (-58.5, 16, -33.5, 38), "JFAN": (-67, 32, -61, 36),

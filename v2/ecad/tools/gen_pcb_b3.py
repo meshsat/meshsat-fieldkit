@@ -63,7 +63,7 @@ def place(ref, x, y, rot=0.0, back=False):
 #     (the two receptacles are separate parts U30A and U30B so JLC places two connectors; connector centres 17 mm off the module centre, 2.5 mm south),
 #     the display FPC east of the module with the cable toward the back wall, the LTE card in the north band with its socket at the west end,
 #     the flashing USB-C on the south edge, the rail leads on the west, the Pi rail lead beside the module's 5 V pins
-FIXED = {"J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -77.5, 180),
+FIXED = {"J_WIFI1": (34, 60, -90), "J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -77.5, 180),
          "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90),
          "U30A": (-105, -2.5, 0), "U30B": (-71, -2.5, 0), "J_DISP": (-50, 10, 180), "J_LTE1": (-3, 67, -90), "J_SIM1": (-45, 60, 0), "BT1": (-46, 27, 0), "J_FAN": (-64, 34, 0),
          "U42": (94, 34, 180)}
@@ -90,6 +90,7 @@ REGIONS = [
  ("HUB",  (-66, -36, -22, -12), ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "R3", "R4", "R5", "R6", "R7", "R8", "U2", "U7", "U10"]),
  ("SDR",  (-20, -19, -3, -9.5), ["U4", "U5"]),
  ("SDR2", (-20, 8, -3, 19), ["U6", "R13", "R30", "C15", "R14", "C16", "C17"]),
+ ("WIFI", (40, 20, 70, 46), ["R72", "U35", "U36", "L36", "C67", "C68", "C69", "C70", "R73", "R74", "R75", "C71", "C72", "R76", "R77", "Q6", "R78", "LED7"]),
  ("LTEP", (-64, 38, -18, 51), ["C50", "C51", "C52", "C53", "C56", "C57", "C58", "C59", "R59", "R60", "R61", "R62", "R63", "R64", "LED2", "J_LTEDBG", "U8"]),
  ("GNSS", (-118, 42, -96, 66), ["U40", "R65", "C60", "C61", "R66", "L40", "C62", "J_GNSS1"]),
  ("LORA", (-94, 44, -74, 66), ["U41", "C63", "C64", "R67"]),
@@ -179,7 +180,7 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)   # B13: 0.127 clearance everywhere (JLC standard), needed by the 0.4 mm connector escapes
 # USB 90 ohm and DSI 100 ohm on JLC's 7628 four-layer stack (0.20/0.15 and 0.17/0.15, the CM5IO's own classes are 0.147 and 0.127 on its 90 um dielectric; confirm with JLC's calculator at upload)
 CLASSES = {"USB": (0.127, 0.2, 0.7, 0.3, 0.2, 0.15), "DSI": (0.127, 0.17, 0.7, 0.3, 0.17, 0.15), "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25)}   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
-PATTERNS = [("USB_*", "USB"), ("DSI0_*", "DSI"), ("5V_*", "PWR"), ("+5V_M1", "PWR"), ("+5V_M2", "PWR"), ("+5V_PI", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("+3V3_LTE", "PWR"), ("+3V3_AB", "PWR"), ("PANEL_5V", "PWR")]
+PATTERNS = [("USB_*", "USB"), ("DSI0_*", "DSI"), ("PCIe_TX_*", "USB"), ("PCIe_RX_*", "USB"), ("PCIe_CLK_P", "USB"), ("PCIe_CLK_N", "USB"), ("+3V3_WIFI", "PWR"), ("5V_*", "PWR"), ("+5V_M1", "PWR"), ("+5V_M2", "PWR"), ("+5V_PI", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("+3V3_LTE", "PWR"), ("+3V3_AB", "PWR"), ("PANEL_5V", "PWR")]
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)
