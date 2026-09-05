@@ -35,4 +35,19 @@ for k, r in R.items(): check(all(rc(r, rod, 4.5) for rod in [(-110.5, -73), (110
 hl = [(case(f.GetPosition()), list(f.Pads())[0].GetDrillSize().x / 1e6) for r, f in fps.items() if r.startswith("H")]
 minweb = min(((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2) ** 0.5 - (dp + dq) / 2 for (p, dp), (q, dq) in itertools.combinations(hl, 2))
 check(minweb >= 2.0, "min web between holes %.2f mm" % minweb)
+# 5 Sep 2026 (appendix 32.39): every label net-class pattern must match a net in one of its two forms, and after the route the rail and node widths are read back
+import fnmatch as _fn, json as _json, os as _os
+_pro = _os.path.splitext(sys.argv[1])[0] + ".kicad_pro"
+if _os.path.exists(_pro):
+    _pats = [(e["pattern"], e["netclass"]) for e in _json.load(open(_pro)).get("net_settings", {}).get("netclass_patterns", [])]
+    _names = {b.GetNetInfo().GetNetItem(k).GetNetname() for k in range(1, b.GetNetInfo().GetNetCount())}
+    _dead = {p for p, c in _pats if not any(_fn.fnmatchcase(n, p) for n in _names)}
+    _bad = [p for p in _dead if not p.startswith("/") and ("/" + p) in _dead]
+    check(not _bad, "every label net-class pattern matches a board net in one of its two forms (unmatched: %s)" % _bad)
+_w = {}
+for _t in b.GetTracks():
+    if _t.GetClass() == "PCB_TRACK": _w.setdefault(_t.GetNetname().lstrip("/"), set()).add(round(_t.GetWidth() / 1e6, 2))
+if _w:
+    for _n, _min in (("+5V_PI", 2.0), ("+5V_M1", 2.0), ("+5V_M2", 2.0), ("CELL+", 1.0)):
+        if _n in _w: check(min(_w[_n]) >= _min - 0.01, "%s routed at its class width (>= %.1f mm; widths %s)" % (_n, _min, sorted(_w[_n])))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
