@@ -14,7 +14,7 @@ PY
 JAR=${FR_JAR:-$HOME/bin/freerouting-1.9.0.jar}   # FR_JAR (6 Sep 2026, Stage 4 A/B): another Freerouting jar, e.g. ~/bin/freerouting-2.4.1.jar (needs Java 25)
 JAVA=${FR_JAVA:-java}; V2_ARGS=()
 case "$(basename "$JAR")" in freerouting-2.*) [ -x /usr/lib/jvm/java-25-openjdk-amd64/bin/java ] && [ -z "${FR_JAVA:-}" ] && JAVA=/usr/lib/jvm/java-25-openjdk-amd64/bin/java
-  V2_ARGS=(--gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false "--router.job_timeout=$(printf '%02d:%02d:%02d' $((${FR_TIMEOUT:-4500} / 3600)) $((${FR_TIMEOUT:-4500} % 3600 / 60)) $((${FR_TIMEOUT:-4500} % 60)))" -drc "$W/fr-drc.json");;
+  V2_ARGS=(--gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false "--router.job_timeout=$(printf '%02d:%02d:%02d' $((${FR_TIMEOUT:-4500} / 3600)) $((${FR_TIMEOUT:-4500} % 3600 / 60)) $((${FR_TIMEOUT:-4500} % 60)))");;   # never -drc here: in 2.4.1 it turns the run into a DRC-only job (no session)
 esac
 # FR_POWER_LAYERS="In1.Cu In4.Cu" (5 Sep 2026, B15): plane layers become power-type layers in the DSN (Freerouting routes no wire there, vias pass)
 # and their board-wide wire keep-outs are dropped; a board-wide wire_keepout polygon made the router thrash for the whole time limit (B14 In1 test, B15 run 1)

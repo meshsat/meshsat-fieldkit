@@ -42,7 +42,8 @@
     ],
     "threads": 1,
     "timeout": 4500,
-    "log": "out/par-c6.log"
+    "log": "out/par-c6.log",
+    "jar": "~/bin/freerouting-2.4.1.jar"
   },
   "finish": {
     "argv": [
@@ -61,6 +62,6 @@
     "autoroute_minutes_max": 45
   },
   "budget_rounds": 2,
-  "notes": "C6 two-layer backer: one route attempt (the panel rule), one thread; the footprint generator runs first because gen_pcb_c.py loads BackerScrew_M3_GND from meshsat.pretty; the two generator logs must carry a saved line (run 1 lesson).",
+  "notes": "C6 two-layer backer: one route attempt (the panel rule), one thread; the footprint generator runs first because gen_pcb_c.py loads BackerScrew_M3_GND from meshsat.pretty; the two generator logs must carry a saved line (run 1 lesson). Owner instruction 6 Sep 2026 00:52: from scratch on Freerouting 2.4.1 under routeflow.",
   "baseline_key": "C6"
 }
