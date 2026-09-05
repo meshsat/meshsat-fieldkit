@@ -174,6 +174,14 @@ def plane(layer, netname, name, rect=(-122.5, -85, 122.5, 85), priority=0):
     board.Add(z); return z
 plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+5V_M1", "+5V plane In2")
 plane(pcbnew.F_Cu, "+5V_PI", "+5V_PI pour F.Cu (J_5V_PI to the module 5 V pins)", rect=(-120, -30, -100, 0), priority=1)
+# --- In1 is a solid ground plane (owner ruling 5 Sep 2026 17:10, appendix 32.40 decision 3): a board-wide rule area on In1 forbids tracks and permits
+#     vias, so the router keeps to F.Cu, In2 and B.Cu and every inner track has the solid ground next to it (the PCIe pairs of B14 had 40 to 90 mm per leg
+#     in slots of the ground plane). escape.py and prefanout.py ignore a rule area that permits vias; KiCad exports it as a wire_keepout.
+_bb = board.GetBoardEdgesBoundingBox(); _z = pcbnew.ZONE(board); _z.SetIsRuleArea(True); _z.SetDoNotAllowTracks(True); _z.SetDoNotAllowVias(False)
+_z.SetDoNotAllowCopperPour(False); _z.SetDoNotAllowPads(False); _z.SetDoNotAllowFootprints(False); _z.SetLayer(pcbnew.In1_Cu); _z.SetZoneName("keep tracks off In1 (solid ground plane)")
+_o = _z.Outline(); _o.NewOutline()
+for _x, _y in ((_bb.GetLeft(), _bb.GetTop()), (_bb.GetRight(), _bb.GetTop()), (_bb.GetRight(), _bb.GetBottom()), (_bb.GetLeft(), _bb.GetBottom())): _o.Append(_x, _y)
+board.Add(_z); print("In1 track keep-out over the whole board (solid ground plane)")
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
