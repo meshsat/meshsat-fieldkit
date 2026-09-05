@@ -62,5 +62,6 @@
       "via_costs": 400,
       "preferred": "h,v"
     }
-  ]
+  ],
+  "stub_grid": "0.1"
 }

@@ -9,17 +9,25 @@ import sys, json, collections
 
 def arg(name, default=None): return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default
 
-rows = [json.loads(l) for l in open(sys.argv[1]) if l.strip()]; base = json.load(open(sys.argv[2]))
-out = []
+rows0 = [json.loads(l) for l in open(sys.argv[1]) if l.strip()]; base = json.load(open(sys.argv[2]))
+last = {}
+for r in rows0: last[r["key"]] = r            # the last row per configuration key wins (a re-finished row replaces its predecessor)
+rows = list(last.values())
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__))); import bench_compare
+for r in rows:                                 # verdicts and Q recomputed from the stored metrics with the current rules, so a rule change needs no re-route
+    if r.get("metrics") and r["board_key"] in base:
+        v, note, q = bench_compare.compare(base[r["board_key"]], r["metrics"]); r["verdict"], r["note"], r["Q"] = v, note, q
+out = ["%d rows (%d configuration keys); verdicts recomputed at report time from the stored metrics" % (len(rows0), len(rows))]
 by_board = collections.defaultdict(list)
 for r in rows: by_board[r["board_key"]].append(r)
 for key in sorted(by_board):
     b = base.get(key, {}); out.append("\n### %s (%d experiment rows; baseline: %s router vias, %s mm, %s segments)\n" % (key, len(by_board[key]), b.get("vias_router", "?"), b.get("length_mm", "?"), b.get("tracks", "?")))
-    out.append("| config | verdict | Q | router vias | length mm | segments | detour med / p90 | pairs > 1 mm | autoroute min | wall s |"); out.append("|---|---|---|---|---|---|---|---|---|---|")
+    out.append("| config | jar | verdict | Q | router vias | length mm | segments | detour med / p90 | pairs > 1 mm | raw hard / open | stub closed | autoroute min | wall s |"); out.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     def sk(r): return (0 if r.get("verdict") == "MET" else 1 if r.get("verdict") == "REGRESSION" else 2, r.get("Q") if r.get("Q") is not None else 9)
     for r in sorted(by_board[key], key=sk):
         m = r.get("metrics") or {}
-        out.append("| %s | %s | %s | %s | %s | %s | %s / %s | %s | %s | %s |" % (r["config"], r.get("verdict", "NO_SESSION"), "%.3f" % r["Q"] if r.get("Q") is not None else "-", m.get("vias_router", "-"), m.get("length_mm", "-"), m.get("tracks", "-"), m.get("detour_median", "-"), m.get("detour_p90", "-"), m.get("pairs_over_1mm", "-"), m.get("autoroute_minutes", "-"), r.get("wall_s", "-")))
+        raw = r.get("raw") or {}
+        out.append("| %s | %s | %s | %s | %s | %s | %s | %s / %s | %s | %s / %s | %s of %s | %s | %s |" % (r["config"], (r.get("jar") or "")[12:17], r.get("verdict", "NO_SESSION"), "%.3f" % r["Q"] if r.get("Q") is not None else "-", m.get("vias_router", "-"), m.get("length_mm", "-"), m.get("tracks", "-"), m.get("detour_median", "-"), m.get("detour_p90", "-"), m.get("pairs_over_1mm", "-"), raw.get("hard", "-"), raw.get("unrouted", "-"), r.get("stub_closed", "-"), r.get("stub_open", "-"), m.get("autoroute_minutes", "-"), r.get("wall_s", "-")))
 # knob classification: compare each non-base config with the base config of the same board and preroute
 out.append("\n### Knob classification (effect = router vias or length moved by at least 5 percent against the base config on at least two boards)\n")
 effects = collections.defaultdict(list)

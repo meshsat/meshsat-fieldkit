@@ -248,6 +248,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
     ROUTEFLOW_TIMEOUT_SCALE (float) stretches every route timeout for a slower core without changing a configuration's key; ROUTEFLOW_LOCK
     names the lock file, so several experiments run side by side on one host."""
     import threading, fcntl, concurrent.futures
+    FINISH_VERSION = 2   # 2 (6 Sep 2026 02:00): the finish runs the stub router as production does and records the raw counts; rows of an older finish are re-finished from their session, never re-routed
     exp = json.load(open(exp_fn)); repo = exp.get("repo") or os.getcwd(); tools = os.path.dirname(os.path.abspath(__file__))
     project = os.path.abspath(os.path.join(repo, exp["project"])); ecad = os.path.dirname(project); name = exp["board"]; key = exp["board_key"]
     os.makedirs(os.path.join(project, "out"), exist_ok=True); results = os.path.join(tools, "routeflow", "bench", "results.jsonl"); os.makedirs(os.path.dirname(results), exist_ok=True)
@@ -265,12 +266,13 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
         elif src and os.path.abspath(os.path.join(repo, src)) != os.path.abspath(pre): shutil.copy(os.path.join(repo, src), pre)
         if not os.path.exists(pre): jn(dict(run="exp", board=name, stage="pre", status="GATE_BLOCKED", note="no pre-route board at " + pre)); return 1
         pre_hash = hashlib.sha256(open(pre, "rb").read()).hexdigest()[:12]
-        done = set()
+        done = set(); stale = {}
         if os.path.exists(results):
             for l in open(results):
                 try: r = json.loads(l)
                 except Exception: continue
                 if r.get("verdict") == "NO_SESSION" and (r.get("wall_s") or 0) < 60: continue   # a router that died within a minute is a tool failure (no display, no Java), not a measurement: run it again
+                if r.get("verdict") != "NO_SESSION" and r.get("finish_version", 1) < FINISH_VERSION: stale[r.get("key")] = r; continue   # routed under an older finish: re-finish from its session
                 done.add(r.get("key"))
         def ident(cfg):
             """(jar path, jar sha, configuration key): the key is the pre-route board, the jar, the configuration and the route block; never the host, the timeout scale or the time"""
@@ -278,13 +280,14 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             if not jar_path.startswith("/"): jar_path = os.path.expanduser("~/bin/" + jar_path)
             jar_sha = hashlib.sha256(open(jar_path, "rb").read()).hexdigest()[:16] if os.path.exists(jar_path) else "nojar"
             return jar_path, jar_sha, hashlib.sha256((pre_hash + jar_sha + json.dumps(cfg, sort_keys=True) + json.dumps(exp.get("route", {}), sort_keys=True)).encode()).hexdigest()[:16]
-        pending = []
+        pending = []; refin = []
         for cfg in exp["configs"]:
             jar_path, jar_sha, ckey = ident(cfg)
             if jar_sha == "nojar": jn(dict(run="exp", board=name, stage="experiment", status="GATE_BLOCKED", note="%s: no jar at %s" % (cfg["name"], jar_path))); continue
             if ckey in done: jn(dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s already in results (skip)" % cfg["name"])); continue
+            if ckey in stale and os.path.exists(os.path.join(project, "out", "par", "exp-" + cfg["name"], name + ".ses")): refin.append((cfg, stale[ckey])); continue
             pending.append(cfg)
-        jn(dict(run="exp", board=name, phase=key, stage="experiment", status="EXPERIMENT", note="preroute %s, %d of %d configs to run, %d at once, timeout scale %.1f, budget %.1f h, expect: %s" % (pre_hash, len(pending), len(exp["configs"]), max(1, parallel), scale, budget_hours, exp.get("expect", "")[:160])))
+        jn(dict(run="exp", board=name, phase=key, stage="experiment", status="EXPERIMENT", note="preroute %s, %d of %d configs to route, %d to re-finish from their sessions, %d at once, timeout scale %.1f, budget %.1f h, expect: %s" % (pre_hash, len(pending), len(exp["configs"]), len(refin), max(1, parallel), scale, budget_hours, exp.get("expect", "")[:160])))
         if use_services: services(exp.get("services_script"), "stop", elog)
         # one DSN for the rules file's layer list
         dsn0 = os.path.join(project, "out", name + "-experiment.dsn")
@@ -303,45 +306,65 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             timeout = int(route.get("timeout", 1800) * scale)
             env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
-            ses = os.path.join(w, name + ".ses"); t0 = time.time(); starts = 0
+            ses = os.path.join(w, name + ".ses"); t0 = time.time(); starts = 0; flog = os.path.join(w, "finish.log"); board = os.path.join(w, name + ".kicad_pcb")
             for attempt in (1, 2):
                 starts += 1; sh(["../tools/route_one.sh", ".", name, k, str(route.get("passes", 60))], project, os.path.join(w, "route_one.log"), env)
                 fr = read(os.path.join(w, "fr.log")) or ""
-                if not os.path.exists(ses) and ("Xvfb failed to start" in fr or "Can't open display" in fr or "No protocol specified" in fr):
+                if not os.path.exists(ses) and ("Xvfb failed to start" in fr or "Can't open display" in fr or "No protocol specified" in fr or "HeadlessException" in fr):
                     jn(dict(run="exp", board=name, stage="experiment", status="TOOL_CRASH", note="%s: no display for the router (attempt %d), retrying once" % (cfg["name"], attempt))); time.sleep(5); continue
                 break
             wall = int(time.time() - t0)
-            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "timeout_s": timeout, "starts": starts, "host": os.uname().nodename, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now()}
+            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "timeout_s": timeout, "starts": starts, "host": os.uname().nodename, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now(), "finish_version": FINISH_VERSION}
             if not os.path.exists(ses) or os.path.getsize(ses) == 0:
                 row.update(verdict="NO_SESSION", Q=None, metrics=None); jn(dict(run="exp", board=name, stage="experiment", status="NO_SESSION", note="%s: no session in %d s" % (cfg["name"], wall)))
-            else:
-                # the finish quality steps on the routed copy: dangling clean-up, the straighten pass (DRC-gated inside), then DRC and metrics
-                board = os.path.join(w, name + ".kicad_pcb"); shutil.copy(os.path.join(project, name + ".kicad_pro"), os.path.join(w, name + ".kicad_pro"))
-                sh(["python3", os.path.join(tools, "cleanup_dangling.py"), board], project, os.path.join(w, "finish.log"))
-                sh(["bash", os.path.join(tools, "quality_pass.sh"), w, name], project, os.path.join(w, "finish.log"))
-                sh(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", os.path.join(w, "final-drc.json"), board], project, os.path.join(w, "finish.log"))
-                mfile = os.path.join(w, "metrics.json"); fr = read(os.path.join(w, "fr.log")) or ""
-                m_auto = re.search(r"Auto-routing was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr); m_opt = re.search(r"optimization was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr)
-                argv = ["python3", os.path.join(tools, "route_metrics.py"), board, os.path.join(w, "final-drc.json"), "--json", mfile, "--tag", key, "--wall", str(wall)]
-                if m_auto: argv += ["--autoroute", "%.2f" % (int(m_auto.group(1)) + float(m_auto.group(2)) / 60)]
-                if m_opt: argv += ["--optimizer", "%.2f" % (int(m_opt.group(1)) + float(m_opt.group(2)) / 60)]
-                sh(argv, project, os.path.join(w, "finish.log"))
-                try:
-                    m = json.load(open(mfile)); base_all = json.load(open(os.path.join(tools, "routeflow", "bench", "baseline.json"))); bench_compare = __import__("bench_compare")
-                    v, note, q = bench_compare.compare(base_all[key], m) if key in base_all else ("UNMEASURABLE", "no baseline for " + key, None)
-                    row.update(verdict=v, Q=q, metrics=m, note=note); jn(dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s: %s %s" % (cfg["name"], v, note[:180])))
-                except Exception as e:
-                    row.update(verdict="UNMEASURABLE", Q=None, metrics=None, note=str(e)[:200]); jn(dict(run="exp", board=name, stage="experiment", status="UNMEASURABLE", note="%s: %s" % (cfg["name"], str(e)[:160])))
+            else: finish(row, cfg, w, board, ses, flog)
+            return row
+        def finish(row, cfg, w, board, ses, flog):
+            """the production finish on the routed copy, every count recorded: the raw route (route_one's score), the dangling clean-up, the stub router
+            (closes what the router left open, as finish_*.sh do), the DRC-gated quality pass, the final DRC, the metrics and the grade"""
+            raw = (read(os.path.join(w, "score.txt")) or "").split()
+            if len(raw) >= 3: row["raw"] = {"hard": int(raw[0]), "unrouted": int(raw[1]), "vias": int(raw[2])}
+            shutil.copy(os.path.join(project, name + ".kicad_pro"), os.path.join(w, name + ".kicad_pro"))
+            sh(["python3", os.path.join(tools, "cleanup_dangling.py"), board], project, flog)
+            sh(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", os.path.join(w, "pre-stub-drc.json"), board], project, flog)
+            sh(["python3", os.path.join(tools, "stub_router.py"), board, os.path.join(w, "pre-stub-drc.json")], project, os.path.join(w, "stub.log"), {"STUB_LAYERS": exp.get("stub_layers", "F.Cu,B.Cu"), "STUB_GRID": str(exp.get("stub_grid", "0.05"))})
+            st = re.search(r"stub_router: closed (\d+) of (\d+)", read(os.path.join(w, "stub.log")) or "")
+            row["stub_closed"], row["stub_open"] = (int(st.group(1)), int(st.group(2))) if st else (None, None)
+            sh(["bash", os.path.join(tools, "quality_pass.sh"), w, name], project, flog)
+            sh(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", os.path.join(w, "final-drc.json"), board], project, flog)
+            mfile = os.path.join(w, "metrics.json"); fr = read(os.path.join(w, "fr.log")) or ""
+            m_auto = re.search(r"Auto-routing was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr); m_opt = re.search(r"optimization was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr)
+            argv = ["python3", os.path.join(tools, "route_metrics.py"), board, os.path.join(w, "final-drc.json"), "--json", mfile, "--tag", key, "--wall", str(row["wall_s"])]
+            if m_auto: argv += ["--autoroute", "%.2f" % (int(m_auto.group(1)) + float(m_auto.group(2)) / 60)]
+            if m_opt: argv += ["--optimizer", "%.2f" % (int(m_opt.group(1)) + float(m_opt.group(2)) / 60)]
+            sh(argv, project, flog)
+            try:
+                m = json.load(open(mfile)); base_all = json.load(open(os.path.join(tools, "routeflow", "bench", "baseline.json"))); bench_compare = __import__("bench_compare")
+                v, note, q = bench_compare.compare(base_all[key], m) if key in base_all else ("UNMEASURABLE", "no baseline for " + key, None)
+                row.update(verdict=v, Q=q, metrics=m, note=note); jn(dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s: %s (raw %s, stub closed %s of %s) %s" % (cfg["name"], v, row.get("raw"), row.get("stub_closed"), row.get("stub_open"), note[:160])))
+            except Exception as e:
+                row.update(verdict="UNMEASURABLE", Q=None, metrics=None, note=str(e)[:200]); jn(dict(run="exp", board=name, stage="experiment", status="UNMEASURABLE", note="%s: %s" % (cfg["name"], str(e)[:160])))
+        def refinish(cfg, old):
+            """a row routed under an older finish: the routed board again from the pre-route board and the kept session (the import is deterministic, as route_one.sh does it), then the finish; the route is not repeated"""
+            jar_path, jar_sha, ckey = ident(cfg); k = "exp-" + cfg["name"]; w = os.path.join(project, "out", "par", k); ses = os.path.join(w, name + ".ses"); board = os.path.join(w, name + ".kicad_pcb"); flog = os.path.join(w, "finish.log")
+            if not os.path.exists(ses) or os.path.getsize(ses) == 0: return None
+            shutil.copy(pre, board); shutil.copy(os.path.join(project, name + ".kicad_pro"), os.path.join(w, name + ".kicad_pro"))
+            sh(["python3", "-c", "import sys, pcbnew; b = pcbnew.LoadBoard(sys.argv[1]); ok = pcbnew.ImportSpecctraSES(b, sys.argv[2]); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b); print('SES import:', ok)", board, ses], project, flog)
+            sh(["python3", os.path.join(tools, "net_tie.py"), board], project, flog)
+            row = dict(old); row.update(ts=now(), finish_version=FINISH_VERSION, refinished=True, host=os.uname().nodename)
+            finish(row, cfg, w, board, ses, flog); return row
             return row
         def write_row(row):
             if row is None: return
             with open(results, "a") as f:
                 fcntl.flock(f, fcntl.LOCK_EX); f.write(json.dumps(row) + "\n"); f.flush(); fcntl.flock(f, fcntl.LOCK_UN)
         if parallel <= 1:
+            for cfg, old in refin: write_row(refinish(cfg, old))
             for cfg in pending: write_row(one(cfg, 0))
         else:
             with concurrent.futures.ThreadPoolExecutor(max_workers=parallel) as ex:
                 futs = {ex.submit(one, cfg, i): cfg for i, cfg in enumerate(pending)}
+                futs.update({ex.submit(refinish, cfg, old): cfg for cfg, old in refin})
                 for fut in concurrent.futures.as_completed(futs):
                     try: write_row(fut.result())
                     except Exception as e: jn(dict(run="exp", board=name, stage="experiment", status="TOOL_CRASH", note="%s: %s" % (futs[fut]["name"], str(e)[:160])))

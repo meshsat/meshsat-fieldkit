@@ -78,5 +78,7 @@
       "preferred": "h,-,v,h,-,v",
       "inactive": "In1.Cu,In4.Cu"
     }
-  ]
+  ],
+  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "stub_grid": "0.1"
 }
