@@ -164,8 +164,8 @@ for (x, y) in ((-155.5, -63.0), (-117.5, -63.0), (-155.5, -82.0), (-117.5, -82.0
 box("traco_ten40", (50.8, 25.4, 10.2), (-40, -81, 1.6 + 5.1), M["dark"])
 for (x, y) in ((-110.5, -73.0), (110.5, -73.0), (-110.5, 73.0), (110.5, 73.0)):
     cyl("rod_%d_%d" % (x, y), 3.0, 118.0, (x, y, 59.0), M["steel"])
-    for z in (1.6, 16.6, 53.2): cyl("nut_%d_%d_%d" % (x, y, z), 5.5, 2.4, (x, y, z + 1.2), M["steel"], verts=6)
-    cyl("spacer_%d_%d_a" % (x, y), 6.0, 13.4, (x, y, 1.6 + 6.7), M["alu"]); cyl("spacer_%d_%d_b" % (x, y), 6.0, 35.0, (x, y, 16.6 + 17.5), M["alu"])
+    for z in (1.6, 16.6, 56.2): cyl("nut_%d_%d_%d" % (x, y, z), 5.5, 2.4, (x, y, z + 1.2), M["steel"], verts=6)
+    cyl("spacer_%d_%d_a" % (x, y), 6.0, 13.4, (x, y, 1.6 + 6.7), M["alu"]); cyl("spacer_%d_%d_b" % (x, y), 6.0, 38.0, (x, y, 16.6 + 19.0), M["alu"])
 MOD = Matrix.Translation((121.0, -137.0, 6.0)); import_stl("module_base", "module_base.stl", M["gray"], MOD); import_stl("module_lid", "module_lid.stl", M["dark"], MOD)
 import_stl("module_cradle", "module_cradle.stl", M["black"], Matrix.Translation((121.0, -137.0, 5.0)))
 cyl("xt60", 16, 18, (161, -125, 15), M["amber"], axis="Y"); cyl("module_lead_r", 3.2, 30, (158, -95, 4), M["wire_red"], axis="Y"); cyl("module_lead_b", 3.2, 30, (164, -95, 4), M["wire_blk"], axis="Y")
@@ -178,8 +178,8 @@ for k, (x, y) in enumerate(((-100, -56), (-84, -56), (-26, -56), (-12, -56), (70
     cyl("sma_jack_%d" % k, 6.5, 9.0, (x, y, 21.1), M["gold"]); cyl("sma_nut_%d" % k, 8.0, 2.0, (x, y, 17.6), M["steel"], verts=6)
 for k, y in enumerate((-68, -58, -48)):     # the three rail leads A to B
     cyl("lead_r_%d" % k, 1.8, 36, (-92 - 1.5, y, 35), M["wire_red"]); cyl("lead_b_%d" % k, 1.8, 36, (-92 + 1.5, y, 35), M["wire_blk"])
-import_board("pcb_b13", "pcb-b-compute.glb", 51.6)
-ZB = 53.2
+import_board("pcb_b13", "pcb-b-compute.glb", 54.6)
+ZB = 56.2
 box("cm5_module", (40, 55, 1.24), (-88, 0, ZB + 4.62), M["pcb"]); box("cm5_soc", (15, 15, 1.2), (-88, 6, ZB + 5.84), M["dark"]); box("cm5_emmc", (11, 13, 1.0), (-88, -12, ZB + 5.74), M["dark"])
 box("cm5_cooler", (41, 56, 4.0), (-88, 0, ZB + 8.24 + 2.0), M["alu"]); box("cm5_fan", (30, 30, 6), (-88, 0, ZB + 8.24 + 12.7 + 3), M["dark"]); cyl("cm5_fan_rotor", 26, 5, (-88, 0, ZB + 8.24 + 12.7 + 3.5), M["gray"], verts=7)
 for i in range(13): box("cm5_fin_%d" % i, (1.2, 52, 8.7), (-88 - 18 + 3.0 * i, 0, ZB + 8.24 + 4.0 + 4.35), M["alu"])
