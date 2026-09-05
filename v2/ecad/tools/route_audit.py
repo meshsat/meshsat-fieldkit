@@ -28,9 +28,12 @@ for z in b.Zones():
 for f in b.GetFootprints():
     for p in f.Pads():
         bx = p.GetBoundingBox(); d.rectangle([P(mm(bx.GetLeft()), mm(bx.GetTop())), P(mm(bx.GetRight()), mm(bx.GetBottom()))], fill=(190, 190, 190))
+def via_w(v):   # KiCad 9 wants a layer for a via's width
+    try: return v.GetWidth(pcbnew.F_Cu)
+    except TypeError: return v.GetWidth()
 for t in b.GetTracks():
     if t.GetClass() == "PCB_VIA":
-        c = P(mm(t.GetPosition().x), mm(t.GetPosition().y)); r = mm(t.GetWidth()) / 2 * ppm; d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], outline=(0, 0, 0), width=1)
+        c = P(mm(t.GetPosition().x), mm(t.GetPosition().y)); r = mm(via_w(t)) / 2 * ppm; d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], outline=(0, 0, 0), width=1)
     elif t.GetClass() == "PCB_TRACK":
         col = LC.get(b.GetLayerName(t.GetLayer()), (100, 100, 100)); d.line([P(mm(t.GetStart().x), mm(t.GetStart().y)), P(mm(t.GetEnd().x), mm(t.GetEnd().y))], fill=col, width=max(1, int(mm(t.GetWidth()) * ppm)))
 opens = collections.Counter(); n_unc = 0

@@ -137,7 +137,7 @@ def slot(ref, x, y, w, h, value="tie slot"):
 def rule_area_annulus(cx, cy, d, inner_d, name):
     z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(True); z.SetDoNotAllowTracks(True)
     z.SetDoNotAllowVias(True); z.SetDoNotAllowPads(True); z.SetDoNotAllowFootprints(False)
-    z.SetLayerSet(pcbnew.LSET.AllCuMask(4)); z.SetZoneName(name)
+    z.SetLayerSet(pcbnew.LSET.AllCuMask(board.GetCopperLayerCount())); z.SetZoneName(name)   # every copper layer of the stack (B15 run 2: a track on In3 skimmed the pass-through hole because the mask was the old four layers)
     o = z.Outline(); o.NewOutline()
     for i in range(36):
         a = math.radians(i * 10); p = P(cx + d / 2 * math.cos(a), cy + d / 2 * math.sin(a)); o.Append(p.x, p.y)
@@ -148,7 +148,7 @@ def rule_area_annulus(cx, cy, d, inner_d, name):
 def rule_area_poly(pts, name):
     z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(True); z.SetDoNotAllowTracks(True)
     z.SetDoNotAllowVias(True); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
-    z.SetLayerSet(pcbnew.LSET.AllCuMask(4)); z.SetZoneName(name)
+    z.SetLayerSet(pcbnew.LSET.AllCuMask(board.GetCopperLayerCount())); z.SetZoneName(name)   # every copper layer of the stack (B15 run 2: a track on In3 skimmed the pass-through hole because the mask was the old four layers)
     o = z.Outline(); o.NewOutline()
     for x, y in pts:
         p = P(x, y); o.Append(p.x, p.y)
