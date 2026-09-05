@@ -194,12 +194,11 @@ outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
 #     Rails M2 and PI run from their output capacitors (C96 at (-107, -15), C97 at (-75, -11)) west along the boost row and north to the VH connectors at y 44.5;
 #     rail M1 has its In2 plane. Boost inputs: fuse (THT, y -44.3) north to the inductor pad (fanned out to a via). CELL+ gets a tap to the mezzanine fuse F2.
 B = (pcbnew.B_Cu,)
-outer_pour("+5V_M2", "rail M2 collector", (-140.0, -18.5, -103.0, -14.6), layers=B); outer_pour("+5V_M2", "rail M2 riser", (-140.0, -18.5, -134.0, 46.5), layers=B)
-outer_pour("+5V_PI", "rail PI collector", (-125.0, -14.0, -71.5, -9.5), layers=B); outer_pour("+5V_PI", "rail PI riser", (-125.0, -14.0, -119.0, 46.5), layers=B)
-outer_pour("BOOST1_IN", "boost 1 feed", (-158.0, -46.5, -152.0, -3.5), layers=B); outer_pour("BOOST1_IN", "boost 1 inductor", (-158.0, -9.0, -145.0, -3.5), layers=B)
-outer_pour("BOOST2_IN", "boost 2 feed", (-133.0, -46.5, -127.0, -3.5), layers=B); outer_pour("BOOST2_IN", "boost 2 inductor", (-133.0, -9.0, -113.0, -3.5), layers=B)
-outer_pour("BOOST3_IN", "boost 3 feed", (-108.0, -46.5, -102.0, -19.5), layers=B); outer_pour("BOOST3_IN", "boost 3 link", (-108.0, -22.5, -80.0, -19.5), layers=B); outer_pour("BOOST3_IN", "boost 3 inductor", (-86.0, -22.5, -80.0, -3.5), layers=B)
-outer_pour("CELL+", "node tap to F2", (-83.0, -46.5, -77.0, -38.0), priority=3)
+outer_pour("+5V_M2", "rail M2 collector", (-140.0, -18.5, -103.0, -14.6), layers=B); outer_pour("+5V_M2", "rail M2 riser", (-140.0, -18.5, -134.0, 46.5), layers=B, priority=3)
+outer_pour("+5V_PI", "rail PI collector", (-125.0, -14.0, -71.5, -9.5), layers=B); outer_pour("+5V_PI", "rail PI riser", (-125.0, -14.0, -119.0, 46.5), layers=B, priority=3)
+outer_pour("BOOST1_IN", "boost 1 feed", (-158.0, -46.5, -152.0, -3.5), layers=B); outer_pour("BOOST1_IN", "boost 1 inductor", (-158.0, -9.0, -145.0, -3.5), layers=B, priority=3)
+outer_pour("BOOST2_IN", "boost 2 feed", (-133.0, -46.5, -127.0, -3.5), layers=B); outer_pour("BOOST2_IN", "boost 2 inductor", (-133.0, -9.0, -113.0, -3.5), layers=B, priority=3)
+outer_pour("BOOST3_IN", "boost 3 feed", (-108.0, -46.5, -102.0, -19.5), layers=B); outer_pour("BOOST3_IN", "boost 3 link", (-108.0, -22.5, -80.0, -19.5), layers=B, priority=3); outer_pour("BOOST3_IN", "boost 3 inductor", (-86.0, -22.5, -80.0, -3.5), layers=B, priority=4)
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
 # The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
 # footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
