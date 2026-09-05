@@ -256,11 +256,13 @@ for ref, net, vias in (("U22", "+5V_M1", [(14.88, -6.0), (16.38, -6.0), (14.88, 
                        ("U24", "+5V_PI", [(5.13 + 1.5 * k, -7.0) for k in range(6)])):                                                  # into the PI tap (B.Cu, KiCad x 70.5 to 79.5, y 105.5 to 124)
     x0 = placed[ref].GetPosition().x / 1e6; y0 = placed[ref].GetPosition().y / 1e6
     island(net, "VOUT island " + ref, [(x0 + 1.4, y0 - 0.05), (x0 + 3.6, y0 - 0.05), (x0 + 3.6, y0 - 15.4), (x0 + 17.5, y0 - 15.4), (x0 + 17.5, y0 + 4.0), (x0 + 3.6, y0 + 4.0), (x0 + 3.6, y0 + 0.45), (x0 + 1.4, y0 + 0.45)])
+    track_keepout("VOUT island " + ref, K(x0 + 3.6, y0 - 15.4, x0 + 17.5, y0 + 4.0), layer=pcbnew.F_Cu); track_keepout("VOUT neck " + ref, K(x0 + 1.4, y0 - 0.05, x0 + 3.6, y0 + 0.45), layer=pcbnew.F_Cu)   # run 17: an SW3 track down the island's west edge cut the neck off
     stitch(net, [(x0 + dx, y0 + dy) for dx, dy in vias])
 # Inductor tap islands: over the south end of pad 1 (2.38 x 9.0 mm, y 111.5 to 120.5) and 3.5 mm beyond it, six 0.8/0.4 vias down to the In2 and B.Cu feeds
 for ref, net in (("L2", "BOOST1_IN"), ("L3", "BOOST2_IN"), ("L4", "BOOST3_IN")):
     pad = [p for p in placed[ref].Pads() if p.GetNumber() == "1"][0]; px, py = pad.GetPosition().x / 1e6, pad.GetPosition().y / 1e6
     island(net, "inductor tap " + ref, [(px - 2.0, py + 3.8), (px + 2.0, py + 3.8), (px + 2.0, py + 8.0), (px - 2.0, py + 8.0)])
+    track_keepout("inductor tap " + ref, K(px - 2.0, py + 3.8, px + 2.0, py + 8.0), layer=pcbnew.F_Cu)
     stitch(net, [(px + dx, py + dy) for dx in (-1.0, 0.0, 1.0) for dy in (5.6, 7.0)])   # six vias: 9.5 A at 2.5 A per 0.4 mm hole with margin
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
 # The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
@@ -272,7 +274,7 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
 CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.15, 0.6, 1.2, 0.6, 0.5, 0.25), "BOOST": (0.15, 0.8, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.15, 0.5, 1.0, 0.5, 0.5, 0.3), "RF": (0.3, 0.35, 0.7, 0.3, 0.2, 0.15)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
-PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("SW_*", "PWR"), ("GND", "PWR"), ("SHORE_12V", "PWR"), ("HEAT_*", "PWR"), ("PMID", "PWR"), ("SYS_CHG", "PWR"), ("SW*_CHG", "PWR"), ("CELL+", "BANK"), ("CELL_N", "BANK"), ("MEZZ_CELL", "BANK"), ("BOOST*_IN", "BOOST"), ("SW1", "BOOST"), ("SW2", "BOOST"), ("SW3", "BOOST"), ("+5V_M1", "RAIL"), ("+5V_M2", "RAIL"), ("+5V_PI", "RAIL"), ("RF_*", "RF")]
+PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("SW_*", "PWR"), ("GND", "PWR"), ("SHORE_12V", "PWR"), ("HEAT_*", "PWR"), ("PMID", "PWR"), ("SYS_CHG", "PWR"), ("SW*_CHG", "PWR"), ("CELL+", "BANK"), ("CELL_N", "PWR"), ("MEZZ_CELL", "BANK"), ("BOOST*_IN", "BOOST"), ("SW1", "BOOST"), ("SW2", "BOOST"), ("SW3", "BOOST"), ("+5V_M1", "RAIL"), ("+5V_M2", "RAIL"), ("+5V_PI", "RAIL"), ("RF_*", "RF")]
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     for name, vals in CLASSES.items():
