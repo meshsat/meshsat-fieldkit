@@ -17,7 +17,7 @@ def fpc(ref):
 def hole_at(x, y, d): return any(r.startswith("H") and abs(case(f.GetPosition())[0] - x) < 0.01 and abs(case(f.GetPosition())[1] - y) < 0.01 and abs(list(f.Pads())[0].GetDrillSize().x / 1e6 - d) < 0.01 for r, f in fps.items())
 for (x, y) in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]: check(hole_at(x, y, 3.2), "rod hole at (%.1f, %.1f)" % (x, y))
 for (x, y) in [(10, -26), (80, -26), (10, 26), (80, 26)]: check(hole_at(x, y, 3.2), "mezzanine M3 at (%d, %d)" % (x, y))
-for ref, (ex, ey) in {"J_DOCK": (-124, -70), "J_PRE1": (-151, -70), "J_CP1": (-147, -73), "J_CN4": (-135, -67), "F3": (-150, -46), "F4": (-125, -46), "F5": (-100, -46), "F2": (-75, -46), "U22": (-148, -20), "U23": (-116, -20), "U24": (-84, -20), "U20": (-50, -58), "U21": (-112, -60), "R52": (-130, -60), "J_BM1": (-100, -66), "J_RF1": (-100, -56), "J_BM7": (103, -64), "J_RF7": (107, -54), "J_RF5": (70, -74), "J_WALL1": (-156, 62), "U6": (-70, 52), "J_MEZZ1": (-8, 8), "J_GPS1": (30, -52), "J_WIFI1": (8, 52.5),
+for ref, (ex, ey) in {"J_DOCK": (-124, -70), "J_PRE1": (-151, -70), "J_CP1": (-147, -73), "J_CN4": (-135, -67), "F3": (-150, -46), "F4": (-125, -46), "F5": (-100, -46), "F2": (-75, -46), "U22": (-148, -20), "U23": (-116, -20), "U24": (-84, -20), "U20": (-50, -58), "U21": (-112, -60), "R52": (-120, -60), "J_BM1": (-100, -66), "J_RF1": (-100, -56), "J_BM7": (103, -64), "J_RF7": (107, -54), "J_RF5": (70, -74), "J_WALL1": (-156, 62), "U6": (-70, 52), "J_MEZZ1": (-8, 8), "J_GPS1": (30, -52), "J_WIFI1": (8, 52.5),
                       }.items():   # A20: no GPS puck or WiFi dongle slots
     if ref not in fps: print("SKIP %s (placed at the netlist stage)" % ref); continue
     cx, cy = fpc(ref); check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
@@ -55,11 +55,25 @@ if _w:
 if any(not z.GetIsRuleArea() and z.GetFilledArea() > 0 for z in b.Zones()):
     for z in b.Zones():
         _n = z.GetZoneName()
-        if not z.GetIsRuleArea() and _n.startswith(("rail ", "VOUT island ", "boost ")):
+        if not z.GetIsRuleArea() and _n.startswith(("rail ", "VOUT island ", "boost ", "inductor tap ")):
             _fp = z.GetFilledPolysList(z.GetFirstLayer()); _bb = z.GetBoundingBox(); _rect = _bb.GetWidth() / 1e6 * _bb.GetHeight() / 1e6; _area = z.GetFilledArea() / 1e12
             check(_fp.OutlineCount() == 1 and _area >= 0.5 * _rect, "band '%s' is one piece over at least half its outline (%d pieces, %.0f of %.0f mm2)" % (_n, _fp.OutlineCount(), _area, _rect))
     for _t in b.GetTracks():
         if _t.Type() == pcbnew.PCB_VIA_T and _t.IsLocked() and abs(_t.GetDrillValue() / 1e6 - 0.4) < 0.01 and _t.GetNetname().lstrip("/") in ("+5V_M2", "+5V_PI"):
             _zs = [z for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == _t.GetNetname() and z.GetZoneName().startswith("rail ")]
             check(any(z.GetFilledPolysList(pcbnew.B_Cu).Contains(_t.GetPosition()) for z in _zs), "stitch via %s at (%.1f, %.1f) sits in a filled rail band" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
+        if _t.Type() == pcbnew.PCB_VIA_T and _t.IsLocked() and abs(_t.GetDrillValue() / 1e6 - 0.4) < 0.01 and _t.GetNetname().lstrip("/").startswith("BOOST"):
+            _zs = [z for z in b.Zones() if not z.GetIsRuleArea() and z.GetNetname() == _t.GetNetname() and z.GetZoneName().startswith("boost ")]
+            check(any(z.GetFilledPolysList(pcbnew.In2_Cu).Contains(_t.GetPosition()) for z in _zs), "inductor stitch via %s at (%.1f, %.1f) sits in a filled In2 feed" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
+    # the pieces of one rail or feed must touch: a vertex of the higher-priority fill lies on (or in) the other fill
+    def _touch(_z1, _z2):
+        _L = _z1.GetFirstLayer(); _f1 = _z1.GetFilledPolysList(_L); _f2 = _z2.GetFilledPolysList(_L)
+        for _i in range(_f2.OutlineCount()):
+            _o = _f2.Outline(_i)
+            for _k in range(_o.PointCount()):
+                if _f1.Collide(_o.GetPoint(_k), int(0.06e6)): return True
+        return False
+    _byname = {z.GetZoneName(): z for z in b.Zones() if not z.GetIsRuleArea()}
+    for _p, _q in (("rail M2 collector B.Cu", "rail M2 riser B.Cu"), ("rail M2 collector B.Cu", "rail M2 tap B.Cu"), ("rail PI collector B.Cu", "rail PI riser B.Cu"), ("rail PI collector B.Cu", "rail PI tap B.Cu"), ("boost 1 column In2.Cu", "boost 1 jog In2.Cu"), ("boost 3 column In2.Cu", "boost 3 jog In2.Cu")):
+        if _p in _byname and _q in _byname: check(_touch(_byname[_p], _byname[_q]), "'%s' and '%s' touch" % (_p, _q))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
