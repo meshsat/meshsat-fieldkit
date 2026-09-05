@@ -268,6 +268,9 @@ def experiment(exp_fn, budget_hours, use_services):
         sh(["python3", "-c", "import pcbnew,sys; b=pcbnew.LoadBoard(sys.argv[1]); [b.Remove(z) for z in list(b.Zones()) if not z.GetIsRuleArea()]; pcbnew.SaveBoard(sys.argv[1]+'.np.kicad_pcb', b); print(pcbnew.ExportSpecctraDSN(pcbnew.LoadBoard(sys.argv[1]+'.np.kicad_pcb'), sys.argv[2]))", pre, dsn0], project, elog)
         for cfg in exp["configs"]:
             if time.time() - t_start > budget_hours * 3600: journal(project, dict(run="exp", board=name, stage="experiment", status="STOPPED_BUDGET", note="budget spent before %s" % cfg["name"])); break
+            jar_path = os.path.expanduser(cfg.get("jar", exp.get("jar", "~/bin/freerouting-1.9.0.jar")))
+            if not jar_path.startswith("/"): jar_path = os.path.expanduser("~/bin/" + jar_path)
+            jar_sha = hashlib.sha256(open(jar_path, "rb").read()).hexdigest()[:16] if os.path.exists(jar_path) else "nojar"
             ckey = hashlib.sha256((pre_hash + jar_sha + json.dumps(cfg, sort_keys=True) + json.dumps(exp.get("route", {}), sort_keys=True)).encode()).hexdigest()[:16]
             if ckey in done: journal(project, dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s already in results (skip)" % cfg["name"])); continue
             k = "exp-" + cfg["name"]; w = os.path.join(project, "out", "par", k); shutil.rmtree(w, ignore_errors=True); os.makedirs(w)
@@ -276,10 +279,10 @@ def experiment(exp_fn, budget_hours, use_services):
             if cfg.get("inactive"): argv += ["--inactive", cfg["inactive"]]
             sh(argv, project, elog)
             route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
-            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(route.get("timeout", 1800)), "FR_RULES": rules}
+            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(route.get("timeout", 1800)), "FR_RULES": rules, "FR_JAR": jar_path}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             t0 = time.time(); rc = sh(["../tools/route_one.sh", ".", name, k, str(route.get("passes", 60))], project, os.path.join(w, "route_one.log"), env); wall = int(time.time() - t0)
-            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "preroute_hash": pre_hash, "jar_sha": jar_sha, "wall_s": wall, "ts": now()}
+            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now()}
             ses = os.path.join(w, name + ".ses")
             if not os.path.exists(ses) or os.path.getsize(ses) == 0:
                 row.update(verdict="NO_SESSION", Q=None, metrics=None); journal(project, dict(run="exp", board=name, stage="experiment", status="NO_SESSION", note="%s: no session in %d s" % (cfg["name"], wall)))
