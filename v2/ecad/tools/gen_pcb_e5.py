@@ -114,7 +114,7 @@ for L in (pcbnew.F_Cu, pcbnew.B_Cu):
     pour(L, "CELL+", "CELL+ pour " + board.GetLayerName(L), (-157, -84, -133, -71)); pour(L, "CELL_N", "CELL_N pour " + board.GetLayerName(L), (-157, -66, -133, -60))
 for x in (-153.0, -149.0, -145.0): via(x, -80.0, "CELL+", 0.8, 0.4); via(x, -61.5, "CELL_N", 0.8, 0.4)
 for x in (-149.0, -141.0): via(x, -71.8, "CELL+", 0.8, 0.4)
-text("E5 DOCK BLOCK  face 7.4 mm", -124.0, -61.0, pcbnew.F_SilkS, 0.9, 0.15); text("A19 pins land on these targets", -124.0, -58.0, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
+text("E5 BLOCK  face 7.4 mm", -134.0, -61.0, pcbnew.F_SilkS, 0.9, 0.15); text("A20 pins land here", -134.0, -58.5, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)   # kept clear of the corner holes and the board edge
 text("CELL+ 12 AWG", -147.0, -83.0, pcbnew.F_SilkS, 0.9, 0.15); text("RETURN 12 AWG", -147.0, -63.5, pcbnew.F_SilkS, 0.9, 0.15)
 pcbnew.SaveBoard(OUT, board); b2 = pcbnew.LoadBoard(OUT); pcbnew.ZONE_FILLER(b2).Fill(b2.Zones()); pcbnew.SaveBoard(OUT, b2)
 print("saved", OUT, "footprints:", len(list(b2.GetFootprints())), "nets:", b2.GetNetCount())
