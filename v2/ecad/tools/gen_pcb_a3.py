@@ -211,7 +211,7 @@ for net, name, rect, prio in BANDS: outer_pour(net, name, rect, layers=B, priori
 # Boost feeds on In2 (the +5V_M1 plane gives up three 6 mm slots): the blade fuses' BOOST pads (pin 2, x 5/30/55, y 154.3 and 157.7, plated through, so
 # the column starts in the pad itself) north under the CELL+ node bar to the inductor row, where a jog reaches the stitch vias of a top-side tap island
 # at the south end of each inductor's pad 1. Run 9's B.Cu feed bands were centred on the fuses' CELL+ pads and cut by the node bar at y 148.5 to 152.
-BOOST_IN2 = [("BOOST1_IN", "boost 1 column", K(3.5, 121.0, 9.5, 158.5), 2), ("BOOST1_IN", "boost 1 jog", K(-3.5, 120.5, 9.5, 124.5), 3),
+BOOST_IN2 = [("BOOST1_IN", "boost 1 column", K(4.1, 121.0, 9.5, 158.5), 2), ("BOOST1_IN", "boost 1 jog", K(-3.5, 120.5, 9.5, 124.5), 3)   # the column starts 0.5 mm east of U22's BST1 escape via (3.32, 127.25): run 10 left that net open when the keep-out edge touched the via,
              ("BOOST2_IN", "boost 2 column", K(27.0, 121.0, 33.0, 158.5), 2),
              ("BOOST3_IN", "boost 3 column", K(52.0, 121.0, 58.0, 158.5), 2), ("BOOST3_IN", "boost 3 jog", K(52.0, 120.5, 64.5, 124.5), 3)]
 for net, name, rect, prio in BOOST_IN2: outer_pour(net, name, rect, layers=I2, priority=prio); track_keepout(name, rect, layer=pcbnew.In2_Cu)
