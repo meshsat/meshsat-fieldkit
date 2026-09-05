@@ -53,7 +53,7 @@ SDR_RECT = (-4.0, -16.0, 78.0, 16.0)
 SDR_SLOTS = [(20.0, -18.0), (74.0, -18.0), (20.0, 18.0), (66.0, 18.0)]   # tie-wrap slots 5 x 1.8
 # LTE mini PCIe card (north band): socket at the west end, full-size card 30 x 50.95 extending east, two M2.5 standoffs in the socket footprint
 LTE_RECT = (-32.0, 52.0, 26.0, 82.0)
-WIFI_RECT = (27.0, 49.0, 64.0, 71.0)   # B14: M.2 E-key socket at (34, 60) rot -90, the 2230 card along +X to 64, standoff hole at (62.25, 60); IPEX leads east
+WIFI_RECT = (30.0, 49.0, 67.0, 71.0)   # B14: M.2 E-key socket at (37, 60) rot -90, the 2230 card along +X to 67, standoff hole at (65.25, 60); IPEX leads east; 4 mm east of LTE_RECT
 # ZigBee module (east strip): E72-2G4M20S1E 28.7 x 17.5, long axis along Y, PCB antenna toward the back wall
 ZB_RECT = (84.0, 16.0, 104.0, 52.0)   # the module body plus its 3 mm antenna keep-out; its small parts pack east of it
 # RockBLOCK dual site centred (52, -48): 9704 on the GC bracket (4x Ø4.6 on 32 x 32), 9603 offset +6 in Y
