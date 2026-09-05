@@ -37,7 +37,7 @@ while True:
 open(fn, "w").write("".join(out)); print("power layers in the DSN:", ", ".join(layers), "(%d layer types changed, %d wire keep-outs dropped)" % (n1, n2))
 PYPL
 fi
-timeout 4500 xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-6} -oit 2 -dct 0 > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
+timeout ${FR_TIMEOUT:-4500} xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-6} -oit 2 -dct 0 > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
 pkill -9 -f "^java .*par/$K/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PY'
