@@ -142,6 +142,7 @@ def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.6, 0.3)
 PATTERNS = [("+5V", "PWR"), ("LED_RAIL*", "PWR"), ("GND", "PWR")]
+PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.15, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)

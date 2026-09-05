@@ -182,6 +182,7 @@ cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)   # B13: 0.127 cl
 # USB 90 ohm and DSI 100 ohm on JLC's 7628 four-layer stack (0.20/0.15 and 0.17/0.15, the CM5IO's own classes are 0.147 and 0.127 on its 90 um dielectric; confirm with JLC's calculator at upload)
 CLASSES = {"USB": (0.127, 0.2, 0.7, 0.3, 0.2, 0.15), "DSI": (0.127, 0.17, 0.7, 0.3, 0.17, 0.15), "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25)}   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
 PATTERNS = [("USB_*", "USB"), ("DSI0_*", "DSI"), ("PCIe_TX_*", "USB"), ("PCIe_RX_*", "USB"), ("PCIe_CLK_P", "USB"), ("PCIe_CLK_N", "USB"), ("+3V3_WIFI", "PWR"), ("5V_*", "PWR"), ("+5V_M1", "PWR"), ("+5V_M2", "PWR"), ("+5V_PI", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("+3V3_LTE", "PWR"), ("+3V3_AB", "PWR"), ("PANEL_5V", "PWR")]
+PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)

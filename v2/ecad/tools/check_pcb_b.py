@@ -64,6 +64,17 @@ if placed:
     check(len(pcie) >= 10, "ten PCIe lane and control nets present on the board (got %d: %s)" % (len(pcie), sorted(pcie)))
     for nm, refs in sorted(pcie.items()):
         check("U30B" in refs and len(refs) >= 2, "%s reaches the module receptacle U30B and a second part (got %s)" % (nm, sorted(refs)))
+    # 5 Sep: every net-class pattern of the project must match at least one net on the board (a pattern that matches nothing routes its nets in Default)
+    import fnmatch as _fn, json as _json, os as _os
+    pro = _os.path.splitext(sys.argv[1])[0] + ".kicad_pro"
+    if _os.path.exists(pro):
+        pats = [(e["pattern"], e["netclass"]) for e in _json.load(open(pro)).get("net_settings", {}).get("netclass_patterns", [])]
+        names = {b.GetNetInfo().GetNetItem(i).GetNetname() for i in range(1, b.GetNetInfo().GetNetCount())}
+        dead = [p for p, c in pats if not any(_fn.fnmatchcase(n, p) for n in names)]
+        slashed_only = [p for p in dead if p.startswith("/")]
+        check(not [p for p in dead if not p.startswith("/")] or all(("/" + p) not in dead for p in dead if not p.startswith("/")), "every label net-class pattern matches a net in one of its two forms (unmatched: %s)" % [p for p in dead if not p.startswith("/") and ("/" + p) in dead])
+        for p, c in pats:
+            if p in ("/PCIe_TX_*", "/PCIe_RX_*", "/PCIe_CLK_P", "/PCIe_CLK_N"): check(any(_fn.fnmatchcase(n, p) for n in names), "PCIe class pattern %s matches a board net" % p)
     # B14: intra-pair length report for the PCIe lane (post-route only; Freerouting does no length matching). PCIe Gen 2 UI is 200 ps; the
     # usual intra-pair budget is a few ps, about 1 mm on FR-4. A mismatch is reported as a WARNING with the numbers, not as a FAIL: the fix is a post-route meander.
     tl = {}
