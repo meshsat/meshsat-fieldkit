@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="365.5mm" height="249.5mm" viewBox="-182.8 -124.8 365.5 249.5">
+<g transform="scale(1,-1)" font-family="Helvetica, Arial, sans-serif" fill="#ffffff" stroke="none">
+<text x="124.00" y="-43.90" font-size="2.60" text-anchor="end" transform="scale(1,-1)">MSTR WARN</text>
+<text x="124.00" y="-34.90" font-size="2.60" text-anchor="end" transform="scale(1,-1)">MSTR CAUT</text>
+<text x="124.00" y="-25.90" font-size="2.60" text-anchor="end" transform="scale(1,-1)">TX</text>
+<text x="124.00" y="-16.90" font-size="2.60" text-anchor="end" transform="scale(1,-1)">SOS ACTIVE</text>
+<text x="124.00" y="-7.90" font-size="2.60" text-anchor="end" transform="scale(1,-1)">SAT</text>
+<text x="124.00" y="1.10" font-size="2.60" text-anchor="end" transform="scale(1,-1)">MESH</text>
+<text x="124.00" y="10.10" font-size="2.60" text-anchor="end" transform="scale(1,-1)">LTE</text>
+<text x="124.00" y="19.10" font-size="2.60" text-anchor="end" transform="scale(1,-1)">GPS</text>
+<text x="124.00" y="28.10" font-size="2.60" text-anchor="end" transform="scale(1,-1)">SHORE</text>
+<text x="124.00" y="37.10" font-size="2.60" text-anchor="end" transform="scale(1,-1)">CHARGE</text>
+<text x="124.00" y="46.10" font-size="2.60" text-anchor="end" transform="scale(1,-1)">MSG</text>
+<text x="-20.00" y="96.00" font-size="2.20" text-anchor="middle" transform="scale(1,-1)">20</text>
+<text x="-14.00" y="96.00" font-size="2.20" text-anchor="middle" transform="scale(1,-1)">40</text>
+<text x="-8.00" y="96.00" font-size="2.20" text-anchor="middle" transform="scale(1,-1)">60</text>
+<text x="-2.00" y="96.00" font-size="2.20" text-anchor="middle" transform="scale(1,-1)">80</text>
+<text x="4.00" y="96.00" font-size="2.20" text-anchor="middle" transform="scale(1,-1)">100</text>
+<text x="-8.00" y="107.00" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">BATTERY %</text>
+<text x="150.00" y="-73.60" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">MAIN</text>
+<text x="150.00" y="-22.10" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">PI</text>
+<text x="150.00" y="27.90" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">TEST</text>
+<text x="-150.00" y="-73.00" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">SOS</text>
+<text x="-150.00" y="-31.00" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">EMCON</text>
+<text x="-150.00" y="11.00" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">ZEROIZE</text>
+<text x="-150.00" y="53.00" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">LIGHT</text>
+<text x="-160.00" y="66.00" font-size="2.40" text-anchor="end" transform="scale(1,-1)">DAY</text>
+<text x="-140.00" y="66.00" font-size="2.40" text-anchor="start" transform="scale(1,-1)">NIGHT</text>
+<text x="-150.00" y="78.00" font-size="2.40" text-anchor="middle" transform="scale(1,-1)">BLACKOUT</text>
+<text x="-149.00" y="116.00" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">SOUNDER</text>
+<rect x="40.00" y="88.00" width="76.00" height="26.00" fill="none" stroke="#ffffff" stroke-width="0.3"/>
+<text x="78.00" y="93.50" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">MESHSAT FIELD KIT V2</text>
+<text x="78.00" y="99.50" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">S/N ________   NUCLEAR LIGHTERS</text>
+<text x="78.00" y="106.00" font-size="2.40" text-anchor="middle" transform="scale(1,-1)">PELI 1450  DC 12 V  RF HAZARD DURING TX</text>
+<text x="-150.00" y="-96.00" font-size="2.40" text-anchor="middle" transform="scale(1,-1)">[MESHSAT LOGO 36 mm, tools/logo_meshsat.json]</text>
+</g></svg>
