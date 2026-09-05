@@ -8,7 +8,7 @@ b = pcbnew.LoadBoard(sys.argv[1])
 vias = sorted([t for t in b.GetTracks() if t.Type() == pcbnew.PCB_VIA_T and t.GetNetname().lstrip("/") == "BOOST_EN" and 125e6 < t.GetPosition().y < 132e6], key=lambda t: t.GetPosition().x)
 if len(vias) != 3: print("bus_a21: expected the three BOOST_EN escape vias, found", len(vias)); sys.exit(1)
 net = vias[0].GetNet()
-obstacles = [(t.GetPosition(), FromMM(0.5)) for t in b.GetTracks() if t.Type() == pcbnew.PCB_VIA_T and t.GetNetCode() != net.GetNetCode()]   # every via taken as 1.0 mm
+obstacles = [(t.GetPosition(), t.GetWidth(pcbnew.F_Cu) / 2) for t in b.GetTracks() if t.Type() == pcbnew.PCB_VIA_T and t.GetNetCode() != net.GetNetCode()]   # real via radius: the rail escape via sits 0.8 mm south of the enable via
 for fp in b.GetFootprints():
     for p in fp.Pads():
         if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) and p.GetNetCode() != net.GetNetCode(): obstacles.append((p.GetPosition(), max(p.GetSizeX(), p.GetSizeY()) / 2))
