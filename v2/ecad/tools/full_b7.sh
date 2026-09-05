@@ -10,6 +10,7 @@ python3 ../tools/gen_pcb_b3.py $N.kicad_pcb out/$N.net > out/gen3.log 2>&1; GEN3
 [ "$GEN3" -eq 0 ] || { echo "BLOCK placement generator exit $GEN3" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
 python3 ../tools/check_pcb_b.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'   # B12: the placed board through the gate again
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
+python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'   # adjacent same-net pins become one island (B15 runs 2 and 3: PANEL_5V pin 1, the hub's +3V3 escapes)
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND,+5V_M1' fine 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
