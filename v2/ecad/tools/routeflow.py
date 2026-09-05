@@ -280,7 +280,7 @@ def experiment(exp_fn, budget_hours, use_services):
             if cfg.get("inactive"): argv += ["--inactive", cfg["inactive"]]
             sh(argv, project, elog)
             route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
-            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(route.get("timeout", 1800)), "FR_RULES": rules, "FR_JAR": jar_path}
+            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(route.get("timeout", 1800)), "FR_RULES": rules, "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             t0 = time.time(); rc = sh(["../tools/route_one.sh", ".", name, k, str(route.get("passes", 60))], project, os.path.join(w, "route_one.log"), env); wall = int(time.time() - t0)
             row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now()}
