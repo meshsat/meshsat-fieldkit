@@ -68,13 +68,17 @@ if any(not z.GetIsRuleArea() and z.GetFilledArea() > 0 for z in b.Zones()):
             check(any(z.GetFilledPolysList(pcbnew.B_Cu).Contains(_t.GetPosition()) for z in _zs), "feed stitch via %s at (%.1f, %.1f) sits in a filled B.Cu feed" % (_t.GetNetname(), _t.GetPosition().x / 1e6, _t.GetPosition().y / 1e6))
     # the pieces of one rail or feed must touch: a vertex of the higher-priority fill lies on (or in) the other fill
     def _touch(_z1, _z2):
-        _L = _z1.GetFirstLayer(); _f1 = _z1.GetFilledPolysList(_L); _f2 = _z2.GetFilledPolysList(_L)
+        _f1 = _z1.GetFilledPolysList(_z1.GetFirstLayer()); _f2 = _z2.GetFilledPolysList(_z2.GetFirstLayer())   # zones on different layers touch through the stitch vias: their outlines overlap in plan
+        if _z1.GetFirstLayer() != _z2.GetFirstLayer():
+            for _t in b.GetTracks():
+                if _t.Type() == pcbnew.PCB_VIA_T and _t.GetNetname() == _z1.GetNetname() and _f1.Contains(_t.GetPosition()) and _f2.Contains(_t.GetPosition()): return True
+            return False
         for _i in range(_f2.OutlineCount()):
             _o = _f2.Outline(_i)
             for _k in range(_o.PointCount()):
                 if _f1.Collide(_o.GetPoint(_k), int(0.06e6)): return True
         return False
     _byname = {z.GetZoneName(): z for z in b.Zones() if not z.GetIsRuleArea()}
-    for _p, _q in (("rail M2 collector B.Cu", "rail M2 riser B.Cu"), ("rail M2 collector B.Cu", "rail M2 tap B.Cu"), ("rail PI collector B.Cu", "rail PI riser B.Cu"), ("rail PI collector B.Cu", "rail PI tap B.Cu"), ("boost 1 column In2.Cu", "boost 1 jog In2.Cu"), ("boost 3 column In2.Cu", "boost 3 jog In2.Cu"), ("boost 1 column In2.Cu", "boost 1 foot In2.Cu"), ("boost 2 column In2.Cu", "boost 2 foot In2.Cu"), ("boost 3 column In2.Cu", "boost 3 foot In2.Cu"), ("boost 1 bottom B.Cu", "boost 1 bottom jog B.Cu"), ("boost 3 bottom B.Cu", "boost 3 bottom jog B.Cu")):
+    for _p, _q in (("rail M2 collector B.Cu", "rail M2 riser B.Cu"), ("rail M2 collector B.Cu", "rail M2 tap B.Cu"), ("rail PI collector B.Cu", "rail PI riser B.Cu"), ("rail PI collector B.Cu", "rail PI tap B.Cu"), ("boost 1 column In2.Cu", "boost 1 jog In2.Cu"), ("boost 3 column In2.Cu", "boost 3 jog In2.Cu"), ("boost 1 column In2.Cu", "boost 1 foot In2.Cu"), ("boost 2 column In2.Cu", "boost 2 foot In2.Cu"), ("boost 3 column In2.Cu", "boost 3 foot In2.Cu"), ("boost 1 bottom B.Cu", "boost 1 bottom jog B.Cu"), ("boost 3 bottom B.Cu", "boost 3 bottom jog B.Cu"), ("boost 1 foot In2.Cu", "boost 1 bottom south B.Cu"), ("boost 2 foot In2.Cu", "boost 2 bottom south B.Cu"), ("boost 3 foot In2.Cu", "boost 3 bottom south B.Cu")):
         if _p in _byname and _q in _byname: check(_touch(_byname[_p], _byname[_q]), "'%s' and '%s' touch" % (_p, _q))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
