@@ -50,4 +50,26 @@ for ref, fp in fps.items():
         if math.hypot(cx - sx, cy - sy) < 3.75: bad.append(ref + "@standoff")
 check(not bad, "all footprints inside the outline and off the standoff faces (%s)" % bad)
 check(b.GetCopperLayerCount() == 4, "4 copper layers"); check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
+# ---------------------------------------------------------------- D7 content (MESHSAT-804, appendix 32.38): the parts and nets that fit the DMR858M V1.0 board
+def nets_of(ref):
+    fp = fps.get(ref); return {pd.GetNumber(): pd.GetNetname() for pd in fp.Pads()} if fp else {}
+def reach(net, ref):
+    """True if a pad of footprint `ref` sits on `net`."""
+    return net in nets_of(ref).values()
+if fps:
+    check("U7" in fps and "TSSOP-24" in fps["U7"].GetFPIDAsString(), "U7 is the PCA9555 (TSSOP-24), not the PCA9536")
+    u7 = nets_of("U7")
+    check(u7.get("21") == "GND" and u7.get("2") == "+3V3_AB" and u7.get("3") == "+3V3_AB", "U7 address pins A0 = 0, A1 = 1, A2 = 1: 0x26 (got A0 %s, A1 %s, A2 %s)" % (u7.get("21"), u7.get("2"), u7.get("3")))
+    check("U8" in fps and "TSSOP-16" in fps["U8"].GetFPIDAsString(), "U8 the SC16IS740 bridge (TSSOP-16) present")
+    u8 = nets_of("U8")
+    check(u8.get("2") == "+3V3_AB" and u8.get("3") == "+3V3_AB" and u8.get("8") == "+3V3_AB" and u8.get("11") == "GND" and u8.get("15") == "MCLK", "U8 strapped for I2C at 0x48 (A0, A1, I2C/SPI high), CTS low, 24 MHz on XTAL1")
+    check(not any(r in fps for r in ("JP1", "JP2", "JP3", "JP4", "JP5", "J_UART1")), "no channel jumpers and no bench UART header on the board")
+    u2 = nets_of("U2")
+    check(u2.get("16") == "RADIO_COS", "module pin 16 (SPKEN, receive indication output) on RADIO_COS (got %s)" % u2.get("16"))
+    check(reach("RADIO_COS", "R42") and reach("RADIO_COS_IN", "R42") and reach("RADIO_COS_IN", "U7"), "carrier detect reaches U7 through R42")
+    for pin, net, rr in (("7", "CH8", "R43"), ("8", "CH4", "R44"), ("9", "CH2", "R45"), ("10", "CH1", "R46")):
+        check(u2.get(pin) == net and reach(net, rr) and reach(net + "_IN", rr) and reach(net + "_IN", "U7"), "channel code pin %s (%s) reaches U7 through %s" % (pin, net, rr))
+    check(u2.get("3") == "CS" and reach("CS", "R36") and reach("CS", "R48") and reach("CS_CTL", "U7"), "CS pulled up by R36 and driven by U7 through R48")
+    check(u2.get("18") == "RADIO_TX" and u2.get("19") == "RADIO_RX" and reach("RADIO_TX", "R9") and reach("BR_RX", "R9") and reach("BR_RX", "U8") and reach("RADIO_RX", "R8") and reach("BR_TX", "R8") and reach("BR_TX", "U8"), "module control UART reaches U8 through R8 and R9")
+    check(fps.get("R2") is not None and fps["R2"].GetValue().startswith("47k") and fps.get("R4") is not None and fps["R4"].GetValue().startswith("1k"), "mic divider R2 47k / R4 1k (got %s / %s)" % (fps["R2"].GetValue() if "R2" in fps else None, fps["R4"].GetValue() if "R4" in fps else None))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

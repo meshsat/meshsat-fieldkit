@@ -100,7 +100,7 @@ Debounce 30 ms on every input; INT-driven read of U1 port 1 in one byte.
 
 - The panel's 3V3 is never switched while the ribbon is attached (an unpowered PCA9555 clamps the kit I2C bus).
 - With the ribbon unplugged nothing on PCB-B depends on the panel: I2C reads of 0x22 and 0x23 NACK, TR_APRS is held low by PCB-A's pull-down, TX_INHIBIT_n is held high by PCB-D's pull-up. The bridge must treat a NACK as "no panel" and keep running.
-- I2C map after B13 (appendix 32.35): 0x1A (WM8960 on D), 0x20 and 0x25 (B), 0x21 and 0x24 (A), 0x22 and 0x23 (C), 0x40 SDR, 0x41 PCA9536 on D, 0x42 NEO-M9N, 0x43 RockBLOCK and 0x44 LTE INA219s on B, 0x4A the wall-port INA219 on A, plus the BQ25792 charger and the BQ34Z100-G1 fuel gauge on PCB-A. The panel addresses did not move.
+- I2C map after B13 (appendix 32.35): 0x1A (WM8960 on D), 0x20 and 0x25 (B), 0x21 and 0x24 (A), 0x22 and 0x23 (C), 0x26 the D7 PCA9555 (PTT, CS, carrier detect, channel code), 0x40 SDR, 0x42 NEO-M9N, 0x43 RockBLOCK, 0x44 LTE and 0x45 WiFi P2P (B14) INA219s on B, 0x48 the D7 SC16IS740 UART bridge, 0x4A the wall-port INA219 on A (0x41 is free since D7), plus the BQ25792 charger and the BQ34Z100-G1 fuel gauge on PCB-A. The panel addresses did not move.
 
 ## 8. Existing code to reuse
 
@@ -140,3 +140,11 @@ U31 at 0x24 on PCB-A (the first, U19 at 0x21, keeps the map of section 9). Port 
 Port 1 bits 0 to 7: EXP2_SP1 to EXP2_SP8, spare, on test points.
 
 **Heating pad rule.** The pad (RS PRO 245-556, 7.5 W, 0.63 A at 12 V) lies under the cells inside the battery module and is fed from the dock's 12 V, so it can only ever run on shore power. The bridge turns HEAT_EN on when all three hold: shore 12 V is present (the charger reports its input), the module thermistor reads below 0 C (the charger's TS reading over I2C, which is the same sensor that makes it refuse to charge below 0 C), and the pad has not been on for more than 2 hours in this docking. It turns HEAT_EN off when the thermistor reads above +5 C (hysteresis), when shore power goes, on HEAT_FLT, or at the 2 hour limit, and it never charges the pad from the cells because the hardware cannot. The CHARGING indicator stays off while the pad runs and the charger is inhibited; the e-paper shows "warming pack" with the module temperature. A pad that has run 2 hours without the thermistor crossing 0 C is a fault: MASTER CAUT and a log entry, not a retry.
+
+## 12. APRS module control since D7 (MESHSAT-804, appendix 32.38)
+
+The DMR858M on PCB-D is owned by the bridge through two I2C devices on the kit bus, nothing else on the harness changed:
+
+- **PCA9555 at 0x26** (`U7`, a gpiochip through the kernel `pca953x` driver): P0.0 PTT (high keys the module through the transistor stage and the EMCON inhibit; the TX lamp follows the module's real PTT pin), P0.1 PTT2 spare, P0.2 status LED (sink), P0.3 CS (high = module awake, low = sleep after 3 s; the pull-up keeps it awake when the bit is an input), P0.4 carrier detect (input, the module's SPKEN: low idle, high while a signal is received; Direwolf's DCD), P0.5 to P1.0 the channel knob code 8/4/2/1 (inputs, read back only). Bits P0.4 to P1.0 are inputs and must never be driven; the 1k series resistors protect the module if they are.
+- **SC16IS740 at 0x48** (`U8`, the kernel `sc16is7xx` driver with `clock-frequency = <24000000>` in the device tree gives `/dev/ttySC0`): the module's control UART. NiceRF's command set (V1.2 datasheet, commands 0x01 to 0x28, 9600 baud unless the module is configured otherwise) sets and reads the current channel, transmit power, mic gain (0x0B), the monitor and encryption switches. The knob position is read on the expander; a channel set by command overrides it until power-down.
+- Direwolf: `ADEVICE` on the WM8960 card, `PTT` on the 0x26 gpiochip line 0, `DCD` on line 4; the AIOC preflight of the V1 kits does not run on V2. The upgrade UART and NiceRF's PC tool are reached only on the bench through the module's own USB-C.
