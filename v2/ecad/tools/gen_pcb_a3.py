@@ -219,6 +219,11 @@ def island(netname, name, pts_k, priority=3, layer=pcbnew.F_Cu):
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.15)); o = z.Outline(); o.NewOutline()
     for x, y in pts_k: o.Append(FromMM(x), FromMM(y))
     z.SetAssignedPriority(priority); board.Add(z)
+def spine(netname, x0, y0, x1, y1, w=0.4, layer=pcbnew.F_Cu):
+    """a locked track inside an island: the router keeps its clearance from a fixed track, which it does not from a plane outline
+    (run 21: a BST3 track along U24's island edge made the fill retreat and cut the neck off the body)"""
+    t = pcbnew.PCB_TRACK(board); t.SetStart(VECTOR2I(FromMM(x0), FromMM(y0))); t.SetEnd(VECTOR2I(FromMM(x1), FromMM(y1))); t.SetWidth(FromMM(w)); t.SetLayer(layer)
+    t.SetNet(net_for(netname, create=False)); t.SetLocked(True); board.Add(t)
 def stitch(netname, pts_k):
     for x, y in pts_k:
         v = pcbnew.PCB_VIA(board); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetDrill(FromMM(0.4)); v.SetWidth(FromMM(0.8)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
@@ -257,11 +262,13 @@ for ref, net, vias in (("U22", "+5V_M1", [(14.88, -6.0), (16.38, -6.0), (14.88, 
     x0 = placed[ref].GetPosition().x / 1e6; y0 = placed[ref].GetPosition().y / 1e6
     island(net, "VOUT island " + ref, [(x0 + 1.4, y0 - 0.05), (x0 + 3.6, y0 - 0.05), (x0 + 3.6, y0 - 15.4), (x0 + 17.5, y0 - 15.4), (x0 + 17.5, y0 + 4.0), (x0 + 3.6, y0 + 4.0), (x0 + 3.6, y0 + 0.45), (x0 + 1.4, y0 + 0.45)])
     stitch(net, [(x0 + dx, y0 + dy) for dx, dy in vias])
+    spine(net, x0 + 1.5, y0 + 0.2, x0 + 5.2, y0 + 0.2)   # pad 5 east end, through the neck and 1.6 mm into the body
 # Inductor tap islands: over the south end of pad 1 (2.38 x 9.0 mm, y 111.5 to 120.5) and 3.5 mm beyond it, six 0.8/0.4 vias down to the In2 and B.Cu feeds
 for ref, net in (("L2", "BOOST1_IN"), ("L3", "BOOST2_IN"), ("L4", "BOOST3_IN")):
     pad = [p for p in placed[ref].Pads() if p.GetNumber() == "1"][0]; px, py = pad.GetPosition().x / 1e6, pad.GetPosition().y / 1e6
     island(net, "inductor tap " + ref, [(px - 2.0, py + 3.8), (px + 2.0, py + 3.8), (px + 2.0, py + 8.0), (px - 2.0, py + 8.0)])
     stitch(net, [(px + dx, py + dy) for dx in (-1.0, 0.0, 1.0) for dy in (5.6, 7.0)])   # six vias: 9.5 A at 2.5 A per 0.4 mm hole with margin
+    spine(net, px, py + 4.2, px, py + 7.4, w=0.8)   # from the pad's south end through the middle via column
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
 # The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
 # footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
