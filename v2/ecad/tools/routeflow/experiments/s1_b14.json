@@ -1,0 +1,66 @@
+{
+  "board": "pcb-b-compute",
+  "board_key": "B14",
+  "project": "v2/ecad/pcb-b-compute",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "preroute": "strip:v2/release/revA/boards/meshsat-pcb-b-revA-B14/pcb-b-compute.kicad_pcb",
+  "services_script": "~/meshsat-services.sh",
+  "expect": "the same ordering of configs as on D7 and E4: via_costs 200 and 400 cut router vias by at least 15 percent for under 15 percent more length, preferred directions cut length; a knob counts as an effect only when at least two boards agree",
+  "route": {
+    "passes": 100,
+    "threads": 1,
+    "timeout": 7200
+  },
+  "configs": [
+    {
+      "name": "base"
+    },
+    {
+      "name": "via100",
+      "via_costs": 100
+    },
+    {
+      "name": "via200",
+      "via_costs": 200
+    },
+    {
+      "name": "via400",
+      "via_costs": 400
+    },
+    {
+      "name": "planevia20",
+      "plane_via_costs": 20
+    },
+    {
+      "name": "ripup200",
+      "ripup": 200
+    },
+    {
+      "name": "ripup400",
+      "ripup": 400
+    },
+    {
+      "name": "pref_hvhv",
+      "preferred": "h,v,h,v"
+    },
+    {
+      "name": "pref_vhvh",
+      "preferred": "v,h,v,h"
+    },
+    {
+      "name": "via200_pref_hvhv",
+      "via_costs": 200,
+      "preferred": "h,v,h,v"
+    },
+    {
+      "name": "via200_ripup200",
+      "via_costs": 200,
+      "ripup": 200
+    },
+    {
+      "name": "via400_pref_hvhv",
+      "via_costs": 400,
+      "preferred": "h,v,h,v"
+    }
+  ]
+}
