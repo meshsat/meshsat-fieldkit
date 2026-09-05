@@ -92,8 +92,8 @@ FP = {
  "LED3": "LED_THT:LED_D3.0mm", "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm", "SOT23": "Package_TO_SOT_SMD:SOT-23", "SOT236": "Package_TO_SOT_SMD:SOT-23-6",
  "SOD123": "Diode_SMD:D_SOD-123", "FB": "Inductor_SMD:L_0603_1608Metric", "JP2": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm", "TP": "TestPoint:TestPoint_Pad_D1.5mm",
  "XH2": "meshsat:LeadLands_1x02", "IDC20": "Connector_IDC:IDC-Header_2x10_P2.54mm_Vertical_SMD", "HDR8": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical_SMD_Pin1Left",
- "SW19": "meshsat:PanelSwitch_19mm", "SW16": "meshsat:PanelSwitch_16mm", "TGL6": "meshsat:PanelToggle_DPDT", "TGL3": "meshsat:GuardedToggle_SPDT",
- "BZ": "meshsat:PanelSounder", "MHPAD": "meshsat:FrameScrew_M3_GND",   # C5 (sealed face): every connector SMD on the underside, the sounder a panel-mount IP67 part, the frame screws masked on the face
+ "SW19": "meshsat:PanelSwitch_19mm", "SW16": "meshsat:PanelSwitch_16mm", "TGL6": "meshsat:ToggleBody_DPDT", "TGL3": "meshsat:ToggleBody_SPDT",   # C6: the toggle bodies pass the backer through slots; the keyed holes are in the face plate
+ "BZ": "meshsat:PanelSounder", "MHPAD": "meshsat:BackerScrew_M3_GND",   # C5 (sealed face): every connector SMD on the underside, the sounder a panel-mount IP67 part, the frame screws masked on the face
 }
 P = []   # (ref, lib, symbol, value, footprint, nets{pin: net}, lcsc)
 def part(ref, lib, sym, value, fp, nets, lcsc=""):
@@ -180,7 +180,7 @@ part("BZ1", "Device", "Buzzer", "IP67 panel-mount sounder, 5 V DC continuous, be
 nfet("Q4", "Q4_G", "GND", "BZ_K"); r("R%d" % rn, "100R", "PWM1", "Q4_G", "R", "C22775"); rn += 1; r("R%d" % rn, "100k", "Q4_G", "GND", "R", "C25803"); rn += 1
 
 # --- chassis bond: the 16 frame screws through GND ring pads (MIL-STD-461 bonding of the aluminium frame)
-for i in range(1, 17): part("H%d" % i, "Mechanical", "MountingHole_Pad", "frame screw M3 x 10, GND bond through the bonded sealing washer on the underside land", "MHPAD", {"1": "GND"})
+for i in range(1, 7): part("H%d" % i, "Mechanical", "MountingHole_Pad", "M3 x 6 into the face plate's self-clinching standoff (C6 backer, 5 Sep 2026): GND bond to the plate", "MHPAD", {"1": "GND"})
 for i, net in enumerate(("+5V", "+3V3", "GND", "EXP_INT", "TX_INHIBIT_n", "SPARE1", "SPARE2", "SPARE3", "SPARE4", "SPARE5", "EPD_BUSY"), 3): tp("TP%d" % i, net)
 
 # ----------------------------------------------------------------- emit
@@ -258,7 +258,7 @@ SECTIONS = [("RIBBON FROM PCB-B, RAILS, TVS, TEST POINTS", ["J_PANEL", "C1", "C2
             ("TX LAMP (HARDWARE FROM THE PTT MIRROR) + LAMP TEST", ["R28", "D3", "Q3", "R29", "R30", "D17"]),
             ("SWITCHES: MAIN PWR, PI, TEST/ACK, SOS, EMCON, ZEROIZE + POWER-BUTTON LEADS", ["SW_MAIN", "R31", "SW_PI", "R32", "SW_TEST", "R33", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C11", "J_MAINSW", "FB3", "FB4", "C12", "J_PIJ2"]),
             ("E-PAPER 3.7in LEAD + SOUNDER", ["R34", "R35", "R36", "R37", "J_EPD", "C13", "BZ1", "Q4", "R38", "R39"]),
-            ("FRAME SCREWS, GND BOND", ["H%d" % i for i in range(1, 17)])]
+            ("PLATE STANDOFF SCREWS, GND BOND", ["H%d" % i for i in range(1, 7)])]
 byref = {p["ref"]: p for p in P}
 placed = set()
 COLW = 88.0; x = 20.0; y = 30.0; PAGE_H = 560.0   # A1 landscape is 841 x 594; A0 is chosen below if the columns overflow

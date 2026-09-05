@@ -1,50 +1,35 @@
 #!/usr/bin/env python3
-"""PCB-C CONTROL PANEL, phase C5 mechanical (sealed face, appendix 32.34): the panel that sits in the Peli 1520PF frame and is the case's top bulkhead.
+"""PCB-C, phase C6 mechanical: the BACKER BOARD under the aluminium face plate of the Peli 1450 (owner rulings 5 Sep 2026, appendix 32.40 items 4 and 5, 32.42).
 Usage: gen_pcb_c.py <out.kicad_pcb>
-Case-centred frame (origin = case cavity centre = frame centre, +X starboard, +Y back wall). Sources: Peli drawing 1523-314-000 rev A and
-1523-PF.STEP (window 422.6 x 291.2 R5.85, 16 inserts on 431.8 x 301.2, panel up to 444.4 x 313.1 under the frame body), appendix 22.6 (display
-aperture from the Touch Display 2 STEP), owner rules (glass 0.75 mm proud, one board, taped; MIL-STD-1472 panel; MIL-STD-461 frame bond; MIL-STD-130 nameplate).
-Places: outline, the 16 frame screws as masked GND rings (H1..H16), the display aperture and its seal band, the e-paper recessed window (aperture + underside tape lands)
-and the band of its lens, the frame gasket band, the die-cut outlines of the three seals on User.2 and the lens on User.3, the window and legend graphics.
-Every electrical part is placed by gen_pcb_c3.py from the netlist. Seals (owner rulings 4 Sep): 0.4 mm closed-cell foam tape frames under both lenses,
-a 0.53 mm PORON ring between the panel face and the frame's bearing ring, plugged vias, no plated hole on the face but the LEDs and the frame screws."""
-import math, sys, os, json
+The face is the 3 mm plate of v2/cad/face_plate.py (365.5 x 249.5, clamped under the 1450PF frame ring, PORON gasket on its band, every seal a named part as in
+32.34). This board hangs 10 mm under the plate on six self-clinching M3 standoffs and carries the electronics only: the expanders and LED drivers, the sixteen
+LEDs under the plate's light pipes, the lead lands of the seven switches and the sounder, the ribbon J_PANEL, the e-paper lead J_EPD and the MAIN / PI lands.
+It is a U in the strips outside PCB-B's outline (left: toggles, bottom: sounder and battery bar, right: buttons, status LEDs, the drivers), open over the
+display and the e-paper, whose modules bond to the plate. Positions come from tools/panel1450.py, the single source shared with the plate.
+Case-centred frame (origin = case cavity centre = frame centre, +X starboard, +Y back wall), the same as the plate and the render scene."""
+import math, sys, os
 import pcbnew
 from pcbnew import VECTOR2I, FromMM
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import panel1450 as L
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-c-display.kicad_pcb"
 PRJDIR = os.path.dirname(os.path.abspath(OUT)); MSLIB = os.path.join(PRJDIR, "..", "meshsat.pretty")
 open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version 7)\n  (lib (name "meshsat")(type "KiCad")(uri "${KIPRJMOD}/../meshsat.pretty")(options "")(descr "MeshSat carrier in-code footprints"))\n)\n')
 # ---------------------------------------------------------------- geometry
-PANEL_L, PANEL_W, PANEL_R, BOARD_T = 442.0, 311.0, 17.0, 2.0        # inside the frame skirt (444.4 x 313.1, R16.5) with 1.2 / 1.05 mm clearance
-WIN_L, WIN_W, WIN_R = 422.6, 291.2, 5.85                            # frame window = visible area
-FRAME_HOLES = [(x, y) for x in (-177.3, -88.6, 0.0, 88.6, 177.3) for y in (-150.6, 150.6)] + [(x, y) for x in (-215.9, 215.9) for y in (-110.7, 0.0, 110.7)]
-HOLE_D = 3.4                                                        # M3 clearance into the frame inserts (kit inserts to be confirmed)
-DISP_CX, DISP_CY = 0.0, -10.0                                       # Touch Display 2 glass centre (kept from C2: the Pi stack sits under the port strip)
-DISP_L, DISP_W, DISP_R = 189.32, 120.24, 8.0
-STEP_YOFF = 2.935
-def step_to_case(sx, sy): return (sy - STEP_YOFF + DISP_CX, -sx + DISP_CY)
-BODY_STEP = (-49.855, 49.855, -85.275, 83.275); APERTURE_CLR = 0.4; APERTURE_R = 1.5
-_bx0, _by0 = step_to_case(BODY_STEP[1], BODY_STEP[2]); _bx1, _by1 = step_to_case(BODY_STEP[0], BODY_STEP[3])
-BODY = (_bx0, _by0, _bx1, _by1)
-APERTURE = (BODY[0] - APERTURE_CLR, BODY[1] - APERTURE_CLR, BODY[2] + APERTURE_CLR, BODY[3] + APERTURE_CLR)
-PI_STANDOFFS = [step_to_case(sx, sy) for sx in (-24.5, 24.5) for sy in (-17.27, 40.73)]
-PI_STACK = (-121.0, -48.5, -36.0, 48.5)                             # PCB-B's Pi + X1202 + cooler envelope: LEDs only above it
-EPD_C = (30.0, 100.0)                                               # WeAct 3.7 in module centre (105.79 x 53.80), back strip
-NAMEPLATE = (0.0, -110.0, 76.0, 26.0)                               # MIL-STD-130 field on the front strip: centre, w, h
-# ---------------------------------------------------------------- KiCad plumbing (A2 sheet 594 x 420 holds 442 x 311 at 1:1)
+BOARD_T = L.BACKER_T
+SL, SB, SR = L.STRIP_L, L.STRIP_B, L.STRIP_R          # (x0, y0, x1, y1) each
+OUTER = (SL[0], SB[1], SR[2], SL[3])                  # -172, -114, 172, 114
+VOID = (SL[2], SB[3], SR[0], SL[3])                   # -126, -88, 126, 114: open over the display and the e-paper
+# ---------------------------------------------------------------- KiCad plumbing (A2 sheet holds the 344 x 228 U at 1:1 with room for the plate outline)
 OX, OY = 297.0, 210.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 board = pcbnew.BOARD()
-tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-C CONTROL PANEL"); tb.SetRevision("A (C5)"); tb.SetDate("2026-09-04"); tb.SetCompany("MeshSat")
-tb.SetComment(0, "MESHSAT-709. Case-centred frame, +Y = case back wall. Panel in the Peli 1520PF frame. Generated by tools/gen_pcb_c.py + gen_pcb_c3.py"); board.SetTitleBlock(tb)
+tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-C CONTROL PANEL BACKER"); tb.SetRevision("A (C6)"); tb.SetDate("2026-09-05"); tb.SetCompany("MeshSat")
+tb.SetComment(0, "MESHSAT-709 / 505. Case-centred frame, +Y = case back wall. Backer board under the aluminium face plate in the Peli 1450PF frame. Generated by tools/gen_pcb_c.py + gen_pcb_c3.py"); board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(BOARD_T)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.5), ("m_MinThroughDrill", 0.3), ("m_HoleToHoleMin", 0.3), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.25), ("m_SolderMaskMinWidth", 0.1)):
     try: setattr(ds, attr, FromMM(val))
     except Exception as e: print("note: could not set", attr, e)
-for attr in ("m_TentViasFront", "m_TentViasBack"):                    # both faces tented in the gerbers; the fab option on top of that is "plugged" (ORDER-NOTES)
-    try: setattr(ds, attr, True)
-    except Exception as e: print("note: could not set", attr, e)
-U2 = getattr(pcbnew, "User_2", pcbnew.Eco1_User); U3 = getattr(pcbnew, "User_3", pcbnew.Eco2_User)   # die-cut outlines (seals) and the lens
 def shape(layer, width=0.1):
     s = pcbnew.PCB_SHAPE(board); s.SetLayer(layer); s.SetWidth(FromMM(width)); board.Add(s); return s
 def line(x1, y1, x2, y2, layer, width=0.1):
@@ -69,104 +54,47 @@ def footprint(libpath, name, ref, x, y, value, rot=0.0):
     if fp is None: raise SystemExit("footprint %s not found in %s" % (name, libpath))
     fp.SetReference(ref); fp.SetValue(value); fp.Reference().SetVisible(False); fp.Value().SetVisible(False)
     fp.SetPosition(P(x, y)); fp.SetOrientationDegrees(rot); board.Add(fp); return fp
-def rule_area_rect(x0, y0, x1, y1, name, hole=None, allow_pour=True, tracks=False, vias=False, pads=False, footprints=False, layer=None):
-    """Rule area: every keyword says what stays ALLOWED inside it (default: nothing but the pour); layer None = both copper layers."""
-    z = pcbnew.ZONE(board); z.SetIsRuleArea(True)
-    z.SetDoNotAllowCopperPour(not allow_pour); z.SetDoNotAllowTracks(not tracks); z.SetDoNotAllowVias(not vias); z.SetDoNotAllowPads(not pads); z.SetDoNotAllowFootprints(not footprints)
-    if layer is None: z.SetLayerSet(pcbnew.LSET.AllCuMask(2))
-    else: ls = pcbnew.LSET(); ls.AddLayer(layer); z.SetLayerSet(ls)
-    z.SetZoneName(name)
-    o = z.Outline(); o.NewOutline()
-    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
-    if hole:
-        h = o.NewHole(0); hx0, hy0, hx1, hy1 = hole
-        for x, y in ((hx0, hy0), (hx0, hy1), (hx1, hy1), (hx1, hy0)): p = P(x, y); o.Append(p.x, p.y, 0, h)
+def rule_area(points, name, tracks=False, vias=False, pads=True, footprints=True, pour=True):
+    """Rule area on both copper layers; every keyword says what stays ALLOWED inside it."""
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(not pour); z.SetDoNotAllowTracks(not tracks); z.SetDoNotAllowVias(not vias); z.SetDoNotAllowPads(not pads); z.SetDoNotAllowFootprints(not footprints)
+    z.SetLayerSet(pcbnew.LSET.AllCuMask(2)); z.SetZoneName(name); o = z.Outline(); o.NewOutline()
+    for x, y in points: p = P(x, y); o.Append(p.x, p.y)
     board.Add(z); return z
-# ---------------------------------------------------------------- outline, aperture, frame screws
-hx, hy = PANEL_L / 2, PANEL_W / 2
-rounded_rect(-hx, -hy, hx, hy, PANEL_R, pcbnew.Edge_Cuts)
-rounded_rect(APERTURE[0], APERTURE[1], APERTURE[2], APERTURE[3], APERTURE_R, pcbnew.Edge_Cuts)
-for i, (x, y) in enumerate(FRAME_HOLES, 1):
-    footprint(MSLIB, "FrameScrew_M3_GND", "H%d" % i, x, y, "frame screw M3 x 10, GND bond through the star washer on the underside land; face masked under the gasket")
-    circle(x, y, 9.0, pcbnew.B_SilkS, 0.12)
-# display seal band: the glass border on the panel between the aperture and the glass edge carries the 0.4 mm foam tape frame; no copper at all on either
-# layer (25.4 "no copper", C5: the tape needs a flat mask surface), no vias, no parts
-gx0, gy0, gx1, gy1 = DISP_CX - DISP_L / 2, DISP_CY - DISP_W / 2, DISP_CX + DISP_L / 2, DISP_CY + DISP_W / 2
-rule_area_rect(gx0 - 1.0, gy0 - 1.0, gx1 + 1.0, gy1 + 1.0, "tape band: display seal, 0.4 mm foam tape frame, keep flat (no copper)", hole=APERTURE, allow_pour=False)
-# frame gasket band: the 0.53 mm PORON ring sits on the face between the frame window edge (1 mm inside it) and the panel edge; no copper on the face, no vias on the back
-GASKET_IN = (-(WIN_L / 2 - 1.0), -(WIN_W / 2 - 1.0), WIN_L / 2 - 1.0, WIN_W / 2 - 1.0)
-rule_area_rect(-hx, -hy, hx, hy, "frame gasket band F: no copper under the PORON ring (frame screw rings excepted)", hole=GASKET_IN, allow_pour=False, pads=True, footprints=True, layer=pcbnew.F_Cu)
-rule_area_rect(-hx, -hy, hx, hy, "frame gasket band B: no vias under the sealing band", hole=GASKET_IN, allow_pour=True, pads=True, footprints=True, layer=pcbnew.B_Cu)   # no tracks either: Freerouting ignores the edge clearance and ran a track 0.4 mm from the panel edge
-# ---------------------------------------------------------------- module site and reference graphics
-# e-paper recessed window (owner ruling 3 Sep): the WeAct 3.7 module hangs under the panel, its glass (E037A75, 92.99 x 53.0 x 0.95) rises into the
-# aperture, its two 5.8 mm PCB lands (left and right of the glass, WeAct STEP + drawing) are taped to the underside; glass face 1.0 mm below the
-# panel face, or flush with the 1.0 mm spacer ring (pcb-c-ring). Glass assumed centred on the module (front-view alignment marks at 6.5 / 99.3 mm).
-EPD_MOD = (105.79, 53.80); EPD_GLASS = (92.99, 53.0); EPD_CLR = (0.6, 0.3)
-ex0, ey0 = EPD_C[0] - EPD_GLASS[0] / 2 - EPD_CLR[0], EPD_C[1] - EPD_GLASS[1] / 2 - EPD_CLR[1]; ex1, ey1 = EPD_C[0] + EPD_GLASS[0] / 2 + EPD_CLR[0], EPD_C[1] + EPD_GLASS[1] / 2 + EPD_CLR[1]
-mx0, my0 = EPD_C[0] - EPD_MOD[0] / 2, EPD_C[1] - EPD_MOD[1] / 2; mx1, my1 = EPD_C[0] + EPD_MOD[0] / 2, EPD_C[1] + EPD_MOD[1] / 2
-rounded_rect(ex0, ey0, ex1, ey1, 1.0, pcbnew.Edge_Cuts)                                   # the window: 94.19 x 53.6
-rounded_rect(mx0, my0, mx1, my1, 1.4, pcbnew.B_Fab, 0.1)                                    # module outline on the underside
-# the lens over the window (C5): 2.0 mm UV-grade polycarbonate 107.2 x 66.6 R3 on a 6.0 mm wide frame of 0.4 mm foam tape (3M VHB 5915 on Primer 94),
-# inner edge 0.5 mm outside the window cut; the lens ends 2.4 mm above the face, 7.2 mm under the frame top. Outlines on User.3 (lens) and User.2 (tape)
-LENS_TAPE, LENS_GAP, LENS_R = 6.0, 0.5, 3.0
-lx0, ly0, lx1, ly1 = ex0 - LENS_GAP - LENS_TAPE, ey0 - LENS_GAP - LENS_TAPE, ex1 + LENS_GAP + LENS_TAPE, ey1 + LENS_GAP + LENS_TAPE
-rounded_rect(lx0, ly0, lx1, ly1, LENS_R, U3, 0.15)                                                        # the lens: 107.19 x 66.6
-rounded_rect(lx0, ly0, lx1, ly1, LENS_R, U2, 0.15); rounded_rect(ex0 - LENS_GAP, ey0 - LENS_GAP, ex1 + LENS_GAP, ey1 + LENS_GAP, 1.5, U2, 0.15)   # its tape frame
-rounded_rect(lx0 - 0.5, ly0 - 0.5, lx1 + 0.5, ly1 + 0.5, LENS_R + 0.5, pcbnew.F_SilkS, 0.15)              # lens alignment guide on the face
-rule_area_rect(lx0 - 0.5, ly0 - 0.5, lx1 + 0.5, ly1 + 0.5, "e-paper lens band F: no copper under the tape frame", hole=(ex0, ey0, ex1, ey1), allow_pour=False, layer=pcbnew.F_Cu)
-rule_area_rect(lx0 - 0.5, ly0 - 0.5, lx1 + 0.5, ly1 + 0.5, "e-paper lens band B: no vias under the sealing band", hole=(ex0, ey0, ex1, ey1), allow_pour=True, tracks=True, layer=pcbnew.B_Cu)
-print("e-paper lens: %.2f x %.2f, tape frame %.1f wide" % (lx1 - lx0, ly1 - ly0, LENS_TAPE))
-def _epd_rule(x0, y0, x1, y1, name, footprints):
-    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowTracks(False); z.SetDoNotAllowVias(True); z.SetDoNotAllowPads(True); z.SetDoNotAllowFootprints(footprints)
-    ls = pcbnew.LSET(); ls.AddLayer(pcbnew.B_Cu); z.SetLayerSet(ls); z.SetZoneName(name); o = z.Outline(); o.NewOutline()
-    for (x, y) in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): q = P(x, y); o.Append(q.x, q.y)
-    board.Add(z)
-_epd_rule(mx0, my0, ex0, my1, "e-paper tape land W (no pads, no vias)", True); _epd_rule(ex1, my0, mx1, my1, "e-paper tape land E (no pads, no vias)", True)
-_epd_rule(mx0 - 1.0, my0 - 1.0, mx1 + 1.0, my1 + 1.0, "e-paper module body (no footprints on the underside)", True)
-# router keep-out around the window on both copper layers: Freerouting ignores the edge clearance of inner cutouts (same lesson as PCB-A's strap slots)
-_kz = pcbnew.ZONE(board); _kz.SetIsRuleArea(True); _kz.SetDoNotAllowCopperPour(False); _kz.SetDoNotAllowTracks(True); _kz.SetDoNotAllowVias(True); _kz.SetDoNotAllowPads(True); _kz.SetDoNotAllowFootprints(False)
-_kz.SetLayerSet(pcbnew.LSET.AllCuMask(2)); _kz.SetZoneName("e-paper window edge keep-out (router edge clearance)"); _ko = _kz.Outline(); _ko.NewOutline()
-for (x, y) in ((ex0 - 0.6, ey0 - 0.6), (ex1 + 0.6, ey0 - 0.6), (ex1 + 0.6, ey1 + 0.6), (ex0 - 0.6, ey1 + 0.6)): _q = P(x, y); _ko.Append(_q.x, _q.y)
-board.Add(_kz)
-_t = pcbnew.PCB_TEXT(board); _t.SetText("WeAct 3.7 e-paper: glass into the window, tape the two lands (foam tape), header east, 1x8 lead to J_EPD (SMD); 2.0 mm PC lens on the 0.4 mm tape frame over the window on the face"); _t.SetPosition(P(EPD_C[0], my1 + 2.5)); _t.SetLayer(pcbnew.B_SilkS); _t.SetTextSize(VECTOR2I(FromMM(1.2), FromMM(1.2))); _t.SetTextThickness(FromMM(0.2)); _t.SetMirrored(True); board.Add(_t)
-print("e-paper window: %.2f x %.2f at %s, lands %.1f mm" % (ex1 - ex0, ey1 - ey0, EPD_C, ex0 - mx0))
-rounded_rect(-WIN_L / 2, -WIN_W / 2, WIN_L / 2, WIN_W / 2, WIN_R, pcbnew.Dwgs_User, 0.15)                     # frame window (visible area)
-rounded_rect(-WIN_L / 2 + 1.0, -WIN_W / 2 + 1.0, WIN_L / 2 - 1.0, WIN_W / 2 - 1.0, WIN_R, pcbnew.F_SilkS, 0.15)  # 1 mm inside the frame lip: what the operator sees
-rounded_rect(gx0 - 0.5, gy0 - 0.5, gx1 + 0.5, gy1 + 0.5, DISP_R + 0.5, pcbnew.F_SilkS, 0.15)                     # glass alignment guide, 0.5 outside the glass
-rounded_rect(gx0, gy0, gx1, gy1, DISP_R, U3, 0.15)                                                                 # the glass outline (reference for the die-cutter)
-rounded_rect(gx0 + 0.3, gy0 + 0.3, gx1 - 0.3, gy1 - 0.3, DISP_R - 0.3, U2, 0.15)                                  # display tape frame, outer edge 0.3 inside the glass edge
-rounded_rect(APERTURE[0] - 0.5, APERTURE[1] - 0.5, APERTURE[2] + 0.5, APERTURE[3] + 0.5, APERTURE_R + 0.5, U2, 0.15)   # its inner edge, 0.5 outside the aperture
-# frame gasket ring: outer edge 0.5 inside the panel edge, inner edge 0.3 outside the frame window, 16 screw holes at 3.6
-rounded_rect(-hx + 0.5, -hy + 0.5, hx - 0.5, hy - 0.5, PANEL_R - 0.5, U2, 0.15); rounded_rect(-WIN_L / 2 - 0.3, -WIN_W / 2 - 0.3, WIN_L / 2 + 0.3, WIN_W / 2 + 0.3, WIN_R + 0.3, U2, 0.15)
-for (x, y) in FRAME_HOLES: circle(x, y, 3.6, U2, 0.15)
-text("User.2 = die-cut seals: frame gasket ring (0.53 mm PORON 4701-30 on PET), display tape frame and e-paper tape frame (0.4 mm 3M VHB 5915); User.3 = lenses", 0, -hy + 3.0, U2, 2.0, 0.3)
-text("e-paper lens 2.0 mm UV polycarbonate 107.2 x 66.6 R3 (Primer 94 on the bonded face); display glass outline for reference only", 0, -hy + 6.0, U3, 2.0, 0.3)
-rounded_rect(BODY[0], BODY[1], BODY[2], BODY[3], 1.0, pcbnew.Dwgs_User, 0.1)
-for (x, y) in PI_STANDOFFS: circle(x, y, 5.0, pcbnew.Dwgs_User, 0.1)
-rounded_rect(PI_STACK[0], PI_STACK[1], PI_STACK[2], PI_STACK[3], 2.0, pcbnew.Dwgs_User, 0.1); text("PCB-B Pi + X1202 + cooler below: LEDs only", (PI_STACK[0] + PI_STACK[2]) / 2, PI_STACK[3] + 3.0, pcbnew.Dwgs_User, 1.5, 0.2)
-text("TD2 7in glass 189.32 x 120.24 centre (0,-10): align to the silk guide; die-cut 0.4 mm foam tape frame (3M VHB 5915, User.2) in the band; glass about 1.1 mm proud", DISP_CX, gy1 + 3.0, pcbnew.B_SilkS, 1.5, 0.25, mirror=True)
-text("CONNECTOR END = PORT (-X). DO NOT ROTATE THE DISPLAY", DISP_CX, gy0 - 3.5, pcbnew.B_SilkS, 1.5, 0.25, mirror=True)
-
+def rule_circle(cx, cy, r, name):
+    rule_area([(cx + r * math.cos(math.radians(a)), cy + r * math.sin(math.radians(a))) for a in range(0, 360, 15)], name)
+# ---------------------------------------------------------------- outline: the U, 3 mm corner radius on the outer corners, square inner corners
+R = 3.0
+x0, y0, x1, y1 = OUTER; vx0, vy0, vx1, vy1 = VOID
+E = pcbnew.Edge_Cuts
+line(x0 + R, y0, x1 - R, y0, E); arc(x1 - R, y0 + R, R, 270, 360, E); line(x1, y0 + R, x1, y1 - R, E); arc(x1 - R, y1 - R, R, 0, 90, E)
+line(x1 - R, y1, vx1, y1, E); line(vx1, y1, vx1, vy0, E); line(vx1, vy0, vx0, vy0, E); line(vx0, vy0, vx0, y1, E); line(vx0, y1, x0 + R, y1, E)
+arc(x0 + R, y1 - R, R, 90, 180, E); line(x0, y1 - R, x0, y0 + R, E); arc(x0 + R, y0 + R, R, 180, 270, E)
+# ---------------------------------------------------------------- the six standoff screws (M3 into the plate's self-clinching standoffs), on GND: the plate's bond
+for i, (x, y) in enumerate(L.STANDOFFS, 1):
+    footprint(MSLIB, "BackerScrew_M3_GND", "H%d" % i, x, y, "M3 x 6 into the plate's self-clinching standoff (PEM SO-M3-10), GND bond to the plate")
+# ---------------------------------------------------------------- router keep-outs around every panel-mount cut-out (Freerouting ignores the edge clearance of inner cut-outs)
+K = L.CUTOUT_KEEPOUT
+for ref, (x, y), hole, depth in L.BUTTONS: rule_circle(x, y, hole / 2 + K, "cut-out keep-out " + ref)
+for ref, (x, y) in L.TOGGLES:
+    w, h = L.TOGGLE_BODY; rule_area([(x - w / 2 - K, y - h / 2 - K), (x + w / 2 + K, y - h / 2 - K), (x + w / 2 + K, y + h / 2 + K), (x - w / 2 - K, y + h / 2 + K)], "cut-out keep-out " + ref)
+lx, ly = L.LIGHT[1]; w, h = L.LIGHT_BODY; rule_area([(lx - w / 2 - K, ly - h / 2 - K), (lx + w / 2 + K, ly - h / 2 - K), (lx + w / 2 + K, ly + h / 2 + K), (lx - w / 2 - K, ly + h / 2 + K)], "cut-out keep-out SW_LIGHT")
+sx, sy = L.SOUNDER[1]; rule_circle(sx, sy, L.SOUNDER[2] / 2 + K, "cut-out keep-out BZ1")
+# the inner edge of the U: 0.6 mm edge clearance for the router
+rule_area([(vx0 - K, vy0 - K), (vx1 + K, vy0 - K), (vx1 + K, y1 + 1), (vx1 - K, y1 + 1), (vx1 - K, vy0 + K), (vx0 + K, vy0 + K), (vx0 + K, y1 + 1), (vx0 - K, y1 + 1)], "inner edge keep-out (router edge clearance)")
+# ---------------------------------------------------------------- reference graphics: the plate, the window, the display and e-paper modules above the void
+pw, ph, pt = L.PLATE
+rounded_rect(-pw / 2, -ph / 2, pw / 2, ph / 2, L.PLATE_R, pcbnew.Dwgs_User, 0.15); text("face plate 365.5 x 249.5 x 3 (v2/cad/face_plate.py), 10 mm above this board", 0, ph / 2 - 4.0, pcbnew.Dwgs_User, 2.0, 0.3)
+rounded_rect(-L.WINDOW[0] / 2, -L.WINDOW[1] / 2, L.WINDOW[0] / 2, L.WINDOW[1] / 2, 5.85, pcbnew.Dwgs_User, 0.15); text("frame window 349.65 x 233.83", 0, L.WINDOW[1] / 2 - 9.0, pcbnew.Dwgs_User, 1.6, 0.25)
+gx, gy = L.DISPLAY["c"]; gw, gh = L.DISPLAY["glass"]; rounded_rect(gx - gw / 2, gy - gh / 2, gx + gw / 2, gy + gh / 2, 8.0, pcbnew.Dwgs_User, 0.1); text("Touch Display 2 glass on the plate (7 mm below it)", gx, gy, pcbnew.Dwgs_User, 2.0, 0.3)
+ex, ey = L.EPAPER["c"]; mw, mh = L.EPAPER["module"]; rounded_rect(ex - mw / 2, ey - mh / 2, ex + mw / 2, ey + mh / 2, 1.4, pcbnew.Dwgs_User, 0.1); text("WeAct 3.7 e-paper on the plate, its 1x8 lead to J_EPD", ex, ey, pcbnew.Dwgs_User, 1.8, 0.3)
+for (x, y) in L.FRAME_BOSSES: circle(x, y, 5.2, pcbnew.Dwgs_User, 0.1)
+bx0, by0, bx1, by1 = L.B_OUTLINE; rounded_rect(bx0, by0, bx1, by1, 2.0, pcbnew.Dwgs_User, 0.1); text("PCB-B outline below: deep parts stay outside it (32.42)", 0, by0 + 4.0, pcbnew.Dwgs_User, 1.6, 0.25)
 line(-4, 0, 4, 0, pcbnew.Dwgs_User, 0.1); line(0, -4, 0, 4, pcbnew.Dwgs_User, 0.1); text("CASE DATUM (0,0)", 0, -6.5, pcbnew.Dwgs_User, 1.2, 0.2)
-# ---------------------------------------------------------------- legend, nameplate (MIL-STD-130), wall labels
-PHASE = "C5"
-text("MESHSAT FIELD KIT  -  CONTROL PANEL", 0, WIN_W / 2 - 6.0, pcbnew.F_SilkS, 3.5, 0.5)
-text("BACK WALL (+Y)", -160.0, WIN_W / 2 - 6.0, pcbnew.B_SilkS, 2.0, 0.3, mirror=True)   # assembly aid, underside
-text("FRONT WALL (-Y)   v v v", -150.0, -WIN_W / 2 + 5.0, pcbnew.B_SilkS, 2.0, 0.3, mirror=True)
-text("PORT (-X)", -WIN_L / 2 + 6.0, -80.0, pcbnew.B_SilkS, 2.0, 0.3, angle=90, mirror=True); text("STARBOARD (+X)", WIN_L / 2 - 6.0, -80.0, pcbnew.B_SilkS, 2.0, 0.3, angle=90, mirror=True)
-nx, ny, nw, nh = NAMEPLATE
-rounded_rect(nx - nw / 2, ny - nh / 2, nx + nw / 2, ny + nh / 2, 2.0, pcbnew.F_SilkS, 0.2)
-text("MESHSAT FIELD KIT   P/N MS709-C   REV A", nx - nw / 2 + 3.0, ny + nh / 2 - 4.5, pcbnew.F_SilkS, 1.8, 0.3, halign="left")
-text("S/N ____________   MFR MESHSAT", nx - nw / 2 + 3.0, ny, pcbnew.F_SilkS, 2.0, 0.3, halign="left")   # ends before the data-matrix square at nx + 23
-text("S/N label: outdoor polyester (3M 7871), data matrix", nx - nw / 2 + 3.0, ny - nh / 2 + 4.0, pcbnew.F_SilkS, 1.8, 0.3, halign="left")
-rounded_rect(nx + nw / 2 - 15.0, ny - 6.0, nx + nw / 2 - 3.0, ny + 6.0, 0.5, pcbnew.F_SilkS, 0.15)
-text("RF HAZARD DURING TX  -  KEEP CLEAR OF ANTENNAS", -100.0, -WIN_W / 2 + 12.0, pcbnew.F_SilkS, 2.0, 0.3)
-text("EMCON CLOSED = TRANSMIT INHIBITED  |  ZEROIZE: HOLD 5 s  |  SOS: HOLD 2 s", 100.0, -WIN_W / 2 + 12.0, pcbnew.F_SilkS, 2.0, 0.3)
-text("PCB-C UNDERSIDE (REV A, %s, MESHSAT-709, 2026-09-04) - sealed face: plugged vias, gasket band, silicone beads on the LED joints - faces PCB-B - ribbon J_PANEL (SMD), leads J_MAINSW / J_PIJ2 on solder lands" % PHASE, 0, -WIN_W / 2 + 9.0, pcbnew.B_SilkS, 2.0, 0.3, mirror=True)
-# ---------------------------------------------------------------- brand: MeshSat lockup, white silk, monochrome production treatment (brand guide 7), traced from the sticker master
-from logo_silk import add_logo
-LOGO_C, LOGO_W = (0.0, -86.0), 75.0            # front strip, between the display glass band (to about Y -71) and the nameplate (Y -97 up)
-n_logo, logo_h = add_logo(board, P, LOGO_C[0], LOGO_C[1], LOGO_W); print("logo: %d silk polygons, %.1f x %.1f mm at %s" % (n_logo, LOGO_W, logo_h, LOGO_C))
+# ---------------------------------------------------------------- legends on the board itself (the face legends are laser marked on the plate)
+PHASE = "C6"
+text("PCB-C %s BACKER  -  under the face plate  -  MESHSAT-709/505  -  2026-09-05" % PHASE, 0, y0 + 4.0, pcbnew.F_SilkS, 2.0, 0.3)
+text("UNDERSIDE: ribbon J_PANEL, e-paper lead J_EPD, MAIN / PI lands, switch and sounder leads on their lands, the drivers on the right strip", 0, y0 + 8.0, pcbnew.B_SilkS, 1.6, 0.25, mirror=True)
+text("LEFT: SOS, EMCON, ZEROIZE, LIGHT", x0 + 23, y1 - 5.0, pcbnew.F_SilkS, 1.6, 0.25); text("RIGHT: MAIN, PI, TEST, status LEDs", x1 - 23, y1 - 5.0, pcbnew.F_SilkS, 1.6, 0.25)
 pcbnew.SaveBoard(OUT, board)
 s = open(OUT).read().replace('(paper "A4")', '(paper "A2")'); open(OUT, "w").write(s)
-print("saved", OUT, "frame holes:", len(FRAME_HOLES), "aperture:", tuple(round(v, 3) for v in APERTURE))
+print("saved", OUT, "outline U %.0f x %.0f, void %s, standoffs %d" % (x1 - x0, y1 - y0, VOID, len(L.STANDOFFS)))
