@@ -56,7 +56,7 @@ def nets_of(ref):
 def reach(net, ref):
     """True if a pad of footprint `ref` sits on `net`."""
     return net in nets_of(ref).values()
-if fps:
+if "U5" in fps:   # only after the netlist import and placement (the D1 mechanical board carries just the module socket and the connectors)
     check("U7" in fps and "TSSOP-24" in fps["U7"].GetFPIDAsString(), "U7 is the PCA9555 (TSSOP-24), not the PCA9536")
     u7 = nets_of("U7")
     check(u7.get("21") == "GND" and u7.get("2") == "+3V3_AB" and u7.get("3") == "+3V3_AB", "U7 address pins A0 = 0, A1 = 1, A2 = 1: 0x26 (got A0 %s, A1 %s, A2 %s)" % (u7.get("21"), u7.get("2"), u7.get("3")))
