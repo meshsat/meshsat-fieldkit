@@ -49,7 +49,9 @@ swp = [(fp.GetReference(), pd.GetNumber()) for fp in b.GetFootprints() if fp.Get
 check(not swp, "every switch and sounder lead land is an SMD pad on the underside (%s)" % swp[:6])
 # 3. the sixteen LEDs on their light-pipe sites, top face, through-hole
 leds = {r: c for r, c, name in L.STATUS_LEDS + L.BAR_LEDS}
-led_off = [r for r, c in leds.items() if r not in fps or abs(case(fps[r].GetPosition())[0] - c[0]) > 0.3 or abs(case(fps[r].GetPosition())[1] - c[1]) > 0.3 or fps[r].IsFlipped()]
+def dome(fp):   # the LED's dome sits between its two pads; KiCad's LED_D3.0mm origin is pad 1, 1.27 mm off the dome (C6 run 2 lesson)
+    ps = [case(pd.GetPosition()) for pd in fp.Pads()]; return (sum(p[0] for p in ps) / len(ps), sum(p[1] for p in ps) / len(ps))
+led_off = [r for r, c in leds.items() if r not in fps or abs(dome(fps[r])[0] - c[0]) > 0.3 or abs(dome(fps[r])[1] - c[1]) > 0.3 or fps[r].IsFlipped()]
 check(not led_off, "sixteen LEDs on the plate's light-pipe sites, top face (off: %s)" % led_off)
 pth = [(fp.GetReference(), pd.GetNumber()) for fp in b.GetFootprints() for pd in fp.Pads() if pd.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and not (fp.GetReference().startswith("H") or fp.GetReference().startswith("D"))]
 check(not pth, "no plated component hole but the standoff screws and the LEDs (%s)" % pth[:6])
@@ -59,9 +61,9 @@ check(len(sw) == 7, "seven panel switches (got %d)" % len(sw))
 pairs = [(a, c_) for i, a in enumerate(sw) for c_ in list(sw)[i + 1:]]
 dmin = min(math.hypot(sw[a][0] - sw[c_][0], sw[a][1] - sw[c_][1]) for a, c_ in pairs)
 check(dmin >= 25.0, "switch centre pitch >= 25 mm (MIL-STD-1472 gloved use), min %.1f" % dmin)
-W, H = L.WINDOW
+W, H = L.PLATE[0], L.PLATE[1]   # the backer hangs under the plate: its parts stay inside the plate's outline by 3 mm (the frame window rule is the plate's, not the backer's)
 outside_window = [r for r, fp in fps.items() if not r.startswith("H") and (bbox(fp)[0] < -W / 2 + 3 or bbox(fp)[2] > W / 2 - 3 or bbox(fp)[1] < -H / 2 + 3 or bbox(fp)[3] > H / 2 - 3)]
-check(not outside_window, "every part inside the frame window by 3 mm (%s)" % outside_window[:6])
+check(not outside_window, "every part inside the plate outline by 3 mm (%s)" % outside_window[:6])
 off_board = [r for r, fp in fps.items() if not r.startswith("H") and not in_strips(fp, 0.0)]
 check(not off_board, "every part on the U (left, bottom or right strip), nothing over the void (%s)" % off_board[:8])
 # 5. the height rule: deep parts outside PCB-B's outline; every part's depth against the stack under it (3 mm)

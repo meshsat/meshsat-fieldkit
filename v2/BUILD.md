@@ -18,7 +18,7 @@ Six boards, five assembled by the fabricator (standard assembly; the economic ti
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O A21 | `PCB-A-POWER-A21/` | 285 x 160 | 4 | JLC04161H-7628 | top |
 | PCB-B COMPUTE B15 | `PCB-B-COMPUTE-B15/` | 245 x 170 | 6 | JLC06161H-3313 (In1 solid ground, In4 +5V plane) | top, bottom 1 |
-| PCB-C PANEL BACKER C6 | `PCB-C-DISPLAY-C6/` | 344 x 228 U, 252 x 202 void | 2 | standard, 1.6 mm | top (LEDs), bottom (cluster and connectors); the face itself is the aluminium plate of `release/revA/case/face-plate/` |
+| PCB-C PANEL BACKER C6 | `PCB-C-DISPLAY-C6/` | 344 x 228 U, 240 x 202 void | 2 | standard, 1.6 mm | top (LEDs), bottom (cluster and connectors); the face itself is the aluminium plate of `release/revA/case/face-plate/` |
 | PCB-D APRS D7 | `PCB-D-APRS-D7/` | 80 x 62 | 4 | JLC04161H-7628 | top 62, bottom 1 |
 | PCB-E1 DOCK STRIP E4 | `PCB-E1-DOCK-E4/` | 278 x 60 | 4 | JLC04161H-7628 | top |
 | PCB-E5 DOCK BLOCK E5 | `PCB-E5-BLOCK-E5/` | 43 x 26 | 2 | standard, 2 oz outer copper | none |

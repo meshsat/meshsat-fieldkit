@@ -32,9 +32,9 @@ NAMEPLATE = (78.0, -101.0, 76.0, 26.0)     # laser marked: centre X, centre Y, w
 LOGO = ((-150.0, 96.0), 36.0)             # laser marked, top of the left strip
 
 # --- the backer board C6: a U in the strips outside PCB-B's outline, open over the display and the e-paper
-STRIP_L = (-172.0, -114.0, -126.0, 114.0)  # left strip (toggles)
+STRIP_L = (-172.0, -114.0, -120.0, 114.0)  # left strip (toggles); the inner edge at 120 keeps the status LED column at X 128 (4.8 mm courtyard) 5.6 mm from the board edge (C6 run 2 lesson)
 STRIP_B = (-172.0, -114.0, 172.0, -88.0)   # bottom strip (sounder, battery bar)
-STRIP_R = (126.0, -114.0, 172.0, 114.0)    # right strip (buttons, status LEDs, the drivers, the ribbon)
+STRIP_R = (120.0, -114.0, 172.0, 114.0)    # right strip (buttons, status LEDs, the drivers, the ribbon)
 STANDOFFS = [(-160.0, 108.0), (160.0, 108.0), (-165.0, -108.0), (165.0, -108.0), (-40.0, -101.0), (20.0, -101.0)]   # M3 self-clinching standoffs in the plate, 10 mm, the backer's screws from below
 CLUSTER = (128.0, -114.0, 172.0, -52.0)    # the driver electronics on the underside of the right strip, below SW_TEST
 J_PANEL_POS = (150.0, 92.0)               # the ribbon from PCB-B's J_PANEL at (82 to 91, 51 to 85), right-angle IDC toward -Y
