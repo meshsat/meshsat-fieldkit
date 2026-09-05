@@ -30,9 +30,9 @@ python3 - "$N" <<'PYX'
 import json, collections, sys
 d = json.load(open('out/%s-drc.json' % sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])
 hard = sum(c[t] for t in ('clearance', 'shorting_items', 'tracks_crossing', 'hole_clearance', 'hole_to_hole', 'copper_edge_clearance')); un = len(d.get('unconnected_items', []))
-print('routed-board gate: hard', hard, 'unrouted', un); open('out/b14-clean.txt', 'w').write('clean' if hard == 0 and un == 0 else 'open')
+print('routed-board gate: hard', hard, 'unrouted', un); open('out/b14-clean.txt', 'w').write(('clean' if hard == 0 and un == 0 else 'open') + '\n')
 for u in d.get('unconnected_items', [])[:6]: print('  OPEN', ' ~ '.join('%s@(%.1f,%.1f)' % (i['description'][:50], i['pos']['x'], i['pos']['y']) for i in u['items']))
 PYX
-read CLEAN < out/b14-clean.txt; if [ "$CLEAN" != clean ]; then echo 'B14 NOT CLEAN, not finishing'; echo FINISH-B14-DONE; exit 1; fi
+CLEAN=$(cat out/b14-clean.txt); if [ "$CLEAN" != clean ]; then echo 'B14 NOT CLEAN, not finishing'; echo FINISH-B14-DONE; exit 1; fi
 cd ..; ./tools/finish_board.sh pcb-b-compute pcb-b-compute post_fix_b13.py meshsat-pcb-b-revA-B14 2>&1 | tail -16
 echo FINISH-B14-DONE
