@@ -74,7 +74,8 @@ for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot,
 for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light pipes; the legends are laser marked on the plate
 text("C6 BACKER: LEDs under the plate light pipes, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
-REGIONS = [("CLUSTER", L.CLUSTER, [r for r in comps if r not in placed and not r.startswith("H")], True)]   # the right strip below SW_TEST
+SPREAD = lambda r: r.startswith(("TP", "JP", "FB")) or r == "D17"
+REGIONS = [("CLUSTER", L.CLUSTER, [r for r in comps if r not in placed and not r.startswith("H") and not SPREAD(r)], True), ("CLUSTER2", L.CLUSTER2, [r for r in comps if r not in placed and not r.startswith("H") and SPREAD(r)], True)]   # the right strip below SW_TEST
 GAP = 1.2; FINE_MARGIN = 1.4
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True

@@ -79,6 +79,9 @@ for ref, (x, y) in L.TOGGLES:
     w, h = L.TOGGLE_BODY; rule_area([(x - w / 2 - K, y - h / 2 - K), (x + w / 2 + K, y - h / 2 - K), (x + w / 2 + K, y + h / 2 + K), (x - w / 2 - K, y + h / 2 + K)], "cut-out keep-out " + ref)
 lx, ly = L.LIGHT[1]; w, h = L.LIGHT_BODY; rule_area([(lx - w / 2 - K, ly - h / 2 - K), (lx + w / 2 + K, ly - h / 2 - K), (lx + w / 2 + K, ly + h / 2 + K), (lx - w / 2 - K, ly + h / 2 + K)], "cut-out keep-out SW_LIGHT")
 sx, sy = L.SOUNDER[1]; rule_circle(sx, sy, L.SOUNDER[2] / 2 + K, "cut-out keep-out BZ1")
+# the outer edge of the U: a 0.6 mm band (no tracks, no vias) so the router keeps the board's copper-to-edge clearance (C6 run 3: tracks at 0.3 mm from the right edge)
+for (ax0, ay0, ax1, ay1) in ((x0, y0, x0 + K, y1), (x1 - K, y0, x1, y1), (x0, y0, x1, y0 + K), (x0, y1 - K, vx0, y1), (vx1, y1 - K, x1, y1)):
+    rule_area([(ax0, ay0), (ax1, ay0), (ax1, ay1), (ax0, ay1)], "outer edge keep-out (router)")
 # the inner edge of the U: 0.6 mm edge clearance for the router
 rule_area([(vx0 - K, vy0 - K), (vx1 + K, vy0 - K), (vx1 + K, y1 + 1), (vx1 - K, y1 + 1), (vx1 - K, vy0 + K), (vx0 + K, vy0 + K), (vx0 + K, y1 + 1), (vx0 - K, y1 + 1)], "inner edge keep-out (router edge clearance)")
 # ---------------------------------------------------------------- reference graphics: the plate, the window, the display and e-paper modules above the void
