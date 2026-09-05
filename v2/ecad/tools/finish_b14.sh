@@ -24,6 +24,12 @@ PY
 read H < out/par-score.txt; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting to the cleaned board'; cp out/$N-cleaned.kicad_pcb $N.kicad_pcb; fi
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
 python3 ../tools/silk_fix_all.py $N.kicad_pcb b 2>&1 | grep -vE 'Debug|leak' | tail -2
+# Owner ruling 5 Sep 2026 17:00 (appendix 32.40): a differential pair over 1 mm of intra-pair mismatch blocks the finish; pair_match.sh meanders the short
+# legs itself, and when it still fails the session audits out/audit/*.png (pair_audit.py), traces the cause and iterates. No human look.
+if ! ../tools/pair_match.sh "$PWD" $N check_pcb_b.py 2>&1 | grep -E "pair_match|WARN|PASS|meander" | cut -c1-140; then
+  mkdir -p out/audit; for pr in PCIe_TX PCIe_RX PCIe_CLK; do python3 ../tools/pair_audit.py $N.kicad_pcb $pr out/audit/$pr.png 2>&1 | grep pair_audit; done
+  echo 'B14 PAIRS NOT MATCHED, not finishing (audit images in out/audit)'; echo open > out/b14-clean.txt; echo FINISH-B14-DONE; exit 1
+fi
 # B14 (5 Sep 2026): the finish refuses an open or dirty board; the chain commits only on out/b14-clean.txt = clean
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 - "$N" <<'PYX'
