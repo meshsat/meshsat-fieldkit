@@ -77,7 +77,7 @@ for ref in comps:
 # --- regions for the rest: (x0, y0, x1, y1), refs
 REGIONS = [
  ("N_TOP_W", (-17, 18.6, -7, 30.4), ["X1", "C38", "C7", "C8"], False),
- ("N_TOP_E", (6, 18.6, 30, 30.4), ["FB1", "C9", "C10", "U7", "C39", "R3", "D1", "R15"], False),
+ ("N_TOP_E", (6, 18.6, 30, 29.6), ["FB1", "C9", "C10", "U7", "C39", "R3", "D1", "R15"], False),   # D7: 0.8 mm off the north edge so no fanout via lands inside the 0.3 mm edge clearance
  # the MCU core sits on the TOP side under the module since D4 (module 11 mm up on sockets and standoffs; its back-side parts hang 5 mm, so 6 mm remain):
  # the free field between the two socket rows (Y -18.6 .. 14.6) and clear of the two M2.5 standoff holes at (-15.8, -18.6) and (36.8, 14.4)
  ("CORE_W", (-13.5, -17.5, 5.0, 13.5), ["C17", "C18", "R10", "R11", "Q1", "Q2", "R12", "R13", "Q3", "Q4", "R37", "R38", "R39", "R40", "R41", "C32", "R8", "R9", "U8", "C40", "R47"], False),
@@ -156,6 +156,18 @@ def plane(layer, netname, name, rect=(-40, -31, 40, 31), priority=0):
     z.SetAssignedPriority(priority)
     board.Add(z); return z
 plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+3V3", "+3V3 plane In2")
+# --- D7 (MESHSAT-804, appendix 32.38): the boost loop carries up to 4.8 A on the input and 2 A on V8; the router could not close 1.2 mm CELL tracks through the core,
+#     so pre-route pours on B.Cu carry them and the router only adds vias and short stubs into them (the idea of the A node bars in gen_pcb_a3.py):
+#     V8: a column at the boost output capacitors (x -27..-23.5) and a bar under the module's north pin row (y 12.2..14.6; the pads' rings end at 15.25) to VCC pin 1 at (24.6, 16.1);
+#     VIN_CELL: a column between the harness header and the boost (x -29.6..-27.4) from the cell feed J_PWR1 up to the boost input parts.
+def d7_pour(netname, name, rect, layer=pcbnew.B_Cu, priority=2):
+    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname)); z.SetZoneName(name); z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL)
+    z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.2)); z.SetAssignedPriority(priority)
+    o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
+    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): pt = P(x, y); o.Append(pt.x, pt.y)
+    board.Add(z); return z
+d7_pour("V8", "V8 boost output column", (-27.0, -20.5, -23.5, 14.6)); d7_pour("V8", "V8 bar to the module VCC pin", (-27.0, 12.2, 25.4, 14.6)); d7_pour("V8", "V8 tap to pin 1", (23.6, 14.0, 25.6, 16.1), priority=3)
+d7_pour("VIN_CELL", "VIN_CELL column", (-29.6, -15.5, -27.4, 21.0))
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
