@@ -80,7 +80,9 @@ if placed:
     tl = {}
     for t in b.GetTracks():
         if t.GetClass() == "PCB_TRACK": tl[t.GetNetname().lstrip("/")] = tl.get(t.GetNetname().lstrip("/"), 0.0) + t.GetLength() / 1e6
-    for pair in ("PCIe_TX", "PCIe_RX", "PCIe_CLK"):
+    # every differential pair on the board, discovered from the net names (6 Sep 2026: the metrics instrument found 9 DSI pairs over 1 mm on B14 while only the PCIe pairs were matched)
+    pairs = sorted(set(n[:-2] for n in tl if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in tl and (n[:-2] + "_N") in tl))
+    for pair in pairs:
         lp, ln = tl.get(pair + "_P", 0.0), tl.get(pair + "_N", 0.0)
         if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(lp - ln) > 1.0 else "PASS ") + pair, lp, ln, abs(lp - ln), "" if abs(lp - ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
     j = next((f for f in b.GetFootprints() if f.GetReference() == "J_AB1"), None)
