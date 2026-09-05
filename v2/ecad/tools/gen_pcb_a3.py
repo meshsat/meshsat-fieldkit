@@ -66,6 +66,7 @@ FIXED = {"J_AB1": (-72, -73, 90), "J_LEDS1": (-38, -74, 0), "J_MEZZ_PWR1": (-8, 
          "J_DOCK": (-124, -70, 0), "J_PRE1": (-151, -70, 0),
          "F3": (-150, -46, 0), "F4": (-125, -46, 0), "F5": (-100, -46, 0), "F2": (-75, -46, 0),
          "U22": (-148, -20, 0), "L2": (-148, -6, 0), "U23": (-116, -20, 0), "L3": (-116, -6, 0), "U24": (-84, -20, 0), "L4": (-84, -6, 0),
+         "C38": (-148, -24.2, 0), "C71": (-116, -24.2, 0), "C84": (-84, -24.2, 0),   # the bootstrap capacitors right under their converters (A21 runs 10 and 14: 13 mm away in the compensation row, BST1/BST2 could not cross the boost feed columns)
          "U20": (-50, -58, 0), "L5": (-40, -58, 0), "U21": (-112, -60, 0), "R52": (-120, -60, 0),
          "J_5V_M1": (-150, 44, 0), "J_5V_M2": (-135, 44, 0), "J_5V_PI": (-120, 44, 0),
          "U25": (-150, 19, 0), "J_MAINSW": (-159, 8, 90), "U26": (-140, 28, 0), "J_HEAT": (-159, 28, 90), "U5": (-150, 4, 0), "L6": (-142, 4, 0),
@@ -221,22 +222,26 @@ def stitch(netname, pts_k):
         v.SetNet(net_for(netname, create=False)); v.SetLocked(True); board.Add(v)
 # Boost feeds (up to 9.5 A into the Pi converter at a 3.0 V node): JLC's 4-layer stack has 0.5 oz inner copper, so a 6 mm In2 column alone is good for
 # about 3 A at 10 K. Each feed is therefore an In2 column from the blade fuse's BOOST pad (pin 2, x 5/30/55, y 154.3 and 157.7, plated through, so the
-# column starts in the pad itself) north to the inductor row, widened to a 19 mm foot where it passes under the CELL+ node bar (y 148.5 to 152), and a
-# B.Cu column of the same width in parallel from just north of the node bar to the inductor jog, tied to the In2 column by four locked 0.8/0.4 vias at
-# its south end and by the six inductor tap vias at its north end. Run 9's B.Cu feed bands were centred on the fuses' CELL+ pads and cut by the node bar.
+# column starts in the pad itself) north to the inductor row, widened to a 19 mm foot on In2 and In1 where it passes under the CELL+ node bar (y 148.5 to 152),
+# and a B.Cu column of the same width in parallel on both sides of the bar (fuse pad to the bar, bar to the inductor jog), tied to the In2 column by
+# locked 0.8/0.4 vias at both ends of the bar and by the six inductor tap vias at its north end. Run 9's B.Cu feed bands were centred on the fuses' CELL+ pads and cut by the node bar.
 BOOST = [("BOOST1_IN", 1, 4.1, 9.5, (-3.5, 9.5), (-2.0, 17.0)),     # column x, jog x (west to the L2 tap), foot x (between the CELL+ pad rings of F3 and F4)
          ("BOOST2_IN", 2, 27.0, 33.0, None, (23.0, 42.0)),          # L3's tap sits in the column
          ("BOOST3_IN", 3, 52.0, 58.0, (52.0, 64.5), (48.0, 67.0))]  # jog east to the L4 tap
+I1 = (pcbnew.In1_Cu,)
 for net, n, cx0, cx1, jog, foot in BOOST:
-    col = K(cx0, 121.0, cx1, 158.5); ft = K(foot[0], 146.0, foot[1], 158.5); bot = K(cx0, 121.0, cx1, 148.2)
+    col = K(cx0, 121.0, cx1, 158.5); ft = K(foot[0], 147.5, foot[1], 153.0); bot = K(cx0, 121.0, cx1, 148.2); south = K(cx0, 152.8, cx1, 158.5)
     outer_pour(net, "boost %d column" % n, col, layers=I2, priority=2); track_keepout("boost %d column" % n, col, layer=pcbnew.In2_Cu)
-    outer_pour(net, "boost %d foot" % n, ft, layers=I2, priority=3); track_keepout("boost %d foot" % n, ft, layer=pcbnew.In2_Cu)
-    outer_pour(net, "boost %d bottom" % n, bot, layers=B, priority=2); track_keepout("boost %d bottom" % n, bot)
+    outer_pour(net, "boost %d foot" % n, ft, layers=I2, priority=3); track_keepout("boost %d foot" % n, ft, layer=pcbnew.In2_Cu)          # under the node bar only (y 148.5 to 152)
+    outer_pour(net, "spare foot boost %d" % n, ft, layers=I1, priority=3)                                                                # In1 in parallel, best effort: no keep-out, not gated
+    outer_pour(net, "boost %d bottom" % n, bot, layers=B, priority=2); track_keepout("boost %d bottom" % n, bot)                        # north of the node bar
+    outer_pour(net, "boost %d bottom south" % n, south, layers=B, priority=2); track_keepout("boost %d bottom south" % n, south)        # from the fuse pad to the node bar
     if jog:
         jg = K(jog[0], 120.5, jog[1], 124.5)
         outer_pour(net, "boost %d jog" % n, jg, layers=I2, priority=4); track_keepout("boost %d jog" % n, jg, layer=pcbnew.In2_Cu)
         outer_pour(net, "boost %d bottom jog" % n, jg, layers=B, priority=3); track_keepout("boost %d bottom jog" % n, jg)
-    stitch(net, [(cx0 + 1.2, 146.0), (cx1 - 1.2, 146.0), (cx0 + 1.2, 147.5), (cx1 - 1.2, 147.5)])   # In2 to B.Cu at the column's south end
+    stitch(net, [(cx0 + 1.2, 146.0), (cx1 - 1.2, 146.0), (cx0 + 1.2, 147.5), (cx1 - 1.2, 147.5)])   # In2 to B.Cu north of the bar
+    stitch(net, [(cx0 + 1.2, 153.2), (cx1 - 1.2, 153.2)])                                          # In2 and In1 feet to the B.Cu south segment
 # --- A21 output islands (5 Sep 2026, appendix 32.39): the TPS61288L VOUT pin is a 1.25 x 0.40 mm pad with its neighbours 0.25 mm away, so no 1.0 mm track
 #     can leave it (the six opens of the 14:20 run, every one at pad 5 of U22/U23/U24) and the escape scheme had given each rail one 0.2 mm stub and one
 #     0.45/0.25 via as its whole current path. Each converter gets a top-side copper island: a 0.5 mm neck over the east end of pad 5 (between pad 6 and the
