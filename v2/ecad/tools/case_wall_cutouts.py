@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """1:1 templates for the two MIL-DTL-38999 wall receptacles and the nine SMA bulkheads on the Peli 1450 base (appendix 32.13 ruling 6, 32.29, 32.40 items 4, 8 and 9, 32.42; the 1520 version of 4 Sep is in the history).
 
-The receptacles do not mount on the case wall directly: the 1520's inner wall drafts about 2 degrees and its outer skin is
-ribbed, so a flanged connector could not seal on either face. Both sit on one flat aluminium plate (82 x 54 x 3 mm) bolted
-over a window in the long wall on the dock's entry side, with a 2 mm closed-cell gasket between plate and wall. The plate
+The receptacles do not mount on the case wall directly: the case's inner wall drafts about 2 degrees and its outer skin is
+ribbed (the 1520 study of 32.29; the 1450 drawing 1451-931 shows the same construction), so a flanged connector could not
+seal on either face. Both sit on one flat aluminium plate (54 wide x 82 tall x 3 mm) bolted upright over a window in the
+back long wall between two inner ribs, with a 2 mm closed-cell gasket between plate and wall. The plate
 carries the exact Glenair cut-outs; the wall only needs two hole-saw holes and six screw holes.
 
 Shore DC: Glenair D38999/20 shell 13 wall-mount receptacle, round holes (D0), front panel mount on the plate: flange 28.9
@@ -15,7 +16,7 @@ Case (Peli 1450, drawing 1451-931 and its DXF in vendor/peli/1450): base 109 dee
 walls at X -170, -95, -18, +60, +137, hinge clusters outside at X -167 to -74 and +58 to +160, plain end walls with ribs at the corners, frame skirt
 from Z 100. Wall: the BACK long wall, the hinge side (case +Y); the plate stands upright between the ribs at X -95 and -18 (32.40 item 9).
 Frame: case-centred, X along the long axis, Z up from the cavity floor. Both sheets are drawn as seen from OUTSIDE the back
-wall, so case +X is on the viewer's left. Sheets 3 and 4 put the seven SMA antenna bulkheads on the two end walls. 1:1 on A4 landscape; check the 100 mm bar with a rule.  Usage: case_wall_cutouts.py <out.pdf>"""
+wall, so case +X is on the viewer's left. Sheets 3 and 4 put the nine SMA antenna bulkheads on the two end walls. 1:1 on A4 landscape; check the 100 mm bar with a rule.  Usage: case_wall_cutouts.py <out.pdf>"""
 import sys
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.units import mm
@@ -87,7 +88,7 @@ scale_bar(-140, -10)
 notes(["SHEET 1 of 4: BACK WALL. MeshSat field kit, Peli 1450 base (32.40 item 4), the BACK long wall (hinge side), seen from OUTSIDE, so case +X is on your left. Case frame: X along the long axis from the case centre, Z up from the cavity floor. The plate stands upright between the inner ribs at X -95 and -18 (item 9) and between the hinge clusters (X -167 to -74, +58 to +160).",
        "Two hole-saw holes for the receptacle bodies and six M4 clearance holes for the connector plate. Tape this sheet on the outer skin with its floor line level with the inside floor (transfer the height from inside).",
        "The plate, not the wall, carries the sealing faces: the inner wall drafts and the outer skin is not flat, so a flanged receptacle cannot seal on the case itself (the 1520 study of 32.29; the 1450 drawing 1451-931 in vendor/peli/1450 shows the same construction).",
-       "Why the back wall: the front wall carries the handle, the pressure valve, two rib clusters and both latch straps (Peli drawing 1521-931), and the end walls are too narrow between their ribs. Every through-hole here keeps 7 mm or more from the back wall's inner ribs (X -133.3 and -8.6 nearest, frame-leg drill points at 67 to 71 mm above the floor, appendix 25.1); the hinge sits at the rim, 43 mm above the plate.",
+       "Why the back wall: the front wall carries the handle, the pressure valve, two rib clusters and both latch straps (Peli drawing 1451-931, the same layout as the 1520 of 32.29), and the end walls carry the antennas over the battery row. The plate stands between the inner ribs at X -95 and -18 (32.40 item 9) with about 7 mm to each rib and no rib cut; the frame-leg drill points and the hinge clusters (X -167 to -74, +58 to +160 per the 1451-931 DXF) lie outside its window.",
        "Cut order: mark, drill the six 4.5 holes, hole-saw the two 29 holes from outside, deburr both faces, dry-fit the plate, then gasket. The floor fillet ends about 10 mm up; the plate starts at Z 13."], -17)
 c.showPage()
 
