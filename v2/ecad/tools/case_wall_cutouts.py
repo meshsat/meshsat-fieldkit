@@ -117,7 +117,7 @@ c.showPage()
 # Amphenol Connex 132170 SMA female-female bulkhead coupler: 6.5 mm D-hole with the flat at 6.00 across (vendor/rf drawing), 8 mm nut.
 # Four sites per end wall at Y -60, -30, +30, +60 between the wall's inner ribs (Y 0 and +-89, appendix 25.1), 55 mm above the floor.
 SMA_Z = 55.0
-WEST = [(-60.0, "UHF"), (-30.0, "WIFI 2.4"), (30.0, "WIFI 5.8"), (60.0, "SDR")]        # west end wall (case -X): the strip's four western clamps
+WEST = [(-60.0, "UHF"), (-30.0, "WIFI 2.4"), (30.0, "GNSS"), (60.0, "SDR")]        # west end wall (case -X): the strip's four western clamps; since B13 the third path carries the NEO-M9N antenna (the CM5 antenna is dual-band, one path)
 EAST = [(-60.0, "LTE"), (-30.0, "IRIDIUM"), (30.0, "LORA"), (60.0, "spare, plugged")]  # east end wall (case +X)
 def end_wall(title, sites, y_sign, ox_paper):
     """One end wall seen from OUTSIDE: paper x = case Y times y_sign (so the viewer's left is the right case direction)."""
