@@ -55,6 +55,15 @@ if placed:
         check(len(st) == 1 and abs(st[0][0] - 65.25) < 0.05 and abs(st[0][1] - 60) < 0.05, "2230 standoff hole at (65.25, 60) (got %s)" % st)
         bb = j.GetBoundingBox(False, False); r = (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
         check(29 <= r[0] and r[2] <= 68 and 48 <= r[1] and r[3] <= 72, "M.2 socket and card inside WIFI_RECT (30..67, 49..71 plus courtyard) (got x %.1f..%.1f, y %.1f..%.1f)" % (r[0], r[2], r[1], r[3]))
+    # B14 guard (gateway finding 5 Sep 05:49): a net that exists only on the socket makes no ratsnest, so the router and DRC stay silent about it
+    pcie = {}
+    for f in b.GetFootprints():
+        for pd in f.Pads():
+            nm = pd.GetNetname()
+            if nm.upper().startswith("PCIE"): pcie.setdefault(nm, set()).add(f.GetReference())
+    check(len(pcie) >= 10, "ten PCIe lane and control nets present on the board (got %d: %s)" % (len(pcie), sorted(pcie)))
+    for nm, refs in sorted(pcie.items()):
+        check("U30B" in refs and len(refs) >= 2, "%s reaches the module receptacle U30B and a second part (got %s)" % (nm, sorted(refs)))
     j = next((f for f in b.GetFootprints() if f.GetReference() == "J_AB1"), None)
     if j is not None: check(j.IsFlipped(), "J_AB1 on the underside")
 # hole-to-hole webs >= 2 mm between every pair of holes (drill edges), NPTH pads of the module and the socket included
