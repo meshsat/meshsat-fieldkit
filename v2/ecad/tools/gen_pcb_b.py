@@ -220,7 +220,7 @@ text("J_PANEL ribbon up to PCB-C", 86.0, 75.5, pcbnew.F_SilkS, 0.9, 0.16)
 # datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
 text("PCB-B COMPUTE  REV A (B14)", 70, -79.0, pcbnew.F_SilkS, 1.6, 0.26)
-text("MESHSAT-795 | 245x170x1.6 4L | matte black | 2026-09-04", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
+text("MESHSAT-795/802 | 245x170x1.6 4L | matte black | 2026-09-05", 70, -82.5, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -10, 83.0, pcbnew.F_SilkS, 1.2, 0.2); text("FRONT WALL (-Y)   v v v", -100, -83.2, pcbnew.F_SilkS, 1.5, 0.25)
 text("PORT (-X)", -hx + 5.5, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 6.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
 text("PCB-B UNDERSIDE - faces PCB-A", 0, -hy + 9.0, pcbnew.B_SilkS, 1.6, 0.25, mirror=True)
