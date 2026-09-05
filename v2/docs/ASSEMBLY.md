@@ -73,7 +73,7 @@ Samsung's specification forbids soldering to the cell can: the cells are welded 
 | Wall USB | PCB-A J_WALL1 (USB-A) | Glenair 233-370 receptacle on the connector plate | USB 2.0 cable, 300 mm | USB-A both ends |
 | Connector plate | 82 x 54 x 3 aluminium over the wall window (appendix 32.29, `release/revA/case/`) | the back long wall (hinge side), plate centre 55 mm above the floor, X -92 | six M4 x 16 stainless, washers both sides, Nyloc inside, 1.2 N m in a cross pattern; 2 mm closed-cell gasket | carries the shore DC receptacle (D38999/20 shell 13) and the USB receptacle (233-370 shell 15), each on its own gasket with M3 x 10 and spring washers |
 | RF pigtails | device SMA on B / D | PCB-A J_RF1 to J_RF7 (SMA jacks) | RG-316, bend radius 12.5 mm | SMA male |
-| RF jumpers, 7 x | the float nests on the dock strip (Radiall R222M80500 right-angle plugs, crimped, tied into the nest) | the SMA bulkhead couplers on the end walls (Amphenol Connex 132170; west wall UHF, WIFI 2.4, WIFI 5.8, SDR at Y -60, -30, +30, +60; east wall LTE, IRIDIUM, LORA at Y -60, -30, +30, the +60 site plugged; 55 mm above the floor) | RG-316, 150 to 250 mm, bend radius 12.5 mm | SMP-MAX plug at the nest, SMA male at the coupler |
+| RF jumpers, 7 x | the float nests on the dock strip (Radiall R222M80500 right-angle plugs, crimped, tied into the nest) | the SMA bulkhead couplers on the end walls (Amphenol Connex 132170; west wall UHF, WIFI 2.4, GNSS, SDR at Y -60, -30, +30, +60; east wall LTE, IRIDIUM, LORA at Y -60, -30, +30, the +60 site plugged; 55 mm above the floor) | RG-316, 150 to 250 mm, bend radius 12.5 mm | SMP-MAX plug at the nest, SMA male at the coupler |
 
 Every lead tied at both ends; the rod stack's edge carries the vertical runs with a tie base per bay.
 

@@ -8,7 +8,7 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-e1-dock.kicad_pcb"
 PRJDIR = os.path.dirname(os.path.abspath(OUT))
 open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version 7)\n  (lib (name "meshsat")(type "KiCad")(uri "${KIPRJMOD}/../meshsat.pretty")(options "")(descr "MeshSat carrier in-code footprints"))\n)\n')
 X0, X1, Y0, Y1, R = -160.0, 118.0, -111.0, -51.0, 3.0   # 278 x 60: the east end stops at X 118 so the battery module cradle beside it (X 120 to 202) has room (32.30)
-RF_SITES = [(-100.0, "UHF"), (-84.0, "WIFI 2.4"), (-26.0, "WIFI 5.8"), (-12.0, "SDR"), (70.0, "LTE"), (92.0, "IRIDIUM"), (103.0, "LORA")]   # float clamps for the R222M80500 plugs, mirroring A19 (site 7 at Y -64)
+RF_SITES = [(-100.0, "UHF"), (-84.0, "WIFI 2.4"), (-26.0, "GNSS"), (-12.0, "SDR"), (70.0, "LTE"), (92.0, "IRIDIUM"), (103.0, "LORA")]   # float clamps for the R222M80500 plugs, mirroring A19 (site 7 at Y -64)
 BLOCK_HOLES = [(-155.5, -63.0), (-117.5, -63.0), (-155.5, -82.0), (-117.5, -82.0)]   # corner M3 standoffs of the raised contact block (pcb-e5-block, 43 x 25 at X -158..-115 Y -85..-60, face at 7.4 mm); its east edge stays 4.5 mm off the rod at (-110.5, -73) and its south edge 0.5 mm north of the J_BLK lands
 UNDER_A_Y = -80.0   # north of this line PCB-A sits 13.4 mm above the strip: parts at most 12 mm tall
 ROD_HOLES = [(-110.5, -73.0), (110.5, -73.0)]; ROD_D = 3.2; STANDOFF_KEEPOUT_D = 9.0
