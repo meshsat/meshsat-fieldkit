@@ -142,7 +142,7 @@ FP = {
  "CM5A": "meshsat:CM5_Conn_A_10164227", "CM5B": "meshsat:CM5_Conn_B_10164227",   # the two 100-pin Amphenol 10164227 receptacles of the module site (CM5IO design files); holes and outline by gen_pcb_b.py
  "FPC22": "meshsat:Hirose_FH12-22S-0.5SH_1x22-1MP_P0.50mm_Horizontal",      # Touch Display 2 FPC, 22-pin 0.5 mm (CM5IO design files)
  "MPCIE": "meshsat:MiniPCIe_Socket_52P_H4.0_Standoff",
- "M2E": "meshsat:M2_E-Key_Socket_2230",                                      # M.2 E-key socket, 2230 card, plated M2.5 standoff hole 28.25 mm from the datum (B14)                     # PCI Express Mini Card socket + the two M2.5 standoffs of a full-size card
+ "M2E": "meshsat:M2_E-Key_Socket_2230",                                      # M.2 E-key socket, 2230 card, plated M2.5 standoff hole 28.25 mm from the datum (B14)
  "NANOSIM": "Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00",
  "NEO": "RF_GPS:ublox_NEO", "WIO": "meshsat:Seeed_Wio-SX1262", "E72": "meshsat:Ebyte_E72-2G4M20S1E",
  "UFL": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical", "CR2032": "Battery:BatteryHolder_Keystone_3034_1x20mm",
@@ -199,9 +199,10 @@ r("R41", "0.05R 1% 1206", "+5V_M1", "5V_LTE_IN", "RS"); ina219("U33", "+5V_M1", 
 buck("U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "5V_LTE_IN", "EN_LTE", "+3V3_LTE", "SW_LTE", "FB_LTE", "BST_LTE", "3.3 V buck for the LTE socket (EN_LTE)")
 r("R42", "100k", "EN_LTE", "GND")
 c("C50", "100u 6.3V", "+3V3_LTE", "GND", "C100u"); c("C51", "100n", "+3V3_LTE", "GND"); c("C52", "33p", "+3V3_LTE", "GND", "C0402"); c("C53", "10p", "+3V3_LTE", "GND", "C0402")   # Quectel EG25-G mini PCIe HD 3.3: bulk + RF decoupling at the socket
-#     U36 the M.2 WiFi socket (B14, appendix 32.37: AsiaRF AW7915-AED, 3.3 V at up to 3 A, 9 W maximum), on rail M2 through its own shunt and INA219 (0x45),
-#     enabled by the module's PCIE_PWR_EN output (3.3 V, active high) so the card rail follows the module and its PCIe link state
-r("R72", "0.05R 1% 1206", "+5V_M2", "5V_WIFI_IN", "RS"); ina219("U35", "+5V_M2", "5V_WIFI_IN", "+3V3", "+3V3")   # A0 = A1 = VS: 0x45
+#     U36 the M.2 WiFi socket (B14, appendix 32.37: AsiaRF AW7915-AED, 3.3 V at up to 3 A, 9 W maximum), on the Pi rail (owner ruling 5 Sep 06:00: the
+#     5.1 V 5 A converter carries the module's 2.5 A design point plus the card's 2.0 A worst case; M2 would have been left with 10 percent margin) through
+#     its own shunt and INA219 (0x45), enabled by the module's PCIE_PWR_EN output (3.3 V, active high) so the card rail follows the module and its PCIe link state
+r("R72", "0.05R 1% 1206", "+5V_PI", "5V_WIFI_IN", "RS"); ina219("U35", "+5V_PI", "5V_WIFI_IN", "+3V3", "+3V3")   # A0 = A1 = VS: 0x45
 buck("U36", "L36", "C67", "C68", "C69", "C70", "R73", "R74", "5V_WIFI_IN", "PCIE_PWR_EN", "+3V3_WIFI", "SW_WIFI", "FB_WIFI", "BST_WIFI", "3.3 V buck for the M.2 WiFi socket (PCIE_PWR_EN)")
 r("R75", "100k", "PCIE_PWR_EN", "GND")
 c("C71", "100u 6.3V", "+3V3_WIFI", "GND", "C100u"); c("C72", "100n", "+3V3_WIFI", "GND")   # bulk at the socket's four 3.3 V pins
@@ -223,7 +224,9 @@ for n, nm in CM5_PINS.items():
     else: CM5[n] = "NC"          # Ethernet, HDMI, PCIe, USB 3.0 super-speed, MIPI1, SD (eMMC variant), CC
 CM5.update({36: GPIO[0], 35: GPIO[1], 16: "FAN_TACHO", 19: "FAN_PWM", 20: "EEPROM_nWP", 21: "LED_nACT", 76: "VBAT", 78: "+3V3_CM", 80: "DISP_SCL", 82: "DISP_SDA",
             89: "WL_nDIS", 91: "BT_nDIS", 92: "PWR_BUT", 93: "nRPIBOOT", 95: "LED_nPWR", 97: "CAM_GPIO0", 99: "PMIC_EN", 103: "USB_OTG_N", 105: "USB_OTG_P",
-            111: "VBUS_EN", 134: "USB_UP_P", 136: "USB_UP_N", 163: "USB_LTE_P", 165: "USB_LTE_N"})
+            111: "VBUS_EN", 134: "USB_UP_P", 136: "USB_UP_N", 163: "USB_LTE_P", 165: "USB_LTE_N",
+            # B14: the PCIe Gen 2 x1 lane and its control lines to the M.2 socket J_WIFI1 (everything not listed here falls back to NC above)
+            102: "PCIe_CLK_nREQ", 104: "PCIE_nWAKE", 106: "PCIE_PWR_EN", 109: "PCIe_nRST", 110: "PCIe_CLK_P", 112: "PCIe_CLK_N", 116: "PCIe_RX_P", 118: "PCIe_RX_N", 122: "PCIe_TX_P", 124: "PCIe_TX_N"})
 part("U30A", "Connector_Generic", "CM5A", "Amphenol 10164227-1004A1RLF receptacle A (CM5 pins 1-100, GPIO side); module CM5108064 8 GB 64 GB eMMC wireless, bench-fitted", "CM5A", {str(k): v for k, v in CM5.items() if k <= 100}, "C7435219")
 part("U30B", "Connector_Generic", "CM5B", "Amphenol 10164227-1004A1RLF receptacle B (CM5 pins 101-200, high-speed side)", "CM5B", {str(k): v for k, v in CM5.items() if k > 100}, "C7435219")
 # module support: RTC cell (shared with the GNSS backup pin), LEDs, fan, flashing port, bench headers
