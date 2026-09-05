@@ -301,5 +301,14 @@ def render(view):
         for o in bpy.data.objects:
             if o.name in ("display_flex", "panel_ribbon"): o.scale.z /= 2.0; o.location.z -= 30
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "meshsat-v2-concept.blend"))
+if os.environ.get("DUMP_BBOX"):
+    # stack height map input (5 Sep 2026, C6 gate): every mesh object's world bounding box, case frame in mm
+    import json
+    dump = []
+    for o in bpy.data.objects:
+        if o.type != "MESH" or not o.data.vertices: continue
+        pts = [o.matrix_world @ Vector(c) for c in o.bound_box]
+        dump.append({"name": o.name, "x": [round(min(p.x for p in pts), 2), round(max(p.x for p in pts), 2)], "y": [round(min(p.y for p in pts), 2), round(max(p.y for p in pts), 2)], "z": [round(min(p.z for p in pts), 2), round(max(p.z for p in pts), 2)]})
+    json.dump(dump, open(os.environ["DUMP_BBOX"], "w"), indent=0); print("DUMPED", len(dump), "objects to", os.environ["DUMP_BBOX"]); sys.exit(0)
 for v in (["overview", "hero", "top", "detail", "cutaway", "closed"] if VIEWS == ["all"] else VIEWS): render(v)
 print("SCENE-DONE")
