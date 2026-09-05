@@ -163,6 +163,7 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
 cls(ns.GetDefaultNetclass(), 0.14, 0.25, 0.7, 0.3, 0.2, 0.15)   # D6: 0.14 (Freerouting left one D5 clearance 2.6 um short of 0.15; at 0.127 it packed tracks inside the 0.25 hole clearance of the escape vias)
 CLASSES = {"USB": (0.14, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.14, 0.4, 0.8, 0.4, 0.4, 0.25), "CELL": (0.2, 1.2, 1.0, 0.5, 1.2, 0.3)}   # CELL: the 5 A boost loop
 PATTERNS = [("USB_*", "USB"), ("VIN_CELL", "CELL"), ("SW", "CELL"), ("V8", "CELL"), ("+5V_USB", "PWR"), ("+3V3", "PWR"), ("+3.3VA", "PWR"), ("VIN_LDO", "PWR"), ("LDO_A", "PWR"), ("GND", "PWR")]
+PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)

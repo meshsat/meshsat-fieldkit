@@ -12,7 +12,7 @@ tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, 
 b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
 PY
 JAR=$HOME/bin/freerouting-1.9.0.jar
-timeout 4500 xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt 1 -oit 2 -dct 0 > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
+timeout 4500 xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-6} -oit 2 -dct 0 > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
 pkill -9 -f "^java .*par/$K/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PY'
