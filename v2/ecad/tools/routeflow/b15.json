@@ -6,28 +6,51 @@
   "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
   "services_script": "~/meshsat-services.sh",
   "pre": {
-    "argv": ["bash", "../tools/full_b7.sh", "<PROJECT>"],
+    "argv": [
+      "bash",
+      "../tools/full_b7.sh",
+      "<PROJECT>"
+    ],
     "cwd": "<PROJECT>",
-    "must_contain": ["single-pin nets", "PREROUTE-DONE OK"],
+    "must_contain": [
+      "single-pin nets",
+      "PREROUTE-DONE OK"
+    ],
     "min_all_pass": 2,
     "gen_logs": []
   },
-  "plane_layers": ["In1.Cu", "In4.Cu"],
+  "plane_layers": [
+    "In1.Cu",
+    "In4.Cu"
+  ],
   "route": {
-    "attempts": [80, 90, 100],
+    "attempts": [
+      100
+    ],
     "threads": 1,
     "timeout": 9000,
-    "power_layers": ["In1.Cu", "In4.Cu"],
+    "power_layers": [
+      "In1.Cu",
+      "In4.Cu"
+    ],
     "log": "out/parallel-b15.log"
   },
   "finish": {
-    "argv": ["./tools/finish_b15.sh", "<ECAD>", "out/parallel-b15.log"],
+    "argv": [
+      "./tools/finish_b15.sh",
+      "<ECAD>",
+      "out/parallel-b15.log"
+    ],
     "cwd": "<ECAD>",
     "clean_flag": "out/b15-clean.txt",
     "stub_log": "out/pcb-b-compute-stub.log"
   },
   "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-B15",
-  "expect": {"hard": 0, "unrouted": 0, "autoroute_minutes_max": 60},
+  "expect": {
+    "hard": 0,
+    "unrouted": 0,
+    "autoroute_minutes_max": 60
+  },
   "budget_rounds": 2,
-  "notes": "B15 six layers: In1 and In4 are planes handed to Freerouting as power layers (5 Sep 2026 E1 test); one thread because the multi-thread optimiser knotted +3V3 and WIFI_DIS on In3 in run 3; the stub router closes the fine-pitch opens with the coarse grid."
+  "notes": "B15 six layers: In1 and In4 are planes handed to Freerouting as power layers (5 Sep 2026 E1 test); one thread because the multi-thread optimiser knotted +3V3 and WIFI_DIS on In3 in run 3; the stub router closes the fine-pitch opens with the coarse grid. Freerouting is deterministic: run 3's three attempts at 80, 90 and 100 passes returned identical boards (39 hard, 5 opens, 261 vias) because the autorouter completed before any ceiling, so one attempt is the rule unless the ceiling binds."
 }
