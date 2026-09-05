@@ -1,12 +1,12 @@
 #!/bin/bash
 # vast.ai onstart script for the routeflow experiment box (Freerouting quality programme, 6 Sep 2026). Image ubuntu:24.04, runs as root once
-# at container start. Installs KiCad 9.0 from the kicad-9.0-releases PPA (the VM's build), Java 25 (noble-updates), Xvfb, numpy; fetches the two
+# at container start. Installs KiCad 9.0 from the kicad-9.0-releases PPA (the VM's build), Java 25 (noble-updates; the FULL jre, not -headless: Freerouting 1.9.0 needs a headful AWT toolkit under Xvfb even in command-line mode), Xvfb, numpy; fetches the two
 # Freerouting jars and checks them against the VM's sha256; clones the public mirror at the VM's path (the runner then overlays the VM's
 # working tree with rsync); writes a no-op service-group script so the profiles need no change. Log /root/setup.log, marker SETUP-DONE or SETUP-FAILED <step>.
 exec > /root/setup.log 2>&1; set -x
 export DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 touch /root/.no_auto_tmux
-apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy xvfb openjdk-25-jre-headless rsync unzip procps || { echo "SETUP-FAILED apt"; exit 1; }
+apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy xvfb openjdk-25-jre rsync unzip procps || { echo "SETUP-FAILED apt"; exit 1; }
 add-apt-repository -y ppa:kicad/kicad-9.0-releases && apt-get update && apt-get install -y --no-install-recommends kicad || { echo "SETUP-FAILED kicad"; exit 1; }
 mkdir -p /root/bin
 curl -fsSL -o /root/bin/freerouting-1.9.0.jar https://github.com/freerouting/freerouting/releases/download/v1.9.0/freerouting-1.9.0.jar || { echo "SETUP-FAILED download19"; exit 1; }

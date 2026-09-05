@@ -268,8 +268,10 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
         done = set()
         if os.path.exists(results):
             for l in open(results):
-                try: r = json.loads(l); done.add(r.get("key"))
-                except Exception: pass
+                try: r = json.loads(l)
+                except Exception: continue
+                if r.get("verdict") == "NO_SESSION" and (r.get("wall_s") or 0) < 60: continue   # a router that died within a minute is a tool failure (no display, no Java), not a measurement: run it again
+                done.add(r.get("key"))
         def ident(cfg):
             """(jar path, jar sha, configuration key): the key is the pre-route board, the jar, the configuration and the route block; never the host, the timeout scale or the time"""
             jar_path = os.path.expanduser(cfg.get("jar", exp.get("jar", "~/bin/freerouting-1.9.0.jar")))
