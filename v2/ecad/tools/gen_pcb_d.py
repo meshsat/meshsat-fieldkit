@@ -175,7 +175,7 @@ text("J_PWR1 MEZZ_CELL GND", J_PWR[0], J_PWR[1] + 6.5, pcbnew.B_SilkS, 0.8, 0.15
 for r, label in ((N_STRIP, "N: D6 core (top clock/expander/LED, bottom codec/audio/PTT)"), (S_STRIP, "S: DNP headers (top), jumpers + TPs (bottom)"), (W_COL, "W: 8 V boost")):
     rect(r, pcbnew.Dwgs_User, 0.1); text(label, (r[0] + r[2]) / 2, (r[1] + r[3]) / 2, pcbnew.Dwgs_User, 0.8, 0.14, angle=90 if r is W_COL else 0)
 # ---------------------------------------------------------------- legends
-text("PCB-D APRS BOARD REV A (D5) | MESHSAT-709/748 | 2026-09-03", 10, -1.5, pcbnew.B_SilkS, 1.0, 0.17, mirror=True)
+text("PCB-D APRS BOARD REV A (D7) | MESHSAT-709/748/804 | 2026-09-05", 10, -1.5, pcbnew.B_SilkS, 1.0, 0.17, mirror=True)
 text("underside faces PCB-A: jumpers + test points", 10, -5.0, pcbnew.B_SilkS, 0.85, 0.15, mirror=True)
 pcbnew.SaveBoard(OUT, board)
 print("saved", OUT, "standoff holes:", n - 1, "module pads:", len(list(mod.Pads())) if mod else 0)
