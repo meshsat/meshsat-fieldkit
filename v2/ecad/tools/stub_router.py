@@ -14,7 +14,7 @@ X0, Y0 = eb.GetLeft() / 1e6 - 1.0, eb.GetTop() / 1e6 - 1.0
 NX, NY = int(eb.GetWidth() / 1e6 / G) + 20, int(eb.GetHeight() / 1e6 / G) + 20
 def cell(x_mm, y_mm): return int(round((x_mm - X0) / G)), int(round((y_mm - Y0) / G))
 def mm(v): return v / 1e6
-LAYERS = [pcbnew.F_Cu, pcbnew.B_Cu]; INNER = [pcbnew.In1_Cu, pcbnew.In2_Cu]
+LAYERS = [pcbnew.F_Cu, pcbnew.B_Cu]; INNER = [pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.In3_Cu, pcbnew.In4_Cu]   # inner layers up to six-layer boards (B15)
 # ---- rasterisation helpers (grid index j = x, i = y)
 def disc(mask, cx, cy, r):
     i0, i1 = max(0, int((cy - r - Y0) / G)), min(NY - 1, int((cy + r - Y0) / G) + 1); j0, j1 = max(0, int((cx - r - X0) / G)), min(NX - 1, int((cx + r - X0) / G) + 1)
