@@ -17,8 +17,8 @@ Six boards, five assembled by the fabricator (standard assembly; the economic ti
 | Board | Folder | Size (mm) | Layers | Stackup | Assembly |
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O A21 | `PCB-A-POWER-A21/` | 285 x 160 | 4 | JLC04161H-7628 | top |
-| PCB-B COMPUTE B14 | `PCB-B-COMPUTE-B14/` | 245 x 170 | 4 | JLC04161H-7628 | top, bottom 1 |
-| PCB-C CONTROL PANEL C5 | `PCB-C-DISPLAY-C5/` | 442 x 311 | 2 | standard, 2.0 mm, vias plugged | top (LEDs), bottom (cluster and connectors) |
+| PCB-B COMPUTE B15 | `PCB-B-COMPUTE-B15/` | 245 x 170 | 6 | JLC06161H-3313 (In1 solid ground, In4 +5V plane) | top, bottom 1 |
+| PCB-C PANEL BACKER C6 | `PCB-C-DISPLAY-C6/` | 344 x 228 U, 252 x 202 void | 2 | standard, 1.6 mm | top (LEDs), bottom (cluster and connectors); the face itself is the aluminium plate of `release/revA/case/face-plate/` |
 | PCB-D APRS D7 | `PCB-D-APRS-D7/` | 80 x 62 | 4 | JLC04161H-7628 | top 62, bottom 1 |
 | PCB-E1 DOCK STRIP E4 | `PCB-E1-DOCK-E4/` | 278 x 60 | 4 | JLC04161H-7628 | top |
 | PCB-E5 DOCK BLOCK E5 | `PCB-E5-BLOCK-E5/` | 43 x 26 | 2 | standard, 2 oz outer copper | none |
@@ -31,7 +31,7 @@ If you change a board first, regenerate it (`README.md`, "Regenerating a board")
 
 ## 2. Everything else to buy
 
-Case and frame: Peli 1520EU without foam and the 1520PF special application panel frame (the frame kit brings the inserts; confirm the insert thread against the M3 x 8 screws before ordering fasteners). Orange was chosen for the kits.
+Case and frame: Peli 1450 without foam and the 1450PF special application panel frame (the frame kit brings the inserts; confirm the insert thread against the M3 screws before ordering fasteners). Orange was chosen for the kits. The 1520EU bought on 3 Sep 2026 is not the kit's case any more (design record 32.41). The face plate is a CNC part from the DXF and STEP in `release/revA/case/face-plate/` (5754 or 6061, black anodised, laser-marked from the SVG); the sixteen LEDs need sixteen Mentor 1282.5004 light guides, the plate six PEM SO-M3-10 standoffs.
 
 Modules that mount on the boards (one kit, the Compute Module 5 set of appendix 32.35): Raspberry Pi Compute Module 5 (8 GB, 64 GB eMMC, wireless, CM5108064) with the CM5 Cooler and the Raspberry Pi Compute Module antenna kit, an AsiaRF AW7915-AED M.2 WiFi card (the kit-to-kit link since B14, `vendor/wifi/`) with two IPEX to SMA bulkhead pigtails of about 250 mm and two dual-band 2.4/5 GHz SMA whips, a Quectel EG25-G mini PCIe LTE card with a nano-SIM and two U.FL to SMA pigtails, RTL-SDR Blog V4 (or LimeSDR Mini 2.0), RockBLOCK 9704 (or 9603) with the Ground Control bracket, Raspberry Pi Touch Display 2 with the Standard-Mini display cable (22 to 15 pin), WeAct 3.7 inch e-paper, a CR2032 cell, and U.FL to SMA pigtails for the GNSS, LoRa and ZigBee antennas. The u-blox NEO-M9N GNSS, the Seeed Wio-SX1262 LoRa and the Ebyte E72-2G4M20S1E ZigBee modules are soldered by the assembler; the WM8960 codec sits on PCB-D. No GPS puck, WiFi dongle, LoRa board, cellular board, ZigBee dongle or USB cable is bought any more. There is no separate uninterruptible supply module: PCB-A is the charger, the gauge and the power control.
 
@@ -51,7 +51,7 @@ Panel hardware: two 19 mm and 16 mm anti-vandal switches with LED rings (SW_MAIN
 
 ## 3. Prepare the case
 
-1. Fit the 1520PF frame per Peli's instructions; its 16 inserts are the panel's screw pattern (431.8 x 301.2 mm, appendix 25.1).
+1. Fit the 1450PF frame per Peli's instructions; its ten inserts are the face plate's screw pattern (design record 32.42, the plate drawing).
 2. Junction strip E2 goes on the +Z wall between the wall ribs: six M3 wall screws into the 1520's drill points (self-tapping brass inserts or nuts inside the wall recess), seven SMA bulkheads in the wall next to it on the strip's D-hole pattern (6.5 mm). The strip's lower coupler sides face the wall pigtails, the upper sides the device pigtails.
 3. Shore inlet: the IP68 2-pin bulkhead on the -Z wall, lead to the dock's `J_DCIN` (JST-VH, 18 AWG, 400 mm).
 4. Dock strip E1 on the floor: degrease with IPA, four VHB pads at the corners, locate it by dropping two rods through its south rod holes before the pads touch.
@@ -75,7 +75,7 @@ Follow `docs/ASSEMBLY.md` section 2 step by step; the short form:
 4. 38 mm spacers (D7: the DMR858M heatsink needs the extra 3 mm under B14), PCB-B B14: the WiFi P2P card into `J_WIFI1` on its M2.5 standoff with its two pigtails to the east wall P2P bulkheads; press the Compute Module 5 onto its two receptacles and screw it to the four 4.0 mm standoffs, clip the CM5 Cooler on with its fan lead in `J_FAN` and its antenna lead to the WiFi bulkhead, the LTE card into `J_LTE1` on its two standoffs with the SIM in `J_SIM1` and its pigtails to the LTE bulkhead, the SDR stick, the RockBLOCK, the display flex into `J_DISP`, a CR2032 in `BT1`, the three rail leads from PCB-A into `J_5V_M1`, `J_5V_M2` and `J_5V_PI` (no plug: the module's 5 V is on the board), the GNSS, LoRa and ZigBee antenna pigtails, the panel ribbon in `J_PANEL` and the 2x9 ribbon in `J_AB1`. Nyloc on top.
 5. Battery module into its cradle, thermistor pair and the XT60 into the dock strip. The module's own fuse is at its positive terminal, so it is fused before the cable.
 6. RF: the seven right-angle plugs sit in their printed clamps on the dock strip and mate blind with the receptacles under PCB-A when the stack is lowered. The wall connectors are the MIL-DTL-38999 receptacles; their pigtails are torqued once at the wall side and finger tight at the device side, RG-316 with a 12.5 mm bend radius, tied at both ends.
-7. Panel C5: the sealed face of `docs/ASSEMBLY.md` section 2 step 8: the panel-mount parts through the face with their seals, leads soldered to the underside lands and beaded, the LED joints beaded, the e-paper module taped under its window with its lens on the face, the display glass on its tape frame, the underside coated, the PORON ring on the frame, the panel into the frame on 16 x M3 x 10 with star washers. Flood and hose the panel in its frame before the stack goes in (appendix 32.34).
+7. The face: the aluminium plate with its parts (`docs/ASSEMBLY.md` section 2 step 8): press the six standoffs and the sixteen light guides, fit the switches and the sounder through the plate with their seals, the e-paper module taped under its window with its lens in the top pocket, the display glass in its pocket on the tape frame; then the backer C6 onto the standoffs (its LEDs under the light guides, the switch leads to the lands beside each site), the PORON ring in the band, the plate into the frame on ten M3 with star washers. Flood and hose the face in its frame before the stack goes in (appendix 32.34, the same procedure).
 8. Lid: the case is bought without foam; nothing on the panel face is taller than 20 mm and the lid cavity is 46 mm deep.
 
 Torque table, threadlocker rules and every lead's wire gauge, length and connector are in `docs/ASSEMBLY.md` sections 1 and 4. Never put threadlocker on Nyloc nuts or on the switch nuts.
@@ -102,7 +102,7 @@ Removal for maintenance (`docs/ASSEMBLY.md` section 7): lid, 16 screws, ribbon a
 
 ## 9. Known gaps of Rev A
 
-- The sealed panel face (C5) is a construction, not a test result: the flood, hose, rain and dust procedure of appendix 32.34 has not been run on any panel, and the tape's peel on the printed glass border and on the black solder mask is untested.
+- The sealed face (the plate with C6 under it) is a construction, not a test result: the flood, hose, rain and dust procedure of appendix 32.34 has not been run on any face, and the tape's peel on the printed glass border and on anodised aluminium is untested.
 
 - Nothing here has been built and no board has been fabricated. Report what does not fit on MESHSAT-709.
 - The spring-pin return path is three contacts at about 1.1 A each, inside the Preci-Dip contact's 3.5 A rating; the module current runs on the separate 9 A pins.
