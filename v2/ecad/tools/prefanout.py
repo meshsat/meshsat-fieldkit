@@ -61,9 +61,9 @@ for fp in b.GetFootprints():
                 mid = VECTOR2I(int((c.x + v.x) / 2), int((c.y + v.y) / 2)); q3 = VECTOR2I(int((c.x + 3 * v.x) / 4), int((c.y + 3 * v.y) / 4))
                 if clear(v, pad) and clear(mid, pad, TRACK_W / 2) and clear(q3, pad, TRACK_W / 2):
                     layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
-                    via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH)
+                    via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)   # locked like the escapes (5 Sep 2026): the router keeps the pad-to-pour tie and the width gates skip it
                     via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via)
-                    t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TRACK_W); t.SetLayer(layer); t.SetNet(pad.GetNet()); b.Add(t)
+                    t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TRACK_W); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t)
                     placed.append(v); placed_nets.append((v, pad.GetNetname())); added += 1; done = True; break
             if done: break
         if not done: skipped += 1; print("  no room for a fanout via at %s pad %s (%s)" % (fp.GetReference(), pad.GetNumber(), pad.GetNetname()))

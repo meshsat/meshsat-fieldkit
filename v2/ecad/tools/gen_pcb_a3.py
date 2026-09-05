@@ -193,29 +193,34 @@ outer_pour("CELL_N", "return bar", (-149, -66, -121, -60))
 #     (the RAIL and BOOST classes at 2.0 and 1.5 mm left 20 connections open; the classes are now 1.0 and 0.8 and these bands carry the current).
 #     Rails M2 and PI run from their output capacitors (C96 at (-107, -15), C97 at (-75, -11)) west along the boost row and north to the VH connectors at y 44.5;
 #     rail M1 has its In2 plane. Boost inputs: fuse (THT, y -44.3) north to the inductor pad (fanned out to a via). CELL+ gets a tap to the mezzanine fuse F2.
-B = (pcbnew.B_Cu,)
-# The bands (board frame, x = KiCad x - 150, y = 110 - KiCad y). Run 8 of 5 Sep showed that the PI collector at KiCad y 119.5 to 124 was cut by the boost 3
-# inductor band and its riser by the boost 2 inductor band (same layer, other net), so the PI rail now runs north of the boost row (KiCad y 109.5 to 112.8)
-# with a tap east of the boost 3 inductor band down to the U24 island's stitch vias; the M2 collector is widened north to 6.5 mm so U23's escape via row
-# (KiCad y 127.25) leaves 4.7 mm of it. Every band also gets a B.Cu track keep-out (vias allowed, so escape.py and prefanout.py ignore it): the router
-# may not cut a band with another net's track; it crosses on F.Cu, In1 or In2.
-BANDS = [("+5V_M2", "rail M2 collector", (-140.0, -18.5, -103.0, -12.0), 2), ("+5V_M2", "rail M2 riser", (-140.0, -18.5, -134.0, 46.5), 3),
-         ("+5V_PI", "rail PI collector", (-125.0, -2.8, -70.5, 0.5), 2), ("+5V_PI", "rail PI riser", (-125.0, -2.8, -119.0, 46.5), 3), ("+5V_PI", "rail PI tap", (-79.5, -14.0, -70.5, 0.5), 3),
-         ("BOOST1_IN", "boost 1 feed", (-158.0, -46.5, -152.0, -3.5), 2), ("BOOST1_IN", "boost 1 inductor", (-158.0, -9.0, -145.0, -3.5), 3),
-         ("BOOST2_IN", "boost 2 feed", (-133.0, -46.5, -127.0, -3.5), 2), ("BOOST2_IN", "boost 2 inductor", (-133.0, -9.0, -113.0, -3.5), 3),
-         ("BOOST3_IN", "boost 3 feed", (-108.0, -46.5, -102.0, -19.5), 2), ("BOOST3_IN", "boost 3 link", (-108.0, -22.5, -80.0, -19.5), 3), ("BOOST3_IN", "boost 3 inductor", (-86.0, -22.5, -80.0, -3.5), 4)]
+B = (pcbnew.B_Cu,); I2 = (pcbnew.In2_Cu,)
+def K(x0, y0, x1, y1): return (x0 - OX, OY - y1, x1 - OX, OY - y0)      # a rectangle given in the KiCad frame, for outer_pour and track_keepout
 def track_keepout(name, rect, layer=pcbnew.B_Cu):
     z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
     z.SetLayer(layer); z.SetZoneName("keep tracks off " + name); o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     board.Add(z)
+# Rail bands on B.Cu (KiCad frame; converters U22/U23/U24 at x 2.1/34.1/66.1, y 130; inductors L2/L3/L4 pad 1 at x -1.3/30.7/62.7, y 111.5 to 120.5;
+# VH connectors J_5V_M2 at (13.2, 65.5) and J_5V_PI at (28.2, 65.5)). Runs 8 and 9 of 5 Sep showed every east-west collector south of the inductor row cut
+# by a north-south band of another net, so both collectors run north of the inductors, side by side (M2 at y 109.5 to 112.8, PI at 105.5 to 108.8), each
+# with a tap down to its island's stitch vias east of the output capacitors and a riser to its VH pin. Every band has a B.Cu track keep-out (vias allowed,
+# so escape.py and prefanout.py ignore it): the router crosses a band on F.Cu, In1 or In2 and cannot slice it.
+BANDS = [("+5V_M2", "rail M2 collector", K(10.0, 109.5, 51.5, 112.8), 2), ("+5V_M2", "rail M2 tap", K(47.5, 109.5, 51.5, 128.5), 3), ("+5V_M2", "rail M2 riser", K(10.0, 63.5, 16.0, 112.8), 3),
+         ("+5V_PI", "rail PI collector", K(25.0, 105.5, 79.5, 108.8), 2), ("+5V_PI", "rail PI tap", K(70.5, 105.5, 79.5, 124.0), 3), ("+5V_PI", "rail PI riser", K(25.0, 63.5, 31.0, 108.8), 3)]
 for net, name, rect, prio in BANDS: outer_pour(net, name, rect, layers=B, priority=prio); track_keepout(name, rect)
+# Boost feeds on In2 (the +5V_M1 plane gives up three 6 mm slots): the blade fuses' BOOST pads (pin 2, x 5/30/55, y 154.3 and 157.7, plated through, so
+# the column starts in the pad itself) north under the CELL+ node bar to the inductor row, where a jog reaches the stitch vias of a top-side tap island
+# at the south end of each inductor's pad 1. Run 9's B.Cu feed bands were centred on the fuses' CELL+ pads and cut by the node bar at y 148.5 to 152.
+BOOST_IN2 = [("BOOST1_IN", "boost 1 column", K(3.5, 121.0, 9.5, 158.5), 2), ("BOOST1_IN", "boost 1 jog", K(-3.5, 120.5, 9.5, 124.5), 3),
+             ("BOOST2_IN", "boost 2 column", K(27.0, 121.0, 33.0, 158.5), 2),
+             ("BOOST3_IN", "boost 3 column", K(52.0, 121.0, 58.0, 158.5), 2), ("BOOST3_IN", "boost 3 jog", K(52.0, 120.5, 64.5, 124.5), 3)]
+for net, name, rect, prio in BOOST_IN2: outer_pour(net, name, rect, layers=I2, priority=prio); track_keepout(name, rect, layer=pcbnew.In2_Cu)
 # --- A21 output islands (5 Sep 2026, appendix 32.39): the TPS61288L VOUT pin is a 1.25 x 0.40 mm pad with its neighbours 0.25 mm away, so no 1.0 mm track
 #     can leave it (the six opens of the 14:20 run, every one at pad 5 of U22/U23/U24) and the escape scheme had given each rail one 0.2 mm stub and one
 #     0.45/0.25 via as its whole current path. Each converter gets a top-side copper island: a 0.5 mm neck over the east end of pad 5 (between pad 6 and the
-#     package edge), widening east of the escape vias over the output capacitor group, stitched to the rail's bottom band (M2, PI) or the In2 plane (M1) by six
-#     locked 0.8/0.4 vias. The RAIL class is the link width only (0.5 mm); the islands, bands and planes carry the current. route_one.sh keeps zones of this
-#     size in the DSN, so the router treats them as conduction areas and routes the other nets around them. Coordinates in the KiCad frame, relative to the part.
+#     package edge), widening east of the escape vias over the output capacitor group, stitched to the rail's bottom tap (M2, PI) or the In2 plane (M1) by six
+#     locked 0.8/0.4 vias. The RAIL class is the link width only (0.5 mm); the islands, bands and planes carry the current. Coordinates in the KiCad frame,
+#     relative to the part.
 def island(netname, name, pts_k, priority=3, layer=pcbnew.F_Cu):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name + " " + board.GetLayerName(layer))
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.15)); o = z.Outline(); o.NewOutline()
@@ -225,12 +230,17 @@ def stitch(netname, pts_k):
     for x, y in pts_k:
         v = pcbnew.PCB_VIA(board); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetDrill(FromMM(0.4)); v.SetWidth(FromMM(0.8)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
         v.SetNet(net_for(netname, create=False)); v.SetLocked(True); board.Add(v)
-for ref, net, vias in (("U22", "+5V_M1", [(4.5, -13.5 + 2.0 * k) for k in range(6)]),                                                  # into the In2 plane, in the column between the converter and its capacitors (clear of the M2 collector)
-                       ("U23", "+5V_M2", [(4.38 + 1.5 * k, -2.6) for k in range(6)]),                                                   # into the M2 collector (B.Cu, KiCad y 122.0 to 128.5)
-                       ("U24", "+5V_PI", [(5.13 + 1.5 * k, -7.0) for k in range(6)])):                                                  # into the PI tap (B.Cu, KiCad x 70.5 to 79.5, y 109.5 to 124)
+for ref, net, vias in (("U22", "+5V_M1", [(14.88, -6.0), (16.38, -6.0), (14.88, -4.4), (16.38, -4.4), (14.88, -2.8), (16.38, -2.8)]),      # into the In2 plane, south of C70, between the boost 1 and 2 columns
+                       ("U23", "+5V_M2", [(13.88, -6.0), (15.38, -6.0), (16.88, -6.0), (13.88, -4.4), (15.38, -4.4), (16.88, -4.4)]),      # into the M2 tap (B.Cu, KiCad x 47.5 to 51.5)
+                       ("U24", "+5V_PI", [(5.13 + 1.5 * k, -7.0) for k in range(6)])):                                                  # into the PI tap (B.Cu, KiCad x 70.5 to 79.5, y 105.5 to 124)
     x0 = placed[ref].GetPosition().x / 1e6; y0 = placed[ref].GetPosition().y / 1e6
     island(net, "VOUT island " + ref, [(x0 + 1.4, y0 - 0.05), (x0 + 3.6, y0 - 0.05), (x0 + 3.6, y0 - 15.4), (x0 + 17.5, y0 - 15.4), (x0 + 17.5, y0 + 4.0), (x0 + 3.6, y0 + 4.0), (x0 + 3.6, y0 + 0.45), (x0 + 1.4, y0 + 0.45)])
     stitch(net, [(x0 + dx, y0 + dy) for dx, dy in vias])
+# Inductor tap islands: over the south end of pad 1 (2.38 x 9.0 mm, y 111.5 to 120.5) and 3.5 mm beyond it, four 0.8/0.4 vias down to the In2 feed
+for ref, net in (("L2", "BOOST1_IN"), ("L3", "BOOST2_IN"), ("L4", "BOOST3_IN")):
+    pad = [p for p in placed[ref].Pads() if p.GetNumber() == "1"][0]; px, py = pad.GetPosition().x / 1e6, pad.GetPosition().y / 1e6
+    island(net, "inductor tap " + ref, [(px - 1.7, py + 3.8), (px + 1.7, py + 3.8), (px + 1.7, py + 8.0), (px - 1.7, py + 8.0)])
+    stitch(net, [(px - 0.7, py + 5.6), (px + 0.7, py + 5.6), (px - 0.7, py + 7.0), (px + 0.7, py + 7.0)])
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
 # The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
 # footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
@@ -241,7 +251,7 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
 CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.4, 0.8, 0.4, 0.4, 0.25), "BANK": (0.15, 0.6, 1.2, 0.6, 0.5, 0.25), "BOOST": (0.15, 0.8, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.15, 0.5, 1.0, 0.5, 0.5, 0.3), "RF": (0.3, 0.35, 0.7, 0.3, 0.2, 0.15)}   # pack node: 4 mm tracks, up to 10 A peaks   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
-PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("SHORE_12V", "PWR"), ("HEAT_*", "PWR"), ("PMID", "PWR"), ("SYS_CHG", "PWR"), ("SW*_CHG", "PWR"), ("CELL+", "BANK"), ("CELL_N", "BANK"), ("MEZZ_CELL", "BANK"), ("BOOST*_IN", "BOOST"), ("SW1", "BOOST"), ("SW2", "BOOST"), ("SW3", "BOOST"), ("+5V_M1", "RAIL"), ("+5V_M2", "RAIL"), ("+5V_PI", "RAIL"), ("RF_*", "RF")]
+PATTERNS = [("USB_*", "USB"), ("5V_*", "PWR"), ("SW_*", "PWR"), ("GND", "PWR"), ("SHORE_12V", "PWR"), ("HEAT_*", "PWR"), ("PMID", "PWR"), ("SYS_CHG", "PWR"), ("SW*_CHG", "PWR"), ("CELL+", "BANK"), ("CELL_N", "BANK"), ("MEZZ_CELL", "BANK"), ("BOOST*_IN", "BOOST"), ("SW1", "BOOST"), ("SW2", "BOOST"), ("SW3", "BOOST"), ("+5V_M1", "RAIL"), ("+5V_M2", "RAIL"), ("+5V_PI", "RAIL"), ("RF_*", "RF")]
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     for name, vals in CLASSES.items():
