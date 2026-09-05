@@ -20,8 +20,11 @@ def keepout_circle(r, name, n=36):
     return '\t(zone (net 0) (net_name "") (layers "F&B.Cu") (name "%s") (hatch edge 0.5) (keepout (tracks not_allowed) (vias not_allowed) (pads allowed) (copperpour not_allowed) (footprints allowed)) (polygon (pts %s)))' % (name, pts)
 def tht(num, x, y, drill=1.1, size=2.0, shape="circle"): return '\t(pad "%s" thru_hole %s (at %.3f %.3f) (size %.2f %.2f) (drill %.2f) (layers "*.Cu" "*.Mask"))' % (num, shape, x, y, size, size, drill)
 def text(t, x, y, layer="F.Fab", size=1.0): return '\t(fp_text user "%s" (at %.3f %.3f) (layer "%s") (effects (font (size %g %g) (thickness 0.15))%s))' % (t, x, y, layer, size, size, " (justify mirror)" if layer.startswith("B.") else "")
+WRITTEN = []
 def write(name, lines):
-    s = "\n".join(lines) + "\n)\n"; open(os.path.join(OUT, name + ".kicad_mod"), "w").write(s); print("wrote", name)
+    s = "\n".join(lines) + "\n)\n"
+    if "%." in s: raise SystemExit("footprint %s has an unformatted label placeholder (head() lines 8 and 9 need the label offset)" % name)   # 5 Sep 2026: BackerScrew shipped with %.2f in it and KiCad loaded None
+    open(os.path.join(OUT, name + ".kicad_mod"), "w").write(s); WRITTEN.append(name); print("wrote", name)
 def smd_back(num, x, y, w=2.0, h=3.0):
     """Solder land on the underside for a flying lead: the footprint sits on the face (its hole and body are face features), the lead is soldered from below."""
     return '\t(pad "%s" smd rect (at %.3f %.3f) (size %.2f %.2f) (layers "B.Cu" "B.Paste" "B.Mask"))' % (num, x, y, w, h)
@@ -79,7 +82,7 @@ def body_slot(name, w, h, npads, pad_r, descr):
     L.append(text("body slot %.0f x %.0f, lands 1..%d underneath" % (w, h, npads), 0, pad_r + 2.5, "B.Fab", 0.8)); write(name, L)
 body_slot("ToggleBody_SPDT", 15.0, 22.0, 3, 15.0, "APEM 5636ADKB-2V body passing the backer board: 15 x 22 slot, three lead lands underneath; the keyed 6.5 hole is in the face plate")
 body_slot("ToggleBody_DPDT", 15.0, 12.0, 6, 11.5, "NKK M2044SD3A01 body passing the backer board: 15 x 12 slot, six lead lands underneath; the D hole is in the face plate")
-L = head("BackerScrew_M3_GND", "C6 backer screw M3 into the plate's self-clinching standoff: plated hole 3.2, 6.0 mm ring both sides, GND", "backer screw gnd", "through_hole")
+L = head("BackerScrew_M3_GND", "C6 backer screw M3 into the plate's self-clinching standoff: plated hole 3.2, 6.0 mm ring both sides, GND", "backer screw gnd", "through_hole"); L[8] %= 4.5; L[9] %= 4.5
 L.append('\t(pad "1" thru_hole circle (at 0 0) (size 6.0 6.0) (drill 3.2) (layers "*.Cu" "*.Mask"))'); L.append(circle(0, 0, 3.5, "F.CrtYd", 0.05)); write("BackerScrew_M3_GND", L)
 panel_switch("GuardedToggle_SPDT", 6.5, 13.0, 3, 11.0, "APEM 5636ADKB-2V locking toggle, K front seal (O-ring + U360 gasket), 6.5 hole with the 2.70 x 1.10 keyway toward the operator (case -Y), three lead lands underneath", keyway=90.0)   # footprint +y is KiCad down = case -Y
 # panel-mount IP68 sounder Floyd Bell MC-09-530-Q (docs/respin-research-seal-2026-09-04.md f): 1-1/8 in hole (28.575), bezel gasket 61663 on the face,
@@ -120,3 +123,13 @@ for name, target in (("PogoPins_2x4", False), ("PogoTargets_2x4", True)):
 for name, d in (("GuidePin_Dock", 4.1), ("GuidePin_Stack", 4.3)):
     L = head(name, "landing guide pin seat, %s mm hole" % d, "guide pin dock", "through_hole"); L[8] %= 4.0; L[9] %= 4.0
     L.append(npth(0, 0, d)); L.append(circle(0, 0, 4.0, "F.CrtYd", 0.05)); L.append(circle(0, 0, 3.5, "F.SilkS")); write(name, L)
+
+
+# self-test (5 Sep 2026): every footprint written above must load in KiCad, or the chain stops here instead of at a silent "not found" later
+try:
+    import pcbnew
+    bad = [n for n in WRITTEN if pcbnew.FootprintLoad(OUT, n) is None]
+    if bad: raise SystemExit("footprints KiCad cannot load: %s" % ", ".join(bad))
+    print("footprint self-test: %d loaded" % len(WRITTEN))
+except ImportError:
+    print("footprint self-test skipped (no pcbnew)")
