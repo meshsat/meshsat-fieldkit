@@ -10,7 +10,7 @@ Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying 
 - `pcb-a-power-render-top-A4.png`, `pcb-a-power-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-a-power-schematic.pdf`: full schematic; `pcb-a-power-drc.rpt`: the DRC report of the exported board
 
-## PCB-B COMPUTE Rev A (B13), folder `PCB-B-COMPUTE-B13/`, 245 x 170 mm, 4 layers
+## PCB-B COMPUTE Rev A (B14), folder `PCB-B-COMPUTE-B14/`, 245 x 170 mm, 4 layers
 
 - `pcb-b-compute-1to1-top.pdf`, `pcb-b-compute-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-b-compute-assembly-top.pdf`, `pcb-b-compute-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
