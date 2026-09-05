@@ -202,11 +202,13 @@ def track_keepout(name, rect, layer=pcbnew.B_Cu):
     board.Add(z)
 # Rail bands on B.Cu (KiCad frame; converters U22/U23/U24 at x 2.1/34.1/66.1, y 130; inductors L2/L3/L4 pad 1 at x -1.3/30.7/62.7, y 111.5 to 120.5;
 # VH connectors J_5V_M2 at (13.2, 65.5) and J_5V_PI at (28.2, 65.5)). Runs 8 and 9 of 5 Sep showed every east-west collector south of the inductor row cut
-# by a north-south band of another net, so both collectors run north of the inductors, side by side (M2 at y 109.5 to 112.8, PI at 105.5 to 108.8), each
+# by a north-south band of another net, so both collectors run north of the inductors, side by side (M2 at y 109.5 to 112.8, PI at 103.5 to 106.8), each
 # with a tap down to its island's stitch vias east of the output capacitors and a riser to its VH pin. Every band has a B.Cu track keep-out (vias allowed,
 # so escape.py and prefanout.py ignore it): the router crosses a band on F.Cu, In1 or In2 and cannot slice it.
 BANDS = [("+5V_M2", "rail M2 collector", K(10.0, 109.5, 51.5, 112.8), 2), ("+5V_M2", "rail M2 tap", K(47.5, 109.5, 51.5, 128.5), 3), ("+5V_M2", "rail M2 riser", K(10.0, 63.5, 16.0, 112.8), 3),
-         ("+5V_PI", "rail PI collector", K(25.0, 105.5, 79.5, 108.8), 2), ("+5V_PI", "rail PI tap", K(70.5, 105.5, 79.5, 124.0), 3), ("+5V_PI", "rail PI riser", K(25.0, 63.5, 31.0, 108.8), 3)]
+         ("+5V_PI", "rail PI collector", K(25.0, 103.5, 79.5, 106.8), 2), ("+5V_PI", "rail PI tap", K(70.5, 103.5, 79.5, 124.0), 3), ("+5V_PI", "rail PI riser", K(25.0, 63.5, 31.0, 106.8), 3)]
+# (the PI corridor sits 2 mm further north than the M2 one leaves room for: run 12 of 5 Sep left R18 pin 2 (LED_PWR_A, at (25.4, 107.6)) open under the
+#  riser's keep-out, since Freerouting places no via inside a wire keep-out and that net has to leave on an inner layer)
 for net, name, rect, prio in BANDS: outer_pour(net, name, rect, layers=B, priority=prio); track_keepout(name, rect)
 # Boost feeds on In2 (the +5V_M1 plane gives up three 6 mm slots): the blade fuses' BOOST pads (pin 2, x 5/30/55, y 154.3 and 157.7, plated through, so
 # the column starts in the pad itself) north under the CELL+ node bar to the inductor row, where a jog reaches the stitch vias of a top-side tap island
