@@ -84,7 +84,7 @@ REGIONS = [
  ("CORE_C", (5.5, -17.5, 19.0, 13.5), ["U5", "C33", "C34", "C35", "C36", "C37"], False),
  ("CORE_E", (19.5, -17.5, 34.0, 13.5), ["R2", "R4", "C13", "C14"], False),
  ("BOOST_W", (-27, -30.4, -18, 30.4), ["L1", "U1", "C23", "C24", "C26", "C27", "C28", "C29", "C20", "C21", "C22", "C25", "C30", "R30", "R31", "R32", "R33", "R34", "R35"], False),
- ("BENCH_BOT", (-30, -30.4, 19, -22.6), ["R36", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"], True),
+ ("BENCH_BOT", (-30, -30.4, 19, -22.6), ["R36", "R49", "R50", "R51", "R52", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"], True),
 ]
 GAP = 1.2                      # between any two packed parts (0.7 left fine-pitch ICs wall to wall with passives)
 FINE_MARGIN = 1.4              # extra on the pin sides of a fine-pitch IC so its escapes (escape.py) keep a via lane

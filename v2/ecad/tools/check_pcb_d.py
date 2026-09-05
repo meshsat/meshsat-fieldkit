@@ -67,8 +67,8 @@ if fps:
     u2 = nets_of("U2")
     check(u2.get("16") == "RADIO_COS", "module pin 16 (SPKEN, receive indication output) on RADIO_COS (got %s)" % u2.get("16"))
     check(reach("RADIO_COS", "R42") and reach("RADIO_COS_IN", "R42") and reach("RADIO_COS_IN", "U7"), "carrier detect reaches U7 through R42")
-    for pin, net, rr in (("7", "CH8", "R43"), ("8", "CH4", "R44"), ("9", "CH2", "R45"), ("10", "CH1", "R46")):
-        check(u2.get(pin) == net and reach(net, rr) and reach(net + "_IN", rr) and reach(net + "_IN", "U7"), "channel code pin %s (%s) reaches U7 through %s" % (pin, net, rr))
+    for pin, net, rr, rp in (("7", "CH8", "R43", "R49"), ("8", "CH4", "R44", "R50"), ("9", "CH2", "R45", "R51"), ("10", "CH1", "R46", "R52")):
+        check(u2.get(pin) == net and reach(net, rr) and reach(net + "_IN", rr) and reach(net + "_IN", "U7") and reach(net + "_IN", rp) and reach("GND", rp), "channel code pin %s (%s) reaches U7 through %s with the pull-down %s" % (pin, net, rr, rp))
     check(u2.get("3") == "CS" and reach("CS", "R36") and reach("CS", "R48") and reach("CS_CTL", "U7"), "CS pulled up by R36 and driven by U7 through R48")
     check(u2.get("18") == "RADIO_TX" and u2.get("19") == "RADIO_RX" and reach("RADIO_TX", "R9") and reach("BR_RX", "R9") and reach("BR_RX", "U8") and reach("RADIO_RX", "R8") and reach("BR_TX", "R8") and reach("BR_TX", "U8"), "module control UART reaches U8 through R8 and R9")
     check(fps.get("R2") is not None and fps["R2"].GetValue().startswith("47k") and fps.get("R4") is not None and fps["R4"].GetValue().startswith("1k"), "mic divider R2 47k / R4 1k (got %s / %s)" % (fps["R2"].GetValue() if "R2" in fps else None, fps["R4"].GetValue() if "R4" in fps else None))
