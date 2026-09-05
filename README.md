@@ -43,8 +43,8 @@ Concept renders of the assembled kit as designed (not built; `v2/cad/render/` ho
 |---|---|
 | ![overview](v2/images/concept/meshsat-v2-concept-overview.png) | ![hero](v2/images/concept/meshsat-v2-concept-hero.png) |
 | the open case with the panel and the end-wall antennas | the panel: display, e-paper, switches, indicator column |
-| ![top](v2/images/concept/meshsat-v2-concept-top.png) | ![stack](v2/images/concept/meshsat-v2-concept-stack.png) |
-| the panel from above | the board stack lifted out: dock strip, PCB-A with the APRS mezzanine, the Compute Module 5 carrier |
+| ![top](v2/images/concept/meshsat-v2-concept-top.png) | ![cutaway](v2/images/concept/meshsat-v2-concept-cutaway.png) |
+| the panel from above | the front wall cut away and the panel lifted: the dock strip on the floor, PCB-A with the APRS mezzanine, the Compute Module 5 carrier on the rods, the battery module in its cradle |
 | ![detail](v2/images/concept/meshsat-v2-concept-detail.png) | ![closed](v2/images/concept/meshsat-v2-concept-closed.png) |
 | the switch corner | closed for transport |
 
