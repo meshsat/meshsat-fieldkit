@@ -40,5 +40,6 @@ print('routed-board gate: hard', hard, 'unrouted', un); open('out/b14-clean.txt'
 for u in d.get('unconnected_items', [])[:6]: print('  OPEN', ' ~ '.join('%s@(%.1f,%.1f)' % (i['description'][:50], i['pos']['x'], i['pos']['y']) for i in u['items']))
 PYX
 CLEAN=$(cat out/b14-clean.txt); if [ "$CLEAN" != clean ]; then echo 'B14 NOT CLEAN, not finishing'; echo FINISH-B14-DONE; exit 1; fi
+python3 ../tools/retitle.py $N.kicad_pcb B14 2026-09-05 'MESHSAT-795 |=>MESHSAT-795/802 |' 2>&1 | grep -E 'retitle: [0-9]' | cut -c1-100   # the chain reuses the first generation's silk text
 cd ..; ./tools/finish_board.sh pcb-b-compute pcb-b-compute post_fix_b13.py meshsat-pcb-b-revA-B14 2>&1 | tail -16
 echo FINISH-B14-DONE
