@@ -23,6 +23,7 @@ hard=sum(c[t] for t in ('clearance','shorting_items','tracks_crossing','hole_cle
 PY
 read H < out/par-score.txt; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting to the cleaned board'; cp out/$N-cleaned.kicad_pcb $N.kicad_pcb; fi
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
+bash ../tools/quality_pass.sh "$PWD" $N 2>&1 | grep "quality:" | tail -4   # Stage 3 of the quality programme (6 Sep 2026): straighten and via passes on a copy, DRC-gated, reverted when anything rises
 python3 ../tools/silk_fix_all.py $N.kicad_pcb b 2>&1 | grep -vE 'Debug|leak' | tail -2
 # Owner ruling 5 Sep 2026 17:00 (appendix 32.40): a differential pair over 1 mm of intra-pair mismatch blocks the finish; pair_match.sh meanders the short
 # legs itself, and when it still fails the session audits out/audit/*.png (pair_audit.py), traces the cause and iterates. No human look.
