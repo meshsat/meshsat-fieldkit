@@ -353,6 +353,46 @@
       {
         "netclass": "PWR",
         "pattern": "GND"
+      },
+      {
+        "netclass": "USB",
+        "pattern": "/USB_*"
+      },
+      {
+        "netclass": "CELL",
+        "pattern": "/VIN_CELL"
+      },
+      {
+        "netclass": "CELL",
+        "pattern": "/SW"
+      },
+      {
+        "netclass": "CELL",
+        "pattern": "/V8"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "/+5V_USB"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "/+3V3"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "/+3.3VA"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "/VIN_LDO"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "/LDO_A"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "/GND"
       }
     ]
   },
