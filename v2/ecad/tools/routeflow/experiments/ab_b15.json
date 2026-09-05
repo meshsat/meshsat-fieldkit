@@ -1,0 +1,38 @@
+{
+  "board": "pcb-b-compute",
+  "board_key": "B14",
+  "project": "v2/ecad/pcb-b-compute",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "preroute": "v2/ecad/pcb-b-compute/out/pcb-b-compute-preroute.kicad_pcb",
+  "services_script": "~/meshsat-services.sh",
+  "expect": "Stage 4 gate: 2.4.1 accepts the same DSN, writes a session within the timeout, reaches at least 1.9.0's completion, and scores Q at least 5 percent better on three of five boards with none regressed; otherwise 1.9.0 stays",
+  "route": {
+    "passes": 100,
+    "threads": 1,
+    "timeout": 7200,
+    "power_layers": [
+      "In1.Cu",
+      "In4.Cu"
+    ]
+  },
+  "configs": [
+    {
+      "name": "fr19_base",
+      "jar": "freerouting-1.9.0.jar"
+    },
+    {
+      "name": "fr24_base",
+      "jar": "freerouting-2.4.1.jar"
+    },
+    {
+      "name": "fr19_via200",
+      "jar": "freerouting-1.9.0.jar",
+      "via_costs": 200
+    },
+    {
+      "name": "fr24_via200",
+      "jar": "freerouting-2.4.1.jar",
+      "via_costs": 200
+    }
+  ]
+}

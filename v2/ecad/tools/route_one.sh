@@ -11,7 +11,11 @@ for z in list(b.Zones()):
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
 b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
 PY
-JAR=$HOME/bin/freerouting-1.9.0.jar
+JAR=${FR_JAR:-$HOME/bin/freerouting-1.9.0.jar}   # FR_JAR (6 Sep 2026, Stage 4 A/B): another Freerouting jar, e.g. ~/bin/freerouting-2.4.1.jar (needs Java 25)
+JAVA=${FR_JAVA:-java}; V2_ARGS=()
+case "$(basename "$JAR")" in freerouting-2.*) [ -x /usr/lib/jvm/java-25-openjdk-amd64/bin/java ] && [ -z "${FR_JAVA:-}" ] && JAVA=/usr/lib/jvm/java-25-openjdk-amd64/bin/java
+  V2_ARGS=(--gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false "--router.job_timeout=$(printf '%02d:%02d:%02d' $((${FR_TIMEOUT:-4500} / 3600)) $((${FR_TIMEOUT:-4500} % 3600 / 60)) $((${FR_TIMEOUT:-4500} % 60)))" -drc "$W/fr-drc.json");;
+esac
 # FR_POWER_LAYERS="In1.Cu In4.Cu" (5 Sep 2026, B15): plane layers become power-type layers in the DSN (Freerouting routes no wire there, vias pass)
 # and their board-wide wire keep-outs are dropped; a board-wide wire_keepout polygon made the router thrash for the whole time limit (B14 In1 test, B15 run 1)
 if [ -n "${FR_POWER_LAYERS:-}" ]; then python3 - "$W/$N.dsn" $FR_POWER_LAYERS <<'PYPL'
@@ -39,8 +43,8 @@ PYPL
 fi
 # FR_RULES: a Freerouting rules file (tools/fr_rules.py) with via costs, ripup costs, layer directions and activity; the probe of 6 Sep 2026 showed it is the lever 1.9.0 honours
 RULES_ARG=(); [ -n "${FR_RULES:-}" ] && [ -f "${FR_RULES}" ] && RULES_ARG=(-dr "${FR_RULES}")
-{ echo "{\"jar\": \"$(basename "$JAR")\", \"jar_sha256_16\": \"$(sha256sum "$JAR" | cut -c1-16)\", \"passes\": $P, \"threads\": ${FR_THREADS:-6}, \"timeout\": ${FR_TIMEOUT:-4500}, \"power_layers\": \"${FR_POWER_LAYERS:-}\", \"rules\": \"${FR_RULES:-}\", \"start\": \"$(date -Iseconds)\"}"; } > "$W/run.json"
-timeout ${FR_TIMEOUT:-4500} xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-6} -oit 2 -dct 0 "${RULES_ARG[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
+{ echo "{\"jar\": \"$(basename "$JAR")\", \"jar_sha256_16\": \"$(sha256sum "$JAR" | cut -c1-16)\", \"java\": \"$($JAVA -version 2>&1 | head -1 | tr -d '"')\", \"passes\": $P, \"threads\": ${FR_THREADS:-6}, \"timeout\": ${FR_TIMEOUT:-4500}, \"power_layers\": \"${FR_POWER_LAYERS:-}\", \"rules\": \"${FR_RULES:-}\", \"start\": \"$(date -Iseconds)\"}"; } > "$W/run.json"
+timeout ${FR_TIMEOUT:-4500} xvfb-run -a "$JAVA" -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-6} -oit 2 -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
 pkill -9 -f "^java .*par/$K/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PY'
