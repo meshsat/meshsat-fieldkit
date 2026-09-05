@@ -209,20 +209,7 @@ BANDS = [("+5V_M2", "rail M2 collector", K(10.0, 109.5, 51.5, 112.8), 2), ("+5V_
          ("+5V_PI", "rail PI collector", K(25.0, 103.5, 79.5, 106.8), 2), ("+5V_PI", "rail PI tap", K(70.5, 103.5, 79.5, 124.0), 3), ("+5V_PI", "rail PI riser", K(25.0, 63.5, 31.0, 106.8), 3)]
 # (the PI corridor sits 2 mm further north than the M2 one leaves room for: run 12 of 5 Sep left R18 pin 2 (LED_PWR_A, at (25.4, 107.6)) open under the
 #  riser's keep-out, since Freerouting places no via inside a wire keep-out and that net has to leave on an inner layer)
-for net, name, rect, prio in BANDS: outer_pour(net, name, rect, layers=B, priority=prio); track_keepout(name, rect)
-# Boost feeds on In2 (the +5V_M1 plane gives up three 6 mm slots): the blade fuses' BOOST pads (pin 2, x 5/30/55, y 154.3 and 157.7, plated through, so
-# the column starts in the pad itself) north under the CELL+ node bar to the inductor row, where a jog reaches the stitch vias of a top-side tap island
-# at the south end of each inductor's pad 1. Run 9's B.Cu feed bands were centred on the fuses' CELL+ pads and cut by the node bar at y 148.5 to 152.
-BOOST_IN2 = [("BOOST1_IN", "boost 1 column", K(4.1, 121.0, 9.5, 158.5), 2), ("BOOST1_IN", "boost 1 jog", K(-3.5, 120.5, 9.5, 124.5), 3),   # the column starts 0.5 mm east of U22's BST1 escape via (3.32, 127.25): run 10 left that net open when the keep-out edge touched the via,
-             ("BOOST2_IN", "boost 2 column", K(27.0, 121.0, 33.0, 158.5), 2),
-             ("BOOST3_IN", "boost 3 column", K(52.0, 121.0, 58.0, 158.5), 2), ("BOOST3_IN", "boost 3 jog", K(52.0, 120.5, 64.5, 124.5), 3)]
-for net, name, rect, prio in BOOST_IN2: outer_pour(net, name, rect, layers=I2, priority=prio); track_keepout(name, rect, layer=pcbnew.In2_Cu)
-# --- A21 output islands (5 Sep 2026, appendix 32.39): the TPS61288L VOUT pin is a 1.25 x 0.40 mm pad with its neighbours 0.25 mm away, so no 1.0 mm track
-#     can leave it (the six opens of the 14:20 run, every one at pad 5 of U22/U23/U24) and the escape scheme had given each rail one 0.2 mm stub and one
-#     0.45/0.25 via as its whole current path. Each converter gets a top-side copper island: a 0.5 mm neck over the east end of pad 5 (between pad 6 and the
-#     package edge), widening east of the escape vias over the output capacitor group, stitched to the rail's bottom tap (M2, PI) or the In2 plane (M1) by six
-#     locked 0.8/0.4 vias. The RAIL class is the link width only (0.5 mm); the islands, bands and planes carry the current. Coordinates in the KiCad frame,
-#     relative to the part.
+for net, name, rect, prio in BANDS: outer_pour(net, name, rect, layers=B, priority=prio); ("tap" not in name) and track_keepout(name, rect)   # the taps sit in the capacitor columns whose GND vias need the room (run 13: BOOST_EN could not via past the M2 tap)
 def island(netname, name, pts_k, priority=3, layer=pcbnew.F_Cu):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name + " " + board.GetLayerName(layer))
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.15)); o = z.Outline(); o.NewOutline()
@@ -232,17 +219,41 @@ def stitch(netname, pts_k):
     for x, y in pts_k:
         v = pcbnew.PCB_VIA(board); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetDrill(FromMM(0.4)); v.SetWidth(FromMM(0.8)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
         v.SetNet(net_for(netname, create=False)); v.SetLocked(True); board.Add(v)
+# Boost feeds (up to 9.5 A into the Pi converter at a 3.0 V node): JLC's 4-layer stack has 0.5 oz inner copper, so a 6 mm In2 column alone is good for
+# about 3 A at 10 K. Each feed is therefore an In2 column from the blade fuse's BOOST pad (pin 2, x 5/30/55, y 154.3 and 157.7, plated through, so the
+# column starts in the pad itself) north to the inductor row, widened to a 19 mm foot where it passes under the CELL+ node bar (y 148.5 to 152), and a
+# B.Cu column of the same width in parallel from just north of the node bar to the inductor jog, tied to the In2 column by four locked 0.8/0.4 vias at
+# its south end and by the six inductor tap vias at its north end. Run 9's B.Cu feed bands were centred on the fuses' CELL+ pads and cut by the node bar.
+BOOST = [("BOOST1_IN", 1, 4.1, 9.5, (-3.5, 9.5), (-2.0, 17.0)),     # column x, jog x (west to the L2 tap), foot x (between the CELL+ pad rings of F3 and F4)
+         ("BOOST2_IN", 2, 27.0, 33.0, None, (23.0, 42.0)),          # L3's tap sits in the column
+         ("BOOST3_IN", 3, 52.0, 58.0, (52.0, 64.5), (48.0, 67.0))]  # jog east to the L4 tap
+for net, n, cx0, cx1, jog, foot in BOOST:
+    col = K(cx0, 121.0, cx1, 158.5); ft = K(foot[0], 146.0, foot[1], 158.5); bot = K(cx0, 121.0, cx1, 148.2)
+    outer_pour(net, "boost %d column" % n, col, layers=I2, priority=2); track_keepout("boost %d column" % n, col, layer=pcbnew.In2_Cu)
+    outer_pour(net, "boost %d foot" % n, ft, layers=I2, priority=3); track_keepout("boost %d foot" % n, ft, layer=pcbnew.In2_Cu)
+    outer_pour(net, "boost %d bottom" % n, bot, layers=B, priority=2); track_keepout("boost %d bottom" % n, bot)
+    if jog:
+        jg = K(jog[0], 120.5, jog[1], 124.5)
+        outer_pour(net, "boost %d jog" % n, jg, layers=I2, priority=4); track_keepout("boost %d jog" % n, jg, layer=pcbnew.In2_Cu)
+        outer_pour(net, "boost %d bottom jog" % n, jg, layers=B, priority=3); track_keepout("boost %d bottom jog" % n, jg)
+    stitch(net, [(cx0 + 1.2, 146.0), (cx1 - 1.2, 146.0), (cx0 + 1.2, 147.5), (cx1 - 1.2, 147.5)])   # In2 to B.Cu at the column's south end
+# --- A21 output islands (5 Sep 2026, appendix 32.39): the TPS61288L VOUT pin is a 1.25 x 0.40 mm pad with its neighbours 0.25 mm away, so no 1.0 mm track
+#     can leave it (the six opens of the 14:20 run, every one at pad 5 of U22/U23/U24) and the escape scheme had given each rail one 0.2 mm stub and one
+#     0.45/0.25 via as its whole current path. Each converter gets a top-side copper island: a 0.5 mm neck over the east end of pad 5 (between pad 6 and the
+#     package edge), widening east of the escape vias over the output capacitor group, stitched to the rail's bottom tap (M2, PI) or the In2 plane (M1) by six
+#     locked 0.8/0.4 vias. The RAIL class is the link width only (0.5 mm); the islands, bands and planes carry the current. Coordinates in the KiCad frame,
+#     relative to the part.
 for ref, net, vias in (("U22", "+5V_M1", [(14.88, -6.0), (16.38, -6.0), (14.88, -4.4), (16.38, -4.4), (14.88, -2.8), (16.38, -2.8)]),      # into the In2 plane, south of C70, between the boost 1 and 2 columns
                        ("U23", "+5V_M2", [(13.88, -6.0), (15.38, -6.0), (16.88, -6.0), (13.88, -4.4), (15.38, -4.4), (16.88, -4.4)]),      # into the M2 tap (B.Cu, KiCad x 47.5 to 51.5)
                        ("U24", "+5V_PI", [(5.13 + 1.5 * k, -7.0) for k in range(6)])):                                                  # into the PI tap (B.Cu, KiCad x 70.5 to 79.5, y 105.5 to 124)
     x0 = placed[ref].GetPosition().x / 1e6; y0 = placed[ref].GetPosition().y / 1e6
     island(net, "VOUT island " + ref, [(x0 + 1.4, y0 - 0.05), (x0 + 3.6, y0 - 0.05), (x0 + 3.6, y0 - 15.4), (x0 + 17.5, y0 - 15.4), (x0 + 17.5, y0 + 4.0), (x0 + 3.6, y0 + 4.0), (x0 + 3.6, y0 + 0.45), (x0 + 1.4, y0 + 0.45)])
     stitch(net, [(x0 + dx, y0 + dy) for dx, dy in vias])
-# Inductor tap islands: over the south end of pad 1 (2.38 x 9.0 mm, y 111.5 to 120.5) and 3.5 mm beyond it, four 0.8/0.4 vias down to the In2 feed
+# Inductor tap islands: over the south end of pad 1 (2.38 x 9.0 mm, y 111.5 to 120.5) and 3.5 mm beyond it, six 0.8/0.4 vias down to the In2 and B.Cu feeds
 for ref, net in (("L2", "BOOST1_IN"), ("L3", "BOOST2_IN"), ("L4", "BOOST3_IN")):
     pad = [p for p in placed[ref].Pads() if p.GetNumber() == "1"][0]; px, py = pad.GetPosition().x / 1e6, pad.GetPosition().y / 1e6
-    island(net, "inductor tap " + ref, [(px - 1.7, py + 3.8), (px + 1.7, py + 3.8), (px + 1.7, py + 8.0), (px - 1.7, py + 8.0)])
-    stitch(net, [(px - 0.7, py + 5.6), (px + 0.7, py + 5.6), (px - 0.7, py + 7.0), (px + 0.7, py + 7.0)])
+    island(net, "inductor tap " + ref, [(px - 2.0, py + 3.8), (px + 2.0, py + 3.8), (px + 2.0, py + 8.0), (px - 2.0, py + 8.0)])
+    stitch(net, [(px + dx, py + dy) for dx in (-1.0, 0.0, 1.0) for dy in (5.6, 7.0)])   # six vias: 9.5 A at 2.5 A per 0.4 mm hole with margin
 for k in range(4): outer_pour("CELL_N", "return tap %d" % (k + 1), (-148.0 + 4 * k, -68, -146.0 + 4 * k, -60), priority=3)
 # The inner layers stay open to the router. Banning tracks there (tried 4 Sep) leaves Freerouting two layers for 148 nets and 279
 # footprints, and the best of four attempts came back with 83 nets unrouted; A17 routed on all four and the plane fill simply
