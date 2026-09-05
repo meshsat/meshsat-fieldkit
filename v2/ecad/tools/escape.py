@@ -84,7 +84,7 @@ def clear(v, r, me, me_ref, net, lane=0.75):
     return True
 added = skipped = 0
 for fp in b.GetFootprints():
-    if not is_fine(fp) or fp.GetReference().startswith("J"): continue      # connectors route fine without escapes
+    if not is_fine(fp) or (fp.GetReference().startswith("J") and min_pitch(fp) > FromMM(0.6)): continue      # coarse connectors route fine without escapes; a 0.5 mm M.2 socket (B14 J_WIFI1) does not (5 Sep: the router thrashed 75 min on its 67 bare pads)
     if fp.GetReference() in set(filter(None, __import__("os").environ.get("ESCAPE_SKIP", "").split(","))): continue   # A19: parts the router escapes itself (mixed pad sizes)
     ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))
     if ONLY and fp.GetReference() not in ONLY: continue                    # test runs on one part
