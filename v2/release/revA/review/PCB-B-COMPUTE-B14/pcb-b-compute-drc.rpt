@@ -1,0 +1,1501 @@
+** Drc report for pcb-b-compute.kicad_pcb **
+** Created on 2026-09-05T10:07:05+0200 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 254 DRC violations **
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(49,6800 mm, 46,1850 mm): Rectangle of J_GNSS1 on F.Mask
+    @(49,1450 mm, 47,1250 mm): Pad 1 [/GNSS_ANT] of J_GNSS1 on F.Cu
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(49,6800 mm, 46,1850 mm): Rectangle of J_GNSS1 on F.Mask
+    @(49,1450 mm, 47,1250 mm): Pad 1 [/GNSS_ANT] of J_GNSS1 on F.Cu
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 73,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,6500 mm, 60,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,8500 mm, 60,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,1500 mm, 59,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(240,6500 mm, 59,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 73,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,1500 mm, 60,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,5500 mm, 60,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,2500 mm, 60,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 73,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 73,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(240,8500 mm, 59,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(240,9500 mm, 59,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,3500 mm, 60,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(240,7500 mm, 59,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,7500 mm, 60,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,9500 mm, 60,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 73,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 62,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,4500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,0500 mm, 59,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 65,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 68,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 70,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 61,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 71,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,6500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 67,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,5500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,2500 mm, 61,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,0500 mm, 60,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,1500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 69,8500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,7500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 73,0500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 64,9500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 66,3500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(241,4500 mm, 60,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 72,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area 'E72 antenna keep-out')
+    Rule: keepout area 'E72 antenna keep-out'; error
+    @(242,3500 mm, 63,2500 mm): Track [/EXP_INT] on B.Cu, length 0,1000 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,4500 mm, 47,7500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,5500 mm, 47,6500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,9500 mm, 53,2500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,0500 mm, 48,1500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,7500 mm, 49,4500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(102,3500 mm, 52,8500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,5500 mm, 49,6500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,9500 mm, 47,2500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(100,9500 mm, 54,2500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,6500 mm, 53,5500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(108,2500 mm, 46,9500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,6500 mm, 47,5500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,1500 mm, 54,0500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,5500 mm, 53,6500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(102,1500 mm, 53,0500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,6500 mm, 49,5500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(106,9500 mm, 48,2500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(102,4500 mm, 52,7500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(102,0500 mm, 53,1500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,8500 mm, 47,3500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(100,8500 mm, 54,3500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,3500 mm, 47,8500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,8500 mm, 53,3500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,3500 mm, 53,8500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,2500 mm, 53,9500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(108,0500 mm, 47,1500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(106,7500 mm, 48,4500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,1500 mm, 48,0500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(106,8500 mm, 48,3500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,4500 mm, 53,7500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(102,2500 mm, 52,9500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,0500 mm, 54,1500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,7500 mm, 47,4500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,2500 mm, 47,9500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(101,7500 mm, 53,4500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(108,1500 mm, 47,0500 mm): Track [/LTE_UART_RX] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,7000 mm, 45,6000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,3000 mm, 48,0000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,4000 mm, 47,9000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(104,9000 mm, 48,4000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,4000 mm, 45,9000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(104,4000 mm, 48,9000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,5000 mm, 45,8000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(106,8000 mm, 46,5000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,1000 mm, 48,2000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,1000 mm, 46,2000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,6000 mm, 47,7000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(104,3000 mm, 49,0000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,2000 mm, 46,1000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,2000 mm, 48,1000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,5000 mm, 47,8000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(107,0000 mm, 46,3000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(105,7000 mm, 47,6000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(104,8000 mm, 48,5000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(104,7000 mm, 48,6000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(104,5000 mm, 48,8000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[items_not_allowed]: Items not allowed (keepout area)
+    Rule: keepout area; error
+    @(106,9000 mm, 46,4000 mm): Track [/LTE_WAKE_n] on F.Cu, length 0,1414 mm
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(54,0000 mm, 41,5000 mm): PCB text 'GNSS NEO-M9N + U.FL -> GPS bulkhead   |   LoRa Wio-SX1262, IPEX -> LoRa bulkhead' on F.Silkscreen
+    @(39,5000 mm, 37,0000 mm): Circle on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(62,0000 mm, 78,5000 mm): PCB text 'COMPUTE MODULE 5 on 2x Amphenol 10164227-1004A1RLF (4.0 mm stack), M2.5 x 4 on 33 x 48; CM5 Cooler 41 x 56 over it' on F.Silkscreen
+    @(93,2200 mm, 77,5409 mm): Segment of BT1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(98,5944 mm, 142,2450 mm): Segment of C14 on F.Silkscreen
+    @(62,0000 mm, 141,5000 mm): PCB text 'GPIO connector WEST, high-speed connector EAST; U.FL antenna lead to the WiFi bulkhead (dtparam=ant2)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(33,0900 mm, 141,1950 mm): Polygon of U20 on F.Silkscreen
+    @(62,0000 mm, 141,5000 mm): PCB text 'GPIO connector WEST, high-speed connector EAST; U.FL antenna lead to the WiFi bulkhead (dtparam=ant2)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(58,2225 mm, 172,5500 mm): Reference field of J_5V_M1
+    @(62,2625 mm, 172,3600 mm): Segment of J_5V_M2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(113,5550 mm, 146,0150 mm): Reference field of J_PWRBTN
+    @(108,7650 mm, 146,0150 mm): Reference field of J_PMIC
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(233,2675 mm, 57,3400 mm): Segment of J_PANEL on F.Silkscreen
+    @(244,0000 mm, 56,4000 mm): PCB text 'ZIGBEE: Ebyte E72-2G4M20S1E (CC2652P), PCB antenna to the back wall' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(253,2625 mm, 62,3625 mm): Segment of U42 on F.Silkscreen
+    @(198,5000 mm, 62,6000 mm): PCB text 'WIFI P2P: AsiaRF AW7915-AED M.2 2230 on J_WIFI1 (CM5 PCIe), M2.5 standoff; 2x IPEX pigtails -> WIFI P2P bulkheads (east wall)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(235,4625 mm, 73,2625 mm): Segment of U42 on F.Silkscreen
+    @(198,5000 mm, 62,6000 mm): PCB text 'WIFI P2P: AsiaRF AW7915-AED M.2 2230 on J_WIFI1 (CM5 PCIe), M2.5 standoff; 2x IPEX pigtails -> WIFI P2P bulkheads (east wall)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(244,0000 mm, 56,4000 mm): PCB text 'ZIGBEE: Ebyte E72-2G4M20S1E (CC2652P), PCB antenna to the back wall' on F.Silkscreen
+    @(239,7675 mm, 26,6600 mm): Segment of J_PANEL on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(239,7675 mm, 26,6600 mm): Segment of J_PANEL on F.Silkscreen
+    @(236,0000 mm, 34,5000 mm): PCB text 'J_PANEL ribbon up to PCB-C' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(244,0000 mm, 56,4000 mm): PCB text 'ZIGBEE: Ebyte E72-2G4M20S1E (CC2652P), PCB antenna to the back wall' on F.Silkscreen
+    @(241,0775 mm, 25,3600 mm): Segment of J_PANEL on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(233,2675 mm, 39,9500 mm): Segment of J_PANEL on F.Silkscreen
+    @(236,0000 mm, 34,5000 mm): PCB text 'J_PANEL ribbon up to PCB-C' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(138,0000 mm, 100,5000 mm): PCB text 'J_RTL1' on F.Silkscreen
+    @(136,1744 mm, 100,9000 mm): Segment of C16 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(195,0000 mm, 191,5000 mm): PCB text 'FRONT WALL (-Y)   v v v' on F.Silkscreen
+    @(220,0000 mm, 192,5000 mm): PCB text 'MESHSAT-795 | 245x170x1.6 4L | matte black | 2026-09-04' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(62,0000 mm, 78,5000 mm): PCB text 'COMPUTE MODULE 5 on 2x Amphenol 10164227-1004A1RLF (4.0 mm stack), M2.5 x 4 on 33 x 48; CM5 Cooler 41 x 56 over it' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(62,0000 mm, 141,5000 mm): PCB text 'GPIO connector WEST, high-speed connector EAST; U.FL antenna lead to the WiFi bulkhead (dtparam=ant2)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(62,0000 mm, 144,5000 mm): PCB text 'B13: no Pi 5, no ribbon, no USB plug on the compute side (appendix 32.35)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(236,0000 mm, 34,5000 mm): PCB text 'J_PANEL ribbon up to PCB-C' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(138,0000 mm, 100,5000 mm): PCB text 'J_RTL1' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(79,0000 mm, 108,5000 mm): Reference field of U30B
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(45,0000 mm, 108,5000 mm): Reference field of U30A
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(27,5000 mm, 30,0000 mm): Segment on Edge.Cuts
+    @(54,0000 mm, 41,5000 mm): PCB text 'GNSS NEO-M9N + U.FL -> GPS bulkhead   |   LoRa Wio-SX1262, IPEX -> LoRa bulkhead' on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(27,5000 mm, 30,0000 mm): Segment on Edge.Cuts
+    @(62,0000 mm, 78,5000 mm): PCB text 'COMPUTE MODULE 5 on 2x Amphenol 10164227-1004A1RLF (4.0 mm stack), M2.5 x 4 on 33 x 48; CM5 Cooler 41 x 56 over it' on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(27,5000 mm, 30,0000 mm): Segment on Edge.Cuts
+    @(62,0000 mm, 141,5000 mm): PCB text 'GPIO connector WEST, high-speed connector EAST; U.FL antenna lead to the WiFi bulkhead (dtparam=ant2)' on F.Silkscreen
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(87,9500 mm, 124,1750 mm): Track [+3V3] on F.Cu, length 2,0591 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(93,9500 mm, 124,1750 mm): Track [+3V3] on F.Cu, length 2,0591 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(91,4500 mm, 124,9125 mm): Track [+3V3] on F.Cu, length 1,4375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(86,4000 mm, 130,0750 mm): Track [+3V3] on F.Cu, length 1,0921 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(90,4500 mm, 133,7375 mm): Track [+3V3] on F.Cu, length 1,0375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(96,8500 mm, 126,5750 mm): Track [+3V3] on F.Cu, length 1,0035 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(86,2500 mm, 127,5750 mm): Track [+3V3] on F.Cu, length 1,2324 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(96,8500 mm, 132,0750 mm): Track [+3V3] on F.Cu, length 1,7341 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(89,9500 mm, 133,7375 mm): Track [+3V3] on F.Cu, length 0,8875 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(91,3500 mm, 134,8500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(97,2000 mm, 128,0000 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(96,9500 mm, 127,4500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(91,4500 mm, 125,5500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(93,9500 mm, 125,5500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(90,3500 mm, 133,3500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(86,3500 mm, 129,9500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(93,9500 mm, 124,3000 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(88,0000 mm, 127,5500 mm): Via [+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(42,8100 mm, 119,9000 mm): Via [/+5V_PI] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(42,1100 mm, 118,7000 mm): Via [/+5V_PI] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(42,8100 mm, 119,1000 mm): Via [/+5V_PI] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(42,1100 mm, 117,9000 mm): Via [/+5V_PI] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(42,1100 mm, 119,5000 mm): Via [/+5V_PI] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(88,4500 mm, 124,0250 mm): Track [/HUB_RBIAS] on F.Cu, length 1,9526 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(87,2875 mm, 126,0750 mm): Track [/USB_RTL_P] on F.Cu, length 0,8875 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(90,4500 mm, 124,9125 mm): Track [/USB_UP_P] on F.Cu, length 1,4875 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(86,2500 mm, 126,5750 mm): Track [/USB_WALL_N] on F.Cu, length 1,1754 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(86,1000 mm, 127,0750 mm): Track [/USB_WALL_P] on F.Cu, length 1,1886 mm
+
+** Found 177 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(57,3300 mm, 60,3050 mm): Pad 1 [+3V3] of C63 on F.Cu
+    @(44,5500 mm, 60,3500 mm): Track [+3V3] on F.Cu, length 0,1000 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(75,3500 mm, 173,9550 mm): Pad 2 [+3V3] of R25 on F.Cu
+    @(95,1375 mm, 170,2800 mm): Pad 4 [+3V3] of U33 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(86,4000 mm, 130,0750 mm): Track [+3V3] on F.Cu, length 1,0921 mm
+    @(86,2500 mm, 127,5750 mm): Track [+3V3] on F.Cu, length 1,2324 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(87,9500 mm, 124,9125 mm): Track [+3V3] on F.Cu, length 0,7375 mm
+    @(87,8000 mm, 127,5500 mm): Track [+3V3] on F.Cu, length 0,1000 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(87,9500 mm, 124,9125 mm): Track [+3V3] on F.Cu, length 0,7375 mm
+    @(91,4500 mm, 124,9125 mm): Pad 57 [+3V3] of U1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(89,9500 mm, 133,7375 mm): Track [+3V3] on F.Cu, length 0,8875 mm
+    @(90,4500 mm, 133,7375 mm): Pad 22 [+3V3] of U1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(89,9500 mm, 133,7375 mm): Track [+3V3] on F.Cu, length 0,8875 mm
+    @(85,3300 mm, 142,7550 mm): Pad 1 [+3V3] of C11 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(93,9500 mm, 125,5500 mm): Via [+3V3] on F.Cu - B.Cu
+    @(96,1125 mm, 126,5750 mm): Track [+3V3] on F.Cu, length 0,7375 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(93,9500 mm, 125,5500 mm): Via [+3V3] on F.Cu - B.Cu
+    @(91,4500 mm, 125,5500 mm): Via [+3V3] on F.Cu - B.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(96,1125 mm, 132,0750 mm): Track [+3V3] on F.Cu, length 0,7375 mm
+    @(92,9000 mm, 133,2500 mm): Track [+3V3] on F.Cu, length 0,1414 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(96,8500 mm, 126,5750 mm): Track [+3V3] on F.Cu, length 1,0035 mm
+    @(96,9500 mm, 127,4500 mm): Via [+3V3] on F.Cu - B.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(96,1125 mm, 128,0750 mm): Track [+3V3] on F.Cu, length 1,0375 mm
+    @(96,8500 mm, 132,0750 mm): Track [+3V3] on F.Cu, length 1,7341 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(97,2000 mm, 128,0000 mm): Via [+3V3] on F.Cu - B.Cu
+    @(96,1125 mm, 127,5750 mm): Track [+3V3] on F.Cu, length 0,8875 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(96,8500 mm, 126,5750 mm): Track [+3V3] on F.Cu, length 1,0035 mm
+    @(104,4375 mm, 124,5000 mm): Pad 5 [+3V3] of U2 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(98,0500 mm, 168,1500 mm): Track [+3V3] on F.Cu, length 0,1000 mm
+    @(97,9600 mm, 142,7550 mm): Pad 1 [+3V3] of C14 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(107,6200 mm, 138,0050 mm): Pad 1 [+3V3] of C6 on F.Cu
+    @(103,4100 mm, 138,0050 mm): Pad 1 [+3V3] of C5 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(133,1375 mm, 122,9550 mm): Pad 4 [+3V3] of U5 on F.Cu
+    @(141,2475 mm, 132,9550 mm): Pad 4 [+3V3] of U14 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(135,5400 mm, 100,3900 mm): Pad 1 [+3V3] of C16 on F.Cu
+    @(133,1375 mm, 122,9550 mm): Pad 4 [+3V3] of U5 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(201,6875 mm, 67,4550 mm): Pad 4 [+3V3] of U35 on F.Cu
+    @(141,7900 mm, 97,1800 mm): Pad 2 [+3V3] of R30 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(237,7875 mm, 53,4300 mm): PTH pad 20 [+3V3] of J_PANEL
+    @(256,5500 mm, 73,2000 mm): Track [+3V3] on F.Cu, length 0,1000 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(235,8750 mm, 149,3750 mm): Pad 1 [/+1V8_CM] of TP11 on F.Cu
+    @(46,5400 mm, 120,3000 mm): Pad 90 [/+1V8_CM] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(67,3500 mm, 168,7500 mm): Track [/+3V3_CM] on B.Cu, length 0,0500 mm
+    @(48,1500 mm, 158,9500 mm): Track [/+3V3_CM] on F.Cu, length 0,0500 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,5500 mm, 145,5500 mm): Track [/+3V3_CM] on B.Cu, length 0,1000 mm
+    @(250,8750 mm, 145,6250 mm): Pad 1 [/+3V3_CM] of TP10 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(96,2100 mm, 175,9000 mm): Pad 2 [/+3V3_LTE] of L32 on F.Cu
+    @(95,7000 mm, 70,2250 mm): Pad 1 [/+3V3_LTE] of R64 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(99,3000 mm, 181,1500 mm): Pad 1 [/+3V3_LTE] of C38 on F.Cu
+    @(239,6250 mm, 156,8750 mm): Pad 1 [/+3V3_LTE] of TP22 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(100,4000 mm, 61,6500 mm): Track [/+3V3_LTE] on F.Cu, length 0,1000 mm
+    @(91,4125 mm, 61,5000 mm): Pad 5 [/+3V3_LTE] of U8 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(142,3625 mm, 121,0500 mm): Pad 5 [/+5V_M2] of U4 on F.Cu
+    @(131,3300 mm, 100,3900 mm): Pad 1 [/+5V_M2] of C15 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(30,0000 mm, 140,0000 mm): Zone '+5V_PI pour F.Cu (J_5V_PI to the module 5 V pins)' [/+5V_PI] on F.Cu, priority 1
+    @(66,1700 mm, 162,6250 mm): Pad 1 [/+5V_PI] of D4 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(201,6875 mm, 65,5050 mm): Track [/+5V_PI] on F.Cu, length 2,2625 mm
+    @(84,5000 mm, 77,3250 mm): Pad 1 [/+5V_PI] of J_FAN on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(247,1250 mm, 145,6250 mm): Pad 1 [/+5V_PI] of TP9 on F.Cu
+    @(208,2525 mm, 71,8050 mm): Pad 1 [/+5V_PI] of R72 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(132,0100 mm, 113,5000 mm): PTH pad 1 [/5V_RTL] of J_RTL1
+    @(131,3750 mm, 97,4300 mm): Pad 1 [/5V_RTL] of C17 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 154,0000 mm): Pad 6 [/DCF_PON] of U21 on F.Cu
+    @(68,7500 mm, 32,4750 mm): PTH pad 4 [/DCF_PON] of J_DCF77
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(66,2500 mm, 32,4750 mm): PTH pad 3 [/DCF_T] of J_DCF77
+    @(39,8125 mm, 157,9000 mm): Pad 13 [/DCF_T] of U21 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 105,5000 mm): Pad 115 [/DSI0_D0_N] of U30B on F.Cu
+    @(95,2500 mm, 102,8000 mm): Pad 2 [/DSI0_D0_N] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 105,9000 mm): Pad 117 [/DSI0_D0_P] of U30B on F.Cu
+    @(95,7500 mm, 102,8000 mm): Pad 3 [/DSI0_D0_P] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 106,7000 mm): Pad 121 [/DSI0_D1_N] of U30B on F.Cu
+    @(96,7500 mm, 102,8000 mm): Pad 5 [/DSI0_D1_N] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 107,1000 mm): Pad 123 [/DSI0_D1_P] of U30B on F.Cu
+    @(97,2500 mm, 102,8000 mm): Pad 6 [/DSI0_D1_P] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 108,3000 mm): Pad 29 [/EPD_DC] of U30A on F.Cu
+    @(237,7875 mm, 38,1900 mm): PTH pad 8 [/EPD_DC] of J_PANEL
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 154,6500 mm): Pad 7 [/EPD_RES_ALT] of U21 on F.Cu
+    @(235,2475 mm, 48,3500 mm): PTH pad 15 [/EPD_RES_ALT] of J_PANEL
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(243,2000 mm, 156,1500 mm): Track [/EXP_INT] on F.Cu, length 0,1000 mm
+    @(78,0000 mm, 188,7525 mm): PTH pad 9 [/EXP_INT] of J_AB1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 155,9500 mm): Pad 9 [/EXP_SPARE1] of U21 on F.Cu
+    @(250,8750 mm, 156,8750 mm): Pad 1 [/EXP_SPARE1] of TP31 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 156,6000 mm): Pad 10 [/EXP_SPARE2] of U21 on F.Cu
+    @(235,8750 mm, 160,6250 mm): Pad 1 [/EXP_SPARE2] of TP32 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 157,2500 mm): Pad 11 [/EXP_SPARE3] of U21 on F.Cu
+    @(239,6250 mm, 160,6250 mm): Pad 1 [/EXP_SPARE3] of TP33 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 157,2500 mm): Pad 14 [/EXP_SPARE4] of U21 on F.Cu
+    @(243,3750 mm, 160,6250 mm): Pad 1 [/EXP_SPARE4] of TP34 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 156,6000 mm): Pad 15 [/EXP_SPARE5] of U21 on F.Cu
+    @(247,1250 mm, 160,6250 mm): Pad 1 [/EXP_SPARE5] of TP35 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 155,9500 mm): Pad 16 [/EXP_SPARE6] of U21 on F.Cu
+    @(250,8750 mm, 160,6250 mm): Pad 1 [/EXP_SPARE6] of TP36 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 155,3000 mm): Pad 17 [/EXP_SPARE7] of U21 on F.Cu
+    @(235,8750 mm, 164,3750 mm): Pad 1 [/EXP_SPARE7] of TP37 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 154,6500 mm): Pad 18 [/EXP_SPARE8] of U21 on F.Cu
+    @(239,6250 mm, 164,3750 mm): Pad 1 [/EXP_SPARE8] of TP38 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 154,0000 mm): Pad 19 [/EXP_SPARE9] of U21 on F.Cu
+    @(243,3750 mm, 164,3750 mm): Pad 1 [/EXP_SPARE9] of TP39 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 153,3500 mm): Pad 20 [/EXP_SPARE10] of U21 on F.Cu
+    @(247,1250 mm, 164,3750 mm): Pad 1 [/EXP_SPARE10] of TP40 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(250,8750 mm, 149,3750 mm): Pad 1 [/GNSS_PPS] of TP15 on F.Cu
+    @(46,5400 mm, 111,5000 mm): Pad 46 [/GNSS_PPS] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(45,7750 mm, 50,2750 mm): Pad 20 [/GNSS_TXD] of U40 on F.Cu
+    @(235,8750 mm, 153,1250 mm): Pad 1 [/GNSS_TXD] of TP16 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(73,9000 mm, 174,1500 mm): Track [/I2S_BCLK] on B.Cu, length 0,0707 mm
+    @(239,6250 mm, 153,1250 mm): Pad 1 [/I2S_BCLK] of TP17 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(243,3750 mm, 153,1250 mm): Pad 1 [/I2S_LRCLK] of TP18 on F.Cu
+    @(74,3000 mm, 174,0500 mm): Track [/I2S_LRCLK] on B.Cu, length 0,0707 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 106,7000 mm): Pad 21 [/LED_nACT] of U30A on F.Cu
+    @(122,4175 mm, 147,3950 mm): Pad 1 [/LED_nACT] of LED5 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 121,5000 mm): Pad 95 [/LED_nPWR] of U30A on F.Cu
+    @(101,7400 mm, 157,2250 mm): Pad 1 [/LED_nPWR] of R47 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 111,5000 mm): Pad 45 [/LORA_DIO1] of U30A on F.Cu
+    @(59,4750 mm, 45,9750 mm): Pad 12 [/LORA_DIO1] of U41 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(61,4900 mm, 60,3050 mm): Pad 1 [/LORA_NSS] of R67 on F.Cu
+    @(43,4600 mm, 109,9000 mm): Pad 37 [/LORA_NSS] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 145,7500 mm): Pad 8 [/LTE_DTR] of U20 on F.Cu
+    @(127,5600 mm, 60,3550 mm): Pad 1 [/LTE_DTR] of R61 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(123,3500 mm, 60,3550 mm): Pad 1 [/LTE_PERST_n] of R60 on F.Cu
+    @(34,0875 mm, 145,1000 mm): Pad 7 [/LTE_PERST_n] of U20 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(87,2800 mm, 70,2250 mm): Pad 1 [/LTE_RI] of R62 on F.Cu
+    @(39,8125 mm, 147,7000 mm): Pad 14 [/LTE_RI] of U20 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(91,4900 mm, 70,2250 mm): Pad 1 [/LTE_WAKE_n] of R63 on F.Cu
+    @(39,8125 mm, 147,0500 mm): Pad 15 [/LTE_WAKE_n] of U20 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 144,4500 mm): Pad 6 [/LTE_W_DIS_n] of U20 on F.Cu
+    @(119,1400 mm, 60,3550 mm): Pad 1 [/LTE_W_DIS_n] of R59 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 108,7000 mm): Pad 31 [/PANEL_PWM] of U30A on F.Cu
+    @(235,2475 mm, 50,8900 mm): PTH pad 17 [/PANEL_PWM] of J_PANEL
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(195,4125 mm, 66,5000 mm): Pad 5 [/PCIE_PWR_EN] of U36 on F.Cu
+    @(80,5400 mm, 103,5000 mm): Pad 106 [/PCIE_PWR_EN] of U30B on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 103,1000 mm): Pad 104 [/PCIE_nWAKE] of U30B on F.Cu
+    @(203,4200 mm, 54,2500 mm): Pad 55 [/PCIE_nWAKE] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 104,7000 mm): Pad 112 [/PCIe_CLK_N] of U30B on F.Cu
+    @(203,4200 mm, 52,7500 mm): Pad 49 [/PCIe_CLK_N] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 104,3000 mm): Pad 110 [/PCIe_CLK_P] of U30B on F.Cu
+    @(203,4200 mm, 52,2500 mm): Pad 47 [/PCIe_CLK_P] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 102,7000 mm): Pad 102 [/PCIe_CLK_nREQ] of U30B on F.Cu
+    @(203,4200 mm, 53,7500 mm): Pad 53 [/PCIe_CLK_nREQ] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 105,9000 mm): Pad 118 [/PCIe_RX_N] of U30B on F.Cu
+    @(203,4200 mm, 49,7500 mm): Pad 37 [/PCIe_RX_N] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 105,5000 mm): Pad 116 [/PCIe_RX_P] of U30B on F.Cu
+    @(203,4200 mm, 49,2500 mm): Pad 35 [/PCIe_RX_P] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 107,1000 mm): Pad 124 [/PCIe_TX_N] of U30B on F.Cu
+    @(203,4200 mm, 51,2500 mm): Pad 43 [/PCIe_TX_N] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(80,5400 mm, 106,7000 mm): Pad 122 [/PCIe_TX_P] of U30B on F.Cu
+    @(203,4200 mm, 50,7500 mm): Pad 41 [/PCIe_TX_P] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 104,3000 mm): Pad 109 [/PCIe_nRST] of U30B on F.Cu
+    @(195,8700 mm, 53,5000 mm): Pad 52 [/PCIe_nRST] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(88,1600 mm, 186,2125 mm): PTH pad 2 [/PI_KILL] of J_AB1
+    @(239,6250 mm, 145,6250 mm): Pad 1 [/PI_KILL] of TP7 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 112,3000 mm): Pad 50 [/PI_KILL_CM] of U30A on F.Cu
+    @(80,3500 mm, 161,5500 mm): Track [/PI_KILL_CM] on F.Cu, length 0,0500 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 107,9000 mm): Pad 28 [/PWM1] of U30A on F.Cu
+    @(237,7875 mm, 48,3500 mm): PTH pad 16 [/PWM1] of J_PANEL
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(103,3900 mm, 157,2250 mm): Pad 2 [/Q2_B] of R47 on F.Cu
+    @(117,5675 mm, 147,3750 mm): Pad 1 [/Q2_B] of Q2 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(105,9500 mm, 157,2250 mm): Pad 1 [/Q2_C] of R48 on F.Cu
+    @(119,4425 mm, 148,3250 mm): Pad 3 [/Q2_C] of Q2 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(153,7700 mm, 137,9000 mm): Pad 1 [/RB_CTRL] of R26 on F.Cu
+    @(39,8125 mm, 144,4500 mm): Pad 19 [/RB_CTRL] of U20 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 145,7500 mm): Pad 17 [/RB_NETAV] of U20 on F.Cu
+    @(158,1250 mm, 170,4550 mm): PTH pad 4 [/RB_NETAV] of J_RB9603
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(158,7300 mm, 158,7525 mm): PTH pad 7 [/RB_STATUS] of J_RB9704
+    @(132,2800 mm, 141,1100 mm): Pad 1 [/RB_STATUS] of R28 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(142,3000 mm, 122,9000 mm): Track [/SCL] on B.Cu, length 0,1000 mm
+    @(203,9625 mm, 67,4550 mm): Pad 5 [/SCL] of U35 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(204,7500 mm, 67,3500 mm): Track [/SCL] on F.Cu, length 0,1414 mm
+    @(250,8750 mm, 141,8750 mm): Pad 1 [/SCL] of TP5 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(235,8750 mm, 156,8750 mm): Pad 1 [/SCL_CM] of TP21 on F.Cu
+    @(46,5400 mm, 113,5000 mm): Pad 56 [/SCL_CM] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(38,0175 mm, 161,2050 mm): Pad 7 [/SDA] of U34 on F.Cu
+    @(35,9900 mm, 165,2600 mm): Pad 1 [/SDA] of R57 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 141,8500 mm): Pad 23 [/SDA] of U20 on F.Cu
+    @(39,8125 mm, 151,4000 mm): Pad 23 [/SDA] of U21 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(39,8125 mm, 151,4000 mm): Pad 23 [/SDA] of U21 on F.Cu
+    @(38,0175 mm, 161,2050 mm): Pad 7 [/SDA] of U34 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(135,4125 mm, 122,3050 mm): Pad 6 [/SDA] of U5 on F.Cu
+    @(143,5225 mm, 132,3050 mm): Pad 6 [/SDA] of U14 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(135,4125 mm, 122,3050 mm): Pad 6 [/SDA] of U5 on F.Cu
+    @(203,9625 mm, 66,8050 mm): Pad 6 [/SDA] of U35 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(143,5225 mm, 132,3050 mm): Pad 6 [/SDA] of U14 on F.Cu
+    @(98,2500 mm, 169,6500 mm): Via [/SDA] on F.Cu - B.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,9625 mm, 66,8050 mm): Pad 6 [/SDA] of U35 on F.Cu
+    @(237,7875 mm, 33,1100 mm): PTH pad 4 [/SDA] of J_PANEL
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,9625 mm, 66,8050 mm): Pad 6 [/SDA] of U35 on F.Cu
+    @(247,1250 mm, 141,8750 mm): Pad 1 [/SDA] of TP4 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(45,7750 mm, 52,4750 mm): Pad 18 [/SDA_CM] of U40 on F.Cu
+    @(46,5400 mm, 113,9000 mm): Pad 58 [/SDA_CM] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 113,9000 mm): Pad 58 [/SDA_CM] of U30A on F.Cu
+    @(33,7925 mm, 161,2050 mm): Pad 2 [/SDA_CM] of U34 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(250,8750 mm, 153,1250 mm): Pad 1 [/SDA_CM] of TP20 on F.Cu
+    @(46,5400 mm, 113,9000 mm): Pad 58 [/SDA_CM] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(111,9650 mm, 69,9550 mm): Pad 1 [/SIM_RST] of C58 on F.Cu
+    @(111,8500 mm, 42,9500 mm): Track [/SIM_RST] on B.Cu, length 0,1000 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(107,1000 mm, 42,2000 mm): Via [/SIM_VCC] on F.Cu - B.Cu
+    @(114,9800 mm, 60,3550 mm): Pad 1 [/SIM_VCC] of C59 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 110,3000 mm): Pad 39 [/SPI_CE0] of U30A on F.Cu
+    @(237,7875 mm, 45,8100 mm): PTH pad 14 [/SPI_CE0] of J_PANEL
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 110,3000 mm): Pad 40 [/SPI_MISO] of U30A on F.Cu
+    @(59,4750 mm, 56,9750 mm): Pad 2 [/SPI_MISO] of U41 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(237,7875 mm, 43,2700 mm): PTH pad 12 [/SPI_MOSI] of J_PANEL
+    @(60,7450 mm, 56,9750 mm): Pad 3 [/SPI_MOSI] of U41 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(62,0150 mm, 56,9750 mm): Pad 4 [/SPI_SCLK] of U41 on F.Cu
+    @(46,5400 mm, 109,9000 mm): Pad 38 [/SPI_SCLK] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(237,7875 mm, 40,7300 mm): PTH pad 10 [/SPI_SCLK] of J_PANEL
+    @(62,0150 mm, 56,9750 mm): Pad 4 [/SPI_SCLK] of U41 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(141,2475 mm, 131,0050 mm): Pad 1 [/SW_RB] of U14 on F.Cu
+    @(133,6675 mm, 132,4200 mm): Pad 1 [/SW_RB] of U13 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(235,2475 mm, 38,1900 mm): PTH pad 7 [/TR_APRS] of J_PANEL
+    @(86,3075 mm, 162,0750 mm): Pad 3 [/TR_APRS] of Q5 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(64,4500 mm, 156,6500 mm): Via [/TR_APRS_CM] on F.Cu - B.Cu
+    @(46,5400 mm, 111,9000 mm): Pad 48 [/TR_APRS_CM] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(72,9200 mm, 186,2125 mm): PTH pad 14 [/TX_INHIBIT_n] of J_AB1
+    @(235,8750 mm, 145,6250 mm): Pad 1 [/TX_INHIBIT_n] of TP6 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 113,5000 mm): Pad 55 [/UART0_TX] of U30A on F.Cu
+    @(94,3950 mm, 150,9350 mm): PTH pad 2 [/UART0_TX] of J_DBG
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 109,5000 mm): Pad 35 [/UART1_RX] of U30A on F.Cu
+    @(235,5125 mm, 83,0925 mm): Pad 8 [/UART1_RX] of U42 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 109,5000 mm): Pad 36 [/UART1_TX] of U30A on F.Cu
+    @(235,5125 mm, 81,8225 mm): Pad 7 [/UART1_TX] of U42 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 109,1000 mm): Pad 34 [/UART2_RX] of U30A on F.Cu
+    @(154,6500 mm, 169,7000 mm): Track [/UART2_RX] on B.Cu, length 0,1414 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 113,1000 mm): Pad 54 [/UART2_TX] of U30A on F.Cu
+    @(161,3500 mm, 168,1500 mm): Track [/UART2_TX] on B.Cu, length 0,1414 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 115,5000 mm): Pad 165 [/USB_LTE_N] of U30B on F.Cu
+    @(97,6500 mm, 70,9000 mm): Track [/USB_LTE_N] on B.Cu, length 0,1414 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(97,5000 mm, 71,4000 mm): Track [/USB_LTE_P] on B.Cu, length 0,1000 mm
+    @(77,4600 mm, 115,1000 mm): Pad 163 [/USB_LTE_P] of U30B on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(128,6500 mm, 179,7500 mm): Track [/USB_OTG_N] on F.Cu, length 0,1000 mm
+    @(77,4600 mm, 103,1000 mm): Pad 103 [/USB_OTG_N] of U30B on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 103,5000 mm): Pad 105 [/USB_OTG_P] of U30B on F.Cu
+    @(128,5000 mm, 177,7500 mm): Track [/USB_OTG_P] on F.Cu, length 0,0500 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(90,4500 mm, 124,9125 mm): Track [/USB_UP_P] on F.Cu, length 1,4875 mm
+    @(80,5400 mm, 109,1000 mm): Pad 134 [/USB_UP_P] of U30B on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(86,2500 mm, 126,5750 mm): Track [/USB_WALL_N] on F.Cu, length 1,1754 mm
+    @(83,0800 mm, 188,7525 mm): PTH pad 5 [/USB_WALL_N] of J_AB1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(110,7125 mm, 125,4500 mm): Pad 3 [/USB_WALL_N] of U7 on F.Cu
+    @(87,2875 mm, 126,5750 mm): Track [/USB_WALL_N] on F.Cu, length 1,0375 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(86,1000 mm, 127,0750 mm): Track [/USB_WALL_P] on F.Cu, length 1,1886 mm
+    @(85,6200 mm, 186,2125 mm): PTH pad 4 [/USB_WALL_P] of J_AB1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(87,2875 mm, 127,0750 mm): Track [/USB_WALL_P] on F.Cu, length 1,1875 mm
+    @(110,7125 mm, 123,5500 mm): Pad 1 [/USB_WALL_P] of U7 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(46,5400 mm, 117,5000 mm): Pad 76 [/VBAT] of U30A on F.Cu
+    @(93,0150 mm, 83,0009 mm): Pad 1 [/VBAT] of BT1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(77,4600 mm, 104,7000 mm): Pad 111 [/VBUS_EN] of U30B on F.Cu
+    @(239,6250 mm, 149,3750 mm): Pad 1 [/VBUS_EN] of TP12 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(117,5500 mm, 190,9850 mm): Pad A9 [/VBUS_FLASH] of J_FLASH on F.Cu
+    @(122,4500 mm, 190,9850 mm): Pad A4 [/VBUS_FLASH] of J_FLASH on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(122,4500 mm, 190,9850 mm): Pad A4 [/VBUS_FLASH] of J_FLASH on F.Cu
+    @(131,4125 mm, 178,5000 mm): Pad 5 [/VBUS_FLASH] of U9 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(247,1250 mm, 153,1250 mm): Pad 1 [/VBUS_FLASH] of TP19 on F.Cu
+    @(131,4125 mm, 178,5000 mm): Pad 5 [/VBUS_FLASH] of U9 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(197,4675 mm, 71,4250 mm): Pad 1 [/WIFI_DIS] of Q6 on F.Cu
+    @(34,0875 mm, 155,3000 mm): Pad 8 [/WIFI_DIS] of U21 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(247,1250 mm, 156,8750 mm): Pad 1 [/WIFI_DIS] of TP30 on F.Cu
+    @(197,4675 mm, 71,4250 mm): Pad 1 [/WIFI_DIS] of Q6 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(195,8700 mm, 54,5000 mm): Pad 56 [/WIFI_W_DIS_n] of J_WIFI1 on F.Cu
+    @(199,3425 mm, 72,3750 mm): Pad 3 [/WIFI_W_DIS_n] of Q6 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 152,7000 mm): Pad 4 [/WL_nDIS] of U21 on F.Cu
+    @(43,4600 mm, 120,3000 mm): Pad 89 [/WL_nDIS] of U30A on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(235,5125 mm, 85,6325 mm): Pad 10 [/ZB_BSL] of U42 on F.Cu
+    @(34,0875 mm, 147,0500 mm): Pad 10 [/ZB_BSL] of U20 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(34,0875 mm, 146,4000 mm): Pad 9 [/ZB_nRST] of U20 on F.Cu
+    @(251,7500 mm, 85,9500 mm): Track [/ZB_nRST] on F.Cu, length 0,1000 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(43,4600 mm, 121,1000 mm): Pad 93 [/nRPIBOOT] of U30A on F.Cu
+    @(99,1850 mm, 148,3950 mm): PTH pad 1 [/nRPIBOOT] of J_RPIBOOT
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(62,0150 mm, 45,9750 mm): Pad 10 [GND] of U41 on F.Cu
+    @(52,4200 mm, 45,6500 mm): Via [GND] on F.Cu - B.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(65,8250 mm, 56,9750 mm): Pad 7 [GND] of U41 on F.Cu
+    @(58,8800 mm, 60,3050 mm): Track [GND] on F.Cu, length 1,1250 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(86,9750 mm, 61,5000 mm): Via [GND] on F.Cu - B.Cu
+    @(85,5000 mm, 77,3250 mm): Pad 2 [GND] of J_FAN on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(94,7500 mm, 102,8000 mm): Pad 1 [GND] of J_DISP on F.Cu
+    @(96,2500 mm, 102,8000 mm): Pad 4 [GND] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(97,7500 mm, 102,8000 mm): Pad 7 [GND] of J_DISP on F.Cu
+    @(99,2500 mm, 102,8000 mm): Pad 10 [GND] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(97,7500 mm, 102,8000 mm): Pad 7 [GND] of J_DISP on F.Cu
+    @(96,2500 mm, 102,8000 mm): Pad 4 [GND] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(98,8500 mm, 47,5000 mm): Track [GND] on F.Cu, length 1,5500 mm
+    @(103,1000 mm, 43,4000 mm): Pad 5 [GND] of J_SIM1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(100,7500 mm, 102,8000 mm): Pad 13 [GND] of J_DISP on F.Cu
+    @(99,2500 mm, 102,8000 mm): Pad 10 [GND] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(102,2500 mm, 102,8000 mm): Pad 16 [GND] of J_DISP on F.Cu
+    @(100,7500 mm, 102,8000 mm): Pad 13 [GND] of J_DISP on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(102,2500 mm, 102,8000 mm): Pad 16 [GND] of J_DISP on F.Cu
+    @(104,0000 mm, 92,5509 mm): Via [GND] on F.Cu - B.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(116,7500 mm, 190,9850 mm): Pad A12 [GND] of J_FLASH on F.Cu
+    @(115,6800 mm, 190,0700 mm): PTH pad S1 [GND] of J_FLASH
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 34,4000 mm): Pad 9 [GND] of J_LTE1 on F.Cu
+    @(120,9750 mm, 36,8000 mm): Pad 15 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 34,4000 mm): Pad 9 [GND] of J_LTE1 on F.Cu
+    @(127,1750 mm, 32,4000 mm): Pad 4 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 36,8000 mm): Pad 15 [GND] of J_LTE1 on F.Cu
+    @(120,9750 mm, 42,4000 mm): Pad 21 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 42,4000 mm): Pad 21 [GND] of J_LTE1 on F.Cu
+    @(120,9750 mm, 44,8000 mm): Pad 27 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 44,8000 mm): Pad 27 [GND] of J_LTE1 on F.Cu
+    @(120,9750 mm, 45,6000 mm): Pad 29 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 48,0000 mm): Pad 35 [GND] of J_LTE1 on F.Cu
+    @(120,9750 mm, 45,6000 mm): Pad 29 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 48,0000 mm): Pad 35 [GND] of J_LTE1 on F.Cu
+    @(127,1750 mm, 47,6000 mm): Pad 34 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 48,8000 mm): Pad 37 [GND] of J_LTE1 on F.Cu
+    @(120,9750 mm, 48,0000 mm): Pad 35 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120,9750 mm, 51,2000 mm): Pad 43 [GND] of J_LTE1 on F.Cu
+    @(120,9750 mm, 48,8000 mm): Pad 37 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(124,3200 mm, 190,0700 mm): PTH pad S1 [GND] of J_FLASH
+    @(123,2500 mm, 190,9850 mm): Pad A1 [GND] of J_FLASH on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127,1750 mm, 44,4000 mm): Pad 26 [GND] of J_LTE1 on F.Cu
+    @(127,1750 mm, 41,2000 mm): Pad 18 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127,1750 mm, 47,6000 mm): Pad 34 [GND] of J_LTE1 on F.Cu
+    @(127,1750 mm, 50,0000 mm): Pad 40 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127,1750 mm, 47,6000 mm): Pad 34 [GND] of J_LTE1 on F.Cu
+    @(127,1750 mm, 44,4000 mm): Pad 26 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127,1750 mm, 50,0000 mm): Pad 40 [GND] of J_LTE1 on F.Cu
+    @(127,1750 mm, 54,0000 mm): Pad 50 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(129,2100 mm, 60,3550 mm): Track [GND] on F.Cu, length 1,1250 mm
+    @(127,1750 mm, 54,0000 mm): Pad 50 [GND] of J_LTE1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(134,5550 mm, 133,0700 mm): Pad 7 [GND] of U13 on F.Cu
+    @(135,4425 mm, 133,7200 mm): Track [GND] on F.Cu, length 0,5000 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(140,0875 mm, 122,0000 mm): Pad 2 [GND] of U4 on F.Cu
+    @(137,6750 mm, 121,6550 mm): Via [GND] on F.Cu - B.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(194,4000 mm, 74,2750 mm): Via [GND] on F.Cu - B.Cu
+    @(197,4675 mm, 73,3250 mm): Pad 2 [GND] of Q6 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(195,8700 mm, 45,0000 mm): Pad 18 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 42,2500 mm): Pad 7 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 40,7500 mm): Pad 1 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 42,2500 mm): Pad 7 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 42,2500 mm): Pad 7 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 48,7500 mm): Pad 33 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 48,7500 mm): Pad 33 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 50,2500 mm): Pad 39 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 50,2500 mm): Pad 39 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 51,7500 mm): Pad 45 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 51,7500 mm): Pad 45 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 53,2500 mm): Pad 51 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 54,7500 mm): Pad 57 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 53,2500 mm): Pad 51 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 54,7500 mm): Pad 57 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 56,2500 mm): Pad 63 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 56,2500 mm): Pad 63 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 57,7500 mm): Pad 69 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 57,7500 mm): Pad 69 [GND] of J_WIFI1 on F.Cu
+    @(203,4200 mm, 59,2500 mm): Pad 75 [GND] of J_WIFI1 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(203,4200 mm, 59,2500 mm): Pad 75 [GND] of J_WIFI1 on F.Cu
+    @(201,6875 mm, 66,8050 mm): Track [GND] on F.Cu, length 2,2625 mm
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(235,5125 mm, 74,2025 mm): Pad 1 [GND] of U42 on F.Cu
+    @(235,5125 mm, 86,9025 mm): Pad 11 [GND] of U42 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(235,5125 mm, 88,1725 mm): Track [GND] on F.Cu, length 1,5500 mm
+    @(235,5125 mm, 86,9025 mm): Pad 11 [GND] of U42 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(246,2675 mm, 91,3125 mm): Pad 19 [GND] of U42 on F.Cu
+    @(253,2125 mm, 89,7225 mm): Via [GND] on F.Cu - B.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(257,3950 mm, 74,9350 mm): PTH pad 2 [GND] of J_ZBDBG
+    @(253,2125 mm, 74,2025 mm): Pad 34 [GND] of U42 on F.Cu
+
+** Found 0 Footprint errors **
+
+** End of Report **
