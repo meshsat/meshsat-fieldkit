@@ -1,8 +1,8 @@
 ** Drc report for pcb-e5-block.kicad_pcb **
-** Created on 2026-09-05T04:51:28+0200 **
+** Created on 2026-09-05T05:02:01+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 5 DRC violations **
+** Found 4 DRC violations **
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(15,8000 mm, 174,4000 mm): Segment on F.Silkscreen
@@ -15,10 +15,6 @@
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(32,3500 mm, 191,0000 mm): PCB text 'GND6' on B.Silkscreen
-[silk_edge_clearance]: Silkscreen clipped by board edge
-    Rule: board setup constraints silk; warning
-    @(33,5000 mm, 169,0000 mm): Segment on Edge.Cuts
-    @(16,0000 mm, 168,5000 mm): PCB text 'A20 pins land here' on B.Silkscreen
 
 ** Found 0 unconnected pads **
 
