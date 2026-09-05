@@ -217,7 +217,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.2, 1.0, 1.2, 0.6, 0.5, 0.25), C("BOOST", 3, 0.2, 1.5, 1.0, 0.5, 1.2, 0.3), C("RAIL", 4, 0.2, 2.0, 1.0, 0.5, 1.2, 0.3), C("RF", 5, 0.3, 0.35, 0.7, 0.3, 0.2, 0.15)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.15, 0.2, 0.7, 0.3, 0.2, 0.15), C("PWR", 1, 0.15, 0.4, 0.8, 0.4, 0.4, 0.25), C("BANK", 2, 0.15, 1.0, 1.2, 0.6, 0.5, 0.25), C("BOOST", 3, 0.2, 1.5, 1.0, 0.5, 1.2, 0.3), C("RAIL", 4, 0.2, 2.0, 1.0, 0.5, 1.2, 0.3), C("RF", 5, 0.3, 0.35, 0.7, 0.3, 0.2, 0.15)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
