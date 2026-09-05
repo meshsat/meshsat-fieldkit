@@ -1,5 +1,5 @@
 ** Drc report for pcb-a-power.kicad_pcb **
-** Created on 2026-09-05T01:25:12+0200 **
+** Created on 2026-09-05T04:26:34+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
 ** Found 72 DRC violations **
@@ -21,6 +21,10 @@
     @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
+    @(67,3400 mm, 188,4325 mm): Segment of J_AB1 on F.Silkscreen
+    @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
     @(67,8400 mm, 187,4325 mm): Segment of J_AB1 on F.Silkscreen
     @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
@@ -29,16 +33,8 @@
     @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(67,3400 mm, 188,4325 mm): Segment of J_AB1 on F.Silkscreen
-    @(53,0000 mm, 188,0000 mm): PCB text 'BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins' on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
     @(260,5000 mm, 37,0000 mm): Circle on F.Silkscreen
     @(205,0000 mm, 33,5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A18)' on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(253,0000 mm, 178,0000 mm): Circle on B.Silkscreen
-    @(252,9997 mm, 174,0000 mm): Arc of J_BM7 on B.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(253,0000 mm, 184,0000 mm): PCB text 'BM LORA' on B.Silkscreen
@@ -47,6 +43,10 @@
     Rule: board setup constraints silk; warning
     @(195,0000 mm, 186,0000 mm): PCB text 'PCB-A UNDERSIDE - 13.4 mm above the dock strip (32.21); dock block pins and seven SMP-MAX receptacles land on the dock' on B.Silkscreen
     @(260,5000 mm, 183,0000 mm): Circle on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(253,0000 mm, 178,0000 mm): Circle on B.Silkscreen
+    @(252,9997 mm, 174,0000 mm): Arc of J_BM7 on B.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(50,0000 mm, 176,0000 mm): Circle on B.Silkscreen
@@ -76,7 +76,7 @@
     @(66,0000 mm, 184,0000 mm): PCB text 'BM WIFI 2.4' on B.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
-    @(124,0000 mm, 184,0000 mm): PCB text 'BM WIFI 5.8' on B.Silkscreen
+    @(124,0000 mm, 184,0000 mm): PCB text 'BM GNSS' on B.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(220,0000 mm, 184,0000 mm): PCB text 'BM LTE' on B.Silkscreen

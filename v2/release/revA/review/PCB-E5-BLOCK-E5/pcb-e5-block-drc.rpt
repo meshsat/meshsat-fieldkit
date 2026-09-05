@@ -1,32 +1,32 @@
 ** Drc report for pcb-e5-block.kicad_pcb **
-** Created on 2026-09-04T20:32:32+0200 **
+** Created on 2026-09-05T04:26:47+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
 ** Found 18 DRC violations **
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
+    @(11,0000 mm, 183,0000 mm): Circle of T_CP3 on F.Silkscreen
+    @(15,0000 mm, 183,0000 mm): Circle of T_CP4 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(7,0000 mm, 183,0000 mm): Circle of T_CP2 on F.Silkscreen
+    @(11,0000 mm, 183,0000 mm): Circle of T_CP3 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(11,0000 mm, 177,0000 mm): Circle of T_CN3 on F.Silkscreen
+    @(7,0000 mm, 177,0000 mm): Circle of T_CN2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(15,0000 mm, 177,0000 mm): Circle of T_CN4 on F.Silkscreen
+    @(11,0000 mm, 177,0000 mm): Circle of T_CN3 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(7,0000 mm, 177,0000 mm): Circle of T_CN2 on F.Silkscreen
+    @(3,0000 mm, 177,0000 mm): Circle of T_CN1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
     @(7,0000 mm, 183,0000 mm): Circle of T_CP2 on F.Silkscreen
     @(3,0000 mm, 183,0000 mm): Circle of T_CP1 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(7,0000 mm, 183,0000 mm): Circle of T_CP2 on F.Silkscreen
-    @(11,0000 mm, 183,0000 mm): Circle of T_CP3 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(15,0000 mm, 183,0000 mm): Circle of T_CP4 on F.Silkscreen
-    @(11,0000 mm, 183,0000 mm): Circle of T_CP3 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(3,0000 mm, 177,0000 mm): Circle of T_CN1 on F.Silkscreen
-    @(7,0000 mm, 177,0000 mm): Circle of T_CN2 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(11,0000 mm, 177,0000 mm): Circle of T_CN3 on F.Silkscreen
-    @(7,0000 mm, 177,0000 mm): Circle of T_CN2 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(11,0000 mm, 177,0000 mm): Circle of T_CN3 on F.Silkscreen
-    @(15,0000 mm, 177,0000 mm): Circle of T_CN4 on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(3,0000 mm, 173,5000 mm): PCB text 'RETURN 12 AWG' on F.Silkscreen
@@ -38,28 +38,28 @@
     @(32,3500 mm, 191,0000 mm): PCB text 'GND6' on B.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
-    @(3,0000 mm, 183,0000 mm): Circle of T_CP1 on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; warning
-    @(15,0000 mm, 177,0000 mm): Circle of T_CN4 on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; warning
     @(11,0000 mm, 183,0000 mm): Circle of T_CP3 on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; warning
-    @(3,0000 mm, 177,0000 mm): Circle of T_CN1 on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; warning
-    @(7,0000 mm, 183,0000 mm): Circle of T_CP2 on F.Silkscreen
-[silk_over_copper]: Silkscreen clipped by solder mask
-    Local override; warning
-    @(7,0000 mm, 177,0000 mm): Circle of T_CN2 on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(11,0000 mm, 177,0000 mm): Circle of T_CN3 on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(15,0000 mm, 183,0000 mm): Circle of T_CP4 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(7,0000 mm, 177,0000 mm): Circle of T_CN2 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3,0000 mm, 177,0000 mm): Circle of T_CN1 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(3,0000 mm, 183,0000 mm): Circle of T_CP1 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(7,0000 mm, 183,0000 mm): Circle of T_CP2 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(15,0000 mm, 177,0000 mm): Circle of T_CN4 on F.Silkscreen
 [silk_edge_clearance]: Silkscreen clipped by board edge
     Rule: board setup constraints silk; warning
     @(35,0000 mm, 193,5000 mm): Segment on Edge.Cuts
