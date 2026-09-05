@@ -430,7 +430,7 @@ def emit_pwr_flag(p, x, y):
     else: label(net, x, y + STUB, 270)
 
 # layout: columns, top-down cursor; group order = list order with section titles
-SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_M1", "J_5V_M2", "J_5V_PI", "D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "R1", "LED1", "J_TD2"] + ["TP%d" % k for k in range(1, 24)] + ["#FLG%02d" % k for k in range(1, 16)]),
+SECTIONS = [("POWER INPUT, RAILS, TEST POINTS", ["J_5V_M1", "J_5V_M2", "J_5V_PI", "D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "R1", "LED1", "J_TD2"] + ["TP%d" % k for k in range(1, 24)] + ["#FLG%02d" % k for k in range(1, 18)]),
             ("3.3 V BUCKS: U31 BOARD (FOLLOWS THE CM5 3.3 V), U32 LTE SOCKET (EN_LTE, 0x44)", ["U31", "L31", "C31", "C32", "C33", "C34", "R35", "R36", "R37", "R38", "R41", "U33", "U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "R42", "C50", "C51", "C52", "C53", "C49", "C39"]),
             ("COMPUTE MODULE 5 (2x AMPHENOL 10164227-1004A1RLF)", ["U30A", "U30B"]),
             ("CM5 SUPPORT: RTC CELL, LEDS, FAN, FLASH PORT, BENCH HEADERS", ["BT1", "R46", "LED5", "Q2", "R47", "R48", "LED6", "J_FAN", "R49", "J_FLASH", "R50", "R51", "U9", "J_RPIBOOT", "J_WP", "J_PMIC", "J_PWRBTN", "J_DBG"]),
