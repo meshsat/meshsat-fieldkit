@@ -166,7 +166,7 @@ def d7_pour(netname, name, rect, layer=pcbnew.B_Cu, priority=2):
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): pt = P(x, y); o.Append(pt.x, pt.y)
     board.Add(z); return z
-d7_pour("V8", "V8 boost output column", (-27.0, -20.5, -23.5, 14.6)); d7_pour("V8", "V8 bar to the module VCC pin", (-27.0, 12.2, 25.4, 14.6)); d7_pour("V8", "V8 tap to pin 1", (23.6, 14.0, 25.6, 16.1), priority=3)
+d7_pour("V8", "V8 boost output column", (-27.0, -20.5, -23.5, 14.6)); d7_pour("V8", "V8 bar to the module VCC pin", (-27.0, 12.2, 25.4, 14.6), priority=3); d7_pour("V8", "V8 tap to pin 1", (23.6, 14.0, 25.6, 16.1), priority=4)   # same-net bands at distinct priorities (the D7 deliverable of 13:52 carries one zones_intersect note from the equal priorities)
 d7_pour("VIN_CELL", "VIN_CELL column", (-29.6, -15.5, -27.4, 21.0))
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
