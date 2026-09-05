@@ -112,7 +112,7 @@ notes(["SHEET 2 of 4: CONNECTOR PLATE, 54 wide x 82 tall x 3 mm aluminium (5052 
        "Pin functions, cables and the dock leads: appendix 32.29 and ASSEMBLY.md section 4. Seen from outside the back wall (case +X to your left), as sheet 1. Nothing here has been cut yet."], -17)
 c.showPage()
 
-# ---------------- sheet 3: the seven SMA antenna bulkheads on the two end walls (the wall strip E3 is retired, 32.13 ruling 5)
+# ---------------- sheet 3: the nine SMA antenna bulkheads on the two end walls (the wall strip E3 is retired, 32.13 ruling 5)
 # Amphenol Connex 132170 SMA female-female bulkhead coupler: 6.5 mm D-hole with the flat at 6.00 across (vendor/rf drawing), 8 mm nut.
 # Four sites per end wall at Y -60, -30, +30, +60 between the wall's inner ribs (none on the 1450 end walls), 55 mm above the floor.
 SMA_Z = 88.0   # 1450 (32.40 item 8): above the battery row (top 78 mm) along the west end wall, below the frame skirt (Z 100 to 109)
