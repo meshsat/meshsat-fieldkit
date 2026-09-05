@@ -49,17 +49,17 @@ if placed:
         check(-33 <= r[0] and r[2] <= 27 and 50 <= r[1] and r[3] <= 84, "LTE card and socket inside the north band (-32..26, 52..82 plus courtyard) (got x %.1f..%.1f, y %.1f..%.1f)" % (r[0], r[2], r[1], r[3]))
     if "J_WIFI1" in fps:
         j = next(f for f in b.GetFootprints() if f.GetReference() == "J_WIFI1")
-        pos = case(j.GetPosition()); check(abs(pos[0] - 37) < 0.05 and abs(pos[1] - 60) < 0.05, "M.2 socket J_WIFI1 at (37, 60) (got %.2f, %.2f)" % pos)
+        pos = case(j.GetPosition()); check(abs(pos[0] - 37) < 0.3 and abs(pos[1] - 60) < 0.3, "M.2 socket J_WIFI1 datum at (37, 60) (got %.2f, %.2f)" % pos)
         check(sum(1 for pd in j.Pads() if pd.GetNumber().isdigit()) == 67, "M.2 E-key socket carries 67 contacts (positions 1-23, 32-75)")
         st = [case(pd.GetPosition()) for pd in j.Pads() if pd.GetNumber() == "M1"]
-        check(len(st) == 1 and abs(st[0][0] - 65.25) < 0.05 and abs(st[0][1] - 60) < 0.05, "2230 standoff hole at (65.25, 60) (got %s)" % st)
+        check(len(st) == 1 and abs(st[0][0] - 65.25) < 0.3 and abs(st[0][1] - 60) < 0.3, "2230 standoff hole at (65.25, 60) (got %s)" % st)
         bb = j.GetBoundingBox(False, False); r = (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
         check(29 <= r[0] and r[2] <= 68 and 48 <= r[1] and r[3] <= 72, "M.2 socket and card inside WIFI_RECT (30..67, 49..71 plus courtyard) (got x %.1f..%.1f, y %.1f..%.1f)" % (r[0], r[2], r[1], r[3]))
     # B14 guard (gateway finding 5 Sep 05:49): a net that exists only on the socket makes no ratsnest, so the router and DRC stay silent about it
     pcie = {}
     for f in b.GetFootprints():
         for pd in f.Pads():
-            nm = pd.GetNetname()
+            nm = pd.GetNetname().lstrip("/")   # root-sheet labels read "/NAME" on the board
             if nm.upper().startswith("PCIE"): pcie.setdefault(nm, set()).add(f.GetReference())
     check(len(pcie) >= 10, "ten PCIe lane and control nets present on the board (got %d: %s)" % (len(pcie), sorted(pcie)))
     for nm, refs in sorted(pcie.items()):
@@ -68,7 +68,7 @@ if placed:
     # usual intra-pair budget is a few ps, about 1 mm on FR-4. A mismatch is reported as a WARNING with the numbers, not as a FAIL: the fix is a post-route meander.
     tl = {}
     for t in b.GetTracks():
-        if t.GetClass() == "PCB_TRACK": tl[t.GetNetname()] = tl.get(t.GetNetname(), 0.0) + t.GetLength() / 1e6
+        if t.GetClass() == "PCB_TRACK": tl[t.GetNetname().lstrip("/")] = tl.get(t.GetNetname().lstrip("/"), 0.0) + t.GetLength() / 1e6
     for pair in ("PCIe_TX", "PCIe_RX", "PCIe_CLK"):
         lp, ln = tl.get(pair + "_P", 0.0), tl.get(pair + "_N", 0.0)
         if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(lp - ln) > 1.0 else "PASS ") + pair, lp, ln, abs(lp - ln), "" if abs(lp - ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))

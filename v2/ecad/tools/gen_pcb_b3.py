@@ -63,7 +63,7 @@ def place(ref, x, y, rot=0.0, back=False):
 #     (the two receptacles are separate parts U30A and U30B so JLC places two connectors; connector centres 17 mm off the module centre, 2.5 mm south),
 #     the display FPC east of the module with the cable toward the back wall, the LTE card in the north band with its socket at the west end,
 #     the flashing USB-C on the south edge, the rail leads on the west, the Pi rail lead beside the module's 5 V pins
-FIXED = {"J_WIFI1": (37, 60, -90), "J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -77.5, 180),
+FIXED = {"J_WIFI1": (48.145, 60, 90),   # place() centres the courtyard box: with the card along +X (rot +90) the socket datum lands at (37, 60) and the 2230 standoff at (65.25, 60) "J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -77.5, 180),
          "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90),
          "U30A": (-105, -2.5, 0), "U30B": (-71, -2.5, 0), "J_DISP": (-50, 10, 180), "J_LTE1": (-3, 67, -90), "J_SIM1": (-45, 60, 0), "BT1": (-46, 27, 0), "J_FAN": (-64, 34, 0),
          "U42": (94, 34, 180)}
