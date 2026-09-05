@@ -1,0 +1,21 @@
+MeshSat field-kit carrier PCB-A POWER + I/O Rev A, phase A21: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-a-power-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 285.1 x 160.1 mm, 4 copper layers, 1.6 mm FR-4, JLC04161H-7628 stackup
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: USB 2.0 pairs /USB_WALL_N, /USB_WALL_P designed 0.2 mm track / 0.15 mm gap on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
+- BOM: pcb-a-power-bom.csv (70 lines, 49 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-a-power-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
+- Parts on the TOP side: 148, on the BOTTOM side: 0
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): J_BM1, J_BM2, J_BM3, J_BM4, J_BM5, J_BM6, J_BM7, J_CN1, J_CN2, J_CN3, J_CN4, J_CP1, J_CP2, J_CP3, J_CP4, J_DOCK, J_PRE1, L2, L3, L4, L5, L6, RT1
+- Not assembled by JLC, fitted at the bench: A21 is A20 re-routed with the net classes applied (appendix 32.39: the Pi rail and the cell node in their 2.0 and 1.0 mm classes, the USB pairs at 0.2/0.15). no pack on the board: the battery module plugs into the dock block; the twelve Preci-Dip spring pins, four CELL+ and four return Mill-Max pins and the pre-charge pin are pressed in from the underside; the seven Radiall SMP-MAX receptacles on the underside and the seven SMA jacks on top; the DMR858M mezzanine (PCB-D) on four M3 standoffs with the 2x8 harness (I2S, I2C, the gated 3.3 V from B13) and the VH cell lead; the J_AB1 2x9 ribbon up to PCB-B; the wall host port cable from J_WALL1 to the Glenair receptacle; the thermistor lead into the module; blade fuses in F2 to F5 (appendix 32.35, 32.36)
+
+SOURCE
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-a-revA-A21 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
