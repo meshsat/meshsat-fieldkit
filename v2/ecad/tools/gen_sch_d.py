@@ -124,12 +124,12 @@ FP.update({
  "QFN11": "Package_DFN_QFN:Texas_VQFN-RNR0011A-11", "LQFP48": "Package_QFP:LQFP-48_7x7mm_P0.5mm", "SOT235": "Package_TO_SOT_SMD:SOT-23-5",
  "SOT363": "Package_TO_SOT_SMD:SOT-363_SC-70-6", "XTAL5032": "Crystal:Crystal_SMD_5032-2Pin_5.0x3.2mm", "C1210": "Capacitor_SMD:C_1210_3225Metric",
  "L6030": "Inductor_SMD:L_Coilcraft_XAL6030-XXX", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "HDR7": "Connector_PinHeader_1.27mm:PinHeader_1x07_P1.27mm_Vertical",
- "HDR3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "QFN32": "Package_DFN_QFN:QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm", "OSC3225": "Oscillator:Oscillator_SMD_Abracon_ASE-4Pin_3.2x2.5mm", "SOIC8": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "PH2": "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "DMR": "meshsat:DMR858M", "FB": "Inductor_SMD:L_0603_1608Metric"})
+ "HDR3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "QFN32": "Package_DFN_QFN:QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm", "OSC3225": "Oscillator:Oscillator_SMD_Abracon_ASE-4Pin_3.2x2.5mm", "SOIC8": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "TSSOP16": "Package_SO:TSSOP-16_4.4x5mm_P0.65mm", "PH2": "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "DMR": "meshsat:DMR858M", "FB": "Inductor_SMD:L_0603_1608Metric"})
 # --- harness to PCB-A (mirror of A20's J_MEZZ1, appendix 32.35): 1 GND 2 +3V3_AB 3 I2S_BCLK 4 I2S_LRCLK 5 GND 6 I2S_DOUT 7 I2S_DIN 8 GND 9 SDA 10 TR_APRS 11 MEZZ_EN 12 +3V3 13 GND 14 SCL 15 TX_INHIBIT_n 16 GND
 part("J_HARN1", "Connector_Generic", "Conn_02x08_Odd_Even", "harness to PCB-A J_MEZZ1 (IDC 2x8): I2S, I2C, the gated 3.3 V from B13, PTT lines", "IDC16",
      {"1": "GND", "2": "+3V3_AB", "3": "I2S_BCLK", "4": "I2S_LRCLK", "5": "GND", "6": "I2S_DOUT", "7": "I2S_DIN", "8": "GND", "9": "SDA", "10": "TR_APRS", "11": "MEZZ_EN", "12": "+3V3", "13": "GND", "14": "SCL", "15": "TX_INHIBIT_n", "16": "GND"})
 part("J_PWR1", "Connector_Generic", "Conn_01x02", "cell node from PCB-A J_MEZZ_PWR (JST-VH)", "VH2", {"1": "VIN_CELL", "2": "GND"})
-for ref, net in (("TP1", "V8"), ("TP2", "GND"), ("TP3", "RADIO_PTT"), ("TP4", "RADIO_MIC"), ("TP5", "RADIO_SPK"), ("TP6", "SPKEN"), ("TP7", "+3V3"), ("TP8", "VIN_CELL"), ("TP9", "TR_APRS"), ("TP10", "RADIO_PTT2"), ("TP11", "MEZZ_EN"), ("TP12", "TX_INHIBIT_n"), ("TP13", "MCLK"), ("TP14", "+3V3_AB"), ("TP15", "I2S_BCLK")):
+for ref, net in (("TP1", "V8"), ("TP2", "GND"), ("TP3", "RADIO_PTT"), ("TP4", "RADIO_MIC"), ("TP5", "RADIO_SPK"), ("TP6", "RADIO_COS"), ("TP7", "+3V3"), ("TP8", "VIN_CELL"), ("TP9", "TR_APRS"), ("TP10", "RADIO_PTT2"), ("TP11", "MEZZ_EN"), ("TP12", "TX_INHIBIT_n"), ("TP13", "MCLK"), ("TP14", "+3V3_AB"), ("TP15", "I2S_BCLK")):
     part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
 for i, net in enumerate(("VIN_CELL", "+3V3_AB", "+3.3VA", "+3V3", "GND"), 1):   # V8 is driven by the boost; the two 3.3 V rails arrive over the harness
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
@@ -145,9 +145,10 @@ c("C30", "100n 25V", "V8", "GND")
 # --- DMR858M (pin numbers are the module pins; symbol is a generic 2x12)
 part("U2", "Connector_Generic", "Conn_02x12_Odd_Even", "DNP bench: DMR858M 5 W UHF module on 2 x 1x12 2.54 mm female headers 8.5 mm + M2.5 x 11 mm standoffs", "DMR",
      {"1": "V8", "2": "GND", "3": "CS", "4": "GND", "5": "RADIO_PTT", "6": "RADIO_SPK", "7": "CH8", "8": "CH4", "9": "CH2", "10": "CH1", "11": "NC", "12": "NC",
-      "13": "GND", "14": "RADIO_MIC", "15": "GND", "16": "SPKEN", "17": "GND", "18": "RADIO_TX", "19": "RADIO_RX", "20": "NC", "21": "NC", "22": "NC", "23": "NC", "24": "NC"})   # speaker OUTP/OUTN and the host-upgrade UART unused
-for i, net in enumerate(("CH8", "CH4", "CH2", "CH1"), 1): part("JP%d" % i, "Jumper", "SolderJumper_2_Open", "channel bit %s to GND (open = default)" % net, "JP2", {"1": net, "2": "GND"})
-r("R36", "10k", "CS", "+3V3"); part("JP5", "Jumper", "SolderJumper_2_Open", "CS to GND = module sleep", "JP2", {"1": "CS", "2": "GND"})
+      "13": "GND", "14": "RADIO_MIC", "15": "GND", "16": "RADIO_COS", "17": "GND", "18": "RADIO_TX", "19": "RADIO_RX", "20": "NC", "21": "NC", "22": "NC", "23": "NC", "24": "NC"})   # D7 (V1.2 datasheet p.10): 16 SPKEN is the module's receive indication OUTPUT (low, high on a received signal), read as carrier detect; 7 to 10 are the channel knob's 8421 code OUTPUTS, read back; 11/12 speaker OUTP/OUTN and 21/22 HST (upgrade UART, the module's own USB-C) unused
+# D7: no channel jumpers (the pins are outputs); CS pulled up on the kit-domain rail and driven by the expander bit CS_CTL (low = module sleep, 3 s)
+r("R36", "10k", "CS", "+3V3_AB"); r("R48", "1k", "CS_CTL", "CS")
+for k, (net, rr) in enumerate((("CH8", "R43"), ("CH4", "R44"), ("CH2", "R45"), ("CH1", "R46"))): r(rr, "1k", net, net + "_IN")   # knob code outputs into expander inputs, 1k against a software mistake
 # --- D6 rails: +3V3_AB (gated on B13, over J_AB1 and J_MEZZ1) feeds the codec, its clock and the PCA9536, so the I2S lines die with the module (32.35);
 #     +3V3 (PCB-A's always-on logic rail) keeps the PTT, EMCON and TR-mirror stages as on D5; the codec's analogue rail sits behind a bead
 part("FB1", "Device", "FerriteBead", "600R@100MHz", "FB", {"1": "+3V3_AB", "2": "+3.3VA"}); c("C9", "100n", "+3.3VA", "GND"); c("C10", "4.7u", "+3.3VA", "GND")
@@ -161,11 +162,21 @@ WM = {1: "NC", 2: "NC", 3: "NC", 4: "SPK_IN", 5: "NC", 6: "NC", 7: "NC", 8: "+3V
 part("U5", "Connector_Generic", "Conn_02x17_Odd_Even", "WM8960 audio codec QFN-32 (pins per datasheet table: 4 LINPUT1, 11 MCLK, 12 BCLK, 13 DACLRC, 14 DACDAT, 15 ADCLRC, 16 ADCDAT, 17 SCLK, 18 SDIN, 27 VMID, 31 HP_L, 32 AVDD, 33 paddle)", "QFN32", {str(k): v for k, v in WM.items()})
 c("C33", "100n", "+3.3VA", "GND"); c("C34", "10u", "+3.3VA", "GND", "C1210"); c("C35", "100n", "+3V3_AB", "GND"); c("C36", "100n", "+3V3_AB", "GND"); c("C37", "4.7u", "VMID", "GND")
 part("X1", "Oscillator", "ASE-xxxMHz", "24 MHz 3.3 V oscillator 3225 (ASE-24.000MHZ-LC-T class)", "OSC3225", {"1": "+3V3_AB", "2": "GND", "3": "MCLK", "4": "+3V3_AB"}); c("C38", "100n", "+3V3_AB", "GND"); 
-part("U7", "Interface_Expansion", "PCA9536D", "PCA9536 4-bit I2C expander 0x41: 0 PTT, 1 PTT2 (spare), 2 SPKEN, 3 status LED; a gpiochip for Direwolf's PTT", "SOIC8",
-     {"1": "OUT1", "2": "OUT2", "3": "SPKEN", "4": "GND", "5": "SDA", "6": "SCL", "7": "LED_K", "8": "+3V3_AB"}); c("C39", "100n", "+3V3_AB", "GND"); r("R3", "100k", "SPKEN", "GND")
-part("J_UART1", "Connector_Generic", "Conn_01x03", "DMR858M host-upgrade UART (bench, 3.3 V, 100R in series): GND TX RX", "HDR3", {"1": "GND", "2": "UART_RX_H", "3": "UART_TX_H"})
+# D7: PCA9555 0x26 (A2 A1 A0 = 1 1 0) replaces the PCA9536: P0.0 PTT, P0.1 PTT2 (spare), P0.2 status LED, P0.3 CS control, P0.4 carrier detect (SPKEN, input),
+#     P0.5 to P1.0 the channel knob code 8/4/2/1 (inputs), the rest spare; a gpiochip for Direwolf's PTT and DCD
+part("U7", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x26: PTT, PTT2, LED, CS, COS in, channel code in", "EXP", {
+ "24": "+3V3_AB", "12": "GND", "22": "SCL", "23": "SDA", "1": "NC", "21": "GND", "2": "+3V3_AB", "3": "+3V3_AB",   # A0 = pin 21, A1 = pin 2, A2 = pin 3: 0x26
+ "4": "OUT1", "5": "OUT2", "6": "LED_K", "7": "CS_CTL", "8": "RADIO_COS_IN", "9": "CH8_IN", "10": "CH4_IN", "11": "CH2_IN", "13": "CH1_IN",
+ "14": "NC", "15": "NC", "16": "NC", "17": "NC", "18": "NC", "19": "NC", "20": "NC"}, "C5626"); c("C39", "100n", "+3V3_AB", "GND")
+r("R3", "100k", "RADIO_COS", "GND"); r("R42", "1k", "RADIO_COS", "RADIO_COS_IN")   # the module's receive indication into the expander, 1k against a software mistake
+# D7: SC16IS740 I2C-to-UART bridge (NXP data sheet, TSSOP16: 1 VDD, 2 A0, 3 A1, 4 SO, 5 SCL, 6 SDA, 7 IRQ, 8 I2C/SPI, 9 VSS, 10 RTS, 11 CTS, 12 TX, 13 RX, 14 RESET, 15 XTAL1, 16 XTAL2)
+#     on the module's control UART (18 TXD, 19 RXD: channel, power, mic gain, the command set 0x01 to 0x28), A1 = A0 = VDD gives 0x90 (7-bit 0x48), I2C mode,
+#     CTS tied low, clocked by the codec's 24 MHz oscillator on XTAL1 (external clock input, XTAL2 open), RESET pulled up; Linux sc16is7xx gives it a tty
+part("U8", "Connector_Generic", "Conn_01x16", "SC16IS740IPW I2C-to-UART bridge 0x48, 24 MHz external clock on XTAL1", "TSSOP16",
+     {"1": "+3V3_AB", "2": "+3V3_AB", "3": "+3V3_AB", "4": "NC", "5": "SCL", "6": "SDA", "7": "NC", "8": "+3V3_AB", "9": "GND", "10": "NC", "11": "GND", "12": "BR_TX", "13": "BR_RX", "14": "BR_nRST", "15": "MCLK", "16": "NC"})
+c("C40", "100n", "+3V3_AB", "GND"); r("R47", "10k", "BR_nRST", "+3V3_AB")
 # --- audio paths (D5 values where they stay), PTT from U7, TR mirror, UART header, LED
-r("R2", "4.7k", "AFOUT", "MIC_NODE"); r("R4", "1.5k", "MIC_NODE", "GND"); c("C13", "4.7u", "MIC_NODE", "RADIO_MIC")   # HP_L line level divided by 4 into the module's microphone pin
+r("R2", "47k", "AFOUT", "MIC_NODE"); r("R4", "1k", "MIC_NODE", "GND"); c("C13", "4.7u", "MIC_NODE", "RADIO_MIC")   # D7: HP_L line level divided by 48 (about 20 mV rms at full scale) into the module's microphone pin, whose modulation sensitivity is 4 to 10 mV (V1.2 datasheet); the module provides the bias
 c("C14", "4.7u", "RADIO_SPK", "SPK_IN")   # the module's audio out into LINPUT1 (internally biased at VMID)
 r("R10", "1.5k", "OUT2", "Q1_B"); r("R11", "1.5k", "OUT1", "Q2_B")
 part("Q1", "Transistor_BJT", "BC847", "BC847 (PTT2, spare)", "SOT23", {"1": "Q1_B", "2": "GND", "3": "Q1_C"}); part("Q2", "Transistor_BJT", "BC847", "BC847 (PTT to the module)", "SOT23", {"1": "Q2_B", "2": "Q2_E", "3": "Q2_C"})
@@ -176,7 +187,7 @@ r("R37", "1k", "TX_INHIBIT_n", "Q3_G"); r("R38", "100k", "TX_INHIBIT_n", "+3V3")
 part("Q4", "Transistor_BJT", "BC857", "BC857 (TR mirror from RADIO_PTT)", "SOT23", {"1": "Q4_B", "2": "+3V3", "3": "Q4_C"})
 r("R40", "10k", "RADIO_PTT", "Q4_B"); r("R41", "100R", "Q4_C", "TR_APRS")
 r("R12", "22R", "Q1_C", "RADIO_PTT2"); r("R13", "22R", "Q2_C", "RADIO_PTT")
-r("R8", "100R", "UART_TX_H", "RADIO_RX"); r("R9", "100R", "RADIO_TX", "UART_RX_H")
+r("R8", "100R", "BR_TX", "RADIO_RX"); r("R9", "100R", "RADIO_TX", "BR_RX")   # bridge TX into the module RXD, module TXD into the bridge RX
 part("D1", "Device", "LED", "green status (U7 bit 3 sinks)", "LED", {"2": "LED_A", "1": "LED_K"}, "C72043"); r("R15", "1k", "+3V3_AB", "LED_A")
 
 # ----------------------------------------------------------------- emit
@@ -249,9 +260,9 @@ def emit_pwr_flag(p, x, y):
 # layout: columns, top-down cursor; group order = list order with section titles
 SECTIONS = [("HARNESS TO PCB-A, CELL FEED, TEST POINTS", ["J_HARN1", "J_PWR1", "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10", "TP11", "TP12", "TP13", "TP14", "TP15", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05"]),
             ("TPS61089 BOOST: CELL NODE -> 8 V / 2 A  (500 kHz, ILIM 7.9 A, EN = MEZZ_EN)", ["U1", "L1", "C20", "C21", "R30", "R31", "R32", "C22", "R33", "R34", "R35", "C23", "C24", "C25", "C26", "C27", "C28", "C29", "C30"]),
-            ("DMR858M RADIO MODULE: CHANNEL JUMPERS, CS", ["U2", "JP1", "JP2", "JP3", "JP4", "R36", "JP5"]),
-            ("D6 CORE: RAILS, WM8960 CODEC ON I2S + I2C, 24 MHz CLOCK, PCA9536 PTT EXPANDER, UART HEADER", ["FB1", "C9", "C10", "C7", "C8", "C17", "C18", "U5", "C33", "C34", "C35", "C36", "C37", "X1", "C38", "U7", "C39", "R3", "J_UART1"]),
-            ("AUDIO PATHS, PTT + TR MIRROR, UART, LED", ["R2", "R4", "C13", "C14", "R10", "R11", "Q1", "Q2", "R12", "R13", "Q3", "R37", "R38", "C32", "R39", "Q4", "R40", "R41", "R8", "R9", "D1", "R15"])]
+            ("DMR858M RADIO MODULE (V1.0 BOARD): CS PULL-UP AND CONTROL, KNOB CODE AND COS INTO THE EXPANDER", ["U2", "R36", "R48", "R43", "R44", "R45", "R46", "R42"]),
+            ("D7 CORE: RAILS, WM8960 CODEC ON I2S + I2C, 24 MHz CLOCK, PCA9555 EXPANDER 0x26, SC16IS740 UART BRIDGE 0x48", ["FB1", "C9", "C10", "C7", "C8", "C17", "C18", "U5", "C33", "C34", "C35", "C36", "C37", "X1", "C38", "U7", "C39", "R3", "U8", "C40", "R47"]),
+            ("AUDIO PATHS, PTT + TR MIRROR, BRIDGE UART LINES, LED", ["R2", "R4", "C13", "C14", "R10", "R11", "Q1", "Q2", "R12", "R13", "Q3", "R37", "R38", "C32", "R39", "Q4", "R40", "R41", "R8", "R9", "D1", "R15"])]
 byref = {p["ref"]: p for p in P}
 placed = set()
 COLW = 88.0; x = 20.0; y = 30.0; PAGE_H = 560.0   # A1 landscape is 841 x 594; A0 is chosen below if the columns overflow
@@ -281,7 +292,7 @@ max_x = x + COLW
 PAPER = "A1" if max_x <= 820 else "A0"
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-D APRS BOARD") (date "2026-09-02") (rev "A") (company "MeshSat") (comment 1 "Phase D6 schematic (appendix 32.35: the AIOC-derived STM32 core is replaced by a WM8960 codec on I2S and I2C, a 24 MHz clock and a PCA9536 for the PTT lines; USB is gone), generated by tools/gen_sch_d.py") (comment 2 "MESHSAT-709/748. AIOC rev 1.2 core (MIT, skuep/AIOC) on an STM32F302C8T6; TPS61089 boost 8 V from the cell node; DMR858M castellated; TR_APRS = OUT1 mirror to PCB-A."))\n'
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-D APRS BOARD") (date "2026-09-05") (rev "A") (company "MeshSat") (comment 1 "Phase D7 schematic (MESHSAT-804: the DMR858M V1.0 board as delivered, the CM5 owns the module) on D6 (appendix 32.35: the AIOC-derived STM32 core is replaced by a WM8960 codec on I2S and I2C, a 24 MHz clock and a PCA9536 for the PTT lines; USB is gone), generated by tools/gen_sch_d.py") (comment 2 "MESHSAT-709/748. AIOC rev 1.2 core (MIT, skuep/AIOC) on an STM32F302C8T6; TPS61089 boost 8 V from the cell node; DMR858M castellated; TR_APRS = OUT1 mirror to PCB-A."))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'
