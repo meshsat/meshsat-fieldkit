@@ -64,6 +64,14 @@ if placed:
     check(len(pcie) >= 10, "ten PCIe lane and control nets present on the board (got %d: %s)" % (len(pcie), sorted(pcie)))
     for nm, refs in sorted(pcie.items()):
         check("U30B" in refs and len(refs) >= 2, "%s reaches the module receptacle U30B and a second part (got %s)" % (nm, sorted(refs)))
+    # B14: intra-pair length report for the PCIe lane (post-route only; Freerouting does no length matching). PCIe Gen 2 UI is 200 ps; the
+    # usual intra-pair budget is a few ps, about 1 mm on FR-4. A mismatch is reported as a WARNING with the numbers, not as a FAIL: the fix is a post-route meander.
+    tl = {}
+    for t in b.GetTracks():
+        if t.GetClass() == "PCB_TRACK": tl[t.GetNetname()] = tl.get(t.GetNetname(), 0.0) + t.GetLength() / 1e6
+    for pair in ("PCIe_TX", "PCIe_RX", "PCIe_CLK"):
+        lp, ln = tl.get(pair + "_P", 0.0), tl.get(pair + "_N", 0.0)
+        if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(lp - ln) > 1.0 else "PASS ") + pair, lp, ln, abs(lp - ln), "" if abs(lp - ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
     j = next((f for f in b.GetFootprints() if f.GetReference() == "J_AB1"), None)
     if j is not None: check(j.IsFlipped(), "J_AB1 on the underside")
 # hole-to-hole webs >= 2 mm between every pair of holes (drill edges), NPTH pads of the module and the socket included
