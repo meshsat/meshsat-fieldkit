@@ -23,7 +23,7 @@ for fn in sorted(glob.glob(os.path.join(out, "meshsat-1450-*.png"))):
     im = Image.open(fn).convert("RGB"); w, h = im.size; strip = 64
     canvas = Image.new("RGB", (w, h + strip), (24, 24, 28)); canvas.paste(im, (0, 0)); d = ImageDraw.Draw(canvas)
     view = os.path.basename(fn)[len("meshsat-1450-"):-4]
-    d.text((18, h + 8), "MeshSat field kit V2 concept, Peli 1450 (411 x 329 x 154 mm)   view: " + view, fill=(240, 240, 235), font=font)
+    d.text((18, h + 8), "MeshSat field kit V2 concept in the Peli 1450 (catalogue 411 x 329 mm)   view: " + view, fill=(240, 240, 235), font=font)
     d.text((18, h + 42), "rulers in mm, 10 mm ticks, numerals every 50; floor grid 50 mm; prototype design, nothing built; 5 Sep 2026", fill=(180, 180, 175), font=small)
     canvas.save(fn); n += 1
 print("title strips on", n, "images")

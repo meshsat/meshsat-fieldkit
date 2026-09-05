@@ -1,15 +1,34 @@
-# MeshSat field kit V2, concept renders, Blender scene: a modelled Peli 1520 (Peli's STEP is only an envelope), the 1520PF frame with the sealed panel C5,
-# the board stack (E4, E5, A20, D6, B13), the battery module, end-wall antennas, the back-wall connector plate; a cutaway view shows the stack inside the case.
+# MeshSat field kit V2, concept renders, Blender scene for the Peli 1450 (5 Sep 2026, appendix 32.40 items 4 to 9 and 32.42): Peli's own 1451-931 bodies
+# (STL from the vendor STEP; a modelled fallback with the 1450 numbers), the 1450PF frame, the 3 mm aluminium face plate (v2/cad/face_plate.py) with the
+# backer board C6 under it, the board stack (E4, E5, A21, D7, B15), the battery row along the west end wall, the nine end-wall antennas at Z 88 with
+# their pigtails, the upright connector plate on the back wall with the shore and USB cables plugged, rulers and a 50 mm floor grid in every view.
 # Case frame in mm: X along the long axis, +Y = back wall (hinge), Z up from the cavity floor.
-# Run headless: blender -b -P scene.py -- <out dir> [views...]   (views: overview, hero, top, detail, cutaway, closed, all)
+# Run headless: blender -b -P scene.py -- <out dir> [views...]   (views: a name from VIEWS, "orbit", "closed", "details", "all")
 import bpy, bmesh, math, os, sys
 from mathutils import Vector, Matrix
 R = os.path.expanduser("~/render3d"); STL = R + "/stl"
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-OUT = args[0] if args else R + "/out2"; VIEWS = args[1:] or ["all"]; os.makedirs(OUT, exist_ok=True)
+OUT = args[0] if args else R + "/out1450"; VIEWS_ASKED = args[1:] or ["all"]; os.makedirs(OUT, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 S = bpy.context.scene; S.unit_settings.system = "METRIC"; S.unit_settings.scale_length = 0.001; S.unit_settings.length_unit = "MILLIMETERS"
-RIM = 124.87; FACE = RIM - 8.8; PZ = FACE - 2.0
+for cand in (os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecad", "tools"), os.path.expanduser("~/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad/tools"), R):
+    if os.path.exists(os.path.join(cand, "panel1450.py")): sys.path.insert(0, cand); break
+import panel1450 as P
+# ------------------------------------------------------------------ the 1450's numbers (appendix 32.41 and 32.42; Peli drawing 1451-931 and the STEP)
+BW, BL = 411.0, 329.0                 # outer
+RIM = 109.4                           # the rim (frame seat) above the cavity floor
+LIDH = 45.5                           # lid outer height above the rim
+FLOOR_W, FLOOR_L, RIM_W, RIM_L = 360.0, 246.0, 371.0, 259.0
+SKIRT = (378.4, 262.5, 8.1)           # the frame skirt ring the rim step takes
+FACE = P.FACE_TOP_Z                   # 101.4, the plate's top face on the frame lip
+PLATE_UNDER = P.PLATE_UNDER_Z         # 98.4
+BACKER_TOP = PLATE_UNDER - P.BACKER_GAP; BACKER_Z = BACKER_TOP - P.BACKER_T   # 88.4, 86.8
+SMA_Z = 88.0
+WEST = [(-72.0, "UHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]
+EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (0.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]
+RIBS_X = (-170.0, -95.0, -18.0, 60.0, 137.0)
+CPLATE = dict(cx=-56.0, cz=54.0, w=54.0, h=82.0)
+GROUND = -8.0                         # the ground plane under the feet (reset from the case body when Peli's STL is used)
 # ------------------------------------------------------------------ materials
 def mat(name, rgb, rough=0.5, metal=0.0, alpha=1.0, emit=0.0, bump=0.0):
     m = bpy.data.materials.get(name)
@@ -25,14 +44,15 @@ def mat(name, rgb, rough=0.5, metal=0.0, alpha=1.0, emit=0.0, bump=0.0):
         nt.links.new(tex.outputs["Fac"], bm.inputs["Height"]); nt.links.new(bm.outputs["Normal"], n.inputs["Normal"])
     return m
 M = dict(orange=mat("peli_orange", (0.97, 0.30, 0.015), 0.6, bump=0.35), orange2=mat("peli_orange_dark", (0.86, 0.25, 0.012), 0.68, bump=0.3),
-         black=mat("matte_black", (0.02, 0.02, 0.02), 0.65, bump=0.2), mask=mat("mask_black", (0.03, 0.03, 0.035), 0.45),
+         black=mat("matte_black", (0.02, 0.02, 0.02), 0.65, bump=0.2), mask=mat("mask_black", (0.03, 0.03, 0.035), 0.45), anod=mat("anodised", (0.05, 0.05, 0.055), 0.42, 0.55),
          gold=mat("enig", (0.95, 0.75, 0.30), 0.35, 1.0), steel=mat("steel", (0.62, 0.62, 0.64), 0.28, 1.0), steel_dark=mat("steel_dark", (0.3, 0.3, 0.32), 0.35, 1.0),
          alu=mat("aluminium", (0.75, 0.76, 0.78), 0.4, 1.0), chrome=mat("chrome", (0.85, 0.85, 0.87), 0.12, 1.0),
          glass=mat("glass", (0.6, 0.7, 0.8), 0.05, 0.0, 0.18), lens=mat("lens", (0.85, 0.88, 0.92), 0.05, 0.0, 0.2), paper=mat("epaper", (0.92, 0.92, 0.9), 0.75),
          green=mat("led_green", (0.15, 0.95, 0.25), 0.3, 0.0, 1.0, 3.0), amber=mat("led_amber", (1.0, 0.62, 0.06), 0.3, 0.0, 1.0, 3.0), redled=mat("led_red", (1.0, 0.1, 0.05), 0.3, 0.0, 1.0, 3.0),
          white=mat("plastic_white", (0.9, 0.9, 0.88), 0.5), rubber=mat("rubber", (0.04, 0.04, 0.04), 0.9, bump=0.3), dark=mat("dark_plastic", (0.08, 0.08, 0.09), 0.6),
          red=mat("red", (0.8, 0.05, 0.05), 0.4), pcb=mat("pcb_green", (0.05, 0.25, 0.1), 0.5), tin=mat("tin", (0.7, 0.72, 0.72), 0.3, 1.0), gray=mat("gray_plastic", (0.35, 0.35, 0.37), 0.6),
-         ledoff=mat("led_off", (0.55, 0.55, 0.5), 0.25, 0.0, 0.7), wire_red=mat("wire_red", (0.7, 0.05, 0.05), 0.5), wire_blk=mat("wire_black", (0.05, 0.05, 0.05), 0.5), ribbon=mat("ribbon", (0.4, 0.4, 0.42), 0.6))
+         ledoff=mat("led_off", (0.55, 0.55, 0.5), 0.25, 0.0, 0.7), wire_red=mat("wire_red", (0.7, 0.05, 0.05), 0.5), wire_blk=mat("wire_black", (0.05, 0.05, 0.05), 0.5), ribbon=mat("ribbon", (0.4, 0.4, 0.42), 0.6),
+         coax=mat("coax", (0.55, 0.45, 0.25), 0.6), usb=mat("usb_cable", (0.2, 0.2, 0.22), 0.55), ruler=mat("ruler", (0.96, 0.96, 0.9), 0.6), tick=mat("tick", (0.02, 0.02, 0.02), 0.6), grid=mat("grid", (0.42, 0.42, 0.45), 0.8))
 def assign(o, m):
     o.data.materials.clear(); o.data.materials.append(m)
 # ------------------------------------------------------------------ primitives (mm)
@@ -48,6 +68,11 @@ def cyl(name, d, h, at, m, axis="Z", verts=64, bevel=0.0):
     assign(o, m)
     if bevel: md = o.modifiers.new("bev", "BEVEL"); md.width = bevel; md.segments = 3
     return o
+def tube(name, p1, p2, d, m):
+    """A cylinder from p1 to p2 (cables and pigtails)."""
+    a, b = Vector(p1), Vector(p2); v = b - a; L = v.length
+    bpy.ops.mesh.primitive_cylinder_add(radius=d / 2, depth=L, location=(a + b) / 2, vertices=24); o = bpy.context.object; o.name = name
+    o.rotation_euler = v.to_track_quat("Z", "Y").to_euler(); assign(o, m); return o
 def cone(name, d1, d2, h, at, m, rot=(0, 0, 0)):
     bpy.ops.mesh.primitive_cone_add(radius1=d1 / 2, radius2=d2 / 2, depth=h, location=at, vertices=48); o = bpy.context.object; o.name = name; o.rotation_euler = rot; assign(o, m); return o
 def torus(name, R_, r_, at, m):
@@ -76,14 +101,27 @@ def cut(o, tool, op="DIFFERENCE"):
     md = o.modifiers.new("bool", "BOOLEAN"); md.operation = op; md.object = tool; md.solver = "EXACT"
     bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=md.name); bpy.data.objects.remove(tool, do_unlink=True)
 # ------------------------------------------------------------------ imports
-def import_stl(name, fn, m, matrix):
-    bpy.ops.wm.stl_import(filepath=os.path.join(STL, fn)) if hasattr(bpy.ops.wm, "stl_import") else bpy.ops.import_mesh.stl(filepath=os.path.join(STL, fn))
-    o = bpy.context.selected_objects[0]; o.name = name; o.matrix_world = matrix; assign(o, m)
-    for p in o.data.polygons: p.use_smooth = False
+def bbox(o):
+    pts = [o.matrix_world @ Vector(c) for c in o.bound_box]
+    return (min(p.x for p in pts), max(p.x for p in pts), min(p.y for p in pts), max(p.y for p in pts), min(p.z for p in pts), max(p.z for p in pts))
+def import_stl(name, fn, m, matrix=None, fit=None, smooth=False):
+    """fit=(centre_xy, anchor, z): after the import the mesh is moved so its XY centre is 0 and its min ('min') or max ('max') Z sits at z."""
+    fp = os.path.join(STL, fn)
+    if not os.path.exists(fp): print("MISSING STL", fp, flush=True); return None
+    bpy.ops.wm.stl_import(filepath=fp) if hasattr(bpy.ops.wm, "stl_import") else bpy.ops.import_mesh.stl(filepath=fp)
+    o = bpy.context.selected_objects[0]; o.name = name; o.matrix_world = matrix or Matrix.Identity(4); assign(o, m)
+    if fit:
+        centre_xy, anchor, z = fit; x0, x1, y0, y1, z0, z1 = bbox(o)
+        dx, dy = (-(x0 + x1) / 2, -(y0 + y1) / 2) if centre_xy else (0.0, 0.0); dz = z - (z0 if anchor == "min" else z1)
+        o.matrix_world = Matrix.Translation((dx, dy, dz)) @ o.matrix_world
+    for p in o.data.polygons: p.use_smooth = smooth
+    x0, x1, y0, y1, z0, z1 = bbox(o); print("STL %-14s x %.1f..%.1f y %.1f..%.1f z %.1f..%.1f (%d faces)" % (name, x0, x1, y0, y1, z0, z1, len(o.data.polygons)), flush=True)
     return o
 def import_board(name, fn, z, extra=Matrix.Identity(4), hide_names=()):
     """A KiCad GLB exported with the case-frame user origin (case mm after the import, board bottom at z 0): mask matte black, pads gold, models dark."""
-    before = set(bpy.data.objects); bpy.ops.import_scene.gltf(filepath=os.path.join(R, fn)); new = [o for o in bpy.data.objects if o not in before]
+    fp = os.path.join(R, "glb", fn) if os.path.exists(os.path.join(R, "glb", fn)) else os.path.join(R, fn)
+    if not os.path.exists(fp): print("MISSING GLB", fp, flush=True); return None
+    before = set(bpy.data.objects); bpy.ops.import_scene.gltf(filepath=fp); new = [o for o in bpy.data.objects if o not in before]
     root = bpy.data.objects.new(name, None); S.collection.objects.link(root)
     for o in new:
         if o.parent is None: o.parent = root
@@ -110,55 +148,76 @@ def textured(o, image_fn, strength=0.0):
     pr.inputs["Roughness"].default_value = 0.35 if strength else 0.8
     if strength: nt.links.new(tex.outputs["Color"], pr.inputs["Emission Color"]); pr.inputs["Emission Strength"].default_value = strength
     assign(o, m); bpy.context.view_layer.objects.active = o; bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.uv.cube_project(cube_size=1.0, scale_to_bounds=True); bpy.ops.object.mode_set(mode="OBJECT")
-# ------------------------------------------------------------------ the Peli 1520: outer 508 x 378, base 150 tall (rim at Z 124.87, feet below), lid 71.5; cavity 413.8 x 283.6 at the floor, 448.4 x 318.1 at the rim
-BW, BL, CR = 508.0, 378.0, 14.0
-base = rounded_box("case_base", BW - 6, BL - 6, RIM + 22.0, CR, (0, 0, -22.0), M["orange"], top_scale=(BW / (BW - 6), BL / (BL - 6)))
-cav = rounded_box("cavity", 413.8, 283.6, RIM + 5.0, 10.0, (0, 0, 0.0), M["orange"], top_scale=(448.4 / 413.8, 318.1 / 283.6)); cut(base, cav)
-rim_step = rounded_box("rim_step", 454.1, 323.9, 8.0, 10.0, (0, 0, RIM - 7.92), M["orange"]); cut(base, rim_step)     # the rim step the frame skirt seats in
-lid = rounded_box("case_lid", BW, BL, 71.5, CR, (0, 0, RIM), M["orange"], top_scale=((BW - 8) / BW, (BL - 8) / BL))
-lcav = rounded_box("lid_cavity", 448.4, 318.1, 46.1, 10.0, (0, 0, RIM - 1.0), M["orange"], top_scale=(0.95, 0.94)); cut(lid, lcav)
-field = rounded_box("lid_field", BW - 70, BL - 70, 14.0, 22.0, (0, 0, RIM + 71.5 - 9.0), M["orange"]); cut(lid, field)   # the recessed top field
-# ribs on both end walls (base and lid), a Peli signature
+# ------------------------------------------------------------------ the Peli 1450: Peli's bodies when their STL exists (CASE_MODE=stl), else modelled from the numbers
+CASE_MODE = os.environ.get("CASE_MODE", "stl" if os.path.exists(os.path.join(STL, "case1450_bottom.stl")) else "model")
+base = lid = None
+if CASE_MODE == "stl":
+    # Peli's 1451-931 STEP frames: X the long axis, Y up, Z the short axis (bottom y -25.4..109.0 with the rim at 109; top y 0..70.9 with its latch straps
+    # hanging LID_DROP below the lid rim). Rotated 90 degrees about X into the case frame; CASE_FLIP=1 turns the bodies 180 degrees about Z if the hinge
+    # side comes out at the front (checked on the preview render).
+    ROT = Matrix.Rotation(math.radians(90), 4, "X")
+    if os.environ.get("CASE_FLIP"): ROT = Matrix.Rotation(math.pi, 4, "Z") @ ROT
+    base = import_stl("case_base", "case1450_bottom.stl", M["orange"], matrix=ROT, fit=(True, "max", RIM), smooth=True)
+    lid = import_stl("case_lid", "case1450_top.stl", M["orange"], matrix=ROT, fit=(True, "min", RIM - float(os.environ.get("LID_DROP", "25.4"))), smooth=True)
+    if base is not None and (bbox(base)[5] - bbox(base)[4]) < 90: CASE_MODE = "model"; bpy.data.objects.remove(base, do_unlink=True); base = None
+    if lid is not None and CASE_MODE == "model": bpy.data.objects.remove(lid, do_unlink=True); lid = None
+if CASE_MODE == "stl":
+    x0, x1, y0, y1, z0, z1 = bbox(base); BW, BL, GROUND = x1 - x0 - 12.0, y1 - y0, z0 - 0.4   # the body's own outline (the catalogue 411 x 329 counts the latch straps); the ground under its slab
+    print("case from Peli's STEP: outer %.1f x %.1f, base bottom at %.1f" % (x1 - x0, y1 - y0, z0), flush=True)
+if CASE_MODE == "model":
+    CR = 12.0
+    base = rounded_box("case_base", BW - 6, BL - 6, RIM + 6.0, CR, (0, 0, -6.0), M["orange"], top_scale=(BW / (BW - 6), BL / (BL - 6)))
+    cav = rounded_box("cavity", FLOOR_W, FLOOR_L, RIM + 5.0, 10.0, (0, 0, 0.0), M["orange"], top_scale=(RIM_W / FLOOR_W, RIM_L / FLOOR_L)); cut(base, cav)
+    rim_step = rounded_box("rim_step", SKIRT[0], SKIRT[1], SKIRT[2] + 1.0, 10.0, (0, 0, RIM - SKIRT[2]), M["orange"]); cut(base, rim_step)
+    lid = rounded_box("case_lid", BW, BL, LIDH, CR, (0, 0, RIM), M["orange"], top_scale=((BW - 8) / BW, (BL - 8) / BL))
+    lcav = rounded_box("lid_cavity", RIM_W, RIM_L, LIDH - 5.0, 10.0, (0, 0, RIM - 1.0), M["orange"], top_scale=(0.95, 0.94)); cut(lid, lcav)
+    field = rounded_box("lid_field", BW - 60, BL - 60, 10.0, 20.0, (0, 0, RIM + LIDH - 6.0), M["orange"]); cut(lid, field)
+# the features Peli's envelope STEP leaves out (and the modelled body needs): end-wall ribs, feet, corner bosses, padlock protectors, latches, handle, valve, hinge, the model text
+FEET_Z = GROUND + 0.4
 for sx in (-1, 1):
-    for k, y in enumerate((-135, -95, -55, -15, 25, 65, 105, 145)):
-        box("rib_b_%d_%d" % (sx, k), (7.0, 9.0, 110.0), (sx * (BW / 2 + 1.0), y, 62.0), M["orange"], bevel=2.0)
-        box("rib_l_%d_%d" % (sx, k), (7.0, 9.0, 40.0), (sx * (BW / 2 - 1.0), y, RIM + 34.0), M["orange"], bevel=2.0)
-# corner bosses, rubber feet, padlock protectors
+    for k, y in enumerate((-105, -75, -45, -15, 15, 45, 75, 105)):
+        box("rib_b_%d_%d" % (sx, k), (6.0, 8.0, RIM - 12.0 - FEET_Z), (sx * (BW / 2 + 1.0), y, (RIM - 12.0 + FEET_Z) / 2), M["orange"], bevel=2.0)
+        box("rib_l_%d_%d" % (sx, k), (6.0, 8.0, 30.0), (sx * (BW / 2 - 1.0), y, RIM + 22.0), M["orange"], bevel=2.0)
 for sx in (-1, 1):
     for sy in (-1, 1):
-        cyl("foot_%d_%d" % (sx, sy), 28.0, 6.0, (sx * 200, sy * 140, -22.0 - 3.0), M["rubber"])
-        box("corner_b_%d_%d" % (sx, sy), (34, 34, 60), (sx * (BW / 2 - 14), sy * (BL / 2 - 14), 30.0), M["orange2"], bevel=6.0)
-        box("corner_l_%d_%d" % (sx, sy), (34, 34, 44), (sx * (BW / 2 - 14), sy * (BL / 2 - 14), RIM + 30.0), M["orange2"], bevel=6.0)
-    box("padlock_%d" % sx, (36, 22, 26), (sx * (BW / 2 - 26), -BL / 2 - 8, RIM), M["orange2"], bevel=4.0); cyl("padlock_hole_%d" % sx, 8, 24, (sx * (BW / 2 - 26), -BL / 2 - 8, RIM), M["black"], axis="Y")
-# two double-throw latches and the folding handle on the front wall, the pressure valve, the rear hinge
+        cyl("foot_%d_%d" % (sx, sy), 22.0, 3.0, (sx * 165, sy * 125, FEET_Z - 1.5), M["rubber"])
+        box("corner_b_%d_%d" % (sx, sy), (30, 30, 50), (sx * (BW / 2 - 12), sy * (BL / 2 - 12), FEET_Z + 28.0), M["orange2"], bevel=6.0)
+        box("corner_l_%d_%d" % (sx, sy), (30, 30, 34), (sx * (BW / 2 - 12), sy * (BL / 2 - 12), RIM + 20.0), M["orange2"], bevel=6.0)
+    box("padlock_%d" % sx, (30, 20, 22), (sx * (BW / 2 - 22), -BL / 2 - 7, RIM), M["orange2"], bevel=4.0); cyl("padlock_hole_%d" % sx, 7, 22, (sx * (BW / 2 - 22), -BL / 2 - 7, RIM), M["black"], axis="Y")
 FY = -BL / 2
 for sx in (-1, 1):
-    x = sx * 118
-    box("latch_base_%d" % sx, (56, 10, 40), (x, FY - 5, RIM - 26), M["orange2"], bevel=3.0)
-    box("latch_lid_%d" % sx, (46, 11, 44), (x, FY - 6, RIM + 24), M["orange2"], bevel=4.0)
-    box("latch_lever_%d" % sx, (54, 12, 70), (x, FY - 16, RIM - 4), M["black"], bevel=5.0)
-    box("latch_pull_%d" % sx, (40, 6, 14), (x, FY - 24, RIM - 30), M["black"], bevel=2.5)
-    cyl("latch_pin_%d" % sx, 7, 60, (x, FY - 14, RIM + 42), M["steel_dark"], axis="X")
-box("handle_bar", (150, 22, 24), (0, FY - 16, 62), M["black"], bevel=6.0)
-for sx in (-1, 1): box("handle_boss_%d" % sx, (26, 18, 36), (sx * 88, FY - 8, 62), M["orange2"], bevel=4.0)
-cyl("valve", 30, 9, (-185, FY - 4.5, 70), M["black"], axis="Y", bevel=1.5); cyl("valve_cap", 22, 4, (-185, FY - 11, 70), M["steel_dark"], axis="Y")
-cyl("hinge_bar", 15, 320, (0, BL / 2 + 4, RIM), M["orange2"], axis="X")
-for x in (-140, 0, 140): box("hinge_knuckle_%d" % x, (44, 16, 30), (x, BL / 2 + 3, RIM), M["orange2"], bevel=4.0)
-label("peli_text", "1520", (150, FY - 1.0, 100), 18.0, M["orange2"], rot=(math.pi / 2, 0, 0))
+    x = sx * 100
+    box("latch_base_%d" % sx, (50, 10, 36), (x, FY - 5, RIM - 24), M["orange2"], bevel=3.0); box("latch_lid_%d" % sx, (42, 11, 30), (x, FY - 6, RIM + 17), M["orange2"], bevel=4.0)
+    box("latch_lever_%d" % sx, (48, 12, 60), (x, FY - 16, RIM - 6), M["black"], bevel=5.0); box("latch_pull_%d" % sx, (36, 6, 12), (x, FY - 24, RIM - 30), M["black"], bevel=2.5)
+    cyl("latch_pin_%d" % sx, 6, 54, (x, FY - 14, RIM + 30), M["steel_dark"], axis="X")
+box("handle_bar", (140, 20, 22), (-9, FY - 15, 52), M["black"], bevel=6.0)
+for sx in (-1, 1): box("handle_boss_%d" % sx, (24, 16, 32), (-9 + sx * 82, FY - 8, 52), M["orange2"], bevel=4.0)
+cyl("valve", 26, 8, (-16, FY - 4.0, 62), M["black"], axis="Y", bevel=1.5); cyl("valve_cap", 19, 4, (-16, FY - 10, 62), M["steel_dark"], axis="Y")
+cyl("hinge_bar", 13, 300, (0, BL / 2 + 3, RIM), M["orange2"], axis="X")
+for x in (-120, 0, 120): box("hinge_knuckle_%d" % x, (40, 14, 26), (x, BL / 2 + 2.5, RIM), M["orange2"], bevel=4.0)
+label("peli_text", "1450", (130, FY - 1.0, 88), 14.0, M["orange2"], rot=(math.pi / 2, 0, 0))
+# the inner ribs of the long walls (1451-931 section B-B) in both modes: the connector plate stands between the ribs at X -95 and -18
+for sy in (-1, 1):
+    for x in RIBS_X: box("case_rib_in_%d_%d" % (sy, x), (5.0, 5.0, 94.0), (x, sy * (FLOOR_L / 2 + 2.0), 47.0), M["orange"])
 CASE = [o for o in bpy.data.objects if o.name.startswith(("case_", "rib_", "foot_", "corner_", "padlock", "latch_", "handle_", "valve", "hinge_", "peli_text"))]
 LID = [o for o in CASE if o.name.startswith(("case_lid", "rib_l_", "corner_l_", "latch_lid", "latch_lever", "latch_pull", "latch_pin", "hinge_"))]
-hinge = Vector((0, BL / 2 + 4, RIM)); CLOSED = {o.name: o.matrix_world.copy() for o in LID}
+hinge = Vector((0, BL / 2 + 3, RIM)); CLOSED = {o.name: o.matrix_world.copy() for o in LID}
 def set_lid(open_):
     for o in LID:
         base_m = CLOSED[o.name]
         o.matrix_world = (Matrix.Translation(hinge) @ Matrix.Rotation(math.radians(-100), 4, "X") @ Matrix.Translation(-hinge) @ base_m) if open_ else base_m
-frame = import_stl("panel_frame", "panel_frame.stl", M["black"], Matrix.Translation((0, 0, RIM - 8.5)))
-# connector plate on the back wall (outside): 82 x 54 x 3 at X -133..-51, Z 28..82
+frame = import_stl("panel_frame", "frame1450.stl", M["black"], fit=(True, "max", RIM))
+# ------------------------------------------------------------------ the back wall: the upright connector plate between the ribs, the shore and USB receptacles, both cables plugged
 WALL_Y = BL / 2
-plate = box("conn_plate", (82, 3, 54), (-92, WALL_Y + 1.5, 55), M["alu"])
-for x, d, fl, nm in ((-110, 19.05, 28.9, "shore"), (-74, 23.01, 31.29, "usb")):
-    box("recept_flange_" + nm, (fl, 4, fl), (x, WALL_Y + 5, 55), M["steel"], bevel=1.0); cyl("recept_" + nm, d + 4, 14, (x, WALL_Y + 12, 55), M["steel_dark"], axis="Y"); cyl("recept_cap_" + nm, d + 6, 4, (x, WALL_Y + 20, 55), M["dark"], axis="Y")
-# ------------------------------------------------------------------ the floor: dock strip E4, block E5, rods, battery module
+box("conn_plate", (CPLATE["w"], 3, CPLATE["h"]), (CPLATE["cx"], WALL_Y + 1.5, CPLATE["cz"]), M["alu"])
+for (sx, sz) in ((-79, 82), (-33, 82), (-79, 54), (-33, 54), (-79, 26), (-33, 26)): cyl("cplate_screw_%d_%d" % (sx, sz), 7.0, 1.5, (sx, WALL_Y + 3.75, sz), M["steel"], axis="Y", verts=6)
+for z, d, fl, nm, cm, cd in ((34, 19.05, 28.9, "shore", M["wire_blk"], 8.0), (74, 23.01, 31.29, "usb", M["usb"], 6.0)):
+    box("recept_flange_" + nm, (fl, 4, fl), (CPLATE["cx"], WALL_Y + 5, z), M["steel"], bevel=1.0); cyl("recept_" + nm, d + 4, 14, (CPLATE["cx"], WALL_Y + 12, z), M["steel_dark"], axis="Y")
+    cyl("plug_" + nm, d + 8, 26, (CPLATE["cx"], WALL_Y + 26, z), M["dark"], axis="Y", bevel=1.0); cyl("plug_nut_" + nm, d + 10, 6, (CPLATE["cx"], WALL_Y + 16, z), M["steel_dark"], axis="Y", verts=6)
+    tube("cable_%s_1" % nm, (CPLATE["cx"], WALL_Y + 39, z), (CPLATE["cx"] + 30, WALL_Y + 150, z - 10), cd, cm); sphere("cable_%s_k" % nm, cd, (CPLATE["cx"] + 30, WALL_Y + 150, z - 10), cm)
+    tube("cable_%s_2" % nm, (CPLATE["cx"] + 30, WALL_Y + 150, z - 10), (CPLATE["cx"] + 60, WALL_Y + 230, GROUND + cd / 2), cd, cm); sphere("cable_%s_k2" % nm, cd, (CPLATE["cx"] + 60, WALL_Y + 230, GROUND + cd / 2), cm)
+    tube("cable_%s_3" % nm, (CPLATE["cx"] + 60, WALL_Y + 230, GROUND + cd / 2), (CPLATE["cx"] + 60, WALL_Y + 420, GROUND + cd / 2), cd, cm)
+# ------------------------------------------------------------------ the floor: dock strip E4, block E5, rods, the battery row along the west end wall
 import_board("pcb_e4", "pcb-e1-dock.glb", 0.0); import_board("pcb_e5", "pcb-e5-block.glb", 6.0)
 for (x, y) in ((-155.5, -63.0), (-117.5, -63.0), (-155.5, -82.0), (-117.5, -82.0)): cyl("standoff_e5_%d" % int(x), 5.0, 6.0, (x, y, 3.0), M["steel"])
 box("traco_ten40", (50.8, 25.4, 10.2), (-40, -81, 1.6 + 5.1), M["dark"])
@@ -166,19 +225,21 @@ for (x, y) in ((-110.5, -73.0), (110.5, -73.0), (-110.5, 73.0), (110.5, 73.0)):
     cyl("rod_%d_%d" % (x, y), 3.0, 118.0, (x, y, 59.0), M["steel"])
     for z in (1.6, 16.6, 56.2): cyl("nut_%d_%d_%d" % (x, y, z), 5.5, 2.4, (x, y, z + 1.2), M["steel"], verts=6)
     cyl("spacer_%d_%d_a" % (x, y), 6.0, 13.4, (x, y, 1.6 + 6.7), M["alu"]); cyl("spacer_%d_%d_b" % (x, y), 6.0, 38.0, (x, y, 16.6 + 19.0), M["alu"])
-MOD = Matrix.Translation((121.0, -137.0, 6.0)); import_stl("module_base", "module_base.stl", M["gray"], MOD); import_stl("module_lid", "module_lid.stl", M["dark"], MOD)
-import_stl("module_cradle", "module_cradle.stl", M["black"], Matrix.Translation((121.0, -137.0, 5.0)))
-cyl("xt60", 16, 18, (161, -125, 15), M["amber"], axis="Y"); cyl("module_lead_r", 3.2, 30, (158, -95, 4), M["wire_red"], axis="Y"); cyl("module_lead_b", 3.2, 30, (164, -95, 4), M["wire_blk"], axis="Y")
-# ------------------------------------------------------------------ PCB-A A20, the mezzanine D6, PCB-B B13 and what rides on it
-import_board("pcb_a20", "pcb-a-power.glb", 15.0)
-import_board("pcb_d6", "pcb-d-aprs.glb", 22.6, Matrix.Translation((45.0, 0.0, 0.0)))
+MOD = Matrix.Translation((-174.0, -114.5, 5.0))    # module frame: X across the width, Y along the row from the south (lead) end, Z from the cradle's underside
+import_stl("module_base", "module_base.stl", M["gray"], MOD); import_stl("module_lid", "module_lid.stl", M["dark"], MOD); import_stl("module_cradle", "module_cradle.stl", M["black"], MOD)
+tube("module_lead_r", (-163, -113, 68), (-163, -104, 30), 3.2, M["wire_red"]); tube("module_lead_b", (-161, -113, 68), (-161, -104, 30), 3.2, M["wire_blk"])
+tube("module_lead_r2", (-163, -104, 30), (-146, -98, 12), 3.2, M["wire_red"]); tube("module_lead_b2", (-161, -104, 30), (-144, -98, 12), 3.2, M["wire_blk"]); box("xt60", (16, 16, 8), (-138, -98, 10), M["amber"], bevel=1.0)
+# ------------------------------------------------------------------ PCB-A A21, the mezzanine D7, PCB-B B15 and what rides on it
+import_board("pcb_a21", "pcb-a-power.glb", 15.0)
+import_board("pcb_d7", "pcb-d-aprs.glb", 22.6, Matrix.Translation((45.0, 0.0, 0.0)))
 for (x, y) in ((10, -26), (80, -26), (10, 26), (80, 26)): cyl("standoff_d_%d_%d" % (x, y), 5.0, 6.0, (x, y, 19.6), M["steel"])
 box("dmr858m", (48, 26, 6), (55.5, -2.0, 38.2), M["tin"]); box("dmr858m_sink", (48, 26, 8), (55.5, -2.0, 45.2), M["alu"])
-for k, (x, y) in enumerate(((-100, -56), (-84, -56), (-26, -56), (-12, -56), (70, -74), (92, -74), (103, -54))):
+SMA_JACKS = ((-100, -56), (-84, -56), (-26, -56), (-12, -56), (70, -74), (92, -74), (103, -54))
+for k, (x, y) in enumerate(SMA_JACKS):
     cyl("sma_jack_%d" % k, 6.5, 9.0, (x, y, 21.1), M["gold"]); cyl("sma_nut_%d" % k, 8.0, 2.0, (x, y, 17.6), M["steel"], verts=6)
 for k, y in enumerate((-68, -58, -48)):     # the three rail leads A to B
     cyl("lead_r_%d" % k, 1.8, 36, (-92 - 1.5, y, 35), M["wire_red"]); cyl("lead_b_%d" % k, 1.8, 36, (-92 + 1.5, y, 35), M["wire_blk"])
-import_board("pcb_b13", "pcb-b-compute.glb", 54.6)
+import_board("pcb_b15", "pcb-b-compute.glb", 54.6)
 ZB = 56.2
 box("cm5_module", (40, 55, 1.24), (-88, 0, ZB + 4.62), M["pcb"]); box("cm5_soc", (15, 15, 1.2), (-88, 6, ZB + 5.84), M["dark"]); box("cm5_emmc", (11, 13, 1.0), (-88, -12, ZB + 5.74), M["dark"])
 box("cm5_cooler", (41, 56, 4.0), (-88, 0, ZB + 8.24 + 2.0), M["alu"]); box("cm5_fan", (30, 30, 6), (-88, 0, ZB + 8.24 + 12.7 + 3), M["dark"]); cyl("cm5_fan_rotor", 26, 5, (-88, 0, ZB + 8.24 + 12.7 + 3.5), M["gray"], verts=7)
@@ -191,60 +252,112 @@ import_stl("rockblock9704", "rockblock9704.stl", M["dark"], Matrix.Translation((
 for (x, y) in ((36, -64), (68, -64), (36, -32), (68, -32)): cyl("rb_standoff_%d_%d" % (x, y), 6.0, 6.0, (x, y, ZB + 3.0), M["steel"])
 box("gnss_neo", (12.2, 16, 2.4), (-107, 55, ZB + 1.2), M["tin"]); box("lora_wio", (11.6, 11, 3), (-84, 55, ZB + 1.5), M["tin"]); box("zigbee_e72", (17.5, 28.7, 2.5), (94, 34, ZB + 1.25), M["tin"])
 cyl("cr2032", 20, 3.2, (-46, 27, ZB + 3.2), M["steel"]); box("cr2032_holder", (24, 21, 5), (-46, 27, ZB + 2.5), M["dark"])
-box("display_flex", (16, 0.3, 58), (-50, 22, ZB + 29), M["amber"]); box("panel_ribbon", (0.9, 25.4, 58), (150, 72, ZB + 29), M["ribbon"])
-# ------------------------------------------------------------------ the panel C5 and everything on its face
-c5 = import_board("pcb_c5", "pcb-c-display.glb", PZ, hide_names=tuple("D%d" % k for k in range(1, 17)))
-TD2 = Matrix.Translation((0.0, -10.0, FACE + 1.1 - 5.0)) @ Matrix.Rotation(math.radians(-90), 4, "Z") @ Matrix.Translation((0, -2.95, 0))
+box("display_flex", (16, 0.3, BACKER_Z - ZB - 2), (-50, 22, (ZB + BACKER_Z) / 2), M["amber"]); box("panel_ribbon", (0.9, 25.4, BACKER_Z - ZB - 2), (P.J_PANEL_POS[0], 72, (ZB + BACKER_Z) / 2), M["ribbon"])
+# ------------------------------------------------------------------ the face: the aluminium plate, the backer C6 on its standoffs, the display, the e-paper, switches, light guides, legends
+plate = import_stl("plate", "face_plate.stl", M["anod"], fit=(True, "min", PLATE_UNDER))
+if plate is None: plate = box("plate", (P.PLATE[0], P.PLATE[1], P.PLATE[2]), (0, 0, PLATE_UNDER + P.PLATE[2] / 2), M["anod"])
+c6 = import_board("pcb_c6", "pcb-c6-backer.glb", BACKER_Z, hide_names=tuple("D%d" % k for k in range(1, 17)))
+if c6 is None:      # stand-in U until the C6 GLB exists
+    for nm, (x0, y0, x1, y1) in (("L", P.STRIP_L), ("B", P.STRIP_B), ("R", P.STRIP_R)): box("pcb_c6_strip_" + nm, (x1 - x0, y1 - y0, P.BACKER_T), ((x0 + x1) / 2, (y0 + y1) / 2, BACKER_Z + P.BACKER_T / 2), M["mask"])
+for k, (x, y) in enumerate(P.STANDOFFS): cyl("standoff_c6_%d" % k, 5.0, P.BACKER_GAP, (x, y, PLATE_UNDER - P.BACKER_GAP / 2), M["steel"], verts=6); cyl("screw_c6_%d" % k, 5.5, 2.0, (x, y, BACKER_Z - 1.0), M["steel_dark"])
+# Touch Display 2: the glass in the plate's 1 mm pocket (its top 1 mm inside the plate), the picture through the aperture
+DX, DY = P.DISPLAY["c"]; GT = PLATE_UNDER + P.DISPLAY["pocket_depth"]
+TD2 = Matrix.Translation((DX, DY, GT - 5.0)) @ Matrix.Rotation(math.radians(-90), 4, "Z") @ Matrix.Translation((0, -2.95, 0))
 import_stl("td2", "td2.stl", M["black"], TD2)
-scr = box("td2_screen", (160, 90, 0.15), (0, -10, FACE + 1.2), M["dark"]); textured(scr, "ui.png", 4.0)
-box("td2_glass", (189.32, 120.24, 0.8), (0, -10, FACE + 1.7), M["glass"])
-EPD = Matrix.Translation((30.0, 100.0, FACE - 3.0)) @ Matrix.Rotation(math.pi, 4, "X") @ Matrix.Translation((-269.3, -177.4, 0.0)); import_stl("epaper", "epaper.stl", M["dark"], EPD)
-epd = box("epaper_glass", (92.99, 53.0, 0.6), (30, 100, FACE - 0.3), M["paper"]); textured(epd, "epaper.png", 0.0)
-box("epaper_lens", (107.19, 66.6, 2.0), (30, 100, FACE + 0.4 + 1.0), M["lens"], bevel=0.8)
-def pushbutton(name, x, y, D, ring, on=True):
-    """C&K ATP anti-vandal: stainless bezel with a bevel, the illuminated ring, a low domed cap, the body below the face."""
-    cyl(name + "_bezel", D + 3.2, 3.0, (x, y, FACE + 1.5), M["steel"], bevel=1.0); cyl(name + "_body", D, 26, (x, y, FACE - 2 - 13), M["dark"])
+scr = box("td2_screen", (160, 90, 0.15), (DX, DY, GT - 0.5), M["dark"]); textured(scr, "ui.png", 4.0)
+box("td2_glass", (P.DISPLAY["glass"][0], P.DISPLAY["glass"][1], 0.8), (DX, DY, GT - 0.4), M["glass"])
+# WeAct 3.7 e-paper: the module taped under the plate with its glass up in the window, the 2 mm lens in the top pocket
+EX, EY = P.EPAPER["c"]; ET = FACE - P.EPAPER["pocket_depth"]
+EPD = Matrix.Translation((EX, EY, ET - 3.0)) @ Matrix.Rotation(math.pi, 4, "X") @ Matrix.Translation((-269.3, -177.4, 0.0)); import_stl("epaper", "epaper.stl", M["dark"], EPD)
+epd = box("epaper_glass", (92.99, 53.0, 0.6), (EX, EY, ET - 0.3), M["paper"]); textured(epd, "epaper.png", 0.0)
+box("epaper_lens", (P.EPAPER["lens"][0], P.EPAPER["lens"][1], 2.0), (EX, EY, ET + 1.0), M["lens"], bevel=0.8)
+def pushbutton(name, x, y, D, ring, depth, on=True):
+    """C&K ATP anti-vandal: stainless bezel with a bevel, the illuminated ring, a low domed cap, the body below the plate."""
+    cyl(name + "_bezel", D + 3.2, 3.0, (x, y, FACE + 1.5), M["steel"], bevel=1.0); cyl(name + "_body", D - 1.0, depth - 3.0, (x, y, PLATE_UNDER - (depth - 3.0) / 2), M["dark"])
     torus(name + "_ring", D / 2 - 1.6, 0.9, (x, y, FACE + 3.1), ring if on else M["ledoff"])
-    cap = cyl(name + "_cap", D - 6.0, 3.0, (x, y, FACE + 4.2), M["steel_dark"], bevel=1.2); sphere(name + "_dome", D - 6.0, (x, y, FACE + 4.2 - (D - 6.0) / 2 + 3.4), M["steel_dark"])
-pushbutton("sw_main", -150, 100, 19.2, M["green"]); pushbutton("sw_pi", -110, 100, 16.2, M["amber"]); pushbutton("sw_test", -70, 100, 16.2, M["white"], on=False)
-def toggle(name, x, y, L, tilt, locking=False, boot=False):
+    cyl(name + "_cap", D - 6.0, 3.0, (x, y, FACE + 4.2), M["steel_dark"], bevel=1.2); sphere(name + "_dome", D - 6.0, (x, y, FACE + 4.2 - (D - 6.0) / 2 + 3.4), M["steel_dark"])
+RINGS = {"SW_MAIN": (M["green"], True), "SW_PI": (M["amber"], True), "SW_TEST": (M["white"], False)}
+for ref, (x, y), hole, depth in P.BUTTONS: pushbutton(ref.lower(), x, y, hole, RINGS[ref][0], depth, RINGS[ref][1])
+def toggle(name, x, y, L, tilt, depth, locking=False, boot=False):
     cyl(name + "_nut", 10.4, 2.8, (x, y, FACE + 1.4), M["chrome"], verts=6); cyl(name + "_bush", 6.35, 8.5, (x, y, FACE + 2.8), M["chrome"])
     if locking: cyl(name + "_lock", 9.0, 5.0, (x, y, FACE + 7.8), M["steel_dark"], bevel=0.8)
     t = math.radians(tilt); base_z = FACE + 9.0
-    lever = cone(name + "_lever", 4.6, 6.4, L, (x, y - math.sin(t) * L / 2, base_z + math.cos(t) * L / 2), M["chrome"], rot=(t, 0, 0))
+    cone(name + "_lever", 4.6, 6.4, L, (x, y - math.sin(t) * L / 2, base_z + math.cos(t) * L / 2), M["chrome"], rot=(t, 0, 0))
     sphere(name + "_tip", 7.2, (x, y - math.sin(t) * L, base_z + math.cos(t) * L), M["red"] if locking else M["chrome"])
     if boot: cone(name + "_boot", 15.0, 6.0, 14.0, (x, y - math.sin(t) * 5.5, base_z + math.cos(t) * 5.5), M["rubber"], rot=(t, 0, 0))
-    cyl(name + "_body", 13, 22, (x, y, FACE - 2 - 11), M["dark"])
-toggle("sw_light", 120, 100, 18, 25, boot=True); toggle("sw_sos", 170, 42, 22, 24, True); toggle("sw_emcon", 170, 0, 22, 24, True); toggle("sw_zero", 170, -42, 22, 24, True)
-cyl("sounder", 34, 3.5, (-180, -100, FACE + 1.75), M["black"], bevel=1.2)
-for k, rr in enumerate((5.0, 8.5, 12.0)): torus("sounder_ring_%d" % k, rr, 0.7, (-180, -100, FACE + 3.5), M["dark"])
-cyl("sounder_body", 30, 20, (-180, -100, FACE - 2 - 10), M["dark"])
-LEDS = [("D1", 45, "MSTR WARN", "redled", False), ("D2", 36, "MSTR CAUT", "amber", False), ("D3", 27, "TX", "redled", False), ("D4", 18, "SOS ACTIVE", "redled", False), ("D5", 9, "SAT", "green", True), ("D6", 0, "MESH", "green", True),
-        ("D7", -9, "LTE", "green", True), ("D8", -18, "GPS", "green", True), ("D9", -27, "SHORE", "amber", True), ("D10", -36, "CHARGE", "amber", True), ("D11", -45, "MSG", "green", False)]
-def led(name, x, y, m, on):
-    cyl(name + "_bezel", 4.6, 1.0, (x, y, FACE + 0.5), M["black"]); sphere(name, 3.0, (x, y, FACE + 0.6), m if on else M["ledoff"])
-for ref, y, txt, col, on in LEDS:
-    led("led_" + ref, -120, y, M[col], on); label("lbl_" + ref, txt, (-126, y - 1.2, FACE + 0.05), 3.0, M["white"], align="RIGHT")
-for ref, x in (("D12", -82), ("D13", -76), ("D14", -70), ("D15", -64), ("D16", -58)): led("led_" + ref, x, 123, M["green"], x < -60)
-label("lbl_bar", "BATTERY", (-70, 128, FACE + 0.05), 3.5, M["white"])
-label("nameplate", "MESHSAT FIELD KIT V2   S/N ______   NUCLEAR LIGHTERS", (0, -114, FACE + 0.05), 4.5, M["white"])
-for x, y, txt in ((-150, 86, "MAIN"), (-110, 86, "PI"), (-70, 86, "TEST"), (120, 86, "LIGHT"), (170, 55, "SOS"), (170, 13, "EMCON"), (170, -29, "ZEROIZE")): label("lbl_" + txt, txt, (x, y, FACE + 0.05), 4.0, M["white"])
-# ------------------------------------------------------------------ end-wall antennas: bulkheads at Z 55, Y -60, -30, +30, +60; whips upright on right-angle adapters
-WX = BW / 2
+    box(name + "_body", (12.5, 20.0 if locking else 10.0, depth - 2.0), (x, y, PLATE_UNDER - (depth - 2.0) / 2), M["dark"], bevel=1.0)
+for ref, (x, y) in P.TOGGLES: toggle(ref.lower(), x, y, 22, 24, 26.0, locking=True)
+toggle(P.LIGHT[0].lower(), P.LIGHT[1][0], P.LIGHT[1][1], 18, 25, 19.0, boot=True)
+SX, SY = P.SOUNDER[1]
+cyl("sounder", 34, 3.5, (SX, SY, FACE + 1.75), M["black"], bevel=1.2)
+for k, rr in enumerate((5.0, 8.5, 12.0)): torus("sounder_ring_%d" % k, rr, 0.7, (SX, SY, FACE + 3.5), M["dark"])
+cyl("sounder_body", P.SOUNDER[2] - 0.6, P.SOUNDER[3] - 3.0, (SX, SY, PLATE_UNDER - (P.SOUNDER[3] - 3.0) / 2), M["dark"])
+LED_STATE = {"MSTR WARN": ("redled", False), "MSTR CAUT": ("amber", False), "TX": ("redled", False), "SOS ACTIVE": ("redled", False), "SAT": ("green", True), "MESH": ("green", True), "LTE": ("green", True),
+             "GPS": ("green", True), "SHORE": ("amber", True), "CHARGE": ("amber", True), "MSG": ("green", False)}
+def lightguide(name, x, y, m, on):
+    """Mentor 1282.5004: the 3.2 mm spherical head on the face, the 2.5 mm shaft down to the LED on the backer."""
+    cyl(name + "_shaft", 2.5, P.PLATE[2] + 4.5, (x, y, FACE - (P.PLATE[2] + 4.5) / 2 + 0.2), M["lens"]); sphere(name + "_head", 3.2, (x, y, FACE + 0.6), m if on else M["ledoff"])
+    cyl(name + "_led", 3.0, 4.0, (x, y, BACKER_TOP + 2.0), m if on else M["ledoff"])
+for ref, (x, y), txt in P.STATUS_LEDS:
+    col, on = LED_STATE[txt]; lightguide("led_" + ref, x, y, M[col], on); label("lbl_" + ref, txt, (x - 5.5, y - 1.1, FACE + 0.05), 2.6, M["white"], align="RIGHT")
+for k, (ref, (x, y), txt) in enumerate(P.BAR_LEDS): lightguide("led_" + ref, x, y, M["green"], k < 3)
+label("lbl_bar", "BATTERY", (P.BAR_LEDS[2][1][0], P.BAR_LEDS[2][1][1] - 7.5, FACE + 0.05), 3.0, M["white"])
+label("nameplate", "MESHSAT FIELD KIT V2", (P.NAMEPLATE[0], P.NAMEPLATE[1] + 2.5, FACE + 0.05), 4.2, M["white"]); label("nameplate_2", "S/N ______   NUCLEAR LIGHTERS", (P.NAMEPLATE[0], P.NAMEPLATE[1] - 5.5, FACE + 0.05), 3.0, M["white"])
+for ref, (x, y), hole, depth in P.BUTTONS: label("lbl_" + ref, {"SW_MAIN": "MAIN", "SW_PI": "PI", "SW_TEST": "TEST"}[ref], (x, y + hole / 2 + 4.0, FACE + 0.05), 3.6, M["white"])
+for ref, (x, y) in P.TOGGLES: label("lbl_" + ref, {"SW_SOS": "SOS", "SW_EMCON": "EMCON", "SW_ZERO": "ZEROIZE"}[ref], (x, y + 14.0, FACE + 0.05), 3.6, M["white"])
+label("lbl_light", "LIGHT", (P.LIGHT[1][0], P.LIGHT[1][1] + 14.0, FACE + 0.05), 3.6, M["white"])
+(LX, LY), LD = P.LOGO; torus("logo_ring", LD / 2 - 2.0, 1.0, (LX, LY, FACE + 0.05), M["white"]); label("logo_text", "MESHSAT", (LX, LY - 2.0, FACE + 0.05), 5.0, M["white"])
+# ------------------------------------------------------------------ end-wall antennas: nine bulkheads at Z 88, whips upright on right-angle adapters, pigtails inside to the dock nests
+WX = BW / 2; WALL_IN = FLOOR_W / 2 + 4.0
 ANT = {"UHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9), "WIFI P2P A": (120, 9), "WIFI P2P B": (120, 9)}
-for sx, sites in ((-1, ((-60, "UHF"), (-30, "WIFI 2.4"), (30, "GNSS"), (60, "SDR"))), (1, ((-60, "LTE"), (-30, "IRIDIUM"), (30, "LORA"), (60, "WIFI P2P A"), (-45, "WIFI P2P B", 90)))):
-    for site in sites:
-        y, nm = site[0], site[1]; z = site[2] if len(site) > 2 else 55
-        cyl("bulk_" + nm, 9.5, 3.0, (sx * (WX + 1.5), y, z), M["steel"], axis="X", verts=6); cyl("bulk_sma_" + nm, 6.5, 11, (sx * (WX + 7), y, z), M["gold"], axis="X")
+NEST = {"UHF": SMA_JACKS[0], "WIFI 2.4": SMA_JACKS[1], "GNSS": SMA_JACKS[2], "SDR": SMA_JACKS[3], "LTE": SMA_JACKS[4], "IRIDIUM": SMA_JACKS[5], "LORA": SMA_JACKS[6]}
+for sx, sites in ((-1, WEST), (1, EAST)):
+    for y, nm in sites:
+        z = SMA_Z; tag = nm.replace(" ", "_").lower()
+        cyl("bulk_" + tag, 9.5, 3.0, (sx * (WX + 1.5), y, z), M["steel"], axis="X", verts=6); cyl("bulk_sma_" + tag, 6.5, 11, (sx * (WX + 7), y, z), M["gold"], axis="X")
+        cyl("bulk_in_" + tag, 8.0, 10, (sx * (WALL_IN + 3), y, z), M["gold"], axis="X"); cyl("bulk_nut_in_" + tag, 8.0, 2.0, (sx * (WALL_IN - 1), y, z), M["steel"], axis="X", verts=6)
         ax = sx * (WX + 15)
         if nm in ANT:
-            L, d = ANT[nm]; cyl("ant_elbow_" + nm, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + nm, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + nm, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + nm, d * 1.25, (ax, y, z + 16 + L), M["rubber"])
+            L, d = ANT[nm]; cyl("ant_elbow_" + tag, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + tag, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + tag, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + tag, d * 1.25, (ax, y, z + 16 + L), M["rubber"])
         elif nm == "IRIDIUM": cyl("ant_elbow_iridium", 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_iridium", 76, 18, (ax, y, z + 10 + 9), M["white"], bevel=2.0)
         elif nm == "GNSS": cyl("ant_elbow_gnss", 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_gnss", 48, 14, (ax, y, z + 8 + 7), M["dark"], bevel=2.0)
-        else: cyl("ant_plug", 9, 6, (sx * (WX + 13), y, z), M["steel"], axis="X", verts=6)
+        # the pigtail: a right-angle plug at the coupler, down the wall (in front of the battery row on the west side), along the floor gap to its nest
+        xin = sx * (WALL_IN - 8) if sx > 0 else -146.0
+        p0 = (sx * (WALL_IN - 6), y, z); p1 = (xin, y, z); p2 = (xin, y, 12.0)
+        cyl("pig_plug_" + tag, 8.0, 10.0, p0, M["gold"], axis="X")
+        if nm in NEST:
+            nx, ny = NEST[nm]; tube("pig_%s_1" % tag, p0, p1, 3.0, M["coax"]); sphere("pig_%s_k1" % tag, 3.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 3.0, M["coax"]); sphere("pig_%s_k2" % tag, 3.0, p2, M["coax"]); tube("pig_%s_3" % tag, p2, (nx, ny, 9.0), 3.0, M["coax"])
+        else:      # the two WiFi P2P pigtails go to the M.2 card on B
+            p2 = (xin, y, ZB + 6.0); tube("pig_%s_1" % tag, p0, p1, 2.0, M["coax"]); sphere("pig_%s_k1" % tag, 2.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 2.0, M["coax"]); sphere("pig_%s_k2" % tag, 2.0, p2, M["coax"]); tube("pig_%s_3" % tag, p2, (66.0, 60.0 + (2 if "B" in nm else -2), ZB + 5.0), 2.0, M["coax"])
+# ------------------------------------------------------------------ rulers (10 mm ticks, numerals every 50) and the 50 mm floor grid
+RULER_W, RULER_T = 14.0, 2.0
+def ruler(name, origin, axis, length, m_up=(0, 0, 1)):
+    """A white bar from `origin` along `axis` (unit vector) with black ticks every 10 mm (taller every 50) and numerals every 50 mm."""
+    a = Vector(axis); o = Vector(origin); up = Vector(m_up); side = a.cross(up).normalized()
+    mid = o + a * (length / 2); rot = a.to_track_quat("X", "Z").to_euler() if axis != (0, 0, 1) else (0, 0, 0)
+    bar = box(name, (length, RULER_W, RULER_T) if axis != (0, 0, 1) else (RULER_W, RULER_T, length), tuple(mid), M["ruler"], rot=rot if axis != (0, 0, 1) else (0, 0, 0))
+    for k in range(0, int(length) + 1, 10):
+        big = k % 50 == 0; tl = RULER_W * (0.7 if big else 0.4); p = o + a * k + up * (RULER_T / 2 + 0.05) - side * (RULER_W / 2 - tl / 2) if axis != (0, 0, 1) else o + a * k + Vector((0, -RULER_T / 2 - 0.05, 0)) - side * (RULER_W / 2 - tl / 2)
+        if axis != (0, 0, 1): box("%s_t%d" % (name, k), (1.0 if big else 0.6, tl, 0.2), tuple(p), M["tick"], rot=rot)
+        else: box("%s_t%d" % (name, k), (tl, 0.2, 1.0 if big else 0.6), tuple(p), M["tick"])
+        if big:
+            if axis == (1, 0, 0): label("%s_n%d" % (name, k), str(k), (o.x + k, o.y - RULER_W / 2 + 1.5, o.z + RULER_T / 2 + 0.05), 4.0, M["tick"])
+            elif axis == (0, 1, 0): label("%s_n%d" % (name, k), str(k), (o.x + 1.0, o.y + k - 1.5, o.z + RULER_T / 2 + 0.05), 4.0, M["tick"], align="LEFT")
+            else: label("%s_n%d" % (name, k), str(k), (o.x + 1.0, o.y - RULER_T / 2 - 0.05, o.z + k + 1.0), 4.0, M["tick"], rot=(math.pi / 2, 0, 0), align="LEFT")
+    label(name + "_unit", "mm", (o.x + (length + 8 if axis == (1, 0, 0) else 0), o.y + (length + 8 if axis == (0, 1, 0) else 0), o.z + (length + 8 if axis == (0, 0, 1) else RULER_T / 2 + 0.05)), 4.0, M["tick"], rot=(math.pi / 2, 0, 0) if axis == (0, 0, 1) else (0, 0, 0))
+GZ = GROUND + 0.05
+ruler("ruler_x", (-BW / 2, -BL / 2 - 40, GZ), (1, 0, 0), 450)          # along the front edge, 0 at the case's left end
+ruler("ruler_x2", (-BW / 2, BL / 2 + 40, GZ), (1, 0, 0), 450)          # along the back edge
+ruler("ruler_y", (-BW / 2 - 40, -BL / 2, GZ), (0, 1, 0), 350)          # along the left side, 0 at the front
+ruler("ruler_y2", (BW / 2 + 40, -BL / 2, GZ), (0, 1, 0), 350)          # along the right side
+ruler("ruler_z", (-BW / 2 - 40, -BL / 2 - 40, GROUND), (0, 0, 1), 300)   # standing at the front-left corner, 0 on the ground
+ruler("ruler_z2", (BW / 2 + 40, -BL / 2 - 40, GROUND), (0, 0, 1), 300)   # and the front-right
+label("ruler_note", "Peli 1450, catalogue 411 x 329 mm; floor grid 50 mm; Z 0 = the cavity floor", (0, -BL / 2 - 75, GZ), 6.0, M["tick"])
+for k in range(-12, 13):
+    box("grid_x_%d" % k, (1200, 0.8, 0.1), (0, k * 50.0, GROUND + 0.02), M["grid"]); box("grid_y_%d" % k, (0.8, 1200, 0.1), (k * 50.0, 0, GROUND + 0.02), M["grid"])
 # ------------------------------------------------------------------ world, lights, cameras, views
 S.render.engine = "CYCLES"; S.cycles.samples = int(os.environ.get("SAMPLES", "256")); S.cycles.use_denoising = False; S.cycles.device = "CPU"
-if os.environ.get("CYCLES_GPU"):   # the build host nllei01gpu01 (RTX 3090 Ti): OptiX, else CUDA; run with the ollama containers stopped
+if os.environ.get("CYCLES_GPU"):   # the build host nllei01gpu01 (RTX 3090 Ti): OptiX, else CUDA; run with the service group stopped
     cp = bpy.context.preferences.addons["cycles"].preferences
     for dev_type in ("OPTIX", "CUDA"):
         try:
@@ -262,15 +375,33 @@ world = bpy.data.worlds.new("w"); S.world = world; world.use_nodes = True; bg = 
 def light(name, at, energy, size):
     bpy.ops.object.light_add(type="AREA", location=at); L = bpy.context.object; L.name = name; L.data.energy = energy; L.data.size = size
     L.rotation_euler = (Vector((0, 0, 60)) - Vector(at)).to_track_quat("-Z", "Y").to_euler(); return L
-light("key", (-500, -900, 1000), 5.5e6, 700); light("fill", (900, -300, 700), 2.2e6, 900); light("rim", (200, 900, 800), 2.2e6, 500)
-bpy.ops.mesh.primitive_plane_add(size=6000, location=(0, 0, -28)); floor = bpy.context.object; floor.name = "ground"; assign(floor, mat("ground", (0.62, 0.62, 0.64), 0.85))
+light("key", (-500, -900, 1000), 5.5e6, 700); light("fill", (900, -300, 700), 2.2e6, 900); light("rim", (200, 900, 800), 2.2e6, 500); light("top", (0, 0, 1400), 1.6e6, 1200)
+bpy.ops.mesh.primitive_plane_add(size=6000, location=(0, 0, GROUND)); floor = bpy.context.object; floor.name = "ground"; assign(floor, mat("ground", (0.62, 0.62, 0.64), 0.85))
 def camera(name, at, look, lens=50):
     bpy.ops.object.camera_add(location=at); c = bpy.context.object; c.name = name; c.data.lens = lens; c.data.clip_end = 20000
     c.rotation_euler = (Vector(look) - Vector(at)).to_track_quat("-Z", "Y").to_euler(); return c
-CAMS = {"overview": camera("cam_overview", (-720, -920, 640), (0, 0, 95), 40), "hero": camera("cam_hero", (-410, -570, 480), (-20, 10, 105), 55),
-        "top": camera("cam_top", (0, -120, 980), (0, 0, 100), 50), "detail": camera("cam_detail", (-215, 25, 285), (-112, 66, 116), 55),
-        "cutaway": camera("cam_cutaway", (-390, -660, 330), (-10, 0, 62), 46), "closed": camera("cam_closed", (-700, -860, 520), (0, 0, 80), 40)}
-PANEL_PREFIX = ("pcb_c5", "td2", "epaper", "sw_", "sounder", "led_", "lbl_", "nameplate")
+def orbit(az, el, dist=1050, look=(0, 0, 70), lens=42):
+    """az 0 = from the front (-Y), counter-clockwise seen from above; el above the ground plane."""
+    a, e = math.radians(az), math.radians(el)
+    return (look[0] - dist * math.cos(e) * math.sin(a) * -1.0, look[1] - dist * math.cos(e) * math.cos(a), look[2] + dist * math.sin(e))
+VIEWS = {}
+for az in range(0, 360, 45):
+    for el in (20, 40, 60): VIEWS["az%03d-el%02d-open" % (az, el)] = dict(cam=camera("cam_%03d_%02d" % (az, el), orbit(az, el), (0, 0, 70), 42), lid=True)
+    VIEWS["az%03d-el20-closed" % az] = dict(cam=VIEWS["az%03d-el20-open" % az]["cam"], lid=False)
+VIEWS.update({
+    "top-face": dict(cam=camera("cam_top", (0, -60, 1150), (0, 0, 100), 50), lid=True),
+    "face-detail-left": dict(cam=camera("cam_fdl", (-330, -230, 330), (-120, 0, 100), 60), lid=True),
+    "face-detail-right": dict(cam=camera("cam_fdr", (330, -230, 330), (120, 0, 100), 60), lid=True),
+    "west-wall": dict(cam=camera("cam_west", (-780, -260, 260), (-205, 0, 110), 55), lid=False),
+    "east-wall": dict(cam=camera("cam_east", (780, -260, 260), (205, 0, 110), 55), lid=False),
+    "back-wall": dict(cam=camera("cam_back", (-160, 760, 260), (-56, 165, 60), 55), lid=False),
+    "front-wall": dict(cam=camera("cam_front", (-60, -760, 200), (-10, -165, 60), 55), lid=False),
+    "cutaway": dict(cam=camera("cam_cutaway", (-360, -640, 330), (-10, 0, 62), 46), lid=True, cutaway=True),
+    "battery-row": dict(cam=camera("cam_batt", (-420, -330, 330), (-160, 0, 50), 50), lid=True, lift=True),
+    "face-underside": dict(cam=camera("cam_under", (-300, -520, 150), (0, 0, 190), 50), lid=True, lift=True),
+    "stack-no-face": dict(cam=camera("cam_stack", (-300, -480, 480), (-20, 0, 60), 46), lid=True, noface=True),
+})
+PANEL_PREFIX = ("plate", "pcb_c6", "standoff_c6", "screw_c6", "td2", "epaper", "sw_", "sounder", "led_", "lbl_", "nameplate", "logo_")
 def walk(prefixes):
     for o in bpy.data.objects:
         p = o
@@ -279,36 +410,46 @@ def walk(prefixes):
             p = p.parent
 def hide(prefixes, flag):
     for o in walk(prefixes): o.hide_render = flag
+def move_face(dz):
+    for o in walk(PANEL_PREFIX):
+        if o.parent is None: o.matrix_world = Matrix.Translation((0, 0, dz)) @ o.matrix_world
+    for o in bpy.data.objects:
+        if o.name in ("display_flex", "panel_ribbon"):
+            if dz > 0: o.scale.z *= 2.0; o.location.z += dz / 2
+            else: o.scale.z /= 2.0; o.location.z += dz / 2
 set_lid(True)
 def render(view):
-    S.camera = CAMS[view]; set_lid(view != "closed"); hide(("ant_",), view == "closed"); hide(("peli_text",), view == "cutaway")
-    if view == "cutaway":   # the front wall of the case and the frame's front bar removed (the floor and the other walls stay); the panel lifted 60 mm on its ribbon and flex
-        tool = box("cut_tool", (700, 70, 400), (0, -BL / 2 - 20 + 35, 120), M["dark"]); keep = []
-        for o in CASE + [frame]:
-            if o.type != "MESH": continue
+    v = VIEWS[view]; S.camera = v["cam"]; set_lid(v["lid"]); hide(("peli_text",), bool(v.get("cutaway")))
+    keep = []; tool = None
+    if v.get("cutaway"):   # the front wall of the case and the frame's front bar removed; the face lifted 60 mm on its ribbon and flex
+        tool = box("cut_tool", (700, 142, 400), (0, -BL / 2 - 25, 100), M["dark"])
+        for o in CASE + ([frame] if frame else []):
+            if o is None or o.type != "MESH": continue
             md = o.modifiers.new("cutv", "BOOLEAN"); md.operation = "DIFFERENCE"; md.object = tool; md.solver = "EXACT"; keep.append((o, md))
-        tool.hide_render = True
-        for o in walk(PANEL_PREFIX):
-            if o.parent is None or o.name == "pcb_c5": o.matrix_world = Matrix.Translation((0, 0, 60)) @ o.matrix_world
-        for o in bpy.data.objects:
-            if o.name in ("display_flex", "panel_ribbon"): o.scale.z *= 2.0; o.location.z += 30
-    S.render.filepath = os.path.join(OUT, "meshsat-v2-concept-%s.png" % view); bpy.ops.render.render(write_still=True); print("RENDERED", S.render.filepath, flush=True)
-    if view == "cutaway":
+        tool.hide_render = True; move_face(60)
+    if v.get("lift"): move_face(150)
+    if v.get("noface"): hide(PANEL_PREFIX, True)
+    S.render.filepath = os.path.join(OUT, "meshsat-1450-%s.png" % view); bpy.ops.render.render(write_still=True); print("RENDERED", S.render.filepath, flush=True)
+    if v.get("cutaway"):
         for o, md in keep: o.modifiers.remove(md)
-        bpy.data.objects.remove(tool, do_unlink=True)
-        for o in walk(PANEL_PREFIX):
-            if o.parent is None or o.name == "pcb_c5": o.matrix_world = Matrix.Translation((0, 0, -60)) @ o.matrix_world
-        for o in bpy.data.objects:
-            if o.name in ("display_flex", "panel_ribbon"): o.scale.z /= 2.0; o.location.z -= 30
-bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "meshsat-v2-concept.blend"))
+        bpy.data.objects.remove(tool, do_unlink=True); move_face(-60)
+    if v.get("lift"): move_face(-150)
+    if v.get("noface"): hide(PANEL_PREFIX, False)
+bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "meshsat-1450-concept.blend"))
 if os.environ.get("DUMP_BBOX"):
     # stack height map input (5 Sep 2026, C6 gate): every mesh object's world bounding box, case frame in mm
     import json
     dump = []
     for o in bpy.data.objects:
         if o.type != "MESH" or not o.data.vertices: continue
-        pts = [o.matrix_world @ Vector(c) for c in o.bound_box]
-        dump.append({"name": o.name, "x": [round(min(p.x for p in pts), 2), round(max(p.x for p in pts), 2)], "y": [round(min(p.y for p in pts), 2), round(max(p.y for p in pts), 2)], "z": [round(min(p.z for p in pts), 2), round(max(p.z for p in pts), 2)]})
+        x0, x1, y0, y1, z0, z1 = bbox(o); dump.append({"name": o.name, "x": [round(x0, 2), round(x1, 2)], "y": [round(y0, 2), round(y1, 2)], "z": [round(z0, 2), round(z1, 2)]})
     json.dump(dump, open(os.environ["DUMP_BBOX"], "w"), indent=0); print("DUMPED", len(dump), "objects to", os.environ["DUMP_BBOX"]); sys.exit(0)
-for v in (["overview", "hero", "top", "detail", "cutaway", "closed"] if VIEWS == ["all"] else VIEWS): render(v)
-print("SCENE-DONE")
+todo = []
+for v in VIEWS_ASKED:
+    if v == "all": todo += list(VIEWS)
+    elif v == "orbit": todo += [k for k in VIEWS if k.endswith("-open") and k.startswith("az")]
+    elif v == "closed": todo += [k for k in VIEWS if k.endswith("-closed")]
+    elif v == "details": todo += [k for k in VIEWS if not k.startswith("az")]
+    else: todo.append(v)
+for v in todo: render(v)
+print("SCENE-DONE", len(todo), "views")
