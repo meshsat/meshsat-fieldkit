@@ -11,6 +11,7 @@ Usage:
   routeflow.py run <profile.json> [--rounds N] [--no-services] [--dry-run]
   routeflow.py status <project dir> [--markdown]      the journal
   routeflow.py selftest                               kill the predicates with empty inputs; every one must block
+  routeflow.py experiment <exp.json> [--budget-hours H] [--no-services]   one route per configuration (rules file knobs) on one pre-route board, measured into bench/results.jsonl
 
 Profile (JSON): see tools/routeflow/*.json. Placeholders in argv: <PROJECT> (the project dir), <ECAD> (its parent), <NAME> (the board stem).
 """
@@ -230,6 +231,75 @@ def quality(project, repo, prof, rid, rnd, name, mins):
     except Exception as e: st, note = "UNMEASURABLE", "compare failed: %s" % e
     journal(project, dict(run=rid, round=rnd, board=name, stage="quality", status=st, note=note))
 
+# ---------------------------------------------------------------- experiment (Stage 2): one route per configuration on one pre-route board, measured, journaled, resumable
+def experiment(exp_fn, budget_hours, use_services):
+    exp = json.load(open(exp_fn)); repo = exp.get("repo") or os.getcwd(); tools = os.path.dirname(os.path.abspath(__file__))
+    project = os.path.abspath(os.path.join(repo, exp["project"])); ecad = os.path.dirname(project); name = exp["board"]; key = exp["board_key"]
+    os.makedirs(os.path.join(project, "out"), exist_ok=True); results = os.path.join(tools, "routeflow", "bench", "results.jsonl"); os.makedirs(os.path.dirname(results), exist_ok=True)
+    t_start = time.time(); ok, msg = take_lock(name + ":experiment")
+    journal(project, dict(run="exp", board=name, phase=key, stage="lock", status="LOCKED" if ok else "PREFLIGHT_FAIL", note=msg))
+    if not ok: return 2
+    try:
+        # the pre-route board: "strip:<released board>" strips the router copper (locked copper stays); a path is used as is; nothing means out/<name>-preroute.kicad_pcb
+        pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); src = exp.get("preroute")
+        elog = os.path.join(project, "out", "experiment.log")
+        if src and src.startswith("strip:"): sh(["python3", os.path.join(tools, "strip_route.py"), os.path.join(repo, src[6:]), pre], project, elog); shutil.copy(os.path.join(os.path.dirname(os.path.join(repo, src[6:])), name + ".kicad_pro"), os.path.join(project, name + ".kicad_pro"))
+        elif src: shutil.copy(os.path.join(repo, src), pre)
+        if not os.path.exists(pre): journal(project, dict(run="exp", board=name, stage="pre", status="GATE_BLOCKED", note="no pre-route board at " + pre)); return 1
+        pre_hash = hashlib.sha256(open(pre, "rb").read()).hexdigest()[:12]
+        jar_sha = hashlib.sha256(open(os.path.expanduser("~/bin/freerouting-1.9.0.jar"), "rb").read()).hexdigest()[:16] if os.path.exists(os.path.expanduser("~/bin/freerouting-1.9.0.jar")) else "nojar"
+        done = set()
+        if os.path.exists(results):
+            for l in open(results):
+                try: r = json.loads(l); done.add(r.get("key"))
+                except Exception: pass
+        journal(project, dict(run="exp", board=name, phase=key, stage="experiment", status="EXPERIMENT", note="preroute %s, %d configs, budget %.1f h, expect: %s" % (pre_hash, len(exp["configs"]), budget_hours, exp.get("expect", "")[:160])))
+        if use_services: services(exp.get("services_script"), "stop", elog)
+        # one DSN for the rules file's layer list
+        dsn0 = os.path.join(project, "out", name + "-experiment.dsn")
+        sh(["python3", "-c", "import pcbnew,sys; b=pcbnew.LoadBoard(sys.argv[1]); [b.Remove(z) for z in list(b.Zones()) if not z.GetIsRuleArea()]; pcbnew.SaveBoard(sys.argv[1]+'.np.kicad_pcb', b); print(pcbnew.ExportSpecctraDSN(pcbnew.LoadBoard(sys.argv[1]+'.np.kicad_pcb'), sys.argv[2]))", pre, dsn0], project, elog)
+        for cfg in exp["configs"]:
+            if time.time() - t_start > budget_hours * 3600: journal(project, dict(run="exp", board=name, stage="experiment", status="STOPPED_BUDGET", note="budget spent before %s" % cfg["name"])); break
+            ckey = hashlib.sha256((pre_hash + jar_sha + json.dumps(cfg, sort_keys=True) + json.dumps(exp.get("route", {}), sort_keys=True)).encode()).hexdigest()[:16]
+            if ckey in done: journal(project, dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s already in results (skip)" % cfg["name"])); continue
+            k = "exp-" + cfg["name"]; w = os.path.join(project, "out", "par", k); shutil.rmtree(w, ignore_errors=True); os.makedirs(w)
+            rules = os.path.join(w, "config.rules"); argv = ["python3", os.path.join(tools, "fr_rules.py"), dsn0, rules, "--via-costs", str(cfg.get("via_costs", 50)), "--plane-via-costs", str(cfg.get("plane_via_costs", 5)), "--ripup", str(cfg.get("ripup", 100))]
+            if cfg.get("preferred"): argv += ["--preferred", cfg["preferred"]]
+            if cfg.get("inactive"): argv += ["--inactive", cfg["inactive"]]
+            sh(argv, project, elog)
+            route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
+            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(route.get("timeout", 1800)), "FR_RULES": rules}
+            if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
+            t0 = time.time(); rc = sh(["../tools/route_one.sh", ".", name, k, str(route.get("passes", 60))], project, os.path.join(w, "route_one.log"), env); wall = int(time.time() - t0)
+            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "preroute_hash": pre_hash, "jar_sha": jar_sha, "wall_s": wall, "ts": now()}
+            ses = os.path.join(w, name + ".ses")
+            if not os.path.exists(ses) or os.path.getsize(ses) == 0:
+                row.update(verdict="NO_SESSION", Q=None, metrics=None); journal(project, dict(run="exp", board=name, stage="experiment", status="NO_SESSION", note="%s: no session in %d s" % (cfg["name"], wall)))
+            else:
+                # the finish quality steps on the routed copy: dangling clean-up, the straighten pass (DRC-gated inside), then DRC and metrics
+                board = os.path.join(w, name + ".kicad_pcb"); shutil.copy(os.path.join(project, name + ".kicad_pro"), os.path.join(w, name + ".kicad_pro"))
+                sh(["python3", os.path.join(tools, "cleanup_dangling.py"), board], project, os.path.join(w, "finish.log"))
+                sh(["bash", os.path.join(tools, "quality_pass.sh"), w, name], project, os.path.join(w, "finish.log"))
+                sh(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", os.path.join(w, "final-drc.json"), board], project, os.path.join(w, "finish.log"))
+                mfile = os.path.join(w, "metrics.json"); fr = read(os.path.join(w, "fr.log")) or ""
+                m_auto = re.search(r"Auto-routing was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr); m_opt = re.search(r"optimization was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr)
+                argv = ["python3", os.path.join(tools, "route_metrics.py"), board, os.path.join(w, "final-drc.json"), "--json", mfile, "--tag", key, "--wall", str(wall)]
+                if m_auto: argv += ["--autoroute", "%.2f" % (int(m_auto.group(1)) + float(m_auto.group(2)) / 60)]
+                if m_opt: argv += ["--optimizer", "%.2f" % (int(m_opt.group(1)) + float(m_opt.group(2)) / 60)]
+                rc = sh(argv, project, os.path.join(w, "finish.log"))
+                try:
+                    m = json.load(open(mfile)); base_all = json.load(open(os.path.join(tools, "routeflow", "bench", "baseline.json"))); bench_compare = __import__("bench_compare")
+                    v, note, q = bench_compare.compare(base_all[key], m) if key in base_all else ("UNMEASURABLE", "no baseline for " + key, None)
+                    row.update(verdict=v, Q=q, metrics=m, note=note); journal(project, dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s: %s %s" % (cfg["name"], v, note[:180])))
+                except Exception as e:
+                    row.update(verdict="UNMEASURABLE", Q=None, metrics=None, note=str(e)[:200]); journal(project, dict(run="exp", board=name, stage="experiment", status="UNMEASURABLE", note="%s: %s" % (cfg["name"], str(e)[:160])))
+            with open(results, "a") as f: f.write(json.dumps(row) + "\n")
+    finally:
+        if use_services: services(exp.get("services_script"), "start", os.path.join(project, "out", "experiment.log"))
+        try: os.remove(LOCK)
+        except OSError: pass
+    journal(project, dict(run="exp", board=name, stage="end", status="COMPLETE", note="results in %s" % results)); return 0
+
 # ---------------------------------------------------------------- status, preflight, selftest
 def status(project, markdown):
     fn = os.path.join(project, "out", "routeflow", "journal.jsonl"); t = read(fn)
@@ -328,4 +398,5 @@ if __name__ == "__main__":
     if a[0] == "selftest": sys.exit(selftest())
     if a[0] == "status": sys.exit(status(a[1], "--markdown" in a))
     if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a))
+    if a[0] == "experiment": sys.exit(experiment(a[1], float(a[a.index("--budget-hours") + 1]) if "--budget-hours" in a else 6.0, "--no-services" not in a))
     print(__doc__); sys.exit(2)
