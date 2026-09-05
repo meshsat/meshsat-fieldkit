@@ -1,16 +1,16 @@
 ** Drc report for pcb-d-aprs.kicad_pcb **
-** Created on 2026-09-05T13:45:48+0200 **
+** Created on 2026-09-05T13:51:45+0200 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 20 DRC violations **
+** Found 19 DRC violations **
 [zones_intersect]: Copper zones intersect (intersecting zones must have distinct priorities)
     Local override; error
-    @(73.0000 mm, 120.5000 mm): Zone 'V8 boost output column' [V8] on B.Cu, priority 2
     @(73.0000 mm, 87.8000 mm): Zone 'V8 bar to the module VCC pin' [V8] on B.Cu, priority 2
+    @(73.0000 mm, 120.5000 mm): Zone 'V8 boost output column' [V8] on B.Cu, priority 2
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(67.0000 mm, 77.5000 mm): PCB text 'J_HARN1 to PCB-A J_MEZZ1' on B.Silkscreen
     @(65.0000 mm, 74.0000 mm): Circle on B.Silkscreen
+    @(67.0000 mm, 77.5000 mm): PCB text 'J_HARN1 to PCB-A J_MEZZ1' on B.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(81.9450 mm, 83.2550 mm): Rectangle of U2 on F.Silkscreen
@@ -33,54 +33,39 @@
     @(67.0000 mm, 107.5000 mm): PCB text 'J_PWR1 MEZZ_CELL GND' on B.Silkscreen
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
+    @(109.0300 mm, 95.8300 mm): Via [/+3V3_AB] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(107.0500 mm, 75.5000 mm): Via [/CS_CTL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
     @(107.7500 mm, 74.8500 mm): Via [/LED_K] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
+[isolated_copper]: Isolated copper fill
     Local override; warning
-    @(107.7500 mm, 76.1500 mm): Via [/RADIO_COS_IN] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
+    @(73.0000 mm, 87.8000 mm): Zone 'V8 bar to the module VCC pin' [V8] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
     Local override; warning
-    @(77.1250 mm, 75.7000 mm): Via [/V8] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
+    @(73.0000 mm, 87.8000 mm): Zone 'V8 bar to the module VCC pin' [V8] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
     Local override; warning
-    @(79.4750 mm, 73.0100 mm): Via [/VIN_CELL] on F.Cu - B.Cu
+    @(70.4000 mm, 115.5000 mm): Zone 'VIN_CELL column' [VIN_CELL] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(70.4000 mm, 115.5000 mm): Zone 'VIN_CELL column' [VIN_CELL] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(73.0000 mm, 120.5000 mm): Zone 'V8 boost output column' [V8] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(73.0000 mm, 120.5000 mm): Zone 'V8 boost output column' [V8] on B.Cu, priority 2
+[isolated_copper]: Isolated copper fill
+    Local override; warning
+    @(73.0000 mm, 120.5000 mm): Zone 'V8 boost output column' [V8] on B.Cu, priority 2
 [isolated_copper]: Isolated copper fill
     Local override; warning
     @(123.6000 mm, 86.0000 mm): Zone 'V8 tap to pin 1' [V8] on B.Cu, priority 3
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(70.4000 mm, 115.5000 mm): Zone 'VIN_CELL column' [VIN_CELL] on B.Cu, priority 2
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(70.4000 mm, 115.5000 mm): Zone 'VIN_CELL column' [VIN_CELL] on B.Cu, priority 2
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(73.0000 mm, 120.5000 mm): Zone 'V8 boost output column' [V8] on B.Cu, priority 2
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(73.0000 mm, 120.5000 mm): Zone 'V8 boost output column' [V8] on B.Cu, priority 2
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(73.0000 mm, 87.8000 mm): Zone 'V8 bar to the module VCC pin' [V8] on B.Cu, priority 2
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(73.0000 mm, 87.8000 mm): Zone 'V8 bar to the module VCC pin' [V8] on B.Cu, priority 2
-[isolated_copper]: Isolated copper fill
-    Local override; warning
-    @(73.0000 mm, 87.8000 mm): Zone 'V8 bar to the module VCC pin' [V8] on B.Cu, priority 2
 
-** Found 3 unconnected pads **
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(74.4500 mm, 96.2600 mm): Track [/V8] on F.Cu, length 4.4500 mm
-    @(77.0750 mm, 74.7000 mm): Track [/V8] on F.Cu, length 1.0012 mm
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(77.0750 mm, 74.7000 mm): Track [/V8] on F.Cu, length 1.0012 mm
-    @(124.5950 mm, 83.9250 mm): PTH pad 1 [/V8] of U2
-[unconnected_items]: Missing connection between items
-    Local override; error
-    @(77.9000 mm, 72.9000 mm): Track [/VIN_CELL] on F.Cu, length 0.8750 mm
-    @(75.1350 mm, 80.8800 mm): Pad 1 [/VIN_CELL] of L1 on F.Cu
+** Found 0 unconnected pads **
 
 ** Found 0 Footprint errors **
 
