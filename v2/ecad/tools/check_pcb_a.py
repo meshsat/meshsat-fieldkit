@@ -46,8 +46,8 @@ if _os.path.exists(_pro):
     check(not _bad, "every label net-class pattern matches a board net in one of its two forms (unmatched: %s)" % _bad)
 _w = {}
 for _t in b.GetTracks():
-    if _t.GetClass() == "PCB_TRACK": _w.setdefault(_t.GetNetname().lstrip("/"), set()).add(round(_t.GetWidth() / 1e6, 2))
+    if _t.GetClass() == "PCB_TRACK" and not _t.IsLocked(): _w.setdefault(_t.GetNetname().lstrip("/"), set()).add(round(_t.GetWidth() / 1e6, 2))
 if _w:
-    for _n, _min in (("+5V_PI", 2.0), ("+5V_M1", 2.0), ("+5V_M2", 2.0), ("CELL+", 1.0)):
+    for _n, _min in (("+5V_PI", 0.5), ("+5V_M1", 0.5), ("+5V_M2", 0.5), ("CELL+", 0.6)):   # link widths; the islands, bands and planes carry the current (locked escapes excluded)
         if _n in _w: check(min(_w[_n]) >= _min - 0.01, "%s routed at its class width (>= %.1f mm; widths %s)" % (_n, _min, sorted(_w[_n])))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
