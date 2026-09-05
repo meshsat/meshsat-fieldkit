@@ -4,7 +4,7 @@
 365.5 x 249.5 x 3.0 mm 5754 or 6061, black anodised, clamped under the 1450PF frame ring inside its skirt with the PORON gasket ring on its 8 mm band
 (the construction of 32.34, the plate replacing the PCB as the weather face). Cut-outs, all from v2/ecad/tools/panel1450.py: the ten M3 holes at the
 frame's inserts, the display aperture inside a 1.0 mm pocket for the glass and its tape frame, the e-paper window inside a pocket for its 2 mm lens,
-three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, sixteen 4.0 mm holes for press-fit
+three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, sixteen 2.6 mm H7 holes for the press-fit Mentor 1282.5004 IP68
 light pipes, six self-clinching M3 standoff holes for the C6 backer board. Legends and the logo are laser marked from the SVG this script also writes.
 Usage: face_plate.py <out dir>   (build123d in ~/.venv-cad on the VM). Writes face-plate.step, face-plate.stl, face-plate.dxf (the outline and every
 through cut, for DataPro or JLC CNC) and face-plate-marking.svg; prints the sizes. Plate frame = case frame (X, Y from the case centre), Z up."""

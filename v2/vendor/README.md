@@ -32,6 +32,7 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `lora/` | Seeed Wio-SX1262 data sheet, Ebyte E22-900M22S and E22-900M30S manuals, the meshtasticd config.d templates and the Meshtastic Linux hardware pages as text; see `lora/README.md` | the LoRa radio driven by meshtasticd on the compute module |
 | `zigbee/` | Ebyte E72-2G4M20S1E and E180-ZG120B manuals, the Sonoff Dongle-E NCP readme and the Zigbee2MQTT adapter-settings page as text; see `zigbee/README.md` | a Zigbee coordinator on the carrier instead of a USB dongle |
 | `audio/` | Raspberry Pi I2S white paper, Cirrus WM8960 data sheet, the Waveshare WM8960 HAT wiki as text, the Direwolf user guide, C-Media CM108B data sheet; see `audio/README.md` | the APRS sound path of the respin study: an I2S codec against the USB codec |
+| `mentor/` | Mentor catalogue sheet ll14-14, IP68-proofed front-panel light guides (families 1282, 1292, 1293): the 1282.5004 (2.5 mm shaft in a 2.6 H7 hole, 3.2 mm spherical head, 7.5 mm long) carries the sixteen panel LEDs of the backer board through the aluminium face plate | the Peli 1450 face of 32.42 |
 | `probes/` | our own STEP probe scripts (build123d), kept with the models they read | reproducing the numbers in the appendix |
 
 The files are ordinary git objects (the largest is about 50 MB).
