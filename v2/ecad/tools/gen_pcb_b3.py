@@ -174,14 +174,24 @@ def plane(layer, netname, name, rect=(-122.5, -85, 122.5, 85), priority=0):
     board.Add(z); return z
 plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In2_Cu, "+5V_M1", "+5V plane In2")
 plane(pcbnew.F_Cu, "+5V_PI", "+5V_PI pour F.Cu (J_5V_PI to the module 5 V pins)", rect=(-120, -30, -100, 0), priority=1)
-# --- In1 is a solid ground plane (owner ruling 5 Sep 2026 17:10, appendix 32.40 decision 3): a board-wide rule area on In1 forbids tracks and permits
-#     vias, so the router keeps to F.Cu, In2 and B.Cu and every inner track has the solid ground next to it (the PCIe pairs of B14 had 40 to 90 mm per leg
-#     in slots of the ground plane). escape.py and prefanout.py ignore a rule area that permits vias; KiCad exports it as a wire_keepout.
-_bb = board.GetBoardEdgesBoundingBox(); _z = pcbnew.ZONE(board); _z.SetIsRuleArea(True); _z.SetDoNotAllowTracks(True); _z.SetDoNotAllowVias(False)
-_z.SetDoNotAllowCopperPour(False); _z.SetDoNotAllowPads(False); _z.SetDoNotAllowFootprints(False); _z.SetLayer(pcbnew.In1_Cu); _z.SetZoneName("keep tracks off In1 (solid ground plane)")
-_o = _z.Outline(); _o.NewOutline()
-for _x, _y in ((_bb.GetLeft(), _bb.GetTop()), (_bb.GetRight(), _bb.GetTop()), (_bb.GetRight(), _bb.GetBottom()), (_bb.GetLeft(), _bb.GetBottom())): _o.Append(_x, _y)
-board.Add(_z); print("In1 track keep-out over the whole board (solid ground plane)")
+# --- In1 is a solid ground plane (owner ruling 5 Sep 2026 17:10, appendix 32.40 decision 3) except under the Compute Module 5 breakout: the two 0.4 mm
+#     receptacles fan 200 pins out through vias at the pad tips, which needs both inner layers (the board-wide In1 keep-out of the 17:08 run left the router
+#     thrashing for 36 minutes without a session). Four rule areas on In1 forbid tracks and permit vias everywhere but in a window 8 mm around the
+#     receptacles, so the router keeps to F.Cu, In2 and B.Cu outside the module and every inner track there has the solid ground next to it; the PCIe pairs
+#     leave the window on In2 or B.Cu. escape.py and prefanout.py ignore a rule area that permits vias; KiCad exports them as wire_keepouts.
+def _in1_keepout(name, x0, y0, x1, y1):
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+    z.SetLayer(pcbnew.In1_Cu); z.SetZoneName("keep tracks off In1 " + name); o = z.Outline(); o.NewOutline()
+    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): o.Append(int(x), int(y))
+    board.Add(z)
+_bb = board.GetBoardEdgesBoundingBox(); _w = pcbnew.BOX2I()
+for _ref in ("U30A", "U30B"):
+    _f = board.FindFootprintByReference(_ref)
+    if _f: _w.Merge(_f.GetBoundingBox(False, False))
+_w.Inflate(FromMM(8.0)); _L, _T, _R, _B = _w.GetLeft(), _w.GetTop(), _w.GetRight(), _w.GetBottom()
+_in1_keepout("north of the CM5 window", _bb.GetLeft(), _bb.GetTop(), _bb.GetRight(), _T); _in1_keepout("south of the CM5 window", _bb.GetLeft(), _B, _bb.GetRight(), _bb.GetBottom())
+_in1_keepout("west of the CM5 window", _bb.GetLeft(), _T, _L, _B); _in1_keepout("east of the CM5 window", _R, _T, _bb.GetRight(), _B)
+print("In1 track keep-out everywhere but the CM5 window (%.0f x %.0f mm)" % ((_R - _L) / 1e6, (_B - _T) / 1e6))
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
