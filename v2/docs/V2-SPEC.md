@@ -75,3 +75,33 @@ the 5G module and its jack count; the RA30H1317M sheet and the heat path; Xenarc
 | C7 | panel backer under the plate: LEDs, switches, e-paper flex, the pass-throughs for the monitor |
 | D8 | APRS: SA868, 30 W PA stage, codec, PTT and EMCON logic, two headset paths |
 | E6 | dock strip and block: nine float clamps, the 2590 connector and cradle interface, shore and solar entry |
+
+## Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026)
+
+Estimates in euros at single-unit or five-off prices; documented prices where the record has them (case, monitor, RockBLOCK, RRC pack), the rest from the makers' list prices as remembered and to be replaced by quotes. Labour, subscriptions (Iridium messaging line, cellular SIM) and accessories are outside the total.
+
+| Group | Estimate (EUR) |
+|---|---|
+| Case, frame, machined and anodised face plate | 350 |
+| Xenarc 709GNK monitor | 520 |
+| BB-2590/U pack with our SMBus charger parts | 600 to 850 |
+| Three CM5 8 GB / 64 GB wireless | 300 |
+| LimeSDR Mini 2.4 | 275 |
+| 5G module | 150 to 250 |
+| AW7915-AED WiFi card | 70 |
+| RockBLOCK 9704 SMA and Maxtena helical | 395 |
+| LG290P module and GNSS puck | 160 |
+| LoRa 1 W module, two E72, SA868, PA module, QMX HF module | 225 |
+| PDi e-paper | 30 |
+| Two NVMe drives, two PCIe switches, secure element, RTC, DCF77 | 165 |
+| Sensor board with Geiger counter and the vent | 120 |
+| Panel parts: toggles and covers, buttons, LEDs and light guides, sounder | 200 |
+| Two headset jacks, camera | 125 |
+| Connectors: two MIL-DTL-38999, sealed Ethernet and USB-C, SMA bulkheads, the nine-path SMP-MAX blind-mate set, arrestors | 700 to 850 |
+| External antennas (seven Quectel picks plus 5G) | 240 |
+| Five PCBs with assembly, per kit at five-off | 400 |
+| Board components (converters, charger, PA stage, codec, expanders, passives) | 300 |
+| Rods, standoffs, cradle, cables, heater mat, PA heatsink, air mixer | 140 |
+| **Total, parts** | **about 5,700 (4,800 to 6,800)** |
+
+Accessories outside the total: rugged tablet for the lid (500 to 700), mast, coax set and HF wire antenna kit (about 300), personal locator beacon (about 300). The pack, the monitor, the connector set, the Iridium modem and the SDR are about 60 percent of the parts total.
