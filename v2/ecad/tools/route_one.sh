@@ -44,8 +44,12 @@ fi
 # FR_RULES: a Freerouting rules file (tools/fr_rules.py) with via costs, ripup costs, layer directions and activity; the probe of 6 Sep 2026 showed it is the lever 1.9.0 honours
 RULES_ARG=(); [ -n "${FR_RULES:-}" ] && [ -f "${FR_RULES}" ] && RULES_ARG=(-dr "${FR_RULES}")
 { echo "{\"jar\": \"$(basename "$JAR")\", \"jar_sha256_16\": \"$(sha256sum "$JAR" | cut -c1-16)\", \"java\": \"$($JAVA -version 2>&1 | grep -m1 -i version | tr -d '"')\", \"passes\": $P, \"threads\": ${FR_THREADS:-6}, \"timeout\": ${FR_TIMEOUT:-4500}, \"power_layers\": \"${FR_POWER_LAYERS:-}\", \"rules\": \"${FR_RULES:-}\", \"start\": \"$(date -Iseconds)\"}"; } > "$W/run.json"
-timeout ${FR_TIMEOUT:-4500} xvfb-run -a "$JAVA" -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-6} -oit 2 -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
-pkill -9 -f "^java .*par/$K/$N\.dsn" 2>/dev/null || true
+# absolute paths for the router (6 Sep 2026 04:30): two experiments on different project directories with the same board and configuration names produced
+# identical relative command lines, and the clean-up kill below took the OTHER experiment's router with it (every 1.9.0 B15 route on the box died the moment
+# its B14 twin finished). The kill pattern now carries this run's absolute session directory.
+ADSN="$PWD/$W/$N.dsn"; ASES="$PWD/$W/$N.ses"
+timeout ${FR_TIMEOUT:-4500} xvfb-run -a "$JAVA" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit 2 -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
+pkill -9 -f "java .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PY'
 import sys, os, pcbnew
