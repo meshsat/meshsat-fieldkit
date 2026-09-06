@@ -1,0 +1,64 @@
+{
+  "board": "pcb-b-compute",
+  "board_key": "B15",
+  "project": "v2/ecad/pcb-b-compute-b15p",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "preroute": "v2/ecad/pcb-b-compute-b15p/out/pcb-b-compute-preroute.kicad_pcb",
+  "note": "Own project directory on the experiment host. Isolation (6 Sep 2026 11:40): which item of an autoroute_settings block makes Freerouting 1.9.0 lose the design's clearances on B15 (the full default block injected into the DSN: 42 hard; no block: 0 hard, same pre-route c44e9cc27b23).",
+  "services_script": "~/meshsat-services.sh",
+  "expect": "exactly one item (or the layer_rule lines) carries the 42 hard violations; the others route at 0 hard and 1 open like the plain route; via_costs alone at 200 keeps 0 hard and cuts router vias",
+  "route": {
+    "passes": 100,
+    "threads": 1,
+    "timeout": 7200,
+    "power_layers": [
+      "In1.Cu",
+      "In4.Cu"
+    ]
+  },
+  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "stub_grid": "0.1",
+  "configs": [
+    {
+      "name": "only_via_costs",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "via_costs"
+    },
+    {
+      "name": "only_via200",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "via_costs",
+      "via_costs": 200
+    },
+    {
+      "name": "only_layer_rules",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "layer_rules"
+    },
+    {
+      "name": "no_layer_rules",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "fanout,autoroute,postroute,vias,via_costs,plane_via_costs,start_ripup_costs,start_pass_no"
+    },
+    {
+      "name": "only_flags",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "fanout,autoroute,postroute,vias"
+    },
+    {
+      "name": "only_costs",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "via_costs,plane_via_costs,start_ripup_costs"
+    },
+    {
+      "name": "only_start_pass",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "start_pass_no"
+    },
+    {
+      "name": "only_vias_flag",
+      "jar": "freerouting-1.9.0.jar",
+      "only": "vias"
+    }
+  ]
+}
