@@ -25,10 +25,10 @@ PLATE_UNDER = P.PLATE_UNDER_Z         # 98.4
 BACKER_TOP = PLATE_UNDER - P.BACKER_GAP; BACKER_Z = BACKER_TOP - P.BACKER_T   # 88.4, 86.8
 SMA_Z = 88.0
 WEST = [(-72.0, "VHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]
-EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (0.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]
+EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (-24.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]   # LORA off Y 0: the 1450 end wall carries a nub there (drawing 1451-931, 6 Sep 2026)
 RIBS_X = (-170.0, -95.0, -18.0, 60.0, 137.0)
 CPLATE = dict(cx=-56.0, cz=54.0, w=54.0, h=82.0)
-GROUND = -8.0                         # the ground plane under the feet (reset from the case body when Peli's STL is used)
+GROUND = -8.0                         # the ground plane under the feet pads (the shell's bottom at -5, pads 3 mm)
 # ------------------------------------------------------------------ materials
 def mat(name, rgb, rough=0.5, metal=0.0, alpha=1.0, emit=0.0, bump=0.0):
     m = bpy.data.materials.get(name)
@@ -148,67 +148,96 @@ def textured(o, image_fn, strength=0.0):
     pr.inputs["Roughness"].default_value = 0.35 if strength else 0.8
     if strength: nt.links.new(tex.outputs["Color"], pr.inputs["Emission Color"]); pr.inputs["Emission Strength"].default_value = strength
     assign(o, m); bpy.context.view_layer.objects.active = o; bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.uv.cube_project(cube_size=1.0, scale_to_bounds=True); bpy.ops.object.mode_set(mode="OBJECT")
-# ------------------------------------------------------------------ the Peli 1450: Peli's bodies when their STL exists (CASE_MODE=stl), else modelled from the numbers
-CASE_MODE = os.environ.get("CASE_MODE", "stl" if os.path.exists(os.path.join(STL, "case1450_bottom.stl")) else "model")
-base = lid = None
-if CASE_MODE == "stl":
-    # Peli's 1451-931 STEP frames: X the long axis, Y up, Z the short axis (bottom y -25.4..109.0 with the rim at 109; top y 0..70.9 with its latch straps
-    # hanging LID_DROP below the lid rim). Rotated 90 degrees about X into the case frame; CASE_FLIP=1 turns the bodies 180 degrees about Z if the hinge
-    # side comes out at the front (checked on the preview render).
-    ROT = Matrix.Rotation(math.radians(90), 4, "X")
-    if os.environ.get("CASE_FLIP"): ROT = Matrix.Rotation(math.pi, 4, "Z") @ ROT
-    base = import_stl("case_base", "case1450_bottom.stl", M["orange"], matrix=ROT, fit=(True, "max", RIM), smooth=True)
-    lid = import_stl("case_lid", "case1450_top.stl", M["orange"], matrix=ROT, fit=(True, "min", RIM - float(os.environ.get("LID_DROP", "0.0"))), smooth=True)   # 6 Sep 2026: the 1451-931 lid mesh spans 0 to 70.9 from its own rim (no straps below it), so it sits ON the rim; the 25.4 mm drop of the 1520 lid drew the seam under the antenna sockets
-    if base is not None and (bbox(base)[5] - bbox(base)[4]) < 90: CASE_MODE = "model"; bpy.data.objects.remove(base, do_unlink=True); base = None
-    if lid is not None and CASE_MODE == "model": bpy.data.objects.remove(lid, do_unlink=True); lid = None
-if CASE_MODE == "stl":
-    x0, x1, y0, y1, z0, z1 = bbox(base); BW, BL, GROUND = x1 - x0 - 12.0, y1 - y0, z0 - 0.4   # the body's own outline (the catalogue 411 x 329 counts the latch straps); the ground under its slab
-    print("case from Peli's STEP: outer %.1f x %.1f, base bottom at %.1f" % (x1 - x0, y1 - y0, z0), flush=True)
-if CASE_MODE == "model":
-    CR = 12.0
-    base = rounded_box("case_base", BW - 6, BL - 6, RIM + 6.0, CR, (0, 0, -6.0), M["orange"], top_scale=(BW / (BW - 6), BL / (BL - 6)))
-    cav = rounded_box("cavity", FLOOR_W, FLOOR_L, RIM + 5.0, 10.0, (0, 0, 0.0), M["orange"], top_scale=(RIM_W / FLOOR_W, RIM_L / FLOOR_L)); cut(base, cav)
-    rim_step = rounded_box("rim_step", SKIRT[0], SKIRT[1], SKIRT[2] + 1.0, 10.0, (0, 0, RIM - SKIRT[2]), M["orange"]); cut(base, rim_step)
-    lid = rounded_box("case_lid", BW, BL, LIDH, CR, (0, 0, RIM), M["orange"], top_scale=((BW - 8) / BW, (BL - 8) / BL))
-    lcav = rounded_box("lid_cavity", RIM_W, RIM_L, LIDH - 5.0, 10.0, (0, 0, RIM - 1.0), M["orange"], top_scale=(0.95, 0.94)); cut(lid, lcav)
-    field = rounded_box("lid_field", BW - 60, BL - 60, 10.0, 20.0, (0, 0, RIM + LIDH - 6.0), M["orange"]); cut(lid, field)
-# the features Peli's envelope STEP leaves out (and the modelled body needs): end-wall ribs, feet, corner bosses, padlock protectors, latches, handle, valve, hinge, the model text
-FEET_Z = GROUND + 0.4
+# ------------------------------------------------------------------ the Peli 1450 from its customer drawing 1451-931 (6 Sep 2026 17:10, owner: "add the details of the
+# case properly"). Peli's STEP bodies are envelopes (a slab, a drafted block and a rim ring; 75 and 39 faces), so the shell is modelled from the drawing's views and
+# sections (`vendor/peli/1450/`): outer 375 x 261 at the bottom drafting to 383 x 269 under the seam flange, the flange ring 411 x 291 x 12 on each half, lid 45.5
+# high with a 259 deep top; lid ladder rails at X +-114 and +-156 with rungs at Y +78 and -82; label recess 85 x 50 R3; two double-throw latches at X +-135 in
+# 43 mm channels; padlock protectors at the front corners; the handle pocket 220 x 78 in the front wall with the U handle on pivots at X +-76 and the valve at
+# (-16, 62); hinge blocks at X +-124 with four knuckles at 22 mm pitch; four feet pads 38 x 23 at (+-132, +-62); three nubs per end wall on each half (Y 0, +-83.5).
+BODY_W0, BODY_L0 = 375.0, 261.0; BODY_W1, BODY_L1 = 383.0, 269.0; FL_W, FL_L, FL_H = 411.0, 291.0, 12.0; BOT = -5.0; CR = 24.0
+def wall_x(z): return BODY_W0 / 2 + (BODY_W1 - BODY_W0) / 2 * (z - BOT) / (RIM - FL_H - BOT)     # the end walls' outer half-width at height z (draft)
+def wall_y(z): return BODY_L0 / 2 + (BODY_L1 - BODY_L0) / 2 * (z - BOT) / (RIM - FL_H - BOT)     # the long walls' outer half-depth at height z
+def lid_y(z): return BODY_L1 / 2 - (BODY_L1 - BODY_L0 + 2) / 2 * (z - (RIM + FL_H)) / (LIDH - FL_H)
+def smooth_by_angle(o, deg=32.0):
+    bpy.context.view_layer.objects.active = o; o.select_set(True)
+    try: bpy.ops.object.shade_smooth_by_angle(angle=math.radians(deg))
+    except Exception:
+        try: bpy.ops.object.shade_smooth(use_auto_smooth=True, auto_smooth_angle=math.radians(deg))
+        except Exception: bpy.ops.object.shade_smooth()
+    o.select_set(False)
+def bevel(o, width, segs=3, deg=35.0):
+    md = o.modifiers.new("bev", "BEVEL"); md.width = width; md.segments = segs; md.limit_method = "ANGLE"; md.angle_limit = math.radians(deg)
+    bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=md.name)
+# the base: drafted shell plus its flange, the cavity and the frame seat cut out, bottom edges rounded
+base = rounded_box("case_base", BODY_W0, BODY_L0, RIM - FL_H - BOT + 0.2, CR, (0, 0, BOT), M["orange"], top_scale=(BODY_W1 / BODY_W0, BODY_L1 / BODY_L0))
+cut(base, rounded_box("case_base_flange", FL_W, FL_L, FL_H, 32.0, (0, 0, RIM - FL_H), M["orange"]), op="UNION")
+bevel(base, 5.0)
+cut(base, rounded_box("cavity", FLOOR_W, FLOOR_L, RIM + 5.0, 10.0, (0, 0, 0.0), M["orange"], top_scale=(RIM_W / FLOOR_W, RIM_L / FLOOR_L)))
+cut(base, rounded_box("rim_step", SKIRT[0], SKIRT[1], SKIRT[2] + 1.0, 10.0, (0, 0, RIM - SKIRT[2]), M["orange"]))
+smooth_by_angle(base)
+# the lid: flange, drafted body, the top edges rounded, the inside hollowed, the label recess on top and the nameplate recess on its front
+LID_TOP = RIM + LIDH
+lid = rounded_box("case_lid", BODY_W1, BODY_L1, LIDH - FL_H, CR, (0, 0, RIM + FL_H - 0.2), M["orange"], top_scale=(BODY_W0 / BODY_W1, (BODY_L0 - 2) / BODY_L1))
+cut(lid, rounded_box("case_lid_flange", FL_W, FL_L, FL_H, 32.0, (0, 0, RIM), M["orange"]), op="UNION")
+bevel(lid, 6.0)
+cut(lid, rounded_box("lid_cavity", RIM_W, RIM_L, LIDH - 6.0, 10.0, (0, 0, RIM - 1.0), M["orange"], top_scale=(0.95, 0.94)))
+cut(lid, rounded_box("label_tool", 85.0, 50.0, 4.0, 3.0, (-59.0, 77.0, LID_TOP - 1.2), M["orange"]))
+cut(lid, box("nameplate_tool", (114.0, 6.0, 18.0), (0, -lid_y(RIM + 27.0), RIM + 27.0), M["orange"]))
+smooth_by_angle(lid)
+label("peli_text", "1450", (0, -lid_y(RIM + 27.0) + 3.2, RIM + 22.0), 9.0, M["orange2"], rot=(math.pi / 2, 0, 0))
 for sx in (-1, 1):
-    for k, y in enumerate((-105, -75, -45, -15, 15, 45, 75, 105)):
-        box("rib_b_%d_%d" % (sx, k), (6.0, 8.0, RIM - 12.0 - FEET_Z), (sx * (BW / 2 + 1.0), y, (RIM - 12.0 + FEET_Z) / 2), M["orange"], bevel=2.0)
-        box("rib_l_%d_%d" % (sx, k), (6.0, 8.0, 30.0), (sx * (BW / 2 - 1.0), y, RIM + 22.0), M["orange"], bevel=2.0)
+    for rx in (114.0, 156.0): box("rail_%d_%d" % (sx, rx), (6.0, 250.0, 6.0), (sx * rx, -3.0, LID_TOP + 2.5), M["orange"], bevel=1.5)
+    for ry in (78.0, -82.0): box("rung_%d_%d" % (sx, ry), (48.0, 6.0, 6.0), (sx * 135.0, ry, LID_TOP + 2.5), M["orange"], bevel=1.5)
+# the front wall: handle pocket (a tray set into the shell), the U handle folded into it, the valve on the pocket floor
+FY = -FL_L / 2
+cut(base, box("pocket_tool", (220.0, 20.0, 78.0), (0, -wall_y(53.0) + 0.5, 53.0), M["orange"]))
+tray = box("pocket_tray", (224.0, 10.0, 82.0), (0, -126.5, 53.0), M["orange"]); cut(tray, box("pocket_in", (220.0, 9.0, 78.0), (0, -128.0, 53.0), M["orange"]))
 for sx in (-1, 1):
-    for sy in (-1, 1):
-        cyl("foot_%d_%d" % (sx, sy), 22.0, 3.0, (sx * 165, sy * 125, FEET_Z - 1.5), M["rubber"])
-        box("corner_b_%d_%d" % (sx, sy), (30, 30, 50), (sx * (BW / 2 - 12), sy * (BL / 2 - 12), FEET_Z + 28.0), M["orange2"], bevel=6.0)
-        box("corner_l_%d_%d" % (sx, sy), (30, 30, 34), (sx * (BW / 2 - 12), sy * (BL / 2 - 12), RIM + 20.0), M["orange2"], bevel=6.0)
-    box("padlock_%d" % sx, (30, 20, 22), (sx * (BW / 2 - 22), -BL / 2 - 7, RIM), M["orange2"], bevel=4.0); cyl("padlock_hole_%d" % sx, 7, 22, (sx * (BW / 2 - 22), -BL / 2 - 7, RIM), M["black"], axis="Y")
-FY = -BL / 2
+    cyl("handle_pivot_%d" % sx, 12.0, 9.0, (sx * 76.0, -128.0, 84.0), M["black"], axis="Y"); box("handle_arm_%d" % sx, (12.0, 7.0, 58.0), (sx * 76.0, -128.0, 55.0), M["black"], bevel=2.0)
+box("handle_grip", (152.0, 9.0, 16.0), (0, -128.0, 30.0), M["black"], bevel=4.0)
+for k in (-40, -20, 0, 20, 40): box("handle_rib_%d" % k, (7.0, 2.5, 12.0), (k, -132.8, 30.0), M["black"], bevel=0.8)
+cyl("valve", 26.0, 5.0, (-16.0, -126.0, 62.0), M["black"], axis="Y", bevel=1.2); cyl("valve_cap", 19.0, 2.0, (-16.0, -129.5, 62.0), M["steel_dark"], axis="Y")
+# the latches: channel rails on both halves, the keeper block on the flange, the lever on the lid with its pin
 for sx in (-1, 1):
-    x = sx * 100
-    box("latch_base_%d" % sx, (50, 10, 36), (x, FY - 5, RIM - 24), M["orange2"], bevel=3.0); box("latch_lid_%d" % sx, (42, 11, 30), (x, FY - 6, RIM + 17), M["orange2"], bevel=4.0)
-    box("latch_lever_%d" % sx, (48, 12, 60), (x, FY - 16, RIM - 6), M["black"], bevel=5.0); box("latch_pull_%d" % sx, (36, 6, 12), (x, FY - 24, RIM - 30), M["black"], bevel=2.5)
-    cyl("latch_pin_%d" % sx, 6, 54, (x, FY - 14, RIM + 30), M["steel_dark"], axis="X")
-box("handle_bar", (140, 20, 22), (-9, FY - 15, 52), M["black"], bevel=6.0)
-for sx in (-1, 1): box("handle_boss_%d" % sx, (24, 16, 32), (-9 + sx * 82, FY - 8, 52), M["orange2"], bevel=4.0)
-cyl("valve", 26, 8, (-16, FY - 4.0, 62), M["black"], axis="Y", bevel=1.5); cyl("valve_cap", 19, 4, (-16, FY - 10, 62), M["steel_dark"], axis="Y")
-cyl("hinge_bar", 13, 300, (0, BL / 2 + 3, RIM), M["orange2"], axis="X")
-for x in (-120, 0, 120): box("hinge_knuckle_%d" % x, (40, 14, 26), (x, BL / 2 + 2.5, RIM), M["orange2"], bevel=4.0)
-label("peli_text", "1450", (130, FY - 1.0, 88), 14.0, M["orange2"], rot=(math.pi / 2, 0, 0))
-# the inner ribs of the long walls (1451-931 section B-B) in both modes: the connector plate stands between the ribs at X -95 and -18
+    x = sx * 135.0
+    for k in (-21.5, 21.5):
+        box("latch_rail_b_%d_%d" % (sx, k), (6.0, 5.0, RIM - FL_H - 16.0), (x + k, -wall_y(57.0) - 1.5, (RIM - FL_H + 16.0) / 2), M["orange"], bevel=1.2)
+        box("latch_lidrail_%d_%d" % (sx, k), (6.0, 5.0, LIDH - FL_H - 10.0), (x + k, -lid_y(RIM + 28.0) - 1.5, (RIM + FL_H + 2.0 + LID_TOP - 8.0) / 2), M["orange"], bevel=1.2)
+    box("latch_keeper_%d" % sx, (50.0, 6.0, FL_H), (x, FY - 3.0, RIM - FL_H / 2), M["orange2"], bevel=2.0); box("latch_lidkeep_%d" % sx, (50.0, 6.0, FL_H), (x, FY - 3.0, RIM + FL_H / 2), M["orange2"], bevel=2.0)
+    box("latch_lever_%d" % sx, (36.0, 9.0, 66.0), (x, FY - 10.5, RIM - 6.0), M["orange2"], bevel=4.0); box("latch_pivot_%d" % sx, (40.0, 10.0, 12.0), (x, FY - 9.0, RIM + 33.0), M["orange2"], bevel=2.5)
+    cyl("latch_pin_%d" % sx, 5.0, 46.0, (x, FY - 8.0, RIM + 38.0), M["steel_dark"], axis="X"); box("latch_notch_%d" % sx, (22.0, 3.0, 5.0), (x, FY - 15.0, RIM - 34.0), M["black"], bevel=1.0)
+# padlock protectors at the front corners (section C-C), split at the seam, the hasp hole through both halves
+for sx in (-1, 1):
+    x = sx * 176.0
+    box("padlock_b_%d" % sx, (44.0, 14.0, FL_H), (x, FY - 4.0, RIM - FL_H / 2), M["orange2"], bevel=4.5); cyl("padlock_hole_b_%d" % sx, 10.0, FL_H + 0.4, (x, FY - 6.0, RIM - FL_H / 2), M["black"])
+    box("padlock_lid_%d" % sx, (44.0, 14.0, FL_H), (x, FY - 4.0, RIM + FL_H / 2), M["orange2"], bevel=4.5); cyl("padlock_lidhole_%d" % sx, 10.0, FL_H + 0.4, (x, FY - 6.0, RIM + FL_H / 2), M["black"])
+# the hinge: two blocks behind the flange, four knuckles on the base and three lugs on the lid around one pin
+HINGE_Y = FL_L / 2 + 8.0
+for sx in (-1, 1):
+    x = sx * 124.0
+    box("hinge_block_%d" % sx, (69.0, 16.0, 14.0), (x, HINGE_Y, RIM - 7.0), M["orange2"], bevel=3.0)
+    for k in (-33, -11, 11, 33): box("hinge_knuckle_%d_%d" % (sx, k), (5.0, 16.0, 12.0), (x + k, HINGE_Y, RIM + 6.0), M["orange2"], bevel=1.5)
+    for k in (-22, 0, 22): box("hinge_lug_%d_%d" % (sx, k), (5.0, 16.0, 12.0), (x + k, HINGE_Y, RIM + 6.0), M["orange2"], bevel=1.5)
+    cyl("hinge_pin_%d" % sx, 8.0, 74.0, (x, HINGE_Y, RIM + 6.0), M["steel_dark"], axis="X")
+# feet pads and the end-wall nubs (three per half, at the seam line of the drawing: Y 0 and +-83.5)
+FEET_Z = BOT - 1.5
+for sx in (-1, 1):
+    for sy in (-1, 1): box("foot_%d_%d" % (sx, sy), (38.0, 23.0, 3.0), (sx * 132.0, sy * 62.0, FEET_Z), M["orange2"], bevel=1.0)
+    for y in (-83.5, 0.0, 83.5):
+        sphere("nub_b_%d_%d" % (sx, y), 9.0, (sx * (wall_x(83.0) + 1.0), y, 83.0), M["orange"]); sphere("nub_l_%d_%d" % (sx, y), 9.0, (sx * (wall_x(RIM - FL_H) + 1.0), y, RIM + FL_H + 8.0), M["orange"])
+# the inner ribs of the long walls (1451-931 section B-B): the connector plate stands between the ribs at X -95 and -18
 for sy in (-1, 1):
     for x in RIBS_X: box("case_rib_in_%d_%d" % (sy, x), (5.0, 5.0, 94.0), (x, sy * (FLOOR_L / 2 + 2.0), 47.0), M["orange"])
-CASE = [o for o in bpy.data.objects if o.name.startswith(("case_", "rib_", "foot_", "corner_", "padlock", "latch_", "handle_", "valve", "hinge_", "peli_text"))]
-LID = [o for o in CASE if o.name.startswith(("case_lid", "rib_l_", "corner_l_", "latch_lid", "latch_lever", "latch_pull", "latch_pin", "hinge_"))]
-hinge = Vector((0, BL / 2 + 3, RIM)); CLOSED = {o.name: o.matrix_world.copy() for o in LID}
+CASE = [o for o in bpy.data.objects if o.name.startswith(("case_", "rail_", "rung_", "foot_", "padlock", "latch_", "handle_", "valve", "hinge_", "peli_text", "nub_", "pocket_"))]
+LID = [o for o in CASE if o.name.startswith(("case_lid", "rail_", "rung_", "latch_lever", "latch_pivot", "latch_pin", "latch_notch", "latch_lidrail", "latch_lidkeep", "padlock_lid", "hinge_lug", "hinge_pin", "nub_l_", "peli_text"))]
+hinge = Vector((0, HINGE_Y, RIM + 6.0)); CLOSED = {o.name: o.matrix_world.copy() for o in LID}
 def set_lid(open_):
     for o in LID:
         base_m = CLOSED[o.name]
         o.matrix_world = (Matrix.Translation(hinge) @ Matrix.Rotation(math.radians(-100), 4, "X") @ Matrix.Translation(-hinge) @ base_m) if open_ else base_m
 frame = import_stl("panel_frame", "frame1450.stl", M["black"], fit=(True, "max", RIM))
 # ------------------------------------------------------------------ the back wall: the upright connector plate between the ribs, the shore and USB receptacles, both cables plugged
-WALL_Y = BL / 2
+WALL_Y = wall_y(54.0)   # the long wall's outer face at the plate's mid-height (the drafted shell of the drawing)
 box("conn_plate", (CPLATE["w"], 3, CPLATE["h"]), (CPLATE["cx"], WALL_Y + 1.5, CPLATE["cz"]), M["alu"])
 for (sx, sz) in ((-79, 82), (-33, 82), (-79, 54), (-33, 54), (-79, 26), (-33, 26)): cyl("cplate_screw_%d_%d" % (sx, sz), 7.0, 1.5, (sx, WALL_Y + 3.75, sz), M["steel"], axis="Y", verts=6)
 for z, d, fl, nm, cm, cd in ((34, 19.05, 28.9, "shore", M["wire_blk"], 8.0), (74, 23.01, 31.29, "usb", M["usb"], 6.0)):
@@ -320,7 +349,7 @@ def logo_mark(name, cx, cy, width, z, m):
     o = bpy.data.objects.new(name, cu); S.collection.objects.link(o); o.location = (cx, cy, z); assign(o, m); return o
 logo_mark("logo_mark", LX, LY, LD, FACE + 0.05, M["white"])   # 6 Sep 2026 (owner): the official mark on the plate's upper left, not a ring with text
 # ------------------------------------------------------------------ end-wall antennas: nine bulkheads at Z 88, whips upright on right-angle adapters, pigtails inside to the dock nests
-WX = BW / 2; WALL_IN = FLOOR_W / 2 + 4.0
+WX = wall_x(SMA_Z); WALL_IN = FLOOR_W / 2 + 4.0   # the end wall's outer face at the jack line
 ANT = {"VHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9), "WIFI P2P A": (120, 9), "WIFI P2P B": (120, 9)}
 NEST = {"VHF": SMA_JACKS[0], "WIFI 2.4": SMA_JACKS[1], "GNSS": SMA_JACKS[2], "SDR": SMA_JACKS[3], "LTE": SMA_JACKS[4], "IRIDIUM": SMA_JACKS[5], "LORA": SMA_JACKS[6]}
 for sx, sites in ((-1, WEST), (1, EAST)):

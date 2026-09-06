@@ -1,5 +1,5 @@
-# Freerouting quality programme: experiment report (generated 2026-09-06 13:43)
-234 rows (189 configuration keys); verdicts recomputed at report time from the stored metrics
+# Freerouting quality programme: experiment report (generated 2026-09-06 16:55)
+236 rows (191 configuration keys); verdicts recomputed at report time from the stored metrics
 
 ### A21 (56 experiment rows; baseline: 132 router vias, 10693.5 mm, 2051 segments)
 
@@ -128,7 +128,7 @@
 | fr24_base | c44e9c | 2.4.1 | UNMEASURABLE | - | 329 | 24200.7 | 3874 | 1.143 / 1.346 | 12 | 0 / 14 | 14 of 14 | 0.0 | 1912 |
 | fr24_via200 | c44e9c | 2.4.1 | UNMEASURABLE | - | 185 | 25340.4 | 3757 | 1.18 / 1.479 | 12 | 0 / 11 | 10 of 11 | 0.0 | 2792 |
 
-### C6 (29 experiment rows; baseline: ? router vias, ? mm, ? segments)
+### C6 (31 experiment rows; baseline: ? router vias, ? mm, ? segments)
 
 | config | pre-route | jar | verdict | Q | router vias | length mm | segments | detour med / p90 | pairs > 1 mm | raw hard / open | stub closed | autoroute min | wall s |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -161,6 +161,8 @@
 | fr24_via200 | f61ffe | 2.4.1 | UNMEASURABLE | - | 157 | 15654.4 | 1969 | 1.171 / 1.363 | 0 | 0 / 6 | 3 of 6 | 0.0 | 1947 |
 | fr19_plain | f61ffe | 1.9.0 | UNMEASURABLE | - | 217 | 16121.5 | 1927 | 1.155 / 1.423 | 0 | 0 / 2 | 2 of 2 | 9.02 | 568 |
 | fr24_plain | f61ffe | 2.4.1 | UNMEASURABLE | - | 274 | 15681.5 | 2340 | 1.159 / 1.369 | 0 | 0 / 2 | 1 of 2 | 0.0 | 1120 |
+| fr19_plain | 4e9480 | 1.9.0 | UNMEASURABLE | - | 196 | 14302.8 | 2053 | 1.17 / 1.405 | 0 | 0 / 17 | 10 of 17 | 0.0 | 4124 |
+| fr19_plain_p100 | 4e9480 | 1.9.0 | UNMEASURABLE | - | 194 | 14658.2 | 2130 | 1.172 / 1.403 | 0 | 0 / 10 | 5 of 10 | 0.0 | 4926 |
 
 ### D7 (24 experiment rows; baseline: 90 router vias, 3617.6 mm, 958 segments)
 
@@ -258,8 +260,7 @@
 | A21 | yes | yes | 0 / 0 (0) | 0 / 2 (3) | 95 | 130 | 0.828 | - | FAIL (completion below 1.9.0) |
 | B14 | yes | yes | 0 / 0 (0) | 0 / 9 (14) | 266 | 324 | - | - | FAIL (completion below 1.9.0) |
 | B15 | yes | yes | 12 / 1 (1) | 0 / 4 (10) | 263 | 328 | - | - | FAIL (completion below 1.9.0) |
-| C6 | yes | yes | 0 / 0 (2) | 0 / 2 (2) | 217 | 274 | - | - | FAIL (completion below 1.9.0) |
 | D7 | yes | yes | 0 / 0 (0) | 0 / 1 (2) | 72 | 83 | 0.887 | - | FAIL (completion below 1.9.0) |
 | E4 | yes | yes | 0 / 0 (0) | 0 / 0 (0) | 83 | 120 | 0.746 | 0.904 | REGRESSED |
 
-Gate verdict: NOT MET, 1.9.0 stays the production jar (6 boards: 5 FAIL, 0 BETTER, 1 REGRESSED; the gate needs 0 FAIL, 0 REGRESSED and BETTER on at least 3).
+Gate verdict: NOT MET, 1.9.0 stays the production jar (5 boards: 4 FAIL, 0 BETTER, 1 REGRESSED; the gate needs 0 FAIL, 0 REGRESSED and BETTER on at least 3).

@@ -116,8 +116,8 @@ c.showPage()
 # Amphenol Connex 132170 SMA female-female bulkhead coupler: 6.5 mm D-hole with the flat at 6.00 across (vendor/rf drawing), 8 mm nut.
 # Four sites per end wall at Y -60, -30, +30, +60 between the wall's inner ribs (none on the 1450 end walls), 55 mm above the floor.
 SMA_Z = 88.0   # 1450 (32.40 item 8): above the battery row (top 78 mm) along the west end wall, below the frame skirt (Z 100 to 109)
-WEST = [(-72.0, "UHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]        # west end wall (case -X): the strip's four western clamps; since B13 the third path carries the NEO-M9N antenna (the CM5 antenna is dual-band, one path)
-EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (0.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]   # five sites at one height, 48 mm apart so the Iridium patch clears its neighbours  # east end wall (case +X); B14: the spare took the first WiFi P2P lead, the second sits in a second row at Z 90 (clear of the Iridium patch, whose top is at Z 82)
+WEST = [(-72.0, "VHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]        # VHF since 6 Sep 2026 (the DMR858M is the 134 to 174 MHz variant; the port was mislabelled UHF); west end wall (case -X): the strip's four western clamps; since B13 the third path carries the NEO-M9N antenna (the CM5 antenna is dual-band, one path)
+EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (-24.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]   # LORA off Y 0 since 6 Sep 2026: the 1450 end wall carries a moulded nub at Y 0 and +-83.5 on the jack line (drawing 1451-931 side view); the Iridium antenna is the Maxtena helical on the jack  # east end wall (case +X); B14: the spare took the first WiFi P2P lead, the second sits in a second row at Z 90 (clear of the Iridium patch, whose top is at Z 82)
 def end_wall(title, sites, y_sign, ox_paper):
     """One end wall seen from OUTSIDE: paper x = case Y times y_sign (so the viewer's left is the right case direction)."""
     def Q(y, z): return W / 2 + (ox_paper + y_sign * y) * mm, oz + z * mm
@@ -140,7 +140,7 @@ for k, (title, sites, sign) in enumerate((("WEST end wall (case -X), seen from o
     if k: c.showPage()
     end_wall(title, sites, sign, 0.0)
     scale_bar(-140, -14)
-    notes(["SHEET %d of 4: the SMA antenna bulkheads on this end wall of the Peli 1450, 88 mm above the floor (32.40 item 8): west UHF, WIFI 2.4, GNSS, SDR at Y -72, -24, +24, +72; east LTE, IRIDIUM, LORA, WIFI P2P A, WIFI P2P B at Y -96, -48, 0, +48, +96. Print at 100 percent." % (3 + k),
+    notes(["SHEET %d of 4: the SMA antenna bulkheads on this end wall of the Peli 1450, 88 mm above the floor (32.40 item 8): west VHF, WIFI 2.4, GNSS, SDR at Y -72, -24, +24, +72; east LTE, IRIDIUM, LORA, WIFI P2P A, WIFI P2P B at Y -96, -48, -24, +48, +96 (LORA off Y 0: the end wall carries a moulded nub at Y 0 and +-83.5 on the jack line, 1451-931 side view). Print at 100 percent." % (3 + k),
        "Coupler: Amphenol Connex 132170 SMA female-female bulkhead (vendor/rf), 6.5 mm D-hole with the flat filed to 6.00 across so the coupler cannot turn when a pigtail is torqued; 8 mm nut and lock washer inside, the NBR O-ring 6.5 x 1.0 under the outside hex.",
        "The sites sit on the plain band of the end walls (ribs only at the corners, 1451-931) and above the battery row along the west wall (top 78 mm) with the frame skirt 12 mm above them. Inside, an RG-316 jumper runs from each coupler to its float nest on the strip: west wall to the UHF, WIFI 2.4, GNSS and SDR nests, east wall to LTE, IRIDIUM and LORA (about 150 to 250 mm each); the two WIFI P2P couplers take IPEX pigtails straight from the M.2 card on PCB-B, no nest.",
        "Outside, the antenna pigtails screw on as before, 0.45 N m once. The retired wall strip E3 carried these same seven couplers; only their home changed."], -22)
