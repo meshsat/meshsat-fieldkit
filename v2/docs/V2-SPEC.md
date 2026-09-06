@@ -55,12 +55,12 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 | E-paper | Pervasive Displays E2370KS0C1, 3.7 in 416 x 240 wide-temperature panel under the plate lens: identity, status and the QR code with the power off |
 | Switches | APEM 5636ADKB-2V locking toggles for SOS, EMCON and ZEROIZE with hinged safety covers on SOS and ZEROIZE (cover part *owed*), C&K and NKK buttons for MAIN, PI and TEST, the LIGHT toggle |
 | Indicators | sixteen LEDs through IP68 light guides, the Floyd Bell sounder; blackout and NVG modes |
-| Audio | two sealed MIL headset jacks with PTT on the codec, net audio recording to the drives |
+| Audio | the monitor's built-in waterproof speaker over HDMI for the UI, spoken alerts and net monitoring (volume and mute in its menu); two sealed MIL headset jacks with PTT on the codec as the private path; net audio recording to the drives; blackout mutes the speaker and the sounder (32.53) |
 | Camera | a sealed camera on the face or a USB camera on the wall port for image messages |
 | Ambient light | a sensor behind a sealed window drives the monitor and panel brightness |
 
 ## Sensors (a sensor board on the I2C bus)
-inside temperature, humidity and pressure with the outside pressure as a seal check; floor water sensor with alarm and pack shutdown; six-axis IMU with magnetometer (shock and tilt log, heading, motion wake-up); hydrogen and VOC sensing in the battery bay with shutdown; ambient light; AS3935 lightning detector with a mast-down alarm; Geiger-Mueller tube counter inside (dose rate logged and shared over the mesh); outside temperature, humidity, pressure and UV behind a membrane vent in an end wall. Particulates and wind stay external accessories.
+inside temperature, humidity and pressure with the outside pressure as a seal check; floor water sensor with alarm and pack shutdown; six-axis IMU with magnetometer (shock and tilt log, heading, motion wake-up); hydrogen and VOC sensing in the battery bay with shutdown; ambient light; AS3935 lightning detector with a mast-down alarm; Geiger-Mueller tube counter inside (dose rate logged and shared over the mesh); outside temperature, humidity, pressure and UV in a sealed pod on the outside of the connector plate over an M8 sealed receptacle, with a UV-transparent window (no vent anywhere, 32.53). Particulates and wind stay external accessories.
 
 ## Qualification
 
@@ -68,7 +68,7 @@ The method-by-method plan with pass criteria is `TEST-PLAN.md` (approved item 16
 A whole-kit test plan to MIL-STD-810 (transit drop, vibration, temperature operation and storage, humidity, immersion) and MIL-STD-461 (conducted emissions and susceptibility on the power leads, radiated emissions) is part of the design: written before the build, run on the built prototype in-house where possible and at a lab where not, pass criteria per test, fixes fed back into the record (approved 6 Sep 2026).
 
 ## Thermal and environment
-the 30 W PA stage conducts to the aluminium face plate or a finned block, an internal air mixer; the pack's heater mat and the inside climate sensor set the cold-weather behaviour; the case rides on its own pressure valve.
+no vent opening anywhere in the case skin or the plate (owner ruling 7 Sep 2026, 32.53): the heat leaves through the aluminium face plate and the case walls; five IP68-rated internal fans (one per CM5 cooler, two mixer fans under the plate) driven by the sensor controller couple the inside air to the skin; the 30 W PA stage conducts to the plate through its column; estimated inside-air rise about 10 K with one module and 16 K with three loaded modules with the lid open (32.53), to be measured by `TEST-PLAN.md` E3; in direct sun the plate is shaded; with the lid closed the kit runs the reduced mode; the pack's heater mat and the inside climate sensor set the cold-weather behaviour; the case keeps Peli's own pressure equalisation valve.
 
 ## Open items before the generators move (MESHSAT-830)
 the 5G module and its jack count; the RA30H1317M sheet and the heat path; Xenarc's drawing; BB-2590 and charger quotes; the SOS and ZEROIZE cover part; the 2 m antenna; ASM1184e availability; the HF module pick; the B16 UART and PCIe plans and the power budget.
@@ -100,14 +100,14 @@ Estimates in euros at single-unit or five-off prices; documented prices where th
 | LoRa 1 W module, two E72, SA868, PA module, QMX HF module | 225 |
 | PDi e-paper | 30 |
 | Two NVMe drives, two PCIe switches, secure element, RTC, DCF77 | 165 |
-| Sensor board with Geiger counter and the vent | 120 |
+| Sensor board with Geiger counter and the outside sensor pod | 130 |
 | Panel parts: toggles and covers, buttons, LEDs and light guides, sounder | 200 |
 | Two headset jacks, camera | 125 |
 | Connectors: two MIL-DTL-38999, sealed Ethernet and USB-C, SMA bulkheads, the nine-path SMP-MAX blind-mate set, arrestors | 700 to 850 |
 | External antennas (seven Quectel picks plus 5G) | 240 |
 | Five PCBs with assembly, per kit at five-off | 400 |
 | Board components (converters, charger, PA stage, codec, expanders, passives) | 300 |
-| Rods, standoffs, cradle, cables, heater mat, PA heatsink, air mixer | 140 |
+| Rods, standoffs, cradle, cables, heater mat, PA heat column, five IP68 fans | 190 |
 | **Total, parts** | **about 5,700 (4,800 to 6,800)** |
 
 Accessories outside the total: rugged tablet for the lid (500 to 700), mast, coax set and HF wire antenna kit (about 300), personal locator beacon (about 300). The pack, the monitor, the connector set, the Iridium modem and the SDR are about 60 percent of the parts total.

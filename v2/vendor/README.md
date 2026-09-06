@@ -44,6 +44,15 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `sensirion/` | SGP41 datasheet (VOC and NOx sensing in the battery bay) | sensor board |
 | `vishay/` | VEML7700 datasheet (ambient light behind the plate window) | sensor board, panel brightness |
 | `ti/` | LM5176 (9 to 36 V buck-boost front end), TPS23861 (PoE PSE for the wall Ethernet), TPS25750 (USB-C PD source controller), BQ25731 (4S SMBus charger candidate for the BB-2590) datasheets | the A22 power tree (32.52) |
+| `diodes/` | Diodes PI7C9X2G304SL (3-port, 4-lane PCIe 2.0 packet switch, 128-pin LQFP 14 x 14, -40 to 85 C; the one-to-two switch of each CM5 slot) and PI7C9X2G404SL (4-port variant, the alternative with a third downstream port) datasheets rev 5, PI3HDX414 HDMI 1:4 splitter sheet (reference only) | the per-slot PCIe switch of B16 (32.52, 32.54) |
+| `ti/` (added 7 Sep) | TUSB8041 (four-port USB 3.0 hub, 64-QFN 9 x 9, 0.5 mm pitch, 24 MHz crystal) and TUSB8020B (two-port, 48-HTQFP), TMDS341A (3-to-1 HDMI 1.3a switch, 80-TQFP, 3.3 V, 2.25 Gbps) and TS3DV642 (12-channel 2:1 mux for HDMI, 42-WQFN) datasheets | the per-slot USB 3 hub and the three-input display switch of B16 (32.54) |
+| `microchip/` | USB5744 four-port USB 3.2 Gen 1 hub datasheet (the alternative hub; Microchip's site refused every other download) | B16 hub alternative (32.54) |
+| `silabs/` | CP2102N USB-to-UART bridge datasheet (QFN20/24/28, 3 Mbaud, no crystal) | the USB-serial bridges of the LG290P and the two E72 on B16, the SA868 control port on D8 (32.54) |
+| `rp2040/` | RP2040 datasheet and the hardware design guide from raspberrypi.com | the panel controller (C7) and the sensor controller (S1) (32.52, MESHSAT-837, 838) |
+| `ams/` | ams OSRAM AS7331 UVA, UVB and UVC sensor datasheet (OLGA16, I2C) | the outside sensor pod (32.53), replacing the discontinued VEML6075 |
+| `openthread/` | README of the OpenThread ot-cc13x2-cc26x2 platform repository (the RCP build for the CC2652P) | the Thread border router on the second E72 (MESHSAT-840) |
+| `ti/` (added 7 Sep, power) | TPS56637 (4.5 to 28 V in, 6 A buck), TPS54A24 (4.5 to 17 V in, 10 A buck), TPS62933 (3.8 to 30 V in, 3 A buck, SOT583), TPS55288 (36 V, 16 A switch buck-boost with I2C, 0.8 to 22 V out; the USB-C PD source stage behind the TPS25750), LM74700-Q1 (ideal diode controller, 3.2 to 65 V), TPS25982 (2.7 to 24 V, 15 A eFuse with current monitor), INA226 (36 V current and power monitor) datasheets | the A22 power tree of the 14.4 V node (32.55) |
+| `nicerf/` | NiceRF SA868 2 W embedded walkie-talkie module datasheet V1.3 (VHF 134 to 174 MHz or UHF 400 to 480 MHz variants; 3.3 to 5.5 V, RX 60 mA, TX 1 A at 2 W; UART 9600 8N1 AT+DMO command set; pins: Audio ON, AF_OUT, PTT low = transmit, PD, H/L, VBAT, ANT, RXD, TXD, MIC_IN), mirrored from the LilyGO T-TWR repository because nicerf.com refuses the runner | the VHF exciter of D8 driving the RA30H1317M1 (32.54) |
 
 The files are ordinary git objects (the largest is about 50 MB).
 
