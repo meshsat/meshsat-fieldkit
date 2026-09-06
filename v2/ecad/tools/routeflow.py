@@ -315,6 +315,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             rules = os.path.join(w, "config.rules"); argv = ["python3", os.path.join(tools, "fr_rules.py"), dsn0, rules, "--via-costs", str(cfg.get("via_costs", 50)), "--plane-via-costs", str(cfg.get("plane_via_costs", 5)), "--ripup", str(cfg.get("ripup", 100))]
             if cfg.get("preferred"): argv += ["--preferred", cfg["preferred"]]
             if cfg.get("inactive"): argv += ["--inactive", cfg["inactive"]]
+            if cfg.get("only"): argv += ["--only", cfg["only"]]
             sh(argv, project, plog)
             route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
             if cfg.get("planes"): route["plane_nets"] = list(cfg["planes"])
