@@ -316,11 +316,12 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             if cfg.get("preferred"): argv += ["--preferred", cfg["preferred"]]
             if cfg.get("inactive"): argv += ["--inactive", cfg["inactive"]]
             if cfg.get("only"): argv += ["--only", cfg["only"]]
-            sh(argv, project, plog)
+            if cfg.get("plain"): rules = ""   # plain (6 Sep 2026 14:15): no settings block at all, the production configuration; a settings block, even with default values, costs the design's clearances on B15
+            else: sh(argv, project, plog)
             route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
             if cfg.get("planes"): route["plane_nets"] = list(cfg["planes"])
             timeout = int(route.get("timeout", 1800) * scale)
-            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_RULES_INJECT": "1", "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
+            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_RULES_INJECT": "1" if rules else "0", "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])
             ses = os.path.join(w, name + ".ses"); t0 = time.time(); starts = 0; flog = os.path.join(w, "finish.log"); board = os.path.join(w, name + ".kicad_pcb")
