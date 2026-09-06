@@ -18,7 +18,7 @@ BACKER_T = 1.6
 
 # --- the face elements (centre X, centre Y in the case frame)
 DISPLAY = dict(c=(0.0, -24.0), glass=(189.32, 120.24), aperture=(169.35, 100.51), aperture_r=1.5, pocket_depth=1.0, depth_below=7.0)     # Touch Display 2, the aperture of 32.34 (body + 0.4)
-EPAPER = dict(c=(0.0, 70.0), window=(94.19, 53.6), lens=(107.19, 66.6), lens_r=3.0, module=(105.79, 53.80), pocket_depth=1.0, depth_below=12.0)  # WeAct 3.7 under a 2 mm lens, its board on the module's back
+EPAPER = dict(c=(0.0, 78.0), window=(94.19, 53.6), lens=(107.19, 66.6), lens_r=3.0, module=(105.79, 53.80), pocket_depth=1.0, depth_below=12.0)   # 6 Sep 2026 14:45 (owner): moved up 8 mm; at Y 70 the lens pocket sat 0.6 mm from the display glass pocket, now 8.6 mm of plate between them (lens top at 111.3, the frame window edge at 116.9)  # WeAct 3.7 under a 2 mm lens, its board on the module's back
 BUTTONS = [("SW_MAIN", (150.0, 60.0), 19.2, 30.0), ("SW_PI", (150.0, 10.0), 16.2, 28.0), ("SW_TEST", (150.0, -40.0), 16.2, 28.0)]   # ref, centre, plate hole, depth behind the face (C&K ATP19/ATP16 sheets)
 TOGGLES = [("SW_SOS", (-150.0, 60.0)), ("SW_EMCON", (-150.0, 18.0)), ("SW_ZERO", (-150.0, -24.0))]                              # APEM 5636ADKB-2V: 6.5 hole with a 2.70 x 1.10 keyway toward the operator (-Y), about 26 deep
 TOGGLE_HOLE, TOGGLE_KEY = 6.5, (2.70, 1.10)
