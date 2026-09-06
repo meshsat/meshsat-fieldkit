@@ -24,7 +24,7 @@ FACE = P.FACE_TOP_Z                   # 101.4, the plate's top face on the frame
 PLATE_UNDER = P.PLATE_UNDER_Z         # 98.4
 BACKER_TOP = PLATE_UNDER - P.BACKER_GAP; BACKER_Z = BACKER_TOP - P.BACKER_T   # 88.4, 86.8
 SMA_Z = 88.0
-WEST = [(-72.0, "UHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]
+WEST = [(-72.0, "VHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]
 EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (0.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]
 RIBS_X = (-170.0, -95.0, -18.0, 60.0, 137.0)
 CPLATE = dict(cx=-56.0, cz=54.0, w=54.0, h=82.0)
@@ -321,8 +321,8 @@ def logo_mark(name, cx, cy, width, z, m):
 logo_mark("logo_mark", LX, LY, LD, FACE + 0.05, M["white"])   # 6 Sep 2026 (owner): the official mark on the plate's upper left, not a ring with text
 # ------------------------------------------------------------------ end-wall antennas: nine bulkheads at Z 88, whips upright on right-angle adapters, pigtails inside to the dock nests
 WX = BW / 2; WALL_IN = FLOOR_W / 2 + 4.0
-ANT = {"UHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9), "WIFI P2P A": (120, 9), "WIFI P2P B": (120, 9)}
-NEST = {"UHF": SMA_JACKS[0], "WIFI 2.4": SMA_JACKS[1], "GNSS": SMA_JACKS[2], "SDR": SMA_JACKS[3], "LTE": SMA_JACKS[4], "IRIDIUM": SMA_JACKS[5], "LORA": SMA_JACKS[6]}
+ANT = {"VHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9), "WIFI P2P A": (120, 9), "WIFI P2P B": (120, 9)}
+NEST = {"VHF": SMA_JACKS[0], "WIFI 2.4": SMA_JACKS[1], "GNSS": SMA_JACKS[2], "SDR": SMA_JACKS[3], "LTE": SMA_JACKS[4], "IRIDIUM": SMA_JACKS[5], "LORA": SMA_JACKS[6]}
 for sx, sites in ((-1, WEST), (1, EAST)):
     for y, nm in sites:
         z = SMA_Z; tag = nm.replace(" ", "_").lower()
