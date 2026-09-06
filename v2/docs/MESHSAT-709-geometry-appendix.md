@@ -2932,3 +2932,37 @@ The generators do not move before every row has its document and pick. State of 
 **Budget.** 50 W typical, 200 W peak, 290 W with the outlets (32.52 item 3): 4 to 17 A from the node at 12 V, inside the pack's 18 A peak; the dock block's four CELL+ and four return pins (Mill-Max 9 A class) carry 36 A, adequate; the outlets drop to their minimum contract while the PA keys. Fuses: pack 30 A, vehicle input 10 A, PA rail 10 A blade; the PoE and PD paths are electronic. Shunts: 5 mOhm on the slot rails, 2 mOhm on the PA rail.
 
 **I2C on A22.** INA226 at 0x40 (S1), 0x41 (S2), 0x44 (S3), 0x45 (DEV), 0x46 (PA), 0x47 (PoE) (the old SDR, LTE and WiFi monitors of those addresses go with B15); the BQ25731 at 0x6B (the BQ25792's address; only one is fitted); a PCA9548 mux isolates the pack's two SMBus sections, the TPS25750 and the TPS23861 on their own segments; the two A22 expanders stay at 0x21 and 0x24.
+
+### 32.56 A22 floor plan, the PA on the plate, eleven blind-mate paths (7 Sep 2026 01:30; Stage 2 numbers for `gen_pcb_a.py`, `gen_pcb_a3.py`, `check_pcb_a.py`, `case_wall_cutouts.py`, `panel1450.py`)
+
+**Outline.** 240 x 160 mm, X -120 to +120, Y -80 to +80 (case frame), corner radius 5, four layers; the rods stay at (+-110.5, +-73) with their 9 mm nut keep-outs. The west 45 mm of A21 (X -165 to -120) is the BB-2590/U cradle's floor (32.49 item 12).
+
+**The PA module leaves D8 for the face plate.** B16 (330 x 200) covers the whole frame window over A22, so no column can rise from a mezzanine under it to the plate. The RA30H1317M1's copper flange bolts flat to the underside of the aluminium face plate (two PEM S-M3 nuts pressed into the plate, thermal compound), inside the backer's void, over a low-profile zone of B16 (the M.2 card area, cards 2 to 4 mm tall; the plate's underside is at Z 98.4, the module body 9.9 mm, B16's top at about Z 56); the plate is the heatsink (3 mm, 0.7 kg, 660 J/K: a 20 s key-down at 45 W warms the local patch about 15 K; the average at APRS duty is a few watts). Its leads run around B16's edge (10 mm of gap between B16 and the frame window on each side): the 13.8 V pair from A22's `J_PA` (JST-VH, 16 AWG), VGG from D8's bias gate, and two RG-316 coax (drive from D8's exciter, output back to D8's low-pass filter and transmit-receive relay, then the blind-mate pigtail). D8 keeps the SA868 exciter, the LPF, the relay, the codec set and the PTT and EMCON logic; `pa_heat_column.py` of the plan is replaced by `pa_plate_mount.py` (the two plate holes and the lead routing in `panel1450.py`). Lid budget: the module sits under the plate, so nothing changes on top.
+
+**South band (Y -80 to -58): the dock block and eleven blind-mate sites.** The dock block moves east of the west rod: the region X -104 to -66, Y -78 to -64 on the underside carries the pre-charge pin `J_PRE1` at (-103, -70), the four CELL+ pins `J_CP1..4` at (-99 + 4k, -73), the four return pins `J_CN1..4` at (-99 + 4k, -67), and the 2x6 signal block `J_DOCK` at (-76, -70) (E6's raised block reads these positions from A22's board as E5 did). The RF row follows at Y -66 (SMP-MAX receptacles underside) with the SMA jacks on top at Y -56, 14 mm pitch, west to east:
+
+| Site | X | Path | Wall jack (Z 88) |
+|---|---|---|---|
+| J_BM1 | -52 | VHF (D8 relay output) | west, Y -72 |
+| J_BM2 | -38 | HF (the QMX, B16 bay) | west, Y -48 (new) |
+| J_BM3 | -24 | WIFI 2.4 (the CM5 kit antenna) | west, Y -24 |
+| J_BM4 | -10 | GNSS (LG290P, active antenna bias) | west, Y +24 |
+| J_BM5 | +4 | SDR (LimeSDR, limiter) | west, Y +72 |
+| J_BM6 | +18 | WIFI P2P A (card MHF4 lead through a top-side MHF4 on A22) | east, Y +48 |
+| J_BM7 | +32 | WIFI P2P B | east, Y +96 |
+| J_BM8 | +60 | 5G MAIN | east, Y -96 |
+| J_BM9 | +74 | 5G DIV (second 5G jack; a third and fourth follow the hardware design if it asks for four) | east, Y -72 (new) |
+| J_BM10 | +88 | IRIDIUM (RockBLOCK 9704) | east, Y -48 |
+| J_BM11 | +102 | LORA (E22 module) | east, Y -24 |
+
+The LORA site at X 102, Y -66 clears the east rod (110.5, -73) by 11 mm. The wall jack lists of `scene.py`, `case_wall_cutouts.py` and the documents move into `panel1450.py` (`WALL_WEST`, `WALL_EAST`) in the same change; the west wall gains HF at Y -48 (24 mm from its neighbours, off the nub at Y 0 and the end nubs at +-83.5), the east wall gains 5G DIV at Y -72; every wall jack stays an SMA bulkhead (the HF path ends in an SMA at the wall and a BNC adapter on the wire antenna kit's feed).
+
+**West column (X -118 to -60).** FRONT zone (Y 40 to 78, nearest the back-wall connector plate): the LM5176 front end from the dock's shore pins to the 20 V bus (the E6 strip carries the entry protection, the filter and the hot-swap; the raw 9 to 36 V comes up the four shore contacts of `J_DOCK`, 3.5 A each, 14 A total, enough for 100 W at 9 V). CHARGER zone (Y 0 to 40): BQ25731, its inductor and capacitors, the PCA9548 and the pack SMBus buffer. POE zone (Y -30 to 0): the LM5176 boost to 54 V and the TPS23861 with its port magnetics lead to the wall Ethernet (the switch chip is on B16; the PSE injects on the wall port's pairs through `J_ETH_PSE`). The node copper (CELL+ from the pins to the fuse row) stays the A21 pattern of locked pours: pins at Y -73, a node bar at Y -60, the fuse row at Y -46 with the blade holders `F1..F4` (pack 30 A, PA rail, vehicle input, device rail).
+
+**Middle column (X -60 to 0).** The rail converters in the `rail()` pattern along Y 20 to 60: `+5V_S1`, `+5V_S2`, `+5V_S3`, `+5V_DEV` (TPS56637 each) with their INA226 and VH outputs on the north edge at Y 75 (`J_5V_S1` at X -64, `J_5V_S2` -52, `J_5V_S3` -40, `J_5V_DEV` -28, `J_LEDS1` -10); the two TPS62933 3.3 V rails beside them; the PA rail LM5176 and the HF TPS55288 along Y -30 to 20; the main power control LTC2954, the expanders 0x21 and 0x24 and the test points along Y -58 to -30.
+
+**East (X 0 to 120).** The D8 mezzanine site 100 x 80 at X 0 to 100, Y -40 to 40 on four M3 standoffs at (5, +-35) and (95, +-35), harness headers on its west side: `J_MEZZ1` (2x8 IDC at (-8, 8): the USB pair of D8's hub, `TR_APRS`, `TX_INHIBIT_n`, `PA_VGG_EN`, GND) and `J_MEZZ_PWR1` (VH at (-8, -18): `+5V_DEV` for D8). The strip X 100 to 118 east of the mezzanine carries, rotated 90: `J_PA` (13.8 V to the plate-mounted PA) at (110, 58), `J_MON` (VMON to the Xenarc's lead) at (110, 44), `J_HEAT` at (110, 30), `J_USBC_OUT` (the PD outlet feed to the wall USB-C) at (110, 14). The north-east band (X 0 to 100, Y 40 to 78): the TPS25750 and its TPS55288, the monitor and heater eFuses, `J_AB1` (2x9 IDC, top side) at (-90, 76) is the exception in the north-west corner, 9 mm east of the rod's keep-out, with B16's underside header at the same case XY.
+
+**Pin map of `J_AB1` (A22 to B16, 2x9):** 1 `PI_SHDN_REQ`, 2 `PI_KILL` (both to the panel controller's lines on B16), 3 GND, 4 `USB_D8_P`, 5 `USB_D8_N` (D8's hub upstream to slot 3's hub), 6 GND, 7 SDA, 8 SCL, 9 `EXP_INT`, 10 `TR_APRS`, 11 `EMCON_HW` (from the panel controller), 12 `ZEROIZE_HW`, 13 GND, 14 `TX_INHIBIT_n` (the D8 inhibit, driven by `EMCON_HW`), 15 `SLOT_EN1`, 16 `SLOT_EN2`, 17 `SLOT_EN3` (the per-slot rail enables from the panel controller), 18 GND. `check_contracts.py` gains this map.
+
+**Gate literals for `check_pcb_a.py`:** outline 240 x 160 at X -120; the eleven `J_BM` and `J_RF` positions; the dock pins; `J_AB1` at (-90, 76); the mezzanine holes at (5, +-35), (95, +-35); the four fuses; the regions FRONT, CHARGER, POE, RAILS, CTRL, MEZZ, EAST strip with the 2 mm margin, no overlaps, 4.5 mm from every rod.
