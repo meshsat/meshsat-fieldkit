@@ -2866,3 +2866,69 @@ The generators do not move before every row has its document and pick. State of 
 3. **The Xenarc 709GNK's built-in waterproof speaker is the kit's loudspeaker** (volume and mute in its menu, audio over HDMI; manual on file): the UI, spoken alerts and net monitoring; the two headset jacks stay the private audio and PTT path; blackout mutes the speaker and the sounder. No separate speaker.
 4. **Sensor 8 of 32.50 loses its vent:** the outside climate and UV sensors (BME280, AS7331) go into a sealed pod bolted to the outside of the back-wall connector plate, on an M8 sealed receptacle (IP67 mated), with a UV-transparent window and a shade cap; the pod is a printed part with a gasket (`v2/cad/sensor_pod.py`, Stage 5). The inside pressure against the pod's outside pressure remains the seal check.
 5. `V2-SPEC.md` takes the speaker in its audio row, the fans and the no-vent rule in its thermal section, the pod in its sensor paragraph, and five IP68 fans (+50) and the pod (+10) in the cost estimate.
+
+### 32.54 Research gate, pass two (7 Sep 2026 01:20): the runner's sheets, JLCPCB availability by API, the picks
+
+**Instrument.** JLCPCB's parts search endpoint answers without a login (`POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList` with the JSON body `{"keyword": ..., "currentPage": 1, "pageSize": 6, "searchSource": "search"}`) and returns per part the LCSC code, the stock, the library type (basic or extended) and the price breaks. Every pick below carries its code, stock and unit price in USD as answered between 01:05 and 01:20; `tools/jlc_stock.py` (Stage 2) wraps the call for `lcsc_fill.py`. The availability rows of the laptop list (ASM118x, and every "is it buyable" question) close with this instrument; the laptop keeps the rows whose sheets the makers' sites refuse to the runner.
+
+**Picks (sheet on file unless noted; codes and stock from the query):**
+
+| Function | Pick | LCSC code, stock, unit price | Note |
+|---|---|---|---|
+| Per-slot PCIe switch | Diodes PI7C9X2G404SL: 4-port, 4-lane PCIe 2.0 packet switch, one upstream x1 and three downstream x1, 128-LQFP 14 x 14 with pad, -40 to 85 C (`diodes/`) | C500767, 2,780, 7.81 | the 3-port PI7C9X2G304SL has 8 in stock (C780885, 12.89); the 4-port is the buyable one and gives every slot its NVMe, its card and a third port (left unpopulated on slots 1 and 2, the spare M-key 2280 on slot 3). ASM1184e and ASM1182e: 0 stock (C2943483, C2833072); the ASMedia path closes |
+| Per-slot USB 3 hub | TI TUSB8041IRGCR, industrial, 64-QFN 9 x 9 (`ti/`) | C544686, 3,693, 4.06 | alternative Microchip USB5744T-I/2G, C626715, 379, 4.64 (`microchip/`) |
+| Display switch, three HDMI inputs | two TI TS3DV642A0RUAR 2:1 muxes in cascade (12 channels: four TMDS pairs plus DDC, HPD and CEC; 42-WQFN) (`ti/`) | C157482, 840, 1.17 | the TI TMDS341A 3-to-1 switch (C2674381, 10, 7.39; HDMI 1.3a, 80-TQFP, sheet on file) is the fallback; the Xenarc runs 1024 x 600 at 60 Hz, far under either limit |
+| USB-serial bridges (LG290P, two E72, the SA868 control port) | Silicon Labs CP2102N-A02-GQFN24R, QFN-24 4 x 4, no crystal (`silabs/`) | C969151, 24,127, 2.06 | FTDI's site refuses the runner |
+| Panel and sensor controllers | RP2040 with a Winbond W25Q16JVUXIQ flash (`rp2040/`) | C2040, 91,842, 0.99; C2843335, 3,853, 1.57 | |
+| Ethernet switch (three CM5 and the wall port) | Microchip KSZ9897RTXI: seven ports, five copper PHYs and two MAC ports, 128-TQFP | C638299, 240, 18.32 | sheet on the laptop list (Microchip refuses the runner); KSZ9567RTXI has 26 in stock (C638294, 16.15); Realtek RTL8367S-CG has 5,827 at 2.75 (C2760849) but its sheet is under NDA. The CM5 brings out its PHY's copper pairs, so the three module links are PHY-to-PHY through coupling capacitors on the board; only the wall port gets magnetics: Pulse H5007NL (C110248, 1,063, 2.05) or H5120NL (C6076538, 2,029, 2.37) |
+| M.2 sockets | E-key for the WiFi card: TE 2199230-4 (C2977809, 7,202, 1.71); M-key for the NVMe and the spare: Amphenol MDT420M02001 (C2927698, 7,294, 1.58); B-key for the 5G module: TE 1-2199119-5 (C574849, 8,784, 1.21) if its drawing confirms key B, else Amphenol MDT420B01001 (C4594496, 52, 1.99) | | the drawings (te.com, amphenol-cs.com) are owed for the height code and the standoff; the 5G module is 3052, the NVMe 2242, the spare 2280 |
+| CM5 receptacles | Amphenol 10164227-1004A1RLF (`cm5/`) | C7435219, 1,284, 3.46 | six per kit |
+| LimeSDR bay | USB 3.0 type A receptacle, Hong Cheng HC-USB3.0-L257-P, through-hole | C7501847, 17,134, 0.32 | generic part, drawing in the JLC record |
+| Nano SIM (two, 32.50 item 11) | SHOU HAN NANO SIM 7P H1.37 | C7529384, 52,418, 0.29 | |
+| Antenna ports on the boards | I-PEX 20279-001E-03 (U.FL) | C3173448, 1,698, 0.11 | the MHF4 receptacles sit on the WiFi card, not on our boards |
+| E-paper flex | Hirose FH34SRJ-24S-0.5SH(50) (named in the PDi note) | C324726, 26,880, 0.31 | |
+| LoRa 1 W module | Ebyte E22-900M30S (`ebyte/`) | C411294, 586, 7.18 | JLCPCB places the module |
+| Zigbee and Thread radios | Ebyte E72-2G4M20S1E (footprint on file) | C5352930, 0, 16.80 | bench-fitted, no stock |
+| GNSS | Quectel LG290P03AAMD (`quectel/`) | C29781241, 78, 86.09 | JLCPCB places it |
+| VHF exciter | NiceRF SA868, VHF variant 134 to 174 MHz (`nicerf/`, V1.3 sheet mirrored from the LilyGO T-TWR repository) | the UHF variant SA868-U is C3001507, 6, 12.46; the VHF variant is bench-fitted from NiceRF | 35.6 x 19.0 x 3.2 mm castellated module, 18 pins (page 10 drawing), UART 9600 8N1 with the AT+DMO command set, PTT low = transmit, H/L pin open = 2 W, 3.3 to 5.5 V, RX 60 mA, TX 1 A; the 2 W drive is padded to the RA30H1317M1's 50 mW input |
+| PA module | Mitsubishi RA30H1317M1 (`mitsubishi/`) | not at JLCPCB | bench-fitted (RF Parts, 57.91 USD); flange 67 x 19.4 mm, holes on 60 mm, 9.9 mm high (drawing page 6) |
+| D8 audio and control | TI PCM2912A USB audio codec (mic input with bias, headphone output, TQFP-32) with a TPA6132A2 headphone amplifier for the two jacks and a CP2102N for the SA868 UART, behind a small USB hub on D8 (TI TUSB2046B full-speed hub or WCH CH334R, C4154405, 26,952, 0.56) (`ti/`) | C475497, 516, 6.58; C69901, 1,679, 1.35 | D8 becomes a USB device set as 32.52 wants; the D7 codec WM8960 has no stock (0 at 11 to 12.5) |
+| Inside climate, outside pod, battery bay | Bosch BME688 (temperature, humidity, pressure, gas) (`bosch/`), one inside, one in the outside pod, with the Sensirion SGP41 (C3659325, 2,835, 8.95) in the battery bay | C3664478, 1,339, 11.72 | BME280 has 55 in stock (C92489, 7.27); BMP390 and DPS310 have none; the two BME688 pressures are the seal check |
+| IMU and magnetometer | Bosch BMI270 and BMM150 (`bosch/`) | C2836813, 6,014, 3.23; C171681, 3,977, 1.29 | ICM-42688-P: 317 at 19.10 (a clone at 3 USD is not a pick); LIS3MDLTR (C478483, 8,002, 5.20) is the alternative magnetometer, sheet on the laptop list |
+| Ambient light | Vishay VEML7700-TR (`vishay/`) | C504893, 5,938, 1.17 | |
+| UV in the pod | bench-fitted ams AS7331 breakout on the pod's header (`ams/`) | AS7331 0 stock; LTR-390UV, GUVA-S12SD, ML8511, VEML6070, SI1145 all 0 | |
+| Lightning | ScioSense AS3935 as a bench-fitted module (CJMCU-3935 class) on the sensor board's header (`sciosense/`: factsheet and hardware guide; the full sheet is not on the maker's public page) | 0 stock (C3178344, 15.02) | |
+| Pack-bay temperature reference | TI TMP117AIDRVR | C699536, 8,509, 1.02 | sheet in pass three |
+| Holdover RTC | Analog Devices DS3231MZ+TRL (TCXO, SOIC-8) | C107410, 12,271, 3.29 | sheet on the laptop list; RV-3028-C7 has 1 in stock |
+| Secure element | Microchip ATECC608B-SSHDA-T (SOIC-8) | C1518769, 1,043, 1.00 | sheet on the laptop list |
+| Expanders, buffers, level shifters | PCA9555DBR C45293, 5,580, 1.87; TCA9517ADGKR C201698, 10,323, 0.50; PCA9548APWR C295762, 340, 1.21; TXB0108PWR C53406, 29,078, 0.64 | | on file |
+| Power parts of 32.55 | LM5176PWPR C442493, 432, 3.85; BQ25731RSNR C2871872, 375, 3.48; TPS23861PWR C93245, 1,176, 2.53; TPS25750DRJKR C2868209, 540, 2.39; TPS56637RPAR C841386, 1,149, 2.53; TPS55288RPMR C2864583, 5,732, 2.20; LM74700QDBVRQ1 C2941042, 5,916, 1.51; TPS62933DRLR C3200405, 6,268, 0.57; TPS259824ONRGER C2155766, 2,511, 6.27; TPS259631DDAR C2155778, 4,840, 0.73; LM5069MM-2 C111822, 851, 5.43; LTC2954CTS8-1 C683782, 2,471, 6.63; INA226AIDGSR C49851, 59,460, 0.82; SMCJ15A Littelfuse C1973072, 3,421, 0.26 | | `ti/`, `power/`; the Analog Devices path (LTC4162-L 27 at 11.83, LT8390 1,886 at 13.03) costs three times the TI path and its sheets are refused to the runner |
+| Solar tracker (E6) | LT8705A (`power/lt8705a.pdf`) | C674165 and siblings, 1 to 5 in stock, 19 to 35 | thin: the tracker is bench-fitted or the E6 generator moves it to an LM5176 in input-voltage regulation (its sheet describes the loop); decided in the E6 generator |
+| Sounder | Floyd Bell MC-09-530-Q | C20517741, 0, 54.34 | bench-fitted as before |
+
+**Still on the laptop list (sites that refuse the runner):** the RM520N-GL hardware design and its antenna count (Quectel's product page carries no number in its text), the KSZ9897 and ATECC608B sheets (Microchip), the DS3231 sheet (Analog Devices), LIS3MDL (ST), the TE and Amphenol M.2 drawings, the sealed USB-C and RJ45 wall parts, the U-174/U headset jacks (Amphenol Nexus), the toggle safety cover, the tablet, the 2 m antenna, the IP68 fans (Sunon and Delta; JLCPCB lists Sunon by chance only), the 2590 quotes. Closed since 32.51: the vent (no vent anywhere, 32.53), the ASM118x availability (0 stock, Diodes picked), the SA868 sheet (mirrored), the Geiger board (the MightyOhm kit's files moved; the RadiationD-v1.1 board is bought as a module on a header, documented by its silk), the HDMI switch, the hubs, the bridges, the controllers, the sensors' stock.
+
+### 32.55 The A22 power tree of the 14.4 V node (7 Sep 2026 01:25; from the TI sheets on file, for the Stage 2 generator)
+
+**Node.** The BB-2590/U's two 14.4 V sections in parallel (10.0 to 16.8 V; 10 A continuous and 18 A peak by the pack's rating) are the kit's node `VBAT`: fused at the cradle cable (30 A MAXI blade), reverse-protected by an LM74700 ideal-diode controller with its FET, switched by the main power control (LTC2954 on a P-FET pair, as A21). Every load runs from `VBAT`; there is no NVDC path and no BATFET in the load path: the charger charges the node and, while shore is present, carries the load up to its own limit. The three TPS61288L boosts of the 1S node go.
+
+**Inputs.** (1) Shore and vehicle, 9 to 36 V, through the wide-range front end on A22: LM74700 reverse polarity, LM5069 hot-swap with under and over-voltage limits (9 V, 40 V) and a current limit, the MIL-STD-461 class line filter (common-mode choke, X and Y capacitors, an SMCJ transient clamp), then an LM5176 four-switch buck-boost regulating a 20 V `VIN_BUS` at up to 5 A (100 W). (2) Solar into the same 20 V bus through the E6 tracker. (3) The charger BQ25731 from `VIN_BUS` (its input range is 3.5 to 24 V) to the 4S node at up to 8 A; the pack's own SMBus gauge (both sections) is read by the host through a PCA9548 segment and sets the charge window; the pack's thermistor line goes to the charger's TS pin. The shore inhibit of PANEL.md section 9 becomes the charger's enable.
+
+**Rails from `VBAT`.**
+
+| Rail | Part | Load | Enable and monitor |
+|---|---|---|---|
+| `+5V_S1`, `+5V_S2`, `+5V_S3` | one TPS56637 (6 A) per CM5 slot, 5.1 V | the module and its cooler fan | enable from the panel controller (an empty slot stays off; a slot can be off while the others run); INA226 per rail |
+| `+5V_DEV` | TPS56637, 6 A | the USB devices behind the three hubs (bridges, controllers, LoRa module, camera), the LimeSDR bay and the RockBLOCK through their own TPS2596 switches | INA226 |
+| `+3V3`, `+3V3_RF` | TPS62933 (3 A) each | logic; the LG290P, two E72, the 5G module's supply switch | `+3V3_RF` and the module switches gated by EMCON |
+| `+13V8_PA` | LM5176 buck-boost, 13.8 V at 6 A | the RA30H1317M1 on D8 | enable = EMCON gate AND the software hold; INA226 |
+| `+12V_HF` | TPS55288 buck-boost, 12.0 V at 2 A | the QMX (never 13.8 V) | enable = EMCON gate |
+| `VMON`, `VHEAT` | `VBAT` through a TPS2596 eFuse each | the Xenarc (10 to 35 V input, under 10 W); the pack heater | HEAT_EN as PANEL.md section 11; VMON follows blackout |
+| `+54V_POE` | LM5176 in boost, 54 V at 0.6 A | the TPS23861 PSE for the wall Ethernet port | software |
+| USB-C PD outlet | TPS55288 (5 to 20 V at up to 3.25 A, set over I2C by the TPS25750) | the outlet | the PD controller; limited to 45 W while the PA keys |
+
+**EMCON gates (hardware, from the panel controller's EMCON line, each ANDed with the HAL's hold):** `+13V8_PA` enable and the PA's VGG on D8; `+12V_HF` enable; the 5G module's supply switch and W_DISABLE; the WiFi card's 3.3 V buck enable on B16 and its W_DISABLE; the LoRa module's supply switch; the RockBLOCK's 5 V switch; the two E72's `+3V3_RF`; the LimeSDR bay switch.
+
+**Budget.** 50 W typical, 200 W peak, 290 W with the outlets (32.52 item 3): 4 to 17 A from the node at 12 V, inside the pack's 18 A peak; the dock block's four CELL+ and four return pins (Mill-Max 9 A class) carry 36 A, adequate; the outlets drop to their minimum contract while the PA keys. Fuses: pack 30 A, vehicle input 10 A, PA rail 10 A blade; the PoE and PD paths are electronic. Shunts: 5 mOhm on the slot rails, 2 mOhm on the PA rail.
+
+**I2C on A22.** INA226 at 0x40 (S1), 0x41 (S2), 0x44 (S3), 0x45 (DEV), 0x46 (PA), 0x47 (PoE) (the old SDR, LTE and WiFi monitors of those addresses go with B15); the BQ25731 at 0x6B (the BQ25792's address; only one is fitted); a PCA9548 mux isolates the pack's two SMBus sections, the TPS25750 and the TPS23861 on their own segments; the two A22 expanders stay at 0x21 and 0x24.

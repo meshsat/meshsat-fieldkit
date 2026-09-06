@@ -13,6 +13,8 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 | Disassembly | face plate off (ten M3), the rod stack lifted straight up off the blind-mate joint without unscrewing a cable, the pack out of its cradle |
 
 ## Power
+
+The node, the inputs, every rail with its part and its EMCON gate: appendix 32.55 (7 Sep 2026).
 | Item | Specification |
 |---|---|
 | Battery | one BB-2590/U military pack (MIL-PRF-32383 family; 14.4 V, 250 to 300 Wh, SMBus and LED gauge, MIL-STD-810F and 461 tested, discharge -32 to +60 C), Army SC-C-179495 connector; quotes *owed* |
@@ -26,7 +28,7 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 |---|---|
 | Requirement | no single CM5 is a single point of failure: one, two or three modules in any slot, every device visible to all modules, the OS and the HAL adopt devices, k3s on top |
 | Compute | three identical CM5 slots (8 GB, 64 GB eMMC, wireless) joined by a five-port Gigabit switch chip with the sealed wall port and a spare header |
-| Per slot | a one-to-two PCIe switch feeding one NVMe M.2 M-key 2242 (storage replicated across slots by k3s) and one card slot (slot 1 the WiFi link card, slot 2 the 5G module, slot 3 a spare M.2 M-key 2280); a four-port USB 3 hub with device headers; HDMI into the three-input display switch; time-pulse and heartbeat lines |
+| Per slot | a PCIe switch (Diodes PI7C9X2G404SL, one upstream and three downstream lanes; 32.54) feeding one NVMe M.2 M-key 2242 (storage replicated across slots by k3s) and one card slot (slot 1 the WiFi link card, slot 2 the 5G module, slot 3 a spare M.2 M-key 2280); a four-port USB 3 hub with device headers; HDMI into the three-input display switch; time-pulse and heartbeat lines |
 | Devices | every radio, sensor and the panel is a USB device on a slot's hub (USB-serial bridges for the UART radios, two RP2040-class controllers for the panel and the sensors, a USB audio and control set for the APRS board); the HAL shares them to the other modules over the network; the physical owner is a cabling choice recorded in the HAL configuration |
 | Panel controller | LEDs, switches, sounder, e-paper, ambient light, blackout and NVG lighting, HDMI input select, heartbeats, and the hardware EMCON and ZEROIZE logic independent of any module; the secure element on its bus |
 | Security | secure element behind ZEROIZE (element wiped, disk-key wipe line asserted), encrypted drives, case-open tamper switch, key fill as a signed procedure over the console |
@@ -71,7 +73,7 @@ A whole-kit test plan to MIL-STD-810 (transit drop, vibration, temperature opera
 no vent opening anywhere in the case skin or the plate (owner ruling 7 Sep 2026, 32.53): the heat leaves through the aluminium face plate and the case walls; five IP68-rated internal fans (one per CM5 cooler, two mixer fans under the plate) driven by the sensor controller couple the inside air to the skin; the 30 W PA stage conducts to the plate through its column; estimated inside-air rise about 10 K with one module and 16 K with three loaded modules with the lid open (32.53), to be measured by `TEST-PLAN.md` E3; in direct sun the plate is shaded; with the lid closed the kit runs the reduced mode; the pack's heater mat and the inside climate sensor set the cold-weather behaviour; the case keeps Peli's own pressure equalisation valve.
 
 ## Open items before the generators move (MESHSAT-830)
-the 5G module and its jack count; the RA30H1317M sheet and the heat path; Xenarc's drawing; BB-2590 and charger quotes; the SOS and ZEROIZE cover part; the 2 m antenna; ASM1184e availability; the HF module pick; the B16 UART and PCIe plans and the power budget.
+the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS3231, LIS3MDL, TE and Amphenol M.2 drawings (laptop list, 32.54); the sealed USB-C and RJ45 wall parts; the U-174/U headset jacks; the SOS and ZEROIZE cover part; the 2 m antenna; the tablet; the IP68 fans; the BB-2590 quotes. Closed on 7 Sep 2026: the PCIe switch (Diodes), the hubs, the display switch, the bridges, the controllers, the sensors' stock, the SA868 sheet, the PA sheet and heat path, Xenarc's drawing, the vent (none), the ASM118x question (0 stock).
 
 ## Boards of this generation
 | Board | Role |
