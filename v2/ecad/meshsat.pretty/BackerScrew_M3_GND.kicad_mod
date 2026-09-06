@@ -1,0 +1,13 @@
+(footprint "BackerScrew_M3_GND"
+	(version 20241229)
+	(generator "meshsat")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "C6 backer screw M3 into the plate's self-clinching standoff: plated hole 3.2, 6.0 mm ring both sides, GND")
+	(tags "backer screw gnd")
+	(attr through_hole)
+	(property "Reference" "REF**" (at 0 -4.50 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+	(property "Value" "VAL**" (at 0 4.50 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+	(pad "1" thru_hole circle (at 0 0) (size 6.0 6.0) (drill 3.2) (layers "*.Cu" "*.Mask"))
+	(fp_circle (center 0.000 0.000) (end 3.500 0.000) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))
+)

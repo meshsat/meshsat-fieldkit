@@ -1,0 +1,103 @@
+** Drc report for pcb-c-display.kicad_pcb **
+** Created on 2026-09-06T11:52:19+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 26 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(275.4400 mm, 312.0800 mm): Segment of D12 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(281.4400 mm, 312.0800 mm): Segment of D13 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(287.4400 mm, 312.0800 mm): Segment of D14 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(293.4400 mm, 312.0800 mm): Segment of D15 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(148.0000 mm, 101.0000 mm): PCB text 'LEFT: SOS, EMCON, ZEROIZE, LIGHT' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C6 BACKER: LEDs under the plate light pipes, no face legends here' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(446.0000 mm, 101.0000 mm): PCB text 'RIGHT: MAIN, PI, TEST, status LEDs' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL, e-paper lead J_EPD, MAIN / PI lands, switch and sounder leads on their lands, the drivers on the right strip' on B.Silkscreen
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(452.3375 mm, 267.3750 mm): Track [/EPD_DC] on B.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(426.1125 mm, 269.8000 mm): Track [/LIGHT_DAY_n] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(430.1750 mm, 271.1000 mm): Via [/PIRING_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(428.4500 mm, 273.0500 mm): Via [/SCL] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(462.7625 mm, 267.3750 mm): Track [/SCL] on B.Cu, length 1.4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(427.7500 mm, 273.7000 mm): Via [/SDA] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(430.1750 mm, 272.4000 mm): Via [/SHORE_K] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(426.1125 mm, 269.1500 mm): Track [/TEST_SW] on B.Cu, length 2.3375 mm
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
