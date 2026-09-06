@@ -44,6 +44,26 @@ for cfg, lst in sorted(effects.items()):
     moved = sum(1 for _, dv, dl, _ in lst if abs(dv) >= 0.05 or abs(dl) >= 0.05); harmful = sum(1 for _, _, _, v in lst if v in ("REGRESSION", "INELIGIBLE"))
     cls = "HARMFUL" if harmful == len(lst) else "EFFECT" if moved >= 2 else "NO_EFFECT" if moved == 0 else "WEAK (one board)"
     out.append("| %s | %s | %s | %s | %s | %s |" % (cfg, ", ".join(k for k, _, _, _ in lst), ", ".join("%+.1f%%" % (dv * 100) for _, dv, _, _ in lst), ", ".join("%+.1f%%" % (dl * 100) for _, _, dl, _ in lst), ", ".join(str(v) for _, _, _, v in lst), cls))
+# Stage 4 gate (pre-registered, plan of 6 Sep 2026): 2.4.1 must write a session within the timeout on every board, reach at least 1.9.0's completion (finished opens
+# and hard after the production finish) and score Q at least 5 percent better on three of five boards with none regressed; otherwise 1.9.0 stays the production jar.
+out.append("\n### Stage 4 gate: Freerouting 2.4.1 against 1.9.0 (fr24_base against fr19_base per board; the finish is the production finish)\n")
+out.append("| board | 1.9.0 session | 2.4.1 session | 1.9.0 hard / open (raw open) | 2.4.1 hard / open (raw open) | 1.9.0 router vias | 2.4.1 router vias | 1.9.0 Q | 2.4.1 Q | board verdict |"); out.append("|---|---|---|---|---|---|---|---|---|---|")
+gate = []
+for key in sorted(by_board):
+    r19 = next((r for r in by_board[key] if r["config"] == "fr19_base"), None); r24 = next((r for r in by_board[key] if r["config"] == "fr24_base"), None)
+    if not r19 or not r24: continue
+    def cell(r):
+        m = r.get("metrics") or {}; raw = r.get("raw") or {}
+        return ("yes" if r.get("verdict") != "NO_SESSION" else "NO"), "%s / %s (%s)" % (m.get("hard", "-"), m.get("unrouted", "-"), raw.get("unrouted", "-")), m.get("vias_router", "-"), ("%.3f" % r["Q"]) if r.get("Q") is not None else "-"
+    s19, s24 = cell(r19), cell(r24); m19 = r19.get("metrics") or {}; m24 = r24.get("metrics") or {}
+    if r24.get("verdict") == "NO_SESSION": v = "FAIL (no session)"
+    elif (m24.get("unrouted", 999) > m19.get("unrouted", 999)) or (m24.get("hard", 999) > m19.get("hard", 999)): v = "FAIL (completion below 1.9.0)"
+    elif r19.get("Q") is not None and r24.get("Q") is not None: v = "BETTER" if r24["Q"] <= r19["Q"] * 0.95 else "REGRESSED" if r24["Q"] > r19["Q"] else "SAME"
+    else: v = "not rankable (a board is INELIGIBLE on both)"
+    gate.append(v); out.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (key, s19[0], s24[0], s19[1], s24[1], s19[2], s24[2], s19[3], s24[3], v))
+if gate:
+    fails = sum(1 for v in gate if v.startswith("FAIL")); better = sum(1 for v in gate if v == "BETTER"); regressed = sum(1 for v in gate if v == "REGRESSED")
+    out.append("\nGate verdict: %s (%d boards: %d FAIL, %d BETTER, %d REGRESSED; the gate needs 0 FAIL, 0 REGRESSED and BETTER on at least 3)." % ("PASS, 2.4.1 may become the production jar" if fails == 0 and regressed == 0 and better >= 3 else "NOT MET, 1.9.0 stays the production jar", len(gate), fails, better, regressed))
 text = "# Freerouting quality programme: experiment report (generated %s)\n" % __import__("datetime").datetime.now().strftime("%Y-%m-%d %H:%M") + "\n".join(out) + "\n"
 if arg("--out"): open(arg("--out"), "w").write(text)
 print(text)
