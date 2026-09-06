@@ -1,4 +1,6 @@
-# Concept renders, the kit in the Peli 1450 (rendered 6 September 2026, third set)
+# Concept renders, the kit in the Peli 1450 (rendered 6 September 2026, fifth set)
+
+Fifth set, 6 Sep 2026 17:15: the Peli 1450 is modelled from its customer drawing 1451-931 (Peli's STEP bodies are envelopes): seam flanges, lid ladder rails and label recess, latches with pins, padlock protectors, the handle pocket with the U handle and the valve, hinge knuckles, feet pads and end-wall nubs. All nine antenna ports are plain SMA bulkheads; the open views show the Maxtena M1621HCT-P-SMA helical on the Iridium jack and the Quectel YEGD006U1A puck of the LG290P receiver on its lead at the GNSS jack, the closed views none. Rendered on a rented 8x H100 box, Cycles, 256 samples. Prototype design, nothing built.
 
 Concept illustrations of the V2 kit as designed on 5 and 6 September 2026 (design record 32.40 to 32.44): the Peli 1450 with the 1450PF frame, the 3 mm aluminium face plate with the four-layer backer board C6 under it, the stack (E4, E5, A21, D7, B15), the battery row along the west end wall, the nine end-wall antenna sockets and the upright connector plate with both cables plugged. Rendered by `v2/cad/render/scene.py` (Blender 4.2, Cycles, 256 samples, eight H100 GPUs of a rented vast.ai box) from the KiCad boards, Peli's 1451-931 CAD and the makers' models; see `v2/cad/render/README.md` for what is real geometry and what is a stand-in. **Nothing in these images has been built.**
 
