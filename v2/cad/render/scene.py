@@ -293,7 +293,7 @@ for k, (x, y) in enumerate(P.STANDOFFS): cyl("standoff_c6_%d" % k, 5.0, P.BACKER
 DX, DY = P.DISPLAY["c"]; GT = PLATE_UNDER + P.DISPLAY["pocket_depth"]
 TD2 = Matrix.Translation((DX, DY, GT - 5.0)) @ Matrix.Rotation(math.radians(-90), 4, "Z") @ Matrix.Translation((0, -2.95, 0))
 import_stl("td2", "td2.stl", M["black"], TD2)
-scr = box("td2_screen", (160, 90, 0.15), (DX, DY, GT - 0.5), M["dark"]); textured(scr, "ui.png", 4.0)
+scr = box("td2_screen", (160, 90, 0.15), (DX, DY, GT + 0.12), M["dark"]); textured(scr, "ui.png", 4.0)   # 6 Sep 2026 18:00: ON the glass, not 0.5 mm inside the display body (which hid the screenshot in sets one to six)
 box("td2_glass", (P.DISPLAY["glass"][0], P.DISPLAY["glass"][1], 0.8), (DX, DY, GT - 0.4), M["glass"])
 # WeAct 3.7 e-paper: the module taped under the plate with its glass up in the window, the 2 mm lens in the top pocket
 EX, EY = P.EPAPER["c"]; ET = FACE - P.EPAPER["pocket_depth"]
