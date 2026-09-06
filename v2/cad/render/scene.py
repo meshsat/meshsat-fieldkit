@@ -333,8 +333,20 @@ for sx, sites in ((-1, WEST), (1, EAST)):
         # and the u-blox GNSS puck; every other port is drawn as its bulkhead jack, the whip parts are not chosen yet. WHIPS=1 restores the old stand-ins.
         if os.environ.get("WHIPS") and nm in ANT:
             L, d = ANT[nm]; cyl("ant_elbow_" + tag, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + tag, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + tag, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + tag, d / 2 + 1.5, (ax, y, z + 16 + L), M["rubber"])
-        elif nm == "IRIDIUM": cyl("ant_iridium", 76, 18, (sx * (WX + 9), y, 82 - 38), M["white"], bevel=2.0, axis="X")   # the patch flat on the east wall, its top at Z 82, fed by a short lead from the jack above it
-        elif nm == "GNSS": cyl("ant_gnss", 48, 14, (sx * (WX + 7), y, 82 - 24), M["dark"], bevel=2.0, axis="X")          # the puck flat on the west wall below its jack
+        elif nm == "IRIDIUM":
+            # 6 Sep 2026 16:20 (owner): the port is a plain SMA bulkhead like the other eight; the approved external antenna of the 9704 SMA variant is the
+            # Maxtena M1621HCT-P-SMA helical (49 x dia 19 mm radome, SMA male; appendix 32.45), stood upright on a right-angle SMA adapter so its axis points
+            # at the sky; drawn with the lid open only (the kit travels closed with its antennas off)
+            cyl("ant_elbow_iridium", 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_elbow2_iridium", 8, 6, (ax, y, z + 4.5 + 3), M["gold"])
+            cyl("ant_iridium", 19, 49, (ax, y, z + 4.5 + 6 + 24.5), M["dark"], bevel=3.0)
+        elif nm == "GNSS":
+            # 6 Sep 2026 16:20 (owner): the LG290P's active antenna, the Quectel YEGD006U1A puck (109.28 x 89 x 25.8 mm, SMA male on a 5 m RG174 lead; appendix
+            # 32.46), set on the ground beyond the west wall with its lead to the jack; the jack itself is a plain SMA bulkhead; lid open only
+            px, py = sx * (WX + 62), -(BL / 2 + 74)   # on the ground at the front-west corner, where the orbit views show it beside the case
+            rounded_box("ant_gnss_puck", 109.28, 89.0, 25.8, 12.0, (px, py, GROUND), M["dark"], top_scale=(0.88, 0.88))
+            cyl("ant_gnss_plug", 8.0, 12.0, (sx * (WX + 12), y, z), M["gold"], axis="X")
+            q0 = (sx * (WX + 18), y, z); q1 = (sx * (WX + 44), y - 14, z - 42); q2 = (px + 24, py + 70, GROUND + 5); q3 = (px + 6, py + 44.5, GROUND + 6)
+            tube("ant_gnss_lead_1", q0, q1, 3.0, M["coax"]); sphere("ant_gnss_lead_k1", 3.0, q1, M["coax"]); tube("ant_gnss_lead_2", q1, q2, 3.0, M["coax"]); sphere("ant_gnss_lead_k2", 3.0, q2, M["coax"]); tube("ant_gnss_lead_3", q2, q3, 3.0, M["coax"])
         # the pigtail (6 Sep 2026, owner): a right-angle plug at the coupler, down the wall, along the FLOOR to the dock strip's float clamp under A21's
         # receptacle (the blind-mate joint), never to a board; on the west side it drops into the 10 mm gap behind the battery row and runs under the module's
         # cradle (four 4 x 4 mm grooves in the cradle, owed in battery_module.py), so the module lifts out without touching a cable
@@ -461,6 +473,7 @@ def move_face(dz):
 set_lid(True)
 def render(view):
     v = VIEWS[view]; S.camera = v["cam"]; set_lid(v["lid"]); hide(("peli_text",), bool(v.get("cutaway")))
+    hide(("ant_",), not v["lid"])   # 6 Sep 2026 16:20: the two external antennas (Maxtena helical, LG290P puck) appear only with the lid open
     keep = []; tool = None
     if v.get("cutaway"):   # the front wall of the case and the frame's front bar removed; the face lifted 60 mm on its ribbon and flex
         tool = box("cut_tool", (700, 142, 400), (0, -BL / 2 - 25, 100), M["dark"])

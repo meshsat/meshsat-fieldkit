@@ -34,7 +34,7 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `audio/` | Raspberry Pi I2S white paper, Cirrus WM8960 data sheet, the Waveshare WM8960 HAT wiki as text, the Direwolf user guide, C-Media CM108B data sheet; see `audio/README.md` | the APRS sound path of the respin study: an I2S codec against the USB codec |
 | `mentor/` | Mentor catalogue sheet ll14-14, IP68-proofed front-panel light guides (families 1282, 1292, 1293): the 1282.5004 (2.5 mm shaft in a 2.6 H7 hole, 3.2 mm spherical head, 7.5 mm long) carries the sixteen panel LEDs of the backer board through the aluminium face plate | the Peli 1450 face of 32.42 |
 | `probes/` | our own STEP probe scripts (build123d), kept with the models they read | reproducing the numbers in the appendix |
-| `quectel/` | Quectel antenna brochure, December 2025 edition (117 pages: external, embedded and combo antennas with bands, gain, dimensions, connectors, cables and IP ratings) | the external antenna picks per bulkhead of appendix 32.46 (LTE, LoRa, WiFi P2P, SDR, GNSS) |
+| `quectel/` | Quectel antenna brochure, December 2025 edition (117 pages: external, embedded and combo antennas with bands, gain, dimensions, connectors, cables and IP ratings); LG290P(03) GNSS module: hardware design V1.1, GNSS protocol specification V1.1, module specification V1.3, and SparkFun's LG290P breakout schematic (the bench board) | the external antenna picks per bulkhead of appendix 32.46 (LTE, LoRa, WiFi P2P, SDR, GNSS); the GNSS receiver of B16 (owner ruling 6 Sep 2026, MESHSAT-823) |
 
 The files are ordinary git objects (the largest is about 50 MB).
 
