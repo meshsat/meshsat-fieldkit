@@ -61,11 +61,14 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 ## Sensors (a sensor board on the I2C bus)
 inside temperature, humidity and pressure with the outside pressure as a seal check; floor water sensor with alarm and pack shutdown; six-axis IMU with magnetometer (shock and tilt log, heading, motion wake-up); hydrogen and VOC sensing in the battery bay with shutdown; ambient light; AS3935 lightning detector with a mast-down alarm; Geiger-Mueller tube counter inside (dose rate logged and shared over the mesh); outside temperature, humidity, pressure and UV behind a membrane vent in an end wall. Particulates and wind stay external accessories.
 
+## Qualification
+A whole-kit test plan to MIL-STD-810 (transit drop, vibration, temperature operation and storage, humidity, immersion) and MIL-STD-461 (conducted emissions and susceptibility on the power leads, radiated emissions) is part of the design: written before the build, run on the built prototype in-house where possible and at a lab where not, pass criteria per test, fixes fed back into the record (approved 6 Sep 2026).
+
 ## Thermal and environment
 the 30 W PA stage conducts to the aluminium face plate or a finned block, an internal air mixer; the pack's heater mat and the inside climate sensor set the cold-weather behaviour; the case rides on its own pressure valve.
 
 ## Open items before the generators move (MESHSAT-830)
-the 5G module and its jack count; the RA30H1317M sheet and the heat path; Xenarc's drawing; BB-2590 and charger quotes; the SOS and ZEROIZE cover part; the 2 m antenna; ASM1184e availability; the HF module pick; the B16 UART and PCIe plans and the power budget; the whole-kit MIL-STD-810 and 461 test plan (undecided, 32.50 item 16e).
+the 5G module and its jack count; the RA30H1317M sheet and the heat path; Xenarc's drawing; BB-2590 and charger quotes; the SOS and ZEROIZE cover part; the 2 m antenna; ASM1184e availability; the HF module pick; the B16 UART and PCIe plans and the power budget.
 
 ## Boards of this generation
 | Board | Role |
