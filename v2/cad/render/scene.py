@@ -306,7 +306,19 @@ label("nameplate", "MESHSAT FIELD KIT V2", (P.NAMEPLATE[0], P.NAMEPLATE[1] + 2.5
 for ref, (x, y), hole, depth in P.BUTTONS: label("lbl_" + ref, {"SW_MAIN": "MAIN", "SW_PI": "PI", "SW_TEST": "TEST"}[ref], (x, y + hole / 2 + 4.0, FACE + 0.05), 3.6, M["white"])
 for ref, (x, y) in P.TOGGLES: label("lbl_" + ref, {"SW_SOS": "SOS", "SW_EMCON": "EMCON", "SW_ZERO": "ZEROIZE"}[ref], (x, y + 14.0, FACE + 0.05), 3.6, M["white"])
 label("lbl_light", "LIGHT", (P.LIGHT[1][0], P.LIGHT[1][1] + 14.0, FACE + 0.05), 3.6, M["white"])
-(LX, LY), LD = P.LOGO; torus("logo_ring", LD / 2 - 2.0, 1.0, (LX, LY, FACE + 0.05), M["white"]); label("logo_text", "MESHSAT", (LX, LY - 2.0, FACE + 0.05), 5.0, M["white"])
+(LX, LY), LD = P.LOGO
+def logo_mark(name, cx, cy, width, z, m):
+    """The MeshSat mark from tools/logo_meshsat.json (traced from the sticker master, never redrawn) as one filled 2D curve: outer loops and holes as closed splines, even-odd fill."""
+    import json
+    src = next(f for f in (os.path.join(R, "logo_meshsat.json"), os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecad", "tools", "logo_meshsat.json")) if os.path.exists(f))
+    d = json.load(open(src)); x0, y0, x1, y1 = d["bbox"]; sc = width / (x1 - x0); mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+    cu = bpy.data.curves.new(name, "CURVE"); cu.dimensions = "2D"; cu.fill_mode = "BOTH"; cu.extrude = 0.03
+    for poly in d["polys"]:
+        for loop in [poly["ext"]] + list(poly.get("holes", [])):
+            sp = cu.splines.new("POLY"); sp.points.add(len(loop) - 1); sp.use_cyclic_u = True
+            for k, (x, y) in enumerate(loop): sp.points[k].co = ((x - mx) * sc, -(y - my) * sc, 0.0, 1.0)   # artwork y grows downward
+    o = bpy.data.objects.new(name, cu); S.collection.objects.link(o); o.location = (cx, cy, z); assign(o, m); return o
+logo_mark("logo_mark", LX, LY, LD, FACE + 0.05, M["white"])   # 6 Sep 2026 (owner): the official mark on the plate's upper left, not a ring with text
 # ------------------------------------------------------------------ end-wall antennas: nine bulkheads at Z 88, whips upright on right-angle adapters, pigtails inside to the dock nests
 WX = BW / 2; WALL_IN = FLOOR_W / 2 + 4.0
 ANT = {"UHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9), "WIFI P2P A": (120, 9), "WIFI P2P B": (120, 9)}
@@ -323,14 +335,19 @@ for sx, sites in ((-1, WEST), (1, EAST)):
             L, d = ANT[nm]; cyl("ant_elbow_" + tag, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + tag, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + tag, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + tag, d / 2 + 1.5, (ax, y, z + 16 + L), M["rubber"])
         elif nm == "IRIDIUM": cyl("ant_iridium", 76, 18, (sx * (WX + 9), y, 82 - 38), M["white"], bevel=2.0, axis="X")   # the patch flat on the east wall, its top at Z 82, fed by a short lead from the jack above it
         elif nm == "GNSS": cyl("ant_gnss", 48, 14, (sx * (WX + 7), y, 82 - 24), M["dark"], bevel=2.0, axis="X")          # the puck flat on the west wall below its jack
-        # the pigtail: a right-angle plug at the coupler, down the wall (in front of the battery row on the west side), along the floor gap to its nest
-        xin = sx * (WALL_IN - 8) if sx > 0 else -146.0
-        p0 = (sx * (WALL_IN - 6), y, z); p1 = (xin, y, z); p2 = (xin, y, 12.0)
+        # the pigtail (6 Sep 2026, owner): a right-angle plug at the coupler, down the wall, along the FLOOR to the dock strip's float clamp under A21's
+        # receptacle (the blind-mate joint), never to a board; on the west side it drops into the 10 mm gap behind the battery row and runs under the module's
+        # cradle (four 4 x 4 mm grooves in the cradle, owed in battery_module.py), so the module lifts out without touching a cable
+        xdrop = -(WALL_IN - 5) if sx < 0 else (WALL_IN - 6); zf = 2.5
+        p0 = (sx * (WALL_IN - 6), y, z); p1 = (xdrop, y, z); p2 = (xdrop, y, zf)
         cyl("pig_plug_" + tag, 8.0, 10.0, p0, M["gold"], axis="X")
         if nm in NEST:
-            nx, ny = NEST[nm]; tube("pig_%s_1" % tag, p0, p1, 3.0, M["coax"]); sphere("pig_%s_k1" % tag, 3.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 3.0, M["coax"]); sphere("pig_%s_k2" % tag, 3.0, p2, M["coax"]); tube("pig_%s_3" % tag, p2, (nx, ny, 9.0), 3.0, M["coax"])
-        else:      # the two WiFi P2P pigtails go to the M.2 card on B
-            p2 = (xin, y, ZB + 6.0); tube("pig_%s_1" % tag, p0, p1, 2.0, M["coax"]); sphere("pig_%s_k1" % tag, 2.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 2.0, M["coax"]); sphere("pig_%s_k2" % tag, 2.0, p2, M["coax"]); tube("pig_%s_3" % tag, p2, (66.0, 60.0 + (2 if "B" in nm else -2), ZB + 5.0), 2.0, M["coax"])
+            nx, ny = NEST[nm]; p3 = (nx, y, zf); p4 = (nx, ny, zf)
+            tube("pig_%s_1" % tag, p0, p1, 3.0, M["coax"]); sphere("pig_%s_k1" % tag, 3.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 3.0, M["coax"]); sphere("pig_%s_k2" % tag, 3.0, p2, M["coax"])
+            tube("pig_%s_3" % tag, p2, p3, 3.0, M["coax"]); sphere("pig_%s_k3" % tag, 3.0, p3, M["coax"]); tube("pig_%s_4" % tag, p3, p4, 3.0, M["coax"])
+            box("dock_clamp_" + tag, (12, 12, 5), (nx, ny, 2.5), M["black"]); cyl("dock_plug_" + tag, 6.0, 8.0, (nx, ny, 5 + 4), M["gold"])   # the printed float clamp on E4 and the SMP-MAX plug standing up into A21
+        else:      # the two WiFi P2P leads (ruling 5 Sep 05:45): MHF4 leads from the M.2 card on B15 to their end-wall couplers, not blind-mated
+            p2 = (xdrop, y, ZB + 6.0); tube("pig_%s_1" % tag, p0, p1, 2.0, M["coax"]); sphere("pig_%s_k1" % tag, 2.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 2.0, M["coax"]); sphere("pig_%s_k2" % tag, 2.0, p2, M["coax"]); tube("pig_%s_3" % tag, p2, (66.0, 60.0 + (2 if "B" in nm else -2), ZB + 6.0), 2.0, M["coax"])
 # ------------------------------------------------------------------ rulers (10 mm ticks, numerals every 50) and the 50 mm floor grid
 RULER_W, RULER_T = 14.0, 2.0
 def ruler(name, origin, axis, length, m_up=(0, 0, 1)):
@@ -393,7 +410,7 @@ for az in range(0, 360, 45): VIEWS["az%03d-el40-open" % az] = dict(cam=camera("c
 for az in (0, 90, 180, 270): VIEWS["az%03d-el20-closed" % az] = dict(cam=camera("cam_%03d_20c" % az, orbit(az, 20), (0, 0, 70), 42), lid=False)
 B15_PARTS = ("pcb_b15", "cm5_", "cr2032", "display_flex", "gnss_neo", "lora_wio", "lte_", "panel_ribbon", "sdr_", "usb_a_recept", "wifi_m2_", "zigbee_e72", "rockblock9704")   # the board and everything drawn on it
 D7_PARTS = B15_PARTS + ("pcb_d7", "dmr858m")
-A21_PARTS = D7_PARTS + ("pcb_a21", "sma_jack", "sma_nut", "sma_nest", "pig_")   # the wall pigtails end in A21's nests, so they go with the board
+A21_PARTS = D7_PARTS + ("pcb_a21", "sma_jack", "sma_nut", "sma_nest")   # the wall pigtails end at the dock clamps (6 Sep 2026), so they stay when A21 is lifted
 DOCK_PARTS = A21_PARTS + ("battery", "module_")
 UPPER = {"b15": B15_PARTS, "d7": D7_PARTS, "a21": A21_PARTS, "dock": DOCK_PARTS}
 VIEWS.update({
@@ -410,12 +427,12 @@ VIEWS.update({
     "level-d7": dict(cam=camera("cam_l_d7", (-300, -480, 480), (-20, 0, 50), 46), lid=True, noface=True, hide=UPPER["b15"]),
     "level-a21": dict(cam=camera("cam_l_a21", (-300, -480, 480), (-20, 0, 40), 46), lid=True, noface=True, hide=UPPER["d7"]),
     "level-a21-top": dict(cam=camera("cam_l_a21_top", (0, -40, 800), (0, 0, 20), 50), lid=True, noface=True, hide=UPPER["d7"]),
-    "level-dock": dict(cam=camera("cam_l_dock", (-300, -480, 420), (-20, 0, 20), 46), lid=True, noface=True, hide=UPPER["a21"]),
+    "level-dock": dict(cam=camera("cam_l_dock", (-220, -400, 560), (-20, -30, 10), 46), lid=True, noface=True, hide=UPPER["a21"]),
     "level-dock-top": dict(cam=camera("cam_l_dock_top", (0, -40, 800), (0, 0, 10), 50), lid=True, noface=True, hide=UPPER["a21"]),
     "battery-row": dict(cam=camera("cam_batt", (-420, -330, 330), (-160, 0, 50), 50), lid=True, lift=True),
     "battery-row-inside": dict(cam=camera("cam_batt_in", (-40, -200, 260), (-160, 0, 45), 50), lid=True, noface=True, hide=UPPER["d7"]),
-    "dock-joint": dict(cam=camera("cam_dock", (60, -420, 200), (-40, -60, 15), 65), lid=True, noface=True, hide=UPPER["a21"]),
-    "dock-joint-a21": dict(cam=camera("cam_dock_a", (60, -420, 220), (-40, -60, 25), 65), lid=True, noface=True, hide=UPPER["d7"]),
+    "dock-joint": dict(cam=camera("cam_dock", (40, -330, 150), (-45, -60, 10), 60), lid=True, cutaway=True, noface=True, hide=UPPER["a21"]),      # front wall removed: the float clamps and plugs on the dock strip
+    "dock-joint-a21": dict(cam=camera("cam_dock_a", (40, -330, 170), (-45, -60, 20), 60), lid=True, cutaway=True, noface=True, hide=UPPER["d7"]),   # the same with A21 mated on them
     "connector-plate": dict(cam=camera("cam_cp", (-120, 470, 150), (-56, 168, 55), 60), lid=False),   # the upright plate on the back wall from outside, both cables plugged (the wall model is solid, so there is no inside view of it)
     "west-wall-inside": dict(cam=camera("cam_ww_in", (60, -180, 260), (-180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
     "east-wall-inside": dict(cam=camera("cam_ew_in", (-60, -180, 260), (180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
