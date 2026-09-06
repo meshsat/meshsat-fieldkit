@@ -35,6 +35,11 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `mentor/` | Mentor catalogue sheet ll14-14, IP68-proofed front-panel light guides (families 1282, 1292, 1293): the 1282.5004 (2.5 mm shaft in a 2.6 H7 hole, 3.2 mm spherical head, 7.5 mm long) carries the sixteen panel LEDs of the backer board through the aluminium face plate | the Peli 1450 face of 32.42 |
 | `probes/` | our own STEP probe scripts (build123d), kept with the models they read | reproducing the numbers in the appendix |
 | `quectel/` | Quectel antenna brochure, December 2025 edition (117 pages: external, embedded and combo antennas with bands, gain, dimensions, connectors, cables and IP ratings); LG290P(03) GNSS module: hardware design V1.1, GNSS protocol specification V1.1, module specification V1.3, and SparkFun's LG290P breakout schematic (the bench board) | the external antenna picks per bulkhead of appendix 32.46 (LTE, LoRa, WiFi P2P, SDR, GNSS); the GNSS receiver of B16 (owner ruling 6 Sep 2026, MESHSAT-823) |
+| `xenarc/` | Xenarc 709GNK dimensional drawing V3 and product manual V2 (the IP67 7 in monitor on the face plate) | the plate cutout, VESA 50 holes and the connector pocket of C7 and the plate (32.51) |
+| `ebyte/` | Ebyte E22-M series user manual (E22-900M30S 1 W LoRa module: pins, currents, dimensions) | the LoRa site on B16 (32.51) |
+| `pdi/` | Pervasive Displays E2370KS0C1 flyer and the EPD driving circuit note rev.02 (24-pin FPC, boost circuit) | the e-paper flex connector and driver on C7 (32.51) |
+| `qrp-labs/` | QRP Labs QMX operating and CAT manuals (the HF module in its bay on B16; the assembly manual stays online) | the HF bay, its 12 V feed and USB path (32.51) |
+| `mitsubishi/` | Mitsubishi RA30H1317M1 datasheet (30 W VHF amplifier module of D8) | the PA stage, its VGG gate and heat path (32.51) |
 
 The files are ordinary git objects (the largest is about 50 MB).
 
