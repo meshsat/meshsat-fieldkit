@@ -2775,3 +2775,24 @@ The owner asked to be taken through the devices one at a time ("ask me one by on
 **Run time from the pack alone (typical 29 W with the monitor on and radios idle; 20 W dimmed; 150 W with everything transmitting):** one BB-2590 8 to 9.5 h typical, 11 to 13.5 h dimmed; two RRC2054-2 (99 Wh each, 276 EUR ex VAT each at Farnell) about 6 h; four 18 V tool packs of the BL4018 class (72 Wh each) about 9 h without a gauge bus; the retired Samsung module about 5 h.
 
 **Compute kept at 8 GB and 64 GB (owner, 23:00):** the service stack sits at 3 to 4 GB of RAM; the eMMC carries the system and the NVMe drives the data. **What this set means for the boards:** a new generation A22, B16, C7, D8, E6 with a new face plate and case template (the end walls need two to four more jacks for the 5G antennas, against the nub finding of 32.47), the antenna picks of 32.46 extended with 5G antennas from the same brochure, the power budget and the thermal design of the PA stage, the UART and PCIe plans of B16, and the software items (meshtasticd for the 1 W module, zigbee2mqtt and an OpenThread border router with a Matter controller, ModemManager for 5G, LimeSuite, Direwolf on the SA868, HDMI display configuration). Research owed before the generators move: the 5G module and antenna count, the RA30H1317M sheet, the Xenarc drawing, the BB-2590 and charger quotes, the toggle safety cover, the 2 m antenna, the ASM1184e availability. The GNSS ruling of 32.46 (LG290P) stands. The board generation is MESHSAT-830.
+
+### 32.50 The tactical gap list, approved (owner, 6 Sep 2026 23:18: "ALL 12 APPROVED", plus DCF77 and a full sensor suite)
+
+Asked "what tactical and mission-critical components have we forgotten", the session listed twelve gaps; the owner approved all twelve and added two. They join MESHSAT-830 as requirements of the next generation; nothing is ordered.
+
+| # | Item | Where it lands |
+|---|---|---|
+| 1 | Sealed Gigabit Ethernet on the connector plate (M12 X-coded or RJField) with PoE out from the 13.8 V rail | plate receptacle, A22 injector, B16 brings the CM5's Ethernet out |
+| 2 | Sealed USB-C outlet, PD 65 W, doubling as the maintenance console | A22 PD controller, one sealed USB-C on the plate |
+| 3 | EMCON kills every transmitter in hardware (5G, WiFi cards, LoRa, Iridium, the APRS PA bias), not only the APRS PTT | rail gates on A22 and B16 driven by the EMCON line |
+| 4 | RF protection: gas-discharge arrestors at the antenna bulkheads, a receive limiter or relay on the SDR path during key-down, a shielded compartment for the PA | end walls, B16, D8 |
+| 5 | Secure element (ATECC608 or TPM 2.0) and encrypted drives behind ZEROIZE, keys wiped in milliseconds | B16, software |
+| 6 | Case-open and tamper switch feeding ZEROIZE logic and the log | one sealed switch under the frame |
+| 7 | Internal environment sensing: temperature, humidity, pressure, a floor water sensor, a shock and tilt IMU | B16 or the sensor board of item 14 |
+| 8 | Thermal path for the 30 W PA: the aluminium face plate or a finned block as the heatsink, an internal air mixer | D8, plate |
+| 9 | Sealed headset jack with PTT on the codec's mic and headphone paths | plate, D8 codec |
+| 10 | Camera: a sealed camera on the face or a USB camera on the wall port, for image messages over the 9704 and the mesh | plate or wall port |
+| 11 | Holdover clock: a TCXO-disciplined RTC fed by the LG290P pulse | B16 |
+| 12 | Dual SIM (eSIM plus nano-SIM) on the 5G module; a ground stud on the case wall | B16, case |
+| 13 | **DCF77 receiver** (77.5 kHz ferrite antenna module, as on the parallax V1 kit) as the second time source | B16 input, the ferrite placed away from the converters |
+| 14 | **Sensor suite** ("go mad"): inside the case temperature, humidity and pressure (the pressure pair inside and outside doubles as a seal integrity check), a floor water sensor, a shock and tilt IMU with magnetometer, a hydrogen and VOC gas sensor in the battery bay (cell venting), an ambient light sensor for the display, a lightning detector (AS3935), a **Geiger counter** (SBM-20 or J305 tube board with its 400 V supply, pulse to a GPIO; gamma passes the polymer case), and through a vented port in the wall an outside temperature, humidity, pressure and UV sensor; particulates and wind only as external accessories | a small sensor board on the I2C bus with its own issue; the Geiger board in a corner away from the PA |
