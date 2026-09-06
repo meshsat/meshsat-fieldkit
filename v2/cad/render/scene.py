@@ -391,7 +391,11 @@ VIEWS = {}
 # views, and everything else inside: the stack level by level with the boards above removed, the face from both sides, the walls from inside.
 for az in range(0, 360, 45): VIEWS["az%03d-el40-open" % az] = dict(cam=camera("cam_%03d_40" % az, orbit(az, 40), (0, 0, 70), 42), lid=True)
 for az in (0, 90, 180, 270): VIEWS["az%03d-el20-closed" % az] = dict(cam=camera("cam_%03d_20c" % az, orbit(az, 20), (0, 0, 70), 42), lid=False)
-UPPER = {"b15": ("pcb_b15",), "d7": ("pcb_b15", "pcb_d7"), "a21": ("pcb_b15", "pcb_d7", "pcb_a21"), "dock": ("pcb_b15", "pcb_d7", "pcb_a21", "battery", "module_")}
+B15_PARTS = ("pcb_b15", "cm5_", "cr2032", "display_flex", "gnss_neo", "lora_wio", "lte_", "panel_ribbon", "sdr_", "usb_a_recept", "wifi_m2_", "zigbee_e72", "rockblock9704")   # the board and everything drawn on it
+D7_PARTS = B15_PARTS + ("pcb_d7", "dmr858m")
+A21_PARTS = D7_PARTS + ("pcb_a21", "sma_jack", "sma_nut", "sma_nest", "pig_")   # the wall pigtails end in A21's nests, so they go with the board
+DOCK_PARTS = A21_PARTS + ("battery", "module_")
+UPPER = {"b15": B15_PARTS, "d7": D7_PARTS, "a21": A21_PARTS, "dock": DOCK_PARTS}
 VIEWS.update({
     "top-face": dict(cam=camera("cam_top", (0, -60, 1150), (0, 0, 100), 50), lid=True),
     "face-detail-left": dict(cam=camera("cam_fdl", (-330, -230, 330), (-120, 0, 100), 60), lid=True),
@@ -408,12 +412,11 @@ VIEWS.update({
     "level-a21-top": dict(cam=camera("cam_l_a21_top", (0, -40, 800), (0, 0, 20), 50), lid=True, noface=True, hide=UPPER["d7"]),
     "level-dock": dict(cam=camera("cam_l_dock", (-300, -480, 420), (-20, 0, 20), 46), lid=True, noface=True, hide=UPPER["a21"]),
     "level-dock-top": dict(cam=camera("cam_l_dock_top", (0, -40, 800), (0, 0, 10), 50), lid=True, noface=True, hide=UPPER["a21"]),
-    "level-floor": dict(cam=camera("cam_l_floor", (-300, -480, 420), (-20, 0, 20), 46), lid=True, noface=True, hide=UPPER["dock"]),
     "battery-row": dict(cam=camera("cam_batt", (-420, -330, 330), (-160, 0, 50), 50), lid=True, lift=True),
     "battery-row-inside": dict(cam=camera("cam_batt_in", (-40, -200, 260), (-160, 0, 45), 50), lid=True, noface=True, hide=UPPER["d7"]),
     "dock-joint": dict(cam=camera("cam_dock", (60, -420, 200), (-40, -60, 15), 65), lid=True, noface=True, hide=UPPER["a21"]),
     "dock-joint-a21": dict(cam=camera("cam_dock_a", (60, -420, 220), (-40, -60, 25), 65), lid=True, noface=True, hide=UPPER["d7"]),
-    "connector-plate-inside": dict(cam=camera("cam_cp_in", (-40, -220, 260), (-56, 165, 60), 50), lid=True, noface=True, hide=UPPER["b15"]),
+    "connector-plate": dict(cam=camera("cam_cp", (-120, 470, 150), (-56, 168, 55), 60), lid=False),   # the upright plate on the back wall from outside, both cables plugged (the wall model is solid, so there is no inside view of it)
     "west-wall-inside": dict(cam=camera("cam_ww_in", (60, -180, 260), (-180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
     "east-wall-inside": dict(cam=camera("cam_ew_in", (-60, -180, 260), (180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
     "cutaway": dict(cam=camera("cam_cutaway", (-360, -640, 330), (-10, 0, 62), 46), lid=True, cutaway=True),
