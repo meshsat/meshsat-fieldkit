@@ -21,15 +21,16 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 | Run time from the pack | about 8 to 9.5 h typical (29 W: monitor on, radios idle, APRS beacons), 5 to 6 h with the three-CM5 cluster busy, 11 to 13.5 h dimmed; peak about 150 W with everything transmitting |
 | EMCON | a hardware line gates every transmitter rail and the PA bias (5G, WiFi cards, LoRa, Iridium, HF, APRS); blackout and NVG panel modes beside it |
 
-## Compute, storage, expansion (B16, about 330 x 200 mm)
+## Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52)
 | Item | Specification |
 |---|---|
-| Compute | three Raspberry Pi Compute Module 5 (8 GB, 64 GB eMMC, wireless) on receptacles, joined by a Gigabit Ethernet switch chip |
-| PCIe | two ASMedia ASM1184e switches cascaded on the CM5's Gen 2 lane: WiFi link card, 5G module, two NVMe, a spare M.2 M-key slot (2242 to 2280, drive or AI accelerator), a spare M.2 E-key slot, one internal PCIe connector |
-| Storage | two NVMe M.2 M-key drives (maps, recordings, logs) beside the eMMC; encrypted, keys in the secure element |
-| Other expansion | a USB 3 and a USB 2 internal header; the CM5's spare USB 3 |
-| Security | secure element (ATECC608 or TPM 2.0), encrypted drives, ZEROIZE wipes element and disk keys in milliseconds, case-open tamper switch into the ZEROIZE logic and the log, key fill as a signed procedure over the console |
-| Time | Quectel LG290P pulse, a TCXO-disciplined holdover RTC, a DCF77 receiver as the second source |
+| Requirement | no single CM5 is a single point of failure: one, two or three modules in any slot, every device visible to all modules, the OS and the HAL adopt devices, k3s on top |
+| Compute | three identical CM5 slots (8 GB, 64 GB eMMC, wireless) joined by a five-port Gigabit switch chip with the sealed wall port and a spare header |
+| Per slot | a one-to-two PCIe switch feeding one NVMe M.2 M-key 2242 (storage replicated across slots by k3s) and one card slot (slot 1 the WiFi link card, slot 2 the 5G module, slot 3 a spare M.2 M-key 2280); a four-port USB 3 hub with device headers; HDMI into the three-input display switch; time-pulse and heartbeat lines |
+| Devices | every radio, sensor and the panel is a USB device on a slot's hub (USB-serial bridges for the UART radios, two RP2040-class controllers for the panel and the sensors, a USB audio and control set for the APRS board); the HAL shares them to the other modules over the network; the physical owner is a cabling choice recorded in the HAL configuration |
+| Panel controller | LEDs, switches, sounder, e-paper, ambient light, blackout and NVG lighting, HDMI input select, heartbeats, and the hardware EMCON and ZEROIZE logic independent of any module; the secure element on its bus |
+| Security | secure element behind ZEROIZE (element wiped, disk-key wipe line asserted), encrypted drives, case-open tamper switch, key fill as a signed procedure over the console |
+| Time | LG290P and DCF77 pulses fanned out to every slot, a holdover RTC on the panel controller, chrony on each module |
 
 ## Bearers and radios
 | Bearer | Device | Where |
