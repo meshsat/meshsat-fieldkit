@@ -56,6 +56,14 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `bosch/` (added 7 Sep) | BMP390 pressure sensor, BMI270 six-axis IMU and BME688 gas, humidity, pressure and temperature sensor datasheets (the BME280 sheet was already here) | the sensor board and the outside pod (32.54): BME688 inside and outside, BMI270 for shock, tilt and motion |
 | `sciosense/` | AS3935 Franklin lightning sensor factsheet and hardware design guide (the full datasheet is not on the maker's public page; the sensor is a bench-fitted module on the sensor board because JLCPCB has no stock) | the lightning sensor (32.54) |
 | `ti/` (added 7 Sep, audio) | PCM2912A USB audio codec (mic input, headphone output, TQFP-32), TLV320AIC3204 I2S codec (alternative), TPA6132A2 headphone amplifier datasheets | D8 as a USB audio device for the two headset jacks and the SA868 audio path (32.54) |
+| `microchip/` (added 7 Sep, through JLCPCB's part records) | KSZ9897R seven-port Gigabit switch datasheet (196 pages) and the ATECC608B summary datasheet | the B16 Ethernet switch and the secure element (32.54); JLCPCB serves the maker's sheet behind every LCSC part (`dataManualFileAccessId`, `https://jlcpcb.com/api/file/downloadByFileSystemAccessId/<id>`) |
+| `adi/` | DS3231M datasheet (the holdover RTC pick, TCXO, +-5 ppm) | S1 and the panel controller (32.54) |
+| `st/` | LIS3MDL magnetometer datasheet (alternative to the BMM150) | sensor board (32.54) |
+| `m2/` | M.2 socket drawings: TE 2199230-4 (E-key), TE 1-2199119-5 (key to be read from the drawing), Amphenol MDT420M02001 (M-key) and MDT420B01001 (B-key) | the B16 card slots (32.54) |
+| `connectors/` | Hong Cheng HC-USB3.0-L257-P USB 3.0 A receptacle drawing, SHOU HAN nano SIM holder drawing | the LimeSDR bay and the two SIM holders on B16 |
+| `pulse/` | H5007NL 1000BASE-T magnetics module datasheet | the wall Ethernet port on A22 (32.55) |
+| `wch/` | CH334 and CH335 USB 2.0 four-port hub datasheet V2.7 (Chinese) | the D8 hub alternative to the TUSB2046B (32.54) |
+| `cm5/`, `ebyte/`, `quectel/`, `ti/` (added 7 Sep) | Amphenol 10164227 Bergstak drawing rev C, the E22-900M30S specification (Chinese), the LG290P hardware design 1.0.0 (Chinese, earlier than the English 1.1 on file), TI TUSB2046B four-port full-speed hub | B16 and D8 |
 
 The files are ordinary git objects (the largest is about 50 MB).
 
