@@ -1,8 +1,8 @@
-# Concept renders, the kit in the Peli 1450 (rendered 6 September 2026, second set)
+# Concept renders, the kit in the Peli 1450 (rendered 6 September 2026, third set)
 
 Concept illustrations of the V2 kit as designed on 5 and 6 September 2026 (design record 32.40 to 32.44): the Peli 1450 with the 1450PF frame, the 3 mm aluminium face plate with the four-layer backer board C6 under it, the stack (E4, E5, A21, D7, B15), the battery row along the west end wall, the nine end-wall antenna sockets and the upright connector plate with both cables plugged. Rendered by `v2/cad/render/scene.py` (Blender 4.2, Cycles, 256 samples, eight H100 GPUs of a rented vast.ai box) from the KiCad boards, Peli's 1451-931 CAD and the makers' models; see `v2/cad/render/README.md` for what is real geometry and what is a stand-in. **Nothing in these images has been built.**
 
-Every image carries rulers (white bars, 10 mm ticks, numerals every 50 mm) along the case's edges on the ground and standing at the front corners, a 50 mm floor grid, and a title strip with the view name. Case frame: X along the case, +Y toward the hinge wall, Z from the cavity floor. The nine antenna sockets are drawn as the bulkhead jacks in the end walls; only the two antenna forms the record names are shown (the Iridium patch and the GNSS puck), the others are not chosen yet.
+Every image carries rulers (white bars, 10 mm ticks, numerals every 50 mm) along the case's edges on the ground and standing at the front corners, a 50 mm floor grid, and a title strip with the view name. Case frame: X along the case, +Y toward the hinge wall, Z from the cavity floor. The nine antenna sockets are drawn as the bulkhead jacks in the end walls; only the two antenna forms the record names are shown (the Iridium patch and the GNSS puck), the others are not chosen yet. The seven blind-mate pigtails run from the couplers down the walls and along the floor to the float clamps on the dock strip, where the SMP-MAX plugs stand up into A21's receptacles; on the west side they pass behind and under the battery module, so the stack and the module lift out without touching a cable. The two WiFi P2P leads go to the M.2 card on B15 (ruling of 5 Sep). The MeshSat mark on the plate is the traced sticker master; the e-paper window sits 8.6 mm above the display glass pocket.
 
 ## The inside (27 views)
 
@@ -132,4 +132,4 @@ Azimuth 0 looks at the front wall (handle and latches), 90 at the east end, 180 
 |---|---|---|---|
 | ![az000-el20-closed](meshsat-1450-az000-el20-closed.png) | ![az090-el20-closed](meshsat-1450-az090-el20-closed.png) | ![az180-el20-closed](meshsat-1450-az180-el20-closed.png) | ![az270-el20-closed](meshsat-1450-az270-el20-closed.png) |
 
-The first set of 6 September (43 views, mostly outside orbits, with the closed lid drawn 25 mm too low so the sockets read as lid-mounted) was withdrawn the same day.
+The first two sets of 6 September were withdrawn the same day: the first (43 views, mostly outside orbits) drew the closed lid 25 mm too low so the sockets read as lid-mounted and stood invented whips on every socket; the second ended the pigtails at the boards instead of the dock clamps, ran the west ones over the battery module, carried a text stand-in for the mark and left the e-paper window 0.6 mm from the display pocket.
