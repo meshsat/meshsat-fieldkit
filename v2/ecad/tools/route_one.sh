@@ -3,11 +3,15 @@
 set -uo pipefail
 cd "$1"; N="$2"; K="$3"; P="$4"; W="out/par/$K"; mkdir -p "$W"
 cp "out/$N-preroute.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
-python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" <<'PY'
+# FR_PLANE_NETS="GND" (6 Sep 2026 04:50): the zones of these nets on the FR_POWER_LAYERS layers stay in the DSN as planes, so the router connects their pins
+# by a via into the plane instead of routing them as wires (B15's DSN listed 258 GND pins for the router, 37 percent of its connections). Default: none, as before.
+python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" <<'PY'
 import sys, pcbnew
-b = pcbnew.LoadBoard(sys.argv[1])
+b = pcbnew.LoadBoard(sys.argv[1]); keep_nets = set(x for x in sys.argv[3].split(",") if x); keep_layers = set(sys.argv[4].split()); kept = 0
 for z in list(b.Zones()):
-    if not z.GetIsRuleArea() and not z.GetZoneName().startswith(("VOUT island", "inductor tap")): b.Remove(z)          # the A21 output islands and inductor taps stay as planes (their pads are connected by the fill and the gate checks it); every other plane, band and island out of the DSN: GND/+5V route as ordinary nets (A21 run 8 of 5 Sep 2026: bands exported as planes made the router end tracks at band edges the fill never reached; bands are protected by track keep-outs instead)
+    if not z.GetIsRuleArea() and z.GetNetname() in keep_nets and any(b.GetLayerName(l) in keep_layers for l in z.GetLayerSet().Seq()): kept += 1; continue
+    if not z.GetIsRuleArea() and not z.GetZoneName().startswith(("VOUT island", "inductor tap")): b.Remove(z)
+if keep_nets: print("planes kept in the DSN:", kept, "zone(s) of", sorted(keep_nets), "on", sorted(keep_layers))          # the A21 output islands and inductor taps stay as planes (their pads are connected by the fill and the gate checks it); every other plane, band and island out of the DSN: GND/+5V route as ordinary nets (A21 run 8 of 5 Sep 2026: bands exported as planes made the router end tracks at band edges the fill never reached; bands are protected by track keep-outs instead)
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
 b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
 PY

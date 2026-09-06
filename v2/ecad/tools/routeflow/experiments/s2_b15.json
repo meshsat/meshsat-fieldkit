@@ -1,0 +1,45 @@
+{
+  "board": "pcb-b-compute",
+  "board_key": "B15",
+  "project": "v2/ecad/pcb-b-compute-b15p",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "preroute": "v2/ecad/pcb-b-compute-b15p/out/pcb-b-compute-preroute.kicad_pcb",
+  "note": "Own project directory on the experiment host (see ab_b15.json). Stage 5 probe: the In1 GND plane stays in the DSN (planes knob), so the router connects the 258 GND pins by vias into the plane instead of routing them as wires.",
+  "services_script": "~/meshsat-services.sh",
+  "expect": "With the GND plane in the DSN the router routes 446 connections instead of 703: raw opens fall to 0 on at least one jar, router vias fall (no GND wires), autoroute minutes fall by a third or more against ab_b15's fr19_base and fr24_base",
+  "route": {
+    "passes": 100,
+    "threads": 1,
+    "timeout": 7200,
+    "power_layers": [
+      "In1.Cu",
+      "In4.Cu"
+    ]
+  },
+  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "stub_grid": "0.1",
+  "configs": [
+    {
+      "name": "fr19_planes",
+      "jar": "freerouting-1.9.0.jar",
+      "planes": [
+        "GND"
+      ]
+    },
+    {
+      "name": "fr24_planes",
+      "jar": "freerouting-2.4.1.jar",
+      "planes": [
+        "GND"
+      ]
+    },
+    {
+      "name": "fr19_planes_via200",
+      "jar": "freerouting-1.9.0.jar",
+      "planes": [
+        "GND"
+      ],
+      "via_costs": 200
+    }
+  ]
+}

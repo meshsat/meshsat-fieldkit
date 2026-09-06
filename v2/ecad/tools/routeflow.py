@@ -169,6 +169,7 @@ def run(profile_fn, rounds, use_services, dry):
             if st != "GATED": status = st; break
             env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(route.get("timeout", 4500))}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
+            if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])   # zones of these nets on the power layers stay in the DSN as planes (6 Sep 2026: GND by vias into In1, not as wires)
             if route.get("jar"): env["FR_JAR"] = os.path.expanduser(route["jar"])   # the router build (Stage 4: freerouting-2.4.1.jar beside 1.9.0)
             if any(k in route for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive")) and not dry:   # the rules-file knobs the probe found the router honours
                 tools = os.path.dirname(os.path.abspath(__file__)); pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); dsn0 = os.path.join(rdir, "round%d-rules.dsn" % rnd); rules = os.path.join(rdir, "round%d.rules" % rnd)
@@ -177,7 +178,7 @@ def run(profile_fn, rounds, use_services, dry):
                 if route.get("preferred"): argv += ["--preferred", route["preferred"]]
                 if route.get("inactive"): argv += ["--inactive", route["inactive"]]
                 if sh(argv, project, os.path.join(rdir, "round%d-rules.log" % rnd)) == 0 and os.path.exists(rules): env["FR_RULES"] = rules
-            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s rules %s jar %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"), {k: route[k] for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive") if k in route} or "none", os.path.basename(route.get("jar", "freerouting-1.9.0.jar")))))
+            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s planes %s rules %s jar %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"), route.get("plane_nets") or "none", {k: route[k] for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive") if k in route} or "none", os.path.basename(route.get("jar", "freerouting-1.9.0.jar")))))
             if use_services: services(prof.get("services_script"), "stop", os.path.join(rdir, "services.log"))
             rlog = os.path.join(project, prof["route"].get("log", "out/parallel-routeflow.log"))
             if not dry:
@@ -315,9 +316,11 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             if cfg.get("inactive"): argv += ["--inactive", cfg["inactive"]]
             sh(argv, project, plog)
             route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
+            if cfg.get("planes"): route["plane_nets"] = list(cfg["planes"])
             timeout = int(route.get("timeout", 1800) * scale)
             env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
+            if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])
             ses = os.path.join(w, name + ".ses"); t0 = time.time(); starts = 0; flog = os.path.join(w, "finish.log"); board = os.path.join(w, name + ".kicad_pcb")
             for attempt in (1, 2):
                 starts += 1; sh(["../tools/route_one.sh", ".", name, k, str(route.get("passes", 60))], project, os.path.join(w, "route_one.log"), env)
