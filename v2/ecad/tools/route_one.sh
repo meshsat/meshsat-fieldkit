@@ -45,8 +45,31 @@ while True:
 open(fn, "w").write("".join(out)); print("power layers in the DSN:", ", ".join(layers), "(%d layer types changed, %d wire keep-outs dropped)" % (n1, n2))
 PYPL
 fi
-# FR_RULES: a Freerouting rules file (tools/fr_rules.py) with via costs, ripup costs, layer directions and activity; the probe of 6 Sep 2026 showed it is the lever 1.9.0 honours
-RULES_ARG=(); [ -n "${FR_RULES:-}" ] && [ -f "${FR_RULES}" ] && RULES_ARG=(-dr "${FR_RULES}")
+# FR_RULES: a Freerouting rules file (tools/fr_rules.py) with via costs, ripup costs, layer directions and activity; the probe of 6 Sep 2026 showed it is the lever 1.9.0 honours.
+# FR_RULES_INJECT=1 (6 Sep 2026 11:30): the file's (autoroute_settings ...) block is written INTO the DSN's structure and no -dr is passed: a -dr file that
+# carries only autoroute settings made Freerouting drop the design's clearance and edge rules (B15 with a "default" rules file: 17 shorts, 16 clearance
+# violations and a track along the board edge, against 0 hard without the file on the same DSN).
+RULES_ARG=()
+if [ -n "${FR_RULES:-}" ] && [ -f "${FR_RULES}" ]; then
+  if [ "${FR_RULES_INJECT:-0}" = "1" ]; then python3 - "$W/$N.dsn" "$FR_RULES" <<'PYINJ'
+import sys
+dsn, rules = sys.argv[1], sys.argv[2]; s = open(dsn, errors="replace").read(); r = open(rules).read()
+i = r.find("(autoroute_settings")
+if i < 0: print("inject: no autoroute_settings block in", rules); sys.exit(0)
+depth = 0; j = i
+while j < len(r):
+    if r[j] == "(": depth += 1
+    elif r[j] == ")":
+        depth -= 1
+        if depth == 0: break
+    j += 1
+block = r[i:j + 1]
+k = s.find("(boundary")
+if k < 0: print("inject: no boundary in the DSN"); sys.exit(0)
+s = s[:k] + block + "\n    " + s[k:]; open(dsn, "w").write(s); print("inject: autoroute_settings written into the DSN structure (%d chars)" % len(block))
+PYINJ
+  else RULES_ARG=(-dr "${FR_RULES}"); fi
+fi
 { echo "{\"jar\": \"$(basename "$JAR")\", \"jar_sha256_16\": \"$(sha256sum "$JAR" | cut -c1-16)\", \"java\": \"$($JAVA -version 2>&1 | grep -m1 -i version | tr -d '"')\", \"passes\": $P, \"threads\": ${FR_THREADS:-6}, \"timeout\": ${FR_TIMEOUT:-4500}, \"power_layers\": \"${FR_POWER_LAYERS:-}\", \"rules\": \"${FR_RULES:-}\", \"start\": \"$(date -Iseconds)\"}"; } > "$W/run.json"
 # absolute paths for the router (6 Sep 2026 04:30): two experiments on different project directories with the same board and configuration names produced
 # identical relative command lines, and the clean-up kill below took the OTHER experiment's router with it (every 1.9.0 B15 route on the box died the moment

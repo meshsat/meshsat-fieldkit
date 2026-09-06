@@ -177,7 +177,7 @@ def run(profile_fn, rounds, use_services, dry):
                 argv = ["python3", os.path.join(tools, "fr_rules.py"), dsn0, rules, "--via-costs", str(route.get("via_costs", 50)), "--plane-via-costs", str(route.get("plane_via_costs", 5)), "--ripup", str(route.get("ripup", 100))]
                 if route.get("preferred"): argv += ["--preferred", route["preferred"]]
                 if route.get("inactive"): argv += ["--inactive", route["inactive"]]
-                if sh(argv, project, os.path.join(rdir, "round%d-rules.log" % rnd)) == 0 and os.path.exists(rules): env["FR_RULES"] = rules
+                if sh(argv, project, os.path.join(rdir, "round%d-rules.log" % rnd)) == 0 and os.path.exists(rules): env["FR_RULES"] = rules; env["FR_RULES_INJECT"] = "1"   # into the DSN, never -dr (6 Sep 2026 11:30)
             journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s planes %s rules %s jar %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"), route.get("plane_nets") or "none", {k: route[k] for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive") if k in route} or "none", os.path.basename(route.get("jar", "freerouting-1.9.0.jar")))))
             if use_services: services(prof.get("services_script"), "stop", os.path.join(rdir, "services.log"))
             rlog = os.path.join(project, prof["route"].get("log", "out/parallel-routeflow.log"))
@@ -250,6 +250,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
     names the lock file, so several experiments run side by side on one host."""
     import threading, fcntl, concurrent.futures
     FINISH_VERSION = 2   # 2 (6 Sep 2026 02:00): the finish runs the stub router as production does and records the raw counts; rows of an older finish are re-finished from their session, never re-routed
+    RULES_MODE = "inject"   # part of every configuration key since 6 Sep 2026 11:30: the settings go into the DSN; the -dr rows of the night before (which lost the design's clearances) have other keys and are never reused
     exp = json.load(open(exp_fn)); repo = exp.get("repo") or os.getcwd(); tools = os.path.dirname(os.path.abspath(__file__))
     project = os.path.abspath(os.path.join(repo, exp["project"])); ecad = os.path.dirname(project); name = exp["board"]; key = exp["board_key"]
     os.makedirs(os.path.join(project, "out"), exist_ok=True); results = os.path.join(tools, "routeflow", "bench", "results.jsonl"); os.makedirs(os.path.dirname(results), exist_ok=True)
@@ -292,7 +293,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             jar_path = os.path.expanduser(cfg.get("jar", exp.get("jar", "~/bin/freerouting-1.9.0.jar")))
             if not jar_path.startswith("/"): jar_path = os.path.expanduser("~/bin/" + jar_path)
             jar_sha = hashlib.sha256(open(jar_path, "rb").read()).hexdigest()[:16] if os.path.exists(jar_path) else "nojar"
-            return jar_path, jar_sha, hashlib.sha256((pre_hash + jar_sha + json.dumps(cfg, sort_keys=True) + json.dumps(exp.get("route", {}), sort_keys=True)).encode()).hexdigest()[:16]
+            return jar_path, jar_sha, hashlib.sha256((pre_hash + jar_sha + json.dumps(cfg, sort_keys=True) + json.dumps(exp.get("route", {}), sort_keys=True) + RULES_MODE).encode()).hexdigest()[:16]
         pending = []; refin = []
         for cfg in exp["configs"]:
             jar_path, jar_sha, ckey = ident(cfg)
@@ -318,7 +319,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
             if cfg.get("planes"): route["plane_nets"] = list(cfg["planes"])
             timeout = int(route.get("timeout", 1800) * scale)
-            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
+            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_RULES_INJECT": "1", "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])
             ses = os.path.join(w, name + ".ses"); t0 = time.time(); starts = 0; flog = os.path.join(w, "finish.log"); board = os.path.join(w, name + ".kicad_pcb")
@@ -329,7 +330,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
                     jn(dict(run="exp", board=name, stage="experiment", status="TOOL_CRASH", note="%s: no display for the router (attempt %d), retrying once" % (cfg["name"], attempt))); time.sleep(5); continue
                 break
             wall = int(time.time() - t0)
-            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "timeout_s": timeout, "starts": starts, "host": os.uname().nodename, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now(), "finish_version": FINISH_VERSION}
+            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "rules_mode": RULES_MODE, "timeout_s": timeout, "starts": starts, "host": os.uname().nodename, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now(), "finish_version": FINISH_VERSION}
             if not os.path.exists(ses) or os.path.getsize(ses) == 0:
                 row.update(verdict="NO_SESSION", Q=None, metrics=None); jn(dict(run="exp", board=name, stage="experiment", status="NO_SESSION", note="%s: no session in %d s" % (cfg["name"], wall)))
             else: finish(row, cfg, w, board, ses, flog)
