@@ -158,7 +158,7 @@ if CASE_MODE == "stl":
     ROT = Matrix.Rotation(math.radians(90), 4, "X")
     if os.environ.get("CASE_FLIP"): ROT = Matrix.Rotation(math.pi, 4, "Z") @ ROT
     base = import_stl("case_base", "case1450_bottom.stl", M["orange"], matrix=ROT, fit=(True, "max", RIM), smooth=True)
-    lid = import_stl("case_lid", "case1450_top.stl", M["orange"], matrix=ROT, fit=(True, "min", RIM - float(os.environ.get("LID_DROP", "25.4"))), smooth=True)
+    lid = import_stl("case_lid", "case1450_top.stl", M["orange"], matrix=ROT, fit=(True, "min", RIM - float(os.environ.get("LID_DROP", "0.0"))), smooth=True)   # 6 Sep 2026: the 1451-931 lid mesh spans 0 to 70.9 from its own rim (no straps below it), so it sits ON the rim; the 25.4 mm drop of the 1520 lid drew the seam under the antenna sockets
     if base is not None and (bbox(base)[5] - bbox(base)[4]) < 90: CASE_MODE = "model"; bpy.data.objects.remove(base, do_unlink=True); base = None
     if lid is not None and CASE_MODE == "model": bpy.data.objects.remove(lid, do_unlink=True); lid = None
 if CASE_MODE == "stl":
@@ -317,10 +317,12 @@ for sx, sites in ((-1, WEST), (1, EAST)):
         cyl("bulk_" + tag, 9.5, 3.0, (sx * (WX + 1.5), y, z), M["steel"], axis="X", verts=6); cyl("bulk_sma_" + tag, 6.5, 11, (sx * (WX + 7), y, z), M["gold"], axis="X")
         cyl("bulk_in_" + tag, 8.0, 10, (sx * (WALL_IN + 3), y, z), M["gold"], axis="X"); cyl("bulk_nut_in_" + tag, 8.0, 2.0, (sx * (WALL_IN - 1), y, z), M["steel"], axis="X", verts=6)
         ax = sx * (WX + 15)
-        if nm in ANT:
-            L, d = ANT[nm]; cyl("ant_elbow_" + tag, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + tag, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + tag, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + tag, d * 1.25, (ax, y, z + 16 + L), M["rubber"])
-        elif nm == "IRIDIUM": cyl("ant_elbow_iridium", 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_iridium", 76, 18, (ax, y, z + 10 + 9), M["white"], bevel=2.0)
-        elif nm == "GNSS": cyl("ant_elbow_gnss", 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_gnss", 48, 14, (ax, y, z + 8 + 7), M["dark"], bevel=2.0)
+        # 6 Sep 2026 (owner, the first 1450 set): no invented antennas. The record fixes two forms only: the Iridium patch (its top at Z 82 on the east wall)
+        # and the u-blox GNSS puck; every other port is drawn as its bulkhead jack, the whip parts are not chosen yet. WHIPS=1 restores the old stand-ins.
+        if os.environ.get("WHIPS") and nm in ANT:
+            L, d = ANT[nm]; cyl("ant_elbow_" + tag, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + tag, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + tag, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + tag, d / 2 + 1.5, (ax, y, z + 16 + L), M["rubber"])
+        elif nm == "IRIDIUM": cyl("ant_iridium", 76, 18, (sx * (WX + 9), y, 82 - 38), M["white"], bevel=2.0, axis="X")   # the patch flat on the east wall, its top at Z 82, fed by a short lead from the jack above it
+        elif nm == "GNSS": cyl("ant_gnss", 48, 14, (sx * (WX + 7), y, 82 - 24), M["dark"], bevel=2.0, axis="X")          # the puck flat on the west wall below its jack
         # the pigtail: a right-angle plug at the coupler, down the wall (in front of the battery row on the west side), along the floor gap to its nest
         xin = sx * (WALL_IN - 8) if sx > 0 else -146.0
         p0 = (sx * (WALL_IN - 6), y, z); p1 = (xin, y, z); p2 = (xin, y, 12.0)
@@ -385,21 +387,40 @@ def orbit(az, el, dist=1050, look=(0, 0, 70), lens=42):
     a, e = math.radians(az), math.radians(el)
     return (look[0] - dist * math.cos(e) * math.sin(a) * -1.0, look[1] - dist * math.cos(e) * math.cos(a), look[2] + dist * math.sin(e))
 VIEWS = {}
-for az in range(0, 360, 45):
-    for el in (20, 40, 60): VIEWS["az%03d-el%02d-open" % (az, el)] = dict(cam=camera("cam_%03d_%02d" % (az, el), orbit(az, el), (0, 0, 70), 42), lid=True)
-    VIEWS["az%03d-el20-closed" % az] = dict(cam=VIEWS["az%03d-el20-open" % az]["cam"], lid=False)
+# 6 Sep 2026, second set (owner: "the inside of the case is the most interesting part"): eight orbit views with the lid open at el 40, four closed
+# views, and everything else inside: the stack level by level with the boards above removed, the face from both sides, the walls from inside.
+for az in range(0, 360, 45): VIEWS["az%03d-el40-open" % az] = dict(cam=camera("cam_%03d_40" % az, orbit(az, 40), (0, 0, 70), 42), lid=True)
+for az in (0, 90, 180, 270): VIEWS["az%03d-el20-closed" % az] = dict(cam=camera("cam_%03d_20c" % az, orbit(az, 20), (0, 0, 70), 42), lid=False)
+UPPER = {"b15": ("pcb_b15",), "d7": ("pcb_b15", "pcb_d7"), "a21": ("pcb_b15", "pcb_d7", "pcb_a21"), "dock": ("pcb_b15", "pcb_d7", "pcb_a21", "battery", "module_")}
 VIEWS.update({
     "top-face": dict(cam=camera("cam_top", (0, -60, 1150), (0, 0, 100), 50), lid=True),
     "face-detail-left": dict(cam=camera("cam_fdl", (-330, -230, 330), (-120, 0, 100), 60), lid=True),
     "face-detail-right": dict(cam=camera("cam_fdr", (330, -230, 330), (120, 0, 100), 60), lid=True),
+    "face-underside": dict(cam=camera("cam_under", (-300, -520, 150), (0, 0, 190), 50), lid=True, lift=True),
+    "face-underside-top": dict(cam=camera("cam_under_top", (60, -420, 520), (0, 0, 200), 50), lid=True, lift=True),
+    "stack-no-face": dict(cam=camera("cam_stack", (-300, -480, 480), (-20, 0, 60), 46), lid=True, noface=True),
+    "stack-no-face-top": dict(cam=camera("cam_stack_top", (0, -40, 900), (0, 0, 40), 50), lid=True, noface=True),
+    "stack-no-face-east": dict(cam=camera("cam_stack_e", (520, -360, 360), (40, 0, 55), 46), lid=True, noface=True),
+    "stack-no-face-back": dict(cam=camera("cam_stack_b", (-260, 560, 420), (-20, 40, 55), 46), lid=True, noface=True),
+    "level-b15": dict(cam=camera("cam_l_b15", (-300, -480, 480), (-20, 0, 60), 46), lid=True, noface=True),
+    "level-d7": dict(cam=camera("cam_l_d7", (-300, -480, 480), (-20, 0, 50), 46), lid=True, noface=True, hide=UPPER["b15"]),
+    "level-a21": dict(cam=camera("cam_l_a21", (-300, -480, 480), (-20, 0, 40), 46), lid=True, noface=True, hide=UPPER["d7"]),
+    "level-a21-top": dict(cam=camera("cam_l_a21_top", (0, -40, 800), (0, 0, 20), 50), lid=True, noface=True, hide=UPPER["d7"]),
+    "level-dock": dict(cam=camera("cam_l_dock", (-300, -480, 420), (-20, 0, 20), 46), lid=True, noface=True, hide=UPPER["a21"]),
+    "level-dock-top": dict(cam=camera("cam_l_dock_top", (0, -40, 800), (0, 0, 10), 50), lid=True, noface=True, hide=UPPER["a21"]),
+    "level-floor": dict(cam=camera("cam_l_floor", (-300, -480, 420), (-20, 0, 20), 46), lid=True, noface=True, hide=UPPER["dock"]),
+    "battery-row": dict(cam=camera("cam_batt", (-420, -330, 330), (-160, 0, 50), 50), lid=True, lift=True),
+    "battery-row-inside": dict(cam=camera("cam_batt_in", (-40, -200, 260), (-160, 0, 45), 50), lid=True, noface=True, hide=UPPER["d7"]),
+    "dock-joint": dict(cam=camera("cam_dock", (60, -420, 200), (-40, -60, 15), 65), lid=True, noface=True, hide=UPPER["a21"]),
+    "dock-joint-a21": dict(cam=camera("cam_dock_a", (60, -420, 220), (-40, -60, 25), 65), lid=True, noface=True, hide=UPPER["d7"]),
+    "connector-plate-inside": dict(cam=camera("cam_cp_in", (-40, -220, 260), (-56, 165, 60), 50), lid=True, noface=True, hide=UPPER["b15"]),
+    "west-wall-inside": dict(cam=camera("cam_ww_in", (60, -180, 260), (-180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
+    "east-wall-inside": dict(cam=camera("cam_ew_in", (-60, -180, 260), (180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
+    "cutaway": dict(cam=camera("cam_cutaway", (-360, -640, 330), (-10, 0, 62), 46), lid=True, cutaway=True),
+    "cutaway-east": dict(cam=camera("cam_cutaway_e", (420, -600, 330), (10, 0, 62), 46), lid=True, cutaway=True),
     "west-wall": dict(cam=camera("cam_west", (-780, -260, 260), (-205, 0, 110), 55), lid=False),
     "east-wall": dict(cam=camera("cam_east", (780, -260, 260), (205, 0, 110), 55), lid=False),
     "back-wall": dict(cam=camera("cam_back", (-160, 760, 260), (-56, 165, 60), 55), lid=False),
-    "front-wall": dict(cam=camera("cam_front", (-60, -760, 200), (-10, -165, 60), 55), lid=False),
-    "cutaway": dict(cam=camera("cam_cutaway", (-360, -640, 330), (-10, 0, 62), 46), lid=True, cutaway=True),
-    "battery-row": dict(cam=camera("cam_batt", (-420, -330, 330), (-160, 0, 50), 50), lid=True, lift=True),
-    "face-underside": dict(cam=camera("cam_under", (-300, -520, 150), (0, 0, 190), 50), lid=True, lift=True),
-    "stack-no-face": dict(cam=camera("cam_stack", (-300, -480, 480), (-20, 0, 60), 46), lid=True, noface=True),
 })
 PANEL_PREFIX = ("plate", "pcb_c6", "standoff_c6", "screw_c6", "td2", "epaper", "sw_", "sounder", "led_", "lbl_", "nameplate", "logo_")
 def walk(prefixes):
@@ -429,12 +450,14 @@ def render(view):
         tool.hide_render = True; move_face(60)
     if v.get("lift"): move_face(150)
     if v.get("noface"): hide(PANEL_PREFIX, True)
+    if v.get("hide"): hide(tuple(v["hide"]), True)   # 6 Sep 2026: the stack level by level (object name prefixes hidden for this view only)
     S.render.filepath = os.path.join(OUT, "meshsat-1450-%s.png" % view); bpy.ops.render.render(write_still=True); print("RENDERED", S.render.filepath, flush=True)
     if v.get("cutaway"):
         for o, md in keep: o.modifiers.remove(md)
         bpy.data.objects.remove(tool, do_unlink=True); move_face(-60)
     if v.get("lift"): move_face(-150)
     if v.get("noface"): hide(PANEL_PREFIX, False)
+    if v.get("hide"): hide(tuple(v["hide"]), False)
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "meshsat-1450-concept.blend"))
 if os.environ.get("DUMP_BBOX"):
     # stack height map input (5 Sep 2026, C6 gate): every mesh object's world bounding box, case frame in mm
