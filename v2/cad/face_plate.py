@@ -108,7 +108,7 @@ def dxf_and_svg():
     txt(lx, ly + 13.0, "LIGHT", 3.6); txt(lx - 10.0, ly, "DAY", 2.4, "end"); txt(lx + 10.0, ly, "NIGHT", 2.4, "start"); txt(lx, ly - 12.0, "BLACKOUT", 2.4)
     txt(sx, sy - 19.0, "SOUNDER", 2.6)
     nx, ny, nw, nh = L.NAMEPLATE; lines.append('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="none" stroke="#ffffff" stroke-width="0.3"/>' % (nx - nw / 2, -ny - nh / 2, nw, nh))
-    txt(nx, ny + 7.5, "MESHSAT FIELD KIT V2", 3.6); txt(nx, ny + 1.5, "S/N ________   NUCLEAR LIGHTERS", 2.6); txt(nx, ny - 5.0, "PELI 1450  DC 12 V  RF HAZARD DURING TX", 2.4)
+    txt(nx, ny + 7.5, "MESHSAT FIELD KIT V2", 3.6); txt(nx, ny + 1.5, "S/N ________", 2.6); txt(nx, ny - 5.0, "PELI 1450  DC 12 V  RF HAZARD DURING TX", 2.4)
     txt(L.LOGO[0][0], L.LOGO[0][1], "[MESHSAT LOGO %.0f mm, tools/logo_meshsat.json]" % L.LOGO[1], 2.4)
     lines.append("</g></svg>"); open(os.path.join(OUT, "face-plate-marking.svg"), "w").write("\n".join(lines))
     print("face-plate.dxf and face-plate-marking.svg written")

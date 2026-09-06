@@ -30,7 +30,7 @@
 <text x="-149.00" y="116.00" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">SOUNDER</text>
 <rect x="40.00" y="88.00" width="76.00" height="26.00" fill="none" stroke="#ffffff" stroke-width="0.3"/>
 <text x="78.00" y="93.50" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">MESHSAT FIELD KIT V2</text>
-<text x="78.00" y="99.50" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">S/N ________   NUCLEAR LIGHTERS</text>
+<text x="78.00" y="99.50" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">S/N ________</text>
 <text x="78.00" y="106.00" font-size="2.40" text-anchor="middle" transform="scale(1,-1)">PELI 1450  DC 12 V  RF HAZARD DURING TX</text>
 <text x="-150.00" y="-96.00" font-size="2.40" text-anchor="middle" transform="scale(1,-1)">[MESHSAT LOGO 36 mm, tools/logo_meshsat.json]</text>
 </g></svg>
