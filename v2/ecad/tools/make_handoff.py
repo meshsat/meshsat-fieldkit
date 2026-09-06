@@ -49,7 +49,7 @@ PCB_OPTIONS = {"pcb-b-compute": ["FABRICATION NOTES (B15, Compute Module 5 carri
     "- Differential pairs: USB 2.0 pairs 0.20/0.15 mm (90 ohm), display DSI pairs 0.17/0.15 mm (100 ohm), PCIe pairs 0.15/0.15 over the In1 ground; ask for impedance tuning on the JLC06161H-3313 stack if offered.",
     "- The Compute Module itself, its cooler, the LTE card, the SIM, the SDR stick, the RockBLOCK, the display flex and the CR2032 are fitted at the bench (not in the BOM/CPL).", ""],
     "pcb-c-display": ["FABRICATION NOTES (C6, the backer under the aluminium face plate)",
-    "- A plain two-layer 1.6 mm board (any colour, HASL or ENIG); nothing on it is a weather face any more (the aluminium plate is), so no via plugging and no special mask rules.",
+    "- A four-layer 1.6 mm board on JLC's standard four-layer stack (JLC04161H-7628): F.Cu, In1 = solid ground plane, In2 signal, B.Cu; the gerber zip carries all four copper layers, check the layer count on the order form (4). Any colour, HASL or ENIG; nothing on it is a weather face any more (the aluminium plate is), so no via plugging and no special mask rules. Vias 0.4/0.2 mm at the finest (the four-layer floor).",
     "- Outline: a U (344 x 228 outside, 240 x 202 void open toward +Y) with R3 outer corners; the two 15 x 22 and one 15 x 12 body slots and the 19.2, 16.2, 16.2 and 28.6 mm holes are on Edge.Cuts (routed). The six 3.2 mm holes H1 to H6 carry 6.0 mm rings on both faces: they are the ground bond to the plate through the PEM standoffs.",
     "- The face plate is a separate CNC part (release/revA/case/face-plate/: STEP, DXF, marking SVG, drawing); it is not a JLC PCB order.", ""]}
 JLC = os.path.join(RELEASE, "order"); REV = os.path.join(RELEASE, "review")
