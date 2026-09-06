@@ -1,0 +1,58 @@
+{
+  "board": "pcb-b-compute",
+  "project": "v2/ecad/pcb-b-compute",
+  "phase": "B15",
+  "issue": "MESHSAT-802",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "services_script": "~/meshsat-services.sh",
+  "pre": {
+    "argv": [
+      "bash",
+      "../tools/full_b7.sh",
+      "<PROJECT>"
+    ],
+    "cwd": "<PROJECT>",
+    "must_contain": [
+      "single-pin nets",
+      "PREROUTE-DONE OK"
+    ],
+    "min_all_pass": 2,
+    "gen_logs": []
+  },
+  "plane_layers": [
+    "In1.Cu",
+    "In4.Cu"
+  ],
+  "route": {
+    "attempts": [
+      100
+    ],
+    "threads": 1,
+    "timeout": 9000,
+    "power_layers": [
+      "In1.Cu",
+      "In4.Cu"
+    ],
+    "log": "out/parallel-b15.log",
+    "jar": "~/bin/freerouting-1.9.0.jar"
+  },
+  "finish": {
+    "argv": [
+      "./tools/finish_b15.sh",
+      "<ECAD>",
+      "out/parallel-b15.log"
+    ],
+    "cwd": "<ECAD>",
+    "clean_flag": "out/b15-clean.txt",
+    "stub_log": "out/pcb-b-compute-stub.log"
+  },
+  "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-B15",
+  "expect": {
+    "hard": 0,
+    "unrouted": 0,
+    "autoroute_minutes_max": 60
+  },
+  "budget_rounds": 2,
+  "notes": "B15 six layers: In1 and In4 are planes handed to Freerouting as power layers (5 Sep 2026 E1 test); one thread because the multi-thread optimiser knotted +3V3 and WIFI_DIS on In3 in run 3; the stub router closes the fine-pitch opens with the coarse grid. Freerouting is deterministic: run 3's three attempts at 80, 90 and 100 passes returned identical boards (39 hard, 5 opens, 261 vias) because the autorouter completed before any ceiling, so one attempt is the rule unless the ceiling binds. Owner instruction 6 Sep 2026 00:52: from scratch on Freerouting 2.4.1 under routeflow. | Fallback profile (6 Sep 2026 04:20): the same B15 run on Freerouting 1.9.0, single-threaded with the power layers. The first routeflow B15 run on 1.9.0 (00:20) came back 0 hard, 1 open at the hub's +3V3 island, which the inner-layer stub router of finish_b15.sh closes; on 2.4.1 round 1 left 10 opens at 0 hard and the remedy rounds were still open when this file was written. Use only after the 2.4.1 run has stopped; one route at a time on the VM.",
+  "baseline_key": "B14"
+}
