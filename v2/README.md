@@ -1,14 +1,16 @@
 # V2: the Peli 1450 carrier set (MESHSAT-709)
 
-Seven KiCad 9 boards for the kit V2 go-box: a Peli 1450 case with the 1450PF panel frame (the 1520 of the first design was twice the kit; design record 32.40 and 32.41, 5 Sep 2026). The power and compute boards stack on four M3 rods and lift out of the case in one piece; a dock strip on the case floor carries the shore power, the solar tracker and the raised contact block that the stack blind-mates onto. The control panel is a 3 mm aluminium face plate in the frame (`cad/face_plate.py`, `release/revA/case/face-plate/`) with the backer board C6 hanging under it; the battery module stands along the west end wall and the nine antenna bulkheads sit in the end walls. Nothing here has been built yet: the boards are designed and checked, and the first set has not been ordered.
+Six KiCad 9 boards for the kit V2 go-box: a Peli 1450 case with the 1450PF panel frame (the 1520 of the first design was twice the kit; design record 32.40 and 32.41, 5 Sep 2026). The power and compute boards stack on four M3 rods and lift out of the case in one piece; a dock strip on the case floor carries the shore power, the solar tracker and the raised contact block that the stack blind-mates onto. The control panel is a 3 mm aluminium face plate in the frame (`cad/face_plate.py`, `release/revA/case/face-plate/`) with the backer board C6 hanging under it; the battery module stands along the west end wall and the nine antenna bulkheads sit in the end walls. Nothing here has been built yet: the boards are designed and checked, and the first set has not been ordered.
+
+> **Next generation in design (MESHSAT-830, since 6 Sep 2026).** The owner ruled a new device set on 6 September 2026: three Compute Module 5 in identical slots on one carrier, a BB-2590/U pack, a 5G module, a 1 W LoRa module, Zigbee and Thread radios, a LimeSDR Mini, an SA868 with a 30 W amplifier for VHF APRS, a sealed 7 inch monitor, a wide-temperature e-paper, an HF module, a sensor suite and the tactical features of appendix 32.50. The approved specification is [`docs/V2-SPEC.md`](docs/V2-SPEC.md), the qualification plan [`docs/TEST-PLAN.md`](docs/TEST-PLAN.md), the architecture appendix 32.52. The boards of that generation (A22, B16, C7, D8, E6 and a sensor board) are being generated; until they land, the tables below describe the released set A21, B15, C6, D7, E4, E5, which stays on the `revA` release as the record. Nothing of either generation has been built.
 
 Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md`, sections 25 and 32): the kit carries its own charger, gauge and power control on PCB-A, with the cells in a battery module on the case floor that blind-mates through the dock; EMCON is a hardware line from the panel to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`.
 
 | Board | Rev | Size (mm) | Layers | Project | Deliverable folder |
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O | A21 | 285 x 160 | 4 | `ecad/pcb-a-power/` | `release/revA/boards/meshsat-pcb-a-revA-A21/` |
-| PCB-B COMPUTE | B14 | 245 x 170 | 4 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B14/` |
-| PCB-C CONTROL PANEL | C5 | 442 x 311 | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C5/` |
+| PCB-B COMPUTE | B15 | 245 x 170 | 6 | `ecad/pcb-b-compute/` | `release/revA/boards/meshsat-pcb-b-revA-B15/` |
+| PCB-C PANEL BACKER | C6 | 344 x 228 U | 2 | `ecad/pcb-c-display/` | `release/revA/boards/meshsat-pcb-c-revA-C6/` |
 | PCB-D APRS | D7 | 80 x 62 | 4 | `ecad/pcb-d-aprs/` | `release/revA/boards/meshsat-pcb-d-revA-D7/` |
 | PCB-E1 DOCK STRIP | E4 | 278 x 60 | 4 | `ecad/pcb-e1-dock/` | `release/revA/boards/meshsat-pcb-e-revA-E4/` |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | `ecad/pcb-e5-block/` | `release/revA/boards/meshsat-pcb-e5-revA-E5/` |
@@ -19,7 +21,7 @@ Three rulings bind the design (details in `docs/MESHSAT-709-geometry-appendix.md
 
 | Path | Content |
 |---|---|
-| `docs/` | `MESHSAT-709-geometry-appendix.md` (the design record, every number and every ruling), `ASSEMBLY.md` (fasteners, torque, coating, removal procedure, bench-fit lists), `PANEL.md` (the software contract for the control panel, MESHSAT-773) |
+| `docs/` | `MESHSAT-709-geometry-appendix.md` (the design record, every number and every ruling), `ASSEMBLY.md` (fasteners, torque, coating, removal procedure, bench-fit lists), `PANEL.md` (the software contract for the control panel, MESHSAT-773), `V2-SPEC.md` (the approved specification of the next generation, MESHSAT-830), `TEST-PLAN.md` (its qualification plan) |
 | `ecad/` | the KiCad sources: one project folder per board, `meshsat.pretty/` (project footprints), `tools/` (the generators and the pipeline scripts) |
 | `vendor/` | third-party reference CAD and datasheets (see `vendor/README.md`) |
 | `release/revA/boards/` | the Rev A deliverables: KiCad project snapshot, Gerber zip, BOM, CPL, DRC report, schematic PDF, renders, 1:1 print |

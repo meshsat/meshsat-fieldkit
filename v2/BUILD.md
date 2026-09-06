@@ -4,6 +4,8 @@ Rev A of the carrier set has been designed, reviewed and prepared for order; no 
 
 MeshSat is a prototype. The V2 boards have not been fabricated; expect changes after the first build.
 
+> **Next generation in design (MESHSAT-830, since 6 Sep 2026).** The owner ruled a new device set on 6 September 2026: three Compute Module 5 in identical slots on one carrier, a BB-2590/U pack, a 5G module, a 1 W LoRa module, Zigbee and Thread radios, a LimeSDR Mini, an SA868 with a 30 W amplifier for VHF APRS, a sealed 7 inch monitor, a wide-temperature e-paper, an HF module, a sensor suite and the tactical features of appendix 32.50. The approved specification is [`docs/V2-SPEC.md`](docs/V2-SPEC.md), the qualification plan [`docs/TEST-PLAN.md`](docs/TEST-PLAN.md), the architecture appendix 32.52. The boards of that generation (A22, B16, C7, D8, E6 and a sensor board) are being generated; until they land, this guide describes the released set A21, B15, C6, D7, E4, E5, which stays on the `revA` release as the record. Nothing of either generation has been built.
+
 ## 0. Before you start
 
 - Three rulings are not open for redesign: the kit carries its own charger, fuel gauge and power control on PCB-A, with the cells in a battery module on the case floor that blind-mates through the dock; EMCON is a hardware line from the panel toggle to the APRS PTT driver plus a software hold; the panel is driven per `docs/PANEL.md`.

@@ -2,12 +2,14 @@
 
 Hardware for the MeshSat field kits: the portable go-boxes that carry a MeshSat Bridge (Raspberry Pi 5) with its radios, satellite modem, cellular modem, GPS and power into the field. The software lives in the [meshsat](https://github.com/meshsat/meshsat) repository. This repository holds the mechanical and electronic design, the build records and the manufacturing files.
 
-MeshSat is a prototype. Nothing here has been through a field deployment yet. The V1 kits are bench and demo units, and the V2 boards are at their first fabrication order.
+MeshSat is a prototype. Nothing here has been through a field deployment yet. The V1 kits are bench and demo units, and the V2 boards are designed and checked but not ordered.
+
+> **Next generation in design (MESHSAT-830, since 6 Sep 2026).** The owner ruled a new device set on 6 September 2026: three Compute Module 5 in identical slots on one carrier, a BB-2590/U pack, a 5G module, a 1 W LoRa module, Zigbee and Thread radios, a LimeSDR Mini, an SA868 with a 30 W amplifier for VHF APRS, a sealed 7 inch monitor, a wide-temperature e-paper, an HF module, a sensor suite and the tactical features of appendix 32.50. The approved specification is [`v2/docs/V2-SPEC.md`](v2/docs/V2-SPEC.md), the qualification plan [`v2/docs/TEST-PLAN.md`](v2/docs/TEST-PLAN.md), the architecture appendix 32.52. The boards of that generation (A22, B16, C7, D8, E6 and a sensor board) are being generated; until they land, the tables below describe the released set A21, B15, C6, D7, E4, E5, which stays on the `revA` release as the record. Nothing of either generation has been built.
 
 | Folder | What it is | State |
 |---|---|---|
 | `v1/` | tesseract and parallax as built: IP67 case, HDPE plates on M3 rods, UV-K5 + AIOC APRS chain, per-kit BOM and GPIO pinouts, FreeCAD plate model | built April 2026, in use |
-| `v2/` | the Peli 1450 go-box: six carrier PCBs, an aluminium control face in the 1450PF panel frame with a backer board under it, a removable stack on a floor dock | Rev A designed, JLCPCB order prepared September 2026, not yet built |
+| `v2/` | the Peli 1450 go-box: six carrier PCBs, an aluminium control face in the 1450PF panel frame with a backer board under it, a removable stack on a floor dock | Rev A designed and checked, order prepared but not placed; the next generation (MESHSAT-830) in design since 6 September 2026 |
 
 ## V1: tesseract and parallax
 
@@ -31,9 +33,9 @@ Six KiCad 9 boards replace the plates, the loose wiring and the USB hub. The sta
 | | |
 |---|---|
 | ![PCB-A](v2/images/pcb-a-power-top.png) | ![PCB-B](v2/images/pcb-b-compute-top.png) |
-| PCB-A POWER + I/O (A21) | PCB-B COMPUTE (B14) |
+| PCB-A POWER + I/O (A21) | PCB-B COMPUTE (B15) |
 | ![PCB-C](v2/images/pcb-c-display-top.png) | ![PCB-D](v2/images/pcb-d-aprs-top.png) |
-| PCB-C CONTROL PANEL (C5) | PCB-D APRS (D7) |
+| PCB-C PANEL BACKER (C6) | PCB-D APRS (D7) |
 | ![PCB-E1](v2/images/pcb-e1-dock-top.png) | ![PCB-E5](v2/images/pcb-e5-block-top.png) |
 | PCB-E1 DOCK STRIP (E4) | PCB-E5 DOCK BLOCK (E5) |
 
