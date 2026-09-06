@@ -55,10 +55,10 @@ def footprint(libpath, name, ref, x, y, value, rot=0.0):
     if fp is None: raise SystemExit("footprint %s not found in %s" % (name, libpath))
     fp.SetReference(ref); fp.SetValue(value); fp.Reference().SetVisible(False); fp.Value().SetVisible(False)
     fp.SetPosition(P(x, y)); fp.SetOrientationDegrees(rot); board.Add(fp); return fp
-def rule_area(points, name, tracks=False, vias=False, pads=True, footprints=True, pour=True):
-    """Rule area on both copper layers; every keyword says what stays ALLOWED inside it."""
+def rule_area(points, name, tracks=False, vias=False, pads=True, footprints=True, pour=True, layers=None):
+    """Rule area on every copper layer (or the given LSET); every keyword says what stays ALLOWED inside it."""
     z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(not pour); z.SetDoNotAllowTracks(not tracks); z.SetDoNotAllowVias(not vias); z.SetDoNotAllowPads(not pads); z.SetDoNotAllowFootprints(not footprints)
-    z.SetLayerSet(pcbnew.LSET.AllCuMask(COPPER_LAYERS)); z.SetZoneName(name); o = z.Outline(); o.NewOutline()
+    z.SetLayerSet(layers if layers is not None else pcbnew.LSET.AllCuMask(COPPER_LAYERS)); z.SetZoneName(name); o = z.Outline(); o.NewOutline()
     for x, y in points: p = P(x, y); o.Append(p.x, p.y)
     board.Add(z); return z
 def rule_circle(cx, cy, r, name):
@@ -83,6 +83,15 @@ sx, sy = L.SOUNDER[1]; rule_circle(sx, sy, L.SOUNDER[2] / 2 + K, "cut-out keep-o
 # the outer edge of the U: a 0.6 mm band (no tracks, no vias) so the router keeps the board's copper-to-edge clearance (C6 run 3: tracks at 0.3 mm from the right edge)
 for (ax0, ay0, ax1, ay1) in ((x0, y0, x0 + K, y1), (x1 - K, y0, x1, y1), (x0, y0, x1, y0 + K), (x0, y1 - K, vx0, y1), (vx1, y1 - K, x1, y1)):
     rule_area([(ax0, ay0), (ax1, ay0), (ax1, ay1), (ax0, ay1)], "outer edge keep-out (router)")
+# In1 stays a solid ground plane (ruling 5 Sep 2026 17:08) everywhere but the two driver clusters, the way B15 leaves a window around its receptacles: track keep-outs
+# on In1 only (vias pass, the pour fills) over the left strip, the bottom strip outside CLUSTER2 and the right strip above CLUSTER. The first four-layer C6 route
+# (6 Sep 13:49) had put 1130 tracks, 60 percent of the copper length, on In1.
+if COPPER_LAYERS >= 4:
+    IN1 = pcbnew.LSET(); IN1.addLayer(pcbnew.In1_Cu)
+    def in1_band(x0, y0, x1, y1, name): rule_area([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], "In1 plane (router keep-out) " + name, tracks=False, vias=True, pour=True, layers=IN1)
+    (c0, c1, c2, c3), (d0, d1, d2, d3) = L.CLUSTER, L.CLUSTER2
+    in1_band(SL[0], SL[1], SL[2], SL[3], "left strip"); in1_band(SB[0], SB[1], d0, SB[3], "bottom strip west of CLUSTER2"); in1_band(d2, SB[1], SB[2], SB[3], "bottom strip east of CLUSTER2")
+    in1_band(SR[0], c3, SR[2], SR[3], "right strip above CLUSTER"); in1_band(d0, d3, d2, SB[3], "bottom strip above CLUSTER2")
 # the inner edge of the U: 0.6 mm edge clearance for the router
 rule_area([(vx0 - K, vy0 - K), (vx1 + K, vy0 - K), (vx1 + K, y1 + 1), (vx1 - K, y1 + 1), (vx1 - K, vy0 + K), (vx0 + K, vy0 + K), (vx0 + K, y1 + 1), (vx0 - K, y1 + 1)], "inner edge keep-out (router edge clearance)")
 # ---------------------------------------------------------------- reference graphics: the plate, the window, the display and e-paper modules above the void

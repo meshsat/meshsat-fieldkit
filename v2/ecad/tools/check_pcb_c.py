@@ -96,6 +96,9 @@ else: check(False, "stack height map v2/cad/stack-heightmap.json present")
 # 6. board, vias, connectors
 check(b.GetCopperLayerCount() == 4 and b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(L.BACKER_T), "4 copper layers (In1 ground plane), %.1f mm thick" % L.BACKER_T)
 check(any(z.GetNetname() == "GND" and not z.GetIsRuleArea() and z.IsOnLayer(pcbnew.In1_Cu) for z in b.Zones()), "In1 carries the GND plane zone")
+in1_tracks = [t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK" and t.GetLayer() == pcbnew.In1_Cu]
+check(sum(1 for z in b.Zones() if z.GetIsRuleArea() and z.GetZoneName().startswith("In1 plane")) >= 5, "In1 plane keep-outs present (the clusters are the only windows)")
+if in1_tracks: print("note: %d tracks on In1 (%.0f mm), inside the cluster windows if the keep-outs hold" % (len(in1_tracks), sum(pcbnew.ToMM(t.GetLength()) for t in in1_tracks)))
 vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
 MIN_DRILL = 0.2 if b.GetCopperLayerCount() >= 4 else 0.3   # JLC: 0.2 mm on four layers, 0.3 mm on two (C6 run of 6 Sep 06:03: the 0.3 rule refused a clean four-layer route)
 check(all(v.GetDrillValue() >= pcbnew.FromMM(MIN_DRILL) - 1 for v in vias), "every via drill >= %.1f mm" % MIN_DRILL)
