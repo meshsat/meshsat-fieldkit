@@ -251,7 +251,7 @@ import_board("pcb_e4", "pcb-e1-dock.glb", 0.0); import_board("pcb_e5", "pcb-e5-b
 for (x, y) in ((-155.5, -63.0), (-117.5, -63.0), (-155.5, -82.0), (-117.5, -82.0)): cyl("standoff_e5_%d" % int(x), 5.0, 6.0, (x, y, 3.0), M["steel"])
 box("traco_ten40", (50.8, 25.4, 10.2), (-40, -81, 1.6 + 5.1), M["dark"])
 for (x, y) in ((-110.5, -73.0), (110.5, -73.0), (-110.5, 73.0), (110.5, 73.0)):
-    cyl("rod_%d_%d" % (x, y), 3.0, 118.0, (x, y, 59.0), M["steel"])
+    cyl("rod_%d_%d" % (x, y), 3.0, 64.0, (x, y, 32.0), M["steel"])   # 6 Sep 2026 (owner, item 2): the rods end 5 mm above the B15 nuts, never through the face
     for z in (1.6, 16.6, 56.2): cyl("nut_%d_%d_%d" % (x, y, z), 5.5, 2.4, (x, y, z + 1.2), M["steel"], verts=6)
     cyl("spacer_%d_%d_a" % (x, y), 6.0, 13.4, (x, y, 1.6 + 6.7), M["alu"]); cyl("spacer_%d_%d_b" % (x, y), 6.0, 38.0, (x, y, 16.6 + 19.0), M["alu"])
 MOD = Matrix.Translation((-174.0, -114.5, 5.0))    # module frame: X across the width, Y along the row from the south (lead) end, Z from the cradle's underside
@@ -316,6 +316,13 @@ def toggle(name, x, y, L, tilt, depth, locking=False, boot=False):
     if boot: cone(name + "_boot", 15.0, 6.0, 14.0, (x, y - math.sin(t) * 5.5, base_z + math.cos(t) * 5.5), M["rubber"], rot=(t, 0, 0))
     box(name + "_body", (12.5, 20.0 if locking else 10.0, depth - 2.0), (x, y, PLATE_UNDER - (depth - 2.0) / 2), M["dark"], bevel=1.0)
 for ref, (x, y) in P.TOGGLES: toggle(ref.lower(), x, y, 22, 24, 26.0, locking=True)
+for ref, (x, y) in P.TOGGLES:   # 6 Sep 2026 17:30 (owner, item 3): SOS and ZEROIZE under hinged safety covers, closed; the cover part is a pick owed (appendix 32.48)
+    if ref not in ("SW_SOS", "SW_ZERO"): continue
+    nm = ref.lower(); cm = M["red"] if ref == "SW_SOS" else mat("guard_yellow", (0.92, 0.72, 0.04), 0.45)
+    box(nm + "_guard_base", (26.0, 30.0, 2.0), (x, y, FACE + 1.0), M["steel_dark"], bevel=0.8)
+    for sx_ in (-1, 1): box(nm + "_guard_lug_%d" % sx_, (3.0, 5.0, 9.0), (x + sx_ * 12.5, y + 13.5, FACE + 6.5), M["steel_dark"], bevel=0.6)
+    cyl(nm + "_guard_pin", 2.5, 30.0, (x, y + 13.5, FACE + 9.0), M["steel_dark"], axis="X")
+    box(nm + "_guard_cover", (24.0, 28.0, 30.0), (x, y - 1.0, FACE + 17.0), cm, bevel=3.0); box(nm + "_guard_lip", (14.0, 4.0, 3.0), (x, y - 16.5, FACE + 4.0), cm, bevel=1.0)
 toggle(P.LIGHT[0].lower(), P.LIGHT[1][0], P.LIGHT[1][1], 18, 25, 19.0, boot=True)
 SX, SY = P.SOUNDER[1]
 cyl("sounder", 34, 3.5, (SX, SY, FACE + 1.75), M["black"], bevel=1.2)
@@ -331,7 +338,7 @@ for ref, (x, y), txt in P.STATUS_LEDS:
     col, on = LED_STATE[txt]; lightguide("led_" + ref, x, y, M[col], on); label("lbl_" + ref, txt, (x - 5.5, y - 1.1, FACE + 0.05), 2.6, M["white"], align="RIGHT")
 for k, (ref, (x, y), txt) in enumerate(P.BAR_LEDS): lightguide("led_" + ref, x, y, M["green"], k < 3)
 label("lbl_bar", "BATTERY", (P.BAR_LEDS[2][1][0], P.BAR_LEDS[2][1][1] - 7.5, FACE + 0.05), 3.0, M["white"])
-label("nameplate", "MESHSAT FIELD KIT V2", (P.NAMEPLATE[0], P.NAMEPLATE[1] + 2.5, FACE + 0.05), 4.2, M["white"]); label("nameplate_2", "S/N ______   NUCLEAR LIGHTERS", (P.NAMEPLATE[0], P.NAMEPLATE[1] - 5.5, FACE + 0.05), 3.0, M["white"])
+label("nameplate", "MESHSAT FIELD KIT V2", (P.NAMEPLATE[0], P.NAMEPLATE[1] + 2.5, FACE + 0.05), 4.2, M["white"]); label("nameplate_2", "S/N ______", (P.NAMEPLATE[0], P.NAMEPLATE[1] - 5.5, FACE + 0.05), 3.0, M["white"])
 for ref, (x, y), hole, depth in P.BUTTONS: label("lbl_" + ref, {"SW_MAIN": "MAIN", "SW_PI": "PI", "SW_TEST": "TEST"}[ref], (x, y + hole / 2 + 4.0, FACE + 0.05), 3.6, M["white"])
 for ref, (x, y) in P.TOGGLES: label("lbl_" + ref, {"SW_SOS": "SOS", "SW_EMCON": "EMCON", "SW_ZERO": "ZEROIZE"}[ref], (x, y + 14.0, FACE + 0.05), 3.6, M["white"])
 label("lbl_light", "LIGHT", (P.LIGHT[1][0], P.LIGHT[1][1] + 14.0, FACE + 0.05), 3.6, M["white"])
@@ -350,8 +357,11 @@ def logo_mark(name, cx, cy, width, z, m):
 logo_mark("logo_mark", LX, LY, LD, FACE + 0.05, M["white"])   # 6 Sep 2026 (owner): the official mark on the plate's upper left, not a ring with text
 # ------------------------------------------------------------------ end-wall antennas: nine bulkheads at Z 88, whips upright on right-angle adapters, pigtails inside to the dock nests
 WX = wall_x(SMA_Z); WALL_IN = FLOOR_W / 2 + 4.0   # the end wall's outer face at the jack line
-ANT = {"VHF": (170, 9), "WIFI 2.4": (110, 9), "SDR": (150, 9), "LTE": (200, 10), "LORA": (140, 9), "WIFI P2P A": (120, 9), "WIFI P2P B": (120, 9)}
-NEST = {"VHF": SMA_JACKS[0], "WIFI 2.4": SMA_JACKS[1], "GNSS": SMA_JACKS[2], "SDR": SMA_JACKS[3], "LTE": SMA_JACKS[4], "IRIDIUM": SMA_JACKS[5], "LORA": SMA_JACKS[6]}
+# the antenna picks of appendix 32.46 (form, length, diameter): stubby = straight on the jack; dipole = hinged terminal mount stood upright; whip = the 2 m band
+# placeholder (pick owed); magwhip = the magnetic-base SDR whip on its lead, set on the ground behind the west wall
+ANT = {"LTE": ("stubby", 50.8, 12.4), "LORA": ("stubby", 50.8, 12.4), "WIFI P2P A": ("dipole", 135.0, 14.0), "WIFI P2P B": ("dipole", 135.0, 14.0), "WIFI 2.4": ("dipole", 110.0, 11.0), "VHF": ("whip", 400.0, 8.0), "SDR": ("magwhip", 82.2, 30.0)}
+NEST = {"VHF": SMA_JACKS[0], "WIFI 2.4": SMA_JACKS[1], "GNSS": SMA_JACKS[2], "SDR": SMA_JACKS[3], "LTE": SMA_JACKS[4], "IRIDIUM": SMA_JACKS[5], "LORA": SMA_JACKS[6],
+        "WIFI P2P A": (26.0, -56.0), "WIFI P2P B": (48.0, -74.0)}   # 6 Sep 2026 17:30 (owner, item 6): ALL nine cables end at the dock; the two WiFi P2P paths get their own blind-mate sites on A22 and in-stack jumpers to the M.2 card
 for sx, sites in ((-1, WEST), (1, EAST)):
     for y, nm in sites:
         z = SMA_Z; tag = nm.replace(" ", "_").lower()
@@ -360,8 +370,18 @@ for sx, sites in ((-1, WEST), (1, EAST)):
         ax = sx * (WX + 15)
         # 6 Sep 2026 (owner, the first 1450 set): no invented antennas. The record fixes two forms only: the Iridium patch (its top at Z 82 on the east wall)
         # and the u-blox GNSS puck; every other port is drawn as its bulkhead jack, the whip parts are not chosen yet. WHIPS=1 restores the old stand-ins.
-        if os.environ.get("WHIPS") and nm in ANT:
-            L, d = ANT[nm]; cyl("ant_elbow_" + tag, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_base_" + tag, 12, 24, (ax, y, z + 4 + 12), M["dark"]); cyl("ant_" + tag, d, L, (ax, y, z + 16 + L / 2), M["rubber"]); sphere("ant_tip_" + tag, d / 2 + 1.5, (ax, y, z + 16 + L), M["rubber"])
+        if nm in ANT:
+            form, L, d = ANT[nm]
+            if form == "stubby": cyl("ant_" + tag, d, L, (sx * (WX + 12 + L / 2), y, z), M["dark"], axis="X", bevel=2.0)
+            elif form in ("dipole", "whip"):
+                cyl("ant_elbow_" + tag, 8, 9, (ax, y, z), M["gold"], axis="X"); cyl("ant_knuckle_" + tag, 10, 10, (ax, y, z + 4.5 + 5), M["dark"], bevel=1.0)
+                cyl("ant_" + tag, d, L, (ax, y, z + 9.5 + L / 2), M["dark"], bevel=min(2.0, d / 3))
+            else:   # the SDR whip on its magnetic base, on the ground behind the west wall, lead to the jack
+                mx, my = sx * (WX + 70), BL / 2 + 90
+                cyl("ant_" + tag + "_base", d, 22.0, (mx, my, GROUND + 11.0), M["dark"], bevel=3.0); cyl("ant_" + tag, 9.0, L - 22.0, (mx, my, GROUND + 22.0 + (L - 22.0) / 2), M["dark"], bevel=2.0)
+                cyl("ant_" + tag + "_plug", 8.0, 12.0, (sx * (WX + 12), y, z), M["gold"], axis="X")
+                q0 = (sx * (WX + 18), y, z); q1 = (sx * (WX + 44), y + 14, z - 42); q2 = (mx - sx * 22, my - 60, GROUND + 4); q3 = (mx, my - d / 2, GROUND + 5)
+                tube("ant_" + tag + "_lead_1", q0, q1, 3.0, M["coax"]); sphere("ant_" + tag + "_lead_k1", 3.0, q1, M["coax"]); tube("ant_" + tag + "_lead_2", q1, q2, 3.0, M["coax"]); sphere("ant_" + tag + "_lead_k2", 3.0, q2, M["coax"]); tube("ant_" + tag + "_lead_3", q2, q3, 3.0, M["coax"])
         elif nm == "IRIDIUM":
             # 6 Sep 2026 16:20 (owner): the port is a plain SMA bulkhead like the other eight; the approved external antenna of the 9704 SMA variant is the
             # Maxtena M1621HCT-P-SMA helical (49 x dia 19 mm radome, SMA male; appendix 32.45), stood upright on a right-angle SMA adapter so its axis points
@@ -387,8 +407,9 @@ for sx, sites in ((-1, WEST), (1, EAST)):
             tube("pig_%s_1" % tag, p0, p1, 3.0, M["coax"]); sphere("pig_%s_k1" % tag, 3.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 3.0, M["coax"]); sphere("pig_%s_k2" % tag, 3.0, p2, M["coax"])
             tube("pig_%s_3" % tag, p2, p3, 3.0, M["coax"]); sphere("pig_%s_k3" % tag, 3.0, p3, M["coax"]); tube("pig_%s_4" % tag, p3, p4, 3.0, M["coax"])
             box("dock_clamp_" + tag, (12, 12, 5), (nx, ny, 2.5), M["black"]); cyl("dock_plug_" + tag, 6.0, 8.0, (nx, ny, 5 + 4), M["gold"])   # the printed float clamp on E4 and the SMP-MAX plug standing up into A21
-        else:      # the two WiFi P2P leads (ruling 5 Sep 05:45): MHF4 leads from the M.2 card on B15 to their end-wall couplers, not blind-mated
-            p2 = (xdrop, y, ZB + 6.0); tube("pig_%s_1" % tag, p0, p1, 2.0, M["coax"]); sphere("pig_%s_k1" % tag, 2.0, p1, M["coax"]); tube("pig_%s_2" % tag, p1, p2, 2.0, M["coax"]); sphere("pig_%s_k2" % tag, 2.0, p2, M["coax"]); tube("pig_%s_3" % tag, p2, (66.0, 60.0 + (2 if "B" in nm else -2), ZB + 6.0), 2.0, M["coax"])
+            if nm.startswith("WIFI P2P"):   # the in-stack jumper (6 Sep 2026 17:30): A22 passes the path through to a top-side MHF4, a 2 mm lead climbs to the M.2 card on B15
+                za = 16.6 + 1.6; cyl("stack_mhf_" + tag, 4.0, 2.5, (nx, ny, za + 1.25), M["gold"]); j1 = (nx, ny, za + 2.5); j2 = (nx, ny, ZB - 10.0); j3 = (66.0, 60.0 + (2 if "B" in nm else -2), ZB + 6.0)
+                tube("jumper_%s_1" % tag, j1, j2, 2.0, M["coax"]); sphere("jumper_%s_k" % tag, 2.0, j2, M["coax"]); tube("jumper_%s_2" % tag, j2, j3, 2.0, M["coax"])
 # ------------------------------------------------------------------ rulers (10 mm ticks, numerals every 50) and the 50 mm floor grid
 RULER_W, RULER_T = 14.0, 2.0
 def ruler(name, origin, axis, length, m_up=(0, 0, 1)):
@@ -445,6 +466,7 @@ def orbit(az, el, dist=1050, look=(0, 0, 70), lens=42):
     """az 0 = from the front (-Y), counter-clockwise seen from above; el above the ground plane."""
     a, e = math.radians(az), math.radians(el)
     return (look[0] - dist * math.cos(e) * math.sin(a) * -1.0, look[1] - dist * math.cos(e) * math.cos(a), look[2] + dist * math.sin(e))
+PANEL_PREFIX = ("plate", "pcb_c6", "standoff_c6", "screw_c6", "td2", "epaper", "sw_", "sounder", "led_", "lbl_", "nameplate", "logo_")   # (moved above the views: the assembly sequence uses it)
 VIEWS = {}
 # 6 Sep 2026, second set (owner: "the inside of the case is the most interesting part"): eight orbit views with the lid open at el 40, four closed
 # views, and everything else inside: the stack level by level with the boards above removed, the face from both sides, the walls from inside.
@@ -452,7 +474,7 @@ for az in range(0, 360, 45): VIEWS["az%03d-el40-open" % az] = dict(cam=camera("c
 for az in (0, 90, 180, 270): VIEWS["az%03d-el20-closed" % az] = dict(cam=camera("cam_%03d_20c" % az, orbit(az, 20), (0, 0, 70), 42), lid=False)
 B15_PARTS = ("pcb_b15", "cm5_", "cr2032", "display_flex", "gnss_neo", "lora_wio", "lte_", "panel_ribbon", "sdr_", "usb_a_recept", "wifi_m2_", "zigbee_e72", "rockblock9704")   # the board and everything drawn on it
 D7_PARTS = B15_PARTS + ("pcb_d7", "dmr858m")
-A21_PARTS = D7_PARTS + ("pcb_a21", "sma_jack", "sma_nut", "sma_nest")   # the wall pigtails end at the dock clamps (6 Sep 2026), so they stay when A21 is lifted
+A21_PARTS = D7_PARTS + ("pcb_a21", "sma_jack", "sma_nut", "sma_nest", "stack_mhf", "jumper_")   # the wall pigtails end at the dock clamps (6 Sep 2026), so they stay when A21 is lifted
 DOCK_PARTS = A21_PARTS + ("battery", "module_")
 UPPER = {"b15": B15_PARTS, "d7": D7_PARTS, "a21": A21_PARTS, "dock": DOCK_PARTS}
 VIEWS.update({
@@ -483,8 +505,26 @@ VIEWS.update({
     "west-wall": dict(cam=camera("cam_west", (-780, -260, 260), (-205, 0, 110), 55), lid=False),
     "east-wall": dict(cam=camera("cam_east", (780, -260, 260), (205, 0, 110), 55), lid=False),
     "back-wall": dict(cam=camera("cam_back", (-160, 760, 260), (-56, 165, 60), 55), lid=False),
+    "back-wall-nocables": dict(cam=camera("cam_back_nc", (-160, 760, 260), (-56, 165, 60), 55), lid=False, cables=False),
+    "az135-el40-open-nocables": dict(cam=camera("cam_135_nc", orbit(135, 40), (0, 0, 70), 42), lid=True, cables=False),
+    "antennas-az045": dict(cam=camera("cam_ant_045", orbit(45, 38, 1500), (0, 0, 120), 40), lid=True, antennas=True),
+    "antennas-az315": dict(cam=camera("cam_ant_315", orbit(315, 38, 1500), (0, 0, 120), 40), lid=True, antennas=True),
+    "antennas-az225": dict(cam=camera("cam_ant_225", orbit(225, 35, 1500), (0, 0, 120), 40), lid=True, antennas=True),
+    "antennas-top": dict(cam=camera("cam_ant_top", (0, -60, 1500), (0, 0, 60), 40), lid=True, antennas=True),
 })
-PANEL_PREFIX = ("plate", "pcb_c6", "standoff_c6", "screw_c6", "td2", "epaper", "sw_", "sounder", "led_", "lbl_", "nameplate", "logo_")
+# the disassembly sequence (owner, 6 Sep 2026 item 7): the same wide camera, one step per view, every removed part set down on the ground around the case
+STACK = A21_PARTS + ("rod_", "nut_", "spacer_")
+PLATE_DZ = GROUND + 0.5 - (BACKER_Z - 1.6); STACK_DZ = GROUND + 0.5 - 1.6; MODULE_DZ = GROUND + 0.5
+MV_PLATE = (PANEL_PREFIX, (450.0, -40.0, PLATE_DZ)); MV_STACK = (STACK, (-460.0, 40.0, STACK_DZ)); MV_MODULE = (("module_",), (60.0, -360.0, MODULE_DZ))
+ASM_CAM = lambda n: camera("cam_asm_%d" % n, (560, -1000, 720), (0, -50, 30), 32)
+VIEWS.update({
+    "assembly-1-closed": dict(cam=ASM_CAM(1), lid=False),
+    "assembly-2-lid-open": dict(cam=ASM_CAM(2), lid=True),
+    "assembly-3-plate-off": dict(cam=ASM_CAM(3), lid=True, moves=[MV_PLATE]),
+    "assembly-4-stack-out": dict(cam=ASM_CAM(4), lid=True, moves=[MV_PLATE, MV_STACK]),
+    "assembly-5-battery-out": dict(cam=ASM_CAM(5), lid=True, moves=[MV_PLATE, MV_STACK, MV_MODULE]),
+    "assembly-6-dock": dict(cam=camera("cam_asm_6", (-260, -520, 520), (-20, -20, 10), 40), lid=True, moves=[MV_PLATE, MV_STACK, MV_MODULE]),
+})
 def walk(prefixes):
     for o in bpy.data.objects:
         p = o
@@ -493,6 +533,9 @@ def walk(prefixes):
             p = p.parent
 def hide(prefixes, flag):
     for o in walk(prefixes): o.hide_render = flag
+def move_group(prefixes, vec):
+    for o in walk(tuple(prefixes)):
+        if o.parent is None: o.matrix_world = Matrix.Translation(vec) @ o.matrix_world
 def move_face(dz):
     for o in walk(PANEL_PREFIX):
         if o.parent is None: o.matrix_world = Matrix.Translation((0, 0, dz)) @ o.matrix_world
@@ -503,7 +546,9 @@ def move_face(dz):
 set_lid(True)
 def render(view):
     v = VIEWS[view]; S.camera = v["cam"]; set_lid(v["lid"]); hide(("peli_text",), bool(v.get("cutaway")))
-    hide(("ant_",), not v["lid"])   # 6 Sep 2026 16:20: the two external antennas (Maxtena helical, LG290P puck) appear only with the lid open
+    hide(("ant_",), not v.get("antennas"))   # 6 Sep 2026 17:30 (owner, item 9): antennas only in the views flagged for them, all nine at once
+    hide(("cable_", "plug_"), v.get("cables") is False)   # item 8: the shore and USB cables can be left out
+    for prefixes, vec in v.get("moves", []): move_group(prefixes, Vector(vec))   # item 7: the disassembly sequence, parts set down around the case
     keep = []; tool = None
     if v.get("cutaway"):   # the front wall of the case and the frame's front bar removed; the face lifted 60 mm on its ribbon and flex
         tool = box("cut_tool", (700, 142, 400), (0, -BL / 2 - 25, 100), M["dark"])
@@ -521,6 +566,7 @@ def render(view):
     if v.get("lift"): move_face(-150)
     if v.get("noface"): hide(PANEL_PREFIX, False)
     if v.get("hide"): hide(tuple(v["hide"]), False)
+    for prefixes, vec in reversed(v.get("moves", [])): move_group(prefixes, -Vector(vec))
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "meshsat-1450-concept.blend"))
 if os.environ.get("DUMP_BBOX"):
     # stack height map input (5 Sep 2026, C6 gate): every mesh object's world bounding box, case frame in mm

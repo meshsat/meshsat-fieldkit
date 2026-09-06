@@ -130,3 +130,16 @@ The bench items that once hung on the separate supply module are gone with it: t
 - Case: the connector plate with its two receptacles (section 4) on the back wall, each on a Glenair 930-001 silicone flange gasket (S06 for the shell 13, S07 for the shell 15), the six M4 plate screws with bonded sealing washers, and the nine Amphenol Connex 132170 SMA couplers in the end walls at Z 88 (D-holes, 8 mm nut and lock washer inside, an NBR O-ring 6.5 x 1.0 under the outside hex), all per `release/revA/case/wall-receptacles-1to1.pdf`.
 - Face seals and hardware (the 1450 plate, `vendor/seals/`, `vendor/mentor/` and `docs/respin-research-seal-2026-09-04.md`): two die-cut frames of 3M VHB 5915 and the die-cut PORON 4701-30 ring (0.53 mm on PET) from the POCKET_1MM and band outlines of `release/revA/case/face-plate/face-plate.dxf`; the 2.0 mm UV polycarbonate lens from the same file with 3M Primer 94; three Silex GP60 silicone washers; the NKK AT516 spare O-ring and AT428H boot; the APEM K seals with the switches; the Floyd Bell 61663 sounder gasket; sixteen Mentor 1282.5004 light guides; six PEM SO-M3-10 standoffs and M3 x 6; DOWSIL 3145 clear for the beads; MG Chemicals 422B for the backer's underside; 10 star washers and M3 x 10; the 3M 7871EC serial label.
 - PCB-E5 dock block E5: nothing is placed on it by the assembler. It goes on four M3 x 6 standoffs above the strip, and the twelve signal wires and the 12 AWG pair are soldered into its plated lands from below before the stack is fitted.
+
+## Disassembly and reassembly in pictures (6 Sep 2026, render set six)
+
+The concept set `v2/images/concept-1450/` carries the sequence a technician follows; every removed part is set down beside the case in the picture:
+
+1. `meshsat-1450-assembly-1-closed.png`: the kit closed, latches shut, antennas off, cables out.
+2. `meshsat-1450-assembly-2-lid-open.png`: lid open; the face plate with its switches, display and e-paper is the first thing seen.
+3. `meshsat-1450-assembly-3-plate-off.png`: the ten M3 screws out, the face plate assembly (plate, backer board C6, switches, display, e-paper) lifted on its ribbon and set down east of the case.
+4. `meshsat-1450-assembly-4-stack-out.png`: the A21 + D7 + B15 rod stack lifted straight up off the dock's blind-mate joint (no cable unscrewed: every antenna path mates at the dock strip) and set down west of the case.
+5. `meshsat-1450-assembly-5-battery-out.png`: the battery module lifted out of its cradle along the west wall (its XT60 unplugged at the dock strip) and set down in front.
+6. `meshsat-1450-assembly-6-dock.png`: the empty case: the dock strip E4 with its float clamps and the nine pigtails from the end-wall jacks, the block E5, the connector plate leads.
+
+Reassembly is the same sequence in reverse: battery module into the cradle and XT60 in, the rod stack lowered onto the dock (the float clamps align the SMP-MAX plugs), the face plate onto the frame and its ten screws, lid closed. Nothing has been built; the pictures are the design intent.
