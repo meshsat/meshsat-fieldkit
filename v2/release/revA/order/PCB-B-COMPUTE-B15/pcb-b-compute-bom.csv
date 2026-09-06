@@ -1,0 +1,82 @@
+Comment,Designator,Footprint,LCSC Part #
+"CR2032 holder Keystone 3034 (VBAT, also the NEO-M9N V_BCKP)",BT1,BatteryHolder_Keystone_3034_1x20mm,
+100u 10V,"C1,C2,C40,C41,C42,C43,C44",C_1206_3216Metric,C6119961
+27p,"C3,C4",C_0603_1608Metric,C107045
+100n,"C5,C6,C7,C8,C9,C10,C11,C15,C16,C18,C26,C27,C31,C35,C39,C51,C54,C55,C59,C60,C63,C65,C67,C72",C_0603_1608Metric,C14663
+1u,"C12,C13,C14,C30",C_0603_1608Metric,C15849
+10u,"C17,C19,C32,C36,C45,C46,C47,C48,C49,C61,C64,C66,C68",C_0805_2012Metric,C15850
+1n,C28,C_0603_1608Metric,C1588
+22u 10V X7R 1210,"C33,C34,C37,C38,C69,C70",C_1210_3225Metric,C2918511
+100u 6.3V,"C50,C71",C_1206_3216Metric,
+33p,"C52,C56,C57,C58",C_0402_1005Metric,
+10p,C53,C_0402_1005Metric,
+47p,C62,C_0402_1005Metric,
+SMBJ5.0A,"D1,D3,D4",D_SMB,C113974
+2A hold 1812,F5,Fuse_1812_4532Metric,C210837
+0.5A hold 1812,"F6,F7",Fuse_1812_4532Metric,C17313
+"5 V rail M1 from PCB-A J_5V_M1 (JST-VH, 18 AWG): + - ; hub, display, panel, LTE socket, 3.3 V buck",J_5V_M1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"5 V rail M2 from PCB-A J_5V_M2 (JST-VH, 18 AWG): + - ; SDR channel, RockBLOCK channel",J_5V_M2,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"Pi rail 5.1 V 5 A from PCB-A J_5V_PI (JST-VH, 18 AWG): + - ; the CM5 5 V pins and the fan, no plug",J_5V_PI,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"A-B interconnect (IDC 2x9, underside)",J_AB1,IDC-Header_2x09_P2.54mm_Vertical,
+"console UART0 (GPIO14/15, 3.3 V): GND TX RX",J_DBG,PinHeader_1x03_P2.54mm_Vertical,
+DCF77 remote (XH2.5): 3V3 GND T P1,J_DCF77,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,
+"Touch Display 2 FPC 22-pin 0.5 mm (Hirose FH12-22S-0.5SH), Standard-Mini 22-to-15 cable",J_DISP,Hirose_FH12-22S-0.5SH_1x22-1MP_P0.50mm_Horizontal,
+CM5 cooler fan (JST-SH 1.0): 5V GND TACHO PWM; 5 V from the Pi rail so the fan stops with the module,J_FAN,JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical,C160404
+USB-C 2.0 receptacle,J_FLASH,USB_C_Receptacle_HRO_TYPE-C-31-M-12,C165948
+U.FL to the GNSS bulkhead pigtail,J_GNSS1,U.FL_Hirose_U.FL-R-SMT-1_Vertical,
+"mini PCIe socket 52P H4.0 + 2x M2.5 standoffs: Quectel EG25-G (Cat 4, QMI, GNSS inside)",J_LTE1,MiniPCIe_Socket_52P_H4.0_Standoff,
+"EG25-G main UART (3.3 V, bench): GND TX RX",J_LTEDBG,PinHeader_1x03_P2.54mm_Vertical,
+panel ribbon to PCB-C (IDC 2x10),J_PANEL,IDC-Header_2x10_P2.54mm_Vertical,
+PMIC_Enable: short to force the module off (bench),J_PMIC,PinHeader_1x02_P2.54mm_Vertical,
+PWR_Button: momentary to GND wakes the module from soft-off (bench),J_PWRBTN,PinHeader_1x02_P2.54mm_Vertical,
+RockBLOCK 9603 PicoBlade 10,J_RB9603,Molex_PicoBlade_53047-1010_1x10_P1.25mm_Vertical,
+RockBLOCK 9704 16-pin (IDC 2x8),J_RB9704,IDC-Header_2x08_P2.54mm_Vertical,
+nRPIBOOT jumper: fit to flash the eMMC over J_FLASH with rpiboot,J_RPIBOOT,PinHeader_1x02_P2.54mm_Vertical,
+USB-A receptacle RTL-SDR,J_RTL1,USB_A_Stewart_SS-52100-001_Horizontal,
+nano-SIM push-push GCT SIM8060,J_SIM1,nanoSIM_GCT_SIM8060-6-0-14-00,
+Touch Display 2 5V (XH2.54),J_TD2,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+"M.2 E-key socket 2230, M2.5 standoff: AsiaRF AW7915-AED (MT7915, WiFi 6 2x2 DBDC) on the CM5 PCIe lane, kit-to-kit link",J_WIFI1,M2_E-Key_Socket_2230,
+EEPROM_nWP jumper: fit to write-protect the bootloader EEPROM,J_WP,PinHeader_1x02_P2.54mm_Vertical,
+CC2652P cJTAG (bench): 3V3 GND TMSC TCKC RESET,J_ZBDBG,PinHeader_1x05_P2.54mm_Vertical,
+3.3uH XAL4020-332MEB,"L31,L32,L36",L_Coilcraft_XAL4020-XXX,
+27nH 0402 (antenna bias tee),L40,L_0402_1005Metric,
+green 5V,LED1,LED_0603_1608Metric,C72043
+amber LTE network (LED_WWAN# sinks),LED2,LED_0603_1608Metric,
+red ZigBee (DIO_7),LED3,LED_0603_1608Metric,C2286
+green ZigBee (DIO_8),LED4,LED_0603_1608Metric,C72043
+green ACT (LED_nACT sinks),LED5,LED_0603_1608Metric,C72043
+red PWR,LED6,LED_0603_1608Metric,C2286
+blue WiFi link,LED7,LED_0603_1608Metric,
+2N7002 OnOff open-drain buffer,Q1,SOT-23,C8545
+BC857: LED_nPWR must be buffered (datasheet Table 4),Q2,SOT-23,C556165
+2N7002,"Q3,Q4,Q5,Q6",SOT-23,C8545
+1k,"R1,R46,R48,R64,R70,R71,R78",R_0603_1608Metric,C21190
+12.0k 1% (RBIAS),R2,R_0603_1608Metric,C22790
+10k,"R3,R4,R5,R6,R7,R8,R13,R25,R28,R29,R47,R49,R52,R53,R54,R56,R61,R62,R63,R65,R67,R68,R69,R76,R77",R_0603_1608Metric,C25804
+0.1R 1% 1206,R14,R_1206_3216Metric,C2903496
+0.05R 1% 1206,"R21,R41,R72",R_1206_3216Metric,C601088
+100R,R26,R_0603_1608Metric,C22775
+100k,"R27,R30,R33,R37,R38,R42,R75",R_0603_1608Metric,C25803
+33.2k 1%,"R35,R39,R73",R_0603_1608Metric,C23003
+10k 1%,"R36,R40,R74",R_0603_1608Metric,C25804
+5.1k,"R50,R51",R_0603_1608Metric,C23186
+4.7k,"R55,R59,R60",R_0603_1608Metric,C23162
+2.2k,"R57,R58",R_0603_1608Metric,
+10R,R66,R_0603_1608Metric,
+"USB2517I-JZX seven-port USB 2.0 hub (strap defaults, ports 6-7 disabled)",U1,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C1521556
+USBLC6-2SC6,"U2,U6,U7,U8,U9,U10",SOT-23-6,C7519
+TPS2065CDBV,U4,SOT-23-5,C353882
+INA219AIDCN,"U5,U14,U33,U35",SOT-23-8,C138024
+TPS22810DRV,U13,WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm,C527679
+PCA9555PW 0x20,U20,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+PCA9555PW 0x25,U21,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+"Amphenol 10164227-1004A1RLF receptacle A (CM5 pins 1-100, GPIO side); module CM5108064 8 GB 64 GB eMMC wireless, bench-fitted",U30A,CM5_Conn_A_10164227,C7435219
+"Amphenol 10164227-1004A1RLF receptacle B (CM5 pins 101-200, high-speed side)",U30B,CM5_Conn_B_10164227,C7435219
+TPS563201 3.3 V buck from M1 for the board (follows the CM5 3.3 V),U31,SOT-23-6,C116592
+TPS563201 3.3 V buck for the LTE socket (EN_LTE),U32,SOT-23-6,C116592
+"TCA9517A I2C buffer: A = module (GPIO2/3, +3V3_CM), B = kit bus to PCB-A and PCB-C, EN from the module rail",U34,MSOP-8_3x3mm_P0.65mm,
+TPS563201 3.3 V buck for the M.2 WiFi socket (PCIE_PWR_EN),U36,SOT-23-6,C116592
+"u-blox NEO-M9N-00B: I2C + PPS, external active antenna",U40,ublox_NEO,
+Seeed Wio-SX1262: 1 RF_SW 2 MISO 3 MOSI 4 SCK 5 NRST 6 NSS 7 GND 8 VCC 9 ANT 10 GND 11 BUSY 12 DIO1,U41,Seeed_Wio-SX1262,
+"Ebyte E72-2G4M20S1E CC2652P ZigBee coordinator (ZNP over UART1): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N",U42,Ebyte_E72-2G4M20S1E,C5352930
+24 MHz 3225,Y1,Crystal_SMD_3225-4Pin_3.2x2.5mm,C70571

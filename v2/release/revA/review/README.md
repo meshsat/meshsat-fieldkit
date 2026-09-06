@@ -10,19 +10,19 @@ Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying 
 - `pcb-a-power-render-top-A4.png`, `pcb-a-power-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-a-power-schematic.pdf`: full schematic; `pcb-a-power-drc.rpt`: the DRC report of the exported board
 
-## PCB-B COMPUTE Rev A (B14), folder `PCB-B-COMPUTE-B14/`, 245 x 170 mm, 4 layers
+## PCB-B COMPUTE Rev A (B15), folder `PCB-B-COMPUTE-B15/`, 245 x 170 mm, 6 layers
 
 - `pcb-b-compute-1to1-top.pdf`, `pcb-b-compute-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-b-compute-assembly-top.pdf`, `pcb-b-compute-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
-- `pcb-b-compute-copper-layers.pdf`: one page per copper layer (F.Cu, In1.Cu, In2.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
+- `pcb-b-compute-copper-layers.pdf`: one page per copper layer (F.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
 - `pcb-b-compute-render-top-A4.png`, `pcb-b-compute-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-b-compute-schematic.pdf`: full schematic; `pcb-b-compute-drc.rpt`: the DRC report of the exported board
 
-## PCB-C CONTROL PANEL Rev A (C5), folder `PCB-C-DISPLAY-C5/`, 442 x 311 mm, 2 layers
+## PCB-C PANEL BACKER Rev A (C6), folder `PCB-C-DISPLAY-C6/`, 344 x 228 mm, 4 layers
 
 - `pcb-c-display-1to1-top.pdf`, `pcb-c-display-1to1-bottom-mirrored.pdf`: 1:1 device-layout sheets (bottom is mirrored so it reads through the paper); lay the real devices on them
 - `pcb-c-display-assembly-top.pdf`, `pcb-c-display-assembly-bottom-mirrored.pdf`: fab drawings with reference designators, pad outlines and pad numbers; DNP parts crossed out
-- `pcb-c-display-copper-layers.pdf`: one page per copper layer (F.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
+- `pcb-c-display-copper-layers.pdf`: one page per copper layer (F.Cu, In1.Cu, In2.Cu, B.Cu) with the outline; check the planes, the USB pairs, the cell straps and the boost loop here
 - `pcb-c-display-render-top-A4.png`, `pcb-c-display-render-bottom-A4.png`: 3D renders at A4 300 dpi; the small `-render-*.png` are the originals
 - `pcb-c-display-schematic.pdf`: full schematic; `pcb-c-display-drc.rpt`: the DRC report of the exported board
 
@@ -66,5 +66,5 @@ Sources: https://pip.raspberrypi.com/categories/1083-raspberry-pi-touch-display-
 1. PCB-A: BQ25601 pin map (PSEL on R45/R46, /QON on TP11), 103AT-2 thermistor network, CSD17303Q5 cell switches, boost/buck chain on shore power.
 2. PCB-B: no F1 (both XH inputs on +5V), 2 A polyfuse + TPS22810 per channel, T-Beam 1W strip and the dual SDR bay, USB pairs.
 3. PCB-D: STM32F302CBT6 (128 KB) for the AIOC firmware, TPS61089 boost at 7.6 V with the 100k ILIM, DMR858M site on sockets and M2.5 x 11 standoffs (rows 36.15 mm, pin 1 north-east), heatsink clearance in the bottom bay (about 35 mm).
-4. PCB-C (C5): the sealed face: seal bands and their die-cut outlines, keyed switch holes, the panel-mount sounder, via plugging, the frame gasket ring against the Z closure (32.30).
+4. PCB-C (C6): the backer under the 1450 face plate: every site against panel1450.py and the plate drawing, the body slots, the six ground-bond holes, the deep parts outside PCB-B's outline, the stack height map (32.42).
 

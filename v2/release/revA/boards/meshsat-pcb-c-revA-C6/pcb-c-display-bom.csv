@@ -1,0 +1,50 @@
+Comment,Designator,Footprint,LCSC Part #
+"IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (part per docs/respin-research-seal-2026-09-04.md)",BZ1,PanelSounder,
+10u,"C1,C2",C_0805_2012Metric,C15850
+100n,"C3,C4,C11-C13",C_0603_1608Metric,C14663
+10n,C5-C10,C_0603_1608Metric,C57112
+"3 mm MWARN red, sunlight viewable",D1,LED_D3.0mm,
+"3 mm MCAUT amber, sunlight viewable",D2,LED_D3.0mm,
+"3 mm TX red (RF hazard), sunlight viewable",D3,LED_D3.0mm,
+"3 mm SOSACT red, sunlight viewable",D4,LED_D3.0mm,
+"3 mm SAT green, sunlight viewable",D5,LED_D3.0mm,
+"3 mm MESH green, sunlight viewable",D6,LED_D3.0mm,
+"3 mm LTE green, sunlight viewable",D7,LED_D3.0mm,
+"3 mm GPS green, sunlight viewable",D8,LED_D3.0mm,
+"3 mm SHORE green, sunlight viewable",D9,LED_D3.0mm,
+"3 mm CHG white, sunlight viewable",D10,LED_D3.0mm,
+"3 mm MSG white, sunlight viewable",D11,LED_D3.0mm,
+"3 mm BAT1 amber, sunlight viewable",D12,LED_D3.0mm,
+"3 mm BAT2 green, sunlight viewable",D13,LED_D3.0mm,
+"3 mm BAT3 green, sunlight viewable",D14,LED_D3.0mm,
+"3 mm BAT4 green, sunlight viewable",D15,LED_D3.0mm,
+"3 mm BAT5 green, sunlight viewable",D16,LED_D3.0mm,
+BAT54 lamp-test tie,D17,D_SOD-123,C2166
+ferrite 600R,FB1-FB4,L_0603_1608Metric,C1017
+PANEL_ID strap (closed = variant B),JP1,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+EPD RES from BCM7 instead of U2 (close to use),JP2,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
+e-paper module lead: BUSY RES D/C CS SCL SDA GND VCC (SMD header on the underside),J_EPD?,PinHeader_1x08_P2.54mm_Vertical_SMD_Pin1Left,C41417365
+"MAIN button lead to PCB-A J_MAINSW (XH2.5 at the PCB-A end): two solder lands on the underside, soldered and beaded",J_MAINSW?,LeadLands_1x02,
+"panel ribbon from PCB-B (IDC 2x10, underside)",J_PANEL?,IDC-Header_2x10_P2.54mm_Vertical_SMD,C54803514
+"lead to the Pi 5 J2 power-button pins: two solder lands on the underside, soldered and beaded",J_PIJ2,LeadLands_1x02,
+AO3401A P-FET high side,Q1,SOT-23,C15127
+2N7002,Q2-Q4,SOT-23,C8545
+10k,"R1-R5,R7,R8",R_0603_1608Metric,C25804
+100k,"R6,R12,R30,R39",R_0603_1608Metric,C25803
+2.2k,R9,R_0603_1608Metric,C4190
+47R,R10,R_0603_1608Metric,C25118
+100R,"R11,R34-R38",R_0603_1608Metric,C22775
+300R,"R13-R15,R23,R28,R32",R_0603_1608Metric,C23025
+180R,"R16-R22,R24-R27",R_0603_1608Metric,C25270
+1k,R29,R_0603_1608Metric,C11702
+470R,"R31,R33",R_0603_1608Metric,C23179
+"EMCON locking toggle (closed = TX inhibit; APEM 5636ADKB-2V, both positions locked; ruling 32.13); K front seal in the keyed 6.5 hole",SW_EMCON?,ToggleBody_SPDT,
+"LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 on the D3 splashproof bushing, its O-ring (spare AT516) under the nut on the face, AT428H boot; D hole, flat toward +X",SW_LIGHT?,ToggleBody_DPDT,
+"MAIN PWR 19 mm momentary, green ring (to PCB-A J_MAINSW); C&K ATP19-SL1-603-B0SA-03G; silicone gasket washer under the bezel",SW_MAIN?,PanelSwitch_19mm,
+"PI 16 mm recessed momentary, amber ring (to Pi 5 J2); C&K ATP16-SL1-403-M0SA-04G (orange ring); silicone gasket washer under the bezel",SW_PI?,PanelSwitch_16mm,
+"SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot; ruling 32.13); K front seal in the keyed 6.5 hole; the bridge acts after 2 s closed",SW_SOS?,ToggleBody_SPDT,
+"TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer under the bezel",SW_TEST?,PanelSwitch_16mm,
+"ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, both positions locked; ruling 32.13); K front seal in the keyed 6.5 hole; the bridge acts after 5 s closed",SW_ZERO?,ToggleBody_SPDT,
+PCA9555PW 0x22: LEDs + switches,U1,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
+"PCA9555PW 0x23: LEDs, bar, e-paper control",U2,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
+USBLC6-2SC6 (2-line TVS),U5-U8,SOT-23-6,C7519

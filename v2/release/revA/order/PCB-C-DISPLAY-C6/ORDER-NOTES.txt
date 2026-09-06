@@ -1,0 +1,26 @@
+MeshSat field-kit carrier PCB-C PANEL BACKER Rev A, phase C6: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-c-display-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 344.1 x 228.1 mm, 4 copper layers, 1.6 mm FR-4, JLC04161H-7628 stackup
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: none (no controlled-impedance nets)
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
+- BOM: pcb-c-display-bom.csv (39 lines, 21 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-c-display-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
+- Parts on the TOP side: 16, on the BOTTOM side: 71
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): BZ1, SW_EMCON, SW_LIGHT, SW_MAIN, SW_PI, SW_SOS, SW_TEST, SW_ZERO
+- Not assembled by JLC, fitted at the bench: C6 is the U-shaped backer board under the 3 mm aluminium face plate of the Peli 1450 (appendix 32.40 item 5, 32.42; the plate set is in release/revA/case/face-plate/): it hangs 10 mm under the plate on six PEM SO-M3-10 standoffs (M3 x 6 screws through H1 to H6, which bond the plate to GND) and carries the panel electronics, the sixteen 3 mm LEDs standing on the top face under the plate's Mentor 1282.5004 light guides (bench-soldered, beaded to height), J_PANEL and J_EPD SMD on the underside, the driver cluster on the underside of the right strip. The switches and the sounder mount in the PLATE, not on this board: SW_MAIN C&K ATP19-SL1-603-B0SA-03G, SW_PI C&K ATP16-SL1-403-M0SA-04G, SW_TEST C&K ATP16-SL1-203-M0SA-04G (silicone washer under the bezel), SW_LIGHT NKK M2044SD3A01 (O-ring, AT401A boot), SW_SOS, SW_EMCON and SW_ZERO APEM 5636ADKB-2V (K seal in the keyway), BZ1 Floyd Bell MC-09-530-Q (61663 gasket); their bodies pass the backer through the body slots and their own holes and their leads go to the solder lands beside each site; MAIN and PI leads on J_MAINSW and J_PIJ2 lands
+
+FABRICATION NOTES (C6, the backer under the aluminium face plate)
+- A four-layer 1.6 mm board on JLC's standard four-layer stack (JLC04161H-7628): F.Cu, In1 = solid ground plane, In2 signal, B.Cu; the gerber zip carries all four copper layers, check the layer count on the order form (4). Any colour, HASL or ENIG; nothing on it is a weather face any more (the aluminium plate is), so no via plugging and no special mask rules. Vias 0.4/0.2 mm at the finest (the four-layer floor).
+- Outline: a U (344 x 228 outside, 240 x 202 void open toward +Y) with R3 outer corners; the two 15 x 22 and one 15 x 12 body slots and the 19.2, 16.2, 16.2 and 28.6 mm holes are on Edge.Cuts (routed). The six 3.2 mm holes H1 to H6 carry 6.0 mm rings on both faces: they are the ground bond to the plate through the PEM standoffs.
+- The face plate is a separate CNC part (release/revA/case/face-plate/: STEP, DXF, marking SVG, drawing); it is not a JLC PCB order.
+
+SOURCE
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-c-revA-C6 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
