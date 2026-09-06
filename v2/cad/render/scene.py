@@ -148,7 +148,7 @@ def textured(o, image_fn, strength=0.0):
     pr.inputs["Roughness"].default_value = 0.35 if strength else 0.8
     if strength: nt.links.new(tex.outputs["Color"], pr.inputs["Emission Color"]); pr.inputs["Emission Strength"].default_value = strength
     assign(o, m); bpy.context.view_layer.objects.active = o; bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.uv.cube_project(cube_size=1.0, scale_to_bounds=True); bpy.ops.object.mode_set(mode="OBJECT")
-# ------------------------------------------------------------------ the Peli 1450 from its customer drawing 1451-931 (6 Sep 2026 17:10, owner: "add the details of the
+# ------------------------------------------------------------------ the Peli 1450 from its customer drawing 1451-931 (6 Sep 2026 16:30, owner: "add the details of the
 # case properly"). Peli's STEP bodies are envelopes (a slab, a drafted block and a rim ring; 75 and 39 faces), so the shell is modelled from the drawing's views and
 # sections (`vendor/peli/1450/`): outer 375 x 261 at the bottom drafting to 383 x 269 under the seam flange, the flange ring 411 x 291 x 12 on each half, lid 45.5
 # high with a 259 deep top; lid ladder rails at X +-114 and +-156 with rungs at Y +78 and -82; label recess 85 x 50 R3; two double-throw latches at X +-135 in
@@ -417,7 +417,7 @@ for k in range(-12, 13):
     box("grid_x_%d" % k, (1200, 0.8, 0.1), (0, k * 50.0, GROUND + 0.02), M["grid"]); box("grid_y_%d" % k, (0.8, 1200, 0.1), (k * 50.0, 0, GROUND + 0.02), M["grid"])
 # ------------------------------------------------------------------ world, lights, cameras, views
 S.render.engine = "CYCLES"; S.cycles.samples = int(os.environ.get("SAMPLES", "256")); S.cycles.use_denoising = False; S.cycles.device = "CPU"
-S.render.use_persistent_data = True   # 6 Sep 2026 17:00: keep the BVH between views (the drawing-built case is heavy; without this each view re-synced the scene for 80 s while the GPUs idled)
+S.render.use_persistent_data = True   # 6 Sep 2026 16:58: keep the BVH between views (the drawing-built case is heavy; without this each view re-synced the scene for 80 s while the GPUs idled)
 if os.environ.get("CYCLES_GPU"):   # the build host nllei01gpu01 (RTX 3090 Ti): OptiX, else CUDA; run with the service group stopped
     cp = bpy.context.preferences.addons["cycles"].preferences
     for dev_type in ("OPTIX", "CUDA"):
