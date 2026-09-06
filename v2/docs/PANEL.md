@@ -1,4 +1,6 @@
-# MeshSat control panel (PCB-C C4): software contract for the bridge
+# MeshSat control panel (PCB-C, the backer C6 under the face plate): software contract for the bridge
+
+> The next generation (MESHSAT-830, `V2-SPEC.md`, appendix 32.52) moves the panel onto a USB panel controller (RP2040) with hardware EMCON and ZEROIZE logic, a Pervasive Displays e-paper, blackout and NVG modes and an HDMI monitor; this contract describes the released C6 and will be rewritten with the C7 backer (MESHSAT-837).
 
 Hardware record: `MESHSAT-709-geometry-appendix.md` section 25.4. Bus: the kit I2C (SDA/SCL on the panel ribbon), SPI0 for the e-paper, three Pi GPIOs. Everything below is what the bridge must implement; nothing on the panel works without it except MAIN PWR, PI, EMCON and the TX lamp, which are hardware.
 

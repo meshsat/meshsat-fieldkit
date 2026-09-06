@@ -1,6 +1,6 @@
 # MeshSat Field Kit carrier set: assembly, fasteners, coatings, removal (Rev A, MESHSAT-709)
 
-Companion to `MESHSAT-709-geometry-appendix.md` (sections 14.6, 22, 25, 32). Boards: PCB-A POWER + I/O (**A19**), PCB-B COMPUTE (**B12**), PCB-C CONTROL PANEL (**C5**, the sealed face of appendix 32.34), PCB-D APRS (D5), PCB-E1 DOCK STRIP (**E4**), PCB-E5 DOCK BLOCK (**E5**). Nothing here has been built; this is how the first set is meant to go together.
+Companion to `MESHSAT-709-geometry-appendix.md` (sections 14.6, 22, 25, 32). Boards: PCB-A POWER + I/O (**A19**), PCB-B COMPUTE (**B12**), PCB-C CONTROL PANEL (**C5**, the sealed face of appendix 32.34), PCB-D APRS (D5), PCB-E1 DOCK STRIP (**E4**), PCB-E5 DOCK BLOCK (**E5**). Nothing here has been built; this is how the first set is meant to go together. The next generation (MESHSAT-830, `V2-SPEC.md`) replaces the battery module with a BB-2590/U pack and the display with a sealed monitor on the plate; this page follows when its boards land.
 
 A19 and B12 replaced A18 and B11 on 4 September 2026 after the rulings of appendix 32: the separate uninterruptible supply module is gone, PCB-A carries the charger, the fuel gauge, three 5 V converters and the main power control, PCB-B carries the Pi alone, and the cells left the boards for a battery module on the case floor that blind-mates through the dock. E4 is the dock strip that grew to four layers with a solar tracker, and E5 is the small raised block on it that presents the contacts the stack lands on.
 
