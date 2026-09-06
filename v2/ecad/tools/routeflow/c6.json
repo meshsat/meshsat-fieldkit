@@ -43,7 +43,7 @@
     "threads": 1,
     "timeout": 4500,
     "log": "out/par-c6.log",
-    "jar": "~/bin/freerouting-2.4.1.jar",
+    "jar": "~/bin/freerouting-1.9.0.jar",
     "power_layers": [
       "In1.Cu"
     ],
@@ -68,7 +68,7 @@
     "autoroute_minutes_max": 45
   },
   "budget_rounds": 2,
-  "notes": "C6 two-layer backer: one route attempt (the panel rule), one thread; the footprint generator runs first because gen_pcb_c.py loads BackerScrew_M3_GND from meshsat.pretty; the two generator logs must carry a saved line (run 1 lesson). Owner instruction 6 Sep 2026 00:52: from scratch on Freerouting 2.4.1 under routeflow. | 6 Sep 2026 04:55: C6 is a four-layer backer (In1 solid GND plane per the 5 Sep ruling, In2 routing): the two-layer board left 14 to 23 connections open in every route on the box, all in the driver cluster; In1 is a power-type layer for the router and its GND zone stays in the DSN as a plane (GND by vias, not wires); the stub router works on F, In2 and B.",
+  "notes": "C6 two-layer backer: one route attempt (the panel rule), one thread; the footprint generator runs first because gen_pcb_c.py loads BackerScrew_M3_GND from meshsat.pretty; the two generator logs must carry a saved line (run 1 lesson). Owner instruction 6 Sep 2026 00:52: from scratch on Freerouting 2.4.1 under routeflow. | 6 Sep 2026 04:55: C6 is a four-layer backer (In1 solid GND plane per the 5 Sep ruling, In2 routing): the two-layer board left 14 to 23 connections open in every route on the box, all in the driver cluster; In1 is a power-type layer for the router and its GND zone stays in the DSN as a plane (GND by vias, not wires); the stub router works on F, In2 and B. | 05:00: the jar is 1.9.0: on the box 2.4.1 leaves opens on D7, E4 and A21 where 1.9.0 completes, and B15 on 2.4.1 went 10, open, 49 opens over three rounds while the same profile on 1.9.0 came back CLEAN at 04:41 (the pre-registered Stage 4 rule: 2.x only through the gate, otherwise 1.9.0 stays).",
   "baseline_key": "C6",
   "plane_layers": [
     "In1.Cu"
