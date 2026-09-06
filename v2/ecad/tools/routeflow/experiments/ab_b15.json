@@ -1,9 +1,10 @@
 {
   "board": "pcb-b-compute",
-  "board_key": "B14",
-  "project": "v2/ecad/pcb-b-compute",
+  "board_key": "B15",
+  "project": "v2/ecad/pcb-b-compute-b15",
   "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
-  "preroute": "v2/ecad/pcb-b-compute/out/pcb-b-compute-preroute.kicad_pcb",
+  "preroute": "v2/ecad/pcb-b-compute-b15/out/pcb-b-compute-preroute.kicad_pcb",
+  "note": "Own project directory on the experiment host (a copy of pcb-b-compute's project file and lib table with an out/ directory): two experiments on one project directory share out/<name>-preroute.kicad_pcb and out/par/exp-<config>, and on 6 Sep 2026 the B14 strip overwrote the B15 pre-route board while both ran (every B row of that night was discarded). routeflow refuses a second experiment on a busy project directory since then.",
   "services_script": "~/meshsat-services.sh",
   "expect": "Stage 4 gate: 2.4.1 accepts the same DSN, writes a session within the timeout, reaches at least 1.9.0's completion, and scores Q at least 5 percent better on three of five boards with none regressed; otherwise 1.9.0 stays",
   "route": {
@@ -15,6 +16,8 @@
       "In4.Cu"
     ]
   },
+  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "stub_grid": "0.1",
   "configs": [
     {
       "name": "fr19_base",
@@ -39,7 +42,5 @@
       "jar": "freerouting-2.4.1.jar",
       "fanout": true
     }
-  ],
-  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
-  "stub_grid": "0.1"
+  ]
 }

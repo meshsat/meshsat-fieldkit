@@ -258,6 +258,18 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
     t_start = time.time(); ok, msg = take_lock(name + ":experiment")
     jn(dict(run="exp", board=name, phase=key, stage="lock", status="LOCKED" if ok else "PREFLIGHT_FAIL", note=msg))
     if not ok: return 2
+    # the project lock (6 Sep 2026 03:50): two experiments on one project directory share out/<name>-preroute.kicad_pcb and out/par/exp-<config>; the
+    # B14 strip overwrote the B15 pre-route board while both ran and every B row of that night had to be discarded. A busy project directory refuses.
+    plock = os.path.join(project, "out", "routeflow", "experiment.lock"); os.makedirs(os.path.dirname(plock), exist_ok=True)
+    try:
+        o = json.load(open(plock))
+        if os.path.exists("/proc/%d" % o.get("pid", -1)) and o.get("pid") != os.getpid():
+            jn(dict(run="exp", board=name, phase=key, stage="lock", status="PREFLIGHT_FAIL", note="project directory busy: experiment %s (pid %d since %s); give this experiment its own project directory" % (o.get("exp"), o.get("pid"), o.get("since"))))
+            try: os.remove(LOCK)
+            except OSError: pass
+            return 2
+    except (OSError, ValueError): pass
+    json.dump({"exp": os.path.basename(exp_fn), "pid": os.getpid(), "since": now()}, open(plock, "w"))
     try:
         # the pre-route board: "strip:<released board>" strips the router copper (locked copper stays); a path is used as is; nothing means out/<name>-preroute.kicad_pcb
         pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); src = exp.get("preroute")
@@ -370,8 +382,9 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
                     except Exception as e: jn(dict(run="exp", board=name, stage="experiment", status="TOOL_CRASH", note="%s: %s" % (futs[fut]["name"], str(e)[:160])))
     finally:
         if use_services: services(exp.get("services_script"), "start", os.path.join(project, "out", "experiment.log"))
-        try: os.remove(LOCK)
-        except OSError: pass
+        for lk in (LOCK, plock):
+            try: os.remove(lk)
+            except OSError: pass
     jn(dict(run="exp", board=name, stage="end", status="COMPLETE", note="results in %s" % results)); return 0
 
 # ---------------------------------------------------------------- status, preflight, selftest

@@ -1,9 +1,10 @@
 {
   "board": "pcb-b-compute",
   "board_key": "B14",
-  "project": "v2/ecad/pcb-b-compute",
+  "project": "v2/ecad/pcb-b-compute-s1",
   "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
   "preroute": "strip:v2/release/revA/boards/meshsat-pcb-b-revA-B14/pcb-b-compute.kicad_pcb",
+  "note": "Own project directory on the experiment host (a copy of pcb-b-compute's project file and lib table with an out/ directory): two experiments on one project directory share out/<name>-preroute.kicad_pcb and out/par/exp-<config>, and on 6 Sep 2026 the B14 strip overwrote the B15 pre-route board while both ran (every B row of that night was discarded). routeflow refuses a second experiment on a busy project directory since then.",
   "services_script": "~/meshsat-services.sh",
   "expect": "the same ordering of configs as on D7 and E4: via_costs 200 and 400 cut router vias by at least 15 percent for under 15 percent more length, preferred directions cut length; a knob counts as an effect only when at least two boards agree",
   "route": {
