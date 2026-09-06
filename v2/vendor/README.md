@@ -40,6 +40,10 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `pdi/` | Pervasive Displays E2370KS0C1 flyer and the EPD driving circuit note rev.02 (24-pin FPC, boost circuit) | the e-paper flex connector and driver on C7 (32.51) |
 | `qrp-labs/` | QRP Labs QMX operating and CAT manuals (the HF module in its bay on B16; the assembly manual stays online) | the HF bay, its 12 V feed and USB path (32.51) |
 | `mitsubishi/` | Mitsubishi RA30H1317M1 datasheet (30 W VHF amplifier module of D8) | the PA stage, its VGG gate and heat path (32.51) |
+| `bosch/` | BME280 datasheet (inside and outside climate sensors of the sensor board) | sensor board (32.50 item 14) |
+| `sensirion/` | SGP41 datasheet (VOC and NOx sensing in the battery bay) | sensor board |
+| `vishay/` | VEML7700 datasheet (ambient light behind the plate window) | sensor board, panel brightness |
+| `ti/` | LM5176 (9 to 36 V buck-boost front end), TPS23861 (PoE PSE for the wall Ethernet), TPS25750 (USB-C PD source controller), BQ25731 (4S SMBus charger candidate for the BB-2590) datasheets | the A22 power tree (32.52) |
 
 The files are ordinary git objects (the largest is about 50 MB).
 
