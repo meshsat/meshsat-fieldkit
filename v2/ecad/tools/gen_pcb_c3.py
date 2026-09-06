@@ -130,7 +130,8 @@ def pour(layer, netname, name, rect, priority=0):
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
-pour(pcbnew.F_Cu, "GND", "GND pour F", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3])); pour(pcbnew.B_Cu, "GND", "GND pour B", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3]))   # clipped to the U by the outline
+pour(pcbnew.F_Cu, "GND", "GND pour F", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3])); pour(pcbnew.B_Cu, "GND", "GND pour B", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3]))
+if board.GetCopperLayerCount() >= 4: pour(pcbnew.In1_Cu, "GND", "GND plane In1", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3]))   # the solid In1 ground plane (ruling 5 Sep 2026); it stays in the DSN as a plane (FR_PLANE_NETS=GND) so the router connects GND by vias, and In1 is a power-type layer for the router (FR_POWER_LAYERS=In1.Cu)   # clipped to the U by the outline
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))

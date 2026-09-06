@@ -94,7 +94,8 @@ if os.path.exists(hm_path):
     check(L.PLATE_UNDER_Z - L.DISPLAY["depth_below"] - disp_t >= 3.0 and L.PLATE_UNDER_Z - L.EPAPER["depth_below"] - epd_t >= 3.0, "display (%.0f over %.0f) and e-paper (%.0f over %.0f) clear the stack by 3 mm" % (L.PLATE_UNDER_Z - L.DISPLAY["depth_below"], disp_t, L.PLATE_UNDER_Z - L.EPAPER["depth_below"], epd_t))
 else: check(False, "stack height map v2/cad/stack-heightmap.json present")
 # 6. board, vias, connectors
-check(b.GetCopperLayerCount() == 2 and b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(L.BACKER_T), "2 copper layers, %.1f mm thick" % L.BACKER_T)
+check(b.GetCopperLayerCount() == 4 and b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(L.BACKER_T), "4 copper layers (In1 ground plane), %.1f mm thick" % L.BACKER_T)
+check(any(z.GetNetname() == "GND" and not z.GetIsRuleArea() and z.IsOnLayer(pcbnew.In1_Cu) for z in b.Zones()), "In1 carries the GND plane zone")
 vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
 check(all(v.GetDrillValue() >= pcbnew.FromMM(0.3) - 1 for v in vias), "every via drill >= 0.3 mm")
 keep = [z for z in b.Zones() if z.GetIsRuleArea() and "keep-out" in z.GetZoneName()]
