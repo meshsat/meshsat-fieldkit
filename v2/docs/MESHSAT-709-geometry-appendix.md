@@ -2933,7 +2933,7 @@ The generators do not move before every row has its document and pick. State of 
 
 **I2C on A22.** INA226 at 0x40 (S1), 0x41 (S2), 0x44 (S3), 0x45 (DEV), 0x46 (PA), 0x47 (PoE) (the old SDR, LTE and WiFi monitors of those addresses go with B15); the BQ25731 at 0x6B (the BQ25792's address; only one is fitted); a PCA9548 mux isolates the pack's two SMBus sections, the TPS25750 and the TPS23861 on their own segments; the two A22 expanders stay at 0x21 and 0x24.
 
-### 32.56 A22 floor plan, the PA on the plate, eleven blind-mate paths (7 Sep 2026 01:30; Stage 2 numbers for `gen_pcb_a.py`, `gen_pcb_a3.py`, `check_pcb_a.py`, `case_wall_cutouts.py`, `panel1450.py`)
+### 32.56 A22 floor plan, the PA on the plate, eleven blind-mate paths (7 Sep 2026 01:17; Stage 2 numbers for `gen_pcb_a.py`, `gen_pcb_a3.py`, `check_pcb_a.py`, `case_wall_cutouts.py`, `panel1450.py`)
 
 **Outline.** 240 x 160 mm, X -120 to +120, Y -80 to +80 (case frame), corner radius 5, four layers; the rods stay at (+-110.5, +-73) with their 9 mm nut keep-outs. The west 45 mm of A21 (X -165 to -120) is the BB-2590/U cradle's floor (32.49 item 12).
 
