@@ -1,44 +1,135 @@
-# Concept renders, the kit in the Peli 1450 (rendered 6 September 2026)
+# Concept renders, the kit in the Peli 1450 (rendered 6 September 2026, second set)
 
-Concept illustrations of the V2 kit as designed on 5 September 2026 (design record 32.40 to 32.42): the Peli 1450 with the 1450PF frame, the 3 mm aluminium face plate with the backer board C6 under it, the stack (E4, E5, A21, D7, B15), the battery row along the west end wall, the nine end-wall antennas and the upright connector plate with both cables plugged. Rendered on 6 September 2026 by `v2/cad/render/scene.py` (Blender 4.2, Cycles on eight H100 GPUs of a rented vast.ai box, 256 samples) from the KiCad boards, Peli's 1451-931 CAD and the makers' models; see `v2/cad/render/README.md` for what is real geometry and what is a stand-in. **Nothing in these images has been built.**
+Concept illustrations of the V2 kit as designed on 5 and 6 September 2026 (design record 32.40 to 32.44): the Peli 1450 with the 1450PF frame, the 3 mm aluminium face plate with the four-layer backer board C6 under it, the stack (E4, E5, A21, D7, B15), the battery row along the west end wall, the nine end-wall antenna sockets and the upright connector plate with both cables plugged. Rendered by `v2/cad/render/scene.py` (Blender 4.2, Cycles, 256 samples, eight H100 GPUs of a rented vast.ai box) from the KiCad boards, Peli's 1451-931 CAD and the makers' models; see `v2/cad/render/README.md` for what is real geometry and what is a stand-in. **Nothing in these images has been built.**
 
-Every image carries rulers (white bars, 10 mm ticks, numerals every 50 mm) along the case's edges on the ground and standing at the front corners, a 50 mm floor grid, and a title strip with the view name. Case frame: X along the case, +Y toward the hinge wall, Z from the cavity floor (the ground plane lies under Peli's 25 mm floor-and-feet slab).
+Every image carries rulers (white bars, 10 mm ticks, numerals every 50 mm) along the case's edges on the ground and standing at the front corners, a 50 mm floor grid, and a title strip with the view name. Case frame: X along the case, +Y toward the hinge wall, Z from the cavity floor. The nine antenna sockets are drawn as the bulkhead jacks in the end walls; only the two antenna forms the record names are shown (the Iridium patch and the GNSS puck), the others are not chosen yet.
 
-## Orbit, lid open (eight azimuths by three elevations)
+## The inside (27 views)
 
-Azimuth 0 looks at the front wall (handle and latches), 90 at the east end (LTE, Iridium, LoRa, WiFi P2P), 180 at the back wall (hinge, connector plate), 270 at the west end (UHF, WiFi 2.4, GNSS, SDR); elevations 20, 40 and 60 degrees.
+**stack-no-face-top**: the stack from above with the face plate and backer removed: B15 with the CM5 and its cooler, the LTE card, the M.2 WiFi card, the pigtails to the end walls, the battery row on the west
 
-| | el 20 | el 40 | el 60 |
-|---|---|---|---|
-| az 0 | ![](meshsat-1450-az000-el20-open.png) | ![](meshsat-1450-az000-el40-open.png) | ![](meshsat-1450-az000-el60-open.png) |
-| az 45 | ![](meshsat-1450-az045-el20-open.png) | ![](meshsat-1450-az045-el40-open.png) | ![](meshsat-1450-az045-el60-open.png) |
-| az 90 | ![](meshsat-1450-az090-el20-open.png) | ![](meshsat-1450-az090-el40-open.png) | ![](meshsat-1450-az090-el60-open.png) |
-| az 135 | ![](meshsat-1450-az135-el20-open.png) | ![](meshsat-1450-az135-el40-open.png) | ![](meshsat-1450-az135-el60-open.png) |
-| az 180 | ![](meshsat-1450-az180-el20-open.png) | ![](meshsat-1450-az180-el40-open.png) | ![](meshsat-1450-az180-el60-open.png) |
-| az 225 | ![](meshsat-1450-az225-el20-open.png) | ![](meshsat-1450-az225-el40-open.png) | ![](meshsat-1450-az225-el60-open.png) |
-| az 270 | ![](meshsat-1450-az270-el20-open.png) | ![](meshsat-1450-az270-el40-open.png) | ![](meshsat-1450-az270-el60-open.png) |
-| az 315 | ![](meshsat-1450-az315-el20-open.png) | ![](meshsat-1450-az315-el40-open.png) | ![](meshsat-1450-az315-el60-open.png) |
+![stack-no-face-top](meshsat-1450-stack-no-face-top.png)
 
-## Lid closed, low views
+**stack-no-face**: the stack without the face, three-quarter view
+
+![stack-no-face](meshsat-1450-stack-no-face.png)
+
+**stack-no-face-east**: the same from the east end
+
+![stack-no-face-east](meshsat-1450-stack-no-face-east.png)
+
+**stack-no-face-back**: the same from the hinge side
+
+![stack-no-face-back](meshsat-1450-stack-no-face-back.png)
+
+**level-b15**: B15 on top of the stack
+
+![level-b15](meshsat-1450-level-b15.png)
+
+**level-d7**: B15 removed: D7 (the DMR858M carrier) on A21
+
+![level-d7](meshsat-1450-level-d7.png)
+
+**level-a21**: D7 removed: A21 alone with its SMA nests and the wall pigtails
+
+![level-a21](meshsat-1450-level-a21.png)
+
+**level-a21-top**: A21 from above
+
+![level-a21-top](meshsat-1450-level-a21-top.png)
+
+**level-dock**: A21 removed: the dock strip E4 and the block E5 on the floor, the battery row
+
+![level-dock](meshsat-1450-level-dock.png)
+
+**level-dock-top**: the dock level from above
+
+![level-dock-top](meshsat-1450-level-dock-top.png)
+
+**face-underside**: the face plate and the backer C6 lifted 150 mm on their ribbon and flex, from the front
+
+![face-underside](meshsat-1450-face-underside.png)
+
+**face-underside-top**: the lifted face from above, the plate's top side with the LEDs and the e-paper
+
+![face-underside-top](meshsat-1450-face-underside-top.png)
+
+**top-face**: the face plate from straight above, lid open
+
+![top-face](meshsat-1450-top-face.png)
+
+**face-detail-left**: the toggles, the light switch and the sounder
+
+![face-detail-left](meshsat-1450-face-detail-left.png)
+
+**face-detail-right**: the buttons, the status LED column
+
+![face-detail-right](meshsat-1450-face-detail-right.png)
+
+**battery-row**: the battery module along the west end wall with the face lifted
+
+![battery-row](meshsat-1450-battery-row.png)
+
+**battery-row-inside**: the battery row from inside the cavity
+
+![battery-row-inside](meshsat-1450-battery-row-inside.png)
+
+**dock-joint**: the blind-mate joint on the dock block, A21 removed
+
+![dock-joint](meshsat-1450-dock-joint.png)
+
+**dock-joint-a21**: the same with A21 in place
+
+![dock-joint-a21](meshsat-1450-dock-joint-a21.png)
+
+**west-wall-inside**: the west end wall from inside: UHF, WiFi 2.4, GNSS and SDR couplers and their pigtails
+
+![west-wall-inside](meshsat-1450-west-wall-inside.png)
+
+**east-wall-inside**: the east end wall from inside: LTE, Iridium, LoRa and the two WiFi P2P couplers
+
+![east-wall-inside](meshsat-1450-east-wall-inside.png)
+
+**cutaway**: front wall removed, the face lifted 60 mm: the stack and the battery row
+
+![cutaway](meshsat-1450-cutaway.png)
+
+**cutaway-east**: the same cutaway from the east
+
+![cutaway-east](meshsat-1450-cutaway-east.png)
+
+**connector-plate**: the upright connector plate on the back wall from outside, both cables plugged
+
+![connector-plate](meshsat-1450-connector-plate.png)
+
+**west-wall**: the west end wall from outside, lid closed
+
+![west-wall](meshsat-1450-west-wall.png)
+
+**east-wall**: the east end wall from outside, lid closed
+
+![east-wall](meshsat-1450-east-wall.png)
+
+**back-wall**: the back wall, hinge side, lid closed
+
+![back-wall](meshsat-1450-back-wall.png)
+
+## The case, lid open (eight azimuths at 40 degrees elevation)
+
+Azimuth 0 looks at the front wall (handle and latches), 90 at the east end, 180 at the back wall (hinge, connector plate), 270 at the west end.
 
 | az 0 | az 45 | az 90 | az 135 |
 |---|---|---|---|
-| ![](meshsat-1450-az000-el20-closed.png) | ![](meshsat-1450-az045-el20-closed.png) | ![](meshsat-1450-az090-el20-closed.png) | ![](meshsat-1450-az135-el20-closed.png) |
+| ![az000-el40-open](meshsat-1450-az000-el40-open.png) | ![az045-el40-open](meshsat-1450-az045-el40-open.png) | ![az090-el40-open](meshsat-1450-az090-el40-open.png) | ![az135-el40-open](meshsat-1450-az135-el40-open.png) |
+
 | az 180 | az 225 | az 270 | az 315 |
-| ![](meshsat-1450-az180-el20-closed.png) | ![](meshsat-1450-az225-el20-closed.png) | ![](meshsat-1450-az270-el20-closed.png) | ![](meshsat-1450-az315-el20-closed.png) |
+|---|---|---|---|
+| ![az180-el40-open](meshsat-1450-az180-el40-open.png) | ![az225-el40-open](meshsat-1450-az225-el40-open.png) | ![az270-el40-open](meshsat-1450-az270-el40-open.png) | ![az315-el40-open](meshsat-1450-az315-el40-open.png) |
 
-## Details
+## The case, lid closed (four azimuths)
 
-| View | What it shows |
-|---|---|
-| ![](meshsat-1450-top-face.png) | the face from above: the display aperture, the e-paper lens with the meshsat.net QR, the buttons, the toggles, the light switch, the sounder, the status column, the battery bar, the nameplate and the logo |
-| ![](meshsat-1450-face-detail-left.png) | the left strip: SOS, EMCON and ZEROIZE locking toggles, the light switch, the sounder, the logo |
-| ![](meshsat-1450-face-detail-right.png) | the right strip: MAIN, PI and TEST buttons with their lit rings, the eleven status LEDs |
-| ![](meshsat-1450-west-wall.png) | the west end wall: UHF, WiFi 2.4, GNSS puck and SDR bulkheads at 88 mm |
-| ![](meshsat-1450-east-wall.png) | the east end wall: LTE, the Iridium patch, LoRa and the two WiFi P2P bulkheads |
-| ![](meshsat-1450-back-wall.png) | the back wall: the upright connector plate between the ribs with the shore and USB cables plugged, the hinge |
-| ![](meshsat-1450-front-wall.png) | the front wall: the handle, the latches, the pressure valve |
-| ![](meshsat-1450-cutaway.png) | the front wall cut away and the face lifted: the dock strip and block, PCB-A with the APRS mezzanine, the Compute Module carrier, the battery row, the pigtails |
-| ![](meshsat-1450-battery-row.png) | the battery row along the west wall under the SMA row, the face lifted clear |
-| ![](meshsat-1450-face-underside.png) | the face lifted 150 mm: the backer board C6 on its standoffs under the plate, the switch bodies through its slots |
-| ![](meshsat-1450-stack-no-face.png) | the stack in the case without the face |
+| az 0 | az 90 | az 180 | az 270 |
+|---|---|---|---|
+| ![az000-el20-closed](meshsat-1450-az000-el20-closed.png) | ![az090-el20-closed](meshsat-1450-az090-el20-closed.png) | ![az180-el20-closed](meshsat-1450-az180-el20-closed.png) | ![az270-el20-closed](meshsat-1450-az270-el20-closed.png) |
+
+The first set of 6 September (43 views, mostly outside orbits, with the closed lid drawn 25 mm too low so the sockets read as lid-mounted) was withdrawn the same day.
