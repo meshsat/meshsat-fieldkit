@@ -417,6 +417,7 @@ for k in range(-12, 13):
     box("grid_x_%d" % k, (1200, 0.8, 0.1), (0, k * 50.0, GROUND + 0.02), M["grid"]); box("grid_y_%d" % k, (0.8, 1200, 0.1), (k * 50.0, 0, GROUND + 0.02), M["grid"])
 # ------------------------------------------------------------------ world, lights, cameras, views
 S.render.engine = "CYCLES"; S.cycles.samples = int(os.environ.get("SAMPLES", "256")); S.cycles.use_denoising = False; S.cycles.device = "CPU"
+S.render.use_persistent_data = True   # 6 Sep 2026 17:00: keep the BVH between views (the drawing-built case is heavy; without this each view re-synced the scene for 80 s while the GPUs idled)
 if os.environ.get("CYCLES_GPU"):   # the build host nllei01gpu01 (RTX 3090 Ti): OptiX, else CUDA; run with the service group stopped
     cp = bpy.context.preferences.addons["cycles"].preferences
     for dev_type in ("OPTIX", "CUDA"):
