@@ -22,12 +22,12 @@ by_board = collections.defaultdict(list)
 for r in rows: by_board[r["board_key"]].append(r)
 for key in sorted(by_board):
     b = base.get(key, {}); out.append("\n### %s (%d experiment rows; baseline: %s router vias, %s mm, %s segments)\n" % (key, len(by_board[key]), b.get("vias_router", "?"), b.get("length_mm", "?"), b.get("tracks", "?")))
-    out.append("| config | jar | verdict | Q | router vias | length mm | segments | detour med / p90 | pairs > 1 mm | raw hard / open | stub closed | autoroute min | wall s |"); out.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+    out.append("| config | pre-route | jar | verdict | Q | router vias | length mm | segments | detour med / p90 | pairs > 1 mm | raw hard / open | stub closed | autoroute min | wall s |"); out.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     def sk(r): return (0 if r.get("verdict") == "MET" else 1 if r.get("verdict") == "REGRESSION" else 2, r.get("Q") if r.get("Q") is not None else 9)
     for r in sorted(by_board[key], key=sk):
         m = r.get("metrics") or {}
         raw = r.get("raw") or {}
-        out.append("| %s | %s | %s | %s | %s | %s | %s | %s / %s | %s | %s / %s | %s of %s | %s | %s |" % (r["config"], (r.get("jar") or "")[12:17], r.get("verdict", "NO_SESSION"), "%.3f" % r["Q"] if r.get("Q") is not None else "-", m.get("vias_router", "-"), m.get("length_mm", "-"), m.get("tracks", "-"), m.get("detour_median", "-"), m.get("detour_p90", "-"), m.get("pairs_over_1mm", "-"), raw.get("hard", "-"), raw.get("unrouted", "-"), r.get("stub_closed", "-"), r.get("stub_open", "-"), m.get("autoroute_minutes", "-"), r.get("wall_s", "-")))
+        out.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s / %s | %s | %s / %s | %s of %s | %s | %s |" % (r["config"], r["preroute_hash"][:6], (r.get("jar") or "")[12:17], r.get("verdict", "NO_SESSION"), "%.3f" % r["Q"] if r.get("Q") is not None else "-", m.get("vias_router", "-"), m.get("length_mm", "-"), m.get("tracks", "-"), m.get("detour_median", "-"), m.get("detour_p90", "-"), m.get("pairs_over_1mm", "-"), raw.get("hard", "-"), raw.get("unrouted", "-"), r.get("stub_closed", "-"), r.get("stub_open", "-"), m.get("autoroute_minutes", "-"), r.get("wall_s", "-")))
 # knob classification: compare each non-base config with the base config of the same board and preroute
 out.append("\n### Knob classification (effect = router vias or length moved by at least 5 percent against the base config on at least two boards)\n")
 effects = collections.defaultdict(list)
@@ -46,11 +46,18 @@ for cfg, lst in sorted(effects.items()):
     out.append("| %s | %s | %s | %s | %s | %s |" % (cfg, ", ".join(k for k, _, _, _ in lst), ", ".join("%+.1f%%" % (dv * 100) for _, dv, _, _ in lst), ", ".join("%+.1f%%" % (dl * 100) for _, _, dl, _ in lst), ", ".join(str(v) for _, _, _, v in lst), cls))
 # Stage 4 gate (pre-registered, plan of 6 Sep 2026): 2.4.1 must write a session within the timeout on every board, reach at least 1.9.0's completion (finished opens
 # and hard after the production finish) and score Q at least 5 percent better on three of five boards with none regressed; otherwise 1.9.0 stays the production jar.
-out.append("\n### Stage 4 gate: Freerouting 2.4.1 against 1.9.0 (fr24_base against fr19_base per board; the finish is the production finish)\n")
+out.append("\n### Stage 4 gate: Freerouting 2.4.1 against 1.9.0 (fr24_plain against fr19_plain per board, no settings block, on the board's newest pre-route; the finish is the production finish)\n")
 out.append("| board | 1.9.0 session | 2.4.1 session | 1.9.0 hard / open (raw open) | 2.4.1 hard / open (raw open) | 1.9.0 router vias | 2.4.1 router vias | 1.9.0 Q | 2.4.1 Q | board verdict |"); out.append("|---|---|---|---|---|---|---|---|---|---|")
 gate = []
 for key in sorted(by_board):
-    r19 = next((r for r in by_board[key] if r["config"] == "fr19_base"), None); r24 = next((r for r in by_board[key] if r["config"] == "fr24_base"), None)
+    # the gate is graded on the PLAIN rows (no settings block, the production route) of the board's newest pre-route hash; the "base" rows carry a settings block
+    # that costs the design's clearances on the dense boards (6 Sep 2026); they stay in the tables as knob rows
+    plain = [r for r in by_board[key] if r["config"] == "fr19_plain"]
+    if plain:
+        pre = max(plain, key=lambda r: r.get("ts", ""))["preroute_hash"]
+        r19 = next((r for r in by_board[key] if r["config"] == "fr19_plain" and r["preroute_hash"] == pre), None); r24 = next((r for r in by_board[key] if r["config"] == "fr24_plain" and r["preroute_hash"] == pre), None)
+    else:
+        r19 = next((r for r in by_board[key] if r["config"] == "fr19_base"), None); r24 = next((r for r in by_board[key] if r["config"] == "fr24_base"), None)
     if not r19 or not r24: continue
     def cell(r):
         m = r.get("metrics") or {}; raw = r.get("raw") or {}
