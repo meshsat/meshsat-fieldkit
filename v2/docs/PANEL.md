@@ -121,7 +121,7 @@ The controller owns three lines per slot: `HBn` in, `SLOT_ENn` out, and the disp
 | 0x20, 0x25 | PCA9555 `U6` (outputs: switch reset, rail enables, module radio disables, 5G control) and `U7` (inputs: faults, RockBLOCK status) | B16 |
 | 0x22, 0x23 | PCA9555 panel expanders (section 4) | C7 |
 | 0x26 | PCA9555 (relay, PA and PTT status, mode inputs) | D8 |
-| 0x40, 0x41, 0x44, 0x45, 0x46, 0x47 | INA226 rail monitors (node, PA, per-slot 5 V, outlet, wall port) | A22 |
+| 0x40, 0x41, 0x44, 0x45, 0x46, 0x47 | INA226 rail monitors: the three slot rails (5.1 V), the device rail, the PA rail (13.8 V), the PoE rail (54 V) | A22 |
 | 0x49 | TMP117 board temperature under the coolers | B16 |
 | 0x60 | ATECC608B secure element (keys behind ZEROIZE) | B16 |
 | 0x68 | DS3231M holdover clock (CR2032 backed) | B16 |
