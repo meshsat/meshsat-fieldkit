@@ -64,6 +64,8 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `pulse/` | H5007NL 1000BASE-T magnetics module datasheet | the wall Ethernet port on A22 (32.55) |
 | `wch/` | CH334 and CH335 USB 2.0 four-port hub datasheet V2.7 (Chinese) | the D8 hub alternative to the TUSB2046B (32.54) |
 | `cm5/`, `ebyte/`, `quectel/`, `ti/` (added 7 Sep) | Amphenol 10164227 Bergstak drawing rev C, the E22-900M30S specification (Chinese), the LG290P hardware design 1.0.0 (Chinese, earlier than the English 1.1 on file), TI TUSB2046B four-port full-speed hub | B16 and D8 |
+| `diodes/` (added 7 Sep, power) | AP64500 5 A, 3.8 to 40 V synchronous buck datasheet (SO-8 with exposed pad; the per-slot 5 V rails of A22, chosen over the TPS56637 whose hot-rod land pattern KiCad lacks) | A22 rails (32.57) |
+| `ti/` (added 7 Sep, PD and hubs) | TPS25740 and TPS25740A USB-C PD source controller datasheet (VQFN-24; the A22 outlet at 45 W with an LM5176 stage switched by CTL1 and CTL2), the TPS25740B and TPS25730 sheets (no stock or hot-rod package, reference only), LMR33640 4 A buck (fallback for the rails), TUSB2046B four-port full-speed USB hub (the D8 hub) | A22 outlet, D8 (32.57) |
 
 The files are ordinary git objects (the largest is about 50 MB).
 
