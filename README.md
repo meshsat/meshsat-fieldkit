@@ -37,6 +37,8 @@ Seven KiCad 9 boards replace the plates, the loose wiring and the USB hub. Three
 | PCB-C PANEL BACKER | PCB-D VHF APRS |
 | ![PCB-E1](v2/images/pcb-e1-dock-top.png) | ![PCB-E5](v2/images/pcb-e5-block-top.png) |
 | PCB-E1 DOCK STRIP | PCB-E5 DOCK BLOCK |
+| ![PCB-P](v2/images/pcb-p-pack-top.png) | |
+| PCB-P PACK BMS | |
 
 Concept renders of the assembled kit as designed (not built; `v2/cad/render/` holds the Blender scene, `v2/images/concept-1450/README.md` the full set):
 
