@@ -143,7 +143,10 @@ def ic(ref, npins, value, fp, nets, lcsc=""):
     for k in range(1, npins + 1):
         if str(k) not in nets: raise SystemExit("%s: pin %d has no net" % (ref, k))
     part(ref, "Connector_Generic", "Conn_01x%02d" % npins, value, fp, nets, lcsc)
-def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""): part(ref, "Transistor_FET", "Q_NMOS_GDS", value, fp, {"1": g, "2": d, "3": s}, lcsc)   # Q_NMOS_GDS: 1 G, 2 D, 3 S
+def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""):
+    """PowerPAK SO-8 single (Vishay 71655; the KiCad land): pads 1, 2, 3 = source, 4 = gate, 5 = the drain tab (five pads named 5). A22 round 1 (7 Sep 2026 05:30)
+    found the three-pin Q_NMOS_GDS map putting the gate and drain nets on source pins: the symbol is a five-pin connector so every pad carries its net."""
+    part(ref, "Connector_Generic", "Conn_01x05", value, fp, {"1": s, "2": s, "3": s, "4": g, "5": d}, lcsc)
 def vh2(ref, value, a, b="GND"): part(ref, "Connector_Generic", "Conn_01x02", value, "VH2", {"1": a, "2": b})
 def tp(ref, net): part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
 # --- pack node over the dock block (32.56): four CELL+ pins, four return pins, the pre-charge pin, then the 25 A blade to VBAT (the 2590 gives 10 A continuous, 18 A peak)

@@ -31,7 +31,7 @@ def slot_footprint(w, h):
 
 # ---------------------------------------------------------------- sites (case frame), appendix 32.56
 DOCK_BLOCK = (-104.0, -78.0, -66.0, -64.0)       # underside pin field: J_PRE1 (-103, -70), J_CP1..4 (-99 + 4k, -73), J_CN1..4 (-99 + 4k, -67), J_DOCK 2x6 (-76, -70); E6's raised block reads these
-RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 102]     # VHF HF WIFI24 GNSS SDR P2P-A P2P-B 5G-MAIN 5G-DIV IRID LORA
+RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 100]     # VHF HF WIFI24 GNSS SDR P2P-A P2P-B 5G-MAIN 5G-DIV IRID LORA (LORA at 100 since the ribbon moved to the east strip, 32.58)
 RF_NAMES = ["VHF", "HF", "WIFI 2.4", "GNSS", "SDR", "P2P A", "P2P B", "5G MAIN", "5G DIV", "IRIDIUM", "LORA"]
 RF_Y, RF_JY = -66.0, -56.0                        # SMP-MAX receptacles (underside) and SMA jacks (top)
 FRONT_ZONE = (-118.0, 34.0, -70.0, 66.0)           # LM5176 front end from the dock's shore pins to the 20 V bus (J_AB1 sits above it at (-90, 76))
@@ -48,8 +48,8 @@ MEZZ_RECT = (0.0, -40.0, 100.0, 40.0)              # D8 mezzanine 100 x 80 on fo
 MEZZ_HOLES = [(5.0, -35.0), (95.0, -35.0), (5.0, 35.0), (95.0, 35.0)]
 J_MEZZ = (-8.0, 8.0); J_MEZZ_PWR = (-8.0, -18.0)
 NE_ZONE = (0.0, 44.0, 100.0, 72.0)                 # USB-C PD outlet stage and the three eFuses
-EAST_STRIP = (100.0, -51.0, 118.0, 62.0)           # lead connectors, rotated 90: J_PA (110, 58), J_MON (110, 44), J_HEAT (110, 30), J_USBC_OUT (110, 14), J_HF (110, 0), J_54V (110, -14), J_USBW (110, -26), J_MAINSW (110, -38)
-J_AB = (-84.0, 73.5)                               # 2x13 IDC along X (rot 90), top side, B16's underside header at the same case XY; 5.7 mm east of the rod nut
+EAST_STRIP = (105.0, -67.0, 118.0, 67.0)           # lead connectors, rotated 90: J_PA (110, 62), J_MON (110, 50), J_HEAT (110, 38), J_USBC_OUT (110, 26), J_HF (110, 12), J_54V (110, 0), J_USBW (110, -12); J_MAINSW at (98, 75) in the north-east corner; J_AB1 (2x13 along Y) at (113, -46) on top, B16's underside header at the same case XY (32.58)
+J_AB = (113.0, -46.0)                              # 2x13 IDC along Y, top side, on the east strip: B16's underside header at the same case XY (32.58; the north-west spot of 32.56 lies under B16's first module column)
 # ---------------------------------------------------------------- plumbing (as PCB-C)
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(4)
@@ -143,6 +143,16 @@ def site(r, label, sublabel="", layer=pcbnew.F_SilkS, lx=None, ly=None):
 # ---------------------------------------------------------------- outline + rods
 hx, hy = BOARD_L / 2, BOARD_W / 2
 rounded_rect(BOARD_X0, -hy, BOARD_X0 + BOARD_L, hy, BOARD_R, pcbnew.Edge_Cuts)
+def edge_band(w=0.5):
+    """A22 round 2 (7 Sep 2026): no tracks or vias within w mm of the outline on any copper layer (the E6 route 1 lesson); pours keep their own clearance."""
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(True); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+    z.SetLayerSet(pcbnew.LSET.AllCuMask(board.GetCopperLayerCount())); z.SetZoneName("edge band: no tracks or vias within %.1f mm of the outline" % w)
+    o = z.Outline(); o.NewOutline(); X0, X1 = BOARD_X0, BOARD_X0 + BOARD_L
+    for x, y in ((X0 - 1.0, -hy - 1.0), (X1 + 1.0, -hy - 1.0), (X1 + 1.0, hy + 1.0), (X0 - 1.0, hy + 1.0)): p = P(x, y); o.Append(p.x, p.y)
+    h = o.NewHole(0)
+    for x, y in ((X0 + w, -hy + w), (X0 + w, hy - w), (X1 - w, hy - w), (X1 - w, -hy + w)): p = P(x, y); o.Append(p.x, p.y, 0, h)
+    board.Add(z); return z
+edge_band(0.5)
 for i, (x, y) in enumerate(ROD_HOLES, 1):
     hole("H%d" % i, x, y, 3.2, "M3 rod R%d" % i)
     for layer in (pcbnew.F_SilkS, pcbnew.B_SilkS): circle(x, y, NUT_KEEPOUT_D, layer, 0.15)
@@ -165,10 +175,10 @@ text("D8 MEZZANINE SITE  100 x 80", 50.0, 3.0, pcbnew.F_SilkS, 1.4, 0.22)
 text("SA868 exciter, LPF, T/R relay, USB codec set, PTT and EMCON logic on 4x M3 (32.56); the PA module is on the face plate", 50.0, 0.0, pcbnew.F_SilkS, 0.9, 0.16)
 for (x, y) in MEZZ_HOLES:
     hole("H%d" % n, x, y, 3.2, "M3 standoff, mezzanine"); n += 1
-place("Connector_IDC", "IDC-Header_2x08_P2.54mm_Vertical", "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=90)
+place("Connector_IDC", "IDC-Header_2x08_P2.54mm_Vertical", "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=0)   # along Y beside the mezzanine (its shroud is 29 mm long)
 text("J_MEZZ1", J_MEZZ[0] - 8.0, J_MEZZ[1], pcbnew.F_SilkS, 1.0, 0.18, angle=90)
 text("J_MEZZ_PWR1 VH2 (5 V)", J_MEZZ_PWR[0], J_MEZZ_PWR[1] + 7.0, pcbnew.F_SilkS, 0.9, 0.16)
-rect((J_AB[0] - 21.0, J_AB[1] - 5.5, J_AB[0] + 21.0, J_AB[1] + 5.5), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x13 -> B16 underside (-84, 73.5)", J_AB[0], J_AB[1] - 7.5, pcbnew.Dwgs_User, 0.9, 0.15)
+rect((J_AB[0] - 5.5, J_AB[1] - 21.0, J_AB[0] + 5.5, J_AB[1] + 21.0), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x13 -> B16 underside (113, -46)", J_AB[0] - 9.0, J_AB[1], pcbnew.Dwgs_User, 0.9, 0.15, angle=90)
 text("F1 25 A", FUSE_SITE[0], FUSE_SITE[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)

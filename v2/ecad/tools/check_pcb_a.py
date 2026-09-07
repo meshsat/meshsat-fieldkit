@@ -19,20 +19,20 @@ def hole_at(x, y, d): return any(r.startswith("H") and abs(case(f.GetPosition())
 RODS = [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]
 for (x, y) in RODS: check(hole_at(x, y, 3.2), "rod hole at (%.1f, %.1f)" % (x, y))
 for (x, y) in [(5, -35), (95, -35), (5, 35), (95, 35)]: check(hole_at(x, y, 3.2), "mezzanine M3 at (%d, %d)" % (x, y))
-RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 102]
-EXPECT = {"J_DOCK": (-76, -70), "J_PRE1": (-103, -70), "J_CP1": (-99, -73), "J_CN4": (-87, -67), "F1": (-97, -52), "J_AB1": (-84, 73.5), "J_MEZZ1": (-8, 8), "J_MEZZ_PWR1": (-8, -18),
-          "U2": (-94, 56), "U3": (-96, 12), "U16": (-96, -26), "U4": (-60, 66), "U7": (-12, 66), "U13": (-44, 6), "U15": (-36, -27), "U18": (10, 65), "U1": (-49, -28), "U27": (-50, -19), "J_MAINSW": (110, -38), "J_PA": (110, 58), "J_54V": (110, -14)}
+RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 100]
+EXPECT = {"J_DOCK": (-76, -70), "J_PRE1": (-103, -70), "J_CP1": (-99, -73), "J_CN4": (-87, -67), "F1": (-97, -52), "J_AB1": (113, -46), "J_MEZZ1": (-8, 8), "J_MEZZ_PWR1": (-8, -18),
+          "U2": (-94, 56), "U3": (-96, 12), "U16": (-96, -26), "U4": (-60, 66), "U7": (-12, 66), "U13": (-44, 6), "U15": (-36, -27), "U18": (10, 65), "U1": (-49, -28), "U27": (-50, -19), "J_PA": (110, 62), "J_54V": (110, 0), "J_MAINSW": (98, 75)}
 for k, x in enumerate(RF_X, 1): EXPECT["J_BM%d" % k] = (x, -66); EXPECT["J_RF%d" % k] = (x, -56)
 for ref, (ex, ey) in EXPECT.items():
     if ref not in fps: print("SKIP %s (placed at the netlist stage)" % ref); continue
     cx, cy = fpc(ref); check(abs(cx - ex) < 0.6 and abs(cy - ey) < 0.6, "%s centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cx, cy))
 R = {"FRONT": (-118, 34, -70, 66), "CHARGER": (-118, -6, -70, 34), "POE": (-118, -44, -70, -6), "RAILS": (-66, 34, -2, 72), "PA": (-66, -14, -16, 20), "MID": (-66, 20, -2, 34), "HF": (-46, -48, -16, -22), "CTRL": (-66, -48, -46, -14), "TPZ": (-88.5, -64, -68, -46),
-     "MEZZ": (0, -40, 100, 40), "NE": (0, 44, 100, 72), "EAST": (100, -51, 118, 62), "DOCKBLK": (-104, -78, -66, -64), "JAB": (-105, 68, -63, 79), "FUSE": (-106, -58, -88.5, -46), "JMEZZ": (-13.5, -2, -2.5, 18), "JMEZZPWR": (-13, -22.5, -3, -13.5)}
+     "MEZZ": (0, -40, 100, 40), "NE": (0, 44, 100, 72), "EAST": (105, -67, 118, 67), "DOCKBLK": (-104, -78, -66, -64), "JAB": (107.5, -67, 118.5, -25), "FUSE": (-106, -58, -88.5, -46), "JMEZZ": (-13.5, -7, -2.5, 23), "JMEZZPWR": (-13, -22.5, -3, -13.5)}
 for k, x in enumerate(RF_X, 1): R["BM%d" % k] = (x - 4.2, -70.5, x + 4.2, -51.5)
 for k, r in R.items(): check(r[0] >= -119 and r[2] <= 119 and r[1] >= -79 and r[3] <= 79, "%s inside the outline with a 1 mm margin" % k)
 def overlap(a, c): return not (a[2] <= c[0] or c[2] <= a[0] or a[3] <= c[1] or c[3] <= a[1])
 for (ka, a), (kb, c) in itertools.combinations(R.items(), 2):
-    if {ka, kb} in ({"FUSE", "POE"}, {"EAST", "MEZZ"}, {"RAILS", "JAB"}): continue
+    if {ka, kb} in ({"FUSE", "POE"}, {"EAST", "MEZZ"}, {"EAST", "JAB"}, {"MID", "JMEZZ"}): continue
     check(not overlap(a, c), "%s and %s do not overlap" % (ka, kb))
 def rc(r, c, rad):
     cx = max(r[0], min(c[0], r[2])); cy = max(r[1], min(c[1], r[3])); return ((cx - c[0]) ** 2 + (cy - c[1]) ** 2) ** 0.5 >= rad
@@ -40,6 +40,13 @@ for k, r in R.items(): check(all(rc(r, rod, 4.5) for rod in RODS), "%s clear of 
 hl = [(case(f.GetPosition()), list(f.Pads())[0].GetDrillSize().x / 1e6) for r, f in fps.items() if r.startswith("H")]
 minweb = min(((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2) ** 0.5 - (dp + dq) / 2 for (p, dp), (q, dq) in itertools.combinations(hl, 2))
 check(minweb >= 2.0, "min web between holes %.2f mm" % minweb)
+# PowerPAK FETs (7 Sep 2026): pads 1-3 one net (source), pad 4 the gate, pad 5 the drain tab; a three-pin map left gate and drain on source pins in A22 round 1
+for _f in b.GetFootprints():
+    if "PowerPAK" in _f.GetFPIDAsString():
+        _n = {}
+        for _p in _f.Pads(): _n.setdefault(_p.GetNumber(), set()).add(_p.GetNetname())
+        check(len(_n.get("1", set()) | _n.get("2", set()) | _n.get("3", set())) == 1 and "" not in _n.get("1", set()) and _n.get("4", {""}) != {""} and _n.get("5", {""}) != {""} and _n.get("4") != _n.get("5"),
+              "%s PowerPAK pad map: source 1-3 %s, gate 4 %s, drain 5 %s" % (_f.GetReference(), sorted(_n.get("1", set())), sorted(_n.get("4", set())), sorted(_n.get("5", set()))))
 # net-class patterns must match a board net in one of their two forms (5 Sep 2026, 32.39)
 import fnmatch as _fn, json as _json, os as _os
 _pro = _os.path.splitext(sys.argv[1])[0] + ".kicad_pro"

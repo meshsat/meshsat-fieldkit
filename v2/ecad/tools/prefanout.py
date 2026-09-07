@@ -21,6 +21,11 @@ allpads = [(p, p.GetPosition(), max(p.GetSize().x, p.GetSize().y) / 2) for fp in
 rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()] + [z for fp in b.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout; B13: footprint keep-outs (the E72 antenna) count too
 edges = b.GetBoardEdgesBoundingBox()
 placed = [t.GetPosition() for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]; placed_nets = []   # escapes already on the board count as placed vias
+segs = [(t.GetStart(), t.GetEnd(), t.GetWidth() / 2) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]   # B16 (7 Sep 2026): escape stubs are obstacles too, a fanout via landed on one
+def _seg_dist(p, a, c):
+    ax, ay, bx, by = a.x, a.y, c.x, c.y; dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
+    t = 0.0 if L2 == 0 else max(0.0, min(1.0, ((p.x - ax) * dx + (p.y - ay) * dy) / L2))
+    return math.hypot(p.x - (ax + t * dx), p.y - (ay + t * dy))
 def clear(v, me, r=None):
     r = VIA_D / 2 if r is None else r
     mp = me.GetPosition()
@@ -31,6 +36,8 @@ def clear(v, me, r=None):
         if math.hypot(v.x - qp.x, v.y - qp.y) < qr + r + gap: return False
     for w in placed:
         if math.hypot(v.x - w.x, v.y - w.y) < VIA_D + FromMM(0.5): return False
+    for a, c, hw in segs:
+        if _seg_dist(v, a, c) < hw + r + FromMM(0.2): return False
     for z in rule_areas:
         o = z.Outline()
         for ddx, ddy in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r)):
