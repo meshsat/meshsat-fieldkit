@@ -5,7 +5,8 @@ import sys, re, math, json, heapq, pcbnew, numpy as np
 from pcbnew import VECTOR2I, FromMM
 BOARD, DRC = sys.argv[1], sys.argv[2]
 PLANES = set((sys.argv[3] if len(sys.argv) > 3 else "GND,+5V,+3V3,CELL+").split(","))
-G = float(__import__("os").environ.get("STUB_GRID", "0.05"))   # grid, mm (STUB_GRID=0.1 for long connections)
+G = float(__import__("os").environ.get("STUB_GRID", "0.05"))
+WIN_SCALE = float(__import__("os").environ.get("STUB_WIN_SCALE", "1.0"))   # 7 Sep 2026: the search window around the two ends (8 or 15 mm) times this; A22 closes its last gaps at 2.5   # grid, mm (STUB_GRID=0.1 for long connections)
 CLR = 0.16                   # clearance to other copper, mm (board rule 0.15)
 HOLE_CLR = 0.30              # clearance to a drilled pad or a mounting hole: the board's hole clearance rule is 0.25, and the 0.1 mm grid needs a margin over it (B12, 4 Sep: six 0.24 mm misses against two NPTH holes)
 b = pcbnew.LoadBoard(BOARD); drc = json.load(open(DRC))
@@ -278,7 +279,16 @@ for it1, it2 in pairs:
     net = netobj.GetNetname()
     TW = 0.25; VIA_D, VIA_DR, VIA_COST = 0.6, 0.3, 50.0
     try:
-        nc = netobj.GetNetClass(); TW = max(0.25, min(mm(nc.GetTrackWidth()), 0.4)); VIA_D = max(0.6, mm(nc.GetViaDiameter())); VIA_DR = max(0.3, mm(nc.GetViaDrill()))
+        nc = netobj.GetNetClass(); TW = max(0.25, min(mm(nc.GetTrackWidth()), 1.0)); VIA_D = max(0.6, mm(nc.GetViaDiameter())); VIA_DR = max(0.3, mm(nc.GetViaDrill()))
+        # 7 Sep 2026 (A22 round 2): a bare LoadBoard resolves no class for a root-sheet label on KiCad 9.0.9, so the closure of a 0.6 mm node net came out 0.25 and the
+        # width gate refused it; the project's explicit netclass_assignments (written by the placement generators) are the truth here
+        try:
+            _pro = __import__("json").load(open(__import__("os").path.splitext(BOARD)[0] + ".kicad_pro")); _ns = _pro.get("net_settings", {})
+            _cl = (_ns.get("netclass_assignments") or {}).get(net.GetNetname())
+            if _cl:
+                _c = [c for c in _ns.get("classes", []) if c.get("name") == _cl]
+                if _c: TW = max(0.25, min(float(_c[0].get("track_width", TW)), 1.0)); VIA_D = max(0.6, float(_c[0].get("via_diameter", VIA_D))); VIA_DR = max(0.3, float(_c[0].get("via_drill", VIA_DR)))
+        except Exception as _e: pass
     except Exception: pass
     fine = [it for it in (it1, it2) if it["kind"] == "pad" and it["pad"] is not None and min(mm(it["pad"].GetSize().x), mm(it["pad"].GetSize().y)) < 0.4]
     if fine: TW = 0.2                                              # leaving a fine-pitch pad: thinnest allowed track
@@ -293,9 +303,9 @@ for it1, it2 in pairs:
     if netname(net) in PLANES and not (a["kind"] == "pad" and c["kind"] == "pad"):   # pad-to-pad on a plane net: route it, do not just drop a via
         goal_cells = {L: ~via for L in LAYERS}
         for L in LAYERS: goal_cells[L] &= ~trk[L]
-        win = 8.0
+        win = 8.0 * WIN_SCALE
     else:
-        goal_cells = other_cluster_cells(a, net, via); win = 15.0
+        goal_cells = other_cluster_cells(a, net, via); win = 15.0 * WIN_SCALE
         if not any(M.any() for M in goal_cells.values()):
             goal_cells = copper_cells(c, net)
             if c.get("inner"):
