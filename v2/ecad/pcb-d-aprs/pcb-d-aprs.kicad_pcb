@@ -38942,7 +38942,7 @@
 			)
 		)
 	)
-	(gr_text "SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad"
+	(gr_text "SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay"
 		(at 87 75.5 0)
 		(layer "F.SilkS")
 		(uuid "e728fad7-bfe5-4f68-92c2-968e80847b32")
@@ -38953,7 +38953,7 @@
 			)
 		)
 	)
-	(gr_text "PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct"
+	(gr_text "PA leads on the south edge: J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct"
 		(at 105 62.5 0)
 		(layer "F.SilkS")
 		(uuid "bbfadd24-82e8-4d82-93f9-b33d6bfadefb")
