@@ -24,8 +24,8 @@ FACE = P.FACE_TOP_Z                   # 101.4, the plate's top face on the frame
 PLATE_UNDER = P.PLATE_UNDER_Z         # 98.4
 BACKER_TOP = PLATE_UNDER - P.BACKER_GAP; BACKER_Z = BACKER_TOP - P.BACKER_T   # 88.4, 86.8
 SMA_Z = 88.0
-WEST = [(-72.0, "VHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]
-EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (-24.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]   # LORA off Y 0: the 1450 end wall carries a nub there (drawing 1451-931, 6 Sep 2026)
+WEST = [(y, n) for n, y in P.WALL_WEST]   # since C7 (7 Sep 2026): panel1450 is the single source of the jack lists (eleven paths, 32.56)
+EAST = [(y, n) for n, y in P.WALL_EAST]
 RIBS_X = (-170.0, -95.0, -18.0, 60.0, 137.0)
 CPLATE = dict(cx=-56.0, cz=54.0, w=54.0, h=82.0)
 GROUND = -8.0                         # the ground plane under the feet pads (the shell's bottom at -5, pads 3 mm)
@@ -246,60 +246,69 @@ for z, d, fl, nm, cm, cd in ((34, 19.05, 28.9, "shore", M["wire_blk"], 8.0), (74
     tube("cable_%s_1" % nm, (CPLATE["cx"], WALL_Y + 39, z), (CPLATE["cx"] + 30, WALL_Y + 150, z - 10), cd, cm); sphere("cable_%s_k" % nm, cd, (CPLATE["cx"] + 30, WALL_Y + 150, z - 10), cm)
     tube("cable_%s_2" % nm, (CPLATE["cx"] + 30, WALL_Y + 150, z - 10), (CPLATE["cx"] + 60, WALL_Y + 230, GROUND + cd / 2), cd, cm); sphere("cable_%s_k2" % nm, cd, (CPLATE["cx"] + 60, WALL_Y + 230, GROUND + cd / 2), cm)
     tube("cable_%s_3" % nm, (CPLATE["cx"] + 60, WALL_Y + 230, GROUND + cd / 2), (CPLATE["cx"] + 60, WALL_Y + 420, GROUND + cd / 2), cd, cm)
-# ------------------------------------------------------------------ the floor: dock strip E4, block E5, rods, the battery row along the west end wall
-import_board("pcb_e4", "pcb-e1-dock.glb", 0.0); import_board("pcb_e5", "pcb-e5-block.glb", 6.0)
-for (x, y) in ((-155.5, -63.0), (-117.5, -63.0), (-155.5, -82.0), (-117.5, -82.0)): cyl("standoff_e5_%d" % int(x), 5.0, 6.0, (x, y, 3.0), M["steel"])
-box("traco_ten40", (50.8, 25.4, 10.2), (-40, -81, 1.6 + 5.1), M["dark"])
+# ------------------------------------------------------------------ the floor: dock strip E6, block E5, rods (the BB-2590/U cradle at the west wall is not drawn: 32.60 item 7, the pack needs 5 mm the floor does not have there)
+import_board("pcb_e6", "pcb-e1-dock.glb", 0.0); import_board("pcb_e5", "pcb-e5-block.glb", 6.0)
+for (x, y) in ((-104.0, -63.0), (-66.0, -63.0), (-104.0, -83.0), (-66.0, -83.0)): cyl("standoff_e5_%d" % int(x), 5.0, 6.0, (x, y, 3.0), M["steel"])
 for (x, y) in ((-110.5, -73.0), (110.5, -73.0), (-110.5, 73.0), (110.5, 73.0)):
-    cyl("rod_%d_%d" % (x, y), 3.0, 64.0, (x, y, 32.0), M["steel"])   # 6 Sep 2026 (owner, item 2): the rods end 5 mm above the B15 nuts, never through the face
+    cyl("rod_%d_%d" % (x, y), 3.0, 64.0, (x, y, 32.0), M["steel"])   # 6 Sep 2026 (owner, item 2): the rods end 5 mm above the B16 nuts, never through the face
     for z in (1.6, 16.6, 56.2): cyl("nut_%d_%d_%d" % (x, y, z), 5.5, 2.4, (x, y, z + 1.2), M["steel"], verts=6)
     cyl("spacer_%d_%d_a" % (x, y), 6.0, 13.4, (x, y, 1.6 + 6.7), M["alu"]); cyl("spacer_%d_%d_b" % (x, y), 6.0, 38.0, (x, y, 16.6 + 19.0), M["alu"])
-MOD = Matrix.Translation((-174.0, -114.5, 5.0))    # module frame: X across the width, Y along the row from the south (lead) end, Z from the cradle's underside
-import_stl("module_base", "module_base.stl", M["gray"], MOD); import_stl("module_lid", "module_lid.stl", M["dark"], MOD); import_stl("module_cradle", "module_cradle.stl", M["black"], MOD)
-tube("module_lead_r", (-163, -113, 68), (-163, -104, 30), 3.2, M["wire_red"]); tube("module_lead_b", (-161, -113, 68), (-161, -104, 30), 3.2, M["wire_blk"])
-tube("module_lead_r2", (-163, -104, 30), (-146, -98, 12), 3.2, M["wire_red"]); tube("module_lead_b2", (-161, -104, 30), (-144, -98, 12), 3.2, M["wire_blk"]); box("xt60", (16, 16, 8), (-138, -98, 10), M["amber"], bevel=1.0)
-# ------------------------------------------------------------------ PCB-A A21, the mezzanine D7, PCB-B B15 and what rides on it
-import_board("pcb_a21", "pcb-a-power.glb", 15.0)
-import_board("pcb_d7", "pcb-d-aprs.glb", 22.6, Matrix.Translation((45.0, 0.0, 0.0)))
-for (x, y) in ((10, -26), (80, -26), (10, 26), (80, 26)): cyl("standoff_d_%d_%d" % (x, y), 5.0, 6.0, (x, y, 19.6), M["steel"])
-box("dmr858m", (48, 26, 6), (55.5, -2.0, 38.2), M["tin"]); box("dmr858m_sink", (48, 26, 8), (55.5, -2.0, 45.2), M["alu"])
-SMA_JACKS = ((-100, -56), (-84, -56), (-26, -56), (-12, -56), (70, -74), (92, -74), (103, -54))
+tube("pack_lead_r", (-141.6, -108, 8), (-172, -108, 40), 3.2, M["wire_red"]); tube("pack_lead_b", (-134, -108, 8), (-172, -104, 40), 3.2, M["wire_blk"]); box("xt60", (16, 16, 8), (-138, -108, 6), M["amber"], bevel=1.0)   # the BTA-70762-2 cable's XT60 on E6 J_BATT, its far end owed with the cradle
+# ------------------------------------------------------------------ PCB-A A22, the mezzanine D8 (100 x 80 at case X 0..100), PCB-B B16 (330 x 200) and what rides on it
+import_board("pcb_a22", "pcb-a-power.glb", 15.0)
+import_board("pcb_d8", "pcb-d-aprs.glb", 22.6, Matrix.Translation((50.0, 0.0, 0.0)))
+for (x, y) in ((5, -35), (95, -35), (5, 35), (95, 35)): cyl("standoff_d_%d_%d" % (x, y), 5.0, 6.0, (x, y, 19.6), M["steel"])
+box("sa868", (35.6, 19.0, 3.2), (35.0, 8.0, 24.2 + 1.6), M["tin"])   # the exciter on its castellated land (D8 local (-15, 8))
+SMA_X = (-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 102); SMA_JACKS = tuple((x, -56) for x in SMA_X)   # 32.56: eleven J_RF on top at Y -56, the SMP-MAX receptacles under them at Y -66
 for k, (x, y) in enumerate(SMA_JACKS):
     cyl("sma_jack_%d" % k, 6.5, 9.0, (x, y, 21.1), M["gold"]); cyl("sma_nut_%d" % k, 8.0, 2.0, (x, y, 17.6), M["steel"], verts=6)
-for k, y in enumerate((-68, -58, -48)):     # the three rail leads A to B
-    cyl("lead_r_%d" % k, 1.8, 36, (-92 - 1.5, y, 35), M["wire_red"]); cyl("lead_b_%d" % k, 1.8, 36, (-92 + 1.5, y, 35), M["wire_blk"])
-import_board("pcb_b15", "pcb-b-compute.glb", 54.6)
+for k, x in enumerate((-64, -52, -40, -28)):     # the four rail leads A22 to B16 (J_5V_S1..3, J_5V_DEV at Y 75)
+    cyl("lead_r_%d" % k, 1.8, 36, (x - 1.5, 75, 35), M["wire_red"]); cyl("lead_b_%d" % k, 1.8, 36, (x + 1.5, 75, 35), M["wire_blk"])
+import_board("pcb_b16", "pcb-b-compute.glb", 54.6)
 ZB = 56.2
-box("cm5_module", (40, 55, 1.24), (-88, 0, ZB + 4.62), M["pcb"]); box("cm5_soc", (15, 15, 1.2), (-88, 6, ZB + 5.84), M["dark"]); box("cm5_emmc", (11, 13, 1.0), (-88, -12, ZB + 5.74), M["dark"])
-box("cm5_cooler", (41, 56, 4.0), (-88, 0, ZB + 8.24 + 2.0), M["alu"]); box("cm5_fan", (30, 30, 6), (-88, 0, ZB + 8.24 + 12.7 + 3), M["dark"]); cyl("cm5_fan_rotor", 26, 5, (-88, 0, ZB + 8.24 + 12.7 + 3.5), M["gray"], verts=7)
-for i in range(13): box("cm5_fin_%d" % i, (1.2, 52, 8.7), (-88 - 18 + 3.0 * i, 0, ZB + 8.24 + 4.0 + 4.35), M["alu"])
-for (x, y) in ((-104.5, -24), (-104.5, 24), (-71.5, -24), (-71.5, 24)): cyl("cm5_standoff_%d_%d" % (x, y), 4.0, 4.0, (x, y, ZB + 2.0), M["steel"])
-box("wifi_m2_socket", (10, 22, 4.2), (32.4, 60, ZB + 2.1), M["dark"]); box("wifi_m2_card", (26.6, 22, 0.8), (53.7, 60, ZB + 4.6), M["pcb"]); box("wifi_m2_sink", (24, 20, 4.0), (54, 60, ZB + 7.0), M["alu"]); cyl("wifi_m2_standoff", 4.5, 2.4, (65.25, 60, ZB + 5.2), M["steel"], verts=6)
-box("lte_card", (50.95, 30, 1.0), (-3, 67, ZB + 4.5), M["pcb"]); box("lte_can", (30, 24, 2.5), (5, 67, ZB + 6.25), M["tin"]); box("lte_socket", (8, 22, 4.0), (-29.5, 67, ZB + 2.0), M["dark"])
-box("sdr_stick", (69, 27, 13), (37, 0, ZB + 6.5), M["dark"], bevel=2.0); cyl("sdr_sma", 6.5, 10, (76, 0, ZB + 6.5), M["gold"], axis="X"); box("usb_a_recept", (14, 13.5, 7), (-12, 0, ZB + 3.5), M["steel"])
-import_stl("rockblock9704", "rockblock9704.stl", M["dark"], Matrix.Translation((52.0 - 90.3, -48.0 + 91.2, ZB + 6.0 + 10.3)))
-for (x, y) in ((36, -64), (68, -64), (36, -32), (68, -32)): cyl("rb_standoff_%d_%d" % (x, y), 6.0, 6.0, (x, y, ZB + 3.0), M["steel"])
-box("gnss_neo", (12.2, 16, 2.4), (-107, 55, ZB + 1.2), M["tin"]); box("lora_wio", (11.6, 11, 3), (-84, 55, ZB + 1.5), M["tin"]); box("zigbee_e72", (17.5, 28.7, 2.5), (94, 34, ZB + 1.25), M["tin"])
-cyl("cr2032", 20, 3.2, (-46, 27, ZB + 3.2), M["steel"]); box("cr2032_holder", (24, 21, 5), (-46, 27, ZB + 2.5), M["dark"])
-box("display_flex", (16, 0.3, BACKER_Z - ZB - 2), (-50, 22, (ZB + BACKER_Z) / 2), M["amber"]); box("panel_ribbon", (0.9, 25.4, BACKER_Z - ZB - 2), (P.J_PANEL_POS[0], 72, (ZB + BACKER_Z) / 2), M["ribbon"])
-# ------------------------------------------------------------------ the face: the aluminium plate, the backer C6 on its standoffs, the display, the e-paper, switches, light guides, legends
+for s_, (cx, cy) in enumerate(((-72.5, 60.0), (-2.5, 60.0), (67.5, 60.0)), 1):   # the three CM5 sites with the official cooler and an IP68 fan on it (32.53)
+    box("cm5_%d_module" % s_, (40, 55, 1.24), (cx, cy, ZB + 4.62), M["pcb"]); box("cm5_%d_soc" % s_, (15, 15, 1.2), (cx, cy + 6, ZB + 5.84), M["dark"]); box("cm5_%d_emmc" % s_, (11, 13, 1.0), (cx, cy - 12, ZB + 5.74), M["dark"])
+    box("cm5_%d_cooler" % s_, (41, 56, 4.0), (cx, cy, ZB + 8.24 + 2.0), M["alu"]); box("cm5_%d_fan" % s_, (30, 30, 6), (cx, cy, ZB + 8.24 + 12.7 + 3), M["dark"]); cyl("cm5_%d_fan_rotor" % s_, 26, 5, (cx, cy, ZB + 8.24 + 12.7 + 3.5), M["gray"], verts=7)
+    for i in range(13): box("cm5_%d_fin_%d" % (s_, i), (1.2, 52, 8.7), (cx - 18 + 3.0 * i, cy, ZB + 8.24 + 4.0 + 4.35), M["alu"])
+    for (dx, dy) in ((-16.5, -24), (-16.5, 24), (16.5, -24), (16.5, 24)): cyl("cm5_%d_standoff_%d_%d" % (s_, dx, dy), 4.0, 4.0, (cx + dx, cy + dy, ZB + 2.0), M["steel"])
+# M.2 cards on their sockets (32.58, the socket boxes of gen_pcb_b3.py): S1 WiFi 2230 E-key, S2 5G 3052 B-key, three NVMe 2242 M-key and S3's spare
+for nm, (cx, cy), (w, l) in (("m2_wifi", (-57.0, 11.0), (22, 30)), ("m2_5g", (-20.0, 0.0), (30, 52)), ("m2_nvme1", (-85.0, 5.0), (22, 42)), ("m2_nvme3", (48.0, 5.0), (22, 42)), ("m2_spare3", (79.0, 5.0), (22, 42))):
+    box(nm + "_card", (w, l, 0.8), (cx, cy, ZB + 4.6), M["pcb"]); box(nm + "_chip", (w - 6, l * 0.5, 2.0), (cx, cy, ZB + 6.0), M["dark"])
+box("m2_nvme2_card", (42, 22, 0.8), (-9.3, -85.0, ZB + 4.6), M["pcb"]); box("m2_nvme2_chip", (30, 16, 2.0), (-9.3, -85.0, ZB + 6.0), M["dark"])
+box("lime_sdr", (31.0, 69.0, 10.0), (145.5, 10.5, ZB + 7.0), M["dark"], bevel=2.0); box("usb3_recept", (16.8, 19.0, 7.0), (145.5, -33.5, ZB + 3.5), M["steel"])   # the LimeSDR Mini in its bay, its plug in J_LIME
+import_stl("rockblock9704", "rockblock9704.stl", M["dark"], Matrix.Translation((139.0 - 90.3, -71.0 + 91.2, ZB + 8.0 + 10.3)))
+for (x, y) in ((113, -99), (165, -99), (113, -43), (165, -43)): cyl("rb_standoff_%d_%d" % (x, y), 6.0, 8.0, (x, y, ZB + 4.0), M["steel"])
+box("eth_rj45", (20.0, 17.0, 13.5), (-152.0, 89.5, ZB + 6.75), M["steel_dark"]); box("eth_magnetics", (19.0, 19.0, 6.5), (-152.0, 68.0, ZB + 3.25), M["dark"])
+box("e22_lora", (38.5, 24.0, 4.0), (143.0, 56.0, ZB + 2.0), M["tin"]); box("lg290p", (16.0, 12.2, 2.4), (105.0, 88.0, ZB + 1.2), M["tin"])
+for k, (x, y) in enumerate(((128.0, 52.0), (158.0, 52.0)), 1): box("e72_%d" % k, (17.5, 28.7, 2.5), (x, y, ZB + 1.25), M["tin"])
+box("panel_ribbon", (25.4, 0.9, BACKER_Z - ZB - 2), (P.J_PANEL_POS[0], P.J_PANEL_POS[1], (ZB + BACKER_Z) / 2), M["ribbon"])   # B16 J_PANEL straight up to the top strip
+tube("hdmi_cable_1", (104.5, -93.0, ZB + 4), (90.0, -80.0, ZB + 20), 5.0, M["wire_blk"]); sphere("hdmi_cable_k", 5.0, (90.0, -80.0, ZB + 20), M["wire_blk"]); tube("hdmi_cable_2", (90.0, -80.0, ZB + 20), (73.65, -72.2, PLATE_UNDER - 19.0), 5.0, M["wire_blk"])   # J_HDMI to the monitor's block
+# ------------------------------------------------------------------ the face: the aluminium plate, the backer ring C7 on its standoffs, the Xenarc on the plate, the e-paper, switches, jacks, light guides, legends
 plate = import_stl("plate", "face_plate.stl", M["anod"], fit=(True, "min", PLATE_UNDER))
 if plate is None: plate = box("plate", (P.PLATE[0], P.PLATE[1], P.PLATE[2]), (0, 0, PLATE_UNDER + P.PLATE[2] / 2), M["anod"])
-c6 = import_board("pcb_c6", "pcb-c6-backer.glb", BACKER_Z, hide_names=tuple("D%d" % k for k in range(1, 17)))
-if c6 is None:      # stand-in U until the C6 GLB exists
-    for nm, (x0, y0, x1, y1) in (("L", P.STRIP_L), ("B", P.STRIP_B), ("R", P.STRIP_R)): box("pcb_c6_strip_" + nm, (x1 - x0, y1 - y0, P.BACKER_T), ((x0 + x1) / 2, (y0 + y1) / 2, BACKER_Z + P.BACKER_T / 2), M["mask"])
-for k, (x, y) in enumerate(P.STANDOFFS): cyl("standoff_c6_%d" % k, 5.0, P.BACKER_GAP, (x, y, PLATE_UNDER - P.BACKER_GAP / 2), M["steel"], verts=6); cyl("screw_c6_%d" % k, 5.5, 2.0, (x, y, BACKER_Z - 1.0), M["steel_dark"])
-# Touch Display 2: the glass in the plate's 1 mm pocket (its top 1 mm inside the plate), the picture through the aperture
-DX, DY = P.DISPLAY["c"]; GT = PLATE_UNDER + P.DISPLAY["pocket_depth"]
-TD2 = Matrix.Translation((DX, DY, GT - 5.0)) @ Matrix.Rotation(math.radians(-90), 4, "Z") @ Matrix.Translation((0, -2.95, 0))
-import_stl("td2", "td2.stl", M["black"], TD2)
-scr = box("td2_screen", (160, 90, 0.15), (DX, DY, GT + 0.12), M["dark"]); textured(scr, "ui.png", 4.0)   # 6 Sep 2026 18:00: ON the glass, not 0.5 mm inside the display body (which hid the screenshot in sets one to six)
-box("td2_glass", (P.DISPLAY["glass"][0], P.DISPLAY["glass"][1], 0.8), (DX, DY, GT - 0.4), M["glass"])
-# WeAct 3.7 e-paper: the module taped under the plate with its glass up in the window, the 2 mm lens in the top pocket
+c7 = import_board("pcb_c7", "pcb-c7-backer.glb", BACKER_Z, hide_names=tuple("D%d" % k for k in range(1, 17)))
+if c7 is None:      # stand-in ring until the C7 GLB exists
+    for nm, (x0, y0, x1, y1) in (("L", P.STRIP_L), ("B", P.STRIP_B), ("R", P.STRIP_R), ("T", P.STRIP_T)): box("pcb_c7_strip_" + nm, (x1 - x0, y1 - y0, P.BACKER_T), ((x0 + x1) / 2, (y0 + y1) / 2, BACKER_Z + P.BACKER_T / 2), M["mask"])
+for k, (x, y) in enumerate(P.STANDOFFS): cyl("standoff_c7_%d" % k, 5.0, P.BACKER_GAP, (x, y, PLATE_UNDER - P.BACKER_GAP / 2), M["steel"], verts=6); cyl("screw_c7_%d" % k, 5.5, 2.0, (x, y, BACKER_Z - 1.0), M["steel_dark"])
+# the Xenarc 709GNK on the plate (32.51): the box, its bezel, the screen with the kiosk screenshot, four VESA 50 M4 screws, the connector block through the plate cutout with its gasket ring
+DX, DY = P.XENARC["c"]; XW, XH = P.XENARC["body"]; XT = P.XENARC["height"]
+rounded_box("xenarc_body", XW, XH, XT, 15.0, (DX, DY, FACE), M["black"], top_scale=(0.985, 0.985))
+scr = box("xenarc_screen", (P.XENARC["active"][0], P.XENARC["active"][1], 0.3), (DX, DY + 10.5, FACE + XT + 0.05), M["dark"]); textured(scr, "ui.png", 4.0)
+box("xenarc_glass", (XW - 6.0, XH - 6.0, 0.4), (DX, DY, FACE + XT + 0.3), M["glass"])
+for dx in (-1, 1):
+    for dy in (-1, 1): cyl("xenarc_vesa_%d_%d" % (dx, dy), 7.0, 2.0, (DX + dx * 25, DY + dy * 25, PLATE_UNDER - 1.0), M["steel_dark"])
+bx, by, bw, bh = P.XENARC["block"]; box("xenarc_block", (bw, bh, P.XENARC["block_depth"]), (bx, by, PLATE_UNDER - P.XENARC["block_depth"] / 2), M["black"], bevel=1.5)
+cx_, cy_, cw_, ch_, cr_ = P.XENARC["cutout"]; box("xenarc_gasket", (cw_ + 6, ch_ + 6, 1.5), (cx_, cy_, FACE + 0.75), M["rubber"], bevel=0.5)
+# Pervasive Displays E2370KS0C1: the bare glass taped under the lens in the window, its flex to the ZIF on the top strip
 EX, EY = P.EPAPER["c"]; ET = FACE - P.EPAPER["pocket_depth"]
-EPD = Matrix.Translation((EX, EY, ET - 3.0)) @ Matrix.Rotation(math.pi, 4, "X") @ Matrix.Translation((-269.3, -177.4, 0.0)); import_stl("epaper", "epaper.stl", M["dark"], EPD)
-epd = box("epaper_glass", (92.99, 53.0, 0.6), (EX, EY, ET - 0.3), M["paper"]); textured(epd, "epaper.png", 0.0)
+epd = box("epaper_glass", (92.99, 53.0, 0.85), (EX, EY, ET - 0.45), M["paper"]); textured(epd, "epaper.png", 0.0)
 box("epaper_lens", (P.EPAPER["lens"][0], P.EPAPER["lens"][1], 2.0), (EX, EY, ET + 1.0), M["lens"], bevel=0.8)
+tube("epaper_flex", (EX - 46.5, EY, ET - 1.0), (P.J_EPD_POS[0], P.J_EPD_POS[1], BACKER_TOP + 1.0), 1.0, M["amber"])
+# the PA module on the plate's underside (32.56): the RA30H1317M1 flange, its two PEM nuts, the drive and output coax and the gate lead down to D8
+PX, PY = P.PA_MOUNT["c"]; PW, PL = P.PA_MOUNT["size"]; PH = P.PA_MOUNT["height"]
+box("pa_module", (PW, PL, PH), (PX, PY, PLATE_UNDER - PH / 2), M["steel_dark"], bevel=1.0); box("pa_module_cap", (PW - 14, PL - 4, 2.0), (PX, PY, PLATE_UNDER - PH - 1.0), M["dark"])
+for dx in (-1, 1): cyl("pa_nut_%d" % dx, 6.0, 4.0, (PX + dx * P.PA_MOUNT["holes"] / 2, PY, PLATE_UNDER - 2.0), M["steel"], verts=6)
+tube("pa_lead_in", (PX - 30, PY, PLATE_UNDER - PH), (59.0, -29.0, 26.0), 2.5, M["coax"]); tube("pa_lead_out", (PX + 30, PY, PLATE_UNDER - PH), (85.0, -30.0, 26.0), 3.0, M["coax"]); tube("pa_lead_vgg", (PX + 20, PY + 6, PLATE_UNDER - PH), (93.5, -22.5, 26.0), 1.8, M["wire_red"])
 def pushbutton(name, x, y, D, ring, depth, on=True):
     """C&K ATP anti-vandal: stainless bezel with a bevel, the illuminated ring, a low domed cap, the body below the plate."""
     cyl(name + "_bezel", D + 3.2, 3.0, (x, y, FACE + 1.5), M["steel"], bevel=1.0); cyl(name + "_body", D - 1.0, depth - 3.0, (x, y, PLATE_UNDER - (depth - 3.0) / 2), M["dark"])
@@ -324,6 +333,12 @@ for ref, (x, y) in P.TOGGLES:   # 6 Sep 2026 17:30 (owner, item 3): SOS and ZERO
     cyl(nm + "_guard_pin", 2.5, 30.0, (x, y + 13.5, FACE + 9.0), M["steel_dark"], axis="X")
     box(nm + "_guard_cover", (24.0, 28.0, 30.0), (x, y - 1.0, FACE + 17.0), cm, bevel=3.0); box(nm + "_guard_lip", (14.0, 4.0, 3.0), (x, y - 16.5, FACE + 4.0), cm, bevel=1.0)
 toggle(P.LIGHT[0].lower(), P.LIGHT[1][0], P.LIGHT[1][1], 18, 25, 19.0, boot=True)
+for ref, (x, y) in P.HEADSETS:   # U-174/U panel jacks (32.50 items 9 and 16b): bushing with its nut on the face, the body below, five leads to D8
+    nm = "headset_" + ref.lower(); cyl(nm + "_nut", 22.0, 3.0, (x, y, FACE + 1.5), M["chrome"], verts=8); cyl(nm + "_bush", 15.6, 6.0, (x, y, FACE + 4.5), M["chrome"]); cyl(nm + "_bore", 8.0, 6.2, (x, y, FACE + 4.5), M["black"])
+    cyl(nm + "_body", 15.0, P.HEADSET_DEPTH - 4.0, (x, y, PLATE_UNDER - (P.HEADSET_DEPTH - 4.0) / 2), M["dark"])
+    tube(nm + "_lead", (x, y, PLATE_UNDER - P.HEADSET_DEPTH), (96.5, 12.0 if ref.endswith("1") else -12.0, 26.0), 3.0, M["wire_blk"])
+cyl("camera_window", P.CAMERA[2] + 4.0, 1.2, (P.CAMERA[1][0], P.CAMERA[1][1], FACE + 0.6), M["chrome"]); cyl("camera_lens", P.CAMERA[2] - 2.0, 1.0, (P.CAMERA[1][0], P.CAMERA[1][1], FACE + 0.5), M["glass"])
+box("camera_module", (P.CAMERA[3], P.CAMERA[3], 1.6), (P.CAMERA[1][0], P.CAMERA[1][1], BACKER_TOP + 0.8), M["pcb"]); cyl("camera_barrel", 7.0, 7.0, (P.CAMERA[1][0], P.CAMERA[1][1], BACKER_TOP + 1.6 + 3.5), M["dark"])
 SX, SY = P.SOUNDER[1]
 cyl("sounder", 34, 3.5, (SX, SY, FACE + 1.75), M["black"], bevel=1.2)
 for k, rr in enumerate((5.0, 8.5, 12.0)): torus("sounder_ring_%d" % k, rr, 0.7, (SX, SY, FACE + 3.5), M["dark"])
@@ -337,11 +352,14 @@ def lightguide(name, x, y, m, on):
 for ref, (x, y), txt in P.STATUS_LEDS:
     col, on = LED_STATE[txt]; lightguide("led_" + ref, x, y, M[col], on); label("lbl_" + ref, txt, (x - 5.5, y - 1.1, FACE + 0.05), 2.6, M["white"], align="RIGHT")
 for k, (ref, (x, y), txt) in enumerate(P.BAR_LEDS): lightguide("led_" + ref, x, y, M["green"], k < 3)
+lightguide("led_light_sensor", P.LIGHT_SENSOR[1][0], P.LIGHT_SENSOR[1][1], M["lens"], False)   # the VEML7700 under its own guide
 label("lbl_bar", "BATTERY", (P.BAR_LEDS[2][1][0], P.BAR_LEDS[2][1][1] - 7.5, FACE + 0.05), 3.0, M["white"])
 label("nameplate", "MESHSAT FIELD KIT V2", (P.NAMEPLATE[0], P.NAMEPLATE[1] + 2.5, FACE + 0.05), 4.2, M["white"]); label("nameplate_2", "S/N ______", (P.NAMEPLATE[0], P.NAMEPLATE[1] - 5.5, FACE + 0.05), 3.0, M["white"])
 for ref, (x, y), hole, depth in P.BUTTONS: label("lbl_" + ref, {"SW_MAIN": "MAIN", "SW_PI": "PI", "SW_TEST": "TEST"}[ref], (x, y + hole / 2 + 4.0, FACE + 0.05), 3.6, M["white"])
 for ref, (x, y) in P.TOGGLES: label("lbl_" + ref, {"SW_SOS": "SOS", "SW_EMCON": "EMCON", "SW_ZERO": "ZEROIZE"}[ref], (x, y + 14.0, FACE + 0.05), 3.6, M["white"])
 label("lbl_light", "LIGHT", (P.LIGHT[1][0], P.LIGHT[1][1] + 14.0, FACE + 0.05), 3.6, M["white"])
+for k, (ref, (x, y)) in enumerate(P.HEADSETS, 1): label("lbl_" + ref, "HEADSET %d" % k, (x, y - 14.0, FACE + 0.05), 2.6, M["white"])
+label("lbl_camera", "CAMERA", (P.CAMERA[1][0], P.CAMERA[1][1] - 8.0, FACE + 0.05), 2.4, M["white"]); label("lbl_lightsens", "LIGHT", (P.LIGHT_SENSOR[1][0] + 6.0, P.LIGHT_SENSOR[1][1] - 1.0, FACE + 0.05), 2.0, M["white"], align="LEFT")
 (LX, LY), LD = P.LOGO
 def logo_mark(name, cx, cy, width, z, m):
     """The MeshSat mark from tools/logo_meshsat.json (traced from the sticker master, never redrawn) as one filled 2D curve: outer loops and holes as closed splines, even-odd fill."""
@@ -359,9 +377,8 @@ logo_mark("logo_mark", LX, LY, LD, FACE + 0.05, M["white"])   # 6 Sep 2026 (owne
 WX = wall_x(SMA_Z); WALL_IN = FLOOR_W / 2 + 4.0   # the end wall's outer face at the jack line
 # the antenna picks of appendix 32.46 (form, length, diameter): stubby = straight on the jack; dipole = hinged terminal mount stood upright; whip = the 2 m band
 # placeholder (pick owed); magwhip = the magnetic-base SDR whip on its lead, set on the ground behind the west wall
-ANT = {"LTE": ("stubby", 50.8, 12.4), "LORA": ("stubby", 50.8, 12.4), "WIFI P2P A": ("dipole", 135.0, 14.0), "WIFI P2P B": ("dipole", 135.0, 14.0), "WIFI 2.4": ("dipole", 110.0, 11.0), "VHF": ("whip", 400.0, 8.0), "SDR": ("magwhip", 82.2, 30.0)}
-NEST = {"VHF": SMA_JACKS[0], "WIFI 2.4": SMA_JACKS[1], "GNSS": SMA_JACKS[2], "SDR": SMA_JACKS[3], "LTE": SMA_JACKS[4], "IRIDIUM": SMA_JACKS[5], "LORA": SMA_JACKS[6],
-        "WIFI P2P A": (26.0, -56.0), "WIFI P2P B": (48.0, -74.0)}   # 6 Sep 2026 17:30 (owner, item 6): ALL nine cables end at the dock; the two WiFi P2P paths get their own blind-mate sites on A22 and in-stack jumpers to the M.2 card
+ANT = {"5G MAIN": ("stubby", 50.8, 12.4), "5G DIV": ("stubby", 50.8, 12.4), "LORA": ("stubby", 50.8, 12.4), "WIFI P2P A": ("dipole", 135.0, 14.0), "WIFI P2P B": ("dipole", 135.0, 14.0), "WIFI 2.4": ("dipole", 110.0, 11.0), "VHF": ("whip", 400.0, 8.0), "SDR": ("magwhip", 82.2, 30.0)}
+NEST = {nm: (x, -66.0) for nm, x in zip(("VHF", "HF", "WIFI 2.4", "GNSS", "SDR", "WIFI P2P A", "WIFI P2P B", "5G MAIN", "5G DIV", "IRIDIUM", "LORA"), SMA_X)}   # 32.56: eleven blind-mate sites at Y -66, the float clamps on E6 under them   # 6 Sep 2026 17:30 (owner, item 6): ALL nine cables end at the dock; the two WiFi P2P paths get their own blind-mate sites on A22 and in-stack jumpers to the M.2 card
 for sx, sites in ((-1, WEST), (1, EAST)):
     for y, nm in sites:
         z = SMA_Z; tag = nm.replace(" ", "_").lower()
@@ -408,7 +425,7 @@ for sx, sites in ((-1, WEST), (1, EAST)):
             tube("pig_%s_3" % tag, p2, p3, 3.0, M["coax"]); sphere("pig_%s_k3" % tag, 3.0, p3, M["coax"]); tube("pig_%s_4" % tag, p3, p4, 3.0, M["coax"])
             box("dock_clamp_" + tag, (12, 12, 5), (nx, ny, 2.5), M["black"]); cyl("dock_plug_" + tag, 6.0, 8.0, (nx, ny, 5 + 4), M["gold"])   # the printed float clamp on E4 and the SMP-MAX plug standing up into A21
             if nm.startswith("WIFI P2P"):   # the in-stack jumper (6 Sep 2026 17:30): A22 passes the path through to a top-side MHF4, a 2 mm lead climbs to the M.2 card on B15
-                za = 16.6 + 1.6; cyl("stack_mhf_" + tag, 4.0, 2.5, (nx, ny, za + 1.25), M["gold"]); j1 = (nx, ny, za + 2.5); j2 = (nx, ny, ZB - 10.0); j3 = (66.0, 60.0 + (2 if "B" in nm else -2), ZB + 6.0)
+                za = 16.6 + 1.6; cyl("stack_mhf_" + tag, 4.0, 2.5, (nx, ny, za + 1.25), M["gold"]); j1 = (nx, ny, za + 2.5); j2 = (nx, ny, ZB - 10.0); j3 = (-57.0, 11.0 + (2 if "B" in nm else -2), ZB + 6.0)
                 tube("jumper_%s_1" % tag, j1, j2, 2.0, M["coax"]); sphere("jumper_%s_k" % tag, 2.0, j2, M["coax"]); tube("jumper_%s_2" % tag, j2, j3, 2.0, M["coax"])
 # ------------------------------------------------------------------ rulers (10 mm ticks, numerals every 50) and the 50 mm floor grid
 RULER_W, RULER_T = 14.0, 2.0
@@ -466,17 +483,17 @@ def orbit(az, el, dist=1050, look=(0, 0, 70), lens=42):
     """az 0 = from the front (-Y), counter-clockwise seen from above; el above the ground plane."""
     a, e = math.radians(az), math.radians(el)
     return (look[0] - dist * math.cos(e) * math.sin(a) * -1.0, look[1] - dist * math.cos(e) * math.cos(a), look[2] + dist * math.sin(e))
-PANEL_PREFIX = ("plate", "pcb_c6", "standoff_c6", "screw_c6", "td2", "epaper", "sw_", "sounder", "led_", "lbl_", "nameplate", "logo_")   # (moved above the views: the assembly sequence uses it)
+PANEL_PREFIX = ("plate", "pcb_c7", "standoff_c7", "screw_c7", "xenarc", "epaper", "sw_", "sounder", "led_", "lbl_", "nameplate", "logo_", "headset_", "camera_", "pa_")   # (moved above the views: the assembly sequence uses it)
 VIEWS = {}
 # 6 Sep 2026, second set (owner: "the inside of the case is the most interesting part"): eight orbit views with the lid open at el 40, four closed
 # views, and everything else inside: the stack level by level with the boards above removed, the face from both sides, the walls from inside.
 for az in range(0, 360, 45): VIEWS["az%03d-el40-open" % az] = dict(cam=camera("cam_%03d_40" % az, orbit(az, 40), (0, 0, 70), 42), lid=True)
 for az in (0, 90, 180, 270): VIEWS["az%03d-el20-closed" % az] = dict(cam=camera("cam_%03d_20c" % az, orbit(az, 20), (0, 0, 70), 42), lid=False)
-B15_PARTS = ("pcb_b15", "cm5_", "cr2032", "display_flex", "gnss_neo", "lora_wio", "lte_", "panel_ribbon", "sdr_", "usb_a_recept", "wifi_m2_", "zigbee_e72", "rockblock9704")   # the board and everything drawn on it
-D7_PARTS = B15_PARTS + ("pcb_d7", "dmr858m")
-A21_PARTS = D7_PARTS + ("pcb_a21", "sma_jack", "sma_nut", "sma_nest", "stack_mhf", "jumper_")   # the wall pigtails end at the dock clamps (6 Sep 2026), so they stay when A21 is lifted
-DOCK_PARTS = A21_PARTS + ("battery", "module_")
-UPPER = {"b15": B15_PARTS, "d7": D7_PARTS, "a21": A21_PARTS, "dock": DOCK_PARTS}
+B16_PARTS = ("pcb_b16", "cm5_", "m2_", "lime_sdr", "usb3_recept", "rockblock9704", "rb_standoff", "eth_", "e22_", "e72_", "lg290p", "panel_ribbon", "hdmi_cable")   # the board and everything drawn on it
+D8_PARTS = B16_PARTS + ("pcb_d8", "sa868", "standoff_d")
+A22_PARTS = D8_PARTS + ("pcb_a22", "sma_jack", "sma_nut", "stack_mhf", "jumper_", "lead_")   # the wall pigtails end at the dock clamps, so they stay when A22 is lifted
+DOCK_PARTS = A22_PARTS
+UPPER = {"b16": B16_PARTS, "d8": D8_PARTS, "a22": A22_PARTS, "dock": DOCK_PARTS}
 VIEWS.update({
     "top-face": dict(cam=camera("cam_top", (0, -60, 1150), (0, 0, 100), 50), lid=True),
     "face-detail-left": dict(cam=camera("cam_fdl", (-330, -230, 330), (-120, 0, 100), 60), lid=True),
@@ -487,19 +504,18 @@ VIEWS.update({
     "stack-no-face-top": dict(cam=camera("cam_stack_top", (0, -40, 900), (0, 0, 40), 50), lid=True, noface=True),
     "stack-no-face-east": dict(cam=camera("cam_stack_e", (520, -360, 360), (40, 0, 55), 46), lid=True, noface=True),
     "stack-no-face-back": dict(cam=camera("cam_stack_b", (-260, 560, 420), (-20, 40, 55), 46), lid=True, noface=True),
-    "level-b15": dict(cam=camera("cam_l_b15", (-300, -480, 480), (-20, 0, 60), 46), lid=True, noface=True),
-    "level-d7": dict(cam=camera("cam_l_d7", (-300, -480, 480), (-20, 0, 50), 46), lid=True, noface=True, hide=UPPER["b15"]),
-    "level-a21": dict(cam=camera("cam_l_a21", (-300, -480, 480), (-20, 0, 40), 46), lid=True, noface=True, hide=UPPER["d7"]),
-    "level-a21-top": dict(cam=camera("cam_l_a21_top", (0, -40, 800), (0, 0, 20), 50), lid=True, noface=True, hide=UPPER["d7"]),
-    "level-dock": dict(cam=camera("cam_l_dock", (-220, -400, 560), (-20, -30, 10), 46), lid=True, noface=True, hide=UPPER["a21"]),
-    "level-dock-top": dict(cam=camera("cam_l_dock_top", (0, -40, 800), (0, 0, 10), 50), lid=True, noface=True, hide=UPPER["a21"]),
-    "battery-row": dict(cam=camera("cam_batt", (-420, -330, 330), (-160, 0, 50), 50), lid=True, lift=True),
-    "battery-row-inside": dict(cam=camera("cam_batt_in", (-40, -200, 260), (-160, 0, 45), 50), lid=True, noface=True, hide=UPPER["d7"]),
-    "dock-joint": dict(cam=camera("cam_dock", (40, -330, 150), (-45, -60, 10), 60), lid=True, cutaway=True, noface=True, hide=UPPER["a21"]),      # front wall removed: the float clamps and plugs on the dock strip
-    "dock-joint-a21": dict(cam=camera("cam_dock_a", (40, -330, 170), (-45, -60, 20), 60), lid=True, cutaway=True, noface=True, hide=UPPER["d7"]),   # the same with A21 mated on them
+    "level-b16": dict(cam=camera("cam_l_b16", (-300, -480, 480), (-20, 0, 60), 46), lid=True, noface=True),
+    "level-d8": dict(cam=camera("cam_l_d8", (-300, -480, 480), (-20, 0, 50), 46), lid=True, noface=True, hide=UPPER["b16"]),
+    "level-a22": dict(cam=camera("cam_l_a22", (-300, -480, 480), (-20, 0, 40), 46), lid=True, noface=True, hide=UPPER["d8"]),
+    "level-a22-top": dict(cam=camera("cam_l_a22_top", (0, -40, 800), (0, 0, 20), 50), lid=True, noface=True, hide=UPPER["d8"]),
+    "level-dock": dict(cam=camera("cam_l_dock", (-220, -400, 560), (-20, -30, 10), 46), lid=True, noface=True, hide=UPPER["a22"]),
+    "level-dock-top": dict(cam=camera("cam_l_dock_top", (0, -40, 800), (0, 0, 10), 50), lid=True, noface=True, hide=UPPER["a22"]),
+    "face-pa-underside": dict(cam=camera("cam_pa", (-200, -420, 240), (-45, 20, 190), 50), lid=True, lift=True),   # the PA flange and the Xenarc block under the lifted plate
+    "dock-joint": dict(cam=camera("cam_dock", (40, -330, 150), (-45, -60, 10), 60), lid=True, cutaway=True, noface=True, hide=UPPER["a22"]),      # front wall removed: the float clamps and plugs on the dock strip
+    "dock-joint-a22": dict(cam=camera("cam_dock_a", (40, -330, 170), (-45, -60, 20), 60), lid=True, cutaway=True, noface=True, hide=UPPER["d8"]),   # the same with A22 mated on them
     "connector-plate": dict(cam=camera("cam_cp", (-120, 470, 150), (-56, 168, 55), 60), lid=False),   # the upright plate on the back wall from outside, both cables plugged (the wall model is solid, so there is no inside view of it)
-    "west-wall-inside": dict(cam=camera("cam_ww_in", (60, -180, 260), (-180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
-    "east-wall-inside": dict(cam=camera("cam_ew_in", (-60, -180, 260), (180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d7"]),
+    "west-wall-inside": dict(cam=camera("cam_ww_in", (60, -180, 260), (-180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d8"]),
+    "east-wall-inside": dict(cam=camera("cam_ew_in", (-60, -180, 260), (180, 0, 70), 50), lid=True, noface=True, hide=UPPER["d8"]),
     "cutaway": dict(cam=camera("cam_cutaway", (-360, -640, 330), (-10, 0, 62), 46), lid=True, cutaway=True),
     "cutaway-east": dict(cam=camera("cam_cutaway_e", (420, -600, 330), (10, 0, 62), 46), lid=True, cutaway=True),
     "west-wall": dict(cam=camera("cam_west", (-780, -260, 260), (-205, 0, 110), 55), lid=False),
@@ -513,17 +529,16 @@ VIEWS.update({
     "antennas-top": dict(cam=camera("cam_ant_top", (0, -60, 1500), (0, 0, 60), 40), lid=True, antennas=True),
 })
 # the disassembly sequence (owner, 6 Sep 2026 item 7): the same wide camera, one step per view, every removed part set down on the ground around the case
-STACK = A21_PARTS + ("rod_", "nut_", "spacer_")
+STACK = A22_PARTS + ("rod_", "nut_", "spacer_")
 PLATE_DZ = GROUND + 0.5 - (BACKER_Z - 1.6); STACK_DZ = GROUND + 0.5 - 1.6; MODULE_DZ = GROUND + 0.5
-MV_PLATE = (PANEL_PREFIX, (450.0, -40.0, PLATE_DZ)); MV_STACK = (STACK, (-460.0, 40.0, STACK_DZ)); MV_MODULE = (("module_",), (60.0, -360.0, MODULE_DZ))
+MV_PLATE = (PANEL_PREFIX, (450.0, -40.0, PLATE_DZ)); MV_STACK = (STACK, (-460.0, 40.0, STACK_DZ))
 ASM_CAM = lambda n: camera("cam_asm_%d" % n, (560, -1000, 720), (0, -50, 30), 32)
 VIEWS.update({
     "assembly-1-closed": dict(cam=ASM_CAM(1), lid=False),
     "assembly-2-lid-open": dict(cam=ASM_CAM(2), lid=True),
     "assembly-3-plate-off": dict(cam=ASM_CAM(3), lid=True, moves=[MV_PLATE]),
     "assembly-4-stack-out": dict(cam=ASM_CAM(4), lid=True, moves=[MV_PLATE, MV_STACK]),
-    "assembly-5-battery-out": dict(cam=ASM_CAM(5), lid=True, moves=[MV_PLATE, MV_STACK, MV_MODULE]),
-    "assembly-6-dock": dict(cam=camera("cam_asm_6", (-260, -520, 520), (-20, -20, 10), 40), lid=True, moves=[MV_PLATE, MV_STACK, MV_MODULE]),
+    "assembly-5-dock": dict(cam=camera("cam_asm_5", (-260, -520, 520), (-20, -20, 10), 40), lid=True, moves=[MV_PLATE, MV_STACK]),
 })
 def walk(prefixes):
     for o in bpy.data.objects:
@@ -540,7 +555,7 @@ def move_face(dz):
     for o in walk(PANEL_PREFIX):
         if o.parent is None: o.matrix_world = Matrix.Translation((0, 0, dz)) @ o.matrix_world
     for o in bpy.data.objects:
-        if o.name in ("display_flex", "panel_ribbon"):
+        if o.name in ("panel_ribbon", "epaper_flex"):
             if dz > 0: o.scale.z *= 2.0; o.location.z += dz / 2
             else: o.scale.z /= 2.0; o.location.z += dz / 2
 set_lid(True)

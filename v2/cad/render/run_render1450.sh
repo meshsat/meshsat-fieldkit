@@ -6,7 +6,7 @@ R=/root/gitlab/products/meshsat/meshsat-fieldkit; E=$R/v2/ecad; H=~/render3d; OU
 until grep -a -q "C6-EXIT" ~/c6.log 2>/dev/null && [ -f $H/GO ]; do sleep 30; done; date; echo "render set starting"
 ~/meshsat-services.sh stop 2>&1 | tail -1
 mkdir -p $H/glb $OUT
-for spec in "pcb-a-power:150x110:pcb-a-power" "pcb-b-compute:150x110:pcb-b-compute" "pcb-c-display:297x210:pcb-c6-backer" "pcb-d-aprs:100x100:pcb-d-aprs" "pcb-e1-dock:150x110:pcb-e1-dock" "pcb-e5-block:150x110:pcb-e5-block"; do
+for spec in "pcb-a-power:150x110:pcb-a-power" "pcb-b-compute:150x110:pcb-b-compute" "pcb-c-display:297x210:pcb-c7-backer" "pcb-d-aprs:100x100:pcb-d-aprs" "pcb-e1-dock:150x110:pcb-e1-dock" "pcb-e5-block:150x110:pcb-e5-block"; do
   IFS=: read -r proj org name <<< "$spec"; dir=$E/$proj; [ "$proj" = pcb-e5-block ] && dir=$E/pcb-e1-dock
   board=$(ls $dir/$proj.kicad_pcb 2>/dev/null || ls $dir/*.kicad_pcb | head -1)
   kicad-cli pcb export glb --subst-models --include-pads --user-origin "${org}mm" -o $H/glb/$name.glb "$board" >/dev/null 2>&1 && echo "glb $name from $(basename $board)" || echo "GLB FAILED $name"
