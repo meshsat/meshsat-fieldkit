@@ -1,20 +1,20 @@
 ** Drc report for pcb-e5-block.kicad_pcb **
-** Created on 2026-09-05T05:02:01+0200 **
+** Created on 2026-09-07T12:37:30+0000 **
 ** Report includes: Errors, Warnings, Exclusions **
 
 ** Found 4 DRC violations **
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
-    @(15,8000 mm, 174,4000 mm): Segment on F.Silkscreen
+    @(46.4000 mm, 176.4000 mm): Arc on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
-    @(3,0000 mm, 173,5000 mm): PCB text 'RETURN 12 AWG' on F.Silkscreen
+    @(63.6000 mm, 174.4000 mm): Segment on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
-    @(16,0000 mm, 171,0000 mm): PCB text 'E5 BLOCK  face 7.4 mm' on F.Silkscreen
+    @(51.0000 mm, 173.5000 mm): PCB text 'RETURN 12 AWG' on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
-    @(32,3500 mm, 191,0000 mm): PCB text 'GND6' on B.Silkscreen
+    @(54.0000 mm, 193.5000 mm): PCB text 'CELL+ 12 AWG' on F.Silkscreen
 
 ** Found 0 unconnected pads **
 
