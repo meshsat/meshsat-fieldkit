@@ -178,6 +178,7 @@ def plane(layer, netname, name, rect=(-117.5, -77.5, 117.5, 77.5), priority=0):
     z.SetAssignedPriority(priority)
     board.Add(z); return z
 plane(pcbnew.In1_Cu, "GND", "GND plane In1")
+plane(pcbnew.In4_Cu, "GND", "GND plane In4")   # A22 six layers (7 Sep 2026 10:10, appendix 32.61): In4 a second solid ground under B.Cu, In2 and In3 routable; four-layer runs left 4 to 11 opens in the converter zones
 plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (west and middle columns)", rect=(-117.5, -44, -2, 77.5))
 plane(pcbnew.In2_Cu, "GND", "GND plane In2 (east)", rect=(-2, -77.5, 117.5, 77.5))
 plane(pcbnew.In2_Cu, "GND", "GND island In2 under the blind-mate row", rect=(-60, -77.5, 110, -48), priority=1)
@@ -194,6 +195,11 @@ z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.Se
 z.SetLayer(pcbnew.In1_Cu); z.SetZoneName("In1 solid ground: no tracks"); o = z.Outline(); o.NewOutline()
 for x, y in ((-119, -79), (119, -79), (119, 79), (-119, 79)): p = P(x, y); o.Append(p.x, p.y)
 board.Add(z)
+for L, nm in ((pcbnew.In4_Cu, "In4 solid ground: no tracks"),):   # the same rule for In4 (six layers)
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+    z.SetLayer(L); z.SetZoneName(nm); o = z.Outline(); o.NewOutline()
+    for x, y in ((-119, -79), (119, -79), (119, 79), (-119, 79)): p = P(x, y); o.Append(p.x, p.y)
+    board.Add(z)
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
