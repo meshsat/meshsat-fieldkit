@@ -6,6 +6,8 @@ while ! grep -q PARALLEL-DONE "$LOG" 2>/dev/null; do sleep 30; done
 grep -E 'attempt|WINNER' "$LOG"
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 cp $N.kicad_pcb out/$N-par-routed.kicad_pcb
+# 7 Sep 2026: the router's knot (two nets' tracks tangled at one spot, 20 to 25 shorts) is removed before anything else; the stub router closes the nets it opens
+python3 ../tools/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 # A21 (5 Sep 2026): a few open connections get one continuation pass of the router on the routed board before the stub router (cont_route.sh keeps the board only if it improves)
 UN=$(python3 -c "import json; print(len(json.load(open('out/$N-drc.json')).get('unconnected_items', [])))" 2>/dev/null || echo 0)
 if [ "$UN" -gt 0 ] && [ "$UN" -le 6 ]; then ../tools/cont_route.sh "$PWD" $N 80 900 2>&1 | grep -E 'cont:'; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1; fi

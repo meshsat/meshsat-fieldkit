@@ -6,6 +6,8 @@ cd "$1/pcb-b-compute"; N=pcb-b-compute; LOG="$2"
 while ! grep -q PARALLEL-DONE "$LOG" 2>/dev/null; do sleep 30; done
 grep -E 'attempt|WINNER' "$LOG"
 cp $N.kicad_pcb out/$N-par-routed.kicad_pcb
+# 7 Sep 2026: the router's knot (two nets' tracks tangled at one spot, 20 to 25 shorts) is removed before anything else; the stub router closes the nets it opens
+python3 ../tools/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
 cp $N.kicad_pcb out/$N-cleaned.kicad_pcb
