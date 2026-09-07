@@ -10,7 +10,7 @@ Rules: same footprint, same net (not GND, which the plane joins), pad centres at
 corridor between them, both pads on the same copper side. The track is as wide as the narrower pad (never wider than the net class width when
 the .kicad_pro states one) and runs centre to centre on the pads' layer.
 Usage: join_adjacent_pins.py <board.kicad_pcb> [max gap mm = 2.6]"""
-import sys, math, json, os, re, fnmatch, pcbnew
+import sys, os, math, json, os, re, fnmatch, pcbnew
 from pcbnew import VECTOR2I, FromMM
 
 BOARD = sys.argv[1]; MAX_GAP = float(sys.argv[2]) if len(sys.argv) > 2 else 2.6
@@ -34,12 +34,29 @@ def seg_dist(px, py, ax, ay, bx, by):
     return math.hypot(px - (ax + t * dx), py - (ay + t * dy))
 
 joins = 0; per_ref = {}
+ENDS = set()
+for t in b.GetTracks():
+    if t.GetClass() == "PCB_TRACK": ENDS.add((t.GetStart().x, t.GetStart().y)); ENDS.add((t.GetEnd().x, t.GetEnd().y))
+def big(pd): return min(mm(pd.GetSize().x), mm(pd.GetSize().y)) >= 1.5                      # an exposed pad
+def stubbed(pd): return (pd.GetPosition().x, pd.GetPosition().y) in ENDS                      # an escape already leaves it
+# 7 Sep 2026 (E6 run 12): the ground pads of a part with an exposed pad are joined to it by locked tracks under the body: a full ring of 0.4 mm escape vias fences the
+# ground plane on every layer, so the exposed pad's island would otherwise reach the outside only by luck
 for fp in b.GetFootprints():
-    pads = [pd for pd in fp.Pads() if pd.GetNetCode() > 0 and pd.GetNetname() not in ("GND",)]
+    pads = [pd for pd in fp.Pads() if pd.GetNetCode() > 0]   # ground pads too: every one of them joins the exposed pad (E6 run 12: the ring of 0.4 mm escape vias fences the plane under a QFN on every layer, the exposed pad's island reaches the outside only through a pad's escape via)
     for i, a in enumerate(pads):
         for c in pads[i + 1:]:
             if a.GetNetCode() != c.GetNetCode(): continue
+            gnd = a.GetNetname() == "GND"
+            if gnd and not (big(a) != big(c)): continue                                        # ground: only a pad-to-exposed-pad join
             ax, ay = mm(a.GetPosition().x), mm(a.GetPosition().y); cx, cy = mm(c.GetPosition().x), mm(c.GetPosition().y)
+            if gnd:
+                # the ground join runs along the small pad's own axis into the exposed pad's edge (a diagonal to its centre grazed the neighbouring pads, E6 run 15)
+                small, ep = (a, c) if big(c) else (c, a); sx, sy = mm(small.GetPosition().x), mm(small.GetPosition().y); ex, ey = mm(ep.GetPosition().x), mm(ep.GetPosition().y)
+                hw, hh = mm(ep.GetSize().x) / 2, mm(ep.GetSize().y) / 2; horiz = mm(small.GetSize().x) > mm(small.GetSize().y)
+                if horiz and (ey - hh <= sy <= ey + hh): tx, ty = (ex - hw if sx < ex else ex + hw), sy
+                elif (not horiz) and (ex - hw <= sx <= ex + hw): tx, ty = sx, (ey - hh if sy < ey else ey + hh)
+                else: continue
+                ax, ay, cx, cy = sx, sy, tx, ty
             d = math.hypot(cx - ax, cy - ay)
             if d > MAX_GAP or d < 0.05: continue
             la = pcbnew.F_Cu if a.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu; lc = pcbnew.F_Cu if c.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
@@ -51,9 +68,14 @@ for fp in b.GetFootprints():
             for o in fp.Pads():   # SWIG hands out a new proxy per iteration: compare by number and position, never by identity
                 if (o.GetNumber(), o.GetPosition().x, o.GetPosition().y) in ((a.GetNumber(), a.GetPosition().x, a.GetPosition().y), (c.GetNumber(), c.GetPosition().x, c.GetPosition().y)): continue
                 ox, oy = mm(o.GetPosition().x), mm(o.GetPosition().y); r = min(mm(o.GetSize().x), mm(o.GetSize().y)) / 2   # the narrow half: a collinear row neighbour 0.5 mm away must not block a 0.2 mm joiner
-                if seg_dist(ox, oy, ax, ay, cx, cy) < w / 2 + r + 0.127: blocked = True; break
+                if gnd and big(o): continue
+                if o.GetNumber() == "" or not o.IsOnCopperLayer(): continue   # the exposed pad's paste windows (unnumbered, paste layers only) are not obstacles
+                if seg_dist(ox, oy, ax, ay, cx, cy) < w / 2 + r + 0.127:
+                    blocked = True
+                    if fp.GetReference() == os.environ.get("DEBUG_REF", ""): print("    %s-%s blocked by pad %s at %.3f" % (a.GetNumber(), c.GetNumber(), o.GetNumber(), seg_dist(ox, oy, ax, ay, cx, cy)))
+                    break
             if blocked: continue
-            t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(a.GetPosition())); t.SetEnd(VECTOR2I(c.GetPosition())); t.SetWidth(FromMM(round(w, 3))); t.SetLayer(la); t.SetNetCode(a.GetNetCode()); t.SetLocked(True)
+            t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(ax), FromMM(ay))); t.SetEnd(VECTOR2I(FromMM(cx), FromMM(cy))); t.SetWidth(FromMM(round(w, 3))); t.SetLayer(la); t.SetNetCode(a.GetNetCode()); t.SetLocked(True)
             b.Add(t); joins += 1; per_ref.setdefault(fp.GetReference(), []).append("%s-%s %s %.2f" % (a.GetNumber(), c.GetNumber(), a.GetNetname(), w))
 pcbnew.SaveBoard(BOARD, b)
 for ref, lst in sorted(per_ref.items()): print("  joined %-8s %s" % (ref, "; ".join(lst)))

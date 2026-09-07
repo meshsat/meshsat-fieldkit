@@ -96,7 +96,7 @@ check(any(z.GetNetname() == "GND" and not z.GetIsRuleArea() and z.IsOnLayer(pcbn
 check(sum(1 for z in b.Zones() if z.GetIsRuleArea() and z.GetZoneName().startswith("In1 plane")) >= 7, "In1 plane keep-outs present (the clusters are the only windows)")
 vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
 check(all(v.GetDrillValue() >= pcbnew.FromMM(0.2) - 1 for v in vias), "every via drill >= 0.2 mm")
-keep = [z for z in b.Zones() if z.GetIsRuleArea() and "keep-out" in z.GetZoneName()]
+keep = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # the In1 plane bands allow vias; only the cut-out and edge keep-outs forbid them
 inkeep = [case(v.GetPosition()) for v in vias for z in keep if z.Outline().Contains(v.GetPosition())]
 check(not inkeep, "no via inside a cut-out keep-out (%d found)" % len(inkeep))
 conn = {r: fps[r] for r in ("J_PANEL", "J_MAINSW", "J_PIJ2") if r in fps}
