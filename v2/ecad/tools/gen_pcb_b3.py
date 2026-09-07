@@ -67,7 +67,7 @@ def place(ref, x, y, rot=0.0, back=False):
 FIXED = {"U30A": (-89.5, 57.5, 0), "U30B": (-55.5, 57.5, 0), "U31A": (-19.5, 57.5, 0), "U31B": (14.5, 57.5, 0), "U32A": (50.5, 57.5, 0), "U32B": (84.5, 57.5, 0),
          # M.2 sockets: place() centres the socket-plus-card box, so the target sits 13.65 (2230), 19.65 (2242) or 24.65 (3052) mm south of the socket body centre at Y 25
          "J_M2N1": (-85, 5.35, 0), "J_M2C1": (-57, 11.35, 0), "J_M2C2": (-20, 0.35, 0), "J_M2N2": (-9.35, -85, 90), "J_M2N3": (48, 5.35, 0), "J_M2C3": (79, 5.35, 0),
-         "J_SIM1": (4.5, 21, 0), "J_SIM2": (4.5, 3, 0),
+         "J_SIM1": (4.5, 22, 0), "J_SIM2": (4.5, 1, 0),
          "J_FLASH1": (-92.5, -95, 0), "J_FLASH2": (24, -95, 0), "J_FLASH3": (39.5, -95, 0), "J_5V_S1": (-92.5, -84.5, 0), "J_5V_S2": (27, -84, 0), "J_5V_S3": (39.5, -84.5, 0),
          "J_FAN1": (-97.5, 45, 90), "J_FAN2": (-27.5, 45, 90), "J_FAN3": (92.5, 44, 90),
          "J_AB1": (113, -46, 0), "J_ETH": (-152, 89.5, 180), "J_HDMI": (104.5, -93, 270), "J_PANEL": (-116, 92, 90), "T1": (-152, 68, 0),
@@ -107,8 +107,8 @@ for s in (1, 2, 3):
     if s == 2:
         REGIONS += [("S2_SWIC", (-36, -54, 2, -30), [U(1), U(2)], False),
                     ("S2_SWE", (2, -54, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (2, -54, 32, -30), sw_b + card_b + sup_b, True),
-                    ("S2_RAIL", (-36, -73.4, 32, -54), [r for r in rail if r not in (U(5), U(6), L(3), L(4))] + [C(2, 25), C(2, 26), C(2, 27), C(2, 30), C(2, 31), C(2, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -54), rail_b + straps + sw_dec, True),
-                    ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -5), [U(5), U(6), L(3), L(4)], False)]
+                    ("S2_RAIL", (-36, -73.4, 32, -54), [r for r in rail if r not in (U(5), U(6), L(3), L(4)) and r not in Cs(2, 25, 27) + Cs(2, 30, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -54), rail_b + straps + sw_dec, True),
+                    ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -8), [U(5), U(6), L(3), L(4)] + Cs(2, 25, 27) + Cs(2, 30, 32), False)]
     else:
         REGIONS += [("S%d_SWIC" % s, (x0, -49, x0 + 38, -21), [U(1), U(2), "Y%d" % (100 * s + 1)], False),
                     ("S%d_SWE" % s, (x0 + 38, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0 + 38, -49, x1, -21), sw_b + card_b + sup_b, True),
@@ -144,6 +144,9 @@ def is_fine(fp):
             d = math.hypot(pads[i].x - pads[j].x, pads[i].y - pads[j].y)
             if 0 < d < best: best = d
     return best <= FromMM(0.7)
+_all = [r for _, _, refs, _ in REGIONS for r in refs] + list(FIXED)
+_dups = sorted({r for r in _all if _all.count(r) > 1})
+if _dups: raise SystemExit("reference listed twice in the placement (two footprints per reference make the DSN export refuse the board): %s" % _dups)
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:

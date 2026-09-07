@@ -74,7 +74,7 @@ def clear(v, r, me, me_ref, net, lane=0.75):
         if abs(v.x - qp.x) > FromMM(6) or abs(v.y - qp.y) > FromMM(6): continue
         if qpoly.Collide(VECTOR2I(int(v.x), int(v.y)), int(r + gap)): LAST[0] = "pad %s.%s(%s)" % (qref, q.GetNumber(), qnet); return False
     for vp, vr, vnet in vias:
-        if math.hypot(v.x - vp.x, v.y - vp.y) < vr + r + (max(net_clr(net), net_clr(vnet)) if vnet != net else FromMM(0.05)): LAST[0] = "via(%s)" % vnet; return False
+        if math.hypot(v.x - vp.x, v.y - vp.y) < vr + r + (max(net_clr(net), net_clr(vnet)) if vnet != net else FromMM(0.3)): LAST[0] = "via(%s)" % vnet; return False   # same net: the 0.3 mm hole-to-hole rule (B16: the M.2 sockets' GND escapes sat 0.05 apart)
     for s, e, tr, tnet in tracks:
         if tnet == net: continue
         if seg_dist(v, s, e) < tr + r + max(net_clr(net), net_clr(tnet)): LAST[0] = "track(%s)" % tnet; return False
@@ -134,7 +134,7 @@ for fp in b.GetFootprints():
                     kd = min(0.3 + 0.15 * min(idx, n - 1 - idx), depth - 0.3)
                     knee = VECTOR2I(int(c.x + L[0] * (half + FromMM(kd))), int(c.y + L[1] * (half + FromMM(kd))))
                     v = VECTOR2I(int(c.x + L[0] * (half + FromMM(depth)) + side_dir[0] * s_k), int(c.y + L[1] * (half + FromMM(depth)) + side_dir[1] * s_k))
-                    mids = [VECTOR2I(int(knee.x + (v.x - knee.x) * k / 5.0), int(knee.y + (v.y - knee.y) * k / 5.0)) for k in range(1, 5)]
+                    mids = [VECTOR2I(int(knee.x + (v.x - knee.x) * k / 12.0), int(knee.y + (v.y - knee.y) * k / 12.0)) for k in range(1, 12)]   # B16: a 0.4 mm via slipped between samples 0.4 mm apart on a long splay
                     if clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and clear(knee, TW / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids):
                         layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
                         via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DR); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); via.SetLocked(True); b.Add(via)
@@ -150,7 +150,7 @@ for fp in b.GetFootprints():
             done = False
             for lane, off in [(ln, o) for ln in (0.75, 0.35) for o in order]:
                 v = VECTOR2I(int(c.x + L[0] * (half + FromMM(off))), int(c.y + L[1] * (half + FromMM(off))))
-                mids = [VECTOR2I(int(c.x + (v.x - c.x) * k / 6.0), int(c.y + (v.y - c.y) * k / 6.0)) for k in range(2, 6)]
+                mids = [VECTOR2I(int(c.x + (v.x - c.x) * k / 12.0), int(c.y + (v.y - c.y) * k / 12.0)) for k in range(3, 12)]
                 ok = clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids)
                 if not ok and fp.GetReference() == DEBUG_REF: print("    %s pad %s lane %.2f off %.2f: %s" % (fp.GetReference(), pad.GetNumber(), lane, off, LAST[0]))
                 if ok:

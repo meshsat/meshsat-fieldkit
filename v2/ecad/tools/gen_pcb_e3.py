@@ -59,28 +59,28 @@ for ref in comps:                                                   # the holes 
 # ---------------------------------------------------------------- dock layout (case mm): the target block under PCB-A's J_DOCK, the DC entry at the port end, the buck in the middle
 FIXED = {"J_BLK": (-80, -76.5, 0, False), "P_CP": (-104, -108, 0, False), "P_CN": (-94, -108, 0, False), "PAD_W1": (-84, -108, 0, False), "PAD_W2": (-74, -108, 0, False), "J_BATT": (-138, -108, 0, False), "F3": (-120, -108, 0, False),
          "J_DCIN": (-64, -108, 0, False), "F1": (-48, -108, 0, False), "J_SOLAR": (-22, -108, 0, False), "F2": (-6, -108, 0, False),
-         "U5": (34, -91, 0, False), "L1": (46, -103, 0, False), "U10": (86, -94, 0, False),
+         "U5": (32.8, -91, 0, False), "L1": (46, -103, 0, False), "U10": (86, -94, 0, False),
          "J_SMB": (-144, -62, 0, False), "J_POD": (-138, -62, 0, False), "J_LTG": (-132, -62, 0, False), "J_GEIGER": (-126, -62, 0, False), "J_DCF": (-144, -49.3, 0, False), "J_FAN1": (-138, -49.3, 0, False), "J_FAN2": (-132, -49.3, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 text("PACK", -138, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F3 25A", -120, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("DC IN", -64, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F1 10A", -48, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("PV", -22, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F2 10A", -6, -112.2, pcbnew.F_SilkS, 1.2, 0.2)
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
 REGIONS = [
  ("MCUR",   (91, -106, 118, -80), ["U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37"], False),
- ("PACK",   (-145, -103, -119, -83.5), ["C1", "D3", "TP8", "TP9", "C31", "U12", "L3", "U13", "C30", "C32", "C33", "C34", "C35", "R48", "TP13", "R42", "R43"], False),
+ ("PACK",   (-146, -104, -118.5, -83.5), ["C1", "D3", "TP8", "TP9", "C31", "U12", "L3", "U13", "C30", "C32", "C33", "C34", "C35", "R48", "TP13", "R42", "R43"], False),
  ("FANS",   (-145, -83.4, -116, -71.5), ["Q9", "Q10", "R44", "R45", "R46", "R47", "D7", "D8", "R49", "R50"], False),
  ("HOTSW",  (-106, -104, -76, -86), ["U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "D2", "C8"], False),
  ("ENTRYA", (-76, -103, -44, -87), ["U3", "Q1", "C4", "R1", "D1", "C2", "TP1", "TP2", "Q8", "R26"], False),
  ("ENTRYB", (-44, -103, -26, -81), ["L2", "C6", "C7", "R27", "LED1", "TP3"], False),
  ("TRKIN",  (-26, -103, -2, -81), ["D4", "C11", "C12", "C13", "C14", "C15", "TP5"], False),
  ("TRKW",   (-2, -103, 28, -81), ["Q3", "Q4", "Q5", "Q6", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6"], False),
- ("TRKS",   (38, -95, 56, -81), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
- ("TRKOUT", (56, -112, 76, -81), ["C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18", "TP6"], False),
+ ("TRKS",   (39.5, -95.5, 56, -80), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
+ ("TRKOUT", (56, -112, 78, -81), ["C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18", "TP6"], False),
  ("SENS",   (40, -78, 52, -46), ["U14", "C48", "U15", "R51", "C49", "C50", "R38", "R39", "C51", "R40", "R41"], False),
  ("TPS",    (78, -112, 118, -107), ["TP4", "TP7"], False),
 ]
 rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
 if rest: REGIONS.append(("REST", (78, -98, 118, -82), rest, False))
-GAP = 1.2; FINE_MARGIN = 1.4
+GAP = 1.2; FINE_MARGIN = 2.2   # E6 round 4: 1.4 left R14 inside the tracker's escape row and four pads of U5 without escapes
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
     pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e9
@@ -89,17 +89,22 @@ def is_fine(fp):
             d = math.hypot(pads[i].x - pads[j].x, pads[i].y - pads[j].y)
             if 0 < d < best: best = d
     return best <= FromMM(0.7)
+_all = [r for _, _, refs, _ in REGIONS for r in refs] + list(FIXED)
+_dups = sorted({r for r in _all if _all.count(r) > 1})
+if _dups: raise SystemExit("reference listed twice in the placement (two footprints per reference make the DSN export refuse the board): %s" % _dups)
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:
         fp = place(ref, 0, 0, back=back); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
         if fine:
+            nfine = sum(1 for pd in fp.Pads() if pd.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and min(pd.GetSize().x, pd.GetSize().y) <= FromMM(1.2))
+            fm = FINE_MARGIN if nfine >= 16 else 1.4   # the wide margin is for the QFN and QFP rows whose escape vias splay far (U5, U10); a SOT or USON keeps 1.4
             for pd in fp.Pads():
                 if pd.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or min(pd.GetSize().x, pd.GetSize().y) > FromMM(1.2): continue
                 pbb = pd.GetBoundingBox(); w_, h_ = pbb.GetWidth(), pbb.GetHeight()
-                if w_ > h_ * 1.2: mx = 2 * FINE_MARGIN
-                elif h_ > w_ * 1.2: my = 2 * FINE_MARGIN
-            if mx == 0.0 and my == 0.0: mx = my = 2 * FINE_MARGIN
+                if w_ > h_ * 1.2: mx = 2 * fm
+                elif h_ > w_ * 1.2: my = 2 * fm
+            if mx == 0.0 and my == 0.0: mx = my = 2 * fm
         fps.append((ref, fp, bb.GetWidth() / 1e6 + GAP + mx, bb.GetHeight() / 1e6 + GAP + my, fine))
     fps.sort(key=lambda t: (not t[4], -(t[2] * t[3])))
     cx, cy, rowh = x0, y1, 0.0
@@ -141,6 +146,7 @@ def pour(layer, netname, name, rect, priority=0):
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
 # E6 (32.57): four layers, one ground domain. In1 is the solid GND plane (rule area: no tracks); In2 carries VIN_RAW from the filter to the block lands, the tracker's PV_P and TRK_OUT pours;
+# E6 round 4 (7 Sep 2026): In2 is a power layer in the DSN (no wires; the CELL_F, VIN_RAW, PV_P and TRK_OUT pours are DSN planes the router reaches by vias) and carries no GND pour: overlapping zone outlines would both be planes in the DSN.
 # the pack node CELL_F runs on both outer layers from the blade to the pads; GND pours on the outer layers elsewhere; nothing under the float clamps (rule areas of gen_pcb_e.py).
 pour(pcbnew.In1_Cu, "GND", "GND plane In1", (-149, -113, 118, -45))
 z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
@@ -150,7 +156,7 @@ board.Add(z)
 pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands)", (-92, -100, -26, -80))
 pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-26, -113, -2, -80))
 pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (56, -113, 76, -80))
-pour(pcbnew.In2_Cu, "GND", "GND plane In2 (rest)", (-149, -113, 118, -45), priority=0)
+pour(pcbnew.In2_Cu, "CELL_F", "CELL_F plane In2 (the west end: the pack node to the pack parts, the fans and the monitor divider; a DSN plane on the power layer In2 since E6 round 4)", (-148, -112, -100, -46), priority=1)
 pour(pcbnew.F_Cu, "CELL_F", "CELL_F pour F.Cu (blade to the pad)", (-128, -112, -100, -103.5), priority=1)
 for L in (pcbnew.F_Cu, pcbnew.B_Cu):
     pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-149, -113, 118, -45), priority=0)
@@ -158,7 +164,7 @@ pour(pcbnew.B_Cu, "CELL_F", "CELL_F band B.Cu (the blade lands and the west end:
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
-cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.6, 0.3)
+cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)   # 0.127: the 0.4 mm escape rows of the RP2040 (E6 round 4)
 PATTERNS = [("DC_*", "PWR"), ("HS_S", "PWR"), ("GND", "PWR"), ("GND_V", "PWR"), ("VIN_RAW", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "PWR"), ("TRK_LSENSE", "PWR"), ("+5V_E6", "PWR"), ("E6_SW", "PWR"), ("CELL+", "BANK"), ("CELL_F", "BANK"), ("USB_E6_*", "USB")]
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
@@ -175,7 +181,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.2, diff_pair_gap=0.15)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.6, 0.3), C("PWR", 0, 0.15, 0.8, 0.8, 0.4), C("BANK", 1, 0.3, 3.0, 1.2, 0.6), C("USB", 2, 0.15, 0.2, 0.6, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.8, 0.8, 0.4), C("BANK", 1, 0.3, 3.0, 1.2, 0.6), C("USB", 2, 0.127, 0.2, 0.6, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
     # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern

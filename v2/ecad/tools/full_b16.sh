@@ -20,6 +20,8 @@ grep -q 'RESULT: ALL PASS' out/check_b3.log || { echo "BLOCK numeric gate (out/c
 ESCAPE_SKIP=U3,U4,J_HDMI python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'   # the WQFN-42 display switches: the QFN scheme's vias collide on the 3.5 mm short sides, the router fans them itself
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND,+5V_S1,+5V_S2,+5V_S3,+5V_DEV,+3V3_DEV,+3V3_S1B,+3V3_S2B,+3V3_S3B,+3V3_S1A,+3V3_S2A,+3V3_S3A' fine 2>&1 | grep -E 'fanout:'
+kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
+python3 ../tools/escape_prune.py $N.kicad_pcb out/$N-preroute-drc.json 2>&1 | grep escape_prune   # escapes in a hard violation go, the router fans those pads
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 - <<'PY'

@@ -20,7 +20,7 @@ tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E1 DOCK"
 tb.SetComment(0, "MESHSAT-830. E6 floor dock strip: pack and vehicle entry to the raised block, panel tracker, sensor controller, eleven blind-mate float clamps, rods pass through. tools/gen_pcb_e.py + gen_pcb_e3.py"); board.SetTitleBlock(tb)
 board.SetCopperLayerCount(4)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
-for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.45), ("m_MinThroughDrill", 0.25), ("m_HoleToHoleMin", 0.3), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.25), ("m_SolderMaskMinWidth", 0.1)):
+for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.40), ("m_MinThroughDrill", 0.20), ("m_HoleToHoleMin", 0.3), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.19), ("m_SolderMaskMinWidth", 0.1)):
     try: setattr(ds, attr, FromMM(val))
     except Exception as e: print("note:", attr, e)
 def shape(layer, width=0.1):
