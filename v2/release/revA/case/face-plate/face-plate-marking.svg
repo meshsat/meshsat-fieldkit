@@ -19,7 +19,7 @@
 <text x="-8.00" y="107.00" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">BATTERY %</text>
 <text x="150.00" y="-73.60" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">MAIN</text>
 <text x="150.00" y="-22.10" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">PI</text>
-<text x="150.00" y="27.90" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">TEST</text>
+<text x="150.00" y="20.90" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">TEST</text>
 <text x="-150.00" y="-73.00" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">SOS</text>
 <text x="-150.00" y="-31.00" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">EMCON</text>
 <text x="-150.00" y="11.00" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">ZEROIZE</text>
@@ -28,6 +28,10 @@
 <text x="-140.00" y="66.00" font-size="2.40" text-anchor="start" transform="scale(1,-1)">NIGHT</text>
 <text x="-150.00" y="78.00" font-size="2.40" text-anchor="middle" transform="scale(1,-1)">BLACKOUT</text>
 <text x="-149.00" y="116.00" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">SOUNDER</text>
+<text x="-118.00" y="112.50" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">HEADSET 1</text>
+<text x="-92.00" y="112.50" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">HEADSET 2</text>
+<text x="150.00" y="-92.50" font-size="2.40" text-anchor="middle" transform="scale(1,-1)">CAMERA</text>
+<text x="128.00" y="-67.50" font-size="2.00" text-anchor="middle" transform="scale(1,-1)">LIGHT</text>
 <rect x="40.00" y="88.00" width="76.00" height="26.00" fill="none" stroke="#ffffff" stroke-width="0.3"/>
 <text x="78.00" y="93.50" font-size="3.60" text-anchor="middle" transform="scale(1,-1)">MESHSAT FIELD KIT V2</text>
 <text x="78.00" y="99.50" font-size="2.60" text-anchor="middle" transform="scale(1,-1)">S/N ________</text>

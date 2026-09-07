@@ -33,14 +33,18 @@ with PdfPages(out_fn) as pdf:
     dim(-W / 2, H / 2, W / 2, H / 2, "%.1f" % W, off=14); dim(W / 2, -H / 2, W / 2, H / 2, "%.1f" % H, off=14, vertical=True)
     dim(-L.WINDOW[0] / 2, -H / 2, L.WINDOW[0] / 2, -H / 2, "window %.2f (frame ring)" % L.WINDOW[0], off=-14)
     dim(-W / 2, -L.WINDOW[1] / 2, -W / 2, L.WINDOW[1] / 2, "window %.2f" % L.WINDOW[1], off=-14, vertical=True)
-    dx, dy = L.DISPLAY["c"]; aw, ah = L.DISPLAY["aperture"]
-    dim(dx - aw / 2, dy - ah / 2, dx + aw / 2, dy - ah / 2, "aperture %.2f" % aw, off=-6); dim(dx + aw / 2, dy - ah / 2, dx + aw / 2, dy + ah / 2, "%.2f" % ah, off=6, vertical=True)
+    bx, by, bw, bh, br = L.XENARC["cutout"]; dx, dy = L.XENARC["c"]
+    dim(bx - bw / 2, by - bh / 2, bx + bw / 2, by - bh / 2, "block cutout %.0f" % bw, off=-6); dim(bx + bw / 2, by - bh / 2, bx + bw / 2, by + bh / 2, "%.0f" % bh, off=6, vertical=True)
+    ax.text(dx, dy + 8, "Xenarc 709GNK on the plate: VESA 50 M4 x4 at (%.0f/%.0f, %.0f/%.0f)" % (dx - 25, dx + 25, dy - 25, dy + 25), fontsize=5.5, ha="center")
     ex, ey = L.EPAPER["c"]; ww, wh = L.EPAPER["window"]
     dim(ex - ww / 2, ey + wh / 2, ex + ww / 2, ey + wh / 2, "e-paper window %.2f x %.1f" % (ww, wh), off=6)
     for ref, (x, y), hole, depth in L.BUTTONS: ax.text(x + hole / 2 + 3, y, "%s\nd%.1f" % (ref, hole), fontsize=5.5, va="center")
     for ref, (x, y) in L.TOGGLES: ax.text(x - 22, y, "%s\nd%.1f + key" % (ref, L.TOGGLE_HOLE), fontsize=5.5, va="center")
     ax.text(L.LIGHT[1][0] - 22, L.LIGHT[1][1], "%s\nD %.1f/%.1f" % (L.LIGHT[0], L.LIGHT_HOLE, L.LIGHT_FLAT), fontsize=5.5, va="center")
     ax.text(L.SOUNDER[1][0], L.SOUNDER[1][1] - L.SOUNDER[2] / 2 - 4, "%s d%.1f" % (L.SOUNDER[0], L.SOUNDER[2]), fontsize=5.5, ha="center", va="top")
+    for ref, (x, y) in L.HEADSETS: ax.text(x, y - L.HEADSET_HOLE / 2 - 4, "%s d%.1f" % (ref, L.HEADSET_HOLE), fontsize=5.5, ha="center", va="top")
+    ax.text(L.CAMERA[1][0], L.CAMERA[1][1] + 7, "camera d%.0f" % L.CAMERA[2], fontsize=5.5, ha="center"); ax.text(L.LIGHT_SENSOR[1][0] + 4, L.LIGHT_SENSOR[1][1], "light d%.1f" % L.LED_HOLE, fontsize=5, va="center")
+    ax.text(L.PA_MOUNT["c"][0], L.PA_MOUNT["c"][1] + 13, "PA flange: 2 x PEM S-M3 (4.2) %.0f apart at (%.0f, %.0f), underside" % (L.PA_MOUNT["holes"], L.PA_MOUNT["c"][0], L.PA_MOUNT["c"][1]), fontsize=5.5, ha="center")
     ax.text(L.STATUS_LEDS[0][1][0], L.STATUS_LEDS[-1][1][1] - 8, "D1..D11 d%.1f H7\n9 mm pitch" % L.LED_HOLE, fontsize=5.5, ha="center", va="top")
     ax.text(L.BAR_LEDS[2][1][0], L.BAR_LEDS[0][1][1] - 8, "D12..D16 d%.1f H7, 6 mm pitch" % L.LED_HOLE, fontsize=5.5, ha="center", va="top")
     for k, (x, y) in enumerate(L.FRAME_BOSSES): ax.text(x, y + 4, "M3", fontsize=5, ha="center")
@@ -51,14 +55,17 @@ with PdfPages(out_fn) as pdf:
     tx = fig.add_axes([0.61, 0.07, 0.38, 0.91]); tx.axis("off")
     rows = [("Plate", "%.1f x %.1f x %.1f, R%.0f corners, 5754 or 6061, black anodised" % (W, H, L.PLATE[2], L.PLATE_R)),
             ("Frame screws", "10 x M3 clearance 3.4 at the 1450PF inserts"),
-            ("Display", "Touch Display 2: aperture %.2f x %.2f R%.1f at (%.0f, %.0f); 1.0 pocket %.2f x %.2f from below for the glass and its tape frame" % (aw, ah, L.DISPLAY["aperture_r"], dx, dy, L.DISPLAY["glass"][0], L.DISPLAY["glass"][1])),
-            ("E-paper", "WeAct 3.7: window %.2f x %.1f at (%.0f, %.0f); 1.0 pocket %.2f x %.1f R%.0f from above for the 2 mm lens" % (ww, wh, ex, ey, L.EPAPER["lens"][0], L.EPAPER["lens"][1], L.EPAPER["lens_r"])),
+            ("Monitor", "Xenarc 709GNK (205.15 x 139.49 x 28.66) lies on the plate at (%.0f, %.0f): connector block cutout %.0f x %.0f R%.0f at (%.2f, %.1f) with a gasket ring, four VESA 50 M4 (4.5) holes; no aperture" % (dx, dy, bw, bh, br, bx, by)),
+            ("E-paper", "Pervasive Displays E2370KS0C1 glass 92.99 x 53.0: window %.2f x %.1f at (%.0f, %.0f); 1.0 pocket %.2f x %.1f R%.0f from above for the 2 mm lens; its flex to the backer's ZIF" % (ww, wh, ex, ey, L.EPAPER["lens"][0], L.EPAPER["lens"][1], L.EPAPER["lens_r"])),
+            ("Headset jacks", "; ".join("%s d%.1f at (%.0f, %.0f)" % (r, L.HEADSET_HOLE, c[0], c[1]) for r, c in L.HEADSETS) + " (U-174/U panel jacks, Amphenol Nexus drawing owed)"),
+            ("Camera", "d%.0f sealed window at (%.0f, %.0f) over the USB camera module on the backer's top strip" % (L.CAMERA[2], L.CAMERA[1][0], L.CAMERA[1][1])),
+            ("PA flange", "RA30H1317M1 on the underside at (%.0f, %.0f): two PEM S-M3 nuts (4.2 holes) %.0f apart, thermal compound, inside the backer's void" % (L.PA_MOUNT["c"][0], L.PA_MOUNT["c"][1], L.PA_MOUNT["holes"])),
             ("Buttons", "; ".join("%s d%.1f at (%.0f, %.0f)" % (r, h, c[0], c[1]) for r, c, h, d in L.BUTTONS) + " (C&K ATP19/ATP16, silicone washer under the bezel)"),
             ("Toggles", "; ".join("%s at (%.0f, %.0f)" % (r, c[0], c[1]) for r, c in L.TOGGLES) + ": d%.1f with the %.2f x %.2f keyway toward -Y (APEM 5636ADKB-2V, K seal)" % (L.TOGGLE_HOLE, L.TOGGLE_KEY[0], L.TOGGLE_KEY[1])),
             ("Light switch", "%s at (%.0f, %.0f): D hole %.1f with the %.1f flat toward +X (NKK M2044SD3A01, O-ring and AT401A boot)" % (L.LIGHT[0], L.LIGHT[1][0], L.LIGHT[1][1], L.LIGHT_HOLE, L.LIGHT_FLAT)),
             ("Sounder", "%s d%.1f at (%.0f, %.0f) (Floyd Bell MC-09-530-Q, 61663 gasket)" % (L.SOUNDER[0], L.SOUNDER[2], L.SOUNDER[1][0], L.SOUNDER[1][1])),
-            ("Light guides", "16 x d%.1f H7 reamed: Mentor 1282.5004 IP68 (2.5 shaft, 3.2 head, A 7.5) over the 3 mm LEDs of the backer C6" % L.LED_HOLE),
-            ("Standoffs", "6 x PEM SO-M3-10 self-clinching from below at " + ", ".join("(%.0f, %.0f)" % c for c in L.STANDOFFS) + "; hole 4.2"),
+            ("Light guides", "17 x d%.1f H7 reamed: Mentor 1282.5004 IP68 (2.5 shaft, 3.2 head, A 7.5) over the 3 mm LEDs and the light sensor of the backer C7" % L.LED_HOLE),
+            ("Standoffs", "8 x PEM SO-M3-10 self-clinching from below at " + ", ".join("(%.0f, %.0f)" % c for c in L.STANDOFFS) + "; hole 4.2"),
             ("Marking", "laser: legends, the battery bar, the nameplate %.0f x %.0f at (%.0f, %.0f), the logo d%.0f at (%.0f, %.0f) (face-plate-marking.svg)" % (L.NAMEPLATE[2], L.NAMEPLATE[3], L.NAMEPLATE[0], L.NAMEPLATE[1], L.LOGO[1], L.LOGO[0][0], L.LOGO[0][1])),
             ("Seal", "PORON gasket ring in the %.0f mm band under the frame ring; every cut-out sealed by its part (32.34 construction, 32.42)" % L.BAND)]
     import textwrap
