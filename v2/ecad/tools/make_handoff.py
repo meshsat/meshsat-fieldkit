@@ -70,6 +70,10 @@ if missing and os.environ.get("HANDOFF_ALLOW_MISSING") != "1":
     sys.exit("make_handoff: no finished deliverable for %s in %s.\n"
              "Finish those boards and commit their folders from the laptop first, then pull here and rerun.\n"
              "Set HANDOFF_ALLOW_MISSING=1 only if you mean to build the set without them." % (", ".join(missing), DL))
+blank = [f for f, stem, *_ in BOARDS if os.path.exists(os.path.join(DL, f, stem + "-bom.status")) and open(os.path.join(DL, f, stem + "-bom.status")).read().strip() != "OK"]
+if blank and os.environ.get("HANDOFF_ALLOW_BLANK") != "1":   # 8 Sep 2026 (MESHSAT-862): lcsc_fill's blank count used to be printed and read by nobody
+    sys.exit("make_handoff: the BOM of %s carries LCSC blanks that no lcsc-allow.txt line explains (see <deliverable>/<stem>-bom.status).\n"
+             "Fill the codes in tools/lcsc_fill.py or allow-list the bench-fitted lines with a reason, refinish, then rerun; HANDOFF_ALLOW_BLANK=1 only to build the set regardless." % ", ".join(blank))
 shutil.rmtree(REV, ignore_errors=True); os.makedirs(REV, exist_ok=True); os.makedirs(JLC, exist_ok=True)   # JLCPCB/ is never wiped: ORDER-LOG.md and upload/ copies live there
 def run(cmd): r = subprocess.run(cmd, capture_output=True, text=True); return r.returncode == 0, (r.stdout + r.stderr)[-300:]
 order_index = ["# MeshSat field-kit carrier boards, JLCPCB order set (generated %s)" % subprocess.run(["date", "+%Y-%m-%d %H:%M"], capture_output=True, text=True).stdout.strip(), "",

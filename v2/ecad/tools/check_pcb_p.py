@@ -28,4 +28,5 @@ for net in ("CELL4", "FUSED", "SW", "PACK_P", "PACK_N", "GND"):
     for L in (pcbnew.F_Cu, pcbnew.B_Cu):
         n = sum(1 for t in b.GetTracks() if t.GetClass() == "PCB_TRACK" and t.GetLayer() == L and t.GetNetname().lstrip("/") == net and t.GetWidth() >= pcbnew.FromMM(2.7) and t.IsLocked())
         check(n >= 1, "locked band of %s on %s (%d)" % (net, b.GetLayerName(L), n))
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import copper_checks as _cc; print(_cc.run(b, check))   # 8 Sep 2026 (MESHSAT-862)
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
