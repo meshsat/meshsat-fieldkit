@@ -4,7 +4,7 @@ Usage: prefanout.py <board.kicad_pcb>"""
 import sys, math, pcbnew
 from pcbnew import VECTOR2I, FromMM
 b = pcbnew.LoadBoard(sys.argv[1])
-PLANES = set(sys.argv[2].split(",")) if len(sys.argv) > 2 else {"GND", "+5V"}
+PLANES = {n.lstrip("/") for n in sys.argv[2].split(",")} if len(sys.argv) > 2 else {"GND", "+5V"}   # 7 Sep 2026: root-sheet labels are "/NAME" on the board; until now only the power-symbol nets (GND) ever got a via
 SKIP = set(sys.argv[3].split(",")) if len(sys.argv) > 3 else set()   # footprints whose plane pads are handled elsewhere ("fine" = every fine-pitch part, see escape.py)
 import re as _re
 def is_fine(fp):
@@ -16,7 +16,9 @@ def is_fine(fp):
             d = math.hypot(pads[i].x - pads[j].x, pads[i].y - pads[j].y)
             if 0 < d < best: best = d
     return best <= FromMM(0.7)
-VIA_D, VIA_DRILL, TRACK_W = FromMM(0.8), FromMM(0.4), FromMM(0.4)
+_ds = b.GetDesignSettings()
+VIA_D, VIA_DRILL, TRACK_W = max(_ds.m_ViasMinSize, FromMM(0.45)), max(_ds.m_MinThroughDrill, FromMM(0.25)), FromMM(0.4)   # 7 Sep 2026: the board's small via (0.45/0.25 on the four-layer boards) instead of 0.8/0.4, so a plane via fits beside a packed 0603; a 2-layer board keeps its 0.5/0.3 floor
+if b.GetCopperLayerCount() == 2: VIA_D, VIA_DRILL = max(VIA_D, FromMM(0.5)), max(VIA_DRILL, FromMM(0.3))
 allpads = [(p, p.GetPosition(), max(p.GetSize().x, p.GetSize().y) / 2) for fp in b.GetFootprints() for p in fp.Pads()]
 rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()] + [z for fp in b.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout; B13: footprint keep-outs (the E72 antenna) count too
 edges = b.GetBoardEdgesBoundingBox()
@@ -32,10 +34,10 @@ def clear(v, me, r=None):
     if not (edges.GetLeft() + FromMM(1.5) < v.x < edges.GetRight() - FromMM(1.5) and edges.GetTop() + FromMM(1.5) < v.y < edges.GetBottom() - FromMM(1.5)): return False
     for q, qp, qr in allpads:
         if qp.x == mp.x and qp.y == mp.y: continue            # the pad itself (wrapper objects differ, compare by position)
-        gap = FromMM(0.45) if q.GetNetname() == me.GetNetname() else FromMM(0.75)   # keep other-net pads' exit lanes open for the router
+        gap = FromMM(0.35) if q.GetNetname() == me.GetNetname() else FromMM(0.5)   # keep other-net pads' exit lanes open for the router (0.75 until 7 Sep 2026: half the ground pads of a packed region got no via and the router left islands)
         if math.hypot(v.x - qp.x, v.y - qp.y) < qr + r + gap: return False
     for w in placed:
-        if math.hypot(v.x - w.x, v.y - w.y) < VIA_D + FromMM(0.5): return False
+        if math.hypot(v.x - w.x, v.y - w.y) < VIA_D + FromMM(0.35): return False
     for a, c, hw in segs:
         if _seg_dist(v, a, c) < hw + r + FromMM(0.2): return False
     for z in rule_areas:
@@ -43,12 +45,19 @@ def clear(v, me, r=None):
         for ddx, ddy in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r)):
             if o.Contains(VECTOR2I(int(v.x + ddx * 1.3), int(v.y + ddy * 1.3))): return False
     return True
-added = skipped = 0
+added = skipped = inpad = 0
 for fp in b.GetFootprints():
-    if fp.GetReference() in SKIP or ("fine" in SKIP and is_fine(fp)): continue
+    skip_fp = fp.GetReference() in SKIP or ("fine" in SKIP and is_fine(fp))
     fc = fp.GetPosition()
     for pad in fp.Pads():
-        if pad.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or pad.GetNetname() not in PLANES: continue
+        if skip_fp and not (pad.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and min(pad.GetSize().x, pad.GetSize().y) >= FromMM(1.5) and pad.GetNetname().lstrip("/") in PLANES): continue   # a fine part's exposed pad still gets its plane via (D8 run 5: the amplifier's pad sat on an island)
+        if skip_fp:
+            c = pad.GetPosition()
+            if not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed):
+                via = pcbnew.PCB_VIA(b); via.SetPosition(c); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)
+                via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via); placed.append(c); placed_nets.append((c, pad.GetNetname())); added += 1; inpad += 1
+            continue
+        if pad.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or pad.GetNetname().lstrip("/") not in PLANES: continue
         c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2
         TRACK_W = min(FromMM(0.4), max(FromMM(0.2), min(pad.GetSize().x, pad.GetSize().y)))   # never wider than the pad: fine-pitch neighbours keep a legal corridor
         dx, dy = c.x - fc.x, c.y - fc.y; n = math.hypot(dx, dy)
@@ -74,6 +83,12 @@ for fp in b.GetFootprints():
                     t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TRACK_W); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t)
                     placed.append(v); placed_nets.append((v, pad.GetNetname())); added += 1; done = True; break
             if done: break
+        if not done and min(pad.GetSize().x, pad.GetSize().y) >= VIA_D + FromMM(0.1) and not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed) \
+           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + FromMM(0.15) for q, qp, qr in allpads if q.GetNetname() != pad.GetNetname()):   # the via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
+            # 7 Sep 2026 (E6 run 8, D8 run 3): a plane pad with no room around it gets its via in the pad (0.45/0.25 inside a 0603 land), so no pour piece is ever left
+            # hanging on a pad without a path to the plane; the count is reported for the order notes (via-in-pad is a prototype allowance)
+            via = pcbnew.PCB_VIA(b); via.SetPosition(c); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)
+            via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via); placed.append(c); placed_nets.append((c, pad.GetNetname())); added += 1; inpad += 1; done = True
         if not done: skipped += 1; print("  no room for a fanout via at %s pad %s (%s)" % (fp.GetReference(), pad.GetNumber(), pad.GetNetname()))
-print("fanout: %d vias added, %d pads skipped" % (added, skipped))
+print("fanout: %d vias added (%d in the pad), %d pads skipped" % (added, inpad, skipped))
 pcbnew.SaveBoard(sys.argv[1], b)

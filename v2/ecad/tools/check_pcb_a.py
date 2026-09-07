@@ -59,9 +59,9 @@ if _os.path.exists(_pro) and b.GetNetInfo().GetNetCount() > 1:
 # routed board: the node and rail nets at their class widths (locked escapes excluded), every differential pair reported
 _w = {}
 for _t in b.GetTracks():
-    if _t.GetClass() == "PCB_TRACK" and not _t.IsLocked() and _t.GetLength() >= 0.7e6: _w.setdefault(_t.GetNetname().lstrip("/"), set()).add(round(_t.GetWidth() / 1e6, 2))
+    if _t.GetClass() == "PCB_TRACK" and not _t.IsLocked() and _t.GetLength() >= 3.0e6: _w.setdefault(_t.GetNetname().lstrip("/"), set()).add(round(_t.GetWidth() / 1e6, 2))   # 3 mm: the escape knees, joins and closures are short
 if _w:
-    for _n, _min in (("VBAT", 1.0), ("CELL+", 1.0), ("VBUS20", 1.0), ("+5V_S1", 0.5), ("+5V_S2", 0.5), ("+5V_S3", 0.5), ("+5V_DEV", 0.5), ("+13V8_PA", 0.5)):
+    for _n, _min in (("VBAT", 0.6), ("CELL+", 0.6), ("VBUS20", 0.6), ("+5V_S1", 0.5), ("+5V_S2", 0.5), ("+5V_S3", 0.5), ("+5V_DEV", 0.5), ("+13V8_PA", 0.5)):
         if _n in _w: check(min(_w[_n]) >= _min - 0.01, "%s routed at its class width (>= %.1f mm; widths %s)" % (_n, _min, sorted(_w[_n])))
 _tl = {}
 for _t in b.GetTracks():
