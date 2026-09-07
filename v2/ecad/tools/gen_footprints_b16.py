@@ -103,6 +103,21 @@ def h5007():
     write(name, body, n)
 h5007()
 
+# ---------------------------------------------------------------- NiceRF SA868 (top view, module centred, KiCad y down): 35.6 x 19.0, 18 castellations 1.8 wide (datasheet V1.3 section 8;
+#     pin 1 top left, 1-7 along the top at 4.45 mm, 8-11 down the right side (2.66 from the top, 4.45, 4.45, 4.6), 12-18 along the bottom right to left)
+def sa868():
+    name = "NiceRF_SA868"
+    body = head(name, "NiceRF SA868 VHF walkie-talkie module 35.6 x 19.0 x 3.2, 18 castellated pads 1.8 mm (V1.3 section 8); host pads 1.6 x 2.6 reaching 1.4 mm outside the edge", "SA868 VHF module NiceRF castellated", -11.5, 11.5)
+    n = 0
+    xs = [-13.35 + 4.45 * k for k in range(7)]
+    for k, x in enumerate(xs): body += smd(1 + k, x, -9.5 - 0.1, 1.6, 2.6); n += 1                       # top row, pin 1 left
+    for k, y in enumerate((-9.5 + 2.66, -9.5 + 2.66 + 4.45, -9.5 + 2.66 + 8.9, 9.5 - 2.54)): body += smd(8 + k, 17.8 + 0.1, y, 2.6, 1.6); n += 1   # right side
+    for k, x in enumerate(reversed(xs)): body += smd(12 + k, x, 9.5 + 0.1, 1.6, 2.6); n += 1              # bottom row, pin 12 right
+    body += rect(-17.8, -9.5, 17.8, 9.5, "F.Fab") + rect(-18.6, -11.2, 19.6, 11.2, "F.CrtYd", 0.05)
+    body += line(-17.8, -9.5, -17.8, 9.5, "F.SilkS") + line(-17.8, 9.5, 17.8, 9.5, "F.SilkS") + circ(-15.5, -12.0, 0.3, "F.SilkS")
+    write(name, body, n)
+sa868()
+
 # ---------------------------------------------------------------- 128-pin QFP with exposed pad: the KiCad footprint plus pad 129 at the centre (paste in four windows)
 def qfp_ep(src, name, ep):
     path = os.path.join(KLIB, "Package_QFP.pretty", src + ".kicad_mod")

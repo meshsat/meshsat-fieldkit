@@ -10,7 +10,7 @@ python3 ../tools/gen_pcb_e3.py $N.kicad_pcb out/$N.net > out/gen3.log 2>&1; GEN3
 python3 ../tools/check_pcb_e.py $N.kicad_pcb > out/check_e.log 2>&1; grep -E 'FAIL|RESULT' out/check_e.log; grep -q 'RESULT: ALL PASS' out/check_e.log || { echo 'BLOCK numeric gate (out/check_e.log)' | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
-python3 ../tools/prefanout.py $N.kicad_pcb 'GND,GND_V,VIN_RAW,CELL_F,+3V3_E6' fine 2>&1 | grep -E 'fanout:'
+python3 ../tools/prefanout.py $N.kicad_pcb 'GND,GND_V,VIN_RAW,CELL_F,PV_P,TRK_OUT,+3V3_E6' fine 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 - <<'PY'

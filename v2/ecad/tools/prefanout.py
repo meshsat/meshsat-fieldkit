@@ -61,8 +61,9 @@ for fp in b.GetFootprints():
             u = L
         s2 = math.sqrt(0.5)
         dirs = [u, (-u[1], u[0]), (u[1], -u[0]), (-u[0], -u[1])]
+        dirs += [((a[0] + b_[0]) * s2, (a[1] + b_[1]) * s2) for a, b_ in ((dirs[0], dirs[1]), (dirs[0], dirs[2]), (dirs[3], dirs[1]), (dirs[3], dirs[2]))]   # diagonals too (E6 round 6: two 0603 ground pads beside the RP2040's escapes had no axis-aligned room and their pour pieces stayed islands)
         done = False
-        for off in (half + FromMM(0.65), half + FromMM(1.1), half + FromMM(1.6)):
+        for off in (half + FromMM(0.65), half + FromMM(1.1), half + FromMM(1.6), half + FromMM(2.2), half + FromMM(2.9)):
             for ux, uy in dirs:
                 v = VECTOR2I(int(c.x + ux * off), int(c.y + uy * off))
                 mid = VECTOR2I(int((c.x + v.x) / 2), int((c.y + v.y) / 2)); q3 = VECTOR2I(int((c.x + 3 * v.x) / 4), int((c.y + 3 * v.y) / 4))
