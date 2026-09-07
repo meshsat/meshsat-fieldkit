@@ -125,7 +125,7 @@ The controller owns three lines per slot: `HBn` in, `SLOT_ENn` out, and the disp
 | 0x49 | TMP117 board temperature under the coolers | B16 |
 | 0x60 | ATECC608B secure element (keys behind ZEROIZE) | B16 |
 | 0x68 | DS3231M holdover clock (CR2032 backed) | B16 |
-| 0x6B | BQ25731 SMBus charger (the BB-2590/U pack) | A22 |
+| 0x6B | BQ25731 SMBus charger (the 4S pack's gauge, 0x0B, answers on the charger's SMBus) | A22 |
 
 The sensor board inside E6 (BME688 at 0x76 and the IMU at 0x68 on its own bus) belongs to the sensor controller, a second RP2040 that is another USB device; its addresses never appear on the kit bus. Rules: the panel's 3.3 V is never switched while the ribbon is attached (an unpowered PCA9555 clamps the bus). With the ribbon unplugged the kit fails safe: A22 pulls `EMCON_HW` high (`R102`) and D8 pulls `TX_INHIBIT_n` low (`R2`), so every transmitter rail gate stays open and the PA cannot key; A22 pulls `ZEROIZE_HW` high (`R117`, no wipe) and `SHORE_INHIBIT` low (`R118`, charging allowed). A kit without its panel charges and computes but does not transmit.
 
@@ -152,7 +152,7 @@ Sounder patterns: chirp 50 ms (acknowledge), double chirp (lamp test), 1 s on 1 
 
 ## 10. Shore charge inhibit and the pack
 
-`SHORE_INHIBIT` (controller GPIO 20, ribbon pin 26) reaches A22 through B16 and the dock strip E6 through A22's block: high = the shore and vehicle inputs are held off at the front end, so nothing charges. Low, floating or the controller dead = the inputs run, so a kit with a crashed panel still charges. The bridge asks the controller to assert it when the pack thermistor (read by the BQ25731 over the bus) is below 0 C, when the operator sets "no charge", and clears it with hysteresis (charge again above 3 C). Boot state: low. SHORE shows the charger's input-present bit, CHARGING its charge-in-progress bit; the pack is a BB-2590/U with its own gauge on the SMBus (the charger reads it), so the battery bar comes from the pack's state of charge.
+`SHORE_INHIBIT` (controller GPIO 20, ribbon pin 26) reaches A22 through B16 and the dock strip E6 through A22's block: high = the shore and vehicle inputs are held off at the front end, so nothing charges. Low, floating or the controller dead = the inputs run, so a kit with a crashed panel still charges. The bridge asks the controller to assert it when the pack thermistor (read by the BQ25731 over the bus) is below 0 C, when the operator sets "no charge", and clears it with hysteresis (charge again above 3 C). Boot state: low. SHORE shows the charger's input-present bit, CHARGING its charge-in-progress bit; the pack is a built 4S smart pack with its own SMBus gauge (the charger reads it), so the battery bar comes from the pack's state of charge.
 
 ## 11. Bridge protocol over USB (MESHSAT-837 defines the wire format)
 

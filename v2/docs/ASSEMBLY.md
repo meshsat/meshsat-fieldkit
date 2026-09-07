@@ -2,7 +2,7 @@
 
 Companion to `MESHSAT-709-geometry-appendix.md` (sections 32.49 to 32.61) and `../BUILD.md`. Boards: PCB-A POWER + I/O (**A22**), PCB-B COMPUTE (**B16**), PCB-C PANEL BACKER (**C7**, the ring under the aluminium face plate), PCB-D VHF APRS (**D8**, the mezzanine on A22), PCB-E1 DOCK STRIP (**E6**, with the sensor controller on it), PCB-E5 DOCK BLOCK (**E5**). Nothing here has been built; this is how the first set is meant to go together. The previous generation's page (the twelve-cell battery module, the previous display, the single Compute Module) is in the git history of this file.
 
-The set of 7 September 2026: three Compute Module 5 slots on B16 with a PCIe switch, a USB 3 hub and an NVMe drive each, the radios as USB devices, an Ethernet switch to a sealed wall port, the Xenarc 709GNK monitor lying on the face plate, the Pervasive Displays e-paper under a lens, the RP2040 panel controller on C7, the SA868 exciter and the RA30H1317M1 30 W amplifier (the module bolted under the plate) on D8, a BB-2590/U pack in a cradle at the west wall, the 9 to 36 V front end and the solar tracker on E6, eleven blind-mate RF paths through the dock, and the QMX HF unit in a tray on the lid.
+The set of 7 September 2026: three Compute Module 5 slots on B16 with a PCIe switch, a USB 3 hub and an NVMe drive each, the radios as USB devices, an Ethernet switch to a sealed wall port, the Xenarc 709GNK monitor lying on the face plate, the Pervasive Displays e-paper under a lens, the RP2040 panel controller on C7, the SA868 exciter and the RA30H1317M1 30 W amplifier (the module bolted under the plate) on D8, a built 4S smart pack in the pocket at the east wall (appendix 32.62), the 9 to 36 V front end and the solar tracker on E6, eleven blind-mate RF paths through the dock, and the QMX HF unit in a tray on the lid.
 
 ## 1. Fasteners
 
@@ -28,7 +28,7 @@ The set of 7 September 2026: three Compute Module 5 slots on B16 with a PCIe swi
 | Sounder BZ1 | Floyd Bell MC-09-530-Q through the plate's 28.6 mm hole with the 61663 bezel gasket on the face, nut below the plate, two leads to the lands | hand tight | none |
 | QMX tray on the lid, 4 x | the printed tray (`case/lid-bracket-qmx/`) on the lid's inner face over the right strip (X 103.5 to 172.5, Y -51.5 to 71.5 in the plate frame), four M3 into bonded nut plates or bosses on the lid (the lid's inner face is unribbed in Peli's model; the bond is the assembler's: a 2 mm ABS plate with four PEM nuts bonded with DP8005), the unit held by a 16 mm hook-and-loop strap through the tray's slots and by the 6 mm lip | 0.4 N m | Loctite 243 |
 | Dock strip to floor | 4 x 3M VHB 5952 pads 20 x 20 at the corners, floor degreased with IPA | | |
-| Pack cradle to floor | the printed cradle (`v2/cad/pack_cradle_2590.py`, after the position ruling) on four VHB 5952 pads, the RS PRO 245-556 heater mat stuck to the cradle's floor under the pack | | |
+| Pack to floor | the pack's printed enclosure (`v2/cad/pack_4s.py`, owed with the P1 board) on four VHB 5952 pads in the east pocket (X +120 to +178, under B16's overhang), the RS PRO 245-556 heater mat stuck to the floor under it | | |
 | Blade fuses | 25 A mini blade in A22 `F1` (the pack node), 25 A in E6 `F3` (pack), 10 A in E6 `F1` (vehicle input) and `F2` (solar), Keystone 3568 holders | push fit, seated flush | none; check seating after any transport |
 | Dock block E5 | four M3 x 6 standoffs above the strip, face at 7.4 mm | 0.4 N m | Loctite 243 |
 
@@ -50,14 +50,14 @@ Threadlocker: Loctite 243 (medium, oil tolerant) on every machine screw into met
 
 ## 3. The pack
 
-One BB-2590/U (Bren-Tronics BT-70791CK or Epsilor ELI-2590 NG; sheets in `vendor/battery/2590/`): 125.6 x 111 x 62 mm, about 1.4 kg, two sections with their own protection and gauge on the SMBus. It stands in the printed cradle at the west wall (the position needs the owner's ruling of appendix 32.60 item 7: the pack needs 62 mm beside A22 where the 1450 floor leaves 60 to 64 mm, so either the stack moves 5 mm east or the pack goes into the external box on the back wall) and connects through the BTA-70762-2 cable on an XT60 (pin 2, the pad nearer `F3`, is positive) and the SMBus pair. The heater mat under the cradle runs from A22 `J_HEAT` on shore power below 0 C (`PANEL.md` section 10). Nothing is welded, sleeved or fused inside the pack; the kit fuses the cable at 25 A on E6 and again at A22's node.
+The pack is built for the kit (appendix 32.62; the BB-2590/U of the 6 September ruling is 112 mm tall standing and needs 127 x 112 mm lying, and neither fits beside this board set): a 4S block of sixteen 18650 cells (4S4P, about 200 Wh, about 850 g of cells) or twelve 21700 cells (4S3P), spot-welded on 0.15 x 8 mm nickel strip, with the BMS board `pcb-p-pack` (a BQ40Z50-class SMBus gauge, protection, the cell thermistor; the P1 generator, owed), a 25 A mini blade at the positive terminal, a printed enclosure with a fold-over lid on four M3 (`v2/cad/pack_4s.py`, owed). It lies in the east pocket beside A22 under B16's overhang (X +120 to +178, Y -120 to +120, Z 1 to 49, the six east-wall couplers well above it) on four VHB pads with the heater mat under it, and connects through an XT60 lead and an SMBus lead of 350 mm along the front wall to E6's `J_BATT` and `J_SMB`. A second pack of the same construction fits the west pocket (58 x 160 x 48) later. Samsung's specification forbids soldering to the cell can: the cells are welded and the leads are soldered to the strip, never to a cell.
 
 ## 4. Leads
 
 | Lead | From | To | Wire | Connector |
 |---|---|---|---|---|
-| Pack power | BB-2590/U, BTA-70762-2 cable | E6 `J_BATT` (XT60) | the cable's 12 AWG | XT60 pair |
-| Pack SMBus | the 2590's data pins in the same cable | E6 `J_SMB` (section A on the kit bus, section B on the sensor bus) | 26 AWG twisted | XH2.5 x 6 |
+| Pack power (fused at the pack: 25 A blade) | the 4S pack's lead, along the front wall | E6 `J_BATT` (XT60) | 12 AWG silicone, 350 mm | XT60 pair |
+| Pack SMBus | the pack's gauge (BQ40Z50 class) | E6 `J_SMB` (section A on the kit bus, section B spare) | 26 AWG twisted, 350 mm | XH2.5 x 6 |
 | Vehicle and shore DC | D38999 receptacle on the back-wall plate, DC pair | E6 `J_DCIN` (JST-VH), the lead tied along the back wall, the west end wall and the front wall | 18 AWG, 500 mm | VH crimp |
 | Solar | D38999 receptacle, spare pair | E6 `J_SOLAR` (JST-VH), with the DC lead | 18 AWG, 500 mm | VH crimp |
 | Block signal wires | E6 `J_BLK` (twelve lands) | dock block wire lands, underside | 24 AWG, 60 mm each, named on the block's legend | soldered both ends |
@@ -166,4 +166,4 @@ The concept set `v2/images/concept-1450/` carries the sequence a technician foll
 4. `meshsat-1450-assembly-4-stack-out.png`: the A22 + D8 + B16 rod stack lifted straight up off the dock's blind-mate joint (no cable unscrewed: every antenna path mates at the dock strip) and set down west of the case.
 5. `meshsat-1450-assembly-5-dock.png`: the empty case: the dock strip E6 with its eleven float clamps and the pigtails from the end-wall couplers, the block E5, the sensor modules, the connector plate leads.
 
-The BB-2590/U is not in the pictures: its place is the open ruling of appendix 32.60 item 7 and 32.61 item 7 (standing, the pack is taller than the plate's underside; lying flat it needs 127 x 112 mm of floor that the board set does not leave), so the set shows the pack cable to the west wall and nothing else. Reassembly is the same sequence in reverse: the rod stack lowered onto the dock (the float clamps align the SMP-MAX plugs), the face plate onto the frame and its ten screws, lid closed. Nothing has been built; the pictures are the design intent.
+The pack appears as a stand-in box in the east pocket (its enclosure is not drawn yet, appendix 32.62). Reassembly is the same sequence in reverse: the rod stack lowered onto the dock (the float clamps align the SMP-MAX plugs), the face plate onto the frame and its ten screws, lid closed. Nothing has been built; the pictures are the design intent.

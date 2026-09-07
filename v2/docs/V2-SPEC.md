@@ -9,7 +9,7 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 | Face | 3 mm black anodised aluminium plate on the frame's inserts, laser-marked legends and the MeshSat mark; the backer board C7 hangs under it |
 | End walls | eleven SMA bulkheads at Z 88 (32.56): west VHF, HF, WIFI 2.4, GNSS, SDR; east 5G MAIN, 5G DIV, IRIDIUM, LORA, WIFI P2P A, WIFI P2P B, all clear of the moulded nubs; every cable ends at the dock strip's float clamp under the stack's blind-mate receptacle (`ecad/tools/panel1450.py` is the single source of the positions) |
 | Back wall | connector plate between the ribs: MIL-DTL-38999 shore and USB receptacles, sealed Gigabit Ethernet with PoE out, sealed USB-C PD 45 W outlet (32.57) and console, ground stud |
-| Interior | the A22 + D8 + B16 rod stack over the dock strip E6 and block; the BB-2590/U cradle at the west wall (position ruling owed, 32.60 item 7); on the lid's inner face the printed tray of the QMX HF unit over the right strip (32.60 item 5) and, over the left strip, a bracket for an 8 to 10 inch rugged tablet (not drawn) |
+| Interior | the A22 + D8 + B16 rod stack over the dock strip E6 and block; the built 4S smart pack in the east pocket beside A22 (32.62; the BB-2590/U did not fit and the case stays the 1450); on the lid's inner face the printed tray of the QMX HF unit over the right strip (32.60 item 5) and, over the left strip, a bracket for an 8 to 10 inch rugged tablet (not drawn) |
 | Disassembly | face plate off (ten M3), the rod stack lifted straight up off the blind-mate joint without unscrewing a cable, the pack out of its cradle |
 
 ## Power
@@ -17,7 +17,7 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 The node, the inputs, every rail with its part and its EMCON gate: appendix 32.55 (7 Sep 2026).
 | Item | Specification |
 |---|---|
-| Battery | one BB-2590/U military pack (MIL-PRF-32383 family; 14.4 V, 250 to 300 Wh, SMBus and LED gauge, MIL-STD-810F and 461 tested, discharge -32 to +60 C), Army SC-C-179495 connector; quotes *owed* |
+| Battery | a built 4S smart pack (appendix 32.62, ruling 7 Sep 2026: the BB-2590/U does not fit beside the board set and the case stays the 1450): 4S4P 18650 or 4S3P 21700, 14.4 V, about 200 Wh, a BQ40Z50-class SMBus gauge with protection on the P1 board, a printed enclosure in the 58 x 240 x 48 mm east pocket; a second pack of about 150 Wh in the west pocket when wanted; qualified with the kit under `TEST-PLAN.md` |
 | Inputs | 9 to 36 V filtered vehicle and shore input (MIL-STD-461 class line filter, NATO 2-pin plug cable, the 38999 receptacle); the LT8705A solar tracker |
 | Rails | 14.4 V node; SMBus charger; bucks for 5 V and 3.3 V; 13.8 V rail for the PA stage and the monitor; PoE out; USB-C PD out |
 | Run time from the pack | about 8 to 9.5 h typical (29 W: monitor on, radios idle, APRS beacons), 5 to 6 h with the three-CM5 cluster busy, 11 to 13.5 h dimmed; peak about 150 W with everything transmitting |
@@ -73,7 +73,7 @@ A whole-kit test plan to MIL-STD-810 (transit drop, vibration, temperature opera
 no vent opening anywhere in the case skin or the plate (owner ruling 7 Sep 2026, 32.53): the heat leaves through the aluminium face plate and the case walls; five IP68-rated internal fans (one per CM5 cooler, two mixer fans under the plate) driven by the sensor controller couple the inside air to the skin; the 30 W PA module bolts flat to the plate's underside on two PEM nuts with a thermal pad (32.56); estimated inside-air rise about 10 K with one module and 16 K with three loaded modules with the lid open (32.53), to be measured by `TEST-PLAN.md` E3; in direct sun the plate is shaded; with the lid closed the kit runs the reduced mode; the pack's heater mat and the inside climate sensor set the cold-weather behaviour; the case keeps Peli's own pressure equalisation valve.
 
 ## Open items (the generators have run; these remain owed)
-the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS3231, LIS3MDL, TE and Amphenol M.2 drawings (laptop list, 32.54); the sealed USB-C and RJ45 wall parts; the U-174/U headset jacks; the SOS and ZEROIZE cover part; the 2 m antenna; the tablet; the IP68 fans; the BB-2590 quotes. Closed on 7 Sep 2026: the PCIe switch (Diodes), the hubs, the display switch, the bridges, the controllers, the sensors' stock, the SA868 sheet, the PA sheet and heat path, Xenarc's drawing, the vent (none), the ASM118x question (0 stock).
+the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS3231, LIS3MDL, TE and Amphenol M.2 drawings (laptop list, 32.54); the sealed USB-C and RJ45 wall parts; the U-174/U headset jacks; the SOS and ZEROIZE cover part; the 2 m antenna; the tablet; the IP68 fans. Closed on 7 Sep 2026: the PCIe switch (Diodes), the hubs, the display switch, the bridges, the controllers, the sensors' stock, the SA868 sheet, the PA sheet and heat path, Xenarc's drawing, the vent (none), the ASM118x question (0 stock).
 
 ## Boards of this generation
 | Board | Role |
@@ -92,7 +92,7 @@ Estimates in euros at single-unit or five-off prices; documented prices where th
 |---|---|
 | Case, frame, machined and anodised face plate | 350 |
 | Xenarc 709GNK monitor | 520 |
-| BB-2590/U pack with our SMBus charger parts | 600 to 850 |
+| the built 4S smart pack (cells, BMS board, enclosure) with our SMBus charger parts | 250 to 350 |
 | Three CM5 8 GB / 64 GB wireless | 300 |
 | LimeSDR Mini 2.4 | 275 |
 | 5G module | 150 to 250 |
