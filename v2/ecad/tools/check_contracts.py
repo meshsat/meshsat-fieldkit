@@ -46,10 +46,10 @@ def pinmap(board, ref, pins):
     """net name per pin of one connector, '' where the pin is absent."""
     return {p: B[board][1].get((ref, str(p)), "") for p in pins}
 
-# 1. panel ribbon: the 2x10 map must be identical on B and C, all twenty pins named
-mb, mc = pinmap("B", "J_PANEL", range(1, 21)), pinmap("C", "J_PANEL", range(1, 21))
-diff = [p for p in range(1, 21) if not same(mb[p], mc[p])]
-check(mb and all(mb.values()) and not diff, "J_PANEL 2x10 map identical on B and C",
+# 1. panel ribbon: the 2x13 map (B16/C7, 32.58) must be identical on B and C, all twenty-six pins named
+mb, mc = pinmap("B", "J_PANEL", range(1, 27)), pinmap("C", "J_PANEL", range(1, 27))
+diff = [p for p in range(1, 27) if not same(mb[p], mc[p])]
+check(mb and all(mb.values()) and not diff, "J_PANEL 2x13 map identical on B and C",
       "differs on pins %s: %s" % (diff, {p: (mb[p], mc[p]) for p in diff[:4]}))
 
 # 2. transmit inhibit: the panel toggle drives it on C, it crosses B and A, and on D it reaches Q3 alone
@@ -108,29 +108,32 @@ for net in ("PI_SHDN_REQ", "PI_KILL"):
     b = [r for r, p in B["B"][0].get(net, set())]
     check(bool(a) and bool(b), "ribbon net %s exists on A and B" % net, "A %s, B %s" % (sorted(a), sorted(b)))
 
-# 7. the A to B ribbon (2x9 since A20/B13): identical map on both boards, all eighteen pins named
-ma, mb = pinmap("A", "J_AB1", range(1, 19)), pinmap("B", "J_AB1", range(1, 19))
-diff = [p for p in range(1, 19) if not same(ma[p], mb[p])]
-check(ma and mb and all(ma.values()) and all(mb.values()) and not diff, "J_AB1 2x9 map identical on A and B",
+# 7. the A to B ribbon (2x13 since A22/B16, 32.56): identical map on both boards, all twenty-six pins named
+ma, mb = pinmap("A", "J_AB1", range(1, 27)), pinmap("B", "J_AB1", range(1, 27))
+diff = [p for p in range(1, 27) if not same(ma[p], mb[p])]
+check(ma and mb and all(ma.values()) and all(mb.values()) and not diff, "J_AB1 2x13 map identical on A and B",
       "differs on pins %s: %s" % (diff, {p: (ma[p], mb[p]) for p in diff[:4]}))
 # 8. the mezzanine harness: A's J_MEZZ1 and D's J_HARN1 carry the same sixteen nets
 ma, md = pinmap("A", "J_MEZZ1", range(1, 17)), pinmap("D", "J_HARN1", range(1, 17))
 diff = [p for p in range(1, 17) if not same(ma[p], md[p])]
 check(ma and md and all(ma.values()) and all(md.values()) and not diff, "J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical",
       "differs on pins %s: %s" % (diff, {p: (ma[p], md[p]) for p in diff[:4]}))
-# 9. I2S from the module to the codec: the four lines exist on B (the module), A (pass-through) and D (the WM8960)
-for net in ("I2S_BCLK", "I2S_LRCLK", "I2S_DOUT", "I2S_DIN"):
-    have = {k: bool(B[k][0].get(net)) for k in ("A", "B", "D")}
-    check(all(have.values()), "I2S line %s on B, A and D" % net, str(have))
-check(any(r.startswith("U30") for r, _ in B["B"][0].get("I2S_BCLK", set())), "B: I2S_BCLK leaves a module connector pin", str(sorted(B["B"][0].get("I2S_BCLK", set()))[:4]))
-check(any(r == "U5" for r, _ in B["D"][0].get("I2S_BCLK", set())), "D: I2S_BCLK reaches the codec U5", str(sorted(B["D"][0].get("I2S_BCLK", set()))[:4]))
-# 10. the wall host port: its USB pair comes from B's hub over the ribbon and ends on A's J_WALL1
+# 9. D8 is a USB device set (32.52): its USB pair leaves B16's slot-3 hub, crosses J_AB1 to A22 and the harness to D8's hub
+for net in ("USB_D8_P", "USB_D8_N"):
+    a = [r for r, p in B["A"][0].get(net, set())]; b = [r for r, p in B["B"][0].get(net, set())]; d = [r for r, p in B["D"][0].get(net, set())]
+    check("J_AB1" in a and "J_MEZZ1" in a and "J_AB1" in b and "J_HARN1" in d, "D8 USB pair %s: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1" % net, "A %s, B %s, D %s" % (sorted(a)[:4], sorted(b)[:4], sorted(d)[:4]))
+# 10. the wall host port: its USB pair comes from B16's slot-1 hub over the ribbon and ends on A22's wall port part J_USBW
 for net in ("USB_WALL_P", "USB_WALL_N"):
     a = [r for r, p in B["A"][0].get(net, set())]; b = [r for r, p in B["B"][0].get(net, set())]
-    check("J_WALL1" in a and "J_AB1" in a and "U1" in b and "J_AB1" in b, "wall-port pair %s: B hub -> J_AB1 -> A J_WALL1" % net, "A %s, B %s" % (sorted(a), sorted(b)))
-# 11. the gated codec rail: B13's +3V3_AB crosses the ribbon and the harness to the codec on D
-for k, ref in (("B", "J_AB1"), ("A", "J_AB1"), ("A", "J_MEZZ1"), ("D", "J_HARN1")):
-    check(any(r == ref for r, _ in B[k][0].get("+3V3_AB", set())), "+3V3_AB on %s %s" % (k, ref))
+    check("J_USBW" in a and "J_AB1" in a and "J_AB1" in b and any(r.startswith("U1") and r[1:].isdigit() for r in b), "wall-port pair %s: B16 hub -> J_AB1 -> A22 J_USBW" % net, "A %s, B %s" % (sorted(a)[:5], sorted(b)[:5]))
+# 11. the harness 3.3 V and the panel controller's USB: A22's +3V3 reaches D8 over the harness; B16's USB_PNL pair reaches C7 over the ribbon
+for k, ref in (("A", "J_MEZZ1"), ("D", "J_HARN1")):
+    check(any(r == ref for r, _ in B[k][0].get("+3V3", set())), "+3V3 on %s %s" % (k, ref))
+for net in ("USB_PNL_P", "USB_PNL_N"):
+    check(any(r == "J_PANEL" for r, _ in B["B"][0].get(net, set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get(net, set())), "panel controller USB pair %s on B16 and C7 J_PANEL" % net)
+# 12. the hardware EMCON line: C7's toggle makes TX_INHIBIT_n and EMCON_HW, both cross to B16; TX_INHIBIT_n reaches D8's KEY gate, EMCON_HW the radio disable stages on B16
+check(any(r == "SW_EMCON" for r, _ in B["C"][0].get("TX_INHIBIT_n", set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get("EMCON_HW", set())), "C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL")
+check(any(r == "J_HARN1" for r, _ in B["D"][0].get("TX_INHIBIT_n", set())) and any(r.startswith("U") for r, _ in B["D"][0].get("TX_INHIBIT_n", set())), "D8: TX_INHIBIT_n from J_HARN1 into the KEY gate")
 
 print("\n%d contract(s) FAILED" % len(fails) if fails else "\nALL CONTRACTS PASS")
 sys.exit(1 if fails else 0)
