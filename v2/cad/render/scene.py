@@ -266,7 +266,10 @@ for (x, y) in ((-110.5, -73.0), (110.5, -73.0), (-110.5, 73.0), (110.5, 73.0)):
     cyl("rod_%d_%d" % (x, y), 3.0, 64.0, (x, y, 32.0), M["steel"])   # 6 Sep 2026 (owner, item 2): the rods end 5 mm above the B16 nuts, never through the face
     for z in (1.6, 16.6, 56.2): cyl("nut_%d_%d_%d" % (x, y, z), 5.5, 2.4, (x, y, z + 1.2), M["steel"], verts=6)
     cyl("spacer_%d_%d_a" % (x, y), 6.0, 13.4, (x, y, 1.6 + 6.7), M["alu"]); cyl("spacer_%d_%d_b" % (x, y), 6.0, 38.0, (x, y, 16.6 + 19.0), M["alu"])
-tube("pack_lead_r", (-141.6, -108, 8), (-172, -108, 40), 3.2, M["wire_red"]); tube("pack_lead_b", (-134, -108, 8), (-172, -104, 40), 3.2, M["wire_blk"]); box("xt60", (16, 16, 8), (-138, -108, 6), M["amber"], bevel=1.0)   # the BTA-70762-2 cable's XT60 on E6 J_BATT, its far end owed with the cradle
+box("xt60", (16, 16, 8), (-138, -108, 6), M["amber"], bevel=1.0)   # the BTA-70762-2 cable's XT60 on E6 J_BATT, its far end owed with the cradle
+# the built 4S smart pack in the east pocket (7 Sep 2026 13:20, appendix 32.62: the BB-2590/U does not fit; a 4S4P 18650 pack of about 200 Wh in a printed enclosure, 56 x 236 x 46, lies along the east wall under B16's overhang beside A22); its cable runs along the front wall to E6's west end
+box("pack_4s_east", (56.0, 236.0, 46.0), (149.0, 0.0, 24.0), M["dark"], bevel=2.0); label("lbl_pack", "4S PACK 200 Wh", (149.0, 0.0, 47.1), 5.0, M["white"], rot=(0, 0, math.pi / 2))
+tube("pack_lead_e_r", (149.0, -119.0, 12.0), (-134.0, -119.0, 6.0), 3.2, M["wire_red"]); tube("pack_lead_e_b", (145.0, -120.0, 12.0), (-141.6, -120.0, 6.0), 3.2, M["wire_blk"])
 # ------------------------------------------------------------------ PCB-A A22, the mezzanine D8 (100 x 80 at case X 0..100), PCB-B B16 (330 x 200) and what rides on it
 import_board("pcb_a22", "pcb-a-power.glb", 15.0)
 import_board("pcb_d8", "pcb-d-aprs.glb", 22.6, Matrix.Translation((50.0, 0.0, 0.0)))
