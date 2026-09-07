@@ -10,7 +10,9 @@ import pcbnew
 
 board, dsn_in, dsn_out, part_json = sys.argv[1:5]
 regions = [("DEVW", -102.0), ("S1", -36.0), ("S2", 34.0), ("S3", 97.0), ("DEVE", None)]
+STRICT = None                                   # --strict=M: a net belongs to a region only if every pad lies inside the region's box widened by M mm, else GLOBAL
 for a in sys.argv[5:]:
+    if a.startswith("--strict="): STRICT = float(a.split("=", 1)[1])
     if a.startswith("--regions="):
         regions = []
         for tok in a.split("=", 1)[1].split(","):
@@ -21,6 +23,9 @@ def region(x):
         if lim is None or x < lim: return n
     return regions[-1][0]
 order = [n for n, _ in regions]
+boxes = {}; lo = -165.0
+for n, lim in regions:
+    hi = lim if lim is not None else 165.0; boxes[n] = [lo, hi]; lo = hi
 b = pcbnew.LoadBoard(board)
 by = collections.defaultdict(list)
 for p in b.GetPads():
@@ -30,6 +35,10 @@ def group_of(net):
     if net == "GND" or net.startswith("/+5V_"): return "GLOBAL"
     xs = by.get(net)
     if not xs: return "GLOBAL"
+    if STRICT is not None:
+        for r, (bx0, bx1) in boxes.items():
+            if min(xs) >= bx0 - STRICT and max(xs) <= bx1 + STRICT: return r
+        return "GLOBAL"
     c = collections.Counter(region(x) for x in xs); top, k = c.most_common(1)[0]
     regs = [r for r in order if c[r] >= 3] or [top]
     span = order.index(regs[-1]) - order.index(regs[0])
@@ -73,7 +82,7 @@ for m in re.finditer(r"\n(\s*)\(class\s+(\S+)", s):
 out.append(s[pos:])
 open(dsn_out, "w").write("".join(out))
 conn = {g: sum(max(0, len(by.get(n, [])) - 1) for n in ns) for g, ns in groups.items()}
-json.dump({"groups": groups, "classes": classes, "all_classes": all_classes, "connections": conn}, open(part_json, "w"), indent=1)
+json.dump({"groups": groups, "classes": classes, "all_classes": all_classes, "connections": conn, "boxes": boxes, "margin": STRICT if STRICT is not None else 8.0, "strict": STRICT}, open(part_json, "w"), indent=1)
 for g in ["GLOBAL"] + order:
     print("partition %-6s nets %4d connections %5d classes %s" % (g, len(groups.get(g, [])), conn.get(g, 0), classes.get(g, [])))
 print("partition: DSN written", dsn_out)
