@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""PCB-C phase C5 (sealed face): bring the panel netlist into the mechanical board, place the panel items at their MIL-STD-1472 positions,
-pack the SMD cluster on the underside, add the GND pours. Usage: gen_pcb_c3.py <board.kicad_pcb> <netlist.net>"""
+"""PCB-C phase C7 (MESHSAT-830, 7 Sep 2026): bring the panel netlist into the ring of gen_pcb_c.py, place the panel items at the face sites of tools/panel1450.py,
+the LEDs under the plate's light guides, the ribbon under B16's header, the e-paper ZIF and its boost on the top strip's top side, the light sensor under its guide,
+the camera mount, then pack the RP2040 controller and the drivers on the underside of the right strip, the test points on the bottom strip, and pour the planes.
+Usage: gen_pcb_c3.py <board.kicad_pcb> <netlist.net>. Case-centred frame (origin = case centre, +Y the back wall) as the plate and the scene."""
 import sys, re, math, os, pcbnew
 from pcbnew import VECTOR2I, FromMM
 BOARD, NET = sys.argv[1], sys.argv[2]
@@ -55,28 +57,34 @@ def place(ref, x, y, rot=0.0, back=False, centre=True):
     if centre: centre_on(fp, x, y)
     return fp
 placed = {}
-for ref in comps:                                                   # H1..H16 and EPD1 already on the board from gen_pcb_c.py
+for ref in comps:                                                   # H1..H8 already on the board from gen_pcb_c.py
     if ref in existing: existing[ref].SetValue(comps[ref][0]); placed[ref] = existing[ref]
-# ---------------------------------------------------------------- panel layout (case mm): the sites of tools/panel1450.py, shared with the face plate (C6, 5 Sep 2026)
+# ---------------------------------------------------------------- panel layout (case mm): the sites of tools/panel1450.py, shared with the face plate
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import panel1450 as L
 FIXED = {}
 for ref, (x, y), hole, depth in L.BUTTONS: FIXED[ref] = (x, y, 45, False)           # the four lead lands at 45 degrees clear the neighbours
 for ref, (x, y) in L.TOGGLES: FIXED[ref] = (x, y, 0, False)
 FIXED[L.LIGHT[0]] = (L.LIGHT[1][0], L.LIGHT[1][1], 0, False)
-FIXED[L.SOUNDER[0]] = (L.SOUNDER[1][0], L.SOUNDER[1][1], 90, False)      # lands to the sides (east and west): up and down they met the light switch lands and the board edge
-FIXED["J_PANEL"] = (L.J_PANEL_POS[0], L.J_PANEL_POS[1], 90, True); FIXED["J_EPD"] = (L.J_EPD_POS[0], L.J_EPD_POS[1], 90, True)
+FIXED[L.SOUNDER[0]] = (L.SOUNDER[1][0], L.SOUNDER[1][1], 90, False)      # lands to the sides (east and west)
+for ref, (x, y) in L.HEADSETS: FIXED[ref] = (x, y, 0, False)
+FIXED["J_PANEL"] = (L.J_PANEL_POS[0], L.J_PANEL_POS[1], 90, True)      # 2x13 SMD on the underside, along X, straight above B16's J_PANEL
+FIXED["J_EPD"] = (L.J_EPD_POS[0], L.J_EPD_POS[1], 0, False)            # the ZIF on the top side (the flex comes down from the glass), its contacts toward the window
+FIXED[L.LIGHT_SENSOR[0]] = (L.LIGHT_SENSOR[1][0], L.LIGHT_SENSOR[1][1], 0, False)
+FIXED["CAM_H1"] = (L.CAMERA[1][0] - 10.0, L.CAMERA[1][1], 0, False); FIXED["CAM_H2"] = (L.CAMERA[1][0] + 10.0, L.CAMERA[1][1], 0, False)
 for ref, (x, y) in L.LEAD_LANDS: FIXED[ref] = (x, y, 0, True)
-FIXED["R32"] = (140.0, 26.0, 0, True); FIXED["R33"] = (140.0, -24.0, 0, True)      # the PI and TEST ring resistors beside their buttons, underside
-# C6: the panel-mount parts sit at the plate's sites (their bodies pass this board through the footprints' holes and slots); J_PANEL and J_EPD are SMD
-# parts on the underside; J_MAINSW and J_PIJ2 are solder lands on the underside. Panel-mount parts are placed by their hole centre, not by their bounding box.
-PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1"}
+# panel-mount parts sit at the plate's sites (their bodies pass this board through the footprints' holes and slots): placed by their hole centre, not by their bounding box
+PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1", "J_HSJ1", "J_HSJ2", "CAM_H1", "CAM_H2"}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
-for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light pipes; the legends are laser marked on the plate
-text("C6 BACKER: LEDs under the plate light pipes, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
-# ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
+for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light guides; the legends are laser marked on the plate
+text("C7 BACKER RING: LEDs under the plate light guides, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
+# ---------------------------------------------------------------- packed regions: the controller and drivers on the underside of the right strip, the e-paper boost on the top strip's top side, the spread parts on the bottom strip
+EPD_PARTS = ["Q5", "Q6", "L1", "D19", "D20", "D21", "R42", "R43"] + ["C%d" % k for k in range(28, 38)]
 SPREAD = lambda r: r.startswith(("TP", "JP", "FB")) or r == "D17"
-REGIONS = [("CLUSTER", L.CLUSTER, [r for r in comps if r not in placed and not r.startswith("H") and not SPREAD(r)], True), ("CLUSTER2", L.CLUSTER2, [r for r in comps if r not in placed and not r.startswith("H") and SPREAD(r)], True)]   # the right strip below SW_TEST
-GAP = 1.2; FINE_MARGIN = 1.4
+REGIONS = [("CLUSTER3", L.CLUSTER3, [r for r in EPD_PARTS if r in comps], False),
+           ("CLUSTER2", L.CLUSTER2, [r for r in comps if r not in placed and not r.startswith("H") and SPREAD(r)], True),
+           ("CLUSTER", L.CLUSTER, [r for r in comps if r not in placed and not r.startswith("H") and not SPREAD(r) and r not in EPD_PARTS], True)]
+GAP = 1.2; FINE_MARGIN = 2.2
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
     pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e9
@@ -85,17 +93,22 @@ def is_fine(fp):
             d = math.hypot(pads[i].x - pads[j].x, pads[i].y - pads[j].y)
             if 0 < d < best: best = d
     return best <= FromMM(0.7)
+_all = [r for _, _, refs, _ in REGIONS for r in refs] + list(FIXED)
+_dups = sorted({r for r in _all if _all.count(r) > 1})
+if _dups: raise SystemExit("reference listed twice in the placement (two footprints per reference make the DSN export refuse the board): %s" % _dups)
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:
         fp = place(ref, 0, 0, back=back); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
         if fine:
+            nfine = sum(1 for pd in fp.Pads() if pd.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and min(pd.GetSize().x, pd.GetSize().y) <= FromMM(1.2))
+            fm = FINE_MARGIN if nfine >= 16 else 1.4   # the wide margin is for the QFN and QFP rows whose escape vias splay far (U5, U10); a SOT or USON keeps 1.4
             for pd in fp.Pads():
                 if pd.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or min(pd.GetSize().x, pd.GetSize().y) > FromMM(1.2): continue
                 pbb = pd.GetBoundingBox(); w_, h_ = pbb.GetWidth(), pbb.GetHeight()
-                if w_ > h_ * 1.2: mx = 2 * FINE_MARGIN
-                elif h_ > w_ * 1.2: my = 2 * FINE_MARGIN
-            if mx == 0.0 and my == 0.0: mx = my = 2 * FINE_MARGIN
+                if w_ > h_ * 1.2: mx = 2 * fm
+                elif h_ > w_ * 1.2: my = 2 * fm
+            if mx == 0.0 and my == 0.0: mx = my = 2 * fm
         fps.append((ref, fp, bb.GetWidth() / 1e6 + GAP + mx, bb.GetHeight() / 1e6 + GAP + my, fine))
     fps.sort(key=lambda t: (not t[4], -(t[2] * t[3])))
     cx, cy, rowh = x0, y1, 0.0
@@ -106,10 +119,16 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
 missing = [r for r in comps if r not in placed and not r.startswith("#")]
 if missing: raise SystemExit("unplaced: %s" % missing)
 # ---------------------------------------------------------------- nets, pours, classes
-def net_for(name):
-    n = board.FindNet(name)
-    if n is None or n.GetNetCode() <= 0 and name != "": n = pcbnew.NETINFO_ITEM(board, name); board.Add(n)
-    return n
+def net_for(name, create=True):
+    """The board's net for a schematic name: a local label lands in the board as "/NAME", a power symbol as "NAME".
+    The netlist import creates nets (create=True); a zone must find its net (create=False), because a pour on a name that
+    matches nothing would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 4 Sep 2026, 32.33)."""
+    for cand in (name, "/" + name):
+        n = board.FindNet(cand)
+        if n is not None and n.GetNetCode() > 0: return n
+    if create:
+        n = pcbnew.NETINFO_ITEM(board, name); board.Add(n); return n
+    raise SystemExit("zone net %r is not in the netlist (neither %r nor %r): fix the name, do not pour on a phantom" % (name, name, "/" + name))
 padmap = {}
 for ref, fp in placed.items():
     for pad in fp.Pads(): padmap.setdefault(ref, {}).setdefault(pad.GetNumber(), []).append(pad)
@@ -123,23 +142,34 @@ for name, nodes in nets.items():
         for pad in pads: pad.SetNet(n)
 if unassigned: print("WARNING pads not found for nodes:", unassigned[:12])
 def pour(layer, netname, name, rect, priority=0):
-    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname)); z.SetZoneName(name)
+    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.3))
     try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
     except Exception: pass
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
-pour(pcbnew.F_Cu, "GND", "GND pour F", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3])); pour(pcbnew.B_Cu, "GND", "GND pour B", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3]))
-if board.GetCopperLayerCount() >= 4: pour(pcbnew.In1_Cu, "GND", "GND plane In1", (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3]))   # the solid In1 ground plane (ruling 5 Sep 2026); it stays in the DSN as a plane (FR_PLANE_NETS=GND) so the router connects GND by vias, and In1 is a power-type layer for the router (FR_POWER_LAYERS=In1.Cu)   # clipped to the U by the outline
+# ---------------------------------------------------------------- planes: In1 solid GND (the rule areas of gen_pcb_c.py keep the router off it), GND pours on In2 and both outer layers
+def pour(layer, netname, name, rect, priority=0):
+    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
+    z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.3))
+    try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+    except Exception: pass
+    o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
+    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
+    z.SetAssignedPriority(priority); board.Add(z); return z
+RING = (L.STRIP_L[0], L.STRIP_B[1], L.STRIP_R[2], L.STRIP_L[3])
+for Lr in (pcbnew.F_Cu, pcbnew.B_Cu, pcbnew.In2_Cu): pour(Lr, "GND", "GND pour %s" % board.GetLayerName(Lr), RING)
+pour(pcbnew.In1_Cu, "GND", "GND plane In1", RING)   # the solid In1 ground plane (ruling 5 Sep 2026); it stays in the DSN as a plane (plane_nets GND) so the router reaches it by vias
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
-cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.6, 0.3)
-PATTERNS = [("+5V", "PWR"), ("LED_RAIL*", "PWR"), ("GND", "PWR")]
-PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
+cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)   # 0.127: the RP2040's 0.4 mm escape rows (C7)
+PATTERNS = [("+5V", "PWR"), ("+3V3", "PWR"), ("LED_RAIL*", "PWR"), ("GND", "PWR"), ("EPD_VCC", "PWR"), ("USB_*", "USB")]
+PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]
 try:
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.15, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)
+    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)
+    nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.2, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.2)); nu.SetDiffPairGap(FromMM(0.15)); ns.SetNetclass("USB", nu)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
 pcbnew.SaveBoard(BOARD, board)
@@ -150,8 +180,20 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.2, diff_pair_gap=0.15)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.6, 0.3), C("PWR", 0, 0.15, 0.5, 0.8, 0.4)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.5, 0.8, 0.4), C("USB", 1, 0.127, 0.2, 0.6, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
-    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
+    import fnmatch as _fnm
+    def _class_of(netname):
+        bare = netname.lstrip("/")
+        for pat, cl in PATTERNS:
+            if not pat.startswith("/") and _fnm.fnmatchcase(bare, pat): return cl
+        return None
+    _assign = {}
+    for _name, _net in board.GetNetInfo().NetsByName().items():
+        _cl = _class_of(str(_name))
+        if _cl: _assign[str(_name)] = _cl
+    d["net_settings"]["netclass_assignments"] = _assign
+    print("net-class assignments written for %d nets" % len(_assign))
+    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None)
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
     json.dump(d, open(pro, "w"), indent=2); print("project net classes re-applied")

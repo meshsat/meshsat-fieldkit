@@ -1,0 +1,399 @@
+** Drc report for pcb-d-aprs.kicad_pcb **
+** Created on 2026-09-07T06:06:21+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 106 DRC violations **
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(108.3550 mm, 128.0600 mm): Rectangle of J_PAIN on F.Mask
+    @(107.8200 mm, 129.0000 mm): Pad 1 [/RF_DRV] of J_PAIN on F.Cu
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(108.3550 mm, 128.0600 mm): Rectangle of J_PAIN on F.Mask
+    @(107.8200 mm, 129.0000 mm): Pad 1 [/RF_DRV] of J_PAIN on F.Cu
+[solder_mask_bridge]: Front solder mask aperture bridges items with different nets
+    Rule: board setup solder mask min width; error
+    @(108.3550 mm, 128.0600 mm): Rectangle of J_PAIN on F.Mask
+    @(107.8200 mm, 129.0000 mm): Pad 1 [/RF_DRV] of J_PAIN on F.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer In2.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour In2.Cu' [GND] on In2.Cu, priority 0
+    @(145.9500 mm, 114.0000 mm): PTH pad 2 [GND] of J_HS2
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(145.9500 mm, 110.0000 mm): PTH pad 4 [GND] of J_HS2
+[starved_thermal]: Thermal relief connection to zone incomplete (layer In2.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour In2.Cu' [GND] on In2.Cu, priority 0
+    @(145.9500 mm, 110.0000 mm): PTH pad 4 [GND] of J_HS2
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(59.7875 mm, 85.6500 mm): PTH pad 4 [GND] of J_HARN1
+[starved_thermal]: Thermal relief connection to zone incomplete (layer In2.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour In2.Cu' [GND] on In2.Cu, priority 0
+    @(59.7875 mm, 90.7300 mm): PTH pad 8 [GND] of J_HARN1
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; 2 spokes connected to isolated island)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(59.7875 mm, 100.8900 mm): PTH pad 16 [GND] of J_HARN1
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(145.9500 mm, 90.0000 mm): PTH pad 2 [GND] of J_HS1
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(145.9500 mm, 86.0000 mm): PTH pad 4 [GND] of J_HS1
+[starved_thermal]: Thermal relief connection to zone incomplete (layer In2.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour In2.Cu' [GND] on In2.Cu, priority 0
+    @(145.9500 mm, 90.0000 mm): PTH pad 2 [GND] of J_HS1
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0
+    @(145.9500 mm, 114.0000 mm): PTH pad 2 [GND] of J_HS2
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0
+    @(144.5000 mm, 121.9500 mm): PTH pad 2 [GND] of J_VGG
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(50.0000 mm, 140.0000 mm): Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0
+    @(145.9500 mm, 86.0000 mm): PTH pad 4 [GND] of J_HS1
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.0000 mm, 137.5000 mm): PCB text 'T/R relay K1 and the 5-pole low-pass filter along the south edge; J_ANT -> A22 VHF jack J_RF1 pigtail' on F.Silkscreen
+    @(135.0000 mm, 137.5000 mm): PCB text 'J_PAOUT' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(142.0000 mm, 138.5000 mm): PCB text 'CASE EAST (+X) ->' on F.Silkscreen
+    @(135.0000 mm, 137.5000 mm): PCB text 'J_PAOUT' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.0000 mm, 137.5000 mm): PCB text 'T/R relay K1 and the 5-pole low-pass filter along the south edge; J_ANT -> A22 VHF jack J_RF1 pigtail' on F.Silkscreen
+    @(142.0000 mm, 138.5000 mm): PCB text 'CASE EAST (+X) ->' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(82.7000 mm, 120.9100 mm): Segment of K1 on F.Silkscreen
+    @(86.0000 mm, 121.0000 mm): PCB text 'T/R' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(109.0000 mm, 125.5000 mm): PCB text 'J_PAIN' on F.Silkscreen
+    @(109.3450 mm, 125.8000 mm): Reference field of J_PAIN
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(145.0000 mm, 135.0000 mm): Circle on F.Silkscreen
+    @(142.0000 mm, 138.5000 mm): PCB text 'CASE EAST (+X) ->' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(143.5000 mm, 119.0500 mm): Reference field of J_VGG
+    @(143.5000 mm, 118.5000 mm): PCB text 'J_VGG' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(144.1400 mm, 118.0600 mm): Rectangle of J_HS2 on F.Silkscreen
+    @(143.5000 mm, 118.5000 mm): PCB text 'J_VGG' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(143.8400 mm, 117.1100 mm): Segment of J_HS2 on F.Silkscreen
+    @(143.5000 mm, 118.5000 mm): PCB text 'J_VGG' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(143.5000 mm, 118.5000 mm): PCB text 'J_VGG' on F.Silkscreen
+    @(143.8400 mm, 118.3600 mm): Segment of J_HS2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(58.0000 mm, 62.5000 mm): PCB text 'NORTH (+Y)' on F.Silkscreen
+    @(55.0000 mm, 65.0000 mm): Circle on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(60.0000 mm, 79.0000 mm): PCB text 'J_HARN1 <- A22 J_MEZZ1' on F.Silkscreen
+    @(55.2675 mm, 79.2000 mm): Segment of J_HARN1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(60.0000 mm, 79.0000 mm): PCB text 'J_HARN1 <- A22 J_MEZZ1' on F.Silkscreen
+    @(55.2675 mm, 89.9500 mm): Segment of J_HARN1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(60.0000 mm, 79.0000 mm): PCB text 'J_HARN1 <- A22 J_MEZZ1' on F.Silkscreen
+    @(58.0000 mm, 79.5000 mm): PCB text 'J_HARN1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(55.2675 mm, 79.2000 mm): Segment of J_HARN1 on F.Silkscreen
+    @(58.0000 mm, 79.5000 mm): PCB text 'J_HARN1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(53.9575 mm, 106.1000 mm): Segment of J_HARN1 on F.Silkscreen
+    @(60.0000 mm, 79.0000 mm): PCB text 'J_HARN1 <- A22 J_MEZZ1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(58.0000 mm, 62.5000 mm): PCB text 'NORTH (+Y)' on F.Silkscreen
+    @(61.8750 mm, 63.3750 mm): Circle of TP17 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(61.7675 mm, 79.2000 mm): Segment of J_HARN1 on F.Silkscreen
+    @(60.0000 mm, 79.0000 mm): PCB text 'J_HARN1 <- A22 J_MEZZ1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(66.5850 mm, 78.3100 mm): Segment of U1 on F.Silkscreen
+    @(60.0000 mm, 79.0000 mm): PCB text 'J_HARN1 <- A22 J_MEZZ1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+    @(65.2137 mm, 75.3350 mm): Segment of C2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(71.0637 mm, 75.3350 mm): Segment of C5 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(69.3750 mm, 63.3750 mm): Circle of TP19 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+    @(73.1250 mm, 63.3750 mm): Circle of TP20 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+    @(76.8750 mm, 63.3750 mm): Circle of TP21 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+    @(80.6250 mm, 63.3750 mm): Circle of TP22 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(122.6700 mm, 75.3150 mm): Segment of U7 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(123.1450 mm, 75.3150 mm): Segment of U7 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(124.6250 mm, 63.3750 mm): Circle of TP6 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(128.3750 mm, 63.3750 mm): Circle of TP7 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+    @(107.6900 mm, 75.3150 mm): Segment of U3 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(107.6900 mm, 76.0400 mm): Segment of U3 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(119.9250 mm, 75.7900 mm): Segment of U7 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(119.9250 mm, 75.3150 mm): Segment of U7 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.8750 mm, 63.3750 mm): Circle of TP1 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(109.6250 mm, 63.3750 mm): Circle of TP2 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+    @(113.3750 mm, 63.3750 mm): Circle of TP3 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(117.1250 mm, 63.3750 mm): Circle of TP4 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(120.8750 mm, 63.3750 mm): Circle of TP5 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(132.1250 mm, 63.3750 mm): Circle of TP8 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(135.8750 mm, 63.3750 mm): Circle of TP9 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+    @(145.0000 mm, 65.0000 mm): Circle on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(69.0000 mm, 137.5000 mm): PCB text 'J_ANT' on F.Silkscreen
+    @(105.0000 mm, 137.5000 mm): PCB text 'T/R relay K1 and the 5-pole low-pass filter along the south edge; J_ANT -> A22 VHF jack J_RF1 pigtail' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(109.2050 mm, 100.0300 mm): Reference field of U8
+    @(130.0000 mm, 99.2000 mm): PCB text 'headset leads J_HS1 / J_HS2 from the face plate jacks (SPK MIC PTT GND GND)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(84.3750 mm, 63.3750 mm): Circle of TP23 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(88.1250 mm, 63.3750 mm): Circle of TP24 on F.Silkscreen
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(55.2675 mm, 89.9500 mm): Segment of J_HARN1 on F.Silkscreen
+    @(58.0000 mm, 79.5000 mm): PCB text 'J_HARN1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(85.0000 mm, 80.5000 mm): PCB text 'SA868 (bench fit)' on F.Silkscreen
+    @(84.5000 mm, 81.0675 mm): Reference field of U2
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(112.1850 mm, 75.3150 mm): Segment of U3 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(112.9100 mm, 75.3150 mm): Segment of U3 on F.Silkscreen
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(120.1850 mm, 99.9250 mm): Reference field of U6
+    @(130.0000 mm, 99.2000 mm): PCB text 'headset leads J_HS1 / J_HS2 from the face plate jacks (SPK MIC PTT GND GND)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(143.6400 mm, 81.0600 mm): Rectangle of J_USB3 on F.Silkscreen
+    @(146.5000 mm, 81.0000 mm): PCB text 'J_HS1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(146.5000 mm, 81.0000 mm): PCB text 'J_HS1' on F.Silkscreen
+    @(144.2500 mm, 80.4500 mm): Segment of J_USB3 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(144.9500 mm, 81.0600 mm): Segment of J_USB3 on F.Silkscreen
+    @(146.5000 mm, 81.0000 mm): PCB text 'J_HS1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(146.5000 mm, 81.0000 mm): PCB text 'J_HS1' on F.Silkscreen
+    @(146.2500 mm, 81.0600 mm): Segment of J_USB3 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(143.3400 mm, 81.3600 mm): Segment of J_USB3 on F.Silkscreen
+    @(146.5000 mm, 81.0000 mm): PCB text 'J_HS1' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(60.0000 mm, 79.0000 mm): PCB text 'J_HARN1 <- A22 J_MEZZ1' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(87.0000 mm, 75.5000 mm): PCB text 'SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay, drive to the PA on the plate through the pad' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(105.0000 mm, 62.5000 mm): PCB text 'PA leads (north edge): J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(105.0000 mm, 137.5000 mm): PCB text 'T/R relay K1 and the 5-pole low-pass filter along the south edge; J_ANT -> A22 VHF jack J_RF1 pigtail' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(130.0000 mm, 99.2000 mm): PCB text 'headset leads J_HS1 / J_HS2 from the face plate jacks (SPK MIC PTT GND GND)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(58.0000 mm, 62.5000 mm): PCB text 'NORTH (+Y)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(66.7000 mm, 102.0675 mm): Segment of U2 on F.Silkscreen
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(67.1875 mm, 107.0000 mm): Track [/+3V3] on F.Cu, length 2.3375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(85.8875 mm, 106.0500 mm): Track [/+3V3_D8] on F.Cu, length 1.7625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(80.5375 mm, 106.0500 mm): Track [/+3V3_D8] on F.Cu, length 2.2625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(73.4750 mm, 115.6000 mm): Via [/+3V3_D8] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(85.7500 mm, 110.5300 mm): Via [/+3V3_D8] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(128.4200 mm, 85.3550 mm): Track [/+3V3_D8] on B.Cu, length 2.6750 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(91.3500 mm, 67.3550 mm): Track [/+3V3_D8] on B.Cu, length 2.6750 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(73.6300 mm, 67.3550 mm): Track [/+5V_D8] on B.Cu, length 2.0750 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(109.4900 mm, 112.0650 mm): Track [/+5V_D8] on B.Cu, length 1.1250 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(124.6850 mm, 78.5250 mm): Via [/AMP_CPN] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(123.8350 mm, 76.6750 mm): Track [/AMP_CPP] on F.Cu, length 1.0124 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(124.3231 mm, 76.3591 mm): Track [/AMP_CPP] on F.Cu, length 0.0018 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(122.7350 mm, 73.7750 mm): Via [/AMP_EN] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(122.7350 mm, 80.0750 mm): Via [/AMP_HPVSS] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(118.3850 mm, 76.5250 mm): Via [/AMP_INL_P] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(119.3850 mm, 77.6750 mm): Track [/AMP_INR_N] on F.Cu, length 1.0966 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(118.3850 mm, 77.3250 mm): Via [/AMP_INR_P] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(72.9125 mm, 112.2000 mm): Track [/EXP_SPARE2] on F.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(72.9125 mm, 111.5500 mm): Track [/EXP_SPARE3] on F.Cu, length 2.3375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(72.9125 mm, 110.9000 mm): Track [/EXP_SPARE4] on F.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(72.9125 mm, 110.2500 mm): Track [/EXP_SPARE5] on F.Cu, length 2.3375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(72.9125 mm, 108.3000 mm): Track [/EXP_SPARE8] on F.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(111.3175 mm, 102.1550 mm): Track [/OPB_OUT] on F.Cu, length 2.4125 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(111.3175 mm, 102.8050 mm): Track [/OPB_OUT] on F.Cu, length 1.7125 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(109.5000 mm, 73.7750 mm): Via [/SA_RXD] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(129.4150 mm, 73.2200 mm): Via [/VGG_SW] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(107.0925 mm, 102.8050 mm): Track [/VREF] on F.Cu, length 2.4125 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(67.1875 mm, 107.6500 mm): Track [/X_COS_n] on F.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(67.1875 mm, 110.9000 mm): Track [/X_SA_PD] on F.Cu, length 2.3375 mm
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

@@ -17,7 +17,7 @@ python3 ../tools/check_pcb_a.py $N.kicad_pcb > out/check_a3.log 2>&1; grep -E 'F
 grep -q 'RESULT: ALL PASS' out/check_a3.log || { echo "BLOCK numeric gate (out/check_a3.log)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
-python3 ../tools/prefanout.py $N.kicad_pcb 'GND,VBAT,CELL+,VBUS20,+5V_S1,+5V_S2,+5V_S3,+5V_DEV,+3V3' fine 2>&1 | grep -E 'fanout:'
+python3 ../tools/prefanout.py $N.kicad_pcb 'GND,VBAT,CELL+' fine 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 - <<'PY'

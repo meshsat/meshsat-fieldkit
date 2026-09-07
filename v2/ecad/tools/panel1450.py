@@ -1,6 +1,15 @@
-"""The face of the MeshSat field kit in the Peli 1450: one source of positions for the aluminium plate (v2/cad/face_plate.py), the C6 backer board
-(gen_pcb_c.py, gen_pcb_c3.py, check_pcb_c.py) and the render scene. Case frame: X along the case's long axis, +Y toward the back (hinge) wall, both
-from the case centre; the frame window is centred on the case (appendix 32.40 items 4 and 5, 32.42). Plain Python, no KiCad or CAD imports."""
+"""The face of the MeshSat field kit in the Peli 1450: one source of positions for the aluminium plate (v2/cad/face_plate.py), the C7 backer board
+(gen_pcb_c.py, gen_pcb_c3.py, check_pcb_c.py), the case wall template (case_wall_cutouts.py) and the render scene. Case frame: X along the case's long
+axis, +Y toward the back (hinge) wall, both from the case centre; the frame window is centred on the case (appendix 32.40 items 4 and 5, 32.42).
+Plain Python, no KiCad or CAD imports.
+
+C7 (7 Sep 2026, MESHSAT-830; appendix 32.51, 32.52, 32.56, 32.60): the Xenarc 709GNK monitor lies on the plate over a cutout for its connector block
+(no display aperture, no lens), the Pervasive Displays E2370KS0C1 glass replaces the WeAct module in the same window, two U-174/U headset jacks and
+the ambient light guide join the face, a USB camera looks through a sealed window at the top right, the RA30H1317M1 PA flange bolts to the plate's
+underside inside the backer's void, and the backer becomes a ring (a fourth strip along the top carries the e-paper flex socket, its boost circuit,
+the camera and the ribbon from B16's J_PANEL right below it). B16 is 330 x 200 (X +-165, Y +-100), so the strips sit over its edge bands: the
+gate keeps the deep face parts clear of B16's tall parts (B16_TALL). The QMX HF unit left B16 for a lid bracket (32.60) because no 63 x 95 x 25 mm
+bay on B16 clears the toggle bodies under the left strip."""
 
 # --- frame 1450PF (measured on Peli's STEP, 32.41 and 32.42)
 WINDOW = (349.65, 233.83)                 # the opening; everything visible lies inside it, 3 mm in
@@ -9,45 +18,95 @@ PLATE_R = 12.0
 FRAME_BOSSES = [(-139.4, -121.2), (139.4, -121.2), (0.0, -121.2), (-139.4, 121.2), (139.4, 121.2), (0.0, 121.2), (-179.1, -75.9), (179.1, -75.9), (-179.1, 75.9), (179.1, 75.9)]   # M3 into the frame's inserts, from below
 BAND = 8.0                                # the plate's band under the frame ring: the PORON gasket ring lives here, nothing else
 
-# --- the stack under the face (v2/cad/stack-heightmap.json): PCB-B's outline is X +-122.5, Y +-85; deep parts stay outside it
-B_OUTLINE = (-122.5, -85.0, 122.5, 85.0)
+# --- the stack under the face: B16's outline is X +-165, Y +-100 (32.58); the strips lie over its edge bands, so B16_TALL gates the deep parts
+B_OUTLINE = (-165.0, -100.0, 165.0, 100.0)
+B_TOP_Z = 56.0                            # B16's top copper above the case floor (32.56)
 FACE_TOP_Z = 101.4                        # above the case floor (base 109.4, lip 8)
 PLATE_UNDER_Z = FACE_TOP_Z - PLATE[2]
 BACKER_GAP = 10.0                         # standoff height between the plate's underside and the backer's top
 BACKER_T = 1.6
+BACKER_UNDER_Z = PLATE_UNDER_Z - BACKER_GAP - BACKER_T
+# B16's tall parts (case mm rect, height above B16's top copper), from gen_pcb_b.py's floor plan (32.58, 32.59): the deep face parts must clear them
+B16_TALL = [((-93.0, 32.0, -52.0, 88.0), 30.0, "CM5 slot 1 with cooler and fan"), ((-23.0, 32.0, 18.0, 88.0), 30.0, "CM5 slot 2 with cooler and fan"), ((47.0, 32.0, 88.0, 88.0), 30.0, "CM5 slot 3 with cooler and fan"),
+            ((-162.0, 81.0, -142.0, 98.0), 14.0, "J_ETH RJ45"), ((-161.5, 58.5, -142.5, 77.5), 7.0, "T1 magnetics"), ((-137.0, 86.0, -95.0, 98.0), 9.5, "J_PANEL 2x13"),
+            ((130.0, -43.0, 161.0, 45.0), 12.0, "LimeSDR Mini in J_LIME"), ((113.0, -99.0, 165.0, -43.0), 21.0, "RockBLOCK 9704 on its bracket"), ((96.0, -100.0, 113.0, -86.0), 7.0, "J_HDMI"),
+            ((-152.0, -97.0, -116.0, -69.0), 10.0, "west headers J_54V, J_QMX, F3"), ((144.0, 55.0, 148.0, 67.0), 9.5, "J_CAM header"), ((125.5, 45.5, 162.0, 67.0), 5.0, "radio modules"),
+            ((-98.0, -97.0, 94.0, -21.0), 6.0, "slot columns: switches, hubs, rails, M.2 sockets"), ((-35.0, -30.0, 91.0, 31.0), 4.5, "M.2 cards")]
 
 # --- the face elements (centre X, centre Y in the case frame)
-DISPLAY = dict(c=(0.0, -24.0), glass=(189.32, 120.24), aperture=(169.35, 100.51), aperture_r=1.5, pocket_depth=1.0, depth_below=7.0)     # Touch Display 2, the aperture of 32.34 (body + 0.4)
-EPAPER = dict(c=(0.0, 78.0), window=(94.19, 53.6), lens=(107.19, 66.6), lens_r=3.0, module=(105.79, 53.80), pocket_depth=1.0, depth_below=12.0)   # 6 Sep 2026 14:45 (owner): moved up 8 mm; at Y 70 the lens pocket sat 0.6 mm from the display glass pocket, now 8.6 mm of plate between them (lens top at 111.3, the frame window edge at 116.9)  # WeAct 3.7 under a 2 mm lens, its board on the module's back
-BUTTONS = [("SW_MAIN", (150.0, 60.0), 19.2, 30.0), ("SW_PI", (150.0, 10.0), 16.2, 28.0), ("SW_TEST", (150.0, -40.0), 16.2, 28.0)]   # ref, centre, plate hole, depth behind the face (C&K ATP19/ATP16 sheets)
+XENARC = dict(c=(0.0, -24.0), body=(205.15, 139.49), height=28.66, bezel=16.0, active=(153.6, 90.0), vesa=50.0, vesa_hole=4.5,
+              block=(73.65, -72.2, 57.85, 43.12), cutout=(73.65, -72.2, 60.0, 46.0, 3.0), block_depth=19.0)   # 32.51: the monitor lies flat on the plate, VESA 50 M4 at the rear centre; its connector block (lower right seen from the front, from the drawing's rear view) passes through the plate cutout into the void; a gasket ring around the cutout keeps the face sealed
+EPAPER = dict(c=(0.0, 78.0), window=(94.19, 53.6), lens=(107.19, 66.6), lens_r=3.0, module=(92.99, 53.0), pocket_depth=1.0, depth_below=3.0, tail_side="-X", tail_len=43.9)   # PDi E2370KS0C1 (32.49 item 11): the same glass size as the WeAct 3.7 (92.99 x 53.0 x 0.85), taped under the lens, its 24-way flex leaves the left short edge toward J_EPD on the top strip
+BUTTONS = [("SW_MAIN", (150.0, 60.0), 19.2, 30.0), ("SW_PI", (150.0, 10.0), 16.2, 28.0), ("SW_TEST", (150.0, -33.0), 16.2, 28.0)]   # ref, centre, plate hole, depth behind the face (C&K ATP19/ATP16 sheets); SW_TEST up 7 mm since C7: its body cleared B16's RockBLOCK bracket by -5 mm at Y -40 (32.60)
 TOGGLES = [("SW_SOS", (-150.0, 60.0)), ("SW_EMCON", (-150.0, 18.0)), ("SW_ZERO", (-150.0, -24.0))]                              # APEM 5636ADKB-2V: 6.5 hole with a 2.70 x 1.10 keyway toward the operator (-Y), about 26 deep
 TOGGLE_HOLE, TOGGLE_KEY = 6.5, (2.70, 1.10)
 LIGHT = ("SW_LIGHT", (-150.0, -66.0))                                                                                              # NKK M2044SD3A01: D hole 6.5 with the 5.8 flat toward +X, about 19 deep
 LIGHT_HOLE, LIGHT_FLAT = 6.5, 5.8
-SOUNDER = ("BZ1", (-149.0, -97.0), 28.6, 30.0)   # in the corner where the left and bottom strips meet: its body passes the backer there                                                                                     # Floyd Bell MC-09-530-Q class: 28.6 hole, its 61663 gasket, about 30 deep
+SOUNDER = ("BZ1", (-149.0, -97.0), 28.6, 30.0)   # in the corner where the left and bottom strips meet: its body passes the backer there; Floyd Bell MC-09-530-Q class: 28.6 hole, its 61663 gasket, about 30 deep
+HEADSETS = [("J_HSJ1", (-118.0, -101.0)), ("J_HSJ2", (-92.0, -101.0))]                                                              # two U-174/U panel jacks in the bottom strip (32.50 items 9 and 16b): 16.0 hole (Amphenol Nexus drawing owed, laptop list), about 30 deep, five leads to D8's J_HS1/J_HS2
+HEADSET_HOLE, HEADSET_DEPTH = 16.0, 30.0
 STATUS_LEDS = [("D%d" % (k + 1), (128.0, 45.0 - 9.0 * k), name) for k, name in enumerate(["MSTR WARN", "MSTR CAUT", "TX", "SOS ACTIVE", "SAT", "MESH", "LTE", "GPS", "SHORE", "CHARGE", "MSG"])]   # the status column beside the buttons
 BAR_LEDS = [("D%d" % (12 + k), (-20.0 + 6.0 * k, -101.0), "BAT%d" % (k + 1)) for k in range(5)]                                     # the battery bar in the bottom strip
-LED_HOLE = 2.6                                                                                                                       # Mentor 1282.5004 IP68 front-panel light guide (sheet ll14-14, v2/vendor/mentor/): 2.5 mm shaft pressed into a 2.6 H7 hole, 3.2 mm spherical head on the face, A 7.5 mm reaches 0.2 mm over the 3 mm LED on the backer
+LED_HOLE = 2.6                                                                                                                       # Mentor 1282.5004 IP68 front-panel light guide (sheet ll14-14, v2/vendor/mentor/): 2.5 mm shaft pressed into a 2.6 H7 hole, 3.2 mm spherical head on the face, A 7.5 mm reaches 0.2 mm over the 3 mm
+LIGHT_SENSOR = ("U_LIGHT", (128.0, 63.0))                                                                                            # VEML7700 on the right strip's top side under its own Mentor light guide (32.50 item 8: the ambient light for blackout and NVG lighting)
+CAMERA = ("CAM1", (150.0, 100.0), 8.0, 25.0)                                                                                         # USB camera module (25 x 25 mm board class, sheet owed) on the top strip's top side behind an 8 mm sealed window (32.52: a USB camera behind a plate window on slot 1's hub)
+PA_MOUNT = dict(c=(-45.0, 20.0), size=(67.0, 19.4), height=9.9, holes=60.0, hole_d=3.26)                                             # RA30H1317M1 flange on the plate's underside (32.56): two PEM S-M3 nuts 60 mm apart, inside the void under the monitor, clear of the VESA screws at Y 1 and the e-paper lens at Y 44.7
 NAMEPLATE = (78.0, -101.0, 76.0, 26.0)     # laser marked: centre X, centre Y, width, height
 LOGO = ((-150.0, 96.0), 36.0)             # laser marked, top of the left strip
 
-# --- the backer board C6: a U in the strips outside PCB-B's outline, open over the display and the e-paper
+# --- the backer board C7: a ring of four strips outside the monitor and the e-paper window, open in the middle
 STRIP_L = (-172.0, -114.0, -120.0, 114.0)  # left strip (toggles); the inner edge at 120 keeps the status LED column at X 128 (4.8 mm courtyard) 5.6 mm from the board edge (C6 run 2 lesson)
-STRIP_B = (-172.0, -114.0, 172.0, -88.0)   # bottom strip (sounder, battery bar)
-STRIP_R = (120.0, -114.0, 172.0, 114.0)    # right strip (buttons, status LEDs, the drivers, the ribbon)
-STANDOFFS = [(-160.0, 108.0), (160.0, 108.0), (-165.0, -108.0), (165.0, -108.0), (-40.0, -101.0), (20.0, -101.0)]   # M3 self-clinching standoffs in the plate, 10 mm, the backer's screws from below
+STRIP_B = (-172.0, -114.0, 172.0, -88.0)   # bottom strip (sounder, headset jacks, battery bar, the monitor's block notch)
+STRIP_R = (120.0, -114.0, 172.0, 114.0)    # right strip (buttons, status LEDs, the light sensor, the drivers)
+STRIP_T = (-172.0, 88.0, 172.0, 114.0)     # top strip (C7): the e-paper flex socket and boost, the camera, J_PANEL over B16's header
+BLOCK_NOTCH = (42.0, -96.0, 105.0, -87.0)  # the monitor's connector block passes 19 mm below the plate: the bottom strip is notched under it
+STANDOFFS = [(-160.0, 108.0), (160.0, 108.0), (-165.0, -108.0), (165.0, -108.0), (-40.0, -101.0), (20.0, -101.0), (-75.0, 108.0), (75.0, 108.0)]   # M3 self-clinching standoffs in the plate, 10 mm, the backer's screws from below
 CLUSTER = (120.0, -114.0, 172.0, -56.0)    # the driver electronics (ICs, transistors, resistors, capacitors) on the underside of the right strip, below SW_TEST's lands
-CLUSTER2 = (40.0, -113.0, 116.0, -89.0)    # the test points, solder jumpers, ferrites and the diode on the underside of the bottom strip: spreads the two-layer traffic (C6 run 3 left 10 opens in one dense cluster)
-J_PANEL_POS = (150.0, 92.0)               # the ribbon from PCB-B's J_PANEL at (82 to 91, 51 to 85), right-angle IDC toward -Y
-J_EPD_POS = (140.0, 108.0)                 # the e-paper's own 8-pin lead from the module at the top centre; the 1x8 header lies along X (a vertical one at Y 110 crossed the top edge, C6 run 2)
-LEAD_LANDS = [("J_MAINSW", (-100.0, -108.0)), ("J_PIJ2", (-80.0, -108.0))]
+CLUSTER2 = (40.0, -113.0, 116.0, -97.0)    # test points, solder jumpers, ferrites on the underside of the bottom strip, below the block notch
+CLUSTER3 = (-116.0, 89.0, -82.0, 113.0)    # C7: the e-paper boost circuit west of the flex socket and the standoff H7, top side of the top strip
+J_PANEL_POS = (-116.0, 96.0)              # the ribbon from B16's J_PANEL (2x13 at X -137 to -95, Y 86.5 to 97.5) straight up to the top strip's underside
+J_EPD_POS = (-72.0, 94.0)                  # Hirose FH34SRJ-24S ZIF on the top strip's top side, within the flex's 43.9 mm reach from the glass's left edge at (-46.5, 78)
+LEAD_LANDS = [("J_MAINSW", (-62.0, -108.0)), ("J_PIJ2", (-44.0, -108.0))]   # moved east of the headset jacks (C7)
 
 TOGGLE_BODY = (15.0, 22.0)                 # slot through the backer for the APEM body
 LIGHT_BODY = (15.0, 12.0)                  # slot through the backer for the NKK body
 BUTTON_BODY = {"SW_MAIN": 19.2, "SW_PI": 16.2, "SW_TEST": 16.2}   # the C&K bodies pass their own bushing holes (17.4 and 15 wide)
+HEADSET_BODY = 17.0                        # hole through the backer for the jack's threaded bushing
 CUTOUT_KEEPOUT = 0.6                       # router keep-out around every cut-out (Freerouting ignores the edge clearance of inner cut-outs)
 
+# --- wall jack lists (32.56 and 32.58): the single source for scene.py, case_wall_cutouts.py and the documents; SMA bulkheads at Z 88
+SMA_Z = 88.0
+WALL_WEST = [("VHF", -72.0), ("HF", -48.0), ("WIFI 2.4", -24.0), ("GNSS", 24.0), ("SDR", 72.0)]
+WALL_EAST = [("5G MAIN", -96.0), ("5G DIV", -72.0), ("IRIDIUM", -48.0), ("LORA", -24.0), ("WIFI P2P A", 48.0), ("WIFI P2P B", 96.0)]
+
 def deep_parts():
-    """(ref, centre, depth below the face) for the parts whose bodies hang below the backer's level: every one must sit outside PCB-B's outline."""
+    """(ref, centre, depth below the face) for the parts whose bodies hang below the backer's level; check_pcb_c.py gates each against B16_TALL."""
     out = [(r, c, d) for r, c, h, d in BUTTONS] + [(r, c, 26.0) for r, c in TOGGLES] + [(LIGHT[0], LIGHT[1], 19.0), (SOUNDER[0], SOUNDER[1], SOUNDER[3])]
+    out += [(r, c, HEADSET_DEPTH) for r, c in HEADSETS]
+    out.append(("XENARC_BLOCK", (XENARC["block"][0], XENARC["block"][1]), PLATE[2] + XENARC["block_depth"]))
+    out.append(("PA", PA_MOUNT["c"], PLATE[2] + PA_MOUNT["height"]))
     return out
+
+def deep_part_rect(ref, c, d):
+    """The body footprint of a deep part in the case frame (rect) for the clearance check."""
+    if ref.startswith("SW_") and ref in BUTTON_BODY: r = BUTTON_BODY[ref] / 2 + 1.0; return (c[0] - r, c[1] - r, c[0] + r, c[1] + r)
+    if ref in [t[0] for t in TOGGLES]: w, h = TOGGLE_BODY; return (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
+    if ref == LIGHT[0]: w, h = LIGHT_BODY; return (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
+    if ref == SOUNDER[0]: r = SOUNDER[2] / 2; return (c[0] - r, c[1] - r, c[0] + r, c[1] + r)
+    if ref.startswith("J_HSJ"): r = HEADSET_BODY / 2; return (c[0] - r, c[1] - r, c[0] + r, c[1] + r)
+    if ref == "XENARC_BLOCK": _, _, w, h = XENARC["block"]; return (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
+    if ref == "PA": w, h = PA_MOUNT["size"]; return (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
+    return (c[0] - 5, c[1] - 5, c[0] + 5, c[1] + 5)
+
+def clearance_report():
+    """Every deep part against every tall B16 part it overlaps in plan: (ref, tall name, clearance mm). Negative = collision."""
+    out = []
+    for ref, c, d in deep_parts():
+        bottom_z = FACE_TOP_Z - d; r = deep_part_rect(ref, c, d)
+        for (x0, y0, x1, y1), h, name in B16_TALL:
+            if r[2] <= x0 or r[0] >= x1 or r[3] <= y0 or r[1] >= y1: continue
+            out.append((ref, name, round(bottom_z - (B_TOP_Z + h), 1)))
+    return out
+
+if __name__ == "__main__":
+    for ref, name, clr in clearance_report(): print("%-13s over %-45s clearance %6.1f mm%s" % (ref, name, clr, "" if clr >= 2.0 else "   <-- LESS THAN 2 MM"))

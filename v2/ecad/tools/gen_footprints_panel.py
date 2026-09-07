@@ -107,6 +107,17 @@ for (x, y) in holes: L.append(npth(x, y, 3.2)); L.append(circle(x, y, 3.0, "F.Fa
 L.append(rect(-cx, -cy, cx, cy, "F.Fab")); L.append(rect(-cx - 0.5, -cy - 0.5, cx + 0.5, cy + 0.5, "F.CrtYd", 0.05)); L.append(rect(-cx, -cy, cx, cy, "F.SilkS", 0.15))
 L.append(rect(-40.77, -23.5, 40.77, 23.5, "F.Fab")); L.append(text("E-PAPER 3.7in ACTIVE 81.5 x 47.0", 0, 0, "F.Fab", 1.2)); L.append(text("header end", cx - 8, 0, "F.Fab", 0.8))
 write("WeAct_EPD_3p7", L)
+# ---- C7 additions (7 Sep 2026, MESHSAT-830): the U-174/U headset jack passing the backer, the Hirose FH34SRJ-24S ZIF for the PDi flex, the VEML7700 land
+L = head("PanelJack_17mm", "U-174/U panel jack (Amphenol Nexus class, drawing owed): 17.0 hole through the backer for the threaded bushing, no lands (its five leads run to D8)", "headset jack hole", "through_hole"); L[8] %= 10.5; L[9] %= 10.5
+L.append(npth(0, 0, 17.0)); L.append(circle(0, 0, 9.3, "F.CrtYd", 0.05)); L.append(circle(0, 0, 9.3, "B.CrtYd", 0.05)); L.append(circle(0, 0, 8.5, "F.Fab")); L.append(keepout_circle(9.2, "jack hole keep-out")); write("PanelJack_17mm", L)
+L = head("Hirose_FH34SRJ-24S", "Hirose FH34SRJ-24S-0.5SH(50) FPC ZIF, 24 way 0.5 mm, bottom contact, horizontal (land pattern from the FH34SRJ drawing: 0.3 x 1.3 pads at 0.5, two 0.6 x 1.8 anchor pads; to verify)", "zif fpc 0.5mm", "smd"); L[8] %= 3.2; L[9] %= 3.2
+for k in range(24):
+    x = -5.75 + 0.5 * k; L.append('\t(pad "%d" smd roundrect (at %.3f 0.65) (size 0.30 1.30) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25))' % (k + 1, x))
+for k, x in ((25, -7.75), (26, 7.75)): L.append('\t(pad "%d" smd rect (at %.3f -0.6) (size 0.60 1.80) (layers "F.Cu" "F.Paste" "F.Mask"))' % (k, x))
+L.append(rect(-8.4, -2.2, 8.4, 1.6, "F.Fab")); L.append(rect(-8.6, -2.5, 8.6, 1.9, "F.CrtYd", 0.05)); L.append(text("1", -6.0, 1.9, "F.Fab", 0.6)); L.append(text("flex enters from +y", 0, 2.4, "F.Fab", 0.6)); write("Hirose_FH34SRJ-24S", L)
+L = head("Vishay_VEML7700", "Vishay VEML7700 ambient light sensor 6.8 x 2.35 x 3.0, four pads (1 SCL 2 VDD 3 GND 4 SDA; land from the datasheet outline, to verify)", "light sensor", "smd"); L[8] %= 2.5; L[9] %= 2.5
+for k, x in enumerate((-2.55, -0.85, 0.85, 2.55)): L.append('\t(pad "%d" smd rect (at %.3f 0) (size 1.00 1.60) (layers "F.Cu" "F.Paste" "F.Mask"))' % (k + 1, x))
+L.append(rect(-3.4, -1.175, 3.4, 1.175, "F.Fab")); L.append(rect(-3.6, -1.4, 3.6, 1.4, "F.CrtYd", 0.05)); L.append(text("1", -2.55, -1.6, "F.Fab", 0.6)); write("Vishay_VEML7700", L)
 # spring-pin dock: 4 pins per polarity on the stack side (Mill-Max 0906/0965 class, Ø1.5 hole) and matching 3 mm gold target pads on the dock; 2.54 mm pitch, two rows
 for name, target in (("PogoPins_2x4", False), ("PogoTargets_2x4", True)):
     L = head(name, "spring-pin dock, 2 x 4 contacts at 2.54 mm: pins on the stack side, flat gold targets on the dock", "pogo dock", "through_hole" if not target else "smd")
