@@ -1,0 +1,226 @@
+** Drc report for pcb-c-display.kicad_pcb **
+** Created on 2026-09-07T09:41:39+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 65 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(445.2750 mm, 281.4350 mm): Pad 2 [GND] of Y1 on B.Cu
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(281.4400 mm, 312.0800 mm): Segment of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(293.4400 mm, 312.0800 mm): Segment of D15 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(366.5722 mm, 315.3450 mm): Segment of FB4 on B.Silkscreen
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+    @(366.5722 mm, 316.3650 mm): Segment of FB4 on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(353.9422 mm, 316.3650 mm): Segment of FB1 on B.Silkscreen
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(350.1250 mm, 316.3750 mm): Circle of TP40 on B.Silkscreen
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+    @(346.3750 mm, 316.3750 mm): Circle of TP39 on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(342.6250 mm, 316.3750 mm): Circle of TP38 on B.Silkscreen
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(338.8750 mm, 316.3750 mm): Circle of TP37 on B.Silkscreen
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(148.0000 mm, 101.0000 mm): PCB text 'LEFT: SOS, EMCON, ZEROIZE, LIGHT' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(446.0000 mm, 101.0000 mm): PCB text 'RIGHT: MAIN, PI, TEST, status LEDs' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(424.3750 mm, 282.2350 mm): Via [/+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(424.9300 mm, 277.8300 mm): Via [/+3V3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(466.0650 mm, 270.4750 mm): Via [/+3V3] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(420.8925 mm, 275.5550 mm): Track [/+3V3] on B.Cu, length 0.7375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(427.7675 mm, 275.5550 mm): Track [/+3V3] on B.Cu, length 1.4375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(424.5300 mm, 276.3925 mm): Track [/+3V3] on B.Cu, length 0.7375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(449.1975 mm, 269.1500 mm): Track [/BAT3_K] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(426.1300 mm, 268.0800 mm): Via [/C_RUN] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(219.2711 mm, 118.9000 mm): Via [/EPD_RESE] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.4550 mm, 272.7550 mm): Via [/EPD_RST] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(226.7500 mm, 118.9500 mm): Track [/EPD_VCC] on F.Cu, length 0.9132 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(231.2711 mm, 119.7000 mm): Via [/EPD_VDL] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(436.2375 mm, 281.2850 mm): Track [/EXP_INT] on B.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(420.8925 mm, 270.3550 mm): Track [/HB2] on B.Cu, length 1.4375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(426.9300 mm, 268.0800 mm): Via [/HDMI_SEL2] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442.8350 mm, 267.2000 mm): Via [/LIGHT_DAY_n] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(443.5350 mm, 267.8500 mm): Via [/LIGHT_NIGHT_n] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(435.4725 mm, 271.7500 mm): Track [/MWARN_K] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442.8350 mm, 268.5000 mm): Via [/PANEL_ID] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(429.2050 mm, 270.7550 mm): Via [/PI_KILL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(428.5050 mm, 270.3550 mm): Via [/PI_SHDN_REQ] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.4550 mm, 271.1550 mm): Via [/PWM1] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(465.2150 mm, 269.5250 mm): Track [/QSPI_D3] on B.Cu, length 0.8631 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(427.7675 mm, 273.9550 mm): Track [/RAIL_SENSE] on B.Cu, length 1.4375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(433.1350 mm, 269.8000 mm): Via [/SAT_K] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(430.3625 mm, 281.2850 mm): Track [/SCL] on B.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(454.9225 mm, 273.0500 mm): Track [/SCL] on B.Cu, length 2.3375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(431.8250 mm, 283.1850 mm): Via [/SDA] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(454.9225 mm, 273.7000 mm): Track [/SDA] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(422.9300 mm, 268.0800 mm): Via [/SLOT_EN3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(429.2050 mm, 274.7550 mm): Via [/SOS_SW] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441.1975 mm, 271.1000 mm): Track [/SPARE4] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457.2600 mm, 267.8500 mm): Via [/SPARE6] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(454.9225 mm, 268.5000 mm): Track [/SPARE7] on B.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(454.9225 mm, 270.4500 mm): Track [/SPARE10] on B.Cu, length 2.3375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(454.9225 mm, 271.1000 mm): Track [/SPARE11] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(425.3300 mm, 268.0800 mm): Via [/SWCLK] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(425.7300 mm, 269.5175 mm): Track [/SWDIO] on B.Cu, length 0.7375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(422.2125 mm, 281.2850 mm): Track [/USB_PNL_N] on B.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(422.2125 mm, 283.1850 mm): Track [/USB_PNL_P] on B.Cu, length 1.4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(429.2050 mm, 272.3550 mm): Via [/ZEROIZE_HW] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
