@@ -4,7 +4,7 @@ Prototype design. This plan is written before the build and run on the built pro
 
 ## 1. Test articles and conditions
 
-- **Article:** one complete kit as specified in `V2-SPEC.md`: Peli 1450 with the face plate, the A22 to E6 board set, the BB-2590/U pack, the Xenarc monitor, all radios and antennas fitted as for deployment, the lid tablet bracket loaded with a dummy mass.
+- **Article:** one complete kit as specified in `V2-SPEC.md`: Peli 1450 with the face plate, the A22 to E6 board set, the built 4S pack pack, the Xenarc monitor, all radios and antennas fitted as for deployment, the lid tablet bracket loaded with a dummy mass.
 - **States:** transit (closed, latched, antennas off, cables out, pack fitted), deployed (open, antennas on, cables in), stored (closed, pack out).
 - **Instrumentation:** the kit's own sensor board (inside temperature, humidity, pressure, shock and tilt log, water sensor, gas) logs every test; the bridge's logs and the panel controller's event log are the record; external references are a calibrated thermometer, a pressure gauge for the seal check, and the laboratory's equipment where a laboratory runs the test.
 - **Order:** the seal check first and after every environmental test; the functional check (section 4) before and after every test; a failure stops the sequence until its cause is recorded.
