@@ -1,0 +1,146 @@
+Comment,Designator,Footprint,LCSC Part #
+100u 25V,"C1,C2",C_1206_3216Metric,
+10u 25V 1210,"C3,C29,C30,C35,C36,C41,C42,C47,C48,C54,C120",C_1210_3225Metric,C2918497
+1u,"C4,C19",C_0603_1608Metric,C15849
+10n,"C5,C26,C53,C57,C68,C75,C86,C98,C100,C102",C_0603_1608Metric,C57112
+100p,"C6,C58,C69,C76,C87",C_0603_1608Metric,C14858
+47n,"C7,C59,C70,C77,C88",C_0603_1608Metric,C1622
+4.7u,"C8,C60,C71,C78,C89",C_0805_2012Metric,C1779
+100n 25V,"C9,C10,C16,C17,C61,C62,C72,C73,C79,C80,C90,C91",C_0603_1608Metric,C14663
+22u 50V X7R 1210,"C11-C15,C63-C67,C74,C81-C85,C92,C108-C111,C116-C119",C_1210_3225Metric,
+3.3u,C18,C_0805_2012Metric,
+10u 35V 1210,C20-C22,C_1210_3225Metric,
+22u 25V 1210,C23-C25,C_1210_3225Metric,
+1n,C27,C_0603_1608Metric,C1588
+100n,"C28,C34,C40,C46,C52,C93,C95,C99,C101,C103,C104,C106,C107",C_0603_1608Metric,C14663
+22u 10V X7R 1210,"C31-C33,C37-C39,C43-C45,C49-C51,C55,C56",C_1210_3225Metric,C2918511
+220n,C94,C_0603_1608Metric,
+330p,"C96,C97",C_0603_1608Metric,
+3.3n,C112-C115,C_0603_1608Metric,C1613
+SMCJ18A (VBAT clamp),D1,D_SMB,C1973072
+SMCJ33A (VIN_RAW clamp behind E6's filter),D2,D_SMB,
+SMBJ5.0A,D3,D_SMB,C113974
+SMBJ18A (VBUS clamp at the outlet),D4,D_SMB,
+25 A mini blade (Keystone 3568 holder): pack node to VBAT,F1,Fuseholder_Blade_Mini_Keystone_3568,
+USB device rail to B16 (JST-VH): + -,J_5V_DEV?,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"slot 1 5.1 V rail to B16 (JST-VH, 16 AWG): + -",J_5V_S1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"slot 2 5.1 V rail to B16 (JST-VH, 16 AWG): + -",J_5V_S2,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"slot 3 5.1 V rail to B16 (JST-VH, 16 AWG): + -",J_5V_S3,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+54 V to the PoE injector on B16 (JST-VH): + -,J_54V?,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"A-B interconnect (IDC 2x13, top side) to B16's underside header",J_AB1,IDC-Header_2x13_P2.54mm_Vertical,
+"SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug",J_BM1,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), HF to the dock plug",J_BM2,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), WIFI24 to the dock plug",J_BM3,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), GNSS to the dock plug",J_BM4,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), SDR to the dock plug",J_BM5,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), P2P-A to the dock plug",J_BM6,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), P2P-B to the dock plug",J_BM7,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), 5G-MAIN to the dock plug",J_BM8,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), 5G-DIV to the dock plug",J_BM9,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), IRID to the dock plug",J_BM10,Radiall_SMPMAX_R222M00720,
+"SMP-MAX slide-on receptacle R222M00720 (underside), LORA to the dock plug",J_BM11,Radiall_SMPMAX_R222M00720,
+"9 A spring pin, pack return (Mill-Max 0858 class, dock block)",J_CN1-J_CN4,Mill-Max_0858_power_pin,
+"9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)",J_CP1-J_CP4,Mill-Max_0858_power_pin,
+"spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare",J_DOCK?,PogoPins_2x6,
+heater mat under the 2590 cradle (XH2.5): + -,J_HEAT?,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+"12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -",J_HF?,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"MAIN button lead from the panel (XH2.5): PB, GND",J_MAINSW?,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
+"D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C",J_MEZZ1,IDC-Header_2x08_P2.54mm_Vertical,
+D8 mezzanine 5 V (JST-VH): + -,J_MEZZ_PWR1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+monitor supply lead to the Xenarc (JST-VH): + -,J_MON?,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -",J_PA?,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"pre-charge pin, longer, mates first (32.24 AX)",J_PRE1,Mill-Max_0858_power_pin,
+"SMA jack (Amphenol 132134, vertical), pigtail from the VHF device",J_RF1,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the HF device",J_RF2,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the WIFI24 device",J_RF3,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the GNSS device",J_RF4,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the SDR device",J_RF5,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the P2P-A device",J_RF6,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the P2P-B device",J_RF7,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the 5G-MAIN device",J_RF8,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the 5G-DIV device",J_RF9,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the IRID device",J_RF10,SMA_Amphenol_132134-11_Vertical,
+"SMA jack (Amphenol 132134, vertical), pigtail from the LORA device",J_RF11,SMA_Amphenol_132134-11_Vertical,
+"wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2 GND GND",J_USBC_OUT?,PinHeader_1x05_P2.54mm_Vertical,
+wall USB-C data pair to B16 passes here on the ribbon: this header is the pigtail's data side (D+ D- GND GND),J_USBW?,JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical,
+10uH XAL1010-103ME (Isat 14 A),L1,L_Coilcraft_XAL1010-XXX,
+3.3uH XAL6060-332ME (Isat 15 A),L2,L_Coilcraft_XAL6060-XXX,
+4.7uH XAL6060-472ME (Isat 11 A),L3-L6,L_Coilcraft_XAL6060-XXX,
+4.7uH XAL4030-472ME,L7,L_Coilcraft_XAL4030-XXX,
+6.8uH XAL1010-682ME (Isat 17 A),L8,L_Coilcraft_XAL1010-XXX,
+6.8uH XAL1010-682ME,"L9,L11",L_Coilcraft_XAL1010-XXX,
+22uH XAL1010-223ME (Isat 9 A),L10,L_Coilcraft_XAL1010-XXX,
+"2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3 D)",Q1,SOT-23,C8545
+60 V N-FET PowerPAK SO-8 (CSD19532Q5B class),Q2-Q5,PowerPAK_SO-8_Single,
+2N7002: CHG_INHIBIT high = ILIM_HIZ low = charger in HiZ,Q6,SOT-23,C8545
+CSD18510Q5B 40 V N-FET,"Q7-Q16,Q21-Q26",PowerPAK_SO-8_Single,
+100 V N-FET PowerPAK SO-8 (CSD19536KTT class),Q17-Q20,PowerPAK_SO-8_Single,
+CSD18510Q5B 40 V N-FET (VBUS switch),Q27,PowerPAK_SO-8_Single,
+10R 2W 2512,R1,R_2512_6332Metric,C414890
+100k,"R2-R5,R13,R21,R30,R34,R38,R42,R57,R73,R103,R104,R111-R114,R116,R118,R123,R128,R143",R_0603_1608Metric,C25803
+240k 1%,R6,R_0603_1608Metric,
+10k 1%,"R7,R15,R29,R33,R37,R41,R49,R51,R59,R61,R67,R75,R125,R134",R_0603_1608Metric,C25804
+40.2k (300 kHz),"R8,R52,R62,R68,R78",R_0603_1608Metric,
+30k (slope),"R9,R53,R63,R69,R79",R_0603_1608Metric,
+10k,"R10,R22,R23,R25,R44,R54,R64,R70,R80,R91,R95,R99,R102,R110,R117,R142",R_0603_1608Metric,C25804
+10mOhm 1% 2512 (ISNS),"R11,R65,R81,R138",R_2512_6332Metric,
+5mOhm 1% 2512 (CS),"R12,R56,R122,R127",R_2512_6332Metric,
+62k 1%,"R14,R58,R74,R124,R133",R_0603_1608Metric,
+"10mOhm 1% 2512 (RAC, input current sense)",R16,R_2512_6332Metric,
+"5mOhm 1% 2512 (RSR, charge current sense)",R17,R_2512_6332Metric,
+10R,R18,R_0603_1608Metric,
+16.5k 1%,R19,R_0603_1608Metric,C22812
+34.8k 1%,R20,R_0603_1608Metric,C2933204
+10k (PSYS load),R24,R_0603_1608Metric,
+"60.4k 1% (CELL_BATPRESZ: 4S per Table, from VDDA)",R26,R_0603_1608Metric,
+40.2k 1%,R27,R_0603_1608Metric,
+53.6k 1%,"R28,R32,R36,R40",R_0603_1608Metric,
+5mOhm 1% 2512 (shunt),"R31,R35,R39,R43",R_2512_6332Metric,
+68k (RT: 500 kHz),"R45-R47,R115",R_0603_1608Metric,
+31.6k 1%,R48,R_0603_1608Metric,
+162k 1%,R50,R_0603_1608Metric,
+2mOhm 1% 2512 (ISNS),R55,R_2512_6332Metric,
+140k 1%,R60,R_0603_1608Metric,
+665k 1%,R66,R_0603_1608Metric,
+20mOhm 1% 2512 (ISNS),R71,R_2512_6332Metric,
+10mOhm 1% 2512 (CS),R72,R_2512_6332Metric,
+105k 1%,R76,R_0603_1608Metric,C2933128
+20k 1% (R_FBL),R77,R_0603_1608Metric,C4184
+1.2 A (ILM),R90,R_0603_1608Metric,
+100k 1%,"R92,R96,R100",R_0603_1608Metric,C25803
+10k 1% (OVLO),"R93,R97,R101",R_0603_1608Metric,C25804
+1.0 A (ILM),R94,R_0603_1608Metric,
+2.0 A (ILM),R98,R_0603_1608Metric,
+100k (MODE: CCM),"R119-R121,R126,R135",R_0603_1608Metric,
+22k,R129-R132,R_0603_1608Metric,
+21.0k 1% (R_FBL2: 9 V when CTL2 is low),R136,R_0603_1608Metric,
+14.0k 1% (R_FBL1: 15 V when CTL1 is low too),R137,R_0603_1608Metric,
+43R 1W 2512 (DSCG),R139,R_2512_6332Metric,
+"1M (GD to VPWR, 9.1.3)",R140,R_0603_1608Metric,
+700k,R141,R_0603_1608Metric,
+LTC2954CTS8-1 push-button on/off controller,U1,TSOT-23-8,C683782
+"LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW",U2,HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm,C442493
+"BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B",U3,QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm,C2871872
+"AP64500SP-13 5 A buck, 5.1 V rail +5V_S1",U4,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
+"AP64500SP-13 5 A buck, 5.1 V rail +5V_S2",U5,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
+"AP64500SP-13 5 A buck, 5.1 V rail +5V_S3",U6,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
+"AP64500SP-13 5 A buck, 5.1 V rail +5V_DEV",U7,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
+INA226 rail monitor +5V_S1,U8,VSSOP-10_3x3mm_P0.5mm,C49851
+INA226 rail monitor +5V_S2,U9,VSSOP-10_3x3mm_P0.5mm,C49851
+INA226 rail monitor +5V_S3,U10,VSSOP-10_3x3mm_P0.5mm,C49851
+INA226 rail monitor +5V_DEV,U11,VSSOP-10_3x3mm_P0.5mm,C49851
+"TPS62933DRLR 3 A buck, 3.3 V logic",U12,SOT-583-8,C3200405
+"LM5176PWPR buck-boost controller, +13V8_PA from VBAT",U13,HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm,C442493
+INA226 PA rail monitor (0x46),U14,VSSOP-10_3x3mm_P0.5mm,C49851
+"LM5176PWPR buck-boost controller, +12V_HF from VBAT",U15,HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm,C442493
+"LM5176PWPR buck-boost controller, +54V_POE from VBAT",U16,HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm,C442493
+INA226 PoE rail monitor (0x47),U17,VSSOP-10_3x3mm_P0.5mm,C49851
+"TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)",U18,QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm,C544309
+"LM5176PWPR buck-boost controller, PD_VPWR from VBAT",U19,HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm,C442493
+TPS259631DDAR eFuse VBAT -> VMON (1.2 A (ILM)),U21,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
+TPS259631DDAR eFuse VBAT -> VHEAT (1.0 A (ILM)),U22,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
+TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (2.0 A (ILM)),U23,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
+"74LVC08APW quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit",U26,TSSOP-14_4.4x5mm_P0.65mm,C5605
+PCA9555PW (0x21): enables and status,U27,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+"PCA9555PW (0x24): power-good lines, spares",U28,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+USBLC6-2SC6,U29,SOT-23-6,C7519
