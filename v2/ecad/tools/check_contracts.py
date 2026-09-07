@@ -67,12 +67,12 @@ def reaches(board, netname, target):
 d_inh = [n for n in B["D"][0] if "INHIBIT" in n]
 if d_inh:
     nodes = B["D"][0][d_inh[0]]
-    ok, seen = reaches("D", d_inh[0], "Q3")
-    check(ok, "D: %s reaches Q3 (directly or through its resistors)" % d_inh[0], str(sorted(seen)))
-    check(all(not r.startswith("U") for r, _ in nodes), "D: nothing but the harness and Q3 drives %s" % d_inh[0], str(sorted(nodes)))
+    ok, seen = reaches("D", d_inh[0], "U12")
+    check(ok, "D: %s reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)" % d_inh[0], str(sorted(seen)))
+    check(all(r in ("J_HARN1", "U12") or r.startswith(("R", "TP")) for r, _ in nodes), "D: nothing but the harness, its pull-down, a test point and the KEY gate touches %s" % d_inh[0], str(sorted(nodes)))
 
-# 3. three 5 V rails from A to B (VH pairs, same net names on both boards)
-for rail, ja, jb in (("+5V_M1", "J_5V_M1", "J_5V_M1"), ("+5V_M2", "J_5V_M2", "J_5V_M2"), ("+5V_PI", "J_5V_PI", "J_5V_PI")):
+# 3. four 5 V rails from A22 to B16 (VH pairs, same net names on both boards; 32.56)
+for rail, ja, jb in (("+5V_S1", "J_5V_S1", "J_5V_S1"), ("+5V_S2", "J_5V_S2", "J_5V_S2"), ("+5V_S3", "J_5V_S3", "J_5V_S3"), ("+5V_DEV", "J_5V_DEV", "J_5V_DEV")):
     a = [n for (r, p), n in B["A"][1].items() if r == ja and n == rail]
     b = [n for (r, p), n in B["B"][1].items() if r == jb and n == rail]
     check(bool(a) and bool(b), "rail %s leaves A on %s and enters B on %s" % (rail, ja, jb),
@@ -90,17 +90,17 @@ for r, pin in list(inh):                       # one hop through the series resi
     if r.startswith("R"):
         for n2, nodes in B["E"][0].items():
             if any(x == r and y != pin for x, y in nodes): reach |= set(x for x, _ in nodes)
-check("U2" in reach, "E: SHORE_INHIBIT reaches the opto U2 (directly or through its series resistor)", str(sorted(reach)))
+check("U10" in reach, "E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)", str(sorted(reach)))
 
 # 5. dock power contacts: four CELL+ pins, four returns and the pre-charge pin on A; the strip's lands on E
 cp = [r for r, p in B["A"][0].get("CELL+", set()) if r.startswith("J_CP")]
-cn = [r for r, p in B["A"][0].get("CELL_N", set()) if r.startswith("J_CN")]
-check(len(cp) == 4 and len(cn) == 4, "A: four CELL+ pins and four return pins on the dock block", "CELL+ %s, return %s" % (sorted(cp), sorted(cn)))
+cn = [r for r, p in B["A"][0].get("GND", set()) if r.startswith("J_CN")]
+check(len(cp) == 4 and len(cn) == 4, "A22: four CELL+ pins and four return pins (GND, the In1 plane, 32.56) on the dock block", "CELL+ %s, return %s" % (sorted(cp), sorted(cn)))
 pre = B["A"][1].get(("J_PRE1", "1"), "")
 check(pre.startswith("CELL") or "PRE" in pre, "A: the pre-charge pin lands on a cell node net", pre or "absent")
 check(("P_CP", "1") in B["E"][1] and ("P_CN", "1") in B["E"][1], "E: the 12 AWG lands P_CP and P_CN exist",
       "%s / %s" % (B["E"][1].get(("P_CP", "1"), "absent"), B["E"][1].get(("P_CN", "1"), "absent")))
-check(B["E"][1].get(("P_CN", "1"), "") not in ("GND",), "E: the module return is its own net, not GND", B["E"][1].get(("P_CN", "1"), "absent"))
+check(B["E"][1].get(("P_CN", "1"), "") == "GND", "E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)", B["E"][1].get(("P_CN", "1"), "absent"))
 
 # 6. shutdown pair on the A to B ribbon
 for net in ("PI_SHDN_REQ", "PI_KILL"):
@@ -125,7 +125,7 @@ for net in ("USB_D8_P", "USB_D8_N"):
 # 10. the wall host port: its USB pair comes from B16's slot-1 hub over the ribbon and ends on A22's wall port part J_USBW
 for net in ("USB_WALL_P", "USB_WALL_N"):
     a = [r for r, p in B["A"][0].get(net, set())]; b = [r for r, p in B["B"][0].get(net, set())]
-    check("J_USBW" in a and "J_AB1" in a and "J_AB1" in b and any(r.startswith("U1") and r[1:].isdigit() for r in b), "wall-port pair %s: B16 hub -> J_AB1 -> A22 J_USBW" % net, "A %s, B %s" % (sorted(a)[:5], sorted(b)[:5]))
+    check("J_USBW" in a and "J_AB1" in a and "J_AB1" in b and any(r in ("U102", "U202", "U302") for r in b), "wall-port pair %s: B16 slot hub -> J_AB1 -> A22 J_USBW" % net, "A %s, B %s" % (sorted(a)[:5], sorted(b)[:5]))
 # 11. the harness 3.3 V and the panel controller's USB: A22's +3V3 reaches D8 over the harness; B16's USB_PNL pair reaches C7 over the ribbon
 for k, ref in (("A", "J_MEZZ1"), ("D", "J_HARN1")):
     check(any(r == ref for r, _ in B[k][0].get("+3V3", set())), "+3V3 on %s %s" % (k, ref))
