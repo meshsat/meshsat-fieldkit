@@ -4,6 +4,7 @@
 # out/part/reconciled.kicad_pcb with its DRC json; prints RECONCILE hard/open lines and RECONCILE-DONE.
 set -uo pipefail
 cd "$1"; N="$2"; W=$PWD/out/part; B=$W/reconciled.kicad_pcb; cp $W/merged.kicad_pcb $B
+cp $N.kicad_pro $W/reconciled.kicad_pro; cp $N.kicad_pro $W/merged.kicad_pro
 score() { kicad-cli pcb drc --severity-all --format json -o "$2" "$1" >/dev/null 2>&1; python3 - "$2" <<'PY'
 import json, collections, sys
 d = json.load(open(sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])

@@ -3,15 +3,18 @@
 # again (planes and power layers as the route scripts do), re-partition, route every listed group concurrently, wait, merge, DRC, report.
 # Env: FR_PLANE_NETS (csv) and FR_POWER_LAYERS as for route_one.sh. Marker STAGE2-DONE.
 set -uo pipefail
-cd "$1"; N="$2"; P="$3"; T="$4"; GROUPS="$5"; W=$PWD/out/part; PJ=$W/part.json
+cd "$1"; N="$2"; P="$3"; T="$4"; PARTS="$5"; W=$PWD/out/part; PJ=$W/part.json
+echo "stage2: groups [$PARTS] passes $P timeout $T"; cp $N.kicad_pro out/$N-preroute.kicad_pro 2>/dev/null   # every board KiCad loads or checks needs the project file beside it (net classes, via sizes), or the DRC reports the default class
 python3 ../tools/ses_import_lock.py out/$N-preroute.kicad_pcb $W/GLOBAL/route.ses $PJ GLOBAL $W/stage1.kicad_pcb 2>&1 | grep -v -E "Debug|leak"
+cp $N.kicad_pro $W/stage1.kicad_pro
 bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | grep -v -E "Debug|leak"
 python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json 2>&1 | grep -v -E "Debug|leak" | grep -v "^partition [A-Z]"
-for G in $GROUPS; do bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1 & done
+for G in $PARTS; do bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1 & done
 wait
-for G in $GROUPS; do tail -2 $W/route-$G.log; done
-ARGS=""; for G in $GROUPS; do [ -s $W/$G/route.ses ] && ARGS="$ARGS $G=$W/$G/route.ses"; done
+for G in $PARTS; do tail -2 $W/route-$G.log; done
+ARGS=""; for G in $PARTS; do [ -s $W/$G/route.ses ] && ARGS="$ARGS $G=$W/$G/route.ses"; done
 python3 ../tools/ses_merge.py $W/stage1.kicad_pcb $W/part2.json $W/merged.kicad_pcb $ARGS 2>&1 | grep -v -E "Debug|leak"
+cp $N.kicad_pro $W/merged.kicad_pro
 kicad-cli pcb drc --severity-all --format json -o $W/merged-drc.json $W/merged.kicad_pcb >/dev/null 2>&1
 python3 - $W/merged-drc.json <<'PY'
 import json, collections, sys
