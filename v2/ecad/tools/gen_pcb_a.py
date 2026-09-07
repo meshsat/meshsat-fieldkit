@@ -1,27 +1,18 @@
 #!/usr/bin/env python3
-"""Generate PCB-A POWER + I/O (MeshSat field-kit carrier, Rev A) - MECHANICAL + PLACEMENT layer (phase A1).
+"""Generate PCB-A POWER + I/O, phase A22 (MESHSAT-830, 7 Sep 2026): the mechanical and placement-frame layer.
 
-Case-centred frame as in the geometry appendix (+Y = case back wall). Millimetres.
-Phase B1: outline, rod holes + nut keep-outs, every COTS site with its real hole pattern,
-cradle slots for the USB sticks, ribbon header, DCF77 connector, pass-throughs, reserved
-hub / eFuse / monitor zone. Phase B2 adds the schematic-driven copper.
-
-Sources: appendix s.2/3/6 (outline, rods, CAD device rectangles); CAD _PORTS map (Pi USB
-face, X1202 USB-C IN on the south edge); Raspberry Pi 5 hole pattern 58 x 49 at 3.5 mm
-from the edges; RockBLOCK 9603 drawing (45 x 45, 2x Ø2.5 at 3.15 from the edges, 38.7 apart);
-RockBLOCK 9704 STEP (52.0 x 47.8, no holes, ACC-RB9704SMA-MOUNT bracket 52 x 56 with 4x Ø4.6
-on 32 x 32); LilyGO T-Call A767X drawing (74.78 x 29.01, 4x Ø3 on 69.46 x 24.97); Seeed
-Wio-SX1262 for XIAO STEP (17.78 x 21.44, one Ø2.2 hole 3.76 mm from a short edge); RTL-SDR
-Blog V4 69 x 27 x 13 body; Sonoff ZBDongle-P 87 x 25.5 x 13.5 incl. plug. Owner rulings R2
-(hub per board), R4/R17 (Z), R11 (dual RockBLOCK site), 2026-09-02.
+Case-centred frame as in the geometry appendix (+Y = case back wall). Millimetres. Appendix 32.56: 240 x 160 at X -120 to +120 (the west
+45 mm of A21 went to the BB-2590/U cradle), rods at (+-110.5, +-73), the dock block moved east of the west rod, eleven blind-mate sites
+along the south band, the D8 mezzanine 100 x 80 at X 0 to 100, the front end, charger and PoE stages in the west column, the rails in the
+middle column, the PD outlet and the eFuses in the north-east band, the lead connectors on the east strip. The PA module is on the face plate.
 """
 import math, sys
 import pcbnew
 from pcbnew import VECTOR2I, FromMM
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-a-power.kicad_pcb"
-BOARD_L, BOARD_W, BOARD_R = 285.0, 160.0, 5.0
-BOARD_X0 = -165.0                  # A15: the board grows 45 mm to port for the welded 1S8P pack; the rods stay at (+-110.5, +-73)
+BOARD_L, BOARD_W, BOARD_R = 240.0, 160.0, 5.0
+BOARD_X0 = -120.0
 ROD_HOLES = [(-110.5, -73.0), (110.5, -73.0), (-110.5, 73.0), (110.5, 73.0)]
 ROD_DRILL, NUT_KEEPOUT_D = 3.2, 9.0
 OX, OY = 150.0, 110.0
@@ -38,32 +29,27 @@ def slot_footprint(w, h):
         open(path, "w").write('(footprint "%s"\n\t(version 20241229)\n\t(generator "meshsat")\n\t(generator_version "9.0")\n\t(layer "F.Cu")\n\t(descr "NPTH slot %g x %g mm for a cable tie or strap")\n\t(attr exclude_from_pos_files exclude_from_bom)\n\t(pad "" np_thru_hole oval (at 0 0) (size %g %g) (drill oval %g %g) (layers "*.Cu" "*.Mask"))\n\t(fp_rect (start %g %g) (end %g %g) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))\n)\n' % (name, w, h, w, h, w, h, -w/2-0.25, -h/2-0.25, w/2+0.25, h/2+0.25))
     return name
 
-# ---------------------------------------------------------------- sites (case frame)
-# A19 (appendix 32.17, 32.22, 32.23): no pack on the board; the battery module on the floor reaches this board over the dock block
-POWER_ZONE = (-162.0, -40.0, -32.0, 2.0)     # charger, gauge, three converters and their fuse row (former pack area)
-CTRL_ZONE = (-162.0, 2.0, -118.0, 36.0)     # main power control, heating-pad switch, 3.3 V buck
-RF_SITES = [(-100.0, -56.0, "UHF"), (-84.0, -56.0, "WIFI 2.4"), (-26.0, -56.0, "GNSS"), (-12.0, -56.0, "SDR"), (70.0, -74.0, "LTE"), (92.0, -74.0, "IRIDIUM"), (103.0, -54.0, "LORA")]   # SMP-MAX receptacles on the underside at Y -66; SMA jacks on top at the given Y (south of the GPS puck for the two under it)
-RF_Y = -66.0
-DOCK_BLOCK = (-155.0, -76.0, -116.0, -64.0)   # A19's own pin field: 2x6 signal pins J_DOCK at (-124, -70), 9 A power pins at X -147..-135, pre-charge at (-151, -70); 5.5 mm from the rod nut at (-110.5, -73). The block board below is larger (43 x 25, gen_pcb_e5.py) and reaches X -115, still 4.5 mm clear of that rod.
-# APRS mezzanine site (R3): 80 x 62 on four M3 standoffs, harness headers on its west side
-MEZZ_RECT = (5.0, -31.0, 85.0, 31.0)
-MEZZ_HOLES = [(10.0, -26.0), (80.0, -26.0), (10.0, 26.0), (80.0, 26.0)]
-J_MEZZ = (-8.0, 8.0)          # 2x8 IDC: USB pairs for codec + UART, PTT/TR, EN, GND, 5V logic
-J_MEZZ_PWR = (-8.0, -18.0)    # JST-VH 2-pin: raw cell node + GND to the 8 V boost (R15)
-# GPS puck (u-blox Gmouse, captive USB cable): bracket slots + receptacle + cable tie-downs
-GPS_RECT = (50.0, -65.0, 90.0, -39.0)
-GPS_SLOTS = [(58.0, -70.0), (82.0, -70.0), (48.0, -36.0), (92.0, -36.0)]
-J_GPS = (30.0, -52.0)         # USB-A receptacle, opening +X
-GPS_COIL_SLOTS = [(100.0, -42.0), (100.0, -50.0), (100.0, -58.0)]   # A19: 2 mm north so the LORA blind-mate site clears them
-# WiFi Alfa AWUS036ACM: body 85 x 26 + USB-A 3.0 plug west; two RP-SMA east -> two WiFi bulkheads (R16)
-WIFI_RECT = (20.0, 39.5, 105.0, 65.5)
-WIFI_SLOTS = [(45.0, 36.0), (85.0, 36.0), (45.0, 69.0), (85.0, 69.0)]
-J_WIFI = (8.0, 52.5)          # USB-A receptacle, opening +X
-# power connectors
-J_AB = (-72.0, -66.0)         # 2x9 IDC top side (A20), ribbon up to PCB-B's underside header at (-72, -78)
-J_LEDS = (-38.0, -74.0)       # XH 1x10: five front-wall LEDs (R5); A20: 2 mm east of the A19 spot, clear of the 2x9 J_AB1 box header
-HUB_ZONE = (-104.0, 25.0, -30.0, 77.0)     # A19: seven-port hub, five eFuse + INA219 channels, PCA9555 0x21 and 0x24, LED drivers (grown south into the former pack area)
-BANK_ZONE = (-70.0, -72.0, -30.0, -46.0)    # A19: charger BQ25792 zone, next to the 12 V dock pins and the node bar
+# ---------------------------------------------------------------- sites (case frame), appendix 32.56
+DOCK_BLOCK = (-104.0, -78.0, -66.0, -64.0)       # underside pin field: J_PRE1 (-103, -70), J_CP1..4 (-99 + 4k, -73), J_CN1..4 (-99 + 4k, -67), J_DOCK 2x6 (-76, -70); E6's raised block reads these
+RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 102]     # VHF HF WIFI24 GNSS SDR P2P-A P2P-B 5G-MAIN 5G-DIV IRID LORA
+RF_NAMES = ["VHF", "HF", "WIFI 2.4", "GNSS", "SDR", "P2P A", "P2P B", "5G MAIN", "5G DIV", "IRIDIUM", "LORA"]
+RF_Y, RF_JY = -66.0, -56.0                        # SMP-MAX receptacles (underside) and SMA jacks (top)
+FRONT_ZONE = (-118.0, 34.0, -70.0, 66.0)           # LM5176 front end from the dock's shore pins to the 20 V bus (J_AB1 sits above it at (-90, 76))
+CHARGER_ZONE = (-118.0, -6.0, -70.0, 34.0)         # BQ25731 and its stage
+POE_ZONE = (-118.0, -44.0, -70.0, -6.0)            # LM5176 boost to 54 V
+FUSE_SITE = (-97.0, -52.0)                        # F1 25 A blade, between the POE zone and the dock block
+RAILS_ZONE = (-66.0, 34.0, -2.0, 72.0)             # four TPS56637 rails with their INA226, VH outputs at Y 75
+PA_ZONE = (-66.0, -14.0, -16.0, 20.0)
+MID_ZONE = (-66.0, 20.0, -2.0, 34.0)               # the 3.3 V buck and the control passives              # LM5176 13.8 V for the PA on the plate
+HF_ZONE = (-46.0, -48.0, -16.0, -22.0)             # TPS55288 12 V for the QMX
+CTRL_ZONE = (-66.0, -48.0, -46.0, -14.0)
+TP_ZONE = (-88.5, -64.0, -68.0, -46.0)              # test points beside the fuse           # LTC2954, expanders, mux, AND gates, 3.3 V buck
+MEZZ_RECT = (0.0, -40.0, 100.0, 40.0)              # D8 mezzanine 100 x 80 on four M3 standoffs
+MEZZ_HOLES = [(5.0, -35.0), (95.0, -35.0), (5.0, 35.0), (95.0, 35.0)]
+J_MEZZ = (-8.0, 8.0); J_MEZZ_PWR = (-8.0, -18.0)
+NE_ZONE = (0.0, 44.0, 100.0, 72.0)                 # USB-C PD outlet stage and the three eFuses
+EAST_STRIP = (100.0, -51.0, 118.0, 62.0)           # lead connectors, rotated 90: J_PA (110, 58), J_MON (110, 44), J_HEAT (110, 30), J_USBC_OUT (110, 14), J_HF (110, 0), J_54V (110, -14), J_USBW (110, -26), J_MAINSW (110, -38)
+J_AB = (-84.0, 73.5)                               # 2x13 IDC along X (rot 90), top side, B16's underside header at the same case XY; 5.7 mm east of the rod nut
 # ---------------------------------------------------------------- plumbing (as PCB-C)
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(4)
@@ -163,36 +149,33 @@ for i, (x, y) in enumerate(ROD_HOLES, 1):
     rule_area_annulus(x, y, NUT_KEEPOUT_D, ROD_DRILL + 3.0, "nut keep-out R%d" % i)
     text("R%d" % i, x, y + 7.0 if y < 0 else y - 7.0, pcbnew.F_SilkS, 1.5, 0.25)
 n = 5
-# ---------------------------------------------------------------- A19 power zone, dock block, RF sites
-rect(POWER_ZONE, pcbnew.Dwgs_User, 0.15); text("POWER ZONE (A19): fuse row F3 F4 F5 F2 at Y -46, converters M1 M2 PI north of it, gauge by the pins", (POWER_ZONE[0] + POWER_ZONE[2]) / 2, POWER_ZONE[3] + 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
-rect(CTRL_ZONE, pcbnew.Dwgs_User, 0.15); text("MAIN POWER CONTROL, HEATING PAD SWITCH, 3.3 V BUCK", (CTRL_ZONE[0] + CTRL_ZONE[2]) / 2, CTRL_ZONE[3] + 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
-rect(DOCK_BLOCK, pcbnew.Dwgs_User, 0.15); text("DOCK BLOCK (underside): J_DOCK 2x6 signal pins + 9 A power pins + pre-charge pin, land on the dock block", (DOCK_BLOCK[0] + DOCK_BLOCK[2]) / 2, DOCK_BLOCK[1] - 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
-text("BATTERY MODULE ON THE CASE FLOOR (32.22): 12 x Samsung 35E 1S12P 42 Ah, BMS 30 A, over the dock block pins", -97.0, -78.0, pcbnew.F_SilkS, 1.1, 0.18)
-for (x, sy, nm) in RF_SITES:
-    circle(x, RF_Y - 2.0 if nm == "LORA" else RF_Y, 12.0, pcbnew.Dwgs_User, 0.1); circle(x, RF_Y - 2.0 if nm == "LORA" else RF_Y, 8.3, pcbnew.B_SilkS, 0.12)
-    text("BM %s" % nm, x, RF_Y - 8.0, pcbnew.B_SilkS, 1.0, 0.18, mirror=True); text("SMA %s" % nm, x, sy + 6.0 if sy > -70 else sy - 5.5, pcbnew.F_SilkS, 0.9, 0.16)
-# ---------------------------------------------------------------- APRS mezzanine site
+# ---------------------------------------------------------------- zones (drawing layer), dock block, RF sites
+for zr, label in ((FRONT_ZONE, "FRONT END: LM5176 9-36 V -> 20 V BUS"), (CHARGER_ZONE, "CHARGER BQ25731 4S FROM THE 20 V BUS"), (POE_ZONE, "POE RAIL: LM5176 BOOST 54 V"),
+                  (RAILS_ZONE, "SLOT RAILS S1 S2 S3 + DEVICE RAIL: TPS56637 + INA226"), (PA_ZONE, "PA RAIL: LM5176 13.8 V (PA ON THE PLATE)"), (HF_ZONE, "HF RAIL: TPS55288 12 V"),
+                  (CTRL_ZONE, "CONTROL: LTC2954, EXPANDERS, EMCON GATES"), (MID_ZONE, "3.3 V BUCK, CONTROL PASSIVES"), (TP_ZONE, "TEST POINTS"), (NE_ZONE, "USB-C PD OUTLET + EFUSES (MONITOR, HEATER, D8)"), (EAST_STRIP, "LEAD CONNECTORS")):
+    rect(zr, pcbnew.Dwgs_User, 0.15); text(label, (zr[0] + zr[2]) / 2, zr[3] + 1.8, pcbnew.Dwgs_User, 0.9, 0.16)
+rect(DOCK_BLOCK, pcbnew.Dwgs_User, 0.15); text("DOCK BLOCK (underside): J_DOCK 2x6 + 9 A pins + pre-charge pin, land on E6's block", (DOCK_BLOCK[0] + DOCK_BLOCK[2]) / 2, DOCK_BLOCK[1] - 1.8, pcbnew.Dwgs_User, 0.9, 0.16)
+text("BB-2590/U PACK IN ITS CRADLE WEST OF THIS BOARD (32.49 item 12), ITS CABLE INTO E6, THE NODE OVER THE DOCK PINS", -60.0, -79.0, pcbnew.F_SilkS, 1.0, 0.16)
+for x, nm in zip(RF_X, RF_NAMES):
+    circle(x, RF_Y, 12.0, pcbnew.Dwgs_User, 0.1); circle(x, RF_Y, 8.3, pcbnew.B_SilkS, 0.12)
+    text("BM %s" % nm, x, RF_Y - 8.0, pcbnew.B_SilkS, 0.9, 0.16, mirror=True); text("SMA %s" % nm, x, RF_JY + 6.0, pcbnew.F_SilkS, 0.85, 0.15)
+# ---------------------------------------------------------------- D8 mezzanine site
 rect(MEZZ_RECT, pcbnew.F_SilkS, 0.12)
-text("APRS MEZZANINE SITE  80 x 62", 45.0, 3.0, pcbnew.F_SilkS, 1.4, 0.22)
-text("DMR858M + 8 V boost + codec + UART on 4x M3 (R3)", 45.0, 0.0, pcbnew.F_SilkS, 1.0, 0.18)
-text("SMA -> UHF bulkhead (+128.75, +25, +25)", 45.0, -3.0, pcbnew.F_SilkS, 1.0, 0.18)
+text("D8 MEZZANINE SITE  100 x 80", 50.0, 3.0, pcbnew.F_SilkS, 1.4, 0.22)
+text("SA868 exciter, LPF, T/R relay, USB codec set, PTT and EMCON logic on 4x M3 (32.56); the PA module is on the face plate", 50.0, 0.0, pcbnew.F_SilkS, 0.9, 0.16)
 for (x, y) in MEZZ_HOLES:
     hole("H%d" % n, x, y, 3.2, "M3 standoff, mezzanine"); n += 1
-place("Connector_IDC", "IDC-Header_2x08_P2.54mm_Vertical", "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=0)
+place("Connector_IDC", "IDC-Header_2x08_P2.54mm_Vertical", "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=90)
 text("J_MEZZ1", J_MEZZ[0] - 8.0, J_MEZZ[1], pcbnew.F_SilkS, 1.0, 0.18, angle=90)
-text("J_MEZZ_PWR VH2 (cell node)", J_MEZZ_PWR[0], J_MEZZ_PWR[1] + 7.0, pcbnew.F_SilkS, 1.0, 0.18)
-# ---------------------------------------------------------------- A20: the GPS puck and the WiFi dongle sites are gone (GNSS and WiFi live on B13's module); their floor stays free
-# ---------------------------------------------------------------- power connectors, interconnect, LEDs
-rect((J_AB[0] - 13.5, J_AB[1] - 5.5, J_AB[0] + 13.5, J_AB[1] + 5.5), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x9 -> PCB-B underside (-72,-78)", J_AB[0], J_AB[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
-rect((J_LEDS[0] - 13.0, J_LEDS[1] - 3.0, J_LEDS[0] + 13.0, J_LEDS[1] + 3.0), pcbnew.Dwgs_User, 0.1); text("J_LEDS XH1x10 -> front-wall LED row (R5)", J_LEDS[0], J_LEDS[1] + 5.0, pcbnew.Dwgs_User, 0.9, 0.15)
-rect(HUB_ZONE, pcbnew.Dwgs_User, 0.15); text("CONTROL ZONE (A20): wall-port eFuse + INA219, PCA9555 0x21 + 0x24, LED drivers (the hub went to B13)", (HUB_ZONE[0] + HUB_ZONE[2]) / 2, HUB_ZONE[3] + 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
-rect(BANK_ZONE, pcbnew.Dwgs_User, 0.15); text("CHARGER ZONE (A19): BQ25792 from the dock 12 V into the node, JEITA on the module thermistor", (BANK_ZONE[0] + BANK_ZONE[2]) / 2, BANK_ZONE[1] - 2.5, pcbnew.Dwgs_User, 1.0, 0.18)
+text("J_MEZZ_PWR1 VH2 (5 V)", J_MEZZ_PWR[0], J_MEZZ_PWR[1] + 7.0, pcbnew.F_SilkS, 0.9, 0.16)
+rect((J_AB[0] - 21.0, J_AB[1] - 5.5, J_AB[0] + 21.0, J_AB[1] + 5.5), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x13 -> B16 underside (-84, 73.5)", J_AB[0], J_AB[1] - 7.5, pcbnew.Dwgs_User, 0.9, 0.15)
+text("F1 25 A", FUSE_SITE[0], FUSE_SITE[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A21)", 48, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
-text("MESHSAT-709 / 789  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-05", 48, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
-text("BACK WALL (+Y)", -20, 77.0, pcbnew.F_SilkS, 1.4, 0.22); text("FRONT WALL (-Y)   v v v", 20, -76.0, pcbnew.F_SilkS, 1.3, 0.22)
-text("PORT (-X)", -hx + 5.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 5.0, 0, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
-text("PCB-A UNDERSIDE - 13.4 mm above the dock strip (32.21); dock block pins and seven SMP-MAX receptacles land on the dock", 45, -76.0, pcbnew.B_SilkS, 1.5, 0.25, mirror=True)
+text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A22)", 50, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
+text("MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-07", 50, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
+text("BACK WALL (+Y)", -30, 77.0, pcbnew.F_SilkS, 1.4, 0.22); text("FRONT WALL (-Y)   v v v", 30, -78.5, pcbnew.F_SilkS, 1.3, 0.22)
+text("PORT (-X)", -hx + 5.0, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 5.0, -60, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
+text("PCB-A UNDERSIDE - 13.4 mm above the dock strip E6; the dock block pins and eleven SMP-MAX receptacles land on the dock", 30, -76.0, pcbnew.B_SilkS, 1.4, 0.25, mirror=True)
 pcbnew.SaveBoard(OUT, board)
 print("saved", OUT, "holes:", n - 1)

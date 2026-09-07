@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PCB-A POWER + I/O, phase A2: generate the KiCad 9 schematic (netlist-style: every pin gets a
+"""PCB-A POWER + I/O, phase A22 (MESHSAT-830, 7 Sep 2026): generate the KiCad 9 schematic (netlist-style: every pin gets a
 stub and a net label; power pins get power symbols). Runs on the laptop (needs the KiCad libs).
 Usage: gen_sch_b.py <out.kicad_sch> <project-name>
 """
@@ -125,118 +125,175 @@ def tps2065(ref, en, out, flt): part(ref, "Power_Management", "TPS2065CDBV", "TP
 def tps22810(ref, vin, en, out, ct): part(ref, "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": vin, "5": en, "1": out, "2": "NC", "3": ct, "4": "GND", "7": "GND"})
 def ina219(ref, inp, inn, a0, a1): part(ref, "Sensor_Energy", "INA219AxDCN", "INA219AIDCN", "SOT238", {"1": inp, "2": inn, "3": "GND", "4": "+3V3", "5": "SCL", "6": "SDA", "7": a0, "8": a1}, "C138024")
 
-# ================================================================ A19 (appendix 32.13 to 32.25): the kit UPS on PCB-A; A20 (32.35): no hub, no dongle channels, J_AB1 2x9
-# The Geekworm X1202 is gone (32.17). The battery is a floor module (twelve Samsung 35E, 1S12P, 42 Ah, BMS 30 A) reaching this board over the
-# dock's 9 A blind-mate power pins (32.22, 32.24). This board carries the charger, the gauge, three 5 V converters (M1, M2, Pi), the heating-pad
-# switch, the main power control, a seven-port hub with the wall host port, and the seven blind-mate RF receptacles. Every value below is from
-# the sheets filed in v2/vendor/ (power/, usb2517/, rf/) and the research notes v2/docs/respin-research-*-2026-09-04.md.
-# --- pack node: the module's current arrives on four CELL+ pins, returns on four CELL_N pins through the gauge shunt to GND; a pre-charge pin mates first
+# ================================================================ A22 (7 Sep 2026, appendix 32.52, 32.55, 32.56): the 14.4 V node of the BB-2590/U, the wide-range front end,
+# the BQ25731 charger, per-slot 5 V rails for three CM5, the PA and HF rails, the 54 V PoE rail, the USB-C PD outlet, the monitor and heater switches, hardware EMCON gates,
+# eleven blind-mate RF sites, the D8 mezzanine as a USB device set. Every pin number below is read from the sheet filed under v2/vendor/ (ti/, power/) and the LCSC codes from 32.54.
+# Nets: CELL+ is the pack node (four 9 A dock pins), VBAT the fused node every converter runs from, VIN_RAW the 9 to 36 V vehicle and shore input up the dock signal contacts,
+# VBUS20 the 20 V charge bus, +5V_S1..3 the slot rails, +5V_DEV the USB device rail, +3V3 this board's logic, +13V8_PA, +12V_HF, +54V_POE, VMON, VHEAT, +5V_D8.
+FP.update({
+ "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "IDC26": "Connector_IDC:IDC-Header_2x13_P2.54mm_Vertical", "IDC16": "Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical",
+ "HTSSOP28": "Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm", "QFN32_04": "Package_DFN_QFN:QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm",
+ "SO8EP": "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm", "QFN24": "Package_DFN_QFN:QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm", "SOT583": "Package_TO_SOT_SMD:SOT-583-8", "VSSOP10": "Package_SO:VSSOP-10_3x3mm_P0.5mm", "DDA8": "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm",
+ "TSSOP24": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm", "TSSOP14": "Package_SO:TSSOP-14_4.4x5mm_P0.65mm", "PPAK": "Package_SO:PowerPAK_SO-8_Single",
+ "L1010": "Inductor_SMD:L_Coilcraft_XAL1010-XXX", "L6060": "Inductor_SMD:L_Coilcraft_XAL6060-XXX", "L6030": "Inductor_SMD:L_Coilcraft_XAL6030-XXX", "L4030": "Inductor_SMD:L_Coilcraft_XAL4030-XXX",
+ "C1210": "Capacitor_SMD:C_1210_3225Metric", "RS2512": "Resistor_SMD:R_2512_6332Metric", "PIN5": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical",
+})
+def ic(ref, npins, value, fp, nets, lcsc=""):
+    """an IC drawn as a numbered connector symbol (the design's pattern since A19): every pin must be listed, NC pins get a no-connect flag"""
+    for k in range(1, npins + 1):
+        if str(k) not in nets: raise SystemExit("%s: pin %d has no net" % (ref, k))
+    part(ref, "Connector_Generic", "Conn_01x%02d" % npins, value, fp, nets, lcsc)
+def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""): part(ref, "Transistor_FET", "Q_NMOS_GDS", value, fp, {"1": g, "2": d, "3": s}, lcsc)   # Q_NMOS_GDS: 1 G, 2 D, 3 S
+def vh2(ref, value, a, b="GND"): part(ref, "Connector_Generic", "Conn_01x02", value, "VH2", {"1": a, "2": b})
+def tp(ref, net): part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
+# --- pack node over the dock block (32.56): four CELL+ pins, four return pins, the pre-charge pin, then the 25 A blade to VBAT (the 2590 gives 10 A continuous, 18 A peak)
 for k in range(1, 5):
     part("J_CP%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "CELL+"})
-    part("J_CN%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, module return CELL_N (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "CELL_N"})
-part("J_PRE1", "Connector", "Conn_01x01_Pin", "pre-charge pin, longer, mates first (32.24 AX)", "MMPIN", {"1": "PRECHG"}); r("R51", "10R 2W 2512", "PRECHG", "CELL+", "RS10m")
-part("R52", "Device", "R", "3 mOhm 1% 3 W 2512 shunt (RALEC LR2512-23R003F4): gauge SRP/SRN Kelvin (32.24 AV)", "RS10m", {"1": "CELL_N", "2": "GND"}, "C154688")
-part("F2", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): pack node to the 8 V boost feed", "FUSE", {"1": "CELL+", "2": "MEZZ_CELL"})
-part("J_MEZZ_PWR1", "Connector_Generic", "Conn_01x02", "mezzanine 8 V boost feed (JST-VH): cell node through F2 (R15)", "VH2", {"1": "MEZZ_CELL", "2": "GND"})
-c("C7", "10u", "CELL+", "GND", "C10u"); c("C50", "100u 10V", "CELL+", "GND", "C100u")
-# --- charger BQ25792 (bq25792.pdf, sheet in vendor/power): 12 V shore in, 1S charge up to 5 A (3 A set), JEITA on the module's 103AT, I2C 0x6B, no input FETs, no ship FET
-part("U20", "Connector_Generic", "Conn_01x29", "BQ25792 1S charger from SHORE_12V (3 A set over ILIM_HIZ, 750 kHz, I2C 0x6B)", "RQM29", {
- "1": "CHG_STAT", "2": "SHORE_12V", "3": "SHORE_12V", "4": "BTST1", "5": "REGN", "6": "NC", "7": "NC", "8": "SHORE_12V", "9": "SHORE_12V", "10": "GND", "11": "GND",
- "12": "QON", "13": "GND", "14": "SCL", "15": "SDA", "16": "TS_CHG", "17": "ILIM_HIZ", "18": "CELL_SENSE_P", "19": "BTST2", "20": "PROG", "21": "CHG_INT", "22": "CELL+", "23": "CELL+",
- "24": "SDRV", "25": "SYS_CHG", "26": "SW2_CHG", "27": "GND", "28": "SW1_CHG", "29": "PMID"}, "C2862876")
-part("L5", "Device", "L", "2.2uH XAL4030-222MEB (Isat 7.4 A) between SW1 and SW2 (750 kHz, PROG 4.7k)", "L4030", {"1": "SW1_CHG", "2": "SW2_CHG"})
-c("C51", "10u 25V 1210", "SHORE_12V", "GND", "C1210"); c("C52", "10u 25V 1210", "SHORE_12V", "GND", "C1210")
-for k in range(3): c("C%d" % (53 + k), "10u 25V 1210", "PMID", "GND", "C1210")
-for k in range(5): c("C%d" % (56 + k), "10u 25V 1210", "SYS_CHG", "GND", "C1210")
-c("C61", "10u", "CELL+", "GND", "C10u"); c("C62", "10u", "CELL+", "GND", "C10u")
-c("C63", "47n", "BTST1", "SW1_CHG"); c("C64", "47n", "BTST2", "SW2_CHG"); c("C65", "4.7u", "REGN", "GND", "C10u"); c("C66", "1n", "SDRV", "GND"); c("C67", "100n", "CELL_SENSE_P", "GND")
-r("R53", "4.7k 1% (PROG: 1S, 750 kHz)", "PROG", "GND"); r("R54", "16.5k 1%", "REGN", "ILIM_HIZ"); r("R55", "34.8k 1%", "ILIM_HIZ", "GND")   # 1 V + 0.8 R x 3 A = 3.4 V from REGN 5 V
-# E96 values for the JEITA divider: TI's worked example asks 5.24k and 30.31k, which are not buyable; the substitution moves the trips about a quarter of a degree (32.28)
-r("R56", "5.23k 1% (RT1 JEITA)", "REGN", "TS_CHG"); r("R57", "30.1k 1% (RT2 JEITA)", "TS_CHG", "GND"); r("R58", "100k", "REGN", "QON")
-r("R59", "10k", "CHG_STAT", "REGN"); r("R60", "10k", "CHG_INT", "+3V3")
-part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 SHORE_12V, 5-7 GND, 8 SHORE_INHIBIT, 9 module thermistor (103AT to GND), 10 GND, 11 Kelvin cell sense +, 12 spare", "POGO12",
-     {"1": "SHORE_12V", "2": "SHORE_12V", "3": "SHORE_12V", "4": "SHORE_12V", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "TS_CHG", "10": "GND", "11": "CELL_SENSE_P", "12": "DOCK_SPARE"})
-# --- gauge BQ34Z100-G1 (bq34z100-g1.pdf): low-side shunt, Kelvin cell sense, on-board 103AT, I2C 0x55, ALERT to the second expander
-part("U21", "Connector_Generic", "Conn_01x14", "BQ34Z100-G1 gauge (I2C 0x55, SCALED for 42 Ah, 3 mOhm shunt)", "TSSOP14", {
- "1": "GAUGE_ALERT", "2": "NC", "3": "NC", "4": "CELL_SENSE_P", "5": "CELL+", "6": "CELL+", "7": "REG25", "8": "CELL_N", "9": "CELL_N", "10": "GND", "11": "TS_GAUGE", "12": "NC", "13": "SCL", "14": "SDA"}, "C91302")
-c("C68", "100n", "CELL+", "CELL_N"); c("C69", "1u", "REG25", "CELL_N"); # The gauge reads this bead through its own table, not a single beta: Murata quotes 3380 K over 25 to 50 C and 3434 K over
-# 25 to 85 C for it, against the module thermistor's 3435 K, so configure the gauge from the R/T table over its own window (32.28).
-part("RT1", "Device", "Thermistor_NTC", "10k NTC 0603 1% (gauge temperature, beside the dock pins; the JEITA sensor is the module's own 103AT-2)", "R", {"1": "REG25", "2": "TS_GAUGE"})
-# --- three converters TPS61288L (tps61288.pdf): M1 (this board's logic and hub, PCB-B's hub, display, panel, the LTE channel), M2 (PCB-B's SDR, ZigBee, LoRa, RockBLOCK), Pi 5.1 V 5 A
-part("F3", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): pack node to the M1 converter", "FUSE", {"1": "CELL+", "2": "BOOST1_IN"})
-part("F4", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): pack node to the M2 converter", "FUSE", {"1": "CELL+", "2": "BOOST2_IN"})
-part("F5", "Device", "Fuse", "15 A mini blade (Keystone 3568 holder): pack node to the Pi converter", "FUSE", {"1": "CELL+", "2": "BOOST3_IN"})
-def boost(n, uref, vin, vout, r1, r2, ncout, lref, refs):
-    """One TPS61288L rail: uref the IC, refs = (L, Cbst, Cvcc, Rc, Cc, Cp, R1, R2, Cin1, Cin2, Cin3, [Cout...])."""
-    L, cb, cv, rc, cc, cp, ra, rb, ci1, ci2, ci3 = refs[:11]; couts = refs[11:]
-    part(uref, "Connector_Generic", "Conn_01x11", "TPS61288L boost %s (15 A switch, 500 kHz, no MODE pin)" % vout, "RQQ11",
-         {"1": "FB%d" % n, "2": "COMP%d" % n, "3": "GND", "4": "SW%d" % n, "5": vout, "6": "BOOST_EN", "7": vin, "8": "BST%d" % n, "9": "SW%d" % n, "10": "GND", "11": "VCC%d" % n}, "C7498841")
-    part(L, "Device", "L", "2.2uH XAL1010-222MED (Isat 34 A, 10 mm)", "L1010", {"1": vin, "2": "SW%d" % n})
-    c(cb, "100n 25V", "BST%d" % n, "SW%d" % n); c(cv, "2.2u", "VCC%d" % n, "GND")
-    r(rc, "8.87k", "COMP%d" % n, "COMP%dC" % n); c(cc, "3.3n", "COMP%dC" % n, "GND"); c(cp, "27p", "COMP%d" % n, "GND")
-    r(ra, r1 + " 1%", vout, "FB%d" % n); r(rb, r2 + " 1%", "FB%d" % n, "GND")
-    c(ci1, "22u 10V X7R 1210", vin, "GND", "C1210"); c(ci2, "22u 10V X7R 1210", vin, "GND", "C1210"); c(ci3, "100n", vin, "GND")
-    for cr in couts: c(cr, "22u 10V X7R 1210", vout, "GND", "C1210")
-boost(1, "U22", "BOOST1_IN", "+5V_M1", "102k", "13.7k", 6, "L2", ["L2", "C38", "C39", "R44", "C40", "C41", "R47", "R48", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C70"])
-boost(2, "U23", "BOOST2_IN", "+5V_M2", "102k", "13.7k", 6, "L3", ["L3", "C71", "C72", "R61", "C73", "C74", "R62", "R63", "C75", "C76", "C77", "C78", "C79", "C80", "C81", "C82", "C83"])
-boost(3, "U24", "BOOST3_IN", "+5V_PI", "75k", "10k", 4, "L4", ["L4", "C84", "C85", "R64", "C86", "C87", "R65", "R66", "C88", "C89", "C90", "C91", "C92", "C93", "C94"])
-c("C95", "100u 10V", "+5V_M1", "GND", "C100u"); c("C96", "100u 10V", "+5V_M2", "GND", "C100u"); c("C97", "100u 10V", "+5V_PI", "GND", "C100u")
-part("J_5V_M1", "Connector_Generic", "Conn_01x02", "rail M1 to PCB-B J_5V_M1 (JST-VH, 18 AWG): + -", "VH2", {"1": "+5V_M1", "2": "GND"})
-part("J_5V_M2", "Connector_Generic", "Conn_01x02", "rail M2 to PCB-B J_5V_M2 (JST-VH, 18 AWG): + -", "VH2", {"1": "+5V_M2", "2": "GND"})
-part("J_5V_PI", "Connector_Generic", "Conn_01x02", "Pi rail 5.1 V 5 A to PCB-B J_5V_PI (JST-VH, 18 AWG): + -", "VH2", {"1": "+5V_PI", "2": "GND"})
-# --- main power control LTC2954-1 (ltc2954.pdf): panel MAIN button, EN to the three converters, INT = shutdown request to the Pi, KILL pulled low by the Pi through Q5
-part("U25", "Connector_Generic", "Conn_01x08", "LTC2954CTS8-1 push-button on/off controller", "TSOT8", {"1": "CELL+", "2": "MAIN_PB", "3": "NC", "4": "GND", "5": "PI_SHDN_REQ", "6": "BOOST_EN", "7": "NC", "8": "KILL"}, "C683782")
-c("C98", "1u", "CELL+", "GND"); r("R67", "100k", "BOOST_EN", "CELL+"); r("R68", "100k", "PI_SHDN_REQ", "+3V3"); r("R69", "100k", "KILL", "CELL+")
-part("Q5", "Transistor_FET", "2N7002", "2N7002: Pi GPIO high = pull KILL low = power off (1 G, 2 S, 3 D; source and drain were swapped on A19, appendix 32.36)", "SOT23", {"1": "PI_KILL", "2": "GND", "3": "KILL"}); r("R70", "100k", "PI_KILL", "GND")
+    part("J_CN%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, pack return (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "GND"})
+part("J_PRE1", "Connector", "Conn_01x01_Pin", "pre-charge pin, longer, mates first (32.24 AX)", "MMPIN", {"1": "PRECHG"}); r("R1", "10R 2W 2512", "PRECHG", "CELL+", "RS2512")
+part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack node to VBAT", "FUSE", {"1": "CELL+", "2": "VBAT"})
+c("C1", "100u 25V", "VBAT", "GND", "C100u"); c("C2", "100u 25V", "VBAT", "GND", "C100u"); c("C3", "10u 25V 1210", "VBAT", "GND", "C1210"); part("D1", "Device", "D_TVS", "SMCJ18A (VBAT clamp)", "TVS", {"1": "VBAT", "2": "GND"}, "C1973072")
+part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare", "POGO12",
+     {"1": "VIN_RAW", "2": "VIN_RAW", "3": "VIN_RAW", "4": "VIN_RAW", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})
+# --- main power control LTC2954-1 (ltc2954.pdf): the panel MAIN button, EN to every converter's enable (RAIL_EN), INT = shutdown request, KILL from the panel controller through Q1
+ic("U1", 8, "LTC2954CTS8-1 push-button on/off controller", "TSOT8", {"1": "VBAT", "2": "MAIN_PB", "3": "NC", "4": "GND", "5": "PI_SHDN_REQ", "6": "RAIL_EN", "7": "NC", "8": "KILL"}, "C683782")
+c("C4", "1u", "VBAT", "GND"); r("R2", "100k", "RAIL_EN", "VBAT"); r("R3", "100k", "PI_SHDN_REQ", "+3V3"); r("R4", "100k", "KILL", "VBAT")
+part("Q1", "Transistor_FET", "2N7002", "2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3 D)", "SOT23", {"1": "PI_KILL", "2": "GND", "3": "KILL"}); r("R5", "100k", "PI_KILL", "GND")
 part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead from the panel (XH2.5): PB, GND", "XH2", {"1": "MAIN_PB", "2": "GND"})
-# --- heating pad on the shore rail (tps2595.pdf, TPS259571: 12 V eFuse, 2 A limit, auto-retry), enable from the second expander
-part("F6", "Device", "Polyfuse", "2.5A hold 30V 1812", "F1812", {"1": "SHORE_12V", "2": "HEAT_IN"})   # 30 V class: the clamp on SHORE_12V lets through about 24 V, which a 16 V part would not survive (32.28)
-part("U26", "Connector_Generic", "Conn_01x09", "TPS259571DSGR eFuse 12 V 2.0 A for the heating pad", "DSG8", {"1": "HEAT_DVDT", "2": "HEAT_EN", "3": "HEAT_IN", "4": "HEAT_IN", "5": "HEAT_OUT", "6": "HEAT_FLT", "7": "HEAT_ILM", "8": "GND", "9": "GND"}, "C471038")
-c("C99", "10n", "HEAT_DVDT", "GND"); r("R71", "1.02k 1% (2.0 A)", "HEAT_ILM", "GND"); r("R72", "10k", "HEAT_FLT", "+3V3"); r("R73", "100k", "HEAT_EN", "GND"); c("C100", "100n", "HEAT_IN", "GND")
-part("J_HEAT", "Connector_Generic", "Conn_01x02", "12 V heating pad on the battery module (XH2.5): + -", "XH2", {"1": "HEAT_OUT", "2": "GND"})
-# --- 3.3 V logic from M1: TPS563201 buck (tps563201.pdf), 3 A, replaces the AMS1117 (the hub alone draws up to 460 mA)
-part("U5", "Regulator_Switching", "TPS563201", "TPS563201 3.3 V buck from M1", "SOT236", {"1": "GND", "2": "SW33", "3": "+5V_M1", "4": "FB33", "5": "+5V_M1", "6": "BST33"})
-part("L6", "Device", "L", "3.3uH XAL4020-332MEB", "L4020", {"1": "SW33", "2": "+3V3"}); c("C13", "100n", "BST33", "SW33"); c("C14", "10u", "+5V_M1", "GND", "C10u"); c("C15", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); c("C101", "22u 10V X7R 1210", "+3V3", "GND", "C1210")
-r("R74", "33.2k 1%", "+3V3", "FB33"); r("R75", "10k 1%", "FB33", "GND")   # 0.768 V x (1 + 33.2/10) = 3.32 V
-part("D2", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V_M1", "2": "GND"})
-r("R18", "1k", "+5V_M1", "LED_PWR_A")   # PWR LED on the M1 rail
-for ref, net in (("TP1", "+5V_M1"), ("TP2", "GND"), ("TP3", "+3V3"), ("TP4", "CELL_N"), ("TP5", "CELL+"), ("TP6", "SHORE_INHIBIT"), ("TP7", "GAUGE_ALERT"), ("TP8", "I2S_DIN"), ("TP9", "TX_INHIBIT_n"), ("TP10", "SHORE_12V"), ("TP11", "CHG_INT"), ("TP12", "+5V_M2"), ("TP13", "+5V_PI"), ("TP14", "DOCK_SPARE"), ("TP15", "BOOST_EN"), ("TP16", "CELL_SENSE_P")):
-    part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
-for i, net in enumerate(("CELL+", "CELL_N", "GND", "+3V3", "+5V_M1", "+5V_M2", "+5V_PI", "5V_WALL", "BOOST1_IN", "BOOST2_IN", "BOOST3_IN", "SHORE_12V", "HEAT_IN", "HEAT_OUT", "REGN", "SYS_CHG", "PMID", "REG25", "+3V3_AB"), 1):
-    part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
-# --- A20 (appendix 32.35): the hub and its four dongle channels left for PCB-B's B13; the wall host port keeps its channel, fed by the USB pair on J_AB1
-# --- channel on the M1 rail: wall host port (0x4A); WiFi, GPS, codec and UART channels retired with the dongles (A20)
-tps2065("U28", "EN_WALL", "SW_WALL", "FLT_WALL"); r("R76", "10k", "FLT_WALL", "+3V3"); r("R77", "100k", "EN_WALL", "+3V3"); c("C104", "100n", "+5V_M1", "GND"); r("R78", "0.1R 1% 1206", "SW_WALL", "5V_WALL", "RS"); ina219("U29", "SW_WALL", "5V_WALL", "SDA", "SDA"); c("C105", "100n", "+3V3", "GND"); c("C106", "10u", "5V_WALL", "GND", "C10u")
-part("J_WALL1", "Connector", "USB_A", "USB-A receptacle, internal cable to the Glenair 233-370 wall host port", "USBA", {"1": "5V_WALL", "2": "USB_WALL_N", "3": "USB_WALL_P", "4": "GND", "5": "GND"}); esd("U30", "USB_WALL_P", "USB_WALL_N", "5V_WALL")
-# --- expanders: U19 0x21 (as A18) and U31 0x24 (A19: wall port, heating pad, charger, gauge)
-part("U19", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x21)", "EXP", {
+# --- LM5176 four-switch buck-boost stages (lm5176-datasheet.pdf, HTSSOP-28 PWP; Vref 0.8 V; pins: 1 EN/UVLO 2 VIN 3 VISNS 4 MODE 5 DITH 6 RT/SYNC 7 SLOPE 8 SS 9 COMP 10 AGND 11 FB 12 VOSNS
+#     13 ISNS- 14 ISNS+ 15 CSG 16 CS 17 PGOOD 18 SW2 19 HDRV2 20 BOOT2 21 LDRV2 22 PGND 23 VCC 24 BIAS 25 LDRV1 26 BOOT1 27 HDRV1 28 SW1, pad 29)
+def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isns="10m", rcs="5m", bias=None, rfb_val="10k 1%"):
+    """one stage with prefix p: refs = (Q_bh, Q_bl, Q_bsl, Q_bsh, R_fb_top, R_fb_bot, R_rt, R_slope, R_comp, C_comp, C_comp2, C_ss, C_vcc, C_boot1, C_boot2, R_isns, R_cs, R_pgood, R_en_top, R_en_bot, Cin1, Cin2, Cout1, Cout2, Cout3, R_mode)"""
+    qbh, qbl, qsl, qsh, rft, rfb, rrt, rsl, rco, cco, cco2, css, cvcc, cb1, cb2, risns, rcs_, rpg, ret, reb, ci1, ci2, co1, co2, co3, rmd = refs
+    N = lambda s: p + "_" + s
+    ic(uref, 29, "LM5176PWPR buck-boost controller, %s from %s" % (vout, vin), "HTSSOP28", {
+        "1": N("EN"), "2": vin, "3": vin, "4": N("MODE"), "5": "GND", "6": N("RT"), "7": N("SLOPE"), "8": N("SS"), "9": N("COMP"), "10": "GND", "11": N("FB"), "12": vout,
+        "13": vout, "14": N("OUT"), "15": "GND", "16": N("CS"), "17": N("PGOOD"), "18": N("SW2"), "19": N("HDRV2"), "20": N("BOOT2"), "21": N("LDRV2"), "22": "GND", "23": N("VCC"),
+        "24": bias or vout, "25": N("LDRV1"), "26": N("BOOT1"), "27": N("HDRV1"), "28": N("SW1"), "29": "GND"}, "C442493")
+    nfet(qbh, fet, N("HDRV1"), vin, N("SW1"), lcsc=fet_lcsc); nfet(qbl, fet, N("LDRV1"), N("SW1"), N("CS"), lcsc=fet_lcsc)
+    nfet(qsl, fet, N("LDRV2"), N("SW2"), N("CS"), lcsc=fet_lcsc); nfet(qsh, fet, N("HDRV2"), N("OUT"), N("SW2"), lcsc=fet_lcsc)
+    part(lref, "Device", "L", lval, "L1010", {"1": N("SW1"), "2": N("SW2")})
+    r(rft, rfb_top + " 1%", vout, N("FB")); r(rfb, rfb_val, N("FB"), "GND"); r(rrt, "40.2k (300 kHz)", N("RT"), "GND"); r(rsl, "30k (slope)", N("SLOPE"), "GND")
+    r(rco, "10k", N("COMP"), N("COMPC")); c(cco, "10n", N("COMPC"), "GND"); c(cco2, "100p", N("COMP"), "GND"); c(css, "47n", N("SS"), "GND"); c(cvcc, "4.7u", N("VCC"), "GND", "C10u")
+    c(cb1, "100n 25V", N("BOOT1"), N("SW1")); c(cb2, "100n 25V", N("BOOT2"), N("SW2"))
+    r(risns, isns + "Ohm 1% 2512 (ISNS)", N("OUT"), vout, "RS2512"); r(rcs_, rcs + "Ohm 1% 2512 (CS)", N("CS"), "GND", "RS2512"); r(rpg, "100k", N("PGOOD"), "+3V3")
+    r(ret, "62k 1%", en, N("EN")); r(reb, "10k 1%", N("EN"), "GND"); r(rmd, "100k (MODE: CCM)", N("MODE"), N("VCC"))
+    c(ci1, "22u 50V X7R 1210", vin, "GND", "C1210"); c(ci2, "22u 50V X7R 1210", vin, "GND", "C1210")
+    for cr in (co1, co2, co3): c(cr, "22u 50V X7R 1210", vout, "GND", "C1210")
+# stage FE: the vehicle and shore input (9 to 36 V after E6's protection and filter) to the 20 V charge bus, 5 A; 60 V FETs
+lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "60 V N-FET PowerPAK SO-8 (CSD19532Q5B class)", "",
+       ["Q2", "Q3", "Q4", "Q5", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119"])
+part("D2", "Device", "D_TVS", "SMCJ33A (VIN_RAW clamp behind E6's filter)", "TVS", {"1": "VIN_RAW", "2": "GND"})
+# --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET: the battery side IS the system, the pack node CELL+ through RSR): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,
+#     charge inhibited by pulling ILIM_HIZ low through Q6 (the SHORE_INHIBIT function of PANEL.md section 9 becomes CHG_INHIBIT on the expander); cell count set on CELL_BATPRESZ
+ic("U3", 33, "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B", "QFN32_04", {
+ "1": "VBUS20", "2": "CH_ACN", "3": "VBUS20", "4": "CHRG_OK", "5": "GND", "6": "CHG_ILIM", "7": "CH_VDDA", "8": "IADPT", "9": "IBAT", "10": "PSYS", "11": "PROCHOT", "12": "SDA", "13": "SCL",
+ "14": "GND", "15": "NC", "16": "CH_COMP1", "17": "CH_COMP2", "18": "CH_CELL", "19": "CELL+", "20": "CH_SRP", "21": "NC", "22": "CH_SRP", "23": "CH_SW2", "24": "CH_HIDRV2", "25": "CH_BTST2", "26": "CH_LODRV2",
+ "27": "GND", "28": "REGN", "29": "CH_LODRV1", "30": "CH_BTST1", "31": "CH_HIDRV1", "32": "CH_SW1", "33": "GND"}, "C2871872")
+for _qr, _g, _d, _s in (("Q7", "CH_HIDRV1", "CH_ACN", "CH_SW1"), ("Q8", "CH_LODRV1", "CH_SW1", "GND"), ("Q9", "CH_LODRV2", "CH_SW2", "GND"), ("Q10", "CH_HIDRV2", "CH_SRP", "CH_SW2")): nfet(_qr, "CSD18510Q5B 40 V N-FET", _g, _d, _s)
+part("L2", "Device", "L", "3.3uH XAL6060-332ME (Isat 15 A)", "L6060", {"1": "CH_SW1", "2": "CH_SW2"})
+r("R16", "10mOhm 1% 2512 (RAC, input current sense)", "VBUS20", "CH_ACN", "RS2512"); r("R17", "5mOhm 1% 2512 (RSR, charge current sense)", "CH_SRP", "CELL+", "RS2512")
+c("C16", "100n 25V", "CH_BTST1", "CH_SW1"); c("C17", "100n 25V", "CH_BTST2", "CH_SW2"); c("C18", "3.3u", "REGN", "GND", "C10u"); r("R18", "10R", "REGN", "CH_VDDA"); c("C19", "1u", "CH_VDDA", "GND")
+for k in range(3): c("C%d" % (20 + k), "10u 35V 1210", "CH_ACN", "GND", "C1210")
+for k in range(3): c("C%d" % (23 + k), "22u 25V 1210", "CH_SRP", "GND", "C1210")
+r("R19", "16.5k 1%", "REGN", "CHG_ILIM"); r("R20", "34.8k 1%", "CHG_ILIM", "GND"); part("Q6", "Transistor_FET", "2N7002", "2N7002: CHG_INHIBIT high = ILIM_HIZ low = charger in HiZ", "SOT23", {"1": "CHG_INHIBIT", "2": "GND", "3": "CHG_ILIM"}); r("R21", "100k", "CHG_INHIBIT", "GND")
+r("R22", "10k", "CHRG_OK", "+3V3"); r("R23", "10k", "PROCHOT", "+3V3"); r("R24", "10k (PSYS load)", "PSYS", "GND"); r("R25", "10k", "CH_COMP1", "CH_COMP1C"); c("C26", "10n", "CH_COMP1C", "GND"); c("C27", "1n", "CH_COMP2", "GND")
+r("R26", "60.4k 1% (CELL_BATPRESZ: 4S per Table, from VDDA)", "CH_VDDA", "CH_CELL"); r("R27", "40.2k 1%", "CH_CELL", "GND")
+# --- per-slot 5 V rails: Diodes AP64500SP-13 (diodes/diodes-ap64500.pdf, SO-8 with exposed pad; pins 1 BST 2 VIN 3 EN 4 RT/CLK 5 FB 6 COMP 7 GND 8 SW 9 pad; 3.8 to 40 V in, 5 A,
+#     Vref 0.8 V, 5.1 V from 53.6k/10k), enable from the panel controller over J_AB1, INA226 on each output (ti-ina226.pdf, VSSOP-10; pins 1 A1 2 A0 3 ALERT 4 SDA 5 SCL 6 VS 7 GND 8 VBUS 9 IN- 10 IN+)
+def buck5(n, uref, en, out, refs, ina, a1, a0):
+    L, cb, ci1, ci2, co1, co2, co3, rt, rb, rpg, rsh, rrt, rco, cco = refs
+    ic(uref, 9, "AP64500SP-13 5 A buck, 5.1 V rail %s" % out, "SO8EP", {"1": "S%s_BOOT" % n, "2": "VBAT", "3": en, "4": "S%s_RT" % n, "5": "S%s_FB" % n, "6": "S%s_COMP" % n, "7": "GND", "8": "S%s_SW" % n, "9": "GND"}, "C2070920")
+    part(L, "Device", "L", "4.7uH XAL6060-472ME (Isat 11 A)", "L6060", {"1": "S%s_SW" % n, "2": "S%s_OUT" % n}); c(cb, "100n", "S%s_BOOT" % n, "S%s_SW" % n)
+    c(ci1, "10u 25V 1210", "VBAT", "GND", "C1210"); c(ci2, "10u 25V 1210", "VBAT", "GND", "C1210")
+    for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
+    r(rt, "53.6k 1%", out, "S%s_FB" % n); r(rb, "10k 1%", "S%s_FB" % n, "GND"); r(rrt, "68k (RT: 500 kHz)", "S%s_RT" % n, "GND"); r(rco, "22k", "S%s_COMP" % n, "S%s_COMPC" % n); c(cco, "3.3n", "S%s_COMPC" % n, "GND")
+    r(rsh, "5mOhm 1% 2512 (shunt)", "S%s_OUT" % n, out, "RS2512"); r(rpg, "100k", en, "GND")   # a slot with no controller line stays off
+    ic(ina, 10, "INA226 rail monitor %s" % out, "VSSOP10", {"1": a1, "2": a0, "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": out, "9": out, "10": "S%s_OUT" % n}, "C49851")
+buck5("1", "U4", "SLOT_EN1", "+5V_S1", ["L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", "R30", "R31", "R45", "R129", "C112"], "U8", "GND", "GND")        # 0x40
+buck5("2", "U5", "SLOT_EN2", "+5V_S2", ["L4", "C34", "C35", "C36", "C37", "C38", "C39", "R32", "R33", "R34", "R35", "R46", "R130", "C113"], "U9", "GND", "+3V3")       # 0x41
+buck5("3", "U6", "SLOT_EN3", "+5V_S3", ["L5", "C40", "C41", "C42", "C43", "C44", "C45", "R36", "R37", "R38", "R39", "R47", "R131", "C114"], "U10", "+3V3", "GND")      # 0x44
+buck5("D", "U7", "DEV_EN", "+5V_DEV", ["L6", "C46", "C47", "C48", "C49", "C50", "C51", "R40", "R41", "R42", "R43", "R115", "R132", "C115"], "U11", "+3V3", "+3V3")     # 0x45
+for n, out in (("1", "+5V_S1"), ("2", "+5V_S2"), ("3", "+5V_S3")): vh2("J_5V_S%s" % n, "slot %s 5.1 V rail to B16 (JST-VH, 16 AWG): + -" % n, out)
+vh2("J_5V_DEV", "USB device rail to B16 (JST-VH): + -", "+5V_DEV")
+r("R44", "10k", "INA_ALERT", "+3V3")
+# --- 3.3 V logic: TPS62933DRLR (ti-tps62933.pdf, SOT-583; pins 1 RT 2 EN 3 VIN 4 GND 5 SW 6 BST 7 SS 8 FB; Vref 0.8 V, 3.3 V from 31.6k/10k)
+ic("U12", 8, "TPS62933DRLR 3 A buck, 3.3 V logic", "SOT583", {"1": "NC", "2": "RAIL_EN", "3": "VBAT", "4": "GND", "5": "B33_SW", "6": "B33_BST", "7": "B33_SS", "8": "B33_FB"}, "C3200405")
+part("L7", "Device", "L", "4.7uH XAL4030-472ME", "L4030", {"1": "B33_SW", "2": "+3V3"}); c("C52", "100n", "B33_BST", "B33_SW"); c("C53", "10n", "B33_SS", "GND"); c("C54", "10u 25V 1210", "VBAT", "GND", "C1210")
+c("C55", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); c("C56", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); r("R48", "31.6k 1%", "+3V3", "B33_FB"); r("R49", "10k 1%", "B33_FB", "GND")
+part("D3", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+3V3", "2": "GND"})
+# --- PA rail: LM5176 from VBAT to 13.8 V at 6 A for the RA30H1317M1 on the face plate (32.56), enabled by the hardware EMCON gate AND the software hold (PA_EN from U26); 40 V FETs
+lm5176("PA", "U13", "VBAT", "+13V8_PA", "PA_EN", "162k", "L8", "6.8uH XAL1010-682ME (Isat 17 A)", "CSD18510Q5B 40 V N-FET", "",
+       ["Q11", "Q12", "Q13", "Q14", "R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R55", "R56", "R57", "R58", "R59", "C63", "C64", "C65", "C66", "C67", "R120"], isns="2m")
+ic("U14", 10, "INA226 PA rail monitor (0x46)", "VSSOP10", {"1": "+3V3", "2": "SDA", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "+13V8_PA", "9": "+13V8_PA", "10": "PA_OUT"}, "C49851")
+vh2("J_PA", "13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -", "+13V8_PA")
+# --- HF rail: a fourth LM5176 stage from VBAT to 12.0 V at 2 A for the QMX (never 13.8 V), enabled by the EMCON gate AND the software hold; FB 140k/10k
+lm5176("HF", "U15", "VBAT", "+12V_HF", "HF_EN", "140k", "L9", "6.8uH XAL1010-682ME", "CSD18510Q5B 40 V N-FET", "",
+       ["Q15", "Q16", "Q23", "Q24", "R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "R126"], isns="10m")
+vh2("J_HF", "12.0 V to the QMX in its B16 bay (JST-VH): + -", "+12V_HF")
+# --- PoE rail: LM5176 in boost from VBAT to 54 V at 0.6 A for the TPS23861 PSE on B16 (the port magnetics sit beside the switch chip); 100 V FETs; software enable
+lm5176("POE", "U16", "VBAT", "+54V_POE", "POE_EN", "665k", "L10", "22uH XAL1010-223ME (Isat 9 A)", "100 V N-FET PowerPAK SO-8 (CSD19536KTT class)", "",
+       ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], isns="20m", rcs="10m", bias="VBAT")
+ic("U17", 10, "INA226 PoE rail monitor (0x47)", "VSSOP10", {"1": "+3V3", "2": "SCL", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "NC", "9": "+54V_POE", "10": "POE_OUT"}, "C49851")   # VBUS pin open: 54 V exceeds its 36 V range
+vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
+# --- USB-C PD outlet: TPS25740A source controller (ti-tps25740.pdf, VQFN-24 RGE; pins 1 VTX 2 CC1 3 CC2 4 GND 5 HIPWR 6 CTL1 7 CTL2 8 EN9V 9 N/C 10 N/C 11 UFP 12 PSEL 13 DVDD 14 PCTRL 15 GD 16 VAUX
+#     17 VDD 18 AGND 19 ISNS 20 VPWR 21 VBUS 22 GDNG 23 GDNS 24 DSCG, pad 25) with a fifth LM5176 stage as the power supply: CTL2 and CTL1 (open drain) switch R(FBL2) and R(FBL1) in
+#     parallel with the stage's 20k bottom resistor (section 9.1.4 of the sheet): 5 V idle, 9 V and 15 V on request (45 W, 3 A); GDNG drives the VBUS N-FET, DSCG discharges through 43 Ohm
+lm5176("PD", "U19", "VBAT", "PD_VPWR", "PD_EN", "105k", "L11", "6.8uH XAL1010-682ME", "CSD18510Q5B 40 V N-FET", "",
+       ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], isns="10m", rfb_val="20k 1% (R_FBL)")
+r("R136", "21.0k 1% (R_FBL2: 9 V when CTL2 is low)", "PD_FB", "PD_CTL2"); r("R137", "14.0k 1% (R_FBL1: 15 V when CTL1 is low too)", "PD_FB", "PD_CTL1")
+ic("U18", 25, "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)", "QFN24", {
+ "1": "PD_VTX", "2": "PD_CC1", "3": "PD_CC2", "4": "GND", "5": "PD_DVDD", "6": "PD_CTL1", "7": "PD_CTL2", "8": "PD_DVDD", "9": "GND", "10": "GND", "11": "PD_UFP", "12": "PD_DVDD", "13": "PD_DVDD",
+ "14": "PD_VAUX", "15": "PD_GD", "16": "PD_VAUX", "17": "+5V_DEV", "18": "GND", "19": "PD_SW", "20": "PD_VPWR", "21": "PD_VBUS", "22": "PD_GDNG", "23": "PD_SW", "24": "PD_DSCG", "25": "GND"}, "C544309")
+nfet("Q27", "CSD18510Q5B 40 V N-FET (VBUS switch)", "PD_GDNG", "PD_VPWR", "PD_SW"); r("R138", "10mOhm 1% 2512 (ISNS)", "PD_SW", "PD_VBUS", "RS2512"); r("R139", "43R 1W 2512 (DSCG)", "PD_DSCG", "PD_VBUS", "RS2512")
+r("R140", "1M (GD to VPWR, 9.1.3)", "PD_VPWR", "PD_GD"); r("R141", "700k", "PD_GD", "GND"); r("R142", "10k", "PD_UFP", "+3V3"); r("R143", "100k", "PD_EN", "GND")
+c("C93", "100n", "PD_VTX", "GND"); c("C94", "220n", "PD_DVDD", "GND"); c("C95", "100n", "PD_VAUX", "GND"); c("C96", "330p", "PD_CC1", "GND"); c("C97", "330p", "PD_CC2", "GND"); c("C120", "10u 25V 1210", "PD_VBUS", "GND", "C1210")
+part("D4", "Device", "D_TVS", "SMBJ18A (VBUS clamp at the outlet)", "TVS", {"1": "PD_VBUS", "2": "GND"})
+part("J_USBC_OUT", "Connector_Generic", "Conn_01x05", "wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2 GND GND", "PIN5", {"1": "PD_VBUS", "2": "PD_CC1", "3": "PD_CC2", "4": "GND", "5": "GND"})
+# --- eFuse switches TPS259631DDAR (power/tps2596.pdf, SO PowerPAD-8; pins 1 GND 2 dVdt 3 EN/UVLO 4 IN 5 OUT 6 FLT 7 ILM 8 OVLO, pad 9): the monitor (VMON, 10 to 35 V input, under 1 A),
+#     the pack heater mat (VHEAT), D8's 5 V (+5V_D8 from the device rail)
+def efuse(uref, vin, vout, en, flt, refs, ilim):
+    cd, rilm, rflt, rov1, rov2, cin = refs
+    ic(uref, 9, "TPS259631DDAR eFuse %s -> %s (%s)" % (vin, vout, ilim), "DDA8", {"1": "GND", "2": uref + "_DVDT", "3": en, "4": vin, "5": vout, "6": flt, "7": uref + "_ILM", "8": uref + "_OVLO", "9": "GND"}, "C2155778")
+    c(cd, "10n", uref + "_DVDT", "GND"); r(rilm, ilim, uref + "_ILM", "GND"); r(rflt, "10k", flt, "+3V3"); r(rov1, "100k 1%", vin, uref + "_OVLO"); r(rov2, "10k 1% (OVLO)", uref + "_OVLO", "GND"); c(cin, "100n", vin, "GND")
+efuse("U21", "VBAT", "VMON", "MON_EN", "MON_FLT", ["C98", "R90", "R91", "R92", "R93", "C99"], "1.2 A (ILM)"); vh2("J_MON", "monitor supply lead to the Xenarc (JST-VH): + -", "VMON")
+efuse("U22", "VBAT", "VHEAT", "HEAT_EN", "HEAT_FLT", ["C100", "R94", "R95", "R96", "R97", "C101"], "1.0 A (ILM)"); part("J_HEAT", "Connector_Generic", "Conn_01x02", "heater mat under the 2590 cradle (XH2.5): + -", "XH2", {"1": "VHEAT", "2": "GND"})
+efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "2.0 A (ILM)"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
+# --- hardware EMCON gates: 74LVC08APW quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC); EMCON_HW (active low from the panel controller over J_AB1,
+#     pulled up: an unplugged ribbon leaves the transmitters enabled, as D7's TX_INHIBIT_n did) ANDed with the software holds from the expander
+ic("U26", 14, "74LVC08APW quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit", "TSSOP14", {
+ "1": "EMCON_HW", "2": "PA_SW_EN", "3": "PA_EN", "4": "EMCON_HW", "5": "HF_SW_EN", "6": "HF_EN", "7": "GND", "8": "TX_INHIBIT_n", "9": "EMCON_HW", "10": "EMCON_HW", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3"}, "C5605")
+r("R102", "10k", "EMCON_HW", "+3V3"); c("C104", "100n", "+3V3", "GND"); r("R103", "100k", "PA_SW_EN", "GND"); r("R104", "100k", "HF_SW_EN", "GND")
+# --- I2C: the kit bus (SDA, SCL) carries the charger, the expanders and the INA226s; no mux since the TPS55288 and TPS25750 left the design (7 Sep 01:50)
+# --- expanders: U27 0x21 (outputs: the enables and the charge inhibit; inputs: faults and status), U28 0x24 (power-good lines, spares on test points); PCA9555PW pins as the A21 map
+part("U27", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x21): enables and status", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "+3V3", "2": "GND", "3": "GND",
- "4": "EXP_SP4", "5": "EXP_SP5", "6": "EXP_SP6", "7": "EXP_SP7", "8": "SHORE_INHIBIT", "9": "EXP_SP2", "10": "MEZZ_EN", "11": "LED_MESH_K",
- "13": "LED_SAT_K", "14": "LED_LTE_K", "15": "LED_SYS_K", "16": "EXP_SP8", "17": "EXP_SP9", "18": "EXP_SP10", "19": "EXP_SP11", "20": "EXP_SP3"}, "C5626")
-c("C107", "100n", "+3V3", "GND"); r("R34", "10k", "EXP_INT", "+3V3"); part("TP17", "Connector", "TestPoint", "EXP_SP2", "TP", {"1": "EXP_SP2"}); part("TP18", "Connector", "TestPoint", "EXP_SP3", "TP", {"1": "EXP_SP3"})
-for k in range(4, 12): part("TP%d" % (25 + k), "Connector", "TestPoint", "EXP_SP%d" % k, "TP", {"1": "EXP_SP%d" % k})   # TP29..TP36: the bits the dongle channels used
-part("U31", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x24): wall port, heating pad, charger, gauge", "EXP", {
+ "4": "CHG_INHIBIT", "5": "MON_EN", "6": "HEAT_EN", "7": "D8_EN", "8": "POE_EN", "9": "PA_SW_EN", "10": "HF_SW_EN", "11": "DEV_EN",
+ "13": "CHRG_OK", "14": "PROCHOT", "15": "MON_FLT", "16": "HEAT_FLT", "17": "D8_FLT", "18": "DOCK_SPARE", "19": "INA_ALERT", "20": "FE_PGOOD"}, "C5626")
+part("U28", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x24): power-good lines, spares", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "GND", "2": "GND", "3": "+3V3",
- "4": "EN_WALL", "5": "HEAT_EN", "6": "FLT_WALL", "7": "HEAT_FLT", "8": "CHG_INT", "9": "GAUGE_ALERT", "10": "CHG_STAT", "11": "EXP2_SP0",
- "13": "EXP2_SP1", "14": "EXP2_SP2", "15": "EXP2_SP3", "16": "EXP2_SP4", "17": "EXP2_SP5", "18": "EXP2_SP6", "19": "EXP2_SP7", "20": "EXP2_SP8"}, "C5626")
-c("C108", "100n", "+3V3", "GND")
-for k in range(9): part("TP%d" % (19 + k), "Connector", "TestPoint", "EXP2_SP%d" % k, "TP", {"1": "EXP2_SP%d" % k})
-r("R35", "330R", "+3V3", "LED_MESH_A"); r("R36", "330R", "+3V3", "LED_SAT_A"); r("R37", "330R", "+3V3", "LED_LTE_A"); r("R38", "330R", "+3V3", "LED_SYS_A")
-part("J_LEDS1", "Connector_Generic", "Conn_01x10", "front-wall LED row (XH2.5): PWR MESH SAT LTE SYS", "XH10",
-     {"1": "LED_PWR_A", "2": "GND", "3": "LED_MESH_A", "4": "LED_MESH_K", "5": "LED_SAT_A", "6": "LED_SAT_K", "7": "LED_LTE_A", "8": "LED_LTE_K", "9": "LED_SYS_A", "10": "LED_SYS_K"})
-# --- mezzanine harness and interconnect (ribbon: no 5 V any more; 1 = shutdown request, 2 = Pi KILL)
-part("J_MEZZ1", "Connector_Generic", "Conn_02x08_Odd_Even", "APRS mezzanine harness (IDC 2x8): I2S and I2C for the D6 codec, its gated 3.3 V, PTT lines", "IDC16", {
- "1": "GND", "2": "+3V3_AB", "3": "I2S_BCLK", "4": "I2S_LRCLK", "5": "GND", "6": "I2S_DOUT", "7": "I2S_DIN", "8": "GND",
- "9": "SDA", "10": "TR_APRS", "11": "MEZZ_EN", "12": "+3V3", "13": "GND", "14": "SCL", "15": "TX_INHIBIT_n", "16": "GND"})
-r("R39", "100k", "TR_APRS", "GND")
-part("J_AB1", "Connector_Generic", "Conn_02x09_Odd_Even", "A-B interconnect (IDC 2x9, top side)", "IDC18", {
- "1": "PI_SHDN_REQ", "2": "PI_KILL", "3": "GND", "4": "USB_WALL_P", "5": "USB_WALL_N", "6": "GND", "7": "SDA", "8": "SCL", "9": "EXP_INT", "10": "TR_APRS",
- "11": "I2S_BCLK", "12": "I2S_LRCLK", "13": "GND", "14": "TX_INHIBIT_n", "15": "I2S_DOUT", "16": "I2S_DIN", "17": "+3V3_AB", "18": "GND"})   # A20: the wall-port USB pair comes down from B13's hub, I2S and the gated 3.3 V go on to the mezzanine
-# --- seven blind-mate RF sites (32.23): top-side SMA jack for the module pigtail, bottom-side Radiall R222M00720 receptacle to the dock plug
-RF = (("UHF", "RF_UHF"), ("WIFI24", "RF_WIFI24"), ("WIFI58", "RF_WIFI58"), ("SDR", "RF_SDR"), ("LTE", "RF_LTE"), ("IRID", "RF_IRIDIUM"), ("LORA", "RF_LORA"))
+ "4": "EXP2_SPA", "5": "EXP2_SPB", "6": "EXP2_SPC", "7": "EXP2_SPD", "8": "PA_PGOOD", "9": "POE_PGOOD", "10": "HF_PGOOD", "11": "PD_PGOOD",
+ "13": "PD_EN", "14": "PD_UFP", "15": "EXP2_SP3", "16": "EXP2_SP4", "17": "EXP2_SP5", "18": "EXP2_SP6", "19": "EXP2_SP7", "20": "EXP2_SP8"}, "C5626")
+c("C106", "100n", "+3V3", "GND"); c("C107", "100n", "+3V3", "GND"); r("R110", "10k", "EXP_INT", "+3V3"); r("R111", "100k", "MON_EN", "GND"); r("R112", "100k", "HEAT_EN", "GND"); r("R113", "100k", "D8_EN", "GND"); r("R114", "100k", "POE_EN", "GND")
+for k in range(3, 9): tp("TP%d" % k, "EXP2_SP%d" % k)
+for k, nm in enumerate("ABCD", 1): tp("TP%d" % (22 + k), "EXP2_SP" + nm)
+# --- the A to B ribbon J_AB1 (2x13, top side, at (-90, 76)) and the D8 mezzanine harness J_MEZZ1 (2x8)
+part("J_AB1", "Connector_Generic", "Conn_02x13_Odd_Even", "A-B interconnect (IDC 2x13, top side) to B16's underside header", "IDC26", {
+ "1": "PI_SHDN_REQ", "2": "PI_KILL", "3": "GND", "4": "USB_D8_P", "5": "USB_D8_N", "6": "GND", "7": "USB_E6_P", "8": "USB_E6_N", "9": "GND", "10": "USB_WALL_P", "11": "USB_WALL_N", "12": "GND",
+ "13": "SDA", "14": "SCL", "15": "EXP_INT", "16": "TR_APRS", "17": "EMCON_HW", "18": "TX_INHIBIT_n", "19": "SLOT_EN1", "20": "SLOT_EN2", "21": "SLOT_EN3", "22": "ZEROIZE_HW", "23": "GND", "24": "SHORE_INHIBIT", "25": "AB_SPARE", "26": "GND"})
+part("J_MEZZ1", "Connector_Generic", "Conn_02x08_Odd_Even", "D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C", "IDC16", {
+ "1": "GND", "2": "USB_D8_P", "3": "USB_D8_N", "4": "GND", "5": "TR_APRS", "6": "TX_INHIBIT_n", "7": "PA_EN", "8": "GND", "9": "SDA", "10": "SCL", "11": "EXP_INT", "12": "+3V3", "13": "GND", "14": "ZEROIZE_HW", "15": "AB_SPARE", "16": "GND"})
+r("R116", "100k", "TR_APRS", "GND"); r("R117", "10k", "ZEROIZE_HW", "+3V3"); r("R118", "100k", "SHORE_INHIBIT", "GND")
+part("J_USBW", "Connector_Generic", "Conn_01x04", "wall USB-C data pair to B16 passes here on the ribbon: this header is the pigtail's data side (D+ D- GND GND)", "PH4", {"1": "USB_WALL_P", "2": "USB_WALL_N", "3": "GND", "4": "GND"}); esd("U29", "USB_WALL_P", "USB_WALL_N", "+5V_DEV")
+# --- eleven blind-mate RF sites (32.56): top-side SMA jack for the device pigtail, bottom-side Radiall R222M00720 receptacle to the dock plug
+RF = (("VHF", "RF_VHF"), ("HF", "RF_HF"), ("WIFI24", "RF_WIFI24"), ("GNSS", "RF_GNSS"), ("SDR", "RF_SDR"), ("P2P-A", "RF_P2PA"), ("P2P-B", "RF_P2PB"), ("5G-MAIN", "RF_5G1"), ("5G-DIV", "RF_5G2"), ("IRID", "RF_IRIDIUM"), ("LORA", "RF_LORA"))
 for k, (nm, net) in enumerate(RF, 1):
-    part("J_RF%d" % k, "Connector", "Conn_Coaxial", "SMA jack (Amphenol 132134, vertical), pigtail from the %s module" % nm, "SMAV", {"1": net, "2": "GND"})
+    part("J_RF%d" % k, "Connector", "Conn_Coaxial", "SMA jack (Amphenol 132134, vertical), pigtail from the %s device" % nm, "SMAV", {"1": net, "2": "GND"})
     part("J_BM%d" % k, "Connector", "Conn_Coaxial", "SMP-MAX slide-on receptacle R222M00720 (underside), %s to the dock plug" % nm, "SMPMAX", {"1": net, "2": "GND"})
+# --- test points and flags
+for ref, net in (("TP9", "VBAT"), ("TP10", "GND"), ("TP11", "+3V3"), ("TP12", "VBUS20"), ("TP13", "VIN_RAW"), ("TP14", "CELL+"), ("TP15", "EMCON_HW"), ("TP16", "RAIL_EN"), ("TP17", "SDA"), ("TP18", "SCL"), ("TP19", "IADPT"), ("TP20", "IBAT"), ("TP21", "DOCK_SPARE"), ("TP22", "REGN")): tp(ref, net)
+for i, net in enumerate(("CELL+", "VBAT", "GND", "+3V3", "VIN_RAW", "VBUS20", "+5V_S1", "+5V_S2", "+5V_S3", "+5V_DEV", "+13V8_PA", "+12V_HF", "+54V_POE", "VMON", "VHEAT", "+5V_D8", "PD_VBUS", "PD_VPWR", "PD_SW", "REGN", "CH_SRP", "CH_ACN", "PRECHG", "FE_OUT", "PA_OUT", "HF_OUT", "POE_OUT", "PD_OUT"), 1):
+    part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 
 # ----------------------------------------------------------------- emit
 POWER = {"GND": ("power", "GND"), "+5V": ("power", "+5V"), "+3V3": ("power", "+3V3")}
@@ -306,18 +363,29 @@ def emit_pwr_flag(p, x, y):
     else: label(net, x, y + STUB, 270)
 
 # layout: columns, top-down cursor; group order = list order with section titles
-SECTIONS = [("PACK NODE (A19): MODULE CURRENT OVER THE DOCK PINS, PRE-CHARGE, GAUGE SHUNT, MEZZANINE FEED", ["J_CP1", "J_CP2", "J_CP3", "J_CP4", "J_CN1", "J_CN2", "J_CN3", "J_CN4", "J_PRE1", "R51", "R52", "F2", "J_MEZZ_PWR1", "C7", "C50"]),
-            ("CHARGER BQ25792 (SHORE_12V -> CELL+, 3 A, JEITA ON THE MODULE THERMISTOR) + DOCK SIGNAL PINS", ["U20", "L5", "C51", "C52", "C53", "C54", "C55", "C56", "C57", "C58", "C59", "C60", "C61", "C62", "C63", "C64", "C65", "C66", "C67", "R53", "R54", "R55", "R56", "R57", "R58", "R59", "R60", "J_DOCK"]),
-            ("GAUGE BQ34Z100-G1 (0x55)", ["U21", "C68", "C69", "RT1"]),
-            ("RAIL M1: F3 + TPS61288L 5.05 V (LOGIC, HUB, PCB-B M1)", ["F3", "U22", "L2", "C38", "C39", "R44", "C40", "C41", "R47", "R48", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C70", "C95", "J_5V_M1"]),
-            ("RAIL M2: F4 + TPS61288L 5.05 V (PCB-B M2)", ["F4", "U23", "L3", "C71", "C72", "R61", "C73", "C74", "R62", "R63", "C75", "C76", "C77", "C78", "C79", "C80", "C81", "C82", "C83", "C96", "J_5V_M2"]),
-            ("RAIL PI: F5 + TPS61288L 5.1 V 5 A", ["F5", "U24", "L4", "C84", "C85", "R64", "C86", "C87", "R65", "R66", "C88", "C89", "C90", "C91", "C92", "C93", "C94", "C97", "J_5V_PI"]),
-            ("MAIN POWER CONTROL LTC2954 + HEATING PAD SWITCH TPS259571", ["U25", "C98", "R67", "R68", "R69", "Q5", "R70", "J_MAINSW", "F6", "U26", "C99", "R71", "R72", "R73", "C100", "J_HEAT"]),
-            ("3.3 V BUCK TPS563201 FROM M1, TEST POINTS, FLAGS", ["U5", "L6", "C13", "C14", "C15", "C101", "R74", "R75", "D2", "R18"] + ["TP%d" % k for k in range(1, 17)] + ["#FLG%02d" % k for k in range(1, 20)]),
-            ("CH5 WALL HOST PORT (0x4A)", ["U28", "R76", "R77", "C104", "R78", "U29", "C105", "C106", "J_WALL1", "U30"]),
-            ("I2C EXPANDERS PCA9555 0x21 AND 0x24, LEDs", ["U19", "C107", "R34", "TP17", "TP18"] + ["TP%d" % k for k in range(29, 37)] + ["U31", "C108"] + ["TP%d" % k for k in range(19, 28)] + ["R35", "R36", "R37", "R38", "J_LEDS1"]),
-            ("MEZZANINE HARNESS + A-B INTERCONNECT 2x9 (A20)", ["J_MEZZ1", "R39", "J_AB1"]),
-            ("SEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 8)] + ["J_BM%d" % k for k in range(1, 8)])]
+def refs_with(prefixes, exclude=()):
+    return [p["ref"] for p in P if any(p["ref"] == x or p["ref"].startswith(x) for x in prefixes) and p["ref"] not in exclude]
+SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A BLADE, DOCK SIGNAL PINS", ["J_CP1", "J_CP2", "J_CP3", "J_CP4", "J_CN1", "J_CN2", "J_CN3", "J_CN4", "J_PRE1", "R1", "F1", "C1", "C2", "C3", "D1", "J_DOCK"]),
+            ("MAIN POWER CONTROL LTC2954", ["U1", "C4", "R2", "R3", "R4", "Q1", "R5", "J_MAINSW"]),
+            ("FRONT END: LM5176 FROM THE 9 TO 36 V INPUT TO THE 20 V CHARGE BUS", ["U2", "Q2", "Q3", "Q4", "Q5", "L1", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119", "D2"]),
+            ("CHARGER BQ25731: 4S FROM THE 20 V BUS INTO THE PACK NODE, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "C16", "C17", "C18", "R18", "C19", "C20", "C21", "C22", "C23", "C24", "C25", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27"]),
+            ("SLOT RAIL S1: AP64500 5.1 V + INA226 0x40", ["U4", "L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", "R30", "R31", "R45", "R129", "C112", "U8", "J_5V_S1"]),
+            ("SLOT RAIL S2: AP64500 5.1 V + INA226 0x41", ["U5", "L4", "C34", "C35", "C36", "C37", "C38", "C39", "R32", "R33", "R34", "R35", "R46", "R130", "C113", "U9", "J_5V_S2"]),
+            ("SLOT RAIL S3: AP64500 5.1 V + INA226 0x44", ["U6", "L5", "C40", "C41", "C42", "C43", "C44", "C45", "R36", "R37", "R38", "R39", "R47", "R131", "C114", "U10", "J_5V_S3"]),
+            ("DEVICE RAIL: AP64500 5.1 V + INA226 0x45", ["U7", "L6", "C46", "C47", "C48", "C49", "C50", "C51", "R40", "R41", "R42", "R43", "R115", "R132", "C115", "U11", "J_5V_DEV", "R44"]),
+            ("3.3 V LOGIC: TPS62933", ["U12", "L7", "C52", "C53", "C54", "C55", "C56", "R48", "R49", "D3"]),
+            ("PA RAIL: LM5176 13.8 V 6 A, EMCON GATED, INA226 0x46", ["U13", "Q11", "Q12", "Q13", "Q14", "L8", "R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R55", "R56", "R57", "R58", "R59", "C63", "C64", "C65", "C66", "C67", "R120", "U14", "J_PA"]),
+            ("HF RAIL: LM5176 12.0 V 2 A, EMCON GATED", ["U15", "Q15", "Q16", "Q23", "Q24", "L9", "R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "R126", "J_HF"]),
+            ("POE RAIL: LM5176 BOOST 54 V 0.6 A, INA226 0x47", ["U16", "Q17", "Q18", "Q19", "Q20", "L10", "R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121", "U17", "J_54V"]),
+            ("USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE", ["U19", "Q21", "Q22", "Q25", "Q26", "L11", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135", "R136", "R137", "U18", "Q27", "R138", "R139", "R140", "R141", "R142", "R143", "C93", "C94", "C95", "C96", "C97", "C120", "D4", "J_USBC_OUT"]),
+            ("EFUSES: MONITOR, HEATER, D8 5 V", ["U21", "C98", "R90", "R91", "R92", "R93", "C99", "J_MON", "U22", "C100", "R94", "R95", "R96", "R97", "C101", "J_HEAT", "U23", "C102", "R98", "R99", "R100", "R101", "C103", "J_MEZZ_PWR1"]),
+            ("EMCON GATES 74LVC08, EXPANDERS 0x21 0x24", ["U26", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
+            ("RIBBON J_AB1 2x13, MEZZANINE HARNESS J_MEZZ1 2x8, WALL USB DATA", ["J_AB1", "J_MEZZ1", "R116", "R117", "R118", "J_USBW", "U29"]),
+            ("ELEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 12)] + ["J_BM%d" % k for k in range(1, 12)]),
+            ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(9, 23)] + ["#FLG%02d" % k for k in range(1, 28)])]
+_listed = {r for _, refs in SECTIONS for r in refs}
+_rest = [p["ref"] for p in P if p["ref"] not in _listed]
+if _rest: SECTIONS.append(("OTHER PARTS (not in a section list)", _rest))
 byref = {p["ref"]: p for p in P}
 placed = set()
 COLW = 88.0; x = 20.0; y = 30.0; PAGE_H = 560.0   # A1 landscape is 841 x 594; A0 is chosen below if the columns overflow
@@ -347,7 +415,7 @@ max_x = x + COLW
 PAPER = "A1" if max_x <= 820 else "A0"
 print("layout width %.0f mm -> paper %s" % (max_x, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper "%s")\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026-09-04") (rev "A") (company "MeshSat") (comment 1 "Phase A20 schematic (appendix 32.35: hub and dongle channels gone to B13, J_AB1 2x9 with I2S, Q5 pin order corrected per 32.36), generated by tools/gen_sch_a.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709 / MESHSAT-789. A19 (4 Sep 2026 rulings, appendix 32.13 to 32.25): the kit UPS. BQ25792 charger from the dock 12 V, BQ34Z100-G1 gauge, three TPS61288L rails (M1, M2, Pi), LTC2954 main power control, TPS259571 heating-pad switch, USB2517I seven-port hub with the wall host port, PCA9555 0x21 and 0x24, seven SMP-MAX blind-mate sites, 9 A power pins to the floor battery module. No X1202."))\n'
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026-09-07") (rev "A") (company "MeshSat") (comment 1 "Phase A22 schematic (appendix 32.55 and 32.56: the BB-2590/U node, LM5176 front end and PA and PoE rails, BQ25731 charger, per-slot TPS56637 rails, TPS55288 HF and PD stages, hardware EMCON gates, eleven blind-mate sites), generated by tools/gen_sch_a.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-830. Earlier: Phase A20 schematic (appendix 32.35: hub and dongle channels gone to B13, J_AB1 2x9 with I2S, Q5 pin order corrected per 32.36), generated by tools/gen_sch_a.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "MESHSAT-709 / MESHSAT-789. A19 (4 Sep 2026 rulings, appendix 32.13 to 32.25): the kit UPS. BQ25792 charger from the dock 12 V, BQ34Z100-G1 gauge, three TPS61288L rails (M1, M2, Pi), LTC2954 main power control, TPS259571 heating-pad switch, USB2517I seven-port hub with the wall host port, PCA9555 0x21 and 0x24, seven SMP-MAX blind-mate sites, 9 A power pins to the floor battery module. No X1202."))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'
