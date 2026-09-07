@@ -52,9 +52,9 @@ EAST_STRIP = (105.0, -67.0, 118.0, 67.0)           # lead connectors, rotated 90
 J_AB = (113.0, -46.0)                              # 2x13 IDC along Y, top side, on the east strip: B16's underside header at the same case XY (32.58; the north-west spot of 32.56 lies under B16's first module column)
 # ---------------------------------------------------------------- plumbing (as PCB-C)
 board = pcbnew.BOARD()
-board.SetCopperLayerCount(4)
-tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-B COMPUTE"); tb.SetRevision("A")
-tb.SetDate("2026-09-02"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-709. Case-centred frame. Phase B1 mechanical + placement. tools/gen_pcb_b.py")
+board.SetCopperLayerCount(6)   # A22 six layers since run 10 (7 Sep 2026, appendix 32.61): JLC06161H-3313 as B16, In1 and In4 solid ground, In2 and In3 routable
+tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-A POWER + I/O"); tb.SetRevision("A")
+tb.SetDate("2026-09-07"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-830. Case-centred frame. Phase A22 mechanical + placement. tools/gen_pcb_a.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.45), ("m_MinThroughDrill", 0.2),
@@ -183,7 +183,7 @@ text("F1 25 A", FUSE_SITE[0], FUSE_SITE[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
 text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A22)", 50, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
-text("MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-07", 50, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
+text("MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 6 layers JLC06161H-3313  |  matte black  |  2026-09-07", 50, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -30, 77.0, pcbnew.F_SilkS, 1.4, 0.22); text("FRONT WALL (-Y)   v v v", 30, -78.5, pcbnew.F_SilkS, 1.3, 0.22)
 text("PORT (-X)", -hx + 5.0, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 5.0, -60, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
 text("PCB-A UNDERSIDE - 13.4 mm above the dock strip E6; the dock block pins and eleven SMP-MAX receptacles land on the dock", 30, -76.0, pcbnew.B_SilkS, 1.4, 0.25, mirror=True)
