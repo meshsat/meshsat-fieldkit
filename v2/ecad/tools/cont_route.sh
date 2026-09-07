@@ -5,16 +5,42 @@
 set -uo pipefail
 cd "$1"; N="$2"; P="${3:-80}"; T="${4:-900}"; W=out/cont; mkdir -p "$W"
 cp "$N.kicad_pcb" "$W/$N-before.kicad_pcb"; cp "$N.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
-python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" <<'PYX'
+# 7 Sep 2026 (B16 chunks): the same plane and power-layer treatment as route_one.sh, or a continuation re-routes every plane pin as a wire
+python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" <<'PYX'
 import sys, pcbnew
-b = pcbnew.LoadBoard(sys.argv[1])
+b = pcbnew.LoadBoard(sys.argv[1]); keep_nets = set(x for x in sys.argv[3].split(",") if x); keep_layers = set(sys.argv[4].split()); kept = 0
 for z in list(b.Zones()):
+    if not z.GetIsRuleArea() and z.GetNetname() in keep_nets and any(b.GetLayerName(l) in keep_layers for l in z.GetLayerSet().Seq()): kept += 1; continue
     if not z.GetIsRuleArea() and not z.GetZoneName().startswith(("VOUT island", "inductor tap")): b.Remove(z)
+if keep_nets: print("cont: planes kept in the DSN:", kept, "zone(s) of", sorted(keep_nets), "on", sorted(keep_layers))
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
 b2 = pcbnew.LoadBoard(tmp); print("cont: DSN export", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
 PYX
+if [ -n "${FR_POWER_LAYERS:-}" ]; then python3 - "$W/$N.dsn" $FR_POWER_LAYERS <<'PYPL'
+import re, sys
+fn = sys.argv[1]; layers = sys.argv[2:]; s = open(fn).read(); n1 = 0
+for lay in layers:
+    s, k = re.subn(r"(\(layer %s\s*\(type )signal(\))" % re.escape(lay), r"\1power\2", s); n1 += k
+out = []; i = 0; n2 = 0
+while True:
+    j = s.find("(wire_keepout", i)
+    if j < 0: out.append(s[i:]); break
+    depth = 0; k = j
+    while k < len(s):
+        if s[k] == "(": depth += 1
+        elif s[k] == ")":
+            depth -= 1
+            if depth == 0: break
+        k += 1
+    block = s[j:k + 1]
+    if any(("(polygon %s" % lay) in block for lay in layers): out.append(s[i:j]); n2 += 1
+    else: out.append(s[i:k + 1])
+    i = k + 1
+open(fn, "w").write("".join(out)); print("cont: power layers in the DSN:", ", ".join(layers), "(%d layer types changed, %d wire keep-outs dropped)" % (n1, n2))
+PYPL
+fi
 JAR=$HOME/bin/freerouting-1.9.0.jar
-timeout "$T" xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit 2 -dct 0 > "$W/fr.log" 2>&1 || echo "cont: freerouting exit $?"
+timeout "$T" xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit ${FR_OIT:-2} -dct 0 > "$W/fr.log" 2>&1 || echo "cont: freerouting exit $?"
 pkill -9 -f "^java .*out/cont/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "cont: no session, board kept"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PYX'
