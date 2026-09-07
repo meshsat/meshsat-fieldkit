@@ -3,7 +3,7 @@
 # (its tracks stay as normal wires, the router reroutes what is incomplete and may rip up the rest), then keep the result only if it is better.
 # Usage: cont_route.sh <project dir> <name> <passes> [timeout s]; prints "cont: ..." lines; the board is replaced only when unrouted drops and hard stays 0.
 set -uo pipefail
-cd "$1"; N="$2"; P="${3:-80}"; T="${4:-900}"; W=out/cont; mkdir -p "$W"
+cd "$1"; N="$2"; P="${3:-80}"; T="${4:-900}"; W=$PWD/out/cont; mkdir -p "$W"   # absolute: the kill below must match only this directory's router (7 Sep 2026: a relative pattern killed four parallel continuations at once)
 cp "$N.kicad_pcb" "$W/$N-before.kicad_pcb"; cp "$N.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
 # 7 Sep 2026 (B16 chunks): the same plane and power-layer treatment as route_one.sh, or a continuation re-routes every plane pin as a wire
 python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" <<'PYX'
@@ -41,7 +41,7 @@ PYPL
 fi
 JAR=$HOME/bin/freerouting-1.9.0.jar
 timeout "$T" xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit ${FR_OIT:-2} -dct 0 > "$W/fr.log" 2>&1 || echo "cont: freerouting exit $?"
-pkill -9 -f "^java .*out/cont/$N\.dsn" 2>/dev/null || true
+pkill -9 -f "^java .*$W/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "cont: no session, board kept"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PYX'
 import sys, pcbnew
