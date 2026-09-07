@@ -103,7 +103,7 @@ Removal for maintenance (`docs/ASSEMBLY.md` section 7): lid, the ten plate screw
 
 - Nothing here has been built and no board has been fabricated. Report what does not fit on MESHSAT-830.
 - The sealed face (the plate with C7 under it) is a construction, not a test result: the flood, hose, rain and dust procedure of appendix 32.34 has not been run on any face; the whole-kit MIL-STD-810 and 461 programme of `docs/TEST-PLAN.md` has not started.
-- The pack position at the west wall needs the owner's ruling (the stack moves 5 mm east or the pack goes into the external box, appendix 32.60 item 7); the cradle is drawn after it.
+- The pack's place needs the owner's ruling (appendix 32.60 item 7 and 32.61 item 7): standing on its small face the BB-2590/U is 112 to 127 mm tall against a plate underside 98.4 mm above the floor, and lying flat it needs 127 x 112 mm of floor beside a 330 x 200 mm B16 in a 360 x 246 mm cavity; the external pack box on the back wall, a smaller pack or a deeper case are the options. The cradle is drawn after the ruling.
 - Part picks owed: the toggle safety covers, the U-174/U jacks' drawing, the camera module, the sealed RJ45 and USB-C wall parts, the fans, the tablet, the 2 m antenna, the 2590 quotes (the laptop research list of appendix 32.49).
 - The QMX in the lid tray is a session decision under the owner's requirement for an HF unit inside the case (appendix 32.60 item 5, veto open); the tablet bracket is not drawn.
 - The PA's thermal path (the flange on the plate) is an estimate until a module is keyed on a plate; the 30 W stage, the T/R relay and the LPF of D8 have not been measured.
