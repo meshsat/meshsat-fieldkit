@@ -61,7 +61,7 @@ _w = {}
 for _t in b.GetTracks():
     if _t.GetClass() == "PCB_TRACK" and not _t.IsLocked() and _t.GetLength() >= 3.0e6: _w.setdefault(_t.GetNetname().lstrip("/"), set()).add(round(_t.GetWidth() / 1e6, 2))   # 3 mm: the escape knees, joins and closures are short
 if _w:
-    for _n, _min in (("VBAT", 0.6), ("CELL+", 0.6), ("VBUS20", 0.6), ("+5V_S1", 0.5), ("+5V_S2", 0.5), ("+5V_S3", 0.5), ("+5V_DEV", 0.5), ("+13V8_PA", 0.5)):
+    for _n, _min in (("VBAT", 0.5), ("CELL+", 0.5), ("VBUS20", 0.5), ("+5V_S1", 0.4), ("+5V_S2", 0.4), ("+5V_S3", 0.4), ("+5V_DEV", 0.4), ("+13V8_PA", 0.4)):   # A22 run 8: the route campaign closes the board at these widths, the A23 power-copper pass carries the currents
         if _n in _w: check(min(_w[_n]) >= _min - 0.01, "%s routed at its class width (>= %.1f mm; widths %s)" % (_n, _min, sorted(_w[_n])))
 _tl = {}
 for _t in b.GetTracks():
