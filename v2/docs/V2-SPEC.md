@@ -8,7 +8,7 @@ Prototype design. Nothing in this document has been built, ordered or field depl
 | Case | Peli 1450 (used unit bought 6 Sep 2026) with the 1450PF panel frame; IP67 by the case, pressure valve, padlock protectors; the kit is designed to an IP67-class construction and never labelled IP68 |
 | Face | 3 mm black anodised aluminium plate on the frame's inserts, laser-marked legends and the MeshSat mark; the backer board C7 hangs under it |
 | End walls | SMA bulkheads at Z 88 for nine antenna paths plus the 5G jacks (two or four, *owed*) and the HF jack; the LoRa jack at Y -24 off the moulded nub; every cable ends at the dock strip's float clamp under the stack's blind-mate receptacle |
-| Back wall | connector plate between the ribs: MIL-DTL-38999 shore and USB receptacles, sealed Gigabit Ethernet with PoE out, sealed USB-C PD 65 W outlet and console, ground stud |
+| Back wall | connector plate between the ribs: MIL-DTL-38999 shore and USB receptacles, sealed Gigabit Ethernet with PoE out, sealed USB-C PD 45 W outlet (32.57) and console, ground stud |
 | Interior | the A22 + D8 + B16 rod stack over the dock strip E6 and block; the BB-2590/U cradle along the west wall; a lid bracket for an 8 to 10 inch rugged tablet |
 | Disassembly | face plate off (ten M3), the rod stack lifted straight up off the blind-mate joint without unscrewing a cable, the pack out of its cradle |
 
