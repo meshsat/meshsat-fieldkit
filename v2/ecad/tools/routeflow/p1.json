@@ -1,0 +1,53 @@
+{
+  "board": "pcb-p-pack",
+  "project": "v2/ecad/pcb-p-pack",
+  "phase": "P1",
+  "issue": "MESHSAT-830",
+  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+  "services_script": "~/meshsat-services.sh",
+  "pre": {
+    "argv": [
+      "bash",
+      "../tools/full_p1.sh",
+      "<PROJECT>"
+    ],
+    "cwd": "<PROJECT>",
+    "must_contain": [
+      "single-pin nets",
+      "PREROUTE-DONE OK"
+    ],
+    "min_all_pass": 1,
+    "gen_logs": []
+  },
+  "plane_layers": [],
+  "route": {
+    "attempts": [
+      60
+    ],
+    "threads": 1,
+    "timeout": 1800,
+    "power_layers": [],
+    "plane_nets": [],
+    "log": "out/parallel-p1.log",
+    "jar": "~/bin/freerouting-1.9.0.jar"
+  },
+  "finish": {
+    "argv": [
+      "./tools/finish_p1.sh",
+      "<ECAD>",
+      "out/parallel-p1.log"
+    ],
+    "cwd": "<ECAD>",
+    "clean_flag": "out/p1-clean.txt",
+    "stub_log": "out/pcb-p-pack-stub.log"
+  },
+  "deliverable": "v2/release/revA/boards/meshsat-pcb-p-revA-P1",
+  "expect": {
+    "hard": 0,
+    "unrouted": 0,
+    "autoroute_minutes_max": 15
+  },
+  "budget_rounds": 2,
+  "notes": "P1 (7 Sep 2026, appendix 32.62): the pack BMS board (BQ4050 gauge and protection for the built 4S pack), two layers, 2 oz; the power path in locked bands, no plane in the DSN (the ground pour on B.Cu fills around the route), one attempt on 1.9.0 single thread.",
+  "baseline_key": "P1"
+}
