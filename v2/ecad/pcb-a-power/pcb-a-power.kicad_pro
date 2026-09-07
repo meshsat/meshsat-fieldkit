@@ -121,7 +121,7 @@
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.3,
         "min_groove_width": 0.0,
-        "min_hole_clearance": 0.25,
+        "min_hole_clearance": 0.2,
         "min_hole_to_hole": 0.3,
         "min_microvia_diameter": 0.2,
         "min_microvia_drill": 0.1,
@@ -237,7 +237,7 @@
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.15,
+        "clearance": 0.127,
         "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -255,43 +255,43 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.15,
+        "clearance": 0.18,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.4,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "HV",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 6,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.4,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.127,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.5,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
-        "name": "BANK",
+        "name": "NODE",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.6,
-        "via_diameter": 1.2,
-        "via_drill": 0.6,
+        "track_width": 0.5,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
         "wire_width": 6
       },
       {
         "bus_width": 12,
-        "clearance": 0.15,
-        "diff_pair_gap": 0.3,
-        "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.8,
-        "line_style": 0,
-        "microvia_diameter": 0.3,
-        "microvia_drill": 0.1,
-        "name": "BOOST",
-        "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "priority": 3,
-        "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.8,
-        "via_diameter": 1.0,
-        "via_drill": 0.5,
-        "wire_width": 6
-      },
-      {
-        "bus_width": 12,
-        "clearance": 0.15,
+        "clearance": 0.127,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.4,
@@ -309,7 +309,7 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.15,
+        "clearance": 0.127,
         "diff_pair_gap": 0.3,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.5,
@@ -320,14 +320,14 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 4,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.5,
+        "track_width": 0.4,
         "via_diameter": 1.0,
         "via_drill": 0.5,
         "wire_width": 6
       },
       {
         "bus_width": 12,
-        "clearance": 0.3,
+        "clearance": 0.18,
         "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -345,7 +345,25 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.15,
+        "clearance": 0.127,
+        "diff_pair_gap": 0.3,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.8,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "SW",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 3,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.5,
+        "via_diameter": 1.0,
+        "via_drill": 0.5,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.127,
         "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -366,19 +384,356 @@
       "version": 4
     },
     "net_colors": null,
-    "netclass_assignments": null,
+    "netclass_assignments": {
+      "+3V3": [
+        "PWR"
+      ],
+      "/+12V_HF": [
+        "RAIL"
+      ],
+      "/+13V8_PA": [
+        "RAIL"
+      ],
+      "/+54V_POE": [
+        "HV"
+      ],
+      "/+5V_D8": [
+        "RAIL"
+      ],
+      "/+5V_DEV": [
+        "RAIL"
+      ],
+      "/+5V_S1": [
+        "RAIL"
+      ],
+      "/+5V_S2": [
+        "RAIL"
+      ],
+      "/+5V_S3": [
+        "RAIL"
+      ],
+      "/B33_SW": [
+        "SW"
+      ],
+      "/CELL+": [
+        "NODE"
+      ],
+      "/CH_ACN": [
+        "NODE"
+      ],
+      "/CH_SRP": [
+        "NODE"
+      ],
+      "/CH_SW1": [
+        "SW"
+      ],
+      "/CH_SW2": [
+        "SW"
+      ],
+      "/FE_CS": [
+        "SW"
+      ],
+      "/FE_OUT": [
+        "NODE"
+      ],
+      "/FE_SW1": [
+        "SW"
+      ],
+      "/FE_SW2": [
+        "SW"
+      ],
+      "/HF_OUT": [
+        "PWR"
+      ],
+      "/HF_SW1": [
+        "SW"
+      ],
+      "/HF_SW2": [
+        "SW"
+      ],
+      "/HF_SW_EN": [
+        "SW"
+      ],
+      "/PA_CS": [
+        "SW"
+      ],
+      "/PA_OUT": [
+        "NODE"
+      ],
+      "/PA_SW1": [
+        "SW"
+      ],
+      "/PA_SW2": [
+        "SW"
+      ],
+      "/PA_SW_EN": [
+        "SW"
+      ],
+      "/PD_CC1": [
+        "USB"
+      ],
+      "/PD_CC2": [
+        "USB"
+      ],
+      "/PD_OUT": [
+        "PWR"
+      ],
+      "/PD_SW": [
+        "SW"
+      ],
+      "/PD_SW1": [
+        "SW"
+      ],
+      "/PD_SW2": [
+        "SW"
+      ],
+      "/PD_VBUS": [
+        "PWR"
+      ],
+      "/PD_VPWR": [
+        "PWR"
+      ],
+      "/POE_CS": [
+        "SW"
+      ],
+      "/POE_OUT": [
+        "HV"
+      ],
+      "/POE_SW1": [
+        "HV"
+      ],
+      "/POE_SW2": [
+        "HV"
+      ],
+      "/PRECHG": [
+        "PWR"
+      ],
+      "/RF_5G1": [
+        "RF"
+      ],
+      "/RF_5G2": [
+        "RF"
+      ],
+      "/RF_GNSS": [
+        "RF"
+      ],
+      "/RF_HF": [
+        "RF"
+      ],
+      "/RF_IRIDIUM": [
+        "RF"
+      ],
+      "/RF_LORA": [
+        "RF"
+      ],
+      "/RF_P2PA": [
+        "RF"
+      ],
+      "/RF_P2PB": [
+        "RF"
+      ],
+      "/RF_SDR": [
+        "RF"
+      ],
+      "/RF_VHF": [
+        "RF"
+      ],
+      "/RF_WIFI24": [
+        "RF"
+      ],
+      "/S1_OUT": [
+        "RAIL"
+      ],
+      "/S1_SW": [
+        "SW"
+      ],
+      "/S2_OUT": [
+        "RAIL"
+      ],
+      "/S2_SW": [
+        "SW"
+      ],
+      "/S3_OUT": [
+        "RAIL"
+      ],
+      "/S3_SW": [
+        "SW"
+      ],
+      "/SD_OUT": [
+        "RAIL"
+      ],
+      "/SD_SW": [
+        "SW"
+      ],
+      "/USB_D8_N": [
+        "USB"
+      ],
+      "/USB_D8_P": [
+        "USB"
+      ],
+      "/USB_E6_N": [
+        "USB"
+      ],
+      "/USB_E6_P": [
+        "USB"
+      ],
+      "/USB_WALL_N": [
+        "USB"
+      ],
+      "/USB_WALL_P": [
+        "USB"
+      ],
+      "/VBAT": [
+        "NODE"
+      ],
+      "/VBUS20": [
+        "NODE"
+      ],
+      "/VHEAT": [
+        "PWR"
+      ],
+      "/VIN_RAW": [
+        "NODE"
+      ],
+      "/VMON": [
+        "PWR"
+      ],
+      "GND": [
+        "PWR"
+      ]
+    },
     "netclass_patterns": [
       {
         "netclass": "USB",
         "pattern": "USB_*"
       },
       {
-        "netclass": "PWR",
-        "pattern": "5V_*"
+        "netclass": "USB",
+        "pattern": "PD_CC*"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "CELL+"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "VBAT"
       },
       {
         "netclass": "PWR",
-        "pattern": "SW_*"
+        "pattern": "PRECHG"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "VIN_RAW"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "VBUS20"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "CH_ACN"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "CH_SRP"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "CH_SW*"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "FE_SW*"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "FE_OUT"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "FE_CS"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "PA_SW*"
+      },
+      {
+        "netclass": "NODE",
+        "pattern": "PA_OUT"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "PA_CS"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "HF_SW*"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "HF_OUT"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "PD_SW*"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PD_OUT"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PD_PPHV"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PD_VBUS"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "S?_SW"
+      },
+      {
+        "netclass": "SW",
+        "pattern": "SD_SW"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "S?_OUT"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "SD_OUT"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PD_VPWR"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "PD_SW"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+5V_*"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+13V8_PA"
+      },
+      {
+        "netclass": "RAIL",
+        "pattern": "+12V_HF"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "VMON"
+      },
+      {
+        "netclass": "PWR",
+        "pattern": "VHEAT"
       },
       {
         "netclass": "PWR",
@@ -386,147 +741,31 @@
       },
       {
         "netclass": "PWR",
-        "pattern": "SHORE_12V"
+        "pattern": "+3V3"
       },
       {
-        "netclass": "PWR",
-        "pattern": "HEAT_*"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "PMID"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "SYS_CHG"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "SW*_CHG"
-      },
-      {
-        "netclass": "BANK",
-        "pattern": "CELL+"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "CELL_N"
-      },
-      {
-        "netclass": "BANK",
-        "pattern": "MEZZ_CELL"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "BOOST*_IN"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "SW1"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "SW2"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "SW3"
-      },
-      {
-        "netclass": "RAIL",
-        "pattern": "+5V_M1"
-      },
-      {
-        "netclass": "RAIL",
-        "pattern": "+5V_M2"
-      },
-      {
-        "netclass": "RAIL",
-        "pattern": "+5V_PI"
+        "netclass": "SW",
+        "pattern": "B33_SW"
       },
       {
         "netclass": "RF",
         "pattern": "RF_*"
       },
       {
-        "netclass": "USB",
-        "pattern": "/USB_*"
+        "netclass": "HV",
+        "pattern": "POE_SW*"
       },
       {
-        "netclass": "PWR",
-        "pattern": "/5V_*"
+        "netclass": "HV",
+        "pattern": "POE_OUT"
       },
       {
-        "netclass": "PWR",
-        "pattern": "/SW_*"
+        "netclass": "HV",
+        "pattern": "+54V_POE"
       },
       {
-        "netclass": "PWR",
-        "pattern": "/GND"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "/SHORE_12V"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "/HEAT_*"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "/PMID"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "/SYS_CHG"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "/SW*_CHG"
-      },
-      {
-        "netclass": "BANK",
-        "pattern": "/CELL+"
-      },
-      {
-        "netclass": "PWR",
-        "pattern": "/CELL_N"
-      },
-      {
-        "netclass": "BANK",
-        "pattern": "/MEZZ_CELL"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "/BOOST*_IN"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "/SW1"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "/SW2"
-      },
-      {
-        "netclass": "BOOST",
-        "pattern": "/SW3"
-      },
-      {
-        "netclass": "RAIL",
-        "pattern": "/+5V_M1"
-      },
-      {
-        "netclass": "RAIL",
-        "pattern": "/+5V_M2"
-      },
-      {
-        "netclass": "RAIL",
-        "pattern": "/+5V_PI"
-      },
-      {
-        "netclass": "RF",
-        "pattern": "/RF_*"
+        "netclass": "SW",
+        "pattern": "POE_CS"
       }
     ]
   },
