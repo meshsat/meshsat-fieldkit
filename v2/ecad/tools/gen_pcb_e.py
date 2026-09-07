@@ -39,9 +39,11 @@ def text(txt, x, y, layer, size=1.5, thick=0.25, angle=0.0, mirror=False):
     t = pcbnew.PCB_TEXT(board); t.SetText(txt); t.SetPosition(P(x, y)); t.SetLayer(layer); t.SetTextSize(VECTOR2I(FromMM(size), FromMM(size))); t.SetTextThickness(FromMM(thick)); t.SetTextAngleDegrees(angle)
     if mirror: t.SetMirrored(True)
     board.Add(t); return t
-def rule_area_circle(cx, cy, d, name, inner_d=None):
+def rule_area_circle(cx, cy, d, name, inner_d=None, layer=None):
     z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(True); z.SetDoNotAllowPads(True); z.SetDoNotAllowFootprints(False)
-    z.SetLayerSet(pcbnew.LSET.AllCuMask(2)); z.SetZoneName(name); o = z.Outline(); o.NewOutline()
+    if layer is None: z.SetLayerSet(pcbnew.LSET.AllCuMask(2))   # both outer layers (the standoffs and nuts touch both faces)
+    else: z.SetLayer(layer)                                    # E6 route 1 (7 Sep 2026 01:14): the clamp sits on the top face only, so its no-copper circle is F.Cu only and B.Cu routes under it
+    z.SetZoneName(name); o = z.Outline(); o.NewOutline()
     for i in range(36):
         a = math.radians(i * 10); p = P(cx + d / 2 * math.cos(a), cy + d / 2 * math.sin(a)); o.Append(p.x, p.y)
     if inner_d:
@@ -50,6 +52,17 @@ def rule_area_circle(cx, cy, d, name, inner_d=None):
             a = math.radians(-i * 10); p = P(cx + inner_d / 2 * math.cos(a), cy + inner_d / 2 * math.sin(a)); o.Append(p.x, p.y, 0, h)
     board.Add(z); return z
 rounded_rect(X0, Y0, X1, Y1, R, pcbnew.Edge_Cuts)
+def edge_band(w=0.5):
+    """E6 route 1 (7 Sep 2026 01:14, routeflow: 'edge clearance dominates: an edge keep-out band belongs in the outline generator'): a ring of rule area
+    along the outline on every copper layer that forbids tracks and vias within w mm of the edge; pours keep their own clearance."""
+    z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(True); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+    z.SetLayerSet(pcbnew.LSET.AllCuMask(board.GetCopperLayerCount())); z.SetZoneName("edge band: no tracks or vias within %.1f mm of the outline" % w)
+    o = z.Outline(); o.NewOutline()
+    for x, y in ((X0 - 1.0, Y0 - 1.0), (X1 + 1.0, Y0 - 1.0), (X1 + 1.0, Y1 + 1.0), (X0 - 1.0, Y1 + 1.0)): p = P(x, y); o.Append(p.x, p.y)
+    h = o.NewHole(0)
+    for x, y in ((X0 + w, Y0 + w), (X0 + w, Y1 - w), (X1 - w, Y1 - w), (X1 - w, Y0 + w)): p = P(x, y); o.Append(p.x, p.y, 0, h)
+    board.Add(z); return z
+edge_band(0.5)
 for i, (x, y) in enumerate(ROD_HOLES, 1):
     fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % i); fp.SetValue("M3 rod pass-through, PCB-A standoff stands here"); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, y)); board.Add(fp)
     circle(x, y, STANDOFF_KEEPOUT_D, pcbnew.F_SilkS, 0.15); rule_area_circle(x, y, STANDOFF_KEEPOUT_D, "standoff keep-out H%d" % i, inner_d=ROD_D + 3.0)
@@ -62,7 +75,7 @@ for (x, nm) in RF_SITES:
     circle(x, cy, 9.9, pcbnew.Dwgs_User, 0.1); rounded_rect(x - 8.0, cy - 12.0, x + 8.0, cy + 12.0, 1.0, pcbnew.Dwgs_User, 0.1); text("CLAMP %s" % nm, x, cy - 14.5, pcbnew.F_SilkS, 0.9, 0.16)
     for hy in (cy - 10.0, cy + 10.0):
         fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % n); fp.SetValue("M3, float clamp %s" % nm); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, hy)); board.Add(fp); n += 1
-    rule_area_circle(x, cy, 12.0, "clamp %s: no copper under the float clamp" % nm)
+    rule_area_circle(x, cy, 12.0, "clamp %s: no copper under the float clamp (top face)" % nm, layer=pcbnew.F_Cu)
 line(-121.0, UNDER_A_Y, X1, UNDER_A_Y, pcbnew.Dwgs_User, 0.15); line(-121.0, Y0, -121.0, Y1, pcbnew.Dwgs_User, 0.15); text("PCB-A EDGE ABOVE (13.4 mm gap): north of this line and east of X -121 parts at most 12 mm tall", 0, UNDER_A_Y - 2.0, pcbnew.Dwgs_User, 1.0, 0.18)
 text("MESHSAT PCB-E1 DOCK (E6)  -  pack 14.4 V and vehicle 9-36 V to the raised block -> A22  -  panel tracker  -  sensor controller on USB  -  eleven blind-mate clamps", 0, -46.3, pcbnew.F_SilkS, 1.2, 0.2)
 text("D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor", 0, -111.5, pcbnew.F_SilkS, 1.1, 0.18)

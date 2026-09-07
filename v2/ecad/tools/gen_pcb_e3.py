@@ -65,9 +65,9 @@ for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot,
 text("PACK", -138, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F3 25A", -120, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("DC IN", -64, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F1 10A", -48, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("PV", -22, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F2 10A", -6, -112.2, pcbnew.F_SilkS, 1.2, 0.2)
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
 REGIONS = [
- ("MCUR",   (91, -106, 118, -82), ["U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37"], False),
- ("PACK",   (-147, -103, -119, -83.5), ["C1", "D3", "TP8", "TP9", "C31", "U12", "L3", "U13", "C30", "C32", "C33", "C34", "C35", "R48", "TP13"], False),
- ("FANS",   (-147, -83.4, -116, -71.5), ["Q9", "Q10", "R44", "R45", "R46", "R47", "D7", "D8", "R49", "R50"], False),
+ ("MCUR",   (91, -106, 118, -80), ["U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37"], False),
+ ("PACK",   (-145, -103, -119, -83.5), ["C1", "D3", "TP8", "TP9", "C31", "U12", "L3", "U13", "C30", "C32", "C33", "C34", "C35", "R48", "TP13", "R42", "R43"], False),
+ ("FANS",   (-145, -83.4, -116, -71.5), ["Q9", "Q10", "R44", "R45", "R46", "R47", "D7", "D8", "R49", "R50"], False),
  ("HOTSW",  (-106, -104, -76, -86), ["U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "D2", "C8"], False),
  ("ENTRYA", (-76, -103, -44, -87), ["U3", "Q1", "C4", "R1", "D1", "C2", "TP1", "TP2", "Q8", "R26"], False),
  ("ENTRYB", (-44, -103, -26, -81), ["L2", "C6", "C7", "R27", "LED1", "TP3"], False),
@@ -75,7 +75,7 @@ REGIONS = [
  ("TRKW",   (-2, -103, 28, -81), ["Q3", "Q4", "Q5", "Q6", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6"], False),
  ("TRKS",   (38, -95, 56, -81), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
  ("TRKOUT", (56, -112, 76, -81), ["C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18", "TP6"], False),
- ("SENS",   (40, -78, 52, -46), ["U14", "C48", "U15", "R51", "C49", "C50", "R38", "R39", "C51", "R40", "R41", "R42", "R43"], False),
+ ("SENS",   (40, -78, 52, -46), ["U14", "C48", "U15", "R51", "C49", "C50", "R38", "R39", "C51", "R40", "R41"], False),
  ("TPS",    (78, -112, 118, -107), ["TP4", "TP7"], False),
 ]
 rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
@@ -151,9 +151,10 @@ pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands)", (
 pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-26, -113, -2, -80))
 pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (56, -113, 76, -80))
 pour(pcbnew.In2_Cu, "GND", "GND plane In2 (rest)", (-149, -113, 118, -45), priority=0)
+pour(pcbnew.F_Cu, "CELL_F", "CELL_F pour F.Cu (blade to the pad)", (-128, -112, -100, -103.5), priority=1)
 for L in (pcbnew.F_Cu, pcbnew.B_Cu):
-    pour(L, "CELL_F", "CELL_F pour %s (blade to the pad)" % board.GetLayerName(L), (-128, -112, -100, -103.5), priority=1)
     pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-149, -113, 118, -45), priority=0)
+pour(pcbnew.B_Cu, "CELL_F", "CELL_F band B.Cu (the blade lands and the west end: the pack node to the fans and the monitor divider; E6 route 2 left them open)", (-148, -112, -100, -46), priority=1)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
@@ -176,6 +177,20 @@ if os.path.exists(pro):
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.2, diff_pair_gap=0.15)
     d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.6, 0.3), C("PWR", 0, 0.15, 0.8, 0.8, 0.4), C("BANK", 1, 0.3, 3.0, 1.2, 0.6), C("USB", 2, 0.15, 0.2, 0.6, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
-    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
+    # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
+    # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern
+    import fnmatch as _fnm
+    def _class_of(netname):
+        bare = netname.lstrip("/")
+        for pat, cl in PATTERNS:
+            if not pat.startswith("/") and _fnm.fnmatchcase(bare, pat): return cl
+        return None
+    _assign = {}
+    for _name, _net in board.GetNetInfo().NetsByName().items():
+        _cl = _class_of(str(_name))
+        if _cl: _assign[str(_name)] = _cl
+    d["net_settings"]["netclass_assignments"] = _assign
+    print("net-class assignments written for %d nets" % len(_assign))
+    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", {})
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
     json.dump(d, open(pro, "w"), indent=2); print("project net classes re-applied")

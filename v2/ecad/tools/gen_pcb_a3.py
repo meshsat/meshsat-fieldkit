@@ -61,16 +61,16 @@ def place(ref, x, y, rot=0.0, back=False):
         print("  %-10s centred at (%.1f, %.1f) size %.1f x %.1f %s" % (ref, (bb.GetLeft() + bb.GetRight()) / 2e6 - OX, OY - (bb.GetTop() + bb.GetBottom()) / 2e6, bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, "BACK" if fp.IsFlipped() else ""))
     return fp
 # --- fixed positions (case frame), appendix 32.56
-RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 102]
-FIXED = {"J_AB1": (-84, 73.5, 90), "J_MEZZ_PWR1": (-8, -18, 90),
-         "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (110, -38, 90),
+RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 100]
+FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
+         "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          "U4": (-60, 66, 0), "U5": (-44, 66, 0), "U6": (-28, 66, 0), "U7": (-12, 66, 0), "L3": (-58, 54, 0), "L4": (-42, 54, 0), "L5": (-26, 54, 0), "L6": (-10, 54, 0), "U8": (-64, 28, 0), "U9": (-56, 28, 0), "U10": (-48, 28, 0), "U11": (-40, 28, 0), "U14": (-32, 28, 0),
          "J_5V_S1": (-56, 75, 0), "J_5V_S2": (-44, 75, 0), "J_5V_S3": (-32, 75, 0), "J_5V_DEV": (-20, 75, 0),
-         "U13": (-44, 6, 0), "L8": (-26, 4, 0), "U15": (-36, -27, 0), "L9": (-22, -27, 0), "U12": (-6, 31, 0), "L7": (-6, 24, 0), "U1": (-49, -28, 0),
+         "U13": (-44, 6, 0), "L8": (-26, 4, 0), "U15": (-36, -27, 0), "L9": (-22, -27, 0), "U12": (-64, 10.5, 0), "L7": (-58, 10.5, 0), "U1": (-49, -28, 0),
          "U26": (-58, -28, 0), "U27": (-50, -19, 0), "U28": (-62, -19, 0),
          "U18": (10, 65, 0), "U19": (36, 64, 0), "L11": (56, 65, 0), "U21": (70, 66, 0), "U22": (80, 66, 0), "U23": (90, 66, 0),
-         "J_PA": (110, 58, 90), "J_MON": (110, 44, 90), "J_HEAT": (110, 30, 90), "J_USBC_OUT": (110, 14, 90), "J_HF": (110, 0, 90), "J_54V": (110, -14, 90), "J_USBW": (110, -26, 90)}
+         "J_PA": (110, 62, 90), "J_MON": (110, 50, 90), "J_HEAT": (110, 38, 90), "J_USBC_OUT": (110, 26, 90), "J_HF": (110, 12, 90), "J_54V": (110, 0, 90), "J_USBW": (110, -12, 90)}
 for k in range(4): FIXED["J_CP%d" % (k + 1)] = (-99 + 4 * k, -73, 0); FIXED["J_CN%d" % (k + 1)] = (-99 + 4 * k, -67, 0)
 for k, x in enumerate(RF_X, 1): FIXED["J_BM%d" % k] = (x, -66, 0); FIXED["J_RF%d" % k] = (x, -56, 0)
 BACK = {"J_DOCK", "J_PRE1"} | {"J_CP%d" % k for k in range(1, 5)} | {"J_CN%d" % k for k in range(1, 5)} | {"J_BM%d" % k for k in range(1, 12)}
@@ -92,26 +92,25 @@ REGIONS = [
  ("FEQ",   (-118, 34, -70, 46), ["Q2", "Q3", "Q4", "Q5", "R11", "R12", "C11", "C12", "D2"]),
  ("FES",   (-118, 46, -100, 66), ["R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R13", "R14", "R15", "R119", "C13", "C14", "C15", "TP12", "TP13"]),
  ("CHQ",   (-118, 22, -70, 34), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
- ("CHS",   (-118, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
+ ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  ("POQ",   (-118, -44, -70, -32), ["Q17", "Q18", "Q19", "Q20", "R71", "R72", "C81", "C82", "C83", "C84", "C85"]),
- ("POS",   (-118, -17, -70, -6), ["R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R73", "R74", "R75", "R121", "U17"]),
+ ("POS",   (-115, -17, -70, -6), ["R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R73", "R74", "R75", "R121", "U17"]),
  ("R1S",   (-66, 34, -50, 50), ["C28", "C31", "C32", "C33", "R28", "R29", "R30", "R45", "R129", "C112"]),
  ("VC1",   (-66, 58, -54, 63), ["C29", "C30"]), ("VC2", (-50, 58, -38, 63), ["C35", "C36"]), ("VC3", (-34, 58, -22, 63), ["C41", "C42"]), ("VC4", (-18, 58, -6, 63), ["C47", "C48"]),
  ("R2S",   (-50, 34, -34, 50), ["C34", "C37", "C38", "C39", "R32", "R33", "R34", "R46", "R130", "C113"]),
  ("R3S",   (-34, 34, -18, 50), ["C40", "C43", "C44", "C45", "R36", "R37", "R38", "R47", "R131", "C114"]),
  ("RDS",   (-18, 34, -2, 50), ["C46", "C49", "C50", "C51", "R40", "R41", "R42", "R44", "R115", "R132", "C115"]),
- ("SHUNT", (-66, 20, -28, 25.5), ["R31", "R35", "R39", "R43", "R56"]),
- ("PAQ",   (-66, -14, -16, -2), ["Q11", "Q12", "Q13", "Q14", "R55", "C63", "C64", "C65", "C66", "C67"]),
- ("PAS",   (-66, 12, -16, 20), ["R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R57", "R58", "R59", "R120"]),
+ ("SHUNT", (-66, 20, -14, 25.5), ["R31", "R35", "R39", "R43", "R56"]),
+ ("PAQ",   (-66, -14, -16, -2), ["Q11", "Q12", "Q13", "Q14", "R55", "C63", "C64", "C65", "C66", "C67", "C54", "D3"]),
+ ("PAS",   (-66, 13, -16, 20), ["R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R57", "R58", "R59", "R120"]),
  ("HFQ",   (-46, -48, -16, -34), ["Q15", "Q16", "Q23", "Q24", "R65", "R122"]),
  ("HFS",   (-16, -50, -2, -23), ["R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R123", "R124", "R125", "R126", "C74", "C108", "C109", "C110", "C111"]),
- ("B33",   (-28, 20, -10, 34), ["C52", "C53", "C54", "C55", "C56", "R48", "R49", "D3"]),
+ ("B33",   (-66, -2, -48, 8), ["C52", "C53", "C55", "C56", "R48", "R49"]),
  ("CTL",   (-66, -48, -46, -32), ["C4", "R2", "R3", "R4", "Q1", "R5", "R102", "C104", "R103", "R104", "C106", "C107", "R110", "R111", "R112", "R113", "R114"]),
- ("TPS",   (-88.5, -64, -68, -46), ["TP%d" % k for k in range(3, 9)] + ["TP10", "TP11", "TP15", "TP16", "TP17", "TP18", "TP21", "TP23", "TP24", "TP25", "TP26", "R116", "R117", "R118"]),
+ ("TPS",   (-88.5, -64, -66, -46), ["TP%d" % k for k in range(3, 9)] + ["TP10", "TP11", "TP15", "TP16", "TP17", "TP18", "TP21", "TP23", "TP24", "TP25", "TP26", "R116", "R117", "R118", "U29"]),
  ("PDS",   (0, 44, 30, 62), ["C93", "C94", "C95", "C96", "C97", "C120", "D4", "R136", "R137", "R138", "R139", "R140", "R141", "R142", "R143", "Q27"]),
  ("PDQ",   (30, 44, 84, 58), ["Q21", "Q22", "Q25", "Q26", "R81", "R127", "C92", "C116", "C117", "C118", "C119", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R128", "R133", "R134", "R135"]),
  ("EFS",   (84, 44, 100, 62), ["C98", "R90", "R91", "R92", "R93", "C99", "C100", "R94", "R95", "R96", "R97", "C101", "C102", "R98", "R99", "R100", "R101", "C103"]),
- ("EAST",  (102, -51, 118, -43), ["U29"]),
 ]
 GAP = 1.2                      # between any two packed parts (was 0.7: fine-pitch ICs ended wall to wall with passives)
 FINE_MARGIN = 1.6              # extra all round a fine-pitch IC so every side keeps a via lane for its escapes
@@ -199,8 +198,9 @@ board.Add(z)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
-cls(ns.GetDefaultNetclass(), 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)
-CLASSES = {"USB": (0.15, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.15, 0.5, 0.8, 0.4, 0.4, 0.25), "NODE": (0.2, 1.0, 1.2, 0.6, 0.5, 0.25), "SW": (0.15, 0.8, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.15, 0.5, 1.0, 0.5, 0.5, 0.3), "RF": (0.3, 0.35, 0.7, 0.3, 0.2, 0.15), "HV": (0.5, 0.4, 0.8, 0.4, 0.4, 0.25)}
+cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
+# clearances at the board minimum (7 Sep 2026: with the explicit net-class assignments the DRC enforces them, and a class clearance above a fine-pitch pad gap of 0.2 fails inside the LM5176 and TPS23861 pads); HV 0.18 for the 54 V nodes
+CLASSES = {"USB": (0.127, 0.2, 0.7, 0.3, 0.2, 0.15), "PWR": (0.127, 0.5, 0.8, 0.4, 0.4, 0.25), "NODE": (0.15, 1.0, 1.2, 0.6, 0.5, 0.25), "SW": (0.127, 0.8, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.127, 0.5, 1.0, 0.5, 0.5, 0.3), "RF": (0.18, 0.35, 0.7, 0.3, 0.2, 0.15), "HV": (0.18, 0.4, 0.8, 0.4, 0.4, 0.25)}
 PATTERNS = [("USB_*", "USB"), ("PD_CC*", "USB"), ("CELL+", "NODE"), ("VBAT", "NODE"), ("PRECHG", "PWR"), ("VIN_RAW", "NODE"), ("VBUS20", "NODE"), ("CH_ACN", "NODE"), ("CH_SRP", "NODE"), ("CH_SW*", "SW"), ("FE_SW*", "SW"), ("FE_OUT", "NODE"), ("FE_CS", "SW"),
             ("PA_SW*", "SW"), ("PA_OUT", "NODE"), ("PA_CS", "SW"), ("HF_SW*", "SW"), ("HF_OUT", "PWR"), ("PD_SW*", "SW"), ("PD_OUT", "PWR"), ("PD_PPHV", "PWR"), ("PD_VBUS", "PWR"), ("S?_SW", "SW"), ("SD_SW", "SW"), ("S?_OUT", "RAIL"), ("SD_OUT", "RAIL"), ("PD_VPWR", "PWR"), ("PD_SW", "PWR"),
             ("+5V_*", "RAIL"), ("+13V8_PA", "RAIL"), ("+12V_HF", "RAIL"), ("VMON", "PWR"), ("VHEAT", "PWR"), ("GND", "PWR"), ("+3V3", "PWR"), ("B33_SW", "SW"), ("RF_*", "RF"), ("POE_SW*", "HV"), ("POE_OUT", "HV"), ("+54V_POE", "HV"), ("POE_CS", "SW")]
@@ -220,8 +220,22 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.15, 0.25, 0.7, 0.3, 0.2, 0.15)] + [C(nm, i, *v) for i, (nm, v) in enumerate(CLASSES.items())]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)] + [C(nm, i, *v) for i, (nm, v) in enumerate(CLASSES.items())]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
-    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
+    # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
+    # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern
+    import fnmatch as _fnm
+    def _class_of(netname):
+        bare = netname.lstrip("/")
+        for pat, cl in PATTERNS:
+            if not pat.startswith("/") and _fnm.fnmatchcase(bare, pat): return cl
+        return None
+    _assign = {}
+    for _name, _net in board.GetNetInfo().NetsByName().items():
+        _cl = _class_of(str(_name))
+        if _cl: _assign[str(_name)] = _cl
+    d["net_settings"]["netclass_assignments"] = _assign
+    print("net-class assignments written for %d nets" % len(_assign))
+    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", {})
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
     json.dump(d, open(pro, "w"), indent=2); print("project net classes re-applied")

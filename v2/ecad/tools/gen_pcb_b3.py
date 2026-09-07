@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""PCB-B phase B3 (B13 positions): bring the schematic netlist into the B1 mechanical board.
+"""PCB-B phase B3 (B16 positions, appendix 32.58): bring the schematic netlist into the B16 mechanical board.
 Usage: gen_pcb_b3.py <board.kicad_pcb> <netlist.net>
-- reuses footprints already on the board by reference (J_RTL1, J_DCF77, the slots and holes)
-- places the connectors and the module site at planned case-frame positions, small parts packed into regions near them
-- creates nets, assigns pads, adds the GND (In1) and +5V_M1 (In2) planes and the +5V_PI pour at the module, saves
+- reuses footprints already on the board by reference (J_LIME, the slots and holes)
+- places the three receptacle pairs, the M.2 sockets, the bay and band connectors at planned case-frame positions, the small parts packed into regions
+- creates nets, assigns pads, adds the GND plane (In1), the four 5 V plane zones (In4: one slot rail under each column, the device rail in the bands),
+  the board-wide no-track rule areas on In1 and In4, the net classes; saves
 """
 import sys, re, math, os, pcbnew
 from pcbnew import VECTOR2I, FromMM
@@ -50,7 +51,7 @@ def centre_on(fp, x, y):
 def place(ref, x, y, rot=0.0, back=False):
     val, fpid = comps[ref]
     fp = load(fpid); fp.SetReference(ref); fp.SetValue(val)
-    fp.Reference().SetVisible(ref[0] in "UJ" and not ref.startswith("JP")); fp.Value().SetVisible(False)   # only ICs and connectors carry a visible reference
+    fp.Reference().SetVisible(ref[0] in "UJT" and not ref.startswith("JP") and not ref.startswith("TP")); fp.Value().SetVisible(False)
     fp.Reference().SetTextSize(VECTOR2I(FromMM(0.8), FromMM(0.8))); fp.Reference().SetTextThickness(FromMM(0.12))
     fp.SetPosition(P(x, y)); board.Add(fp)
     if back: fp.Flip(P(x, y), False)
@@ -59,53 +60,83 @@ def place(ref, x, y, rot=0.0, back=False):
         bb = fp.GetBoundingBox(False, False)
         print("  %-10s centred at (%.1f, %.1f) size %.1f x %.1f %s" % (ref, (bb.GetLeft() + bb.GetRight()) / 2e6 - OX, OY - (bb.GetTop() + bb.GetBottom()) / 2e6, bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, "BACK" if fp.IsFlipped() else ""))
     return fp
-# --- fixed positions (case frame), appendix 32.35: the module centred (-88, 0) with its GPIO connector west and the high-speed connector east
-#     (the two receptacles are separate parts U30A and U30B so JLC places two connectors; connector centres 17 mm off the module centre, 2.5 mm south),
-#     the display FPC east of the module with the cable toward the back wall, the LTE card in the north band with its socket at the west end,
-#     the flashing USB-C on the south edge, the rail leads on the west, the Pi rail lead beside the module's 5 V pins
-# J_WIFI1: place() centres the courtyard box, so with the card along +X (rot +90) the socket datum lands at (37, 60) and the 2230 standoff at (65.25, 60)
-FIXED = {"J_WIFI1": (48.145, 60, 90), "J_5V_M1": (-92, -68, 0), "J_5V_M2": (-92, -58, 0), "J_5V_PI": (-114, -24, 90), "J_PANEL": (86, 68, 0), "J_TD2": (-42, 77, 0), "J_FLASH": (-30, -77.5, 180),
-         "J_RB9704": (10, -48, 90), "J_RB9603": (10, -60, 0), "J_AB1": (-72, -78, 90),
-         "U30A": (-105, -2.5, 0), "U30B": (-71, -2.5, 0), "J_DISP": (-50, 10, 180), "J_LTE1": (-3, 67, -90), "J_SIM1": (-45, 60, 0), "BT1": (-46, 27, 0), "J_FAN": (-64, 34, 0),
-         "U42": (94, 34, 180)}
+# --- fixed positions (case frame), appendix 32.58: the receptacle pairs 17 mm off each module centre and 2.5 mm south of it; the M.2 sockets at Y 25 with the
+#     cards extending south (S2's NVMe along +X at the column's south end because the 3052 5G card takes the height); J_AB1 flipped over A22's header;
+#     the bay and band connectors (KiCad horizontal receptacles open toward local +y, the Molex HDMI toward local +x; a positive rotation is counter-clockwise); the HDMI receptacle at the south-east corner opening south, its switches at the north-east;
+#     the fan headers west of each module; the flashing USB-C receptacles on the south edge opening south (rot 0)
+FIXED = {"U30A": (-89.5, 57.5, 0), "U30B": (-55.5, 57.5, 0), "U31A": (-19.5, 57.5, 0), "U31B": (14.5, 57.5, 0), "U32A": (50.5, 57.5, 0), "U32B": (84.5, 57.5, 0),
+         # M.2 sockets: place() centres the socket-plus-card box, so the target sits 13.65 (2230), 19.65 (2242) or 24.65 (3052) mm south of the socket body centre at Y 25
+         "J_M2N1": (-85, 5.35, 0), "J_M2C1": (-57, 11.35, 0), "J_M2C2": (-20, 0.35, 0), "J_M2N2": (-9.35, -85, 90), "J_M2N3": (48, 5.35, 0), "J_M2C3": (79, 5.35, 0),
+         "J_SIM1": (4.5, 21, 0), "J_SIM2": (4.5, 3, 0),
+         "J_FLASH1": (-92.5, -95, 0), "J_FLASH2": (24, -95, 0), "J_FLASH3": (39.5, -95, 0), "J_5V_S1": (-92.5, -84.5, 0), "J_5V_S2": (27, -84, 0), "J_5V_S3": (39.5, -84.5, 0),
+         "J_FAN1": (-97.5, 45, 90), "J_FAN2": (-27.5, 45, 90), "J_FAN3": (92.5, 44, 90),
+         "J_AB1": (113, -46, 0), "J_ETH": (-152, 89.5, 180), "J_HDMI": (104.5, -93, 270), "J_PANEL": (-116, 92, 90), "T1": (-152, 68, 0),
+         "U12": (111, 47.5, 0), "U13": (133.5, 84, 180), "U14": (154.5, 84, 180), "J_RB9704": (100.5, -56, 0)}
 BACK = {"J_AB1"}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
     if ref not in comps: print("WARNING not in netlist:", ref); continue
     placed[ref] = place(ref, x, y, rot, back=ref in BACK)
-# --- reuse existing footprints
+# --- reuse existing footprints (J_LIME comes from the mechanical stage with its slots)
 for ref in comps:
     if ref in placed: continue
     if ref in existing:
         fp = existing[ref]; val, fpid = comps[ref]
         if fp.GetFPIDAsString().split(":")[-1] != fpid.split(":")[-1]: print("NOTE %s footprint differs: board %s vs schematic %s" % (ref, fp.GetFPIDAsString(), fpid))
         fp.SetValue(val); placed[ref] = fp
-# --- regions for the rest: (x0, y0, x1, y1), refs
-REGIONS = [
- ("PWR",  (-86, -72, -62, -44), ["D1", "C1", "C2", "D3", "C40", "C41", "D4", "C42", "R1", "LED1", "Q3", "R52", "Q4", "R53", "Q5", "R54", "R55", "R25"]),   # the level stages beside J_AB1
- ("MODC", (-119.5, -18, -110, 0), ["C43", "C44", "C45", "C46", "C47", "C48"]),                  # the module's 5 V bulk beside its 5 V pins, inside the +5V_PI pour
- ("CTRL", (-119.5, -64, -100, -30), ["U20", "U21", "U34", "R56", "C54", "C55", "R57", "R58", "C26", "C27"]),
- ("BUCK", (-58, -82, -36, -52), ["U31", "L31", "C31", "C32", "C33", "C34", "R35", "R36", "R37", "R38", "R41", "U33", "U32", "L32", "C35", "C36", "C37", "C38", "R39", "R40", "R42", "C49", "C39", "F7"]),
- ("FLASH", (-24, -82, -14, -66), ["U9", "R50", "R51"]),
- ("CM5X", (-58, -52, -22, -36), ["R46", "LED5", "Q2", "R47", "R48", "LED6", "R49", "J_RPIBOOT", "J_WP", "J_PMIC", "J_PWRBTN", "J_DBG"]),
- ("HUB",  (-66, -36, -22, -12), ["U1", "Y1", "C3", "C4", "R2", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "R3", "R4", "R5", "R6", "R7", "R8", "U2", "U7", "U10"]),
- ("SDR",  (-20, -19, -3, -9.5), ["U4", "U5"]),
- ("SDR2", (-20, 8, -3, 19), ["U6", "R13", "R30", "C15", "R14", "C16", "C17"]),
- ("WIFI", (40, 20, 70, 46), ["R72", "U35", "U36", "L36", "C67", "C68", "C69", "C70", "R73", "R74", "R75", "C71", "C72", "R76", "R77", "Q6", "R78", "LED7"]),
- ("LTEP", (-64, 38, -18, 51), ["C50", "C51", "C52", "C53", "C56", "C57", "C58", "C59", "R59", "R60", "R61", "R62", "R63", "R64", "LED2", "J_LTEDBG", "U8"]),
- ("GNSS", (-118, 42, -96, 66), ["U40", "R65", "C60", "C61", "R66", "L40", "C62", "J_GNSS1"]),
- ("LORA", (-94, 44, -74, 66), ["U41", "C63", "C64", "R67"]),
- ("ZBP",  (105, 16, 118, 40), ["C65", "C66", "R68", "R69", "R70", "LED3", "R71", "LED4", "J_ZBDBG", "F6"]),
- ("TPS",  (84, -60, 104, -30), ["TP%d" % k for k in range(1, 24)] + ["TP%d" % k for k in range(30, 41)]),
- ("RB",   (-19, -40, 15, -19.5), ["F5", "U13", "C28", "C30", "R33", "R21", "U14", "C18", "C19", "Q1", "R26", "R27", "R28"]),
- ("DCF",  (-72, 74, -60, 80), ["R29"]),
+# --- regions for the rest: (x0, y0, x1, y1), refs. Slot refs are numbered 100 s + k (gen_sch_b.py); the column bands of gen_pcb_b.py (S1 -98..-38, S2 -36..32, S3 34..94)
+def R(s, k): return "R%d" % (100 * s + k)
+def C(s, k): return "C%d" % (100 * s + k)
+def Cs(s, a, b): return ["C%d" % (100 * s + k) for k in range(a, b + 1)]
+def Rs(s, a, b): return ["R%d" % (100 * s + k) for k in range(a, b + 1)]
+COL = {1: (-98, -38), 2: (-36, 32), 3: (34, 94)}
+REGIONS = []   # (name, rect, refs, back): decoupling and pull-ups on the UNDERSIDE (B16 is assembled on both sides), never beneath a fine-pitch part whose escapes need the vias
+for s in (1, 2, 3):
+    x0, x1 = COL[s]; U = lambda k: "U%d" % (100 * s + k); Q = lambda k: "Q%d" % (100 * s + k); L = lambda k: "L%d" % (100 * s + k)
+    sw_dec = Cs(s, 35, 48)                                                     # the switch's twelve 100 nF (the exposed pad's fanout via needs the centre, so they sit under the rail band)
+    sw_b = Cs(s, 59, 60) + Cs(s, 63, 74) + Rs(s, 41, 47)                     # hub caps, USB coupling, hub straps
+    if s == 1: sw_b += Cs(1, 61, 62)
+    straps = Rs(s, 17, 34)
+    rail = [U(3), U(4), L(1), L(2), U(5), U(6), L(3), L(4)] + Cs(s, 11, 16) + Cs(s, 18, 23) + Cs(s, 25, 27) + Cs(s, 30, 32) + Cs(s, 49, 49) + Cs(s, 57, 57) + ["LED%d4" % s]
+    rail_b = Rs(s, 2, 16) + [C(s, 17), C(s, 24), C(s, 28), C(s, 29), C(s, 33), C(s, 34), C(s, 50), C(s, 58), R(s, 35), R(s, 36)]
+    sup = [U(7), "J_RPIBOOT%d" % s, "J_DBG%d" % s, Q(1), Q(2), Q(3), Q(4), Q(5), "D%d" % (100 * s + 1)] + Cs(s, 1, 8) + ["LED%d1" % s, "LED%d7" % s, "LED%d6" % s]
+    sup_b = [R(s, 52), R(s, 53), R(s, 1), R(s, 49), R(s, 50), R(s, 48), R(s, 51)] + Rs(s, 54, 58) + Cs(s, 9, 10)
+    eth = Cs(s, 75, 82)
+    card = {1: ["Q106", "LED15"], 2: ["Q206", "Q207", "Q208", "LED25"], 3: ["LED35"]}[s]
+    card_b = {1: [R(1, 37), R(1, 38), R(1, 39)], 2: [R(2, 37), R(2, 38), R(2, 40), R(2, 39)] + Cs(2, 86, 91), 3: [R(3, 37), R(3, 39)]}[s]
+    if s == 2:
+        REGIONS += [("S2_SWIC", (-36, -54, 2, -30), [U(1), U(2)], False),
+                    ("S2_SWE", (2, -54, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (2, -54, 32, -30), sw_b + card_b + sup_b, True),
+                    ("S2_RAIL", (-36, -73.4, 32, -54), [r for r in rail if r not in (U(5), U(6), L(3), L(4))] + [C(2, 25), C(2, 26), C(2, 27), C(2, 30), C(2, 31), C(2, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -54), rail_b + straps + sw_dec, True),
+                    ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -5), [U(5), U(6), L(3), L(4)], False)]
+    else:
+        REGIONS += [("S%d_SWIC" % s, (x0, -49, x0 + 38, -21), [U(1), U(2), "Y%d" % (100 * s + 1)], False),
+                    ("S%d_SWE" % s, (x0 + 38, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0 + 38, -49, x1, -21), sw_b + card_b + sup_b, True),
+                    ("S%d_RAIL" % s, (x0, -70, x1, -49), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -49), rail_b + straps + sw_dec, True),
+                    ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
+REGIONS += [
+ ("NORTH1", (-94, 88.5, -52, 97.5), ["TP%d" % k for k in range(1, 21)], False),
+ ("NORTH2", (-23, 88.5, 18, 97.5), ["TP%d" % k for k in range(21, 32)] + ["LED6", "LED7", "LED8", "LED9"], False),
+ ("NORTH3", (47, 88.5, 88, 97.5), ["TP%d" % k for k in range(41, 52)], False),
+ ("ETH",   (-162, 30, -122, 59), ["U1", "Y1", "C14", "C15", "R3", "R57"] + ["C%d" % k for k in range(17, 29)], False),
+ ("POE",   (-140.5, 59, -122, 86), ["U5", "Q1", "R12", "R13", "C31", "C32"], False),
+ ("POEB",  (-140.5, 59, -122, 70), ["C33", "R9", "R10", "C29", "C30"], True),
+ ("WNE",   (-121, 29, -102, 68), ["U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "J_5V_DEV"], False),
+ ("GAP12", (-50, 33, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
+ ("GAP23", (19, 33, 44, 97), ["BT1", "U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71"], False),
+ ("WMIDS", (-152, -97, -116, -69), ["U35", "D1", "D2", "J_54V", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
+ ("NEX",   (96, 78, 123, 97.5), ["U3", "U4", "R14", "R15", "R16", "C37", "C38"], False),
+ ("SEX",   (96, -85, 112, -78), ["F2", "C39"], False),
+ ("SEXB",  (96, -85, 112, -78), ["R17", "R18", "R19", "R20"], True),
+ ("RADE",  (125.5, 45.5, 162, 67), ["R25", "R28", "R29", "R30", "R31", "R32", "R33", "R34", "R35", "J_ZBDBG1", "J_ZBDBG2", "J_LORA1", "U28", "U34", "J_CAM"], False),
+ ("RBX2",  (96, -44, 110, -26), ["C45", "C46", "C47", "C52", "C53", "C54", "C55", "F4", "C64", "R47", "R48"], False),
+ ("RBX",   (96, -25, 126, 27), ["U23", "C56", "R36", "R37", "R38", "R39", "C57", "C58", "U33", "U24", "C61", "R43", "R44", "R45", "R46", "C62", "C63", "U18", "R40", "C59", "C60", "R41", "R42", "U15", "U16", "U17", "R24", "C43", "C44", "R26", "C48", "C49", "R27", "C50", "C51", "U21", "U22"], False),
 ]
-GAP = 1.2                      # between any two packed parts (was 0.7: fine-pitch ICs ended wall to wall with passives)
-FINE_MARGIN = 1.6              # extra all round a fine-pitch IC so every side keeps a via lane for its escapes
+GAP = 1.2
+FINE_MARGIN = 1.6
 import re as _re
 def is_fine(fp):
-    """Fine-pitch: minimum SMD pad centre distance <= 0.7 mm, or a SOT-23-6/8."""
-    if _re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
+    if _re.search(r"SOT-23-[68]|SOT-583|TSOT-23-6", fp.GetFPIDAsString()): return True
     pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]
     best = 1e9
     for i in range(len(pads)):
@@ -113,20 +144,21 @@ def is_fine(fp):
             d = math.hypot(pads[i].x - pads[j].x, pads[i].y - pads[j].y)
             if 0 < d < best: best = d
     return best <= FromMM(0.7)
-for name, (x0, y0, x1, y1), refs in REGIONS:
+for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:
         if ref not in comps: print("WARNING %s not in netlist" % ref); continue
-        fp = place(ref, 0, 0); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
-        if fine:                                                   # margin only on the sides that carry pins (escapes leave along the pad axis)
-            for pd in fp.Pads():                                   # a pin pad is elongated along its escape axis
+        if ref in placed: print("WARNING %s listed twice" % ref); continue
+        fp = place(ref, 0, 0, back=back); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
+        if fine:
+            for pd in fp.Pads():
                 if pd.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or min(pd.GetSize().x, pd.GetSize().y) > FromMM(1.2): continue
                 pbb = pd.GetBoundingBox(); w_, h_ = pbb.GetWidth(), pbb.GetHeight()
                 if w_ > h_ * 1.2: mx = 2 * FINE_MARGIN
                 elif h_ > w_ * 1.2: my = 2 * FINE_MARGIN
             if mx == 0.0 and my == 0.0: mx = my = 2 * FINE_MARGIN
         fps.append((ref, fp, bb.GetWidth() / 1e6 + GAP + mx, bb.GetHeight() / 1e6 + GAP + my, fine))
-    fps.sort(key=lambda t: (not t[4], -(t[2] * t[3])))   # fine-pitch ICs first, then by size
+    fps.sort(key=lambda t: (not t[4], -(t[2] * t[3])))
     cx, cy, rowh = x0, y1, 0.0
     for ref, fp, w, h, fine in fps:
         if cx + w > x1 + 0.01:
@@ -139,9 +171,6 @@ if missing: raise SystemExit("unplaced: %s" % missing)
 # --- nets
 ni = board.GetNetInfo()
 def net_for(name, create=True):
-    """The board's net for a schematic name: a local label lands in the board as "/NAME", a power symbol as "NAME".
-    The netlist import creates nets (create=True); a zone must find its net (create=False), because a pour on a name that
-    matches nothing would get a phantom net with no pads and dead copper (A19 and B12 rail planes, 4 Sep 2026, 32.33)."""
     for cand in (name, "/" + name):
         n = board.FindNet(cand)
         if n is not None and n.GetNetCode() > 0: return n
@@ -160,8 +189,8 @@ for name, nodes in nets.items():
         if not pads: unassigned.append((ref, pin, name)); continue
         for pad in pads: pad.SetNet(n)
 if unassigned: print("WARNING pads not found for nodes:", unassigned[:12])
-# --- planes: In1 GND, In2 +5V_M1; the module's 5 V (2.5 A design point) as a front pour from the J_5V_PI lead to the 5 V pins of the west connector
-def plane(layer, netname, name, rect=(-122.5, -85, 122.5, 85), priority=0):
+# --- planes: In1 GND; In4 the four 5 V rails (one slot rail under each column and its module, the device rail in the bands); nothing on the outer layers
+def plane(layer, netname, name, rect, priority=0):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.3))
     try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
@@ -172,27 +201,31 @@ def plane(layer, netname, name, rect=(-122.5, -85, 122.5, 85), priority=0):
         p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority)
     board.Add(z); return z
-plane(pcbnew.In1_Cu, "GND", "GND plane In1"); plane(pcbnew.In4_Cu, "+5V_M1", "+5V plane In4")   # B15: the planes on In1 and In4, In2 and In3 route
-plane(pcbnew.F_Cu, "+5V_PI", "+5V_PI pour F.Cu (J_5V_PI to the module 5 V pins)", rect=(-120, -30, -100, 0), priority=1)
-# --- B15 (5 Sep 2026, 32.40 items 3 and 6): In1 and In4 are solid planes. A board-wide rule area on each forbids tracks and permits vias, so the router
-#     keeps to F.Cu, In2, In3 and B.Cu (the same four routing layers B14 had) and every inner track has a solid plane next to it. On four layers the
-#     In1 rule left the router thrashing (17:08 board-wide, 17:45 with a window around the CM5 receptacles: the 0.4 mm breakout needs two inner layers).
+plane(pcbnew.In1_Cu, "GND", "GND plane In1", (-165, -100, 165, 100))
+plane(pcbnew.In4_Cu, "+5V_S1", "+5V_S1 plane In4 (column S1)", (-100, -100, -37, 100))
+plane(pcbnew.In4_Cu, "+5V_S2", "+5V_S2 plane In4 (column S2)", (-35, -100, 33, 100))
+plane(pcbnew.In4_Cu, "+5V_S3", "+5V_S3 plane In4 (column S3)", (35, -100, 96, 100))
+plane(pcbnew.In4_Cu, "+5V_DEV", "+5V_DEV plane In4 (west band)", (-165, -100, -102, 100))
+plane(pcbnew.In4_Cu, "+5V_DEV", "+5V_DEV plane In4 (east band)", (98, -100, 165, 100))
 _bb = board.GetBoardEdgesBoundingBox()
-for _L, _label in ((pcbnew.In1_Cu, "In1 (solid ground plane)"), (pcbnew.In4_Cu, "In4 (solid 5 V plane)")):
+for _L, _label in ((pcbnew.In1_Cu, "In1 (solid ground plane)"), (pcbnew.In4_Cu, "In4 (5 V planes)")):
     _z = pcbnew.ZONE(board); _z.SetIsRuleArea(True); _z.SetDoNotAllowTracks(True); _z.SetDoNotAllowVias(False); _z.SetDoNotAllowCopperPour(False); _z.SetDoNotAllowPads(False); _z.SetDoNotAllowFootprints(False)
     _z.SetLayer(_L); _z.SetZoneName("keep tracks off " + _label); _o = _z.Outline(); _o.NewOutline()
     for _x, _y in ((_bb.GetLeft(), _bb.GetTop()), (_bb.GetRight(), _bb.GetTop()), (_bb.GetRight(), _bb.GetBottom()), (_bb.GetLeft(), _bb.GetBottom())): _o.Append(_x, _y)
     board.Add(_z)
-print("track keep-outs over the whole board on In1 and In4 (solid planes); In2 and In3 route")
+print("track keep-outs over the whole board on In1 and In4 (planes); In2 and In3 route")
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
-cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)   # B13: 0.127 clearance everywhere (JLC standard), needed by the 0.4 mm connector escapes
-# USB 90 ohm and DSI 100 ohm on JLC's 7628 four-layer stack (0.20/0.15 and 0.17/0.15, the CM5IO's own classes are 0.147 and 0.127 on its 90 um dielectric; confirm with JLC's calculator at upload)
-CLASSES = {"USB": (0.127, 0.2, 0.7, 0.3, 0.2, 0.15), "DSI": (0.127, 0.17, 0.7, 0.3, 0.17, 0.15), "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25)}   # 0.4 mm enters 0.65-pitch pads; the In2 plane carries the bulk 5 V
-PATTERNS = [("USB_*", "USB"), ("DSI0_*", "DSI"), ("PCIe_TX_*", "USB"), ("PCIe_RX_*", "USB"), ("PCIe_CLK_P", "USB"), ("PCIe_CLK_N", "USB"), ("+3V3_WIFI", "PWR"), ("5V_*", "PWR"), ("+5V_M1", "PWR"), ("+5V_M2", "PWR"), ("+5V_PI", "PWR"), ("SW_*", "PWR"), ("*_FUSED", "PWR"), ("GND", "PWR"), ("+3V3_LTE", "PWR"), ("+3V3_AB", "PWR"), ("PANEL_5V", "PWR")]
-PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
+cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
+CLASSES = {"USB": (0.127, 0.2, 0.7, 0.3, 0.2, 0.15), "DIFF100": (0.127, 0.17, 0.7, 0.3, 0.17, 0.15), "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "HV": (0.18, 0.5, 0.8, 0.4, 0.5, 0.5)}   # HV 0.18: above the 0.2 pad gap of the TSSOP-28 PoE controller it fails inside the part
+PATTERNS = [("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("USBX_D*", "USB"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
+            ("PCIE*", "USB"), ("NVME*_RX_*", "USB"), ("NVME*_TX_*", "USB"), ("NVME*_CLK_*", "USB"), ("CARD*_RX_*", "USB"), ("CARD*_TX_*", "USB"), ("CARD*_CLK_*", "USB"),
+            ("HDMI*_D*", "DIFF100"), ("HDMI*_CK_*", "DIFF100"), ("ETH*", "DIFF100"), ("SWP*", "DIFF100"),
+            ("MDI_*", "HV"), ("POE_*", "HV"), ("+54V_POE", "HV"),
+            ("+5V_*", "PWR"), ("+3V3_*", "PWR"), ("+1V*", "PWR"), ("+2V5*", "PWR"), ("PANEL_5V", "PWR"), ("VBUS*", "PWR"), ("GND", "PWR"), ("*_SW", "PWR"), ("VBAT", "PWR")]
+PATTERNS += [("/" + pat, cls_) for pat, cls_ in PATTERNS if not pat.startswith("/")]
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)
@@ -207,9 +240,23 @@ pro = os.path.splitext(BOARD)[0] + ".kicad_pro"
 if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
-    def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15), C("USB", 0, 0.127, 0.2, 0.7, 0.3, 0.2, 0.15), C("DSI", 1, 0.127, 0.17, 0.7, 0.3, 0.17, 0.15), C("PWR", 2, 0.127, 0.4, 0.8, 0.4, 0.4, 0.25)]
+    def Cc(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
+    d.setdefault("net_settings", {})["classes"] = [Cc("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15), Cc("USB", 0, 0.127, 0.2, 0.7, 0.3, 0.2, 0.15), Cc("DIFF100", 1, 0.127, 0.17, 0.7, 0.3, 0.17, 0.15), Cc("PWR", 2, 0.127, 0.4, 0.8, 0.4, 0.4, 0.25), Cc("HV", 3, 0.18, 0.5, 0.8, 0.4, 0.5, 0.5)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
-    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", None)
+    # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
+    # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern
+    import fnmatch as _fnm
+    def _class_of(netname):
+        bare = netname.lstrip("/")
+        for pat, cl in PATTERNS:
+            if not pat.startswith("/") and _fnm.fnmatchcase(bare, pat): return cl
+        return None
+    _assign = {}
+    for _name, _net in board.GetNetInfo().NetsByName().items():
+        _cl = _class_of(str(_name))
+        if _cl: _assign[str(_name)] = _cl
+    d["net_settings"]["netclass_assignments"] = _assign
+    print("net-class assignments written for %d nets" % len(_assign))
+    d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None); d["net_settings"].setdefault("netclass_assignments", {})
     d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
     json.dump(d, open(pro, "w"), indent=2); print("project net classes re-applied")

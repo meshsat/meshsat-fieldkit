@@ -53,7 +53,7 @@
     "unrouted": 0,
     "autoroute_minutes_max": 90
   },
-  "budget_rounds": 2,
+  "budget_rounds": 1,
   "notes": "A22 (7 Sep 2026, appendix 32.55 and 32.56): four layers, In1 the solid ground plane handed to Freerouting as a power layer with GND as a plane net, In2 carries the VBAT plane and GND islands and stays routable; single thread on 1.9.0 (the blessed production jar); the finish is finish_a22.sh (stub router, cleanup, quality pass, pair report on the three USB pairs, the A gate, finish_board into the A22 deliverable).",
   "baseline_key": "A21"
 }
