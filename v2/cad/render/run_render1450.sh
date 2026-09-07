@@ -12,6 +12,7 @@ for spec in "pcb-a-power:150x110:pcb-a-power" "pcb-b-compute:150x110:pcb-b-compu
   kicad-cli pcb export glb --subst-models --include-pads --user-origin "${org}mm" -o $H/glb/$name.glb "$board" >/dev/null 2>&1 && echo "glb $name from $(basename $board)" || echo "GLB FAILED $name"
 done
 ~/.venv-cad/bin/python3 $H/step2stl.py 2>&1 | grep -v "^$" | tail -12
+cp $R/v2/release/revA/case/face-plate/face-plate.stl $H/stl/face_plate.stl 2>/dev/null && echo "plate STL copied"   # C7 face plate v2 (7 Sep 2026): the STL from v2/cad/face_plate.py, not a STEP conversion
 cd $H && CYCLES_GPU=1 SAMPLES=${SAMPLES:-256} RESPCT=${RESPCT:-100} ~/blender/blender -b -P $H/scene.py -- $OUT all 2>&1 | grep -a -E "RENDERED|SCENE-DONE|MISSING|STL |Error|Traceback|cycles on" | cut -c1-200
 python3 - "$OUT" <<'PY'
 import sys, os, glob

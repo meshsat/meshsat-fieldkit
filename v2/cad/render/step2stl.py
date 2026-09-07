@@ -9,13 +9,13 @@ JOBS = {
  "case1450_bottom": V + "/vendor/peli/1450/1451-931-bottom.STEP",
  "case1450_top": V + "/vendor/peli/1450/1451-931-top.STEP",
  "frame1450": V + "/vendor/peli/1450/1450-panel-frame.STEP",
- "td2": V + "/vendor/td2/td2-7inch.step",
- "epaper": V + "/vendor/weact/Hardware/WeAct-EpaperModule-3.7 Board 3D.step",
- "rockblock9704": V + "/vendor/rockblock/RockBLOCK 9704-SMA-2A.step",
- "face_plate": H + "/plate1450/out/face-plate.step",
- "module_base": H + "/battery1450/battery-module-base.step",
- "module_lid": H + "/battery1450/battery-module-lid.step",
- "module_cradle": H + "/battery1450/battery-module-cradle.step",
+
+
+ "rockblock9704": V + "/vendor/rockblock/RockBLOCK 9704-SMA-2A.step",   # 7 Sep 2026: the Touch Display 2, the WeAct module and the cell module left the set (C7, 32.49); the face plate STL comes from v2/cad/face_plate.py through the release folder
+
+
+
+
 }
 ONLY = sys.argv[1:]
 for name, path in JOBS.items():
