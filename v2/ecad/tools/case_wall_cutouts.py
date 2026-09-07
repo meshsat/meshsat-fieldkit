@@ -116,8 +116,9 @@ c.showPage()
 # Amphenol Connex 132170 SMA female-female bulkhead coupler: 6.5 mm D-hole with the flat at 6.00 across (vendor/rf drawing), 8 mm nut.
 # Four sites per end wall at Y -60, -30, +30, +60 between the wall's inner ribs (none on the 1450 end walls), 55 mm above the floor.
 SMA_Z = 88.0   # 1450 (32.40 item 8): above the battery row (top 78 mm) along the west end wall, below the frame skirt (Z 100 to 109)
-WEST = [(-72.0, "VHF"), (-24.0, "WIFI 2.4"), (24.0, "GNSS"), (72.0, "SDR")]        # VHF since 6 Sep 2026 (the DMR858M is the 134 to 174 MHz variant; the port was mislabelled UHF); west end wall (case -X): the strip's four western clamps; since B13 the third path carries the NEO-M9N antenna (the CM5 antenna is dual-band, one path)
-EAST = [(-96.0, "LTE"), (-48.0, "IRIDIUM"), (-24.0, "LORA"), (48.0, "WIFI P2P A"), (96.0, "WIFI P2P B")]   # LORA off Y 0 since 6 Sep 2026: the 1450 end wall carries a moulded nub at Y 0 and +-83.5 on the jack line (drawing 1451-931 side view); the Iridium antenna is the Maxtena helical on the jack  # east end wall (case +X); B14: the spare took the first WiFi P2P lead, the second sits in a second row at Z 90 (clear of the Iridium patch, whose top is at Z 82)
+import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import panel1450 as _L
+WEST = [(y, n) for n, y in _L.WALL_WEST]   # since C7 (7 Sep 2026): the single source of the jack lists is panel1450.WALL_WEST / WALL_EAST (32.56: HF at west -48, 5G DIV at east -72)
+EAST = [(y, n) for n, y in _L.WALL_EAST]
 def end_wall(title, sites, y_sign, ox_paper):
     """One end wall seen from OUTSIDE: paper x = case Y times y_sign (so the viewer's left is the right case direction)."""
     def Q(y, z): return W / 2 + (ox_paper + y_sign * y) * mm, oz + z * mm

@@ -118,7 +118,7 @@ def ic(ref, npins, value, fp, nets, lcsc=""):
 def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""): part(ref, "Transistor_FET", "Q_NMOS_GDS", value, fp, {"1": g, "2": d, "3": s}, lcsc)
 def ph(ref, n, value, nets): part(ref, "Connector_Generic", "Conn_01x%02d" % n, value, "PH%d" % n, nets)
 # --- pack entry: the BTA-70762-2 cable of the BB-2590/U (both 14.4 V sections in parallel) on an XT60, the 25 A blade, the 12 AWG pads to the block; the pack's two SMBus sections on J_SMB
-part("J_BATT", "Connector_Generic", "Conn_01x02", "BB-2590/U cable (BTA-70762-2) on XT60-M: + - ; the pack's own protection is inside it", "XT60", {"1": "CELL+", "2": "GND"})
+part("J_BATT", "Connector_Generic", "Conn_01x02", "BB-2590/U cable (BTA-70762-2) on XT60-M: pin 2 (the pad nearer the fuse F3) is +, pin 1 is the return; the pack's own protection is inside it (E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)", "XT60", {"1": "GND", "2": "CELL+"})
 part("F3", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack to the block", "FUSE", {"1": "CELL+", "2": "CELL_F"})
 part("P_CP", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board CELL+ targets", "PAD86", {"1": "CELL_F"})
 part("P_CN", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board return targets", "PAD86", {"1": "GND"})

@@ -3,9 +3,10 @@
 
 365.5 x 249.5 x 3.0 mm 5754 or 6061, black anodised, clamped under the 1450PF frame ring inside its skirt with the PORON gasket ring on its 8 mm band
 (the construction of 32.34, the plate replacing the PCB as the weather face). Cut-outs, all from v2/ecad/tools/panel1450.py: the ten M3 holes at the
-frame's inserts, the display aperture inside a 1.0 mm pocket for the glass and its tape frame, the e-paper window inside a pocket for its 2 mm lens,
-three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, sixteen 2.6 mm H7 holes for the press-fit Mentor 1282.5004 IP68
-light pipes, six self-clinching M3 standoff holes for the C6 backer board. Legends and the logo are laser marked from the SVG this script also writes.
+frame's inserts, the Xenarc monitor's connector-block cutout (60 x 46 with a gasket ring) and its four VESA 50 M4 holes (C7: no display aperture, the monitor lies on the plate),
+the e-paper window inside a pocket for its 2 mm lens, three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, two 16 mm
+headset jack holes, the 8 mm camera window, seventeen 2.6 mm H7 holes for the press-fit Mentor 1282.5004 IP68 light guides (sixteen LEDs and the light sensor), eight self-clinching
+M3 standoff holes for the C7 backer ring and two for the PA flange's PEM nuts. Legends and the logo are laser marked from the SVG this script also writes.
 Usage: face_plate.py <out dir>   (build123d in ~/.venv-cad on the VM). Writes face-plate.step, face-plate.stl, face-plate.dxf (the outline and every
 through cut, for DataPro or JLC CNC) and face-plate-marking.svg; prints the sizes. Plate frame = case frame (X, Y from the case centre), Z up."""
 import sys, os, math
@@ -43,10 +44,11 @@ plate = rrect(0, 0, W, H, L.PLATE_R, 0, T)
 cuts = []
 # frame screws, from below into the frame's inserts: M3 clearance 3.4
 for (x, y) in L.FRAME_BOSSES: cuts.append(cyl(x, y, 3.4, -1, T + 2))
-# display: glass pocket 1.0 deep from the top, aperture through
-gx, gy = L.DISPLAY["c"]; gw, gh = L.DISPLAY["glass"]; aw, ah = L.DISPLAY["aperture"]
-cuts.append(rrect(gx, gy, gw + 0.6, gh + 0.6, 8.3, T - L.DISPLAY["pocket_depth"], L.DISPLAY["pocket_depth"] + 1))
-cuts.append(rrect(gx, gy, aw, ah, L.DISPLAY["aperture_r"], -1, T + 2))
+# the Xenarc monitor (C7, 32.51): no aperture; a cutout for its connector block with a gasket ring around it, and the four VESA 50 M4 holes at its rear centre
+bx, by, bw, bh, br = L.XENARC["cutout"]; cuts.append(rrect(bx, by, bw, bh, br, -1, T + 2))
+gx, gy = L.XENARC["c"]
+for dx in (-1, 1):
+    for dy in (-1, 1): cuts.append(cyl(gx + dx * L.XENARC["vesa"] / 2, gy + dy * L.XENARC["vesa"] / 2, L.XENARC["vesa_hole"], -1, T + 2))
 # e-paper: lens pocket 1.0 deep, window through
 ex, ey = L.EPAPER["c"]; lw, lh = L.EPAPER["lens"]; ww, wh = L.EPAPER["window"]
 cuts.append(rrect(ex, ey, lw + 0.4, lh + 0.4, L.EPAPER["lens_r"], T - L.EPAPER["pocket_depth"], L.EPAPER["pocket_depth"] + 1))
@@ -57,8 +59,13 @@ for ref, (x, y), d, depth in L.BUTTONS: cuts.append(cyl(x, y, d, -1, T + 2))
 for ref, (x, y) in L.TOGGLES: cuts.append(keyed_hole(x, y, L.TOGGLE_HOLE, L.TOGGLE_KEY[0], L.TOGGLE_KEY[1], (0, -1), -1, T + 2))
 # NKK toggle: D hole, flat toward +X
 lx, ly = L.LIGHT[1]; cuts.append(cyl(lx, ly, L.LIGHT_HOLE, -1, T + 2) & Box(L.LIGHT_FLAT + (L.LIGHT_HOLE - L.LIGHT_FLAT), L.LIGHT_HOLE + 2, T + 2).moved(Location(Vector(lx - (L.LIGHT_HOLE - L.LIGHT_FLAT) / 2, ly, T / 2))))
-# sounder
+# sounder, the two headset jacks, the camera window, the light sensor's guide hole
 sx, sy = L.SOUNDER[1]; cuts.append(cyl(sx, sy, L.SOUNDER[2], -1, T + 2))
+for ref, (x, y) in L.HEADSETS: cuts.append(cyl(x, y, L.HEADSET_HOLE, -1, T + 2))
+cx_, cy_ = L.CAMERA[1]; cuts.append(cyl(cx_, cy_, L.CAMERA[2], -1, T + 2))
+cuts.append(cyl(L.LIGHT_SENSOR[1][0], L.LIGHT_SENSOR[1][1], L.LED_HOLE, -1, T + 2))
+# the PA flange's two PEM S-M3 nuts on the underside (4.2 mm holes like the standoffs)
+for dx in (-1, 1): cuts.append(cyl(L.PA_MOUNT["c"][0] + dx * L.PA_MOUNT["holes"] / 2, L.PA_MOUNT["c"][1], 4.2, -1, T + 2))
 # light pipes
 for ref, (x, y), name in L.STATUS_LEDS + L.BAR_LEDS: cuts.append(cyl(x, y, L.LED_HOLE, -1, T + 2))
 # backer standoffs: self-clinching M3, 4.2 mm hole (PEM SO-M3 in 3 mm aluminium), from the underside
@@ -86,7 +93,12 @@ def dxf_and_svg():
     for name in ("OUTLINE", "THROUGH", "POCKET_1MM", "STANDOFF_M3", "MARKING"): doc.layers.add(name)
     poly_rrect(0, 0, W, H, L.PLATE_R, "OUTLINE")
     for (x, y) in L.FRAME_BOSSES: circle(x, y, 3.4, "THROUGH")
-    poly_rrect(gx, gy, aw, ah, L.DISPLAY["aperture_r"], "THROUGH"); poly_rrect(gx, gy, gw + 0.6, gh + 0.6, 8.3, "POCKET_1MM")
+    poly_rrect(bx, by, bw, bh, br, "THROUGH")
+    for dx in (-1, 1):
+        for dy in (-1, 1): circle(gx + dx * L.XENARC["vesa"] / 2, gy + dy * L.XENARC["vesa"] / 2, L.XENARC["vesa_hole"], "THROUGH")
+    for ref, (x, y) in L.HEADSETS: circle(x, y, L.HEADSET_HOLE, "THROUGH")
+    circle(cx_, cy_, L.CAMERA[2], "THROUGH"); circle(L.LIGHT_SENSOR[1][0], L.LIGHT_SENSOR[1][1], L.LED_HOLE, "THROUGH")
+    for dx in (-1, 1): circle(L.PA_MOUNT["c"][0] + dx * L.PA_MOUNT["holes"] / 2, L.PA_MOUNT["c"][1], 4.2, "STANDOFF_M3")
     poly_rrect(ex, ey, ww, wh, 1.0, "THROUGH"); poly_rrect(ex, ey, lw + 0.4, lh + 0.4, L.EPAPER["lens_r"], "POCKET_1MM")
     for ref, (x, y), d, depth in L.BUTTONS: circle(x, y, d, "THROUGH")
     for ref, (x, y) in L.TOGGLES:
@@ -107,6 +119,8 @@ def dxf_and_svg():
     for ref, (x, y) in L.TOGGLES: txt(x, y + 13.0, {"SW_SOS": "SOS", "SW_EMCON": "EMCON", "SW_ZERO": "ZEROIZE"}[ref], 3.6)
     txt(lx, ly + 13.0, "LIGHT", 3.6); txt(lx - 10.0, ly, "DAY", 2.4, "end"); txt(lx + 10.0, ly, "NIGHT", 2.4, "start"); txt(lx, ly - 12.0, "BLACKOUT", 2.4)
     txt(sx, sy - 19.0, "SOUNDER", 2.6)
+    for k, (ref, (x, y)) in enumerate(L.HEADSETS, 1): txt(x, y - 11.5, "HEADSET %d" % k, 2.6)
+    txt(cx_, cy_ - 7.5, "CAMERA", 2.4); txt(L.LIGHT_SENSOR[1][0], L.LIGHT_SENSOR[1][1] + 4.5, "LIGHT", 2.0)
     nx, ny, nw, nh = L.NAMEPLATE; lines.append('<rect x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="none" stroke="#ffffff" stroke-width="0.3"/>' % (nx - nw / 2, -ny - nh / 2, nw, nh))
     txt(nx, ny + 7.5, "MESHSAT FIELD KIT V2", 3.6); txt(nx, ny + 1.5, "S/N ________", 2.6); txt(nx, ny - 5.0, "PELI 1450  DC 12 V  RF HAZARD DURING TX", 2.4)
     txt(L.LOGO[0][0], L.LOGO[0][1], "[MESHSAT LOGO %.0f mm, tools/logo_meshsat.json]" % L.LOGO[1], 2.4)
