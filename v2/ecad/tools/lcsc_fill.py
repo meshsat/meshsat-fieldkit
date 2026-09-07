@@ -87,4 +87,17 @@ for r in rows:
         if re.match(vre, r["Comment"]) and fsub in r["Footprint"]: r["LCSC Part #"] = code; filled += 1; break
 with open(path, "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=["Comment", "Designator", "Footprint", "LCSC Part #"]); w.writeheader(); w.writerows(rows)
-print("lcsc_fill: %d lines filled, %d still blank of %d" % (filled, sum(1 for r in rows if not r["LCSC Part #"]), len(rows)))
+blank = [r for r in rows if not r["LCSC Part #"]]
+# 8 Sep 2026 (MESHSAT-862): the blank count used to be printed and read by nobody. A blank line is allowed only by <project>/lcsc-allow.txt
+# (one Comment substring per line, a `#` reason after it: bench-fitted modules, connectors ordered elsewhere); the rest is an exit 1 that
+# finish_board.sh records in out/jlc/<name>-bom.status and make_handoff.py refuses to build the order set on.
+import os
+allow = []
+# the project directory is two levels above out/jlc/<name>-bom.csv; LCSC_ALLOW overrides the path
+ap = os.environ.get("LCSC_ALLOW") or os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(path)))), "lcsc-allow.txt")
+if os.path.exists(ap):
+    for line in open(ap):
+        if "#" in line and line.split("#", 1)[0].strip(): allow.append(line.split("#", 1)[0].strip())
+not_allowed = [r for r in blank if not any(a in r["Comment"] for a in allow)]
+print("lcsc_fill: %d lines filled, %d still blank of %d (%d allow-listed, %d not: %s)" % (filled, len(blank), len(rows), len(blank) - len(not_allowed), len(not_allowed), ", ".join(r["Designator"][:24] for r in not_allowed[:8])))
+sys.exit(1 if not_allowed else 0)

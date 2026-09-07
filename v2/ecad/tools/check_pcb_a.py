@@ -48,7 +48,7 @@ for _f in b.GetFootprints():
         check(len(_n.get("1", set()) | _n.get("2", set()) | _n.get("3", set())) == 1 and "" not in _n.get("1", set()) and _n.get("4", {""}) != {""} and _n.get("5", {""}) != {""} and _n.get("4") != _n.get("5"),
               "%s PowerPAK pad map: source 1-3 %s, gate 4 %s, drain 5 %s" % (_f.GetReference(), sorted(_n.get("1", set())), sorted(_n.get("4", set())), sorted(_n.get("5", set()))))
 # net-class patterns must match a board net in one of their two forms (5 Sep 2026, 32.39)
-import fnmatch as _fn, json as _json, os as _os
+import fnmatch as _fn, json as _json, os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 _pro = _os.path.splitext(sys.argv[1])[0] + ".kicad_pro"
 if _os.path.exists(_pro) and b.GetNetInfo().GetNetCount() > 1:
     _pats = [(e["pattern"], e["netclass"]) for e in _json.load(open(_pro)).get("net_settings", {}).get("netclass_patterns", [])]
@@ -63,10 +63,15 @@ for _t in b.GetTracks():
 if _w:
     for _n, _min in (("VBAT", 0.5), ("CELL+", 0.5), ("VBUS20", 0.5), ("+5V_S1", 0.4), ("+5V_S2", 0.4), ("+5V_S3", 0.4), ("+5V_DEV", 0.4), ("+13V8_PA", 0.4)):   # A22 run 8: the route campaign closes the board at these widths, the A23 power-copper pass carries the currents
         if _n in _w: check(min(_w[_n]) >= _min - 0.01, "%s routed at its class width (>= %.1f mm; widths %s)" % (_n, _min, sorted(_w[_n])))
+# 8 Sep 2026 (MESHSAT-862): the A21 copper checks (pour contiguity, locked vias in fill, cross-layer links) return for A22's 20 A copper, shared in copper_checks.py
+import copper_checks as _cc; print(_cc.run(b, check))
 _tl = {}
 for _t in b.GetTracks():
     if _t.GetClass() == "PCB_TRACK": _tl[_t.GetNetname().lstrip("/")] = _tl.get(_t.GetNetname().lstrip("/"), 0.0) + _t.GetLength() / 1e6
-for _pair in sorted(set(n[:-2] for n in _tl if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in _tl and (n[:-2] + "_N") in _tl)):
+_names = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
+for _pair in sorted(set(n[:-2] for n in _names if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in _names and (n[:-2] + "_N") in _names)):   # every pair of the netlist, not only the routed ones (8 Sep 2026)
     _lp, _ln = _tl.get(_pair + "_P", 0.0), _tl.get(_pair + "_N", 0.0)
+    if not _lp and not _ln: continue
+    if (_lp > 0) != (_ln > 0): check(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (_pair, _lp, _ln)); continue
     print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(_lp - _ln) > 1.0 else "PASS ") + _pair, _lp, _ln, abs(_lp - _ln), "" if abs(_lp - _ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

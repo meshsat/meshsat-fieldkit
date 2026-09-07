@@ -95,6 +95,8 @@ def judge_finish(finish_log, clean_flag, stub_log, deliverable):
     if flag is None: return "FINISH_REFUSED", "no clean flag written (%s)" % clean_flag
     if flag.strip() != "clean": return "FINISH_REFUSED", "flag says %r" % flag.strip()
     if deliverable and not glob.glob(os.path.join(deliverable, "*-gerbers.zip")): return "FINISH_REFUSED", "deliverable has no gerber zip: %s" % deliverable
+    if "contracts: ALL PASS" not in t: return "FINISH_REFUSED", "the finish did not print 'contracts: ALL PASS' (check_contracts.py is part of every finish since 8 Sep 2026)"
+    if deliverable and "verify_deliverable: ALL PASS" not in t and "REFUSED" in t: return "FINISH_REFUSED", "the deliverable read-back refused (verify_deliverable.py)"
     m = re.search(r"routed-board gate: hard (\d+) unrouted (\d+)", t)
     return "CLEAN", ("routed-board gate: hard %s unrouted %s" % (m.group(1), m.group(2))) if m else "clean flag set"
 
@@ -201,6 +203,9 @@ def run(profile_fn, rounds, use_services, dry):
                 # the finish gets its chance on every routed board: cleanup, stub router, pairs, the routed-board gate
                 fin = prof["finish"]; flog = os.path.join(rdir, "round%d-finish.log" % rnd)
                 journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="FINISHING", note=" ".join(fin["argv"])))
+                for stale in (os.path.join(project, fin["clean_flag"]), os.path.join(project, "out", "contracts.log")):   # 8 Sep 2026 (MESHSAT-862): a stale clean flag finished a board (register class 6)
+                    try: os.remove(stale)
+                    except OSError: pass
                 if not dry: sh(expand(fin["argv"], project, ecad, name), project if fin.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, flog)
                 fst, fnote = judge_finish(flog, os.path.join(project, fin["clean_flag"]), os.path.join(project, fin.get("stub_log", "out/%s-stub.log" % name)), os.path.join(repo, prof.get("deliverable", "")) if prof.get("deliverable") else None)
                 journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status=fst, note=fnote))
@@ -468,7 +473,25 @@ def selftest():
     open(os.path.join(t, "flag"), "w").write("open\n"); chk("open flag refuses", judge_finish(os.path.join(t, "nofinish.log"), os.path.join(t, "flag"), None, None)[0] == "FINISH_REFUSED")
     open(os.path.join(t, "flag"), "w").write("clean\n"); open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\n"); os.makedirs(os.path.join(t, "deliv"))
     chk("clean flag without a gerber zip refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
-    open(os.path.join(t, "deliv", "x-gerbers.zip"), "w").write("z"); chk("clean flag with a deliverable passes", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "CLEAN")
+    open(os.path.join(t, "deliv", "x-gerbers.zip"), "w").write("z"); chk("clean flag with a deliverable but no contracts line refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: ALL PASS\n"); chk("clean flag with a deliverable and the contracts line passes", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "CLEAN")
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: FAIL (out/contracts.log)\n"); chk("a contracts FAIL line refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: ALL PASS\nfinish_board: deliverable REFUSED, folder removed\n"); chk("a refused deliverable read-back refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: ALL PASS\n")
+    try:   # 8 Sep 2026 (MESHSAT-862): the re-armed gates, each fed a broken input
+        import hardset, erc_gate, verify_deliverable
+        bad = {"violations": [{"type": "solder_mask_bridge", "items": [{"description": "Pad 1 [X] of U1 on F.Cu"}, {"description": "Track [Y] on F.Cu"}]}, {"type": "courtyards_overlap", "items": [{"description": "Footprint U9"}, {"description": "Footprint U9"}]}, {"type": "zones_intersect", "items": []}, {"type": "connection_width", "items": []}], "unconnected_items": []}
+        c = hardset.counts(bad); chk("hardset: a pad-to-track mask bridge and a zone intersection are hard, the own-courtyard overlap exempt, connection_width reported", c["hard"] == 2 and c["exempt"] == {"courtyards_overlap": 1} and c["report"] == {"connection_width": 1})
+        chk("hardset: fifteen types, pre and post the same", len(hardset.HARD_POST) == 15 and hardset.HARD_PRE == hardset.HARD_POST)
+        try: hardset.load(os.path.join(t, "absent.json")); chk("hardset: a missing DRC JSON raises", False)
+        except RuntimeError: chk("hardset: a missing DRC JSON raises", True)
+        erc = {"sheets": [{"violations": [{"type": "pin_not_connected", "severity": "error", "description": "Pin 3 of U1", "items": []}, {"type": "power_pin_not_driven", "severity": "error", "description": "Input Power pin on +3V3_AB", "items": []}, {"type": "label_dangling", "severity": "warning", "description": "x", "items": []}]}]}
+        blk, allowed, by = erc_gate.gate(erc, []); chk("erc_gate: two errors block with no allow-list, the warning does not", len(blk) == 2 and allowed == 0)
+        blk, allowed, by = erc_gate.gate(erc, [("power_pin_not_driven", "+3V3_AB", "the gated rail comes over the harness")]); chk("erc_gate: an allow-listed error with a reason passes, the other still blocks", len(blk) == 1 and allowed == 1)
+        chk("erc_gate: an allow line without a reason is ignored", erc_gate.allow_rules(os.path.join(t, "noallow.txt")) == [])
+        open(os.path.join(t, "erc-allow.txt"), "w").write("pin_not_connected\npower_pin_not_driven|+3V3   # gated rail\n"); chk("erc_gate: only the reasoned line is a rule", erc_gate.allow_rules(os.path.join(t, "erc-allow.txt")) == [("power_pin_not_driven", "+3V3", "gated rail")])
+        d = os.path.join(t, "deliv2"); os.makedirs(d); fails, lines = verify_deliverable.check_dir(d, "x", 4); chk("verify_deliverable: an empty folder fails every item", len(fails) >= len(verify_deliverable.ITEMS))
+    except ImportError as e: chk("hardset, erc_gate and verify_deliverable importable (%s)" % e, False)
     open(os.path.join(t, "stub.log"), "w").write("Traceback (most recent call last):\n"); chk("stub router traceback is a tool crash", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), os.path.join(t, "stub.log"), os.path.join(t, "deliv"))[0] == "TOOL_CRASH")
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     try:

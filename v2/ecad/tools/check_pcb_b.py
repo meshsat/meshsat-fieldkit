@@ -89,9 +89,13 @@ if placed:
     tl = {}
     for t in b.GetTracks():
         if t.GetClass() == "PCB_TRACK": tl[t.GetNetname().lstrip("/")] = tl.get(t.GetNetname().lstrip("/"), 0.0) + t.GetLength() / 1e6
-    pairs = sorted(set(n[:-2] for n in tl if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in tl and (n[:-2] + "_N") in tl))
+    if tl:   # 8 Sep 2026 (MESHSAT-862): the +5V pours on In4 and the GND plane get the A21 copper checks; every netlist pair is reported, a one-leg pair is a FAIL
+        import sys as _sys, os as _os2; _sys.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__))); import copper_checks as _cc; print(_cc.run(b, check))
+    names_all = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
+    pairs = sorted(set(n[:-2] for n in names_all if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in names_all and (n[:-2] + "_N") in names_all))
     for pair in pairs:
         lp, ln = tl.get(pair + "_P", 0.0), tl.get(pair + "_N", 0.0)
+        if (lp > 0) != (ln > 0): check(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (pair, lp, ln)); continue
         if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(lp - ln) > 1.0 else "PASS ") + pair, lp, ln, abs(lp - ln), "" if abs(lp - ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
 # hole-to-hole webs >= 2 mm between every pair of holes (drill edges), the socket standoffs and the module holes included
 hl = [(v[0], v[1][0], r) for r, v in holes.items()]

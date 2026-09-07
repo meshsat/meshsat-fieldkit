@@ -19,7 +19,10 @@ for v in d["violations"]:
     # drop the escape of the item listed second (the DRC lists the pair; one pruned pad frees the other)
     i, t = hits[-1]
     victims[id(t)] = t
-if not victims: print("escape_prune: nothing to prune"); sys.exit(0)
+if not victims:
+    import os
+    _out = os.path.join(os.path.dirname(os.path.abspath(sys.argv[1])), "out", os.path.splitext(os.path.basename(sys.argv[1]))[0] + "-pruned.txt"); os.makedirs(os.path.dirname(_out), exist_ok=True); open(_out, "w").write("# none pruned\n")
+    print("escape_prune: nothing to prune (0 pads; %s)" % _out); sys.exit(0)
 # take the whole escape of each victim's pad: every locked same-net piece chained to it within 4 mm
 removed = set()
 def chain(t):
@@ -31,8 +34,23 @@ def chain(t):
             oends = [o.GetPosition()] if o.GetClass() == "PCB_VIA" else [o.GetStart(), o.GetEnd()]
             if any(math.hypot(e.x - f.x, e.y - f.y) < 20000 for e in ends for f in oends): out[id(o)] = o; frontier.append(o)
     return out.values()
+pruned = []   # 8 Sep 2026 (MESHSAT-862): the pad each pruned escape belonged to, for pruned_gate.py after the route
+pads = [(f.GetReference(), p) for f in b.GetFootprints() for p in f.Pads()]
 for t in victims.values():
-    for o in chain(t):
+    pieces = list(chain(t)); found = None
+    for o in pieces:
+        ends = [o.GetPosition()] if o.GetClass() == "PCB_VIA" else [o.GetStart(), o.GetEnd()]
+        for ref, p in pads:
+            if p.GetNetname() == o.GetNetname() and any(p.GetBoundingBox().Contains(e) for e in ends): found = (ref, p); break
+        if found: break
+    pruned.append((t.GetNetname(), found[0] if found else "?", found[1].GetNumber() if found else "?", t.GetPosition().x / 1e6, t.GetPosition().y / 1e6))
+    for o in pieces:
         if id(o) not in removed: removed.add(id(o)); b.Remove(o)
 pcbnew.SaveBoard(sys.argv[1], b)
-print("escape_prune: %d escape pieces removed for %d pads" % (len(removed), len(victims)))
+import os
+out = os.path.join(os.path.dirname(os.path.abspath(sys.argv[1])), "out", os.path.splitext(os.path.basename(sys.argv[1]))[0] + "-pruned.txt")
+os.makedirs(os.path.dirname(out), exist_ok=True)
+with open(out, "w") as fh:
+    fh.write("# net\tref\tpad\tx\ty (pads whose escape was pruned; pruned_gate.py requires the router to reach them)\n")
+    for net, ref, num, x, y in pruned: fh.write("%s\t%s\t%s\t%.3f\t%.3f\n" % (net, ref, num, x, y))
+print("escape_prune: %d escape pieces removed for %d pads (%s); pruned pads: %s" % (len(removed), len(victims), out, ", ".join("%s.%s" % (r, n) for _, r, n, _, _ in pruned)))

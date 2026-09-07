@@ -19,7 +19,12 @@ rows = list(csv.DictReader(open("out/%s-bom.csv" % N)))
 with open("out/jlc/%s-bom.csv" % N, "w", newline="") as f:
     w = csv.writer(f); w.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"])
     for r in rows:
-        refs = [x for x in r["Reference"].split(",") if not x.startswith(("H", "S_", "TP", "#"))]
+        refs = []   # 8 Sep 2026 (MESHSAT-862): kicad-cli writes `J_ANT?` for a reference without a number and compresses runs to `C49-C57`; JLC's parser wants neither (the deliverable read-back caught both in the shipped D8 BOM)
+        for x in r["Reference"].split(","):
+            x = x.strip().rstrip("?")
+            m = re.match(r"^([A-Za-z_]+)(\d+)-\1?(\d+)$", x)
+            refs += ["%s%d" % (m.group(1), k) for k in range(int(m.group(2)), int(m.group(3)) + 1)] if m else [x]
+        refs = [x for x in refs if x and not x.startswith(("H", "S_", "TP", "#"))]
         if not refs: continue
         w.writerow([r["Value"], ",".join(refs), r["Footprint"].split(":")[-1], r.get("LCSC", "")])
 print("JLC BOM + CPL written to out/jlc/")
