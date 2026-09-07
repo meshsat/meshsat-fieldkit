@@ -236,6 +236,19 @@ def set_lid(open_):
         base_m = CLOSED[o.name]
         o.matrix_world = (Matrix.Translation(hinge) @ Matrix.Rotation(math.radians(-100), 4, "X") @ Matrix.Translation(-hinge) @ base_m) if open_ else base_m
 frame = import_stl("panel_frame", "frame1450.stl", M["black"], fit=(True, "max", RIM))
+# the QMX HF unit in its printed tray on the lid's inner face over the right strip (32.60 item 5, session decision, veto open): the tray's tab face
+# against the cavity top, the pocket opening downward, the 95 x 63 x 25 unit inside; X 103.5 to 172.5 clears the Xenarc box (east edge 102.6) and the
+# lid wall, Y -51.5 to 71.5 clears the camera window; the tray swings with the lid (`v2/cad/lid_bracket_qmx.py`, STL from the release folder)
+LID_IN_Z = RIM - 1.0 + LIDH - 6.0                     # the lid cavity's inner face (lid_cavity above): 147.9
+QX, QY = 138.0, 10.0
+tray = import_stl("lid_tray_qmx", "lid_bracket_qmx.stl", M["white"], matrix=Matrix.Rotation(math.radians(90), 4, "Z") @ Matrix.Rotation(math.pi, 4, "X"), fit=(True, "max", LID_IN_Z))
+if tray is not None: tray.matrix_world = Matrix.Translation((QX, QY, 0)) @ tray.matrix_world
+qmx = box("lid_qmx_unit", (63.0, 95.0, 25.0), (QX, QY, LID_IN_Z - 2.0 - 12.5), M["black"], bevel=1.0)
+box("lid_qmx_face", (61.0, 2.0, 23.0), (QX, QY - 47.0, LID_IN_Z - 2.0 - 12.5), M["dark"])   # the front panel (display and knobs) toward the operator
+for o in (tray, qmx):
+    if o is not None: LID.append(o); CLOSED[o.name] = o.matrix_world.copy()
+for o in bpy.data.objects:
+    if o.name == "lid_qmx_face": LID.append(o); CLOSED[o.name] = o.matrix_world.copy()
 # ------------------------------------------------------------------ the back wall: the upright connector plate between the ribs, the shore and USB receptacles, both cables plugged
 WALL_Y = wall_y(54.0)   # the long wall's outer face at the plate's mid-height (the drafted shell of the drawing)
 box("conn_plate", (CPLATE["w"], 3, CPLATE["h"]), (CPLATE["cx"], WALL_Y + 1.5, CPLATE["cz"]), M["alu"])
@@ -510,6 +523,7 @@ VIEWS.update({
     "level-a22-top": dict(cam=camera("cam_l_a22_top", (0, -40, 800), (0, 0, 20), 50), lid=True, noface=True, hide=UPPER["d8"]),
     "level-dock": dict(cam=camera("cam_l_dock", (-220, -400, 560), (-20, -30, 10), 46), lid=True, noface=True, hide=UPPER["a22"]),
     "level-dock-top": dict(cam=camera("cam_l_dock_top", (0, -40, 800), (0, 0, 10), 50), lid=True, noface=True, hide=UPPER["a22"]),
+    "lid-inside": dict(cam=camera("cam_lid_in", (198, -223, 373), (138, 197, 253), 55), lid=True),   # the open lid's inner face: the QMX tray over the right strip (32.60 item 5)
     "face-pa-underside": dict(cam=camera("cam_pa", (-200, -420, 240), (-45, 20, 190), 50), lid=True, lift=True),   # the PA flange and the Xenarc block under the lifted plate
     "dock-joint": dict(cam=camera("cam_dock", (40, -330, 150), (-45, -60, 10), 60), lid=True, cutaway=True, noface=True, hide=UPPER["a22"]),      # front wall removed: the float clamps and plugs on the dock strip
     "dock-joint-a22": dict(cam=camera("cam_dock_a", (40, -330, 170), (-45, -60, 20), 60), lid=True, cutaway=True, noface=True, hide=UPPER["d8"]),   # the same with A22 mated on them
