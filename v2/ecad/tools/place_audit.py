@@ -115,7 +115,16 @@ def main(a):
         # Anything else (a track or a via) is copper this pipeline laid itself, the fanout vias and the pre-routed pairs, which took the lane
         # the escape wanted; the router can still serve the pad on another layer and `pruned_gate.py` refuses the board after the route if it
         # did not. On B17 that split is 6 against 28, and blocking the chain on the 28 would be blocking it on our own pre-route.
-        by_pad = [r for r in orphan if len(r) > 6 and r[6].strip().startswith("Pad")]
+        # ...and only when that pad belongs to ANOTHER part. An escape that shorts a neighbouring pad of its OWN connector is a fault of the
+        # escape geometry for that footprint, not of the placement, and moving parts cannot fix it; on B17 seven of the sixteen were
+        # J_HDMI against J_HDMI and J_LIME against J_LIME (9 Sep 2026 00:45). They are counted and named on their own line.
+        def _other_ref(r):
+            m = re.search(r" of ([A-Za-z_][A-Za-z0-9_]*)", r[6]) if len(r) > 6 else None
+            return m.group(1) if m else None
+        pad_rows = [r for r in orphan if len(r) > 6 and r[6].strip().startswith("Pad")]
+        own_pad = [r for r in pad_rows if _other_ref(r) == r[1]]
+        by_pad = [r for r in pad_rows if _other_ref(r) != r[1]]
+        if own_pad: lines.append("INFO  %d pruned escapes shorted another pad of their OWN part: the escape geometry for that footprint, not the placement (%s)" % (len(own_pad), ", ".join(sorted({r[1] for r in own_pad}))))
         displaced = len(orphan) - len(by_pad)
         if displaced: lines.append("INFO  %d of %d pruned escapes were displaced by copper this pipeline laid (fanout vias, pre-routed pairs), not by the placement" % (displaced, len(orphan)))
         if len(by_pad) >= 12: lines.append("FAIL  %d escapes pruned against another part's PAD: the placement cannot carry the escape at that many pads (%d more were displaced by our own pre-route copper)" % (len(by_pad), displaced)); coll += 1
