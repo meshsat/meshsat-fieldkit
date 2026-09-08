@@ -8,8 +8,10 @@ shunt with the B- and pack - lands along the south edge; tools/gen_pcb_p3.py pla
 layers and packs the gauge and its filters in the middle.
 """
 import math, sys, os
-import pcbnew
+import os, pcbnew
 from pcbnew import VECTOR2I, FromMM
+PHASE = os.environ.get("PHASE", "P2")   # the silk carries the phase the chain builds; the gate in verify_deliverable.py refuses a deliverable stamped with another (8 Sep 2026)
+
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-p-pack.kicad_pcb"
 BOARD_L, BOARD_W, BOARD_R = 70.0, 44.0, 2.0
@@ -114,7 +116,7 @@ for i, (x, y) in enumerate(STANDOFFS, 1):
 for k, r in ZONES.items(): rect(r, pcbnew.Dwgs_User, 0.12); text(k, (r[0] + r[2]) / 2, r[3] - 1.0, pcbnew.Dwgs_User, 0.8, 0.14)
 text("B+ > F1 25A > Q1 CHG > Q2 DSG > PACK+", 0.0, 20.2, pcbnew.F_SilkS, 0.8, 0.14)
 text("B- > R10 2m > PACK-   taps J_CELL   NTC J_TS   SMBus J_SMB", -6.0, -20.2, pcbnew.F_SilkS, 0.8, 0.14)
-text("PCB-P PACK BMS REV A (P1)", 0, -3.0, pcbnew.B_SilkS, 1.2, 0.2, mirror=True)
+text("PCB-P PACK BMS REV A (%s)" % PHASE, 0, -3.0, pcbnew.B_SilkS, 1.2, 0.2, mirror=True)
 text("MESHSAT-830 | 70x44x1.6 2L 2oz | 2026-09-07", 0, -5.5, pcbnew.B_SilkS, 0.8, 0.14, mirror=True)
 pcbnew.SaveBoard(OUT, board)
 print("saved", OUT, "holes: 4")

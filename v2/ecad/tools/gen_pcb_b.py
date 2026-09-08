@@ -12,8 +12,10 @@ north edge, the LG290P, the bridges), the RockBLOCK 9704 bracket south-east (52 
 (113, -46) over A22's ribbon header. The board overhangs A22 by 45 mm on each side and 20 mm north and south (support posts: ASSEMBLY.md).
 """
 import math, sys, os
-import pcbnew
+import os, pcbnew
 from pcbnew import VECTOR2I, FromMM
+PHASE = os.environ.get("PHASE", "B17")   # the silk carries the phase the chain builds; the gate in verify_deliverable.py refuses a deliverable stamped with another (8 Sep 2026)
+
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-b-compute.kicad_pcb"
 BOARD_L, BOARD_W, BOARD_R = 330.0, 200.0, 5.0
@@ -193,7 +195,7 @@ text("E22-900M30S LoRa | E72 x2 (antennas -> north edge) | LG290P + U.FL -> A22 
 text("KSZ9897R Gigabit switch | H5007NL | PoE TPS23861 (54 V from A22 J_54V)", -142.0, 38.5, pcbnew.F_SilkS, 0.9, 0.16)
 # datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("PCB-B COMPUTE  REV A (B16)", 100, -96.0, pcbnew.F_SilkS, 1.6, 0.26)
+text("PCB-B COMPUTE  REV A (%s)" % PHASE, 100, -96.0, pcbnew.F_SilkS, 1.6, 0.26)
 text("MESHSAT-830 | 330x200x1.6 6L JLC06161H-3313 | matte black | 2026-09-07", 100, -99.0, pcbnew.F_SilkS, 1.0, 0.16)
 text("BACK WALL (+Y)", 0, 98.5, pcbnew.F_SilkS, 1.2, 0.2); text("FRONT WALL (-Y)   v v v", -60, -98.5, pcbnew.F_SilkS, 1.2, 0.2)
 text("PORT (-X)", -hx + 5.5, -60, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 6.0, 60, pcbnew.F_SilkS, 1.2, 0.2, angle=90)

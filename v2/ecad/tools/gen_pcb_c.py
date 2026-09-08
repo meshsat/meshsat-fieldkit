@@ -118,8 +118,8 @@ for (x, y) in L.FRAME_BOSSES: circle(x, y, 5.2, pcbnew.Dwgs_User, 0.1)
 bx0, by0, bx1, by1 = L.B_OUTLINE; rounded_rect(bx0, by0, bx1, by1, 2.0, pcbnew.Dwgs_User, 0.1); text("B16 outline below (330 x 200): the deep parts clear its tall parts (panel1450.clearance_report)", 0, by0 + 4.0, pcbnew.Dwgs_User, 1.6, 0.25)
 line(-4, 0, 4, 0, pcbnew.Dwgs_User, 0.1); line(0, -4, 0, 4, pcbnew.Dwgs_User, 0.1); text("CASE DATUM (0,0)", 0, -6.5, pcbnew.Dwgs_User, 1.2, 0.2)
 # ---------------------------------------------------------------- legends on the board itself (the face legends are laser marked on the plate)
-PHASE = "C7"
-text("PCB-C %s BACKER RING  -  under the face plate  -  MESHSAT-830  -  2026-09-07" % PHASE, 0, y0 + 4.0, pcbnew.F_SilkS, 2.0, 0.3)
+PHASE = os.environ.get("PHASE", "C8")   # 8 Sep 2026: the phase comes from the chain, and the silk no longer carries a fixed date that goes stale
+text("PCB-C %s BACKER RING  -  under the face plate  -  MESHSAT-830" % PHASE, 0, y0 + 4.0, pcbnew.F_SilkS, 2.0, 0.3)
 text("UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor", 0, y0 + 8.0, pcbnew.B_SilkS, 1.6, 0.25, mirror=True)
 text("LEFT: SOS, EMCON, ZEROIZE, LIGHT", x0 + 23, y1 - 5.0, pcbnew.F_SilkS, 1.6, 0.25); text("RIGHT: MAIN, PI, TEST, status LEDs", x1 - 23, y1 - 5.0, pcbnew.F_SilkS, 1.6, 0.25)
 pcbnew.SaveBoard(OUT, board)

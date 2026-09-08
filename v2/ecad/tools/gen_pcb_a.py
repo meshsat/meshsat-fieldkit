@@ -6,9 +6,11 @@ Case-centred frame as in the geometry appendix (+Y = case back wall). Millimetre
 along the south band, the D8 mezzanine 100 x 80 at X 0 to 100, the front end, charger and PoE stages in the west column, the rails in the
 middle column, the PD outlet and the eFuses in the north-east band, the lead connectors on the east strip. The PA module is on the face plate.
 """
-import math, sys
+import math, sys, os
 import pcbnew
 from pcbnew import VECTOR2I, FromMM
+PHASE = os.environ.get("PHASE", "A23")   # the silk carries the phase the chain builds; the gate in verify_deliverable.py refuses a deliverable stamped with another (8 Sep 2026)
+
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-a-power.kicad_pcb"
 BOARD_L, BOARD_W, BOARD_R = 240.0, 160.0, 5.0
@@ -182,7 +184,7 @@ rect((J_AB[0] - 5.5, J_AB[1] - 21.0, J_AB[0] + 5.5, J_AB[1] + 21.0), pcbnew.Dwgs
 text("F1 25 A", FUSE_SITE[0], FUSE_SITE[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
-text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A22)", 50, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
+text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (%s)" % PHASE, 50, 76.5, pcbnew.F_SilkS, 2.2, 0.35)
 text("MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 6 layers JLC06161H-3313  |  matte black  |  2026-09-07", 50, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -30, 77.0, pcbnew.F_SilkS, 1.4, 0.22); text("FRONT WALL (-Y)   v v v", 30, -78.5, pcbnew.F_SilkS, 1.3, 0.22)
 text("PORT (-X)", -hx + 5.0, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 5.0, -60, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
