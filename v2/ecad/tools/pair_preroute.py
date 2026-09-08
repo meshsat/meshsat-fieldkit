@@ -646,13 +646,24 @@ def main(a):
                     if all(los_ok(c, ~trk[layers[run[0][0]]]) for c, run in zip(cand, runs)) and legs_clear(cand): smoothed = cand; break
             if smoothed is None:
                 failed = "%s -> %s (the legs clear no smoothing of the centreline)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference())
-                if os.environ.get("PAIR_DEBUG"):   # where the legs hit: the first forbidden cell of each leg on the raw path
+                if os.environ.get("PAIR_DEBUG"):
+                    # where the legs hit: the first forbidden cell of each leg on the raw path, under the SAME exemption legs_clear uses
+                    # (the first and last 1.2 mm at a fine-pitch station are inside the pad pair and are not obstacles). Without the
+                    # exemption this print named a cell 0.23 mm from the pad that legs_clear had already skipped, and an evening went
+                    # into a theory about pair escapes at the socket that the tool was never blocked by (8 Sep 2026 22:15).
                     for r_i, run in enumerate(runs):
                         L = layers[run[0][0]]; pts = [gr.xy(c[2], c[1]) for c in run]
+                        first_run, last_run = r_i == 0, r_i == len(runs) - 1
                         for poly, net in ((offset_polyline(pts, d * p_side), pn), (offset_polyline(pts, -d * p_side), nn)):
+                            seg = [math.hypot(poly[k + 1][0] - poly[k][0], poly[k + 1][1] - poly[k][1]) for k in range(len(poly) - 1)]
+                            total = sum(seg); walked = 0.0; hit = None
                             for k in range(len(poly) - 1):
-                                jj, ii = gr.cell(*poly[k])
-                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]: print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s" % (net, poly[k][0], poly[k][1], b.GetLayerName(L))); break
+                                if not ((first_run and fineA and walked < 1.2) or (last_run and fineB and total - walked < 1.2)):
+                                    jj, ii = gr.cell(*poly[k])
+                                    if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]: hit = (poly[k], walked); break
+                                walked += seg[k]
+                            if hit: print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s, %.2f mm along run %d of %d" % (net, hit[0][0], hit[0][1], b.GetLayerName(L), hit[1], r_i + 1, len(runs)))
+                            else: print("pair_preroute: leg %s clears run %d of %d on %s (the blocker is another run or the smoothing)" % (net, r_i + 1, len(runs), b.GetLayerName(L)))
                 break
             merged = []   # [(layer index, points)] with consecutive same-layer runs joined into one polyline
             for r_i, run in enumerate(runs):
