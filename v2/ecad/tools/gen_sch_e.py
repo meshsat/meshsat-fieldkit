@@ -345,4 +345,16 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+# --- decoupling as data (8 Sep 2026, MESHSAT-862 Stage C): the pin each capacitor serves, so the loop gate measures a distance instead of
+# counting parts. The tracker's compensation and soft-start networks (C16 to C23), the boost and bootstrap capacitors (C17, C18, C30), the
+# hot-swap timer (C5), the crystal loads and the sense filters are not decoupling and are not listed. `intent.write` refuses an entry whose
+# capacitor is not on that pin's net, so a wrong line here stops the generator.
+for _i, _pin in enumerate((1, 10, 22, 33, 42, 49)): _intent.bypass("C%d" % (38 + _i), "U10", _pin, "+3V3_E6")   # the RP2040's six IOVDD pins
+_intent.bypass("C44", "U11", "8", "+3V3_E6")     # the QSPI flash's VCC
+_intent.bypass("C45", "U10", "23", "E6_DVDD"); _intent.bypass("C46", "U10", "50", "E6_DVDD")
+_intent.bypass("C47", "U10", "44", "+3V3_E6")    # VREG_VIN
+_intent.bypass("C31", "U12", "2", "CELL_F")      # the 5 V buck's input capacitor, the loop that matters on a switcher
+_intent.bypass("C34", "U13", "1", "+5V_E6"); _intent.bypass("C35", "U13", "5", "+3V3_E6")   # the LDO's input and output
+_intent.bypass("C48", "U14", "8", "+3V3_E6")     # BME688 VDD
+_intent.bypass("C49", "U15", "8", "+3V3_E6"); _intent.bypass("C50", "U15", "5", "+3V3_E6")  # BMI270 VDD and VDDIO
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json
