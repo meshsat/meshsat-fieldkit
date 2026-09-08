@@ -73,7 +73,7 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
             if pth: c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + 0.2 + 0.30)
             if p.GetNetname() in nets: continue
-            pk = "%s.%s" % (fp.GetReference(), p.GetNumber())
+            pk = "%s.%s@%d,%d" % (fp.GetReference(), p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 13:00)
             for L in layers:
                 if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
                 if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
@@ -391,6 +391,30 @@ def main(a):
             for vx_, vy_ in via_site(ex_, ey_, px_, py_, L, aL, net, away):
                 if stub(ex_, ey_, vx_, vy_, L, net): return (vx_, vy_)
             return None
+        def dive_p(x, y, ex, ey, L, aL, obj, net, away):
+            """The P leg from its corridor end (ex, ey) on L to its pad (x, y) under the N leg: a via beside the corridor end, a hop on the other layer,
+            a via beside the pad (none for a through-hole pad, which the hop layer reaches itself), the stub in. Returns the failure text or None."""
+            if aL is not None and aL != L:   # the pad is on another layer: the P leg runs on the corridor layer to a via beside its pad, under the N stub
+                site = None
+                for cand in via_site(x, y, x, y, L, aL, net, away):
+                    if stub(ex, ey, cand[0], cand[1], L, net): site = cand; break
+                if site is None: return "no via site beside the pad with a hop path"
+                via_at(site[0], site[1], net); gr.disc(via, site[0], site[1], VIA_SPLIT)
+                return None if stub(site[0], site[1], x, y, aL, net) else "no stub path"
+            hop = next((L2 for L2 in layers if L2 != L), None)   # the pad is on the corridor layer: dive through the other corridor layer
+            if hop is None: return "no layer to dive through"
+            aL_ = L if aL is None else aL
+            site1 = via_hop(ex, ey, x, y, L, hop, net, away)
+            if site1 is None: return "no via site for the dive"
+            via_at(site1[0], site1[1], net); gr.disc(via, site1[0], site1[1], VIA_SPLIT)
+            pth_ = hasattr(obj, "GetAttribute") and obj.GetAttribute() == pcbnew.PAD_ATTRIB_PTH
+            if pth_ and stub(site1[0], site1[1], x, y, hop, net): return None   # a through-hole pad takes the leg on the hop layer
+            site2 = None
+            for cand in via_site(x, y, x, y, hop, aL_, net, away):
+                if stub(site1[0], site1[1], cand[0], cand[1], hop, net): site2 = cand; break
+            if site2 is None: return "no via site beside the pad with a dive path"
+            via_at(site2[0], site2[1], net); gr.disc(via, site2[0], site2[1], VIA_SPLIT)
+            return None if stub(site2[0], site2[1], x, y, aL_, net) else "no stub path"
         for (pa, na), (pb, nb) in sections:
             A = [anchor(pa), anchor(na)]; B = [anchor(pb), anchor(nb)]
             sx, sy = (A[0][0] + A[1][0]) / 2, (A[0][1] + A[1][1]) / 2; gx, gy = (B[0][0] + B[1][0]) / 2, (B[0][1] + B[1][1]) / 2
@@ -648,30 +672,6 @@ def main(a):
                 side_leg = ax_ * uy - ay_ * ux
                 side_pad = ax_ * (Nn[1] - P[1]) - ay_ * (Nn[0] - P[0])
                 return side_leg * side_pad < 0
-            def dive_p(x, y, ex, ey, L, aL, obj, net, away):
-                """The P leg from its corridor end (ex, ey) on L to its pad (x, y) under the N leg: a via beside the corridor end, a hop on the other layer,
-                a via beside the pad (none for a through-hole pad, which the hop layer reaches itself), the stub in. Returns the failure text or None."""
-                if aL is not None and aL != L:   # the pad is on another layer: the P leg runs on the corridor layer to a via beside its pad, under the N stub
-                    site = None
-                    for cand in via_site(x, y, x, y, L, aL, net, away):
-                        if stub(ex, ey, cand[0], cand[1], L, net): site = cand; break
-                    if site is None: return "no via site beside the pad with a hop path"
-                    via_at(site[0], site[1], net); gr.disc(via, site[0], site[1], VIA_SPLIT)
-                    return None if stub(site[0], site[1], x, y, aL, net) else "no stub path"
-                hop = next((L2 for L2 in layers if L2 != L), None)   # the pad is on the corridor layer: dive through the other corridor layer
-                if hop is None: return "no layer to dive through"
-                aL_ = L if aL is None else aL
-                site1 = via_hop(ex, ey, x, y, L, hop, net, away)
-                if site1 is None: return "no via site for the dive"
-                via_at(site1[0], site1[1], net); gr.disc(via, site1[0], site1[1], VIA_SPLIT)
-                pth_ = hasattr(obj, "GetAttribute") and obj.GetAttribute() == pcbnew.PAD_ATTRIB_PTH
-                if pth_ and stub(site1[0], site1[1], x, y, hop, net): return None   # a through-hole pad takes the leg on the hop layer
-                site2 = None
-                for cand in via_site(x, y, x, y, hop, aL_, net, away):
-                    if stub(site1[0], site1[1], cand[0], cand[1], hop, net): site2 = cand; break
-                if site2 is None: return "no via site beside the pad with a dive path"
-                via_at(site2[0], site2[1], net); gr.disc(via, site2[0], site2[1], VIA_SPLIT)
-                return None if stub(site2[0], site2[1], x, y, aL_, net) else "no stub path"
             cross_near = end_crossing(A[0], A[1], lp0, ln0); cross_far = end_crossing(B[0], B[1], lp1, ln1)
             if crossing and not (cross_near or cross_far): pass
             ends = ((A[0], lp0, firstL, net_p, True, 1), (A[1], ln0, firstL, net_n, True, -1), (B[0], lp1, lastL, net_p, False, 1), (B[1], ln1, lastL, net_n, False, -1))
@@ -739,7 +739,7 @@ def main(a):
         if failed: rollback(); report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections))); continue
         # every other pad of the two nets (a pull resistor, a test point, a part's second pin) gets a stub to the nearest laid piece of its net, so the router
         # has nothing left on a pair net (8 Sep 2026: Freerouting wandered 15 to 23 pieces over three layers to reach D9's pull-downs and the read-back called the pairs uncoupled)
-        left = 0; stubs_ = 0
+        left = 0; stubs_ = 0; dives_ = 0
         for net_obj, net in ((net_p, pn), (net_n, nn)):
             laid_pts = [(mm(t.GetStart().x), mm(t.GetStart().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net] + [(mm(t.GetEnd().x), mm(t.GetEnd().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net]
             if not laid_pts: continue
@@ -762,9 +762,16 @@ def main(a):
                             if stub(site[0], site[1], qx, qy, qL, net_obj): done = True; break
                             continue
                         if SL in trk1[net] and stub(x_, y_, qx, qy, SL, net_obj): done = True; break
+                    if not done:   # the pad across the other leg (a pull-down whose side flipped with a swap): the stub dives under it on the other corridor layer (8 Sep 2026 13:02)
+                        for x_, y_, L_ in near[:3]:
+                            if L_ not in layers: continue
+                            n0 = len(pieces)
+                            if dive_p(qx, qy, x_, y_, L_, (None if (qL is None or qL == L_) else qL), q, net_obj, (0.0, 0.0)) is None: done = True; dives_ += 1; break
+                            for t in pieces[n0:]: b.Remove(t)
+                            del pieces[n0:]
                     if done: stubs_ += 1
                     else: left += 1
-        if stubs_ or left: report.append("STUBS %s: %d other pad(s) of the pair nets stubbed to the laid copper, %d left to the router" % (stem, stubs_, left))
+        if stubs_ or left: report.append("STUBS %s: %d other pad(s) of the pair nets stubbed to the laid copper (%d by a dive), %d left to the router" % (stem, stubs_, dives_, left))
         laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added))
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
