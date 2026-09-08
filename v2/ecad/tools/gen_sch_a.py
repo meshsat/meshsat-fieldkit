@@ -15,7 +15,7 @@ _intent.rail("VBUS20", 20.0, 6.0, 8.0, "U2", note="the charge bus, BQ25731 up to
 for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, note="one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt")
 _intent.rail("+5V_DEV", 5.0, 3.0, 6.0, "R43", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt")
 _intent.rail("+3V3", 3.3, 1.0, 3.0, "L7", note="this board's logic; the net starts at the TPS62933 inductor L7")
-_intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "U13", loads={"J_PA": 6.0}, note="the RA30H1317M1 on the face plate")
+_intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, note="the RA30H1317M1 on the face plate")
 _intent.rail("+12V_HF", 12.0, 1.0, 2.0, "U15", note="the QMX")
 _intent.rail("+54V_POE", 54.0, 0.3, 0.6, "U16", note="the TPS23861 PSE on B16")
 SYMDIR = "/usr/share/kicad/symbols/"
