@@ -12,7 +12,9 @@ NETS = {"A": "pcb-a-power", "B": "pcb-b-compute", "C": "pcb-c-display", "D": "pc
 
 def load(stem):
     """{net name: {(ref, pin)}} and {(ref, pin): net name} from a KiCad netlist."""
-    path = os.path.join(ECAD, stem, "out", stem + ".net")
+    import glob as _glob   # 8 Sep 2026: a board generated in a copy directory (pcb-a-power-a23) carries the newest netlist; the newest of <stem>*/out/<stem>.net counts
+    cands = [c for c in _glob.glob(os.path.join(ECAD, stem + "*", "out", stem + ".net")) if os.path.isfile(c)]
+    path = max(cands, key=os.path.getmtime) if cands else os.path.join(ECAD, stem, "out", stem + ".net")
     if not os.path.exists(path): return None, None
     txt = open(path, encoding="utf-8", errors="replace").read()
     by_net, by_pin = {}, {}

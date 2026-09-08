@@ -41,8 +41,6 @@
   "layer_rules": {
    "USB": [
     "F.Cu",
-    "In2.Cu",
-    "In3.Cu",
     "B.Cu"
    ],
    "RF": [
