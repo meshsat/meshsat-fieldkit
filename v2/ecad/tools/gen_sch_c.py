@@ -350,4 +350,20 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+# --- decoupling as data (8 Sep 2026, MESHSAT-862 Stage C): which capacitor serves which supply pin, so the decoupling gate measures the
+# pad-to-pin distance instead of counting parts. Only supply pins: the crystal loads, the RC debounce networks, the e-paper charge pump's
+# reservoirs (C30 to C37) and the LED rail bulk are not decoupling and are not listed. `intent.write` refuses an entry whose capacitor is
+# not on that pin's net, so a wrong line here stops the generator.
+for _i, _pin in enumerate((1, 10, 22, 33, 42, 49)): _intent.bypass("C%d" % (7 + _i), "U3", _pin, "+3V3")   # the RP2040's six IOVDD pins
+_intent.bypass("C13", "U4", "8", "+3V3")        # the QSPI flash's VCC
+_intent.bypass("C14", "U3", "23", "C_DVDD"); _intent.bypass("C15", "U3", "50", "C_DVDD")   # the two DVDD pins off the internal regulator
+_intent.bypass("C16", "U3", "44", "+3V3")       # VREG_VIN
+_intent.bypass("C3", "U5", "1", "+5V"); _intent.bypass("C4", "U5", "5", "+3V3")            # the LDO's input and output capacitors
+_intent.bypass("C17", "U1", "24", "+3V3"); _intent.bypass("C18", "U2", "24", "+3V3")       # the two expanders
+_intent.bypass("C25", "U9", "5", "+3V3")        # the EMCON inverter
+_intent.bypass("C38", "U_LIGHT", "2", "+3V3")   # the light sensor
+_intent.bypass("C29", "J_EPD", "15", "EPD_VCC"); _intent.bypass("C28", "J_EPD", "16", "EPD_VCC")
+# OPEN, needs a part and therefore a regeneration, not fixed here: the RP2040's ADC_AVDD (pin 43) and USB_VDD (pin 48) share the seven
+# 100 nF above with the six IOVDD pins and the flash, so two supply pins have no capacitor of their own; RAIL_SENSE is an ADC input, so
+# pin 43 wants its own 100 nF behind a ferrite or a 10 ohm. Carried with the decoupling placement decision for the next C phase.
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json
