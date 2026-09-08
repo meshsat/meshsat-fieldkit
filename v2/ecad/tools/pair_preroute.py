@@ -67,8 +67,9 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             if pth: c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + 0.2 + 0.30)
             if p.GetNetname() in nets: continue
             for L in layers:
-                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if pth else CLR) + half)
-            anyL = next((L for L in layers if p.IsOnLayer(L)), None)
+                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half)
+                if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
+            anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
             if anyL is not None or pth: gr.poly(via, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split)
     for t in b.GetTracks():
         if t.GetClass() == "PCB_VIA": c = t.GetPosition(); gr.disc(via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + 0.2 + 0.30 + split)
@@ -148,7 +149,8 @@ def smooth(gr, pts_cells, passable, cap=None):
 def stub_path(gr, passable, start_xy, goal_xy, window):
     """A short A* for one track from start to goal (mm) on one layer's passable map; returns [(x, y)...] smoothed, or None."""
     sj, si = gr.cell(*start_xy); gj, gi = gr.cell(*goal_xy)
-    for (jj, ii) in ((sj, si), (gj, gi)): passable[max(0, ii - 2):ii + 3, max(0, jj - 2):jj + 3] = True
+    for (jj, ii) in ((sj, si), (gj, gi)):
+        if 0 <= ii < passable.shape[0] and 0 <= jj < passable.shape[1]: passable[ii, jj] = True
     (jmin, imin), (jmax, imax) = window
     dist = {(si, sj): 0.0}; prev = {}; pq = [(0.0, 0.0, (si, sj))]; found = None; n = 0
     steps = [(-1, 0, 1.0), (1, 0, 1.0), (0, -1, 1.0), (0, 1, 1.0), (-1, -1, 1.414), (-1, 1, 1.414), (1, -1, 1.414), (1, 1, 1.414)]
@@ -229,7 +231,13 @@ def main(a):
     for stem in stems:   # a swapped pair is appended and laid again
         pn, nn = stem + "_P", stem + "_N"; cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
         vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); half = w + s / 2 + 0.15 + 0.1; d = (w + s) / 2   # the corridor carries the per-leg maps' 0.15 mm mask margin plus one grid cell, or the legs never clear it
-        pads = {net: [p for f in b.GetFootprints() for p in f.Pads() if p.GetNetname() == net] for net in (pn, nn)}
+        def is_pull(p):
+            """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
+            f = p.GetParentFootprint(); ps = list(f.Pads())
+            if len(ps) != 2 or not f.GetReference()[:1] in "RCL": return False
+            o = next((q for q in ps if q.GetNumber() != p.GetNumber()), None); on = (o.GetNetname() if o else "").lstrip("/")
+            return on == "GND" or on.startswith("+") or on.startswith("V") or "VDD" in on or "VBUS" in on or "3V3" in on
+        pads = {net: [p for f in b.GetFootprints() for p in f.Pads() if p.GetNetname() == net and not is_pull(p)] for net in (pn, nn)}
         # a real leg is a chain of pads (connector, series resistor, ESD diode, hub pin): match each P pad to the nearest N pad within 5 mm (a station),
         # order the stations along the leg by nearest neighbour from the outermost one; unmatched pads (a lone test point) stay the router's stubs
         import itertools
@@ -252,13 +260,13 @@ def main(a):
         order = [far]; rest = [st for st in stations if st is not far]
         while rest:
             nxt = min(rest, key=lambda st: math.hypot(mid(st)[0] - mid(order[-1])[0], mid(st)[1] - mid(order[-1])[1])); order.append(nxt); rest.remove(nxt)
-        sections = list(zip(order[:-1], order[1:]))
+        sections = [(a_, b_) for a_, b_ in zip(order[:-1], order[1:]) if a_[0].GetParentFootprint().GetReference() != b_[0].GetParentFootprint().GetReference()]   # a part's pass-through pins (the ESD's 1 and 6) are joined by join_adjacent_pins, not by a corridor
         for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and not t.IsLocked()]: b.Remove(t)   # a previous route of the pair goes; the locked escapes stay
         pre_vias[:] = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA" and t.IsLocked()]
         trk, via = build_maps(gr, b, layers, set(), half, vd / 2)   # every net's copper, the pair's own pads included: the corridor stops outside the stations, the stubs enter
         via1 = build_maps(gr, b, layers, {pn, nn}, half, vd / 2, split=0.05)[1]   # sites for a single end via (plain margins; the corridor's map keeps room for a via pair)
         pad_layers = sorted({L for net in (pn, nn) for p in pads[net] for L in _ALL.values() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and p.IsOnLayer(L)} | set(layers), key=list(_ALL.values()).index)
-        trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.15, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.15, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
+        trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         pieces = []
         def rollback():
@@ -324,7 +332,7 @@ def main(a):
             crossing = False
             if side_a * side_b < 0 and min(abs(side_a), abs(side_b)) > 1e-6:
                 fa_, fb_ = pb.GetParentFootprint(), nb.GetParentFootprint()
-                swappable = fa_ is not fb_ and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and abs(fa_.GetOrientationDegrees() - fb_.GetOrientationDegrees()) < 0.01 and not fa_.IsLocked() and not fb_.IsLocked() and stem not in swapped
+                swappable = fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and abs(fa_.GetOrientationDegrees() - fb_.GetOrientationDegrees()) < 0.01 and not fa_.IsLocked() and not fb_.IsLocked() and stem not in swapped
                 if swappable: twist = "%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()); break
                 crossing = True   # both stations are fixed parts (a connector, a hub): the legs cross once at the near station, one stub under the other
             def legs_clear(sm):   # each offset leg of every run against its own single-track map (the other leg and every other net are obstacles)
@@ -382,8 +390,8 @@ def main(a):
                 sp = stub_path(gr, pm.copy(), (ax_, ay_), (bx_, by_), win2) if pm is not None else None
                 if sp and len(sp) >= 2:
                     for k in range(len(sp) - 1): seg(sp[k][0], sp[k][1], sp[k + 1][0], sp[k + 1][1], SL, net)
-                    seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net)
-                else: seg(ax_, ay_, bx_, by_, SL, net)
+                    seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net); return True
+                return False   # no blind straight piece (it shorted J_HARN1's pin 4 on D9)
             def via_site(ex_, ey_, px_, py_, L, aL, net, away):
                 """A free single-via site near the offset end (ex_, ey_): the nearest cell of via1 that is also clear on both layers' leg maps, preferring the
                 side away from the other leg (unit vector `away`) and the direction of the pad; None when nothing within 3 mm."""
@@ -414,25 +422,37 @@ def main(a):
                 crossing = cross_near if near else cross_far
                 nnx, nny = (ln0[0] - lp0[0], ln0[1] - lp0[1]) if near else (ln1[0] - lp1[0], ln1[1] - lp1[1]); nl_ = math.hypot(nnx, nny) or 1.0
                 away = (-sgn * nnx / nl_, -sgn * nny / nl_)   # from the other leg's end towards this one, continued
-                hop = None
-                if crossing and net is net_p:   # the P stub of a crossing end dives under the N stub: a hop on another corridor layer, then the pad's layer
-                    hop = next((L2 for L2 in layers if L2 != L), None)
-                if aL is None or aL == L:
-                    if hop is None: stub(ex, ey, x, y, L, net); continue
+                ref_ = obj.GetParentFootprint().GetReference() if hasattr(obj, "GetParentFootprint") else "via"
+                def fail_(what): return "%s -> %s (%s for %s at %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), what, net.GetNetname(), ref_)
+                if crossing and net is net_p:
+                    if aL is not None and aL != L:   # the pad is on another layer: the P leg runs on the corridor layer to a via beside its pad, under the N stub
+                        site = via_site(x, y, x, y, L, aL, net, away)
+                        if site is None: failed = fail_("no via site beside the pad"); break
+                        if not stub(ex, ey, site[0], site[1], L, net): failed = fail_("no hop path"); break
+                        via_at(site[0], site[1], net); gr.disc(via1, site[0], site[1], VIA_SPLIT); gr.disc(via, site[0], site[1], VIA_SPLIT)
+                        if not stub(site[0], site[1], x, y, aL, net): failed = fail_("no stub path"); break
+                        continue
+                    hop = next((L2 for L2 in layers if L2 != L), None)   # the pad is on the corridor layer: dive through the other corridor layer
+                    if hop is None: failed = fail_("no layer to dive through"); break
                     aL_ = L if aL is None else aL
-                else: aL_ = aL
-                first_target = hop if hop is not None else aL_
-                site = via_site(ex, ey, x, y, L, first_target, net, away)
-                if site is None:
-                    failed = "%s -> %s (no via site for the %s stub at %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), net.GetNetname(), obj.GetParentFootprint().GetReference() if hasattr(obj, "GetParentFootprint") else "via"); break
-                vx, vy = site; stub(ex, ey, vx, vy, L, net); via_at(vx, vy, net); gr.disc(via1, vx, vy, VIA_SPLIT); gr.disc(via, vx, vy, VIA_SPLIT)
-                if hop is not None and hop != aL_ and aL is not None:   # the dive: a second via back to the pad's layer near the pad
+                    site1 = via_site(ex, ey, x, y, L, hop, net, away)
+                    if site1 is None: failed = fail_("no via site for the dive"); break
+                    if not stub(ex, ey, site1[0], site1[1], L, net): failed = fail_("no hop path"); break
+                    via_at(site1[0], site1[1], net); gr.disc(via1, site1[0], site1[1], VIA_SPLIT); gr.disc(via, site1[0], site1[1], VIA_SPLIT)
                     site2 = via_site(x, y, x, y, hop, aL_, net, away)
-                    if site2 is None: failed = "%s -> %s (no via site for the crossing at %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), obj.GetParentFootprint().GetReference()); break
-                    stub(vx, vy, site2[0], site2[1], hop, net); via_at(site2[0], site2[1], net); gr.disc(via1, site2[0], site2[1], VIA_SPLIT); vx, vy = site2
-                    stub(vx, vy, x, y, aL_, net)
-                else:
-                    stub(vx, vy, x, y, first_target if aL is not None else hop, net)
+                    if site2 is None: failed = fail_("no via site beside the pad"); break
+                    if not stub(site1[0], site1[1], site2[0], site2[1], hop, net): failed = fail_("no dive path"); break
+                    via_at(site2[0], site2[1], net); gr.disc(via1, site2[0], site2[1], VIA_SPLIT); gr.disc(via, site2[0], site2[1], VIA_SPLIT)
+                    if not stub(site2[0], site2[1], x, y, aL_, net): failed = fail_("no stub path"); break
+                    continue
+                if aL is None or aL == L:   # the pad (or an escape via) is on the corridor layer
+                    if not stub(ex, ey, x, y, L, net): failed = fail_("no stub path"); break
+                    continue
+                site = via_site(ex, ey, x, y, L, aL, net, away)   # the pad is on another layer: a via near the offset end, the stub on the pad's layer
+                if site is None: failed = fail_("no via site"); break
+                if not stub(ex, ey, site[0], site[1], L, net): failed = fail_("no hop path"); break
+                via_at(site[0], site[1], net); gr.disc(via1, site[0], site[1], VIA_SPLIT); gr.disc(via, site[0], site[1], VIA_SPLIT)
+                if not stub(site[0], site[1], x, y, aL, net): failed = fail_("no stub path"); break
             if failed: break
         if twist:
             rollback()
@@ -440,11 +460,11 @@ def main(a):
             # their positions is a legal pre-route placement move that untwists the pair (the packer placed them in arbitrary order); done once, then the pair is laid again
             (pa2, na2) = next(sec[1] for sec in sections if "%s -> %s" % (sec[0][0].GetParentFootprint().GetReference(), sec[1][0].GetParentFootprint().GetReference()) == twist)
             fa, fb = pa2.GetParentFootprint(), na2.GetParentFootprint()
-            if fa is not fb and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped:
+            if fa.GetReference() != fb.GetReference() and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped:
                 pa_, pb_ = fa.GetPosition(), fb.GetPosition(); fa.SetPosition(pb_); fb.SetPosition(pa_); swapped.add(stem)
                 for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn)]: b.Remove(t)   # its locked pieces so far go with the retry
                 report.append("SWAP  %s: %s and %s exchanged positions to untwist the pair; laid again" % (stem, fa.GetReference(), fb.GetReference())); stems.append(stem); continue
-            why = ("one part's two pins" if fa is fb else ("different footprints %s / %s" % (fa.GetFPIDAsString().split(":")[-1], fb.GetFPIDAsString().split(":")[-1]) if fa.GetFPIDAsString() != fb.GetFPIDAsString() else ("orientations %s / %s" % (fa.GetOrientationDegrees(), fb.GetOrientationDegrees()) if abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) >= 0.01 else ("locked" if fa.IsLocked() or fb.IsLocked() else "already swapped once"))))
+            why = ("one part's two pins" if fa.GetReference() == fb.GetReference() else ("different footprints %s / %s" % (fa.GetFPIDAsString().split(":")[-1], fb.GetFPIDAsString().split(":")[-1]) if fa.GetFPIDAsString() != fb.GetFPIDAsString() else ("orientations %s / %s" % (fa.GetOrientationDegrees(), fb.GetOrientationDegrees()) if abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) >= 0.01 else ("locked" if fa.IsLocked() or fb.IsLocked() else "already swapped once"))))
             report.append("TWIST %s: the P leg changes side between the stations %s (no swap: %s); a crossing would be needed, left to the router" % (stem, twist, why)); continue
         if failed: rollback(); report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections))); continue
         laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added))
