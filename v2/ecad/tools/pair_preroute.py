@@ -73,7 +73,7 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
             if pth: c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + 0.2 + 0.30)
             if p.GetNetname() in nets: continue
-            pk = "%s.%s@%d,%d" % (fp.GetReference(), p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 13:00)
+            pk = "%s.%s@%d,%d" % (fp.GetReference(), p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 12:59)
             for L in layers:
                 if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
                 if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
@@ -762,7 +762,7 @@ def main(a):
                             if stub(site[0], site[1], qx, qy, qL, net_obj): done = True; break
                             continue
                         if SL in trk1[net] and stub(x_, y_, qx, qy, SL, net_obj): done = True; break
-                    if not done:   # the pad across the other leg (a pull-down whose side flipped with a swap): the stub dives under it on the other corridor layer (8 Sep 2026 13:02)
+                    if not done:   # the pad across the other leg (a pull-down whose side flipped with a swap): the stub dives under it on the other corridor layer (8 Sep 2026 12:59)
                         for x_, y_, L_ in near[:3]:
                             if L_ not in layers: continue
                             n0 = len(pieces)
