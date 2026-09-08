@@ -10,7 +10,7 @@ locked = [t for t in b.GetTracks() if t.IsLocked()]
 def at(pos):
     x, y = pos["x"] * 1e6, pos["y"] * 1e6
     return [t for t in locked if math.hypot(t.GetPosition().x - x, t.GetPosition().y - y) < 60000 or (t.GetClass() == "PCB_TRACK" and (math.hypot(t.GetStart().x - x, t.GetStart().y - y) < 60000 or math.hypot(t.GetEnd().x - x, t.GetEnd().y - y) < 60000))]
-victims = {}; causes = {}
+victims = {}; causes = {}; kept = []
 for v in d["violations"]:
     if v["type"] not in HARD: continue
     items = v.get("items", [])
@@ -24,6 +24,11 @@ for v in d["violations"]:
     def _len(tr):
         return 0.3 if tr.GetClass() == "PCB_VIA" else math.hypot(tr.GetStart().x - tr.GetEnd().x, tr.GetStart().y - tr.GetEnd().y) / 1e6
     i, t = min(hits, key=lambda h: _len(h[1]))
+    if _len(t) > 5.0:
+        # Nothing here is an escape: both items are long pre-routed runs, so this is two laid pairs crossing, a real defect of the
+        # pre-router. Deleting one of them silently would leave a pair half laid and the impedance judge measuring the router's version
+        # instead; the violation is left on the board, the pre-route DRC counts it and the chain refuses. Fail closed, as the audit asks.
+        kept.append((v["type"], t.GetNetname(), _len(t))); continue
     # 8 Sep 2026 (MESHSAT-862): record WHY, not only what. 118 of B17's pads lost their escape with nothing in the log to say what they
     # collided with, so the placement could not be corrected. The counterparty is the other item of the DRC pair.
     other = next((o for o in items if o is not i), None)
@@ -63,6 +68,7 @@ os.makedirs(os.path.dirname(out), exist_ok=True)
 with open(out, "w") as fh:
     fh.write("# net\tref\tpad\tx\ty\tviolation\twhat it collided with (pruned_gate.py requires the router to reach these pads)\n")
     for net, ref, num, x, y, ty, oth in pruned: fh.write("%s\t%s\t%s\t%.3f\t%.3f\t%s\t%s\n" % (net, ref, num, x, y, ty, oth))
+if kept: print("escape_prune: %d violation(s) left in place: both items are laid runs over 5 mm, not escapes (%s)" % (len(kept), ", ".join("%s %s %.0f mm" % k for k in kept[:6])))
 print("escape_prune: %d escape pieces removed for %d pads (%s); pruned pads: %s" % (len(removed), len(victims), out, ", ".join("%s.%s" % (r, n) for _, r, n, _, _, _, _ in pruned)))
 import collections
 _c = collections.Counter("%s vs %s" % (ty, oth.split("[")[0].strip()) for _, _, _, _, _, ty, oth in pruned)
