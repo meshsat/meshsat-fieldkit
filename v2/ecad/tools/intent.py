@@ -16,8 +16,9 @@ _I = {"bypass": [], "rails": {}, "pair_classes": dict(Z_DEFAULT)}
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
-def rail(net, volts, amps_typ, amps_peak, source, loads=None, note=""):
-    _I["rails"][net] = {"volts": volts, "amps_typ": amps_typ, "amps_peak": amps_peak, "source": source, "loads": loads or {}, "note": note}
+def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None):
+    """budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026)."""
+    _I["rails"][net] = {"volts": volts, "amps_typ": amps_typ, "amps_peak": amps_peak, "source": source, "loads": loads or {}, "note": note, **({"budget": budget} if budget else {})}
 
 def pair_class(name, z_diff=None, z_se=None):
     _I["pair_classes"][name] = {k: v for k, v in (("z_diff", z_diff), ("z_se", z_se)) if v is not None}
