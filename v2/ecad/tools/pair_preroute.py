@@ -571,7 +571,14 @@ def main(a):
                 dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_
                 return mx_ + nx_ * out_, my_ + ny_ * out_
-            fine_station = entry_station
+            def fine_station(st):
+                # The tail run (a straight line on F.Cu from the corridor's end into the pad pair) is only for a station whose pads the
+                # corridor is meant to reach directly. A 0.4 mm row is not one: `entry_station0` already refuses it for the corridor's own
+                # end because "the escape vias are the ends", and drawing a straight tail into the pad pair anyway crosses the whole fan.
+                # That asymmetry between the two predicates is what "the legs clear no smoothing of the centreline" was on B17's socket and
+                # switch sections: both legs cleared the corridor and hit at the first cell of the tail run (8 Sep 2026 22:30, 32.75).
+                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and row_scheme(q.GetParentFootprint()) for q in st): return False
+                return entry_station(st)
             def entry_cells(frm, to):
                 """Straight cells (i, j) from cell frm to cell to (Bresenham), both included."""
                 (j0, i0), (j1, i1) = frm, to; n = max(abs(i1 - i0), abs(j1 - j0), 1)
