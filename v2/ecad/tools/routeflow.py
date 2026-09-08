@@ -173,6 +173,9 @@ def run(profile_fn, rounds, use_services, dry):
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])   # zones of these nets on the power layers stay in the DSN as planes (6 Sep 2026: GND by vias into In1, not as wires)
             if route.get("jar"): env["FR_JAR"] = os.path.expanduser(route["jar"])
+            # the optimiser is where a route disappears: C8's auto-route finished in 14 min 21 s and the two default optimiser passes
+            # then ran past a 90 minute limit with no session written, three times (8 Sep 2026 19:35). A profile may cap it.
+            if route.get("optimiser_passes") is not None: env["FR_OIT"] = str(route["optimiser_passes"])
             if route.get("layer_rules"): env["FR_LAYER_RULES"] = ";".join("%s:%s" % (c, ",".join(ls)) for c, ls in route["layer_rules"].items())   # rule 2 of 32.67: a class only on layers with a plane next to them   # the router build (Stage 4: freerouting-2.4.1.jar beside 1.9.0)
             if any(k in route for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive")) and not dry:   # the rules-file knobs the probe found the router honours
                 tools = os.path.dirname(os.path.abspath(__file__)); pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); dsn0 = os.path.join(rdir, "round%d-rules.dsn" % rnd); rules = os.path.join(rdir, "round%d.rules" % rnd)

@@ -50,7 +50,9 @@
   ],
   "log": "out/parallel-c8.log",
   "jar": "~/bin/freerouting-1.9.0.jar",
-  "_layer_rules_removed": "REMOVED 8 Sep 2026 17:50: the per-class layer rule (rule 2) cost C8 three routes that never finished a pass (12 min, 90 min, 3 h with nothing written) while the same DSN without it auto-routed in 14 min 21 s; and the D9 read-back this morning showed the router does not hold a class to its layers anyway. The pair pre-router lays the pairs on their layers by construction, which is what enforces the intent now."
+  "_layer_rules_removed": "REMOVED 8 Sep 2026 17:50: the per-class layer rule (rule 2) cost C8 three routes that never finished a pass (12 min, 90 min, 3 h with nothing written) while the same DSN without it auto-routed in 14 min 21 s; and the D9 read-back this morning showed the router does not hold a class to its layers anyway. The pair pre-router lays the pairs on their layers by construction, which is what enforces the intent now.",
+  "optimiser_passes": 1,
+  "_optimiser_note": "1 pass: the auto-route finishes in about 14 minutes and the default two optimiser passes ran past 90 minutes three times without writing a session (8 Sep 2026)"
  },
  "finish": {
   "argv": [
