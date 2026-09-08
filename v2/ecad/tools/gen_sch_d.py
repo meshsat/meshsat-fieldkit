@@ -239,7 +239,10 @@ ic("U11", 5, "74LVC1G04 inverter (2 A 4 Y): PTT_ANY", "SOT235", {"2": "PTT_ANY_n
 ic("U12", 5, "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)", "SOT235", {"1": "PTT_ANY", "2": "TX_INHIBIT_n", "3": "GND", "4": "KEY", "5": "+3V3_D8"})
 ic("U13", 5, "74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)", "SOT235", {"2": "KEY", "3": "GND", "4": "SA_PTT_n", "5": "+3V3_D8"})
 ic("U14", 5, "74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)", "SOT235", {"1": "KEY", "2": "PA_EN", "3": "GND", "4": "PA_KEY", "5": "+3V3_D8"})
-for i in range(51, 57): c("C%d" % i, "100n", "+3V3_D8", "GND")
+# one 100 nF per gate, tied to its gate as data so the decoupling gate measures the loop instead of trusting the schematic order
+# (8 Sep 2026: the note below that these six gates carried no bypass capacitor was wrong, the capacitors existed since D8; what was
+# missing was the intent entry, so no gate ever measured the distance on the chain that keys a 30 W transmitter)
+for _i, _u in enumerate(("U9", "U10", "U11", "U12", "U13", "U14")): c("C%d" % (51 + _i), "100n", "+3V3_D8", "GND", bypass=(_u, "5"))
 r("R48", "100", "KEY", "TR_APRS")   # the PTT mirror to A22 (100k pull-down there): the TX lamp follows the real key line
 led("LED4", "red transmit", "LED_TX_A", "GND"); r("R49", "1k", "KEY", "LED_TX_A"); led("LED5", "amber PA keyed", "LED_PA_A", "GND"); r("R50", "1k", "PA_KEY", "LED_PA_A")
 led("LED6", "green receive (AUDIO_ON low)", "LED_RX_A", "SA_AUDIO_ON_n"); r("R51", "2.2k", "+3V3_D8", "LED_RX_A")
@@ -364,8 +367,8 @@ print("nets:", len(nets), "single-pin nets (should be empty or intentional):", s
 # capacitor sits directly after the part it serves) and filtered to supply pins: crystal loads, reset networks, the codec's VCOM reservoirs
 # and the amplifier's charge-pump and input capacitors are not decoupling and are not listed. intent.py refuses an entry whose capacitor is
 # not on that pin's net, so a wrong line here stops the generator.
-# FINDING, not fixed here because it adds parts: U9 to U14, the six 74LVC1G gates of the PTT and EMCON chain, carry no bypass capacitor at
-# all; the nearest +3V3_D8 capacitors are the hub's C15 to C17. That is the chain that keys a 30 W transmitter. An owner decision.
+# CORRECTED 8 Sep 2026: an earlier note here said U9 to U14 had no bypass capacitor. They do, C51 to C56, one per gate, and they are
+# now declared above with their gate so the proximity rule reaches them; the placement is what has to be judged, not the count.
 _intent.bypass("C7", "U1", "1", "+5V_D8")
 _intent.bypass("C8", "U1", "5", "+3V3_D8")
 _intent.bypass("C9", "U1", "5", "+3V3_D8")
