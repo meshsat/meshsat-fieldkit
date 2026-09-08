@@ -190,14 +190,14 @@ def buck33(uref, tag, vin, en, out, refs):
     L, cb, ci1, ci2, co1, co2, co3, rt, rb, rrt, rco, cco = refs
     ic(uref, 9, "AP64500SP-13 5 A buck, 3.3 V rail %s" % out, "SO8EP", {"1": tag + "_BOOT", "2": vin, "3": en, "4": tag + "_RT", "5": tag + "_FB", "6": tag + "_COMP", "7": "GND", "8": tag + "_SW", "9": "GND"}, "C2070920")
     part(L, "Device", "L", "3.3uH XAL6060-332ME", "L6060", {"1": tag + "_SW", "2": out}); c(cb, "100n", tag + "_BOOT", tag + "_SW")
-    c(ci1, "22u 10V X7R 1210", vin, "GND", "C1210"); c(ci2, "22u 10V X7R 1210", vin, "GND", "C1210")
+    c(ci1, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2"))   # the buck's VIN pin
     for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
     r(rt, "31.6k 1%", out, tag + "_FB"); r(rb, "10k 1%", tag + "_FB", "GND"); r(rrt, "68k (RT: 500 kHz)", tag + "_RT", "GND"); r(rco, "22k", tag + "_COMP", tag + "_COMPC"); c(cco, "3.3n", tag + "_COMPC", "GND")
 def buck_small(uref, tag, vin, en, out, refs, rb_val, note):
     """TPS62933 3 A buck (SOT-583: 1 RT 2 EN 3 VIN 4 GND 5 SW 6 BST 7 SS/PG 8 FB; 0.8 V reference, RT floating = 500 kHz): 10k top, rb_val bottom."""
     L, ci, co1, co2, cb, css, rt, rb = refs
     ic(uref, 8, "TPS62933DRLR buck %s" % note, "SOT583", {"1": "NC", "2": en, "3": vin, "4": "GND", "5": tag + "_SW", "6": tag + "_BST", "7": tag + "_SS", "8": tag + "_FB"})
-    part(L, "Device", "L", "2.2uH XAL4020-222ME", "L4020", {"1": tag + "_SW", "2": out}); c(ci, "10u", vin, "GND", "C10u"); c(co1, "22u 6.3V", out, "GND", "C10u"); c(co2, "22u 6.3V", out, "GND", "C10u")
+    part(L, "Device", "L", "2.2uH XAL4020-222ME", "L4020", {"1": tag + "_SW", "2": out}); c(ci, "10u", vin, "GND", "C10u", bypass=(uref, "3")); c(co1, "22u 6.3V", out, "GND", "C10u"); c(co2, "22u 6.3V", out, "GND", "C10u")
     c(cb, "100n", tag + "_BST", tag + "_SW"); c(css, "10n", tag + "_SS", "GND"); r(rt, "10k 1%", out, tag + "_FB"); r(rb, rb_val, tag + "_FB", "GND")
 def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
     """CP2102N-A02-GQFN28 bridge: bus sense and regulator input from the slot rail whose hub carries it, its own 3.3 V out (VDD) bypassed, RSTb pulled to VDD."""
@@ -588,4 +588,18 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+
+# the decoupling written outside the converter blocks, which declare their own (8 Sep 2026, MESHSAT-862 Stage C):
+# each capacitor sits directly after the part it serves and is filtered to supply pins; intent.py refuses a wrong entry.
+_intent.bypass("C4", "U25", "2", "+5V_DEV")
+_intent.bypass("C5", "U25", "1", "+3V3_DEV")
+_intent.bypass("C6", "U25", "1", "+3V3_DEV")
+_intent.bypass("C12", "U27", "5", "+2V5_KSZ")
+_intent.bypass("C13", "U27", "1", "+3V3_DEV")
+_intent.bypass("C36", "U5", "1", "+3V3_DEV")
+_intent.bypass("C37", "U5", "1", "+3V3_DEV")
+_intent.bypass("C38", "U5", "1", "+3V3_DEV")
+_intent.bypass("C69", "U8", "8", "+3V3_DEV")
+_intent.bypass("C70", "U9", "2", "+3V3_DEV")
+_intent.bypass("C71", "U9", "2", "+3V3_DEV")
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json
