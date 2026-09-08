@@ -253,7 +253,7 @@ ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
-CLASSES = {"USB": (0.10, 0.127, 0.7, 0.3, 0.127, 0.127), "DIFF100": (0.10, 0.127, 0.7, 0.3, 0.127, 0.20),   # 8 Sep 2026 (32.71): on the 3313 outer layers 0.127/0.127 computes 94 ohm and 0.127/0.20 computes 101 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds
+CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13), "DIFF100": (0.127, 0.127, 0.7, 0.3, 0.127, 0.20),   # 8 Sep 2026 (32.71): on the 3313 outer layers 0.127/0.127 computes 94 ohm and 0.127/0.20 computes 101 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds
             "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "HV": (0.18, 0.5, 0.8, 0.4, 0.5, 0.5)}   # HV 0.18: above the 0.2 pad gap of the TSSOP-28 PoE controller it fails inside the part
 PATTERNS = [("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("USBX_D*", "USB"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
             ("PCIE*", "USB"), ("NVME*_RX_*", "USB"), ("NVME*_TX_*", "USB"), ("NVME*_CLK_*", "USB"), ("CARD*_RX_*", "USB"), ("CARD*_TX_*", "USB"), ("CARD*_CLK_*", "USB"),
@@ -261,6 +261,11 @@ PATTERNS = [("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "
             ("MDI_*", "HV"), ("POE_*", "HV"), ("+54V_POE", "HV"),
             ("+5V_*", "PWR"), ("+3V3_*", "PWR"), ("+1V*", "PWR"), ("+2V5*", "PWR"), ("PANEL_5V", "PWR"), ("VBUS*", "PWR"), ("GND", "PWR"), ("*_SW", "PWR"), ("VBAT", "PWR")]
 PATTERNS += [("/" + pat, cls_) for pat, cls_ in PATTERNS if not pat.startswith("/")]
+# A net class clearance below the board minimum never applies: KiCad enforces the minimum as a floor while the router takes the class value
+# from the DSN, so every pair laid at that spacing is a violation (A23, 25 of them, 9 Sep 2026 02:10; MESHSAT-862).
+_minclr = board.GetDesignSettings().m_MinClearance / 1e6
+_bad = {n: v[0] for n, v in CLASSES.items() if v[0] < _minclr - 1e-9}
+if _bad: raise SystemExit("net class clearance below the board minimum %.3f mm: %s" % (_minclr, _bad))
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)
