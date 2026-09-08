@@ -11,7 +11,8 @@ cd "$E"; T="$E/tools"; N=$PRJ; [ -f "$RES" ] || : > "$RES"
 read PL PN JAR TO ATT <<< "$(python3 -c "import json,sys; d=json.load(open(sys.argv[1]))['route']; print(','.join(d.get('power_layers') or ['-']), ','.join(d.get('plane_nets') or ['-']), d.get('jar','~/bin/freerouting-1.9.0.jar'), d.get('timeout',3600), d.get('attempts',[40])[0])" "$PROF")"
 [ "$PL" = "-" ] && PL=""; [ "$PN" = "-" ] && PN=""; PL="${PL//,/ }"; PASSES="${PASSES:-$ATT}"   # power layers joined by commas for the read, spaces for route_one.sh (review of 8 Sep 2026)
 one() {
-  local seed=$1 W="$E/jit-$PRJ-$seed"; rm -rf "$W"; cp -r "$E/$PRJ" "$W"; rm -rf "$W/out"; mkdir -p "$W/out"
+  local seed=$1; local W="$E/jit-$PRJ-$seed"   # two statements: in one `local a=.. b="$a"` the second expands before the first is assigned (every sample shared one directory, 8 Sep 02:35)
+  rm -rf "$W"; cp -r "$E/$PRJ" "$W"; rm -rf "$W/out"; mkdir -p "$W/out"
   ( cd "$E" && PLACE_JITTER=$seed PLACE_AUDIT_GATE=0 timeout 1800 bash "$T/$CHAIN" "$W" > "$W/out/chain.log" 2>&1 ); local rc=$?
   if [ $rc -ne 0 ] || ! grep -q 'PREROUTE-DONE OK' "$W/out/chain.log"; then echo "jitter $seed: REFUSED by the chain ($(grep -m1 BLOCK "$W/out/chain.log" | cut -c1-80))"; echo "$PRJ,$seed,REFUSED" >> "$RES.refused"; return 0; fi
   ( cd "$W" && FR_THREADS=1 FR_TIMEOUT=$TO FR_POWER_LAYERS="$PL" FR_PLANE_NETS="$PN" FR_JAR="$JAR" "$T/route_one.sh" . "$N" 1 "$PASSES" > "$W/out/route.log" 2>&1 )
