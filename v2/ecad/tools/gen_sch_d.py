@@ -358,4 +358,28 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+
+# --- decoupling as data (8 Sep 2026, MESHSAT-862 Stage C): which capacitor serves which supply pin, so `intent_checks.py` can measure the
+# pad-to-pin distance and the loop instead of trusting that the schematic order means anything. Read out of this file's own order (each
+# capacitor sits directly after the part it serves) and filtered to supply pins: crystal loads, reset networks, the codec's VCOM reservoirs
+# and the amplifier's charge-pump and input capacitors are not decoupling and are not listed. intent.py refuses an entry whose capacitor is
+# not on that pin's net, so a wrong line here stops the generator.
+# FINDING, not fixed here because it adds parts: U9 to U14, the six 74LVC1G gates of the PTT and EMCON chain, carry no bypass capacitor at
+# all; the nearest +3V3_D8 capacitors are the hub's C15 to C17. That is the chain that keys a 30 W transmitter. An owner decision.
+_intent.bypass("C7", "U1", "1", "+5V_D8")
+_intent.bypass("C8", "U1", "5", "+3V3_D8")
+_intent.bypass("C9", "U1", "5", "+3V3_D8")
+_intent.bypass("C15", "U4", "3", "+3V3_D8")
+_intent.bypass("C16", "U4", "3", "+3V3_D8")
+_intent.bypass("C17", "U4", "3", "+3V3_D8")
+_intent.bypass("C18", "U6", "2", "+5V_D8")
+_intent.bypass("C19", "U6", "5", "PCM_VDD")
+_intent.bypass("C20", "U6", "15", "PCM_VCCA")
+_intent.bypass("C21", "U6", "19", "PCM_VCCL")
+_intent.bypass("C22", "U6", "21", "PCM_VCCR")
+_intent.bypass("C23", "U6", "26", "PCM_VCCP")
+_intent.bypass("C31", "U7", "12", "AMP_HPVDD")
+_intent.bypass("C32", "U7", "14", "+5V_D8")
+_intent.bypass("C33", "U7", "14", "+5V_D8")
+_intent.bypass("C39", "U8", "8", "+5V_D8")
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json
