@@ -1,0 +1,26 @@
+MeshSat field-kit carrier PCB-C PANEL BACKER Rev A, phase C7: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-c-display-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 344.1 x 228.1 mm, 4 copper layers, 1.6 mm FR-4, JLC04161H-7628 stackup
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: USB 2.0 pairs /USB_PNL_N, /USB_PNL_P designed 0.2 mm track / 0.15 mm gap on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
+- BOM: pcb-c-display-bom.csv (57 lines, 27 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-c-display-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
+- Parts on the TOP side: 36, on the BOTTOM side: 92
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): BZ1, CAM_H1, CAM_H2, J_HSJ1, J_HSJ2, J_MAINSW, J_PIJ2, SW_EMCON, SW_LIGHT, SW_MAIN, SW_PI, SW_SOS, SW_TEST, SW_ZERO
+- Not assembled by JLC, fitted at the bench: C7 is the backer ring under the 3 mm aluminium face plate of the Peli 1450 (appendix 32.56, 32.60, 32.61; the plate set is in release/revA/case/face-plate/): 344 x 228 with a 240 x 176 void, four layers, hanging 10 mm under the plate on eight PEM SO-M3-10 standoffs (M3 x 6 through H1 to H8, the ground bond to the plate). It carries the RP2040 panel controller (a USB device on the panel ribbon), the two PCA9555, the PDi E2370KS0C1 e-paper ZIF and boost stage, the VEML7700, the sounder driver and the sixteen 3 mm LEDs standing on the top face under the plate's Mentor 1282.5004 light guides (bench-soldered, beaded to height). The switches, the sounder, the two U-174/U headset jacks and the camera module mount in the PLATE and only their leads reach the board: SW_MAIN C&K ATP19-SL1-603-B0SA-03G, SW_PI C&K ATP16-SL1-403-M0SA-04G, SW_TEST C&K ATP16-SL1-203-M0SA-04G, SW_LIGHT NKK M2044SD3A01, SW_SOS, SW_EMCON and SW_ZERO APEM 5636ADKB-2V, BZ1 Floyd Bell MC-09-530-Q; the Xenarc 709GNK lies on the plate and its connector block passes the ring's notch
+
+FABRICATION NOTES (C7, the backer ring under the aluminium face plate, appendix 32.60)
+- A four-layer 1.6 mm board on JLC's standard four-layer stack (JLC04161H-7628): F.Cu, In1 = solid ground plane (bands), In2 signal, B.Cu; the gerber zip carries all four copper layers, check the layer count on the order form (4). Any colour, ENIG; nothing on it is a weather face (the aluminium plate is), so no via plugging and no special mask rules. The RP2040 (0.4 mm QFN) is escaped with 0.40/0.20 mm vias, 0.127 mm tracks and clearance and 0.19 mm hole-to-copper clearance, within the standard capability.
+- Outline: a ring (344 x 228 outside, 240 x 176 void) with R3 corners and the notch for the monitor's connector block; the toggle body slots, the 19.2, 16.2, 16.2, 28.6 and two 17 mm holes are on Edge.Cuts (routed). The eight 3.2 mm holes H1 to H8 carry 6.0 mm rings on both faces: they are the ground bond to the plate through the PEM standoffs.
+- The face plate is a separate CNC part (release/revA/case/face-plate/: STEP, STL, DXF, marking SVG, drawing); it is not a JLC PCB order.
+
+SOURCE
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-c-revA-C7 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709

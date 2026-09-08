@@ -1,0 +1,2 @@
+QUOTE ONLY. This folder is the B16 pre-route (placed, unrouted) board exported on 8 Sep 2026 for a JLCPCB price quote of the current set (MESHSAT-776, MESHSAT-862).
+It is not a deliverable and must never be ordered: the routed B17 board replaces it. Size, layer count, stack, finish and the parts list are those of the design, so the quote is right; the copper is not.

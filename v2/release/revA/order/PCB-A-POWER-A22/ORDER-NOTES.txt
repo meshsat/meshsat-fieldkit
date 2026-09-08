@@ -1,0 +1,27 @@
+MeshSat field-kit carrier PCB-A POWER + I/O Rev A, phase A22: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-a-power-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 240.1 x 160.1 mm, 6 copper layers, 1.6 mm FR-4
+- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: USB 2.0 pairs /USB_D8_N, /USB_D8_P, /USB_E6_N, /USB_E6_P, /USB_WALL_N, /USB_WALL_P designed 0.2 mm track / 0.15 mm gap on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
+- BOM: pcb-a-power-bom.csv (129 lines, 51 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-a-power-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
+- Parts on the TOP side: 343, on the BOTTOM side: 0
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): F1, J_BM1, J_BM10, J_BM11, J_BM2, J_BM3, J_BM4, J_BM5, J_BM6, J_BM7, J_BM8, J_BM9, J_CN1, J_CN2, J_CN3, J_CN4, J_CP1, J_CP2, J_CP3, J_CP4, J_DOCK, J_PRE1
+- Not assembled by JLC, fitted at the bench: A22 is the power board of the MESHSAT-830 generation (appendix 32.55, 32.56, 32.61): 240 x 160 on the JLC06161H-3313 six-layer stack (In1 and In4 solid ground). Bench-fitted: the twelve Preci-Dip spring pins, four node and four return Mill-Max pins and the pre-charge pin pressed in from the underside; the eleven Radiall SMP-MAX receptacles on the underside under the eleven SMA jacks on top; the 25 A blade in F1; the D8 mezzanine on four M3 x 22.6 standoffs with the 2x8 harness and the VH 5 V lead; the 2x13 ribbon J_AB1 to B16; the VH leads of the three slot rails, the device rail, the PA rail (to the module on the plate), the HF rail (lid harness), the PoE rail and the monitor; the MAIN button lead; the heater lead; the wall USB-C outlet leads (J_USBC_OUT, J_USBW). Some ground pads carry a via in the pad (fanout fallback), counted in the order notes
+
+FABRICATION NOTES (A22, the power board on the six-layer stack, appendix 32.55, 32.61)
+- Six layers on the JLC06161H-3313 stack (1.6 mm): F.Cu, In1 = solid ground plane, In2 (the node plane and ground islands) and In3 signal, In4 = solid ground plane, B.Cu. The gerber zip carries all six copper layers; check the layer count on the order form (6) and quote the six-layer price in the order log.
+- The fine-pitch parts (LM5176 controllers, INA226 monitors, PCA9555, the USB-C controller) are escaped with 0.45/0.25 mm vias, 0.127 mm tracks and clearance; some ground pads carry a 0.45/0.25 via in the pad (the fanout fallback; plain through vias, no filling). All within the standard capability; do not let a DFM tool widen them.
+- Differential pairs: USB 2.0 pairs 0.20/0.15 mm (90 ohm) on the outer layers over the In1 ground.
+- The spring-pin connector, the nine Mill-Max pins, the eleven SMP-MAX receptacles and the blade fuse holder are fitted at the bench (not in the BOM/CPL); the SMA jacks are assembled.
+
+SOURCE
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-a-revA-A22 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709
