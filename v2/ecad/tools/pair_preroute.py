@@ -270,11 +270,17 @@ def main(a):
             _pitch[k] = best
         return _pitch[k]
     ROW_PITCH = 0.45   # a 0.4 mm receptacle row keeps escape.py's CM5IO scheme: the legs end at the escape via, never in the pad (B17, 8 Sep 2026 13:35)
+    def row_scheme(f):
+        """escape.py's own ROWS04 condition, kept in step with it: a 0.4 mm row, or a 0.5 mm row of 40 pads or more (a card socket),
+        keeps its escapes and the escape via is where a pair leg ends. Out of step, the pre-router aims at pads that sit behind a wall
+        of escape vias and reports "the legs clear no smoothing of the centreline": 57 of B17's 99 pairs (8 Sep 2026 19:55)."""
+        pt = pitch_of(f); n = sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD)
+        return pt <= ROW_PITCH or (pt <= 0.5 and n >= 40)
     def anchor(p):
         """The pad: (x, y, layer or None for a via, object). A pad of a 0.4 mm row is anchored at its escape via (a locked via of its net within 3 mm, present before the pair was laid)."""
         pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
         L = None if pth else next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # the pad's own copper layer (a through-hole pad is on every layer)
-        if not pth and pitch_of(p.GetParentFootprint()) <= ROW_PITCH:
+        if not pth and row_scheme(p.GetParentFootprint()):
             vs = [v for v in pre_vias if v.GetNetname() == p.GetNetname() and math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y) < 3e6]
             if vs:
                 v = min(vs, key=lambda v: math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y))
@@ -330,7 +336,7 @@ def main(a):
                     dd = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y)
                     if 0 < dd < best: best = dd
             return best <= 0.7e6
-        def fanned_part(f): return (fine_part(f) or bool(re.search(r"SOT-23-[68]", f.GetFPIDAsString()))) and pitch_of(f) > ROW_PITCH   # escape.py's rule: these parts carry escape stubs and vias; a 0.4 mm row keeps them (the via is the station)
+        def fanned_part(f): return (fine_part(f) or bool(re.search(r"SOT-23-[68]", f.GetFPIDAsString()))) and not row_scheme(f)   # escape.py's rule: these parts carry escape stubs and vias; a 0.4 mm row keeps them (the via is the station)
         for net in (pn, nn):
             for p in pads[net]:
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or not fanned_part(p.GetParentFootprint()): continue
@@ -481,7 +487,7 @@ def main(a):
                 return mx_ + nx_ * out_, my_ + ny_ * out_
             gx0, gy0 = gx, gy
             def entry_station0(st):
-                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and pitch_of(q.GetParentFootprint()) <= ROW_PITCH for q in st): return False   # a 0.4 mm row: the escape vias are the ends
+                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and row_scheme(q.GetParentFootprint()) for q in st): return False   # a 0.4 mm row: the escape vias are the ends
                 if not all((q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu)) or q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in st) or dist_p(st[0], st[1]) > 2.6: return False
                 fa_, fb_ = st[0].GetParentFootprint(), st[1].GetParentFootprint()
                 return fa_.GetReference() == fb_.GetReference() or (fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and fa_.GetReference()[:1] in "RCL")
