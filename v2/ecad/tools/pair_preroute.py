@@ -247,7 +247,11 @@ def main(a):
 
     for stem in stems:   # a swapped pair is appended and laid again
         pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
-        vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); half = w + s / 2 + 0.15 + 0.1; d = (w + s) / 2; clr_c = float(cl.get("clearance", CLR))   # the corridor carries the per-leg maps' 0.15 mm mask margin plus one grid cell, or the legs never clear it
+        vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); clr_c = float(cl.get("clearance", CLR))
+        try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
+        except Exception: min_clr = 0.0
+        clr_c = max(clr_c, min_clr); s = max(s, clr_c + 0.013)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
+        half = w + s / 2 + 0.15 + 0.1; d = (w + s) / 2   # the corridor carries the per-leg maps' 0.15 mm mask margin plus one grid cell, or the legs never clear it
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
             f = p.GetParentFootprint(); ps = list(f.Pads())
@@ -367,7 +371,7 @@ def main(a):
                 return mx_ + nx_ * out_, my_ + ny_ * out_
             gx0, gy0 = gx, gy
             def entry_station0(st):
-                if not all(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu) for q in st) or dist_p(st[0], st[1]) > 2.0: return False
+                if not all((q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu)) or q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in st) or dist_p(st[0], st[1]) > 2.6: return False
                 fa_, fb_ = st[0].GetParentFootprint(), st[1].GetParentFootprint()
                 return fa_.GetReference() == fb_.GetReference() or (fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and fa_.GetReference()[:1] in "RCL")
             fineA0, fineB0 = entry_station0((pa, na)), entry_station0((pb, nb))
@@ -435,15 +439,15 @@ def main(a):
                 for li in range(len(layers)): dump("start of %s" % failed, sx, sy, 3.0, li); dump("goal of %s" % failed, gx, gy, 3.0, li)
                 break
             def entry_station(st):
-                if not all(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu) for q in st): return False
-                if dist_p(st[0], st[1]) > 2.0: return False
+                if not all((q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu)) or q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in st): return False
+                if dist_p(st[0], st[1]) > 2.6: return False
                 fa_, fb_ = st[0].GetParentFootprint(), st[1].GetParentFootprint()
                 return fa_.GetReference() == fb_.GetReference() or (fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and fa_.GetReference()[:1] in "RCL")
             def entry_target(st):
                 """Where the entry run ends: the pad pair's midpoint for a fine pitch, 1.0 mm short of it (on the outward normal) when the legs must fan out."""
                 mx_, my_ = mid(st); pitch = dist_p(st[0], st[1])
                 if pitch <= 0.7: return mx_, my_
-                out_ = 1.0 if pitch <= 1.0 else 1.6
+                out_ = 1.0 if pitch <= 1.0 else (1.6 if pitch <= 2.0 else 2.2)
                 p_, n_ = st; fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_ = (fa_.GetPosition().x + fb_.GetPosition().x) / 2e6; fy_ = (fa_.GetPosition().y + fb_.GetPosition().y) / 2e6
                 dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_
