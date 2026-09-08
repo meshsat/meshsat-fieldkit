@@ -73,9 +73,9 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          "U4": (22, 14, 0, False), "U5": (9, 16.2, 0, False), "U3": (30, 3, 0, False), "U6": (22, -9.5, 0, False), "Y1": (21, 21.5, 0, False), "Y2": (13, -13.5, 0, False),
          "R6": (13.5, 16.8, 0, False), "R7": (13.5, 15.2, 0, False),
          "R12": (21.6, 6.3, 270, False), "R13": (20.0, 6.3, 270, False), "R16": (23.5, 3.25, 0, False), "R17": (23.5, 1.65, 0, False),   # port 2: in line with the bridge U3's D+/D- pins 3 mm east, pad 2 (the pair) east: a straight pair; pad 1 (the hub side) north for port 1
-         "R20": (30.5, 13.6, 0, False), "R21": (30.5, 12.0, 0, False), "R26": (13.5, -9.1, 0, False), "R27": (13.5, -7.5, 0, False),
+         "R20": (30.5, 13.6, 0, False), "R21": (30.5, 12.0, 0, False), "R26": (11.5, -9.1, 0, False), "R27": (11.5, -7.5, 0, False),   # 4.4 mm from U6 pad tips: the entry runs of both stations need the room (12:25)
          # D9: the pull-downs and the codec pull-up of the pair nets on the top layer beside their pairs (a pair net's pad on the back made the router wander three layers)
-         "R14": (18.0, 4.5, 90, False), "R15": (19.6, 4.5, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (13.5, -11.1, 0, False)}
+         "R14": (18.0, 4.5, 90, False), "R15": (19.6, 4.5, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (11.5, -11.1, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 for ref, x, y in (("J_HARN1", -42, 20.5), ("J_PWR1", -42, -9.5), ("J_ANT", -31, -37.5), ("J_PAIN", 9, -25.5), ("J_PAOUT", 35, -37.5), ("J_VGG", 43.5, -18.5), ("J_HS1", 46.5, 19), ("J_HS2", 46.5, -5), ("J_USB3", 46, 30.5)):
     text(ref, x, y, pcbnew.F_SilkS, 0.9, 0.15)
