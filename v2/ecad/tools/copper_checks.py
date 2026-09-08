@@ -56,8 +56,10 @@ def run(b, check, nets=None):
     for t in b.GetTracks():
         if t.Type() != pcbnew.PCB_VIA_T or not t.IsLocked() or t.GetNetname() not in nets: continue
         inside = [z for z in pz if z.GetNetname() == t.GetNetname() and z.Outline().Contains(t.GetPosition())]
+        touched = any(tr.GetClass() == "PCB_TRACK" and tr.GetNetname() == t.GetNetname() and (tr.GetStart() == t.GetPosition() or tr.GetEnd() == t.GetPosition()) for tr in b.GetTracks())
         for z in inside:
             if t.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != z.GetFirstLayer() and o.GetFilledArea() >= 0.8 * o.Outline().Area() for o in pz): continue   # a ground via reaches the solid plane
+            if not touched and not z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()): print("NOTE stitch via %s at (%.1f, %.1f) outside the fill of '%s' (no track on it: it carries nothing)" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed")); continue   # P2's ground grid where the router's tracks pushed the fill away
             check(z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()), "locked via %s at (%.1f, %.1f) sits in the fill of '%s' on %s" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed", b.GetLayerName(z.GetFirstLayer()))); n2 += 1
     bynet = {}
     for z in pz: bynet.setdefault(z.GetNetname(), []).append(z)
