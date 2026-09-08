@@ -297,11 +297,18 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
 # clearances at the board minimum (7 Sep 2026: with the explicit net-class assignments the DRC enforces them, and a class clearance above a fine-pitch pad gap of 0.2 fails inside the LM5176 and TPS23861 pads); HV 0.18 for the 54 V nodes
-CLASSES = {"USB": (0.10, 0.127, 0.7, 0.3, 0.127, 0.127),   # 8 Sep 2026 (32.71): 0.127/0.127 on the 3313 outer layer computes 94 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds; clearance 0.10 so the gap keeps a margin
+CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13),   # 8 Sep 2026 (32.71): 0.127/0.127 on the 3313 outer layer computes 94 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds; clearance 0.10 so the gap keeps a margin
             "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "NODE": (0.127, 0.5, 0.8, 0.4, 0.5, 0.25), "SW": (0.127, 0.5, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.127, 0.4, 1.0, 0.5, 0.5, 0.3), "RF": (0.18, 0.35, 0.7, 0.3, 0.2, 0.15), "HV": (0.18, 0.4, 0.8, 0.4, 0.4, 0.25)}
 PATTERNS = [("USB_*", "USB"), ("PD_CC*", "USB"), ("CELL+", "NODE"), ("VBAT", "NODE"), ("PRECHG", "PWR"), ("VIN_RAW", "NODE"), ("VBUS20", "NODE"), ("CH_ACN", "NODE"), ("CH_SRP", "NODE"), ("CH_SW*", "SW"), ("FE_SW*", "SW"), ("FE_OUT", "NODE"), ("FE_CS", "SW"),
             ("PA_SW*", "SW"), ("PA_OUT", "NODE"), ("PA_CS", "SW"), ("HF_SW*", "SW"), ("HF_OUT", "PWR"), ("PD_SW*", "SW"), ("PD_OUT", "PWR"), ("PD_PPHV", "PWR"), ("PD_VBUS", "PWR"), ("S?_SW", "SW"), ("SD_SW", "SW"), ("S?_OUT", "RAIL"), ("SD_OUT", "RAIL"), ("PD_VPWR", "PWR"), ("PD_SW", "PWR"),
             ("+5V_*", "RAIL"), ("+13V8_PA", "RAIL"), ("+12V_HF", "RAIL"), ("VMON", "PWR"), ("VHEAT", "PWR"), ("GND", "PWR"), ("+3V3", "PWR"), ("B33_SW", "SW"), ("RF_*", "RF"), ("POE_SW*", "HV"), ("POE_OUT", "HV"), ("+54V_POE", "HV"), ("POE_CS", "SW")]
+# A net class clearance below the board minimum is not a tighter rule, it is a rule that never applies: KiCad enforces the board minimum as a
+# floor, the router takes the class value from the DSN, and every pair it lays at that spacing is a violation. A23's route came back with 25
+# clearance violations reading "board minimum clearance 0.1270 mm; actual 0.1017 mm", all of them between the two legs of a pair, because the
+# USB class said 0.10 (9 Sep 2026 02:10, MESHSAT-862). Refuse it here instead of discovering it after three hours of routing.
+_minclr = board.GetDesignSettings().m_MinClearance / 1e6
+_bad = {n: v[0] for n, v in CLASSES.items() if v[0] < _minclr - 1e-9}
+if _bad: raise SystemExit("net class clearance below the board minimum %.3f mm: %s (KiCad enforces the minimum, so the class value is a lie the router believes)" % (_minclr, _bad))
 try:
     for name, vals in CLASSES.items():
         nc = pcbnew.NETCLASS(name); cls(nc, *vals); ns.SetNetclass(name, nc)
