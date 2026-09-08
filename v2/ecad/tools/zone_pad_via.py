@@ -50,19 +50,31 @@ for ref, pn, net in want:
     print("zone_pad_via: %s.%s [%s] via at %.3f, %.3f" % (ref, pn, net, vx, vy))
 if not made:
     print("zone_pad_via: 0 of %d pad-to-zone items closed (nothing placeable)" % len(want)); sys.exit(0 if not want else 1)
-b.BuildConnectivity(); pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+# accept one via at a time, the way stub_accept.py keeps the stub router's good closures: a via that closes an open without
+# raising the hard count stays, one that does not is taken out again and the next is tried (8 Sep 2026: placing all of them
+# and reverting all of them threw away the via that worked along with the one that did not)
 tmp = os.path.splitext(bp)[0] + ("-zpv.kicad_pcb" if dry else ".kicad_pcb")
 if dry:
     for e in (".kicad_pro", ".kicad_prl"):
         s_ = os.path.splitext(bp)[0] + e
         if os.path.exists(s_): __import__("shutil").copy(s_, os.path.splitext(tmp)[0] + e)
-pcbnew.SaveBoard(tmp, b)
 j2 = os.path.splitext(tmp)[0] + "-zpv-drc.json"
-subprocess.run(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", j2, tmp], capture_output=True)
-after = hardset(j2)
-print("zone_pad_via: %d via(s) placed; hard %d -> %d, unrouted %d -> %d" % (len(made), before[0], after[0], before[1], after[1]))
-if after[0] > before[0]:
-    for v_ in made: b.Remove(v_)
+def state():
     b.BuildConnectivity(); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(tmp, b)
-    print("zone_pad_via: the vias raised the hard count, all reverted"); sys.exit(1)
-sys.exit(0 if after[1] == 0 else 1)
+    subprocess.run(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", j2, tmp], capture_output=True)
+    return hardset(j2)
+trial = list(made)
+for v_ in trial: b.Remove(v_)
+kept = 0; cur = before
+for v_ in trial:
+    b.Add(v_); st = state()
+    if st[0] > cur[0] or st[1] > cur[1]:
+        b.Remove(v_)
+        d = json.load(open(j2)); types = {}
+        for x in d.get("violations", []): types[x["type"]] = types.get(x["type"], 0) + 1
+        print("zone_pad_via: the via at %.3f, %.3f raised hard %d -> %d, taken out again (%s)" % (v_.GetPosition().x / 1e6, v_.GetPosition().y / 1e6, cur[0], st[0], types))
+        continue
+    kept += 1; cur = st
+final = state()
+print("zone_pad_via: %d of %d via(s) kept; hard %d -> %d, unrouted %d -> %d" % (kept, len(trial), before[0], final[0], before[1], final[1]))
+sys.exit(0 if final[1] == 0 else 1)
