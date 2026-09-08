@@ -68,11 +68,11 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          "C60": (13, -34.5, 90, False), "L2": (17, -29, 0, False), "C59": (21, -34.5, 90, False), "L1": (25, -29, 0, False), "C58": (28.5, -35, 90, False), "J_PAOUT": (35, -30, 0, False), "J_VGG": (43.5, -22.5, 0, False),
          # D9 (8 Sep 2026, 32.68): the USB cluster on the top layer. The hub U4 (LQFP-32, pins 1 to 8 down the west side, 9 to 16 along the south, 17 to 24 up the east):
          # the upstream pair through the ESD U5 (west) and R6/R7 into pins 1, 2; port 1 (pins 11, 12) through R12/R13 south to the codec U6 with R26/R27 at its pins 3, 4;
-         # port 2 (pins 15, 16) through R16/R17 south-east into the bridge U3 (its D+/D- side faces the resistors); port 3 (pins 19, 20) through R20/R21 east to J_USB3.
+         # port 2 (pins 15, 16) through R16/R17 lying in line with the bridge U3's D+/D- pins 3 mm to their east (a straight pair, no corner); port 3 (pins 19, 20) through R20/R21 east to J_USB3.
          # Every pair's two resistors sit side by side, 1.6 mm apart, pads across the pair axis, within 4 mm of the pins (the D8 rows 4.2 mm apart broke the pair pre-router).
          "U4": (22, 14, 0, False), "U5": (9, 16.2, 0, False), "U3": (30, 3, 0, False), "U6": (22, -9.5, 0, False), "Y1": (21, 21.5, 0, False), "Y2": (13, -13.5, 0, False),
          "R6": (13.5, 16.8, 0, False), "R7": (13.5, 15.2, 0, False),
-         "R12": (21.6, 6.3, 270, False), "R13": (20.0, 6.3, 270, False), "R16": (24.8, 6.3, 270, False), "R17": (23.2, 6.3, 270, False),   # pad 1 (the hub side) north, pad 2 (the pair) south
+         "R12": (21.6, 6.3, 270, False), "R13": (20.0, 6.3, 270, False), "R16": (23.5, 3.25, 0, False), "R17": (23.5, 1.65, 0, False),   # port 2: in line with the bridge U3's D+/D- pins 3 mm east, pad 2 (the pair) east: a straight pair; pad 1 (the hub side) north for port 1
          "R20": (30.5, 13.6, 0, False), "R21": (30.5, 12.0, 0, False), "R26": (13.5, -9.1, 0, False), "R27": (13.5, -7.5, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 for ref, x, y in (("J_HARN1", -42, 20.5), ("J_PWR1", -42, -9.5), ("J_ANT", -31, -37.5), ("J_PAIN", 9, -25.5), ("J_PAOUT", 35, -37.5), ("J_VGG", 43.5, -18.5), ("J_HS1", 46.5, 19), ("J_HS2", 46.5, -5), ("J_USB3", 46, 30.5)):

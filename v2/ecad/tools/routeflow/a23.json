@@ -1,0 +1,76 @@
+{
+ "board": "pcb-a-power",
+ "project": "v2/ecad/pcb-a-power-a23",
+ "phase": "A23",
+ "issue": "MESHSAT-862",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "argv": [
+   "bash",
+   "../tools/full_a22.sh",
+   "<PROJECT>"
+  ],
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 2,
+  "gen_logs": []
+ },
+ "plane_layers": [
+  "In1.Cu",
+  "In4.Cu"
+ ],
+ "route": {
+  "attempts": [
+   120
+  ],
+  "threads": 1,
+  "timeout": 7200,
+  "power_layers": [
+   "In1.Cu",
+   "In4.Cu"
+  ],
+  "plane_nets": [
+   "GND"
+  ],
+  "log": "out/parallel-a23.log",
+  "jar": "~/bin/freerouting-1.9.0.jar",
+  "layer_rules": {
+   "USB": [
+    "F.Cu",
+    "In2.Cu",
+    "In3.Cu",
+    "B.Cu"
+   ],
+   "RF": [
+    "F.Cu",
+    "In2.Cu",
+    "In3.Cu",
+    "B.Cu"
+   ]
+  }
+ },
+ "finish": {
+  "argv": [
+   "./tools/finish_a23.sh",
+   "<ECAD>",
+   "out/parallel-a23.log"
+  ],
+  "cwd": "<ECAD>",
+  "clean_flag": "out/a23-clean.txt",
+  "stub_log": "out/pcb-a-power-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-a-revA-A23",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 90
+ },
+ "budget_rounds": 1,
+ "notes": "A23 (8 Sep 2026, MESHSAT-862 rule 3, appendix 32.69): the A22 profile on the pcb-a-power-a23 copy with the power copper of gen_pcb_a3.py; finish_a23.sh is finish_a22.sh on that directory.",
+ "baseline_key": "A21",
+ "clean_flag": "out/a23-clean.txt"
+}

@@ -207,12 +207,14 @@ def offset_polyline(pts, d):
         d1 = (p2[0] - p1[0], p2[1] - p1[1]); d2 = (p4[0] - p3[0], p4[1] - p3[1]); den = d1[0] * d2[1] - d1[1] * d2[0]
         if abs(den) < 1e-9: out.append(p2); continue
         t = ((p3[0] - p1[0]) * d2[1] - (p3[1] - p1[1]) * d2[0]) / den; ix, iy = p1[0] + t * d1[0], p1[1] + t * d1[1]
-        if math.hypot(ix - p2[0], iy - p2[1]) > 1.5 * abs(d):   # the outer side of a sharp bend: an arc around the corner keeps the legs parallel (a bevel chord cut inside the gap)
+        if t > 1.0 and math.hypot(ix - p2[0], iy - p2[1]) > 1.5 * abs(d):   # the outer side of a sharp bend (the offsets meet beyond their ends): an arc around the corner keeps the legs parallel; the inner side keeps its mitre
             cx, cy = pts[k + 1]; a0 = math.atan2(p2[1] - cy, p2[0] - cx); a1 = math.atan2(p3[1] - cy, p3[0] - cx); da = a1 - a0
             while da > math.pi: da -= 2 * math.pi
             while da < -math.pi: da += 2 * math.pi
-            n = max(2, int(abs(da) / math.radians(20)))
-            for q in range(n + 1): a = a0 + da * q / n; out.append((cx + abs(d) * math.cos(a), cy + abs(d) * math.sin(a)))
+            n = max(2, int(abs(da) / math.radians(30)))
+            for q in range(n + 1):
+                a = a0 + da * q / n; pt = (cx + abs(d) * math.cos(a), cy + abs(d) * math.sin(a))
+                if math.hypot(pt[0] - out[-1][0], pt[1] - out[-1][1]) >= 0.05: out.append(pt)
         else: out.append((ix, iy))
     out.append(segs[-1][1]); return out
 
@@ -369,22 +371,47 @@ def main(a):
             fineA0, fineB0 = entry_station0((pa, na)), entry_station0((pb, nb))
             if fineA0 and fineB0 and math.hypot(mid((pb, nb))[0] - mid((pa, na))[0], mid((pb, nb))[1] - mid((pa, na))[1]) < 7.0:
                 # two entry stations a few millimetres apart (the ESD beside its series resistors): straight legs pad to pad on F.Cu, no corridor
+                # each leg: from its pad at the wider station to a waypoint 1.2 mm before the finer station's pad pair at +-(w+s)/2 of its axis, then straight into the pin
+                # (a neighbouring pin's escape via sits 0.45 mm off the axis: a leg converging late would touch it)
+                stA, stB = (pa, na), (pb, nb); wide_first = dist_p(*stA) >= dist_p(*stB)
+                stF, stW = (stB, stA) if wide_first else (stA, stB)   # the finer station gets the waypoint
+                mxF, myF = mid(stF); fa_, fb_ = stF[0].GetParentFootprint(), stF[1].GetParentFootprint(); fx_ = (fa_.GetPosition().x + fb_.GetPosition().x) / 2e6; fy_ = (fa_.GetPosition().y + fb_.GetPosition().y) / 2e6
+                dxF, dyF = stF[1].GetPosition().x / 1e6 - stF[0].GetPosition().x / 1e6, stF[1].GetPosition().y / 1e6 - stF[0].GetPosition().y / 1e6; lF = math.hypot(dxF, dyF) or 1.0; ax_, ay_ = dxF / lF, dyF / lF
+                nxF, nyF = -ay_, ax_
+                if (mxF - fx_) * nxF + (myF - fy_) * nyF < 0: nxF, nyF = -nxF, -nyF
+                wx, wy = mxF + nxF * 1.2, myF + nyF * 1.2; fineF = dist_p(*stF) <= 0.7
+                legs_ = []
+                for k_, net in ((0, net_p), (1, net_n)):
+                    pW, pF = stW[k_], stF[k_]; lat = (-d if k_ == 0 else d)   # P on the near side of the axis direction P->N
+                    E_ = (mm(pF.GetPosition().x), mm(pF.GetPosition().y)); W_ = (wx + ax_ * lat, wy + ay_ * lat) if fineF else E_   # two wide stations: pad to pad
+                    legs_.append((net, (mm(pW.GetPosition().x), mm(pW.GetPosition().y)), W_, E_))
                 ok_ = True
-                for p_, q_, net in ((pa, pb, net_p), (na, nb, net_n)):
-                    (x1_, y1_), (x2_, y2_) = (mm(p_.GetPosition().x), mm(p_.GetPosition().y)), (mm(q_.GetPosition().x), mm(q_.GetPosition().y)); ln_ = math.hypot(x2_ - x1_, y2_ - y1_)
-                    pm_ = trk1[net.GetNetname()].get(pcbnew.F_Cu)
+                for net, S_, W_, E_ in legs_:
+                    (x1_, y1_), (x2_, y2_) = S_, W_; ln_ = math.hypot(x2_ - x1_, y2_ - y1_); pm_ = trk1[net.GetNetname()].get(pcbnew.F_Cu)
                     for k in range(int(ln_ / gr.G) + 1):
                         u = k * gr.G / ln_ if ln_ else 0
-                        if u * ln_ < 0.9 or (1 - u) * ln_ < 0.9: continue   # inside the pads' own space
+                        if u * ln_ < 0.9 or (not fineF and (1 - u) * ln_ < 0.9): continue   # inside a station's own pad space
                         jj, ii = gr.cell(x1_ + u * (x2_ - x1_), y1_ + u * (y2_ - y1_))
                         if pm_ is not None and 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]: ok_ = False
+                def isx_(a_, b_, c_, d_):
+                    def ccw(p1_, p2_, p3_): return (p3_[1] - p1_[1]) * (p2_[0] - p1_[0]) > (p2_[1] - p1_[1]) * (p3_[0] - p1_[0])
+                    return ccw(a_, c_, d_) != ccw(b_, c_, d_) and ccw(a_, b_, c_) != ccw(a_, b_, d_)
+                if ok_ and isx_(legs_[0][1], legs_[0][2], legs_[1][1], legs_[1][2]):   # the two fans cross: exchange the wide station's passives when they are a pair
+                    fa2, fb2 = stW[0].GetParentFootprint(), stW[1].GetParentFootprint()
+                    if fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked():
+                        p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference()))
+                        legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
+                    else: ok_ = False
                 if ok_:
-                    for p_, q_, net in ((pa, pb, net_p), (na, nb, net_n)): seg(mm(p_.GetPosition().x), mm(p_.GetPosition().y), mm(q_.GetPosition().x), mm(q_.GetPosition().y), pcbnew.F_Cu, net)
+                    for net, S_, W_, E_ in legs_: seg(S_[0], S_[1], W_[0], W_[1], pcbnew.F_Cu, net); seg(W_[0], W_[1], E_[0], E_[1], pcbnew.F_Cu, net)
                     laid_sections += 1; continue
                 # not clear: the corridor takes over, with shorter entries so the two ends do not overlap
-            d_mid = math.hypot(mid((pb, nb))[0] - mid((pa, na))[0], mid((pb, nb))[1] - mid((pa, na))[1]); entry_out = max(1.2, min(2.5, d_mid / 2 - 0.6))
-            sx, sy = fine_end((pa, na), entry_out) if fineA0 else free_end(sx, sy, A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0)
-            gx, gy = fine_end((pb, nb), entry_out) if fineB0 else free_end(gx, gy, B[0][0], B[0][1], B[1][0], B[1][1], sx, sy)
+            d_mid = math.hypot(mid((pb, nb))[0] - mid((pa, na))[0], mid((pb, nb))[1] - mid((pa, na))[1])
+            def entry_out_(st):
+                pitch = dist_p(st[0], st[1]); tgt = 0.0 if pitch <= 0.7 else (1.0 if pitch <= 1.0 else 1.6)
+                return max(tgt + 0.8, min(2.5 + tgt, d_mid / 2 - 0.3))
+            sx, sy = fine_end((pa, na), entry_out_((pa, na))) if fineA0 else free_end(sx, sy, A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0)
+            gx, gy = fine_end((pb, nb), entry_out_((pb, nb))) if fineB0 else free_end(gx, gy, B[0][0], B[0][1], B[1][0], B[1][1], sx, sy)
             sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); win = 25.0
             window = (gr.cell(min(sx, gx) - win, min(sy, gy) - win), gr.cell(max(sx, gx) + win, max(sy, gy) + win))
             window = ((max(0, window[0][0]), max(0, window[0][1])), (min(gr.NX - 1, window[1][0]), min(gr.NY - 1, window[1][1])))
@@ -426,13 +453,14 @@ def main(a):
                 return [(int(round(i0 + (i1 - i0) * k / n)), int(round(j0 + (j1 - j0) * k / n))) for k in range(n + 1)]
             FL = layers.index(pcbnew.F_Cu) if pcbnew.F_Cu in layers else None
             fineA, fineB = fine_station((pa, na)), fine_station((pb, nb))
-            if FL is not None and fineB:   # the far station: from the corridor's end straight into the pad pair on F.Cu
-                mB = gr.cell(*entry_target((pb, nb))); tail = [(FL, i, j) for i, j in entry_cells((path[-1][2], path[-1][1]), mB)]
-                path = path + tail[1:] if path[-1][0] == FL else path + tail
+            runs = simplify(path); head_run = tail_run = None
+            if FL is not None and fineB:   # the far station: from the corridor's end straight into the pad pair on F.Cu, a run of its own (never smoothed into the corridor)
+                mB = gr.cell(*entry_target((pb, nb))); tail_run = [(FL, i, j) for i, j in entry_cells((path[-1][2], path[-1][1]), mB)]
+                runs = runs + [tail_run]
             if FL is not None and fineA:
-                mA = gr.cell(*entry_target((pa, na))); head = [(FL, i, j) for i, j in entry_cells(mA, (path[0][2], path[0][1]))]
-                path = head + path[1:] if path[0][0] == FL else head + path
-            runs = simplify(path); cells += len(path); nruns += len(runs); laid_sections += 1
+                mA = gr.cell(*entry_target((pa, na))); head_run = [(FL, i, j) for i, j in entry_cells(mA, (path[0][2], path[0][1]))]
+                runs = [head_run] + runs
+            cells += len(path); nruns += len(runs); laid_sections += 1
             first = runs[0]; (x0, y0) = gr.xy(first[0][2], first[0][1]); (x1, y1) = gr.xy(first[-1][2], first[-1][1]) if len(first) > 1 else (gx, gy)
             cross = (x1 - x0) * (A[0][1] - y0) - (y1 - y0) * (A[0][0] - x0); p_side = 1 if cross > 0 else -1   # which leg is left of the centreline: the P anchor's side
             prev_end = None; lp = ln = None
@@ -445,9 +473,7 @@ def main(a):
                 dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_
                 return 1 if nx_ * (-dy_) - ny_ * (-dx_) > 0 else -1   # the P pad's side of the outward normal
-            if fineA0 and fineB0:
-                twisted = sigma((pa, na)) * sigma((pb, nb)) > 0   # leaving A with P on one side, arriving at B it must be on the other
-                side_a, side_b = (1.0, 1.0) if twisted else (1.0, -1.0)
+            if fineA0 or fineB0: side_a, side_b = 1.0, -1.0   # an entry station's twist is settled when its fan is laid (a swap of the two passives there)
             if side_a * side_b < 0 and min(abs(side_a), abs(side_b)) > 1e-6:
                 def swappable_(x_, y_):
                     fa_, fb_ = x_.GetParentFootprint(), y_.GetParentFootprint()
@@ -503,14 +529,22 @@ def main(a):
                                 jj, ii = gr.cell(*poly[k])
                                 if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]: print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s" % (net, poly[k][0], poly[k][1], b.GetLayerName(L))); break
                 break
+            merged = []   # [(layer index, points)] with consecutive same-layer runs joined into one polyline
             for r_i, run in enumerate(runs):
-                L = layers[run[0][0]]; pts = [gr.xy(j, i) for i, j in smoothed[r_i]]
+                pts_ = [gr.xy(j, i) for i, j in smoothed[r_i]]
+                if merged and merged[-1][0] == run[0][0]: merged[-1][1].extend(pts_[1:] if pts_ and merged[-1][1] and pts_[0] == merged[-1][1][-1] else pts_)
+                else: merged.append((run[0][0], list(pts_)))
+            runs = [[(li, 0, 0)] for li, _ in merged]; smoothed = [None] * len(merged)   # the loop below reads the layer from runs and the points from merged
+            for r_i, run in enumerate(runs):
+                L = layers[run[0][0]]; pts = list(merged[r_i][1])
                 if len(pts) == 1: pts = pts * 2
                 lp = offset_polyline(pts, d * p_side); ln = offset_polyline(pts, -d * p_side)
                 for poly, net in ((lp, net_p), (ln, net_n)):
                     for k in range(len(poly) - 1): seg(poly[k][0], poly[k][1], poly[k + 1][0], poly[k + 1][1], L, net)
-                if r_i > 0:   # the layer change: two vias VIA_SPLIT either side of the centreline, on the previous run's last direction, walked back until both sites are free
-                    ppts = [gr.xy(j, i) for i, j in smoothed[r_i - 1]]
+                if r_i > 0 and layers[runs[r_i - 1][0][0]] == L:   # the same layer (an entry run meets the corridor): the legs join with a short piece
+                    for poly_start, prev_poly_end, net in ((lp[0], prev_end[0], net_p), (ln[0], prev_end[1], net_n)): seg(prev_poly_end[0], prev_poly_end[1], poly_start[0], poly_start[1], L, net)
+                elif r_i > 0:   # the layer change: two vias VIA_SPLIT either side of the centreline, on the previous run's last direction, walked back until both sites are free
+                    ppts = list(merged[r_i - 1][1])
                     if len(ppts) == 1: ppts = ppts * 2
                     (ax, ay), (qx, qy) = ppts[-1], ppts[-2]; dx, dy = ax - qx, ay - qy; ll = math.hypot(dx, dy)
                     if ll < 1e-6: (bx, by) = pts[1]; dx, dy = bx - pts[0][0], by - pts[0][1]; ll = math.hypot(dx, dy) or 1.0
@@ -539,7 +573,7 @@ def main(a):
                 prev_end = (lp[-1], ln[-1])
             if failed: break
             firstL = layers[runs[0][0][0]]; lastL = layers[runs[-1][0][0]]
-            first_pts = [gr.xy(j, i) for i, j in smoothed[0]]; last_pts = [gr.xy(j, i) for i, j in smoothed[-1]]
+            first_pts = list(merged[0][1]); last_pts = list(merged[-1][1])
             if len(first_pts) == 1: first_pts = first_pts * 2
             if len(last_pts) == 1: last_pts = last_pts * 2
             lp0, ln0 = offset_polyline(first_pts, d * p_side)[0], offset_polyline(first_pts, -d * p_side)[0]
@@ -595,8 +629,28 @@ def main(a):
             ends = ((A[0], lp0, firstL, net_p, True, 1), (A[1], ln0, firstL, net_n, True, -1), (B[0], lp1, lastL, net_p, False, 1), (B[1], ln1, lastL, net_n, False, -1))
             for (x, y, aL, obj), (ex, ey), L, net, near, sgn in ends:
                 if (near and fineA) or (not near and fineB):
-                    if dist_p(pa if near else pb, na if near else nb) > 0.7: seg(ex, ey, x, y, pcbnew.F_Cu, net)   # the fan into a side-by-side pair
-                    continue   # a fine pitch: the legs entered the pads straight
+                    st_ = (pa, na) if near else (pb, nb)
+                    if dist_p(*st_) > 0.7 and net is net_p:   # the fan into a side-by-side pair, both legs at once (the N leg's turn is skipped below)
+                        lpx, lpy = (ex, ey); lnx, lny = (ln0 if near else ln1)
+                        def xing():
+                            """The two fans against each other and against every top-layer piece of the other leg laid so far (an L-shaped corridor twists the order)."""
+                            P_ = (mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y)); N_ = (mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y))
+                            def ccw(a_, b_, c_): return (c_[1] - a_[1]) * (b_[0] - a_[0]) > (b_[1] - a_[1]) * (c_[0] - a_[0])
+                            def isx(a_, b_, c_, d_): return ccw(a_, c_, d_) != ccw(b_, c_, d_) and ccw(a_, b_, c_) != ccw(a_, b_, d_)
+                            if isx((lpx, lpy), P_, (lnx, lny), N_): return True
+                            for t in pieces:
+                                if t.GetClass() != "PCB_TRACK" or t.GetLayer() != pcbnew.F_Cu: continue
+                                a_ = (mm(t.GetStart().x), mm(t.GetStart().y)); b_ = (mm(t.GetEnd().x), mm(t.GetEnd().y))
+                                if t.GetNetname() == nn and isx((lpx, lpy), P_, a_, b_): return True
+                                if t.GetNetname() == pn and isx((lnx, lny), N_, a_, b_): return True
+                            return False
+                        if xing():
+                            fa_, fb_ = st_[0].GetParentFootprint(), st_[1].GetParentFootprint()
+                            if fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked():
+                                pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference()))
+                            if xing(): failed = "%s -> %s (the fan into %s crosses)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
+                        seg(lpx, lpy, mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), pcbnew.F_Cu, net_p); seg(lnx, lny, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
+                    continue   # a fine pitch: the legs entered the pads straight; the N leg of a fan was laid with the P leg
                 crossing = cross_near if near else cross_far
                 nnx, nny = (ln0[0] - lp0[0], ln0[1] - lp0[1]) if near else (ln1[0] - lp1[0], ln1[1] - lp1[1]); nl_ = math.hypot(nnx, nny) or 1.0
                 away = (-sgn * nnx / nl_, -sgn * nny / nl_)   # from the other leg's end towards this one, continued
