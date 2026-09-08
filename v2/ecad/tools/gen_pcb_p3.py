@@ -174,11 +174,19 @@ pour(pcbnew.B_Cu, "GND", "GND pour B.Cu", (-35, -22, 35, 22))
 # P2 (8 Sep 2026, MESHSAT-862; 32.66: the P1 pour was 874 of 3080 mm2 in 15 pieces, 4 loose, once the router had used the underside): a locked ground via grid
 # on 5 mm, wherever 1.6 mm from every pad, band and hole, so each piece the router leaves is anchored to the top-side ground
 _gnd = net_for("GND", create=False); _n = 0
-_obst = [(pd.GetPosition(), 1.6) for f in board.GetFootprints() for pd in f.Pads()] + [(t.GetStart(), 1.6) for t in board.GetTracks()] + [(t.GetEnd(), 1.6) for t in board.GetTracks()]
+_obst = [(pd.GetPosition(), 1.6) for f in board.GetFootprints() for pd in f.Pads()]
+def _seg_d(p_, a_, b_):
+    dx_, dy_ = b_.x - a_.x, b_.y - a_.y; l2 = dx_ * dx_ + dy_ * dy_
+    t_ = 0 if l2 == 0 else max(0, min(1, ((p_.x - a_.x) * dx_ + (p_.y - a_.y) * dy_) / l2))
+    return math.hypot(p_.x - (a_.x + t_ * dx_), p_.y - (a_.y + t_ * dy_))
+_rules = [z for z in board.Zones() if z.GetIsRuleArea()]
 for _gx in range(-32, 33, 5):
     for _gy in range(-19, 20, 5):
         _p = P(_gx, _gy)
-        if all(math.hypot(_p.x - o.x, _p.y - o.y) > FromMM(r) for o, r in _obst) and board.GetBoardEdgesBoundingBox().Contains(_p):
+        if not all(math.hypot(_p.x - o.x, _p.y - o.y) > FromMM(r) for o, r in _obst): continue
+        if not all(_seg_d(_p, t.GetStart(), t.GetEnd()) > t.GetWidth() / 2 + FromMM(0.3 + 0.3 + 0.15) for t in board.GetTracks() if t.GetClass() == "PCB_TRACK"): continue   # the PWR class clearance 0.3 plus the via
+        if any(z.Outline().Contains(_p) for z in _rules): continue
+        if board.GetBoardEdgesBoundingBox().Contains(_p):
             v = pcbnew.PCB_VIA(board); v.SetPosition(_p); v.SetDrill(FromMM(0.3)); v.SetWidth(FromMM(0.6)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetNet(_gnd); v.SetLocked(True); board.Add(v); _n += 1
 print("ground stitch grid: %d locked vias" % _n)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings

@@ -1,0 +1,71 @@
+{
+ "board": "pcb-b-compute",
+ "project": "v2/ecad/pcb-b-compute-b17",
+ "phase": "B17",
+ "issue": "MESHSAT-862",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "argv": [
+   "bash",
+   "../tools/full_b16.sh",
+   "<PROJECT>"
+  ],
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 2,
+  "gen_logs": []
+ },
+ "plane_layers": [
+  "In1.Cu",
+  "In4.Cu"
+ ],
+ "route": {
+  "attempts": [
+   100
+  ],
+  "threads": 1,
+  "timeout": 14400,
+  "power_layers": [
+   "In1.Cu",
+   "In4.Cu"
+  ],
+  "plane_nets": [
+   "GND"
+  ],
+  "log": "out/parallel-b17.log",
+  "jar": "~/bin/freerouting-1.9.0.jar",
+  "layer_rules": {
+   "USB": [
+    "F.Cu",
+    "B.Cu"
+   ],
+   "DIFF100": [
+    "F.Cu",
+    "B.Cu"
+   ]
+  }
+ },
+ "finish": {
+  "argv": [
+   "./tools/finish_b17.sh",
+   "<ECAD>",
+   "out/parallel-b17.log"
+  ],
+  "cwd": "<ECAD>",
+  "clean_flag": "out/b17-clean.txt",
+  "stub_log": "out/pcb-b-compute-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-B17",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 200
+ },
+ "budget_rounds": 1,
+ "notes": "B17 (8 Sep 2026, MESHSAT-862, appendix 32.70): the B16 profile on the pcb-b-compute-b17 copy; the HDMI switches at 16 mm pitch, the pair pre-router in the chain.",
+ "baseline_key": "B15"
+}
