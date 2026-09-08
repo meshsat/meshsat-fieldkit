@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PCB-C phase C7 (MESHSAT-830, 7 Sep 2026): bring the panel netlist into the ring of gen_pcb_c.py, place the panel items at the face sites of tools/panel1450.py,
+"""PCB-C (C8, 8 Sep 2026, MESHSAT-862: the 1.0 mm RAIL class and the pair pre-router in the chain) phase C7 (MESHSAT-830, 7 Sep 2026): bring the panel netlist into the ring of gen_pcb_c.py, place the panel items at the face sites of tools/panel1450.py,
 the LEDs under the plate's light guides, the ribbon under B16's header, the e-paper ZIF and its boost on the top strip's top side, the light sensor under its guide,
 the camera mount, then pack the RP2040 controller and the drivers on the underside of the right strip, the test points on the bottom strip, and pour the planes.
 Usage: gen_pcb_c3.py <board.kicad_pcb> <netlist.net>. Case-centred frame (origin = case centre, +Y the back wall) as the plate and the scene."""
@@ -165,10 +165,11 @@ ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)   # 0.127: the RP2040's 0.4 mm escape rows (C7)
-PATTERNS = [("+5V", "PWR"), ("+3V3", "PWR"), ("LED_RAIL*", "PWR"), ("GND", "PWR"), ("EPD_VCC", "PWR"), ("USB_*", "USB")]
+PATTERNS = [("+5V", "RAIL"), ("+3V3", "RAIL"), ("LED_RAIL*", "PWR"), ("GND", "PWR"), ("EPD_VCC", "PWR"), ("USB_*", "USB")]   # C8 (8 Sep 2026, 32.70): the two rails 1.0 mm wide
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]
 try:
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)
+    nr = pcbnew.NETCLASS("RAIL"); cls(nr, 0.127, 1.0, 0.8, 0.4); ns.SetNetclass("RAIL", nr)
     nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.2, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.2)); nu.SetDiffPairGap(FromMM(0.15)); ns.SetNetclass("USB", nu)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
@@ -180,7 +181,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.2, diff_pair_gap=0.15)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.5, 0.8, 0.4), C("USB", 1, 0.127, 0.2, 0.6, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.5, 0.8, 0.4), C("USB", 1, 0.127, 0.2, 0.6, 0.3), C("RAIL", 2, 0.127, 1.0, 0.8, 0.4)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     import fnmatch as _fnm
     def _class_of(netname):

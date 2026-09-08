@@ -14,7 +14,7 @@ import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-c-display"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import intent as _intent
-_intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", note="the panel rail over the ribbon (PANEL_5V on B16, fused F6)")
+_intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.03, note="the panel rail over the ribbon (PANEL_5V on B16, fused F6)")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)

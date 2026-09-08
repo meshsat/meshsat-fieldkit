@@ -171,6 +171,16 @@ def pour(layer, netname, name, rect, priority=0):
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
 pour(pcbnew.B_Cu, "GND", "GND pour B.Cu", (-35, -22, 35, 22))
+# P2 (8 Sep 2026, MESHSAT-862; 32.66: the P1 pour was 874 of 3080 mm2 in 15 pieces, 4 loose, once the router had used the underside): a locked ground via grid
+# on 5 mm, wherever 1.6 mm from every pad, band and hole, so each piece the router leaves is anchored to the top-side ground
+_gnd = net_for("GND", create=False); _n = 0
+_obst = [(pd.GetPosition(), 1.6) for f in board.GetFootprints() for pd in f.Pads()] + [(t.GetStart(), 1.6) for t in board.GetTracks()] + [(t.GetEnd(), 1.6) for t in board.GetTracks()]
+for _gx in range(-32, 33, 5):
+    for _gy in range(-19, 20, 5):
+        _p = P(_gx, _gy)
+        if all(math.hypot(_p.x - o.x, _p.y - o.y) > FromMM(r) for o, r in _obst) and board.GetBoardEdgesBoundingBox().Contains(_p):
+            v = pcbnew.PCB_VIA(board); v.SetPosition(_p); v.SetDrill(FromMM(0.3)); v.SetWidth(FromMM(0.6)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetNet(_gnd); v.SetLocked(True); board.Add(v); _n += 1
+print("ground stitch grid: %d locked vias" % _n)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))

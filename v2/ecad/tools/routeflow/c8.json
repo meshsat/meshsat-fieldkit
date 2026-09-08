@@ -1,0 +1,82 @@
+{
+ "board": "pcb-c-display",
+ "project": "v2/ecad/pcb-c-display-c8",
+ "phase": "C8",
+ "issue": "MESHSAT-862",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "footprint self-test",
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 1,
+  "gen_logs": [
+   {
+    "file": "out/gen_pcb_c.log",
+    "must": "saved"
+   },
+   {
+    "file": "out/gen_pcb_c3.log",
+    "must": "saved"
+   }
+  ],
+  "steps": [
+   [
+    "python3",
+    "../tools/gen_footprints_panel.py",
+    "../meshsat.pretty"
+   ],
+   [
+    "bash",
+    "../tools/full_c7.sh",
+    "."
+   ]
+  ]
+ },
+ "route": {
+  "attempts": [
+   100
+  ],
+  "threads": 1,
+  "timeout": 5400,
+  "power_layers": [
+   "In1.Cu"
+  ],
+  "plane_nets": [
+   "GND"
+  ],
+  "log": "out/parallel-c8.log",
+  "jar": "~/bin/freerouting-1.9.0.jar",
+  "layer_rules": {
+   "USB": [
+    "F.Cu",
+    "In2.Cu"
+   ]
+  }
+ },
+ "finish": {
+  "argv": [
+   "../tools/finish_c8.sh",
+   "..",
+   "out/parallel-c8.log"
+  ],
+  "cwd": "<PROJECT>",
+  "clean_flag": "out/c8-clean.txt",
+  "stub_log": "out/pcb-c-display-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-c-revA-C8",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 60
+ },
+ "budget_rounds": 2,
+ "notes": "C8 (8 Sep 2026, MESHSAT-862, appendix 32.70): the C7 profile on the v2/ecad/pcb-c-display-c8 copy.",
+ "baseline_key": "C6",
+ "plane_layers": [
+  "In1.Cu"
+ ]
+}
