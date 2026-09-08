@@ -2,7 +2,8 @@
 """Read the deliverable back (MESHSAT-862, 8 Sep 2026; appendix 27.2 listed these properties on 3 Sep and no gate read them until now).
 Asserts: every item of the deliverable folder is present and non-empty; the gerber zip carries one copper gerber per copper layer of the
 board (F_Cu .gtl, In<k>_Cu .g<k>, B_Cu .gbl), the mask, paste, silk and edge layers, the Excellon drill file and its map; the JLC BOM is in
-the JLC form and every designator in it is in the CPL (bench-fitted parts excepted by prefix); the CPL has only Top and Bottom in its side
+the JLC form and every designator in it is in the CPL (bench-fitted parts excepted by prefix: H mounting, S_ shield, TP test point,
+W_ solder wire land, JP solder jumper, none of which JLC places); the CPL has only Top and Bottom in its side
 column and no `?` designator; the DRC report exists. Prints one line per property with its count and the denominator.
 
 Usage: verify_deliverable.py <deliverable dir> <name> <copper layers> [--bench-prefixes H,S_,TP] [--bare]   -> exit 1 on any FAIL."""
@@ -13,7 +14,7 @@ ITEMS = ["%s-gerbers.zip", "%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-drc
 
 BARE_SKIP = ("%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-schematic.pdf", "%s.kicad_sch", "%s-bom.status")   # a bare board (E5) has no schematic, BOM or CPL
 
-def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_"), bare=False):
+def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP"), bare=False):
     fails, lines = [], []
     def ok(cond, text):
         lines.append(("PASS  " if cond else "FAIL  ") + text)
@@ -70,7 +71,7 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_"), bare=False):
 
 def main(a):
     if len(a) < 3: print(__doc__); return 2
-    bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP", "W_")
+    bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP", "W_", "JP")
     fails, lines = check_dir(a[0], a[1], int(a[2]), bench, "--bare" in a)
     for l in lines: print("verify_deliverable: " + l)
     print("verify_deliverable: %s (%d of %d properties)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails), len(lines) - len(fails) - sum(1 for l in lines if l.startswith("INFO")), len(lines) - sum(1 for l in lines if l.startswith("INFO"))))
