@@ -186,11 +186,11 @@ r("R7", "2.2k", "SDA", "+3V3"); r("R8", "2.2k", "SCL", "+3V3")   # the kit bus p
 part("U1", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x22: LED sinks, light mode inputs", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "+3V3", "21": "GND", "3": "GND",
  "4": "SOSACT_K", "5": "MWARN_K", "6": "MCAUT_K", "7": "CHG_K", "8": "SAT_K", "9": "MESH_K", "10": "LTE_K", "11": "GPS_K",
- "13": "LIGHT_DAY_n", "14": "LIGHT_NIGHT_n", "15": "PANEL_ID", "16": "SPARE1", "17": "SPARE2", "18": "SPARE3", "19": "SPARE4", "20": "SPARE5"}, "C50993")
+ "13": "LIGHT_DAY_n", "14": "LIGHT_NIGHT_n", "15": "PANEL_ID", "16": "SPARE1", "17": "SPARE2", "18": "SPARE3", "19": "SPARE4", "20": "SPARE5"}, "C2864778")
 part("U2", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x23: LED sinks, the battery bar, lamp test", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "+3V3", "21": "+3V3", "3": "GND",
  "4": "SHORE_K", "5": "MSG_K", "6": "PIRING_K", "7": "BAT1_K", "8": "BAT2_K", "9": "BAT3_K", "10": "BAT4_K", "11": "BAT5_K",
- "13": "TX_LAMPTEST", "14": "SPARE6", "15": "SPARE7", "16": "SPARE8", "17": "SPARE9", "18": "SPARE10", "19": "SPARE11", "20": "SPARE12"}, "C50993")
+ "13": "TX_LAMPTEST", "14": "SPARE6", "15": "SPARE7", "16": "SPARE8", "17": "SPARE9", "18": "SPARE10", "19": "SPARE11", "20": "SPARE12"}, "C2864778")
 c("C17", "100n", "+3V3", "GND", "C", "C14663"); c("C18", "100n", "+3V3", "GND", "C", "C14663")
 for i, net in enumerate(("SOS_SW", "ZEROIZE_HW", "TEST_SW", "LIGHT_DAY_n", "LIGHT_NIGHT_n"), 9):
     r("R%d" % i, "10k", net, "+3V3", "R", "C25804"); c("C%d" % (i + 10), "10n", net, "GND", "C", "C57112")
@@ -203,7 +203,7 @@ part("JP2", "Jumper", "SolderJumper_2_Open", "PANEL_ID strap (closed = variant B
 part("SW_LIGHT", "Connector_Generic", "Conn_01x06", "LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 on the D3 splashproof bushing, its O-ring (spare AT516) under the nut on the face, AT428H boot; D hole, flat toward +X", "TGL6",
      {"1": "LED_RAIL_SW", "2": "+5V", "3": "NC", "4": "GND", "5": "LIGHT_DAY_n", "6": "LIGHT_NIGHT_n"})
 part("Q1", "Transistor_FET", "AO3401A", "AO3401A P-FET high side", "SOT23", {"1": "Q1_G", "2": "LED_RAIL_SW", "3": "LED_RAIL"}, "C15127")
-r("R17", "2.2k", "LED_RAIL_SW", "Q1_G", "R", "C4190"); r("R18", "47R", "Q1_G", "Q2_D", "R", "C25118")
+r("R17", "2.2k", "LED_RAIL_SW", "Q1_G", "R", "C4190"); r("R18", "47R", "Q1_G", "Q2_D", "R", "C23182")
 nfet("Q2", "Q2_G", "GND", "Q2_D"); r("R19", "100R", "PANEL_PWM", "Q2_G", "R", "C22775"); r("R20", "100k", "Q2_G", "GND", "R", "C25803")
 tp("TP4", "LED_RAIL"); tp("TP5", "LED_RAIL_SW")
 # --- indicators (3 mm THT, anode from LED_RAIL through the series resistor, cathode to the expander sink; red/amber 300R, green/white 180R at 8 mA)
@@ -212,11 +212,11 @@ LEDS = [("D1", "MWARN", "red", "300R"), ("D2", "MCAUT", "amber", "300R"), ("D4",
         ("D12", "BAT1", "amber", "300R"), ("D13", "BAT2", "green", "180R"), ("D14", "BAT3", "green", "180R"), ("D15", "BAT4", "green", "180R"), ("D16", "BAT5", "green", "180R")]
 rn = 21
 for ref, name, colour, val in LEDS:
-    r("R%d" % rn, val, "LED_RAIL", name + "_A", "R", "C23025" if val == "300R" else "C25270"); led3(ref, "%s %s" % (name, colour), name + "_A", name + "_K"); rn += 1
+    r("R%d" % rn, val, "LED_RAIL", name + "_A", "R", "C23025" if val == "300R" else "C22828"); led3(ref, "%s %s" % (name, colour), name + "_A", name + "_K"); rn += 1
 # TX lamp: hardware from TR_APRS (the real PTT mirror of D8's KEY line), lamp test through a BAT54 from U2
 r("R%d" % rn, "300R", "LED_RAIL", "TX_A", "R", "C23025"); rn += 1; led3("D3", "TX red (RF hazard)", "TX_A", "TX_K")
-nfet("Q3", "Q3_G", "GND", "TX_K"); r("R%d" % rn, "1k", "TR_APRS", "Q3_G", "R", "C11702"); rn += 1; r("R%d" % rn, "100k", "Q3_G", "GND", "R", "C25803"); rn += 1
-part("D17", "Device", "D_Schottky", "BAT54 lamp-test tie", "SOD123", {"2": "TX_K", "1": "TX_LAMPTEST"}, "C2166")
+nfet("Q3", "Q3_G", "GND", "TX_K"); r("R%d" % rn, "1k", "TR_APRS", "Q3_G", "R", "C21190"); rn += 1; r("R%d" % rn, "100k", "Q3_G", "GND", "R", "C25803"); rn += 1
+part("D17", "Device", "D_Schottky", "BAT54 lamp-test tie", "SOD123", {"2": "TX_K", "1": "TX_LAMPTEST"}, "C7502705")
 # --- switches (bench parts on flying leads; footprints = panel hole + lead pads)
 part("SW_MAIN", "Connector_Generic", "Conn_01x04", "MAIN PWR 19 mm momentary, green ring (to A22 J_MAINSW); C&K ATP19-SL1-603-B0SA-03G; silicone gasket washer under the bezel", "SW19", {"1": "MAINSW_A", "2": "MAINSW_B", "3": "MAINRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL_SW", "MAINRING_A", "R", "C23179"); rn += 1
@@ -228,10 +228,10 @@ part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS locking toggle, maintaine
 part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW high; APEM 5636ADKB-2V, hinged safety cover); K front seal in the keyed 6.5 hole", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
 part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; ZEROIZE_HW low = wipe the secure element and assert the disk-key wipe (32.52)", "TGL3", {"1": "ZEROIZE_HW", "2": "GND", "3": "NC"})
 # power-button leads: ferrite + 100 nF at the panel end (the leads pass the antenna feeds)
-part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_A", "2": "MAINSW_A2"}, "C1017"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_B", "2": "MAINSW_B2"}, "C1017")
+part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_A", "2": "MAINSW_A2"}, "C1002"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_B", "2": "MAINSW_B2"}, "C1002")
 c("C26", "100n", "MAINSW_A2", "MAINSW_B2", "C", "C14663")
 part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead to A22 J_MAINSW (XH2.5 at the A22 end): two solder lands on the underside, soldered and beaded", "XH2", {"1": "MAINSW_A2", "2": "MAINSW_B2"})
-part("FB3", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_A", "2": "PIJ2_A2"}, "C1017"); part("FB4", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_B", "2": "PIJ2_B2"}, "C1017")
+part("FB3", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_A", "2": "PIJ2_A2"}, "C1002"); part("FB4", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_B", "2": "PIJ2_B2"}, "C1002")
 c("C27", "100n", "PIJ2_A2", "PIJ2_B2", "C", "C14663")
 part("J_PIJ2", "Connector_Generic", "Conn_01x02", "PI button lead: two solder lands on the underside (the controller reads it as the module shutdown request)", "XH2", {"1": "PIJ2_A2", "2": "PIJ2_B2"})
 # --- e-paper: the bare E2370KS0C1 on a 24-way ZIF (top strip, top side) with the PDi rev 02 driving circuit behind a P-FET power switch (leakage: "connect to a transistor switch")

@@ -264,7 +264,7 @@ def slot(s):
               86: "S%d_IREF" % s, 116: "S%d_REXT" % s, 33: "S%d_SLOTCLK" % s, 45: "S%d_SLOTIMP" % s, 46: "S%d_SLOTIMP" % s, 19: "GND", 20: "GND", 21: "S%d_PRSNT3" % s, 28: "S%d_PWRSAV" % s,
               9: "S%d_TEST1" % s, 16: "S%d_TESTL" % s, 17: "S%d_TESTL" % s, 22: "S%d_TESTL" % s, 25: "S%d_TESTL" % s, 51: "S%d_TESTL" % s, 18: "S%d_TESTL" % s, 26: "S%d_SMBCLK" % s, 27: "S%d_SMBDAT" % s,
               71: "S%d_EEPD" % s, 89: "S%d_JTAGL" % s, 92: "S%d_JTAGL" % s, 93: "S%d_JTAGL" % s, 94: "S%d_JTAGL" % s, 67: "S%d_PST0" % s, 68: "S%d_PST1" % s})
-    synth(U(1), "PI7C9X2G404SL", "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S%d: up = CM5 lane, port 1 NVMe, port 2 card socket" % s, "LQFP128EP", m, "C2827826")
+    synth(U(1), "PI7C9X2G404SL", "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S%d: up = CM5 lane, port 1 NVMe, port 2 card socket" % s, "LQFP128EP", m, "C500767")
     r(R(17), "475 1% (IREF)", "S%d_IREF" % s, "GND"); r(R(18), "1.43k 1% (REXT)", "S%d_REXT" % s, "GND"); r(R(19), "5.1k", "S%d_SLOTCLK" % s, b33); r(R(20), "5.1k", "S%d_SLOTIMP" % s, b33)
     r(R(21), "5.1k", "S%d_PRSNT3" % s, b33); r(R(22), "330", "S%d_PWRSAV" % s, "GND"); r(R(23), "5.1k", "S%d_TEST1" % s, b33); r(R(24), "330", "S%d_TESTL" % s, "GND"); r(R(25), "5.1k", "S%d_SMBCLK" % s, b33)
     r(R(26), "5.1k", "S%d_SMBDAT" % s, b33); r(R(27), "4.7k", "S%d_EEPD" % s, "GND"); r(R(28), "330", "S%d_JTAGL" % s, "GND"); r(R(29), "1k", "PCIE%d_CLKREQ_n" % s, "GND")   # the switch cannot forward CLKREQ: the module's clock is always requested
@@ -279,7 +279,7 @@ def slot(s):
     M.update({n: b33 for n in (2, 4, 12, 14, 16, 18, 70, 72, 74)}); M.update({n: "GND" for n in (1, 3, 9, 15, 21, 27, 33, 39, 45, 51, 57, 71, 73, 75)})
     M.update({41: "NVME%d_RX_N" % s, 43: "NVME%d_RX_P" % s, 47: "NVME%d_TX_N" % s, 49: "NVME%d_TX_P" % s, 53: "NVME%d_CLK_N" % s, 55: "NVME%d_CLK_P" % s, 50: "PCIE%d_RST1_n" % s, 52: "NVME%d_CLKREQ_n" % s,
               54: "PCIE%d_nWAKE" % s, 38: "NVME%d_DEVSLP" % s, 10: "NVME%d_nLED" % s})
-    part("J_M2N%d" % s, "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S%d (k3s replicated storage)" % s, "M2M", M, "C2803771")
+    part("J_M2N%d" % s, "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S%d (k3s replicated storage)" % s, "M2M", M, "C41430851")
     r(R(35), "10k", "NVME%d_DEVSLP" % s, "GND"); r(R(36), "1k", b33, "LED_NV_A%d" % s); led("LED%d4" % s, "amber NVMe activity", "LED_NV_A%d" % s, "NVME%d_nLED" % s)
     c(C(49), "22u 6.3V", b33, "GND", "C10u"); c(C(50), "100n", b33, "GND")
     if s == 1:   # WiFi link card AW7915-AED on an E-key 2230 (B14 wiring); W_DISABLE1# from the hardware EMCON line through a level stage on the card rail
@@ -287,7 +287,7 @@ def slot(s):
         E.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E.update({n: a33 for n in (2, 4, 72, 74)})
         E.update({3: "USB1_CARD_P", 5: "USB1_CARD_N", 35: "CARD1_TX_P", 37: "CARD1_TX_N", 41: "CARD1_RX_P", 43: "CARD1_RX_N", 47: "CARD1_CLK_P", 49: "CARD1_CLK_N", 52: "PCIE1_RST2_n", 53: "CARD1_CLKREQ_n",
                   55: "PCIE1_nWAKE", 56: "WIFI_W_DIS_n", 54: "WIFI_W_DIS2_n", 6: "WIFI_nLED"})
-        part("J_M2C1", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)", "M2E", E, "C2803764")
+        part("J_M2C1", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)", "M2E", E, "C41430829")
         r(R(37), "10k", "WIFI_W_DIS_n", a33); r(R(38), "10k", "WIFI_W_DIS2_n", a33); nfet(Q(6), a33, "WIFI_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
         r(R(39), "1k", a33, "LED_WIFI_A"); led("LED15", "blue WiFi link", "LED_WIFI_A", "WIFI_nLED")
     elif s == 2:   # 5G module RM520N-GL on a B-key 3052 (M.2 WWAN socket 2 pinout; TE 1-2199119-5); SIM 1 on the UIM pins, SIM 2 on GPIO_0..3 per the RM5xx series (to confirm from the RM520N-GL hardware design)
@@ -295,7 +295,7 @@ def slot(s):
         B.update({n: "GND" for n in (3, 5, 11, 27, 33, 39, 45, 51, 57, 71, 73)}); B.update({n: a33 for n in (2, 4, 70, 72, 74)})
         B.update({7: "USB2_CARD_P", 9: "USB2_CARD_N", 41: "CARD2_RX_N", 43: "CARD2_RX_P", 47: "CARD2_TX_N", 49: "CARD2_TX_P", 53: "CARD2_CLK_N", 55: "CARD2_CLK_P", 50: "PCIE2_RST2_n", 52: "CARD2_CLKREQ_n",
                   54: "PCIE2_nWAKE", 6: "5G_PWROFF_n", 8: "5G_W_DIS_n", 67: "5G_RST_n", 30: "SIM1_RST", 32: "SIM1_CLK", 34: "SIM1_IO", 36: "SIM1_VCC", 40: "SIM2_CLK", 42: "SIM2_IO", 44: "SIM2_RST", 46: "SIM2_VCC", 10: "5G_nLED"})
-        part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)", "M2B", B, "C2803770")
+        part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)", "M2B", B, "C41430835")
         r(R(37), "10k", "5G_W_DIS_n", a33); nfet(Q(6), a33, "5G_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
         r(R(38), "10k", "5G_PWROFF_n", a33); nfet(Q(7), "5G_OFF", "GND", "5G_PWROFF_n", "2N7002 expander -> FULL_CARD_POWER_OFF#")
         r(R(40), "10k", "5G_RST_n", a33); nfet(Q(8), "5G_RESET", "GND", "5G_RST_n", "2N7002 expander -> RESET#")
@@ -307,7 +307,7 @@ def slot(s):
         M3 = {n: "NC" for n in range(1, 76) if not 59 <= n <= 66}
         M3.update({n: a33 for n in (2, 4, 12, 14, 16, 18, 70, 72, 74)}); M3.update({n: "GND" for n in (1, 3, 9, 15, 21, 27, 33, 39, 45, 51, 57, 71, 73, 75)})
         M3.update({41: "CARD3_RX_N", 43: "CARD3_RX_P", 47: "CARD3_TX_N", 49: "CARD3_TX_P", 53: "CARD3_CLK_N", 55: "CARD3_CLK_P", 50: "PCIE3_RST2_n", 52: "CARD3_CLKREQ_n", 54: "PCIE3_nWAKE", 38: "CARD3_DEVSLP", 10: "CARD3_nLED"})
-        part("J_M2C3", "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of S3", "M2M", M3, "C2803771")
+        part("J_M2C3", "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of S3", "M2M", M3, "C41430851")
         r(R(37), "10k", "CARD3_DEVSLP", "GND"); r(R(39), "1k", a33, "LED_C3_A"); led("LED35", "amber spare drive activity", "LED_C3_A", "CARD3_nLED")
     c(C(57), "22u 6.3V", a33, "GND", "C10u"); c(C(58), "100n", a33, "GND")
     # --- USB 3 hub TUSB8041I on the module's USB3-0 port; downstream ports per the fabric of 32.58
@@ -327,7 +327,7 @@ def slot(s):
         h[dp] = nets[0]; h[dm] = nets[1]
         if len(nets) == 6: h[txp], h[txm], h[rxp], h[rxm] = nets[2], nets[3], nets[4], nets[5]
     if s == 1: h[36] = "LIME_HW_EN"; h[46] = "LIME_FLT"
-    synth(U(2), "TUSB8041", "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S%d (upstream the CM5 USB3-0 port)" % s, "QFN64", h, "C2841998")
+    synth(U(2), "TUSB8041", "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S%d (upstream the CM5 USB3-0 port)" % s, "QFN64", h, "C544686")
     c(C(59), "100n", "HUB%d_SSTX_P" % s, "USB3%d_RX_P" % s, "C0402"); c(C(60), "100n", "HUB%d_SSTX_N" % s, "USB3%d_RX_N" % s, "C0402")   # AC coupling on the hub's transmit pairs
     if s == 1: c(C(61), "100n", "HUB1_D1TX_P", "LIME_SSRX_P", "C0402"); c(C(62), "100n", "HUB1_D1TX_N", "LIME_SSRX_N", "C0402")
     r(R(41), "10k", "HUB%d_RST_n" % s, b33); c(C(63), "1u", "HUB%d_RST_n" % s, "GND"); r(R(42), "9.53k 1%", "HUB%d_R1" % s, "GND"); r(R(43), "90.9k 1%", n5, "HUB%d_VBUS" % s); r(R(44), "10k 1%", "HUB%d_VBUS" % s, "GND")
@@ -379,7 +379,7 @@ for n, nm in KSZ.items():
         k[n] = "SWP4_%s_%s" % (nm[-1], "P" if nm[5] == "P" else "N")
     else: k[n] = "NC"
 k.update({125: "KSZ_XO", 126: "KSZ_XI", 127: "KSZ_ISET", 96: "KSZ_RST_n", 94: "EXP_INT", 98: "SDA", 101: "SCL", 105: "KSZ_LED1", 91: "KSZ_LED2", 88: "KSZ_LED3", 85: "KSZ_LED4", 86: "KSZ_STRAP_I2C"})
-synth("U1", "KSZ9897R", "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus", "TQFP128EP", k, "C2830106")
+synth("U1", "KSZ9897R", "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus", "TQFP128EP", k, "C638299")
 part("Y1", "Device", "Crystal_GND24", "25 MHz 3225", "XTAL", {"1": "KSZ_XI", "3": "KSZ_XO", "2": "GND", "4": "GND"}); c("C14", "18p", "KSZ_XI", "GND", "C0402"); c("C15", "18p", "KSZ_XO", "GND", "C0402")
 r("R57", "1k (strap [LED4_1, LED3_1] = 01: I2C management, Table 3-3)", "KSZ_STRAP_I2C", "GND"); r("R3", "6.04k 1% (ISET)", "KSZ_ISET", "GND"); r("R4", "10k", "KSZ_RST_n", "+3V3_DEV"); c("C16", "10u", "KSZ_RST_n", "GND", "C10u"); nfet("Q2", "KSZ_RST", "GND", "KSZ_RST_n", "2N7002 expander -> switch reset")
 for i, nm in enumerate(("KSZ_LED1", "KSZ_LED2", "KSZ_LED3", "KSZ_LED4"), 1):
@@ -389,7 +389,7 @@ c("C27", "10u", "+1V2_KSZ", "GND", "C10u"); c("C28", "10u", "+2V5_KSZ", "GND", "
 # magnetics: chip side centre taps to ground through separate 100 nF (voltage-mode PHY, KSZ9897 section 7); MDI side to the RJ45, PoE on the pair 1-2 and 3-6 centre taps
 t = {1: "TCT1", 4: "TCT2", 7: "TCT3", 10: "TCT4", 2: "SWP4_A_P", 3: "SWP4_A_N", 5: "SWP4_B_P", 6: "SWP4_B_N", 8: "SWP4_C_P", 9: "SWP4_C_N", 11: "SWP4_D_P", 12: "SWP4_D_N",
      23: "MDI_A_P", 22: "MDI_A_N", 20: "MDI_B_P", 19: "MDI_B_N", 17: "MDI_C_P", 16: "MDI_C_N", 14: "MDI_D_P", 13: "MDI_D_N", 24: "POE_P", 21: "POE_DRAIN", 18: "MCT3", 15: "MCT4"}
-synth("T1", "H5007NL", "Pulse H5007NL 1000BASE-T magnetics (switch port 4 to the wall RJ45)", "H5007", t, "C2891392")
+synth("T1", "H5007NL", "Pulse H5007NL 1000BASE-T magnetics (switch port 4 to the wall RJ45)", "H5007", t, "C6384935")
 for i, nm in enumerate(("TCT1", "TCT2", "TCT3", "TCT4"), 29): c("C%d" % i, "100n", nm, "GND")
 r("R9", "75", "MCT3", "BOB"); r("R10", "75", "MCT4", "BOB"); c("C33", "1n 2kV", "BOB", "GND", "C1812")
 part("J_ETH", "Connector", "RJ45_Shielded", "RJ45 jack (Amphenol RJHSE5380): patch lead to the sealed wall RJ45; PoE out on 1-2 (+) and 3-6", "RJ45",
@@ -398,9 +398,9 @@ part("J_ETH", "Connector", "RJ45_Shielded", "RJ45 jack (Amphenol RJHSE5380): pat
 part("J_54V", "Connector_Generic", "Conn_01x02", "54 V PoE feed from A22 J_54V (JST-VH): + -", "VH2", {"1": "+54V_POE", "2": "GND"})
 part("D2", "Device", "D_TVS", "SMBJ58A", "TVS", {"1": "+54V_POE", "2": "GND"}); c("C34", "100n 100V", "+54V_POE", "GND", "C10u"); c("C35", "10u 100V", "+54V_POE", "GND", "C1812")
 synth("U5", "TPS23861", "TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus", "TSSOP28",
-      {1: "+3V3_DEV", 2: "POE_RST_n", 3: "SCL", 4: "SDA", 5: "SDA", 6: "EXP_INT", 7: "GND", 22: "GND", 28: "+54V_POE", 15: "POE_SEN", 16: "POE_DRAIN", 17: "POE_GATE", 18: "GND", 11: "GND", 8: "GND", 12: "GND", 19: "GND"}, "C2927919")
+      {1: "+3V3_DEV", 2: "POE_RST_n", 3: "SCL", 4: "SDA", 5: "SDA", 6: "EXP_INT", 7: "GND", 22: "GND", 28: "+54V_POE", 15: "POE_SEN", 16: "POE_DRAIN", 17: "POE_GATE", 18: "GND", 11: "GND", 8: "GND", 12: "GND", 19: "GND"}, "C93245")
 r("R11", "10k", "POE_RST_n", "+3V3_DEV"); c("C36", "100n", "+3V3_DEV", "GND")
-part("Q1", "Connector_Generic", "Conn_01x05", "FDMC3612 100 V N-FET, PoE port switch (PowerPAK SO-8: 1-3 source, 4 gate, 5 drain tab)", "PPAK", {"1": "POE_SEN", "2": "POE_SEN", "3": "POE_SEN", "4": "POE_GATE", "5": "POE_DRAIN"}, "C2827865")
+part("Q1", "Connector_Generic", "Conn_01x05", "FDMC3612 100 V N-FET, PoE port switch (PowerPAK SO-8: 1-3 source, 4 gate, 5 drain tab)", "PPAK", {"1": "POE_SEN", "2": "POE_SEN", "3": "POE_SEN", "4": "POE_GATE", "5": "POE_DRAIN"}, "C455160")
 r("R12", "0.255R 1% 2512", "POE_SEN", "GND", "R2512"); r("R13", "24.9 (POE_P tie)", "+54V_POE", "POE_P")   # the positive pair tap sits on the 54 V bus through a low-value link for the fit of the PSE detection
 # ================================================================= display switch: two TS3DV642 in cascade to the HDMI receptacle; SEL2 chooses the slot (SEL1 high = all channels), selects from the panel controller
 def ts3(ref, a, b, cmn, sel):
@@ -408,7 +408,7 @@ def ts3(ref, a, b, cmn, sel):
          5: cmn + "_D0_P", 6: cmn + "_D0_N", 7: cmn + "_D1_P", 8: cmn + "_D1_N", 10: cmn + "_D2_P", 11: cmn + "_D2_N", 12: cmn + "_CK_P", 13: cmn + "_CK_N", 3: cmn + "_SCL", 4: cmn + "_SDA", 14: cmn + "_HPD", 15: cmn + "_CEC",
          38: a + "_D0_P", 37: a + "_D0_N", 36: a + "_D1_P", 35: a + "_D1_N", 34: a + "_D2_P", 33: a + "_D2_N", 32: a + "_CK_P", 31: a + "_CK_N", 42: a + "_SCL", 41: a + "_SDA", 19: a + "_HPD", 18: a + "_CEC",
          29: b + "_D0_P", 28: b + "_D0_N", 27: b + "_D1_P", 26: b + "_D1_N", 25: b + "_D2_P", 24: b + "_D2_N", 23: b + "_CK_P", 22: b + "_CK_N", 40: b + "_SCL", 39: b + "_SDA", 21: b + "_HPD", 20: b + "_CEC"}
-    synth(ref, "TS3DV642", "TI TS3DV642A0RUAR HDMI 2:1 switch (%s / %s -> %s)" % (a, b, cmn), "WQFN42", d, "C2846591")
+    synth(ref, "TS3DV642", "TI TS3DV642A0RUAR HDMI 2:1 switch (%s / %s -> %s)" % (a, b, cmn), "WQFN42", d, "C157482")
 ts3("U3", "HDMI1", "HDMI2", "HDMIM", "HDMI_SEL1"); ts3("U4", "HDMIM", "HDMI3", "HDMIO", "HDMI_SEL2")
 r("R14", "10k", "HDMI_SW_EN", "+3V3_DEV"); r("R15", "100k", "HDMI_SEL1", "GND"); r("R16", "100k", "HDMI_SEL2", "GND"); c("C37", "100n", "+3V3_DEV", "GND"); c("C38", "100n", "+3V3_DEV", "GND")
 part("J_HDMI", "Connector", "HDMI_A", "HDMI type A receptacle (Molex 208658-1001): cable to the Xenarc 709GNK pass-through on the face plate", "HDMI",
@@ -420,7 +420,7 @@ r("R19", "15k", "HDMIO_HPD_IN", "HDMIO_HPD"); r("R20", "22k", "HDMIO_HPD", "GND"
 # ================================================================= GNSS LG290P on a CP2102N bridge (S2 hub port 1); 1PPS to the three slots through level stages; active antenna bias from VDD_RF
 g = {n: "GND" for n, nm in LG.items() if nm == "GND"}
 g.update({23: "+3V3_DEV", 22: "VBAT", 20: "GNSS_TXD", 21: "GNSS_RXD", 3: "GNSS_PPS", 8: "GNSS_RST_n", 9: "GNSS_VDD_RF", 11: "GNSS_RF_IN", 6: "GNSS_TXD2", 7: "GNSS_RXD2"})
-synth("U11", "LG290P", "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack", "LG290P", g, "C22453086")
+synth("U11", "LG290P", "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack", "LG290P", g, "C29781241")
 r("R21", "10k", "GNSS_RST_n", "+3V3_DEV"); c("C40", "100n", "+3V3_DEV", "GND"); c("C41", "10u", "+3V3_DEV", "GND", "C10u"); r("R22", "10k", "GNSS_PPS", "GND")
 r("R23", "10R", "GNSS_VDD_RF", "GNSS_BIAS"); part("L3", "Device", "L", "27nH 0402 (antenna bias tee)", "L0402", {"1": "GNSS_BIAS", "2": "GNSS_ANT"}); c("C42", "47p", "GNSS_ANT", "GNSS_RF_IN", "C0402")
 part("J_GNSS1", "Connector", "Conn_Coaxial", "U.FL: pigtail to A22's GNSS jack J_RF4", "UFL", {"1": "GNSS_ANT", "2": "GND"})
@@ -429,7 +429,7 @@ cp2102("U15", "GNSS", "+5V_S2", "GNSS_DP", "GNSS_DM", "GNSS_RXD", "GNSS_TXD", re
 # ================================================================= LoRa E22-900M30S on S3's SPI0, 5 V through a TPS22810 gated by EMCON; antenna pad to a U.FL for A22's LoRa jack
 e22 = {n: "GND" for n, nm in E22P.items() if nm == "GND"}
 e22.update({9: "+5V_LORA", 10: "+5V_LORA", 6: "LORA_RXEN", 7: "LORA_TXEN", 8: "NC", 13: "SPI3_IO24", 14: "SPI3_IO23", 15: "SPI3_IO26", 16: "SPI3_MISO", 17: "SPI3_MOSI", 18: "SPI3_SCLK", 19: "SPI3_CE1", 21: "LORA_ANT"})
-synth("U12", "E22_900M30S", "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd", "E22", e22, "C2913441")
+synth("U12", "E22_900M30S", "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd", "E22", e22, "C411294")
 tps22810("U21", "+5V_DEV", "E22_EN", "+5V_LORA", "E22_CT"); c("C45", "1n", "E22_CT", "GND"); c("C46", "10u", "+5V_LORA", "GND", "C10u"); c("C47", "100n", "+5V_LORA", "GND"); r("R25", "10k", "SPI3_CE1", "+3V3_S3B")
 part("J_LORA1", "Connector", "Conn_Coaxial", "U.FL: pigtail to A22's LoRa jack J_RF11", "UFL", {"1": "LORA_ANT", "2": "GND"})
 # ================================================================= two E72 CC2652P radios (Zigbee coordinator, Thread RCP) on CP2102N bridges (S2 hub ports 2 and 3), 3.3 V through one TPS22810 gated by EMCON
@@ -445,7 +445,7 @@ for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", 
 tps22810("U22", "+3V3_DEV", "E72_EN", "+3V3_ZB", "E72_CT"); c("C52", "1n", "E72_CT", "GND"); c("C53", "10u", "+3V3_ZB", "GND", "C10u"); c("C54", "100n", "+3V3_ZB", "GND"); c("C55", "100n", "+3V3_ZB", "GND")
 # ================================================================= LimeSDR Mini receptacle (S1 hub port 1, USB 3) and the RockBLOCK 9704 header (S1 hub port 4 through a CP2102N), both behind TPS259631 eFuses
 part("J_LIME", "Connector", "USB3_A", "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", "USB3A",
-     {"1": "+5V_LIME", "2": "LIME_DM", "3": "LIME_DP", "4": "GND", "5": "LIME_SSRX_N", "6": "LIME_SSRX_P", "7": "GND", "8": "LIME_SSTX_N", "9": "LIME_SSTX_P", "10": "GND"}, "C2802372")
+     {"1": "+5V_LIME", "2": "LIME_DM", "3": "LIME_DP", "4": "GND", "5": "LIME_SSRX_N", "6": "LIME_SSRX_P", "7": "GND", "8": "LIME_SSTX_N", "9": "LIME_SSTX_P", "10": "GND"}, "C5355286")
 esd("U33", "LIME_DP", "LIME_DM", "+5V_LIME")
 efuse("U23", "+5V_DEV", "+5V_LIME", "LIME_EN", "LIME_FLT", ["C56", "R36", "R37", "R38", "R39", "C57"], "3.0 A (ILM)"); c("C58", "22u 6.3V", "+5V_LIME", "GND", "C10u")
 part("J_RB9704", "Connector_Generic", "Conn_02x08_Odd_Even", "RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket", "IDC16", {
@@ -464,24 +464,24 @@ part("J_USBX", "Connector_Generic", "Conn_01x04", "spare USB 2.0 header (S3 hub 
 esd("U29", "USB_WALL_P", "USB_WALL_N", "+3V3_DEV")
 # ================================================================= hardware EMCON gates (74LVC08APW: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC); EMCON_HW low silences every transmitter on this board
 part("U19", "Connector_Generic", "Conn_01x14", "74LVC08APW quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)", "TSSOP14",
-     {"1": "EMCON_HW", "2": "LIME_HW_EN", "3": "LIME_EN_A", "4": "LIME_EN_A", "5": "LIME_SW_EN", "6": "LIME_EN", "7": "GND", "8": "RB_EN", "9": "EMCON_HW", "10": "RB_SW_EN", "11": "E22_EN", "12": "EMCON_HW", "13": "LORA_ON", "14": "+3V3_DEV"}, "C6009")
+     {"1": "EMCON_HW", "2": "LIME_HW_EN", "3": "LIME_EN_A", "4": "LIME_EN_A", "5": "LIME_SW_EN", "6": "LIME_EN", "7": "GND", "8": "RB_EN", "9": "EMCON_HW", "10": "RB_SW_EN", "11": "E22_EN", "12": "EMCON_HW", "13": "LORA_ON", "14": "+3V3_DEV"}, "C465737")
 part("U20", "Connector_Generic", "Conn_01x14", "74LVC08APW quad AND: E72 radios (EMCON AND software); spare gates grounded", "TSSOP14",
-     {"1": "EMCON_HW", "2": "ZB_ON", "3": "E72_EN", "4": "GND", "5": "GND", "6": "NC", "7": "GND", "8": "NC", "9": "GND", "10": "GND", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3_DEV"}, "C6009")
+     {"1": "EMCON_HW", "2": "ZB_ON", "3": "E72_EN", "4": "GND", "5": "GND", "6": "NC", "7": "GND", "8": "NC", "9": "GND", "10": "GND", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3_DEV"}, "C465737")
 c("C65", "100n", "+3V3_DEV", "GND"); c("C66", "100n", "+3V3_DEV", "GND"); r("R49", "100k", "LIME_HW_EN", "GND"); r("R50", "100k", "LIME_SW_EN", "GND"); r("R51", "100k", "RB_SW_EN", "GND"); r("R52", "100k", "LORA_ON", "GND"); r("R53", "100k", "ZB_ON", "GND")
 # ================================================================= expanders, secure element, holdover clock, temperature (kit I2C bus, mastered by the panel controller over J_PANEL)
 part("U6", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)", "EXP", {
  "24": "+3V3_DEV", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "GND", "3": "GND",
  "4": "KSZ_RST", "5": "LIME_SW_EN", "6": "RB_SW_EN", "7": "LORA_ON", "8": "ZB_ON", "9": "CAM_EN", "10": "5G_OFF", "11": "5G_RESET",
- "13": "WL_nDIS1", "14": "WL_nDIS2", "15": "WL_nDIS3", "16": "BT_nDIS1", "17": "BT_nDIS2", "18": "BT_nDIS3", "19": "RB_IEN", "20": "RB_CTRL"}, "C5626")
+ "13": "WL_nDIS1", "14": "WL_nDIS2", "15": "WL_nDIS3", "16": "BT_nDIS1", "17": "BT_nDIS2", "18": "BT_nDIS3", "19": "RB_IEN", "20": "RB_CTRL"}, "C2864778")
 part("U7", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares", "EXP", {
  "24": "+3V3_DEV", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "+3V3_DEV", "3": "+3V3_DEV",
  "4": "LIME_FLT", "5": "RB_FLT", "6": "CAM_FLT", "7": "RB_STATUS", "8": "RB_XMTG", "9": "EXP_SPARE1", "10": "EXP_SPARE2", "11": "EXP_SPARE3",
- "13": "EXP_SPARE4", "14": "EXP_SPARE5", "15": "EXP_SPARE6", "16": "EXP_SPARE7", "17": "EXP_SPARE8", "18": "EXP_SPARE9", "19": "EXP_SPARE10", "20": "EXP_SPARE11"}, "C5626")
+ "13": "EXP_SPARE4", "14": "EXP_SPARE5", "15": "EXP_SPARE6", "16": "EXP_SPARE7", "17": "EXP_SPARE8", "18": "EXP_SPARE9", "19": "EXP_SPARE10", "20": "EXP_SPARE11"}, "C2864778")
 c("C67", "100n", "+3V3_DEV", "GND"); c("C68", "100n", "+3V3_DEV", "GND"); r("R54", "2.2k", "SDA", "+3V3_DEV"); r("R55", "2.2k", "SCL", "+3V3_DEV"); r("R56", "10k", "EXP_INT", "+3V3_DEV")
 for i in range(1, 12): part("TP%d" % (40 + i), "Connector", "TestPoint", "EXP_SPARE%d" % i, "TP", {"1": "EXP_SPARE%d" % i})
 ic("U8", 8, "ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE", "SOIC8", {"4": "GND", "5": "SDA", "6": "SCL", "8": "+3V3_DEV"}, "C2836813"); c("C69", "100n", "+3V3_DEV", "GND")
 ic("U9", 8, "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed", "SOIC8", {"2": "+3V3_DEV", "3": "EXP_INT", "5": "GND", "6": "VBAT", "7": "SDA", "8": "SCL"}, "C9866"); c("C70", "100n", "+3V3_DEV", "GND")
-part("U10", "Sensor_Temperature", "TMP117xxDRV", "TMP117AIDRVR board temperature under the coolers (I2C 0x49)", "WSON6", {"1": "SCL", "2": "GND", "3": "EXP_INT", "4": "+3V3_DEV", "5": "+3V3_DEV", "6": "SDA", "7": "GND"}, "C2842210"); c("C71", "100n", "+3V3_DEV", "GND")
+part("U10", "Sensor_Temperature", "TMP117xxDRV", "TMP117AIDRVR board temperature under the coolers (I2C 0x49)", "WSON6", {"1": "SCL", "2": "GND", "3": "EXP_INT", "4": "+3V3_DEV", "5": "+3V3_DEV", "6": "SDA", "7": "GND"}, "C699536"); c("C71", "100n", "+3V3_DEV", "GND")
 # ================================================================= the panel ribbon J_PANEL (2x13) to C7's controller and the A22 ribbon J_AB1 (2x13, underside)
 part("F1", "Device", "Polyfuse", "2A hold 1812", "F1812", {"1": "+5V_DEV", "2": "PANEL_5V"})
 part("J_PANEL", "Connector_Generic", "Conn_02x13_Odd_Even", "panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines", "IDC26", {
