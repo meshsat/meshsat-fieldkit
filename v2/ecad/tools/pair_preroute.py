@@ -330,6 +330,11 @@ def main(a):
         via1 = via1n[pn]   # shared updates below go to both
         pad_layers = sorted({L for net in (pn, nn) for p in pads[net] for L in _ALL.values() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and p.IsOnLayer(L)} | set(layers), key=list(_ALL.values()).index)
         trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
+        def rebuild_maps():   # after a swap of two passives inside a section the maps still hold the pads at their old places (D9: a stub over the swapped pad, 8 Sep 2026 13:08)
+            nonlocal trk, via, via1n, trk1
+            trk, via = build_maps(gr, b, layers, set(), half, vd / 2)
+            via1n = {pn: build_maps(gr, b, layers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, layers, {nn}, half, vd / 2, split=0.05)[1]}
+            trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         def rollback():
             for t in pieces: b.Remove(t)
@@ -485,7 +490,7 @@ def main(a):
                 if ok_ and isx_(legs_[0][1], legs_[0][2], legs_[1][1], legs_[1][2]):   # the two fans cross: exchange the wide station's passives when they are a pair
                     fa2, fb2 = stW[0].GetParentFootprint(), stW[1].GetParentFootprint()
                     if fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked() and not pinned(fa2) and not pinned(fb2):
-                        p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference()))
+                        p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference())); rebuild_maps()
                         legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
                     else: ok_ = False
                 if ok_:
@@ -695,9 +700,14 @@ def main(a):
                         if xing():
                             fa_, fb_ = st_[0].GetParentFootprint(), st_[1].GetParentFootprint()
                             if fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_):
-                                pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference()))
+                                pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference())); rebuild_maps()
                             if xing():   # still crossing (one part's two pins, a pinned station): the N fan is laid straight and the P leg dives under it (8 Sep 2026 12:26)
-                                seg(lnx, lny, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
+                                # the N fan first runs 0.5 mm on along the corridor, then turns: its diagonal passed 1 um under the class clearance at P's turn into the dive (13:08)
+                                ax2, ay2 = (lnx - lpx), (lny - lpy); al2 = math.hypot(ax2, ay2) or 1.0; ux2, uy2 = -ay2 / al2, ax2 / al2
+                                smx, smy = (mm(st_[0].GetPosition().x) + mm(st_[1].GetPosition().x)) / 2, (mm(st_[0].GetPosition().y) + mm(st_[1].GetPosition().y)) / 2
+                                if (smx - lnx) * ux2 + (smy - lny) * uy2 < 0: ux2, uy2 = -ux2, -uy2
+                                lnx2, lny2 = lnx + 0.5 * ux2, lny + 0.5 * uy2
+                                seg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n); seg(lnx2, lny2, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
                                 nnx_, nny_ = (lnx - lpx, lny - lpy); nl2_ = math.hypot(nnx_, nny_) or 1.0
                                 err_ = dive_p(mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), lpx, lpy, pcbnew.F_Cu, None, st_[0], net_p, (-nnx_ / nl2_, -nny_ / nl2_))
                                 if err_: failed = "%s -> %s (the fan into %s crosses, %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference(), err_); break
@@ -739,7 +749,7 @@ def main(a):
         if failed: rollback(); report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections))); continue
         # every other pad of the two nets (a pull resistor, a test point, a part's second pin) gets a stub to the nearest laid piece of its net, so the router
         # has nothing left on a pair net (8 Sep 2026: Freerouting wandered 15 to 23 pieces over three layers to reach D9's pull-downs and the read-back called the pairs uncoupled)
-        left = 0; stubs_ = 0; dives_ = 0
+        left = 0; stubs_ = 0; dives_ = 0; rebuild_maps()
         for net_obj, net in ((net_p, pn), (net_n, nn)):
             laid_pts = [(mm(t.GetStart().x), mm(t.GetStart().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net] + [(mm(t.GetEnd().x), mm(t.GetEnd().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net]
             if not laid_pts: continue
