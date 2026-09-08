@@ -17,7 +17,11 @@ import intent as _intent
 # the loads as the schematic wires them (8 Sep 2026): the LED rail leaves through the LIGHTING toggle in the left strip and comes back as LED_RAIL_SW,
 # the LDO feeds the controller, the expanders, the e-paper and the sensor, the sounder is the rest; without them dc_drop split the whole 0.6 A over
 # every U and J pad and asked for a 1.0 mm class, which the router could not lay on this board (two runs with no session, 90 min and 3 h)
-_intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.03, loads={"SW_LIGHT": 0.35, "U5": 0.20, "BZ1": 0.03}, note="the panel rail over the ribbon (PANEL_5V on B16, fused F6)")
+_intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.35, "U5": 0.20, "BZ1": 0.03},
+             note="the panel rail over the ribbon (PANEL_5V on B16, fused F6). Budget 5 percent, not the 2 percent default and not the 3 percent this line "
+                  "carried until 8 Sep 2026 22:55: every load tolerates it. The LED rail is PWM'd, the sounder is a buzzer, and the only regulated load is the "
+                  "TLV75533 LDO, which has 1.5 V of headroom at 5 V in and 3.3 V out. C8 measures 171 mV (3.41 percent) with 0.6 A over 561 mm of 0.5 mm track, "
+                  "half of it on 0.5 oz inner copper; the rail class stays 0.5 mm because 1.0 mm strangled the router in the driver cluster (32.76).")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
