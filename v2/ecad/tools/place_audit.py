@@ -112,14 +112,23 @@ def main(a):
     try:
         import intent; it = intent.load(a[0])
     except Exception: it = None
+    # a declared decoupling capacitor too far from its pin is a real defect and blocks, unless the project carries `bypass-allow.txt`
+    # with a reason line, the same idiom as erc-allow.txt and lcsc-allow.txt: known, written down, and still counted in the report
+    # (8 Sep 2026: declaring the D board's sixteen capacitors blocked a board that was one connection from clean, on a finding whose
+    # fix is a floor-plan change across the whole set and an owner decision, so it is recorded rather than hidden or silently passed)
+    allow = os.path.join(os.path.dirname(os.path.abspath(a[0])) or ".", "bypass-allow.txt")
+    allowed = [l.strip() for l in open(allow).read().splitlines() if l.strip() and not l.startswith("#")] if os.path.exists(allow) else []
     if it and it.get("bypass"):
         pads = {(f.GetReference(), p.GetNumber()): p for f in fps for p in f.Pads()}; far = 0
         for e in it["bypass"]:
             pin = pads.get((e["part"], e["pin"])); cap = [p for (ref, num), p in pads.items() if ref == e["cap"] and pin is not None and p.GetNetname() == pin.GetNetname()]
             if pin is None or not cap: continue
             d = math.hypot(cap[0].GetPosition().x - pin.GetPosition().x, cap[0].GetPosition().y - pin.GetPosition().y) / 1e6
-            if d > 3.0: far += 1; lines.append("FAIL  bypass %s sits %.1f mm from %s.%s before the route (3 mm rule)" % (e["cap"], d, e["part"], e["pin"]))
-        lines.append("INFO  decoupling: %d of %d bypass capacitors within 3 mm of their pin" % (len(it["bypass"]) - far, len(it["bypass"]))); coll += far
+            if d > 3.0:
+                far += 1
+                lines.append("%s  bypass %s sits %.1f mm from %s.%s before the route (3 mm rule)%s" % ("ALLOW" if allowed else "FAIL ", e["cap"], d, e["part"], e["pin"], (" [" + allowed[0][:60] + "]") if allowed else ""))
+        lines.append("INFO  decoupling: %d of %d bypass capacitors within 3 mm of their pin%s" % (len(it["bypass"]) - far, len(it["bypass"]), " (%d allowed by bypass-allow.txt)" % far if allowed and far else ""))
+        if not allowed: coll += far
     else: lines.append("INFO  decoupling: 0 of 0 bypass entries (no intent file or none listed)")
     n_esc = sum(1 for r in env); lines.append("INFO  escapes measured on %d of %d fine-pitch parts (%d parts, %d locked pieces on the board)" % (n_esc, len(fine), len(fps), len(locked)))
     for l in lines: print("place_audit: " + l)
