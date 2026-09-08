@@ -386,6 +386,7 @@ def main(a):
                 for a10 in range(0, 360, 15):
                     a = math.radians(a10); cx_, cy_ = ex_ + r * math.cos(a), ey_ + r * math.sin(a); jj, ii = gr.cell(cx_, cy_)
                     if not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or via1n[net.GetNetname()][ii, jj]: continue
+                    cx_, cy_ = gr.xy(jj, ii)   # the site is the cell the maps cleared, not the polar sample up to 0.07 mm off it (a dive via 0.10 mm from the other leg, 8 Sep 2026 13:27)
                     if L in trk1[net.GetNetname()] and trk1[net.GetNetname()][L][ii, jj]: continue
                     if aL in trk1[net.GetNetname()] and trk1[net.GetNetname()][aL][ii, jj]: continue
                     score = r - 0.5 * ((cx_ - ex_) * away[0] + (cy_ - ey_) * away[1]) / r + 0.3 * math.hypot(cx_ - px_, cy_ - py_) / 10.0
@@ -414,7 +415,7 @@ def main(a):
             via_at(site1[0], site1[1], net); gr.disc(via, site1[0], site1[1], VIA_SPLIT)
             pth_ = hasattr(obj, "GetAttribute") and obj.GetAttribute() == pcbnew.PAD_ATTRIB_PTH
             if pth_ and stub(site1[0], site1[1], x, y, hop, net): return None   # a through-hole pad takes the leg on the hop layer
-            for cand in via_site(x, y, x, y, hop, aL_, net, away):   # each site: the hop to it, the via, the stub into the pad; the next site when the stub finds no path (13:18)
+            for cand in via_site(x, y, x, y, hop, aL_, net, away):   # each site: the hop to it, the via, the stub into the pad; the next site when the stub finds no path (13:16)
                 n0 = len(pieces)
                 if not stub(site1[0], site1[1], cand[0], cand[1], hop, net): continue
                 via_at(cand[0], cand[1], net); gr.disc(via, cand[0], cand[1], VIA_SPLIT)
