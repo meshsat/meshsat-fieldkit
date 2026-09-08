@@ -194,7 +194,7 @@ for k, n in ((11, "TS2"), (12, "TS3"), (13, "TS4")): r("R%d" % k, "10k", n, "GND
 r("R14", "10k", "PRES", "GND"); r("R15", "10k", "DISP", "GND")                                                  # embedded pack: present; no LED display
 # --- the high-side protection: fuse, charge FET, discharge FET (common drain), gate networks
 part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): the pack's fuse", "FUSE", {"1": "CELL4", "2": "FUSED"})
-pfet5("Q1", "CSD17570Q5B 30 V N-FET, charge switch", "CHG_G", "SW", "FUSED", "C2825431"); pfet5("Q2", "CSD17570Q5B 30 V N-FET, discharge switch", "DSG_G", "SW", "PACK_P", "C2825431")
+pfet5("Q1", "CSD17570Q5B 30 V N-FET, charge switch", "CHG_G", "SW", "FUSED", "C529279"); pfet5("Q2", "CSD17570Q5B 30 V N-FET, discharge switch", "DSG_G", "SW", "PACK_P", "C529279")
 r("R16", "5.1k", "CHG_G", "CHG_R"); r("R17", "10M", "CHG_G", "FUSED"); r("R18", "5.1k", "DSG_G", "DSG_R"); r("R19", "10M", "DSG_G", "PACK_P")
 # the gauge drives the gates through the 5.1k: rename the gauge pins onto the resistor side
 for p_ in P:

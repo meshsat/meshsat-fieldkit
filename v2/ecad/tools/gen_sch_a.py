@@ -280,18 +280,18 @@ efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R10
 # --- hardware EMCON gates: 74LVC08APW quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC); EMCON_HW (active low from the panel controller over J_AB1,
 #     pulled up: an unplugged ribbon leaves the transmitters enabled, as D7's TX_INHIBIT_n did) ANDed with the software holds from the expander
 ic("U26", 14, "74LVC08APW quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit", "TSSOP14", {
- "1": "EMCON_HW", "2": "PA_SW_EN", "3": "PA_EN", "4": "EMCON_HW", "5": "HF_SW_EN", "6": "HF_EN", "7": "GND", "8": "TX_INHIBIT_n", "9": "EMCON_HW", "10": "EMCON_HW", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3"}, "C5605")
+ "1": "EMCON_HW", "2": "PA_SW_EN", "3": "PA_EN", "4": "EMCON_HW", "5": "HF_SW_EN", "6": "HF_EN", "7": "GND", "8": "TX_INHIBIT_n", "9": "EMCON_HW", "10": "EMCON_HW", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3"}, "C465737")
 r("R102", "10k", "EMCON_HW", "+3V3"); c("C104", "100n", "+3V3", "GND"); r("R103", "100k", "PA_SW_EN", "GND"); r("R104", "100k", "HF_SW_EN", "GND")
 # --- I2C: the kit bus (SDA, SCL) carries the charger, the expanders and the INA226s; no mux since the TPS55288 and TPS25750 left the design (7 Sep 01:50)
 # --- expanders: U27 0x21 (outputs: the enables and the charge inhibit; inputs: faults and status), U28 0x24 (power-good lines, spares on test points); PCA9555PW pins as the A21 map
 part("U27", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x21): enables and status", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "+3V3", "2": "GND", "3": "GND",
  "4": "CHG_INHIBIT", "5": "MON_EN", "6": "HEAT_EN", "7": "D8_EN", "8": "POE_EN", "9": "PA_SW_EN", "10": "HF_SW_EN", "11": "DEV_EN",
- "13": "CHRG_OK", "14": "PROCHOT", "15": "MON_FLT", "16": "HEAT_FLT", "17": "D8_FLT", "18": "DOCK_SPARE", "19": "INA_ALERT", "20": "FE_PGOOD"}, "C5626")
+ "13": "CHRG_OK", "14": "PROCHOT", "15": "MON_FLT", "16": "HEAT_FLT", "17": "D8_FLT", "18": "DOCK_SPARE", "19": "INA_ALERT", "20": "FE_PGOOD"}, "C2864778")
 part("U28", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x24): power-good lines, spares", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "GND", "2": "GND", "3": "+3V3",
  "4": "EXP2_SPA", "5": "EXP2_SPB", "6": "EXP2_SPC", "7": "EXP2_SPD", "8": "PA_PGOOD", "9": "POE_PGOOD", "10": "HF_PGOOD", "11": "PD_PGOOD",
- "13": "PD_EN", "14": "PD_UFP", "15": "EXP2_SP3", "16": "EXP2_SP4", "17": "EXP2_SP5", "18": "EXP2_SP6", "19": "EXP2_SP7", "20": "EXP2_SP8"}, "C5626")
+ "13": "PD_EN", "14": "PD_UFP", "15": "EXP2_SP3", "16": "EXP2_SP4", "17": "EXP2_SP5", "18": "EXP2_SP6", "19": "EXP2_SP7", "20": "EXP2_SP8"}, "C2864778")
 c("C106", "100n", "+3V3", "GND"); c("C107", "100n", "+3V3", "GND"); r("R110", "10k", "EXP_INT", "+3V3"); r("R111", "100k", "MON_EN", "GND"); r("R112", "100k", "HEAT_EN", "GND"); r("R113", "100k", "D8_EN", "GND"); r("R114", "100k", "POE_EN", "GND")
 for k in range(3, 9): tp("TP%d" % k, "EXP2_SP%d" % k)
 for k, nm in enumerate("ABCD", 1): tp("TP%d" % (22 + k), "EXP2_SP" + nm)
