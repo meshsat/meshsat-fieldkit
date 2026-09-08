@@ -14,7 +14,10 @@ import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-c-display"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import intent as _intent
-_intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.03, note="the panel rail over the ribbon (PANEL_5V on B16, fused F6)")
+# the loads as the schematic wires them (8 Sep 2026): the LED rail leaves through the LIGHTING toggle in the left strip and comes back as LED_RAIL_SW,
+# the LDO feeds the controller, the expanders, the e-paper and the sensor, the sounder is the rest; without them dc_drop split the whole 0.6 A over
+# every U and J pad and asked for a 1.0 mm class, which the router could not lay on this board (two runs with no session, 90 min and 3 h)
+_intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.03, loads={"SW_LIGHT": 0.35, "U5": 0.20, "BZ1": 0.03}, note="the panel rail over the ribbon (PANEL_5V on B16, fused F6)")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
