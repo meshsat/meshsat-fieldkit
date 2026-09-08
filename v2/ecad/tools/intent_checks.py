@@ -55,7 +55,11 @@ def run(b, check, path=None):
         c = p.GetPosition(); r = int(NEAR_VIA * 1e6)
         if any(v.GetNetname() == p.GetNetname() and math.hypot(v.GetPosition().x - c.x, v.GetPosition().y - c.y) <= r for v in vias): return True
         return any(pl.Contains(c) for L in cu for pl in planes_net.get((L, p.GetNetname()), []))   # the pad lies in a pour of its own net (review of 8 Sep 2026: the `is` on SWIG proxies was always False)
-    n_by = 0
+    # the same recorded-exception idiom as erc-allow.txt: a decoupling distance may stand only if the board's own
+    # bypass-allow.txt gives a reason, and the report still names every entry and its distance (8 Sep 2026 18:25)
+    allow_p = os.path.join(os.path.dirname(os.path.abspath(path)) if path else ".", "bypass-allow.txt")
+    allowed = [l.strip() for l in open(allow_p).read().splitlines() if l.strip() and not l.startswith("#")] if os.path.exists(allow_p) else []
+    n_by = 0; n_far = 0
     for e in it.get("bypass", []):
         n_by += 1
         cap = [p for (ref, num), p in pads.items() if ref == e["cap"]]; pin = pads.get((e["part"], e["pin"]))
@@ -65,11 +69,17 @@ def run(b, check, path=None):
         d = math.hypot(rail[0].GetPosition().x - pin.GetPosition().x, rail[0].GetPosition().y - pin.GetPosition().y) / 1e6
         val = next((f.GetValue() for f in b.GetFootprints() if f.GetReference() == e["cap"]), "")
         loop = 6.0 if any(u in val.lower() for u in ("u ", "uf", "u,", "µ")) and not val.lower().startswith(("0.1u", "0.01u")) else 3.0
-        check(d <= loop, "bypass %s (%s) to %s.%s: %.2f mm pad to pin (limit %.1f)" % (e["cap"], val, e["part"], e["pin"], d, loop))
+        if d > loop and allowed:
+            n_far += 1
+            check(True, "bypass %s (%s) to %s.%s: %.2f mm pad to pin, allowed by bypass-allow.txt [%s]" % (e["cap"], val, e["part"], e["pin"], d, allowed[0][:56]))
+        else:
+            check(d <= loop, "bypass %s (%s) to %s.%s: %.2f mm pad to pin (limit %.1f)" % (e["cap"], val, e["part"], e["pin"], d, loop))
+        if d > loop and allowed: continue                  # a capacitor that far away has no loop worth measuring
         check(closes(rail[0]) and (not gnd or closes(gnd[0])), "bypass %s: rail and ground pads reach a via or pour within %.1f mm" % (e["cap"], NEAR_VIA))
     # 3. rails exist
     names = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
     for net in it.get("rails", {}): check(net.lstrip("/") in names, "intent rail %s is a net of the board" % net)
+    if n_far: print("intent_checks: %d of %d bypass entries are past their limit and allowed by bypass-allow.txt" % (n_far, n_by))
     return "intent_checks: return path on %d nets, %d bypass entries, %d rails checked" % (n_nets, n_by, len(it.get("rails", {})))
 
 if __name__ == "__main__":
