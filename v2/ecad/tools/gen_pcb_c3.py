@@ -74,6 +74,15 @@ FIXED[L.LIGHT_SENSOR[0]] = (L.LIGHT_SENSOR[1][0], L.LIGHT_SENSOR[1][1], 0, False
 FIXED["CAM_H1"] = (L.CAMERA[1][0] - 10.0, L.CAMERA[1][1], 0, False); FIXED["CAM_H2"] = (L.CAMERA[1][0] + 10.0, L.CAMERA[1][1], 0, False)
 for ref, (x, y) in L.LEAD_LANDS: FIXED[ref] = (x, y, 0, True)
 # panel-mount parts sit at the plate's sites (their bodies pass this board through the footprints' holes and slots): placed by their hole centre, not by their bounding box
+# The sounder driver belongs at the sounder (8 Sep 2026 23:20, 32.76): on C8 the packer put Q4 in the east cluster 294 mm from BZ1's land
+# and /BZ_K was the one net the router and both stub-router passes could not close, because a buzzer drive had to cross the whole panel.
+# Q4 and its two gate resistors sit on the underside beside the sounder now; the gate net PWM1 is the long one instead, which is a 100 ohm
+# series line into a FET gate and does not care.
+_sx, _sy = L.SOUNDER[1]
+FIXED["Q4"] = (_sx + 24.0, _sy, 0, True)
+_q4g = [r for r, pin in (nets.get("Q4_G") or nets.get("/Q4_G") or []) if r.startswith("R")]
+for _i, _r in enumerate(sorted(_q4g)[:2]): FIXED[_r] = (_sx + 27.5 + 3.2 * _i, _sy, 90, True)
+
 PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1", "J_HSJ1", "J_HSJ2", "CAM_H1", "CAM_H2"}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
 for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light guides; the legends are laser marked on the plate
