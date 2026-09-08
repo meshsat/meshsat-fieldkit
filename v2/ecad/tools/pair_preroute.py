@@ -89,7 +89,10 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
             if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + half)
             gr.seg(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
-    for z in b.Zones():
+    # Footprint-local rule areas count too: they are not in b.Zones(), so a keep-out that belongs to a part (the E72's antenna clearance,
+    # a connector's own no-track area) was invisible here while `prefanout.py` already read them. B17's pre-route came back with five
+    # items_not_allowed, all of them pair copper laid straight through one (9 Sep 2026 02:20, MESHSAT-862).
+    for z in list(b.Zones()) + [z for fp in b.GetFootprints() for z in fp.Zones()]:
         if z.GetIsRuleArea():
             zk = "zone.%s" % z.m_Uuid.AsString() if hasattr(z, "m_Uuid") else "zone.%d" % id(z)
             for L in layers:
