@@ -106,4 +106,7 @@ check(all(in_strips(fps[r]) for r in under), "the underside cluster stays on the
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
     import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic; print(_ic.run(b, check, sys.argv[1]))
+# 8 Sep 2026 (MESHSAT-862): the copper checks were wired into the A and P gates only, and they are what finds a pour the router
+# has eaten to islands or a stitch via the fill retreated from. D9 ended a clean route with eleven such islands on its front ground pour.
+import copper_checks as _cc2; print(_cc2.run(b, check))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

@@ -15,6 +15,7 @@ net named GND, or the caller's list.  Usage as a module: fails = copper_checks.r
 import pcbnew
 
 MIN_COVER = 0.5
+SLIVER = 5.0   # mm2: a fill piece smaller than this is a crumb of the pour, reported and not counted as a loose island (8 Sep 2026: D9's In1 plane was one 7300 mm2 plane plus six 2.5 mm2 slivers beside a connector, and the gate called the plane fragmented)
 
 def power_nets(b, extra=()):
     names = set(extra)
@@ -43,14 +44,16 @@ def run(b, check, nets=None):
         anchors += [p.GetPosition() for f in b.GetFootprints() for p in f.Pads() if p.GetNetname() == z.GetNetname() and p.IsOnLayer(L)]
         same = [o for o in pz if o is not z and o.GetNetname() == z.GetNetname() and o.GetFirstLayer() == L]   # same-net pours on this layer merge in the fill (a band chain, 8 Sep 2026)
         for o in same: anchors += [p.GetPosition() for p in thru if p.GetNetname() == z.GetNetname()]
-        loose = 0
+        loose = 0; slivers = 0
         for i in range(fp.OutlineCount()):
             o = fp.Outline(i)
+            if o.Area() / 1e12 < SLIVER: slivers += 1; continue   # a piece this small carries nothing and threatens nothing; counted and reported, never a block
             if any(o.PointInside(a) for a in anchors): continue
             merged = any(any(o.PointInside(q.GetFilledPolysList(L).Outline(k).CPoint(j)) for k in range(q.GetFilledPolysList(L).OutlineCount()) for j in range(0, q.GetFilledPolysList(L).Outline(k).PointCount(), 7)) for q in same)
             merged = merged or any(any(q.Outline().Contains(o.CPoint(j)) for j in range(0, o.PointCount(), 5)) for q in same)   # abutting same-net zones (a higher-priority band knocks the lower one out to its edge)
             if not merged: loose += 1
         solid_gnd = z.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != L and o.GetFilledArea() >= 0.8 * o.Outline().Area() for o in pz)   # a ground pour on a routing layer beside a solid ground plane: its islands are a note, not a defect
+        if slivers: print("NOTE pour '%s' (%s, %s): %d piece(s) under %.1f mm2 not counted (isolated slivers, the fill's own crumbs)" % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), slivers, SLIVER))
         if solid_gnd and loose: print("NOTE pour '%s' (%s, %s): %d of %d pieces loose; the solid ground plane on another layer carries the return" % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), loose, fp.OutlineCount())); loose = 0
         check(loose == 0 and area >= MIN_COVER * rect, "pour '%s' (%s, %s): every piece anchored by a pad or via of its net (%d of %d loose), fill %.0f of %.0f mm2 of its outline (at least %.0f%%)" % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), loose, fp.OutlineCount(), area, rect, MIN_COVER * 100)); n1 += 1
     for t in b.GetTracks():
