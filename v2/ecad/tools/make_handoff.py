@@ -65,7 +65,10 @@ PCB_OPTIONS = {"pcb-a-power": ["FABRICATION NOTES (A22, the power board on the s
 JLC = os.path.join(RELEASE, "order"); REV = os.path.join(RELEASE, "review")
 # The deliverable folders are written by finish_board.sh on the laptop. Building order/ and review/ from a clone that has
 # not received them yet silently falls back to the project board file (older, and with no gerbers), so stop here instead.
-missing = [f for f, stem, *_ in BOARDS if not os.path.exists(os.path.join(DL, f, stem + "-gerbers.zip"))]
+# 8 Sep 2026 (MESHSAT-776): a board that is held (B16) may carry a QUOTE-ONLY folder `<folder>-quote` exported from its placed pre-route board, so the
+# JLCPCB cart can be priced for the whole set; its order line is marked QUOTE ONLY in every file and is rebuilt from the real deliverable before any payment
+QUOTE = {f: f + "-quote" for f, stem, *_ in BOARDS if not os.path.exists(os.path.join(DL, f, stem + "-gerbers.zip")) and os.path.exists(os.path.join(DL, f + "-quote", stem + "-gerbers.zip"))}
+missing = [f for f, stem, *_ in BOARDS if f not in QUOTE and not os.path.exists(os.path.join(DL, f, stem + "-gerbers.zip"))]
 if missing and os.environ.get("HANDOFF_ALLOW_MISSING") != "1":
     sys.exit("make_handoff: no finished deliverable for %s in %s.\n"
              "Finish those boards and commit their folders from the laptop first, then pull here and rerun.\n"
@@ -82,7 +85,7 @@ order_index = ["# MeshSat field-kit carrier boards, JLCPCB order set (generated 
 review_index = ["# MeshSat field-kit carrier boards, review prints (generated)", "",
                 "Print everything at 100 % scale (no fit-to-page). The 1:1 sheets are for laying the real devices on paper; the copper sheets and the assembly drawings are for the design review (appendix section 21.3 / 22.4: the six order-gate items are the agenda).", ""]
 for folder, stem, prj, title, phase, hand in BOARDS:
-    src = os.path.join(DL, folder); board_file = os.path.join(src, stem + ".kicad_pcb")
+    quote = folder in QUOTE; src = os.path.join(DL, QUOTE.get(folder, folder)); board_file = os.path.join(src, stem + ".kicad_pcb")
     if not os.path.exists(board_file): board_file = os.path.join(RT, prj, stem + ".kicad_pcb")
     b = pcbnew.LoadBoard(board_file); bb = b.GetBoardEdgesBoundingBox(); fps = list(b.GetFootprints())
     W, H, NL, T = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, b.GetCopperLayerCount(), b.GetDesignSettings().GetBoardThickness() / 1e6
@@ -117,7 +120,7 @@ for folder, stem, prj, title, phase, hand in BOARDS:
         files += [stem + "-bom.csv", stem + "-cpl.csv"]
         nb = len(open(os.path.join(jd, stem + "-bom.csv")).read().splitlines()) - 1; nl = sum(1 for r in csv.reader(open(os.path.join(jd, stem + "-bom.csv")))) - 1
         lcsc = sum(1 for r in list(csv.reader(open(os.path.join(jd, stem + "-bom.csv"))))[1:] if r[3].strip())
-    notes = ["MeshSat field-kit carrier %s Rev A, phase %s: JLCPCB order notes" % (title, phase), "",
+    notes = ["MeshSat field-kit carrier %s Rev A, phase %s: JLCPCB order notes" % (title, phase), ""] + (["QUOTE ONLY: this line is priced from the PLACED, UNROUTED pre-route board of %s (8 Sep 2026, MESHSAT-776). Size, layers, stack, finish and parts are the design's, the copper is not. Never pay this line; rebuild it from the routed deliverable first." % phase, ""] if quote else []) + [
              "PCB", "- Gerbers + Excellon drill: %s (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)" % os.path.basename(ger),
              "- Size %.1f x %.1f mm, %d copper layers, %.1f mm FR-4%s" % (W, H, NL, T, ", JLC04161H-7628 stackup" if NL == 4 else ""),
              ("- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)" if (top or bot) else "- no copper on this board: any surface finish (pick the cheapest, HASL lead-free), matte black solder mask, white silkscreen, no castellations, remove order number: yes"),
@@ -138,7 +141,7 @@ for folder, stem, prj, title, phase, hand in BOARDS:
     notes += ["SOURCE", "- Deliverable folder: v2/release/%s/boards/%s in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)" % (os.path.basename(RELEASE), folder),
               "- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709"]
     open(os.path.join(jd, "ORDER-NOTES.txt"), "w").write("\n".join(notes) + "\n")
-    order_index.append("| `%s/` | %s Rev A (%s) | %.0f x %.0f mm | %d | %s | %s |" % (tag, title, phase, W, H, NL, ("top %d + bottom %d parts, %d DNP removed" % (len(top), len(bot), len(removed))) if assembled else "none (PCB only)", ", ".join(files)))
+    order_index.append("| `%s/` | %s Rev A (%s)%s | %.0f x %.0f mm | %d | %s | %s |" % (tag, title, phase, " QUOTE ONLY, unrouted pre-route board" if quote else "", W, H, NL, ("top %d + bottom %d parts, %d DNP removed" % (len(top), len(bot), len(removed))) if assembled else "none (PCB only)", ", ".join(files)))
     # ---------------- Review
     rd = os.path.join(REV, tag); os.makedirs(rd)
     for f in os.listdir(src):

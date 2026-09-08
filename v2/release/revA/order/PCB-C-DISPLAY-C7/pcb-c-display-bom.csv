@@ -1,0 +1,58 @@
+Comment,Designator,Footprint,LCSC Part #
+10u,"C1,C2",C_0805_2012Metric,C15850
+1u,"C3,C4,C14,C15,C16",C_0603_1608Metric,C15849
+15p NP0,"C5,C6",C_0402_1005Metric,
+100n,"C7,C8,C9,C10,C11,C12,C13,C17,C18,C25,C26,C27,C29,C38",C_0603_1608Metric,C14663
+10n,"C19,C20,C21,C22,C23,C24",C_0603_1608Metric,C57112
+4.7u,C28,C_0805_2012Metric,C1779
+1u 25V,"C30,C31,C32,C33,C34,C35,C36,C37",C_0603_1608Metric,
+"3 mm MWARN red, sunlight viewable",D1,LED_D3.0mm,
+"3 mm MCAUT amber, sunlight viewable",D2,LED_D3.0mm,
+"3 mm TX red (RF hazard), sunlight viewable",D3,LED_D3.0mm,
+"3 mm SOSACT red, sunlight viewable",D4,LED_D3.0mm,
+"3 mm SAT green, sunlight viewable",D5,LED_D3.0mm,
+"3 mm MESH green, sunlight viewable",D6,LED_D3.0mm,
+"3 mm LTE green, sunlight viewable",D7,LED_D3.0mm,
+"3 mm GPS green, sunlight viewable",D8,LED_D3.0mm,
+"3 mm SHORE green, sunlight viewable",D9,LED_D3.0mm,
+"3 mm CHG white, sunlight viewable",D10,LED_D3.0mm,
+"3 mm MSG white, sunlight viewable",D11,LED_D3.0mm,
+"3 mm BAT1 amber, sunlight viewable",D12,LED_D3.0mm,
+"3 mm BAT2 green, sunlight viewable",D13,LED_D3.0mm,
+"3 mm BAT3 green, sunlight viewable",D14,LED_D3.0mm,
+"3 mm BAT4 green, sunlight viewable",D15,LED_D3.0mm,
+"3 mm BAT5 green, sunlight viewable",D16,LED_D3.0mm,
+BAT54 lamp-test tie,D17,D_SOD-123,C2166
+status (GPIO25),D18,LED_0603_1608Metric,
+SS2040FL: EPD_SW -> VGH,D19,D_SOD-123F,
+SS2040FL: pump clamp,D20,D_SOD-123F,
+SS2040FL: pump -> VGL,D21,D_SOD-123F,
+ferrite 600R,"FB1,FB2,FB3,FB4",L_0603_1608Metric,C1017
+"Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way; pin names per the PDi driving circuit note rev 02)",J_EPD,Hirose_FH34SRJ-24S,
+"panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control",J_PANEL,IDC-Header_2x13_P2.54mm_Vertical_SMD,
+10uH ATNR4010100MT 0.8 A (the boost inductor),L1,L_APV_ANR4020,
+AO3401A P-FET high side,Q1,SOT-23,C15127
+2N7002,"Q2,Q3,Q4",SOT-23,C8545
+AO3401A P-FET: the e-paper's supply switch (EPD_PWR_n low = on),Q5,SOT-23,C15127
+"Si1308EDL class N-FET (RDS under 200 mOhm, VGS 2.5 V): the boost switch on GDR",Q6,SOT-23,C8545
+1k,"R1,R6,R37",R_0603_1608Metric,C11702
+27R,"R2,R3",R_0603_1608Metric,
+10k,"R4,R9,R10,R11,R12,R13,R15,R16,R42",R_0603_1608Metric,C25804
+1k (BOOTSEL),R5,R_0603_1608Metric,
+2.2k,"R7,R8,R17",R_0603_1608Metric,C4190
+100k,"R14,R20,R38,R45",R_0603_1608Metric,C25803
+47R,R18,R_0603_1608Metric,C25118
+100R,"R19,R44",R_0603_1608Metric,C22775
+300R,"R21,R22,R23,R31,R36,R40",R_0603_1608Metric,C23025
+180R,"R24,R25,R26,R27,R28,R29,R30,R32,R33,R34,R35",R_0603_1608Metric,C25270
+470R,"R39,R41",R_0603_1608Metric,C23179
+0.47R 1%,R43,R_0603_1608Metric,
+"PCA9555PW 0x22: LED sinks, light mode inputs",U1,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
+"PCA9555PW 0x23: LED sinks, the battery bar, lamp test",U2,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
+"RP2040 panel controller (USB device on B16's slot-2 hub, the kit I2C master)",U3,QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm,C2040
+"W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)",U4,Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm,C2843335
+"TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)",U5,SOT-23-5,
+USBLC6-2SC6,"U6,U7,U8",SOT-23-6,C7519
+"74LVC1G04 inverter (2 A 4 Y): EMCON_HW = NOT TX_INHIBIT_n, the hardware emission-control line to every transmitter rail (32.50 item 3)",U9,SOT-23-5,
+"Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10",U_LIGHT,Vishay_VEML7700,C504893
+"12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND",Y1,Crystal_SMD_3225-4Pin_3.2x2.5mm,C20625731

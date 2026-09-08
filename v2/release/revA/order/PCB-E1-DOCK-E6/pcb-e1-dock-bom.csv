@@ -1,0 +1,88 @@
+Comment,Designator,Footprint,LCSC Part #
+10u 25V 1210,"C1,C31",C_1210_3225Metric,C2918497
+100n 100V,C2,C_0805_2012Metric,
+100n 50V,"C4,C28",C_0603_1608Metric,C14663
+100n (TIMER),C5,C_0603_1608Metric,C14663
+"1u 100V 1210 (X, input side)",C6,C_1210_3225Metric,
+"1u 100V 1210 (X, bus side)",C7,C_1210_3225Metric,
+10u 50V 1210,C8,C_1210_3225Metric,
+100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm),"C11,C12",CP_Elec_6.3x7.7,C454360
+10u 50V,"C13,C14",C_1206_3216Metric,C89632
+4.7u 50V,C15,C_1206_3216Metric,C132170
+1n,C16,C_0603_1608Metric,C1588
+470n 25V,"C17,C18",C_0603_1608Metric,C1623
+4.7u 25V,C19,C_1206_3216Metric,C132170
+1u,"C20,C34,C35,C45,C46,C47",C_0603_1608Metric,C15849
+4.7n,C21,C_0603_1608Metric,C53987
+100p,C22,C_0603_1608Metric,C14858
+100n,"C23,C30,C38,C39,C40,C41,C42,C43,C44,C48,C49,C50,C51",C_0603_1608Metric,C14663
+39u 35V Panasonic 35SVPF39M polymer (6.9 mm),"C24,C25",CP_Elec_8x6.7,C189474
+10u 25V,"C26,C27",C_1206_3216Metric,C89632
+22u 10V X7R 1210,"C32,C33",C_1210_3225Metric,C2918511
+15p,"C36,C37",C_0603_1608Metric,
+"SMCJ33A (input surge, datasheet 50 V 100 ms)",D1,D_SMC,C42371548
+SMCJ33A (bus clamp),D2,D_SMC,C42371548
+SMCJ18A (pack node clamp),D3,D_SMC,
+SMCJ33A (panel surge),D4,D_SMC,C42371548
+BAT54 boost diode INTVCC -> BOOST1,D5,D_SOD-123,C7502705
+BAT54 boost diode INTVCC -> BOOST2,D6,D_SOD-123,C7502705
+SS14 flyback across fan 1,D7,D_SMB,
+SS14 flyback across fan 2,D8,D_SMB,
+"DCF77 receiver module: 3.3 V, GND, pulse",J_DCF,PinHeader_1x03_P2.54mm_Vertical,
+"vehicle and shore DC in 9-36 V, lead from the D38999 wall receptacle DC pair (JST-VH, 10 A): + -",J_DCIN,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)",J_FAN1,PinHeader_1x03_P2.54mm_Vertical,
+"mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)",J_FAN2,PinHeader_1x03_P2.54mm_Vertical,
+"Geiger counter module (RadiationD-v1.1 class): 5 V, GND, pulse",J_GEIGER,PinHeader_1x03_P2.54mm_Vertical,
+"AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ",J_LTG,PinHeader_1x05_P2.54mm_Vertical,
+"outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL",J_POD,PinHeader_1x04_P2.54mm_Vertical,
+"pack SMBus (XH or pin header): section A SDA SCL on I2C0, section B SDA SCL on the sensor bus I2C1, GND GND",J_SMB,PinHeader_1x06_P2.54mm_Vertical,
+"bare 12 V class panel in, lead from the D38999 spare pair (JST-VH, 10 A): + - (36-cell panel, up to about 22 V open circuit, 100 W)",J_SOLAR,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)",L1,L_Coilcraft_XAL1510-103,C3911782
+"Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1 pins 1-2 on the positive line, winding 2 pins 3-4 on the return (pin map per the Bourns drawing, verified 7 Sep 2026)",L2,L_CommonModeChoke_Bourns_SRF1260,
+4.7uH XAL4020-472ME,L3,L_Coilcraft_XAL4020-XXX,
+green: vehicle input present,LED1,LED_0603_1608Metric,C72043
+status (GPIO25),LED2,LED_0603_1608Metric,
+"BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)","Q1,Q2",TDSON-8-1,C534330
+"BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)",Q3,TDSON-8-1,C148250
+"BSC039N06NS 60 V N-FET, M2 buck bottom",Q4,TDSON-8-1,C534330
+"BSC028N06NS 60 V N-FET, M3 boost bottom",Q5,TDSON-8-1,C148250
+"BSC039N06NS 60 V N-FET, M4 boost top",Q6,TDSON-8-1,C534330
+"60 V N-FET PowerPAK SO-8 (CSD19532Q5B class), hot-swap pass",Q7,PowerPAK_SO-8_Single,
+"2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)",Q8,SOT-23,C8545
+"2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)",Q9,SOT-23,C8545
+"2N7002 fan 2 low-side switch (1 G, 2 S, 3 D)",Q10,SOT-23,C8545
+100k,"R1,R18,R26",R_0603_1608Metric,C25803
+5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4),R5,R_2512_6332Metric,C154688
+100R,"R6,R7,R44,R45",R_0603_1608Metric,C22775
+102k 1% (RFBIN1: panel point 17.6 V),R8,R_0603_1608Metric,C2933126
+7.50k 1% (RFBIN2),R9,R_0603_1608Metric,C23234
+115k 1% (RFBOUT1: 15.1 V),R10,R_0603_1608Metric,C22783
+10.0k 1% (RFBOUT2),R11,R_0603_1608Metric,C25804
+215k 1% (RT: 202 kHz),R12,R_0603_1608Metric,C5713280
+10k,"R13,R16,R17,R25,R31,R46,R47,R49,R50",R_0603_1608Metric,C25804
+100k 1%,"R14,R20,R22,R40,R42",R_0603_1608Metric,C25803
+15.0k 1% (SHDN: enable above about 9.5 V),R15,R_0603_1608Metric,C22809
+10mOhm 1% 2512 (hot-swap sense),R19,R_2512_6332Metric,
+38.3k 1% (UVLO: 9 V),R21,R_0603_1608Metric,
+6.65k 1% (OVLO: 40 V),R23,R_0603_1608Metric,
+20k (PWR: power limit),R24,R_0603_1608Metric,
+2.2k,R27,R_0603_1608Metric,C4190
+1k,"R28,R33",R_0603_1608Metric,C21190
+27R,"R29,R30",R_0603_1608Metric,
+1k (BOOTSEL),R32,R_0603_1608Metric,
+4.7k,"R34,R35,R36,R37",R_0603_1608Metric,C23162
+1M,"R38,R39",R_0603_1608Metric,
+10k 1% (ADC1: 0.091 x bus),R41,R_0603_1608Metric,C25804
+22k 1% (ADC2: 0.18 x pack),R43,R_0603_1608Metric,
+22R (pulse input series),R48,R_0603_1608Metric,
+0R (CSB high: I2C mode; its own net keeps the pin joiner off the diagonal),R51,R_0603_1608Metric,
+LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE,"U3,U4",SOT-23-6,C2941042
+"LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted",U5,WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm,C674167
+"LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit",U6,VSSOP-10_3x3mm_P0.5mm,C111822
+RP2040 sensor controller (USB to B16 through the dock),U10,QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm,C2040
+"W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)",U11,Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm,C2843335
+"AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic",U12,TSOT-23-6,C2071056
+TLV75533PDBVR 3.3 V LDO,U13,SOT-23-5,C404027
+"BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)",U14,Bosch_LGA-8_3x3mm_P0.8mm_ClockwisePinNumbering,C3664478
+"BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake",U15,Bosch_LGA-14_3x2.5mm_P0.5mm,C2836813
+"12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND",Y1,Crystal_SMD_3225-4Pin_3.2x2.5mm,C20625731

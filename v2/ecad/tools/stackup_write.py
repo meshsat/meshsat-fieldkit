@@ -46,7 +46,16 @@ def write(path, name=None):
     if name is None: name = {4: "JLC04161H-7628", 6: "JLC06161H-3313"}.get(ncu, "2L")
     want = [it[0] for it in STACKS[name] if len(it) == 2]
     if len(want) != ncu: raise SystemExit("stackup_write: %s has %d copper layers, board file lists %d" % (name, len(want), ncu))
-    s2 = re.sub(r"\n[ \t]+\(stackup\n.*?\n[ \t]+\)\n", "\n", s, count=1, flags=re.S)   # drop an existing block (KiCad 9 indents with tabs)
+    s2 = s; k = s.find("(stackup")   # drop an existing block by matching its parentheses (the regex to the first close cut a saved board in half, 8 Sep 2026)
+    if k >= 0:
+        depth = 0; e = k
+        while e < len(s):
+            if s[e] == "(": depth += 1
+            elif s[e] == ")":
+                depth -= 1
+                if depth == 0: break
+            e += 1
+        j = s.rfind("\n", 0, k); s2 = s[:j + 1] + s[e + 1:].lstrip("\n")
     m = re.search(r"\n[ \t]+\(setup\n", s2)
     if not m: raise SystemExit("stackup_write: no (setup) block in %s" % path)
     s2 = s2[:m.end()] + block(name) + "\n" + s2[m.end():]
