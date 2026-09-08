@@ -22,6 +22,10 @@ def hardset(j):
     m = re.search(r"hard (\d+) of", out); u = re.search(r"unrouted (\d+)", out)
     return (int(m.group(1)) if m else -1, int(u.group(1)) if u else -1)
 
+# the pour has to be current before the pad-to-zone items are read: the finish refills later, so the DRC handed in can be a fill
+# behind the board and the items this pass exists for are not in it (8 Sep 2026: "0 of 0, nothing placeable" while the board had one)
+b.BuildConnectivity(); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(bp, b)
+subprocess.run(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", drcp, bp], capture_output=True)
 before = hardset(drcp)
 want = []   # (footprint ref, pad number) of every pad an item pairs with a zone of its own net
 for v in json.load(open(drcp)).get("unconnected_items", []):
