@@ -370,4 +370,10 @@ _intent.bypass("C29", "J_EPD", "15", "EPD_VCC"); _intent.bypass("C28", "J_EPD", 
 # OPEN, needs a part and therefore a regeneration, not fixed here: the RP2040's ADC_AVDD (pin 43) and USB_VDD (pin 48) share the seven
 # 100 nF above with the six IOVDD pins and the flash, so two supply pins have no capacitor of their own; RAIL_SENSE is an ADC input, so
 # pin 43 wants its own 100 nF behind a ferrite or a 10 ohm. Carried with the decoupling placement decision for the next C phase.
+# The panel board's only differential pair is the RP2040's own USB device port, and the RP2040's controller is USB 1.1 FULL SPEED (12 Mbps).
+# The 90 ohm differential target of the shared USB class belongs to USB 2.0 high speed; requiring it here is a wrong requirement, not a strict
+# one, so this board declares the class with no impedance target and `impedance_check.py` skips it (8 Sep 2026 23:05, appendix 32.76). The
+# geometry stays what the router used: 0.3 mm at the class clearance. Every other board's USB pairs keep the 90 ohm target.
+_intent.pair_class("USB")
+
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json

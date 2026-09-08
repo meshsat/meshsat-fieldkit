@@ -110,7 +110,16 @@ def main(a):
             (served if ok else orphan).append(row)
         for row in orphan: lines.append("WARN  the escape of %s.%s (%s) sat in a hard violation and was pruned: the pad is the router's; pruned_gate.py checks it after the route" % (row[1], row[2], row[0]))
         if served: lines.append("INFO  %d of %d pruned escapes are on pads that pre-laid copper of their own net already reaches" % (len(served), len(rows)))
-        if len(orphan) >= 12: lines.append("FAIL  %d escapes pruned with nothing else on the pad: the escape pass and the placement disagree at that many pads" % len(orphan)); coll += 1
+        # WHAT the escape collided with decides whether this is a placement fault (8 Sep 2026 23:10, MESHSAT-862; escape_prune.py records it).
+        # A counterparty PAD means two parts sit too close for the escape to exist at all: the placement has to change and that is a FAIL here.
+        # Anything else (a track or a via) is copper this pipeline laid itself, the fanout vias and the pre-routed pairs, which took the lane
+        # the escape wanted; the router can still serve the pad on another layer and `pruned_gate.py` refuses the board after the route if it
+        # did not. On B17 that split is 6 against 28, and blocking the chain on the 28 would be blocking it on our own pre-route.
+        by_pad = [r for r in orphan if len(r) > 6 and r[6].strip().startswith("Pad")]
+        displaced = len(orphan) - len(by_pad)
+        if displaced: lines.append("INFO  %d of %d pruned escapes were displaced by copper this pipeline laid (fanout vias, pre-routed pairs), not by the placement" % (displaced, len(orphan)))
+        if len(by_pad) >= 12: lines.append("FAIL  %d escapes pruned against another part's PAD: the placement cannot carry the escape at that many pads (%d more were displaced by our own pre-route copper)" % (len(by_pad), displaced)); coll += 1
+        elif len(orphan) >= 12: lines.append("NOTE  %d escapes pruned, %d of them against a pad; the rest are the router's to close and pruned_gate.py judges them after the route" % (len(orphan), len(by_pad)))
     # pin density and HPWL
     edge = b.GetBoardEdgesBoundingBox(); ex0, ey0, ex1, ey1 = edge.GetLeft() / 1e6, edge.GetTop() / 1e6, edge.GetRight() / 1e6, edge.GetBottom() / 1e6
     tiles = {}
