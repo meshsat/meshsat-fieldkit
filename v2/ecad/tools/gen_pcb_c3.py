@@ -80,12 +80,12 @@ for ref, (x, y) in L.LEAD_LANDS: FIXED[ref] = (x, y, 0, True)
 # series line into a FET gate and does not care.
 _sx, _sy = L.SOUNDER[1]
 # In a column between the two things that own this corner: BZ1's own 30 mm keep-out reaches x -134, and J_HSJ1's 16 mm jack hole at
-# (-118, -101) reaches about x -128, and BZ1's own solder lands run east and west at its centre line. The column therefore sits south-east
+# (-118, -101) reaches about x -128, and BZ1's own solder lands run east and west at its centre line. Measured courtyards: BZ1 x -164.5 to -133.5, J_HSJ1 x -127.3 to -108.7, a 6.2 mm gap between them. The column sits in its middle at x -130.4, south-east
 # of the sounder at (-133, -104 to -112), inside the bottom strip (y -114 to -88), clear of both. Two earlier attempts are the reason this
 # comment exists: _sx + 24 landed on the jack (six mask bridges, three courtyard overlaps) and _sx + 18 shorted BZ1's own +5V land.
-FIXED["Q4"] = (_sx + 16.0, _sy - 7.0, 0, True)
+FIXED["Q4"] = (_sx + 18.6, _sy - 7.0, 0, True)
 _q4g = [r for r, pin in (nets.get("Q4_G") or nets.get("/Q4_G") or []) if r.startswith("R")]
-for _i, _r in enumerate(sorted(_q4g)[:2]): FIXED[_r] = (_sx + 16.0, _sy - 11.0 - 4.0 * _i, 0, True)
+for _i, _r in enumerate(sorted(_q4g)[:2]): FIXED[_r] = (_sx + 18.6, _sy - 11.0 - 4.0 * _i, 0, True)
 
 PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1", "J_HSJ1", "J_HSJ2", "CAM_H1", "CAM_H2"}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
