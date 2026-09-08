@@ -40,6 +40,14 @@ The site projects are named "MeshSat V2 <board> <rev>"; by owner instruction not
 - The schematic arrives as one merged sheet; DRC was not run and design rules were not compared.
 - The site's upload is flaky: B16 failed twice ("The upload of the project log failed!", "Network Error!") before the same archive imported on the third attempt after an editor reload; C7 and D8 each needed one retry. A failed import leaves an empty project shell under the chosen name, which has to be deleted on the projects page before the retry. Nothing about the archives caused the failures.
 
+## Gerber exports (8 Sep 2026)
+
+Per project, Export > PCB Fabrication File (Gerber) with One Key Export (the JLCPCB default set), saved as `<board>-<rev>/MeshSat-V2-<x>-<rev>-gerber.zip`. The six routed boards export cleanly. B16 is placed and unrouted, so its zip is named `MeshSat-V2-B-B16-gerber-UNROUTED-quote-only.zip` and is not a manufacturable set (the exporter warns about incomplete connections; the export was continued for the record). Each zip holds the copper layers of the board, both solder masks, both silkscreens, the outline, three drill files, paste and assembly layers; the files inside are named `Gerber_<layer>` and `Drill_<type>` only.
+
+## Provenance strings in component descriptions (not cleaned, by owner ruling 8 Sep 2026 15:00)
+
+The project-library symbols `Connector_Generic_Conn_NNxNN` carry the source library's provenance in their Description attribute ("..., script generated (kicad-library-utils/schlib/autogen/connector/)"; 56 symbols across A22, B16, C7, D8, E6 and P2, none in E5). They are not in the Gerbers or the schematic PDFs, and the projects are Private. Editing them on the site by hand is not worth the clicks (the editor's Find and Replace, the device editor and the extension API all leave that attribute alone); if the projects are ever published, the fix is one scripted pass over the exported `.epro2` files, or a correction in the source libraries before a fresh import. Details in `pcb-b-compute-B16/import-notes.txt`.
+
 ## Cart of the same day
 
 The JLCPCB quote cart of this set (13 lines, all ticked: merchandise 4594.90 EUR, estimated shipping 129.22 EUR, subtotal 4724.11 EUR, nothing paid) is recorded in `v2/release/revA/order/ORDER-LOG.md` section 5.1 with the screenshot `v2/release/revA/order/cart-830-set-2026-09-08.jpg`.
