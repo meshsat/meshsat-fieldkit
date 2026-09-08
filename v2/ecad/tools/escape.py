@@ -92,8 +92,12 @@ for fp in b.GetFootprints():
     # 8 Sep 2026 (B17): the 0.5 mm rows take this scheme by pitch instead of by name. B14's M.2 socket was named here because it is
     # a 0.5 mm row and the splay cannot serve one; B17 has five of them, and on the splay their end pins landed 5 mm sideways. The
     # scheme's own margin is what decides: a 0.127 track passes a neighbour's 0.40 via at 0.5 mm lateral with 0.11 mm to spare, where
-    # the 0.45 via and 0.2 track of the branch below leave 0.048 mm and 86 escapes were pruned as violations.
-    ROWS04 = pitch <= FromMM(0.5) and b.GetDesignSettings().m_ViasMinSize <= FromMM(0.40) and b.GetDesignSettings().m_HoleClearance <= FromMM(0.19)   # B14: the 0.5 mm M.2 rows take the CM5IO tip-via scheme too (the 0.7 scheme left 0.096 mm between a stub and a neighbour via)   # only a board set up for it (B13: via 0.40/0.20, class clearance 0.127, hole clearance 0.19); A20 and D6 keep the QFN scheme
+    # the 0.45 via and 0.2 track of the branch below leave 0.048 mm and 86 escapes were pruned as violations. The row has to be LONG for
+    # this: taking every 0.5 mm part put A23's charger QFN on the shallow 0.3/1.0/1.7 depths of this scheme and its escape vias landed
+    # 0.075 mm from their neighbours' tracks, four clearance violations on a board that had none (8 Sep 2026 17:30). A socket has 75 pads,
+    # a QFN-32 has 33, so the count separates them and every short 0.5 mm part keeps the splay that has always worked for it.
+    nsmd = sum(1 for q in fp.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD)
+    ROWS04 = (pitch <= FromMM(0.45) or (pitch <= FromMM(0.5) and nsmd >= 40)) and b.GetDesignSettings().m_ViasMinSize <= FromMM(0.40) and b.GetDesignSettings().m_HoleClearance <= FromMM(0.19)   # B14: the 0.5 mm M.2 rows take the CM5IO tip-via scheme too (the 0.7 scheme left 0.096 mm between a stub and a neighbour via)   # only a board set up for it (B13: via 0.40/0.20, class clearance 0.127, hole clearance 0.19); A20 and D6 keep the QFN scheme
     FAN_OK = True; CLR = FromMM(0.127) if ROWS04 else FromMM(0.16)   # the 0.4 mm rows need the JLC floor itself; every other part keeps the 0.16 margin
     if ROWS04: VIA_D, VIA_DR, TW, OFFS, FAN_OK = FromMM(0.40), FromMM(0.20), FromMM(0.127), (0.3, 1.0, 1.7), False
     # 0.4 mm board-to-board rows (the CM5 receptacles, B13, appendix 32.35): the CM5IO scheme, a 0.40/0.20 via right past every pad tip,
