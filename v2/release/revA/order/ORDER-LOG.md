@@ -632,6 +632,6 @@ Cart summary read 12:16 CEST with every selectable line ticked: 11 items selecte
 
 **Cards:** the six first-round cards (04:39 to 04:42, the shipped BOMs) are left in the project as duplicates; the second-round cards (05:08 to 05:10) and the single E5 card are the ones quoted. Task #504054 (A22) is the only task under the Tasks tab.
 
-**YouTrack:** this host has no `~/gitlab/products/cubeos/.env`, so the MESHSAT-776 comment was not posted from here. Text for the runner session to post:
+**YouTrack:** the owner supplied the token at 12:29 CEST (now in `~/gitlab/products/cubeos/.env` on this VM) and the comment below was posted on MESHSAT-776 at 12:30 CEST (comment 5-33431):
 
 > JLCPCB quote cart of the MESHSAT-830 set, 8 Sep 2026 12:25 CEST (ORDER-LOG.md section 5.1, cart-830-set-2026-09-08.jpg): 13 lines, qty 5 each, Standard PCBA, both free confirmations on, impedance control not ordered, nothing paid. PCB: A22 135.25, B16 (quote only) 163.20, C7 152.12, D8 61.16, E6 91.29, P1 48.55, E5 47.28 (698.85). PCBA: A22 1131.75, B16 1814.06, C7 203.08, D8 251.73, E6 419.77, P1 75.69 (3896.08). Whole set 4594.91 EUR merchandise; the cart summary with the 11 selectable lines reads 3327.91 merchandise, 105.23 shipping, 3433.13 subtotal (the A22 lines are unselectable since 12:11 because L1 XAL1010-103MED went out of stock). Not matched at JLC: C7 D1 to D16 (bench LEDs), D8 L1, L2, U4, Y1, Y2, E6 U5, P1 F1 (all Do not place). 33 wrong design LCSC codes corrected in the generators by owner ruling.
