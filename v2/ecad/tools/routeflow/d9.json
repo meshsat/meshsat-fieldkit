@@ -54,7 +54,7 @@
    "out/parallel-d9.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/d8-clean.txt",
+  "clean_flag": "out/d9-clean.txt",
   "stub_log": "out/pcb-d-aprs-stub.log"
  },
  "deliverable": "v2/release/revA/boards/meshsat-pcb-d-revA-D9",
