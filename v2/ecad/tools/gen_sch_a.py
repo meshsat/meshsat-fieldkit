@@ -192,11 +192,11 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
     nfet(qsl, fet, N("LDRV2"), N("SW2"), N("CS"), lcsc=fet_lcsc); nfet(qsh, fet, N("HDRV2"), N("OUT"), N("SW2"), lcsc=fet_lcsc)
     part(lref, "Device", "L", lval, "L1010", {"1": N("SW1"), "2": N("SW2")})
     r(rft, rfb_top + " 1%", vout, N("FB")); r(rfb, rfb_val, N("FB"), "GND"); r(rrt, "40.2k (300 kHz)", N("RT"), "GND"); r(rsl, "30k (slope)", N("SLOPE"), "GND")
-    r(rco, "10k", N("COMP"), N("COMPC")); c(cco, "10n", N("COMPC"), "GND"); c(cco2, "100p", N("COMP"), "GND"); c(css, "47n", N("SS"), "GND"); c(cvcc, "4.7u", N("VCC"), "GND", "C10u")
+    r(rco, "10k", N("COMP"), N("COMPC")); c(cco, "10n", N("COMPC"), "GND"); c(cco2, "100p", N("COMP"), "GND"); c(css, "47n", N("SS"), "GND"); c(cvcc, "4.7u", N("VCC"), "GND", "C10u", bypass=(uref, "23"))   # the controller's own VCC
     c(cb1, "100n 25V", N("BOOT1"), N("SW1")); c(cb2, "100n 25V", N("BOOT2"), N("SW2"))
     r(risns, isns + "Ohm 1% 2512 (ISNS)", N("OUT"), vout, "RS2512"); r(rcs_, rcs + "Ohm 1% 2512 (CS)", N("CS"), "GND", "RS2512"); r(rpg, "100k", N("PGOOD"), "+3V3")
     r(ret, "62k 1%", en, N("EN")); r(reb, "10k 1%", N("EN"), "GND"); r(rmd, "100k (MODE: CCM)", N("MODE"), N("VCC"))
-    c(ci1, "22u 50V X7R 1210", vin, "GND", "C1210"); c(ci2, "22u 50V X7R 1210", vin, "GND", "C1210")
+    c(ci1, "22u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "3"))   # the two VIN pins
     for cr in (co1, co2, co3): c(cr, "22u 50V X7R 1210", vout, "GND", "C1210")
 # stage FE: the vehicle and shore input (9 to 36 V after E6's protection and filter) to the 20 V charge bus, 5 A; 60 V FETs
 lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "60 V N-FET PowerPAK SO-8 (CSD19532Q5B class)", "",
@@ -223,7 +223,7 @@ def buck5(n, uref, en, out, refs, ina, a1, a0):
     L, cb, ci1, ci2, co1, co2, co3, rt, rb, rpg, rsh, rrt, rco, cco = refs
     ic(uref, 9, "AP64500SP-13 5 A buck, 5.1 V rail %s" % out, "SO8EP", {"1": "S%s_BOOT" % n, "2": "VBAT", "3": en, "4": "S%s_RT" % n, "5": "S%s_FB" % n, "6": "S%s_COMP" % n, "7": "GND", "8": "S%s_SW" % n, "9": "GND"}, "C2070920")
     part(L, "Device", "L", "4.7uH XAL6060-472ME (Isat 11 A)", "L6060", {"1": "S%s_SW" % n, "2": "S%s_OUT" % n}); c(cb, "100n", "S%s_BOOT" % n, "S%s_SW" % n)
-    c(ci1, "10u 25V 1210", "VBAT", "GND", "C1210"); c(ci2, "10u 25V 1210", "VBAT", "GND", "C1210")
+    c(ci1, "10u 25V 1210", "VBAT", "GND", "C1210", bypass=(uref, "2")); c(ci2, "10u 25V 1210", "VBAT", "GND", "C1210", bypass=(uref, "2"))   # the buck's VIN pin
     for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
     r(rt, "53.6k 1%", out, "S%s_FB" % n); r(rb, "10k 1%", "S%s_FB" % n, "GND"); r(rrt, "68k (RT: 500 kHz)", "S%s_RT" % n, "GND"); r(rco, "22k", "S%s_COMP" % n, "S%s_COMPC" % n); c(cco, "3.3n", "S%s_COMPC" % n, "GND")
     r(rsh, "5mOhm 1% 2512 (shunt)", "S%s_OUT" % n, out, "RS2512"); r(rpg, "100k", en, "GND")   # a slot with no controller line stays off
