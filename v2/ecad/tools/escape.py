@@ -167,7 +167,14 @@ for fp in b.GetFootprints():
             continue
         for idx, (along, pad, L) in enumerate(lst):
             c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
-            order = (OFFS[0], OFFS[1], OFFS[2]) if idx % 2 == 0 else (OFFS[1], OFFS[0], OFFS[2])
+            # a differential pair leaves the row together or not at all: two legs at the class gap need about 0.65 mm between the via
+            # edges and neighbouring vias of this scheme leave 0.6 mm, so a pair whose pads sit on alternating depths cannot be laid at
+            # all. Its two pads therefore share the depth of the lower index, and the row's alternation carries on around them
+            # (8 Sep 2026 21:40: 63 of B17's 76 pair failures were the switch-to-socket runs hitting a via at the row's edge).
+            pn_ = re.sub(r"_[PN]$", "", net)
+            twin = next((j for j, (a_, q_, _) in enumerate(lst) if j != idx and re.sub(r"_[PN]$", "", q_.GetNetname()) == pn_ and q_.GetNetname() != net), None)
+            depth_idx = min(idx, twin) if (twin is not None and abs(twin - idx) == 1 and net.endswith(("_P", "_N"))) else idx
+            order = (OFFS[0], OFFS[1], OFFS[2]) if depth_idx % 2 == 0 else (OFFS[1], OFFS[0], OFFS[2])
             done = False
             for lane, off in [(ln, o) for ln in (0.75, 0.35) for o in order]:
                 v = VECTOR2I(int(c.x + L[0] * (half + FromMM(off))), int(c.y + L[1] * (half + FromMM(off))))
