@@ -124,16 +124,25 @@ for fp in b.GetFootprints():
             for idx, (along, pad, L) in enumerate(lst):
                 c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
                 done = False
-                for lane, vpitch, depth in [(0.75, 0.8, dp) for dp in (1.3, 1.7, 2.1)] + [(0.35, 0.8, 1.3), (0.35, 0.8, 1.7), (0.35, 0.7, 1.2), (0.35, 0.7, 1.0), (0.35, 0.7, 0.85), (0.35, 0.8, 2.1)]:
+                # 8 Sep 2026 (B17): a splayed via row is `vpitch / pitch` times as wide as the pad row, so a long row (an M.2 socket's 37 pads at
+                # 0.5 mm) throws its end pins 5 mm sideways into whatever stands beside the connector and ten to thirteen pads of every socket
+                # got no escape at all. STAGGER first: each pin goes straight out on its own axis to one of `k` depths by index, so the via row
+                # is exactly as wide as the pad row and the via pitch is k x the pad pitch. A neighbour's track passes a via at the pad pitch
+                # (0.5 mm against 0.225 + 0.127 + 0.1 = 0.452 needed), which is why k = 2 is enough at 0.5 mm and k = 3 is the fallback.
+                # vpitch 0 marks a staggered attempt; the splay attempts follow it unchanged for the rows where they do fit. The switch is the
+                # splay's own overhang, (vpitch - pitch) x (n - 1) / 2: an LQFP's eight-pad side throws its end pin 1.05 mm wide and routes fine,
+                # a 37-pad socket row throws it 5.4 mm into the neighbours, so rows that overhang more than 1.5 mm stagger and the rest do not move.
+                for lane, vpitch, depth, k in ([(0.75, 0, 0.8, 2), (0.75, 0, 0.8, 3), (0.35, 0, 0.7, 2), (0.35, 0, 0.7, 3), (0.35, 0, 0.55, 2), (0.35, 0, 0.55, 3)] if (0.8 - pitch / 1e6) * (len(lst) - 1) / 2 > 1.5 else []) + [(0.75, 0.8, dp, 1) for dp in (1.3, 1.7, 2.1)] + [(0.35, 0.8, 1.3, 1), (0.35, 0.8, 1.7, 1), (0.35, 0.7, 1.2, 1), (0.35, 0.7, 1.0, 1), (0.35, 0.7, 0.85, 1), (0.35, 0.8, 2.1, 1)]:
                     # A19 (4 Sep): the BQ25792's south row had a 1210 capacitor 1.7 mm past its tips; the 0.75 mm lane rule rejected every
                     # depth, the row went to the router without escapes and SDA could not be routed at all. Second pass with the lane at 0.35,
                     # the via row at 0.7 mm pitch (smaller splay) and shallower depths, for a row whose neighbour sits closer than the standard depth allows.
-                    s_k = (idx - (n - 1) / 2.0) * FromMM(vpitch) - (along - centre_along)     # lateral shift from the pad's own lane
+                    if k > 1: s_k = 0; depth_ = depth + (idx % k) * 0.8                      # straight out, one of k depths by index
+                    else: s_k = (idx - (n - 1) / 2.0) * FromMM(vpitch) - (along - centre_along); depth_ = depth   # lateral shift from the pad's own lane
                     # nested knees: the outermost pin turns 0.3 past its tip, each pin further in turns 0.15 deeper, so a splay never runs
                     # past its outer neighbour's knee (a 0.4 mm row's second pin sat 0.14 mm from the first pin's knee and was always rejected)
-                    kd = min(0.3 + 0.15 * min(idx, n - 1 - idx), depth - 0.3)
+                    kd = min(0.3 + 0.15 * min(idx, n - 1 - idx), depth_ - 0.3) if k == 1 else max(0.1, depth_ - 0.3)
                     knee = VECTOR2I(int(c.x + L[0] * (half + FromMM(kd))), int(c.y + L[1] * (half + FromMM(kd))))
-                    v = VECTOR2I(int(c.x + L[0] * (half + FromMM(depth)) + side_dir[0] * s_k), int(c.y + L[1] * (half + FromMM(depth)) + side_dir[1] * s_k))
+                    v = VECTOR2I(int(c.x + L[0] * (half + FromMM(depth_)) + side_dir[0] * s_k), int(c.y + L[1] * (half + FromMM(depth_)) + side_dir[1] * s_k))
                     mids = [VECTOR2I(int(knee.x + (v.x - knee.x) * k / 12.0), int(knee.y + (v.y - knee.y) * k / 12.0)) for k in range(1, 12)]   # B16: a 0.4 mm via slipped between samples 0.4 mm apart on a long splay
                     if clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and clear(knee, TW / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids):
                         layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
