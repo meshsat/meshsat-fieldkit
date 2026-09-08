@@ -1,0 +1,69 @@
+{
+ "board": "pcb-d-aprs",
+ "project": "v2/ecad/pcb-d-aprs-d9",
+ "phase": "D9",
+ "issue": "MESHSAT-862",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "argv": [
+   "bash",
+   "../tools/full_d8.sh",
+   "<PROJECT>"
+  ],
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 1,
+  "gen_logs": []
+ },
+ "plane_layers": [
+  "In1.Cu"
+ ],
+ "route": {
+  "attempts": [
+   100
+  ],
+  "threads": 1,
+  "timeout": 3600,
+  "power_layers": [
+   "In1.Cu"
+  ],
+  "plane_nets": [
+   "GND"
+  ],
+  "log": "out/parallel-d9.log",
+  "jar": "~/bin/freerouting-1.9.0.jar",
+  "layer_rules": {
+   "USB": [
+    "F.Cu",
+    "In2.Cu"
+   ],
+   "RF": [
+    "F.Cu",
+    "In2.Cu"
+   ]
+  }
+ },
+ "finish": {
+  "argv": [
+   "./tools/finish_d9.sh",
+   "<ECAD>",
+   "out/parallel-d9.log"
+  ],
+  "cwd": "<ECAD>",
+  "clean_flag": "out/d8-clean.txt",
+  "stub_log": "out/pcb-d-aprs-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-d-revA-D9",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 40
+ },
+ "budget_rounds": 2,
+ "notes": "D9 (8 Sep 2026, MESHSAT-862 rules 1 and 2, appendix 32.70): the D8 profile on the pcb-d-aprs-d9 copy with the USB cluster on the top layer and the pair pre-router in the chain; the USB and RF classes on F.Cu and In2.Cu.",
+ "baseline_key": "D7"
+}
