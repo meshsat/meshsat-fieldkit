@@ -13,6 +13,9 @@ kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >
 python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' | grep -v '^hardset:'   # 8 Sep 2026 (MESHSAT-862): tools/hardset.py is the one hard set
 [ -s out/par-score.txt ] || { echo "no DRC score after the stub router (hardset refused)"; echo open > out/d9-clean.txt; echo FINISH-D9-DONE; exit 1; }; read H < out/par-score.txt; if [ "$H" -ne 0 ]; then python3 ../tools/stub_accept.py out/$N-par-routed.kicad_pcb $N.kicad_pcb out/$N-drc.json 2>&1 | grep stub_accept; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1; H=$(python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt >/dev/null; cat out/par-score.txt); echo "after stub_accept: hard $H"; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; fi; fi
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
+# 8 Sep 2026: a fine-pitch pad its own plane cannot reach after the route (the tracks cut the pour off) gets a via in the pad, the closure this board family already ships
+kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+python3 ../tools/zone_pad_via.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -v "^Debug" | tail -6
 bash ../tools/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -5   # Stage 3 of the quality programme (6 Sep 2026): straighten and via passes on a copy, DRC-gated, reverted when anything rises
 python3 ../tools/silk_fix_all.py $N.kicad_pcb d 2>&1 | grep -vE 'Debug|leak' | tail -2
 python3 - "$N" <<'PYX' 2>&1 | grep -vE 'Debug|leak'
