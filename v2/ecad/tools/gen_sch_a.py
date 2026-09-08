@@ -445,4 +445,15 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+
+# the decoupling this file writes outside the converter blocks (which declare their own, 8 Sep 2026, MESHSAT-862 Stage C):
+# each capacitor sits directly after the part it serves in this file and is filtered to supply pins, so crystal loads, reset
+# networks and reference filters are not listed. intent.py refuses an entry whose capacitor is not on that pin's net.
+_intent.bypass("C4", "U1", "1", "VBAT")
+_intent.bypass("C19", "U3", "7", "CH_VDDA")
+_intent.bypass("C54", "U12", "3", "VBAT")
+_intent.bypass("C94", "U18", "5", "PD_DVDD")
+_intent.bypass("C104", "U26", "14", "+3V3")
+_intent.bypass("C106", "U26", "14", "+3V3")
+_intent.bypass("C107", "U26", "14", "+3V3")
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json
