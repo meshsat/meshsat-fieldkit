@@ -8,15 +8,15 @@ OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-a-power"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import intent as _intent
 # Rails of A22 (appendix 32.55; the record's currents, not measurements): the node from the pack, the 20 V charge bus, the slot rails, the device rail, the PA and HF rails, PoE
-_intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
+_intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", loads={"U4": 2.0, "U5": 2.0, "U6": 2.0, "U7": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2}, note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
 _intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", note="the pack side of the RSR shunt")
-_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"U2": 8.0}, note="shore and vehicle input from E6 over the dock, 10 A fuse; U2 is the LM5176 that takes it")
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5, "C12": 0.5}, note="shore and vehicle input from E6 over the dock, 10 A fuse; the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)")
 _intent.rail("VBUS20", 20.0, 6.0, 8.0, "U2", note="the charge bus, BQ25731 up to 8 A")
 for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, note="one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt")
-_intent.rail("+5V_DEV", 5.0, 3.0, 6.0, "R43", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt")
-_intent.rail("+3V3", 3.3, 1.0, 3.0, "L7", note="this board's logic; the net starts at the TPS62933 inductor L7")
+_intent.rail("+5V_DEV", 5.0, 3.0, 6.0, "R43", loads={"J_5V_DEV": 2.4}, note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt")
+_intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
 _intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, note="the RA30H1317M1 on the face plate")
-_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "U15", note="the QMX")
+_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "U15", budget=0.03, note="the QMX")
 _intent.rail("+54V_POE", 54.0, 0.3, 0.6, "U16", note="the TPS23861 PSE on B16")
 SYMDIR = "/usr/share/kicad/symbols/"
 

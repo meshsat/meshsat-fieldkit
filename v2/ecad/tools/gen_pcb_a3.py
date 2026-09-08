@@ -247,36 +247,38 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
 pa = "+13V8_PA"; pr = pads_rect(net_pads(pa, ["R55", "C65", "C66", "C67"]), 1.2, 1.0)
 PC.island(pa, "PA rail head", rect_pts((pr[0], pr[1], pr[2] + 2.5, pr[3])), pcbnew.F_Cu, priority=3)
 jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
-PC.band(pa, "PA rail east", (pr[2] - 0.5, -13.75, 106.25, -9.25), (pcbnew.B_Cu,), priority=2)
-PC.band(pa, "PA rail north", (101.75, -13.75, 106.25, yP + 2.25), (pcbnew.B_Cu,), priority=3)   # same-net bands that touch carry different priorities (zones_intersect otherwise)
-PC.band(pa, "PA rail pin", (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25), (pcbnew.B_Cu,), priority=4)
+PC.union(pa, "PA rail", [(pr[2] - 0.5, -13.75, 106.25, -9.25), (101.75, -13.75, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin
 col(pa, pr[2] + 1.3, -12.6, -10.4, 2)                                         # two vias in the head island, in the band
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
 vr = "VIN_RAW"; vb = "VBAT"; jd = pads_rect(net_pads(vr, ["J_DOCK"]), 0.5)
 fe = pads_rect(net_pads(vr, ["Q2", "Q3", "C11", "C12"]), 1.0)
 PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 2.6, fe[2], fe[3])), pcbnew.F_Cu, priority=3)
-PC.band(vr, "VIN_RAW dock riser", (max(jd[0], -85.5), jd[1], jd[2], -40), (pcbnew.B_Cu,), priority=2)
-# the west run crosses the VBAT trunk (x fx0 to fx1): two bands of different nets never cross on one layer (32.39), so VIN_RAW dives to In3 under the trunk on six vias a side
-f1_ = pads_rect(net_pads(vb, ["F1"]), 0.5); fx0_, fx1_ = (f1_[0] + f1_[2]) / 2 - 3.0, (f1_[0] + f1_[2]) / 2 + 3.0
-PC.band(vr, "VIN_RAW west run W", (-118, -46, fx0_ - 0.8, -40), (pcbnew.B_Cu,), priority=2)
-PC.band(vr, "VIN_RAW west run E", (fx1_ + 0.8, -46, jd[2], -40), (pcbnew.B_Cu,), priority=3)
+# the west run crosses the VBAT trunk (x fx0 to fx1): two bands of different nets never cross on one layer (32.39), so VIN_RAW dives to In3 under the trunk on five vias a side;
+# each side of the dive is ONE polygon (the dock riser with the east run, the west run with the west riser): abutting same-net zones with priorities read as separate pieces (32.69)
+f1_ = pads_rect(net_pads(vb, ["F1"]), 0.5); f1c_ = (f1_[0] + f1_[2]) / 2; fx0_, fx1_ = f1c_ - 4.5, f1c_ + 0.5   # the trunk on the west half of F1's pad 2, clear of the dock pins' riser
+PC.union(vr, "VIN_RAW east", [(jd[0], jd[1], jd[2], -40), (fx1_ + 0.8, -46, jd[2], -40)], pcbnew.B_Cu, priority=4)   # from the four dock pins themselves (a band that missed them left the link to a 0.4 mm In2 track: 667 A/mm2, 32.69); priority 4 over the CELL+ node bar's corner
+PC.union(vr, "VIN_RAW west", [(-118, -46, fx0_ - 0.8, -40), (-118, -46, -112, fe[1] - 0.4)], pcbnew.B_Cu, priority=3)
 PC.band(vr, "VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), (pcbnew.In3_Cu,), priority=2)
 col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 2)
-PC.band(vr, "VIN_RAW west riser", (-118, -46, -112, fe[1] - 0.4), (pcbnew.B_Cu,), priority=3)
 row(vr, -117, -113, fe[1] - 1.3, 3)
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
 f1 = f1_; fx0, fx1 = fx0_, fx1_
-PC.band(vb, "VBAT trunk", (fx0, f1[1], fx1, 44.5), (pcbnew.B_Cu,), priority=2)
-PC.band(vb, "VBAT collector", (fx0, 38.5, -4, 44.5), (pcbnew.B_Cu,), priority=3)
+PC.union(vb, "VBAT", [(fx0, f1[1], fx1, 44.5), (fx0, 38.5, -4, 44.5), (fx0, -12.5, -48, -7.5)], pcbnew.B_Cu, priority=2)   # one comb: the trunk from F1, the collector under the converters, the PA spur
 for n, xL, Lr, Rr, Jr, out in SLOT:
-    ur = pads_rect(net_pads(vb, ["U%d" % {"1": 4, "2": 5, "3": 6, "D": 7}[n]]), 1.2, 0.8)
-    PC.island(vb, "VBAT in S%s" % n, rect_pts((ur[0] - 1.2, 40.0, ur[2], ur[3])), pcbnew.F_Cu, priority=3)
-    row(vb, ur[0] - 0.4, ur[2] - 0.6, 41.2, 2)
-PC.band(vb, "VBAT PA spur", (fx0, -12.5, -48, -7.5), (pcbnew.B_Cu,), priority=3)
+    ur = pads_rect(net_pads(vb, ["U%d" % {"1": 4, "2": 5, "3": 6, "D": 7}[n]]), 0.5, 0.5)   # the converter's VIN pin (pin 2, west side)
+    # an L: a via column west of the pin row (the other pins would slice a rectangle to 48 percent fill, 32.69) and a finger into the pin's pad
+    PC.island(vb, "VBAT in S%s" % n, [(ur[0] - 2.6, 40.0), (ur[0] - 0.6, 40.0), (ur[0] - 0.6, ur[1]), (ur[2], ur[1]), (ur[2], ur[3]), (ur[0] - 2.6, ur[3])], pcbnew.F_Cu, priority=3)
+    col(vb, ur[0] - 1.6, 41.0, 43.6, 3)
 qr = pads_rect(net_pads(vb, ["Q11", "C63", "C64"]), 1.0)
 PC.island(vb, "VBAT PA head", rect_pts((qr[0] - 3.5, min(qr[1], -12.0), qr[2], qr[3])), pcbnew.F_Cu, priority=3)
 col(vb, qr[0] - 1.9, -11.6, -8.4, 2)
-print("A23 power copper: %d zones and keep-outs" % len(PC.made))
+# every pad of a rail net joins its pour solid (no thermal spokes): a through-hole pin's four spokes are the neck of an 8 A path, and the mesh judge sees them as no connection
+RAIL_NETS = {"VBAT", "CELL+", "VIN_RAW", "+5V_S1", "+5V_S2", "+5V_S3", "+5V_DEV", "+13V8_PA", "S1_OUT", "S2_OUT", "S3_OUT", "SD_OUT"}
+_solid = 0
+for fp in board.GetFootprints():
+    for pd in fp.Pads():
+        if pd.GetNetname().lstrip("/") in RAIL_NETS: pd.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_FULL); _solid += 1
+print("A23 power copper: %d zones and keep-outs; %d rail pads joined solid" % (len(PC.made), _solid))
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
