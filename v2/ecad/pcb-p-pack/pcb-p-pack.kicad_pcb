@@ -9917,7 +9917,7 @@
 			(justify mirror)
 		)
 	)
-	(gr_text "PCB-P PACK BMS REV A (P1)"
+	(gr_text "PCB-P PACK BMS REV A (P2)"
 		(at 100 103 0)
 		(layer "B.SilkS")
 		(uuid "e51b8303-baec-4dd6-b371-339b2e82ab67")
