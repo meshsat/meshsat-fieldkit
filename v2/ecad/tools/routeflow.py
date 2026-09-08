@@ -172,7 +172,8 @@ def run(profile_fn, rounds, use_services, dry):
             env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(route.get("timeout", 4500))}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])   # zones of these nets on the power layers stay in the DSN as planes (6 Sep 2026: GND by vias into In1, not as wires)
-            if route.get("jar"): env["FR_JAR"] = os.path.expanduser(route["jar"])   # the router build (Stage 4: freerouting-2.4.1.jar beside 1.9.0)
+            if route.get("jar"): env["FR_JAR"] = os.path.expanduser(route["jar"])
+            if route.get("layer_rules"): env["FR_LAYER_RULES"] = ";".join("%s:%s" % (c, ",".join(ls)) for c, ls in route["layer_rules"].items())   # rule 2 of 32.67: a class only on layers with a plane next to them   # the router build (Stage 4: freerouting-2.4.1.jar beside 1.9.0)
             if any(k in route for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive")) and not dry:   # the rules-file knobs the probe found the router honours
                 tools = os.path.dirname(os.path.abspath(__file__)); pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); dsn0 = os.path.join(rdir, "round%d-rules.dsn" % rnd); rules = os.path.join(rdir, "round%d.rules" % rnd)
                 sh(["python3", "-c", "import pcbnew,sys; b=pcbnew.LoadBoard(sys.argv[1]); [b.Remove(z) for z in list(b.Zones()) if not z.GetIsRuleArea()]; pcbnew.SaveBoard(sys.argv[1]+'.np.kicad_pcb', b); print(pcbnew.ExportSpecctraDSN(pcbnew.LoadBoard(sys.argv[1]+'.np.kicad_pcb'), sys.argv[2]))", pre, dsn0], project, os.path.join(rdir, "round%d-rules.log" % rnd))
