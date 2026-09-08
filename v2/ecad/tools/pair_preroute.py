@@ -44,19 +44,26 @@ class Grid:
         dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
         t = 0 if L2 == 0 else np.clip(((xs - ax) * dx + (ys - ay) * dy) / L2, 0, 1)
         M[i0:i1 + 1, j0:j1 + 1] |= (xs - (ax + t * dx)) ** 2 + (ys - (ay + t * dy)) ** 2 <= r * r
-    def poly(self, M, sps, grow):
+    _cache = {}   # (key, grow) -> (i0, j0, mask): a pad or zone outline rasterised once per grow value for the whole run (B17's 40 pairs rebuilt every map from scratch, 8 Sep 2026)
+    def poly(self, M, sps, grow, key=None):
         bb = sps.BBox(); G, X0, Y0, NX, NY = self.G, self.X0, self.Y0, self.NX, self.NY; r = grow
         i0, i1 = max(0, int((mm(bb.GetTop()) - r - Y0) / G)), min(NY - 1, int((mm(bb.GetBottom()) + r - Y0) / G) + 1); j0, j1 = max(0, int((mm(bb.GetLeft()) - r - X0) / G)), min(NX - 1, int((mm(bb.GetRight()) + r - X0) / G) + 1)
         if i1 < i0 or j1 < j0: return
+        ck = (key, round(grow, 4)) if key is not None else None
+        if ck is not None and ck in Grid._cache:
+            ci0, cj0, mask = Grid._cache[ck]; M[ci0:ci0 + mask.shape[0], cj0:cj0 + mask.shape[1]] |= mask; return
         grown = pcbnew.SHAPE_POLY_SET(sps)
         if grow > 0:
             try: grown.Inflate(FromMM(grow), pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, FromMM(0.05))
             except Exception:
                 try: grown.Inflate(FromMM(grow), 16)
                 except Exception: pass
+        mask = np.zeros((i1 - i0 + 1, j1 - j0 + 1), dtype=bool)
         for ii in range(i0, i1 + 1):
             for jj in range(j0, j1 + 1):
-                if grown.Contains(VECTOR2I(FromMM(X0 + jj * G), FromMM(Y0 + ii * G))): M[ii, jj] = True
+                if grown.Contains(VECTOR2I(FromMM(X0 + jj * G), FromMM(Y0 + ii * G))): mask[ii - i0, jj - j0] = True
+        if ck is not None: Grid._cache[ck] = (i0, j0, mask)
+        M[i0:i1 + 1, j0:j1 + 1] |= mask
 
 def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
     """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer)."""
@@ -66,11 +73,12 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
             if pth: c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + 0.2 + 0.30)
             if p.GetNetname() in nets: continue
+            pk = "%s.%s" % (fp.GetReference(), p.GetNumber())
             for L in layers:
-                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half)
+                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
                 if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
             anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
-            if anyL is not None or pth: gr.poly(via, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split)
+            if anyL is not None or pth: gr.poly(via, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split, key=(pk, "via", anyL))
     for t in b.GetTracks():
         if t.GetClass() == "PCB_VIA": c = t.GetPosition(); gr.disc(via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + 0.2 + 0.30 + split)
         if t.GetNetname() in nets: continue
@@ -83,9 +91,10 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             gr.seg(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
     for z in b.Zones():
         if z.GetIsRuleArea():
+            zk = "zone.%s" % z.m_Uuid.AsString() if hasattr(z, "m_Uuid") else "zone.%d" % id(z)
             for L in layers:
-                if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): gr.poly(trk[L], z.Outline(), CLR + half)
-            if z.GetDoNotAllowVias(): gr.poly(via, z.Outline(), CLR + via_r + split)
+                if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): gr.poly(trk[L], z.Outline(), CLR + half, key=(zk, L))
+            if z.GetDoNotAllowVias(): gr.poly(via, z.Outline(), CLR + via_r + split, key=(zk, "via"))
     m = int(0.8 / gr.G) + 12
     for M in list(trk.values()) + [via]: M[:m, :] = True; M[-m:, :] = True; M[:, :m] = True; M[:, -m:] = True
     return trk, via
