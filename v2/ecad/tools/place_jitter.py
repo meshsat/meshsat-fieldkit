@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Jittered placements for the learned-critic data campaign (MESHSAT-862 Stage E1, 8 Sep 2026). Takes a placed, unrouted board (the chain's
-board after gen_pcb_*3.py, before escape.py) and a seed, and returns a neighbour of that placement: every unlocked footprint whose reference is
-not in the fixed set (connectors, sockets, holes, the receptacles: refs starting with J, H, S_, U30..U32 and anything the caller lists) moves
-by a uniform offset within +-DX mm, and pairs of footprints with the same footprint id within SWAP mm of each other are swapped with
+board after gen_pcb_*3.py, before escape.py) and a seed, and returns a neighbour of that placement: every shelf-packed passive (C, R, L, D, FB, Q references; the gates pin the ICs and
+connectors to 0.6 mm) moves by a uniform offset within +-DX mm (0.4 mm: the packer's 1.2 mm gap minus courtyard growth), and pairs of footprints with the same footprint id within SWAP mm of each other are swapped with
 probability P_SWAP. The chain's own gates decide whether the sample is legal (courtyard overlaps and the numeric gate refuse it); the router
 then labels it. The pre-route hash of each sample is its identity in the journal (routeflow rule).
 
@@ -12,10 +11,11 @@ import sys, os, random, re, pcbnew
 def main(a):
     if len(a) < 2: print(__doc__); return 2
     b = pcbnew.LoadBoard(a[0]); seed = int(a[1]); rnd = random.Random(seed)
-    dx = float(a[a.index("--dx") + 1]) if "--dx" in a else 1.0; swap = float(a[a.index("--swap") + 1]) if "--swap" in a else 15.0
+    dx = float(a[a.index("--dx") + 1]) if "--dx" in a else 0.4; swap = float(a[a.index("--swap") + 1]) if "--swap" in a else 15.0
     ps = float(a[a.index("--p-swap") + 1]) if "--p-swap" in a else 0.3
     fixed = set(a[a.index("--fixed") + 1].split(",")) if "--fixed" in a else set()
-    fps = [f for f in b.GetFootprints() if not f.IsLocked() and f.GetReference() not in fixed and not re.match(r"^(J|H\d|S_|U3[012][AB]$|TP|W_)", f.GetReference())]
+    # only the shelf-packed passives move (C, R, L, D, FB, Q): the board gates check the ICs' and connectors' positions to 0.6 mm, so a moved U or J is refused before it is routed (first campaign, 8 Sep 2026: 20 of 20 D8 samples refused at 1 mm on every part)
+    fps = [f for f in b.GetFootprints() if not f.IsLocked() and f.GetReference() not in fixed and re.match(r"^(C|R|L|D|FB|Q)\d", f.GetReference())]
     moved = 0
     for f in fps:
         ox, oy = rnd.uniform(-dx, dx), rnd.uniform(-dx, dx); f.Move(pcbnew.VECTOR2I(int(ox * 1e6), int(oy * 1e6))); moved += 1
