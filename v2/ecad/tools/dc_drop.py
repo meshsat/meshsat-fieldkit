@@ -142,6 +142,13 @@ def main(a):
             ncomp, lab = csg.connected_components(sp.coo_matrix((np.ones(len(rows)), (rows, cols)), shape=(N, N)), directed=False)
             reach = {lab[n] for n in src}; unreachable = [n for n in sinks if lab[n] not in reach]
             if unreachable:
+                # the pieces, so the copper gap is found (8 Sep 2026): layer set, extent, cells, and whether the source or a load sits on it
+                by = {}
+                for n_, c_ in enumerate(lab): by.setdefault(int(c_), []).append(n_)
+                srcset = set(src)
+                for c_, ns_ in sorted(by.items(), key=lambda kv: -len(kv[1]))[:8]:
+                    Ls_ = sorted({lname[coords[n_][0]] for n_ in ns_}); xs_ = [x0 + (coords[n_][2] + 0.5) * cell for n_ in ns_]; ys_ = [y0 + (coords[n_][1] + 0.5) * cell for n_ in ns_]
+                    print("dc_drop:   piece of %s: %d cells on %s, x %.0f..%.0f y %.0f..%.0f%s%s" % (net, len(ns_), "+".join(Ls_), min(xs_), max(xs_), min(ys_), max(ys_), " SOURCE" if any(n_ in srcset for n_ in ns_) else "", (" loads %d" % sum(1 for n_ in ns_ if n_ in sinks)) if any(n_ in sinks for n_ in ns_) else ""))
                 results.append((net, "MISSED", "%d of %d load pads on copper not connected to the source %s through this net's copper and vias (the mesh: %d pieces)" % (len(unreachable), len(sinks), r["source"], ncomp), 0, 1.0, 0, {})); miss += 1; continue
             keep = np.array([i for i in range(N) if lab[i] in reach and i not in set(src)]); i_vec = np.zeros(N)
             for n, amps in sinks.items(): i_vec[n] -= amps
