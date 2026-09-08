@@ -9,14 +9,14 @@ set -uo pipefail
 E="$1"; PRJ="$2"; CHAIN="$3"; PROF="$4"; S0="$5"; CNT="$6"; PAR="$7"; RES="$8"; PASSES="${9:-}"
 cd "$E"; T="$E/tools"; N=$PRJ; [ -f "$RES" ] || : > "$RES"
 read PL PN JAR TO ATT <<< "$(python3 -c "import json,sys; d=json.load(open(sys.argv[1]))['route']; print(','.join(d.get('power_layers') or ['-']), ','.join(d.get('plane_nets') or ['-']), d.get('jar','~/bin/freerouting-1.9.0.jar'), d.get('timeout',3600), d.get('attempts',[40])[0])" "$PROF")"
-[ "$PL" = "-" ] && PL=""; [ "$PN" = "-" ] && PN=""; PL="${PL//,/ }"; PASSES="${PASSES:-$ATT}"   # power layers joined by commas for the read, spaces for route_one.sh (review of 8 Sep 2026)
+[ "$PL" = "-" ] && PL=""; [ "$PN" = "-" ] && PN=""; PL="${PL//,/ }"; PASSES="${PASSES:-$ATT}"; JAR="${JAR/#\~/$HOME}"   # the profile writes ~/bin/...: a tilde inside a variable is not expanded   # power layers joined by commas for the read, spaces for route_one.sh (review of 8 Sep 2026)
 one() {
   local seed=$1; local W="$E/jit-$PRJ-$seed"   # two statements: in one `local a=.. b="$a"` the second expands before the first is assigned (every sample shared one directory, 8 Sep 02:35)
   rm -rf "$W"; cp -r "$E/$PRJ" "$W"; rm -rf "$W/out"; mkdir -p "$W/out"
   ( cd "$E" && PLACE_JITTER=$seed PLACE_AUDIT_GATE=0 timeout 1800 bash "$T/$CHAIN" "$W" > "$W/out/chain.log" 2>&1 ); local rc=$?
   if [ $rc -ne 0 ] || ! grep -q 'PREROUTE-DONE OK' "$W/out/chain.log"; then echo "jitter $seed: REFUSED by the chain ($(grep -m1 BLOCK "$W/out/chain.log" | cut -c1-80))"; echo "$PRJ,$seed,REFUSED" >> "$RES.refused"; return 0; fi
   ( cd "$W" && FR_THREADS=1 FR_TIMEOUT=$TO FR_POWER_LAYERS="$PL" FR_PLANE_NETS="$PN" FR_JAR="$JAR" "$T/route_one.sh" . "$N" 1 "$PASSES" > "$W/out/route.log" 2>&1 )
-  if [ ! -f "$W/out/par/1/score.txt" ]; then echo "jitter $seed: NO_SESSION"; echo "$PRJ,$seed,NO_SESSION" >> "$RES.refused"; return 0; fi
+  if [ ! -f "$W/out/par/1/score.txt" ] || grep -q "^9999" "$W/out/par/1/score.txt"; then echo "jitter $seed: NO_SESSION ($(grep -m1 -E "exit|No such|Exception" "$W/out/route.log" | cut -c1-60))"; echo "$PRJ,$seed,NO_SESSION" >> "$RES.refused"; return 0; fi
   python3 "$T/tile_labels.py" "$W/out/$N-preroute.kicad_pcb" "$W/out/par/1/$N.kicad_pcb" "$W/out/par/1/drc.json" "$W/out/tiles.csv" --sample "$PRJ-$seed" 2>&1 | grep tile_labels   # one file per sample; merged below (parallel appends interleave rows)
   echo "jitter $seed: $(cat "$W/out/par/1/score.txt") (hard unrouted vias); place_audit said: $(grep -m1 'predicted collision' "$W/out/place_audit.log" | cut -c1-80)"
 }
