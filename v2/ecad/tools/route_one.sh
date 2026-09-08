@@ -45,6 +45,23 @@ while True:
 open(fn, "w").write("".join(out)); print("power layers in the DSN:", ", ".join(layers), "(%d layer types changed, %d wire keep-outs dropped)" % (n1, n2))
 PYPL
 fi
+# FR_LAYER_RULES="USB:F.Cu,In2.Cu;RF:F.Cu,In2.Cu" (8 Sep 2026, MESHSAT-862 rule 2 of appendix 32.67): a net class may only use the listed copper layers
+# (the layers with a plane next to them); written as (use_layer ...) into the class's (circuit ...) block of the DSN, which Freerouting honours.
+if [ -n "${FR_LAYER_RULES:-}" ]; then python3 - "$W/$N.dsn" "$FR_LAYER_RULES" <<'PYLR'
+import re, sys
+fn = sys.argv[1]; s = open(fn).read(); n = 0
+for rule in sys.argv[2].split(";"):
+    if ":" not in rule: continue
+    cls, layers = rule.split(":", 1); layers = [l.strip() for l in layers.split(",") if l.strip()]
+    m = re.search(r"\(class %s\b" % re.escape(cls.strip()), s)
+    if not m: print("layer rule: class %s not in the DSN" % cls); continue
+    j = s.find("(circuit", m.end()); k = s.find("(class ", m.end())
+    if j < 0 or (0 < k < j): print("layer rule: class %s has no (circuit) block" % cls); continue
+    s = s[:j + len("(circuit")] + "\n        (use_layer %s)" % " ".join(layers) + s[j + len("(circuit"):]; n += 1
+    print("layer rule: class %s on %s" % (cls, " ".join(layers)))
+open(fn, "w").write(s); print("layer rules in the DSN: %d class(es)" % n)
+PYLR
+fi
 # FR_RULES: a Freerouting rules file (tools/fr_rules.py) with via costs, ripup costs, layer directions and activity; the probe of 6 Sep 2026 showed it is the lever 1.9.0 honours.
 # FR_RULES_INJECT=1 (6 Sep 2026 11:30): the file's (autoroute_settings ...) block is written INTO the DSN's structure and no -dr is passed: a -dr file that
 # carries only autoroute settings made Freerouting drop the design's clearance and edge rules (B15 with a "default" rules file: 17 shorts, 16 clearance

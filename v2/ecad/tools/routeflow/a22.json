@@ -1,61 +1,75 @@
 {
-  "board": "pcb-a-power",
-  "project": "v2/ecad/pcb-a-power",
-  "phase": "A22",
-  "issue": "MESHSAT-830",
-  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
-  "services_script": "~/meshsat-services.sh",
-  "pre": {
-    "argv": [
-      "bash",
-      "../tools/full_a22.sh",
-      "<PROJECT>"
-    ],
-    "cwd": "<PROJECT>",
-    "must_contain": [
-      "single-pin nets",
-      "PREROUTE-DONE OK"
-    ],
-    "min_all_pass": 2,
-    "gen_logs": []
-  },
-  "plane_layers": [
-    "In1.Cu",
-    "In4.Cu"
+ "board": "pcb-a-power",
+ "project": "v2/ecad/pcb-a-power",
+ "phase": "A22",
+ "issue": "MESHSAT-830",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "argv": [
+   "bash",
+   "../tools/full_a22.sh",
+   "<PROJECT>"
   ],
-  "route": {
-    "attempts": [
-      120
-    ],
-    "threads": 1,
-    "timeout": 7200,
-    "power_layers": [
-      "In1.Cu",
-      "In4.Cu"
-    ],
-    "plane_nets": [
-      "GND"
-    ],
-    "log": "out/parallel-a22.log",
-    "jar": "~/bin/freerouting-1.9.0.jar"
-  },
-  "finish": {
-    "argv": [
-      "./tools/finish_a22.sh",
-      "<ECAD>",
-      "out/parallel-a22.log"
-    ],
-    "cwd": "<ECAD>",
-    "clean_flag": "out/a22-clean.txt",
-    "stub_log": "out/pcb-a-power-stub.log"
-  },
-  "deliverable": "v2/release/revA/boards/meshsat-pcb-a-revA-A22",
-  "expect": {
-    "hard": 0,
-    "unrouted": 0,
-    "autoroute_minutes_max": 90
-  },
-  "budget_rounds": 1,
-  "notes": "A22 (7 Sep 2026, appendix 32.55, 32.56, 32.61): six layers since run 10 (JLC06161H-3313 as B16): In1 and In4 solid ground planes handed to Freerouting as power layers with GND as the plane net, In2 carries the VBAT plane and GND islands and stays routable, In3 routable; single thread on 1.9.0 (the blessed production jar); the finish is finish_a22.sh (stub router on F, In2, In3, B; cleanup, quality pass, pair report on the three USB pairs, the A gate, finish_board into the A22 deliverable). History: eight four-layer 1.9.0 rounds left 4 to 11 opens in the packed converter zones (run 8 also 36 hard: overlapping tracks of two nets at three spots), run 9 on 2.4.1 sat at 153 unrouted after four passes and was stopped. Run 11 (250 passes) converged at pass about 150 ('19 changes in 60 passes') and would have hit the 2 h limit before writing its session: 120 passes since run 12.",
-  "baseline_key": "A21"
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 2,
+  "gen_logs": []
+ },
+ "plane_layers": [
+  "In1.Cu",
+  "In4.Cu"
+ ],
+ "route": {
+  "attempts": [
+   120
+  ],
+  "threads": 1,
+  "timeout": 7200,
+  "power_layers": [
+   "In1.Cu",
+   "In4.Cu"
+  ],
+  "plane_nets": [
+   "GND"
+  ],
+  "log": "out/parallel-a22.log",
+  "jar": "~/bin/freerouting-1.9.0.jar",
+  "layer_rules": {
+   "USB": [
+    "F.Cu",
+    "In2.Cu",
+    "In3.Cu",
+    "B.Cu"
+   ],
+   "RF": [
+    "F.Cu",
+    "In2.Cu",
+    "In3.Cu",
+    "B.Cu"
+   ]
+  }
+ },
+ "finish": {
+  "argv": [
+   "./tools/finish_a22.sh",
+   "<ECAD>",
+   "out/parallel-a22.log"
+  ],
+  "cwd": "<ECAD>",
+  "clean_flag": "out/a22-clean.txt",
+  "stub_log": "out/pcb-a-power-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-a-revA-A22",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 90
+ },
+ "budget_rounds": 1,
+ "notes": "A22 (7 Sep 2026, appendix 32.55, 32.56, 32.61): six layers since run 10 (JLC06161H-3313 as B16): In1 and In4 solid ground planes handed to Freerouting as power layers with GND as the plane net, In2 carries the VBAT plane and GND islands and stays routable, In3 routable; single thread on 1.9.0 (the blessed production jar); the finish is finish_a22.sh (stub router on F, In2, In3, B; cleanup, quality pass, pair report on the three USB pairs, the A gate, finish_board into the A22 deliverable). History: eight four-layer 1.9.0 rounds left 4 to 11 opens in the packed converter zones (run 8 also 36 hard: overlapping tracks of two nets at three spots), run 9 on 2.4.1 sat at 153 unrouted after four passes and was stopped. Run 11 (250 passes) converged at pass about 150 ('19 changes in 60 passes') and would have hit the 2 h limit before writing its session: 120 passes since run 12.",
+ "baseline_key": "A21"
 }
