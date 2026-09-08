@@ -44,8 +44,7 @@
   "jar": "~/bin/freerouting-1.9.0.jar",
   "layer_rules": {
    "USB": [
-    "F.Cu",
-    "In2.Cu"
+    "F.Cu"
    ]
   }
  },

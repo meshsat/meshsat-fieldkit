@@ -231,8 +231,10 @@ def main(a):
     layers = [_ALL[x] for x in (a[a.index("--layers") + 1].split(",") if "--layers" in a else os.environ.get("PAIR_LAYERS", "F.Cu,B.Cu").split(",")) if x in _ALL]
     names = {str(n): n for n in b.GetNetInfo().NetsByName().keys()}
     stems = sorted({n[:-2] for n in names if n.endswith("_P") and n[:-2] + "_N" in names})
+    suffixed = sorted({n[:-3] for n in names if n.endswith("_PR") and n[:-3] + "_NR" in names})   # USB1_PR / USB1_NR (the codec side of D9's port 1): P and N with a suffix
+    pair_names = {st: (st + "_P", st + "_N") for st in stems}; pair_names.update({st + "_R": (st + "_PR", st + "_NR") for st in suffixed}); stems = stems + [st + "_R" for st in suffixed]
     if "--pairs" in a: stems = [s for s in stems if s.lstrip("/") in set(a[a.index("--pairs") + 1].split(","))]
-    stems = [s for s in stems if cls_of(s + "_P") in want_classes]
+    stems = [s for s in stems if cls_of(pair_names.get(s, (s + "_P", s + "_N"))[0]) in want_classes]
     laid = 0; report = []; swapped = set()
 
     def dist_p(p, q): return math.hypot(p.GetPosition().x - q.GetPosition().x, p.GetPosition().y - q.GetPosition().y) / 1e6
@@ -244,7 +246,7 @@ def main(a):
         return (mm(p.GetPosition().x), mm(p.GetPosition().y), L, p)
 
     for stem in stems:   # a swapped pair is appended and laid again
-        pn, nn = stem + "_P", stem + "_N"; cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
+        pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
         vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); half = w + s / 2 + 0.15 + 0.1; d = (w + s) / 2; clr_c = float(cl.get("clearance", CLR))   # the corridor carries the per-leg maps' 0.15 mm mask margin plus one grid cell, or the legs never clear it
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
