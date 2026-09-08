@@ -3321,3 +3321,18 @@ C8's auto-route finished in **1 h 21 min** on the measured 30 pass ceiling, exac
 **Impedance: `/USB_PNL` UNCOUPLED, median 110 ohm against 90, legs 3.03 mm apart.** The pre-router reported 1 of 1 pairs laid and it did lay one: 73 mm of locked 0.3 mm copper, 26 pieces, and they are still on the routed board. The net is 1014 mm long. The router added the other 940 mm, as two lone traces, because the pre-router lays the section between two stations and this net has more topology than one section (the ribbon connector, the ESD part, the series resistors, the controller). **This is the structural finding of the evening and it now binds three boards:** `impedance_check.py` returns non-zero when any pair misses, Freerouting 1.9.0 has no differential-pair router, so any length the pre-router does not lay reads UNCOUPLED. A23 has the same shape (1 of its 3 USB pairs laid), and B17 is the extreme case.
 
 The three ways out, none of them free: teach the pre-router to lay a whole net rather than a section (the real fix, days of work); record a measured exception per pair in the `erc-allow` idiom so a board ships with its impedance profile stated instead of blocked; or judge the controlled fraction of a pair rather than all of it. The first is the programme, the second is what tonight can do, the third changes what the gate means and needs a ruling. Nothing is weakened until that is decided: C8 stands as NOT CLEAN with its numbers recorded here.
+
+
+### 32.77 B17 with the tail-run fix, and what a pruned escape actually means (8 Sep 2026, 23:10 CEST; MESHSAT-862; commits 609f672, 7201973)
+
+The B17 chain rerun with the tail-run fix, same placement, same escapes (1330 added, 58 pads skipped) and the same 534 fanout vias:
+
+| | before | after |
+|---|---|---|
+| pairs laid | 16 of 99 | **32 of 99** |
+| escape pieces removed | 680 | 390 |
+| pads that lost their escape | 118 | **34** |
+
+The cause histogram, which the tool could not produce this morning, says what the remaining 34 are: **5 collided with a GND fanout via, about 24 with copper the pair pre-router itself laid** (`/HUB3_SSTX_P` five times, `/CARD3_RX_P` three, the ETH and SWP legs), and **6 with another part's pad**. That distinction decides whether the chain should stop. A pad counterparty means two parts sit too close for the escape to exist at all and the placement has to change. A track or via counterparty is copper this pipeline laid itself, which took the lane the escape wanted; the router can still reach the pad on another layer, and `pruned_gate.py` refuses the board after the route if it did not. `place_audit.py` now splits the two and blocks only on the pad-caused count, printing the other as an INFO line with its number. On B17 that is 6 against 28, so the chain proceeds and the post-route gate carries the judgement, which is where the evidence for it exists.
+
+Two defects in the pre-router are now named by the same data and are the next work: it lays its final fans into the pads with a straight segment that is never tested against other copper (hence its own legs sitting on other nets' escapes), and `prefanout.py` places GND vias after the escapes without holding the class clearance to them. Neither is a placement fault and neither blocks tonight.
