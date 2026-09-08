@@ -148,6 +148,24 @@ def is_fine(fp):
 _all = [r for _, _, refs, _ in REGIONS for r in refs] + list(FIXED)
 _dups = sorted({r for r in _all if _all.count(r) > 1})
 if _dups: raise SystemExit("reference listed twice in the placement (two footprints per reference make the DSN export refuse the board): %s" % _dups)
+# --- a differential pair's two series parts are packed as a couple (8 Sep 2026, MESHSAT-862; the D9 rule of 32.68). The shelf packer put
+# them in a row 3.1 mm apart, so the pre-router had to splay a 0.27 mm pair to 3.1 mm at the station and 63 of B17's 76 pair failures were
+# exactly that. A couple is two two-pad passives whose nets are each other's _P and _N counterparts, so it is read from the netlist and
+# needs no table: they land one above the other at the packer's own gap, pads across the pair axis, and the pair enters both pad 1s.
+_pins_of = {}
+for _n, _nodes in nets.items():
+    for _r, _pin in _nodes: _pins_of.setdefault(_r, {})[_pin] = _n
+_twopad = {r: tuple(sorted(v.values())) for r, v in _pins_of.items() if len(v) == 2 and r[:1] in ("C", "R", "L")}
+COUPLE = {}
+_byn = {}
+for _r, _nn in _twopad.items(): _byn.setdefault(_nn, []).append(_r)
+for _r, _nn in _twopad.items():
+    if _r in COUPLE or not all(x.endswith("_P") for x in _nn): continue
+    _want = tuple(sorted(x[:-2] + "_N" for x in _nn))
+    for _o in _byn.get(_want, []):
+        if _o != _r: COUPLE[_r] = _o; COUPLE[_o] = _r; break
+print("placement: %d differential-pair couples packed side by side" % (len(COUPLE) // 2))
+
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:
@@ -162,12 +180,24 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
                 elif h_ > w_ * 1.2: my = 2 * FINE_MARGIN
             if mx == 0.0 and my == 0.0: mx = my = 2 * FINE_MARGIN
         fps.append((ref, fp, bb.GetWidth() / 1e6 + GAP + mx, bb.GetHeight() / 1e6 + GAP + my, fine))
-    fps.sort(key=lambda t: (not t[4], -(t[2] * t[3])))
-    cx, cy, rowh = x0, y1, 0.0
+    # merge each couple whose two parts are both in this region into one unit, stacked, before the shelf packer sees them
+    _here = {t[0]: t for t in fps}; units = []; _done = set()
     for ref, fp, w, h, fine in fps:
+        if ref in _done: continue
+        o = COUPLE.get(ref)
+        if o and o in _here and o not in _done:
+            _, fp2, w2, h2, f2 = _here[o]; _done.add(ref); _done.add(o)
+            units.append(([(ref, fp, h), (o, fp2, h2)], max(w, w2), h + h2, fine or f2))
+        else:
+            _done.add(ref); units.append(([(ref, fp, h)], w, h, fine))
+    units.sort(key=lambda t: (not t[3], -(t[1] * t[2])))
+    cx, cy, rowh = x0, y1, 0.0
+    for members, w, h, fine in units:
         if cx + w > x1 + 0.01:
             cx = x0; cy -= rowh; rowh = 0.0
-        centre_on(fp, cx + w / 2, cy - h / 2); placed[ref] = fp
+        dy = 0.0
+        for ref, fp, hi in members:
+            centre_on(fp, cx + w / 2, cy - dy - hi / 2); placed[ref] = fp; dy += hi
         cx += w; rowh = max(rowh, h)
     if cy - rowh < y0 - 0.01: print("WARNING region %s overflows by %.1f mm" % (name, (y0 - (cy - rowh))))
 missing = [r for r in comps if r not in placed and not r.startswith("#")]
