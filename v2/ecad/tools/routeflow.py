@@ -186,7 +186,7 @@ def run(profile_fn, rounds, use_services, dry):
             rlog = os.path.join(project, prof["route"].get("log", "out/parallel-routeflow.log"))
             if not dry:
                 shutil.rmtree(os.path.join(project, "out", "par"), ignore_errors=True)
-                rc = sh(["./tools/route_parallel.sh", name, name, " ".join(str(p) for p in route["attempts"])], ecad, rlog, env)
+                rc = sh(["./tools/route_parallel.sh", os.path.basename(project), name, " ".join(str(p) for p in route["attempts"])], ecad, rlog, env)   # the project directory, not the board name (a copy directory such as pcb-a-power-a23, 8 Sep 2026)
             scores = parse_scores(os.path.join(project, "out", "par")) if not dry else {}
             best = min(scores.items(), key=lambda kv: kv[1]) if scores else (None, (9999, 9999, 999999))
             mins = {k: autoroute_minutes(os.path.join(project, "out", "par", k, "fr.log")) for k in scores}
