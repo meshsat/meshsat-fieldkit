@@ -44,4 +44,5 @@ python3 ../tools/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > 
 python3 ../tools/check_contracts.py .. > out/contracts.log 2>&1; grep -E 'FAIL|MISSING' out/contracts.log | head -12; if grep -q 'ALL CONTRACTS PASS' out/contracts.log; then echo 'contracts: ALL PASS'; else echo 'contracts: FAIL (out/contracts.log)'; echo open > out/a22-clean.txt; fi
 CLEAN=$(cat out/a22-clean.txt); if [ "$CLEAN" != clean ]; then echo 'A22 NOT CLEAN, not finishing'; echo FINISH-A22-DONE; exit 1; fi
 cd ..; ./tools/finish_board.sh pcb-a-power pcb-a-power - meshsat-pcb-a-revA-A22 2>&1 | tail -16
+[ "${PIPESTATUS[0]}" -eq 0 ] || { echo "A22: finish_board REFUSED the deliverable (verify_deliverable or an export step failed)"; echo FINISH-A22-DONE; exit 1; }   # 8 Sep 2026: a pipeline's status is tail's, so a refused deliverable used to be reported finished
 echo FINISH-A22-DONE
