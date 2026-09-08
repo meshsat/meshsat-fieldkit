@@ -5,18 +5,21 @@ board (F_Cu .gtl, In<k>_Cu .g<k>, B_Cu .gbl), the mask, paste, silk and edge lay
 the JLC form and every designator in it is in the CPL (bench-fitted parts excepted by prefix); the CPL has only Top and Bottom in its side
 column and no `?` designator; the DRC report exists. Prints one line per property with its count and the denominator.
 
-Usage: verify_deliverable.py <deliverable dir> <name> <copper layers> [--bench-prefixes H,S_,TP,J_,U_MOD]   -> exit 1 on any FAIL."""
+Usage: verify_deliverable.py <deliverable dir> <name> <copper layers> [--bench-prefixes H,S_,TP] [--bare]   -> exit 1 on any FAIL."""
 import sys, os, csv, zipfile, re
 
 ITEMS = ["%s-gerbers.zip", "%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-drc.rpt", "%s-schematic.pdf", "%s-render-top.png", "%s-render-bottom.png",
          "%s-1to1-top.pdf", "%s-1to1-bottom-mirrored.pdf", "%s.kicad_pcb", "%s.kicad_sch", "%s.kicad_pro", "%s-bom.status", "meshsat.pretty"]
 
-def check_dir(D, name, ncu, bench=("H", "S_", "TP")):
+BARE_SKIP = ("%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-schematic.pdf", "%s.kicad_sch", "%s-bom.status")   # a bare board (E5) has no schematic, BOM or CPL
+
+def check_dir(D, name, ncu, bench=("H", "S_", "TP"), bare=False):
     fails, lines = [], []
     def ok(cond, text):
         lines.append(("PASS  " if cond else "FAIL  ") + text)
         if not cond: fails.append(text)
     for it in ITEMS:
+        if bare and it in BARE_SKIP: continue
         p = os.path.join(D, it % name if "%s" in it else it)
         ok(os.path.exists(p) and (os.path.isdir(p) or os.path.getsize(p) > 0), "deliverable item %s present and non-empty" % os.path.basename(p))
     z = os.path.join(D, "%s-gerbers.zip" % name)
@@ -30,7 +33,7 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP")):
         ok(any(n.endswith(".drl") for n in names), "gerber zip carries the Excellon drill file")
         ok(any(n.endswith("drl_map.gbr") for n in names), "gerber zip carries the drill map")
     bom = os.path.join(D, "%s-bom.csv" % name); cpl = os.path.join(D, "%s-cpl.csv" % name); cpl_refs = set()
-    if os.path.exists(cpl):
+    if os.path.exists(cpl) and not bare:
         rows = list(csv.DictReader(open(cpl)))
         ok(rows and list(rows[0].keys())[:5] == ["Designator", "Mid X", "Mid Y", "Layer", "Rotation"], "CPL in the JLC form (Designator, Mid X, Mid Y, Layer, Rotation)")
         sides = {r.get("Layer", "") for r in rows}
@@ -38,7 +41,7 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP")):
         ok(all(r.get("Mid X", "").endswith("mm") and r.get("Mid Y", "").endswith("mm") for r in rows), "CPL positions in mm (drill-file origin)")
         cpl_refs = {r["Designator"] for r in rows}
         ok(not any("?" in r for r in cpl_refs), "no '?' designator in the CPL")
-    if os.path.exists(bom):
+    if os.path.exists(bom) and not bare:
         rows = list(csv.DictReader(open(bom)))
         ok(rows and list(rows[0].keys())[:4] == ["Comment", "Designator", "Footprint", "LCSC Part #"], "BOM in the JLC form (Comment, Designator, Footprint, LCSC Part #)")
         refs = []
@@ -58,7 +61,7 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP")):
 def main(a):
     if len(a) < 3: print(__doc__); return 2
     bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP")
-    fails, lines = check_dir(a[0], a[1], int(a[2]), bench)
+    fails, lines = check_dir(a[0], a[1], int(a[2]), bench, "--bare" in a)
     for l in lines: print("verify_deliverable: " + l)
     print("verify_deliverable: %s (%d of %d properties)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails), len(lines) - len(fails) - sum(1 for l in lines if l.startswith("INFO")), len(lines) - sum(1 for l in lines if l.startswith("INFO"))))
     return 1 if fails else 0

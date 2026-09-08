@@ -5,6 +5,19 @@ Usage: gen_sch_b.py <out.kicad_sch> <project-name>
 """
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-a-power"
+import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import intent as _intent
+# Rails of A22 (appendix 32.55; the record's currents, not measurements): the node from the pack, the 20 V charge bus, the slot rails, the device rail, the PA and HF rails, PoE
+_intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
+_intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", note="the pack side of the RSR shunt")
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"U2": 8.0}, note="shore and vehicle input from E6 over the dock, 10 A fuse; U2 is the LM5176 that takes it")
+_intent.rail("VBUS20", 20.0, 6.0, 8.0, "U2", note="the charge bus, BQ25731 up to 8 A")
+for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, note="one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt")
+_intent.rail("+5V_DEV", 5.0, 3.0, 6.0, "R43", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt")
+_intent.rail("+3V3", 3.3, 1.0, 3.0, "L7", note="this board's logic; the net starts at the TPS62933 inductor L7")
+_intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "U13", loads={"J_PA": 6.0}, note="the RA30H1317M1 on the face plate")
+_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "U15", note="the QMX")
+_intent.rail("+54V_POE", 54.0, 0.3, 0.6, "U16", note="the TPS23861 PSE on B16")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers
@@ -120,7 +133,9 @@ def usb_c_plug(ref, dp, dm, vbus, cc):
 def esd(ref, dp, dm, vbus):
     part(ref, "Power_Protection", "USBLC6-2SC6", "USBLC6-2SC6", "SOT236", {"1": dp, "6": dp, "3": dm, "4": dm, "5": vbus, "2": "GND"}, "C7519")
 def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
-def c(ref, val, a, b, fp="C", lcsc=""): part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
+    part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+    if bypass: _intent.bypass(ref, bypass[0], bypass[1])   # 8 Sep 2026 (MESHSAT-862): the pin this capacitor serves, for the decoupling gate
 def tps2065(ref, en, out, flt): part(ref, "Power_Management", "TPS2065CDBV", "TPS2065CDBV", "SOT235", {"5": "+5V_M1", "4": en, "1": out, "3": flt, "2": "GND"})   # A19: the channels hang on rail M1
 def tps22810(ref, vin, en, out, ct): part(ref, "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": vin, "5": en, "1": out, "2": "NC", "3": ct, "4": "GND", "7": "GND"})
 def ina219(ref, inp, inn, a0, a1): part(ref, "Sensor_Energy", "INA219AxDCN", "INA219AIDCN", "SOT238", {"1": inp, "2": inn, "3": "GND", "4": "+3V3", "5": "SCL", "6": "SDA", "7": a0, "8": a1}, "C138024")
@@ -430,3 +445,4 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+_intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json

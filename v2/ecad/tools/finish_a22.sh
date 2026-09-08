@@ -36,6 +36,9 @@ python3 ../tools/check_pcb_a.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|band|stitch|ro
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 ../tools/hardset.py out/$N-drc.json post --flag out/a22-clean.txt --label 'routed-board gate' | sed 's/^hardset:/routed-board DRC:/'
 if ! python3 ../tools/check_pcb_a.py $N.kicad_pcb 2>/dev/null | grep -q 'RESULT: ALL PASS'; then echo 'A22 GATE FAIL on the routed board'; echo open > out/a22-clean.txt; fi
+# 8 Sep 2026 (MESHSAT-862 Stage C): the electrical verdicts before the clean flag: DC drop and current density of the intent rails, the impedance of the pair classes
+python3 ../tools/dc_drop.py $N.kicad_pcb --json out/$N-dc_drop.json > out/$N-dc_drop.log 2>&1; DC=$?; grep -E 'dc_drop' out/$N-dc_drop.log | tail -14; [ "$DC" -eq 0 ] || { echo 'A22 DC DROP MISSED or unresolved (out/$N-dc_drop.log)'; echo open > out/a22-clean.txt; }
+python3 ../tools/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > out/$N-impedance.log 2>&1; IM=$?; grep -E 'impedance' out/$N-impedance.log | tail -14; [ "$IM" -eq 0 ] || { echo 'A22 IMPEDANCE MISSED (out/$N-impedance.log; openEMS on the missed pairs)'; echo open > out/a22-clean.txt; }
 # 8 Sep 2026 (MESHSAT-862): the cross-board contracts are part of every finish (they were called by no chain before)
 python3 ../tools/check_contracts.py .. > out/contracts.log 2>&1; grep -E 'FAIL|MISSING' out/contracts.log | head -12; if grep -q 'ALL CONTRACTS PASS' out/contracts.log; then echo 'contracts: ALL PASS'; else echo 'contracts: FAIL (out/contracts.log)'; echo open > out/a22-clean.txt; fi
 CLEAN=$(cat out/a22-clean.txt); if [ "$CLEAN" != clean ]; then echo 'A22 NOT CLEAN, not finishing'; echo FINISH-A22-DONE; exit 1; fi

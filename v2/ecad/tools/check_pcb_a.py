@@ -74,4 +74,7 @@ for _pair in sorted(set(n[:-2] for n in _names if n.endswith(("_P", "_N")) and (
     if not _lp and not _ln: continue
     if (_lp > 0) != (_ln > 0): check(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (_pair, _lp, _ln)); continue
     print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(_lp - _ln) > 1.0 else "PASS ") + _pair, _lp, _ln, abs(_lp - _ln), "" if abs(_lp - _ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
+# 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
+if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
+    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic; print(_ic.run(b, check, sys.argv[1]))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

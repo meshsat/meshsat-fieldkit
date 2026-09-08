@@ -103,4 +103,7 @@ conn = {r: fps[r] for r in ("J_PANEL", "J_MAINSW", "J_PIJ2") if r in fps}
 check(len(conn) == 3 and all(fp.IsFlipped() and all(pd.GetAttribute() == pcbnew.PAD_ATTRIB_SMD for pd in fp.Pads()) for fp in conn.values()), "J_PANEL, J_MAINSW and J_PIJ2 are SMD parts on the underside")
 under = [r for r, fp in fps.items() if fp.IsFlipped() and r not in conn]
 check(all(in_strips(fps[r]) for r in under), "the underside cluster stays on the strips")
+# 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
+if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
+    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic; print(_ic.run(b, check, sys.argv[1]))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
