@@ -252,13 +252,32 @@ def main(a):
 
     def dist_p(p, q): return math.hypot(p.GetPosition().x - q.GetPosition().x, p.GetPosition().y - q.GetPosition().y) / 1e6
     pre_vias = []   # the locked vias present before a pair is laid (its own end vias must not become anchors of its next section)
+    _pitch = {}
+    def pitch_of(f):
+        """The smallest centre distance between two SMD pads of the part (mm); 1e9 without two."""
+        k = f.GetReference()
+        if k not in _pitch:
+            ps = [q.GetPosition() for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e9
+            for i in range(len(ps)):
+                for j in range(i + 1, len(ps)):
+                    dd = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y) / 1e6
+                    if 0 < dd < best: best = dd
+            _pitch[k] = best
+        return _pitch[k]
+    ROW_PITCH = 0.45   # a 0.4 mm receptacle row keeps escape.py's CM5IO scheme: the legs end at the escape via, never in the pad (B17, 8 Sep 2026 13:35)
     def anchor(p):
-        """An escape via of the pad when one exists (a locked via of its net within 3 mm, present before the pair was laid), else the pad: (x, y, layer or None for a via, object)."""
+        """The pad: (x, y, layer or None for a via, object). A pad of a 0.4 mm row is anchored at its escape via (a locked via of its net within 3 mm, present before the pair was laid)."""
         pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
         L = None if pth else next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # the pad's own copper layer (a through-hole pad is on every layer)
+        if not pth and pitch_of(p.GetParentFootprint()) <= ROW_PITCH:
+            vs = [v for v in pre_vias if v.GetNetname() == p.GetNetname() and math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y) < 3e6]
+            if vs:
+                v = min(vs, key=lambda v: math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y))
+                return (mm(v.GetPosition().x), mm(v.GetPosition().y), None, v)
         return (mm(p.GetPosition().x), mm(p.GetPosition().y), L, p)
 
     for stem in stems:   # a swapped pair is appended and laid again
+        pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
         pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
         vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); clr_c = float(cl.get("clearance", CLR))
         try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
@@ -306,7 +325,7 @@ def main(a):
                     dd = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y)
                     if 0 < dd < best: best = dd
             return best <= 0.7e6
-        def fanned_part(f): return fine_part(f) or bool(re.search(r"SOT-23-[68]", f.GetFPIDAsString()))   # escape.py's rule: these parts carry escape stubs and vias
+        def fanned_part(f): return (fine_part(f) or bool(re.search(r"SOT-23-[68]", f.GetFPIDAsString()))) and pitch_of(f) > ROW_PITCH   # escape.py's rule: these parts carry escape stubs and vias; a 0.4 mm row keeps them (the via is the station)
         for net in (pn, nn):
             for p in pads[net]:
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or not fanned_part(p.GetParentFootprint()): continue
@@ -457,6 +476,7 @@ def main(a):
                 return mx_ + nx_ * out_, my_ + ny_ * out_
             gx0, gy0 = gx, gy
             def entry_station0(st):
+                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and pitch_of(q.GetParentFootprint()) <= ROW_PITCH for q in st): return False   # a 0.4 mm row: the escape vias are the ends
                 if not all((q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu)) or q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in st) or dist_p(st[0], st[1]) > 2.6: return False
                 fa_, fb_ = st[0].GetParentFootprint(), st[1].GetParentFootprint()
                 return fa_.GetReference() == fb_.GetReference() or (fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and fa_.GetReference()[:1] in "RCL")
