@@ -76,9 +76,10 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          "R20": (30.5, 13.6, 0, False), "R21": (30.5, 12.0, 0, False), "R26": (11.5, -9.1, 0, False), "R27": (11.5, -7.5, 0, False),   # 4.4 mm from U6 pad tips: the entry runs of both stations need the room (12:19 CEST)
          # D9: the pull-downs and the codec pull-up of the pair nets on the top layer beside their pairs (a pair net's pad on the back made the router wander three layers);
          # R14 east of R12 and R15 west of R13 in the series row (the P pull-down on the P side, the N one on the N side, so the stubs do not cross the legs; 12:26 CEST)
-         # the unused hub port's 15k terminations at the pins themselves (8 Sep 2026 15:40): the packer had put them on the back 9 mm away, and the
-         # router could not reach U4 pin 23 through the crystal and port-4 copper around it, which left HUB_DM4 the one open net of two rounds
-         "R25": (28.3, 15.6, 0, False), "R24": (28.3, 17.4, 0, False),
+         # the unused hub port's 15k terminations beside the hub instead of 9 mm away on the back (8 Sep 2026 16:05): the router could not reach U4 pin 23
+         # through the crystal and port-4 copper around it, which left HUB_DM4 the one open net of two rounds. They sit north-east of U4 on the FRONT, the
+         # pins' own layer, because the gap between U4's courtyard (to x 127.22) and the pull-down column (from x 128.97) is 1.75 mm, too narrow for an 0603
+         "R25": (28.3, 20.6, 0, False), "R24": (31.6, 20.6, 0, False),
          "R14": (23.2, 6.3, 90, False), "R15": (18.4, 6.3, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (11.5, -5.8, 180, False)}   # R28 north of R27, pad 1 east toward the codec leg (its slot south overlapped the crystal Y2 courtyard, 12:59 CEST)
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 for ref, x, y in (("J_HARN1", -42, 20.5), ("J_PWR1", -42, -9.5), ("J_ANT", -31, -37.5), ("J_PAIN", 9, -25.5), ("J_PAOUT", 35, -37.5), ("J_VGG", 43.5, -18.5), ("J_HS1", 46.5, 19), ("J_HS2", 46.5, -5), ("J_USB3", 46, 30.5)):
