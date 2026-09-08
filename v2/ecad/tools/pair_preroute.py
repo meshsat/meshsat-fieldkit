@@ -414,12 +414,14 @@ def main(a):
             via_at(site1[0], site1[1], net); gr.disc(via, site1[0], site1[1], VIA_SPLIT)
             pth_ = hasattr(obj, "GetAttribute") and obj.GetAttribute() == pcbnew.PAD_ATTRIB_PTH
             if pth_ and stub(site1[0], site1[1], x, y, hop, net): return None   # a through-hole pad takes the leg on the hop layer
-            site2 = None
-            for cand in via_site(x, y, x, y, hop, aL_, net, away):
-                if stub(site1[0], site1[1], cand[0], cand[1], hop, net): site2 = cand; break
-            if site2 is None: return "no via site beside the pad with a dive path"
-            via_at(site2[0], site2[1], net); gr.disc(via, site2[0], site2[1], VIA_SPLIT)
-            return None if stub(site2[0], site2[1], x, y, aL_, net) else "no stub path"
+            for cand in via_site(x, y, x, y, hop, aL_, net, away):   # each site: the hop to it, the via, the stub into the pad; the next site when the stub finds no path (13:18)
+                n0 = len(pieces)
+                if not stub(site1[0], site1[1], cand[0], cand[1], hop, net): continue
+                via_at(cand[0], cand[1], net); gr.disc(via, cand[0], cand[1], VIA_SPLIT)
+                if stub(cand[0], cand[1], x, y, aL_, net): return None
+                for t in pieces[n0:]: b.Remove(t)
+                del pieces[n0:]
+            return "no via site beside the pad with a dive path and a stub into it"
         for (pa, na), (pb, nb) in sections:
             A = [anchor(pa), anchor(na)]; B = [anchor(pb), anchor(nb)]
             sx, sy = (A[0][0] + A[1][0]) / 2, (A[0][1] + A[1][1]) / 2; gx, gy = (B[0][0] + B[1][0]) / 2, (B[0][1] + B[1][1]) / 2
