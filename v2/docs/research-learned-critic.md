@@ -49,4 +49,52 @@ pair), at which point an encoder pretrained on the unlabeled corpus and probed w
 
 ## 5. Numbers
 
-(filled by the campaign; every figure comes from `results.csv` and the journal, none typed by hand)
+Every figure below is printed by `tools/critic_e2.py` over the campaign's tile rows in `tools/routeflow/bench/jitter/` (8 Sep 2026: D8 60 jittered placements on the 128-thread box plus 557 tile rows from the 16-thread box, E6 40, P1 60 plus 234; C7 gave no rows because every one of its 40 jittered routes ended at the campaign's time limit without a session). A row is one 10 mm tile of one jittered placement; its label is what the production router left in that tile (opens, hard violations); its features are what `place_audit.py` and `tile_labels.py` read off the pre-route board (pads, fine-pitch pads, pads without an escape, escape vias, locked copper length, escape-envelope overlap, nets crossing the tile, rule areas).
+
+### 5.1 Stage E2, the analytical arm as a tile predictor
+
+```
+$ python3 tools/critic_e2.py tools/routeflow/bench/jitter/jitter-pcb-d-aprs.csv tools/routeflow/bench/jitter/jitter-pcb-e1-dock.csv tools/routeflow/bench/jitter/jitter-pcb-p-pack.csv tools/routeflow/bench/jitter/jitter-pcb-d-aprs-smallbox.csv tools/routeflow/bench/jitter/jitter-pcb-p-pack-smallbox.csv
+== all rows (5 files): 9033 tiles, 294 (3.3%) with an open or a hard violation
+   unescaped_pads > 0                     flags    74 tiles  precision 0.11  recall 0.03
+   env_overlap > 0                        flags   131 tiles  precision 0.02  recall 0.01
+   nets_crossing > 0                      flags  8906 tiles  precision 0.03  recall 0.98
+   fine_pads > 0                          flags   957 tiles  precision 0.07  recall 0.24
+   pads >= 12                             flags  1405 tiles  precision 0.05  recall 0.25
+   nets_crossing >= 8                     flags  6984 tiles  precision 0.03  recall 0.82
+   fine_pads > 0 and nets_crossing >= 8   flags   957 tiles  precision 0.07  recall 0.24
+== pcb-d-aprs-preroute.kicad_pcb: 2705 tiles, 36 (1.3%) with an open or a hard violation
+   unescaped_pads > 0                     flags    34 tiles  precision 0.00  recall 0.00
+   env_overlap > 0                        flags    91 tiles  precision 0.01  recall 0.03
+   nets_crossing > 0                      flags  2699 tiles  precision 0.01  recall 0.83
+   fine_pads > 0                          flags   408 tiles  precision 0.03  recall 0.39
+   pads >= 12                             flags   774 tiles  precision 0.02  recall 0.47
+   nets_crossing >= 8                     flags  2159 tiles  precision 0.01  recall 0.83
+   fine_pads > 0 and nets_crossing >= 8   flags   408 tiles  precision 0.03  recall 0.39
+== pcb-e1-dock-preroute.kicad_pcb: 5563 tiles, 205 (3.7%) with an open or a hard violation
+   unescaped_pads > 0                     flags    40 tiles  precision 0.20  recall 0.04
+   env_overlap > 0                        flags    40 tiles  precision 0.03  recall 0.00
+   nets_crossing > 0                      flags  5563 tiles  precision 0.04  recall 1.00
+   fine_pads > 0                          flags   480 tiles  precision 0.11  recall 0.25
+   pads >= 12                             flags   508 tiles  precision 0.07  recall 0.19
+   nets_crossing >= 8                     flags  4480 tiles  precision 0.04  recall 0.87
+   fine_pads > 0 and nets_crossing >= 8   flags   480 tiles  precision 0.11  recall 0.25
+== pcb-p-pack-preroute.kicad_pcb: 765 tiles, 53 (6.9%) with an open or a hard violation
+   unescaped_pads > 0                     flags     0 tiles  precision 0.00  recall 0.00
+   env_overlap > 0                        flags     0 tiles  precision 0.00  recall 0.00
+   nets_crossing > 0                      flags   644 tiles  precision 0.08  recall 1.00
+   fine_pads > 0                          flags    69 tiles  precision 0.06  recall 0.08
+   pads >= 12                             flags   123 tiles  precision 0.15  recall 0.34
+   nets_crossing >= 8                     flags   345 tiles  precision 0.10  recall 0.62
+   fine_pads > 0 and nets_crossing >= 8   flags    69 tiles  precision 0.06  recall 0.08
+```
+
+Reading: the base rate is 3.3 percent of tiles (294 of 9,033). No analytical feature predicts a failing tile: the escape-envelope overlap, the very rule that caught the INA226 row on A22 and the HDMI switches on B16 at board level, flags 131 tiles with a precision of 0.02; pads without an escape 74 tiles at 0.11; the crossing-net count is nearly everywhere (recall 0.98 at precision 0.03) and its high end (8 or more) no better; fine-pitch presence and pad density reach a recall of a quarter at a precision of 0.05 to 0.07. Per board the picture is the same (D8 1.3 percent failing tiles, E6 3.7, P1 6.9; the E6 escape rule is the best single feature at precision 0.20 and recall 0.04). So on these three boards the router's residual opens and hard items do not sit where the placement features say; they sit where the router's global choices (layer, ripup order) leave them, and a tile-local predictor cannot see that. **The analytical predictor stays what it was designed as: a board-level gate for escape-fan collisions of fine-pitch parts (a placement defect it does catch), not a router-outcome predictor.**
+
+### 5.2 Stage E3, the supervised arm
+
+Not run. With 294 positive tiles at a 3.3 percent base rate and no feature above 0.2 precision, a U-Net trained on these rasters would learn the base rate; the negative result of 5.1 is the result, and the condition for a learned critic (thousands of distinct boards, a slow evaluator producing few labels) is the one section 3 states for a JEPA as well. The five USD of GPU time stay unspent.
+
+### 5.3 What the campaign did produce
+
+The campaign infrastructure (`place_jitter.py`, `jitter_campaign.sh`, `tile_labels.py`, `critic_e2.py`) and 9,033 labelled tile rows; the finding that on D8, E6 and P1 the router's leftovers are not placement-local; and the C7 negative (its jittered routes exceed the campaign's limit: the backer ring is the one board whose route time, not its placement, is the constraint). The placement instrument's real yield was the board-level collision rule (32.66 and 32.70) and, on D9, the station rule for pairs (two series resistors side by side, pads across the pair axis, on the pair's layer) that the pair pre-router derived from the same kind of measurement.
