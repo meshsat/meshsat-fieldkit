@@ -92,8 +92,25 @@ def main(a):
     pr = os.path.join(os.path.dirname(os.path.abspath(a[0])), "out", os.path.splitext(os.path.basename(a[0]))[0] + "-pruned.txt")
     if os.path.exists(pr):
         rows = [l.split("\t") for l in open(pr).read().splitlines() if l and not l.startswith("#")]
-        for row in rows: lines.append("WARN  the escape of %s.%s (%s) sat in a hard violation and was pruned: the pad is the router's; pruned_gate.py checks it after the route" % (row[1], row[2], row[0]))
-        if len(rows) >= 12: lines.append("FAIL  %d escapes pruned: the escape pass and the placement disagree at that many pads" % len(rows)); coll += 1
+        # a pad whose escape was pruned but which now carries locked copper of its own net is SERVED, not a disagreement: the pair
+        # pre-router lays into the pads of its classes and the escape it displaced was redundant. B17 counted 84 such pads as a
+        # failure while every one of them belongs to a pre-laid Ethernet or switch pair (8 Sep 2026 18:05).
+        locked_ends = {}
+        for t in b.GetTracks():
+            if t.GetClass() == "PCB_TRACK" and t.IsLocked():
+                locked_ends.setdefault(t.GetNetname(), []).append((t.GetStart(), t.GetEnd()))
+        served = []; orphan = []
+        for row in rows:
+            f = b.FindFootprintByReference(row[1]); pad = next((q for q in f.Pads() if q.GetNumber() == row[2]), None) if f else None
+            ok = False
+            if pad is not None:
+                pb = pad.GetBoundingBox(); pb.Inflate(int(0.05e6))
+                for a_, b_ in locked_ends.get(pad.GetNetname(), []):
+                    if pb.Contains(a_) or pb.Contains(b_): ok = True; break
+            (served if ok else orphan).append(row)
+        for row in orphan: lines.append("WARN  the escape of %s.%s (%s) sat in a hard violation and was pruned: the pad is the router's; pruned_gate.py checks it after the route" % (row[1], row[2], row[0]))
+        if served: lines.append("INFO  %d of %d pruned escapes are on pads that pre-laid copper of their own net already reaches" % (len(served), len(rows)))
+        if len(orphan) >= 12: lines.append("FAIL  %d escapes pruned with nothing else on the pad: the escape pass and the placement disagree at that many pads" % len(orphan)); coll += 1
     # pin density and HPWL
     edge = b.GetBoardEdgesBoundingBox(); ex0, ey0, ex1, ey1 = edge.GetLeft() / 1e6, edge.GetTop() / 1e6, edge.GetRight() / 1e6, edge.GetBottom() / 1e6
     tiles = {}
