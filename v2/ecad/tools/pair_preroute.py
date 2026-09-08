@@ -238,6 +238,11 @@ def main(a):
         c = assign.get(n) or assign.get("/" + n.lstrip("/")) or assign.get(n.lstrip("/")); return (c[0] if isinstance(c, list) and c else c) or "Default"
     want_classes = set(a[a.index("--classes") + 1].split(",")) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
     layers = [_ALL[x] for x in (a[a.index("--layers") + 1].split(",") if "--layers" in a else os.environ.get("PAIR_LAYERS", "F.Cu,B.Cu").split(",")) if x in _ALL]
+    # the hop layers carry only the dives and the stubs' hops, never a corridor run: on the 7628 four-layer stack a 0.30/0.20 pair on In2 reads 137 ohm
+    # against In1 across the 1.065 mm core (D9's USB_D8 took 42 mm of In2 in its corridor, 8 Sep 2026 14:44); the class geometry holds on the corridor layers only
+    hops = [_ALL[x] for x in (a[a.index("--hop-layers") + 1].split(",") if "--hop-layers" in a else os.environ.get("PAIR_HOP_LAYERS", "").split(",")) if x in _ALL and _ALL[x] not in layers]
+    maplayers = layers + hops
+    def hop_of(L): return next((L2 for L2 in hops + layers if L2 != L), None)   # a hop layer first, else another corridor layer
     names = {str(n): n for n in b.GetNetInfo().NetsByName().keys()}
     stems = sorted({n[:-2] for n in names if n.endswith("_P") and n[:-2] + "_N" in names})
     suffixed = sorted({n[:-3] for n in names if n.endswith("_PR") and n[:-3] + "_NR" in names})   # USB1_PR / USB1_NR (the codec side of D9's port 1): P and N with a suffix
@@ -344,15 +349,15 @@ def main(a):
                 v = pcbnew.PCB_VIA(b); v.SetPosition(q.GetPosition()); v.SetWidth(FromMM(min(vd, 0.5))); v.SetDrill(FromMM(min(vdr, 0.25))); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(q.GetNet()); v.SetLocked(True); b.Add(v); pieces.append(v); inpad += 1
         if stripped or inpad: print("pair_preroute: %s: %d escape pieces of fine-pitch station pads removed, the legs enter those pads directly; %d via(s) in the pad of a pin between them" % (stem, len(stripped), inpad))
         pre_vias[:] = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA" and t.IsLocked()]
-        trk, via = build_maps(gr, b, layers, set(), half, vd / 2)   # every net's copper, the pair's own pads included: the corridor stops outside the stations, the stubs enter
-        via1n = {pn: build_maps(gr, b, layers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, layers, {nn}, half, vd / 2, split=0.05)[1]}   # sites for a single end via per leg (plain margins; the other leg's pads block)
+        trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)   # every net's copper, the pair's own pads included: the corridor stops outside the stations, the stubs enter
+        via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}   # sites for a single end via per leg (plain margins; the other leg's pads block)
         via1 = via1n[pn]   # shared updates below go to both
-        pad_layers = sorted({L for net in (pn, nn) for p in pads[net] for L in _ALL.values() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and p.IsOnLayer(L)} | set(layers), key=list(_ALL.values()).index)
+        pad_layers = sorted({L for net in (pn, nn) for p in pads[net] for L in _ALL.values() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and p.IsOnLayer(L)} | set(maplayers), key=list(_ALL.values()).index)
         trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
         def rebuild_maps():   # after a swap of two passives inside a section the maps still hold the pads at their old places (D9: a stub over the swapped pad, 8 Sep 2026 13:08)
             nonlocal trk, via, via1n, trk1
-            trk, via = build_maps(gr, b, layers, set(), half, vd / 2)
-            via1n = {pn: build_maps(gr, b, layers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, layers, {nn}, half, vd / 2, split=0.05)[1]}
+            trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)
+            via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}
             trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         def rollback():
@@ -426,7 +431,7 @@ def main(a):
                 if site is None: return "no via site beside the pad with a hop path"
                 via_at(site[0], site[1], net); gr.disc(via, site[0], site[1], VIA_SPLIT)
                 return None if stub(site[0], site[1], x, y, aL, net) else "no stub path"
-            hop = next((L2 for L2 in layers if L2 != L), None)   # the pad is on the corridor layer: dive through the other corridor layer
+            hop = hop_of(L)   # the pad is on the corridor layer: dive through a hop layer (else the other corridor layer)
             if hop is None: return "no layer to dive through"
             aL_ = L if aL is None else aL
             site1 = via_hop(ex, ey, x, y, L, hop, net, away)
@@ -734,7 +739,7 @@ def main(a):
                                 nnx_, nny_ = (lnx - lpx, lny - lpy); nl2_ = math.hypot(nnx_, nny_) or 1.0
                                 err_ = dive_p(mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), lpx, lpy, pcbnew.F_Cu, None, st_[0], net_p, (-nnx_ / nl2_, -nny_ / nl2_))
                                 if err_: failed = "%s -> %s (the fan into %s crosses, %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference(), err_); break
-                                report.append("DIVE  %s: the P leg crosses under the N fan into %s on %s" % (stem, st_[0].GetParentFootprint().GetReference(), b.GetLayerName(next((L2 for L2 in layers if L2 != pcbnew.F_Cu), pcbnew.F_Cu))))
+                                report.append("DIVE  %s: the P leg crosses under the N fan into %s on %s" % (stem, st_[0].GetParentFootprint().GetReference(), b.GetLayerName(hop_of(pcbnew.F_Cu) or pcbnew.F_Cu)))
                                 continue
                         seg(lpx, lpy, mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), pcbnew.F_Cu, net_p); seg(lnx, lny, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
                     continue   # a fine pitch: the legs entered the pads straight; the N leg of a fan was laid with the P leg
