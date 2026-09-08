@@ -19,9 +19,9 @@ import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-p-pack"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import intent as _intent
-_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", note="the pack lead")
-_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP", note="the top cell node from the block strip")
-_intent.rail("FUSED", 14.4, 10.0, 18.0, "F1", note="after the blade fuse")
+_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, note="the pack lead")
+_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP", loads={"F1": 10.0}, note="the top cell node from the block strip")
+_intent.rail("FUSED", 14.4, 10.0, 18.0, "F1", loads={"Q1": 10.0}, note="after the blade fuse")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
