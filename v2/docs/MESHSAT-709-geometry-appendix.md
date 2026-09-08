@@ -3297,3 +3297,14 @@ The three ways out, with what each costs:
 3. **A floor-plan pass in the placement generators**: reserve a slot beside each part for its declared capacitors before its neighbours are packed, which is the same shape of change as the differential-pair couple rule that went into the B generator today. Cost: a generator change per board, a full regeneration and re-route of all six, about a day of box time, and every board's routed result changes, so the whole set is judged again.
 
 This is an owner decision because option 3 restarts the wave. It is written here so the question can be asked once, with these numbers, rather than carried as an adjective.
+
+
+### 32.75 What "the legs clear no smoothing of the centreline" actually is (8 Sep 2026, 22:25 CEST; MESHSAT-862; commit 5d64df7)
+
+With the debug print fixed to share the predicate it explains, the failure that stops 63 of B17's 99 pairs reads clearly. On `/CARD1_CLK` and `/NVME1_RX`, both legs **clear run 1 on F.Cu and run 2 on B.Cu** and both hit at the very start of **run 3**, the tail run. The tail run is not part of the corridor: when a section's far station is a fine-pitch part, the tool appends a straight run on F.Cu from the corridor's end into the pad pair, and `legs_clear` exempts only the last 1.2 mm of it, the part that lies inside the pad pair itself. Everything before that is tested, and a straight line from the corridor's end to a pad in a 0.4 mm row crosses the neighbouring pads and their escape stubs.
+
+The obstacle was read off the board at the reported point: `U101.84` (+3V3_S1B) with its 0.127 mm escape running east, and its neighbours `U101.83` and `U101.85` (the PCIE1_RCLK0 pair) 0.41 mm either side, all locked. The pair is not blocked at the M.2 socket, which is what the unexempted print had suggested all evening, and it is not blocked by the escape depths. It is blocked by the geometry of its own arrival at the switch.
+
+The work item that follows, specified rather than guessed: the tail run must be routed, not drawn. A single-layer search from the corridor's end to a point about 1.2 mm short of the pad pair, along the direction the fan opens, with the straight line kept only for that last 1.2 mm, and the corridor's goal placed beyond the station's escape vias rather than beside the pads. Until that exists, a pair whose far station is a fine-pitch part in a dense fan lays only when the corridor happens to end in front of its own lane, which is why the count is 16 of 99 on B17 and 4 of 4 on the D board, whose stations are two resistors in open space.
+
+This matters beyond the pre-router: `impedance_check.py` returns non-zero when any pair misses its target, and Freerouting 1.9.0 has no differential-pair router, so every pair it lays reads UNCOUPLED. A board whose pairs are not pre-laid cannot pass the impedance gate, which makes the tail-run fix the gate on B17's release rather than a refinement of it.
