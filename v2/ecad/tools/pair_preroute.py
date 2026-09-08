@@ -716,6 +716,34 @@ def main(a):
             why = ("one part's two pins" if fa.GetReference() == fb.GetReference() else ("different footprints %s / %s" % (fa.GetFPIDAsString().split(":")[-1], fb.GetFPIDAsString().split(":")[-1]) if fa.GetFPIDAsString() != fb.GetFPIDAsString() else ("orientations %s / %s" % (fa.GetOrientationDegrees(), fb.GetOrientationDegrees()) if abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) >= 0.01 else ("locked" if fa.IsLocked() or fb.IsLocked() else "already swapped once"))))
             report.append("TWIST %s: the P leg changes side between the stations %s (no swap: %s); a crossing would be needed, left to the router" % (stem, twist, why)); continue
         if failed: rollback(); report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections))); continue
+        # every other pad of the two nets (a pull resistor, a test point, a part's second pin) gets a stub to the nearest laid piece of its net, so the router
+        # has nothing left on a pair net (8 Sep 2026: Freerouting wandered 15 to 23 pieces over three layers to reach D9's pull-downs and the read-back called the pairs uncoupled)
+        left = 0; stubs_ = 0
+        for net_obj, net in ((net_p, pn), (net_n, nn)):
+            laid_pts = [(mm(t.GetStart().x), mm(t.GetStart().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net] + [(mm(t.GetEnd().x), mm(t.GetEnd().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net]
+            if not laid_pts: continue
+            station_pads = {(q.GetParentFootprint().GetReference(), q.GetNumber()) for st in stations for q in st}
+            for f in b.GetFootprints():
+                for q in f.Pads():
+                    if q.GetNetname() != net or (f.GetReference(), q.GetNumber()) in station_pads: continue
+                    qx, qy = mm(q.GetPosition().x), mm(q.GetPosition().y)
+                    if any(math.hypot(qx - x_, qy - y_) < 0.3 for x_, y_, _ in laid_pts): continue   # already on the copper
+                    near = sorted(laid_pts, key=lambda t: math.hypot(qx - t[0], qy - t[1]))[:6]
+                    if math.hypot(qx - near[0][0], qy - near[0][1]) > 12.0: left += 1; continue   # too far: the router's
+                    qL = None if q.GetAttribute() != pcbnew.PAD_ATTRIB_SMD else next((L for L in _ALL.values() if q.IsOnLayer(L)), None)
+                    done = False
+                    for x_, y_, L_ in near:
+                        SL = qL if (qL is not None and qL == L_) else L_
+                        if qL is not None and qL != L_:   # the pad on another layer: a via beside it, the stub on the pad's layer
+                            site = via_hop(x_, y_, qx, qy, L_, qL, net_obj, (0.0, 0.0)) if L_ in trk1[net] else None
+                            if site is None: continue
+                            via_at(site[0], site[1], net_obj); gr.disc(via, site[0], site[1], VIA_SPLIT)
+                            if stub(site[0], site[1], qx, qy, qL, net_obj): done = True; break
+                            continue
+                        if SL in trk1[net] and stub(x_, y_, qx, qy, SL, net_obj): done = True; break
+                    if done: stubs_ += 1
+                    else: left += 1
+        if stubs_ or left: report.append("STUBS %s: %d other pad(s) of the pair nets stubbed to the laid copper, %d left to the router" % (stem, stubs_, left))
         laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added))
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
