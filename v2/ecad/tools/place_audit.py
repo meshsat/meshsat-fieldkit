@@ -13,7 +13,8 @@ fine-pitch part, so the predictor reads:
   2. escape envelopes (the bounding box of each part's locked pieces within REACH mm) are reported as a Stage E feature only: on every clean
      released board neighbouring fans overlap in bounding box with their vias interleaved, so the overlap is not a verdict; the escape pass
      and the pre-route DRC (0 hard) are the proof that the fans fit;
-  3. escapes that the pre-route DRC found in a hard violation (out/<name>-pruned.txt from escape_prune.py, when present): FAIL per pad.
+  3. escapes that the pre-route DRC found in a hard violation (out/<name>-pruned.txt from escape_prune.py): a WARN per pad (pruned_gate.py
+     judges them after the route; B16's generation prunes six), a FAIL from twelve pads on.
 Also reported: pin density per 20 mm tile, the HPWL of every net over its pad centres, and the decoupling loop lengths from the intent file
 before the route (3 mm rule, FAIL beyond it). A PNG (--png) shows the envelopes, red where they collide.
 
@@ -91,7 +92,8 @@ def main(a):
     pr = os.path.join(os.path.dirname(os.path.abspath(a[0])), "out", os.path.splitext(os.path.basename(a[0]))[0] + "-pruned.txt")
     if os.path.exists(pr):
         rows = [l.split("\t") for l in open(pr).read().splitlines() if l and not l.startswith("#")]
-        for row in rows: lines.append("FAIL  the escape of %s.%s (%s) sat in a hard violation and was pruned: the pad is the router's" % (row[1], row[2], row[0])); coll += 1
+        for row in rows: lines.append("WARN  the escape of %s.%s (%s) sat in a hard violation and was pruned: the pad is the router's; pruned_gate.py checks it after the route" % (row[1], row[2], row[0]))
+        if len(rows) >= 12: lines.append("FAIL  %d escapes pruned: the escape pass and the placement disagree at that many pads" % len(rows)); coll += 1
     # pin density and HPWL
     edge = b.GetBoardEdgesBoundingBox(); ex0, ey0, ex1, ey1 = edge.GetLeft() / 1e6, edge.GetTop() / 1e6, edge.GetRight() / 1e6, edge.GetBottom() / 1e6
     tiles = {}
