@@ -3164,7 +3164,7 @@ Asked how to order the regenerations 32.66 lists (A23, C8, D9, P2, B17) against 
 
 **Stage E1 closed on the big box:** D8 2150, E6 5564, P1 533 tile rows (plus the small box's 557 and 234) are in `tools/routeflow/bench/jitter/`; C7 gave 0 rows: all 40 jittered routes ended at the campaign's time limit without a session (C7's ring routes take longer than the limit allowed), recorded as a negative result; a rerun with a longer limit on a few seeds is owed if the critic needs C7 rows.
 
-### 32.70 Rule 1 proven on D9's placement, rule 3 on A23's routed board (8 Sep 2026, 10:20 CEST; MESHSAT-862; commits 8c3908d, 76be8dd)
+### 32.70 Rule 1 proven on D9's placement, rule 3 on A23's routed board (8 Sep 2026, 10:14 CEST; MESHSAT-862; commits 8c3908d, 76be8dd)
 
 **D9's USB cluster (gen_pcb_d3.py).** The hub U4, the bridge U3, the ESD U5, the codec U6, both crystals and every pair's two series resistors are FIXED on the top layer beside the pins they serve: the upstream pair from J_HARN1 through U5 (its pass-through pins facing west and east) and R6/R7 into hub pins 1 and 2; port 1 through R12/R13 (pad 1 north to the hub, pad 2 south) down to the codec with R26/R27 at its pins 3 and 4; port 2 through R16/R17 lying in line with U3's D+/D- pins 3 mm to their east; port 3 through R20/R21 east to J_USB3. The packed regions were carved around the cluster (HUB north strip, HUB2 east of the bridge, AUD south of the codec, AUD2); the pull resistors and terminations stay packed on the back.
 
