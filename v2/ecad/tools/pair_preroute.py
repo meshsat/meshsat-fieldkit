@@ -407,6 +407,24 @@ def main(a):
                         rowtxt += "S" if (abs(i - is_) <= 1 and abs(j - js) <= 1) else ("G" if (i, j) == (ig, jg) else ("." if pm[i, j] else "#"))
                     print("   " + rowtxt)
             return False   # no blind straight piece (it shorted J_HARN1's pin 4 on D9)
+        def fan_leg(ex_, ey_, px_, py_, L_, net_):
+            """The last piece of a leg, from its corridor end into its own pad. It used to be laid straight and untested, which is how a
+            pair's own fan came to sit on other nets' escapes: 24 of B17's 34 pruned escapes had a pre-routed pair leg as the counterparty
+            (8 Sep 2026 23:15, 32.77). Straight when the straight line is clear on this leg's own map, with the last 1.2 mm exempt because
+            it lies inside the pad pair (the exemption legs_clear already uses); otherwise routed by stub(), and False when neither works."""
+            pm = trk1[net_.GetNetname()].get(L_)
+            if pm is None: seg(ex_, ey_, px_, py_, L_, net_); return True
+            ln_ = math.hypot(px_ - ex_, py_ - ey_)
+            clear = True
+            if ln_ > 1.2:
+                n_ = int(ln_ / gr.G) + 2
+                for k_ in range(n_ + 1):
+                    u_ = k_ / n_
+                    if ln_ * (1.0 - u_) < 1.2: break
+                    jj_, ii_ = gr.cell(ex_ + u_ * (px_ - ex_), ey_ + u_ * (py_ - ey_))
+                    if 0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX and pm[ii_, jj_]: clear = False; break
+            if clear: seg(ex_, ey_, px_, py_, L_, net_); return True
+            return stub(ex_, ey_, px_, py_, L_, net_)
         def via_site(ex_, ey_, px_, py_, L, aL, net, away):
             """A free single-via site near the offset end (ex_, ey_): the nearest cell of via1 that is also clear on both layers' leg maps, preferring the
             side away from the other leg (unit vector `away`) and the direction of the pad; None when nothing within 3 mm."""
@@ -765,7 +783,9 @@ def main(a):
                                 if err_: failed = "%s -> %s (the fan into %s crosses, %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference(), err_); break
                                 report.append("DIVE  %s: the P leg crosses under the N fan into %s on %s" % (stem, st_[0].GetParentFootprint().GetReference(), b.GetLayerName(hop_of(pcbnew.F_Cu) or pcbnew.F_Cu)))
                                 continue
-                        seg(lpx, lpy, mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), pcbnew.F_Cu, net_p); seg(lnx, lny, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
+                        okp = fan_leg(lpx, lpy, mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), pcbnew.F_Cu, net_p)
+                        okn = fan_leg(lnx, lny, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
+                        if not (okp and okn): failed = "%s -> %s (the fan into %s is blocked and has no path)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
                     continue   # a fine pitch: the legs entered the pads straight; the N leg of a fan was laid with the P leg
                 crossing = cross_near if near else cross_far
                 nnx, nny = (ln0[0] - lp0[0], ln0[1] - lp0[1]) if near else (ln1[0] - lp1[0], ln1[1] - lp1[1]); nl_ = math.hypot(nnx, nny) or 1.0
