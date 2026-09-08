@@ -10,8 +10,10 @@ the PA leads at the north edge (drive U.FL, output SMA, gate bias header; the RA
 and the relay. tools/gen_pcb_d3.py places the parts and pours the planes.
 """
 import math, sys, os
-import pcbnew
+import os, pcbnew
 from pcbnew import VECTOR2I, FromMM
+PHASE = os.environ.get("PHASE", "D9")   # the silk carries the phase the chain builds; the gate in verify_deliverable.py refuses a deliverable stamped with another (8 Sep 2026)
+
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-d-aprs.kicad_pcb"
 BOARD_L, BOARD_W, BOARD_R = 100.0, 80.0, 3.0
@@ -128,7 +130,7 @@ text("J_HARN1 <- A22 J_MEZZ1", J_HARN[0] + 2.0, J_HARN[1] + 13.0, pcbnew.F_SilkS
 text("headset leads J_HS1 / J_HS2 from the face plate jacks (SPK MIC PTT GND GND)", 30.0, 0.8, pcbnew.F_SilkS, 0.85, 0.15)
 for k, r in ZONES.items(): rect(r, pcbnew.Dwgs_User, 0.12); text(k, (r[0] + r[2]) / 2, r[3] - 1.2, pcbnew.Dwgs_User, 0.9, 0.15)
 line(-3, 0, 3, 0, pcbnew.Dwgs_User); line(0, -3, 0, 3, pcbnew.Dwgs_User); text("BOARD DATUM = CASE (50, 0)", 0, -4.5, pcbnew.Dwgs_User, 0.9, 0.15)
-text("PCB-D APRS MEZZANINE  REV A (D8)", 0, -36.0, pcbnew.B_SilkS, 1.4, 0.22, mirror=True)
+text("PCB-D APRS MEZZANINE  REV A (%s)" % PHASE, 0, -36.0, pcbnew.B_SilkS, 1.4, 0.22, mirror=True)
 text("MESHSAT-830 | 100x80x1.6 4L | 2026-09-07", 0, -38.5, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
 text("CASE EAST (+X) ->", 42.0, -38.5, pcbnew.F_SilkS, 0.9, 0.15); text("NORTH (+Y)", -42.0, 37.5, pcbnew.F_SilkS, 0.9, 0.15)
 pcbnew.SaveBoard(OUT, board)

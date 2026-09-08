@@ -181,7 +181,7 @@ for folder, stem, prj, title, phase, hand in BOARDS:
                 "", "Sources: https://pip.raspberrypi.com/categories/1083-raspberry-pi-touch-display-2 and https://datasheets.raspberrypi.com/display/touch-display-2-product-brief.pdf (checked 2 Sep 2026).", ""]
     print("%s: %s -> JLCPCB/%s (%s) and Review/%s (%s)" % (stem, os.path.basename(board_file), tag, ", ".join(files), tag, ", ".join("%s %s" % (n, "ok" if ok else "FAILED") for n, ok, m in made)))
 order_index += ["", "Common options for all boards: 1 oz outer copper, ENIG, matte black mask, white silk; 4-layer boards on the JLC04161H-7628 stackup (impedance-tuned USB pairs where the notes say so).",
-                "The BOM/CPL copies here have the DNP lines removed (U2 on PCB-D is the bench-fitted DMR858M, R46 on PCB-A is the PSEL alternative); the full BOMs stay in the deliverable folders.",
+                "The BOM/CPL copies here have the DNP and bench-fitted lines removed; each board's ORDER-NOTES.txt lists its own designators by name, and the full BOMs stay in the deliverable folders.",   # 8 Sep 2026: the old sentence still named the DMR858M, which left PCB-D with the device set of 6 Sep, and an R46 that is now a slot-rail resistor
                 "Order after the 12 Sep design review (appendix section 21 / 22)."]
 open(os.path.join(JLC, "README.md"), "w").write("\n".join(order_index) + "\n")
 review_index += ["## Review agenda (MESHSAT-830 generation, appendix 32.52 to 32.61)", "", "1. PCB-A (A22): the 14.4 V node and the BQ25731 charger, the LM5176 front-end and PA/HF/PoE stages, the four AP64500 rails and their INA226 monitors, the TPS25740 and TPS55288 outlet stage, the EMCON gates, the eleven blind-mate sites, the dock contacts.",

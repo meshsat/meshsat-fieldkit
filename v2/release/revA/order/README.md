@@ -13,5 +13,5 @@ One sub-folder per board. Upload the Gerber zip first, then (for the assembled b
 | `PCB-E5-BLOCK-E5/` | PCB-E5 DOCK BLOCK Rev A (E5) | 43 x 26 mm | 2 | none (PCB only) | pcb-e5-block-gerbers.zip |
 
 Common options for all boards: 1 oz outer copper, ENIG, matte black mask, white silk; 4-layer boards on the JLC04161H-7628 stackup (impedance-tuned USB pairs where the notes say so).
-The BOM/CPL copies here have the DNP lines removed (U2 on PCB-D is the bench-fitted DMR858M, R46 on PCB-A is the PSEL alternative); the full BOMs stay in the deliverable folders.
+The BOM/CPL copies here have the DNP and bench-fitted lines removed; each board's ORDER-NOTES.txt lists its own designators by name, and the full BOMs stay in the deliverable folders.
 Order after the 12 Sep design review (appendix section 21 / 22).

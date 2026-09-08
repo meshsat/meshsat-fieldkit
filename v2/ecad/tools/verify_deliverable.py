@@ -13,7 +13,7 @@ ITEMS = ["%s-gerbers.zip", "%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-drc
 
 BARE_SKIP = ("%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-schematic.pdf", "%s.kicad_sch", "%s-bom.status")   # a bare board (E5) has no schematic, BOM or CPL
 
-def check_dir(D, name, ncu, bench=("H", "S_", "TP"), bare=False):
+def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_"), bare=False):
     fails, lines = [], []
     def ok(cond, text):
         lines.append(("PASS  " if cond else "FAIL  ") + text)
@@ -56,11 +56,21 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP"), bare=False):
             ok(not missing, "every BOM designator is in the CPL (%d of %d; missing %s)" % (len(refs) - len(missing), len(refs), missing[:8]))
         blank = [r for r in rows if not r.get("LCSC Part #")]
         lines.append("INFO  BOM lines without an LCSC code: %d of %d (%s)" % (len(blank), len(rows), ", ".join(r.get("Designator", "")[:20] for r in blank[:6])))
+    # the silk names this deliverable's phase and no other (8 Sep 2026: every placement generator hard-coded the PREVIOUS phase, so the
+    # released P2 carries "REV A (P1)" on its underside and D9 would have shipped stamped D8; the deliverable folder name is the authority)
+    ph = os.path.basename(D.rstrip("/")).rsplit("-", 1)[-1]
+    if re.fullmatch(r"[A-Z][A-Z]?\d\d?", ph or ""):
+        bf = os.path.join(D, name + ".kicad_pcb")
+        if os.path.exists(bf):
+            texts = re.findall(r'\(gr_text\s+"([^"]*)"', open(bf, errors="replace").read())
+            here = {t for txt in texts for t in re.findall(r"\b" + re.escape(ph[0]) + r"\d\d?\b", txt)}
+            ok(ph in here, "the silk names the phase %s (found %s in %d legend texts)" % (ph, ", ".join(sorted(here)) or "no phase token", len(texts)))
+            ok(not (here - {ph}), "no other phase of this board on the silk (stale: %s)" % ", ".join(sorted(here - {ph})))
     return fails, lines
 
 def main(a):
     if len(a) < 3: print(__doc__); return 2
-    bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP")
+    bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP", "W_")
     fails, lines = check_dir(a[0], a[1], int(a[2]), bench, "--bare" in a)
     for l in lines: print("verify_deliverable: " + l)
     print("verify_deliverable: %s (%d of %d properties)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails), len(lines) - len(fails) - sum(1 for l in lines if l.startswith("INFO")), len(lines) - sum(1 for l in lines if l.startswith("INFO"))))
