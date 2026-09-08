@@ -76,6 +76,9 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          "R20": (30.5, 13.6, 0, False), "R21": (30.5, 12.0, 0, False), "R26": (11.5, -9.1, 0, False), "R27": (11.5, -7.5, 0, False),   # 4.4 mm from U6 pad tips: the entry runs of both stations need the room (12:19 CEST)
          # D9: the pull-downs and the codec pull-up of the pair nets on the top layer beside their pairs (a pair net's pad on the back made the router wander three layers);
          # R14 east of R12 and R15 west of R13 in the series row (the P pull-down on the P side, the N one on the N side, so the stubs do not cross the legs; 12:26 CEST)
+         # the unused hub port's 15k terminations at the pins themselves (8 Sep 2026 15:40): the packer had put them on the back 9 mm away, and the
+         # router could not reach U4 pin 23 through the crystal and port-4 copper around it, which left HUB_DM4 the one open net of two rounds
+         "R25": (28.3, 15.6, 0, False), "R24": (28.3, 17.4, 0, False),
          "R14": (23.2, 6.3, 90, False), "R15": (18.4, 6.3, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (11.5, -5.8, 180, False)}   # R28 north of R27, pad 1 east toward the codec leg (its slot south overlapped the crystal Y2 courtyard, 12:59 CEST)
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 for ref, x, y in (("J_HARN1", -42, 20.5), ("J_PWR1", -42, -9.5), ("J_ANT", -31, -37.5), ("J_PAIN", 9, -25.5), ("J_PAOUT", 35, -37.5), ("J_VGG", 43.5, -18.5), ("J_HS1", 46.5, 19), ("J_HS2", 46.5, -5), ("J_USB3", 46, 30.5)):
@@ -91,7 +94,7 @@ REGIONS = [
  ("TPS2", (-40, 34.5, 4, 38.5), ["TP%d" % k for k in range(17, 25)], False),
  ("HUB",  (4, 20, 43, 28), ["C10", "C11", "C13", "C14"] + ["C%d" % k for k in range(29, 34)] + ["C35", "C36", "C37", "C38"], False),   # D9: the strip north of the fixed USB cluster
  ("HUB2", (35, 0, 43, 20), ["U7", "U15", "C61", "C62"], False),   # D9: east of the bridge
- ("HUBB", (4, 0, 43, 16), ["R4"] + ["R%d" % k for k in (8, 9, 10, 11, 24, 25)] + ["C12", "C15", "C16", "C17"], True),
+ ("HUBB", (4, 0, 43, 16), ["R4"] + ["R%d" % k for k in (8, 9, 10, 11)] + ["C12", "C15", "C16", "C17"], True),
  ("AUD",  (4, -22, 43, -15.2), ["C%d" % k for k in range(19, 28)] + ["C39", "C40", "LED2", "LED3", "R29", "R30", "JP1", "JP2"], False),   # D9: the strip south of the codec
  ("AUD2", (29, -15, 43, 0), ["U8"], False),
  ("AUDB", (4, -22, 43, -8), ["R%d" % k for k in range(31, 48)] + ["C18", "C28", "C34"] + ["C%d" % k for k in range(41, 49)], True),
