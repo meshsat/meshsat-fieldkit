@@ -352,6 +352,45 @@ def main(a):
             for L in trk1[o]: gr.disc(trk1[o][L], x, y, vd / 2 + clr_c + w / 2 + 0.01)
             for vm in via1n.values(): gr.disc(vm, x, y, vdr + 0.30 + 0.02)
             gr.disc(via, x, y, vdr + 0.30 + VIA_SPLIT)
+        # the stub, via-site and hop helpers of this pair (pair-level state only; they were inside the section loop and a pair whose last section took the direct legs left them undefined for the stub pass, 8 Sep 2026 12:47)
+        def stub(ax_, ay_, bx_, by_, SL, net):
+            """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
+            pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
+            win2 = (gr.cell(min(ax_, bx_) - 8, min(ay_, by_) - 8), gr.cell(max(ax_, bx_) + 8, max(ay_, by_) + 8)); win2 = ((max(0, win2[0][0]), max(0, win2[0][1])), (min(gr.NX - 1, win2[1][0]), min(gr.NY - 1, win2[1][1])))
+            if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G: seg(ax_, ay_, bx_, by_, SL, net); return True   # the offset end already sits on the pad
+            sp = stub_path(gr, pm.copy(), (ax_, ay_), (bx_, by_), win2) if pm is not None else None
+            if sp and len(sp) >= 2:
+                for k in range(len(sp) - 1): seg(sp[k][0], sp[k][1], sp[k + 1][0], sp[k + 1][1], SL, net)
+                seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net); return True
+            if os.environ.get("PAIR_DEBUG") and pm is not None:   # the stub map around the goal, one character per cell (S start, G goal, # forbidden)
+                js, is_ = gr.cell(ax_, ay_); jg, ig = gr.cell(bx_, by_); r = 20
+                print("pair_preroute: stub %s on %s from (%.2f, %.2f) [%s] to (%.2f, %.2f) [%s], 4 mm around the goal:" % (net.GetNetname(), b.GetLayerName(SL), ax_, ay_, "free" if pm[is_, js] else "BLOCKED", bx_, by_, "free" if pm[ig, jg] else "BLOCKED"))
+                for i in range(ig - r, ig + r + 1, 2):
+                    rowtxt = ""
+                    for j in range(jg - r, jg + r + 1):
+                        if not (0 <= i < gr.NY and 0 <= j < gr.NX): rowtxt += " "; continue
+                        rowtxt += "S" if (abs(i - is_) <= 1 and abs(j - js) <= 1) else ("G" if (i, j) == (ig, jg) else ("." if pm[i, j] else "#"))
+                    print("   " + rowtxt)
+            return False   # no blind straight piece (it shorted J_HARN1's pin 4 on D9)
+        def via_site(ex_, ey_, px_, py_, L, aL, net, away):
+            """A free single-via site near the offset end (ex_, ey_): the nearest cell of via1 that is also clear on both layers' leg maps, preferring the
+            side away from the other leg (unit vector `away`) and the direction of the pad; None when nothing within 3 mm."""
+            cands = []
+            for r10 in range(4, 31):
+                r = r10 / 10.0
+                for a10 in range(0, 360, 15):
+                    a = math.radians(a10); cx_, cy_ = ex_ + r * math.cos(a), ey_ + r * math.sin(a); jj, ii = gr.cell(cx_, cy_)
+                    if not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or via1n[net.GetNetname()][ii, jj]: continue
+                    if L in trk1[net.GetNetname()] and trk1[net.GetNetname()][L][ii, jj]: continue
+                    if aL in trk1[net.GetNetname()] and trk1[net.GetNetname()][aL][ii, jj]: continue
+                    score = r - 0.5 * ((cx_ - ex_) * away[0] + (cy_ - ey_) * away[1]) / r + 0.3 * math.hypot(cx_ - px_, cy_ - py_) / 10.0
+                    cands.append((score, cx_, cy_))
+            cands.sort(); return [(c[1], c[2]) for c in cands[:12]]   # the best twelve, tried in order until a hop path exists
+        def via_hop(ex_, ey_, px_, py_, L, aL, net, away):
+            """A via site with a hop path from the offset end on L: (vx, vy) or None; the hop is laid."""
+            for vx_, vy_ in via_site(ex_, ey_, px_, py_, L, aL, net, away):
+                if stub(ex_, ey_, vx_, vy_, L, net): return (vx_, vy_)
+            return None
         for (pa, na), (pb, nb) in sections:
             A = [anchor(pa), anchor(na)]; B = [anchor(pb), anchor(nb)]
             sx, sy = (A[0][0] + A[1][0]) / 2, (A[0][1] + A[1][1]) / 2; gx, gy = (B[0][0] + B[1][0]) / 2, (B[0][1] + B[1][1]) / 2
@@ -378,9 +417,11 @@ def main(a):
                 dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0
                 nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_   # outward
+                padL = [L for L in layers if all(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(L) for q in st)]   # an SMD station's end sits where its own layer is free
+                Ls_ = padL or list(layers)   # (8 Sep 2026 12:53: an end free on In2 only, inside the top-layer keep-away between two stations 2.4 mm apart, left the corridor no start)
                 for step in range(int(out_ * 10), 121):
                     cx_, cy_ = mx_ + nx_ * 0.1 * step, my_ + ny_ * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
-                    if 0 <= ii - 3 and ii + 3 < gr.NY and 0 <= jj - 3 and jj + 3 < gr.NX and any(not trk[L][ii - 3:ii + 4, jj - 3:jj + 4].any() for L in layers): return cx_, cy_
+                    if 0 <= ii - 3 and ii + 3 < gr.NY and 0 <= jj - 3 and jj + 3 < gr.NX and any(not trk[L][ii - 3:ii + 4, jj - 3:jj + 4].any() for L in Ls_): return cx_, cy_
                 return mx_ + nx_ * out_, my_ + ny_ * out_
             gx0, gy0 = gx, gy
             def entry_station0(st):
@@ -411,7 +452,9 @@ def main(a):
                         u = k * gr.G / ln_ if ln_ else 0
                         if u * ln_ < 0.9 or (not fineF and (1 - u) * ln_ < 0.9): continue   # inside a station's own pad space
                         jj, ii = gr.cell(x1_ + u * (x2_ - x1_), y1_ + u * (y2_ - y1_))
-                        if pm_ is not None and 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]: ok_ = False
+                        if pm_ is not None and 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]:
+                            if ok_ and os.environ.get("PAIR_DEBUG"): print("pair_preroute: direct leg of %s blocked on F.Cu at (%.2f, %.2f), %.1f mm along the %.1f mm leg" % (net.GetNetname(), x1_ + u * (x2_ - x1_), y1_ + u * (y2_ - y1_), u * ln_, ln_))
+                            ok_ = False
                 def isx_(a_, b_, c_, d_):
                     def ccw(p1_, p2_, p3_): return (p3_[1] - p1_[1]) * (p2_[0] - p1_[0]) > (p2_[1] - p1_[1]) * (p3_[0] - p1_[0])
                     return ccw(a_, c_, d_) != ccw(b_, c_, d_) and ccw(a_, b_, c_) != ccw(a_, b_, d_)
@@ -597,44 +640,6 @@ def main(a):
             if len(last_pts) == 1: last_pts = last_pts * 2
             lp0, ln0 = offset_polyline(first_pts, d * p_side)[0], offset_polyline(first_pts, -d * p_side)[0]
             lp1, ln1 = offset_polyline(last_pts, d * p_side)[-1], offset_polyline(last_pts, -d * p_side)[-1]
-            def stub(ax_, ay_, bx_, by_, SL, net):
-                """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
-                pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
-                win2 = (gr.cell(min(ax_, bx_) - 8, min(ay_, by_) - 8), gr.cell(max(ax_, bx_) + 8, max(ay_, by_) + 8)); win2 = ((max(0, win2[0][0]), max(0, win2[0][1])), (min(gr.NX - 1, win2[1][0]), min(gr.NY - 1, win2[1][1])))
-                if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G: seg(ax_, ay_, bx_, by_, SL, net); return True   # the offset end already sits on the pad
-                sp = stub_path(gr, pm.copy(), (ax_, ay_), (bx_, by_), win2) if pm is not None else None
-                if sp and len(sp) >= 2:
-                    for k in range(len(sp) - 1): seg(sp[k][0], sp[k][1], sp[k + 1][0], sp[k + 1][1], SL, net)
-                    seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net); return True
-                if os.environ.get("PAIR_DEBUG") and pm is not None:   # the stub map around the goal, one character per cell (S start, G goal, # forbidden)
-                    js, is_ = gr.cell(ax_, ay_); jg, ig = gr.cell(bx_, by_); r = 20
-                    print("pair_preroute: stub %s on %s from (%.2f, %.2f) [%s] to (%.2f, %.2f) [%s], 4 mm around the goal:" % (net.GetNetname(), b.GetLayerName(SL), ax_, ay_, "free" if pm[is_, js] else "BLOCKED", bx_, by_, "free" if pm[ig, jg] else "BLOCKED"))
-                    for i in range(ig - r, ig + r + 1, 2):
-                        rowtxt = ""
-                        for j in range(jg - r, jg + r + 1):
-                            if not (0 <= i < gr.NY and 0 <= j < gr.NX): rowtxt += " "; continue
-                            rowtxt += "S" if (abs(i - is_) <= 1 and abs(j - js) <= 1) else ("G" if (i, j) == (ig, jg) else ("." if pm[i, j] else "#"))
-                        print("   " + rowtxt)
-                return False   # no blind straight piece (it shorted J_HARN1's pin 4 on D9)
-            def via_site(ex_, ey_, px_, py_, L, aL, net, away):
-                """A free single-via site near the offset end (ex_, ey_): the nearest cell of via1 that is also clear on both layers' leg maps, preferring the
-                side away from the other leg (unit vector `away`) and the direction of the pad; None when nothing within 3 mm."""
-                cands = []
-                for r10 in range(4, 31):
-                    r = r10 / 10.0
-                    for a10 in range(0, 360, 15):
-                        a = math.radians(a10); cx_, cy_ = ex_ + r * math.cos(a), ey_ + r * math.sin(a); jj, ii = gr.cell(cx_, cy_)
-                        if not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or via1n[net.GetNetname()][ii, jj]: continue
-                        if L in trk1[net.GetNetname()] and trk1[net.GetNetname()][L][ii, jj]: continue
-                        if aL in trk1[net.GetNetname()] and trk1[net.GetNetname()][aL][ii, jj]: continue
-                        score = r - 0.5 * ((cx_ - ex_) * away[0] + (cy_ - ey_) * away[1]) / r + 0.3 * math.hypot(cx_ - px_, cy_ - py_) / 10.0
-                        cands.append((score, cx_, cy_))
-                cands.sort(); return [(c[1], c[2]) for c in cands[:12]]   # the best twelve, tried in order until a hop path exists
-            def via_hop(ex_, ey_, px_, py_, L, aL, net, away):
-                """A via site with a hop path from the offset end on L: (vx, vy) or None; the hop is laid."""
-                for vx_, vy_ in via_site(ex_, ey_, px_, py_, L, aL, net, away):
-                    if stub(ex_, ey_, vx_, vy_, L, net): return (vx_, vy_)
-                return None
             def end_crossing(P, Nn, lp_, ln_):
                 """The stubs of an end cross when the P pad lies on the other side of the leg-pair axis than the P leg's offset end."""
                 ux, uy = ln_[0] - lp_[0], ln_[1] - lp_[1]   # across the legs, P to N
