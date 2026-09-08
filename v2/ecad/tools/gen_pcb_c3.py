@@ -79,9 +79,12 @@ for ref, (x, y) in L.LEAD_LANDS: FIXED[ref] = (x, y, 0, True)
 # Q4 and its two gate resistors sit on the underside beside the sounder now; the gate net PWM1 is the long one instead, which is a 100 ohm
 # series line into a FET gate and does not care.
 _sx, _sy = L.SOUNDER[1]
-FIXED["Q4"] = (_sx + 24.0, _sy, 0, True)
+# In a column between the two things that own this corner: BZ1's own 30 mm keep-out reaches x -134, and J_HSJ1's 16 mm jack hole at
+# (-118, -101) reaches about x -128, so the parts sit at x -131 inside the bottom strip (y -114 to -88). The first attempt put them at
+# _sx + 24 and landed on the jack: six mask bridges and three courtyard overlaps, caught by the pre-route DRC (9 Sep 2026 00:40).
+FIXED["Q4"] = (_sx + 18.0, _sy + 2.0, 0, True)
 _q4g = [r for r, pin in (nets.get("Q4_G") or nets.get("/Q4_G") or []) if r.startswith("R")]
-for _i, _r in enumerate(sorted(_q4g)[:2]): FIXED[_r] = (_sx + 27.5 + 3.2 * _i, _sy, 90, True)
+for _i, _r in enumerate(sorted(_q4g)[:2]): FIXED[_r] = (_sx + 18.0, _sy - 2.0 - 4.0 * _i, 0, True)
 
 PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1", "J_HSJ1", "J_HSJ2", "CAM_H1", "CAM_H2"}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
