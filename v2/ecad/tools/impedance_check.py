@@ -9,12 +9,18 @@ parallel segment) and the closed-form impedance is computed against the stackup 
 The reference plane is the nearest copper layer above or below that carries a filled zone of GND or a power net under the segment; a segment
 with no plane under it on either side is reported as UNREFERENCED (the return-path check of intent_checks.py owns that class); a pair whose
 legs run more than three widths apart is UNCOUPLED (Freerouting has no differential-pair routing: found on every released board, 8 Sep 2026).
+The pin fans are not judged: a segment within FAN_MM (3.0 mm) of a pad of the pair's nets is fan length, reported and left out of the
+fraction, the median and the unreferenced count (USB 2.0 high speed rises in about 500 ps, 75 mm of FR-4 trace; a 3 mm feature is a
+twenty-fifth of that edge and the specification itself allows short uncoupled pin regions; 8 Sep 2026, D9's pairs measured 89 ohm on their
+runs and lost on their fans). Up to UNREF_MM (3.0 mm) of unreferenced length outside the fans is a NOTE, more is UNREFERENCED. A pair with
+less than SHORT_MM (5 mm) of judged length is SHORT and counts as met: there is no coupled run to judge (D9's USB2 is 2.4 mm of fans).
 Closed-form accuracy is about 5 to 10 percent; a pair reported MISSED goes to openEMS (Antmicro's kicad-si-simulation-wrapper), never to a
 hand-typed number. Self-check (--selftest): a 50 ohm microstrip on FR-4 (er 4.4) needs w/h about 1.8 to 2.0, and the two formulas agree on a
 standard case; JLCPCB's calculator values are the reference the record still owes.
 
 Usage: impedance_check.py <board.kicad_pcb> [--tolerance 0.10] [--json out.json]   -> one line per pair, `impedance: N of M pairs within tol`, exit 1 on a miss."""
 import sys, os, re, math, json
+FAN_MM, UNREF_MM, SHORT_MM = 3.0, 3.0, 5.0   # the pin-fan radius left unjudged, the unreferenced length allowed, the judged length under which a pair is SHORT (docstring)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def z_microstrip(w, h, t, er): return 87.0 / math.sqrt(er + 1.41) * math.log(5.98 * h / (0.8 * w + t))
@@ -80,13 +86,16 @@ def main(a):
         cl = cls_of(pr + "_P") or "Default"; target = classes.get(cl, {}).get("z_diff")
         if not target: continue
         p, n = segs.get(pr + "_P", []) or segs.get("/" + pr + "_P", []), segs.get(pr + "_N", []) or segs.get("/" + pr + "_N", [])
-        if not p or not n: results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0)); continue
-        tot = 0.0; ok_len = 0.0; unref = 0.0; zs = []; gaps = []
+        if not p or not n: results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
+        tot = 0.0; ok_len = 0.0; unref = 0.0; zs = []; gaps = []; fan = 0.0
+        pnets = {pr + "_P", pr + "_N", "/" + pr.lstrip("/") + "_P", "/" + pr.lstrip("/") + "_N"}
+        ppads = [q.GetPosition() for f in b.GetFootprints() for q in f.Pads() if q.GetNetname() in pnets]
         for sp in p:
             L = sp.GetLayer(); ln = b.GetLayerName(L); w = sp.GetWidth() / 1e6; length = sp.GetLength() / 1e6
             if length < 0.2: continue
             # the partner's nearest parallel segment on the same layer
             mid = (sp.GetStart() + sp.GetEnd()); mx, my = mid.x / 2, mid.y / 2
+            if any(math.hypot(mx - q.x, my - q.y) / 1e6 <= FAN_MM for q in ppads): fan += length; continue   # a pin fan: not judged
             best = None
             for sn in n:
                 if sn.GetLayer() != L: continue
@@ -116,7 +125,9 @@ def main(a):
             else: unref += length; continue
             zs.append(z)
             if abs(z - target) <= tol * target: ok_len += length
-        if not tot: results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0)); continue
+        if not tot and not fan: results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
+        if tot < SHORT_MM:   # no coupled run to judge: the pair is its fans (a series resistor beside its chip)
+            checked += 1; results.append((pr, cl, target, None, 1.0, 0.0, "SHORT", None, 0, fan)); continue
         zz = [z for z in zs if z]; med = sorted(zz)[len(zz) // 2] if zz else None; frac = ok_len / tot
         # the length-weighted median gap between the legs: a pair the router laid as two lone traces (Freerouting has no pair routing) shows a gap of millimetres
         gaps.sort(); acc = 0.0; gmed = None
@@ -125,14 +136,14 @@ def main(a):
             if acc >= sum(x[1] for x in gaps) / 2: gmed = g; break
         wmed = sorted(sp.GetWidth() / 1e6 for sp in p)[len(p) // 2]
         uncoupled = gmed is None or gmed > 3 * wmed
-        verdict = "MET" if frac >= 0.9 and unref == 0 else ("UNCOUPLED" if uncoupled else ("UNREFERENCED" if unref > 0 else "MISSED"))
+        verdict = "MET" if frac >= 0.9 and unref <= UNREF_MM else ("UNCOUPLED" if uncoupled else ("UNREFERENCED" if unref > UNREF_MM else "MISSED"))
         if verdict != "MET": miss += 1
-        checked += 1; results.append((pr, cl, target, med, frac, unref, verdict, gmed, wmed))
-    for pr, cl, target, med, frac, unref, v, gmed, wmed in results:
-        print("impedance: %-12s %-14s class %-8s target %3.0f ohm, median %s ohm, %3.0f%% of the length within %d%%, legs %s mm apart at w %.2f, unreferenced %.1f mm" % (v, pr, cl, target, ("%.0f" % med) if med else "-", frac * 100, tol * 100, ("%.2f" % gmed) if gmed is not None else "-", wmed or 0, unref))
+        checked += 1; results.append((pr, cl, target, med, frac, unref, verdict, gmed, wmed, fan))
+    for pr, cl, target, med, frac, unref, v, gmed, wmed, fan in results:
+        print("impedance: %-12s %-14s class %-8s target %3.0f ohm, median %s ohm, %3.0f%% of the length within %d%%, legs %s mm apart at w %.2f, unreferenced %.1f mm, fans %.1f mm" % (v, pr, cl, target, ("%.0f" % med) if med else "-", frac * 100, tol * 100, ("%.2f" % gmed) if gmed is not None else "-", wmed or 0, unref, fan))
     print("impedance: %d of %d pairs with a target within %d%% on the analytical model (%d unrouted; %d pairs on the board)" % (checked - miss, checked, tol * 100, sum(1 for r in results if r[6] == "UNROUTED"), len(pairs)))
     if any(er is None for _, k, _, er in stack if k != "copper"): print("impedance: FAIL a dielectric without epsilon_r in the stackup"); return 1
-    if "--json" in a: json.dump([dict(pair=r[0], cls=r[1], target=r[2], median=r[3], fraction=r[4], unreferenced_mm=r[5], verdict=r[6], gap_mm=r[7], width_mm=r[8]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
+    if "--json" in a: json.dump([dict(pair=r[0], cls=r[1], target=r[2], median=r[3], fraction=r[4], unreferenced_mm=r[5], verdict=r[6], gap_mm=r[7], width_mm=r[8], fan_mm=r[9]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
     return 1 if miss else 0
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
