@@ -17,7 +17,13 @@ for v in d["violations"]:
     hits = [(i, t) for i in items for t in at(i["pos"]) if i.get("description", "").startswith(("Track", "Via"))]
     if not hits: continue
     # drop the escape of the item listed second (the DRC lists the pair; one pruned pad frees the other)
-    i, t = hits[-1]
+    # Prune the ESCAPE, never the pre-routed pair. Both are locked, so "locked" cannot tell them apart; length can. An escape piece is a
+    # stub of a millimetre or two from a pad to its via, a pre-routed differential leg is tens of millimetres, and on B17 this tool was
+    # deleting 34 mm pair legs that the pair pre-router had just laid to a controlled geometry (9 Sep 2026 01:00, MESHSAT-862). Among the
+    # locked items the DRC names, take the shortest; a via counts as a short piece because it is one.
+    def _len(tr):
+        return 0.3 if tr.GetClass() == "PCB_VIA" else math.hypot(tr.GetStart().x - tr.GetEnd().x, tr.GetStart().y - tr.GetEnd().y) / 1e6
+    i, t = min(hits, key=lambda h: _len(h[1]))
     # 8 Sep 2026 (MESHSAT-862): record WHY, not only what. 118 of B17's pads lost their escape with nothing in the log to say what they
     # collided with, so the placement could not be corrected. The counterparty is the other item of the DRC pair.
     other = next((o for o in items if o is not i), None)
