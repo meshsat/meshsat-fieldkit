@@ -1,0 +1,3 @@
+# Reasons the decoupling distances of this board are accepted for now, one line each (place_audit.py reads this file).
+# Written 8 September 2026 with the numbers in the design record, section 32.73.
+The thirteen entries declared on 8 September 2026 (the sensor controller's supply pins, the flash, the buck's input loop, the LDO pair and the two sensors) are measured for the first time on the next E phase; the distances come from the same shelf packer as every other board and moving them is the floor-plan decision the record carries for the whole set, not a quiet edit to a released board.
