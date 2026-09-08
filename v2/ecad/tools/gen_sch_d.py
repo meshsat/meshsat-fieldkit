@@ -16,6 +16,9 @@ the PTT logic in single-gate 74LVC1G parts (KEY = any PTT AND TX_INHIBIT_n; PA_K
 """
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-d-aprs"
+import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import intent as _intent
+_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", note="the mezzanine's 5 V from A22")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
@@ -141,7 +144,9 @@ def synth(ref, name, value, fp, nets, lcsc=""):
     full = {str(k): nets.get(k, nets.get(str(k), "NC")) for k in SYNTH[name]}
     part(ref, "Connector_Generic", name, value, fp, full, lcsc)
 def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
-def c(ref, val, a, b, fp="C", lcsc=""): part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
+    part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+    if bypass: _intent.bypass(ref, bypass[0], bypass[1])   # 8 Sep 2026 (MESHSAT-862): the pin this capacitor serves, for the decoupling gate
 def led(ref, colour, anode, cathode): part(ref, "Device", "LED", colour, "LED", {"2": anode, "1": cathode})
 def nfet(ref, gate, source, drain, value="2N7002"): part(ref, "Transistor_FET", "2N7002", value, "SOT23", {"1": gate, "2": source, "3": drain}, "C8545")   # 1 G 2 S 3 D (SOT-23 order, appendix 32.36)
 def level(ref, rn, far, near, near_rail, far_rail=None, rf=None):
@@ -353,3 +358,4 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+_intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json

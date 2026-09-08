@@ -134,4 +134,7 @@ for k, r in R.items():
     check(all(rect_circle_clear(r, rod, 4.5) for rod in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]), "%s clear of the 9 mm nut keep-outs" % k)
 check(b.GetCopperLayerCount() == 6, "6 copper layers (B16, JLC06161H-3313)")
 check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
+# 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
+if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
+    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic; print(_ic.run(b, check, sys.argv[1]))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

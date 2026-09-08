@@ -6,8 +6,8 @@
 exec > /root/setup.log 2>&1; set -x
 export DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 touch /root/.no_auto_tmux
-apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy xvfb openjdk-25-jre rsync unzip procps || { echo "SETUP-FAILED apt"; exit 1; }
-add-apt-repository -y ppa:kicad/kicad-9.0-releases && apt-get update && apt-get install -y --no-install-recommends kicad || { echo "SETUP-FAILED kicad"; exit 1; }
+apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy xvfb openjdk-25-jre rsync unzip zip procps || { echo "SETUP-FAILED apt"; exit 1; }
+add-apt-repository -y ppa:kicad/kicad-9.0-releases && apt-get update && apt-get install -y --no-install-recommends kicad kicad-symbols kicad-footprints || { echo "SETUP-FAILED kicad"; exit 1; }
 mkdir -p /root/bin
 curl -fsSL -o /root/bin/freerouting-1.9.0.jar https://github.com/freerouting/freerouting/releases/download/v1.9.0/freerouting-1.9.0.jar || { echo "SETUP-FAILED download19"; exit 1; }
 curl -fsSL -o /root/bin/freerouting-2.4.1.jar https://github.com/freerouting/freerouting/releases/download/v2.4.1/freerouting-2.4.1.jar || { echo "SETUP-FAILED download24"; exit 1; }

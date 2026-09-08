@@ -39,4 +39,7 @@ for ref in ("U2", "K1", "J_HARN1", "J_HS1", "J_HS2"):
     if f is None: continue
     r = f.GetBoundingBox(False, False); under = [g.GetReference() for g in b.GetFootprints() if g.IsFlipped() and r.Contains(g.GetPosition())]
     check(not under, "no underside part under %s%s" % (ref, "" if not under else ": " + ",".join(under[:6])))
+# 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
+if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
+    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic; print(_ic.run(b, check, sys.argv[1]))
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)

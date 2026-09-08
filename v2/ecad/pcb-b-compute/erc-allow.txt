@@ -1,0 +1,4 @@
+# ERC allow-list for B16 (erc_gate.py, MESHSAT-862). One rule per line: type or type|substring, then a reason after #. A line without a reason is ignored.
+pin_to_pin|#FLG   # the generator puts a PWR_FLAG on every regulator output net; KiCad reports the flag against the regulator's own Power-output pin (one driver on the net)
+pin_not_driven|UIM-RESET   # the M.2 socket symbol declares the UIM lines as inputs; the 5G module drives SIM1_RST, the SIM card is passive
+power_pin_not_driven|J_SIM   # SIM1_VCC and SIM2_VCC come from the module's UIM-PWR pins (the socket symbol types them Passive), not from a regulator on this board

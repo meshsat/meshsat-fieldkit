@@ -5,6 +5,10 @@ Usage: gen_sch_e.py <out.kicad_sch> <project-name>
 """
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-e1-dock"
+import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import intent as _intent
+_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", note="the pack node after the 25 A blade F3, to the block pads")
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", note="shore and vehicle entry after the filter choke, 10 A fuse")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers
@@ -97,7 +101,9 @@ P = []
 def part(ref, lib, sym, value, fp, nets, lcsc=""):
     P.append(dict(ref=ref, lib=lib, sym=sym, value=value, fp=FP.get(fp, fp), nets=nets, lcsc=lcsc))
 def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
-def c(ref, val, a, b, fp="C", lcsc=""): part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
+    part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+    if bypass: _intent.bypass(ref, bypass[0], bypass[1])   # 8 Sep 2026 (MESHSAT-862): the pin this capacitor serves, for the decoupling gate
 def tp(ref, net): part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
 # ================================================================ E6 (7 Sep 2026, appendix 32.55 to 32.57, MESHSAT-830): the dock strip of the A22 generation. It carries the BB-2590/U cable entry
 # and its 25 A blade to the raised block, the vehicle and shore entry (10 A blade, LM74700 ideal diode, LM5069 hot-swap with under and over-voltage limits, the input filter) to the
@@ -339,3 +345,4 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+_intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json

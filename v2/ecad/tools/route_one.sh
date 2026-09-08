@@ -87,9 +87,15 @@ PY
 python3 ../tools/net_tie.py "$W/$N.kicad_pcb" >/dev/null
 kicad-cli pcb drc --severity-all --format json -o "$W/drc.json" "$W/$N.kicad_pcb" >/dev/null 2>&1
 python3 - "$W" <<'PY'
-import json, sys, collections
-d = json.load(open(sys.argv[1] + "/drc.json")); c = collections.Counter(v["type"] for v in d["violations"])
-hard = sum(c[t] for t in ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance")); unr = len(d.get("unconnected_items", []))
+import json, sys, collections, os as _os
+sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)) if "__file__" in dir() else ".", "..", "tools"))
+sys.path.insert(0, _os.path.abspath(_os.path.join(_os.getcwd(), "..", "tools"))); sys.path.insert(0, _os.path.abspath(_os.path.join(_os.getcwd(), "tools")))
+d = json.load(open(sys.argv[1] + "/drc.json"))
+try:
+    import hardset; _c = hardset.counts(d); hard = _c["hard"]   # 8 Sep 2026 (MESHSAT-862): the one hard set scores the attempt too
+except ImportError:
+    c = collections.Counter(v["type"] for v in d["violations"]); hard = sum(c[t] for t in ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance"))
+unr = len(d.get("unconnected_items", []))
 import re
 s = open(sys.argv[1] + "/fr.log").read(); vias = len(re.findall(r"^\s*\(via ", open(sys.argv[1] + "/" + [f for f in __import__("os").listdir(sys.argv[1]) if f.endswith(".ses")][0]).read(), re.M)) if any(f.endswith(".ses") for f in __import__("os").listdir(sys.argv[1])) else 9999
 open(sys.argv[1] + "/score.txt", "w").write("%d %d %d\n" % (hard, unr, vias)); print("score: hard %d unrouted %d vias %d" % (hard, unr, vias))

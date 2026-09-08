@@ -17,6 +17,11 @@ the XT60 that lands on E6's J_BATT), the blade holder F1. Two layers, 2 oz coppe
 """
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-p-pack"
+import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import intent as _intent
+_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", note="the pack lead")
+_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP", note="the top cell node from the block strip")
+_intent.rail("FUSED", 14.4, 10.0, 18.0, "F1", note="after the blade fuse")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
@@ -147,7 +152,9 @@ def synth(ref, name, value, fp, nets, lcsc=""):
     full = {str(k): nets.get(k, nets.get(str(k), "NC")) for k in SYNTH[name]}
     part(ref, "Connector_Generic", name, value, fp, full, lcsc)
 def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
-def c(ref, val, a, b, fp="C", lcsc=""): part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
+    part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+    if bypass: _intent.bypass(ref, bypass[0], bypass[1])   # 8 Sep 2026 (MESHSAT-862): the pin this capacitor serves, for the decoupling gate
 def led(ref, colour, anode, cathode): part(ref, "Device", "LED", colour, "LED", {"2": anode, "1": cathode})
 def nfet(ref, gate, source, drain, value="2N7002"): part(ref, "Transistor_FET", "2N7002", value, "SOT23", {"1": gate, "2": source, "3": drain}, "C8545")   # 1 G 2 S 3 D (SOT-23 order, appendix 32.36)
 def level(ref, rn, far, near, near_rail, far_rail=None, rf=None):
@@ -293,3 +300,4 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+_intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json

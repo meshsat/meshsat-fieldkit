@@ -17,6 +17,11 @@ J_AB1 (2x13, underside). Every radio is a USB device of one hub; the kit I2C bus
 """
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-b-compute"
+import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import intent as _intent
+for _n in ("1", "2", "3"): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, "J_5V_S%s" % _n, note="slot rail from A22 (JST-VH); the CM5 draws up to 5 A")
+_intent.rail("+5V_DEV", 5.0, 3.0, 6.0, "J_5V_DEV", note="the device rail from A22")
+_intent.rail("GND", 0.0, 10.0, 21.0, "J_5V_S1", note="the return of every rail")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
@@ -160,7 +165,9 @@ def synth(ref, name, value, fp, nets, lcsc=""):
     full = {str(k): nets.get(k, nets.get(str(k), "NC")) for k in SYNTH[name]}
     part(ref, "Connector_Generic", name, value, fp, full, lcsc)
 def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
-def c(ref, val, a, b, fp="C", lcsc=""): part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
+    part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
+    if bypass: _intent.bypass(ref, bypass[0], bypass[1])   # 8 Sep 2026 (MESHSAT-862): the pin this capacitor serves, for the decoupling gate
 def led(ref, colour, anode, cathode): part(ref, "Device", "LED", colour, "LED", {"2": anode, "1": cathode})
 def nfet(ref, gate, source, drain, value="2N7002"): part(ref, "Transistor_FET", "2N7002", value, "SOT23", {"1": gate, "2": source, "3": drain}, "C8545")   # 1 G 2 S 3 D (SOT-23 order, appendix 32.36)
 def level(ref, rn, far, near, near_rail, far_rail=None, rf=None):
@@ -581,3 +588,4 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+_intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json

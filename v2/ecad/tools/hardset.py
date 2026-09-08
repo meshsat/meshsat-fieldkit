@@ -6,8 +6,8 @@ HARD_POST and HARD_PRE are the same fifteen types (the register of 8 Sep 2026 fo
 courtyards_overlap, via_diameter, drill_out_of_range and items_not_allowed in no post-route set); `pre` and `post` are accepted for the callers' record.
 REPORT: computed and printed with counts, never blocking (the record reads them; a jump is a symptom, appendix 32.33).
 Two exemptions, both about one footprint against itself: a courtyard overlap of a footprint's own two courtyard polygons (the Wuerth USB 3
-receptacle) and a solder-mask bridge between two pads of the same fine-pitch part (JLC gang-masks under its 0.2 mm dam; a bridge between
-different parts or pad to track stays hard).
+receptacle) and a solder-mask bridge inside one footprint (two pads of a fine-pitch part, which JLC gang-masks, or a library mask drawing over its
+own pad; a bridge between different parts or pad to track stays hard).
 
 Usage: hardset.py <drc.json> [pre|post] [--score FILE] [--gate FILE] [--flag FILE] [--label TEXT] [--examples N]
   prints  hardset: hard H of T types {type: n} unrouted U | report {type: n}
@@ -35,7 +35,7 @@ def exempt(v):
     a, c = _fp_of(items[0]), _fp_of(items[1])
     if not a or a != c: return False
     if v["type"] == "courtyards_overlap": return True
-    if v["type"] == "solder_mask_bridge" and all(i.get("description", "").startswith("Pad") for i in items): return True
+    if v["type"] == "solder_mask_bridge": return True   # two pads of one part (JLC gang-masks) or a part's own mask drawing over its pad (the U.FL library footprint)
     return False
 
 def load(path):
