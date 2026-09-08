@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""PCB-A phase A22 (MESHSAT-830, 7 Sep 2026): bring the schematic netlist into the mechanical board of gen_pcb_a.py.
+"""PCB-A phase A23 (MESHSAT-862 rule 3, 8 Sep 2026; A22 of MESHSAT-830 before it): bring the schematic netlist into the mechanical board of gen_pcb_a.py,
+and lay every rail's current in locked copper (islands, bottom bands, stitch vias) built from the placed pads, judged by dc_drop.py (appendix 32.67, 32.69).
 Usage: gen_pcb_b3.py <board.kicad_pcb> <netlist.net>
 - reuses footprints already on the board by reference (J_GPIO1, J_RTL1, J_ZB1, J_DCF77)
 - places connectors at planned case-frame positions, small parts packed into regions near their connectors
@@ -66,8 +67,13 @@ RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 100]
 FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
-         "U4": (-60, 66, 0), "U5": (-44, 66, 0), "U6": (-28, 66, 0), "U7": (-12, 66, 0), "L3": (-58, 54, 0), "L4": (-42, 54, 0), "L5": (-26, 54, 0), "L6": (-10, 54, 0), "U8": (-63, 28, 0), "U9": (-51, 28, 0), "U10": (-39, 28, 0), "U11": (-27, 28, 0), "U14": (-15, 28, 0),
-         "J_5V_S1": (-56, 75, 0), "J_5V_S2": (-44, 75, 0), "J_5V_S3": (-32, 75, 0), "J_5V_DEV": (-20, 75, 0),
+         # A23: the converters south of their inductors, the rail column runs north to the connector
+         "U4": (-60, 47, 0), "U5": (-44, 47, 0), "U6": (-28, 47, 0), "U7": (-12, 47, 0), "L3": (-58, 54, 0), "L4": (-42, 54, 0), "L5": (-26, 54, 0), "L6": (-10, 54, 0), "U8": (-62, 67, 0), "U9": (-46, 67, 0), "U10": (-30, 67, 0), "U11": (-14, 67, 0), "U14": (20, -4.5, 0),
+         "J_5V_S1": (-51, 75, 0), "J_5V_S2": (-35, 75, 0), "J_5V_S3": (-19, 75, 0), "J_5V_DEV": (-3, 75, 0),   # A23: pin 1 (the rail) at x = inductor + 5, over the shunt's column
+         "R31": (-53, 66, 90), "R35": (-37, 66, 90), "R39": (-21, 66, 90), "R43": (-5, 66, 90),   # A23: the slot shunts (inductor x + 5) stand in their rail columns between the output caps and the connector
+         "R55": (4, -11.5, 0), "C65": (11, -11.5, 90), "C66": (14.5, -11.5, 90), "C67": (18, -11.5, 90),   # A23: the PA shunt R55 (the LM5176 ISNS resistor; R56 is the CS resistor) and output caps at the head of the PA band
+         "Q2": (-108, 64.5, 0), "Q3": (-108, 57, 0), "C11": (-115, 64.5, 90), "C12": (-115, 59, 90),   # A23: the front end's input FETs and caps at the head of the VIN_RAW band (Q2 clear of the rod nut at (-110.5, 73))
+         "Q11": (-60, -8, 0), "C63": (-54, -8, 90), "C64": (-50.5, -8, 90),   # A23: the PA stage's input FET and caps at the end of the VBAT spur
          "U13": (-44, 6, 0), "L8": (-26, 4, 0), "U15": (-36, -27, 0), "L9": (-22, -27, 0), "U12": (-64, 10.5, 0), "L7": (-58, 10.5, 0), "U1": (-49, -28, 0),
          "U26": (-58, -28, 0), "U27": (-50, -19, 0), "U28": (-62, -19, 0),
          "U18": (10, 65, 0), "U19": (36, 64, 0), "L11": (56, 65, 0), "U21": (70, 66, 0), "U22": (80, 66, 0), "U23": (90, 66, 0),
@@ -90,19 +96,18 @@ for ref in comps:
 def lm5176_refs(qs, rs, cs): return list(qs) + list(rs) + list(cs)
 REGIONS = [
  ("NODE",  (-118, -68, -106, -44), ["C1", "C2", "C3", "D1", "R1", "TP14", "TP9"]),
- ("FEQ",   (-118, 46, -100, 70), ["Q2", "Q3", "Q4", "Q5"]),   # run 11: the FETs beside the controller U2 (-94, 56), their gate drives no longer cross the support passives (FE_HDRV1 and FE_BOOT1 open in runs 6 to 10)
- ("FES",   (-118, 33, -66, 46), ["R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R13", "R14", "R15", "R119", "C13", "C14", "C15", "TP12", "TP13", "R11", "R12", "C11", "C12", "D2"]),
- ("CHQ",   (-118, 22, -70, 33), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
+ ("FEQ",   (-118, 46, -100, 54), ["Q4", "Q5"]),   # A23: Q2, Q3 and the input caps are FIXED at the VIN_RAW band head; the region stays clear of the rod nut   # run 11: the FETs beside the controller U2 (-94, 56), their gate drives no longer cross the support passives (FE_HDRV1 and FE_BOOT1 open in runs 6 to 10)
+ ("FES",   (-118, 30, -66, 43), ["R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R13", "R14", "R15", "R119", "C13", "C14", "C15", "TP12", "TP13", "R11", "R12", "D2"]),
+ ("CHQ",   (-118, 18.5, -70, 30.5), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
  ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  ("POQ",   (-118, -48, -46, -32), ["Q17", "Q18", "Q19", "Q20", "R71", "R72", "C81", "C82", "C83", "C84", "C85"]),
  ("POS",   (-115, -17, -70, -6), ["R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R73", "R74", "R75", "R121", "U17"]),
- ("R1S",   (-66, 34, -50, 50), ["C28", "C31", "C32", "C33", "R28", "R29", "R30", "R45", "R129", "C112"]),
+ ("R1S",   (-61, 24, -49, 44), ["C28", "C31", "C32", "C33", "R28", "R29", "R30", "R45", "R129", "C112"]),
  ("VC1",   (-66, 58, -54, 63), ["C29", "C30"]), ("VC2", (-50, 58, -38, 63), ["C35", "C36"]), ("VC3", (-34, 58, -22, 63), ["C41", "C42"]), ("VC4", (-18, 58, -6, 63), ["C47", "C48"]),
- ("R2S",   (-50, 34, -34, 50), ["C34", "C37", "C38", "C39", "R32", "R33", "R34", "R46", "R130", "C113"]),
- ("R3S",   (-34, 34, -18, 50), ["C40", "C43", "C44", "C45", "R36", "R37", "R38", "R47", "R131", "C114"]),
- ("RDS",   (-18, 34, -2, 50), ["C46", "C49", "C50", "C51", "R40", "R41", "R42", "R44", "R115", "R132", "C115"]),
- ("SHUNT", (-66, 20, -14, 25.5), ["R31", "R35", "R39", "R43", "R56"]),
- ("PAQ",   (-66, -14, -16, -2), ["Q11", "Q12", "Q13", "Q14", "R55", "C63", "C64", "C65", "C66", "C67", "C54", "D3"]),
+ ("R2S",   (-45, 24, -33, 44), ["C34", "C37", "C38", "C39", "R32", "R33", "R34", "R46", "R130", "C113"]),
+ ("R3S",   (-29, 24, -17, 44), ["C40", "C43", "C44", "C45", "R36", "R37", "R38", "R47", "R131", "C114"]),
+ ("RDS",   (-13, 24, -1, 44), ["C46", "C49", "C50", "C51", "R40", "R41", "R42", "R44", "R115", "R132", "C115"]),
+ ("PAQ",   (-46, -15, -16, -2), ["Q12", "Q13", "Q14", "R56", "C54", "D3"]),   # A23: Q11, C63, C64 at the VBAT spur, C65 to C67 at the PA band
  ("PAS",   (-66, 13, -16, 20), ["R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R57", "R58", "R59", "R120"]),
  ("HFQ",   (-46, -48, -16, -34), ["Q15", "Q16", "Q23", "Q24", "R65", "R122"]),
  ("HFS",   (-16, -50, -2, -23), ["R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R123", "R124", "R125", "R126", "C74", "C108", "C109", "C110", "C111"]),
@@ -201,6 +206,77 @@ for L, nm in ((pcbnew.In4_Cu, "In4 solid ground: no tracks"),):   # the same rul
     z.SetLayer(L); z.SetZoneName(nm); o = z.Outline(); o.NewOutline()
     for x, y in ((-119, -79), (119, -79), (119, 79), (-119, 79)): p = P(x, y); o.Append(p.x, p.y)
     board.Add(z)
+# --- A23 power copper (MESHSAT-862 rule 3, 8 Sep 2026): every rail's current in locked copper built from the placed pads; judged by dc_drop.py on the filled board
+sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from power_copper import PowerCopper
+PC = PowerCopper(board, net_for, P)
+def case_xy(pos): return pos.x / 1e6 - OX, OY - pos.y / 1e6
+def net_pads(net, refs):
+    out = []
+    for r in refs:
+        fp = placed.get(r)
+        if fp is None: print("WARNING power copper: %s not placed" % r); continue
+        for pd in fp.Pads():
+            if pd.GetNetname() in (net, "/" + net): out.append(pd)
+    if not out: raise SystemExit("power copper: no pad of %s on %s" % (net, refs))
+    return out
+def pads_rect(pads, gx, gy=None):
+    gy = gx if gy is None else gy; xs, ys = [], []
+    for pd in pads:
+        bb = pd.GetBoundingBox(); xs += [bb.GetLeft() / 1e6 - OX, bb.GetRight() / 1e6 - OX]; ys += [OY - bb.GetBottom() / 1e6, OY - bb.GetTop() / 1e6]
+    return (min(xs) - gx, min(ys) - gy, max(xs) + gx, max(ys) + gy)
+def rect_pts(r): return [(r[0], r[1]), (r[2], r[1]), (r[2], r[3]), (r[0], r[3])]
+def row(net, x0, x1, y, n=3): PC.stitch(net, [(x0 + (x1 - x0) * k / (n - 1) if n > 1 else (x0 + x1) / 2, y) for k in range(n)])
+def col(net, x, y0, y1, n=3): PC.stitch(net, [(x, y0 + (y1 - y0) * k / (n - 1) if n > 1 else (y0 + y1) / 2) for k in range(n)])
+# 1. the four slot rails: converter output island (inductor OUT pad, output caps, shunt pad 1) with a bottom band; the rail after the shunt (shunt pad 2, connector pin 1) the same
+SLOT_CAPS = {"1": ["C29", "C30"], "2": ["C35", "C36"], "3": ["C41", "C42"], "D": ["C47", "C48"]}
+SLOT = [("1", -58, "L3", "R31", "J_5V_S1", "+5V_S1"), ("2", -42, "L4", "R35", "J_5V_S2", "+5V_S2"), ("3", -26, "L5", "R39", "J_5V_S3", "+5V_S3"), ("D", -10, "L6", "R43", "J_5V_DEV", "+5V_DEV")]
+for n, xL, Lr, Rr, Jr, out in SLOT:
+    so = "S%s_OUT" % n
+    net_pads(so, [Lr, Rr] + SLOT_CAPS[n])                                   # the parts exist and carry the net (a refusal otherwise)
+    ir = (xL - 8.7, 50.5, xL + 6.8, 64.9)                                    # the converter output: inductor, output caps, the shunt's pad 1; below the INA226's pin row (65.5)
+    PC.island(so, "S%s output" % n, rect_pts(ir), pcbnew.F_Cu, priority=3)
+    PC.band(so, "S%s output" % n, (xL + 1.5, 50.5, xL + 6.8, 64.9), (pcbnew.B_Cu,), priority=2)
+    row(so, xL + 2.0, xL + 6.2, 58.2, 4)                                     # between the inductor's north edge (57) and the caps' first row (59.3)
+    col(so, xL + 3.0, 60.0, 62.0, 2)                                         # beside the shunt's pad 1, east of the caps (to xL + 0.8)
+    orr = pads_rect(net_pads(out, [Rr, Jr]), 2.6, 1.0)                       # the rail: shunt pad 2 and the connector's rail pin
+    PC.island(out, "%s rail" % out, rect_pts(orr), pcbnew.F_Cu, priority=3)
+    PC.band(out, "%s rail" % out, orr, (pcbnew.B_Cu,), priority=2)
+    row(out, xL + 3.1, xL + 6.5, 72.6, 3)                                    # under the connector body, 2.4 mm from its pins
+# 2. the PA rail: the shunt's pad 2 and the output caps in an island at the head of a 4.5 mm bottom band east along y -11.5, north at x 104, into J_PA's pin 1
+pa = "+13V8_PA"; pr = pads_rect(net_pads(pa, ["R55", "C65", "C66", "C67"]), 1.2, 1.0)
+PC.island(pa, "PA rail head", rect_pts((pr[0], pr[1], pr[2] + 2.5, pr[3])), pcbnew.F_Cu, priority=3)
+jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
+PC.band(pa, "PA rail east", (pr[2] - 0.5, -13.75, 106.25, -9.25), (pcbnew.B_Cu,), priority=2)
+PC.band(pa, "PA rail north", (101.75, -13.75, 106.25, yP + 2.25), (pcbnew.B_Cu,), priority=3)   # same-net bands that touch carry different priorities (zones_intersect otherwise)
+PC.band(pa, "PA rail pin", (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25), (pcbnew.B_Cu,), priority=4)
+col(pa, pr[2] + 1.3, -12.6, -10.4, 2)                                         # two vias in the head island, in the band
+# 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
+vr = "VIN_RAW"; vb = "VBAT"; jd = pads_rect(net_pads(vr, ["J_DOCK"]), 0.5)
+fe = pads_rect(net_pads(vr, ["Q2", "Q3", "C11", "C12"]), 1.0)
+PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 2.6, fe[2], fe[3])), pcbnew.F_Cu, priority=3)
+PC.band(vr, "VIN_RAW dock riser", (max(jd[0], -85.5), jd[1], jd[2], -40), (pcbnew.B_Cu,), priority=2)
+# the west run crosses the VBAT trunk (x fx0 to fx1): two bands of different nets never cross on one layer (32.39), so VIN_RAW dives to In3 under the trunk on six vias a side
+f1_ = pads_rect(net_pads(vb, ["F1"]), 0.5); fx0_, fx1_ = (f1_[0] + f1_[2]) / 2 - 3.0, (f1_[0] + f1_[2]) / 2 + 3.0
+PC.band(vr, "VIN_RAW west run W", (-118, -46, fx0_ - 0.8, -40), (pcbnew.B_Cu,), priority=2)
+PC.band(vr, "VIN_RAW west run E", (fx1_ + 0.8, -46, jd[2], -40), (pcbnew.B_Cu,), priority=3)
+PC.band(vr, "VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), (pcbnew.In3_Cu,), priority=2)
+col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 2)
+PC.band(vr, "VIN_RAW west riser", (-118, -46, -112, fe[1] - 0.4), (pcbnew.B_Cu,), priority=3)
+row(vr, -117, -113, fe[1] - 1.3, 3)
+# 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
+f1 = f1_; fx0, fx1 = fx0_, fx1_
+PC.band(vb, "VBAT trunk", (fx0, f1[1], fx1, 44.5), (pcbnew.B_Cu,), priority=2)
+PC.band(vb, "VBAT collector", (fx0, 38.5, -4, 44.5), (pcbnew.B_Cu,), priority=3)
+for n, xL, Lr, Rr, Jr, out in SLOT:
+    ur = pads_rect(net_pads(vb, ["U%d" % {"1": 4, "2": 5, "3": 6, "D": 7}[n]]), 1.2, 0.8)
+    PC.island(vb, "VBAT in S%s" % n, rect_pts((ur[0] - 1.2, 40.0, ur[2], ur[3])), pcbnew.F_Cu, priority=3)
+    row(vb, ur[0] - 0.4, ur[2] - 0.6, 41.2, 2)
+PC.band(vb, "VBAT PA spur", (fx0, -12.5, -48, -7.5), (pcbnew.B_Cu,), priority=3)
+qr = pads_rect(net_pads(vb, ["Q11", "C63", "C64"]), 1.0)
+PC.island(vb, "VBAT PA head", rect_pts((qr[0] - 3.5, min(qr[1], -12.0), qr[2], qr[3])), pcbnew.F_Cu, priority=3)
+col(vb, qr[0] - 1.9, -11.6, -8.4, 2)
+print("A23 power copper: %d zones and keep-outs" % len(PC.made))
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
