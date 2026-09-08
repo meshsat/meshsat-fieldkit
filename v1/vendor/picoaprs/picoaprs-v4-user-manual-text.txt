@@ -1,0 +1,1446 @@
+               PicoAPRS V4
+
+
+
+        Engineered by Taner Schenker
+                  DB1NTO
+                Usermanual
+
+
+
+
+www.wimo.com     - 1- ©Taner Schenker, 20. November 2023
+Table of contents
+1. PicoAPRS V4....................................................................................................................4
+    1.1 Optional equipment....................................................................................................5
+    1.2 Recommended plug-on antennas................................................................................5
+    1.3 Safety instructions......................................................................................................6
+    1.4 Important note on the antenna socket.........................................................................7
+2. Operation..........................................................................................................................8
+    2.1 Installing and removing the battery............................................................................8
+    2.2 Device overview.........................................................................................................9
+    2.3 General information...................................................................................................9
+        Turn ON......................................................................................................................9
+        Software updates.........................................................................................................9
+    2.4 Mainscreen...............................................................................................................10
+        5-Way button.............................................................................................................12
+        On-screen keyboard..................................................................................................12
+        Mainscreen in APRS modes.....................................................................................13
+        Mainscreen in FM modes.........................................................................................13
+        Automatic display of received APRS packets in APRS modes................................14
+        OPEN........................................................................................................................14
+        - „FOLLOW“............................................................................................................15
+        - „WHO IS“..............................................................................................................15
+        - „Show QR code“....................................................................................................15
+        - „Send message“......................................................................................................15
+        - Received status message........................................................................................16
+        - Received textmessage („SMS“).............................................................................16
+        - Received weather packet........................................................................................17
+3 Menu.................................................................................................................................18
+    3.1 Power OFF...............................................................................................................19
+    3.2 SOS...........................................................................................................................19
+    3.2 Settings.....................................................................................................................20
+        Device mode.............................................................................................................20
+        Brightness.................................................................................................................21
+        GPS Powersave.........................................................................................................22
+        Beep..........................................................................................................................22
+        Units..........................................................................................................................23
+    3.3 Exit...........................................................................................................................23
+    3.4 GPS...........................................................................................................................23
+        GPS data...................................................................................................................24
+        GPS Coordinates.......................................................................................................24
+        GPS Satellites...........................................................................................................24
+        Speedometer.............................................................................................................25
+        Compass....................................................................................................................25
+        My Home..................................................................................................................25
+        My Car......................................................................................................................26
+
+
+     www.wimo.com                                    - 2- ©Taner Schenker, 20. November 2023
+        My Location..............................................................................................................26
+        GPS Deviation..........................................................................................................27
+    3.5 Last Heard................................................................................................................27
+    3.6 Bluetooth..................................................................................................................28
+    3.7 WIFI®......................................................................................................................28
+        WIFI setup................................................................................................................28
+        WIFI status................................................................................................................29
+        RX WIFI APRS........................................................................................................29
+        Webconfig.................................................................................................................30
+        WIFI Reconnect........................................................................................................31
+    3.8 Last Weather.............................................................................................................31
+    3.9 Radio Settings...........................................................................................................31
+    3.10 Messages................................................................................................................32
+        Received Messages...................................................................................................32
+        Sent Messages...........................................................................................................33
+        New Message............................................................................................................33
+        New Message → Destination...................................................................................33
+        New Message → Destination SSID..........................................................................34
+        New Message → Text...............................................................................................34
+        New Message → Confirm........................................................................................35
+    3.11 APRS Settings........................................................................................................35
+        APRS Symbol...........................................................................................................35
+        TX Interval................................................................................................................36
+        MyCall......................................................................................................................36
+        MySSID....................................................................................................................37
+        APRS Frequency......................................................................................................38
+        My Comment............................................................................................................39
+    3.12 FM Voice Settings..................................................................................................39
+    3.13 Device Info.............................................................................................................40
+4. Technical specifications..................................................................................................40
+5. Troubleshooting..............................................................................................................40
+6. Manufacturer information............................................................................................41
+7. EU CE Declaration of Conformity...............................................................................42
+8. Disclaimer.......................................................................................................................43
+
+
+
+
+     www.wimo.com                                  - 3- ©Taner Schenker, 20. November 2023
+1. PicoAPRS V4
+PicoAPRS V4 is one of the smallest, if not the smallest radio in the world with this range of functions!
+As the "V4" in the name already suggests, this is already the fourth generation of the "tiny one".
+
+In this version, PicoAPRS has been completely revised and, despite its tiny dimensions, has received
+many new functions.
+
+Below:
+
+- Colorscreen with 240x240 pixel.
+- Bluetooth® (Classic) for use as TNC.
+- WiFi® for use as iGate, for configuration & softwareupdates without using a PC
+- Speaker, Michrophone and PTT for FM voice communication
+- 5 way button for easy usage
+- On screen keyboard easy text input
+- USB-C connector for charging and communication
+
+In addition, PicoAPRS V4 is currently available in three different variants.
+
+1. VHF variant. This module offers the largest range of functions. It enables the use of APRS in the 2m
+band as well as operation as an iGate without a PC (via WiFi®), Bluetooth TNC and voice radio on the
+2m amateur radio band. The transmission power is a maximum of 1 watt.
+
+2. LoRa variant. The LoRa module enables the use of LoRA-APRS in the 70cm band (433 MHz) and
+the iGate function without a PC.
+The built-in speaker and microphone are not used.
+
+3. Shortwave receiver variant. With this it is possible to receive SSB (USB/LSB) on amateur radio
+bands (80m to 10m) and FM radio (88 MHz - 108 MHz). APRS can only be used via WiFi connection.
+
+
+
+Measuring only approx. 35mm x 66mm x 25mm, the PicoAPRS resembles a
+matchbox. The VHF variant (without antenna) weighs just 60 grams.
+
+Ideal for always having the device with you, e.g. when hiking, cycling, motorcycling,
+skiing, on a boat or in the air.
+
+
+
+APRS® & Mic-Encoder® are registered trademarks of Bob Bruninga, WB4APR
+
+
+
+
+    www.wimo.com                         - 4- ©Taner Schenker, 20. November 2023
+1.1 Optional equipment
+
+
+PicoAPRS comes without antenna and charger.
+
+
+
+Order. Nr.
+
+35055         Secondary battery 3,6V/850mAh
+35061         USB-charger
+42854.02      Adapter SMA-(male)/BNC(female), ultra short, black
+
+
+
+
+1.2 Recommended plug-on antennas
+Manufacturer          DIAMOND           DIAMOND           DIAMOND
+Type                  SRH-805           SRH-815S          SRH-36
+Frequency range       144-148 MHz       144-148 MHz       144-148 MHz
+Connector             SMA               SMA               SMA
+Gain                  0dBi              2dBi              3dBi
+Length                4.5cm             13cm              36cm
+Order nr.             17023             17021             17022
+
+Recommended Magnetfic mount antennas
+Order. Nr.
+20117.SMA     DIAMOND MR-77S Magnetic mount antenna, 4m cable, foot 65mm diameter
+20119.SMA     DIAMOND MR-75S Magnetic mount antenna, 3m cable, foot 30mm diameter
+20111.SMA     No-Name Magnetic mount antenna, 3m cable
+
+
+
+
+   www.wimo.com                - 5- ©Taner Schenker, 20. November 2023
+1.3 Safety instructions
+                   Please keep your PicoAPRS away from children!
+                   Warning: Small parts that can be swallowed!
+
+
+
+
+- The device is not waterproof and is not protected against the ingress of splashing water.
+Please only use it in dry environment!
+
+- Do not expose the device to excessive heat (e.g. parked vehicle in strong sunlight).
+
+- Do not use damaged components.
+
+The battery used stores energy with a high density. Improper handling of the battery can
+lead to dangerous situations. Please note the following information on safety when handling
+the battery.
+
+- Do not open the battery or try to repair it
+- Do not short-circuit the connections
+- Do not expose the battery to high temperatures or burn it
+- Do not bring the battery into contact with liquids or immerse it
+- Do not charge the battery when the battery is warm or near heat sources.
+- Stop using a defective or damaged battery
+- Do not charge the battery with third-party chargers
+- Do not place the device on a flammable surface
+- Remove the battery from your PicoAPRS if you will not be using the device for a long time
+- Tape off the battery contacts when storing them outside of the device to avoid accidental
+short circuits.
+
+
+Battery Disposal Instructions
+In connection with the sale of batteries or the delivery of devices containing batteries, the
+provider is obliged to inform the customer of the following:
+
+As the end user, the customer is legally obliged to return used batteries. He can return old
+batteries, which the Provider has or has had in its range as new batteries, free of charge to
+the Provider's shipping warehouse (shipping address). Batteries and rechargeable batteries
+must not be disposed of with household waste.
+
+The symbol according to §17 paragraph 1 BattG and the characters according to §17
+paragraph 3 BattG
+have the following meaning:
+Pb = battery contains more than 0.004% lead by mass
+Cd = battery contains more than 0.002 percent by mass of cadmium
+Hg = battery contains more than 0.0005 percent by mass of mercury
+
+
+
+
+   www.wimo.com                      - 6- ©Taner Schenker, 20. November 2023
+1.4 Important note on the antenna socket
+
+Due to its construction, the SMA antenna socket is not suitable for
+high mechanical loads! Stressing (bending) an antenna mounted on
+the PicoAPRS V4 can severely damage the device!
+
+
+
+
+  www.wimo.com            - 7- ©Taner Schenker, 20. November 2023
+2. Operation
+
+2.1 Installing and removing the battery
+1. Unlock the battery cover by pulling the tab on the cover down with your
+fingernail.
+
+2. Remove the battery cover.
+
+
+
+
+3. Remove the battery from the device at the rear end of the battery (recessed
+grip).
+
+
+
+
+Insert in reverse order, please note the alignment of the battery contacts to the
+contacts in the PicoAPRS.
+
+
+   www.wimo.com                - 8- ©Taner Schenker, 20. November 2023
+2.2 Device overview
+
+
+
+
+                                                                             Speaker
+               PTT-button
+                                                                              Display
+
+
+                    Microphone
+                                                                              5-way button
+
+
+
+
+2.3 General information
+- PicoAPRS V4 can only be operated with an inserted battery.
+- A charging process is only displayed when the device is switched on. However, the battery is also
+charged when the device is switched off.
+
+Turn ON
+- To turn on, please press the PTT for at least 3 seconds until you hear a tone.
+
+
+Software updates
+Since the PicoAPRS software is constantly being developed and improved, we
+recommend checking for updates regularly!
+
+To do this, the WLAN connection must be configured once. Available software
+updates can then be regularly checked and updated directly in the device
+menu. No computer is required for this!
+
+
+
+
+   www.wimo.com                        - 9- ©Taner Schenker, 20. November 2023
+2.4 Mainscreen
+The content of the main screen changes depending on the set operating mode.
+The screen has no touch function. The "soft buttons" shown (in light blue, here "MENU" and SET")
+indicate the situation-dependent function of the left and right button of the 5-way button.
+
+If there are small triangles (see image below) pointing up and down between the “soft keys”, it
+means that the up and down keys have a function at that moment.
+
+
+
+The following information is displayed on the main screen:
+                                                    Number of used
+                                                    GPS satellites
+
+                 „RX“/„TX“ Indicator                      GPS-state
+                                                               Bluetooth®-state
+                    Betriebsmodus
+
+
+                                                                                 WIFI®-state
+    Battery state
+
+
+
+          Info area
+
+
+  Button function                                                                   Button Function
+           LEFT                                                                     RIGHT
+
+
+                                         UP/DOWN buttons
+                                            are assigned
+                                             functions
+
+
+
+
+   www.wimo.com                       - 10- ©Taner Schenker, 20. November 2023
+Explanations of the exemplary main screen display in 2m APRS operation:
+
+
+
+
+- the built-in lithium ion battery is fully charged. The battery icon is completely filled in green.
+A red triangle appears when charging
+
+- To the right of the battery, “TX” appears in red when transmitting, while “RX” is green
+when receiving, or there is no indicator when neither transmitting nor the squelch is open.
+
+- Currently 10 satellites are used for position determination, GPS and Bluetooth are active.
+
+- Your own call sign with SSID and the APRS symbol used
+- Time (UTC) 15:16:40 (hours:minutes:seconds)
+- The speed is 1kp/h
+
+The GPS icon flashes during GPS search.
+If the GPS receiver has been temporarily deactivated to save energy (see "GPS
+Powersave"), no GPS symbol will appear at this point.
+A small "D" to the right of the number means that "Differential GPS" (WAAS/EGNOS) is
+used via SBAS signal and the precision of the GPS position is more accurate.
+
+
+
+
+   www.wimo.com                       - 11- ©Taner Schenker, 20. November 2023
+5-Way button
+
+
+
+
+Left button
+You can access the menu by pressing the navigation button to the left (labeled “Menu” on
+the display) while PicoAPRS is displaying the main screen.
+
+Right button
+The right button on the main screen is assigned the most important functions depending on
+the situation. So you don't have to search in submenus.
+
+OK button (mid)
+Different functions depending on the situation.
+
+Up / Down buttons
+Different functions depending on the situation.
+
+On-screen keyboard
+PicoAPRS has an on-screen keyboard for easier information entry.
+The keyboard will appear automatically as soon as character input is required (e.g. when
+entering text messages, call sign, WIFI password..)
+
+
+                                          Example images of the on-screen keyboard.
+                                          Depending on the situation, you can
+                                          with the key "abc - ABC - !?/"
+                                          (bottom left in the image), switch between upper
+                                          case letters, lower case letters and special
+                                          characters.
+
+
+
+
+  www.wimo.com                     - 12- ©Taner Schenker, 20. November 2023
+Mainscreen in APRS modes
+
+
+
+
+*The left button takes you to the main menu.
+* Right button takes you to APRS settings (chapter 3.11).
+* The OK button sends a current position beacon even if you have not changed
+your location and the set interval time has not elapsed.
+
+Mainscreen in FM modes
+
+
+
+
+* Left button takes you to the main menu.
+* With the right button you get to the FM settings (chapter 3.12).
+* The OK button emits a 1750Hz tone for 3 seconds.
+* Use the Up/Down buttons to change the volume.
+
+
+
+
+  www.wimo.com                  - 13- ©Taner Schenker, 20. November 2023
+Automatic display of received APRS packets in APRS modes
+When an APRS packet is received, the packet will automatically be displayed unless you
+are within the menu or a message is displayed.
+
+- Received position report
+
+
+
+
+       Callsign & SSID
+                                                                              APRS Symbol
+Distance and direction*
+
+          Comment text
+             (if exists)
+
+
+
+
+             Close this                                                      Open
+              message
+
+
+
+*Distance and direction to the displayed station in degrees.
+Distance depending on the set unit either in km or miles.
+The values appear in green if they are currently receiving a current GPS position.
+If no valid GPS position is known (e.g. inside buildings, tunnels or if GPS is deactivated due
+to energy saving functions), a "~" appears in front of the distance information and the data
+is displayed in orange. Distance is then calculated using your last known GPS position.
+
+OPEN
+                                        "OPEN" opens a page with three options
+
+                                        - „Follow“
+                                        - „WHO IS“
+                                        - „Show QR Code“
+                                        - „Send Message“
+
+
+
+
+   www.wimo.com                    - 14- ©Taner Schenker, 20. November 2023
+- „FOLLOW“
+                                        shows you the distance and direction to that station.
+
+                                        The same applies here: Green writing means that
+                                        your GPS position is up-to-date and the distance
+                                        was calculated using this data. Orange writing
+                                        means that your GPS data is not up-to-date and is
+                                        calculated from your last known position.
+
+                                        If you are moving at more than 5 km/h, you will be
+                                        shown the direction IN RELATION to your own
+                                        driving direction.
+
+                                        You can recognize this by a green arrowhead.
+
+                                        This means if you are moving directly towards the
+                                        tracked station, the arrow will point straight up.
+
+If you are not moving, you will be shown the absolute direction in degrees.
+
+For example, up means the station is north of you.
+
+You can recognize this by a red arrowhead as in the image on the left.
+
+Should new position data be received for the station being tracked, this display will be
+updated automatically.
+
+"OPEN" takes you back to the selection menu.
+
+- „WHO IS“
+Sends a text message to the "Who is" service requesting the displayed callsign.
+
+The "Who is" service then sends you information such as the name and address of the user
+of the call sign. However, you can only receive the answer as a text message if you send
+the request via an iGate which can also send out APRS packets (TX iGate) or is in WIFI-
+APRS mode.
+
+- „Show QR code“
+Shows you a QR code with a link to http://aprs.fi for the selected call sign, which you can
+open with a smartphone, for example.
+
+
+
+- „Send message“
+With the selection "Send Message" you go directly to the menu for sending a message and
+only have to enter the message text. The destination call sign and SSID are taken from the
+displayed station. For more see "New Message".
+
+
+  www.wimo.com                     - 15- ©Taner Schenker, 20. November 2023
+- Received status message
+
+
+  Callsign and SSID of
+        received sation
+
+
+             State text
+             (if exists)
+
+
+
+            Closes this                                 See Open
+              message
+
+
+
+
+- Received textmessage („SMS“)
+
+
+
+   Callsign and SSID
+            of sender
+       Message text
+
+
+
+
+           Closes this                                 Reply to this
+             message                                   message
+
+
+
+
+ www.wimo.com              - 16- ©Taner Schenker, 20. November 2023
+- Received weather packet
+
+
+
+    Callsign and SSID
+           of received                                                Distance*
+        weather sation
+         Temperatue                                                  Rainfall
+
+
+       Windspeed and                                                  Humidity
+             direction
+
+                                                                      See OPEN
+
+
+Not every weather station sends all values.
+It is possible that only individual values are displayed and a "0" appears for the
+other values.
+
+*There are weather reports with or without position data. If weather data without
+position data is received, no distance is displayed.
+
+
+
+
+  www.wimo.com                  - 17- ©Taner Schenker, 20. November 2023
+3 Menu
+
+
+
+
+  •   Power OFF
+  •   SOS
+  •   Settings
+      ◦ Device Mode
+      ◦ Brightness
+      ◦ Softwareupdate
+      ◦ GPS Powersave
+      ◦ Beep
+      ◦ Units
+      ◦ Time Offset
+      ◦ Device Info
+  •   Exit
+  •   GPS
+      ◦ GPS Satellites
+      ◦ GPS data
+      ◦ GPS Coordinates
+      ◦ GPS Compass
+      ◦ My Home
+      ◦ My Car
+      ◦ My Location
+      ◦ GPS Deviation
+      ◦ Speedometer
+  •   Last Heard
+  •   Bluetooth
+  •   WIFI
+      ◦ WIFI Setup
+      ◦ WIFI Status
+      ◦ RX WIFI APRS
+      ◦ Webconfig
+      ◦ WIFI reconnect
+  •   Last Weather data
+  •   Radio Settings
+  •   Messages
+      ◦ Received messages
+      ◦ Sent messages
+      ◦ New Messages
+      ◦ Set Bulletin
+  •   Keylock
+
+
+
+ www.wimo.com               - 18- ©Taner Schenker, 20. November 2023
+3.1 Power OFF
+                                      Press the middle button to turn off the PicoAPRS.
+
+
+
+
+3.2 SOS
+                                      To send an “APRS EMERGENCY” (emergency)
+                                      message, press and hold the center button for about
+                                      5 seconds.
+
+                                      Your PicoAPRS then automatically switches to
+                                      APRS mode if this is not currently activated, sets
+                                      the transmission power to 1 watt and transmits an
+                                      EMERGENCY message with your position via the
+                                      APRS network every full minute.
+
+                                      If you use the VHF variant of the PicoAPRS, the
+                                      loudspeaker and the microphone are also activated.
+                                      In this case, you can then speak, listen and send
+                                      APRS emergency messages on the APRS
+frequency at the same time.
+
+To disable Emergency Mode, you must turn off your PicoAPRS.As long as this mode is
+active and the battery is sufficiently charged, an emergency message with the latest GPS
+position is sent every full minute.
+
+
+
+WARNING! An "EMERGENCY CALL" generates an alarm tone on most APRS
+receivers. Only use this function in emergencies!
+
+WARNING: There is no guarantee that your emergency call will be received or
+heeded! Only use this emergency call message if you have no way of making the
+emergency call via established channels (e.g. telephone)!
+
+
+
+
+  www.wimo.com                    - 19- ©Taner Schenker, 20. November 2023
+3.2 Settings
+                                  - Device Mode
+                                  - Brightness
+                                  - Softwareupdate
+                                  - GPS Powersave
+                                  - Beep
+                                  - Units
+                                  - Time Offset
+                                  - Device Info (2. page)
+
+
+
+
+Device mode
+                                  - APRS
+                                  - RX iGate
+                                  - GPS
+                                  - FM-Voice
+                                  - FM + WIFI APRS
+                                  - Fill in Digi
+                                  - TNC
+                                          *USB-C
+                                          *TCP
+                                          *Bluetooth
+                                          *Bluetooth LE
+
+
+
+
+Available devicemodes
+- APRS:          Pure APRS transmission and reception via VHF resp. LoRA®
+- RX iGate:      Forwards received APRS packets to the APRS IS network. This
+requires an internet connection via WIFI.
+- GPS:           Forwards the data from the GPS receiver via USB or Bluetooth.
+- FM-Voice:      Pure FM radiotelephone operation via VHF.
+- FM + WIFI APRS: FM radiotelephone operation via VHF and APRS usage via
+the WIFI internet connection.
+- Fill in Digi: PicoAPRS retransmits APRS packets received over VHF if they
+were received with the path "WIDE1-1, ...."
+
+
+  www.wimo.com                - 20- ©Taner Schenker, 20. November 2023
+- TNC:          In TNC mode you have three options.
+                       1. Via USB-C Virtual Com Port
+                       2.TCP. PicoAPRS supports DNS-SD Discovery
+                       3.Bluetooth (Classic)
+                       4.Bluetooth Low Energy (BLE)
+
+                In all three variants, your PicoAPRS works as a "KISS" TNC.
+
+To use a Bluetooth “Classic” connection, you must pair your PicoAPRS with your
+smartphone, tablet or PC. Your PicoAPRS will be visible for 4 minutes after
+activating TNC mode. If a connection to the PicoAPPRS via Bluetooth is not
+established within this time, the Bluetooth function of the PicoAPRS switches off
+to save energy. You can then reactivate Bluetooth using the Bluetooth icon in the
+main menu.
+
+With Bluetooth Low Energy (BLE), no prior pairing with your smartphone, tablet
+or laptop is necessary or possible! In this case, your PicoAPRS will not be
+displayed at all when searching for Bluetooth devices. That is normal! Please open
+your application (e.g. RadioMail® or aprs.fi® app) on your smartphone, tablet or
+PC and simply select your PicoAPRS there without prior pairing.
+
+
+
+Brightness
+                                   Brightness controls the display brightness.
+                                   The gray bar shows the set brightness.
+                                   Brightness is adjusted with the up and down
+                                   buttons.
+
+                                   A low brightness lowers the power consumption and
+                                   thereby extends the battery life slightly.
+
+
+
+
+  www.wimo.com                 - 21- ©Taner Schenker, 20. November 2023
+GPS Powersave
+                                       „GPS Powersave“ defines whether the GPS
+                                       receiver should be switched off automatically when
+                                       GPS is not needed.
+                                       "OFF" turns off the power saving function and
+                                       "ON" enables this function.
+
+
+                                        If the external power supply is connected via
+                                        USB, GPS is activated regardless of this setting!
+
+
+
+
+If the GPS receiver is deactivated cyclically, this saves energy and extends the battery
+life. On the other hand, the GPS speed may not be displayed correctly on the main
+screen. In addition, the distance to other stations is then only calculated and displayed
+using the last known GPS position.
+
+
+Beep
+                                       Set when you want your PicoAPRS to play a
+                                       beep.
+                                             "Messages" For incoming text messages
+                                             "Keypress" When a key is pressed
+                                             "Packets" For received APRS packets
+                                             "Morse Msg" If you activate this item,
+                                                    incoming text messages will be
+                                                    forwarded to you as Morse code.
+
+
+
+
+  www.wimo.com                     - 22- ©Taner Schenker, 20. November 2023
+Units
+                    Setting the displayed units of measurement for
+                    speed, distance and temperature, amount of
+                    precipitation
+
+                    Metrical → km/h, km, Degrees Celsius, mm/h
+                    Imperial → mp/h, Miles, Degrees Fahrenheit, in/h
+                    Nautical → Knots, Nautical Meiles, Degrees Celsius,
+                    mm/h
+
+
+
+
+3.3 Exit
+                    Try it, you will be surprised ;-)
+
+
+
+
+3.4 GPS
+                    Pressing the right button "ok" takes you to the GPS
+                    data shown below
+
+
+
+
+  www.wimo.com   - 23- ©Taner Schenker, 20. November 2023
+GPS data
+                     Pressing the up or down button takes you to the
+                     next page of GPS information as shown in the
+                     images below.
+
+
+
+
+GPS Coordinates
+                     Different formats of your current location.
+
+
+
+
+GPS Satellites
+                     Sats in use shows the number of satellites actively
+                     used for position determination.
+
+                     Sats in view shows the number of visible GPS,
+                     GLONASS and GALILEO satellites.
+
+                     H-DOP stands for horizontal position accuracy. The
+                     smaller the number, the more accurate the position.
+
+
+
+
+  www.wimo.com    - 24- ©Taner Schenker, 20. November 2023
+Speedometer
+                   Shows your speed over ground as measured by
+                   GPS.
+
+
+
+
+Compass
+                   compass rose
+
+                   Shows your current speed measured by GPS and
+                   from approx. 5 km/h, your direction of movement.
+
+
+
+
+My Home
+                   Save your "home" position here, for example, by
+                   holding down the "OK" button when GPS reception
+                   is available.
+                   You can overwrite this position again at any time.
+
+                   When you call up this menu item, the distance (as
+                   the crow flies) and the compass direction to the
+                   saved position are displayed.
+
+                   This can be very useful, for example, when traveling
+                   or in unfamiliar areas to find your tent, hotel, etc.
+                   again.
+
+                   If you are moving below about 5km/h, the
+                   arrowhead turns red and shows you the absolute
+                   direction (so up means north).
+
+
+
+ www.wimo.com   - 25- ©Taner Schenker, 20. November 2023
+If you are moving over 5km/h, the arrowhead will turn green and show you the direction
+relative to your moving direction.
+This means if you are moving straight towards the target, the arrow will point up. If you
+move away from this location, the arrow will point down.
+
+My Car
+                                        This menu item offers you an additional storage
+                                        space for certain locations such as "My Home".
+
+                                        Here you can, for example, save the parking space
+                                        of your vehicle in foreign areas to find it more easily.
+
+
+
+
+My Location
+                                        Visually indicates your position on a map with a
+                                        small red dot.
+
+                                        The map changes automatically depending on the
+                                        region. Due to the internal memory size, no more
+                                        maps can be loaded into the device!
+
+
+
+
+  www.wimo.com                     - 26- ©Taner Schenker, 20. November 2023
+GPS Deviation
+                                       Visually indicates the inaccuracy of your GPS
+                                       position.
+
+                                       Each line corresponds to a deviation of two meters.
+
+                                       When starting this menu item and after pressing the
+                                       right button ("CLEAR"), the center is used as a
+                                       reference.
+
+                                       Red dots on the edge mean that the deviation is
+                                       outside the displayable range (> 12 meters).
+
+
+
+
+3.5 Last Heard
+                                       The stations last received are displayed here.
+
+                                       At the top right of the picture you can see the
+                                       number of stations received so far and which station
+                                       is displayed (station 1 of 12).
+
+                                       Stations that have already been received are
+                                       updated when they are received again. Exit the
+                                       menu with "CLOSE".
+
+                                       „OPEN“ see open
+
+
+
+
+A maximum of 20 of the stations last listened to are saved.
+When all 20 memory locations are occupied, the entry is overwritten again, starting with the
+first.
+The list is deleted when you switch off.
+
+
+
+
+  www.wimo.com                     - 27- ©Taner Schenker, 20. November 2023
+3.6 Bluetooth
+                   Reactivates the Bluetooth connection again if it
+                   was deactivated to save energy after the
+                   connection was lost.
+
+                   The Bluetooth connection can only be used in
+                   TNC mode and switches on automatically
+                   when you switch to TNC mode.
+
+
+
+
+3.7 WIFI®
+
+WIFI setup
+                   Starts a scan for WiFi® networks.
+
+                   You will then see all the available networks as
+                   shown in the next image as an example.
+
+                   Select the desired network with the up or down
+                   button and then press the right "SELECT"
+                   button to select.
+
+
+
+
+ www.wimo.com   - 28- ©Taner Schenker, 20. November 2023
+                                    Enter your WiFi® password here.
+
+
+
+
+WIFI status
+                                    Shows you the network name, the IP and
+                                    MAC address of your PicoAPRS as well as the
+                                    WiFi® field strength and the WiFi®
+                                    transmission power.
+
+                                    The transmission power is adjusted depending
+                                    on the reception field strength.
+
+
+
+
+RX WIFI APRS
+If this function is activated, APRS data packets are also received and displayed via
+the Internet connection when using APRS connections via WiFi®.
+
+E.g. in iGate operating mode. Deactivate this function if you do not want any data
+packages from the Internet to be displayed. This is useful, for example, if you
+want your PicoAPRS to work unattended as an iGate.
+
+
+
+
+  www.wimo.com                  - 29- ©Taner Schenker, 20. November 2023
+Webconfig
+                   Here you can see the web address of your
+                   PicoAPRS.
+                   You can call this up with a browser on a
+                   computer within the same WLAN network in
+                   order to conveniently edit the frequency
+                   memories via the browser.
+                   The right button "QR Code" shows you this
+                   address as a QR code, which you can scan with
+                   a smartphone.
+
+                   Below is an example of what the "Webconfig"
+                   page looks like in a computer browser.
+
+
+
+
+ www.wimo.com   - 30- ©Taner Schenker, 20. November 2023
+WIFI Reconnect
+The WiFi® connection requires a lot of energy.
+Therefore, the WiFi® connection will be disabled if the connection to the
+configured network is lost for more than one minute.
+With "Wifi Reconnect" you restart the connection to your network without
+changing the configuration or operating mode.
+
+3.8 Last Weather
+                                  At this point you can display the weather data
+                                  last received, if available.
+
+
+
+
+3.9 Radio Settings
+                                  Here you can switch the transmission power
+                                  in APRS or VHF operating mode between 0.5
+                                  or 1 watt. Green tick means 1 watt.
+
+                                  VHF BW Wide sets the channel bandwidth to
+                                  25kHz. If this item is not activated, the channel
+                                  width is 12.5KHz.
+
+
+
+                                  FM Noise Cancel. Enables noise reduction.
+
+
+
+
+  www.wimo.com                - 31- ©Taner Schenker, 20. November 2023
+3.10 Messages
+                                Opens the text message menu
+
+
+
+
+Received Messages
+                                 Opens submenu for received text messages.
+
+                                 The list is deleted when you switch off.
+
+                                 If there are received text messages, previously
+                                 closed messages can be read again and replied to
+                                 here.
+
+
+
+
+             Callsign & SSID of the sender
+                             Message text
+
+
+
+
+ www.wimo.com               - 32- ©Taner Schenker, 20. November 2023
+Sent Messages
+The list is deleted when you switch off.
+If you have previously sent text messages, you can view them again here.
+The green tick in the example on the left means that the delivery has been
+confirmed by the recipient.
+
+If a number appears there, the number indicates the remaining delivery
+attempts. A maximum of 5 delivery attempts are made for each new message.
+
+If no acknowledgment of receipt is received, a red X will appear there.
+But that doesn't mean your message hasn't arrived. There can be various
+reasons why you do not receive the confirmation.
+
+By pressing the right button "resend" you can send this message again.
+
+Use the Up and Down buttons to scroll through all received text messages.
+
+New Message
+Creates a new text message.
+
+
+New Message → Destination
+                                 Enter the call sign and then the SSID of
+                                 the recipient. To enter the SSID, you can
+                                 confirm the selection "OK" (bottom right in
+                                 the picture) or select the "hyphen" (-).
+
+
+
+
+  www.wimo.com               - 33- ©Taner Schenker, 20. November 2023
+New Message → Destination SSID
+
+                                         Use the up and down buttons to select an SSID
+                                         between 0 and 15.
+                                         The input of letters is not intended here.
+
+
+
+
+TIP: You can also use this to send an e-mail to any e-mail address on
+the APRS network! To do this, please enter the destination EMAIL-2 as
+the recipient. Then enter the target e-mail address in the text field first,
+followed by a space and then your message text.
+
+
+
+New Message → Text
+Enter the message text here.
+
+"Space" inserts a space.
+"<" deletes the last character
+"OK" ends the text input and leads to the next step
+
+
+
+
+  www.wimo.com                      - 34- ©Taner Schenker, 20. November 2023
+New Message → Confirm
+                           At this point you have the option to check your
+                           message and cancel ("cancel") or confirm ("send")
+                           the sending of the message.
+
+
+
+
+3.11 APRS Settings
+
+
+
+
+APRS Symbol
+                           Here you set your own APRS symbol which should
+                           be displayed to other receivers.
+                           The symbol is displayed as ASCII characters
+                           (according to the table) and also graphically for most
+                           symbols.
+                           Not every graphic symbol is present in the
+                           PicoAPRS.
+
+                           The primary table is always used!
+
+                           A translation table can be downloaded e.g. from
+                           http://wa8lmf.net/aprs/APRS_symbols.htm.
+
+
+
+
+ www.wimo.com           - 35- ©Taner Schenker, 20. November 2023
+TX Interval
+                                       Specify the intervals at which position reports
+                                       should be sent. Please note that the interval set
+                                       here only applies if your position has changed by at
+                                       least 50* or 100 meters!
+                                       *50 meters only with very high GPS accuracy and slow movement
+                                       speed.
+
+
+
+
+MyCall
+Here you set your own call sign. This is the most important setting you have to make! A
+valid call sign is at least 4 digits long.
+
+It is used to send position reports and receive personal text messages.
+
+                                       If previously set, the currently set call sign is
+                                       displayed here.
+
+                                       To delete or correct the entry, press the virtual key
+                                       "<".
+
+
+
+
+  www.wimo.com                    - 36- ©Taner Schenker, 20. November 2023
+MySSID
+                                        Set your SSID here using the up or down button.
+                                        Values from 0-15 are available.
+
+                                        The SSID is used to differentiate between the APRS
+                                        station types.
+
+
+
+
+The convention for the SSID is (source: http://aprs.org/aprs11/SSIDs.txt)
+
+ -0 Your primary station usually fixed and message capable
+ -1 generic additional station, digi, mobile, wx, etc
+ -2 generic additional station, digi, mobile, wx, etc
+ -3 generic additional station, digi, mobile, wx, etc
+ -4 generic additional station, digi, mobile, wx, etc
+ -5 Other networks (Dstar, Iphones, Androids etc)
+ -6 Special activity, Satellite ops, camping or 6 meters, etc
+ -7 walkie talkies, HT's or other human portable
+ -8 boats, sailboats, RV's or second main mobile
+ -9 Primary Mobile (usually message capable)
+-10 internet, Igates, echolink, winlink, AVRS, APRN, etc
+-11 balloons, aircraft, spacecraft, etc
+-12 APRStt, DTMF, RFID, devices, one-way trackers*, etc
+-13 Weather stations
+-14 Truckers or generally full time drivers
+-15 generic additional station, digi, mobile, wx, etc
+
+
+
+
+  www.wimo.com                     - 37- ©Taner Schenker, 20. November 2023
+APRS Frequency
+                                    The frequency is preset to the usual US frequency
+                                    of 144.3900 MHz and normally does not have to be
+                                    changed.
+
+                                    If you want to change the frequency, use "<" to
+                                    delete the current frequency up to the desired
+                                    position and then enter the new frequency.
+
+
+
+
+The following frequencies are used in other parts of the world for 1200 baud FM
+APRS:
+                                          The APRS path is set to
+USA:                     144.390 MH
+                                          WIDE1-1, WIDE2-2
+Japan:                   144.660 MHz
+                                          If you set the frequency to 145.8250MHz,
+Europe:                  144.800 MHz
+                                          the path will open automatically
+Australia:               145.175 MHz
+                                          ARISS, WIDE2-1 converted.
+Thailand:                145.525 MHz
+                                          To use APRS via the International Space
+ISS (Space Station):     145.825 MHz
+                                          Station (ISS), it is sufficient to set the
+                                          frequency.
+
+
+
+
+  www.wimo.com                  - 38- ©Taner Schenker, 20. November 2023
+My Comment
+                               Enter a comment text under "My Comment", which
+                               is sent as a comment with every position package.
+                               The text is limited to 40 characters.
+
+
+
+
+3.12 FM Voice Settings
+                               - VFO: Allows quick switching to an
+                               unsaved frequency. Here you can type in a
+                               frequency which is set identically as TX
+                               and RX frequency. At the same time, the
+                               frequency is stored in the memory
+                               (memory list) at position 21. If required,
+                               you can set additional settings in memory
+                               such as CTCSS or DCS tones for this
+                               frequency.
+
+
+
+
+- Memory List: Here you can save, select and edit frequencies.
+
+Including the name of the memory location, the TX and RX frequency, TX
+and RX subtone as well as the setting for a "scan stop".
+These settings can be conveniently edited on a computer using the
+"Webconfig" function.
+
+- Memory Scan starts a search over the stored frequencies that were
+specified for a "Scan Stop".
+
+- TX power 1W switches the transmission power for FM radiotelephone
+operation between 1 watt (green tick) and 0.5W (no tick).
+
+  www.wimo.com              - 39- ©Taner Schenker, 20. November 2023
+You can also change this setting in the "Radio Settings" menu. The
+transmission power for APRS operation can be set separately in the "Radio
+Settings" menu item.
+
+- SQL: Here you can set the response threshold for the squelch between a
+value from 0 (SQL open) to 8.
+
+
+
+3.13 Device Info
+                                      Under "Device Info" you will see some information
+                                      about your PicoAPRS.
+
+                                      Software version of the device and the radio module
+                                      (modem version), as well as the ID of the device.
+
+
+
+
+4. Technical specifications
+Frequency range RX worldwide:      136.000 MHz – 174.000 MHz (from firmware V13)
+Frequency range TX EU market:      144.000 MHz – 146.000 MHz
+Frequency range TX US market:      144.000 MHz – 148.000 MHz
+TX power:                          Maximum 1 Watt
+Modulation:                        FM / AFSK
+Baudrate AX.25:                    1200 Baud
+TNC Packet size (MTU):             1024 Bytes.
+Baurate USB (virtual COM port):    115200 Baud
+Operating voltage über USB:        5.0V DC
+Battery:                           3,7V - 850mAh Li-Ion
+GPS:                               The GPS receiver used works up to an altitude of
+                                   18,000 meters (60,000 feet).
+Current consumpt. at the USB-port: Maximum 500mA
+Dimensions: approx.                35 mm x 67 mm x 25 mm
+Weight:                            ca. 60 grams
+Operating temperature range:       -10°C to +45°C
+
+5. Troubleshooting
+If your PicoAPRS shows a malfunction, please remove the battery and, if applicable, the
+USB power supply for a few seconds and then reinsert the battery.
+
+
+  www.wimo.com                    - 40- ©Taner Schenker, 20. November 2023
+6. Manufacturer information
+WiMo Antennen und Elektronik GmbH
+Am Gäxwald 14
+76863 Herxheim
+Germany
+
+
+Tel. +49 (0) 7276 9668-0
+http://www.wimo.com
+e-mail: info@wimo.com
+
+
+
+
+ www.wimo.com              - 41- ©Taner Schenker, 20. November 2023
+7. EU CE Declaration of Conformity
+In accordance with EU Directives and Regulations 2014/53/EU, 2011/65/EU und
+2015/863/EU
+
+WiMo Antennen und Elektronik GmbH
+Am Gäxwald 14, 76863 Herxheim, Germany
+
+as the manufacturer, hereby declares under our sole responsibility that
+
+Product: APRS Data and FM Transceiver
+Model name: PICO-APRS is in conformity with the essential requirements of the
+RE Directive 2014/53/EU:
+
+Radio            EN 301 783 V2.2.1 (2016-01)
+                 EN 300 328 V2.2.2. (2019-07)
+                 ETSI EN 303 413 V1.2.1 (2021-04)
+Article 3.2      EN 300 440 V2.1.1 (2017-03)
+EMC              ETSI EN 301 489-1 V2.2.3 (2019-11)
+                 ETSI EN 301 489-15 V2.2.1 (2019-04)
+                 ETSI EN 301 489-17 V3.2.4 (2020-09)
+                 ETSI EN 301 489-19 V2.2.1 (2022-09)
+
+Article 3.1(b)   EN 301 489-3 V2.1.1 (2017-03)
+Safety           EN IEC 62368-1:2020+A11:2020
+Health           EN 62311:2008
+                 EN 50566:2017
+                 EN 62209-1:2016
+                 EN 62209-2:2010/A1:2019
+                 EN 62479:2010; EN 50663:2017
+ROHS             EN IEC 63000:2019-05
+
+The notified body Bay Area Compliance Labs Corp.(BACL)
+(EU Identification Number: 1313) performed a conformity assessment according to
+Annex III, Module B.
+Signed on behalf of WiMo Antennen und Elektronik GmbH
+
+Name: Volkmar Junge
+Title: Certification Supervisor Signature
+Tel: +49 7276 96680 Mail: info@wimo.com          (V. Junge)
+Date: October 23, 2022
+
+
+
+
+  www.wimo.com                 - 42- ©Taner Schenker, 20. November 2023
+8. Disclaimer
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY,   FITNESS    FOR   A    PARTICULAR  PURPOSE    AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+__________________________________________________
+
+Software License Agreement (FreeBSD License)
+Copyright (c) 2022 Bodmer (https://github.com/Bodmer)
+
+All rights reserved.
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+The views and conclusions contained in the software and documentation are those of the authors and should not
+be interpreted as representing official policies, either expressed or implied, of the FreeBSD Project.
+
+
+
+   www.wimo.com                             - 43- ©Taner Schenker, 20. November 2023
+
