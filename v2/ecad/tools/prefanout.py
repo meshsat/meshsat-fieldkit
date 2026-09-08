@@ -23,7 +23,7 @@ allpads = [(p, p.GetPosition(), max(p.GetSize().x, p.GetSize().y) / 2) for fp in
 rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()] + [z for fp in b.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout; B13: footprint keep-outs (the E72 antenna) count too
 edges = b.GetBoardEdgesBoundingBox()
 placed = [t.GetPosition() for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]; placed_nets = []   # escapes already on the board count as placed vias
-segs = [(t.GetStart(), t.GetEnd(), t.GetWidth() / 2) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]   # B16 (7 Sep 2026): escape stubs are obstacles too, a fanout via landed on one
+segs = [(t.GetStart(), t.GetEnd(), t.GetWidth() / 2, t.GetNetname()) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]   # B16 (7 Sep 2026): escape stubs are obstacles too, a fanout via landed on one
 def _seg_dist(p, a, c):
     ax, ay, bx, by = a.x, a.y, c.x, c.y; dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
     t = 0.0 if L2 == 0 else max(0.0, min(1.0, ((p.x - ax) * dx + (p.y - ay) * dy) / L2))
@@ -38,7 +38,7 @@ def clear(v, me, r=None):
         if math.hypot(v.x - qp.x, v.y - qp.y) < qr + r + gap: return False
     for w in placed:
         if math.hypot(v.x - w.x, v.y - w.y) < VIA_D + FromMM(0.35): return False
-    for a, c, hw in segs:
+    for a, c, hw, _n in segs:
         if _seg_dist(v, a, c) < hw + r + FromMM(0.2): return False
     for z in rule_areas:
         o = z.Outline()
@@ -84,7 +84,8 @@ for fp in b.GetFootprints():
                     placed.append(v); placed_nets.append((v, pad.GetNetname())); added += 1; done = True; break
             if done: break
         if not done and min(pad.GetSize().x, pad.GetSize().y) >= VIA_D + FromMM(0.1) and not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed) \
-           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + FromMM(0.15) for q, qp, qr in allpads if q.GetNetname() != pad.GetNetname()):   # the via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
+           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + FromMM(0.15) for q, qp, qr in allpads if q.GetNetname() != pad.GetNetname()) \
+           and all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + FromMM(0.15) for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname()):   # 8 Sep 2026: the in-pad fallback tested pads and vias but not TRACKS, so a via in a plane pad landed on a neighbour's locked escape and the escape was pruned for it (B17, 32.77). The via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
             # 7 Sep 2026 (E6 run 8, D8 run 3): a plane pad with no room around it gets its via in the pad (0.45/0.25 inside a 0603 land), so no pour piece is ever left
             # hanging on a pad without a path to the plane; the count is reported for the order notes (via-in-pad is a prototype allowance)
             via = pcbnew.PCB_VIA(b); via.SetPosition(c); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)
