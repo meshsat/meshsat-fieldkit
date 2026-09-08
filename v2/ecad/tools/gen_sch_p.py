@@ -300,4 +300,10 @@ for p in P:
         if net != "NC": nets.setdefault(net, []).append("%s.%s" % (p["ref"], num))
 single = [n for n, v in nets.items() if len(v) == 1]
 print("nets:", len(nets), "single-pin nets (should be empty or intentional):", single)
+# --- decoupling as data (8 Sep 2026, MESHSAT-862 Stage C): the pack board has one active part, so its whole decoupling is the gauge's three
+# supply pins. The cell sense RCs (C2 to C5), the PACK and coulomb-counter filters (C7, C9), the thermistor filter (C10) and the terminal
+# ESD capacitors (C11, C12) are not decoupling and are not listed; `intent.write` refuses an entry whose capacitor is not on that pin's net.
+_intent.bypass("C1", "U1", "1", "PBI")        # the backup supply on PBI
+_intent.bypass("C6", "U1", "32", "BAT_F")     # BAT, the primary supply
+_intent.bypass("C8", "U1", "26", "VCC_F")     # VCC, the secondary supply from the pack terminal
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json
