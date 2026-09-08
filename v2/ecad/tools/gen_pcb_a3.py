@@ -256,9 +256,15 @@ PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 2.6, fe[2], fe
 # the west run crosses the VBAT trunk (x fx0 to fx1): two bands of different nets never cross on one layer (32.39), so VIN_RAW dives to In3 under the trunk on five vias a side;
 # each side of the dive is ONE polygon (the dock riser with the east run, the west run with the west riser): abutting same-net zones with priorities read as separate pieces (32.69)
 f1_ = pads_rect(net_pads(vb, ["F1"]), 0.5); f1c_ = (f1_[0] + f1_[2]) / 2; fx0_, fx1_ = f1c_ - 4.5, f1c_ + 0.5   # the trunk on the west half of F1's pad 2, clear of the dock pins' riser
-PC.union(vr, "VIN_RAW east", [(jd[0], jd[1], jd[2], -40), (fx1_ + 0.8, -46, jd[2], -40)], pcbnew.B_Cu, priority=4)   # from the four dock pins themselves (a band that missed them left the link to a 0.4 mm In2 track: 667 A/mm2, 32.69); priority 4 over the CELL+ node bar's corner
+# the dock header's second row (GND, SHORE_INHIBIT, the E6 USB pair) sits between the VIN_RAW row and the band: the riser through it fills as two pieces
+# (the mesh of 8 Sep 2026 12:35: "7 of 7 load pads not connected", the router's 0.4 mm In2 track was the only bridge, 3.1 percent), so the copper goes round the row's
+# west end: 2 mm of copper south of the VIN_RAW row, the passage between J_CP4 and pin 1, and the field west of the header up to the CELL+ node bar, on B.Cu, F.Cu and In3
+cp4 = pads_rect(net_pads("CELL+", ["J_CP4"]), 0.5); jd_s = jd[1] - 2.0
+dock = [(jd[0], jd_s, jd[2], -40), (fx1_ + 0.8, -46, jd[2], -40), (fx1_ + 0.8, -69.7, jd[0] + 0.1, -40), (cp4[2], jd_s, jd[0] + 0.1, -69.6)]
+PC.union(vr, "VIN_RAW east", dock, pcbnew.B_Cu, priority=4)   # from the four dock pins themselves (a band that missed them left the link to a 0.4 mm In2 track: 667 A/mm2, 32.69); priority 4 over the VBAT plane's corner
+PC.union(vr, "VIN_RAW dock top", dock, pcbnew.F_Cu, priority=4, keepout=False, min_width=0.25, clearance=0.15)   # no track keep-out on top: the header's signal pins escape there
 PC.union(vr, "VIN_RAW west", [(-118, -46, fx0_ - 0.8, -40), (-118, -46, -112, fe[1] - 0.4)], pcbnew.B_Cu, priority=3)
-PC.band(vr, "VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), (pcbnew.In3_Cu,), priority=2)
+PC.union(vr, "VIN_RAW under the trunk", [(fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5)] + dock, pcbnew.In3_Cu, priority=2)   # one In3 polygon from the dive to the dock pins (the pins join the layers)
 col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 2)
 row(vr, -117, -113, fe[1] - 1.3, 3)
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
