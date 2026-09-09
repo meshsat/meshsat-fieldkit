@@ -166,7 +166,19 @@ on a board where no hub reset had any driver at all before today. The voted sign
 reset down, the way `KSZ_RST` has always been done here, so the existing RC holds each hub out of reset by default and a
 majority can still recycle a wedged one.
 
-**Placement.** The plane takes a new back-side region, X -98 to 94 by Y 32 to 88, under the three modules.
+**Placement (corrected the same evening).** One back-side band under the modules was wrong twice: it put parts under
+the six CM5 receptacles, whose 0.4 mm rows escape into vias at the pad tips, and over the twelve M2.5 standoff holes at
+Y 36 and Y 84, and it put all three supervisors in one failure domain. The three controller blocks sit in three
+separate back-side pockets instead: the gap between the slot 1 and slot 2 module columns (X -52 to -23), the gap
+between slot 2 and slot 3 (X 18 to 47), and the free underside of the QMX bay (X -158 to -129, clear of its four strap
+slots). The voters and the small logic take the band between the receptacles and the standoff row, Y 69 to 80.5, and
+the antenna changeover sits on the underside of the LimeSDR bay near the east wall.
+
+**State, 9 September 2026 18:45 CEST.** The full board builds and `check_pcb_b.py` prints `RESULT: ALL PASS` with
+every invariant of section 5 and the new ownership, rail-independence, read-back and WiFi-duplication checks: 951
+footprints, 840 nets, no region overflow, nothing unplaced. It is not routed: no B deliverable is cut against this
+topology. Five further defects were found by building it and are recorded in appendix 32.86, the most important being
+that a bank's hub and both its host selects hung on the rail of the module they are meant to fail away from.
 
 ## 11. Open rulings
 
