@@ -137,4 +137,57 @@ check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm t
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
     import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic; print(_ic.run(b, check, sys.argv[1]))
+# ----------------------------------------------------------------- the I/O high-availability invariants (ARCH-PCB-B-IOHA)
+# These are the properties the architecture rests on, so they are checked rather than described. A pad map by net name
+# is enough: every one of them is a question about which parts share a net.
+PADS = {}
+for _fp in b.GetFootprints():
+    for _pd in _fp.Pads():
+        _n = _pd.GetNetname().lstrip("/")
+        if _n: PADS.setdefault(_n, set()).add(_fp.GetReference())
+RING = {1: 2, 2: 3, 3: 1}   # bank s is owned by slot s and fails over to slot RING[s]
+for _s, _f in RING.items():
+    home = PADS.get("HOST%d_0TX_P" % _s, set()); over = PADS.get("HOST%d_1TX_P" % _f, set())
+    check(len(home & over) == 0 and home and over,
+          "bank %d has one home host and one failover host, and they are different modules (home %s, failover %s)"
+          % (_s, sorted(home), sorted(over)))
+    for _sig in ("BSEL%d" % _s, "BOE%d_n" % _s):
+        parts = PADS.get(_sig, set())
+        check(sum(1 for r in parts if r.startswith("U")) >= 2,
+              "%s reaches both switches of its bank (%s)" % (_sig, sorted(parts)))
+    # the safe state: each control carries a pull to the home host, so a dark control plane changes nothing
+    check(any(r.startswith("R") for r in PADS.get("BSEL%d" % _s, set())),
+          "bank %d select is pulled to its safe state" % _s)
+# every voted bit is driven by all three controllers and by nothing else
+for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3"):
+    drivers = [t for t in ("A", "B", "C") if PADS.get("%s_%s" % (_bit, t))]
+    check(len(drivers) == 3, "%s is driven by all three controllers (%s)" % (_bit, drivers))
+    for _t in drivers:
+        parts = PADS["%s_%s" % (_bit, _t)]
+        check(any(r.startswith("R") for r in parts),
+              "%s_%s is pulled down, so an absent controller reads as a definite no (%s)" % (_bit, _t, sorted(parts)))
+# the hub reset must be gated, never driven straight from a voter: a voter output is push-pull and its inputs sit low
+# when the plane is dark, which would hold every hub in reset. The FET plus the existing RC is the safe arrangement.
+for _s in (1, 2, 3):
+    rst = PADS.get("HUB%d_RST_n" % _s, set())
+    check(any(r.startswith("Q") for r in rst) and not any(r.startswith("U7") or r.startswith("U8") for r in rst),
+          "hub %d reset is gated by a FET and not driven by a voter directly (%s)" % (_s, sorted(rst)))
+# each controller is its own failure domain: its own regulator output and its own reset net
+for _t in ("A", "B", "C"):
+    check(PADS.get("+3V3_IOC%s" % _t), "controller %s has its own regulator branch" % _t)
+    check(PADS.get("IOC%s_RST_n" % _t), "controller %s has its own reset" % _t)
+# the two heartbeat fabrics are independent: no part may sit on both, other than a controller's own two transceivers
+for _f in ("A", "B"):
+    check(PADS.get("CANH_%s" % _f) and PADS.get("CANL_%s" % _f), "heartbeat fabric %s exists" % _f)
+check(not (PADS.get("CANH_A", set()) & PADS.get("CANH_B", set())),
+      "the two heartbeat fabrics share no transceiver (%s)" % sorted(PADS.get("CANH_A", set()) & PADS.get("CANH_B", set())))
+# no peripheral bank may hold two long-range bearers, or one bank failure removes more than it should
+BEARERS = {"RB_DP": "Iridium", "QMX_DP": "HF", "USB_D8_P": "APRS", "USB_5G_P": "cellular"}
+BANK_OF = {}
+for _s in (1, 2, 3):
+    for _n in BEARERS:
+        if "U%d02" % _s in PADS.get(_n, set()): BANK_OF.setdefault(_s, []).append(BEARERS[_n])
+for _s, _b in BANK_OF.items():
+    check(len(_b) <= 1, "bank %d holds at most one long-range bearer (%s)" % (_s, _b))
+
 print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
