@@ -169,8 +169,18 @@ def smooth(gr, pts_cells, passable, cap=None):
 def stub_path(gr, passable, start_xy, goal_xy, window):
     """A short A* for one track from start to goal (mm) on one layer's passable map; returns [(x, y)...] smoothed, or None."""
     sj, si = gr.cell(*start_xy); gj, gi = gr.cell(*goal_xy)
+    # 9 Sep 2026 (B18 CARD1_CLK, D10 USB3; appendix 32.83): freeing ONE cell at each end is not enough. Both ends of a stub
+    # lie on the net's OWN copper (the corridor end at one side, the escape via at the other), so every neighbour of that cell
+    # is inside that copper's own clearance disc and the search cannot take a first step: the eight-neighbour loop finds
+    # nothing passable and the stub is reported as "no stub path at the via" with a goal the map itself calls free. The
+    # 0.2 mm disc at each end is same-net copper by construction; anything it wrongly opens is a hard violation the
+    # pre-route DRC gate reads before the router is ever started.
     for (jj, ii) in ((sj, si), (gj, gi)):
-        if 0 <= ii < passable.shape[0] and 0 <= jj < passable.shape[1]: passable[ii, jj] = True
+        for di in range(-2, 3):
+            for dj in range(-2, 3):
+                if di * di + dj * dj > 5: continue
+                a_, c_ = ii + di, jj + dj
+                if 0 <= a_ < passable.shape[0] and 0 <= c_ < passable.shape[1]: passable[a_, c_] = True
     (jmin, imin), (jmax, imax) = window
     dist = {(si, sj): 0.0}; prev = {}; pq = [(0.0, 0.0, (si, sj))]; found = None; n = 0
     steps = [(-1, 0, 1.0), (1, 0, 1.0), (0, -1, 1.0), (0, 1, 1.0), (-1, -1, 1.414), (-1, 1, 1.414), (1, -1, 1.414), (1, 1, 1.414)]
@@ -433,6 +443,13 @@ def main(a):
                         return True
             if os.environ.get("PAIR_DEBUG") and pm is not None:   # the stub map around the goal, one character per cell (S start, G goal, # forbidden)
                 js, is_ = gr.cell(ax_, ay_); jg, ig = gr.cell(bx_, by_); r = 20
+                print("pair_preroute: stub map 4 mm around the START (%.2f, %.2f):" % (ax_, ay_))
+                for i in range(is_ - r, is_ + r + 1, 2):
+                    rowtxt = ""
+                    for j in range(js - r, js + r + 1):
+                        if not (0 <= i < gr.NY and 0 <= j < gr.NX): rowtxt += " "; continue
+                        rowtxt += "S" if (i, j) == (is_, js) else ("G" if (abs(i - ig) <= 1 and abs(j - jg) <= 1) else ("." if pm[i, j] else "#"))
+                    print("   " + rowtxt)
                 print("pair_preroute: stub %s on %s from (%.2f, %.2f) [%s] to (%.2f, %.2f) [%s], 4 mm around the goal:" % (net.GetNetname(), b.GetLayerName(SL), ax_, ay_, "free" if pm[is_, js] else "BLOCKED", bx_, by_, "free" if pm[ig, jg] else "BLOCKED"))
                 for i in range(ig - r, ig + r + 1, 2):
                     rowtxt = ""
