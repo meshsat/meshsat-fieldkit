@@ -94,10 +94,10 @@ STRIP_L = (-172.0, -114.0, -120.0, 114.0)  # left strip (toggles); the inner edg
 STRIP_B = (-172.0, -114.0, 172.0, -88.0)   # bottom strip (sounder, headset jacks, battery bar, the monitor's block notch)
 STRIP_R = (120.0, -114.0, 172.0, 114.0)    # right strip (buttons, status LEDs, the light sensor, the drivers)
 STRIP_T = (-172.0, 88.0, 172.0, 114.0)     # top strip (C7): the e-paper flex socket and boost, the camera, J_PANEL over B16's header
-BLOCK_NOTCH = (-104.0, -95.0, 104.0, -87.0)  # 9 Sep 2026 (appendix 32.85): was (42, -96, 105, -87), a notch for the connector block alone
+BLOCK_NOTCH = (-104.0, -94.2, 104.0, -87.0)  # 9 Sep 2026 (appendix 32.85): was (42, -96, 105, -87), a notch for the connector block alone
 # while the monitor lay on the plate. Recessed, the whole 205.15 mm body passes the ring, and its south edge at Y -93.745 runs 5.745 mm past
 # the void's edge at -88.0, so the notch spans the body's width. Everything on that strip is south of it: the sounder at X -149, the headset
-# jacks at Y -104 (their 16 mm holes reach -96, 1.0 mm clear), the battery bar at Y -101 and the nameplate at Y -108. Only routing width is lost.
+# jacks at Y -104 (their courtyards reach -94.66, 0.46 mm clear of the notch; the notch is only 0.155 mm deeper than the plate window at -94.045, which is all the body needs), the battery bar at Y -101 and the nameplate at Y -108. Only routing width is lost.
 STANDOFFS = [(-160.0, 108.0), (160.0, 108.0), (-165.0, -108.0), (165.0, -108.0), (-40.0, -101.0), (20.0, -101.0), (-75.0, 108.0), (75.0, 108.0)]   # M3 self-clinching standoffs in the plate, 10 mm, the backer's screws from below
 CLUSTER = (120.0, -114.0, 172.0, -56.0)    # the driver electronics (ICs, transistors, resistors, capacitors) on the underside of the right strip, below SW_TEST's lands
 CLUSTER2 = (40.0, -113.0, 116.0, -97.0)    # test points, solder jumpers, ferrites on the underside of the bottom strip, below the block notch
