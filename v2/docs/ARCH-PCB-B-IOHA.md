@@ -93,6 +93,14 @@ Four independent mechanisms, strongest first.
 
 **Heartbeat: two independent CAN-FD fabrics**, one per FDCAN peripheral, with separate transceivers, separate termination and separately routed pairs. Loss of either fabric, or of one transceiver, leaves quorum. Ethernet health reporting to the cluster is secondary and is never the arbitration path. **That open item is closed with a decision, not with a port:** the three supervisors report status on the **kit I2C bus** (each of them a slave at its own address, 0x30, 0x31 and 0x32, which are free in the map of section 8 of the repo handover), which the panel controller masters and the cluster reads through the panel's USB device. Three Ethernet links do not fit on the KSZ's one free PHY port, an Ethernet PHY per supervisor is three more parts and three more failure points for a status path, and status must never be able to become the arbitration path by accident. If bank 1 is unreachable the cluster loses the status read and the supervisors keep arbitrating on CAN, which is the intended order of dependence.
 
+**The CAN pairs are not in a controlled-impedance class, deliberately.** They sit in the board's Default class (0.25 mm
+at 0.2 mm) and are routed as two nets rather than as a coupled pair. The reason is measured rather than assumed: on the
+JLC 3313 outer layer the narrowest track this board allows, 0.127 mm, reaches about 109 ohm differential at any
+practical gap, not 120, because the prepreg is 0.0994 mm thick; and at 5 Mbps the bus is electrically short (about
+1.3 ns of line against a 200 ns bit), with a split termination of 120.8 ohm at each physical end doing the work. What
+would change this is a faster fabric or a longer bus, neither of which is in this design. The pair pre-router therefore
+leaves them alone, which also keeps its 113-pair pass from growing for no gain.
+
 **Power independence.** Each controller gets its own regulator branch, supervisor, watchdog, reset and SWD pads. `+3V3_DEV` must not feed all three, or the control plane has a common-mode failure by construction.
 
 **Hub reset becomes real.** The voted plane drives `HUB{s}_RST_n`, which today has no driver at all, so a wedged hub can be recycled as part of the failover sequence.
