@@ -1,0 +1,152 @@
+** Drc report for pcb-p-pack.kicad_pcb **
+** Created on 2026-09-09T11:46:10+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 44 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(100.0000 mm, 79.8000 mm): PCB text 'B+ > F1 25A > Q1 CHG > Q2 DSG > PACK+' on F.Silkscreen
+    @(84.4000 mm, 80.4000 mm): PCB text 'F1 25A' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(104.4400 mm, 114.5150 mm): Rectangle of J_CELL on F.Silkscreen
+    @(94.0000 mm, 120.2000 mm): PCB text 'B- > R10 2m > PACK-   taps J_CELL   NTC J_TS   SMBus J_SMB' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(105.2000 mm, 119.7250 mm): Segment of J_CELL on F.Silkscreen
+    @(94.0000 mm, 120.2000 mm): PCB text 'B- > R10 2m > PACK-   taps J_CELL   NTC J_TS   SMBus J_SMB' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(112.0000 mm, 121.2000 mm): PCB text 'TAPS' on F.Silkscreen
+    @(94.0000 mm, 120.2000 mm): PCB text 'B- > R10 2m > PACK-   taps J_CELL   NTC J_TS   SMBus J_SMB' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(94.0000 mm, 120.2000 mm): PCB text 'B- > R10 2m > PACK-   taps J_CELL   NTC J_TS   SMBus J_SMB' on F.Silkscreen
+    @(118.8000 mm, 119.7250 mm): Segment of J_CELL on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(65.0000 mm, 80.0000 mm): Segment on Edge.Cuts
+    @(68.0000 mm, 81.0000 mm): Circle on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(65.0000 mm, 80.0000 mm): Segment on Edge.Cuts
+    @(68.0000 mm, 119.0000 mm): Circle on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(133.0000 mm, 78.0000 mm): Segment on Edge.Cuts
+    @(132.0000 mm, 81.0000 mm): Circle on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(67.0000 mm, 122.0000 mm): Segment on Edge.Cuts
+    @(132.0000 mm, 119.0000 mm): Circle on F.Silkscreen
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(77.8485 mm, 84.3379 mm): Track [/CELL4] on B.Cu, length 0.5536 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(87.5050 mm, 95.7050 mm): Via [/DISP] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(91.4609 mm, 83.6687 mm): Track [/FUSED] on F.Cu, length 1.7322 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(90.1480 mm, 83.4383 mm): Track [/FUSED] on B.Cu, length 5.3323 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(85.4515 mm, 114.8958 mm): Track [/PACK_N] on B.Cu, length 5.8956 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(112.6000 mm, 85.6400 mm): Track [/PACK_P] on B.Cu, length 12.7285 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(79.1550 mm, 91.1550 mm): Via [/PBI] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(86.1300 mm, 98.1300 mm): Via [/PRES] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(106.9375 mm, 89.5500 mm): Track [/SMBC] on F.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(106.9375 mm, 91.4500 mm): Track [/SMBD] on F.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(100.6900 mm, 85.0000 mm): Track [/SW] on B.Cu, length 6.6200 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(82.9300 mm, 98.1300 mm): Via [/TS3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(83.7300 mm, 98.1300 mm): Via [/TS4] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(79.5794 mm, 93.6707 mm): Track [/VC2_F] on F.Cu, length 0.0001 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(79.1550 mm, 93.5550 mm): Via [/VC2_F] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(79.1550 mm, 92.7550 mm): Via [/VC3_F] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(111.3750 mm, 90.5000 mm): Via [/VCC_F] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(86.7435 mm, 92.2765 mm): Track [GND] on F.Cu, length 0.1252 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(118.0000 mm, 104.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(88.0000 mm, 109.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(83.0000 mm, 114.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(113.0000 mm, 114.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(108.0000 mm, 114.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(73.0000 mm, 84.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(128.0000 mm, 114.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(123.0000 mm, 104.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(113.0000 mm, 104.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(68.0000 mm, 89.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(83.0000 mm, 84.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(68.0000 mm, 114.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(103.0000 mm, 94.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(103.0000 mm, 104.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(78.0000 mm, 94.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(78.0000 mm, 89.0000 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(83.0000 mm, 99.0000 mm): Via [GND] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
