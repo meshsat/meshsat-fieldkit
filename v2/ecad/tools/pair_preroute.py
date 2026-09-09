@@ -393,6 +393,7 @@ def main(a):
         sections = [(a_, b_) for a_, b_ in zip(order[:-1], order[1:]) if a_[0].GetParentFootprint().GetReference() != b_[0].GetParentFootprint().GetReference()]   # a part's pass-through pins (the ESD's 1 and 6) are joined by join_adjacent_pins, not by a corridor
         for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and not t.IsLocked()]: b.Remove(t)   # a previous route of the pair goes; the locked escapes stay
         pieces = []   # everything this pair lays (removed on rollback)
+        staircase = False   # set when a section fell back to the corridor as the search found it
         stripped = []   # the escape via and stubs of a fine-pitch station pad, removed so the legs enter the pad itself (restored on rollback)
         def fine_part(f):
             """Pitch 0.7 mm or under: the legs enter the pads straight (the entry run)."""
@@ -764,13 +765,24 @@ def main(a):
                         u = k / n; i = int(round(a_[0] + u * (b_[0] - a_[0]))); j = int(round(a_[1] + u * (b_[1] - a_[1])))
                         if not passable[i, j]: return False
                 return True
-            smoothed = None
+            smoothed = None; staircase = False
             cand = [smooth(gr, [(c[1], c[2]) for c in run], ~trk[layers[run[0][0]]], None) for run in runs]
             if legs_clear(cand): smoothed = cand
             else:
-                for tol in (1.5, 2.5, 4.0):   # gentler polylines (few long segments at free angles), never a staircase
+                for tol in (1.5, 2.5, 4.0):   # gentler polylines (few long segments at free angles)
                     cand = [dp([(c[1], c[2]) for c in run], tol) for run in runs]
                     if all(los_ok(c, ~trk[layers[run[0][0]]]) for c, run in zip(cand, runs)) and legs_clear(cand): smoothed = cand; break
+            if smoothed is None and os.environ.get("PAIR_STAIRCASE", "1") != "0":
+                # 9 September 2026 (B19): the last resort is the corridor as the search found it, tidied only enough to drop
+                # single-cell jitter. Until tonight the tool refused a staircase on quality grounds and left the pair to the
+                # router instead, and `pair_report.py` measured what that costs: THIRTEEN of the first twenty four failures
+                # were this one line. A staircase pair is coupled, holds its class geometry and can be straightened later by
+                # `straighten.py`; a pair left to the router is uncoupled and fails the impedance gate. The owner's ruling of
+                # 9 September is that the pairs are laid in the pre-router, so the coupled staircase wins on the requirement.
+                for tol in (0.6, 0.0):
+                    cand = [dp([(c[1], c[2]) for c in run], tol) if tol else [(c[1], c[2]) for c in run] for run in runs]
+                    if all(los_ok(c, ~trk[layers[run[0][0]]]) for c, run in zip(cand, runs)) and legs_clear(cand):
+                        smoothed = cand; staircase = True; break
             if smoothed is None:
                 failed = "%s -> %s (the legs clear no smoothing of the centreline)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference())
                 if os.environ.get("PAIR_DEBUG"):
@@ -977,7 +989,7 @@ def main(a):
             rollback()
             report.append("FAIL  %s: the two legs cross each other %d time(s) on the laid path; rolled back, the router takes the pair" % (stem, _cross))
             continue
-        laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added))
+        laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
     print("pair_preroute: --- summary ---")
