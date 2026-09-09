@@ -30,6 +30,18 @@ for v in drc.get("violations", []):
             x, y = it["pos"]["x"] * 1e6, it["pos"]["y"] * 1e6
             for u, o in added.items():
                 if any(math.hypot(e.x - x, e.y - y) < 60000 for e in ends(o)): bad.update(closure(o).keys())
+# 9 September 2026 (E7, appendix 32.89): a closure whose item count is out of proportion to the net it closes is not a
+# closure, it is carpeting. E's board-wide stub run added 29,985 items for five open nets, and the quality pass could not
+# digest them: an hour into straighten.py the finish had produced no verdict and was killed. A net's closure is refused
+# here when it costs more than STUB_MAX_ITEMS (default 400) items, which is far above any honest stub (the accepted ones
+# on A24 and D10 are tens of items) and far below a carpet. STUB_MAX_ITEMS=0 turns the rule off.
+_cap = int(__import__("os").environ.get("STUB_MAX_ITEMS", "400"))
+_bynet = {}
+for u, t in added.items(): _bynet.setdefault(t.GetNetCode(), set()).add(u)
+_fat = [n for n, g in _bynet.items() if _cap and len(g) > _cap]
+for n in _fat:
+    bad.update(_bynet[n])
+    print("stub_accept: net %d refused, its closure costs %d items (cap %d): that is carpeting, not a closure" % (n, len(_bynet[n]), _cap))
 for u in bad: post.Remove(added[u])
 groups = {}
 for u, t in added.items(): groups.setdefault(t.GetNetCode(), set()).add(u)
