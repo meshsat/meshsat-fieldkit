@@ -428,7 +428,7 @@ r("R21", "10k", "GNSS_RST_n", "+3V3_DEV"); c("C40", "100n", "+3V3_DEV", "GND"); 
 r("R23", "10R", "GNSS_VDD_RF", "GNSS_BIAS"); part("L3", "Device", "L", "27nH 0402 (antenna bias tee)", "L0402", {"1": "GNSS_BIAS", "2": "GNSS_ANT"}); c("C42", "47p", "GNSS_ANT", "GNSS_RF_IN", "C0402")
 part("J_GNSS1", "Connector", "Conn_Coaxial", "U.FL: pigtail to A22's GNSS jack J_RF4", "UFL", {"1": "GNSS_ANT", "2": "GND"})
 part("J_GNSS2", "Connector_Generic", "Conn_01x03", "LG290P UART2 (bench): GND TX RX", "PH1x3", {"1": "GND", "2": "GNSS_TXD2", "3": "GNSS_RXD2"})
-cp2102("U15", "GNSS", "+5V_S2", "GNSS_DP", "GNSS_DM", "GNSS_RXD", "GNSS_TXD", refs=("R24", "C43", "C44"))
+cp2102("U15", "GNSS", "+5V_DEV", "GNSS_DP", "GNSS_DM", "GNSS_RXD", "GNSS_TXD", refs=("R24", "C43", "C44"))
 # ================================================================= LoRa E22-900M30S on S3's SPI0, 5 V through a TPS22810 gated by EMCON; antenna pad to a U.FL for A22's LoRa jack
 e22 = {n: "GND" for n, nm in E22P.items() if nm == "GND"}
 e22.update({9: "+5V_LORA", 10: "+5V_LORA", 6: "LORA_RXEN", 7: "LORA_TXEN", 8: "NC", 13: "SPI3_IO24", 14: "SPI3_IO23", 15: "SPI3_IO26", 16: "SPI3_MISO", 17: "SPI3_MOSI", 18: "SPI3_SCLK", 19: "SPI3_CE1", 21: "LORA_ANT"})
@@ -444,7 +444,7 @@ for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", 
     r("R%d" % (31 + i), "1k", tag + "_LED_R", "LED_%sR_A" % tag); led("LED%d" % (5 + 2 * i - 1), "red %s (DIO_7)" % tag, "LED_%sR_A" % tag, "GND")
     r("R%d" % (33 + i), "1k", tag + "_LED_G", "LED_%sG_A" % tag); led("LED%d" % (5 + 2 * i), "green %s (DIO_8)" % tag, "LED_%sG_A" % tag, "GND")
     part("J_ZBDBG%d" % i, "Connector_Generic", "Conn_01x05", "CC2652P cJTAG %s (bench): 3V3 GND TMSC TCKC RESET" % tag, "PH1x5", {"1": "+3V3_ZB", "2": "GND", "3": tag + "_TMSC", "4": tag + "_TCKC", "5": tag + "_RST_n"})
-    cp2102(ub, tag, "+5V_S2", tag + "_DP", tag + "_DM", tag + "_RXD", tag + "_TXD", rts=tag + "_RST_n", dtr=tag + "_BSL", refs=refs)
+    cp2102(ub, tag, "+5V_DEV", tag + "_DP", tag + "_DM", tag + "_RXD", tag + "_TXD", rts=tag + "_RST_n", dtr=tag + "_BSL", refs=refs)
 tps22810("U22", "+3V3_DEV", "E72_EN", "+3V3_ZB", "E72_CT"); c("C52", "1n", "E72_CT", "GND"); c("C53", "10u", "+3V3_ZB", "GND", "C10u"); c("C54", "100n", "+3V3_ZB", "GND"); c("C55", "100n", "+3V3_ZB", "GND")
 # ================================================================= LimeSDR Mini receptacle (S1 hub port 1, USB 3) and the RockBLOCK 9704 header (S1 hub port 4 through a CP2102N), both behind TPS259631 eFuses
 part("J_LIME", "Connector", "USB3_A", "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", "USB3A",
@@ -453,7 +453,7 @@ esd("U33", "LIME_DP", "LIME_DM", "+5V_LIME")
 efuse("U23", "+5V_DEV", "+5V_LIME", "LIME_EN", "LIME_FLT", ["C56", "R36", "R37", "R38", "R39", "C57"], "3.0 A (ILM)"); c("C58", "22u 6.3V", "+5V_LIME", "GND", "C10u")
 part("J_RB9704", "Connector_Generic", "Conn_02x08_Odd_Even", "RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket", "IDC16", {
  "1": "GND", "2": "NC", "3": "RB_IEN", "4": "GND", "5": "NC", "6": "RB_CTRL", "7": "RB_STATUS", "8": "RB_XMTG", "9": "NC", "10": "GND", "11": "NC", "12": "NC", "13": "RB_TXD", "14": "RB_RXD", "15": "+5V_RB", "16": "GND"})
-cp2102("U18", "RB", "+5V_S1", "RB_DP", "RB_DM", "RB_RXD", "RB_TXD", refs=("R40", "C59", "C60"))
+cp2102("U18", "RB", "+5V_DEV", "RB_DP", "RB_DM", "RB_RXD", "RB_TXD", refs=("R40", "C59", "C60"))
 r("R41", "10k", "RB_STATUS", "+3V3_DEV"); r("R42", "10k", "RB_XMTG", "+3V3_DEV")
 efuse("U24", "+5V_DEV", "+5V_RB", "RB_EN", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "3.0 A (ILM)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
 # ================================================================= camera, QMX and spare USB headers, the wall USB pair (S3 hub port 3) with its ESD
@@ -471,6 +471,11 @@ part("U19", "Connector_Generic", "Conn_01x14", "74LVC08APW quad AND: LimeSDR (hu
 part("U20", "Connector_Generic", "Conn_01x14", "74LVC08APW quad AND: E72 radios (EMCON AND software); spare gates grounded", "TSSOP14",
      {"1": "EMCON_HW", "2": "ZB_ON", "3": "E72_EN", "4": "GND", "5": "GND", "6": "NC", "7": "GND", "8": "NC", "9": "GND", "10": "GND", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3_DEV"}, "C465737")
 c("C65", "100n", "+3V3_DEV", "GND"); c("C66", "100n", "+3V3_DEV", "GND"); r("R49", "100k", "LIME_HW_EN", "GND"); r("R50", "100k", "LIME_SW_EN", "GND"); r("R51", "100k", "RB_SW_EN", "GND"); r("R52", "100k", "LORA_ON", "GND"); r("R53", "100k", "ZB_ON", "GND")
+# 9 September 2026 (ARCH-PCB-B-IOHA section 2, defect 3): three expander-driven FET gates had no pull-down, so they float
+# through the PCA9555's power-on reset, when its ports come up as high-impedance inputs. KSZ_RST holds the Ethernet switch
+# in reset for the whole kit if it floats high; 5G_OFF and 5G_RESET do the same to the cellular module. The six gates around
+# them have carried a 100k pull-down since the board was drawn; these three were simply missed.
+r("R60", "100k", "KSZ_RST", "GND"); r("R61", "100k", "5G_OFF", "GND"); r("R62", "100k", "5G_RESET", "GND")
 # Fail safe on the two panel lines (9 September 2026, red team C1): with the panel ribbon out, EMCON_HW and TX_INHIBIT_n must read LOW here,
 # which silences every transmitter on this board and, through J_AB1, on A22 and D9 as well. C7 holds them up with 10k when the panel is
 # present, which wins over these three boards' 100k pull-downs in parallel (2.5 V, a solid high).

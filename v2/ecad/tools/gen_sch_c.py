@@ -3,7 +3,7 @@
 stub and a net label; GND gets power symbols). Runs where the KiCad symbol libraries are (the vast.ai box). Usage: gen_sch_c.py <out.kicad_sch> <project>
 
 The backer hangs 10 mm under the aluminium face plate (tools/panel1450.py is the single source of the face positions). C7 replaces the two expanders'
-role by an RP2040 panel controller (32.52: a USB device of B16's slot-2 hub, the kit I2C master, the e-paper, the sounder, the LED rail PWM, the
+role by an RP2040 panel controller (32.52: a USB device of B16's slot-1 hub, PORTS[1][2] in gen_sch_b.py, corrected 9 Sep 2026, the kit I2C master, the e-paper, the sounder, the LED rail PWM, the
 heartbeats, slot enables, HDMI input select and the power-control lines to B16 over the 2x13 ribbon J_PANEL; the two PCA9555 stay as the LED sinks
 and mode inputs on the same bus). The hardware lines stay hardware: the EMCON toggle drives TX_INHIBIT_n directly and EMCON_HW through an inverter,
 the ZEROIZE toggle drives ZEROIZE_HW, the TX lamp follows TR_APRS. The e-paper is the bare Pervasive Displays E2370KS0C1 on a 24-way ZIF with the
@@ -175,7 +175,7 @@ for i in range(1, 6): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", 
 #     27 ohm USB series, RUN pull-up, BOOTSEL by a solder jumper on QSPI_SS). GPIO: 0 SDA 1 SCL (the kit I2C bus, this board its master), 2 EPD SCL, 3 EPD SDA, 4 EPD DC, 5 EPD CS, 6 EPD RST,
 #     7 EPD BUSY, 8 LED rail PWM, 9 sounder PWM, 10 to 12 heartbeats HB1..3 (in), 13 to 15 SLOT_EN1..3, 16 and 17 HDMI_SEL1/2, 18 PI_SHDN_REQ, 19 PI_KILL, 20 SHORE_INHIBIT, 21 EMCON_HW (read),
 #     22 ZEROIZE_HW (read), 23 TR_APRS (read), 24 EXP_INT (read), 25 status LED, 26 LED rail sense (ADC0), 27 TEST_SW, 28 SOS_SW, 29 EPD_PWR_n (the boost's power switch)
-synth("U3", "RP2040", "RP2040 panel controller (USB device on B16's slot-2 hub, the kit I2C master)", "QFN56", {
+synth("U3", "RP2040", "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)", "QFN56", {
  1: "+3V3", 10: "+3V3", 22: "+3V3", 33: "+3V3", 42: "+3V3", 49: "+3V3", 43: "+3V3", 44: "+3V3", 48: "+3V3", 23: "C_DVDD", 50: "C_DVDD", 45: "C_DVDD", 57: "GND", 19: "GND",
  2: "SDA", 3: "SCL", 4: "EPD_SCL", 5: "EPD_SDA", 6: "EPD_DC", 7: "EPD_CS", 8: "EPD_RST", 9: "EPD_BUSY", 11: "PANEL_PWM", 12: "PWM1", 13: "HB1", 14: "HB2", 15: "HB3", 16: "SLOT_EN1", 17: "SLOT_EN2", 18: "SLOT_EN3",
  20: "XIN", 21: "XOUT_R", 24: "SWCLK", 25: "SWDIO", 26: "C_RUN", 27: "HDMI_SEL1", 28: "HDMI_SEL2", 29: "PI_SHDN_REQ", 30: "PI_KILL", 31: "SHORE_INHIBIT", 32: "EMCON_HW", 34: "ZEROIZE_HW", 35: "TR_APRS", 36: "EXP_INT",
