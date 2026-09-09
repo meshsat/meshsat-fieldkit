@@ -222,7 +222,10 @@ ph("J_GEIGER", 3, "Geiger counter module (RadiationD-v1.1 class): 5 V, GND, puls
 ph("J_DCF", 3, "DCF77 receiver module: 3.3 V, GND, pulse", {"1": "+3V3_E6", "2": "GND", "3": "DCF_PULSE"})
 ph("J_LTG", 5, "AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ", {"1": "+3V3_E6", "2": "GND", "3": "SDA1", "4": "SCL1", "5": "LTG_IRQ"})
 ph("J_POD", 4, "outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL", {"1": "+3V3_E6", "2": "GND", "3": "SDA1", "4": "SCL1"})
-r("R48", "22R (pulse input series)", "GEIGER_PULSE", "GEIGER_IN")   # 9 Sep 2026 (E7, appendix 32.83): U10 pin 9 was on GEIGER_PULSE, so this resistor sat in series with NOTHING, the module's pulse reached the RP2040 pin directly and GEIGER_IN went only to TP13. Pin 9 is GEIGER_IN now and the resistor is in the path it was drawn for; tp("TP13", "GEIGER_IN"); r("R49", "10k", "DCF_PULSE", "+3V3_E6"); r("R50", "10k", "LTG_IRQ", "+3V3_E6")
+# 9 Sep 2026 (E7, appendix 32.83): U10 pin 9 was on GEIGER_PULSE, so R48 sat in series with NOTHING: the module's pulse reached the
+# RP2040 pin directly and GEIGER_IN went only to TP13. Pin 9 is GEIGER_IN now and the resistor is in the path it was drawn for.
+# (This comment is on its OWN line: appended to the code line it swallowed tp("TP13") and R49 and R50, the trap CLAUDE.md section 8 names.)
+r("R48", "22R (pulse input series)", "GEIGER_PULSE", "GEIGER_IN"); tp("TP13", "GEIGER_IN"); r("R49", "10k", "DCF_PULSE", "+3V3_E6"); r("R50", "10k", "LTG_IRQ", "+3V3_E6")
 tp("TP1", "DC_IN"); tp("TP2", "DC_P"); tp("TP3", "VIN_RAW"); tp("TP4", "GND"); tp("TP5", "PV_P"); tp("TP6", "TRK_OUT"); tp("TP7", "BLK_SPARE"); tp("TP8", "CELL_F"); tp("TP9", "+5V_E6")
 for i, net in enumerate(("DC_IN", "DC_F", "DC_P", "DC_HS", "GND_V", "GND", "VIN_RAW", "PV_IN", "PV_P", "TRK_OUT", "TRK_INTVCC", "TRK_LDO33", "CELL+", "CELL_F", "+5V_E6", "+3V3_E6", "E6_DVDD"), 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 

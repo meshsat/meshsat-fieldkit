@@ -1,7 +1,7 @@
 {
  "board": "pcb-c-display",
  "project": "v2/ecad/pcb-c-display-c8",
- "phase": "C8",
+ "phase": "C10",
  "issue": "MESHSAT-862",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -65,7 +65,7 @@
   "clean_flag": "out/c8-clean.txt",
   "stub_log": "out/pcb-c-display-stub.log"
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-c-revA-C8",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-c-revA-C10",
  "expect": {
   "hard": 0,
   "unrouted": 0,
