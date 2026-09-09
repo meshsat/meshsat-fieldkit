@@ -24,7 +24,7 @@ Comment,Designator,Footprint,LCSC Part #
 "3 mm BAT3 green, sunlight viewable",D14,LED_D3.0mm,
 "3 mm BAT4 green, sunlight viewable",D15,LED_D3.0mm,
 "3 mm BAT5 green, sunlight viewable",D16,LED_D3.0mm,
-BAT54 lamp-test tie,D17,D_SOD-123,C2166
+BAT54 lamp-test tie,D17,D_SOD-123,C7502705
 status (GPIO25),D18,LED_0603_1608Metric,
 SS2040FL: EPD_SW -> VGH,D19,D_SOD-123F,
 SS2040FL: pump clamp,D20,D_SOD-123F,
@@ -43,13 +43,13 @@ AO3401A P-FET high side,Q1,SOT-23,C15127
 2N7002,Q2-Q4,SOT-23,C8545
 AO3401A P-FET: the e-paper's supply switch (EPD_PWR_n low = on),Q5,SOT-23,C15127
 "Si1308EDL class N-FET (RDS under 200 mOhm, VGS 2.5 V): the boost switch on GDR",Q6,SOT-23,C8545
-1k,"R1,R6,R37",R_0603_1608Metric,C11702
+1k,"R1,R6,R37",R_0603_1608Metric,C21190
 27R,"R2,R3",R_0603_1608Metric,
 10k,"R4,R9-R13,R15,R16,R42",R_0603_1608Metric,C25804
 1k (BOOTSEL),R5,R_0603_1608Metric,
 2.2k,"R7,R8,R17",R_0603_1608Metric,C4190
 100k,"R14,R20,R38,R45",R_0603_1608Metric,C25803
-47R,R18,R_0603_1608Metric,C25118
+47R,R18,R_0603_1608Metric,C23182
 100R,"R19,R44",R_0603_1608Metric,C22775
 300R,"R21-R23,R31,R36,R40",R_0603_1608Metric,C23025
 180R,"R24-R30,R32-R35",R_0603_1608Metric,C25270
@@ -62,8 +62,8 @@ AO3401A P-FET: the e-paper's supply switch (EPD_PWR_n low = on),Q5,SOT-23,C15127
 "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot, hinged safety cover per 32.50; ruling 32.13); K front seal in the keyed 6.5 hole; the controller acts after 2 s closed",SW_SOS?,ToggleBody_SPDT,
 "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer under the bezel",SW_TEST?,PanelSwitch_16mm,
 "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; ZEROIZE_HW low = wipe the secure element and assert the disk-key wipe (32.52)",SW_ZERO?,ToggleBody_SPDT,
-"PCA9555PW 0x22: LED sinks, light mode inputs",U1,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
-"PCA9555PW 0x23: LED sinks, the battery bar, lamp test",U2,TSSOP-24_4.4x7.8mm_P0.65mm,C50993
+"PCA9555PW 0x22: LED sinks, light mode inputs",U1,TSSOP-24_4.4x7.8mm_P0.65mm,C2864778
+"PCA9555PW 0x23: LED sinks, the battery bar, lamp test",U2,TSSOP-24_4.4x7.8mm_P0.65mm,C2864778
 "RP2040 panel controller (USB device on B16's slot-2 hub, the kit I2C master)",U3,QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm,C2040
 "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)",U4,Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm,C2843335
 "TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)",U5,SOT-23-5,

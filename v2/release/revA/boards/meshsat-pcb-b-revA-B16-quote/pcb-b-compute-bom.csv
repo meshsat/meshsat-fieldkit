@@ -39,14 +39,14 @@ USB-C 2.0 receptacle,"J_FLASH1,J_FLASH2,J_FLASH3",USB_C_Receptacle_HRO_TYPE-C-31
 U.FL: pigtail to A22's GNSS jack J_RF4,J_GNSS1,U.FL_Hirose_U.FL-R-SMT-1_Vertical,
 LG290P UART2 (bench): GND TX RX,J_GNSS2,PinHeader_1x03_P2.54mm_Vertical,
 HDMI type A receptacle (Molex 208658-1001): cable to the Xenarc 709GNK pass-through on the face plate,J_HDMI,HDMI_A_Molex_208658-1001_Horizontal,
-USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay,J_LIME,USB3_A_Receptacle_Wuerth_692122030100,C2802372
+USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay,J_LIME,USB3_A_Receptacle_Wuerth_692122030100,C5355286
 U.FL: pigtail to A22's LoRa jack J_RF11,J_LORA1,U.FL_Hirose_U.FL-R-SMT-1_Vertical,
-"M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)",J_M2C1,M2_E-Key_Socket_2230,C2803764
-"M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)",J_M2C2,M2_B-Key_Socket_3052,C2803770
-"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of S3",J_M2C3,M2_M-Key_Socket_2242,C2803771
-"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)",J_M2N1,M2_M-Key_Socket_2242,C2803771
-"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S2 (k3s replicated storage)",J_M2N2,M2_M-Key_Socket_2242,C2803771
-"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S3 (k3s replicated storage)",J_M2N3,M2_M-Key_Socket_2242,C2803771
+"M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)",J_M2C1,M2_E-Key_Socket_2230,C41430829
+"M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)",J_M2C2,M2_B-Key_Socket_3052,C41430835
+"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of S3",J_M2C3,M2_M-Key_Socket_2242,C41430851
+"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)",J_M2N1,M2_M-Key_Socket_2242,C41430851
+"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S2 (k3s replicated storage)",J_M2N2,M2_M-Key_Socket_2242,C41430851
+"M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S3 (k3s replicated storage)",J_M2N3,M2_M-Key_Socket_2242,C41430851
 "panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines",J_PANEL,IDC-Header_2x13_P2.54mm_Vertical,
 QMX USB lead (S2 hub port 4): VBUS D- D+ GND; pigtail to the unit's USB-C,J_QMX,PinHeader_1x04_P2.54mm_Vertical,
 RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket,J_RB9704,IDC-Header_2x08_P2.54mm_Vertical,
@@ -63,26 +63,26 @@ CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET,J_ZBDBG2,PinHeader_1x05_P2.54
 2.2uH XAL4020-222ME,"L2,L103,L104,L203,L204,L303,L304",L_Coilcraft_XAL4020-XXX,
 27nH 0402 (antenna bias tee),L3,L_0402_1005Metric,
 3.3uH XAL6060-332ME,"L101,L102,L201,L202,L301,L302",L_Coilcraft_XAL6060-XXX,
-green Ethernet port 1 link,LED1,LED_0603_1608Metric,C72043
-green Ethernet port 2 link,LED2,LED_0603_1608Metric,C72043
-green Ethernet port 3 link,LED3,LED_0603_1608Metric,C72043
-green Ethernet port 4 link,LED4,LED_0603_1608Metric,C72043
+green Ethernet port 1 link,LED1,LED_0603_1608Metric,C2986059
+green Ethernet port 2 link,LED2,LED_0603_1608Metric,C2986059
+green Ethernet port 3 link,LED3,LED_0603_1608Metric,C2986059
+green Ethernet port 4 link,LED4,LED_0603_1608Metric,C2986059
 red ZBA (DIO_7),LED6,LED_0603_1608Metric,C2286
-green ZBA (DIO_8),LED7,LED_0603_1608Metric,C72043
+green ZBA (DIO_8),LED7,LED_0603_1608Metric,C2986059
 red ZBB (DIO_7),LED8,LED_0603_1608Metric,C2286
-green ZBB (DIO_8),LED9,LED_0603_1608Metric,C72043
-green 5 V S1,LED11,LED_0603_1608Metric,C72043
-green NVMe link (PORTSTATUS0),"LED12,LED22,LED32",LED_0603_1608Metric,C72043
-green card link (PORTSTATUS1),"LED13,LED23,LED33",LED_0603_1608Metric,C72043
+green ZBB (DIO_8),LED9,LED_0603_1608Metric,C2986059
+green 5 V S1,LED11,LED_0603_1608Metric,C2986059
+green NVMe link (PORTSTATUS0),"LED12,LED22,LED32",LED_0603_1608Metric,C2986059
+green card link (PORTSTATUS1),"LED13,LED23,LED33",LED_0603_1608Metric,C2986059
 amber NVMe activity,"LED14,LED24,LED34",LED_0603_1608Metric,
 blue WiFi link,LED15,LED_0603_1608Metric,
-green ACT (LED_nACT sinks),"LED16,LED26,LED36",LED_0603_1608Metric,C72043
+green ACT (LED_nACT sinks),"LED16,LED26,LED36",LED_0603_1608Metric,C2986059
 red PWR,"LED17,LED27,LED37",LED_0603_1608Metric,C2286
-green 5 V S2,LED21,LED_0603_1608Metric,C72043
+green 5 V S2,LED21,LED_0603_1608Metric,C2986059
 amber 5G network,LED25,LED_0603_1608Metric,
-green 5 V S3,LED31,LED_0603_1608Metric,C72043
+green 5 V S3,LED31,LED_0603_1608Metric,C2986059
 amber spare drive activity,LED35,LED_0603_1608Metric,
-"FDMC3612 100 V N-FET, PoE port switch (PowerPAK SO-8: 1-3 source, 4 gate, 5 drain tab)",Q1,PowerPAK_SO-8_Single,C2827865
+"FDMC3612 100 V N-FET, PoE port switch (PowerPAK SO-8: 1-3 source, 4 gate, 5 drain tab)",Q1,PowerPAK_SO-8_Single,C455160
 2N7002 expander -> switch reset,Q2,SOT-23,C8545
 BC857: LED_nPWR must be buffered (datasheet Table 4),"Q101,Q201,Q301",SOT-23,C556165
 2N7002,"Q102,Q103,Q104,Q105,Q202,Q203,Q204,Q205,Q302,Q303,Q304,Q305",SOT-23,C8545
@@ -118,26 +118,26 @@ BC857: LED_nPWR must be buffered (datasheet Table 4),"Q101,Q201,Q301",SOT-23,C55
 9.53k 1%,"R142,R242,R342",R_0603_1608Metric,
 90.9k 1%,"R143,R243,R343",R_0603_1608Metric,
 1M,"R147,R247,R347",R_0603_1608Metric,
-Pulse H5007NL 1000BASE-T magnetics (switch port 4 to the wall RJ45),T1,Pulse_H5007NL,C2891392
-"Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus",U1,TQFP-128_14x14mm_P0.4mm_EP10.0,C2830106
-TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM),U3,WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm,C2846591
-TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO),U4,WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm,C2846591
-"TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus",U5,TSSOP-28_4.4x9.7mm_P0.65mm,C2927919
-"PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)",U6,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
-"PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares",U7,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+Pulse H5007NL 1000BASE-T magnetics (switch port 4 to the wall RJ45),T1,Pulse_H5007NL,C6384935
+"Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus",U1,TQFP-128_14x14mm_P0.4mm_EP10.0,C638299
+TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM),U3,WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm,C157482
+TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO),U4,WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm,C157482
+"TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus",U5,TSSOP-28_4.4x9.7mm_P0.65mm,C93245
+"PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)",U6,TSSOP-24_4.4x7.8mm_P0.65mm,C2864778
+"PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares",U7,TSSOP-24_4.4x7.8mm_P0.65mm,C2864778
 ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE,U8,SOIC-8_3.9x4.9mm_P1.27mm,C2836813
 "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed",U9,SOIC-8_3.9x4.9mm_P1.27mm,C9866
-TMP117AIDRVR board temperature under the coolers (I2C 0x49),U10,WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm,C2842210
-"Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack",U11,Quectel_LG290P,C22453086
-"Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd",U12,Ebyte_E22-900M30S,C2913441
+TMP117AIDRVR board temperature under the coolers (I2C 0x49),U10,WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm,C699536
+"Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack",U11,Quectel_LG290P,C29781241
+"Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd",U12,Ebyte_E22-900M30S,C411294
 "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge",U13,Ebyte_E72-2G4M20S1E,C5352930
 "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge",U14,Ebyte_E72-2G4M20S1E,C5352930
 CP2102N-A02-GQFN28 USB-UART bridge (GNSS),U15,QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm,C964632
 CP2102N-A02-GQFN28 USB-UART bridge (ZBA),U16,QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm,C964632
 CP2102N-A02-GQFN28 USB-UART bridge (ZBB),U17,QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm,C964632
 CP2102N-A02-GQFN28 USB-UART bridge (RB),U18,QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm,C964632
-"74LVC08APW quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)",U19,TSSOP-14_4.4x5mm_P0.65mm,C6009
-74LVC08APW quad AND: E72 radios (EMCON AND software); spare gates grounded,U20,TSSOP-14_4.4x5mm_P0.65mm,C6009
+"74LVC08APW quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)",U19,TSSOP-14_4.4x5mm_P0.65mm,C465737
+74LVC08APW quad AND: E72 radios (EMCON AND software); spare gates grounded,U20,TSSOP-14_4.4x5mm_P0.65mm,C465737
 TPS22810DRV,"U21,U22",WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm,C527679
 TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (3.0 A (ILM)),U23,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
 TPS259631DDAR eFuse +5V_DEV -> +5V_RB (3.0 A (ILM)),U24,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
@@ -152,20 +152,20 @@ USBLC6-2SC6,"U29,U33,U34,U35,U36,U37,U107,U207,U307",SOT-23-6,C7519
 "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)",U31B,CM5_Conn_B_10164227,C7435219
 "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted",U32A,CM5_Conn_A_10164227,C7435219
 "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)",U32B,CM5_Conn_B_10164227,C7435219
-"Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket",U101,LQFP-128_14x14mm_P0.4mm_EP6.0,C2827826
-"TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)",U102,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C2841998
+"Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket",U101,LQFP-128_14x14mm_P0.4mm_EP6.0,C500767
+"TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)",U102,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C544686
 "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A",U103,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
 "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1B",U104,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
 TPS62933DRLR buck 1.0 V PCIe switch core S1,U105,SOT-583-8,
 TPS62933DRLR buck 1.1 V hub core S1,U106,SOT-583-8,
-"Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket",U201,LQFP-128_14x14mm_P0.4mm_EP6.0,C2827826
-"TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)",U202,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C2841998
+"Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket",U201,LQFP-128_14x14mm_P0.4mm_EP6.0,C500767
+"TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)",U202,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C544686
 "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A",U203,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
 "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2B",U204,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
 TPS62933DRLR buck 1.0 V PCIe switch core S2,U205,SOT-583-8,
 TPS62933DRLR buck 1.1 V hub core S2,U206,SOT-583-8,
-"Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket",U301,LQFP-128_14x14mm_P0.4mm_EP6.0,C2827826
-"TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)",U302,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C2841998
+"Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket",U301,LQFP-128_14x14mm_P0.4mm_EP6.0,C500767
+"TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)",U302,QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm,C544686
 "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A",U303,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
 "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3B",U304,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2070920
 TPS62933DRLR buck 1.0 V PCIe switch core S3,U305,SOT-583-8,

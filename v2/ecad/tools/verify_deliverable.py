@@ -45,6 +45,19 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP"), bare=False):
     if os.path.exists(bom) and not bare:
         rows = list(csv.DictReader(open(bom)))
         ok(rows and list(rows[0].keys())[:4] == ["Comment", "Designator", "Footprint", "LCSC Part #"], "BOM in the JLC form (Comment, Designator, Footprint, LCSC Part #)")
+        # No code this project has already proved wrong at JLCPCB (tools/lcsc-blocked.txt). A finish re-exports the BOM from the board file it
+        # already has and never re-runs the schematic generator, so a code corrected in a generator does not reach a deliverable until that
+        # board is regenerated: on 9 September 2026 a red team found all 23 of the codes corrected on 8 September still in five shipped
+        # deliverable BOMs, among them a PCA9555 that is a 74HC245PW and a BAT54 that is an LED. This is the gate that was missing.
+        _bl = {}
+        _blf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lcsc-blocked.txt")
+        if os.path.exists(_blf):
+            for _ln in open(_blf):
+                if _ln.startswith("#") or not _ln.strip(): continue
+                _f = _ln.split()
+                if len(_f) >= 2: _bl[_f[0]] = " ".join(_f[1:])
+        _hit = sorted({(r.get("LCSC Part #") or "").strip() for r in rows if (r.get("LCSC Part #") or "").strip() in _bl})
+        ok(not _hit, "no LCSC code the record has proved wrong (%s)" % (", ".join("%s: %s" % (h, _bl[h]) for h in _hit) if _hit else "none of %d blocked codes" % len(_bl)))
         refs = []
         for r in rows:
             for x in r.get("Designator", "").split(","):

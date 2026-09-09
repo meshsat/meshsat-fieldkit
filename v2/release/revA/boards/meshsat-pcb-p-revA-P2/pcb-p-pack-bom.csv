@@ -9,8 +9,8 @@ USBLC6-2SC6 ESD clamp on the SMBus pair,D2,SOT-23-6,C7519
 cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN,J_CELL,JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical,
 SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND PRES,J_SMB,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,
 cell thermistor (JST-PH 1x2): the 103AT in the block,J_TS,JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical,
-"CSD17570Q5B 30 V N-FET, charge switch",Q1,PowerPAK_SO-8_Single,C2825431
-"CSD17570Q5B 30 V N-FET, discharge switch",Q2,PowerPAK_SO-8_Single,C2825431
+"CSD17570Q5B 30 V N-FET, charge switch",Q1,PowerPAK_SO-8_Single,C529279
+"CSD17570Q5B 30 V N-FET, discharge switch",Q2,PowerPAK_SO-8_Single,C529279
 100R,"R1,R2,R3,R4,R5,R8,R9,R20,R21",R_0603_1608Metric,C22775
 1k,"R6,R7",R_0603_1608Metric,C21190
 2m 2512 2W (sense),R10,R_2512_6332Metric,

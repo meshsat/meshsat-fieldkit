@@ -1,0 +1,29 @@
+# LCSC codes this project has proved wrong at JLCPCB. verify_deliverable.py refuses a deliverable whose BOM carries one.
+# Written 9 September 2026 from the corrections of appendix 32.72 (verified on JLCPCB's parts API by the ordering
+# session on 8 September) after a red-team pass found every one of them still in the shipped deliverable BOMs:
+# a finish re-exports the BOM from the board file it already has and never re-runs the schematic generator, so a
+# code corrected in a generator does not reach a deliverable until that board is regenerated from the schematic.
+# code  replacement  reason
+C11702       C21190       a 0402 part on an 0603 land
+C2166        C7502705     resolves to an LED, not a BAT54
+C22453086    C29781241    corrected on the site by the ordering session; the replacement was verified for part and package
+C25118       C23182       a 0402 part on an 0603 land
+C2802372     C5355286     corrected on the site by the ordering session; the replacement was verified for part and package
+C2803764     C41430829    corrected on the site by the ordering session; the replacement was verified for part and package
+C2803770     C41430835    corrected on the site by the ordering session; the replacement was verified for part and package
+C2803771     C41430851    corrected on the site by the ordering session; the replacement was verified for part and package
+C2825431     C529279      resolves to a lever switch, not a CSD17570Q5B
+C2827826     C500767      corrected on the site by the ordering session; the replacement was verified for part and package
+C2827865     C455160      corrected on the site by the ordering session; the replacement was verified for part and package
+C2830106     C638299      corrected on the site by the ordering session; the replacement was verified for part and package
+C2841998     C544686      corrected on the site by the ordering session; the replacement was verified for part and package
+C2842210     C699536      corrected on the site by the ordering session; the replacement was verified for part and package
+C2846591     C157482      corrected on the site by the ordering session; the replacement was verified for part and package
+C2891392     C6384935     corrected on the site by the ordering session; the replacement was verified for part and package
+C2913441     C411294      corrected on the site by the ordering session; the replacement was verified for part and package
+C2927919     C93245       corrected on the site by the ordering session; the replacement was verified for part and package
+C50993       C2864778     not in JLCPCB's catalogue
+C5605        C465737      resolves to a 74HC14D, not a 74LVC08
+C5626        C2864778     resolves to a 74HC245PW, not a PCA9555
+C6009        C465737      corrected on the site by the ordering session; the replacement was verified for part and package
+C72043       C2986059     one piece in stock at the quote

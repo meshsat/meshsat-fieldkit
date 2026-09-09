@@ -46,7 +46,7 @@ BOOTSEL: short while powering to enter the USB bootloader,JP1,SolderJumper-2_P1.
 "10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)",L1,L_Coilcraft_XAL1510-103,C3911782
 "Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1 pins 1-2 on the positive line, winding 2 pins 3-4 on the return (pin map per the Bourns drawing, verified 7 Sep 2026)",L2,L_CommonModeChoke_Bourns_SRF1260,
 4.7uH XAL4020-472ME,L3,L_Coilcraft_XAL4020-XXX,
-green: vehicle input present,LED1,LED_0603_1608Metric,C72043
+green: vehicle input present,LED1,LED_0603_1608Metric,C2986059
 status (GPIO25),LED2,LED_0603_1608Metric,
 "water electrode A (bare copper, +3.3 V through 1 M)",PAD_W1,SolderPad_8x6,
 "water electrode B (bare copper, to ADC0)",PAD_W2,SolderPad_8x6,
