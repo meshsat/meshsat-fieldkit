@@ -15,7 +15,7 @@ Hardware record: `MESHSAT-709-geometry-appendix.md` sections 32.52 (fabric), 32.
 | E-paper | Pervasive Displays E2370KS0C1 on the 24-way ZIF `J_EPD`, supply switch `Q5`, the boost stage `L1`/`Q6`/`D19`..`D21` per PDi's driving note rev 02 | controller |
 | Sounder | `BZ1` IP67 panel sounder on `+5V` through `Q4` from `PWM1` | controller |
 | Ambient light | `U_LIGHT` VEML7700 (I2C 0x10) under its own light guide | controller |
-| EMCON logic | `U9` 74LVC1G04: `EMCON_HW` = NOT `TX_INHIBIT_n` | hardware |
+| EMCON logic | `U9` 74LVC1G34 buffer: `EMCON_HW` follows `TX_INHIBIT_n`, both LOW = inhibited (corrected 9 September 2026, red team C1: the part was an inverter and both consumer boards were built on low = silence, so asserting EMCON enabled the PA and released both M.2 radios) | hardware |
 | Pass-throughs | the Xenarc 709GNK monitor's connector block (its HDMI, USB touch and 12 V leads go below the plate to B16 and A22), two U-174/U headset jacks `J_HSJ1`/`J_HSJ2` (leads to D8 `J_HS1`/`J_HS2`), the USB camera module behind the sealed window (lead to B16 `J_CAM`) | not the panel's |
 
 ## 2. The ribbon `J_PANEL` (2x13, 2.54 mm; B16 `J_PANEL` carries the same map, checked by `check_contracts.py`)
@@ -29,7 +29,7 @@ Hardware record: `MESHSAT-709-geometry-appendix.md` sections 32.52 (fabric), 32.
 | 5 | SCL | | 18 | HB1 | in: slot 1 heartbeat |
 | 6 | EXP_INT | out (the panel expanders' interrupt, also read by the controller) | 19 | HB2 | in: slot 2 heartbeat |
 | 7 | TR_APRS | in: D8's real KEY line (lights the TX lamp) | 20 | HB3 | in: slot 3 heartbeat |
-| 8 | EMCON_HW | out, hardware: high = transmitters inhibited | 21 | SLOT_EN1 | out: slot 1 rail enable |
+| 8 | EMCON_HW | out, hardware: LOW = transmitters inhibited | 21 | SLOT_EN1 | out: slot 1 rail enable |
 | 9 | GND | | 22 | SLOT_EN2 | out |
 | 10 | ZEROIZE_HW | out, hardware: low = wipe | 23 | SLOT_EN3 | out |
 | 11 | TX_INHIBIT_n | out, hardware: low = inhibit (to D8's KEY gate) | 24 | PI_SHDN_REQ | out: clean shutdown request to the modules |
@@ -107,8 +107,8 @@ The controller owns three lines per slot: `HBn` in, `SLOT_ENn` out, and the disp
 
 | Line | Source | Effect |
 |---|---|---|
-| TX_INHIBIT_n | `SW_EMCON` closed = low (100k pull-up `R14`, 10 nF `C24`) | D8's KEY gate cannot key the SA868 and the PA (`KEY = PTT_ANY AND TX_INHIBIT_n`); the bridge additionally holds every bearer |
-| EMCON_HW | `U9` inverter, high while TX_INHIBIT_n is low | the transmitter rail gates on A22 and B16 (5G, LoRa, WiFi link, Zigbee, Thread, Iridium, HF, SDR) open; ruled 32.50 item 3 |
+| TX_INHIBIT_n | `SW_EMCON` closed = low (10k pull-up `R14` on C7, 10 nF `C24`; A22, B16 and D9 each hold it down with 100k so a cut ribbon inhibits) | D8's KEY gate cannot key the SA868 and the PA (`KEY = PTT_ANY AND TX_INHIBIT_n`); the bridge additionally holds every bearer |
+| EMCON_HW | `U9` buffer, low while TX_INHIBIT_n is low | the transmitter rail gates on A22 and B16 (5G, LoRa, WiFi link, Zigbee, Thread, Iridium, HF, SDR) CLOSE: every enable is `X_EN = EMCON_HW AND X_SW_EN`, and both M.2 cards' `W_DISABLE1#` is pulled low; ruled 32.50 item 3 |
 | ZEROIZE_HW | `SW_ZERO` closed = low | B16's secure element and the encrypted drives are wiped by the supervisor on the falling edge (hardware line to the slots); the controller shows the armed state |
 | TR_APRS | D8's real KEY line | the TX lamp |
 | MAIN PWR | `SW_MAIN` to A22 `J_MAINSW` | kit power |
