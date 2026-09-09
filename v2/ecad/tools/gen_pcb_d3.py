@@ -183,10 +183,12 @@ if unassigned: print("WARNING pads not found for nodes:", unassigned[:12])
 def pour(layer, netname, name, rect, priority=0):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL); z.SetLocalClearance(FromMM(0.3)); z.SetMinThickness(FromMM(0.25)); z.SetThermalReliefGap(FromMM(0.3)); z.SetThermalReliefSpokeWidth(FromMM(0.4))
-    # 9 Sep 2026 (D10, appendix 32.85): this file defined pour() TWICE and the second one, the one that actually runs,
-    # never set the island removal. Every D pour since D8 has kept its unconnected islands, and KiCad counts each of
-    # them as an unrouted item between the zone and itself: that was D10's last open. pour_stitch.py gives a via to the
-    # islands worth keeping and the fill deletes the rest, which is the pair of passes this board family needs.
+    # 9 Sep 2026 (D10, appendix 32.85 and its correction): this file defined pour() TWICE and the second one, the one
+    # that actually runs, did not set the island removal. The duplicate was a real trap and is gone. The setting itself
+    # changes NOTHING: ISLAND_REMOVAL_MODE_ALWAYS is 0, which is KiCad's default, so every zone on every board has always
+    # removed its unconnected islands and the token never even reaches the file. It is written explicitly now so the
+    # intent is readable, not because it fixes anything. D10's last open is a different thing: two areas of one pour that
+    # are each connected to a pad but not to each other, which is pour_stitch.py's job.
     try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
     except Exception: pass
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
