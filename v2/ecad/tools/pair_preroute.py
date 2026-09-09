@@ -108,6 +108,15 @@ def astar(gr, layers, trk, via, start, goal, window, behind=()):
     LI = {L: i for i, L in enumerate(layers)}
     (jmin, imin), (jmax, imax) = window
     passable = {LI[L]: ~trk[L] for L in layers}
+    sL, sj, si = start; gL, gj, gi = goal
+    # 9 Sep 2026 (A24 USB_E6, appendix 32.83): the behind mask blocks a 2.5 mm half disc behind each entry station so a
+    # corridor leaves outward instead of diving back under the connector. It was also walling in the very cell free_end
+    # chose to start from: A's mezzanine-to-dock pair died after SIXTEEN expansions, which reads as a congested board and
+    # is a pocket of the tool's own making. The ends keep the 0.6 mm block free_end measured; the rest of the half disc
+    # stays blocked, so the rule still does its work.
+    _r0 = max(1, int(0.6 / gr.G))
+    _keep = {(L, e): passable[L][max(0, ii0 - _r0):ii0 + _r0 + 1, max(0, jj0 - _r0):jj0 + _r0 + 1].copy()
+             for L in passable for e, (jj0, ii0) in (("s", (sj, si)), ("g", (gj, gi)))}
     for (bx, by, ux, uy) in behind:
         jc, ic = gr.cell(bx, by); r = int(2.5 / gr.G)
         for ii in range(max(0, ic - r), min(gr.NY, ic + r + 1)):
@@ -115,7 +124,9 @@ def astar(gr, layers, trk, via, start, goal, window, behind=()):
                 x_, y_ = gr.xy(jj, ii)
                 if (x_ - bx) * ux + (y_ - by) * uy < -0.05 and math.hypot(x_ - bx, y_ - by) <= 2.5:
                     for L in passable: passable[L][ii, jj] = False
-    sL, sj, si = start; gL, gj, gi = goal
+    for L in passable:
+        for e, (jj0, ii0) in (("s", (sj, si)), ("g", (gj, gi))):
+            passable[L][max(0, ii0 - _r0):ii0 + _r0 + 1, max(0, jj0 - _r0):jj0 + _r0 + 1] = _keep[(L, e)]
     # the ends are the cells free_end chose: free on at least one layer; the path starts and ends only on layers where they are free (8 Sep: forcing
     # them passable on every layer let a path start on In2 inside a resistor's clearance and the legs hit at the first cell)
     def h(L, i, j): return math.hypot(i - gi, j - gj)
@@ -543,14 +554,25 @@ def main(a):
                 cloud of a hub or a connector), else along the normal of the P-N line, up to 6 mm; the stubs cover the distance at single width."""
                 def open_cell(jj, ii, r=3):   # free with a clear 7 x 7 block around it on that layer: a one-cell pocket between a header's pins is no corridor start (D9, J_HARN1)
                     return 0 <= ii - r and ii + r < gr.NY and 0 <= jj - r and jj + r < gr.NX and any(not trk[L][ii - r:ii + r + 1, jj - r:jj + r + 1].any() for L in layers)
-                jj, ii = gr.cell(x, y)
-                if open_cell(jj, ii): return x, y
+                # 9 Sep 2026 (A24 USB_E6, appendix 32.83): the FIRST cell with a 0.6 mm block around it is often a pocket
+                # inside a connector's escape cloud, and the corridor A* then dies in it after ninety expansions. A wider
+                # block is far more likely to sit in open copper, so the search runs twice: 1.2 mm first, 0.6 mm after.
                 dx_, dy_ = qx - px, qy - py; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 tdx, tdy = tx - x, ty - y; tl = math.hypot(tdx, tdy) or 1.0; tdx, tdy = tdx / tl, tdy / tl
-                for step in range(1, 121):   # up to 12 mm: a 0.4 mm hub's escape cloud is 4 to 8 mm deep
+                for _rr in (6, 3):
+                  jj, ii = gr.cell(x, y)
+                  if open_cell(jj, ii, _rr): return x, y
+                  for step in range(1, 121):   # up to 12 mm: a 0.4 mm hub's escape cloud is 4 to 8 mm deep
                     for ux, uy in ((nx_, ny_), (-nx_, -ny_), (tdx, tdy)):   # the P-N normal first: the legs then arrive side by side with the pads (8 Sep: an approach along the P-N line makes the far stub pass the near pad)
                         cx_, cy_ = x + ux * 0.1 * step, y + uy * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
-                        if open_cell(jj, ii): return cx_, cy_
+                        if open_cell(jj, ii, _rr): return cx_, cy_
+                  # three rays are a thin search; the sweep tries sixteen directions, the ones pointing at the other station first
+                  order = sorted(range(16), key=lambda k: -(math.cos(k * math.pi / 8) * tdx + math.sin(k * math.pi / 8) * tdy))
+                  for step in range(1, 121):
+                    for k in order:
+                        ux, uy = math.cos(k * math.pi / 8), math.sin(k * math.pi / 8)
+                        cx_, cy_ = x + ux * 0.1 * step, y + uy * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
+                        if open_cell(jj, ii, _rr): return cx_, cy_
                 return x, y
             def fine_end(st, out_=2.5):
                 """The corridor end of an entry station: on the outward normal of the pad pair (away from the parts' centre), the first open block at out_ mm or beyond."""
