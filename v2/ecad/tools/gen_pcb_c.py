@@ -106,10 +106,9 @@ for (ax0, ay0, ax1, ay1) in ((vx0 - K, vy0 - K, vx1 + K, vy0 + K), (vx0 - K, vy1
 pw, ph, pt = L.PLATE
 rounded_rect(-pw / 2, -ph / 2, pw / 2, ph / 2, L.PLATE_R, pcbnew.Dwgs_User, 0.15); text("face plate 365.5 x 249.5 x 3 (v2/cad/face_plate.py), 10 mm above this board", 0, ph / 2 - 4.0, pcbnew.Dwgs_User, 2.0, 0.3)
 rounded_rect(-L.WINDOW[0] / 2, -L.WINDOW[1] / 2, L.WINDOW[0] / 2, L.WINDOW[1] / 2, 5.85, pcbnew.Dwgs_User, 0.15); text("frame window 349.65 x 233.83", 0, L.WINDOW[1] / 2 - 9.0, pcbnew.Dwgs_User, 1.6, 0.25)
-gx, gy = L.XENARC["c"]; gw, gh = L.XENARC["body"]; rounded_rect(gx - gw / 2, gy - gh / 2, gx + gw / 2, gy + gh / 2, 15.0, pcbnew.Dwgs_User, 0.1); text("Xenarc 709GNK on the plate top (205 x 139 x 29), VESA 50 M4 at its rear centre", gx, gy, pcbnew.Dwgs_User, 2.0, 0.3)
-bx_, by_, bw_, bh_ = L.XENARC["block"]; rounded_rect(bx_ - bw_ / 2, by_ - bh_ / 2, bx_ + bw_ / 2, by_ + bh_ / 2, 1.0, pcbnew.Dwgs_User, 0.1); text("connector block through the plate cutout, 19 mm down", bx_, by_, pcbnew.Dwgs_User, 1.4, 0.25)
-for dx in (-1, 1):
-    for dy in (-1, 1): circle(gx + dx * L.XENARC["vesa"] / 2, gy + dy * L.XENARC["vesa"] / 2, L.XENARC["vesa_hole"], pcbnew.Dwgs_User, 0.1)
+gx, gy = L.XENARC["c"]; gw, gh = L.XENARC["body"]; rounded_rect(gx - gw / 2, gy - gh / 2, gx + gw / 2, gy + gh / 2, 15.0, pcbnew.Dwgs_User, 0.1); text("Xenarc 709GNK IN the plate (205 x 139 x 29), glass level with the face, rear frame on the VESA 50 pattern", gx, gy, pcbnew.Dwgs_User, 2.0, 0.3)
+bx_, by_, bw_, bh_ = L.XENARC["block"]; rounded_rect(bx_ - bw_ / 2, by_ - bh_ / 2, bx_ + bw_ / 2, by_ + bh_ / 2, 1.0, pcbnew.Dwgs_User, 0.1); text("connector block, part of the recessed body", bx_, by_, pcbnew.Dwgs_User, 1.4, 0.25)
+for (fx_, fy_) in L.XENARC["frame_holes"]: circle(fx_, fy_, 4.5, pcbnew.Dwgs_User, 0.1)   # 9 Sep 2026 (32.85): the rear frame's M4, the VESA holes are inside the window now
 ex, ey = L.EPAPER["c"]; mw, mh = L.EPAPER["module"]; rounded_rect(ex - mw / 2, ey - mh / 2, ex + mw / 2, ey + mh / 2, 1.4, pcbnew.Dwgs_User, 0.1); text("PDi E2370KS0C1 glass under the lens, its flex to J_EPD on the top strip", ex, ey, pcbnew.Dwgs_User, 1.8, 0.3)
 pw_, ph_ = L.PA_MOUNT["size"]; px_, py_ = L.PA_MOUNT["c"]; rounded_rect(px_ - pw_ / 2, py_ - ph_ / 2, px_ + pw_ / 2, py_ + ph_ / 2, 1.0, pcbnew.Dwgs_User, 0.1); text("RA30H1317M1 flange on the plate's underside (two PEM S-M3)", px_, py_, pcbnew.Dwgs_User, 1.4, 0.25)
 for dx in (-1, 1): circle(px_ + dx * L.PA_MOUNT["holes"] / 2, py_, L.PA_MOUNT["hole_d"], pcbnew.Dwgs_User, 0.1)

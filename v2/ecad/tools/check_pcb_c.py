@@ -22,7 +22,7 @@ top_inner = [sg for sg in segs if abs(sg[0][1] - VOID[3]) < 0.01 and abs(sg[1][1
 check(len(top_inner) == 1 and abs(min(top_inner[0][0][0], top_inner[0][1][0]) - VOID[0]) < 0.01 and abs(max(top_inner[0][0][0], top_inner[0][1][0]) - VOID[2]) < 0.01, "the window %s: its top edge at Y %.0f from X %.0f to %.0f" % (VOID, VOID[3], VOID[0], VOID[2]))
 nx0, ny0, nx1, ny1 = L.BLOCK_NOTCH
 notch = [sg for sg in segs if abs(sg[0][1] - ny0) < 0.01 and abs(sg[1][1] - ny0) < 0.01]
-check(len(notch) == 1 and abs(min(notch[0][0][0], notch[0][1][0]) - nx0) < 0.01 and abs(max(notch[0][0][0], notch[0][1][0]) - nx1) < 0.01, "the monitor block notch %s cut into the bottom strip" % (L.BLOCK_NOTCH,))
+check(len(notch) == 1 and abs(min(notch[0][0][0], notch[0][1][0]) - nx0) < 0.01 and abs(max(notch[0][0][0], notch[0][1][0]) - nx1) < 0.01, "the monitor body notch %s cut into the bottom strip" % (L.BLOCK_NOTCH,))
 fps = {fp.GetReference(): fp for fp in b.GetFootprints()}
 def bbox(fp):
     bb = fp.GetBoundingBox(False, False); return (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
@@ -94,6 +94,11 @@ face_hw = L.face_overlap_report("hw")
 check(not face_hw, "no two face parts overlap in plan on the plate (%s)" % ["%s / %s %.2f x %.2f mm" % f for f in face_hw][:6])
 face_hidden = L.face_overlap_report("hidden")
 if face_hidden: print("check_pcb_c: INFO  laser marking under a face part: %s" % ["%s / %s %.2f x %.2f mm" % f for f in face_hidden][:4])
+# 9 Sep 2026 (appendix 32.85): the owner's ruling 14.6 says every display surface is level with the plate, at most 0.5 to 0.8 mm
+# proud. The Xenarc stood 28.66 mm proud for three days and no gate asked, because "proud" was prose in the record and a number
+# in nobody's code. It is a number in panel1450.py now and this is where it blocks.
+proud = L.proud_report()
+check(not proud, "every display surface is within %.1f mm of the plate's face (%s)" % (L.PROUD_LIMIT, ["%s %.2f mm" % q for q in proud]))
 ALLOW = {L.STRIP_T: 9.5, L.STRIP_L: 3.5, L.STRIP_B: 3.5, L.STRIP_R: 3.5}   # the underside's tallest parts per strip: the IDC ribbon header on the top strip, SMD parts elsewhere
 tall_under = [(name, h, round(L.BACKER_UNDER_Z - ALLOW[st] - (L.B_TOP_Z + h), 1)) for (rx0, ry0, rx1, ry1), h, name in L.B16_TALL for st in STRIPS if rx1 > st[0] and rx0 < st[2] and ry1 > st[1] and ry0 < st[3] and L.BACKER_UNDER_Z - ALLOW[st] - (L.B_TOP_Z + h) < 3.0]
 check(not tall_under, "B16's tall parts under the strips stay 3 mm below the backer's underside parts (3.5 mm allowance, 9.5 under the top strip's ribbon header): %s" % tall_under[:4])

@@ -3,8 +3,8 @@
 
 365.5 x 249.5 x 3.0 mm 5754 or 6061, black anodised, clamped under the 1450PF frame ring inside its skirt with the PORON gasket ring on its 8 mm band
 (the construction of 32.34, the plate replacing the PCB as the weather face). Cut-outs, all from v2/ecad/tools/panel1450.py: the ten M3 holes at the
-frame's inserts, the Xenarc monitor's connector-block cutout (60 x 46 with a gasket ring) and its four VESA 50 M4 holes (C7: no display aperture, the monitor lies on the plate),
-the e-paper window inside a pocket for its 2 mm lens, three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, two 16 mm
+frame's inserts, the Xenarc monitor's full-body window (205.75 x 140.09 R15: the monitor sits IN the plate with its glass level with this face, owner ruling
+9 Sep 2026, appendix 32.85) with four M4 holes for its rear retaining frame, the e-paper window inside a pocket for its 1 mm lens, three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, two 16 mm
 headset jack holes, the 8 mm camera window, seventeen 2.6 mm H7 holes for the press-fit Mentor 1282.5004 IP68 light guides (sixteen LEDs and the light sensor), eight self-clinching
 M3 standoff holes for the C7 backer ring and two for the PA flange's PEM nuts. Legends and the logo are laser marked from the SVG this script also writes.
 Usage: face_plate.py <out dir>   (build123d in ~/.venv-cad on the VM). Writes face-plate.step, face-plate.stl, face-plate.dxf (the outline and every
@@ -44,12 +44,15 @@ plate = rrect(0, 0, W, H, L.PLATE_R, 0, T)
 cuts = []
 # frame screws, from below into the frame's inserts: M3 clearance 3.4
 for (x, y) in L.FRAME_BOSSES: cuts.append(cyl(x, y, 3.4, -1, T + 2))
-# the Xenarc monitor (C7, 32.51): no aperture; a cutout for its connector block with a gasket ring around it, and the four VESA 50 M4 holes at its rear centre
-bx, by, bw, bh, br = L.XENARC["cutout"]; cuts.append(rrect(bx, by, bw, bh, br, -1, T + 2))
-gx, gy = L.XENARC["c"]
-for dx in (-1, 1):
-    for dy in (-1, 1): cuts.append(cyl(gx + dx * L.XENARC["vesa"] / 2, gy + dy * L.XENARC["vesa"] / 2, L.XENARC["vesa_hole"], -1, T + 2))
-# e-paper: lens pocket 1.0 deep, window through
+# 9 September 2026 (owner ruling, appendix 32.85): the monitor sits IN the plate, its glass level with this face. Until today it lay ON
+# the plate and stood 28.66 mm proud, which breaks the ruling of 14.6 that every display surface is level with the top shelf. The 709GNK's
+# front bezel is a 10.66 mm flange and a 3 mm plate cannot pocket it, so the plate carries a full-body WINDOW: the monitor fills the 3 mm
+# and hangs 25.66 mm into the void, held by a rear frame on its VESA 50 pattern (M4 x 6 mm max thread, so the frame carries the 1.2 kg,
+# not the plate) and sealed at the window land. The block cutout and the four VESA through holes are withdrawn with the old construction.
+gx, gy = L.XENARC["c"]; ww_, wh_ = L.XENARC["window"]
+cuts.append(rrect(gx, gy, ww_, wh_, L.XENARC["window_r"], -1, T + 2))
+for (fx, fy) in L.XENARC["frame_holes"]: cuts.append(cyl(fx, fy, 4.5, -1, T + 2))   # the rear frame's M4 clearance, in the side bands
+# e-paper: lens pocket 1.0 deep, window through; the lens is 1.0 mm on 0.05 mm transfer tape since 9 Sep 2026 (32.85), so it ends 0.05 proud
 ex, ey = L.EPAPER["c"]; lw, lh = L.EPAPER["lens"]; ww, wh = L.EPAPER["window"]
 cuts.append(rrect(ex, ey, lw + 0.4, lh + 0.4, L.EPAPER["lens_r"], T - L.EPAPER["pocket_depth"], L.EPAPER["pocket_depth"] + 1))
 cuts.append(rrect(ex, ey, ww, wh, 1.0, -1, T + 2))
@@ -93,9 +96,8 @@ def dxf_and_svg():
     for name in ("OUTLINE", "THROUGH", "POCKET_1MM", "STANDOFF_M3", "MARKING"): doc.layers.add(name)
     poly_rrect(0, 0, W, H, L.PLATE_R, "OUTLINE")
     for (x, y) in L.FRAME_BOSSES: circle(x, y, 3.4, "THROUGH")
-    poly_rrect(bx, by, bw, bh, br, "THROUGH")
-    for dx in (-1, 1):
-        for dy in (-1, 1): circle(gx + dx * L.XENARC["vesa"] / 2, gy + dy * L.XENARC["vesa"] / 2, L.XENARC["vesa_hole"], "THROUGH")
+    poly_rrect(gx, gy, ww_, wh_, L.XENARC["window_r"], "THROUGH")
+    for (fx, fy) in L.XENARC["frame_holes"]: circle(fx, fy, 4.5, "THROUGH")
     for ref, (x, y) in L.HEADSETS: circle(x, y, L.HEADSET_HOLE, "THROUGH")
     circle(cx_, cy_, L.CAMERA[2], "THROUGH"); circle(L.LIGHT_SENSOR[1][0], L.LIGHT_SENSOR[1][1], L.LED_HOLE, "THROUGH")
     for dx in (-1, 1): circle(L.PA_MOUNT["c"][0] + dx * L.PA_MOUNT["holes"] / 2, L.PA_MOUNT["c"][1], 4.2, "STANDOFF_M3")
