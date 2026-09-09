@@ -13,8 +13,15 @@ router (the gate then calls it UNCOUPLED). The caller runs DRC.
 
 Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
   prints one line per pair and `pair_preroute: N of M pairs laid`, exit 1 when a pair failed."""
-import sys, os, re, math, json, heapq
+import sys, os, re, math, json, heapq, time
 PATH_WHY = [""]   # why the last corridor search returned nothing (9 Sep 2026)
+# 9 September 2026 (B19): a wall-clock budget per pair. The two searches are capped by EXPANSIONS (6,000,000 and 400,000),
+# which is not a time bound: on B19's board, with 1412 escapes and 951 parts in the way, the longest pair spent eleven
+# minutes without finishing one section, and a pass with 113 pairs has no predictable end. PAIR_BUDGET (seconds, default
+# 600) makes each pair give up on its own rather than the pass hanging; a pair that runs out is reported unlaid like any
+# other, which is honest, and the number of pairs laid is what the gate reads anyway.
+PAIR_DEADLINE = [0.0]
+PAIR_BUDGET = float(os.environ.get("PAIR_BUDGET", "600"))   # seconds per pair; 0 turns the budget off
 import pcbnew, numpy as np
 from pcbnew import VECTOR2I, FromMM
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -144,6 +151,8 @@ def astar(gr, layers, trk, via, start, goal, window, behind=()):
         L, i, j = s; n += 1
         if (i, j) == (gi, gj) and (gL not in LI or L == LI[gL]): found = s; break
         if n > 6000000: capped = True; break
+        if PAIR_DEADLINE[0] and not n % 8192 and time.time() > PAIR_DEADLINE[0]:
+            capped = True; PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET; break
         for di, dj, c in steps:
             ni, nj = i + di, j + dj
             if not (imin <= ni <= imax and jmin <= nj <= jmax): continue
@@ -211,6 +220,8 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
         if (i, j) == (gi, gj): found = (i, j); break
         n += 1
         if n > 400000: break
+        if PAIR_DEADLINE[0] and not n % 8192 and time.time() > PAIR_DEADLINE[0]:
+            PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET; break
         for di, dj, c in steps:
             ni, nj = i + di, j + dj
             if not (imin <= ni <= imax and jmin <= nj <= jmax) or not passable[ni, nj]: continue
@@ -335,6 +346,7 @@ def main(a):
         return (mm(p.GetPosition().x), mm(p.GetPosition().y), L, p)
 
     for stem in stems:   # a swapped pair is appended and laid again
+        PAIR_DEADLINE[0] = time.time() + PAIR_BUDGET if PAIR_BUDGET > 0 else 0.0
         pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
         pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
         vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); clr_c = float(cl.get("clearance", CLR))
