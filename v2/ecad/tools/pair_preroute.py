@@ -262,6 +262,7 @@ def simplify(path):
         cur.append(c)
     runs.append(cur); return runs
 
+_MITRE = float(os.environ.get("PAIR_MITRE_LIMIT", "1.2"))   # above this multiple of d the outer join is arced, not mitred
 def offset_polyline(pts, d):
     """Offset a polyline (list of (x, y) mm) by d to its left; mitred joins."""
     if len(pts) < 2: return list(pts)
@@ -275,7 +276,12 @@ def offset_polyline(pts, d):
         d1 = (p2[0] - p1[0], p2[1] - p1[1]); d2 = (p4[0] - p3[0], p4[1] - p3[1]); den = d1[0] * d2[1] - d1[1] * d2[0]
         if abs(den) < 1e-9: out.append(p2); continue
         t = ((p3[0] - p1[0]) * d2[1] - (p3[1] - p1[1]) * d2[0]) / den; ix, iy = p1[0] + t * d1[0], p1[1] + t * d1[1]
-        if t > 1.0 and math.hypot(ix - p2[0], iy - p2[1]) > 1.5 * abs(d):   # the outer side of a sharp bend (the offsets meet beyond their ends): an arc around the corner keeps the legs parallel; the inner side keeps its mitre
+        # 9 September 2026 (B19): the limit was 1.5, and a RIGHT ANGLE puts the mitre point at d times the square root of
+        # two, 1.414, so every 90 degree corner took the mitre and stood 41 percent further from the centreline than the
+        # straights do. `pair_report.py` says 46 of 160 failed attempts are the legs failing to clear, and a corridor that
+        # fits along its straights and not at its corners is what that looks like. The arc is strictly closer to the
+        # centreline than the mitre, so lowering the limit to 1.2 can only help; PAIR_MITRE_LIMIT restores the old value.
+        if t > 1.0 and math.hypot(ix - p2[0], iy - p2[1]) > _MITRE * abs(d):   # the outer side of a bend: an arc around the corner keeps the legs parallel; the inner side keeps its mitre
             cx, cy = pts[k + 1]; a0 = math.atan2(p2[1] - cy, p2[0] - cx); a1 = math.atan2(p3[1] - cy, p3[0] - cx); da = a1 - a0
             while da > math.pi: da -= 2 * math.pi
             while da < -math.pi: da += 2 * math.pi
