@@ -229,11 +229,13 @@ prototype; none has been run.
 
 ## 14. What it costs
 
-**Parts.** The work adds 174 placed parts in five groups, measured on the built board rather than counted from the
-schematic: the three supervisor blocks 66 parts (MCU, its LDO, two CAN transceivers, crystal, SWD pads, status LED,
-decoupling and pulls, three times over), the voters and the break-before-make 59, the three per-bank host selects 21,
-the WiFi antenna changeover 16, and the CAN termination 12. Against a board that carried about 925 parts, that is
-roughly a fifth more parts, and every one of them is a passive, a logic quad, a small mux or one of three MCUs.
+**Parts, measured against the netlist this work started from** (`096b67c`, the board before the fabric): **756 parts
+before, 925 after, +169**. By prefix: capacitors +69, resistors +52, integrated circuits +33, transistors +5, LEDs +3,
+crystals +3, six U.FL receptacles, and two removals (the spare USB header, which became the 5G module's port, and one
+fuse). Grouped by what they are for, on the placed board: the three supervisor blocks 66 parts (MCU, its LDO, two CAN
+transceivers, crystal, SWD pads, status LED, decoupling and pulls, three times over), the voters and the
+break-before-make 59, the three per-bank host selects 21, the WiFi antenna changeover 16, the CAN termination 12.
+That is 22 percent more parts, and every one of them is a passive, a logic quad, a small mux or one of three MCUs.
 
 **Area.** 2,709 mm2 of part bounding box, all of it on the **underside**, in pockets that carried nothing before:
 the two gaps between the module columns (29 x 56 mm each), the free underside of the QMX bay, and the band between
