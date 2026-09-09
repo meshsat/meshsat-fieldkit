@@ -3432,3 +3432,30 @@ trade this ruling accepts: the set runs at PAIR_GATE=0 and the impedance judge r
 **Phases.** The regenerated set is **A24, B18, C9, D10, E7, P3**. E5 is unchanged, being a bare board with no
 active part. A23, C8 and B17 were never released, so nothing shipped under those names; D9 and P2 were, and
 their deliverables stay in the record as the boards that were released on 8 September.
+
+
+### 32.82 The decoupling floor plan, and the pass that had never run (9 September 2026, 13:20 CEST; MESHSAT-862)
+
+The floor-plan ruling of 32.81 put two passes into every chain: `bypass_slots.py` reserves a slot beside each
+declared capacitor's pin before the region packer runs, and `bypass_place.py` moves the capacitors of the parts
+the packer itself places. Four of the six boards then blocked at `place_audit` with the same complaint, that a
+fine-pitch part had lost its escapes: D10's `U7` six of seventeen pads, C9's `U3` twenty-three of fifty-seven
+and `J_EPD` six of twenty-one.
+
+The obvious suspect was the reservation, and it was wrong. `BYPASS_SLOTS=0` turns the reservation off, so the
+same board can be built both ways: **with the reservation off the escapes were still lost.** The cause is
+`bypass_place.py`, which has existed since 8 September, which **no chain had ever run**, and which was wired
+into every chain that same morning. It knows about courtyards, rule areas and the board edge, and it knows
+nothing about escape fans, so it parked capacitors one to three millimetres from QFN and ZIF pins and took the
+room those pins escape through. Ten capacitors moved on D10 and six of U7's pads lost their fan.
+
+Both passes now share one rule: **an escaped IC's fan is closed to a decoupling capacitor.** An escaped IC is
+a part with eight or more SMD pads whose closest two are 1.0 mm apart or less, and its fan is its courtyard
+grown by 2.2 mm, which is `place_audit`'s own envelope figure. The first cut of that rule used the 0.7 mm
+fine-pitch test and let five capacitors land 1.9 to 2.6 mm from a 0.8 mm TQFP's pins, which is how the D board
+found the hole in it.
+
+Two lessons, both already in the record's own language. A tool that has never run is not a tool that works,
+and the day it is first wired in is the day it is first tested: this one had been sitting in the tree for a day
+carrying a defect that only a chain could reveal. And a switch that lets a pass be turned off is worth writing
+before the pass is needed, because it turns "which change broke this" from an argument into a measurement.
