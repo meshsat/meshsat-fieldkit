@@ -201,8 +201,14 @@ part("U2", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x23: LED sinks, the b
 c("C17", "100n", "+3V3", "GND", "C", "C14663"); c("C18", "100n", "+3V3", "GND", "C", "C14663")
 for i, net in enumerate(("SOS_SW", "ZEROIZE_HW", "TEST_SW", "LIGHT_DAY_n", "LIGHT_NIGHT_n"), 9):
     r("R%d" % i, "10k", net, "+3V3", "R", "C25804"); c("C%d" % (i + 10), "10n", net, "GND", "C", "C57112")
-r("R14", "100k", "TX_INHIBIT_n", "+3V3", "R", "C25803"); c("C24", "10n", "TX_INHIBIT_n", "GND", "C", "C57112")
-ic("U9", 5, "74LVC1G04 inverter (2 A 4 Y): EMCON_HW = NOT TX_INHIBIT_n, the hardware emission-control line to every transmitter rail (32.50 item 3)", "SOT235", {"2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"})
+r("R14", "10k", "TX_INHIBIT_n", "+3V3", "R", "C25804"); c("C24", "10n", "TX_INHIBIT_n", "GND", "C", "C57112")   # 10k, not 100k: A22, B16 and D9
+# each hold TX_INHIBIT_n down with 100k so a cut ribbon inhibits at every consumer; 10k against those three in parallel still reads 2.5 V, a solid high
+# EMCON_HW is a BUFFERED COPY of TX_INHIBIT_n, not its inverse (9 September 2026, red team C1). Both consumer boards were already built on
+# "low silences": A22 computes PA_EN = EMCON_HW AND PA_SW_EN and B16 computes every transmitter enable the same way, while this board
+# inverted the toggle into them. Asserting EMCON therefore ENABLED the PA and released both M.2 radios' W_DISABLE1#. A 74LVC1G34
+# non-inverting buffer in the same SOT-23-5 land (2 A, 4 Y) fixes the sense at its source. The toggle stays the only driver of
+# TX_INHIBIT_n: A22's gate that drove it back from EMCON_HW is deleted, which also removes a one-inversion feedback loop.
+ic("U9", 5, "74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"})
 c("C25", "100n", "+3V3", "GND")
 r("R15", "10k", "LED_RAIL_SW", "RAIL_SENSE", "R", "C25804"); r("R16", "10k", "PANEL_ID", "+3V3", "R", "C25804")
 part("JP2", "Jumper", "SolderJumper_2_Open", "PANEL_ID strap (closed = variant B)", "JP2", {"1": "PANEL_ID", "2": "GND"})
@@ -232,7 +238,7 @@ r("R%d" % rn, "300R", "LED_RAIL", "PIRING_A", "R", "C23025"); rn += 1
 part("SW_TEST", "Connector_Generic", "Conn_01x04", "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer under the bezel", "SW16", {"1": "TEST_SW", "2": "GND", "3": "TESTRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL", "TESTRING_A", "R", "C23179"); rn += 1
 part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot, hinged safety cover per 32.50; ruling 32.13); K front seal in the keyed 6.5 hole; the controller acts after 2 s closed", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
-part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW high; APEM 5636ADKB-2V, hinged safety cover); K front seal in the keyed 6.5 hole", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
+part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636ADKB-2V, hinged safety cover); K front seal in the keyed 6.5 hole", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
 part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; ZEROIZE_HW low = wipe the secure element and assert the disk-key wipe (32.52)", "TGL3", {"1": "ZEROIZE_HW", "2": "GND", "3": "NC"})
 # power-button leads: ferrite + 100 nF at the panel end (the leads pass the antenna feeds)
 part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_A", "2": "MAINSW_A2"}, "C1002"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_B", "2": "MAINSW_B2"}, "C1002")

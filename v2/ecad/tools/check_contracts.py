@@ -137,5 +137,35 @@ for net in ("USB_PNL_P", "USB_PNL_N"):
 check(any(r == "SW_EMCON" for r, _ in B["C"][0].get("TX_INHIBIT_n", set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get("EMCON_HW", set())), "C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL")
 check(any(r == "J_HARN1" for r, _ in B["D"][0].get("TX_INHIBIT_n", set())) and any(r.startswith("U") for r, _ in B["D"][0].get("TX_INHIBIT_n", set())), "D8: TX_INHIBIT_n from J_HARN1 into the KEY gate")
 
+# 13 to 15: the safety lines, added 9 September 2026 after a red team found that check 12 passes on a design that does the OPPOSITE of what
+# it says (appendix 32.81). Check 12 asks whether the nets exist. These ask who drives them, in which sense, and what happens when the panel
+# ribbon is not there. The defect they would have caught: C7 inverted the toggle into two boards that were both built on "low silences", so
+# asserting EMCON enabled the 30 W PA and released both M.2 radios, and A22 drove TX_INHIBIT_n back from EMCON_HW, closing a feedback loop.
+def _value_of(stem, ref):
+    import glob as _g
+    cands = [c for c in _g.glob(os.path.join(ECAD, stem + "*", "out", stem + ".net")) if os.path.isfile(c)]
+    if not cands: return ""
+    txt = open(max(cands, key=os.path.getmtime), encoding="utf-8", errors="replace").read()
+    m = re.search(r'\(comp \(ref "%s"\)\s*\(value "([^"]*)"\)' % re.escape(ref), txt)
+    return m.group(1) if m else ""
+
+# 13. one driver: the inhibit line is made by the panel toggle and read everywhere else. No gate output may sit on it.
+for _bd, _stem in (("A", "pcb-a-power"), ("B", "pcb-b-compute")):
+    _u = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("U")})
+    check(not _u, "%s: no device drives TX_INHIBIT_n, the panel toggle is its only source" % _bd, "found %s" % _u)
+_u26 = sorted({pin for r, pin in B["A"][0].get("EMCON_HW", set()) if r == "U26"})
+check(set(_u26) <= {"1", "4"}, "A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output", "U26 pins %s" % _u26)
+
+# 14. fail safe: with the panel ribbon out, every consumer must read the inhibit line LOW, so each holds it down itself.
+for _bd in ("A", "B", "D"):
+    _gnd = {r for r, _ in B[_bd][0].get("GND", set())}
+    _pull = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("R") and r in _gnd})
+    check(bool(_pull), "%s: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits" % _bd, "pull-downs %s" % _pull)
+
+# 15. the sense: C7 buffers the toggle into EMCON_HW, it does not invert it (both consumer boards silence on LOW).
+_u9 = _value_of("pcb-c-display", "U9")
+check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read")
+
+
 print("\n%d contract(s) FAILED" % len(fails) if fails else "\nALL CONTRACTS PASS")
 sys.exit(1 if fails else 0)

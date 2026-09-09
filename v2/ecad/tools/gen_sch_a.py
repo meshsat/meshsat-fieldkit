@@ -277,11 +277,14 @@ def efuse(uref, vin, vout, en, flt, refs, ilim):
 efuse("U21", "VBAT", "VMON", "MON_EN", "MON_FLT", ["C98", "R90", "R91", "R92", "R93", "C99"], "1.2 A (ILM)"); vh2("J_MON", "monitor supply lead to the Xenarc (JST-VH): + -", "VMON")
 efuse("U22", "VBAT", "VHEAT", "HEAT_EN", "HEAT_FLT", ["C100", "R94", "R95", "R96", "R97", "C101"], "1.0 A (ILM)"); part("J_HEAT", "Connector_Generic", "Conn_01x02", "heater mat under the 2590 cradle (XH2.5): + -", "XH2", {"1": "VHEAT", "2": "GND"})
 efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "2.0 A (ILM)"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
-# --- hardware EMCON gates: 74LVC08APW quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC); EMCON_HW (active low from the panel controller over J_AB1,
-#     pulled up: an unplugged ribbon leaves the transmitters enabled, as D7's TX_INHIBIT_n did) ANDed with the software holds from the expander
+# --- hardware EMCON gates: 74LVC08APW quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC).
+#     EMCON_HW is active LOW (low silences) and this board only READS it: gate 3 used to drive TX_INHIBIT_n from EMCON_HW, which closed a
+#     one-inversion loop through C7's inverter and put a push-pull output on the same net as the panel's mechanical toggle. Deleted 9 September
+#     2026 (red team C1); C7 now buffers rather than inverts, so the sense these two gates were always built on is the sense the panel sends.
+#     The 10k pull-UP is gone with it: an unplugged ribbon must inhibit, so both lines are pulled DOWN here, as D9 already pulled TX_INHIBIT_n.
 ic("U26", 14, "74LVC08APW quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit", "TSSOP14", {
- "1": "EMCON_HW", "2": "PA_SW_EN", "3": "PA_EN", "4": "EMCON_HW", "5": "HF_SW_EN", "6": "HF_EN", "7": "GND", "8": "TX_INHIBIT_n", "9": "EMCON_HW", "10": "EMCON_HW", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3"}, "C465737")
-r("R102", "10k", "EMCON_HW", "+3V3"); c("C104", "100n", "+3V3", "GND"); r("R103", "100k", "PA_SW_EN", "GND"); r("R104", "100k", "HF_SW_EN", "GND")
+ "1": "EMCON_HW", "2": "PA_SW_EN", "3": "PA_EN", "4": "EMCON_HW", "5": "HF_SW_EN", "6": "HF_EN", "7": "GND", "8": "NC", "9": "GND", "10": "GND", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3"}, "C465737")
+r("R102", "100k", "EMCON_HW", "GND"); c("C104", "100n", "+3V3", "GND"); r("R103", "100k", "PA_SW_EN", "GND"); r("R104", "100k", "HF_SW_EN", "GND"); r("R145", "100k", "TX_INHIBIT_n", "GND")   # fail safe: no panel, no transmit
 # --- I2C: the kit bus (SDA, SCL) carries the charger, the expanders and the INA226s; no mux since the TPS55288 and TPS25750 left the design (7 Sep 01:50)
 # --- expanders: U27 0x21 (outputs: the enables and the charge inhibit; inputs: faults and status), U28 0x24 (power-good lines, spares on test points); PCA9555PW pins as the A21 map
 part("U27", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x21): enables and status", "EXP", {
