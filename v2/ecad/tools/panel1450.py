@@ -36,14 +36,14 @@ B16_TALL = [((-93.0, 32.0, -52.0, 88.0), 30.0, "CM5 slot 1 with cooler and fan")
 # --- the face elements (centre X, centre Y in the case frame)
 XENARC = dict(c=(0.0, -24.0), body=(205.15, 139.49), height=28.66, bezel=16.0, active=(153.6, 90.0), vesa=50.0, vesa_hole=4.5,
               block=(73.65, -72.2, 57.85, 43.12), cutout=(73.65, -72.2, 60.0, 46.0, 3.0), block_depth=19.0)   # 32.51: the monitor lies flat on the plate, VESA 50 M4 at the rear centre; its connector block (lower right seen from the front, from the drawing's rear view) passes through the plate cutout into the void; a gasket ring around the cutout keeps the face sealed
-EPAPER = dict(c=(0.0, 78.0), window=(94.19, 53.6), lens=(107.19, 66.6), lens_r=3.0, module=(92.99, 53.0), pocket_depth=1.0, depth_below=3.0, tail_side="-X", tail_len=43.9)   # PDi E2370KS0C1 (32.49 item 11): the same glass size as the WeAct 3.7 (92.99 x 53.0 x 0.85), taped under the lens, its 24-way flex leaves the left short edge toward J_EPD on the top strip
+EPAPER = dict(c=(0.0, 83.0), window=(94.19, 53.6), lens=(107.19, 66.6), lens_r=3.0, module=(92.99, 53.0), pocket_depth=1.0, depth_below=3.0, tail_side="-X", tail_len=43.9)   # PDi E2370KS0C1 (32.49 item 11): the same glass size as the WeAct 3.7 (92.99 x 53.0 x 0.85), taped under the lens, its 24-way flex leaves the left short edge toward J_EPD on the top strip. CENTRE Y 78 -> 83 on 9 Sep 2026 (appendix 32.84): at 78 the lens ran from Y 44.700 and the Xenarc body reaches Y 45.745, so the two overlapped by 1.045 mm across the lens' full 107.19 mm width. Both stand proud of the plate (the monitor 28.66 mm, the lens about 2 mm on its tape frame), so they collided; the gap is 3.955 mm now
 BUTTONS = [("SW_MAIN", (150.0, 60.0), 19.2, 30.0), ("SW_PI", (150.0, 10.0), 16.2, 28.0), ("SW_TEST", (150.0, -33.0), 16.2, 28.0)]   # ref, centre, plate hole, depth behind the face (C&K ATP19/ATP16 sheets); SW_TEST up 7 mm since C7: its body cleared B16's RockBLOCK bracket by -5 mm at Y -40 (32.60)
 TOGGLES = [("SW_SOS", (-150.0, 60.0)), ("SW_EMCON", (-150.0, 18.0)), ("SW_ZERO", (-150.0, -24.0))]                              # APEM 5636ADKB-2V: 6.5 hole with a 2.70 x 1.10 keyway toward the operator (-Y), about 26 deep
 TOGGLE_HOLE, TOGGLE_KEY = 6.5, (2.70, 1.10)
 LIGHT = ("SW_LIGHT", (-150.0, -66.0))                                                                                              # NKK M2044SD3A01: D hole 6.5 with the 5.8 flat toward +X, about 19 deep
 LIGHT_HOLE, LIGHT_FLAT = 6.5, 5.8
 SOUNDER = ("BZ1", (-149.0, -97.0), 28.6, 30.0)   # in the corner where the left and bottom strips meet: its body passes the backer there; Floyd Bell MC-09-530-Q class: 28.6 hole, its 61663 gasket, about 30 deep
-HEADSETS = [("J_HSJ1", (-118.0, -101.0)), ("J_HSJ2", (-92.0, -101.0))]                                                              # two U-174/U panel jacks in the bottom strip (32.50 items 9 and 16b): 16.0 hole (Amphenol Nexus drawing owed, laptop list), about 30 deep, five leads to D8's J_HS1/J_HS2
+HEADSETS = [("J_HSJ1", (-118.0, -104.0)), ("J_HSJ2", (-92.0, -104.0))]                                                              # two U-174/U panel jacks in the bottom strip (32.50 items 9 and 16b): 16.0 hole (Amphenol Nexus drawing owed, laptop list), about 30 deep, five leads to D8's J_HS1/J_HS2
 HEADSET_HOLE, HEADSET_DEPTH = 16.0, 30.0
 STATUS_LEDS = [("D%d" % (k + 1), (128.0, 45.0 - 9.0 * k), name) for k, name in enumerate(["MSTR WARN", "MSTR CAUT", "TX", "SOS ACTIVE", "SAT", "MESH", "LTE", "GPS", "SHORE", "CHARGE", "MSG"])]   # the status column beside the buttons
 BAR_LEDS = [("D%d" % (12 + k), (-20.0 + 6.0 * k, -101.0), "BAT%d" % (k + 1)) for k in range(5)]                                     # the battery bar in the bottom strip
@@ -51,8 +51,15 @@ LED_HOLE = 2.6                                                                  
 LIGHT_SENSOR = ("U_LIGHT", (128.0, 63.0))                                                                                            # VEML7700 on the right strip's top side under its own Mentor light guide (32.50 item 8: the ambient light for blackout and NVG lighting)
 CAMERA = ("CAM1", (150.0, 100.0), 8.0, 25.0)                                                                                         # USB camera module (25 x 25 mm board class, sheet owed) on the top strip's top side behind an 8 mm sealed window (32.52: a USB camera behind a plate window on slot 1's hub)
 PA_MOUNT = dict(c=(-45.0, 20.0), size=(67.0, 19.4), height=9.9, holes=60.0, hole_d=3.26)                                             # RA30H1317M1 flange on the plate's underside (32.56): two PEM S-M3 nuts 60 mm apart, inside the void under the monitor, clear of the VESA screws at Y 1 and the e-paper lens at Y 44.7
-NAMEPLATE = (78.0, -101.0, 76.0, 26.0)     # laser marked: centre X, centre Y, width, height
+NAMEPLATE = (78.0, -108.0, 76.0, 26.0)     # laser marked: centre X, centre Y, width, height
 LOGO = ((-150.0, 96.0), 36.0)             # laser marked, top of the left strip
+
+# 9 September 2026 (appendix 32.84): the headset jacks moved from Y -101 to -104 and the nameplate from -101 to -108
+# because the DISPLAY GREW. The Touch Display 2 this face was laid out around was 189.32 x 120.24 with its bottom edge
+# at Y -84.12; the Xenarc 709GNK is 205.15 x 139.49 and its bottom edge sits at Y -93.745, 9.625 mm further south, and
+# it stands ON the plate instead of behind an aperture. Nothing re-spaced the furniture around it: J_HSJ2's 16 mm hole
+# ran 0.745 mm UNDER the monitor body (the box would have rested over an open hole and broken the face seal) and
+# 5.745 mm of the nameplate's marking was hidden beneath it. The bottom band is 31.00 mm now, so this strip is full.
 
 # --- the backer board C7: a ring of four strips outside the monitor and the e-paper window, open in the middle
 STRIP_L = (-172.0, -114.0, -120.0, 114.0)  # left strip (toggles); the inner edge at 120 keeps the status LED column at X 128 (4.8 mm courtyard) 5.6 mm from the board edge (C6 run 2 lesson)
@@ -97,6 +104,39 @@ def deep_part_rect(ref, c, d):
     if ref == "XENARC_BLOCK": _, _, w, h = XENARC["block"]; return (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
     if ref == "PA": w, h = PA_MOUNT["size"]; return (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
     return (c[0] - 5, c[1] - 5, c[0] + 5, c[1] + 5)
+
+FACE_ITEMS = [("XENARC", XENARC["c"], XENARC["body"], "hw"), ("EPAPER_LENS", EPAPER["c"], EPAPER["lens"], "hw"),
+              ("NAMEPLATE", NAMEPLATE[:2], NAMEPLATE[2:], "mark"), ("LOGO", LOGO[0], (LOGO[1], LOGO[1] / 3.0), "mark")] \
+             + [(r, c, (d + 6.0, d + 6.0), "hw") for r, c, d, _ in BUTTONS] \
+             + [(r, c, (TOGGLE_HOLE + 12.0, TOGGLE_HOLE + 12.0), "hw") for r, c in TOGGLES] \
+             + [(LIGHT[0], LIGHT[1], (LIGHT_HOLE + 10.0, LIGHT_HOLE + 10.0), "hw"), (SOUNDER[0], SOUNDER[1], (SOUNDER[2] + 4.0, SOUNDER[2] + 4.0), "hw"),
+                (CAMERA[0], CAMERA[1], (CAMERA[2] + 6.0, CAMERA[2] + 6.0), "hw")] \
+             + [(r, c, (HEADSET_HOLE, HEADSET_HOLE), "hw") for r, c in HEADSETS] \
+             + [(r, c, (LED_HOLE + 1.4, LED_HOLE + 1.4), "hw") for r, c, _ in STATUS_LEDS + BAR_LEDS]
+# 9 Sep 2026 (appendix 32.84): everything the FACE carries, as its plan footprint with the collar its part needs
+# (a switch bezel, a light guide head, the sounder gasket). clearance_report() above answers a different question,
+# a deep face part against a tall board part UNDER the plate, and nothing asked whether two things ON the plate can
+# both be there. The monitor and the e-paper lens overlapped by 1.045 mm for two days and only a render showed it.
+# The headset jacks carry their documented 16.0 mm hole and NO nut collar: the Amphenol Nexus drawing is still owed
+# (32.50 item 9), and their front hardware is the open question of the bottom strip, not something to guess at here.
+# "mark" items are laser marking with no height: they cannot collide, they can only be hidden, and are reported apart.
+
+def face_overlap_report(want="hw"):
+    """Face items overlapping in plan: (a, b, x overlap mm, y overlap mm). want="hw" is the gate (two solid things
+    cannot share the plate), want="hidden" reports marking a part covers, want="all" is everything."""
+    out = []
+    for i in range(len(FACE_ITEMS)):
+        an, ac, (aw, ah), ak = FACE_ITEMS[i]
+        for j in range(i + 1, len(FACE_ITEMS)):
+            bn, bc, (bw, bh), bk = FACE_ITEMS[j]
+            ox = min(ac[0] + aw / 2, bc[0] + bw / 2) - max(ac[0] - aw / 2, bc[0] - bw / 2)
+            oy = min(ac[1] + ah / 2, bc[1] + bh / 2) - max(ac[1] - ah / 2, bc[1] - bh / 2)
+            if ox <= 0 or oy <= 0: continue
+            marks = (ak == "mark") + (bk == "mark")
+            if want == "hw" and marks: continue
+            if want == "hidden" and marks != 1: continue
+            out.append((an, bn, round(ox, 3), round(oy, 3)))
+    return out
 
 def clearance_report():
     """Every deep part against every tall B16 part it overlaps in plan: (ref, tall name, clearance mm). Negative = collision."""
