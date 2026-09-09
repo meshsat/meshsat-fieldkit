@@ -116,14 +116,14 @@ for s in (1, 2, 3):
     card = {1: ["Q106", "LED15"], 2: ["Q206", "Q207", "Q208", "LED25"], 3: ["Q306", "LED35"]}[s]
     card_b = {1: [R(1, 37), R(1, 38), R(1, 39)], 2: [R(2, 37), R(2, 38), R(2, 40), R(2, 39)] + Cs(2, 86, 91), 3: [R(3, 37), R(3, 38), R(3, 39)]}[s]
     if s == 2:
-        REGIONS += [("S2_SWIC", (-36, -54, 16, -30), [U(1), U(2), U(9), U(10)], False),
-                    ("S2_SWE", (16, -54, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (-36, -54, 32, -30), sw_b + card_b + sup_b, True),
-                    ("S2_RAIL", (-36, -73.4, 32, -54), [r for r in rail if r not in (U(5), U(6), L(3), L(4)) and r not in Cs(2, 25, 27) + Cs(2, 30, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -54), rail_b + straps + sw_dec, True),
+        REGIONS += [("S2_SWIC", (-36, -57, 10, -30), [U(1), U(2), U(9), U(10)], False),
+                    ("S2_SWE", (10, -57, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (-36, -57, 32, -30), sw_b + card_b + sup_b, True),
+                    ("S2_RAIL", (-36, -73.4, 32, -57), [r for r in rail if r not in (U(5), U(6), L(3), L(4)) and r not in Cs(2, 25, 27) + Cs(2, 30, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -57), rail_b + straps + sw_dec, True),
                     ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -8), [U(5), U(6), L(3), L(4)] + Cs(2, 25, 27) + Cs(2, 30, 32), False)]
     else:
-        REGIONS += [("S%d_SWIC" % s, (x0, -49, x0 + 52, -21), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
-                    ("S%d_SWE" % s, (x0 + 52, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -49, x1, -21), sw_b + card_b + sup_b, True),
-                    ("S%d_RAIL" % s, (x0, -70, x1, -49), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -49), rail_b + straps + sw_dec, True),
+        REGIONS += [("S%d_SWIC" % s, (x0, -52, x0 + 43, -21), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
+                    ("S%d_SWE" % s, (x0 + 43, -52, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -52, x1, -21), sw_b + card_b + sup_b, True),
+                    ("S%d_RAIL" % s, (x0, -70, x1, -52), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -52), rail_b + straps + sw_dec, True),
                     ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
 # 9 September 2026 (ARCH-PCB-B-IOHA section 6): the I/O control plane goes on the UNDERSIDE, and the three controllers
 # go in three SEPARATE pockets rather than one band. Two reasons, both measured on the board. First, a single rect
@@ -137,16 +137,18 @@ def _ioc(k):
     return (["U%d" % (40 + 10 * k + n) for n in range(5)] + ["Y%d" % (2 + k), "LED%d" % (40 + k)]
             + ["C%d" % (400 + 20 * k + n) for n in range(12)]
             + ["R%d" % (63 + 12 * k + n) for n in range(3)])
-IOVOTE = (["U%d" % n for n in range(70, 80)] + ["U80"] + ["C%d" % n for n in range(470, 480)]
-          + ["C480", "C481", "C482", "C483"] + ["R474", "R475", "R476"]
-          + ["Q3", "Q4", "Q5", "R477", "R478", "R479"]
-          + ["R%d" % n for n in range(480, 501)])
+def _vote(k):
+    """The voted logic, split three ways so it rides in the three controller pockets rather than in one cramped band."""
+    us = ["U%d" % n for n in range(70 + k, 80, 3)] + (["U80"] if k == 0 else [])
+    cs = ["C%d" % n for n in range(470 + k, 480, 3)] + ([ "C480", "C481", "C482", "C483"] if k == 1 else [])
+    rs = ["R%d" % n for n in range(480 + 7 * k, 480 + 7 * (k + 1))] + {0: ["R474", "R475", "R476"], 1: ["Q3", "Q4", "Q5"], 2: ["R477", "R478", "R479", "R500"]}[k]
+    return us + cs + rs
 # each CAN fabric is terminated at its two PHYSICAL ends, which are controller A in the west pocket and controller C in
 # the east one; a bus terminated once, in the middle, reflects off both ends (caught reading the placement, 9 Sep 2026)
-REGIONS += [("IOCA", (-158.0, -60.0, -129.0, -4.0), _ioc(0) + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
-            ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1), True),
-            ("IOCC", (18.0, 32.0, 47.0, 88.0), _ioc(2) + ["R504", "R505", "R506", "R507", "C506", "C507"], True),
-            ("IOVOTE", (-98.0, 69.0, 94.0, 80.5), IOVOTE, True),
+REGIONS += [("IOCA", (-158.0, -60.0, -129.0, -4.0), _ioc(0) + _vote(0) + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
+            ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1) + _vote(1), True),
+            ("IOCC", (18.0, 32.0, 47.0, 88.0), _ioc(2) + _vote(2) + ["R504", "R505", "R506", "R507", "C506", "C507"], True),
+
             ("WIFISW", (132.0, -20.0, 159.0, 10.0),
              ["U82", "U83", "J_W1A", "J_W3A", "J_WOA", "J_W1B", "J_W3B", "J_WOB", "R510", "Q10"] + ["C%d" % n for n in range(500, 506)], True)]
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r in comps or not _n.startswith("IO")], _bk) for _n, _rect, _refs, _bk in REGIONS]
