@@ -141,7 +141,7 @@ def _vote(k):
     """The voted logic, split three ways so it rides in the three controller pockets rather than in one cramped band."""
     us = ["U%d" % n for n in range(70 + k, 80, 3)] + (["U80"] if k == 0 else [])
     cs = ["C%d" % n for n in range(470 + k, 480, 3)] + ([ "C480", "C481", "C482", "C483"] if k == 1 else [])
-    rs = ["R%d" % n for n in range(480 + 7 * k, 480 + 7 * (k + 1))] + {0: ["R474", "R475", "R476"], 1: ["Q3", "Q4", "Q5"], 2: ["R477", "R478", "R479", "R500"]}[k]
+    rs = ["R%d" % n for n in range(480 + 7 * k, 480 + 7 * (k + 1))] + {0: ["R474", "R475", "R476"], 1: ["Q3", "Q4", "Q5"], 2: ["R477", "R478", "R479"]}[k]
     return us + cs + rs
 # each CAN fabric is terminated at its two PHYSICAL ends, which are controller A in the west pocket and controller C in
 # the east one; a bus terminated once, in the middle, reflects off both ends (caught reading the placement, 9 Sep 2026)
