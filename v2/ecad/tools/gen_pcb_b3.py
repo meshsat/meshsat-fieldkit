@@ -78,6 +78,14 @@ placed = {}
 for ref, (x, y, rot) in FIXED.items():
     if ref not in comps: print("WARNING not in netlist:", ref); continue
     placed[ref] = place(ref, x, y, rot, back=ref in BACK)
+# 9 September 2026 (owner ruling, appendix 32.74 option 3): every declared decoupling capacitor takes its slot beside the pin it serves
+# BEFORE the packer fills the regions. The old order shelf-packed them by reference number and moved afterwards only what still fitted;
+# measured across the released set, not one capacitor of any board was inside the 3 mm rule and A22's worst two sat 117 and 121 mm away.
+import json as _json, bypass_slots
+_ip = os.path.join(os.path.dirname(os.path.abspath(BOARD)), "out", os.path.splitext(os.path.basename(BOARD))[0] + "-intent.json")
+_entries = _json.load(open(_ip)).get("bypass", []) if os.path.exists(_ip) else []
+RESERVED = bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
+for _r in RESERVED: placed[_r] = board.FindFootprintByReference(_r)
 # --- reuse existing footprints (J_LIME comes from the mechanical stage with its slots)
 for ref in comps:
     if ref in placed: continue
@@ -166,6 +174,7 @@ for _r, _nn in _twopad.items():
         if _o != _r: COUPLE[_r] = _o; COUPLE[_o] = _r; break
 print("placement: %d differential-pair couples packed side by side" % (len(COUPLE) // 2))
 
+REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:

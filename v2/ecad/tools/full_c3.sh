@@ -8,6 +8,10 @@ python3 ../tools/gen_pcb_c.py $N.kicad_pcb > out/gen_pcb_c.log 2>&1; grep -E 'sa
 grep -q '^saved' out/gen_pcb_c.log || { echo "BLOCK: gen_pcb_c.py did not save the board (see out/gen_pcb_c.log)"; tail -3 out/gen_pcb_c.log; echo 'BLOCK generator' > out/preroute-gate.txt; echo PREROUTE-DONE BLOCK generator; exit 1; }
 python3 ../tools/gen_pcb_c3.py $N.kicad_pcb out/$N.net > out/gen_pcb_c3.log 2>&1; grep -E 'saved|WARN|Trace|Error|overflow|unplaced|missing|single-pin' out/gen_pcb_c3.log
 grep -q '^saved' out/gen_pcb_c3.log || { echo "BLOCK: gen_pcb_c3.py did not save the board (see out/gen_pcb_c3.log)"; tail -3 out/gen_pcb_c3.log; echo 'BLOCK generator' > out/preroute-gate.txt; echo PREROUTE-DONE BLOCK generator; exit 1; }
+# 9 September 2026 (owner ruling, 32.74 option 3): phase two of the decoupling placement. `bypass_slots` reserved a slot beside every
+# FIXED part before the packer ran; this moves the capacitors of the parts the packer itself placed, which it could not know earlier.
+# The tool has existed since 8 September and no chain ran it, which is why the measured distances never changed.
+python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
 python3 ../tools/check_pcb_c.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND' fine 2>&1 | grep -E 'fanout:'

@@ -20,6 +20,7 @@ gate still sees it as far away rather than the tool pretending it fitted."""
 import math, pcbnew
 
 LIMIT = 3.0
+_DETACHED = []   # KiCad 9: a footprint removed from the board must stay referenced in Python or the next FootprintLoad dies inside the IO plugin
 
 def _courtyard(f):
     try:
@@ -66,7 +67,7 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False):
                 if free(at): spot = (at, r10 / 10.0); break
             if spot: break
         if spot is None:
-            board.Remove(fp); stuck.append((cap, ref, pin, "no free spot within %.1f mm" % limit)); continue
+            board.Remove(fp); _DETACHED.append(fp); stuck.append((cap, ref, pin, "no free spot within %.1f mm" % limit)); continue
         fp.SetPosition(spot[0]); done.add(cap); report.append((cap, ref, pin, spot[1]))
     if not quiet:
         print("bypass_slots: %d of %d declared capacitors reserved a slot within %.1f mm of their pin" % (len(done), len({e.get("cap") for e in entries}), limit))
