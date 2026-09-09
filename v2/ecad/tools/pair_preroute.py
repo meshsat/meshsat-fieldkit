@@ -413,6 +413,24 @@ def main(a):
             if sp and len(sp) >= 2:
                 for k in range(len(sp) - 1): seg(sp[k][0], sp[k][1], sp[k + 1][0], sp[k + 1][1], SL, net)
                 seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net); return True
+            # A stub has to reach its own NET, not one point of it. Aiming only at the escape via made the last half millimetre the hardest
+            # cell on the board, because the via sits inside its own part's fan: 34 of B18's 66 pair failures were "no stub path at via"
+            # (9 September 2026). The escape track that leads to the via is the same copper and is reachable a millimetre earlier, so when
+            # the via cannot be reached the nearest points of the net's own locked escape are tried in turn.
+            if pm is not None:
+                alts = []
+                for t_ in b.GetTracks():
+                    if t_.GetClass() != "PCB_TRACK" or not t_.IsLocked() or t_.GetNetname() != net.GetNetname() or t_.GetLayer() != SL: continue
+                    ax2, ay2, bx2, by2 = mm(t_.GetStart().x), mm(t_.GetStart().y), mm(t_.GetEnd().x), mm(t_.GetEnd().y)
+                    for px_, py_ in ((ax2, ay2), (bx2, by2), ((ax2 + bx2) / 2, (ay2 + by2) / 2)):
+                        d_ = math.hypot(px_ - bx_, py_ - by_)
+                        if 0.05 < d_ <= 4.0: alts.append((d_, px_, py_))
+                for _d, px_, py_ in sorted(alts)[:8]:
+                    sp2 = stub_path(gr, pm.copy(), (ax_, ay_), (px_, py_), win2)
+                    if sp2 and len(sp2) >= 2:
+                        for k in range(len(sp2) - 1): seg(sp2[k][0], sp2[k][1], sp2[k + 1][0], sp2[k + 1][1], SL, net)
+                        seg(sp2[-1][0], sp2[-1][1], px_, py_, SL, net)
+                        return True
             if os.environ.get("PAIR_DEBUG") and pm is not None:   # the stub map around the goal, one character per cell (S start, G goal, # forbidden)
                 js, is_ = gr.cell(ax_, ay_); jg, ig = gr.cell(bx_, by_); r = 20
                 print("pair_preroute: stub %s on %s from (%.2f, %.2f) [%s] to (%.2f, %.2f) [%s], 4 mm around the goal:" % (net.GetNetname(), b.GetLayerName(SL), ax_, ay_, "free" if pm[is_, js] else "BLOCKED", bx_, by_, "free" if pm[ig, jg] else "BLOCKED"))
