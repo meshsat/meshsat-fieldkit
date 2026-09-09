@@ -88,7 +88,7 @@ for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot,
 import json as _json, os as _osx, bypass_slots
 _ip = _osx.path.join(_osx.path.dirname(_osx.path.abspath(BOARD)), "out", _osx.path.splitext(_osx.path.basename(BOARD))[0] + "-intent.json")
 _entries = _json.load(open(_ip)).get("bypass", []) if _osx.path.exists(_ip) else []
-RESERVED = bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
+RESERVED = set() if _osx.environ.get("BYPASS_SLOTS") == "0" else bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
 for _r in RESERVED: placed[_r] = board.FindFootprintByReference(_r)
 for ref, x, y in (("J_HARN1", -42, 20.5), ("J_PWR1", -42, -9.5), ("J_ANT", -31, -37.5), ("J_PAIN", 9, -25.5), ("J_PAOUT", 35, -37.5), ("J_VGG", 43.5, -18.5), ("J_HS1", 46.5, 19), ("J_HS2", 46.5, -5), ("J_USB3", 46, 30.5)):
     text(ref, x, y, pcbnew.F_SilkS, 0.9, 0.15)

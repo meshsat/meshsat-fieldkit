@@ -84,7 +84,7 @@ for ref, (x, y, rot) in FIXED.items():
 import json as _json, os as _osx, bypass_slots
 _ip = _osx.path.join(_osx.path.dirname(_osx.path.abspath(BOARD)), "out", _osx.path.splitext(_osx.path.basename(BOARD))[0] + "-intent.json")
 _entries = _json.load(open(_ip)).get("bypass", []) if _osx.path.exists(_ip) else []
-RESERVED = bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
+RESERVED = set() if _osx.environ.get("BYPASS_SLOTS") == "0" else bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
 for _r in RESERVED: placed[_r] = board.FindFootprintByReference(_r)
 # --- reuse existing footprints (J_LIME comes from the mechanical stage with its slots)
 for ref in comps:
