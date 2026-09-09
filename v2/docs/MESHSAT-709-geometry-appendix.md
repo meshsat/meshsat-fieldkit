@@ -3354,3 +3354,46 @@ Two defects in the pre-router are now named by the same data and are the next wo
 **The pair pre-router could not see a keep-out that belongs to a part.** B17's pre-route came back with five `items_not_allowed`, all of them pre-routed pair copper (`/ETH2_P1_P`, `/PCIE2_RX_N`, `/PCIE2_RX_P`) laid straight through a rule area. `build_maps` read `board.Zones()`, which does not contain footprint-local rule areas: the E72's antenna clearance and any part that carries its own no-track zone were invisible to the corridor search, though `prefanout.py` had been reading them since 5 September. Fixed, and both boards are re-running.
 
 Both defects have the same shape as the evening's others: the tool believed a rule that the board does not enforce, or did not read a rule the board does. Neither was visible in a summary count; both were one line of the DRC text away.
+
+
+### 32.80 The EMCON and PoE fixes, and the three contract tests that were missing (9 September 2026, 03:00 CEST; MESHSAT-862; commit 5d9efaf)
+
+Both critical defects of the red team (`RED-TEAM-2026-09-09.md`) are fixed in the generators and all three
+affected boards are regenerating.
+
+**EMCON: one driver, one sense, and a missing panel inhibits.** The inversion was entirely at the source. A22
+and B16 were both built on "low silences": A22 computes `PA_EN = EMCON_HW AND PA_SW_EN`, B16 computes every
+transmitter enable the same way and pulls both M.2 cards' `W_DISABLE1#` down through a FET when `EMCON_HW` is
+low. C7 then inverted the toggle into them, so asserting EMCON enabled the 30 W PA and released both radios.
+The fix is one part: **C7's U9 becomes a 74LVC1G34 non-inverting buffer** in the same SOT-23-5 land, so
+`EMCON_HW` follows `TX_INHIBIT_n` and both are low when the toggle is closed. With that, every consumer's
+existing logic is correct as drawn.
+
+Two further changes go with it. **A22's U26 gate 3 is deleted** (pins 8, 9, 10 to NC and GND): it drove
+`TX_INHIBIT_n` from `EMCON_HW`, which put a push-pull output on the same net as the panel's mechanical toggle
+and, through C7's inverter, closed a one-inversion feedback loop, a ring oscillator on the line that gates a
+30 W transmitter. And the **fail-safe direction is reversed**: A22's 10k pull-up on `EMCON_HW` becomes a 100k
+pull-down, A22 and B16 each gain a 100k pull-down on `TX_INHIBIT_n` (D9 always had one), and C7's pull-up
+drops from 100k to 10k so that the three pull-downs in parallel still read 2.5 V, a solid high, when the panel
+is present. An unplugged or cut ribbon now inhibits at every consumer instead of enabling.
+
+**PoE: the 24.9 ohm resistor leaves the feed.** `R13` sat between `+54V_POE` and `POE_P`, the positive centre
+tap of the port magnetics, on an 0603 land. At 802.3at it would have dropped 15 V of the 54 and dissipated 9 W
+in a part rated for 0.1 W. It is a 0 ohm 2512 link now, which keeps a place to open the path on the bench.
+Detection and classification were never its job; they are the TPS23861's own pins.
+
+**The gate that let this through.** Contract 12 asked whether `SW_EMCON` drives `TX_INHIBIT_n` and whether
+`EMCON_HW` appears on the ribbon. Both were true of a design that did the opposite of what it says. Three
+tests are added:
+
+1. **one driver**: no device output may sit on `TX_INHIBIT_n` on A22 or B16, and `EMCON_HW` may reach only
+   U26's gate inputs 1A and 2A;
+2. **fail safe**: A22, B16 and D9 must each hold `TX_INHIBIT_n` down with a resistor to ground;
+3. **the sense**: C7's U9 must be a non-inverting buffer, read from the netlist's own value string.
+
+`PANEL.md` is corrected in four places, including one row that documented the wrong behaviour and another that
+contradicted it two lines later.
+
+**Phases.** A23, C8 and B17 keep their names: none of the three was ever released, so no shipped artefact
+carries the old copper. The builds from 03:00 CEST on 9 September carry the EMCON and PoE fixes; anything
+earlier under those names does not.
