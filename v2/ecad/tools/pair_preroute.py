@@ -252,6 +252,19 @@ def main(a):
     pair_names = {st: (st + "_P", st + "_N") for st in stems}; pair_names.update({st + "_R": (st + "_PR", st + "_NR") for st in suffixed}); stems = stems + [st + "_R" for st in suffixed]
     if "--pairs" in a: stems = [s for s in stems if s.lstrip("/") in set(a[a.index("--pairs") + 1].split(","))]
     stems = [s for s in stems if cls_of(pair_names.get(s, (s + "_P", s + "_N"))[0]) in want_classes]
+    # The long pairs go first (9 September 2026). This tool lays greedily and never rips up, so whichever pair is laid first takes the room
+    # and the rest fit around it; alphabetical order decided that, which is no order at all. The span of a pair's own pads is a cheap proxy
+    # for how hard it will be: a 90 mm PCIe run across B18 has one route and a 4 mm hub link has hundreds, so the long one is laid while the
+    # board is still empty. Measured on B18 in the same build: PAIR_ORDER=name restores the old order for comparison.
+    def _span(st):
+        pn_, nn_ = pair_names.get(st, (st + "_P", st + "_N"))
+        want = {pn_.lstrip("/"), nn_.lstrip("/")}
+        pts = [q.GetPosition() for f in b.GetFootprints() for q in f.Pads() if q.GetNetname().lstrip("/") in want]
+        if len(pts) < 2: return 0.0
+        return max(math.hypot(u.x - v.x, u.y - v.y) for u in pts for v in pts) / 1e6
+    if os.environ.get("PAIR_ORDER", "span") == "span":
+        stems = sorted(stems, key=lambda st: (-_span(st), st))
+        if stems: print("pair_preroute: %d pairs, longest first (%s spans %.0f mm, %s spans %.0f mm)" % (len(stems), stems[0], _span(stems[0]), stems[-1], _span(stems[-1])))
     laid = 0; report = []; swapped = set()
     def pinned(f):
         """A footprint whose pads already hold a track end (a section laid for another stem of the same nets, an escape) must not be moved: the second swap of
