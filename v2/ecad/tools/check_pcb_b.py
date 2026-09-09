@@ -174,6 +174,15 @@ for _s, _f in RING.items():
     # the safe state: each control carries a pull to the home host, so a dark control plane changes nothing
     check(any(r.startswith("R") for r in PADS.get("BSEL%d" % _s, set())),
           "bank %d select is pulled to its safe state" % _s)
+# a bank must outlive the module it fails away from, so nothing in its path may hang on that slot's rail. This is the
+# defect the first rail read-back found: the hub and both host-selection switches sat on +3V3_S{s}B, whose buck is
+# enabled by the module's own 3.3 V, which would have made the whole ring decoration.
+for _s in (1, 2, 3):
+    for _ref, _what in (("U%d02" % _s, "hub"), ("U%d09" % _s, "SuperSpeed host select"), ("U%d10" % _s, "USB2 host select")):
+        _bad = sorted({_n for _n, _rs in PADS.items() if _ref in _rs and (_n.startswith("+3V3_S%d" % _s) or _n.startswith("+5V_S%d" % _s))})
+        check(not _bad, "the %s of bank %d is off the slot rail (%s)" % (_what, _s, _bad))
+    check("U%d06" % _s in PADS.get("+5V_DEV", set()), "the hub core buck of bank %d is fed from the device rail" % _s)
+    check("U%d02" % _s in PADS.get("+3V3_DEV", set()), "the hub of bank %d takes its 3.3 V from the device rail" % _s)
 # every voted bit is driven by all three controllers and by nothing else
 for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3", "WSEC"):
     drivers = [t for t in ("A", "B", "C") if PADS.get("%s_%s" % (_bit, t))]
@@ -203,6 +212,10 @@ for _ref, _dis, _slot in (("J_M2C1", "WIFI_W_DIS_n", 1), ("J_M2C3", "WIFI2_W_DIS
     check(_ref in PADS.get(_dis, set()), "WiFi card on slot %d is fitted and EMCON reaches its W_DISABLE (%s)" % (_slot, sorted(PADS.get(_dis, set()))))
     check("U%d01" % _slot in PADS.get("CARD%d_TX_P" % _slot, set()),
           "the slot %d WiFi card hangs on its own PCIe switch, so one switch cannot take both radios" % _slot)
+# the plane can read back what the voters did: without it a voter stuck at one value is invisible to the controllers
+for _b in ("BSEL1", "BSEL2", "BSEL3", "WIFI_SEC"):
+    _ctl = {r for r in PADS.get(_b, set()) if r in ("U41", "U51", "U61")}
+    check(len(_ctl) == 3, "%s is read back by all three controllers (%s)" % (_b, sorted(_ctl)))
 _sw = {r for r in PADS.get("WIFI_SEC", set()) if r.startswith("U8")}
 check(len(_sw) == 2, "both antenna changeover switches follow the voted select (%s)" % sorted(_sw))
 check(any(r.startswith("R") for r in PADS.get("WIFI_PRI", set())) and any(r.startswith("Q") for r in PADS.get("WIFI_PRI", set())),
