@@ -73,7 +73,7 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          "U4": (22, 14, 0, False), "U5": (9, 16.2, 0, False), "U3": (30, 3, 0, False), "U6": (22, -9.5, 0, False), "Y1": (21, 21.5, 0, False), "Y2": (13, -13.5, 0, False),
          "R6": (13.5, 16.8, 0, False), "R7": (13.5, 15.2, 0, False),
          "R12": (21.6, 6.3, 270, False), "R13": (20.0, 6.3, 270, False), "R16": (23.5, 3.25, 0, False), "R17": (23.5, 1.65, 0, False),   # port 2: in line with the bridge U3's D+/D- pins 3 mm east, pad 2 (the pair) east: a straight pair; pad 1 (the hub side) north for port 1
-         "R20": (30.5, 13.6, 0, False), "R21": (30.5, 12.0, 0, False), "R26": (11.5, -9.1, 0, False), "R27": (11.5, -7.5, 0, False),   # 4.4 mm from U6 pad tips: the entry runs of both stations need the room (12:19 CEST)
+         "R20": (32.0, 13.6, 0, False), "R21": (32.0, 12.0, 0, False), "R26": (11.5, -9.1, 0, False), "R27": (11.5, -7.5, 0, False),   # 4.4 mm from U6 pad tips: the entry runs of both stations need the room (12:19 CEST)
          # D9: the pull-downs and the codec pull-up of the pair nets on the top layer beside their pairs (a pair net's pad on the back made the router wander three layers);
          # R14 east of R12 and R15 west of R13 in the series row (the P pull-down on the P side, the N one on the N side, so the stubs do not cross the legs; 12:26 CEST)
          # the unused hub port's 15k terminations beside the hub instead of 9 mm away on the back (8 Sep 2026 16:05): the router could not reach U4 pin 23
