@@ -14,6 +14,7 @@ router (the gate then calls it UNCOUPLED). The caller runs DRC.
 Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
   prints one line per pair and `pair_preroute: N of M pairs laid`, exit 1 when a pair failed."""
 import sys, os, re, math, json, heapq
+PATH_WHY = [""]   # why the last corridor search returned nothing (9 Sep 2026)
 import pcbnew, numpy as np
 from pcbnew import VECTOR2I, FromMM
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -124,12 +125,14 @@ def astar(gr, layers, trk, via, start, goal, window, behind=()):
         s = (L, si, sj); dist[s] = 0.0; heapq.heappush(pq, (h(L, si, sj), 0.0, s))
     steps = [(-1, 0, 1.0), (1, 0, 1.0), (0, -1, 1.0), (0, 1, 1.0), (-1, -1, 1.414), (-1, 1, 1.414), (1, -1, 1.414), (1, 1, 1.414)]
     n = 0; found = None
+    if not pq: PATH_WHY[0] = "the start cell is passable on no allowed layer"   # 9 Sep 2026 (D10 USB3): the search never began
+    capped = False
     while pq:
         f, d, s = heapq.heappop(pq)
         if d > dist.get(s, 1e18): continue
         L, i, j = s; n += 1
         if (i, j) == (gi, gj) and (gL not in LI or L == LI[gL]): found = s; break
-        if n > 6000000: break
+        if n > 6000000: capped = True; break
         for di, dj, c in steps:
             ni, nj = i + di, j + dj
             if not (imin <= ni <= imax and jmin <= nj <= jmax): continue
@@ -142,7 +145,14 @@ def astar(gr, layers, trk, via, start, goal, window, behind=()):
                 if oL == L or not passable[oL][i, j]: continue
                 nd = d + VIA_COST; t = (oL, i, j)
                 if nd < dist.get(t, 1e18): dist[t] = nd; prev[t] = s; heapq.heappush(pq, (nd + h(oL, i, j), nd, t))
-    if found is None: return None
+    if found is None:
+        # 9 Sep 2026 (A24 USB_E6 spans 189 mm; appendix 32.83): a corridor that cannot be found must say WHY. Three
+        # different failures used to return the same None: the search never began, it ran out of its node budget, or
+        # the map really has no path. Only the third is a placement question.
+        if capped: PATH_WHY[0] = "the node budget of 6,000,000 ran out after %d expansions" % n
+        elif not PATH_WHY[0]: PATH_WHY[0] = "no path on the map after %d expansions" % n
+        return None
+    PATH_WHY[0] = ""
     path = [found]
     while path[-1] in prev: path.append(prev[path[-1]])
     return list(reversed(path))
@@ -623,7 +633,7 @@ def main(a):
                         row += "S" if (i, j) == (si, sj) else ("G" if (i, j) == (gi, gj) else ("#" if M[i, j] else "."))
                     print("   " + row)
             if path is None:
-                failed = "%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference())
+                failed = "%s -> %s (%s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), PATH_WHY[0] or "no corridor")
                 for li in range(len(layers)): dump("start of %s" % failed, sx, sy, 3.0, li); dump("goal of %s" % failed, gx, gy, 3.0, li)
                 break
             def entry_station(st):
