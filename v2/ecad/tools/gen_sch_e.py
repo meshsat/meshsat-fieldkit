@@ -357,4 +357,9 @@ _intent.bypass("C31", "U12", "2", "CELL_F")      # the 5 V buck's input capacito
 _intent.bypass("C34", "U13", "1", "+5V_E6"); _intent.bypass("C35", "U13", "5", "+3V3_E6")   # the LDO's input and output
 _intent.bypass("C48", "U14", "8", "+3V3_E6")     # BME688 VDD
 _intent.bypass("C49", "U15", "8", "+3V3_E6"); _intent.bypass("C50", "U15", "5", "+3V3_E6")  # BMI270 VDD and VDDIO
+# The dock strip's only differential pair is the sensor controller's own USB port, and the RP2040 is USB 1.1 FULL SPEED. The shared USB
+# class targets 90 ohm, which belongs to USB 2.0 high speed; requiring it here is a wrong requirement, not a strict one, so this board
+# declares the class with no impedance target and `impedance_check.py` skips it (9 September 2026, the same as C9).
+_intent.pair_class("USB")
+
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json
