@@ -5,4 +5,7 @@
 # Usage: full_b19.sh <project dir>
 set -uo pipefail
 export PHASE=B19
+# 300 s per pair (pair_preroute's PAIR_BUDGET). Measured on the B19 board: the long pairs take about 2.5 minutes each, so
+# this bounds the tail without biting the normal case, and 113 pairs cannot turn into an open-ended night again.
+export PAIR_BUDGET=${PAIR_BUDGET:-300}
 exec bash "$(dirname "$0")/full_b16.sh" "$@"
