@@ -81,6 +81,13 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          # pins' own layer, because the gap between U4's courtyard (to x 127.22) and the pull-down column (from x 128.97) is 1.75 mm, too narrow for an 0603
          "R25": (28.3, 20.6, 0, False), "R24": (31.6, 20.6, 0, False),
          "R14": (23.2, 6.3, 90, False), "R15": (18.4, 6.3, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (11.5, -5.8, 180, False)}   # R28 north of R27, pad 1 east toward the codec leg (its slot south overlapped the crystal Y2 courtyard, 12:59 CEST)
+# 9 Sep 2026 (D10, appendix 32.83): a placement candidate can be swept from the environment instead of edited into the file.
+# The D pre-route chain runs in 47 seconds, so where a part goes is a question to MEASURE (pairs laid, pre-route hard),
+# not to argue on paper. FIXED_OVERRIDE="R20=35.0,19.5,0;R21=35.0,17.9,0" moves those parts for one run only.
+for _ov in filter(None, os.environ.get("FIXED_OVERRIDE", "").split(";")):
+    _r, _v = _ov.split("="); _p = [float(t) for t in _v.split(",")]
+    FIXED[_r.strip()] = (_p[0], _p[1], _p[2] if len(_p) > 2 else 0, bool(_p[3]) if len(_p) > 3 else False)
+    print("gen_pcb_d3: FIXED_OVERRIDE %s -> %s" % (_r.strip(), FIXED[_r.strip()]))
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 # 9 September 2026 (owner ruling, appendix 32.74 option 3): every declared decoupling capacitor takes its slot beside the pin it serves
 # BEFORE the packer fills the regions. The old order shelf-packed them by reference number and `bypass_place.py` then moved what still
