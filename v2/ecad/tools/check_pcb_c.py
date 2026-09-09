@@ -73,7 +73,15 @@ outside_window = [r for r, fp in fps.items() if not r.startswith("H") and (bbox(
 check(not outside_window, "every part inside the plate outline by 3 mm (%s)" % outside_window[:6])
 off_board = [r for r, fp in fps.items() if not r.startswith("H") and not in_strips(fp, 0.0)]
 check(not off_board, "every part on the ring (left, bottom, right or top strip), nothing over the window (%s)" % off_board[:8])
-notch_hit = [r for r, fp in fps.items() if not r.startswith("H") and bbox(fp)[2] > nx0 and bbox(fp)[0] < nx1 and bbox(fp)[3] > ny0 and bbox(fp)[1] < ny1 + 1]
+def mech_bbox(fp):
+    """The COURTYARD where the footprint has one, else the bounding box. 9 Sep 2026 (32.85): the notch test used the bounding box,
+    which includes silkscreen text; J_HSJ2's silk reaches 2.18 mm further north than any copper or body it owns and failed a notch
+    the part is mechanically clear of. A notch is cut so a body can pass; silk is what the legend pass moves."""
+    cy = fp.GetCourtyard(pcbnew.B_CrtYd if fp.IsFlipped() else pcbnew.F_CrtYd)
+    if cy.OutlineCount():
+        bb = cy.BBox(); return (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
+    return bbox(fp)
+notch_hit = [r for r, fp in fps.items() if not r.startswith("H") and mech_bbox(fp)[2] > nx0 and mech_bbox(fp)[0] < nx1 and mech_bbox(fp)[3] > ny0 and mech_bbox(fp)[1] < ny1 + 1]
 check(not notch_hit, "nothing sits in the monitor block notch (%s)" % notch_hit[:6])
 def site_ok(ref, xy, tol=0.6):
     fp = fps.get(ref)
