@@ -176,6 +176,11 @@ band("GND", short_of(r10a, wbn), short_of(wbn, r10a, 0.5)); band("PACK_N", short
 def pour(layer, netname, name, rect, priority=0):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL); z.SetLocalClearance(FromMM(0.3)); z.SetMinThickness(FromMM(0.25)); z.SetThermalReliefGap(FromMM(0.3)); z.SetThermalReliefSpokeWidth(FromMM(0.4))
+    # 9 Sep 2026 (appendix 32.85): P's pours never had the island removal that every other board sets. An unconnected
+    # island is copper that reaches nothing and KiCad counts it as an open between the zone and itself; the fill deletes
+    # it now, and pour_stitch.py keeps the islands worth a via before that.
+    try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+    except Exception: pass
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
