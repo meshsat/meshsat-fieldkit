@@ -26,7 +26,10 @@ PAIR_BUDGET = float(os.environ.get("PAIR_BUDGET", "600"))   # seconds per pair; 
 # same placement and the same 1493 escapes laid 38 and 33 of 113, and the only difference was how loaded the box was
 # while each ran: under load a pair gets fewer expansions inside its 300 seconds. A budget that decides the result must
 # be counted in work, not in time, so the real cap is expansions and the clock is only the outer safety net.
-PAIR_EXPANSIONS = int(os.environ.get("PAIR_EXPANSIONS", "3000000"))   # expansions per pair across all its searches; 0 = off
+PAIR_EXPANSIONS = int(os.environ.get("PAIR_EXPANSIONS", "12000000"))   # expansions per pair across all its searches; 0 = off
+# Calibrated 10 September 2026: 3,000,000 laid 21 of B19's 113 pairs where the old 300 second clock laid 38, because the
+# budget is spent by MANY searches per pair (the corridor plus a stub search per station), not by one. 12,000,000 is the
+# figure that matches the clock on a quiet core, and unlike the clock it gives the same answer whatever else the box runs.
 PAIR_SPENT = [0]
 import pcbnew, numpy as np
 from pcbnew import VECTOR2I, FromMM
