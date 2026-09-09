@@ -94,7 +94,7 @@ if _dups: raise SystemExit("reference listed twice in the placement (two footpri
 import json as _json, os as _osx, bypass_slots
 _ip = _osx.path.join(_osx.path.dirname(_osx.path.abspath(BOARD)), "out", _osx.path.splitext(_osx.path.basename(BOARD))[0] + "-intent.json")
 _entries = _json.load(open(_ip)).get("bypass", []) if _osx.path.exists(_ip) else []
-RESERVED = bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
+RESERVED = set() if _osx.environ.get("BYPASS_SLOTS") == "0" else bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
 for _r in RESERVED: placed[_r] = board.FindFootprintByReference(_r)
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
