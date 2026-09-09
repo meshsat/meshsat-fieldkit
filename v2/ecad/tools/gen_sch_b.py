@@ -115,7 +115,8 @@ CP2102 = {1:"DCD",2:"RI_CLK",3:"GND",4:"D+",5:"D-",6:"VDD",7:"VREGIN",8:"VBUS",9
 # TI TMUXHS4212, SLASEP7A rev May 2022, Table 5-1: two-channel differential 2:1 mux, port A is the common side and SEL
 # low sends A to B, high sends A to C. OEn is active low, L = normal. RSVD1 and RSVD2 are tied to VCC. 20-pin VQFN.
 TMUXHS = {1: "RSVD1", 2: "OEn", 3: "A0p", 4: "A0n", 5: "GND", 6: "VCC", 7: "A1p", 8: "A1n", 9: "SEL", 10: "RSVD2",
-          12: "C1n", 13: "C1p", 14: "C0n", 15: "C0p", 16: "B1n", 17: "B1p", 18: "B0n", 19: "B0p", 20: "GND"}
+          11: "GND", 12: "C1n", 13: "C1p", 14: "C0n", 15: "C0p", 16: "B1n", 17: "B1p", 18: "B0n", 19: "B0p", 20: "GND",
+          21: "EPAD"}
 # TI TS3USB221A, SCDS277C rev Oct 2024, Table 4-1: USB 2.0 high-speed 1:2 mux, D+/D- is the common port, S selects
 # port 1 or port 2, OE is active low. 10-pin uQFN. It exists because the TMUXHS4212 cannot carry USB2: its common-mode
 # range is 0 to 1.8 V and its I/O absolute maximum is 2.4 V, against USB2's 3.3 V single-ended swing.
@@ -152,7 +153,7 @@ FP = {
  "C10u": "Capacitor_SMD:C_0805_2012Metric", "C100u": "Capacitor_SMD:C_1206_3216Metric", "C1210": "Capacitor_SMD:C_1210_3225Metric", "C1812": "Capacitor_SMD:C_1812_4532Metric", "LED": "LED_SMD:LED_0603_1608Metric",
  "TVS": "Diode_SMD:D_SMB", "F1812": "Fuse:Fuse_1812_4532Metric",
  "QFN64": "Package_DFN_QFN:QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm", "WQFN42": "Package_DFN_QFN:WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm", "QFN28": "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm",
- "LQFP100": "Package_QFP:LQFP-100_14x14mm_P0.5mm", "VQFN20": "Package_DFN_QFN:VQFN-20-1EP_2.5x4.5mm_P0.5mm_EP1.0x3.0mm", "UQFN10": "Package_DFN_QFN:UQFN-10_1.4x1.8mm_P0.4mm",
+ "LQFP100": "Package_QFP:LQFP-100_14x14mm_P0.5mm", "VQFN20": "meshsat:Texas_RKS0020A_VQFN-20_2.5x4.5mm", "UQFN10": "meshsat:Texas_RSE0010A_UQFN-10_1.5x2mm",
  "SOT353": "Package_TO_SOT_SMD:SOT-353_SC-70-5", "SOIC14": "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm", "SOT23_8": "Package_TO_SOT_SMD:SOT-23-8",
  "LQFP128EP": "meshsat:LQFP-128_14x14mm_P0.4mm_EP6.0", "TQFP128EP": "meshsat:TQFP-128_14x14mm_P0.4mm_EP10.0",
  "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm", "TSSOP14": "Package_SO:TSSOP-14_4.4x5mm_P0.65mm", "TSSOP28": "Package_SO:TSSOP-28_4.4x9.7mm_P0.65mm", "SOIC8": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
@@ -364,7 +365,7 @@ def slot(s):
     # A 2:1 mux cannot connect two hosts at once by construction, so the voted control of section 5 is there to stop a
     # single wedged controller MOVING ownership, not to prevent contention, which the topology already makes impossible.
     f = s % 3 + 1
-    mx = {1: b33, 10: b33, 5: "GND", 20: "GND", 6: b33, 2: "BOE%d_n" % s, 9: "BSEL%d" % s,
+    mx = {1: b33, 10: b33, 5: "GND", 11: "GND", 20: "GND", 21: "GND", 6: b33, 2: "BOE%d_n" % s, 9: "BSEL%d" % s,
           3: "BANK%d_UPTX_P" % s, 4: "BANK%d_UPTX_N" % s, 7: "MUX%d_A1P" % s, 8: "MUX%d_A1N" % s,
           19: "HOST%d_0TX_P" % s, 18: "HOST%d_0TX_N" % s, 17: "HOST%d_0RX_P" % s, 16: "HOST%d_0RX_N" % s,
           15: "HOST%d_1TX_P" % f, 14: "HOST%d_1TX_N" % f, 13: "HOST%d_1RX_P" % f, 12: "HOST%d_1RX_N" % f}
