@@ -38,6 +38,14 @@ def main(a):
     # only a rule area that forbids FOOTPRINTS blocks a placement; the board-wide "no tracks on In1" and edge-band areas cover
     # every spot on the board and are about copper, not parts (8 Sep 2026: testing every rule area made all 16 capacitors "stuck")
     rule = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowFootprints()]
+    # 9 September 2026: this pass had no idea what an escape fan is, and it ran in no chain until today, so nothing ever noticed. Wired into
+    # every chain it promptly parked capacitors 1 to 3 mm from QFN and ZIF pins and cost those parts their escapes (D10's U7 six of
+    # seventeen, C9's U3 twenty-three of fifty-seven). An escaped IC's fan is closed to this pass, the same rule bypass_slots.py uses.
+    import bypass_slots as _bs
+    fans = []
+    for g in b.GetFootprints():
+        if _bs._needs_fan(g):
+            cb = courtyard(g); fb = pcbnew.BOX2I(cb.GetOrigin(), cb.GetSize()); fb.Inflate(int(FM(2.2))); fans.append(fb)
     def blocked(f, at, side):
         """The capacitor's courtyard at `at` against every other footprint on that side, the rule areas and the edge."""
         cy = courtyard(f); w, h = cy.GetWidth(), cy.GetHeight()
@@ -48,6 +56,8 @@ def main(a):
             if courtyard(g).Intersects(box): return g.GetReference()
         for z in rule:
             if z.GetBoundingBox().Intersects(box) and z.HitTestFilledArea(z.GetFirstLayer(), pcbnew.VECTOR2I(at.x, at.y), 0): return "rule area " + (z.GetZoneName() or "")
+        for fb in fans:
+            if fb.Intersects(box): return "an escape fan"
         return None
     moved = near = stuck = 0
     for e in entries:
