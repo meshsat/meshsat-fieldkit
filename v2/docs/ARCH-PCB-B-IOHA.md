@@ -226,3 +226,32 @@ prototype; none has been run.
 | A12 | Dark plane | unpopulate or hold all three supervisors in reset from power-on | every bank comes up on its home module, every hub leaves reset, the kit works |
 | A13 | USB bandwidth under failover | run the SDR at full rate on a bank that has failed over | throughput is measured and recorded; the neighbour hosting two banks is expected to share, and the number is what matters |
 | A14 | EMCON through the fabric | assert EMCON while a bank is failed over | every transmitter of that bank is silenced, measured with the SDR, exactly as when it is home |
+
+## 14. What it costs
+
+**Parts.** The work adds 174 placed parts in five groups, measured on the built board rather than counted from the
+schematic: the three supervisor blocks 66 parts (MCU, its LDO, two CAN transceivers, crystal, SWD pads, status LED,
+decoupling and pulls, three times over), the voters and the break-before-make 59, the three per-bank host selects 21,
+the WiFi antenna changeover 16, and the CAN termination 12. Against a board that carried about 925 parts, that is
+roughly a fifth more parts, and every one of them is a passive, a logic quad, a small mux or one of three MCUs.
+
+**Area.** 2,709 mm2 of part bounding box, all of it on the **underside**, in pockets that carried nothing before:
+the two gaps between the module columns (29 x 56 mm each), the free underside of the QMX bay, and the band between
+the CM5 receptacles and the standoff row. The board outline does not change and no top-side block moves.
+
+**Power.** About 0.9 W continuous added, dominated by the three supervisors (roughly 60 mA each at 3.3 V with the
+core clocked to what CAN-FD timing needs, not to 480 MHz) and the six CAN transceivers (about 10 mA each). The rest
+is negligible by measurement from the data sheets: the TMUXHS4212 draws 250 uA maximum, the TS3USB221A 30 uA, the
+74LVC quads microamps, and the SKY13351 is a passive GaAs switch whose control pins draw microamps. The second WiFi
+card adds about 0.3 W while it is powered and idle; it never transmits at the same time as the primary, because the
+two share one pair of antennas.
+
+**Rails, redistributed rather than increased.** Moving each bank's hub, its 1.1 V core and its two host selects off
+the slot rails puts about **0.8 A more on `+5V_DEV`** and takes about 0.2 A off each slot rail. The kit draws the
+same; A22's device-rail converter carries more of it and its three slot converters less, which is an item for A22's
+next rail check and is recorded here so it is not discovered on the bench. `+3V3_DEV` is now a declared rail in the
+intent layer at 1.2 A against U25's 2 A part, so `dc_drop.py` judges it like any other.
+
+**What it does not cost.** No second board, no ribbon between boards, no change to the case, the face plate, the
+antenna count or any other board's outline. The three PCIe switches stay, because the WiFi ruling kept the cards on
+PCIe.
