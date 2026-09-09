@@ -3455,7 +3455,15 @@ grown by 2.2 mm, which is `place_audit`'s own envelope figure. The first cut of 
 fine-pitch test and let five capacitors land 1.9 to 2.6 mm from a 0.8 mm TQFP's pins, which is how the D board
 found the hole in it.
 
-Two lessons, both already in the record's own language. A tool that has never run is not a tool that works,
+**Addendum, 13:40 CEST: the fan protection itself did not work, and that is why two boards kept failing after it was
+added.** The inflated envelope was built as `BOX2I(courtyard.GetOrigin(), courtyard.GetSize())` and then inflated,
+which produced a box of the inflate alone: 4.4 mm square, wherever the courtyard's origin happened to be. Every fan
+test therefore passed and the protection was a no-op through three chain cycles. It showed up in one line the moment
+the box was printed rather than trusted: `J_EPD fan box x 198.9..203.3` for a 24-way ZIF that is 14 mm wide, and
+`0 footprint(s) inside the fan` on a part that had just lost six of its twenty-one escapes. The box is built from the
+courtyard's own edges now.
+
+Three lessons, all already in the record's own language. A tool that has never run is not a tool that works,
 and the day it is first wired in is the day it is first tested: this one had been sitting in the tree for a day
 carrying a defect that only a chain could reveal. And a switch that lets a pass be turned off is worth writing
 before the pass is needed, because it turns "which change broke this" from an argument into a measurement.
