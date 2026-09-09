@@ -54,7 +54,13 @@ def run(b, check, path=None):
     def closes(p):
         c = p.GetPosition(); r = int(NEAR_VIA * 1e6)
         if any(v.GetNetname() == p.GetNetname() and math.hypot(v.GetPosition().x - c.x, v.GetPosition().y - c.y) <= r for v in vias): return True
-        return any(pl.Contains(c) for L in cu for pl in planes_net.get((L, p.GetNetname()), []))   # the pad lies in a pour of its own net (review of 8 Sep 2026: the `is` on SWIG proxies was always False)
+        if any(pl.Contains(c) for L in cu for pl in planes_net.get((L, p.GetNetname()), [])): return True   # the pad lies in a pour of its own net (review of 8 Sep 2026: the `is` on SWIG proxies was always False)
+        # 9 Sep 2026 (D10, appendix 32.83): the question this asks is whether the pad REACHES ITS PLANE, and a rail
+        # carried by tracks has no plane to reach. Its loop is the pad-to-pin distance, which the check above already
+        # measures. D10 failed four capacitors sitting 1.1 to 2.6 mm from their pins because +3V3_D8 and +5V_D8 are
+        # track rails on that board and no via of theirs happened to land within 1.5 mm; the ground pads all lay in
+        # the pour. A net with no pour anywhere on the board is not asked a question that does not apply to it.
+        return not any(planes_net.get((L, p.GetNetname())) for L in cu)
     # the same recorded-exception idiom as erc-allow.txt: a decoupling distance may stand only if the board's own
     # bypass-allow.txt gives a reason, and the report still names every entry and its distance (8 Sep 2026 18:25)
     allow_p = os.path.join(os.path.dirname(os.path.abspath(path)) if path else ".", "bypass-allow.txt")

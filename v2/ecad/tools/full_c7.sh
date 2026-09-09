@@ -21,10 +21,14 @@ python3 ../tools/check_pcb_c.py $N.kicad_pcb > out/check_c.log 2>&1; grep -E 'FA
 [ -n "${PLACE_JITTER:-}" ] && python3 ../tools/place_jitter.py $N.kicad_pcb "$PLACE_JITTER" 2>&1 | grep place_jitter   # Stage E data campaign: a jittered neighbour of the placement (the gates below still judge it)
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
-# only nets with a plane or pour to land on (7 Sep 2026: a pre-placed via of a net without a plane is one more open for the router)
-python3 ../tools/prefanout.py $N.kicad_pcb 'GND' fine 2>&1 | grep -E 'fanout:'
 # C8 (8 Sep 2026, MESHSAT-862 rule 1): the panel USB pair laid as locked copper before the router (PAIR_GATE=0 reports only)
 PAIR_LAYERS=${PAIR_LAYERS:-F.Cu} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-In2.Cu} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes USB > out/pair_preroute.log 2>&1; PP=$?; grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -12; [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || { echo "BLOCK pair pre-router (out/pair_preroute.log)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
+# 9 Sep 2026 (D10, appendix 32.83): THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT. The fanout used to run first and scatter
+# plane vias over the whole board with no knowledge of the pair corridors; D10's USB3 then had its corridor START cell blocked by
+# C15's ground via 0.73 mm away and the section could not be laid at all. prefanout.py already reads existing tracks and vias as
+# obstacles, so it fits around the laid pairs, while the pre-router has no such freedom: the constrained nets go first.
+# only nets with a plane or pour to land on (7 Sep 2026: a pre-placed via of a net without a plane is one more open for the router)
+python3 ../tools/prefanout.py $N.kicad_pcb 'GND' fine 2>&1 | grep -E 'fanout:'
 python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?; grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8; [ "$PA" -eq 0 ] || [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || { echo "BLOCK placement predictor (out/place_audit.log, out/place_audit.png)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }   # 8 Sep 2026 (MESHSAT-862 Stage D): after the escapes, the fans are measured, not guessed; a collision is a FAIL before any route is bought
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
