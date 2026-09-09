@@ -82,6 +82,14 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          "R25": (28.3, 20.6, 0, False), "R24": (31.6, 20.6, 0, False),
          "R14": (23.2, 6.3, 90, False), "R15": (18.4, 6.3, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (11.5, -5.8, 180, False)}   # R28 north of R27, pad 1 east toward the codec leg (its slot south overlapped the crystal Y2 courtyard, 12:59 CEST)
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
+# 9 September 2026 (owner ruling, appendix 32.74 option 3): every declared decoupling capacitor takes its slot beside the pin it serves
+# BEFORE the packer fills the regions. The old order shelf-packed them by reference number and `bypass_place.py` then moved what still
+# fitted, which on D9 was nine of sixteen; measured across the released set, not one capacitor of any board was inside the 3 mm rule.
+import json as _json, bypass_slots
+_ip = os.path.join(os.path.dirname(os.path.abspath(BOARD)), "out", os.path.splitext(os.path.basename(BOARD))[0] + "-intent.json")
+_entries = _json.load(open(_ip)).get("bypass", []) if os.path.exists(_ip) else []
+RESERVED = bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
+for _r in RESERVED: placed[_r] = board.FindFootprintByReference(_r)
 for ref, x, y in (("J_HARN1", -42, 20.5), ("J_PWR1", -42, -9.5), ("J_ANT", -31, -37.5), ("J_PAIN", 9, -25.5), ("J_PAOUT", 35, -37.5), ("J_VGG", 43.5, -18.5), ("J_HS1", 46.5, 19), ("J_HS2", 46.5, -5), ("J_USB3", 46, 30.5)):
     text(ref, x, y, pcbnew.F_SilkS, 0.9, 0.15)
 text("SA868 (bench fit)", -15, 19.5, pcbnew.F_SilkS, 0.9, 0.15); text("T/R", -14, -21, pcbnew.F_SilkS, 0.9, 0.15); text("10 dB", -1, -24.5, pcbnew.F_SilkS, 0.8, 0.14); text("LPF 145 MHz", 21, -24.5, pcbnew.F_SilkS, 0.8, 0.14)
@@ -103,6 +111,8 @@ REGIONS = [
  ("CTRLB", (-24, -21.5, -5, -4.5), ["C%d" % k for k in range(51, 57)] + ["R48", "R49", "R50", "R51", "R5", "D2", "C57"], True),
  ("RLYD", (-26, -37, -8, -31.5), ["Q2", "R52", "R53"], False),
 ]
+REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
+
 rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
 if rest: REGIONS.append(("REST", (-46, -30, -38, -22), rest, False))
 GAP = 1.2; FINE_MARGIN = 2.2   # E6 round 4: 1.4 left R14 inside the tracker's escape row and four pads of U5 without escapes
