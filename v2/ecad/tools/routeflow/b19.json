@@ -1,0 +1,63 @@
+{
+ "board": "pcb-b-compute",
+ "project": "v2/ecad/pcb-b-compute-b19",
+ "phase": "B19",
+ "issue": "MESHSAT-862",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "argv": [
+   "bash",
+   "../tools/full_b19.sh",
+   "<PROJECT>"
+  ],
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 2,
+  "gen_logs": []
+ },
+ "plane_layers": [
+  "In1.Cu",
+  "In4.Cu"
+ ],
+ "route": {
+  "attempts": [
+   3
+  ],
+  "threads": 1,
+  "timeout": 10800,
+  "power_layers": [
+   "In1.Cu",
+   "In4.Cu"
+  ],
+  "plane_nets": [
+   "GND"
+  ],
+  "log": "out/parallel-b19.log",
+  "jar": "~/bin/freerouting-1.9.0.jar",
+  "_layer_rules_removed": "REMOVED 8 Sep 2026 17:50: the per-class layer rule (rule 2) cost C8 three routes that never finished a pass (12 min, 90 min, 3 h with nothing written) while the same DSN without it auto-routed in 14 min 21 s; and the D9 read-back this morning showed the router does not hold a class to its layers anyway. The pair pre-router lays the pairs on their layers by construction, which is what enforces the intent now.",
+  "_ceiling_measured": "9 September 2026 19:05 CEST: this is the PROBE, not the release route. The rule of the record is that a pass ceiling comes from a measured 3-pass probe of THIS DSN, never from an ambition, and this DSN is not B18's: the I/O high-availability layer added 169 parts and 40 nets. Read the 3-pass rate off this run, then set the release ceiling from it in b19-release.json."
+ },
+ "finish": {
+  "argv": [
+   "./tools/finish_b19.sh",
+   "<ECAD>",
+   "out/parallel-b19.log"
+  ],
+  "cwd": "<ECAD>",
+  "clean_flag": "out/b19-clean.txt",
+  "stub_log": "out/pcb-b-compute-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-B19",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 200
+ },
+ "budget_rounds": 1,
+ "notes": "B19 (9 September 2026, MESHSAT-862, appendix 32.86): the first B phase with the I/O high-availability layer. The board builds and check_pcb_b.py prints ALL PASS on it; this profile measures how the new DSN routes. B18 is superseded and no release is cut against it.",
+ "baseline_key": "B15"
+}
