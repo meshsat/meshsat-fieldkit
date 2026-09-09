@@ -1,0 +1,13 @@
+LCSC part codes corrected in this deliverable's BOM on 9 September 2026 (MESHSAT-862, appendix 32.72 and 32.80).
+
+The codes the generators carried when this board was built resolved to WRONG PARTS at JLCPCB. The
+ordering session verified a replacement for each one against JLCPCB's parts API on 8 September 2026
+(part and package), the generators were corrected the same day, and the corrected codes reached the
+order set immediately but NOT this folder, because a finish re-exports the BOM from the board file it
+already has and does not re-run the schematic generator. Anyone who had built from this BOM would have
+fitted the wrong parts. The codes below now match `v2/release/revA/order/PCB-A-POWER-A22/upload/`.
+
+file                   designator(s)      was          now
+pcb-a-power-bom.csv    U26                C5605        C465737
+pcb-a-power-bom.csv    U27                C5626        C2864778
+pcb-a-power-bom.csv    U28                C5626        C2864778

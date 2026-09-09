@@ -1,0 +1,12 @@
+LCSC part codes corrected in this deliverable's BOM on 9 September 2026 (MESHSAT-862, appendix 32.72 and 32.80).
+
+The codes the generators carried when this board was built resolved to WRONG PARTS at JLCPCB. The
+ordering session verified a replacement for each one against JLCPCB's parts API on 8 September 2026
+(part and package), the generators were corrected the same day, and the corrected codes reached the
+order set immediately but NOT this folder, because a finish re-exports the BOM from the board file it
+already has and does not re-run the schematic generator. Anyone who had built from this BOM would have
+fitted the wrong parts. The codes below now match `v2/release/revA/order/PCB-P-PACK-P1/upload/`.
+
+file                   designator(s)      was          now
+pcb-p-pack-bom.csv     Q1                 C2825431     C529279
+pcb-p-pack-bom.csv     Q2                 C2825431     C529279

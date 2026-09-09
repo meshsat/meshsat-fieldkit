@@ -1,0 +1,48 @@
+LCSC part codes corrected in this deliverable's BOM on 9 September 2026 (MESHSAT-862, appendix 32.72 and 32.80).
+
+The codes the generators carried when this board was built resolved to WRONG PARTS at JLCPCB. The
+ordering session verified a replacement for each one against JLCPCB's parts API on 8 September 2026
+(part and package), the generators were corrected the same day, and the corrected codes reached the
+order set immediately but NOT this folder, because a finish re-exports the BOM from the board file it
+already has and does not re-run the schematic generator. Anyone who had built from this BOM would have
+fitted the wrong parts. The codes below now match `v2/release/revA/order/PCB-B-COMPUTE-B16/upload/`.
+
+file                   designator(s)      was          now
+pcb-b-compute-bom.csv  J_LIME             C2802372     C5355286
+pcb-b-compute-bom.csv  J_M2C1             C2803764     C41430829
+pcb-b-compute-bom.csv  J_M2C2             C2803770     C41430835
+pcb-b-compute-bom.csv  J_M2C3             C2803771     C41430851
+pcb-b-compute-bom.csv  J_M2N1             C2803771     C41430851
+pcb-b-compute-bom.csv  J_M2N2             C2803771     C41430851
+pcb-b-compute-bom.csv  J_M2N3             C2803771     C41430851
+pcb-b-compute-bom.csv  LED1               C72043       C2986059
+pcb-b-compute-bom.csv  LED2               C72043       C2986059
+pcb-b-compute-bom.csv  LED3               C72043       C2986059
+pcb-b-compute-bom.csv  LED4               C72043       C2986059
+pcb-b-compute-bom.csv  LED7               C72043       C2986059
+pcb-b-compute-bom.csv  LED9               C72043       C2986059
+pcb-b-compute-bom.csv  LED11              C72043       C2986059
+pcb-b-compute-bom.csv  LED12,LED22,LED32  C72043       C2986059
+pcb-b-compute-bom.csv  LED13,LED23,LED33  C72043       C2986059
+pcb-b-compute-bom.csv  LED16,LED26,LED36  C72043       C2986059
+pcb-b-compute-bom.csv  LED21              C72043       C2986059
+pcb-b-compute-bom.csv  LED31              C72043       C2986059
+pcb-b-compute-bom.csv  Q1                 C2827865     C455160
+pcb-b-compute-bom.csv  T1                 C2891392     C6384935
+pcb-b-compute-bom.csv  U1                 C2830106     C638299
+pcb-b-compute-bom.csv  U3                 C2846591     C157482
+pcb-b-compute-bom.csv  U4                 C2846591     C157482
+pcb-b-compute-bom.csv  U5                 C2927919     C93245
+pcb-b-compute-bom.csv  U6                 C5626        C2864778
+pcb-b-compute-bom.csv  U7                 C5626        C2864778
+pcb-b-compute-bom.csv  U10                C2842210     C699536
+pcb-b-compute-bom.csv  U11                C22453086    C29781241
+pcb-b-compute-bom.csv  U12                C2913441     C411294
+pcb-b-compute-bom.csv  U19                C6009        C465737
+pcb-b-compute-bom.csv  U20                C6009        C465737
+pcb-b-compute-bom.csv  U101               C2827826     C500767
+pcb-b-compute-bom.csv  U102               C2841998     C544686
+pcb-b-compute-bom.csv  U201               C2827826     C500767
+pcb-b-compute-bom.csv  U202               C2841998     C544686
+pcb-b-compute-bom.csv  U301               C2827826     C500767
+pcb-b-compute-bom.csv  U302               C2841998     C544686

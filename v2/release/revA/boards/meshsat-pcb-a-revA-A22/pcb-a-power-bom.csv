@@ -140,7 +140,7 @@ INA226 PoE rail monitor (0x47),U17,VSSOP-10_3x3mm_P0.5mm,C49851
 TPS259631DDAR eFuse VBAT -> VMON (1.2 A (ILM)),U21,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
 TPS259631DDAR eFuse VBAT -> VHEAT (1.0 A (ILM)),U22,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
 TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (2.0 A (ILM)),U23,SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm,C2155778
-"74LVC08APW quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit",U26,TSSOP-14_4.4x5mm_P0.65mm,C5605
-PCA9555PW (0x21): enables and status,U27,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
-"PCA9555PW (0x24): power-good lines, spares",U28,TSSOP-24_4.4x7.8mm_P0.65mm,C5626
+"74LVC08APW quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit",U26,TSSOP-14_4.4x5mm_P0.65mm,C465737
+PCA9555PW (0x21): enables and status,U27,TSSOP-24_4.4x7.8mm_P0.65mm,C2864778
+"PCA9555PW (0x24): power-good lines, spares",U28,TSSOP-24_4.4x7.8mm_P0.65mm,C2864778
 USBLC6-2SC6,U29,SOT-23-6,C7519
