@@ -3622,3 +3622,17 @@ C10's three routeflow rounds went **19 open, then 5, then 1** (0 hard throughout
 **It is still not clean, and the reason is the ground.** `check_pcb_c.py` reports 24 failures on the routed board that the same board does not have before the route: the four GND pours fill **23 to 39 percent of their outline against the 50 percent `MIN_COVER` asks**, and about twenty pre-placed GND stitch vias now sit inside a pour outline but outside its fill, stranded by copper the router laid around them. The pre-route board passes the same gate.
 
 That is a real finding rather than a threshold quibble: a ground pour eaten to a quarter of its area carries a poor return, and a stitch via the fill no longer touches carries nothing at all. It is also a consequence of the remedy that closed the board, since `via_costs 100` buys fewer vias with longer tracks and longer tracks are what fragment a pour. **The item for C's next phase** is either a route that keeps the pour whole (the via cost back to normal, with the passes that the third round showed are needed) or a stitching pass after the route (`pour_stitch.py` exists for the islands, and the stranded vias want removing rather than keeping). No C deliverable is cut tonight.
+
+### 32.93 The partition routes B19, and the concurrency in it is what costs (10 September 2026, 01:45 CEST; MESHSAT-862)
+
+The pipeline ran end to end on B19 for the first time and every stage did its job:
+
+- **GLOBAL** (212 nets): one pass, 37 minutes, session written. Three passes timed out at 45 minutes, twenty at two hours, so the hedges in their own work directories were what produced a result at all.
+- **The five region groups** (DEVW, S1, S2, S3, DEVE, 61 to 171 nets each) all finished with exit 0 against the locked GLOBAL, between 22:20 and 23:04 UTC, four of them inside 45 minutes.
+- **The merge** took the board from 7,970 to 17,317 items over 659 nets.
+
+**And then the reconcile met the bill for routing the regions concurrently: 1,121 hard violations at the boundaries.** Three rip passes brought that to about 400 and stopped converging (355 clearance, 30 shorting, 7 hole clearance), leaving 499 nets open, and the board-wide stub router then closed **28 of those 499 in 34 minutes**, which is a ten-hour road to a board nobody would trust. It was killed.
+
+**The cause is structural, not a bug.** Each region job is given the DSN with the other groups' classes ignored, so it sees stage 1's locked copper and nothing of what its siblings are laying at the same moment. Their boundaries therefore collide by construction, and the denser the board the more they collide. `part_stage2.sh` now has `PART_SEQ=1`, which routes the groups **one at a time and imports and locks each result before the next DSN is exported**, so every group sees its predecessors as obstacles and the merge has nothing to reconcile. It costs wall clock, five jobs in a row rather than five at once, and on the measured region times that is about three hours against fifty minutes.
+
+Two smaller repairs came out of the same run: the reconcile now passes the stub router's work through `stub_accept.py` like every other finish does, instead of keeping it blind, and the copied project directory needed the generator's net-class assignments or every gate would have judged the board against the Default class.
