@@ -117,7 +117,11 @@ for fp in b.GetFootprints():
     # (0.20 mm at 0.65 mm pitch): closed, and no knot either.
     _pass = 0.481 if ROWS04 else 0.604    # 0.127 + 2 x 0.127 + 0.10 on the 0.4 mm rows; 0.25 + 2 x 0.127 + 0.10 elsewhere
     _need = math.sqrt(max((_pass + pcbnew.ToMM(VIA_D)) ** 2 - pcbnew.ToMM(pitch) ** 2, 0.0))
-    if _need > OFFS[1] - OFFS[0]:
+    # only a real pad ROW has a corridor between neighbouring escape vias. A two-pad passive escapes its two pads in
+    # OPPOSITE directions and has no such corridor, so deepening its offsets buys nothing and costs room: the first
+    # run with this rule pushed C56's and C57's escapes 1.2 mm further out into their neighbours and returned two
+    # clearance violations on a board that had none there (9 Sep 2026, D10 pre-route). Four SMD pads is the floor.
+    if _need > OFFS[1] - OFFS[0] and nsmd >= 4:
         OFFS = (OFFS[0], OFFS[0] + _need, OFFS[0] + 2 * _need)
     # group pads by side (outward direction), order along the side, alternate the offset
     sides = {}; eps = ep_numbers(fp)

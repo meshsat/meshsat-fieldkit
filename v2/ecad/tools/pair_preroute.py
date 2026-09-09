@@ -905,6 +905,27 @@ def main(a):
                     if done: stubs_ += 1
                     else: left += 1
         if stubs_ or left: report.append("STUBS %s: %d other pad(s) of the pair nets stubbed to the laid copper (%d by a dive), %d left to the router" % (stem, stubs_, dives_, left))
+        # 9 Sep 2026 (D10 USB3, appendix 32.83): THE TWO LEGS OF A PAIR MAY NEVER CROSS EACH OTHER. Around a hairpin the
+        # offset legs can swap sides and swap back, which D10's USB3 did twice on F.Cu and shipped two tracks_crossing
+        # violations between USB3_P and USB3_N into the pre-route gate. A pair the pre-router cannot lay is one unrouted
+        # net the router will take; a pair it lays crossed is a short. The pair is rolled back and reported instead.
+        _segs = {}
+        for _t in pieces:
+            if _t.GetClass() != "PCB_TRACK": continue
+            _segs.setdefault((_t.GetNetname(), _t.GetLayer()), []).append((mm(_t.GetStart().x), mm(_t.GetStart().y), mm(_t.GetEnd().x), mm(_t.GetEnd().y)))
+        def _hit(a, c, d, e, f, g_, h, i_):
+            def _o(px, py, qx, qy, rx, ry): return (qx - px) * (ry - py) - (qy - py) * (rx - px)
+            o1, o2, o3, o4 = _o(a, c, d, e, f, g_), _o(a, c, d, e, h, i_), _o(f, g_, h, i_, a, c), _o(f, g_, h, i_, d, e)
+            return (o1 > 1e-9) != (o2 > 1e-9) and (o3 > 1e-9) != (o4 > 1e-9) and abs(o1) + abs(o2) + abs(o3) + abs(o4) > 1e-9
+        _cross = 0
+        for _L in {k[1] for k in _segs}:
+            for _a in _segs.get((pn, _L), []):
+                for _b2 in _segs.get((nn, _L), []):
+                    if _hit(*_a, *_b2): _cross += 1
+        if _cross:
+            rollback()
+            report.append("FAIL  %s: the two legs cross each other %d time(s) on the laid path; rolled back, the router takes the pair" % (stem, _cross))
+            continue
         laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added))
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
