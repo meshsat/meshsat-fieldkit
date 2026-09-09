@@ -159,7 +159,7 @@ for _s, _f in RING.items():
     check(any(r.startswith("R") for r in PADS.get("BSEL%d" % _s, set())),
           "bank %d select is pulled to its safe state" % _s)
 # every voted bit is driven by all three controllers and by nothing else
-for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3"):
+for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3", "WSEC"):
     drivers = [t for t in ("A", "B", "C") if PADS.get("%s_%s" % (_bit, t))]
     check(len(drivers) == 3, "%s is driven by all three controllers (%s)" % (_bit, drivers))
     for _t in drivers:
@@ -181,6 +181,22 @@ for _f in ("A", "B"):
     check(PADS.get("CANH_%s" % _f) and PADS.get("CANL_%s" % _f), "heartbeat fabric %s exists" % _f)
 check(not (PADS.get("CANH_A", set()) & PADS.get("CANH_B", set())),
       "the two heartbeat fabrics share no transceiver (%s)" % sorted(PADS.get("CANH_A", set()) & PADS.get("CANH_B", set())))
+# the kit-to-kit mesh radio is the one bearer with no second path, so it is duplicated on two slots and the two cards
+# share the case's existing antennas through a passive changeover that rests on the primary card when nothing drives it
+for _ref, _dis, _slot in (("J_M2C1", "WIFI_W_DIS_n", 1), ("J_M2C3", "WIFI2_W_DIS_n", 3)):
+    check(_ref in PADS.get(_dis, set()), "WiFi card on slot %d is fitted and EMCON reaches its W_DISABLE (%s)" % (_slot, sorted(PADS.get(_dis, set()))))
+    check("U%d02" % _slot in PADS.get("CARD%d_TX_P" % _slot, set()),
+          "the slot %d WiFi card hangs on its own PCIe switch, so one switch cannot take both radios" % _slot)
+_sw = {r for r in PADS.get("WIFI_SEC", set()) if r.startswith("U8")}
+check(len(_sw) == 2, "both antenna changeover switches follow the voted select (%s)" % sorted(_sw))
+check(any(r.startswith("R") for r in PADS.get("WIFI_PRI", set())) and any(r.startswith("Q") for r in PADS.get("WIFI_PRI", set())),
+      "the changeover's complement is a pull-up and a FET, so a dark control plane rests on the primary card (%s)" % sorted(PADS.get("WIFI_PRI", set())))
+for _ch in ("A", "B"):
+    for _n, _what in (("W1%s_CARD" % _ch, "the slot 1 card"), ("W3%s_CARD" % _ch, "the slot 3 card"), ("W%s_ANT" % _ch, "the case jack")):
+        _p = PADS.get(_n, set())
+        check(any(r.startswith("J_W") for r in _p) and any(r.startswith("C") for r in _p),
+              "chain %s reaches %s through a U.FL and a DC block (%s)" % (_ch, _what, sorted(_p)))
+
 # no peripheral bank may hold two long-range bearers, or one bank failure removes more than it should
 BEARERS = {"RB_DP": "Iridium", "QMX_DP": "HF", "USB_D8_P": "APRS", "USB_5G_P": "cellular"}
 BANK_OF = {}
