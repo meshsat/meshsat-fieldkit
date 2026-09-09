@@ -95,9 +95,9 @@ if _dups: raise SystemExit("reference listed twice in the placement (two footpri
 # 9 September 2026 (owner ruling, appendix 32.74 option 3): every declared decoupling capacitor takes its slot beside the pin it serves
 # BEFORE the packer fills the regions. The old order shelf-packed them by reference number and moved afterwards only what still fitted;
 # measured across the released set, not one capacitor of any board was inside the 3 mm rule and A22's worst two sat 117 and 121 mm away.
-import json as _json, bypass_slots
-_ip = os.path.join(os.path.dirname(os.path.abspath(BOARD)), "out", os.path.splitext(os.path.basename(BOARD))[0] + "-intent.json")
-_entries = _json.load(open(_ip)).get("bypass", []) if os.path.exists(_ip) else []
+import json as _json, os as _osx, bypass_slots
+_ip = _osx.path.join(_osx.path.dirname(_osx.path.abspath(BOARD)), "out", _osx.path.splitext(_osx.path.basename(BOARD))[0] + "-intent.json")
+_entries = _json.load(open(_ip)).get("bypass", []) if _osx.path.exists(_ip) else []
 RESERVED = bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
 for _r in RESERVED: placed[_r] = board.FindFootprintByReference(_r)
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
