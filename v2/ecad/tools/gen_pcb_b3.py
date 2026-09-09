@@ -137,17 +137,20 @@ def _ioc(k):
     return (["U%d" % (40 + 10 * k + n) for n in range(5)] + ["Y%d" % (2 + k), "LED%d" % (40 + k)]
             + ["C%d" % (400 + 20 * k + n) for n in range(12)]
             + ["R%d" % (63 + 12 * k + n) for n in range(3)])
-def _vote(k):
-    """The voted logic, split three ways so it rides in the three controller pockets rather than in one cramped band."""
-    us = ["U%d" % n for n in range(70 + k, 80, 3)] + (["U80"] if k == 0 else [])
-    cs = ["C%d" % n for n in range(470 + k, 480, 3)] + ([ "C480", "C481", "C482", "C483"] if k == 1 else [])
-    rs = ["R%d" % n for n in range(480 + 7 * k, 480 + 7 * (k + 1))] + {0: ["R474", "R475", "R476"], 1: ["Q3", "Q4", "Q5"], 2: ["R477", "R478", "R479"]}[k]
-    return us + cs + rs
+# The voted logic goes in ONE pocket, with controller A on the free underside of the QMX bay, which is 57 x 56 mm there
+# against the 29 x 56 of the two gaps between the module columns. Splitting it three ways (the first attempt) put three
+# or four TSSOP-14 quads into each 1624 mm2 pocket beside an LQFP-100 and the predictor answered with 17 collisions,
+# most of them the quads' own fans. Concentrating the voters is not a failure-domain regression: the FMEA already
+# names them as common mode, and what has to stay separate is the three CONTROLLERS, which it does.
+VOTE_PARTS = (["U%d" % n for n in range(70, 80)] + ["U80"] + ["C%d" % n for n in range(470, 480)]
+              + ["C480", "C481", "C482", "C483"] + ["R474", "R475", "R476"]
+              + ["Q3", "Q4", "Q5", "R477", "R478", "R479"]
+              + ["R%d" % n for n in range(480, 501)])
 # each CAN fabric is terminated at its two PHYSICAL ends, which are controller A in the west pocket and controller C in
 # the east one; a bus terminated once, in the middle, reflects off both ends (caught reading the placement, 9 Sep 2026)
-REGIONS += [("IOCA", (-158.0, -60.0, -129.0, -4.0), _ioc(0) + _vote(0) + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
-            ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1) + _vote(1), True),
-            ("IOCC", (18.0, 32.0, 47.0, 88.0), _ioc(2) + _vote(2) + ["R504", "R505", "R506", "R507", "C506", "C507"], True),
+REGIONS += [("IOCA", (-160.0, -60.0, -103.0, -4.0), _ioc(0) + VOTE_PARTS + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
+            ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1), True),
+            ("IOCC", (18.0, 32.0, 47.0, 88.0), _ioc(2) + ["R504", "R505", "R506", "R507", "C506", "C507"], True),
 
             ("WIFISW", (132.0, -20.0, 159.0, 10.0),
              ["U82", "U83", "J_W1A", "J_W3A", "J_WOA", "J_W1B", "J_W3B", "J_WOB", "R510", "Q10"] + ["C%d" % n for n in range(500, 506)], True)]
