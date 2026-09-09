@@ -20,7 +20,8 @@ OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-b-comput
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import intent as _intent
 for _n in ("1", "2", "3"): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, "J_5V_S%s" % _n, note="slot rail from A22 (JST-VH); the CM5 draws up to 5 A")
-_intent.rail("+5V_DEV", 5.0, 3.0, 6.0, "J_5V_DEV", note="the device rail from A22")
+_intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", note="the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)")
+_intent.rail("+3V3_DEV", 3.3, 1.2, 5.0, "U25", note="shared logic, the KSZ IO, the three hub VDD33 (99 mA each), the muxes, the three supervisor LDOs; U25 is a 2 A part")
 _intent.rail("GND", 0.0, 10.0, 21.0, "J_5V_S1", note="the return of every rail")
 SYMDIR = "/usr/share/kicad/symbols/"
 
@@ -265,7 +266,7 @@ def slot(s):
     buck33(U(4), "S%dB" % s, n5, "EN33_S%d" % s, b33, [L(2), C(18), C(19), C(20), C(21), C(22), C(23), R(7), R(8), R(9), R(10), C(24)])
     r(R(11), "100k", cm33, "EN33_S%d" % s); r(R(12), "100k", "EN33_S%d" % s, "GND")   # 1.65 V when the module's 3.3 V is up
     buck_small(U(5), "S%dC" % s, n5, "EN33_S%d" % s, v10, [L(3), C(25), C(26), C(27), C(28), C(29), R(13), R(14)], "40.2k 1%", "1.0 V PCIe switch core S%d" % s)
-    buck_small(U(6), "S%dD" % s, n5, "EN33_S%d" % s, v11, [L(4), C(30), C(31), C(32), C(33), C(34), R(15), R(16)], "26.7k 1%", "1.1 V hub core S%d" % s)
+    buck_small(U(6), "S%dD" % s, "+5V_DEV", "+5V_DEV", v11, [L(4), C(30), C(31), C(32), C(33), C(34), R(15), R(16)], "26.7k 1%", "1.1 V hub core S%d (on the device rail and always on: the bank outlives its module)")
     # --- PCIe switch PI7C9X2G404SL: upstream port 0 to the module, port 1 the NVMe socket, port 2 the card socket, port 3 unused; the integrated clock buffer fans the module's 100 MHz to the switch core and both sockets
     m = {}
     for n, nm in PI7C.items():
@@ -334,10 +335,14 @@ def slot(s):
         r(R(39), "1k", a33, "LED_WIFI2_A"); led("LED35", "blue WiFi link, card 2", "LED_WIFI2_A", "WIFI2_nLED")
     c(C(57), "22u 6.3V", a33, "GND", "C10u"); c(C(58), "100n", a33, "GND")
     # --- USB 3 hub TUSB8041I on the module's USB3-0 port; downstream ports per the fabric of 32.58
+    # 9 September 2026 (ARCH-PCB-B-IOHA): the hub and the two host-selection switches run on the DEVICE rail, not on
+    # this slot's. They used to sit on +3V3_S{s}B, whose buck is enabled by the module's own 3.3 V, so a bank died with
+    # the module it was supposed to fail away from and the whole ring was decoration. Read off the rail tree, not the
+    # topology drawing. The PCIe switch and the NVMe socket stay on the slot rail on purpose: they are the module's.
     h = {}
     for n, nm in TUSB.items():
         if nm == "VDD": h[n] = v11
-        elif nm == "VDD33": h[n] = b33
+        elif nm == "VDD33": h[n] = "+3V3_DEV"
         elif nm == "GND": h[n] = "GND"
         else: h[n] = "NC"
     h.update({53: "BANK%d_UPD_P" % s, 54: "BANK%d_UPD_N" % s, 55: "BANK%d_UPRX_P" % s, 56: "BANK%d_UPRX_N" % s, 58: "BANK%d_UPTX_P" % s, 59: "BANK%d_UPTX_N" % s, 50: "HUB%d_RST_n" % s, 64: "HUB%d_R1" % s,
@@ -358,12 +363,12 @@ def slot(s):
     synth(U(2), "TUSB8041", "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S%d (upstream the CM5 USB3-0 port)" % s, "QFN64", h, "C544686")
     c(C(59), "100n", "BANK%d_UPRX_P" % s, "MUX%d_A1P" % s, "C0402"); c(C(60), "100n", "BANK%d_UPRX_N" % s, "MUX%d_A1N" % s, "C0402")   # AC coupling on the hub's transmit pair, hub side of the mux so it serves either host
     if s == 1: c(C(61), "100n", "HUB1_D1TX_P", "LIME_SSRX_P", "C0402"); c(C(62), "100n", "HUB1_D1TX_N", "LIME_SSRX_N", "C0402")
-    r(R(41), "10k", "HUB%d_RST_n" % s, b33); c(C(63), "1u", "HUB%d_RST_n" % s, "GND"); r(R(42), "9.53k 1%", "HUB%d_R1" % s, "GND"); r(R(43), "90.9k 1%", n5, "HUB%d_VBUS" % s); r(R(44), "10k 1%", "HUB%d_VBUS" % s, "GND")
-    r(R(45), "10k", "HUB%d_SMBUS_n" % s, b33); r(R(46), "10k", "HUB%d_PWRPOL" % s, b33)
+    r(R(41), "10k", "HUB%d_RST_n" % s, "+3V3_DEV"); c(C(63), "1u", "HUB%d_RST_n" % s, "GND"); r(R(42), "9.53k 1%", "HUB%d_R1" % s, "GND"); r(R(43), "90.9k 1%", "+5V_DEV", "HUB%d_VBUS" % s); r(R(44), "10k 1%", "HUB%d_VBUS" % s, "GND")
+    r(R(45), "10k", "HUB%d_SMBUS_n" % s, "+3V3_DEV"); r(R(46), "10k", "HUB%d_PWRPOL" % s, "+3V3_DEV")
     part("Y%d" % (100 * s + 1), "Device", "Crystal_GND24", "24 MHz 3225", "XTAL", {"1": "HUB%d_XI" % s, "3": "HUB%d_XO" % s, "2": "GND", "4": "GND"})
     c(C(64), "18p", "HUB%d_XI" % s, "GND", "C0402"); c(C(65), "18p", "HUB%d_XO" % s, "GND", "C0402"); r(R(47), "1M", "HUB%d_XI" % s, "HUB%d_XO" % s)
     for k in range(66, 70): c(C(k), "100n", v11, "GND")
-    for k in range(70, 74): c(C(k), "100n", b33, "GND")
+    for k in range(70, 74): c(C(k), "100n", "+3V3_DEV", "GND")
     c(C(74), "10u", v11, "GND", "C10u")
     # --- the host-selection fabric for this bank (ARCH-PCB-B-IOHA section 4). The bank's upstream is a 2:1 selection
     # between its HOME module, this slot's USB3-0, and one NEIGHBOUR module's spare USB3-1. The ring is bank s home s,
@@ -372,17 +377,17 @@ def slot(s):
     # A 2:1 mux cannot connect two hosts at once by construction, so the voted control of section 5 is there to stop a
     # single wedged controller MOVING ownership, not to prevent contention, which the topology already makes impossible.
     f = s % 3 + 1
-    mx = {1: b33, 10: b33, 5: "GND", 11: "GND", 20: "GND", 21: "GND", 6: b33, 2: "BOE%d_n" % s, 9: "BSEL%d" % s,
+    mx = {1: "+3V3_DEV", 10: "+3V3_DEV", 5: "GND", 11: "GND", 20: "GND", 21: "GND", 6: "+3V3_DEV", 2: "BOE%d_n" % s, 9: "BSEL%d" % s,
           3: "BANK%d_UPTX_P" % s, 4: "BANK%d_UPTX_N" % s, 7: "MUX%d_A1P" % s, 8: "MUX%d_A1N" % s,
           19: "HOST%d_0TX_P" % s, 18: "HOST%d_0TX_N" % s, 17: "HOST%d_0RX_P" % s, 16: "HOST%d_0RX_N" % s,
           15: "HOST%d_1TX_P" % f, 14: "HOST%d_1TX_N" % f, 13: "HOST%d_1RX_P" % f, 12: "HOST%d_1RX_N" % f}
     synth(U(9), "TMUXHS4212", "TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C = slot %d USB3-1 (failover)" % (s, s, f), "VQFN20", mx, "C3656912")
-    c(C(92), "100n", b33, "GND"); c(C(93), "1u", b33, "GND")
-    u2 = {10: b33, 5: "GND", 6: "BOE%d_n" % s, 9: "BSEL%d" % s,
+    c(C(92), "100n", "+3V3_DEV", "GND"); c(C(93), "1u", "+3V3_DEV", "GND")
+    u2 = {10: "+3V3_DEV", 5: "GND", 6: "BOE%d_n" % s, 9: "BSEL%d" % s,
           8: "BANK%d_UPD_P" % s, 7: "BANK%d_UPD_N" % s,
           1: "HOST%d_0D_P" % s, 2: "HOST%d_0D_N" % s, 3: "HOST%d_1D_P" % f, 4: "HOST%d_1D_N" % f}
     synth(U(10), "TS3USB221A", "TI TS3USB221A USB2 2:1 host select, bank %d: port 1 = slot %d (home), port 2 = slot %d (failover)" % (s, s, f), "UQFN10", u2, "C128396")
-    c(C(94), "100n", b33, "GND")
+    c(C(94), "100n", "+3V3_DEV", "GND")
     # Safe state with the control plane dark: SEL low is port A to port B on the TMUXHS4212 and port 1 on the TS3USB221A,
     # both of which are the HOME module, and OEn low is normal operation on both. So an unpowered or absent control plane
     # leaves each bank connected to its own module, which is exactly the board's behaviour before this fabric existed.
@@ -593,7 +598,10 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
               25: "HUBRST1_%s" % _tag, 28: "HUBRST2_%s" % _tag, 29: "HUBRST3_%s" % _tag,
               30: "HB1", 31: "HB2", 32: "HB3",
               33: "EMCON_HW", 34: "IOC%s_LED_A" % _tag, 35: "SDA", 36: "SCL",
-              37: "WSEC_%s" % _tag})
+              37: "WSEC_%s" % _tag,
+              # read-back of the voted bits: without it a voter stuck at one value is invisible to the plane, and the
+              # FMEA had no detection for that row. Four inputs, no parts, and the outputs are push-pull already.
+              38: "BSEL1", 39: "BSEL2", 40: "BSEL3", 41: "WIFI_SEC"})
     synth(U_(1), "STM32H753VI", "STM32H753VITx I/O supervisor %s: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset" % _tag, "LQFP100", m, "C114409")   # the buyable H7: the STM32H753VIT6 (C730206) has no JLC stock, and the H743VIT6 is the same die and pinout without the crypto accelerator, which an I/O supervisor does not use
     c(C_(7), "2.2u", "IOC%s_VCAP" % _tag, "GND"); c(C_(8), "2.2u", "IOC%s_VCAP" % _tag, "GND")
     r(R_(0), "10k", "IOC%s_RST_n" % _tag, v33); c(C_(9), "100n", "IOC%s_RST_n" % _tag, "GND")
