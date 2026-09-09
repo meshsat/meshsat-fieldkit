@@ -53,7 +53,7 @@ The node, the inputs, every rail with its part and its EMCON gate: appendix 32.5
 ## Panel and human interface (face plate, C7)
 | Item | Specification |
 |---|---|
-| Display | Xenarc 709GNK boxed monitor on the plate: 7 in, 1024 x 600, 1000 nits, projected-capacitive touch, HDMI, IP67, -20 to +70 C; connector side from Xenarc's drawing *owed* |
+| Display | Xenarc 709GNK boxed monitor set INTO the plate, its glass level with the aluminium face (owner ruling 9 Sep 2026, appendix 32.85): 7 in, 1024 x 600, 1000 nits, projected-capacitive touch, HDMI, IP67, -20 to +70 C; connector side from Xenarc's drawing *owed* |
 | E-paper | Pervasive Displays E2370KS0C1, 3.7 in 416 x 240 wide-temperature panel under the plate lens: identity, status and the QR code with the power off |
 | Switches | APEM 5636ADKB-2V locking toggles for SOS, EMCON and ZEROIZE with hinged safety covers on SOS and ZEROIZE (cover part *owed*), C&K and NKK buttons for MAIN, PI and TEST, the LIGHT toggle |
 | Indicators | sixteen LEDs through IP68 light guides, the Floyd Bell sounder; blackout and NVG modes |

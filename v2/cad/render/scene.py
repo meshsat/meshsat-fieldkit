@@ -306,19 +306,23 @@ c7 = import_board("pcb_c7", "pcb-c7-backer.glb", BACKER_Z, hide_names=tuple("D%d
 if c7 is None:      # stand-in ring until the C7 GLB exists
     for nm, (x0, y0, x1, y1) in (("L", P.STRIP_L), ("B", P.STRIP_B), ("R", P.STRIP_R), ("T", P.STRIP_T)): box("pcb_c7_strip_" + nm, (x1 - x0, y1 - y0, P.BACKER_T), ((x0 + x1) / 2, (y0 + y1) / 2, BACKER_Z + P.BACKER_T / 2), M["mask"])
 for k, (x, y) in enumerate(P.STANDOFFS): cyl("standoff_c7_%d" % k, 5.0, P.BACKER_GAP, (x, y, PLATE_UNDER - P.BACKER_GAP / 2), M["steel"], verts=6); cyl("screw_c7_%d" % k, 5.5, 2.0, (x, y, BACKER_Z - 1.0), M["steel_dark"])
-# the Xenarc 709GNK on the plate (32.51): the box, its bezel, the screen with the kiosk screenshot, four VESA 50 M4 screws, the connector block through the plate cutout with its gasket ring
-DX, DY = P.XENARC["c"]; XW, XH = P.XENARC["body"]; XT = P.XENARC["height"]
-rounded_box("xenarc_body", XW, XH, XT, 15.0, (DX, DY, FACE), M["black"], top_scale=(0.985, 0.985))
-scr = box("xenarc_screen", (P.XENARC["active"][0], P.XENARC["active"][1], 0.3), (DX, DY + 10.5, FACE + XT + 0.05), M["dark"]); textured(scr, "ui.png", 4.0)
-box("xenarc_glass", (XW - 6.0, XH - 6.0, 0.4), (DX, DY, FACE + XT + 0.3), M["glass"])
-for dx in (-1, 1):
-    for dy in (-1, 1): cyl("xenarc_vesa_%d_%d" % (dx, dy), 7.0, 2.0, (DX + dx * 25, DY + dy * 25, PLATE_UNDER - 1.0), M["steel_dark"])
-bx, by, bw, bh = P.XENARC["block"]; box("xenarc_block", (bw, bh, P.XENARC["block_depth"]), (bx, by, PLATE_UNDER - P.XENARC["block_depth"] / 2), M["black"], bevel=1.5)
-cx_, cy_, cw_, ch_, cr_ = P.XENARC["cutout"]; box("xenarc_gasket", (cw_ + 6, ch_ + 6, 1.5), (cx_, cy_, FACE + 0.75), M["rubber"], bevel=0.5)
+# the Xenarc 709GNK IN the plate (owner ruling 9 Sep 2026, appendix 32.85): its glass surface is LEVEL with the plate's top face,
+# the 10.66 mm bezel flange filling the plate's 3 mm and the 18.0 mm rear shell hanging into the void, held by a rear frame on the
+# VESA 50 pattern and sealed at the window land. It stood 28.66 mm proud until today, against the ruling of 14.6 that every display
+# surface is level with the top shelf. Everything here is drawn DOWN from FACE, which is what the render now shows.
+DX, DY = P.XENARC["c"]; XW, XH = P.XENARC["body"]; XT = P.XENARC["height"]; XB = P.XENARC["bezel_depth"]
+rounded_box("xenarc_bezel", XW, XH, XB, 15.0, (DX, DY, FACE - XB), M["black"])                                   # the flange, in the plate
+rounded_box("xenarc_shell", XW - 14.0, XH - 14.0, P.XENARC["shell_depth"], 10.0, (DX, DY, FACE - XT), M["black"], top_scale=(0.96, 0.96))   # the smaller rear shell below it
+scr = box("xenarc_screen", (P.XENARC["active"][0], P.XENARC["active"][1], 0.3), (DX, DY + 10.5, FACE - 0.35), M["dark"]); textured(scr, "ui.png", 4.0)
+box("xenarc_glass", (P.XENARC["glass"][0], P.XENARC["glass"][1], 0.4), (DX, DY, FACE - 0.2), M["glass"])          # the glass surface AT the face
+for (fx_, fy_) in P.XENARC["frame_holes"]: cyl("xenarc_frame_%d_%d" % (int(fx_), int(fy_)), 7.0, 2.0, (fx_, fy_, PLATE_UNDER - 1.0), M["steel_dark"])
+box("xenarc_frame_bar", (XW + 30.0, 18.0, 3.0), (DX, DY, FACE - XT - 1.5), M["steel_dark"], bevel=1.0)            # the rear retaining frame
+bx, by, bw, bh = P.XENARC["block"]; box("xenarc_block", (bw, bh, P.XENARC["block_depth"]), (bx, by, FACE - XT + P.XENARC["block_depth"] / 2), M["black"], bevel=1.5)
+box("xenarc_seal", (XW + 3.0, XH + 3.0, 1.2), (DX, DY, PLATE_UNDER - 0.6), M["rubber"], bevel=0.4)                # the window seal at the plate land
 # Pervasive Displays E2370KS0C1: the bare glass taped under the lens in the window, its flex to the ZIF on the top strip
 EX, EY = P.EPAPER["c"]; ET = FACE - P.EPAPER["pocket_depth"]
 epd = box("epaper_glass", (92.99, 53.0, 0.85), (EX, EY, ET - 0.45), M["paper"]); textured(epd, "epaper.png", 0.0)
-box("epaper_lens", (P.EPAPER["lens"][0], P.EPAPER["lens"][1], 2.0), (EX, EY, ET + 1.0), M["lens"], bevel=0.8)
+box("epaper_lens", (P.EPAPER["lens"][0], P.EPAPER["lens"][1], P.EPAPER["lens_t"]), (EX, EY, ET + P.EPAPER["tape_t"] + P.EPAPER["lens_t"] / 2), M["lens"], bevel=0.4)   # 9 Sep 2026: 1.0 mm lens on 0.05 tape in the 1.0 pocket, 0.05 proud (32.85)
 tube("epaper_flex", (EX - 46.5, EY, ET - 1.0), (P.J_EPD_POS[0], P.J_EPD_POS[1], BACKER_TOP + 1.0), 1.0, M["amber"])
 # the PA module on the plate's underside (32.56): the RA30H1317M1 flange, its two PEM nuts, the drive and output coax and the gate lead down to D8
 PX, PY = P.PA_MOUNT["c"]; PW, PL = P.PA_MOUNT["size"]; PH = P.PA_MOUNT["height"]

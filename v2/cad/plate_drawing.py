@@ -33,9 +33,9 @@ with PdfPages(out_fn) as pdf:
     dim(-W / 2, H / 2, W / 2, H / 2, "%.1f" % W, off=14); dim(W / 2, -H / 2, W / 2, H / 2, "%.1f" % H, off=14, vertical=True)
     dim(-L.WINDOW[0] / 2, -H / 2, L.WINDOW[0] / 2, -H / 2, "window %.2f (frame ring)" % L.WINDOW[0], off=-14)
     dim(-W / 2, -L.WINDOW[1] / 2, -W / 2, L.WINDOW[1] / 2, "window %.2f" % L.WINDOW[1], off=-14, vertical=True)
-    bx, by, bw, bh, br = L.XENARC["cutout"]; dx, dy = L.XENARC["c"]
-    dim(bx - bw / 2, by - bh / 2, bx + bw / 2, by - bh / 2, "block cutout %.0f" % bw, off=-6); dim(bx + bw / 2, by - bh / 2, bx + bw / 2, by + bh / 2, "%.0f" % bh, off=6, vertical=True)
-    ax.text(dx, dy + 8, "Xenarc 709GNK on the plate: VESA 50 M4 x4 at (%.0f/%.0f, %.0f/%.0f)" % (dx - 25, dx + 25, dy - 25, dy + 25), fontsize=5.5, ha="center")
+    dx, dy = L.XENARC["c"]; mw, mh = L.XENARC["window"]
+    dim(dx - mw / 2, dy - mh / 2, dx + mw / 2, dy - mh / 2, "monitor window %.2f" % mw, off=-6); dim(dx + mw / 2, dy - mh / 2, dx + mw / 2, dy + mh / 2, "%.2f" % mh, off=6, vertical=True)
+    ax.text(dx, dy + 8, "Xenarc 709GNK IN the plate, glass level with the face; rear frame M4 x4", fontsize=5.5, ha="center")
     ex, ey = L.EPAPER["c"]; ww, wh = L.EPAPER["window"]
     dim(ex - ww / 2, ey + wh / 2, ex + ww / 2, ey + wh / 2, "e-paper window %.2f x %.1f" % (ww, wh), off=6)
     for ref, (x, y), hole, depth in L.BUTTONS: ax.text(x + hole / 2 + 3, y, "%s\nd%.1f" % (ref, hole), fontsize=5.5, va="center")
@@ -55,7 +55,7 @@ with PdfPages(out_fn) as pdf:
     tx = fig.add_axes([0.61, 0.07, 0.38, 0.91]); tx.axis("off")
     rows = [("Plate", "%.1f x %.1f x %.1f, R%.0f corners, 5754 or 6061, black anodised" % (W, H, L.PLATE[2], L.PLATE_R)),
             ("Frame screws", "10 x M3 clearance 3.4 at the 1450PF inserts"),
-            ("Monitor", "Xenarc 709GNK (205.15 x 139.49 x 28.66) lies on the plate at (%.0f, %.0f): connector block cutout %.0f x %.0f R%.0f at (%.2f, %.1f) with a gasket ring, four VESA 50 M4 (4.5) holes; no aperture" % (dx, dy, bw, bh, br, bx, by)),
+            ("Monitor", "Xenarc 709GNK (205.15 x 139.49 x 28.66) sits IN the plate at (%.0f, %.0f) with its GLASS LEVEL WITH THIS FACE (owner ruling 9 Sep 2026, appendix 32.85): full-body window %.2f x %.2f R%.0f, four M4 (4.5) for the rear retaining frame, a seal at the window land; the 10.66 mm bezel flange fills the plate and the 18.00 mm rear shell hangs below" % (dx, dy, mw, mh, L.XENARC["window_r"])),
             ("E-paper", "Pervasive Displays E2370KS0C1 glass 92.99 x 53.0: window %.2f x %.1f at (%.0f, %.0f); 1.0 pocket %.2f x %.1f R%.0f from above for the 2 mm lens; its flex to the backer's ZIF" % (ww, wh, ex, ey, L.EPAPER["lens"][0], L.EPAPER["lens"][1], L.EPAPER["lens_r"])),
             ("Headset jacks", "; ".join("%s d%.1f at (%.0f, %.0f)" % (r, L.HEADSET_HOLE, c[0], c[1]) for r, c in L.HEADSETS) + " (U-174/U panel jacks, Amphenol Nexus drawing owed)"),
             ("Camera", "d%.0f sealed window at (%.0f, %.0f) over the USB camera module on the backer's top strip" % (L.CAMERA[2], L.CAMERA[1][0], L.CAMERA[1][1])),
