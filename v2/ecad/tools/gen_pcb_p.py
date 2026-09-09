@@ -10,7 +10,7 @@ layers and packs the gauge and its filters in the middle.
 import math, sys, os
 import os, pcbnew
 from pcbnew import VECTOR2I, FromMM
-PHASE = os.environ.get("PHASE", "P2")   # the silk carries the phase the chain builds; the gate in verify_deliverable.py refuses a deliverable stamped with another (8 Sep 2026)
+PHASE = os.environ.get("PHASE", "P3")   # the silk carries the phase the chain builds; the gate in verify_deliverable.py refuses a deliverable stamped with another (8 Sep 2026)
 
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-p-pack.kicad_pcb"

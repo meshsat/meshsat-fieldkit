@@ -32,6 +32,6 @@ python3 ../tools/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > 
 python3 ../tools/check_contracts.py .. > out/contracts.log 2>&1; grep -E 'FAIL|MISSING' out/contracts.log | head -12; if grep -q 'ALL CONTRACTS PASS' out/contracts.log; then echo 'contracts: ALL PASS'; else echo 'contracts: FAIL (out/contracts.log)'; echo open > out/e6-clean.txt; fi
 CLEAN=$(cat out/e6-clean.txt); if [ "$CLEAN" != clean ]; then echo 'E6 NOT CLEAN, not finishing'; echo FINISH-E6-DONE; exit 1; fi
 rm -rf out/$N-seals.dxf; kicad-cli pcb export dxf --mode-single --layers User.2,User.3,Edge.Cuts --output-units mm -o out/$N-seals.dxf $N.kicad_pcb >/dev/null 2>&1 && echo "seals DXF: out/$N-seals.dxf ($(grep -c -E '^(LINE|ARC|CIRCLE|LWPOLYLINE|POLYLINE)$' out/$N-seals.dxf) entities)"
-cd ..; ./tools/finish_board.sh pcb-e1-dock pcb-e1-dock - meshsat-pcb-e-revA-E6 2>&1 | tail -16
+cd ..; ./tools/finish_board.sh pcb-e1-dock pcb-e1-dock - meshsat-pcb-e-revA-E7 2>&1 | tail -16
 [ "${PIPESTATUS[0]}" -eq 0 ] || { echo "E6: finish_board REFUSED the deliverable (verify_deliverable or an export step failed)"; echo FINISH-E6-DONE; exit 1; }   # 8 Sep 2026: a pipeline's status is tail's, so a refused deliverable used to be reported finished
 echo FINISH-E6-DONE

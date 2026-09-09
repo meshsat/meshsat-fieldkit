@@ -7,6 +7,7 @@ from pcbnew import VECTOR2I, FromMM
 OUT = sys.argv[1] if len(sys.argv) > 1 else "pcb-e1-dock.kicad_pcb"
 PRJDIR = os.path.dirname(os.path.abspath(OUT))
 open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version 7)\n  (lib (name "meshsat")(type "KiCad")(uri "${KIPRJMOD}/../meshsat.pretty")(options "")(descr "MeshSat carrier in-code footprints"))\n)\n')
+PHASE = os.environ.get("PHASE", "E7")   # 9 September 2026: E gets the phase variable the other boards have, so the silk and the deliverable agree
 X0, X1, Y0, Y1, R = -149.0, 118.0, -113.0, -45.0, 3.0   # E6: 267 x 68 (2 mm more to the wall, 6 mm more under A22); the west end stops 1 mm short of the BB-2590/U cradle (X -174 to -150, 32.49 item 12); the part west of X -121 is not under A22 (240 mm, X -120 to 120)
 RF_SITES = [(-52.0, "VHF"), (-38.0, "HF"), (-24.0, "WIFI 2.4"), (-10.0, "GNSS"), (4.0, "SDR"), (18.0, "P2P A"), (32.0, "P2P B"), (60.0, "5G MAIN"), (74.0, "5G DIV"), (88.0, "IRIDIUM"), (102.0, "LORA")]   # eleven float clamps for the R222M80500 plugs, mirroring A22 (32.56)
 BLOCK_HOLES = [(-104.0, -63.0), (-66.0, -63.0), (-104.0, -83.0), (-66.0, -83.0)]   # corner M3 standoffs of the raised contact block (pcb-e5-block, 43 x 25 at X -158..-115 Y -85..-60, face at 7.4 mm); its east edge stays 4.5 mm off the rod at (-110.5, -73) and its south edge 0.5 mm north of the J_BLK lands
@@ -16,7 +17,7 @@ BLOCK_C = (-85.0, -70.0)                       # raised block centre: A22 J_DOCK
 OX, OY = 150.0, 110.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 board = pcbnew.BOARD()
-tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E1 DOCK"); tb.SetRevision("A (E6)"); tb.SetDate("2026-09-07"); tb.SetCompany("MeshSat")
+tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-E1 DOCK"); tb.SetRevision("A (%s)" % PHASE); tb.SetDate("2026-09-07"); tb.SetCompany("MeshSat")
 tb.SetComment(0, "MESHSAT-830. E6 floor dock strip: pack and vehicle entry to the raised block, panel tracker, sensor controller, eleven blind-mate float clamps, rods pass through. tools/gen_pcb_e.py + gen_pcb_e3.py"); board.SetTitleBlock(tb)
 board.SetCopperLayerCount(4)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
@@ -77,7 +78,7 @@ for (x, nm) in RF_SITES:
         fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % n); fp.SetValue("M3, float clamp %s" % nm); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, hy)); board.Add(fp); n += 1
     rule_area_circle(x, cy, 12.0, "clamp %s: no copper under the float clamp (top face)" % nm, layer=pcbnew.F_Cu)
 line(-121.0, UNDER_A_Y, X1, UNDER_A_Y, pcbnew.Dwgs_User, 0.15); line(-121.0, Y0, -121.0, Y1, pcbnew.Dwgs_User, 0.15); text("PCB-A EDGE ABOVE (13.4 mm gap): north of this line and east of X -121 parts at most 12 mm tall", 0, UNDER_A_Y - 2.0, pcbnew.Dwgs_User, 1.0, 0.18)
-text("MESHSAT PCB-E1 DOCK (E6)  -  pack 14.4 V and vehicle 9-36 V to the raised block -> A22  -  panel tracker  -  sensor controller on USB  -  eleven blind-mate clamps", 0, -46.3, pcbnew.F_SilkS, 1.2, 0.2)
+text("MESHSAT PCB-E1 DOCK (%s)" % PHASE + "  -  pack 14.4 V and vehicle 9-36 V to the raised block -> A22  -  panel tracker  -  sensor controller on USB  -  eleven blind-mate clamps", 0, -46.3, pcbnew.F_SilkS, 1.2, 0.2)
 text("D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor", 0, -111.5, pcbnew.F_SilkS, 1.1, 0.18)
 text("PCB-E1 underside: VHB pads at the four corners, no parts", 0, Y0 + 3.0, pcbnew.B_SilkS, 1.4, 0.22, mirror=True)
 pcbnew.SaveBoard(OUT, board); print("saved", OUT, "holes:", n - 1)

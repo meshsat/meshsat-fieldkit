@@ -34,6 +34,6 @@ python3 ../tools/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > 
 # 8 Sep 2026 (MESHSAT-862): the cross-board contracts are part of every finish (they were called by no chain before)
 python3 ../tools/check_contracts.py .. > out/contracts.log 2>&1; grep -E 'FAIL|MISSING' out/contracts.log | head -12; if grep -q 'ALL CONTRACTS PASS' out/contracts.log; then echo 'contracts: ALL PASS'; else echo 'contracts: FAIL (out/contracts.log)'; echo open > out/d9-clean.txt; fi
 CLEAN=$(cat out/d9-clean.txt); if [ "$CLEAN" != clean ]; then echo 'D9 NOT CLEAN, not finishing'; echo FINISH-D9-DONE; exit 1; fi
-cd ..; ./tools/finish_board.sh pcb-d-aprs-d9 pcb-d-aprs - meshsat-pcb-d-revA-D9 2>&1 | tail -16
+cd ..; ./tools/finish_board.sh pcb-d-aprs-d9 pcb-d-aprs - meshsat-pcb-d-revA-D10 2>&1 | tail -16
 [ "${PIPESTATUS[0]}" -eq 0 ] || { echo "D9: finish_board REFUSED the deliverable (verify_deliverable or an export step failed)"; echo FINISH-D9-DONE; exit 1; }   # 8 Sep 2026: a pipeline's status is tail's, so a refused deliverable used to be reported finished
 echo FINISH-D9-DONE
