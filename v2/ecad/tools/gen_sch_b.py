@@ -112,8 +112,16 @@ E22P = {1:"GND",2:"GND",3:"GND",4:"GND",5:"GND",6:"RXEN",7:"TXEN",8:"DIO2",9:"VC
 H5007 = {1:"TCT1",2:"TD1P",3:"TD1N",4:"TCT2",5:"TD2P",6:"TD2N",7:"TCT3",8:"TD3P",9:"TD3N",10:"TCT4",11:"TD4P",12:"TD4N",13:"MX4N",14:"MX4P",15:"MCT4",16:"MX3N",17:"MX3P",18:"MCT3",19:"MX2N",20:"MX2P",21:"MCT2",22:"MX1N",23:"MX1P",24:"MCT1"}
 TPS23861 = {1:"VDD",2:"RESET",3:"SCL",4:"SDAI",5:"SDAO",6:"INT",7:"DGND",8:"SEN3",9:"DRAIN3",10:"GATE3",11:"KSENSB",12:"SEN4",13:"DRAIN4",14:"GATE4",15:"SEN1",16:"DRAIN1",17:"GATE1",18:"KSENSA",19:"SEN2",20:"DRAIN2",21:"GATE2",22:"AGND",23:"A3",24:"SHTDWN",25:"AIN",26:"AOUT",27:"NC",28:"VPWR"}
 CP2102 = {1:"DCD",2:"RI_CLK",3:"GND",4:"D+",5:"D-",6:"VDD",7:"VREGIN",8:"VBUS",9:"RSTb",10:"NC",11:"SUSPENDb",12:"SUSPEND",13:"CHREN",14:"CHR1",15:"CHR0",16:"GPIO3",17:"GPIO2",18:"GPIO1",19:"GPIO0",20:"GPIO6",21:"GPIO5",22:"GPIO4",23:"CTS",24:"RTS",25:"RXD",26:"TXD",27:"DSR",28:"DTR",29:"GND"}
+# TI TMUXHS4212, SLASEP7A rev May 2022, Table 5-1: two-channel differential 2:1 mux, port A is the common side and SEL
+# low sends A to B, high sends A to C. OEn is active low, L = normal. RSVD1 and RSVD2 are tied to VCC. 20-pin VQFN.
+TMUXHS = {1: "RSVD1", 2: "OEn", 3: "A0p", 4: "A0n", 5: "GND", 6: "VCC", 7: "A1p", 8: "A1n", 9: "SEL", 10: "RSVD2",
+          12: "C1n", 13: "C1p", 14: "C0n", 15: "C0p", 16: "B1n", 17: "B1p", 18: "B0n", 19: "B0p", 20: "GND"}
+# TI TS3USB221A, SCDS277C rev Oct 2024, Table 4-1: USB 2.0 high-speed 1:2 mux, D+/D- is the common port, S selects
+# port 1 or port 2, OE is active low. 10-pin uQFN. It exists because the TMUXHS4212 cannot carry USB2: its common-mode
+# range is 0 to 1.8 V and its I/O absolute maximum is 2.4 V, against USB2's 3.3 V single-ended swing.
+TS3USB = {1: "1Dp", 2: "1Dn", 3: "2Dp", 4: "2Dn", 5: "GND", 6: "OEn", 7: "Dn", 8: "Dp", 9: "S", 10: "VCC"}
 SYNTH = {"CM5A": {k: v for k, v in CM5_PINS.items() if k <= 100}, "CM5B": {k: v for k, v in CM5_PINS.items() if k > 100},
-         "PI7C9X2G404SL": PI7C, "TUSB8041": TUSB, "TS3DV642": TS3, "KSZ9897R": KSZ, "LG290P": LG, "E22_900M30S": E22P, "H5007NL": H5007, "TPS23861": TPS23861, "CP2102N": CP2102}
+         "PI7C9X2G404SL": PI7C, "TUSB8041": TUSB, "TS3DV642": TS3, "KSZ9897R": KSZ, "LG290P": LG, "E22_900M30S": E22P, "H5007NL": H5007, "TPS23861": TPS23861, "CP2102N": CP2102, "TMUXHS4212": TMUXHS, "TS3USB221A": TS3USB}
 def synth_symbol(lib, name):
     pins = SYNTH[name]; n = len(pins); rows = (n + 1) // 2; first = min(pins)
     W = 30.48; H = rows * 2.54 + 2.54
@@ -230,8 +238,8 @@ def slot(s):
                 3: "ETH%d_P3_P" % s, 5: "ETH%d_P3_N" % s, 4: "ETH%d_P1_P" % s, 6: "ETH%d_P1_N" % s, 9: "ETH%d_P2_N" % s, 11: "ETH%d_P2_P" % s, 10: "ETH%d_P0_N" % s, 12: "ETH%d_P0_P" % s,
                 102: "PCIE%d_CLKREQ_n" % s, 104: "PCIE%d_nWAKE" % s, 106: "PCIE_PWR_EN%d" % s, 109: "PCIE%d_nRST" % s, 110: "PCIE%d_CLK_P" % s, 112: "PCIE%d_CLK_N" % s,
                 116: "PCIE%d_RX_P" % s, 118: "PCIE%d_RX_N" % s, 122: "PCIE%d_TX_P" % s, 124: "PCIE%d_TX_N" % s,
-                128: "USB3%d_RX_N" % s, 130: "USB3%d_RX_P" % s, 134: "USB%d_UP_P" % s, 136: "USB%d_UP_N" % s, 140: "USB3%d_TX_N" % s, 142: "USB3%d_TX_P" % s,
-                163: "USB%d_CARD_P" % s if s < 3 else "NC", 165: "USB%d_CARD_N" % s if s < 3 else "NC",
+                128: "HOST%d_0RX_N" % s, 130: "HOST%d_0RX_P" % s, 134: "HOST%d_0D_P" % s, 136: "HOST%d_0D_N" % s, 140: "HOST%d_0TX_N" % s, 142: "HOST%d_0TX_P" % s,
+                157: "HOST%d_1RX_N" % s, 159: "HOST%d_1RX_P" % s, 163: "HOST%d_1D_P" % s, 165: "HOST%d_1D_N" % s, 169: "HOST%d_1TX_N" % s, 171: "HOST%d_1TX_P" % s,
                 170: "HDMI%d_D2_P" % s, 172: "HDMI%d_D2_N" % s, 176: "HDMI%d_D1_P" % s, 178: "HDMI%d_D1_N" % s, 182: "HDMI%d_D0_P" % s, 184: "HDMI%d_D0_N" % s, 188: "HDMI%d_CK_P" % s, 190: "HDMI%d_CK_N" % s,
                 151: "HDMI%d_CEC" % s, 153: "HDMI%d_HPD" % s, 199: "HDMI%d_SDA" % s, 200: "HDMI%d_SCL" % s})
     ra, rb = "U3%dA" % (s - 1), "U3%dB" % (s - 1)
@@ -285,7 +293,7 @@ def slot(s):
     if s == 1:   # WiFi link card AW7915-AED on an E-key 2230 (B14 wiring); W_DISABLE1# from the hardware EMCON line through a level stage on the card rail
         E = {n: "NC" for n in list(range(1, 24)) + list(range(32, 76))}
         E.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E.update({n: a33 for n in (2, 4, 72, 74)})
-        E.update({3: "USB1_CARD_P", 5: "USB1_CARD_N", 35: "CARD1_TX_P", 37: "CARD1_TX_N", 41: "CARD1_RX_P", 43: "CARD1_RX_N", 47: "CARD1_CLK_P", 49: "CARD1_CLK_N", 52: "PCIE1_RST2_n", 53: "CARD1_CLKREQ_n",
+        E.update({3: "NC", 5: "NC", 35: "CARD1_TX_P", 37: "CARD1_TX_N", 41: "CARD1_RX_P", 43: "CARD1_RX_N", 47: "CARD1_CLK_P", 49: "CARD1_CLK_N", 52: "PCIE1_RST2_n", 53: "CARD1_CLKREQ_n",
                   55: "PCIE1_nWAKE", 56: "WIFI_W_DIS_n", 54: "WIFI_W_DIS2_n", 6: "WIFI_nLED"})
         part("J_M2C1", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)", "M2E", E, "C41430829")
         r(R(37), "10k", "WIFI_W_DIS_n", a33); r(R(38), "10k", "WIFI_W_DIS2_n", a33); nfet(Q(6), a33, "WIFI_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
@@ -293,7 +301,7 @@ def slot(s):
     elif s == 2:   # 5G module RM520N-GL on a B-key 3052 (M.2 WWAN socket 2 pinout; TE 1-2199119-5); SIM 1 on the UIM pins, SIM 2 on GPIO_0..3 per the RM5xx series (to confirm from the RM520N-GL hardware design)
         B = {n: "NC" for n in range(1, 76) if not 12 <= n <= 19}
         B.update({n: "GND" for n in (3, 5, 11, 27, 33, 39, 45, 51, 57, 71, 73)}); B.update({n: a33 for n in (2, 4, 70, 72, 74)})
-        B.update({7: "USB2_CARD_P", 9: "USB2_CARD_N", 41: "CARD2_RX_N", 43: "CARD2_RX_P", 47: "CARD2_TX_N", 49: "CARD2_TX_P", 53: "CARD2_CLK_N", 55: "CARD2_CLK_P", 50: "PCIE2_RST2_n", 52: "CARD2_CLKREQ_n",
+        B.update({7: "USB_5G_P", 9: "USB_5G_N", 41: "CARD2_RX_N", 43: "CARD2_RX_P", 47: "CARD2_TX_N", 49: "CARD2_TX_P", 53: "CARD2_CLK_N", 55: "CARD2_CLK_P", 50: "PCIE2_RST2_n", 52: "CARD2_CLKREQ_n",
                   54: "PCIE2_nWAKE", 6: "5G_PWROFF_n", 8: "5G_W_DIS_n", 67: "5G_RST_n", 30: "SIM1_RST", 32: "SIM1_CLK", 34: "SIM1_IO", 36: "SIM1_VCC", 40: "SIM2_CLK", 42: "SIM2_IO", 44: "SIM2_RST", 46: "SIM2_VCC", 10: "5G_nLED"})
         part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)", "M2B", B, "C41430835")
         r(R(37), "10k", "5G_W_DIS_n", a33); nfet(Q(6), a33, "5G_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
@@ -317,18 +325,23 @@ def slot(s):
         elif nm == "VDD33": h[n] = b33
         elif nm == "GND": h[n] = "GND"
         else: h[n] = "NC"
-    h.update({53: "USB%d_UP_P" % s, 54: "USB%d_UP_N" % s, 55: "HUB%d_SSTX_P" % s, 56: "HUB%d_SSTX_N" % s, 58: "USB3%d_TX_P" % s, 59: "USB3%d_TX_N" % s, 50: "HUB%d_RST_n" % s, 64: "HUB%d_R1" % s,
+    h.update({53: "BANK%d_UPD_P" % s, 54: "BANK%d_UPD_N" % s, 55: "BANK%d_UPRX_P" % s, 56: "BANK%d_UPRX_N" % s, 58: "BANK%d_UPTX_P" % s, 59: "BANK%d_UPTX_N" % s, 50: "HUB%d_RST_n" % s, 64: "HUB%d_R1" % s,
               48: "HUB%d_VBUS" % s, 61: "HUB%d_XO" % s, 62: "HUB%d_XI" % s, 49: "GND", 39: "HUB%d_SMBUS_n" % s, 41: "HUB%d_PWRPOL" % s})
+    # 9 September 2026 (ARCH-PCB-B-IOHA): bank 3's port 4 was a spare header and now carries the 5G module's USB. Two things
+    # made that necessary and useful. The failover ring needs every module's USB3-1 D+/D- for the neighbour bank it adopts,
+    # and slots 1 and 2 were spending those pins on their M.2 card's USB2 link. On slot 1 that link was already dead copper:
+    # the AW7915-AED is an MT7915, WiFi only, with no Bluetooth companion to use it. On slot 2 the 5G module does use it, for
+    # firmware and AT access, so rather than lose it the link becomes a device on a hub, which also gives it the bank's failover.
     PORTS = {1: {1: ("LIME_DP", "LIME_DM", "HUB1_D1TX_P", "HUB1_D1TX_N", "LIME_SSTX_P", "LIME_SSTX_N"), 2: ("USB_PNL_P", "USB_PNL_N"), 3: ("CAM_DP", "CAM_DM"), 4: ("RB_DP", "RB_DM")},
              2: {1: ("GNSS_DP", "GNSS_DM"), 2: ("ZBA_DP", "ZBA_DM"), 3: ("ZBB_DP", "ZBB_DM"), 4: ("QMX_DP", "QMX_DM")},
-             3: {1: ("USB_D8_P", "USB_D8_N"), 2: ("USB_E6_P", "USB_E6_N"), 3: ("USB_WALL_P", "USB_WALL_N"), 4: ("USBX_DP", "USBX_DM")}}[s]
+             3: {1: ("USB_D8_P", "USB_D8_N"), 2: ("USB_E6_P", "USB_E6_N"), 3: ("USB_WALL_P", "USB_WALL_N"), 4: ("USB_5G_P", "USB_5G_N")}}[s]
     for port, nets in PORTS.items():
         dp, dm, txp, txm, rxp, rxm = HUB_PORT[port]
         h[dp] = nets[0]; h[dm] = nets[1]
         if len(nets) == 6: h[txp], h[txm], h[rxp], h[rxm] = nets[2], nets[3], nets[4], nets[5]
     if s == 1: h[36] = "LIME_HW_EN"; h[46] = "LIME_FLT"
     synth(U(2), "TUSB8041", "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S%d (upstream the CM5 USB3-0 port)" % s, "QFN64", h, "C544686")
-    c(C(59), "100n", "HUB%d_SSTX_P" % s, "USB3%d_RX_P" % s, "C0402"); c(C(60), "100n", "HUB%d_SSTX_N" % s, "USB3%d_RX_N" % s, "C0402")   # AC coupling on the hub's transmit pairs
+    c(C(59), "100n", "BANK%d_UPRX_P" % s, "MUX%d_A1P" % s, "C0402"); c(C(60), "100n", "BANK%d_UPRX_N" % s, "MUX%d_A1N" % s, "C0402")   # AC coupling on the hub's transmit pair, hub side of the mux so it serves either host
     if s == 1: c(C(61), "100n", "HUB1_D1TX_P", "LIME_SSRX_P", "C0402"); c(C(62), "100n", "HUB1_D1TX_N", "LIME_SSRX_N", "C0402")
     r(R(41), "10k", "HUB%d_RST_n" % s, b33); c(C(63), "1u", "HUB%d_RST_n" % s, "GND"); r(R(42), "9.53k 1%", "HUB%d_R1" % s, "GND"); r(R(43), "90.9k 1%", n5, "HUB%d_VBUS" % s); r(R(44), "10k 1%", "HUB%d_VBUS" % s, "GND")
     r(R(45), "10k", "HUB%d_SMBUS_n" % s, b33); r(R(46), "10k", "HUB%d_PWRPOL" % s, b33)
@@ -337,6 +350,28 @@ def slot(s):
     for k in range(66, 70): c(C(k), "100n", v11, "GND")
     for k in range(70, 74): c(C(k), "100n", b33, "GND")
     c(C(74), "10u", v11, "GND", "C10u")
+    # --- the host-selection fabric for this bank (ARCH-PCB-B-IOHA section 4). The bank's upstream is a 2:1 selection
+    # between its HOME module, this slot's USB3-0, and one NEIGHBOUR module's spare USB3-1. The ring is bank s home s,
+    # failover (s mod 3) + 1, so every module uses both of its host ports and any single module loss moves exactly one
+    # bank to a neighbour that has a port free. Port A of the TMUXHS4212 is the common side and faces the hub.
+    # A 2:1 mux cannot connect two hosts at once by construction, so the voted control of section 5 is there to stop a
+    # single wedged controller MOVING ownership, not to prevent contention, which the topology already makes impossible.
+    f = s % 3 + 1
+    mx = {1: b33, 10: b33, 5: "GND", 20: "GND", 6: b33, 2: "BOE%d_n" % s, 9: "BSEL%d" % s,
+          3: "BANK%d_UPTX_P" % s, 4: "BANK%d_UPTX_N" % s, 7: "MUX%d_A1P" % s, 8: "MUX%d_A1N" % s,
+          19: "HOST%d_0TX_P" % s, 18: "HOST%d_0TX_N" % s, 17: "HOST%d_0RX_P" % s, 16: "HOST%d_0RX_N" % s,
+          15: "HOST%d_1TX_P" % f, 14: "HOST%d_1TX_N" % f, 13: "HOST%d_1RX_P" % f, 12: "HOST%d_1RX_N" % f}
+    synth(U(9), "TMUXHS4212", "TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C = slot %d USB3-1 (failover)" % (s, s, f), "VQFN20", mx)
+    c(C(78), "100n", b33, "GND"); c(C(79), "1u", b33, "GND")
+    u2 = {10: b33, 5: "GND", 6: "BOE%d_n" % s, 9: "BSEL%d" % s,
+          8: "BANK%d_UPD_P" % s, 7: "BANK%d_UPD_N" % s,
+          1: "HOST%d_0D_P" % s, 2: "HOST%d_0D_N" % s, 3: "HOST%d_1D_P" % f, 4: "HOST%d_1D_N" % f}
+    synth(U(10), "TS3USB221A", "TI TS3USB221A USB2 2:1 host select, bank %d: port 1 = slot %d (home), port 2 = slot %d (failover)" % (s, s, f), "UQFN10", u2)
+    c(C(80), "100n", b33, "GND")
+    # Safe state with the control plane dark: SEL low is port A to port B on the TMUXHS4212 and port 1 on the TS3USB221A,
+    # both of which are the HOME module, and OEn low is normal operation on both. So an unpowered or absent control plane
+    # leaves each bank connected to its own module, which is exactly the board's behaviour before this fabric existed.
+    r(R(60), "100k", "BSEL%d" % s, "GND"); r(R(61), "100k", "BOE%d_n" % s, "GND")
     # --- module support: LEDs, fan, flashing port, bench headers, the SPI breakout, the domain-boundary stages
     r(R(48), "1k", cm33, "LED_ACT_A%d" % s); led("LED%d6" % s, "green ACT (LED_nACT sinks)", "LED_ACT_A%d" % s, "LED_nACT%d" % s)
     part(Q(1), "Transistor_BJT", "BC857", "BC857: LED_nPWR must be buffered (datasheet Table 4)", "SOT23", {"1": "Q%dB" % s, "2": cm33, "3": "Q%dC" % s})
@@ -462,8 +497,9 @@ part("J_CAM", "Connector_Generic", "Conn_01x04", "camera lead (USB 2.0, S1 hub p
 part("F3", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "VBUS_QMX"})
 part("J_QMX", "Connector_Generic", "Conn_01x04", "QMX USB lead (S2 hub port 4): VBUS D- D+ GND; pigtail to the unit's USB-C", "PH1x4", {"1": "VBUS_QMX", "2": "QMX_DM", "3": "QMX_DP", "4": "GND"}); esd("U35", "QMX_DP", "QMX_DM", "VBUS_QMX")
 # the QMX 12 V lead runs from A22's J_HF straight to the unit's DC jack (no B16 part)
-part("F4", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "+5V_USBX"})
-part("J_USBX", "Connector_Generic", "Conn_01x04", "spare USB 2.0 header (S3 hub port 4): 5V D- D+ GND", "PH1x4", {"1": "+5V_USBX", "2": "USBX_DM", "3": "USBX_DP", "4": "GND"}); esd("U36", "USBX_DP", "USBX_DM", "+5V_USBX")
+# 9 September 2026 (ARCH-PCB-B-IOHA): the spare USB header and its fuse are withdrawn. Bank 3's port 4 now carries the 5G
+# module's management link, which had to leave the CM5's USB3-1 pins so the failover ring could use them. The 5G module
+# takes its VBUS from its own socket rail, so no fuse is needed here.
 esd("U29", "USB_WALL_P", "USB_WALL_N", "+3V3_DEV")
 # ================================================================= hardware EMCON gates (74LVC08APW: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC); EMCON_HW low silences every transmitter on this board
 part("U19", "Connector_Generic", "Conn_01x14", "74LVC08APW quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)", "TSSOP14",
@@ -507,7 +543,7 @@ part("TP1", "Connector", "TestPoint", "AB_SPARE", "TP", {"1": "AB_SPARE"})
 for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "EMCON_HW", "ZEROIZE_HW", "GNSS_PPS", "SDA", "SCL", "+54V_POE", "POE_DRAIN", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "HDMI_SEL1", "HDMI_SEL2",
                         "+3V3_S1A", "+3V3_S1B", "+1V0_S1", "+1V1_S1", "+3V3_S2A", "+3V3_S2B", "+1V0_S2", "+1V1_S2", "+3V3_S3A", "+3V3_S3B", "+1V0_S3", "+1V1_S3"), 2):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
-RAILS = ["+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "+54V_POE", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "+5V_HDMI", "+5V_CAM", "VBUS_QMX", "+5V_USBX", "PANEL_5V", "GND", "POE_P", "POE_DRAIN", "GNSS_3V3", "ZBA_3V3", "ZBB_3V3", "RB_3V3"]
+RAILS = ["+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "+54V_POE", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "+5V_HDMI", "+5V_CAM", "VBUS_QMX", "PANEL_5V", "GND", "POE_P", "POE_DRAIN", "GNSS_3V3", "ZBA_3V3", "ZBB_3V3", "RB_3V3"]
 for s in (1, 2, 3): RAILS += ["+5V_S%d" % s, "+3V3_S%dA" % s, "+3V3_S%dB" % s, "+1V0_S%d" % s, "+1V1_S%d" % s, "+3V3_CM%d" % s, "+1V8_CM%d" % s, "VBUS_FLASH%d" % s]
 for i, net in enumerate(RAILS, 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 
