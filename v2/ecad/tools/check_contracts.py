@@ -167,5 +167,24 @@ _u9 = _value_of("pcb-c-display", "U9")
 check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read")
 
 
+# 16. an in-line part is in line with something (9 Sep 2026, E7, appendix 32.83). R48 on E is drawn as the Geiger
+# module's "pulse input series" resistor, but U10 pin 9 sat on GEIGER_PULSE with the connector, so the pulse reached
+# the RP2040 directly and the resistor hung off it with only TP13 on its far side: a part that does nothing, the same
+# class as the EMCON gate of 32.80. A two-pin part whose value says series must have a real pin on BOTH of its nets,
+# counting neither test points, nor power flags, nor the part itself.
+_IGNORE = ("TP", "#FLG", "#PWR")
+for _bd, _stem in NETS.items():
+    _nets, _pins = B[_bd]
+    if not _pins: continue
+    _refs = {}
+    for (r, pin), net in _pins.items(): _refs.setdefault(r, {})[pin] = net
+    for _r, _pp in sorted(_refs.items()):
+        if not _r.startswith(("R", "FB", "L", "F")) or len(_pp) != 2: continue
+        _val = _value_of(_stem, _r)
+        if "series" not in _val.lower(): continue
+        _bad = [n for n in _pp.values()
+                if not [q for q, _ in _nets.get(n, set()) if q != _r and not q.startswith(_IGNORE)]]
+        check(not _bad, "%s: %s (%s) is in series with a real pin on both sides" % (_bd, _r, _val), "dead net(s) %s" % _bad)
+
 print("\n%d contract(s) FAILED" % len(fails) if fails else "\nALL CONTRACTS PASS")
 sys.exit(1 if fails else 0)
