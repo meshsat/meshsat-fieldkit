@@ -29,15 +29,18 @@ def _courtyard(f):
     except Exception: pass
     return f.GetBoundingBox(False, False)
 
-def _fine(f):
-    """A part whose pads are 0.7 mm apart or closer needs its escape fan, and a capacitor parked in it costs that part its pins."""
+def _needs_fan(f):
+    """Any part that will be escaped needs the room its fan takes. The first cut used the 0.7 mm fine-pitch test and let five capacitors
+    land 1.9 to 2.6 mm from a 0.8 mm TQFP's pins, which cost the part beside it six of seventeen escapes (D10 and C9, 9 September 2026).
+    An IC is a part with eight or more SMD pads whose closest two are 1.0 mm apart or less; that is the set whose fans must stay clear."""
     ps = [q.GetPosition() for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]
+    if len(ps) < 8: return False
     best = 1e9
     for i in range(len(ps)):
         for j in range(i + 1, len(ps)):
             d = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y)
             if 0 < d < best: best = d
-    return best <= pcbnew.FromMM(0.7)
+    return best <= pcbnew.FromMM(1.0)
 
 def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
     """Places each declared capacitor beside its pin. Returns the set of references it placed."""
@@ -49,7 +52,7 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
     # `fan` mm is closed to this pass. A capacitor that cannot be served outside every fan is named, not forced.
     fans = []
     for g in board.GetFootprints():
-        if _fine(g):
+        if _needs_fan(g):
             box = pcbnew.BOX2I(_courtyard(g).GetOrigin(), _courtyard(g).GetSize()); box.Inflate(int(pcbnew.FromMM(fan)))
             fans.append((g.GetReference(), box))
     done, stuck, report = set(), [], []
