@@ -475,7 +475,7 @@ part("J_HDMI", "Connector", "HDMI_A", "HDMI type A receptacle (Molex 208658-1001
 part("F2", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "+5V_HDMI"}); c("C39", "10u", "+5V_HDMI", "GND", "C10u")
 r("R17", "2.2k", "HDMIO_SCL", "+5V_HDMI"); r("R18", "2.2k", "HDMIO_SDA", "+5V_HDMI")   # source-side DDC pull-ups as the CM5IO board (2.2k)
 r("R19", "15k", "HDMIO_HPD_IN", "HDMIO_HPD"); r("R20", "22k", "HDMIO_HPD", "GND")   # the monitor's 5 V hot-plug level down to 3 V for the module pins
-# ================================================================= GNSS LG290P on a CP2102N bridge (S2 hub port 1); 1PPS to the three slots through level stages; active antenna bias from VDD_RF
+# ================================================================= GNSS LG290P on a CP2102N bridge (bank 2 hub, port 1; a BANK is not a slot since the I/O HA work: bank s is hosted by slot s or by its neighbour); 1PPS to the three slots through level stages; active antenna bias from VDD_RF
 g = {n: "GND" for n, nm in LG.items() if nm == "GND"}
 g.update({23: "+3V3_DEV", 22: "VBAT", 20: "GNSS_TXD", 21: "GNSS_RXD", 3: "GNSS_PPS", 8: "GNSS_RST_n", 9: "GNSS_VDD_RF", 11: "GNSS_RF_IN", 6: "GNSS_TXD2", 7: "GNSS_RXD2"})
 synth("U11", "LG290P", "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack", "LG290P", g, "C29781241")
@@ -490,7 +490,7 @@ e22.update({9: "+5V_LORA", 10: "+5V_LORA", 6: "LORA_RXEN", 7: "LORA_TXEN", 8: "N
 synth("U12", "E22_900M30S", "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd", "E22", e22, "C411294")
 tps22810("U21", "+5V_DEV", "E22_EN", "+5V_LORA", "E22_CT"); c("C45", "1n", "E22_CT", "GND"); c("C46", "10u", "+5V_LORA", "GND", "C10u"); c("C47", "100n", "+5V_LORA", "GND"); r("R25", "10k", "SPI3_CE1", "+3V3_S3B")
 part("J_LORA1", "Connector", "Conn_Coaxial", "U.FL: pigtail to A22's LoRa jack J_RF11", "UFL", {"1": "LORA_ANT", "2": "GND"})
-# ================================================================= two E72 CC2652P radios (Zigbee coordinator, Thread RCP) on CP2102N bridges (S2 hub ports 2 and 3), 3.3 V through one TPS22810 gated by EMCON
+# ================================================================= two E72 CC2652P radios (Zigbee coordinator, Thread RCP) on CP2102N bridges (bank 2 hub, ports 2 and 3), 3.3 V through one TPS22810 gated by EMCON
 for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", "C49")), ("ZBB", "U14", "U17", ("R27", "C50", "C51"))), 1):
     E72 = {n: "GND" for n in (1, 11, 12, 19, 23, 34)}
     E72.update({2: tag + "_LED_R", 3: tag + "_LED_G", 7: tag + "_RXD", 8: tag + "_TXD", 10: tag + "_BSL", 13: tag + "_TMSC", 14: tag + "_TCKC", 20: "+3V3_ZB", 24: tag + "_RST_n"})
@@ -501,7 +501,7 @@ for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", 
     part("J_ZBDBG%d" % i, "Connector_Generic", "Conn_01x05", "CC2652P cJTAG %s (bench): 3V3 GND TMSC TCKC RESET" % tag, "PH1x5", {"1": "+3V3_ZB", "2": "GND", "3": tag + "_TMSC", "4": tag + "_TCKC", "5": tag + "_RST_n"})
     cp2102(ub, tag, "+5V_DEV", tag + "_DP", tag + "_DM", tag + "_RXD", tag + "_TXD", rts=tag + "_RST_n", dtr=tag + "_BSL", refs=refs)
 tps22810("U22", "+3V3_DEV", "E72_EN", "+3V3_ZB", "E72_CT"); c("C52", "1n", "E72_CT", "GND"); c("C53", "10u", "+3V3_ZB", "GND", "C10u"); c("C54", "100n", "+3V3_ZB", "GND"); c("C55", "100n", "+3V3_ZB", "GND")
-# ================================================================= LimeSDR Mini receptacle (S1 hub port 1, USB 3) and the RockBLOCK 9704 header (S1 hub port 4 through a CP2102N), both behind TPS259631 eFuses
+# ================================================================= LimeSDR Mini receptacle (bank 1 hub, port 1, USB 3) and the RockBLOCK 9704 header (bank 1 hub, port 4, through a CP2102N), both behind TPS259631 eFuses
 part("J_LIME", "Connector", "USB3_A", "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", "USB3A",
      {"1": "+5V_LIME", "2": "LIME_DM", "3": "LIME_DP", "4": "GND", "5": "LIME_SSRX_N", "6": "LIME_SSRX_P", "7": "GND", "8": "LIME_SSTX_N", "9": "LIME_SSTX_P", "10": "GND"}, "C5355286")
 esd("U33", "LIME_DP", "LIME_DM", "+5V_LIME")
@@ -511,11 +511,11 @@ part("J_RB9704", "Connector_Generic", "Conn_02x08_Odd_Even", "RockBLOCK 9704 16-
 cp2102("U18", "RB", "+5V_DEV", "RB_DP", "RB_DM", "RB_RXD", "RB_TXD", refs=("R40", "C59", "C60"))
 r("R41", "10k", "RB_STATUS", "+3V3_DEV"); r("R42", "10k", "RB_XMTG", "+3V3_DEV")
 efuse("U24", "+5V_DEV", "+5V_RB", "RB_EN", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "3.0 A (ILM)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
-# ================================================================= camera, QMX and spare USB headers, the wall USB pair (S3 hub port 3) with its ESD
+# ================================================================= camera, QMX and spare USB headers, the wall USB pair (bank 3 hub, port 3) with its ESD
 tps2065("U28", "+5V_DEV", "CAM_EN", "+5V_CAM", "CAM_FLT"); r("R47", "10k", "CAM_FLT", "+3V3_DEV"); r("R48", "100k", "CAM_EN", "GND"); c("C64", "10u", "+5V_CAM", "GND", "C10u")
-part("J_CAM", "Connector_Generic", "Conn_01x04", "camera lead (USB 2.0, S1 hub port 3): 5V D- D+ GND", "PH1x4", {"1": "+5V_CAM", "2": "CAM_DM", "3": "CAM_DP", "4": "GND"}); esd("U34", "CAM_DP", "CAM_DM", "+5V_CAM")
+part("J_CAM", "Connector_Generic", "Conn_01x04", "camera lead (USB 2.0, bank 1 hub, port 3): 5V D- D+ GND", "PH1x4", {"1": "+5V_CAM", "2": "CAM_DM", "3": "CAM_DP", "4": "GND"}); esd("U34", "CAM_DP", "CAM_DM", "+5V_CAM")
 part("F3", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "VBUS_QMX"})
-part("J_QMX", "Connector_Generic", "Conn_01x04", "QMX USB lead (S2 hub port 4): VBUS D- D+ GND; pigtail to the unit's USB-C", "PH1x4", {"1": "VBUS_QMX", "2": "QMX_DM", "3": "QMX_DP", "4": "GND"}); esd("U35", "QMX_DP", "QMX_DM", "VBUS_QMX")
+part("J_QMX", "Connector_Generic", "Conn_01x04", "QMX USB lead (bank 2 hub, port 4): VBUS D- D+ GND; pigtail to the unit's USB-C", "PH1x4", {"1": "VBUS_QMX", "2": "QMX_DM", "3": "QMX_DP", "4": "GND"}); esd("U35", "QMX_DP", "QMX_DM", "VBUS_QMX")
 # the QMX 12 V lead runs from A22's J_HF straight to the unit's DC jack (no B16 part)
 # 9 September 2026 (ARCH-PCB-B-IOHA): the spare USB header and its fuse are withdrawn. Bank 3's port 4 now carries the 5G
 # module's management link, which had to leave the CM5's USB3-1 pins so the failover ring could use them. The 5G module
