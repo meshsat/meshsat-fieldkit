@@ -9,8 +9,24 @@ python3 ../tools/ses_import_lock.py out/$N-preroute.kicad_pcb $W/GLOBAL/route.se
 cp $N.kicad_pro $W/stage1.kicad_pro
 bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | grep -v -E "Debug|leak"
 python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json 2>&1 | grep -v -E "Debug|leak" | grep -v "^partition [A-Z]"
-for G in $PARTS; do bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1 & done
-wait
+# 10 September 2026 (B19, appendix 32.93): PART_SEQ=1 routes the groups ONE AT A TIME, importing and locking each result
+# before the next job's DSN is exported, so a group sees its predecessors' copper as obstacles. Concurrent jobs cannot:
+# each one only knows the locked copper of stage 1, so their boundaries collide, and on B19 the merge of five concurrent
+# regions carried 1,121 hard violations that three rip passes could only bring to about 400. Sequential costs wall clock
+# (five jobs in a row rather than five at once) and buys a merge that has nothing to reconcile.
+if [ "${PART_SEQ:-0}" = 1 ]; then
+  for G in $PARTS; do
+    echo "stage2: sequential group $G"
+    bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1
+    [ -s $W/$G/route.ses ] || { echo "stage2: $G wrote no session, stopping the chain here"; break; }
+    python3 ../tools/ses_import_lock.py $W/stage1.kicad_pcb $W/$G/route.ses $W/part2.json $G $W/stage1.kicad_pcb 2>&1 | grep -v -E "Debug|leak"
+    bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | tail -1
+    python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json 2>&1 | tail -1
+  done
+else
+  for G in $PARTS; do bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1 & done
+  wait
+fi
 for G in $PARTS; do tail -2 $W/route-$G.log; done
 ARGS=""; for G in $PARTS; do [ -s $W/$G/route.ses ] && ARGS="$ARGS $G=$W/$G/route.ses"; done
 python3 ../tools/ses_merge.py $W/stage1.kicad_pcb $W/part2.json $W/merged.kicad_pcb $ARGS 2>&1 | grep -v -E "Debug|leak"
