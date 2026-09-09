@@ -25,10 +25,10 @@
  ],
  "route": {
   "attempts": [
-   16
+   8
   ],
   "threads": 1,
-  "timeout": 25200,
+  "timeout": 14400,
   "power_layers": [
    "In1.Cu",
    "In4.Cu"
@@ -39,7 +39,7 @@
   "log": "out/parallel-b17.log",
   "jar": "~/bin/freerouting-1.9.0.jar",
   "_layer_rules_removed": "REMOVED 8 Sep 2026 17:50: the per-class layer rule (rule 2) cost C8 three routes that never finished a pass (12 min, 90 min, 3 h with nothing written) while the same DSN without it auto-routed in 14 min 21 s; and the D9 read-back this morning showed the router does not hold a class to its layers anyway. The pair pre-router lays the pairs on their layers by construction, which is what enforces the intent now.",
-  "_ceiling_measured": "8 Sep 2026 23:10 CEST: the ceiling comes from B16's measured curve on the same placement family, not from an ambition. B16 from scratch: 3 passes 252 open in 1 h 42 min, 5 passes 159 in 2 h 05, 12 passes 77 in 3 h 20, 16 passes 74 in 3 h 43, and the plain router flattens near 70 open after that. 100 passes could never finish inside any budget, and 1.9.0 writes its session only when the whole job ends, so the 4 h limit would have returned NO_SESSION exactly as A23's 120-pass rounds did twice today (32.73). 16 passes in a 7 h budget leaves room for this box being slower per pass than 50107044 was."
+  "_ceiling_measured": "9 September 2026 12:55 CEST: this is an INFORMATION route, not a release route. The board is held by the owner's ruling on the pairs question until the pre-router lays them, so what this route has to answer is a different question: does this placement route at all, with the new decoupling floor plan and the HDMI switches at 16 mm? B16 flattened near 70 open whatever the pass count. 16 passes did not finish in 7 h on this box last night, so 8 passes in a 4 h budget reads the open count without another all-night gamble. The release route comes after the pre-router work, with a ceiling measured on that DSN."
  },
  "finish": {
   "argv": [
