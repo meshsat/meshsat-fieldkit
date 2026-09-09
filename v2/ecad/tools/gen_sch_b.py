@@ -609,11 +609,14 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
     for _f, _rx, _tx, _un in (("A", "IOC%s_CAN1_RX" % _tag, "IOC%s_CAN1_TX" % _tag, 3), ("B", "IOC%s_CAN2_RX" % _tag, "IOC%s_CAN2_TX" % _tag, 4)):
         ic(U_(_un), 8, "TCAN334D CAN-FD transceiver, controller %s on heartbeat fabric %s" % (_tag, _f), "SOIC8",
            {"1": _tx, "2": "GND", "3": v33, "4": _rx, "5": "NC", "6": "CANL_%s" % _f, "7": "CANH_%s" % _f, "8": "GND"}, "C2871143")
-# Each fabric is terminated once at each physical end. The two fabrics keep separate termination so a shorted
-# terminator on one cannot load the other.
+# Each fabric is terminated at BOTH physical ends, which are controller A's pocket and controller C's: a bus terminated
+# once, in the middle, reflects off both ends. Split termination (two 60R4 to a 4.7 nF) at each end, so 120.8 ohm twice.
+# The two fabrics keep separate termination so a shorted terminator on one cannot load the other.
 # the slots take R101 to R394 (100 * s + n), so the plane's shared passives live at 470 and above
 r("R470", "60R4 1%", "CANH_A", "CANT_A"); r("R471", "60R4 1%", "CANT_A", "CANL_A"); c("C460", "4.7n", "CANT_A", "GND")
 r("R472", "60R4 1%", "CANH_B", "CANT_B"); r("R473", "60R4 1%", "CANT_B", "CANL_B"); c("C461", "4.7n", "CANT_B", "GND")
+r("R504", "60R4 1%", "CANH_A", "CANT2_A"); r("R505", "60R4 1%", "CANT2_A", "CANL_A"); c("C506", "4.7n", "CANT2_A", "GND")
+r("R506", "60R4 1%", "CANH_B", "CANT2_B"); r("R507", "60R4 1%", "CANT2_B", "CANL_B"); c("C507", "4.7n", "CANT2_B", "GND")
 
 # ----------------------------------------------------------------- the 2-of-3 majority voters
 # One voter per control bit: out = AB + BC + CA, three AND gates and two OR gates. A controller stuck high or low is a

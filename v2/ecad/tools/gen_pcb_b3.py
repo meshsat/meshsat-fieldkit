@@ -66,7 +66,7 @@ def place(ref, x, y, rot=0.0, back=False):
 #     the fan headers west of each module; the flashing USB-C receptacles on the south edge opening south (rot 0)
 FIXED = {"U30A": (-89.5, 57.5, 0), "U30B": (-55.5, 57.5, 0), "U31A": (-19.5, 57.5, 0), "U31B": (14.5, 57.5, 0), "U32A": (50.5, 57.5, 0), "U32B": (84.5, 57.5, 0),
          # M.2 sockets: place() centres the socket-plus-card box, so the target sits 13.65 (2230), 19.65 (2242) or 24.65 (3052) mm south of the socket body centre at Y 25
-         "J_M2N1": (-85, 5.35, 0), "J_M2C1": (-57, 11.35, 0), "J_M2C2": (-20, 0.35, 0), "J_M2N2": (-9.35, -85, 90), "J_M2N3": (48, 5.35, 0), "J_M2C3": (79, 5.35, 0),
+         "J_M2N1": (-85, 5.35, 0), "J_M2C1": (-57, 11.35, 0), "J_M2C2": (-20, 0.35, 0), "J_M2N2": (-9.35, -85, 90), "J_M2N3": (48, 5.35, 0), "J_M2C3": (79, 11.35, 0),
          "J_SIM1": (4.5, 22, 0), "J_SIM2": (4.5, 1, 0),
          "J_FLASH1": (-92.5, -95, 0), "J_FLASH2": (24, -95, 0), "J_FLASH3": (39.5, -95, 0), "J_5V_S1": (-92.5, -84.5, 0), "J_5V_S2": (27, -84, 0), "J_5V_S3": (39.5, -84.5, 0),
          "J_FAN1": (-97.5, 45, 90), "J_FAN2": (-27.5, 45, 90), "J_FAN3": (92.5, 44, 90),
@@ -116,33 +116,40 @@ for s in (1, 2, 3):
     card = {1: ["Q106", "LED15"], 2: ["Q206", "Q207", "Q208", "LED25"], 3: ["Q306", "LED35"]}[s]
     card_b = {1: [R(1, 37), R(1, 38), R(1, 39)], 2: [R(2, 37), R(2, 38), R(2, 40), R(2, 39)] + Cs(2, 86, 91), 3: [R(3, 37), R(3, 38), R(3, 39)]}[s]
     if s == 2:
-        REGIONS += [("S2_SWIC", (-36, -54, 10, -30), [U(1), U(2), U(9), U(10)], False),
-                    ("S2_SWE", (10, -54, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (10, -54, 32, -30), sw_b + card_b + sup_b, True),
+        REGIONS += [("S2_SWIC", (-36, -54, 16, -30), [U(1), U(2), U(9), U(10)], False),
+                    ("S2_SWE", (16, -54, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (-36, -54, 32, -30), sw_b + card_b + sup_b, True),
                     ("S2_RAIL", (-36, -73.4, 32, -54), [r for r in rail if r not in (U(5), U(6), L(3), L(4)) and r not in Cs(2, 25, 27) + Cs(2, 30, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -54), rail_b + straps + sw_dec, True),
                     ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -8), [U(5), U(6), L(3), L(4)] + Cs(2, 25, 27) + Cs(2, 30, 32), False)]
     else:
-        REGIONS += [("S%d_SWIC" % s, (x0, -49, x0 + 43, -21), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
-                    ("S%d_SWE" % s, (x0 + 43, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0 + 43, -49, x1, -21), sw_b + card_b + sup_b, True),
+        REGIONS += [("S%d_SWIC" % s, (x0, -49, x0 + 50, -21), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
+                    ("S%d_SWE" % s, (x0 + 50, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -49, x1, -21), sw_b + card_b + sup_b, True),
                     ("S%d_RAIL" % s, (x0, -70, x1, -49), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -49), rail_b + straps + sw_dec, True),
                     ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
-# 9 September 2026 (ARCH-PCB-B-IOHA section 6): the I/O control plane goes on the UNDERSIDE, under the three CM5
-# modules. That band is X -98 to 94 by Y 32 to 88, 10752 mm2, and it carried nothing at all: no back-side region of
-# this generator reached into it. The plane needs about 2400 mm2, so it fits with room for routing and no second board
-# is required. B16's underside clears D8's SA868 by about 20 mm, against the 1.7 mm an LQFP part stands.
-IOCTRL_PARTS = (["U%d" % (40 + 10 * k + n) for k in range(3) for n in range(5)]
-                + ["U%d" % n for n in range(70, 80)] + ["U80"]
-                + ["Y2", "Y3", "Y4"] + ["LED40", "LED41", "LED42"]
-                + ["Q3", "Q4", "Q5"]
-                + ["C%d" % (400 + 20 * k + n) for k in range(3) for n in range(12)]
-                + ["C460", "C461", "C480", "C481", "C482", "C483"]
-                + ["C%d" % n for n in range(470, 480)]
-                + ["R%d" % (63 + 12 * k + n) for k in range(3) for n in range(3)]
-                + ["R%d" % n for n in range(470, 505)])
-# The voter allocator opens a quad package only when the previous one is full, so how many of U70 to U79 and their
-# decoupling exist depends on how many bits are voted. The list above is the superset and the netlist is the authority:
-# a part that is in the netlist and in no region still stops the generator at the unplaced check below.
-IOCTRL_PARTS = [_r for _r in IOCTRL_PARTS if _r in comps]
-REGIONS += [("IOCTRL", (-98.0, 32.0, 94.0, 88.0), IOCTRL_PARTS, True)]
+# 9 September 2026 (ARCH-PCB-B-IOHA section 6): the I/O control plane goes on the UNDERSIDE, and the three controllers
+# go in three SEPARATE pockets rather than one band. Two reasons, both measured on the board. First, a single rect
+# across the module bay puts parts under the six CM5 receptacles (0.4 mm rows at Y 47.7 to 67.3, escape vias at the pad
+# tips) and over the twelve M2.5 standoff holes at Y 36 and Y 84, which is exactly what the underside rule forbids.
+# Second, three controllers in one pocket is one failure domain again: a screw, a crack or a solder wash takes all
+# three. The pockets are the two gaps between the module columns (X -52 to -23 and 18 to 47, clear of every socket and
+# hole) and the free underside of the QMX bay (X -158 to -129, clear of its four strap slots at Y 20, -40 and -67.5).
+# The voters and the small logic sit in the band north of the receptacles and south of the standoff row, Y 69 to 80.5.
+def _ioc(k):
+    return (["U%d" % (40 + 10 * k + n) for n in range(5)] + ["Y%d" % (2 + k), "LED%d" % (40 + k)]
+            + ["C%d" % (400 + 20 * k + n) for n in range(12)]
+            + ["R%d" % (63 + 12 * k + n) for n in range(3)])
+IOVOTE = (["U%d" % n for n in range(70, 80)] + ["U80"] + ["C%d" % n for n in range(470, 480)]
+          + ["C480", "C481", "C482", "C483"] + ["R474", "R475", "R476"]
+          + ["Q3", "Q4", "Q5", "R477", "R478", "R479"]
+          + ["R%d" % n for n in range(480, 501)])
+# each CAN fabric is terminated at its two PHYSICAL ends, which are controller A in the west pocket and controller C in
+# the east one; a bus terminated once, in the middle, reflects off both ends (caught reading the placement, 9 Sep 2026)
+REGIONS += [("IOCA", (-158.0, -60.0, -129.0, -4.0), _ioc(0) + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
+            ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1), True),
+            ("IOCC", (18.0, 32.0, 47.0, 88.0), _ioc(2) + ["R504", "R505", "R506", "R507", "C506", "C507"], True),
+            ("IOVOTE", (-98.0, 69.0, 94.0, 80.5), IOVOTE, True),
+            ("WIFISW", (132.0, -20.0, 159.0, 10.0),
+             ["U82", "U83", "J_W1A", "J_W3A", "J_WOA", "J_W1B", "J_W3B", "J_WOB", "R510", "Q10"] + ["C%d" % n for n in range(500, 506)], True)]
+REGIONS = [(_n, _rect, [_r for _r in _refs if _r in comps or not _n.startswith("IO")], _bk) for _n, _rect, _refs, _bk in REGIONS]
 REGIONS += [
  ("NORTH1", (-94, 88.5, -52, 97.5), ["TP%d" % k for k in range(1, 21)], False),
  ("NORTH2", (-23, 88.5, 18, 97.5), ["TP%d" % k for k in range(21, 32)] + ["LED6", "LED7", "LED8", "LED9"], False),
@@ -152,8 +159,7 @@ REGIONS += [
  ("POEB",  (-140.5, 59, -122, 70), ["C33", "R9", "R10", "C29", "C30"], True),
  ("WNE",   (-121, 29, -102, 68), ["U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "J_5V_DEV"], False),
  ("GAP12", (-50, 33, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
- ("GAP23", (19, 33, 44, 97), ["BT1", "U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71",
-            "U82", "U83", "J_W1A", "J_W3A", "J_WOA", "J_W1B", "J_W3B", "J_WOB", "R510", "Q10"] + ["C%d" % n for n in range(500, 506)], False),
+ ("GAP23", (19, 33, 44, 97), ["BT1", "U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71"], False),
  ("WMIDS", (-152, -97, -116, -69), ["U35", "D1", "D2", "J_54V", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
  ("NEX",   (96, 78, 123, 82), ["R14", "R15", "R16", "C37", "C38"], False),   # B17 (8 Sep 2026, 32.65): the two HDMI switches U3 and U4 are FIXED at 16 mm pitch above this strip (9.6 mm in the packed row collided their escape fans)
  ("SEX",   (96, -85, 112, -78), ["F2", "C39"], False),
@@ -285,7 +291,7 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
 CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13), "DIFF100": (0.127, 0.127, 0.7, 0.3, 0.127, 0.20),   # 8 Sep 2026 (32.71): on the 3313 outer layers 0.127/0.127 computes 94 ohm and 0.127/0.20 computes 101 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds
             "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "HV": (0.18, 0.5, 0.8, 0.4, 0.5, 0.5)}   # HV 0.18: above the 0.2 pad gap of the TSSOP-28 PoE controller it fails inside the part
-PATTERNS = [("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("USBX_D*", "USB"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
+PATTERNS = [("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("HOST*", "USB"), ("BANK*", "USB"), ("MUX*", "USB"), ("SW?_O*", "USB"), ("SW?_IN", "USB"), ("W?*_CARD", "USB"), ("W?_ANT", "USB"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
             ("PCIE*", "USB"), ("NVME*_RX_*", "USB"), ("NVME*_TX_*", "USB"), ("NVME*_CLK_*", "USB"), ("CARD*_RX_*", "USB"), ("CARD*_TX_*", "USB"), ("CARD*_CLK_*", "USB"),
             ("HDMI*_D*", "DIFF100"), ("HDMI*_CK_*", "DIFF100"), ("ETH*", "DIFF100"), ("SWP*", "DIFF100"),
             ("MDI_*", "HV"), ("POE_*", "HV"), ("+54V_POE", "HV"),

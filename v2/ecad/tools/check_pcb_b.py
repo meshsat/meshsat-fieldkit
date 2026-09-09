@@ -44,7 +44,7 @@ if placed:
             check(len(ys) == 50 and abs(ys[-1] - ys[0] - 19.6) < 0.02 and abs((ys[0] + ys[-1]) / 2 - (cy - 2.5)) < 0.05, "%s 50 positions at 0.4 mm over 19.6 mm centred y %.1f (got %d over %.2f)" % (ref, cy - 2.5, len(ys), ys[-1] - ys[0]))
             check(all(cx - 20 < p[0] < cx + 20 and cy - 27.5 < p[1] < cy + 27.5 for p in smd), "%s pads inside the module outline" % ref)
     # M.2 sockets: body centre (the placement centres the courtyard box) and the standoff hole (card length minus 1.75 from the socket datum; cards extend south, S2's NVMe east)
-    M2 = {"J_M2N1": (-85, 5.35, (-85, -17.1), 67), "J_M2C1": (-57, 11.35, (-57, -5.1), 67), "J_M2C2": (-20, 0.35, (-20, -27.1), 67), "J_M2N2": (-9.35, -85, (13.1, -85), 67), "J_M2N3": (48, 5.35, (48, -17.1), 67), "J_M2C3": (79, 5.35, (79, -17.1), 67)}
+    M2 = {"J_M2N1": (-85, 5.35, (-85, -17.1), 67), "J_M2C1": (-57, 11.35, (-57, -5.1), 67), "J_M2C2": (-20, 0.35, (-20, -27.1), 67), "J_M2N2": (-9.35, -85, (13.1, -85), 67), "J_M2N3": (48, 5.35, (48, -17.1), 67), "J_M2C3": (79, 11.35, (79, -5.1), 67)}
     for ref, (ex, ey, (sx, sy), ncont) in M2.items():
         f = fpo.get(ref); check(f is not None, "%s present" % ref)
         if f is None: continue
@@ -68,9 +68,24 @@ if placed:
         rb = "U3%dB" % (s - 1); sw = "U%d01" % s; hub = "U%d02" % s
         for nm in ("PCIE%d_TX_P" % s, "PCIE%d_TX_N" % s, "PCIE%d_RX_P" % s, "PCIE%d_RX_N" % s, "PCIE%d_CLK_P" % s, "PCIE%d_CLK_N" % s, "PCIE%d_nRST" % s):
             check(rb in bynet.get(nm, set()) and sw in bynet.get(nm, set()), "%s reaches %s and the PCIe switch %s (got %s)" % (nm, rb, sw, sorted(bynet.get(nm, set()))))
-        for nm in ("USB3%d_TX_P" % s, "USB3%d_TX_N" % s, "USB%d_UP_P" % s, "USB%d_UP_N" % s):
-            check(rb in bynet.get(nm, set()) and hub in bynet.get(nm, set()), "%s reaches %s and the hub %s" % (nm, rb, hub))
-        for nm in ("USB3%d_RX_P" % s, "USB3%d_RX_N" % s): check(rb in bynet.get(nm, set()) and len(bynet.get(nm, set())) >= 2, "%s reaches %s and its coupling capacitor" % (nm, rb))
+        # 9 September 2026 (ARCH-PCB-B-IOHA): the module no longer faces its hub directly. Port 0 goes to its OWN bank's
+        # pair of muxes and port 1 to the bank that adopts this slot, and the bank's upstream runs from the muxes to the
+        # hub, so the three checks below follow that path rather than the direct one they used to.
+        _own = ("U%d09" % s, "U%d10" % s)
+        _adopt = {1: 3, 2: 1, 3: 2}[s]          # bank b adopts slot RING[b], so slot s is adopted by this bank
+        for nm in ("HOST%d_0TX_P" % s, "HOST%d_0TX_N" % s, "HOST%d_0RX_P" % s, "HOST%d_0RX_N" % s, "HOST%d_0D_P" % s, "HOST%d_0D_N" % s):
+            _p = bynet.get(nm, set())
+            check(rb in _p and (set(_own) & _p), "%s reaches %s and its own bank's host select (got %s)" % (nm, rb, sorted(_p)))
+        for nm in ("HOST%d_1TX_P" % s, "HOST%d_1TX_N" % s, "HOST%d_1RX_P" % s, "HOST%d_1RX_N" % s, "HOST%d_1D_P" % s, "HOST%d_1D_N" % s):
+            _p = bynet.get(nm, set())
+            check(rb in _p and ({"U%d09" % _adopt, "U%d10" % _adopt} & _p),
+                  "%s reaches %s and the host select of the bank that adopts slot %d (got %s)" % (nm, rb, s, sorted(_p)))
+        for nm in ("BANK%d_UPTX_P" % s, "BANK%d_UPTX_N" % s, "BANK%d_UPD_P" % s, "BANK%d_UPD_N" % s):
+            _p = bynet.get(nm, set())
+            check(hub in _p and (set(_own) & _p), "%s reaches the hub %s and its host select (got %s)" % (nm, hub, sorted(_p)))
+        for nm in ("BANK%d_UPRX_P" % s, "BANK%d_UPRX_N" % s):
+            _p = bynet.get(nm, set())
+            check(hub in _p and any(r.startswith("C") for r in _p), "%s reaches the hub %s and its coupling capacitor (got %s)" % (nm, hub, sorted(_p)))
         for nm in ("HDMI%d_D0_P" % s, "HDMI%d_D1_P" % s, "HDMI%d_D2_P" % s, "HDMI%d_CK_P" % s, "HDMI%d_HPD" % s, "HDMI%d_SDA" % s):
             check(rb in bynet.get(nm, set()) and ({"U3", "U4"} & bynet.get(nm, set())), "%s reaches %s and a display switch (got %s)" % (nm, rb, sorted(bynet.get(nm, set()))))
         for k in range(4): check(len(bynet.get("ETH%d_P%d_P" % (s, k), set())) == 2, "ETH%d_P%d_P reaches the receptacle and its coupling capacitor" % (s, k))
@@ -147,7 +162,8 @@ for _fp in b.GetFootprints():
         if _n: PADS.setdefault(_n, set()).add(_fp.GetReference())
 RING = {1: 2, 2: 3, 3: 1}   # bank s is owned by slot s and fails over to slot RING[s]
 for _s, _f in RING.items():
-    home = PADS.get("HOST%d_0TX_P" % _s, set()); over = PADS.get("HOST%d_1TX_P" % _f, set())
+    _mods = lambda n: {r for r in PADS.get(n, set()) if r.startswith("U3")}   # the receptacles; the mux itself is on both nets by construction
+    home = _mods("HOST%d_0TX_P" % _s); over = _mods("HOST%d_1TX_P" % _f)
     check(len(home & over) == 0 and home and over,
           "bank %d has one home host and one failover host, and they are different modules (home %s, failover %s)"
           % (_s, sorted(home), sorted(over)))
@@ -185,7 +201,7 @@ check(not (PADS.get("CANH_A", set()) & PADS.get("CANH_B", set())),
 # share the case's existing antennas through a passive changeover that rests on the primary card when nothing drives it
 for _ref, _dis, _slot in (("J_M2C1", "WIFI_W_DIS_n", 1), ("J_M2C3", "WIFI2_W_DIS_n", 3)):
     check(_ref in PADS.get(_dis, set()), "WiFi card on slot %d is fitted and EMCON reaches its W_DISABLE (%s)" % (_slot, sorted(PADS.get(_dis, set()))))
-    check("U%d02" % _slot in PADS.get("CARD%d_TX_P" % _slot, set()),
+    check("U%d01" % _slot in PADS.get("CARD%d_TX_P" % _slot, set()),
           "the slot %d WiFi card hangs on its own PCIe switch, so one switch cannot take both radios" % _slot)
 _sw = {r for r in PADS.get("WIFI_SEC", set()) if r.startswith("U8")}
 check(len(_sw) == 2, "both antenna changeover switches follow the voted select (%s)" % sorted(_sw))
@@ -198,7 +214,7 @@ for _ch in ("A", "B"):
               "chain %s reaches %s through a U.FL and a DC block (%s)" % (_ch, _what, sorted(_p)))
 
 # no peripheral bank may hold two long-range bearers, or one bank failure removes more than it should
-BEARERS = {"RB_DP": "Iridium", "QMX_DP": "HF", "USB_D8_P": "APRS", "USB_5G_P": "cellular"}
+BEARERS = {"RB_DP": "Iridium", "QMX_DP": "HF", "USB_D8_P": "APRS"}   # the 5G module's USB is management: its data path is slot 2's PCIe lane (ARCH-PCB-B-IOHA open ruling 4)
 BANK_OF = {}
 for _s in (1, 2, 3):
     for _n in BEARERS:
