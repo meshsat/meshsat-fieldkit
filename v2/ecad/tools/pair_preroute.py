@@ -307,7 +307,14 @@ def main(a):
     if os.environ.get("PAIR_ORDER", "span") == "span":
         stems = sorted(stems, key=lambda st: (-_span(st), st))
         if stems: print("pair_preroute: %d pairs, longest first (%s spans %.0f mm, %s spans %.0f mm)" % (len(stems), stems[0], _span(stems[0]), stems[-1], _span(stems[-1])))
-    laid = 0; report = []; swapped = set()
+    laid = 0; swapped = set()
+    # 9 September 2026 (B19): the outcome lines used to be held until the pass ended, so a run of 113 pairs showed nothing
+    # for hours and could not be steered or timed. They are printed as they happen now, and the same list is still summarised
+    # at the end, so a driver watching the log can count LAID and FAIL while the pass is running.
+    class _Report(list):
+        def append(self, line):
+            list.append(self, line); print("pair_preroute: " + line, flush=True)
+    report = _Report()
     def pinned(f):
         """A footprint whose pads already hold a track end (a section laid for another stem of the same nets, an escape) must not be moved: the second swap of
         R26/R27 on D9 (8 Sep 2026 12:20) left four locked pieces on pads of the wrong net."""
@@ -973,6 +980,7 @@ def main(a):
         laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added))
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
+    print("pair_preroute: --- summary ---")
     for l in report: print("pair_preroute: " + l)
     n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
     print("pair_preroute: %d of %d pairs laid -> %s" % (laid, n_pairs, out))
