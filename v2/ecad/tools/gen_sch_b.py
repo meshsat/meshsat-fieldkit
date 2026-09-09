@@ -362,12 +362,12 @@ def slot(s):
           19: "HOST%d_0TX_P" % s, 18: "HOST%d_0TX_N" % s, 17: "HOST%d_0RX_P" % s, 16: "HOST%d_0RX_N" % s,
           15: "HOST%d_1TX_P" % f, 14: "HOST%d_1TX_N" % f, 13: "HOST%d_1RX_P" % f, 12: "HOST%d_1RX_N" % f}
     synth(U(9), "TMUXHS4212", "TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C = slot %d USB3-1 (failover)" % (s, s, f), "VQFN20", mx)
-    c(C(78), "100n", b33, "GND"); c(C(79), "1u", b33, "GND")
+    c(C(92), "100n", b33, "GND"); c(C(93), "1u", b33, "GND")
     u2 = {10: b33, 5: "GND", 6: "BOE%d_n" % s, 9: "BSEL%d" % s,
           8: "BANK%d_UPD_P" % s, 7: "BANK%d_UPD_N" % s,
           1: "HOST%d_0D_P" % s, 2: "HOST%d_0D_N" % s, 3: "HOST%d_1D_P" % f, 4: "HOST%d_1D_N" % f}
     synth(U(10), "TS3USB221A", "TI TS3USB221A USB2 2:1 host select, bank %d: port 1 = slot %d (home), port 2 = slot %d (failover)" % (s, s, f), "UQFN10", u2)
-    c(C(80), "100n", b33, "GND")
+    c(C(94), "100n", b33, "GND")
     # Safe state with the control plane dark: SEL low is port A to port B on the TMUXHS4212 and port 1 on the TS3USB221A,
     # both of which are the HOME module, and OEn low is normal operation on both. So an unpowered or absent control plane
     # leaves each bank connected to its own module, which is exactly the board's behaviour before this fabric existed.
