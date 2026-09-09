@@ -19,6 +19,12 @@ for i in 1 2 3; do
   H=$(python3 -c "import json,collections,sys; d=json.load(open(sys.argv[1])); c=collections.Counter(v['type'] for v in d['violations']); print(sum(c[t] for t in ('clearance','shorting_items','tracks_crossing','hole_clearance','hole_to_hole','copper_edge_clearance')))" $W/rec-$i.json)
   [ "$H" -eq 0 ] && break
 done
+cp $B $W/rec-before-stub.kicad_pcb   # 10 Sep 2026 (E7, appendix 32.89): the closures are judged, not kept blind
 STUB_LAYERS=F.Cu,In2.Cu,In3.Cu,B.Cu STUB_GRID=0.2 STUB_WIN_SCALE=25 STUB_MAXN=80000000 nice -n 10 python3 ../tools/stub_router.py $B $W/rec-$i.json > $W/rec-stub.log 2>&1 || echo "stub router CRASHED ($W/rec-stub.log)"; grep -E 'closed|FAILED|stub_router' $W/rec-stub.log | tail -5
-echo "RECONCILE after stub: $(score $B $W/rec-final.json)"
+echo "RECONCILE after stub, before accept: $(score $B $W/rec-final.json)"
+# Every other finish judges the stub router's work and this one did not: E7 kept 29,985 items that closed five nets and
+# the finish then spent an hour in straighten.py. stub_accept drops the closures a DRC finds in a hard violation and, since
+# 9 September, any whose item count is out of proportion to the net (STUB_MAX_ITEMS).
+python3 ../tools/stub_accept.py $W/rec-before-stub.kicad_pcb $B $W/rec-final.json 2>&1 | grep stub_accept
+echo "RECONCILE after accept: $(score $B $W/rec-final.json)"
 echo "RECONCILE-DONE $(date -u +%H:%M:%S)"
