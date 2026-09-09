@@ -19,6 +19,14 @@ _ALL = {"F.Cu": pcbnew.F_Cu, "In1.Cu": pcbnew.In1_Cu, "In2.Cu": pcbnew.In2_Cu, "
 # STUB_LAYERS (6 Sep 2026): the layers the stub router may route on, default the two outer ones; B15 passes F.Cu,In2.Cu,In3.Cu,B.Cu (In1 and In4 are planes).
 LAYERS = [_ALL[x.strip()] for x in __import__("os").environ.get("STUB_LAYERS", "F.Cu,B.Cu").split(",") if x.strip() in _ALL] or [pcbnew.F_Cu, pcbnew.B_Cu]
 INNER = [l for l in _ALL.values() if l not in LAYERS]
+def _pad_layer(p):
+    """A copper layer the pad is REALLY on. GetEffectivePolygon(layer) on a layer the pad does not have crashes the
+    binding: with STUB_LAYERS naming inner layers only (A24, 9 Sep 2026) the old fallback handed an inner layer to a
+    front-side SMD pad and the process died with a segmentation fault, exit 139, and no Python traceback at all."""
+    for L in LAYERS + INNER:
+        if p.IsOnLayer(L): return L
+    seq = list(p.GetLayerSet().CuStack()) if hasattr(p.GetLayerSet(), "CuStack") else []
+    return seq[0] if seq else pcbnew.F_Cu
 LI = {L: i for i, L in enumerate(LAYERS)}; LR = {i: L for L, i in LI.items()}
 # ---- rasterisation helpers (grid index j = x, i = y)
 def disc(mask, cx, cy, r):
@@ -79,7 +87,7 @@ def build_maps(net):
             if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):   # hole to hole against drilled pads of any net
                 c = p.GetPosition(); d = p.GetDrillSize(); disc(via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + VIA_DR / 2 + 0.30)
             if p.GetNetname() == net: continue
-            anyL = next((L for L in LAYERS + INNER if p.IsOnLayer(L)), pcbnew.F_Cu)
+            anyL = _pad_layer(p)
             for L in LAYERS:
                 if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) else CLR) + w2)
             if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) or any(p.IsOnLayer(L) for L in INNER + LAYERS): poly(via, p.GetEffectivePolygon(anyL), CLR + vr)
