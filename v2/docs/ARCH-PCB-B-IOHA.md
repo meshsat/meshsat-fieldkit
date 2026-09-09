@@ -269,3 +269,37 @@ intent layer at 1.2 A against U25's 2 A part, so `dc_drop.py` judges it like any
 **What it does not cost.** No second board, no ribbon between boards, no change to the case, the face plate, the
 antenna count or any other board's outline. The three PCIe switches stay, because the WiFi ruling kept the cards on
 PCIe.
+
+## 15. Every peripheral, traced
+
+The owner asked three questions of each device: which surviving module owns it, how the path moves, and what one
+further failure removes it. This is the answer for every peripheral on the board, read off the netlist rather than
+described. "Home" and "failover" are the ring of section 4.
+
+| Peripheral | Where it hangs | Owner while everything works | After the home module is lost | Removed by one further failure |
+|---|---|---|---|---|
+| LimeSDR Mini 2.4 | bank 1, port 1 (USB 3) | slot 1 | slot 3 adopts bank 1 through its spare USB3-1 | losing slot 3 as well, or the bank 1 hub |
+| Panel controller (C7) | bank 1, port 2 | slot 1 | slot 3 | as above; the panel's hardware lines (EMCON, ZEROIZE, MAIN PWR) do not depend on any module at all |
+| Camera | bank 1, port 3 | slot 1 | slot 3 | as above |
+| RockBLOCK 9704 (Iridium) | bank 1, port 4 through a CP2102N | slot 1 | slot 3 | as above |
+| GNSS LG290P | bank 2, port 1 through a CP2102N | slot 2 | slot 1 adopts bank 2 | losing slot 1 as well, or the bank 2 hub |
+| E72 Zigbee coordinator | bank 2, port 2 | slot 2 | slot 1 | as above |
+| E72 Thread RCP | bank 2, port 3 | slot 2 | slot 1 | as above |
+| QMX HF unit | bank 2, port 4 | slot 2 | slot 1 | as above |
+| APRS board (D8) | bank 3, port 1 | slot 3 | slot 2 adopts bank 3 | losing slot 2 as well, or the bank 3 hub |
+| Sensor controller (E6) | bank 3, port 2 | slot 3 | slot 2 | as above |
+| Sealed wall USB port | bank 3, port 3 | slot 3 | slot 2 | as above |
+| 5G module, management | bank 3, port 4 | slot 3 | slot 2 | as above. **This is the AT and firmware link only** |
+| 5G module, data | slot 2's PCIe switch | slot 2 | **nothing: it does not move** | slot 2 alone. Open ruling 4 would move it onto bank 3 |
+| WiFi mesh card 1 | slot 1's PCIe switch | slot 1 | **the card does not move; the antennas do** | losing slot 3 as well, which takes the second card |
+| WiFi mesh card 2 | slot 3's PCIe switch | standby, radio disabled | takes the antennas on the voted `WIFI_SEC` | losing slot 1 as well |
+| NVMe drive, per slot | that slot's PCIe switch | its own module | **does not move; k3s replicates across the three** | losing two modules leaves one replica |
+| LoRa E22-900M30S | **slot 3's SPI0 and GPIO directly** | slot 3 | **nothing: it does not move** | slot 3 alone. This is the one bearer with no fabric path, and it is the red team's finding M1 |
+| Ethernet, per module | KSZ9897R ports 1 to 3 | its own module | the switch keeps the other two | the KSZ itself, which is a common mode |
+| Sealed wall Ethernet with PoE | KSZ port 4 | every module reaches it through the switch | unaffected by a module loss | the KSZ itself |
+| Display (HDMI) | the two-stage TS3DV642 switch | whichever module the panel controller selects | the panel controller selects another | the switch, or the panel controller |
+| Secure element, holdover clock, expanders, PoE controller | the kit I2C bus, mastered by the panel controller | the panel controller | with the panel on bank 1, they follow bank 1 | the I2C bus, which is a common mode |
+
+Read the table as the honest statement of what this work bought: **every USB peripheral survives one module loss, and
+the two bearers that do not are named** (the LoRa module, which is on slot 3's SPI, and cellular data, which is on
+slot 2's PCIe lane until open ruling 4 is decided).
