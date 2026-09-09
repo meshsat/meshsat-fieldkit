@@ -4,7 +4,7 @@ stub and a net label; GND pins get power symbols). Runs where the KiCad symbol l
 
 Three identical slot columns S1, S2, S3, each a Compute Module 5 on two Amphenol 10164227 receptacles (U30A/B, U31A/B, U32A/B) with, per slot:
 a Diodes PI7C9X2G404SL one-to-three PCIe switch (upstream the module's Gen 2 lane; port 1 an NVMe M.2 M-key 2242 socket, port 2 the slot's card
-socket: S1 the WiFi link card on an M.2 E-key 2230, S2 the 5G module on an M.2 B-key 3052 with two nano-SIM holders, S3 a spare M-key 2242), a TI
+socket: S1 the WiFi link card on an M.2 E-key 2230, S2 the 5G module on an M.2 B-key 3052 with two nano-SIM holders, S3 the second WiFi link card on an M.2 E-key 2230), a TI
 TUSB8041I four-port USB 3 hub on the module's USB3-0 port, the module's Ethernet pairs into the shared KSZ9897R switch through coupling capacitors,
 the module's HDMI0 into the shared two-stage TS3DV642 display switch, the slot's 5 V lead from A22 (J_5V_Sx), two AP64500 3.3 V bucks (A: the card
 socket rail on PCIE_PWR_EN; B: switch, hub and NVMe, following the module's 3.3 V), TPS62933 bucks for the switch core (1.0 V) and the hub core
@@ -153,7 +153,7 @@ FP = {
  "C10u": "Capacitor_SMD:C_0805_2012Metric", "C100u": "Capacitor_SMD:C_1206_3216Metric", "C1210": "Capacitor_SMD:C_1210_3225Metric", "C1812": "Capacitor_SMD:C_1812_4532Metric", "LED": "LED_SMD:LED_0603_1608Metric",
  "TVS": "Diode_SMD:D_SMB", "F1812": "Fuse:Fuse_1812_4532Metric",
  "QFN64": "Package_DFN_QFN:QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm", "WQFN42": "Package_DFN_QFN:WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm", "QFN28": "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm",
- "LQFP100": "Package_QFP:LQFP-100_14x14mm_P0.5mm", "VQFN20": "meshsat:Texas_RKS0020A_VQFN-20_2.5x4.5mm", "UQFN10": "meshsat:Texas_RSE0010A_UQFN-10_1.5x2mm",
+ "LQFP100": "Package_QFP:LQFP-100_14x14mm_P0.5mm", "VQFN20": "meshsat:Texas_RKS0020A_VQFN-20_2.5x4.5mm", "UQFN10": "meshsat:Texas_RSE0010A_UQFN-10_1.5x2mm", "MLPD6": "meshsat:Skyworks_SKY13351_MLPD-6_1x1mm",
  "SOT353": "Package_TO_SOT_SMD:SOT-353_SC-70-5", "SOIC14": "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm", "SOT23_8": "Package_TO_SOT_SMD:SOT-23-8",
  "LQFP128EP": "meshsat:LQFP-128_14x14mm_P0.4mm_EP6.0", "TQFP128EP": "meshsat:TQFP-128_14x14mm_P0.4mm_EP10.0",
  "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm", "TSSOP14": "Package_SO:TSSOP-14_4.4x5mm_P0.65mm", "TSSOP28": "Package_SO:TSSOP-28_4.4x9.7mm_P0.65mm", "SOIC8": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
@@ -319,12 +319,19 @@ def slot(s):
         for k, (vcc, rst, clk, io) in ((1, ("SIM1_VCC", "SIM1_RST", "SIM1_CLK", "SIM1_IO")), (2, ("SIM2_VCC", "SIM2_RST", "SIM2_CLK", "SIM2_IO"))):
             part("J_SIM%d" % k, "Connector", "SIM_Card_Shielded", "nano-SIM push-push GCT SIM8060 (SIM %d)" % k, "NANOSIM", {"1": vcc, "2": rst, "3": clk, "5": "GND", "6": "NC", "7": io, "SH": "GND"})
             c(C(83 + 3 * k), "100n", vcc, "GND"); c(C(84 + 3 * k), "33p", io, "GND", "C0402"); c(C(85 + 3 * k), "33p", clk, "GND", "C0402")
-    else:   # spare M-key 2242 on port 2 (the 2280 of 32.52 gave way to space, 32.58)
-        M3 = {n: "NC" for n in range(1, 76) if not 59 <= n <= 66}
-        M3.update({n: a33 for n in (2, 4, 12, 14, 16, 18, 70, 72, 74)}); M3.update({n: "GND" for n in (1, 3, 9, 15, 21, 27, 33, 39, 45, 51, 57, 71, 73, 75)})
-        M3.update({41: "CARD3_RX_N", 43: "CARD3_RX_P", 47: "CARD3_TX_N", 49: "CARD3_TX_P", 53: "CARD3_CLK_N", 55: "CARD3_CLK_P", 50: "PCIE3_RST2_n", 52: "CARD3_CLKREQ_n", 54: "PCIE3_nWAKE", 38: "CARD3_DEVSLP", 10: "CARD3_nLED"})
-        part("J_M2C3", "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of S3", "M2M", M3, "C41430851")
-        r(R(37), "10k", "CARD3_DEVSLP", "GND"); r(R(39), "1k", a33, "LED_C3_A"); led("LED35", "amber spare drive activity", "LED_C3_A", "CARD3_nLED")
+    else:   # 9 September 2026 (ARCH-PCB-B-IOHA ruling 3): the spare M-key drive slot carries a SECOND WiFi card instead.
+            # The mesh link is the one bearer with no second path in the kit, and the card is single-homed to slot 1's
+            # PCIe switch, so losing slot 1 lost the kit-to-kit link entirely. A second identical card on slot 3 fixes
+            # that; the two share the EXISTING pair of P2P antennas through the passive changeover of the plane below,
+            # because under the no-vent ruling every case penetration is a seal and two more jacks would be a case change.
+            # What is given up is a fourth drive slot, which k3s does not need with three replicas.
+        E3 = {n: "NC" for n in list(range(1, 24)) + list(range(32, 76))}
+        E3.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E3.update({n: a33 for n in (2, 4, 72, 74)})
+        E3.update({3: "NC", 5: "NC", 35: "CARD3_TX_P", 37: "CARD3_TX_N", 41: "CARD3_RX_P", 43: "CARD3_RX_N", 47: "CARD3_CLK_P", 49: "CARD3_CLK_N", 52: "PCIE3_RST2_n", 53: "CARD3_CLKREQ_n",
+                   55: "PCIE3_nWAKE", 56: "WIFI2_W_DIS_n", 54: "WIFI2_W_DIS2_n", 6: "WIFI2_nLED"})
+        part("J_M2C3", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeover U82 and U83)", "M2E", E3, "C41430829")
+        r(R(37), "10k", "WIFI2_W_DIS_n", a33); r(R(38), "10k", "WIFI2_W_DIS2_n", a33); nfet(Q(6), a33, "WIFI2_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
+        r(R(39), "1k", a33, "LED_WIFI2_A"); led("LED35", "blue WiFi link, card 2", "LED_WIFI2_A", "WIFI2_nLED")
     c(C(57), "22u 6.3V", a33, "GND", "C10u"); c(C(58), "100n", a33, "GND")
     # --- USB 3 hub TUSB8041I on the module's USB3-0 port; downstream ports per the fabric of 32.58
     h = {}
@@ -369,12 +376,12 @@ def slot(s):
           3: "BANK%d_UPTX_P" % s, 4: "BANK%d_UPTX_N" % s, 7: "MUX%d_A1P" % s, 8: "MUX%d_A1N" % s,
           19: "HOST%d_0TX_P" % s, 18: "HOST%d_0TX_N" % s, 17: "HOST%d_0RX_P" % s, 16: "HOST%d_0RX_N" % s,
           15: "HOST%d_1TX_P" % f, 14: "HOST%d_1TX_N" % f, 13: "HOST%d_1RX_P" % f, 12: "HOST%d_1RX_N" % f}
-    synth(U(9), "TMUXHS4212", "TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C = slot %d USB3-1 (failover)" % (s, s, f), "VQFN20", mx)
+    synth(U(9), "TMUXHS4212", "TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C = slot %d USB3-1 (failover)" % (s, s, f), "VQFN20", mx, "C3656912")
     c(C(92), "100n", b33, "GND"); c(C(93), "1u", b33, "GND")
     u2 = {10: b33, 5: "GND", 6: "BOE%d_n" % s, 9: "BSEL%d" % s,
           8: "BANK%d_UPD_P" % s, 7: "BANK%d_UPD_N" % s,
           1: "HOST%d_0D_P" % s, 2: "HOST%d_0D_N" % s, 3: "HOST%d_1D_P" % f, 4: "HOST%d_1D_N" % f}
-    synth(U(10), "TS3USB221A", "TI TS3USB221A USB2 2:1 host select, bank %d: port 1 = slot %d (home), port 2 = slot %d (failover)" % (s, s, f), "UQFN10", u2)
+    synth(U(10), "TS3USB221A", "TI TS3USB221A USB2 2:1 host select, bank %d: port 1 = slot %d (home), port 2 = slot %d (failover)" % (s, s, f), "UQFN10", u2, "C128396")
     c(C(94), "100n", b33, "GND")
     # Safe state with the control plane dark: SEL low is port A to port B on the TMUXHS4212 and port 1 on the TS3USB221A,
     # both of which are the HOME module, and OEn low is normal operation on both. So an unpowered or absent control plane
@@ -585,8 +592,9 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
               22: "SEL1_%s" % _tag, 23: "SEL2_%s" % _tag, 24: "SEL3_%s" % _tag,
               25: "HUBRST1_%s" % _tag, 28: "HUBRST2_%s" % _tag, 29: "HUBRST3_%s" % _tag,
               30: "HB1", 31: "HB2", 32: "HB3",
-              33: "EMCON_HW", 34: "IOC%s_LED_A" % _tag, 35: "SDA", 36: "SCL"})
-    synth(U_(1), "STM32H753VI", "STM32H753VITx I/O supervisor %s: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset" % _tag, "LQFP100", m)
+              33: "EMCON_HW", 34: "IOC%s_LED_A" % _tag, 35: "SDA", 36: "SCL",
+              37: "WSEC_%s" % _tag})
+    synth(U_(1), "STM32H753VI", "STM32H753VITx I/O supervisor %s: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset" % _tag, "LQFP100", m, "C114409")   # the buyable H7: the STM32H753VIT6 (C730206) has no JLC stock, and the H743VIT6 is the same die and pinout without the crypto accelerator, which an I/O supervisor does not use
     c(C_(7), "2.2u", "IOC%s_VCAP" % _tag, "GND"); c(C_(8), "2.2u", "IOC%s_VCAP" % _tag, "GND")
     r(R_(0), "10k", "IOC%s_RST_n" % _tag, v33); c(C_(9), "100n", "IOC%s_RST_n" % _tag, "GND")
     r(R_(1), "10k", "IOC%s_BOOT0" % _tag, "GND")
@@ -600,7 +608,7 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
     # heartbeat paths from a controller. TI TCAN334D, 3.3 V, CAN FD to 5 Mbps: https://www.ti.com/product/TCAN334
     for _f, _rx, _tx, _un in (("A", "IOC%s_CAN1_RX" % _tag, "IOC%s_CAN1_TX" % _tag, 3), ("B", "IOC%s_CAN2_RX" % _tag, "IOC%s_CAN2_TX" % _tag, 4)):
         ic(U_(_un), 8, "TCAN334D CAN-FD transceiver, controller %s on heartbeat fabric %s" % (_tag, _f), "SOIC8",
-           {"1": _tx, "2": "GND", "3": v33, "4": _rx, "5": "NC", "6": "CANL_%s" % _f, "7": "CANH_%s" % _f, "8": "GND"})
+           {"1": _tx, "2": "GND", "3": v33, "4": _rx, "5": "NC", "6": "CANL_%s" % _f, "7": "CANH_%s" % _f, "8": "GND"}, "C2871143")
 # Each fabric is terminated once at each physical end. The two fabrics keep separate termination so a shorted
 # terminator on one cannot load the other.
 # the slots take R101 to R394 (100 * s + n), so the plane's shared passives live at 470 and above
@@ -619,7 +627,8 @@ r("R472", "60R4 1%", "CANH_B", "CANT_B"); r("R473", "60R4 1%", "CANT_B", "CANL_B
 # reset down, exactly as KSZ_RST is done on this board, so the existing RC holds each hub OUT of reset by default and a
 # controller majority can still recycle a wedged one. Read back from the netlist before this was noticed.
 VOTED = [("BSEL1", "SEL1"), ("BSEL2", "SEL2"), ("BSEL3", "SEL3"),
-         ("HUBRST1_VOTE", "HUBRST1"), ("HUBRST2_VOTE", "HUBRST2"), ("HUBRST3_VOTE", "HUBRST3")]
+         ("HUBRST1_VOTE", "HUBRST1"), ("HUBRST2_VOTE", "HUBRST2"), ("HUBRST3_VOTE", "HUBRST3"),
+         ("WIFI_SEC", "WSEC")]
 GATE = [(1, 2, 3), (4, 5, 6), (10, 9, 8), (13, 12, 11)]   # (inA, inB, out) of the four gates in a 14-pin quad
 _pkg = {}
 def _gate(kind):
@@ -646,16 +655,17 @@ for ref in sorted(_pkg, key=lambda r: int(r[1:])):
         d.setdefault(pin, "GND" if pin in ("1", "2", "4", "5", "10", "9", "13", "12") else "NC")
     part(ref, "Connector_Generic", "Conn_01x14",
          "74LVC%sAPW quad 2-input %s: the 2-of-3 majority voters of the I/O control plane" % ("08" if kind == "AND" else "32", kind),
-         "TSSOP14", d)
+         "TSSOP14", d, "C465737" if kind == "AND" else "C352974")
     c("C%d" % (470 + int(ref[1:]) - 70), "100n", "+3V3_DEV", "GND")
 for _b in (1, 2, 3):
     nfet("Q%d" % (2 + _b), "HUBRST%d_VOTE" % _b, "GND", "HUB%d_RST_n" % _b, "2N7002: a voted majority pulls the bank's hub into reset")
     r("R%d" % (476 + _b), "100k", "HUBRST%d_VOTE" % _b, "GND")
 # Every controller output that reaches a voter is pulled down, so a controller that is absent, unpowered or still in
 # reset presents its GPIOs as high impedance and the voter reads a definite NO rather than an undefined CMOS input.
-for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3"):
+CTRL_BITS = ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3", "WSEC")
+for _j, _bit in enumerate(CTRL_BITS):
     for _i, _t in enumerate(("A", "B", "C")):
-        r("R%d" % (480 + 3 * ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3").index(_bit) + _i), "100k", "%s_%s" % (_bit, _t), "GND")
+        r("R%d" % (480 + 3 * _j + _i), "100k", "%s_%s" % (_bit, _t), "GND")
 
 # Break before make, in hardware. Any change of a voted select charges an RC through an exclusive-or against the
 # undelayed select, which raises the mux output enable for the RC time and drops it again once both sides agree. The
@@ -663,10 +673,30 @@ for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3"):
 # no transition in progress the enable sits low, which is normal operation.
 part("U80", "Connector_Generic", "Conn_01x14", "74LVC86APW quad exclusive-or: break-before-make on each bank's select", "TSSOP14",
      {"7": "GND", "14": "+3V3_DEV", "1": "BSEL1", "2": "BSEL1_D", "3": "BOE1_n", "4": "BSEL2", "5": "BSEL2_D", "6": "BOE2_n",
-      "10": "BSEL3", "9": "BSEL3_D", "8": "BOE3_n", "13": "GND", "12": "GND", "11": "NC"})
+      "10": "BSEL3", "9": "BSEL3_D", "8": "BOE3_n", "13": "GND", "12": "GND", "11": "NC"}, "C350562")
 c("C480", "100n", "+3V3_DEV", "GND")
 for _b in (1, 2, 3):
     r("R%d" % (473 + _b), "10k", "BSEL%d" % _b, "BSEL%d_D" % _b); c("C%d" % (480 + _b), "10n", "BSEL%d_D" % _b, "GND")
+
+# ----------------------------------------------------------------- the shared WiFi antennas and their changeover
+# The two AW7915-AED cards (slot 1 and slot 3) feed the SAME pair of P2P antennas through two Skyworks SKY13351-378LF
+# SPDT switches, one per antenna chain. Data sheet 201132I: 20 MHz to 6.0 GHz, insertion loss 0.35 dB typical below
+# 3 GHz and 0.50 dB typical from 3 to 6 GHz, isolation 24 dB, IP0.5dB +30 dBm at VCTL 2.7 V against the card's +20 dBm,
+# control 0 V and 1.8 to 5.0 V on VCTL1 or VCTL2, and every RF port must be DC blocked, which is what the 22 pF do.
+# Only one radio is live at a time, which is what failover needs; this buys redundancy, not capacity.
+# The safe state is the primary card: WIFI_SEC is a VOTED bit and sits low with the control plane dark, so VCTL2 is low
+# while VCTL1 is held high by its pull-up through the open Q10, and the switch rests on OUTPUT1, the slot 1 card.
+r("R510", "10k", "WIFI_PRI", "+3V3_DEV")
+nfet("Q10", "WIFI_SEC", "GND", "WIFI_PRI", "2N7002: the changeover's complement, so a voted WIFI_SEC moves both chains at once")
+for _ch, _u, _c0 in (("A", "U82", 500), ("B", "U83", 503)):
+    part("J_W1%s" % _ch, "Connector", "Conn_Coaxial", "U.FL: MHF4 pigtail from the slot 1 WiFi card, chain %s" % _ch, "UFL", {"1": "W1%s_CARD" % _ch, "2": "GND"}, "C434808")
+    part("J_W3%s" % _ch, "Connector", "Conn_Coaxial", "U.FL: MHF4 pigtail from the slot 3 WiFi card, chain %s" % _ch, "UFL", {"1": "W3%s_CARD" % _ch, "2": "GND"}, "C434808")
+    part("J_WO%s" % _ch, "Connector", "Conn_Coaxial", "U.FL: pigtail to A22's P2P jack, chain %s" % _ch, "UFL", {"1": "W%s_ANT" % _ch, "2": "GND"}, "C434808")
+    c("C%d" % _c0, "22p", "W1%s_CARD" % _ch, "SW%s_O1" % _ch, "C0402")
+    c("C%d" % (_c0 + 1), "22p", "W3%s_CARD" % _ch, "SW%s_O2" % _ch, "C0402")
+    c("C%d" % (_c0 + 2), "22p", "W%s_ANT" % _ch, "SW%s_IN" % _ch, "C0402")
+    ic(_u, 6, "SKY13351-378LF SPDT antenna changeover, chain %s: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card" % _ch, "MLPD6",
+       {"1": "SW%s_O1" % _ch, "2": "GND", "3": "SW%s_O2" % _ch, "4": "WIFI_SEC", "5": "SW%s_IN" % _ch, "6": "WIFI_PRI"}, "C129189")
 
 RAILS = ["+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "+54V_POE", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "+5V_HDMI", "+5V_CAM", "VBUS_QMX", "PANEL_5V", "GND", "POE_P", "POE_DRAIN", "GNSS_3V3", "ZBA_3V3", "ZBB_3V3", "RB_3V3"]
 for s in (1, 2, 3): RAILS += ["+5V_S%d" % s, "+3V3_S%dA" % s, "+3V3_S%dB" % s, "+1V0_S%d" % s, "+1V1_S%d" % s, "+3V3_CM%d" % s, "+1V8_CM%d" % s, "VBUS_FLASH%d" % s]

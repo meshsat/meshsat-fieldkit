@@ -13,6 +13,7 @@
 - LQFP-128_14x14mm_P0.4mm_EP6.0 (PI7C9X2G404SL, exposed pad drawn conservatively at 6.0 mm) and TQFP-128_14x14mm_P0.4mm_EP10.0 (KSZ9897R, the 10 x 10
   exposed pad of the Microchip TQFP-EP drawing): the KiCad library footprint with pad 129 added at the centre.
 - Texas_RKS0020A_VQFN-20_2.5x4.5mm (TMUXHS4212) and Texas_RSE0010A_UQFN-10_1.5x2mm (TS3USB221A): TI land patterns 4222490/B and 4220307/A.
+- Skyworks_SKY13351_MLPD-6_1x1mm: the WiFi antenna changeover, from Figure 12 of Skyworks 201132I.
 Every footprint ends in the self-test (pcbnew loads it and counts the pads; a file that pcbnew refuses stops the chain: the C6 run 1 lesson)."""
 import os, sys
 OUTDIR = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "meshsat.pretty")
@@ -176,6 +177,28 @@ def rse0010a():
     body += line(-0.75, -1.0, 0.75, -1.0, "F.SilkS") + line(-0.75, 1.0, 0.75, 1.0, "F.SilkS") + circ(-0.95, -1.2, 0.12, "F.SilkS")
     write(name, body, n)
 rse0010a()
+
+# ---------------------------------------------------------------- Skyworks SKY13351-378LF, MLPD-6 1 x 1 mm, from the data sheet's own
+#     Figure 12 (PCB layout footprint, drawing S1484 in 201132I). Six lands 0.33 x 0.15 at 0.35 mm pitch, outer edge 0.65 mm from the
+#     centre line; the GND land (pin 2) is the long one, reaching to 0.21 mm from the centre where it merges with the exposed soldering
+#     area, a 0.23 x 1.32 bar from x -0.10 to +0.13. The bar is drawn as a second pad 2 so the merge is copper, not a routing accident.
+#     Pin 1 OUTPUT1 top left, 2 GND, 3 OUTPUT2 bottom left; 6 VCTL1 top right, 5 INPUT, 4 VCTL2 bottom right (Figure 2, top view).
+def sky13351():
+    name = "Skyworks_SKY13351_MLPD-6_1x1mm"
+    body = head(name, "Skyworks SKY13351-378LF SPDT 20 MHz to 6.0 GHz, MLPD-6 1 x 1 mm, 0.35 mm pitch; land pattern of data sheet 201132I Figure 12", "MLPD-6 SPDT SKY13351 Skyworks RF switch", -1.5, 1.5)
+    n = 0
+    for k, num in enumerate((1, 2, 3)):
+        y = -0.354 + 0.354 * k
+        if num == 2: body += smd(2, -0.43, y, 0.44, 0.15)      # the ground land runs in to the exposed area
+        else: body += smd(num, -0.485, y, 0.33, 0.15)
+        n += 1
+    for k, num in enumerate((6, 5, 4)):
+        body += smd(num, 0.485, -0.354 + 0.354 * k, 0.33, 0.15); n += 1
+    body += smd(2, 0.015, 0.0, 0.23, 1.32); n += 1             # exposed soldering area, drawn as a second pad 2
+    body += rect(-0.5, -0.5, 0.5, 0.5, "F.Fab") + rect(-0.9, -0.85, 0.9, 0.85, "F.CrtYd", 0.05)
+    body += circ(-0.75, -0.7, 0.1, "F.SilkS")
+    write(name, body, n)
+sky13351()
 
 # ---------------------------------------------------------------- self-test
 try:
