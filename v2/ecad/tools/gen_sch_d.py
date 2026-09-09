@@ -18,7 +18,11 @@ import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-d-aprs"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import intent as _intent
-_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", note="the mezzanine's 5 V from A22")
+_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.03,
+             note="the mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default, and the reason is the load list rather than the
+                  "measurement: every consumer either regulates this rail or tolerates a wide range. It feeds the TLV75533 3.3 V LDO (needs 3.5 V "
+                  "in, has 1.5 V of headroom), the CP2102N bridge (4.0 V minimum), the ESD reference and, through FB1, the exciter's own boost. "
+                  "D10 measures 108 mV at 1.0 A, which is 2.16 percent and leaves 4.89 V at the tightest consumer (9 September 2026)."
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
