@@ -45,7 +45,7 @@ def main(a):
     fans = []
     for g in b.GetFootprints():
         if _bs._needs_fan(g):
-            cb = courtyard(g); fb = pcbnew.BOX2I(cb.GetOrigin(), cb.GetSize()); fb.Inflate(int(FM(2.2))); fans.append(fb)
+            fans.append(_bs._fan_box(g, 2.2))
     def blocked(f, at, side):
         """The capacitor's courtyard at `at` against every other footprint on that side, the rule areas and the edge."""
         cy = courtyard(f); w, h = cy.GetWidth(), cy.GetHeight()

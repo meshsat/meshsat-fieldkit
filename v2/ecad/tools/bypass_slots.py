@@ -29,6 +29,12 @@ def _courtyard(f):
     except Exception: pass
     return f.GetBoundingBox(False, False)
 
+def _fan_box(f, fan):
+    """The courtyard grown by `fan` mm, built from its own edges. BOX2I(origin, size) from a courtyard gave a box of the inflate alone
+    (4.4 mm square), so every fan test passed and the protection did nothing: found 9 September 2026 13:35 by printing the box."""
+    cb = _courtyard(f); i = int(pcbnew.FromMM(fan))
+    return pcbnew.BOX2I(pcbnew.VECTOR2I(cb.GetLeft() - i, cb.GetTop() - i), pcbnew.VECTOR2I(cb.GetWidth() + 2 * i, cb.GetHeight() + 2 * i))
+
 def _needs_fan(f):
     """Any part that will be escaped needs the room its fan takes. The first cut used the 0.7 mm fine-pitch test and let five capacitors
     land 1.9 to 2.6 mm from a 0.8 mm TQFP's pins, which cost the part beside it six of seventeen escapes (D10 and C9, 9 September 2026).
@@ -53,8 +59,7 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
     fans = []
     for g in board.GetFootprints():
         if _needs_fan(g):
-            box = pcbnew.BOX2I(_courtyard(g).GetOrigin(), _courtyard(g).GetSize()); box.Inflate(int(pcbnew.FromMM(fan)))
-            fans.append((g.GetReference(), box))
+            fans.append((g.GetReference(), _fan_box(g, fan)))
     done, stuck, report = set(), [], []
     for e in entries:
         cap, ref, pin = e.get("cap"), e.get("part"), str(e.get("pin"))
