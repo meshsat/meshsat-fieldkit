@@ -179,18 +179,16 @@ for name, nodes in nets.items():
         if not pads: unassigned.append((ref, pin, name)); continue
         for pad in pads: pad.SetNet(n)
 if unassigned: print("WARNING pads not found for nodes:", unassigned[:12])
-def pour(layer, netname, name, rect, priority=0):
-    z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
-    z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL); z.SetMinThickness(FromMM(0.25)); z.SetLocalClearance(FromMM(0.3))
-    try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
-    except Exception: pass
-    o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
-    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
-    z.SetAssignedPriority(priority); board.Add(z); return z
 # ---------------------------------------------------------------- planes: In1 solid GND (no tracks), GND pours on In2 and both outer layers (the RF section is coplanar over the plane)
 def pour(layer, netname, name, rect, priority=0):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL); z.SetLocalClearance(FromMM(0.3)); z.SetMinThickness(FromMM(0.25)); z.SetThermalReliefGap(FromMM(0.3)); z.SetThermalReliefSpokeWidth(FromMM(0.4))
+    # 9 Sep 2026 (D10, appendix 32.85): this file defined pour() TWICE and the second one, the one that actually runs,
+    # never set the island removal. Every D pour since D8 has kept its unconnected islands, and KiCad counts each of
+    # them as an unrouted item between the zone and itself: that was D10's last open. pour_stitch.py gives a via to the
+    # islands worth keeping and the fill deletes the rest, which is the pair of passes this board family needs.
+    try: z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+    except Exception: pass
     o = z.Outline(); o.NewOutline(); x0, y0, x1, y1 = rect
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)): p = P(x, y); o.Append(p.x, p.y)
     z.SetAssignedPriority(priority); board.Add(z); return z
