@@ -3397,3 +3397,38 @@ contradicted it two lines later.
 **Phases.** A23, C8 and B17 keep their names: none of the three was ever released, so no shipped artefact
 carries the old copper. The builds from 03:00 CEST on 9 September carry the EMCON and PoE fixes; anything
 earlier under those names does not.
+
+
+### 32.81 Owner rulings 9 September 2026, 12:15 to 12:30 CEST: the pre-router first, the decoupling floor plan, the whole set
+
+Three decisions, asked one at a time with the measured numbers of 32.74 and 32.76 in front of them.
+
+1. **B17's 66 uncoupled pairs: fix the pre-router and hold the board.** Not "build it as it routes" and not a
+   recorded exception per pair. The reasoning offered with the question: nearly every pair on that board is
+   1 Gbps or above (PCIe Gen2 uplinks, NVMe and M.2 lanes, HDMI TMDS, gigabit Ethernet, USB 3), a 5 GT/s lane
+   laid as two lone traces 13 mm apart is not a marginal risk, and the compute board is the most expensive in
+   the set. The other boards move meanwhile.
+2. **The decoupling: the full floor-plan pass, now.** Not the recorded exception and not the partial move.
+   Every placement generator reserves a slot beside each part for the capacitors it declares before its
+   neighbours are packed. This is the option that restarts the wave, chosen because nothing is at the fab and
+   this is therefore the cheapest moment for it.
+3. **The whole set, including the two released boards.** D9 becomes D10 and P2 becomes P3, so every board
+   follows the same decoupling rule. D carries the 30 W PA and the EMCON gate chain, which is where a 20 mm
+   decoupling loop matters most.
+
+**Implementation.** `bypass_slots.py` runs inside every placement generator between the fixed placement and
+the region packer: for each declared capacitor it walks outward from the pin it serves, from 0.8 mm to the
+3 mm limit, testing the capacitor's courtyard against the parts already on the board, the footprint keep-outs
+and the board edge, and places it at the first free spot. What it cannot place is left to the packer and named.
+`bypass_place.py`, which has existed since 8 September and which **no chain ever ran**, is now the second pass
+in every chain, for the capacitors whose own part the packer places.
+
+**First measurement, on the D board:** 5 reserved in the first pass, 6 moved in the second, 7 already close,
+**13 of 22 within 3 mm against 0 of 22 before**, and the board gate still ALL PASS with 0 hard on the pre-route
+DRC. Two regions overflow by 0.0 and 0.2 mm, which the packer reports and which is the room the capacitors took.
+One pair section (`/USB1_R`, the codec side of the series resistors) no longer finds a corridor, which is the
+trade this ruling accepts: the set runs at PAIR_GATE=0 and the impedance judge reports what the router did.
+
+**Phases.** The regenerated set is **A24, B18, C9, D10, E7, P3**. E5 is unchanged, being a bare board with no
+active part. A23, C8 and B17 were never released, so nothing shipped under those names; D9 and P2 were, and
+their deliverables stay in the record as the boards that were released on 8 September.
