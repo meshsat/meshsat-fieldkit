@@ -121,8 +121,8 @@ for s in (1, 2, 3):
                     ("S2_RAIL", (-36, -73.4, 32, -54), [r for r in rail if r not in (U(5), U(6), L(3), L(4)) and r not in Cs(2, 25, 27) + Cs(2, 30, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -54), rail_b + straps + sw_dec, True),
                     ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -8), [U(5), U(6), L(3), L(4)] + Cs(2, 25, 27) + Cs(2, 30, 32), False)]
     else:
-        REGIONS += [("S%d_SWIC" % s, (x0, -49, x0 + 50, -21), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
-                    ("S%d_SWE" % s, (x0 + 50, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -49, x1, -21), sw_b + card_b + sup_b, True),
+        REGIONS += [("S%d_SWIC" % s, (x0, -49, x0 + 52, -21), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
+                    ("S%d_SWE" % s, (x0 + 52, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -49, x1, -21), sw_b + card_b + sup_b, True),
                     ("S%d_RAIL" % s, (x0, -70, x1, -49), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -49), rail_b + straps + sw_dec, True),
                     ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
 # 9 September 2026 (ARCH-PCB-B-IOHA section 6): the I/O control plane goes on the UNDERSIDE, and the three controllers

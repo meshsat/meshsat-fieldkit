@@ -2,7 +2,7 @@
 """Numeric verification of PCB-B phase B16 (MESHSAT-830, appendix 32.58): outline, rods, the three Compute Module 5 sites and their receptacle pairs,
 the M.2 sockets and their standoffs, the QMX, LimeSDR and RockBLOCK sites, J_AB1 under the board, the fabric nets reaching their receptacles, six layers;
 on a placed board the net-class patterns; on a routed board the pair report."""
-import sys, pcbnew, itertools
+import sys, re, pcbnew, itertools
 from pcbnew import FromMM
 OX, OY = 150.0, 110.0
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
@@ -162,7 +162,7 @@ for _fp in b.GetFootprints():
         if _n: PADS.setdefault(_n, set()).add(_fp.GetReference())
 RING = {1: 2, 2: 3, 3: 1}   # bank s is owned by slot s and fails over to slot RING[s]
 for _s, _f in RING.items():
-    _mods = lambda n: {r for r in PADS.get(n, set()) if r.startswith("U3")}   # the receptacles; the mux itself is on both nets by construction
+    _mods = lambda n: {r for r in PADS.get(n, set()) if re.match(r"^U3[012][AB]$", r)}   # the receptacles only: the mux (U309 and friends) is on both nets by construction, and its reference starts with U3 as well
     home = _mods("HOST%d_0TX_P" % _s); over = _mods("HOST%d_1TX_P" % _f)
     check(len(home & over) == 0 and home and over,
           "bank %d has one home host and one failover host, and they are different modules (home %s, failover %s)"
