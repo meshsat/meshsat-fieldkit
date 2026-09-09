@@ -77,14 +77,21 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP"), bare=False):
         bf = os.path.join(D, name + ".kicad_pcb")
         if os.path.exists(bf):
             texts = re.findall(r'\(gr_text\s+"([^"]*)"', open(bf, errors="replace").read())
-            here = {t for txt in texts for t in re.findall(r"\b" + re.escape(ph[0]) + r"\d\d?\b", txt)}
+            # 9 September 2026: a token that follows "PCB-" is the board's own designation, not a phase stamp. E7's silk
+            # reads "MESHSAT PCB-E1 DOCK (E7)", and the E1 there is the dock strip's name; the gate was calling it a
+            # stale phase and refusing a clean deliverable.
+            here = {t for txt in texts for t in re.findall(r"(?<!PCB-)\b" + re.escape(ph[0]) + r"\d\d?\b", txt)}
             ok(ph in here, "the silk names the phase %s (found %s in %d legend texts)" % (ph, ", ".join(sorted(here)) or "no phase token", len(texts)))
             ok(not (here - {ph}), "no other phase of this board on the silk (stale: %s)" % ", ".join(sorted(here - {ph})))
     return fails, lines
 
 def main(a):
     if len(a) < 3: print(__doc__); return 2
-    bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP", "W_", "JP")
+    # 9 September 2026: PAD_ and P_ join the list. E7's deliverable was refused for four designators the CPL "lacked",
+    # PAD_W1, PAD_W2, P_CN and P_CP, which are bare copper lands (the two water electrodes and the pack's positive and
+    # negative pads). They carry a footprint and so appear on the BOM, and JLC places nothing on them, so their absence
+    # from the CPL is correct and the gate was reading it as a defect.
+    bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP", "W_", "JP", "PAD", "P_")
     fails, lines = check_dir(a[0], a[1], int(a[2]), bench, "--bare" in a)
     for l in lines: print("verify_deliverable: " + l)
     print("verify_deliverable: %s (%d of %d properties)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails), len(lines) - len(fails) - sum(1 for l in lines if l.startswith("INFO")), len(lines) - sum(1 for l in lines if l.startswith("INFO"))))
