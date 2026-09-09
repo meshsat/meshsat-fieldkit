@@ -275,6 +275,8 @@ def offset_polyline(pts, d):
 def main(a):
     if not a: print(__doc__); return 2
     board = a[0]; test = "--test" in a; g = float(a[a.index("--grid") + 1]) if "--grid" in a else 0.1
+    _GLONG = float(os.environ.get("PAIR_GRID_LONG", "0")) or 0.0   # a coarser grid for the long pairs (0 = off)
+    _LONG_MM = float(os.environ.get("PAIR_LONG_MM", "120"))
     b = pcbnew.LoadBoard(board); gr = Grid(b, g)
     pro = os.path.splitext(board)[0] + ".kicad_pro"; assign = {}; classes = {}
     if os.path.exists(pro):
@@ -354,6 +356,12 @@ def main(a):
 
     for stem in stems:   # a swapped pair is appended and laid again
         PAIR_DEADLINE[0] = time.time() + PAIR_BUDGET if PAIR_BUDGET > 0 else 0.0
+        # 9 September 2026 (B19): the long pairs die on the expansion cap, not on geometry. SWP3_D spans 261 mm and its
+        # corridor search stopped after 5,365,661 expansions of a 0.1 mm grid, which is 3320 x 2020 cells per layer. A
+        # coarser grid for the long ones is four times fewer cells for the same millimetres of clearance, since every
+        # obstacle margin here is in mm. Off by default until it is measured: PAIR_GRID_LONG=0.2 PAIR_LONG_MM=120.
+        if _GLONG and _span(stem) >= _LONG_MM: gr = Grid(b, _GLONG)
+        elif gr.G != g: gr = Grid(b, g)
         pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
         pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
         vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); clr_c = float(cl.get("clearance", CLR))
