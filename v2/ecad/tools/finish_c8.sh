@@ -13,6 +13,10 @@ python3 ../tools/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && py
 # 8 Sep 2026: a fine-pitch pad its own plane cannot reach after the route (the tracks cut the pour off) gets a via in the pad, the closure this board family already ships
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 ../tools/zone_pad_via.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -v "^Debug" | tail -6; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+
+# 9 Sep 2026 (D10, appendix 32.83): pour_stitch.py was written on 8 Sep for D9's 57-island front pour and wired into NO finish;
+# D10 ended its route with the B.Cu ground pour and the In1 plane reported open because no via of the net reached the island.
+python3 ../tools/pour_stitch.py $N.kicad_pcb --nets=GND 2>&1 | grep -vE "^Debug|leak" | tail -4; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 STUB_LAYERS=F.Cu,In2.Cu,B.Cu STUB_GRID=0.1 nice -n 10 python3 ../tools/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || { echo "stub router CRASHED, exit $? (out/$N-stub.log)"; echo open > out/c8-clean.txt; echo FINISH-C8-DONE; exit 1; }; grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' | grep -v '^hardset:'   # 8 Sep 2026 (MESHSAT-862): tools/hardset.py is the one hard set

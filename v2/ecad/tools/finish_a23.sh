@@ -13,6 +13,10 @@ python3 ../tools/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && py
 # 8 Sep 2026: a fine-pitch pad its own plane cannot reach after the route (the tracks cut the pour off) gets a via in the pad, the closure this board family already ships
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 ../tools/zone_pad_via.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -v "^Debug" | tail -6; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+
+# 9 Sep 2026 (D10, appendix 32.83): pour_stitch.py was written on 8 Sep for D9's 57-island front pour and wired into NO finish;
+# D10 ended its route with the B.Cu ground pour and the In1 plane reported open because no via of the net reached the island.
+python3 ../tools/pour_stitch.py $N.kicad_pcb --nets=GND 2>&1 | grep -vE "^Debug|leak" | tail -4; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 # A21 (5 Sep 2026): a few open connections get one continuation pass of the router on the routed board before the stub router (cont_route.sh keeps the board only if it improves)
 UN=$(python3 -c "import json; print(len(json.load(open('out/$N-drc.json')).get('unconnected_items', [])))") || { echo "no readable DRC JSON after the unknot step"; echo open > out/a23-clean.txt; echo FINISH-A23-DONE; exit 1; }
 if [ "$UN" -gt 0 ] && [ "$UN" -le 6 ]; then ../tools/cont_route.sh "$PWD" $N 80 900 2>&1 | grep -E 'cont:'; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1; fi

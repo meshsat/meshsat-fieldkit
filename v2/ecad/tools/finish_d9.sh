@@ -16,6 +16,10 @@ python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
 # 8 Sep 2026: a fine-pitch pad its own plane cannot reach after the route (the tracks cut the pour off) gets a via in the pad, the closure this board family already ships
 kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 python3 ../tools/zone_pad_via.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -v "^Debug" | tail -6
+
+# 9 Sep 2026 (D10, appendix 32.83): pour_stitch.py was written on 8 Sep for D9's 57-island front pour and wired into NO finish;
+# D10 ended its route with the B.Cu ground pour and the In1 plane reported open because no via of the net reached the island.
+python3 ../tools/pour_stitch.py $N.kicad_pcb --nets=GND 2>&1 | grep -vE "^Debug|leak" | tail -4; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
 bash ../tools/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -5   # Stage 3 of the quality programme (6 Sep 2026): straighten and via passes on a copy, DRC-gated, reverted when anything rises
 python3 ../tools/silk_fix_all.py $N.kicad_pcb d 2>&1 | grep -vE 'Debug|leak' | tail -2
 python3 - "$N" <<'PYX' 2>&1 | grep -vE 'Debug|leak'

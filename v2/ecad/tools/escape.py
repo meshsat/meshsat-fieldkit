@@ -106,6 +106,19 @@ for fp in b.GetFootprints():
     elif pitch <= FromMM(0.7): VIA_D, VIA_DR, TW, OFFS = FromMM(0.45), FromMM(0.25), FromMM(0.2), (0.9, 1.6, 2.3)
     else: VIA_D, VIA_DR, TW, OFFS = FromMM(0.6), FromMM(0.3), FromMM(0.25), (0.8, 1.5, 2.2)
     if b.GetCopperLayerCount() == 2: VIA_D, VIA_DR = max(VIA_D, FromMM(0.5)), max(VIA_DR, FromMM(0.3))   # JLC 2-layer floor (C5: 48 escape vias were at 0.25 on the 2-layer panel)
+    # 9 Sep 2026 (D10, appendix 32.83): THE STAGGER MUST NOT LAND ON THE ROUTER'S OWN LIMIT. Two neighbouring escape
+    # vias sit one pad pitch apart along the row and OFFS[1] - OFFS[0] apart in depth, so the copper gap between them is
+    # sqrt(pitch^2 + dz^2) - VIA_D. On D10's PCA9555 (pitch 0.65, via 0.45, dz 0.7) that is 0.5052 mm and a 0.25 mm router
+    # track with 0.127 mm clearance needs 0.504 mm: 1.2 microns of margin. Freerouting threaded it and wrote a
+    # self-overlapping knot at U16 pins 7 and 8 (8 shorting_items, 3 clearance, 3 tracks_crossing between X_KEY and
+    # X_PA_KEY on In2.Cu), which was every hard violation of the board. A corridor is safe when it is comfortably OPEN or
+    # decisively CLOSED, never on the line, so the stagger deepens until the gap clears the passing track by 0.10 mm.
+    # A pad whose deepened offset is then rejected falls back to its neighbour's depth, where the gap is pitch - VIA_D
+    # (0.20 mm at 0.65 mm pitch): closed, and no knot either.
+    _pass = 0.481 if ROWS04 else 0.604    # 0.127 + 2 x 0.127 + 0.10 on the 0.4 mm rows; 0.25 + 2 x 0.127 + 0.10 elsewhere
+    _need = math.sqrt(max((_pass + pcbnew.ToMM(VIA_D)) ** 2 - pcbnew.ToMM(pitch) ** 2, 0.0))
+    if _need > OFFS[1] - OFFS[0]:
+        OFFS = (OFFS[0], OFFS[0] + _need, OFFS[0] + 2 * _need)
     # group pads by side (outward direction), order along the side, alternate the offset
     sides = {}; eps = ep_numbers(fp)
     # one escape per pin: footprints like TI's SON draw each pin as several overlapping pieces, keep the largest per number
