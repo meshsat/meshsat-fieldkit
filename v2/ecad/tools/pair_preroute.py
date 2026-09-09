@@ -22,6 +22,12 @@ PATH_WHY = [""]   # why the last corridor search returned nothing (9 Sep 2026)
 # other, which is honest, and the number of pairs laid is what the gate reads anyway.
 PAIR_DEADLINE = [0.0]
 PAIR_BUDGET = float(os.environ.get("PAIR_BUDGET", "600"))   # seconds per pair; 0 turns the budget off
+# 9 September 2026, measured: a wall-clock budget makes the pass NON-REPRODUCIBLE. Two runs of the same board with the
+# same placement and the same 1493 escapes laid 38 and 33 of 113, and the only difference was how loaded the box was
+# while each ran: under load a pair gets fewer expansions inside its 300 seconds. A budget that decides the result must
+# be counted in work, not in time, so the real cap is expansions and the clock is only the outer safety net.
+PAIR_EXPANSIONS = int(os.environ.get("PAIR_EXPANSIONS", "3000000"))   # expansions per pair across all its searches; 0 = off
+PAIR_SPENT = [0]
 import pcbnew, numpy as np
 from pcbnew import VECTOR2I, FromMM
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -151,8 +157,12 @@ def astar(gr, layers, trk, via, start, goal, window, behind=()):
         L, i, j = s; n += 1
         if (i, j) == (gi, gj) and (gL not in LI or L == LI[gL]): found = s; break
         if n > 6000000: capped = True; break
-        if PAIR_DEADLINE[0] and not n % 8192 and time.time() > PAIR_DEADLINE[0]:
-            capped = True; PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET; break
+        if not n % 4096:
+            PAIR_SPENT[0] += 4096
+            if PAIR_EXPANSIONS and PAIR_SPENT[0] > PAIR_EXPANSIONS:
+                capped = True; PATH_WHY[0] = "the pair's expansion budget ran out (PAIR_EXPANSIONS %d)" % PAIR_EXPANSIONS; break
+            if PAIR_DEADLINE[0] and time.time() > PAIR_DEADLINE[0]:
+                capped = True; PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET; break
         for di, dj, c in steps:
             ni, nj = i + di, j + dj
             if not (imin <= ni <= imax and jmin <= nj <= jmax): continue
@@ -220,8 +230,12 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
         if (i, j) == (gi, gj): found = (i, j); break
         n += 1
         if n > 400000: break
-        if PAIR_DEADLINE[0] and not n % 8192 and time.time() > PAIR_DEADLINE[0]:
-            PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET; break
+        if not n % 4096:
+            PAIR_SPENT[0] += 4096
+            if PAIR_EXPANSIONS and PAIR_SPENT[0] > PAIR_EXPANSIONS:
+                PATH_WHY[0] = "the pair's expansion budget ran out (PAIR_EXPANSIONS %d)" % PAIR_EXPANSIONS; break
+            if PAIR_DEADLINE[0] and time.time() > PAIR_DEADLINE[0]:
+                PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET; break
         for di, dj, c in steps:
             ni, nj = i + di, j + dj
             if not (imin <= ni <= imax and jmin <= nj <= jmax) or not passable[ni, nj]: continue
@@ -356,6 +370,7 @@ def main(a):
 
     for stem in stems:   # a swapped pair is appended and laid again
         PAIR_DEADLINE[0] = time.time() + PAIR_BUDGET if PAIR_BUDGET > 0 else 0.0
+        PAIR_SPENT[0] = 0
         # 9 September 2026 (B19): the long pairs die on the expansion cap, not on geometry. SWP3_D spans 261 mm and its
         # corridor search stopped after 5,365,661 expansions of a 0.1 mm grid, which is 3320 x 2020 cells per layer. A
         # coarser grid for the long ones is four times fewer cells for the same millimetres of clearance, since every
