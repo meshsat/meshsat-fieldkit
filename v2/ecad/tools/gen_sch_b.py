@@ -120,8 +120,13 @@ TMUXHS = {1: "RSVD1", 2: "OEn", 3: "A0p", 4: "A0n", 5: "GND", 6: "VCC", 7: "A1p"
 # port 1 or port 2, OE is active low. 10-pin uQFN. It exists because the TMUXHS4212 cannot carry USB2: its common-mode
 # range is 0 to 1.8 V and its I/O absolute maximum is 2.4 V, against USB2's 3.3 V single-ended swing.
 TS3USB = {1: "1Dp", 2: "1Dn", 3: "2Dp", 4: "2Dn", 5: "GND", 6: "OEn", 7: "Dn", 8: "Dp", 9: "S", 10: "VCC"}
+# STM32H753VITx, LQFP-100 14 x 14 mm 0.5 mm pitch. The pin table is KiCad's own MCU_ST_STM32H7 symbol, whose Datasheet
+# property is https://www.st.com/resource/en/datasheet/stm32h753vi.pdf, transcribed here rather than by hand so no pin
+# is mistyped. Alternate-function choices below (FDCAN1 on PD0/PD1, FDCAN2 on PB12/PB13) are the classic H7 mappings and
+# are to be confirmed against the datasheet's alternate function table before the board is released.
+H753 = {1: "PE2", 2: "PE3", 3: "PE4", 4: "PE5", 5: "PE6", 6: "VBAT", 7: "PC13", 8: "PC14", 9: "PC15", 10: "VSS", 11: "VDD", 12: "PH0", 13: "PH1", 14: "NRST", 15: "PC0", 16: "PC1", 17: "PC2_C", 18: "PC3_C", 19: "VSSA", 20: "VREF+", 21: "VDDA", 22: "PA0", 23: "PA1", 24: "PA2", 25: "PA3", 26: "VSS", 27: "VDD", 28: "PA4", 29: "PA5", 30: "PA6", 31: "PA7", 32: "PC4", 33: "PC5", 34: "PB0", 35: "PB1", 36: "PB2", 37: "PE7", 38: "PE8", 39: "PE9", 40: "PE10", 41: "PE11", 42: "PE12", 43: "PE13", 44: "PE14", 45: "PE15", 46: "PB10", 47: "PB11", 48: "VCAP", 49: "VSS", 50: "VDD", 51: "PB12", 52: "PB13", 53: "PB14", 54: "PB15", 55: "PD8", 56: "PD9", 57: "PD10", 58: "PD11", 59: "PD12", 60: "PD13", 61: "PD14", 62: "PD15", 63: "PC6", 64: "PC7", 65: "PC8", 66: "PC9", 67: "PA8", 68: "PA9", 69: "PA10", 70: "PA11", 71: "PA12", 72: "PA13", 73: "VCAP", 74: "VSS", 75: "VDD", 76: "PA14", 77: "PA15", 78: "PC10", 79: "PC11", 80: "PC12", 81: "PD0", 82: "PD1", 83: "PD2", 84: "PD3", 85: "PD4", 86: "PD5", 87: "PD6", 88: "PD7", 89: "PB3", 90: "PB4", 91: "PB5", 92: "PB6", 93: "PB7", 94: "BOOT0", 95: "PB8", 96: "PB9", 97: "PE0", 98: "PE1", 99: "VSS", 100: "VDD"}
 SYNTH = {"CM5A": {k: v for k, v in CM5_PINS.items() if k <= 100}, "CM5B": {k: v for k, v in CM5_PINS.items() if k > 100},
-         "PI7C9X2G404SL": PI7C, "TUSB8041": TUSB, "TS3DV642": TS3, "KSZ9897R": KSZ, "LG290P": LG, "E22_900M30S": E22P, "H5007NL": H5007, "TPS23861": TPS23861, "CP2102N": CP2102, "TMUXHS4212": TMUXHS, "TS3USB221A": TS3USB}
+         "PI7C9X2G404SL": PI7C, "TUSB8041": TUSB, "TS3DV642": TS3, "KSZ9897R": KSZ, "LG290P": LG, "E22_900M30S": E22P, "H5007NL": H5007, "TPS23861": TPS23861, "CP2102N": CP2102, "TMUXHS4212": TMUXHS, "TS3USB221A": TS3USB, "STM32H753VI": H753}
 def synth_symbol(lib, name):
     pins = SYNTH[name]; n = len(pins); rows = (n + 1) // 2; first = min(pins)
     W = 30.48; H = rows * 2.54 + 2.54
@@ -147,6 +152,8 @@ FP = {
  "C10u": "Capacitor_SMD:C_0805_2012Metric", "C100u": "Capacitor_SMD:C_1206_3216Metric", "C1210": "Capacitor_SMD:C_1210_3225Metric", "C1812": "Capacitor_SMD:C_1812_4532Metric", "LED": "LED_SMD:LED_0603_1608Metric",
  "TVS": "Diode_SMD:D_SMB", "F1812": "Fuse:Fuse_1812_4532Metric",
  "QFN64": "Package_DFN_QFN:QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm", "WQFN42": "Package_DFN_QFN:WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm", "QFN28": "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm",
+ "LQFP100": "Package_QFP:LQFP-100_14x14mm_P0.5mm", "VQFN20": "Package_DFN_QFN:VQFN-20-1EP_2.5x4.5mm_P0.5mm_EP1.0x3.0mm", "UQFN10": "Package_DFN_QFN:UQFN-10_1.4x1.8mm_P0.4mm",
+ "SOT353": "Package_TO_SOT_SMD:SOT-353_SC-70-5", "SOIC14": "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm", "SOT23_8": "Package_TO_SOT_SMD:SOT-23-8",
  "LQFP128EP": "meshsat:LQFP-128_14x14mm_P0.4mm_EP6.0", "TQFP128EP": "meshsat:TQFP-128_14x14mm_P0.4mm_EP10.0",
  "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm", "TSSOP14": "Package_SO:TSSOP-14_4.4x5mm_P0.65mm", "TSSOP28": "Package_SO:TSSOP-28_4.4x9.7mm_P0.65mm", "SOIC8": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
  "DDA8": "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm", "SO8EP": "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm", "PPAK": "Package_SO:PowerPAK_SO-8_Single",
@@ -543,6 +550,123 @@ part("TP1", "Connector", "TestPoint", "AB_SPARE", "TP", {"1": "AB_SPARE"})
 for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "EMCON_HW", "ZEROIZE_HW", "GNSS_PPS", "SDA", "SCL", "+54V_POE", "POE_DRAIN", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "HDMI_SEL1", "HDMI_SEL2",
                         "+3V3_S1A", "+3V3_S1B", "+1V0_S1", "+1V1_S1", "+3V3_S2A", "+3V3_S2B", "+1V0_S2", "+1V1_S2", "+3V3_S3A", "+3V3_S3B", "+1V0_S3", "+1V1_S3"), 2):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
+# ================================================================= the I/O high-availability control plane (ARCH-PCB-B-IOHA)
+# Three equivalent supervisors. They decide which module owns each bank and never carry a byte of peripheral traffic:
+# no USB, no PCIe and no Ethernet payload passes through one. Their decisions reach the fabric only through the 2-of-3
+# majority voters below, so a controller wedged in any state is outvoted by the other two and no firmware is trusted.
+# Watchdog and brownout are the H753's own IWDG and BOR. That is deliberate: an internal watchdog cannot save a core
+# that has wedged with its outputs in the wrong state, and the thing that protects the system from that is the voter,
+# not a supervisor chip. Each controller still has its own regulator, its own reset and its own SWD access so it is a
+# failure domain of its own, and a shorted controller cannot pull the other two down through a shared rail.
+for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
+    U_ = lambda n, _k=_k: "U%d" % (40 + 10 * _k + n)
+    R_ = lambda n, _k=_k: "R%d" % (63 + 12 * _k + n)
+    C_ = lambda n, _k=_k: "C%d" % (400 + 20 * _k + n)   # the slots take C101 to C394 (100 * s + n), so every global capacitor of this plane lives at 400 and above
+    v33 = "+3V3_IOC%s" % _tag
+    ic(U_(0), 5, "AP2112K-3.3 LDO: the private 3.3 V of controller %s, its own branch off the device rail" % _tag, "SOT235",
+       {"1": "+5V_DEV", "2": "GND", "3": "+5V_DEV", "4": "NC", "5": v33})
+    c(C_(0), "1u", "+5V_DEV", "GND"); c(C_(1), "10u", v33, "GND", "C10u")
+    for _n in range(2, 7): c(C_(_n), "100n", v33, "GND")
+    m = {}
+    for _p, _nm in H753.items():
+        if _nm == "VDD": m[_p] = v33
+        elif _nm in ("VSS", "VSSA"): m[_p] = "GND"
+        elif _nm == "VDDA": m[_p] = v33
+        elif _nm == "VREF+": m[_p] = v33
+        elif _nm == "VBAT": m[_p] = v33
+        elif _nm == "VCAP": m[_p] = "IOC%s_VCAP" % _tag
+        else: m[_p] = "NC"
+    m.update({14: "IOC%s_RST_n" % _tag, 94: "IOC%s_BOOT0" % _tag,
+              12: "IOC%s_XI" % _tag, 13: "IOC%s_XO" % _tag,
+              72: "IOC%s_SWDIO" % _tag, 76: "IOC%s_SWCLK" % _tag,
+              81: "IOC%s_CAN1_RX" % _tag, 82: "IOC%s_CAN1_TX" % _tag,
+              51: "IOC%s_CAN2_RX" % _tag, 52: "IOC%s_CAN2_TX" % _tag,
+              22: "SEL1_%s" % _tag, 23: "SEL2_%s" % _tag, 24: "SEL3_%s" % _tag,
+              25: "HUBRST1_%s" % _tag, 28: "HUBRST2_%s" % _tag, 29: "HUBRST3_%s" % _tag,
+              30: "HB1", 31: "HB2", 32: "HB3",
+              33: "EMCON_HW", 34: "IOC%s_LED_A" % _tag, 35: "SDA", 36: "SCL"})
+    synth(U_(1), "STM32H753VI", "STM32H753VITx I/O supervisor %s: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset" % _tag, "LQFP100", m)
+    c(C_(7), "2.2u", "IOC%s_VCAP" % _tag, "GND"); c(C_(8), "2.2u", "IOC%s_VCAP" % _tag, "GND")
+    r(R_(0), "10k", "IOC%s_RST_n" % _tag, v33); c(C_(9), "100n", "IOC%s_RST_n" % _tag, "GND")
+    r(R_(1), "10k", "IOC%s_BOOT0" % _tag, "GND")
+    part("Y%d" % (2 + _k), "Device", "Crystal_GND24", "25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI)", "XTAL",
+         {"1": "IOC%s_XI" % _tag, "3": "IOC%s_XO" % _tag, "2": "GND", "4": "GND"})
+    c(C_(10), "18p", "IOC%s_XI" % _tag, "GND", "C0402"); c(C_(11), "18p", "IOC%s_XO" % _tag, "GND", "C0402")
+    r(R_(2), "1k", v33, "IOC%s_LED_K" % _tag); led("LED%d" % (40 + _k), "green IOCTRL %s alive" % _tag, "IOC%s_LED_A" % _tag, "IOC%s_LED_K" % _tag)
+    ic(U_(2), 5, "SWD pads, controller %s: 3V3 SWDIO SWCLK NRST GND" % _tag, "PH1x5",
+       {"1": v33, "2": "IOC%s_SWDIO" % _tag, "3": "IOC%s_SWCLK" % _tag, "4": "IOC%s_RST_n" % _tag, "5": "GND"})
+    # two CAN-FD transceivers on two INDEPENDENT fabrics, so neither a broken bus nor a failed transceiver can take both
+    # heartbeat paths from a controller. TI TCAN334D, 3.3 V, CAN FD to 5 Mbps: https://www.ti.com/product/TCAN334
+    for _f, _rx, _tx, _un in (("A", "IOC%s_CAN1_RX" % _tag, "IOC%s_CAN1_TX" % _tag, 3), ("B", "IOC%s_CAN2_RX" % _tag, "IOC%s_CAN2_TX" % _tag, 4)):
+        ic(U_(_un), 8, "TCAN334D CAN-FD transceiver, controller %s on heartbeat fabric %s" % (_tag, _f), "SOIC8",
+           {"1": _tx, "2": "GND", "3": v33, "4": _rx, "5": "NC", "6": "CANL_%s" % _f, "7": "CANH_%s" % _f, "8": "GND"})
+# Each fabric is terminated once at each physical end. The two fabrics keep separate termination so a shorted
+# terminator on one cannot load the other.
+# the slots take R101 to R394 (100 * s + n), so the plane's shared passives live at 470 and above
+r("R470", "60R4 1%", "CANH_A", "CANT_A"); r("R471", "60R4 1%", "CANT_A", "CANL_A"); c("C460", "4.7n", "CANT_A", "GND")
+r("R472", "60R4 1%", "CANH_B", "CANT_B"); r("R473", "60R4 1%", "CANT_B", "CANL_B"); c("C461", "4.7n", "CANT_B", "GND")
+
+# ----------------------------------------------------------------- the 2-of-3 majority voters
+# One voter per control bit: out = AB + BC + CA, three AND gates and two OR gates. A controller stuck high or low is a
+# minority of one and cannot move the bit, which is what makes the split-brain guarantee a property of the circuit and
+# not of firmware. 74LVC08 and 74LVC32 share a pinout and the EMCON chain already uses the 08, so this adds no new
+# family. The bank select and the hub reset are voted. The mux output enable is NOT: it is generated from a select
+# transition by the edge detector below, so break-before-make is hardware too.
+# The hub reset is voted through a FET, not driven directly. A voter output is push-pull and its inputs sit low when the
+# control plane is dark, so wiring it straight to the active-low HUB{s}_RST_n would hold every hub in reset whenever the
+# controllers are absent, which is the opposite of a safe state. The voted signal instead gates a 2N7002 that pulls the
+# reset down, exactly as KSZ_RST is done on this board, so the existing RC holds each hub OUT of reset by default and a
+# controller majority can still recycle a wedged one. Read back from the netlist before this was noticed.
+VOTED = [("BSEL1", "SEL1"), ("BSEL2", "SEL2"), ("BSEL3", "SEL3"),
+         ("HUBRST1_VOTE", "HUBRST1"), ("HUBRST2_VOTE", "HUBRST2"), ("HUBRST3_VOTE", "HUBRST3")]
+GATE = [(1, 2, 3), (4, 5, 6), (10, 9, 8), (13, 12, 11)]   # (inA, inB, out) of the four gates in a 14-pin quad
+_pkg = {}
+def _gate(kind):
+    """Hand out the next free gate of `kind`, opening a new quad package when the current one is full."""
+    n = _gate.n.setdefault(kind, 0); _gate.n[kind] = n + 1
+    base = 70 if kind == "AND" else 76
+    ref = "U%d" % (base + n // 4)
+    d = _pkg.setdefault(ref, {"7": "GND", "14": "+3V3_DEV", "_kind": kind})
+    return ref, GATE[n % 4]
+_gate.n = {}
+for out, src in VOTED:
+    a, b, cc = ("%s_A" % src, "%s_B" % src, "%s_C" % src)
+    ab, bc, ca = ("%s_AB" % src, "%s_BC" % src, "%s_CA" % src)
+    o1 = "%s_O1" % src
+    for ins, o in ((( a, b), ab), ((b, cc), bc), ((cc, a), ca)):
+        ref, (pa, pb, py) = _gate("AND")
+        _pkg[ref].update({str(pa): ins[0], str(pb): ins[1], str(py): o})
+    for ins, o in (((ab, bc), o1), ((o1, ca), out)):
+        ref, (pa, pb, py) = _gate("OR")
+        _pkg[ref].update({str(pa): ins[0], str(pb): ins[1], str(py): o})
+for ref in sorted(_pkg, key=lambda r: int(r[1:])):
+    d = _pkg[ref]; kind = d.pop("_kind")
+    for pin in [str(p) for g in GATE for p in g]:
+        d.setdefault(pin, "GND" if pin in ("1", "2", "4", "5", "10", "9", "13", "12") else "NC")
+    part(ref, "Connector_Generic", "Conn_01x14",
+         "74LVC%sAPW quad 2-input %s: the 2-of-3 majority voters of the I/O control plane" % ("08" if kind == "AND" else "32", kind),
+         "TSSOP14", d)
+    c("C%d" % (470 + int(ref[1:]) - 70), "100n", "+3V3_DEV", "GND")
+for _b in (1, 2, 3):
+    nfet("Q%d" % (2 + _b), "HUBRST%d_VOTE" % _b, "GND", "HUB%d_RST_n" % _b, "2N7002: a voted majority pulls the bank's hub into reset")
+    r("R%d" % (476 + _b), "100k", "HUBRST%d_VOTE" % _b, "GND")
+# Every controller output that reaches a voter is pulled down, so a controller that is absent, unpowered or still in
+# reset presents its GPIOs as high impedance and the voter reads a definite NO rather than an undefined CMOS input.
+for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3"):
+    for _i, _t in enumerate(("A", "B", "C")):
+        r("R%d" % (480 + 3 * ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3").index(_bit) + _i), "100k", "%s_%s" % (_bit, _t), "GND")
+
+# Break before make, in hardware. Any change of a voted select charges an RC through an exclusive-or against the
+# undelayed select, which raises the mux output enable for the RC time and drops it again once both sides agree. The
+# muxes are therefore disconnected across every transition without the firmware having to sequence anything, and with
+# no transition in progress the enable sits low, which is normal operation.
+part("U80", "Connector_Generic", "Conn_01x14", "74LVC86APW quad exclusive-or: break-before-make on each bank's select", "TSSOP14",
+     {"7": "GND", "14": "+3V3_DEV", "1": "BSEL1", "2": "BSEL1_D", "3": "BOE1_n", "4": "BSEL2", "5": "BSEL2_D", "6": "BOE2_n",
+      "10": "BSEL3", "9": "BSEL3_D", "8": "BOE3_n", "13": "GND", "12": "GND", "11": "NC"})
+c("C480", "100n", "+3V3_DEV", "GND")
+for _b in (1, 2, 3):
+    r("R%d" % (473 + _b), "10k", "BSEL%d" % _b, "BSEL%d_D" % _b); c("C%d" % (480 + _b), "10n", "BSEL%d_D" % _b, "GND")
+
 RAILS = ["+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "+54V_POE", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "+5V_HDMI", "+5V_CAM", "VBUS_QMX", "PANEL_5V", "GND", "POE_P", "POE_DRAIN", "GNSS_3V3", "ZBA_3V3", "ZBB_3V3", "RB_3V3"]
 for s in (1, 2, 3): RAILS += ["+5V_S%d" % s, "+3V3_S%dA" % s, "+3V3_S%dB" % s, "+1V0_S%d" % s, "+1V1_S%d" % s, "+3V3_CM%d" % s, "+1V8_CM%d" % s, "VBUS_FLASH%d" % s]
 for i, net in enumerate(RAILS, 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})

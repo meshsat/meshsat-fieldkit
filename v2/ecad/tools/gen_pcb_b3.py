@@ -125,6 +125,20 @@ for s in (1, 2, 3):
                     ("S%d_SWE" % s, (x0 + 38, -49, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0 + 38, -49, x1, -21), sw_b + card_b + sup_b, True),
                     ("S%d_RAIL" % s, (x0, -70, x1, -49), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -49), rail_b + straps + sw_dec, True),
                     ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
+# 9 September 2026 (ARCH-PCB-B-IOHA section 6): the I/O control plane goes on the UNDERSIDE, under the three CM5
+# modules. That band is X -98 to 94 by Y 32 to 88, 10752 mm2, and it carried nothing at all: no back-side region of
+# this generator reached into it. The plane needs about 2400 mm2, so it fits with room for routing and no second board
+# is required. B16's underside clears D8's SA868 by about 20 mm, against the 1.7 mm an LQFP part stands.
+IOCTRL_PARTS = (["U%d" % (40 + 10 * k + n) for k in range(3) for n in range(5)]
+                + ["U%d" % n for n in range(70, 78)] + ["U80"]
+                + ["Y2", "Y3", "Y4"] + ["LED40", "LED41", "LED42"]
+                + ["Q3", "Q4", "Q5"]
+                + ["C%d" % (400 + 20 * k + n) for k in range(3) for n in range(12)]
+                + ["C460", "C461", "C480", "C481", "C482", "C483"]
+                + ["C%d" % n for n in range(470, 478)]
+                + ["R%d" % (63 + 12 * k + n) for k in range(3) for n in range(3)]
+                + ["R%d" % n for n in range(470, 498)])
+REGIONS += [("IOCTRL", (-98.0, 32.0, 94.0, 88.0), IOCTRL_PARTS, True)]
 REGIONS += [
  ("NORTH1", (-94, 88.5, -52, 97.5), ["TP%d" % k for k in range(1, 21)], False),
  ("NORTH2", (-23, 88.5, 18, 97.5), ["TP%d" % k for k in range(21, 32)] + ["LED6", "LED7", "LED8", "LED9"], False),
