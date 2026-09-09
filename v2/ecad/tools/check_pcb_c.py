@@ -87,6 +87,13 @@ check(ep_reach <= L.EPAPER["tail_len"] - 8.0, "the e-paper flex reaches the ZIF:
 # 5. the height rule: every deep face part against B16's tall parts (panel1450.B16_TALL), 2 mm; the backer's own parts under the strips
 rep = L.clearance_report(); worst = [(r, n, c) for r, n, c in rep if c < 2.0]
 check(not worst, "every deep face part clears B16's tall parts by 2 mm (%s)" % ["%s over %s: %.1f" % w for w in worst][:6])
+# 9 Sep 2026 (appendix 32.84): the check above asks whether a deep face part clears a tall board part UNDER the plate.
+# Nothing asked whether two things ON the plate can both be there, and the Xenarc overlapped the e-paper lens by
+# 1.045 mm and J_HSJ2's hole by 0.745 mm until a render showed it. Marking that a part hides is reported, not blocked.
+face_hw = L.face_overlap_report("hw")
+check(not face_hw, "no two face parts overlap in plan on the plate (%s)" % ["%s / %s %.2f x %.2f mm" % f for f in face_hw][:6])
+face_hidden = L.face_overlap_report("hidden")
+if face_hidden: print("check_pcb_c: INFO  laser marking under a face part: %s" % ["%s / %s %.2f x %.2f mm" % f for f in face_hidden][:4])
 ALLOW = {L.STRIP_T: 9.5, L.STRIP_L: 3.5, L.STRIP_B: 3.5, L.STRIP_R: 3.5}   # the underside's tallest parts per strip: the IDC ribbon header on the top strip, SMD parts elsewhere
 tall_under = [(name, h, round(L.BACKER_UNDER_Z - ALLOW[st] - (L.B_TOP_Z + h), 1)) for (rx0, ry0, rx1, ry1), h, name in L.B16_TALL for st in STRIPS if rx1 > st[0] and rx0 < st[2] and ry1 > st[1] and ry0 < st[3] and L.BACKER_UNDER_Z - ALLOW[st] - (L.B_TOP_Z + h) < 3.0]
 check(not tall_under, "B16's tall parts under the strips stay 3 mm below the backer's underside parts (3.5 mm allowance, 9.5 under the top strip's ribbon header): %s" % tall_under[:4])
