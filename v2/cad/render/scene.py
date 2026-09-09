@@ -280,9 +280,9 @@ for k, (x, y) in enumerate(SMA_JACKS):
     cyl("sma_jack_%d" % k, 6.5, 9.0, (x, y, 21.1), M["gold"]); cyl("sma_nut_%d" % k, 8.0, 2.0, (x, y, 17.6), M["steel"], verts=6)
 for k, x in enumerate((-64, -52, -40, -28)):     # the four rail leads A22 to B16 (J_5V_S1..3, J_5V_DEV at Y 75)
     cyl("lead_r_%d" % k, 1.8, 36, (x - 1.5, 75, 35), M["wire_red"]); cyl("lead_b_%d" % k, 1.8, 36, (x + 1.5, 75, 35), M["wire_blk"])
-import_board("pcb_b16", "pcb-b-compute.glb", 54.6)
-ZB = 56.2
-for s_, (cx, cy) in enumerate(((-72.5, 60.0), (-2.5, 60.0), (67.5, 60.0)), 1):   # the three CM5 sites with the official cooler and an IP68 fan on it (32.53)
+import_board("pcb_b16", "pcb-b-compute.glb", 48.1)   # 9 Sep 2026 (appendix 32.85): 54.6 until the monitor was recessed; B16 drops 6.5 mm so the CM5 heatsinks clear its body
+ZB = 49.7
+for s_, (cx, cy) in enumerate(((-72.5, 63.0), (-2.5, 63.0), (67.5, 63.0)), 1):   # the three CM5 sites, cooler and IP68 fan (32.53); cy 60 -> 63 on 9 Sep 2026 so the fan clears the recessed monitor's edge at Y +45.745 (32.85)
     box("cm5_%d_module" % s_, (40, 55, 1.24), (cx, cy, ZB + 4.62), M["pcb"]); box("cm5_%d_soc" % s_, (15, 15, 1.2), (cx, cy + 6, ZB + 5.84), M["dark"]); box("cm5_%d_emmc" % s_, (11, 13, 1.0), (cx, cy - 12, ZB + 5.74), M["dark"])
     box("cm5_%d_cooler" % s_, (41, 56, 4.0), (cx, cy, ZB + 8.24 + 2.0), M["alu"]); box("cm5_%d_fan" % s_, (30, 30, 6), (cx, cy, ZB + 8.24 + 12.7 + 3), M["dark"]); cyl("cm5_%d_fan_rotor" % s_, 26, 5, (cx, cy, ZB + 8.24 + 12.7 + 3.5), M["gray"], verts=7)
     for i in range(13): box("cm5_%d_fin_%d" % (s_, i), (1.2, 52, 8.7), (cx - 18 + 3.0 * i, cy, ZB + 8.24 + 4.0 + 4.35), M["alu"])
