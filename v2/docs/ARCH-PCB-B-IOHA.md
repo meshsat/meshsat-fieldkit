@@ -135,6 +135,39 @@ Named honestly, because an FMEA that lists nothing is worthless:
 - The voters themselves are silicon and can fail; they fail to a defined state, which is why the safe state is the home assignment.
 - Two simultaneous module losses leave one bank unreachable, as section 4 explains.
 
+## 10a. What is built, 9 September 2026 17:40 to 18:40 CEST
+
+The fabric and the control plane are in `gen_sch_b.py` and the generator builds: **939 parts, 815 nets, no single-pin net.**
+Every claim below was read back from the exported netlist rather than assumed.
+
+**Per bank:** a TMUXHS4212 with port A on the hub, port B the home module's USB3-0 and port C the neighbour's USB3-1;
+a TS3USB221A on D+/D-, because the TMUXHS4212's common mode range is 0 to 1.8 V against USB2's 3.3 V swing and its I/O
+absolute maximum is 2.4 V; the hub's AC coupling moved to the hub side of the mux so one pair of caps serves either host.
+
+**Per controller:** an STM32H753VITx in LQFP-100, its own AP2112K-3.3 branch off `+5V_DEV`, its own 25 MHz crystal
+because CAN-FD bit timing cannot ride on the HSI, its own reset, SWD pads, status LED, and **two** TCAN334D transceivers
+on two independent fabrics with separate termination. The pin table is KiCad's own `STM32H753VITx` symbol, which cites
+`https://www.st.com/resource/en/datasheet/stm32h753vi.pdf`; the alternate-function choices, FDCAN1 on PD0/PD1 and FDCAN2
+on PB12/PB13, are the classic H7 mappings and are to be confirmed against the datasheet's AF table before release.
+
+**Six voters**, one per voted bit, `out = AB + BC + CA` in 74LVC08 and 74LVC32 quads, the same families the EMCON chain
+already uses. Verified on bank 1: the three controllers' selects enter U70 at pins 1/9, 2/4 and 10/5, the three products
+leave at 3, 6 and 8, and the OR tree in U76 produces `BSEL1`, which reaches both muxes, its pull-down, the RC and the
+break-before-make detector. Every one of the eighteen controller outputs carries a pull-down, so a controller that is
+absent, unpowered or in reset is read as a definite no rather than as an undefined CMOS input.
+
+**Break before make is hardware.** A 74LVC86 compares each voted select against an RC-delayed copy of itself and raises
+that bank's mux enable for the RC time on any transition. The firmware does not sequence it and cannot skip it.
+
+**One fail-safe inversion was caught by reading the netlist back, not by inspection.** The hub reset was first wired
+straight from its voter. A voter output is push-pull and its inputs sit low when the control plane is dark, so that
+arrangement would have held every hub in reset whenever the controllers were absent: the exact opposite of a safe state,
+on a board where no hub reset had any driver at all before today. The voted signal now gates a 2N7002 that pulls the
+reset down, the way `KSZ_RST` has always been done here, so the existing RC holds each hub out of reset by default and a
+majority can still recycle a wedged one.
+
+**Placement.** The plane takes a new back-side region, X -98 to 94 by Y 32 to 88, under the three modules.
+
 ## 11. Open rulings
 
 1. **CLOSED 9 September 2026 by the owner's condition: WiFi stays on PCIe.** The condition was that the radio must do peer-to-peer links with no access point. The gate fails for USB: **MT7921, the embeddable USB WiFi 6 chip, does not support mesh point mode** (openwrt/mt76 issue 653, 2022, cited in morrownr/USB-WiFi issue 526, where the question of hardware, firmware or driver cause was asked and never answered). The mt76 chip that does mesh over USB is the MT7612U, and the 5 September research had already established that **no embeddable MT7612U module exists**, which is why that ruling moved WiFi to M.2 PCIe in the first place. The MT7915 in the AW7915-AED is documented for AP, station and mesh in its kernel submission, so the card stays. The consequence is that the PCIe switches are not deleted and no area is freed there.
