@@ -11,6 +11,10 @@ grep -E 'wrote|single-pin nets' out/gen_sch.log
 rm -f out/$N-erc.status; python3 ../tools/erc_gate.py . $N 2>&1 | tail -6; grep -qE "^(clean|allowed)" out/$N-erc.status 2>/dev/null || { echo "BLOCK ERC (out/$N-erc.json, out/$N-erc.status; allow-list erc-allow.txt with a reason per line)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
 [ -s out/$N.net ] || { echo "BLOCK no netlist (out/build_sch.log)" | tee out/preroute-gate.txt; tail -5 out/build_sch.log; echo PREROUTE-DONE BLOCK; exit 1; }
 python3 ../tools/gen_pcb_a.py $N.kicad_pcb > out/gen_pcb_a.log 2>&1; grep -E 'saved|WARN|Trace' out/gen_pcb_a.log; grep -q saved out/gen_pcb_a.log || { echo "BLOCK mechanical generator" | tee out/preroute-gate.txt; tail -5 out/gen_pcb_a.log; echo PREROUTE-DONE BLOCK; exit 1; }
+# 9 September 2026 (owner ruling, 32.74 option 3): phase two of the decoupling placement. `bypass_slots` reserved a slot beside every
+# FIXED part before the packer ran; this moves the capacitors of the parts the packer itself placed, which it could not know earlier.
+# The tool has existed since 8 September and no chain ran it, which is why the measured distances never changed.
+python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
 python3 ../tools/check_pcb_a.py $N.kicad_pcb > out/check_a1.log 2>&1; grep -E 'FAIL|RESULT' out/check_a1.log
 python3 ../tools/gen_pcb_a3.py $N.kicad_pcb out/$N.net > out/gen3.log 2>&1; GEN3=$?; grep -E 'saved|WARN|overflow|unplaced|Trace|SystemExit|zone net|not in the netlist|footprint missing' out/gen3.log
 [ "$GEN3" -eq 0 ] || { echo "BLOCK placement generator exit $GEN3" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }

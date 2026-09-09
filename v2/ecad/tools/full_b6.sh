@@ -5,6 +5,10 @@ cd "$1"; N=pcb-b-compute
 python3 ../tools/gen_sch_b.py $N.kicad_sch $N 2>&1 | tail -1
 ../tools/build_sch.sh . $N 2>&1 | grep -E 'ERC|netlist'
 python3 ../tools/gen_pcb_b.py $N.kicad_pcb 2>&1 | grep -E 'saved|WARN|Trace|Error'
+# 9 September 2026 (owner ruling, 32.74 option 3): phase two of the decoupling placement. `bypass_slots` reserved a slot beside every
+# FIXED part before the packer ran; this moves the capacitors of the parts the packer itself placed, which it could not know earlier.
+# The tool has existed since 8 September and no chain ran it, which is why the measured distances never changed.
+python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
 python3 ../tools/check_pcb_b.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'
 python3 ../tools/gen_pcb_b3.py $N.kicad_pcb out/$N.net > out/gen3.log 2>&1; GEN3=$?; grep -E 'saved|WARN|Trace|Error|overflow|SystemExit|zone net|not in the netlist' out/gen3.log
 [ "$GEN3" -eq 0 ] || { echo "BLOCK placement generator exit $GEN3" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
