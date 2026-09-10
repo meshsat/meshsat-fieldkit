@@ -4072,9 +4072,26 @@ two nets of a pair, so an intra-pair gap below the class clearance of 0.127 is a
 needs either a custom rule for the pair or a class clearance of 0.09, which then applies to everything in that class. That is
 a fabrication and rules decision, not a router setting.
 
-**What is still open, and it is the one combination that is both correct and cheaper:** B19 has two pair classes, USB at
-0.13 / 0.14 with a 90 ohm target and DIFF100 at 0.13 / 0.20 with a 100 ohm target. On the inner layers DIFF100 wants a
-**narrower** gap than it uses outside (0.127 gives 102 ohm against its 100 target, inside tolerance, with an envelope of 0.387
-against the 0.46 it uses on the outer layers), so DIFF100 gains both layers and room while USB stays on F.Cu and B.Cu where its
-geometry is already right. That needs a per-class layer set, which the tool does not have and does not need: two passes on one
-board give it, because the second pass reads the first pass's locked copper as an obstacle. Both orderings are measuring now.
+**The one combination that is both correct and cheaper, measured.** B19 has two pair classes, USB at 0.13 / 0.14 with a 90 ohm
+target (65 pairs) and DIFF100 at 0.13 / 0.20 with a 100 ohm target (48 pairs). On the inner layers DIFF100 wants a **narrower**
+gap than it uses outside (0.127 gives 102 ohm against its 100 target, inside tolerance, with an envelope of 0.387 against the
+0.46 it uses outside), so DIFF100 can take four layers while USB stays on F.Cu and B.Cu where its geometry is already right. A
+per-class layer set needs no code: two passes on one board give it, because the second pass reads the first pass's locked
+copper as an obstacle.
+
+| order | first pass | second pass | total |
+|---|---|---|---:|
+| DIFF100 on four layers, then USB on two | 23 of 48 | 37 of 65 | **60 of 113** |
+| USB on two layers, then DIFF100 on four | 39 of 65 | 17 of 48 | **56 of 113** |
+
+**60 of 113 is the best impedance-correct number this board has reached**, against 56 for the plain two-layer pass, and the
+order decides four pairs of it: the class that goes first should be the one with the extra layers, not the one with more pairs.
+
+**And the honest position after a day on it.** The four-layer run's 71 is not available while the geometry has to be right; the
+correct configurations are 44, 47, 56, 56 and 60. The pre-router lays **60 of B19's 113 pairs** and the ruling of 32.94 needs
+113. What moved today was understanding rather than coverage: the layer confinement was a real defect and is fixed, the
+negotiated router is measured and rejected, the impedance of an inner-layer pair is known rather than assumed, and the kernel
+is three times faster with every step proved to change nothing. **The remaining 53 pairs are not a router problem.** The
+failures concentrate where 32.98 said they would, at the fine-pitch parts and in the congested middle band, and the lever 32.98
+named beside the negotiated router is the one still untried: **a floor plan built around the pair corridors**, which is a
+placement change on B and an owner-visible piece of work rather than another knob.
