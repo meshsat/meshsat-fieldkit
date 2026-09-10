@@ -18,6 +18,16 @@ STUB_LAYERS=F.Cu,B.Cu STUB_GRID=0.1 nice -n 10 python3 ../tools/stub_router.py $
 python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' | grep -v '^hardset:'   # 8 Sep 2026 (MESHSAT-862): tools/hardset.py is the one hard set
 [ -s out/par-score.txt ] || { echo "no DRC score after the stub router (hardset refused)"; echo open > out/e6-clean.txt; echo FINISH-E6-DONE; exit 1; }; read H < out/par-score.txt; if [ "$H" -ne 0 ]; then python3 ../tools/stub_accept.py out/$N-par-routed.kicad_pcb $N.kicad_pcb out/$N-drc.json 2>&1 | grep stub_accept; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json; H=$(python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt >/dev/null; cat out/par-score.txt); echo "after stub_accept: hard $H"; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; fi; fi
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
+# 10 September 2026 (report 2 H3, the fix-propagation matrix): E was the one board of six whose finish ran NEITHER of these,
+# and it is the board with the big pours (CELL_F, VIN_RAW, PV_P, TRK_OUT). A pad its own plane cannot reach gets a via in the
+# pad and a dogbone past its tip; a pour island with no via of its net gets one. Both were written on 8 September for D9.
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
+python3 ../tools/zone_pad_via.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -v "^Debug" | tail -6; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json
+python3 ../tools/pour_stitch.py $N.kicad_pcb --nets=GND,CELL_F,VIN_RAW,PV_P,TRK_OUT 2>&1 | grep -vE "^Debug|leak" | tail -4; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json
+# The router's knot: two nets tangled at one spot, the hard pattern hardset names KNOT. Three of the six finishes ran it and
+# three did not (10 September 2026, report 2 H3); it removes nothing where there is no knot.
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
+python3 ../tools/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 bash ../tools/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -5   # Stage 3 of the quality programme (6 Sep 2026): straighten and via passes on a copy, DRC-gated, reverted when anything rises
 python3 ../tools/silk_fix_all.py $N.kicad_pcb e 2>&1 | grep -vE 'Debug|leak' | tail -2
 python3 - "$N" <<'PYX' 2>&1 | grep -vE 'Debug|leak'

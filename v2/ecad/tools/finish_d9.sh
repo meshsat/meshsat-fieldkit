@@ -25,7 +25,19 @@ python3 ../tools/zone_pad_via.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -v "^D
 # 9 Sep 2026 (D10, appendix 32.83): pour_stitch.py was written on 8 Sep for D9's 57-island front pour and wired into NO finish;
 # D10 ended its route with the B.Cu ground pour and the In1 plane reported open because no via of the net reached the island.
 python3 ../tools/pour_stitch.py $N.kicad_pcb --nets=GND 2>&1 | grep -vE "^Debug|leak" | tail -4; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json
+# The router's knot: two nets tangled at one spot, the hard pattern hardset names KNOT. Three of the six finishes ran it and
+# three did not (10 September 2026, report 2 H3); it removes nothing where there is no knot.
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
+python3 ../tools/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 bash ../tools/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -5   # Stage 3 of the quality programme (6 Sep 2026): straighten and via passes on a copy, DRC-gated, reverted when anything rises
+# Owner ruling 5 September 2026 17:00 (appendix 32.40): a differential pair over 1 mm of intra-pair mismatch blocks the finish.
+# This board has pairs and its finish never ran the matcher, while A's and B's did (10 September 2026, report 2 H3's
+# fix-propagation matrix). pair_match.sh meanders the short legs itself; when it still fails the session audits the images.
+../tools/pair_match.sh "$PWD" $N check_pcb_d.py > out/pair-match.log 2>&1; PM=$?; grep -E "pair_match|WARN|PASS|meander" out/pair-match.log | cut -c1-140
+if [ "$PM" -ne 0 ]; then
+  mkdir -p out/audit; for pr in USB1 USB2 USB3 USB_D8; do python3 ../tools/pair_audit.py $N.kicad_pcb $pr out/audit/$pr.png 2>&1 | grep pair_audit; done
+  echo 'PAIRS NOT MATCHED, not finishing (audit images in out/audit)'; echo open > out/d9-clean.txt; echo FINISH-D9-DONE; exit 1
+fi
 python3 ../tools/silk_fix_all.py $N.kicad_pcb d 2>&1 | grep -vE 'Debug|leak' | tail -2
 python3 - "$N" <<'PYX' 2>&1 | grep -vE 'Debug|leak'
 import pcbnew, sys
