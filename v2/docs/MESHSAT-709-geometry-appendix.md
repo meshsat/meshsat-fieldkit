@@ -3833,3 +3833,99 @@ every long pair threw the whole board's pad rasters away twice per pair.
 
 **Measured beside it, and it is the first number above the plateau:** the multi-pass driver's second pass, with the pairs that
 failed put first, laid **52 of 113** against the 50 of 32.98.
+
+### 32.101 The two red teams, answered item by item (10 September 2026, 19:00 CEST; MESHSAT-862)
+
+The owner's ruling was "everything, in the red teams' order". This is the register: every finding of both reports, what was
+done, and the measurement that says it was done. Items not taken say so and why. Report 1 is
+`meshsat-engineering-red-team-report-2026-09-10.md`, report 2 `red-team-engineering-2026-09-10.md`; both read the code pack of
+this morning and neither ran it.
+
+**Report 1, the priority table.**
+
+| # | finding | state | evidence |
+|---|---|---|---|
+| P0 | the one hard DRC set is not one set | **done** | `hardset.py` imported by every consumer; the six private tuples deleted; `tests/test_hardset.py` fails if a second definition appears anywhere, proved by putting one back |
+| P0 | `pair_negotiate.py` reports success after a failed lay | **done** | it returns the laying pass's exit code |
+| P0 | routeflow ignores the router supervisor's exit status | **done** | `INFRA_FAIL` when the supervisor exits non-zero with no session, and the remedy table refuses to treat it as a routing outcome |
+| P0/P1 | run artefacts are neither immutable nor bound to a run | **done** | `out/routeflow/<utc>-<fingerprint>/` fresh per invocation, `provenance.json` and `resolved-config.json` in it, logs opened for writing |
+| P1 | 24 finish scripts poll a log for a marker with no deadline | **not yet** | stage 7's second half; the chains are consolidated, the finishes are not |
+| P1 | DRC artefacts mutable, CLI errors unchecked | **partly** | a deliverable is built in a staging folder and promoted only after `verify_deliverable.py` passes; the per-command exit checks inside the finishes go with the finish consolidation |
+| P1 | `Grid._cache` unsafe when the grid size changes | **done** | the cache is instance-local and keyed by the grid it was rasterised in; one Grid per cell size is kept; `PAIR_GRID_LONG` with a negotiated plan raises rather than reading the wrong cells |
+| P1 | `judge_finish()` treats absence of evidence as success | **done** | it requires `verify_deliverable: ALL PASS`, and the selftest predicate that codified the hole is gone |
+| P1 | the orchestration layer has crossed the duplication threshold | **half done** | one `full.sh` plus `tools/boards/<letter>.json`; twenty one chains became six five-line wrappers; the 31 finishes remain |
+| P1 | `pair_preroute.py` rebuilds full-board occupancy maps about five times a pair | **done** | measured, then fixed twice: the rasteriser 81.2 s to 4.6 s, and then the maps cached and topped up with only the copper laid since (32.100 and below) |
+| P2 | `dc_drop.py`'s documented model and its code disagree | **done** | the docstring says `spsolve` and says the density is reported not gated; the line prints the rail's own budget; and a residual check makes an unsolved mesh UNRESOLVED rather than MET |
+| P2 | station matching is factorial | **done** | exhaustive below 50,000 orderings so today's boards keep the matching they were laid with, scipy's Hungarian solver above it; the two agree in cost on 300 random point sets |
+| P2 | the routeflow lock is check-then-write | **done** | `fcntl.flock(LOCK_EX \| LOCK_NB)` on an open file |
+| P2 | preflight exists but is not part of `run` | **done** | `run()` calls it unless `ROUTEFLOW_SKIP_PREFLIGHT=1` |
+| P2 | configuration has become an implicit API | **done** | `resolved-config.json` per run: every `PAIR_*`, `FR_*` and `PLACE_*` knob in force |
+
+**Report 2, by severity.**
+
+**C1** (two definitions of hard, the benchmark used the smaller one), **C2** (six forks of one schematic engine and the pin
+check died in four), **C3** (66 of 81 measured router hours graded UNMEASURABLE): all three are 32.99, with the benchmark
+regraded, `kisch.py` extracted, strict `ic()` restored on all six boards and the golden schematic test that immediately found
+six stale committed files.
+
+**H1**, every load-bearing number in three places and the gate checking the generator against the gate author's copy: **not
+yet**. It is stage 8's second half, a `design_<letter>.py` of constants imported by both the generator and the gate, then
+`appendix_check.py` against machine-readable appendix tables. This is the finding this record most wants closed and it is the
+one that needs the appendix itself to change shape.
+
+**H2**, verdicts on three channels and every finish running its gate twice: **not yet**, with the finish consolidation.
+
+**H3**, phase numbers in filenames: **half done**. The chains are one file plus a board table; the finishes are not, and
+phases are still filenames rather than tags.
+
+**H4**, `pair_negotiate.py` cannot converge at the cost per iteration the architecture imposes: **done, and it was the
+mission's blocker.** A planning iteration on B19 took about **40 minutes** and now takes about **5**, so the tens of
+iterations PathFinder needs are affordable. The kernel work behind it is 32.100.
+
+**H5**, the gates have no tests: **done**. `tools/tests/` holds 26 fixtures, one input that must fail and one that must pass
+per rule, and they run where KiCad is not.
+
+**M1**, the corridor search is pure Python on a 0.1 mm grid: **done**, 13.5x, and proved to be the same router by a selftest
+that runs the heapq original beside it (32.100).
+
+**M2**, the whole routeflow superstructure exists because 1.9.0 writes its session only at the end: **done**. Our build writes
+one per pass; on the same DSN with the same options its final session is **byte identical** to the stock jar's (139,311 bytes)
+and its auto-routing took 1 min 24.08 s against 1 min 23.13 s. `route_one.sh` takes our jar when the host has it, so a route
+that hits its time limit now leaves the best board it reached instead of nothing.
+
+**M3**, the rented box does not match the workload: **not yet**, an item for the next box.
+
+**M4**, pin maps as 2,764-character lines: **partly**. The engine is extracted and the generators are data plus `main`; moving
+the pin maps themselves to CSV with a pad-count assertion is still owed.
+
+**M5**, the wall-clock pair budget still on by default: **done**. `full_b19.sh` exports `PAIR_BUDGET=0`, and the clock left
+the search entirely: it is checked between searches, and the reproducible bound is the expansion cap (32.90's own rule).
+
+**M6**, `impedance_2d.py` is the second opinion never asked: **not yet**, kept for the calibration it is owed.
+
+**L1**, minified generators: **not taken as a formatting pass.** The b/c/d/p lineage lost its long lines to `kisch.py` because
+the engine moved out, which is the part that mattered; reformatting the rest would rewrite files a review is reading.
+
+**L2**, dead weight: **done**. Eight `.bak` files and eleven dead chain scripts deleted; eight superseded post-route one-offs
+deleted; `review_nets.py` wired into `full.sh` as a report that never blocks rather than deleted, because what it looks for
+(decoupling, floating control pins, ESD on the pairs, the I2C map, connector mates) is a class of mistake no numeric gate
+looks for; `peli_probe.py` and `face_section.py` kept with the reason written in them, since the record cites their output;
+`critic_e2.py` kept because stage E2 is pending work. Both docstrings the report named are corrected.
+
+**L3**, the 143 session drivers: **not taken.** They are in the session scratchpad, not in the repository, and they are a
+symptom of a launch interface the pipeline does not have. Recorded as an item, not fixed today.
+
+**L4**, `check_pcb_*.py` is 238 lines for B and 35 to 48 for D, E and P: **not yet**. A per-board rule count in the record
+would make the asymmetry a decision; it goes with H1.
+
+**What the answering itself found, which is the point of doing it against the code rather than against the reports:**
+
+- matplotlib's `Path.contains_points` fills every sub-path whatever its winding, so a polygon's holes cannot be sub-paths.
+  Fixed the wrong way first, the board-wide edge band blocked all 6,708,420 cells of every map, and no pair could be laid.
+- The numba re-exec ran at module level, so importing the pre-router from a measuring script restarted that script.
+- `-oit` is a threshold in percent, not a pass count: `-oit 0` asks Freerouting to optimise until the improvement is below
+  zero, and it never ends. An hour went into that.
+- **The pre-route chain is not deterministic.** Proving the consolidated chain equivalent needed a control, and the OLD chain
+  differs from ITSELF by 48 lines of board geometry across two runs of the same input while its log stays identical. The
+  escape via positions move and nothing would ever have reported it. The schematics are byte-reproducible since `kisch`; the
+  boards are not, and that is a defect of its own now on the list.
