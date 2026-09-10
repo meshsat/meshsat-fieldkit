@@ -127,7 +127,7 @@ REGIONS = [
  ("EFS",   (84, 44, 100, 62), ["C98", "R90", "R91", "R92", "R93", "C99", "C100", "R94", "R95", "R96", "R97", "C101", "C102", "R98", "R99", "R100", "R101", "C103"]),
 ]
 GAP = 1.2                      # between any two packed parts (was 0.7: fine-pitch ICs ended wall to wall with passives)
-FINE_MARGIN = 1.6              # extra all round a fine-pitch IC so every side keeps a via lane for its escapes
+FINE_MARGIN = float(_os.environ.get("PLACE_FINE_MARGIN", "1.6"))   # extra all round a fine-pitch IC so every side keeps a via lane for its escapes; a knob since 10 Sep 2026, when 1.6 to 2.6 on B19 took the pads with no escape at all from 194 to 69
 import re as _re
 def is_fine(fp):
     """Fine-pitch: minimum SMD pad centre distance <= 0.7 mm, or a SOT-23-6/8."""
