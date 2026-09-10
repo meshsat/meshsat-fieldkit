@@ -4180,3 +4180,81 @@ That list is the argument for the store and the argument against trusting it in 
 tell you that a claim has no source in this tree, which is a fact about our documents and worth
 knowing. It cannot tell you that a claim is true, and nothing about how well it retrieves will ever
 make it able to, because what makes a board correct is a mechanical check of the board.
+
+### 32.105 Every part the generators name now has a document, and the CAD models are searchable (11 September 2026, 00:30 CEST; MESHSAT-862)
+
+The store of 32.104 was asked the question it exists for: which parts does this design instantiate,
+and which of them does this tree hold no document for. `kb_parts.py` reads the part number out of
+every string in the six schematic generators, looks each one up by its number, its base and its
+family stem, and reports what is not there. **It named 47 entries. The answer is now zero of 160.**
+
+**Twenty nine datasheets were fetched.** The three that matter most were exactly the ones the record
+had been leaning on memory for: the **TMUXHS4212**, the USB mux of PCB-B's high-availability layer,
+whose pin table 32.86 says was corrected by hand from a manufacturer's drawing; the **STM32H7**, the
+three I/O supervisors, in both the H753 the generators name and the H743VIT6 actually bought as
+C114409; and the **TPS2065CDBV**, the part behind this record's most quoted trap, whose ordering
+table now settles it inside our own tree in one line: `SOT-23 (DBV) | 5`. The rule of section 8 of
+the handover, that a package is confirmed from the same datasheet page, can be followed for that part
+for the first time.
+
+**Provenance is recorded per file** in `v2/vendor/DOWNLOADS-2026-09-10.md`, because three did not come
+from a manufacturer's own server. `st.com` refuses this host outright, as section 7 already records,
+so both STM32 sheets are the Wayback Machine's stored copies, which is the route section 8 records
+for the Geekworm wiki; `cs.amphenol.com` refuses the connection and Amphenol's own CDN answers 403,
+so the RJHSE jack is Mouser's mirror. Every file was opened after download and its first page read.
+
+**The Quectel RM520N-GL was the one document owed and is no longer owed.** The first search returned
+only third-party document mirrors and it was not taken from one. A second look found Quectel's own
+files: **Hardware Design v1.0 on forums.quectel.com**, which is Quectel's own domain, and the newer
+**RM520N Series Hardware Design v1.1 of 2023-03-16**, Quectel's own file hosted on TI's forum. Both
+carry Quectel authorship in their metadata. It answers the B question immediately: the M.2 B-key pin
+assignment is page 21 of v1.1, with the note that pins 20/22/28 are reserved and pin 24 is VDDIO_1V8
+on the GL where the EU variant has PCM, which is the same shape of variant detail that produced the
+one-pad PCIe orphans of the first B14 draft.
+
+**The other half of `v2/vendor/` is geometry, and it is searchable now.** STEP and DXF are binary to
+a text search, so every mechanical number in this record has rested on whoever probed the model that
+day. `geom_probe.py` writes the measurable facts beside each model as `<model>.geom.txt`, indexed
+like any other document, with no CAD kernel and no venv: STEP is ISO-10303-21 ASCII and DXF is group
+codes. **It is checked against a fact rather than trusted:** its selftest reproduces the WeAct 3.7
+hole pattern this record established independently on 5 September, 100.19 x 48.20 mm.
+
+**Four things it refuses to claim, each found by reading its own output and disbelieving it**, which
+is the same discipline the rest of this programme runs on:
+
+- **An assembly gets no envelope.** A STEP assembly holds every component in its own coordinates, and
+  a raw box over its points is a number about nothing: the WeAct module, 105 x 54 mm, reads as
+  845 x 421 mm that way. Hole patterns are still true within a component, which is why the mounting
+  holes come out right.
+- **Construction geometry is removed and counted.** 11.6 percent of the LimeSDR model sits at plus
+  and minus 400,000 mm; its raw box reads 800 metres across.
+- **A DXF is a drawing sheet, and only its ENTITIES section is read.** The HEADER uses the same group
+  codes, and `$EXTMIN`/`$EXTMAX` turned one Peli drawing into a part two hundred billion kilometres
+  across.
+- **The axes are the file's own**, and every number is a measurement of the file, never a
+  specification. Where the manufacturer publishes a drawing, the drawing wins.
+
+**Six defects in the new tools, every one found by disbelieving their output rather than by a gate.**
+A missing-datasheet report that invents missing datasheets sends someone to fetch what is already
+here, so each of these mattered: the lookup searched page text but not filenames, so
+`radiall-R222M00720-tds.pdf` read as missing though it is that part's own sheet; the family stem was
+a blind character trim, then a longest-boundary rule that still missed `M2044`, which is the only
+form the NKK sheet spells, and it now tries every digit-to-letter boundary; the filename match was
+case sensitive against the `utf8mb4_bin` collation and reported a sheet added minutes earlier as
+absent; the per-document cap applied only to the final list, so one large model's near-identical hole
+lines filled both retrieval pools and answered about a different module; a probed geometry file was
+being down-weighted as though it were one of our own notes; and `--all` permitted retired documents
+while still penalising them, so asking about the WeAct module by name returned three other modules.
+
+**And one that was not a new tool.** `finish_board.sh` ended with `grep -E '^\\['` over the
+deliverable DRC report. In an ERE that is a literal backslash and an unterminated bracket expression,
+so grep exited 2 on every finish and the trailing `|| true` swallowed it, with the tell on stderr
+where the caller's `2>&1 | tail -16` hid it. **The per-type histogram of every deliverable DRC has
+been blank since it was written.** Nothing was gated on it, so no board ever passed falsely; the
+instrument was simply never there. It is an output file now as well as a line of stdout, on the rule
+`drc.sh` already applies to the report itself. Both red teams keep naming this class, and this is the
+third instance in two days: the drift regression that scanned `*.py` while the drift lived in shell,
+the pair gate whose `if !` tested `cut`, and now this.
+
+**State:** 445 documents, 40,260 chunks, all embedded; `kb_verify` PASS on coverage 445 of 445, the
+embedding space at median cosine 1.000, and a gold set of twelve, ten electrical and two mechanical.
