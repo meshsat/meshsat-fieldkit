@@ -315,7 +315,7 @@ for k, (nm, net) in enumerate(RF, 1):
     part("J_RF%d" % k, "Connector", "Conn_Coaxial", "SMA jack (Amphenol 132134, vertical), pigtail from the %s device" % nm, "SMAV", {"1": net, "2": "GND"})
     part("J_BM%d" % k, "Connector", "Conn_Coaxial", "SMP-MAX slide-on receptacle R222M00720 (underside), %s to the dock plug" % nm, "SMPMAX", {"1": net, "2": "GND"})
 # --- test points and flags
-for ref, net in (("TP9", "VBAT"), ("TP10", "GND"), ("TP11", "+3V3"), ("TP12", "VBUS20"), ("TP13", "VIN_RAW"), ("TP14", "CELL+"), ("TP15", "EMCON_HW"), ("TP16", "RAIL_EN"), ("TP17", "SDA"), ("TP18", "SCL"), ("TP19", "IADPT"), ("TP20", "IBAT"), ("TP21", "DOCK_SPARE"), ("TP22", "REGN")): tp(ref, net)
+for ref, net in (("TP9", "VBAT"), ("TP10", "GND"), ("TP11", "+3V3"), ("TP12", "VBUS20"), ("TP13", "VIN_RAW"), ("TP14", "CELL+"), ("TP15", "EMCON_HW"), ("TP16", "RAIL_EN"), ("TP17", "SDA"), ("TP18", "SCL"), ("TP19", "IADPT"), ("TP20", "IBAT"), ("TP21", "DOCK_SPARE"), ("TP22", "REGN"), ("TP27", "AB_SPARE")): tp(ref, net)   # TP27: AB_SPARE lost its seat on J_AB1 when the ribbon pairs took their columns (10 Sep 2026), and it reaches D alone
 for i, net in enumerate(("CELL+", "VBAT", "GND", "+3V3", "VIN_RAW", "VBUS20", "+5V_S1", "+5V_S2", "+5V_S3", "+5V_DEV", "+13V8_PA", "+12V_HF", "+54V_POE", "VMON", "VHEAT", "+5V_D8", "PD_VBUS", "PD_VPWR", "PD_SW", "REGN", "CH_SRP", "CH_ACN", "PRECHG", "FE_OUT", "PA_OUT", "HF_OUT", "POE_OUT", "PD_OUT"), 1):
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 
@@ -406,7 +406,7 @@ SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A 
             ("EMCON GATES 74LVC08, EXPANDERS 0x21 0x24", ["U26", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
             ("RIBBON J_AB1 2x13, MEZZANINE HARNESS J_MEZZ1 2x8, WALL USB DATA", ["J_AB1", "J_MEZZ1", "R116", "R117", "R118", "J_USBW", "U29"]),
             ("ELEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 12)] + ["J_BM%d" % k for k in range(1, 12)]),
-            ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(9, 23)] + ["#FLG%02d" % k for k in range(1, 28)])]
+            ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(9, 23)] + ["TP27"] + ["#FLG%02d" % k for k in range(1, 28)])]
 _listed = {r for _, refs in SECTIONS for r in refs}
 _rest = [p["ref"] for p in P if p["ref"] not in _listed]
 if _rest: SECTIONS.append(("OTHER PARTS (not in a section list)", _rest))
