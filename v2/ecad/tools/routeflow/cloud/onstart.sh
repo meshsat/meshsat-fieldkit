@@ -6,7 +6,7 @@
 exec > /root/setup.log 2>&1; set -x
 export DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 touch /root/.no_auto_tmux
-apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy xvfb openjdk-25-jre rsync unzip zip procps || { echo "SETUP-FAILED apt"; exit 1; }
+apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy python3.12-venv xvfb openjdk-25-jre rsync unzip zip procps || { echo "SETUP-FAILED apt"; exit 1; }
 add-apt-repository -y ppa:kicad/kicad-9.0-releases && apt-get update && apt-get install -y --no-install-recommends kicad kicad-symbols kicad-footprints || { echo "SETUP-FAILED kicad"; exit 1; }
 mkdir -p /root/bin
 curl -fsSL -o /root/bin/freerouting-1.9.0.jar https://github.com/freerouting/freerouting/releases/download/v1.9.0/freerouting-1.9.0.jar || { echo "SETUP-FAILED download19"; exit 1; }
@@ -15,5 +15,9 @@ echo "9084a4888937a7f31f857ecc12aa7a37407f51160e4d2892dff9c9bb47ae3102  /root/bi
 echo "251101c3eeac22d7e7dfcf6796603279e5d1000283eb82d8f093780f7afc6aa9  /root/bin/freerouting-2.4.1.jar" | sha256sum -c - || { echo "SETUP-FAILED sha24"; exit 1; }
 mkdir -p /root/gitlab/products/meshsat && git clone --depth 1 https://github.com/meshsat/meshsat-fieldkit /root/gitlab/products/meshsat/meshsat-fieldkit || { echo "SETUP-FAILED clone"; exit 1; }
 printf '#!/bin/sh\n# no service group on the cloud box; routeflow calls this before and after a run\nexit 0\n' > /root/meshsat-services.sh; chmod +x /root/meshsat-services.sh
+# The pre-router's corridor search is 13.5x faster compiled (pairsearch.py) and numba cannot go into the KiCad python, so a venv
+# that sees the system packages carries both; `pair_preroute.py` re-execs itself under it. Not fatal: without it the tool uses the
+# heapq search, which returns the same paths.
+python3 -m venv --system-site-packages /root/venv-numba && /root/venv-numba/bin/pip -q install numba && /root/venv-numba/bin/python -c "import numba, pcbnew; print('numba', numba.__version__)" || echo "SETUP-WARN numba (the heapq search will be used)"
 kicad-cli version; python3 -c "import pcbnew; print('pcbnew', pcbnew.GetBuildVersion())"; java -version; nproc; free -g | head -2; df -h /root | tail -1
 echo SETUP-DONE
