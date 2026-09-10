@@ -1,49 +1,5 @@
 #!/usr/bin/env bash
-# PCB-B B16 (MESHSAT-830) pre-route: footprints -> schematic -> ERC/netlist -> mechanical -> gate -> netlist import + placement -> gate -> escapes, joins, fanout -> pre-route DRC gate
-# Usage: full_b16.sh <project dir>. Every generator's full output goes to out/*.log; the chain stops on a generator that does not save (C6 run 1 lesson).
+# PCB-B B16 and later (B19 through full_b19.sh) pre-route chain. The sequence is tools/full.sh and this board's differences are tools/boards/b.json
+# (10 September 2026, plan stage 7: twenty one chain clones, and the drift between clones is what split the DRC policy in two).
 set -uo pipefail
-cd "$1"; N=pcb-b-compute; mkdir -p out
-for f in ../tools/gen_footprints_b16.py ../tools/gen_sch_b.py ../tools/gen_pcb_b.py ../tools/gen_pcb_b3.py ../tools/check_pcb_b.py; do python3 -W error -c "import sys
-with open(sys.argv[1]) as fh: compile(fh.read(), sys.argv[1], 'exec')" "$f" || { echo "BLOCK compile $f" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }; done
-python3 ../tools/gen_footprints_b16.py ../meshsat.pretty > out/gen_fp.log 2>&1 || { echo "BLOCK footprint generator (out/gen_fp.log)" | tee out/preroute-gate.txt; tail -3 out/gen_fp.log; echo PREROUTE-DONE BLOCK; exit 1; }
-grep gen_footprints out/gen_fp.log | cut -c1-120
-python3 ../tools/gen_sch_b.py $N.kicad_sch $N > out/gen_sch.log 2>&1 || { echo "BLOCK schematic generator (out/gen_sch.log)" | tee out/preroute-gate.txt; tail -3 out/gen_sch.log; echo PREROUTE-DONE BLOCK; exit 1; }
-grep -E 'wrote|single-pin nets' out/gen_sch.log
-../tools/build_sch.sh . $N > out/build_sch.log 2>&1; grep -E 'ERC|netlist' out/build_sch.log
-rm -f out/$N-erc.status; python3 ../tools/erc_gate.py . $N 2>&1 | tail -6; grep -qE "^(clean|allowed)" out/$N-erc.status 2>/dev/null || { echo "BLOCK ERC (out/$N-erc.json, out/$N-erc.status; allow-list erc-allow.txt with a reason per line)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
-[ -s out/$N.net ] || { echo "BLOCK no netlist (out/build_sch.log)" | tee out/preroute-gate.txt; tail -5 out/build_sch.log; echo PREROUTE-DONE BLOCK; exit 1; }
-python3 ../tools/gen_pcb_b.py $N.kicad_pcb > out/gen_pcb_b.log 2>&1; grep -E 'saved|WARN|Trace' out/gen_pcb_b.log; grep -q saved out/gen_pcb_b.log || { echo "BLOCK mechanical generator" | tee out/preroute-gate.txt; tail -5 out/gen_pcb_b.log; echo PREROUTE-DONE BLOCK; exit 1; }
-# 9 September 2026 (owner ruling, 32.74 option 3): phase two of the decoupling placement. `bypass_slots` reserved a slot beside every
-# FIXED part before the packer ran; this moves the capacitors of the parts the packer itself placed, which it could not know earlier.
-# The tool has existed since 8 September and no chain ran it, which is why the measured distances never changed.
-python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
-python3 ../tools/check_pcb_b.py $N.kicad_pcb > out/check_b1.log 2>&1; grep -E 'FAIL|RESULT' out/check_b1.log
-python3 ../tools/gen_pcb_b3.py $N.kicad_pcb out/$N.net > out/gen3.log 2>&1; GEN3=$?; grep -E 'saved|WARN|overflow|unplaced|Trace|SystemExit|zone net|not in the netlist|footprint missing' out/gen3.log
-[ "$GEN3" -eq 0 ] || { echo "BLOCK placement generator exit $GEN3" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
-python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1   # 8 Sep 2026 (MESHSAT-862): the JLC stackup in the board file, so the impedance read-back reads the project
-python3 ../tools/check_pcb_b.py $N.kicad_pcb > out/check_b3.log 2>&1; grep -E 'FAIL|RESULT' out/check_b3.log
-grep -q 'RESULT: ALL PASS' out/check_b3.log || { echo "BLOCK numeric gate (out/check_b3.log)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
-[ -n "${PLACE_JITTER:-}" ] && python3 ../tools/place_jitter.py $N.kicad_pcb "$PLACE_JITTER" 2>&1 | grep place_jitter   # Stage E data campaign: a jittered neighbour of the placement (the gates below still judge it)
-ESCAPE_SKIP=U3,U4,J_HDMI python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'   # the WQFN-42 display switches: the QFN scheme's vias collide on the 3.5 mm short sides, the router fans them itself
-python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
-# 10 September 2026: the placed board with its escapes and BEFORE any pair copper. Every measurement of the pre-router needs this
-# input, and it did not exist: out/<name>-preroute.kicad_pcb is copied AFTER the pre-router, so a run against it starts on top of
-# the previous pass's locked pair copper (4,969 mm of it on B19) and measures nothing. PREROUTE_STOP_AFTER_PLACE=1 stops here.
-cp $N.kicad_pcb out/$N-placed.kicad_pcb
-[ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
-# B17 (8 Sep 2026, MESHSAT-862 rule 1): the USB and DIFF100 pairs laid as locked copper on F.Cu and B.Cu (the layer rule) before the router (PAIR_GATE=0 reports only)
-PAIR_LAYERS=${PAIR_LAYERS:-F.Cu,B.Cu} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-In2.Cu,In3.Cu} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes USB,DIFF100 > out/pair_preroute.log 2>&1; PP=$?; grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -40; [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || { echo "BLOCK pair pre-router (out/pair_preroute.log)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
-# 9 Sep 2026 (D10, appendix 32.83): THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT. The fanout used to run first and scatter
-# plane vias over the whole board with no knowledge of the pair corridors; D10's USB3 then had its corridor START cell blocked by
-# C15's ground via 0.73 mm away and the section could not be laid at all. prefanout.py already reads existing tracks and vias as
-# obstacles, so it fits around the laid pairs, while the pre-router has no such freedom: the constrained nets go first.
-# only nets with a plane or pour to land on (7 Sep 2026: a pre-placed via of a net without a plane is one more open for the router)
-python3 ../tools/prefanout.py $N.kicad_pcb 'GND,+5V_S1,+5V_S2,+5V_S3,+5V_DEV' fine 2>&1 | grep -E 'fanout:'
-kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
-python3 ../tools/escape_prune.py $N.kicad_pcb out/$N-preroute-drc.json 2>&1 | grep escape_prune   # escapes in a hard violation go, the router fans those pads
-ESCAPE_SKIP=U3,U4,J_HDMI python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?; grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8; [ "$PA" -eq 0 ] || [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || { echo "BLOCK placement predictor (out/place_audit.log, out/place_audit.png)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }   # 8 Sep 2026 (MESHSAT-862 Stage D): after the escapes, the fans are measured, not guessed; a collision is a FAIL before any route is bought
-cp $N.kicad_pcb out/$N-preroute.kicad_pcb
-kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
-python3 ../tools/hardset.py out/$N-preroute-drc.json pre --gate out/preroute-gate.txt --examples 6 | sed 's/^hardset:/pre-route DRC:/'   # 8 Sep 2026 (MESHSAT-862): one hard set for every gate (tools/hardset.py)
-python3 ../tools/check_zone_nets.py $N.kicad_pcb > out/zone_nets.log 2>&1; ZN=$?; grep -E "FAIL|zone nets" out/zone_nets.log; [ "$ZN" -eq 0 ] || echo "BLOCK zone-nets (DRC gate said: $(cat out/preroute-gate.txt))" > out/preroute-gate.txt   # 8 Sep 2026 (MESHSAT-862): the grep always matched the summary line, so the old `|| echo BLOCK` never fired
-V=$(cat out/preroute-gate.txt); echo PREROUTE-DONE $V; [ "$V" = OK ] || exit 1   # 8 Sep 2026 (MESHSAT-862): a chain run by hand used to exit 0 on its own BLOCK
+exec bash "$(dirname "$0")/full.sh" "$1" b

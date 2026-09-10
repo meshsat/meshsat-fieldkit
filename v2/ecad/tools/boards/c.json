@@ -1,0 +1,16 @@
+{
+  "name": "pcb-c-display",
+  "letter": "c",
+  "title": "PCB-C CONTROL PANEL backer",
+  "footprint_generator": null,
+  "extra_compile": ["panel1450.py"],
+  "gate_before_placement": false,
+  "bypass_place_after": "stackup",
+  "escape_env": {},
+  "pair_classes": "USB",
+  "pair_layers": "F.Cu",
+  "pair_hop_layers": "In2.Cu",
+  "pair_tail": 12,
+  "fanout_nets": "GND",
+  "escape_prune_before_audit": false
+}
