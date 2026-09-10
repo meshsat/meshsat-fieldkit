@@ -19,6 +19,8 @@ A board file does:
 The state is module level because one process generates one board. Nothing here knows anything about any board: every table
 (`FP`, `POWER`, `SYNTH`) comes from the board file through `configure()`."""
 import re, sys, os, uuid
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import intent as _intent   # `c(..., bypass=(part, pin))` records the pin a decoupling capacitor serves; the engine owns that call
 
 
 SYMDIR = os.environ.get("KICAD_SYMBOLS", "/usr/share/kicad/symbols/")

@@ -13,6 +13,10 @@ and a USB camera module behind a sealed window (its lead to B16's J_CAM). Eight 
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-c-display"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+# 10 September 2026 (MESHSAT-862, red team C2): the schematic engine lives in kisch.py, one copy for the six boards.
+# What stays here is this board: its part tables, its nets, its sheet layout. `ic()` is strict for every board again.
+import kisch
+from kisch import (U, c, emit_part, emit_pwr_flag, ensure, esd, extents, find_sym, flatten, flatten_raw, ic, label, lib_tree, noconn, parse, part, pins_of, place_symbol, q, r, rename_units, ser, synth_symbol, text, tps22810, uq, usb_c_recept, wire)
 import intent as _intent
 # the loads as the schematic wires them (8 Sep 2026): the LED rail leaves through the LIGHTING toggle in the left strip and comes back as LED_RAIL_SW,
 # the LDO feeds the controller, the expanders, the e-paper and the sensor, the sounder is the rest; without them dc_drop split the whole 0.6 A over
@@ -25,76 +29,7 @@ _intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
-def parse(s):
-    tok = re.findall(r'\(|\)|"(?:[^"\\]|\\.)*"|[^\s()"]+', s)
-    def rd(i):
-        out = []
-        while i < len(tok):
-            t = tok[i]
-            if t == "(":
-                sub, i = rd(i + 1); out.append(sub)
-            elif t == ")":
-                return out, i + 1
-            else:
-                out.append(t); i += 1
-        return out, i
-    return rd(0)[0]
-def ser(n, ind=0):
-    if not isinstance(n, list): return n
-    if all(not isinstance(x, list) for x in n): return "(" + " ".join(n) + ")"
-    head = []
-    i = 0
-    while i < len(n) and not isinstance(n[i], list): head.append(n[i]); i += 1
-    s = "(" + " ".join(head)
-    for x in n[i:]:
-        s += "\n" + "\t" * (ind + 1) + ser(x, ind + 1) if isinstance(x, list) else " " + x
-    return s + "\n" + "\t" * ind + ")"
-def q(s): return '"' + s.replace('\\', '\\\\').replace('"', '\\"') + '"'
-def uq(s): return s[1:-1] if s.startswith('"') else s
 LIBCACHE = {}
-def lib_tree(lib):
-    if lib not in LIBCACHE: LIBCACHE[lib] = parse(open(SYMDIR + lib + ".kicad_sym").read())[0]
-    return LIBCACHE[lib]
-def find_sym(lib, name):
-    for e in lib_tree(lib)[1:]:
-        if isinstance(e, list) and e and e[0] == "symbol" and uq(e[1]) == name: return e
-    raise SystemExit("symbol not found: %s:%s" % (lib, name))
-def flatten(lib, name):
-    sym = find_sym(lib, name)
-    ext = [e for e in sym if isinstance(e, list) and e and e[0] == "extends"]
-    if ext:
-        parent = flatten_raw(lib, uq(ext[0][1]))
-        child_props = {uq(e[1]): e for e in sym if isinstance(e, list) and e and e[0] == "property"}
-        out = ["symbol", q(lib + ":" + name)]
-        for e in parent[2:]:
-            if isinstance(e, list) and e and e[0] == "property": e = child_props.get(uq(e[1]), e)
-            out.append(e)
-        for k, e in child_props.items():
-            if not any(isinstance(x, list) and x and x[0] == "property" and uq(x[1]) == k for x in out): out.append(e)
-        return rename_units(out, uq(ext[0][1]), name)
-    return rename_units(flatten_raw(lib, name), name, name)
-def flatten_raw(lib, name):
-    import copy
-    sym = copy.deepcopy(find_sym(lib, name))
-    ext = [e for e in sym if isinstance(e, list) and e and e[0] == "extends"]
-    if ext: return flatten(lib, name)
-    sym[1] = q(lib + ":" + name); return sym
-def rename_units(sym, oldname, newname):
-    for e in sym:
-        if isinstance(e, list) and e and e[0] == "symbol" and uq(e[1]).startswith(oldname + "_"): e[1] = q(newname + uq(e[1])[len(oldname):])
-    return [e for e in sym if not (isinstance(e, list) and e and e[0] == "extends")]
-def pins_of(sym):
-    pins = []
-    def walk(n):
-        for e in n:
-            if isinstance(e, list) and e:
-                if e[0] == "symbol": walk(e)
-                elif e[0] == "pin":
-                    at = [x for x in e if isinstance(x, list) and x and x[0] == "at"][0]
-                    num = uq([x for x in e if isinstance(x, list) and x and x[0] == "number"][0][1])
-                    nm = uq([x for x in e if isinstance(x, list) and x and x[0] == "name"][0][1])
-                    pins.append((num, nm, float(at[1]), float(at[2]), int(float(at[3]))))
-    walk(sym); return pins
 
 # ----------------------------------------------------------------- synthetic box symbols (odd pins left, even pins right)
 # Raspberry Pi RP2040 (QFN-56, pin 57 the pad), the PDi 24-way FPC (pin names from the driving circuit note rev 02)
@@ -105,24 +40,6 @@ RP2040 = {1: "IOVDD", 2: "GPIO0", 3: "GPIO1", 4: "GPIO2", 5: "GPIO3", 6: "GPIO4"
 EPD24 = {1: "NC", 2: "GDR", 3: "RESE", 4: "NC", 5: "VDHR", 6: "NC", 7: "NC", 8: "BS", 9: "BUSY_N", 10: "RST_N", 11: "DC", 12: "CSB", 13: "SCL", 14: "SDA", 15: "VDDIO", 16: "VDD", 17: "VSS", 18: "VDDD",
          19: "NC", 20: "VDH", 21: "VGH", 22: "VDL", 23: "VGL", 24: "VCOM", 25: "SHIELD", 26: "SHIELD"}
 SYNTH = {"RP2040": RP2040, "EPD24": EPD24}
-def synth_symbol(lib, name):
-    pins = SYNTH[name]; n = len(pins); rows = (n + 1) // 2; first = min(pins)
-    W = 30.48; H = rows * 2.54 + 2.54
-    fx = lambda: ["effects", ["font", ["size", "1.27", "1.27"]]]
-    sym = ["symbol", q(lib + ":" + name), ["pin_names", ["offset", "1.016"]], ["exclude_from_sim", "no"], ["in_bom", "yes"], ["on_board", "yes"],
-           ["property", q("Reference"), q("U"), ["at", "0", "%.2f" % (H / 2 + 1.27), "0"], fx()],
-           ["property", q("Value"), q(name), ["at", "0", "%.2f" % (-H / 2 - 1.27), "0"], fx()],
-           ["property", q("Footprint"), q(""), ["at", "0", "0", "0"], ["effects", ["font", ["size", "1.27", "1.27"]], ["hide", "yes"]]],
-           ["property", q("Datasheet"), q(""), ["at", "0", "0", "0"], ["effects", ["font", ["size", "1.27", "1.27"]], ["hide", "yes"]]]]
-    body = ["symbol", q(name + "_0_1"), ["rectangle", ["start", "%.2f" % (-W / 2), "%.2f" % (H / 2)], ["end", "%.2f" % (W / 2), "%.2f" % (-H / 2)],
-            ["stroke", ["width", "0.254"], ["type", "default"]], ["fill", ["type", "background"]]]]
-    unit = ["symbol", q(name + "_1_1")]
-    for num in sorted(pins):
-        row = (num - first) // 2; y = H / 2 - 2.54 * (row + 1)
-        if (num - first) % 2 == 0: at = ["at", "%.2f" % (-W / 2 - 2.54), "%.2f" % y, "0"]
-        else: at = ["at", "%.2f" % (W / 2 + 2.54), "%.2f" % y, "180"]
-        unit.append(["pin", "passive", "line", at, ["length", "2.54"], ["name", q(pins[num]), fx()], ["number", q(str(num)), fx()]])
-    sym.append(body); sym.append(unit); return sym
 
 # ----------------------------------------------------------------- footprints
 FP = {
@@ -134,30 +51,18 @@ FP = {
  "SW19": "meshsat:PanelSwitch_19mm", "SW16": "meshsat:PanelSwitch_16mm", "TGL6": "meshsat:ToggleBody_DPDT", "TGL3": "meshsat:ToggleBody_SPDT", "HSJ": "meshsat:PanelJack_17mm", "CAMH": "MountingHole:MountingHole_2.2mm_M2",
  "BZ": "meshsat:PanelSounder", "MHPAD": "meshsat:BackerScrew_M3_GND",
 }
-P = []
-def part(ref, lib, sym, value, fp, nets, lcsc=""):
-    if any(p["ref"] == ref for p in P): raise SystemExit("duplicate reference " + ref)
-    P.append(dict(ref=ref, lib=lib, sym=sym, value=value, fp=FP.get(fp, fp), nets={str(k): v for k, v in nets.items()}, lcsc=lcsc))
+kisch.configure(fp=FP, synth=SYNTH)   # the engine needs the tables before the first part
+P = kisch.P                           # one list, shared with the engine (not a copy)
 def synth(ref, name, value, fp, nets, lcsc=""):
     full = {str(k): nets.get(k, nets.get(str(k), "NC")) for k in SYNTH[name]}
     part(ref, "Connector_Generic", name, value, fp, full, lcsc)
-def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": a, "2": b}, lcsc)
-def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
-    part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
-    if bypass: _intent.bypass(ref, bypass[0], bypass[1])   # 8 Sep 2026 (MESHSAT-862): the pin this capacitor serves, for the decoupling gate
 def led(ref, colour, anode, cathode): part(ref, "Device", "LED", colour, "LED", {"2": anode, "1": cathode})
 def nfet(ref, gate, source, drain, value="2N7002"): part(ref, "Transistor_FET", "2N7002", value, "SOT23", {"1": gate, "2": source, "3": drain}, "C8545")   # 1 G 2 S 3 D (SOT-23 order, appendix 32.36)
 def level(ref, rn, far, near, near_rail, far_rail=None, rf=None):
     """Bidirectional 2N7002 stage between a module-domain line (near, pulled up to the module's rail) and the always-on side (far); the module off = gate low, nothing flows."""
     nfet(ref, near_rail, near, far); r(rn, "10k", near, near_rail)
     if far_rail: r(rf, "10k", far, far_rail)
-def usb_c_recept(ref, dp, dm, vbus, cc1, cc2):
-    part(ref, "Connector", "USB_C_Receptacle_USB2.0_16P", "USB-C 2.0 receptacle", "USBC",
-         {"A1": "GND", "A12": "GND", "B1": "GND", "B12": "GND", "A4": vbus, "A9": vbus, "B4": vbus, "B9": vbus, "A5": cc1, "B5": cc2, "A6": dp, "B6": dp, "A7": dm, "B7": dm, "A8": "NC", "B8": "NC", "S1": "GND"}, "C165948")
-def esd(ref, dp, dm, vbus): part(ref, "Power_Protection", "USBLC6-2SC6", "USBLC6-2SC6", "SOT236", {"1": dp, "6": dp, "3": dm, "4": dm, "5": vbus, "2": "GND"}, "C7519")
 def tps2065(ref, rail, en, out, flt): part(ref, "Power_Management", "TPS2065CDBV", "TPS2065CDBV", "SOT235", {"5": rail, "4": en, "1": out, "3": flt, "2": "GND"})
-def tps22810(ref, vin, en, out, ct): part(ref, "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": vin, "5": en, "1": out, "2": "NC", "3": ct, "4": "GND", "7": "GND"})
-def ic(ref, npins, value, fp, nets, lcsc=""): part(ref, "Connector_Generic", "Conn_01x%02d" % npins, value, fp, {str(k): nets.get(str(k), "NC") for k in range(1, npins + 1)}, lcsc)
 
 def led3(ref, colour, a, k): part(ref, "Device", "LED", "3 mm %s, sunlight viewable" % colour, "LED3", {"2": a, "1": k})
 def tp(ref, net): part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
@@ -167,7 +72,7 @@ part("J_PANEL", "Connector_Generic", "Conn_02x13_Odd_Even", "panel ribbon from B
  "1": "+5V", "2": "+5V", "3": "GND", "4": "SDA", "5": "SCL", "6": "EXP_INT", "7": "TR_APRS", "8": "EMCON_HW", "9": "GND", "10": "ZEROIZE_HW", "11": "TX_INHIBIT_n", "12": "HDMI_SEL1", "13": "HDMI_SEL2",
  "14": "GND", "15": "USB_PNL_P", "16": "USB_PNL_N", "17": "GND", "18": "HB1", "19": "HB2", "20": "HB3", "21": "SLOT_EN1", "22": "SLOT_EN2", "23": "SLOT_EN3", "24": "PI_SHDN_REQ", "25": "PI_KILL", "26": "SHORE_INHIBIT"})
 c("C1", "10u", "+5V", "GND", "C10u", "C15850"); c("C2", "10u", "+3V3", "GND", "C10u", "C15850")
-ic("U5", 5, "TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)", "SOT235", {"1": "+5V", "2": "GND", "3": "+5V", "5": "+3V3"})
+ic("U5", 5, "TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)", "SOT235", {"1": "+5V", "2": "GND", "3": "+5V", "4": "NC", "5": "+3V3"})
 c("C3", "1u", "+5V", "GND"); c("C4", "1u", "+3V3", "GND")
 esd("U6", "USB_PNL_P", "USB_PNL_N", "+3V3"); esd("U7", "SDA", "SCL", "+3V3"); esd("U8", "TR_APRS", "EXP_INT", "+3V3")
 for i in range(1, 6): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": ["+5V", "+3V3", "GND", "LED_RAIL_SW", "LED_RAIL"][i - 1]})
@@ -208,7 +113,7 @@ r("R14", "10k", "TX_INHIBIT_n", "+3V3", "R", "C25804"); c("C24", "10n", "TX_INHI
 # inverted the toggle into them. Asserting EMCON therefore ENABLED the PA and released both M.2 radios' W_DISABLE1#. A 74LVC1G34
 # non-inverting buffer in the same SOT-23-5 land (2 A, 4 Y) fixes the sense at its source. The toggle stays the only driver of
 # TX_INHIBIT_n: A22's gate that drove it back from EMCON_HW is deleted, which also removes a one-inversion feedback loop.
-ic("U9", 5, "74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"})
+ic("U9", 5, "74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"1": "NC", "2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"})
 c("C25", "100n", "+3V3", "GND")
 r("R15", "10k", "LED_RAIL_SW", "RAIL_SENSE", "R", "C25804"); r("R16", "10k", "PANEL_ID", "+3V3", "R", "C25804")
 part("JP2", "Jumper", "SolderJumper_2_Open", "PANEL_ID strap (closed = variant B)", "JP2", {"1": "PANEL_ID", "2": "GND"})
@@ -271,51 +176,10 @@ for i in range(1, 9): part("H%d" % i, "Mechanical", "MountingHole_Pad", "M3 x 6 
 for i, net in enumerate(("+5V", "+3V3", "GND", "EXP_INT", "TX_INHIBIT_n", "EMCON_HW", "ZEROIZE_HW", "SPARE1", "SPARE2", "SPARE3", "SPARE4", "SPARE5", "SPARE6", "SPARE7", "SPARE8", "SPARE9", "SPARE10", "SPARE11", "SPARE12", "EPD_BUSY", "EPD_VGH", "EPD_VGL", "HB1", "HB2", "HB3", "SLOT_EN1", "SLOT_EN2", "SLOT_EN3", "HDMI_SEL1", "HDMI_SEL2", "PI_SHDN_REQ", "PI_KILL", "SHORE_INHIBIT", "PIJ2_A", "PIJ2_B"), 6): tp("TP%d" % i, net)
 # ----------------------------------------------------------------- emit (as B15)
 POWER = {"GND": ("power", "GND")}
-libsyms = {}; out = []; ROOT = str(uuid.uuid4())
-def U(): return str(uuid.uuid4())
-def ensure(lib, name):
-    key = lib + ":" + name
-    if key not in libsyms: libsyms[key] = synth_symbol(lib, name) if name in SYNTH else flatten(lib, name)
-    return libsyms[key]
-def extents(sym):
-    pins = pins_of(sym); xs = [p[2] for p in pins] or [0]; ys = [p[3] for p in pins] or [0]
-    return min(xs), max(xs), min(ys), max(ys)
-def place_symbol(lib, name, ref, value, fp, x, y, lcsc="", hide_props=False):
-    sym = ensure(lib, name); pins = pins_of(sym); x0, x1, y0, y1 = extents(sym)
-    s = '(symbol (lib_id %s) (at %.2f %.2f 0) (unit 1) (exclude_from_sim no) (in_bom %s) (on_board %s) (dnp no) (fields_autoplaced yes) (uuid "%s")\n' % (
-        q(lib + ":" + name), x, y, "no" if lib == "power" or name in ("TestPoint",) else "yes", "no" if lib == "power" else "yes", U())
-    def prop(k, v, px, py, hide): return '\t(property %s %s (at %.2f %.2f 0) (effects (font (size 1.27 1.27)) (justify left)%s))\n' % (q(k), q(v), px, py, " (hide yes)" if hide else "")
-    s += prop("Reference", ref, x + x1 + 1.27, y - y1 - 1.27, hide_props); s += prop("Value", value, x + x1 + 1.27, y - y1 + 1.27, hide_props)
-    s += prop("Footprint", fp, x, y, True); s += prop("Datasheet", "", x, y, True); s += prop("Description", "", x, y, True)
-    if lcsc: s += prop("LCSC", lcsc, x, y, True)
-    for num, nm, px, py, rot in pins: s += '\t(pin %s (uuid "%s"))\n' % (q(num), U())
-    s += '\t(instances (project %s (path "/%s" (reference %s) (unit 1))))\n)\n' % (q(PROJECT), ROOT, q(ref))
-    out.append(s); return pins
-def wire(x1, y1, x2, y2): out.append('(wire (pts (xy %.2f %.2f) (xy %.2f %.2f)) (stroke (width 0) (type default)) (uuid "%s"))\n' % (x1, y1, x2, y2, U()))
-def label(net, x, y, rot):
-    just = {0: "left bottom", 180: "right bottom", 90: "left bottom", 270: "right bottom"}[rot]
-    out.append('(label %s (at %.2f %.2f %d) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify %s)) (uuid "%s"))\n' % (q(net), x, y, rot, just, U()))
-def noconn(x, y): out.append('(no_connect (at %.2f %.2f) (uuid "%s"))\n' % (x, y, U()))
-def text(t, x, y, size=2.0): out.append('(text %s (exclude_from_sim no) (at %.2f %.2f 0) (effects (font (size %.2f %.2f) bold) (justify left bottom)) (uuid "%s"))\n' % (q(t), x, y, size, size, U()))
+libsyms = kisch.libsyms; out = kisch.out; pf_n = kisch.pf_n   # the engine's objects, by reference
+ROOT = str(uuid.uuid5(kisch.UUID_NS, "root:" + PROJECT))   # deterministic: a board regenerates byte for byte (10 Sep 2026)
 STUB = 5.08
-pf_n = [0]
-def emit_part(p, x, y):
-    pins = place_symbol(p["lib"], p["sym"], p["ref"], p["value"], p["fp"], x, y, p["lcsc"]); seen = set()
-    for num, nm, px, py, rot in pins:
-        sx, sy = x + px, y - py; key = (round(sx, 2), round(sy, 2)); net = p["nets"].get(num)
-        if net is None: raise SystemExit("%s pin %s (%s) has no net assignment" % (p["ref"], num, nm))
-        if key in seen: continue
-        seen.add(key)
-        if net == "NC": noconn(sx, sy); continue
-        dx, dy = {0: (-1, 0), 180: (1, 0), 90: (0, 1), 270: (0, -1)}[rot]; ex, ey = sx + dx * STUB, sy + dy * STUB; wire(sx, sy, ex, ey)
-        if net in POWER:
-            lib, nm2 = POWER[net]; place_symbol(lib, nm2, "#PWR%03d" % pf_n[0], net, "", ex, ey); pf_n[0] += 1
-        else: label(net, ex, ey, {(-1, 0): 180, (1, 0): 0, (0, 1): 270, (0, -1): 90}[(dx, dy)])
-def emit_pwr_flag(p, x, y):
-    place_symbol("power", "PWR_FLAG", p["ref"], "PWR_FLAG", "", x, y); net = p["nets"]["1"]; wire(x, y, x, y + STUB)
-    if net in POWER:
-        lib, nm2 = POWER[net]; place_symbol(lib, nm2, "#PWR%03d" % pf_n[0], net, "", x, y + STUB); pf_n[0] += 1
-    else: label(net, x, y + STUB, 270)
+kisch.configure(power=POWER, stub=STUB, root=ROOT, project=PROJECT, seed=PROJECT)
 byref = {p["ref"]: p for p in P}
 
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
@@ -328,7 +192,7 @@ placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
 SECTIONS.append(("STANDOFF SCREWS (GND BOND), TEST POINTS, THE REST", [p["ref"] for p in P if p["ref"] not in placed_refs]))
 def layout(page_h):
     global out, pf_n
-    out = []; pf_n = [0]; placed = set(); COLW = 92.0; x = 20.0; y = 30.0
+    out = kisch.reset_body(); placed = set(); COLW = 92.0; x = 20.0; y = 30.0
     for title, refs in SECTIONS:
         hs = []
         for ref in refs:
