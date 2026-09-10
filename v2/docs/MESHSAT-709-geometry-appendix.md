@@ -4091,7 +4091,26 @@ order decides four pairs of it: the class that goes first should be the one with
 correct configurations are 44, 47, 56, 56 and 60. The pre-router lays **60 of B19's 113 pairs** and the ruling of 32.94 needs
 113. What moved today was understanding rather than coverage: the layer confinement was a real defect and is fixed, the
 negotiated router is measured and rejected, the impedance of an inner-layer pair is known rather than assumed, and the kernel
-is three times faster with every step proved to change nothing. **The remaining 53 pairs are not a router problem.** The
-failures concentrate where 32.98 said they would, at the fine-pitch parts and in the congested middle band, and the lever 32.98
-named beside the negotiated router is the one still untried: **a floor plan built around the pair corridors**, which is a
-placement change on B and an owner-visible piece of work rather than another knob.
+is three times faster with every step proved to change nothing.
+
+**CORRECTED 10 September 22:40, and the correction is the useful part.** This section first said "the remaining 53 pairs are
+not a router problem" and named a floor plan as the next step. A round-two red team counted the final `FAIL` reason of every
+failed pair in the two logs of this very arm, and the sentence is wrong:
+
+| the reason the pair was finally lost | count |
+|---|---:|
+| a corridor was found, and no stub path reached the pad from its end | **23** |
+| a corridor was found, and the offset legs did not fit it | **12** |
+| a corridor was found, and there was no via site for the layer change | 3 |
+| a corridor was found, and the two legs crossed | 2 |
+| **no corridor at all**, more than 20,000 expansions | 9 |
+| **no corridor at all**, fewer than 20,000 (a pocketed end) | 4 |
+
+**Forty of the fifty three had a corridor and were lost afterwards, in the pre-router's own end geometry.** Only thirteen are
+corridor failures and four of those are pocketed ends, which is the placement-shaped part. A floor plan would not have touched
+the forty. Appendix 32.95 named all three of the top rows as pre-router causes and they have been open since; the count says
+they are not a tail, they are the bulk. The order of work is therefore the stub-first corridor endpoint (the 23), the leg
+offset at corners (the 12), the via sites and crossings (the 5), and only then a floor plan, against the 13.
+
+The claim was made from where the failures felt concentrated rather than from counting them, which is the same mistake as
+reading an exit status instead of the number a change was supposed to move (32.96). The count took one command.
