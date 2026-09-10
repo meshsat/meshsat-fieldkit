@@ -14,6 +14,7 @@ python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage
 # each one only knows the locked copper of stage 1, so their boundaries collide, and on B19 the merge of five concurrent
 # regions carried 1,121 hard violations that three rip passes could only bring to about 400. Sequential costs wall clock
 # (five jobs in a row rather than five at once) and buys a merge that has nothing to reconcile.
+for G in $PARTS; do rm -rf $W/$G $W/route-$G.log; done   # 10 Sep 2026: the merge and the report used to pick up the sessions and logs of a PREVIOUS pass for a group this pass never reached
 if [ "${PART_SEQ:-0}" = 1 ]; then
   for G in $PARTS; do
     echo "stage2: sequential group $G"
@@ -28,8 +29,17 @@ else
   wait
 fi
 for G in $PARTS; do tail -2 $W/route-$G.log; done
-ARGS=""; for G in $PARTS; do [ -s $W/$G/route.ses ] && ARGS="$ARGS $G=$W/$G/route.ses"; done
-python3 ../tools/ses_merge.py $W/stage1.kicad_pcb $W/part2.json $W/merged.kicad_pcb $ARGS 2>&1 | grep -v -E "Debug|leak"
+# 10 September 2026: in sequential mode every group's session was ALREADY imported and locked into stage1 as it finished, so
+# merging the same sessions again laid each group's copper a second time on top of itself (B19: 1,770 DEVW tracks added to a
+# board that already carried them, and the duplicate pieces read as clearance and shorting violations). The sequential board
+# is stage1 as it stands.
+if [ "${PART_SEQ:-0}" = 1 ]; then
+  cp $W/stage1.kicad_pcb $W/merged.kicad_pcb
+  echo "stage2: sequential mode, the merged board is stage1 (each group was imported and locked as it finished)"
+else
+  ARGS=""; for G in $PARTS; do [ -s $W/$G/route.ses ] && ARGS="$ARGS $G=$W/$G/route.ses"; done
+  python3 ../tools/ses_merge.py $W/stage1.kicad_pcb $W/part2.json $W/merged.kicad_pcb $ARGS 2>&1 | grep -v -E "Debug|leak"
+fi
 cp $N.kicad_pro $W/merged.kicad_pro
 kicad-cli pcb drc --severity-all --format json -o $W/merged-drc.json $W/merged.kicad_pcb >/dev/null 2>&1
 python3 - $W/merged-drc.json <<'PY'
