@@ -106,3 +106,5 @@ family-matches.txt   tooling   # the declared reasons a family sheet covers a sp
 open-picks.txt       tooling   # the items of the kit with no part chosen yet, and what each pick needs
 not-used.txt         tooling   # part numbers named in a document only to record that they were rejected
 PARTS.md             current   # the generated inventory of everything V2 uses, checked against this store on every run
+sources.txt          tooling   # where each vendor document came from, folder level for the backfill and file level for each fetch
+duplicates-allowed.txt   tooling   # the declared reasons a file is kept in two places
