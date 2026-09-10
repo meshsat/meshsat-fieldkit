@@ -788,7 +788,12 @@ def main(a):
                 for step in range(int(out_ * 10), 121):
                     cx_, cy_ = mx_ + nx_ * 0.1 * step, my_ + ny_ * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
                     if 0 <= ii - 3 and ii + 3 < gr.NY and 0 <= jj - 3 and jj + 3 < gr.NX and any(not trk[L][ii - 3:ii + 4, jj - 3:jj + 4].any() for L in Ls_): return cx_, cy_
-                return mx_ + nx_ * out_, my_ + ny_ * out_
+                # 10 September 2026 (D10 USB_D8): the outward normal of the P-N line is the WRONG way out of a through-hole header
+                # whose pair sits across the two rows: the normal then runs ALONG the pin row and hits pin after pin, and the tool
+                # returned a blocked point that A* refused with "the start cell is passable on no allowed layer". A pair on the old
+                # diagonal pins escaped between four pins by luck of the geometry. None here means "no way out along the normal",
+                # and the caller falls back to the sixteen-direction sweep of free_end.
+                return None
             gx0, gy0 = gx, gy
             def entry_station0(st):
                 if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and (row_scheme(q.GetParentFootprint()) or via_entry(q.GetParentFootprint())) for q in st): return False   # a 0.4 mm row, or an IC under PAIR_ENTRY_VIA: the escape vias are the ends
@@ -839,8 +844,10 @@ def main(a):
             def entry_out_(st):
                 pitch = dist_p(st[0], st[1]); tgt = 0.0 if pitch <= 0.7 else (1.0 if pitch <= 1.0 else 1.6)
                 return max(tgt + 0.8, min(2.5 + tgt, d_mid / 2 - 0.3))
-            sx, sy = fine_end((pa, na), entry_out_((pa, na))) if fineA0 else free_end(sx, sy, A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0)
-            gx, gy = fine_end((pb, nb), entry_out_((pb, nb))) if fineB0 else free_end(gx, gy, B[0][0], B[0][1], B[1][0], B[1][1], sx, sy)
+            _fa = fine_end((pa, na), entry_out_((pa, na))) if fineA0 else None
+            sx, sy = _fa if _fa else free_end(sx, sy, A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0)
+            _fb = fine_end((pb, nb), entry_out_((pb, nb))) if fineB0 else None
+            gx, gy = _fb if _fb else free_end(gx, gy, B[0][0], B[0][1], B[1][0], B[1][1], sx, sy)
             sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); win = 25.0
             window = (gr.cell(min(sx, gx) - win, min(sy, gy) - win), gr.cell(max(sx, gx) + win, max(sy, gy) + win))
             window = ((max(0, window[0][0]), max(0, window[0][1])), (min(gr.NX - 1, window[1][0]), min(gr.NY - 1, window[1][1])))
