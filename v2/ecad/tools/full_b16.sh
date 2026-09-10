@@ -26,6 +26,11 @@ grep -q 'RESULT: ALL PASS' out/check_b3.log || { echo "BLOCK numeric gate (out/c
 [ -n "${PLACE_JITTER:-}" ] && python3 ../tools/place_jitter.py $N.kicad_pcb "$PLACE_JITTER" 2>&1 | grep place_jitter   # Stage E data campaign: a jittered neighbour of the placement (the gates below still judge it)
 ESCAPE_SKIP=U3,U4,J_HDMI python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'   # the WQFN-42 display switches: the QFN scheme's vias collide on the 3.5 mm short sides, the router fans them itself
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
+# 10 September 2026: the placed board with its escapes and BEFORE any pair copper. Every measurement of the pre-router needs this
+# input, and it did not exist: out/<name>-preroute.kicad_pcb is copied AFTER the pre-router, so a run against it starts on top of
+# the previous pass's locked pair copper (4,969 mm of it on B19) and measures nothing. PREROUTE_STOP_AFTER_PLACE=1 stops here.
+cp $N.kicad_pcb out/$N-placed.kicad_pcb
+[ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
 # B17 (8 Sep 2026, MESHSAT-862 rule 1): the USB and DIFF100 pairs laid as locked copper on F.Cu and B.Cu (the layer rule) before the router (PAIR_GATE=0 reports only)
 PAIR_LAYERS=${PAIR_LAYERS:-F.Cu,B.Cu} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-In2.Cu,In3.Cu} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes USB,DIFF100 > out/pair_preroute.log 2>&1; PP=$?; grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -40; [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || { echo "BLOCK pair pre-router (out/pair_preroute.log)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
 # 9 Sep 2026 (D10, appendix 32.83): THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT. The fanout used to run first and scatter
