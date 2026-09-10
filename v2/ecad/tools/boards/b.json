@@ -6,11 +6,29 @@
   "extra_compile": [],
   "gate_before_placement": true,
   "bypass_place_after": "mechanical",
-  "escape_env": {"ESCAPE_SKIP": "U3,U4,J_HDMI"},
+  "escape_env": {
+    "ESCAPE_SKIP": "U3,U4,J_HDMI"
+  },
   "pair_classes": "USB,DIFF100",
   "pair_layers": "F.Cu,B.Cu",
   "pair_hop_layers": "In2.Cu,In3.Cu",
   "pair_tail": 40,
   "fanout_nets": "GND,+5V_S1,+5V_S2,+5V_S3,+5V_DEV",
-  "escape_prune_before_audit": true
+  "escape_prune_before_audit": true,
+  "pair_passes": [
+    {
+      "classes": "DIFF100",
+      "layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+      "hop_layers": "In2.Cu,In3.Cu",
+      "inner": "DIFF100:0.13/0.127",
+      "note": "100 ohm: on In2/In3 the field solver reads 102 ohm at a 0.127 gap, inside tolerance, and the envelope is 0.387 against the 0.46 it uses outside, so this class gains both layers and room"
+    },
+    {
+      "classes": "USB",
+      "layers": "F.Cu,B.Cu",
+      "hop_layers": "In2.Cu",
+      "inner": "",
+      "note": "90 ohm: stays on the outer layers, where its class geometry already hits the target; 0.127/0.127 on In2/In3 would read 102 ohm against a 90 ohm target"
+    }
+  ]
 }

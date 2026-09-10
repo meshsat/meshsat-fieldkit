@@ -17,6 +17,13 @@ that has both). Both use the same binary heap over the same key `(f, d, state)` 
 exactly as the tuple `(L, i, j)` heapq used to compare, so the two return byte-identical paths and the fast one is not a new
 router. `selftest` proves it on random maps.
 
+The heuristic is `math.sqrt` of an EXACT integer sum, never `math.hypot` (round-two red teams, H1). A sum of two squared
+integer cell offsets is exact in a float and `sqrt` is correctly rounded on every platform, while `hypot` is not required to
+be, so CPython and the compiled kernel could differ by an ulp and reorder two entries of equal true distance. The paths
+agreed even before this, for a reason worth stating rather than relying on: the possible predecessors of a cell differ from
+it by at most one in each axis, so an ulp can only reorder nodes far apart in the heap and can never change which neighbour
+wins a `prev`. With the sum exact, the equivalence argument no longer rests on that lemma.
+
 The wall-clock budget is NOT checked inside the search any more: the kernel stops on expansions, which is reproducible, and the
 caller looks at the clock between searches. The record's own rule (appendix 32.90: a budget that decides a result must be counted
 in work, not in time) is why.
@@ -54,7 +61,7 @@ def _kernel(passable, viablock, cost, use_cost, starts_L, starts_i, starts_j, gL
         s = (L * H + i) * W + j
         if dist[s] <= 0.0: continue
         dist[s] = 0.0
-        f = math.hypot(float(i - gi), float(j - gj))
+        f = math.sqrt(float((i - gi) * (i - gi) + (j - gj) * (j - gj)))
         if hn >= cap:
             cap *= 2
             nf = np.empty(cap, dtype=np.float64); nd = np.empty(cap, dtype=np.float64); ns = np.empty(cap, dtype=np.int64)
@@ -101,7 +108,7 @@ def _kernel(passable, viablock, cost, use_cost, starts_L, starts_i, starts_j, gL
             t = (L * H + ni) * W + nj
             if nd_ < dist[t]:
                 dist[t] = nd_; prev[t] = s
-                ff = nd_ + math.hypot(float(ni - gi), float(nj - gj))
+                ff = nd_ + math.sqrt(float((ni - gi) * (ni - gi) + (nj - gj) * (nj - gj)))
                 if hn >= cap:
                     cap *= 2
                     nf2 = np.empty(cap, dtype=np.float64); nd2 = np.empty(cap, dtype=np.float64); ns2 = np.empty(cap, dtype=np.int64)
@@ -121,7 +128,7 @@ def _kernel(passable, viablock, cost, use_cost, starts_L, starts_i, starts_j, gL
                 t = (oL * H + i) * W + j
                 if nd_ < dist[t]:
                     dist[t] = nd_; prev[t] = s
-                    ff = nd_ + math.hypot(float(i - gi), float(j - gj))
+                    ff = nd_ + math.sqrt(float((i - gi) * (i - gi) + (j - gj) * (j - gj)))
                     if hn >= cap:
                         cap *= 2
                         nf3 = np.empty(cap, dtype=np.float64); nd3 = np.empty(cap, dtype=np.float64); ns3 = np.empty(cap, dtype=np.int64)
@@ -178,7 +185,7 @@ def astar_ref(passable, viablock, cost, starts, goal, via_cost=VIA_COST_DEFAULT,
     the array kernel can be proved to be the same router rather than merely a plausible one; the selftest compares all three."""
     import heapq
     nL, H, W = passable.shape; gL, gi, gj = goal
-    def h(i, j): return math.hypot(i - gi, j - gj)
+    def h(i, j): return math.sqrt(float((i - gi) * (i - gi) + (j - gj) * (j - gj)))
     dist = {}; prev = {}; pq = []
     for (L, i, j) in starts:
         if not passable[L, i, j]: continue

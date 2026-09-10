@@ -3,11 +3,22 @@
 
 If they ever diverge, every pre-router measurement taken on a box with numba means something different from one taken without
 it, and the record's ladders stop comparing (plan stage 5, 10 September 2026)."""
+import os
 import pairsearch
 import numpy as np
+from harness import Skip
 
 
 def t_the_three_implementations_agree():
+    """Without numba this host has TWO implementations, not three, so a pass here would certify the compiled kernel by
+    never running it (round-two red teams, H2). Every pair number in the record came from the compiled kernel, so the
+    honest outcome on such a host is Skip. PAIR_REQUIRE_NUMBA=1 turns the absence into a failure, which is what the box
+    that produces the measurements sets."""
+    if pairsearch._run_nb is None:
+        if os.environ.get("PAIR_REQUIRE_NUMBA") == "1":
+            raise AssertionError("numba is absent and PAIR_REQUIRE_NUMBA=1: the compiled kernel cannot be certified here")
+        assert pairsearch.selftest(16, seed=3, verbose=False) == 0, "the two available implementations disagree"
+        raise Skip("no numba on this host: the heapq original and the array kernel agree, the compiled one was not run")
     assert pairsearch.selftest(16, seed=3, verbose=False) == 0, "the search implementations disagree"
 
 

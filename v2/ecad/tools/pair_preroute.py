@@ -56,6 +56,7 @@ PAIR_EXPANSIONS = int(os.environ.get("PAIR_EXPANSIONS", "12000000"))   # expansi
 # figure that matches the clock on a quiet core, and unlike the clock it gives the same answer whatever else the box runs.
 PAIR_SPENT = [0]      # expansions this PAIR has spent; reset per pair, because the budget is per pair
 PAIR_TOTAL = [0]      # expansions the whole pass has spent; never reset, so the summary line means what it says
+_RASTER_FALLBACK = [0]   # times the vectorised rasteriser fell back to the per-cell predicate; reported, never silent
 T0 = time.time()   # the pass's own clock, for the phase line at the end
 import pcbnew, numpy as np
 try:
@@ -66,6 +67,7 @@ from pcbnew import VECTOR2I, FromMM
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pairsearch
 _FAST_SEARCH = os.environ.get("PAIR_FAST_SEARCH", "1") != "0"   # the compiled search when numba is here, the heapq one otherwise; the same path either way (pairsearch.py selftest)
+_SEARCH_KERNEL = ("compiled" if (_FAST_SEARCH and pairsearch.HAVE_NUMBA) else "heapq")   # printed and recorded: a 13x difference must never be invisible (round-two red teams, L2)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
 # The geometry a pair takes on an INNER layer, per class, because an inner layer is a stripline and the class width that hits
@@ -141,8 +143,11 @@ class Grid:
         _g = grow + 1e-4
         try: grown.Inflate(FromMM(_g), pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, FromMM(0.05))
         except Exception:
-            try: grown.Inflate(FromMM(_g), 16)
-            except Exception: pass
+            # If BOTH inflate calls fail the polygon is rasterised at its bare outline, with no clearance ring, and a pair
+            # is then laid against the pad it should have kept away from: a silent fallback in the UNSAFE direction
+            # (round-two red teams, M1). The one-sided correctness gate never exercised this branch, because nothing raised
+            # on the board it was measured against. It raises now.
+            grown.Inflate(FromMM(_g), 16)
         # 10 September 2026, MEASURED (report 2, M1): this loop called SHAPE_POLY_SET.Contains through SWIG once per cell, and a
         # profile of three B19 pairs spent 270 of 330 seconds here across 56.4 million Contains calls and 112.8 million FromMM
         # conversions, against 41 seconds in the A* it exists to feed. The polygon's own vertices go to numpy once and
@@ -176,8 +181,12 @@ class Grid:
                     for hi in range(grown.HoleCount(oi)): m &= ~_ring_mask(grown.Hole(oi, hi))
                     inside |= m
                 return inside.reshape(len(ys), len(xs))
-            except Exception:
-                pass   # fall through to the predicate the board itself answers
+            except Exception as _e:
+                # Falling back to the per-cell SWIG predicate is legitimate (it is the same answer) but it is 17.7x slower,
+                # and it used to happen with no line anywhere: a pass could be twenty minutes slower for a reason nothing
+                # recorded (round-two red teams, M1). It is counted and reported in the summary now.
+                _RASTER_FALLBACK[0] += 1
+                if _RASTER_FALLBACK[0] == 1: print("pair_preroute: the vectorised rasteriser fell back to the per-cell predicate (%s); the maps are correct and much slower" % _e, flush=True)
         mask = np.zeros((len(ys), len(xs)), dtype=bool)
         for ii in range(i0, i1 + 1):
             for jj in range(j0, j1 + 1):
@@ -192,7 +201,9 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
 
     Cached per signature and topped up: a repeat call re-stamps nothing, it stamps only the tracks and vias laid since the last
     one. The caller mutates what it gets (`via1` is shared and written into), so a copy goes out and the cache keeps its own."""
-    ck = (id(gr), tuple(layers), frozenset(nets), round(half, 5), round(via_r, 5), round(split, 5))
+    # Keyed by the grid's IDENTITY, not its address: one Grid per cell size is kept today so id() is safe today, but a
+    # freed Grid whose address were reused would match a stale map (round-two red teams, L3).
+    ck = ((gr.G, gr.X0, gr.Y0, gr.NX, gr.NY), tuple(layers), frozenset(nets), round(half, 5), round(via_r, 5), round(split, 5))
     hit = _MAPS.get(ck)
     if hit is not None and hit[3] == MAP_EPOCH[0]:
         trk, via, seen = hit[0], hit[1], hit[2]
@@ -1556,6 +1567,7 @@ def main(a):
     for l in report: print("pair_preroute: " + l)
     n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
     print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
+    print("pair_preroute: search kernel %s%s" % (_SEARCH_KERNEL, (", rasteriser fell back to the per-cell predicate %d time(s)" % _RASTER_FALLBACK[0]) if _RASTER_FALLBACK[0] else ""))
     print("pair_preroute: seconds %.0f total, %.0f in the occupancy maps, %.0f in the corridor search, %.0f elsewhere; %d expansions"
           % (time.time() - T0, _T["maps"], _T["astar"], max(0.0, time.time() - T0 - _T["maps"] - _T["astar"]), PAIR_TOTAL[0]))
     return 0 if laid == n_pairs else 1
