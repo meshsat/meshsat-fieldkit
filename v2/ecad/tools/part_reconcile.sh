@@ -5,18 +5,18 @@
 set -uo pipefail
 cd "$1"; N="$2"; W=$PWD/out/part; B=$W/reconciled.kicad_pcb; cp $W/merged.kicad_pcb $B
 cp $N.kicad_pro $W/reconciled.kicad_pro; cp $N.kicad_pro $W/merged.kicad_pro
-score() { kicad-cli pcb drc --severity-all --format json -o "$2" "$1" >/dev/null 2>&1; python3 - "$2" <<'PY'
-import json, collections, sys
-d = json.load(open(sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])
-print("hard %d unconnected %d %s" % (sum(c[t] for t in ('clearance', 'shorting_items', 'tracks_crossing', 'hole_clearance', 'hole_to_hole', 'copper_edge_clearance')), len(d.get('unconnected_items', [])), dict((k, v) for k, v in c.items() if v and k in ('clearance', 'shorting_items', 'tracks_crossing', 'hole_clearance'))))
-PY
+# The one hard set scores the reconcile (10 September 2026, round-two red teams C1); it counted six types in a heredoc.
+score() {   # board, report -> "hard unrouted"
+  ../tools/drc.sh "$1" "$2" || { echo "999999 999999"; return; }
+  local c; c=$(mktemp); python3 ../tools/hardset.py "$2" post --counts "$c" >/dev/null || { rm -f "$c"; echo "999999 999999"; return; }
+  cat "$c"; rm -f "$c"
 }
 echo "RECONCILE merged: $(score $B $W/rec-0.json)"
 for i in 1 2 3; do
   python3 ../tools/unknot.py $B $W/rec-$((i - 1)).json 2>&1 | grep unknot
   python3 ../tools/cleanup_dangling.py $B 2>&1 | grep cleanup
   echo "RECONCILE after rip $i: $(score $B $W/rec-$i.json)"
-  H=$(python3 -c "import json,collections,sys; d=json.load(open(sys.argv[1])); c=collections.Counter(v['type'] for v in d['violations']); print(sum(c[t] for t in ('clearance','shorting_items','tracks_crossing','hole_clearance','hole_to_hole','copper_edge_clearance')))" $W/rec-$i.json)
+  read H _ < <(score $B $W/rec-$i.json)
   [ "$H" -eq 0 ] && break
 done
 cp $B $W/rec-before-stub.kicad_pcb   # 10 Sep 2026 (E7, appendix 32.89): the closures are judged, not kept blind

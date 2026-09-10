@@ -5,12 +5,12 @@
 # vias, length and segments with denominators. Usage: quality_pass.sh <project dir> <name>   (writes out/<name>-quality.log)
 set -uo pipefail
 cd "$1"; N="$2"; T=$(cd "$(dirname "$0")" && pwd); W=out/quality; rm -rf "$W"; mkdir -p "$W"; LOG=out/$N-quality.log; : > "$LOG"
+# The one hard set decides here too (10 September 2026, both round-two red teams C1). This counted six types in a heredoc
+# while the finish refused on fifteen, and it is what keeps or reverts a quality step.
 drc_counts() {   # file -> "hard unrouted"
-  python3 - "$1" <<'PY'
-import json, sys, collections
-d = json.load(open(sys.argv[1])); c = collections.Counter(v["type"] for v in d["violations"])
-print(sum(c[t] for t in ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance")), len(d.get("unconnected_items", [])))
-PY
+  local c; c=$(mktemp)
+  python3 "$T/hardset.py" "$1" post --counts "$c" >/dev/null || { rm -f "$c"; echo "quality_pass: hardset refused $1" >&2; echo "999999 999999"; return 1; }
+  cat "$c"; rm -f "$c"
 }
 measure() {   # board -> "vias length tracks"
   python3 - "$1" <<'PY' 2>/dev/null | grep -v "Debug\|assert"

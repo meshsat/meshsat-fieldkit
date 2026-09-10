@@ -36,7 +36,12 @@ if [ -n "$FPGEN" ]; then
 fi
 python3 ../tools/gen_sch_$L.py $N.kicad_sch $N > out/gen_sch.log 2>&1 || block "schematic generator (out/gen_sch.log)" out/gen_sch.log
 grep -E 'wrote|single-pin nets' out/gen_sch.log
-../tools/build_sch.sh . $N > out/build_sch.log 2>&1; grep -E 'ERC|netlist' out/build_sch.log
+# The netlist is an OUTPUT, not a file that happens to be there (10 September 2026; round-two red teams, report 1 P1). This
+# did not check build_sch.sh's status and did not delete the old netlist first, so a failed export with yesterday's netlist on
+# disk let the whole chain place a board from stale connectivity. Centralising the chains made one correction protect six boards.
+rm -f out/$N.net
+../tools/build_sch.sh . $N > out/build_sch.log 2>&1; BSCH=$?; grep -E 'ERC|netlist' out/build_sch.log
+[ "$BSCH" -eq 0 ] || block "the schematic build exited $BSCH (out/build_sch.log)" out/build_sch.log
 [ -s out/$N.net ] || block "no netlist (out/build_sch.log)" out/build_sch.log
 rm -f out/$N-erc.status; python3 ../tools/erc_gate.py . $N 2>&1 | tail -6
 grep -qE "^(clean|allowed)" out/$N-erc.status 2>/dev/null || block "ERC (out/$N-erc.json, out/$N-erc.status; allow-list erc-allow.txt with a reason per line)"

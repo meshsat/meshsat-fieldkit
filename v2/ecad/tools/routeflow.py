@@ -579,7 +579,7 @@ def selftest():
     open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: ALL PASS\n")
     try:   # 8 Sep 2026 (MESHSAT-862): the re-armed gates, each fed a broken input
         import hardset, erc_gate, verify_deliverable
-        bad = {"violations": [{"type": "solder_mask_bridge", "items": [{"description": "Pad 1 [X] of U1 on F.Cu"}, {"description": "Track [Y] on F.Cu"}]}, {"type": "courtyards_overlap", "items": [{"description": "Footprint U9"}, {"description": "Footprint U9"}]}, {"type": "zones_intersect", "items": []}, {"type": "connection_width", "items": []}], "unconnected_items": []}
+        bad = {"violations": [{"type": "solder_mask_bridge", "items": [{"description": "Pad 1 [X] of U1 on F.Cu"}, {"description": "Track [Y] on F.Cu"}]}, {"type": "courtyards_overlap", "items": [{"description": "Footprint U9"}, {"description": "Footprint U9"}]}, {"type": "zones_intersect", "items": []}, {"type": "connection_width", "items": []}], "unconnected_items": []}   # drift-ok: a fixture fed to hardset.counts, not a policy
         c = hardset.counts(bad); chk("hardset: a pad-to-track mask bridge and a zone intersection are hard, the own-courtyard overlap exempt, connection_width reported", c["hard"] == 2 and c["exempt"] == {"courtyards_overlap": 1} and c["report"] == {"connection_width": 1})
         chk("hardset: fifteen types, pre and post the same", len(hardset.HARD_POST) == 15 and hardset.HARD_PRE == hardset.HARD_POST)
         try: hardset.load(os.path.join(t, "absent.json")); chk("hardset: a missing DRC JSON raises", False)
@@ -607,10 +607,14 @@ def selftest():
     # 10 September 2026, the three predicates the red teams' P0 findings owe (C1, C3, the deliverable hole)
     tools_dir = os.path.dirname(os.path.abspath(__file__))
     strays = []
-    for fn in sorted(glob.glob(os.path.join(tools_dir, "*.py"))):
+    # Every text file, not only Python: the six-type tuple had survived in 27 shell scripts while this predicate passed
+    # (10 September 2026, both round-two red teams C1).
+    for fn in sorted(glob.glob(os.path.join(tools_dir, "*.py")) + glob.glob(os.path.join(tools_dir, "*.sh"))):
         if os.path.basename(fn) in ("hardset.py",): continue
         for i, line in enumerate(open(fn, errors="replace"), 1):
-            if '"shorting_items"' in line and "hardset" not in line and not line.lstrip().startswith("#"):
+            _q = sum(1 for _t in hardset.DRIFT_MARKERS if ('"%s"' % _t) in line or ("'%s'" % _t) in line)   # the names come from
+            # the policy itself (or this predicate would be the second definition); quoted, so prose does not trip it
+            if _q >= 2 and "hardset" not in line and not line.lstrip().startswith("#") and not re.search(r"drift-ok:\s*\S", line):
                 strays.append("%s:%d" % (os.path.basename(fn), i))
     chk("one hard set: no second definition of the DRC policy in the tools (%s)" % (", ".join(strays[:4]) or "none"), not strays)
     d2 = os.path.join(t, "deliv3"); os.makedirs(d2); open(os.path.join(d2, "x-gerbers.zip"), "w").write("z")
