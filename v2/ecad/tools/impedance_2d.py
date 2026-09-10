@@ -81,14 +81,20 @@ def solve(w, s, t, h, er, mode="microstrip", h2=None, ppmm=200, keep=None, mask=
     if "Zodd" not in got: raise SystemExit("atlc gave no Zodd:\n" + out[:600])
     return got.get("Zodd"), got.get("Zeven"), got.get("Zdiff", 2 * got["Zodd"]), bmp
 
-CASES = [   # (label, mode, w, s, t, h, er, the closed form's answer from impedance_check.py, the class's target)
-    ("4L 7628 outer, USB now (D9, C8)",      "microstrip", 0.30,  0.20,  0.035, 0.2104, 4.4,  89, 90),
-    ("4L 7628 outer, USB as shipped (D8)",   "microstrip", 0.20,  0.15,  0.035, 0.2104, 4.4, 102, 90),
-    ("6L 3313 outer, USB (B17)",             "microstrip", 0.127, 0.127, 0.035, 0.0994, 4.1,  94, 90),
-    ("6L 3313 outer, DIFF100 (B17)",         "microstrip", 0.127, 0.20,  0.035, 0.0994, 4.1, 101, 100),
-    # the inner-layer case of the 3313 stack is asymmetric (0.55 core one side, 0.1088 prepreg the other) and this entry models it
-    # symmetrically, so its numbers are NOT a like-for-like comparison and the stripline confirmation is still owed (8 Sep 2026)
-    ("6L 3313 inner stripline, 0.127/0.127 (symmetric model, not the real stack)", "stripline", 0.127, 0.127, 0.0152, 0.55, 4.6, 74, 100),
+# (label, mode, w, s, t, h, er, the class's target). The closed form is COMPUTED from the same (w, s, t, h, er), never stored:
+# the stripline row used to carry 74 ohm, which impedance_check's selftest had computed at h 0.1 while this table solved h 0.55,
+# so the row compared two different geometries and read as a 38 percent solver-to-formula disagreement that did not exist
+# (found 10 September 2026 while calibrating the gate).
+CASES = [
+    ("4L 7628 outer, USB now (D9, C8)",      "microstrip", 0.30,  0.20,  0.035, 0.2104, 4.4,   90),
+    ("4L 7628 outer, USB as shipped (D8)",   "microstrip", 0.20,  0.15,  0.035, 0.2104, 4.4,   90),
+    ("6L 3313 outer, USB (B17)",             "microstrip", 0.127, 0.127, 0.035, 0.0994, 4.1,   90),
+    ("6L 3313 outer, DIFF100 (B17)",         "microstrip", 0.127, 0.20,  0.035, 0.0994, 4.1,  100),
+    # The inner layers of the 3313 stack: a track on In2 sees In1 (solid ground) 0.55 mm above through the core and In4
+    # 0.674 mm below through prepreg, core and copper; In3 is the mirror. impedance_check takes the harmonic mean of the two
+    # plane distances for an asymmetric stripline, which is 0.6057 mm, and averages the two epsilons to about 4.45.
+    ("6L 3313 inner stripline, USB 0.127/0.127",     "stripline", 0.127, 0.127, 0.0152, 0.6057, 4.45,  90),
+    ("6L 3313 inner stripline, DIFF100 0.127/0.200", "stripline", 0.127, 0.200, 0.0152, 0.6057, 4.45, 100),
 ]
 
 def main(a):
@@ -96,11 +102,15 @@ def main(a):
         ppmm = int(a[a.index("--ppmm") + 1]) if "--ppmm" in a else 200
         print("impedance_2d: atlc 2D field solver against the closed forms of impedance_check.py (%d px/mm)" % ppmm)
         worst = 0.0
-        for label, mode, w, s, t, h, er, closed, target in CASES:
+        import importlib.util as _iu, os as _os
+        _sp = _iu.spec_from_file_location("_ic", _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "impedance_check.py"))
+        _ic = _iu.module_from_spec(_sp); _sp.loader.exec_module(_ic)   # the closed form comes from the gate itself, at this geometry
+        for label, mode, w, s, t, h, er, target in CASES:
+            closed = (_ic.zd_microstrip(w, s, h, t, er) if mode == "microstrip" else _ic.zd_stripline(w, s, h, t, er))
             zo, ze, zd, _ = solve(w, s, t, h, er, mode, ppmm=ppmm)
             zm = solve(w, s, t, h, er, mode, ppmm=ppmm, mask=0.01)[2] if mode != "stripline" else zd
             d = 100.0 * (zm - closed) / closed; worst = max(worst, abs(d))   # the masked solve is the like-for-like number: a real outer layer carries mask
-            print("impedance_2d: %-40s w %.3f s %.3f h %.4f er %.1f | solver %5.1f (with mask %5.1f) | closed form %3d | %+5.1f%% | target %d" % (label, w, s, h, er, zd, zm, closed, d, target))
+            print("impedance_2d: %-46s w %.3f s %.3f h %.4f er %.2f | solver %5.1f (with mask %5.1f) | closed form %5.1f | %+6.1f%% | target %d" % (label, w, s, h, er, zd, zm, closed, d, target))
         print("impedance_2d: worst difference between the masked solver and the closed form %.1f%%" % worst)
         return 0 if worst <= 10.0 else 1
     def f(k, d=None):
