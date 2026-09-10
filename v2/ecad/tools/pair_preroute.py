@@ -11,8 +11,12 @@ each leg gets its own via 0.9 mm from the centreline with a jog; at the ends sho
 vias when the pads carry locked escapes). Everything added is locked. A pair whose centreline finds no path is reported and left to the
 router (the gate then calls it UNCOUPLED). The caller runs DRC.
 
+Rip-up and retry (10 Sep 2026): a pair that fails takes the laid pairs out of its corridor and is laid again before them, because a pair that
+fails in the pass often lays alone on the same board (measured on B19), so the failure is the greedy order, not the placement. PAIR_RIPUP=0
+turns it off and restores the plain greedy pass; PAIR_RIP_MARGIN, PAIR_RIP_MAX and PAIR_RIP_TOTAL bound how much is ripped.
+
 Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
-  prints one line per pair and `pair_preroute: N of M pairs laid`, exit 1 when a pair failed."""
+  prints one line per pair and `pair_preroute: N of M pairs laid, R rip-up event(s)`, exit 1 when a pair failed."""
 import sys, os, re, math, json, heapq, time
 PATH_WHY = [""]   # why the last corridor search returned nothing (9 Sep 2026)
 # 9 September 2026 (B19): a wall-clock budget per pair. The two searches are capped by EXPANSIONS (6,000,000 and 400,000),
@@ -340,6 +344,36 @@ def main(a):
         def append(self, line):
             list.append(self, line); print("pair_preroute: " + line, flush=True)
     report = _Report()
+    # 10 September 2026, rip-up and retry (MESHSAT-862). Measured on B19 the day before: /HOST2_1RX, /HDMIO_D1 and /HDMIO_CK
+    # all FAIL in the full pass with "the legs clear no smoothing of the centreline" and all three LAY when they are the only pair
+    # routed on the same board. What stops them is copper this tool laid for an earlier pair, not the placement and not the corner
+    # geometry: it lays greedily and never rips up, so whichever pair went first took the room. When a section fails now, the laid
+    # pairs whose copper lies in that section's corridor are taken off the board, the failed pair is queued to be laid again first
+    # and they are queued behind it. PAIR_RIPUP=0 restores the greedy pass, which is how the two arms are compared.
+    RIPUP = int(os.environ.get("PAIR_RIPUP", "1"))                 # rip-up events one pair may trigger
+    RIP_MARGIN = float(os.environ.get("PAIR_RIP_MARGIN", "4.0"))   # mm from the failed section's line for a piece to count as in the way
+    RIP_MAX = int(os.environ.get("PAIR_RIP_MAX", "6"))             # laid pairs taken off the board per event
+    RIP_TOTAL = int(os.environ.get("PAIR_RIP_TOTAL", "60"))        # rip-up events in the whole pass (the pass is bounded by this)
+    on_board = {}     # stem -> (pieces, stripped escapes) of a pair that is laid and can be ripped
+    rip_events = {}   # stem -> how often this pair has ripped others
+    rip_done = [0]
+    cur_seg = [0.0, 0.0, 0.0, 0.0]   # the section the corridor search is working on, for the rip-up window
+
+    def _seg_d(px, py, x1, y1, x2, y2):
+        dx, dy = x2 - x1, y2 - y1; L2 = dx * dx + dy * dy
+        t = 0.0 if L2 <= 1e-9 else max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / L2))
+        return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
+
+    def _in_way(pcs, x1, y1, x2, y2):
+        """The distance from a laid pair's copper to the failed section's straight line (mm), 1e9 when it has none."""
+        d = 1e9
+        for t_ in pcs:
+            if t_.GetClass() == "PCB_TRACK":
+                d = min(d, _seg_d(mm(t_.GetStart().x), mm(t_.GetStart().y), x1, y1, x2, y2), _seg_d(mm(t_.GetEnd().x), mm(t_.GetEnd().y), x1, y1, x2, y2))
+            else:
+                d = min(d, _seg_d(mm(t_.GetPosition().x), mm(t_.GetPosition().y), x1, y1, x2, y2))
+            if d <= RIP_MARGIN: break
+        return d
     def pinned(f):
         """A footprint whose pads already hold a track end (a section laid for another stem of the same nets, an escape) must not be moved: the second swap of
         R26/R27 on D9 (8 Sep 2026 12:20) left four locked pieces on pads of the wrong net."""
@@ -693,6 +727,7 @@ def main(a):
             sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); win = 25.0
             window = (gr.cell(min(sx, gx) - win, min(sy, gy) - win), gr.cell(max(sx, gx) + win, max(sy, gy) + win))
             window = ((max(0, window[0][0]), max(0, window[0][1])), (min(gr.NX - 1, window[1][0]), min(gr.NY - 1, window[1][1])))
+            cur_seg[:] = [sx, sy, gx, gy]   # the section the rip-up window is measured from
             behind = []
             if fineA0: mx_, my_ = mid((pa, na)); ln_ = math.hypot(sx - mx_, sy - my_) or 1.0; behind.append((sx, sy, (sx - mx_) / ln_, (sy - my_) / ln_))
             if fineB0: mx_, my_ = mid((pb, nb)); ln_ = math.hypot(gx - mx_, gy - my_) or 1.0; behind.append((gx, gy, (gx - mx_) / ln_, (gy - my_) / ln_))
@@ -964,7 +999,28 @@ def main(a):
                 report.append("SWAP  %s: %s and %s exchanged positions to untwist the pair; laid again" % (stem, fa.GetReference(), fb.GetReference())); stems.append(stem); continue
             why = ("one part's two pins" if fa.GetReference() == fb.GetReference() else ("different footprints %s / %s" % (fa.GetFPIDAsString().split(":")[-1], fb.GetFPIDAsString().split(":")[-1]) if fa.GetFPIDAsString() != fb.GetFPIDAsString() else ("orientations %s / %s" % (fa.GetOrientationDegrees(), fb.GetOrientationDegrees()) if abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) >= 0.01 else ("locked" if fa.IsLocked() or fb.IsLocked() else "already swapped once"))))
             report.append("TWIST %s: the P leg changes side between the stations %s (no swap: %s); a crossing would be needed, left to the router" % (stem, twist, why)); continue
-        if failed: rollback(); report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections))); continue
+        if failed:
+            rollback()
+            blockers = []
+            if RIPUP and rip_done[0] < RIP_TOTAL and rip_events.get(stem, 0) < RIPUP:
+                x1_, y1_, x2_, y2_ = cur_seg
+                for st2, (pcs2, _s2) in on_board.items():
+                    if st2 in swapped: continue   # a swapped pair's escapes were stripped at the old positions and the swap is not undone
+                    d2 = _in_way(pcs2, x1_, y1_, x2_, y2_)
+                    if d2 <= RIP_MARGIN: blockers.append((d2, st2))
+                blockers = [s2 for _d2, s2 in sorted(blockers)[:RIP_MAX]]
+            if blockers:
+                rip_events[stem] = rip_events.get(stem, 0) + 1; rip_done[0] += 1
+                for st2 in blockers:
+                    pcs2, str2 = on_board.pop(st2)
+                    for t_ in pcs2: b.Remove(t_)
+                    for t_ in str2: b.Add(t_)   # that pair's escape pieces come back with it
+                    laid -= 1
+                stems.append(stem); stems.extend(blockers)
+                report.append("RIPUP %s: section %s is blocked; %d laid pair(s) taken off the board (%s), this pair is laid again first and they follow" % (stem, failed, len(blockers), ", ".join(blockers)))
+                continue
+            report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections)))
+            continue
         # every other pad of the two nets (a pull resistor, a test point, a part's second pin) gets a stub to the nearest laid piece of its net, so the router
         # has nothing left on a pair net (8 Sep 2026: Freerouting wandered 15 to 23 pieces over three layers to reach D9's pull-downs and the read-back called the pairs uncoupled)
         left = 0; stubs_ = 0; dives_ = 0; rebuild_maps()
@@ -1021,13 +1077,14 @@ def main(a):
             rollback()
             report.append("FAIL  %s: the two legs cross each other %d time(s) on the laid path; rolled back, the router takes the pair" % (stem, _cross))
             continue
-        laid += 1; report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
+        laid += 1; on_board[stem] = (list(pieces), list(stripped))
+        report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
     print("pair_preroute: --- summary ---")
     for l in report: print("pair_preroute: " + l)
     n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
-    print("pair_preroute: %d of %d pairs laid -> %s" % (laid, n_pairs, out))
+    print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
     return 0 if laid == n_pairs else 1
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
