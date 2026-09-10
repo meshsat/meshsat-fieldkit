@@ -123,8 +123,10 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
     for M in list(trk.values()) + [via]: M[:m, :] = True; M[-m:, :] = True; M[:, :m] = True; M[:, -m:] = True
     return trk, via
 
-def astar(gr, layers, trk, via, start, goal, window, behind=()):
-    """behind: [(x, y, ux, uy), ...] (mm): cells within 2.5 mm of (x, y) on the side against (ux, uy) are blocked, so a corridor leaves an entry end outward."""
+def astar(gr, layers, trk, via, start, goal, window, behind=(), cost=None):
+    """cost: {layer index: float raster} added to every step, the negotiated-congestion term of pair_negotiate.py (10 Sep 2026).
+
+    behind: [(x, y, ux, uy), ...] (mm): cells within 2.5 mm of (x, y) on the side against (ux, uy) are blocked, so a corridor leaves an entry end outward."""
     LI = {L: i for i, L in enumerate(layers)}
     (jmin, imin), (jmax, imax) = window
     passable = {LI[L]: ~trk[L] for L in layers}
@@ -175,12 +177,12 @@ def astar(gr, layers, trk, via, start, goal, window, behind=()):
             if not (imin <= ni <= imax and jmin <= nj <= jmax): continue
             if not passable[L][ni, nj]: continue
             if di and dj and not (passable[L][i, nj] and passable[L][ni, j]): continue
-            nd = d + c; t = (L, ni, nj)
+            nd = d + c + (cost[L][ni, nj] if cost is not None else 0.0); t = (L, ni, nj)
             if nd < dist.get(t, 1e18): dist[t] = nd; prev[t] = s; heapq.heappush(pq, (nd + h(L, ni, nj), nd, t))
         if not via[i, j]:
             for oL in range(len(layers)):
                 if oL == L or not passable[oL][i, j]: continue
-                nd = d + VIA_COST; t = (oL, i, j)
+                nd = d + VIA_COST + (cost[oL][i, j] if cost is not None else 0.0); t = (oL, i, j)
                 if nd < dist.get(t, 1e18): dist[t] = nd; prev[t] = s; heapq.heappush(pq, (nd + h(oL, i, j), nd, t))
     if found is None:
         # 9 Sep 2026 (A24 USB_E6 spans 189 mm; appendix 32.83): a corridor that cannot be found must say WHY. Three
@@ -513,6 +515,49 @@ def main(a):
                 v = min(vs, key=lambda v: math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y))
                 return (mm(v.GetPosition().x), mm(v.GetPosition().y), None, v)
         return (mm(p.GetPosition().x), mm(p.GetPosition().y), L, p)
+
+    # ===================================================================== negotiated congestion (10 September 2026, MESHSAT-862)
+    # The measured plateau of 32.98 is a greedy-order plateau: whichever pair is laid first takes the room, and taking it back
+    # by ripping the neighbours never pays (106 episodes, none kept). The way a router actually solves this is PathFinder's
+    # negotiation: every pair routes as if it owned the board, cells used by more than one pair get a HISTORY cost, and the
+    # iteration repeats until no cell is shared. `pair_negotiate.py` drives it; this tool does one half-iteration at a time.
+    #   PAIR_PLAN_MODE=plan  search only, lay nothing, write the corridors and the cells two pairs both wanted
+    #   PAIR_HIST_IN=<npz>   the history rasters of the iterations before this one
+    #   PAIR_PRESENT=<w>     the weight of the cells THIS iteration has already given away
+    #   PAIR_PLAN_OUT=<json> where the corridors go; PAIR_PLAN_IN=<json> lays a negotiated plan instead of searching
+    PLAN_MODE = os.environ.get("PAIR_PLAN_MODE", "") == "plan"
+    PRESENT_W = float(os.environ.get("PAIR_PRESENT", "0"))
+    _li = {L: i for i, L in enumerate(layers)}
+    NEG_COST = None; NEG_OCC = None
+    _hist_in = os.environ.get("PAIR_HIST_IN")
+    if PLAN_MODE or _hist_in:
+        NEG_COST = {i: np.zeros((gr.NY, gr.NX), dtype=np.float32) for i in range(len(layers))}
+        NEG_OCC = {i: np.zeros((gr.NY, gr.NX), dtype=np.int16) for i in range(len(layers))}
+        if _hist_in and os.path.exists(_hist_in):
+            _h = np.load(_hist_in)
+            for _k, _ii, _jj, _vv in zip(_h["L"], _h["i"], _h["j"], _h["v"]):
+                if int(_k) in NEG_COST: NEG_COST[int(_k)][int(_ii), int(_jj)] += float(_vv)
+            print("pair_preroute: history from %s: %d cell(s) carry a cost" % (os.path.basename(_hist_in), len(_h["v"])))
+    plan_out = {}   # stem -> [[[layer index, i, j], ...], ...] one list per section
+    plan_in = {}
+    _pin = os.environ.get("PAIR_PLAN_IN")
+    if _pin and os.path.exists(_pin):
+        plan_in = json.load(open(_pin))
+        print("pair_preroute: laying the negotiated plan of %s (%d pairs)" % (os.path.basename(_pin), len(plan_in)))
+
+    def neg_stamp(cells, half_mm):
+        """Give this corridor's envelope to the pair that just took it: occupancy up by one, and the present cost with it."""
+        if NEG_OCC is None: return
+        for Lidx in {c[0] for c in cells}:
+            run = [c for c in cells if c[0] == Lidx]
+            if not run: continue
+            tmp = np.zeros((gr.NY, gr.NX), dtype=bool)
+            for a_, b_ in zip(run[:-1], run[1:]):
+                x1, y1 = gr.xy(a_[2], a_[1]); x2, y2 = gr.xy(b_[2], b_[1])
+                if abs(a_[1] - b_[1]) + abs(a_[2] - b_[2]) > 4: continue   # a layer change is not a run
+                gr.seg(tmp, x1, y1, x2, y2, half_mm)
+            NEG_OCC[Lidx][tmp] += 1
+            if PRESENT_W: NEG_COST[Lidx][tmp] += PRESENT_W
 
     for stem in stems:   # a swapped pair is appended and laid again
         if episode[0] is not None and stem not in episode[0]["members"]: settle_episode()   # the episode's members are queued together: the first stem past them ends it
@@ -906,7 +951,17 @@ def main(a):
             behind = []
             if fineA0: mx_, my_ = mid((pa, na)); ln_ = math.hypot(sx - mx_, sy - my_) or 1.0; behind.append((sx, sy, (sx - mx_) / ln_, (sy - my_) / ln_))
             if fineB0: mx_, my_ = mid((pb, nb)); ln_ = math.hypot(gx - mx_, gy - my_) or 1.0; behind.append((gx, gy, (gx - mx_) / ln_, (gy - my_) / ln_))
-            path = astar(gr, layers, trk, via, (sL, sj, si), (gL, gj, gi), window, behind)
+            _sec_k = sections.index(((pa, na), (pb, nb)))
+            _planned = plan_in.get(stem.lstrip("/"), None)
+            if _planned is not None and _sec_k < len(_planned) and _planned[_sec_k]:
+                path = [tuple(c) for c in _planned[_sec_k]]   # the negotiated corridor, already agreed with every other pair
+            else:
+                path = astar(gr, layers, trk, via, (sL, sj, si), (gL, gj, gi), window, behind, cost=NEG_COST)
+            if PLAN_MODE:
+                plan_out.setdefault(stem.lstrip("/"), []).append([list(c) for c in (path or [])])
+                if path: neg_stamp(path, half + CLR)
+                else: report.append("FAIL  %s: section %s -> %s (%s)" % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), PATH_WHY[0] or "no corridor"))
+                continue
             def dump(tag, cx, cy, R=3.0, layer_idx=0):   # PAIR_DEBUG=1: the corridor map around a point, one character per 2 cells (S start, G goal, # forbidden)
                 if not os.environ.get("PAIR_DEBUG"): return
                 jc, ic = gr.cell(cx, cy); r = int(R / gr.G); M = trk[layers[layer_idx]]; print("pair_preroute: map %s on %s around (%.1f, %.1f), %d mm square" % (tag, b.GetLayerName(layers[layer_idx]), cx, cy, 2 * R))
@@ -1160,6 +1215,9 @@ def main(a):
                 via_at(site[0], site[1], net); gr.disc(via, site[0], site[1], VIA_SPLIT)
                 if not stub(site[0], site[1], x, y, aL, net): failed = fail_("no stub path"); break
             if failed: break
+        if PLAN_MODE:   # a planning half-iteration searches and gives nothing back to the board
+            rollback()
+            continue
         if twist:
             rollback()
             # the P leg changes side between two stations: when the far station is two identical passives (the series resistors of the two legs), swapping
@@ -1271,6 +1329,18 @@ def main(a):
         laid += 1; on_board[stem] = (list(pieces), list(stripped))
         report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
     settle_episode()   # an episode that was still open at the end of the list is judged like any other
+    if PLAN_MODE:
+        _po = os.environ.get("PAIR_PLAN_OUT")
+        if _po: json.dump(plan_out, open(_po, "w"))
+        _done = sum(1 for v in plan_out.values() if v and all(x for x in v))
+        _cL, _ci, _cj, _cv = [], [], [], []
+        for _k, _occ in (NEG_OCC or {}).items():
+            _ii, _jj = np.nonzero(_occ > 1)
+            _cL.extend([_k] * len(_ii)); _ci.extend(_ii.tolist()); _cj.extend(_jj.tolist()); _cv.extend((_occ[_ii, _jj] - 1).tolist())
+        _co = os.environ.get("PAIR_CONFLICT_OUT")
+        if _co: np.savez_compressed(_co, L=np.array(_cL, dtype=np.int16), i=np.array(_ci, dtype=np.int32), j=np.array(_cj, dtype=np.int32), v=np.array(_cv, dtype=np.int16))
+        print("pair_preroute: PLAN %d of %d pairs have a corridor for every section, %d contested cell(s)" % (_done, len(set(stems)), len(_cv)))
+        return 0 if _done == len(set(stems)) else 1
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
     print("pair_preroute: --- summary ---")
