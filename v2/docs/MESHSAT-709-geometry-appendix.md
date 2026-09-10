@@ -3775,3 +3775,61 @@ because nothing ever compared a generator's output with the file beside the boar
 iteration on B19 says **108 of 113 pairs have a corridor when each pair searches as if it owned the board**, with 156,206
 contested cells to negotiate away. Only five pairs have no corridor at all. The greedy pass lays 50; the other 58 are lost to
 contention, not to the placement. That is what stages 5 and 6 are for.
+
+### 32.100 The pre-router's kernel: 17.7x off the maps and 13.5x off the search, both proved equal to what they replace (10 September 2026, 18:15 CEST; MESHSAT-862)
+
+Stage 5 of the plan, the one the negotiated router waits on. The measurement that opened it: a cProfile of three B19 pairs spent
+**270 of its 330 seconds in `Grid.poly`**, across 56.4 million calls of `SHAPE_POLY_SET.Contains` through SWIG and 112.8 million
+`FromMM` conversions, against **41 seconds in the A\*** the occupancy maps exist to feed. Neither number is an algorithm problem.
+Both are the cost of asking a C++ library one question per cell from Python.
+
+**The maps: 81.2 seconds to 4.6 seconds on B19's whole board (17.7x).** The polygon's own vertices go to numpy once and
+matplotlib's path test answers every cell of the bounding box in one call. Two things it had to be taught, and the second one
+cost the afternoon:
+
+- matplotlib fills **every sub-path of a Path whatever its winding**. A polygon's holes therefore cannot be handed to it as
+  sub-paths of one Path, which is what the first version did, having confirmed the windings were opposite (outline +67,481 mm2,
+  hole -65,060 mm2). A three-line experiment settled it: a square with a reversed inner square still reports the middle as
+  inside, both ways round. The consequence on the board was total rather than subtle. B19 carries a board-wide **edge band**
+  rule area, a 1,593 mm2 ring around a 65,060 mm2 hole, and with its hole filled it blocked **all 6,708,420 cells of every
+  layer**: every map was solid and no pair could be laid. Each outline and each of its holes is rasterised separately now and
+  the holes are subtracted.
+- The half-cell boundary bias is applied by inflating the **polygon** by 0.1 um, not by matplotlib's `radius` argument, which
+  inflates each sub-path on its own and fills the holes the same way.
+
+The correctness gate is one-sided on purpose: against the old per-cell maps on B19, **not one cell that KiCad blocks is left
+free** (F.Cu, B.Cu and the via map all zero), and 4,754 of 1.51 million extra cells are blocked on F.Cu, which is the
+conservative direction and comes from the inflation. On D10 the whole pass went 29 s to 7 s and laid the same 3 of 5 pairs with
+the same reasons and identical geometry.
+
+**The search: 13.5x, and it is the same router.** The A\* lived inside `main()`'s closure, reading a Grid and KiCad objects, so
+it could be neither tested alone nor compiled. `tools/pairsearch.py` takes only numpy arrays in window coordinates. It holds
+**three implementations of one algorithm**: `astar_ref`, the heapq-and-dicts original copied faithfully; `_kernel`, the same
+thing over flat arrays with its own binary heap; and that kernel under numba's `njit`. The heap compares `(f, d, state)` with
+`state = (L * H + i) * W + j`, which orders exactly as the tuple `(L, i, j)` heapq compared, so with every key distinct the pop
+order is fully determined and the three cannot diverge. `pairsearch.py selftest` runs all three on random maps with and without
+a cost raster: **24 of 24 identical**.
+
+Measured on the box, a 260 x 260 window on two layers:
+
+| implementation | expansions per second | against the original |
+|---|---:|---:|
+| heapq and dicts, as written | 167,000 | 1.0x |
+| the array kernel, plain Python | 25,000 | **0.15x** |
+| the array kernel, compiled | 2,261,000 | **13.5x** |
+
+The middle row is why the fallback is the heapq original and not the kernel: a fallback must not be a regression. A pair's
+12,000,000 expansion budget costs about 5 seconds now instead of about 8 minutes. numba cannot be installed into the KiCad
+python of a rented box, but a venv made with `--system-site-packages` has both it and `pcbnew`, so the tool re-execs itself
+under that interpreter after checking it really imports both, prints the line, and `PAIR_VENV=0` stays put; the box setup script
+builds the venv and without it nothing changes but the speed. The compile is cached beside the module (4.45 s the first time,
+0.18 s after). D10's pass laid the same 3 of 5 pairs with byte-identical geometry through all three paths.
+
+**One rule changed with it.** The wall clock is checked **between** searches now, not inside one. The record's own finding is why
+(32.90: a budget that decides a result must be counted in work, not in time); the expansion cap is the reproducible bound and
+`PAIR_BUDGET` is the outer safety net. Two cache defects of the old kernel are closed in passing: the polygon raster cache is
+instance-local and keyed by the grid it was rasterised in, and one Grid per cell size is kept, because building a fresh Grid for
+every long pair threw the whole board's pad rasters away twice per pair.
+
+**Measured beside it, and it is the first number above the plateau:** the multi-pass driver's second pass, with the pairs that
+failed put first, laid **52 of 113** against the 50 of 32.98.
