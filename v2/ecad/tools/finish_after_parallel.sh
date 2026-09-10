@@ -19,15 +19,15 @@ for s,e in ((a,mid),(mid,c)):
 pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard('pcb-a-power.kicad_pcb', b); print('EP tie added')
 PY
 fi
-kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 cp $N.kicad_pcb out/$N-par-routed.kicad_pcb
 nice -n 10 python3 ../tools/stub_router.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -E 'closed|FAILED|stub_router'
-kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 - "$N" <<'PY'
 import json, collections, sys
 d=json.load(open('out/%s-drc.json' % sys.argv[1])); c=collections.Counter(v['type'] for v in d['violations'])
 hard=sum(c[t] for t in ('clearance','shorting_items','tracks_crossing','hole_clearance','hole_to_hole','copper_edge_clearance')); open('out/par-score.txt','w').write('%d' % hard); print('after stub router: hard', hard, 'unrouted', len(d.get('unconnected_items',[])))
 PY
-read H < out/par-score.txt; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1; fi
+read H < out/par-score.txt; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json; fi
 cd ..; ./tools/finish_board.sh "$D" "$N" "$PF" "$DL" 2>&1 | tail -12
 echo FINISH-PAR-DONE

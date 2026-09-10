@@ -17,7 +17,7 @@ python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'   # adjacent same-net pins become one island (B15 runs 2 and 3: PANEL_5V pin 1, the hub's +3V3 escapes)
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND,+5V_M1' fine 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
-kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
 python3 - <<'PY'
 import json, collections
 d = json.load(open('out/pcb-b-compute-preroute-drc.json'))

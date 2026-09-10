@@ -15,7 +15,7 @@ python3 ../tools/check_pcb_d.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'   # D7
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/prefanout.py $N.kicad_pcb "GND,+3V3,V8,VIN_CELL" "U2,fine"   # D7: the boost loop pads get vias into the B.Cu pours 2>&1 | grep -E 'fanout:'
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
-kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
 python3 - <<'PY'
 import json, collections
 d = json.load(open('out/pcb-d-aprs-preroute-drc.json'))

@@ -78,7 +78,7 @@ fi
 
 python3 ../tools/prefanout.py $N.kicad_pcb "$FANOUT" fine 2>&1 | grep -E 'fanout:'   # only nets with a plane or pour to land on
 if [ -n "$EPRUNE" ]; then
-  kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
+  ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
   python3 ../tools/escape_prune.py $N.kicad_pcb out/$N-preroute-drc.json 2>&1 | grep escape_prune
 fi
 env $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?
@@ -86,7 +86,7 @@ grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
 [ "$PA" -eq 0 ] || [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || block "placement predictor (out/place_audit.log, out/place_audit.png)"
 
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
-kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
 python3 ../tools/hardset.py out/$N-preroute-drc.json pre --gate out/preroute-gate.txt --examples 6 | sed 's/^hardset:/pre-route DRC:/'
 python3 ../tools/check_zone_nets.py $N.kicad_pcb > out/zone_nets.log 2>&1; ZN=$?; grep -E "FAIL|zone nets" out/zone_nets.log
 [ "$ZN" -eq 0 ] || echo "BLOCK zone-nets (DRC gate said: $(cat out/preroute-gate.txt))" > out/preroute-gate.txt
