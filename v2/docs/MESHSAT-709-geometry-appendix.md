@@ -3722,3 +3722,56 @@ The ladder of 32.97 was run out to its combinations, every arm on the same board
 4. **Fewer pairs**, which is a device-set decision and therefore an owner ruling.
 
 The recommendation, stated once: item 1 for the tool and item 3 for the board, in that order, because item 1 is bounded work with a known method and item 3 is where the 24 pairs with no corridor at all actually live.
+
+### 32.99 Two engineering red teams, and the control plane they found (10 September 2026, 17:10 CEST; MESHSAT-862)
+
+The owner sent the code pack (`meshsat-fieldkit-code-review-2026-09-10.zip`, 447 files) to two independent engineering red teams
+and brought both reports back. They agree, and their headline is the 9 September electrical headline one level down: **the gates
+are copies, and the copies disagree.** Every load-bearing claim was verified against the code before anything was changed.
+
+**Owner ruling, about 17:00: take everything, in the red teams' order.** Board work is frozen until the control plane is fixed;
+the set ETA moves to about 20 September, and the compensation is that every verdict after it means what it says. The hold of
+32.94 is unchanged.
+
+**Stage 1, verdict integrity, done.** `hardset.py` declared fifteen hard DRC types while `routeflow.py`, `route_metrics.py`,
+`stub_accept.py` and `fix_pad_escapes.py` each carried a six-type tuple and `gap_closer_checked.py` and `escape_prune.py` five,
+so the supervisor could journal a board `ROUTED_CLEAN` that the finish then refused, with no remedy for the disagreement, and
+**all 233 measured benchmark rows were graded on six.** There is one definition now, imported everywhere, with the two deliberate
+narrow patterns named in the policy module (`KNOT` for `unknot.py`), and a selftest predicate that fails if a second definition
+appears anywhere in the tools. The benchmark was regraded: the baseline was keyed by PHASE (`A21`, `C5`), so every C6 and B15
+experiment looked up its key, missed, and graded UNMEASURABLE **after** its route had been paid for, which is 66 of the 81
+measured router hours. Keyed by board, the stored metrics grade: **63 rows recovered, no ungraded row left, and 155 of 191 are
+INELIGIBLE** because the board did not route to completion, which is what those hours actually bought. Every remaining MET is
+printed `MET*`, six-type basis, not evidence of a clean board until it is re-measured. Also: the router supervisor's exit code is
+now a fact (`INFRA_FAIL`, and the remedy table refuses to treat it as a routing outcome), the deliverable read-back must PASS
+rather than merely not print REFUSED, `preflight` runs before the spend instead of beside it, the lock is an `flock`, and
+`pair_negotiate.py` returns what its laying pass did instead of always zero.
+
+**Stage 2, run and artefact semantics, done.** A run directory was deterministic, so a second run appended to the first one's
+logs and could read its markers. Each invocation now gets `out/routeflow/<utc>-<fingerprint>`, fresh, with `provenance.json`
+(git HEAD, whether the tree was dirty and the hash of the diff, the input board's hash, the KiCad build, the Freerouting jar's
+sha, Python and Java) and `resolved-config.json` (every `PAIR_*`, `FR_*`, `PLACE_*` knob in force). The fingerprint stays a
+separate deterministic value and indexes results. A deliverable is built in a staging folder and **promoted only after
+`verify_deliverable.py` passes**; it used to delete the existing folder first, so a refused rebuild destroyed the deliverable
+that was there.
+
+**Stage 3, the schematic engine, done.** Thirty two functions of one S-expression engine lived in six copies; twelve had
+diverged in two lineages, and the divergence that mattered was `ic()`: the a/e lineage refused an IC with an unlisted pin, the
+b/c/d/p lineage filled it with `"NC"` silently, on the boards carrying a 200-pin receptacle pair, a 128-pin PCIe switch and a
+100-pin Ethernet switch. `kisch.py` is the engine now, imported by all six board files, which keep only their own part tables,
+nets and sheet layout (751 lines deleted, 57 added). `ic()` is strict everywhere; the five parts that were implicitly no-connect
+say so explicitly (B's ATECC608B and DS3231MZ, C's and D's single-gate logic, both LDOs), each read off the part's own pinout.
+The engine's uuids are derived from the project name instead of `uuid4()`, so **a board regenerates byte for byte**, which is
+what makes a golden test possible at all: `tools/tests/golden_sch.sh` regenerates every board twice and diffs against the
+committed file. Proof that the extraction changed nothing: the pre-migration generators and the new ones produce identical
+schematics on all six boards.
+
+**And the golden test immediately found what it is for.** The six committed `.kicad_sch` files were stale against their own
+generators: A, B and D missed the ribbon pinout change of this morning, C carried "slot-2 hub" where the record says slot 1 and
+an LCSC code corrected on 9 September, E had a net renamed `GEIGER_PULSE` to `GEIGER_IN`. Nothing in the pipeline had noticed,
+because nothing ever compared a generator's output with the file beside the board. They are regenerated and committed.
+
+**Measured on the way, and it is the number the pre-router programme was missing:** the first negotiated-congestion planning
+iteration on B19 says **108 of 113 pairs have a corridor when each pair searches as if it owned the board**, with 156,206
+contested cells to negotiate away. Only five pairs have no corridor at all. The greedy pass lays 50; the other 58 are lost to
+contention, not to the placement. That is what stages 5 and 6 are for.
