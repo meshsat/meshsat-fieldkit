@@ -3901,7 +3901,33 @@ the pin maps themselves to CSV with a pad-count assertion is still owed.
 **M5**, the wall-clock pair budget still on by default: **done**. `full_b19.sh` exports `PAIR_BUDGET=0`, and the clock left
 the search entirely: it is checked between searches, and the reproducible bound is the expansion cap (32.90's own rule).
 
-**M6**, `impedance_2d.py` is the second opinion never asked: **not yet**, kept for the calibration it is owed.
+**M6**, `impedance_2d.py` is the second opinion never asked: **done, and it overturned a finding of the record.** The solver
+(atlc 4.6.1, the cross-section drawn with its solder mask) has been run on all six geometries this project uses and its numbers
+are in `impedance_check.py`, with a measured factor for anything unsolved (microstrip 0.967 over four points, stripline 0.77
+over two) and a line at the end of every run saying how many millimetres were judged which way.
+
+Doing it found that the comparison table itself was wrong. `impedance_2d.py` stored the closed form's answer as a literal
+(74 ohm) beside a geometry it solved at h 0.55, and that 74 had been computed at h 0.1 in `impedance_check`'s selftest: two
+different cross-sections in one row. The closed form is computed from the row's own geometry now. With the real inner layers of
+the JLC 3313 stack solved (a track on In2 sees In1 0.55 mm above and In4 0.674 mm below, harmonic mean 0.6057, epsilon 4.45):
+
+| geometry | IPC-2141 | field solver | difference |
+|---|---:|---:|---:|
+| microstrip 0.300 / 0.200, h 0.2104 | 88.6 | 87.4 | -1.3 % |
+| microstrip 0.200 / 0.150, h 0.2104 | 102.0 | 95.9 | -6.0 % |
+| microstrip 0.127 / 0.127, h 0.0994 | 93.7 | 90.7 | -3.1 % |
+| microstrip 0.127 / 0.200, h 0.0994 | 101.4 | 99.2 | -2.2 % |
+| **stripline 0.127 / 0.127, h 0.6057** | **138.1** | **102.0** | **-26.2 %** |
+| **stripline 0.127 / 0.200, h 0.6057** | **147.6** | **118.1** | **-20.0 %** |
+
+**So the finding of 8 September, that the 3313 stack's inner-layer pairs "compute about 74 ohm, not 100", is withdrawn.** It
+came from an h that is not this stack's plane distance. The outer layers agree with the closed form; the stripline form reads
+20 to 26 percent HIGH for traces this narrow, not low.
+
+**What replaces it is a real constraint, and it arrives exactly as the pre-router is being asked to use the inner layers:** at
+today's class widths an inner-layer pair is about **102 ohm against a 90 ohm target and 118 against a 100 ohm one**, both
+outside the 10 percent tolerance. A pair moved to In2 or In3 needs wider copper, and the four-layer corridor arm below has to
+be paid for in the net classes before its pairs can pass the impedance gate.
 
 **L1**, minified generators: **not taken as a formatting pass.** The b/c/d/p lineage lost its long lines to `kisch.py` because
 the engine moved out, which is the part that mattered; reformatting the rest would rewrite files a review is reading.
