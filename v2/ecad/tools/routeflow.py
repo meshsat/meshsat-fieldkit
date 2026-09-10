@@ -131,13 +131,46 @@ def journal(project, rec):
     with open(os.path.join(project, "out", "routeflow", "journal.jsonl"), "a") as f: f.write(json.dumps(rec) + "\n")
     print("[routeflow %s] %s %s  %s" % (rec["ts"][11:], rec.get("stage", ""), rec.get("status", ""), rec.get("note", "")), flush=True)
 
-def run_id(repo, prof, project):
+def fingerprint(repo, prof, project):
+    """The deterministic identity of a run's INPUTS: the profile, the tools tree including uncommitted work, and the board it starts
+    from. It indexes results; it does not name the run directory (10 September 2026, both red teams: a deterministic directory name
+    let a second run append to the first one's logs and read its markers)."""
     h = hashlib.sha256(json.dumps(prof, sort_keys=True).encode())
-    try: h.update(subprocess.run(["git", "rev-parse", "HEAD:v2/ecad/tools"], cwd=repo, capture_output=True, text=True).stdout.encode())
-    except Exception: pass
+    for argv in (["git", "rev-parse", "HEAD:v2/ecad/tools"], ["git", "diff", "HEAD", "--", "v2/ecad/tools"]):
+        try: h.update(subprocess.run(argv, cwd=repo, capture_output=True, text=True).stdout.encode())   # the working tree counts: a run on an edited tool is a different input
+        except Exception: pass
     pre = os.path.join(project, "out", "%s-preroute.kicad_pcb" % prof["board"])
     if os.path.exists(pre): h.update(open(pre, "rb").read())
     return h.hexdigest()[:12]
+
+def new_run_dir(project, fp):
+    """A fresh directory per invocation, never reused: <utc>-<fingerprint>[-n]."""
+    base = os.path.join(project, "out", "routeflow"); os.makedirs(base, exist_ok=True)
+    stamp = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    for n in range(1, 100):
+        d = os.path.join(base, "%s-%s" % (stamp, fp[:8]) if n == 1 else "%s-%s-%d" % (stamp, fp[:8], n))
+        try: os.makedirs(d); return d
+        except FileExistsError: continue
+    raise RuntimeError("cannot make a run directory in %s" % base)
+
+def provenance(repo, prof, project, fp):
+    """What produced this run, recorded beside it: nothing here is inferred later from a filename."""
+    def out(argv, cwd=repo):
+        try: return subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=30).stdout.strip()
+        except Exception: return ""
+    pre = os.path.join(project, "out", "%s-preroute.kicad_pcb" % prof["board"])
+    jar = os.path.expanduser(prof.get("route", {}).get("jar", "~/bin/freerouting-1.9.0.jar"))
+    def sha(fn):
+        try: return hashlib.sha256(open(fn, "rb").read()).hexdigest()[:16]
+        except Exception: return None
+    try:
+        import pcbnew as _pcb; kicad = _pcb.GetBuildVersion()
+    except Exception: kicad = out(["kicad-cli", "version"])
+    return {"fingerprint": fp, "utc": datetime.datetime.utcnow().isoformat() + "Z", "host": os.uname().nodename,
+            "git_head": out(["git", "rev-parse", "HEAD"]), "git_tools_tree": out(["git", "rev-parse", "HEAD:v2/ecad/tools"]),
+            "git_dirty": bool(out(["git", "status", "--porcelain", "v2/ecad/tools"])), "git_dirty_sha": hashlib.sha256(out(["git", "diff", "HEAD", "--", "v2/ecad/tools"]).encode()).hexdigest()[:16],
+            "board_sha": sha(pre), "board_file": pre, "kicad": kicad, "python": sys.version.split()[0],
+            "freerouting_jar": os.path.basename(jar), "freerouting_sha": sha(jar), "java": out(["java", "-version"]) or out(["bash", "-c", "java -version 2>&1 | head -1"])}
 
 _LOCK_FH = []   # kept open for the life of the process: closing the handle releases the flock
 
@@ -163,7 +196,11 @@ def run(profile_fn, rounds, use_services, dry):
     prof = json.load(open(profile_fn)); repo = prof.get("repo") or os.getcwd()
     project = os.path.abspath(os.path.join(repo, prof["project"])); ecad = os.path.dirname(project); name = prof["board"]
     os.makedirs(os.path.join(project, "out", "routeflow"), exist_ok=True)
-    rid = run_id(repo, prof, project); rdir = os.path.join(project, "out", "routeflow", rid); os.makedirs(rdir, exist_ok=True)
+    fp = fingerprint(repo, prof, project); rdir = new_run_dir(project, fp); rid = os.path.basename(rdir)
+    json.dump(provenance(repo, prof, project, fp), open(os.path.join(rdir, "provenance.json"), "w"), indent=1)
+    json.dump({"profile": prof, "profile_file": os.path.abspath(profile_fn), "rounds": rounds, "services": bool(use_services), "dry": bool(dry),
+               "env": {k: v for k, v in sorted(os.environ.items()) if k.startswith(("PAIR_", "FR_", "ROUTEFLOW_", "PLACE_", "STUB_", "ESCAPE_", "BYPASS_"))}},
+              open(os.path.join(rdir, "resolved-config.json"), "w"), indent=1)
     # 10 September 2026 (report 1, P2): preflight existed and was optional exactly where an expensive run begins. It runs here now;
     # ROUTEFLOW_SKIP_PREFLIGHT=1 is for a host that is deliberately not the build host, and it is journalled when it is used.
     if os.environ.get("ROUTEFLOW_SKIP_PREFLIGHT") != "1":
@@ -173,7 +210,7 @@ def run(profile_fn, rounds, use_services, dry):
     else:
         journal(project, dict(run=rid, board=name, phase=prof["phase"], stage="preflight", status="PREFLIGHT_SKIPPED", note="ROUTEFLOW_SKIP_PREFLIGHT=1"))
     ok, msg = take_lock(name)
-    journal(project, dict(run=rid, board=name, phase=prof["phase"], stage="lock", status="LOCKED" if ok else "PREFLIGHT_FAIL", note=msg))
+    journal(project, dict(run=rid, fingerprint=fp, board=name, phase=prof["phase"], stage="lock", status="LOCKED" if ok else "PREFLIGHT_FAIL", note=msg))
     if not ok: return 2
     applied = set(); status = None
     try:
