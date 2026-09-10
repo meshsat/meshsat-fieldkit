@@ -9,7 +9,12 @@
   "is not a list written from memory, because a gold set written from memory measures the memory.",
   "",
   "Two entries name the same document twice: microchip/microchip-ksz9897-datasheet.pdf and",
-  "cluster/ksz9897.pdf are the same Microchip datasheet filed in two folders, so either is right."
+  "cluster/ksz9897.pdf are the same Microchip datasheet filed in two folders, so either is right.",
+  "",
+  "The last two questions are mechanical, and they guard a different path: the .geom.txt",
+  "files that geom_probe.py writes beside each vendor CAD model. Without them a change to",
+  "the probe or to the ranking could quietly stop answering about geometry while every",
+  "electrical question still passed."
  ],
  "questions": [
   {
@@ -88,6 +93,22 @@
     "rockblock/rb9704-sch-2B1.pdf"
    ],
    "fact": "the Iridium site on PCB-B"
+  },
+  {
+   "q": "RockBLOCK 9704 mounting hole positions and diameters",
+   "accept": [
+    "rockblock/RockBLOCK 9704-SMA-2A.geom.txt"
+   ],
+   "fact": "probed from the vendor STEP, not from a datasheet"
+  },
+  {
+   "q": "Peli 1450 case drawing sheet extents and circular features",
+   "accept": [
+    "peli/1450/1451-931-customer-drawing.geom.txt",
+    "peli/1450/1451-931-top.geom.txt",
+    "peli/1450/1451-931-bottom.geom.txt"
+   ],
+   "fact": "the case is fixed by the 7 September ruling; its drawing is the reference"
   }
  ]
 }
