@@ -41,3 +41,21 @@ By part: 40 died at a via, 12 at U1, 8 at U4, 8 at U30B. **None of the three is 
 A concrete C: a pair passes when **at least 80 percent of its judged length is within tolerance** and no unreferenced run exceeds the existing `UNREF_MM`, and a pair with less than that fails as it does today. On D9's measured pairs that changes nothing (they are at 99 percent); on B19 it is the difference between a board that can be released with its numbers stated and a board that cannot be released at all.
 
 **This is the owner's call**, and the numbers above are what it should be made on. Nothing in this note changes a gate on its own.
+
+## 6. What the repair programme has moved, measured (10 September 2026, 14:45 CEST)
+
+The ruling of section 4 made the pre-router the critical path for the whole set. A day of measurement on B19's 113 pairs, one change per arm on the same placed board, says where the room actually is:
+
+| lever | change | pairs laid of 113 |
+|---|---|---|
+| none | the tool as it stood | 38 |
+| the corridor's slack | it held the centreline 0.25 mm further from copper than its legs need; 0.12 mm | **49** |
+| the placement | the room around a fine-pitch part, 1.6 to 2.6 mm (194 pads with no escape at all, down to 69) | **46** |
+| the entry | a leg that cannot reach its pad ends at the part's escape via instead, as a per-pair fallback | **44** |
+| rip-up and retry | ripping the laid pairs in a failed pair's corridor and laying it first | **29, worse than nothing** |
+
+Rip-up was rebuilt as a trial that is kept only when it leaves more pairs laid than it found: safe, and useless. **106 episodes, none kept.** A pair that fails in the pass does lay when it is alone on the board, so the order does matter, but taking the neighbours out of its corridor is not what recovers it.
+
+The three levers are being measured in combination now. What is left after them, on the arm with the corridor slack alone, is 24 pairs with **no corridor on the map at all** and 12 whose two legs cross, which are a placement question and a tool question respectively, in that order of size.
+
+**Nothing here weakens the gate or the ruling.** The boards stay held; these are the numbers the hold is buying.
