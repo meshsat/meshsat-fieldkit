@@ -3668,3 +3668,28 @@ C10 routed clean on 9 September (0 hard, 0 unrouted, 12 of 12 rails MET) and its
 The denominator is now the zone outline intersected with the board outline (`GetBoardPolygonOutlines`, cutouts included), which on a solid rectangular board is the same number as before. With it, **C10's board gate prints `RESULT: ALL PASS`** (4 pours, 84 locked vias, 4 cross-layer links) and A24's gate is unchanged, still 30 pours passing with its own four open items (one +5V_S1 segment at 0.25 mm against a 0.4 mm class, three return-path lengths over the limit). One KiCad detail cost a first attempt: `SHAPE_POLY_SET.BooleanIntersection` takes no mode argument in KiCad 9 and the guard caught `TypeError` while the bindings raised `AttributeError`, so the clip silently did nothing and the numbers did not move. Read the number, not the exit status.
 
 **C10 stays held** under the ruling of 32.94 like every other board; what changed is that its remaining blocker was in the instrument, not on the board.
+
+### 32.97 The pre-router ladder: what moves the number and what does not (10 September 2026, 14:30 CEST; MESHSAT-862)
+
+Every arm below ran on the same placed board (md5 96052741, no pair copper), with the expansion budget and no clock, one change per arm, on B19's 113 pairs.
+
+| arm | change | pairs laid of 113 |
+|---|---|---|
+| base | the tool as it stood on 9 September | **38** |
+| deloop | the self-intersections cut out of an offset leg | 38 |
+| strip | a station's escape stripped by following the chain, not a 3 mm radius | 38 |
+| reach | a corridor end must be a cell both legs can reach their pads from | 38 |
+| rip | rip-up and retry as first written | **29** |
+| all | deloop + strip + reach + rip | 33 |
+| fbvia | the escape-via entry as a MODE | 30 |
+| allvia | all + the escape-via entry as a mode | 44 |
+| **fb0** | **the escape-via entry as a per-pair FALLBACK** | **44** |
+| slack05 | the corridor's margin over its legs 0.25 to 0.05 mm | 42 |
+| **slack12** | **the same margin to 0.12 mm** | **49** |
+| **fm26** | **the placement's fine-pitch margin 1.6 to 2.6 mm, tool unchanged** | **46** |
+
+**Three levers move the number and one does not.** The corridor's own slack is the biggest: the centreline was being held 0.25 mm further from copper than its legs need, and on a board whose gaps are tenths of a millimetre that is most of the room. The placement's escape margin is next: `place_audit` counts 194 pads of fine-pitch parts with no escape at all at 1.6 mm, 142 at 2.0, **69 at 2.6**, 164 at 3.0 and 121 at 3.6 (past 2.6 the shelf packer spills parts into other regions and the fans lose again). Giving the wide margin only to parts of sixteen fine pads or more, which is what the C and E generators do, is worse here (205 pads at 2.6): on this board it is the small fine-pitch parts crowding the big ones that close the fans. The escape-via entry is third, and only as a fallback: as a mode it lays 30 and costs D10 two of its five pairs, as a fallback after a failed pad entry it lays 44 and D10 keeps its four.
+
+**Rip-up does not work, and the measurement is unambiguous.** As first written it lays 224 times, spends 47 episodes and ends at 29 against the greedy pass's 38, because nothing checked that an episode paid. Rebuilt as a trial that is kept only when it leaves more pairs laid than it found, it is safe but useless: **106 episodes across two arms, none of them kept.** The isolation finding of 32.95 stands (a pair that fails in the pass lays alone on the same board), but ripping the laid pairs in that pair's corridor is not what recovers it. Rip-up stays off by default and is not the lever to spend more time on.
+
+**Two smaller things learnt on the way.** The escape-via entry has to be a per-pair fallback because the two boards disagree about it, which is the general shape of every knob here: a value that gains on the 951-part carrier can lose on the 62 x 80 mm mezzanine. And a corridor end at a through-hole header must not be found along the normal of the P-N line: for a pair across the two rows that normal runs ALONG the pin row, which is how the ribbon change of 32.95 immediately cost D10's `USB_D8` its corridor start; `fine_end` returns None now and the sixteen-direction sweep takes over.
