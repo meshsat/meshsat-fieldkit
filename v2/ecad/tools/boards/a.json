@@ -1,0 +1,16 @@
+{
+  "name": "pcb-a-power",
+  "letter": "a",
+  "title": "PCB-A POWER + I/O",
+  "footprint_generator": null,
+  "extra_compile": [],
+  "gate_before_placement": true,
+  "bypass_place_after": "mechanical",
+  "escape_env": {},
+  "pair_classes": "USB",
+  "pair_layers": "F.Cu,B.Cu",
+  "pair_hop_layers": "In2.Cu,In3.Cu",
+  "pair_tail": 12,
+  "fanout_nets": "GND,VBAT,CELL+",
+  "escape_prune_before_audit": false
+}
