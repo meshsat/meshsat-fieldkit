@@ -69,11 +69,14 @@ def main(a):
     env = dict(os.environ); env["PAIR_PLAN_IN"] = plan_f
     log = stem + "-neglay.log"
     with open(log, "w") as fh:
-        subprocess.run([sys.executable, "-u", TOOL, board] + rest, stdout=fh, stderr=subprocess.STDOUT, env=env)
+        lay = subprocess.run([sys.executable, "-u", TOOL, board] + rest, stdout=fh, stderr=subprocess.STDOUT, env=env)
     txt = open(log, errors="replace").read()
     m = re.search(r"pair_preroute: (\d+) of (\d+) pairs laid", txt)
-    print("pair_negotiate: laid %s -> %s" % (m.group(0).split(": ")[-1] if m else "?", board))
-    return 0
+    print("pair_negotiate: laid %s -> %s (the laying pass exited %d)" % (m.group(0).split(": ")[-1] if m else "?", board, lay.returncode))
+    # 10 September 2026 (both red teams, P0): this returned 0 whatever the laying pass did, so a crash could be read as a
+    # successful negotiation. The pre-router's own convention is the exit code (0 only when every pair was laid), and it travels.
+    if m is None: print("pair_negotiate: the laying pass wrote no summary line; see %s" % os.path.basename(log)); return 3
+    return lay.returncode
 
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
