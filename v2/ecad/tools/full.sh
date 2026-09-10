@@ -19,6 +19,8 @@ N="$(cfg name)"; FPGEN="$(cfg footprint_generator)"; EXTRA="$(cfg extra_compile)
 GATE1="$(cfg gate_before_placement)"; BPAFTER="$(cfg bypass_place_after)"
 PCLS="$(cfg pair_classes)"; PLAY="$(cfg pair_layers)"; PHOP="$(cfg pair_hop_layers)"; PTAIL="$(cfg pair_tail)"
 FANOUT="$(cfg fanout_nets)"; EPRUNE="$(cfg escape_prune_before_audit)"; ESCENV="$(cfg_env)"
+# One line per pair pass, tab separated: classes, layers, hop layers, inner geometry. Empty when the board runs one pass.
+PPASSES="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(chr(10).join(chr(9).join((p.get(k) or '') for k in ('classes','layers','hop_layers','inner')) for p in (d.get('pair_passes') or [])))" "$CFG")"
 cd "$D" || exit 2
 mkdir -p out
 block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $1"; [ -n "${2:-}" ] && tail -5 "$2"; echo PREROUTE-DONE BLOCK; exit 1; }
@@ -69,15 +71,38 @@ grep -q 'RESULT: ALL PASS' out/check_$L.log || block "numeric gate (out/check_$L
 env $ESCENV python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
 
-if [ -n "$PCLS" ]; then
+if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # The placed board with its escapes and BEFORE any pair copper: the only honest input for a pre-router measurement
   # (10 Sep 2026; the -preroute copy is taken after the pre-router and carried the previous pass's 4,969 mm of pair copper).
   cp $N.kicad_pcb out/$N-placed.kicad_pcb
   [ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
   # THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT (9 Sep 2026, D10, appendix 32.83): prefanout reads laid copper as an
   # obstacle and fits around the corridors, while the pre-router has no such freedom.
-  PAIR_LAYERS=${PAIR_LAYERS:-$PLAY} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-$PHOP} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes "$PCLS" > out/pair_preroute.log 2>&1; PP=$?
-  grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -"$PTAIL"
+  #
+  # A BOARD MAY NEED MORE THAN ONE PASS, WITH A DIFFERENT LAYER SET PER CLASS (10 September 2026, appendix 32.103; round-two
+  # red team H3). B19's two pair classes do not want the same layers: the 100 ohm class hits its target on In2 and In3 with a
+  # NARROWER gap than it uses outside, and the 90 ohm class does not, so the first takes four layers and the second takes two.
+  # The pre-router has no per-class layer list and does not need one: the second pass reads the first pass's locked copper as
+  # an obstacle, so a list of passes in the board file is the per-class layer set. Measured: 23 + 37 = 60 of 113 in that
+  # order, 39 + 17 = 56 in the other, against 56 for one pass on two layers. The class that gains the layers goes first.
+  # This lived in a session driver until now, so the chain laid 56 and any floor-plan work would have been measured against
+  # the wrong baseline.
+  PP=0; PIDX=0
+  if [ -n "$PPASSES" ]; then
+    while IFS=$'\t' read -r pcls play phop pinner; do
+      [ -z "$pcls" ] && continue
+      PIDX=$((PIDX + 1))
+      echo "pair pass $PIDX: classes $pcls on ${play:-$PLAY}${pinner:+ , inner $pinner}"
+      PAIR_LAYERS="${play:-$PLAY}" PAIR_HOP_LAYERS="${phop:-$PHOP}" PAIR_INNER="$pinner"         python3 ../tools/pair_preroute.py $N.kicad_pcb --classes "$pcls" > out/pair_preroute-$PIDX.log 2>&1; rc=$?
+      [ "$rc" -eq 0 ] || PP=$rc
+      grep -E "pair_preroute:" out/pair_preroute-$PIDX.log | grep -v "map " | tail -"$PTAIL"
+    done <<< "$PPASSES"
+    cat out/pair_preroute-*.log > out/pair_preroute.log
+  else
+    PAIR_LAYERS=${PAIR_LAYERS:-$PLAY} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-$PHOP} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes "$PCLS" > out/pair_preroute.log 2>&1; PP=$?
+    grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -"$PTAIL"
+  fi
+  echo "pair pre-router: $(grep -h "pairs laid," out/pair_preroute*.log | sed 's/^pair_preroute: //' | paste -sd'; ')"
   [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || block "pair pre-router (out/pair_preroute.log)"
 fi
 
