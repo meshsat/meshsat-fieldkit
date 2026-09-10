@@ -46,6 +46,11 @@ def mm(v): return v / 1e6
 
 class Grid:
     def __init__(self, b, g):
+        # 10 September 2026 (report 1, P1): the rasterisation cache used to be a CLASS attribute keyed by (part, grow) only, so
+        # a second grid with a different cell size read masks rasterised in the first one's coordinate system. Nothing had gone
+        # wrong yet because the adaptive grid is off by default, which is the definition of a latent defect. The cache belongs
+        # to the grid that filled it; the reuse that matters (every pair of a pass shares one grid) is untouched.
+        self._cache = {}
         self.b, self.G = b, g; eb = b.GetBoardEdgesBoundingBox()
         self.X0, self.Y0 = eb.GetLeft() / 1e6 - 1.0, eb.GetTop() / 1e6 - 1.0
         self.NX, self.NY = int(eb.GetWidth() / 1e6 / g) + 20, int(eb.GetHeight() / 1e6 / g) + 20
@@ -65,14 +70,14 @@ class Grid:
         dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
         t = 0 if L2 == 0 else np.clip(((xs - ax) * dx + (ys - ay) * dy) / L2, 0, 1)
         M[i0:i1 + 1, j0:j1 + 1] |= (xs - (ax + t * dx)) ** 2 + (ys - (ay + t * dy)) ** 2 <= r * r
-    _cache = {}   # (key, grow) -> (i0, j0, mask): a pad or zone outline rasterised once per grow value for the whole run (B17's 40 pairs rebuilt every map from scratch, 8 Sep 2026)
+    # (key, grow) -> (i0, j0, mask): a pad or zone outline rasterised once per grow value, per grid (see __init__)
     def poly(self, M, sps, grow, key=None):
         bb = sps.BBox(); G, X0, Y0, NX, NY = self.G, self.X0, self.Y0, self.NX, self.NY; r = grow
         i0, i1 = max(0, int((mm(bb.GetTop()) - r - Y0) / G)), min(NY - 1, int((mm(bb.GetBottom()) + r - Y0) / G) + 1); j0, j1 = max(0, int((mm(bb.GetLeft()) - r - X0) / G)), min(NX - 1, int((mm(bb.GetRight()) + r - X0) / G) + 1)
         if i1 < i0 or j1 < j0: return
         ck = (key, round(grow, 4)) if key is not None else None
-        if ck is not None and ck in Grid._cache:
-            ci0, cj0, mask = Grid._cache[ck]; M[ci0:ci0 + mask.shape[0], cj0:cj0 + mask.shape[1]] |= mask; return
+        if ck is not None and ck in self._cache:
+            ci0, cj0, mask = self._cache[ck]; M[ci0:ci0 + mask.shape[0], cj0:cj0 + mask.shape[1]] |= mask; return
         grown = pcbnew.SHAPE_POLY_SET(sps)
         if grow > 0:
             try: grown.Inflate(FromMM(grow), pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, FromMM(0.05))
@@ -83,7 +88,7 @@ class Grid:
         for ii in range(i0, i1 + 1):
             for jj in range(j0, j1 + 1):
                 if grown.Contains(VECTOR2I(FromMM(X0 + jj * G), FromMM(Y0 + ii * G))): mask[ii - i0, jj - j0] = True
-        if ck is not None: Grid._cache[ck] = (i0, j0, mask)
+        if ck is not None: self._cache[ck] = (i0, j0, mask)
         M[i0:i1 + 1, j0:j1 + 1] |= mask
 
 def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
@@ -570,6 +575,11 @@ def main(a):
         # corridor search stopped after 5,365,661 expansions of a 0.1 mm grid, which is 3320 x 2020 cells per layer. A
         # coarser grid for the long ones is four times fewer cells for the same millimetres of clearance, since every
         # obstacle margin here is in mm. Off by default until it is measured: PAIR_GRID_LONG=0.2 PAIR_LONG_MM=120.
+        # 10 September 2026 (report 1, P1): the negotiation rasters are allocated once from the grid in use, so a pass that
+        # changes the cell size mid-run would index them in another coordinate system. The two are not composable and the tool
+        # says so rather than reading the wrong cells.
+        if _GLONG and (NEG_COST is not None or plan_in):
+            raise SystemExit("pair_preroute: PAIR_GRID_LONG cannot be combined with the negotiated plan or its cost rasters (they are sized from one grid)")
         if _GLONG and _span(stem) >= _LONG_MM: gr = Grid(b, _GLONG)
         elif gr.G != g: gr = Grid(b, g)
         pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
