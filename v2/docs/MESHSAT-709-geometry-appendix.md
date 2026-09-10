@@ -3693,3 +3693,32 @@ Every arm below ran on the same placed board (md5 96052741, no pair copper), wit
 **Rip-up does not work, and the measurement is unambiguous.** As first written it lays 224 times, spends 47 episodes and ends at 29 against the greedy pass's 38, because nothing checked that an episode paid. Rebuilt as a trial that is kept only when it leaves more pairs laid than it found, it is safe but useless: **106 episodes across two arms, none of them kept.** The isolation finding of 32.95 stands (a pair that fails in the pass lays alone on the same board), but ripping the laid pairs in that pair's corridor is not what recovers it. Rip-up stays off by default and is not the lever to spend more time on.
 
 **Two smaller things learnt on the way.** The escape-via entry has to be a per-pair fallback because the two boards disagree about it, which is the general shape of every knob here: a value that gains on the 951-part carrier can lose on the 62 x 80 mm mezzanine. And a corridor end at a through-hole header must not be found along the normal of the P-N line: for a pair across the two rows that normal runs ALONG the pin row, which is how the ribbon change of 32.95 immediately cost D10's `USB_D8` its corridor start; `fine_end` returns None now and the sixteen-direction sweep takes over.
+
+### 32.98 The levers do not compose, and the pre-router plateaus at 50 of 113 (10 September 2026, 15:45 CEST; MESHSAT-862)
+
+The ladder of 32.97 was run out to its combinations, every arm on the same board with the same budget. The full table, pairs laid of 113:
+
+| configuration | laid |
+|---|---|
+| the tool as it stood on 9 September | 38 |
+| corridor slack 0.05 mm | 42 |
+| **corridor slack 0.12 mm** | **49** |
+| corridor slack 0.15 mm | 49 |
+| corridor slack 0.18 mm | 44 |
+| corridor slack 0.12 with a 40 mm search box (25 mm is the default) | 45 |
+| the escape-via entry as a per-pair fallback, old slack | 44 |
+| the placement's fine-pitch margin at 2.6 mm, old slack | 46 |
+| the placement at 2.6 **and** slack 0.12 and the entry fallback | **43** |
+| **slack 0.12, the entry fallback and the crossing fallback, placement at 1.6** | **50** |
+| rip-up, in any form | 29 to 33, and no episode ever paid |
+
+**Two of the three levers cancel each other.** The roomier placement is worth eight pairs against the old corridor slack and costs seven against the corrected one: the extra room moves every packed part, so the pairs that had won their corridor lose it to a different neighbour. The wider search box is worth nothing and costs five. The default margin goes back to 1.6 mm with the measurement recorded beside it; the slack stays at 0.12 mm, and the two fallbacks stay because each is a strict second chance and neither can lose a pair.
+
+**So the pre-router plateaus at 50 of 113 on B19, from 38 this morning.** That is a third more coupled pairs and it is not 113. The remaining 63 are, in order of size: pairs with **no corridor on the map at all** (24 at slack 0.12, a capacity question), pairs whose two legs cross for a reason the offset loop removal does not fix (12), and a tail of stub and via-site failures at fine-pitch parts. Knob-turning is finished; what is left needs one of four things, and the choice is the owner's:
+
+1. **A negotiated-congestion pair router** (the PathFinder pattern: route everything, rip up what shares copper, raise the cost of the contested cells, repeat). This is what a real router does and it is the reason the naive rip-up of today never paid: there is no cost history, so the second attempt makes the same choice as the first. Days of work, and the method is well understood.
+2. **The inner layers for the pairs.** On B's JLC06161H-3313 stack a routing layer sits 0.55 mm from its plane, so a 100 ohm pair is 0.30 mm wide at a 0.15 mm gap and a 90 ohm pair 0.40 at 0.20, against 0.13/0.20 on the outers. Two more layers at half the density, and the general routing loses what the pairs take.
+3. **A floor plan built around the pair corridors** rather than around the regions: place the pair endpoints so the corridors are short and parallel, then pack the rest.
+4. **Fewer pairs**, which is a device-set decision and therefore an owner ruling.
+
+The recommendation, stated once: item 1 for the tool and item 3 for the board, in that order, because item 1 is bounded work with a known method and item 3 is where the 24 pairs with no corridor at all actually live.
