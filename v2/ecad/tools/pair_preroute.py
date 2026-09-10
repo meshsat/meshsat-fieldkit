@@ -501,6 +501,9 @@ def main(a):
     # to a fanned part of eight SMD pads or more, which is escape.py's own fan condition; a passive couple keeps its pads.
     ENTRY_VIA = os.environ.get("PAIR_ENTRY_VIA", "0") == "1"
     via_entry_stems = set()   # pairs that failed once with the legs entering the pads and are laid again ending at the escape vias
+    SLACK = float(os.environ.get("PAIR_CORRIDOR_SLACK", "0.12"))
+    SLACK_SLIM = float(os.environ.get("PAIR_CORRIDOR_SLACK_SLIM", "0.05"))
+    slim_stems = set()   # pairs that found no corridor at the measured slack and are searched again at the slim one
 
     def via_entry(f):
         return (ENTRY_VIA or stem in via_entry_stems) and sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD) >= 8
@@ -582,7 +585,13 @@ def main(a):
         # 0.25 lays 38 of 113, 0.18 and 0.15 are in the sweep, 0.12 lays 49, 0.05 lays 42 (too little slack lets the
         # corridor into places the legs then fail out of, and legs_clear rejects the whole pair). D10 lays 4 of 5 at every
         # value, so the figure is not board-specific in the small. PAIR_CORRIDOR_SLACK restores any of them.
-        half = w + s / 2 + float(os.environ.get("PAIR_CORRIDOR_SLACK", "0.12")); d = (w + s) / 2
+        # 10 September 2026, the slim retry. A 2.54 mm through-hole header leaves 0.94 mm between two 1.6 mm pads, and the
+        # corridor at the measured slack asks for 2 x (w + s/2 + 0.12 + 0.16) = 1.02 mm, so a pair whose station is inside a
+        # ribbon header has NO corridor out of the pin field: /USB_PNL at J_PANEL and /USB_E6 at J_AB1 both fail exactly
+        # there, by eighty micrometres. At 0.05 mm of slack the same gap is 0.88 mm and the corridor fits. A board-wide 0.05
+        # is worse (42 of 113 against 49), so it is a per-pair second chance like the escape-via entry: the measured slack
+        # first, and the slim one for a pair that found no corridor at all. `legs_clear` still judges the legs either way.
+        half = w + s / 2 + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
             f = p.GetParentFootprint(); ps = list(f.Pads())
@@ -966,7 +975,12 @@ def main(a):
                 if path:
                     neg_stamp(path, half + CLR)
                     print("pair_preroute: PLAN  %s section %d of %d: %d cells" % (stem, _sec_k + 1, len(sections), len(path)), flush=True)
-                else: report.append("FAIL  %s: section %s -> %s (%s)" % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), PATH_WHY[0] or "no corridor"))
+                elif stem not in slim_stems and SLACK_SLIM < SLACK:
+                    slim_stems.add(stem); stems.append(stem); plan_out.pop(stem.lstrip("/"), None)
+                    report.append("SLIM  %s: no corridor at %.2f mm of slack; planned again at %.2f" % (stem, SLACK, SLACK_SLIM))
+                    break
+                else:
+                    report.append("FAIL  %s: section %s -> %s (%s)" % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), PATH_WHY[0] or "no corridor"))
                 continue
             def dump(tag, cx, cy, R=3.0, layer_idx=0):   # PAIR_DEBUG=1: the corridor map around a point, one character per 2 cells (S start, G goal, # forbidden)
                 if not os.environ.get("PAIR_DEBUG"): return
@@ -1266,6 +1280,10 @@ def main(a):
             if not ENTRY_VIA and stem not in via_entry_stems:
                 via_entry_stems.add(stem); stems.append(stem)
                 report.append("ENTRY %s: section %s failed with the legs entering the pads; laid again ending at the escape vias" % (stem, failed))
+                continue
+            if stem not in slim_stems and SLACK_SLIM < SLACK:
+                slim_stems.add(stem); stems.append(stem)
+                report.append("SLIM  %s: section %s; searched again with the corridor at %.2f mm of slack instead of %.2f" % (stem, failed, SLACK_SLIM, SLACK))
                 continue
             report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections)))
             continue
