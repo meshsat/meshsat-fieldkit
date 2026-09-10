@@ -1,0 +1,64 @@
+Geometry of WeAct-EpaperModule-3.7 Board 3D, probed from weact/Hardware/WeAct-EpaperModule-3.7 Board 3D.step
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: weact/Hardware/WeAct-EpaperModule-3.7 Board 3D.step
+sha256 (first 16): 2824a59087387fd7
+size: 3488822 bytes
+points read: 15264
+
+WeAct-EpaperModule-3.7 Board 3D ENVELOPE: NOT MEASURED. This file is an assembly (121 component occurrences),
+  and each component's coordinates are its own; placing them needs a CAD kernel, which this
+  reader deliberately is not. Open the model, or probe a single-part file instead.
+  For the record, the raw spread of all points, which is NOT the part size:
+  X -328.5 to 517.1, Y -216.7 to 204.3, Z -15.5 to 16.0
+
+WeAct-EpaperModule-3.7 Board 3D HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  WeAct-EpaperModule-3.7 Board 3D: diameter 0.500 : 16 holes   pattern 13.500 x 3.464
+      at X -6.750  Y -2.265
+      at X -6.750  Y -0.365
+      at X -1.190  Y -1.199
+      at X -1.190  Y -0.825
+      at X -0.710  Y -1.199
+      at X -0.710  Y -0.825
+      at X -0.240  Y 0.825
+      at X -0.240  Y 1.199
+      at X 0.240  Y 0.825
+      at X 0.240  Y 1.199
+      at X 0.710  Y -1.199
+      at X 0.710  Y -0.825
+  WeAct-EpaperModule-3.7 Board 3D: diameter 0.812 : 8 holes   pattern 2.540 x 7.620
+      at X 317.764  Y 188.342
+      at X 317.764  Y 190.882
+      at X 317.764  Y 193.422
+      at X 317.764  Y 195.962
+      at X 320.304  Y 188.342
+      at X 320.304  Y 190.882
+      at X 320.304  Y 193.422
+      at X 320.304  Y 195.962
+  WeAct-EpaperModule-3.7 Board 3D: diameter 3.000 : 2 holes   pattern 0.000 x 12.400
+      at X 317.419  Y 171.623
+      at X 317.419  Y 184.023
+  WeAct-EpaperModule-3.7 Board 3D: diameter 3.200 : 4 holes   pattern 100.190 x 48.200
+      at X 219.244  Y 153.262
+      at X 219.244  Y 201.462
+      at X 319.434  Y 153.262
+      at X 319.434  Y 201.462
+  WeAct-EpaperModule-3.7 Board 3D: diameter 5.599 : 2 holes   pattern 100.191 x 0.000
+      at X 219.244  Y 201.462
+      at X 319.434  Y 201.462
+  WeAct-EpaperModule-3.7 Board 3D: diameter 5.603 : 2 holes   pattern 100.187 x 0.000
+      at X 219.245  Y 153.263
+      at X 319.433  Y 153.263
+
+(6 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

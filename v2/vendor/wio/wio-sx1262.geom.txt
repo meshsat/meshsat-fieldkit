@@ -1,0 +1,84 @@
+Geometry of wio-sx1262, probed from wio/wio-sx1262.step
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: wio/wio-sx1262.step
+sha256 (first 16): 6a4c8592691cf821
+size: 3754614 bytes
+points read: 27079
+
+wio-sx1262 ENVELOPE: NOT MEASURED. This file is an assembly (11 component occurrences),
+  and each component's coordinates are its own; placing them needs a CAD kernel, which this
+  reader deliberately is not. Open the model, or probe a single-part file instead.
+  For the record, the raw spread of all points, which is NOT the part size:
+  X -0.8 to 123.3, Y -179.8 to 118.3, Z -27.0 to 40.3
+
+wio-sx1262 HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  wio-sx1262: diameter 0.500 : 5 holes   pattern 2.100 x 2.100
+      at X 8.907  Y 10.042
+      at X 8.907  Y 7.942
+      at X 9.957  Y 8.992
+      at X 11.007  Y 10.042
+      at X 11.007  Y 7.942
+  wio-sx1262: diameter 0.520 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 0.640 : 4 holes   pattern 0.000 x 4.140
+      at X 50.000  Y 105.930
+      at X 50.000  Y 106.890
+      at X 50.000  Y 109.110
+      at X 50.000  Y 110.070
+  wio-sx1262: diameter 0.740 : 4 holes   pattern 0.000 x 4.140
+      at X 50.000  Y 105.930
+      at X 50.000  Y 106.890
+      at X 50.000  Y 109.110
+      at X 50.000  Y 110.070
+  wio-sx1262: diameter 1.000 : 14 holes   pattern 15.240 x 15.240
+      at X 106.782  Y -128.523
+      at X 106.782  Y -125.983
+      at X 106.782  Y -123.443
+      at X 106.782  Y -120.903
+      at X 106.782  Y -118.363
+      at X 106.782  Y -115.823
+      at X 106.782  Y -113.283
+      at X 122.022  Y -128.523
+      at X 122.022  Y -125.983
+      at X 122.022  Y -123.443
+      at X 122.022  Y -120.903
+      at X 122.022  Y -118.363
+  wio-sx1262: diameter 1.680 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 1.700 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 1.720 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 1.852 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 1.860 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 1.866 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 1.992 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 1.994 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 2.000 : 1 hole
+      at X 9.957  Y 8.992
+  wio-sx1262: diameter 2.200 : 1 hole
+      at X 114.399  Y -114.122
+  wio-sx1262: diameter 3.810 : 4 holes   pattern 13.970 x 17.630
+      at X 107.417  Y -112.267
+      at X 107.417  Y -129.897
+      at X 121.387  Y -129.897
+      at X 121.387  Y -112.267
+
+(8 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

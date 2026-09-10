@@ -59,6 +59,8 @@ vishay       current   # passives and protection on the power tree
 wifi         current   # AW7915-AED, ruled 5 September 2026
 xenarc       current   # 709GNK IP67 monitor, ruled 6 September 2026, replacing the Touch Display 2
 zigbee       current   # the CC2652P documents behind the E72 modules
+coilcraft     current   # XAL40xx and XAL60xx moulded inductors, the buck inductors of A, B and E
+winbond      current   # W25Q16JV QSPI flash beside the RP2040 controllers on C and E
 
 # --- retired by a ruling, kept for the record ---
 aioc         retired   # the V1 audio-interface chain went with the PicoAPRS V4 ruling of 8 September 2026: no AIOC, no sound card, no PTT wiring
@@ -94,3 +96,4 @@ battery/samsung-35e-akkuzentrum.pdf   retired   # the 1S12P Samsung 35E module w
 battery/samsung-35e-conrad.pdf        retired   # same ruling
 battery/samsung-35e-orbtronic.pdf     retired   # same ruling
 battery/samsung-35e-relectro.pdf      retired   # same ruling; and this reseller sheet is 13 pages of images with 1097 characters of text in all of them
+DOWNLOADS-2026-09-10.md   current   # what was fetched on 10 September 2026, from where, and the one document still owed

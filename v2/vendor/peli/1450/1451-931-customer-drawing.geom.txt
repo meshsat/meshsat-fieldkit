@@ -1,0 +1,52 @@
+Geometry of 1451-931-customer-drawing, probed from peli/1450/1451-931-customer-drawing.dxf
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: drawing units (a DXF declares no unit here). EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1450/1451-931-customer-drawing.dxf
+sha256 (first 16): f7e1aa81b3f73098
+size: 8890008 bytes
+points read: 27950
+
+1451-931-customer-drawing EXTENTS OF THE DRAWING SHEET. This is a 2D drawing, not a solid: the box below
+is the sheet, several views sit on it at different places, and only the circle
+centres further down are positions within a view.
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -73.674 to 852.590   extent 926.264
+  axis 2 0.000 to 589.873   extent 589.873
+  axis 3 0.000 to 0.000   extent 0.000
+
+1451-931-customer-drawing HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1451-931-customer-drawing: diameter 1.058 : 2 holes   pattern 288.945 x 0.000
+      at X 343.011  Y 272.519
+      at X 631.955  Y 272.519
+  1451-931-customer-drawing: diameter 1.101 : 2 holes   pattern 288.945 x 0.000
+      at X 343.011  Y 272.519
+      at X 631.955  Y 272.519
+  1451-931-customer-drawing: diameter 2.117 : 1 hole
+      at X 636.765  Y 253.626
+  1451-931-customer-drawing: diameter 4.447 : 1 hole
+      at X 169.114  Y 250.557
+  1451-931-customer-drawing: diameter 7.778 : 1 hole
+      at X 169.114  Y 250.557
+  1451-931-customer-drawing: diameter 8.013 : 1 hole
+      at X 169.114  Y 250.557
+  1451-931-customer-drawing: diameter 8.041 : 1 hole
+      at X 169.114  Y 250.557
+  1451-931-customer-drawing: diameter 8.052 : 1 hole
+      at X 169.114  Y 250.557
+  1451-931-customer-drawing: diameter 8.183 : 1 hole
+      at X 169.114  Y 250.557
+  1451-931-customer-drawing: diameter 10.408 : 1 hole
+      at X 169.114  Y 250.557
+  1451-931-customer-drawing: diameter 10.624 : 1 hole
+      at X 169.114  Y 250.557
+

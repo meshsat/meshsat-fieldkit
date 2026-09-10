@@ -1,0 +1,52 @@
+Geometry of td2-7inch, probed from td2/td2-7inch.step
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: td2/td2-7inch.step
+sha256 (first 16): 4f7f664f371d9c14
+size: 11522395 bytes
+points read: 50077
+
+td2-7inch ENVELOPE: NOT MEASURED. This file is an assembly (13 component occurrences),
+  and each component's coordinates are its own; placing them needs a CAD kernel, which this
+  reader deliberately is not. Open the model, or probe a single-part file instead.
+  For the record, the raw spread of all points, which is NOT the part size:
+  X -60.1 to 120.2, Y -170.4 to 189.3, Z -9.0 to 4.5
+
+td2-7inch HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  td2-7inch: diameter 0.600 : 20 holes   pattern 98.010 x 164.850
+      at X -49.005  Y -82.225
+      at X -49.005  Y 82.225
+      at X -48.805  Y -82.425
+      at X -48.805  Y 82.425
+      at X -48.655  Y -81.875
+      at X -48.655  Y 81.875
+      at X -48.455  Y -82.075
+      at X -48.455  Y 82.075
+      at X -48.305  Y -81.725
+      at X -48.305  Y 81.725
+      at X 48.305  Y -81.725
+      at X 48.305  Y 81.725
+  td2-7inch: diameter 1.000 : 10 holes   pattern 97.610 x 164.450
+      at X -48.805  Y -82.225
+      at X -48.805  Y 82.225
+      at X -48.455  Y -81.875
+      at X -48.455  Y 81.875
+      at X -45.070  Y -81.045
+      at X 45.070  Y -81.045
+      at X 48.455  Y -81.875
+      at X 48.455  Y 81.875
+      at X 48.805  Y -82.225
+      at X 48.805  Y 82.225
+
+(1 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

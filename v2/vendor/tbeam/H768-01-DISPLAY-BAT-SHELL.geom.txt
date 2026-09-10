@@ -1,0 +1,95 @@
+Geometry of H768-01-DISPLAY-BAT-SHELL, probed from tbeam/H768-01-DISPLAY-BAT-SHELL.stp
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: tbeam/H768-01-DISPLAY-BAT-SHELL.stp
+sha256 (first 16): 9feddeec3e203604
+size: 743857 bytes
+points read: 2972
+
+H768-01-DISPLAY-BAT-SHELL ENVELOPE: NOT MEASURED. This file is an assembly (7 component occurrences),
+  and each component's coordinates are its own; placing them needs a CAD kernel, which this
+  reader deliberately is not. Open the model, or probe a single-part file instead.
+  For the record, the raw spread of all points, which is NOT the part size:
+  X -80.5 to 79.1, Y -50.8 to 196.7, Z -81.9 to 84.1
+
+H768-01-DISPLAY-BAT-SHELL HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  H768-01-DISPLAY-BAT-SHELL: diameter 0.600 : 4 holes   pattern 38.200 x 22.495
+      at X -20.202  Y 100.350
+      at X -20.202  Y 104.350
+      at X 17.998  Y 81.855
+      at X 17.998  Y 85.850
+  H768-01-DISPLAY-BAT-SHELL: diameter 1.000 : 32 holes   pattern 38.200 x 50.514
+      at X -20.202  Y 72.179
+      at X -20.202  Y 77.600
+      at X -20.202  Y 100.150
+      at X -20.202  Y 104.550
+      at X -20.202  Y 110.300
+      at X -20.202  Y 116.900
+      at X -19.702  Y 77.600
+      at X -19.702  Y 78.100
+      at X -14.054  Y 72.179
+      at X -14.054  Y 72.679
+      at X -14.054  Y 77.600
+      at X -14.054  Y 78.100
+  H768-01-DISPLAY-BAT-SHELL: diameter 1.500 : 4 holes   pattern 2.400 x 49.692
+      at X 3.000  Y -30.377
+      at X 3.000  Y 19.314
+      at X 5.400  Y -30.377
+      at X 5.400  Y 19.314
+  H768-01-DISPLAY-BAT-SHELL: diameter 2.000 : 5 holes   pattern 27.700 x 45.221
+      at X -19.702  Y 77.600
+      at X -15.887  Y 113.590
+      at X -14.054  Y 72.679
+      at X -14.054  Y 77.600
+      at X 7.998  Y 117.900
+  H768-01-DISPLAY-BAT-SHELL: diameter 3.000 : 2 holes   pattern 35.500 x 18.500
+      at X -18.854  Y 102.350
+      at X 16.646  Y 83.850
+  H768-01-DISPLAY-BAT-SHELL: diameter 3.500 : 4 holes   pattern 2.400 x 49.699
+      at X 3.000  Y -30.384
+      at X 3.000  Y 19.314
+      at X 5.400  Y -30.377
+      at X 5.400  Y 19.314
+  H768-01-DISPLAY-BAT-SHELL: diameter 4.000 : 5 holes   pattern 35.500 x 93.590
+      at X -18.854  Y 102.350
+      at X 7.000  Y 8.760
+      at X 7.200  Y 8.760
+      at X 9.200  Y 21.902
+      at X 16.646  Y 83.850
+  H768-01-DISPLAY-BAT-SHELL: diameter 4.400 : 2 holes   pattern 35.500 x 18.500
+      at X -18.854  Y 102.350
+      at X 16.646  Y 83.850
+  H768-01-DISPLAY-BAT-SHELL: diameter 5.000 : 4 holes   pattern 4.000 x 6.000
+      at X 11.498  Y 117.193
+      at X 11.498  Y 123.193
+      at X 15.498  Y 117.193
+      at X 15.498  Y 123.193
+  H768-01-DISPLAY-BAT-SHELL: diameter 5.600 : 1 hole
+      at X 9.600  Y -30.832
+  H768-01-DISPLAY-BAT-SHELL: diameter 6.000 : 7 holes   pattern 35.500 x 153.525
+      at X -18.854  Y 102.350
+      at X 9.600  Y -30.832
+      at X 11.498  Y 117.693
+      at X 11.498  Y 122.693
+      at X 15.498  Y 117.693
+      at X 15.498  Y 122.693
+      at X 16.646  Y 83.850
+  H768-01-DISPLAY-BAT-SHELL: diameter 6.500 : 2 holes   pattern 0.000 x 2.000
+      at X 13.630  Y 121.193
+      at X 13.630  Y 123.193
+  H768-01-DISPLAY-BAT-SHELL: diameter 7.000 : 2 holes   pattern 35.500 x 18.500
+      at X -18.854  Y 102.350
+      at X 16.646  Y 83.850
+
+(2 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

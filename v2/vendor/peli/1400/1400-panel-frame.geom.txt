@@ -1,0 +1,42 @@
+Geometry of 1400-panel-frame, probed from peli/1400/1400-panel-frame.STEP
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: unknown. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1400/1400-panel-frame.STEP
+sha256 (first 16): f359ca8237e019c7
+size: 1792173 bytes
+points read: 9947
+
+1400-panel-frame ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -6.310 to 6.310   extent 12.620
+  axis 2 -4.250 to 0.000   extent 4.250
+  axis 3 -4.840 to 4.965   extent 9.805
+
+1400-panel-frame HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1400-panel-frame: diameter 1.300 : 4 holes   pattern 10.246 x 0.130
+      at X -5.123  Y -0.397
+      at X -5.123  Y -0.267
+      at X 5.123  Y -0.267
+      at X 5.123  Y -0.397
+  1400-panel-frame: diameter 1.380 : 4 holes   pattern 10.126 x 0.310
+      at X -5.063  Y -0.957
+      at X -5.063  Y -0.647
+      at X 5.063  Y -0.647
+      at X 5.063  Y -0.957
+  1400-panel-frame: diameter 1.740 : 2 holes   pattern 10.206 x 0.000
+      at X -5.103  Y -3.051
+      at X 5.103  Y -3.051
+
+(6 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

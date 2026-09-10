@@ -1,0 +1,55 @@
+Geometry of 1501-931-top, probed from peli/1500/1501-931-top.STEP
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: unknown. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1500/1501-931-top.STEP
+sha256 (first 16): bce57f9adfe7eea9
+size: 2245211 bytes
+points read: 9168
+
+1501-931-top ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -9.062 to 9.062   extent 18.125
+  axis 2 -0.007 to 22.429   extent 22.436
+  axis 3 -6.260 to 6.280   extent 12.540
+
+1501-931-top HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1501-931-top: diameter 0.501 : 3 holes   pattern 13.050 x 0.000
+      at X -6.530  Y 1.790
+      at X 0.000  Y 1.790
+      at X 6.520  Y 1.790
+  1501-931-top: diameter 0.855 : 3 holes   pattern 13.050 x 0.000
+      at X -6.530  Y 1.390
+      at X 0.000  Y 1.390
+      at X 6.520  Y 1.390
+  1501-931-top: diameter 0.915 : 3 holes   pattern 13.050 x 0.000
+      at X -6.530  Y 1.417
+      at X 0.000  Y 1.417
+      at X 6.520  Y 1.417
+  1501-931-top: diameter 0.975 : 3 holes   pattern 13.050 x 0.000
+      at X -6.530  Y 1.763
+      at X 0.000  Y 1.763
+      at X 6.520  Y 1.763
+  1501-931-top: diameter 1.035 : 3 holes   pattern 13.050 x 0.000
+      at X -6.530  Y 1.790
+      at X 0.000  Y 1.790
+      at X 6.520  Y 1.790
+  1501-931-top: diameter 1.359 : 2 holes   pattern 15.766 x 0.000
+      at X -7.883  Y 0.000
+      at X 7.883  Y 0.000
+  1501-931-top: diameter 1.360 : 2 holes   pattern 15.686 x 0.000
+      at X -7.843  Y 1.110
+      at X 7.843  Y 1.110
+
+(6 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+
