@@ -1,0 +1,96 @@
+# What each vendor folder is FOR, one line each: <path>  <status>  # reason
+# Statuses: current (this design uses it), v1 (the built V1 kits only, not the V2 board set),
+#           retired (superseded by a ruling; kept for the record), tooling (not a document).
+#
+# WHY THIS FILE EXISTS. A document store answers with whatever it holds, and this folder holds the
+# whole history: the u-blox receiver that the Quectel ruling replaced, the Touch Display 2 that the
+# Xenarc replaced, the DMR858M that was dropped from both kits. A retrieval that returns a retired
+# part's page with the same standing as a current one does not merely waste a minute; it is the
+# exact shape of the defect this repository has already paid for twice, a confident claim about a
+# part nobody re-read (a TPS2065CDBV on a SOT-23-6 land for four board phases).
+#
+# So: kb_search.py LABELS every hit with the status of its folder and pushes a retired one down the
+# ranking, and kb_verify.py FAILS when a vendor folder has no line here. A new folder cannot enter
+# the store as "current" by default, and a retirement is a line with a ruling behind it rather than
+# something a session is expected to remember.
+#
+# A file line overrides its folder line. Written 10 September 2026 (MESHSAT-862), each reason
+# traceable to a ruling in the design record or to the generator that instantiates the part.
+
+# --- the V2 board set as it stands ---
+adi          current   # LT8705A, the bespoke solar tracker on the dock strip (ruling F, 4 September 2026)
+ams          current   # AS7331 UV sensor of the outside pod; approved in the device set of 6 September, not yet in a generator
+battery      current   # the 4S pack of the 7 September ruling, its protection board and the RS PRO heater mat
+bosch        current   # the environment sensing approved 6 September 2026
+cluster      current   # the three-CM5 cluster of appendix 32.52
+cm5          current   # Compute Module 5, the compute of every slot
+connectors   current   # the USB 3 A receptacle and the nano-SIM socket on B
+d38999       current   # the MIL-DTL-38999 wall receptacles on the connector plate
+diodes       current   # protection and ideal-diode parts on A and the dock
+ebyte        current   # E22-900M30S class LoRa and the two E72 CC2652P (Zigbee and Thread), ruled 6 September 2026
+keystone     current   # 3568 blade-fuse holders on A
+limesdr      current   # LimeSDR Mini 2.4 on USB 3, ruled 6 September 2026
+lora         current   # the LoRa radio documents behind the E22 ruling
+m2           current   # the M.2 E-key and M-key sockets on B
+mentor       current   # 1282.5004 light guides, the only path from the LEDs through the sealed face
+microchip    current   # ATECC608B (secure element) and KSZ9897 (the five-port switch) are in gen_sch_b.py
+mitsubishi   current   # RA30H1317M1, the 30 W PA stage on D
+openthread   current   # the CC13x2/CC26x2 notes behind the Matter/Thread RCP
+pdi          current   # E2370KS0C1 wide-temperature e-paper, ruled 6 September 2026
+peli         current   # the Peli 1450 and 1450PF; the case is fixed by the ruling of 7 September ("no change of case ever again")
+power        current   # the converters and chargers of the A power tree
+precidip     current   # 813 series signal contacts on the dock block
+pulse        current   # H5007NL magnetics on B's gigabit links
+qrp-labs     current   # the QMX-class HF module approved 6 September 2026
+quectel      current   # LG290P (GNSS, ruled 6 September) and the RM520N-GL 5G module
+rf           current   # SMP-MAX blind-mate, SMA bulkheads, the RF path documents
+rockblock    current   # RockBLOCK 9704 Iridium
+rp2040       current   # the two RP2040 controllers, panel and sensors
+sciosense    current   # AS3935 lightning sensor of the approved suite
+seals        current   # the gasket, O-ring and IP-rating documents behind the sealed face
+sensirion    current   # inside climate sensing
+silabs       current   # CP2102N, the console bridge on B, D and P
+st           current   # STM32H743VIT6, the three I/O supervisors of the high-availability layer
+switches     current   # APEM, NKK and C&K panel parts named in the ruling of 4 September 2026
+ti           current   # the largest current-part folder: converters, muxes, codecs, protection
+traco        current   # TEN 40-2412WIN, the isolated shore converter on the dock strip
+usb2517      current   # still instantiated by gen_sch_a.py for A's wall host port
+vishay       current   # passives and protection on the power tree
+wifi         current   # AW7915-AED, ruled 5 September 2026
+xenarc       current   # 709GNK IP67 monitor, ruled 6 September 2026, replacing the Touch Display 2
+zigbee       current   # the CC2652P documents behind the E72 modules
+
+# --- retired by a ruling, kept for the record ---
+aioc         retired   # the V1 audio-interface chain went with the PicoAPRS V4 ruling of 8 September 2026: no AIOC, no sound card, no PTT wiring
+audio        retired   # WM8960 and CM108B were the D7-era codec path; the current D and P boards carry a PCM2912A, and the Direwolf guide went with the same PicoAPRS ruling
+dmr858       retired   # the DMR858M was dropped from V2 on 6 September and from V1 on 8 September 2026; both modules went back unopened
+gnss         retired   # the u-blox NEO-M9N, MAX-M10S and SAM-M10Q were replaced by the Quectel LG290P on 6 September 2026 (MESHSAT-823)
+lte          retired   # the EG25-G mini PCIe path and its socket were replaced by an M.2 B-key 5G module on 6 September 2026; the SIMCom and T-Call sheets were evaluation reading
+nicerf       current   # NOT retired despite the folder's history: its one file is the SA868 datasheet, and the SA868 is the ruled V2 radio (six generators reference it). The NiceRF part that was retired is the DMR858M, which lives in dmr858/
+td2          retired   # the Touch Display 2 was replaced by the Xenarc 709GNK on 6 September 2026
+weact        retired   # the WeAct 3.7 e-paper module was replaced by the PDi E2370KS0C1 on 6 September 2026; its drawing is still the mechanical reference for the window because the two share the glass
+wio          retired   # the Wio-SX1262 SPI LoRa module was replaced by the E22-900M30S class on 6 September 2026
+
+# --- the built V1 kits, which are a different machine ---
+rpi5         v1        # the Raspberry Pi 5 of tesseract and parallax; the V2 kit is Compute Module 5 on our own carrier
+tbeam        v1        # T-Beam mechanical models from the V1 kits
+tcall        v1        # T-Call A7670 models from the V1 kits
+x1202        v1        # the Geekworm X1202 was removed from V2 on 4 September 2026 (appendix 32.17) and is still the V1 kits' charger (MESHSAT-793)
+
+# --- not documents ---
+probes       tooling   # python probes that measure STEP models and drawings, not vendor documentation
+wch          retired   # CH334/CH335 USB hub, read while choosing the hub for B; no generator instantiates it (A carries a USB2517I, B the voted TMUXHS4212 and TS3USB221A path)
+
+# --- this folder's own files ---
+README.md            current   # the vendor README: what these files are, the licence position and the takedown-on-request line
+vendor-status.txt    tooling   # this file
+vendor-noindex.txt   tooling   # the declared-invisible list beside it
+
+# --- file lines: documents that sit in a current folder but describe something retired ---
+cm5/doc-touch-display-2.adoc   retired   # the Touch Display 2 was replaced by the Xenarc 709GNK on 6 September 2026; this file is a 38-byte include stub with no content of its own
+cm5/doc-td2-about.adoc         retired   # the Touch Display 2 text, same ruling
+cm5/rpi5-product-brief.pdf     v1        # the Raspberry Pi 5 brief, a byte-identical copy of rpi5/raspberry-pi-5-product-brief.pdf
+battery/samsung-35e-akkuzentrum.pdf   retired   # the 1S12P Samsung 35E module went with the pack ruling of 7 September 2026 (a built 4S pack of 100 to 150 Wh)
+battery/samsung-35e-conrad.pdf        retired   # same ruling
+battery/samsung-35e-orbtronic.pdf     retired   # same ruling
+battery/samsung-35e-relectro.pdf      retired   # same ruling; and this reseller sheet is 13 pages of images with 1097 characters of text in all of them

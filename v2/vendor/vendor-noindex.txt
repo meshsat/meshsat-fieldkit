@@ -1,0 +1,31 @@
+# Vendor documents that carry no extractable text, one per line, with the reason after the '#'
+# (the erc-allow.txt idiom of this repository: a line without a reason declares nothing).
+#
+# kb_ingest.py records every one of these as a document with zero chunks and its reason, and
+# kb_verify.py FAILS on any text-less PDF that is not listed here. That is deliberate: the failure
+# mode of a document store is not a wrong answer, it is a document that is quietly not in it, and
+# "no hits" then reads the same as "nothing to find". A file listed here is known to be invisible
+# to search; anything else that is invisible is a defect.
+#
+# Written 10 September 2026 (MESHSAT-862). Every entry below was checked with pdffonts and
+# pdfimages: they carry no font objects at all, so their lettering is drawn as vector paths.
+
+aioc/k1-aioc-schematic-rev1.2.pdf   # KiCad schematic plot, 1 page, lettering outlined as vector paths, no font objects
+m2/te-2199230-m2-e-key.pdf   # TE customer drawing, 4 pages of CAD linework, no font objects
+m2/amphenol-mdt420m02001-m2-m-key.pdf   # Amphenol customer drawing, 1 page of CAD linework, no font objects
+lte/te-2041119-mini-pcie-msata-socket-4mm-customer-drawing-rev-d.pdf   # TE customer drawing, 5 pages of CAD linework, no font objects
+rf/amphenol-connex-132170-sma-bulkhead-ff-drawing.pdf   # Amphenol drawing of the SMA bulkhead, 1 page, no font objects
+xenarc/xenarc-709gnk-dimensional-drawing-v3.pdf   # Xenarc dimensional drawing, 1 page, a single raster image, no font objects
+quectel/sparkfun-lg290p-breakout-schematic.pdf   # SparkFun breakout schematic plot, 1 page, lettering outlined, no font objects
+
+# Not a drawing and not a datasheet: a saved HTTP error page under a .pdf name, 552 bytes, found
+# by this ingest on 10 September 2026. The DMR858M is retired from V2 (SA868) and from V1
+# (PicoAPRS V4), so nothing depends on it; the file is kept and declared rather than deleted
+# quietly, because a vendor folder that silently loses a file is the same defect in the mirror.
+dmr858/dmr858m-datasheet.pdf   # a saved '404 Not Found' page from the vendor's server, not a document; the real sheets beside it are dmr858m-v1.2.pdf and dmr858s.pdf
+
+# Present, indexed, and almost entirely pictures. Declared for the same reason as the drawings
+# above: a document that search can technically reach but cannot answer from must not be counted
+# as covered. Both are retired as well (see vendor-status.txt), so nothing current depends on them.
+battery/samsung-35e-relectro.pdf   # 13 pages carrying 1097 characters in total; the three other Samsung 35E sheets beside it carry real text
+cm5/doc-touch-display-2.adoc   # a 38-byte include stub: one 'include::touch-display-2/about.adoc[]' line, the content is in doc-td2-about.adoc
