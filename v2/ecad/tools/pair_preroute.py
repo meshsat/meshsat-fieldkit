@@ -433,11 +433,20 @@ def main(a):
         of escape vias and reports "the legs clear no smoothing of the centreline": 57 of B17's 99 pairs (8 Sep 2026 19:55)."""
         pt = pitch_of(f); n = sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD)
         return pt <= ROW_PITCH or (pt <= 0.5 and n >= 40)
+    # 10 September 2026 (B19): PAIR_ENTRY_VIA=1 ends a leg at an IC's escape via instead of stripping the escape and entering
+    # the pad. Measured because /HDMI1_D0 fails alone on the board with "no stub path at U3": the pad sits behind the picket of
+    # the OTHER nets' escape vias, and stripping had just removed the one target this leg could still have reached. It applies
+    # to a fanned part of eight SMD pads or more, which is escape.py's own fan condition; a passive couple keeps its pads.
+    ENTRY_VIA = os.environ.get("PAIR_ENTRY_VIA", "0") == "1"
+
+    def via_entry(f):
+        return ENTRY_VIA and sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD) >= 8
+
     def anchor(p):
         """The pad: (x, y, layer or None for a via, object). A pad of a 0.4 mm row is anchored at its escape via (a locked via of its net within 3 mm, present before the pair was laid)."""
         pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
         L = None if pth else next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # the pad's own copper layer (a through-hole pad is on every layer)
-        if not pth and row_scheme(p.GetParentFootprint()):
+        if not pth and (row_scheme(p.GetParentFootprint()) or via_entry(p.GetParentFootprint())):
             vs = [v for v in pre_vias if v.GetNetname() == p.GetNetname() and math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y) < 3e6]
             if vs:
                 v = min(vs, key=lambda v: math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y))
@@ -527,7 +536,7 @@ def main(a):
         def fanned_part(f): return (fine_part(f) or bool(re.search(r"SOT-23-[68]", f.GetFPIDAsString()))) and not row_scheme(f)   # escape.py's rule: these parts carry escape stubs and vias; a 0.4 mm row keeps them (the via is the station)
         for net in (pn, nn):
             for p in pads[net]:
-                if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or not fanned_part(p.GetParentFootprint()): continue
+                if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or via_entry(p.GetParentFootprint()) or not fanned_part(p.GetParentFootprint()): continue   # PAIR_ENTRY_VIA keeps an IC's escape and ends the legs at its vias
                 for t in _escape_chain(p, net): b.Remove(t); stripped.append(t)
         inpad = 0
         for p_, n_ in stations:   # a pin between the station's two pads (the SOT-23-6 ESD's ground pin 2): its escape stub would sit under the legs; a via in its pad instead
@@ -728,7 +737,7 @@ def main(a):
                 return mx_ + nx_ * out_, my_ + ny_ * out_
             gx0, gy0 = gx, gy
             def entry_station0(st):
-                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and row_scheme(q.GetParentFootprint()) for q in st): return False   # a 0.4 mm row: the escape vias are the ends
+                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and (row_scheme(q.GetParentFootprint()) or via_entry(q.GetParentFootprint())) for q in st): return False   # a 0.4 mm row, or an IC under PAIR_ENTRY_VIA: the escape vias are the ends
                 if not all((q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu)) or q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in st) or dist_p(st[0], st[1]) > 2.6: return False
                 fa_, fb_ = st[0].GetParentFootprint(), st[1].GetParentFootprint()
                 return fa_.GetReference() == fb_.GetReference() or (fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and fa_.GetReference()[:1] in "RCL")
@@ -819,7 +828,7 @@ def main(a):
                 # end because "the escape vias are the ends", and drawing a straight tail into the pad pair anyway crosses the whole fan.
                 # That asymmetry between the two predicates is what "the legs clear no smoothing of the centreline" was on B17's socket and
                 # switch sections: both legs cleared the corridor and hit at the first cell of the tail run (8 Sep 2026 22:30, 32.75).
-                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and row_scheme(q.GetParentFootprint()) for q in st): return False
+                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and (row_scheme(q.GetParentFootprint()) or via_entry(q.GetParentFootprint())) for q in st): return False
                 return entry_station(st)
             def entry_cells(frm, to):
                 """Straight cells (i, j) from cell frm to cell to (Bresenham), both included."""
