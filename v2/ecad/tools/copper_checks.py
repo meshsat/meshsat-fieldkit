@@ -46,8 +46,8 @@ def run(b, check, nets=None):
         if board_poly is None or board_poly.OutlineCount() == 0: return o.Area() / 1e12
         try:
             zp = pcbnew.SHAPE_POLY_SET(o)
-            try: zp.BooleanIntersection(board_poly, pcbnew.SHAPE_POLY_SET.PM_FAST)
-            except TypeError: zp.BooleanIntersection(board_poly)
+            try: zp.BooleanIntersection(board_poly)                              # KiCad 9
+            except TypeError: zp.BooleanIntersection(board_poly, pcbnew.PM_FAST)  # older bindings take the mode
             a = zp.Area() / 1e12
             return a if a > 0 else o.Area() / 1e12
         except Exception:
