@@ -18,6 +18,26 @@ turns it off and restores the plain greedy pass; PAIR_RIP_MARGIN, PAIR_RIP_MAX a
 Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
   prints one line per pair and `pair_preroute: N of M pairs laid, R rip-up event(s)`, exit 1 when a pair failed."""
 import sys, os, re, math, json, heapq, time
+
+# ---------------------------------------------------------------- the compiled search needs an interpreter that has numba
+# The corridor search is 13.5x faster compiled (2.26 million expansions a second against 167 thousand; `pairsearch.py bench`),
+# and numba is not installable into the KiCad python of a rented box. A venv made with `--system-site-packages` has both, so
+# rather than edit every chain the tool re-execs itself under that interpreter, says so, and checks first that the interpreter
+# really imports pcbnew and numba. PAIR_VENV=0 stays here; PAIR_VENV=<python> names another one.
+def _reexec_for_numba():
+    import importlib.util, subprocess
+    if os.environ.get("PAIR_VENV") == "0" or os.environ.get("_PAIR_REEXEC"): return
+    if importlib.util.find_spec("numba") is not None: return
+    cand = os.environ.get("PAIR_VENV") or "/root/venv-numba/bin/python"
+    if not os.path.exists(cand): return
+    try:
+        if subprocess.run([cand, "-c", "import numba, pcbnew, numpy"], capture_output=True, timeout=120).returncode != 0: return
+    except Exception: return
+    os.environ["_PAIR_REEXEC"] = "1"
+    print("pair_preroute: re-exec under %s, which has numba, for the compiled corridor search (PAIR_VENV=0 to stay here)" % cand, flush=True)
+    try: os.execv(cand, [cand] + sys.argv)
+    except Exception as e: print("pair_preroute: the re-exec failed (%s); the heapq search it is" % e, flush=True)
+_reexec_for_numba()
 PATH_WHY = [""]   # why the last corridor search returned nothing (9 Sep 2026)
 # 9 September 2026 (B19): a wall-clock budget per pair. The two searches are capped by EXPANSIONS (6,000,000 and 400,000),
 # which is not a time bound: on B19's board, with 1412 escapes and 951 parts in the way, the longest pair spent eleven
@@ -43,6 +63,8 @@ except Exception:
     _PATH = None
 from pcbnew import VECTOR2I, FromMM
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import pairsearch
+_FAST_SEARCH = os.environ.get("PAIR_FAST_SEARCH", "1") != "0"   # the compiled search when numba is here, the heapq one otherwise; the same path either way (pairsearch.py selftest)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
 _ALL = {"F.Cu": pcbnew.F_Cu, "In1.Cu": pcbnew.In1_Cu, "In2.Cu": pcbnew.In2_Cu, "In3.Cu": pcbnew.In3_Cu, "In4.Cu": pcbnew.In4_Cu, "B.Cu": pcbnew.B_Cu}
@@ -199,50 +221,49 @@ def astar(gr, layers, trk, via, start, goal, window, behind=(), cost=None):
             passable[L][max(0, ii0 - _r0):ii0 + _r0 + 1, max(0, jj0 - _r0):jj0 + _r0 + 1] = _keep[(L, e)]
     # the ends are the cells free_end chose: free on at least one layer; the path starts and ends only on layers where they are free (8 Sep: forcing
     # them passable on every layer let a path start on In2 inside a resistor's clearance and the legs hit at the first cell)
-    def h(L, i, j): return math.hypot(i - gi, j - gj)
-    dist = {}; prev = {}; pq = []
-    for L in ([LI[sL]] if sL in LI else list(range(len(layers)))):
-        if not passable[L][si, sj]: continue
-        s = (L, si, sj); dist[s] = 0.0; heapq.heappush(pq, (h(L, si, sj), 0.0, s))
-    steps = [(-1, 0, 1.0), (1, 0, 1.0), (0, -1, 1.0), (0, 1, 1.0), (-1, -1, 1.414), (-1, 1, 1.414), (1, -1, 1.414), (1, 1, 1.414)]
-    n = 0; found = None
-    if not pq: PATH_WHY[0] = "the start cell is passable on no allowed layer"   # 9 Sep 2026 (D10 USB3): the search never began
-    capped = False
-    while pq:
-        f, d, s = heapq.heappop(pq)
-        if d > dist.get(s, 1e18): continue
-        L, i, j = s; n += 1
-        if (i, j) == (gi, gj) and (gL not in LI or L == LI[gL]): found = s; break
-        if n > 6000000: capped = True; break
-        if not n % 4096:
-            PAIR_SPENT[0] += 4096
-            if PAIR_EXPANSIONS and PAIR_SPENT[0] > PAIR_EXPANSIONS:
-                capped = True; PATH_WHY[0] = "the pair's expansion budget ran out (PAIR_EXPANSIONS %d)" % PAIR_EXPANSIONS; break
-            if PAIR_DEADLINE[0] and time.time() > PAIR_DEADLINE[0]:
-                capped = True; PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET; break
-        for di, dj, c in steps:
-            ni, nj = i + di, j + dj
-            if not (imin <= ni <= imax and jmin <= nj <= jmax): continue
-            if not passable[L][ni, nj]: continue
-            if di and dj and not (passable[L][i, nj] and passable[L][ni, j]): continue
-            nd = d + c + (cost[L][ni, nj] if cost is not None else 0.0); t = (L, ni, nj)
-            if nd < dist.get(t, 1e18): dist[t] = nd; prev[t] = s; heapq.heappush(pq, (nd + h(L, ni, nj), nd, t))
-        if not via[i, j]:
-            for oL in range(len(layers)):
-                if oL == L or not passable[oL][i, j]: continue
-                nd = d + VIA_COST + (cost[oL][i, j] if cost is not None else 0.0); t = (oL, i, j)
-                if nd < dist.get(t, 1e18): dist[t] = nd; prev[t] = s; heapq.heappush(pq, (nd + h(oL, i, j), nd, t))
-    if found is None:
+    # 10 September 2026 (plan stage 5): the loop that was here is `pairsearch.search`, which takes only arrays and returns the
+    # same path. Two reasons. It can be compiled: with numba the same algorithm runs at 2.27 million expansions a second against
+    # 26 thousand, so a pair's 12,000,000 budget costs seconds rather than eight minutes, which is what makes the tens of
+    # iterations of a negotiated router affordable at all. And it can be TESTED: `pairsearch.py selftest` runs the array kernel,
+    # the compiled kernel and a faithful copy of the heapq original on random maps and refuses any difference.
+    (jmin, imin), (jmax, imax) = window
+    H, W = imax - imin + 1, jmax - jmin + 1
+    nL = len(layers)
+    P = np.empty((nL, H, W), dtype=bool)
+    for L in range(nL): P[L] = passable[L][imin:imax + 1, jmin:jmax + 1]
+    VB = np.ascontiguousarray(via[imin:imax + 1, jmin:jmax + 1])
+    C = None
+    if cost is not None:
+        C = np.empty((nL, H, W), dtype=np.float64)
+        for L in range(nL): C[L] = cost[L][imin:imax + 1, jmin:jmax + 1]
+    start_layers = [LI[sL]] if sL in LI else list(range(nL))
+    starts = [(L, si - imin, sj - jmin) for L in start_layers
+              if imin <= si <= imax and jmin <= sj <= jmax and passable[L][si, sj]]
+    if not starts:
+        PATH_WHY[0] = "the start cell is passable on no allowed layer"   # 9 Sep 2026 (D10 USB3): the search never began
+        return None
+    budget = 6000000
+    if PAIR_EXPANSIONS: budget = min(budget, max(1, PAIR_EXPANSIONS - PAIR_SPENT[0]))
+    # The clock is checked BETWEEN searches now, not inside one. A budget that decides a result must be counted in work
+    # (appendix 32.90), and the expansion cap is the reproducible one; PAIR_BUDGET stays the outer safety net.
+    if PAIR_DEADLINE[0] and time.time() > PAIR_DEADLINE[0]:
+        PATH_WHY[0] = "the pair's time budget ran out (PAIR_BUDGET %.0f s)" % PAIR_BUDGET
+        return None
+    goal = (LI[gL] if gL in LI else -1, gi - imin, gj - jmin)
+    cells, n, why = pairsearch.search(P, VB, C, starts, goal, VIA_COST, budget, fast=_FAST_SEARCH)
+    PAIR_SPENT[0] += n
+    if cells is None:
         # 9 Sep 2026 (A24 USB_E6 spans 189 mm; appendix 32.83): a corridor that cannot be found must say WHY. Three
         # different failures used to return the same None: the search never began, it ran out of its node budget, or
         # the map really has no path. Only the third is a placement question.
-        if capped: PATH_WHY[0] = "the node budget of 6,000,000 ran out after %d expansions" % n
-        elif not PATH_WHY[0]: PATH_WHY[0] = "no path on the map after %d expansions" % n
+        if why == "capped" and PAIR_EXPANSIONS and PAIR_SPENT[0] >= PAIR_EXPANSIONS:
+            PATH_WHY[0] = "the pair's expansion budget ran out (PAIR_EXPANSIONS %d)" % PAIR_EXPANSIONS
+        elif why == "capped": PATH_WHY[0] = "the node budget of 6,000,000 ran out after %d expansions" % n
+        else: PATH_WHY[0] = "no path on the map after %d expansions" % n
         return None
     PATH_WHY[0] = ""
-    path = [found]
-    while path[-1] in prev: path.append(prev[path[-1]])
-    return list(reversed(path))
+    return [(L, i + imin, j + jmin) for (L, i, j) in cells]
+
 
 
 
