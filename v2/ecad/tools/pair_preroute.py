@@ -395,6 +395,7 @@ def main(a):
     on_board = {}     # stem -> (pieces, stripped escapes) of a pair that is laid and can be ripped
     rip_events = {}   # stem -> how often this pair has ripped others
     rip_done = [0]
+    episode = [None]  # the open rip-up episode: what it took off the board, and how many pairs were laid before it
     cur_seg = [0.0, 0.0, 0.0, 0.0]   # the section the corridor search is working on, for the rip-up window
 
     def _seg_d(px, py, x1, y1, x2, y2):
@@ -432,6 +433,31 @@ def main(a):
                 d = min(d, _seg_d(mm(t_.GetPosition().x), mm(t_.GetPosition().y), x1, y1, x2, y2))
             if d <= RIP_MARGIN: break
         return d
+    def settle_episode():
+        """A rip-up episode is a TRIAL: it is kept only when it leaves more pairs laid than it found (10 September 2026).
+
+        Measured without this: 47 episodes, 224 lays and 29 of B19's 113 pairs against the greedy pass's 38. A ripped pair is
+        not guaranteed to fit again once the pair that ripped it has taken the room, so an episode that does not pay must be
+        undone in full: what the members laid comes off, what was ripped goes back."""
+        nonlocal laid
+        ep = episode[0]
+        if ep is None: return
+        if laid <= ep["laid_before"]:
+            for st2 in list(ep["members"]):
+                if st2 in on_board:
+                    pcs2, str2 = on_board.pop(st2)
+                    for t_ in pcs2: b.Remove(t_)
+                    for t_ in str2: b.Add(t_)
+                    laid -= 1
+            for st2, (pcs2, str2) in ep["saved"].items():
+                for t_ in pcs2: b.Add(t_)
+                for t_ in str2: b.Remove(t_)
+                on_board[st2] = (pcs2, str2); laid += 1
+            report.append("RIPUP %s: the episode ended with %d pairs laid against %d before it; every piece is put back" % (ep["trigger"], laid, ep["laid_before"]))
+        else:
+            report.append("RIPUP %s: the episode ended with %d pairs laid against %d before it; kept" % (ep["trigger"], laid, ep["laid_before"]))
+        episode[0] = None
+
     def pinned(f):
         """A footprint whose pads already hold a track end (a section laid for another stem of the same nets, an escape) must not be moved: the second swap of
         R26/R27 on D9 (8 Sep 2026 12:20) left four locked pieces on pads of the wrong net."""
@@ -480,6 +506,7 @@ def main(a):
         return (mm(p.GetPosition().x), mm(p.GetPosition().y), L, p)
 
     for stem in stems:   # a swapped pair is appended and laid again
+        if episode[0] is not None and stem not in episode[0]["members"]: settle_episode()   # the episode's members are queued together: the first stem past them ends it
         PAIR_DEADLINE[0] = time.time() + PAIR_BUDGET if PAIR_BUDGET > 0 else 0.0
         PAIR_SPENT[0] = 0
         # 9 September 2026 (B19): the long pairs die on the expansion cap, not on geometry. SWP3_D spans 261 mm and its
@@ -1131,7 +1158,7 @@ def main(a):
         if failed:
             rollback()
             blockers = []
-            if RIPUP and rip_done[0] < RIP_TOTAL and rip_events.get(stem, 0) < RIPUP:
+            if RIPUP and episode[0] is None and rip_done[0] < RIP_TOTAL and rip_events.get(stem, 0) < RIPUP:
                 x1_, y1_, x2_, y2_ = cur_seg
                 for st2, (pcs2, _s2) in on_board.items():
                     if st2 in swapped: continue   # a swapped pair's escapes were stripped at the old positions and the swap is not undone
@@ -1140,11 +1167,13 @@ def main(a):
                 blockers = [s2 for _d2, s2 in sorted(blockers)[:RIP_MAX]]
             if blockers:
                 rip_events[stem] = rip_events.get(stem, 0) + 1; rip_done[0] += 1
+                saved = {}
                 for st2 in blockers:
-                    pcs2, str2 = on_board.pop(st2)
+                    pcs2, str2 = on_board.pop(st2); saved[st2] = (pcs2, str2)
                     for t_ in pcs2: b.Remove(t_)
                     for t_ in str2: b.Add(t_)   # that pair's escape pieces come back with it
                     laid -= 1
+                episode[0] = {"trigger": stem, "members": set([stem]) | set(blockers), "saved": saved, "laid_before": laid + len(blockers)}
                 stems.append(stem); stems.extend(blockers)
                 report.append("RIPUP %s: section %s is blocked; %d laid pair(s) taken off the board (%s), this pair is laid again first and they follow" % (stem, failed, len(blockers), ", ".join(blockers)))
                 continue
@@ -1215,6 +1244,7 @@ def main(a):
             continue
         laid += 1; on_board[stem] = (list(pieces), list(stripped))
         report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
+    settle_episode()   # an episode that was still open at the end of the list is judged like any other
     out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
     pcbnew.SaveBoard(out, b)
     print("pair_preroute: --- summary ---")
