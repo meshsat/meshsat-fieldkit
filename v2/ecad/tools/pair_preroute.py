@@ -1250,6 +1250,13 @@ def main(a):
                     if _hit(*_a, *_b2): _cross += 1
         if _cross:
             rollback()
+            # 10 September 2026: a crossing used to end the pair here, while a section failure got the escape-via fallback.
+            # The crossings are 12 of the 64 misses that remain once the corridor slack is right, and the fallback changes
+            # where the legs end, which is where most of them cross. The pair takes the same second chance.
+            if not ENTRY_VIA and stem not in via_entry_stems:
+                via_entry_stems.add(stem); stems.append(stem)
+                report.append("ENTRY %s: the two legs crossed %d time(s) with the legs entering the pads; laid again ending at the escape vias" % (stem, _cross))
+                continue
             report.append("FAIL  %s: the two legs cross each other %d time(s) on the laid path; rolled back, the router takes the pair" % (stem, _cross))
             continue
         laid += 1; on_board[stem] = (list(pieces), list(stripped))
