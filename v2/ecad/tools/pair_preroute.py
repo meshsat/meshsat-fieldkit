@@ -521,7 +521,12 @@ def main(a):
         try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
         except Exception: min_clr = 0.0
         clr_c = max(clr_c, min_clr); s = max(s, clr_c + 0.013)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
-        half = w + s / 2 + 0.15 + 0.1; d = (w + s) / 2   # the corridor carries the per-leg maps' 0.15 mm mask margin plus one grid cell, or the legs never clear it
+        # 10 September 2026: the corridor's margin over the legs is a knob now, measured rather than assumed. A leg needs
+        # w/2 + 0.02 from other copper on its own map and sits (w + s)/2 off the centreline, so the centreline needs
+        # w + s/2 + 0.02; the extra 0.25 (a 0.15 mm mask margin plus one grid cell) is slack that costs 0.25 mm of
+        # clearance at every obstacle on a board where the gaps are measured in tenths. legs_clear still judges the legs,
+        # so the slack buys nothing a check does not already do. PAIR_CORRIDOR_SLACK restores the old figure.
+        half = w + s / 2 + float(os.environ.get("PAIR_CORRIDOR_SLACK", "0.25")); d = (w + s) / 2
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
             f = p.GetParentFootprint(); ps = list(f.Pads())
