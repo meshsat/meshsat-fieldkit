@@ -68,7 +68,20 @@ import pairsearch
 _FAST_SEARCH = os.environ.get("PAIR_FAST_SEARCH", "1") != "0"   # the compiled search when numba is here, the heapq one otherwise; the same path either way (pairsearch.py selftest)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
-W_INNER = float(os.environ.get("PAIR_INNER_WIDTH", "0"))   # the width a pair takes on an inner layer; 0 = the class width everywhere
+# The geometry a pair takes on an INNER layer, per class, because an inner layer is a stripline and the class width that hits
+# its target outside does not hit it inside. Measured with the field solver on the JLC 3313 six-layer stack (appendix 32.102):
+# at 0.127/0.127 an inner pair is 102 ohm, which is 13 percent high of a 90 ohm target and 2 percent high of a 100 ohm one, so
+# the 100 ohm classes need nothing and the 90 ohm one needs 0.15/0.09 (88.9 ohm at 0.390 mm of envelope, against 0.381 today;
+# 0.21/0.127 also hits 90 but its envelope is 0.547 and it costs more pairs than the inner layers win).
+#   PAIR_INNER="USB:0.15/0.09,DIFF100:0.127/0.127"   per class
+#   PAIR_INNER_WIDTH / PAIR_INNER_GAP                the same for every class (the scalar form, kept)
+W_INNER = float(os.environ.get("PAIR_INNER_WIDTH", "0"))
+S_INNER = float(os.environ.get("PAIR_INNER_GAP", "0"))
+INNER_BY_CLASS = {}
+for _e in os.environ.get("PAIR_INNER", "").split(","):
+    if ":" not in _e: continue
+    _c, _g = _e.split(":", 1); _w, _, _s = _g.partition("/")
+    INNER_BY_CLASS[_c.strip()] = (float(_w), float(_s or _w))
 # ---------------------------------------------------------------- the occupancy maps, built once and topped up (10 Sep 2026)
 # MEASURED on B19's 113 pairs after the rasteriser was vectorised: 1,248 of the pass's 1,552 seconds were still in build_maps,
 # against 113 in the corridor search. The pads and the rule areas are cached per polygon and cost almost nothing on a repeat;
@@ -740,10 +753,13 @@ def main(a):
         # the layer: PAIR_INNER_WIDTH names the inner one (0 keeps the class width everywhere, which is what every board did
         # while the corridors were confined to F.Cu and B.Cu). The corridor's own envelope takes the WIDER of the two, because
         # one map serves every layer and it must never under-block.
-        w_in = W_INNER or w
+        _ic = INNER_BY_CLASS.get(cls_of(pn))
+        w_in, s_in = (_ic if _ic else (W_INNER or w, S_INNER or s))
         def wid(L): return w_in if L in _INNER_CU else w
-        def dof(L): return (wid(L) + s) / 2
-        half = max(w, w_in) + s / 2 + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
+        def gap(L): return s_in if L in _INNER_CU else s
+        def dof(L): return (wid(L) + gap(L)) / 2
+        # The corridor envelope takes the wider of the two geometries: one map serves every layer and it must never under-block.
+        half = max(w + s / 2, w_in + s_in / 2) + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
             f = p.GetParentFootprint(); ps = list(f.Pads())
