@@ -15,7 +15,7 @@ Usage:
 
 Profile (JSON): see tools/routeflow/*.json. Placeholders in argv: <PROJECT> (the project dir), <ECAD> (its parent), <NAME> (the board stem).
 """
-import sys, os, re, json, time, glob, hashlib, subprocess, shutil, collections, tempfile, datetime, fcntl
+import platform, sys, os, re, json, time, glob, hashlib, subprocess, shutil, collections, tempfile, datetime, fcntl
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import hardset   # 10 September 2026: the supervisor used to carry its own six-type tuple while the finish refused on hardset's
@@ -23,6 +23,16 @@ import hardset   # 10 September 2026: the supervisor used to carry its own six-t
                  # and the remedy table had no case for the disagreement. One definition, imported (both red teams, C1/P0).
 HARD = hardset.HARD_POST
 LOCK = os.path.expanduser(os.environ.get("ROUTEFLOW_LOCK") or "~/.routeflow.lock")   # ROUTEFLOW_LOCK: another lock name, so several experiments run side by side on a big host (6 Sep 2026)
+
+def _kicad_version():
+    """pcbnew's build string, or the CLI's, or "unknown"; never an exception, this is bookkeeping."""
+    try:
+        import pcbnew; return pcbnew.GetBuildVersion()
+    except Exception: pass
+    try:
+        import subprocess as _sp; return _sp.run(["kicad-cli", "version"], capture_output=True, text=True, timeout=30).stdout.strip() or "unknown"
+    except Exception: return "unknown"
+
 
 def now(): return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 def sh(argv, cwd, log, env=None):
@@ -414,7 +424,10 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
                     jn(dict(run="exp", board=name, stage="experiment", status="TOOL_CRASH", note="%s: no display for the router (attempt %d), retrying once" % (cfg["name"], attempt))); time.sleep(5); continue
                 break
             wall = int(time.time() - t0)
-            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "rules_mode": RULES_MODE, "timeout_s": timeout, "starts": starts, "host": os.uname().nodename, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now(), "finish_version": FINISH_VERSION}
+            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "rules_mode": RULES_MODE, "timeout_s": timeout, "starts": starts, "host": os.uname().nodename, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now(), "finish_version": FINISH_VERSION,
+                   # 10 September 2026 (report 2 M3): the tool versions belong in the row. A benchmark comparing two boxes or two
+                   # months compares KiCad builds and Python versions too, and the record could not say which build a row was measured on.
+                   "kicad": _kicad_version(), "python": platform.python_version(), "cpus": os.cpu_count()}
             if not os.path.exists(ses) or os.path.getsize(ses) == 0:
                 row.update(verdict="NO_SESSION", Q=None, metrics=None); jn(dict(run="exp", board=name, stage="experiment", status="NO_SESSION", note="%s: no session in %d s" % (cfg["name"], wall)))
             else: finish(row, cfg, w, board, ses, flog)
