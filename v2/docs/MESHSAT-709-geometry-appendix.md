@@ -4026,3 +4026,55 @@ oscillates between about 123,000 and 173,000 whatever the schedule, and both str
 default: present cost 2 doubling with history 8 reaches 123,295 at its best, present cost 32 doubling reaches 140,388, history
 64 reaches 132,036. The five pairs with no corridor at all stay five throughout. Negotiation is not what unblocks this board;
 the layers were.
+
+### 32.103 The negotiated router, measured and rejected; and what the extra layers really cost (10 September 2026, 20:15 CEST; MESHSAT-862)
+
+**The negotiated-congestion router of 32.98 is built, measured on four schedules, and it does not pay on B19.** With the kernel
+repaired a planning iteration costs 5 minutes against 40, so the arms were affordable at last. Three schedules ran eight
+planning iterations each and then laid their best plan:
+
+| schedule | best plan, contested cells | pairs laid |
+|---|---:|---:|
+| present 2 doubling, history 8 (the default) | 123,295 | **25 of 113** |
+| present 32 doubling, history 8 | 140,388 | **23 of 113** |
+| present 2 doubling, history 64 | 123,740 | **22 of 113** |
+| the plain greedy pass, for comparison | n/a | **56 of 113** |
+
+Two findings inside that. **The contested-cell count does not converge**: it oscillates between about 123,000 and 173,000
+whatever the schedule, and the five pairs with no corridor at all stay five in every iteration. And **laying a negotiated plan
+is worse than searching greedily**, which is the part worth keeping: a planned path that turns out to be blocked fails
+outright, where a greedy search would have found the way round. Negotiation only pays once the plan is nearly conflict-free,
+and on this board it never gets there.
+
+`pair_negotiate.py` stays in the tools with its numbers in the record. It is not the answer for B19 and no more time goes into
+tuning it.
+
+**What the four layers of 32.102 really cost, measured one geometry at a time.** The four-layer corridor lays 71 against 56,
+but those inner-layer pairs are stripline and 32.101 says the class geometry misses its target there. Every impedance-correct
+variant was then measured on the same placed board:
+
+| corridor | inner geometry | pairs laid | impedance on the inner layers |
+|---|---|---:|---|
+| F.Cu, B.Cu | (none) | **56** | correct |
+| F.Cu, In2, In3, B.Cu | class geometry, 0.13 / 0.14 and 0.13 / 0.20 | **71** | **wrong**: 102 ohm on a 90 target, 118 on a 100 |
+| F.Cu, In2, In3, B.Cu | 0.21 / 0.127 for every class | **44** | correct, envelope 0.547 mm |
+| F.Cu, In2, In3, B.Cu | 0.15 / 0.09 for every class | **47** | correct for 90, too low for 100 |
+| F.Cu, In2, In3, B.Cu | 0.15 / 0.09 for the USB class only | **56** | correct |
+
+**So the extra layers pay only while the geometry is wrong.** Widening the inner copper takes back everything the layers gave:
+at 0.21 mm the envelope grows 44 percent and the board lays 44, which is worse than never using the inner layers at all. The
+narrow-gap variant (0.15 / 0.09, envelope 0.390 against 0.381) costs almost nothing in room and still ends level with the
+two-layer pass, because the corridor envelope is one number for every layer and a 90 ohm pair that may need the wider geometry
+carries it everywhere.
+
+**The 0.09 mm gap has a second problem that the pre-router does not see:** KiCad applies the net-class clearance between the
+two nets of a pair, so an intra-pair gap below the class clearance of 0.127 is a clearance violation on the routed board. It
+needs either a custom rule for the pair or a class clearance of 0.09, which then applies to everything in that class. That is
+a fabrication and rules decision, not a router setting.
+
+**What is still open, and it is the one combination that is both correct and cheaper:** B19 has two pair classes, USB at
+0.13 / 0.14 with a 90 ohm target and DIFF100 at 0.13 / 0.20 with a 100 ohm target. On the inner layers DIFF100 wants a
+**narrower** gap than it uses outside (0.127 gives 102 ohm against its 100 target, inside tolerance, with an envelope of 0.387
+against the 0.46 it uses on the outer layers), so DIFF100 gains both layers and room while USB stays on F.Cu and B.Cu where its
+geometry is already right. That needs a per-class layer set, which the tool does not have and does not need: two passes on one
+board give it, because the second pass reads the first pass's locked copper as an obstacle. Both orderings are measuring now.
