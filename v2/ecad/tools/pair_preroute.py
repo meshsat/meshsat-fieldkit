@@ -523,6 +523,23 @@ def main(a):
         pieces = []   # everything this pair lays (removed on rollback)
         staircase = False   # set when a section fell back to the corridor as the search found it
         stripped = []   # the escape via and stubs of a fine-pitch station pad, removed so the legs enter the pad itself (restored on rollback)
+        END_CANDS = int(os.environ.get("PAIR_END_CANDS", "12"))   # candidate corridor ends tested for reach before the nearest one is taken anyway
+
+        def _end_reaches(cx_, cy_, px, py, qx, qy, cache=None):
+            """Can a stub run from this corridor end to BOTH pads of the station, on the legs' own maps? (10 September 2026)"""
+            cache = {} if cache is None else cache
+            for (tx_, ty_), nm in (((px, py), pn), ((qx, qy), nn)):
+                if math.hypot(tx_ - cx_, ty_ - cy_) < 0.35: continue   # the end sits on the pad already
+                ok_ = False
+                for L_ in layers:
+                    if L_ not in trk1[nm]: continue
+                    if (nm, L_) not in cache: cache[(nm, L_)] = ~trk1[nm][L_]   # stub_path walks the PASSABLE map and writes in it, so each try gets its own copy
+                    w2 = (gr.cell(min(cx_, tx_) - 8, min(cy_, ty_) - 8), gr.cell(max(cx_, tx_) + 8, max(cy_, ty_) + 8))
+                    w2 = ((max(0, w2[0][0]), max(0, w2[0][1])), (min(gr.NX - 1, w2[1][0]), min(gr.NY - 1, w2[1][1])))
+                    if stub_path(gr, cache[(nm, L_)].copy(), (cx_, cy_), (tx_, ty_), w2): ok_ = True; break
+                if not ok_: return False
+            return True
+
         def fine_part(f):
             """Pitch 0.7 mm or under: the legs enter the pads straight (the entry run)."""
             ps = [q.GetPosition() for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e18
@@ -718,9 +735,9 @@ def main(a):
             sL = gL = None   # the corridor picks its layer; the end stubs via to the pads' own layer (8 Sep: a start forced onto B.Cu inside the resistor cluster found no exit)
             # a station between two through-hole pads or two hub pins has no room for the corridor at its midpoint: slide the end outward along the normal of the
             # P-N line (both ways, up to 4 mm) to the first cell the corridor map allows on any of the layers; the stubs cover the rest
-            def free_end(x, y, px, py, qx, qy, tx, ty):
-                """The nearest cell the corridor allows: the station's midpoint itself, else outward towards the other station (through the escape
-                cloud of a hub or a connector), else along the normal of the P-N line, up to 6 mm; the stubs cover the distance at single width."""
+            def _free_cands(x, y, px, py, qx, qy, tx, ty):
+                """The cells the corridor allows near a station, nearest first: the midpoint itself, then outward towards the other
+                station (through the escape cloud of a hub or a connector), then along the normal of the P-N line, up to 12 mm."""
                 def open_cell(jj, ii, r=3):   # free with a clear 7 x 7 block around it on that layer: a one-cell pocket between a header's pins is no corridor start (D9, J_HARN1)
                     return 0 <= ii - r and ii + r < gr.NY and 0 <= jj - r and jj + r < gr.NX and any(not trk[L][ii - r:ii + r + 1, jj - r:jj + r + 1].any() for L in layers)
                 # 9 Sep 2026 (A24 USB_E6, appendix 32.83): the FIRST cell with a 0.6 mm block around it is often a pocket
@@ -730,19 +747,35 @@ def main(a):
                 tdx, tdy = tx - x, ty - y; tl = math.hypot(tdx, tdy) or 1.0; tdx, tdy = tdx / tl, tdy / tl
                 for _rr in (6, 3):
                   jj, ii = gr.cell(x, y)
-                  if open_cell(jj, ii, _rr): return x, y
+                  if open_cell(jj, ii, _rr): yield x, y
                   for step in range(1, 121):   # up to 12 mm: a 0.4 mm hub's escape cloud is 4 to 8 mm deep
                     for ux, uy in ((nx_, ny_), (-nx_, -ny_), (tdx, tdy)):   # the P-N normal first: the legs then arrive side by side with the pads (8 Sep: an approach along the P-N line makes the far stub pass the near pad)
                         cx_, cy_ = x + ux * 0.1 * step, y + uy * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
-                        if open_cell(jj, ii, _rr): return cx_, cy_
+                        if open_cell(jj, ii, _rr): yield cx_, cy_
                   # three rays are a thin search; the sweep tries sixteen directions, the ones pointing at the other station first
                   order = sorted(range(16), key=lambda k: -(math.cos(k * math.pi / 8) * tdx + math.sin(k * math.pi / 8) * tdy))
                   for step in range(1, 121):
                     for k in order:
                         ux, uy = math.cos(k * math.pi / 8), math.sin(k * math.pi / 8)
                         cx_, cy_ = x + ux * 0.1 * step, y + uy * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
-                        if open_cell(jj, ii, _rr): return cx_, cy_
-                return x, y
+                        if open_cell(jj, ii, _rr): yield cx_, cy_
+
+            def free_end(x, y, px, py, qx, qy, tx, ty):
+                """The corridor end at a station: the nearest allowed cell FROM WHICH BOTH LEGS CAN STILL REACH THEIR PADS.
+
+                10 September 2026 (B19): the old version took the first open cell it found, in a sweep of sixteen directions up to
+                12 mm. At a fine-pitch part that cell is regularly on the far side of the picket of the OTHER nets' escape vias, and
+                the corridor then arrives somewhere the stub cannot leave: /HDMI1_D0 fails alone on the board with "no stub path for
+                HDMI1_D0_N at U3" and its stub map shows a wall between the corridor end and the pad. Each candidate is now tested
+                with the same stub search that will have to run later, and the first that works for both legs is taken; when none of
+                the first PAIR_END_CANDS does, the nearest open cell is used as before, so nothing is lost."""
+                best = None; cache = {}
+                for k_, (cx_, cy_) in enumerate(_free_cands(x, y, px, py, qx, qy, tx, ty)):
+                    if best is None: best = (cx_, cy_)
+                    if _end_reaches(cx_, cy_, px, py, qx, qy, cache): return cx_, cy_
+                    if k_ + 1 >= END_CANDS: break
+                return best if best is not None else (x, y)
+
             def fine_end(st, out_=2.5):
                 """The corridor end of an entry station: on the outward normal of the pad pair (away from the parts' centre), the first open block at out_ mm or beyond."""
                 p_, n_ = st; mx_, my_ = mid(st); fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_ = (fa_.GetPosition().x + fb_.GetPosition().x) / 2e6; fy_ = (fa_.GetPosition().y + fb_.GetPosition().y) / 2e6
