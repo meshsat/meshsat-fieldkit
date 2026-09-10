@@ -954,6 +954,11 @@ def main(a):
             _planned = plan_in.get(stem.lstrip("/"), None)
             if _planned is not None and _sec_k < len(_planned) and _planned[_sec_k]:
                 path = [tuple(c) for c in _planned[_sec_k]]   # the negotiated corridor, already agreed with every other pair
+                # The plan owns its ends. `free_end` reads the board, and by the time this section is laid the board carries
+                # the pairs laid before it, so it can choose a different cell than the planning pass did and the corridor
+                # would then start away from its own first cell. The planned path's own ends win (10 September 2026).
+                sx, sy = gr.xy(path[0][2], path[0][1]); gx, gy = gr.xy(path[-1][2], path[-1][1])
+                sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); cur_seg[:] = [sx, sy, gx, gy]
             else:
                 path = astar(gr, layers, trk, via, (sL, sj, si), (gL, gj, gi), window, behind, cost=NEG_COST)
             if PLAN_MODE:
