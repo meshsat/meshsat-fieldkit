@@ -51,7 +51,10 @@ MEASURED_SUFFIX = ".geom.txt"
 OCR_SUFFIX = ".ocr.txt"
 OCR_WEIGHT = 0.8
 NOTE_WEIGHT = 0.55
-PER_DOC_CAP = 3      # six passages of one datasheet are one piece of evidence, not six
+PER_DOC_CAP = 2      # six passages of one datasheet are one piece of evidence, not six.
+                     # Two, not three: with the exact-token pool added, one document could
+                     # still take half of a k=6 answer, and it did, crowding the RockBLOCK
+                     # datasheet out with three chunks of its own geometry sidecar.
 
 
 def _rows(db, sql, params):
@@ -82,6 +85,30 @@ def fulltext_hits(db, query, k, vendor=None):
     return _rows(db, sql, params)
 
 
+def token_hits(db, query, k, vendor=None):
+    """A third signal: documents that contain the query's part-number tokens verbatim.
+
+    A part number is the highest-precision term a question can carry and it is exactly what a dense
+    embedding blurs: "what package and pin count does H5007NL have" embeds mostly as "package and pin
+    count", and the pool fills with datasheets that discuss packages. Measured over the whole
+    inventory, that cost about a tenth of all recall, so the exact token gets its own pool and the
+    fusion weighs it beside the other two rather than trusting either alone."""
+    toks = [t for t in PART_TOKEN.findall(query) if len(t) >= 5]
+    if not toks:
+        return []
+    rows = []
+    for t in toks:
+        # the manufacturer's own document first, then our probes and sidecars: a token match in a
+        # geometry sidecar is real but it is not the datasheet the question wanted
+        sql = (SELECT + " , 0 AS score " + JOIN +
+               "WHERE d.present=1 AND (c.text LIKE %s OR LOWER(d.relpath) LIKE %s) "
+               + ("AND d.vendor=%s " if vendor else "") +
+               "ORDER BY (d.status='current') DESC, (LOWER(d.relpath) LIKE %s) DESC, c.page LIMIT %s")
+        params = ("%" + t + "%", "%" + t.lower() + "%") + ((vendor,) if vendor else ()) + ("%.pdf", k * 4)
+        rows += _rows(db, sql, params)
+    return rows
+
+
 def rerank(query, cands, timeout=20):
     """Optional. When the rerank service is down the fused order stands and says so; a reranker that
     quietly disappears must not look like a reranker that agreed."""
@@ -109,7 +136,8 @@ def rerank(query, cands, timeout=20):
 def search(query, k=6, vendor=None, include_retired=False, use_rerank=True, caller=None):
     db = kbdb.connect()
     scores, meta = {}, {}
-    for pool in (vector_hits(db, query, k, vendor), fulltext_hits(db, query, k, vendor)):
+    for pool in (vector_hits(db, query, k, vendor), fulltext_hits(db, query, k, vendor),
+                 token_hits(db, query, k, vendor)):
         # The cap is applied while the pools are FUSED, not only to the final list. A large model's
         # probe file carries dozens of near identical hole lines and filled both pools by itself, so a
         # question about one module answered with another module's holes even though the right file
@@ -117,7 +145,13 @@ def search(query, k=6, vendor=None, include_retired=False, use_rerank=True, call
         seen_doc = {}
         for rank, row in enumerate(pool):
             cid, relpath, page, status, reason, text = row[:6]   # the pools carry a score column too
-            if not include_retired and status in ("retired", "v1", "tooling"):
+            # `tooling` is ALWAYS excluded, even with --all: those are this store's own bookkeeping
+            # files (PARTS.md, family-matches.txt, the status and source lists) and they name every
+            # part number in the design, so the exact-token pool ranked them above the datasheets they
+            # are indexes of. They are never an answer about a part.
+            if status == "tooling":
+                continue
+            if not include_retired and status in ("retired", "v1"):
                 continue
             n_doc = seen_doc.get(relpath, 0)
             if n_doc >= PER_DOC_CAP:

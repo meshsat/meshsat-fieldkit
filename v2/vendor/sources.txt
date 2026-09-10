@@ -146,3 +146,9 @@ vishay/vishay-smbj-series-tvs.pdf                            # https://www.visha
 vishay/vishay-smcj-series-tvs.pdf                            # https://www.vishay.com/docs/88394/smcj.pdf
 vishay/vishay-ss12-ss16-schottky.pdf                         # https://www.vishay.com/docs/88746/ss12.pdf
 winbond/winbond-w25q16jv-serial-flash.pdf                    # https://www.winbond.com/resource-files/w25q16jv%20spi%20revh%2004082019%20plus.pdf
+bulgin       # bulgin.com's own datasheet service, fetched 11 September 2026
+polyphaser   # polyphaser.com datasheet downloads, fetched 11 September 2026
+bulgin/bulgin-px0833-sealed-rj45-coupler.pdf   # https://www.bulgin.com/pdf/pdf.php?sku=PX0833
+bulgin/bulgin-4000-series-sealed-usb-c.pdf   # https://www.bulgin.com/products/pub/media/bulgin/data/4000_series_c_type.pdf
+polyphaser/polyphaser-gth-sff-al-sma-surge-protector.pdf   # https://www.polyphaser.com/Images/Downloadables/Datasheets/GTH-SFF-AL_datasheets_US.pdf
+switches/apem-switch-guards-series.pdf   # https://www.apem.com/storage/datasheets/files/safety_guards_serie_switchguards/media/safety guards-serie-switchguards.pdf

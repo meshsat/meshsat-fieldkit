@@ -86,7 +86,7 @@ probes       tooling   # python probes that measure STEP models and drawings, no
 wch          retired   # CH334/CH335 USB hub, read while choosing the hub for B; no generator instantiates it (A carries a USB2517I, B the voted TMUXHS4212 and TS3USB221A path)
 
 # --- this folder's own files ---
-README.md            current   # the vendor README: what these files are, the licence position and the takedown-on-request line
+README.md            tooling   # the vendor README: what these files are, the licence position and the takedown-on-request line
 vendor-status.txt    tooling   # this file
 vendor-noindex.txt   tooling   # the declared-invisible list beside it
 
@@ -107,6 +107,8 @@ adhesives    current   # the bonded joints of the build: 3M Scotch-Weld DP8005 u
 family-matches.txt   tooling   # the declared reasons a family sheet covers a specific order code
 open-picks.txt       tooling   # the items of the kit with no part chosen yet, and what each pick needs
 not-used.txt         tooling   # part numbers named in a document only to record that they were rejected
-PARTS.md             current   # the generated inventory of everything V2 uses, checked against this store on every run
+PARTS.md             tooling   # the generated inventory of everything V2 uses, checked against this store on every run
 sources.txt          tooling   # where each vendor document came from, folder level for the backfill and file level for each fetch
 duplicates-allowed.txt   tooling   # the declared reasons a file is kept in two places
+bulgin       current   # the sealed wall parts: PX0833 RJ45 coupler and the 4000 series C-type USB receptacle
+polyphaser   current   # GTH-SFF-AL SMA surge protector at the antenna bulkheads
