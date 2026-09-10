@@ -458,9 +458,10 @@ def main(a):
     # the OTHER nets' escape vias, and stripping had just removed the one target this leg could still have reached. It applies
     # to a fanned part of eight SMD pads or more, which is escape.py's own fan condition; a passive couple keeps its pads.
     ENTRY_VIA = os.environ.get("PAIR_ENTRY_VIA", "0") == "1"
+    via_entry_stems = set()   # pairs that failed once with the legs entering the pads and are laid again ending at the escape vias
 
     def via_entry(f):
-        return ENTRY_VIA and sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD) >= 8
+        return (ENTRY_VIA or stem in via_entry_stems) and sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD) >= 8
 
     def anchor(p):
         """The pad: (x, y, layer or None for a via, object). A pad of a 0.4 mm row is anchored at its escape via (a locked via of its net within 3 mm, present before the pair was laid)."""
@@ -1134,6 +1135,13 @@ def main(a):
                     laid -= 1
                 stems.append(stem); stems.extend(blockers)
                 report.append("RIPUP %s: section %s is blocked; %d laid pair(s) taken off the board (%s), this pair is laid again first and they follow" % (stem, failed, len(blockers), ", ".join(blockers)))
+                continue
+            # 10 September 2026, measured both ways: ending the legs at an IC's escape vias instead of stripping the escape and
+            # entering the pads lays 27 more of B19's 113 pairs and COSTS D10 two of its five, so it is not a mode to switch on.
+            # It is a fallback: the pads are tried first, and a pair that fails is laid again ending at the vias.
+            if not ENTRY_VIA and stem not in via_entry_stems:
+                via_entry_stems.add(stem); stems.append(stem)
+                report.append("ENTRY %s: section %s failed with the legs entering the pads; laid again ending at the escape vias" % (stem, failed))
                 continue
             report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections)))
             continue
