@@ -28,6 +28,49 @@ def zd_microstrip(w, s, h, t, er): return 2 * z_microstrip(w, h, t, er) * (1 - 0
 def z_stripline(w, h, t, er): return 60.0 / math.sqrt(er) * math.log(1.9 * (2 * h + t) / (0.8 * w + t))
 def zd_stripline(w, s, h, t, er): return 2 * z_stripline(w, h, t, er) * (1 - 0.347 * math.exp(-2.9 * s / h))
 
+# ---------------------------------------------------------------- the 2D solver's correction (10 September 2026, MESHSAT-862)
+# The closed forms above are IPC-2141 and good to about 5 to 10 percent, and the record has said since 8 September that no
+# impedance may be claimed until a field solver confirms them. `impedance_2d.py` (atlc 4.6.1, a 2D quasi-static
+# finite-difference solver, the cross-section drawn with its solder mask) has now been run on every geometry this project
+# uses, and the answers are here so the GATE reads them rather than a formula the record already doubts.
+#
+#   geometry (mode, w, s, h, er)                     closed form   solver, with mask   difference
+#   microstrip 0.300 / 0.200, h 0.2104, er 4.4            89              87.4            -1.7 %
+#   microstrip 0.200 / 0.150, h 0.2104, er 4.4           102              95.9            -6.0 %
+#   microstrip 0.127 / 0.127, h 0.0994, er 4.1            94              90.7            -3.5 %
+#   microstrip 0.127 / 0.200, h 0.0994, er 4.1           101              99.2            -1.8 %
+#   stripline  0.127 / 0.127, h 0.5500, er 4.6            74             102.4           +38.4 %
+#
+# The outer layers agree; the STRIPLINE does not, and it is not a small disagreement. IPC-2141's stripline form is being used
+# far outside the width-to-height ratio it was fitted for (w/h 0.23), and it reads 74 ohm where the solver reads 102 on a
+# 100 ohm class. That is the difference between a board that misses its target by a quarter and one that meets it. The
+# solver's number is the one carried, with the caveat the case itself carries: this stripline entry models the 3313 stack's
+# asymmetric inner layer symmetrically, so it is a correction, not yet a measurement of the real stack.
+CAL = [   # (mode, w, s, h, er, Zdiff from the solver with mask), matched within CAL_TOL of each dimension
+    ("microstrip", 0.300, 0.200, 0.2104, 4.4,  87.4),
+    ("microstrip", 0.200, 0.150, 0.2104, 4.4,  95.9),
+    ("microstrip", 0.127, 0.127, 0.0994, 4.1,  90.7),
+    ("microstrip", 0.127, 0.200, 0.0994, 4.1,  99.2),
+    ("stripline",  0.127, 0.127, 0.5500, 4.6, 102.4),
+]
+CAL_TOL = 0.06      # 6 percent on each of w, s, h; er within 0.3
+# Over the four microstrip geometries above the solver reads 0.94 to 0.98 of the closed form, mean 0.967, so a microstrip
+# whose exact geometry has not been solved is corrected by that factor: it is a measured bias, not a guess, and it is small.
+# The stripline has ONE solved point and it disagrees by 38 percent, which is far too large a correction to extrapolate from
+# one geometry, so an unsolved stripline keeps its closed form and the run says out loud that the number is unconfirmed.
+MICROSTRIP_FACTOR = 0.967
+CAL_USED = {"solver": 0.0, "microstrip factor": 0.0, "stripline closed form, UNCONFIRMED": 0.0}   # millimetres judged each way
+
+def calibrated(mode, w, s, h, er, closed, length=0.0):
+    """The best number this project has for this geometry, and which kind it is. Never silent about the difference."""
+    for (m, cw, cs, ch, cer, z) in CAL:
+        if m != mode: continue
+        if abs(w - cw) <= CAL_TOL * cw and abs(s - cs) <= CAL_TOL * cs and abs(h - ch) <= CAL_TOL * ch and abs(er - cer) <= 0.3:
+            CAL_USED["solver"] += length; return z, "solver"
+    if mode == "microstrip":
+        CAL_USED["microstrip factor"] += length; return closed * MICROSTRIP_FACTOR, "microstrip factor"
+    CAL_USED["stripline closed form, UNCONFIRMED"] += length; return closed, "stripline closed form, UNCONFIRMED"
+
 def read_stackup(path):
     """[(name, kind, thickness_mm, er)] from the (stackup ...) block written by stackup_write.py; copper layers carry kind 'copper'."""
     s = open(path, encoding="utf-8").read(); m = re.search(r"\n[ \t]+\(stackup\n(.*?)\n[ \t]+\)\n", s, re.S)
@@ -119,9 +162,11 @@ def main(a):
             if best is None or best - w <= 0: zs.append(None); continue
             s = best - w; gaps.append((s, length))
             if ra and rb:
-                h = 2 * ra[0] * rb[0] / (ra[0] + rb[0]); er = (ra[1] + rb[1]) / 2; z = zd_stripline(w, s, h, t, er)
+                h = 2 * ra[0] * rb[0] / (ra[0] + rb[0]); er = (ra[1] + rb[1]) / 2
+                z, _cal = calibrated("stripline", w, s, h, er, zd_stripline(w, s, h, t, er), length)
             elif ra or rb:
-                h, er = (ra or rb); z = zd_microstrip(w, s, h, t, er)
+                h, er = (ra or rb)
+                z, _cal = calibrated("microstrip", w, s, h, er, zd_microstrip(w, s, h, t, er), length)
             else: unref += length; continue
             zs.append(z)
             if abs(z - target) <= tol * target: ok_len += length
@@ -142,6 +187,14 @@ def main(a):
     for pr, cl, target, med, frac, unref, v, gmed, wmed, fan in results:
         print("impedance: %-12s %-14s class %-8s target %3.0f ohm, median %s ohm, %3.0f%% of the length within %d%%, legs %s mm apart at w %.2f, unreferenced %.1f mm, fans %.1f mm" % (v, pr, cl, target, ("%.0f" % med) if med else "-", frac * 100, tol * 100, ("%.2f" % gmed) if gmed is not None else "-", wmed or 0, unref, fan))
     print("impedance: %d of %d pairs with a target within %d%% on the analytical model (%d unrouted; %d pairs on the board)" % (checked - miss, checked, tol * 100, sum(1 for r in results if r[6] == "UNROUTED"), len(pairs)))
+    # Say which numbers came from the field solver and which from the closed form, because on the stripline geometry they
+    # differ by 38 percent and a reader must never have to guess which one a verdict rests on (10 September 2026).
+    tot_mm = sum(CAL_USED.values()) or 1.0
+    print("impedance: where the numbers come from: %s" % "; ".join("%.0f mm %s" % (v, k) for k, v in CAL_USED.items() if v > 0) or "nothing judged")
+    if CAL_USED["stripline closed form, UNCONFIRMED"] > 0:
+        print("impedance: WARNING %.0f mm (%.0f%%) judged on the IPC-2141 stripline form, which the 2D field solver read 38%% low on the one"
+              " geometry solved (74 against 102 ohm). Solve that geometry with impedance_2d.py before any stripline verdict is quoted."
+              % (CAL_USED["stripline closed form, UNCONFIRMED"], 100.0 * CAL_USED["stripline closed form, UNCONFIRMED"] / tot_mm))
     if any(er is None for _, k, _, er in stack if k != "copper"): print("impedance: FAIL a dielectric without epsilon_r in the stackup"); return 1
     if "--json" in a: json.dump([dict(pair=r[0], cls=r[1], target=r[2], median=r[3], fraction=r[4], unreferenced_mm=r[5], verdict=r[6], gap_mm=r[7], width_mm=r[8], fan_mm=r[9]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
     return 1 if miss else 0
