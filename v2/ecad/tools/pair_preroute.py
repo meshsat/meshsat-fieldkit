@@ -502,12 +502,33 @@ def main(a):
                     dd = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y)
                     if 0 < dd < best: best = dd
             return best <= 0.7e6
+        STRIP_MM = float(os.environ.get("PAIR_STRIP_MM", "6.0"))   # how far out of the pad an escape chain is followed
+
+        def _escape_chain(p, net):
+            """The locked escape pieces of `net` that hang off this pad, followed from the pad outward (10 September 2026).
+
+            It used to be whatever piece STARTED within 3 mm of the pad, which is not the same thing: on B19 the other leg's
+            escape survived past that radius and stood in the way of this leg 1.8 mm out of the station (SWP3_A, and the same
+            shape in 30 of the 75 failures). The chain is followed piece by piece and bounded by PAIR_STRIP_MM from the pad,
+            so nothing far from the station is touched, and rollback puts every piece back."""
+            pool = [t for t in b.GetTracks() if t.IsLocked() and t.GetNetname() == net]
+            px_, py_ = p.GetPosition().x, p.GetPosition().y; ends = []; take = []
+            def _pts(t): return [t.GetPosition()] if t.GetClass() == "PCB_VIA" else [t.GetStart(), t.GetEnd()]
+            grew = True
+            while grew:
+                grew = False
+                for t in list(pool):
+                    qs = _pts(t)
+                    if not any(math.hypot(q.x - px_, q.y - py_) < STRIP_MM * 1e6 for q in qs): continue
+                    if not (any(p.HitTest(q) for q in qs) or any(math.hypot(q.x - e.x, q.y - e.y) < 0.05e6 for q in qs for e in ends)): continue
+                    take.append(t); pool.remove(t); ends.extend(qs); grew = True
+            return take
+
         def fanned_part(f): return (fine_part(f) or bool(re.search(r"SOT-23-[68]", f.GetFPIDAsString()))) and not row_scheme(f)   # escape.py's rule: these parts carry escape stubs and vias; a 0.4 mm row keeps them (the via is the station)
         for net in (pn, nn):
             for p in pads[net]:
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or not fanned_part(p.GetParentFootprint()): continue
-                near = [t for t in b.GetTracks() if t.IsLocked() and t.GetNetname() == net and math.hypot(t.GetPosition().x - p.GetPosition().x, t.GetPosition().y - p.GetPosition().y) < 3e6]
-                for t in near: b.Remove(t); stripped.append(t)
+                for t in _escape_chain(p, net): b.Remove(t); stripped.append(t)
         inpad = 0
         for p_, n_ in stations:   # a pin between the station's two pads (the SOT-23-6 ESD's ground pin 2): its escape stub would sit under the legs; a via in its pad instead
             f_ = p_.GetParentFootprint()
