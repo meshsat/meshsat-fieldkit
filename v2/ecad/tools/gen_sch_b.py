@@ -767,7 +767,7 @@ def emit_pwr_flag(p, x, y):
     else: label(net, x, y + STUB, 270)
 byref = {p["ref"]: p for p in P}
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
-SECTIONS = [("SHARED POWER: DEVICE RAIL, +3V3_DEV, KSZ CORE RAILS, CR2032", ["J_5V_DEV", "D1", "C1", "C2", "U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "BT1"] + ["TP%d" % k for k in range(1, 32)] + ["TP%d" % k for k in range(41, 52)] + ["#FLG%02d" % k for k in range(1, len(RAILS) + 1)])]
+SECTIONS = [("SHARED POWER: DEVICE RAIL, +3V3_DEV, KSZ CORE RAILS, CR2032", ["J_5V_DEV", "D1", "C1", "C2", "U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "BT1"] + ["TP%d" % k for k in range(2, 32)] + ["TP%d" % k for k in range(41, 52)] + ["#FLG%02d" % k for k in range(1, len(RAILS) + 1)])]
 for s in (1, 2, 3):
     mine = lambda ref, s=s: (ref[0] in "RCLQDUY" and ref[1:].isdigit() and 100 * s <= int(ref[1:]) < 100 * (s + 1)) or ref in ("U3%dA" % (s - 1), "U3%dB" % (s - 1)) or ref.startswith("LED%d" % s) and len(ref) == 5 or ref.endswith("%d" % s) and ref.startswith(("J_5V_S", "J_FAN", "J_FLASH", "J_RPIBOOT", "J_DBG", "J_SPI", "J_M2N", "J_M2C")) or (s == 2 and ref in ("J_SIM1", "J_SIM2"))
     SECTIONS.append(("SLOT S%d: COMPUTE MODULE 5, PCIe SWITCH, USB 3 HUB, M.2 SOCKETS, RAILS, SUPPORT" % s, refs_matching(mine)))
