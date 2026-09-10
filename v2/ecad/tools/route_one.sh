@@ -15,7 +15,14 @@ if keep_nets: print("planes kept in the DSN:", kept, "zone(s) of", sorted(keep_n
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
 b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
 PY
-JAR=${FR_JAR:-$HOME/bin/freerouting-1.9.0.jar}   # FR_JAR (6 Sep 2026, Stage 4 A/B): another Freerouting jar, e.g. ~/bin/freerouting-2.4.1.jar (needs Java 25)
+# Our 1.9.0 build when it is on the host, the stock jar otherwise (10 September 2026). The patch adds a per-pass session write
+# and nothing else, proved: on the same D board DSN with the same options the two jars produced BYTE IDENTICAL final sessions
+# (139,311 bytes, cmp clean) and auto-routed in 1 min 23.13 s against 1 min 24.08 s. FR_JAR names another jar, e.g.
+# ~/bin/freerouting-2.4.1.jar (needs Java 25).
+JAR=${FR_JAR:-}
+if [ -z "$JAR" ]; then
+  if [ -s "$HOME/bin/freerouting-1.9.0-mesh.jar" ]; then JAR="$HOME/bin/freerouting-1.9.0-mesh.jar"; else JAR="$HOME/bin/freerouting-1.9.0.jar"; fi
+fi
 JAVA=${FR_JAVA:-java}; V2_ARGS=()
 case "$(basename "$JAR")" in freerouting-2.*) [ -x /usr/lib/jvm/java-25-openjdk-amd64/bin/java ] && [ -z "${FR_JAVA:-}" ] && JAVA=/usr/lib/jvm/java-25-openjdk-amd64/bin/java
   V2_ARGS=(--gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false "--router.fanout.enabled=${FR_FANOUT:-false}" "--router.job_timeout=$(printf '%02d:%02d:%02d' $((${FR_TIMEOUT:-4500} / 3600)) $((${FR_TIMEOUT:-4500} % 3600 / 60)) $((${FR_TIMEOUT:-4500} % 60)))");;   # never -drc here: in 2.4.1 it turns the run into a DRC-only job (no session)

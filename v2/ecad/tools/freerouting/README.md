@@ -19,6 +19,20 @@ session can be written there too.
 rename, so a reader never sees half a file. `-Dfreerouting.design_name=<name.dsn>` names the session inside it. Without the
 property nothing changes, and the stock jar ignores an unknown `-D`, so `route_one.sh` passes it either way.
 
+## Proof it changes nothing else
+
+Same D board DSN, same options (`-mp 5 -mt 1 -oit 100 -dct 0`), stock jar against ours, 10 September 2026:
+
+| | stock 1.9.0 | ours |
+|---|---|---|
+| auto-routing | 1 min 23.13 s | 1 min 24.08 s |
+| sessions written | 1, at the end | 6: one per pass plus the final one |
+| final session | 139,311 bytes | 139,311 bytes, **byte identical** (`cmp` clean) |
+
+So `route_one.sh` takes our jar when it is on the host and the stock one otherwise. A note on `-oit`: it is a THRESHOLD in
+percent, not a pass count. `-oit 100` stops the optimizer after one pass, which is what this pipeline uses; `-oit 0` means
+"optimise until the improvement is below zero" and never ends. An hour was spent on that.
+
 ## Building it
 
     git clone --depth 1 --branch v1.9.0 https://github.com/freerouting/freerouting.git fr-src
