@@ -53,8 +53,8 @@ silabs       current   # CP2102N, the console bridge on B, D and P
 st           current   # STM32H743VIT6, the three I/O supervisors of the high-availability layer
 switches     current   # APEM, NKK and C&K panel parts named in the ruling of 4 September 2026
 ti           current   # the largest current-part folder: converters, muxes, codecs, protection
-traco        current   # TEN 40-2412WIN, the isolated shore converter on the dock strip
-usb2517      current   # still instantiated by gen_sch_a.py for A's wall host port
+
+
 vishay       current   # passives and protection on the power tree
 wifi         current   # AW7915-AED, ruled 5 September 2026
 xenarc       current   # 709GNK IP67 monitor, ruled 6 September 2026, replacing the Touch Display 2
@@ -71,6 +71,8 @@ lte          retired   # the EG25-G mini PCIe path and its socket were replaced 
 nicerf       current   # NOT retired despite the folder's history: its one file is the SA868 datasheet, and the SA868 is the ruled V2 radio (six generators reference it). The NiceRF part that was retired is the DMR858M, which lives in dmr858/
 td2          retired   # the Touch Display 2 was replaced by the Xenarc 709GNK on 6 September 2026
 weact        retired   # the WeAct 3.7 e-paper module was replaced by the PDi E2370KS0C1 on 6 September 2026; its drawing is still the mechanical reference for the window because the two share the glass
+traco        retired   # the TEN 40-2412WIN is on no current BOM: E6 carries none of it, and the only mention left in a generator is a KiCad footprint name. The README had this right and my first status line did not
+usb2517      retired   # the USB2517I is on no current BOM either: the only mention left in gen_sch_a.py is a historical note in its title block
 wio          retired   # the Wio-SX1262 SPI LoRa module was replaced by the E22-900M30S class on 6 September 2026
 
 # --- the built V1 kits, which are a different machine ---

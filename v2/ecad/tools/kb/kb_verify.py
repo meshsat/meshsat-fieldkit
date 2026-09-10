@@ -144,6 +144,49 @@ def check_coverage(db):
         counts["pdfs_with_text"] = c.fetchone()[0]
         c.execute("SELECT COUNT(*) FROM documents WHERE present=1 AND text_source='pdftotext' AND revision IS NOT NULL")
         counts["revision_read"] = c.fetchone()[0]
+    # The vendor README's folder table carries its own "previous generation, kept for the record"
+    # prose beside vendor-status.txt. Two places to say the same thing is two places to disagree, and
+    # the disagreement would be invisible: the README is what a person reads and the status file is
+    # what the store believes.
+    readme = os.path.join(VENDOR, "README.md")
+    if os.path.exists(readme):
+        # the FOLDER's declared status, read from vendor-status.txt itself. Reading it from the
+        # documents table gave an arbitrary answer for any folder with a file-level override, which
+        # is how this check first reported cm5 as retired because three of its files are.
+        st = {}
+        sf = os.path.join(VENDOR, "vendor-status.txt")
+        if os.path.exists(sf):
+            for line in open(sf, errors="replace"):
+                line = line.strip()
+                if not line or line.startswith("#") or "#" not in line:
+                    continue
+                head = line.split("#", 1)[0].split()
+                if len(head) == 2 and "/" not in head[0] and "." not in head[0]:
+                    st[head[0]] = head[1]
+        text = open(readme, errors="replace").read()
+        rows = {}
+        for line in text.splitlines():
+            if not line.startswith("|"):
+                continue
+            cells = line.split("|")
+            if len(cells) < 3:
+                continue
+            for f in re.findall(r"`([a-z0-9_]+)/", cells[1]):
+                rows.setdefault(f, line.lower())
+        disagree = []
+        for folder, line in rows.items():
+            # This repository's own idiom for a retired folder is the phrase "kept for the record",
+            # and matching on that beats guessing from prose: the battery row legitimately says part of
+            # its contents is superseded while the folder itself is current, and any keyword rule loose
+            # enough to catch a retirement was also catching that.
+            says_retired = "kept for the record" in line
+            is_retired = st.get(folder) in ("retired", "v1")
+            if says_retired != is_retired and folder in st:
+                disagree.append("%s: README says %s, vendor-status.txt says %s"
+                                % (folder, "retired" if says_retired else "current", st.get(folder)))
+        counts["status_disagreements"] = len(disagree)
+        fails += ["the README and vendor-status.txt disagree, " + d for d in disagree]
+
     if counts["no_source"]:
         fails.append("%d document(s) have no recorded source; every one needs a line in "
                      "v2/vendor/sources.txt" % counts["no_source"])

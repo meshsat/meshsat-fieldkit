@@ -13,13 +13,13 @@ deliberately not read: it is the whole history, and enumerating it would enumera
 
 | state | meaning | count |
 |---|---|---|
-| DOCUMENTED | a document names its exact order code | 180 |
+| DOCUMENTED | a document names its exact order code | 164 |
 | FAMILY | a family document covers it, with a declared reason | 17 |
 | OPEN PICK | no part chosen yet, so no datasheet can exist | 15 |
 | NOT USED | named in a document only to record that it was rejected | 1 |
 | UNCOVERED | no document and no declaration. This must be 0 | 0 |
 
-213 items in all. 70 tokens were dropped by the extractor and every one is listed with its
+197 items in all. 70 tokens were dropped by the extractor and every one is listed with its
 reason in `out/kb_inventory-excluded.txt`, because a hand-made exclusion list is where a
 real part disappears quietly.
 
@@ -89,7 +89,7 @@ A datasheet names the family; the order code names the reel.
 | `XAL4020-472ME` | B, E | bom+gen | coilcraft/coilcraft-xal40xx-series.pdf | Coilcraft's XAL40xx sheet, same part table |
 | `XAL6060-332ME` | A, B | bom+gen | coilcraft/coilcraft-xal60xx-series.pdf | Coilcraft's XAL60xx sheet, same part table |
 
-## Covered by a document naming the exact part (180)
+## Covered by a document naming the exact part (164)
 
 | item | used in | source | document | note |
 |---|---|---|---|---|
@@ -132,10 +132,6 @@ A datasheet names the family; the order code names the reel.
 | `D38999` | ASSEMBLY, BUILD, E | bom+doc+gen | d38999/amphenol-d38999-iii-federal.pdf | vehicle and shore DC in 9-36 V, lead from the D38999 wall receptacle DC pair (JS |
 | `D38999/26` | BUILD | doc | d38999/amphenol-d38999-iii-federal.pdf | Wall parts on the back-wall connector plate (`release/revA/case/wall-receptacles |
 | `DP8005` | ASSEMBLY | doc | adhesives/3m-scotch-weld-dp8005.pdf | / QMX tray on the lid, 4 x / the printed tray (`case/lid-bracket-qmx/`) on the l |
-| `DRAIN1` | B | gen | ti/tps23861-datasheet.pdf | DRAIN1 |
-| `DRAIN2` | B | gen | ti/tps23861-datasheet.pdf | DRAIN2 |
-| `DRAIN3` | B | gen | ti/tps23861-datasheet.pdf | DRAIN3 |
-| `DRAIN4` | B | gen | ti/tps23861-datasheet.pdf | DRAIN4 |
 | `DS3231` | B, V2-SPEC | bom+doc+gen | adi/adi-ds3231.pdf | CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup |
 | `DS3231M` | PANEL, V2-SPEC | doc | adi/adi-ds3231.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
 | `DS3231MZ` | B | bom+gen | adi/adi-ds3231.pdf | DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed |
@@ -170,21 +166,13 @@ A datasheet names the family; the order code names the reel.
 | `M22520/1-04` | ASSEMBLY | doc | d38999/glenair-series-iii-iv-pin-contact-selection.pdf | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
 | `M39029/56-352` | ASSEMBLY | doc | d38999/amphenol-d38999-iii-federal.pdf | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
 | `M81969/14-03` | ASSEMBLY | doc | d38999/glenair-contact-crimp-and-installation-tools.pdf | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
-| `MDT420M02001` | B | bom+gen | m2/amphenol-mdt420m02001-m2-m-key.pdf | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of |
+| `MDT420M02001` | B | bom+gen | m2/amphenol-mdt420m02001-m2-m-key.ocr.txt | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of |
 | `MT7915` | V2-SPEC | doc | wifi/asiarf-AW7915-AED-datasheet.pdf | / Kit-to-kit WiFi / **two** AsiaRF AW7915-AED (MT7915, 2.4 and 5 GHz) for mesh o |
-| `OVERCUR1z` | B | gen | ti/ti-tusb8020b.pdf | OVERCUR1z |
-| `OVERCUR2z` | B | gen | ti/ti-tusb8041.pdf | OVERCUR2z |
-| `OVERCUR3z` | B | gen | ti/ti-tusb8041.pdf | OVERCUR3z |
-| `OVERCUR4z` | B | gen | ti/ti-tusb8041.pdf | OVERCUR4z |
 | `PCA9555` | A, B, C, D, PANEL, V2-SPEC | doc+gen | ti/ti-pca9555.pdf | / C7 / panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, fou |
 | `PCA9555PW` | A, B, C, D, LCSC_FILL | bom+gen | ti/ti-pca9555.pdf | PCA9555PW (0x21): enables and status |
 | `PCM2912A` | D, P, V2-SPEC | bom+doc+gen | ti/ti-pcm2912a.pdf | TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo outpu |
 | `PI7C9X2G404` | V2-SPEC | doc | diodes/diodes-pi7c9x2g404sl.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
 | `PI7C9X2G404SL` | B, GEN_FOOTPRIN, V2-SPEC | bom+doc+gen | diodes/diodes-pi7c9x2g404sl.pdf | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port  |
-| `PWRCTL1` | B | gen | ti/ti-tusb8020b.pdf | PWRCTL1 |
-| `PWRCTL2` | B | gen | ti/ti-tusb8020b.pdf | PWRCTL2 |
-| `PWRCTL3` | B | gen | ti/ti-tusb8041.pdf | PWRCTL3 |
-| `PWRCTL4` | B | gen | ti/ti-tusb8041.pdf | PWRCTL4 |
 | `R222M00720` | A, ASSEMBLY, BUILD | bom+doc+gen | rf/radiall-R222M00720-tds.pdf | SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug |
 | `R222M80500` | ASSEMBLY, BUILD | doc | rf/radiall-R222M80500-tds.pdf | / RF jumpers, 11 x / the float clamps on E6 (Radiall R222M80500 right-angle plug |
 | `RA30H1317M` | V2-SPEC | doc | mitsubishi/ra30h1317m1-datasheet.pdf | / APRS and VHF voice / NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H13 |
@@ -255,11 +243,7 @@ A datasheet names the family; the order code names the reel.
 | `TUSB8041IRGCR` | B | bom+gen | ti/ti-tusb8041.pdf | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) |
 | `USB2517I` | A | gen | usb2517/usb2517-datasheet-DS00001598C-lcsc.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
 | `USB3-0` | B | bom+gen | cm5/cm5-datasheet.pdf | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) |
-| `USB3-0-DM` | B | gen | cm5/cm5-datasheet.pdf | USB3-0-DM |
-| `USB3-0-DP` | B | gen | cm5/cm5-datasheet.pdf | USB3-0-DP |
-| `USB3-1` | B | gen | cm5/cm5-datasheet.pdf | USB3-1-RX_N |
-| `USB3-1-DM` | B | gen | cm5/cm5-datasheet.pdf | USB3-1-DM |
-| `USB3-1-DP` | B | gen | cm5/cm5-datasheet.pdf | USB3-1-DP |
+| `USB3-1` | B | gen | cm5/cm5-datasheet.pdf | TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C  |
 | `USBLC6-2SC6` | A, B, C, D, LCSC_FILL, P | bom+gen | st/st-usblc6-2-esd-protection.pdf | ST's USBLC6-2 datasheet: SC6 is the SOT-23-6 package option in its own ordering  |
 | `VEML7700` | ASSEMBLY, C, GEN_FOOTPRIN, PANEL, V2-SPE | bom+doc+gen | vishay/veml7700-datasheet.pdf | Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10 |
 | `W25Q16` | PANEL | doc | winbond/winbond-w25q16jv-serial-flash.pdf | / Panel controller / `U3` RP2040, `U4` W25Q16 QSPI flash, `Y1` 12 MHz, `R5`/`JP1 |

@@ -14,7 +14,11 @@
   "The last two questions are mechanical, and they guard a different path: the .geom.txt",
   "files that geom_probe.py writes beside each vendor CAD model. Without them a change to",
   "the probe or to the ranking could quietly stop answering about geometry while every",
-  "electrical question still passed."
+  "electrical question still passed.",
+  "",
+  "One question was replaced on 11 September 2026: it asked about the TRACO TEN 40-2412WIN, which",
+  "turned out to be on no current BOM. A gold set that asks about retired parts measures the",
+  "wrong thing, and by default this store does not answer with retired documents."
  ],
  "questions": [
   {
@@ -25,11 +29,11 @@
    "fact": "135-175 MHz, 30 W, 12.5 V, two stage"
   },
   {
-   "q": "TEN 40-2412WIN input voltage range, output current and isolation",
+   "q": "LT8705A buck-boost controller input range and switching frequency",
    "accept": [
-    "traco/ten40win_datasheet-3049699.pdf"
+    "power/lt8705a.pdf"
    ],
-   "fact": "the isolated shore converter under the dock gap"
+   "fact": "the bespoke solar tracker on the dock strip; replaced the TEN 40 question when that part was found to be retired"
   },
   {
    "q": "which M.2 key and interface does the AsiaRF AW7915 module use",

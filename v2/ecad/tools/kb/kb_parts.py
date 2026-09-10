@@ -87,6 +87,19 @@ def parts_from_generators():
         except SyntaxError as e:
             print("kb_parts: %s does not parse (%s)" % (os.path.basename(path), e), file=sys.stderr)
             continue
+        # Pin maps are dicts keyed by integers: {1:"USB_DP_DN1", 2:"VDD", ...}. Their values are pin
+        # and net names, never part numbers, and scanning them put OVERCUR3z into the inventory as a
+        # part and then "covered" it with the TUSB8041 sheet by family stem. Skipping them is a
+        # structural rule about what those strings ARE, which is worth more than another exclusion
+        # pattern: patterns are guesses, this is the shape of the code.
+        pinmap_strings = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Dict) and node.keys and all(
+                    isinstance(k, ast.Constant) and isinstance(k.value, int) for k in node.keys):
+                for v in node.values:
+                    for sub in ast.walk(v):
+                        if isinstance(sub, ast.Constant) and isinstance(sub.value, str):
+                            pinmap_strings.add(id(sub))
         lcsc_here = set()
         for node in ast.walk(tree):
             if isinstance(node, ast.Constant) and isinstance(node.value, str):
@@ -94,6 +107,8 @@ def parts_from_generators():
                     lcsc_here.add(node.value.strip())
         for node in ast.walk(tree):
             if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
+                continue
+            if id(node) in pinmap_strings:
                 continue
             text = node.value
             for tok in PART.findall(text):
