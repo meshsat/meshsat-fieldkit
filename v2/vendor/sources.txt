@@ -101,3 +101,48 @@ DOWNLOADS-2026-09-10.md   # written in this repository: the fetch log of 10 and 
 qrp-labs             # qrp-labs.com, the QMX assembly and operating manuals, downloaded by the owner
 duplicates-allowed.txt   # written in this repository
 adhesives            # multimedia.3m.com, the Scotch-Weld DP8005 technical data sheet, fetched 11 September 2026
+
+# Per-file URLs for everything fetched on 10 and 11 September 2026. kb_recheck.py re-fetches
+# from these and compares the bytes and the revision, so currency can be stated as a date
+# rather than assumed. A folder line without a URL is a backfill and can only be checked by hand.
+adhesives/3m-scotch-weld-dp8005.pdf                          # https://multimedia.3m.com/mws/media/2365892O/3m-scotch-weld-structural-plastic-adhesive-dp8005-black.pdf
+coilcraft/coilcraft-xal40xx-series.pdf                       # https://www.coilcraft.com/getmedia/6adcb47d-8b55-416c-976e-1e22e0d2848c/xal4000.pdf
+coilcraft/coilcraft-xal60xx-series.pdf                       # https://www.coilcraft.com/getmedia/ea51f14b-7f32-4dc6-8dfe-d4b70549040f/xal60xx.pdf
+connectors/amphenol-rjhse5380-rj45-jack.pdf                  # https://www.mouser.com/datasheet/2/18/1/io_modjack_rjhse-2509079.pdf
+connectors/gct-sim8060-nano-sim-socket.pdf                   # https://gct.co/files/drawings/sim8060.pdf
+diodes/diodes-ap2112-ldo.pdf                                 # https://www.diodes.com/assets/Datasheets/AP2112.pdf
+diodes/diodes-ap63200-series-buck.pdf                        # https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf
+everlight/everlight-el817-optocoupler.pdf                    # https://www.everlighteurope.com/custom/files/datasheets/DPC-0000046.pdf
+hirose/hirose-fh12-series-ffc-connectors.pdf                 # https://www.hirose.com/product/document?clcode=&productname=&series=FH12&documenttype=Catalog&lang=en&documentid=D31648_en
+nexperia/nexperia-74lvc08a-quad-and.pdf                      # https://assets.nexperia.com/documents/data-sheet/74LVC08A.pdf
+nexperia/nexperia-bc847bs-dual-npn.pdf                       # https://assets.nexperia.com/documents/data-sheet/BC847BS.pdf
+omron/omron-g6k-signal-relay.pdf                             # https://omronfs.omron.com/en_US/ecb/products/pdf/en-g6k.pdf
+power/aos-ao3401a-p-mosfet.pdf                               # https://aosmd.com/res/data_sheets/AO3401A.pdf
+power/bourns-srf1260-common-mode-choke.pdf                   # https://www.bourns.com/docs/product-datasheets/srf1260.pdf
+power/infineon-irf7404-p-mosfet.pdf                          # https://www.infineon.com/dgdl/irf7404pbf.pdf
+power/ti-csd19532q5b-n-fet.pdf                               # https://www.ti.com/lit/ds/symlink/csd19532q5b.pdf
+power/ti-tlv755p-ldo.pdf                                     # https://www.ti.com/lit/ds/symlink/tlv755p.pdf
+power/ti-tps2595-efuse.pdf                                   # https://www.ti.com/lit/ds/symlink/tps2595.pdf
+power/ti-tps563201-buck.pdf                                  # https://www.ti.com/lit/ds/symlink/tps563201.pdf
+power/ti-tps61089-boost.pdf                                  # https://www.ti.com/lit/ds/symlink/tps61089.pdf
+quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf           # https://forums.quectel.com/uploads/short-url/1zkjPRnxF5BZ2woox386baCZx4g.pdf
+quectel/quectel-rm520n-series-hardware-design-v1.1.pdf       # https://e2e.ti.com/cfs-file/__key/communityserver-discussions-components-files/138/rm520_5F00_modem_5F00_datasheet.pdf
+rf/skyworks-sky13351-378lf-spdt.pdf                          # https://www.skyworksinc.com/-/media/SkyWorks/Documents/Products/401-500/SKY13351_378LF_201132I.pdf
+seals/apem-5000-series-catalogue.pdf                         # https://www.farnell.com/datasheets/94098.pdf
+st/st-stm32h743xi-datasheet.pdf                              # https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
+st/st-stm32h753xi-datasheet.pdf                              # https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/stm32h753vi.pdf
+st/st-usblc6-2-esd-protection.pdf                            # https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/usblc6-2.pdf
+ti/ti-ina219.pdf                                             # https://www.ti.com/lit/ds/symlink/ina219.pdf
+ti/ti-pca9555.pdf                                            # https://www.ti.com/lit/ds/symlink/pca9555.pdf
+ti/ti-tca9517a-i2c-buffer.pdf                                # https://www.ti.com/lit/ds/symlink/tca9517a.pdf
+ti/ti-tcan334-can-fd-transceiver.pdf                         # https://www.ti.com/lit/ds/symlink/tcan334.pdf
+ti/ti-tlv9062-op-amp.pdf                                     # https://www.ti.com/lit/ds/symlink/tlv9062.pdf
+ti/ti-tmp117-temperature.pdf                                 # https://www.ti.com/lit/ds/symlink/tmp117.pdf
+ti/ti-tmuxhs4212.pdf                                         # https://www.ti.com/lit/ds/symlink/tmuxhs4212.pdf
+ti/ti-tps2065-tps2066-tps2067.pdf                            # https://www.ti.com/lit/ds/symlink/tps2065.pdf
+ti/ti-tps22810-load-switch.pdf                               # https://www.ti.com/lit/ds/symlink/tps22810.pdf
+ti/ti-ts3usb221a.pdf                                         # https://www.ti.com/lit/ds/symlink/ts3usb221a.pdf
+vishay/vishay-smbj-series-tvs.pdf                            # https://www.vishay.com/docs/88392/smbj.pdf
+vishay/vishay-smcj-series-tvs.pdf                            # https://www.vishay.com/docs/88394/smcj.pdf
+vishay/vishay-ss12-ss16-schottky.pdf                         # https://www.vishay.com/docs/88746/ss12.pdf
+winbond/winbond-w25q16jv-serial-flash.pdf                    # https://www.winbond.com/resource-files/w25q16jv%20spi%20revh%2004082019%20plus.pdf
