@@ -41,6 +41,10 @@ STATUS_LABEL = {"current": "", "tooling": "  [TOOLING]", "v1": "  [V1 KITS ONLY]
 # in the folder, so it matches almost any question about any of them. It stays searchable and stays
 # labelled, and it does not outrank the sheet it describes.
 NOTE_EXT = (".md", ".adoc", ".html", ".htm", ".txt", ".yaml", ".yml", ".json", ".xml", ".csv", ".tsv")
+# `.geom.txt` is a measurement taken from a vendor CAD model by geom_probe.py, not our commentary, so
+# it keeps full weight. Without this it lost to the READMEs by the note factor and a question about a
+# module's hole pattern came back with a different module's.
+MEASURED_SUFFIX = ".geom.txt"
 NOTE_WEIGHT = 0.55
 PER_DOC_CAP = 3      # six passages of one datasheet are one piece of evidence, not six
 
@@ -61,7 +65,7 @@ def vector_hits(db, query, k, vendor=None):
            "FROM chunk_embeddings e JOIN chunks c ON c.id = e.chunk_id "
            "JOIN documents d ON d.id = c.document_id WHERE d.present=1 "
            + ("AND d.vendor=%s " if vendor else "") + "ORDER BY dist LIMIT %s")
-    params = (qv, vendor, k * 4) if vendor else (qv, k * 4)
+    params = (qv, vendor, k * 10) if vendor else (qv, k * 10)
     return _rows(db, sql, params)
 
 
@@ -69,7 +73,7 @@ def fulltext_hits(db, query, k, vendor=None):
     sql = (SELECT + ", MATCH(c.text) AGAINST (%s IN NATURAL LANGUAGE MODE) AS score " + JOIN +
            "WHERE d.present=1 AND MATCH(c.text) AGAINST (%s IN NATURAL LANGUAGE MODE) "
            + ("AND d.vendor=%s " if vendor else "") + "ORDER BY score DESC LIMIT %s")
-    params = (query, query, vendor, k * 4) if vendor else (query, query, k * 4)
+    params = (query, query, vendor, k * 10) if vendor else (query, query, k * 10)
     return _rows(db, sql, params)
 
 
@@ -101,12 +105,25 @@ def search(query, k=6, vendor=None, include_retired=False, use_rerank=True, call
     db = kbdb.connect()
     scores, meta = {}, {}
     for pool in (vector_hits(db, query, k, vendor), fulltext_hits(db, query, k, vendor)):
+        # The cap is applied while the pools are FUSED, not only to the final list. A large model's
+        # probe file carries dozens of near identical hole lines and filled both pools by itself, so a
+        # question about one module answered with another module's holes even though the right file
+        # was indexed. Ranking is untouched; what changes is how many rows one document may occupy.
+        seen_doc = {}
         for rank, row in enumerate(pool):
             cid, relpath, page, status, reason, text = row[:6]   # the pools carry a score column too
             if not include_retired and status in ("retired", "v1", "tooling"):
                 continue
-            w = STATUS_WEIGHT.get(status, 0.5)
-            if os.path.splitext(relpath)[1].lower() in NOTE_EXT:
+            n_doc = seen_doc.get(relpath, 0)
+            if n_doc >= PER_DOC_CAP:
+                continue
+            seen_doc[relpath] = n_doc + 1
+            # The status penalty exists to keep a retired part out of a default answer. Once --all is
+            # given the caller has asked for those documents by name, so the penalty is dropped and
+            # only the label remains: otherwise asking about the WeAct module, which IS retired,
+            # returned three other modules' hole patterns and never its own.
+            w = 1.0 if include_retired else STATUS_WEIGHT.get(status, 0.5)
+            if os.path.splitext(relpath)[1].lower() in NOTE_EXT and not relpath.endswith(MEASURED_SUFFIX):
                 w *= NOTE_WEIGHT
             scores[cid] = scores.get(cid, 0.0) + (1.0 / (RRF_K + rank + 1)) * w
             meta[cid] = {"chunk_id": cid, "relpath": relpath, "page": page, "status": status,
@@ -202,7 +219,8 @@ def main(argv):
           % (len(hits), a.query, note, TRUTH_CAP))
     for i, h in enumerate(hits, 1):
         page = ("p.%d" % h["page"]) if h["page"] else "(no pages)"
-        note = "  [REPO NOTE]" if os.path.splitext(h["relpath"])[1].lower() in NOTE_EXT else ""
+        note = ("  [PROBED FROM THE CAD MODEL]" if h["relpath"].endswith(MEASURED_SUFFIX)
+                else ("  [REPO NOTE]" if os.path.splitext(h["relpath"])[1].lower() in NOTE_EXT else ""))
         print("\n[%d] v2/vendor/%s  %s%s%s" % (i, h["relpath"], page, STATUS_LABEL.get(h["status"], ""), note))
         if h["status"] != "current" and h["status_reason"]:
             print("    why it is %s: %s" % (h["status"], h["status_reason"]))

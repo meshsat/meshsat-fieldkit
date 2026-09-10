@@ -39,6 +39,41 @@ And the fourth, which is the one that matters most in practice:
 
    > `!! NO DOCUMENT IN THIS STORE MENTIONS TMUXHS4212.`
 
+## Geometry, which is the other half of this folder
+
+Half of what this project needs from `v2/vendor/` is not in a datasheet. The e-paper window, the case
+ribs, the receptacle envelope: those live in STEP and DXF files, which are binary as far as search is
+concerned, so the mechanical numbers in the record rested on whoever probed the model that day.
+
+`geom_probe.py` reads them and writes the measurable facts beside each model as `<model>.geom.txt`,
+which the store then indexes like any other document: the envelope, every hole diameter with its
+count, and the pattern each hole group forms. STEP is ISO-10303-21 ASCII and DXF is group codes, so
+this needs no CAD kernel and no venv, and it runs on the runner as well as on the box.
+
+    python3 kb/geom_probe.py --selftest     # the WeAct hole pattern, the one number we can check
+    python3 kb/geom_probe.py                # every model under v2/vendor/
+
+The selftest is the point: the record established on 5 September, independently, that the WeAct 3.7
+module's holes sit on 100.19 x 48.20 mm. The probe reproduces exactly that, so the tool is checked
+against a fact rather than trusted.
+
+**Four things it refuses to claim**, each one found by reading its own output and disbelieving it:
+
+- **An assembly gets no envelope.** A STEP assembly holds every component in its own coordinates and
+  places them through transforms this reader does not apply, so a raw box over its points is a number
+  about nothing: the WeAct module, 105 x 54 mm, reads as 845 x 421 mm that way. The file says NOT
+  MEASURED and gives the raw spread only as a labelled non-measurement. Hole patterns are still true
+  *within* a component, which is why a module's mounting holes come out right.
+- **Construction geometry is removed and counted.** The LimeSDR model puts 11.6 percent of its points
+  at plus and minus 400,000 mm; the raw box reads 800 metres. The body is the box after points outside
+  ten interquartile ranges are dropped, and the count of what was dropped is printed.
+- **A DXF is a drawing sheet, not a part**, and its extents are the sheet with several views on it.
+  Only the ENTITIES section is read: the HEADER uses the same group codes, and its `$EXTMIN`/`$EXTMAX`
+  turned one Peli drawing into a part two hundred billion kilometres across.
+- **Axes are the file's own.** A vendor model is often exported Y up and this reader does not turn it,
+  so the three extents are sizes, not width, depth and height. And every number is a measurement of
+  the file, never a specification: where the manufacturer publishes a drawing, the drawing wins.
+
 ## Using it
 
     python3 kb/kb_search.py "LG290P supply voltage and pin assignment" --k 6
@@ -64,13 +99,13 @@ verdict (0 PASS, 1 FAIL, 3 INCONCLUSIVE), so an unreachable store is never a pas
   The model is the contract, not the host: a different model still answers, still returns 768
   numbers, and quietly ruins every distance. Measured sensitivity: keeping the same model and only
   swapping the asymmetric prefix moves the median to 0.958, far below the bar.
-- **gold** ten real questions with the document that answers each, every accepted path found
+- **gold** twelve real questions, ten electrical and two mechanical, with the document that answers each, every accepted path found
   mechanically from the indexed text rather than written from memory, and each checked to exist so
   the gold set cannot become a test that can never fail.
 
 ## What it is made of
 
-MariaDB 11.8 native `VECTOR(768)` with a cosine vector index, plus InnoDB full text over the same
+285 vendor PDFs and 34 probed geometry files, in MariaDB 11.8 native `VECTOR(768)` with a cosine index, plus InnoDB full text over the same
 chunks, fused by reciprocal rank fusion and reranked when the rerank service answers. Embeddings
 are `nomic-embed-text` with its asymmetric `search_document:` / `search_query:` prefixes. One row
 per (document, page, chunk), because the page is the citation.
