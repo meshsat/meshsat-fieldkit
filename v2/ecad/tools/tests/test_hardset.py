@@ -4,7 +4,7 @@
 The defect these are written against is real and was in the tools this morning: seven copies of the hard tuple had drifted
 apart, two of them silently narrower, so the supervisor could call a board CLEAN that the finish then refused (both red teams,
 10 September 2026, appendix 32.99)."""
-import os, json, tempfile, subprocess, sys
+import os, re, json, tempfile, subprocess, sys
 import hardset
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -83,19 +83,35 @@ def t_a_broken_report_is_never_a_pass():
 
 
 def t_no_second_hard_set_definition_anywhere_in_the_tools():
-    """The regression the red teams asked for: the hard types are defined in one file and nowhere else.
+    """The hard types are defined in one file, in ANY language, and nowhere else.
+
+    The first version of this test scanned `*.py` only. Both round-two red teams found the consequence on 10 September 2026:
+    the six-type tuple had survived in 27 SHELL scripts in twenty one different forms, several of them not even the six-type
+    set, and five of them decided something (`route_one.sh` scored the attempt that `route_parallel.sh` then picked,
+    `quality_pass.sh` kept or reverted a quality step, `pair_match.sh` said whether a meander hurt, the two partition scripts
+    reported the merge). The test that "fails if a second definition appears anywhere" was looking in the one place the drift
+    was not. It reads every text file now.
 
     A tool may name a NARROWER pattern for a reason, and those patterns live in hardset.py too (KNOT). What must never come
-    back is a private tuple in a consumer, which is how the six-type and the fifteen-type policies coexisted for two days."""
+    back is a private set of type names in a consumer, in a heredoc or otherwise."""
     hits = []
+    TYPES = hardset.DRIFT_MARKERS   # the names come from the policy itself, or this detector is the second definition
     for root, dirs, files in os.walk(TOOLS):
-        dirs[:] = [d for d in dirs if d not in (".git", "__pycache__", "bench", "cloud", "freerouting")]
+        dirs[:] = [d for d in dirs if d not in (".git", "__pycache__", "bench", "cloud", "freerouting", "boards")]
         for f in files:
-            if not f.endswith(".py") or f == "hardset.py": continue
+            if f == "hardset.py" or f.endswith((".json", ".txt", ".md", ".kicad_pcb", ".kicad_sch", ".pyc")): continue
             p = os.path.join(root, f)
-            for n, line in enumerate(open(p, errors="replace"), 1):
+            if os.path.basename(root) == "tests" and f.startswith("test_"): continue   # the fixtures name types on purpose
+            try: text = open(p, errors="replace").read()
+            except Exception: continue
+            for n, line in enumerate(text.splitlines(), 1):
                 s = line.strip()
-                if s.startswith("#"): continue
-                if "shorting_items" in s and ("=" in s.split("shorting_items")[0] or s.startswith("HARD")):
-                    hits.append("%s:%d %s" % (os.path.relpath(p, TOOLS), n, s[:90]))
-    assert not hits, "a second hard-set definition is back:\n  " + "\n  ".join(hits)
+                if s.startswith("#") or s.startswith("//"): continue
+                # A line that is DATA rather than policy says so and why, the `erc-allow.txt` idiom inline: a marker with no
+                # reason after it waives nothing.
+                if re.search(r"drift-ok:\s*\S", s): continue
+                # Two or more hard type names QUOTED on one line is a set, whatever the language quotes it with. The quotes
+                # are what separates a definition from prose: unknot.py's docstring names two of them in a sentence.
+                if sum(1 for t in TYPES if ('"%s"' % t) in s or ("'%s'" % t) in s) >= 2:
+                    hits.append("%s:%d %s" % (os.path.relpath(p, TOOLS), n, s[:100]))
+    assert not hits, "a second hard-set definition is back (%d line(s)):\n  " % len(hits) + "\n  ".join(hits)

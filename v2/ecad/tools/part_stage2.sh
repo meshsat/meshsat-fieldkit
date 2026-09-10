@@ -41,10 +41,6 @@ else
   python3 ../tools/ses_merge.py $W/stage1.kicad_pcb $W/part2.json $W/merged.kicad_pcb $ARGS 2>&1 | grep -v -E "Debug|leak"
 fi
 cp $N.kicad_pro $W/merged.kicad_pro
-kicad-cli pcb drc --severity-all --format json -o $W/merged-drc.json $W/merged.kicad_pcb >/dev/null 2>&1
-python3 - $W/merged-drc.json <<'PY'
-import json, collections, sys
-d = json.load(open(sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])
-print("stage2 merged: hard %d (%s) unconnected %d" % (sum(c[t] for t in ('clearance', 'shorting_items', 'tracks_crossing', 'hole_clearance', 'hole_to_hole', 'copper_edge_clearance')), dict((k, v) for k, v in c.items() if v), len(d.get('unconnected_items', []))))
-PY
+# The one hard set reports here too (10 September 2026, round-two red teams C1).
+../tools/drc.sh $W/merged.kicad_pcb $W/merged-drc.json && python3 ../tools/hardset.py $W/merged-drc.json post --label "stage2 merged" | head -2
 echo "STAGE2-DONE $(date -u +%H:%M:%S)"

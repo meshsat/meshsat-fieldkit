@@ -4,11 +4,13 @@
 # Usage: pair_match.sh <project dir> <name> <check script>   (e.g. pair_match.sh /root/.../pcb-b-compute pcb-b-compute check_pcb_b.py)
 set -uo pipefail; cd "$1"; N="$2"; CHECK="$3"; mkdir -p out
 report() { python3 ../tools/$CHECK $N.kicad_pcb 2>/dev/null | grep -E "pair length"; }
-hard() { kicad-cli pcb drc --severity-all --format json -o "$2" $1 >/dev/null 2>&1; python3 - "$2" <<'PYY'
-import json, collections, sys
-d = json.load(open(sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])
-print(sum(c[t] for t in ('clearance', 'shorting_items', 'tracks_crossing', 'hole_clearance', 'hole_to_hole', 'copper_edge_clearance')) + len(d.get('unconnected_items', [])))
-PYY
+# The one hard set decides here too (10 September 2026, both round-two red teams C1); this counted six types while the finish
+# refused on fifteen, and it is what says whether a meander hurt. A DRC that does not run is a refusal, not a zero.
+hard() {   # board, report -> hard + unrouted
+  ../tools/drc.sh "$1" "$2" || { echo 999999; return; }
+  local c; c=$(mktemp)
+  python3 ../tools/hardset.py "$2" post --counts "$c" >/dev/null || { rm -f "$c"; echo 999999; return; }
+  awk '{print $1 + $2}' "$c"; rm -f "$c"
 }
 for round in 1 2 3; do
   warn=$(report | grep "^WARN" || true); [ -z "$warn" ] && { echo "pair_match: every pair within 1 mm (round $round)"; report | cut -c1-120; exit 0; }

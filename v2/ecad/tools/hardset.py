@@ -9,9 +9,16 @@ Two exemptions, both about one footprint against itself: a courtyard overlap of 
 receptacle) and a solder-mask bridge inside one footprint (two pads of a fine-pitch part, which JLC gang-masks, or a library mask drawing over its
 own pad; a bridge between different parts or pad to track stays hard).
 
-Usage: hardset.py <drc.json> [pre|post] [--score FILE] [--gate FILE] [--flag FILE] [--label TEXT] [--examples N]
+Usage: hardset.py <drc.json> [pre|post] [--score FILE] [--counts FILE] [--gate FILE] [--flag FILE] [--label TEXT] [--examples N]
   prints  hardset: hard H of T types {type: n} unrouted U | report {type: n}
-  --score writes H; --gate writes OK or BLOCK H; --flag writes clean or open (hard 0 and unrouted 0).  Exit 3 on an unreadable JSON (never a pass)."""
+  --score writes H; --counts writes "H U"; --gate writes OK or BLOCK H; --flag writes clean or open (hard 0 and unrouted 0).  Exit 3 on an unreadable JSON (never a pass).
+
+THE SHELL USES THE SAME POLICY THROUGH THIS CLI (10 September 2026, both round-two red teams C1/P0). Twenty seven shell scripts
+carried their own tuple in a heredoc, in twenty one different forms, several of them NOT the six-type set: the drift the register
+of 8 September found in Python had a second home nobody had looked in, and five of those scripts decide something today
+(`route_one.sh` scores the attempt route_parallel.sh then picks, `quality_pass.sh` keeps or reverts a quality step,
+`pair_match.sh` decides whether a meander hurt, `part_stage2.sh` and `part_reconcile.sh` report the partition). No shell script
+counts violation types any more; they call this file and read the number back."""
 import sys, json, collections, re
 
 HARD_POST = ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance",
@@ -21,6 +28,13 @@ HARD_PRE = HARD_POST
 # Named patterns, so a tool that acts on a narrower set says which one and why here rather than keeping a private tuple
 # (10 September 2026, both red teams C1: seven copies of the hard set had drifted apart, two of them silently narrower).
 KNOT = ("shorting_items", "tracks_crossing")   # unknot.py: the router's knot, two nets tangled at one spot; a symptom pattern, not a policy subset
+# The names a drift detector looks for (`routeflow.py selftest` and `tests/test_hardset.py`): the hard types that are ONLY ever
+# DRC violation types. `track_width`, `via_diameter`, `clearance` and `hole_clearance` are left out because they are also net
+# class property names, and a generator reading `cl.get("via_diameter")` is not a second DRC policy. Two of these quoted on one
+# line outside this file is a private hard set (10 September 2026, both round-two red teams C1).
+DRIFT_MARKERS = ("shorting_items", "tracks_crossing", "hole_to_hole", "copper_edge_clearance", "solder_mask_bridge",
+                 "annular_width", "diff_pair_gap_out_of_range", "zones_intersect", "courtyards_overlap",
+                 "drill_out_of_range", "items_not_allowed")
 REPORT = ("connection_width", "isolated_copper", "starved_thermal", "copper_sliver", "silk_over_copper", "silk_overlap", "silk_edge_clearance",
           "track_dangling", "via_dangling", "net_conflict", "lib_footprint_mismatch", "diff_pair_uncoupled_length_too_long", "skew_out_of_range",
           "length_out_of_range", "too_many_vias", "malformed_courtyard", "missing_courtyard")
@@ -79,6 +93,7 @@ def main(a):
     for line in examples(d, which, n): print(line)
     if opt("--label"): print("%s: hard %d unrouted %d (%d types checked)" % (opt("--label"), c["hard"], c["unrouted"], len(c["types"])))
     if opt("--score"): open(opt("--score"), "w").write("%d\n" % c["hard"])
+    if opt("--counts"): open(opt("--counts"), "w").write("%d %d\n" % (c["hard"], c["unrouted"]))   # the shell's interface: "hard unrouted" on one line
     if opt("--gate"): open(opt("--gate"), "w").write("OK" if c["hard"] == 0 else "BLOCK %d" % c["hard"])
     if opt("--flag"): open(opt("--flag"), "w").write(("clean" if c["hard"] == 0 and c["unrouted"] == 0 else "open") + "\n")
     return 0

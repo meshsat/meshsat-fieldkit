@@ -2,7 +2,12 @@
 # Usage: build_pcb.sh <board-dir> <board-name>   (runs DRC, gerbers, drill, 1:1 PDF, renders)
 set -euo pipefail
 D="$1"; N="$2"; cd "$D"; mkdir -p out
-kicad-cli pcb drc --severity-all --exit-code-violations --format json -o "out/$N-drc.json" "$N.kicad_pcb" && echo "DRC: clean" || echo "DRC: violations (see out/$N-drc.json)"
+# 10 September 2026 (round-two red teams, report 1 P1): this ran the DRC with --exit-code-violations inside `cmd && clean ||
+# violations`, so EVERY non-zero status read as "the board is dirty" (5 means violations; anything else is a tool failure) and
+# a failed export left the previous out/$N-drc.json in place for finish_board.sh to read. One contract now, in drc.sh: the
+# report is an output, and hardset.py says what it means.
+../tools/drc.sh "$N.kicad_pcb" "out/$N-drc.json"
+python3 ../tools/hardset.py "out/$N-drc.json" post --label "DRC" | head -2
 kicad-cli pcb drc --severity-all --format report -o "out/$N-drc.rpt" "$N.kicad_pcb" >/dev/null
 rm -rf out/gerbers; mkdir -p out/gerbers
 CU=$(python3 -c "import pcbnew; b=pcbnew.LoadBoard('$N.kicad_pcb'); n=b.GetCopperLayerCount(); print(','.join(['F.Cu']+['In%d.Cu'%i for i in range(1,n-1)]+['B.Cu']))" 2>/dev/null | tail -1)

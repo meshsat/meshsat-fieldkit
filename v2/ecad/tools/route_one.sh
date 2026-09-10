@@ -107,26 +107,31 @@ ADSN="$PWD/$W/$N.dsn"; ASES="$PWD/$W/$N.ses"
 timeout ${FR_TIMEOUT:-4500} xvfb-run -a "$JAVA" -Dfreerouting.ses_per_pass="$ASES" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
 pkill -9 -f "java .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
+# 10 September 2026 (round-two red teams, report 1 P0): the import, the DRC and the score used to fail silently and the attempt
+# still ended `ROUTE-ONE-DONE` with exit 0, so `routeflow.py` could never tell a broken attempt from a board that would not
+# route and applied a routing remedy to an infrastructure failure. Each step reports now and the attempt exits non-zero.
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PY'
 import sys, os, pcbnew
 b = pcbnew.LoadBoard(sys.argv[1]); ok = os.path.exists(sys.argv[2]) and pcbnew.ImportSpecctraSES(b, sys.argv[2]); print("SES import:", ok)
+if not ok: sys.exit(4)
 pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)
 print("tracks:", len([t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]), "vias:", len([t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]))
 PY
+IMP=$?; [ "$IMP" -eq 0 ] || { echo "attempt $K: the session did not import (exit $IMP)"; echo "ROUTE-ONE-DONE $K"; exit 4; }
 python3 ../tools/net_tie.py "$W/$N.kicad_pcb" >/dev/null
-kicad-cli pcb drc --severity-all --format json -o "$W/drc.json" "$W/$N.kicad_pcb" >/dev/null 2>&1
+../tools/drc.sh "$W/$N.kicad_pcb" "$W/drc.json" || { echo "attempt $K: the DRC did not run"; echo "ROUTE-ONE-DONE $K"; exit 5; }
 python3 - "$W" <<'PY'
-import json, sys, collections, os as _os
-sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)) if "__file__" in dir() else ".", "..", "tools"))
+import json, sys, os as _os, re
 sys.path.insert(0, _os.path.abspath(_os.path.join(_os.getcwd(), "..", "tools"))); sys.path.insert(0, _os.path.abspath(_os.path.join(_os.getcwd(), "tools")))
+# The one hard set scores the attempt, and its absence is a failure. It used to fall back to a six-type tuple with no message,
+# which is the drift of report 1's C1 living in the file that decides which attempt route_parallel.sh picks; and the tool's own
+# rule, written for pairsearch.py the same day, is that a fallback must not be a regression.
+import hardset
 d = json.load(open(sys.argv[1] + "/drc.json"))
-try:
-    import hardset; _c = hardset.counts(d); hard = _c["hard"]   # 8 Sep 2026 (MESHSAT-862): the one hard set scores the attempt too
-except ImportError:
-    c = collections.Counter(v["type"] for v in d["violations"]); hard = sum(c[t] for t in ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance"))
-unr = len(d.get("unconnected_items", []))
-import re
-s = open(sys.argv[1] + "/fr.log").read(); vias = len(re.findall(r"^\s*\(via ", open(sys.argv[1] + "/" + [f for f in __import__("os").listdir(sys.argv[1]) if f.endswith(".ses")][0]).read(), re.M)) if any(f.endswith(".ses") for f in __import__("os").listdir(sys.argv[1])) else 9999
+hard = hardset.counts(d)["hard"]; unr = len(d.get("unconnected_items", []))
+ses = [f for f in _os.listdir(sys.argv[1]) if f.endswith(".ses")]
+vias = len(re.findall(r"^\s*\(via ", open(_os.path.join(sys.argv[1], ses[0])).read(), re.M)) if ses else 9999
 open(sys.argv[1] + "/score.txt", "w").write("%d %d %d\n" % (hard, unr, vias)); print("score: hard %d unrouted %d vias %d" % (hard, unr, vias))
 PY
+SC=$?; [ "$SC" -eq 0 ] || { echo "attempt $K: the score was not written (exit $SC)"; rm -f "$W/score.txt"; echo "ROUTE-ONE-DONE $K"; exit 6; }
 echo "ROUTE-ONE-DONE $K"

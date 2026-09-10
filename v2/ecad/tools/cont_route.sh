@@ -47,11 +47,12 @@ python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PYX'
 import sys, pcbnew
 b = pcbnew.LoadBoard(sys.argv[1]); print("cont: SES import", pcbnew.ImportSpecctraSES(b, sys.argv[2])); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)
 PYX
-score() { kicad-cli pcb drc --severity-all --format json -o "$W/drc-$2.json" "$1" >/dev/null 2>&1; python3 - "$W/drc-$2.json" <<'PYX'
-import json, collections, sys
-d = json.load(open(sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])
-print(sum(c[t] for t in ('clearance', 'shorting_items', 'tracks_crossing', 'hole_clearance', 'hole_to_hole', 'copper_edge_clearance')), len(d.get('unconnected_items', [])))
-PYX
+# The one hard set scores the continuation (10 September 2026, round-two red teams C1); it counted six types in a heredoc
+# and it is what decides whether the continuation pass is kept.
+score() {   # board, tag -> "hard unrouted"
+  ../tools/drc.sh "$1" "$W/drc-$2.json" || { echo "999999 999999"; return; }
+  local c; c=$(mktemp); python3 ../tools/hardset.py "$W/drc-$2.json" post --counts "$c" >/dev/null || { rm -f "$c"; echo "999999 999999"; return; }
+  cat "$c"; rm -f "$c"
 }
 read H0 U0 < <(score "$W/$N-before.kicad_pcb" before); read H1 U1 < <(score "$W/$N.kicad_pcb" after)
 echo "cont: before hard $H0 unrouted $U0, after hard $H1 unrouted $U1"
