@@ -178,7 +178,7 @@ GAP = 1.2
 # (2.2 mm plus 0.12 per pad on a side) wants about 5 mm at a 99-pad QFN and this gives 1.6, which is why B19's audit
 # reports a third of the pads of U301, U201 and U101 with no escape at all. PLACE_FINE_MARGIN measures the trade against
 # the region overflow the gate refuses.
-FINE_MARGIN = float(os.environ.get("PLACE_FINE_MARGIN", "1.6"))
+FINE_MARGIN = float(os.environ.get("PLACE_FINE_MARGIN", "2.6"))
 import re as _re
 def is_fine(fp):
     if _re.search(r"SOT-23-[68]|SOT-583|TSOT-23-6", fp.GetFPIDAsString()): return True
@@ -218,12 +218,12 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
         if ref in placed: print("WARNING %s listed twice" % ref); continue
         fp = place(ref, 0, 0, back=back); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
         if fine:
-            # 10 September 2026: the wide margin is for the QFN and QFP rows whose escape vias splay far (the PCIe switches,
-            # the hubs, the supervisors); a SOT or a USON keeps 1.4, which is the rule gen_pcb_c3.py and gen_pcb_e3.py already
-            # had and this generator did not. Measured on B19 by counting the pads place_audit finds with no escape at all:
-            # a flat 1.6 leaves 194 of them, a flat 2.6 leaves 69, a flat 3.0 leaves 164 (the packer spills into other regions).
-            nfine = sum(1 for pd in fp.Pads() if pd.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and min(pd.GetSize().x, pd.GetSize().y) <= FromMM(1.2))
-            fm = FINE_MARGIN if nfine >= 16 else 1.4
+            # 10 September 2026, measured on B19 by counting the pads place_audit finds with NO escape at all: a flat 1.6 leaves
+            # 194 of them, 2.0 leaves 142, 2.6 leaves 69, 3.0 leaves 164 and 3.6 leaves 121 (past 2.6 the shelf packer spills
+            # parts into other regions and the fans lose again). Giving the wide margin only to parts of sixteen fine pads or
+            # more, which is what gen_pcb_c3.py and gen_pcb_e3.py do, was tried and is WORSE here (205 pads at 2.6): on this
+            # board it is the small fine-pitch parts crowding the big ones that close the fans, so every fine part gets the room.
+            fm = FINE_MARGIN
             for pd in fp.Pads():
                 if pd.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or min(pd.GetSize().x, pd.GetSize().y) > FromMM(1.2): continue
                 pbb = pd.GetBoundingBox(); w_, h_ = pbb.GetWidth(), pbb.GetHeight()
