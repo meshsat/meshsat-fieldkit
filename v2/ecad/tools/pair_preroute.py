@@ -823,7 +823,7 @@ def main(a):
                 for t in pieces[n0:]: b.Remove(t)
                 del pieces[n0:]
             return "no via site beside the pad with a dive path and a stub into it"
-        for (pa, na), (pb, nb) in sections:
+        for _sec_k, ((pa, na), (pb, nb)) in enumerate(sections):
             A = [anchor(pa), anchor(na)]; B = [anchor(pb), anchor(nb)]
             sx, sy = (A[0][0] + A[1][0]) / 2, (A[0][1] + A[1][1]) / 2; gx, gy = (B[0][0] + B[1][0]) / 2, (B[0][1] + B[1][1]) / 2
             sL = gL = None   # the corridor picks its layer; the end stubs via to the pads' own layer (8 Sep: a start forced onto B.Cu inside the resistor cluster found no exit)
@@ -951,7 +951,6 @@ def main(a):
             behind = []
             if fineA0: mx_, my_ = mid((pa, na)); ln_ = math.hypot(sx - mx_, sy - my_) or 1.0; behind.append((sx, sy, (sx - mx_) / ln_, (sy - my_) / ln_))
             if fineB0: mx_, my_ = mid((pb, nb)); ln_ = math.hypot(gx - mx_, gy - my_) or 1.0; behind.append((gx, gy, (gx - mx_) / ln_, (gy - my_) / ln_))
-            _sec_k = sections.index(((pa, na), (pb, nb)))
             _planned = plan_in.get(stem.lstrip("/"), None)
             if _planned is not None and _sec_k < len(_planned) and _planned[_sec_k]:
                 path = [tuple(c) for c in _planned[_sec_k]]   # the negotiated corridor, already agreed with every other pair
@@ -959,7 +958,9 @@ def main(a):
                 path = astar(gr, layers, trk, via, (sL, sj, si), (gL, gj, gi), window, behind, cost=NEG_COST)
             if PLAN_MODE:
                 plan_out.setdefault(stem.lstrip("/"), []).append([list(c) for c in (path or [])])
-                if path: neg_stamp(path, half + CLR)
+                if path:
+                    neg_stamp(path, half + CLR)
+                    print("pair_preroute: PLAN  %s section %d of %d: %d cells" % (stem, _sec_k + 1, len(sections), len(path)), flush=True)
                 else: report.append("FAIL  %s: section %s -> %s (%s)" % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), PATH_WHY[0] or "no corridor"))
                 continue
             def dump(tag, cx, cy, R=3.0, layer_idx=0):   # PAIR_DEBUG=1: the corridor map around a point, one character per 2 cells (S start, G goal, # forbidden)
