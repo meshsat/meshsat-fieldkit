@@ -92,7 +92,12 @@ fi
 # identical relative command lines, and the clean-up kill below took the OTHER experiment's router with it (every 1.9.0 B15 route on the box died the moment
 # its B14 twin finished). The kill pattern now carries this run's absolute session directory.
 ADSN="$PWD/$W/$N.dsn"; ASES="$PWD/$W/$N.ses"
-timeout ${FR_TIMEOUT:-4500} xvfb-run -a "$JAVA" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
+# 10 September 2026 (MESHSAT-862, red team M2): the per-pass session. Our build of 1.9.0 writes the Specctra session after every
+# pass when -Dfreerouting.ses_per_pass names a file (tools/freerouting/ses_per_pass.py; proved on a D board DSN: seven sessions
+# in ninety seconds, each importable by KiCad). It writes to the SAME path the run ends at, atomically, so a route that hits its
+# time limit now leaves the best board it reached instead of nothing. The stock jar ignores an unknown -D property, so this line
+# is safe with either jar and the NO_SESSION path stays for the stock one.
+timeout ${FR_TIMEOUT:-4500} xvfb-run -a "$JAVA" -Dfreerouting.ses_per_pass="$ASES" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
 pkill -9 -f "java .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PY'
