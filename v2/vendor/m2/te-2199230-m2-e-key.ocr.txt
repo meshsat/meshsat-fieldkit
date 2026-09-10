@@ -1,0 +1,760 @@
+OCR of m2/te-2199230-m2-e-key.pdf, a drawing with no text layer
+
+Read by tools/kb/kb_ocr.py at 300 dpi with tesseract, because this document carries no
+font objects: its lettering is drawn as vector paths and no text extractor can reach it.
+
+THIS IS AN INDEX, NOT A SOURCE OF NUMBERS. OCR misreads exactly the characters that matter
+on a drawing: a decimal point, a tolerance, an H7, a 6 against an 8. Use this to find WHICH
+drawing to open. Then open it:  pdftoppm -r 300 -png -f <page> -l <page> v2/vendor/m2/te-2199230-m2-e-key.pdf
+Every dimension quoted anywhere in this project must come from the drawing, never from here.
+
+LEGIBILITY: 651 word-like tokens in 5792 characters.
+
+--- te-2199230-m2-e-key, page 1, as read by OCR ---
+oem i i i i i i i i i i i i i i lm sm i i i i i i i i i i i i i i im i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i im i i sg iw CU. awn a>a5>_ncr n> a.ctCrCT aa
+THIS DRAWING IS UNPUBLISHED
+RELEASED FOR PUBLICATION
+— i, —
+REVISIONS
+©) COPYRIGHT —
+By —
+ALL RIGHTS RESERVED
+Pp
+LTR
+DESCRIPTION
+DATE
+DWN
+APVD
+BS
+REVISED PER ECR—-19—000415
+27SEP2019/ E.Z | W.H
+DIM.
+DIM
+B
+NOTES
+DIM. A
+1
+MATERIAL
+PIN 75 L\
+1.1
+HOUSING
+HIGH TEMPERATURE THERMOPLASTIC
+UL94V—O0, COLOR: BLACK
+aie
+/~ ¢ OF CONN
+DATE CODE
+1.2 CONTACT: COPPER ALLOY
+QOODONOANOADOAHONHADAAAnhnd
+1.5 SOLDER PEG: STAINLESS STEEL
+PIN ;
+POSITION
+25°45
+a
+HOUSING -——**
+sill
+INSERTION ANGLE
+2. FINISH
+CAV.NO
+2.1
+CONTACT: UNDERCOAT NICKEL SOu
+min
+ALL OVER
+/\KEY ID—|
+=A
+0.92 REF
+i
+— A
+MATING AREA: GOLD PLATING, THE THICKNESS
+OETA Aaa Aaa aaa
+=
+eee aE
+4
+STATES Eee eee
+LA
+i
+IK
+ii
+i
+i i
+iyi
+ayaa
+i
+f hi
+aii
+f i
+PAAR ARE
+SEE TABLE LIST
+a
+a
+no
+i
+Hy
+a
+alah
+Fiat
+af=]=
+AY IAL IAL IY IAL IAL IA
+no
+Ae
+Ha
+af=
+ae
+”
+Ae
+no
+af=
+aa
+.
+Ae
+Q fl
+af=
+de
+a=
+o fi
+.
+fl
+A Al JALAL ALIA
+Ae
+rl
+no
+af=
+an
+my
+By
+SOLDERABLE AREA: GOLDFLASH
+PIN 2
+I
+I
+2.48 REF
+2.2
+SOLDER PEG: UNDERCOAT: NICKEL SQu
+min
+ALL OVER
+VA
+aa
+SOLDERABLE AREA: MATTE TIN
+100u
+min
+PIN 74
+2.94 REF.—
+ae
+IM
+/\ COPLANARITY: 0.10mm_ MAX.(BEFORE SOLDERING)
+2.9
+1.75
+4. ACCEPTED MODULE BASED ON INDUSTRY STD
+C
+DIM. C
+DIM. D
+4.4
+/\ KEY ID, "*” IS A CAPTICAL LETTER PER
+2.85
+THE PART NO
+REF
+5.85 REF.——\——
+21.9+0.1
+/\ THE PIN NO. DEFINITIONS ARE ACCORDING TO
+20.15+0.05
+PCB FOOTPRINT, THE ACTUAL PIN QUANTITY
+IS ONLY 67 POS. FOR KEY TAKING OUT 8 POS
+SLOT WIDTH
+DIM. E
+7. THE PRODUCT IS RoHS COMPLIANT
+7.75
+BR Q9OOPPM MAX
+CL GOOPPM MAX
+2X 0.88
+1.1
++
+BR+CL 1500 PPM MAX
+REF
+2.9
+REF
+/* OF SLOT
+ee ee
+So Ip
+0.65
+/d\ MINUS MEANS ¢ OF KEY IS ON THE RIGHT SIDE
+OF CONN
+IN PAGE 1
+=
+REF
+li
+li
+ili
+i) i
+li
+i=
+| I
+H
+HI
+f
+Lo
+LU
+O
+H
+H
+H H H
+i} H H
+a
+Cy
+i]
+f
+Z
+HOBOSOBUY
+HOROBOEUROY OR OSOE DROS OR OSUEOROYOEOROEOROEOBUYOEO
+i
+i
+i
+i
+i
+i
+i
+it
+HOH
+3
+4.2 MAX
+=
+0.8+0.05
+Tk
+67X SOLDER TAILS &
+1.45+0.05
+2X SOLDER PEG
+10
+A~—_
+—y— 35X_ 0.1540.02
+STANDOFF
+|-|0.13}A[U—T[U]
+STANDOFF
+90CT2012
+SURFACE
+‘1
+THIS DRAWING IS A CONTROLLED DOCUMENT
+SIMON WU
+SURFACE
+CHK
+90CT2012
+STE
+TE Connectivity Ltd
+DIMENSIONS
+TOLERANCES UNLESS
+SIMON _L
+DD
+OTHERWISE SPECIFIED
+APVD
+90CT2012
+NAME
+4.4 REF
+mm
+COREL WANG
+[|
+PLC
++ 0.30
+PRODUCT SPEC
+M.2(NGFF) MINI CARD MOUNTING TYPE
+A
+PLC
++ 0.30
+0.50mm PITCH 67 POS. 4.2mm HEIGHT
+ty
+PLC
++ 0.20
+SEE TABLE
+FOR DOUBLE SIDED MODULE
+E $1.45 REF
+oS
+PLC
+£0.10
+APPLICATION SPEC
+0.8 ger —/ “PITT COTTE
+ANGLES
+PLC
++e
++3
+114—115006
+SIZE
+CAGE CODE | DRAWING NO
+RESTRICTED TO
+54X_0.15+0.02
+MATERIAL
+FINISH
+WEIGHT
+A——_
+0.64 G
+A 4)00779|G=2199230
+|@[0.13|/A]/U—T|U]
+SCALE
+SHEET
+REV
+CUSTOMER DRAWING
+4:1
+oF 4
+BS
+1470-19
+(1/15)
+ee
+
+--- te-2199230-m2-e-key, page 2, as read by OCR ---
+oem i i i i i i i i i i i i i i lm sm i i i i i i i i i i i i i i im i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i im i i sg iw CU. awn a>a5>_ncr n> a.ctCrCT aa
+THIS DRAWING IS UNPUBLISHED.
+RELEASED FOR PUBLICATION
+— i, —
+REVISIONS
+ALL RIGHTS RESERVED.
+©) COPYRIGHT —
+By —
+LTR
+DESCRIPTION
+DATE
+DWN
+APVD
+—
+—
+SEE
+SHEET 1
+50u
+MIN
+1-2199230—7
+108-—115042
+S5Ou
+MIN
+1-—2199230—-6
+15u
+MIN
+1—2199230—-5
+1.125
+1.375
+—6.125
+1.5
+14.0
+2.0
+14.0
+10u
+MIN
+1=2199230—-4
+108—115049
+GOLD
+FLASH
+1=2199250—5
+6.625
+14.5
+1.0
+14.5
+1.5
+1—2199230-—2
+108—115042
+10u
+MIN.
+2.625
+10.5
+5.0
+10.5
+5.5
+1-—2199230-1
+5.625
+13.5
+2.0
+13.5
+2.5
+1—21992350—0
+SOu
+MIN.
+21992350—9
+108—-115042
+15u
+MIN.
+6.625
+14.5
+1.0
+14.5
+1.5
+21992350—8
+108—-115049
+GOLD
+FLASH
+21992350—7
+1.375
+1.125
+2.625
+10.5
+5.0
+10.5
+5.5
+SOu
+MIN.
+2199230—6
+5.625
+13.5
+2.0
+13.5
+2.5
+21992350—5
+108—-115042
+2.625
+10.5
+5.0
+10.5
+one)
+15u’
+MIN.
+2199230—4
+5.625
+13.5
+2.0
+13.5
+2.5
+2199250—5
+2.625
+10.5
+5.0
+10.5
+5.5
+2199230—2
+108—115049
+GOLD FLASH
+9.625
+13.5
+2.0
+13.5
+2.9
+2199230—1
+KEY ID.
+PRODUCT SPEC.
+GOLD SPEC.
+DIM. G
+DIM. F
+DIM. E
+DIM
+D
+DIM. C
+DIM. B
+DIM. A
+PART NO.
+THIS DRAWING IS A CONTROLLED DOCUMENT.
+90CT2012
+SIMON WU
+TE Connectivity Ltd.
+CHK
+90CT2012
+=TlE
+DIMENSIONS:
+TOLERANCES UNLESS
+SIMON LI
+mm
+OTHERWISE SPECIFIED:
+APVD
+90CT2012 | NAME
+PRODUCT SPEC
+COREL WANG
+M.2(NGFF) MINI CARD MOUNTING TYPE
+PLC
++ 0.30
+PLC
++ 0.30
+0.50mm PITCH 67 POS. 4.2mm HEIGHT
+PLC
++ 0.20
+APPLICATION SPEC
+FOR DOUBLE SIDED MODULE
+oot
+PLC
+PLC
++e
+£0.10
+SIZE
+CAGE CODE | DRAWING NO
+RESTRICTED TO
+ANGLES
++3
+MATERIAL
+FINISH
+WEIGHT
+—
+A 4)00779|G=2199230
+SCALE
+SHEET
+REV
+CUSTOMER DRAWING
+4:1
+2 0 4
+BS
+1470-19
+(1/15)
+ee
+
+--- te-2199230-m2-e-key, page 3, as read by OCR ---
+nen ne ne nen nen ne nnn nnn nee eee ne nen nn ne nen nen nen nee ne ne nnn nnn nen nen ne nen enn nn ee ne ne enn nnn nn nnn nen nen nn ee nnn nnn nen ee nen nnn nn ne nen nnn EEE EEE EEE
+THIS DRAWING IS UNPUBLISHED
+RELEASED FOR PUBLICATION
+— oe
+REVISIONS
+© COPYRIGHT —
+By —
+ALL RIGHTS RESERVED
+LTR
+DESCRIPTION
+DATE
+DWN
+APVD
+SEE SHEET 1
+—_—
+—_—
+-——[10. 35}
+10.35
+9.25
+PIN 1
+DIM. A
+(DIM. BI B
+2X 1.2+0.03
+SEE DETAIL B
+L@ |0.1]Z|x-Y [x]
+54X 0.340.035
+PIN 75
+|@ |0.1]Z]x-Y|
+~
+|
+mbt
+-1.55+0.03
++ }+{0.5] TYP
+7
+|--|0.1]Z|x|xX—-Y |
+|
+ni
+CIMA
+34X
+[6.05]
+n
+[4.5]
+|
+al
+2X 2.7540.03
+(WL
+CN
+yp
+NMJ
+1.55+£0.03
+L@ |0.1]2]x]x-Y]
+namnn
+—=
+Tibi tne
+HIPti el
+|
+(0.1]Z|X]X—Y |
+Bel
+|
+|
+il
+ST)
+HIPti el
+POU Ion
+33X
+N
+—
+0.540.035
+$1.1+0.05
+TYP
+L@ |0.1|Z]x-Y[x|
+[6 |0.1|Z|x—Y |x]
+33X
+1.6+0.05
+DETAILB
+SCALE 8:1
+—{DIM D
+PIN 74
+DIM. C
+PIN 2
+[0.25}-]=/
+10
+20
+M
+1.5
+14.0
+2.0
+14.0
+E
+10.5
+5.0
+10.5
+3.5
+RECOMMEDNED NGFF MINI
+CARD MOUNTING TYPE_SMT_PCB OUTLINE
+B
+13.5
+2.0
+13.5
+2.5
+DATUM Z: PCB SOLDER SURFACE
+A
+14.5
+1.0
+14.5
+1.5
+KEY ID
+DIM. D
+DIM. C
+DIM. B
+DIM. A
+DWN
+90CT2012
+THIS DRAWING IS A CONTROLLED DOCUMENT
+SIMON WU
+CHK
+90CT2012
+= TE
+TE Connectivity Ltd
+DIMENSIONS
+TOLERANCES UNLESS
+SIMON LI
+OTHERWISE SPECIFIED
+APVD
+90CT2012
+NAME
+mm
+COREL _ WANG
+M.2(NGFF) MINI CARD MOUNTING TYPE
+PLC
++ 0.30
+PRODUCT SPEC
+PLC
++ 0.30
+O0.50mm PITCH 67 POS. 4.2mm HEIGHT
+PLC
+PLC
++£0.10
++ 0.20
+APPLICATION SPEC
+FOR DOUBLE SIDED MODULE
+Or
+PLC
++
+SIZE
+CAGE CODE | DRAWING NO
+RESTRICTED TO
+ANGLES
++3
+MATERIAL
+FINISH
+WEIGHT
+—
+A 4)007791G=2199230
+CUSTOMER DRAWING
+SCALE
+SHEET
+REV
+2:1
+3 oF 4
+BS
+1470-19 (1/15)
+ee
+
+--- te-2199230-m2-e-key, page 4, as read by OCR ---
+nen ne ne nen nen ne nnn nnn nee eee ne nen nn ne nen nen nen nee ne ne nnn nnn nen nen ne nen enn nn ee ne ne enn nnn nn nnn nen nen nn ee nnn nnn nen ee nen nnn nn ne nen nnn EEE EEE EEE
+THIS DRAWING IS UNPUBLISHED.
+RELEASED FOR PUBLICATION
+— oe
+REVISIONS
+© COPYRIGHT —
+By —
+ALL RIGHTS RESERVED
+LTR
+DESCRIPTION
+DATE
+DWN
+APVD
+—_—
+—_—
+SEE SHEET 1
+ING 1 REC Tg
+PEELING AN
+NOTES: (APPLIED TO CURRENT SHEET)
+1
+THE DIRECTION OF EACH CONNECTOR ON
+A EMBOSS IS REFERRED TO THIS DRAWING.
+9.0
+2. GENERAL TOLERANCE: +£0.5, +3’
+USER DIRECTION OF UNREELING
+}) |
+}] |
+pi
+3. PACKAGED IN EMBOSS TAPE AND PLASTIC RELL
+—_>
+1OOOPCS PER REEL.
+SECT A=A
+91 O
+(P1)16.00
+(PO)4.00
+(10XP0)=40.0
+(P2)2.00
+01.5-0:0
++0.1
+(T0)0.5+0.05
+(KO)4.20
+@ #0 0 0 BJoJO 0 A)9 GOFF 00909000 Po
+A
+ae
+ey
+=
+CO
+CH
+L_]
+=
+—
+ay
+L_]
+LJ
+im
+O O0OJO 00 0OJO 00 0J0 00000000 0
+O O O
+SECT B-B
+DWN
+90CT2012
+THIS DRAWING IS A CONTROLLED DOCUMENT
+SIMON WU
+CHK
+90CT2012
+=TE
+TE Connectivity Ltd.
+DIMENSIONS:
+TOLERANCES UNLESS
+SIMON LI
+OTHERWISE SPECIFIED:
+APVD
+9OCT2012 | NAME
+mm
+COREL _ WANG
+PLC
++ 0.30
+PRODUCT SPEC
+M.2(NGFF) MINI CARD MOUNTING TYPE
+PLC
++ 0.30
+O0.50mm PITCH 67 POS. 4.2mm HEIGHT
+PLC
++ 0.20
+FOR DOUBLE SIDED MODULE
+PLC
++£0.10
+APPLICATION SPEC
+ANGLES
+PLC
++
++3
+SIZE
+CAGE CODE | DRAWING NO
+RESTRICTED TO
+MATERIAL
+FINISH
+WEIGHT
+—
+A 4)007791G=2199230
+SCALE
+SHEET
+REV
+CUSTOMER DRAWING
+N/ZA
+4 oA
+BS
+1470-19
+(1/15)
+ee
+

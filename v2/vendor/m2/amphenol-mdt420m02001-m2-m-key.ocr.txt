@@ -1,0 +1,259 @@
+OCR of m2/amphenol-mdt420m02001-m2-m-key.pdf, a drawing with no text layer
+
+Read by tools/kb/kb_ocr.py at 300 dpi with tesseract, because this document carries no
+font objects: its lettering is drawn as vector paths and no text extractor can reach it.
+
+THIS IS AN INDEX, NOT A SOURCE OF NUMBERS. OCR misreads exactly the characters that matter
+on a drawing: a decimal point, a tolerance, an H7, a 6 against an 8. Use this to find WHICH
+drawing to open. Then open it:  pdftoppm -r 300 -png -f <page> -l <page> v2/vendor/m2/amphenol-mdt420m02001-m2-m-key.pdf
+Every dimension quoted anywhere in this project must come from the drawing, never from here.
+
+LEGIBILITY: 295 word-like tokens in 2420 characters.
+
+--- amphenol-mdt420m02001-m2-m-key, page 1, as read by OCR ---
+4
+v
+1
+This document is the property of Amphenol Corporation and Is delivered on
+whole or in part, for manufacture or sale by anyone other than Amphenol
+the express condition that It is not to be disclosed, reproduced or used, in
+REVISIONS
+Corporation without its prior concert, & that no right Is granted to disclose
+or to use any Information in this document.
+SYM
+ECN
+DESCRIPTION
+DATE
+APPROVED
+CUSTOMER DRAWING
+CDXXXX
+NEW RELEASE
+SEP.25,2013
+YH
+CDXXXX
+UPDATE DRAWING
+SEP.26,2013
+YH
+22.00MAX
+CDXXXX
+UPDATE DRAWING
+NOV.22,2013
+YH
+DIM A
+DIM B
+CDXXXX
+ADD A DIMENSION AND UPDATE DRAWING
+APR.30,2014
+YH
+9.25
+PIN tN
+0.50
+| DIM
+34x0.20
+i
+Ce eee PPE PE PPP Pee PPE PESTS E YP EP EP TEEPE ETE PPT
+ea OS Pe Oe ee PO Oe Oe Oe Oe
+ee
+"Step CARD py
+enol
+it
+TT ote Tela eee eee ee ete eee ee ee oT ol TTT oT.
+i.
+has
+NOTE:
+|
+MATERIAL:
+oHS
+IPN 75
+20°
+PLASTIC: LCP, UL 94V-0, BLACK
+CONTACT: COPPER ALLOY
+NH
+© OF 10 LA
+BOARD LOCK: ALLOY
+7 sae
+| |
+FINISHED:
+WORKING POSITION ~
+—
+CONTACT AREA: SEE P/N SYSTEM
+SOLDER AREA: GOLD FLASH
+1.10
+pin 74
+BOARD LOCK: TIN PLATING
+DIM D
+33x0.20
+UNDERPLATED: NI PLATING
+dla
+ELECTRICAL PERFORMANCE:
+3.1 CURRENT RATING: 0.5A PER PIN, VOLTAGE RATING: 50 VAC PER PIN
+9,00MAX
+3.2 DIELECTRIC STRENGTH: 300V AC FOR 1 MINUTE
+20.15+0.05
+6.75
+3.3 INSULATION RESISTANCE: 500MQ MIN
+3.4 CONTACT RESISTANCE: 55m MAX
+—
+3.5 OPERATION TEMPERATURE: -40°C TO +80°C
+-—
+“sane.
+DIMENSIONING SHALL BE INTERPRETED PER ASME Y14.5M 1994
+MATERIAL SHOULD BE FULFILLED AMPHENOL SPEC# S-SN-002
+BOE ee
+Eee
+FOR HALOGEN FREE PRODUCTS, ALSO NEED TO MEET # S-SN-004
+$1.40+0.08
+CY | 0.10
+ORDER P/N SYSTEM:
+£0.90+0.08 ia
+475
+FOR ALL SOLDER TAILS
+5.1
+MDT XXX X XX 001
+CONNECTOR HEIGHT
+PLATING
+XXX
+DIM E
+DIM F
+01 0.76 MICRONS GOLD PLATING
+580
+5. 80MAX
+4 AG4MAX
+02 0.38 MICRONS GOLD PLATING
+420
+4 2OMAX
+2.54MAX
+03 GOLD FLASH
+22 MAX
+320
+3,20MAX
+1.54MAX
+8.5
+38x0.30+0.03
+275
+2.1S5MAX
+0. 89MAX
+CONNECTOR KEY ID
+A-KEYA
+PIN \Y
+9.25
+LZ PIN 715
+|--[0.10|Z]x-y |x|
+245
+2.45MAX
+0.61MAX
+B- KEY B
+a OF DIM 20 _
+E-KEYE
+WH HHH AH AWWA HHH AHHH
+ICICLE ECE Shhh
+VAT A
+M-KEYM
+$1.60+0.05
+1
+0.3
+10.35 ‘ ~+
+'
++1
+|
+|
+PROPOSAL DRAWING
+= eee
+38x1,55+0.03
+'
+\O.S9TYP.
+=
+|-- | 0.10]Z] x-Y]x|
+M
+14.0
+2.0
+1.375
+6.125
+=
+\
+E
+5.5
+10.5
+-2.625
+1.10+0.05
+B
+2.5
+13.5
+1.125
+-5.625
+37x0.30+0.03
+PIN 74
+A
+1.5
+14.5
+-6.625
+PIN 2-7
+0.50
++i
+~~
+KEY ID
+DIM.A
+DIM.B
+DIM.C
+DIM.D
+REMARK
+|--|0.10|Z|x-Y |x|
+O5SOTYP.
+dL
+UNLESS OTHERWISE SPECIFIED
+APPROVAL
+DATE
+fe)
+2x1.20+0.03
+TOLERANCES
+DRAWN
+Yunx.liu |APR.30,2014
+U.S.
+METRIC
+Amphenol
+|--|0.10|z|x-Y| x]
+X
++/-
+0.50
+CHECKED} LY.Yi
+APR.30,2014
+XX +/—-
+0.25
+APPROVED
+wXXX +/=
+RECOMMENDED M.2 MINI CARD MOUNTING TYPE SMT_ PCB OUTLINE
+DETAIL A
+FRACTIONS
++
+/
+5
+TITLE
+DATUM Z: PCB SOLDER SURFACE
+ANGLES +/-
+DRAWING FILE :
+SCALE 2.5:1
+SEE_NO
+FOR MATERIALS AND FINISHES
+DRAWING\ MDT\ CMDTXXXXXX001
+M.2 MINI PCle CONECTOR
+REMOVE SHARP EDGES
+ANGLE OF PROJECTION
+SIZE | DRAWING NO.
+REV.
+DIMENSIONS
+—wtS— | +NOHES
+(a) 7
+AS
+C MDT—XXX—X—XX-001
+4
+(METRIC)
+(MM)
+WY LI
+SCALE |
+NONE
+SHEET 1
+OF 1
+2
+1
+|
+

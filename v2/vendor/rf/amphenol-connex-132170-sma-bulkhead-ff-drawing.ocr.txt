@@ -1,0 +1,107 @@
+OCR of rf/amphenol-connex-132170-sma-bulkhead-ff-drawing.pdf, a drawing with no text layer
+
+Read by tools/kb/kb_ocr.py at 300 dpi with tesseract, because this document carries no
+font objects: its lettering is drawn as vector paths and no text extractor can reach it.
+
+THIS IS AN INDEX, NOT A SOURCE OF NUMBERS. OCR misreads exactly the characters that matter
+on a drawing: a decimal point, a tolerance, an H7, a 6 against an 8. Use this to find WHICH
+drawing to open. Then open it:  pdftoppm -r 300 -png -f <page> -l <page> v2/vendor/rf/amphenol-connex-132170-sma-bulkhead-ff-drawing.pdf
+Every dimension quoted anywhere in this project must come from the drawing, never from here.
+
+LEGIBILITY: POOR. 16 word-like tokens in 224 characters. This drawing's lettering did not
+survive rasterisation, most likely because its callouts are rotated. Treat the text below
+as nothing more than a pointer to the file.
+
+--- amphenol-connex-132170-sma-bulkhead-ff-drawing, page 1, as read by OCR ---
+alr
+w
+a}oa}]N]o
+; C Es tO
+.00 [.236]
+(a)
+iw)
+ajo
+=
+sz
+S22
+Gey
+ez
+de
+gz
+re
+g=g
+BEo
+om
+ae
+gh
+gas
+Ea
+Bu
+Nw
+oa
+ray
+BA
+oaZ
+Rg
+oo
+Do
+oF
+33
+om
+az
+es
+ao
+zu
+a2
+33
+aa
+2a9
+s2n
+il
+I
+ll
+S=
+em
+ZG
+z=
+mom
+Sua
+sm
+He HE
+zon
+Bad
+ag
+Pa
+oo
+m2z¢2
+Rss
+=
+oS
+op
+go
+mS
+5
+AG
+Din
+Ba
+oo
+Bo
+a2
+Gi
+2s
+33
+ona
+mas
+33
+2s
+z22
+—_— =
+=>
+——
+zO
+ool
+Ld
+ll
+I
+oo
+
