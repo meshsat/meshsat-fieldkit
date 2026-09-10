@@ -521,12 +521,14 @@ def main(a):
         try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
         except Exception: min_clr = 0.0
         clr_c = max(clr_c, min_clr); s = max(s, clr_c + 0.013)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
-        # 10 September 2026: the corridor's margin over the legs is a knob now, measured rather than assumed. A leg needs
-        # w/2 + 0.02 from other copper on its own map and sits (w + s)/2 off the centreline, so the centreline needs
-        # w + s/2 + 0.02; the extra 0.25 (a 0.15 mm mask margin plus one grid cell) is slack that costs 0.25 mm of
-        # clearance at every obstacle on a board where the gaps are measured in tenths. legs_clear still judges the legs,
-        # so the slack buys nothing a check does not already do. PAIR_CORRIDOR_SLACK restores the old figure.
-        half = w + s / 2 + float(os.environ.get("PAIR_CORRIDOR_SLACK", "0.25")); d = (w + s) / 2
+        # 10 September 2026, measured: the corridor's margin over its legs was 0.25 mm (a 0.15 mm mask margin plus one grid
+        # cell) and that slack decides how many pairs can be laid. A leg needs w/2 + 0.02 from other copper on its own map
+        # and sits (w + s)/2 off the centreline, so the centreline needs w + s/2 + 0.02; anything beyond that is clearance
+        # the corridor demands and the legs do not, on a board whose gaps are measured in tenths. On B19's placed board:
+        # 0.25 lays 38 of 113, 0.18 and 0.15 are in the sweep, 0.12 lays 49, 0.05 lays 42 (too little slack lets the
+        # corridor into places the legs then fail out of, and legs_clear rejects the whole pair). D10 lays 4 of 5 at every
+        # value, so the figure is not board-specific in the small. PAIR_CORRIDOR_SLACK restores any of them.
+        half = w + s / 2 + float(os.environ.get("PAIR_CORRIDOR_SLACK", "0.12")); d = (w + s) / 2
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
             f = p.GetParentFootprint(); ps = list(f.Pads())
