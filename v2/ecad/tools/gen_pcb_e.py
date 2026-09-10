@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""PCB-E1 DOCK phase E4 (appendix 32.25, MESHSAT-790), mechanical: a 278 x 60 mm strip on the Peli 1520 floor; its north 29 mm lie under PCB-A's south edge at a 13.4 mm gap (the seven blind-mate float clamps, the raised contact block and the TEN 40 converter), its south 31 mm are clear of PCB-A and take the tall parts (fuse holders, connectors, the panel tracker stage). Originally a 250 x 44 mm strip. The two south rods pass through it
+"""PCB-E1 DOCK, mechanical: a 267 x 68 mm strip on the Peli 1450 floor (X -149 to 118, Y -113 to -45; the numbers are in the line
+marked E6 below, and this docstring said 278 x 60 on the 1520 floor until 10 September 2026, which is the E4 board of appendix 32.25
+and MESHSAT-790). Its north part lies under PCB-A's south edge at a 13.4 mm gap (the eleven blind-mate float clamps, the raised
+contact block and the TEN 40 converter), its south part is clear of PCB-A and takes the tall parts (fuse holders, connectors, the
+panel tracker stage). It began as a 250 x 44 mm strip. The two south rods pass through it
 (Ø3.4 at (+-110.5, -73)), so the rods align the dock and PCB-A's 6 mm standoffs stand on it. It carries the shore-power entry and the
 spring-pin targets that PCB-A's pins land on. Usage: gen_pcb_e.py <out.kicad_pcb>. Case-centred frame like PCB-A."""
 import math, sys, os, pcbnew
