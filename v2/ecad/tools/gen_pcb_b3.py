@@ -178,7 +178,11 @@ GAP = 1.2
 # (2.2 mm plus 0.12 per pad on a side) wants about 5 mm at a 99-pad QFN and this gives 1.6, which is why B19's audit
 # reports a third of the pads of U301, U201 and U101 with no escape at all. PLACE_FINE_MARGIN measures the trade against
 # the region overflow the gate refuses.
-FINE_MARGIN = float(os.environ.get("PLACE_FINE_MARGIN", "2.6"))
+# 10 September 2026, second measurement: 2.6 is right only against the OLD corridor slack. With the pre-router's slack at
+# its measured 0.12 mm the same board lays 50 of 113 pairs at a 1.6 mm margin and 43 at 2.6, because the extra room moves
+# every packed part and the pairs that won their corridor lose it again. The two knobs do not compose; the default goes
+# back to 1.6 and PLACE_FINE_MARGIN carries the experiment.
+FINE_MARGIN = float(os.environ.get("PLACE_FINE_MARGIN", "1.6"))
 import re as _re
 def is_fine(fp):
     if _re.search(r"SOT-23-[68]|SOT-583|TSOT-23-6", fp.GetFPIDAsString()): return True
