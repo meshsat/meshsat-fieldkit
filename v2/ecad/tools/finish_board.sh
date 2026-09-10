@@ -20,13 +20,17 @@ if python3 ../tools/lcsc_fill.py out/jlc/$N-bom.csv; then echo OK > out/jlc/$N-b
 grep -E '^\\[' out/$N-drc.rpt | sed 's/:.*//' | sort | uniq -c | sort -rn || true
 python3 ../tools/hardset.py out/$N-drc.json post --label 'deliverable DRC' --examples 4
 python3 -c "import json; d=json.load(open('out/$N-drc.json')); print('unrouted:', len(d.get('unconnected_items', []))); [print('   ', ' / '.join(i.get('description', '')[:70] for i in v.get('items', []))) for v in d.get('unconnected_items', [])]"
-rm -rf "$D"; mkdir -p "$D"
+# 10 September 2026 (report 1, item 3): the deliverable is built in a staging folder and PROMOTED only after the read-back passes.
+# It used to remove the existing folder first and rebuild in place, so a refused rebuild destroyed the deliverable that was there.
+STAGE="$D.staging.$$"; rm -rf "$STAGE"; mkdir -p "$STAGE"
 # 8 Sep 2026 15:35: out/jlc/$N-bom.csv and out/$N-bom.csv share a basename, so this cp refused the second ("will not overwrite just-created") and returned 1;
 # under set -e that ended the script here, which is why no deliverable since this morning carried meshsat.pretty and why verify_deliverable.py below never ran.
 # The deliverable keeps the JLC-form BOM under the plain name (what make_handoff.py and the gate read) and the generator's full BOM beside it.
-cp out/$N-gerbers.zip out/jlc/$N-bom.csv out/jlc/$N-cpl.csv out/jlc/README-fab.txt out/$N-drc.rpt out/$N-schematic.pdf out/$N-render-top.png out/$N-render-bottom.png out/$N-1to1-top.pdf out/$N-1to1-bottom-mirrored.pdf $N.kicad_pcb $N.kicad_sch $N.kicad_pro out/jlc/$N-bom.status "$D"/
-[ -f out/$N-bom.csv ] && cp out/$N-bom.csv "$D"/$N-bom-full.csv || true
-cp -r ../meshsat.pretty "$D"/; echo "deliverables: $D ($(ls "$D" | wc -l) items)"
+cp out/$N-gerbers.zip out/jlc/$N-bom.csv out/jlc/$N-cpl.csv out/jlc/README-fab.txt out/$N-drc.rpt out/$N-schematic.pdf out/$N-render-top.png out/$N-render-bottom.png out/$N-1to1-top.pdf out/$N-1to1-bottom-mirrored.pdf $N.kicad_pcb $N.kicad_sch $N.kicad_pro out/jlc/$N-bom.status "$STAGE"/
+[ -f out/$N-bom.csv ] && cp out/$N-bom.csv "$STAGE"/$N-bom-full.csv || true
+cp -r ../meshsat.pretty "$STAGE"/; echo "deliverables staged: $STAGE ($(ls "$STAGE" | wc -l) items)"
 # 8 Sep 2026 (MESHSAT-862): the deliverable is read back (every item, the gerber zip against the copper layer count, BOM and CPL form); a FAIL removes the folder
 CU=$(python3 -c "import pcbnew; print(pcbnew.LoadBoard('$N.kicad_pcb').GetCopperLayerCount())" 2>/dev/null | tail -1)
-python3 ../tools/verify_deliverable.py "$D" $N "$CU" || { echo "finish_board: deliverable REFUSED, folder removed"; rm -rf "$D"; exit 3; }
+python3 ../tools/verify_deliverable.py "$STAGE" $N "$CU" || { echo "finish_board: deliverable REFUSED, staging folder removed, the previous deliverable is untouched"; rm -rf "$STAGE"; exit 3; }
+rm -rf "$D.prev"; [ -d "$D" ] && mv "$D" "$D.prev"; mv "$STAGE" "$D"; rm -rf "$D.prev"   # promoted only after the read-back passed
+echo "deliverables: $D ($(ls "$D" | wc -l) items)"
