@@ -48,7 +48,10 @@ def main(a):
         done, total, contested = int(m.group(1)), int(m.group(2)), int(m.group(3))
         print("pair_negotiate: iteration %d: %s of %s pairs have a corridor, %s contested cell(s), present cost %.1f"
               % (k, done, total, contested, present), flush=True)
-        if best is None or (done, -contested) > (best[0], -best[1]):
+        # The laying pass cares about CONTESTED cells first: a plan where every pair has a corridor but the corridors overlap
+        # lays worse than one where a few pairs have none and the rest are disjoint, because an overlap is a pair lost anyway
+        # and it takes its neighbour with it. Fewest contested first, then most corridors.
+        if best is None or (contested, -done) < (best[1], -best[0]):
             best = (done, contested); shutil.copyfile(plan_f, plan_f + ".best")
         if contested == 0: break
         c = np.load(conf_f)                     # the cells two pairs both wanted: they cost more from now on
