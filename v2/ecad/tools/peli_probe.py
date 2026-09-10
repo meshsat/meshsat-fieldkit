@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Numbers from Peli's CAD for the case integration (appendix 23.1). Usage: peli_probe.py <case bottom STEP> <case top STEP> <frame STEP>
+One-off: run when the case model changed, and the numbers it printed are in appendix 23.1. Kept because the record cites them.
 Case models: Y is up, rim at Y = 0. Frame model: Z is up, frame top at the largest horizontal face level.
 Prints depths, outlines, the frame's window, body, skirt and insert-hole pattern, and the case wall drill points."""
 import sys

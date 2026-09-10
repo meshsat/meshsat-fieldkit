@@ -40,6 +40,10 @@ grep -E 'wrote|single-pin nets' out/gen_sch.log
 [ -s out/$N.net ] || block "no netlist (out/build_sch.log)" out/build_sch.log
 rm -f out/$N-erc.status; python3 ../tools/erc_gate.py . $N 2>&1 | tail -6
 grep -qE "^(clean|allowed)" out/$N-erc.status 2>/dev/null || block "ERC (out/$N-erc.json, out/$N-erc.status; allow-list erc-allow.txt with a reason per line)"
+# The netlist-level review: decoupling, floating control pins, ESD on the USB pairs, the I2C address map, connector mates.
+# It has existed since the early phases and no chain ever ran it (report 2 L2). It reports and never blocks, because it reads
+# intent that the board gates read from the intent file; what it is for is the class of mistake no numeric gate looks for.
+python3 ../tools/review_nets.py out/$N.net 2>&1 | grep -E "^(==|I2C|issues|  )" | tail -12
 
 python3 ../tools/gen_pcb_$L.py $N.kicad_pcb > out/gen_pcb_$L.log 2>&1; grep -E 'saved|WARN|Trace|Error|note|not found' out/gen_pcb_$L.log
 grep -q saved out/gen_pcb_$L.log || block "mechanical generator (out/gen_pcb_$L.log)" out/gen_pcb_$L.log

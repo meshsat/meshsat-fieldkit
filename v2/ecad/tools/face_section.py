@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """A Y-Z section through the face at the display, drawn from panel1450.py (9 September 2026, appendix 32.85).
+One-off: run when the face changed, and the section it drew is in appendix 32.85. Kept because the record cites it.
 
 The owner's ruling 14.6 is about a surface the eye can check: the glass level with the aluminium. A pass/fail line in a
 log cannot be checked by eye, and a full render needs a rented GPU box, so this draws the section: the plate, the monitor

@@ -54,7 +54,8 @@ PAIR_EXPANSIONS = int(os.environ.get("PAIR_EXPANSIONS", "12000000"))   # expansi
 # Calibrated 10 September 2026: 3,000,000 laid 21 of B19's 113 pairs where the old 300 second clock laid 38, because the
 # budget is spent by MANY searches per pair (the corridor plus a stub search per station), not by one. 12,000,000 is the
 # figure that matches the clock on a quiet core, and unlike the clock it gives the same answer whatever else the box runs.
-PAIR_SPENT = [0]
+PAIR_SPENT = [0]      # expansions this PAIR has spent; reset per pair, because the budget is per pair
+PAIR_TOTAL = [0]      # expansions the whole pass has spent; never reset, so the summary line means what it says
 T0 = time.time()   # the pass's own clock, for the phase line at the end
 import pcbnew, numpy as np
 try:
@@ -67,6 +68,17 @@ import pairsearch
 _FAST_SEARCH = os.environ.get("PAIR_FAST_SEARCH", "1") != "0"   # the compiled search when numba is here, the heapq one otherwise; the same path either way (pairsearch.py selftest)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
+# ---------------------------------------------------------------- the occupancy maps, built once and topped up (10 Sep 2026)
+# MEASURED on B19's 113 pairs after the rasteriser was vectorised: 1,248 of the pass's 1,552 seconds were still in build_maps,
+# against 113 in the corridor search. The pads and the rule areas are cached per polygon and cost almost nothing on a repeat;
+# what grows is the COPPER THIS PASS LAYS. By the hundredth pair every one of the five maps rasterises thousands of segments
+# that were already rasterised for the pair before it. So a map is cached per (layers, excluded nets, half, via radius, split)
+# and a repeat call stamps only the tracks it has not seen. Adding copper is safe to top up; REMOVING any (a rollback, a
+# stripped escape chain, a retry) invalidates every cached map, which is what MAP_EPOCH counts.
+MAP_EPOCH = [0]
+def board_remove(b, item):
+    """Every removal of copper goes through here, so the cached occupancy maps know they are stale."""
+    MAP_EPOCH[0] += 1; b.Remove(item)
 _ALL = {"F.Cu": pcbnew.F_Cu, "In1.Cu": pcbnew.In1_Cu, "In2.Cu": pcbnew.In2_Cu, "In3.Cu": pcbnew.In3_Cu, "In4.Cu": pcbnew.In4_Cu, "B.Cu": pcbnew.B_Cu}
 
 def mm(v): return v / 1e6
@@ -156,8 +168,20 @@ class Grid:
         return mask
 
 
+_MAPS = {}   # (grid, layers, excluded nets, half, via radius, split) -> [trk, via, tracks already stamped, MAP_EPOCH when built]
+
 def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
-    """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer)."""
+    """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer).
+
+    Cached per signature and topped up: a repeat call re-stamps nothing, it stamps only the tracks and vias laid since the last
+    one. The caller mutates what it gets (`via1` is shared and written into), so a copy goes out and the cache keeps its own."""
+    ck = (id(gr), tuple(layers), frozenset(nets), round(half, 5), round(via_r, 5), round(split, 5))
+    hit = _MAPS.get(ck)
+    if hit is not None and hit[3] == MAP_EPOCH[0]:
+        trk, via, seen = hit[0], hit[1], hit[2]
+        n_new = _stamp_tracks(gr, b, layers, nets, half, via_r, split, trk, via, seen)
+        if n_new: _edge_band(gr, trk, via)   # the band is re-applied, the stamping cannot have cleared it but the cost is nothing
+        return {L: trk[L].copy() for L in layers}, via.copy()
     trk = {L: np.zeros((gr.NY, gr.NX), dtype=bool) for L in layers}; via = np.zeros((gr.NY, gr.NX), dtype=bool)
     for fp in b.GetFootprints():
         for p in fp.Pads():
@@ -170,16 +194,7 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
                 if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
             anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
             if anyL is not None or pth: gr.poly(via, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split, key=(pk, "via", anyL))
-    for t in b.GetTracks():
-        if t.GetClass() == "PCB_VIA": c = t.GetPosition(); gr.disc(via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + 0.2 + 0.30 + split)
-        if t.GetNetname() in nets: continue
-        if t.GetClass() == "PCB_VIA":
-            c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
-            for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + CLR + half)
-        else:
-            a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
-            if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + half)
-            gr.seg(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
+    seen = set(); _stamp_tracks(gr, b, layers, nets, half, via_r, split, trk, via, seen)
     # Footprint-local rule areas count too: they are not in b.Zones(), so a keep-out that belongs to a part (the E72's antenna clearance,
     # a connector's own no-track area) was invisible here while `prefanout.py` already read them. B17's pre-route came back with five
     # items_not_allowed, all of them pair copper laid straight through one (9 Sep 2026 02:20, MESHSAT-862).
@@ -189,9 +204,41 @@ def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             for L in layers:
                 if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): gr.poly(trk[L], z.Outline(), CLR + half, key=(zk, L))
             if z.GetDoNotAllowVias(): gr.poly(via, z.Outline(), CLR + via_r + split, key=(zk, "via"))
+    _edge_band(gr, trk, via)
+    _MAPS[ck] = [trk, via, seen, MAP_EPOCH[0]]
+    return {L: trk[L].copy() for L in layers}, via.copy()
+
+
+def _edge_band(gr, trk, via):
+    """The board's outer band: no centreline and no via within 0.8 mm of the grid edge."""
     m = int(0.8 / gr.G) + 12
     for M in list(trk.values()) + [via]: M[:m, :] = True; M[-m:, :] = True; M[:, :m] = True; M[:, -m:] = True
-    return trk, via
+
+
+def _track_key(t):
+    """A stable identity for a track: SWIG hands out a fresh proxy per iteration, so `is` and id() never match (5 Sep 2026)."""
+    a, e = t.GetStart(), t.GetEnd()
+    return (t.GetClass(), a.x, a.y, e.x, e.y, t.GetLayer(), t.GetNetCode(),
+            t.GetDrillValue() if t.GetClass() == "PCB_VIA" else t.GetWidth())
+
+
+def _stamp_tracks(gr, b, layers, nets, half, via_r, split, trk, via, seen):
+    """Stamp every track not yet in `seen` into the maps. Returns how many were new."""
+    n = 0
+    for t in b.GetTracks():
+        k = _track_key(t)
+        if k in seen: continue
+        seen.add(k); n += 1
+        if t.GetClass() == "PCB_VIA": c = t.GetPosition(); gr.disc(via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + 0.2 + 0.30 + split)
+        if t.GetNetname() in nets: continue
+        if t.GetClass() == "PCB_VIA":
+            c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
+            for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + CLR + half)
+        else:
+            a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
+            if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + half)
+            gr.seg(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
+    return n
 
 def astar(gr, layers, trk, via, start, goal, window, behind=(), cost=None):
     """cost: {layer index: float raster} added to every step, the negotiated-congestion term of pair_negotiate.py (10 Sep 2026).
@@ -251,7 +298,7 @@ def astar(gr, layers, trk, via, start, goal, window, behind=(), cost=None):
         return None
     goal = (LI[gL] if gL in LI else -1, gi - imin, gj - jmin)
     cells, n, why = pairsearch.search(P, VB, C, starts, goal, VIA_COST, budget, fast=_FAST_SEARCH)
-    PAIR_SPENT[0] += n
+    PAIR_SPENT[0] += n; PAIR_TOTAL[0] += n
     if cells is None:
         # 9 Sep 2026 (A24 USB_E6 spans 189 mm; appendix 32.83): a corridor that cannot be found must say WHY. Three
         # different failures used to return the same None: the search never began, it ran out of its node budget, or
@@ -325,7 +372,7 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
         n += 1
         if n > 400000: break
         if not n % 4096:
-            PAIR_SPENT[0] += 4096
+            PAIR_SPENT[0] += 4096; PAIR_TOTAL[0] += 4096
             if PAIR_EXPANSIONS and PAIR_SPENT[0] > PAIR_EXPANSIONS:
                 PATH_WHY[0] = "the pair's expansion budget ran out (PAIR_EXPANSIONS %d)" % PAIR_EXPANSIONS; break
             if PAIR_DEADLINE[0] and time.time() > PAIR_DEADLINE[0]:
@@ -542,12 +589,12 @@ def main(a):
             for st2 in list(ep["members"]):
                 if st2 in on_board:
                     pcs2, str2 = on_board.pop(st2)
-                    for t_ in pcs2: b.Remove(t_)
+                    for t_ in pcs2: board_remove(b, t_)
                     for t_ in str2: b.Add(t_)
                     laid -= 1
             for st2, (pcs2, str2) in ep["saved"].items():
                 for t_ in pcs2: b.Add(t_)
-                for t_ in str2: b.Remove(t_)
+                for t_ in str2: board_remove(b, t_)
                 on_board[st2] = (pcs2, str2); laid += 1
             report.append("RIPUP %s: the episode ended with %d pairs laid against %d before it; every piece is put back" % (ep["trigger"], laid, ep["laid_before"]))
         else:
@@ -730,7 +777,7 @@ def main(a):
         while rest:
             nxt = min(rest, key=lambda st: math.hypot(mid(st)[0] - mid(order[-1])[0], mid(st)[1] - mid(order[-1])[1])); order.append(nxt); rest.remove(nxt)
         sections = [(a_, b_) for a_, b_ in zip(order[:-1], order[1:]) if a_[0].GetParentFootprint().GetReference() != b_[0].GetParentFootprint().GetReference()]   # a part's pass-through pins (the ESD's 1 and 6) are joined by join_adjacent_pins, not by a corridor
-        for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and not t.IsLocked()]: b.Remove(t)   # a previous route of the pair goes; the locked escapes stay
+        for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and not t.IsLocked()]: board_remove(b, t)   # a previous route of the pair goes; the locked escapes stay
         pieces = []   # everything this pair lays (removed on rollback)
         staircase = False   # set when a section fell back to the corridor as the search found it
         stripped = []   # the escape via and stubs of a fine-pitch station pad, removed so the legs enter the pad itself (restored on rollback)
@@ -785,7 +832,7 @@ def main(a):
         for net in (pn, nn):
             for p in pads[net]:
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or via_entry(p.GetParentFootprint()) or not fanned_part(p.GetParentFootprint()): continue   # PAIR_ENTRY_VIA keeps an IC's escape and ends the legs at its vias
-                for t in _escape_chain(p, net): b.Remove(t); stripped.append(t)
+                for t in _escape_chain(p, net): board_remove(b, t); stripped.append(t)
         inpad = 0
         for p_, n_ in stations:   # a pin between the station's two pads (the SOT-23-6 ESD's ground pin 2): its escape stub would sit under the legs; a via in its pad instead
             f_ = p_.GetParentFootprint()
@@ -795,7 +842,7 @@ def main(a):
                 d1, d2 = dist_p(q, p_), dist_p(q, n_)
                 if abs(d1 + d2 - dist_p(p_, n_)) > 0.3: continue   # not between them
                 near = [t for t in b.GetTracks() if t.IsLocked() and t.GetNetname() == q.GetNetname() and math.hypot(t.GetPosition().x - q.GetPosition().x, t.GetPosition().y - q.GetPosition().y) < 2.5e6]
-                for t in near: b.Remove(t); stripped.append(t)
+                for t in near: board_remove(b, t); stripped.append(t)
                 v = pcbnew.PCB_VIA(b); v.SetPosition(q.GetPosition()); v.SetWidth(FromMM(min(vd, 0.5))); v.SetDrill(FromMM(min(vdr, 0.25))); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(q.GetNet()); v.SetLocked(True); b.Add(v); pieces.append(v); inpad += 1
         if stripped or inpad: print("pair_preroute: %s: %d escape pieces of fine-pitch station pads removed, the legs enter those pads directly; %d via(s) in the pad of a pin between them" % (stem, len(stripped), inpad))
         pre_vias[:] = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA" and t.IsLocked()]
@@ -811,7 +858,7 @@ def main(a):
             trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         def rollback():
-            for t in pieces: b.Remove(t)
+            for t in pieces: board_remove(b, t)
             pieces.clear()
             for t in stripped: b.Add(t)   # the escapes come back with the pair's failure
             stripped.clear()
@@ -937,7 +984,7 @@ def main(a):
                 if not stub(site1[0], site1[1], cand[0], cand[1], hop, net): continue
                 via_at(cand[0], cand[1], net); gr.disc(via, cand[0], cand[1], VIA_SPLIT)
                 if stub(cand[0], cand[1], x, y, aL_, net): return None
-                for t in pieces[n0:]: b.Remove(t)
+                for t in pieces[n0:]: board_remove(b, t)
                 del pieces[n0:]
             return "no via site beside the pad with a dive path and a stub into it"
         for _sec_k, ((pa, na), (pb, nb)) in enumerate(sections):
@@ -1043,7 +1090,7 @@ def main(a):
                 if ok_ and isx_(legs_[0][1], legs_[0][2], legs_[1][1], legs_[1][2]):   # the two fans cross: exchange the wide station's passives when they are a pair
                     fa2, fb2 = stW[0].GetParentFootprint(), stW[1].GetParentFootprint()
                     if fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked() and not pinned(fa2) and not pinned(fb2):
-                        p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference())); rebuild_maps()
+                        p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference())); rebuild_maps()
                         legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
                     else: ok_ = False
                 if ok_:
@@ -1309,7 +1356,7 @@ def main(a):
                         if xing():
                             fa_, fb_ = st_[0].GetParentFootprint(), st_[1].GetParentFootprint()
                             if fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_):
-                                pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference())); rebuild_maps()
+                                pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference())); rebuild_maps()
                             if xing():   # still crossing (one part's two pins, a pinned station): the N fan is laid straight and the P leg dives under it (8 Sep 2026 12:26)
                                 # the N fan first runs 0.5 mm on along the corridor, then turns: its diagonal passed 1 um under the class clearance at P's turn into the dive (13:08)
                                 ax2, ay2 = (lnx - lpx), (lny - lpy); al2 = math.hypot(ax2, ay2) or 1.0; ux2, uy2 = -ay2 / al2, ax2 / al2
@@ -1353,8 +1400,8 @@ def main(a):
             twist, pa2, na2 = twist
             fa, fb = pa2.GetParentFootprint(), na2.GetParentFootprint()
             if fa.GetReference() != fb.GetReference() and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped and not pinned(fa) and not pinned(fb):
-                pa_, pb_ = fa.GetPosition(), fb.GetPosition(); fa.SetPosition(pb_); fb.SetPosition(pa_); swapped.add(stem)
-                for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and t not in stripped]: b.Remove(t)   # its locked pieces so far go with the retry
+                pa_, pb_ = fa.GetPosition(), fb.GetPosition(); fa.SetPosition(pb_); fb.SetPosition(pa_); MAP_EPOCH[0] += 1; swapped.add(stem)   # a swap moves pads, so every cached occupancy map is stale
+                for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and t not in stripped]: board_remove(b, t)   # its locked pieces so far go with the retry
                 for t in stripped: b.Add(t)
                 stripped.clear()
                 report.append("SWAP  %s: %s and %s exchanged positions to untwist the pair; laid again" % (stem, fa.GetReference(), fb.GetReference())); stems.append(stem); continue
@@ -1375,7 +1422,7 @@ def main(a):
                 saved = {}
                 for st2 in blockers:
                     pcs2, str2 = on_board.pop(st2); saved[st2] = (pcs2, str2)
-                    for t_ in pcs2: b.Remove(t_)
+                    for t_ in pcs2: board_remove(b, t_)
                     for t_ in str2: b.Add(t_)   # that pair's escape pieces come back with it
                     laid -= 1
                 episode[0] = {"trigger": stem, "members": set([stem]) | set(blockers), "saved": saved, "laid_before": laid + len(blockers)}
@@ -1425,7 +1472,7 @@ def main(a):
                             if L_ not in layers: continue
                             n0 = len(pieces)
                             if dive_p(qx, qy, x_, y_, L_, (None if (qL is None or qL == L_) else qL), q, net_obj, (0.0, 0.0)) is None: done = True; dives_ += 1; break
-                            for t in pieces[n0:]: b.Remove(t)
+                            for t in pieces[n0:]: board_remove(b, t)
                             del pieces[n0:]
                     if done: stubs_ += 1
                     else: left += 1
@@ -1480,7 +1527,7 @@ def main(a):
     n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
     print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
     print("pair_preroute: seconds %.0f total, %.0f in the occupancy maps, %.0f in the corridor search, %.0f elsewhere; %d expansions"
-          % (time.time() - T0, _T["maps"], _T["astar"], max(0.0, time.time() - T0 - _T["maps"] - _T["astar"]), PAIR_SPENT[0]))
+          % (time.time() - T0, _T["maps"], _T["astar"], max(0.0, time.time() - T0 - _T["maps"] - _T["astar"]), PAIR_TOTAL[0]))
     return 0 if laid == n_pairs else 1
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
