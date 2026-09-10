@@ -366,7 +366,16 @@ def main(a):
         pts = [q.GetPosition() for f in b.GetFootprints() for q in f.Pads() if q.GetNetname().lstrip("/") in want]
         if len(pts) < 2: return 0.0
         return max(math.hypot(u.x - v.x, u.y - v.y) for u in pts for v in pts) / 1e6
-    if os.environ.get("PAIR_ORDER", "span") == "span":
+    # 10 September 2026: an explicit order, one stem per line, for the multi-pass driver `pair_passes.py`. The isolation test
+    # of 32.95 proved the order decides: a pair that fails in the pass lays when it is alone on the board. Ripping the room
+    # back from its neighbours does not work (32.98), so the other way round it is: the pairs that failed go FIRST next time.
+    _ordf = os.environ.get("PAIR_ORDER_FILE")
+    if _ordf and os.path.exists(_ordf):
+        _want = [l.strip().lstrip("/") for l in open(_ordf) if l.strip()]
+        _rank = {n: i for i, n in enumerate(_want)}
+        stems = sorted(stems, key=lambda st: (_rank.get(st.lstrip("/"), 10 ** 6), -_span(st), st))
+        print("pair_preroute: order from %s: %d named first, then the longest of the rest" % (os.path.basename(_ordf), len(_want)))
+    elif os.environ.get("PAIR_ORDER", "span") == "span":
         stems = sorted(stems, key=lambda st: (-_span(st), st))
         if stems: print("pair_preroute: %d pairs, longest first (%s spans %.0f mm, %s spans %.0f mm)" % (len(stems), stems[0], _span(stems[0]), stems[-1], _span(stems[-1])))
     laid = 0; swapped = set()
