@@ -696,9 +696,25 @@ def main(a):
         import itertools
         P_, N_ = pads[pn], pads[nn]; best = None
         small, large, flip = (P_, N_, False) if len(P_) <= len(N_) else (N_, P_, True)
-        for perm in itertools.permutations(range(len(large)), len(small)):
-            cost = sum(dist_p(small[k], large[perm[k]]) for k in range(len(small)))
-            if best is None or cost < best[0]: best = (cost, perm)
+        # This is an assignment problem and it was solved by enumerating every ordered selection, which is len(large)!/(len(large)
+        # - len(small))! and rises off a cliff: 8 pads against 8 is 40,320 and 12 against 12 is 479 million (report 1 item 9).
+        # Today's pairs are two to four pads, so the exhaustive search is kept where it is affordable and gives exactly the
+        # matching the boards have been laid with; beyond that scipy's Hungarian solver answers the same question in polynomial
+        # time. The threshold is on the actual count, not on a pad number, so it cannot be wrong about which side is cheap.
+        _npermute = 1
+        for _k in range(len(small)): _npermute *= (len(large) - _k)
+        if _npermute > 50000:
+            try:
+                from scipy.optimize import linear_sum_assignment
+                M = np.array([[dist_p(a_, b_) for b_ in large] for a_ in small], dtype=float)
+                rows, cols = linear_sum_assignment(M)
+                best = (float(M[rows, cols].sum()), tuple(int(c) for c in cols))
+                report.append("MATCH %s: %d against %d pads matched by assignment (%d orderings would have been enumerated)" % (stem, len(small), len(large), _npermute))
+            except ImportError: pass
+        if best is None:
+            for perm in itertools.permutations(range(len(large)), len(small)):
+                cost = sum(dist_p(small[k], large[perm[k]]) for k in range(len(small)))
+                if best is None or cost < best[0]: best = (cost, perm)
         stations = []
         if best:
             for k, idx in enumerate(best[1]):
