@@ -28,7 +28,13 @@ By part: 40 died at a via, 12 at U1, 8 at U4, 8 at U30B. **None of the three is 
 
 **C. Gate the controlled fraction.** Judge a pair by how much of its judged length is coupled and inside tolerance, with a threshold, instead of pass or fail on the whole net. This is not a weakening dressed up: `impedance_check.py` already exempts pin fans by the same logic (a 3 mm feature against a 75 mm edge), USB 2.0 and USB 3 both allow short uncoupled regions at the connector, and the tool already reports the percentage per pair. What it needs is a threshold with a reason, and pairs below it still fail.
 
-## 4. Recommendation
+## 4. RULING (owner, 10 September 2026, 02:00 CEST)
+
+**Option B: hold every board until the pre-router lays every pair.** The gate is unchanged, no exception is written, and no board of this set is released while any pair reads UNCOUPLED. The recommendation below was option C and was not taken; it is kept as written because the record keeps what was recommended as well as what was ruled.
+
+**What that makes the work.** The pre-router is now the critical path for the whole set, and the three causes measured tonight are the programme: the leg clearance against the corridor (46 of 160 failed attempts), the stub hop into an escape via at the CM5 receptacles and the HDMI switches (38), and the search expansion caps (18). Each is measured against the same board with one variable at a time, in the discipline that caught the wall-clock budget and the neutral mitre change tonight.
+
+## 5. Recommendation as it was written
 
 **C as the gate rule, A as the engineering work, B never.** The gate should say what good enough is and measure it, which is C; the tool should get better at laying pairs, which is A and now has three named leads; and B is thirty pages of the same excuse.
 
