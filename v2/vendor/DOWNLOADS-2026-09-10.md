@@ -48,18 +48,27 @@ CDN answered 403, so the RJHSE sheet is Mouser's mirror of Amphenol's `io_modjac
 If either is ever used to settle a number that matters, re-fetch it from the vendor on a host that
 can reach them and compare.
 
-## Owed: one document, and it needs the owner
+## The Quectel RM520N-GL, found on 11 September 2026
 
-**Quectel RM520N-GL, the 5G module on PCB-B's M.2 B-key socket.** quectel.com answers but publishes
-its module specifications and hardware design guides through a request form rather than as public
-files, and every copy findable otherwise is a third-party document mirror (Scribd, ManualsLib,
-device.report), all of which refused this host and none of which is the manufacturer. The house rule
-is manufacturer documents first, so this one is not taken from a mirror.
+It was the one document owed, because quectel.com publishes module documents through a request form
+and the first search returned only third-party document mirrors, none of them the manufacturer. A
+second look found better sources, and all three files below are Quectel's own: their PDF metadata
+carries Quectel authorship (`kingson.zhang@QUECTEL.COM`, and two Quectel names) and they are the
+original Word and PowerPoint exports, not re-prints.
 
-What is wanted: **RM520N-GL Hardware Design** and **RM520N-GL 5G Specification**, into
-`v2/vendor/quectel/`. The B design currently assumes this module (a 6 September ruling records it as
-assumed, with the pick and the antenna count still owed), and its M.2 B-key pinout, its supply
-current and its antenna count are all decided from that document.
+| Document | Filed as | Source |
+|---|---|---|
+| RM520N-GL Hardware Design v1.0, 2022-07-15, Released, 85 pages | `quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf` | **forums.quectel.com**, which is Quectel's own domain |
+| RM520N Series Hardware Design v1.1, 2023-03-16, Released, 98 pages | `quectel/quectel-rm520n-series-hardware-design-v1.1.pdf` | TI's E2E forum, hosting Quectel's own file |
+| RM520N-GL 5G Specification, the two-page product brief | `quectel/quectel-rm520n-gl-5g-specification-brief.pdf` | a distributor's copy of Quectel's brief |
+
+**Read v1.1 first: it supersedes v1.0** and covers the series rather than the one variant. v1.0 is
+kept because it is the copy from Quectel's own server, so the two together settle any question of
+whether a mirrored file was altered.
+
+The B design assumes this module (a 6 September ruling records it as assumed, with the pick and the
+antenna count still owed), and its M.2 B-key pinout, its supply current and its antenna count are
+decided from these documents.
 
 ## What confirming a package looks like now
 

@@ -38,6 +38,7 @@ NOT_A_PART = re.compile(
     r"C\d{3,9}|"
     # net and pin labels that happen to have the shape of a part number
     r"SPARE\d+|HUBRST\d+|PRSNT\d+|OUTPUT\d+|INPUT\d+|WIFI\d+|PICO\d+|SLOT\d+|BANK\d+|CH\d+|"
+    r"PORTSTATUS\d+|PORT\d+|LANE\d+|BIT\d+|VOTE\d+|FAB\d+|"
     # more package spellings, including the ones drawn as library footprint names
     r"LQFP\d+EP|TQFP\d+EP|LGA\d+\w?|CPOL\d+|C\d+u\d+|R[A-Z]{2}\d{4}[A-Z]?-\d+|DBV\d?|DRV\d?)$", re.I)
 SKIP = {"SWD", "NOTE", "PADS", "TEST"}
@@ -101,13 +102,15 @@ def variants(part):
     # where a manufacturer's order code starts. TPS2065CDBV -> TPS2065, TMP117AIDRVR -> TMP117,
     # M2044SD3A01 -> M2044 (the NKK sheet spells only the family), STM32H753VITx -> STM32H753.
     # Longest, not shortest: shortest would turn TPS2065CDBV into TPS20 and match half of TI.
-    stem = None
+    # EVERY such boundary, longest first, not just the longest: M2044SD3A01 has two, and only the
+    # shorter one (M2044) is what the NKK sheet spells, so stopping at the first found the file's
+    # family nowhere. Longest first still keeps TPS2065CDBV from ever being tried as TPS20, because
+    # that string has no earlier boundary to fall back to.
     for i in range(len(base) - 1, 3, -1):
         if base[i - 1].isdigit() and base[i].isalpha():
             stem = base[:i]
-            break
-    if stem and len(stem) >= 5 and stem not in out:
-        out.append(stem)
+            if len(stem) >= 5 and stem not in out:
+                out.append(stem)
     return out
 
 
