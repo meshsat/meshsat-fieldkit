@@ -16,7 +16,7 @@ python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/prefanout.py $N.kicad_pcb 'GND,+5V_M1,CELL+,+5V_M2,+5V_PI,BOOST1_IN,BOOST2_IN,BOOST3_IN' fine 2>&1 | grep -E 'fanout:'
 python3 ../tools/bus_a21.py $N.kicad_pcb 2>&1 | grep -E 'bus_a21' || { echo 'BLOCK BOOST_EN bus' | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }   # A21: the converters' enable line by hand on In1
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
-kicad-cli pcb drc --severity-all --format json -o out/$N-preroute-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
 python3 - <<'PY'
 import json, collections
 d = json.load(open('out/pcb-a-power-preroute-drc.json')); c = collections.Counter(v['type'] for v in d['violations']); print('pre-route DRC:', dict(c))

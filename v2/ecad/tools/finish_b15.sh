@@ -14,13 +14,13 @@ cp $N.kicad_pcb out/$N-par-routed.kicad_pcb
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
 cp $N.kicad_pcb out/$N-cleaned.kicad_pcb
-kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 STUB_LAYERS=F.Cu,In2.Cu,In3.Cu,B.Cu STUB_GRID=0.1 nice -n 10 python3 ../tools/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || echo "stub router CRASHED, exit $? (out/$N-stub.log)"; grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
 python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'
 import pcbnew, sys
 b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b); print('zones refilled after the stub router')
 PY
-kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 - "$N" <<'PY'
 import json, collections, sys
 d=json.load(open('out/%s-drc.json' % sys.argv[1])); c=collections.Counter(v['type'] for v in d['violations'])
@@ -37,7 +37,7 @@ if ! ../tools/pair_match.sh "$PWD" $N check_pcb_b.py 2>&1 | grep -E "pair_match|
   echo 'B15 PAIRS NOT MATCHED, not finishing (audit images in out/audit)'; echo open > out/b15-clean.txt; echo FINISH-B15-DONE; exit 1
 fi
 # B15 (5 Sep 2026): the finish refuses an open or dirty board; the chain commits only on out/b15-clean.txt = clean
-kicad-cli pcb drc --severity-all --format json -o out/$N-drc.json $N.kicad_pcb >/dev/null 2>&1
+../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 - "$N" <<'PYX'
 import json, collections, sys
 d = json.load(open('out/%s-drc.json' % sys.argv[1])); c = collections.Counter(v['type'] for v in d['violations'])
