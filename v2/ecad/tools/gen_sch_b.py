@@ -556,10 +556,15 @@ part("J_PANEL", "Connector_Generic", "Conn_02x13_Odd_Even", "panel ribbon to PCB
  "1": "PANEL_5V", "2": "PANEL_5V", "3": "GND", "4": "SDA", "5": "SCL", "6": "EXP_INT", "7": "TR_APRS", "8": "EMCON_HW", "9": "GND", "10": "ZEROIZE_HW", "11": "TX_INHIBIT_n", "12": "HDMI_SEL1", "13": "HDMI_SEL2",
  "14": "GND", "15": "USB_PNL_P", "16": "USB_PNL_N", "17": "GND", "18": "HB1", "19": "HB2", "20": "HB3", "21": "SLOT_EN1", "22": "SLOT_EN2", "23": "SLOT_EN3", "24": "PI_SHDN_REQ", "25": "PI_KILL", "26": "SHORE_INHIBIT"})
 esd("U37", "USB_PNL_P", "USB_PNL_N", "+3V3_DEV")
+# 10 September 2026 (MESHSAT-862): EVERY DIFFERENTIAL PAIR SITS IN ONE COLUMN OF THE HEADER, with ground pins on both sides.
+# The three USB pairs were on pins 4/5, 7/8 and 10/11, which on a 2x13 odd-even footprint are DIAGONAL neighbours 3.59 mm
+# apart: the pre-router reports "J_AB1 and J_AB1 are 3.6 mm apart" for USB_WALL and cannot lay it, and the two legs would
+# be unequal and return-less through the ribbon. An odd pin and the even pin beside it are 2.54 mm apart across the rows,
+# which is the geometry J_PANEL already had for USB_PNL. The spare line AB_SPARE loses its seat here (it stays on the A to
+# D harness) and B's test point for it goes with it; SHORE_INHIBIT keeps its seat, being a cross-board contract.
 part("J_AB1", "Connector_Generic", "Conn_02x13_Odd_Even", "A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)", "IDC26", {
- "1": "PI_SHDN_REQ", "2": "PI_KILL", "3": "GND", "4": "USB_D8_P", "5": "USB_D8_N", "6": "GND", "7": "USB_E6_P", "8": "USB_E6_N", "9": "GND", "10": "USB_WALL_P", "11": "USB_WALL_N", "12": "GND",
- "13": "SDA", "14": "SCL", "15": "EXP_INT", "16": "TR_APRS", "17": "EMCON_HW", "18": "TX_INHIBIT_n", "19": "SLOT_EN1", "20": "SLOT_EN2", "21": "SLOT_EN3", "22": "ZEROIZE_HW", "23": "GND", "24": "SHORE_INHIBIT", "25": "AB_SPARE", "26": "GND"})
-part("TP1", "Connector", "TestPoint", "AB_SPARE", "TP", {"1": "AB_SPARE"})
+ "1": "GND", "2": "GND", "3": "USB_D8_P", "4": "USB_D8_N", "5": "GND", "6": "GND", "7": "USB_E6_P", "8": "USB_E6_N", "9": "GND", "10": "GND", "11": "USB_WALL_P", "12": "USB_WALL_N",
+ "13": "GND", "14": "PI_SHDN_REQ", "15": "PI_KILL", "16": "SDA", "17": "SCL", "18": "EXP_INT", "19": "TR_APRS", "20": "EMCON_HW", "21": "TX_INHIBIT_n", "22": "SLOT_EN1", "23": "SLOT_EN2", "24": "SLOT_EN3", "25": "ZEROIZE_HW", "26": "SHORE_INHIBIT"})
 for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "EMCON_HW", "ZEROIZE_HW", "GNSS_PPS", "SDA", "SCL", "+54V_POE", "POE_DRAIN", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "HDMI_SEL1", "HDMI_SEL2",
                         "+3V3_S1A", "+3V3_S1B", "+1V0_S1", "+1V1_S1", "+3V3_S2A", "+3V3_S2B", "+1V0_S2", "+1V1_S2", "+3V3_S3A", "+3V3_S3B", "+1V0_S3", "+1V1_S3"), 2):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
