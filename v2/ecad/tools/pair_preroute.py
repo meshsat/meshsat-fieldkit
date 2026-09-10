@@ -37,7 +37,7 @@ def _reexec_for_numba():
     print("pair_preroute: re-exec under %s, which has numba, for the compiled corridor search (PAIR_VENV=0 to stay here)" % cand, flush=True)
     try: os.execv(cand, [cand] + sys.argv)
     except Exception as e: print("pair_preroute: the re-exec failed (%s); the heapq search it is" % e, flush=True)
-_reexec_for_numba()
+if __name__ == "__main__": _reexec_for_numba()   # only as a script: importing this module must never restart the caller's process
 PATH_WHY = [""]   # why the last corridor search returned nothing (9 Sep 2026)
 # 9 September 2026 (B19): a wall-clock budget per pair. The two searches are capped by EXPANSIONS (6,000,000 and 400,000),
 # which is not a time bound: on B19's board, with 1412 escapes and 951 parts in the way, the longest pair spent eleven
