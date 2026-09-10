@@ -887,7 +887,10 @@ def main(a):
             sx, sy = _fa if _fa else free_end(sx, sy, A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0)
             _fb = fine_end((pb, nb), entry_out_((pb, nb))) if fineB0 else None
             gx, gy = _fb if _fb else free_end(gx, gy, B[0][0], B[0][1], B[1][0], B[1][1], sx, sy)
-            sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); win = 25.0
+            # 10 September 2026: the corridor search box is the two ends plus this margin. 25 mm was a guess; with the
+            # corridor slack measured, "no path on the map" is the biggest remaining family (24 of B19's 64 misses) and
+            # a pair that has to detour further than the box allows reads exactly like a pair with no path. PAIR_WINDOW.
+            sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); win = float(os.environ.get("PAIR_WINDOW", "25"))
             window = (gr.cell(min(sx, gx) - win, min(sy, gy) - win), gr.cell(max(sx, gx) + win, max(sy, gy) + win))
             window = ((max(0, window[0][0]), max(0, window[0][1])), (min(gr.NX - 1, window[1][0]), min(gr.NY - 1, window[1][1])))
             cur_seg[:] = [sx, sy, gx, gy]   # the section the rip-up window is measured from
