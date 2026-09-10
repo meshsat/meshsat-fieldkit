@@ -218,12 +218,18 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
         if ref in placed: print("WARNING %s listed twice" % ref); continue
         fp = place(ref, 0, 0, back=back); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
         if fine:
+            # 10 September 2026: the wide margin is for the QFN and QFP rows whose escape vias splay far (the PCIe switches,
+            # the hubs, the supervisors); a SOT or a USON keeps 1.4, which is the rule gen_pcb_c3.py and gen_pcb_e3.py already
+            # had and this generator did not. Measured on B19 by counting the pads place_audit finds with no escape at all:
+            # a flat 1.6 leaves 194 of them, a flat 2.6 leaves 69, a flat 3.0 leaves 164 (the packer spills into other regions).
+            nfine = sum(1 for pd in fp.Pads() if pd.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and min(pd.GetSize().x, pd.GetSize().y) <= FromMM(1.2))
+            fm = FINE_MARGIN if nfine >= 16 else 1.4
             for pd in fp.Pads():
                 if pd.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or min(pd.GetSize().x, pd.GetSize().y) > FromMM(1.2): continue
                 pbb = pd.GetBoundingBox(); w_, h_ = pbb.GetWidth(), pbb.GetHeight()
-                if w_ > h_ * 1.2: mx = 2 * FINE_MARGIN
-                elif h_ > w_ * 1.2: my = 2 * FINE_MARGIN
-            if mx == 0.0 and my == 0.0: mx = my = 2 * FINE_MARGIN
+                if w_ > h_ * 1.2: mx = 2 * fm
+                elif h_ > w_ * 1.2: my = 2 * fm
+            if mx == 0.0 and my == 0.0: mx = my = 2 * fm
         fps.append((ref, fp, bb.GetWidth() / 1e6 + GAP + mx, bb.GetHeight() / 1e6 + GAP + my, fine))
     # merge each couple whose two parts are both in this region into one unit, stacked, before the shelf packer sees them
     _here = {t[0]: t for t in fps}; units = []; _done = set()
