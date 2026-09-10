@@ -13,21 +13,34 @@ rows0 = [json.loads(l) for l in open(sys.argv[1]) if l.strip()]; base = json.loa
 last = {}
 for r in rows0: last[r["key"]] = r            # the last row per configuration key wins (a re-finished row replaces its predecessor)
 rows = list(last.values())
-sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__))); import bench_compare
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__))); import bench_compare, hardset
+# 10 September 2026 (both red teams, C1 and C3). Two corrections to how this report reads its own rows:
+#   * the baseline is keyed by BOARD now, not by phase, so the 78 rows that graded UNMEASURABLE ("no baseline for C6", "for B15")
+#     because their key was a phase are graded here from the metrics that were stored all along. No route is repeated.
+#   * every stored row was measured over SIX hard types while the finish refuses on fifteen, so a row whose hard count is zero
+#     cannot be certified: it is marked with an asterisk and named SIX-TYPE in the report. Only a re-measured row loses the mark.
+NHARD = len(hardset.HARD_POST)
 for r in rows:                                 # verdicts and Q recomputed from the stored metrics with the current rules, so a rule change needs no re-route
-    if r.get("metrics") and r["board_key"] in base:
-        v, note, q = bench_compare.compare(base[r["board_key"]], r["metrics"]); r["verdict"], r["note"], r["Q"] = v, note, q
-out = ["%d rows (%d configuration keys); verdicts recomputed at report time from the stored metrics" % (len(rows0), len(rows))]
+    m = r.get("metrics") or {}
+    r["phase"] = r.get("board_key", ""); r["stored_verdict"] = r.get("verdict")
+    r["key_board"] = bench_compare.board_key(m.get("board") or r.get("board") or "")
+    r["six_type"] = bool(m) and m.get("hard_types_checked", 6) < NHARD
+    if m and r["key_board"] in base:
+        v, note, q = bench_compare.compare(base[r["key_board"]], m); r["verdict"], r["note"], r["Q"] = v, note, q
+out = ["%d rows (%d configuration keys); verdicts recomputed at report time from the stored metrics." % (len(rows0), len(rows)),
+       "",
+       "A verdict marked * was measured over %d hard DRC types, not the %d the finish refuses on (`hardset.py`): it is not evidence of a clean board." % (6, NHARD),
+       "Rows are grouped by BOARD; the phase each row ran under is its own column. Before 10 September 2026 the baseline was keyed by phase, and %d of these rows carried a stored verdict of UNMEASURABLE (\"no baseline for C6\", \"for B15\") after their route had already been paid for; they are graded here from the metrics that were stored all along." % sum(1 for r in rows if r.get("stored_verdict") == "UNMEASURABLE")]
 by_board = collections.defaultdict(list)
-for r in rows: by_board[r["board_key"]].append(r)
+for r in rows: by_board[r["key_board"]].append(r)
 for key in sorted(by_board):
     b = base.get(key, {}); out.append("\n### %s (%d experiment rows; baseline: %s router vias, %s mm, %s segments)\n" % (key, len(by_board[key]), b.get("vias_router", "?"), b.get("length_mm", "?"), b.get("tracks", "?")))
-    out.append("| config | pre-route | jar | verdict | Q | router vias | length mm | segments | detour med / p90 | pairs > 1 mm | raw hard / open | stub closed | autoroute min | wall s |"); out.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+    out.append("| config | phase | pre-route | jar | verdict | Q | router vias | length mm | segments | detour med / p90 | pairs > 1 mm | raw hard / open | stub closed | autoroute min | wall s |"); out.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     def sk(r): return (0 if r.get("verdict") == "MET" else 1 if r.get("verdict") == "REGRESSION" else 2, r.get("Q") if r.get("Q") is not None else 9)
     for r in sorted(by_board[key], key=sk):
         m = r.get("metrics") or {}
         raw = r.get("raw") or {}
-        out.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s / %s | %s | %s / %s | %s of %s | %s | %s |" % (r["config"], r["preroute_hash"][:6], (r.get("jar") or "")[12:17], r.get("verdict", "NO_SESSION"), "%.3f" % r["Q"] if r.get("Q") is not None else "-", m.get("vias_router", "-"), m.get("length_mm", "-"), m.get("tracks", "-"), m.get("detour_median", "-"), m.get("detour_p90", "-"), m.get("pairs_over_1mm", "-"), raw.get("hard", "-"), raw.get("unrouted", "-"), r.get("stub_closed", "-"), r.get("stub_open", "-"), m.get("autoroute_minutes", "-"), r.get("wall_s", "-")))
+        out.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s / %s | %s | %s / %s | %s of %s | %s | %s |" % (r["config"], r.get("phase", "-"), r["preroute_hash"][:6], (r.get("jar") or "")[12:17], r.get("verdict", "NO_SESSION") + ("*" if r.get("six_type") and r.get("verdict") in ("MET", "REGRESSION") else ""), "%.3f" % r["Q"] if r.get("Q") is not None else "-", m.get("vias_router", "-"), m.get("length_mm", "-"), m.get("tracks", "-"), m.get("detour_median", "-"), m.get("detour_p90", "-"), m.get("pairs_over_1mm", "-"), raw.get("hard", "-"), raw.get("unrouted", "-"), r.get("stub_closed", "-"), r.get("stub_open", "-"), m.get("autoroute_minutes", "-"), r.get("wall_s", "-")))
 # knob classification: compare each non-base config with the base config of the same board and preroute
 out.append("\n### Knob classification (effect = router vias or length moved by at least 5 percent against the base config on at least two boards)\n")
 effects = collections.defaultdict(list)
