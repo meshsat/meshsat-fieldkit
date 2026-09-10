@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """kb_parts.py, the parts this design builds with against the documents we hold (MESHSAT-862, 10 September 2026).
 
+SCOPE, because a coverage number is worthless without one. Every generator is read, not only the
+schematic ones: `gen_sch_*`, `gen_pcb_*`, `gen_footprints_*`, `lcsc_fill.py` and `panel1450.py`. The
+first version read `gen_sch_*.py` alone and reported zero parts without a document, which was true and
+too narrow: four real parts were named only elsewhere (the EL817 optocoupler on the dock, a BC847BS,
+a TPS563201 and a TPS61089), and none of them had a sheet in the tree.
+
 The store's most useful output is not a passage, it is the list of parts it CANNOT answer about. Every
 `ic()` call in a schematic generator names its part in the first token of its value string, so the list
 of parts this design actually instantiates is mechanical rather than remembered, and each one is looked
@@ -39,6 +45,10 @@ NOT_A_PART = re.compile(
     # net and pin labels that happen to have the shape of a part number
     r"SPARE\d+|HUBRST\d+|PRSNT\d+|OUTPUT\d+|INPUT\d+|WIFI\d+|PICO\d+|SLOT\d+|BANK\d+|CH\d+|"
     r"PORTSTATUS\d+|PORT\d+|LANE\d+|BIT\d+|VOTE\d+|FAB\d+|"
+    # region and area names the placement generators use, and TI literature numbers (SLASEP7A,
+    # SCDS277C), which name a document rather than a part
+    r"CLUSTER\d+|NORTH\d+|SOUTH\d+|EAST\d+|WEST\d+|DEVW|DEVE|DIFF\d+|GLOBAL\d*|"
+    r"S[A-Z]{3}\d{3}[A-Z]?|JLC\d{2}\d*[A-Z]?-?\d*|"
     # more package spellings, including the ones drawn as library footprint names
     r"LQFP\d+EP|TQFP\d+EP|LGA\d+\w?|CPOL\d+|C\d+u\d+|R[A-Z]{2}\d{4}[A-Z]?-\d+|DBV\d?|DRV\d?)$", re.I)
 SKIP = {"SWD", "NOTE", "PADS", "TEST"}
@@ -63,8 +73,13 @@ def parts_from_generators():
     the part number then lives in the helper's own format string. Scanning every string literal finds
     those, at the price of some package names, which the pattern above excludes."""
     out = {}
-    for path in sorted(glob.glob(os.path.join(TOOLS, "gen_sch_*.py"))):
-        board = os.path.basename(path)[len("gen_sch_"):-3]
+    paths = []
+    for pat in ("gen_sch_*.py", "gen_pcb_*.py", "gen_footprints_*.py", "lcsc_fill.py", "panel1450.py"):
+        paths += glob.glob(os.path.join(TOOLS, pat))
+    for path in sorted(set(paths)):
+        base = os.path.basename(path)
+        board = (base[len("gen_sch_"):-3] if base.startswith("gen_sch_") else
+                 base[len("gen_pcb_"):-3][:1] if base.startswith("gen_pcb_") else base[:-3][:12])
         try:
             tree = ast.parse(open(path, errors="replace").read())
         except SyntaxError as e:
@@ -180,7 +195,7 @@ def main(argv):
         else:
             print("MISSING %-26s %-10s %-10s %s" % (r["part"], ",".join(r["boards"]),
                                                     ",".join(r["lcsc"]) or "-", r["note"]))
-    print("\nkb_parts: %d parts named by the schematic generators, %d with no document in this tree"
+    print("\nkb_parts: %d parts named by the generators, %d with no document in this tree"
           % (len(rows), len(missing)))
     return 0
 

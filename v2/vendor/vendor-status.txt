@@ -97,3 +97,4 @@ battery/samsung-35e-conrad.pdf        retired   # same ruling
 battery/samsung-35e-orbtronic.pdf     retired   # same ruling
 battery/samsung-35e-relectro.pdf      retired   # same ruling; and this reseller sheet is 13 pages of images with 1097 characters of text in all of them
 DOWNLOADS-2026-09-10.md   current   # what was fetched on 10 September 2026, from where, and the one document still owed
+everlight    current   # EL817 optocoupler, the shore-inhibit isolation on the dock strip
