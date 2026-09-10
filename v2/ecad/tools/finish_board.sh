@@ -17,7 +17,17 @@ python3 ../tools/net_tie.py $N.kicad_pcb
 ../tools/export_jlc.sh . $N > out/$N-export_jlc.log 2>&1 || { echo "export_jlc.sh failed (out/$N-export_jlc.log)"; exit 2; }; grep JLC out/$N-export_jlc.log
 if python3 ../tools/lcsc_fill.py out/jlc/$N-bom.csv; then echo OK > out/jlc/$N-bom.status; else echo "BLANK not allow-listed (lcsc-allow.txt)" > out/jlc/$N-bom.status; fi; echo "BOM status: $(cat out/jlc/$N-bom.status)"   # make_handoff.py refuses an order set on a non-OK status
 [ -f out/jlc/README-fab.custom ] && cp out/jlc/README-fab.custom out/jlc/README-fab.txt || true
-grep -E '^\\[' out/$N-drc.rpt | sed 's/:.*//' | sort | uniq -c | sort -rn || true
+# The per-type histogram of the deliverable DRC, which has never printed. The pattern was '^\\[': in an ERE that is a literal
+# backslash followed by an unterminated bracket expression, so grep exited 2 on every finish and the `|| true` swallowed it.
+# Proved against a released report rather than argued: on meshsat-pcb-d-revA-D9/pcb-d-aprs-drc.rpt, '^\[' matches 91 violation
+# lines and '^\\[' is a grep error (mismatched [ ]). Nothing was gated on it, so no board ever passed falsely; the instrument
+# was simply blank in every finish that wrote a deliverable. This is the class the round-two red teams keep naming, a line that
+# could not fire, and here the tell went to stderr where no one read it. 10 September 2026 (MESHSAT-862).
+# It also has to survive the caller: every finish_*.sh runs this script through `2>&1 | tail -16`, which is why nobody ever
+# read the grep error either, and which would still cut the histogram off the top even once it prints. So it is an output file
+# as well as a line of stdout, on the same rule drc.sh applies to the DRC report itself.
+grep -E '^\[' out/$N-drc.rpt | sed 's/:.*//' | sort | uniq -c | sort -rn > out/$N-drc-types.txt || true
+if [ -s out/$N-drc-types.txt ]; then echo "deliverable DRC by type (out/$N-drc-types.txt):"; cat out/$N-drc-types.txt; else echo "deliverable DRC by type: no violation lines in out/$N-drc.rpt"; fi
 # THE AUTHORITATIVE GATE, AFTER THE LAST MUTATION (10 September 2026; round-two red teams, report 1 P1). The routed board's
 # clean flag is written by the finish BEFORE this script runs, and this script then changes the board: the post-fix, and
 # net_tie.py above. Until now the DRC that followed those changes was printed with --label, which returns 0 whatever it counts,
