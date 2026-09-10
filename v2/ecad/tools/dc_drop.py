@@ -8,10 +8,13 @@ node joined to its four neighbours by the sheet resistance of that layer (rho_cu
 35 um outer and 15.2 um inner by default); vias of the net join the layers they span (R = rho L / (pi d t_plating), plating 25 um); the
 source pads (the intent file's source reference) are held at 0 V and every load pad sinks its share of the intent current (loads by reference
 where given, else the rail's typical current split over the pads of the parts whose only power pin on this net is a real load: the parts
-listed in the intent's loads, or, failing that, every non-passive footprint on the net); the system G v = i is solved with scipy (sparse
-conjugate gradient) or numpy on small meshes.  Reported per rail: the worst node's drop in mV and percent of the rail voltage, the worst cell's
-current density in A/mm2 and the IPC-2221 external and internal limits for 10 K rise (I = k dT^0.44 A^0.725, k 0.048 external, 0.024
-internal, A in mil2), the layer share of the current, and MET or MISSED against --budget (default 2 percent) and the density limit.
+listed in the intent's loads, or, failing that, every non-passive footprint on the net); the system G v = i is solved by scipy's DIRECT sparse solve
+(`spsolve`; the docstring said conjugate gradient until 10 September 2026 and the code never did, report 1 item 7), and the solution's
+relative residual is checked before any verdict is read off it.  Reported per rail: the worst node's drop in mV and percent of the rail
+voltage, the worst cell's current density in A/mm2 and the IPC-2221 external and internal limits for 10 K rise (I = k dT^0.44 A^0.725,
+k 0.048 external, 0.024 internal, A in mil2), the layer share of the current, and MET or MISSED against the rail's budget (its own if the
+intent file gives it one, else --budget, default 2 percent).  **The drop alone decides the verdict**: the density at a single-cell neck
+overstates by the cell-to-width ratio (a 0.4 mm track is one 0.5 mm cell), so it is printed and not gated until the raster is validated.
 
 Usage: dc_drop.py <board.kicad_pcb> [--cell 0.5] [--budget 0.02] [--rails NET,NET] [--json out.json] [--png out.png]   -> exit 1 on a miss.
 Every number comes from the board and the intent file; a rail without a resolvable source or load is reported UNRESOLVED and counts as a miss."""
@@ -154,6 +157,12 @@ def main(a):
             for n, amps in sinks.items(): i_vec[n] -= amps
             Gk = G[keep][:, keep].tocsc(); v = np.zeros(N)
             sol = spl.spsolve(Gk, i_vec[keep]); v[keep] = sol
+            # 10 September 2026 (report 1 item 7): a verdict was read off whatever spsolve returned. A singular or badly
+            # conditioned mesh gives a silent nonsense solution, so the residual is measured and a rail whose system was not
+            # actually solved is UNRESOLVED, never MET.
+            rhs = i_vec[keep]; resid = float(np.abs(Gk @ sol - rhs).max()); scale = float(np.abs(rhs).max()) or 1.0
+            if not np.all(np.isfinite(sol)) or resid / scale > 1e-6:
+                results.append((net, "UNRESOLVED", "the resistive mesh did not solve: residual %.3g against a %.3g A right-hand side (%d nodes)" % (resid, scale, len(keep)), 0, 0, 0, {})); miss += 1; continue
         except ImportError:
             results.append((net, "UNRESOLVED", "scipy missing on this host (apt-get install python3-scipy)", 0, 0, 0, {})); miss += 1; continue
         drop = -v.min() if v.min() < 0 else v.max(); drop = abs(v).max()
@@ -177,7 +186,7 @@ def main(a):
         rb = float(r.get("budget", budget))   # a rail may carry its own budget in the intent (8 Sep 2026)
         verdict = "MET" if pct <= rb else "MISSED"   # the drop decides; the density at a single-cell neck (a 0.4 mm track is one 0.5 mm cell) overstates by the cell-to-width ratio and is reported, not gated, until the raster is validated (8 Sep 2026 02:25)
         if verdict != "MET": miss += 1
-        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at 10 K; layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], budget * 100, worst_j, worst[0], worst[1], worst[2], jl, share), drop, pct, worst_j, share))
+        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at 10 K (reported, not gated); layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, share), drop, pct, worst_j, share))
     if not results: print("dc_drop: FAIL no rail to check (the intent file lists none)"); return 1
     for net, v, text, *_ in results: print("dc_drop: %-10s %-10s %s" % (v, net, text))
     print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)" % (len(results) - miss, len(results), cell, budget * 100))
