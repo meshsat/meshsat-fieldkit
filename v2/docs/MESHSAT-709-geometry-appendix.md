@@ -3981,3 +3981,48 @@ would make the asymmetry a decision; it goes with H1.
   differs from ITSELF by 48 lines of board geometry across two runs of the same input while its log stays identical. The
   escape via positions move and nothing would ever have reported it. The schematics are byte-reproducible since `kisch`; the
   boards are not, and that is a defect of its own now on the list.
+
+### 32.102 The pairs were routing on two layers of a six-layer board: 56 to 71 of 113 (10 September 2026, 19:20 CEST; MESHSAT-862)
+
+The ladder of 32.97 and 32.98 tried corridor slack, search windows, entry vias, placement margins, rip-up in three forms and a
+multi-pass order, and it moved B19 from 38 to 50 of 113 and then stopped. Every one of those arms ran with the pre-router's
+default `PAIR_LAYERS=F.Cu,B.Cu`, which nobody had questioned, and **B19 is a six-layer board**: In1 is the solid ground plane
+and In4 the power plane, both board-wide no-track rule areas, but **In2 and In3 are ordinary routing layers with the same 27
+rule areas as F.Cu and B.Cu**. The pairs were competing for two layers with four available.
+
+**Measured, same placed board, same budget, one change:**
+
+| corridor layers | pairs laid of 113 | wall |
+|---|---:|---:|
+| `F.Cu,B.Cu` (the default all the arms used) | **56** | 1,327 s |
+| `F.Cu,In2.Cu,In3.Cu,B.Cu` | **71** | 1,373 s |
+
+Free: the four-layer pass costs 46 seconds more. At matched pair index the two arms are identical for the first 40 pairs, and
+then they part: at pair 60 the two-layer arm has 51 and the four-layer arm 59 of 59; at pair 80, 53 against 69; at pair 90, 55
+against 71. **The first 40 pairs never needed the room. The rest do, and it was there all along.**
+
+That is the largest single move in this ladder. The day before it took a full day of arms to go from 38 to 50.
+
+**What it costs, and this is a real constraint rather than a caveat.** A pair on In2 or In3 is a stripline, and the field
+solver (32.101) says today's class width does not hit its target there:
+
+| geometry, inner layers of the 3313 stack | Zdiff | target | verdict |
+|---|---:|---:|---|
+| w 0.127, s 0.127 | 102.0 | 90 | 13 % high, MISSED |
+| w 0.127, s 0.200 | 118.1 | 100 | 18 % high, MISSED |
+| w 0.210, s 0.127 | **90.2** | 90 | met |
+| w 0.210, s 0.200 | **101.7** | 100 | met |
+
+So an inner-layer pair needs **0.21 mm copper against the 0.127 mm the outer layers use**, and its envelope grows from 0.381
+to 0.547 mm, about 1.44x. The pre-router carries one width per class today, taken from the net class, so laying a pair partly
+on an outer layer and partly on an inner one at the right width for each is a change it does not yet have. **Under the ruling
+of 32.94 this is not optional: a pair laid on In2 at 0.127 reads 102 ohm and the impedance gate refuses the board.** The next
+measurement is what the wider inner corridor costs in pairs, because 1.44x the envelope on the two new layers takes some of
+the room back.
+
+**Also measured, and it is the negotiation's own answer:** with the kernel repaired a planning iteration costs 5 minutes
+against 40, so three schedules were run out to their iterations on B19. **None converges.** The contested-cell count
+oscillates between about 123,000 and 173,000 whatever the schedule, and both stronger settings are worse than the gentle
+default: present cost 2 doubling with history 8 reaches 123,295 at its best, present cost 32 doubling reaches 140,388, history
+64 reaches 132,036. The five pairs with no corridor at all stay five throughout. Negotiation is not what unblocks this board;
+the layers were.
