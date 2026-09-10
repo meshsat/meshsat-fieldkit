@@ -174,7 +174,11 @@ REGIONS += [
  ("RBX",   (96, -25, 126, 27), ["U23", "C56", "R36", "R37", "R38", "R39", "C57", "C58", "U33", "U24", "C61", "R43", "R44", "R45", "R46", "C62", "C63", "U18", "R40", "C59", "C60", "R41", "R42", "U15", "U16", "U17", "R24", "C43", "C44", "R26", "C48", "C49", "R27", "C50", "C51", "U21", "U22"], False),
 ]
 GAP = 1.2
-FINE_MARGIN = 1.6
+# 10 September 2026: the room the packer leaves around a fine-pitch part is a knob, because place_audit's own envelope
+# (2.2 mm plus 0.12 per pad on a side) wants about 5 mm at a 99-pad QFN and this gives 1.6, which is why B19's audit
+# reports a third of the pads of U301, U201 and U101 with no escape at all. PLACE_FINE_MARGIN measures the trade against
+# the region overflow the gate refuses.
+FINE_MARGIN = float(os.environ.get("PLACE_FINE_MARGIN", "1.6"))
 import re as _re
 def is_fine(fp):
     if _re.search(r"SOT-23-[68]|SOT-583|TSOT-23-6", fp.GetFPIDAsString()): return True
