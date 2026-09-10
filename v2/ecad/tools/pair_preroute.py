@@ -397,6 +397,26 @@ def main(a):
         t = 0.0 if L2 <= 1e-9 else max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / L2))
         return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
 
+    def _what_is_at(x, y, L, net):
+        """The copper nearest to a point on one layer, named (10 September 2026). A debug line that says a leg hits `an
+        obstacle` and does not say WHICH cost an evening once already (8 Sep, the escape-depth theory); the rule of the
+        record is that a gate which strips or refuses copper names what it hit."""
+        best = None
+        for f in b.GetFootprints():
+            for q in f.Pads():
+                if q.GetNetname() == net or not q.IsOnLayer(L): continue
+                d_ = math.hypot(mm(q.GetPosition().x) - x, mm(q.GetPosition().y) - y)
+                if best is None or d_ < best[0]: best = (d_, "pad %s.%s (%s)" % (f.GetReference(), q.GetNumber(), q.GetNetname() or "no net"))
+        for t in b.GetTracks():
+            if t.GetNetname() == net: continue
+            if t.GetClass() == "PCB_VIA":
+                d_ = math.hypot(mm(t.GetPosition().x) - x, mm(t.GetPosition().y) - y); what = "via (%s)%s" % (t.GetNetname() or "no net", " locked" if t.IsLocked() else "")
+            else:
+                if t.GetLayer() != L: continue
+                d_ = _seg_d(x, y, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)); what = "track (%s)%s" % (t.GetNetname() or "no net", " locked" if t.IsLocked() else "")
+            if best is None or d_ < best[0]: best = (d_, what)
+        return "nothing within reach" if best is None else "%s at %.2f mm" % (best[1], best[0])
+
     def _in_way(pcs, x1, y1, x2, y2):
         """The distance from a laid pair's copper to the failed section's straight line (mm), 1e9 when it has none."""
         d = 1e9
@@ -931,7 +951,7 @@ def main(a):
                                     jj, ii = gr.cell(*poly[k])
                                     if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]: hit = (poly[k], walked); break
                                 walked += seg[k]
-                            if hit: print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s, %.2f mm along run %d of %d" % (net, hit[0][0], hit[0][1], b.GetLayerName(L), hit[1], r_i + 1, len(runs)))
+                            if hit: print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s, %.2f mm along run %d of %d: %s" % (net, hit[0][0], hit[0][1], b.GetLayerName(L), hit[1], r_i + 1, len(runs), _what_is_at(hit[0][0], hit[0][1], L, net)))
                             else: print("pair_preroute: leg %s clears run %d of %d on %s (the blocker is another run or the smoothing)" % (net, r_i + 1, len(runs), b.GetLayerName(L)))
                 break
             merged = []   # [(layer index, points)] with consecutive same-layer runs joined into one polyline
