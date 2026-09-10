@@ -8,6 +8,9 @@ result goes to a copy (--out, default <board>-hand.kicad_pcb), the zones are ref
 without --test the board itself is written. The first and last waypoints should sit on existing copper of the net (a pad centre, a via, a track end):
 the connectivity check decides, not this script. Prints 'hand_route: N segments, V vias, hard H, unconnected U'."""
 import sys, os, json, subprocess, collections, pcbnew
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import hardset
 args = [a for a in sys.argv[1:] if not a.startswith("--")]; opts = [a for a in sys.argv[1:] if a.startswith("--")]
 board_path, net, width, OX, OY = args[0], args[1], float(args[2]), float(args[3]), float(args[4])
 pts = []
@@ -36,7 +39,7 @@ if test:
     drc = os.path.splitext(target)[0] + "-drc.json"
     subprocess.run(["kicad-cli", "pcb", "drc", "--severity-error", "--format", "json", "-o", drc, target], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     d = json.load(open(drc)); c = collections.Counter(x["type"] for x in d["violations"])
-    hard = sum(c[t] for t in ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance"))
-    det = [(x["type"], [i["description"][:44] for i in x["items"]], round(x["items"][0]["pos"]["x"] - OX, 1), round(OY - x["items"][0]["pos"]["y"], 1)) for x in d["violations"] if x["type"] in ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole")][:4]
+    hard = sum(c[t] for t in hardset.HARD_POST)   # one definition (10 Sep 2026, both red teams C1)
+    det = [(x["type"], [i["description"][:44] for i in x["items"]], round(x["items"][0]["pos"]["x"] - OX, 1), round(OY - x["items"][0]["pos"]["y"], 1)) for x in d["violations"] if x["type"] in hardset.HARD_POST][:4]
     print("hand_route: %d segments, %d vias (%s), hard %d, unconnected %d %s" % (k, v_n, net, hard, len(d.get("unconnected_items", [])), det))
 else: print("hand_route: %d locked segments, %d vias (%s) written to %s" % (k, v_n, net, target))

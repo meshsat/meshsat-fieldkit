@@ -18,6 +18,9 @@ HARD_POST = ("clearance", "shorting_items", "tracks_crossing", "hole_clearance",
              "solder_mask_bridge", "annular_width", "track_width", "diff_pair_gap_out_of_range", "zones_intersect", "courtyards_overlap",
              "via_diameter", "drill_out_of_range", "items_not_allowed")   # one set (the register of 8 Sep found four different ones, none complete)
 HARD_PRE = HARD_POST
+# Named patterns, so a tool that acts on a narrower set says which one and why here rather than keeping a private tuple
+# (10 September 2026, both red teams C1: seven copies of the hard set had drifted apart, two of them silently narrower).
+KNOT = ("shorting_items", "tracks_crossing")   # unknot.py: the router's knot, two nets tangled at one spot; a symptom pattern, not a policy subset
 REPORT = ("connection_width", "isolated_copper", "starved_thermal", "copper_sliver", "silk_over_copper", "silk_overlap", "silk_edge_clearance",
           "track_dangling", "via_dangling", "net_conflict", "lib_footprint_mismatch", "diff_pair_uncoupled_length_too_long", "skew_out_of_range",
           "length_out_of_range", "too_many_vias", "malformed_courtyard", "missing_courtyard")

@@ -3,7 +3,10 @@
 so A22 lost 8 good closures over one bad one, E6 6 over 2). Usage: stub_accept.py <board before the stub router> <board after> <drc.json of the board after>.
 Writes the "after" board with the offending closures removed; prints how many closures stayed."""
 import sys, json, math, pcbnew
-HARD = ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance")
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import hardset
+HARD = hardset.HARD_POST   # one definition (10 Sep 2026, both red teams C1/P0): this file used to carry its own tuple
 pre, post, drc = pcbnew.LoadBoard(sys.argv[1]), pcbnew.LoadBoard(sys.argv[2]), json.load(open(sys.argv[3]))
 old = {t.m_Uuid.AsString() for t in pre.GetTracks()}
 added = {t.m_Uuid.AsString(): t for t in post.GetTracks() if t.m_Uuid.AsString() not in old}

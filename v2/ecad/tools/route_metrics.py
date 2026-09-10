@@ -10,7 +10,10 @@ Fail closed: a board with connected pads and no tracks, or a DRC JSON without a 
 Usage: route_metrics.py <board.kicad_pcb> <drc.json|-> --json <out.json> [--wall S] [--autoroute MIN] [--optimizer MIN] [--tag NAME]"""
 import sys, os, json, math, re, collections, statistics, pcbnew
 
-HARD = ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance")
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import hardset
+HARD = hardset.HARD_POST   # one definition (10 Sep 2026, both red teams C1/P0): this file used to carry its own tuple
 
 def arg(name, default=None):
     return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default

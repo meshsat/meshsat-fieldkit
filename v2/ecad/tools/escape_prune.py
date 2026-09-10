@@ -4,7 +4,13 @@ Usage: escape_prune.py <board.kicad_pcb> <drc.json>
 B16 (7 Sep 2026): the M.2 B-key socket's escapes for two SIM pins crossed each other after every geometric guard in escape.py; two pads out of
 1285 escapes are the router's job. A pruned pad's stub goes with its via, so nothing locked dangles."""
 import sys, json, math, pcbnew
-HARD = ("clearance", "shorting_items", "hole_clearance", "hole_to_hole", "tracks_crossing")
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import hardset
+# 10 September 2026 (both red teams, C1): this file judged a FIVE-type subset of its own, with no reason recorded anywhere.
+# There is one hard set and it is hardset's; a violation the finish will refuse on is one this tool should act on too, and a
+# violation hardset exempts (a footprint against itself) is one it should leave alone.
+HARD = hardset.HARD_POST
 b = pcbnew.LoadBoard(sys.argv[1]); d = json.load(open(sys.argv[2]))
 locked = [t for t in b.GetTracks() if t.IsLocked()]
 def at(pos):
@@ -12,7 +18,7 @@ def at(pos):
     return [t for t in locked if math.hypot(t.GetPosition().x - x, t.GetPosition().y - y) < 60000 or (t.GetClass() == "PCB_TRACK" and (math.hypot(t.GetStart().x - x, t.GetStart().y - y) < 60000 or math.hypot(t.GetEnd().x - x, t.GetEnd().y - y) < 60000))]
 victims = {}; causes = {}; kept = []
 for v in d["violations"]:
-    if v["type"] not in HARD: continue
+    if v["type"] not in HARD or hardset.exempt(v): continue
     items = v.get("items", [])
     hits = [(i, t) for i in items for t in at(i["pos"]) if i.get("description", "").startswith(("Track", "Via"))]
     if not hits: continue
