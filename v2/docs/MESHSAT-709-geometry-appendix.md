@@ -3831,8 +3831,34 @@ builds the venv and without it nothing changes but the speed. The compile is cac
 instance-local and keyed by the grid it was rasterised in, and one Grid per cell size is kept, because building a fresh Grid for
 every long pair threw the whole board's pad rasters away twice per pair.
 
-**Measured beside it, and it is the first number above the plateau:** the multi-pass driver's second pass, with the pairs that
-failed put first, laid **52 of 113** against the 50 of 32.98.
+**The maps, second pass: cached and topped up.** After the rasteriser was vectorised, **1,248 of a 1,552 second B19 pass were
+still in `build_maps`** against 113 in the corridor search. The pads and the rule areas are cached per polygon and cost almost
+nothing on a repeat; what grows is the copper the pass itself lays, so by the hundredth pair every map re-rasterises thousands
+of segments that were rasterised for the pair before it. A map is cached per (grid, layers, excluded nets, half, via radius,
+split) and a repeat call stamps only the tracks it has not seen; every removal goes through `board_remove()` and the three
+footprint swaps bump `MAP_EPOCH`, which is what invalidates a cached map. A track's identity is its geometry, because SWIG
+hands out a fresh proxy per iteration and `id()` never matches. (The code landed inside commit `c13c258`, whose message is
+about deleting dead tools; it belongs here.)
+
+**The whole ladder on B19's 113 pairs, same placed board, one change at a time:**
+
+| build | wall | in the maps | in the search | pairs laid |
+|---|---:|---:|---:|---:|
+| heapq search, per-cell rasteriser | (about 81 s per map build) | | | |
+| heapq search, vectorised rasteriser | 3,957 s | 1,261 s | 2,506 s | **56 of 113** |
+| compiled search | 1,552 s | 1,248 s | 113 s | **56 of 113** |
+| compiled search and the map overlay | 1,327 s | 1,010 s | 115 s | **56 of 113** |
+
+**All three lay the same 56 pairs for the same reasons.** The kernel work changed the speed and not the outcome, which is what
+it was for; the search itself is 22x faster in situ (2,506 s to 113 s) and the pass 2.98x.
+
+The overlay is worth 1.24x rather than the 5x the call count suggests, and the reason is in the cache key: four of the five
+builds a pair does exclude that pair's own nets, so their key is unique per pair and they still build in full. Taking those
+apart (one build excluding both nets, plus a cheap raster of each net's own copper, OR-ed three ways) is the next step and it
+is not taken, because at 22 minutes a laying pass the pair count is the blocker and not the clock.
+
+**Measured beside it:** the multi-pass driver, with the pairs that failed put first, went 50, 52, then **56 of 113** across
+three passes, and a single pass of the repaired kernel reaches 56 on its own.
 
 ### 32.101 The two red teams, answered item by item (10 September 2026, 19:00 CEST; MESHSAT-862)
 
