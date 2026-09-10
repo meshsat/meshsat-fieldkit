@@ -1,0 +1,24 @@
+# Items of the V2 kit named as a CLASS with no manufacturer part number chosen, one per line with what
+# the pick needs. No datasheet can exist for these until a part is ruled, so they are not missing
+# documents: they are outstanding design decisions, and an inventory that listed only the decided
+# parts would hide them.
+#
+# Owner ruling 11 September 2026: each of these is researched against manufacturer documents and comes
+# back as a recommendation with evidence, one at a time. A line disappears from here when its part is
+# ruled, and reappears in the inventory as a part number with its datasheet.
+
+toggle-safety-covers   # hinged guards over SOS and ZEROIZE. No guard is documented in the filed sheets and the NKK AT4000s on file are dust covers; APEM accessories section D and NKK's toggle-guard sheet are the two to read
+headset-jack-U174U     # two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL section 19 and ASSEMBLY line 25 depend on the panel hole and the sealing method
+camera-module          # a USB camera module about 25 x 25 mm behind an 8 mm sealed window with a 1.0 mm PC disc on VHB 5915
+sealed-rj45-wall       # sealed Gigabit RJ45 wall receptacle with PoE out; candidates recorded are Bulgin Buccaneer, Amphenol RJField and Conec
+sealed-usbc-wall       # sealed USB-C wall receptacle, 45 W PD out plus console, same candidate list as the RJ45
+m8-pod-receptacle      # the M8 sealed receptacle carrying the outside sensor pod through the connector plate
+ground-stud            # the ground stud on the wall plate
+ip68-fans              # five IP68 internal fans, three cooler and two mixer, 40 and 60 mm; Sunon and Delta IP68 series named as the families to read
+vhf-2m-antenna         # the 2 m whip for the VHF jack; no maker's brochure on file covers it
+xenarc-rear-frame      # the steel rear frame under the plate holding the 709GNK, four M4 x 8; a new part whose drawing is owed
+gdt-arrestors          # gas-discharge arrestors at the antenna bulkheads, and the SDR limiter beside them
+tamper-switch          # one sealed case-open switch under the frame, feeding the ZEROIZE logic
+geiger-tube-board      # the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube is recorded as the class, with J305 as an alternative
+5g-jack-count          # whether the RM520N-GL takes two or four antenna jacks, which sets the end-wall bulkhead count; the hardware design fetched on 11 September is the document that settles it
+rugged-tablet          # the 8 to 10 inch rugged tablet in the lid and its bracket, which is not drawn; BUILD.md lists it among the part picks owed, and it stays here even though the kit costing treats it as an accessory

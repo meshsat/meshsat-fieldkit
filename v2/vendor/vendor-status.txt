@@ -98,3 +98,11 @@ battery/samsung-35e-orbtronic.pdf     retired   # same ruling
 battery/samsung-35e-relectro.pdf      retired   # same ruling; and this reseller sheet is 13 pages of images with 1097 characters of text in all of them
 DOWNLOADS-2026-09-10.md   current   # what was fetched on 10 September 2026, from where, and the one document still owed
 everlight    current   # EL817 optocoupler, the shore-inhibit isolation on the dock strip
+nexperia     current   # 74LVC08A quad AND gate on A and the BC847BS dual NPN
+omron        current   # G6K-2F-Y signal relay, the T/R changeover on PCB-D
+hirose       current   # FH12 series (the display FFC on B) and FH34 series (the e-paper ZIF on C)
+adhesives    current   # the bonded joints of the build: 3M Scotch-Weld DP8005 under the QMX tray nut plates
+family-matches.txt   tooling   # the declared reasons a family sheet covers a specific order code
+open-picks.txt       tooling   # the items of the kit with no part chosen yet, and what each pick needs
+not-used.txt         tooling   # part numbers named in a document only to record that they were rejected
+PARTS.md             current   # the generated inventory of everything V2 uses, checked against this store on every run
