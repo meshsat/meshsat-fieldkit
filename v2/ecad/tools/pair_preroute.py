@@ -377,13 +377,18 @@ def main(a):
         def append(self, line):
             list.append(self, line); print("pair_preroute: " + line, flush=True)
     report = _Report()
-    # 10 September 2026, rip-up and retry (MESHSAT-862). Measured on B19 the day before: /HOST2_1RX, /HDMIO_D1 and /HDMIO_CK
+    # 10 September 2026, rip-up and retry (MESHSAT-862), OFF by default on its own measurement (see PAIR_RIPUP below). /HOST2_1RX, /HDMIO_D1 and /HDMIO_CK
     # all FAIL in the full pass with "the legs clear no smoothing of the centreline" and all three LAY when they are the only pair
     # routed on the same board. What stops them is copper this tool laid for an earlier pair, not the placement and not the corner
     # geometry: it lays greedily and never rips up, so whichever pair went first took the room. When a section fails now, the laid
     # pairs whose copper lies in that section's corridor are taken off the board, the failed pair is queued to be laid again first
     # and they are queued behind it. PAIR_RIPUP=0 restores the greedy pass, which is how the two arms are compared.
-    RIPUP = int(os.environ.get("PAIR_RIPUP", "1"))                 # rip-up events one pair may trigger
+    # MEASURED 10 September 2026 and OFF by default: rip-up as written LOSES pairs. On B19's placed board the greedy pass lays
+    # 38 of 113; with rip-up the tool laid 224 times, spent 47 rip-up events and ended at 29, because a ripped pair is not
+    # guaranteed to fit again once its room has been taken by the pair that ripped it, and nothing checks that the episode paid.
+    # The episode has to become a trial that is accepted only when it leaves more pairs laid than it found; until it is, the flag
+    # stays off (PAIR_RIPUP=1 to reproduce the measurement).
+    RIPUP = int(os.environ.get("PAIR_RIPUP", "0"))                 # rip-up events one pair may trigger
     RIP_MARGIN = float(os.environ.get("PAIR_RIP_MARGIN", "4.0"))   # mm from the failed section's line for a piece to count as in the way
     RIP_MAX = int(os.environ.get("PAIR_RIP_MAX", "6"))             # laid pairs taken off the board per event
     RIP_TOTAL = int(os.environ.get("PAIR_RIP_TOTAL", "60"))        # rip-up events in the whole pass (the pass is bounded by this)
