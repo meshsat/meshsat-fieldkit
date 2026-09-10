@@ -113,8 +113,36 @@ def check_coverage(db):
         c.execute("SELECT sha256, COUNT(*) n, GROUP_CONCAT(relpath SEPARATOR ' = ') FROM documents "
                   "WHERE present=1 GROUP BY sha256 HAVING n > 1")
         dups = c.fetchall()
-    counts["duplicate_files"] = len(dups)      # reported, never a failure: the same sheet filed twice
-    return fails, counts, ["same bytes twice: %s" % d[2][:180] for d in dups[:10]]
+    counts["duplicate_files"] = len(dups)
+    # Duplicates are a FAIL unless declared. Two of the pairs here were created by me on 10 September,
+    # fetching documents this tree already held, because the lookup that said they were missing was
+    # wrong. A store that quietly accepts the same bytes twice cannot tell you what it holds.
+    dup_ok = set()
+    dupfile = os.path.join(VENDOR, "duplicates-allowed.txt")
+    if os.path.exists(dupfile):
+        for line in open(dupfile):
+            line = line.strip()
+            if line and not line.startswith("#") and "#" in line:
+                k, r = line.split("#", 1)
+                if k.strip() and r.strip():
+                    dup_ok.add(k.strip())
+    for sha, n, names in dups:
+        if sha not in dup_ok:
+            fails.append("the same bytes are filed twice and it is not declared: %s" % names[:150])
+
+    # Provenance and revision. A blank field and a document that declares no revision are different
+    # facts, so `unknown` has to be written rather than left null.
+    with db.cursor() as c:
+        c.execute("SELECT COUNT(*) FROM documents WHERE present=1 AND source IS NULL")
+        counts["no_source"] = c.fetchone()[0]
+        c.execute("SELECT COUNT(*) FROM documents WHERE present=1 AND text_source='pdftotext'")
+        counts["pdfs_with_text"] = c.fetchone()[0]
+        c.execute("SELECT COUNT(*) FROM documents WHERE present=1 AND text_source='pdftotext' AND revision IS NOT NULL")
+        counts["revision_read"] = c.fetchone()[0]
+    if counts["no_source"]:
+        fails.append("%d document(s) have no recorded source; every one needs a line in "
+                     "v2/vendor/sources.txt" % counts["no_source"])
+    return fails, counts, []
 
 
 def check_space(db, sample=60):

@@ -20,7 +20,7 @@ with a reason, in the erc-allow.txt idiom of this repository. An undeclared one 
 
 Usage: kb_ingest.py [--stage scan|text|embed|all] [--limit N] [--reset-text PATH]
 """
-import sys, os, argparse, datetime, hashlib, subprocess, uuid
+import sys, os, re, argparse, datetime, hashlib, subprocess, uuid
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -38,6 +38,28 @@ CHUNK_CHARS = 1200
 CHUNK_OVERLAP = 200
 MIN_PAGE_CHARS = 40      # below this a page is a picture: recorded as an empty page, not as text
 RUN_ID = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + "-" + uuid.uuid4().hex[:6]
+SOURCES = os.path.join(VENDOR, "sources.txt")
+
+# What a document says about its own revision, in the forms the manufacturers on this estate use.
+# Ordered: the most specific first, so TI's literature number beats a bare "Rev".
+REV_PATTERNS = [
+    r"S[A-Z]{3}\d{3}[A-Z]\b",                    # TI literature number, the letter IS the revision
+    r"\bDS\d{4,6}\b[^\n]{0,40}?Rev(?:ision)?\.?\s*[0-9A-Z]{1,3}\b",   # ST, Diodes
+    r"\bREVISED\s+[A-Z]+\s+\d{4}",
+    r"\bVersion:?\s*[0-9][0-9.]*",
+    r"\bRev(?:ision)?\.?\s*[:]?\s*[0-9A-Z]{1,3}\b",
+    r"\bDocument\s+\d{3,4}-\d\b",
+]
+
+
+def revision_of(pages):
+    """The revision a document declares about itself, from its first two pages, or None."""
+    head = "\n".join(pages[:2])
+    for pat in REV_PATTERNS:
+        m = re.search(pat, head, re.I)
+        if m:
+            return " ".join(m.group(0).split())[:64]
+    return None
 
 
 def log(db, stage, doc_id, ok, detail=""):
@@ -52,6 +74,21 @@ def sha256_file(path):
         for block in iter(lambda: fh.read(1 << 20), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def declared_sources():
+    """relpath or folder -> where the file came from, from v2/vendor/sources.txt."""
+    out = {}
+    if not os.path.exists(SOURCES):
+        return out
+    for line in open(SOURCES):
+        line = line.strip()
+        if not line or line.startswith("#") or "#" not in line:
+            continue
+        path, src = line.split("#", 1)
+        if path.strip() and src.strip():
+            out[path.strip()] = src.strip()[:500]
+    return out
 
 
 def noindex_reasons():
@@ -193,6 +230,7 @@ def pdf_pages(path):
 
 def stage_text(db, limit=None):
     reasons = noindex_reasons()
+    srcs = declared_sources()
     with db.cursor() as c:
         c.execute("SELECT id, relpath FROM documents WHERE present=1 AND text_source='none' ORDER BY id"
                   + (" LIMIT %d" % int(limit) if limit else ""))
@@ -228,12 +266,16 @@ def stage_text(db, limit=None):
                 continue                     # a drawing page inside a text PDF: no chunk, no pretence
             for i, piece in enumerate(chunk_page(ptext)):
                 rows.append((doc_id, pno, i, piece, len(piece) // 4))
+        rev = revision_of(pages) if pages else None
+        folder = rel.split(os.sep, 1)[0] if os.sep in rel else rel
+        source = srcs.get(rel) or srcs.get(folder)
         with db.cursor() as c:
             if rows:
                 c.executemany("INSERT IGNORE INTO chunks (document_id, page, seq, text, token_est) "
                               "VALUES (%s,%s,%s,%s,%s)", rows)
-            c.execute("UPDATE documents SET text_source=%s, no_text_reason=%s, pages=%s, ingested_at=NOW() "
-                      "WHERE id=%s", (src, reason, len(pages) or None, doc_id))
+            c.execute("UPDATE documents SET text_source=%s, no_text_reason=%s, pages=%s, revision=%s, "
+                      "source=%s, ingested_at=NOW() WHERE id=%s",
+                      (src, reason, len(pages) or None, rev, source, doc_id))
         if src == "none":
             blind += 1
         else:

@@ -31,6 +31,18 @@ CREATE TABLE IF NOT EXISTS documents (
   mtime          DATETIME NOT NULL,
   vendor         VARCHAR(64),                    -- the top folder: ti, cm5, quectel, peli, ...
   pages          INT UNSIGNED NULL,
+  -- The revision a document declares about ITSELF, read from its first pages: TI's
+  -- "SLVS490K, REVISED JUNE 2024", ST's "DS12117 Rev 9", Quectel's "Version: 1.1". About eight in
+  -- ten yield one and the rest are written as unknown rather than omitted, because a blank field and
+  -- a document with no revision string are different facts.
+  revision       VARCHAR(64) NULL,
+  -- Where the file came from. Authority is not a property of a PDF: two of ours are Wayback Machine
+  -- copies because st.com refuses this host, and one is a distributor's mirror. A reader has to be
+  -- able to see that.
+  source         VARCHAR(512) NULL,
+  -- When the source was last re-fetched and compared. Currency cannot be proved offline; what can be
+  -- stated is the date it was last checked against the vendor.
+  checked_at     DATETIME NULL,
   text_source    ENUM('pdftotext','direct','none') NOT NULL DEFAULT 'none',
   no_text_reason VARCHAR(255) NULL,              -- from v2/vendor/vendor-noindex.txt
   status         ENUM('current','v1','retired','tooling','undeclared') NOT NULL DEFAULT 'undeclared',
