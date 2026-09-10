@@ -270,6 +270,39 @@ def simplify(path):
     runs.append(cur); return runs
 
 _MITRE = float(os.environ.get("PAIR_MITRE_LIMIT", "1.2"))   # above this multiple of d the outer join is arced, not mitred
+def _isect(a, b, c, d):
+    """The crossing point of segments a-b and c-d when they properly cross (never at a shared endpoint), else None."""
+    r = (b[0] - a[0], b[1] - a[1]); s_ = (d[0] - c[0], d[1] - c[1])
+    den = r[0] * s_[1] - r[1] * s_[0]
+    if abs(den) < 1e-12: return None
+    t = ((c[0] - a[0]) * s_[1] - (c[1] - a[1]) * s_[0]) / den
+    u = ((c[0] - a[0]) * r[1] - (c[1] - a[1]) * r[0]) / den
+    if not (1e-9 < t < 1 - 1e-9 and 1e-9 < u < 1 - 1e-9): return None
+    return (a[0] + t * r[0], a[1] + t * r[1])
+
+
+def deloop(pts):
+    """Cut the self-intersections out of an offset polyline (10 September 2026, B19).
+
+    A turn whose radius is smaller than the offset d folds the INNER leg back on itself: the offset polyline crosses
+    itself, and where the two legs of a pair do that they cross each other, which is a short. Nine of B19's 113 pairs
+    were rolled back for exactly that (three crossings each on HDMI3_CK, D0, D1, D2 and HDMIM_D0), and D10's USB3
+    shipped two tracks_crossing violations from it before the crossing test caught them. The loop is a fold of at most
+    d, so cutting it at the crossing point shortens the leg by well under a tenth of a millimetre and leaves the ends
+    where they were."""
+    out = list(pts); i = 0
+    while i < len(out) - 2:
+        j = len(out) - 2
+        while j > i + 1:
+            X = _isect(out[i], out[i + 1], out[j], out[j + 1])
+            if X is not None:
+                out = out[:i + 1] + [X] + out[j + 1:]
+                break
+            j -= 1
+        i += 1
+    return out
+
+
 def offset_polyline(pts, d):
     """Offset a polyline (list of (x, y) mm) by d to its left; mitred joins."""
     if len(pts) < 2: return list(pts)
@@ -297,7 +330,7 @@ def offset_polyline(pts, d):
                 a = a0 + da * q / n; pt = (cx + abs(d) * math.cos(a), cy + abs(d) * math.sin(a))
                 if math.hypot(pt[0] - out[-1][0], pt[1] - out[-1][1]) >= 0.05: out.append(pt)
         else: out.append((ix, iy))
-    out.append(segs[-1][1]); return out
+    out.append(segs[-1][1]); return deloop(out)
 
 def main(a):
     if not a: print(__doc__); return 2
