@@ -45,6 +45,8 @@ NOT_A_PART = re.compile(
     # net and pin labels that happen to have the shape of a part number
     r"SPARE\d+|HUBRST\d+|PRSNT\d+|OUTPUT\d+|INPUT\d+|WIFI\d+|PICO\d+|SLOT\d+|BANK\d+|CH\d+|"
     r"PORTSTATUS\d+|PORT\d+|LANE\d+|BIT\d+|VOTE\d+|FAB\d+|"
+    # "IP67-class", "RP2040-class": prose describing a requirement, not an order code
+    r"[A-Za-z0-9]+-class|"
     # region and area names the placement generators use, and TI literature numbers (SLASEP7A,
     # SCDS277C), which name a document rather than a part
     r"CLUSTER\d+|NORTH\d+|SOUTH\d+|EAST\d+|WEST\d+|DEVW|DEVE|DIFF\d+|GLOBAL\d*|"
