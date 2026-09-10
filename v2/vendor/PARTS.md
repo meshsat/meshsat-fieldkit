@@ -41,19 +41,19 @@ No datasheet can exist for these until a part is ruled. Each says what it needs.
 
 | item | used in | source | document | note |
 |---|---|---|---|---|
-| `5g-jack-count` | design documents | pick | _whether the RM520N-GL takes two or four antenna jacks, which sets the | whether the RM520N-GL takes two or four antenna jacks, which sets the end-wall b |
+| `5g-jack-count` | design documents | pick | _RECOMMENDED: FOUR jacks. Settled from Quectel's own RM520N Series Har | RECOMMENDED: FOUR jacks. Settled from Quectel's own RM520N Series Hardware Desig |
 | `camera-module` | design documents | pick | _a USB camera module about 25 x 25 mm behind an 8 mm sealed window wit | a USB camera module about 25 x 25 mm behind an 8 mm sealed window with a 1.0 mm  |
-| `gdt-arrestors` | design documents | pick | _gas-discharge arrestors at the antenna bulkheads, and the SDR limiter | gas-discharge arrestors at the antenna bulkheads, and the SDR limiter beside the |
+| `gdt-arrestors` | design documents | pick | _RECOMMENDED: PolyPhaser GTH-SFF-AL, SMA female to female bulkhead RF  | RECOMMENDED: PolyPhaser GTH-SFF-AL, SMA female to female bulkhead RF surge prote |
 | `geiger-tube-board` | design documents | pick | _the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube  | the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube is recorded |
 | `ground-stud` | design documents | pick | _the ground stud on the wall plate_ | the ground stud on the wall plate |
 | `headset-jack-U174U` | design documents | pick | _two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL se | two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL section 19 an |
-| `ip68-fans` | design documents | pick | _five IP68 internal fans, three cooler and two mixer, 40 and 60 mm; Su | five IP68 internal fans, three cooler and two mixer, 40 and 60 mm; Sunon and Del |
-| `m8-pod-receptacle` | design documents | pick | _the M8 sealed receptacle carrying the outside sensor pod through the  | the M8 sealed receptacle carrying the outside sensor pod through the connector p |
+| `ip68-fans` | design documents | pick | _RECOMMENDED for the two 60 mm mixer fans: Same Sky CFM-6025BG68, 60 x | RECOMMENDED for the two 60 mm mixer fans: Same Sky CFM-6025BG68, 60 x 60 x 25 mm |
+| `m8-pod-receptacle` | design documents | pick | _RECOMMENDED: binder 86 6618 1121 00004, M8 female panel mount, 4 cont | RECOMMENDED: binder 86 6618 1121 00004, M8 female panel mount, 4 contacts, shiel |
 | `rugged-tablet` | design documents | pick | _the 8 to 10 inch rugged tablet in the lid and its bracket, which is n | the 8 to 10 inch rugged tablet in the lid and its bracket, which is not drawn; B |
-| `sealed-rj45-wall` | design documents | pick | _sealed Gigabit RJ45 wall receptacle with PoE out; candidates recorded | sealed Gigabit RJ45 wall receptacle with PoE out; candidates recorded are Bulgin |
-| `sealed-usbc-wall` | design documents | pick | _sealed USB-C wall receptacle, 45 W PD out plus console, same candidat | sealed USB-C wall receptacle, 45 W PD out plus console, same candidate list as t |
+| `sealed-rj45-wall` | design documents | pick | _RECOMMENDED: Bulgin PX0833, Standard Buccaneer front-panel CAT5e shie | RECOMMENDED: Bulgin PX0833, Standard Buccaneer front-panel CAT5e shielded couple |
+| `sealed-usbc-wall` | design documents | pick | _RECOMMENDED: Bulgin PXP4043/C, IP-sealed C-type USB rear panel mount  | RECOMMENDED: Bulgin PXP4043/C, IP-sealed C-type USB rear panel mount with a 2 x  |
 | `tamper-switch` | design documents | pick | _one sealed case-open switch under the frame, feeding the ZEROIZE logi | one sealed case-open switch under the frame, feeding the ZEROIZE logic |
-| `toggle-safety-covers` | design documents | pick | _hinged guards over SOS and ZEROIZE. No guard is documented in the fil | hinged guards over SOS and ZEROIZE. No guard is documented in the filed sheets a |
+| `toggle-safety-covers` | design documents | pick | _RECOMMENDED: the APEM CSG series switch guard, which APEM's own page  | RECOMMENDED: the APEM CSG series switch guard, which APEM's own page states is f |
 | `vhf-2m-antenna` | design documents | pick | _the 2 m whip for the VHF jack; no maker's brochure on file covers it_ | the 2 m whip for the VHF jack; no maker's brochure on file covers it |
 | `xenarc-rear-frame` | design documents | pick | _the steel rear frame under the plate holding the 709GNK, four M4 x 8; | the steel rear frame under the plate holding the 709GNK, four M4 x 8; a new part |
 

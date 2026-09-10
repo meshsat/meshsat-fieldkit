@@ -137,3 +137,30 @@ It may become a proposer aid: a tool an agent calls while drafting a change, alw
 citation attached. It may not become a gate, a verdict, or an input to one, and no measurement of
 its usefulness changes that, because what makes a board correct is a mechanical check of the board,
 not a passage about a part.
+
+## Is it complete, and how would you know
+
+Ask it. `kb_confidence.py` prints the answer from the verdict JSONs the gates wrote, and every figure
+in it is one of theirs; nothing in that report computes anything of its own, and a gate that did not
+run says so rather than counting as a pass.
+
+    python3 kb/kb_inventory.py --write   # regenerate v2/vendor/PARTS.md and check it against the store
+    python3 kb/kb_recall.py              # ask every part's own question, report recall@k
+    python3 kb/kb_recheck.py             # re-fetch from the recorded source, compare, date the check
+    python3 kb/kb_confidence.py          # the one report, from the gates' own numbers
+
+**The inventory** comes from three independent sources that must agree: the shipped BOM of the newest
+deliverable per board, the generators, and the design documents. Each item is DOCUMENTED (a document
+names its exact order code), FAMILY (a family document covers it, with the reason declared in
+`family-matches.txt`), OPEN PICK (no part chosen yet, so no datasheet can exist, listed with what the
+pick needs), NOT USED (a part number named only to record a rejection), or UNCOVERED, which fails.
+
+**Why three sources.** On 10 September the store reported zero parts without a document. It was
+measured over `gen_sch_*.py` alone and was wrong within a minute of being checked: four parts were
+named only in the other generators, eight more only on the BOMs, five more only in the design
+documents. One source is one heuristic's opinion of itself.
+
+**What this does not claim.** That a document is the current revision: only that its bytes still
+matched the vendor's on the date `kb_recheck` last ran, with hosts that refuse this runner recorded
+as unreachable rather than as verified. That an OCR sidecar's numbers are right: they are an index to
+a drawing, never a source. That the open picks are decided: they are not, and they are enumerated.
