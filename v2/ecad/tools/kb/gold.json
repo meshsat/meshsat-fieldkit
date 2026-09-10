@@ -1,0 +1,93 @@
+{
+ "_comment": [
+  "The retrieval gold set (MESHSAT-862, 10 September 2026). Ten questions a session actually asks",
+  "while building a board, each with the document that answers it. kb_verify.py --gold runs them",
+  "and requires an accepted document in the top k.",
+  "",
+  "Every `accept` entry below was found mechanically, by searching the indexed text of this store",
+  "for a phrase only the right document carries, and reading back which file and page held it. It",
+  "is not a list written from memory, because a gold set written from memory measures the memory.",
+  "",
+  "Two entries name the same document twice: microchip/microchip-ksz9897-datasheet.pdf and",
+  "cluster/ksz9897.pdf are the same Microchip datasheet filed in two folders, so either is right."
+ ],
+ "questions": [
+  {
+   "q": "what output power and frequency band does the RA30H1317M1 power module cover",
+   "accept": [
+    "mitsubishi/ra30h1317m1-datasheet.pdf"
+   ],
+   "fact": "135-175 MHz, 30 W, 12.5 V, two stage"
+  },
+  {
+   "q": "TEN 40-2412WIN input voltage range, output current and isolation",
+   "accept": [
+    "traco/ten40win_datasheet-3049699.pdf"
+   ],
+   "fact": "the isolated shore converter under the dock gap"
+  },
+  {
+   "q": "which M.2 key and interface does the AsiaRF AW7915 module use",
+   "accept": [
+    "wifi/asiarf-AW7915-AE1-datasheet.pdf",
+    "wifi/asiarf-AW7915-NP1-datasheet.pdf"
+   ],
+   "fact": "A/E key, MT7915"
+  },
+  {
+   "q": "SA868 walkie talkie module supply voltage and transmit current",
+   "accept": [
+    "nicerf/nicerf-sa868-datasheet-v1.3.pdf"
+   ],
+   "fact": "the ruled V2 radio module on PCB-D"
+  },
+  {
+   "q": "ATECC608B package options and pin count",
+   "accept": [
+    "microchip/microchip-atecc608b-datasheet.pdf"
+   ],
+   "fact": "the secure element behind ZEROIZE"
+  },
+  {
+   "q": "LG290P GNSS module supply voltage and pin assignment",
+   "accept": [
+    "quectel/lg290p03-hardware-design-v1.1.pdf",
+    "quectel/lg290p-hardware-design-v1.0.0-zh.pdf",
+    "quectel/lg290p03-module-specification-v1.3.pdf"
+   ],
+   "fact": "the ruled GNSS receiver, MESHSAT-823"
+  },
+  {
+   "q": "KSZ9897 RGMII interface signals and strapping",
+   "accept": [
+    "microchip/microchip-ksz9897-datasheet.pdf",
+    "cluster/ksz9897.pdf",
+    "cluster/ksz989x-hw-design-checklist.pdf"
+   ],
+   "fact": "the five-port switch on PCB-B"
+  },
+  {
+   "q": "BME280 humidity and pressure accuracy over temperature",
+   "accept": [
+    "bosch/bme280-datasheet.pdf"
+   ],
+   "fact": "inside climate sensing"
+  },
+  {
+   "q": "Compute Module 5 connector pin assignment for the PCIe lane",
+   "accept": [
+    "cm5/cm5-datasheet.pdf",
+    "cm5/cm5io-datasheet.pdf"
+   ],
+   "fact": "the receptacles on our own carrier"
+  },
+  {
+   "q": "RockBLOCK 9704 supply voltage and peak transmit current",
+   "accept": [
+    "rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf",
+    "rockblock/rb9704-sch-2B1.pdf"
+   ],
+   "fact": "the Iridium site on PCB-B"
+  }
+ ]
+}
