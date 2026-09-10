@@ -68,6 +68,7 @@ import pairsearch
 _FAST_SEARCH = os.environ.get("PAIR_FAST_SEARCH", "1") != "0"   # the compiled search when numba is here, the heapq one otherwise; the same path either way (pairsearch.py selftest)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
+W_INNER = float(os.environ.get("PAIR_INNER_WIDTH", "0"))   # the width a pair takes on an inner layer; 0 = the class width everywhere
 # ---------------------------------------------------------------- the occupancy maps, built once and topped up (10 Sep 2026)
 # MEASURED on B19's 113 pairs after the rasteriser was vectorised: 1,248 of the pass's 1,552 seconds were still in build_maps,
 # against 113 in the corridor search. The pads and the rule areas are cached per polygon and cost almost nothing on a repeat;
@@ -79,7 +80,10 @@ MAP_EPOCH = [0]
 def board_remove(b, item):
     """Every removal of copper goes through here, so the cached occupancy maps know they are stale."""
     MAP_EPOCH[0] += 1; b.Remove(item)
+_OUTER_CU = (pcbnew.F_Cu, pcbnew.B_Cu)
 _ALL = {"F.Cu": pcbnew.F_Cu, "In1.Cu": pcbnew.In1_Cu, "In2.Cu": pcbnew.In2_Cu, "In3.Cu": pcbnew.In3_Cu, "In4.Cu": pcbnew.In4_Cu, "B.Cu": pcbnew.B_Cu}
+
+_INNER_CU = tuple(L for L in (pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.In3_Cu, pcbnew.In4_Cu))
 
 def mm(v): return v / 1e6
 
@@ -730,7 +734,16 @@ def main(a):
         # there, by eighty micrometres. At 0.05 mm of slack the same gap is 0.88 mm and the corridor fits. A board-wide 0.05
         # is worse (42 of 113 against 49), so it is a per-pair second chance like the escape-via entry: the measured slack
         # first, and the slim one for a pair that found no corridor at all. `legs_clear` still judges the legs either way.
-        half = w + s / 2 + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
+        # A pair on an inner layer is a STRIPLINE and the class width that hits its target on the outside does not hit it inside.
+        # Measured with the 2D field solver on the JLC 3313 six-layer stack (appendix 32.101, 32.102): 0.127 mm reads 102 ohm
+        # against a 90 ohm target on In2 or In3 and 118 against 100, while 0.210 mm reads 90.2 and 101.7. So the width follows
+        # the layer: PAIR_INNER_WIDTH names the inner one (0 keeps the class width everywhere, which is what every board did
+        # while the corridors were confined to F.Cu and B.Cu). The corridor's own envelope takes the WIDER of the two, because
+        # one map serves every layer and it must never under-block.
+        w_in = W_INNER or w
+        def wid(L): return w_in if L in _INNER_CU else w
+        def dof(L): return (wid(L) + s) / 2
+        half = max(w, w_in) + s / 2 + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
             f = p.GetParentFootprint(); ps = list(f.Pads())
@@ -850,12 +863,12 @@ def main(a):
         via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}   # sites for a single end via per leg (plain margins; the other leg's pads block)
         via1 = via1n[pn]   # shared updates below go to both
         pad_layers = sorted({L for net in (pn, nn) for p in pads[net] for L in _ALL.values() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and p.IsOnLayer(L)} | set(maplayers), key=list(_ALL.values()).index)
-        trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
+        trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
         def rebuild_maps():   # after a swap of two passives inside a section the maps still hold the pads at their old places (D9: a stub over the swapped pad, 8 Sep 2026 13:08)
             nonlocal trk, via, via1n, trk1
             trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)
             via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}
-            trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, w / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, w / 2 + 0.02, vd / 2)[0]}
+            trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         def rollback():
             for t in pieces: board_remove(b, t)
@@ -866,11 +879,12 @@ def main(a):
         def seg(x1, y1, x2, y2, L, net):
             nonlocal added
             if math.hypot(x2 - x1, y2 - y1) < 0.01: return
-            t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(x1), FromMM(y1))); t.SetEnd(VECTOR2I(FromMM(x2), FromMM(y2))); t.SetWidth(FromMM(w)); t.SetLayer(L); t.SetNet(net); t.SetLocked(True); b.Add(t); added += 1; pieces.append(t)
+            wL = wid(L)
+            t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(x1), FromMM(y1))); t.SetEnd(VECTOR2I(FromMM(x2), FromMM(y2))); t.SetWidth(FromMM(wL)); t.SetLayer(L); t.SetNet(net); t.SetLocked(True); b.Add(t); added += 1; pieces.append(t)
             o = other_of(net)
-            if L in trk1[o]: gr.seg(trk1[o][L], x1, y1, x2, y2, w + clr_c + 0.01)   # the other leg keeps clear of this piece by the class clearance (the map's 0.16 floor blocked the other leg's own start 0.35 mm away)
-            for vm in via1n.values(): gr.seg(vm, x1, y1, x2, y2, w / 2 + clr_c + vd / 2 + 0.01)
-            gr.seg(via, x1, y1, x2, y2, w / 2 + CLR + vd / 2 + VIA_SPLIT)
+            if L in trk1[o]: gr.seg(trk1[o][L], x1, y1, x2, y2, wL + clr_c + 0.01)   # the other leg keeps clear of this piece by the class clearance (the map's 0.16 floor blocked the other leg's own start 0.35 mm away)
+            for vm in via1n.values(): gr.seg(vm, x1, y1, x2, y2, wL / 2 + clr_c + vd / 2 + 0.01)
+            gr.seg(via, x1, y1, x2, y2, wL / 2 + CLR + vd / 2 + VIA_SPLIT)
         def via_at(x, y, net):
             nonlocal added
             v = pcbnew.PCB_VIA(b); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetWidth(FromMM(vd)); v.SetDrill(FromMM(vdr)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(net); v.SetLocked(True); b.Add(v); added += 1; pieces.append(v)
@@ -1211,7 +1225,7 @@ def main(a):
                     L = layers[run[0][0]]; pts = [gr.xy(j, i) for i, j in sm[r_i]]
                     if len(pts) == 1: pts = pts * 2
                     first_run, last_run = r_i == 0, r_i == len(runs) - 1
-                    for poly, net in ((offset_polyline(pts, d * p_side), pn), (offset_polyline(pts, -d * p_side), nn)):
+                    for poly, net in ((offset_polyline(pts, dof(L) * p_side), pn), (offset_polyline(pts, -dof(L) * p_side), nn)):
                         total = sum(math.hypot(poly[k + 1][0] - poly[k][0], poly[k + 1][1] - poly[k][1]) for k in range(len(poly) - 1)); walked = 0.0
                         for k in range(len(poly) - 1):
                             (x1, y1), (x2, y2) = poly[k], poly[k + 1]; ln_ = math.hypot(x2 - x1, y2 - y1); n = int(ln_ / gr.G) * 2 + 2
@@ -1265,7 +1279,7 @@ def main(a):
                     for r_i, run in enumerate(runs):
                         L = layers[run[0][0]]; pts = [gr.xy(c[2], c[1]) for c in run]
                         first_run, last_run = r_i == 0, r_i == len(runs) - 1
-                        for poly, net in ((offset_polyline(pts, d * p_side), pn), (offset_polyline(pts, -d * p_side), nn)):
+                        for poly, net in ((offset_polyline(pts, dof(L) * p_side), pn), (offset_polyline(pts, -dof(L) * p_side), nn)):
                             seg = [math.hypot(poly[k + 1][0] - poly[k][0], poly[k + 1][1] - poly[k][1]) for k in range(len(poly) - 1)]
                             total = sum(seg); walked = 0.0; hit = None
                             for k in range(len(poly) - 1):
@@ -1285,7 +1299,7 @@ def main(a):
             for r_i, run in enumerate(runs):
                 L = layers[run[0][0]]; pts = list(merged[r_i][1])
                 if len(pts) == 1: pts = pts * 2
-                lp = offset_polyline(pts, d * p_side); ln = offset_polyline(pts, -d * p_side)
+                lp = offset_polyline(pts, dof(L) * p_side); ln = offset_polyline(pts, -dof(L) * p_side)
                 for poly, net in ((lp, net_p), (ln, net_n)):
                     for k in range(len(poly) - 1): seg(poly[k][0], poly[k][1], poly[k + 1][0], poly[k + 1][1], L, net)
                 if r_i > 0 and layers[runs[r_i - 1][0][0]] == L:   # the same layer (an entry run meets the corridor): the legs join with a short piece
@@ -1323,8 +1337,8 @@ def main(a):
             first_pts = list(merged[0][1]); last_pts = list(merged[-1][1])
             if len(first_pts) == 1: first_pts = first_pts * 2
             if len(last_pts) == 1: last_pts = last_pts * 2
-            lp0, ln0 = offset_polyline(first_pts, d * p_side)[0], offset_polyline(first_pts, -d * p_side)[0]
-            lp1, ln1 = offset_polyline(last_pts, d * p_side)[-1], offset_polyline(last_pts, -d * p_side)[-1]
+            lp0, ln0 = offset_polyline(first_pts, dof(firstL) * p_side)[0], offset_polyline(first_pts, -dof(firstL) * p_side)[0]
+            lp1, ln1 = offset_polyline(last_pts, dof(lastL) * p_side)[-1], offset_polyline(last_pts, -dof(lastL) * p_side)[-1]
             def end_crossing(P, Nn, lp_, ln_):
                 """The stubs of an end cross when the P pad lies on the other side of the leg-pair axis than the P leg's offset end."""
                 ux, uy = ln_[0] - lp_[0], ln_[1] - lp_[1]   # across the legs, P to N
