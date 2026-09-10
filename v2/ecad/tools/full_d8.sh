@@ -23,6 +23,8 @@ python3 ../tools/check_pcb_d.py $N.kicad_pcb > out/check_d.log 2>&1; grep -E 'FA
 python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
 # D9 (8 Sep 2026, MESHSAT-862 rule 1, appendix 32.68): every USB pair laid as locked copper on the class's layers before the router; a pair that cannot be laid blocks (PAIR_GATE=0 to route anyway)
+cp $N.kicad_pcb out/$N-placed.kicad_pcb   # 10 Sep 2026: the placed board with its escapes and before any pair copper, the input every pre-router measurement needs
+[ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
 PAIR_LAYERS=${PAIR_LAYERS:-F.Cu} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-In2.Cu} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes USB > out/pair_preroute.log 2>&1; PP=$?; grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -14; [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || { echo "BLOCK pair pre-router (out/pair_preroute.log)" | tee out/preroute-gate.txt; echo PREROUTE-DONE BLOCK; exit 1; }
 # 9 Sep 2026 (D10, appendix 32.83): THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT. The fanout used to run first and scatter
 # plane vias over the whole board with no knowledge of the pair corridors; D10's USB3 then had its corridor START cell blocked by
