@@ -1,0 +1,32 @@
+Geometry of 1451-931-top, probed from peli/1450/1451-931-top.STEP
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: unknown. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1450/1451-931-top.STEP
+sha256 (first 16): 11a1aa05ff53d714
+size: 202003 bytes
+points read: 1042
+
+1451-931-top ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -8.360 to 8.360   extent 16.720
+  axis 2 -0.000 to 24.500   extent 24.500
+  axis 3 -6.110 to 6.110   extent 12.220
+
+1451-931-top HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1451-931-top: diameter 0.941 : 2 holes   pattern 13.779 x 0.000
+      at X -6.890  Y 0.000
+      at X 6.890  Y 0.000
+
+(1 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+
