@@ -63,7 +63,8 @@ FP = {
  "FUSE": "Fuse:Fuseholder_Blade_Mini_Keystone_3568", "XH5": "Connector_JST:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical", "XH4": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
  "WIRE": "Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm", "R1206": "Resistor_SMD:R_1206_3216Metric",
 }
-P = []
+kisch.configure(fp=FP, synth=SYNTH)   # the engine needs the footprint table before the first part
+P = kisch.P                           # one list, shared with the engine (not a copy)
 def synth(ref, name, value, fp, nets, lcsc=""):
     full = {str(k): nets.get(k, nets.get(str(k), "NC")) for k in SYNTH[name]}
     part(ref, "Connector_Generic", name, value, fp, full, lcsc)
@@ -119,11 +120,10 @@ for i, net in enumerate(("BTP_INT", "FUSE", "CHG_R", "DSG_R", "SW", "FUSED", "PA
 for i, net in enumerate(("CELL4", "CELL1", "CELL2", "CELL3", "PACK_P", "PACK_N", "FUSED", "SW", "GND"), 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 # ----------------------------------------------------------------- emit (as B15)
 POWER = {"GND": ("power", "GND")}
-libsyms = {}; out = []; ROOT = str(uuid.uuid5(kisch.UUID_NS, "root:" + (sys.argv[1] if len(sys.argv) > 1 else "pcb-p-pack")))   # deterministic: a board regenerates byte for byte (10 Sep 2026)
+libsyms = kisch.libsyms; out = kisch.out; pf_n = kisch.pf_n   # the engine's, by reference
 STUB = 5.08
-pf_n = [0]
-kisch.P = P; kisch.libsyms = libsyms; kisch.pf_n = pf_n   # the same objects: the engine appends to this board's lists
-kisch.configure(fp=FP, power=POWER, synth=SYNTH, stub=STUB, root=ROOT, seed=os.path.basename(sys.argv[1]) if len(sys.argv) > 1 else "pcb-p-pack")
+ROOT = str(uuid.uuid5(kisch.UUID_NS, "root:" + (sys.argv[1] if len(sys.argv) > 1 else "pcb-p-pack")))   # deterministic: a board regenerates byte for byte (10 Sep 2026)
+kisch.configure(power=POWER, stub=STUB, root=ROOT, seed=os.path.basename(sys.argv[1]) if len(sys.argv) > 1 else "pcb-p-pack")
 byref = {p["ref"]: p for p in P}
 
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
