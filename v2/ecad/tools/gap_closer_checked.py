@@ -4,13 +4,19 @@ Usage: gap_closer_checked.py <board> <drc.json>"""
 import sys, re, json, math, subprocess, shutil, os, pcbnew
 from pcbnew import VECTOR2I, FromMM
 BOARD, DRC = sys.argv[1], sys.argv[2]
-HARD = ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "copper_edge_clearance")
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import hardset
+# 10 September 2026 (both red teams, C1): this file judged a FIVE-type subset of its own, with no reason recorded anywhere.
+# There is one hard set and it is hardset's; a violation the finish will refuse on is one this tool should act on too, and a
+# violation hardset exempts (a footprint against itself) is one it should leave alone.
+HARD = hardset.HARD_POST
 def run_drc(path):
     pro = os.path.splitext(BOARD)[0] + ".kicad_pro"; tpro = os.path.splitext(path)[0] + ".kicad_pro"
     if os.path.exists(pro) and not os.path.exists(tpro): shutil.copy(pro, tpro)   # kicad-cli reads the design rules from the project file next to the board
     out = path + ".drc.json"; subprocess.run(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", out, path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     d = json.load(open(out)); os.remove(out)
-    return sum(1 for v in d["violations"] if v["type"] in HARD), len(d.get("unconnected_items", []))
+    return sum(1 for v in d["violations"] if v["type"] in HARD and not hardset.exempt(v)), len(d.get("unconnected_items", []))
 base_hard, base_unr = run_drc(BOARD); print("baseline: hard %d, unrouted %d" % (base_hard, base_unr))
 d = json.load(open(DRC))
 def item_of(b, it):

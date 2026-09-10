@@ -7,11 +7,14 @@ track named by a shorting_items or tracks_crossing item goes, plus every unlocke
 (default 1.5 mm) of the violation; the opens this creates are closed by the stub router afterwards (the finish re-runs the DRC in between).
 Prints 'unknot: N tracks removed at K spots (nets ...)'."""
 import sys, json, pcbnew
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import hardset   # the knot pattern is named there (10 Sep 2026)
 b = pcbnew.LoadBoard(sys.argv[1]); d = json.load(open(sys.argv[2])); R = float(sys.argv[3]) if len(sys.argv) > 3 else 1.5
 by_uuid = {t.m_Uuid.AsString(): t for t in b.GetTracks()}
 spots, victims, names = [], set(), set()
 for v in d.get("violations", []):
-    if v["type"] not in ("shorting_items", "tracks_crossing"): continue
+    if v["type"] not in hardset.KNOT: continue
     nets = set()
     for it in v.get("items", []):
         t = by_uuid.get(it.get("uuid", ""))

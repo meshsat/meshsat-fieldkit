@@ -1,64 +1,65 @@
 {
-  "board": "pcb-c-display",
-  "board_key": "C6",
-  "project": "v2/ecad/pcb-c-display-4l",
-  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
-  "preroute": "v2/ecad/pcb-c-display-4l/out/pcb-c-display-preroute.kicad_pcb",
-  "note": "Own project directory on the experiment host holding the FOUR-layer C6 pre-route board of 6 Sep 2026 05:00 (In1 GND plane, In2 routing; the two-layer board left 14 to 23 connections open in every route). fr19_base routes GND as wires on three layers (control); the planes configurations keep the In1 GND zone in the DSN. 13:10: the route block no longer declares In1 as a power layer (the VM's clean C6 route of 04:58 had In1 routable and no plane; the box's production rerun with the same settings left 3 opens on a freshly generated board), so fr24_base here is the backup for the production C6: same pre-route board as the VM's clean run.",
-  "services_script": "~/meshsat-services.sh",
-  "expect": "the four-layer backer with the GND plane in the DSN completes (raw opens 0) on at least one jar within 80 passes; the control without the plane completes or leaves under 5 opens; router vias and length fall against the two-layer C6 rows",
-  "route": {
-    "passes": 80,
-    "threads": 1,
-    "timeout": 5400
+ "board": "pcb-c-display",
+ "board_key": "C",
+ "project": "v2/ecad/pcb-c-display-4l",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "preroute": "v2/ecad/pcb-c-display-4l/out/pcb-c-display-preroute.kicad_pcb",
+ "note": "Own project directory on the experiment host holding the FOUR-layer C6 pre-route board of 6 Sep 2026 05:00 (In1 GND plane, In2 routing; the two-layer board left 14 to 23 connections open in every route). fr19_base routes GND as wires on three layers (control); the planes configurations keep the In1 GND zone in the DSN. 13:10: the route block no longer declares In1 as a power layer (the VM's clean C6 route of 04:58 had In1 routable and no plane; the box's production rerun with the same settings left 3 opens on a freshly generated board), so fr24_base here is the backup for the production C6: same pre-route board as the VM's clean run.",
+ "services_script": "~/meshsat-services.sh",
+ "expect": "the four-layer backer with the GND plane in the DSN completes (raw opens 0) on at least one jar within 80 passes; the control without the plane completes or leaves under 5 opens; router vias and length fall against the two-layer C6 rows",
+ "route": {
+  "passes": 80,
+  "threads": 1,
+  "timeout": 5400
+ },
+ "stub_layers": "F.Cu,In2.Cu,B.Cu",
+ "stub_grid": "0.1",
+ "configs": [
+  {
+   "name": "fr19_base",
+   "jar": "freerouting-1.9.0.jar"
   },
-  "stub_layers": "F.Cu,In2.Cu,B.Cu",
-  "stub_grid": "0.1",
-  "configs": [
-    {
-      "name": "fr19_base",
-      "jar": "freerouting-1.9.0.jar"
-    },
-    {
-      "name": "fr19_planes",
-      "jar": "freerouting-1.9.0.jar",
-      "planes": [
-        "GND"
-      ]
-    },
-    {
-      "name": "fr24_planes",
-      "jar": "freerouting-2.4.1.jar",
-      "planes": [
-        "GND"
-      ]
-    },
-    {
-      "name": "fr19_planes_via200",
-      "jar": "freerouting-1.9.0.jar",
-      "planes": [
-        "GND"
-      ],
-      "via_costs": 200
-    },
-    {
-      "name": "fr24_base",
-      "jar": "freerouting-2.4.1.jar"
-    },
-    {
-      "name": "fr24_via200",
-      "jar": "freerouting-2.4.1.jar",
-      "via_costs": 200
-    },
-    {
-      "name": "fr19_plain",
-      "jar": "freerouting-1.9.0.jar",
-      "plain": true
-    },
-    {
-      "name": "fr24_plain",
-      "jar": "freerouting-2.4.1.jar",
-      "plain": true
-    }
-  ]
+  {
+   "name": "fr19_planes",
+   "jar": "freerouting-1.9.0.jar",
+   "planes": [
+    "GND"
+   ]
+  },
+  {
+   "name": "fr24_planes",
+   "jar": "freerouting-2.4.1.jar",
+   "planes": [
+    "GND"
+   ]
+  },
+  {
+   "name": "fr19_planes_via200",
+   "jar": "freerouting-1.9.0.jar",
+   "planes": [
+    "GND"
+   ],
+   "via_costs": 200
+  },
+  {
+   "name": "fr24_base",
+   "jar": "freerouting-2.4.1.jar"
+  },
+  {
+   "name": "fr24_via200",
+   "jar": "freerouting-2.4.1.jar",
+   "via_costs": 200
+  },
+  {
+   "name": "fr19_plain",
+   "jar": "freerouting-1.9.0.jar",
+   "plain": true
+  },
+  {
+   "name": "fr24_plain",
+   "jar": "freerouting-2.4.1.jar",
+   "plain": true
+  }
+ ],
+ "board_phase": "C6"
 }

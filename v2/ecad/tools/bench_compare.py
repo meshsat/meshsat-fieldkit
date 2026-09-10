@@ -8,6 +8,20 @@ lower is better, 1.0 is the released board. Time is printed beside Q and never f
 Usage: bench_compare.py <baseline.json> <metrics.json> [--board KEY] [--json out]   (KEY defaults to the metrics' tag, then its board stem)"""
 import sys, json, os
 
+# 10 September 2026 (both red teams, C3): the baseline was keyed by PHASE, so every C6 and B15 experiment looked its key up,
+# found C5 and B14, and graded UNMEASURABLE after the route had been paid for: 66 of the 81 measured router hours. A baseline
+# belongs to a BOARD, not to a phase of it; a phase that changes the board's metrics is exactly what the comparison measures.
+BOARD_KEY = {"pcb-a-power": "A", "pcb-b-compute": "B", "pcb-c-display": "C", "pcb-c-ring": "CRING", "pcb-d-aprs": "D",
+             "pcb-e1-dock": "E", "pcb-e2-rfjunction": "E2", "pcb-e5-block": "E5", "pcb-p-pack": "P"}
+
+
+def board_key(stem):
+    """The baseline key of a board file, project directory or stem: 'pcb-b-compute-b19/pcb-b-compute.kicad_pcb' -> 'B'."""
+    base = os.path.basename(str(stem)); base = os.path.splitext(base)[0]
+    for k, v in BOARD_KEY.items():
+        if base == k or base.startswith(k + "-") or base.startswith(k + "."): return v
+    return base
+
 def arg(name, default=None): return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default
 
 def compare(base, m):
@@ -24,9 +38,9 @@ def compare(base, m):
 
 def main():
     base_all = json.load(open(sys.argv[1])); m = json.load(open(sys.argv[2]))
-    key = arg("--board") or m.get("tag") or os.path.splitext(m["board"])[0]
-    base = base_all.get(key) or next((v for k, v in base_all.items() if k.startswith(key) or key.startswith(k)), None)
-    if base is None: print("UNMEASURABLE: no baseline for", key, "in", sys.argv[1]); sys.exit(3)
+    key = arg("--board") or board_key(m["board"])
+    base = base_all.get(key)   # no prefix fallback: it could never match C6 to C5 and it hid the miss (10 Sep 2026)
+    if base is None: print("UNMEASURABLE: no baseline for", key, "in", sys.argv[1], "- keys:", ", ".join(sorted(base_all))); sys.exit(3)
     verdict, note, q = compare(base, m)
     res = {"board": key, "verdict": verdict, "Q": q, "note": note, "baseline_tag": base.get("tag")}
     if arg("--json"): json.dump(res, open(arg("--json"), "w"), indent=1)
