@@ -122,8 +122,8 @@ for i, net in enumerate(("CELL4", "CELL1", "CELL2", "CELL3", "PACK_P", "PACK_N",
 POWER = {"GND": ("power", "GND")}
 libsyms = kisch.libsyms; out = kisch.out; pf_n = kisch.pf_n   # the engine's, by reference
 STUB = 5.08
-ROOT = str(uuid.uuid5(kisch.UUID_NS, "root:" + (sys.argv[1] if len(sys.argv) > 1 else "pcb-p-pack")))   # deterministic: a board regenerates byte for byte (10 Sep 2026)
-kisch.configure(power=POWER, stub=STUB, root=ROOT, seed=os.path.basename(sys.argv[1]) if len(sys.argv) > 1 else "pcb-p-pack")
+ROOT = str(uuid.uuid5(kisch.UUID_NS, "root:" + PROJECT))   # deterministic and independent of the output path: a board regenerates byte for byte (10 Sep 2026)
+kisch.configure(power=POWER, stub=STUB, root=ROOT, project=PROJECT, seed=PROJECT)
 byref = {p["ref"]: p for p in P}
 
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]

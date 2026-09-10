@@ -29,14 +29,16 @@ P = []
 pf_n = [0]
 ROOT = str(uuid.uuid4())
 STUB = 5.08
+PROJECT = ""  # the KiCad project name written into every symbol instance, from the board file
 FP = {}       # footprint key -> library footprint, from the board file
 POWER = {}    # net name -> (library, symbol) for the nets drawn as power symbols
 SYNTH = {}    # synthesised symbols (a module drawn as one big connector), from the board file
 
 
-def configure(fp=None, power=None, synth=None, stub=None, symdir=None, root=None, seed=None):
+def configure(fp=None, power=None, synth=None, stub=None, symdir=None, root=None, seed=None, project=None):
     """The board file hands its tables to the engine once, before it starts adding parts."""
-    global FP, POWER, SYNTH, STUB, SYMDIR, ROOT
+    global FP, POWER, SYNTH, STUB, SYMDIR, ROOT, PROJECT
+    if project is not None: PROJECT = project
     if seed is not None: UUID_SEED[0] = str(seed); _UUID_N[0] = 0
     if fp is not None: FP = fp
     if power is not None: POWER = power
