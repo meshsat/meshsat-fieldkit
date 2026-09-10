@@ -85,7 +85,9 @@ def check_coverage(db):
             chunked += 1
         ext = os.path.splitext(rel)[1].lower()
         if ext == ".pdf" and not n and rel not in noindex:
-            blind.append(rel)
+            # an OCR sidecar makes the drawing reachable by search, which is what blindness meant here
+            if not os.path.exists(os.path.join(VENDOR, os.path.splitext(rel)[0] + ".ocr.txt")):
+                blind.append(rel)
     counts["chunked"] = chunked
     with db.cursor() as c:
         # a current datasheet whose pages carry almost no text is present, searchable and useless;
@@ -99,6 +101,9 @@ def check_coverage(db):
             if rel not in noindex:
                 thin.append("%s (%d pages, %d chars of text)" % (rel, pages, chars))
     counts["thin_undeclared"] = len(thin)
+    with db.cursor() as c:
+        c.execute("SELECT COUNT(*) FROM documents WHERE present=1 AND relpath LIKE '%.ocr.txt'")
+        counts["ocr_sidecars"] = c.fetchone()[0]
     counts["blind_undeclared"] = len(blind)
     counts["status_undeclared"] = len(undeclared)
     fails += ["no text layer and no declared reason: %s" % r for r in blind]

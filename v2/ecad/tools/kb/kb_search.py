@@ -45,6 +45,11 @@ NOTE_EXT = (".md", ".adoc", ".html", ".htm", ".txt", ".yaml", ".yml", ".json", "
 # it keeps full weight. Without this it lost to the READMEs by the note factor and a question about a
 # module's hole pattern came back with a different module's.
 MEASURED_SUFFIX = ".geom.txt"
+# An OCR sidecar is a searchable index of a drawing that has no text layer. It is never a source of
+# numbers: OCR misreads exactly the characters that matter on a drawing, a decimal point, a tolerance,
+# an H7, a 6 against an 8. It is labelled in every hit and it points at the original page.
+OCR_SUFFIX = ".ocr.txt"
+OCR_WEIGHT = 0.8
 NOTE_WEIGHT = 0.55
 PER_DOC_CAP = 3      # six passages of one datasheet are one piece of evidence, not six
 
@@ -123,7 +128,9 @@ def search(query, k=6, vendor=None, include_retired=False, use_rerank=True, call
             # only the label remains: otherwise asking about the WeAct module, which IS retired,
             # returned three other modules' hole patterns and never its own.
             w = 1.0 if include_retired else STATUS_WEIGHT.get(status, 0.5)
-            if os.path.splitext(relpath)[1].lower() in NOTE_EXT and not relpath.endswith(MEASURED_SUFFIX):
+            if relpath.endswith(OCR_SUFFIX):
+                w *= OCR_WEIGHT
+            elif os.path.splitext(relpath)[1].lower() in NOTE_EXT and not relpath.endswith(MEASURED_SUFFIX):
                 w *= NOTE_WEIGHT
             scores[cid] = scores.get(cid, 0.0) + (1.0 / (RRF_K + rank + 1)) * w
             meta[cid] = {"chunk_id": cid, "relpath": relpath, "page": page, "status": status,
@@ -220,6 +227,7 @@ def main(argv):
     for i, h in enumerate(hits, 1):
         page = ("p.%d" % h["page"]) if h["page"] else "(no pages)"
         note = ("  [PROBED FROM THE CAD MODEL]" if h["relpath"].endswith(MEASURED_SUFFIX)
+                else "  [OCR OF A DRAWING, NOT A SOURCE OF NUMBERS]" if h["relpath"].endswith(OCR_SUFFIX)
                 else ("  [REPO NOTE]" if os.path.splitext(h["relpath"])[1].lower() in NOTE_EXT else ""))
         print("\n[%d] v2/vendor/%s  %s%s%s" % (i, h["relpath"], page, STATUS_LABEL.get(h["status"], ""), note))
         if h["status"] != "current" and h["status_reason"]:
