@@ -4114,3 +4114,69 @@ offset at corners (the 12), the via sites and crossings (the 5), and only then a
 
 The claim was made from where the failures felt concentrated rather than from counting them, which is the same mistake as
 reading an exit status instead of the number a change was supposed to move (32.96). The count took one command.
+
+### 32.104 A retrieval store over the vendor documents, and why it may never decide anything (10 September 2026, 22:45 CEST; MESHSAT-862)
+
+The owner asked whether RAG makes sense here, and the first answer was a qualified no: the sibling
+project closest to this pipeline in shape rejected GraphRAG outright, the gateway that does run
+retrieval keeps it strictly on the prompt side, and every expensive mistake in this record was a
+verification failure rather than a retrieval failure. That answer was made on an incomplete reading.
+The estate also runs a fifth system that had already solved the storage half of the problem on the
+shared database cluster, with native `VECTOR(768)` on MariaDB 11.8 and an embedding host that is
+already up: there is no VRAM negotiation to have, no index service to maintain, and no new
+dependency to keep alive. The cost objection was answered before it was raised.
+
+What does not change is the shape of the thing. Retrieval here answers exactly one question, which
+page of which vendor document to read, and it is kept off every path that judges a board by four
+mechanisms rather than by intent:
+
+1. **The truth cap is a database constraint.** A retrieved passage is model-selected evidence, so a
+   lookup is recorded at 0.75, below the action threshold the sibling projects enforce, and
+   `ck_truth_cap CHECK (confidence <= 0.750)` refuses anything higher. Proved by a rejected write:
+   an insert at 0.900 fails with `CONSTRAINT ck_truth_cap failed`.
+2. **No gate may import it.** `tools/tests/test_kb_isolation.py` scans every gate, check, finish and
+   chain script for a reference and fails on one; `kb_search.py` does not import `verdict.py` at
+   all, so the tool that proposes evidence has no way to write a verdict about it. All three guards
+   were proved to fire by breaking each one in turn. The topology says the same thing independently:
+   the boards are built and judged on a rented box with no route to this store.
+3. **A retired part is never served as current.** Every document carries the status of its vendor
+   folder, declared with its ruling in `v2/vendor/vendor-status.txt`: 306 files current, 49 retired,
+   11 V1-only, 12 tooling. A folder with no declaration fails the coverage check, so nothing enters
+   the store as current by default, and when nothing current matches, the tool says so in those
+   words instead of quietly serving a retired page.
+4. **An absent part is named.** This is the guard that matters most. Asked for the `TMUXHS4212`, the
+   fused ranking returns the LT8705A's exposed-pad note and a TI mux's pin table: two real pages,
+   both about something else, and nothing in a naive output would say so. Every part-number-shaped
+   token in a question is now checked against the returned passages and against the whole store, and
+   the answer reads `NO DOCUMENT IN THIS STORE MENTIONS TMUXHS4212`.
+
+**The numbers.** 258 vendor PDFs, 6,733 pages, 379 files, 31,791 chunks, each carrying the page it
+came from, all embedded. `kb_verify.py` writes a verdict JSON like every other gate and its exit
+code is the verdict: coverage 379 rows against 379 files with every text-less or picture-only
+document declared with a reason; the embedding space at median cosine 1.000 against a 0.9999 bar
+(keeping the model and swapping only the asymmetric prefix moves it to 0.958, which is what the bar
+is set to catch); and a gold set of ten real questions, every accepted document found mechanically
+from the indexed text rather than written from memory, 10 of 10 at k=6 and 9 of 10 at k=1.
+
+**What the first ingest found, before any query was asked.** The store's first useful output was an
+inventory of what cannot be checked from this tree.
+
+- `dmr858/dmr858m-datasheet.pdf` is a saved `404 Not Found` page, 552 bytes, under a `.pdf` name.
+- `weact/` holds both `README.md` and `readme.md`, two different files, and under the schema's
+  default case-insensitive collation the second silently landed on the first's row, took its hash
+  and deleted its chunks with no error anywhere. `relpath` is `utf8mb4_bin` now and the coverage
+  check counts rows against files, which is how it surfaced.
+- **There is no datasheet in this tree for the TMUXHS4212**, the USB mux of PCB-B's high-availability
+  layer, whose pin table this record says was corrected by hand from the manufacturer's drawing.
+- **There is none for the STM32H743** either, the three I/O supervisors, which follows from `st.com`
+  refusing both the runner and the box.
+- **And none for the TPS2065CDBV**, which is the part behind this record's most-quoted trap: a
+  footprint key is a claim about a package that nobody checks, and that one sat on a SOT-23-6 land
+  for four board phases while TI's DBV package is a five-pin SOT-23.
+- The SA868, the ruled V2 radio, has a datasheet that carries text only from page 2 and is otherwise
+  images. Six documents are filed twice under different names, byte for byte.
+
+That list is the argument for the store and the argument against trusting it in one breath. It can
+tell you that a claim has no source in this tree, which is a fact about our documents and worth
+knowing. It cannot tell you that a claim is true, and nothing about how well it retrieves will ever
+make it able to, because what makes a board correct is a mechanical check of the board.
