@@ -35,7 +35,12 @@ PAIR_EXPANSIONS = int(os.environ.get("PAIR_EXPANSIONS", "12000000"))   # expansi
 # budget is spent by MANY searches per pair (the corridor plus a stub search per station), not by one. 12,000,000 is the
 # figure that matches the clock on a quiet core, and unlike the clock it gives the same answer whatever else the box runs.
 PAIR_SPENT = [0]
+T0 = time.time()   # the pass's own clock, for the phase line at the end
 import pcbnew, numpy as np
+try:
+    from matplotlib.path import Path as _PATH   # the vectorised point-in-polygon test; without it the SWIG loop below is used
+except Exception:
+    _PATH = None
 from pcbnew import VECTOR2I, FromMM
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -79,17 +84,55 @@ class Grid:
         if ck is not None and ck in self._cache:
             ci0, cj0, mask = self._cache[ck]; M[ci0:ci0 + mask.shape[0], cj0:cj0 + mask.shape[1]] |= mask; return
         grown = pcbnew.SHAPE_POLY_SET(sps)
-        if grow > 0:
-            try: grown.Inflate(FromMM(grow), pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, FromMM(0.05))
+        # +0.1 um so a cell centre exactly on the boundary counts as blocked. It is done on the POLYGON, not by matplotlib's
+        # `radius`, which inflates every sub-path on its own and so fills a polygon's holes: with it the board-wide "edge band"
+        # keep-out (a ring, 1,593 mm2 of band around a 65,060 mm2 hole) blocked all 6,708,420 cells of the map (10 Sep 2026).
+        _g = grow + 1e-4
+        try: grown.Inflate(FromMM(_g), pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, FromMM(0.05))
+        except Exception:
+            try: grown.Inflate(FromMM(_g), 16)
+            except Exception: pass
+        # 10 September 2026, MEASURED (report 2, M1): this loop called SHAPE_POLY_SET.Contains through SWIG once per cell, and a
+        # profile of three B19 pairs spent 270 of 330 seconds here across 56.4 million Contains calls and 112.8 million FromMM
+        # conversions, against 41 seconds in the A* it exists to feed. The polygon's own vertices go to numpy once and
+        # matplotlib's path test does every cell in one call. Same predicate, and the old loop stays as the fallback.
+        mask = self._poly_mask(grown, i0, i1, j0, j1)
+        if ck is not None: self._cache[ck] = (i0, j0, mask)
+        M[i0:i1 + 1, j0:j1 + 1] |= mask
+
+    def _poly_mask(self, grown, i0, i1, j0, j1):
+        """The cells of the box [i0..i1] x [j0..j1] whose centres lie inside `grown`."""
+        G, X0, Y0 = self.G, self.X0, self.Y0
+        ys = np.arange(i0, i1 + 1) * G + Y0; xs = np.arange(j0, j1 + 1) * G + X0
+        if _PATH is not None:
+            try:
+                XX, YY = np.meshgrid(xs, ys)
+                pts = np.column_stack((XX.ravel(), YY.ravel()))
+
+                def _ring_mask(chain):
+                    """The cells inside one closed ring. matplotlib's contains_points fills every sub-path whatever its winding
+                    (checked: a square with a reversed inner square still reports the middle as inside), so a polygon's holes
+                    cannot be expressed as sub-paths and are subtracted here instead. Without this the board-wide "edge band"
+                    keep-out, a 1,593 mm2 ring around a 65,060 mm2 hole, blocked the whole map (10 September 2026)."""
+                    n = chain.PointCount()
+                    if n < 3: return np.zeros(pts.shape[0], dtype=bool)
+                    v = [(chain.CPoint(k).x / 1e6, chain.CPoint(k).y / 1e6) for k in range(n)]
+                    return _PATH(np.asarray(v + [v[0]]), np.asarray([1] + [2] * (n - 1) + [79], dtype=np.uint8)).contains_points(pts)
+
+                inside = np.zeros(pts.shape[0], dtype=bool)
+                for oi in range(grown.OutlineCount()):
+                    m = _ring_mask(grown.Outline(oi))
+                    for hi in range(grown.HoleCount(oi)): m &= ~_ring_mask(grown.Hole(oi, hi))
+                    inside |= m
+                return inside.reshape(len(ys), len(xs))
             except Exception:
-                try: grown.Inflate(FromMM(grow), 16)
-                except Exception: pass
-        mask = np.zeros((i1 - i0 + 1, j1 - j0 + 1), dtype=bool)
+                pass   # fall through to the predicate the board itself answers
+        mask = np.zeros((len(ys), len(xs)), dtype=bool)
         for ii in range(i0, i1 + 1):
             for jj in range(j0, j1 + 1):
                 if grown.Contains(VECTOR2I(FromMM(X0 + jj * G), FromMM(Y0 + ii * G))): mask[ii - i0, jj - j0] = True
-        if ck is not None: self._cache[ck] = (i0, j0, mask)
-        M[i0:i1 + 1, j0:j1 + 1] |= mask
+        return mask
+
 
 def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
     """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer)."""
@@ -201,6 +244,22 @@ def astar(gr, layers, trk, via, start, goal, window, behind=(), cost=None):
     while path[-1] in prev: path.append(prev[path[-1]])
     return list(reversed(path))
 
+
+
+# ---------------------------------------------------------------- where the seconds go (10 September 2026, MESHSAT-862)
+# The profile that motivated the fast rasteriser (270 of 330 seconds in Grid.poly) had to be taken with cProfile on a copy of
+# the board. Every arm needs that number, so the tool keeps it itself: one accumulator per phase, one line at the end of the
+# pass. It costs a time.time() per call of two functions and it is what says whether the next change belongs in the maps or
+# in the search.
+_T = {"maps": 0.0, "astar": 0.0}
+def _timed(name, fn):
+    def w(*a, **k):
+        t0 = time.time()
+        try: return fn(*a, **k)
+        finally: _T[name] += time.time() - t0
+    w.__name__ = fn.__name__; w.__doc__ = fn.__doc__; return w
+build_maps = _timed("maps", build_maps)
+astar = _timed("astar", astar)
 
 def smooth(gr, pts_cells, passable, cap=None):
     """Greedy line-of-sight simplification of a run's cells [(i, j)...] on one layer: keep the farthest point (at most `cap` cells away) reachable
@@ -344,7 +403,7 @@ def main(a):
     board = a[0]; test = "--test" in a; g = float(a[a.index("--grid") + 1]) if "--grid" in a else 0.1
     _GLONG = float(os.environ.get("PAIR_GRID_LONG", "0")) or 0.0   # a coarser grid for the long pairs (0 = off)
     _LONG_MM = float(os.environ.get("PAIR_LONG_MM", "120"))
-    b = pcbnew.LoadBoard(board); gr = Grid(b, g)
+    b = pcbnew.LoadBoard(board); gr = Grid(b, g); _grids = {g: gr}
     pro = os.path.splitext(board)[0] + ".kicad_pro"; assign = {}; classes = {}
     if os.path.exists(pro):
         d = json.load(open(pro)); assign = d.get("net_settings", {}).get("netclass_assignments", {}); classes = {c["name"]: c for c in d.get("net_settings", {}).get("classes", [])}
@@ -580,8 +639,10 @@ def main(a):
         # says so rather than reading the wrong cells.
         if _GLONG and (NEG_COST is not None or plan_in):
             raise SystemExit("pair_preroute: PAIR_GRID_LONG cannot be combined with the negotiated plan or its cost rasters (they are sized from one grid)")
-        if _GLONG and _span(stem) >= _LONG_MM: gr = Grid(b, _GLONG)
-        elif gr.G != g: gr = Grid(b, g)
+        # One Grid per cell size, kept: the polygon raster cache is instance-local since the fix above, so building a fresh Grid
+        # for every long pair threw the whole board's pad rasters away twice per pair (10 September 2026).
+        want = _GLONG if (_GLONG and _span(stem) >= _LONG_MM) else g
+        if gr.G != want: gr = _grids.setdefault(want, Grid(b, want))
         pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
         pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
         vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); clr_c = float(cl.get("clearance", CLR))
@@ -1381,6 +1442,8 @@ def main(a):
     for l in report: print("pair_preroute: " + l)
     n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
     print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
+    print("pair_preroute: seconds %.0f total, %.0f in the occupancy maps, %.0f in the corridor search, %.0f elsewhere; %d expansions"
+          % (time.time() - T0, _T["maps"], _T["astar"], max(0.0, time.time() - T0 - _T["maps"] - _T["astar"]), PAIR_SPENT[0]))
     return 0 if laid == n_pairs else 1
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
