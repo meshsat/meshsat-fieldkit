@@ -51,6 +51,7 @@ def main(a):
         # The laying pass cares about CONTESTED cells first: a plan where every pair has a corridor but the corridors overlap
         # lays worse than one where a few pairs have none and the rest are disjoint, because an overlap is a pair lost anyway
         # and it takes its neighbour with it. Fewest contested first, then most corridors.
+        shutil.copyfile(plan_f, "%s.iter%d" % (plan_f, k))   # every iteration's plan is kept: the best of a run is a judgement and it can be re-made later
         if best is None or (contested, -done) < (best[1], -best[0]):
             best = (done, contested); shutil.copyfile(plan_f, plan_f + ".best")
         if contested == 0: break
