@@ -33,11 +33,30 @@ def run(b, check, nets=None):
     nets = nets if nets is not None else power_nets(b)
     pz = [z for z in zones if z.GetNetname() in nets and z.GetFilledArea() > 0]
     n1 = n2 = n3 = 0
+    # 10 September 2026 (C10): the coverage denominator is the pour's outline INSIDE THE BOARD. C7 is a U-shaped backer with a
+    # display window through it, so a pour drawn over the whole board rectangle can never fill more than about 40 percent of its
+    # own outline and every one of its four pours failed a check that is meant to catch a pour eaten to slivers. On a solid
+    # rectangular board the two areas are the same, which is why this only ever bit the panel backer.
+    board_poly = pcbnew.SHAPE_POLY_SET()
+    try: b.GetBoardPolygonOutlines(board_poly)
+    except Exception: board_poly = None
+
+    def outline_area(z):
+        o = z.Outline()
+        if board_poly is None or board_poly.OutlineCount() == 0: return o.Area() / 1e12
+        try:
+            zp = pcbnew.SHAPE_POLY_SET(o)
+            try: zp.BooleanIntersection(board_poly, pcbnew.SHAPE_POLY_SET.PM_FAST)
+            except TypeError: zp.BooleanIntersection(board_poly)
+            a = zp.Area() / 1e12
+            return a if a > 0 else o.Area() / 1e12
+        except Exception:
+            return o.Area() / 1e12
     thru = [p for f in b.GetFootprints() for p in f.Pads() if p.GetNetname() in nets and p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH]
     vias_all = [t for t in b.GetTracks() if t.Type() == pcbnew.PCB_VIA_T and t.GetNetname() in nets]
     for z in pz:
         L = z.GetFirstLayer(); fp = z.GetFilledPolysList(L); bb = z.GetBoundingBox()
-        rect = z.Outline().Area() / 1e12; area = z.GetFilledArea() / 1e12   # against the zone's own outline area (a ring or an L is not its bounding box; review of 8 Sep 2026)
+        rect = outline_area(z); area = z.GetFilledArea() / 1e12   # against the zone's own outline area clipped to the board (a ring or an L is not its bounding box; review of 8 Sep 2026, board clip 10 Sep 2026)
         # a piece is anchored when a pad or a via of the net lies in it (a plane on a routable layer is sliced by tracks into anchored pieces; that is not a defect);
         # a piece with no anchor is an island the fill should have removed; the fill must still cover MIN_COVER of the outline (a pour eaten to slivers carries nothing)
         anchors = [p.GetPosition() for p in thru if p.GetNetname() == z.GetNetname()] + [v.GetPosition() for v in vias_all if v.GetNetname() == z.GetNetname()]
@@ -52,7 +71,7 @@ def run(b, check, nets=None):
             merged = any(any(o.PointInside(q.GetFilledPolysList(L).Outline(k).CPoint(j)) for k in range(q.GetFilledPolysList(L).OutlineCount()) for j in range(0, q.GetFilledPolysList(L).Outline(k).PointCount(), 7)) for q in same)
             merged = merged or any(any(q.Outline().Contains(o.CPoint(j)) for j in range(0, o.PointCount(), 5)) for q in same)   # abutting same-net zones (a higher-priority band knocks the lower one out to its edge)
             if not merged: loose += 1
-        solid_gnd = z.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != L and o.GetFilledArea() >= 0.8 * o.Outline().Area() for o in pz)   # a ground pour on a routing layer beside a solid ground plane: its islands are a note, not a defect
+        solid_gnd = z.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != L and o.GetFilledArea() / 1e12 >= 0.8 * outline_area(o) for o in pz)   # a ground pour on a routing layer beside a solid ground plane: its islands are a note, not a defect
         if slivers: print("NOTE pour '%s' (%s, %s): %d piece(s) under %.1f mm2 not counted (isolated slivers, the fill's own crumbs)" % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), slivers, SLIVER))
         if solid_gnd and loose: print("NOTE pour '%s' (%s, %s): %d of %d pieces loose; the solid ground plane on another layer carries the return" % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), loose, fp.OutlineCount())); loose = 0
         check(loose == 0 and area >= MIN_COVER * rect, "pour '%s' (%s, %s): every piece anchored by a pad or via of its net (%d of %d loose), fill %.0f of %.0f mm2 of its outline (at least %.0f%%)" % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), loose, fp.OutlineCount(), area, rect, MIN_COVER * 100)); n1 += 1
@@ -61,7 +80,7 @@ def run(b, check, nets=None):
         inside = [z for z in pz if z.GetNetname() == t.GetNetname() and z.Outline().Contains(t.GetPosition())]
         touched = any(tr.GetClass() == "PCB_TRACK" and tr.GetNetname() == t.GetNetname() and (tr.GetStart() == t.GetPosition() or tr.GetEnd() == t.GetPosition()) for tr in b.GetTracks())
         for z in inside:
-            if t.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != z.GetFirstLayer() and o.GetFilledArea() >= 0.8 * o.Outline().Area() for o in pz): continue   # a ground via reaches the solid plane
+            if t.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != z.GetFirstLayer() and o.GetFilledArea() / 1e12 >= 0.8 * outline_area(o) for o in pz): continue   # a ground via reaches the solid plane
             if not touched and not z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()): print("NOTE stitch via %s at (%.1f, %.1f) outside the fill of '%s' (no track on it: it carries nothing)" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed")); continue   # P2's ground grid where the router's tracks pushed the fill away
             check(z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()), "locked via %s at (%.1f, %.1f) sits in the fill of '%s' on %s" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed", b.GetLayerName(z.GetFirstLayer()))); n2 += 1
     bynet = {}
