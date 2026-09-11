@@ -81,12 +81,20 @@ python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail 
 # dangling by its rule, and the board gate then refuses the board for it (P routed 0 hard and 0 unrouted and was
 # refused for exactly one). Judged the way the stub router is: keep it only if nothing opened (11 Sep 2026).
 cp $N.kicad_pcb out/$N-prestitch.kicad_pcb
+python3 $T/hardset.py out/$N-drc.json post --counts out/prune-before.txt --label 'before stitch_prune' >/dev/null
+read BH BU < out/prune-before.txt
 python3 $T/stitch_prune.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | head -4
 $T/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 $T/hardset.py out/$N-drc.json post --counts out/prune-score.txt --label 'after stitch_prune' >/dev/null
 read PH PU < out/prune-score.txt
-if [ "$PH" -ne 0 ] || [ "$PU" -ne 0 ]; then
-  echo "stitch_prune hurt (hard $PH, unrouted $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
+# Judged against the board BEFORE it, never against zero. Written against zero, it blamed the pruner for an
+# open the board already had: E reached the pruner at one open, the pruner changed nothing about that open, and
+# the revert fired every time, so the pruner could never help a board that was not already clean
+# (12 September 2026, found by reading the line beside "after stub router: hard 0 unrouted 1").
+if [ "$PH" -gt "$BH" ] || [ "$PU" -gt "$BU" ]; then
+  echo "stitch_prune hurt (hard $BH -> $PH, unrouted $BU -> $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
+else
+  echo "stitch_prune kept (hard $BH -> $PH, unrouted $BU -> $PU)"
 fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
 python3 $T/silk_fix_all.py $N.kicad_pcb $L 2>&1 | grep -vE 'Debug|leak' | tail -2

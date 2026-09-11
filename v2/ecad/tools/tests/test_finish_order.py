@@ -152,3 +152,7 @@ def t_the_stitch_pruner_is_reverted_when_it_opens_anything():
     assert "-prestitch.kicad_pcb" in t[:i], "no copy of the board is taken before the pruner runs"
     assert "reverting" in after and "cp out/$N-prestitch.kicad_pcb" in after, \
         "the pruner's result is not reverted when it opens something"
+    # and judged against the board BEFORE it, never against zero: written against zero it blamed the pruner
+    # for an open the board already had, and could never help a board that was not already clean.
+    assert '-gt "$BH"' in after and '-gt "$BU"' in after, \
+        "the pruner is judged against zero rather than against the board it was given"
