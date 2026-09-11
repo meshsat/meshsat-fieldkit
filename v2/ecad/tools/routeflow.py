@@ -19,6 +19,7 @@ import platform, sys, os, re, json, time, glob, hashlib, subprocess, shutil, col
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict   # one hash implementation, and the same one the gates write into their verdicts
 import hardset   # the one DRC policy, for grading a profile's prediction
+import ledger    # the journal is a chained ledger, not an append-only file
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import hardset   # 10 September 2026: the supervisor used to carry its own six-type tuple while the finish refused on hardset's
@@ -200,7 +201,13 @@ def journal(project, rec):
     if rec.get("board") and "boards" not in rec:
         try: rec["boards"] = board_hashes(project, rec["board"])
         except Exception as e: rec["boards"] = {"error": str(e)}
-    with open(os.path.join(project, "out", "routeflow", "journal.jsonl"), "a") as f: f.write(json.dumps(rec) + "\n")
+    # Chained (11 September 2026): each row carries the hash of the one before, so a row edited, removed or
+    # reordered after the fact fails `ledger.py verify`. Append-only was never the same as tamper-evident.
+    path = os.path.join(project, "out", "routeflow", "journal.jsonl")
+    try: rec = ledger.append(path, rec)
+    except Exception as e:
+        rec["ledger_error"] = str(e)
+        with open(path, "a") as f: f.write(json.dumps(rec) + "\n")
     print("[routeflow %s] %s %s  %s" % (rec["ts"][11:], rec.get("stage", ""), rec.get("status", ""), rec.get("note", "")), flush=True)
 
 def fingerprint(repo, prof, project):
@@ -719,6 +726,15 @@ def selftest():
     journal(jp, dict(board="brd", stage="finish", status="CLEAN"))
     row3 = json.loads(open(os.path.join(jp, "out", "routeflow", "journal.jsonl")).read().splitlines()[-1])
     chk("a changed board changes the hash on the next row", row3["boards"]["brd.kicad_pcb"] != row2["boards"]["brd.kicad_pcb"])
+    # The journal is a chained ledger: a row edited after the fact must fail the walk (11 September 2026).
+    jl = os.path.join(jp, "out", "routeflow", "journal.jsonl")
+    ok_, n_, probs_ = ledger.verify(jl)
+    chk("the journal chain verifies (%d rows)" % n_, ok_ and n_ == 3)
+    _rows = [json.loads(l) for l in open(jl) if l.strip()]
+    _rows[1]["status"] = "CLEAN"
+    open(jl, "w").write("\n".join(json.dumps(r, sort_keys=True) for r in _rows) + "\n")
+    ok2_, _n, probs2_ = ledger.verify(jl)
+    chk("a journal row edited after the fact is caught", (not ok2_) and any("content changed" in x for x in probs2_))
     shutil.rmtree(t, ignore_errors=True); ok = sum(1 for _, c in res if c)
     print("selftest: %d of %d predicates block on empty input as required" % (ok, len(res))); return 0 if ok == len(res) else 1
 
