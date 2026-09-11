@@ -18,6 +18,7 @@ J_AB1 (2x13, underside). Every radio is a USB device of one hub; the kit I2C bus
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-b-compute"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from idc_pads import idc   # the IDC land is a per-board measurement (IDC_PADS), not a default: see idc_pads.py
 # 10 September 2026 (MESHSAT-862, red team C2): the schematic engine lives in kisch.py, one copy for the six boards.
 # What stays here is this board: its part tables, its nets, its sheet layout. `ic()` is strict for every board again.
 import kisch
@@ -81,7 +82,7 @@ FP = {
  "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm", "L4020": "Inductor_SMD:L_Coilcraft_XAL4020-XXX", "L6060": "Inductor_SMD:L_Coilcraft_XAL6060-XXX", "L0402": "Inductor_SMD:L_0402_1005Metric",
  "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "VH4": "Connector_JST:JST_VH_B4P-VH_1x04_P3.96mm_Vertical",
  "SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
- "IDC16": "meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad", "IDC26": "meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad",
+ "IDC16": idc("2x08"), "IDC26": idc("2x13"),
  "PH1x2": "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical", "PH1x3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "PH1x4": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
  "PH1x5": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical", "PH2x5": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
  "USBC": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "USB3A": "Connector_USB:USB3_A_Receptacle_Wuerth_692122030100", "HDMI": "Connector_Video:HDMI_A_Molex_208658-1001_Horizontal",

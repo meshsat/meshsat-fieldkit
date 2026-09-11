@@ -26,6 +26,11 @@ PPASSES="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(ch
 # sweep measures the declaration instead of the knob (11 September 2026).
 PENV="$(python3 -c "import json,sys,os; d=json.load(open(sys.argv[1])).get('pair_env') or {}; print(' '.join('%s=%s' % (k, v) for k, v in d.items() if not os.environ.get(k)))" "$CFG")"
 [ -n "$PENV" ] && echo "pair environment declared by the board: $PENV"
+# The same for the GENERATORS (`gen_env`), which is where a board declares a land pattern or any other choice it
+# was measured best at: IDC_PADS is the first (12 September 2026, the 2.54 mm IDC channel; `idc_pads.py` carries
+# the numbers). A caller's own value wins here too, so an arm can vary what the board declares.
+GENV="$(python3 -c "import json,sys,os; d=json.load(open(sys.argv[1])).get('gen_env') or {}; print(' '.join('%s=%s' % (k, v) for k, v in d.items() if not os.environ.get(k)))" "$CFG")"
+[ -n "$GENV" ] && echo "generator environment declared by the board: $GENV"
 cd "$D" || exit 2
 mkdir -p out
 block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $1"; [ -n "${2:-}" ] && tail -5 "$2"; echo PREROUTE-DONE BLOCK; exit 1; }
@@ -44,7 +49,7 @@ if [ -n "$FPGEN" ]; then
   python3 "../tools/$FPGEN" ../meshsat.pretty > out/gen_fp.log 2>&1 || block "footprint generator (out/gen_fp.log)" out/gen_fp.log
   grep gen_footprints out/gen_fp.log | cut -c1-120
 fi
-python3 ../tools/gen_sch_$L.py $N.kicad_sch $N > out/gen_sch.log 2>&1 || block "schematic generator (out/gen_sch.log)" out/gen_sch.log
+env $GENV python3 ../tools/gen_sch_$L.py $N.kicad_sch $N > out/gen_sch.log 2>&1 || block "schematic generator (out/gen_sch.log)" out/gen_sch.log
 grep -E 'wrote|single-pin nets' out/gen_sch.log
 # The netlist is an OUTPUT, not a file that happens to be there (10 September 2026; round-two red teams, report 1 P1). This
 # did not check build_sch.sh's status and did not delete the old netlist first, so a failed export with yesterday's netlist on
