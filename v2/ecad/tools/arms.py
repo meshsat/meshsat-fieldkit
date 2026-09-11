@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+"""Run many pre-router arms at once and grade each against its own written prediction (MESHSAT-862, 11 Sep 2026).
+
+The ladders of 32.97 and 32.98 ran serially, one knob at a time, at twenty minutes an arm, and the answer to
+"which of these eight ideas pays" took a day. A box with 128 cores runs eight arms in the time one takes, and the
+pre-router is one thread per pass, so width is the whole of the speedup available here.
+
+The shape is the one the control-plane programme settles on and it is deliberately small:
+
+  * AN ARM IS {name, env, predict}. The env is the knobs; the prediction is written BEFORE the run, in the spec
+    file, and is graded mechanically afterwards. An arm without a prediction is refused, because a run nobody
+    predicted cannot disappoint and so cannot teach anything. That is the fail-closed prediction gate, here.
+  * EVERY ARM GETS ITS OWN PROJECT DIRECTORY, copied from one source, with the same placed board restored into
+    it. One experiment per project directory is a rule this project already paid for: routeflow experiments
+    sharing a directory overwrote each other's pre-route board and three hours of "B15" rows were B14 routes
+    (6 September, appendix). The board's md5 goes in every row, so a row names the bytes it measured.
+  * THE JUDGE IS NOT THE PROPOSER. Grading is `pairs >= predicted`, computed here from the tool's own summary
+    line, never from anything the arm reports about itself.
+  * ROWS ARE CHAINED into a ledger, so the table can be regenerated and cannot be quietly edited.
+
+Usage: arms.py <spec.json> [--parallel N] [--dry]
+"""
+import os, re, sys, json, time, shutil, hashlib, argparse, subprocess, concurrent.futures as cf
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict, ledger
+
+TOOLS = os.path.dirname(os.path.abspath(__file__))
+PAIRS = re.compile(r"pair_preroute: (\d+) of (\d+) pairs laid")
+SECS = re.compile(r"pair_preroute: seconds (\d+) total, (\d+) in the occupancy maps")
+
+
+def md5(path):
+    h = hashlib.md5()
+    with open(path, "rb") as f:
+        for c in iter(lambda: f.read(1 << 20), b""): h.update(c)
+    return h.hexdigest()
+
+
+def run_arm(spec, arm, ecad, out_dir):
+    """One arm: its own copy of the project, the same placed board, the passes in order. Returns a row."""
+    name = arm["name"]
+    src = os.path.join(ecad, spec["source_project"])
+    dst = os.path.join(ecad, "arm-%s-%s" % (spec["letter"], name))
+    t0 = time.time()
+    row = {"arm": name, "board": spec["board"], "letter": spec["letter"], "env": arm.get("env", {}),
+           "predict": arm["predict"], "tools_sha": spec.get("tools_sha", "")}
+    try:
+        shutil.rmtree(dst, ignore_errors=True)
+        shutil.copytree(src, dst)
+        placed = os.path.join(dst, spec["placed"])
+        board = os.path.join(dst, spec["board"] + ".kicad_pcb")
+        if not os.path.exists(placed):
+            row.update(error="no placed board at %s" % spec["placed"]); return row
+        row["placed_md5"] = md5(placed)
+        laid = total = 0; secs = maps = 0; logs = []
+        for i, ps in enumerate(spec["passes"], 1):
+            shutil.copyfile(placed, board) if i == 1 else None   # pass 1 starts from the placed board; later passes read what the earlier laid
+            env = dict(os.environ); env.update({k: str(v) for k, v in ps.get("env", {}).items()})
+            env.update({k: str(v) for k, v in arm.get("env", {}).items()})
+            log = os.path.join(out_dir, "arm-%s-pass%d.log" % (name, i))
+            with open(log, "w") as fh:
+                subprocess.run([sys.executable, os.path.join(TOOLS, "pair_preroute.py"), board,
+                                "--classes", ps["classes"]], cwd=dst, stdout=fh, stderr=subprocess.STDOUT,
+                               env=env, timeout=spec.get("timeout_s", 14400))
+            txt = open(log, errors="replace").read(); logs.append(os.path.basename(log))
+            m = PAIRS.search(txt)
+            if m: laid += int(m.group(1)); total += int(m.group(2))
+            t = SECS.search(txt)
+            if t: secs += int(t.group(1)); maps += int(t.group(2))
+        row.update(pairs=laid, of=total, seconds=secs, map_seconds=maps, logs=logs)
+    except subprocess.TimeoutExpired: row["error"] = "timed out"
+    except Exception as e: row["error"] = "%s: %s" % (type(e).__name__, e)
+    finally:
+        row["wall_s"] = round(time.time() - t0, 1)
+        shutil.rmtree(dst, ignore_errors=True)
+    return row
+
+
+def grade(row):
+    """The mechanical judge. `pairs` against the arm's own written prediction, and nothing the arm said."""
+    p = row.get("predict") or {}
+    if row.get("error"): return "INFRA_FAIL", row["error"]
+    got = row.get("pairs")
+    if got is None: return "UNMEASURABLE", "the pass printed no 'pairs laid' line"
+    op, val = p.get("op", ">="), p.get("value")
+    if val is None: return "UNMEASURABLE", "no predicted value"
+    ok = {">=": got >= val, ">": got > val, "==": got == val, "<=": got <= val, "<": got < val}.get(op)
+    if ok is None: return "UNMEASURABLE", "unknown operator %r" % op
+    return ("MET" if ok else "MISSED"), "%d %s %s (%s)" % (got, op, val, p.get("basis", "no basis given"))
+
+
+def main(argv):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("spec"); ap.add_argument("--parallel", type=int, default=8)
+    ap.add_argument("--out-dir", default="out/arms"); ap.add_argument("--dry", action="store_true")
+    a = ap.parse_args(argv)
+    spec = json.load(open(a.spec))
+    ecad = os.path.abspath(spec.get("ecad") or os.path.dirname(TOOLS))
+    os.makedirs(a.out_dir, exist_ok=True)
+
+    missing = [x.get("name", "?") for x in spec["arms"] if not x.get("predict", {}).get("value")]
+    if missing:
+        print("arms: refused, these carry no prediction: %s" % missing)
+        print("arms: an arm nobody predicted cannot disappoint, so it cannot teach anything")
+        return verdict.write("arms", verdict.FAIL, counts={"unpredicted": len(missing)}, denominator=len(spec["arms"]),
+                             evidence=missing, note="every arm carries {metric, op, value, basis} before it runs",
+                             out_dir=a.out_dir)
+    if a.dry:
+        for x in spec["arms"]: print("  %-14s env %-44s predict %s %s" % (x["name"], json.dumps(x.get("env", {})), x["predict"].get("op"), x["predict"].get("value")))
+        return 0
+
+    print("arms: %d arm(s), %d at a time, source %s" % (len(spec["arms"]), a.parallel, spec["source_project"]))
+    rows = []
+    with cf.ThreadPoolExecutor(max_workers=a.parallel) as ex:
+        futs = {ex.submit(run_arm, spec, x, ecad, a.out_dir): x for x in spec["arms"]}
+        for f in cf.as_completed(futs):
+            row = f.result(); v, note = grade(row); row["verdict"] = v; row["note"] = note
+            rows.append(row)
+            print("arms: %-14s %-12s %s  (%.0f s, maps %s s)" % (row["arm"], v, note, row.get("wall_s", 0), row.get("map_seconds", "?")))
+            ledger.append(os.path.join(a.out_dir, "arms.jsonl"), row)
+    rows.sort(key=lambda r: (-(r.get("pairs") or -1), r["arm"]))
+    print("\narms: ranked by pairs laid")
+    for r in rows:
+        print("  %-14s %-4s of %-4s  %-10s maps %-5s s  wall %-6s s  %s"
+              % (r["arm"], r.get("pairs", "-"), r.get("of", "-"), r["verdict"], r.get("map_seconds", "-"),
+                 r.get("wall_s", "-"), json.dumps(r.get("env", {}))[:60]))
+    met = sum(1 for r in rows if r["verdict"] == "MET"); bad = sum(1 for r in rows if r["verdict"] == "INFRA_FAIL")
+    best = rows[0] if rows else {}
+    return verdict.write("arms", verdict.INCONCLUSIVE if bad == len(rows) else verdict.PASS,
+                         counts={"arms": len(rows), "met": met, "missed": len(rows) - met - bad, "infra_fail": bad,
+                                 "best_pairs": best.get("pairs")},
+                         denominator=len(rows), evidence=["%s %s %s" % (r["arm"], r["verdict"], r["note"]) for r in rows],
+                         note="best %s with %s of %s; the judge is the pair count, never the arm" % (best.get("arm"), best.get("pairs"), best.get("of")),
+                         out_dir=a.out_dir)
+
+
+if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
