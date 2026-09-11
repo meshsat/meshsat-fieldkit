@@ -75,7 +75,7 @@ def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
 
 # ================================================================= the design (nets are root-sheet labels; GND is the only power symbol)
 # --- harness and power entry (A22 J_MEZZ1 mirror, J_MEZZ_PWR1 5 V behind A22's 2 A eFuse U23)
-# 12 September 2026 (MESHSAT-862): USB_D8 sits on pins 1/2, the END row, and the four pins behind it are ground. Measured
+# 11 September 2026 (MESHSAT-862): USB_D8 sits on pins 1/2, the END row, and the four pins behind it are ground. Measured
 # reason: this is a 2x8 at 2.54 mm with 1.70 mm pads, so the channel between the two columns is 0.84 mm, while a 0.30/0.20/0.30
 # pair with its class clearance needs 1.20 mm. No coupled pair can leave an INNER row of this header, in any direction or on
 # any layer, the pins being through-hole; only an end row escapes into free board. The 10 September move (from the diagonal

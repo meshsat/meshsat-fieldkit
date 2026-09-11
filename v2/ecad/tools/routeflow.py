@@ -266,7 +266,7 @@ def jar_in_use(route=None):
     Every place that RECORDED a jar had its own default string, `~/bin/freerouting-1.9.0.jar`, so with nothing
     pinned the journal line and the provenance file both named the stock jar while the patched one ran. A record
     that says something other than what happened is the defect this whole channel exists to remove
-    (12 September 2026)."""
+    (11 September 2026)."""
     pinned = (route or {}).get("jar")
     if pinned: return os.path.expanduser(pinned)
     mesh = os.path.expanduser("~/bin/freerouting-1.9.0-mesh.jar")
@@ -477,7 +477,7 @@ def run(profile_fn, rounds, use_services, dry):
             # from scratch, so the supervisor was discarding a good board to keep a bad one: board E went 0 hard
             # and 1 open in round one, then 0 hard and 23 opens after the via_costs remedy, and the 1-open board
             # was gone. Every other stage in this pipeline already keeps a result only if it improves
-            # (cont_route, stub_accept, quality_pass); the supervisor did not (12 September 2026).
+            # (cont_route, stub_accept, quality_pass); the supervisor did not (11 September 2026).
             if sig not in ("NO_SESSION", "TOOL_CRASH", "INFRA_FAIL"):
                 _sc = (best[1][0], unr if unr is not None else 10 ** 6)
                 if best_board[0] is None or _sc < best_board[0]:
@@ -535,7 +535,7 @@ def run(profile_fn, rounds, use_services, dry):
                                                    % (best_board[2], best_board[0][0], best_board[0][1], rnd)))
                         # A restored board is not a finished board. The finish is what closes the last opens,
                         # runs every gate and cuts the deliverable, and it last ran on the round being discarded,
-                        # so run it once on the board that is actually being kept (12 September 2026).
+                        # so run it once on the board that is actually being kept (11 September 2026).
                         if not dry:
                             fin = prof["finish"]; flog = os.path.join(rdir, "round%d-finish-best.log" % rnd)
                             for stale in (os.path.join(project, fin["clean_flag"]), os.path.join(project, "out", "contracts.log")):

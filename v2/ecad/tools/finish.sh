@@ -98,7 +98,7 @@ read PH PU < out/prune-score.txt
 # Judged against the board BEFORE it, never against zero. Written against zero, it blamed the pruner for an
 # open the board already had: E reached the pruner at one open, the pruner changed nothing about that open, and
 # the revert fired every time, so the pruner could never help a board that was not already clean
-# (12 September 2026, found by reading the line beside "after stub router: hard 0 unrouted 1").
+# (11 September 2026, found by reading the line beside "after stub router: hard 0 unrouted 1").
 if [ "$PH" -gt "$BH" ] || [ "$PU" -gt "$BU" ]; then
   echo "stitch_prune hurt (hard $BH -> $PH, unrouted $BU -> $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
 else

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Where a differential pair may sit on a two-row 2.54 mm header, checked in the generators that write the pin map.
 
-Measured on D's /USB_D8 (12 September 2026, MESHSAT-862). J_HARN1 is a 2x8 at 2.54 mm with 1.70 mm pads, so the
+Measured on D's /USB_D8 (11 September 2026, MESHSAT-862). J_HARN1 is a 2x8 at 2.54 mm with 1.70 mm pads, so the
 channel between the two columns is 2.54 - 1.70 = 0.84 mm. A 0.30/0.20/0.30 pair needs its own 0.80 mm plus the
 class clearance on both sides, 1.20 mm at 0.20. The pins are through-hole, so the channel is 0.84 mm on every
 layer and no inner row can be left coupled in any direction. The pre-router had been reporting exactly that for

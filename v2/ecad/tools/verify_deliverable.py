@@ -90,7 +90,7 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP", "PAD", "P_"), ba
         # with its reason, and writes its answer beside the BOM as `<name>-bom.status`. This gate knew only
         # `tools/jlc-handfit.txt` and the bench prefixes, so a line the board declares in the place the project
         # actually uses read as undeclared here. Board E was 34 of 35 properties on exactly that, with every
-        # other gate passing and its allow list correct (12 September 2026).
+        # other gate passing and its allow list correct (11 September 2026).
         _st = os.path.join(D, "%s-bom.status" % name)
         _lcsc_ok = os.path.exists(_st) and open(_st, errors="replace").read().strip() == "OK"
         blank = [r for r in rows if not r.get("LCSC Part #")]

@@ -30,7 +30,7 @@ if dry:
         if os.path.exists(s_): __import__("shutil").copy(s_, os.path.splitext(tmp)[0] + e)
 # The DRC JSON is an intermediate, so it belongs in out/ with every other one. Written beside the
 # BOARD it escaped the out/ ignore rule and turned up as untracked noise in the project directory
-# after every run (12 September 2026).
+# after every run (11 September 2026).
 _od = os.path.join(os.path.dirname(os.path.abspath(bp)) or ".", "out")
 os.makedirs(_od, exist_ok=True)
 j2 = os.path.join(_od, os.path.basename(os.path.splitext(tmp)[0]) + "-zpv-drc.json")

@@ -117,7 +117,7 @@ Each one that runs gets its result recorded here beside the row it answers.
 
 ---
 
-## The decisions as they stand, 12 September 2026
+## The decisions as they stand, 11 September 2026
 
 **The layer count is on the never-auto floor** (`tools/reserved.json`), so what follows is the measured decision
 per board with the evidence that forced it, for the owner to rule on. Four of the seven are written here and

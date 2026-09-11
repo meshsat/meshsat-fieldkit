@@ -192,7 +192,7 @@ pairs (`USB_D8`, `USB_E6`, `USB_WALL`) on a 2x13 of the same family, so the coun
 the B19 arm results will say. **Pair class geometry is on the never-auto floor** (`reserved.json`), so I have
 taken the measurement and stopped.
 
-### Addendum, 12 September 2026: a fourth way out that costs nothing, and what is left of this decision
+### Addendum, 11 September 2026: a fourth way out that costs nothing, and what is left of this decision
 
 **The question above assumed the pair must cross the pin field. It does not have to.** A pair on the header's
 **END row** leaves past the end of the connector, into free board, and never enters the channel at all. D's
@@ -265,7 +265,7 @@ unrouted on 11 September.
 
 ---
 
-## 8. The order set cannot be rebuilt until the board prose names the boards being ordered (12 September 2026)
+## 8. The order set cannot be rebuilt until the board prose names the boards being ordered (11 September 2026)
 
 `make_handoff.py` resolves each board's deliverable phase from the tree now and **refuses** when the prose still
 describes an older phase, which is the gate that stops a note describing D8 travelling with D10's gerbers. It

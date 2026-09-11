@@ -194,7 +194,7 @@ router closing its one open), C is routing, P routed and finished every electric
 the process, every one of them a writer that had been wrong for as long as nobody read it; they are in
 `project_unread_channel_defects.md` and in appendix 32.113 and 32.114.
 
-## Verification, measured rather than claimed (12 September 2026)
+## Verification, measured rather than claimed (11 September 2026)
 
 The plan's own verification list, with what was actually run against each item.
 
@@ -209,7 +209,7 @@ The plan's own verification list, with what was actually run against each item.
 | 7 | every deliverable passes `verify_deliverable`; `check_contracts` passes across the set | **P3 35 of 35**; contracts **ALL PASS, 40 of 40** once A existed in the tree |
 | 8 | the suite passes on the runner and on the box | **155 on the runner, 161 on the box** (the box has pcbnew, so six board rules run there that skip here), selftest 54 of 54 on both |
 
-## Where the run stands, 12 September 2026 01:15 CEST
+## Where the run stands, 11 September 2026 01:15 CEST
 
 **Delivered.**
 
