@@ -1,49 +1,55 @@
 {
-  "name": "pcb-b-compute",
-  "letter": "b",
-  "title": "PCB-B COMPUTE",
-  "footprint_generator": "gen_footprints_b16.py",
-  "extra_compile": [],
-  "gate_before_placement": true,
-  "bypass_place_after": "mechanical",
-  "escape_env": {
-    "ESCAPE_SKIP": "U3,U4,J_HDMI"
+ "name": "pcb-b-compute",
+ "letter": "b",
+ "title": "PCB-B COMPUTE",
+ "footprint_generator": "gen_footprints_b16.py",
+ "extra_compile": [],
+ "gate_before_placement": true,
+ "bypass_place_after": "mechanical",
+ "escape_env": {
+  "ESCAPE_SKIP": "U3,U4,J_HDMI"
+ },
+ "pair_classes": "USB,DIFF100",
+ "pair_layers": "F.Cu,B.Cu",
+ "pair_hop_layers": "In2.Cu,In3.Cu",
+ "pair_tail": 40,
+ "fanout_nets": "GND,+5V_S1,+5V_S2,+5V_S3,+5V_DEV",
+ "escape_prune_before_audit": true,
+ "pair_passes": [
+  {
+   "classes": "DIFF100",
+   "layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+   "hop_layers": "In2.Cu,In3.Cu",
+   "inner": "DIFF100:0.13/0.127",
+   "note": "100 ohm: on In2/In3 the field solver reads 102 ohm at a 0.127 gap, inside tolerance, and the envelope is 0.387 against the 0.46 it uses outside, so this class gains both layers and room"
   },
-  "pair_classes": "USB,DIFF100",
-  "pair_layers": "F.Cu,B.Cu",
-  "pair_hop_layers": "In2.Cu,In3.Cu",
-  "pair_tail": 40,
-  "fanout_nets": "GND,+5V_S1,+5V_S2,+5V_S3,+5V_DEV",
-  "escape_prune_before_audit": true,
-  "pair_passes": [
-    {
-      "classes": "DIFF100",
-      "layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
-      "hop_layers": "In2.Cu,In3.Cu",
-      "inner": "DIFF100:0.13/0.127",
-      "note": "100 ohm: on In2/In3 the field solver reads 102 ohm at a 0.127 gap, inside tolerance, and the envelope is 0.387 against the 0.46 it uses outside, so this class gains both layers and room"
-    },
-    {
-      "classes": "USB",
-      "layers": "F.Cu,B.Cu",
-      "hop_layers": "In2.Cu",
-      "inner": "",
-      "note": "90 ohm: stays on the outer layers, where its class geometry already hits the target; 0.127/0.127 on In2/In3 would read 102 ohm against a 90 ohm target"
-    }
-  ],
-  "finish": {
-    "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
-    "pour_nets": "GND",
-    "pair_match": true,
-    "pair_audit_nets": [
-      "PCIE1_TX",
-      "PCIE2_TX",
-      "PCIE3_TX",
-      "USB31_TX",
-      "HDMI1_D0"
-    ],
-    "post_fix": "post_fix_b13.py",
-    "pruned_gate": true,
-    "gate_grep": "FAIL|RESULT|WARN|pieces|stitch|^verdict:"
+  {
+   "classes": "USB",
+   "layers": "F.Cu,B.Cu",
+   "hop_layers": "In2.Cu",
+   "inner": "",
+   "note": "90 ohm: stays on the outer layers, where its class geometry already hits the target; 0.127/0.127 on In2/In3 would read 102 ohm against a 90 ohm target"
   }
+ ],
+ "finish": {
+  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "pour_nets": "GND",
+  "pair_match": true,
+  "pair_audit_nets": [
+   "PCIE1_TX",
+   "PCIE2_TX",
+   "PCIE3_TX",
+   "USB31_TX",
+   "HDMI1_D0"
+  ],
+  "post_fix": "post_fix_b13.py",
+  "pruned_gate": true,
+  "gate_grep": "FAIL|RESULT|WARN|pieces|stitch|^verdict:",
+  "cont_route": {
+   "max_opens": 6,
+   "passes": 80,
+   "timeout_s": 900
+  },
+  "_cont_route_why": "11 September 2026: one continuation pass of the router before the stub router when a handful of connections are open (A21's lever of 5 September). cont_route.sh keeps the board only if it improves, so it cannot make one worse; it was declared for A alone because only the A clones carried it, and E and P both ended a route at exactly one open."
+ }
 }
