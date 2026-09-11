@@ -360,7 +360,7 @@ part("D2", "Device", "D_TVS", "SMBJ58A", "TVS", {"1": "+54V_POE", "2": "GND"}); 
 synth("U5", "TPS23861", "TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus", "TSSOP28",
       {1: "+3V3_DEV", 2: "POE_RST_n", 3: "SCL", 4: "SDA", 5: "SDA", 6: "EXP_INT", 7: "GND", 22: "GND", 28: "+54V_POE", 15: "POE_SEN", 16: "POE_DRAIN", 17: "POE_GATE", 18: "GND", 11: "GND", 8: "GND", 12: "GND", 19: "GND"}, "C93245")
 r("R11", "10k", "POE_RST_n", "+3V3_DEV"); c("C36", "100n", "+3V3_DEV", "GND")
-part("Q1", "Connector_Generic", "Conn_01x05", "FDMC3612 100 V N-FET, PoE port switch (PowerPAK SO-8: 1-3 source, 4 gate, 5 drain tab)", "PPAK", {"1": "POE_SEN", "2": "POE_SEN", "3": "POE_SEN", "4": "POE_GATE", "5": "POE_DRAIN"}, "C455160")
+part("Q1", "Connector_Generic", "Conn_01x05", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6), PoE port switch (1-3 source, 4 gate, 5 drain tab)", "PPAK", {"1": "POE_SEN", "2": "POE_SEN", "3": "POE_SEN", "4": "POE_GATE", "5": "POE_DRAIN"}, "C473333")
 r("R12", "0.255R 1% 2512", "POE_SEN", "GND", "R2512"); r("R13", "0R 2512 (POE_P link)", "+54V_POE", "POE_P", "R2512")   # 9 September 2026 (red team C2): this was 24.9 ohm on an 0603 land, and POE_P is the
 # positive centre tap of the port magnetics, that is, the feed to the powered device. At 802.3at (about 600 mA) it dropped 15 V, leaving 39 V against a
 # 44 V minimum, and dissipated 9 W in a part rated for 0.1 W. Detection and classification are the TPS23861's own pins; nothing belongs in the feed.
