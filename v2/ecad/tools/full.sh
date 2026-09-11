@@ -107,6 +107,13 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # order, 39 + 17 = 56 in the other, against 56 for one pass on two layers. The class that gains the layers goes first.
   # This lived in a session driver until now, so the chain laid 56 and any floor-plan work would have been measured against
   # the wrong baseline.
+  # A board may name the order its pairs are laid in (`pair_order` in boards/<letter>.json). The pass is greedy
+  # and never rips up, so whichever pair goes first takes the room, and "longest first" is the wrong rule where
+  # one pair has far less freedom than the others: A's three ribbon pairs went 2 of 3 to 3 of 3 when the one on
+  # an INNER row of the header, which can only leave through the channel between the columns, was laid before
+  # the two on the end rows, which have the open board in front of them (12 September 2026, appendix 32.134).
+  PORD="$(python3 -c "import json,sys; print('\n'.join(json.load(open(sys.argv[1])).get('pair_order') or []))" "$CFG")"
+  if [ -n "$PORD" ]; then printf '%s\n' "$PORD" > out/pair-order.txt; PENV="$PENV PAIR_ORDER_FILE=$PWD/out/pair-order.txt"; echo "pair order: $(printf '%s' "$PORD" | tr '\n' ' ')first, then the longest of the rest"; fi
   PP=0; PIDX=0
   if [ -n "$PPASSES" ]; then
     while IFS=$'\t' read -r pcls play phop pinner; do

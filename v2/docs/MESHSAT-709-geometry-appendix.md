@@ -5278,3 +5278,37 @@ an unclassified copper-laying script, and its `--test` copy sat beside the board
 B5 trap of 11 September. Both were fixed before the commit.
 
 **The current-phase deliverables are P3, E5, E7 and D10.**
+
+### 32.134 A's three ribbon pairs go from 0 of 3 to 3 of 3, and the copper is then refused by the DRC (12 September 2026, 01:35 CEST; MESHSAT-862)
+
+Decision 6 said the A to B ribbon could not carry three pairs on a 2x13 with two end rows and called it an
+owner question. **It was not a question, it was work**, and three measured changes took A from **0 of 3 pairs to
+3 of 3**:
+
+| change | A's pairs |
+|---|---:|
+| as it stood | 0 of 3 |
+| `J_AB1` remapped: `USB_D8` on pins 1/2 and `USB_E6` on 25/26, the two END rows, `USB_WALL` on 5/6 | **2 of 3** |
+| the inner-row pair laid FIRST (`pair_order` in `boards/a.json`) | **3 of 3** |
+
+**The order matters because the pass is greedy and never rips up.** Laid longest-first, the end-row pairs go
+down and their copper crosses `USB_WALL`'s fan out of the connector; the debug line names it exactly, the leg
+hitting "track (/USB_D8_P) locked at 0.62 mm". The pair with the least freedom goes first, and `full.sh` reads
+that order out of the board's own file now.
+
+**The narrow-pad footprints are a separate lever and A never needed them.** `tools/gen_footprints_idc.py`
+writes KiCad's IDC headers with the pads narrowed **across the columns only**, 1.40 mm in x and the full 1.70 in
+y, which takes the channel from 0.84 mm to **1.14 mm** at a 0.20 mm annular ring on a 1.00 mm drill. A's USB
+class is 0.13/0.14, so its pair needs 0.654 mm and fitted the old channel; **B and D are the 0.30/0.20 boards
+that need 1.054 mm**, and for them this is what makes an inner row passable at all.
+
+**What A's board says now, and it is not a pass.** The pre-route DRC reads **22 hard**, and thirteen of them are
+between the pair nets themselves at the station fans: `/USB_D8_N` against its OWN partner `/USB_D8_P` as
+`shorting_items` and `clearance` on 0.1 mm segments, and `/USB_D8_N` crossing `/USB_WALL_N`. The fan that draws
+a pair's two legs from a 2.5 mm station into 0.27 mm of pair pitch emits copper that overlaps itself on A's fine
+geometry. **The chain refuses it, correctly.**
+
+**That is a latent defect this work exposed rather than caused**: A had never laid these pairs before tonight,
+so the fan at a 2.5 mm station on a 0.13/0.14 class had never run. It is the next piece of work and it is named
+here with its evidence: the fan emission must be checked against the copper already on the board, its own
+partner leg included.
