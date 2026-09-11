@@ -4635,3 +4635,37 @@ because the defect was the position of a line rather than what it computed.
 
 **The rule to carry out of the day: wiring a reader to an unread channel is a change to every writer on it, and
 the writers have to be re-read as if they were new.**
+
+### 32.116 The deliverable gates read back, and three of the refusals were the gates' own (11 September 2026, 22:00 CEST; MESHSAT-862)
+
+Boards E and P routed clean and their finishes ran the whole way to the deliverable export. **Both were refused,
+and between them the refusals were one real parts gap and two defects in the checks themselves.**
+
+**Real: P's three pack connectors had no code and no declaration.** `J_CELL`, `J_SMB` and `J_TS` are ordinary
+JST headers, so the answer is codes rather than a hand-fit declaration. Each was read back from JLCPCB's own
+parts API with its pin count, pitch, body length and stock, on the land its footprint draws: **C157991** (JST
+B5B-XH-A(LF)(SN), 1x5P 2.5 mm, 14.9 mm, stock 85,826), **C594232** (B4B-XH-A-G, 1x4P 2.5 mm, 12.4 mm, 20,031),
+**C5251182** (B2B-PH-K-S-GW, 1x2P 2.0 mm, 15,304). Proved by running `lcsc_fill.py` on a three-row fixture
+rather than by reading the patterns.
+
+**A gate defect: a code is wrong FOR A PART, not in general.** E's finish refused with *"U15 C2836813:
+WRONG_MODEL, asked for ATECC608B-SSHDA-T, JLCPCB's best answer is BMI270"*. **E's U15 IS a BMI270 and C2836813
+is exactly right for it.** `JLC-CERTIFIED.tsv` carries that code twice, CERTIFIED against the BMI270 comment and
+WRONG_MODEL against the ATECC608B comment, and `lcsc_fill` keyed its rejection on the code alone. So the part
+the code is right for was refused because the same code had once been a wrong answer to a different question.
+`lcsc-blocked.txt` carried a line saying this, deliberately, in prose that nothing read. The rejection is keyed
+on **(code, comment, footprint)** now, and a pair the table certifies is never rejected. **A table that records
+what a code was asked FOR is the only thing that can tell a wrong code from a right one, and the check was
+throwing that column away.**
+
+**A declaration defect: an allow line that matched nothing.** E's other five refusals, `J_FAN1`, `J_FAN2`,
+`J_GEIGER`, `J_LTG`, `J_POD`, are 2.54 mm pin headers a lead is pushed onto at build, which is exactly what
+`lcsc-allow.txt` is for, and the board's list already carried a line for them: `module:`. The generator writes
+*"Geiger counter module (RadiationD-v1.1 class)"*, with a bracket and not a colon, **so the line matched nothing
+for as long as it existed.** `lcsc_fill` counts and names every allow line that matches no row on the board it
+is judging now: a declaration that reads as cover and provides none is worse than no declaration.
+
+**And the deliverable path is proved end to end by these runs**, which is what they were really for: the
+collapsed `finish.sh` ran a board's whole finish, the electrical gates (dc_drop MET 3 of 3 on P, impedance PASS,
+netlist_board PASS), the cross-board contracts (ALL PASS, 40 of 40, once A existed in the tree), the gerber and
+JLC export, and the deliverable read-back, and it refused at exactly the point where something was wrong.
