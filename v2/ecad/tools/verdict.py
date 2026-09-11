@@ -116,7 +116,7 @@ def read(path):
     return rec, CODE[v]
 
 
-def collect(out_dir="out", require=()):
+def collect(out_dir="out", require=(), since=None):
     """Every verdict in a directory, and the worst of them (MESHSAT-862, 11 September 2026).
 
     There was no collector. `kb_confidence.py` aggregates five gates from a hardcoded list and nothing does it for the
@@ -127,6 +127,13 @@ def collect(out_dir="out", require=()):
         case this pipeline keeps mistaking for a gate that passed.
       * the worst verdict wins, and INCONCLUSIVE is worse than PASS. There is no truthy spelling of INCONCLUSIVE.
 
+    `since` is a horizon: a UTC timestamp in the form verdict.now() writes, and any verdict older than it is
+    ignored. Verdict files live in the board's out/ directory across stages and rounds, so without a horizon a
+    stage is judged partly by files an EARLIER stage wrote. On 11 September 2026 board E's second pre-route was
+    blocked by a check_contracts verdict its first round's FINISH had written, which is a judgement about a
+    different moment and a different question. A verdict with no timestamp is kept, because dropping it would
+    turn an unreadable record into a silent pass.
+
     Returns (worst_code, {tool: record}, [missing tools]).
     """
     found = {}
@@ -135,6 +142,7 @@ def collect(out_dir="out", require=()):
     for fn in names:
         if not fn.endswith(".verdict.json"): continue
         rec, _code = read(os.path.join(out_dir, fn))
+        if since and rec.get("ts") and rec["ts"] < since: continue
         found[rec.get("tool") or fn[:-len(".verdict.json")]] = rec
     missing = [t for t in require if t not in found]
     # No verdicts at all is not "everything passed": it is a directory nothing wrote to, which is what an

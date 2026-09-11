@@ -107,7 +107,7 @@ def signature(drc):
     if len(layers) == 1 and len(nets) == 2 and lengths and max(lengths) < 0.5: return "KNOT", counts, unr
     return "HARD", counts, unr
 
-def judge_verdicts(project, require=()):
+def judge_verdicts(project, require=(), since=None):
     """What the gates themselves decided, read from their verdict JSONs rather than from their prose.
 
     The seam stage 0 left open (11 September 2026): every gate writes `out/<tool>.verdict.json` now, and the
@@ -377,6 +377,10 @@ def run(profile_fn, rounds, use_services, dry):
             route = prof["route"]
             journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status="GENERATING", note="expect %s" % json.dumps(prof.get("expect", {}))))
             pre = prof["pre"]; plog = os.path.join(rdir, "round%d-pre.log" % rnd)
+            # The horizon for this stage's verdicts, and it has to be taken BEFORE the chain runs or it excludes
+            # every verdict the chain writes. Set after, as it was for one commit, it would have hidden all of
+            # them and read as "no verdicts at all" (11 September 2026; see verdict.collect).
+            pre_started = now()
             rc = 0
             if not dry:
                 for argv in (pre.get("steps") or [pre["argv"]]):   # fixed argument vectors, one process each, no shell string
@@ -387,7 +391,7 @@ def run(profile_fn, rounds, use_services, dry):
             if rc != 0 and st == "GATED": st, note = "TOOL_CRASH", "pre-route chain exit %d" % rc
             journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status=st, note=note))
             if st == "GATED" and not dry:
-                vst, vnote = judge_verdicts(project, prof.get("expect", {}).get("verdicts", ()))
+                vst, vnote = judge_verdicts(project, prof.get("expect", {}).get("verdicts", ()), since=pre_started)
                 journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status=vst, note=vnote))
                 if vst != "GATED": st, note = vst, vnote
             if st != "GATED": status = st; break

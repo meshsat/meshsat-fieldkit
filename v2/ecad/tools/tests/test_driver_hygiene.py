@@ -184,3 +184,14 @@ def t_the_router_does_not_fall_back_to_the_stock_jar_in_silence():
     assert "exit 2" in tail[:900], "requiring it must refuse, not warn and continue"
     i = src.index("freerouting-1.9.0.jar\"")
     assert "WARNING" in src[max(0, i - 400):i], "taking the stock jar must say so loudly"
+
+
+def t_the_verdict_horizon_is_taken_before_the_chain_runs():
+    """`pre_started` is the timestamp that decides which verdicts belong to this stage. Taken AFTER the chain,
+    it excludes every verdict the chain just wrote and the stage reads as "no verdicts at all", which
+    verdict.collect treats as INCONCLUSIVE. It was in that position for one commit on 11 September 2026 and the
+    unit test for the collector could not see it, because the defect is where the line sits, not what it does."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("pre_started = now()")
+    j = src.index("rc = sh(expand(argv", i - 4000 if i > 4000 else 0)
+    assert i < j, "pre_started is taken after the pre-route chain runs, so it excludes the chain's own verdicts"
