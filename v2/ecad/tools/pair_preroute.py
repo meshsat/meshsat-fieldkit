@@ -216,29 +216,46 @@ MAP_MODE = os.environ.get("PAIR_MAP_MODE", "counts")
 MAP_CHECK = os.environ.get("PAIR_MAP_CHECK") == "1"
 
 
-def _stamp_pads(gr, b, layers, want, trk, via_clr, via_holes, half, via_r, split):
-    """Pads, and the rule areas, into the count rasters.
+def _pad_stamp(gr, layers, ref, p, trk, via_clr, half, via_r, split):
+    """One pad's clearance into the count rasters. Shared by the whole-board pass and the per-pair pass."""
+    pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
+    pk = "%s.%s@%d,%d" % (ref, p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 12:59)
+    for L in layers:
+        if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
+        if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
+    anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
+    if anyL is not None or pth: gr.poly(via_clr, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split, key=(pk, "via", anyL))
 
-    `want` is None to stamp EVERY net, or a set of net names to stamp only those. The hole-to-hole discs and the rule
-    areas are stamped only on the None pass: hole to hole applies whatever the net and a keep-out belongs to no net, so
-    neither may ever be subtracted for the pair being laid."""
-    every = want is None
+
+def _track_stamp(gr, layers, t, trk, via_clr, half, via_r, split):
+    """One track or via's clearance into the count rasters."""
+    if t.GetClass() == "PCB_VIA":
+        c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
+        for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + CLR + half)
+    else:
+        a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
+        if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + half)
+        gr.seg(via_clr, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
+
+
+def _stamp_board(gr, b, layers, trk, via_clr, via_holes, half, via_r, split, idx):
+    """Every net's copper into the counts, once, and an index of which items belong to which net.
+
+    The index is what makes the per-pair map cheap. Without it the own-net pass still walks every footprint,
+    every pad and every track of the board to find the two nets it cares about, and SWIG's proxy-per-item
+    iteration is most of that cost: measured on D, the counted map came out SLOWER than the per-pair rebuild
+    it replaced, 21 s against 17 s, with identical pairs and identical expansions. 11 September 2026."""
     for fp in b.GetFootprints():
+        ref = fp.GetReference()
         for p in fp.Pads():
-            pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
-            if pth and every:
+            if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):
                 c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(via_holes, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + 0.2 + 0.30)
-            if not (every or p.GetNetname() in want): continue
-            pk = "%s.%s@%d,%d" % (fp.GetReference(), p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 12:59)
-            for L in layers:
-                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
-                if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
-            anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
-            if anyL is not None or pth: gr.poly(via_clr, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split, key=(pk, "via", anyL))
-    if not every: return
+            idx.setdefault(p.GetNetname(), [[], []])[0].append((ref, p))
+            _pad_stamp(gr, layers, ref, p, trk, via_clr, half, via_r, split)
     # Footprint-local rule areas count too: they are not in b.Zones(), so a keep-out that belongs to a part (the E72's antenna clearance,
     # a connector's own no-track area) was invisible here while `prefanout.py` already read them. B17's pre-route came back with five
-    # items_not_allowed, all of them pair copper laid straight through one (9 Sep 2026 02:20, MESHSAT-862).
+    # items_not_allowed, all of them pair copper laid straight through one (9 Sep 2026 02:20, MESHSAT-862). A rule area belongs to no
+    # net, so it is stamped only here and can never be subtracted for the pair being laid.
     for z in list(b.Zones()) + [z for fp in b.GetFootprints() for z in fp.Zones()]:
         if z.GetIsRuleArea():
             zk = "zone.%s" % z.m_Uuid.AsString() if hasattr(z, "m_Uuid") else "zone.%d" % id(z)
@@ -247,48 +264,47 @@ def _stamp_pads(gr, b, layers, want, trk, via_clr, via_holes, half, via_r, split
             if z.GetDoNotAllowVias(): gr.poly(via_clr, z.Outline(), CLR + via_r + split, key=(zk, "via"))
 
 
-def _stamp_copper(gr, b, layers, want, trk, via_clr, via_holes, half, via_r, split, seen):
-    """Tracks and vias into the count rasters, skipping any already in `seen`. Returns how many were new.
-
-    `seen` is the ALL pass's memory so a repeat call stamps only what was laid since. The own-net pass passes a fresh
-    set every time, because its rasters are zeroed and rebuilt from scratch for each pair."""
-    every = want is None; n = 0
+def _stamp_new_copper(gr, b, layers, trk, via_clr, via_holes, half, via_r, split, seen, idx):
+    """Tracks and vias laid since the last call, into the counts and the index. Returns how many were new."""
+    n = 0
     for t in b.GetTracks():
         k = _track_key(t)
         if k in seen: continue
         seen.add(k); n += 1
-        if t.GetClass() == "PCB_VIA" and every:
-            c = t.GetPosition(); gr.disc(via_holes, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + 0.2 + 0.30 + split)
-        if not (every or t.GetNetname() in want): continue
         if t.GetClass() == "PCB_VIA":
-            c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
-            for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + CLR + half)
-        else:
-            a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
-            if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + half)
-            gr.seg(via_clr, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
+            c = t.GetPosition(); gr.disc(via_holes, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + 0.2 + 0.30 + split)
+        idx.setdefault(t.GetNetname(), [[], []])[1].append(t)
+        _track_stamp(gr, layers, t, trk, via_clr, half, via_r, split)
     return n
 
 
+def _stamp_own(gr, layers, nets, idx, trk, via_clr, half, via_r, split):
+    """Just this pair's own copper, from the index: a handful of pads and the legs laid so far."""
+    for nm in nets:
+        pads, tracks = idx.get(nm, ([], []))
+        for ref, p in pads: _pad_stamp(gr, layers, ref, p, trk, via_clr, half, via_r, split)
+        for t in tracks: _track_stamp(gr, layers, t, trk, via_clr, half, via_r, split)
+
+
 def _all_counts(gr, b, layers, half, via_r, split):
-    """The whole board counted once: how many nets' grown copper covers each cell, per layer and for via centres.
+    """The whole board counted once, with an index from net name to the items on it.
 
     This is the change of 11 September 2026 (round-two C3). Four of the five `build_maps` calls a pair makes exclude
     that pair's own nets, so the cache key was unique per pair and every one rebuilt the board in full: 1,010 s of a
-    1,327 s B19 pass, 76 percent, against 115 s in the corridor search the pass exists to run. Counted once, a pair's
-    own map is two stamps of its own copper and a comparison."""
+    1,327 s B19 pass, 76 percent, against 115 s in the corridor search the pass exists to run."""
     ck = ((gr.G, gr.X0, gr.Y0, gr.NX, gr.NY), tuple(layers), round(half, 5), round(via_r, 5), round(split, 5))
     hit = _ALLMAPS.get(ck)
     if hit is not None and hit[4] == MAP_EPOCH[0]:
-        _stamp_copper(gr, b, layers, None, hit[0], hit[1], hit[2], half, via_r, split, hit[3])
+        _stamp_new_copper(gr, b, layers, hit[0], hit[1], hit[2], half, via_r, split, hit[3], hit[6])
         return hit
     trk = {L: np.zeros((gr.NY, gr.NX), dtype=np.uint16) for L in layers}
     via_clr = np.zeros((gr.NY, gr.NX), dtype=np.uint16)
     via_holes = np.zeros((gr.NY, gr.NX), dtype=bool)
-    _stamp_pads(gr, b, layers, None, trk, via_clr, via_holes, half, via_r, split)
-    seen = set(); _stamp_copper(gr, b, layers, None, trk, via_clr, via_holes, half, via_r, split, seen)
+    idx = {}
+    _stamp_board(gr, b, layers, trk, via_clr, via_holes, half, via_r, split, idx)
+    seen = set(); _stamp_new_copper(gr, b, layers, trk, via_clr, via_holes, half, via_r, split, seen, idx)
     scratch = ({L: np.zeros((gr.NY, gr.NX), dtype=np.uint16) for L in layers}, np.zeros((gr.NY, gr.NX), dtype=np.uint16))
-    rec = [trk, via_clr, via_holes, seen, MAP_EPOCH[0], scratch]
+    rec = [trk, via_clr, via_holes, seen, MAP_EPOCH[0], scratch, idx]
     _ALLMAPS[ck] = rec
     return rec
 
@@ -306,12 +322,10 @@ def _build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
     if MAP_MODE == "reference" and not MAP_CHECK:
         return _build_maps_reference(gr, b, layers, nets, half, via_r, split)
     rec = _all_counts(gr, b, layers, half, via_r, split)
-    all_trk, all_via, holes, _seen, _ep, (own_trk, own_via) = rec
+    all_trk, all_via, holes, _seen, _ep, (own_trk, own_via), idx = rec
     for L in layers: own_trk[L].fill(0)
     own_via.fill(0)
-    want = set(nets)
-    _stamp_pads(gr, b, layers, want, own_trk, own_via, None, half, via_r, split)
-    _stamp_copper(gr, b, layers, want, own_trk, own_via, None, half, via_r, split, set())
+    _stamp_own(gr, layers, set(nets), idx, own_trk, own_via, half, via_r, split)
     # "some net other than this pair's blocks the cell" is a comparison of counts, never a bitwise subtraction: where
     # two nets' grown rasters overlap, clearing the pair's own bits would free a cell the other net blocks.
     trk = {L: all_trk[L] > own_trk[L] for L in layers}
