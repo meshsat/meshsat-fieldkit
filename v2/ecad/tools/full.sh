@@ -21,6 +21,11 @@ PCLS="$(cfg pair_classes)"; PLAY="$(cfg pair_layers)"; PHOP="$(cfg pair_hop_laye
 FANOUT="$(cfg fanout_nets)"; EPRUNE="$(cfg escape_prune_before_audit)"; ESCENV="$(cfg_env)"
 # One line per pair pass, tab separated: classes, layers, hop layers, inner geometry. Empty when the board runs one pass.
 PPASSES="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(chr(10).join(chr(9).join((p.get(k) or '') for k in ('classes','layers','hop_layers','inner')) for p in (d.get('pair_passes') or [])))" "$CFG")"
+# A board may declare the pair environment it was measured best at (boards/<letter>.json `pair_env`). It never
+# overrides what the caller set: an arm has to be able to vary the very thing the board declares, or the next
+# sweep measures the declaration instead of the knob (11 September 2026).
+PENV="$(python3 -c "import json,sys,os; d=json.load(open(sys.argv[1])).get('pair_env') or {}; print(' '.join('%s=%s' % (k, v) for k, v in d.items() if not os.environ.get(k)))" "$CFG")"
+[ -n "$PENV" ] && echo "pair environment declared by the board: $PENV"
 cd "$D" || exit 2
 mkdir -p out
 block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $1"; [ -n "${2:-}" ] && tail -5 "$2"; echo PREROUTE-DONE BLOCK; exit 1; }
@@ -108,13 +113,13 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
       [ -z "$pcls" ] && continue
       PIDX=$((PIDX + 1))
       echo "pair pass $PIDX: classes $pcls on ${play:-$PLAY}${pinner:+ , inner $pinner}"
-      PAIR_LAYERS="${play:-$PLAY}" PAIR_HOP_LAYERS="${phop:-$PHOP}" PAIR_INNER="$pinner"         python3 ../tools/pair_preroute.py $N.kicad_pcb --classes "$pcls" > out/pair_preroute-$PIDX.log 2>&1; rc=$?
+      env $PENV PAIR_LAYERS="${play:-$PLAY}" PAIR_HOP_LAYERS="${phop:-$PHOP}" PAIR_INNER="$pinner"         python3 ../tools/pair_preroute.py $N.kicad_pcb --classes "$pcls" > out/pair_preroute-$PIDX.log 2>&1; rc=$?
       [ "$rc" -eq 0 ] || PP=$rc
       grep -E "pair_preroute:" out/pair_preroute-$PIDX.log | grep -v "map " | tail -"$PTAIL"
     done <<< "$PPASSES"
     cat out/pair_preroute-*.log > out/pair_preroute.log
   else
-    PAIR_LAYERS=${PAIR_LAYERS:-$PLAY} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-$PHOP} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes "$PCLS" > out/pair_preroute.log 2>&1; PP=$?
+    env $PENV PAIR_LAYERS=${PAIR_LAYERS:-$PLAY} PAIR_HOP_LAYERS=${PAIR_HOP_LAYERS:-$PHOP} python3 ../tools/pair_preroute.py $N.kicad_pcb --classes "$PCLS" > out/pair_preroute.log 2>&1; PP=$?
     grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -"$PTAIL"
   fi
   echo "pair pre-router: $(grep -h "pairs laid," out/pair_preroute*.log | sed 's/^pair_preroute: //' | paste -sd'; ')"

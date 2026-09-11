@@ -75,3 +75,13 @@ def t_every_arm_row_says_where_it_ran():
     head = src[i:src.index("\n    try:", i)]
     for k in ('"host"', '"kicad"'):
         assert k in head, "an arm row does not carry %s: %s" % (k, head)
+
+
+def t_a_boards_declared_pair_environment_never_overrides_its_caller():
+    """A board may record the pair environment it measured best at. It must not win over an explicit value,
+    or the next sweep measures the declaration instead of the knob: every arm of the b19-slack sweep varies
+    PAIR_CORRIDOR_SLACK, which is exactly what boards/b.json now declares."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    i = src.index("PENV=")
+    line = src[i:src.index("\n", i)]
+    assert "os.environ.get(k)" in line, "the board's pair_env is applied even when the caller set that variable: %s" % line
