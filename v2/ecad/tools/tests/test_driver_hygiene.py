@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Two rules about how a driver waits and how a tool chooses the board it judges.
+"""Three rules: how a driver waits, how a tool chooses the board it judges, and how a pass walks a board.
 
 Stage 0a and 0d of the control-plane programme (MESHSAT-862, 11 September 2026, v2/docs/CONTROL-PLANE.md).
 
@@ -12,6 +12,12 @@ carried `b5m.kicad_pcb`, the 2 September B5 board, beside `pcb-b-compute.kicad_p
 A wave script that globbed the directory on 11 September exported a BOM for B from a nine-day-old board and
 nothing in its output said which board it had read. The stale file is gone; this rule is what stops the next
 one from mattering. A board comes from the board table (`tools/boards/<letter>.json`) or from an argument.
+
+BOARD ORDER. A pass that LAYS copper greedily must not walk the board in the board file's own order, because
+that order follows the random UUID KiCad mints for every item. Measured on 11 September: two runs of the D
+chain on identical input differed in four tracks and four vias, the escape stubs of /MICAMP_OUT and /SAU_RST.
+`boardorder.py` carries the stable order and the whole story; this rule is what stops a fifth laying pass
+from being written without it.
 """
 import os, re, glob
 
@@ -74,3 +80,67 @@ def t_no_project_directory_holds_a_second_board():
         boards = [os.path.basename(b) for b in glob.glob(os.path.join(d, "*.kicad_pcb"))]
         if len(boards) > 1: bad.append("%s: %s" % (os.path.basename(d), sorted(boards)))
     assert not bad, "a project directory holds more than one board: %s" % bad
+
+
+# ---------------------------------------------------------------- board order
+
+# Passes that lay copper GREEDILY, walking the board and taking room as they go, so that what fits depends
+# on the order they walk in. A new one belongs here with the others.
+LAYING = ("escape.py", "prefanout.py", "join_adjacent_pins.py", "pour_stitch.py")
+
+# The other ways a tool in this tree creates copper, each of which lays from its own ordered source rather
+# than from the board's file order, so a random uuid cannot reach it. These are classifications, not
+# excuses: a file lands in one of them because someone read it.
+GENERATORS = "lay from their own component and region lists, in the order those lists are written"
+POST_ROUTE = "work from an explicit list (a DRC report, a pruned-pad list, a named net), not from board order"
+ONE_OFFS = "board-specific hand fixes for one phase, each naming its own items"
+
+CLASSIFIED = {
+    "gen_pcb_e5.py": GENERATORS, "gen_pcb_p3.py": GENERATORS, "gen_pcb_a3.py": GENERATORS,
+    "gen_pcb_b3.py": GENERATORS, "gen_pcb_c3.py": GENERATORS, "gen_pcb_d3.py": GENERATORS,
+    "power_copper.py": GENERATORS,
+    "finish_stubs.py": POST_ROUTE, "fix_pad_escapes.py": POST_ROUTE, "gap_closer_checked.py": POST_ROUTE,
+    "stub_router.py": POST_ROUTE, "pair_preroute.py": POST_ROUTE, "pair_shadow.py": POST_ROUTE,
+    "zone_pad_via.py": POST_ROUTE, "escape_prune.py": POST_ROUTE, "stub_accept.py": POST_ROUTE,
+    "cleanup_dangling.py": POST_ROUTE, "straighten.py": POST_ROUTE, "via_merge.py": POST_ROUTE,
+    "meander.py": POST_ROUTE, "ses_import_lock.py": POST_ROUTE, "ses_merge.py": POST_ROUTE,
+    "part_reconcile.py": POST_ROUTE, "hand_route.py": POST_ROUTE,
+    "fix_a15_node.py": ONE_OFFS, "fix_a17_node.py": ONE_OFFS, "fix_a19_node.py": ONE_OFFS,
+    "fix_a21_bands.py": ONE_OFFS, "bus_a21.py": ONE_OFFS, "bump_a18.py": ONE_OFFS,
+    "fix_c7_u3.py": ONE_OFFS, "d9_gndvia.py": ONE_OFFS, "post_fix_a.py": ONE_OFFS,
+    "post_fix_b4.py": ONE_OFFS, "post_fix_b13.py": ONE_OFFS, "post_fix_d.py": ONE_OFFS,
+}
+
+CREATES_COPPER = re.compile(r"pcbnew\.(PCB_VIA|PCB_TRACK|PCB_ARC)\s*\(")
+# Only a loop at column zero: in these scripts that is the pass itself. A `for f in b.GetFootprints()` inside
+# a helper is building an obstacle list, and the same obstacles come out whatever order it walks in.
+WALKS_FILE_ORDER = re.compile(r"^for\s+[\w, ()]+\s+in\s+(?:list\()?\w+\.(GetFootprints|Zones)\(\)")
+
+
+def t_a_pass_that_lays_copper_walks_the_board_in_a_stable_order():
+    bad = []
+    for fn in LAYING:
+        p = os.path.join(TOOLS, fn)
+        if not os.path.exists(p): bad.append("%s is listed as a laying pass and does not exist" % fn); continue
+        src = open(p, errors="replace").read()
+        if not CREATES_COPPER.search(src):
+            bad.append("%s is listed as a laying pass but creates no copper" % fn); continue
+        if "import boardorder" not in src:
+            bad.append("%s lays copper and does not use boardorder" % fn); continue
+        for n, line in enumerate(src.splitlines(), 1):
+            if WALKS_FILE_ORDER.match(line):
+                bad.append("%s:%d walks the board in file order while laying copper" % (fn, n))
+    assert not bad, "the board's own order follows a random uuid: %s" % bad
+
+
+def t_every_copper_laying_tool_is_classified():
+    """The rule above is only as good as its list. A tool that creates copper and is classified nowhere must
+    be read by a person and put in one of the four buckets, here, in writing."""
+    unclassified = []
+    for fn in sorted(os.listdir(TOOLS)):
+        if not fn.endswith(".py"): continue
+        if fn in LAYING or fn in CLASSIFIED: continue
+        if CREATES_COPPER.search(open(os.path.join(TOOLS, fn), errors="replace").read()):
+            unclassified.append(fn)
+    assert not unclassified, ("these create copper and are classified nowhere; read each and put it in "
+                              "LAYING (and give it boardorder) or in CLASSIFIED: %s" % unclassified)
