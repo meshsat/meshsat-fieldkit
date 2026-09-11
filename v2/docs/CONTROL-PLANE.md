@@ -124,9 +124,9 @@ These are other people's incidents, and each one is a shape we have hit:
 | item | state on 11 September |
 |---|---|
 | 0a one verdict channel | **done**: seventeen more gates write `out/<tool>.verdict.json` with counts, denominator and evidence, and exit with it; no driver greps a gate's prose; no finish runs its board gate twice. `tests/test_verdict_channel.py` holds the shape, and its four structural rules fail on the pre-fix tree |
-| 0b determinism | **being measured**: two runs of the same chain on D, P, C and A, compared byte for byte on `out/<name>-placed.kicad_pcb`. The suspect named here was `escape.py:126-142`; reading it first found only insertion-ordered dicts, so this is measured rather than argued |
+| 0b determinism | **done and proved**: the cause was a random KiCad UUID, not Python. Two runs of D differed in **four tracks and four vias of 391** (the `/MICAMP_OUT` and `/SAU_RST` escape stubs) because `escape.py` walks the board in file order, that order follows the uuid KiCad mints per item, and the pass lays greedily. `boardorder.py` fixes it in the four laying passes. After: **D 0 of 391 across three runs, A 0 of 1483, C 0 of 556**. `tests/determinism.sh <letter> [runs]` is the standing check; `board_diff.py` is what makes the question answerable, since `diff` reported 26,142 lines of 36,724 on C and the largest bucket was `(uuid` |
 | 0c board hash per stage | **done**: `journal()` attaches the hash of every board file of that board that exists when the row is written, so in and out are the same field on consecutive rows. `provenance.json`'s board hash is `board_sha_before_run` now, because it was a true value under a name that claimed something else |
-| 0d waits and fixtures | **waits done**: the twelve finishes were bounded on 10 Sep and `long_route.sh` on 11 Sep; it waited on any Freerouting process started outside its own flock. **Fixtures: in progress** |
+| 0d waits and fixtures | **done**: every wait bounded (the twelve finishes on 10 Sep, `long_route.sh` on 11 Sep, which waited on any Freerouting process started outside its own flock). `tests/test_gate_fixtures.py` carries a passing and a failing fixture for the gates that judge a file, a folder or a number, and **the admission rule**: a gate with no fixture and no declared debt fails the suite. Five are declared, printed on every run, and all five need a board |
 
 Two things found by doing this rather than by planning it, both of the same class as everything else here:
 `PREROUTE_STOP_AFTER_PLACE=1` was silently a no-op on E and P, whose chains have no pair classes, so the
@@ -138,6 +138,9 @@ the repository, and the parts certification reads the deliverable folders under 
 rather than these exports, taking B from `meshsat-pcb-b-revA-B16-quote` as the newest B deliverable. The
 certification's 150 B rows are therefore sound. The damage was one wrong file on the rented box, and the
 only reason anyone noticed is that the exporter printed the name `b5m`.
+
+**Stage 0 is complete as of 11 September 2026 05:30 CEST.** 53 tests pass, 5 skip for want of pcbnew on the
+runner; routeflow's selftest is 52 of 52; the six board gates were run on real boards on the box.
 
 **Stage 1, the runner and the ledger**, in the shapes above.
 
