@@ -693,6 +693,11 @@ def main(a):
                          "  a copied project directory needs that file copied too.\n" % pro)
         raise SystemExit(2)
     b = pcbnew.LoadBoard(board); gr = Grid(b, g); _grids = {g: gr}
+    # Every position this pass changes, named at the end. The tool exchanges two passives when a station's fans cross,
+    # and on D the routed board came back with R12 and R13 exchanged while the pass log named three swaps, none of them
+    # those two: a part had moved and nothing said so. A move that decides whether the OTHER side of the station can be
+    # routed (the hub pin to its series resistor, D's last open) must be in the report (11 September 2026).
+    _POS0 = {f_.GetReference(): (f_.GetPosition().x, f_.GetPosition().y) for f_ in b.GetFootprints()}
     def cls_of(n):
         c = assign.get(n) or assign.get("/" + n.lstrip("/")) or assign.get(n.lstrip("/")); return (c[0] if isinstance(c, list) and c else c) or "Default"
     want_classes = set(a[a.index("--classes") + 1].split(",")) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
@@ -1935,6 +1940,11 @@ def main(a):
     print("pair_preroute: --- summary ---")
     for l in report: print("pair_preroute: " + l)
     n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
+    _moved = [(r_, _POS0[r_], (f_.GetPosition().x, f_.GetPosition().y)) for f_ in b.GetFootprints()
+              for r_ in [f_.GetReference()] if r_ in _POS0 and _POS0[r_] != (f_.GetPosition().x, f_.GetPosition().y)]
+    for r_, a_, c_ in sorted(_moved):
+        print("pair_preroute: MOVED %s from (%.2f, %.2f) to (%.2f, %.2f)" % (r_, mm(a_[0]), mm(a_[1]), mm(c_[0]), mm(c_[1])))
+    if _moved: print("pair_preroute: %d footprint(s) moved by this pass" % len(_moved))
     print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
     print("pair_preroute: search kernel %s%s" % (_SEARCH_KERNEL, (", rasteriser fell back to the per-cell predicate %d time(s)" % _RASTER_FALLBACK[0]) if _RASTER_FALLBACK[0] else ""))
     # `_T["maps"]` already counted this and a second counter beside it would be one more pair of numbers to drift apart,
