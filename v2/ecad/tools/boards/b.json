@@ -51,5 +51,10 @@
    "timeout_s": 900
   },
   "_cont_route_why": "11 September 2026: one continuation pass of the router before the stub router when a handful of connections are open (A21's lever of 5 September). cont_route.sh keeps the board only if it improves, so it cannot make one worse; it was declared for A alone because only the A clones carried it, and E and P both ended a route at exactly one open."
- }
+ },
+ "pair_env": {
+  "PAIR_CORRIDOR_SLACK": 0.08,
+  "PAIR_CORRIDOR_SLACK_SLIM": 0.03
+ },
+ "_pair_env_why": "11 September 2026, the best of thirty measured arms on B19's 113 pairs: 62 against 54 at the defaults. It is recorded HERE and not as a global default because the sweep of 32.117 shows the response is chaotic in this parameter (0.15 lays 59 and 0.16 lays 47), so a value that wins one draw on one board is a measurement, not a law."
 }
