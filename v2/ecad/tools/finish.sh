@@ -80,6 +80,14 @@ python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail 
 # the fill retreated by its clearance. cleanup_dangling leaves it because a via with a track on it is not
 # dangling by its rule, and the board gate then refuses the board for it (P routed 0 hard and 0 unrouted and was
 # refused for exactly one). Judged the way the stub router is: keep it only if nothing opened (11 Sep 2026).
+# Declared per board and OFF everywhere today (`stitch_prune` in boards/<letter>.json). The tool is written and
+# tested, and on 12 September it was measured finding SIXTEEN abandoned vias on board E of which NONE was dead:
+# its abandonment test broke at the first zone whose fill missed the via, so a via connected on another layer
+# read as abandoned. That is fixed and the same board now gives zero. But the tool has still never removed a via
+# that needed removing, so its risk is proved and its value is not, and a pass that cuts copper out of a board
+# bound for manufacture does not sit in the path on that balance. It goes back on for a board that presents the
+# case, one board at a time, with the number that justified it.
+if [ -n "$(cfg x stitch_prune)" ]; then
 cp $N.kicad_pcb out/$N-prestitch.kicad_pcb
 python3 $T/hardset.py out/$N-drc.json post --counts out/prune-before.txt --label 'before stitch_prune' >/dev/null
 read BH BU < out/prune-before.txt
@@ -95,6 +103,7 @@ if [ "$PH" -gt "$BH" ] || [ "$PU" -gt "$BU" ]; then
   echo "stitch_prune hurt (hard $BH -> $PH, unrouted $BU -> $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
 else
   echo "stitch_prune kept (hard $BH -> $PH, unrouted $BU -> $PU)"
+fi
 fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
 python3 $T/silk_fix_all.py $N.kicad_pcb $L 2>&1 | grep -vE 'Debug|leak' | tail -2
