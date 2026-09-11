@@ -49,7 +49,8 @@ FP = {
  "TP": "TestPoint:TestPoint_Pad_D1.5mm", "QFN28": "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm", "TQFP32": "Package_QFP:TQFP-32_7x7mm_P0.8mm", "LQFP32": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
  "QFN16": "Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm", "VSSOP8": "Package_SO:VSSOP-8_3x3mm_P0.65mm", "TSSOP24": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
  "SA868": "meshsat:NiceRF_SA868", "RELAY": "Relay_SMD:Relay_DPDT_Omron_G6K-2F-Y", "SMA": "Connector_Coaxial:SMA_Amphenol_132134_Vertical", "UFL": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical",
- "L1812": "Inductor_SMD:L_1812_4532Metric", "FB": "Inductor_SMD:L_0805_2012Metric", "SOD123": "Diode_SMD:D_SOD-123", "SMB": "Diode_SMD:D_SMB",
+ "L1812": "Inductor_SMD:L_1812_4532Metric", "L0805": "Inductor_SMD:L_0805_2012Metric",
+ "FB": "Inductor_SMD:L_0805_2012Metric", "SOD123": "Diode_SMD:D_SOD-123", "SMB": "Diode_SMD:D_SMB",
  "PH2": "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "PH4": "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical", "PH5": "Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical",
  "JP": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
 }
@@ -161,8 +162,14 @@ part("D2", "Diode", "1N4148W", "1N4148W coil flyback", "SOD123", {"1": "+5V_D8",
 r("R54", "27 1% 2010", "RF_PAD_IN", "RF_PAD_M", "R2010"); r("R55", "36 1% 2010", "RF_PAD_M", "GND", "R2010"); r("R56", "27 1% 2010", "RF_PAD_M", "RF_DRV", "R2010")   # 10 dB T-pad, 0.5 W in, 50 mW to the PA
 part("J_PAIN", "Connector", "Conn_Coaxial", "PA drive (U.FL, coax to the RA30H1317M1 input on the plate)", "UFL", {"1": "RF_DRV", "2": "GND"})
 part("J_PAOUT", "Connector", "Conn_Coaxial", "PA output (SMA, coax from the RA30H1317M1 output on the plate)", "SMA", {"1": "RF_PAOUT", "2": "GND"})
-c("C58", "22p 500V NP0 1206", "RF_PAOUT", "GND", "C1206"); part("L1", "Device", "L", "68nH 1812 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)", "L1812", {"1": "RF_PAOUT", "2": "RF_LPF_M"})
-c("C59", "39p 500V NP0 1206", "RF_LPF_M", "GND", "C1206"); part("L2", "Device", "L", "68nH 1812 (LPF)", "L1812", {"1": "RF_LPF_M", "2": "RF_LPF_OUT"}); c("C60", "22p 500V NP0 1206", "RF_LPF_OUT", "GND", "C1206")
+# L1 and L2 leave the 1812 land. The IMC1812EB68NK they were drawn as is rated 450 mA and the
+# 30 W PA puts about 775 mA RMS through this filter (sqrt(30/50) into a matched load), so the
+# part was under-rated for its own job independently of being out of stock, and every other
+# 68 nH in 1812 is the same 450 mA family. The Murata LQW2BAN68NG00L is 1.2 A and 2 percent,
+# which a fifth-order corner wants, at 120 mW of dissipation in its 200 mOhm. Confirm the
+# current under a mismatched antenna when MESHSAT-818 simulates this filter.
+c("C58", "22p 500V NP0 1206", "RF_PAOUT", "GND", "C1206"); part("L1", "Device", "L", "68nH 0805 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)", "L0805", {"1": "RF_PAOUT", "2": "RF_LPF_M"})
+c("C59", "39p 500V NP0 1206", "RF_LPF_M", "GND", "C1206"); part("L2", "Device", "L", "68nH 0805 (LPF)", "L0805", {"1": "RF_LPF_M", "2": "RF_LPF_OUT"}); c("C60", "22p 500V NP0 1206", "RF_LPF_OUT", "GND", "C1206")
 part("J_ANT", "Connector", "Conn_Coaxial", "antenna (SMA, pigtail to A22's VHF jack J_RF1)", "SMA", {"1": "RF_ANT", "2": "GND"})
 tps22810("U15", "+5V_D8", "PA_KEY", "VGG_SW", "VGG_CT"); c("C61", "4.7n", "VGG_CT", "GND", "C0402"); c("C62", "100n", "VGG_SW", "GND")
 part("J_VGG", "Connector_Generic", "Conn_01x02", "PA gate bias lead (JST-PH 1x2 to the RA30H1317M1 VGG): VGG GND", "PH2", {"1": "VGG_SW", "2": "GND"})
