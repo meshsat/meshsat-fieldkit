@@ -125,3 +125,6 @@ def t_a_profile_agrees_with_itself_about_the_phase_it_cuts():
         assert os.path.basename(d.get("project", "").rstrip("/")) == proj, \
             "%s: project %r, the finish runs in %r" % (b, d.get("project"), proj)
         assert os.path.exists(os.path.join(TOOLS, "boards", "%s.json" % letter)), "%s: no board file for %s" % (b, letter)
+        # argv[0] is a path relative to the ecad directory, so the working directory is not free. c7 named
+        # <PROJECT> and would have died on its first line looking for ./tools there.
+        assert fin.get("cwd") == "<ECAD>", "%s: finish cwd %r, but ./tools/finish.sh only resolves from <ECAD>" % (b, fin.get("cwd"))

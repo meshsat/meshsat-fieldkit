@@ -65,7 +65,7 @@
    "C7",
    "out/parallel-c7.log"
   ],
-  "cwd": "<PROJECT>",
+  "cwd": "<ECAD>",
   "clean_flag": "out/c7-clean.txt",
   "stub_log": "out/pcb-c-display-stub.log",
   "_collapsed": "11 September 2026 (MESHSAT-862): finish_c7.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
