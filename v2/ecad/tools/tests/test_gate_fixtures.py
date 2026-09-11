@@ -356,3 +356,21 @@ def t_the_same_code_on_the_part_it_is_wrong_for_is_still_rejected():
     rc, out = _lcsc_run([("ATECC608B-SSHDA-T secure element", "U9", "SOIC8", "C2836813")])
     assert "checked and rejected" in out and "WRONG_MODEL" in out, out
     assert rc != 0, out
+
+
+def t_an_allow_line_that_covers_nothing_is_named():
+    """E's list carried `module:` for four sensor headers while the generator writes "Geiger counter module
+    (RadiationD-v1.1 class)", a bracket and not a colon, so the line matched nothing for as long as it existed
+    and the board's deliverable was refused for the five rows it was written to cover. A declaration that reads
+    as cover and provides none is worse than no declaration."""
+    import subprocess, tempfile, json as _j, shutil as _sh
+    d = tempfile.mkdtemp(prefix="stale-allow-")
+    proj = os.path.join(d, "p", "out", "jlc"); os.makedirs(proj)
+    open(os.path.join(d, "p", "lcsc-allow.txt"), "w").write("never matches this   # a line for a part no longer on the board\n")
+    bom = os.path.join(proj, "b-bom.csv")
+    open(bom, "w").write('Comment,Designator,Footprint,LCSC Part #\n"a real part","R1","R_0603","C1234"\n')
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "lcsc_fill.py"), bom], capture_output=True, text=True, cwd=d)
+    out = r.stdout + r.stderr
+    _sh.rmtree(d, ignore_errors=True)
+    assert "allow line(s) match no row" in out, out
+    assert "never matches this" in out, out

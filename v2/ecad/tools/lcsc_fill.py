@@ -136,7 +136,16 @@ if os.path.exists(ap):
     for line in open(ap):
         if "#" in line and line.split("#", 1)[0].strip(): allow.append(line.split("#", 1)[0].strip())
 not_allowed = [r for r in blank if not any(a in r["Comment"] for a in allow)]
+# An allow line that matches no row on this board is not harmless: it reads as cover that does not exist. E's
+# list carried `module:` for four sensor headers and the generator writes "Geiger counter module (RadiationD",
+# with a bracket and not a colon, so the line matched nothing for as long as it existed and the board's
+# deliverable was refused for the five rows it was written to cover (11 September 2026). Counted and named,
+# not blocking: a stale line is a defect in the declaration, not in the board.
+stale_allow = [a for a in allow if not any(a in r["Comment"] for r in rows)]
 print("lcsc_fill: %d lines filled (%d of them from the certified table), %d still blank of %d (%d allow-listed, %d not: %s)" % (filled, from_cert, len(blank), len(rows), len(blank) - len(not_allowed), len(not_allowed), ", ".join(r["Designator"][:24] for r in not_allowed[:8])))
+if stale_allow:
+    print("lcsc_fill: %d allow line(s) match no row on this board and cover nothing: %s"
+          % (len(stale_allow), ", ".join(repr(a) for a in stale_allow[:6])))
 
 # 11 September 2026 (MESHSAT-862). Until today this script ONLY ever filled blanks: the `continue` above
 # skips any row that already carries a code, so a code typed into an `ic()` call was never looked at by
@@ -199,7 +208,8 @@ sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
 import verdict as _v
 sys.exit(_v.write("lcsc_fill",
                   _v.INCONCLUSIVE if not rows else (_v.FAIL if (not_allowed or bad) else _v.PASS),
-                  counts={"rows": len(rows), "blank_over_allowance": len(not_allowed), "rejected_code": len(bad)},
+                  counts={"rows": len(rows), "blank_over_allowance": len(not_allowed), "rejected_code": len(bad),
+                          "stale_allow_lines": len(stale_allow)},
                   denominator=len(rows),
                   evidence=[str(x) for x in (list(not_allowed) + bad)],
                   note="" if rows else "the BOM carried no row, so no code was judged"))
