@@ -5075,6 +5075,16 @@ than systematic: it showed up once in three runs.
 **What it cost here is exactly one open on a board that is otherwise finished**, because the round whose board
 was kept had the swap and the rounds that re-ran did not.
 
+**The obvious remedy was tried and measured, and it is refused.** Moving the port-1 resistor row 1.2 mm further
+from the hub, which is the room the crossing wants, costs a PAIR: the pre-router lays **4 of 5** on the moved
+placement against 5 of 5, `/USB2` failing at R16 into the bridge. The row is back where it was. That is the
+shape of this board: its USB cluster is packed tightly enough that room taken for one connection is room removed
+from another, and the change that closes `/HUB_DM1` has to come from somewhere other than a millimetre.
+
+**The move report earned itself in the same run.** On the moved placement it printed four lines, R12 with R13 and
+R16 with R17, where the previous board's log had named only R20 and R21. So which parts the pre-router exchanges
+depends on the placement, and until today nothing said so at all.
+
 **The instrument that made this readable landed with it:** the pre-router now reports every footprint it moves,
 with its before and after. The swap of R20 and R21 was in the log; the swap of R12 and R13 was not, and a part
 that moves without saying so is how a board comes back with a net no router could ever have closed.
