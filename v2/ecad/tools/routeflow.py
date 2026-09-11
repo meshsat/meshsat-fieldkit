@@ -393,6 +393,7 @@ def run(profile_fn, rounds, use_services, dry):
     journal(project, dict(run=rid, fingerprint=fp, board=name, phase=prof["phase"], stage="lock", status="LOCKED" if ok else "PREFLIGHT_FAIL", note=msg))
     if not ok: return 2
     applied = set(); status = None
+    best_board = (None, None, 0)   # (score, path, round): the best routed board of this run, kept across remedies
     try:
         for rnd in range(1, rounds + 2):
             route = prof["route"]
@@ -472,6 +473,26 @@ def run(profile_fn, rounds, use_services, dry):
                     note = "winner attempt %s: hard %d of %d types %s, unrouted %d of %d nets, vias %d, autoroute minutes %s" % (best[0], best[1][0], len(HARD), dict(counts), unr, nets, best[1][2], mins)
             st = {"NO_SESSION": "NO_SESSION", "KNOT": "ROUTED_HARD", "HARD": "ROUTED_HARD", "EDGE": "ROUTED_HARD", "OPEN": "ROUTED_OPEN", "CLEAN": "ROUTED_CLEAN", "TOOL_CRASH": "TOOL_CRASH", "INFRA_FAIL": "INFRA_FAIL"}[sig]
             journal(project, dict(run=rid, round=rnd, board=name, stage="route", status=st, signature=sig, note=note))
+            # Keep the best routed board of the run. A remedy can make a board WORSE and every round re-routes
+            # from scratch, so the supervisor was discarding a good board to keep a bad one: board E went 0 hard
+            # and 1 open in round one, then 0 hard and 23 opens after the via_costs remedy, and the 1-open board
+            # was gone. Every other stage in this pipeline already keeps a result only if it improves
+            # (cont_route, stub_accept, quality_pass); the supervisor did not (12 September 2026).
+            if sig not in ("NO_SESSION", "TOOL_CRASH", "INFRA_FAIL"):
+                _sc = (best[1][0], unr if unr is not None else 10 ** 6)
+                if best_board[0] is None or _sc < best_board[0]:
+                    _bp = os.path.join(rdir, "best-round%d.kicad_pcb" % rnd)
+                    try:
+                        shutil.copy(os.path.join(project, name + ".kicad_pcb"), _bp)
+                        for _e in (".kicad_pro", ".kicad_prl"):
+                            _s = os.path.join(project, name + _e)
+                            if os.path.exists(_s): shutil.copy(_s, os.path.splitext(_bp)[0] + _e)
+                        best_board = (_sc, _bp, rnd)
+                    except OSError as _e: journal(project, dict(run=rid, round=rnd, board=name, stage="route", status=st, note="could not keep the best board: %s" % _e))
+                elif _sc > best_board[0]:
+                    journal(project, dict(run=rid, round=rnd, board=name, stage="route", status=st,
+                                          note="this round is worse than round %d (hard %d unrouted %s against %d and %s); the better board is kept"
+                                               % (best_board[2], _sc[0], _sc[1], best_board[0][0], best_board[0][1])))
             # The profile's own prediction, graded. `expect: {hard, unrouted}` is written in all twelve profiles and
             # was read by nothing until 11 September 2026; a prediction nobody grades is a comment.
             met, enote = judge_expect(os.path.join(project, "out", name + "-drc.json"), prof.get("expect", {}))
@@ -495,7 +516,19 @@ def run(profile_fn, rounds, use_services, dry):
                     status = "CLEAN"; break
                 if fst == "TOOL_CRASH": status = fst; break
                 if sig == "CLEAN": sig = "OPEN"   # the router was clean but the finish refused: treat as opens for the table
-            if rnd > rounds: status = "STOPPED_BUDGET"; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="%d automatic rounds spent on %s" % (rounds, sig))); break
+            if rnd > rounds:
+                status = "STOPPED_BUDGET"
+                journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="%d automatic rounds spent on %s" % (rounds, sig)))
+                # The run ends on whatever the last remedy produced, which may be the worst board of the run.
+                # Put the best one back, so what is left on disk is the best this run reached.
+                if best_board[1] and best_board[2] != rnd and os.path.exists(best_board[1]):
+                    try:
+                        shutil.copy(best_board[1], os.path.join(project, name + ".kicad_pcb"))
+                        journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status="RESTORED_BEST",
+                                              note="round %d's board (hard %d, unrouted %s) restored over round %d's"
+                                                   % (best_board[2], best_board[0][0], best_board[0][1], rnd)))
+                    except OSError as _e: journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="could not restore the best board: %s" % _e))
+                break
             new_route, why = remedy(sig, prof, applied)
             if new_route is None: status = "STOPPED_NEEDS_GENERATOR"; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note=why)); break
             for k in ("power_layers", "timeout", "threads", "attempts", "via_costs"):
