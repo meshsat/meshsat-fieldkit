@@ -43,9 +43,14 @@ about four of the seven boards.**
 Measured state: A22, B15, B16 six layers on JLC06161H-3313; C7, D9, E6 four on JLC04161H-7628; E5, P3 two. All
 1.6 mm.
 
-**What the run can produce without you, and is:** the measurement each decision needs. For A that is the
-four-layer rerun with `unknot.py` in the loop that was never done, since A22's 33 hard turned out to be one router
-knot rather than congestion. For B the evidence already exists and stands: three CM5 at 0.4 mm receptacle pitch,
+**What the run can produce without you, and is:** the measurement each decision needs. **For A, a correction to
+the P0 itself:** A's promotion was not unmeasured. `gen_pcb_a3.py:196` carries the number beside the In4 plane,
+"four-layer runs left 4 to 11 opens in the converter zones". The P0 cited A22's 33 hard violations, which were one
+router knot; that is a different run and a different measurement. **The four-layer evidence for A is 4 to 11
+opens**, and opens are not what `unknot.py` fixes. Four to eleven is inside the range today's finish closes as a
+matter of course (the continuation pass at six opens or fewer, then the stub router), and neither was in the loop
+when those rounds were run. So the experiment is narrower than the P0 supposed: does a four-layer A reach zero
+after today's finish. For B the evidence already exists and stands: three CM5 at 0.4 mm receptacle pitch,
 93 opens at 8 passes with In1 keep-outs. For C, D, E, E5 and P no rationale was ever recorded at all, the four
 layer default being the first board's default copied forward.
 

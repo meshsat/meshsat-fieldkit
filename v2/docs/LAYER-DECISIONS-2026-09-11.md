@@ -53,15 +53,27 @@ the ground plane alone and that is the sentence the record never wrote.**
 stands, and In1 as a solid plane is the owner's own ruling of 5 September 17:08, which was explicitly four-layer
 compatible.
 
-**A is the open one, exactly as the P0 says.** Its six layers are two planes (In1, In4) and two inner signal layers
-carrying 13,459 mm, 69 percent of the routing. The plain question is whether that fits on three routing layers
-instead of four. **The measurement nobody has taken is a four-layer rerun with `unknot.py` in the loop**: A22 was
-promoted after eight failed four-layer rounds whose 33 hard violations turned out to be a single router knot, and
-no four-layer attempt was ever made after `unknot.py` existed.
+**A is the open one, and the P0's framing of it needs one correction that I owe to reading the generator rather
+than the record.** Its six layers are two planes (In1, In4) and two inner signal layers carrying 13,459 mm, 69
+percent of the routing.
 
-There is a second number in A's row worth reading: **B.Cu carries 1,159 mm, under 6 percent of the board.** The
-router put almost nothing on the back. A four-layer rerun is therefore not only "can three layers hold four
-layers' copper": it is also "will the router use the back side when the inner layers are not there".
+A's promotion was **not** unmeasured. `gen_pcb_a3.py:196` carries the number in a comment beside the In4 plane:
+*"four-layer runs left 4 to 11 opens in the converter zones"*. The P0 said A's evidence was 33 hard violations
+that turned out to be one router knot; that is a different measurement of a different run. **The four-layer
+evidence for A is 4 to 11 open connections, and opens are not what `unknot.py` fixes.**
+
+That makes the question sharper rather than settling it. **Four to eleven opens is inside the range this
+pipeline's finish now closes as a matter of course**: `cont_route.sh` takes one continuation pass at six opens or
+fewer, the stub router closes what is left, and neither was in the loop when those four-layer rounds were run.
+A22's own released route needed exactly that treatment. So the experiment stands, and what it asks is narrower
+and cheaper than "does A route on four layers": **does A's four-layer route reach zero after today's finish.**
+
+Two other numbers belong in that experiment. **B.Cu carries 1,159 mm, under 6 percent of the board**, so the
+router put almost nothing on the back and a four-layer run asks whether it will use the back when the inner
+layers are gone. And A's four-layer form loses In3, which is not only signal: `gen_pcb_a3.py:280` dives the
+VIN_RAW trunk onto In3 to cross the VBAT trunk without two nets' bands crossing on one layer (the rule of 32.39).
+**That dive needs somewhere else to go before a four-layer A is even generatable**, and it is a placement change,
+not a router setting.
 
 **B is evidenced and stands.** 82 percent of its routing is on In2 and In3, and B.Cu carries 781 mm. Three CM5 at
 0.4 mm receptacle pitch measured 93 opens at 8 passes with In1 keep-outs (5 September 17:08). That is a measurement
@@ -83,7 +95,7 @@ layers and at six, nothing else changed.
 
 | board | experiment | what it answers |
 |---|---|---|
-| A | four-layer rerun of A24 with `unknot.py` in the loop, same placement, same passes | whether the promotion to six was ever needed |
+| A | four-layer A24 with today's finish (continuation pass, stub router) in the loop | whether the 4 to 11 opens of the old four-layer rounds close now |
 | E | two-layer variant judged by `dc_drop.py` at the record's currents | whether In2's four pours need their own layer |
 | D | none; write the ground-plane rationale | the RF plane is the reason, and it was never written down |
 | C | none; write the rationale from this table | 55 percent of routing is on In2 |
