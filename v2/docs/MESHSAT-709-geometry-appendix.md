@@ -5017,3 +5017,43 @@ difference.
 **Counting calls beside the seconds is what makes this actionable**, and it was one line: 6 seconds over 75
 calls and 6 seconds over 75,000 calls are different problems with different fixes, and the line that printed
 only seconds could not tell them apart.
+
+### 32.128 D's one open is a station swap, and the chain that produced it is not yet proved a function of its input (11 September 2026, 22:15 CEST; MESHSAT-862)
+
+D10 is 0 hard, `check_pcb_d` ALL PASS on 231 checks, `netlist_board` 994 of 994, contracts ALL PASS 40 of 40,
+all five pairs laid and every one within 1 mm, `dc_drop` **MET** (+5V_D8 at 81 mV, 1.62 percent of a 3 percent
+budget). **One connection is open**: `/HUB_DM1`, 2.82 mm between U4 pad 11 and R13 pad 1, with **not one track
+on the net**.
+
+**The cause is a station swap.** The pre-router exchanges two identical passives when the pair's own fans cross
+at a station. On the board that was routed, R12 and R13 had been exchanged: R12 sits at x 120.0 carrying
+`/HUB_DP1` and R13 at 121.6 carrying `/HUB_DM1`, while the hub's DM1 pad is at x 120.80. The two hub-side
+connections therefore cross, in a 2.7 mm gap between the hub's pad row and the resistor row, and the router laid
+nothing. A later round of the same run did **not** exchange them and routed that net (two tracks on
+`/HUB_DM1`). **The swap is judged on the side the pair is laid from and the other side of the same two parts is
+not looked at.**
+
+**The swap is not optional, measured.** `PAIR_SWAP=0` on D lays **2 of 5 pairs** against **5 of 5** with it. So
+the answer is not to remove it but to judge both sides of the station before accepting it, and that is the
+change the next session makes.
+
+**And the chain is not yet proved a function of its input past the placement.** `tests/determinism.sh` stopped
+after the PLACEMENT, so the pre-router, which moves parts, had never been under it. It takes
+`--with-preroute` now and compares the board the ROUTER is given. Three runs of D:
+
+| comparison | result |
+|---|---|
+| run 1 against run 2 | **60 of 652 items differ**: 2 footprints, 54 tracks, 4 vias |
+| run 2 against run 3 | 0 of 656 differ |
+
+**The pre-router alone is not the unstable part.** Four runs of it on one fixed placed board, same environment,
+give **0 of 468 differing items** every time (the file hashes differ, which is KiCad's per-item UUIDs and not
+geometry). So the instability is upstream of it or in what the chain hands it, and it is intermittent rather
+than systematic: it showed up once in three runs.
+
+**What it cost here is exactly one open on a board that is otherwise finished**, because the round whose board
+was kept had the swap and the rounds that re-ran did not.
+
+**The instrument that made this readable landed with it:** the pre-router now reports every footprint it moves,
+with its before and after. The swap of R20 and R21 was in the log; the swap of R12 and R13 was not, and a part
+that moves without saying so is how a board comes back with a net no router could ever have closed.
