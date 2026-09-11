@@ -67,6 +67,11 @@ from pcbnew import VECTOR2I, FromMM
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pairsearch
 _FAST_SEARCH = os.environ.get("PAIR_FAST_SEARCH", "1") != "0"   # the compiled search when numba is here, the heapq one otherwise; the same path either way (pairsearch.py selftest)
+# The stub search on the same kernel, ON where the kernel is compiled. Measured 11 September 2026 on B19, 113 pairs,
+# same placed board: 47 of 113 either way, the pass 1586 s to 976 s, the stub search 675 s to 46 s, and the two boards
+# byte-identical at 0 of 7,706 items. On D: 5 of 5 either way, 9 s to 3 s, 0 of 478 items. It is OFF without numba,
+# because the same kernel interpreted is a numpy heap in a Python loop and that is slower than the heapq it replaces.
+_FAST_STUBS = os.environ.get("PAIR_FAST_STUBS", "1" if pairsearch.HAVE_NUMBA else "0") != "0"
 _SEARCH_KERNEL = ("compiled" if (_FAST_SEARCH and pairsearch.HAVE_NUMBA) else "heapq")   # printed and recorded: a 13x difference must never be invisible (round-two red teams, L2)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
@@ -543,9 +548,9 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
     # one was left in interpreted Python doing almost the same thing on almost the same map. It does not need a new
     # kernel: a single-layer search IS `pairsearch.search` with nL=1, no via layer and the window as the array, and
     # that kernel is proved against its own reference by `pairsearch.py selftest`. PAIR_FAST_STUBS=1 takes it.
-    # OFF until it is measured on a board, because "it must be the same" is what the selftest is for and a pair
-    # count is what the knob is for.
-    if os.environ.get("PAIR_FAST_STUBS", "0") != "0":
+    # Measured on two boards and ON where numba is: B19 lays the same 47 of 113 with the pass at 976 s against
+    # 1586 and the stub search at 46 s against 675, and the two boards differ in 0 of 7,706 items.
+    if _FAST_STUBS:
         wi0, wi1 = max(0, imin), min(passable.shape[0] - 1, imax)
         wj0, wj1 = max(0, jmin), min(passable.shape[1] - 1, jmax)
         if not (wi0 <= si <= wi1 and wj0 <= sj <= wj1 and wi0 <= gi <= wi1 and wj0 <= gj <= wj1): return None
