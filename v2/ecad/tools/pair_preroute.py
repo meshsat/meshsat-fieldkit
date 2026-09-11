@@ -999,6 +999,38 @@ def main(a):
             cache = {} if cache is None else cache
             return (_reach_one(cx_, cy_, px, py, pn, cache) and _reach_one(cx_, cy_, qx, qy, nn, cache))
 
+        def _legs_leave(cx_, cy_, px, py, qx, qy, tx_, ty_, off):
+            """Do the two OFFSET legs clear their own maps on the straight run from their pads to this corridor end?
+
+            11 September 2026. The end-chooser tested that a STUB could reach each pad and never tested the LEGS, which
+            is the predicate that later judges the pair, so it could choose an end no leg can reach and the pair then
+            failed with "the legs clear no smoothing of the centreline". Measured on D's /USB_D8 at J_HARN1, a
+            through-hole header whose pair sits in one column with ground pins on both sides: the P leg is blocked by
+            its own partner's pad at 1.13 mm and the N leg by a GND pad at 0.87 mm, both just past the 1.2 mm station
+            exemption, on every smoothing including the raw staircase. An end-chooser that does not share the predicate
+            that judges is the same mistake as a debug print that does not share the predicate it explains.
+            """
+            dx_, dy_ = tx_ - cx_, ty_ - cy_; ln_ = math.hypot(dx_, dy_)
+            if ln_ < 1e-9: return True
+            ox_, oy_ = -dy_ / ln_ * off, dx_ / ln_ * off
+            for (sp, sq) in (((cx_ + ox_, cy_ + oy_), (cx_ - ox_, cy_ - oy_)), ((cx_ - ox_, cy_ - oy_), (cx_ + ox_, cy_ + oy_))):
+                ok_ = True
+                for (ex_, ey_), (tx2, ty2), nm in ((sp, (px, py), pn), (sq, (qx, qy), nn)):
+                    pm_ = trk1.get(nm, {}).get(pcbnew.F_Cu)
+                    if pm_ is None: continue
+                    L_ = math.hypot(ex_ - tx2, ey_ - ty2)
+                    if L_ < 0.2: continue
+                    for k in range(int(L_ / gr.G) + 1):
+                        u = k * gr.G / L_
+                        # the first 1.2 mm is inside the station's own pad pair and is not an obstacle: the SAME
+                        # exemption legs_clear uses, which is the whole point of sharing the predicate
+                        if u * L_ < 1.2: continue
+                        jj, ii = gr.cell(tx2 + u * (ex_ - tx2), ty2 + u * (ey_ - ty2))
+                        if 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]: ok_ = False; break
+                    if not ok_: break
+                if ok_: return True
+            return False
+
         def _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx_, ty_, off, cache=None):
             """The same question asked where the stub will really start: at the OFFSET leg ends, not on the centreline.
 
@@ -1252,7 +1284,8 @@ def main(a):
                 for k_, (cx_, cy_) in enumerate(_free_cands(x, y, px, py, qx, qy, tx, ty)):
                     if best is None: best = (cx_, cy_)
                     # first choice: an end whose OFFSET leg starts both reach their pads, which is what the pass will do
-                    if off_ > 0 and _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx, ty, off_, cache): return cx_, cy_
+                    if off_ > 0 and _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx, ty, off_, cache) \
+                       and _legs_leave(cx_, cy_, px, py, qx, qy, tx, ty, off_): return cx_, cy_
                     # second choice: the centreline test, which is what this did before; kept so the change can only
                     # improve on the old answer and never replace a working end with a worse one
                     if centre_ok is None and _end_reaches(cx_, cy_, px, py, qx, qy, cache): centre_ok = (cx_, cy_)
