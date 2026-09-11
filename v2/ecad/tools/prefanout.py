@@ -2,6 +2,9 @@
 """Before autorouting: give every SMD pad on a plane net (GND, +5V) a fanout via + stub so the inner planes reach it.
 Usage: prefanout.py <board.kicad_pcb>"""
 import sys, math, pcbnew
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import boardorder
 from pcbnew import VECTOR2I, FromMM
 b = pcbnew.LoadBoard(sys.argv[1])
 PLANES = {n.lstrip("/") for n in sys.argv[2].split(",")} if len(sys.argv) > 2 else {"GND", "+5V"}   # 7 Sep 2026: root-sheet labels are "/NAME" on the board; until now only the power-symbol nets (GND) ever got a via
@@ -46,7 +49,7 @@ def clear(v, me, r=None):
             if o.Contains(VECTOR2I(int(v.x + ddx * 1.3), int(v.y + ddy * 1.3))): return False
     return True
 added = skipped = inpad = 0
-for fp in b.GetFootprints():
+for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
     skip_fp = fp.GetReference() in SKIP or ("fine" in SKIP and is_fine(fp))
     fc = fp.GetPosition()
     for pad in fp.Pads():

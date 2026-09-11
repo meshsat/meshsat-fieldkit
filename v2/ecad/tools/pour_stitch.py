@@ -11,6 +11,9 @@ stub_accept.py keeps the stub router's closures. Islands too small or too crowde
 
 Usage: pour_stitch.py <board.kicad_pcb> [--nets GND,+3V3] [--min-area 1.0] [--via=0.6/0.3] [--dry]"""
 import sys, os, re, math, json, subprocess, pcbnew
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import boardorder
 
 bp = sys.argv[1]
 nets = set((next((a.split("=",1)[1] for a in sys.argv[2:] if a.startswith("--nets=")), None) or "GND").split(","))
@@ -72,7 +75,7 @@ def clearance_at(x, y, ka):
 # phase 1 collects the candidates without touching the board: a refill invalidates every polygon reference still in
 # hand, and placing a via inside the loop over a zone's outlines segfaulted the process (8 Sep 2026 18:33)
 cands = []
-for z in list(b.Zones()):
+for z in boardorder.zones(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
     if z.GetIsRuleArea() or z.GetNetname().lstrip("/") not in nets: continue
     ka = keepaways(z.GetNetname())
     for L in z.GetLayerSet().Seq():
