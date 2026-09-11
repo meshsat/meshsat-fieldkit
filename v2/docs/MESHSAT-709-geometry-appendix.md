@@ -4504,3 +4504,63 @@ ordered, and the cart is unpaid. It is evidence that **the order set rests on fo
 current checks refuse**, that the checks grew after the folders were cut, and that no pass has re-run them
 since. Every board is being regenerated anyway; the point of recording it is that a folder on disk is not a
 verdict, and a released folder is worth exactly the gate that last read it.
+
+### 32.112 The twelve finish clones retired, and the five defects that only appeared when they were compared (11 September 2026, 17:00 CEST; MESHSAT-862)
+
+A reviewer reading the diff of `finish.sh` against the tree found one thing: **`netlist_board.py` is in
+`finish.sh` and in none of the fifteen `finish_*.sh` clones**, so a board could pass every gate while carrying a
+phantom net or a footprint its schematic does not have. Answering it properly meant comparing every clone with
+`finish.sh` mechanically rather than patching the one line into twelve files, and the comparison found four more:
+
+| what the clones do | how many |
+|---|---:|
+| never run `netlist_board.py` | 12 of 12 |
+| never run `pruned_gate.py` | 9 |
+| never run `pour_stitch.py` | 4 |
+| never run `pair_match.sh`, so the owner's pair ruling cannot fire | 3 |
+| run the stub router BEFORE the clean-up, against the order with two written reasons | 5 |
+
+The twelve are gone, 638 lines, and every routeflow profile dispatches `tools/finish.sh`. It grew the two stages
+only the A clones ever had, as data rather than as code: the continuation pass before the stub router
+(`cont_route`, A21's lever of 5 September) and the wider stub window (`stub_env`).
+
+**Comparing the clones against `boards/<letter>.json` before deleting them found four divergences in the data
+file itself, every one of them mine, written the day before by reading some clones and not all.** A declared
+`post_fix_a.py` and D `post_fix_d.py` where every clone of both passes `-`; E stitching only GND where its In2
+carries four more pours (CELL_F, VIN_RAW, PV_P, TRK_OUT); E handing the stub router In2 where the released E6
+handed it the two outer layers. A data file is only as good as the reading that produced it, and the way to
+check one is to compare it with the thing it replaces before that thing is deleted.
+
+**And five profiles named a phase one behind the folder their own finish cuts** (a23 cut A24, b17 B18, d9 D10,
+e6 E7, p2 P3). `finish.sh` derives the deliverable folder from the phase argument and routeflow verifies the
+folder named in `deliverable`, so the supervisor would have looked for a folder that was never going to be
+written. `t_a_profile_agrees_with_itself_about_the_phase_it_cuts` is that rule; three of the nine rules in
+`tests/test_finish_order.py` fail on the pre-fix tree.
+
+One more came out of the collapse itself: `c7.json` ran its clone from the project directory with a relative
+`../tools` path, and a single dispatch shape `./tools/finish.sh` only resolves from the ecad directory, so c7
+would have died on its first line. The working directory is part of the rule now.
+
+### 32.113 The new netlist gate blocked a board that passes everything else, because KiCad's unconnected-pin placeholder is not a net (11 September 2026, 17:30 CEST; MESHSAT-862)
+
+`netlist_board.py` ran in a chain for the first time on B19's regeneration on the rented box and **failed 1,007
+of 6,716 comparisons**, stopping a board whose every other gate passes: `check_pcb_b` ALL PASS, 2,142 of 2,142,
+950 footprints, 839 nets.
+
+The gate was wrong, and the shape is worth keeping. **KiCad gives every unconnected pin a synthetic net,
+`unconnected-(REF-PINNAME-PadN)`, and writes it into the netlist as though it were a net.** The board side of
+the comparison already stripped those; the netlist side did not. So every unconnected pin read as "on a net in
+the netlist and no net on the board", which is exactly what a CORRECT board looks like. The gate now expects no
+net there and fails the opposite case instead: a pad carrying a net on the board while the netlist says
+unconnected is a board wired to something the schematic does not know about.
+
+The board-only references are split the same way. A footprint the netlist does not have whose pads carry **no**
+net is inert copper, a placement list that has outlived its schematic part; it is named and does not block. One
+whose pads **do** carry a net blocks. B19 has four in the first class (`J_USBX`, `U36`, `F4` and a test point),
+which the placement generator already warns about and nothing ever read.
+
+**The lesson is about the order the gates were added in.** Stage 0 put seventeen gates on a verdict channel and
+proved each one fires on a fixture. This one fired on a fixture too. What it had never done was run against a
+real board of this project, and the defect was not in its logic but in an assumption about the input format that
+no fixture contained. **A fixture proves a gate can fail; only a real board proves it does not fail wrongly**,
+and a gate's first real run belongs before the run that depends on it, not inside it.
