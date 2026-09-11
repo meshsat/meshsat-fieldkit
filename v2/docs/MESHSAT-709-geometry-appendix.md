@@ -5244,3 +5244,37 @@ Every knob that changes how hard it searches is now measured at zero. So the rem
 placement and connector question, which is what decision 6 says in its own terms: three pairs on a 2x13 ribbon
 with two end rows cannot escape whatever the router does. **Tuning is finished on this board until its floor
 plan changes.**
+
+### 32.133 D10 is cut, and the last connection was closed by hand after three measured refusals (12 September 2026, 01:10 CEST; MESHSAT-862)
+
+`meshsat-pcb-d-revA-D10`: **0 hard of the fifteen types, 0 unrouted**, `check_pcb_d` ALL PASS on 231 checks,
+`dc_drop` MET (+5V_D8 at 81 mV, 1.62 percent of a 3 percent budget), **impedance 4 of 4 pairs within 10 percent**,
+`netlist_board` 994 of 994, contracts ALL PASS 40 of 40, `verify_deliverable` ALL PASS. The board file, the
+deliverable copy and the recorded sha256 all read `6a1cb187...982c795e`.
+
+**Three attempts to make the router close `/HUB_DM1` failed and each is a measurement:**
+
+| attempt | result |
+|---|---|
+| the stub router, six-fold window, three layers, 40 M nodes | FAILED, pad to pad |
+| 1.2 mm more room at the station | the pre-router drops from **5 of 5 pairs to 4 of 5** |
+| three times the router passes, 100 to 300 | the same hard 0 and **3 unrouted** |
+
+**What the router had actually done was get within 0.28 mm**: `/HUB_DM1` leaves U4 pad 11 northward, takes a
+via down to In2, runs south-east and ends at (121.35, 92.75) with no via back up, while R13 pad 1 sits at
+(121.60, 92.88). So the closure is a locked via at that end and a locked 0.25 mm track to the pad, and the DRC
+decides, which is what it did for A22's VBUS20 and C7's U3 ring. `tools/fix_d10_hubdm1.py` refuses if that end
+is more than 1.5 mm from the pad, so it cannot be pointed at a different problem.
+
+**The deliverable was then refused by one BOM row, and the refusal was wrong.** FB1 carries C1017, an 0805 600
+ohm ferrite. `lcsc-blocked.txt` blocks that code because on board C it sits on 0603 lands; the certification
+table says PACKAGE_MISMATCH for C and **CERTIFIED for D, whose land is 0805**. The block was keyed on the code
+alone, so it refused a part the certifier had passed. **This is the same shape as 32.120**, where a rejection
+keyed on the code alone refused board E, and the fix is the same: a blocked line may now carry `fp=<substring>`
+and both readers honour it, with a fixture that fails on the pre-fix file.
+
+**The suite caught two of my own mistakes inside this one closure**, which is what it is for: the new tool was
+an unclassified copper-laying script, and its `--test` copy sat beside the board in the project directory, the
+B5 trap of 11 September. Both were fixed before the commit.
+
+**The current-phase deliverables are P3, E5, E7 and D10.**
