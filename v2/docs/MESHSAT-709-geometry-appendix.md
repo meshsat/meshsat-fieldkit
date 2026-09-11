@@ -4801,3 +4801,30 @@ changed. `tests/determinism.sh` is the standing form of that measurement and it 
 Two clean copies per board, the placement run twice, and the BOARDS compared by `board_diff.py`, which ignores
 UUIDs, file order and the title block because none of those is a property of the board. **Thirteen minutes for
 the whole set**, which is what makes it a standing check rather than an occasion.
+
+### 32.122 A tool I added today would have cut live copper, and two wrong conditions hid it from each other (12 September 2026, 03:30 CEST; MESHSAT-862)
+
+`stitch_prune.py` was written this evening to remove a locked stitch via the pour has abandoned: the router runs
+a track past it, the fill retreats by its clearance, and the via's pour end touches nothing. It went into the
+finish under the accept-or-revert contract every copper-changing pass here works under.
+
+**Its abandonment test was wrong.** It walked the zones of the via's net and broke at the **first** whose outline
+contained the via and whose fill did not. A via whose F.Cu end sits in the ground fill and whose B.Cu end has
+been pushed out of it satisfies that on the B.Cu zone and is **connected on F.Cu**. Multi-layer zones failed the
+same way through `GetFilledPolysList(z.GetFirstLayer())`, which asks about one layer of a zone that may span
+several.
+
+**Measured, after the fix, on board E's own routed board: 0 abandoned vias of 241 locked.** Before the fix the
+same board gave **16** (one removed, fifteen left alone for other reasons). **None of those sixteen was dead.**
+
+**And the reason it never reached a board is not a good one.** My accept test in `finish.sh` reverted whenever
+hard or unrouted was non-zero AFTER the pass, instead of on a RISE. E arrived at the pruner with one open, so
+the revert fired every single time. **Two independently wrong conditions cancelled, and the visible behaviour
+was a tool that quietly did nothing.** Had the board arrived clean, sixteen connected vias would have gone, the
+DRC would have reported the opens, and the revert would then have fired on a real defect the tool had itself
+caused.
+
+**What this says about the day's method.** A pass that removes copper is judged against the board it was given,
+and a predicate about "is this via connected" has to ask about every layer and every zone, not the first one it
+finds. Both were caught by a reviewer reading the file with fresh eyes, not by the suite: the fixtures exercised
+the tool's arithmetic, and neither wrong condition is arithmetic.
