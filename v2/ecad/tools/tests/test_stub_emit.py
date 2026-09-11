@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The stub router's path emission, which decides whether its closure is accepted at all.
 
-12 September 2026. `emit()` merged straight runs by comparing the vector of the run SO FAR against the next
+11 September 2026. `emit()` merged straight runs by comparing the vector of the run SO FAR against the next
 step: after one merge the run was two cells long and the step one, the test failed, and it appended. A straight
 twenty-cell run came out as TEN segments instead of one.
 

@@ -55,7 +55,7 @@ def main(a):
         # first zone whose outline contained it and whose fill did not, so a via whose F.Cu end sat in the F.Cu
         # ground fill and whose B.Cu end had been pushed out of the B.Cu fill read as abandoned and would have
         # been removed with its connection intact. A multi-layer zone had the same fault through
-        # GetFirstLayer() (reviewer, 12 September 2026). Both are one question: is this via in ANY fill?
+        # GetFirstLayer() (reviewer, 11 September 2026). Both are one question: is this via in ANY fill?
         abandoned, filled_anywhere = None, False
         for z in zones:
             if z.GetNetname() != net: continue

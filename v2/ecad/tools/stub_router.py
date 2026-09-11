@@ -260,7 +260,7 @@ def emit(net_item, path):
     # the run was two cells long and the step one, the test failed, and it appended: a straight 20-cell run came
     # out as TEN segments instead of one. A 2,178-cell closure on board E therefore emitted 992 tracks, and
     # `stub_accept.py` refused it as "carpeting, not a closure" at its 400-item cap, which left the board one
-    # open short through three router rounds. The path was always fine; the emission was not (12 September 2026).
+    # open short through three router rounds. The path was always fine; the emission was not (11 September 2026).
     # The direction of the current run is carried instead, and every step is one grid cell by construction.
     segs = []; cur = [path[0]]; run = None
     for k in range(1, len(path)):

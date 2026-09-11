@@ -615,7 +615,7 @@ def fp_centre(fp):
     NOT `fp.GetPosition()`, which is the footprint's ORIGIN: on every connector in this tree that origin is PIN 1,
     not the body. It is used to decide which way is "out" of a pair's station, and for a pair on the END row of a
     header the origin lies exactly ON the station line, so the dot product is zero, the test cannot flip anything
-    and the default direction points straight INTO the pin field. Measured on D's /USB_D8 on 12 September 2026: the
+    and the default direction points straight INTO the pin field. Measured on D's /USB_D8 on 11 September 2026: the
     corridor end came out at (58.80, 85.35), between the two columns of J_HARN1 and one row inside it, and the fan
     into the pads had no path from there. The pads' own centre is (58.5, 92.0) for that part, which puts "out" north,
     off the end of the connector, where the board is empty."""
@@ -770,11 +770,11 @@ def main(a):
                 if t.GetLayer() != L: continue
                 d_ = _seg_d(x, y, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)); what = "track (%s)%s" % (t.GetNetname() or "no net", " locked" if t.IsLocked() else "")
             if best is None or d_ < best[0]: best = (d_, what)
-        # 12 September 2026: zones and rule areas were not scanned at all, so a leg stopped by a pour or a keep-out was
+        # 11 September 2026: zones and rule areas were not scanned at all, so a leg stopped by a pour or a keep-out was
         # reported as the nearest PAD, which reads as a pad problem and is not one. It named "pad U2.1 at 1.85 mm" for a
         # cell no pad could reach, and 1.85 mm against a forbidden radius of about 1.35 is the tell that the answer was
         # the wrong object. The rule of the record is that a tool which refuses copper names what it hit.
-        # 12 September 2026: RULE AREAS were not scanned at all, so a leg stopped by a keep-out was reported as the nearest
+        # 11 September 2026: RULE AREAS were not scanned at all, so a leg stopped by a keep-out was reported as the nearest
         # PAD, which reads as a pad problem and is not one. It named "pad U2.1 at 1.85 mm" for a cell no pad could reach, and
         # 1.85 mm against a forbidden radius near 1.35 is the tell that the answer was the wrong object. Footprint-local rule
         # areas are NOT in b.Zones() (the same trap build_maps closed on 9 September), so both lists are walked. A copper pour
@@ -962,7 +962,7 @@ def main(a):
         def wid(L): return w_in if L in _INNER_CU else w
         def gap(L): return s_in if L in _INNER_CU else s
         def dof(L): return (wid(L) + gap(L)) / 2
-        # 12 September 2026 (MESHSAT-862), measured on D's /USB_D8: the corridor did not cover its own legs, and the
+        # 11 September 2026 (MESHSAT-862), measured on D's /USB_D8: the corridor did not cover its own legs, and the
         # difference was smaller than a grid cell. A leg sits dof = (w + s)/2 off the centreline and its own map grows
         # obstacles by w/2 + 0.02, so it reaches w + s/2 + 0.02 out; the corridor grew them by w + s/2 + slack, which is
         # 0.02 mm SHORT of that before the slack is counted. The author's own note above says the centreline needs
@@ -974,7 +974,7 @@ def main(a):
         # the leg demanded 0.330. Both fit in exact arithmetic, by 8 and 37 micrometres, and the cell centres do not.
         # PAIR_COVER_LEGS=1 makes the corridor cover the legs plus one grid cell, so that a free centreline implies free
         # legs and a pair that cannot pass an obstacle is refused by the SEARCH, which can go round, rather than by the
-        # legs, which cannot. It is OFF, and that is the B19 arm of 12 September 2026 rather than an opinion. Same placed
+        # legs, which cannot. It is OFF, and that is the B19 arm of 11 September 2026 rather than an opinion. Same placed
         # board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs, counted by each pair's LAST failure:
         #
         #                                          off        on

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Which way is "out" of a pair's station, and the footprint origin that is not a centre.
 
-Measured on D's /USB_D8, 12 September 2026 (MESHSAT-862). The pre-router decides which side of a station the
+Measured on D's /USB_D8, 11 September 2026 (MESHSAT-862). The pre-router decides which side of a station the
 corridor leaves from by taking the vector from the footprint's centre to the station midpoint and dotting it
 with the normal of the P-N line. It read that centre from `GetPosition()`, which is the footprint's ORIGIN, and
 on every connector in this tree the origin is PIN 1. For a pair on the END row of a header the origin therefore

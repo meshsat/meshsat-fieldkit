@@ -39,7 +39,7 @@ def is_ledger(path):
             r = json.loads(line)
             # every row, not only the first: a file that starts chained and continues unchained is neither a
             # ledger nor a plain table, and calling it a ledger turns its tail into a wall of false breaks
-            # (reviewer, 12 September 2026)
+            # (reviewer, 11 September 2026)
             if not all(k in r for k in ("sha", "prev_sha", "seq")): return False
             seen = True
     except Exception:

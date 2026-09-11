@@ -4705,7 +4705,7 @@ pairs on a good draw, that the variance between draws is larger than any single 
 the remaining failures are dominated by geometry the router cannot negotiate: the stub-to-escape-via at the
 fine-pitch parts, and the channel arithmetic of decision 6.
 
-### 32.118 Every profile pinned the stock jar, so the refusal written that morning could never fire (12 September 2026, 00:45 CEST; MESHSAT-862)
+### 32.118 Every profile pinned the stock jar, so the refusal written that morning could never fire (11 September 2026, 16:57 CEST; MESHSAT-862)
 
 `route_one.sh` prefers our patched 1.9.0 build and, since the morning of 11 September, **refuses** when the host
 has not got it, with the reason spelled out: our build writes a session after every pass, the stock jar writes
@@ -4728,7 +4728,7 @@ and a value set somewhere else quietly made the guard unreachable. The verdict c
 this is the fifth. **What they have in common is that nothing checked the two ends against each other**, and
 what catches them is a rule that reads the seam rather than either side.
 
-### 32.119 The stub router's closures were refused for how they were written down, not for what they were (12 September 2026, 01:45 CEST; MESHSAT-862)
+### 32.119 The stub router's closures were refused for how they were written down, not for what they were (11 September 2026, 17:43 CEST; MESHSAT-862)
 
 Board E reached 0 hard and **one** open through three router rounds and two hours of box time. The open is
 `/USB_E6_P` between `J_BLK` pad 9 at x 68.7 and `R29` pad 2 at x 264.6: **a 196 mm run across a 267 mm board
@@ -4757,7 +4757,7 @@ produced a thousand correct items that looked like a thousand wrong ones; the ot
 reporting normally. **Neither is a defect a test could have been written for in advance, and both took one
 measurement each to see**: count the segments of a straight run, and list the session files.
 
-### 32.120 A clean board refused by a declaration that is not the one in the repository (12 September 2026, 02:45 CEST; MESHSAT-862)
+### 32.120 A clean board refused by a declaration that is not the one in the repository (11 September 2026, 18:36 CEST; MESHSAT-862)
 
 Board E reached the end of its finish tonight as a **clean board**: 0 hard, 0 unrouted, `check_pcb_e` ALL PASS,
 `dc_drop` 2 of 2 rails MET, `impedance_check` PASS, `netlist_board` 816 of 816, `check_contracts` ALL PASS, the
@@ -4782,7 +4782,7 @@ deliverable at the end of a route.
 in what the pipeline believed about the board. Of E's last four refusals, one was a real parts gap and **three
 were the checks, the declarations or the copies being wrong about a board that was right.**
 
-### 32.121 Determinism re-proved on all six boards after two days of generator and tool changes (12 September 2026, 03:10 CEST; MESHSAT-862)
+### 32.121 Determinism re-proved on all six boards after two days of generator and tool changes (11 September 2026, 19:06 CEST; MESHSAT-862)
 
 Stage 0b proved the pre-route chain a function of its input on D, A and C, and the defect it found was that a
 random KiCad UUID decided which escapes fit. Since then the generators, `escape.py`, `boardorder.py`,
@@ -4802,7 +4802,7 @@ Two clean copies per board, the placement run twice, and the BOARDS compared by 
 UUIDs, file order and the title block because none of those is a property of the board. **Thirteen minutes for
 the whole set**, which is what makes it a standing check rather than an occasion.
 
-### 32.122 A tool I added today would have cut live copper, and two wrong conditions hid it from each other (12 September 2026, 03:30 CEST; MESHSAT-862)
+### 32.122 A tool I added today would have cut live copper, and two wrong conditions hid it from each other (11 September 2026, 19:14 CEST; MESHSAT-862)
 
 `stitch_prune.py` was written this evening to remove a locked stitch via the pour has abandoned: the router runs
 a track past it, the fill retreats by its clearance, and the via's pour end touches nothing. It went into the
@@ -4829,7 +4829,7 @@ and a predicate about "is this via connected" has to ask about every layer and e
 finds. Both were caught by a reviewer reading the file with fresh eyes, not by the suite: the fixtures exercised
 the tool's arithmetic, and neither wrong condition is arithmetic.
 
-### 32.123 Two declarations for one question, and the deliverable gate could see only the other one (12 September 2026, 04:15 CEST; MESHSAT-862)
+### 32.123 Two declarations for one question, and the deliverable gate could see only the other one (11 September 2026, 19:32 CEST; MESHSAT-862)
 
 Board E finished tonight at **34 of 35 properties**: 0 hard, 0 unrouted, `check_pcb_e` ALL PASS, `check_contracts`
 ALL PASS, the gerbers exported with all four copper layers, the JLC BOM and CPL written, the phase stamped
@@ -4858,7 +4858,7 @@ phase a profile names against the folder its finish cuts, the jar a profile pins
 would choose, and a phase copy's declaration files against its board's. **The rule that keeps catching them is
 the same one: compare the two ends against each other, not either end against its own intention.**
 
-### 32.124 Two defects between D and its fifth pair, and a footprint origin that is not a centre (12 September 2026, 18:30 CEST; MESHSAT-862)
+### 32.124 Two defects between D and its fifth pair, and a footprint origin that is not a centre (11 September 2026, 20:30 CEST; MESHSAT-862)
 
 D has laid 4 of 5 pairs since 11 September and the pre-router has been saying why in a line that reads as a
 tool weakness and is not one: `the legs clear no smoothing of the centreline`. It lays **5 of 5** now. Two
@@ -4905,7 +4905,7 @@ give D its fifth pair. It did not: D lays 5 of 5 with the change on **or** off, 
 right side. The corridor change is a correctness finding with no measured gain today, and it is recorded as
 that rather than as an improvement.
 
-**The B19 arm, written prediction and result, 19:00 CEST.** The prediction written before the run was that
+**The B19 arm, written prediction and result, 21:00 CEST.** The prediction written before the run was that
 covering the legs would lay FEWER pairs on B19, because it adds 0.12 mm to the corridor envelope and the
 recorded ladder runs the other way. Same placed board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs:
 
@@ -4935,7 +4935,7 @@ carry the words "fan into" and are successes, not failures. The table above coun
 is the one to read; the direction of the finding is unchanged and its mechanism is not what the first version
 said.
 
-### 32.125 E7 is cut, and the board was never the thing that was wrong (12 September 2026, 17:48 CEST; MESHSAT-862)
+### 32.125 E7 is cut, and the board was never the thing that was wrong (11 September 2026, 19:48 CEST; MESHSAT-862)
 
 `meshsat-pcb-e-revA-E7` is in `v2/release/revA/boards/`: 0 hard of the fifteen types, 0 unrouted, 415 vias over
 8564 mm on four layers, both rails MET (CELL_F 10.0 A, VIN_RAW 213 mV of a 2 percent budget), `check_pcb_e` 88
@@ -4950,3 +4950,33 @@ actually uses. **The round that refused it was round one of a run whose round tw
 board at 250 passes when the fix landed.** That round was killed by PID and the finish re-run on round one's
 kept board, which is what the best-board rule of 12 September exists for. Three hours of box time, and a board
 that was already right.
+
+### 32.126 Every section from 32.118 on carried tomorrow's date, and the rule that exists for this was not run (11 September 2026, 21:30 CEST; MESHSAT-862)
+
+Sections **32.118 to 32.125** were written and committed on **11 September 2026** between 16:57 and 21:00 CEST
+and every one of them said **12 September**, with a clock time eight hours ahead of the commit that carried it.
+The dates are corrected in place, to the commit clock, and the affected times were:
+
+| section | said | committed |
+|---|---|---|
+| 32.118 | 12 Sep 00:45 | 11 Sep 16:57 |
+| 32.119 | 12 Sep 01:45 | 11 Sep 17:43 |
+| 32.120 | 12 Sep 02:45 | 11 Sep 18:36 |
+| 32.121 | 12 Sep 03:10 | 11 Sep 19:06 |
+| 32.122 | 12 Sep 03:30 | 11 Sep 19:14 |
+| 32.123 | 12 Sep 04:15 | 11 Sep 19:32 |
+| 32.124, 32.125 | 12 Sep 17:48 and 18:30 | 11 Sep 19:48 and 20:30 |
+
+Thirty six occurrences of the wrong date across twenty files went with them: eight documents and twelve tools,
+including the code comments that explain why `finish.sh`, `stub_router.py`, `pour_stitch.py`, `zone_pad_via.py`
+and `pair_preroute.py` are the way they are, and three test files. All are corrected.
+
+**The rule for this is in the record and is four days old.** Section 8 of `CLAUDE.md`: *"Run `date` before
+labelling a section, a comment or a file"*, written after the 4 September sessions dated everything from 32.10
+on a day ahead and the whole record, the memory, the release notes and the YouTrack comments had to be walked
+back. It was not run today. Two things made it invisible: the box reports UTC and the record is written in
+CEST, so every log line read two hours low and was corrected in the wrong direction; and a session that has
+been running for many hours has no clock of its own, so "it must be past midnight by now" is a feeling, not a
+measurement. **The `date` command is the only instrument for this and it takes no time at all.**
+
+A YouTrack comment on MESHSAT-862 carried the same wrong date and is corrected there.

@@ -221,7 +221,7 @@ for k, nm in enumerate("ABCD", 1): tp("TP%d" % (22 + k), "EXP2_SP" + nm)
 # 10 September 2026 (MESHSAT-862): the ribbon pairs sit in one row of the header, ground pins on both sides (the same change in
 # gen_sch_b.py and gen_sch_d.py; the two maps are compared by check_contracts.py). Pins 4/5, 7/8 and 10/11 were diagonal
 # neighbours 3.59 mm apart and no pair can be laid into them. AB_SPARE keeps its seat on the D harness only.
-# 12 September 2026: the mezzanine harness pair moved once more, to the END row (pins 1/2), because an inner row of a 2.54 mm
+# 11 September 2026: the mezzanine harness pair moved once more, to the END row (pins 1/2), because an inner row of a 2.54 mm
 # IDC field with 1.70 mm pads leaves a 0.84 mm channel between the columns and a coupled pair needs 1.20 mm. J_AB1 below is NOT
 # fixed by that move: it carries THREE pairs and a 2x13 has only two end rows, so one pair cannot escape coupled whatever the
 # pin map. That is a connector decision (two headers, a mezzanine stack connector, smaller pads, or an accepted uncoupled fan)
