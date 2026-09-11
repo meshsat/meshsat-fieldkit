@@ -5210,3 +5210,37 @@ on, and an arm at forty eight million is running with that prediction written do
 since 32.103**, and both live at a station rather than in the corridor: the legs fail where they fan into their
 pads, and the stub search fails to reach a pad from the corridor's end. The corridor itself loses only ten, and
 four of those to a via pair that has nowhere to sit. **Every lever left is at the ends of a pair, not along it.**
+
+### 32.132 Seven arms at the peak slack, five of which change nothing: the pair count is geometry now (12 September 2026, 01:00 CEST; MESHSAT-862)
+
+With a pass at sixteen minutes, seven arms ran on B19's placed board at the slack the curve peaks on, each with
+its prediction written before it. Baseline: **57 of 113**.
+
+| arm | pairs | prediction | verdict |
+|---|---:|---|---|
+| baseline (12 ends, 12 M expansions, 400 k stub cap) | 57 | | |
+| `PAIR_LEG_EXACT=1` (exact leg re-test) | 57 | no change | **held** |
+| `PAIR_EXPANSIONS` 12 M to 48 M | 57 | converts part of the 10 capped pairs | **wrong** |
+| `PAIR_STUB_EXPANSIONS` 400 k to 4 M | 57 | converts part of the 14 station stubs | **wrong** |
+| `PAIR_STATION_OWN=1` (own copper not an obstacle at a station) | 57 | converts part of the 21 leg failures | **wrong** |
+| `PAIR_END_CANDS` 12 to 48 | **53** | converts part of the 14 station stubs | **wrong, and worse** |
+| the per-class two-pass layer split | **54** (20 of 48 + 34 of 65) | beats 57 and lands at or above the recorded 62 | **wrong, and worse** |
+
+**Five knobs move the count by nothing and two move it backwards.** The expansion budget is not binding: four
+times the budget finds the same pairs, so a pair that reports "no path after the expansion cap" is searching a
+space with no path in it. The stub cap is not binding either. The leg rounding is real and worth nothing here,
+which two different implementations now agree on. And more candidate corridor ends is actively worse, because
+the end chosen is the first that reaches and a greedy pass with no rip-up pays later for a first choice made
+further from the natural one.
+
+**The per-class split losing is the one to keep in mind**, because 62 of 113, the number the record has carried
+as the best B19 result since 11 September, came from that split at slack 0.08. At today's peak the split lays
+54 and a single pass lays 57. The split was worth about thirteen pairs when the single pass was weaker; it is
+worth minus three now. **A configuration that won once is not a configuration that wins.**
+
+**What this says about the pair question.** The two things that have ever moved this number are the corridor
+slack and the layer set, and both change the GEOMETRY the search is given rather than how hard it searches.
+Every knob that changes how hard it searches is now measured at zero. So the remaining 56 pairs are a
+placement and connector question, which is what decision 6 says in its own terms: three pairs on a 2x13 ribbon
+with two end rows cannot escape whatever the router does. **Tuning is finished on this board until its floor
+plan changes.**
