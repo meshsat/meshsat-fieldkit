@@ -380,7 +380,7 @@ def run(profile_fn, rounds, use_services, dry):
             # The horizon for this stage's verdicts, and it has to be taken BEFORE the chain runs or it excludes
             # every verdict the chain writes. Set after, as it was for one commit, it would have hidden all of
             # them and read as "no verdicts at all" (11 September 2026; see verdict.collect).
-            pre_started = now()
+            pre_started = verdict.now()   # UTC in the verdict channel's own format, never routeflow's local now()
             rc = 0
             if not dry:
                 for argv in (pre.get("steps") or [pre["argv"]]):   # fixed argument vectors, one process each, no shell string

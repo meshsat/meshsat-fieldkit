@@ -225,3 +225,31 @@ def t_the_collector_honours_a_horizon():
     put("no_ts", "FAIL", None)
     worst3, found3, _ = v.collect(d, since="2026-09-11T11:00:00Z")
     assert "no_ts" in found3 and worst3 == 1, (worst3, found3)
+
+
+def t_the_horizon_and_the_stamp_come_from_one_clock():
+    """The horizon is a string compared against a verdict's `ts`, so the two have to be the same format AND the
+    same timezone. The first version passed routeflow's own now(), which is local time with a space separator,
+    against a ts in UTC with a T and a Z: 'T' sorts after ' ', so every record landed on the keep side and the
+    horizon excluded nothing at all. Board P stayed blocked by a stale verdict with the fix supposedly in.
+
+    This drives both producers rather than either alone, because the defect was in neither."""
+    import subprocess, tempfile, json as _j, time as _t
+    _s = sys; _s.path.insert(0, TOOLS)
+    import verdict as v, routeflow as rf
+    assert callable(getattr(v, "now", None)), "verdict has no now(): the channel has no single clock"
+    d = tempfile.mkdtemp(prefix="one-clock-")
+    horizon = v.now()
+    _t.sleep(1.1)
+    rec = {"tool": "later_gate", "verdict": "FAIL", "denominator": 1, "counts": {}, "evidence": [], "inputs": {}, "note": "", "ts": v.now()}
+    _j.dump(rec, open(os.path.join(d, "later_gate.verdict.json"), "w"))
+    worst, found, _ = v.collect(d, since=horizon)
+    assert "later_gate" in found, "a verdict written AFTER the horizon was excluded: the formats disagree"
+    _t.sleep(1.1)   # the stamp has one-second resolution, so a horizon in the same second is not "after" it
+    worst2, found2, _ = v.collect(d, since=v.now())
+    assert "later_gate" not in found2, "a verdict written BEFORE the horizon was kept: the formats disagree"
+    # and the trap itself: routeflow's display clock must never be used as a horizon
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("pre_started =")
+    line = src[i:src.index("\n", i)]
+    assert "verdict.now()" in line, "the horizon is taken from routeflow's local display clock: %s" % line.strip()
