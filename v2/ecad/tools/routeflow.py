@@ -8,6 +8,7 @@ budget, and stops with a named state when the table ends. No model is in the loo
 
 Usage:
   routeflow.py preflight [--repo DIR]                 host checks (imports, binaries, jar, memory, load, services, git, lock)
+  routeflow.py validate <profile.json> [--repo DIR]    the profile against the tree: nothing written, no host touched
   routeflow.py run <profile.json> [--rounds N] [--no-services] [--dry-run]
   routeflow.py status <project dir> [--markdown]      the journal
   routeflow.py selftest                               kill the predicates with empty inputs; every one must block
@@ -273,6 +274,66 @@ def services(script, action, log):
     if script and os.path.exists(os.path.expanduser(script)): sh([os.path.expanduser(script), action], os.path.expanduser("~"), log)
 
 def expand(argv, project, ecad, name): return [a.replace("<PROJECT>", project).replace("<ECAD>", ecad).replace("<NAME>", name) for a in argv]
+
+def validate(profile_fn, repo=None):
+    """Everything about a profile that can be judged without a host, a board or a filesystem write.
+
+    11 September 2026 (MESHSAT-862). `--dry-run` was not one: it still created the run directory, wrote
+    provenance, ran preflight and took the lock, so a box profile could not be checked from the runner at all
+    and the first thing that read it was an eight-hour wave. Five profiles were carrying a phase one behind the
+    deliverable their own finish cuts when this was written; that is the class of defect this catches in a
+    second. Prints one line per property and returns a verdict code."""
+    prof = json.load(open(profile_fn)); b = os.path.basename(profile_fn)
+    repo = repo or os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    ecad = os.path.join(repo, "v2", "ecad"); tools = os.path.join(ecad, "tools")
+    fails, lines = [], []
+    def ok(cond, text):
+        lines.append(("PASS  " if cond else "FAIL  ") + text)
+        if not cond: fails.append(text)
+
+    for k in ("board", "project", "phase", "route", "finish"):
+        ok(k in prof, "profile declares %s" % k)
+    if fails:
+        for l in lines: print("validate: " + l)
+        return verdict.write("routeflow_validate", verdict.FAIL, denominator=len(lines), evidence=fails,
+                             counts={"fail": len(fails)}, inputs={"profile": b})
+
+    proj = os.path.basename(str(prof["project"]).rstrip("/")); phase = prof["phase"]
+    fin = prof["finish"]; argv = fin.get("argv") or []
+    ok(bool(argv), "the finish declares an argv")
+    if argv:
+        script = os.path.join(ecad, argv[0].lstrip("./"))
+        ok(os.path.exists(script), "the finish script exists: %s" % argv[0])
+        ok(fin.get("cwd") == "<ECAD>", "the finish runs from <ECAD>, which is the only place its relative argv[0] resolves")
+        if os.path.basename(argv[0]) == "finish.sh" and len(argv) >= 6:
+            _, _, aproj, letter, aphase, alog = argv[:6]
+            ok(aproj == proj, "the finish runs in the profile's own project directory (%s against %s)" % (aproj, proj))
+            ok(aphase == phase, "the finish cuts the profile's phase (%s against %s)" % (aphase, phase))
+            ok(os.path.exists(os.path.join(tools, "boards", "%s.json" % letter)), "a board file exists for letter %s" % letter)
+            want = "meshsat-pcb-%s-revA-%s" % (letter, aphase)
+            ok(os.path.basename(prof.get("deliverable", "")) == want,
+               "the deliverable is the one the finish writes (%s against %s)" % (os.path.basename(prof.get("deliverable", "")) or "-", want))
+            ok(fin.get("clean_flag") == "out/%s-clean.txt" % aphase.lower(),
+               "the clean flag is the phase's own (%s)" % fin.get("clean_flag"))
+            ok(alog == (prof["route"].get("log") or alog), "the finish waits on the log the route writes (%s against %s)" % (alog, prof["route"].get("log")))
+    pre = prof.get("pre") or {}
+    if pre.get("argv"):
+        ps = pre["argv"][1] if len(pre["argv"]) > 1 else ""
+        cand = os.path.join(ecad, ps.lstrip("./")) if not ps.startswith("../") else os.path.join(ecad, ps[3:])
+        ok(os.path.exists(cand), "the pre-route script exists: %s" % ps)
+        ok(bool(pre.get("must_contain")), "the pre-route stage names what its log must contain")
+    ok(bool(prof.get("expect")), "the profile carries an expectation to be graded against")
+    jar = str(prof["route"].get("jar", ""))
+    ok(not jar or jar.endswith(".jar"), "the route names a jar file (%s)" % (jar or "the host default"))
+
+    for l in lines: print("validate: " + l)
+    print("validate: %s (%d of %d properties, %s)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails),
+                                                      len(lines) - len(fails), len(lines), b))
+    return verdict.write("routeflow_validate", verdict.PASS if not fails else verdict.FAIL,
+                         counts={"fail": len(fails), "pass": len(lines) - len(fails)},
+                         denominator=len(lines), evidence=fails, inputs={"profile": b},
+                         note="the profile against the tree, with nothing written and no host touched")
+
 
 def run(profile_fn, rounds, use_services, dry):
     prof = json.load(open(profile_fn)); repo = prof.get("repo") or os.getcwd()
@@ -763,6 +824,7 @@ if __name__ == "__main__":
     if a[0] == "preflight": sys.exit(preflight(a[a.index("--repo") + 1] if "--repo" in a else os.getcwd()))
     if a[0] == "selftest": sys.exit(selftest())
     if a[0] == "status": sys.exit(status(a[1], "--markdown" in a))
+    if a[0] == "validate": sys.exit(validate(a[1], a[a.index("--repo") + 1] if "--repo" in a else None))
     if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a))
     if a[0] == "experiment": sys.exit(experiment(a[1], float(a[a.index("--budget-hours") + 1]) if "--budget-hours" in a else 6.0, "--no-services" not in a, int(a[a.index("--parallel") + 1]) if "--parallel" in a else 1))
     print(__doc__); sys.exit(2)
