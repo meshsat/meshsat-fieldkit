@@ -192,6 +192,6 @@ def t_the_verdict_horizon_is_taken_before_the_chain_runs():
     verdict.collect treats as INCONCLUSIVE. It was in that position for one commit on 11 September 2026 and the
     unit test for the collector could not see it, because the defect is where the line sits, not what it does."""
     src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
-    i = src.index("pre_started = now()")
+    i = src.index("pre_started =")   # the expression changed once; the POSITION is what this rule is about
     j = src.index("rc = sh(expand(argv", i - 4000 if i > 4000 else 0)
     assert i < j, "pre_started is taken after the pre-route chain runs, so it excludes the chain's own verdicts"

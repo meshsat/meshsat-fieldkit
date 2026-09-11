@@ -77,7 +77,7 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
     rec = {
         "tool": tool,
         "version": _version(),
-        "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "ts": now(),
         "verdict": result,
         "counts": dict(counts or {}),
         "denominator": denominator,
@@ -114,6 +114,16 @@ def read(path):
         rec["note"] = "verdict field is %r, which is not a verdict" % v
         return rec, CODE[INCONCLUSIVE]
     return rec, CODE[v]
+
+
+def now():
+    """The one timestamp format in this channel: UTC, `2026-09-11T13:38:13Z`.
+
+    It is a function rather than an inline strftime because a caller needs to build a comparable horizon for
+    `collect(since=...)`, and the first version of that horizon passed routeflow's own `now()`, which is LOCAL
+    time with a space separator. The string compare then put every record on the wrong side of it and the
+    horizon excluded nothing at all (11 September 2026)."""
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
 def collect(out_dir="out", require=(), since=None):
