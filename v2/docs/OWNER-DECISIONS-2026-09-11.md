@@ -178,3 +178,45 @@ pairs (`USB_D8`, `USB_E6`, `USB_WALL`) on a 2x13 of the same family, so the coun
 the B19 arm results will say. **Pair class geometry is on the never-auto floor** (`reserved.json`), so I have
 taken the measurement and stopped.
 
+---
+
+## 7. P and E5 are described as 2 oz and ordered as 1 oz, and P's current density is already over IPC at either (measured 11 September, 23:45)
+
+**The contradiction, in the order set itself.** `make_handoff.py` writes three things about copper weight:
+
+| where | what it says |
+|---|---|
+| `make_handoff.py:175`, into EVERY board's `ORDER-NOTES.txt` | "1 oz outer copper, surface finish ENIG..." |
+| `make_handoff.py:232`, into the order index | "Common options for all boards: 1 oz outer copper" |
+| `make_handoff.py:59`, `PCB_OPTIONS` for `pcb-p-pack` | "2 oz outer copper (the power path carries the pack current in 3 mm bands on both faces) ... check the copper weight (2 oz)" |
+
+and the BOARDS row for E5 calls it a "bare 2 oz board". **A fab reading the P folder is told both**, and JLCPCB's
+default is 1 oz, so on the current order set P and E5 would be made at 1 oz with a power path drawn for 2 oz.
+
+**The board's own stackup agrees with the 1 oz line and nothing else.** `stackup_write.py`'s two-layer entry is
+0.035 mm of copper on each face, which is 1 oz, and that is the number written into the board file and read back
+by `dc_drop.py`.
+
+**What P's rails measure at that thickness**, from its finish on 11 September:
+
+| rail | current | worst drop | worst density | IPC-2221 at 10 K |
+|---|---|---|---|---|
+| CELL4 | 10.0 A | 6 mV (0.04%) | 87.4 A/mm2 | 82.7 A/mm2 |
+| FUSED | 10.0 A | 16 mV (0.11%) | 193.5 A/mm2 | 82.7 A/mm2 |
+
+**The drops are fine and the density is not.** `dc_drop` reports the density and does not gate on it, which is
+why this has never stopped a board. At 2 oz the same geometry halves to about 44 and 97 A/mm2, so **2 oz brings
+CELL4 inside the guidance and leaves FUSED about 17 percent over**; 1 oz leaves FUSED at 2.3 times it.
+
+**Three things follow and all three are yours.**
+
+1. **Which weight P and E5 are ordered at.** The order set has to say one thing. (`make_handoff.py` is on the
+   floor as "the order set and anything ordered".)
+2. **What the board's stackup says**, because `dc_drop` judges against it and it currently says 1 oz.
+   (`stackup_write.py` is on the floor as "layer count and stackup".)
+3. **Whether the FUSED band is wide enough at whichever weight is chosen.** This is a geometry question with a
+   number attached, and it is the only one of the three I could answer without you, once 1 or 2 is settled.
+
+I have changed nothing. The measurement above is from P's own finish, on the board that routed 0 hard and 0
+unrouted on 11 September.
+
