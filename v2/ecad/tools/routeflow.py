@@ -610,6 +610,16 @@ def preflight(repo):
                 except OSError: held = True
         except Exception: held = False
     checks.append(("no other route running", not held, read(LOCK) or ""))
+    # The pin on which files may write a gerber, a BOM, a CPL or an order set. Cheap, and preflight runs where an
+    # expensive run begins, which is the right place to notice that the actuation surface grew (11 September 2026).
+    try:
+        import execution_paths as _ep
+        _found = _ep.producers()
+        _unpinned = sorted(f for f in _found if f not in _ep.PIN and f not in _ep.READERS)
+        _gone = sorted(f for f in _ep.PIN if f not in _found)
+        checks.append(("fab-artefact producers match the pin", not _unpinned and not _gone,
+                       ("unpinned %s" % _unpinned if _unpinned else "") + (" stale pin %s" % _gone if _gone else "")))
+    except Exception as e: checks.append(("fab-artefact pin readable", False, str(e)[:60]))
     ok = sum(1 for c in checks if c[1])
     for name_, good, note in checks: print("%s  %s  %s" % ("PASS" if good else "FAIL", name_, note))
     print("preflight: %d of %d checks pass" % (ok, len(checks)))
