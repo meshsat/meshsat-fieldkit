@@ -1,6 +1,6 @@
 # A differential pair that sits where no coupled escape exists, declared with the reason it still stands.
 # The rule and its arithmetic are in tools/tests/test_pair_headers.py. Format: <connector> <pair stem>  # reason
-J_AB1 USB_D8    # open owner decision, not an accepted design: a 2x13 has two end rows and this ribbon carries three pairs (v2/docs/OWNER-DECISIONS-2026-09-11.md, decision 9)
-J_AB1 USB_E6    # the same decision: the A to B ribbon needs a connector answer, not a pin swap
+J_AB1 USB_D8    # open owner decision, not an accepted design: a 2x13 has two end rows and this ribbon carries three pairs (v2/docs/OWNER-DECISIONS-2026-09-11.md, decision 6 and its 12 September addendum)
+J_AB1 USB_E6    # decision 6 again: the A to B ribbon needs a connector answer, not a pin swap
 J_AB1 USB_WALL  # the same decision; this is the pair the record has said "could not be laid at all" since 10 September
-J_PANEL USB_PNL # B and C carry one map: on C the USB class is declared with NO impedance target (the RP2040 is USB 1.1 full speed, appendix 32.78), so C does not need this pair coupled and the router takes the two lines singly, which the 0.84 mm channel does pass; on B the same pair carries the 90 ohm target and is held by decision 9 with the J_AB1 three
+J_PANEL USB_PNL # B and C carry one map: on C the USB class is declared with NO impedance target (the RP2040 is USB 1.1 full speed, appendix 32.78), so C does not need this pair coupled and the router takes the two lines singly, which the 0.84 mm channel does pass; on B the same pair carries the 90 ohm target and is held with the J_AB1 three under decision 6
