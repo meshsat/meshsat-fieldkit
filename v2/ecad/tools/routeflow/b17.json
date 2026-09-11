@@ -57,7 +57,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 200
  },
- "budget_rounds": 1,
  "notes": "B17 (8 Sep 2026, MESHSAT-862, appendix 32.70): the B16 profile on the pcb-b-compute-b17 copy; the HDMI switches at 16 mm pitch, the pair pre-router in the chain.",
  "baseline_key": "B15"
 }

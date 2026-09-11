@@ -62,7 +62,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 40
  },
- "budget_rounds": 2,
  "notes": "D8 (7 Sep 2026): the APRS mezzanine of the A22 generation (SA868 exciter, T/R relay, LPF, USB audio and control set; the 30 W PA on the face plate, 32.56); four layers, In1 the ground plane as a power layer, one attempt on 1.9.0 single thread.",
  "baseline_key": "D7"
 }

@@ -74,7 +74,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 60
  },
- "budget_rounds": 2,
  "notes": "C8 (8 Sep 2026, MESHSAT-862, appendix 32.70): the C7 profile on the v2/ecad/pcb-c-display-c8 copy.",
  "baseline_key": "C6",
  "plane_layers": [

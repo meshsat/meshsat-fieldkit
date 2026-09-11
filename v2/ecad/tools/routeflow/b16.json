@@ -65,7 +65,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 200
  },
- "budget_rounds": 1,
  "notes": "B16 (7 Sep 2026, appendix 32.52 and 32.58): 330 x 200, six layers as B15 (In1 solid ground, In4 the four 5 V planes, both handed to Freerouting as power layers, GND as a plane net); single thread on 1.9.0; three CM5 slots with a PCIe switch and a USB 3 hub each, the Ethernet and HDMI switches, the radios. One automatic round: the via_costs remedy hurt A22 (7 Sep 01:33, GND pads left open), the session audits the leftovers.",
  "baseline_key": "B15"
 }

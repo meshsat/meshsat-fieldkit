@@ -143,3 +143,20 @@ def t_an_unreadable_verdict_does_not_become_a_pass():
     open(os.path.join(d, "junk.verdict.json"), "w").write("{not json")
     worst, found, missing = verdict.collect(d)
     assert worst == 3, (worst, found)
+
+
+def t_no_profile_declares_a_key_nothing_reads():
+    """A configuration key nobody reads is a claim about behaviour that does not happen. `budget_rounds` sat in
+    twelve profiles and the CLI's --rounds decided; `expect.hard` and `expect.unrouted` sat in all twelve and
+    were wired to a judge on 11 September rather than deleted, because those two express a real prediction."""
+    import glob
+    dead = ("budget_rounds",)
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        d = json.load(open(p))
+        for k in dead:
+            if k in d: bad.append("%s carries %s" % (os.path.basename(p), k))
+    src = open(os.path.join(TOOLS, "routeflow.py")).read()
+    for k in ("expect", "hard", "unrouted"):
+        assert k in src, "expect.%s must be read by the supervisor or removed from the profiles" % k
+    assert not bad, bad

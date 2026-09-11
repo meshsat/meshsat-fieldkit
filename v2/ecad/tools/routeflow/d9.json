@@ -57,7 +57,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 40
  },
- "budget_rounds": 2,
  "notes": "D9 (8 Sep 2026, MESHSAT-862 rules 1 and 2, appendix 32.70): the D8 profile on the pcb-d-aprs-d9 copy with the USB cluster on the top layer and the pair pre-router in the chain; the USB and RF classes on F.Cu and In2.Cu.",
  "baseline_key": "D7"
 }

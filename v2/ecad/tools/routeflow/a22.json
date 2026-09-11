@@ -67,7 +67,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 90
  },
- "budget_rounds": 1,
  "notes": "A22 (7 Sep 2026, appendix 32.55, 32.56, 32.61): six layers since run 10 (JLC06161H-3313 as B16): In1 and In4 solid ground planes handed to Freerouting as power layers with GND as the plane net, In2 carries the VBAT plane and GND islands and stays routable, In3 routable; single thread on 1.9.0 (the blessed production jar); the finish is finish_a22.sh (stub router on F, In2, In3, B; cleanup, quality pass, pair report on the three USB pairs, the A gate, finish_board into the A22 deliverable). History: eight four-layer 1.9.0 rounds left 4 to 11 opens in the packed converter zones (run 8 also 36 hard: overlapping tracks of two nets at three spots), run 9 on 2.4.1 sat at 153 unrouted after four passes and was stopped. Run 11 (250 passes) converged at pass about 150 ('19 changes in 60 passes') and would have hit the 2 h limit before writing its session: 120 passes since run 12.",
  "baseline_key": "A21"
 }
