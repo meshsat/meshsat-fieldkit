@@ -73,10 +73,22 @@ if missing and os.environ.get("HANDOFF_ALLOW_MISSING") != "1":
     sys.exit("make_handoff: no finished deliverable for %s in %s.\n"
              "Finish those boards and commit their folders from the laptop first, then pull here and rerun.\n"
              "Set HANDOFF_ALLOW_MISSING=1 only if you mean to build the set without them." % (", ".join(missing), DL))
-blank = [f for f, stem, *_ in BOARDS if os.path.exists(os.path.join(DL, f, stem + "-bom.status")) and open(os.path.join(DL, f, stem + "-bom.status")).read().strip() != "OK"]
+# 11 September 2026 (MESHSAT-862), two defects in the line this replaces. It looked the status file up
+# under the plain folder name while every other line in this file uses QUOTE.get(folder, folder), so the
+# ONE board that most needed the gate, B16's quote folder with 79 uncoded lines, was never looked at. And
+# a MISSING status file passed silently, which is the state of nineteen of the twenty three deliverable
+# folders: a finish that died before writing one looked exactly like a finish that passed.
+def _status(f, stem):
+    return os.path.join(DL, QUOTE.get(f, f), stem + "-bom.status")
+blank = [f for f, stem, *_ in BOARDS if os.path.exists(_status(f, stem)) and open(_status(f, stem)).read().strip() != "OK"]
+nostatus = [f for f, stem, *_ in BOARDS if not os.path.exists(_status(f, stem))]
 if blank and os.environ.get("HANDOFF_ALLOW_BLANK") != "1":   # 8 Sep 2026 (MESHSAT-862): lcsc_fill's blank count used to be printed and read by nobody
     sys.exit("make_handoff: the BOM of %s carries LCSC blanks that no lcsc-allow.txt line explains (see <deliverable>/<stem>-bom.status).\n"
              "Fill the codes in tools/lcsc_fill.py or allow-list the bench-fitted lines with a reason, refinish, then rerun; HANDOFF_ALLOW_BLANK=1 only to build the set regardless." % ", ".join(blank))
+if nostatus and os.environ.get("HANDOFF_ALLOW_BLANK") != "1":
+    sys.exit("make_handoff: no BOM status file for %s (expected <deliverable>/<stem>-bom.status).\n"
+             "That file is written by finish_board.sh after lcsc_fill.py passes, so its absence means the BOM was never checked.\n"
+             "Refinish those boards, then rerun; HANDOFF_ALLOW_BLANK=1 only to build the set regardless." % ", ".join(nostatus))
 shutil.rmtree(REV, ignore_errors=True); os.makedirs(REV, exist_ok=True); os.makedirs(JLC, exist_ok=True)   # JLCPCB/ is never wiped: ORDER-LOG.md and upload/ copies live there
 def run(cmd): r = subprocess.run(cmd, capture_output=True, text=True); return r.returncode == 0, (r.stdout + r.stderr)[-300:]
 order_index = ["# MeshSat field-kit carrier boards, JLCPCB order set (generated %s)" % subprocess.run(["date", "+%Y-%m-%d %H:%M"], capture_output=True, text=True).stdout.strip(), "",

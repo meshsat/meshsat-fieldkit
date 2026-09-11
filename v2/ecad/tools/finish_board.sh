@@ -15,7 +15,16 @@ if [ "$PF" != "-" ]; then NO_GAPS=1 python3 ../tools/$PF $N.kicad_pcb out/$N-drc
 python3 ../tools/net_tie.py $N.kicad_pcb
 ../tools/build_pcb.sh . $N > out/$N-build_pcb.log 2>&1 || { echo "build_pcb.sh failed (out/$N-build_pcb.log)"; tail -5 out/$N-build_pcb.log; exit 2; }; grep -E '^DRC|gerber copper' out/$N-build_pcb.log
 ../tools/export_jlc.sh . $N > out/$N-export_jlc.log 2>&1 || { echo "export_jlc.sh failed (out/$N-export_jlc.log)"; exit 2; }; grep JLC out/$N-export_jlc.log
-if python3 ../tools/lcsc_fill.py out/jlc/$N-bom.csv; then echo OK > out/jlc/$N-bom.status; else echo "BLANK not allow-listed (lcsc-allow.txt)" > out/jlc/$N-bom.status; fi; echo "BOM status: $(cat out/jlc/$N-bom.status)"   # make_handoff.py refuses an order set on a non-OK status
+# 11 September 2026 (MESHSAT-862): this `if` swallowed lcsc_fill's exit code. Under `set -e` a refusal
+# only changed the text in .status and the finish carried on and wrote a deliverable, which is how BOMs
+# with blanks and with proved-wrong codes reached v2/release. The status file is still written, because
+# make_handoff.py reads it, but a refusal now stops the finish where it stands.
+if python3 ../tools/lcsc_fill.py out/jlc/$N-bom.csv; then echo OK > out/jlc/$N-bom.status; else
+  echo "BLANK not allow-listed (lcsc-allow.txt)" > out/jlc/$N-bom.status
+  echo "BOM status: $(cat out/jlc/$N-bom.status)"
+  echo "finish_board: lcsc_fill.py refused $N-bom.csv; not writing a deliverable"
+  exit 2
+fi; echo "BOM status: $(cat out/jlc/$N-bom.status)"   # make_handoff.py refuses an order set on a non-OK status
 [ -f out/jlc/README-fab.custom ] && cp out/jlc/README-fab.custom out/jlc/README-fab.txt || true
 # The per-type histogram of the deliverable DRC, which has never printed. The pattern was '^\\[': in an ERE that is a literal
 # backslash followed by an unterminated bracket expression, so grep exited 2 on every finish and the `|| true` swallowed it.

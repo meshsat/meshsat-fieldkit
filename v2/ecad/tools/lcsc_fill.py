@@ -6,7 +6,12 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^10k$", "R_0603"): "C25804", (r"^100k$", "R_0603"): "C25803", (r"^1k$", "R_0603"): "C21190", (r"^4\.7k$", "R_0603"): "C23162", (r"^5\.1k$", "R_0603"): "C23186",
  (r"^1\.5k$", "R_0603"): "C22843", (r"^100R$", "R_0603"): "C22775", (r"^22R$", "R_0603"): "C23345", (r"^330R$", "R_0603"): "C23138", (r"^2k$", "R_0603"): "C22975",
  (r"^100n", "C_0603"): "C14663", (r"^22p", "C_0603"): "C1653", (r"^4\.7u$", "C_0603"): "C19666", (r"^4\.7n", "C_0603"): "C53987", (r"^1u$", "C_0603"): "C15849",
- (r"^10u$", "C_0805"): "C15850", (r"^green", "LED_0603"): "C2986059", (r"^red", "LED_0603"): "C2286", (r"^600R@100MHz", "L_0603"): "C1002", (r"^ferrite 600R$", "L_0603"): "C1002",  # the C BOM writes the value this way round
+ (r"^10u$", "C_0805"): "C15850", (r"^green", "LED_0603"): "C2986059", (r"^red", "LED_0603"): "C2286",
+ (r"^blue", "LED_0603"): "C2288",        # KT-0603B, the blue of the same Hubei KENTO series as the red above
+ (r"^amber", "LED_0603"): "C165983",     # BL-HJC36G-AV-TRB 605 nm; JLCPCB stocks no amber in the KENTO series
+ (r"^status\b", "LED_0603"): "C2986059",# the bare "status (GPIO25)" rows name no colour: green, like every other indicator
+ (r"^SS14\b", "D_SMB"): "C51897884",     # the fan flyback diodes on E6
+ (r"^0\.25R 1% 2512$", "R_2512"): "C459675",   # RLP25FEER250, 2 W current sense, 1 percent (r"^600R@100MHz", "L_0603"): "C1002", (r"^ferrite 600R$", "L_0603"): "C1002",  # the C BOM writes the value this way round
  (r"^180R?$", "R_0603"): "C22828",        # the shipped C BOM carried C25270, an 0805, on these eleven 0603 lands
  (r"^8MHz", "5032"): "C115962", (r"^USBLC6-2SC6", "SOT-23-6"): "C7519", (r"^INA219", "SOT-23-8"): "C138024", (r"^PCA9555PW", "TSSOP-24"): "C2864778", (r"^FE1\.1s", "SSOP-28"): "C2848",
  (r"^USB-C 2\.0 receptacle", "TYPE-C-31-M-12"): "C165948", (r"^BC847BS", "SOT-363"): "C8653",
@@ -101,4 +106,51 @@ if os.path.exists(ap):
         if "#" in line and line.split("#", 1)[0].strip(): allow.append(line.split("#", 1)[0].strip())
 not_allowed = [r for r in blank if not any(a in r["Comment"] for a in allow)]
 print("lcsc_fill: %d lines filled, %d still blank of %d (%d allow-listed, %d not: %s)" % (filled, len(blank), len(rows), len(blank) - len(not_allowed), len(not_allowed), ", ".join(r["Designator"][:24] for r in not_allowed[:8])))
-sys.exit(1 if not_allowed else 0)
+
+# 11 September 2026 (MESHSAT-862). Until today this script ONLY ever filled blanks: the `continue` above
+# skips any row that already carries a code, so a code typed into an `ic()` call was never looked at by
+# anything. That is how all twenty three codes of lcsc-blocked.txt reached shipped deliverable BOMs, and
+# how a BMI270 came to stand where the ATECC608B secure element is named. Every code is checked now.
+HERE = os.path.dirname(os.path.abspath(__file__))
+bad = []
+
+# 1. Codes this project has already proved wrong. The authority is the hand-curated list, so this fires
+#    whether or not the certified table has been regenerated since.
+blocked = {}
+bp = os.path.join(HERE, "lcsc-blocked.txt")
+if os.path.exists(bp):
+    for line in open(bp):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        f = line.split()
+        if len(f) >= 2:
+            blocked[f[0]] = (f[1], " ".join(f[2:]))
+for r in rows:
+    c = (r.get("LCSC Part #") or "").strip()
+    if c in blocked:
+        bad.append("%s %s is blocked, use %s (%s)" % (r["Designator"][:18], c, blocked[c][0], blocked[c][1][:60]))
+
+# 2. Every other code against the dated certification. A row is refused when the certifier read that
+#    code and found a different part or a package our land cannot take. NO_STOCK is not refused here:
+#    stock is a reading of one moment and the order set, not the board, is where it binds.
+cert = os.path.join(os.path.dirname(os.path.dirname(HERE)), "release", "revA", "order", "JLC-CERTIFIED.tsv")
+if os.path.exists(cert):
+    import csv as _csv
+    verdicts = {}
+    for row in _csv.DictReader(open(cert, errors="replace"), delimiter="\t"):
+        code = (row.get("bom_code") or "").strip()
+        if code and row.get("verdict") in ("WRONG_MODEL", "PACKAGE_MISMATCH"):
+            verdicts[code] = (row["verdict"], (row.get("note") or "")[:70])
+    for r in rows:
+        c = (r.get("LCSC Part #") or "").strip()
+        if c in verdicts and c not in blocked:
+            bad.append("%s %s: %s, %s" % (r["Designator"][:18], c, verdicts[c][0], verdicts[c][1]))
+
+if bad:
+    print("lcsc_fill: %d row(s) carry a code this project has checked and rejected:" % len(bad))
+    for b in bad[:12]:
+        print("   " + b)
+    print("   fix the code in the GENERATOR, not in the BOM: a finish re-exports the BOM from the board")
+    print("   file it already has, so a code corrected only here comes back on the next regeneration.")
+sys.exit(1 if (not_allowed or bad) else 0)
