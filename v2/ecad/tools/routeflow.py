@@ -343,6 +343,11 @@ def validate(profile_fn, repo=None):
     ok(bool(prof.get("expect")), "the profile carries an expectation to be graded against")
     jar = str(prof["route"].get("jar", ""))
     ok(not jar or jar.endswith(".jar"), "the route names a jar file (%s)" % (jar or "the host default"))
+    # Pinning the stock 1.9.0 jar sets FR_JAR, which bypasses route_one's choice and, with it, the refusal that
+    # exists because the stock jar writes no session until the whole job ends. Every profile did this, so the
+    # refusal added on 11 September could never fire (found the same evening, with E routing on stock).
+    ok(not jar.endswith("freerouting-1.9.0.jar"),
+       "the route does not pin the stock 1.9.0 jar, which would bypass route_one's per-pass-session refusal")
 
     for l in lines: print("validate: " + l)
     print("validate: %s (%d of %d properties, %s)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails),
