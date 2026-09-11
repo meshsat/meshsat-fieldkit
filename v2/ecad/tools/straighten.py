@@ -55,16 +55,27 @@ n0 = len(segs); merged = snapped = shortcuts = 0
 # The work budget, and the counter it is spent from. STRAIGHTEN_BUDGET=0 removes the bound.
 BUDGET = int(os.environ.get("STRAIGHTEN_BUDGET", "3000000")) or float("inf")
 checks = [0]; capped = [False]
+# One index per PASS, not one per merge. This used to rebuild the index over every live segment and restart the
+# scan after each single merge, which is O(n squared) in segments: board E reached the quality pass with 3,862
+# segments after the stub router closed three nets with 2,178-cell paths, and this loop ran for over an hour
+# with nothing to show for it (11 September 2026; the record's "straighten.py then ran over an hour" is this).
+# A pass now takes every merge it can find and only then re-indexes, and each merge is charged to the budget,
+# so the bound is in work rather than in a clock.
 changed = True
-while changed:
-    changed = False; idx = index([s for s in segs if not s.dead])
+while changed and checks[0] < BUDGET:
+    changed = False; idx = index([s for s in segs if not s.dead]); touched = set()
     for (pt, layer), ss in idx.items():
         if len(ss) != 2: continue
         a, c = ss
+        if id(a) in touched or id(c) in touched: continue          # a segment already merged this pass has moved
+        if a.dead or c.dead: continue
         if a.locked or c.locked or a.net != c.net or a.w != c.w or busy(pt, layer): continue
+        checks[0] += 1
+        if checks[0] >= BUDGET: capped[0] = True; break
         pa, pc = other(a, pt), other(c, pt)
         if same_line_opposite(pt, pa, pc):
-            a.a, a.b, a.dirty = pa, pc, True; c.dead = True; merged += 1; changed = True; break
+            a.a, a.b, a.dirty = pa, pc, True; c.dead = True; merged += 1; changed = True
+            touched.add(id(a)); touched.add(id(c))
 # 2. (snap of micro-segments removed 6 Sep 2026: moving a track end laterally broke a 0.15 mm clearance on D7; merge and shortcut are geometry-safe)
 # 3. shortcuts A-B-C -> A-C against precomputed obstacles per layer
 if do_short:
