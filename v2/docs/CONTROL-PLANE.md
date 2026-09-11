@@ -209,7 +209,30 @@ The plan's own verification list, with what was actually run against each item.
 | 7 | every deliverable passes `verify_deliverable`; `check_contracts` passes across the set | **P3 35 of 35**; contracts **ALL PASS, 40 of 40** once A existed in the tree |
 | 8 | the suite passes on the runner and on the box | **155 on the runner, 161 on the box** (the box has pcbnew, so six board rules run there that skip here), selftest 54 of 54 on both |
 
-## Where the run stands, 11 September 2026 01:15 CEST
+## Where the run stands, 11 September 2026 21:45 CEST (the evening's second block)
+
+**Delivered since 20:00.**
+
+| | |
+|---|---|
+| **E7** | **cut and committed**: 0 hard, 0 unrouted, 415 vias, both rails MET, `check_pcb_e` 88 of 88, `netlist_board` 816 of 816, contracts ALL PASS, `verify_deliverable` **ALL PASS 35 of 35**, sha256 verified three ways. The current deliverables that pass today's gate are **P3 (37 of 37), E5 (21 of 21) and E7 (35 of 35)** |
+| **D lays all five pairs**, 4 of 5 for two days | two defects: a pair cannot leave an INNER row of a 2.54 mm IDC header (0.84 mm channel, 1.054 mm needed, on every layer), so it sits on the END row; and `GetPosition()` is a footprint's ORIGIN, which on a connector is pin 1, so the "which way is out" test could not flip and the corridor left into the pin field |
+| four of seven layer decisions | written with their measurements; E's four layers are now evidenced by E7's own `dc_drop` |
+| the B19 cover-legs arm | prediction held: 47 of 113 against 45. The rounding class is real (25 leg failures to 10) and widening the corridor is the wrong way to remove it |
+| `PAIR_LEG_EXACT` | the right way: re-test a blocked leg point against the polygons before refusing the pair. D unchanged at 5 of 5; the B19 arm is running |
+| the unmeasured half of a pass | named: on D, 6 of 10 seconds are the **stub search**, not the maps and not the corridor search |
+| the dates | every section from 32.118 on said 12 September and was written on the 11th; 36 occurrences across 20 files corrected (32.126) |
+
+**Blocked on a decision, not on work.** **D** by decision 9: its 5 V rail carries 1.0 A through a 0.5 mm class
+track that IPC-2221 rates at 0.44 A on inner copper, measured at 83.4 A/mm2 against a 52 bar and 3.10 percent
+drop against its own 3 percent budget. Either the class widens, which is reserved, or the rail gets copper of
+its own. **A and B** by decision 6, which the end row answers for the mezzanine harness and does not answer for
+`J_AB1`: three pairs, two end rows.
+
+**In flight on the box.** C10 with three routeflow rounds (round one came back hard 1, unrouted 16, and the In2
+GND pour at 48.2 percent of its outline against a 50 percent bar).
+
+## Where the run stood, 11 September 2026 01:15 CEST
 
 **Delivered.**
 
