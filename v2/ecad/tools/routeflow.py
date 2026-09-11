@@ -343,7 +343,16 @@ def run(profile_fn, rounds, use_services, dry):
                 # supervisor became NO_SESSION and the remedy doubled the timeout for what was never a routing problem.
                 sig = "INFRA_FAIL"; note = "the router supervisor exited %d and wrote no session; this is not a routing outcome (see %s)" % (rc, rlog)
             elif best[1][0] >= 9999:
-                sig = "NO_SESSION"; note = "no session in %d attempts; autoroute minutes %s" % (len(scores), mins)
+                # With our patched jar a session is written after EVERY pass, so "no session at all" stops being a
+                # routing outcome and becomes something that went wrong: the job never started, the DSN was refused,
+                # the host ran out of memory. Calling it NO_SESSION sends the remedy table off to double a timeout
+                # that was never the problem, which is the two nights A23 lost. Round-two H5, 11 September 2026.
+                _mesh = os.path.exists(os.path.expanduser("~/bin/freerouting-1.9.0-mesh.jar")) and not route.get("jar")
+                if _mesh:
+                    sig = "INFRA_FAIL"; note = ("the per-pass jar wrote NO session in %d attempts, so this is not a routing "
+                                               "outcome: the job did not run. autoroute minutes %s" % (len(scores), mins))
+                else:
+                    sig = "NO_SESSION"; note = "no session in %d attempts on a jar that writes one only at the end; autoroute minutes %s" % (len(scores), mins)
             else:
                 try: drc = load_drc(os.path.join(project, "out", "par", best[0], "drc.json")); sig, counts, unr = signature(drc)
                 except RuntimeError as e: sig, counts, unr = "TOOL_CRASH", {}, None; note = str(e)
