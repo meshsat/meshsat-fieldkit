@@ -30,5 +30,9 @@
    "passes": 80,
    "timeout_s": 900
   }
- }
+ },
+ "pair_order": [
+  "USB_WALL"
+ ],
+ "_pair_order_why": "12 September 2026: A's three ribbon pairs sit on J_AB1, two of them on the header's end rows and USB_WALL on an inner row, which can only leave through the 1.14 mm channel between the columns. Laid longest-first the end-row pairs go down and their copper crosses USB_WALL's fan out of the connector, and the pass ends 2 of 3; laid with USB_WALL first it is 3 of 3. The pass is greedy and never rips up, so the pair with the least freedom goes first."
 }
