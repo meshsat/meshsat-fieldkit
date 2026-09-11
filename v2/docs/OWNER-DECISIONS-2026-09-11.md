@@ -7,7 +7,7 @@ The floor classes are in `tools/reserved.json` with the files that carry them; `
 
 ---
 
-## 1. Does the pair hold bind board C? (blocking C10's release, and only C10's)
+## 1. Does the pair hold bind boards C and E? (widened 15:45: it is two boards, not one)
 
 **The ruling, 10 September 02:00 CEST (32.94):** every board is held until the pre-router lays every pair, with the
 impedance gate unchanged and no per-pair exception written. Its stated mechanism is that a pair the pre-router does
@@ -22,9 +22,19 @@ ruling names cannot refuse C for its pairs.**
 **Board C's state otherwise:** routed, 0 hard, 0 unrouted, `check_pcb_c.py` ALL PASS on the filled board,
 `dc_drop` MET, contracts ALL PASS (32.92, 32.96). It is the board closest to a deliverable.
 
-**The decision.** Either the ruling binds C through its stated mechanism, in which case C is not held and its
-deliverable can be cut; or the ruling binds the whole set as a set, in which case C waits for B. This is an
-interpretation of your own ruling and is not mine to take.
+**It is two boards, and the mechanism is exact.** `intent.py:14` seeds `pair_classes` from `Z_DEFAULT`, so a
+board that declares nothing keeps the 90 and 100 ohm targets; a board that calls `pair_class("USB")` with no
+argument OVERWRITES that entry with an empty one. Two generators do that and only two: `gen_sch_c.py:247` and
+`gen_sch_e.py:226`. **A, B and D keep their targets and are judged; C and E are not.** P declares no pair
+class in `boards/p.json` at all, so its pre-router never runs and it has no pair to lay.
+
+So the boards the impedance gate can refuse for an unlaid pair are **A, B and D**. The boards it cannot are
+**C, E, P and E5**.
+
+**The decision.** Either the ruling binds through its stated mechanism, in which case C, E, P and E5 are not
+held and their deliverables can be cut once they are re-routed; or it binds the whole set as a set, in which
+case they wait for B. This is an interpretation of your own ruling and is not mine to take. **It is worth
+about four of the seven boards.**
 
 ---
 
