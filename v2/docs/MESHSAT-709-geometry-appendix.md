@@ -4828,3 +4828,32 @@ caused.
 and a predicate about "is this via connected" has to ask about every layer and every zone, not the first one it
 finds. Both were caught by a reviewer reading the file with fresh eyes, not by the suite: the fixtures exercised
 the tool's arithmetic, and neither wrong condition is arithmetic.
+
+### 32.123 Two declarations for one question, and the deliverable gate could see only the other one (12 September 2026, 04:15 CEST; MESHSAT-862)
+
+Board E finished tonight at **34 of 35 properties**: 0 hard, 0 unrouted, `check_pcb_e` ALL PASS, `check_contracts`
+ALL PASS, the gerbers exported with all four copper layers, the JLC BOM and CPL written, the phase stamped
+correctly on the silk. The single failure named `J_BLK`, `J_DCF`, `J_DCIN`, `J_FAN1`, `J_FAN2`, `J_GEIGER` as BOM
+lines with no LCSC code and no declaration.
+
+**They are declared, in the place this project actually uses.** A blank line is judged twice by two mechanisms
+that do not know about each other:
+
+| gate | reads | shape |
+|---|---|---|
+| `lcsc_fill.py` | `<project>/lcsc-allow.txt` | one comment substring per line, each with its `#` reason |
+| `verify_deliverable.py` | `tools/jlc-handfit.txt` plus the bench designator prefixes | a part number with a purchase route, or a reference prefix |
+
+`lcsc_fill` had already accepted every one of those lines and written `OK` into `<name>-bom.status` beside the
+BOM, which the deliverable folder carries and `verify_deliverable` already checks the existence of. It simply
+never read it, and re-judged the blanks by a rule that cannot see the board's own declaration.
+
+**The gate defers to `lcsc_fill`'s ANSWER, never to its absence.** With no `OK` status beside the BOM it judges
+the blanks itself, so dropping `lcsc_fill` from a chain cannot quietly widen what a deliverable may carry; three
+rules hold the three directions and the first fails on the pre-fix tree.
+
+**This is the fifth time in two days that the same shape has cost a board**: two places answering one question
+and only one of them being consulted. The others were the finish clones against `boards/<letter>.json`, the
+phase a profile names against the folder its finish cuts, the jar a profile pins against the jar `route_one`
+would choose, and a phase copy's declaration files against its board's. **The rule that keeps catching them is
+the same one: compare the two ends against each other, not either end against its own intention.**
