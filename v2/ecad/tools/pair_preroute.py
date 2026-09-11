@@ -974,12 +974,18 @@ def main(a):
         # the leg demanded 0.330. Both fit in exact arithmetic, by 8 and 37 micrometres, and the cell centres do not.
         # PAIR_COVER_LEGS=1 makes the corridor cover the legs plus one grid cell, so that a free centreline implies free
         # legs and a pair that cannot pass an obstacle is refused by the SEARCH, which can go round, rather than by the
-        # legs, which cannot. It is OFF by default and that is a measurement, not an opinion: D lays 5 of 5 either way
-        # once the corridor leaves its station on the right side, and turning it on adds 0.12 mm to the corridor's
-        # envelope, which on the recorded B19 ladder (slack 0.12 lays 49, 0.20 lays about 44, 0.25 lays 38) is a move in
-        # the direction that costs pairs. The tuned B19 slack of 0.08 sits INSIDE the uncovered band, so that tuning may
-        # in part be paying for this rounding. It is turned on when a B19 arm says it wins, and not before.
-        _cover = (0.02 + gr.G) if os.environ.get("PAIR_COVER_LEGS", "0") != "0" else 0.0   # OFF by default: see the note above, it is a measurement waiting for B19
+        # legs, which cannot. It is OFF, and that is the B19 arm of 12 September 2026 rather than an opinion. Same placed
+        # board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs:
+        #
+        #   off  47 of 113   1581 s   144 leg failures ("no smoothing")    4 fan failures
+        #   on   45 of 113   1656 s    80 leg failures                    56 fan failures
+        #
+        # The mechanism is real and does what it says: covering the legs removes 44 percent of the leg failures. It does
+        # not turn them into laid pairs, it turns them into pairs that cannot get OUT OF THEIR STATION, and two fewer
+        # are laid. That is the useful half of the measurement: with the corridor honest, the binding constraint on this
+        # board is the station fan and not the corridor, so the next arm belongs there. D lays 5 of 5 either way once
+        # the corridor leaves its station on the right side.
+        _cover = (0.02 + gr.G) if os.environ.get("PAIR_COVER_LEGS", "0") != "0" else 0.0   # OFF: the B19 arm above
         # The corridor envelope takes the wider of the two geometries: one map serves every layer and it must never under-block.
         half = max(w + s / 2, w_in + s_in / 2) + _cover + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
         def is_pull(p):
