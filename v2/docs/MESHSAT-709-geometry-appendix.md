@@ -5088,3 +5088,29 @@ depends on the placement, and until today nothing said so at all.
 **The instrument that made this readable landed with it:** the pre-router now reports every footprint it moves,
 with its before and after. The swap of R20 and R21 was in the log; the swap of R12 and R13 was not, and a part
 that moves without saying so is how a board comes back with a net no router could ever have closed.
+
+### 32.129 C10's only failing check is a pour on a routing layer, measured per layer (11 September 2026, 22:50 CEST; MESHSAT-862)
+
+C's first round came back 1 hard and 16 unrouted, so it is not a candidate yet, but the check that will decide
+it once the route is clean is worth having the numbers for. Measured on that board, fill against the zone
+outline **clipped to the board** (34,895 mm2, the denominator of 32.96):
+
+| pour | layer | fill | of the board | pieces |
+|---|---|---:|---:|---:|
+| GND pour | F.Cu | 25,777 mm2 | **73.9%** | 27 |
+| GND pour | B.Cu | 23,286 mm2 | **66.7%** | 43 |
+| GND plane | In1 | 30,346 mm2 | **87.0%** | 1 |
+| GND pour | In2 | 16,881 mm2 | **48.4%** | 47 |
+
+`copper_checks.MIN_COVER` is 0.5 and it is applied to every power pour of every layer. **In1, the layer the
+owner's ruling of 5 September made a solid ground plane, is one piece at 87 percent. In2 is the board's busiest
+ROUTING layer** (15,657 mm of track, 55 percent of all routing, per `LAYER-DECISIONS-2026-09-11.md`), and its
+pour is what the tracks leave behind.
+
+**No bar is changed here and no board is passed.** What the numbers say is that one bar is being asked two
+different questions: on a plane layer "is the plane still a plane", and on a routing layer "is there ground
+between the tracks". The check's own text says it is the first ("a pour the router's tracks have eaten to
+slivers carries nothing"), and the separate anchor test, which C passes at 0 loose pieces of 48, is what
+catches a pour that has actually gone to slivers. If a clean C route lands above 50 percent on In2 the question
+does not arise; if it lands where this one did, the exemption belongs in the project's own allow-file idiom
+with the layer named and the reason written, and not in the bar.
