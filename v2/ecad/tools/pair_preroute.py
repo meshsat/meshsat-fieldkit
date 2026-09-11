@@ -102,6 +102,19 @@ _INNER_CU = tuple(L for L in (pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.In3_Cu, pcbne
 
 def mm(v): return v / 1e6
 
+def _acc(M, i0, i1, j0, j1, mask):
+    """OR a boolean mask into a boolean raster, ADD it into an integer one.
+
+    The integer form is what makes the per-pair map exact (MESHSAT-862, round-two C3, 11 September 2026). A pair's
+    forbidden map is "every cell some OTHER net blocks", and `all & ~own` does not compute that: where two nets' grown
+    rasters overlap, clearing the pair's own bits also clears cells the other net blocks, which frees copper in the
+    UNSAFE direction. Counting how many stamps cover each cell makes it exact: a cell is blocked by someone else iff
+    the total count exceeds the pair's own count.
+    """
+    if M.dtype == bool: M[i0:i1 + 1, j0:j1 + 1] |= mask
+    else: M[i0:i1 + 1, j0:j1 + 1] += mask
+
+
 class Grid:
     def __init__(self, b, g):
         # 10 September 2026 (report 1, P1): the rasterisation cache used to be a CLASS attribute keyed by (part, grow) only, so
@@ -119,7 +132,7 @@ class Grid:
         i0, i1 = max(0, int((cy - r - Y0) / G)), min(NY - 1, int((cy + r - Y0) / G) + 1); j0, j1 = max(0, int((cx - r - X0) / G)), min(NX - 1, int((cx + r - X0) / G) + 1)
         if i1 < i0 or j1 < j0: return
         ys = (np.arange(i0, i1 + 1) * G + Y0)[:, None]; xs = (np.arange(j0, j1 + 1) * G + X0)[None, :]
-        M[i0:i1 + 1, j0:j1 + 1] |= (xs - cx) ** 2 + (ys - cy) ** 2 <= r * r
+        _acc(M, i0, i1, j0, j1, (xs - cx) ** 2 + (ys - cy) ** 2 <= r * r)
     def seg(self, M, ax, ay, bx, by, r):
         G, X0, Y0, NX, NY = self.G, self.X0, self.Y0, self.NX, self.NY
         i0, i1 = max(0, int((min(ay, by) - r - Y0) / G)), min(NY - 1, int((max(ay, by) + r - Y0) / G) + 1); j0, j1 = max(0, int((min(ax, bx) - r - X0) / G)), min(NX - 1, int((max(ax, bx) + r - X0) / G) + 1)
@@ -127,7 +140,7 @@ class Grid:
         ys = (np.arange(i0, i1 + 1) * G + Y0)[:, None]; xs = (np.arange(j0, j1 + 1) * G + X0)[None, :]
         dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
         t = 0 if L2 == 0 else np.clip(((xs - ax) * dx + (ys - ay) * dy) / L2, 0, 1)
-        M[i0:i1 + 1, j0:j1 + 1] |= (xs - (ax + t * dx)) ** 2 + (ys - (ay + t * dy)) ** 2 <= r * r
+        _acc(M, i0, i1, j0, j1, (xs - (ax + t * dx)) ** 2 + (ys - (ay + t * dy)) ** 2 <= r * r)
     # (key, grow) -> (i0, j0, mask): a pad or zone outline rasterised once per grow value, per grid (see __init__)
     def poly(self, M, sps, grow, key=None):
         bb = sps.BBox(); G, X0, Y0, NX, NY = self.G, self.X0, self.Y0, self.NX, self.NY; r = grow
@@ -135,7 +148,8 @@ class Grid:
         if i1 < i0 or j1 < j0: return
         ck = (key, round(grow, 4)) if key is not None else None
         if ck is not None and ck in self._cache:
-            ci0, cj0, mask = self._cache[ck]; M[ci0:ci0 + mask.shape[0], cj0:cj0 + mask.shape[1]] |= mask; return
+            ci0, cj0, mask = self._cache[ck]
+            _acc(M, ci0, ci0 + mask.shape[0] - 1, cj0, cj0 + mask.shape[1] - 1, mask); return
         grown = pcbnew.SHAPE_POLY_SET(sps)
         # +0.1 um so a cell centre exactly on the boundary counts as blocked. It is done on the POLYGON, not by matplotlib's
         # `radius`, which inflates every sub-path on its own and so fills a polygon's holes: with it the board-wide "edge band"
@@ -154,7 +168,7 @@ class Grid:
         # matplotlib's path test does every cell in one call. Same predicate, and the old loop stays as the fallback.
         mask = self._poly_mask(grown, i0, i1, j0, j1)
         if ck is not None: self._cache[ck] = (i0, j0, mask)
-        M[i0:i1 + 1, j0:j1 + 1] |= mask
+        _acc(M, i0, i1, j0, j1, mask)
 
     def _poly_mask(self, grown, i0, i1, j0, j1):
         """The cells of the box [i0..i1] x [j0..j1] whose centres lie inside `grown`."""
@@ -195,9 +209,117 @@ class Grid:
 
 
 _MAPS = {}   # (grid, layers, excluded nets, half, via radius, split) -> [trk, via, tracks already stamped, MAP_EPOCH when built]
+_ALLMAPS = {}   # (grid, layers, half, via radius, split) -> the whole-board counts, built once for every pair of a pass
+
+# PAIR_MAP_MODE=reference restores the per-pair full rebuild; PAIR_MAP_CHECK=1 runs both and refuses any difference.
+MAP_MODE = os.environ.get("PAIR_MAP_MODE", "counts")
+MAP_CHECK = os.environ.get("PAIR_MAP_CHECK") == "1"
+
+
+def _stamp_pads(gr, b, layers, want, trk, via_clr, via_holes, half, via_r, split):
+    """Pads, and the rule areas, into the count rasters.
+
+    `want` is None to stamp EVERY net, or a set of net names to stamp only those. The hole-to-hole discs and the rule
+    areas are stamped only on the None pass: hole to hole applies whatever the net and a keep-out belongs to no net, so
+    neither may ever be subtracted for the pair being laid."""
+    every = want is None
+    for fp in b.GetFootprints():
+        for p in fp.Pads():
+            pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
+            if pth and every:
+                c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(via_holes, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + 0.2 + 0.30)
+            if not (every or p.GetNetname() in want): continue
+            pk = "%s.%s@%d,%d" % (fp.GetReference(), p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 12:59)
+            for L in layers:
+                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
+                if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
+            anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
+            if anyL is not None or pth: gr.poly(via_clr, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split, key=(pk, "via", anyL))
+    if not every: return
+    # Footprint-local rule areas count too: they are not in b.Zones(), so a keep-out that belongs to a part (the E72's antenna clearance,
+    # a connector's own no-track area) was invisible here while `prefanout.py` already read them. B17's pre-route came back with five
+    # items_not_allowed, all of them pair copper laid straight through one (9 Sep 2026 02:20, MESHSAT-862).
+    for z in list(b.Zones()) + [z for fp in b.GetFootprints() for z in fp.Zones()]:
+        if z.GetIsRuleArea():
+            zk = "zone.%s" % z.m_Uuid.AsString() if hasattr(z, "m_Uuid") else "zone.%d" % id(z)
+            for L in layers:
+                if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): gr.poly(trk[L], z.Outline(), CLR + half, key=(zk, L))
+            if z.GetDoNotAllowVias(): gr.poly(via_clr, z.Outline(), CLR + via_r + split, key=(zk, "via"))
+
+
+def _stamp_copper(gr, b, layers, want, trk, via_clr, via_holes, half, via_r, split, seen):
+    """Tracks and vias into the count rasters, skipping any already in `seen`. Returns how many were new.
+
+    `seen` is the ALL pass's memory so a repeat call stamps only what was laid since. The own-net pass passes a fresh
+    set every time, because its rasters are zeroed and rebuilt from scratch for each pair."""
+    every = want is None; n = 0
+    for t in b.GetTracks():
+        k = _track_key(t)
+        if k in seen: continue
+        seen.add(k); n += 1
+        if t.GetClass() == "PCB_VIA" and every:
+            c = t.GetPosition(); gr.disc(via_holes, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + 0.2 + 0.30 + split)
+        if not (every or t.GetNetname() in want): continue
+        if t.GetClass() == "PCB_VIA":
+            c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
+            for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + CLR + half)
+        else:
+            a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
+            if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + half)
+            gr.seg(via_clr, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
+    return n
+
+
+def _all_counts(gr, b, layers, half, via_r, split):
+    """The whole board counted once: how many nets' grown copper covers each cell, per layer and for via centres.
+
+    This is the change of 11 September 2026 (round-two C3). Four of the five `build_maps` calls a pair makes exclude
+    that pair's own nets, so the cache key was unique per pair and every one rebuilt the board in full: 1,010 s of a
+    1,327 s B19 pass, 76 percent, against 115 s in the corridor search the pass exists to run. Counted once, a pair's
+    own map is two stamps of its own copper and a comparison."""
+    ck = ((gr.G, gr.X0, gr.Y0, gr.NX, gr.NY), tuple(layers), round(half, 5), round(via_r, 5), round(split, 5))
+    hit = _ALLMAPS.get(ck)
+    if hit is not None and hit[4] == MAP_EPOCH[0]:
+        _stamp_copper(gr, b, layers, None, hit[0], hit[1], hit[2], half, via_r, split, hit[3])
+        return hit
+    trk = {L: np.zeros((gr.NY, gr.NX), dtype=np.uint16) for L in layers}
+    via_clr = np.zeros((gr.NY, gr.NX), dtype=np.uint16)
+    via_holes = np.zeros((gr.NY, gr.NX), dtype=bool)
+    _stamp_pads(gr, b, layers, None, trk, via_clr, via_holes, half, via_r, split)
+    seen = set(); _stamp_copper(gr, b, layers, None, trk, via_clr, via_holes, half, via_r, split, seen)
+    scratch = ({L: np.zeros((gr.NY, gr.NX), dtype=np.uint16) for L in layers}, np.zeros((gr.NY, gr.NX), dtype=np.uint16))
+    rec = [trk, via_clr, via_holes, seen, MAP_EPOCH[0], scratch]
+    _ALLMAPS[ck] = rec
+    return rec
+
 
 def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
-    """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer).
+    """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer)."""
+    if MAP_MODE == "reference" and not MAP_CHECK:
+        return _build_maps_reference(gr, b, layers, nets, half, via_r, split)
+    rec = _all_counts(gr, b, layers, half, via_r, split)
+    all_trk, all_via, holes, _seen, _ep, (own_trk, own_via) = rec
+    for L in layers: own_trk[L].fill(0)
+    own_via.fill(0)
+    want = set(nets)
+    _stamp_pads(gr, b, layers, want, own_trk, own_via, None, half, via_r, split)
+    _stamp_copper(gr, b, layers, want, own_trk, own_via, None, half, via_r, split, set())
+    # "some net other than this pair's blocks the cell" is a comparison of counts, never a bitwise subtraction: where
+    # two nets' grown rasters overlap, clearing the pair's own bits would free a cell the other net blocks.
+    trk = {L: all_trk[L] > own_trk[L] for L in layers}
+    via = (all_via > own_via) | holes
+    _edge_band(gr, trk, via)
+    if MAP_CHECK:
+        rtrk, rvia = _build_maps_reference(gr, b, layers, nets, half, via_r, split)
+        bad = [L for L in layers if not np.array_equal(trk[L], rtrk[L])]
+        if bad or not np.array_equal(via, rvia):
+            raise SystemExit("PAIR MAP CHECK FAILED for nets %s: layers %s differ, via differs %s (counts against the reference)"
+                             % (sorted(nets), bad, not np.array_equal(via, rvia)))
+    return trk, via
+
+
+def _build_maps_reference(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
+    """The per-pair full rebuild, kept as the thing the counted map is checked against (PAIR_MAP_CHECK=1).
 
     Cached per signature and topped up: a repeat call re-stamps nothing, it stamps only the tracks and vias laid since the last
     one. The caller mutates what it gets (`via1` is shared and written into), so a copy goes out and the cache keeps its own."""
