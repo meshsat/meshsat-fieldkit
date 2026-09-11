@@ -81,21 +81,32 @@ def jlc_keyword(comment, fp):
     R_ is ohms and needs no suffix. The voltage rating is kept when the row states one, since a 50 V
     1206 and a 16 V 1206 are different parts and the cheaper one is not always the right one."""
     val = comment.split("(")[0].strip()
+    # The value does not always lead: board C writes "ferrite 600R" where the map writes
+    # "600R@100MHz", and VALUE is anchored, so four ferrites parsed as nothing at all.
+    kindword = ""
+    if re.search(r"(?i)\bferrite\b|\bbead\b", val):
+        kindword = "ferrite"                  # wherever the word sits: "ferrite 600R" and "600R 2A ferrite"
+        val = re.sub(r"(?i)\b(?:ferrite\s+bead|ferrite|bead)\b", " ", val).strip()
     m = VALUE.match(val)
     if not m:
         return None
     num, mult, unit = m.groups()
     mult = mult or ""
+    unit = unit or ""          # the group is optional, and the guards below may now leave it unset
     kind = fp.split("_", 1)[0].upper()
     if unit and unit.upper() == "OHM":
         unit = ""
-    if kind == "R" and not unit:
+    if kind == "R" and not unit and not mult:
         # Measured against the endpoint: "180 0603" answers CL10C180JB8NNNC, a 180 pF CAPACITOR, and
-        # "27 2010" answers a 1N5339B zener. "180R 0603" and "27R 2010" answer the resistors, with
-        # 488k and 4.1k in stock. Milliohm values are the exception the old comment was about, so a
-        # milli multiplier still goes bare.
-        unit = "" if mult == "m" else "R"
-    if not unit:
+        # "27 2010" answers a 1N5339B zener. "27R 2010" answers the resistor with 4.1k in stock.
+        # Only a BARE number needs it: this project writes "43R" and "0.255R" with R as the decimal
+        # marker, which the value parser returns as the multiplier, and appending another R asked for
+        # "43RR" and "0.255RR" and got a Murata capacitor. A k or m multiplier is already unambiguous
+        # ("698k 0603" answers the resistor), and a milliohm value searches worst of all with a suffix.
+        unit = "R"
+    if not unit and not kindword and mult != "R":
+        # A ferrite is specified in ohms at 100 MHz, not in henries, and this project writes that as
+        # "600R" on an L_ land. Defaulting the L_ prefix to H asked JLCPCB for "600RH".
         unit = {"C": "F", "L": "H"}.get(kind, "")
     volts = re.search(r"\b(\d+(?:\.\d+)?)\s*V\b", val)
     pkg = norm_pkg(fp)
@@ -104,6 +115,8 @@ def jlc_keyword(comment, fp):
         parts.append(volts.group(1) + "V")
     if pkg:
         parts.append(pkg)
+    if kindword:
+        parts.append(kindword)
     return " ".join(parts)
 
 
@@ -405,8 +418,10 @@ def certify(rec, cache, handfit, aliases, refresh=False):
                            "the generator or declare it hand-fit (search answered %s, %s)"
                            % (ev["model"], b))
             return ev
-        wider = re.sub(r"[A-Za-z]+$", "", want).rstrip("-")
-        if len(wider) >= 5 and wider.upper() != want.upper():
+        # A row certified by its code alone has no part number to broaden, and since a code-carrying
+        # row now reaches this branch, `want` can be None here.
+        wider = re.sub(r"[A-Za-z]+$", "", want).rstrip("-") if want else ""
+        if want and len(wider) >= 5 and wider.upper() != want.upper():
             lst2, asked2 = query(wider, cache, refresh)
             cand2 = [c for c in (lst2 or []) if same_part(want, c.get("componentModelEn"))
                      and norm_pkg(c.get("componentSpecificationEn")) == a]
