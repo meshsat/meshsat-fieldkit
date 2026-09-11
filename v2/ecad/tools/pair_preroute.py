@@ -629,10 +629,25 @@ def main(a):
     board = a[0]; test = "--test" in a; g = float(a[a.index("--grid") + 1]) if "--grid" in a else 0.1
     _GLONG = float(os.environ.get("PAIR_GRID_LONG", "0")) or 0.0   # a coarser grid for the long pairs (0 = off)
     _LONG_MM = float(os.environ.get("PAIR_LONG_MM", "120"))
+    # The pair classes live in the PROJECT file, not the board. A board without one, or with one that carries no
+    # netclass assignments, has no pairs by construction, and this tool then printed "0 of 0 pairs laid" and exited 0.
+    # A pre-router that finds no pairs and reports success is the exact shape this pipeline spent two days removing,
+    # and it is easy to hit: `out/<name>-placed.kicad_pcb` has no project file beside it, and a project directory
+    # copied for a route carries a stale one (the B19 trap of 9 September, appendix 32.91). It refuses now.
+    # 11 September 2026 (MESHSAT-862).
+    pro = os.path.splitext(board)[0] + ".kicad_pro"
+    if not os.path.exists(pro):
+        raise SystemExit("pair_preroute: no project file at %s. The pair classes are in it, so this board has no pairs to lay,\n"
+                         "  which is not the same as having laid them all. Run on the board in its project directory, or copy\n"
+                         "  the .kicad_pro beside it." % pro)
+    d = json.load(open(pro))
+    assign = d.get("net_settings", {}).get("netclass_assignments") or {}
+    classes = {c["name"]: c for c in (d.get("net_settings", {}).get("classes") or [])}
+    if not assign:
+        raise SystemExit("pair_preroute: %s carries no netclass_assignments, so every net reads as Default and no pair\n"
+                         "  would be found. The placement generator writes them into the project file OF THE DIRECTORY IT RUNS IN;\n"
+                         "  a copied project directory needs that file copied too." % pro)
     b = pcbnew.LoadBoard(board); gr = Grid(b, g); _grids = {g: gr}
-    pro = os.path.splitext(board)[0] + ".kicad_pro"; assign = {}; classes = {}
-    if os.path.exists(pro):
-        d = json.load(open(pro)); assign = d.get("net_settings", {}).get("netclass_assignments", {}); classes = {c["name"]: c for c in d.get("net_settings", {}).get("classes", [])}
     def cls_of(n):
         c = assign.get(n) or assign.get("/" + n.lstrip("/")) or assign.get(n.lstrip("/")); return (c[0] if isinstance(c, list) and c else c) or "Default"
     want_classes = set(a[a.index("--classes") + 1].split(",")) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
@@ -952,21 +967,41 @@ def main(a):
         staircase = False   # set when a section fell back to the corridor as the search found it
         stripped = []   # the escape via and stubs of a fine-pitch station pad, removed so the legs enter the pad itself (restored on rollback)
         END_CANDS = int(os.environ.get("PAIR_END_CANDS", "12"))   # candidate corridor ends tested for reach before the nearest one is taken anyway
+        END_OFFSET = os.environ.get("PAIR_END_OFFSET", "1") != "0"   # test the corridor end where the stubs will really start (round-two C2)
+
+        def _reach_one(sx_, sy_, tx_, ty_, nm, cache):
+            """Can a stub run from (sx_, sy_) to (tx_, ty_) on net nm's own map, on any allowed layer?"""
+            if math.hypot(tx_ - sx_, ty_ - sy_) < 0.35: return True   # the end sits on the pad already
+            for L_ in layers:
+                if L_ not in trk1[nm]: continue
+                if (nm, L_) not in cache: cache[(nm, L_)] = ~trk1[nm][L_]   # stub_path walks the PASSABLE map and writes in it, so each try gets its own copy
+                w2 = (gr.cell(min(sx_, tx_) - 8, min(sy_, ty_) - 8), gr.cell(max(sx_, tx_) + 8, max(sy_, ty_) + 8))
+                w2 = ((max(0, w2[0][0]), max(0, w2[0][1])), (min(gr.NX - 1, w2[1][0]), min(gr.NY - 1, w2[1][1])))
+                if stub_path(gr, cache[(nm, L_)].copy(), (sx_, sy_), (tx_, ty_), w2): return True
+            return False
 
         def _end_reaches(cx_, cy_, px, py, qx, qy, cache=None):
             """Can a stub run from this corridor end to BOTH pads of the station, on the legs' own maps? (10 September 2026)"""
             cache = {} if cache is None else cache
-            for (tx_, ty_), nm in (((px, py), pn), ((qx, qy), nn)):
-                if math.hypot(tx_ - cx_, ty_ - cy_) < 0.35: continue   # the end sits on the pad already
-                ok_ = False
-                for L_ in layers:
-                    if L_ not in trk1[nm]: continue
-                    if (nm, L_) not in cache: cache[(nm, L_)] = ~trk1[nm][L_]   # stub_path walks the PASSABLE map and writes in it, so each try gets its own copy
-                    w2 = (gr.cell(min(cx_, tx_) - 8, min(cy_, ty_) - 8), gr.cell(max(cx_, tx_) + 8, max(cy_, ty_) + 8))
-                    w2 = ((max(0, w2[0][0]), max(0, w2[0][1])), (min(gr.NX - 1, w2[1][0]), min(gr.NY - 1, w2[1][1])))
-                    if stub_path(gr, cache[(nm, L_)].copy(), (cx_, cy_), (tx_, ty_), w2): ok_ = True; break
-                if not ok_: return False
-            return True
+            return (_reach_one(cx_, cy_, px, py, pn, cache) and _reach_one(cx_, cy_, qx, qy, nn, cache))
+
+        def _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx_, ty_, off, cache=None):
+            """The same question asked where the stub will really start: at the OFFSET leg ends, not on the centreline.
+
+            11 September 2026 (round-two C2, the 23 "no stub path" failures of the 60-of-113 arm). `free_end` tested
+            reachability from the corridor's centreline end, and then the pass ran its stubs from the two offset leg
+            ends, each displaced perpendicular to the corridor by half the pair pitch. At a fine-pitch part the picket
+            of the other nets' escape vias has gaps at the via pitch, and half a pair gap sideways is the difference
+            between a start inside a gap and a start inside a via's clearance. The test now asks about the points the
+            stubs will use. Both sign assignments are tried, because which leg takes which side is decided later."""
+            cache = {} if cache is None else cache
+            dx_, dy_ = tx_ - cx_, ty_ - cy_; ln_ = math.hypot(dx_, dy_)
+            if ln_ < 1e-9 or off <= 0: return _end_reaches(cx_, cy_, px, py, qx, qy, cache)
+            ox_, oy_ = -dy_ / ln_ * off, dx_ / ln_ * off
+            a_ = (cx_ + ox_, cy_ + oy_); b_ = (cx_ - ox_, cy_ - oy_)
+            for (sp, sq) in ((a_, b_), (b_, a_)):
+                if _reach_one(sp[0], sp[1], px, py, pn, cache) and _reach_one(sq[0], sq[1], qx, qy, nn, cache): return True
+            return False
 
         def fine_part(f):
             """Pitch 0.7 mm or under: the legs enter the pads straight (the entry run)."""
@@ -1198,12 +1233,18 @@ def main(a):
                 HDMI1_D0_N at U3" and its stub map shows a wall between the corridor end and the pad. Each candidate is now tested
                 with the same stub search that will have to run later, and the first that works for both legs is taken; when none of
                 the first PAIR_END_CANDS does, the nearest open cell is used as before, so nothing is lost."""
-                best = None; cache = {}
+                best = None; centre_ok = None; cache = {}
+                off_ = max((dof(L_) for L_ in layers), default=0.0) if END_OFFSET else 0.0
                 for k_, (cx_, cy_) in enumerate(_free_cands(x, y, px, py, qx, qy, tx, ty)):
                     if best is None: best = (cx_, cy_)
-                    if _end_reaches(cx_, cy_, px, py, qx, qy, cache): return cx_, cy_
+                    # first choice: an end whose OFFSET leg starts both reach their pads, which is what the pass will do
+                    if off_ > 0 and _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx, ty, off_, cache): return cx_, cy_
+                    # second choice: the centreline test, which is what this did before; kept so the change can only
+                    # improve on the old answer and never replace a working end with a worse one
+                    if centre_ok is None and _end_reaches(cx_, cy_, px, py, qx, qy, cache): centre_ok = (cx_, cy_)
+                    if off_ <= 0 and centre_ok is not None: return centre_ok
                     if k_ + 1 >= END_CANDS: break
-                return best if best is not None else (x, y)
+                return centre_ok or best or (x, y)
 
             def fine_end(st, out_=2.5):
                 """The corridor end of an entry station: on the outward normal of the pad pair (away from the parts' centre), the first open block at out_ mm or beyond."""
