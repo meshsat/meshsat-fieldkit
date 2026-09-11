@@ -30,5 +30,20 @@
       "inner": "",
       "note": "90 ohm: stays on the outer layers, where its class geometry already hits the target; 0.127/0.127 on In2/In3 would read 102 ohm against a 90 ohm target"
     }
-  ]
+  ],
+  "finish": {
+    "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+    "pour_nets": "GND",
+    "pair_match": true,
+    "pair_audit_nets": [
+      "PCIE1_TX",
+      "PCIE2_TX",
+      "PCIE3_TX",
+      "USB31_TX",
+      "HDMI1_D0"
+    ],
+    "post_fix": "post_fix_b13.py",
+    "pruned_gate": true,
+    "gate_grep": "FAIL|RESULT|WARN|pieces|stitch|^verdict:"
+  }
 }

@@ -12,5 +12,14 @@
   "pair_hop_layers": null,
   "pair_tail": 0,
   "fanout_nets": "GND",
-  "escape_prune_before_audit": false
+  "escape_prune_before_audit": false,
+  "finish": {
+    "stub_layers": "F.Cu,B.Cu",
+    "pour_nets": "GND",
+    "pair_match": false,
+    "pair_audit_nets": [],
+    "post_fix": "-",
+    "pruned_gate": false,
+    "gate_grep": "FAIL|RESULT|^verdict:"
+  }
 }
