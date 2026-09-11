@@ -72,6 +72,10 @@ _FAST_SEARCH = os.environ.get("PAIR_FAST_SEARCH", "1") != "0"   # the compiled s
 # byte-identical at 0 of 7,706 items. On D: 5 of 5 either way, 9 s to 3 s, 0 of 478 items. It is OFF without numba,
 # because the same kernel interpreted is a numpy heap in a Python loop and that is slower than the heapq it replaces.
 _FAST_STUBS = os.environ.get("PAIR_FAST_STUBS", "1" if pairsearch.HAVE_NUMBA else "0") != "0"
+# The stub search's own cap, which was 400,000 expansions written into the loop. 14 of B19's 52 remaining failures
+# at the peak slack are "no stub path at a station or via" (32.131), and the search that gives up on them is now a
+# fifteenth of the cost it was, so the cap is a knob rather than a constant (12 September 2026).
+STUB_EXPANSIONS = int(os.environ.get("PAIR_STUB_EXPANSIONS", "400000"))
 _SEARCH_KERNEL = ("compiled" if (_FAST_SEARCH and pairsearch.HAVE_NUMBA) else "heapq")   # printed and recorded: a 13x difference must never be invisible (round-two red teams, L2)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
@@ -557,7 +561,7 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
         win = np.ascontiguousarray(passable[wi0:wi1 + 1, wj0:wj1 + 1])[None, :, :]
         novia = np.ones(win.shape[1:], dtype=bool)   # every cell forbids a via: one layer, no layer change exists
         path_, nexp_, _why_ = pairsearch.search(win, novia, None, [(0, si - wi0, sj - wj0)], (0, gi - wi0, gj - wj0),
-                                                max_exp=400000, fast=_FAST_SEARCH)
+                                                max_exp=STUB_EXPANSIONS, fast=_FAST_SEARCH)
         PAIR_SPENT[0] += nexp_; PAIR_TOTAL[0] += nexp_
         if path_ is None: return None
         cells_ = [(i_ + wi0, j_ + wj0) for (_L, i_, j_) in path_]
@@ -572,7 +576,7 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
         if d0 > dist.get((i, j), 1e18): continue
         if (i, j) == (gi, gj): found = (i, j); break
         n += 1
-        if n > 400000: break
+        if n > STUB_EXPANSIONS: break
         if not n % 4096:
             PAIR_SPENT[0] += 4096; PAIR_TOTAL[0] += 4096
             if PAIR_EXPANSIONS and PAIR_SPENT[0] > PAIR_EXPANSIONS:
