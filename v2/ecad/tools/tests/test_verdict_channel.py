@@ -112,3 +112,34 @@ def t_the_exit_code_equals_the_verdict():
     assert verdict.write("t", verdict.PASS, out_dir=d, quiet=True) == 0
     assert verdict.write("t", verdict.FAIL, out_dir=d, quiet=True) == 1
     assert verdict.write("t", verdict.INCONCLUSIVE, out_dir=d, quiet=True) == 3
+
+
+# ---------------------------------------------------------------- the collector
+
+def t_the_collector_takes_the_worst_verdict():
+    d = tempfile.mkdtemp(prefix="vc-")
+    verdict.write("a", verdict.PASS, denominator=3, out_dir=d, quiet=True)
+    verdict.write("b", verdict.PASS, denominator=7, out_dir=d, quiet=True)
+    worst, found, missing = verdict.collect(d)
+    assert worst == 0 and len(found) == 2 and not missing, (worst, found, missing)
+    verdict.write("c", verdict.FAIL, denominator=1, out_dir=d, quiet=True)
+    assert verdict.collect(d)[0] == 1
+    verdict.write("d", verdict.INCONCLUSIVE, denominator=0, out_dir=d, quiet=True)
+    assert verdict.collect(d)[0] == 3, "INCONCLUSIVE is worse than FAIL here: it means a bar was not tested"
+
+
+def t_a_required_verdict_that_is_absent_is_inconclusive():
+    """A gate that did not run is the case this pipeline keeps mistaking for a gate that passed."""
+    d = tempfile.mkdtemp(prefix="vc2-")
+    verdict.write("ran", verdict.PASS, denominator=5, out_dir=d, quiet=True)
+    worst, found, missing = verdict.collect(d, require=("ran", "never_ran"))
+    assert missing == ["never_ran"], missing
+    assert worst == 3, worst
+
+
+def t_an_unreadable_verdict_does_not_become_a_pass():
+    d = tempfile.mkdtemp(prefix="vc3-")
+    verdict.write("good", verdict.PASS, denominator=1, out_dir=d, quiet=True)
+    open(os.path.join(d, "junk.verdict.json"), "w").write("{not json")
+    worst, found, missing = verdict.collect(d)
+    assert worst == 3, (worst, found)
