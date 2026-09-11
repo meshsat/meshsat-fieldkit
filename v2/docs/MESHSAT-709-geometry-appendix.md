@@ -4929,6 +4929,15 @@ exactly that edge. The right way is to make the **leg check** exact where it mat
 the raster, re-test that one point against the polygons before rejecting the pair. That removes the rounding
 without touching the corridor, and it is cheap because it runs only at a failure.
 
+**Where the time goes now, and a plan prediction graded MISSED.** The same arm reports its own profile:
+**1581 s total, 703 s in the occupancy maps** over 1,690 calls, **108 s in the corridor search**, and **769 s
+elsewhere**. The plan of 11 September predicted C3 would take `build_maps` "from 1,010 s to under 120 s" and a
+B19 pass "to under 8 minutes". Neither holds on this configuration: the maps are 44 percent of the pass rather
+than 76, which is the improvement C3 did buy, but they are 703 s and not 120, and the pass is 26 minutes. The
+number that should be read next is the third one: **half the pass is now in neither of the two things that have
+been optimised**, and nothing has ever profiled it. That is where the next throughput work belongs, not in the
+maps.
+
 **A correction to the first version of this entry**, which said 144 leg failures against 80 and 4 fan failures
 against 56. Those counts came from raw line counts that included the tool's own `SWAP` and `DIVE` lines, which
 carry the words "fan into" and are successes, not failures. The table above counts each pair's last failure and
