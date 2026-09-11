@@ -53,8 +53,8 @@
   "_cont_route_why": "11 September 2026: one continuation pass of the router before the stub router when a handful of connections are open (A21's lever of 5 September). cont_route.sh keeps the board only if it improves, so it cannot make one worse; it was declared for A alone because only the A clones carried it, and E and P both ended a route at exactly one open."
  },
  "pair_env": {
-  "PAIR_CORRIDOR_SLACK": 0.08,
+  "PAIR_CORRIDOR_SLACK": 0.06,
   "PAIR_CORRIDOR_SLACK_SLIM": 0.03
  },
- "_pair_env_why": "11 September 2026, the best of thirty measured arms on B19's 113 pairs: 62 against 54 at the defaults. It is recorded HERE and not as a global default because the sweep of 32.117 shows the response is chaotic in this parameter (0.15 lays 59 and 0.16 lays 47), so a value that wins one draw on one board is a measurement, not a law."
+ "_pair_env_why": "11 September 2026, swept again on the evening's tools with the compiled stub search, same placed board, 113 pairs: 0.06 lays 57, 0.08 lays 47, 0.10 lays 48, 0.12 lays 46, 0.14 lays 49, 0.16 lays 47. The value here is 0.06 because that is what the sweep measures, and it is recorded HERE rather than as a global default because the response is chaotic in this parameter: the same board read 62 at 0.08 in the morning sweep and 47 at 0.08 now, on tools and a placement that both moved in between. A value that wins one draw on one board is a measurement, not a law, and the sweep is cheap now that a pass costs 16 minutes instead of 26."
 }
