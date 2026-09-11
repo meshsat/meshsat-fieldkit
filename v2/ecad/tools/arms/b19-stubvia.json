@@ -1,0 +1,67 @@
+{
+  "_why": [
+    "The measured failure profile of B19 arm B (appendix 32.109): 30 'no stub path at VIA', 30 'the legs clear",
+    "no smoothing of the centreline', 8 'no room for the layer-change via pair', 6 'no via site at U3/U4'.",
+    "32 of all failures die at a via rather than a pad. These arms attack those two classes, each one knob at a",
+    "time plus four deliberate pairings, against a baseline of 53 of 113 on placed board fc27d67c.",
+    "Predictions are what I actually expect, not what is safe: an arm that cannot miss teaches nothing."
+  ],
+  "board": "pcb-b-compute",
+  "letter": "b",
+  "source_project": "pcb-b-compute-b19",
+  "placed": "out/pcb-b-compute-placed.kicad_pcb",
+  "timeout_s": 10800,
+  "passes": [
+    {"classes": "DIFF100", "env": {"PAIR_BUDGET": 0, "PAIR_LAYERS": "F.Cu,In2.Cu,In3.Cu,B.Cu", "PAIR_HOP_LAYERS": "In2.Cu,In3.Cu", "PAIR_INNER": "DIFF100:0.13/0.127"}},
+    {"classes": "USB", "env": {"PAIR_BUDGET": 0, "PAIR_LAYERS": "F.Cu,B.Cu", "PAIR_HOP_LAYERS": "In2.Cu"}}
+  ],
+  "arms": [
+    {"name": "base", "env": {"PAIR_END_OFFSET": 0, "PAIR_END_LEGS": 0},
+     "predict": {"metric": "pairs", "op": "==", "value": 53, "basis": "the measured baseline on this placed board; if it does not reproduce, nothing below means anything"}},
+
+    {"name": "endoffset", "env": {"PAIR_END_OFFSET": 1, "PAIR_END_LEGS": 0},
+     "predict": {"metric": "pairs", "op": "==", "value": 56, "basis": "measured at 56 in 32.109; this arm re-proves it beside the others"}},
+
+    {"name": "endlegs", "env": {"PAIR_END_OFFSET": 1, "PAIR_END_LEGS": 1},
+     "predict": {"metric": "pairs", "op": ">=", "value": 60, "basis": "the leg test targets the 30 'legs clear no smoothing'; +4 of 30 would be a poor yield and is the floor I will accept as a signal"}},
+
+    {"name": "entryvia", "env": {"PAIR_ENTRY_VIA": 1},
+     "predict": {"metric": "pairs", "op": ">=", "value": 65, "basis": "32.95 measured the escape-via entry at about +27 on B17 as a global mode; it targets the 30 'no stub path at via' directly"}},
+
+    {"name": "entryvia_endlegs", "env": {"PAIR_ENTRY_VIA": 1, "PAIR_END_OFFSET": 1, "PAIR_END_LEGS": 1},
+     "predict": {"metric": "pairs", "op": ">=", "value": 68, "basis": "the two classes are disjoint in the profile, so their gains should add"}},
+
+    {"name": "cands30", "env": {"PAIR_END_CANDS": 30, "PAIR_END_OFFSET": 1, "PAIR_END_LEGS": 1},
+     "predict": {"metric": "pairs", "op": ">=", "value": 62, "basis": "12 candidates was never measured; a wider sweep should recover ends the leg test rejects"}},
+
+    {"name": "cands60", "env": {"PAIR_END_CANDS": 60, "PAIR_END_OFFSET": 1, "PAIR_END_LEGS": 1},
+     "predict": {"metric": "pairs", "op": ">=", "value": 62, "basis": "the same, further; if 60 is no better than 30 the sweep is not the limit"}},
+
+    {"name": "slack008", "env": {"PAIR_CORRIDOR_SLACK": 0.08},
+     "predict": {"metric": "pairs", "op": ">=", "value": 55, "basis": "0.12 beat 0.05, 0.15 and 0.18 on the old placement; 0.08 was never tried and this placement is not that one"}},
+
+    {"name": "slack015", "env": {"PAIR_CORRIDOR_SLACK": 0.15},
+     "predict": {"metric": "pairs", "op": "<=", "value": 53, "basis": "0.15 measured 49 against 0.12's 49 on the old placement; I expect no gain and am recording that"}},
+
+    {"name": "slim003", "env": {"PAIR_CORRIDOR_SLACK_SLIM": 0.03},
+     "predict": {"metric": "pairs", "op": ">=", "value": 55, "basis": "the slim retry is what a SLIM line reports; a tighter one should recover pairs that fail the first search"}},
+
+    {"name": "window40", "env": {"PAIR_WINDOW": 40},
+     "predict": {"metric": "pairs", "op": "<=", "value": 54, "basis": "a 40 mm box measured 45 against 25's 49 on the old placement; I expect it to cost, and an arm I expect to lose is worth one slot"}},
+
+    {"name": "strip10", "env": {"PAIR_STRIP_MM": 10.0},
+     "predict": {"metric": "pairs", "op": ">=", "value": 55, "basis": "the escape-chain strip is 6 mm; the failures concentrate at the fine-pitch parts' escape clouds, which are 4 to 8 mm deep"}},
+
+    {"name": "exp24m", "env": {"PAIR_EXPANSIONS": 24000000},
+     "predict": {"metric": "pairs", "op": ">=", "value": 55, "basis": "only 4 of 53 failures are expansion-capped, so doubling the budget should buy about that and no more"}},
+
+    {"name": "nostaircase", "env": {"PAIR_STAIRCASE": 0},
+     "predict": {"metric": "pairs", "op": "<=", "value": 45, "basis": "32.98 says thirteen of the first twenty four failures were the staircase refusal; turning it off should cost roughly that, which measures what it is worth"}},
+
+    {"name": "entryvia_cands30", "env": {"PAIR_ENTRY_VIA": 1, "PAIR_END_CANDS": 30, "PAIR_END_OFFSET": 1, "PAIR_END_LEGS": 1},
+     "predict": {"metric": "pairs", "op": ">=", "value": 70, "basis": "every lever that helped, together; this is the arm that says whether they compose"}},
+
+    {"name": "entryvia_slim003", "env": {"PAIR_ENTRY_VIA": 1, "PAIR_CORRIDOR_SLACK_SLIM": 0.03},
+     "predict": {"metric": "pairs", "op": ">=", "value": 66, "basis": "the via entry plus a tighter slim retry, the two that act at the fine-pitch ends"}}
+  ]
+}
