@@ -1361,8 +1361,21 @@ def main(a):
                 pitch = dist_p(st[0], st[1]); tgt = 0.0 if pitch <= 0.7 else (1.0 if pitch <= 1.0 else 1.6)
                 return max(tgt + 0.8, min(2.5 + tgt, d_mid / 2 - 0.3))
             _fa = fine_end((pa, na), entry_out_((pa, na))) if fineA0 else None
+            # An entry station's end comes from fine_end, which walks the OUTWARD NORMAL of the P-N line. When the pair
+            # sits in one column of a through-hole header, that normal points ALONG the pin row, so the end is open for
+            # the centreline and the offset legs leave straight through the neighbouring pins: measured on D's /USB_D8
+            # at J_HARN1, the P leg blocked by its own partner's pad at 1.13 mm and the N leg by a GND pad at 0.87 mm.
+            # An end whose legs cannot leave is not an end, so it is dropped and the sixteen-direction sweep is used.
+            # 11 September 2026, and the same class as the 10 September finding about a pair across two rows.
+            _offl = max((dof(L_) for L_ in layers), default=0.0) if END_OFFSET else 0.0
+            if _fa and _offl > 0 and not _legs_leave(_fa[0], _fa[1], A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0, _offl):
+                report.append("ENDLEG %s: the entry end of %s is open for the centreline and its legs cannot leave it; taking the sweep instead"
+                              % (stem, pa.GetParentFootprint().GetReference())); _fa = None
             sx, sy = _fa if _fa else free_end(sx, sy, A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0)
             _fb = fine_end((pb, nb), entry_out_((pb, nb))) if fineB0 else None
+            if _fb and _offl > 0 and not _legs_leave(_fb[0], _fb[1], B[0][0], B[0][1], B[1][0], B[1][1], sx, sy, _offl):
+                report.append("ENDLEG %s: the entry end of %s is open for the centreline and its legs cannot leave it; taking the sweep instead"
+                              % (stem, pb.GetParentFootprint().GetReference())); _fb = None
             gx, gy = _fb if _fb else free_end(gx, gy, B[0][0], B[0][1], B[1][0], B[1][1], sx, sy)
             # 10 September 2026: the corridor search box is the two ends plus this margin. 25 mm was a guess; with the
             # corridor slack measured, "no path on the map" is the biggest remaining family (24 of B19's 64 misses) and
