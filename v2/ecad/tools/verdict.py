@@ -116,7 +116,44 @@ def read(path):
     return rec, CODE[v]
 
 
+def collect(out_dir="out", require=()):
+    """Every verdict in a directory, and the worst of them (MESHSAT-862, 11 September 2026).
+
+    There was no collector. `kb_confidence.py` aggregates five gates from a hardcoded list and nothing does it for the
+    other nineteen, so no caller could ask "did every gate that ran on this board pass" without knowing the answer's
+    shape in advance. Two rules make the answer mean something:
+
+      * a REQUIRED verdict that is absent is INCONCLUSIVE, not missing-and-ignored. A gate that did not run is the
+        case this pipeline keeps mistaking for a gate that passed.
+      * the worst verdict wins, and INCONCLUSIVE is worse than PASS. There is no truthy spelling of INCONCLUSIVE.
+
+    Returns (worst_code, {tool: record}, [missing tools]).
+    """
+    found = {}
+    try: names = sorted(os.listdir(out_dir))
+    except Exception: names = []
+    for fn in names:
+        if not fn.endswith(".verdict.json"): continue
+        rec, _code = read(os.path.join(out_dir, fn))
+        found[rec.get("tool") or fn[:-len(".verdict.json")]] = rec
+    missing = [t for t in require if t not in found]
+    worst = 0
+    for rec in found.values(): worst = max(worst, CODE.get(rec.get("verdict"), CODE[INCONCLUSIVE]))
+    if missing: worst = max(worst, CODE[INCONCLUSIVE])
+    return worst, found, missing
+
+
 def main(a):
+    if len(a) >= 2 and a[0] == "collect":
+        req = tuple(x for x in (a[a.index("--require") + 1].split(",") if "--require" in a else []) if x)
+        worst, found, missing = collect(a[1], req)
+        for t, rec in sorted(found.items()):
+            d = "" if rec.get("denominator") is None else " of %s" % rec["denominator"]
+            print("verdict: %-24s %-12s%s%s" % (t, rec.get("verdict"), d, (" | " + rec["note"]) if rec.get("note") else ""))
+        for t in missing: print("verdict: %-24s %-12s did not run, and a gate that did not run is not a gate that passed" % (t, INCONCLUSIVE))
+        print("verdict: %d verdict(s) in %s, %d required and absent; worst %s"
+              % (len(found), a[1], len(missing), {v: k for k, v in CODE.items()}.get(worst, "PASS")))
+        return worst
     if len(a) == 2 and a[0] == "read":
         rec, code = read(a[1])
         d = "" if rec.get("denominator") is None else " of %s" % rec["denominator"]
