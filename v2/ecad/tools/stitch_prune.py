@@ -66,9 +66,14 @@ def main(a):
         stub = on[0] if on else None
         if stub is not None:
             far = stub.GetEnd() if abs(stub.GetStart().x - pos.x) < 20000 and abs(stub.GetStart().y - pos.y) < 20000 else stub.GetStart()
-            if pad_at(far, net) or ends_on(far, net, skip=stub):
+            # The far end reaching a pad or another track is the SAFE case, not the risky one: the network on
+            # that side survives the removal, and the branch being removed is dead at the pour end anyway. The
+            # first version of this had the test the other way round and so left the only via it found in place
+            # (11 September 2026). A far end touching nothing is a dangling stub and cleanup_dangling's job,
+            # so it is left here rather than removed twice by two tools with different rules.
+            if not (pad_at(far, net) or ends_on(far, net, skip=stub)):
                 kept += 1
-                evidence.append("%s at (%.1f, %.1f): its stub reaches copper at the far end, left alone" % (net, pos.x / 1e6, pos.y / 1e6))
+                evidence.append("%s at (%.1f, %.1f): its stub hangs free at the far end, left to cleanup_dangling" % (net, pos.x / 1e6, pos.y / 1e6))
                 continue
         evidence.append("%s at (%.1f, %.1f): abandoned by the fill of '%s'%s" %
                         (net, pos.x / 1e6, pos.y / 1e6, abandoned.GetZoneName() or "unnamed",
