@@ -256,16 +256,21 @@ def src_is_here(src, L, i, j):
     return M is not None and M[i, j]
 def emit(net_item, path):
     net = net_item
-    # merge straight runs
-    segs = []; cur = [path[0]]
+    # Merge straight runs. This compared the vector of the run so far against the next STEP, so after one merge
+    # the run was two cells long and the step one, the test failed, and it appended: a straight 20-cell run came
+    # out as TEN segments instead of one. A 2,178-cell closure on board E therefore emitted 992 tracks, and
+    # `stub_accept.py` refused it as "carpeting, not a closure" at its 400-item cap, which left the board one
+    # open short through three router rounds. The path was always fine; the emission was not (12 September 2026).
+    # The direction of the current run is carried instead, and every step is one grid cell by construction.
+    segs = []; cur = [path[0]]; run = None
     for k in range(1, len(path)):
         a, c = path[k - 1], path[k]
-        if a[0] != c[0]:                      # via
-            segs.append(("trk", cur)); segs.append(("via", c)); cur = [c]; continue
-        if len(cur) >= 2:
-            p0, p1 = cur[-2], cur[-1]
-            if (p1[1] - p0[1], p1[2] - p0[2]) == (c[1] - p1[1], c[2] - p1[2]): cur[-1] = c; continue
-        cur.append(c)
+        if a[0] != c[0]:                      # via: the run ends here whatever its direction
+            segs.append(("trk", cur)); segs.append(("via", c)); cur = [c]; run = None; continue
+        step = (c[1] - a[1], c[2] - a[2])
+        if step == (0, 0): continue
+        if step == run: cur[-1] = c           # same direction: extend the segment rather than start another
+        else: cur.append(c); run = step
     segs.append(("trk", cur))
     nt = nv = 0
     for kind, v in segs:
