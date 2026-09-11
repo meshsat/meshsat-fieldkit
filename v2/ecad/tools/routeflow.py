@@ -527,6 +527,19 @@ def run(profile_fn, rounds, use_services, dry):
                         journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status="RESTORED_BEST",
                                               note="round %d's board (hard %d, unrouted %s) restored over round %d's"
                                                    % (best_board[2], best_board[0][0], best_board[0][1], rnd)))
+                        # A restored board is not a finished board. The finish is what closes the last opens,
+                        # runs every gate and cuts the deliverable, and it last ran on the round being discarded,
+                        # so run it once on the board that is actually being kept (12 September 2026).
+                        if not dry:
+                            fin = prof["finish"]; flog = os.path.join(rdir, "round%d-finish-best.log" % rnd)
+                            for stale in (os.path.join(project, fin["clean_flag"]), os.path.join(project, "out", "contracts.log")):
+                                try: os.remove(stale)
+                                except OSError: pass
+                            journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="FINISHING", note="on the restored best board of round %d" % best_board[2]))
+                            sh(expand(fin["argv"], project, ecad, name), project if fin.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, flog)
+                            fst, fnote = judge_finish(flog, os.path.join(project, fin["clean_flag"]), os.path.join(project, fin.get("stub_log", "out/%s-stub.log" % name)), os.path.join(repo, prof.get("deliverable", "")) if prof.get("deliverable") else None)
+                            journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status=fst, note=fnote + " (restored best board)"))
+                            if fst == "CLEAN": status = "CLEAN"
                     except OSError as _e: journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="could not restore the best board: %s" % _e))
                 break
             new_route, why = remedy(sig, prof, applied)

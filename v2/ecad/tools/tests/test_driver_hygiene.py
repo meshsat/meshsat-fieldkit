@@ -273,6 +273,9 @@ def t_the_supervisor_keeps_the_best_routed_board_of_a_run():
     tail = body[j:j + 1400]
     assert "shutil.copy(best_board[1]" in tail, \
         "the budget stop does not put the best board back, so the run ends on the worst round"
+    # and a restored board is not a finished board: the finish is what closes the last opens, runs every gate
+    # and cuts the deliverable, and it last ran on the round being discarded.
+    assert "restored best board" in body, "the restored board never gets its finish"
 
 
 def t_a_phase_copy_declares_what_its_board_declares():
