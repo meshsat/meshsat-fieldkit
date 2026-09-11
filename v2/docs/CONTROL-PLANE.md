@@ -22,7 +22,7 @@ width pays only against an objective that is already trustworthy.
 |---|---|
 | 1 verdict integrity, 2 run semantics, 3 schematic engine, 4 per-pass session, 5 pair kernel | done |
 | 6 negotiated router | **obsolete**: built, measured on four schedules, rejected (22 to 25 of 113 against greedy 56, appendix 32.103) |
-| 7 orchestration | **half**: `full_*.sh` 21 to 7, `finish_*.sh` 31 to 15; **7 tools write a verdict JSON, 18 gates do not**; 13 unbounded `grep` waits |
+| 7 orchestration | **stage 0a and 0c done 11 Sep**: `full_*.sh` 21 to 7, `finish_*.sh` 31 to 15; **24 tools write a verdict JSON, none decides on stdout**; every journal row carries its board hashes; every wait bounded |
 | 8 gate tests and shared constants | **part**: 6 test files, no per-gate fixtures, no `design_<x>.py`, no `appendix_check.py` |
 | 9 solver and leftovers | **mostly**: `PAIR_BUDGET` 0, `impedance_2d` wired, `dc_drop` documents its solver |
 
@@ -119,10 +119,21 @@ These are other people's incidents, and each one is a shape we have hit:
 
 ## Order of work
 
-**Stage 0, the preconditions, and they are most of the value.** One verdict channel across the 18 gates
-that still decide on stdout; determinism, because the chain differs from itself by 48 lines of board
-geometry across two runs of identical input; a board hash in and out of every stage; deadlines on the
-13 unbounded waits; a passing and a failing fixture per gate as the admission rule for the catalogue.
+**Stage 0, the preconditions, and they are most of the value.**
+
+| item | state on 11 September |
+|---|---|
+| 0a one verdict channel | **done**: seventeen more gates write `out/<tool>.verdict.json` with counts, denominator and evidence, and exit with it; no driver greps a gate's prose; no finish runs its board gate twice. `tests/test_verdict_channel.py` holds the shape, and its four structural rules fail on the pre-fix tree |
+| 0b determinism | **being measured**: two runs of the same chain on D, P, C and A, compared byte for byte on `out/<name>-placed.kicad_pcb`. The suspect named here was `escape.py:126-142`; reading it first found only insertion-ordered dicts, so this is measured rather than argued |
+| 0c board hash per stage | **done**: `journal()` attaches the hash of every board file of that board that exists when the row is written, so in and out are the same field on consecutive rows. `provenance.json`'s board hash is `board_sha_before_run` now, because it was a true value under a name that claimed something else |
+| 0d waits and fixtures | **waits done**: the twelve finishes were bounded on 10 Sep and `long_route.sh` on 11 Sep; it waited on any Freerouting process started outside its own flock. **Fixtures: in progress** |
+
+Two things found by doing this rather than by planning it, both of the same class as everything else here:
+`PREROUTE_STOP_AFTER_PLACE=1` was silently a no-op on E and P, whose chains have no pair classes, so the
+placed snapshot the pre-router measurements rest on was never written for them; and `pcb-b-compute/` carried
+`b5m.kicad_pcb`, the 2 September B5 board, which sorts before the real one, so a wave script that globbed the
+directory exported a BOM for B from a nine-day-old board with 160 footprints against the current 951.
+**That B BOM must be re-exported.**
 
 **Stage 1, the runner and the ledger**, in the shapes above.
 
