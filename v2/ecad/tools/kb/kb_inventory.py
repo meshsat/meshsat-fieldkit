@@ -137,6 +137,27 @@ STOP = {"the", "a", "an", "and", "of", "its", "for", "on", "in", "with", "part",
         "s", "or", "to", "wall", "parts", "drawing", "module"}
 
 
+def class_rows_from_boms():
+    """BOM rows that name a CLASS or an owed drawing rather than a part.
+
+    The open-picks list was derived from one paragraph in BUILD.md, and six of the fifteen class rows
+    on the shipped BOMs were missing from it: the two Mill-Max spring pins, CSD19532Q5B class,
+    CSD19536KTT class, Si1308EDL class, and E6's mixer fans as distinct from the cooler fans. A list of
+    what is undecided, derived from one prose paragraph, is the same single-source mistake as the first
+    coverage number and as the layer count. These come from the BOMs, which are what gets ordered."""
+    out = []
+    for letter, (bom, folder) in sorted(newest_deliverables().items()):
+        try:
+            fh = open(bom, newline="", encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for row in csv.DictReader(fh):
+            c = " ".join((row.get("Comment") or "").split())
+            if re.search(r"\bclass\b|\bowed\b", c, re.I):
+                out.append((folder, c))
+    return out
+
+
 def owed_from_build():
     """The owed part picks as BUILD.md itself lists them.
 
@@ -231,9 +252,14 @@ def main(argv):
         words = [w for w in re.split(r"[^a-z0-9]+", phrase.lower()) if w and w not in STOP and len(w) > 1]
         if words and not any(w in picks_text for w in words):
             unclaimed.append(phrase)
+    # and every class-only row on a shipped BOM must be claimed too
+    for folder, c in class_rows_from_boms():
+        words = [w for w in re.split(r"[^a-z0-9]+", c.lower()) if w and w not in STOP and len(w) > 2]
+        if words and not any(w in picks_text for w in words[:12]):
+            unclaimed.append("%s: %s" % (folder.replace("meshsat-pcb-", ""), c[:70]))
     counts_unclaimed = len(unclaimed)
     for u in unclaimed:
-        print("UNCLAIMED OWED PICK  %s   (BUILD.md lists it; open-picks.txt does not)" % u)
+        print("UNCLAIMED CLASS ROW  %s" % u)
 
     bad = sorted(t for t, r in items.items() if r["state"] in ("UNCOVERED", "UNDECLARED FAMILY"))
     for t in bad:

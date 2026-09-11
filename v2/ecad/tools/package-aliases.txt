@@ -1,0 +1,24 @@
+# Footprint-to-package equivalences that are real, one per line as `OURS=THEIRS  # reason`.
+# jlc_certify.py FAILS a part whose JLCPCB package does not match the land we drew, unless the pair is
+# declared here. That check is the one that catches the failure this record has already paid for: two
+# of the twenty three proved-wrong codes were 0402 parts sitting on 0603 lands, and nothing but a
+# person reading a cart noticed.
+#
+# A line here says "these two names are the same physical package". It is not a place to wave away a
+# real difference, and every one of them has to be true of the land pattern, not merely of the words.
+
+QFN-32=VQFN-32     # JLCPCB writes VQFN where KiCad writes QFN for the same very-thin QFN outline; same land
+QFN-64=VQFN-64     # same naming difference on the 64 pin part
+QFN-28=VQFN-28     # same
+QFN-16=WQFN-16     # KiCad's QFN-16 land and JLCPCB's WQFN-16 are the same 3 x 3 outline with the same pitch
+POWERPAK=SON-8     # Vishay's PowerPAK SO-8 is the industry SON-8 outline; JLCPCB lists it either way
+POWERPAK=VSON-8    # the same part again where JLCPCB spells the thin variant
+SOT-23=SOT-25      # JLCPCB calls the five lead SOT-23 a SOT-25; same body, same land
+SOT-23=TSOT-23     # the thin SOT-23 shares the land pattern with the standard one
+SOT-583=SOT-583-8  # our footprint carries the lead count, JLCPCB does not
+SOIC-8=SO-8            # the same eight lead small outline body; JLCPCB uses the shorter spelling
+SOIC-8=SOPOWERPAD-8    # our SOIC-8-1EP land is the SOIC-8 with the exposed pad JLCPCB calls SO PowerPAD
+QFN-56=LQFN-56         # JLCPCB's L prefix for the same 56 lead QFN outline
+WQFN-42=WFQFN-42       # JLCPCB spells the very-thin fine-pitch QFN with an extra F; same land
+SOD-123=SOD-123F       # the F variant shares the land pattern with the standard SOD-123
+3225=SMD3225           # JLCPCB prefixes the metric crystal size with SMD; same 3.2 x 2.5 mm land

@@ -1,0 +1,403 @@
+#!/usr/bin/env python3
+"""jlc_certify.py, every part on the shipped BOMs certified buyable, with a date (MESHSAT-862, 11 September 2026).
+
+WHY. Nothing in this pipeline has ever checked that an LCSC code is the right part. `lcsc_fill.py`
+fills BLANKS only and never looks at a code that is already there, which is how all twenty three of
+the codes on `lcsc-blocked.txt` got into shipped BOMs: they were typed into an `ic()` call and found
+later by a person reading a cart. Two of them were 0402 parts on 0603 lands. One resolved to an LED
+where a BAT54 was meant. One to a lever switch where a CSD17570Q5B was meant.
+
+Appendix 32.54 named the instrument that answers this and promised `tools/jlc_stock.py` as Stage 2.
+That file was never written. This is it, under a name that says what it does.
+
+WHAT CERTIFIED MEANS. All of it true, and dated:
+
+  the row names a part, not a class;
+  JLCPCB returns a component whose model IS that part;
+  its package matches the footprint we drew, or the pair is declared equivalent with a reason;
+  stock covers the order, five of each board by the owner's ruling, times the quantity per board;
+  and the date of the check is written beside it.
+
+Anything else is WRONG_MODEL, PACKAGE_MISMATCH, NO_STOCK, NOT_AT_JLC, NO_PART_CHOSEN or NOT_CHECKED,
+and each of those is fixed or declared with a reason, in this repository's erc-allow.txt idiom.
+
+WHAT IT DOES NOT CLAIM. That a stock figure or a price is still true tomorrow: it is a dated reading,
+like the datasheet currency check. And that the part is the RIGHT part for the circuit, which is what
+the datasheet in the store and the gates on the board are for. This says only that it can be bought.
+
+Usage: jlc_certify.py [--boards a,b,c] [--refresh] [--out-dir out] [--table PATH]
+       --refresh re-queries everything; without it a cached answer younger than the cache age is used.
+"""
+import sys, os, re, csv, json, time, glob, argparse, datetime, subprocess
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(HERE))          # v2/
+BOARDS_DIR = os.path.join(ROOT, "release", "revA", "boards")
+TABLE = os.path.join(ROOT, "release", "revA", "order", "JLC-CERTIFIED.tsv")
+HANDFIT = os.path.join(HERE, "jlc-handfit.txt")
+ALIASES = os.path.join(HERE, "package-aliases.txt")
+CACHE = os.path.join(HERE, "out", "jlc-cache.json")
+API = "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
+UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+BOARD_QTY = 5          # the owner's ruling: minimum five of each board
+CACHE_DAYS = 7
+
+sys.path.insert(0, HERE)
+import verdict                                          # noqa: E402
+
+# A row that is a wire, a solder land or a header is not a component and is never certified. It is
+# copper and wire on our own board, and JLC places none of it.
+LEAD = re.compile(r"JST|IDC|solder land|solder pad|\blead\b|wire|electrode|pigtail|jumper|header|"
+                  r"strap|breakout|harness|ribbon|block B|pack lead|tap sense|target|land\b", re.I)
+# A part number inside the BOM's free prose: the Comment column is not an MPN field.
+# A part number: five or more characters of alphanumerics and the separators makers actually use,
+# carrying at least one letter and one digit. It MUST be allowed to start with a digit: 74LVC1G04,
+# 1N4148W, 2N7002 and Amphenol's 10164227-1004A1RLF all do, and the first version of this pattern
+# required a leading letter, so every one of them fell through to whatever net name came later in the
+# prose. That single character was most of the first run's wrong answers.
+PART_TOKEN = re.compile(r"\b[A-Za-z0-9][A-Za-z0-9./+-]{4,}\b")
+# ...and the price of allowing that is that component VALUES now look like part numbers, so they are
+# excluded by shape: 10mOhm, 4.7uH, 100nF, 22u, 13V8, 145MHz.
+NOT_PART = re.compile(r"^(?:"
+                      r"[0-9.]+\s*(?:m|u|n|p|k|K|M|G)?(?:Ohm|OHM|R|F|H|V|A|W|Hz|HZ)[0-9]*|"
+                      r"[0-9.]+(?:m|u|n|p|k|K|M)?|"
+                      r"GND|VCC|VDD|USB[0-9]?|I2C|SPI|UART[0-9]?|PWM|LED|RGB|IP6[0-9]|NP0|X[57]R|"
+                      r"GPIO[0-9]*|BCM[0-9]*|SLLS[0-9]+|SLUS[A-Z0-9]+|MESHSAT-[0-9]+"
+                      r")$", re.I)
+
+
+VALUE = re.compile(r"^([0-9]+(?:\.[0-9]+)?)\s*(m|u|n|p|k|K|M|R)?\s*(Ohm|OHM|F|H|R)?\b")
+
+
+def jlc_keyword(comment, fp):
+    """The search string for a jellybean: its value with real units, its voltage, and its package.
+
+    JLCPCB's search wants `100nF 1206`, not `100n 1206`, which returns nothing at all. The unit comes
+    from the footprint prefix, because the BOM value does not carry one: C_ is farads, L_ is henries,
+    R_ is ohms and needs no suffix. The voltage rating is kept when the row states one, since a 50 V
+    1206 and a 16 V 1206 are different parts and the cheaper one is not always the right one."""
+    val = comment.split("(")[0].strip()
+    m = VALUE.match(val)
+    if not m:
+        return None
+    num, mult, unit = m.groups()
+    mult = mult or ""
+    kind = fp.split("_", 1)[0].upper()
+    if unit and unit.upper() == "OHM":
+        unit = ""                                        # JLCPCB搜索 takes "10mR" and "10 mOhm" poorly; bare value plus package works
+    if not unit:
+        unit = {"C": "F", "L": "H"}.get(kind, "")
+    volts = re.search(r"\b(\d+(?:\.\d+)?)\s*V\b", val)
+    pkg = norm_pkg(fp)
+    parts = [num + mult + unit]
+    if volts:
+        parts.append(volts.group(1) + "V")
+    if pkg:
+        parts.append(pkg)
+    return " ".join(parts)
+
+
+def declared(path):
+    """`key   # reason` lines. A line without a reason declares nothing."""
+    out = {}
+    if not os.path.exists(path):
+        return out
+    for line in open(path, errors="replace"):
+        line = line.strip()
+        if not line or line.startswith("#") or "#" not in line:
+            continue
+        k, r = line.split("#", 1)
+        if k.strip() and r.strip():
+            out[k.strip()] = r.strip()
+    return out
+
+
+def norm_pkg(s):
+    """One canonical spelling for a package, from either side.
+
+    KiCad writes `R_0603_1608Metric` and `SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm`; JLC writes `0603`
+    and `SOIC-8` and `DO-214AA(SMB)`. Both are reduced to the same short token so the comparison is
+    about the package and not about either tool's naming habits."""
+    if not s:
+        return ""
+    s = s.upper().strip()
+    s = re.sub(r"^(?:PACKAGE_[A-Z_]+:|[A-Z_]+:)", "", s)          # strip a KiCad library prefix
+    m = re.match(r"^(?:R|C|L|LED|D|F|FB)_(\d{4})[_ ]", s)           # passive: R_0603_1608Metric
+    if m:
+        return m.group(1)
+    m = re.match(r"^(?:D|F|FB|L)_(SM[ABC])\b", s)                   # diode body: D_SMB -> SMB
+    if m:
+        return m.group(1)
+    # The general KiCad shape is <kind>_<package>_<metric or dimensions>: D_SOD-123, Fuse_1812_4532Metric,
+    # Crystal_SMD_3225_2Pin. Taking the first token alone turned all of those into D, FUSE and CRYSTAL,
+    # which then "mismatched" every real answer. Take the package field instead.
+    m = re.match(r"^(?:D|F|FB|L|R|C|LED|FUSE|CRYSTAL|DIODE)_([A-Z0-9-]+)(?:_|$)", s)
+    if m and m.group(1) not in ("SMD",):
+        return m.group(1)
+    m = re.match(r"^(?:CRYSTAL|FUSE|L|C)_SMD_(\d{4})", s)           # Crystal_SMD_3225_2Pin -> 3225
+    if m:
+        return m.group(1)
+    m = re.match(r"^(\d{4})\b", s)                                 # JLC: "0603"
+    if m:
+        return m.group(1)
+    for code, short in (("DO-214AC", "SMA"), ("DO-214AA", "SMB"), ("DO-214AB", "SMC")):
+        if code in s:
+            return short
+    s = re.sub(r"\(.*?\)", "", s)                                  # VSON-8(5x6) -> VSON-8
+    s = s.split(",")[0]                                            # SMD,10x6.5mm -> SMD
+    m = re.match(r"^([A-Z]+(?:-[A-Z]+)?-?\d+)", s)                 # SOIC-8, TSSOP-24, SOT-583, QFN-64
+    if m:
+        return m.group(1).rstrip("-")
+    return s.split("_")[0]
+
+
+def load_cache():
+    try:
+        return json.load(open(CACHE))
+    except Exception:
+        return {}
+
+
+def save_cache(c):
+    os.makedirs(os.path.dirname(CACHE), exist_ok=True)
+    tmp = CACHE + ".part"
+    json.dump(c, open(tmp, "w"), indent=0, sort_keys=True)
+    os.replace(tmp, CACHE)
+
+
+def query(keyword, cache, refresh=False):
+    """Ask JLCPCB. Cached by keyword with its date, so a rerun is free and the table reproducible."""
+    key = keyword.strip()
+    hit = cache.get(key)
+    if hit and not refresh:
+        age = (datetime.date.today() - datetime.date.fromisoformat(hit["asked"])).days
+        if age <= CACHE_DAYS:
+            return hit["list"], hit["asked"]
+    body = json.dumps({"keyword": key, "currentPage": 1, "pageSize": 8, "searchSource": "search"})
+    for attempt in range(3):
+        r = subprocess.run(["curl", "-s", "-X", "POST", API, "-H", "Content-Type: application/json",
+                            "-H", "User-Agent: " + UA, "-d", body, "--max-time", "45"],
+                           capture_output=True, text=True)
+        try:
+            d = json.loads(r.stdout)
+            lst = (d.get("data") or {}).get("componentPageInfo", {}).get("list") or []
+            keep = [{k: c.get(k) for k in ("componentCode", "componentModelEn", "componentBrandEn",
+                                           "componentSpecificationEn", "componentLibraryType",
+                                           "stockCount", "initialPrice", "assemblyComponentFlag",
+                                           "minPurchaseNum", "leastPatchNumber")} for c in lst]
+            today = datetime.date.today().isoformat()
+            cache[key] = {"asked": today, "list": keep}
+            return keep, today
+        except Exception:
+            time.sleep(2 * (attempt + 1))
+    return None, None                                              # unreachable: never a pass
+
+
+def same_part(want, got):
+    """Is the component JLC returned the part we asked for? Punctuation and case do not matter; the
+    letters and digits do, and a suffix like R for reel or TRG1 for packaging is allowed on either."""
+    a = re.sub(r"[^A-Z0-9]", "", (want or "").upper())
+    b = re.sub(r"[^A-Z0-9]", "", (got or "").upper())
+    if not a or not b:
+        return False
+    if a.startswith(b) or b.startswith(a):
+        return True
+    # An order code carries suffixes in the middle as well as at the end: LM74700-Q1 is sold as
+    # LM74700QDBVRQ1, where DBVR is the package and reel. A common prefix of six or more characters is
+    # the same silicon; below that it is a coincidence.
+    n = 0
+    while n < min(len(a), len(b)) and a[n] == b[n]:
+        n += 1
+    return n >= 6
+
+
+def intended_part(comment):
+    """The manufacturer part a BOM row means, out of its free prose, or None for a jellybean.
+
+    Two rules, both learnt from the first full run. **Parentheses are stripped first**: this project's
+    BOM convention puts the part before the explanation, and the explanation is full of net names, so
+    `10.0k 1% (RFBOUT2)` was being searched for as a part called RFBOUT2, and `Ebyte E22-900M30S 1 W
+    LoRa (SX1262)` as the bare silicon rather than the module we buy. **And the FIRST token wins**,
+    because `Ebyte E72-2G4M20S1E CC2652P` means the module and names the chip inside it second."""
+    head = re.sub(r"\([^)]*\)", " ", comment)
+    for t in PART_TOKEN.findall(head):
+        t = t.strip(".,;:-/")
+        # letter AND digit, both required. Without the digit the pattern happily returned "green",
+        # "Amphenol", "ferrite" and "sunlight" as part numbers, and each of those was then searched
+        # for and answered with something real, which is the worst possible failure shape.
+        if len(t) < 5 or not (any(c.isdigit() for c in t) and any(c.isalpha() for c in t)):
+            continue
+        if NOT_PART.match(t):
+            continue
+        return t
+    return None
+
+
+def newest_boms(only=None):
+    """{letter: (bom path, folder)} for the newest phase of each board.
+
+    B is read from the QUOTE folder deliberately: B15 is the newest ROUTED deliverable but B16 is what
+    the order set ships, and certifying the wrong one would certify a parts list nobody is buying."""
+    best = {}
+    for d in sorted(glob.glob(os.path.join(BOARDS_DIR, "meshsat-pcb-*"))):
+        m = re.match(r"meshsat-pcb-([a-z0-9]+)-revA-([A-Z]+)(\d+)", os.path.basename(d))
+        if not m:
+            continue
+        letter, num = m.group(1), int(m.group(3))
+        boms = glob.glob(os.path.join(d, "*bom.csv"))
+        if not boms:
+            continue
+        if letter not in best or num > best[letter][0]:
+            best[letter] = (num, boms[0], os.path.basename(d))
+    if only:
+        best = {k: v for k, v in best.items() if k in only}
+    return {k: (v[1], v[2]) for k, v in best.items()}
+
+
+def rows_to_check(only=None):
+    """Every distinct (value, footprint) that is a component, with the boards and quantity it carries."""
+    out = {}
+    for letter, (bom, folder) in sorted(newest_boms(only).items()):
+        for r in csv.DictReader(open(bom, newline="", encoding="utf-8", errors="replace")):
+            comment = " ".join((r.get("Comment") or "").split())
+            fp = (r.get("Footprint") or "").strip()
+            code = (r.get("LCSC Part #") or "").strip()
+            refs = [x for x in (r.get("Designator") or "").split(",") if x.strip()]
+            if not comment or LEAD.search(comment):
+                continue
+            key = (comment, fp)
+            rec = out.setdefault(key, {"comment": comment, "fp": fp, "code": code,
+                                       "boards": set(), "qty": 0})
+            rec["boards"].add(letter.upper())
+            rec["qty"] += max(1, len(refs))
+            if code and not rec["code"]:
+                rec["code"] = code
+    return out
+
+
+def certify(rec, cache, handfit, aliases, refresh=False):
+    """One row's verdict, with the evidence that produced it."""
+    comment, fp, code = rec["comment"], rec["fp"], rec["code"]
+    want = intended_part(comment)
+    need = rec["qty"] * BOARD_QTY
+
+    if re.search(r"\bclass\b|\bowed\b", comment, re.I):
+        return dict(verdict="NO_PART_CHOSEN", note="the row names a class, not a part", need=need)
+
+    hf = handfit.get(want or "") or handfit.get(comment[:60])
+    if hf:
+        return dict(verdict="HAND_FIT", note=hf, need=need)
+
+    # A code that is already there is validated by the code itself; a blank row is searched by the
+    # part it means, or by its value and package when it is a jellybean.
+    kw = code or want or jlc_keyword(comment, fp)
+    if not kw:
+        return dict(verdict="NOT_CHECKED", need=need,
+                    note="no part number and no value this search understands: %r" % comment[:50])
+    lst, asked = query(kw, cache, refresh)
+    if lst is None:
+        return dict(verdict="NOT_CHECKED", note="JLCPCB did not answer", need=need)
+    if not lst:
+        return dict(verdict="NOT_AT_JLC", note="no component for %r" % kw, need=need, asked=asked)
+
+    # Prefer an exact model match anywhere in the page over whatever ranked first.
+    top = lst[0]
+    if want:
+        for c in lst:
+            if same_part(want, c.get("componentModelEn")):
+                top = c
+                break
+    else:
+        # A jellybean has no model to match, so the best answer is the one that is actually in stock
+        # in the right package. The top hit is ranked by JLCPCB's own relevance and was repeatedly a
+        # zero-stock part when an identical one with half a million in stock sat below it.
+        want_pkg = norm_pkg(fp)
+        ok = [c for c in lst if norm_pkg(c.get("componentSpecificationEn")) == want_pkg
+              and (c.get("stockCount") or 0) >= need]
+        if ok:
+            top = max(ok, key=lambda c: (c.get("componentLibraryType") == "base", c.get("stockCount") or 0))
+    ev = dict(code=top.get("componentCode"), model=top.get("componentModelEn"),
+              brand=top.get("componentBrandEn"), pkg=top.get("componentSpecificationEn"),
+              lib=top.get("componentLibraryType"), stock=top.get("stockCount") or 0,
+              price=top.get("initialPrice"), need=need, asked=asked)
+
+    if want and not same_part(want, ev["model"]):
+        ev.update(verdict="WRONG_MODEL",
+                  note="asked for %s, JLCPCB's best answer is %s" % (want, ev["model"]))
+        return ev
+    a, b = norm_pkg(fp), norm_pkg(ev["pkg"])
+    if a and b and a != b and aliases.get("%s=%s" % (a, b)) is None and aliases.get("%s=%s" % (b, a)) is None:
+        if not want:
+            # No part number in the row and the package does not match: the search answered with
+            # something unrelated because there was nothing to search for. PACKAGE_MISMATCH would
+            # blame the package; the real fault is that the BOM row never names its part, and that is
+            # what has to be fixed, in the generator.
+            ev.update(verdict="NOT_IDENTIFIED",
+                      note="the row names no part number, so nothing can be certified: give it one in "
+                           "the generator or declare it hand-fit (search answered %s, %s)"
+                           % (ev["model"], b))
+            return ev
+        ev.update(verdict="PACKAGE_MISMATCH",
+                  note="our land is %s, the part is %s" % (a, b))
+        return ev
+    if (ev["stock"] or 0) < need:
+        ev.update(verdict="NO_STOCK", note="stock %s against a need of %d for %d boards"
+                  % (ev["stock"], need, BOARD_QTY))
+        return ev
+    ev.update(verdict="CERTIFIED", note="")
+    return ev
+
+
+def main(argv):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--boards")
+    ap.add_argument("--refresh", action="store_true")
+    ap.add_argument("--out-dir", default="out")
+    ap.add_argument("--table", default=TABLE)
+    ap.add_argument("--limit", type=int)
+    a = ap.parse_args(argv)
+    only = set(a.boards.split(",")) if a.boards else None
+
+    handfit, aliases = declared(HANDFIT), declared(ALIASES)
+    cache = load_cache()
+    rows = rows_to_check(only)
+    keys = sorted(rows)
+    if a.limit:
+        keys = keys[:a.limit]
+
+    results, counts = [], {}
+    for i, k in enumerate(keys, 1):
+        rec = rows[k]
+        ev = certify(rec, cache, handfit, aliases, a.refresh)
+        ev.update(comment=rec["comment"], fp=rec["fp"], bom_code=rec["code"],
+                  boards=",".join(sorted(rec["boards"])), qty=rec["qty"])
+        results.append(ev)
+        counts[ev["verdict"]] = counts.get(ev["verdict"], 0) + 1
+        if i % 25 == 0:
+            save_cache(cache)
+            print("  %d/%d" % (i, len(keys)), flush=True)
+    save_cache(cache)
+
+    os.makedirs(os.path.dirname(a.table), exist_ok=True)
+    cols = ["verdict", "comment", "fp", "boards", "qty", "need", "bom_code", "code", "model",
+            "brand", "pkg", "lib", "stock", "price", "asked", "note"]
+    with open(a.table, "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=cols, delimiter="\t", extrasaction="ignore")
+        w.writeheader()
+        for r in sorted(results, key=lambda r: (r["verdict"], r["comment"])):
+            w.writerow(r)
+
+    bad = [r for r in results if r["verdict"] not in ("CERTIFIED", "HAND_FIT")]
+    for r in bad[:40]:
+        print("%-17s %-42s %s" % (r["verdict"], r["comment"][:42], r.get("note", "")[:70]))
+    print("\njlc_certify: %d components, %s" % (len(results), ", ".join(
+        "%s %d" % (k, counts[k]) for k in sorted(counts))))
+    res = verdict.INCONCLUSIVE if counts.get("NOT_CHECKED") else (verdict.FAIL if bad else verdict.PASS)
+    return verdict.write("jlc_certify", res, counts=counts, denominator=len(results),
+                         evidence=["%s: %s (%s)" % (r["verdict"], r["comment"][:60], r.get("note", "")[:60])
+                                   for r in bad[:30]],
+                         note="table at %s" % os.path.relpath(a.table, ROOT), out_dir=a.out_dir)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
