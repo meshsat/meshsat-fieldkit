@@ -37,14 +37,28 @@ def md5(path):
     return h.hexdigest()
 
 
+def _kicad_build():
+    """The KiCad build this arm ran against, or "" when pcbnew is not importable here."""
+    try:
+        import pcbnew
+        return pcbnew.GetBuildVersion()
+    except Exception:
+        return ""
+
+
 def run_arm(spec, arm, ecad, out_dir):
     """One arm: its own copy of the project, the same placed board, the passes in order. Returns a row."""
     name = arm["name"]
     src = os.path.join(ecad, spec["source_project"])
     dst = os.path.join(ecad, "arm-%s-%s" % (spec["letter"], name))
     t0 = time.time()
+    # The host and its KiCad build travel with every row. B19's placed board came out at md5 27dd5bd0 on the
+    # rented box and fc27d67c on the VM: same commit, same generator, two hosts, two boards. Determinism WITHIN
+    # a host is proved (tests/determinism.sh) and across hosts it is not, so arms from two hosts are not
+    # comparable and a row that does not say where it ran cannot be checked for that (11 September 2026).
     row = {"arm": name, "board": spec["board"], "letter": spec["letter"], "env": arm.get("env", {}),
-           "predict": arm["predict"], "tools_sha": spec.get("tools_sha", "")}
+           "predict": arm["predict"], "tools_sha": spec.get("tools_sha", ""),
+           "host": os.uname().nodename, "kicad": _kicad_build()}
     try:
         shutil.rmtree(dst, ignore_errors=True)
         shutil.copytree(src, dst)
