@@ -2,7 +2,7 @@
  "name": "pcb-b-compute",
  "letter": "b",
  "title": "PCB-B COMPUTE",
- "footprint_generator": "gen_footprints_b16.py",
+ "footprint_generator": ["gen_footprints_b16.py", "gen_footprints_idc.py"],
  "extra_compile": [],
  "gate_before_placement": true,
  "bypass_place_after": "mechanical",
