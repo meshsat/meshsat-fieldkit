@@ -201,7 +201,7 @@ The plan's own verification list, with what was actually run against each item.
 | # | the item | state |
 |---|---|---|
 | 1 | the B19 pair count re-measured, each step graded against its prediction | **done**, thirty arms over two rounds; nine of sixteen round-one predictions wrong, best 62 of 113. The "pass under 8 minutes" target was **missed**: a pass is about 19 minutes, of which 9 are the maps |
-| 2 | `tests/determinism.sh` on every board after every generator change | **done on the box after the 11 and 12 September changes**: P 0 of 275 items differ, D 0 of 391, C 0 of 556, E 0 of 585, A 0 of 1,483, B running |
+| 2 | `tests/determinism.sh` on every board after every generator change | **done on the box after the 11 and 12 September changes**: **all six**: P 0 of 275 board items differ, D 0 of 391, C 0 of 556, E 0 of 585, A 0 of 1,483, B 0 of 4,211 |
 | 3 | a board routes end to end from one job spec, the report regenerates, `ledger_verify` passes | **P3 did exactly that**; `ledger_verify.py` exists now and is INCONCLUSIVE on a tree with no ledger, which is the runner |
 | 4 | an experiment without a prediction is refused; a reserved-class job is batched with its evidence | **done**: `arms.py` refuses an arm with no `predict`, and eight decisions are batched |
 | 5 | the execution pin fails when a file outside it writes a fab artefact | **PASS on the box**, 8 producers found, 8 pinned |

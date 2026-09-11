@@ -4781,3 +4781,23 @@ deliverable at the end of a route.
 **Worth stating plainly, because it is the fourth time in two days:** the defect was never in the board. It was
 in what the pipeline believed about the board. Of E's last four refusals, one was a real parts gap and **three
 were the checks, the declarations or the copies being wrong about a board that was right.**
+
+### 32.121 Determinism re-proved on all six boards after two days of generator and tool changes (12 September 2026, 03:10 CEST; MESHSAT-862)
+
+Stage 0b proved the pre-route chain a function of its input on D, A and C, and the defect it found was that a
+random KiCad UUID decided which escapes fit. Since then the generators, `escape.py`, `boardorder.py`,
+`join_adjacent_pins.py`, `prefanout.py`, the occupancy maps, the corridor end and the pair environment have all
+changed. `tests/determinism.sh` is the standing form of that measurement and it was run on **every** board.
+
+| board | items compared | differing | wall |
+|---|---:|---:|---:|
+| P | 275 | **0** | 24 s |
+| D | 391 | **0** | 46 s |
+| C | 556 | **0** | 43 s |
+| E | 585 | **0** | 50 s |
+| A | 1,483 | **0** | 104 s |
+| B | 4,211 | **0** | 599 s |
+
+Two clean copies per board, the placement run twice, and the BOARDS compared by `board_diff.py`, which ignores
+UUIDs, file order and the title block because none of those is a property of the board. **Thirteen minutes for
+the whole set**, which is what makes it a standing check rather than an occasion.
