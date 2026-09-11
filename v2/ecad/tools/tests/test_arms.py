@@ -61,3 +61,15 @@ def t_each_arm_gets_its_own_project_directory():
     assert 'os.path.join(ecad, "arm-%s-%s" % (spec["letter"], name))' in src, \
         "an arm's directory must be named after the arm, or two arms share one board"
     assert "shutil.copytree(src, dst)" in src, "each arm copies the source project rather than working in it"
+
+
+def t_every_arm_row_says_where_it_ran():
+    """B19's placed board came out at md5 27dd5bd0 on the rented box and fc27d67c on the VM: same commit, same
+    generator, two hosts, two boards. Determinism within a host is proved and across hosts it is not, so arms
+    from two hosts are not comparable and a row that does not name its host cannot be checked for that."""
+    src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
+    i = src.index('row = {"arm"')
+    # not src.index("}", i): the literal contains arm.get("env", {}), so the first brace is not the last one
+    head = src[i:src.index("\n    try:", i)]
+    for k in ('"host"', '"kicad"'):
+        assert k in head, "an arm row does not carry %s: %s" % (k, head)
