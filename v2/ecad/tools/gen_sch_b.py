@@ -111,7 +111,7 @@ def buck33(uref, tag, vin, en, out, refs):
     """AP64500SP-13 5 A buck (A22 buck5 recipe) set to 3.32 V: 31.6k/10k on the 0.8 V reference, 3.3 uH XAL6060, 500 kHz."""
     L, cb, ci1, ci2, co1, co2, co3, rt, rb, rrt, rco, cco = refs
     ic(uref, 9, "AP64500SP-13 5 A buck, 3.3 V rail %s" % out, "SO8EP", {"1": tag + "_BOOT", "2": vin, "3": en, "4": tag + "_RT", "5": tag + "_FB", "6": tag + "_COMP", "7": "GND", "8": tag + "_SW", "9": "GND"}, "C2070920")
-    part(L, "Device", "L", "3.3uH XAL6060-332ME", "L6060", {"1": tag + "_SW", "2": out}); c(cb, "100n", tag + "_BOOT", tag + "_SW")
+    part(L, "Device", "L", "3.3uH XAL6030-332ME", "L6060", {"1": tag + "_SW", "2": out}); c(cb, "100n", tag + "_BOOT", tag + "_SW")
     c(ci1, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2"))   # the buck's VIN pin
     for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
     r(rt, "31.6k 1%", out, tag + "_FB"); r(rb, "10k 1%", tag + "_FB", "GND"); r(rrt, "68k (RT: 500 kHz)", tag + "_RT", "GND"); r(rco, "22k", tag + "_COMP", tag + "_COMPC"); c(cco, "3.3n", tag + "_COMPC", "GND")
@@ -322,7 +322,7 @@ for s in (1, 2, 3): slot(s)
 part("J_5V_DEV", "Connector_Generic", "Conn_01x02", "USB device rail from A22 J_5V_DEV (JST-VH): + -", "VH2", {"1": "+5V_DEV", "2": "GND"})
 part("D1", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V_DEV", "2": "GND"}); c("C1", "100u 10V", "+5V_DEV", "GND", "C100u"); c("C2", "100u 10V", "+5V_DEV", "GND", "C100u")
 ic("U25", 6, "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)", "TSOT6", {"1": "+3V3_DEV", "2": "+5V_DEV", "3": "+5V_DEV", "4": "GND", "5": "DEV_SW", "6": "DEV_BST"})
-part("L1", "Device", "L", "4.7uH XAL4020-472ME", "L4020", {"1": "DEV_SW", "2": "+3V3_DEV"}); c("C3", "100n", "DEV_BST", "DEV_SW"); c("C4", "10u", "+5V_DEV", "GND", "C10u"); c("C5", "22u 6.3V", "+3V3_DEV", "GND", "C10u"); c("C6", "22u 6.3V", "+3V3_DEV", "GND", "C10u")
+part("L1", "Device", "L", "4.7uH XAL4030-472ME", "L4020", {"1": "DEV_SW", "2": "+3V3_DEV"}); c("C3", "100n", "DEV_BST", "DEV_SW"); c("C4", "10u", "+5V_DEV", "GND", "C10u"); c("C5", "22u 6.3V", "+3V3_DEV", "GND", "C10u"); c("C6", "22u 6.3V", "+3V3_DEV", "GND", "C10u")
 buck_small("U26", "KSZC", "+5V_DEV", "+5V_DEV", "+1V2_KSZ", ["L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2"], "20.0k 1%", "1.2 V Ethernet switch core")
 ic("U27", 5, "AP2112K-2.5 LDO: the switch's 2.5 V analog rail", "SOT235", {"1": "+3V3_DEV", "2": "GND", "3": "+3V3_DEV", "4": "NC", "5": "+2V5_KSZ"}); c("C12", "1u", "+2V5_KSZ", "GND"); c("C13", "1u", "+3V3_DEV", "GND")
 part("BT1", "Device", "Battery_Cell", "CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231", "CR2032", {"1": "VBAT", "2": "GND"})
