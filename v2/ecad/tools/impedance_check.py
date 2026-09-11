@@ -218,14 +218,26 @@ def main(a):
     if "--json" in a: json.dump([dict(pair=r[0], cls=r[1], target=r[2], median=r[3], fraction=r[4], unreferenced_mm=r[5], verdict=r[6], gap_mm=r[7], width_mm=r[8], fan_mm=r[9]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
     by_v = {}
     for r in results: by_v[r[6]] = by_v.get(r[6], 0) + 1
-    # A board with pairs on it but none carrying an impedance target has not been judged, and 0 of 0 must not read
-    # as agreement: that is the whole reason this module exists. 11 September 2026.
-    return _v.write("impedance_check",
-                    _v.INCONCLUSIVE if not checked else (_v.PASS if not miss else _v.FAIL),
-                    counts=dict(by_v, met=checked - miss, missed=miss, pairs_on_board=len(pairs)),
+    # 0 of 0 must not read as agreement, and it must not read as a failure either when zero is the DECLARED state.
+    # A board whose schematic declares its pair classes and gives none of them a target has said what it means:
+    # C's only pair is the RP2040's USB at 1.1 full speed, so no target applies, `intent.pair_class("USB")` writes
+    # an empty entry and the loop above skips it (gen_sch_c.py:247, appendix 32.76). A board with NO declaration
+    # at all is the other case, and there nothing was judged: a missing intent file, a project without class
+    # assignments, a chain that did not run. The first is PASS with its reason, the second INCONCLUSIVE.
+    # 11 September 2026 (MESHSAT-862): the first draft of this check made C's correct state block its own board.
+    declared = bool((it or {}).get("pair_classes"))
+    if checked: res = _v.PASS if not miss else _v.FAIL
+    elif declared: res = _v.PASS
+    else: res = _v.INCONCLUSIVE
+    if not checked:
+        print("impedance: no pair on this board carries an impedance target (%s)"
+              % ("declared that way in the schematic" if declared else "and the board declares no pair class at all"))
+    return _v.write("impedance_check", res,
+                    counts=dict(by_v, met=checked - miss, missed=miss, pairs_on_board=len(pairs), classes_declared=len((it or {}).get("pair_classes") or {})),
                     denominator=checked,
                     evidence=["%s %s class %s target %s ohm" % (r[6], r[0], r[1], r[2]) for r in results if r[6] != "MET"],
                     inputs={"board": a[0]},
-                    note="" if checked else "no pair on this board carries an impedance target")
+                    note="" if checked else ("the board declares its pair classes and gives none a target, which is its recorded design"
+                                             if declared else "the board declares no pair class: nothing was judged"))
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
