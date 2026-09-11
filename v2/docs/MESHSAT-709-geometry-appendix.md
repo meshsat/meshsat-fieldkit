@@ -5018,6 +5018,14 @@ difference.
 calls and 6 seconds over 75,000 calls are different problems with different fixes, and the line that printed
 only seconds could not tell them apart.
 
+**It is wired, and off.** `PAIR_FAST_STUBS=1` sends the stub search through `pairsearch.search` with nL=1, a via
+map that forbids every cell (one layer, so no layer change exists) and the window as the array. No new kernel
+was written: a single-layer search is that kernel, which its own selftest proves against its reference, 8 of 8
+identical. The interpreted path's heuristic became `sqrt` of an exact integer sum rather than `hypot` at the
+same time, so the two order identically and the knob measures speed rather than a different router. It stays
+off until a board says what it is worth, because a selftest answers "is it the same" and only a pair count
+answers "is it better".
+
 ### 32.128 D's one open is a station swap, and the chain that produced it is not yet proved a function of its input (11 September 2026, 22:15 CEST; MESHSAT-862)
 
 D10 is 0 hard, `check_pcb_d` ALL PASS on 231 checks, `netlist_board` 994 of 994, contracts ALL PASS 40 of 40,
