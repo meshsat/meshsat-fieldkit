@@ -4472,3 +4472,35 @@ than a walk over every footprint and every track.
 of 11 September with `PAIR_END_LEGS` defaulting on, and it laid **21 of 48** on the DIFF100 pass where both
 arms of 32.109 laid 18. **The leg test is worth +3 on that pass**, which is the first evidence that it does
 anything; the sixteen-arm sweep measures it properly beside fifteen other knobs.
+
+### 32.111 Every shipped deliverable but one fails today's gate, and one of them carries a code the record proved wrong (11 September 2026, 15:00 CEST; MESHSAT-862)
+
+`verify_deliverable.py` run over all 23 folders in `v2/release/revA/boards/`, with each board's real copper
+count taken from its own gerber zip. **E5 is the only folder that passes: 21 of 21 properties.** Every other
+fails between one and eight, and the gate they fail is not a formality.
+
+| folder | result |
+|---|---|
+| E5 | **ALL PASS**, 21 of 21 |
+| D9, P2, P3 | 1 FAIL of 37 |
+| D5, D6, D7, E4, E6 | 4 to 5 FAIL |
+| C5, C6, C7, D8, P1, and the A and B families | 6 to 8 FAIL |
+
+**A22, the newest A and the one the order set carries, fails eight**, and three of them would be caught by
+JLCPCB rather than by us:
+
+- it **carries `C1973072`**, which `lcsc-blocked.txt` records as resolving to an SMCJ15A where the schematic
+  names an SMCJ18A: a 15 V standoff on a fully charged 4S pack. That defect was found on 9 September and the
+  block list was written the same day; the deliverable predates it and nothing re-checked the folder;
+- its BOM lists designators as **ranges**, which JLC's parser does not accept, and carries **`?` designators**
+  (`J_DOCK?`, `J_PA?`, and six more) which are the KiCad placeholder the handoff is supposed to strip;
+- **its silk says A18**, in 53 legend texts. The silk-phase gate was added on 8 September precisely because
+  every placement generator hard-coded the PREVIOUS phase; A22's folder was cut before that gate ran.
+
+**D9's single failure is the same family as the rest:** 48 of 69 BOM lines blank, 43 of them undeclared.
+
+**What this means and what it does not.** It is not evidence that a bad board was ordered: nothing has been
+ordered, and the cart is unpaid. It is evidence that **the order set rests on folders that the pipeline's own
+current checks refuse**, that the checks grew after the folders were cut, and that no pass has re-run them
+since. Every board is being regenerated anyway; the point of recording it is that a folder on disk is not a
+verdict, and a released folder is worth exactly the gate that last read it.
