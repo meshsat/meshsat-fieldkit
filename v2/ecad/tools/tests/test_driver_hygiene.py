@@ -257,3 +257,19 @@ def t_nothing_records_a_jar_by_a_default_string():
         if line.strip().startswith("#"): continue
         assert ("preflight" in line or "checks.append" in line or "endswith" in line or "ok(" in line), \
             "a jar is recorded by a default string rather than by jar_in_use(): %s" % line.strip()[:120]
+
+
+def t_the_supervisor_keeps_the_best_routed_board_of_a_run():
+    """A remedy can make a board worse and every round re-routes from scratch, so the supervisor was discarding
+    a good board to keep a bad one: board E went 0 hard and 1 open in round one, then 0 hard and 23 opens after
+    the via_costs remedy, and the 1-open board was gone. Every other stage in this pipeline keeps a result only
+    if it improves (cont_route.sh, stub_accept.py, quality_pass.sh); the supervisor did not."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    assert "best_board = (None, None, 0)" in src, "the run does not track a best board"
+    i = src.index("def run(profile_fn")
+    body = src[i:]
+    assert "RESTORED_BEST" in body, "nothing restores the best board when the rounds run out"
+    j = body.index('status = "STOPPED_BUDGET"')
+    tail = body[j:j + 1400]
+    assert "shutil.copy(best_board[1]" in tail, \
+        "the budget stop does not put the best board back, so the run ends on the worst round"
