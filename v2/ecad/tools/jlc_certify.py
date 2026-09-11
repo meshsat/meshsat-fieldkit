@@ -49,6 +49,10 @@ import verdict                                          # noqa: E402
 # copper and wire on our own board, and JLC places none of it.
 LEAD = re.compile(r"JST|IDC|solder land|solder pad|\blead\b|wire|electrode|pigtail|jumper|header|"
                   r"strap|breakout|harness|ribbon|block B|pack lead|tap sense|target|land\b", re.I)
+# A footprint that is a header, a test point or a solder land: whatever the comment says, the row is
+# the land, not the silicon it breaks out to.
+BENCH_FP = re.compile(r"^(?:PinHeader|PinSocket|TestPoint|SolderWire|Conn_01x|Conn_02x|"
+                      r"SolderJumper|Jumper|NetTie|Mounting|Fiducial)", re.I)
 # A part number inside the BOM's free prose: the Comment column is not an MPN field.
 # A part number: five or more characters of alphanumerics and the separators makers actually use,
 # carrying at least one letter and one digit. It MUST be allowed to start with a digit: 74LVC1G04,
@@ -84,7 +88,13 @@ def jlc_keyword(comment, fp):
     mult = mult or ""
     kind = fp.split("_", 1)[0].upper()
     if unit and unit.upper() == "OHM":
-        unit = ""                                        # JLCPCB搜索 takes "10mR" and "10 mOhm" poorly; bare value plus package works
+        unit = ""
+    if kind == "R" and not unit:
+        # Measured against the endpoint: "180 0603" answers CL10C180JB8NNNC, a 180 pF CAPACITOR, and
+        # "27 2010" answers a 1N5339B zener. "180R 0603" and "27R 2010" answer the resistors, with
+        # 488k and 4.1k in stock. Milliohm values are the exception the old comment was about, so a
+        # milli multiplier still goes bare.
+        unit = "" if mult == "m" else "R"
     if not unit:
         unit = {"C": "F", "L": "H"}.get(kind, "")
     volts = re.search(r"\b(\d+(?:\.\d+)?)\s*V\b", val)
@@ -132,8 +142,8 @@ def norm_pkg(s):
     # Crystal_SMD_3225_2Pin. Taking the first token alone turned all of those into D, FUSE and CRYSTAL,
     # which then "mismatched" every real answer. Take the package field instead.
     m = re.match(r"^(?:D|F|FB|L|R|C|LED|FUSE|CRYSTAL|DIODE)_([A-Z0-9-]+)(?:_|$)", s)
-    if m and m.group(1) not in ("SMD",):
-        return m.group(1)
+    if m and m.group(1) not in ("SMD",) and any(c.isdigit() for c in m.group(1)):
+        return m.group(1)        # a package carries digits; `L_COILCRAFT_...` is a maker, not a package
     m = re.match(r"^(?:CRYSTAL|FUSE|L|C)_SMD_(\d{4})", s)           # Crystal_SMD_3225_2Pin -> 3225
     if m:
         return m.group(1)
@@ -148,7 +158,24 @@ def norm_pkg(s):
     m = re.match(r"^([A-Z]+(?:-[A-Z]+)?-?\d+)", s)                 # SOIC-8, TSSOP-24, SOT-583, QFN-64
     if m:
         return m.group(1).rstrip("-")
-    return s.split("_")[0]
+    # A standard package name anywhere in the string. `Winbond_USON-8-1EP_3x2mm` is a USON-8 whatever
+    # the maker prefix says, and so is `WSON-6-1EP_2x2mm`.
+    m = re.search(r"\b((?:[WVUTLHX]?[SQ]?(?:SOIC|SOP|SON|QFN|QFP|TSSOP|SSOP|MSOP|DFN|BGA|LGA|LQFP)"
+                  r"|SOT|SOD|TO|DO|DIP|SC|SMA|SMB|SMC)-?\d+)\b", s)
+    if m:
+        return m.group(1)
+    # Nothing standard in it. This is a land drawn from one maker's own drawing (Ebyte_E22-900M30S,
+    # L_Coilcraft_XAL4020-XXX, CM5_Conn_A_10164227, Radiall_SMPMAX_R222M00720). It has no package name
+    # to compare, and taking its first token returned the MAKER (COILCRAFT, BOSCH, QUECTEL), which then
+    # "mismatched" every real answer and would have been silenced by an alias line that waved through
+    # every part that maker sells. Say nothing instead: an empty string skips the comparison, and the
+    # mechanical check for a custom land is the custom-footprint audit, not this string.
+    m = re.search(r"(POWERPAK|D2PAK|DPAK|SOT-?223|TO-?\d+)", s)
+    if m:
+        return m.group(1)
+    if re.fullmatch(r"SM[ABC]", s):      # JLCPCB writes the diode body bare as well as as DO-214xx
+        return s
+    return ""
 
 
 def load_cache():
@@ -173,7 +200,7 @@ def query(keyword, cache, refresh=False):
         age = (datetime.date.today() - datetime.date.fromisoformat(hit["asked"])).days
         if age <= CACHE_DAYS:
             return hit["list"], hit["asked"]
-    body = json.dumps({"keyword": key, "currentPage": 1, "pageSize": 8, "searchSource": "search"})
+    body = json.dumps({"keyword": key, "currentPage": 1, "pageSize": 12, "searchSource": "search"})
     for attempt in range(3):
         r = subprocess.run(["curl", "-s", "-X", "POST", API, "-H", "Content-Type: application/json",
                             "-H", "User-Agent: " + UA, "-d", body, "--max-time", "45"],
@@ -222,10 +249,20 @@ def intended_part(comment):
     head = re.sub(r"\([^)]*\)", " ", comment)
     for t in PART_TOKEN.findall(head):
         t = t.strip(".,;:-/")
-        # letter AND digit, both required. Without the digit the pattern happily returned "green",
-        # "Amphenol", "ferrite" and "sunlight" as part numbers, and each of those was then searched
-        # for and answered with something real, which is the worst possible failure shape.
-        if len(t) < 5 or not (any(c.isdigit() for c in t) and any(c.isalpha() for c in t)):
+        if len(t) < 5:
+            continue
+        has_d = any(c.isdigit() for c in t)
+        has_a = any(c.isalpha() for c in t)
+        # A digit is always required: without it the pattern happily returned "green", "Amphenol",
+        # "ferrite" and "sunlight" as part numbers, each searched for and answered with something real,
+        # which is the worst failure shape there is. A LETTER is not required, because TE and Amphenol
+        # number their connectors in digits and hyphens alone: 1-2199119-5 and 2199230-4 are the M.2
+        # sockets, and demanding a letter sent all three of them to the module name later in the prose.
+        if not has_d:
+            continue
+        if not has_a and not (re.fullmatch(r"\d+-\d+(?:-\d+)?", t) and len(t) >= 9):
+            continue
+        if re.fullmatch(r"20\d\d-\d\d-\d\d", t):          # a date, not a part
             continue
         if NOT_PART.match(t):
             continue
@@ -284,6 +321,17 @@ def certify(rec, cache, handfit, aliases, refresh=False):
     if re.search(r"\bclass\b|\bowed\b", comment, re.I):
         return dict(verdict="NO_PART_CHOSEN", note="the row names a class, not a part", need=need)
 
+    # A bench header's comment names the chip it breaks out ("CC2652P cJTAG ZBA (bench): 3V3 ...") and
+    # the extractor dutifully reads CC2652P out of it, then certifies a 5-pin 2.54 mm header against a
+    # VQFN-48. The footprint is the honest evidence of what the row IS: when it is a plain header or a
+    # test land, the row is that header, whatever silicon the prose mentions.
+    if BENCH_FP.match(fp):
+        # Bench headers, test points and solder jumpers are fitted by hand at bring-up and JLC places
+        # none of them (make_handoff.py already strips them from the CPL). They are a declared class,
+        # not an open question, and saying NOT_CHECKED about them buried the rows that ARE unanswered.
+        return dict(verdict="BENCH_FITTED", need=need,
+                    note="a header, test point or solder jumper: fitted by hand, not placed by JLC")
+
     hf = handfit.get(want or "") or handfit.get(comment[:60])
     if hf:
         return dict(verdict="HAND_FIT", note=hf, need=need)
@@ -303,10 +351,25 @@ def certify(rec, cache, handfit, aliases, refresh=False):
     # Prefer an exact model match anywhere in the page over whatever ranked first.
     top = lst[0]
     if want:
-        for c in lst:
-            if same_part(want, c.get("componentModelEn")):
-                top = c
-                break
+        # same_part is deliberately loose (a common prefix of six is the same silicon), so the FIRST
+        # match is often the wrong order code of the right chip: asked TUSB2046BI, the page answers
+        # TUSB2046BVF, TUSB2046BVFR and TUSB2046BIRHBR, and only one of those is an LQFP-32 like our
+        # land. Score every match instead: exact model first, then the package we actually drew, then
+        # stock that covers the order. This one change is what separates a wrong order code from a
+        # wrong part, and the wrong order code is the commoner defect by far.
+        want_pkg = norm_pkg(fp)
+        cand = [c for c in lst if same_part(want, c.get("componentModelEn"))]
+        if cand:
+            def rank(c):
+                m = re.sub(r"[^A-Z0-9]", "", (c.get("componentModelEn") or "").upper())
+                w = re.sub(r"[^A-Z0-9]", "", want.upper())
+                pkg = norm_pkg(c.get("componentSpecificationEn"))
+                return (bool(want_pkg) and pkg == want_pkg,
+                        (c.get("stockCount") or 0) >= need,
+                        m == w,
+                        c.get("componentLibraryType") == "base",
+                        c.get("stockCount") or 0)
+            top = max(cand, key=rank)
     else:
         # A jellybean has no model to match, so the best answer is the one that is actually in stock
         # in the right package. The top hit is ranked by JLCPCB's own relevance and was repeatedly a
@@ -327,16 +390,41 @@ def certify(rec, cache, handfit, aliases, refresh=False):
         return ev
     a, b = norm_pkg(fp), norm_pkg(ev["pkg"])
     if a and b and a != b and aliases.get("%s=%s" % (a, b)) is None and aliases.get("%s=%s" % (b, a)) is None:
-        if not want:
-            # No part number in the row and the package does not match: the search answered with
-            # something unrelated because there was nothing to search for. PACKAGE_MISMATCH would
-            # blame the package; the real fault is that the BOM row never names its part, and that is
-            # what has to be fixed, in the generator.
+        if not want and not code:
+            # No part number in the row, no code either, and the package does not match: the search
+            # answered with something unrelated because there was nothing to search for.
+            # PACKAGE_MISMATCH would blame the package; the real fault is that the BOM row never names
+            # its part, and that is what has to be fixed, in the generator.
+            #
+            # A row that DOES carry a code is a different thing entirely: the code IS the part's
+            # identity, the answer is authoritative, and a package that does not match our land is a
+            # hard defect, not a failure to identify. Reading it as NOT_IDENTIFIED hid an 0805 180 ohm
+            # resistor on eleven 0603 lands and an 0805 ferrite on four more, on board C.
             ev.update(verdict="NOT_IDENTIFIED",
                       note="the row names no part number, so nothing can be certified: give it one in "
                            "the generator or declare it hand-fit (search answered %s, %s)"
                            % (ev["model"], b))
             return ev
+        wider = re.sub(r"[A-Za-z]+$", "", want).rstrip("-")
+        if len(wider) >= 5 and wider.upper() != want.upper():
+            lst2, asked2 = query(wider, cache, refresh)
+            cand2 = [c for c in (lst2 or []) if same_part(want, c.get("componentModelEn"))
+                     and norm_pkg(c.get("componentSpecificationEn")) == a]
+            if cand2:
+                top = max(cand2, key=lambda c: ((c.get("stockCount") or 0) >= need,
+                                                c.get("componentLibraryType") == "base",
+                                                c.get("stockCount") or 0))
+                ev = dict(code=top.get("componentCode"), model=top.get("componentModelEn"),
+                          brand=top.get("componentBrandEn"), pkg=top.get("componentSpecificationEn"),
+                          lib=top.get("componentLibraryType"), stock=top.get("stockCount") or 0,
+                          price=top.get("initialPrice"), need=need, asked=asked2)
+                if (ev["stock"] or 0) < need:
+                    ev.update(verdict="NO_STOCK", note="stock %s against a need of %d for %d boards"
+                              % (ev["stock"], need, BOARD_QTY))
+                    return ev
+                ev.update(verdict="CERTIFIED",
+                          note="found on the wider search %r: the row's suffix hid this package" % wider)
+                return ev
         ev.update(verdict="PACKAGE_MISMATCH",
                   note="our land is %s, the part is %s" % (a, b))
         return ev
@@ -387,7 +475,9 @@ def main(argv):
         for r in sorted(results, key=lambda r: (r["verdict"], r["comment"])):
             w.writerow(r)
 
-    bad = [r for r in results if r["verdict"] not in ("CERTIFIED", "HAND_FIT")]
+    # BENCH_FITTED joins CERTIFIED and HAND_FIT as an acceptable, declared outcome: the row is real,
+    # its disposition is known, and no purchase at JLCPCB is owed for it.
+    bad = [r for r in results if r["verdict"] not in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED")]
     for r in bad[:40]:
         print("%-17s %-42s %s" % (r["verdict"], r["comment"][:42], r.get("note", "")[:70]))
     print("\njlc_certify: %d components, %s" % (len(results), ", ".join(
