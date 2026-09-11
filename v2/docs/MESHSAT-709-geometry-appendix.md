@@ -5187,3 +5187,26 @@ file that declares a number nobody re-measured is worse than one that declares t
 **What it is worth:** ten pairs of 113 on the board the pair ruling holds hardest, for the cost of one
 parameter. It does not release B, which is held by decision 6 as well (three pairs on a 2x13 ribbon with two
 end rows), and it is not a lever anyone should tune further without the sweep beside them.
+
+### 32.131 What stops the other 52 pairs at the slack that lays the most (12 September 2026, 00:30 CEST; MESHSAT-862)
+
+At the peak of the curve, 0.06, B19 lays 57 of 113 and 52 pairs end on a failure. Counted by each pair's LAST
+failure, beside the same count at 0.08 for comparison:
+
+| the reason the pair was finally lost | at 0.06 (57 laid) | at 0.08 (47 laid) |
+|---|---:|---:|
+| the legs clear no smoothing of the centreline | **21** | 25 |
+| no stub path at a station or via | **14** | 15 |
+| no path on the map after the expansion cap | **10** | 9 |
+| no room for the layer-change via pair | 4 | 4 |
+| no via site for a dive or a hop | 3 | 6 |
+
+**The ten at the expansion cap are the cheapest of the five classes**, because they are a budget and not a
+geometry: `PAIR_EXPANSIONS` is twelve million and it was set when a pass cost twenty six minutes. The stub
+search is a fifteenth of what it was, so the budget can be raised for the price of wall time nobody is waiting
+on, and an arm at forty eight million is running with that prediction written down.
+
+**The legs and the station stubs, 35 of the 52 together, are the same two classes the record has been naming
+since 32.103**, and both live at a station rather than in the corridor: the legs fail where they fan into their
+pads, and the stub search fails to reach a pad from the corridor's end. The corridor itself loses only ten, and
+four of those to a via pair that has nowhere to sit. **Every lever left is at the ends of a pair, not along it.**
