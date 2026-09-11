@@ -20,6 +20,12 @@
   "pair_audit_nets": [],
   "post_fix": "-",
   "pruned_gate": false,
-  "gate_grep": "FAIL|RESULT|^verdict:"
+  "gate_grep": "FAIL|RESULT|^verdict:",
+  "cont_route": {
+   "max_opens": 6,
+   "passes": 80,
+   "timeout_s": 900
+  },
+  "_cont_route_why": "11 September 2026: one continuation pass of the router before the stub router when a handful of connections are open (A21's lever of 5 September). cont_route.sh keeps the board only if it improves, so it cannot make one worse; it was declared for A alone because only the A clones carried it, and E and P both ended a route at exactly one open."
  }
 }
