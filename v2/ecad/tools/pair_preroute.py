@@ -1615,6 +1615,13 @@ def main(a):
                         p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference())); rebuild_maps()
                         legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
                     else: ok_ = False
+                if ok_:   # and the two legs against each other, which isx_ above answers only for a crossing (12 September 2026)
+                    _need3 = clr_c + wid(pcbnew.F_Cu) - 0.005
+                    _segA = [(legs_[0][1], legs_[0][2]), (legs_[0][2], legs_[0][3])]
+                    _segB = [(legs_[1][1], legs_[1][2]), (legs_[1][2], legs_[1][3])]
+                    for _u in _segA:
+                        for _v in _segB:
+                            if _seg_dist(_u[0][0], _u[0][1], _u[1][0], _u[1][1], _v[0][0], _v[0][1], _v[1][0], _v[1][1]) < _need3: ok_ = False
                 if ok_:
                     for net, S_, W_, E_ in legs_: seg(S_[0], S_[1], W_[0], W_[1], pcbnew.F_Cu, net); seg(W_[0], W_[1], E_[0], E_[1], pcbnew.F_Cu, net)
                     laid_sections += 1; continue
@@ -1943,7 +1950,16 @@ def main(a):
                                 smx, smy = (mm(st_[0].GetPosition().x) + mm(st_[1].GetPosition().x)) / 2, (mm(st_[0].GetPosition().y) + mm(st_[1].GetPosition().y)) / 2
                                 if (smx - lnx) * ux2 + (smy - lny) * uy2 < 0: ux2, uy2 = -ux2, -uy2
                                 lnx2, lny2 = lnx + 0.5 * ux2, lny + 0.5 * uy2
-                                seg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n); seg(lnx2, lny2, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
+                                _nx_, _ny_ = mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y)
+                                # 12 September 2026 (appendix 32.135): these two segments went down straight and untested, and they
+                                # are the defect A's /USB_D8 shipped into the pre-route DRC. `xing()` above asks whether the fan
+                                # CROSSES the partner's copper; two segments 0.06 mm apart never cross, so the N fan came to lie
+                                # flat along the P leg's staircase and ten shorting items followed. The fan asks now, and takes the
+                                # searched stub when the straight one would sit on its own partner.
+                                if own_clear(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n) and own_clear(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n):
+                                    seg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n); seg(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n)
+                                elif not stub(lnx, lny, _nx_, _ny_, pcbnew.F_Cu, net_n):
+                                    failed = "%s -> %s (the N fan into %s lies on its own partner and no stub goes round it)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
                                 nnx_, nny_ = (lnx - lpx, lny - lpy); nl2_ = math.hypot(nnx_, nny_) or 1.0
                                 err_ = dive_p(mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), lpx, lpy, pcbnew.F_Cu, None, st_[0], net_p, (-nnx_ / nl2_, -nny_ / nl2_))
                                 if err_: failed = "%s -> %s (the fan into %s crosses, %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference(), err_); break
