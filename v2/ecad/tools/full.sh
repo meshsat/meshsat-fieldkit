@@ -37,7 +37,8 @@ block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $
 
 # The compile pre-check every chain must have: a comment appended to a generator line has swallowed a comma twice, and a
 # generator that will not parse used to be found by the placement generator building on the PREVIOUS board (appendix 32.39).
-for f in ${FPGEN:+../tools/$FPGEN} ../tools/gen_sch_$L.py ../tools/gen_pcb_$L.py ../tools/gen_pcb_${L}3.py ../tools/check_pcb_$L.py $(for e in $EXTRA; do echo ../tools/$e; done); do
+FPGENS=""; for g in $FPGEN; do FPGENS="$FPGENS ../tools/$g"; done   # a board may declare more than one (12 September 2026: the IDC lands beside the board's own footprints)
+for f in $FPGENS ../tools/gen_sch_$L.py ../tools/gen_pcb_$L.py ../tools/gen_pcb_${L}3.py ../tools/check_pcb_$L.py $(for e in $EXTRA; do echo ../tools/$e; done); do
   python3 -W error -c "import sys
 with open(sys.argv[1]) as fh: compile(fh.read(), sys.argv[1], 'exec')" "$f" || block "compile $f"
   # Compiling is not enough: a comment appended mid-line swallows the calls after it and the file
@@ -46,7 +47,8 @@ with open(sys.argv[1]) as fh: compile(fh.read(), sys.argv[1], 'exec')" "$f" || b
 done
 
 if [ -n "$FPGEN" ]; then
-  python3 "../tools/$FPGEN" ../meshsat.pretty > out/gen_fp.log 2>&1 || block "footprint generator (out/gen_fp.log)" out/gen_fp.log
+  : > out/gen_fp.log
+  for g in $FPGEN; do python3 "../tools/$g" ../meshsat.pretty >> out/gen_fp.log 2>&1 || block "footprint generator $g (out/gen_fp.log)" out/gen_fp.log; done
   grep gen_footprints out/gen_fp.log | cut -c1-120
 fi
 env $GENV python3 ../tools/gen_sch_$L.py $N.kicad_sch $N > out/gen_sch.log 2>&1 || block "schematic generator (out/gen_sch.log)" out/gen_sch.log

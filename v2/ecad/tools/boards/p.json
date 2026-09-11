@@ -2,7 +2,7 @@
  "name": "pcb-p-pack",
  "letter": "p",
  "title": "PCB-P PACK BMS",
- "footprint_generator": null,
+ "footprint_generator": ["gen_footprints_idc.py"],
  "extra_compile": [],
  "gate_before_placement": false,
  "bypass_place_after": "stackup",
