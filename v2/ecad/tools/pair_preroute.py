@@ -537,6 +537,29 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
                 a_, c_ = ii + di, jj + dj
                 if 0 <= a_ < passable.shape[0] and 0 <= c_ < passable.shape[1]: passable[a_, c_] = True
     (jmin, imin), (jmax, imax) = window
+    # 11 September 2026: this search is the pass. Profiled on D, which lays 5 of 5 pairs in 9 seconds: 6 of those
+    # seconds are here, over 75 calls, against 2 in the occupancy maps and 0 in the corridor search (appendix
+    # 32.127). The corridor search was extracted to `pairsearch.py` and compiled on 10 September, 13.5x, and this
+    # one was left in interpreted Python doing almost the same thing on almost the same map. It does not need a new
+    # kernel: a single-layer search IS `pairsearch.search` with nL=1, no via layer and the window as the array, and
+    # that kernel is proved against its own reference by `pairsearch.py selftest`. PAIR_FAST_STUBS=1 takes it.
+    # OFF until it is measured on a board, because "it must be the same" is what the selftest is for and a pair
+    # count is what the knob is for.
+    if os.environ.get("PAIR_FAST_STUBS", "0") != "0":
+        wi0, wi1 = max(0, imin), min(passable.shape[0] - 1, imax)
+        wj0, wj1 = max(0, jmin), min(passable.shape[1] - 1, jmax)
+        if not (wi0 <= si <= wi1 and wj0 <= sj <= wj1 and wi0 <= gi <= wi1 and wj0 <= gj <= wj1): return None
+        win = np.ascontiguousarray(passable[wi0:wi1 + 1, wj0:wj1 + 1])[None, :, :]
+        novia = np.ones(win.shape[1:], dtype=bool)   # every cell forbids a via: one layer, no layer change exists
+        path_, nexp_, _why_ = pairsearch.search(win, novia, None, [(0, si - wi0, sj - wj0)], (0, gi - wi0, gj - wj0),
+                                                max_exp=400000, fast=_FAST_SEARCH)
+        PAIR_SPENT[0] += nexp_; PAIR_TOTAL[0] += nexp_
+        if path_ is None: return None
+        cells_ = [(i_ + wi0, j_ + wj0) for (_L, i_, j_) in path_]
+        cells_ = smooth(gr, cells_, passable)
+        pts_ = [gr.xy(j, i) for i, j in cells_]
+        if pts_: pts_[0] = start_xy
+        return pts_
     dist = {(si, sj): 0.0}; prev = {}; pq = [(0.0, 0.0, (si, sj))]; found = None; n = 0
     steps = [(-1, 0, 1.0), (1, 0, 1.0), (0, -1, 1.0), (0, 1, 1.0), (-1, -1, 1.414), (-1, 1, 1.414), (1, -1, 1.414), (1, 1, 1.414)]
     while pq:
@@ -556,7 +579,9 @@ def stub_path(gr, passable, start_xy, goal_xy, window):
             if not (imin <= ni <= imax and jmin <= nj <= jmax) or not passable[ni, nj]: continue
             if di and dj and not (passable[i, nj] and passable[ni, j]): continue
             nd = d0 + c
-            if nd < dist.get((ni, nj), 1e18): dist[(ni, nj)] = nd; prev[(ni, nj)] = (i, j); heapq.heappush(pq, (nd + math.hypot(ni - gi, nj - gj), nd, (ni, nj)))
+            # sqrt of an exact integer sum, never hypot: the compiled kernel does the same and an ulp of
+            # difference would reorder two entries of equal true distance (pairsearch.py, round-two H1).
+            if nd < dist.get((ni, nj), 1e18): dist[(ni, nj)] = nd; prev[(ni, nj)] = (i, j); heapq.heappush(pq, (nd + math.sqrt(float((ni - gi) * (ni - gi) + (nj - gj) * (nj - gj))), nd, (ni, nj)))
     if found is None: return None
     path = [found]
     while path[-1] in prev: path.append(prev[path[-1]])
