@@ -374,3 +374,62 @@ def t_an_allow_line_that_covers_nothing_is_named():
     _sh.rmtree(d, ignore_errors=True)
     assert "allow line(s) match no row" in out, out
     assert "never matches this" in out, out
+
+
+# ---------------------------------------------------------------- two declarations, one question
+# A BOM line with no LCSC code is judged by lcsc_fill against the board's own <project>/lcsc-allow.txt, and its
+# answer is written beside the BOM as <name>-bom.status. verify_deliverable knew only tools/jlc-handfit.txt and
+# the bench prefixes, so a line the board declares in the place the project actually uses read as undeclared.
+# Board E was 34 of 35 properties on exactly that, every other gate passing and its allow list correct.
+
+def _status_folder(status, blank_designator="J_GEIGER"):
+    import tempfile, zipfile
+    d = tempfile.mkdtemp(prefix="vd-status-"); f = os.path.join(d, "meshsat-pcb-e-revA-E7"); os.makedirs(f)
+    n = "pcb-e1-dock"
+    for item in ("README-fab.txt", "%s-drc.rpt" % n, "%s-schematic.pdf" % n, "%s-render-top.png" % n,
+                 "%s-render-bottom.png" % n, "%s-1to1-top.pdf" % n, "%s-1to1-bottom-mirrored.pdf" % n,
+                 "%s.kicad_sch" % n, "%s.kicad_pro" % n):
+        open(os.path.join(f, item), "w").write("x")
+    # the board carries its phase on the silk, which is a separate property of this gate and not what is under
+    # test here; without it the fixture fails for a reason that has nothing to do with the blank-code rule
+    open(os.path.join(f, "%s.kicad_pcb" % n), "w").write('(kicad_pcb (gr_text "MESHSAT PCB-E1 DOCK REV A (E7)"))\n')
+    os.makedirs(os.path.join(f, "meshsat.pretty"))
+    if status is not None: open(os.path.join(f, "%s-bom.status" % n), "w").write(status + "\n")
+    with zipfile.ZipFile(os.path.join(f, "%s-gerbers.zip" % n), "w") as z:
+        for t in ("F_Cu.gtl", "In1_Cu.g2", "In2_Cu.g3", "B_Cu.gbl", "F_Mask.gts", "B_Mask.gbs", "F_Paste.gtp",
+                  "B_Paste.gbp", "F_Silkscreen.gto", "B_Silkscreen.gbo", "Edge_Cuts.gm1", "x.drl", "x-drl_map.gbr"):
+            z.writestr("%s-%s" % (n, t), "x")
+    open(os.path.join(f, "%s-cpl.csv" % n), "w").write(
+        'Designator,Mid X,Mid Y,Layer,Rotation\n%s,1mm,1mm,Top,0\n' % blank_designator)
+    open(os.path.join(f, "%s-bom.csv" % n), "w").write(
+        'Comment,Designator,Footprint,LCSC Part #\n"Geiger counter module (RadiationD-v1.1 class)","%s","PinHeader_1x03",""\n' % blank_designator)
+    return d, f, n
+
+
+def _vd(status):
+    import subprocess, shutil as _sh
+    d, f, n = _status_folder(status)
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "verify_deliverable.py"), f, n, "4"],
+                       capture_output=True, text=True, cwd=d)
+    out = r.stdout + r.stderr
+    _sh.rmtree(d, ignore_errors=True)
+    return r.returncode, out
+
+
+def t_a_blank_line_the_boards_own_allow_list_covers_is_accepted():
+    rc, out = _vd("OK")
+    assert "ALL PASS" in out, out
+    assert rc == 0, out
+
+
+def t_a_blank_line_with_no_status_file_is_still_refused():
+    """The deferral is to lcsc_fill's ANSWER, not to its absence: with no OK beside the BOM this gate judges the
+    blanks itself, so removing lcsc_fill from a chain cannot quietly widen what a deliverable may carry."""
+    rc, out = _vd(None)
+    assert rc != 0, out
+    assert "no OK status file beside the BOM" in out, out
+
+
+def t_a_blank_line_lcsc_fill_itself_refused_is_refused_here_too():
+    rc, out = _vd("BLANK not allow-listed")
+    assert rc != 0, out
