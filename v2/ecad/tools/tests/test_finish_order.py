@@ -27,7 +27,8 @@ STAGES = ("unknot", "cleanup_dangling", "zone_pad_via", "pour_stitch", "stub_rou
 
 # Every gate that decides whether a board is finished. A gate absent from the finish is a bar nothing tests.
 GATES = ("hardset.py", "check_pcb_", "dc_drop.py", "impedance_check.py", "netlist_board.py", "check_contracts.py",
-         "pruned_gate.py", "pair_match.sh", "quality_pass.sh", "silk_fix_all.py", "stackup_write.py")
+         "pruned_gate.py", "pair_match.sh", "quality_pass.sh", "silk_fix_all.py", "stackup_write.py",
+         "stitch_prune.py")
 
 
 def _order(path):
@@ -140,3 +141,14 @@ def t_routeflow_validate_agrees_with_these_rules():
         r = subprocess.run([sys.executable, os.path.join(TOOLS, "routeflow.py"), "validate", p],
                            capture_output=True, text=True)
         assert r.returncode == 0, "%s: %s" % (os.path.basename(p), (r.stdout + r.stderr).strip().splitlines()[-1] if (r.stdout + r.stderr).strip() else r.returncode)
+
+
+def t_the_stitch_pruner_is_reverted_when_it_opens_anything():
+    """It removes copper, so it is judged the way the stub router is: the board before it is kept, and it goes
+    back if hard or unrouted rose. A cleanup that can only be trusted when it happens to be right is a gamble."""
+    t = open(FINISH, errors="replace").read()
+    i = t.index("stitch_prune.py")
+    after = t[i:i + 900]
+    assert "-prestitch.kicad_pcb" in t[:i], "no copy of the board is taken before the pruner runs"
+    assert "reverting" in after and "cp out/$N-prestitch.kicad_pcb" in after, \
+        "the pruner's result is not reverted when it opens something"

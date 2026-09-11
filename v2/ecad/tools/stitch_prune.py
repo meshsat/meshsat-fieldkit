@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""Remove a locked stitch via that the pour has abandoned (MESHSAT-862, 11 September 2026).
+
+A placement generator lays a grid of LOCKED stitch vias to bond a pour to its plane. The router then runs a
+track past one, the fill retreats by its clearance, and the via's pour end is left touching nothing: dead
+copper with a stub on the other side. `check_pcb_p.py` calls it out ("locked via GND at (84.5, 98.1) sits in
+the fill of 'GND pour B.Cu'") and it is right to; `cleanup_dangling.py` leaves it alone because a via with a
+track end on it is not dangling by its rule. Board P routed 0 hard and 0 unrouted and was refused for exactly
+one of these.
+
+What it removes, and only this: a via that is LOCKED, whose net has a filled zone whose OUTLINE contains it and
+whose FILL does not, and which carries at most one track end. The stub that lands on it goes with it when that
+stub touches nothing else at its far end. Everything is judged on a copy: the caller re-runs DRC and reverts if
+unrouted rose, the same contract `stub_accept.py` works under.
+
+Usage: stitch_prune.py <board.kicad_pcb> [--dry]   exit 0 always (it is a cleanup, not a gate); writes a verdict.
+"""
+import sys, os
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict
+
+
+def main(a):
+    if not a: print(__doc__); return verdict.USAGE
+    path = a[0]; dry = "--dry" in a
+    import pcbnew
+    b = pcbnew.LoadBoard(path)
+    zones = [z for z in b.Zones() if not z.GetIsRuleArea()]
+    tracks = list(b.GetTracks())
+    vias = [t for t in tracks if t.Type() == pcbnew.PCB_VIA_T]
+    segs = [t for t in tracks if t.GetClass() == "PCB_TRACK"]
+
+    def ends_on(pt, net, skip=None):
+        out = []
+        for tr in segs:
+            if tr is skip or tr.GetNetname() != net: continue
+            for e in (tr.GetStart(), tr.GetEnd()):
+                if abs(e.x - pt.x) < 20000 and abs(e.y - pt.y) < 20000: out.append(tr); break
+        return out
+
+    def pad_at(pt, net):
+        for f in b.GetFootprints():
+            for p in f.Pads():
+                if p.GetNetname() == net and p.HitTest(pt): return True
+        return False
+
+    removed, kept, evidence = 0, 0, []
+    for v in vias:
+        if not v.IsLocked(): continue
+        net = v.GetNetname()
+        if not net: continue
+        pos = v.GetPosition()
+        abandoned = None
+        for z in zones:
+            if z.GetNetname() != net: continue
+            try:
+                if not z.Outline().Contains(pos): continue
+                if z.GetFilledPolysList(z.GetFirstLayer()).Contains(pos): continue
+            except Exception:
+                continue
+            abandoned = z; break
+        if abandoned is None: continue
+        on = ends_on(pos, net)
+        if len(on) > 1: kept += 1; evidence.append("%s at (%.1f, %.1f): %d tracks land on it, left alone" % (net, pos.x / 1e6, pos.y / 1e6, len(on))); continue
+        stub = on[0] if on else None
+        if stub is not None:
+            far = stub.GetEnd() if abs(stub.GetStart().x - pos.x) < 20000 and abs(stub.GetStart().y - pos.y) < 20000 else stub.GetStart()
+            if pad_at(far, net) or ends_on(far, net, skip=stub):
+                kept += 1
+                evidence.append("%s at (%.1f, %.1f): its stub reaches copper at the far end, left alone" % (net, pos.x / 1e6, pos.y / 1e6))
+                continue
+        evidence.append("%s at (%.1f, %.1f): abandoned by the fill of '%s'%s" %
+                        (net, pos.x / 1e6, pos.y / 1e6, abandoned.GetZoneName() or "unnamed",
+                         ", with its %.2f mm stub" % pcbnew.ToMM(stub.GetLength()) if stub is not None else ""))
+        if not dry:
+            if stub is not None: b.Remove(stub)
+            b.Remove(v)
+        removed += 1
+    if removed and not dry:
+        pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+        pcbnew.SaveBoard(path, b)
+    print("stitch_prune: %d locked via(s) removed, %d left alone, of %d locked via(s) on %d zone(s)%s"
+          % (removed, kept, sum(1 for v in vias if v.IsLocked()), len(zones), " (dry run)" if dry else ""))
+    for e in evidence[:8]: print("   " + e)
+    return verdict.write("stitch_prune", verdict.PASS,
+                         counts={"removed": removed, "left_alone": kept,
+                                 "locked_vias": sum(1 for v in vias if v.IsLocked())},
+                         denominator=sum(1 for v in vias if v.IsLocked()),
+                         evidence=evidence[:20], inputs={"board": path},
+                         note="a locked stitch via the fill no longer covers is dead at its pour end")
+
+
+if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

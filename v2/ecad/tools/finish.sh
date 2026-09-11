@@ -76,6 +76,18 @@ if [ "$H" -ne 0 ]; then
   [ "$H" -eq 0 ] || { echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; }
 fi
 python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
+# 5b. a locked stitch via the fill no longer covers is dead at its pour end: the router ran a track past it and
+# the fill retreated by its clearance. cleanup_dangling leaves it because a via with a track on it is not
+# dangling by its rule, and the board gate then refuses the board for it (P routed 0 hard and 0 unrouted and was
+# refused for exactly one). Judged the way the stub router is: keep it only if nothing opened (11 Sep 2026).
+cp $N.kicad_pcb out/$N-prestitch.kicad_pcb
+python3 $T/stitch_prune.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | head -4
+$T/drc.sh $N.kicad_pcb out/$N-drc.json
+python3 $T/hardset.py out/$N-drc.json post --counts out/prune-score.txt --label 'after stitch_prune' >/dev/null
+read PH PU < out/prune-score.txt
+if [ "$PH" -ne 0 ] || [ "$PU" -ne 0 ]; then
+  echo "stitch_prune hurt (hard $PH, unrouted $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
+fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
 python3 $T/silk_fix_all.py $N.kicad_pcb $L 2>&1 | grep -vE 'Debug|leak' | tail -2
 
