@@ -313,3 +313,28 @@ def t_the_restored_board_brings_its_project_files():
     window = src[max(0, i - 800):i]
     assert ".kicad_pro" in window and ".kicad_prl" in window, \
         "the restore copies only the board, leaving the previous round's project file beside it"
+
+
+def t_a_timing_wrapper_comes_after_the_function_it_wraps():
+    """`X = _timed("bucket", X)` above `def X` is a NameError at import, and the file still compiles.
+
+    11 September 2026: three buckets were added to the pre-router's profile and two of them named functions
+    defined two hundred lines further down. Compiling proved nothing, which is the standing lesson of this
+    project in another costume: the error lives on the import path, not in the parse."""
+    src_path = os.path.join(TOOLS, "pair_preroute.py")
+    src = open(src_path, errors="replace").read()
+    lines = src.splitlines()
+    defined = {}
+    for i, ln in enumerate(lines):
+        m = re.match(r"def (\w+)\(", ln)
+        if m and m.group(1) not in defined: defined[m.group(1)] = i
+        m = re.match(r"class (\w+)[\(:]", ln)
+        if m and m.group(1) not in defined: defined[m.group(1)] = i
+    bad = []
+    for i, ln in enumerate(lines):
+        m = re.match(r"(\w+)(?:\.\w+)? = _timed\(", ln.strip())
+        if not m: continue
+        name = m.group(1)
+        if name in defined and defined[name] > i:
+            bad.append("line %d wraps %s, which is defined at line %d" % (i + 1, name, defined[name] + 1))
+    assert not bad, "a timing wrapper runs before its function exists:\n  " + "\n  ".join(bad)
