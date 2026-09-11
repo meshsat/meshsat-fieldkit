@@ -56,5 +56,5 @@
   "PAIR_CORRIDOR_SLACK": 0.06,
   "PAIR_CORRIDOR_SLACK_SLIM": 0.03
  },
- "_pair_env_why": "11 September 2026, swept again on the evening's tools with the compiled stub search, same placed board, 113 pairs: 0.06 lays 57, 0.08 lays 47, 0.10 lays 48, 0.12 lays 46, 0.14 lays 49, 0.16 lays 47. The value here is 0.06 because that is what the sweep measures, and it is recorded HERE rather than as a global default because the response is chaotic in this parameter: the same board read 62 at 0.08 in the morning sweep and 47 at 0.08 now, on tools and a placement that both moved in between. A value that wins one draw on one board is a measurement, not a law, and the sweep is cheap now that a pass costs 16 minutes instead of 26."
+ "_pair_env_why": "12 September 2026, ten arms on one placed board with the compiled stub search, 113 pairs: 0.03 lays 41, 0.04 lays 44, 0.05 lays 53, 0.06 lays 57, 0.07 lays 52, 0.08 lays 47, 0.10 lays 48, 0.12 lays 46, 0.14 lays 49, 0.16 lays 47. One peak at 0.06 with a clean rise and fall around it and a noisy plateau from 0.10 out. The value here is 0.06 because that is where the curve peaks, and it is recorded HERE and not as a global default because the same board read 62 at 0.08 in the morning sweep of 11 September on tools and a placement that have both moved since: re-measure the curve when either does."
 }

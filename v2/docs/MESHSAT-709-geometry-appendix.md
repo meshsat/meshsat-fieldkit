@@ -5163,8 +5163,21 @@ pairs, all six arms at once:
 | 0.16 | 47 | 1334 |
 
 **The written prediction was that the response would stay chaotic, that the spread would be at least eight
-pairs, and that nothing would beat the 62 of the morning sweep. All three hold**: the spread is eleven, the
-order is not monotone, and the best is 57.
+pairs, and that nothing would beat the 62 of the morning sweep.** The spread is eleven and nothing beats 62.
+**"Chaotic" is the part the second sweep took away**, and that is the useful correction: four more arms below
+0.06, predicted before the run to beat nothing, beat nothing, and together with the first six they make a curve
+rather than a scatter.
+
+| slack | 0.03 | 0.04 | 0.05 | **0.06** | 0.07 | 0.08 | 0.10 | 0.12 | 0.14 | 0.16 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| pairs of 113 | 41 | 44 | 53 | **57** | 52 | 47 | 48 | 46 | 49 | 47 |
+
+**One peak, a clean rise to it and a fall after it, then a plateau of 46 to 49 from 0.10 out to 0.16.** The
+reading of 32.117, that the response is chaotic in this parameter, came from a coarse grid on tools that have
+since changed: 0.15 against 0.16 there were two points of a plateau, twelve pairs apart because the plateau is
+noisy, and the structure below 0.10 was never sampled. Ten points say the parameter has an optimum and where
+it is. **It is still one board with one placement**, so the caution stands in the form that matters: re-measure
+the curve when the tools or the placement move, which is exactly what happened between the two sweeps.
 
 **The same board read 62 at 0.08 this morning and 47 at 0.08 tonight**, on tools and a placement that both moved
 in between, which is the standing caution of 32.117 measured a second time: a value that wins one draw on one
