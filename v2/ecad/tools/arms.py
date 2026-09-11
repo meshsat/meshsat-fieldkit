@@ -52,10 +52,12 @@ def run_arm(spec, arm, ecad, out_dir):
     src = os.path.join(ecad, spec["source_project"])
     dst = os.path.join(ecad, "arm-%s-%s" % (spec["letter"], name))
     t0 = time.time()
-    # The host and its KiCad build travel with every row. B19's placed board came out at md5 27dd5bd0 on the
-    # rented box and fc27d67c on the VM: same commit, same generator, two hosts, two boards. Determinism WITHIN
-    # a host is proved (tests/determinism.sh) and across hosts it is not, so arms from two hosts are not
-    # comparable and a row that does not say where it ran cannot be checked for that (11 September 2026).
+    # The host and its KiCad build travel with every row, so a cross-host comparison can be checked rather than
+    # assumed. This went in after B19's placed board came out at md5 27dd5bd0 on a rented box against fc27d67c
+    # on the VM, which I first wrote up as a cross-host determinism failure. It is not one: gen_sch_b.py,
+    # escape.py, boardorder.py, join_adjacent_pins.py and prefanout.py all changed on 11 September between the
+    # two runs, so the two boards were never the same tree. NOTHING here shows determinism failing across hosts;
+    # what the day showed is that a recorded md5 without the commit that produced it cannot answer the question.
     row = {"arm": name, "board": spec["board"], "letter": spec["letter"], "env": arm.get("env", {}),
            "predict": arm["predict"], "tools_sha": spec.get("tools_sha", ""),
            "host": os.uname().nodename, "kicad": _kicad_build()}
