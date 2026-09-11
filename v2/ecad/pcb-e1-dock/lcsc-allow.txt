@@ -11,6 +11,15 @@ solder pad       # 12 AWG pack wires, soldered at build
 bare copper      # the two water electrodes: copper on our own board, nothing is placed on them
 on XT60-M        # the pack cable assembly, bought with the pack
 module:          # sensor modules on headers: DCF77, Geiger, lightning, the outside pod
+# 11 September 2026: the line above has never matched anything. The generator writes "Geiger counter module
+# (RadiationD-v1.1 class)", with a bracket after "module" and not a colon, so the substring missed all four and
+# board E's deliverable was refused for five uncoded rows. These five are 2.54 mm pin headers that a lead is
+# pushed onto at build, which is the "bench header" case this file is for; the sensor boards themselves are
+# bought as modules. Matching what the generator actually writes, not what it was thought to write.
+Geiger counter module           # 1x03 pin header: the RadiationD board hangs off a lead
+AS3935 lightning sensor module  # 1x05 pin header: the CJMCU-3935 board hangs off a lead
+outside sensor pod              # 1x04 pin header: the pod's M8 sealed lead is made up at build
+mixer fan                       # 1x03 pin header per fan: the IP68 fan's own flying lead is pushed on
 lead from the D38999            # wall receptacle leads, made up at build
 Bourns SRF1260-4R7Y             # JLCPCB stock 0, route in tools/jlc-handfit.txt
 XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-handfit.txt
