@@ -5,7 +5,7 @@ saw it. escape_prune.py now writes out/<name>-pruned.txt (net, ref, pad, x, y); 
 to be reached by a track or a via of its net (a track end or a via centre within the pad's bounding box grown by 0.05 mm).
 
 Usage: pruned_gate.py <board.kicad_pcb> <pruned.txt>  -> one line per pad, `pruned_gate: N of M pruned pads reached`, exit 1 if any is not."""
-import sys, os, pcbnew
+import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict
 
@@ -18,6 +18,9 @@ def main(a):
         return verdict.write("pruned_gate", verdict.INCONCLUSIVE, counts={"reached": 0}, denominator=0,
                              inputs={"board": a[0]}, note="no pruned list at %s" % a[1])
     rows = [l.split("\t") for l in open(a[1]).read().splitlines() if l and not l.startswith("#")]
+    # pcbnew is imported HERE and not at the top: the "no pruned list" answer above is a real verdict about a
+    # step that did not run, and a gate must be able to say that on a host without KiCad. 11 September 2026.
+    import pcbnew
     b = pcbnew.LoadBoard(a[0]); bad = 0; unreached = []
     pads = {(f.GetReference(), p.GetNumber()): p for f in b.GetFootprints() for p in f.Pads()}
     for net, ref, num, x, y in rows:
