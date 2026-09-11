@@ -212,3 +212,17 @@ def t_the_verdict_horizon_is_actually_passed_to_the_collector():
     call = body[body.index("verdict.collect("):]
     call = call[:call.index(")") + 1]
     assert "since=" in call, "judge_verdicts collects without the horizon it was given: %s" % call
+
+
+def t_a_round_starts_with_a_clean_verdict_channel():
+    """The horizon has one-second resolution, so a verdict written in the same second as the stage began is not
+    'before' it: P's round-two pre stage was blocked by a verify_deliverable its round-one finish had written
+    0 seconds earlier. The round clears out/*.verdict.json before the chain runs, which also makes a gate that
+    does not re-run read as absent rather than as its previous answer."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("pre_started =")
+    window = src[max(0, i - 900):i]
+    assert "*.verdict.json" in window and "os.remove" in window, \
+        "a round does not clear the verdict channel before its chain runs"
+    j = src.index("rc = sh(expand(argv", i)
+    assert src.index("*.verdict.json") < j, "the clear happens after the chain has already written verdicts"

@@ -87,6 +87,12 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^amber hub$", "LED_0603"): "C965802",
  (r"^47u 25V$", "C_1206"): "C403725",       # the VBAT bulk: 100 uF 25 V does not exist in 1206 with stock, 47 uF is the ceiling
  (r"^68nH 0805\b", "L_0805"): "C2044803",   # the 145 MHz LPF: 1.2 A and 2 percent, where every 68 nH in 1812 is 450 mA and out of stock
+ # P3's three pack-side connectors, 11 September 2026. verify_deliverable refused the P3 folder for them: three
+ # BOM lines with no code and no hand-fit declaration. Each is JST's own part on the land the footprint draws,
+ # confirmed against JLCPCB's parts API with its pin count, pitch and stock read back from the same record.
+ (r"cell tap sense wires.*JST-XH 1x5", "JST_XH_B5B"): "C157991",   # JST B5B-XH-A(LF)(SN), 1x5P 2.5 mm, 14.9 mm body, stock 85,826
+ (r"SMBus lead.*JST-XH 1x4", "JST_XH_B4B"): "C594232",             # JST B4B-XH-A-G, 1x4P 2.5 mm, 12.4 mm body, stock 20,031
+ (r"cell thermistor.*JST-PH 1x2", "JST_PH_B2B"): "C5251182",       # JST B2B-PH-K-S-GW, 1x2P 2.0 mm, stock 15,304
 }
 path = sys.argv[1]; rows = list(csv.DictReader(open(path))); filled = 0
 
