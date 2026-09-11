@@ -62,10 +62,19 @@ def main(a):
     for ref in sorted(nl):
         checked += 1
         if ref not in fps: fails.append("%s is in the netlist and not on the board" % ref)
+    board_only_dead = []
     for ref in sorted(fps):
         if ref.startswith(BENCH): continue
         checked += 1
-        if ref not in nl: fails.append("%s is on the board and not in the netlist (not a declared bench prefix)" % ref)
+        if ref in nl: continue
+        # A footprint the netlist does not have is a part with no schematic behind it. If none of its pads carries
+        # a net it is inert copper (a land, a bracket, a leftover of a placement list) and it is reported, not
+        # blocked on; if any pad DOES carry a net, the board is wired to something the schematic does not know
+        # about, which is the defect this gate exists for.
+        live = sorted({p.GetNetname().lstrip("/") for p in fps[ref].Pads()
+                       if p.GetNetname() and not p.GetNetname().lstrip("/").startswith("unconnected-")})
+        if live: fails.append("%s is on the board and not in the netlist, and its pads carry %s" % (ref, ", ".join(live[:4])))
+        else: board_only_dead.append(ref)
 
     for ref in sorted(set(nl) & set(fps)):
         pads = {}
@@ -75,15 +84,29 @@ def main(a):
         for pin, net in sorted(nl[ref].items()):
             checked += 1
             got = pads.get(pin)
+            # KiCad gives every unconnected pin a synthetic net, `unconnected-(REF-PINNAME-PadN)`, and writes it
+            # into the netlist as though it were a net. It is not one: the same pad on the board carries no net
+            # at all, and the two agreeing is what a correct board looks like. Comparing the placeholder against
+            # "no net" called 1,000 of B19's 6,716 comparisons a failure and blocked a board whose every other
+            # gate passed, the first time this gate ran in a chain (11 September 2026).
+            if net.startswith("unconnected-"):
+                if got is not None:
+                    fails.append("%s.%s carries %s on the board and is unconnected in the netlist" % (ref, pin, got))
+                continue
             if got is None: fails.append("%s.%s is on net %s in the netlist and has no net on the board" % (ref, pin, net))
             elif got != net: fails.append("%s.%s is %s on the board and %s in the netlist" % (ref, pin, got, net))
 
     for f in fails[:30]: print("netlist_board: FAIL " + f)
+    if board_only_dead:
+        print("netlist_board: %d footprint(s) on the board that the netlist does not have and that carry no net "
+              "at all: %s. Inert copper, reported and not blocked on; each is a placement list that has outlived "
+              "its schematic part." % (len(board_only_dead), ", ".join(board_only_dead[:12])))
     print("netlist_board: %d of %d comparisons agree (%d references in the netlist, %d footprints on the board)"
           % (checked - len(fails), checked, len(nl), len(fps)))
     return verdict.write("netlist_board", verdict.PASS if not fails else verdict.FAIL,
                          counts={"fail": len(fails), "agree": checked - len(fails),
-                                 "netlist_refs": len(nl), "board_footprints": len(fps)},
+                                 "netlist_refs": len(nl), "board_footprints": len(fps),
+                                 "board_only_inert": len(board_only_dead)},
                          denominator=checked, evidence=fails,
                          inputs={"board": board_path, "netlist": net_path},
                          note="the board against the schematic it was placed from")
