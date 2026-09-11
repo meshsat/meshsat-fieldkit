@@ -273,3 +273,28 @@ def t_the_supervisor_keeps_the_best_routed_board_of_a_run():
     tail = body[j:j + 1400]
     assert "shutil.copy(best_board[1]" in tail, \
         "the budget stop does not put the best board back, so the run ends on the worst round"
+
+
+def t_a_phase_copy_declares_what_its_board_declares():
+    """A phase directory is a copy of its board's project, and the declaration files travel with the copy:
+    `lcsc-allow.txt`, `erc-allow.txt`, `bypass-allow.txt`. They are TRACKED, so a copy taken before a fix keeps
+    the old declaration and every `git reset --hard` restores it.
+
+    Board E was a clean board on 12 September, 0 hard and 0 unrouted through every gate, and its deliverable was
+    refused for five sensor headers whose allow line had been corrected hours earlier in `pcb-e1-dock` while
+    `pcb-e1-dock-e7` still carried the sixteen-line version. The board was judged against a declaration that is
+    not the one in the repo."""
+    ecad = os.path.dirname(TOOLS)
+    bad = []
+    for d in sorted(glob.glob(os.path.join(ecad, "pcb-*-*"))):
+        m = re.fullmatch(r"(pcb-[a-z0-9]+-[a-z0-9]+)-([a-z]\d+)", os.path.basename(d))
+        if not m: continue
+        canon = os.path.join(ecad, m.group(1))
+        if not os.path.isdir(canon): continue
+        for f in ("lcsc-allow.txt", "erc-allow.txt", "bypass-allow.txt"):
+            a, b = os.path.join(canon, f), os.path.join(d, f)
+            if not os.path.exists(a): continue
+            if not os.path.exists(b): bad.append("%s has no %s" % (os.path.basename(d), f)); continue
+            if open(a, errors="replace").read() != open(b, errors="replace").read():
+                bad.append("%s/%s differs from %s's" % (os.path.basename(d), f, m.group(1)))
+    assert not bad, "a phase copy declares something its board does not: %s" % bad
