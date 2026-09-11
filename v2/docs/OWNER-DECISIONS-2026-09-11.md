@@ -49,8 +49,16 @@ knot rather than congestion. For B the evidence already exists and stands: three
 93 opens at 8 passes with In1 keep-outs. For C, D, E, E5 and P no rationale was ever recorded at all, the four
 layer default being the first board's default copied forward.
 
-**What the run cannot produce:** the cost side. No like-for-like four against six quote has ever been taken and the
-promotion was never costed. That needs a quote per board at its real dimensions and quantity five.
+**What the run cannot produce, and why:** the cost side. No like-for-like four against six quote has ever been
+taken and the promotion was never costed. **The runner cannot get one.** JLCPCB's parts API is open and is what
+`jlc_certify.py` uses, but there is no open PCB pricing endpoint at any of the three paths the parts API's shape
+suggests (all 404), and the standing rule is that the runner never logs into JLCPCB. So the quote has to come
+from the **laptop ordering session**, which has the Chrome extension and the account: one quote per board at its
+real outline and quantity five, at four layers and at six, with nothing else changed. That is eight numbers for
+A, B, C and D, and it is the whole of the missing evidence.
+
+I am not quoting from memory or from a published price table read off a page: a number in this decision has to
+be a quote for these boards.
 
 **The decision, per board, once the measurement and the cost are beside each other.** The layer count and the
 stackup are on the floor (`reserved.json`, class "layer count and stackup") and nothing changes one without you.
