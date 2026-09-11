@@ -194,6 +194,21 @@ router closing its one open), C is routing, P routed and finished every electric
 the process, every one of them a writer that had been wrong for as long as nobody read it; they are in
 `project_unread_channel_defects.md` and in appendix 32.113 and 32.114.
 
+## Verification, measured rather than claimed (12 September 2026)
+
+The plan's own verification list, with what was actually run against each item.
+
+| # | the item | state |
+|---|---|---|
+| 1 | the B19 pair count re-measured, each step graded against its prediction | **done**, thirty arms over two rounds; nine of sixteen round-one predictions wrong, best 62 of 113. The "pass under 8 minutes" target was **missed**: a pass is about 19 minutes, of which 9 are the maps |
+| 2 | `tests/determinism.sh` on every board after every generator change | **done on the box after the 11 and 12 September changes**: P 0 of 275 items differ, D 0 of 391, C 0 of 556, E 0 of 585, A 0 of 1,483, B running |
+| 3 | a board routes end to end from one job spec, the report regenerates, `ledger_verify` passes | **P3 did exactly that**; `ledger_verify.py` exists now and is INCONCLUSIVE on a tree with no ledger, which is the runner |
+| 4 | an experiment without a prediction is refused; a reserved-class job is batched with its evidence | **done**: `arms.py` refuses an arm with no `predict`, and eight decisions are batched |
+| 5 | the execution pin fails when a file outside it writes a fab artefact | **PASS on the box**, 8 producers found, 8 pinned |
+| 6 | one generator fix through the loop, reviewed, with an appendix entry | **partly**: the reviewer ran twice and found three real defects, and fixes landed with appendix entries; no fix has gone round the full loop without a human command |
+| 7 | every deliverable passes `verify_deliverable`; `check_contracts` passes across the set | **P3 35 of 35**; contracts **ALL PASS, 40 of 40** once A existed in the tree |
+| 8 | the suite passes on the runner and on the box | **152 on the runner**, 122 on the box at its last full run |
+
 ## Where the run stands, 12 September 2026 01:15 CEST
 
 **Delivered.**
