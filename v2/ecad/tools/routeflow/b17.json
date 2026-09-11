@@ -37,9 +37,9 @@
    "GND"
   ],
   "log": "out/parallel-b17.log",
-  "jar": "~/bin/freerouting-1.9.0.jar",
   "_layer_rules_removed": "REMOVED 8 Sep 2026 17:50: the per-class layer rule (rule 2) cost C8 three routes that never finished a pass (12 min, 90 min, 3 h with nothing written) while the same DSN without it auto-routed in 14 min 21 s; and the D9 read-back this morning showed the router does not hold a class to its layers anyway. The pair pre-router lays the pairs on their layers by construction, which is what enforces the intent now.",
-  "_ceiling_measured": "9 September 2026 12:55 CEST: this is an INFORMATION route, not a release route. The board is held by the owner's ruling on the pairs question until the pre-router lays them, so what this route has to answer is a different question: does this placement route at all, with the new decoupling floor plan and the HDMI switches at 16 mm? B16 flattened near 70 open whatever the pass count. 16 passes did not finish in 7 h on this box last night, so 8 passes in a 4 h budget reads the open count without another all-night gamble. The release route comes after the pre-router work, with a ceiling measured on that DSN."
+  "_ceiling_measured": "9 September 2026 12:55 CEST: this is an INFORMATION route, not a release route. The board is held by the owner's ruling on the pairs question until the pre-router lays them, so what this route has to answer is a different question: does this placement route at all, with the new decoupling floor plan and the HDMI switches at 16 mm? B16 flattened near 70 open whatever the pass count. 16 passes did not finish in 7 h on this box last night, so 8 passes in a 4 h budget reads the open count without another all-night gamble. The release route comes after the pre-router work, with a ceiling measured on that DSN.",
+  "_jar_unpinned": "11 September 2026: this pinned ~/bin/freerouting-1.9.0.jar, the STOCK jar, which set FR_JAR and so bypassed route_one's own choice AND its refusal. Our 1.9.0 build writes a session after every pass; the stock one writes one only when the whole job ends, so a run that is cut leaves nothing, which is what every NO_SESSION round in the record is. Unpinned: route_one takes the patched jar when the host has it and refuses when it does not, unless FR_REQUIRE_MESH=0 says otherwise deliberately."
  },
  "finish": {
   "argv": [

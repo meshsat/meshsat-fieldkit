@@ -29,7 +29,7 @@
   "power_layers": [],
   "plane_nets": [],
   "log": "out/parallel-p1.log",
-  "jar": "~/bin/freerouting-1.9.0.jar"
+  "_jar_unpinned": "11 September 2026: this pinned ~/bin/freerouting-1.9.0.jar, the STOCK jar, which set FR_JAR and so bypassed route_one's own choice AND its refusal. Our 1.9.0 build writes a session after every pass; the stock one writes one only when the whole job ends, so a run that is cut leaves nothing, which is what every NO_SESSION round in the record is. Unpinned: route_one takes the patched jar when the host has it and refuses when it does not, unless FR_REQUIRE_MESH=0 says otherwise deliberately."
  },
  "finish": {
   "argv": [

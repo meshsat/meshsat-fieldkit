@@ -50,11 +50,11 @@
    "GND"
   ],
   "log": "out/parallel-c8.log",
-  "jar": "~/bin/freerouting-1.9.0.jar",
   "_layer_rules_removed": "REMOVED 8 Sep 2026 17:50: the per-class layer rule (rule 2) cost C8 three routes that never finished a pass (12 min, 90 min, 3 h with nothing written) while the same DSN without it auto-routed in 14 min 21 s; and the D9 read-back this morning showed the router does not hold a class to its layers anyway. The pair pre-router lays the pairs on their layers by construction, which is what enforces the intent now.",
   "optimiser_passes": 1,
   "_optimiser_note": "1 pass: the auto-route finishes in about 14 minutes and the default two optimiser passes ran past 90 minutes three times without writing a session (8 Sep 2026)",
-  "_passes_note": "30 passes, not 100: the 3-pass probe took 14 min 21 s, so this board costs about 4.5 minutes a pass at the start and 100 passes cannot finish inside any limit we set; C7 converged before its ceiling and C8 does not (8 Sep 2026 21:10). A session is written only when the whole job ends, so an unreachable ceiling means no result at all."
+  "_passes_note": "30 passes, not 100: the 3-pass probe took 14 min 21 s, so this board costs about 4.5 minutes a pass at the start and 100 passes cannot finish inside any limit we set; C7 converged before its ceiling and C8 does not (8 Sep 2026 21:10). A session is written only when the whole job ends, so an unreachable ceiling means no result at all.",
+  "_jar_unpinned": "11 September 2026: this pinned ~/bin/freerouting-1.9.0.jar, the STOCK jar, which set FR_JAR and so bypassed route_one's own choice AND its refusal. Our 1.9.0 build writes a session after every pass; the stock one writes one only when the whole job ends, so a run that is cut leaves nothing, which is what every NO_SESSION round in the record is. Unpinned: route_one takes the patched jar when the host has it and refuses when it does not, unless FR_REQUIRE_MESH=0 says otherwise deliberately."
  },
  "finish": {
   "argv": [
