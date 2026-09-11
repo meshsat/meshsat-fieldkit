@@ -1,0 +1,14 @@
+# Comment substrings whose BOM line may carry no LCSC code, one per line with the reason after a #.
+# lcsc_fill.py refuses any other blank (it resolves this file three dirnames up from out/jlc/<name>-bom.csv).
+# A line here means JLCPCB never places that part: it is a lead, a solder land, a bench header, or a part
+# bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
+
+(JST-VH          # rail and supply leads: wire assemblies made at build, not placed parts
+(XH2.5)          # panel button and heater-mat leads, wired at build
+(IDC 2x          # board-to-board ribbons, made up from cable and IDC shells at build
+SMP-MAX slide-on receptacle   # Radiall R222M00720, hand-fit, route in tools/jlc-handfit.txt
+SMA jack (Amphenol 132134     # hand-fit bulkhead jack, route in tools/jlc-handfit.txt
+spring pins to the dock block # Preci-Dip 813-S1-012-10-016101, hand-fit, route in tools/jlc-handfit.txt
+pigtail header   # a land for a pigtail the builder solders, not a placed connector
+this header is the pigt       # same, the wall USB-C data pass-through
+XAL              # Coilcraft: not in JLCPCB's catalogue in any value or series, route in tools/jlc-handfit.txt
