@@ -317,19 +317,27 @@ def validate(profile_fn, repo=None):
                "the clean flag is the phase's own (%s)" % fin.get("clean_flag"))
             ok(alog == (prof["route"].get("log") or alog), "the finish waits on the log the route writes (%s against %s)" % (alog, prof["route"].get("log")))
     pre = prof.get("pre") or {}
-    if pre.get("argv"):
-        ps = pre["argv"][1] if len(pre["argv"]) > 1 else ""
-        cand = os.path.join(ecad, ps.lstrip("./")) if not ps.startswith("../") else os.path.join(ecad, ps[3:])
+    # Two shapes exist for the same stage: `argv` (one command) and `steps` (a list of them). Both are checked,
+    # because the profile that carried the stale generator log used `steps`, and the first version of this rule
+    # looked only at `argv`, so it never ran on the one profile it was written for.
+    cmds = ([pre["argv"]] if pre.get("argv") else []) + [c for c in (pre.get("steps") or []) if isinstance(c, list)]
+    ok(bool(cmds), "the pre-route stage declares a command")
+    for cmd in cmds:
+        ps = cmd[1] if len(cmd) > 1 else ""
+        cand = os.path.join(ecad, ps[3:]) if ps.startswith("../") else os.path.join(ecad, ps.lstrip("./"))
         ok(os.path.exists(cand), "the pre-route script exists: %s" % ps)
-        ok(bool(pre.get("must_contain")), "the pre-route stage names what its log must contain")
-        # A declared generator log that the chain never writes blocks every run of that board. c7 and c8 named
-        # out/gen_pcb_c3.log, which no chain has written since full.sh replaced the clones, and C died on it
-        # twice before anyone read the message (11 September 2026).
-        WRITES = {"out/gen_sch.log", "out/gen_fp.log", "out/gen3.log"}
-        for g in pre.get("gen_logs") or []:
-            f = g.get("file") if isinstance(g, dict) else g
-            ok(f in WRITES or re.fullmatch(r"out/gen_pcb_[a-z0-9]+\.log", f or ""),
-               "the declared generator log is one the chain writes: %s" % f)
+    if cmds: ok(bool(pre.get("must_contain")), "the pre-route stage names what its log must contain")
+    # A declared generator log the chain never writes blocks every run of that board: c7 and c8 named
+    # out/gen_pcb_c3.log, which no chain has written since full.sh replaced the clones, and C died on it twice
+    # in one wave while its own chain printed PREROUTE-DONE OK.
+    # The board's OWN letter, not any token: the first version of this rule used [a-z0-9]+ and so accepted
+    # out/gen_pcb_c3.log, the very file it was written to catch.
+    _L = (fin.get("argv") or [None] * 4)[3] or ""
+    WRITES = {"out/gen_sch.log", "out/gen_fp.log", "out/gen3.log", "out/gen_pcb_%s.log" % _L}
+    for g in pre.get("gen_logs") or []:
+        f = g.get("file") if isinstance(g, dict) else g
+        ok(f in WRITES, "the declared generator log is one the chain writes: %s (it writes %s)"
+           % (f, ", ".join(sorted(WRITES))))
     ok(bool(prof.get("expect")), "the profile carries an expectation to be graded against")
     jar = str(prof["route"].get("jar", ""))
     ok(not jar or jar.endswith(".jar"), "the route names a jar file (%s)" % (jar or "the host default"))
