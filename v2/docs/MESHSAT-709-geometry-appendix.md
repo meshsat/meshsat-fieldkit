@@ -5146,3 +5146,31 @@ slivers carries nothing"), and the separate anchor test, which C passes at 0 loo
 catches a pour that has actually gone to slivers. If a clean C route lands above 50 percent on In2 the question
 does not arise; if it lands where this one did, the exemption belongs in the project's own allow-file idiom
 with the layer named and the reason written, and not in the bar.
+
+### 32.130 The corridor slack swept again, and 0.06 lays ten more pairs than the value the board declared (11 September 2026, 23:45 CEST; MESHSAT-862)
+
+The compiled stub search made a B19 pass sixteen minutes instead of twenty six, so the sweep that was worth one
+draw in the morning is worth six in parallel in the evening. Same placed board, same slim retry at 0.03, 113
+pairs, all six arms at once:
+
+| `PAIR_CORRIDOR_SLACK` | pairs laid | seconds |
+|---|---:|---:|
+| **0.06** | **57** of 113 | 1446 |
+| 0.08 (what `boards/b.json` declared) | 47 | 1607 |
+| 0.10 | 48 | 1488 |
+| 0.12 (the tool's default) | 46 | 1348 |
+| 0.14 | 49 | 1429 |
+| 0.16 | 47 | 1334 |
+
+**The written prediction was that the response would stay chaotic, that the spread would be at least eight
+pairs, and that nothing would beat the 62 of the morning sweep. All three hold**: the spread is eleven, the
+order is not monotone, and the best is 57.
+
+**The same board read 62 at 0.08 this morning and 47 at 0.08 tonight**, on tools and a placement that both moved
+in between, which is the standing caution of 32.117 measured a second time: a value that wins one draw on one
+board is a measurement, not a law. `boards/b.json` carries 0.06 now with this table beside it, because a board
+file that declares a number nobody re-measured is worse than one that declares the number today's tools produce.
+
+**What it is worth:** ten pairs of 113 on the board the pair ruling holds hardest, for the cost of one
+parameter. It does not release B, which is held by decision 6 as well (three pairs on a 2x13 ribbon with two
+end rows), and it is not a lever anyone should tune further without the sweep beside them.
