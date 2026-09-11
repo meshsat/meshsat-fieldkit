@@ -1,0 +1,61 @@
+# Parts this kit does not buy through JLCPCB, each with where it IS bought. `key  # reason`, and a
+# line without a reason declares nothing. jlc_certify.py reads the key against the part number a BOM
+# row names, or against the first 60 characters of the row's comment when the row names no part.
+#
+# Written 11 September 2026 (MESHSAT-862). A line here is not an excuse: it is a purchase route, and
+# a part with no route is not buyable, which is the whole point of the exercise. Distributor search
+# URLs are given rather than product-page URLs because a product page moves and a search does not.
+#
+# THE RULE: everything on this list is fitted by hand or ordered separately, so it must NOT appear in
+# a JLC CPL. make_handoff.py strips the bench-fitted prefixes already; anything here that JLC would
+# otherwise try to place needs an EXCLUDE entry there too.
+
+# --- Coilcraft power inductors. Not in JLCPCB's catalogue at all, any value, any series.
+#     Coilcraft sells direct and ships samples; Digi-Key and Mouser both stock the XAL families.
+#     coilcraft.com refuses this runner (403), so add it to the blocked-vendor list of section 7.
+XAL6030-332ME      # Coilcraft direct or Digi-Key, https://www.digikey.com/en/products?keywords=XAL6030-332MEC ; 3.3 uH, Isat 12.2 A, datasheet in v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf
+XAL6060-472ME      # Coilcraft direct or Digi-Key, https://www.digikey.com/en/products?keywords=XAL6060-472MEC ; 4.7 uH, Isat 10.5 A, same datasheet
+XAL4030-472ME      # Coilcraft direct or Digi-Key, https://www.digikey.com/en/products?keywords=XAL4030-472MEC ; 4.7 uH, Isat 4.6 A, v2/vendor/coilcraft/coilcraft-xal40xx-series.pdf
+XAL4020-222ME      # Coilcraft direct or Digi-Key, https://www.digikey.com/en/products?keywords=XAL4020-222MEC ; 2.2 uH, Isat 5.6 A, same datasheet
+XAL1010-103ME      # Coilcraft direct or Digi-Key, https://www.digikey.com/en/products?keywords=XAL1010-103ME ; 10 uH. NO DATASHEET IN THIS TREE: the XAL1010 series sheet is owed, so its Isat 14 A claim is unverified
+XAL1010-223ME      # Coilcraft direct or Digi-Key, https://www.digikey.com/en/products?keywords=XAL1010-223ME ; 22 uH. NO DATASHEET IN THIS TREE, Isat 9 A claim unverified
+XAL1510-103MED     # Coilcraft direct or Digi-Key, https://www.digikey.com/en/products?keywords=XAL1510-103MED ; 10 uH. NO DATASHEET IN THIS TREE
+ATNR4010100MT      # Abracon, Digi-Key https://www.digikey.com/en/products?keywords=ATNR4010100MT ; 10 uH 0.8 A boost inductor. NO DATASHEET IN THIS TREE
+
+# --- Radios and modules. Bought from the maker or a specialist; none is a JLC assembly part.
+E72-2G4M20S1E      # Ebyte direct, https://www.cdebyte.com/products/E72-2G4M20S1E ; CC2652P module. JLCPCB lists it at stock 0
+E22-900M30S        # Ebyte direct, https://www.cdebyte.com/products/E22-900M30S ; 1 W LoRa SX1262 module
+SA868              # NiceRF direct, https://www.nicerf.com/products/detail/sa868-vhf-walkie-talkie-module.html ; VHF 2 W exciter. JLCPCB has the UHF variant at stock 1 and the S variant at 0
+SA868S             # NiceRF direct, https://www.nicerf.com/products/detail/sa868-vhf-walkie-talkie-module.html ; the castellated variant of the SA868
+LG290P03AAMD       # Quectel through a distributor (Rutronik, Codico), https://www.quectel.com/product/gnss-lg290p/ ; datasheets in v2/vendor/quectel/
+RM520N-GL          # Quectel through a distributor, https://www.quectel.com/product/5g-rm520n-series/ ; 5G M.2 B-key module, bought as a card, not placed
+AW7915-AED         # AsiaRF direct, https://www.asiarf.com ; M.2 A/E-key WiFi 6 card, bought as a card
+RockBLOCK 9704     # Ground Control, https://www.groundcontrol.com/product/rockblock-9704/ ; Iridium module on its own board
+LimeSDR Mini 2.4   # Crowd Supply, https://www.crowdsupply.com/lime-micro/limesdr-mini-2 ; a USB board, not a placed part
+
+# --- RF and fine-pitch connectors the assembler does not stock.
+R222M00720         # Radiall, https://www.radiall.com ; SMP-MAX slide-on receptacle, ten per kit. Datasheet v2/vendor/rf/radiall-R222M00720-tds.pdf. JLCPCB stock 0
+FH34SRJ-24S-0.5SH  # Hirose through Digi-Key, https://www.digikey.com/en/products?keywords=FH34SRJ-24S-0.5SH ; 0.5 mm ZIF for the PDi e-paper. JLCPCB stock 0
+208658-1001        # Molex through Digi-Key, https://www.digikey.com/en/products?keywords=208658-1001 ; HDMI type A receptacle
+132170             # Amphenol RF Connex SMA bulkhead, Digi-Key https://www.digikey.com/en/products?keywords=132170 ; amphenolrf.com refuses this runner
+132134             # Amphenol RF SMA vertical, Digi-Key https://www.digikey.com/en/products?keywords=132134
+U.FL-R-SMT-1       # Hirose, Digi-Key https://www.digikey.com/en/products?keywords=U.FL-R-SMT-1(10) ; the PA drive tap
+
+# --- Dock contacts. Both are hand-fitted spring pins on the dock block.
+813-S1-012-10-016101   # Preci-Dip, https://www.preci-dip.com ; 2x6 signal spring pins, sheet in v2/vendor/precidip/
+BTA-70762-2        # Bren-Tronics, https://www.bren-tronics.com ; BB-2590/U cable assembly, bought with the pack, terminated on an XT60
+
+# --- Panel parts. Every one is a panel-mount body wired to the board, never placed.
+ATP19-SL1-603-B0SA-03G   # C&K through Mouser, https://www.mouser.com/c/?q=ATP19-SL1-603-B0SA-03G ; MAIN PWR 19 mm, green ring
+ATP16-SL1-403-M0SA-04G   # C&K through Mouser, https://www.mouser.com/c/?q=ATP16-SL1-403-M0SA-04G ; PI 16 mm recessed, amber ring
+ATP16-SL1-203-M0SA-04G   # C&K through Mouser, https://www.mouser.com/c/?q=ATP16-SL1-203-M0SA-04G ; TEST/ACK 16 mm, white ring
+5636ADKB-2V        # APEM through Mouser, https://www.mouser.com/c/?q=5636ADKB-2V ; the SOS, EMCON and ZEROIZE locking toggles
+M2012SD3A01        # NKK through Mouser, https://www.mouser.com/c/?q=M2012SD3A01 ; SPDT panel toggle
+M2015SD3A01        # NKK through Mouser, https://www.mouser.com/c/?q=M2015SD3A01
+M2044SD3A01        # NKK through Mouser, https://www.mouser.com/c/?q=M2044SD3A01 ; the DPDT ON-ON-ON lighting toggle
+1282.5004          # Mentor through Mouser, https://www.mouser.com/c/?q=1282.5004 ; IP68 light guides, sheet in v2/vendor/mentor/
+
+# --- Magnetics and the relay, none stocked at JLCPCB today.
+SRF1260-4R7Y       # Bourns through Mouser, https://www.mouser.com/c/?q=SRF1260-4R7Y ; dual-winding choke, JLCPCB stock 0
+H5007NL            # Pulse through Mouser, https://www.mouser.com/c/?q=H5007NL ; 1000BASE-T magnetics
+G6K-2F-Y           # Omron through Mouser, https://www.mouser.com/c/?q=G6K-2F-Y ; 5 V DPDT signal relay, JLCPCB stock 0
