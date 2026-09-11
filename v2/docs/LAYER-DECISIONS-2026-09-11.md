@@ -114,3 +114,51 @@ layers and at six, nothing else changed.
 | P, E5 | none; write the rationale | both are two layers with nothing inner to weigh |
 
 Each one that runs gets its result recorded here beside the row it answers.
+
+---
+
+## The decisions as they stand, 12 September 2026
+
+**The layer count is on the never-auto floor** (`tools/reserved.json`), so what follows is the measured decision
+per board with the evidence that forced it, for the owner to rule on. Four of the seven are written here and
+need nothing further; two are open with a named experiment; one is evidenced and stands.
+
+**C panel backer: four layers, decided, no experiment owed.** In2 carries 15,657 mm, 55 percent of all routing on
+a 344 x 228 ring, and In1 is a solid ground plane by the owner's ruling of 5 September 17:08, which was itself
+written to be four-layer compatible. A two-layer C would have to absorb 55 percent of its routing onto faces that
+already carry 12,637 mm, on a board whose middle is a display window. **Cost added over two layers: one stack
+step, not yet quoted.**
+
+**D APRS: four layers, decided on the ground plane rather than on routing.** In2 carries 2,182 mm, 34 percent,
+which two layers could plausibly absorb on a 100 x 80 board. The reason to keep four is In1: a solid ground plane
+under the SA868 exciter, the PA stage and the filter is an RF requirement and the return path for every one of
+those stages. That sentence is what the record never wrote down, and it is the decision. **Cost added over two
+layers: one stack step, not yet quoted.**
+
+**E1 dock: four layers, and the margin is now measured rather than argued.** E7's own finish says it: `dc_drop`
+carries CELL_F at 10.0 A over F.Cu 133 mm2 plus B.Cu 2,327 mm2 plus **In2 2,962 mm2**, and VIN_RAW at 8.0 A over
+**In2 1,293 mm2** for a worst drop of **213 mV, 1.77 percent of 12 V against a 2 percent budget**. Take In2 away
+and more than half of CELL_F's copper area and all of VIN_RAW's goes with it, against 23 hundredths of a
+percentage point of headroom. The second half of the decision is routing, not power: E is a **267 mm** strip and
+its opens are end-to-end signals, `/USB_E6_P` 196 mm and `/GEIGER_IN` 214 mm, which is what three rounds of the
+route were spent on. **A two-layer E is refused by both halves.** What is NOT settled is the opposite direction:
+whether In2 should carry routing as well as pours, which would have closed those two nets without a stub router.
+
+**P pack BMS and E5 dock block: two layers, decided, nothing inner to weigh.** P carries the pack current in 3 mm
+bands on both faces and E5 is a bare contact board with 112 mm of copper. Neither has a signal that leaves its
+own face. **Open on P, and it is decision 7, not this document: P is described as 2 oz and ordered as 1 oz.**
+
+**B compute: six layers, evidenced, stands.** 82 percent of the routing is on In2 and In3, B.Cu carries 781 mm,
+and three CM5 at 0.4 mm receptacle pitch measured 93 opens at 8 passes with In1 keep-outs on 5 September. It is
+the one layer decision in this set that was ever taken on a measurement at the time.
+
+**A power: OPEN, and the experiment is named and cheap.** Does A's four-layer route reach zero opens with today's
+finish in the loop (a continuation pass at six opens or fewer, then the stub router)? The recorded four-layer
+evidence is 4 to 11 opens, which is inside what the finish now closes routinely. **The blocker to running it is
+not the router:** `gen_pcb_a3.py:280` dives the VIN_RAW trunk onto In3 to cross the VBAT trunk, and a four-layer
+A has no In3, so that dive needs somewhere else to go before a four-layer A can be generated at all. That is a
+placement change and it is the work the experiment waits on.
+
+**The cost side is still missing for every row** and cannot be taken here: the runner never logs into JLCPCB and
+there is no open pricing endpoint. One quote per board at its real outline and quantity five, at four layers and
+at six, from the laptop ordering session, and the delta goes in beside each decision above.
