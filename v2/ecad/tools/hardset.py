@@ -112,14 +112,24 @@ def main(a):
     # verdict is written as a file and the exit code is deliberately left alone. The label distinguishes the three
     # judgements one finish makes (after the stub router, the routed-board gate, the deliverable DRC), which would
     # otherwise overwrite each other. 11 September 2026.
+    # PRE and POST are different judgements and the caller has always said which: `hardset.py <json> pre|post`.
+    # Before the supervisor read verdicts, only the printed line and the gate file were read, and both already
+    # honoured the stage; the verdict did not, so a pre-route board FAILED for being unrouted, which is the
+    # state a pre-route board is defined by. E's verdict read FAIL at "hard 0 ... unrouted 357" and blocked two
+    # of the wave's four boards on 11 September 2026, the first day anything read this file.
+    unrouted_counts = (which == "post")
+    bad = c["hard"] != 0 or (unrouted_counts and c["unrouted"] != 0)
     verdict.write(_vname(opt("--label")),
-                  verdict.PASS if (c["hard"] == 0 and c["unrouted"] == 0) else verdict.FAIL,
+                  verdict.FAIL if bad else verdict.PASS,
                   counts={"hard": c["hard"], "unrouted": c["unrouted"], "types_checked": len(c["types"]),
-                          "by_type": c["by_type"], "report": c["report"]},
+                          "by_type": c["by_type"], "report": c["report"], "stage": which},
                   denominator=len(c["types"]),
                   evidence=examples(d, which, 6),
                   inputs={"drc": a[0]},
-                  note=(opt("--label") or "") + " (exit code stays the reader contract of --score and --counts)")
+                  note=((opt("--label") or "") +
+                        (" (pre-route: only the hard set decides, an unrouted board is the expected input)" if not unrouted_counts
+                         else " (routed board: hard and unrouted must both be zero)") +
+                        " (exit code stays the reader contract of --score and --counts)"))
     return 0
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

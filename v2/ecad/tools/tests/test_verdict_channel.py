@@ -160,3 +160,43 @@ def t_no_profile_declares_a_key_nothing_reads():
     for k in ("expect", "hard", "unrouted"):
         assert k in src, "expect.%s must be read by the supervisor or removed from the profiles" % k
     assert not bad, bad
+
+
+# ---------------------------------------------------------------- pre and post are different judgements
+# `hardset.py <json> pre|post` has always taken the stage, and the printed line and the gate file honoured it.
+# The VERDICT did not: it required unrouted == 0 in both, so a pre-route board failed for being unrouted, which
+# is the state a pre-route board is defined by. Nothing read the file until the supervisor started deciding on
+# verdicts, and then it blocked two of the wave's four boards on the first run (11 September 2026).
+
+def _drc(unconnected=0, violations=()):
+    import tempfile, json as _j
+    d = tempfile.mkdtemp(prefix="hardset-stage-")
+    _j.dump({"unconnected_items": [{"items": []} for _ in range(unconnected)],
+             "violations": list(violations)}, open(os.path.join(d, "drc.json"), "w"))
+    return d
+
+
+def _hardset(stage, unconnected):
+    import subprocess, json as _j
+    d = _drc(unconnected)
+    subprocess.run([sys.executable, os.path.join(TOOLS, "hardset.py"), os.path.join(d, "drc.json"), stage,
+                    "--label", "t"], capture_output=True, text=True, cwd=d)
+    return _j.load(open(os.path.join(d, "out", "hardset-t.verdict.json"))) if os.path.exists(os.path.join(d, "out", "hardset-t.verdict.json")) \
+        else _j.load(open(os.path.join(d, "hardset-t.verdict.json")))
+
+
+def t_a_pre_route_board_passes_the_hard_set_while_unrouted():
+    rec = _hardset("pre", 357)
+    assert rec["verdict"] == "PASS", rec
+    assert rec["counts"]["unrouted"] == 357 and rec["counts"]["stage"] == "pre", rec
+
+
+def t_a_routed_board_with_open_connections_fails():
+    rec = _hardset("post", 5)
+    assert rec["verdict"] == "FAIL", rec
+    assert rec["counts"]["stage"] == "post", rec
+
+
+def t_a_routed_board_with_nothing_open_passes():
+    rec = _hardset("post", 0)
+    assert rec["verdict"] == "PASS", rec
