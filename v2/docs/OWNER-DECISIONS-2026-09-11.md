@@ -129,3 +129,52 @@ the same class as 50216670, which ran this work until this morning, and very lik
 
 **No decision is owed.** This entry stays because I published a wrong claim about your ruling and the
 correction belongs where the claim was.
+
+---
+
+## 6. A USB pair cannot leave a 2.54 mm IDC header at the width the impedance work gave it (measured 11 September, 19:30)
+
+**The arithmetic, and it is arithmetic rather than a router weakness.**
+
+`Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical` has 1.7 mm pads on a 2.54 mm grid, so the channel between two
+adjacent pads is **2.54 - 1.7 = 0.84 mm**. On D the pair leaves `J_HARN1` between the ground pins on either side
+of its row (pins 1, 2 and 5, 6 are GND; the pair is on 3 and 4, which the 9 September change put adjacent instead
+of diagonal).
+
+A USB pair at the current class geometry needs, across that channel:
+
+| | mm |
+|---|---:|
+| P track | 0.30 |
+| intra-pair gap | 0.20 |
+| N track | 0.30 |
+| class clearance to the ground pad, each side | 2 x 0.127 |
+| **needed** | **1.054** |
+| **available** | **0.84** |
+
+**Short by 0.214 mm.** At the geometry this class had before 8 September, 0.20/0.15, the same sum is 0.804 mm and
+it fits with 0.036 mm to spare. **The widening to 0.30/0.20 came from the impedance work of 8 September**
+(32.71: 0.30/0.20 on the 7628 outer layer computes 89 ohm against 90), and it is what closed the channel. That is
+also why D laid 5 of 5 pairs in the record and lays 4 of 5 now.
+
+**What I measured rather than assumed.** The escape-via entry, which takes a pair to an inner layer at the
+station and is a router setting rather than a design change, makes D **worse**: 1 of 5 against 3 of 5 on the
+same board, same input. It is not the answer here, and that agrees with 32.95, where it cost D10 two of its five.
+
+**The three ways out, and why the choice is yours.**
+
+1. **Neck the pair through the connector's pad field**, back to 0.20/0.15 for the two or three millimetres
+   inside it, then widen. This is ordinary practice and the discontinuity is negligible at USB 2.0. It needs a
+   new capability in the pre-router (there is none today: a pair is laid at one width throughout) **and a
+   decision about the impedance gate**, which reads the laid width back and would see the neck.
+2. **Keep the geometry and change the connector field**: 1.5 mm pads give 1.04 mm, still 0.014 mm short; 1.4 mm
+   gives 1.14 mm and fits, at a 0.2 mm annular ring on a 1.0 mm drill, which is thin. Or give the pair a row
+   with no ground pin on one side, which costs the shielding the 9 September change was made to add.
+3. **Accept the 0.30/0.20 and route these pairs on an inner layer from a via pair placed clear of the header**,
+   which is a placement change on A and D.
+
+**What this is worth.** One pair on D today. The same channel exists at `J_AB1` on A and B, which carries three
+pairs (`USB_D8`, `USB_E6`, `USB_WALL`) on a 2x13 of the same family, so the count is bounded by how those laid;
+the B19 arm results will say. **Pair class geometry is on the never-auto floor** (`reserved.json`), so I have
+taken the measurement and stopped.
+
