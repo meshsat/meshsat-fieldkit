@@ -4989,3 +4989,31 @@ been running for many hours has no clock of its own, so "it must be past midnigh
 measurement. **The `date` command is the only instrument for this and it takes no time at all.**
 
 A YouTrack comment on MESHSAT-862 carried the same wrong date and is corrected there.
+
+### 32.127 The pre-router is its stub search, which nobody had measured (11 September 2026, 21:50 CEST; MESHSAT-862)
+
+The B19 arm's own profile said 703 s in the occupancy maps, 108 s in the corridor search and **769 s
+elsewhere**: half a pass in the one bucket that had no name. Three more wrappers on the same clock name it, and
+D's clean pass, 5 of 5 pairs in 9 seconds, says where the work is:
+
+| bucket | seconds | calls |
+|---|---:|---:|
+| occupancy maps | 2 | 75 |
+| corridor search (`astar`) | 0 | 6 |
+| **stub search (`stub_path`)** | **6** | **75** |
+| leg offsets | 0 | 36 |
+| stamping laid copper | 0 | 11,556 |
+
+**Two thirds of the pass is the reach from a corridor end into a pad**, at about 80 ms a call. The maps, which
+two days of work went into, are two seconds. The corridor search the tool exists to run is zero.
+
+**The reason is visible in the source once the number points at it.** The corridor search was extracted to
+`pairsearch.py` and compiled with numba in the work of 10 September, 13.5x; `stub_path` is still the original
+heapq A* with a dict for the distances, in interpreted Python. The two searches do almost the same thing on
+almost the same map, and only one of them was moved. That is the next throughput change, with the same
+discipline the first one had: three implementations that must agree, and a selftest that refuses any
+difference.
+
+**Counting calls beside the seconds is what makes this actionable**, and it was one line: 6 seconds over 75
+calls and 6 seconds over 75,000 calls are different problems with different fixes, and the line that printed
+only seconds could not tell them apart.
