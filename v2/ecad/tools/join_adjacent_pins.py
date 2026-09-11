@@ -11,6 +11,9 @@ corridor between them, both pads on the same copper side. The track is as wide a
 the .kicad_pro states one) and runs centre to centre on the pads' layer.
 Usage: join_adjacent_pins.py <board.kicad_pcb> [max gap mm = 2.6]"""
 import sys, os, math, json, os, re, fnmatch, pcbnew
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import boardorder
 from pcbnew import VECTOR2I, FromMM
 
 BOARD = sys.argv[1]; MAX_GAP = float(sys.argv[2]) if len(sys.argv) > 2 else 2.6
@@ -41,7 +44,7 @@ def big(pd): return min(mm(pd.GetSize().x), mm(pd.GetSize().y)) >= 1.5          
 def stubbed(pd): return (pd.GetPosition().x, pd.GetPosition().y) in ENDS                      # an escape already leaves it
 # 7 Sep 2026 (E6 run 12): the ground pads of a part with an exposed pad are joined to it by locked tracks under the body: a full ring of 0.4 mm escape vias fences the
 # ground plane on every layer, so the exposed pad's island would otherwise reach the outside only by luck
-for fp in b.GetFootprints():
+for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
     pads = [pd for pd in fp.Pads() if pd.GetNetCode() > 0]   # ground pads too: every one of them joins the exposed pad (E6 run 12: the ring of 0.4 mm escape vias fences the plane under a QFN on every layer, the exposed pad's island reaches the outside only through a pad's escape via)
     for i, a in enumerate(pads):
         for c in pads[i + 1:]:

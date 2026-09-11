@@ -6,6 +6,9 @@ escapes were ripped up on A19 and the pads they served ended unrouted).
 Fine pitch: minimum SMD pad centre distance <= 0.7 mm, or SOT-23-6/8. Exposed pads (>= 2 mm) are left alone.
 Usage: escape.py <board.kicad_pcb>"""
 import sys, re, math, pcbnew
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import boardorder
 from pcbnew import VECTOR2I, FromMM
 b = pcbnew.LoadBoard(sys.argv[1]); CLR = FromMM(0.16)
 NCC = {}
@@ -83,7 +86,7 @@ def clear(v, r, me, me_ref, net, lane=0.75):
         if o.Contains(VECTOR2I(int(v.x), int(v.y))) or o.Contains(VECTOR2I(int(v.x + r), int(v.y))) or o.Contains(VECTOR2I(int(v.x - r), int(v.y))) or o.Contains(VECTOR2I(int(v.x), int(v.y + r))) or o.Contains(VECTOR2I(int(v.x), int(v.y - r))): LAST[0] = "rule-area"; return False
     return True
 added = skipped = 0
-for fp in b.GetFootprints():
+for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
     if not is_fine(fp) or (fp.GetReference().startswith("J") and min_pitch(fp) > FromMM(0.6)): continue      # coarse connectors route fine without escapes; a 0.5 mm M.2 socket (B14 J_WIFI1) does not (5 Sep: the router thrashed 75 min on its 67 bare pads)
     if fp.GetReference() in set(filter(None, __import__("os").environ.get("ESCAPE_SKIP", "").split(","))): continue   # A19: parts the router escapes itself (mixed pad sizes)
     ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))

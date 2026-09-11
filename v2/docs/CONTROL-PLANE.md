@@ -132,8 +132,12 @@ Two things found by doing this rather than by planning it, both of the same clas
 `PREROUTE_STOP_AFTER_PLACE=1` was silently a no-op on E and P, whose chains have no pair classes, so the
 placed snapshot the pre-router measurements rest on was never written for them; and `pcb-b-compute/` carried
 `b5m.kicad_pcb`, the 2 September B5 board, which sorts before the real one, so a wave script that globbed the
-directory exported a BOM for B from a nine-day-old board with 160 footprints against the current 951.
-**That B BOM must be re-exported.**
+directory exported a BOM for B from a nine-day-old board with 160 footprints against the current 951. **That
+B BOM must be re-exported, and nothing downstream consumed it:** `out/` is not tracked, so it never reached
+the repository, and the parts certification reads the deliverable folders under `v2/release/revA/boards/`
+rather than these exports, taking B from `meshsat-pcb-b-revA-B16-quote` as the newest B deliverable. The
+certification's 150 B rows are therefore sound. The damage was one wrong file on the rented box, and the
+only reason anyone noticed is that the exporter printed the name `b5m`.
 
 **Stage 1, the runner and the ledger**, in the shapes above.
 
