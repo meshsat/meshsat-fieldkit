@@ -226,3 +226,17 @@ def t_a_round_starts_with_a_clean_verdict_channel():
         "a round does not clear the verdict channel before its chain runs"
     j = src.index("rc = sh(expand(argv", i)
     assert src.index("*.verdict.json") < j, "the clear happens after the chain has already written verdicts"
+
+
+def t_the_straightener_merges_a_whole_pass_before_reindexing():
+    """The merge phase rebuilt its index over every live segment and restarted the scan after EACH merge, which
+    is O(n squared) in segments. Board E reached the quality pass with 3,862 segments after the stub router
+    closed three nets with 2,178-cell paths, and this ran for over an hour. A pass takes every merge it can find
+    and only then re-indexes, and every merge is charged to the work budget so the bound is not a clock."""
+    src = open(os.path.join(TOOLS, "straighten.py"), errors="replace").read()
+    i = src.index("while changed")
+    body = src[i:src.index("# 2.", i)]
+    assert "break" not in body.split("if same_line_opposite")[-1], \
+        "the merge loop still restarts after a single merge"
+    assert "checks[0] < BUDGET" in body, "the merge loop is not bounded by the work budget"
+    assert "touched" in body, "the pass does not guard against merging a segment twice"
