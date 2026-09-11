@@ -338,3 +338,16 @@ def t_a_timing_wrapper_comes_after_the_function_it_wraps():
         if name in defined and defined[name] > i:
             bad.append("line %d wraps %s, which is defined at line %d" % (i + 1, name, defined[name] + 1))
     assert not bad, "a timing wrapper runs before its function exists:\n  " + "\n  ".join(bad)
+
+
+def t_the_compiled_stub_search_defaults_off_without_numba():
+    """`PAIR_FAST_STUBS` must default from the kernel's own HAVE_NUMBA, never from a bare "1".
+
+    11 September 2026: the stub search moved onto pairsearch's kernel and is 14.7x on B19 WITH numba. Without
+    numba that same kernel is a numpy heap in a Python loop, which is slower than the heapq it replaces, so a
+    bare default would quietly make every host that lacks numba worse while the measurement that justified the
+    change was taken on one that has it."""
+    src = open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read()
+    m = re.search(r'_FAST_STUBS = os\.environ\.get\("PAIR_FAST_STUBS",\s*([^)]*)\)', src)
+    assert m, "pair_preroute.py has no _FAST_STUBS default to check"
+    assert "HAVE_NUMBA" in m.group(1), "the default is %s: it must read pairsearch.HAVE_NUMBA" % m.group(1).strip()
