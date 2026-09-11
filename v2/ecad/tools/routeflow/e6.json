@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "project": "v2/ecad/pcb-e1-dock",
+ "project": "v2/ecad/pcb-e1-dock-e7",
  "phase": "E7",
  "issue": "MESHSAT-830",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
@@ -52,7 +52,7 @@
   "argv": [
    "./tools/finish.sh",
    "<ECAD>",
-   "pcb-e1-dock",
+   "pcb-e1-dock-e7",
    "e",
    "E7",
    "out/parallel-e6.log"
@@ -68,5 +68,6 @@
   "autoroute_minutes_max": 90
  },
  "notes": "E6 (7 Sep 2026): the dock strip of the A22 generation with the sensor controller folded in (32.57); four layers, In1 the ground plane and In2 the power pours (CELL_F, VIN_RAW, PV_P, TRK_OUT) as power layers, one attempt on 1.9.0 single thread.",
- "baseline_key": "E4"
+ "baseline_key": "E4",
+ "_phase_dir": "11 September 2026: E7 gets its own phase directory like every other board of the wave, so the committed pcb-e1-dock is not the thing a route writes into."
 }
