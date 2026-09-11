@@ -4905,6 +4905,21 @@ give D its fifth pair. It did not: D lays 5 of 5 with the change on **or** off, 
 right side. The corridor change is a correctness finding with no measured gain today, and it is recorded as
 that rather than as an improvement.
 
+**The B19 arm, written prediction and result, 19:00 CEST.** The prediction written before the run was that
+covering the legs would lay FEWER pairs on B19, because it adds 0.12 mm to the corridor envelope and the
+recorded ladder runs the other way. Same placed board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs:
+
+| arm | pairs laid | seconds | leg failures | fan failures |
+|---|---:|---:|---:|---:|
+| `PAIR_COVER_LEGS=0` | **47** of 113 | 1581 | 144 | 4 |
+| `PAIR_COVER_LEGS=1` | **45** of 113 | 1656 | 80 | 56 |
+
+**The prediction holds and the reason is more useful than the verdict.** Covering the legs removes **44 percent
+of the leg failures**, which is the rounding class measured directly and it is large. It does not turn them into
+laid pairs: they become pairs that cannot get OUT OF THEIR STATION, 4 fan failures to 56, and two fewer pairs
+are laid. So with the corridor made honest, **the binding constraint on B19 is the station fan, not the
+corridor**, and that is where the next arm belongs. The knob stays off and carries this table in its comment.
+
 ### 32.125 E7 is cut, and the board was never the thing that was wrong (12 September 2026, 17:48 CEST; MESHSAT-862)
 
 `meshsat-pcb-e-revA-E7` is in `v2/release/revA/boards/`: 0 hard of the fifteen types, 0 unrouted, 415 vias over
