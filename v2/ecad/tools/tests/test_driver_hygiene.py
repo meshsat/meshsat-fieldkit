@@ -301,3 +301,15 @@ def t_a_phase_copy_declares_what_its_board_declares():
             if open(a, errors="replace").read() != open(b, errors="replace").read():
                 bad.append("%s/%s differs from %s's" % (os.path.basename(d), f, m.group(1)))
     assert not bad, "a phase copy declares something its board does not: %s" % bad
+
+
+def t_the_restored_board_brings_its_project_files():
+    """The project file carries the net-class assignments every gate reads, and a remedy can change the route
+    block between rounds. A board from round N under a project file from round N+1 is the B19 trap of
+    9 September again, where a copied project directory had no netclass_assignments and every gate judged the
+    board against the Default class."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("RESTORED_BEST")
+    window = src[max(0, i - 800):i]
+    assert ".kicad_pro" in window and ".kicad_prl" in window, \
+        "the restore copies only the board, leaving the previous round's project file beside it"

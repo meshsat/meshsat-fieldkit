@@ -51,15 +51,26 @@ def main(a):
         net = v.GetNetname()
         if not net: continue
         pos = v.GetPosition()
-        abandoned = None
+        # A via is abandoned only when NO zone of its net fills it on ANY layer. The first version broke at the
+        # first zone whose outline contained it and whose fill did not, so a via whose F.Cu end sat in the F.Cu
+        # ground fill and whose B.Cu end had been pushed out of the B.Cu fill read as abandoned and would have
+        # been removed with its connection intact. A multi-layer zone had the same fault through
+        # GetFirstLayer() (reviewer, 12 September 2026). Both are one question: is this via in ANY fill?
+        abandoned, filled_anywhere = None, False
         for z in zones:
             if z.GetNetname() != net: continue
             try:
                 if not z.Outline().Contains(pos): continue
-                if z.GetFilledPolysList(z.GetFirstLayer()).Contains(pos): continue
             except Exception:
                 continue
-            abandoned = z; break
+            for _L in (list(z.GetLayerSet().Seq()) or [z.GetFirstLayer()]):
+                try:
+                    if z.GetFilledPolysList(_L).Contains(pos): filled_anywhere = True; break
+                except Exception:
+                    continue
+            if filled_anywhere: break
+            if abandoned is None: abandoned = z
+        if filled_anywhere: abandoned = None
         if abandoned is None: continue
         on = ends_on(pos, net)
         if len(on) > 1: kept += 1; evidence.append("%s at (%.1f, %.1f): %d tracks land on it, left alone" % (net, pos.x / 1e6, pos.y / 1e6, len(on))); continue

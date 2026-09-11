@@ -77,3 +77,14 @@ def t_a_witness_catches_a_whole_file_rewrite():
     rc2, out2 = _run(d); shutil.rmtree(d, ignore_errors=True)
     assert rc2 == 1, out2
     assert "the witness says" in out2, out2
+
+
+def t_a_file_that_starts_chained_and_continues_unchained_is_not_a_ledger():
+    """is_ledger looked only at the first row. A file that starts chained and continues unchained is neither a
+    ledger nor a plain table, and calling it a ledger turns its whole tail into false breaks."""
+    d, p = _tree(2)
+    with open(p, "a") as f: f.write(json.dumps({"n": 99}) + "\n")   # one unchained row appended
+    rc, out = _run(d); shutil.rmtree(d, ignore_errors=True)
+    assert "carries no chain" in out, out
+    assert "content changed" not in out and "names prev" not in out, out
+    assert rc == 3, (rc, out)

@@ -32,14 +32,19 @@ def is_ledger(path):
     `tools/routeflow/bench/results.jsonl` as 708 broken rows. That file is the benchmark table: plain rows with
     no chain on them, and never claimed one. A checker that calls an unchained file a broken chain is crying
     wolf at the one place a real break has to be visible (11 September 2026)."""
+    seen = False
     try:
         for line in open(path):
             if not line.strip(): continue
             r = json.loads(line)
-            return all(k in r for k in ("sha", "prev_sha", "seq"))
+            # every row, not only the first: a file that starts chained and continues unchained is neither a
+            # ledger nor a plain table, and calling it a ledger turns its tail into a wall of false breaks
+            # (reviewer, 12 September 2026)
+            if not all(k in r for k in ("sha", "prev_sha", "seq")): return False
+            seen = True
     except Exception:
         return False
-    return False
+    return seen
 
 
 def find(ecad):
