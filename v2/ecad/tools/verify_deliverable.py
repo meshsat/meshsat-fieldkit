@@ -8,6 +8,8 @@ column and no `?` designator; the DRC report exists. Prints one line per propert
 
 Usage: verify_deliverable.py <deliverable dir> <name> <copper layers> [--bench-prefixes H,S_,TP] [--bare]   -> exit 1 on any FAIL."""
 import sys, os, csv, zipfile, re
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict
 
 ITEMS = ["%s-gerbers.zip", "%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-drc.rpt", "%s-schematic.pdf", "%s-render-top.png", "%s-render-bottom.png",
          "%s-1to1-top.pdf", "%s-1to1-bottom-mirrored.pdf", "%s.kicad_pcb", "%s.kicad_sch", "%s.kicad_pro", "%s-bom.status", "meshsat.pretty"]
@@ -114,7 +116,14 @@ def main(a):
     bench = tuple(a[a.index("--bench-prefixes") + 1].split(",")) if "--bench-prefixes" in a else ("H", "S_", "TP", "W_", "JP", "PAD", "P_")
     fails, lines = check_dir(a[0], a[1], int(a[2]), bench, "--bare" in a)
     for l in lines: print("verify_deliverable: " + l)
-    print("verify_deliverable: %s (%d of %d properties)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails), len(lines) - len(fails) - sum(1 for l in lines if l.startswith("INFO")), len(lines) - sum(1 for l in lines if l.startswith("INFO"))))
-    return 1 if fails else 0
+    judged = len(lines) - sum(1 for l in lines if l.startswith("INFO"))
+    print("verify_deliverable: %s (%d of %d properties)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails), judged - len(fails), judged))
+    return verdict.write("verify_deliverable",
+                         verdict.INCONCLUSIVE if not judged else (verdict.PASS if not fails else verdict.FAIL),
+                         counts={"fail": len(fails), "pass": judged - len(fails), "info": len(lines) - judged},
+                         denominator=judged,
+                         evidence=fails,
+                         inputs={"folder": a[0], "name": a[1], "copper_layers": a[2]},
+                         note="" if judged else "no property was judged: the folder yielded nothing to check")
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

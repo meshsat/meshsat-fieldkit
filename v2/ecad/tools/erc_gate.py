@@ -8,6 +8,8 @@ ignored, so nothing is waved through silently). Example:  power_pin_not_driven|+
 
 Usage: erc_gate.py <project dir> <name>  -> prints the counts, writes out/<name>-erc.status (clean | allowed N | BLOCK N | BLOCK no ERC output), exit 1 on BLOCK."""
 import sys, os, json, collections
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict
 
 def violations(d):
     out = []
@@ -46,15 +48,27 @@ def main(a):
     os.makedirs(os.path.join(proj, "out"), exist_ok=True)
     try: d = json.load(open(path))
     except Exception as e:
-        print("erc_gate: BLOCK no ERC output (%s: %s)" % (path, e)); open(status, "w").write("BLOCK no ERC output\n"); return 1
+        print("erc_gate: BLOCK no ERC output (%s: %s)" % (path, e)); open(status, "w").write("BLOCK no ERC output\n")
+        # No ERC output is not an ERC failure: nothing was judged. INCONCLUSIVE still blocks, and says why.
+        return verdict.write("erc_gate", verdict.INCONCLUSIVE, denominator=0, inputs={"project": proj},
+                             note="no ERC output at %s (%s)" % (path, e), out_dir=os.path.join(proj, "out"))
     rules = allow_rules(os.path.join(proj, "erc-allow.txt"))
     block, allowed, by = gate(d, rules)
     for (t, sev), n in sorted(by.items()): print("erc_gate: %-8s %-40s %d" % (sev, t, n))
     if block:
         print("erc_gate: BLOCK %d error(s) not allow-listed (of %d violations; %d allowed by %s):" % (len(block), sum(by.values()), allowed, os.path.basename(proj) + "/erc-allow.txt"))
         for line in block[:12]: print("   " + line)
-        open(status, "w").write("BLOCK %d\n" % len(block)); return 1
+        open(status, "w").write("BLOCK %d\n" % len(block))
+        return verdict.write("erc_gate", verdict.FAIL,
+                             counts={"blocking": len(block), "allowed": allowed, "violations": sum(by.values())},
+                             denominator=sum(by.values()), evidence=block[:30], inputs={"project": proj},
+                             out_dir=os.path.join(proj, "out"))
     print("erc_gate: %s (%d violations, %d error(s) allow-listed with a reason, warnings %d)" % ("clean" if not by else "no blocking error", sum(by.values()), allowed, sum(n for (t, s), n in by.items() if s != "error")))
-    open(status, "w").write(("allowed %d\n" % allowed) if allowed else "clean\n"); return 0
+    open(status, "w").write(("allowed %d\n" % allowed) if allowed else "clean\n")
+    return verdict.write("erc_gate", verdict.PASS,
+                         counts={"blocking": 0, "allowed": allowed, "violations": sum(by.values())},
+                         denominator=sum(by.values()), inputs={"project": proj},
+                         note=("%d error(s) allow-listed with a reason" % allowed) if allowed else "",
+                         out_dir=os.path.join(proj, "out"))
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
