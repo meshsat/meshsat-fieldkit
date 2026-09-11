@@ -361,7 +361,10 @@ synth("U5", "TPS23861", "TI TPS23861PWR PoE PSE controller, port 1 to the wall R
       {1: "+3V3_DEV", 2: "POE_RST_n", 3: "SCL", 4: "SDA", 5: "SDA", 6: "EXP_INT", 7: "GND", 22: "GND", 28: "+54V_POE", 15: "POE_SEN", 16: "POE_DRAIN", 17: "POE_GATE", 18: "GND", 11: "GND", 8: "GND", 12: "GND", 19: "GND"}, "C93245")
 r("R11", "10k", "POE_RST_n", "+3V3_DEV"); c("C36", "100n", "+3V3_DEV", "GND")
 part("Q1", "Connector_Generic", "Conn_01x05", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6), PoE port switch (1-3 source, 4 gate, 5 drain tab)", "PPAK", {"1": "POE_SEN", "2": "POE_SEN", "3": "POE_SEN", "4": "POE_GATE", "5": "POE_DRAIN"}, "C473333")
-r("R12", "0.25R 1% 2512", "POE_SEN", "GND", "R2512")   # TI specifies 255 mOhm for the TPS23861 sense; JLCPCB stocks 255 mOhm only in 0805 (333 mW) and this land is 2512 (2 W), so the 2 W 250 mOhm part is used and every port current reads 2 percent high, which is inside the classification margins; r("R13", "0R 2512 (POE_P link)", "+54V_POE", "POE_P", "R2512")   # 9 September 2026 (red team C2): this was 24.9 ohm on an 0603 land, and POE_P is the
+# R12 is 250 mOhm, not the 255 mOhm TI specifies for the TPS23861 sense: JLCPCB stocks 255 mOhm
+# only in 0805 at 333 mW and this land is 2512 at 2 W, so every port current reads 2 percent
+# high, which is inside the classification margins.
+r("R12", "0.25R 1% 2512", "POE_SEN", "GND", "R2512"); r("R13", "0R 2512 (POE_P link)", "+54V_POE", "POE_P", "R2512")   # 9 September 2026 (red team C2): this was 24.9 ohm on an 0603 land, and POE_P is the
 # positive centre tap of the port magnetics, that is, the feed to the powered device. At 802.3at (about 600 mA) it dropped 15 V, leaving 39 V against a
 # 44 V minimum, and dissipated 9 W in a part rated for 0.1 W. Detection and classification are the TPS23861's own pins; nothing belongs in the feed.
 # A 0 ohm 2512 link keeps a place to open the path on the bench and carries the port current.

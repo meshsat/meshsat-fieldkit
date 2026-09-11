@@ -111,13 +111,19 @@ def parts_from_generators():
             if id(node) in pinmap_strings:
                 continue
             text = node.value
-            for tok in PART.findall(text):
-                if len(tok) < 6 or tok.upper() in SKIP or NOT_A_PART.match(tok):
-                    continue
-                rec = out.setdefault(tok, {"boards": set(), "lcsc": set(), "note": ""})
-                rec["boards"].add(board)
-                if not rec["note"]:
-                    rec["note"] = " ".join(text.split())[:110]
+            # A format template is not a part number. `"SN74LVC%sAPWR quad 2-input %s" % (...)` is one
+            # string holding two parts, and the token taken out of it, SN74LVC%sAPWR, is a part nobody
+            # makes, has no datasheet and never will. The same shape as the pin-map rule above: this is
+            # what the string IS, not a guess about what it says. Split on the placeholders instead, so
+            # the literal halves still yield their tokens.
+            for piece in re.split(r"%[-+ #0-9.]*[sdrfgxi%]", text) if "%" in text else [text]:
+                for tok in PART.findall(piece):
+                    if len(tok) < 6 or tok.upper() in SKIP or NOT_A_PART.match(tok):
+                        continue
+                    rec = out.setdefault(tok, {"boards": set(), "lcsc": set(), "note": ""})
+                    rec["boards"].add(board)
+                    if not rec["note"]:
+                        rec["note"] = " ".join(text.split())[:110]
     return out
 
 

@@ -30,6 +30,9 @@ block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $
 for f in ${FPGEN:+../tools/$FPGEN} ../tools/gen_sch_$L.py ../tools/gen_pcb_$L.py ../tools/gen_pcb_${L}3.py ../tools/check_pcb_$L.py $(for e in $EXTRA; do echo ../tools/$e; done); do
   python3 -W error -c "import sys
 with open(sys.argv[1]) as fh: compile(fh.read(), sys.argv[1], 'exec')" "$f" || block "compile $f"
+  # Compiling is not enough: a comment appended mid-line swallows the calls after it and the file
+  # still compiles, so the part simply stops existing. 11 Sep 2026, twice in one session.
+  python3 ../tools/tests/test_swallowed_calls.py "$f" > /dev/null 2>&1 || { python3 ../tools/tests/test_swallowed_calls.py "$f"; block "a comment swallows calls in $f"; }
 done
 
 if [ -n "$FPGEN" ]; then
