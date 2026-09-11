@@ -67,7 +67,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 90
  },
- "budget_rounds": 2,
  "notes": "E6 (7 Sep 2026): the dock strip of the A22 generation with the sensor controller folded in (32.57); four layers, In1 the ground plane and In2 the power pours (CELL_F, VIN_RAW, PV_P, TRK_OUT) as power layers, one attempt on 1.9.0 single thread.",
  "baseline_key": "E4"
 }

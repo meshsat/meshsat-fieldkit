@@ -50,7 +50,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 15
  },
- "budget_rounds": 2,
  "notes": "P2 (8 Sep 2026, MESHSAT-862, appendix 32.70): the P1 profile on the v2/ecad/pcb-p-pack-p2 copy.",
  "baseline_key": "P1"
 }

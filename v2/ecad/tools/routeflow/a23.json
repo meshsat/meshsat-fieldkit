@@ -57,7 +57,6 @@
   "unrouted": 0,
   "autoroute_minutes_max": 90
  },
- "budget_rounds": 1,
  "notes": "A23 (8 Sep 2026, MESHSAT-862 rule 3, appendix 32.69): the A22 profile on the pcb-a-power-a23 copy with the power copper of gen_pcb_a3.py; finish_a23.sh is finish_a22.sh on that directory.",
  "baseline_key": "A21",
  "clean_flag": "out/a23-clean.txt"
