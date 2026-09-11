@@ -651,16 +651,20 @@ def main(a):
     # 11 September 2026 (MESHSAT-862).
     pro = os.path.splitext(board)[0] + ".kicad_pro"
     if not os.path.exists(pro):
-        raise SystemExit("pair_preroute: no project file at %s. The pair classes are in it, so this board has no pairs to lay,\n"
+        sys.stderr.write("pair_preroute: no project file at %s. The pair classes are in it, so this board has no pairs to lay,\n"
                          "  which is not the same as having laid them all. Run on the board in its project directory, or copy\n"
-                         "  the .kicad_pro beside it." % pro)
+                         "  the .kicad_pro beside it.\n" % pro)
+        # exit 2, not 1: a caller that sees 1 reads "a pair did not lay" and may retry the same board for ever.
+        # This is a tooling error and nothing about it will change on a retry (reviewer, 11 September 2026).
+        raise SystemExit(2)
     d = json.load(open(pro))
     assign = d.get("net_settings", {}).get("netclass_assignments") or {}
     classes = {c["name"]: c for c in (d.get("net_settings", {}).get("classes") or [])}
     if not assign:
-        raise SystemExit("pair_preroute: %s carries no netclass_assignments, so every net reads as Default and no pair\n"
+        sys.stderr.write("pair_preroute: %s carries no netclass_assignments, so every net reads as Default and no pair\n"
                          "  would be found. The placement generator writes them into the project file OF THE DIRECTORY IT RUNS IN;\n"
-                         "  a copied project directory needs that file copied too." % pro)
+                         "  a copied project directory needs that file copied too.\n" % pro)
+        raise SystemExit(2)
     b = pcbnew.LoadBoard(board); gr = Grid(b, g); _grids = {g: gr}
     def cls_of(n):
         c = assign.get(n) or assign.get("/" + n.lstrip("/")) or assign.get(n.lstrip("/")); return (c[0] if isinstance(c, list) and c else c) or "Default"

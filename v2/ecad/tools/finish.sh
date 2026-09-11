@@ -20,6 +20,8 @@ cfg () { python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('finish
 N="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['name'])" "$CFG")"
 STUB_L="$(cfg x stub_layers)"; POUR="$(cfg x pour_nets)"; PAIRM="$(cfg x pair_match)"
 AUDIT="$(cfg x pair_audit_nets)"; PFIX="$(cfg x post_fix)"; PRUNED="$(cfg x pruned_gate)"; GGREP="$(cfg x gate_grep)"
+STUB_ENV="$(cfg x stub_env)"   # A gives the stub router a wider window and a higher node cap; nothing else does
+CONT="$(python3 -c "import json,sys; c=json.load(open(sys.argv[1])).get('finish',{}).get('cont_route'); print('' if not c else '%d %d %d' % (c['max_opens'], c['passes'], c['timeout_s']))" "$CFG")"
 TAG="$(echo "$PHASE" | tr 'A-Z' 'a-z')"; FLAG="out/$TAG-clean.txt"; DELIV="meshsat-pcb-$L-revA-$PHASE"
 cd "$E/$PROJ" || { echo "finish: no project directory $E/$PROJ"; exit 2; }
 rm -f "$FLAG" out/par-score.txt out/contracts.log   # a stale clean flag must never finish a board (register class 6)
@@ -44,8 +46,16 @@ python3 $T/pour_stitch.py $N.kicad_pcb --nets=$POUR 2>&1 | grep -vE "^Debug|leak
 python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
 cp $N.kicad_pcb out/$N-cleaned.kicad_pcb
 $T/drc.sh $N.kicad_pcb out/$N-drc.json
+# 3b. a handful of opens get ONE continuation pass of the router before the stub router (A21, 5 September 2026);
+# cont_route.sh keeps the board only if it improves. Declared per board, and only A declares it.
+if [ -n "$CONT" ]; then
+  set -- $CONT
+  UN=$(python3 -c "import json; print(len(json.load(open('out/$N-drc.json')).get('unconnected_items', [])))") || stop "no readable DRC JSON before the continuation pass"
+  if [ "$UN" -gt 0 ] && [ "$UN" -le "$1" ]; then $T/cont_route.sh "$PWD" $N "$2" "$3" 2>&1 | grep -E 'cont:'; $T/drc.sh $N.kicad_pcb out/$N-drc.json; fi
+fi
 # 4. ONLY NOW the stub router, on a board that is clean and whose pours are filled
-STUB_LAYERS=$STUB_L STUB_GRID=0.1 nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || stop "stub router CRASHED, exit $? (out/$N-stub.log)"
+env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || stop "stub router CRASHED, exit $? (out/$N-stub.log)"
+grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
 # 5. the refill before the check, so a legal closing via is not read against a stale fill
 python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'
 import pcbnew, sys

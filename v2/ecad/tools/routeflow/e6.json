@@ -1,7 +1,7 @@
 {
  "board": "pcb-e1-dock",
  "project": "v2/ecad/pcb-e1-dock",
- "phase": "E6",
+ "phase": "E7",
  "issue": "MESHSAT-830",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -61,7 +61,7 @@
   "clean_flag": "out/e7-clean.txt",
   "stub_log": "out/pcb-e1-dock-stub.log"
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-e-revA-E6",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-e-revA-E7",
  "expect": {
   "hard": 0,
   "unrouted": 0,

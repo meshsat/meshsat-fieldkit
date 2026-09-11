@@ -48,13 +48,17 @@
  },
  "finish": {
   "argv": [
-   "./tools/finish_d8.sh",
+   "./tools/finish.sh",
    "<ECAD>",
+   "pcb-d-aprs",
+   "d",
+   "D8",
    "out/parallel-d8.log"
   ],
   "cwd": "<ECAD>",
   "clean_flag": "out/d8-clean.txt",
-  "stub_log": "out/pcb-d-aprs-stub.log"
+  "stub_log": "out/pcb-d-aprs-stub.log",
+  "_collapsed": "11 September 2026 (MESHSAT-862): finish_d8.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
  },
  "deliverable": "v2/release/revA/boards/meshsat-pcb-d-revA-D8",
  "expect": {

@@ -1,27 +1,27 @@
 {
-  "name": "pcb-d-aprs",
-  "letter": "d",
-  "title": "PCB-D APRS",
-  "footprint_generator": "gen_footprints_b16.py",
-  "extra_compile": [],
-  "gate_before_placement": false,
-  "bypass_place_after": "stackup",
-  "escape_env": {},
-  "pair_classes": "USB",
-  "pair_layers": "F.Cu",
-  "pair_hop_layers": "In2.Cu",
-  "pair_tail": 14,
-  "fanout_nets": "GND",
-  "escape_prune_before_audit": false,
-  "finish": {
-    "stub_layers": "F.Cu,In2.Cu,B.Cu",
-    "pour_nets": "GND",
-    "pair_match": true,
-    "pair_audit_nets": [
-      "USB_D8"
-    ],
-    "post_fix": "post_fix_d.py",
-    "pruned_gate": false,
-    "gate_grep": "FAIL|RESULT|^verdict:"
-  }
+ "name": "pcb-d-aprs",
+ "letter": "d",
+ "title": "PCB-D APRS",
+ "footprint_generator": "gen_footprints_b16.py",
+ "extra_compile": [],
+ "gate_before_placement": false,
+ "bypass_place_after": "stackup",
+ "escape_env": {},
+ "pair_classes": "USB",
+ "pair_layers": "F.Cu",
+ "pair_hop_layers": "In2.Cu",
+ "pair_tail": 14,
+ "fanout_nets": "GND",
+ "escape_prune_before_audit": false,
+ "finish": {
+  "stub_layers": "F.Cu,In2.Cu,B.Cu",
+  "pour_nets": "GND",
+  "pair_match": true,
+  "pair_audit_nets": [
+   "USB_D8"
+  ],
+  "post_fix": "-",
+  "pruned_gate": false,
+  "gate_grep": "FAIL|RESULT|^verdict:"
+ }
 }
