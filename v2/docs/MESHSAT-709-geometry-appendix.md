@@ -4909,16 +4909,31 @@ that rather than as an improvement.
 covering the legs would lay FEWER pairs on B19, because it adds 0.12 mm to the corridor envelope and the
 recorded ladder runs the other way. Same placed board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs:
 
-| arm | pairs laid | seconds | leg failures | fan failures |
-|---|---:|---:|---:|---:|
-| `PAIR_COVER_LEGS=0` | **47** of 113 | 1581 | 144 | 4 |
-| `PAIR_COVER_LEGS=1` | **45** of 113 | 1656 | 80 | 56 |
+| counted by each pair's LAST failure | `PAIR_COVER_LEGS=0` | `PAIR_COVER_LEGS=1` |
+|---|---:|---:|
+| **pairs laid** | **47** of 113 | **45** of 113 |
+| seconds | 1581 | 1656 |
+| the legs clear no smoothing of the centreline | 25 | **10** |
+| no stub path at a station or via | 15 | 23 |
+| no path on the map (expansion cap) | 9 | **19** |
+| no via site, or no room for the layer-change via pair | 12 | 3 |
 
-**The prediction holds and the reason is more useful than the verdict.** Covering the legs removes **44 percent
-of the leg failures**, which is the rounding class measured directly and it is large. It does not turn them into
-laid pairs: they become pairs that cannot get OUT OF THEIR STATION, 4 fan failures to 56, and two fewer pairs
-are laid. So with the corridor made honest, **the binding constraint on B19 is the station fan, not the
-corridor**, and that is where the next arm belongs. The knob stays off and carries this table in its comment.
+**The prediction holds and the histogram is more useful than the verdict.** The rounding class is real and
+covering the legs removes **60 percent of it**, 25 failures to 10. Those pairs do not become laid pairs: the
+stricter envelope costs the search its paths instead, and "no path on the map" doubles. Two fewer pairs, so the
+knob stays off.
+
+**What that says about the next arm.** Widening the corridor is the wrong way to remove the rounding, because
+this board is already at the edge of what its congestion allows, and the slack sweep of 32.117 was measuring
+exactly that edge. The right way is to make the **leg check** exact where it matters: when a leg point fails on
+the raster, re-test that one point against the polygons before rejecting the pair. That removes the rounding
+without touching the corridor, and it is cheap because it runs only at a failure.
+
+**A correction to the first version of this entry**, which said 144 leg failures against 80 and 4 fan failures
+against 56. Those counts came from raw line counts that included the tool's own `SWAP` and `DIVE` lines, which
+carry the words "fan into" and are successes, not failures. The table above counts each pair's last failure and
+is the one to read; the direction of the finding is unchanged and its mechanism is not what the first version
+said.
 
 ### 32.125 E7 is cut, and the board was never the thing that was wrong (12 September 2026, 17:48 CEST; MESHSAT-862)
 

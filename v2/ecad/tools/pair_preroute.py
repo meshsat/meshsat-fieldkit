@@ -975,16 +975,23 @@ def main(a):
         # PAIR_COVER_LEGS=1 makes the corridor cover the legs plus one grid cell, so that a free centreline implies free
         # legs and a pair that cannot pass an obstacle is refused by the SEARCH, which can go round, rather than by the
         # legs, which cannot. It is OFF, and that is the B19 arm of 12 September 2026 rather than an opinion. Same placed
-        # board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs:
+        # board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs, counted by each pair's LAST failure:
         #
-        #   off  47 of 113   1581 s   144 leg failures ("no smoothing")    4 fan failures
-        #   on   45 of 113   1656 s    80 leg failures                    56 fan failures
+        #                                          off        on
+        #   pairs laid                          47 of 113   45 of 113
+        #   the legs clear no smoothing            25          10
+        #   no stub path at a station or via       15          23
+        #   no path on the map (expansion cap)      9          19
+        #   no via site / no room for a via pair   12           3
         #
-        # The mechanism is real and does what it says: covering the legs removes 44 percent of the leg failures. It does
-        # not turn them into laid pairs, it turns them into pairs that cannot get OUT OF THEIR STATION, and two fewer
-        # are laid. That is the useful half of the measurement: with the corridor honest, the binding constraint on this
-        # board is the station fan and not the corridor, so the next arm belongs there. D lays 5 of 5 either way once
-        # the corridor leaves its station on the right side.
+        # The rounding class is real and covering the legs removes 60 percent of it. It does not become laid pairs: the
+        # stricter envelope costs the search its paths instead, and "no path on the map" doubles. Two fewer pairs, so
+        # the knob stays off. What that says about the next arm is the useful part: widening the corridor is the wrong
+        # way to remove the rounding, because this board is already at the edge of what its congestion allows (the slack
+        # sweep of 32.117 was measuring that edge). The right way is to make the LEG CHECK exact where it matters: when
+        # a leg point fails on the raster, re-test that point against the polygons before rejecting the pair. That
+        # removes the rounding without touching the corridor. D lays 5 of 5 either way once the corridor leaves its
+        # station on the right side.
         _cover = (0.02 + gr.G) if os.environ.get("PAIR_COVER_LEGS", "0") != "0" else 0.0   # OFF: the B19 arm above
         # The corridor envelope takes the wider of the two geometries: one map serves every layer and it must never under-block.
         half = max(w + s / 2, w_in + s_in / 2) + _cover + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
