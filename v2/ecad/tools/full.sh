@@ -78,11 +78,15 @@ python3 ../tools/check_pcb_$L.py $N.kicad_pcb > out/check_$L.log 2>&1; GATE=$?; 
 env $ESCENV python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
 python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacent_pins|Traceback|Error'
 
+# The placed board with its escapes and BEFORE any pair copper: the only honest input for a pre-router measurement
+# (10 Sep 2026; the -preroute copy is taken after the pre-router and carried the previous pass's 4,969 mm of pair copper).
+# Both of these lines sat INSIDE the "does this board have pairs" test until 11 September 2026, so E and P wrote no placed
+# board at all and PREROUTE_STOP_AFTER_PLACE=1 silently ran their whole chain instead of stopping. A flag that does nothing
+# on two of six boards and says nothing about it is the shape stage 0 exists to remove; the snapshot is one file copy.
+cp $N.kicad_pcb out/$N-placed.kicad_pcb
+[ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
+
 if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
-  # The placed board with its escapes and BEFORE any pair copper: the only honest input for a pre-router measurement
-  # (10 Sep 2026; the -preroute copy is taken after the pre-router and carried the previous pass's 4,969 mm of pair copper).
-  cp $N.kicad_pcb out/$N-placed.kicad_pcb
-  [ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
   # THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT (9 Sep 2026, D10, appendix 32.83): prefanout reads laid copper as an
   # obstacle and fits around the corridors, while the pre-router has no such freedom.
   #
