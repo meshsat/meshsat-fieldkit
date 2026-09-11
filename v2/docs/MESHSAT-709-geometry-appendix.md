@@ -4669,3 +4669,38 @@ is judging now: a declaration that reads as cover and provides none is worse tha
 collapsed `finish.sh` ran a board's whole finish, the electrical gates (dc_drop MET 3 of 3 on P, impedance PASS,
 netlist_board PASS), the cross-board contracts (ALL PASS, 40 of 40, once A existed in the tree), the gerber and
 JLC export, and the deliverable read-back, and it refused at exactly the point where something was wrong.
+
+### 32.117 The corridor slack is not a parameter with an optimum, it is a source of variance, and that invalidates the ladder (11 September 2026, 23:15 CEST; MESHSAT-862)
+
+Round one said the corridor slack was the one lever that moved: 0.08 gave 60 pairs of 113 and 0.15 gave 59,
+against the default 0.12's 54. **A default beaten on both sides is not a local optimum**, so round two swept the
+parameter from 0.04 to 0.20 on the same placed board, one knob, fourteen arms.
+
+| slack mm | 0.04 | 0.05 | 0.06 | 0.07 | 0.08 | 0.09 | 0.10 | 0.12 | 0.14 | 0.15 | 0.16 | 0.18 | 0.20 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| pairs of 113 | 48 | 51 | 53 | 57 | **60** | 59 | 53 | 54 | 55 | 59 | **47** | 59 | 59 |
+
+**It is not a curve.** 0.15 gives 59 and 0.16 gives 47: a twelve-pair swing from one hundredth of a millimetre.
+0.09 gives 59 and 0.10 gives 53. The pass outcome is **chaotically sensitive** to a parameter that should be
+smooth, and the reason is structural: the corridor search runs on a 0.1 mm grid, so a small slack change flips
+which cells are passable, which changes where the first pairs go, and the pass is greedy and never rips up, so
+the first pairs decide the rest.
+
+**This invalidates the ladder of 32.95 for every difference under about five pairs**, which is most of it. Round
+one's "levers" sat at 54, 55, 55, 55, 55, 55, 56 around a base of 54; on this evidence those are one draw from a
+distribution whose spread is at least 47 to 62. **A single pass is not a measurement of a change.** It took two
+rounds of arms, with written predictions, to see that: round one read as a modest ladder and round two shows the
+ladder was noise.
+
+**What is actually worth having.** The best arm of the two rounds is `PAIR_CORRIDOR_SLACK=0.08` with
+`PAIR_CORRIDOR_SLACK_SLIM=0.03`, at **62 of 113**. But the honest reading of the table is not "use 0.08": it is
+that **running several settings and keeping the best board is worth 8 pairs over running one**, and that is a
+thing the pipeline can do unattended, on the box, for the price of a few minutes each. `pair_passes.py` already
+keeps the best of several passes; what it varies is the pair ORDER, and this says the parameters are at least as
+productive a thing to vary.
+
+**And it changes what the pair hold costs.** Getting from 62 to 113 is not a matter of tuning. The honest
+statement to put beside the owner's ruling of 10 September is that the pre-router lays about 55 percent of B19's
+pairs on a good draw, that the variance between draws is larger than any single change measured so far, and that
+the remaining failures are dominated by geometry the router cannot negotiate: the stub-to-escape-via at the
+fine-pitch parts, and the channel arithmetic of decision 6.
