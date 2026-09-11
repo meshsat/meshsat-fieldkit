@@ -31,6 +31,23 @@ where a board's own values live (`pair_env`), never the tool's defaults.
 | `PAIR_MAP_MODE` | `counts` | the occupancy maps counted once for the whole board | proved identical to the per-pair rebuild on all 75 of D's calls; the map share of a pass fell from 76 percent to 44 |
 | `PAIR_STAIRCASE` | `1` | accept the corridor as the search found it | thirteen of the first twenty four failures were the refusal to; a staircase pair is coupled and can be straightened later |
 
+## Measured at zero, which is worth as much
+
+Seven arms at the peak slack on B19, 12 September (32.132), baseline **57 of 113**:
+
+| knob | value | pairs |
+|---|---|---:|
+| `PAIR_LEG_EXACT` | 1 | 57 |
+| `PAIR_EXPANSIONS` | 48 M against 12 M | 57 |
+| `PAIR_STUB_EXPANSIONS` | 4 M against 400 k | 57 |
+| `PAIR_STATION_OWN` | 1 | 57 |
+| `PAIR_END_CANDS` | 48 against 12 | **53** |
+| the per-class two-pass split | at 0.06 | **54** |
+
+**Every knob that changes how hard the search works measures zero, and two measure worse.** The two that have
+ever moved the number, `PAIR_CORRIDOR_SLACK` and `PAIR_LAYERS`, change the geometry the search is given. That
+is the shape of the whole table: this tool's remaining levers are not in it.
+
 ## Declared and never measured
 
 `PAIR_BUDGET` (the outer clock, 600 s a pair), `PAIR_END_CANDS` (12), `PAIR_END_LEGS`, `PAIR_END_OFFSET`,
