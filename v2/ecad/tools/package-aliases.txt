@@ -22,3 +22,6 @@ QFN-56=LQFN-56         # JLCPCB's L prefix for the same 56 lead QFN outline
 WQFN-42=WFQFN-42       # JLCPCB spells the very-thin fine-pitch QFN with an extra F; same land
 SOD-123=SOD-123F       # the F variant shares the land pattern with the standard SOD-123
 3225=SMD3225           # JLCPCB prefixes the metric crystal size with SMD; same 3.2 x 2.5 mm land
+WSON-6=WDFN-6      # JEDEC MO-229: the same 2 x 2 mm six lead no-lead outline, one land pattern, two spellings
+POWERPAK=SON-8-EP  # the PowerPAK SO-8 with its exposed pad, where JLCPCB names the pad in the package
+QFN-24=VQFN-24     # the same 24 lead QFN outline; JLCPCB writes VQFN for the very-thin body

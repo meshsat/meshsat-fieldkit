@@ -9,9 +9,9 @@ C2166        C7502705     resolves to an LED, not a BAT54
 C22453086    C29781241    corrected on the site by the ordering session; the replacement was verified for part and package
 C25118       C23182       a 0402 part on an 0603 land
 C2802372     C5355286     corrected on the site by the ordering session; the replacement was verified for part and package
-C2803764     C41430829    corrected on the site by the ordering session; the replacement was verified for part and package
-C2803770     C41430835    corrected on the site by the ordering session; the replacement was verified for part and package
-C2803771     C41430851    corrected on the site by the ordering session; the replacement was verified for part and package
+C2803764     C2977809     the site correction of 8 Sep put a JLCPCB house-brand HYCW socket here; C2977809 is what the schematic names (M.2 E-key, TE 2199230-4)
+C2803770     C574849      the site correction of 8 Sep put a JLCPCB house-brand HYCW socket here; C574849 is what the schematic names (M.2 B-key, TE 1-2199119-5)
+C2803771     C2927698     the site correction of 8 Sep put a JLCPCB house-brand HYCW socket here; C2927698 is what the schematic names (M.2 M-key, Amphenol MDT420M02001)
 C2825431     C529279      resolves to a lever switch, not a CSD17570Q5B
 C2827826     C500767      corrected on the site by the ordering session; the replacement was verified for part and package
 C2827865     C455160      corrected on the site by the ordering session; the replacement was verified for part and package
@@ -27,3 +27,15 @@ C5605        C465737      resolves to a 74HC14D, not a 74LVC08
 C5626        C2864778     resolves to a 74HC245PW, not a PCA9555
 C6009        C465737      corrected on the site by the ordering session; the replacement was verified for part and package
 C72043       C2986059     one piece in stock at the quote
+
+# Added 11 September 2026 by tools/jlc_certify.py, which reads each BOM row's own text and refuses a code
+# whose componentModelEn is a different part. Every one of these was in a shipped deliverable BOM.
+C41430829    C2977809     JLCPCB house-brand HYCW16A-05NGFF-420B where the schematic names TE 2199230-4 (M.2 E-key)
+C41430835    C574849      JLCPCB house-brand HYCW01B-05NGFF-420B where the schematic names TE 1-2199119-5 (M.2 B-key)
+C41430851    C2927698     JLCPCB house-brand HYCW25M-05NGFF-230B, a 2.3 mm stack height, where the schematic names Amphenol MDT420M02001 (M.2 M-key)
+C1973072     C374030      resolves to an SMCJ15A, not the SMCJ18A the schematic names: 15 V standoff would conduct on a fully charged 4S pack
+# NOT blocked, and deliberately: C2836813 really is a BMI270 and is correct on E6's U15. It was copied onto
+# B's ATECC608B-SSHDA-T, which is a per-row defect a global block list cannot express. The row check catches it.
+C25270       C22828       an 0805 180 ohm resistor on eleven 0603 lands (C: R24-R30, R32-R35); C22828 is the 0603, 488k in stock
+C1017        C1002        an 0805 600 ohm ferrite on four 0603 lands (C: FB1-FB4); C1002 is the 0603 the MAP already carries
+

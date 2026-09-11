@@ -31,7 +31,8 @@ LIBCACHE = {}
 FP = {
  "R": "Resistor_SMD:R_0603_1608Metric", "RS": "Resistor_SMD:R_1206_3216Metric", "C": "Capacitor_SMD:C_0603_1608Metric",
  "C10u": "Capacitor_SMD:C_0805_2012Metric", "C100u": "Capacitor_SMD:C_1206_3216Metric", "LED": "LED_SMD:LED_0603_1608Metric",
- "TVS": "Diode_SMD:D_SMB", "F1812": "Fuse:Fuse_1812_4532Metric", "F2920": "Fuse:Fuse_2920_7451Metric",
+ "TVS": "Diode_SMD:D_SMB", "TVSC": "Diode_SMD:D_SMC",   # SMBJ is DO-214AA (SMB), SMCJ is DO-214AB (SMC): never one key for both
+ "F1812": "Fuse:Fuse_1812_4532Metric", "F2920": "Fuse:Fuse_2920_7451Metric",
  "HUB": "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm", "EXP": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
  "SOT236": "Package_TO_SOT_SMD:SOT-23-6", "SOT235": "Package_TO_SOT_SMD:SOT-23-5", "SOT238": "Package_TO_SOT_SMD:SOT-23-8", "SOT23": "Package_TO_SOT_SMD:SOT-23",
  "WSON6": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
@@ -81,7 +82,7 @@ for k in range(1, 5):
     part("J_CN%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, pack return (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "GND"})
 part("J_PRE1", "Connector", "Conn_01x01_Pin", "pre-charge pin, longer, mates first (32.24 AX)", "MMPIN", {"1": "PRECHG"}); r("R1", "10R 2W 2512", "PRECHG", "CELL+", "RS2512")
 part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack node to VBAT", "FUSE", {"1": "CELL+", "2": "VBAT"})
-c("C1", "100u 25V", "VBAT", "GND", "C100u"); c("C2", "100u 25V", "VBAT", "GND", "C100u"); c("C3", "10u 25V 1210", "VBAT", "GND", "C1210"); part("D1", "Device", "D_TVS", "SMCJ18A (VBAT clamp)", "TVS", {"1": "VBAT", "2": "GND"}, "C1973072")
+c("C1", "100u 25V", "VBAT", "GND", "C100u"); c("C2", "100u 25V", "VBAT", "GND", "C100u"); c("C3", "10u 25V 1210", "VBAT", "GND", "C1210"); part("D1", "Device", "D_TVS", "SMCJ18A (VBAT clamp)", "TVSC", {"1": "VBAT", "2": "GND"}, "C374030")
 part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare", "POGO12",
      {"1": "VIN_RAW", "2": "VIN_RAW", "3": "VIN_RAW", "4": "VIN_RAW", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})
 # --- main power control LTC2954-1 (ltc2954.pdf): the panel MAIN button, EN to every converter's enable (RAIL_EN), INT = shutdown request, KILL from the panel controller through Q1
@@ -112,7 +113,7 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
 # stage FE: the vehicle and shore input (9 to 36 V after E6's protection and filter) to the 20 V charge bus, 5 A; 60 V FETs
 lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "60 V N-FET PowerPAK SO-8 (CSD19532Q5B class)", "",
        ["Q2", "Q3", "Q4", "Q5", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119"])
-part("D2", "Device", "D_TVS", "SMCJ33A (VIN_RAW clamp behind E6's filter)", "TVS", {"1": "VIN_RAW", "2": "GND"})
+part("D2", "Device", "D_TVS", "SMCJ33A (VIN_RAW clamp behind E6's filter)", "TVSC", {"1": "VIN_RAW", "2": "GND"})
 # --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET: the battery side IS the system, the pack node CELL+ through RSR): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,
 #     charge inhibited by pulling ILIM_HIZ low through Q6 (the SHORE_INHIBIT function of PANEL.md section 9 becomes CHG_INHIBIT on the expander); cell count set on CELL_BATPRESZ
 ic("U3", 33, "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B", "QFN32_04", {
@@ -188,12 +189,12 @@ def efuse(uref, vin, vout, en, flt, refs, ilim):
 efuse("U21", "VBAT", "VMON", "MON_EN", "MON_FLT", ["C98", "R90", "R91", "R92", "R93", "C99"], "1.2 A (ILM)"); vh2("J_MON", "monitor supply lead to the Xenarc (JST-VH): + -", "VMON")
 efuse("U22", "VBAT", "VHEAT", "HEAT_EN", "HEAT_FLT", ["C100", "R94", "R95", "R96", "R97", "C101"], "1.0 A (ILM)"); part("J_HEAT", "Connector_Generic", "Conn_01x02", "heater mat under the 2590 cradle (XH2.5): + -", "XH2", {"1": "VHEAT", "2": "GND"})
 efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "2.0 A (ILM)"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
-# --- hardware EMCON gates: 74LVC08APW quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC).
+# --- hardware EMCON gates: SN74LVC08APWR quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC).
 #     EMCON_HW is active LOW (low silences) and this board only READS it: gate 3 used to drive TX_INHIBIT_n from EMCON_HW, which closed a
 #     one-inversion loop through C7's inverter and put a push-pull output on the same net as the panel's mechanical toggle. Deleted 9 September
 #     2026 (red team C1); C7 now buffers rather than inverts, so the sense these two gates were always built on is the sense the panel sends.
 #     The 10k pull-UP is gone with it: an unplugged ribbon must inhibit, so both lines are pulled DOWN here, as D9 already pulled TX_INHIBIT_n.
-ic("U26", 14, "74LVC08APW quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit", "TSSOP14", {
+ic("U26", 14, "SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit", "TSSOP14", {
  "1": "EMCON_HW", "2": "PA_SW_EN", "3": "PA_EN", "4": "EMCON_HW", "5": "HF_SW_EN", "6": "HF_EN", "7": "GND", "8": "NC", "9": "GND", "10": "GND", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3"}, "C465737")
 r("R102", "100k", "EMCON_HW", "GND"); c("C104", "100n", "+3V3", "GND"); r("R103", "100k", "PA_SW_EN", "GND"); r("R104", "100k", "HF_SW_EN", "GND"); r("R145", "100k", "TX_INHIBIT_n", "GND")   # fail safe: no panel, no transmit
 # --- I2C: the kit bus (SDA, SCL) carries the charger, the expanders and the INA226s; no mux since the TPS55288 and TPS25750 left the design (7 Sep 01:50)
