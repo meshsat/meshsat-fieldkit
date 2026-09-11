@@ -167,3 +167,20 @@ def t_a_quadratic_pass_carries_a_work_budget():
         if "os.environ" not in src.split(env)[1][:120]: bad.append("%s does not read %s from the environment" % (fn, env))
         if "capped" not in src: bad.append("%s spends a budget and never says when it ran out" % fn)
     assert not bad, "an unbounded quadratic pass makes a job immortal without saying so: %s" % bad
+
+
+# ---------------------------------------------------------------- silent fallbacks
+
+def t_the_router_does_not_fall_back_to_the_stock_jar_in_silence():
+    """Round-two H5. Our build writes a session after every pass; the stock one writes one only when the whole job
+    ends, so a cut run leaves nothing, and every pass ceiling in every profile exists because of that. route_one.sh
+    chose the stock jar silently when ours was absent, and `onstart.sh` never built ours, so every fresh box routed
+    on stock while the pipeline behaved as though it had not. The fallback has to be a decision, not a silence."""
+    src = open(os.path.join(TOOLS, "route_one.sh"), errors="replace").read()
+    assert "FR_REQUIRE_MESH" in src, "there is no way to require the patched jar"
+    # from the first mention onwards, not between the first and the second: the message itself names the knob,
+    # so splitting on it cuts the window short and the rule failed on correct code
+    tail = src[src.index("FR_REQUIRE_MESH"):]
+    assert "exit 2" in tail[:900], "requiring it must refuse, not warn and continue"
+    i = src.index("freerouting-1.9.0.jar\"")
+    assert "WARNING" in src[max(0, i - 400):i], "taking the stock jar must say so loudly"

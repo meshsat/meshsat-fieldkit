@@ -21,7 +21,23 @@ PY
 # ~/bin/freerouting-2.4.1.jar (needs Java 25).
 JAR=${FR_JAR:-}
 if [ -z "$JAR" ]; then
-  if [ -s "$HOME/bin/freerouting-1.9.0-mesh.jar" ]; then JAR="$HOME/bin/freerouting-1.9.0-mesh.jar"; else JAR="$HOME/bin/freerouting-1.9.0.jar"; fi
+  if [ -s "$HOME/bin/freerouting-1.9.0-mesh.jar" ]; then JAR="$HOME/bin/freerouting-1.9.0-mesh.jar"
+  else
+    # THE FALLBACK IS NOT SILENT ANY MORE (round-two H5, 11 September 2026). Our build writes a session after
+    # every pass; the stock jar writes one only when the whole job ends, so a run that is cut leaves nothing and
+    # `-Dfreerouting.ses_per_pass` below is a no-op. Every pass ceiling in every profile exists because of that,
+    # and `onstart.sh` never built the jar, so every fresh box routed on stock while the pipeline behaved as
+    # though it had not. A route that silently loses its per-pass sessions is hours of box time with no artefact.
+    if [ "${FR_REQUIRE_MESH:-1}" != 0 ]; then
+      echo "route_one: no $HOME/bin/freerouting-1.9.0-mesh.jar on this host."
+      echo "route_one: that jar writes a session after every pass; the stock one writes one only at the end, so a"
+      echo "route_one: cut run leaves nothing and the pass ceilings exist to work around it. Build it (see"
+      echo "route_one: tools/freerouting/README.md) or set FR_REQUIRE_MESH=0 to route on stock deliberately."
+      exit 2
+    fi
+    echo "route_one: WARNING routing on the STOCK jar by FR_REQUIRE_MESH=0: no session until the job ends"
+    JAR="$HOME/bin/freerouting-1.9.0.jar"
+  fi
 fi
 JAVA=${FR_JAVA:-java}; V2_ARGS=()
 case "$(basename "$JAR")" in freerouting-2.*) [ -x /usr/lib/jvm/java-25-openjdk-amd64/bin/java ] && [ -z "${FR_JAVA:-}" ] && JAVA=/usr/lib/jvm/java-25-openjdk-amd64/bin/java
