@@ -220,3 +220,30 @@ CELL4 inside the guidance and leaves FUSED about 17 percent over**; 1 oz leaves 
 I have changed nothing. The measurement above is from P's own finish, on the board that routed 0 hard and 0
 unrouted on 11 September.
 
+---
+
+## 8. The order set cannot be rebuilt until the board prose names the boards being ordered (12 September 2026)
+
+`make_handoff.py` resolves each board's deliverable phase from the tree now and **refuses** when the prose still
+describes an older phase, which is the gate that stops a note describing D8 travelling with D10's gerbers. It
+refuses today, correctly, and `make_handoff.py` is on the never-auto floor as "the order set and anything
+ordered", so I have not touched it.
+
+**What it needs, and what I checked against the cut board rather than against memory.**
+
+**P: `P1` to `P3` in two places**, the BOARDS row and `PCB_OPTIONS["pcb-p-pack"]`. Everything else in that prose
+is true of the P3 folder cut tonight, read back from its own BOM: `U1` BQ4050RSMR SMBus gauge with primary
+protection and 4S balancing; `Q1` and `Q2` CSD17570Q5B; `R10` a 2 mohm 2512; `F1` the 25 A mini blade in its
+Keystone 3568 holder; `J_CELL` JST-XH 1x5, `J_SMB` JST-XH 1x4, `J_TS` JST-PH 1x2; 70 x 44 mm, two layers.
+
+**The one line that is NOT true is the copper weight**, and that is decision 7: the prose says "Two layers on
+JLC's 2 oz stack" while the board's own generated notes say 1 oz and its stackup is 0.035 mm a face. **Deciding
+7 and updating this prose are the same edit**, which is why they are not separate work.
+
+**D and E follow when their boards land**: D's row says D8 while the tree holds D9 and will hold D10; E's says
+E6 and will need E7. Both are one token in two places, and both need their claims read back the same way before
+the token moves.
+
+**What this costs if it waits:** nothing that is not already waiting. No cart line can be rebuilt until the set
+is final in any case, and nothing is ordered.
+
