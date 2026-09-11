@@ -4299,3 +4299,104 @@ Nothing about the current stackups is settled. From here each board's layer coun
 written decision carrying the measurement that forced it and the cost it adds, before anything is
 ordered; a stackup is never inherited from a sibling board and never promoted silently when a route
 fails; and a session decision taken inside a rulings list is marked as the session's.
+
+### 32.107 Stage 0 of the control plane, and the defect it found: a random UUID decided which escapes fit (11 September 2026, 05:30 CEST; MESHSAT-862)
+
+Owner ruling of the morning: **plumbing first, then the boards**. The programme is `v2/docs/CONTROL-PLANE.md`
+in this repository, which is where the plan lives now; it had been a file in `~/.claude/plans/` and was
+overwritten three times in two days.
+
+**0a, one verdict channel.** Seventeen gates decided on stdout and thirteen drivers recovered those decisions
+with `grep -q 'RESULT: ALL PASS'`. Each gate now writes `out/<tool>.verdict.json` with its counts, its
+denominator and its evidence, and exits with its verdict (0 PASS, 1 FAIL, 3 INCONCLUSIVE). No driver greps a
+gate's prose, and **no finish runs its board gate twice**; every one did, once to print and once to match a
+string, which on B19 is two passes over 951 footprints for one boolean. Denominators measured on real boards:
+A 640 checks, B 1893, C 145, D 225, E 88, P 143.
+
+**Seven silent passes became INCONCLUSIVE and every one still blocks.** The sharpest is `pruned_gate` with no
+pruned list: `escape_prune.py` always writes that file, "# none pruned" included, so its absence meant the
+prune step had never run, and the gate returned 0. The others: `erc_gate` with no ERC output, `impedance_check`
+with no stackup or a dielectric without epsilon_r, `dc_drop` with no intent file or no rail, `check_zone_nets`
+on a board with no pour, `place_audit` with no fine-pitch part, a board gate with no footprint at all.
+
+**`hardset` is the deliberate exception.** It is both a measuring instrument and a gate, and `--score` and
+`--counts` callers rely on exit 0 meaning "the DRC JSON was readable" (`pair_match.sh` returns 999999
+otherwise). It writes its verdict and its exit code is unchanged, with the reason in the code. Its verdict
+file is named after its `--label`, because one finish makes four judgements with it and unlabelled they all
+land on one file and only the last survives; sixteen call sites were unlabelled and two were found by the new
+test rather than by reading.
+
+**0b, determinism, and this is the finding.** A random KiCad UUID was deciding which escapes fit. KiCad mints
+a fresh `(uuid ...)` for every item it writes, the order footprints appear in the file follows from it,
+`escape.py` and `prefanout.py` walk that order, and both lay GREEDILY with copper already laid as an obstacle.
+Two runs of the D chain on identical input differed in **four tracks and four vias of 391 items**, the
+`/MICAMP_OUT` and `/SAU_RST` escape stubs, each a locked track and its via at a different position. Pinning
+`PYTHONHASHSEED` changed nothing, so it was never Python. `tools/boardorder.py` is the stable order and the
+four passes that lay copper use it. After: **D 0 of 391 across three runs, A 0 of 1483, C 0 of 556.**
+
+**The 48-line finding of 32.101 was measuring the file, not the board.** `diff` reported 26,142 differing
+lines of 36,724 on C and the largest bucket was `(uuid`; P and C were already identical AS BOARDS.
+`tools/board_diff.py` separates the two questions by comparing footprints by reference, tracks and vias as
+multisets with ordered ends, and zones by net, layer and priority. `tests/determinism.sh <letter> [runs]` is
+the standing check.
+
+**0c**, every routeflow journal row carries the hash of every board file of that board that exists when the
+row is written, so "in" and "out" are the same field on consecutive rows; `provenance.json`'s board hash is
+`board_sha_before_run`, because it is written before the chain generates the board and was a true value under
+a name that claimed otherwise. **0d**, every wait bounded, and a passing and a failing fixture per gate with
+the admission rule that a gate with neither fixtures nor a written reason fails the suite.
+
+**Three defects found by doing the work rather than planning it.** `b5m.kicad_pcb`, the 2 September B5 board,
+sat in `pcb-b-compute/` and sorts BEFORE the real board, so a wave script that globbed the directory exported
+a BOM for B from a nine-day-old board with 160 footprints against the current 951; nothing downstream consumed
+it, since `out/` is untracked and `jlc_certify.py` reads the deliverable folders, so the certification's 150 B
+rows are sound. `PREROUTE_STOP_AFTER_PLACE=1` was silently a no-op on E and P, whose chains have no pair
+classes, so the placed snapshot every pre-router measurement rests on was never written for them.
+`long_route.sh` held the last unbounded wait, on any Freerouting process started outside its own flock.
+
+**Two lessons about tests, both paid for today.** The first wait-deadline rule PASSED on the tree it was
+written to fail: it ran past the end of a one-line `while ... do sleep 20; done` and swallowed the next loop's
+bound. **A rule that passes on the tree it was written to fail is worse than no rule**, so every structural
+rule here is now run against the pre-fix tree before it is trusted. And `erc_gate.py` shipped `verdict.write`
+with no import: it compiles, and it is a NameError at the one moment nobody is watching, which is why there is
+now a rule that a gate calling the verdict writer must import it.
+
+### 32.108 The occupancy maps, counted once, and the corridor end tested where the stub starts (11 September 2026, 13:00 CEST; MESHSAT-862)
+
+Round-two C3 and C2, taken in the order the reviews give them, and both measured rather than argued.
+
+**The review's proposed expression for the map is not the same map.** It says a pair's forbidden map is
+`all & ~own_P & ~own_N`. Where two nets' grown rasters overlap, and on a dense board they overlap wherever two
+nets run within twice the clearance, clearing the pair's own bits also clears cells the OTHER net blocks. That
+frees copper, which is the unsafe direction, and it would have been invisible: the pass would simply have laid
+more pairs. The rasters therefore COUNT rather than OR, and a cell is blocked for this pair iff the
+whole-board count exceeds the pair's own count. The via map has two components and only one may be
+subtracted: hole-to-hole applies whatever the net, so it is a separate boolean raster OR-ed back afterwards,
+and rule areas belong to no net and are stamped only in the whole-board pass.
+
+**Proved equal on a real board, not only on synthetic cases.** `PAIR_MAP_CHECK=1` builds both the counted map
+and the per-pair rebuild on every call and refuses any difference; D's pre-route ran all 75 calls with no
+difference, same 4 of 5 pairs, same 59,433 expansions.
+
+**The first attempt made it SLOWER, and that is why it was measured.** On D the counted maps took 21 s against
+the rebuild's 17 s. Counting the board once had removed only half the work: the per-pair pass still walked
+every footprint, every pad and every track to find the two nets it cared about, and SWIG's proxy-per-item
+iteration is most of that cost, not the rasterising. The whole-board pass now also builds an index from net
+name to the items on it, topped up with the copper each pass lays, so a pair's own map is a handful of pads
+and the legs laid so far.
+
+**C2, the corridor end.** `free_end` already tested that a candidate end could reach both pads, added on
+10 September as finding 4 of 32.95. It tested from the corridor's CENTRELINE end, and the pass then runs its
+stubs from the two OFFSET leg ends, each displaced perpendicular to the corridor by half the pair pitch. At a
+fine-pitch part the picket of the other nets' escape vias has gaps at the via pitch, and half a pair gap
+sideways is the difference between starting in a gap and starting inside a via's clearance. The test asked
+about a point the pass never uses. `_end_reaches_offset` asks at the points the stubs will really start from,
+trying both sign assignments; the preference order keeps the old answer as the fallback, so the end chosen can
+only improve. `PAIR_END_OFFSET=0` restores the old test.
+
+**A silent pass found by running the tool.** Pointed at `out/<name>-placed.kicad_pcb`, which has no project
+file beside it, the pre-router printed **"0 of 0 pairs laid" and exited 0** under the counted maps, and died
+with an `AttributeError` under the reference maps. The pair classes live in the project file, so a board
+without one has no pairs BY CONSTRUCTION, which is not the same as having laid them all; under the ruling that
+every board is held until every pair is laid, that reads as the board being ready. Both cases are refused now,
+before the board is loaded, and the fixture asserts the refusal AND that "0 of 0 pairs laid" is absent.
