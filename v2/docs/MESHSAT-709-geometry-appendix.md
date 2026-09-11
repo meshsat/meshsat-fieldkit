@@ -4400,3 +4400,46 @@ with an `AttributeError` under the reference maps. The pair classes live in the 
 without one has no pairs BY CONSTRUCTION, which is not the same as having laid them all; under the ruling that
 every board is held until every pair is laid, that reads as the board being ready. Both cases are refused now,
 before the board is loaded, and the fixture asserts the refusal AND that "0 of 0 pairs laid" is absent.
+
+### 32.109 The corridor-end fix measured: +3 of 113, against a prediction of +15, and what the failures actually are (11 September 2026, 14:30 CEST; MESHSAT-862)
+
+**The prediction is refuted, and it was written before the run so that it could be.**
+
+Round-two C2 counts 23 failures as "a corridor was found, no stub path reached the pad from its end" and
+prescribes choosing corridor endpoints the stub search can reach. `free_end` already tested reachability from
+the corridor's CENTRELINE end (finding 4 of 32.95, 10 September); what it did not test was the two OFFSET leg
+ends, half a pair pitch to either side, which is where the stubs actually start. `_end_reaches_offset` asks at
+those points. **Predicted: +15 or better of the 23. Measured: +3.**
+
+**Both arms, one placed board (md5 fc27d67c), one variable, the two-pass per-class configuration of
+`boards/b.json`:**
+
+| arm | DIFF100 pass | USB pass | total |
+|---|---:|---:|---:|
+| A, `PAIR_END_OFFSET=0`, the centreline test as before | 18 of 48 | 35 of 65 | **53 of 113** |
+| B, `PAIR_END_OFFSET=1`, tested where the stubs start | 18 of 48 | 38 of 65 | **56 of 113** |
+
+The DIFF100 pass is IDENTICAL, 18 and 18, with 194,446,075 expansions against 194,577,147: on the class where
+most of the failures sit, the change did not alter a single pair. The three it gained are all in the USB pass.
+
+**Why, from the failure profile of arm B, and it corrects the review's classification.** `pair_report.py` over
+both passes: **30 "no stub path for <net> AT VIA"**, 30 "the legs clear no smoothing of the centreline", 8 "no
+room for the layer-change via pair", 4 "no via site beside the pad with a hop path at U4", and **32 of the
+failures die at a via rather than at a pad**. The stub failures are stubs that cannot reach an ESCAPE VIA, not
+stubs that cannot reach a pad, and `free_end`'s reachability test is about pads on either version. The review
+read the 23 as pad-reaching failures; on this placement they are not.
+
+**This is the same shape as 32.90's own profile** (38 "no stub path at a via", 40 failures dying at a via) and
+32.98's second cause, "the stub hop into an escape via at the CM5 receptacles and the HDMI switches". The
+record already named it; the review's prescription addressed the other half.
+
+**The baseline moved too, and not because of the tool.** The recorded best was 60 of 113 on placement md5
+96052741; this placement, regenerated today through the current generators, gives 53 with the same
+configuration. The placement is the variable, which is worth knowing before any pair number is compared across
+days.
+
+**What the record should carry from here:** the dominant classes on B19 are 30 stubs that cannot reach an
+escape via and 30 legs that clear no smoothing, and neither is a floor-plan problem or a corridor-search
+problem. The next lever is the stub-to-escape-via geometry at the fine-pitch parts, which `PAIR_ENTRY_VIA`
+already touches as a per-pair fallback and which 32.95 measured as costing D10 two of its five pairs when it
+was made a global mode.
