@@ -44,6 +44,17 @@ pours can live on the two outer layers beside the 3 mm bands already there, at t
 is answerable by `dc_drop.py` on a two-layer variant, which is an experiment, not a debate, and it is the cheapest
 layer decision in the set.
 
+**And on 12 September that stopped being an abstract question: it is what holds E7.** E routes to 0 hard and one
+or two opens, round after round, and both of the nets that will not close are the same shape. `/USB_E6_P` runs
+from `J_BLK` pad 9 at x 68.7 to `R29` pad 2 at x 264.6, **196 mm**. `/GEIGER_IN` runs from `J_GEIGER` at x 11 to
+`U10` pad 9 at x 232.75, **214 mm**. E is a **267 mm strip with two routing layers**, and several signals have to
+cross almost its whole length with In1 and In2 unavailable to them. The stub router closed the first of those
+(63 tracks over 2,036 cells, once its emission was fixed, 32.119) and failed on the second.
+
+**So E's layer decision is not only about pour area. It is about whether a 267 mm board carrying end-to-end
+signals should have a routing layer that is not one of its two faces**, and the boards themselves have been
+saying so for three rounds.
+
 **D uses its fourth layer and not heavily.** In2 carries 2,182 mm, 34 percent of the routing, against 4,332 mm on
 the outers. A two-layer D would have to absorb that; the board is 100 x 80 with an RF section, and In1's ground
 plane under the exciter and the filter is an RF requirement, not a routing one. **A four-layer D is defensible on
