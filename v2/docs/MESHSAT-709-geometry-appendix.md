@@ -4595,3 +4595,43 @@ board with that package.
 the gate check, E's block would have been found by the wave, after the route, in the pre stage of a run that had
 already taken the box for the afternoon. It was found in eleven minutes instead, and the other four boards were
 proved placeable in the same eleven.
+
+### 32.115 Four writers on a channel nobody read, and what it cost to start reading it (11 September 2026, 20:30 CEST; MESHSAT-862)
+
+Stage 0 gave seventeen gates a verdict file. **Nothing read those files.** The supervisor began deciding on them
+on the 11th, and within one afternoon **four of the writers turned out to be wrong**, each in a way that had
+cost nothing while nobody was reading.
+
+**1. `hardset.py` failed a pre-route board for being unrouted.** It takes `pre` or `post` as its second argument
+and has always honoured it in the printed line and in the gate file. The verdict did not: it wrote FAIL unless
+hard AND unrouted were both zero, in either stage. **An unrouted board is the state a pre-route board is defined
+by.** E's verdict read FAIL beside its own printed line `hard 0 of 15 types {} unrouted 357`, and the chain's
+text on the same run said `PREROUTE-DONE OK`. It blocked two of the wave's four boards.
+
+**2. `netlist_board.py` read KiCad's unconnected-pin placeholder as a net** (32.113): 1,007 of B19's 6,716
+comparisons, on a board whose every other gate passes.
+
+**3. `check_contracts.py` called a missing board a broken contract.** P3 routed, passed every electrical gate,
+and then printed eleven contract FAILs naming board A: the transmit inhibit absent, four slot rails with zero
+pins on A, the dock block pins empty, the ribbon map differing on all 26 pins. Every one was a claim about the
+design and every one was really a claim about the tree: **A had never been generated on that box.** A missing
+input is INCONCLUSIVE. With A placed, the same check reads **ALL CONTRACTS PASS, 40 of 40.**
+
+**4. `verdict.collect` had no horizon**, so a stage was judged partly by verdicts an EARLIER stage wrote. E
+routed to 0 hard and 1 open, its finish refused on the open, routeflow applied its remedy, and the round-two
+PRE stage was blocked by a `check_contracts` verdict that round ONE's FINISH had written.
+
+**And the horizon took three attempts, which is the part worth keeping.** Written first, it was taken AFTER the
+chain ran, where it would have excluded every verdict the chain had just written. Moved, it compared
+routeflow's `now()`, which is **local time with a space separator**, against a verdict `ts` in **UTC with a T
+and a Z**; in a string compare `T` sorts after a space, so every record landed on the keep side and the horizon
+dropped nothing at all. Board P stayed blocked with the fix supposedly in. `verdict.now()` is the single
+producer of that stamp now.
+
+**The common cause of all three misses is one habit: testing the new unit in isolation when the defect lives at
+the seam between two.** A unit test of `collect()` passes whichever clock the caller uses. The rule that finally
+held it drives BOTH producers against each other, and the rule about WHERE the horizon is taken is structural,
+because the defect was the position of a line rather than what it computed.
+
+**The rule to carry out of the day: wiring a reader to an unread channel is a change to every writer on it, and
+the writers have to be re-read as if they were new.**
