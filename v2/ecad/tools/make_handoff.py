@@ -90,8 +90,14 @@ def _resolve(folder, prj, phase, hand):
     print("make_handoff: %s advanced %s -> %s (the tree's newest, and the notes are written for it)" % (letter.upper(), phase, newest))
     return nf, newest
 
-BOARDS = [(_resolve(f, prj, ph, hand)[0], stem, prj, title, _resolve(f, prj, ph, hand)[1], hand)
-          for f, stem, prj, title, ph, hand in BOARDS]
+def _rows(rows):
+    out = []
+    for f, stem, prj, title, ph, hand in rows:
+        nf, nph = _resolve(f, prj, ph, hand)   # once per board: it lists the release folder and may print
+        out.append((nf, stem, prj, title, nph, hand))
+    return out
+
+BOARDS = _rows(BOARDS)
 
 JLC = os.path.join(RELEASE, "order"); REV = os.path.join(RELEASE, "review")
 # The deliverable folders are written by finish_board.sh on the laptop. Building order/ and review/ from a clone that has
