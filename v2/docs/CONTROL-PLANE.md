@@ -194,6 +194,37 @@ router closing its one open), C is routing, P routed and finished every electric
 the process, every one of them a writer that had been wrong for as long as nobody read it; they are in
 `project_unread_channel_defects.md` and in appendix 32.113 and 32.114.
 
+## Where the run stands, 12 September 2026 01:15 CEST
+
+**Delivered.**
+
+| | |
+|---|---|
+| the twelve board finish clones | retired into one `finish.sh`, 638 lines gone, five gate gaps closed |
+| the verdict channel | four writers corrected on their first real read, plus a horizon and one clock |
+| `routeflow.py validate` | 19 to 22 properties of a profile against the tree, nothing written, no host touched; ten of twelve profiles as they stood this morning fail it |
+| the patched Freerouting jar | actually in use: every profile had pinned the stock one, which bypassed the refusal |
+| `ledger_verify.py` | the standing check stage 1 named and nobody wrote |
+| `layer_audit.py` and the P0 evidence | `LAYER-DECISIONS-2026-09-11.md`, checked against every shipped gerber zip |
+| `stitch_prune.py` | the locked via a pour has abandoned, judged on a copy |
+| thirty pair arms | two rounds, graded against written predictions, best 62 of 113 |
+| **P3** | **routed 0 hard 0 unrouted, finished, `verify_deliverable` ALL PASS 35 of 35, committed** |
+| the phase directories' board state | tracked, after losing four routed boards to a destroyed box on 10 September |
+| seven owner decisions | batched with their evidence in `OWNER-DECISIONS-2026-09-11.md` |
+
+**In flight on the box.** C routing (30 passes, started 13:34Z). E routing its second round: it reaches 0 hard
+and **one** open, `/USB_E6_P` between `J_BLK` pad 9 and `R29` pad 2, where the stub router's only closure is a
+1,017-item carpet that `stub_accept` refuses on its own cap.
+
+**Blocked on a decision, not on work.** **B** by the pair hold, which 30 arms now price at 62 of 113 on a good
+draw with a variance larger than any single change measured. **D** by the same hold, and its one unlaid pair is
+decision 6: the channel between two 2.54 mm IDC ground pins is 0.84 mm and the pair needs 1.054.
+
+**What the day's defects had in common.** Five of them were a mechanism with a guard that something else made
+unreachable: a stage argument the verdict ignored, a placeholder net read as a net, a missing board read as a
+broken contract, a horizon computed and never passed, a jar pinned past the refusal that exists for it. **None
+was found by reading the code. Every one was found by running it and reading the number it produced.**
+
 ## Order of work
 
 **Stage 0, the preconditions, and they are most of the value.**
