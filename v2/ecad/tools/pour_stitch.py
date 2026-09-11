@@ -29,7 +29,12 @@ if dry:
     for e in (".kicad_pro", ".kicad_prl"):
         s_ = os.path.splitext(bp)[0] + e
         if os.path.exists(s_): __import__("shutil").copy(s_, os.path.splitext(tmp)[0] + e)
-j = os.path.splitext(tmp)[0] + "-stitch-drc.json"
+# The DRC JSON is an intermediate, so it belongs in out/ with every other one. Written beside the
+# BOARD it escaped the out/ ignore rule and turned up as untracked noise in the project directory
+# after every run (12 September 2026).
+_od = os.path.join(os.path.dirname(os.path.abspath(bp)) or ".", "out")
+os.makedirs(_od, exist_ok=True)
+j = os.path.join(_od, os.path.basename(os.path.splitext(tmp)[0]) + "-stitch-drc.json")
 
 def measure():
     b.BuildConnectivity(); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(tmp, b)
