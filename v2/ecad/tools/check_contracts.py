@@ -26,9 +26,12 @@ def load(stem):
     return by_net, by_pin
 
 B = {}
+MISSING = []
 for k, stem in NETS.items():
     n, p = load(stem)
-    if n is None: print("MISSING netlist for %s (%s), run its chain first" % (k, stem))
+    if n is None:
+        print("MISSING netlist for %s (%s), run its chain first" % (k, stem))
+        MISSING.append(k)
     B[k] = (n or {}, p or {})
 
 # Names that legitimately differ across a connector, with the reason. A contract is about which pin carries what,
@@ -187,15 +190,24 @@ for _bd, _stem in NETS.items():
                 if not [q for q, _ in _nets.get(n, set()) if q != _r and not q.startswith(_IGNORE)]]
         check(not _bad, "%s: %s (%s) is in series with a real pin on both sides" % (_bd, _r, _val), "dead net(s) %s" % _bad)
 
-print("\n%d contract(s) FAILED" % len(fails) if fails else "\nALL CONTRACTS PASS")
+# A board whose netlist is not in this tree has not been checked; every contract that names it then reads as a
+# FAIL of the contract, which is a claim about the design. It is a claim about the tree. On a rented box where
+# only one board has been regenerated, P3's finish printed eleven contract FAILs naming A, and A had simply
+# never been generated there (11 September 2026). A missing input is INCONCLUSIVE, and it still blocks.
+if MISSING:
+    print("\n%d board netlist(s) absent from this tree: %s. Every contract that names one of them was judged "
+          "against nothing, so this is INCONCLUSIVE and not a verdict on the design; generate those boards "
+          "and run it again." % (len(MISSING), ", ".join(MISSING)))
+print("\n%d contract(s) FAILED" % len(fails) if fails else ("\nALL CONTRACTS PASS" if not MISSING else ""))
 import os as _osv
 sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
 import verdict as _v
 # A contract set that checked nothing has found nothing wrong, which is not the same as agreement.
 sys.exit(_v.write("check_contracts",
-                  _v.INCONCLUSIVE if not checked else (_v.PASS if not fails else _v.FAIL),
-                  counts={"fail": len(fails), "pass": len(checked) - len(fails)},
+                  _v.INCONCLUSIVE if (not checked or MISSING) else (_v.PASS if not fails else _v.FAIL),
+                  counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING)},
                   denominator=len(checked),
-                  evidence=fails,
+                  evidence=(["netlist absent: " + k for k in MISSING] + fails) if MISSING else fails,
                   inputs={"boards": ",".join(sorted(B))},
-                  note="" if checked else "no contract was evaluated"))
+                  note=("no contract was evaluated" if not checked else
+                        ("%s absent from this tree, so nothing that names them was judged" % ", ".join(MISSING)) if MISSING else "")))
