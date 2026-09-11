@@ -19,7 +19,7 @@
     "must": "saved"
    },
    {
-    "file": "out/gen_pcb_c3.log",
+    "file": "out/gen3.log",
     "must": "saved"
    }
   ],
@@ -34,7 +34,8 @@
     "../tools/full_c7.sh",
     "."
    ]
-  ]
+  ],
+  "_gen_logs_fixed": "11 September 2026: this named out/gen_pcb_c3.log, which no chain has written since full.sh replaced the clones; full.sh writes the placement generator to out/gen3.log. A declared log that is never written blocks every run of the board."
  },
  "route": {
   "attempts": [

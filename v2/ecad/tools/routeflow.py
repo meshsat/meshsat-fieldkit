@@ -322,6 +322,14 @@ def validate(profile_fn, repo=None):
         cand = os.path.join(ecad, ps.lstrip("./")) if not ps.startswith("../") else os.path.join(ecad, ps[3:])
         ok(os.path.exists(cand), "the pre-route script exists: %s" % ps)
         ok(bool(pre.get("must_contain")), "the pre-route stage names what its log must contain")
+        # A declared generator log that the chain never writes blocks every run of that board. c7 and c8 named
+        # out/gen_pcb_c3.log, which no chain has written since full.sh replaced the clones, and C died on it
+        # twice before anyone read the message (11 September 2026).
+        WRITES = {"out/gen_sch.log", "out/gen_fp.log", "out/gen3.log"}
+        for g in pre.get("gen_logs") or []:
+            f = g.get("file") if isinstance(g, dict) else g
+            ok(f in WRITES or re.fullmatch(r"out/gen_pcb_[a-z0-9]+\.log", f or ""),
+               "the declared generator log is one the chain writes: %s" % f)
     ok(bool(prof.get("expect")), "the profile carries an expectation to be graded against")
     jar = str(prof["route"].get("jar", ""))
     ok(not jar or jar.endswith(".jar"), "the route names a jar file (%s)" % (jar or "the host default"))
