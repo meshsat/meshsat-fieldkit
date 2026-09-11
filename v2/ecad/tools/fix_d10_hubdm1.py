@@ -19,7 +19,12 @@ import hardset
 
 NET = "/HUB_DM1"; DEST = ("R13", "1"); W = 0.25; VD, VDR = 0.45, 0.25
 bp = sys.argv[1]; test = "--test" in sys.argv
-out = os.path.splitext(bp)[0] + "-hand.kicad_pcb" if test else bp
+# A test copy goes in out/, never beside the board: a project directory that holds a second board is the B5
+# trap of 11 September, where a nine-day-old file sorted first and a wave script exported a BOM from it.
+# tests/test_driver_hygiene.py caught this one before it was committed (12 September 2026).
+_od = os.path.join(os.path.dirname(os.path.abspath(bp)) or ".", "out")
+if test: os.makedirs(_od, exist_ok=True)
+out = os.path.join(_od, os.path.basename(os.path.splitext(bp)[0]) + "-hand.kicad_pcb") if test else bp
 b = pcbnew.LoadBoard(bp); mm = pcbnew.ToMM
 
 pad = next((q for f in b.GetFootprints() if f.GetReference() == DEST[0] for q in f.Pads() if q.GetNumber() == DEST[1]), None)
