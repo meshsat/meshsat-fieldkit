@@ -14,7 +14,7 @@ ITEMS = ["%s-gerbers.zip", "%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-drc
 
 BARE_SKIP = ("%s-bom.csv", "%s-cpl.csv", "README-fab.txt", "%s-schematic.pdf", "%s.kicad_sch", "%s-bom.status")   # a bare board (E5) has no schematic, BOM or CPL
 
-def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP"), bare=False):
+def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP", "PAD", "P_"), bare=False):
     fails, lines = [], []
     def ok(cond, text):
         lines.append(("PASS  " if cond else "FAIL  ") + text)
@@ -68,8 +68,28 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP"), bare=False):
         if cpl_refs:
             missing = [r for r in refs if r not in cpl_refs and not r.startswith(bench)]
             ok(not missing, "every BOM designator is in the CPL (%d of %d; missing %s)" % (len(refs) - len(missing), len(refs), missing[:8]))
+        # 11 September 2026 (MESHSAT-862): this was an INFO line appended straight to `lines`, so it
+        # bypassed ok() and gated nothing. A blank code is acceptable only when the row is a bench-fitted
+        # land that JLC never places, or a part declared in tools/jlc-handfit.txt with a purchase route.
+        # Everything else is a part nobody can buy, which is the whole point of the certification.
+        _hf = {}
+        _hff = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jlc-handfit.txt")
+        if os.path.exists(_hff):
+            for _ln in open(_hff, errors="replace"):
+                _ln = _ln.strip()
+                if not _ln or _ln.startswith("#") or "#" not in _ln: continue
+                _k, _r = _ln.split("#", 1)
+                if _k.strip() and _r.strip(): _hf[_k.strip()] = _r.strip()
+        def _declared_handfit(r):
+            c = r.get("Comment", "")
+            return any(k in c for k in _hf)
         blank = [r for r in rows if not r.get("LCSC Part #")]
-        lines.append("INFO  BOM lines without an LCSC code: %d of %d (%s)" % (len(blank), len(rows), ", ".join(r.get("Designator", "")[:20] for r in blank[:6])))
+        undeclared = [r for r in blank
+                      if not r.get("Designator", "").strip().startswith(bench) and not _declared_handfit(r)]
+        ok(not undeclared, "every BOM line without an LCSC code is a bench-fitted land or a declared hand-fit part "
+                           "(%d blank of %d, %d declared, %d not: %s)"
+           % (len(blank), len(rows), len(blank) - len(undeclared), len(undeclared),
+              ", ".join(r.get("Designator", "")[:20] for r in undeclared[:6]) or "none"))
     # the silk names this deliverable's phase and no other (8 Sep 2026: every placement generator hard-coded the PREVIOUS phase, so the
     # released P2 carries "REV A (P1)" on its underside and D9 would have shipped stamped D8; the deliverable folder name is the authority)
     ph = os.path.basename(D.rstrip("/")).rsplit("-", 1)[-1]
