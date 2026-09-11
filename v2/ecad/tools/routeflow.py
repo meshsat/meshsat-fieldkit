@@ -16,6 +16,8 @@ Usage:
 Profile (JSON): see tools/routeflow/*.json. Placeholders in argv: <PROJECT> (the project dir), <ECAD> (its parent), <NAME> (the board stem).
 """
 import platform, sys, os, re, json, time, glob, hashlib, subprocess, shutil, collections, tempfile, datetime, fcntl
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict   # one hash implementation, and the same one the gates write into their verdicts
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import hardset   # 10 September 2026: the supervisor used to carry its own six-type tuple while the finish refused on hardset's
@@ -135,9 +137,33 @@ def remedy(sig, prof, applied):
     return None, "hard violations of mixed kind: needs the session (route_audit.py)"
 
 # ---------------------------------------------------------------- the run
+# The board files a stage can produce or consume, by the board's name. A stage's row carries the hash of every one
+# that exists at the moment the row is written, so "in" and "out" are the same field read on consecutive rows.
+BOARD_FILES = ("%s.kicad_pcb", "out/%s-placed.kicad_pcb", "out/%s-preroute.kicad_pcb",
+               "out/%s-par-routed.kicad_pcb", "out/%s-routed.kicad_pcb")
+
+
+def board_hashes(project, name):
+    """MESHSAT-862, stage 0c, 11 September 2026: a run recorded its configuration and never the bytes it acted on.
+
+    provenance.json is written before the chain generates the board it names, so its board hash was the PREVIOUS
+    run's board or nothing at all, and a journal row said which knobs were set and never which board they were set
+    on. Two runs of one profile that produce different boards were indistinguishable in the record, which is also
+    what made the determinism question (stage 0b) unanswerable from the journal."""
+    out = {}
+    for pat in BOARD_FILES:
+        fn = os.path.join(project, pat % name)
+        h = verdict.sha256_file(fn) if os.path.exists(fn) else None
+        if h: out[os.path.basename(fn)] = h
+    return out
+
+
 def journal(project, rec):
     os.makedirs(os.path.join(project, "out", "routeflow"), exist_ok=True)
     rec = dict(ts=now(), **rec)
+    if rec.get("board") and "boards" not in rec:
+        try: rec["boards"] = board_hashes(project, rec["board"])
+        except Exception as e: rec["boards"] = {"error": str(e)}
     with open(os.path.join(project, "out", "routeflow", "journal.jsonl"), "a") as f: f.write(json.dumps(rec) + "\n")
     print("[routeflow %s] %s %s  %s" % (rec["ts"][11:], rec.get("stage", ""), rec.get("status", ""), rec.get("note", "")), flush=True)
 
@@ -179,7 +205,10 @@ def provenance(repo, prof, project, fp):
     return {"fingerprint": fp, "utc": datetime.datetime.utcnow().isoformat() + "Z", "host": os.uname().nodename,
             "git_head": out(["git", "rev-parse", "HEAD"]), "git_tools_tree": out(["git", "rev-parse", "HEAD:v2/ecad/tools"]),
             "git_dirty": bool(out(["git", "status", "--porcelain", "v2/ecad/tools"])), "git_dirty_sha": hashlib.sha256(out(["git", "diff", "HEAD", "--", "v2/ecad/tools"]).encode()).hexdigest()[:16],
-            "board_sha": sha(pre), "board_file": pre, "kicad": kicad, "python": sys.version.split()[0],
+            # NOT the board this run produces: provenance is written before the chain generates it, so this is
+            # whatever was on disk from the previous run, or nothing. The board a stage acted on is in that
+            # stage's journal row, under "boards" (stage 0c, 11 September 2026).
+            "board_sha_before_run": sha(pre), "board_file": pre, "kicad": kicad, "python": sys.version.split()[0],
             "freerouting_jar": os.path.basename(jar), "freerouting_sha": sha(jar), "java": out(["java", "-version"]) or out(["bash", "-c", "java -version 2>&1 | head -1"])}
 
 _LOCK_FH = []   # kept open for the life of the process: closing the handle releases the flock
@@ -629,6 +658,21 @@ def selftest():
         base_all = json.load(open(os.path.join(tools_dir, "routeflow", "bench", "baseline.json")))
         chk("the baseline is keyed by board, not phase (%s)" % ", ".join(sorted(base_all)), all(len(k) <= 2 for k in base_all) and _bc2.board_key("pcb-b-compute-b19/pcb-b-compute.kicad_pcb") == "B")
     except Exception as e: chk("baseline readable and keyed by board (%s)" % e, False)
+    # Stage 0c (11 September 2026): a journal row must name the bytes it is about, and must say nothing when
+    # there are no bytes. A row that carried a board name and no hash was the shape that made two runs of one
+    # profile indistinguishable in the record.
+    jp = os.path.join(t, "proj"); os.makedirs(os.path.join(jp, "out"))
+    journal(jp, dict(board="brd", stage="pre", status="GENERATING"))
+    row = json.loads(open(os.path.join(jp, "out", "routeflow", "journal.jsonl")).read().splitlines()[-1])
+    chk("a row about a board that does not exist yet claims no hash", row.get("boards") == {})
+    open(os.path.join(jp, "brd.kicad_pcb"), "wb").write(b"(kicad_pcb)")
+    journal(jp, dict(board="brd", stage="route", status="ROUTING"))
+    row2 = json.loads(open(os.path.join(jp, "out", "routeflow", "journal.jsonl")).read().splitlines()[-1])
+    chk("a row names the board file it acted on", list(row2.get("boards", {})) == ["brd.kicad_pcb"] and len(row2["boards"]["brd.kicad_pcb"]) == 16)
+    open(os.path.join(jp, "brd.kicad_pcb"), "wb").write(b"(kicad_pcb changed)")
+    journal(jp, dict(board="brd", stage="finish", status="CLEAN"))
+    row3 = json.loads(open(os.path.join(jp, "out", "routeflow", "journal.jsonl")).read().splitlines()[-1])
+    chk("a changed board changes the hash on the next row", row3["boards"]["brd.kicad_pcb"] != row2["boards"]["brd.kicad_pcb"])
     shutil.rmtree(t, ignore_errors=True); ok = sum(1 for _, c in res if c)
     print("selftest: %d of %d predicates block on empty input as required" % (ok, len(res))); return 0 if ok == len(res) else 1
 
