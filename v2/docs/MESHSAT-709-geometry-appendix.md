@@ -4857,3 +4857,66 @@ and only one of them being consulted. The others were the finish clones against 
 phase a profile names against the folder its finish cuts, the jar a profile pins against the jar `route_one`
 would choose, and a phase copy's declaration files against its board's. **The rule that keeps catching them is
 the same one: compare the two ends against each other, not either end against its own intention.**
+
+### 32.124 Two defects between D and its fifth pair, and a footprint origin that is not a centre (12 September 2026, 18:30 CEST; MESHSAT-862)
+
+D has laid 4 of 5 pairs since 11 September and the pre-router has been saying why in a line that reads as a
+tool weakness and is not one: `the legs clear no smoothing of the centreline`. It lays **5 of 5** now. Two
+separate things had to go, and the second was invisible until the first was fixed.
+
+**One: a pair cannot leave an inner row of a 2.54 mm IDC header, and this is arithmetic.** The pads are 1.70 mm
+on a 2.54 mm grid, so the channel between two columns is **0.84 mm**, while the pair needs 0.30 + 0.20 + 0.30
+plus its clearance on both sides, **1.054 mm at the class clearance of 0.127** (decision 6 of
+`OWNER-DECISIONS-2026-09-11.md` took that measurement on 11 September). The pins are through-hole, so the
+channel is 0.84 mm **on every layer** and no inner row can be left in any direction. The answer decision 6
+missed is the cheapest one: **the END row**, which escapes past the end of the connector into free board. D's
+`J_HARN1` and A22's `J_MEZZ1` carry `USB_D8` on pins 1/2 now, ground on the four pins behind it, the cable
+still pairing adjacent conductors. `tools/tests/test_pair_headers.py` holds the rule and fails on the pre-fix
+tree; `tools/pair-header-allow.txt` carries the five pairs this does not fix, each with its reason.
+
+**Two: `GetPosition()` is a footprint's ORIGIN and on every connector in this tree that origin is pin 1.** The
+pre-router picks which side of a station to leave from by dotting the station's offset from the footprint's
+centre with the normal of the P-N line. For a pair on the **end row** the origin lies exactly ON the station
+line, the dot product is zero, nothing flips, and the default direction points straight INTO the pin field.
+Measured: the corridor end came out at (58.80, 85.35), between J_HARN1's two columns and one row inside the
+connector, and the fan into the pads had no path from there. The pads' own centre is (58.5, 92.0), which puts
+the exit north, off the end of the connector, where the board is empty. Four sites read the origin; all four
+take `fp_centre` now, and `tests/test_pair_station_side.py` is the guard.
+
+**What made both visible was instrumentation, not reading.** The debug line that names what a leg hit scanned
+pads, tracks and vias only, so a leg stopped by a keep-out was reported as the nearest **pad** at 1.85 mm, an
+object that could not possibly have blocked it; it names rule areas now, footprint-local ones included, and
+never names a copper pour, which is not an obstacle. And the failure line now says whether the CENTRELINE is
+free where the leg is not.
+
+**That second instrument found a third thing, which is left OFF on purpose.** The corridor map is grown by
+`w + s/2 + slack` and the leg maps by `w + s/2 + 0.02`, so **the corridor is 0.02 mm short of covering its own
+legs before the slack is counted**, and the whole margin at the standard slack is 0.10 mm, exactly one cell of
+the 0.1 mm grid. At D's failure point pad U2.1 sat **0.618 mm** from the centreline against a 0.610 demand and
+**0.367 mm** from the leg against a 0.330 demand: both fit in exact arithmetic, by 8 and 37 micrometres, and
+the rasterised cell centres did not. So a centreline the map calls free can carry a leg the map calls blocked,
+and the pass then reports a smoothing failure for a rounding one. `PAIR_COVER_LEGS=1` closes it and **is off by
+default**: it adds 0.12 mm to the envelope, and on the recorded B19 ladder (slack 0.12 lays 49, 0.20 about 44,
+0.25 lays 38) that direction costs pairs. B19's own tuned slack of 0.08 sits inside the uncovered band, so that
+tuning may in part be paying for this rounding. It goes on when a B19 arm says it wins, and not before.
+
+**The prediction I wrote before running was wrong in an instructive way.** It said the corridor change would
+give D its fifth pair. It did not: D lays 5 of 5 with the change on **or** off, once the station leaves on the
+right side. The corridor change is a correctness finding with no measured gain today, and it is recorded as
+that rather than as an improvement.
+
+### 32.125 E7 is cut, and the board was never the thing that was wrong (12 September 2026, 17:48 CEST; MESHSAT-862)
+
+`meshsat-pcb-e-revA-E7` is in `v2/release/revA/boards/`: 0 hard of the fifteen types, 0 unrouted, 415 vias over
+8564 mm on four layers, both rails MET (CELL_F 10.0 A, VIN_RAW 213 mV of a 2 percent budget), `check_pcb_e` 88
+of 88, `netlist_board` 816 of 816, contracts ALL PASS, `verify_deliverable` **ALL PASS on 35 of 35**. The board
+file, the copy in the deliverable and the recorded sha256 all read
+`fdf864b638368a05c4d3fdff846557ec3f11fdc475fb061fd49bf968d1b0ee2e`, and the gerber zip carries four copper
+layers for a four-layer board.
+
+It had been refused once, at 34 of 35, on the blank-code rule of 32.123, and the copper never changed between
+the refusal and this folder: the same board passes untouched with the gate reading the declaration the project
+actually uses. **The round that refused it was round one of a run whose round two was already re-routing the
+board at 250 passes when the fix landed.** That round was killed by PID and the finish re-run on round one's
+kept board, which is what the best-board rule of 12 September exists for. Three hours of box time, and a board
+that was already right.

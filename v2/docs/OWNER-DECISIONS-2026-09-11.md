@@ -192,6 +192,35 @@ pairs (`USB_D8`, `USB_E6`, `USB_WALL`) on a 2x13 of the same family, so the coun
 the B19 arm results will say. **Pair class geometry is on the never-auto floor** (`reserved.json`), so I have
 taken the measurement and stopped.
 
+### Addendum, 12 September 2026: a fourth way out that costs nothing, and what is left of this decision
+
+**The question above assumed the pair must cross the pin field. It does not have to.** A pair on the header's
+**END row** leaves past the end of the connector, into free board, and never enters the channel at all. D's
+`J_HARN1` and A22's `J_MEZZ1` carry the pair on pins 1/2 now, with the four pins behind it ground, and **D lays
+5 of 5 pairs**. No class geometry changed, no pad changed, no part moved, and the cable still pairs adjacent
+conductors, which is the arrangement the 10 September change was made for. Nothing on the never-auto floor was
+touched. `tools/tests/test_pair_headers.py` is the rule, and `tools/pair-header-allow.txt` is where a pair that
+cannot sit there is declared with its reason.
+
+**Half of D's failure was not this at all**, and it is worth knowing before the options above are weighed: the
+pre-router decided which side of a station to leave from by reading `GetPosition()` as the footprint's centre,
+and on every connector here that is **pin 1**. For a pair on the end row that origin lies exactly on the station
+line, so the test could not flip anything and the corridor left INTO the connector. Both defects had to go before
+the pair laid (appendix 32.124).
+
+**What is left for you, and it is smaller than yesterday's question:**
+
+- **`J_AB1`, the A to B ribbon, carries THREE pairs and a 2x13 has TWO end rows.** Two of the three can take the
+  end rows; the third cannot escape coupled whatever the pin map, by the arithmetic above. Options 1, 2 and 3
+  above apply to that one pair only, plus a fourth: **a second connector**, which the A and B boards have room
+  for and which costs a part and a cable.
+- **`J_PANEL`, B to C, carries `USB_PNL` on an inner row.** On C this is already settled and needs nothing: C
+  declares its USB class with **no impedance target** (the RP2040 is USB 1.1 full speed, 32.78), so the two
+  lines are routed singly and a single 0.30 mm track passes the 0.84 mm channel with room. On B the same pair
+  carries the 90 ohm target and is in the same position as the `J_AB1` three.
+- **A and B are held by other things as well** (A24's `+3V3` has no copper of its own, B19 is not routed), so
+  this is not what is between the set and a release today.
+
 ---
 
 ## 7. P and E5 are described as 2 oz and ordered as 1 oz, and P's current density is already over IPC at either (measured 11 September, 23:45)
