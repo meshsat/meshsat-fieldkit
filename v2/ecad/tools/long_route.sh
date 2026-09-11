@@ -2,7 +2,14 @@
 # Usage: long_route.sh <dir> <name> <passes> : one long Freerouting run from the pre-route board (serialised), then DRC
 cd "$1"; N="$2"; P="$3"
 exec 9>/tmp/meshsat-freerouting.lock; flock 9
-while pgrep -f '^java .*freerouting' >/dev/null; do sleep 20; done
+# A wait with a deadline (MESHSAT-862, stage 0a, 11 Sep 2026). This was the last unbounded wait in the tools:
+# the flock above already serialises our own routes, so this loop only catches a router started outside the lock,
+# and with no bound a stray java process made this job immortal with nothing saying so.
+W=0
+while pgrep -f '^java .*freerouting' >/dev/null; do
+  sleep 20; W=$((W + 20))
+  if [ "$W" -ge "${LONG_ROUTE_WAIT_S:-21600}" ]; then echo "long_route: another router still running after ${W} s; refusing"; echo LONG-ROUTE-DONE REFUSED; exit 1; fi
+done
 cp out/$N-preroute.kicad_pcb $N.kicad_pcb; rm -f out/$N-freerouting.log
 export FR_XVFB=1 FR_JAR=$HOME/bin/freerouting-1.9.0.jar
 ( ../tools/route_pcb.sh . $N "$P" 2>&1 | grep -E 'SES import|tracks|non-zero' ) &
