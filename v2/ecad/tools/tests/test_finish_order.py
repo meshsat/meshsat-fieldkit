@@ -26,9 +26,11 @@ FINISH = os.path.join(TOOLS, "finish.sh")
 STAGES = ("unknot", "cleanup_dangling", "zone_pad_via", "pour_stitch", "stub_router")
 
 # Every gate that decides whether a board is finished. A gate absent from the finish is a bar nothing tests.
+# Every gate that decides whether a board is finished. `stitch_prune.py` is NOT one: it is a cleanup that cuts
+# copper, it is declared per board and off everywhere, and listing a cleanup among the gates is the drift this
+# file exists to catch.
 GATES = ("hardset.py", "check_pcb_", "dc_drop.py", "impedance_check.py", "netlist_board.py", "check_contracts.py",
-         "pruned_gate.py", "pair_match.sh", "quality_pass.sh", "silk_fix_all.py", "stackup_write.py",
-         "stitch_prune.py")
+         "pruned_gate.py", "pair_match.sh", "quality_pass.sh", "silk_fix_all.py", "stackup_write.py")
 
 
 def _order(path):
@@ -143,9 +145,22 @@ def t_routeflow_validate_agrees_with_these_rules():
         assert r.returncode == 0, "%s: %s" % (os.path.basename(p), (r.stdout + r.stderr).strip().splitlines()[-1] if (r.stdout + r.stderr).strip() else r.returncode)
 
 
+def t_the_stitch_pruner_is_off_unless_a_board_asks_for_it():
+    """It cuts copper out of a board bound for manufacture, and on 12 September it was measured finding sixteen
+    abandoned vias on board E of which none was dead. That is fixed; what is not fixed is that it has never
+    removed a via that needed removing, so its risk is proved and its value is not. It is declared per board and
+    no board declares it."""
+    t = open(FINISH, errors="replace").read()
+    assert 'if [ -n "$(cfg x stitch_prune)" ]' in t, "the pruner runs on every board rather than on request"
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        f = json.load(open(p))["finish"]
+        assert not f.get("stitch_prune"), \
+            "%s turns the pruner on: record the board's own number for it here when you do" % os.path.basename(p)
+
+
 def t_the_stitch_pruner_is_reverted_when_it_opens_anything():
     """It removes copper, so it is judged the way the stub router is: the board before it is kept, and it goes
-    back if hard or unrouted rose. A cleanup that can only be trusted when it happens to be right is a gamble."""
+    back if hard or unrouted ROSE. A cleanup that can only be trusted when it happens to be right is a gamble."""
     t = open(FINISH, errors="replace").read()
     i = t.index("stitch_prune.py")
     after = t[i:i + 900]
