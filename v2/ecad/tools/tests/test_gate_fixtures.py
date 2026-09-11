@@ -284,3 +284,28 @@ def t_the_pre_router_refuses_a_board_whose_pair_classes_it_cannot_read():
     rc, out = _run([os.path.join(TOOLS, "pair_preroute.py"), b, "--classes", "USB"], cwd=d)
     assert rc != 0, (rc, out)
     assert "no netclass_assignments" in out, out
+
+
+# ---------------------------------------------------------------- a missing board is not a broken contract
+# check_contracts reads every board's netlist out of the tree. On a rented box where only one board has been
+# regenerated, it printed eleven FAILs naming board A and A had simply never been generated there, so P3's
+# finish reported "CONTRACTS FAILED" about a design nothing had looked at (11 September 2026). A missing input
+# is INCONCLUSIVE. It still blocks: what changes is that a skipped check can no longer read as a failed one.
+
+def t_check_contracts_is_inconclusive_when_a_board_is_absent():
+    import subprocess, tempfile, json as _j
+    d = tempfile.mkdtemp(prefix="contracts-absent-")
+    os.makedirs(os.path.join(d, "out"))
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_contracts.py"), d],
+                       capture_output=True, text=True, cwd=d)
+    assert r.returncode == 3, (r.returncode, (r.stdout + r.stderr)[-400:])
+    assert "absent from this tree" in (r.stdout + r.stderr), (r.stdout + r.stderr)[-400:]
+    rec = _j.load(open(os.path.join(d, "out", "check_contracts.verdict.json")))
+    assert rec["verdict"] == "INCONCLUSIVE", rec
+    assert rec["counts"]["missing_boards"] > 0, rec
+
+
+def t_the_finish_treats_an_inconclusive_contract_set_differently_from_a_failed_one():
+    t = open(os.path.join(TOOLS, "finish.sh"), errors="replace").read()
+    assert 'CONTRACTS NOT JUDGED' in t, "the finish does not separate a missing board from a broken contract"
+    assert '"$CT" -eq 3' in t, "the finish does not read the INCONCLUSIVE exit code"

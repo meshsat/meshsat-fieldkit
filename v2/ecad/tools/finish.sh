@@ -103,8 +103,11 @@ python3 $T/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > out/$N
 [ "$IM" -eq 0 ] || stop "IMPEDANCE $(python3 $T/verdict.py read out/impedance_check.verdict.json 2>&1 | tail -1)" "out/$N-impedance.log"
 python3 $T/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.log 2>&1; NB=$?; tail -2 out/netlist_board.log
 [ "$NB" -eq 0 ] || stop "BOARD DOES NOT MATCH ITS NETLIST $(python3 $T/verdict.py read out/netlist_board.verdict.json 2>&1 | tail -1)" "out/netlist_board.log"
-python3 $T/check_contracts.py .. > out/contracts.log 2>&1; grep -E 'FAIL|MISSING' out/contracts.log | head -12
-grep -q 'ALL CONTRACTS PASS' out/contracts.log && echo 'contracts: ALL PASS' || stop "CONTRACTS FAILED (out/contracts.log)"
+python3 $T/check_contracts.py .. > out/contracts.log 2>&1; CT=$?; grep -E 'FAIL|MISSING|absent from this tree' out/contracts.log | head -12
+# exit 3 is INCONCLUSIVE: a board's netlist is not in this tree, so the cross-board contracts were judged
+# against nothing. It still stops the finish, but it is not a verdict on the design and must not read as one.
+[ "$CT" -eq 3 ] && stop "CONTRACTS NOT JUDGED: a board this set depends on has not been generated in this tree" "out/contracts.log"
+[ "$CT" -eq 0 ] && echo 'contracts: ALL PASS' || stop "CONTRACTS FAILED (out/contracts.log)" "out/contracts.log"
 CLEAN=$(cat "$FLAG" 2>/dev/null || echo missing); [ "$CLEAN" = clean ] || { echo "$PHASE NOT CLEAN, not finishing"; echo "FINISH-$PHASE-DONE"; exit 1; }
 cd "$E"; ./tools/finish_board.sh "$PROJ" "$N" "$PFIX" "$DELIV" 2>&1 | tail -16
 [ "${PIPESTATUS[0]}" -eq 0 ] || { echo "$PHASE: finish_board REFUSED the deliverable"; echo "FINISH-$PHASE-DONE"; exit 1; }
