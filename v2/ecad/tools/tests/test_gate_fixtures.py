@@ -309,3 +309,50 @@ def t_the_finish_treats_an_inconclusive_contract_set_differently_from_a_failed_o
     t = open(os.path.join(TOOLS, "finish.sh"), errors="replace").read()
     assert 'CONTRACTS NOT JUDGED' in t, "the finish does not separate a missing board from a broken contract"
     assert '"$CT" -eq 3' in t, "the finish does not read the INCONCLUSIVE exit code"
+
+
+# ---------------------------------------------------------------- a code is wrong FOR A PART, not in general
+# JLC-CERTIFIED.tsv carries C2836813 twice: WRONG_MODEL against "ATECC608B-SSHDA-T secure element", because
+# JLCPCB's best answer to that question is a BMI270, and CERTIFIED against "BMI270 six-axis IMU", because that
+# is exactly what the code is. Keyed on the code alone the rejection refused board E's deliverable for a part
+# whose code is right, and lcsc-blocked.txt already carried a line saying so in prose that nothing read.
+
+def _lcsc_tree(bom_rows):
+    import tempfile, shutil as _sh
+    d = tempfile.mkdtemp(prefix="lcsc-part-key-")
+    t = os.path.join(d, "v2", "ecad", "tools"); os.makedirs(t)
+    o = os.path.join(d, "v2", "release", "revA", "order"); os.makedirs(o)
+    for f in ("lcsc_fill.py", "lcsc-blocked.txt", "jlc-handfit.txt", "verdict.py"):
+        src = os.path.join(TOOLS, f)
+        if os.path.exists(src): _sh.copy(src, t)
+    with open(os.path.join(o, "JLC-CERTIFIED.tsv"), "w") as f:
+        f.write("verdict\tcomment\tfp\tboards\tqty\tneed\tbom_code\tcode\tmodel\n")
+        f.write("CERTIFIED\tBMI270 six-axis IMU (I2C 0x68)\tLGA14B\tE\t1\t5\tC2836813\tC2836813\tBMI270\n")
+        f.write("WRONG_MODEL\tATECC608B-SSHDA-T secure element\tSOIC8\tB\t1\t5\tC2836813\tC2836813\tBMI270\n")
+    bom = os.path.join(d, "bom.csv")
+    with open(bom, "w") as f:
+        f.write("Comment,Designator,Footprint,LCSC Part #\n")
+        for r in bom_rows: f.write('"%s","%s","%s","%s"\n' % r)
+    return d, os.path.join(t, "lcsc_fill.py"), bom
+
+
+def _lcsc_run(bom_rows):
+    import subprocess, shutil as _sh
+    d, script, bom = _lcsc_tree(bom_rows)
+    os.makedirs(os.path.join(d, "out"), exist_ok=True)
+    r = subprocess.run([sys.executable, script, bom], capture_output=True, text=True, cwd=d)
+    out = r.stdout + r.stderr
+    _sh.rmtree(d, ignore_errors=True)
+    return r.returncode, out
+
+
+def t_a_code_certified_for_this_part_is_not_rejected_for_someone_elses_part():
+    rc, out = _lcsc_run([("BMI270 six-axis IMU (I2C 0x68)", "U15", "LGA14B", "C2836813")])
+    assert "checked and rejected" not in out, out
+    assert rc == 0, out
+
+
+def t_the_same_code_on_the_part_it_is_wrong_for_is_still_rejected():
+    rc, out = _lcsc_run([("ATECC608B-SSHDA-T secure element", "U9", "SOIC8", "C2836813")])
+    assert "checked and rejected" in out and "WRONG_MODEL" in out, out
+    assert rc != 0, out

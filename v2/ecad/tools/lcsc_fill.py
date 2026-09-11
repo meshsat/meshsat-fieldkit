@@ -168,15 +168,25 @@ for r in rows:
 cert = os.path.join(os.path.dirname(os.path.dirname(HERE)), "release", "revA", "order", "JLC-CERTIFIED.tsv")
 if os.path.exists(cert):
     import csv as _csv
-    verdicts = {}
+    # A code is wrong FOR A PART, not in general, and the certified table says so twice for C2836813: WRONG_MODEL
+    # against "ATECC608B-SSHDA-T secure element", because JLCPCB's best answer for that question is a BMI270, and
+    # CERTIFIED against "BMI270 six-axis IMU", because that is exactly what the code is. Keyed on the code alone
+    # this refused board E's deliverable for a part whose code is right, and lcsc-blocked.txt already carried a
+    # line saying so in prose that nothing read (11 September 2026).
+    verdicts, certified_for = {}, set()
     for row in _csv.DictReader(open(cert, errors="replace"), delimiter="\t"):
         code = (row.get("bom_code") or "").strip()
-        if code and row.get("verdict") in ("WRONG_MODEL", "PACKAGE_MISMATCH"):
-            verdicts[code] = (row["verdict"], (row.get("note") or "")[:70])
+        key = (code, (row.get("comment") or "").strip(), (row.get("fp") or "").strip())
+        if not code: continue
+        if row.get("verdict") in ("WRONG_MODEL", "PACKAGE_MISMATCH"):
+            verdicts[key] = (row["verdict"], (row.get("note") or "")[:70])
+        elif (row.get("verdict") or "").strip() == "CERTIFIED":
+            certified_for.add(key)
     for r in rows:
         c = (r.get("LCSC Part #") or "").strip()
-        if c in verdicts and c not in blocked:
-            bad.append("%s %s: %s, %s" % (r["Designator"][:18], c, verdicts[c][0], verdicts[c][1]))
+        k = (c, (r.get("Comment") or "").strip(), (r.get("Footprint") or "").strip())
+        if c and k in verdicts and k not in certified_for and c not in blocked:
+            bad.append("%s %s: %s, %s" % (r["Designator"][:18], c, verdicts[k][0], verdicts[k][1]))
 
 if bad:
     print("lcsc_fill: %d row(s) carry a code this project has checked and rejected:" % len(bad))
