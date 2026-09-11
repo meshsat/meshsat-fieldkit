@@ -76,6 +76,9 @@ _FAST_STUBS = os.environ.get("PAIR_FAST_STUBS", "1" if pairsearch.HAVE_NUMBA els
 # at the peak slack are "no stub path at a station or via" (32.131), and the search that gives up on them is now a
 # fifteenth of the cost it was, so the cap is a knob rather than a constant (12 September 2026).
 STUB_EXPANSIONS = int(os.environ.get("PAIR_STUB_EXPANSIONS", "400000"))
+# Test the legs against a map that exempts the pair's OWN two nets inside the station radius: a leg fans to its
+# own pad there and passes its partner's pad on the way, which is an obstacle along the pair and not at its ends.
+STATION_OWN = os.environ.get("PAIR_STATION_OWN", "0") != "0"
 _SEARCH_KERNEL = ("compiled" if (_FAST_SEARCH and pairsearch.HAVE_NUMBA) else "heapq")   # printed and recorded: a 13x difference must never be invisible (round-two red teams, L2)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
@@ -1311,11 +1314,19 @@ def main(a):
         via1 = via1n[pn]   # shared updates below go to both
         pad_layers = sorted({L for net in (pn, nn) for p in pads[net] for L in _ALL.values() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and p.IsOnLayer(L)} | set(maplayers), key=list(_ALL.values()).index)
         trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
+        # The same map with BOTH of the pair's nets exempt, for the station region only. A leg fans out to its own
+        # pad there and necessarily passes its partner's pad on the way; `trk1` calls the partner an obstacle,
+        # which is right along the pair and wrong at its ends, and the fixed 1.2 mm entry exemption covers that
+        # only for a fine-pitch row. 21 of B19's 52 remaining failures at the peak slack are "the legs clear no
+        # smoothing of the centreline" (32.131). PAIR_STATION_OWN=1 tests the legs inside the station radius
+        # against this map instead, which excuses the pair's OWN copper and no one else's (12 September 2026).
+        trk2 = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0] if STATION_OWN else None
         def rebuild_maps():   # after a swap of two passives inside a section the maps still hold the pads at their old places (D9: a stub over the swapped pad, 8 Sep 2026 13:08)
-            nonlocal trk, via, via1n, trk1
+            nonlocal trk, via, via1n, trk1, trk2
             trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)
             via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}
             trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}
+            if STATION_OWN: trk2 = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         def rollback():
             for t in pieces: board_remove(b, t)
@@ -1669,6 +1680,8 @@ def main(a):
             cells += len(path); nruns += len(runs); laid_sections += 1
             first = runs[0]; (x0, y0) = gr.xy(first[0][2], first[0][1]); (x1, y1) = gr.xy(first[-1][2], first[-1][1]) if len(first) > 1 else (gx, gy)
             cross = (x1 - x0) * (A[0][1] - y0) - (y1 - y0) * (A[0][0] - x0); p_side = 1 if cross > 0 else -1   # which leg is left of the centreline: the P anchor's side
+            _stA = mid((pa, na)); _stB = mid((pb, nb))
+            _rA = dist_p(pa, na) / 2 + 0.6; _rB = dist_p(pb, nb) / 2 + 0.6   # the fan's own reach, not a fixed 1.2 mm
             prev_end = None; lp = ln = None
             # a twist: the P pad lies on one side of the line from station A to station B at A and on the other at B (a property of the placement, not of the path)
             dxab, dyab = gx - sx, gy - sy
@@ -1701,7 +1714,10 @@ def main(a):
                                 if (first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2): continue   # the fine-pitch entry ends inside the pad pair
                                 px_, py_ = x1 + u * (x2 - x1), y1 + u * (y2 - y1)
                                 jj, ii = gr.cell(px_, py_)
-                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]:
+                                _m = trk1[net]
+                                if trk2 is not None and (math.hypot(px_ - _stA[0], py_ - _stA[1]) < _rA or math.hypot(px_ - _stB[0], py_ - _stB[1]) < _rB):
+                                    _m = trk2   # the pair's own copper is not an obstacle at its own station
+                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and _m[L][ii, jj]:
                                     # The map is a raster and the leg's margin over it is smaller than a cell (the note at
                                     # `_cover` above has the arithmetic), so a blocked CELL is not yet a blocked LEG. Before
                                     # refusing the whole pair for one point, ask the geometry: the map grows an obstacle by
