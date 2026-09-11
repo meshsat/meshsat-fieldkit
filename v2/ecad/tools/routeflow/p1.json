@@ -33,13 +33,17 @@
  },
  "finish": {
   "argv": [
-   "./tools/finish_p1.sh",
+   "./tools/finish.sh",
    "<ECAD>",
+   "pcb-p-pack",
+   "p",
+   "P1",
    "out/parallel-p1.log"
   ],
   "cwd": "<ECAD>",
   "clean_flag": "out/p1-clean.txt",
-  "stub_log": "out/pcb-p-pack-stub.log"
+  "stub_log": "out/pcb-p-pack-stub.log",
+  "_collapsed": "11 September 2026 (MESHSAT-862): finish_p1.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
  },
  "deliverable": "v2/release/revA/boards/meshsat-pcb-p-revA-P1",
  "expect": {

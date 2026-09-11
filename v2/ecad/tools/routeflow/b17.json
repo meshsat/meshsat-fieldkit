@@ -1,7 +1,7 @@
 {
  "board": "pcb-b-compute",
  "project": "v2/ecad/pcb-b-compute-b17",
- "phase": "B17",
+ "phase": "B18",
  "issue": "MESHSAT-862",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -43,15 +43,19 @@
  },
  "finish": {
   "argv": [
-   "./tools/finish_b17.sh",
+   "./tools/finish.sh",
    "<ECAD>",
+   "pcb-b-compute-b17",
+   "b",
+   "B18",
    "out/parallel-b17.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/b17-clean.txt",
-  "stub_log": "out/pcb-b-compute-stub.log"
+  "clean_flag": "out/b18-clean.txt",
+  "stub_log": "out/pcb-b-compute-stub.log",
+  "_collapsed": "11 September 2026 (MESHSAT-862): finish_b17.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-B17",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-B18",
  "expect": {
   "hard": 0,
   "unrouted": 0,

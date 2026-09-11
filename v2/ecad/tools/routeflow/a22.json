@@ -53,13 +53,17 @@
  },
  "finish": {
   "argv": [
-   "./tools/finish_a22.sh",
+   "./tools/finish.sh",
    "<ECAD>",
+   "pcb-a-power",
+   "a",
+   "A22",
    "out/parallel-a22.log"
   ],
   "cwd": "<ECAD>",
   "clean_flag": "out/a22-clean.txt",
-  "stub_log": "out/pcb-a-power-stub.log"
+  "stub_log": "out/pcb-a-power-stub.log",
+  "_collapsed": "11 September 2026 (MESHSAT-862): finish_a22.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
  },
  "deliverable": "v2/release/revA/boards/meshsat-pcb-a-revA-A22",
  "expect": {

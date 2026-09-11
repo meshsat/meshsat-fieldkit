@@ -137,6 +137,10 @@ def collect(out_dir="out", require=()):
         rec, _code = read(os.path.join(out_dir, fn))
         found[rec.get("tool") or fn[:-len(".verdict.json")]] = rec
     missing = [t for t in require if t not in found]
+    # No verdicts at all is not "everything passed": it is a directory nothing wrote to, which is what an
+    # unrun chain, a wrong out_dir and a healthy board all produce identically. Found by a reviewer reading
+    # this against the rule it was written to enforce, 11 September 2026.
+    if not found: return CODE[INCONCLUSIVE], found, missing
     worst = 0
     for rec in found.values(): worst = max(worst, CODE.get(rec.get("verdict"), CODE[INCONCLUSIVE]))
     if missing: worst = max(worst, CODE[INCONCLUSIVE])

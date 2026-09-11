@@ -1,7 +1,7 @@
 {
  "board": "pcb-a-power",
  "project": "v2/ecad/pcb-a-power-a23",
- "phase": "A23",
+ "phase": "A24",
  "issue": "MESHSAT-862",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -43,15 +43,19 @@
  },
  "finish": {
   "argv": [
-   "./tools/finish_a23.sh",
+   "./tools/finish.sh",
    "<ECAD>",
+   "pcb-a-power-a23",
+   "a",
+   "A24",
    "out/parallel-a23.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/a23-clean.txt",
-  "stub_log": "out/pcb-a-power-stub.log"
+  "clean_flag": "out/a24-clean.txt",
+  "stub_log": "out/pcb-a-power-stub.log",
+  "_collapsed": "11 September 2026 (MESHSAT-862): finish_a23.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-a-revA-A23",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-a-revA-A24",
  "expect": {
   "hard": 0,
   "unrouted": 0,
