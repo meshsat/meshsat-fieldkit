@@ -679,7 +679,12 @@ def preflight(repo):
                 try: fcntl.flock(_fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB); fcntl.flock(_fh.fileno(), fcntl.LOCK_UN)
                 except OSError: held = True
         except Exception: held = False
-    checks.append(("no other route running", not held, read(LOCK) or ""))
+    # 11 September 2026: this is one lock for the whole host by default, which is the VM's memory rule (three
+    # Freerouting attempts at 2 to 4 GB each filled its 31 GB on 5 September). On a 256-thread box four boards
+    # are meant to route side by side, and the first wave lost three of them here with a message that did not
+    # say how. ROUTEFLOW_LOCK is the answer and the message names it now.
+    checks.append(("no other route running", not held,
+                   ((read(LOCK) or "") + ("  [lock %s; set ROUTEFLOW_LOCK to a per-board path to route boards side by side on a host with the memory for it]" % LOCK if held else ""))))
     # The pin on which files may write a gerber, a BOM, a CPL or an order set. Cheap, and preflight runs where an
     # expensive run begins, which is the right place to notice that the actuation surface grew (11 September 2026).
     try:
