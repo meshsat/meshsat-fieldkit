@@ -4258,3 +4258,44 @@ the pair gate whose `if !` tested `cut`, and now this.
 
 **State:** 445 documents, 40,260 chunks, all embedded; `kb_verify` PASS on coverage 445 of 445, the
 embedding space at median cosine 1.000, and a gold set of twelve, ten electrical and two mechanical.
+
+### 32.106 Every board's layer count is reopened, and the four-layer default was never a decision (11 September 2026; owner instruction, P0)
+
+Asked why three boards are six layers, this session answered that the root cause was the owner's In1
+ruling. **That was wrong, the owner caught it, and checking the record rather than defending the
+sentence produced a worse finding than the original question.**
+
+**Four layers has no recorded rationale anywhere in this record.** Its first appearance is a statement
+of state and not a decision: *"PCB-B Rev A is placed and autorouted on the JLC 4-layer stackup with
+GND on In1 and +5V on In2"*, and PCB-A then copied it with *"same JLC stackup as PCB-B"*. It was the
+first board's default. It was never argued, never costed and never ruled, and every board since has
+inherited it.
+
+**The owner's In1 ruling of 5 September 17:08 was explicitly four-layer compatible.** Its own words:
+a board-wide rule area on In1 that forbids tracks and permits vias, *"so the router keeps to F.Cu,
+In2 and B.Cu, the normal use of a 4-layer stack"*. It did not call for six layers, and attributing
+the six-layer stacks to it was the error.
+
+**The promotions to six were session decisions written inside an owner rulings list.** Section 32.40
+item 6, "B goes to six layers (B15)", carries measurements and no words of the owner, where items 4
+and 5 of that same list quote him directly ("ok go with the 1450", "V2 goes with this plan"). A22
+went to six on 7 September the same way, after eight failed four-layer rounds, with no question asked.
+**A decision taken by a session inside a ruling list reads back later as the owner's**, which is
+precisely how this session came to state it as his.
+
+**What each board's six layers actually rests on.** B stands on its own merits: three CM5 modules at
+0.4 mm receptacle pitch need two inner signal layers, measured, with a board-wide In1 keep-out and a
+windowed keep-out both leaving the router thrashing and 93 opens at 8 passes in the diagnostic. **A
+has never been retested**: A22's 33 hard violations turned out to be a single router knot rather than
+congestion, and no four-layer rerun was ever run with `unknot.py` in the loop.
+
+**Measured state, 11 September 2026**, read from the deliverable board files rather than the record:
+A22 240.0 x 160.0 six layers, B15 245.0 x 170.0 six, B16 330.0 x 200.0 six on JLC06161H-3313, C7
+344.0 x 228.0 four, D9 100.0 x 80.0 four, E6 267.0 x 68.0 four, E5 43.0 x 26.0 two, P3 70.0 x 44.0
+two; every board 1.6 mm.
+
+**Ruled by the owner, P0:** review every board's layer decision and its rationale from scratch.
+Nothing about the current stackups is settled. From here each board's layer count needs its own
+written decision carrying the measurement that forced it and the cost it adds, before anything is
+ordered; a stackup is never inherited from a sibling board and never promoted silently when a route
+fails; and a session decision taken inside a rulings list is marked as the session's.
