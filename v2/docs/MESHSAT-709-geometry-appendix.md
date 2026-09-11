@@ -5025,17 +5025,30 @@ all five pairs laid and every one within 1 mm, `dc_drop` **MET** (+5V_D8 at 81 m
 budget). **One connection is open**: `/HUB_DM1`, 2.82 mm between U4 pad 11 and R13 pad 1, with **not one track
 on the net**.
 
-**The cause is a station swap.** The pre-router exchanges two identical passives when the pair's own fans cross
-at a station. On the board that was routed, R12 and R13 had been exchanged: R12 sits at x 120.0 carrying
-`/HUB_DP1` and R13 at 121.6 carrying `/HUB_DM1`, while the hub's DM1 pad is at x 120.80. The two hub-side
-connections therefore cross, in a 2.7 mm gap between the hub's pad row and the resistor row, and the router laid
-nothing. A later round of the same run did **not** exchange them and routed that net (two tracks on
-`/HUB_DM1`). **The swap is judged on the side the pair is laid from and the other side of the same two parts is
-not looked at.**
+**The first explanation was a station swap, and measuring it took the explanation away.** The pre-router
+exchanges two identical passives when the pair's own fans cross at a station, and on the board that was routed
+R12 and R13 had been exchanged, which puts the hub's DM1 pin across from DP1's resistor so the two hub-side
+connections cross in the 2.7 mm gap between the hub's pad row and the resistor row.
 
-**The swap is not optional, measured.** `PAIR_SWAP=0` on D lays **2 of 5 pairs** against **5 of 5** with it. So
-the answer is not to remove it but to judge both sides of the station before accepting it, and that is the
-change the next session makes.
+Three measurements, in the order they were taken:
+
+1. **The swap is not optional.** `PAIR_SWAP=0` lays **2 of 5** pairs on D against **5 of 5** with it.
+2. **A guard that refuses a swap which crosses the parts' OTHER pads** (`PAIR_SWAP_BOTH_SIDES=1`, written for
+   this) drops D to **3 of 5** and prints what it refused: *"R20 and R21: the swap uncrosses this pair's fans
+   and CROSSES /HUB_DP3 and /HUB_DM3 on their other pads"*, and the same for R16 and R17.
+3. Which is the finding: **the swap crosses the hub side BY CONSTRUCTION at every one of these stations.** The
+   two sides of a series-resistor pair are mirror images, so an arrangement that uncrosses the downstream fan
+   necessarily crosses the hub fan. It is not a defect in the swap, and refusing it costs pairs.
+
+**So D's open is not systematic, it is local.** The router resolves that crossing with a via at three of the
+four hub ports and cannot at the fourth, `/HUB_DM1`, where U4's pin sits 2.82 mm from its resistor with the
+other three ports' copper around it. The fix is room at that one station, which is a placement change, or a
+router that tries harder there. What the guard is worth keeping for is the sentence it prints: it is the only
+thing in the tool that looks at the other side of a station at all.
+
+**The first version of this entry said the swap was the cause and the fix was to judge both sides.** The
+measurement says otherwise, and the entry is corrected rather than quietly amended: judging both sides is a
+diagnosis, not a remedy.
 
 **And the chain is not yet proved a function of its input past the placement.** `tests/determinism.sh` stopped
 after the PLACEMENT, so the pre-router, which moves parts, had never been under it. It takes

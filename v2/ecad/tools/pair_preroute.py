@@ -761,6 +761,7 @@ def main(a):
     # with not one track laid on it. Round three of the same run did not swap them and routed that net. PAIR_SWAP=0 turns
     # every swap off, which is how the cost of the swap is measured rather than argued (11 September 2026).
     SWAP_OK = os.environ.get("PAIR_SWAP", "1") != "0"
+    SWAP_BOTH = os.environ.get("PAIR_SWAP_BOTH_SIDES", "0") != "0"   # refuse a swap that crosses the parts' OTHER pads
     RIPUP = int(os.environ.get("PAIR_RIPUP", "0"))                 # rip-up events one pair may trigger
     RIP_MARGIN = float(os.environ.get("PAIR_RIP_MARGIN", "4.0"))   # mm from the failed section's line for a piece to count as in the way
     RIP_MAX = int(os.environ.get("PAIR_RIP_MAX", "6"))             # laid pairs taken off the board per event
@@ -885,6 +886,52 @@ def main(a):
         """A footprint whose pads already hold a track end (a section laid for another stem of the same nets, an escape) must not be moved: the second swap of
         R26/R27 on D9 (8 Sep 2026 12:20) left four locked pieces on pads of the wrong net."""
         return any(p.HitTest(t.GetStart()) or p.HitTest(t.GetEnd()) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK" for p in f.Pads())
+
+    def _seg_cross(a1, a2, b1, b2):
+        def ccw(p, q, r): return (r[1] - p[1]) * (q[0] - p[0]) > (q[1] - p[1]) * (r[0] - p[0])
+        return ccw(a1, b1, b2) != ccw(a2, b1, b2) and ccw(a1, a2, b1) != ccw(a1, a2, b2)
+
+    def swap_breaks_other_side(fa, fb, pair_nets):
+        """Would exchanging these two passives make the connections on their OTHER pads cross?
+
+        A station swap is decided by the pair's own fans and the other side of the same two parts is not looked
+        at. On D that cost the board its only open: exchanging R12 and R13 put the hub's DM1 pin across from
+        DP1's resistor, the two hub-side connections crossed in a 2.7 mm gap, and /HUB_DM1 came back with not
+        one track on it (11 September 2026, appendix 32.128). This asks the question the swap never asked.
+        True means the swap introduces a crossing that is not there now, which is a reason to refuse it."""
+        def _signal(n_):
+            # A plane or rail pad has no single counterpart to cross with: its "nearest pad of the same net" is
+            # whichever GND pad happens to be closest, and a crossing test on that is noise. Measured: without this
+            # the guard refused four of D's swaps and cost the board two pairs (5 of 5 down to 3 of 5).
+            k_ = n_.lstrip("/")
+            return bool(k_) and k_ != "GND" and not k_.startswith(("+", "VBAT", "CELL", "VBUS", "PACK", "FUSED", "VIN", "PV_", "TRK_"))
+        def other(f_):
+            for q in f_.Pads():
+                if q.GetNetname() not in pair_nets and _signal(q.GetNetname()): return q
+            return None
+        qa, qb = other(fa), other(fb)
+        if qa is None or qb is None: return False
+        def mate(q):
+            """The nearest pad of the same net on another footprint: what that pad has to reach."""
+            best = None
+            for f2 in b.GetFootprints():
+                if f2.GetReference() in (fa.GetReference(), fb.GetReference()): continue
+                for p2 in f2.Pads():
+                    if p2.GetNetname() != q.GetNetname(): continue
+                    d_ = dist_p(q, p2)
+                    if best is None or d_ < best[0]: best = (d_, (mm(p2.GetPosition().x), mm(p2.GetPosition().y)))
+            return None if best is None else best[1]
+        ma, mb = mate(qa), mate(qb)
+        if ma is None or mb is None: return False
+        pa_ = (mm(qa.GetPosition().x), mm(qa.GetPosition().y)); pb_ = (mm(qb.GetPosition().x), mm(qb.GetPosition().y))
+        # after the swap each pad moves by the vector between the two footprint origins
+        da = (mm(fb.GetPosition().x) - mm(fa.GetPosition().x), mm(fb.GetPosition().y) - mm(fa.GetPosition().y))
+        pa2 = (pa_[0] + da[0], pa_[1] + da[1]); pb2 = (pb_[0] - da[0], pb_[1] - da[1])
+        now = _seg_cross(pa_, ma, pb_, mb); after = _seg_cross(pa2, ma, pb2, mb)
+        if after and not now:
+            report.append("SWAP-REFUSED %s and %s: the swap uncrosses this pair's fans and CROSSES %s and %s on their other pads"
+                          % (fa.GetReference(), fb.GetReference(), qa.GetNetname(), qb.GetNetname()))
+        return after and not now
 
     def dist_p(p, q): return math.hypot(p.GetPosition().x - q.GetPosition().x, p.GetPosition().y - q.GetPosition().y) / 1e6
     pre_vias = []   # the locked vias present before a pair is laid (its own end vias must not become anchors of its next section)
@@ -1476,7 +1523,7 @@ def main(a):
                     return ccw(a_, c_, d_) != ccw(b_, c_, d_) and ccw(a_, b_, c_) != ccw(a_, b_, d_)
                 if ok_ and isx_(legs_[0][1], legs_[0][2], legs_[1][1], legs_[1][2]):   # the two fans cross: exchange the wide station's passives when they are a pair
                     fa2, fb2 = stW[0].GetParentFootprint(), stW[1].GetParentFootprint()
-                    if SWAP_OK and fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked() and not pinned(fa2) and not pinned(fb2):
+                    if SWAP_OK and not (SWAP_BOTH and swap_breaks_other_side(fa2, fb2, (pn, nn))) and fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked() and not pinned(fa2) and not pinned(fb2):
                         p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference())); rebuild_maps()
                         legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
                     else: ok_ = False
@@ -1776,7 +1823,7 @@ def main(a):
                             return False
                         if xing():
                             fa_, fb_ = st_[0].GetParentFootprint(), st_[1].GetParentFootprint()
-                            if SWAP_OK and fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_):
+                            if SWAP_OK and not (SWAP_BOTH and swap_breaks_other_side(fa_, fb_, (pn, nn))) and fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_):
                                 pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference())); rebuild_maps()
                             if xing():   # still crossing (one part's two pins, a pinned station): the N fan is laid straight and the P leg dives under it (8 Sep 2026 12:26)
                                 # the N fan first runs 0.5 mm on along the corridor, then turns: its diagonal passed 1 um under the class clearance at P's turn into the dive (13:08)
@@ -1820,7 +1867,7 @@ def main(a):
             # their positions is a legal pre-route placement move that untwists the pair (the packer placed them in arbitrary order); done once, then the pair is laid again
             twist, pa2, na2 = twist
             fa, fb = pa2.GetParentFootprint(), na2.GetParentFootprint()
-            if SWAP_OK and fa.GetReference() != fb.GetReference() and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped and not pinned(fa) and not pinned(fb):
+            if SWAP_OK and not (SWAP_BOTH and swap_breaks_other_side(fa, fb, (pn, nn))) and fa.GetReference() != fb.GetReference() and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped and not pinned(fa) and not pinned(fb):
                 pa_, pb_ = fa.GetPosition(), fb.GetPosition(); fa.SetPosition(pb_); fb.SetPosition(pa_); MAP_EPOCH[0] += 1; swapped.add(stem)   # a swap moves pads, so every cached occupancy map is stale
                 for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and t not in stripped]: board_remove(b, t)   # its locked pieces so far go with the retry
                 for t in stripped: b.Add(t)
