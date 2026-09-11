@@ -82,7 +82,12 @@ for k in range(1, 5):
     part("J_CN%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, pack return (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "GND"})
 part("J_PRE1", "Connector", "Conn_01x01_Pin", "pre-charge pin, longer, mates first (32.24 AX)", "MMPIN", {"1": "PRECHG"}); r("R1", "10R 2W 2512", "PRECHG", "CELL+", "RS2512")
 part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack node to VBAT", "FUSE", {"1": "CELL+", "2": "VBAT"})
-c("C1", "100u 25V", "VBAT", "GND", "C100u"); c("C2", "100u 25V", "VBAT", "GND", "C100u"); c("C3", "10u 25V 1210", "VBAT", "GND", "C1210"); part("D1", "Device", "D_TVS", "SMCJ18A (VBAT clamp)", "TVSC", {"1": "VBAT", "2": "GND"}, "C374030")
+# C1 and C2 are 47 uF, not the 100 uF the node was drawn with. 100 uF 25 V does not exist in a
+# 1206 land with stock from any maker (47 uF is the ceiling), so the 200 uF nominal on VBAT was
+# never buildable, and after DC-bias derating at 14.4 V neither number was ever close to its
+# label. The pair is 94 uF nominal now. If the node needs more real bulk than that it wants an
+# SMD aluminium can rather than ceramics, which is a placement change and an owner decision.
+c("C1", "47u 25V", "VBAT", "GND", "C100u"); c("C2", "47u 25V", "VBAT", "GND", "C100u"); c("C3", "10u 25V 1210", "VBAT", "GND", "C1210"); part("D1", "Device", "D_TVS", "SMCJ18A (VBAT clamp)", "TVSC", {"1": "VBAT", "2": "GND"}, "C374030")
 part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare", "POGO12",
      {"1": "VIN_RAW", "2": "VIN_RAW", "3": "VIN_RAW", "4": "VIN_RAW", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})
 # --- main power control LTC2954-1 (ltc2954.pdf): the panel MAIN button, EN to every converter's enable (RAIL_EN), INT = shutdown request, KILL from the panel controller through Q1

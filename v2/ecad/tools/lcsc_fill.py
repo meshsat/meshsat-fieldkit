@@ -85,6 +85,8 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^TPS22810DRV\b", "WSON-6"): "C527679",
  (r"^EL817S / PC817", "SOP-4"): "C109227",
  (r"^amber hub$", "LED_0603"): "C965802",
+ (r"^47u 25V$", "C_1206"): "C403725",       # the VBAT bulk: 100 uF 25 V does not exist in 1206 with stock, 47 uF is the ceiling
+ (r"^68nH 0805\b", "L_0805"): "C2044803",   # the 145 MHz LPF: 1.2 A and 2 percent, where every 68 nH in 1812 is 450 mA and out of stock
 }
 path = sys.argv[1]; rows = list(csv.DictReader(open(path))); filled = 0
 
