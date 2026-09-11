@@ -128,3 +128,15 @@ def t_a_profile_agrees_with_itself_about_the_phase_it_cuts():
         # argv[0] is a path relative to the ecad directory, so the working directory is not free. c7 named
         # <PROJECT> and would have died on its first line looking for ./tools there.
         assert fin.get("cwd") == "<ECAD>", "%s: finish cwd %r, but ./tools/finish.sh only resolves from <ECAD>" % (b, fin.get("cwd"))
+
+
+def t_routeflow_validate_agrees_with_these_rules():
+    """The same judgement at runtime, so a profile is checkable before an eight-hour wave rests on it.
+    `--dry-run` was not that: it still created the run directory, wrote provenance, ran preflight and took the
+    lock, so a box profile could not be checked from the runner at all. Ten of the twelve profiles as they
+    stood before the collapse fail `routeflow.py validate`."""
+    import subprocess
+    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "routeflow.py"), "validate", p],
+                           capture_output=True, text=True)
+        assert r.returncode == 0, "%s: %s" % (os.path.basename(p), (r.stdout + r.stderr).strip().splitlines()[-1] if (r.stdout + r.stderr).strip() else r.returncode)
