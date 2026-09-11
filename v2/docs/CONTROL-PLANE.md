@@ -148,6 +148,45 @@ honest next lever is the one both profiles name and neither review costed: the s
 the fine-pitch parts. **A prediction written before a run is the only reason any of this is known**, and
 three of the sixteen arms now queued predict a loss on purpose.
 
+## What the first day's evening measured (11 September 2026, 20:00 CEST)
+
+**The sixteen-arm sweep answered Phase A, and mostly by refusing it.** One placed B19 board, one knob per arm,
+113 pairs, graded against predictions written before the run.
+
+| arm | predicted | measured of 113 |
+|---|---|---|
+| base | 53 | **54** |
+| `PAIR_CORRIDOR_SLACK=0.08` | >= 55 | **60** |
+| `PAIR_CORRIDOR_SLACK=0.15` | <= 53 | **59** |
+| slim retry 0.03 | >= 55 | 56 |
+| the leg test (`PAIR_END_LEGS`) | >= 60 | 55 |
+| the escape-via entry | >= 65 | **54** |
+| the escape-via entry with the leg test | >= 68 | **54** |
+| the escape-via entry with the slim retry | >= 66 | **49** |
+| the staircase turned OFF | <= 45 | **55** |
+| wider search window, longer strip, more expansions, more end candidates | mixed | 55, 55, 55, 54 |
+
+**Three things come out of it and none of them is the thing the plan expected.**
+
+**The escape-via entry is not a lever on this board.** It was the largest single number in the record (+27 on B,
+32.95) and it is worth zero here: 54 against 54, and 49 when combined. Measured on D the same evening it is
+worth **minus two** (1 of 5 against 3 of 5). It stays a per-pair fallback and nothing more.
+
+**The corridor slack is the lever, and the default sits in a hole.** 0.08 gives 60 and 0.15 gives 59 against
+0.12's 54. A default beaten on both sides is not a local optimum, so the second sweep walks 0.04 to 0.20 rather
+than guessing a third value. That sweep is queued.
+
+**Nine of the sixteen predictions were wrong, three of them badly.** That is the instrument working: an arm
+that cannot miss teaches nothing, and the three deliberate-loss arms were the ones that came closest to being
+right. What the ladder of 32.95 called levers were mostly noise at plus or minus one pair around 54, and only a
+written prediction makes that visible rather than encouraging.
+
+**And the boards moved while the arms ran.** E routed to 0 hard and 0 unrouted (179 vias, 6.2 minutes, the stub
+router closing its one open), C is routing, P routed and finished every electrical gate, A placed clean and
+`check_contracts` passes 40 of 40 with it present. Four defects in the verdict channel were found and fixed in
+the process, every one of them a writer that had been wrong for as long as nobody read it; they are in
+`project_unread_channel_defects.md` and in appendix 32.113 and 32.114.
+
 ## Order of work
 
 **Stage 0, the preconditions, and they are most of the value.**
