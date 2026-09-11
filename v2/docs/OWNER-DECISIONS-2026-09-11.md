@@ -70,24 +70,23 @@ the order surface, not because anything is owed.
 
 ---
 
-## 5. vast.ai will not rent to this account, so the work is on the VM
+## 5. CORRECTED: vast.ai refuses CPU-ONLY offers, not this account
 
-**The ruling, 6 September 11:30:** "RUN EVERYTHING ON VAST.AI AND FIND A BETTER INSTANCE." Routes, generators,
-finishes and renders on rented boxes; the VM idle with its services up.
+**What I wrote here first was wrong and too broad.** I said vast.ai would not rent to this account and that
+the work therefore had to run on the VM. The account is fine.
 
-**What happened today.** Every CPU-only offer is refused: `no_such_ask` on six freshly fetched ids, through both
-the REST API and the `vastai` CLI, within seconds of the listing that returned them. GPU offers list normally.
-The account has 70.92 USD of credit, `can_pay` true, and `paid_verified` 0. Boxes rented on this account as
-recently as this morning, so something changed at their end or CPU-only rental now needs verification.
+**The diagnosis, live.** Every CPU-only offer is refused with `no_such_ask` within seconds of the listing that
+returned it: seven different ids now, through both the REST API and the `vastai` CLI. **A GPU-bearing offer
+rents normally**: offer 49574215, a Quadro P2000 at 0.0281/h, was rented as a one-minute diagnostic and
+destroyed immediately. So the refusal is specific to `num_gpus=0` offers, not to the account, and the account
+shows `can_pay` true with 70.92 USD.
 
-**What the run did instead.** The measurements are on the VM `nllei01gpu01` with `~/meshsat-services.sh stop`
-first, as the older rule requires, and a `venv-numba` was built there so the compiled kernel is what runs. The
-ruling's purpose was speed, and the alternative it names does not currently exist, so the choice was the VM or
-nothing. **It is recorded here rather than assumed**, because it is your ruling.
+**What that means practically: nothing is blocked.** A GPU-bearing instance comes with its CPU cores and RAM,
+which is what this work actually uses; the GPU is incidental, exactly as it was for the render boxes. There
+are 156 verified EPYC offers with a GPU and 64 or more effective cores.
 
-**What it costs.** The VM is 31 GB shared with its own services and is one machine, so the parallel arms and the
-partition route that the box made cheap are serialised. The four board re-routes that phase D needs will be slow
-on it: B19's partition route alone was hours on a 128-thread box.
+**Box 50587217 is up:** AMD EPYC 7B12, 128 cores, 252 GB, Denmark, 0.2681 USD/h, reliability 0.999. That is
+the same class as 50216670, which ran this work until this morning, and very likely the same machine.
 
-**The decision, when you want it:** verify the vast.ai account, or accept the VM's serial pace for the board
-phase, or name another host.
+**No decision is owed.** This entry stays because I published a wrong claim about your ruling and the
+correction belongs where the claim was.
