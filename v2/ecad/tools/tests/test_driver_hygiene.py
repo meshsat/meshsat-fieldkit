@@ -107,7 +107,7 @@ CLASSIFIED = {
     "part_reconcile.py": POST_ROUTE, "hand_route.py": POST_ROUTE,
     "fix_a15_node.py": ONE_OFFS, "fix_a17_node.py": ONE_OFFS, "fix_a19_node.py": ONE_OFFS,
     "fix_a21_bands.py": ONE_OFFS, "bus_a21.py": ONE_OFFS, "bump_a18.py": ONE_OFFS,
-    "fix_c7_u3.py": ONE_OFFS, "d9_gndvia.py": ONE_OFFS, "post_fix_a.py": ONE_OFFS,
+    "fix_c7_u3.py": ONE_OFFS, "fix_d10_hubdm1.py": ONE_OFFS, "d9_gndvia.py": ONE_OFFS, "post_fix_a.py": ONE_OFFS,
     "post_fix_b4.py": ONE_OFFS, "post_fix_b13.py": ONE_OFFS, "post_fix_d.py": ONE_OFFS,
 }
 

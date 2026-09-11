@@ -51,15 +51,22 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP", "PAD", "P_"), ba
         # already has and never re-runs the schematic generator, so a code corrected in a generator does not reach a deliverable until that
         # board is regenerated: on 9 September 2026 a red team found all 23 of the codes corrected on 8 September still in five shipped
         # deliverable BOMs, among them a PCA9555 that is a 74HC245PW and a BAT54 that is an LED. This is the gate that was missing.
+        # The same land qualifier lcsc_fill reads: `fp=<substring>` limits a block to the lands it is about,
+        # because a code can be wrong on one and right on another (C1017 is an 0805 ferrite, a mismatch on C's
+        # 0603 lands and certified on D's 0805 one, 12 September 2026).
         _bl = {}
         _blf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lcsc-blocked.txt")
         if os.path.exists(_blf):
             for _ln in open(_blf):
                 if _ln.startswith("#") or not _ln.strip(): continue
                 _f = _ln.split()
-                if len(_f) >= 2: _bl[_f[0]] = " ".join(_f[1:])
-        _hit = sorted({(r.get("LCSC Part #") or "").strip() for r in rows if (r.get("LCSC Part #") or "").strip() in _bl})
-        ok(not _hit, "no LCSC code the record has proved wrong (%s)" % (", ".join("%s: %s" % (h, _bl[h]) for h in _hit) if _hit else "none of %d blocked codes" % len(_bl)))
+                if len(_f) >= 2:
+                    _fp = _f[2][3:] if len(_f) > 2 and _f[2].startswith("fp=") else ""
+                    _bl[_f[0]] = (" ".join(_f[3:] if _fp else _f[1:]), _fp)
+        _hit = sorted({(r.get("LCSC Part #") or "").strip() for r in rows
+                       if (r.get("LCSC Part #") or "").strip() in _bl
+                       and (not _bl[(r.get("LCSC Part #") or "").strip()][1] or _bl[(r.get("LCSC Part #") or "").strip()][1] in (r.get("Footprint") or ""))})
+        ok(not _hit, "no LCSC code the record has proved wrong (%s)" % (", ".join("%s: %s" % (h, _bl[h][0]) for h in _hit) if _hit else "none of %d blocked codes" % len(_bl)))
         refs = []
         for r in rows:
             for x in r.get("Designator", "").split(","):
