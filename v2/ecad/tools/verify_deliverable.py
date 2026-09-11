@@ -85,13 +85,23 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP", "PAD", "P_"), ba
         def _declared_handfit(r):
             c = r.get("Comment", "")
             return any(k in c for k in _hf)
+        # A blank line is judged by TWO declarations and this gate could only see one of them. `lcsc_fill.py`
+        # judges every blank against the board's own `<project>/lcsc-allow.txt`, one comment substring per line
+        # with its reason, and writes its answer beside the BOM as `<name>-bom.status`. This gate knew only
+        # `tools/jlc-handfit.txt` and the bench prefixes, so a line the board declares in the place the project
+        # actually uses read as undeclared here. Board E was 34 of 35 properties on exactly that, with every
+        # other gate passing and its allow list correct (12 September 2026).
+        _st = os.path.join(D, "%s-bom.status" % name)
+        _lcsc_ok = os.path.exists(_st) and open(_st, errors="replace").read().strip() == "OK"
         blank = [r for r in rows if not r.get("LCSC Part #")]
-        undeclared = [r for r in blank
+        undeclared = [] if _lcsc_ok else [r for r in blank
                       if not r.get("Designator", "").strip().startswith(bench) and not _declared_handfit(r)]
-        ok(not undeclared, "every BOM line without an LCSC code is a bench-fitted land or a declared hand-fit part "
-                           "(%d blank of %d, %d declared, %d not: %s)"
-           % (len(blank), len(rows), len(blank) - len(undeclared), len(undeclared),
-              ", ".join(r.get("Designator", "")[:20] for r in undeclared[:6]) or "none"))
+        ok(not undeclared, "every BOM line without an LCSC code is a bench-fitted land, a declared hand-fit part, "
+                           "or one lcsc_fill accepted against the board's own allow list "
+                           "(%d blank of %d, %d not: %s%s)"
+           % (len(blank), len(rows), len(undeclared),
+              ", ".join(r.get("Designator", "")[:20] for r in undeclared[:6]) or "none",
+              "; lcsc_fill's status file says OK" if _lcsc_ok else "; no OK status file beside the BOM"))
     # the silk names this deliverable's phase and no other (8 Sep 2026: every placement generator hard-coded the PREVIOUS phase, so the
     # released P2 carries "REV A (P1)" on its underside and D9 would have shipped stamped D8; the deliverable folder name is the authority)
     ph = os.path.basename(D.rstrip("/")).rsplit("-", 1)[-1]
