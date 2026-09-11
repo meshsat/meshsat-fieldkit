@@ -313,7 +313,15 @@ def rows_to_check(only=None):
             fp = (r.get("Footprint") or "").strip()
             code = (r.get("LCSC Part #") or "").strip()
             refs = [x for x in (r.get("Designator") or "").split(",") if x.strip()]
-            if not comment or LEAD.search(comment):
+            # LEAD names the words that make a row a wire, a land or a header. It reads the whole
+            # comment, and this project's comments describe FUNCTION as well as nature: R57's
+            # "1k (strap [LED4_1, LED3_1] = 01: I2C management)" is a 1k resistor whose job is to
+            # strap two pins, and it was being dropped as though it were a wire strap. A row that
+            # parses as a value on its own land, or that names a manufacturer part, is a component
+            # whatever else the prose says.
+            if not comment:
+                continue
+            if LEAD.search(comment) and not (jlc_keyword(comment, fp) or intended_part(comment)):
                 continue
             key = (comment, fp)
             rec = out.setdefault(key, {"comment": comment, "fp": fp, "code": code,

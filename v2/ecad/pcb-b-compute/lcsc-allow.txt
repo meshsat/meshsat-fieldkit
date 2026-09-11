@@ -1,0 +1,19 @@
+# Comment substrings whose BOM line may carry no LCSC code, one per line with the reason after a #.
+# lcsc_fill.py refuses any other blank (it resolves this file three dirnames up from out/jlc/<name>-bom.csv).
+# A line here means JLCPCB never places that part: it is a lead, a solder land, a bench header, or a part
+# bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
+
+(JST-VH          # rail and supply leads from A22, wire assemblies made at build
+(JST-SH 1.0)     # IP68 cooler fan leads
+(IDC 2x          # the A-to-B and panel ribbons, and the RockBLOCK bracket header
+bench)           # bench-only debug headers: console UART, cJTAG, the LG290P UART
+nRPIBOOT jumper  # a solder jumper, copper on our own board
+U.FL:            # U.FL pigtails to the bulkhead jacks, made up at build
+RJ45 jack (Amphenol RJHSE5380)  # hand-fit, sheet is Mouser's mirror of Amphenol's
+HDMI type A receptacle (Molex   # hand-fit, route in tools/jlc-handfit.txt
+RockBLOCK 9704 16-pin           # the module's own bracket header, module is hand-fit
+(2x5):           # the SPI0 breakout, a bench header
+(S3 hub port 4)  # spare USB header, bench
+camera lead      # a lead to a camera module bought separately
+XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-handfit.txt
+QMX USB lead     # a pigtail to the QMX unit's own USB-C, made up at build

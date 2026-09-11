@@ -1,0 +1,14 @@
+# Comment substrings whose BOM line may carry no LCSC code, one per line with the reason after a #.
+# lcsc_fill.py refuses any other blank (it resolves this file three dirnames up from out/jlc/<name>-bom.csv).
+# A line here means JLCPCB never places that part: it is a lead, a solder land, a bench header, or a part
+# bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
+
+(JST-PH          # headset, PA gate-bias and spare-port leads, made up at build
+(JST-VH          # the 5 V feed from A22's mezzanine
+(IDC 2x          # the A22 mezzanine harness
+electret bias    # a solder jumper, copper on our own board
+(SMA, pigtail    # a pigtail to a bulkhead jack, made up at build
+(U.FL, coax      # PA drive coax, made up at build
+(SMA, coax       # PA output coax, made up at build
+NiceRF SA868     # module bought from NiceRF, bench-fitted, route in tools/jlc-handfit.txt
+Omron G6K-2F-Y   # JLCPCB stock 0, route in tools/jlc-handfit.txt

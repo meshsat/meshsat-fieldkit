@@ -137,7 +137,10 @@ def main(a):
         cl = cls_of(pr + "_P") or "Default"; target = classes.get(cl, {}).get("z_diff")
         if not target: continue
         p, n = segs.get(pr + "_P", []) or segs.get("/" + pr + "_P", []), segs.get(pr + "_N", []) or segs.get("/" + pr + "_N", [])
-        if not p or not n: results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
+        # 11 September 2026 (MESHSAT-862): both UNROUTED exits appended their verdict and `continue`d
+        # BEFORE the `miss += 1` below, so a pair with no track on one leg was printed in the summary
+        # and did not fail the gate. The exit status is `1 if miss else 0`, so the board passed.
+        if not p or not n: miss += 1; results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
         tot = 0.0; ok_len = 0.0; unref = 0.0; zs = []; gaps = []; fan = 0.0
         pnets = {pr + "_P", pr + "_N", "/" + pr.lstrip("/") + "_P", "/" + pr.lstrip("/") + "_N"}
         ppads = [q.GetPosition() for f in b.GetFootprints() for q in f.Pads() if q.GetNetname() in pnets]
@@ -178,7 +181,7 @@ def main(a):
             else: unref += length; continue
             zs.append(z)
             if abs(z - target) <= tol * target: ok_len += length
-        if not tot and not fan: results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
+        if not tot and not fan: miss += 1; results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
         if tot < SHORT_MM:   # no coupled run to judge: the pair is its fans (a series resistor beside its chip)
             checked += 1; results.append((pr, cl, target, None, 1.0, 0.0, "SHORT", None, 0, fan)); continue
         zz = [z for z in zs if z]; med = sorted(zz)[len(zz) // 2] if zz else None; frac = ok_len / tot

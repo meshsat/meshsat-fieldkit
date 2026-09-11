@@ -12,6 +12,7 @@ segs = [(case(d.GetStart()), case(d.GetEnd())) for d in b.GetDrawings() if d.Get
 pts = [p for s in segs for p in s]
 x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts); y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
 check(abs(x1 - x0 - 240) < 0.005 and abs(y1 - y0 - 160) < 0.005 and abs(x0 + 120) < 0.005 and abs(y1 - 80) < 0.005, "outline 240 x 160, X -120..120 (32.56)")
+check(b.GetCopperLayerCount() == 6, "6 copper layers (A22, JLC06161H-3313; under P0 review 11 Sep 2026)")
 fps = {fp.GetReference(): fp for fp in b.GetFootprints()}
 def fpc(ref):
     bb = fps[ref].GetBoundingBox(False, False); return ((bb.GetLeft() + bb.GetRight()) / 2e6 - OX, OY - (bb.GetTop() + bb.GetBottom()) / 2e6)

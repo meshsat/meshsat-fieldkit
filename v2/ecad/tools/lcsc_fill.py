@@ -87,10 +87,33 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^amber hub$", "LED_0603"): "C965802",
 }
 path = sys.argv[1]; rows = list(csv.DictReader(open(path))); filled = 0
+
+# 11 September 2026 (MESHSAT-862). The MAP above is hand-maintained, 90-odd entries against several
+# hundred distinct values on the set, which is why 320 of 579 BOM rows had no code. A code should
+# enter a BOM because the part was CERTIFIED against JLCPCB's catalogue, not because someone typed it
+# into an ic() call, so the certified table fills whatever the MAP does not. The MAP keeps priority:
+# its entries carry reasons the table cannot know (a 50 V part covering two 1206 lines, the TPS2065
+# package correction), and each of those reasons is a comment beside the entry.
+import os as _os
+CERT = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))),
+                     "release", "revA", "order", "JLC-CERTIFIED.tsv")
+certified = {}
+if _os.path.exists(CERT):
+    for _row in csv.DictReader(open(CERT, errors="replace"), delimiter="\t"):
+        if (_row.get("verdict") or "").strip() != "CERTIFIED":
+            continue
+        _c = (_row.get("code") or "").strip()
+        if _c:
+            certified.setdefault(((_row.get("comment") or "").strip(), (_row.get("fp") or "").strip()), _c)
+
+from_cert = 0
 for r in rows:
     if r.get("LCSC Part #"): continue
     for (vre, fsub), code in MAP.items():
         if re.match(vre, r["Comment"]) and fsub in r["Footprint"]: r["LCSC Part #"] = code; filled += 1; break
+    if r.get("LCSC Part #"): continue
+    code = certified.get((r["Comment"].strip(), r["Footprint"].strip()))
+    if code: r["LCSC Part #"] = code; filled += 1; from_cert += 1
 with open(path, "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=["Comment", "Designator", "Footprint", "LCSC Part #"]); w.writeheader(); w.writerows(rows)
 blank = [r for r in rows if not r["LCSC Part #"]]
@@ -105,7 +128,7 @@ if os.path.exists(ap):
     for line in open(ap):
         if "#" in line and line.split("#", 1)[0].strip(): allow.append(line.split("#", 1)[0].strip())
 not_allowed = [r for r in blank if not any(a in r["Comment"] for a in allow)]
-print("lcsc_fill: %d lines filled, %d still blank of %d (%d allow-listed, %d not: %s)" % (filled, len(blank), len(rows), len(blank) - len(not_allowed), len(not_allowed), ", ".join(r["Designator"][:24] for r in not_allowed[:8])))
+print("lcsc_fill: %d lines filled (%d of them from the certified table), %d still blank of %d (%d allow-listed, %d not: %s)" % (filled, from_cert, len(blank), len(rows), len(blank) - len(not_allowed), len(not_allowed), ", ".join(r["Designator"][:24] for r in not_allowed[:8])))
 
 # 11 September 2026 (MESHSAT-862). Until today this script ONLY ever filled blanks: the `continue` above
 # skips any row that already carries a code, so a code typed into an `ic()` call was never looked at by

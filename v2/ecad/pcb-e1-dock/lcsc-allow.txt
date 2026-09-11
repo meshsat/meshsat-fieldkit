@@ -1,0 +1,16 @@
+# Comment substrings whose BOM line may carry no LCSC code, one per line with the reason after a #.
+# lcsc_fill.py refuses any other blank (it resolves this file three dirnames up from out/jlc/<name>-bom.csv).
+# A line here means JLCPCB never places that part: it is a lead, a solder land, a bench header, or a part
+# bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
+
+(JST-VH          # solar and vehicle input leads
+(XH or pin header)              # the pack SMBus lead
+BOOTSEL          # a solder jumper, copper on our own board
+solder lands     # the twelve signal wires to the block board, soldered at build
+solder pad       # 12 AWG pack wires, soldered at build
+bare copper      # the two water electrodes: copper on our own board, nothing is placed on them
+on XT60-M        # the pack cable assembly, bought with the pack
+module:          # sensor modules on headers: DCF77, Geiger, lightning, the outside pod
+lead from the D38999            # wall receptacle leads, made up at build
+Bourns SRF1260-4R7Y             # JLCPCB stock 0, route in tools/jlc-handfit.txt
+XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-handfit.txt
