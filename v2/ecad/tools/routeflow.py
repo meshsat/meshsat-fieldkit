@@ -228,7 +228,7 @@ def fingerprint(repo, prof, project):
 def new_run_dir(project, fp):
     """A fresh directory per invocation, never reused: <utc>-<fingerprint>[-n]."""
     base = os.path.join(project, "out", "routeflow"); os.makedirs(base, exist_ok=True)
-    stamp = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())   # utcnow() is deprecated and printed two warnings at the head of every run log
     for n in range(1, 100):
         d = os.path.join(base, "%s-%s" % (stamp, fp[:8]) if n == 1 else "%s-%s-%d" % (stamp, fp[:8], n))
         try: os.makedirs(d); return d
@@ -248,7 +248,7 @@ def provenance(repo, prof, project, fp):
     try:
         import pcbnew as _pcb; kicad = _pcb.GetBuildVersion()
     except Exception: kicad = out(["kicad-cli", "version"])
-    return {"fingerprint": fp, "utc": datetime.datetime.utcnow().isoformat() + "Z", "host": os.uname().nodename,
+    return {"fingerprint": fp, "utc": verdict.now(), "host": os.uname().nodename,
             "git_head": out(["git", "rev-parse", "HEAD"]), "git_tools_tree": out(["git", "rev-parse", "HEAD:v2/ecad/tools"]),
             "git_dirty": bool(out(["git", "status", "--porcelain", "v2/ecad/tools"])), "git_dirty_sha": hashlib.sha256(out(["git", "diff", "HEAD", "--", "v2/ecad/tools"]).encode()).hexdigest()[:16],
             # NOT the board this run produces: provenance is written before the chain generates it, so this is
