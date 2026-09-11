@@ -117,6 +117,37 @@ These are other people's incidents, and each one is a shape we have hit:
   a bare `0` is what a broken query, an unwired store and a healthy system all produce identically.
   `verdict.py` already enforces this.
 
+## What the first day of the programme measured (11 September 2026)
+
+**Stage 0 closed and found a real defect**: a random KiCad UUID decided which escapes fit, worth four tracks
+and four vias of 391 on D. After `boardorder.py`: D 0 of 391 across three runs, A 0 of 1483, C 0 of 556.
+
+**Phase A's two levers were measured and both under-delivered against their written predictions.**
+
+| lever | predicted | measured |
+|---|---|---|
+| C2, the corridor end tested where the stubs start | +15 or better of 23 pairs | **+3** (53 to 56 of 113) |
+| C3, the occupancy maps counted once | maps 1,010 s to under 120 | **514 s to 388 s, 1.32x** |
+
+**The review's classification of the failures was wrong for this board.** It counts 23 as "no stub path
+reached the PAD"; the measured profile is **30 "no stub path AT VIA" and 32 of all failures dying at a via
+rather than a pad**. Those are a different code path, and the record's own 32.90 profile said so in August.
+The other 30 are "the legs clear no smoothing", for which the review prescribes a bevel that has been in the
+tool since 10 September.
+
+**The review's proposed map expression was unsafe.** `all & ~own_P & ~own_N` frees cells that another net
+blocks wherever two grown rasters overlap, which on a dense board is wherever two nets run within twice the
+clearance. The maps count rather than OR.
+
+**Two of my own changes were wrong and only measurement caught them:** the counted map was slower than what
+it replaced until the copper was indexed by net, and making every "0 of 0" INCONCLUSIVE would have blocked
+board C, whose declared design is to carry no impedance target.
+
+**What this says about the plan.** Stage 0 was worth what it claimed. Phase A's levers were not, and the
+honest next lever is the one both profiles name and neither review costed: the stub-to-escape-via geometry at
+the fine-pitch parts. **A prediction written before a run is the only reason any of this is known**, and
+three of the sixteen arms now queued predict a loss on purpose.
+
 ## Order of work
 
 **Stage 0, the preconditions, and they are most of the value.**
