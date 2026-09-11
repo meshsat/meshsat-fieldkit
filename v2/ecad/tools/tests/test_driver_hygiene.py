@@ -240,3 +240,20 @@ def t_the_straightener_merges_a_whole_pass_before_reindexing():
         "the merge loop still restarts after a single merge"
     assert "checks[0] < BUDGET" in body, "the merge loop is not bounded by the work budget"
     assert "touched" in body, "the pass does not guard against merging a segment twice"
+
+
+def t_nothing_records_a_jar_by_a_default_string():
+    """Every place that RECORDED which jar ran carried its own default, '~/bin/freerouting-1.9.0.jar', so with
+    nothing pinned the journal line, the provenance file and the benchmark row all named the STOCK jar while the
+    patched one ran. A record that says something other than what happened is what this channel exists to
+    remove. One function answers the question and everything that records a jar calls it."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    assert "def jar_in_use(" in src, "there is no single answer to which jar ran"
+    body = src[src.index("def jar_in_use("):]
+    body = body[:body.index("\ndef ", 10)]
+    rest = src.replace(body, "")
+    for line in rest.splitlines():
+        if "freerouting-1.9.0.jar" not in line: continue
+        if line.strip().startswith("#"): continue
+        assert ("preflight" in line or "checks.append" in line or "endswith" in line or "ok(" in line), \
+            "a jar is recorded by a default string rather than by jar_in_use(): %s" % line.strip()[:120]

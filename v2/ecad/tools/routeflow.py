@@ -241,7 +241,7 @@ def provenance(repo, prof, project, fp):
         try: return subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=30).stdout.strip()
         except Exception: return ""
     pre = os.path.join(project, "out", "%s-preroute.kicad_pcb" % prof["board"])
-    jar = os.path.expanduser(prof.get("route", {}).get("jar", "~/bin/freerouting-1.9.0.jar"))
+    jar = jar_in_use(prof.get("route") or {})
     def sha(fn):
         try: return hashlib.sha256(open(fn, "rb").read()).hexdigest()[:16]
         except Exception: return None
@@ -258,6 +258,20 @@ def provenance(repo, prof, project, fp):
             "freerouting_jar": os.path.basename(jar), "freerouting_sha": sha(jar), "java": out(["java", "-version"]) or out(["bash", "-c", "java -version 2>&1 | head -1"])}
 
 _LOCK_FH = []   # kept open for the life of the process: closing the handle releases the flock
+
+def jar_in_use(route=None):
+    """The jar `route_one.sh` will actually take: a pinned one wins, else our patched build when the host has
+    it, else the stock jar (which route_one refuses unless FR_REQUIRE_MESH=0 says so deliberately).
+
+    Every place that RECORDED a jar had its own default string, `~/bin/freerouting-1.9.0.jar`, so with nothing
+    pinned the journal line and the provenance file both named the stock jar while the patched one ran. A record
+    that says something other than what happened is the defect this whole channel exists to remove
+    (12 September 2026)."""
+    pinned = (route or {}).get("jar")
+    if pinned: return os.path.expanduser(pinned)
+    mesh = os.path.expanduser("~/bin/freerouting-1.9.0-mesh.jar")
+    return mesh if os.path.exists(mesh) else os.path.expanduser("~/bin/freerouting-1.9.0.jar")
+
 
 def take_lock(board):
     """An exclusive flock on the lock file, not a check followed by a write: two routeflows could pass the existence test at the
@@ -426,7 +440,7 @@ def run(profile_fn, rounds, use_services, dry):
                 if route.get("preferred"): argv += ["--preferred", route["preferred"]]
                 if route.get("inactive"): argv += ["--inactive", route["inactive"]]
                 if sh(argv, project, os.path.join(rdir, "round%d-rules.log" % rnd)) == 0 and os.path.exists(rules): env["FR_RULES"] = rules; env["FR_RULES_INJECT"] = "1"   # into the DSN, never -dr (6 Sep 2026 11:30)
-            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s planes %s rules %s jar %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"), route.get("plane_nets") or "none", {k: route[k] for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive") if k in route} or "none", os.path.basename(route.get("jar", "freerouting-1.9.0.jar")))))
+            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s planes %s rules %s jar %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"), route.get("plane_nets") or "none", {k: route[k] for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive") if k in route} or "none", os.path.basename(jar_in_use(route)))))
             if use_services: services(prof.get("services_script"), "stop", os.path.join(rdir, "services.log"))
             rlog = os.path.join(project, prof["route"].get("log", "out/parallel-routeflow.log"))
             if not dry:
@@ -570,7 +584,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
                 done.add(r.get("key"))
         def ident(cfg):
             """(jar path, jar sha, configuration key): the key is the pre-route board, the jar, the configuration and the route block; never the host, the timeout scale or the time"""
-            jar_path = os.path.expanduser(cfg.get("jar", exp.get("jar", "~/bin/freerouting-1.9.0.jar")))
+            jar_path = jar_in_use({"jar": cfg.get("jar") or exp.get("jar")})   # the jar route_one will take, never a default string
             if not jar_path.startswith("/"): jar_path = os.path.expanduser("~/bin/" + jar_path)
             jar_sha = hashlib.sha256(open(jar_path, "rb").read()).hexdigest()[:16] if os.path.exists(jar_path) else "nojar"
             return jar_path, jar_sha, hashlib.sha256((pre_hash + jar_sha + json.dumps(cfg, sort_keys=True) + json.dumps(exp.get("route", {}), sort_keys=True) + RULES_MODE).encode()).hexdigest()[:16]
