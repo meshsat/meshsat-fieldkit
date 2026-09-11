@@ -1,0 +1,17 @@
+# Symbol pins that land on a pad with a different number, declared per footprint with the reason.
+#
+# Some packages tie several symbol pins to one physical pad. KiCad's own TDSON-8-1 is the case that made this
+# file: Infineon's PG-TDSON-8-1 brings the drain out as a single slug, and KiCad numbers that slug "5", while
+# the eight-pin FET symbol has drain on pins 5, 6, 7 and 8. The netlist then carries three nodes per FET with
+# nowhere to land, and netlist_board.py refused board E for eighteen of them.
+#
+# This is a DECLARATION, not a skip. netlist_board.py still checks that the aliased pad carries the net the
+# netlist gives the pin, so the defect class this gate exists for stays caught: a pin map that names a pad the
+# footprint does not have is how the TPS2065CDBV sat on a six-pad SOT-23 land for four board phases while TI's
+# DBV package has five (section 8 of the handover). An undeclared missing pad still fails.
+#
+# Format: <footprint name, no library prefix> <pin> <pad>   # reason
+#
+TDSON-8-1 6 5   # PG-TDSON-8-1 brings the drain out as one slug; the symbol's drain pins 5 to 8 all land on it
+TDSON-8-1 7 5   # as above
+TDSON-8-1 8 5   # as above
