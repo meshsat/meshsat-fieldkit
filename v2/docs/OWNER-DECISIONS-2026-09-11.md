@@ -60,6 +60,22 @@ A, B, C and D, and it is the whole of the missing evidence.
 I am not quoting from memory or from a published price table read off a page: a number in this decision has to
 be a quote for these boards.
 
+**Measured since, and it changes the shape of the question: `v2/docs/LAYER-DECISIONS-2026-09-11.md`.**
+`tools/layer_audit.py` now reports what every copper layer of every board actually carries, checked against the
+copper gerber count of each shipped zip. Three things come out of it.
+
+**E1 dock is a four-layer board whose two inner layers carry NOT ONE routed track.** In1 is a ground plane and
+In2 carries four power pours. E's fourth layer buys pour area, not routing space, so E's decision is a power
+question with a number attached and `dc_drop.py` can answer it without you.
+
+**A's back side is nearly empty**: B.Cu carries 1,159 mm, under 6 percent of the board, while In2 and In3 carry
+13,459 mm. So A's four-layer rerun asks two things at once, whether three routing layers hold it and whether the
+router will use the back when the inner layers are gone.
+
+**D's case is the ground plane, not the routing.** In2 carries 34 percent of D's copper, but In1's solid plane
+sits under the exciter and the filter, which is an RF requirement. That is a defensible four-layer rationale and
+the record never wrote it.
+
 **The decision, per board, once the measurement and the cost are beside each other.** The layer count and the
 stackup are on the floor (`reserved.json`, class "layer count and stackup") and nothing changes one without you.
 
