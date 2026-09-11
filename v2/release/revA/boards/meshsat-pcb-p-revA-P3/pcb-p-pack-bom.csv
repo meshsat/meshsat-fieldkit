@@ -1,22 +1,22 @@
 Comment,Designator,Footprint,LCSC Part #
-2.2u,C1,C_0805_2012Metric,
+2.2u,C1,C_0805_2012Metric,C19110
 100n,"C2,C3,C4,C5,C6,C7,C8,C9,C10",C_0603_1608Metric,C14663
 100n 50V,C11,C_0603_1608Metric,C14663
-100n 50V,C12,C_1206_3216Metric,
-SMBJ20A,D1,D_SMB,
+100n 50V,C12,C_1206_3216Metric,C24497
+SMBJ20A,D1,D_SMB,C364296
 USBLC6-2SC6 ESD clamp on the SMBus pair,D2,SOT-23-6,C7519
-25 A mini blade (Keystone 3568 holder): the pack's fuse,F1,Fuseholder_Blade_Mini_Keystone_3568,
-cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN,J_CELL,JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical,
-SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND PRES,J_SMB,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,
-cell thermistor (JST-PH 1x2): the 103AT in the block,J_TS,JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical,
+25 A mini blade (Keystone 3568 holder): the pack's fuse,F1,Fuseholder_Blade_Mini_Keystone_3568,C4661
+cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN,J_CELL,JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical,C157991
+SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND PRES,J_SMB,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,C594232
+cell thermistor (JST-PH 1x2): the 103AT in the block,J_TS,JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical,C5251182
 "CSD17570Q5B 30 V N-FET, charge switch",Q1,PowerPAK_SO-8_Single,C529279
 "CSD17570Q5B 30 V N-FET, discharge switch",Q2,PowerPAK_SO-8_Single,C529279
 100R,"R1,R2,R3,R4,R5,R8,R9,R20,R21",R_0603_1608Metric,C22775
 1k,"R6,R7",R_0603_1608Metric,C21190
-2m 2512 2W (sense),R10,R_2512_6332Metric,
+2m 2512 2W (sense),R10,R_2512_6332Metric,C154685
 10k,"R11,R12,R13,R14,R15",R_0603_1608Metric,C25804
 5.1k,"R16,R18",R_0603_1608Metric,C23186
-10M,"R17,R19",R_0603_1608Metric,
+10M,"R17,R19",R_0603_1608Metric,C7250
 "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B)",U1,QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm,C157570
 cell block B- (12 AWG from the block's negative strip),W_BN,SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm,
 cell block B+ (12 AWG from the block's positive strip),W_BP,SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm,
