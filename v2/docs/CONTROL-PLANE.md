@@ -164,7 +164,9 @@ three of the sixteen arms now queued predict a loss on purpose.
 | the escape-via entry with the leg test | >= 68 | **54** |
 | the escape-via entry with the slim retry | >= 66 | **49** |
 | the staircase turned OFF | <= 45 | **55** |
-| wider search window, longer strip, more expansions, more end candidates | mixed | 55, 55, 55, 54 |
+| 30 corridor-end candidates | >= 62 | **58** |
+| 60 corridor-end candidates | >= 62 | **59** |
+| wider search window, longer strip, more expansions | mixed | 55, 55, 55 |
 
 **Three things come out of it and none of them is the thing the plan expected.**
 
@@ -172,9 +174,14 @@ three of the sixteen arms now queued predict a loss on purpose.
 32.95) and it is worth zero here: 54 against 54, and 49 when combined. Measured on D the same evening it is
 worth **minus two** (1 of 5 against 3 of 5). It stays a per-pair fallback and nothing more.
 
-**The corridor slack is the lever, and the default sits in a hole.** 0.08 gives 60 and 0.15 gives 59 against
+**The corridor slack is the largest lever, and the default sits in a hole.** 0.08 gives 60 and 0.15 gives 59 against
 0.12's 54. A default beaten on both sides is not a local optimum, so the second sweep walks 0.04 to 0.20 rather
 than guessing a third value. That sweep is queued.
+
+**The end-candidate count is a second real lever, and reading a partial run nearly hid it.** At 30 and 60
+candidates the DIFF100 pass laid three FEWER pairs than base, and on the half-finished run that is all there
+was to see. The USB pass then laid seven and eight MORE, for totals of 58 and 59. **A pass count read before
+the run ends is not a measurement**, and the arms exist precisely so that the number is taken once.
 
 **Nine of the sixteen predictions were wrong, three of them badly.** That is the instrument working: an arm
 that cannot miss teaches nothing, and the three deliberate-loss arms were the ones that came closest to being
