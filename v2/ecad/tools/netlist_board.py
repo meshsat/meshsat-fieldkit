@@ -29,6 +29,24 @@ import verdict
 BENCH = ("H", "S_", "TP", "W_", "JP", "PAD", "P_", "#")
 
 
+def read_aliases(path=None):
+    """{(footprint, pin): pad} from tools/pad-aliases.txt, each line carrying its reason.
+
+    A package that ties several symbol pins to one physical pad (KiCad's TDSON-8-1 brings a FET's drain pins
+    5 to 8 out on one slug numbered 5) leaves netlist nodes with nowhere to land. They are declared here rather
+    than skipped: the aliased pad is still checked for the net, so a pin map that names a pad the footprint does
+    not have keeps failing, which is how the TPS2065CDBV trap would be caught."""
+    path = path or os.path.join(os.path.dirname(os.path.abspath(__file__)), "pad-aliases.txt")
+    out = {}
+    if not os.path.exists(path): return out
+    for ln in open(path, errors="replace"):
+        ln = ln.split("#")[0].strip()
+        if not ln: continue
+        f = ln.split()
+        if len(f) == 3: out[(f[0], f[1])] = f[2]
+    return out
+
+
 def read_netlist(path):
     """{ref: {pin: net}} from a KiCad netlist."""
     txt = open(path, encoding="utf-8", errors="replace").read()
@@ -76,7 +94,10 @@ def main(a):
         if live: fails.append("%s is on the board and not in the netlist, and its pads carry %s" % (ref, ", ".join(live[:4])))
         else: board_only_dead.append(ref)
 
+    aliases = read_aliases()
+    aliased = 0
     for ref in sorted(set(nl) & set(fps)):
+        fpname = fps[ref].GetFPIDAsString().split(":")[-1]
         pads = {}
         for p in fps[ref].Pads():
             n = p.GetNetname().lstrip("/")
@@ -84,6 +105,10 @@ def main(a):
         for pin, net in sorted(nl[ref].items()):
             checked += 1
             got = pads.get(pin)
+            if got is None and (fpname, pin) in aliases:
+                # a declared alias: this pin lands on another pad of the same footprint, and THAT pad still has
+                # to carry the net, so the check is moved rather than dropped
+                got = pads.get(aliases[(fpname, pin)]); aliased += 1
             # KiCad gives every unconnected pin a synthetic net, `unconnected-(REF-PINNAME-PadN)`, and writes it
             # into the netlist as though it were a net. It is not one: the same pad on the board carries no net
             # at all, and the two agreeing is what a correct board looks like. Comparing the placeholder against
@@ -101,12 +126,13 @@ def main(a):
         print("netlist_board: %d footprint(s) on the board that the netlist does not have and that carry no net "
               "at all: %s. Inert copper, reported and not blocked on; each is a placement list that has outlived "
               "its schematic part." % (len(board_only_dead), ", ".join(board_only_dead[:12])))
+    if aliased: print("netlist_board: %d pin(s) checked through a declared pad alias (tools/pad-aliases.txt)" % aliased)
     print("netlist_board: %d of %d comparisons agree (%d references in the netlist, %d footprints on the board)"
           % (checked - len(fails), checked, len(nl), len(fps)))
     return verdict.write("netlist_board", verdict.PASS if not fails else verdict.FAIL,
                          counts={"fail": len(fails), "agree": checked - len(fails),
                                  "netlist_refs": len(nl), "board_footprints": len(fps),
-                                 "board_only_inert": len(board_only_dead)},
+                                 "board_only_inert": len(board_only_dead), "aliased_pins": aliased},
                          denominator=checked, evidence=fails,
                          inputs={"board": board_path, "netlist": net_path},
                          note="the board against the schematic it was placed from")

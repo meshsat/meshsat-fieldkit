@@ -104,7 +104,7 @@ UNCONN = '''(export (version "E")
 '''
 
 
-def _stub_board(pads, extra_fps=()):
+def _stub_board(pads, extra_fps=(), fpid="Package:Generic"):
     """A stub pcbnew whose board has U1 with `pads` = {pin: netname} plus any extra references."""
     d = tempfile.mkdtemp(prefix="nb-stub-")
     src = ['class _P:',
@@ -114,6 +114,7 @@ def _stub_board(pads, extra_fps=()):
            'class _F:',
            '    def __init__(s, r, pads): s.r, s.p = r, [_P(k, v) for k, v in pads.items()]',
            '    def GetReference(s): return s.r',
+           '    def GetFPIDAsString(s): return %r' % fpid,
            '    def Pads(s): return s.p',
            'class _B:',
            '    def GetFootprints(s): return [_F("U1", %r)] + [_F(r, p) for r, p in %r]' % (pads, list(extra_fps)),
@@ -122,9 +123,9 @@ def _stub_board(pads, extra_fps=()):
     return d
 
 
-def _run(netlist_txt, pads, extra_fps=()):
+def _run(netlist_txt, pads, extra_fps=(), fpid="Package:Generic"):
     np_ = _net(netlist_txt)
-    stub = _stub_board(pads, extra_fps)
+    stub = _stub_board(pads, extra_fps, fpid)
     board = os.path.join(os.path.dirname(np_), "b.kicad_pcb"); open(board, "w").write("(kicad_pcb)\n")
     env = dict(os.environ, PYTHONPATH=stub)
     r = subprocess.run([sys.executable, os.path.join(TOOLS, "netlist_board.py"), board, np_],
@@ -156,3 +157,52 @@ def t_a_board_only_footprint_that_carries_a_net_blocks():
     rc, out = _run(UNCONN, {"1": "/USB_P", "44": ""}, extra_fps=[("U36", {"1": "/+3V3"})])
     assert rc == 1, out
     assert "U36 is on the board and not in the netlist, and its pads carry +3V3" in out, out
+
+
+# ---------------------------------------------------------------- declared pad aliases (11 September 2026)
+# KicAD's TDSON-8-1 brings a FET's drain out as one slug numbered 5 while the eight-pin symbol has drain on
+# pins 5 to 8, so board E carried eighteen netlist nodes with nowhere to land and this gate refused it. They
+# are DECLARED in tools/pad-aliases.txt rather than skipped: the aliased pad is still checked for the net, so
+# a pin map naming a pad the footprint has not got keeps failing (the TPS2065CDBV trap of section 8).
+
+TDSON = '''(export (version "E")
+  (nets
+    (net (code "1") (name "/DC_P")
+      (node (ref "U1") (pin "5"))
+      (node (ref "U1") (pin "6"))
+      (node (ref "U1") (pin "7"))
+      (node (ref "U1") (pin "8"))
+    )
+  )
+)
+'''
+
+
+def t_a_declared_alias_moves_the_check_to_the_slug_pad():
+    rc, out = _run(TDSON, {"5": "/DC_P"}, fpid="Package_TO_SOT_SMD:TDSON-8-1")
+    assert rc == 0, out
+    assert "3 pin(s) checked through a declared pad alias" in out, out
+
+
+def t_a_declared_alias_still_fails_when_the_slug_carries_the_wrong_net():
+    """The alias moves the check, it does not drop it."""
+    rc, out = _run(TDSON, {"5": "/GND"}, fpid="Package_TO_SOT_SMD:TDSON-8-1")
+    assert rc == 1, out
+    assert "GND on the board and DC_P in the netlist" in out, out
+
+
+def t_an_undeclared_missing_pad_still_fails():
+    """The TPS2065CDBV class: a pin map that names a pad the footprint has not got."""
+    rc, out = _run(TDSON, {"5": "/DC_P"}, fpid="Package_TO_SOT_SMD:SOT-23-6")
+    assert rc == 1, out
+    assert "U1.6 is on net DC_P in the netlist and has no net on the board" in out, out
+
+
+def t_the_alias_file_gives_every_line_a_reason():
+    import netlist_board as _nb
+    p = os.path.join(TOOLS, "pad-aliases.txt")
+    for ln in open(p):
+        body = ln.split("#")[0].strip()
+        if not body: continue
+        assert "#" in ln, "an alias without a written reason waves a pad through silently: %r" % ln.strip()
+        assert len(body.split()) == 3, ln
