@@ -24,7 +24,13 @@ def _blocks(t, tag):
         j = i + 2; depth = 0; q = False
         while j < len(t):
             c = t[j]
-            if q: q = c != '"' if c != "\\" else q
+            if q:
+                # a backslash consumes the next character, so an escaped quote does not end the string. Without
+                # this, `(name "a\\"b")` ended its string at the escaped quote and every paren after it was
+                # counted in the wrong context (reviewer, 11 September 2026). KiCad escapes quotes in title
+                # block comments and in any user text, so this is reachable on a real board.
+                if c == "\\": j += 2; continue
+                if c == '"': q = False
             elif c == '"': q = True
             elif c == "(": depth += 1
             elif c == ")":

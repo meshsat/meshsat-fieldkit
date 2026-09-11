@@ -25,7 +25,10 @@ CONT="$(python3 -c "import json,sys; c=json.load(open(sys.argv[1])).get('finish'
 TAG="$(echo "$PHASE" | tr 'A-Z' 'a-z')"; FLAG="out/$TAG-clean.txt"; DELIV="meshsat-pcb-$L-revA-$PHASE"
 cd "$E/$PROJ" || { echo "finish: no project directory $E/$PROJ"; exit 2; }
 rm -f "$FLAG" out/par-score.txt out/contracts.log   # a stale clean flag must never finish a board (register class 6)
-stop () { echo "$PHASE $1"; echo open > "$FLAG"; echo "FINISH-$PHASE-DONE"; exit 1; }
+# A stop names a log; print its tail with it. The clones exited before their own grep on a crash too, so this
+# is not a regression they had and we lost, but the evidence lives on a rented box that is destroyed when its
+# last job is fetched, and a message naming a file nobody will ever read is not evidence (11 September 2026).
+stop () { echo "$PHASE $1"; [ -n "${2:-}" ] && [ -s "${2:-}" ] && { echo "--- tail of $2"; tail -12 "$2"; }; echo open > "$FLAG"; echo "FINISH-$PHASE-DONE"; exit 1; }
 
 # A wait with a deadline: if the producer crashes or the marker is never written this job used to be immortal.
 W=0; while ! grep -q PARALLEL-DONE "$LOG" 2>/dev/null; do sleep 30; W=$((W + 30));
@@ -54,7 +57,7 @@ if [ -n "$CONT" ]; then
   if [ "$UN" -gt 0 ] && [ "$UN" -le "$1" ]; then $T/cont_route.sh "$PWD" $N "$2" "$3" 2>&1 | grep -E 'cont:'; $T/drc.sh $N.kicad_pcb out/$N-drc.json; fi
 fi
 # 4. ONLY NOW the stub router, on a board that is clean and whose pours are filled
-env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || stop "stub router CRASHED, exit $? (out/$N-stub.log)"
+env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || stop "stub router CRASHED, exit $? (out/$N-stub.log)" "out/$N-stub.log"
 grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
 # 5. the refill before the check, so a legal closing via is not read against a stale fill
 python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'
@@ -92,14 +95,14 @@ python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('  OPEN', 
 
 # every gate below runs ONCE and its exit code is its verdict; the reason comes from its verdict JSON
 python3 $T/check_pcb_$L.py $N.kicad_pcb > out/gate-$N.log 2>&1; GATE=$?; grep -E "$GGREP" out/gate-$N.log | tail -14
-[ "$GATE" -eq 0 ] || stop "GATE $(python3 $T/verdict.py read out/check_pcb_$L.verdict.json 2>&1 | tail -1) on the routed board"
+[ "$GATE" -eq 0 ] || stop "GATE $(python3 $T/verdict.py read out/check_pcb_$L.verdict.json 2>&1 | tail -1) on the routed board" "out/gate-$N.log"
 python3 $T/dc_drop.py $N.kicad_pcb --json out/$N-dc_drop.json > out/$N-dc_drop.log 2>&1; DC=$?; grep -E 'dc_drop' out/$N-dc_drop.log | tail -14
-[ "$DC" -eq 0 ] || stop "DC DROP $(python3 $T/verdict.py read out/dc_drop.verdict.json 2>&1 | tail -1)"
+[ "$DC" -eq 0 ] || stop "DC DROP $(python3 $T/verdict.py read out/dc_drop.verdict.json 2>&1 | tail -1)" "out/$N-dc_drop.log"
 python3 $T/stackup_write.py $N.kicad_pcb 2>&1 | tail -1
 python3 $T/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > out/$N-impedance.log 2>&1; IM=$?; grep -E 'impedance' out/$N-impedance.log | tail -14
-[ "$IM" -eq 0 ] || stop "IMPEDANCE $(python3 $T/verdict.py read out/impedance_check.verdict.json 2>&1 | tail -1)"
+[ "$IM" -eq 0 ] || stop "IMPEDANCE $(python3 $T/verdict.py read out/impedance_check.verdict.json 2>&1 | tail -1)" "out/$N-impedance.log"
 python3 $T/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.log 2>&1; NB=$?; tail -2 out/netlist_board.log
-[ "$NB" -eq 0 ] || stop "BOARD DOES NOT MATCH ITS NETLIST $(python3 $T/verdict.py read out/netlist_board.verdict.json 2>&1 | tail -1)"
+[ "$NB" -eq 0 ] || stop "BOARD DOES NOT MATCH ITS NETLIST $(python3 $T/verdict.py read out/netlist_board.verdict.json 2>&1 | tail -1)" "out/netlist_board.log"
 python3 $T/check_contracts.py .. > out/contracts.log 2>&1; grep -E 'FAIL|MISSING' out/contracts.log | head -12
 grep -q 'ALL CONTRACTS PASS' out/contracts.log && echo 'contracts: ALL PASS' || stop "CONTRACTS FAILED (out/contracts.log)"
 CLEAN=$(cat "$FLAG" 2>/dev/null || echo missing); [ "$CLEAN" = clean ] || { echo "$PHASE NOT CLEAN, not finishing"; echo "FINISH-$PHASE-DONE"; exit 1; }
