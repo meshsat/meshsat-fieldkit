@@ -5030,8 +5030,19 @@ integer sum rather than `hypot` at the same time, so the two order identically.
 | `PAIR_FAST_STUBS=1` | 5 of 5 | **3 s** | **under 1 s** |
 
 **The two boards are byte-identical in geometry: 0 of 478 items differ.** So it is the same router, three times
-faster on this board, and the bucket that was two thirds of the pass is gone. The B19 arm follows, because 113
-pairs is what the knob has to hold on.
+faster on this board, and the bucket that was two thirds of the pass is gone.
+
+**B19 settles it.** Same placed board, same slack, 113 pairs:
+
+| B19 | pairs | pass | in the stub search |
+|---|---:|---:|---:|
+| `PAIR_FAST_STUBS=0` | 47 of 113 | 1586 s | 675 s |
+| `PAIR_FAST_STUBS=1` | 47 of 113 | **976 s** | **46 s** |
+
+**0 of 7,706 board items differ**: 950 footprints, 5,051 tracks, 1,670 vias and 35 zones, all identical. The
+stub search is **14.7x** and a whole pass is 1.6x. It is **on by default where numba is**, and off without it,
+because the same kernel interpreted is a numpy heap in a Python loop and that is slower than the heapq it
+replaces. Every future arm on this board costs ten minutes less.
 
 **The finish's own closer is the next candidate and it is NOT a drop-in.** `stub_router.py`'s `route()` is the
 same shape at first glance, and it is not: it is a Dijkstra with no heuristic, many starts, and a GOAL SET
