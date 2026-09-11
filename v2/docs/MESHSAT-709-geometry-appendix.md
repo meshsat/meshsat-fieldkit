@@ -4727,3 +4727,32 @@ stood fails that rule.
 and a value set somewhere else quietly made the guard unreachable. The verdict channel had four of those and
 this is the fifth. **What they have in common is that nothing checked the two ends against each other**, and
 what catches them is a rule that reads the seam rather than either side.
+
+### 32.119 The stub router's closures were refused for how they were written down, not for what they were (12 September 2026, 01:45 CEST; MESHSAT-862)
+
+Board E reached 0 hard and **one** open through three router rounds and two hours of box time. The open is
+`/USB_E6_P` between `J_BLK` pad 9 at x 68.7 and `R29` pad 2 at x 264.6: **a 196 mm run across a 267 mm board
+whose two inner layers carry no routed track at all** (In1 is a ground plane, In2 four power pours, 32.115), so
+the pair crosses it on F.Cu and B.Cu.
+
+**The stub router found that path every time.** What it did with it was the problem. `emit()` merges straight
+runs by comparing the vector of the run SO FAR against the next step; after one merge the run is two cells long
+and the step is one, the test fails, and it appends. **A straight twenty-cell run came out as TEN segments
+instead of one**, measured directly on the function. A 2,178-cell closure therefore emitted 992 tracks, and
+`stub_accept.py` refused it at its 400-item cap with the words *"that is carpeting, not a closure"*.
+
+**The path was always fine. The emission was not, and no gate could tell the two apart**, because a genuine
+carpet and a correctly-found path written down badly both arrive as a thousand items. `emit()` carries the run
+direction now, so a straight run is one segment whatever its length. `tests/test_stub_emit.py` holds six rules,
+including the measured case: a 2,000-cell closure of twenty straight legs must come out in the tens.
+
+**The same hour, a second measurement settled a standing risk.** C's route had run **2 hours 8 minutes on the
+stock Freerouting jar and written no session at all**, while E's route on our patched build had one **fifteen
+minutes in**. That is 32.118 as a number rather than an argument: the stock jar writes a session only when the
+whole job ends, so a cut run leaves nothing, and C was 49 minutes from a cap that would have taken the whole
+three hours with it. C was restarted on the patched jar.
+
+**What the two have in common with the day's other findings** is that both were invisible to every gate. One
+produced a thousand correct items that looked like a thousand wrong ones; the other produced nothing while
+reporting normally. **Neither is a defect a test could have been written for in advance, and both took one
+measurement each to see**: count the segments of a straight run, and list the session files.
