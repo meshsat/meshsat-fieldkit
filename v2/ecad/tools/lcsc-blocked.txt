@@ -37,5 +37,5 @@ C1973072     C374030      resolves to an SMCJ15A, not the SMCJ18A the schematic 
 # NOT blocked, and deliberately: C2836813 really is a BMI270 and is correct on E6's U15. It was copied onto
 # B's ATECC608B-SSHDA-T, which is a per-row defect a global block list cannot express. The row check catches it.
 C25270       C22828       an 0805 180 ohm resistor on eleven 0603 lands (C: R24-R30, R32-R35); C22828 is the 0603, 488k in stock
-C1017        C1002        an 0805 600 ohm ferrite on four 0603 lands (C: FB1-FB4); C1002 is the 0603 the MAP already carries
+C1017        C1002        fp=0603 an 0805 600 ohm ferrite on four 0603 lands (C: FB1-FB4); C1002 is the 0603 the MAP already carries. The land qualifier is there because the same code is CERTIFIED on D's 0805 land, where the part is right
 C455160      C473333      FDMC3612, a 3.3 x 3.3 mm Power-33 body, cannot sit on the 5 x 6 mm PowerPAK SO-8 land it was placed on (owner ruling 11 Sep: that land takes the CSD19532Q5B)

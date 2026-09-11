@@ -433,3 +433,31 @@ def t_a_blank_line_with_no_status_file_is_still_refused():
 def t_a_blank_line_lcsc_fill_itself_refused_is_refused_here_too():
     rc, out = _vd("BLANK not allow-listed")
     assert rc != 0, out
+
+
+def t_a_blocked_code_can_name_the_land_it_is_wrong_on():
+    """`fp=<substring>` limits a block to the lands it is about.
+
+    12 September 2026: C1017 is an 0805 600 ohm ferrite. On board C's 0603 lands the certifier calls it a
+    PACKAGE_MISMATCH and it is blocked; on board D's 0805 land the same certifier calls it CERTIFIED. A block
+    keyed on the code alone refused D's finished deliverable for a part whose code is right, which is the same
+    shape as the rejection that refused board E in 32.120. Without the field a line still blocks everywhere."""
+    import tempfile, csv, subprocess, sys, os, json
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    def _bom(d, fp):
+        p = os.path.join(d, "b-bom.csv")
+        with open(p, "w", newline="") as fh:
+            w = csv.writer(fh); w.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"])
+            w.writerow(["600R 2A ferrite", "FB1", fp, "C1017"])
+        return p
+    blocked = os.path.join(TOOLS, "lcsc-blocked.txt")
+    lines = [l for l in open(blocked, errors="replace") if l.startswith("C1017")]
+    assert lines, "lcsc-blocked.txt no longer carries C1017, so this rule has nothing to check"
+    assert "fp=" in lines[0], "the C1017 line does not name a land: it would block D's certified 0805 part"
+    # and the parse itself, both ways round
+    for fp, blocks in (("L_0603_1608Metric", True), ("L_0805_2012Metric", False)):
+        d = tempfile.mkdtemp(prefix="blocked-land-")
+        p = _bom(d, fp)
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "lcsc_fill.py"), p], capture_output=True, text=True)
+        hit = "is blocked" in (r.stdout + r.stderr)
+        assert hit == blocks, "on a %s land the block should be %s: %s" % (fp, blocks, (r.stdout + r.stderr)[:200])

@@ -165,11 +165,17 @@ if os.path.exists(bp):
             continue
         f = line.split()
         if len(f) >= 2:
-            blocked[f[0]] = (f[1], " ".join(f[2:]))
+            # An optional `fp=<substring>` third field limits the block to the lands it is about. A code can be
+            # wrong on one land and right on another: C1017 is an 0805 ferrite, which is a package mismatch on
+            # board C's 0603 lands and CERTIFIED on board D's 0805 land, and a code-only block refused D's
+            # finished deliverable for a part whose code is correct (12 September 2026). Without the field a
+            # line blocks the code everywhere, as all twenty three of the 9 September lines do.
+            _fp = f[2][3:] if len(f) > 2 and f[2].startswith("fp=") else ""
+            blocked[f[0]] = (f[1], " ".join(f[3:] if _fp else f[2:]), _fp)
 for r in rows:
     c = (r.get("LCSC Part #") or "").strip()
-    if c in blocked:
-        bad.append("%s %s is blocked, use %s (%s)" % (r["Designator"][:18], c, blocked[c][0], blocked[c][1][:60]))
+    if c in blocked and (not blocked[c][2] or blocked[c][2] in (r.get("Footprint") or "")):
+        bad.append("%s %s is blocked%s, use %s (%s)" % (r["Designator"][:18], c, (" on a %s land" % blocked[c][2]) if blocked[c][2] else "", blocked[c][0], blocked[c][1][:60]))
 
 # 2. Every other code against the dated certification. A row is refused when the certifier read that
 #    code and found a different part or a package our land cannot take. NO_STOCK is not refused here:
