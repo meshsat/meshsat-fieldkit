@@ -12,5 +12,17 @@
   "pair_hop_layers": "In2.Cu,In3.Cu",
   "pair_tail": 12,
   "fanout_nets": "GND,VBAT,CELL+",
-  "escape_prune_before_audit": false
+  "escape_prune_before_audit": false,
+  "finish": {
+    "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+    "pour_nets": "GND",
+    "pair_match": true,
+    "pair_audit_nets": [
+      "USB_WALL",
+      "USB_E6"
+    ],
+    "post_fix": "post_fix_a.py",
+    "pruned_gate": false,
+    "gate_grep": "FAIL|band|stitch|routed at|RESULT|^verdict:"
+  }
 }
