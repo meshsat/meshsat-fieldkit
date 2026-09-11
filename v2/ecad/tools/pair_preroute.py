@@ -492,11 +492,13 @@ def astar(gr, layers, trk, via, start, goal, window, behind=(), cost=None):
 # pass. It costs a time.time() per call of two functions and it is what says whether the next change belongs in the maps or
 # in the search.
 _T = {"maps": 0.0, "astar": 0.0, "stubs": 0.0, "legs": 0.0, "stamp": 0.0}
+_N = {k: 0 for k in _T}   # calls per bucket: seconds alone cannot say whether a bucket is many cheap calls or few dear ones
 def _timed(name, fn):
     def w(*a, **k):
         t0 = time.time()
         try: return fn(*a, **k)
-        finally: _T[name] += time.time() - t0
+        finally:
+            _T[name] += time.time() - t0; _N[name] += 1
     w.__name__ = fn.__name__; w.__doc__ = fn.__doc__; return w
 build_maps = _timed("maps", build_maps)
 astar = _timed("astar", astar)
@@ -1942,6 +1944,7 @@ def main(a):
           "%.0f in the stub search, %.0f in the leg offsets, %.0f stamping laid copper, %.0f elsewhere; %d expansions"
           % (time.time() - T0, _T["maps"], MAP_CALLS[0], MAP_MODE, ", CHECKED against the reference" if MAP_CHECK else "",
              _T["astar"], _T["stubs"], _T["legs"], _T["stamp"], max(0.0, time.time() - T0 - _known), PAIR_TOTAL[0]))
+    print("pair_preroute: calls %s" % ", ".join("%s %d" % (k, _N[k]) for k in ("maps", "astar", "stubs", "legs", "stamp")))
     return 0 if laid == n_pairs else 1
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
