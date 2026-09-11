@@ -4564,3 +4564,34 @@ proved each one fires on a fixture. This one fired on a fixture too. What it had
 real board of this project, and the defect was not in its logic but in an assumption about the input format that
 no fixture contained. **A fixture proves a gate can fail; only a real board proves it does not fail wrongly**,
 and a gate's first real run belongs before the run that depends on it, not inside it.
+
+### 32.114 The gate check: five boards placed at once before any route starts, and what it caught on the first run (11 September 2026, 18:15 CEST; MESHSAT-862)
+
+32.113 ended with a scheduling rule rather than a code change: a gate's first run against a real board belongs
+**before** the run that depends on it. `$SP/vast/box_gatecheck.sh` is that rule as a script. It places all five
+boards at once with `PREROUTE_STOP_AFTER_PLACE=1`, which is minutes rather than hours, and every gate meets
+every board before a single route is started against any of them.
+
+**Its first run blocked board E, and the cause was neither a board defect nor a gate defect.** Eighteen
+failures, three per power FET Q1 to Q6, every one a drain pin: `Q1.6`, `Q1.7`, `Q1.8` on `DC_P`, and the same
+shape on Q2 to Q6.
+
+KiCad's `Package_TO_SOT_SMD:TDSON-8-1` brings Infineon's PG-TDSON-8-1 drain out as **one slug numbered 5**,
+while the eight-pin FET symbol the generators use puts drain on pins 5, 6, 7 and 8. Source lands on pads 1 to 3
+and the gate on pad 4, all present and all correct, so **every FET on E is properly connected and nothing about
+the board is wrong**. What the netlist carries is three nodes per part with nowhere to land.
+
+**The fix is a declaration, not a skip, and the reason is a trap this record already paid for.** `tools/pad-aliases.txt`
+names each pin with the pad it lands on and why, in the `erc-allow.txt` idiom, and `netlist_board.py` then checks
+that **the aliased pad carries the net the netlist gives the pin**. The check moves; it does not disappear. A
+blanket "ignore a netlist pin with no matching pad" would have silenced the `TPS2065CDBV` class of defect, where
+a part sat on a six-pad SOT-23 land for four board phases while TI's DBV package has five (section 8 of the
+handover). An undeclared missing pad still fails, and `t_an_undeclared_missing_pad_still_fails` holds that line.
+
+**C, D and P placed clean on the same run**, so the gate is not generally wrong about this tree; E was the one
+board with that package.
+
+**What the scheduling bought, in one number.** The wave routes four boards for up to eight hours each. Without
+the gate check, E's block would have been found by the wave, after the route, in the pre stage of a run that had
+already taken the box for the afternoon. It was found in eleven minutes instead, and the other four boards were
+proved placeable in the same eleven.
