@@ -293,8 +293,17 @@ def _all_counts(gr, b, layers, half, via_r, split):
     return rec
 
 
+MAP_TIME = [0.0, 0]   # seconds in the occupancy maps, and how many times they were asked for
+
+
 def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
     """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer)."""
+    _t0 = time.time()
+    try: return _build_maps(gr, b, layers, nets, half, via_r, split)
+    finally: MAP_TIME[0] += time.time() - _t0; MAP_TIME[1] += 1
+
+
+def _build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
     if MAP_MODE == "reference" and not MAP_CHECK:
         return _build_maps_reference(gr, b, layers, nets, half, via_r, split)
     rec = _all_counts(gr, b, layers, half, via_r, split)
@@ -1689,6 +1698,9 @@ def main(a):
     for l in report: print("pair_preroute: " + l)
     n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
     print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
+    # The number C3 exists to move, printed rather than profiled from outside (11 September 2026). It was 1,010 s of a
+    # 1,327 s B19 pass, 76 percent, and nothing in the tool's own output said so.
+    print("pair_preroute: occupancy maps %.1f s over %d call(s), mode %s%s" % (MAP_TIME[0], MAP_TIME[1], MAP_MODE, ", CHECKED against the reference" if MAP_CHECK else ""))
     print("pair_preroute: search kernel %s%s" % (_SEARCH_KERNEL, (", rasteriser fell back to the per-cell predicate %d time(s)" % _RASTER_FALLBACK[0]) if _RASTER_FALLBACK[0] else ""))
     print("pair_preroute: seconds %.0f total, %.0f in the occupancy maps, %.0f in the corridor search, %.0f elsewhere; %d expansions"
           % (time.time() - T0, _T["maps"], _T["astar"], max(0.0, time.time() - T0 - _T["maps"] - _T["astar"]), PAIR_TOTAL[0]))
