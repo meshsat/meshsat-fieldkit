@@ -257,3 +257,30 @@ def t_every_gate_has_both_fixtures():
     assert not missing, "these gates have no fixture and no declared debt: %s" % missing
     for g, why in sorted(FIXTURE_DEBT.items()):
         print("       fixture owed: %-22s %s" % (g, why))
+
+
+# ---------------------------------------------------------------- the pre-router's own preconditions
+
+def t_the_pre_router_refuses_a_board_whose_pair_classes_it_cannot_read():
+    """A pre-router that finds no pairs and reports success is a silent pass, and it is easy to hit.
+
+    Measured on the VM, 11 September 2026: run on `out/<name>-placed.kicad_pcb`, which has no project file beside it,
+    the tool printed "0 of 0 pairs laid" and exited 0 in one map mode and died with an AttributeError in the other.
+    The pair classes live in the project file; a board without one has no pairs BY CONSTRUCTION, which is not the same
+    as having laid them all."""
+    try: import pcbnew  # noqa: F401
+    except Exception as e: raise Skip("no pcbnew here (%s)" % type(e).__name__)
+    import json as _json
+    d = tempfile.mkdtemp(prefix="pp-")
+    b = os.path.join(d, "brd.kicad_pcb")
+    open(b, "w").write('(kicad_pcb (version 20240108) (generator "test"))\n')
+
+    rc, out = _run([os.path.join(TOOLS, "pair_preroute.py"), b, "--classes", "USB"], cwd=d)
+    assert rc != 0, (rc, out)
+    assert "no project file" in out, out
+    assert "0 of 0 pairs laid" not in out, "it must refuse, not report an empty success"
+
+    _json.dump({"net_settings": {"classes": [], "netclass_assignments": None}}, open(os.path.join(d, "brd.kicad_pro"), "w"))
+    rc, out = _run([os.path.join(TOOLS, "pair_preroute.py"), b, "--classes", "USB"], cwd=d)
+    assert rc != 0, (rc, out)
+    assert "no netclass_assignments" in out, out
