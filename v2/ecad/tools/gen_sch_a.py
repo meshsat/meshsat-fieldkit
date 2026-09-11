@@ -111,7 +111,7 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
     c(ci1, "22u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "3"))   # the two VIN pins
     for cr in (co1, co2, co3): c(cr, "22u 50V X7R 1210", vout, "GND", "C1210")
 # stage FE: the vehicle and shore input (9 to 36 V after E6's protection and filter) to the 20 V charge bus, 5 A; 60 V FETs
-lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "60 V N-FET PowerPAK SO-8 (CSD19532Q5B class)", "",
+lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
        ["Q2", "Q3", "Q4", "Q5", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119"])
 part("D2", "Device", "D_TVS", "SMCJ33A (VIN_RAW clamp behind E6's filter)", "TVSC", {"1": "VIN_RAW", "2": "GND"})
 # --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET: the battery side IS the system, the pack node CELL+ through RSR): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,
@@ -162,7 +162,7 @@ lm5176("HF", "U15", "VBAT", "+12V_HF", "HF_EN", "140k", "L9", "6.8uH XAL1010-682
        ["Q15", "Q16", "Q23", "Q24", "R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "R126"], isns="10m")
 vh2("J_HF", "12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -", "+12V_HF")
 # --- PoE rail: LM5176 in boost from VBAT to 54 V at 0.6 A for the TPS23861 PSE on B16 (the port magnetics sit beside the switch chip); 100 V FETs; software enable
-lm5176("POE", "U16", "VBAT", "+54V_POE", "POE_EN", "665k", "L10", "22uH XAL1010-223ME (Isat 9 A)", "100 V N-FET PowerPAK SO-8 (CSD19536KTT class)", "",
+lm5176("POE", "U16", "VBAT", "+54V_POE", "POE_EN", "665k", "L10", "22uH XAL1010-223ME (Isat 9 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
        ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], isns="20m", rcs="10m", bias="VBAT")
 ic("U17", 10, "INA226 PoE rail monitor (0x47)", "VSSOP10", {"1": "+3V3", "2": "SCL", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "NC", "9": "+54V_POE", "10": "POE_OUT"}, "C49851")   # VBUS pin open: 54 V exceeds its 36 V range
 vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
