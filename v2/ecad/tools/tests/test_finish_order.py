@@ -18,7 +18,7 @@ These tests hold the collapse in place: the order, every gate present, and each 
 itself about which phase it cuts (five did not, and one of those would have had the supervisor verify a folder
 the finish never wrote).
 """
-import os, re, json, glob
+import os, re, sys, json, glob
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FINISH = os.path.join(TOOLS, "finish.sh")
