@@ -18,6 +18,7 @@ Profile (JSON): see tools/routeflow/*.json. Placeholders in argv: <PROJECT> (the
 import platform, sys, os, re, json, time, glob, hashlib, subprocess, shutil, collections, tempfile, datetime, fcntl
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict   # one hash implementation, and the same one the gates write into their verdicts
+import hardset   # the one DRC policy, for grading a profile's prediction
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import hardset   # 10 September 2026: the supervisor used to carry its own six-type tuple while the finish refused on hardset's
@@ -103,6 +104,41 @@ def signature(drc):
             if m: lengths.append(float(m.group(1)))
     if len(layers) == 1 and len(nets) == 2 and lengths and max(lengths) < 0.5: return "KNOT", counts, unr
     return "HARD", counts, unr
+
+def judge_verdicts(project, require=()):
+    """What the gates themselves decided, read from their verdict JSONs rather than from their prose.
+
+    The seam stage 0 left open (11 September 2026): every gate writes `out/<tool>.verdict.json` now, and the
+    supervisor still judged stages by log markers, flag files and the DRC JSON. A gate could write FAIL and this
+    would not notice unless its prose happened to match a grep. The log checks stay: they catch a crash, a missing
+    marker and a generator that never saved, none of which a verdict can report because the tool never got that far.
+    """
+    out = os.path.join(project, "out")
+    worst, found, missing = verdict.collect(out, require)
+    bad = sorted("%s %s%s" % (t, r.get("verdict"), (" (%s)" % r["note"]) if r.get("note") else "")
+                 for t, r in found.items() if r.get("verdict") != verdict.PASS)
+    if missing: bad += ["%s did not run" % t for t in missing]
+    if worst == 0:
+        return "GATED", "%d gate verdict(s), all PASS" % len(found)
+    return "GATE_BLOCKED", "%d of %d gate verdict(s) not PASS: %s" % (len(bad), len(found) + len(missing), "; ".join(bad[:6]))
+
+
+def judge_expect(drc_path, exp):
+    """The profile's own prediction, which until now was written in every profile and read by nothing.
+
+    `expect: {hard, unrouted}` is a prediction in the sense the prediction gate means: written before the run,
+    graded mechanically after it. Twelve profiles carry one."""
+    if not exp or ("hard" not in exp and "unrouted" not in exp): return None, "no prediction in the profile"
+    try: d = load_drc(drc_path)
+    except Exception as e: return None, "no DRC to grade the prediction against (%s)" % e
+    c = hardset.counts(d, "post")
+    parts, met = [], True
+    for k, got in (("hard", c["hard"]), ("unrouted", c["unrouted"])):
+        if k not in exp: continue
+        parts.append("%s %d against %s" % (k, got, exp[k]))
+        if got > exp[k]: met = False
+    return met, ", ".join(parts)
+
 
 def judge_finish(finish_log, clean_flag, stub_log, deliverable):
     t = read(finish_log) or ""
@@ -266,6 +302,10 @@ def run(profile_fn, rounds, use_services, dry):
             st, note = judge_pre(read(plog), pre.get("must_contain", []), pre.get("min_all_pass", 1), gen_logs) if not dry else ("GATED", "dry run")
             if rc != 0 and st == "GATED": st, note = "TOOL_CRASH", "pre-route chain exit %d" % rc
             journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status=st, note=note))
+            if st == "GATED" and not dry:
+                vst, vnote = judge_verdicts(project, prof.get("expect", {}).get("verdicts", ()))
+                journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status=vst, note=vnote))
+                if vst != "GATED": st, note = vst, vnote
             if st != "GATED": status = st; break
             env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(route.get("timeout", 4500))}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
@@ -305,6 +345,12 @@ def run(profile_fn, rounds, use_services, dry):
                     note = "winner attempt %s: hard %d of %d types %s, unrouted %d of %d nets, vias %d, autoroute minutes %s" % (best[0], best[1][0], len(HARD), dict(counts), unr, nets, best[1][2], mins)
             st = {"NO_SESSION": "NO_SESSION", "KNOT": "ROUTED_HARD", "HARD": "ROUTED_HARD", "EDGE": "ROUTED_HARD", "OPEN": "ROUTED_OPEN", "CLEAN": "ROUTED_CLEAN", "TOOL_CRASH": "TOOL_CRASH", "INFRA_FAIL": "INFRA_FAIL"}[sig]
             journal(project, dict(run=rid, round=rnd, board=name, stage="route", status=st, signature=sig, note=note))
+            # The profile's own prediction, graded. `expect: {hard, unrouted}` is written in all twelve profiles and
+            # was read by nothing until 11 September 2026; a prediction nobody grades is a comment.
+            met, enote = judge_expect(os.path.join(project, "out", name + "-drc.json"), prof.get("expect", {}))
+            if met is not None:
+                journal(project, dict(run=rid, round=rnd, board=name, stage="expect",
+                                      status="MET" if met else "MISSED", note="the profile predicted: " + enote))
             if sig in ("CLEAN", "OPEN", "HARD", "KNOT", "EDGE"):
                 # the finish gets its chance on every routed board: cleanup, stub router, pairs, the routed-board gate
                 fin = prof["finish"]; flog = os.path.join(rdir, "round%d-finish.log" % rnd)
