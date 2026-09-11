@@ -609,6 +609,21 @@ def deloop(pts):
     return out
 
 
+def fp_centre(fp):
+    """The centre of a footprint's pads, in mm.
+
+    NOT `fp.GetPosition()`, which is the footprint's ORIGIN: on every connector in this tree that origin is PIN 1,
+    not the body. It is used to decide which way is "out" of a pair's station, and for a pair on the END row of a
+    header the origin lies exactly ON the station line, so the dot product is zero, the test cannot flip anything
+    and the default direction points straight INTO the pin field. Measured on D's /USB_D8 on 12 September 2026: the
+    corridor end came out at (58.80, 85.35), between the two columns of J_HARN1 and one row inside it, and the fan
+    into the pads had no path from there. The pads' own centre is (58.5, 92.0) for that part, which puts "out" north,
+    off the end of the connector, where the board is empty."""
+    pts = [(p.GetPosition().x, p.GetPosition().y) for p in fp.Pads()]
+    if not pts: return fp.GetPosition().x / 1e6, fp.GetPosition().y / 1e6
+    return sum(x for x, _ in pts) / len(pts) / 1e6, sum(y for _, y in pts) / len(pts) / 1e6
+
+
 def offset_polyline(pts, d):
     """Offset a polyline (list of (x, y) mm) by d to its left; mitred joins."""
     if len(pts) < 2: return list(pts)
@@ -754,6 +769,21 @@ def main(a):
             else:
                 if t.GetLayer() != L: continue
                 d_ = _seg_d(x, y, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)); what = "track (%s)%s" % (t.GetNetname() or "no net", " locked" if t.IsLocked() else "")
+            if best is None or d_ < best[0]: best = (d_, what)
+        # 12 September 2026: zones and rule areas were not scanned at all, so a leg stopped by a pour or a keep-out was
+        # reported as the nearest PAD, which reads as a pad problem and is not one. It named "pad U2.1 at 1.85 mm" for a
+        # cell no pad could reach, and 1.85 mm against a forbidden radius of about 1.35 is the tell that the answer was
+        # the wrong object. The rule of the record is that a tool which refuses copper names what it hit.
+        # 12 September 2026: RULE AREAS were not scanned at all, so a leg stopped by a keep-out was reported as the nearest
+        # PAD, which reads as a pad problem and is not one. It named "pad U2.1 at 1.85 mm" for a cell no pad could reach, and
+        # 1.85 mm against a forbidden radius near 1.35 is the tell that the answer was the wrong object. Footprint-local rule
+        # areas are NOT in b.Zones() (the same trap build_maps closed on 9 September), so both lists are walked. A copper pour
+        # is deliberately not named: build_maps stamps rule areas only, because a fill yields to a track and is no obstacle.
+        pt = pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        for z in list(b.Zones()) + [z for fp in b.GetFootprints() for z in fp.Zones()]:
+            if not (z.GetIsRuleArea() and z.IsOnLayer(L) and z.GetDoNotAllowTracks()): continue
+            d_ = mm(int(z.Outline().Distance(pt)))
+            what = "rule area %s of %s" % (z.GetZoneName() or "(unnamed)", z.GetParentFootprint().GetReference() if z.GetParentFootprint() else "the board")
             if best is None or d_ < best[0]: best = (d_, what)
         return "nothing within reach" if best is None else "%s at %.2f mm" % (best[1], best[0])
 
@@ -932,8 +962,26 @@ def main(a):
         def wid(L): return w_in if L in _INNER_CU else w
         def gap(L): return s_in if L in _INNER_CU else s
         def dof(L): return (wid(L) + gap(L)) / 2
+        # 12 September 2026 (MESHSAT-862), measured on D's /USB_D8: the corridor did not cover its own legs, and the
+        # difference was smaller than a grid cell. A leg sits dof = (w + s)/2 off the centreline and its own map grows
+        # obstacles by w/2 + 0.02, so it reaches w + s/2 + 0.02 out; the corridor grew them by w + s/2 + slack, which is
+        # 0.02 mm SHORT of that before the slack is counted. The author's own note above says the centreline needs
+        # "w + s/2 + 0.02" and the code never added the 0.02. At the standard slack the whole margin is then 0.10 mm,
+        # one cell of the 0.1 mm grid, and at the slim retry 0.03 mm, a third of a cell: a centreline the raster calls
+        # free can have a leg the raster calls blocked, and the pass reports "the legs clear no smoothing of the
+        # centreline", which reads as a smoothing problem and is a rounding one. Measured at the failure: pad U2.1's
+        # polygon is 0.618 mm from the centreline where the corridor demanded 0.610, and 0.367 mm from the leg where
+        # the leg demanded 0.330. Both fit in exact arithmetic, by 8 and 37 micrometres, and the cell centres do not.
+        # PAIR_COVER_LEGS=1 makes the corridor cover the legs plus one grid cell, so that a free centreline implies free
+        # legs and a pair that cannot pass an obstacle is refused by the SEARCH, which can go round, rather than by the
+        # legs, which cannot. It is OFF by default and that is a measurement, not an opinion: D lays 5 of 5 either way
+        # once the corridor leaves its station on the right side, and turning it on adds 0.12 mm to the corridor's
+        # envelope, which on the recorded B19 ladder (slack 0.12 lays 49, 0.20 lays about 44, 0.25 lays 38) is a move in
+        # the direction that costs pairs. The tuned B19 slack of 0.08 sits INSIDE the uncovered band, so that tuning may
+        # in part be paying for this rounding. It is turned on when a B19 arm says it wins, and not before.
+        _cover = (0.02 + gr.G) if os.environ.get("PAIR_COVER_LEGS", "0") != "0" else 0.0   # OFF by default: see the note above, it is a measurement waiting for B19
         # The corridor envelope takes the wider of the two geometries: one map serves every layer and it must never under-block.
-        half = max(w + s / 2, w_in + s_in / 2) + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
+        half = max(w + s / 2, w_in + s_in / 2) + _cover + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
         def is_pull(p):
             """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
             f = p.GetParentFootprint(); ps = list(f.Pads())
@@ -1303,7 +1351,7 @@ def main(a):
 
             def fine_end(st, out_=2.5):
                 """The corridor end of an entry station: on the outward normal of the pad pair (away from the parts' centre), the first open block at out_ mm or beyond."""
-                p_, n_ = st; mx_, my_ = mid(st); fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_ = (fa_.GetPosition().x + fb_.GetPosition().x) / 2e6; fy_ = (fa_.GetPosition().y + fb_.GetPosition().y) / 2e6
+                p_, n_ = st; mx_, my_ = mid(st); fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
                 dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0
                 nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_   # outward
@@ -1331,7 +1379,7 @@ def main(a):
                 # (a neighbouring pin's escape via sits 0.45 mm off the axis: a leg converging late would touch it)
                 stA, stB = (pa, na), (pb, nb); wide_first = dist_p(*stA) >= dist_p(*stB)
                 stF, stW = (stB, stA) if wide_first else (stA, stB)   # the finer station gets the waypoint
-                mxF, myF = mid(stF); fa_, fb_ = stF[0].GetParentFootprint(), stF[1].GetParentFootprint(); fx_ = (fa_.GetPosition().x + fb_.GetPosition().x) / 2e6; fy_ = (fa_.GetPosition().y + fb_.GetPosition().y) / 2e6
+                mxF, myF = mid(stF); fa_, fb_ = stF[0].GetParentFootprint(), stF[1].GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
                 dxF, dyF = stF[1].GetPosition().x / 1e6 - stF[0].GetPosition().x / 1e6, stF[1].GetPosition().y / 1e6 - stF[0].GetPosition().y / 1e6; lF = math.hypot(dxF, dyF) or 1.0; ax_, ay_ = dxF / lF, dyF / lF
                 nxF, nyF = -ay_, ax_
                 if (mxF - fx_) * nxF + (myF - fy_) * nyF < 0: nxF, nyF = -nxF, -nyF
@@ -1440,7 +1488,7 @@ def main(a):
                 mx_, my_ = mid(st); pitch = dist_p(st[0], st[1])
                 if pitch <= 0.7: return mx_, my_
                 out_ = 1.0 if pitch <= 1.0 else (1.6 if pitch <= 2.0 else 2.2)
-                p_, n_ = st; fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_ = (fa_.GetPosition().x + fb_.GetPosition().x) / 2e6; fy_ = (fa_.GetPosition().y + fb_.GetPosition().y) / 2e6
+                p_, n_ = st; fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
                 dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_
                 return mx_ + nx_ * out_, my_ + ny_ * out_
@@ -1474,7 +1522,7 @@ def main(a):
             side_a = dxab * (A[0][1] - sy) - dyab * (A[0][0] - sx); side_b = dxab * (B[0][1] - gy) - dyab * (B[0][0] - gx)
             crossing = False
             def sigma(st):
-                p_, n_ = st; mx_, my_ = mid(st); fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_ = (fa_.GetPosition().x + fb_.GetPosition().x) / 2e6; fy_ = (fa_.GetPosition().y + fb_.GetPosition().y) / 2e6
+                p_, n_ = st; mx_, my_ = mid(st); fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
                 dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
                 if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_
                 return 1 if nx_ * (-dy_) - ny_ * (-dx_) > 0 else -1   # the P pad's side of the outward normal
@@ -1553,7 +1601,17 @@ def main(a):
                                     jj, ii = gr.cell(*poly[k])
                                     if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]: hit = (poly[k], walked); break
                                 walked += seg[k]
-                            if hit: print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s, %.2f mm along run %d of %d: %s" % (net, hit[0][0], hit[0][1], b.GetLayerName(L), hit[1], r_i + 1, len(runs), _what_is_at(hit[0][0], hit[0][1], L, net)))
+                            if hit:
+                                # Is the CENTRELINE free where the leg is not? The corridor map is grown by `half` (the pair's
+                                # half width plus the slack) and the leg maps by half a leg plus 0.02, so a leg 0.25 mm off the
+                                # centreline reaches 0.42 mm out against the 0.52 mm the corridor guarantees, and the legs can
+                                # only fail where the two maps disagree or where the offset itself has left the corridor.
+                                _cl = min(pts, key=lambda q: math.hypot(q[0] - hit[0][0], q[1] - hit[0][1]))
+                                _jj, _ii = gr.cell(*_cl)
+                                _cb = trk[L][_ii, _jj] if 0 <= _ii < gr.NY and 0 <= _jj < gr.NX else True
+                                print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s, %.2f mm along run %d of %d: %s | the centreline %.2f mm away at (%.2f, %.2f) is %s in the corridor map (half %.2f, leg offset %.2f)"
+                                      % (net, hit[0][0], hit[0][1], b.GetLayerName(L), hit[1], r_i + 1, len(runs), _what_is_at(hit[0][0], hit[0][1], L, net),
+                                         math.hypot(_cl[0] - hit[0][0], _cl[1] - hit[0][1]), _cl[0], _cl[1], "BLOCKED" if _cb else "free", half, dof(L)))
                             else: print("pair_preroute: leg %s clears run %d of %d on %s (the blocker is another run or the smoothing)" % (net, r_i + 1, len(runs), b.GetLayerName(L)))
                 break
             merged = []   # [(layer index, points)] with consecutive same-layer runs joined into one polyline
