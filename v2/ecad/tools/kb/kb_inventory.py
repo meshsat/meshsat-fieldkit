@@ -68,6 +68,33 @@ def declared(path):
     return out
 
 
+def certified_verdicts():
+    """Part token -> (verdict, code) from the dated certification, so PARTS.md can say whether a part
+    this kit uses can actually be bought and not only whether a datasheet exists for it. The table is
+    keyed by BOM comment and this inventory by part token, so the join is a containment test: the
+    longest token that appears in a row's comment wins, which is how `CSD19532Q5B` finds its row and
+    `CSD1` would not."""
+    path = os.path.join(ROOT, "release", "revA", "order", "JLC-CERTIFIED.tsv")
+    out = {}
+    if not os.path.exists(path):
+        return out
+    import csv as _csv
+    for row in _csv.DictReader(open(path, errors="replace"), delimiter="\t"):
+        v = (row.get("verdict") or "").strip()
+        c = " ".join((row.get("comment") or "").split())
+        if v and c:
+            out.setdefault(c.upper(), (v, (row.get("code") or "").strip()))
+    return out
+
+
+def buyable_of(token, table):
+    """The verdict of the certified row whose comment contains this token, longest comment last so a
+    specific row beats a generic one."""
+    t = token.upper()
+    hits = [(len(c), val) for c, val in table.items() if t in c]
+    return max(hits)[1] if hits else ("", "")
+
+
 def newest_deliverables():
     """{board letter: bom path}. The newest phase per letter by its number, so B16-quote beats B15,
     which matters: B15 is the newest ROUTED board but B16 is what the order set ships."""
@@ -191,6 +218,7 @@ def build(db):
         cur["note"] = cur["note"] or rec["note"]
 
     fam, picks, unused = declared(FAMILY), declared(OPEN_PICKS), declared(NOT_USED)
+    buyable = certified_verdicts()
     # Open picks are NOT token-derived and cannot be: an item with no part number chosen has no token
     # to find. They are enumerated by hand in open-picks.txt and added here, because an inventory that
     # lists only what has been decided hides the part of the kit that is still undecided, which is the
@@ -198,6 +226,7 @@ def build(db):
     for slug, reason in picks.items():
         items.setdefault(slug, {"where": {"design documents"}, "sources": {"pick"}, "note": reason})
     for t, rec in items.items():
+        rec["buyable"], rec["buy_code"] = buyable_of(t, buyable)
         if t in unused:
             # named in a document only to record that it was rejected; chasing its datasheet would
             # waste exactly the time this store exists to save
@@ -235,6 +264,10 @@ def main(argv):
     for st in ("DOCUMENTED", "FAMILY", "UNDECLARED FAMILY", "OPEN PICK", "NOT USED", "UNCOVERED"):
         counts[st.lower().replace(" ", "_")] = sum(1 for r in items.values() if r["state"] == st)
     counts["items"] = len(items)
+    for v in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED"):
+        counts["buyable_" + v.lower()] = sum(1 for r in items.values() if r.get("buyable") == v)
+    counts["buyable_unproved"] = sum(1 for r in items.values()
+                                     if r.get("buyable") not in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED"))
     counts["dropped_tokens"] = len(dropped)
 
     os.makedirs(a.out_dir, exist_ok=True)
@@ -301,6 +334,17 @@ def write_parts_md(items, counts):
     L.append("| NOT USED | named in a document only to record that it was rejected | %d |" % counts["not_used"])
     L.append("| UNCOVERED | no document and no declaration. This must be 0 | %d |" % counts["uncovered"])
     L.append("")
+    L.append("Documented is not the same as buyable, so the purchase side is counted separately from")
+    L.append("`v2/release/revA/order/JLC-CERTIFIED.tsv`, which is a dated reading of JLCPCB's catalogue")
+    L.append("and not a promise about tomorrow.")
+    L.append("")
+    L.append("| purchase | meaning | count |")
+    L.append("|---|---|---|")
+    L.append("| CERTIFIED | JLCPCB returns this exact part, in our package, in stock | %d |" % counts.get("buyable_certified", 0))
+    L.append("| HAND_FIT | bought elsewhere, with a distributor and a URL on record | %d |" % counts.get("buyable_hand_fit", 0))
+    L.append("| BENCH_FITTED | a header, land or jumper that nobody places | %d |" % counts.get("buyable_bench_fitted", 0))
+    L.append("| unproved | no certified row yet: an open pick, or a part still owed | %d |" % counts.get("buyable_unproved", 0))
+    L.append("")
     L.append("%d items in all. %d tokens were dropped by the extractor and every one is listed with its"
              % (counts["items"], counts["dropped_tokens"]))
     L.append("reason in `out/kb_inventory-excluded.txt`, because a hand-made exclusion list is where a")
@@ -327,13 +371,17 @@ def write_parts_md(items, counts):
             L.append("None.")
             L.append("")
             continue
-        L.append("| item | used in | source | document | note |")
-        L.append("|---|---|---|---|---|")
+        L.append("| item | used in | source | document | buyable | note |")
+        L.append("|---|---|---|---|---|---|")
         for t, r in rows:
             doc = r.get("doc", "") or ("_" + (r.get("reason", "") or "no part chosen")[:70] + "_")
-            L.append("| `%s` | %s | %s | %s | %s |"
+            buy = r.get("buyable") or "-"
+            if r.get("buy_code"):
+                buy += " " + r["buy_code"]
+            L.append("| `%s` | %s | %s | %s | %s | %s |"
                      % (t, ", ".join(sorted(r["where"]))[:40], "+".join(sorted(r["sources"])),
-                        doc.replace("|", "/")[:70], (r.get("reason") or r["note"]).replace("|", "/")[:80]))
+                        doc.replace("|", "/")[:70], buy,
+                        (r.get("reason") or r["note"]).replace("|", "/")[:80]))
         L.append("")
     open(PARTS_MD, "w").write("\n".join(L) + "\n")
 

@@ -13,13 +13,24 @@ deliberately not read: it is the whole history, and enumerating it would enumera
 
 | state | meaning | count |
 |---|---|---|
-| DOCUMENTED | a document names its exact order code | 164 |
+| DOCUMENTED | a document names its exact order code | 167 |
 | FAMILY | a family document covers it, with a declared reason | 17 |
 | OPEN PICK | no part chosen yet, so no datasheet can exist | 15 |
 | NOT USED | named in a document only to record that it was rejected | 1 |
 | UNCOVERED | no document and no declaration. This must be 0 | 0 |
 
-197 items in all. 70 tokens were dropped by the extractor and every one is listed with its
+Documented is not the same as buyable, so the purchase side is counted separately from
+`v2/release/revA/order/JLC-CERTIFIED.tsv`, which is a dated reading of JLCPCB's catalogue
+and not a promise about tomorrow.
+
+| purchase | meaning | count |
+|---|---|---|
+| CERTIFIED | JLCPCB returns this exact part, in our package, in stock | 90 |
+| HAND_FIT | bought elsewhere, with a distributor and a URL on record | 23 |
+| BENCH_FITTED | a header, land or jumper that nobody places | 0 |
+| unproved | no certified row yet: an open pick, or a part still owed | 87 |
+
+200 items in all. 70 tokens were dropped by the extractor and every one is listed with its
 reason in `out/kb_inventory-excluded.txt`, because a hand-made exclusion list is where a
 real part disappears quietly.
 
@@ -39,222 +50,225 @@ None.
 
 No datasheet can exist for these until a part is ruled. Each says what it needs.
 
-| item | used in | source | document | note |
-|---|---|---|---|---|
-| `5g-jack-count` | design documents | pick | _RECOMMENDED: FOUR jacks. Settled from Quectel's own RM520N Series Har | RECOMMENDED: FOUR jacks. Settled from Quectel's own RM520N Series Hardware Desig |
-| `camera-module` | design documents | pick | _a USB camera module about 25 x 25 mm behind an 8 mm sealed window wit | a USB camera module about 25 x 25 mm behind an 8 mm sealed window with a 1.0 mm  |
-| `gdt-arrestors` | design documents | pick | _RECOMMENDED: PolyPhaser GTH-SFF-AL, SMA female to female bulkhead RF  | RECOMMENDED: PolyPhaser GTH-SFF-AL, SMA female to female bulkhead RF surge prote |
-| `geiger-tube-board` | design documents | pick | _the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube  | the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube is recorded |
-| `ground-stud` | design documents | pick | _the ground stud on the wall plate_ | the ground stud on the wall plate |
-| `headset-jack-U174U` | design documents | pick | _two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL se | two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL section 19 an |
-| `ip68-fans` | design documents | pick | _RECOMMENDED for the two 60 mm mixer fans: Same Sky CFM-6025BG68, 60 x | RECOMMENDED for the two 60 mm mixer fans: Same Sky CFM-6025BG68, 60 x 60 x 25 mm |
-| `m8-pod-receptacle` | design documents | pick | _RECOMMENDED: binder 86 6618 1121 00004, M8 female panel mount, 4 cont | RECOMMENDED: binder 86 6618 1121 00004, M8 female panel mount, 4 contacts, shiel |
-| `rugged-tablet` | design documents | pick | _the 8 to 10 inch rugged tablet in the lid and its bracket, which is n | the 8 to 10 inch rugged tablet in the lid and its bracket, which is not drawn; B |
-| `sealed-rj45-wall` | design documents | pick | _RECOMMENDED: Bulgin PX0833, Standard Buccaneer front-panel CAT5e shie | RECOMMENDED: Bulgin PX0833, Standard Buccaneer front-panel CAT5e shielded couple |
-| `sealed-usbc-wall` | design documents | pick | _RECOMMENDED: Bulgin PXP4043/C, IP-sealed C-type USB rear panel mount  | RECOMMENDED: Bulgin PXP4043/C, IP-sealed C-type USB rear panel mount with a 2 x  |
-| `tamper-switch` | design documents | pick | _one sealed case-open switch under the frame, feeding the ZEROIZE logi | one sealed case-open switch under the frame, feeding the ZEROIZE logic |
-| `toggle-safety-covers` | design documents | pick | _RECOMMENDED: the APEM CSG series switch guard, which APEM's own page  | RECOMMENDED: the APEM CSG series switch guard, which APEM's own page states is f |
-| `vhf-2m-antenna` | design documents | pick | _the 2 m whip for the VHF jack; no maker's brochure on file covers it_ | the 2 m whip for the VHF jack; no maker's brochure on file covers it |
-| `xenarc-rear-frame` | design documents | pick | _the steel rear frame under the plate holding the 709GNK, four M4 x 8; | the steel rear frame under the plate holding the 709GNK, four M4 x 8; a new part |
+| item | used in | source | document | buyable | note |
+|---|---|---|---|---|---|
+| `5g-jack-count` | design documents | pick | _RECOMMENDED: FOUR jacks. Settled from Quectel's own RM520N Series Har | - | RECOMMENDED: FOUR jacks. Settled from Quectel's own RM520N Series Hardware Desig |
+| `camera-module` | design documents | pick | _a USB camera module about 25 x 25 mm behind an 8 mm sealed window wit | - | a USB camera module about 25 x 25 mm behind an 8 mm sealed window with a 1.0 mm  |
+| `gdt-arrestors` | design documents | pick | _RECOMMENDED: PolyPhaser GTH-SFF-AL, SMA female to female bulkhead RF  | - | RECOMMENDED: PolyPhaser GTH-SFF-AL, SMA female to female bulkhead RF surge prote |
+| `geiger-tube-board` | design documents | pick | _the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube  | - | the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube is recorded |
+| `ground-stud` | design documents | pick | _the ground stud on the wall plate_ | - | the ground stud on the wall plate |
+| `headset-jack-U174U` | design documents | pick | _two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL se | - | two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL section 19 an |
+| `ip68-fans` | design documents | pick | _RECOMMENDED for the two 60 mm mixer fans: Same Sky CFM-6025BG68, 60 x | - | RECOMMENDED for the two 60 mm mixer fans: Same Sky CFM-6025BG68, 60 x 60 x 25 mm |
+| `m8-pod-receptacle` | design documents | pick | _RECOMMENDED: binder 86 6618 1121 00004, M8 female panel mount, 4 cont | - | RECOMMENDED: binder 86 6618 1121 00004, M8 female panel mount, 4 contacts, shiel |
+| `rugged-tablet` | design documents | pick | _the 8 to 10 inch rugged tablet in the lid and its bracket, which is n | - | the 8 to 10 inch rugged tablet in the lid and its bracket, which is not drawn; B |
+| `sealed-rj45-wall` | design documents | pick | _RECOMMENDED: Bulgin PX0833, Standard Buccaneer front-panel CAT5e shie | - | RECOMMENDED: Bulgin PX0833, Standard Buccaneer front-panel CAT5e shielded couple |
+| `sealed-usbc-wall` | design documents | pick | _RECOMMENDED: Bulgin PXP4043/C, IP-sealed C-type USB rear panel mount  | - | RECOMMENDED: Bulgin PXP4043/C, IP-sealed C-type USB rear panel mount with a 2 x  |
+| `tamper-switch` | design documents | pick | _one sealed case-open switch under the frame, feeding the ZEROIZE logi | - | one sealed case-open switch under the frame, feeding the ZEROIZE logic |
+| `toggle-safety-covers` | design documents | pick | _RECOMMENDED: the APEM CSG series switch guard, which APEM's own page  | - | RECOMMENDED: the APEM CSG series switch guard, which APEM's own page states is f |
+| `vhf-2m-antenna` | design documents | pick | _the 2 m whip for the VHF jack; no maker's brochure on file covers it_ | - | the 2 m whip for the VHF jack; no maker's brochure on file covers it |
+| `xenarc-rear-frame` | design documents | pick | _the steel rear frame under the plate holding the 709GNK, four M4 x 8; | - | the steel rear frame under the plate holding the 709GNK, four M4 x 8; a new part |
 
 ## Named only to record a rejection (1)
 
 No datasheet is owed for these.
 
-| item | used in | source | document | note |
-|---|---|---|---|---|
-| `ASM118x` | V2-SPEC | doc | _the ASMedia PCIe switch question, closed on 7 September 2026 with 0 s | the ASMedia PCIe switch question, closed on 7 September 2026 with 0 stock at JLC |
+| item | used in | source | document | buyable | note |
+|---|---|---|---|---|---|
+| `ASM118x` | V2-SPEC | doc | _the ASMedia PCIe switch question, closed on 7 September 2026 with 0 s | - | the ASMedia PCIe switch question, closed on 7 September 2026 with 0 stock at JLC |
 
 ## Covered by a family document, with the reason (17)
 
 A datasheet names the family; the order code names the reel.
 
-| item | used in | source | document | note |
-|---|---|---|---|---|
-| `AT428H` | ASSEMBLY, BUILD, C, GEN_FOOTPRIN | bom+doc+gen | seals/nkk-ip-rated-switches-accessories.pdf | NKK's accessories and hardware catalogue: AT428 is the boot, H the colour/materi |
-| `ATP16-SL1-203-M0SA-04G` | BUILD, C | bom+doc+gen | switches/ck-atp16-series-datasheet.pdf | C&K's ATP16 series sheet, same ordering system |
-| `ATP16-SL1-403-M0SA-04G` | BUILD, C | bom+doc+gen | switches/ck-atp16-series-datasheet.pdf | C&K's ATP16 series sheet, same ordering system |
-| `ATP19-SL1-603-B0SA-03G` | BUILD, C | bom+doc+gen | switches/ck-atp19-series-datasheet.pdf | C&K's ATP19 series sheet carries the ordering system these option fields index |
-| `D38999/26FC4SN` | ASSEMBLY | doc | d38999/amphenol-d38999-iii-federal.pdf | Glenair's D38999/26 sheet: FC4SN is shell 13, insert 13-4, key N, socket contact |
-| `EL817S` | LCSC_FILL | gen | everlight/everlight-el817-optocoupler.pdf | Everlight's EL817 series sheet: S is the SMD lead-form option of the same optoco |
-| `INA219AxDCN` | A | gen | ti/ti-ina219.pdf | TI's INA219 sheet: x is the accuracy grade (A or B) and DCN the SOT-23-8 package |
-| `LG290P03AAMD` | B | bom+gen | quectel/lg290p03-gnss-protocol-specification-v1.1.pdf | Quectel's LG290P03 specification and hardware design: AAMD is the variant suffix |
-| `M2044SD3A01` | BUILD, C, GEN_FOOTPRIN | bom+doc+gen | switches/nkk-m-series-toggles-datasheet.pdf | NKK's M series toggle sheet: M2044 is the DPDT ON-ON-ON circuit, SD3A01 the bush |
-| `M85049/38S13N` | ASSEMBLY | doc | d38999/glenair-backshells-accessories-selection-guide.pdf | Glenair's M85049/38 strain-relief sheet: S13N is the shell size and finish from  |
-| `STM32H753VITx` | B | gen | st/st-stm32h753xi-datasheet.pdf | ST's STM32H753xI datasheet: V is the 100 pin package, I the 2 MB flash, T the tr |
-| `TMP117xxDRV` | B | gen | ti/ti-tmp117-temperature.pdf | TI's TMP117 sheet: xx is the grade and DRV the WSON-6 package, both in its order |
-| `TPS2065CDBV` | A, B, C, D, LCSC_FILL, P | bom+gen | ti/ti-tps2065-tps2066-tps2067.pdf | TI's TPS2061/2/3/5/6/7 sheet: the ordering table gives TPS2065DBV, SOT-23 (DBV)  |
-| `XAL1010-223ME` | A | bom+gen | power/coilcraft-xal1010.pdf | Coilcraft's XAL1010 sheet: 223 is the inductance code and ME the packaging, from |
-| `XAL1510-103MED` | E | bom+gen | power/coilcraft-xal1510.pdf | Coilcraft's XAL1510 sheet, same part table |
-| `XAL4020-472ME` | B, E | bom+gen | coilcraft/coilcraft-xal40xx-series.pdf | Coilcraft's XAL40xx sheet, same part table |
-| `XAL6060-332ME` | A, B | bom+gen | coilcraft/coilcraft-xal60xx-series.pdf | Coilcraft's XAL60xx sheet, same part table |
+| item | used in | source | document | buyable | note |
+|---|---|---|---|---|---|
+| `AT428H` | ASSEMBLY, BUILD, C, GEN_FOOTPRIN | bom+doc+gen | seals/nkk-ip-rated-switches-accessories.pdf | HAND_FIT | NKK's accessories and hardware catalogue: AT428 is the boot, H the colour/materi |
+| `ATP16-SL1-203-M0SA-04G` | BUILD, C | bom+doc+gen | switches/ck-atp16-series-datasheet.pdf | HAND_FIT | C&K's ATP16 series sheet, same ordering system |
+| `ATP16-SL1-403-M0SA-04G` | BUILD, C | bom+doc+gen | switches/ck-atp16-series-datasheet.pdf | HAND_FIT | C&K's ATP16 series sheet, same ordering system |
+| `ATP19-SL1-603-B0SA-03G` | BUILD, C | bom+doc+gen | switches/ck-atp19-series-datasheet.pdf | HAND_FIT | C&K's ATP19 series sheet carries the ordering system these option fields index |
+| `D38999/26FC4SN` | ASSEMBLY | doc | d38999/amphenol-d38999-iii-federal.pdf | - | Glenair's D38999/26 sheet: FC4SN is shell 13, insert 13-4, key N, socket contact |
+| `EL817S` | LCSC_FILL | gen | everlight/everlight-el817-optocoupler.pdf | - | Everlight's EL817 series sheet: S is the SMD lead-form option of the same optoco |
+| `INA219AxDCN` | A | gen | ti/ti-ina219.pdf | - | TI's INA219 sheet: x is the accuracy grade (A or B) and DCN the SOT-23-8 package |
+| `LG290P03AAMD` | B | bom+gen | quectel/lg290p03-gnss-protocol-specification-v1.1.pdf | HAND_FIT | Quectel's LG290P03 specification and hardware design: AAMD is the variant suffix |
+| `M2044SD3A01` | BUILD, C, GEN_FOOTPRIN | bom+doc+gen | switches/nkk-m-series-toggles-datasheet.pdf | HAND_FIT | NKK's M series toggle sheet: M2044 is the DPDT ON-ON-ON circuit, SD3A01 the bush |
+| `M85049/38S13N` | ASSEMBLY | doc | d38999/glenair-backshells-accessories-selection-guide.pdf | - | Glenair's M85049/38 strain-relief sheet: S13N is the shell size and finish from  |
+| `STM32H753VITx` | B | gen | st/st-stm32h753xi-datasheet.pdf | - | ST's STM32H753xI datasheet: V is the 100 pin package, I the 2 MB flash, T the tr |
+| `TMP117xxDRV` | B | gen | ti/ti-tmp117-temperature.pdf | - | TI's TMP117 sheet: xx is the grade and DRV the WSON-6 package, both in its order |
+| `TPS2065CDBV` | A, B, C, D, LCSC_FILL, P | bom+gen | ti/ti-tps2065-tps2066-tps2067.pdf | CERTIFIED C353882 | TI's TPS2061/2/3/5/6/7 sheet: the ordering table gives TPS2065DBV, SOT-23 (DBV)  |
+| `XAL1010-223ME` | A | bom+gen | power/coilcraft-xal1010.pdf | HAND_FIT | Coilcraft's XAL1010 sheet: 223 is the inductance code and ME the packaging, from |
+| `XAL1510-103MED` | E | bom+gen | power/coilcraft-xal1510.pdf | HAND_FIT | Coilcraft's XAL1510 sheet, same part table |
+| `XAL4020-472ME` | B, E | bom | coilcraft/coilcraft-xal40xx-series.pdf | NOT_AT_JLC | Coilcraft's XAL40xx sheet, same part table |
+| `XAL6060-332ME` | A, B | bom | coilcraft/coilcraft-xal60xx-series.pdf | NOT_AT_JLC | Coilcraft's XAL60xx sheet, same part table |
 
-## Covered by a document naming the exact part (164)
+## Covered by a document naming the exact part (167)
 
-| item | used in | source | document | note |
-|---|---|---|---|---|
-| `ABM8-272-T3` | C, E | bom+gen | rp2040/rpi-rp2040-hardware-design.pdf | 12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND |
-| `AO3401A` | C | bom+gen | power/aos-ao3401a-p-mosfet.pdf | AO3401A P-FET high side |
-| `AP2112K-2.5` | B | bom+gen | diodes/diodes-ap2112-ldo.pdf | AP2112K-2.5 LDO: the switch's 2.5 V analog rail |
-| `AP2112K-3` | LCSC_FILL | gen | diodes/diodes-ap2112-ldo.pdf | ^AP2112K-3\.3\b |
-| `AP2112K-3.3` | B | gen | diodes/diodes-ap2112-ldo.pdf | AP2112K-3.3 LDO: the private 3.3 V of controller %s, its own branch off the devi |
-| `AP63203WU-7` | B | bom+gen | diodes/diodes-ap63200-series-buck.pdf | AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV) |
-| `AP63205WU-7` | E | bom+gen | diodes/diodes-ap63200-series-buck.pdf | AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' log |
-| `AP64500` | A, B, V2-SPEC | doc+gen | diodes/diodes-ap64500.pdf | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
-| `AP64500SP-13` | A, B | bom+gen | diodes/diodes-ap64500.pdf | AP64500SP-13 5 A buck, 5.1 V rail +5V_S1 |
-| `AS3935` | E, V2-SPEC | bom+doc+gen | sciosense/sciosense-as3935-hw-guide.pdf | AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ |
-| `AS7331` | BUILD | doc | ams/ams-as7331.pdf | Modules that mount on the boards (one kit, appendix 32.49): three Raspberry Pi C |
-| `ATECC608B` | B, PANEL, V2-SPEC | doc+gen | microchip/microchip-atecc608b-datasheet.pdf | the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS32 |
-| `ATECC608B-SSHDA-T` | B | bom+gen | microchip/microchip-atecc608b-datasheet.pdf | ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE |
-| `ATNR4010100MT` | C | bom+gen | pdi/pdi-epd-driving-circuit-rev02.pdf | 10uH ATNR4010100MT 0.8 A (the boost inductor) |
-| `AW7915-AED` | ASSEMBLY, B, BUILD, V2-SPEC | bom+doc+gen | wifi/asiarf-AW7915-AED-datasheet.pdf | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 lin |
-| `BC847BS` | LCSC_FILL | gen | nexperia/nexperia-bc847bs-dual-npn.pdf | ^BC847BS |
-| `BME688` | BUILD, E, PANEL, V2-SPEC | bom+doc+gen | bosch/bosch-bme688.pdf | BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76) |
-| `BMI270` | E, V2-SPEC | bom+doc+gen | bosch/bosch-bmi270.pdf | BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake |
-| `BOOST1` | E | bom+gen | power/lt8705a.pdf | BAT54 boost diode INTVCC -> BOOST1 |
-| `BOOST2` | E | bom+gen | power/lt8705a.pdf | BAT54 boost diode INTVCC -> BOOST2 |
-| `BQ25731` | A, BUILD, PANEL, V2-SPEC | doc+gen | ti/bq25731-datasheet.pdf | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
-| `BQ25731RSNR` | A | bom+gen | ti/bq25731-datasheet.pdf | BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B |
-| `BQ25792` | A | gen | power/bq25792.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
-| `BQ34Z100-G1` | A | gen | power/bq34z100-g1.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
-| `BQ4050` | ASSEMBLY, BUILD, P, V2-SPEC | doc+gen | battery/ti-bq4050.pdf | / Battery / a built 4S smart pack (appendix 32.62, ruling 7 Sep 2026: the BB-259 |
-| `BQ4050RSMR` | P | bom+gen | battery/ti-bq4050.pdf | BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B) |
-| `BSC028N06NS` | E | bom+gen | power/lt8705a.pdf | BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D) |
-| `BSC039N06NS` | E | bom+gen | power/lt8705a.pdf | BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D) |
-| `CC2652P` | B, V2-SPEC | bom+doc+gen | zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf | CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET |
-| `CM5108064` | ASSEMBLY, B, BUILD | bom+doc+gen | cm5/cm5-datasheet.pdf | Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); m |
-| `CP2102N` | B, D, P, V2-SPEC | doc+gen | silabs/silabs-cp2102n.pdf | / D8 / VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, t |
-| `CP2102N-A02-GQFN28` | B, D, P | bom+gen | silabs/silabs-cp2102n.pdf | CP2102N-A02-GQFN28 USB-UART bridge (GNSS) |
-| `CSD17570Q5B` | P, V2-SPEC | bom+doc+gen | battery/ti-csd17570q5b.pdf | CSD17570Q5B 30 V N-FET, charge switch |
-| `CSD18510Q5B` | A | bom+gen | battery/ti-csd18510q5b.pdf | CSD18510Q5B 40 V N-FET |
-| `CSD19532Q5B` | A, E | bom+gen | power/ti-csd19532q5b-n-fet.pdf | 60 V N-FET PowerPAK SO-8 (CSD19532Q5B class) |
-| `CSD19536KTT` | A | bom+gen | ti/ti-lm5069.pdf | 100 V N-FET PowerPAK SO-8 (CSD19536KTT class) |
-| `D38999` | ASSEMBLY, BUILD, E | bom+doc+gen | d38999/amphenol-d38999-iii-federal.pdf | vehicle and shore DC in 9-36 V, lead from the D38999 wall receptacle DC pair (JS |
-| `D38999/26` | BUILD | doc | d38999/amphenol-d38999-iii-federal.pdf | Wall parts on the back-wall connector plate (`release/revA/case/wall-receptacles |
-| `DP8005` | ASSEMBLY | doc | adhesives/3m-scotch-weld-dp8005.pdf | / QMX tray on the lid, 4 x / the printed tray (`case/lid-bracket-qmx/`) on the l |
-| `DS3231` | B, V2-SPEC | bom+doc+gen | adi/adi-ds3231.pdf | CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup |
-| `DS3231M` | PANEL, V2-SPEC | doc | adi/adi-ds3231.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `DS3231MZ` | B | bom+gen | adi/adi-ds3231.pdf | DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed |
-| `E2370KS0C1` | ASSEMBLY, BUILD, C, PANEL, PANEL1450, V2 | bom+doc+gen | pdi/pdi-e2370ks0c1-flyer.pdf | Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way; pin names  |
-| `EEHZK1V101XP` | E | bom+gen | power/lcsc-panasonic-eehzk1v101xp.pdf | 100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm) |
-| `FDMC3612` | B | bom+gen | ti/tps23861-datasheet.pdf | FDMC3612 100 V N-FET, PoE port switch (PowerPAK SO-8: 1-3 source, 4 gate, 5 drai |
-| `FH34SRJ` | GEN_FOOTPRIN | gen | hirose/hirose-fh34-series-ffc-connectors.pdf | Hirose FH34SRJ-24S-0.5SH(50) FPC ZIF, 24 way 0.5 mm, bottom contact, horizontal  |
-| `FH34SRJ-24S-0.5SH` | C, GEN_FOOTPRIN | bom+gen | hirose/hirose-fh34-series-ffc-connectors.pdf | Hirose's own FH34 series catalogue: 24S is the way count and 0.5SH the pitch and |
-| `H5007NL` | B, GEN_FOOTPRIN | bom+gen | microchip/microchip-ksz9897-datasheet.pdf | Pulse H5007NL 1000BASE-T magnetics (switch port 4 to the wall RJ45) |
-| `INA219` | LCSC_FILL | gen | ti/ti-ina219.pdf | ^INA219 |
-| `INA219AIDCN` | A | gen | ti/ti-ina219.pdf | INA219AIDCN |
-| `INA226` | A, ASSEMBLY, PANEL, V2-SPEC | bom+doc+gen | ti/ti-ina226.pdf | INA226 rail monitor +5V_S1 |
-| `IP68-rated` | V2-SPEC | doc | mentor/mentor-ll14-14-ip68-front-panel-light-guides.pdf | no vent opening anywhere in the case skin or the plate (owner ruling 7 Sep 2026, |
-| `IRF7404` | E | gen | power/infineon-irf7404-p-mosfet.pdf | IRF7404 |
-| `KSZ9897` | BUILD, V2-SPEC | doc | microchip/microchip-ksz9897-datasheet.pdf | the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS32 |
-| `KSZ9897R` | B, GEN_FOOTPRIN | gen | microchip/microchip-ksz9897-datasheet.pdf | B16 footprints into meshsat.pretty (MESHSAT-830, appendix 32.58). Usage: gen_foo |
-| `KSZ9897RTXI` | B | bom+gen | microchip/microchip-ksz9897-datasheet.pdf | Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to |
-| `LG290P` | ASSEMBLY, B, BUILD, GEN_FOOTPRIN, V2-SPE | bom+doc+gen | quectel/lg290p03-gnss-protocol-specification-v1.1.pdf | CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup |
-| `LIS3MDL` | V2-SPEC | doc | st/st-lis3mdl.pdf | the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS32 |
-| `LM5069` | E | gen | ti/ti-lm5069.pdf | D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> ra |
-| `LM5069MM-2` | E | bom+gen | ti/ti-lm5069.pdf | LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit |
-| `LM5176` | A, V2-SPEC | doc+gen | ti/lm5176-datasheet.pdf | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
-| `LM5176PWPR` | A | bom+gen | ti/lm5176-datasheet.pdf | LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW |
-| `LM74700` | E | gen | ti/ti-lm74700-q1.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-E1 DOCK") (date "2026-09-07 |
-| `LM74700-Q1` | E | bom+gen | ti/ti-lm74700-q1.pdf | LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE |
-| `LR2512-23R005F4` | E | bom+gen | power/lcsc-ralec-lr2512-23r005f4.pdf | 5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4) |
-| `LT8705A` | E, V2-SPEC | bom+doc+gen | power/lt8705a.pdf | LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 |
-| `LTC2954` | A | gen | power/ltc2954.pdf | CONTROL: LTC2954, EXPANDERS, EMCON GATES |
-| `LTC2954CTS8-1` | A | bom+gen | power/ltc2954.pdf | LTC2954CTS8-1 push-button on/off controller |
-| `M1621HCT-P-SMA` | V2-SPEC | doc | rockblock/maxtena-m1621hct-p-sma-datasheet.pdf | / Satellite / RockBLOCK 9704 SMA (Iridium Messaging Transport) with the Maxtena  |
-| `M22520/1-01` | ASSEMBLY | doc | d38999/glenair-series-iii-iv-pin-contact-selection.pdf | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
-| `M22520/1-04` | ASSEMBLY | doc | d38999/glenair-series-iii-iv-pin-contact-selection.pdf | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
-| `M39029/56-352` | ASSEMBLY | doc | d38999/amphenol-d38999-iii-federal.pdf | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
-| `M81969/14-03` | ASSEMBLY | doc | d38999/glenair-contact-crimp-and-installation-tools.pdf | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
-| `MDT420M02001` | B | bom+gen | m2/amphenol-mdt420m02001-m2-m-key.ocr.txt | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of |
-| `MT7915` | V2-SPEC | doc | wifi/asiarf-AW7915-AED-datasheet.pdf | / Kit-to-kit WiFi / **two** AsiaRF AW7915-AED (MT7915, 2.4 and 5 GHz) for mesh o |
-| `PCA9555` | A, B, C, D, PANEL, V2-SPEC | doc+gen | ti/ti-pca9555.pdf | / C7 / panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, fou |
-| `PCA9555PW` | A, B, C, D, LCSC_FILL | bom+gen | ti/ti-pca9555.pdf | PCA9555PW (0x21): enables and status |
-| `PCM2912A` | D, P, V2-SPEC | bom+doc+gen | ti/ti-pcm2912a.pdf | TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo outpu |
-| `PI7C9X2G404` | V2-SPEC | doc | diodes/diodes-pi7c9x2g404sl.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `PI7C9X2G404SL` | B, GEN_FOOTPRIN, V2-SPEC | bom+doc+gen | diodes/diodes-pi7c9x2g404sl.pdf | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port  |
-| `R222M00720` | A, ASSEMBLY, BUILD | bom+doc+gen | rf/radiall-R222M00720-tds.pdf | SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug |
-| `R222M80500` | ASSEMBLY, BUILD | doc | rf/radiall-R222M80500-tds.pdf | / RF jumpers, 11 x / the float clamps on E6 (Radiall R222M80500 right-angle plug |
-| `RA30H1317M` | V2-SPEC | doc | mitsubishi/ra30h1317m1-datasheet.pdf | / APRS and VHF voice / NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H13 |
-| `RA30H1317M1` | A, ASSEMBLY, BUILD, C, D, PANEL1450, V2- | bom+doc+gen | mitsubishi/ra30h1317m1-datasheet.pdf | PA drive (U.FL, coax to the RA30H1317M1 input on the plate) |
-| `RFBIN1` | E | bom+gen | power/lt8705a.pdf | 102k 1% (RFBIN1: panel point 17.6 V) |
-| `RFBIN2` | E | bom+gen | power/lt8705a.pdf | 7.50k 1% (RFBIN2) |
-| `RFBOUT1` | E | bom+gen | power/lt8705a.pdf | 115k 1% (RFBOUT1: 15.1 V) |
-| `RFBOUT2` | E | bom+gen | power/lt8705a.pdf | 10.0k 1% (RFBOUT2) |
-| `RJHSE5380` | B | bom+gen | connectors/amphenol-rjhse5380-rj45-jack.pdf | RJ45 jack (Amphenol RJHSE5380): patch lead to the sealed wall RJ45; PoE out on 1 |
-| `RKS0020A` | GEN_FOOTPRIN | gen | ti/ti-tmuxhs4212.pdf | TI RKS0020A VQFN-20 2.5 x 4.5 mm, 0.5 mm pitch, exposed pad 1.0 x 3.0 (pad 21);  |
-| `RM520N-GL` | ASSEMBLY, B, BUILD, V2-SPEC | bom+doc+gen | quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf | M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G modul |
-| `RNR0011A` | LCSC_FILL | gen | power/ti-tps61089-boost.pdf | VQFN-RNR0011A |
-| `RP2040` | ASSEMBLY, B, BUILD, C, E, PANEL, V2-SPEC | bom+doc+gen | rp2040/rpi-rp2040-datasheet.pdf | panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit  |
-| `RSE0010A` | GEN_FOOTPRIN | gen | cluster/ts3usb221.pdf | TI RSE0010A UQFN-10 1.5 x 2.0 mm, 0.5 mm pitch, no thermal pad; land pattern of  |
-| `SIM8060` | B | bom+gen | connectors/gct-sim8060-nano-sim-socket.pdf | nano-SIM push-push GCT SIM8060 (SIM 1) |
-| `SKY13351` | GEN_FOOTPRIN | gen | rf/skyworks-sky13351-378lf-spdt.pdf | MLPD-6 SPDT SKY13351 Skyworks RF switch |
-| `SKY13351-378LF` | B, GEN_FOOTPRIN | gen | rf/skyworks-sky13351-378lf-spdt.pdf | Skyworks SKY13351-378LF SPDT 20 MHz to 6.0 GHz, MLPD-6 1 x 1 mm, 0.35 mm pitch;  |
-| `SLASEP7A` | GEN_FOOTPRIN | gen | ti/ti-tmuxhs4212.pdf | TI RKS0020A VQFN-20 2.5 x 4.5 mm, 0.5 mm pitch, exposed pad 1.0 x 3.0 (pad 21);  |
-| `SLUSC67B` | P | bom+gen | battery/ti-bq4050.pdf | BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B) |
-| `SMBJ18A` | A | bom+gen | vishay/vishay-smbj-series-tvs.pdf | SMBJ18A (VBUS clamp at the outlet) |
-| `SMBJ20A` | P | bom+gen | vishay/vishay-smbj-series-tvs.pdf | SMBJ20A |
-| `SMBJ58A` | B | bom+gen | ti/tps23861-datasheet.pdf | SMBJ58A |
-| `SMCJ15A` | LCSC_FILL | gen | vishay/vishay-smcj-series-tvs.pdf | ^SMCJ15A$ |
-| `SMCJ18A` | A, E | bom+gen | vishay/vishay-smcj-series-tvs.pdf | SMCJ18A (VBAT clamp) |
-| `SMCJ33A` | A, E, LCSC_FILL | bom+gen | vishay/vishay-smcj-series-tvs.pdf | SMCJ33A (VIN_RAW clamp behind E6's filter) |
-| `SRF1260` | E | gen | power/bourns-srf1260-common-mode-choke.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-E1 DOCK") (date "2026-09-07 |
-| `SRF1260-4R7Y` | E | bom+gen | power/bourns-srf1260-common-mode-choke.pdf | Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1  |
-| `SS2040FL` | C | bom+gen | pdi/pdi-epd-driving-circuit-rev02.pdf | SS2040FL: EPD_SW -> VGH |
-| `STM32H753` | V2-SPEC | doc | st/st-stm32h753xi-datasheet.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `STM32H753VI` | B | gen | st/st-stm32h753xi-datasheet.pdf | STM32H753VI |
-| `SX1262` | B, GEN_FOOTPRIN, V2-SPEC | bom+doc+gen | lora/seeed-wio-sx1262-module-datasheet-v1.1.pdf | Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 |
-| `Si1308EDL` | C | bom+gen | pdi/pdi-epd-driving-circuit-rev02.pdf | Si1308EDL class N-FET (RDS under 200 mOhm, VGS 2.5 V): the boost switch on GDR |
-| `TCAN334D` | B | gen | ti/ti-tcan334-can-fd-transceiver.pdf | TCAN334D CAN-FD transceiver, controller %s on heartbeat fabric %s |
-| `TLV75533` | C, D | gen | power/ti-tlv755p-ldo.pdf | the panel rail over the ribbon (PANEL_5V on B16, fused F6). Budget 5 percent, no |
-| `TLV75533PDBV` | C, D | bom+gen | power/ti-tlv755p-ldo.pdf | TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor  |
-| `TLV75533PDBVR` | E | bom+gen | power/ti-tlv755p-ldo.pdf | TLV75533PDBVR 3.3 V LDO |
-| `TLV9062` | D | gen | ti/ti-tlv9062-op-amp.pdf | PCB-D APRS MEZZANINE, phase D8 (MESHSAT-830; appendix 32.56 PA on the plate, 32. |
-| `TLV9062IDGK` | D | bom+gen | ti/ti-tlv9062-op-amp.pdf | TLV9062IDGK dual op amp (1 OUT1 2 IN1- 3 IN1+ 4 V- 5 IN2+ 6 IN2- 7 OUT2 8 V+): A |
-| `TMDS341A` | V2-SPEC | doc | ti/ti-tmds341a.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `TMP117` | B, PANEL, V2-SPEC | doc+gen | ti/ti-tmp117-temperature.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `TMP117AIDRVR` | B | bom+gen | ti/ti-tmp117-temperature.pdf | TMP117AIDRVR board temperature under the coolers (I2C 0x49) |
-| `TMUXHS4212` | B, GEN_FOOTPRIN, V2-SPEC | doc+gen | ti/ti-tmuxhs4212.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `TPA6132A2` | D, P, V2-SPEC | bom+doc+gen | ti/ti-tpa6132a2.pdf | TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset lead |
-| `TPS22810` | D, V2-SPEC | doc+gen | ti/ti-tps22810-load-switch.pdf | / D8 / VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, t |
-| `TPS22810DRV` | B, D, LCSC_FILL | bom+gen | ti/ti-tps22810-load-switch.pdf | TPS22810DRV |
-| `TPS23861` | A, B | gen | ti/tps23861-datasheet.pdf | KSZ9897R Gigabit switch / H5007NL / PoE TPS23861 (54 V from A22 J_54V) |
-| `TPS23861PWR` | B | bom+gen | ti/tps23861-datasheet.pdf | TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the |
-| `TPS25740` | V2-SPEC | doc | ti/ti-tps25740.pdf | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
-| `TPS25740A` | A | gen | ti/ti-tps25740.pdf | USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE |
-| `TPS25740ARGER` | A | bom+gen | ti/ti-tps25740.pdf | TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A) |
-| `TPS259571` | A | gen | power/ti-tps2595-efuse.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
-| `TPS259631` | B | gen | power/tps2596.pdf | PCB-B COMPUTE, phase B16 (MESHSAT-830, appendix 32.52 fabric, 32.58 floor plan): |
-| `TPS259631DDAR` | A, B | bom+gen | power/tps2596.pdf | TPS259631DDAR eFuse VBAT -> VMON (1.2 A (ILM)) |
-| `TPS55288` | A, V2-SPEC | doc+gen | ti/ti-tps55288.pdf | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
-| `TPS563201` | LCSC_FILL | gen | power/ti-tps563201-buck.pdf | ^TPS563201\b |
-| `TPS56637` | A | gen | ti/ti-tps56637.pdf | SLOT RAILS S1 S2 S3 + DEVICE RAIL: TPS56637 + INA226 |
-| `TPS61089` | LCSC_FILL | gen | power/ti-tps61089-boost.pdf | ^TPS61089 |
-| `TPS61288L` | A | gen | power/tps61288.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
-| `TPS62933` | A, B | gen | ti/ti-tps62933.pdf | this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC  |
-| `TPS62933DRLR` | A, B | bom+gen | ti/ti-tps62933.pdf | TPS62933DRLR 3 A buck, 3.3 V logic |
-| `TS3DV642` | B | gen | ti/ti-ts3dv642.pdf | PCB-B COMPUTE, phase B16 (MESHSAT-830, appendix 32.52 fabric, 32.58 floor plan): |
-| `TS3DV642A0RUAR` | B | bom+gen | ti/ti-ts3dv642.pdf | TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM) |
-| `TS3USB221A` | B, GEN_FOOTPRIN, V2-SPEC | doc+gen | ti/ti-ts3usb221a.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `TUSB2046B` | D, P, V2-SPEC | doc+gen | ti/ti-tusb2046b.pdf | / D8 / VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, t |
-| `TUSB2046BI` | D | bom+gen | ti/ti-tusb2046b.pdf | TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32; BUSPWR low = self-powered, |
-| `TUSB8041` | B, V2-SPEC | doc+gen | ti/ti-tusb8041.pdf | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
-| `TUSB8041I` | B | gen | ti/ti-tusb8041.pdf | PCB-B COMPUTE, phase B16 (MESHSAT-830, appendix 32.52 fabric, 32.58 floor plan): |
-| `TUSB8041IRGCR` | B | bom+gen | ti/ti-tusb8041.pdf | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) |
-| `USB2517I` | A | gen | usb2517/usb2517-datasheet-DS00001598C-lcsc.pdf | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
-| `USB3-0` | B | bom+gen | cm5/cm5-datasheet.pdf | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) |
-| `USB3-1` | B | gen | cm5/cm5-datasheet.pdf | TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C  |
-| `USBLC6-2SC6` | A, B, C, D, LCSC_FILL, P | bom+gen | st/st-usblc6-2-esd-protection.pdf | ST's USBLC6-2 datasheet: SC6 is the SOT-23-6 package option in its own ordering  |
-| `VEML7700` | ASSEMBLY, C, GEN_FOOTPRIN, PANEL, V2-SPE | bom+doc+gen | vishay/veml7700-datasheet.pdf | Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10 |
-| `W25Q16` | PANEL | doc | winbond/winbond-w25q16jv-serial-flash.pdf | / Panel controller / `U3` RP2040, `U4` W25Q16 QSPI flash, `Y1` 12 MHz, `R5`/`JP1 |
-| `W25Q16JVUXIQ` | C, E | bom+gen | winbond/winbond-w25q16jv-serial-flash.pdf | W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 |
-| `WM8960` | V2-SPEC | doc | audio/cirrus-wm8960-datasheet-rev4.4.pdf | / APRS and VHF voice / NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H13 |
-| `XAL1010-103ME` | A | bom+gen | power/coilcraft-xal1010.pdf | 10uH XAL1010-103ME (Isat 14 A) |
-| `XAL1010-682ME` | A | bom+gen | power/coilcraft-xal1010.pdf | 6.8uH XAL1010-682ME (Isat 17 A) |
-| `XAL4020-222ME` | B | bom+gen | coilcraft/coilcraft-xal40xx-series.pdf | 2.2uH XAL4020-222ME |
-| `XAL4030-472ME` | A | bom+gen | coilcraft/coilcraft-xal40xx-series.pdf | 4.7uH XAL4030-472ME |
-| `XAL6060` | B | gen | coilcraft/coilcraft-xal60xx-series.pdf | AP64500SP-13 5 A buck (A22 buck5 recipe) set to 3.32 V: 31.6k/10k on the 0.8 V r |
-| `XAL6060-472ME` | A | bom+gen | coilcraft/coilcraft-xal60xx-series.pdf | 4.7uH XAL6060-472ME (Isat 11 A) |
-| `XT60-M` | E | bom+gen | battery/amass-xt60-spec-tme.pdf | BB-2590/U cable (BTA-70762-2) on XT60-M: pin 2 (the pad nearer the fuse F3) is + |
-| `YEGD006U1A` | BUILD, V2-SPEC | doc | quectel/quectel-antenna-brochure-2025-12.pdf | / GNSS / Quectel LG290P (all six constellations, L1/L2/L5/E6, RTK capable) with  |
+| item | used in | source | document | buyable | note |
+|---|---|---|---|---|---|
+| `ABM8-272-T3` | C, E | bom+gen | rp2040/rpi-rp2040-hardware-design.pdf | CERTIFIED C20625731 | 12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND |
+| `AO3401A` | C | bom+gen | power/aos-ao3401a-p-mosfet.pdf | CERTIFIED C15127 | AO3401A P-FET high side |
+| `AP2112K-2.5` | B | bom+gen | diodes/diodes-ap2112-ldo.pdf | CERTIFIED C176945 | AP2112K-2.5 LDO: the switch's 2.5 V analog rail |
+| `AP2112K-3` | LCSC_FILL | gen | diodes/diodes-ap2112-ldo.pdf | - | ^AP2112K-3\.3\b |
+| `AP2112K-3.3` | B | gen | diodes/diodes-ap2112-ldo.pdf | - | AP2112K-3.3 LDO: the private 3.3 V of controller %s, its own branch off the devi |
+| `AP63203WU-7` | B | bom+gen | diodes/diodes-ap63200-series-buck.pdf | CERTIFIED C780769 | AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV) |
+| `AP63205WU-7` | E | bom+gen | diodes/diodes-ap63200-series-buck.pdf | CERTIFIED C2071056 | AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' log |
+| `AP64500` | A, B, V2-SPEC | doc+gen | diodes/diodes-ap64500.pdf | CERTIFIED C2070920 | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
+| `AP64500SP-13` | A, B | bom+gen | diodes/diodes-ap64500.pdf | CERTIFIED C2070920 | AP64500SP-13 5 A buck, 5.1 V rail +5V_S1 |
+| `AS3935` | E, V2-SPEC | bom+doc+gen | sciosense/sciosense-as3935-hw-guide.pdf | NO_PART_CHOSEN | AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ |
+| `AS7331` | BUILD | doc | ams/ams-as7331.pdf | - | Modules that mount on the boards (one kit, appendix 32.49): three Raspberry Pi C |
+| `ATECC608B` | B, PANEL, V2-SPEC | doc+gen | microchip/microchip-atecc608b-datasheet.pdf | WRONG_MODEL C2836813 | the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS32 |
+| `ATECC608B-SSHDA-T` | B | bom+gen | microchip/microchip-atecc608b-datasheet.pdf | WRONG_MODEL C2836813 | ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE |
+| `ATNR4010100MT` | C | bom+gen | pdi/pdi-epd-driving-circuit-rev02.pdf | HAND_FIT | 10uH ATNR4010100MT 0.8 A (the boost inductor) |
+| `AW7915-AED` | ASSEMBLY, B, BUILD, V2-SPEC | bom+doc+gen | wifi/asiarf-AW7915-AED-datasheet.pdf | WRONG_MODEL C41430829 | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 lin |
+| `BC847BS` | LCSC_FILL | gen | nexperia/nexperia-bc847bs-dual-npn.pdf | - | ^BC847BS |
+| `BME688` | BUILD, E, PANEL, V2-SPEC | bom+doc+gen | bosch/bosch-bme688.pdf | CERTIFIED C3664478 | BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76) |
+| `BMI270` | E, V2-SPEC | bom+doc+gen | bosch/bosch-bmi270.pdf | CERTIFIED C2836813 | BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake |
+| `BOOST1` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C7502705 | BAT54 boost diode INTVCC -> BOOST1 |
+| `BOOST2` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C7502705 | BAT54 boost diode INTVCC -> BOOST2 |
+| `BQ25731` | A, BUILD, PANEL, V2-SPEC | doc+gen | ti/bq25731-datasheet.pdf | CERTIFIED C2871872 | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
+| `BQ25731RSNR` | A | bom+gen | ti/bq25731-datasheet.pdf | CERTIFIED C2871872 | BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B |
+| `BQ25792` | A | gen | power/bq25792.pdf | - | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
+| `BQ34Z100-G1` | A | gen | power/bq34z100-g1.pdf | - | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
+| `BQ4050` | ASSEMBLY, BUILD, P, V2-SPEC | doc+gen | battery/ti-bq4050.pdf | CERTIFIED C157570 | / Battery / a built 4S smart pack (appendix 32.62, ruling 7 Sep 2026: the BB-259 |
+| `BQ4050RSMR` | P | bom+gen | battery/ti-bq4050.pdf | CERTIFIED C157570 | BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B) |
+| `BSC028N06NS` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C148250 | BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D) |
+| `BSC039N06NS` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C534330 | BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D) |
+| `CC2652P` | B, V2-SPEC | bom+doc+gen | zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf | HAND_FIT | CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET |
+| `CM5108064` | ASSEMBLY, B, BUILD | bom+doc+gen | cm5/cm5-datasheet.pdf | CERTIFIED C7435219 | Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); m |
+| `CP2102N` | B, D, P, V2-SPEC | doc+gen | silabs/silabs-cp2102n.pdf | CERTIFIED C964632 | / D8 / VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, t |
+| `CP2102N-A02-GQFN28` | B, D, P | bom+gen | silabs/silabs-cp2102n.pdf | CERTIFIED C964632 | CP2102N-A02-GQFN28 USB-UART bridge (GNSS) |
+| `CSD17570Q5B` | P, V2-SPEC | bom+doc+gen | battery/ti-csd17570q5b.pdf | CERTIFIED C529279 | CSD17570Q5B 30 V N-FET, charge switch |
+| `CSD18510Q5B` | A | bom+gen | battery/ti-csd18510q5b.pdf | CERTIFIED C2876544 | CSD18510Q5B 40 V N-FET |
+| `CSD19532Q5B` | A, B, E | bom+gen | power/ti-csd19532q5b-n-fet.pdf | NO_PART_CHOSEN | 60 V N-FET PowerPAK SO-8 (CSD19532Q5B class) |
+| `CSD19536KTT` | A | bom | ti/ti-lm5069.pdf | NO_PART_CHOSEN | 100 V N-FET PowerPAK SO-8 (CSD19536KTT class) |
+| `D38999` | ASSEMBLY, BUILD, E | bom+doc+gen | d38999/amphenol-d38999-iii-federal.pdf | - | vehicle and shore DC in 9-36 V, lead from the D38999 wall receptacle DC pair (JS |
+| `D38999/26` | BUILD | doc | d38999/amphenol-d38999-iii-federal.pdf | - | Wall parts on the back-wall connector plate (`release/revA/case/wall-receptacles |
+| `DP8005` | ASSEMBLY | doc | adhesives/3m-scotch-weld-dp8005.pdf | - | / QMX tray on the lid, 4 x / the printed tray (`case/lid-bracket-qmx/`) on the l |
+| `DS3231` | B, V2-SPEC | bom+doc+gen | adi/adi-ds3231.pdf | CERTIFIED C70377 | CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup |
+| `DS3231M` | PANEL, V2-SPEC | doc | adi/adi-ds3231.pdf | CERTIFIED C107410 | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `DS3231MZ` | B | bom+gen | adi/adi-ds3231.pdf | CERTIFIED C107410 | DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed |
+| `E2370KS0C1` | ASSEMBLY, BUILD, C, PANEL, PANEL1450, V2 | bom+doc+gen | pdi/pdi-e2370ks0c1-flyer.pdf | HAND_FIT | Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way; pin names  |
+| `EEHZK1V101XP` | E | bom+gen | power/lcsc-panasonic-eehzk1v101xp.pdf | CERTIFIED C454360 | 100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm) |
+| `FDMC3612` | B | bom | ti/tps23861-datasheet.pdf | PACKAGE_MISMATCH C455160 | FDMC3612 100 V N-FET, PoE port switch (PowerPAK SO-8: 1-3 source, 4 gate, 5 drai |
+| `FH34SRJ` | GEN_FOOTPRIN | gen | hirose/hirose-fh34-series-ffc-connectors.pdf | HAND_FIT | Hirose FH34SRJ-24S-0.5SH(50) FPC ZIF, 24 way 0.5 mm, bottom contact, horizontal  |
+| `FH34SRJ-24S-0.5SH` | C, GEN_FOOTPRIN | bom+gen | hirose/hirose-fh34-series-ffc-connectors.pdf | HAND_FIT | Hirose's own FH34 series catalogue: 24S is the way count and 0.5SH the pitch and |
+| `H5007NL` | B, GEN_FOOTPRIN | bom+gen | microchip/microchip-ksz9897-datasheet.pdf | HAND_FIT | Pulse H5007NL 1000BASE-T magnetics (switch port 4 to the wall RJ45) |
+| `INA219` | LCSC_FILL | gen | ti/ti-ina219.pdf | - | ^INA219 |
+| `INA219AIDCN` | A | gen | ti/ti-ina219.pdf | - | INA219AIDCN |
+| `INA226` | A, ASSEMBLY, PANEL, V2-SPEC | bom+doc+gen | ti/ti-ina226.pdf | CERTIFIED C49851 | INA226 rail monitor +5V_S1 |
+| `IP68-rated` | V2-SPEC | doc | mentor/mentor-ll14-14-ip68-front-panel-light-guides.pdf | - | no vent opening anywhere in the case skin or the plate (owner ruling 7 Sep 2026, |
+| `IRF7404` | E | gen | power/infineon-irf7404-p-mosfet.pdf | - | IRF7404 |
+| `KSZ9897` | BUILD, V2-SPEC | doc | microchip/microchip-ksz9897-datasheet.pdf | CERTIFIED C638299 | the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS32 |
+| `KSZ9897R` | B, GEN_FOOTPRIN | gen | microchip/microchip-ksz9897-datasheet.pdf | CERTIFIED C638299 | B16 footprints into meshsat.pretty (MESHSAT-830, appendix 32.58). Usage: gen_foo |
+| `KSZ9897RTXI` | B | bom+gen | microchip/microchip-ksz9897-datasheet.pdf | CERTIFIED C638299 | Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to |
+| `LG290P` | ASSEMBLY, B, BUILD, GEN_FOOTPRIN, V2-SPE | bom+doc+gen | quectel/lg290p03-gnss-protocol-specification-v1.1.pdf | HAND_FIT | CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup |
+| `LIS3MDL` | V2-SPEC | doc | st/st-lis3mdl.pdf | - | the 5G module's hardware design and its jack count; the KSZ9897, ATECC608B, DS32 |
+| `LM5069` | E | gen | ti/ti-lm5069.pdf | CERTIFIED C111822 | D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> ra |
+| `LM5069MM-2` | E | bom+gen | ti/ti-lm5069.pdf | CERTIFIED C111822 | LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit |
+| `LM5176` | A, V2-SPEC | doc+gen | ti/lm5176-datasheet.pdf | CERTIFIED C442493 | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
+| `LM5176PWPR` | A | bom+gen | ti/lm5176-datasheet.pdf | CERTIFIED C442493 | LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW |
+| `LM74700` | E | gen | ti/ti-lm74700-q1.pdf | CERTIFIED C2941042 | (title_block (title "MeshSat Field Kit carrier - PCB-E1 DOCK") (date "2026-09-07 |
+| `LM74700-Q1` | E | bom+gen | ti/ti-lm74700-q1.pdf | CERTIFIED C2941042 | LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE |
+| `LR2512-23R005F4` | E | bom+gen | power/lcsc-ralec-lr2512-23r005f4.pdf | CERTIFIED C154688 | 5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4) |
+| `LT8705A` | E, V2-SPEC | bom+doc+gen | power/lt8705a.pdf | - | LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 |
+| `LTC2954` | A | gen | power/ltc2954.pdf | CERTIFIED C683782 | CONTROL: LTC2954, EXPANDERS, EMCON GATES |
+| `LTC2954CTS8-1` | A | bom+gen | power/ltc2954.pdf | CERTIFIED C683782 | LTC2954CTS8-1 push-button on/off controller |
+| `M1621HCT-P-SMA` | V2-SPEC | doc | rockblock/maxtena-m1621hct-p-sma-datasheet.pdf | - | / Satellite / RockBLOCK 9704 SMA (Iridium Messaging Transport) with the Maxtena  |
+| `M22520/1-01` | ASSEMBLY | doc | d38999/glenair-series-iii-iv-pin-contact-selection.pdf | - | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
+| `M22520/1-04` | ASSEMBLY | doc | d38999/glenair-series-iii-iv-pin-contact-selection.pdf | - | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
+| `M39029/56-352` | ASSEMBLY | doc | d38999/amphenol-d38999-iii-federal.pdf | - | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
+| `M81969/14-03` | ASSEMBLY | doc | d38999/glenair-contact-crimp-and-installation-tools.pdf | - | / DC lead / Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-3 |
+| `MDT420M02001` | B | bom+gen | m2/amphenol-mdt420m02001-m2-m-key.ocr.txt | WRONG_MODEL C41430851 | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: spare drive slot of |
+| `MT7915` | V2-SPEC | doc | wifi/asiarf-AW7915-AED-datasheet.pdf | - | / Kit-to-kit WiFi / **two** AsiaRF AW7915-AED (MT7915, 2.4 and 5 GHz) for mesh o |
+| `PCA9555` | A, B, C, D, PANEL, V2-SPEC | doc+gen | ti/ti-pca9555.pdf | CERTIFIED C2864778 | / C7 / panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, fou |
+| `PCA9555PW` | A, B, C, D, LCSC_FILL | bom+gen | ti/ti-pca9555.pdf | CERTIFIED C2864778 | PCA9555PW (0x21): enables and status |
+| `PCM2912A` | D, P, V2-SPEC | bom+doc+gen | ti/ti-pcm2912a.pdf | CERTIFIED C475497 | TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo outpu |
+| `PI7C9X2G404` | V2-SPEC | doc | diodes/diodes-pi7c9x2g404sl.pdf | CERTIFIED C500767 | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `PI7C9X2G404SL` | B, GEN_FOOTPRIN, V2-SPEC | bom+doc+gen | diodes/diodes-pi7c9x2g404sl.pdf | CERTIFIED C500767 | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port  |
+| `R222M00720` | A, ASSEMBLY, BUILD | bom+doc+gen | rf/radiall-R222M00720-tds.pdf | HAND_FIT | SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug |
+| `R222M80500` | ASSEMBLY, BUILD | doc | rf/radiall-R222M80500-tds.pdf | - | / RF jumpers, 11 x / the float clamps on E6 (Radiall R222M80500 right-angle plug |
+| `RA30H1317M` | V2-SPEC | doc | mitsubishi/ra30h1317m1-datasheet.pdf | NOT_CHECKED | / APRS and VHF voice / NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H13 |
+| `RA30H1317M1` | A, ASSEMBLY, BUILD, C, D, PANEL1450, V2- | bom+doc+gen | mitsubishi/ra30h1317m1-datasheet.pdf | NOT_CHECKED | PA drive (U.FL, coax to the RA30H1317M1 input on the plate) |
+| `RFBIN1` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C2933126 | 102k 1% (RFBIN1: panel point 17.6 V) |
+| `RFBIN2` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C23234 | 7.50k 1% (RFBIN2) |
+| `RFBOUT1` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C22783 | 115k 1% (RFBOUT1: 15.1 V) |
+| `RFBOUT2` | E | bom+gen | power/lt8705a.pdf | CERTIFIED C25804 | 10.0k 1% (RFBOUT2) |
+| `RJHSE5380` | B | bom+gen | connectors/amphenol-rjhse5380-rj45-jack.pdf | - | RJ45 jack (Amphenol RJHSE5380): patch lead to the sealed wall RJ45; PoE out on 1 |
+| `RKS0020A` | GEN_FOOTPRIN | gen | ti/ti-tmuxhs4212.pdf | - | TI RKS0020A VQFN-20 2.5 x 4.5 mm, 0.5 mm pitch, exposed pad 1.0 x 3.0 (pad 21);  |
+| `RM520N-GL` | ASSEMBLY, B, BUILD, V2-SPEC | bom+doc+gen | quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf | WRONG_MODEL C41430835 | M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G modul |
+| `RNR0011A` | LCSC_FILL | gen | power/ti-tps61089-boost.pdf | - | VQFN-RNR0011A |
+| `RP2040` | ASSEMBLY, B, BUILD, C, E, PANEL, V2-SPEC | bom+doc+gen | rp2040/rpi-rp2040-datasheet.pdf | CERTIFIED C2040 | panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit  |
+| `RSE0010A` | GEN_FOOTPRIN | gen | cluster/ts3usb221.pdf | - | TI RSE0010A UQFN-10 1.5 x 2.0 mm, 0.5 mm pitch, no thermal pad; land pattern of  |
+| `SIM8060` | B | bom+gen | connectors/gct-sim8060-nano-sim-socket.pdf | CERTIFIED C6296715 | nano-SIM push-push GCT SIM8060 (SIM 1) |
+| `SKY13351` | GEN_FOOTPRIN | gen | rf/skyworks-sky13351-378lf-spdt.pdf | - | MLPD-6 SPDT SKY13351 Skyworks RF switch |
+| `SKY13351-378LF` | B, GEN_FOOTPRIN | gen | rf/skyworks-sky13351-378lf-spdt.pdf | - | Skyworks SKY13351-378LF SPDT 20 MHz to 6.0 GHz, MLPD-6 1 x 1 mm, 0.35 mm pitch;  |
+| `SLASEP7A` | GEN_FOOTPRIN | gen | ti/ti-tmuxhs4212.pdf | - | TI RKS0020A VQFN-20 2.5 x 4.5 mm, 0.5 mm pitch, exposed pad 1.0 x 3.0 (pad 21);  |
+| `SLUSC67B` | P | bom+gen | battery/ti-bq4050.pdf | CERTIFIED C157570 | BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B) |
+| `SMBJ18A` | A | bom+gen | vishay/vishay-smbj-series-tvs.pdf | CERTIFIED C168805 | SMBJ18A (VBUS clamp at the outlet) |
+| `SMBJ20A` | P | bom+gen | vishay/vishay-smbj-series-tvs.pdf | CERTIFIED C364296 | SMBJ20A |
+| `SMBJ58A` | B | bom+gen | ti/tps23861-datasheet.pdf | CERTIFIED C157526 | SMBJ58A |
+| `SMCJ15A` | LCSC_FILL | gen | vishay/vishay-smcj-series-tvs.pdf | - | ^SMCJ15A$ |
+| `SMCJ18A` | A, E | bom+gen | vishay/vishay-smcj-series-tvs.pdf | CERTIFIED C151906 | SMCJ18A (VBAT clamp) |
+| `SMCJ33A` | A, E, LCSC_FILL | bom+gen | vishay/vishay-smcj-series-tvs.pdf | CERTIFIED C42371548 | SMCJ33A (VIN_RAW clamp behind E6's filter) |
+| `SN74LVC` | B | gen | ti/ti-sn74lvc08a-quad-and.pdf | - | SN74LVC%sAPWR quad 2-input %s: the 2-of-3 majority voters of the I/O control pla |
+| `SN74LVC08APWR` | A, B | gen | ti/ti-sn74lvc08a-quad-and.pdf | - | SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhi |
+| `SRF1260` | E | gen | power/bourns-srf1260-common-mode-choke.pdf | HAND_FIT | (title_block (title "MeshSat Field Kit carrier - PCB-E1 DOCK") (date "2026-09-07 |
+| `SRF1260-4R7Y` | E | bom+gen | power/bourns-srf1260-common-mode-choke.pdf | HAND_FIT | Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1  |
+| `SS2040FL` | C | bom+gen | pdi/pdi-epd-driving-circuit-rev02.pdf | CERTIFIED C55259975 | SS2040FL: EPD_SW -> VGH |
+| `STM32H753` | V2-SPEC | doc | st/st-stm32h753xi-datasheet.pdf | - | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `STM32H753VI` | B | gen | st/st-stm32h753xi-datasheet.pdf | - | STM32H753VI |
+| `SX1262` | B, GEN_FOOTPRIN, V2-SPEC | bom+doc+gen | lora/seeed-wio-sx1262-module-datasheet-v1.1.pdf | HAND_FIT | Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 |
+| `Si1308EDL` | C | bom+gen | pdi/pdi-epd-driving-circuit-rev02.pdf | NO_PART_CHOSEN | Si1308EDL class N-FET (RDS under 200 mOhm, VGS 2.5 V): the boost switch on GDR |
+| `TCAN334D` | B | gen | ti/ti-tcan334-can-fd-transceiver.pdf | - | TCAN334D CAN-FD transceiver, controller %s on heartbeat fabric %s |
+| `TLV75533` | C, D | gen | power/ti-tlv755p-ldo.pdf | CERTIFIED C404027 | the panel rail over the ribbon (PANEL_5V on B16, fused F6). Budget 5 percent, no |
+| `TLV75533PDBV` | C, D | bom+gen | power/ti-tlv755p-ldo.pdf | CERTIFIED C404027 | TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor  |
+| `TLV75533PDBVR` | E | bom+gen | power/ti-tlv755p-ldo.pdf | CERTIFIED C404027 | TLV75533PDBVR 3.3 V LDO |
+| `TLV9062` | D | gen | ti/ti-tlv9062-op-amp.pdf | CERTIFIED C398356 | PCB-D APRS MEZZANINE, phase D8 (MESHSAT-830; appendix 32.56 PA on the plate, 32. |
+| `TLV9062IDGK` | D | bom+gen | ti/ti-tlv9062-op-amp.pdf | CERTIFIED C398356 | TLV9062IDGK dual op amp (1 OUT1 2 IN1- 3 IN1+ 4 V- 5 IN2+ 6 IN2- 7 OUT2 8 V+): A |
+| `TMDS341A` | V2-SPEC | doc | ti/ti-tmds341a.pdf | - | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `TMP117` | B, PANEL, V2-SPEC | doc+gen | ti/ti-tmp117-temperature.pdf | CERTIFIED C699536 | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `TMP117AIDRVR` | B | bom+gen | ti/ti-tmp117-temperature.pdf | CERTIFIED C699536 | TMP117AIDRVR board temperature under the coolers (I2C 0x49) |
+| `TMUXHS4212` | B, GEN_FOOTPRIN, V2-SPEC | doc+gen | ti/ti-tmuxhs4212.pdf | - | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `TPA6132A2` | D, P, V2-SPEC | bom+doc+gen | ti/ti-tpa6132a2.pdf | CERTIFIED C69901 | TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset lead |
+| `TPS22810` | D, V2-SPEC | doc+gen | ti/ti-tps22810-load-switch.pdf | CERTIFIED C527679 | / D8 / VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, t |
+| `TPS22810DRV` | B, D, LCSC_FILL | bom+gen | ti/ti-tps22810-load-switch.pdf | CERTIFIED C527679 | TPS22810DRV |
+| `TPS23861` | A, B | gen | ti/tps23861-datasheet.pdf | CERTIFIED C93245 | KSZ9897R Gigabit switch / H5007NL / PoE TPS23861 (54 V from A22 J_54V) |
+| `TPS23861PWR` | B | bom+gen | ti/tps23861-datasheet.pdf | CERTIFIED C93245 | TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the |
+| `TPS25740` | V2-SPEC | doc | ti/ti-tps25740.pdf | CERTIFIED C544309 | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
+| `TPS25740A` | A | gen | ti/ti-tps25740.pdf | CERTIFIED C544309 | USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE |
+| `TPS25740ARGER` | A | bom+gen | ti/ti-tps25740.pdf | CERTIFIED C544309 | TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A) |
+| `TPS259571` | A | gen | power/ti-tps2595-efuse.pdf | - | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
+| `TPS259631` | B | gen | power/tps2596.pdf | CERTIFIED C2155778 | PCB-B COMPUTE, phase B16 (MESHSAT-830, appendix 32.52 fabric, 32.58 floor plan): |
+| `TPS259631DDAR` | A, B | bom+gen | power/tps2596.pdf | CERTIFIED C2155778 | TPS259631DDAR eFuse VBAT -> VMON (1.2 A (ILM)) |
+| `TPS55288` | A, V2-SPEC | doc+gen | ti/ti-tps55288.pdf | - | / A22 / power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 |
+| `TPS563201` | LCSC_FILL | gen | power/ti-tps563201-buck.pdf | - | ^TPS563201\b |
+| `TPS56637` | A | gen | ti/ti-tps56637.pdf | - | SLOT RAILS S1 S2 S3 + DEVICE RAIL: TPS56637 + INA226 |
+| `TPS61089` | LCSC_FILL | gen | power/ti-tps61089-boost.pdf | - | ^TPS61089 |
+| `TPS61288L` | A | gen | power/tps61288.pdf | - | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
+| `TPS62933` | A, B | gen | ti/ti-tps62933.pdf | CERTIFIED C3200405 | this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC  |
+| `TPS62933DRLR` | A, B | bom+gen | ti/ti-tps62933.pdf | CERTIFIED C3200405 | TPS62933DRLR 3 A buck, 3.3 V logic |
+| `TS3DV642` | B | gen | ti/ti-ts3dv642.pdf | CERTIFIED C157482 | PCB-B COMPUTE, phase B16 (MESHSAT-830, appendix 32.52 fabric, 32.58 floor plan): |
+| `TS3DV642A0RUAR` | B | bom+gen | ti/ti-ts3dv642.pdf | CERTIFIED C157482 | TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM) |
+| `TS3USB221A` | B, GEN_FOOTPRIN, V2-SPEC | doc+gen | ti/ti-ts3usb221a.pdf | - | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `TUSB2046B` | D, P, V2-SPEC | doc+gen | ti/ti-tusb2046b.pdf | CERTIFIED C167642 | / D8 / VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, t |
+| `TUSB2046BI` | D | bom+gen | ti/ti-tusb2046b.pdf | CERTIFIED C167642 | TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32; BUSPWR low = self-powered, |
+| `TUSB8041` | B, V2-SPEC | doc+gen | ti/ti-tusb8041.pdf | CERTIFIED C544686 | / B16 / compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the  |
+| `TUSB8041I` | B | gen | ti/ti-tusb8041.pdf | CERTIFIED C544686 | PCB-B COMPUTE, phase B16 (MESHSAT-830, appendix 32.52 fabric, 32.58 floor plan): |
+| `TUSB8041IRGCR` | B | bom+gen | ti/ti-tusb8041.pdf | CERTIFIED C544686 | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) |
+| `USB2517I` | A | gen | usb2517/usb2517-datasheet-DS00001598C-lcsc.pdf | - | (title_block (title "MeshSat Field Kit carrier - PCB-A POWER + I/O") (date "2026 |
+| `USB3-0` | B | bom+gen | cm5/cm5-datasheet.pdf | CERTIFIED C544686 | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) |
+| `USB3-1` | B | gen | cm5/cm5-datasheet.pdf | - | TI TMUXHS4212 SuperSpeed 2:1 host select, bank %d: B = slot %d USB3-0 (home), C  |
+| `USBLC6-2SC6` | A, B, C, D, LCSC_FILL, P | bom+gen | st/st-usblc6-2-esd-protection.pdf | CERTIFIED C7519 | ST's USBLC6-2 datasheet: SC6 is the SOT-23-6 package option in its own ordering  |
+| `VEML7700` | ASSEMBLY, C, GEN_FOOTPRIN, PANEL, V2-SPE | bom+doc+gen | vishay/veml7700-datasheet.pdf | CERTIFIED C504893 | Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10 |
+| `W25Q16` | PANEL | doc | winbond/winbond-w25q16jv-serial-flash.pdf | CERTIFIED C2843335 | / Panel controller / `U3` RP2040, `U4` W25Q16 QSPI flash, `Y1` 12 MHz, `R5`/`JP1 |
+| `W25Q16JVUXIQ` | C, E | bom+gen | winbond/winbond-w25q16jv-serial-flash.pdf | CERTIFIED C2843335 | W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 |
+| `WM8960` | V2-SPEC | doc | audio/cirrus-wm8960-datasheet-rev4.4.pdf | - | / APRS and VHF voice / NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H13 |
+| `XAL1010-103ME` | A | bom+gen | power/coilcraft-xal1010.pdf | HAND_FIT | 10uH XAL1010-103ME (Isat 14 A) |
+| `XAL1010-682ME` | A | bom+gen | power/coilcraft-xal1010.pdf | CERTIFIED C3911637 | 6.8uH XAL1010-682ME (Isat 17 A) |
+| `XAL4020-222ME` | B | bom+gen | coilcraft/coilcraft-xal40xx-series.pdf | HAND_FIT | 2.2uH XAL4020-222ME |
+| `XAL4030-472ME` | A, B, E | bom+gen | coilcraft/coilcraft-xal40xx-series.pdf | HAND_FIT | 4.7uH XAL4030-472ME |
+| `XAL6030-332ME` | A, B | gen | coilcraft/coilcraft-xal60xx-series.pdf | - | 3.3uH XAL6030-332ME (Isat 12.2 A) |
+| `XAL6060` | B | gen | coilcraft/coilcraft-xal60xx-series.pdf | NOT_AT_JLC | AP64500SP-13 5 A buck (A22 buck5 recipe) set to 3.32 V: 31.6k/10k on the 0.8 V r |
+| `XAL6060-472ME` | A | bom+gen | coilcraft/coilcraft-xal60xx-series.pdf | HAND_FIT | 4.7uH XAL6060-472ME (Isat 11 A) |
+| `XT60-M` | E | bom+gen | battery/amass-xt60-spec-tme.pdf | NOT_AT_JLC | BB-2590/U cable (BTA-70762-2) on XT60-M: pin 2 (the pad nearer the fuse F3) is + |
+| `YEGD006U1A` | BUILD, V2-SPEC | doc | quectel/quectel-antenna-brochure-2025-12.pdf | - | / GNSS / Quectel LG290P (all six constellations, L1/L2/L5/E6, RTK capable) with  |
 
