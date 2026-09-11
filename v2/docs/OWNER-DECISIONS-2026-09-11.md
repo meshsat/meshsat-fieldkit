@@ -67,3 +67,27 @@ current 951. **Nothing downstream consumed it** (`out/` is untracked; the parts 
 folders, taking B from `meshsat-pcb-b-revA-B16-quote`), so the certification's 150 B rows are sound. The stale
 files are deleted and a test now refuses a second board in any project directory. Recorded here because it touched
 the order surface, not because anything is owed.
+
+---
+
+## 5. vast.ai will not rent to this account, so the work is on the VM
+
+**The ruling, 6 September 11:30:** "RUN EVERYTHING ON VAST.AI AND FIND A BETTER INSTANCE." Routes, generators,
+finishes and renders on rented boxes; the VM idle with its services up.
+
+**What happened today.** Every CPU-only offer is refused: `no_such_ask` on six freshly fetched ids, through both
+the REST API and the `vastai` CLI, within seconds of the listing that returned them. GPU offers list normally.
+The account has 70.92 USD of credit, `can_pay` true, and `paid_verified` 0. Boxes rented on this account as
+recently as this morning, so something changed at their end or CPU-only rental now needs verification.
+
+**What the run did instead.** The measurements are on the VM `nllei01gpu01` with `~/meshsat-services.sh stop`
+first, as the older rule requires, and a `venv-numba` was built there so the compiled kernel is what runs. The
+ruling's purpose was speed, and the alternative it names does not currently exist, so the choice was the VM or
+nothing. **It is recorded here rather than assumed**, because it is your ruling.
+
+**What it costs.** The VM is 31 GB shared with its own services and is one machine, so the parallel arms and the
+partition route that the box made cheap are serialised. The four board re-routes that phase D needs will be slow
+on it: B19's partition route alone was hours on a 128-thread box.
+
+**The decision, when you want it:** verify the vast.ai account, or accept the VM's serial pace for the board
+phase, or name another host.
