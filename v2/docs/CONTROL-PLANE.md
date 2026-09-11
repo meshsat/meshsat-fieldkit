@@ -150,6 +150,14 @@ owner as the floor.
 
 **Stage 3, width**, and only then the board work: the pair end geometry, the floor plan, the layer P0.
 
+**Correction, 11 September 2026.** The phase copy directories are not tracked in git, so the routed C10, D10,
+A24 and E7 boards went with box 50216670 when it was destroyed. Those routes were already throwaway under
+32.95, since the pre-router has changed and every board is regenerated, and no deliverable was lost. But the
+plan's phase D2 assumed C10 could have its deliverable cut from the board as it stood, and it cannot: C must
+be re-routed first. **A routed board is an artefact. One that exists only in a rented box's untracked copy
+directory exists nowhere**, and either the phase copies are tracked or a route that reaches 0 hard is
+committed the same hour.
+
 ## What this does not promise
 
 That the boards get better. That is what the reviews say plainly, and repeating it here is the point of
