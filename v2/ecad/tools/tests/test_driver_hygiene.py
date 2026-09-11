@@ -144,3 +144,26 @@ def t_every_copper_laying_tool_is_classified():
             unclassified.append(fn)
     assert not unclassified, ("these create copper and are classified nowhere; read each and put it in "
                               "LAYING (and give it boardorder) or in CLASSIFIED: %s" % unclassified)
+
+
+# ---------------------------------------------------------------- work budgets
+
+# Passes whose cost grows with the square of the board's copper, so they must be bounded in WORK. Seconds are not
+# a budget here: a clock decided a result in this project twice, and the fix both times was to count the work.
+QUADRATIC = {
+    "straighten.py": ("STRAIGHTEN_BUDGET", "the shortcut test is O(copper on the layer) per candidate; on E7 it "
+                                           "ran over an hour inside a finish and the finish was killed by hand "
+                                           "(appendix 32.89, 9 September 2026)"),
+}
+
+
+def t_a_quadratic_pass_carries_a_work_budget():
+    bad = []
+    for fn, (env, why) in QUADRATIC.items():
+        p = os.path.join(TOOLS, fn)
+        if not os.path.exists(p): bad.append("%s is listed and does not exist" % fn); continue
+        src = open(p, errors="replace").read()
+        if env not in src: bad.append("%s has no %s (%s)" % (fn, env, why)); continue
+        if "os.environ" not in src.split(env)[1][:120]: bad.append("%s does not read %s from the environment" % (fn, env))
+        if "capped" not in src: bad.append("%s spends a budget and never says when it ran out" % fn)
+    assert not bad, "an unbounded quadratic pass makes a job immortal without saying so: %s" % bad

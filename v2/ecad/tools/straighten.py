@@ -52,6 +52,9 @@ def same_line_opposite(pt, pa, pc):
 
 n0 = len(segs); merged = snapped = shortcuts = 0
 # 1. merge collinear pairs (iterate until stable)
+# The work budget, and the counter it is spent from. STRAIGHTEN_BUDGET=0 removes the bound.
+BUDGET = int(os.environ.get("STRAIGHTEN_BUDGET", "3000000")) or float("inf")
+checks = [0]; capped = [False]
 changed = True
 while changed:
     changed = False; idx = index([s for s in segs if not s.dead])
@@ -90,6 +93,11 @@ if do_short:
         t = 0 if L2 == 0 else max(0.0, min(1.0, ((p[0] - ax) * (bx - ax) + (p[1] - ay) * (by - ay)) / L2))
         return math.hypot(p[0] - (ax + t * (bx - ax)), p[1] - (ay + t * (by - ay))) <= tol
     for (pt, layer), ss in list(idx.items()):
+        # A budget counted in WORK, not in seconds, because a clock decided a result in this project twice.
+        # The collision test below is O(copper on the layer) per candidate, so this pass is quadratic in the
+        # board's track count: on E7 it ran for over an hour inside a finish and the finish was killed by hand
+        # (appendix 32.89, 9 September 2026). It stops and says how far it got now. 11 September 2026.
+        if checks[0] >= BUDGET: capped[0] = True; break
         if len(ss) != 2: continue
         a, c = ss
         if a.dead or c.dead or a.locked or c.locked or a.net != c.net or a.w != c.w or busy(pt, layer): continue
@@ -103,7 +111,12 @@ if do_short:
         def cl_for(net):   # KiCad applies the larger class clearance of the two items, never under the board minimum; 5 um margin for rounding
             if net == -2: return int(b.GetDesignSettings().m_CopperEdgeClearance) + 5000
             return max(int(max(clear.get(a.net, default_clear), clear.get(net, default_clear)) * 1e6), int(min_cl)) + 5000
-        if any(net != a.net and uid not in skip and shape.Collide(seg, cl_for(net)) for net, shape, uid in obstacles[layer]): continue
+        hit = False
+        for _net, _shape, _uid in obstacles[layer]:
+            if _net == a.net or _uid in skip: continue
+            checks[0] += 1
+            if _shape.Collide(seg, cl_for(_net)): hit = True; break
+        if hit: continue
         a.a, a.b, a.dirty = pa, pc, True; c.dead = True; shortcuts += 1
 # ---- apply by UUID in one sweep
 by_uid = {str(t.m_Uuid.AsString()): t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"}
@@ -117,3 +130,5 @@ for t in victims: b.Remove(t)
 pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(out_fn, b)
 alive = [s for s in segs if not s.dead]; L = sum(s.length() for s in alive) / 1e6
 print("straighten: segments %d -> %d (merged %d, snapped %d, shortcuts %d), length now %.0f mm -> %s" % (n0, len(alive), merged, snapped, shortcuts, L, out_fn))
+print("straighten: %d collision check(s) of a %s budget%s" % (checks[0], BUDGET if BUDGET != float("inf") else "unbounded",
+      "; THE BUDGET STOPPED THE SHORTCUT PASS, so this board is tidied less than it could be, not tidied wrongly" if capped[0] else ""))
