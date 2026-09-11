@@ -382,6 +382,15 @@ def run(profile_fn, rounds, use_services, dry):
             # The horizon for this stage's verdicts, and it has to be taken BEFORE the chain runs or it excludes
             # every verdict the chain writes. Set after, as it was for one commit, it would have hidden all of
             # them and read as "no verdicts at all" (11 September 2026; see verdict.collect).
+            # A round starts with a clean verdict channel. The horizon alone is not enough: the stamp has
+            # one-second resolution, so a verdict written in the same second as the stage began is not "before"
+            # it, and P's round-two pre stage was blocked by a verify_deliverable its round-one finish had
+            # written 0 seconds earlier. Clearing is also the honest thing: a gate that does not re-run this
+            # round should read as absent, which verdict.collect already treats as INCONCLUSIVE when required.
+            if not dry:
+                for _v in glob.glob(os.path.join(project, "out", "*.verdict.json")):
+                    try: os.remove(_v)
+                    except OSError: pass
             pre_started = verdict.now()   # UTC in the verdict channel's own format, never routeflow's local now()
             rc = 0
             if not dry:
