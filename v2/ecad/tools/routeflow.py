@@ -116,7 +116,9 @@ def judge_verdicts(project, require=(), since=None):
     marker and a generator that never saved, none of which a verdict can report because the tool never got that far.
     """
     out = os.path.join(project, "out")
-    worst, found, missing = verdict.collect(out, require)
+    # Only the verdicts this stage wrote. Verdict files persist in out/ across stages and rounds, and boards P
+    # and E were each blocked three times by a check_contracts verdict their OWN earlier finish had written.
+    worst, found, missing = verdict.collect(out, require, since=since)
     bad = sorted("%s %s%s" % (t, r.get("verdict"), (" (%s)" % r["note"]) if r.get("note") else "")
                  for t, r in found.items() if r.get("verdict") != verdict.PASS)
     if missing: bad += ["%s did not run" % t for t in missing]

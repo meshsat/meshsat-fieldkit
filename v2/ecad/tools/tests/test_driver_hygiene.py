@@ -195,3 +195,20 @@ def t_the_verdict_horizon_is_taken_before_the_chain_runs():
     i = src.index("pre_started =")   # the expression changed once; the POSITION is what this rule is about
     j = src.index("rc = sh(expand(argv", i - 4000 if i > 4000 else 0)
     assert i < j, "pre_started is taken after the pre-route chain runs, so it excludes the chain's own verdicts"
+
+
+def t_the_verdict_horizon_is_actually_passed_to_the_collector():
+    """Computing a horizon and not passing it is the same as having none, and that is what happened: the edit
+    that added `since=since` to the collect call was lost when an assertion later in the same patch script
+    aborted before the file was written. `pre_started` was computed, journalled and dropped, and boards P and E
+    were each blocked three times by a verdict their own earlier finish had written.
+
+    The rule that catches it is about the CALL, not the value: two earlier rules checked that the horizon exists
+    and where it is taken, and both passed throughout."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("def judge_verdicts(")
+    body = src[i:src.index("\ndef ", i + 10)]
+    assert "verdict.collect(" in body, body[:200]
+    call = body[body.index("verdict.collect("):]
+    call = call[:call.index(")") + 1]
+    assert "since=" in call, "judge_verdicts collects without the horizon it was given: %s" % call
