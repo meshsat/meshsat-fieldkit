@@ -73,6 +73,10 @@ python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1   # the JLC stacku
 rm -f out/check_pcb_$L.verdict.json
 python3 ../tools/check_pcb_$L.py $N.kicad_pcb > out/check_$L.log 2>&1; GATE=$?; grep -E 'FAIL|RESULT|^verdict:' out/check_$L.log
 [ "$GATE" -eq 0 ] || block "numeric gate: $(python3 ../tools/verdict.py read out/check_pcb_$L.verdict.json 2>&1 | tail -1)" out/check_$L.log
+# The board against the netlist it was just placed from (round-two M4, 11 Sep 2026). Nothing compared the two,
+# so a board placed from a STALE netlist passed every gate, and this chain has produced exactly that twice.
+python3 ../tools/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.log 2>&1; NB=$?; tail -3 out/netlist_board.log
+[ "$NB" -eq 0 ] || block "the board does not match its netlist: $(python3 ../tools/verdict.py read out/netlist_board.verdict.json 2>&1 | tail -1)" out/netlist_board.log
 
 [ -n "${PLACE_JITTER:-}" ] && python3 ../tools/place_jitter.py $N.kicad_pcb "$PLACE_JITTER" 2>&1 | grep place_jitter   # Stage E data campaign
 env $ESCENV python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'

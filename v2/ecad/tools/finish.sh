@@ -88,6 +88,8 @@ python3 $T/dc_drop.py $N.kicad_pcb --json out/$N-dc_drop.json > out/$N-dc_drop.l
 python3 $T/stackup_write.py $N.kicad_pcb 2>&1 | tail -1
 python3 $T/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > out/$N-impedance.log 2>&1; IM=$?; grep -E 'impedance' out/$N-impedance.log | tail -14
 [ "$IM" -eq 0 ] || stop "IMPEDANCE $(python3 $T/verdict.py read out/impedance_check.verdict.json 2>&1 | tail -1)"
+python3 $T/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.log 2>&1; NB=$?; tail -2 out/netlist_board.log
+[ "$NB" -eq 0 ] || stop "BOARD DOES NOT MATCH ITS NETLIST $(python3 $T/verdict.py read out/netlist_board.verdict.json 2>&1 | tail -1)"
 python3 $T/check_contracts.py .. > out/contracts.log 2>&1; grep -E 'FAIL|MISSING' out/contracts.log | head -12
 grep -q 'ALL CONTRACTS PASS' out/contracts.log && echo 'contracts: ALL PASS' || stop "CONTRACTS FAILED (out/contracts.log)"
 CLEAN=$(cat "$FLAG" 2>/dev/null || echo missing); [ "$CLEAN" = clean ] || { echo "$PHASE NOT CLEAN, not finishing"; echo "FINISH-$PHASE-DONE"; exit 1; }
