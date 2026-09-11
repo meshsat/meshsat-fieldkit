@@ -648,6 +648,18 @@ def deloop(pts):
     return out
 
 
+def _pt_seg(px, py, x1, y1, x2, y2):
+    """Distance from a point to a segment, in millimetres."""
+    dx, dy = x2 - x1, y2 - y1; L2 = dx * dx + dy * dy
+    t = 0.0 if L2 <= 1e-12 else max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / L2))
+    return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
+
+
+def _seg_gap(a, c, d, e, f, g_, h, i_):
+    """Distance between two segments that do not cross, in millimetres (the four endpoint-to-segment distances)."""
+    return min(_pt_seg(a, c, f, g_, h, i_), _pt_seg(d, e, f, g_, h, i_), _pt_seg(f, g_, a, c, d, e), _pt_seg(h, i_, a, c, d, e))
+
+
 def fp_centre(fp):
     """The centre of a footprint's pads, in mm.
 
@@ -1350,12 +1362,31 @@ def main(a):
             for L in trk1[o]: gr.disc(trk1[o][L], x, y, vd / 2 + clr_c + w / 2 + 0.01)
             for vm in via1n.values(): gr.disc(vm, x, y, vdr + 0.30 + 0.02)
             gr.disc(via, x, y, vdr + 0.30 + VIA_SPLIT)
+        def own_clear(x1, y1, x2, y2, L, net):
+            """Is this piece clear of the copper THIS PAIR has already laid on its other leg? (12 September 2026, appendix 32.134.)
+
+            The leg maps answer that everywhere except where a caller exempts them, and two callers do: `fan_leg` exempts the
+            last 1.2 mm of a fan because the partner's PAD blocks there, and `stub` lays a straight piece without asking when
+            the two ends are inside one cell. Both exemptions are about PADS and both silently excused the partner's TRACKS as
+            well. A's three ribbon pairs came out of the J_AB1 station fan with /USB_D8_N shorting its own /USB_D8_P on 0.1 mm
+            segments: the tool had emitted a dive, so the crossing was seen, and the fan copper went down unasked beside it."""
+            o = other_of(net); half = wid(L) / 2
+            for t in pieces:
+                if t.GetNetname() != o: continue
+                if t.GetClass() == "PCB_TRACK":
+                    if t.GetLayer() != L: continue
+                    if _seg_gap(x1, y1, x2, y2, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) < clr_c + half + mm(t.GetWidth()) / 2 - 0.005: return False
+                elif t.GetClass() == "PCB_VIA":
+                    if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < clr_c + half + mm(t.GetWidth()) / 2 - 0.005: return False
+            return True
         # the stub, via-site and hop helpers of this pair (pair-level state only; they were inside the section loop and a pair whose last section took the direct legs left them undefined for the stub pass, 8 Sep 2026 12:47)
         def stub(ax_, ay_, bx_, by_, SL, net):
             """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
             pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
             win2 = (gr.cell(min(ax_, bx_) - 8, min(ay_, by_) - 8), gr.cell(max(ax_, bx_) + 8, max(ay_, by_) + 8)); win2 = ((max(0, win2[0][0]), max(0, win2[0][1])), (min(gr.NX - 1, win2[1][0]), min(gr.NY - 1, win2[1][1])))
-            if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G: seg(ax_, ay_, bx_, by_, SL, net); return True   # the offset end already sits on the pad
+            if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G:   # the offset end already sits on the pad
+                if not own_clear(ax_, ay_, bx_, by_, SL, net): return False   # ... but not over the partner's own copper
+                seg(ax_, ay_, bx_, by_, SL, net); return True
             sp = stub_path(gr, pm.copy(), (ax_, ay_), (bx_, by_), win2) if pm is not None else None
             if sp and len(sp) >= 2:
                 for k in range(len(sp) - 1): seg(sp[k][0], sp[k][1], sp[k + 1][0], sp[k + 1][1], SL, net)
@@ -1411,7 +1442,7 @@ def main(a):
                     if ln_ * (1.0 - u_) < 1.2: break
                     jj_, ii_ = gr.cell(ex_ + u_ * (px_ - ex_), ey_ + u_ * (py_ - ey_))
                     if 0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX and pm[ii_, jj_]: clear = False; break
-            if clear: seg(ex_, ey_, px_, py_, L_, net_); return True
+            if clear and own_clear(ex_, ey_, px_, py_, L_, net_): seg(ex_, ey_, px_, py_, L_, net_); return True
             return stub(ex_, ey_, px_, py_, L_, net_)
         def via_site(ex_, ey_, px_, py_, L, aL, net, away):
             """A free single-via site near the offset end (ex_, ey_): the nearest cell of via1 that is also clear on both layers' leg maps, preferring the
@@ -2007,11 +2038,38 @@ def main(a):
             def _o(px, py, qx, qy, rx, ry): return (qx - px) * (ry - py) - (qy - py) * (rx - px)
             o1, o2, o3, o4 = _o(a, c, d, e, f, g_), _o(a, c, d, e, h, i_), _o(f, g_, h, i_, a, c), _o(f, g_, h, i_, d, e)
             return (o1 > 1e-9) != (o2 > 1e-9) and (o3 > 1e-9) != (o4 > 1e-9) and abs(o1) + abs(o2) + abs(o3) + abs(o4) > 1e-9
-        _cross = 0
+        # 12 September 2026: crossing is not the only way two legs of one pair can be illegal. A's ribbon pairs
+        # came out of the station fan with `shorting_items` and `clearance` between /USB_D8_N and its OWN partner
+        # on 0.1 mm segments, which no strict crossing test sees: two segments can run alongside 0.05 mm apart
+        # and never cross. KiCad applies the CLASS clearance between P and N, so the pair's own two legs are
+        # judged by the same number as any other pair of nets, and the pre-router judges them here rather than
+        # shipping 13 hard violations into the pre-route gate for the chain to refuse.
+        _vias = {pn: [], nn: []}
+        for _t in pieces:
+            if _t.GetClass() == "PCB_VIA" and _t.GetNetname() in _vias: _vias[_t.GetNetname()].append((mm(_t.GetPosition().x), mm(_t.GetPosition().y), mm(_t.GetWidth()) / 2))
+        _cross = 0; _near = 0; _near_worst = 9.9
+        _need = max(0.0, clr_c - 0.005) + max(w, w_in)   # edge to edge: the class clearance, centre to centre
         for _L in {k[1] for k in _segs}:
             for _a in _segs.get((pn, _L), []):
                 for _b2 in _segs.get((nn, _L), []):
                     if _hit(*_a, *_b2): _cross += 1
+                    else:
+                        _g = _seg_gap(*_a, *_b2)
+                        if _g < _need: _near += 1; _near_worst = min(_near_worst, _g)
+            for _nm, _on in ((pn, nn), (nn, pn)):   # a via of one leg against the other leg's track on this layer (a through via is on every layer)
+                for _vx, _vy, _vr in _vias[_nm]:
+                    for _a in _segs.get((_on, _L), []):
+                        _g = _pt_seg(_vx, _vy, *_a) - _vr + max(w, w_in) / 2
+                        if _g < _need: _near += 1; _near_worst = min(_near_worst, _g)
+        for _vx, _vy, _vr in _vias[pn]:
+            for _wx, _wy, _wr in _vias[nn]:
+                _g = math.hypot(_vx - _wx, _vy - _wy) - _vr - _wr + max(w, w_in)
+                if _g < _need: _near += 1; _near_worst = min(_near_worst, _g)
+        if _near and not _cross:
+            rollback()
+            report.append("FAIL  %s: its own two legs come within %.3f mm centre to centre where the class needs %.3f (%d place(s)); rolled back, the router takes the pair"
+                          % (stem, _near_worst, _need, _near))
+            continue
         if _cross:
             rollback()
             # 10 September 2026: a crossing used to end the pair here, while a section failure got the escape-via fallback.
