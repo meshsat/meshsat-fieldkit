@@ -524,6 +524,12 @@ def run(profile_fn, rounds, use_services, dry):
                 if best_board[1] and best_board[2] != rnd and os.path.exists(best_board[1]):
                     try:
                         shutil.copy(best_board[1], os.path.join(project, name + ".kicad_pcb"))
+                        # with its project files: they carry the net-class assignments every gate reads, and a
+                        # remedy can change the route block between rounds, so a board from round N under a
+                        # project file from round N+1 is the B19 trap of 9 September again (reviewer, 12 Sep)
+                        for _e in (".kicad_pro", ".kicad_prl"):
+                            _b = os.path.splitext(best_board[1])[0] + _e
+                            if os.path.exists(_b): shutil.copy(_b, os.path.join(project, name + _e))
                         journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status="RESTORED_BEST",
                                               note="round %d's board (hard %d, unrouted %s) restored over round %d's"
                                                    % (best_board[2], best_board[0][0], best_board[0][1], rnd)))
