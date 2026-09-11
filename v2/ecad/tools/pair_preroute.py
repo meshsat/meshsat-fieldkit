@@ -737,6 +737,7 @@ def main(a):
     # guaranteed to fit again once its room has been taken by the pair that ripped it, and nothing checks that the episode paid.
     # The episode has to become a trial that is accepted only when it leaves more pairs laid than it found; until it is, the flag
     # stays off (PAIR_RIPUP=1 to reproduce the measurement).
+    LEG_EXACT = os.environ.get("PAIR_LEG_EXACT", "0") != "0"       # re-test a blocked leg point against the polygons before refusing the pair
     RIPUP = int(os.environ.get("PAIR_RIPUP", "0"))                 # rip-up events one pair may trigger
     RIP_MARGIN = float(os.environ.get("PAIR_RIP_MARGIN", "4.0"))   # mm from the failed section's line for a piece to count as in the way
     RIP_MAX = int(os.environ.get("PAIR_RIP_MAX", "6"))             # laid pairs taken off the board per event
@@ -751,6 +752,41 @@ def main(a):
         dx, dy = x2 - x1, y2 - y1; L2 = dx * dx + dy * dy
         t = 0.0 if L2 <= 1e-9 else max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / L2))
         return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
+
+    def _nearest_edge(x, y, L, net, limit=3.0):
+        """Distance in mm from a point to the nearest obstacle EDGE on one layer, ignoring `net`, or None past `limit`.
+
+        Edges, not centres: the maps rasterise a pad by its polygon, so a centre distance is the wrong number to compare
+        with them and reads as a pad "at 1.85 mm" blocking a cell it cannot reach (11 September 2026). Bounded by `limit`
+        so the scan is a local one; the caller decides what distance is enough."""
+        best = None
+        pt = pcbnew.VECTOR2I(FromMM(x), FromMM(y))
+        for f in b.GetFootprints():
+            bb = f.GetBoundingBox(False, False)
+            if mm(bb.GetLeft()) - limit > x or mm(bb.GetRight()) + limit < x or mm(bb.GetTop()) - limit > y or mm(bb.GetBottom()) + limit < y: continue
+            for q in f.Pads():
+                if q.GetNetname() == net or not q.IsOnLayer(L): continue
+                if abs(mm(q.GetPosition().x) - x) > limit + 5 or abs(mm(q.GetPosition().y) - y) > limit + 5: continue
+                # A pad whose polygon cannot be taken is an obstacle of UNKNOWN extent, so it answers 0.0 and the caller
+                # refuses. The centre distance was the obvious fallback and it is larger than the edge distance, which
+                # would accept copper the map had blocked: a silent fallback in the unsafe direction, the class of defect
+                # the record has caught twice (the inflate fallback, the map expression).
+                try: d_ = mm(int(q.GetEffectivePolygon(L).Distance(pt)))
+                except Exception: d_ = 0.0
+                if best is None or d_ < best: best = d_
+        for t in b.GetTracks():
+            if t.GetNetname() == net: continue
+            if t.GetClass() == "PCB_VIA":
+                d_ = math.hypot(mm(t.GetPosition().x) - x, mm(t.GetPosition().y) - y) - mm(t.GetDrillValue()) / 2 - 0.05
+            else:
+                if t.GetLayer() != L: continue
+                d_ = _seg_d(x, y, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) - mm(t.GetWidth()) / 2
+            if d_ < limit and (best is None or d_ < best): best = d_
+        for z in list(b.Zones()) + [z for fp in b.GetFootprints() for z in fp.Zones()]:
+            if not (z.GetIsRuleArea() and z.IsOnLayer(L) and z.GetDoNotAllowTracks()): continue
+            d_ = mm(int(z.Outline().Distance(pt)))
+            if d_ < limit and (best is None or d_ < best): best = d_
+        return best
 
     def _what_is_at(x, y, L, net):
         """The copper nearest to a point on one layer, named (10 September 2026). A debug line that says a leg hits `an
@@ -1559,8 +1595,19 @@ def main(a):
                             for q in range(n + 1):
                                 u = q / n; along = walked + u * ln_
                                 if (first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2): continue   # the fine-pitch entry ends inside the pad pair
-                                jj, ii = gr.cell(x1 + u * (x2 - x1), y1 + u * (y2 - y1))
-                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]: return False
+                                px_, py_ = x1 + u * (x2 - x1), y1 + u * (y2 - y1)
+                                jj, ii = gr.cell(px_, py_)
+                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]:
+                                    # The map is a raster and the leg's margin over it is smaller than a cell (the note at
+                                    # `_cover` above has the arithmetic), so a blocked CELL is not yet a blocked LEG. Before
+                                    # refusing the whole pair for one point, ask the geometry: the map grows an obstacle by
+                                    # CLR + w/2 + 0.02, so the same question exactly is whether the nearest edge is that far.
+                                    # Measured on D: 0.367 mm against a 0.330 demand, refused by 37 micrometres of rounding.
+                                    # PAIR_LEG_EXACT=1 turns it on; it costs a local scan only where a pair would be refused.
+                                    if not LEG_EXACT: return False
+                                    _need = CLR + wid(L) / 2 + 0.02
+                                    _d = _nearest_edge(px_, py_, L, net, limit=_need + 0.5)
+                                    if _d is None or _d < _need: return False
                             walked += ln_
                 return True
             def dp(pts_cells, tol):
