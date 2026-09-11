@@ -6,6 +6,7 @@ Usage: gen_sch_b.py <out.kicad_sch> <project-name>
 import re, sys, os, uuid
 OUT = sys.argv[1]; PROJECT = sys.argv[2] if len(sys.argv) > 2 else "pcb-a-power"
 import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from idc_pads import idc   # the IDC land is a per-board measurement (IDC_PADS), not a default: see idc_pads.py
 # 10 September 2026 (MESHSAT-862, red team C2): the schematic engine lives in kisch.py, one copy for the six boards.
 # What stays here is this board: its part tables, its nets, its sheet layout. `ic()` is strict for every board again.
 import kisch
@@ -37,7 +38,7 @@ FP = {
  "SOT236": "Package_TO_SOT_SMD:SOT-23-6", "SOT235": "Package_TO_SOT_SMD:SOT-23-5", "SOT238": "Package_TO_SOT_SMD:SOT-23-8", "SOT23": "Package_TO_SOT_SMD:SOT-23",
  "WSON6": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
  "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "XH4": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
- "IDC18": "meshsat:IDC-Header_2x09_P2.54mm_Vertical_NarrowPad", "IDC40": "meshsat:IDC-Header_2x20_P2.54mm_Vertical_NarrowPad", "IDC14": "meshsat:IDC-Header_2x07_P2.54mm_Vertical_NarrowPad", "IDC16": "meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad",
+ "IDC18": idc("2x09"), "IDC40": idc("2x20"), "IDC14": idc("2x07"), "IDC16": idc("2x08"),
  "PICO10": "Connector_Molex:Molex_PicoBlade_53047-1010_1x10_P1.25mm_Vertical",
  "USBA": "Connector_USB:USB_A_Stewart_SS-52100-001_Horizontal", "USBC": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "USBCP": "Connector_USB:USB_C_Plug_Molex_105444", "PH4": "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
  "JP2": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm", "JP3": "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm",
@@ -63,7 +64,7 @@ def ina219(ref, inp, inn, a0, a1): part(ref, "Sensor_Energy", "INA219AxDCN", "IN
 # Nets: CELL+ is the pack node (four 9 A dock pins), VBAT the fused node every converter runs from, VIN_RAW the 9 to 36 V vehicle and shore input up the dock signal contacts,
 # VBUS20 the 20 V charge bus, +5V_S1..3 the slot rails, +5V_DEV the USB device rail, +3V3 this board's logic, +13V8_PA, +12V_HF, +54V_POE, VMON, VHEAT, +5V_D8.
 FP.update({
- "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "IDC26": "meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad", "IDC16": "meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad",
+ "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "IDC26": idc("2x13"), "IDC16": idc("2x08"),
  "HTSSOP28": "Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm", "QFN32_04": "Package_DFN_QFN:QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm",
  "SO8EP": "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm", "QFN24": "Package_DFN_QFN:QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm", "SOT583": "Package_TO_SOT_SMD:SOT-583-8", "VSSOP10": "Package_SO:VSSOP-10_3x3mm_P0.5mm", "DDA8": "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm",
  "TSSOP24": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm", "TSSOP14": "Package_SO:TSSOP-14_4.4x5mm_P0.65mm", "PPAK": "Package_SO:PowerPAK_SO-8_Single",

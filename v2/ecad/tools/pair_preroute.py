@@ -655,6 +655,18 @@ def _pt_seg(px, py, x1, y1, x2, y2):
     return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
 
 
+def _segs_cross(a, c, d, e, f, g_, h, i_):
+    """Do the two segments properly intersect? (The orientation test, as the leg-crossing gate uses it.)"""
+    def _o(px, py, qx, qy, rx, ry): return (qx - px) * (ry - py) - (qy - py) * (rx - px)
+    o1, o2, o3, o4 = _o(a, c, d, e, f, g_), _o(a, c, d, e, h, i_), _o(f, g_, h, i_, a, c), _o(f, g_, h, i_, d, e)
+    return (o1 > 1e-9) != (o2 > 1e-9) and (o3 > 1e-9) != (o4 > 1e-9) and abs(o1) + abs(o2) + abs(o3) + abs(o4) > 1e-9
+
+
+def _seg_dist(a, c, d, e, f, g_, h, i_):
+    """Distance between two segments, zero when they cross."""
+    return 0.0 if _segs_cross(a, c, d, e, f, g_, h, i_) else _seg_gap(a, c, d, e, f, g_, h, i_)
+
+
 def _seg_gap(a, c, d, e, f, g_, h, i_):
     """Distance between two segments that do not cross, in millimetres (the four endpoint-to-segment distances)."""
     return min(_pt_seg(a, c, f, g_, h, i_), _pt_seg(d, e, f, g_, h, i_), _pt_seg(f, g_, a, c, d, e), _pt_seg(h, i_, a, c, d, e))
@@ -1736,7 +1748,9 @@ def main(a):
                     L = layers[run[0][0]]; pts = [gr.xy(j, i) for i, j in sm[r_i]]
                     if len(pts) == 1: pts = pts * 2
                     first_run, last_run = r_i == 0, r_i == len(runs) - 1
+                    _polys = {}
                     for poly, net in ((offset_polyline(pts, dof(L) * p_side), pn), (offset_polyline(pts, -dof(L) * p_side), nn)):
+                        _polys[net] = poly
                         total = sum(math.hypot(poly[k + 1][0] - poly[k][0], poly[k + 1][1] - poly[k][1]) for k in range(len(poly) - 1)); walked = 0.0
                         for k in range(len(poly) - 1):
                             (x1, y1), (x2, y2) = poly[k], poly[k + 1]; ln_ = math.hypot(x2 - x1, y2 - y1); n = int(ln_ / gr.G) * 2 + 2
@@ -1760,6 +1774,23 @@ def main(a):
                                     _d = _nearest_edge(px_, py_, L, net, limit=_need + 0.5)
                                     if _d is None or _d < _need: return False
                             walked += ln_
+                    # THE TWO LEGS AGAINST EACH OTHER, which no occupancy map can answer: both are laid by this pair, so
+                    # neither is on the board when the maps are built and each leg's map excuses its partner's copper by
+                    # construction. A's /USB_D8 came out of this loop with its two legs 0.038 mm apart centre to centre in
+                    # eleven places against a 0.249 mm demand (12 September 2026), which the post-lay gate then rolled the
+                    # whole pair back for. The cause is the offset of a hairpin: `offset_polyline` removes the loop the inner
+                    # leg makes, and what is left lies on the other leg. Judged here instead, the pair simply takes the next
+                    # smoothing, which is what the candidate ladder below exists for.
+                    _need2 = clr_c + wid(L) - 0.005
+                    _pA, _pB = _polys[pn], _polys[nn]
+                    for _k in range(len(_pA) - 1):
+                        _x1, _y1 = _pA[_k]; _x2, _y2 = _pA[_k + 1]
+                        _lo_x, _hi_x = min(_x1, _x2) - _need2, max(_x1, _x2) + _need2
+                        _lo_y, _hi_y = min(_y1, _y2) - _need2, max(_y1, _y2) + _need2
+                        for _m in range(len(_pB) - 1):
+                            _x3, _y3 = _pB[_m]; _x4, _y4 = _pB[_m + 1]
+                            if max(_x3, _x4) < _lo_x or min(_x3, _x4) > _hi_x or max(_y3, _y4) < _lo_y or min(_y3, _y4) > _hi_y: continue
+                            if _seg_dist(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4) < _need2: return False
                 return True
             def dp(pts_cells, tol):
                 """Douglas-Peucker on cells: the fewest vertices within tol cells of the raw run."""

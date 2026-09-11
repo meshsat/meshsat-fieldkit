@@ -100,3 +100,21 @@ def t_a_coupled_pair_at_its_own_pitch_is_never_refused():
     w, gap_, clr = 0.13, 0.14, 0.127
     need = max(0.0, clr - 0.005) + w
     assert w + gap_ > need, "a correctly coupled pair would be refused by its own clearance test (%.3f against %.3f)" % (w + gap_, need)
+
+def t_the_two_offset_legs_are_judged_against_each_other():
+    """The occupancy maps cannot answer this one: both legs are laid by this pair, so when the maps are built
+    neither is on the board, and each leg's own map excuses its partner by construction. A's /USB_D8 came out
+    of the offset loop with its two legs 0.038 mm apart in eleven places against a 0.249 mm demand."""
+    b = _body("legs_clear")
+    assert "_seg_dist(" in b, "legs_clear never measures one leg against the other"
+    assert "clr_c + wid(L)" in b, "the mutual test does not use the class clearance and the leg width"
+
+
+def t_a_crossing_is_distance_zero():
+    """_seg_gap alone reports the endpoint distances, which for two crossing segments are all positive: an X
+    of two 10 mm legs reads 5 mm apart. Every caller that asks "how close" must get zero there."""
+    s = _src(); i = s.find("def _pt_seg("); j = s.find("def fp_centre(")
+    ns = {"math": math}; exec(compile(s[i:j], "pair_preroute.py", "exec"), ns)
+    assert ns["_seg_dist"](0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 10.0, 0.0) == 0.0, "two crossing legs do not read as touching"
+    assert abs(ns["_seg_dist"](0.0, 0.0, 10.0, 0.0, 0.0, 0.27, 10.0, 0.27) - 0.27) < 1e-9
+    assert ns["_seg_gap"](0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 10.0, 0.0) > 4.9, "this is the trap the rule above exists for"
