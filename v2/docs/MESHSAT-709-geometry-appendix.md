@@ -4443,3 +4443,32 @@ escape via and 30 legs that clear no smoothing, and neither is a floor-plan prob
 problem. The next lever is the stub-to-escape-via geometry at the fine-pitch parts, which `PAIR_ENTRY_VIA`
 already touches as a per-pair fallback and which 32.95 measured as costing D10 two of its five pairs when it
 was made a global mode.
+
+### 32.110 The counted occupancy maps measured on B19: 1.32x on the maps, not the 8x predicted (11 September 2026, 15:15 CEST; MESHSAT-862)
+
+Same board, same pass, same knobs, one variable, and the results are identical: **21 of 48 pairs and
+167,790,531 expansions in both**, which is the equivalence of 32.108 holding on a second board and a far
+larger one than D.
+
+| map mode | total | in the occupancy maps | in the corridor search |
+|---|---:|---:|---:|
+| the per-pair rebuild (reference) | 689 s | **514 s** | 126 s |
+| counted once, indexed by net | 561 s | **388 s** | 123 s |
+
+**1.32x on the maps and 1.23x on the pass. The prediction was `build_maps` from 1,010 s to under 120 s and a
+pass from 22 minutes to under 8, so the prediction is MISSED while the direction is right.**
+
+Why the gap, and it matters for how the 1,010 s figure is read from here. That number comes from
+`pair-b19ovl.log`, a pass on a different configuration, and the rasteriser was vectorised the same day
+(32.100, 17.7x off `Grid.poly`), so a large part of what counting was meant to remove had already been
+removed by something else. What remains is real but smaller: the whole-board pass is paid once instead of
+about four times per pair, and the per-pair side is now a handful of pads and the legs laid so far rather
+than a walk over every footprint and every track.
+
+**It stays**, on 1.32x with identical output and a check that proves it identical on demand
+(`PAIR_MAP_CHECK=1`), and `PAIR_MAP_MODE=reference` keeps the old path one environment variable away.
+
+**A second reading falls out of the same two runs.** This pair ran at `e82b3f2`, which carries the leg test
+of 11 September with `PAIR_END_LEGS` defaulting on, and it laid **21 of 48** on the DIFF100 pass where both
+arms of 32.109 laid 18. **The leg test is worth +3 on that pass**, which is the first evidence that it does
+anything; the sixteen-arm sweep measures it properly beside fifteen other knobs.
