@@ -982,6 +982,10 @@ def main(a):
         stripped = []   # the escape via and stubs of a fine-pitch station pad, removed so the legs enter the pad itself (restored on rollback)
         END_CANDS = int(os.environ.get("PAIR_END_CANDS", "12"))   # candidate corridor ends tested for reach before the nearest one is taken anyway
         END_OFFSET = os.environ.get("PAIR_END_OFFSET", "1") != "0"   # test the corridor end where the stubs will really start (round-two C2)
+        # A SECOND knob for a second change. `_legs_leave` and `_end_reaches_offset` are two different predicates and
+        # riding both on one switch would make every arm two variables, which is how the staircase comparison of
+        # 9 September produced a number that could not be attributed (appendix 32.90 addendum). 11 September 2026.
+        END_LEGS = os.environ.get("PAIR_END_LEGS", "1") != "0"
 
         def _reach_one(sx_, sy_, tx_, ty_, nm, cache):
             """Can a stub run from (sx_, sy_) to (tx_, ty_) on net nm's own map, on any allowed layer?"""
@@ -1285,7 +1289,7 @@ def main(a):
                     if best is None: best = (cx_, cy_)
                     # first choice: an end whose OFFSET leg starts both reach their pads, which is what the pass will do
                     if off_ > 0 and _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx, ty, off_, cache) \
-                       and _legs_leave(cx_, cy_, px, py, qx, qy, tx, ty, off_): return cx_, cy_
+                       and (not END_LEGS or _legs_leave(cx_, cy_, px, py, qx, qy, tx, ty, off_)): return cx_, cy_
                     # second choice: the centreline test, which is what this did before; kept so the change can only
                     # improve on the old answer and never replace a working end with a worse one
                     if centre_ok is None and _end_reaches(cx_, cy_, px, py, qx, qy, cache): centre_ok = (cx_, cy_)
@@ -1367,7 +1371,7 @@ def main(a):
             # at J_HARN1, the P leg blocked by its own partner's pad at 1.13 mm and the N leg by a GND pad at 0.87 mm.
             # An end whose legs cannot leave is not an end, so it is dropped and the sixteen-direction sweep is used.
             # 11 September 2026, and the same class as the 10 September finding about a pair across two rows.
-            _offl = max((dof(L_) for L_ in layers), default=0.0) if END_OFFSET else 0.0
+            _offl = max((dof(L_) for L_ in layers), default=0.0) if END_LEGS else 0.0
             if _fa and _offl > 0 and not _legs_leave(_fa[0], _fa[1], A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0, _offl):
                 report.append("ENDLEG %s: the entry end of %s is open for the centreline and its legs cannot leave it; taking the sweep instead"
                               % (stem, pa.GetParentFootprint().GetReference())); _fa = None
