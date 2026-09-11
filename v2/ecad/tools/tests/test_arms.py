@@ -64,9 +64,11 @@ def t_each_arm_gets_its_own_project_directory():
 
 
 def t_every_arm_row_says_where_it_ran():
-    """B19's placed board came out at md5 27dd5bd0 on the rented box and fc27d67c on the VM: same commit, same
-    generator, two hosts, two boards. Determinism within a host is proved and across hosts it is not, so arms
-    from two hosts are not comparable and a row that does not name its host cannot be checked for that."""
+    """A row that does not name its host cannot be checked for a cross-host comparison at all. This went in
+    after B19's placed board came out at md5 27dd5bd0 on a rented box against fc27d67c on the VM, which I first
+    read as determinism failing across hosts. It was not: five generator and placement files changed between
+    the two runs, so the boards were never the same tree. The fields stay because a recorded md5 without the
+    commit that produced it cannot answer the question either way."""
     src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
     i = src.index('row = {"arm"')
     # not src.index("}", i): the literal contains arm.get("env", {}), so the first brace is not the last one
