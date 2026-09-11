@@ -62,6 +62,37 @@ PCB_OPTIONS = {"pcb-a-power": ["FABRICATION NOTES (A22, the power board on the s
     "- A four-layer 1.6 mm board on JLC's standard four-layer stack (JLC04161H-7628): F.Cu, In1 = solid ground plane (bands), In2 signal, B.Cu; the gerber zip carries all four copper layers, check the layer count on the order form (4). Any colour, ENIG; nothing on it is a weather face (the aluminium plate is), so no via plugging and no special mask rules. The RP2040 (0.4 mm QFN) is escaped with 0.40/0.20 mm vias, 0.127 mm tracks and clearance and 0.19 mm hole-to-copper clearance, within the standard capability.",
     "- Outline: a ring (344 x 228 outside, 240 x 176 void) with R3 corners and the notch for the monitor's connector block; the toggle body slots, the 19.2, 16.2, 16.2, 28.6 and two 17 mm holes are on Edge.Cuts (routed). The eight 3.2 mm holes H1 to H8 carry 6.0 mm rings on both faces: they are the ground bond to the plate through the PEM standoffs.",
     "- The face plate is a separate CNC part (release/revA/case/face-plate/: STEP, STL, DXF, marking SVG, drawing); it is not a JLC PCB order.", ""]}
+# ------------------------------------------------------------------ the table against the tree (11 September 2026, MESHSAT-862)
+# BOARDS names a phase per board and that phase goes into ORDER-NOTES.txt, the document a person reads while placing
+# the order. The table drifts: it said D8 and P1 while the tree held D9 and P3, so a rebuilt order set would have
+# carried D10 gerbers under a note describing D8. The phase is resolved from the tree now, and the prose has to have
+# been written for the phase it describes, or this refuses. A wrong order note is not a cosmetic defect: it is the
+# one artefact that travels to the fab with the board.
+def _phases_in_tree(letter):
+    """Every deliverable phase of one board in the release folder, newest last. `-quote` folders count as their phase."""
+    out = []
+    for fn in sorted(os.listdir(DL)) if os.path.isdir(DL) else []:
+        m = re.fullmatch(r"meshsat-pcb-%s-revA-([A-Z]+\d+)(-quote)?" % re.escape(letter), fn)
+        if m: out.append(m.group(1))
+    return sorted(set(out), key=lambda ph: int(re.sub(r"^[A-Z]+", "", ph)))
+
+def _resolve(folder, prj, phase, hand):
+    letter = re.match(r"meshsat-pcb-([a-z0-9]+)-revA-", folder).group(1)
+    seen = _phases_in_tree(letter)
+    if not seen or seen[-1] == phase: return folder, phase
+    newest = seen[-1]; nf = "meshsat-pcb-%s-revA-%s" % (letter, newest)
+    # the prose has to be about the board being shipped. Both texts open with the phase token by construction.
+    for what, text in (("the hand-fitted list", hand[:80]), ("PCB_OPTIONS", (PCB_OPTIONS.get(prj) or [""])[0])):
+        if newest not in text:
+            sys.exit("make_handoff: the tree's newest %s deliverable is %s, the table says %s, and %s still describes %s.\n"
+                     "  An order set built now would attach %s notes to %s gerbers. Update BOARDS and PCB_OPTIONS for %s, then rerun."
+                     % (letter.upper(), newest, phase, what, phase, phase, newest, newest))
+    print("make_handoff: %s advanced %s -> %s (the tree's newest, and the notes are written for it)" % (letter.upper(), phase, newest))
+    return nf, newest
+
+BOARDS = [(_resolve(f, prj, ph, hand)[0], stem, prj, title, _resolve(f, prj, ph, hand)[1], hand)
+          for f, stem, prj, title, ph, hand in BOARDS]
+
 JLC = os.path.join(RELEASE, "order"); REV = os.path.join(RELEASE, "review")
 # The deliverable folders are written by finish_board.sh on the laptop. Building order/ and review/ from a clone that has
 # not received them yet silently falls back to the project board file (older, and with no gerbers), so stop here instead.
