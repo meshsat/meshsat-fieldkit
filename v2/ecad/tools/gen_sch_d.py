@@ -75,10 +75,15 @@ def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
 
 # ================================================================= the design (nets are root-sheet labels; GND is the only power symbol)
 # --- harness and power entry (A22 J_MEZZ1 mirror, J_MEZZ_PWR1 5 V behind A22's 2 A eFuse U23)
-# 10 September 2026 (MESHSAT-862): USB_D8 moves to pins 3/4, one column of the header with ground on both sides; it was on
-# pins 2/3, which are diagonal neighbours 3.59 mm apart. A22's J_MEZZ1 carries the same map (check_contracts.py compares them).
+# 12 September 2026 (MESHSAT-862): USB_D8 sits on pins 1/2, the END row, and the four pins behind it are ground. Measured
+# reason: this is a 2x8 at 2.54 mm with 1.70 mm pads, so the channel between the two columns is 0.84 mm, while a 0.30/0.20/0.30
+# pair with its class clearance needs 1.20 mm. No coupled pair can leave an INNER row of this header, in any direction or on
+# any layer, the pins being through-hole; only an end row escapes into free board. The 10 September move (from the diagonal
+# pins 2/3, 3.59 mm apart, to 3/4) fixed the station and left the escape impossible, and the pre-router had been saying so
+# ever since: "the legs clear no smoothing of the centreline" with each leg 1.0 mm from a neighbouring pin's pad.
+# A22's J_MEZZ1 carries the same map (check_contracts.py compares them).
 part("J_HARN1", "Connector_Generic", "Conn_02x08_Odd_Even", "A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V", "IDC16", {
- "1": "GND", "2": "GND", "3": "USB_D8_P", "4": "USB_D8_N", "5": "GND", "6": "GND", "7": "TR_APRS", "8": "TX_INHIBIT_n", "9": "PA_EN", "10": "SDA", "11": "SCL", "12": "EXP_INT", "13": "+3V3", "14": "GND", "15": "ZEROIZE_HW", "16": "AB_SPARE"})
+ "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "TR_APRS", "8": "TX_INHIBIT_n", "9": "PA_EN", "10": "SDA", "11": "SCL", "12": "EXP_INT", "13": "+3V3", "14": "GND", "15": "ZEROIZE_HW", "16": "AB_SPARE"})
 part("J_PWR1", "Connector_Generic", "Conn_01x02", "5 V from A22 J_MEZZ_PWR1 (JST-VH, 2 A eFuse on A22): + -", "VH2", {"1": "+5V_D8", "2": "GND"})
 part("D1", "Device", "D_TVS", "SMBJ5.0A", "SMB", {"1": "GND", "2": "+5V_D8"})
 c("C1", "47u 6.3V X5R 1210", "+5V_D8", "GND", "C1210"); c("C2", "47u 6.3V X5R 1210", "+5V_D8", "GND", "C1210"); c("C3", "10u", "+5V_D8", "GND", "C10u"); c("C4", "100n", "+5V_D8", "GND")

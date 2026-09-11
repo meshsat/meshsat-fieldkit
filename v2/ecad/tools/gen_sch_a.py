@@ -218,14 +218,19 @@ c("C106", "100n", "+3V3", "GND"); c("C107", "100n", "+3V3", "GND"); r("R110", "1
 for k in range(3, 9): tp("TP%d" % k, "EXP2_SP%d" % k)
 for k, nm in enumerate("ABCD", 1): tp("TP%d" % (22 + k), "EXP2_SP" + nm)
 # --- the A to B ribbon J_AB1 (2x13, top side, at (-90, 76)) and the D8 mezzanine harness J_MEZZ1 (2x8)
-# 10 September 2026 (MESHSAT-862): the ribbon pairs sit in one column, ground pins on both sides (the same change in gen_sch_b.py
-# and gen_sch_d.py; the two maps are compared by check_contracts.py). Pins 4/5, 7/8 and 10/11 were diagonal neighbours 3.59 mm
-# apart and no pair can be laid into them. AB_SPARE keeps its seat on the D harness only.
+# 10 September 2026 (MESHSAT-862): the ribbon pairs sit in one row of the header, ground pins on both sides (the same change in
+# gen_sch_b.py and gen_sch_d.py; the two maps are compared by check_contracts.py). Pins 4/5, 7/8 and 10/11 were diagonal
+# neighbours 3.59 mm apart and no pair can be laid into them. AB_SPARE keeps its seat on the D harness only.
+# 12 September 2026: the mezzanine harness pair moved once more, to the END row (pins 1/2), because an inner row of a 2.54 mm
+# IDC field with 1.70 mm pads leaves a 0.84 mm channel between the columns and a coupled pair needs 1.20 mm. J_AB1 below is NOT
+# fixed by that move: it carries THREE pairs and a 2x13 has only two end rows, so one pair cannot escape coupled whatever the
+# pin map. That is a connector decision (two headers, a mezzanine stack connector, smaller pads, or an accepted uncoupled fan)
+# and it is written up with its arithmetic in v2/docs/OWNER-DECISIONS-2026-09-11.md.
 part("J_AB1", "Connector_Generic", "Conn_02x13_Odd_Even", "A-B interconnect (IDC 2x13, top side) to B16's underside header", "IDC26", {
  "1": "GND", "2": "GND", "3": "USB_D8_P", "4": "USB_D8_N", "5": "GND", "6": "GND", "7": "USB_E6_P", "8": "USB_E6_N", "9": "GND", "10": "GND", "11": "USB_WALL_P", "12": "USB_WALL_N",
  "13": "GND", "14": "PI_SHDN_REQ", "15": "PI_KILL", "16": "SDA", "17": "SCL", "18": "EXP_INT", "19": "TR_APRS", "20": "EMCON_HW", "21": "TX_INHIBIT_n", "22": "SLOT_EN1", "23": "SLOT_EN2", "24": "SLOT_EN3", "25": "ZEROIZE_HW", "26": "SHORE_INHIBIT"})
 part("J_MEZZ1", "Connector_Generic", "Conn_02x08_Odd_Even", "D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C", "IDC16", {
- "1": "GND", "2": "GND", "3": "USB_D8_P", "4": "USB_D8_N", "5": "GND", "6": "GND", "7": "TR_APRS", "8": "TX_INHIBIT_n", "9": "PA_EN", "10": "SDA", "11": "SCL", "12": "EXP_INT", "13": "+3V3", "14": "GND", "15": "ZEROIZE_HW", "16": "AB_SPARE"})
+ "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "TR_APRS", "8": "TX_INHIBIT_n", "9": "PA_EN", "10": "SDA", "11": "SCL", "12": "EXP_INT", "13": "+3V3", "14": "GND", "15": "ZEROIZE_HW", "16": "AB_SPARE"})
 r("R116", "100k", "TR_APRS", "GND"); r("R117", "10k", "ZEROIZE_HW", "+3V3"); r("R118", "100k", "SHORE_INHIBIT", "GND")
 part("J_USBW", "Connector_Generic", "Conn_01x04", "wall USB-C data pair to B16 passes here on the ribbon: this header is the pigtail's data side (D+ D- GND GND)", "PH4", {"1": "USB_WALL_P", "2": "USB_WALL_N", "3": "GND", "4": "GND"}); esd("U29", "USB_WALL_P", "USB_WALL_N", "+5V_DEV")
 # --- eleven blind-mate RF sites (32.56): top-side SMA jack for the device pigtail, bottom-side Radiall R222M00720 receptacle to the dock plug
