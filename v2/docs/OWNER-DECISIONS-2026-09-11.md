@@ -81,6 +81,20 @@ router will use the back when the inner layers are gone.
 sits under the exciter and the filter, which is an RF requirement. That is a defensible four-layer rationale and
 the record never wrote it.
 
+**12 September: E's layer question stopped being abstract. It is what holds E7.** E routes to 0 hard and one or
+two opens round after round, and both nets that will not close cross almost the whole board: `/USB_E6_P` 196 mm
+(`J_BLK` pad 9 at x 68.7 to `R29` pad 2 at x 264.6) and `/GEIGER_IN` 214 mm (`J_GEIGER` at x 11 to `U10` pad 9 at
+x 232.75). **E is a 267 mm strip whose two inner layers carry no routed track at all**, so those runs have only
+the two faces.
+
+**And it cannot be patched afterwards.** Three stub-router windows were measured on the same board (window scale
+6; scale 25 with 80 million nodes; the same at a 0.2 mm grid) and **all three fail to close `/GEIGER_IN`, in 10
+to 75 seconds**. That is not a budget running out, it is no path existing. The router itself does land that net
+in some rounds, which is why E's ceiling is now 250 passes; but no amount of patching reaches it.
+
+**What that makes E's decision worth:** the difference between a board that lands on a lucky round and a board
+that lands. It is the only one of the seven where the layer count is currently costing route attempts.
+
 **The decision, per board, once the measurement and the cost are beside each other.** The layer count and the
 stackup are on the floor (`reserved.json`, class "layer count and stackup") and nothing changes one without you.
 
