@@ -4756,3 +4756,28 @@ three hours with it. C was restarted on the patched jar.
 produced a thousand correct items that looked like a thousand wrong ones; the other produced nothing while
 reporting normally. **Neither is a defect a test could have been written for in advance, and both took one
 measurement each to see**: count the segments of a straight run, and list the session files.
+
+### 32.120 A clean board refused by a declaration that is not the one in the repository (12 September 2026, 02:45 CEST; MESHSAT-862)
+
+Board E reached the end of its finish tonight as a **clean board**: 0 hard, 0 unrouted, `check_pcb_e` ALL PASS,
+`dc_drop` 2 of 2 rails MET, `impedance_check` PASS, `netlist_board` 816 of 816, `check_contracts` ALL PASS, the
+gerbers exported with all four copper layers, the JLC BOM and CPL written. **`finish_board.sh` then refused the
+deliverable** for five sensor headers, `J_FAN1`, `J_FAN2`, `J_GEIGER`, `J_LTG`, `J_POD`, whose allow line had
+been corrected hours earlier (32.116).
+
+**It was corrected in `pcb-e1-dock`. E routes in `pcb-e1-dock-e7`, a phase COPY taken before that**, and the
+copy's `lcsc-allow.txt` is a tracked file, so every `git reset --hard origin/main` on the box restored the
+sixteen-line version. The board was judged against a declaration that is not the one in the repository.
+
+**This is the same family as the B19 trap of 9 September**, where a project directory copied for a route carried
+a project file with no `netclass_assignments` and every gate then judged the board against the Default class.
+**What travels with a copy is whatever was true when the copy was taken**, and a declaration file is exactly the
+kind of thing that gets corrected afterwards.
+
+`t_a_phase_copy_declares_what_its_board_declares` compares every phase directory's `lcsc-allow.txt`,
+`erc-allow.txt` and `bypass-allow.txt` with its board's, so the drift is a failed test rather than a refused
+deliverable at the end of a route.
+
+**Worth stating plainly, because it is the fourth time in two days:** the defect was never in the board. It was
+in what the pipeline believed about the board. Of E's last four refusals, one was a real parts gap and **three
+were the checks, the declarations or the copies being wrong about a board that was right.**
