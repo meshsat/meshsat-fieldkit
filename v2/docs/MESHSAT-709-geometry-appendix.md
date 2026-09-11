@@ -4704,3 +4704,26 @@ statement to put beside the owner's ruling of 10 September is that the pre-route
 pairs on a good draw, that the variance between draws is larger than any single change measured so far, and that
 the remaining failures are dominated by geometry the router cannot negotiate: the stub-to-escape-via at the
 fine-pitch parts, and the channel arithmetic of decision 6.
+
+### 32.118 Every profile pinned the stock jar, so the refusal written that morning could never fire (12 September 2026, 00:45 CEST; MESHSAT-862)
+
+`route_one.sh` prefers our patched 1.9.0 build and, since the morning of 11 September, **refuses** when the host
+has not got it, with the reason spelled out: our build writes a session after every pass, the stock jar writes
+one only when the whole job ends, so **a run that is cut leaves nothing**. Every `NO_SESSION` round in the
+record is that, and every pass ceiling in every profile exists to work around it.
+
+**All twelve routeflow profiles set `route.jar` to `~/bin/freerouting-1.9.0.jar`.** routeflow turns that into
+`FR_JAR`, and `FR_JAR` bypasses `route_one`'s choice and its refusal together. So the refusal could not fire on
+any board, and the patched jar that `onstart.sh` builds on every box was never used by anything.
+
+**Found by reading a live route's own line**, not by reading the code: board E was routing 130 passes with a
+5,400 second cap on `jar freerouting-1.9.0.jar`, on a box whose setup had built the patched jar an hour before.
+The line had been printed on every route for weeks.
+
+The key is gone from all twelve. `routeflow.py validate` refuses a profile that pins it, and `e6.json` as it
+stood fails that rule.
+
+**The shape is the same as the day's other four defects**: a mechanism was built, a guard was written for it,
+and a value set somewhere else quietly made the guard unreachable. The verdict channel had four of those and
+this is the fifth. **What they have in common is that nothing checked the two ends against each other**, and
+what catches them is a rule that reads the seam rather than either side.
