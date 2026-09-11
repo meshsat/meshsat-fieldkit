@@ -491,7 +491,7 @@ def astar(gr, layers, trk, via, start, goal, window, behind=(), cost=None):
 # the board. Every arm needs that number, so the tool keeps it itself: one accumulator per phase, one line at the end of the
 # pass. It costs a time.time() per call of two functions and it is what says whether the next change belongs in the maps or
 # in the search.
-_T = {"maps": 0.0, "astar": 0.0}
+_T = {"maps": 0.0, "astar": 0.0, "stubs": 0.0, "legs": 0.0, "stamp": 0.0}
 def _timed(name, fn):
     def w(*a, **k):
         t0 = time.time()
@@ -652,6 +652,16 @@ def offset_polyline(pts, d):
                 if math.hypot(pt[0] - out[-1][0], pt[1] - out[-1][1]) >= 0.05: out.append(pt)
         else: out.append((ix, iy))
     out.append(segs[-1][1]); return deloop(out)
+
+# 11 September 2026: the B19 arm's own profile said 703 s in the maps, 108 s in the corridor search and 769 s
+# ELSEWHERE, which is half a pass in the one bucket nothing has ever measured. Three more wrappers name most of
+# it: the stub search that reaches a pad from a corridor end, the leg offsets that legs_clear walks, and the
+# stamping of laid copper into the maps. The cost is one time.time() per call of five functions.
+stub_path = _timed("stubs", stub_path)
+offset_polyline = _timed("legs", offset_polyline)
+Grid.seg = _timed("stamp", Grid.seg)
+Grid.disc = _timed("stamp", Grid.disc)
+
 
 def main(a):
     if not a: print(__doc__); return 2
@@ -1927,9 +1937,11 @@ def main(a):
     print("pair_preroute: search kernel %s%s" % (_SEARCH_KERNEL, (", rasteriser fell back to the per-cell predicate %d time(s)" % _RASTER_FALLBACK[0]) if _RASTER_FALLBACK[0] else ""))
     # `_T["maps"]` already counted this and a second counter beside it would be one more pair of numbers to drift apart,
     # which this project has paid for twice. The map mode and the call count join the line that exists (11 Sep 2026).
-    print("pair_preroute: seconds %.0f total, %.0f in the occupancy maps (%d call(s), mode %s%s), %.0f in the corridor search, %.0f elsewhere; %d expansions"
+    _known = _T["maps"] + _T["astar"] + _T["stubs"] + _T["legs"] + _T["stamp"]
+    print("pair_preroute: seconds %.0f total, %.0f in the occupancy maps (%d call(s), mode %s%s), %.0f in the corridor search, "
+          "%.0f in the stub search, %.0f in the leg offsets, %.0f stamping laid copper, %.0f elsewhere; %d expansions"
           % (time.time() - T0, _T["maps"], MAP_CALLS[0], MAP_MODE, ", CHECKED against the reference" if MAP_CHECK else "",
-             _T["astar"], max(0.0, time.time() - T0 - _T["maps"] - _T["astar"]), PAIR_TOTAL[0]))
+             _T["astar"], _T["stubs"], _T["legs"], _T["stamp"], max(0.0, time.time() - T0 - _known), PAIR_TOTAL[0]))
     return 0 if laid == n_pairs else 1
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
