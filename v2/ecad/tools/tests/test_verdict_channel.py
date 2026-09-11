@@ -200,3 +200,28 @@ def t_a_routed_board_with_open_connections_fails():
 def t_a_routed_board_with_nothing_open_passes():
     rec = _hardset("post", 0)
     assert rec["verdict"] == "PASS", rec
+
+
+def t_the_collector_honours_a_horizon():
+    """Verdict files persist in out/ across stages and rounds. Board E's second pre-route was blocked by a
+    check_contracts verdict its first round's FINISH had written: a judgement about a different moment and a
+    different question. `since` drops anything older; a record with no timestamp is kept, because dropping it
+    would turn an unreadable record into a silent pass."""
+    import tempfile, json as _j, sys as _s
+    _s.path.insert(0, TOOLS)
+    import verdict as v
+    d = tempfile.mkdtemp(prefix="collect-since-")
+    def put(tool, verd, ts):
+        rec = {"tool": tool, "verdict": verd, "denominator": 1, "counts": {}, "evidence": [], "inputs": {}, "note": ""}
+        if ts: rec["ts"] = ts
+        _j.dump(rec, open(os.path.join(d, "%s.verdict.json" % tool), "w"))
+    put("old_gate", "FAIL", "2026-09-11T10:00:00Z")
+    put("new_gate", "PASS", "2026-09-11T12:00:00Z")
+    worst, found, missing = v.collect(d, since="2026-09-11T11:00:00Z")
+    assert worst == 0, (worst, found)
+    assert set(found) == {"new_gate"}, found
+    worst2, found2, _ = v.collect(d)
+    assert worst2 == 1 and set(found2) == {"old_gate", "new_gate"}, (worst2, found2)
+    put("no_ts", "FAIL", None)
+    worst3, found3, _ = v.collect(d, since="2026-09-11T11:00:00Z")
+    assert "no_ts" in found3 and worst3 == 1, (worst3, found3)
