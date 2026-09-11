@@ -113,9 +113,14 @@ def main(a):
         print("impedance selftest: 50 ohm microstrip on the JLC 7628 outer layer at w %.3f mm (w/h %.2f, expected 1.6 to 2.2): %s; the shipped USB geometry 0.20/0.15 on that layer computes %.0f ohm differential; 0.127/0.127 stripline on the 3313 stack's real inner layers %.0f ohm by the closed form, %.0f by the field solver" % (w50, w50 / h, "PASS" if ok1 else "FAIL", zd, zs, 102.0))
         return 0 if ok1 else 1
     import pcbnew, intent
+    import verdict as _v
     tol = float(a[a.index("--tolerance") + 1]) if "--tolerance" in a else 0.10
     b = pcbnew.LoadBoard(a[0]); stack = read_stackup(a[0])
-    if not stack: print("impedance: FAIL no stackup in the board file (run stackup_write.py)"); return 1
+    if not stack:
+        print("impedance: FAIL no stackup in the board file (run stackup_write.py)")
+        # No stackup means no geometry to compute against: nothing was judged, which is not a clean board.
+        return _v.write("impedance_check", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
+                        note="no stackup in the board file; run stackup_write.py")
     it = intent.load(a[0]); classes = (it or {}).get("pair_classes", intent.Z_DEFAULT)
     pro = os.path.splitext(a[0])[0] + ".kicad_pro"; assign = {}
     if os.path.exists(pro): assign = json.load(open(pro)).get("net_settings", {}).get("netclass_assignments", {})
@@ -206,8 +211,21 @@ def main(a):
         print("impedance: NOTE %.0f mm (%.0f%%) judged with the stripline correction, which rests on two solved geometries (the solver reads"
               " 0.74 and 0.80 of IPC-2141 there). Solve that cross-section with impedance_2d.py before the number is quoted outside this project."
               % (CAL_USED["stripline factor (two solved points)"], 100.0 * CAL_USED["stripline factor (two solved points)"] / tot_mm))
-    if any(er is None for _, k, _, er in stack if k != "copper"): print("impedance: FAIL a dielectric without epsilon_r in the stackup"); return 1
+    if any(er is None for _, k, _, er in stack if k != "copper"):
+        print("impedance: FAIL a dielectric without epsilon_r in the stackup")
+        return _v.write("impedance_check", _v.INCONCLUSIVE, counts={"pairs": len(pairs)}, denominator=checked,
+                        inputs={"board": a[0]}, note="a dielectric in the stackup carries no epsilon_r")
     if "--json" in a: json.dump([dict(pair=r[0], cls=r[1], target=r[2], median=r[3], fraction=r[4], unreferenced_mm=r[5], verdict=r[6], gap_mm=r[7], width_mm=r[8], fan_mm=r[9]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
-    return 1 if miss else 0
+    by_v = {}
+    for r in results: by_v[r[6]] = by_v.get(r[6], 0) + 1
+    # A board with pairs on it but none carrying an impedance target has not been judged, and 0 of 0 must not read
+    # as agreement: that is the whole reason this module exists. 11 September 2026.
+    return _v.write("impedance_check",
+                    _v.INCONCLUSIVE if not checked else (_v.PASS if not miss else _v.FAIL),
+                    counts=dict(by_v, met=checked - miss, missed=miss, pairs_on_board=len(pairs)),
+                    denominator=checked,
+                    evidence=["%s %s class %s target %s ohm" % (r[6], r[0], r[1], r[2]) for r in results if r[6] != "MET"],
+                    inputs={"board": a[0]},
+                    note="" if checked else "no pair on this board carries an impedance target")
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

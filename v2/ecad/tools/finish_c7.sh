@@ -18,7 +18,7 @@ python3 ../tools/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && py
 STUB_LAYERS=F.Cu,In2.Cu,B.Cu STUB_GRID=0.1 nice -n 10 python3 ../tools/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || { echo "stub router CRASHED, exit $? (out/$N-stub.log)"; echo open > out/c7-clean.txt; echo FINISH-C7-DONE; exit 1; }; grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
 ../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' | grep -v '^hardset:'   # 8 Sep 2026 (MESHSAT-862): tools/hardset.py is the one hard set
-[ -s out/par-score.txt ] || { echo "no DRC score after the stub router (hardset refused)"; echo open > out/c7-clean.txt; echo FINISH-C7-DONE; exit 1; }; read H < out/par-score.txt; if [ "$H" -ne 0 ]; then python3 ../tools/stub_accept.py out/$N-par-routed.kicad_pcb $N.kicad_pcb out/$N-drc.json 2>&1 | grep stub_accept; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json; H=$(python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt >/dev/null; cat out/par-score.txt); echo "after stub_accept: hard $H"; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; fi; fi
+[ -s out/par-score.txt ] || { echo "no DRC score after the stub router (hardset refused)"; echo open > out/c7-clean.txt; echo FINISH-C7-DONE; exit 1; }; read H < out/par-score.txt; if [ "$H" -ne 0 ]; then python3 ../tools/stub_accept.py out/$N-par-routed.kicad_pcb $N.kicad_pcb out/$N-drc.json 2>&1 | grep stub_accept; ../tools/drc.sh $N.kicad_pcb out/$N-drc.json; H=$(python3 ../tools/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub_accept' >/dev/null; cat out/par-score.txt); echo "after stub_accept: hard $H"; if [ "$H" -ne 0 ]; then echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; fi; fi
 python3 ../tools/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
 bash ../tools/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -5   # Stage 3 of the quality programme (6 Sep 2026): straighten and via passes on a copy, DRC-gated, reverted when anything rises
 python3 ../tools/silk_fix_all.py $N.kicad_pcb c 2>&1 | grep -vE 'Debug|leak' | tail -2
@@ -26,11 +26,11 @@ python3 - "$N" <<'PYX' 2>&1 | grep -vE 'Debug|leak'
 import pcbnew, sys
 b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b); print('zones refilled before the board gate')
 PYX
-python3 ../tools/check_pcb_c.py $N.kicad_pcb 2>&1 | grep -E 'FAIL|RESULT'
+python3 ../tools/check_pcb_c.py $N.kicad_pcb > out/gate-$N.log 2>&1; GATE=$?; grep -E 'FAIL|RESULT|^verdict:' out/gate-$N.log   # 11 Sep 2026 (MESHSAT-862, stage 0a): one run, and the exit code is the verdict. This gate used to run twice, the second time only to grep a string out of its stdout.
 ../tools/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 ../tools/hardset.py out/$N-drc.json post --flag out/c7-clean.txt --label 'routed-board gate' | sed 's/^hardset:/routed-board DRC:/'
 python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('  OPEN', ' ~ '.join('%s@(%.1f,%.1f)' % (i['description'][:50], i['pos']['x'], i['pos']['y']) for i in u['items'])) for u in d.get('unconnected_items', [])[:6]]"
-if ! python3 ../tools/check_pcb_c.py $N.kicad_pcb 2>/dev/null | grep -q 'RESULT: ALL PASS'; then echo 'C7 GATE FAIL on the routed board'; echo open > out/c7-clean.txt; fi
+[ "$GATE" -eq 0 ] || { echo "C7 GATE $(python3 ../tools/verdict.py read out/check_pcb_c.verdict.json 2>&1 | tail -1) on the routed board"; echo open > out/c7-clean.txt; }
 # 8 Sep 2026 (MESHSAT-862 Stage C): the electrical verdicts before the clean flag: DC drop and current density of the intent rails, the impedance of the pair classes
 python3 ../tools/dc_drop.py $N.kicad_pcb --json out/$N-dc_drop.json > out/$N-dc_drop.log 2>&1; DC=$?; grep -E 'dc_drop' out/$N-dc_drop.log | tail -14; [ "$DC" -eq 0 ] || { echo 'C7 DC DROP MISSED or unresolved (out/$N-dc_drop.log)'; echo open > out/c7-clean.txt; }
 python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1   # the routed board carries the stack for the read-back (8 Sep 2026)

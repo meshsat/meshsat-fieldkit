@@ -90,9 +90,18 @@ def run(b, check, path=None):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2: print(__doc__); sys.exit(2)
-    fails = []
+    fails = []; checked = []
     def check(ok, text):
         print(("PASS  " if ok else "FAIL  ") + text)
+        checked.append(text)
         if not ok: fails.append(text)
     print(run(pcbnew.LoadBoard(sys.argv[1]), check, sys.argv[1]))
-    print("RESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
+    print("RESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails))
+    import os as _osv
+    sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
+    import verdict as _v
+    sys.exit(_v.write("intent_checks",
+                      _v.INCONCLUSIVE if not checked else (_v.PASS if not fails else _v.FAIL),
+                      counts={"fail": len(fails), "pass": len(checked) - len(fails)},
+                      denominator=len(checked), evidence=fails, inputs={"board": sys.argv[1]},
+                      note="" if checked else "the intent file yielded no check"))

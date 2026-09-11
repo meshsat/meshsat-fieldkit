@@ -178,4 +178,12 @@ if bad:
         print("   " + b)
     print("   fix the code in the GENERATOR, not in the BOM: a finish re-exports the BOM from the board")
     print("   file it already has, so a code corrected only here comes back on the next regeneration.")
-sys.exit(1 if (not_allowed or bad) else 0)
+import os as _osv
+sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
+import verdict as _v
+sys.exit(_v.write("lcsc_fill",
+                  _v.INCONCLUSIVE if not rows else (_v.FAIL if (not_allowed or bad) else _v.PASS),
+                  counts={"rows": len(rows), "blank_over_allowance": len(not_allowed), "rejected_code": len(bad)},
+                  denominator=len(rows),
+                  evidence=[str(x) for x in (list(not_allowed) + bad)],
+                  note="" if rows else "the BOM carried no row, so no code was judged"))

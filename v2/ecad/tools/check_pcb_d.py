@@ -2,10 +2,11 @@
 """PCB-D D8 numeric gate (MESHSAT-830): outline 100 x 80, four M3 standoff holes at (+-45, +-35), the connectors and the RF chain where gen_pcb_d3.py fixes them,
 the RF nets on the right pads (exciter ANT to the relay, relay to the antenna SMA, pad to the drive U.FL, LPF to the output SMA), four copper layers, the SA868 footprint present."""
 import sys, math, pcbnew
-b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 100.0, 100.0; fails = []
+b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 100.0, 100.0; fails = []; checked = []
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 def check(c, m):
     print(("PASS " if c else "FAIL ") + m)
+    checked.append(m)
     if not c: fails.append(m)
 fps = {f.GetReference(): f for f in b.GetFootprints()}
 bb = b.GetBoardEdgesBoundingBox(); w, h = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6
@@ -45,4 +46,18 @@ if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
 # 8 Sep 2026 (MESHSAT-862): the copper checks were wired into the A and P gates only, and they are what finds a pour the router
 # has eaten to islands or a stitch via the fill retreated from. D9 ended a clean route with eleven such islands on its front ground pour.
 import copper_checks as _cc2; print(_cc2.run(b, check))
-print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
+print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails))
+# The verdict is a file and the exit code, and the denominator travels with it: a bare "0 FAIL" is what a
+# gate that ran, a gate that loaded an empty board and a gate whose checks were all skipped all print.
+# MESHSAT-862, 11 Sep 2026.
+import os as _osv, sys as _sysv
+_sysv.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
+import verdict as _v
+_nfp = len(list(b.GetFootprints()))
+_sysv.exit(_v.write("check_pcb_d",
+                    _v.INCONCLUSIVE if not _nfp else (_v.PASS if not fails else _v.FAIL),
+                    counts={"fail": len(fails), "pass": len(checked) - len(fails), "footprints": _nfp},
+                    denominator=len(checked),
+                    evidence=fails,
+                    inputs={"board": sys.argv[1]},
+                    note="" if _nfp else "the board loaded with no footprints, so nothing here is a judgement of a board"))

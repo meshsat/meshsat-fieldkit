@@ -64,13 +64,16 @@ def _version():
         return "unknown"
 
 
-def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir="out", quiet=False):
+def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
 
     `result` must be PASS, FAIL or INCONCLUSIVE; anything else is a usage error, because a verdict this module does not
     recognise must not resolve to a pass by falling through."""
     if result not in CODE:
         print("verdict: %s reported %r, which is not a verdict" % (tool, result)); return USAGE
+    # `out` beside the board is the house default; a driver that runs a gate from elsewhere sets VERDICT_DIR
+    # rather than teaching every gate an argument it would otherwise never take.
+    out_dir = out_dir or os.environ.get("VERDICT_DIR") or "out"
     rec = {
         "tool": tool,
         "version": _version(),

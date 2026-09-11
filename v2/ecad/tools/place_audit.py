@@ -22,6 +22,8 @@ Usage: place_audit.py <board.kicad_pcb> [--png out.png] [--near 6] [--reach 5] [
 import sys, os, math, re, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pcbnew
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict
 
 NEAR = 6.0; REACH = 5.0
 
@@ -180,6 +182,14 @@ def main(a):
             ax.set_xlim(ex0 - 5, ex1 + 5); ax.set_ylim(ey1 + 5, ey0 - 5); ax.set_aspect("equal"); ax.set_title("place_audit: %s, %d predicted collisions (red)" % (os.path.basename(a[0]), coll))
             fig.savefig(a[a.index("--png") + 1], dpi=130); print("place_audit: image", a[a.index("--png") + 1])
         except ImportError: print("place_audit: no matplotlib, no image")
-    return 1 if coll else 0
+    # The denominator is the fine-pitch parts the predictor could measure: a board where escape.py placed nothing
+    # has zero of them, and "0 predicted collisions" there is the absence of a prediction, not a good placement.
+    return verdict.write("place_audit",
+                         verdict.INCONCLUSIVE if not fine else (verdict.PASS if not coll else verdict.FAIL),
+                         counts={"collisions": coll, "fine_pitch": len(fine), "measured": len(env), "footprints": len(fps)},
+                         denominator=len(fine),
+                         evidence=[l for l in lines if l.startswith("FAIL")][:30],
+                         inputs={"board": a[0]},
+                         note="" if fine else "no fine-pitch part on this board, so nothing was predicted")
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

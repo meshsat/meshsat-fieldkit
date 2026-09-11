@@ -6,9 +6,10 @@ import sys, re, pcbnew, itertools
 from pcbnew import FromMM
 OX, OY = 150.0, 110.0
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
-b = pcbnew.LoadBoard(sys.argv[1]); fails = []
+b = pcbnew.LoadBoard(sys.argv[1]); fails = []; checked = []
 def check(c, m):
     print(("PASS " if c else "FAIL ") + m)
+    checked.append(m)
     if not c: fails.append(m)
 segs = [(case(d.GetStart()), case(d.GetEnd())) for d in b.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_SEGMENT]
 pts = [p for s in segs for p in s]
@@ -235,4 +236,18 @@ for _s in (1, 2, 3):
 for _s, _b in BANK_OF.items():
     check(len(_b) <= 1, "bank %d holds at most one long-range bearer (%s)" % (_s, _b))
 
-print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails)); sys.exit(1 if fails else 0)
+print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails))
+# The verdict is a file and the exit code, and the denominator travels with it: a bare "0 FAIL" is what a
+# gate that ran, a gate that loaded an empty board and a gate whose checks were all skipped all print.
+# MESHSAT-862, 11 Sep 2026.
+import os as _osv, sys as _sysv
+_sysv.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
+import verdict as _v
+_nfp = len(list(b.GetFootprints()))
+_sysv.exit(_v.write("check_pcb_b",
+                    _v.INCONCLUSIVE if not _nfp else (_v.PASS if not fails else _v.FAIL),
+                    counts={"fail": len(fails), "pass": len(checked) - len(fails), "footprints": _nfp},
+                    denominator=len(checked),
+                    evidence=fails,
+                    inputs={"board": sys.argv[1]},
+                    note="" if _nfp else "the board loaded with no footprints, so nothing here is a judgement of a board"))

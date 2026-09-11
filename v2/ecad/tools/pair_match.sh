@@ -9,7 +9,7 @@ report() { python3 ../tools/$CHECK $N.kicad_pcb 2>/dev/null | grep -E "pair leng
 hard() {   # board, report -> hard + unrouted
   ../tools/drc.sh "$1" "$2" || { echo 999999; return; }
   local c; c=$(mktemp)
-  python3 ../tools/hardset.py "$2" post --counts "$c" >/dev/null || { rm -f "$c"; echo 999999; return; }
+  python3 ../tools/hardset.py "$2" post --counts "$c" --label "pair match trial" >/dev/null || { rm -f "$c"; echo 999999; return; }
   awk '{print $1 + $2}' "$c"; rm -f "$c"
 }
 for round in 1 2 3; do

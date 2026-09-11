@@ -39,9 +39,10 @@ ALIAS = [({"PANEL_5V", "+5V"}, "B fuses the panel feed (F6) and names the branch
 def same(a, b):
     return a == b or any({a, b} == pair for pair, _ in ALIAS)
 
-fails = []
+fails = []; checked = []
 def check(ok, text, detail=""):
     print(("PASS  " if ok else "FAIL  ") + text + (("   " + detail) if detail and not ok else ""))
+    checked.append(text)
     if not ok: fails.append(text)
 
 def pinmap(board, ref, pins):
@@ -187,4 +188,14 @@ for _bd, _stem in NETS.items():
         check(not _bad, "%s: %s (%s) is in series with a real pin on both sides" % (_bd, _r, _val), "dead net(s) %s" % _bad)
 
 print("\n%d contract(s) FAILED" % len(fails) if fails else "\nALL CONTRACTS PASS")
-sys.exit(1 if fails else 0)
+import os as _osv
+sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
+import verdict as _v
+# A contract set that checked nothing has found nothing wrong, which is not the same as agreement.
+sys.exit(_v.write("check_contracts",
+                  _v.INCONCLUSIVE if not checked else (_v.PASS if not fails else _v.FAIL),
+                  counts={"fail": len(fails), "pass": len(checked) - len(fails)},
+                  denominator=len(checked),
+                  evidence=fails,
+                  inputs={"boards": ",".join(sorted(B))},
+                  note="" if checked else "no contract was evaluated"))

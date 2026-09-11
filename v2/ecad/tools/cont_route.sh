@@ -51,7 +51,7 @@ PYX
 # and it is what decides whether the continuation pass is kept.
 score() {   # board, tag -> "hard unrouted"
   ../tools/drc.sh "$1" "$W/drc-$2.json" || { echo "999999 999999"; return; }
-  local c; c=$(mktemp); python3 ../tools/hardset.py "$W/drc-$2.json" post --counts "$c" >/dev/null || { rm -f "$c"; echo "999999 999999"; return; }
+  local c; c=$(mktemp); python3 ../tools/hardset.py "$W/drc-$2.json" post --counts "$c" --label "continuation chunk $2" >/dev/null || { rm -f "$c"; echo "999999 999999"; return; }
   cat "$c"; rm -f "$c"
 }
 read H0 U0 < <(score "$W/$N-before.kicad_pcb" before); read H1 U1 < <(score "$W/$N.kicad_pcb" after)

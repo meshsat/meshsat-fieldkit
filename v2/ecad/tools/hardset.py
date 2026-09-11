@@ -19,7 +19,9 @@ of 8 September found in Python had a second home nobody had looked in, and five 
 (`route_one.sh` scores the attempt route_parallel.sh then picks, `quality_pass.sh` keeps or reverts a quality step,
 `pair_match.sh` decides whether a meander hurt, `part_stage2.sh` and `part_reconcile.sh` report the partition). No shell script
 counts violation types any more; they call this file and read the number back."""
-import sys, json, collections, re
+import sys, json, collections, re, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict
 
 HARD_POST = ("clearance", "shorting_items", "tracks_crossing", "hole_clearance", "hole_to_hole", "copper_edge_clearance",
              "solder_mask_bridge", "annular_width", "track_width", "diff_pair_gap_out_of_range", "zones_intersect", "courtyards_overlap",
@@ -81,12 +83,21 @@ def examples(d, which="post", n=4):
             out.append("   %s | %s" % (t, " / ".join(i.get("description", "")[:70] for i in v.get("items", []))))
     return out
 
+def _vname(label):
+    """One verdict file per judgement: `hardset` alone, or `hardset-<label>` when the caller named the moment."""
+    if not label: return "hardset"
+    return "hardset-" + re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
+
+
 def main(a):
     if not a or a[0] in ("-h", "--help"): print(__doc__); return 2
     which = "pre" if "pre" in a[1:2] else "post"
     def opt(k): return a[a.index(k) + 1] if k in a else None
     try: d = load(a[0])
-    except RuntimeError as e: print("hardset: BLOCK %s" % e); return 3
+    except RuntimeError as e:
+        print("hardset: BLOCK %s" % e)
+        return verdict.write(_vname(opt("--label")), verdict.INCONCLUSIVE, denominator=0,
+                             inputs={"drc": a[0]}, note=str(e))
     c = counts(d, which); n = int(opt("--examples") or 4)
     print("hardset: hard %d of %d types %s unrouted %d | report %s%s" % (c["hard"], len(c["types"]), c["by_type"] or "{}", c["unrouted"], c["report"] or "{}",
           (" | exempt %s" % c["exempt"]) if c["exempt"] else ""))
@@ -96,6 +107,19 @@ def main(a):
     if opt("--counts"): open(opt("--counts"), "w").write("%d %d\n" % (c["hard"], c["unrouted"]))   # the shell's interface: "hard unrouted" on one line
     if opt("--gate"): open(opt("--gate"), "w").write("OK" if c["hard"] == 0 else "BLOCK %d" % c["hard"])
     if opt("--flag"): open(opt("--flag"), "w").write(("clean" if c["hard"] == 0 and c["unrouted"] == 0 else "open") + "\n")
+    # hardset is BOTH a measuring instrument and a gate: `--score` and `--counts` callers read the files above and
+    # rely on exit 0 meaning "the DRC JSON was readable" (pair_match.sh returns 999999 on a non-zero exit). So the
+    # verdict is written as a file and the exit code is deliberately left alone. The label distinguishes the three
+    # judgements one finish makes (after the stub router, the routed-board gate, the deliverable DRC), which would
+    # otherwise overwrite each other. 11 September 2026.
+    verdict.write(_vname(opt("--label")),
+                  verdict.PASS if (c["hard"] == 0 and c["unrouted"] == 0) else verdict.FAIL,
+                  counts={"hard": c["hard"], "unrouted": c["unrouted"], "types_checked": len(c["types"]),
+                          "by_type": c["by_type"], "report": c["report"]},
+                  denominator=len(c["types"]),
+                  evidence=examples(d, which, 6),
+                  inputs={"drc": a[0]},
+                  note=(opt("--label") or "") + " (exit code stays the reader contract of --score and --counts)")
     return 0
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

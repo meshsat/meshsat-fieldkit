@@ -33,11 +33,15 @@ def ipc_limit(area_mm2, dT=10.0, internal=False):
 def main(a):
     if not a: print(__doc__); return 2
     import pcbnew, numpy as np, intent
+    import verdict as _v
     from impedance_check import read_stackup
     cell = float(a[a.index("--cell") + 1]) if "--cell" in a else 0.5
     budget = float(a[a.index("--budget") + 1]) if "--budget" in a else 0.02
     b = pcbnew.LoadBoard(a[0]); it = intent.load(a[0])
-    if not it: print("dc_drop: FAIL no intent file for this board (out/<stem>-intent.json; the schematic generator writes it)"); return 1
+    if not it:
+        print("dc_drop: FAIL no intent file for this board (out/<stem>-intent.json; the schematic generator writes it)")
+        return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
+                        note="no intent file for this board, so no rail budget was known")
     rails = it["rails"]
     if "--rails" in a: rails = {k: v for k, v in rails.items() if k in a[a.index("--rails") + 1].split(",")}
     stack = read_stackup(a[0]) or []; thick = {n: th for n, k, th, er in stack if k == "copper"}
@@ -187,10 +191,18 @@ def main(a):
         verdict = "MET" if pct <= rb else "MISSED"   # the drop decides; the density at a single-cell neck (a 0.4 mm track is one 0.5 mm cell) overstates by the cell-to-width ratio and is reported, not gated, until the raster is validated (8 Sep 2026 02:25)
         if verdict != "MET": miss += 1
         results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at 10 K (reported, not gated); layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, share), drop, pct, worst_j, share))
-    if not results: print("dc_drop: FAIL no rail to check (the intent file lists none)"); return 1
+    if not results:
+        print("dc_drop: FAIL no rail to check (the intent file lists none)")
+        return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
+                        note="the intent file lists no rail, so no drop was computed")
     for net, v, text, *_ in results: print("dc_drop: %-10s %-10s %s" % (v, net, text))
     print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)" % (len(results) - miss, len(results), cell, budget * 100))
     if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
-    return 1 if miss else 0
+    return _v.write("dc_drop", _v.PASS if not miss else _v.FAIL,
+                    counts={"met": len(results) - miss, "missed": miss},
+                    denominator=len(results),
+                    evidence=["%s %s %.2f%% of %.1f V" % (r[1], r[0], r[4] * 100, rails[r[0]]["volts"]) for r in results if r[1] != "MET"],
+                    inputs={"board": a[0]},
+                    note="cell %.2f mm, default budget %.0f%%" % (cell, budget * 100))
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

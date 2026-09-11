@@ -48,8 +48,11 @@ rm -f out/$N.net
 ../tools/build_sch.sh . $N > out/build_sch.log 2>&1; BSCH=$?; grep -E 'ERC|netlist' out/build_sch.log
 [ "$BSCH" -eq 0 ] || block "the schematic build exited $BSCH (out/build_sch.log)" out/build_sch.log
 [ -s out/$N.net ] || block "no netlist (out/build_sch.log)" out/build_sch.log
-rm -f out/$N-erc.status; python3 ../tools/erc_gate.py . $N 2>&1 | tail -6
-grep -qE "^(clean|allowed)" out/$N-erc.status 2>/dev/null || block "ERC (out/$N-erc.json, out/$N-erc.status; allow-list erc-allow.txt with a reason per line)"
+rm -f out/$N-erc.status out/erc_gate.verdict.json
+python3 ../tools/erc_gate.py . $N > out/erc_gate.log 2>&1; ERCG=$?; tail -6 out/erc_gate.log
+# 11 Sep 2026 (MESHSAT-862, stage 0a): the gate's own exit code decides, not a grep of a status file it also writes.
+# 3 is INCONCLUSIVE (no ERC output at all) and blocks exactly like 1, which the status-file grep also did but silently.
+[ "$ERCG" -eq 0 ] || block "ERC (out/$N-erc.json, out/erc_gate.verdict.json; allow-list erc-allow.txt with a reason per line)" out/erc_gate.log
 # The netlist-level review: decoupling, floating control pins, ESD on the USB pairs, the I2C address map, connector mates.
 # It has existed since the early phases and no chain ever ran it (report 2 L2). It reports and never blocks, because it reads
 # intent that the board gates read from the intent file; what it is for is the class of mistake no numeric gate looks for.
@@ -67,8 +70,9 @@ grep -E 'saved|WARN|Trace|Error|overflow|unplaced|missing|SystemExit|zone net|no
 [ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3"
 python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1   # the JLC stackup in the board file, so the impedance read-back reads the project
 [ "$BPAFTER" = stackup ] && python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
-python3 ../tools/check_pcb_$L.py $N.kicad_pcb > out/check_$L.log 2>&1; grep -E 'FAIL|RESULT' out/check_$L.log
-grep -q 'RESULT: ALL PASS' out/check_$L.log || block "numeric gate (out/check_$L.log)"
+rm -f out/check_pcb_$L.verdict.json
+python3 ../tools/check_pcb_$L.py $N.kicad_pcb > out/check_$L.log 2>&1; GATE=$?; grep -E 'FAIL|RESULT|^verdict:' out/check_$L.log
+[ "$GATE" -eq 0 ] || block "numeric gate: $(python3 ../tools/verdict.py read out/check_pcb_$L.verdict.json 2>&1 | tail -1)" out/check_$L.log
 
 [ -n "${PLACE_JITTER:-}" ] && python3 ../tools/place_jitter.py $N.kicad_pcb "$PLACE_JITTER" 2>&1 | grep place_jitter   # Stage E data campaign
 env $ESCENV python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'
@@ -120,7 +124,7 @@ grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
 
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
-python3 ../tools/hardset.py out/$N-preroute-drc.json pre --gate out/preroute-gate.txt --examples 6 | sed 's/^hardset:/pre-route DRC:/'
+python3 ../tools/hardset.py out/$N-preroute-drc.json pre --gate out/preroute-gate.txt --examples 6 --label 'pre-route DRC' | sed 's/^hardset:/pre-route DRC:/'
 python3 ../tools/check_zone_nets.py $N.kicad_pcb > out/zone_nets.log 2>&1; ZN=$?; grep -E "FAIL|zone nets" out/zone_nets.log
 [ "$ZN" -eq 0 ] || echo "BLOCK zone-nets (DRC gate said: $(cat out/preroute-gate.txt))" > out/preroute-gate.txt
 V=$(cat out/preroute-gate.txt); echo PREROUTE-DONE $V; [ "$V" = OK ] || exit 1   # a chain run by hand used to exit 0 on its own BLOCK
