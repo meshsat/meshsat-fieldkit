@@ -33,12 +33,15 @@
  },
  "finish": {
   "argv": [
-   "./tools/finish_p2.sh",
+   "./tools/finish.sh",
    "<ECAD>",
+   "pcb-p-pack-p2",
+   "p",
+   "P3",
    "out/parallel-p2.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/p2-clean.txt",
+  "clean_flag": "out/p3-clean.txt",
   "stub_log": "out/pcb-p-pack-stub.log"
  },
  "deliverable": "v2/release/revA/boards/meshsat-pcb-p-revA-P2",

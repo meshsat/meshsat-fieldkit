@@ -57,12 +57,15 @@
  },
  "finish": {
   "argv": [
-   "../tools/finish_c8.sh",
-   "..",
+   "./tools/finish.sh",
+   "<ECAD>",
+   "pcb-c-display-c8",
+   "c",
+   "C10",
    "out/parallel-c8.log"
   ],
-  "cwd": "<PROJECT>",
-  "clean_flag": "out/c8-clean.txt",
+  "cwd": "<ECAD>",
+  "clean_flag": "out/c10-clean.txt",
   "stub_log": "out/pcb-c-display-stub.log"
  },
  "deliverable": "v2/release/revA/boards/meshsat-pcb-c-revA-C10",

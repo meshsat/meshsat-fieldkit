@@ -50,12 +50,15 @@
  },
  "finish": {
   "argv": [
-   "./tools/finish_e6.sh",
+   "./tools/finish.sh",
    "<ECAD>",
+   "pcb-e1-dock",
+   "e",
+   "E7",
    "out/parallel-e6.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/e6-clean.txt",
+  "clean_flag": "out/e7-clean.txt",
   "stub_log": "out/pcb-e1-dock-stub.log"
  },
  "deliverable": "v2/release/revA/boards/meshsat-pcb-e-revA-E6",
