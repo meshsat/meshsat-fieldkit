@@ -816,6 +816,9 @@ def main(a):
     # The episode has to become a trial that is accepted only when it leaves more pairs laid than it found; until it is, the flag
     # stays off (PAIR_RIPUP=1 to reproduce the measurement).
     LEG_EXACT = os.environ.get("PAIR_LEG_EXACT", "0") != "0"
+    OWN_CLEAR = os.environ.get("PAIR_OWN_CLEAR", "1") != "0"   # the emissions that used to lay copper unasked ask the partner
+    FOLD_TEST = os.environ.get("PAIR_FOLD_TEST", "1") != "0"   # the two offset legs judged against each other in the candidate ladder
+    UNMERGE = os.environ.get("PAIR_UNMERGE", "1") != "0"       # a merge of two runs that folds the legs is dropped
     FAN_BACK = float(os.environ.get("PAIR_FAN_BACK", "1.0"))   # how far the P leg is pulled back before the N fan of a dive is laid (mm; 0 restores the old behaviour)       # re-test a blocked leg point against the polygons before refusing the pair
     # A station swap exchanges two identical passives so the pair's own fans stop crossing. It is judged on the side the
     # pair is laid from and NOT on the other side of the same two parts, and on D that is what left the board one open:
@@ -1414,14 +1417,20 @@ def main(a):
             the two ends are inside one cell. Both exemptions are about PADS and both silently excused the partner's TRACKS as
             well. A's three ribbon pairs came out of the J_AB1 station fan with /USB_D8_N shorting its own /USB_D8_P on 0.1 mm
             segments: the tool had emitted a dive, so the crossing was seen, and the fan copper went down unasked beside it."""
+            if not OWN_CLEAR: return True
             o = other_of(net); half = wid(L) / 2
+            # The bar is the fold bar of `legs_clear`, not the class clearance: a leg and its partner MUST converge at
+            # their own station, where their pads are half a millimetre apart, so asking for the full clearance here
+            # refuses the pair's own geometry. What this catches is copper laid ON the partner (A measured 0.044 mm
+            # against a pair pitch of 0.27), and the class number is judged once, on the copper, after the pair is laid.
+            fold = min(clr_c + wid(L), 2.0 * abs(dof(L))) * 0.5
             for t in pieces:
                 if t.GetNetname() != o: continue
                 if t.GetClass() == "PCB_TRACK":
                     if t.GetLayer() != L: continue
-                    if _seg_gap(x1, y1, x2, y2, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) < clr_c + half + mm(t.GetWidth()) / 2 - 0.005: return False
+                    if _seg_dist(x1, y1, x2, y2, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) < fold: return False
                 elif t.GetClass() == "PCB_VIA":
-                    if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < clr_c + half + mm(t.GetWidth()) / 2 - 0.005: return False
+                    if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < fold + mm(t.GetWidth()) / 2: return False
             return True
         # the stub, via-site and hop helpers of this pair (pair-level state only; they were inside the section loop and a pair whose last section took the direct legs left them undefined for the stub pass, 8 Sep 2026 12:47)
         def stub(ax_, ay_, bx_, by_, SL, net):
@@ -1837,6 +1846,7 @@ def main(a):
                     # violation and the whole ladder of smoothings is refused. A FOLD is not marginal, it is the inner
                     # leg lying on the outer one at a twentieth of the pitch (A measured 0.038 and 0.060 mm), so this
                     # asks for half the pair's own pitch and the class number is judged once, on the copper, below.
+                    if not FOLD_TEST: continue
                     _need2 = min(clr_c + wid(L), 2.0 * abs(dof(L))) * 0.5
                     _pA, _pB = _polys[pn], _polys[nn]
                     for _k in range(len(_pA) - 1):
@@ -1936,7 +1946,7 @@ def main(a):
                             if max(_y3, _y4) < min(_y1, _y2) - _nd or min(_y3, _y4) > max(_y1, _y2) + _nd: continue
                             if _seg_dist(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4) < _nd: return True
                 return False
-            if len(merged) < len(runs) and _folds(merged):
+            if UNMERGE and len(merged) < len(runs) and _folds(merged):
                 merged = [(run[0][0], [gr.xy(j, i) for i, j in smoothed[r_i]]) for r_i, run in enumerate(runs)]
                 report.append("UNMERGE %s: joining the runs into one polyline folded the legs onto each other; laid run by run" % stem)
             runs = [[(li, 0, 0)] for li, _ in merged]; smoothed = [None] * len(merged)   # the loop below reads the layer from runs and the points from merged

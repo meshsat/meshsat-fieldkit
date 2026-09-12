@@ -62,3 +62,22 @@ inherited from a constant), `PAIR_WINDOW` (25 mm; 40 mm measured worse, 45 of 11
 **That is seventeen knobs with a number and twenty six without**, in a tool whose output is the gate on four
 boards. The ones worth measuring next are the ones that touch the two biggest failure classes of 32.131:
 `PAIR_END_CANDS` and `PAIR_STUB_EXPANSIONS` at the station stubs, `PAIR_STATION_OWN` at the legs.
+
+## 12 September 2026: the four knobs of the own-legs work (MESHSAT-862, appendix 32.135)
+
+A pair that shorts its own partner was laid, kept and shipped into the pre-route DRC, and the repairs are four
+guards. Each has a knob because each can cost pairs and the only way to know is to measure it on B19.
+
+| knob | default | what it does |
+|---|---|---|
+| `PAIR_OWN_CLEAR` | 1 | the three emissions that used to lay copper unasked ask whether it lies on the partner |
+| `PAIR_FOLD_TEST` | 1 | the two offset legs of a run judged against each other in the candidate ladder |
+| `PAIR_UNMERGE` | 1 | a merge of two runs whose legs then fold is dropped and the runs laid one by one |
+| `PAIR_FAN_BACK` | 1.0 mm | how far a diving leg is pulled back from the station before the other leg's fan is laid |
+
+**The bar inside all of them is half the pair's own pitch, not the class clearance**, and that distinction is
+worth thirteen pairs: written as a second clearance test, the fold test took B19's DIFF100 pass from 22 of 48
+to 9. A correctly coupled pair runs AT the class number on the inner-layer geometry (0.13 on 0.127), so a
+clearance test inside the candidate ladder refuses the tool's own design. The class number is judged exactly
+once, on the copper that was actually laid.
+
