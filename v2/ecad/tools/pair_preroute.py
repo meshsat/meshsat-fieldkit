@@ -1770,11 +1770,13 @@ def main(a):
             dxab, dyab = gx - sx, gy - sy
             side_a = dxab * (A[0][1] - sy) - dyab * (A[0][0] - sx); side_b = dxab * (B[0][1] - gy) - dyab * (B[0][0] - gx)
             crossing = False
-            def sigma(st):
-                p_, n_ = st; mx_, my_ = mid(st); fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
-                dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
-                if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_
-                return 1 if nx_ * (-dy_) - ny_ * (-dx_) > 0 else -1   # the P pad's side of the outward normal
+            # 12 September 2026: keep the honest geometry. Forcing the twist at an entry station exists so the swap
+            # machinery below gets its chance (a station of two passives is untwisted by exchanging them), but when
+            # neither station is swappable the forced value fell through to `crossing = True` and the pair dived at a
+            # pad field it had no reason to dive at. A's /USB_D8 runs between two IDC headers that both carry P on the
+            # SAME side, side_a and side_b are both +60.5, and the tool declared a twist, laid the N fan across the P
+            # leg and was refused by its own clearance gate. The forcing stays for the swap; the fallback is the truth.
+            real_a, real_b = side_a, side_b
             if fineA0 or fineB0: side_a, side_b = 1.0, -1.0   # an entry station's twist is settled when its fan is laid (a swap of the two passives there)
             if side_a * side_b < 0 and min(abs(side_a), abs(side_b)) > 1e-6:
                 def swappable_(x_, y_):
@@ -1782,13 +1784,14 @@ def main(a):
                     return fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and abs(fa_.GetOrientationDegrees() - fb_.GetOrientationDegrees()) < 0.01 and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_) and stem not in swapped
                 if swappable_(pb, nb): twist = ("%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()), pb, nb); break
                 if swappable_(pa, na): twist = ("%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()), pa, na); break
-                crossing = True   # both stations are fixed parts (a connector, a hub): the legs cross once at the near station, one stub under the other
+                crossing = real_a * real_b < 0 and min(abs(real_a), abs(real_b)) > 1e-6   # nothing to swap: the pads' own geometry says whether the legs must cross at all
                 # 12 September 2026: say so. A twist between two FIXED parts is a placement finding, not a routing one:
                 # the pair's two pads present themselves on opposite sides at the two ends, so the legs must cross
                 # somewhere, and the tool's only answer is a dive at a pad field. Rotating one connector by 180 degrees
                 # removes it without touching the schematic, which nothing could propose while this was silent.
-                report.append("TWIST %s: %s and %s present the pair's pads on opposite sides; the legs must cross once and one of them dives at the pad field"
-                              % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()))
+                if crossing:
+                    report.append("TWIST %s: %s and %s present the pair's pads on opposite sides; the legs must cross once and one of them dives at the pad field"
+                                  % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()))
             def legs_clear(sm):   # each offset leg of every run against its own single-track map (the other leg and every other net are obstacles)
                 for r_i, run in enumerate(runs):
                     L = layers[run[0][0]]; pts = [gr.xy(j, i) for i, j in sm[r_i]]
