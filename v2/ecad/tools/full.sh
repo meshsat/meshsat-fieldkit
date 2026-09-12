@@ -13,7 +13,7 @@ T="$(cd "$(dirname "$0")" && pwd)"
 CFG="$T/boards/$L.json"
 [ -s "$CFG" ] || { echo "full.sh: no board file $CFG"; exit 2; }
 cfg () { python3 -c "import json,sys; d=json.load(open(sys.argv[1])); v=d.get(sys.argv[2]); print('' if v is None else (' '.join(v) if isinstance(v,list) else ('1' if v is True else ('' if v is False else v))))" "$CFG" "$1"; }
-cfg_env () { python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(' '.join('%s=%s'%(k,v) for k,v in (d.get('escape_env') or {}).items()))" "$CFG"; }
+cfg_env () { python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(' '.join('%s=%s'%(k,v) for k,v in (d.get(sys.argv[2]) or {}).items()))" "$CFG" "${1:-escape_env}"; }
 
 N="$(cfg name)"; FPGEN="$(cfg footprint_generator)"; EXTRA="$(cfg extra_compile)"
 # The phase the silk carries. It lived as a DEFAULT inside each generator (gen_pcb_c.py said C9 while C's
@@ -24,7 +24,13 @@ export PHASE="${PHASE:-$(cfg phase)}"
 [ -n "$PHASE" ] && echo "full.sh: phase $PHASE"
 GATE1="$(cfg gate_before_placement)"; BPAFTER="$(cfg bypass_place_after)"
 PCLS="$(cfg pair_classes)"; PLAY="$(cfg pair_layers)"; PHOP="$(cfg pair_hop_layers)"; PTAIL="$(cfg pair_tail)"
-FANOUT="$(cfg fanout_nets)"; EPRUNE="$(cfg escape_prune_before_audit)"; ESCENV="$(cfg_env)"
+FANOUT="$(cfg fanout_nets)"; EPRUNE="$(cfg escape_prune_before_audit)"; ESCENV="$(cfg_env escape_env)"
+# 12 September 2026: the placement's own environment, the way `escape_env` has always worked. B declares
+# PLACE_COUPLE_GAP here with the two placements that measured it (appendix 32.147: 14 of 48 pairs at the packer's
+# own gap, 22 at twice it). A caller's own value still wins, which is how the next arm measures it.
+PLACEENV="$(cfg_env place_env)"
+for _kv in $PLACEENV; do _k="${_kv%%=*}"; [ -n "${!_k:-}" ] || export "$_k"="${_kv#*=}"; done   # a caller's own value wins
+[ -n "$PLACEENV" ] && echo "full.sh: placement environment $PLACEENV"
 # One line per pair pass, tab separated: classes, layers, hop layers, inner geometry. Empty when the board runs one pass.
 PPASSES="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(chr(10).join(chr(9).join((p.get(k) or '') for k in ('classes','layers','hop_layers','inner')) for p in (d.get('pair_passes') or [])))" "$CFG")"
 # A board may declare the pair environment it was measured best at (boards/<letter>.json `pair_env`). It never
