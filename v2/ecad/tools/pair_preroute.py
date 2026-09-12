@@ -2241,16 +2241,20 @@ def main(a):
         # PADS and nothing else, so a fan may enter its own pad field and may not lie on another net's track.
         _foul = []
         if CROSS_NET:
+            # The map for this question exempts the pair's OWN two nets, pads and tracks alike: its two legs run at
+            # the pair pitch by design and are judged by the fold test and the gate below, not here. Everything else
+            # on the board, including a pair this same pass laid ten minutes ago, is an obstacle.
+            trkX = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]
             for _i_, _t in enumerate(pieces):
                 if _t.GetClass() != "PCB_TRACK": continue
                 _L = _t.GetLayer()
-                if _L not in trkP: continue
+                if _L not in trkX: continue
                 _x1, _y1, _x2, _y2 = mm(_t.GetStart().x), mm(_t.GetStart().y), mm(_t.GetEnd().x), mm(_t.GetEnd().y)
                 _ln = math.hypot(_x2 - _x1, _y2 - _y1); _n = int(_ln / gr.G) + 2
                 for _k in range(_n + 1):
                     _u = _k / _n; _qx, _qy = _x1 + _u * (_x2 - _x1), _y1 + _u * (_y2 - _y1)
                     _jj, _ii = gr.cell(_qx, _qy)
-                    if 0 <= _ii < gr.NY and 0 <= _jj < gr.NX and trkP[_L][_ii, _jj]:
+                    if 0 <= _ii < gr.NY and 0 <= _jj < gr.NX and trkX[_L][_ii, _jj]:
                         _foul.append((_t.GetNetname(), b.GetLayerName(_L), _qx, _qy, piece_site.get(_i_, "?"), _what_is_at(_qx, _qy, _L, _t.GetNetname())))
                         break
                 if len(_foul) >= 4: break
