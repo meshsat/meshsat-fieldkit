@@ -5975,3 +5975,57 @@ that property scanned only `agent/*.py`. All seven are fixed.
 **What it does not promise** is that the boards get better. What a model adds is width of search. What it has
 added already is a second reader with no stake in the change, and the three readings above are what that is
 worth on this pipeline.
+
+### 32.149 The loop's first four cycles on real boards, and the 150 hard violations nobody had ever read (12 September 2026, 15:30 CEST; MESHSAT-862)
+
+Four cycles ran through tiers 2 and 2b on boards D and B. **Not one arm beat its prediction and every cycle
+produced something**, which is the shape this project's arms have had all along; what is new is that three of
+the four nulls turned out to be defects in the MACHINE rather than answers about the board, and all three are
+closed mechanically now.
+
+| arm | knobs | measured | grade | what it taught |
+|---|---|---|---|---|
+| `b_slack_006_on_d` | `PAIR_CORRIDOR_SLACK=0.06` | 5 of 5 | MISSED, predicted 4 or fewer | B's slack does not cost D a pair, which is the regression answer that arm was written for |
+| `expansions_60k_starve_d` | `PAIR_EXPANSIONS=60000` | 4 of 5 | MISSED, predicted 3 or fewer | starving the budget by two orders of magnitude costs D exactly one pair, not three |
+| `own_clear_floor_009` | `PAIR_OWN_CLEAR=0.09` | 22 of 48 | MISSED, predicted 32 | **a flag read as a threshold.** The tool reads that name as `!= "0"`, so 0.09 sets it ON, which is its default |
+| `place_fine_margin_24` | `PLACE_FINE_MARGIN=2.4` | 22 of 48 | **ILLEGAL** | **a knob this run cannot execute.** It is read by the placement generator and the runner re-runs the pre-router on a board placed hours before |
+
+**The three machine defects, in the order they were met.** (1) Nothing showed a knob had reached the tool, so
+the pre-router echoes the knobs its process received and a mismatch is INFRA_FAIL. (2) A flag given a number
+reads as ON, so the evidence pack carries every knob's TYPE and DEFAULT parsed from the line that reads it, and
+the validator refuses a flag given anything but `0` or `1`; writing the rule then found two knobs whose defaults
+are expressions rather than literals and which nothing had typed at all. (3) A knob read only by a file this run
+never executes cannot act, so a spec declares what it runs and a knob outside that path is refused with the name
+of the file that reads it. **All three produce the same symptom, a result identical to the baseline, and that
+symptom is indistinguishable from an honest answer.** The loop was measuring nothing three times in one
+afternoon and said so only because something mechanical went looking.
+
+**THE PAIR COUNT ALONE IS A GAMEABLE OBJECTIVE, and the fix immediately found something.** Had
+`PAIR_OWN_CLEAR` been the threshold it was taken for, lowering it would have bought pairs by laying copper
+below the class clearance: the count would have gone UP while the board became unbuildable. So the pre-route
+DRC runs on the board each arm laid, an arm above the baseline is graded ILLEGAL whatever its number, and the
+baseline is MEASURED on the source board rather than assumed. The first time that ran it read
+**hard 150 on B19's placed board, before a single pair is laid**, and 160 after the pass.
+
+**Those 150 are real and nothing in this pipeline had ever read them.** B19's chain blocks at the pair gate
+BEFORE the pre-route DRC, which the record has said since 04:00 today, so the placed board's own legality has
+never been in front of anything. Measured with `hardset.py`: **clearance 53, shorting_items 44, solder_mask_bridge
+25, hole_clearance 19, copper_edge_clearance 9**, and they concentrate on seven parts.
+
+| part | hard items naming it | what it is |
+|---|---:|---|
+| `BT1` | 43 | the CR2032 holder. Its pad 2 is a large GND land and the fanout drops other nets' vias inside it: `Via [/SDA] / Pad 2 [GND] of BT1`, repeated for `/HB3`, `/+3V3_IOCC`, `/BSEL1`, `/BSEL2` and more |
+| `U109`, `U209`, `U309` | 26 each | the three banks' TMUXHS4212 SuperSpeed host-select muxes, VQFN20 |
+| `U110`, `U210`, `U310` | 17 to 18 each | the three banks' TS3USB221A USB2 host-select muxes, UQFN10 |
+| `S_QMX3`, `S_QMX4` | 6 to 8 | `copper_edge_clearance`: `R500` and `C411` sit on the QMX standoff holes |
+
+**The shape says generator, not luck: the same count on three identical parts is one pattern repeated three
+times**, and those six parts are the host-select fabric added on 9 September, whose land patterns were drawn
+that day from TI's own drawings. A board that begins its pair pass with 150 hard violations is a board whose
+pre-router is working in a neighbourhood that is already illegal, which is worth knowing before another pair
+knob is swept. **No board changed here and nothing is ordered**; what changed is that the number exists.
+
+**And the reviewer refused a cycle's write-up for the first time**, which is what it is for: the entry claimed
+the knob echo proved the value had taken effect, and an identical 22 of 48 on an identical placed board is
+equally consistent with a knob that never reached the bar. It was right, and it was right before anyone knew
+the knob was a flag.
