@@ -5884,7 +5884,20 @@ against another and never a knob with a value** (32.109's caution, applied delib
 | of those, refused out in the corridor | **76** | **0** |
 | the pair refused for its own two legs, after laying | 22 | 40 |
 
-**Eight more pairs, and the failure class the diagnosis pointed at is gone**: 102 leg-fit refusals become 8, and
+**The whole board, both passes in the declared order, on the same two placements:**
+
+| pass | couple gap 1.2 mm | couple gap 2.4 mm |
+|---|---:|---:|
+| DIFF100, four layers | 14 of 48 | **22 of 48** |
+| USB, two layers, laid second against the first pass's copper | 23 of 65 | **21 of 65** |
+| **the board** | **37 of 113** | **43 of 113** |
+
+**Six on the board, not eight**: the DIFF100 class gains eight and the USB class loses two, because the second
+pass reads the first's copper as an obstacle and there is now more of it. 37 of 113 is also exactly what the same
+tools laid on the PREVIOUS placement (32.142), on a board file with a different hash, which is the first
+reproduction of a pair count across two placements of one design.
+
+**Eight more pairs in the class the diagnosis pointed at, and its failure class is gone**: 102 leg-fit refusals become 8, and
 the 76 that were refused out in the corridor become none. The prediction written before the run was "16 or more of
 48", from the share of refusals that sat at a couple; it held, and this time it under-claimed, which is the first
 time today a count of refusals was a safe basis for one. The reason it was safe here is that the change removes
