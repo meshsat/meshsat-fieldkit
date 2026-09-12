@@ -26,6 +26,12 @@ while True:
         if v[0] in gone: continue
         # a track that passes over the via (the stub router's closing via lands on the middle of an inner-layer run) is a connection too
         n = sum(1 for t in T if t[0] not in gone and t[1] == v[1] and (at_via(t[2], t[3], v) or at_via(t[4], t[5], v) or on_seg(v[2], v[3], t)))
+        # ... and so is a PAD of the same net the via stands in, which this counted for a track and not for a via
+        # (12 September 2026): A24's /+3V3 via at (233.4, 134.9) joined pad C104.1 on one layer to a B.Cu track on
+        # the other, one track and one pad, and was removed as dangling. The board went from 0 unrouted to 1 in the
+        # first ten seconds of its finish, after the copper had been closed and measured. A via in a pad of its own
+        # net is the whole point of a via in a pad.
+        n += sum(1 for net, pd in P if net == v[1] and pd.HitTest(pcbnew.VECTOR2I(int(v[2]), int(v[3]))))
         if n <= 1: gone.add(v[0]); rv += 1; changed = True
     for t in T:
         if t[0] in gone: continue
