@@ -871,6 +871,15 @@ def main(a):
     # partner at the gate's own bar and takes them off when they fail, so the caller tries its next candidate
     # instead of the pair being rolled back whole after it is laid. Off until an arm grades it.
     END_STRICT = os.environ.get("PAIR_END_STRICT", "0") != "0"
+    # 12 September 2026: the wall. "the legs clear no smoothing of the centreline" is 28 of the 68 failures left on
+    # B19's DIFF100 pass and it did not move in ANY of the five configurations measured today. It means a corridor was
+    # found and then neither the smoothed nor the staircase form of the two OFFSET legs fits the maps, so the pair is
+    # dropped while its corridor is still there. Nothing in the tool tells the search about that: the next pair is
+    # laid on the same map and the next attempt at this pair would find the same path again.
+    # PAIR_LEG_RETRY=N blocks the corridor cell the legs failed at and searches again, up to N times. It is the
+    # PathFinder idea at the smallest scale that can work here, one section against its own legs, and it costs a
+    # search per retry on a kernel that does 2.26 M expansions a second.
+    LEG_RETRY = max(0, int(os.environ.get("PAIR_LEG_RETRY", "0")))
     VIA_CANDS = max(1, int(os.environ.get("PAIR_VIA_CANDS", "12")))   # via sites tried at a station before the section fails
     VIA_MODE = os.environ.get("PAIR_VIA_MODE", "class").lower()
     if VIA_MODE not in ("class", "min"): raise SystemExit("pair_preroute: PAIR_VIA_MODE is `class` or `min`, not %r" % VIA_MODE)
@@ -1422,6 +1431,7 @@ def main(a):
             if STATION_OWN: trk2 = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]
             trkP = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2, pads_only=True)[0]
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
+        _sec_retry_at = [-1]; _trk_private = [False]   # PAIR_LEG_RETRY: which section is being retried, and whether this pair owns its corridor map
         def rollback():
             for t in pieces: board_remove(b, t)
             pieces.clear()
@@ -1651,7 +1661,13 @@ def main(a):
                 for t in pieces[n0:]: board_remove(b, t)
                 del pieces[n0:]
             return "no via site beside the pad with a dive path and a stub into it"
-        for _sec_k, ((pa, na), (pb, nb)) in enumerate(sections):
+        # A while loop, not a for, so a section can be searched again on a map that carries what the last attempt
+        # learnt (PAIR_LEG_RETRY, 12 September 2026). `_sec_k` only advances when the section is laid or given up.
+        _sec_k = -1; _sec_tries = 0
+        while True:
+            _sec_k += 1; _sec_tries = _sec_tries if _sec_k == _sec_retry_at[0] else 0
+            if _sec_k >= len(sections): break
+            ((pa, na), (pb, nb)) = sections[_sec_k]
             A = [anchor(pa), anchor(na)]; B = [anchor(pb), anchor(nb)]
             sx, sy = (A[0][0] + A[1][0]) / 2, (A[0][1] + A[1][1]) / 2; gx, gy = (B[0][0] + B[1][0]) / 2, (B[0][1] + B[1][1]) / 2
             sL = gL = None   # the corridor picks its layer; the end stubs via to the pads' own layer (8 Sep: a start forced onto B.Cu inside the resistor cluster found no exit)
@@ -1909,6 +1925,7 @@ def main(a):
                 if crossing:
                     report.append("TWIST %s: %s and %s present the pair's pads on opposite sides; the legs must cross once and one of them dives at the pad field"
                                   % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()))
+            _leg_hit = [None]   # (x, y, layer, centreline points of that run): where the legs were refused, for PAIR_LEG_RETRY
             def legs_clear(sm):   # each offset leg of every run against its own single-track map (the other leg and every other net are obstacles)
                 for r_i, run in enumerate(runs):
                     L = layers[run[0][0]]; pts = [gr.xy(j, i) for i, j in sm[r_i]]
@@ -1940,7 +1957,7 @@ def main(a):
                                     _needE = CLR + wid(L) / 2 + 0.02
                                     _dE = _nearest_edge(px_, py_, L, net, limit=_needE + 0.5, skip=(pn, nn))
                                     if _dE is None or _dE >= _needE: continue
-                                    return False
+                                    _leg_hit[0] = (px_, py_, L, pts); return False
                                 _m = trk1[net]
                                 if trk2 is not None and (math.hypot(px_ - _stA[0], py_ - _stA[1]) < _rA or math.hypot(px_ - _stB[0], py_ - _stB[1]) < _rB):
                                     _m = trk2   # the pair's own copper is not an obstacle at its own station
@@ -1951,10 +1968,10 @@ def main(a):
                                     # CLR + w/2 + 0.02, so the same question exactly is whether the nearest edge is that far.
                                     # Measured on D: 0.367 mm against a 0.330 demand, refused by 37 micrometres of rounding.
                                     # PAIR_LEG_EXACT=1 turns it on; it costs a local scan only where a pair would be refused.
-                                    if not LEG_EXACT: return False
+                                    if not LEG_EXACT: _leg_hit[0] = (px_, py_, L, pts); return False
                                     _need = CLR + wid(L) / 2 + 0.02
                                     _d = _nearest_edge(px_, py_, L, net, limit=_need + 0.5)
-                                    if _d is None or _d < _need: return False
+                                    if _d is None or _d < _need: _leg_hit[0] = (px_, py_, L, pts); return False
                             walked += ln_
                     # THE TWO LEGS AGAINST EACH OTHER, which no occupancy map can answer: both are laid by this pair, so
                     # neither is on the board when the maps are built and each leg's map excuses its partner's copper by
@@ -1980,7 +1997,8 @@ def main(a):
                         for _m in range(len(_pB) - 1):
                             _x3, _y3 = _pB[_m]; _x4, _y4 = _pB[_m + 1]
                             if max(_x3, _x4) < _lo_x or min(_x3, _x4) > _hi_x or max(_y3, _y4) < _lo_y or min(_y3, _y4) > _hi_y: continue
-                            if _seg_dist(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4) < _need2: return False
+                            if _seg_dist(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4) < _need2:
+                                _leg_hit[0] = ((_x1 + _x2) / 2, (_y1 + _y2) / 2, L, pts); return False
                 return True
             def dp(pts_cells, tol):
                 """Douglas-Peucker on cells: the fewest vertices within tol cells of the raw run."""
@@ -2015,6 +2033,19 @@ def main(a):
                     cand = [dp([(c[1], c[2]) for c in run], tol) if tol else [(c[1], c[2]) for c in run] for run in runs]
                     if all(los_ok(c, ~trk[layers[run[0][0]]]) for c, run in zip(cand, runs)) and legs_clear(cand):
                         smoothed = cand; staircase = True; break
+            if smoothed is None and LEG_RETRY and _leg_hit[0] and _sec_tries < LEG_RETRY:
+                # The corridor is there and the legs do not fit it. Block the corridor cell the legs were refused at
+                # and search this section again: the only thing the tool knows that the search does not.
+                _hx, _hy, _hL, _hpts = _leg_hit[0]
+                _cl = min(_hpts, key=lambda q: math.hypot(q[0] - _hx, q[1] - _hy)) if _hpts else (_hx, _hy)
+                if not _trk_private[0]:
+                    trk = {k: v.copy() for k, v in trk.items()}; _trk_private[0] = True   # never stamp the shared cache
+                gr.disc(trk[_hL], _cl[0], _cl[1], max(abs(dof(_hL)), gr.G) + gr.G)
+                _sec_tries += 1; _sec_retry_at[0] = _sec_k
+                report.append("LEGS  %s: section %d's legs were refused at (%.2f, %.2f) on %s; the corridor cell at (%.2f, %.2f) is blocked and the section searched again (%d of %d)"
+                              % (stem, _sec_k + 1, _hx, _hy, b.GetLayerName(_hL), _cl[0], _cl[1], _sec_tries, LEG_RETRY))
+                _sec_k -= 1; _leg_hit[0] = None
+                continue
             if smoothed is None:
                 failed = "%s -> %s (the legs clear no smoothing of the centreline)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference())
                 if os.environ.get("PAIR_DEBUG"):
