@@ -78,7 +78,7 @@
       "sites": [
         [
           "gen_pcb_*3.py",
-          "^REGIONS\\s*="
+          "^REGIONS\\s*=|^\\s*\\(\"[A-Z0-9_]+\",\\s*\\("
         ],
         [
           "panel1450.py",

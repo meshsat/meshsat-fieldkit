@@ -74,7 +74,9 @@ def t_the_packer_reads_the_boards_keep_outs():
     import os as _os
     TOOLS_ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
     src = open(_os.path.join(TOOLS_, "gen_pcb_b3.py"), errors="replace").read()
-    for want in ("_load_obstacles(board)", "_obstacle_hit(", "GetIsRuleArea()"):
+    # 12 September 2026: the call carries the fixed references now, so the rule asks for the CALL and
+    # not for one spelling of its argument list. The fixed parts are checked by the line below.
+    for want in ("_load_obstacles(board", "_obstacle_hit(", "GetIsRuleArea()", "fixed_refs"):
         if want not in src:
             raise AssertionError("the packer no longer reads the board's keep-outs: %s missing" % want)
     body = src[src.index("for members, w, h, fine in units:"):]
