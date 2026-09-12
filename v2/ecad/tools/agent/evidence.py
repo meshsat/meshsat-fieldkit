@@ -99,6 +99,7 @@ def pack(letter, board_json=None, profile=None, ledgers=(), knobs=None, extra=()
     rows = graded_rows(ledgers)
     proposable = sorted((knobs if knobs is not None else schema.known_knobs())
                         - set(schema.RESERVED_KNOBS) - set(schema.BASIS_KNOBS))
+    types = schema.knob_types()
     return {
         "letter": letter,
         "board_declarations": json.loads(_read(bj) or "{}"),
@@ -107,6 +108,7 @@ def pack(letter, board_json=None, profile=None, ledgers=(), knobs=None, extra=()
         "graded_count": len(rows),
         "failure_profile": json.loads(_read(profile) or "{}") if profile else {},
         "proposable_knobs": proposable,
+        "knob_types": {k: types.get(k, {"type": "unknown", "default": "", "note": ""}) for k in proposable},
         "reserved_knobs": schema.RESERVED_KNOBS,
         "basis_locked_knobs": schema.BASIS_KNOBS,
         "law": LAW,
@@ -129,7 +131,12 @@ def render(p):
         L.append("\n=== EVERY ARM GRADED SO FAR, with what it predicted and what it got ===\n" + p["graded_arms"])
     if p["failure_profile"]:
         L.append("\n=== THE FAILURE PROFILE, counted (pair_report.py --json) ===\n" + json.dumps(p["failure_profile"], indent=1)[:4000])
-    L.append("\n=== KNOBS YOU MAY PROPOSE (the tools read these) ===\n" + ", ".join(p["proposable_knobs"]))
+    L.append("\n=== KNOBS YOU MAY PROPOSE, WITH THE TYPE THE TOOL ACTUALLY READS ===")
+    L.append("A knob's type is read from the line that reads it. A FLAG is 1 or 0 and nothing else: giving it a")
+    L.append("number sets it ON, which is usually its default, and the arm then measures nothing.")
+    for k in p["proposable_knobs"]:
+        t = (p.get("knob_types") or {}).get(k, {})
+        L.append("  %-26s %-46s default %-12s %s" % (k, t.get("type", "unknown"), t.get("default", ""), t.get("note", "")))
     L.append("\n=== KNOBS THAT ARE REFUSED, and why ===")
     for k, why in sorted(p["reserved_knobs"].items()):
         L.append("  RESERVED %-18s %s" % (k, why))

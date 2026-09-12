@@ -367,3 +367,49 @@ def t_a_row_belongs_to_the_cycle_that_produced_it():
     src = open(os.path.join(AGENT, "loop.py"), errors="replace").read()
     if "after_seq" not in src or "ledger.head(result)" not in src:
         raise AssertionError("rows are selected by name alone, so an older row with the same name would be read")
+
+
+def t_a_flag_given_a_threshold_is_refused():
+    """The first arm an automated tier 2 ever wrote for board B, turned into a rule.
+
+    It proposed PAIR_OWN_CLEAR=0.09, reasoning carefully in millimetres about a 3 to 38 micrometre miss.
+    The tool reads that name as `os.environ.get("PAIR_OWN_CLEAR", "1") != "0"`, so 0.09 sets it ON,
+    which is its default: the arm could only ever measure nothing, and a null result reads exactly like
+    a knob that does not pay. The type is in the source, so the validator reads it from the source.
+    """
+    types = schema.knob_types()
+    if not types.get("PAIR_OWN_CLEAR", {}).get("type", "").startswith("flag"):
+        raise AssertionError("PAIR_OWN_CLEAR is no longer typed as a flag: %s" % types.get("PAIR_OWN_CLEAR"))
+    if types.get("PAIR_CORRIDOR_SLACK", {}).get("type") != "number":
+        raise AssertionError("PAIR_CORRIDOR_SLACK is no longer typed as a number")
+    if types.get("PAIR_VIA_CANDS", {}).get("type") != "integer":
+        raise AssertionError("PAIR_VIA_CANDS is no longer typed as an integer")
+    p = json.loads(json.dumps(GOOD)); p["arms"][0]["env"] = {"PAIR_OWN_CLEAR": "0.09"}
+    _refuses(p, "FLAG")
+    q = json.loads(json.dumps(GOOD)); q["arms"][0]["env"] = {"PAIR_OWN_CLEAR": 0}
+    ok, errs, _ = schema.validate(q, TEMPLATE)
+    if not ok:
+        raise AssertionError("a flag given a real flag value was refused: %s" % errs)
+
+
+def t_the_pair_count_alone_is_not_the_objective():
+    """An arm that lowers a legality bar buys pairs with copper the board cannot have.
+
+    Nothing in a pair count says so, which makes the count gameable, and the first automated proposal
+    for board B reached for exactly such a knob. The DRC runs on the board the arm laid and its hard
+    count travels in the row; an arm above the baseline is ILLEGAL whatever its number, and a board
+    whose DRC could not be read is UNMEASURED rather than assumed clean.
+    """
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("armsmod_legal", os.path.join(TOOLS, "arms.py"))
+    m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+    base = {"pairs": 40, "predict": {"op": ">=", "value": 32, "basis": "b"}}
+    if m.grade(dict(base, hard=7), 0)[0] != "ILLEGAL":
+        raise AssertionError("an arm that laid hard violations was graded on its pair count")
+    if m.grade(dict(base, hard=0), 0)[0] != "MET":
+        raise AssertionError("a legal arm that met its prediction was not graded MET")
+    if m.grade(dict(base, drc_error="kicad-cli died"), 0)[0] != "UNMEASURED":
+        raise AssertionError("an unreadable DRC was assumed clean")
+    src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
+    if "drc.sh" not in src or "hardset.py" not in src:
+        raise AssertionError("arms.py no longer measures the legality of what the arm laid")
