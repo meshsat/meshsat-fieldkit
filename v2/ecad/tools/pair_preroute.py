@@ -828,7 +828,15 @@ def main(a):
     OWN_CLEAR = os.environ.get("PAIR_OWN_CLEAR", "1") != "0"   # the emissions that used to lay copper unasked ask the partner
     FOLD_TEST = os.environ.get("PAIR_FOLD_TEST", "1") != "0"   # the two offset legs judged against each other in the candidate ladder
     UNMERGE = os.environ.get("PAIR_UNMERGE", "1") != "0"       # a merge of two runs that folds the legs is dropped
-    CROSS_NET = os.environ.get("PAIR_CROSS_NET", "1") != "0"   # a laid pair is refused if its copper lies on another net       # a merge of two runs that folds the legs is dropped
+    # 12 September 2026: REPORT by default, not block. The test asks a RASTER grown by the clearance plus half a leg,
+    # and the emitters deliberately relax that near a station (a direct leg runs pad to pad past its neighbours' pads),
+    # so a cell it calls blocked is not yet a DRC violation: D10 ships 0 hard and this refused one of its five pairs.
+    # The pre-route DRC remains the authority on clearance; what this adds is the NAME of the counterparty and of the
+    # emission, at the moment the pair is laid. PAIR_CROSS_NET=block makes it a verdict, =off silences it.
+    CROSS_NET = os.environ.get("PAIR_CROSS_NET", "report").lower()
+    if CROSS_NET in ("1", "true", "yes"): CROSS_NET = "block"
+    if CROSS_NET in ("0", "false", "no"): CROSS_NET = "off"
+    if CROSS_NET not in ("report", "block", "off"): raise SystemExit("PAIR_CROSS_NET is report, block or off")       # a merge of two runs that folds the legs is dropped
     FAN_BACK = float(os.environ.get("PAIR_FAN_BACK", "1.0"))   # how far the P leg is pulled back before the N fan of a dive is laid (mm; 0 restores the old behaviour)       # re-test a blocked leg point against the polygons before refusing the pair
     # A station swap exchanges two identical passives so the pair's own fans stop crossing. It is judged on the side the
     # pair is laid from and NOT on the other side of the same two parts, and on D that is what left the board one open:
@@ -864,7 +872,7 @@ def main(a):
             bb = f.GetBoundingBox(False, False)
             if mm(bb.GetLeft()) - limit > x or mm(bb.GetRight()) + limit < x or mm(bb.GetTop()) - limit > y or mm(bb.GetBottom()) + limit < y: continue
             for q in f.Pads():
-                if q.GetNetname() == net or not q.IsOnLayer(L): continue
+                if q.GetNetname() == net or q.GetNetname() in skip or not q.IsOnLayer(L): continue
                 if abs(mm(q.GetPosition().x) - x) > limit + 5 or abs(mm(q.GetPosition().y) - y) > limit + 5: continue
                 # A pad whose polygon cannot be taken is an obstacle of UNKNOWN extent, so it answers 0.0 and the caller
                 # refuses. The centre distance was the obvious fallback and it is larger than the edge distance, which
@@ -874,7 +882,7 @@ def main(a):
                 except Exception: d_ = 0.0
                 if best is None or d_ < best: best = d_
         for t in b.GetTracks():
-            if t.GetNetname() == net: continue
+            if t.GetNetname() == net or t.GetNetname() in skip: continue
             if t.GetClass() == "PCB_VIA":
                 d_ = math.hypot(mm(t.GetPosition().x) - x, mm(t.GetPosition().y) - y) - mm(t.GetDrillValue()) / 2 - 0.05
             else:
@@ -887,7 +895,7 @@ def main(a):
             if d_ < limit and (best is None or d_ < best): best = d_
         return best
 
-    def _what_is_at(x, y, L, net):
+    def _what_is_at(x, y, L, net, skip=()):
         """The copper nearest to a point on one layer, named (10 September 2026). A debug line that says a leg hits `an
         obstacle` and does not say WHICH cost an evening once already (8 Sep, the escape-depth theory); the rule of the
         record is that a gate which strips or refuses copper names what it hit."""
@@ -2240,7 +2248,7 @@ def main(a):
         # blocked); what was missing was anyone asking it about the copper as emitted. `trkP` exempts this pair's own
         # PADS and nothing else, so a fan may enter its own pad field and may not lie on another net's track.
         _foul = []
-        if CROSS_NET:
+        if CROSS_NET != "off":
             # The map for this question exempts the pair's OWN two nets, pads and tracks alike: its two legs run at
             # the pair pitch by design and are judged by the fold test and the gate below, not here. Everything else
             # on the board, including a pair this same pass laid ten minutes ago, is an obstacle.
@@ -2255,15 +2263,18 @@ def main(a):
                     _u = _k / _n; _qx, _qy = _x1 + _u * (_x2 - _x1), _y1 + _u * (_y2 - _y1)
                     _jj, _ii = gr.cell(_qx, _qy)
                     if 0 <= _ii < gr.NY and 0 <= _jj < gr.NX and trkX[_L][_ii, _jj]:
-                        _foul.append((_t.GetNetname(), b.GetLayerName(_L), _qx, _qy, piece_site.get(_i_, "?"), _what_is_at(_qx, _qy, _L, _t.GetNetname())))
+                        _foul.append((_t.GetNetname(), b.GetLayerName(_L), _qx, _qy, piece_site.get(_i_, "?"), _what_is_at(_qx, _qy, _L, _t.GetNetname(), skip=(pn, nn))))
                         break
                 if len(_foul) >= 4: break
         if _foul:
-            rollback()
-            report.append("FAIL  %s: its copper lies on another net; rolled back, the router takes the pair" % stem)
+            if CROSS_NET == "block":
+                rollback()
+                report.append("FAIL  %s: its copper lies on another net; rolled back, the router takes the pair" % stem)
+            else:
+                report.append("NEAR  %s: its copper sits inside another net's keep-away on the map (the DRC decides; PAIR_CROSS_NET=block refuses it)" % stem)
             for _nm, _Ln, _qx, _qy, _st, _wh in _foul:
                 report.append("      %s on %s at (%.3f, %.3f) [%s]: %s" % (_nm, _Ln, _qx, _qy, _st, _wh))
-            continue
+            if CROSS_NET == "block": continue
         if _near and not _cross:
             rollback()
             for _w in _near_at: report.append("      %s" % _w)   # name the copper: which piece of which leg, on which layer (12 September 2026)
