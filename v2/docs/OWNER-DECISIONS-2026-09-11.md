@@ -414,3 +414,47 @@ hours) plus a fresh pair pass. Option 3 is a schematic pass over five stages and
 
 **What it blocks:** A24's deliverable, and nothing else. Every other board is unaffected; B, C, D and E do not use
 this value.
+
+---
+
+## Decision 11: BT1 and U62 occupy the same board, from opposite sides (12 September 2026)
+
+**What is measured.** B19's placed board carried **150 hard DRC violations before a single pair was laid**,
+which nothing had ever read because B's chain blocked at the pair gate before the pre-route DRC. Five tool
+causes are fixed today and the count is **6**. Every one of the six is the same pair of parts:
+
+```
+solder_mask_bridge | Pad 1 [/VBAT] of BT1 on F.Cu || PTH pad 1 [/+3V3_IOCC] of U62
+solder_mask_bridge | Pad 1 [/VBAT] of BT1 on F.Cu || PTH pad 2 [/IOCC_SWDIO] of U62
+solder_mask_bridge | Pad 1 [/VBAT] of BT1 on F.Cu || PTH pad 3 [/IOCC_SWCLK] of U62
+shorting_items     | the same three pairs
+```
+
+**Why it is not a tool defect.** `BT1` is the CR2032 holder and sits in the front region `GAP23`
+(X 19 to 44, Y 33 to 97). `U62` is one of the three I/O controllers and sits in the underside pocket at
+X 18 to 47, which was placed there on 9 September for a written reason: three controllers in one pocket is
+one failure domain, so they went into three. **The two regions overlap by design and that is correct for
+surface-mount parts on opposite sides.** It is not correct for a part with pins through the board: U62's
+pins come out on the front, inside BT1's VBAT land.
+
+**What was tried and refused itself.** Feeding every through-hole pad back into the shelf packer as an
+obstacle was measured on the same board: **6 hard violations became 107**, with eight courtyard overlaps,
+because a shelf packer given a hundred new obstacles has nowhere left to step. The collision is named in
+the placement output now rather than avoided, and the chain blocks on it.
+
+**Why this is yours.** Region definitions are on the never-auto floor (`reserved.json`: `gen_pcb_*3.py`
+`REGIONS`), and every way out of this is a region change:
+
+| option | what it costs |
+|---|---|
+| **A. Move BT1 out of GAP23** into a front region with no underside through-hole part beneath it. The CR2032 is 20 mm across and needs a clear back side | the smallest change. GAP12 (X -50 to -32) is the candidate and it currently holds the wall-port cluster |
+| **B. Move controller C's pocket** off the GAP23 footprint | touches the I/O HA failure-domain argument of 9 September, which put the three controllers in three separate pockets deliberately |
+| **C. Declare an allowance of 6** in `boards/b.json` with this section as its reason | the board ships with a known solder-mask bridge between VBAT and three controller pins. **Not recommended**: it is a short between a battery rail and a debug pin |
+| **D. Give U62 a surface-mount package** | the STM32H743VIT6 is bought as LQFP-100; the through-hole pads here are its SWD header, which could be a footprint change rather than a part change |
+
+**Recommendation: A**, and if the wall-port cluster cannot give up the room, **D**, because the pins in
+question are a debug header rather than the controller itself.
+
+**Nothing is blocked on this but board B.** A, C, D, E and P are unaffected, and B's pair work is blocked
+by it in the sense that matters: every pair number measured on that placement was measured in a
+neighbourhood carrying a short.

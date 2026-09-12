@@ -102,19 +102,24 @@ def t_a_band_is_not_a_packer_obstacle():
         raise AssertionError("a dropped keep-out is not reported, so the cut is invisible")
 
 
-def t_a_through_hole_part_occupies_both_sides():
-    """The region rule exempts opposite sides, and a part with pins through the board has none.
+def t_a_through_hole_collision_is_named():
+    """A through-hole part occupies both sides, and the packer cannot step around them all.
 
-    U62 sits in an underside pocket on board B and its pins 1, 2 and 3 came out on the FRONT inside BT1's
-    VBAT land: the last six hard violations on B19's placed board after four tool causes were fixed
-    (MESHSAT-862, 12 September 2026). Surface-mount parts on opposite sides may share a footprint of
-    board; a through-hole part may not.
+    U62 sits in an underside pocket on board B and its pins came out on the FRONT inside BT1's VBAT land:
+    the last six hard violations after four tool causes were fixed. Feeding every through-hole pad back
+    into the shelf packer as an obstacle was measured and took the placed board from 6 to 107, with eight
+    courtyard overlaps, because a shelf packer with a hundred new obstacles has nowhere to step. So the
+    collision is NAMED rather than avoided, and closing it needs a placement pass that can move one part
+    instead of a row of shelves (12 September 2026).
     """
     import os as _os
     TOOLS_ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
     src = open(_os.path.join(TOOLS_, "gen_pcb_b3.py"), errors="replace").read()
+    if "through-hole pad(s) land inside another part" not in src:
+        raise AssertionError("a through-hole collision is neither avoided nor named")
     if "PAD_ATTRIB_PTH" not in src:
-        raise AssertionError("the packer does not treat a through-hole pad as occupying both sides")
-    body = src[src.index("cx += w; rowh = max(rowh, h)"):]
-    if "_OBSTACLES.append(box)" not in body[:1800]:
-        raise AssertionError("the through-hole pads of a packed region do not become obstacles for the next")
+        raise AssertionError("the report does not look at through-hole pads")
+    body = src[src.index("for members, w, h, fine in units:"):src.index("if cy - rowh < y0")]
+    if "PAD_ATTRIB_PTH" in body:
+        raise AssertionError("through-hole pads are obstacles inside the packing loop again, which was "
+                             "measured at 107 hard violations against 6")
