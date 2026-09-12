@@ -147,3 +147,12 @@ def t_a_laid_pair_is_judged_against_every_other_net():
     assert i > 0 and "rollback()" in s[i:i + 400], "PAIR_CROSS_NET=block cannot refuse the pair"
     assert 'CROSS_NET = os.environ.get("PAIR_CROSS_NET", "report")' in s, "the default is not report: a raster test must not decide a pair on its own"
     assert "_what_is_at(" in s[max(0, i - 1500):i], "the cross-net verdict does not name what it hit"
+
+def t_the_entry_exemption_asks_the_pads_only_map():
+    """`legs_clear` skipped the map for the first and last 1.2 mm of a leg because that stretch lies inside the
+    pair's own pad pair. It skipped it for EVERYTHING: A's /USB_D8 laid its corridor leg at 0.00 mm from
+    /USB_WALL's, laid by the same pass minutes earlier, inside exactly that 1.2 mm. Both map modes did it, so
+    it was never the occupancy map: it was the exemption."""
+    b = _body("legs_clear")
+    assert "trkP" in b, "the entry exemption still skips the map instead of asking the pads-only one"
+    assert "along < 1.2) or (last_run and fineB and total - along < 1.2)) \\" in b or "trkP[L][ii, jj]): continue" in b, "the exemption is not guarded"

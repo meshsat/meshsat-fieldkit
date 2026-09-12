@@ -1839,9 +1839,15 @@ def main(a):
                             (x1, y1), (x2, y2) = poly[k], poly[k + 1]; ln_ = math.hypot(x2 - x1, y2 - y1); n = int(ln_ / gr.G) * 2 + 2
                             for q in range(n + 1):
                                 u = q / n; along = walked + u * ln_
-                                if (first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2): continue   # the fine-pitch entry ends inside the pad pair
                                 px_, py_ = x1 + u * (x2 - x1), y1 + u * (y2 - y1)
                                 jj, ii = gr.cell(px_, py_)
+                                # The entry ends INSIDE the pair's own pad pair, which is why the map is skipped there. It was
+                                # skipped for everything, and A's /USB_D8 laid its corridor leg at 0.00 mm from /USB_WALL's,
+                                # laid by the same pass ten minutes earlier, inside exactly this 1.2 mm (12 September 2026,
+                                # appendix 32.135). The exemption asks the pads-only map now: the pair's own pads are not an
+                                # obstacle here, and nothing else is excused. Both map modes lay the same copper without it.
+                                if ((first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2)) \
+                                   and (L not in trkP or not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or not trkP[L][ii, jj]): continue
                                 _m = trk1[net]
                                 if trk2 is not None and (math.hypot(px_ - _stA[0], py_ - _stA[1]) < _rA or math.hypot(px_ - _stB[0], py_ - _stB[1]) < _rB):
                                     _m = trk2   # the pair's own copper is not an obstacle at its own station
