@@ -85,7 +85,7 @@ def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
 # A22's J_MEZZ1 carries the same map (check_contracts.py compares them).
 part("J_HARN1", "Connector_Generic", "Conn_02x08_Odd_Even", "A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V", "IDC16", {
  "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "TR_APRS", "8": "TX_INHIBIT_n", "9": "PA_EN", "10": "SDA", "11": "SCL", "12": "EXP_INT", "13": "+3V3", "14": "GND", "15": "ZEROIZE_HW", "16": "AB_SPARE"})
-part("J_PWR1", "Connector_Generic", "Conn_01x02", "5 V from A22 J_MEZZ_PWR1 (JST-VH, 2 A eFuse on A22): + -", "VH2", {"1": "+5V_D8", "2": "GND"})
+part("J_PWR1", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: 5 V from A22 J_MEZZ_PWR1 (behind A22's 2 A eFuse U23): + -", "VH2", {"1": "+5V_D8", "2": "GND"}, "C274411")
 part("D1", "Device", "D_TVS", "SMBJ5.0A", "SMB", {"1": "GND", "2": "+5V_D8"})
 c("C1", "47u 6.3V X5R 1210", "+5V_D8", "GND", "C1210"); c("C2", "47u 6.3V X5R 1210", "+5V_D8", "GND", "C1210"); c("C3", "10u", "+5V_D8", "GND", "C10u"); c("C4", "100n", "+5V_D8", "GND")
 part("FB1", "Device", "FerriteBead", "600R 2A ferrite (the exciter's 1 A transmit pulses)", "FB", {"1": "+5V_D8", "2": "+5V_SA"})
@@ -166,8 +166,8 @@ part("K1", "Relay", "G6K-2", "Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R", "REL
 nfet("Q2", "RLY_DRV", "GND", "RLY_K", "2N7002 relay coil"); r("R52", "1k", "PA_KEY", "RLY_DRV"); r("R53", "100k", "RLY_DRV", "GND")
 part("D2", "Diode", "1N4148W", "1N4148W coil flyback", "SOD123", {"1": "+5V_D8", "2": "RLY_K"}); c("C57", "100n", "+5V_D8", "GND")
 r("R54", "27 1% 2010", "RF_PAD_IN", "RF_PAD_M", "R2010"); r("R55", "36 1% 2010", "RF_PAD_M", "GND", "R2010"); r("R56", "27 1% 2010", "RF_PAD_M", "RF_DRV", "R2010")   # 10 dB T-pad, 0.5 W in, 50 mW to the PA
-part("J_PAIN", "Connector", "Conn_Coaxial", "PA drive (U.FL, coax to the RA30H1317M1 input on the plate)", "UFL", {"1": "RF_DRV", "2": "GND"})
-part("J_PAOUT", "Connector", "Conn_Coaxial", "PA output (SMA, coax from the RA30H1317M1 output on the plate)", "SMA", {"1": "RF_PAOUT", "2": "GND"})
+part("J_PAIN", "Connector", "Conn_Coaxial", "U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)", "UFL", {"1": "RF_DRV", "2": "GND"}, "C88373")
+part("J_PAOUT", "Connector", "Conn_Coaxial", "SMA jack: PA output (coax from the RA30H1317M1 output on the plate)", "SMA", {"1": "RF_PAOUT", "2": "GND"}, "C3174425")
 # L1 and L2 leave the 1812 land. The IMC1812EB68NK they were drawn as is rated 450 mA and the
 # 30 W PA puts about 775 mA RMS through this filter (sqrt(30/50) into a matched load), so the
 # part was under-rated for its own job independently of being out of stock, and every other
@@ -176,7 +176,7 @@ part("J_PAOUT", "Connector", "Conn_Coaxial", "PA output (SMA, coax from the RA30
 # current under a mismatched antenna when MESHSAT-818 simulates this filter.
 c("C58", "22p 500V NP0 1206", "RF_PAOUT", "GND", "C1206"); part("L1", "Device", "L", "68nH 0805 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)", "L0805", {"1": "RF_PAOUT", "2": "RF_LPF_M"})
 c("C59", "39p 500V NP0 1206", "RF_LPF_M", "GND", "C1206"); part("L2", "Device", "L", "68nH 0805 (LPF)", "L0805", {"1": "RF_LPF_M", "2": "RF_LPF_OUT"}); c("C60", "22p 500V NP0 1206", "RF_LPF_OUT", "GND", "C1206")
-part("J_ANT", "Connector", "Conn_Coaxial", "antenna (SMA, pigtail to A22's VHF jack J_RF1)", "SMA", {"1": "RF_ANT", "2": "GND"})
+part("J_ANT", "Connector", "Conn_Coaxial", "SMA jack: antenna pigtail to A22's VHF jack J_RF1", "SMA", {"1": "RF_ANT", "2": "GND"}, "C3174425")
 tps22810("U15", "+5V_D8", "PA_KEY", "VGG_SW", "VGG_CT"); c("C61", "4.7n", "VGG_CT", "GND", "C0402"); c("C62", "100n", "VGG_SW", "GND")
 part("J_VGG", "Connector_Generic", "Conn_01x02", "PA gate bias lead (JST-PH 1x2 to the RA30H1317M1 VGG): VGG GND", "PH2", {"1": "VGG_SW", "2": "GND"})
 # --- expander PCA9555 0x26 on the kit bus (harness +3V3) with 2N7002 level stages into the mezzanine's 3.3 V domain

@@ -1,124 +1,124 @@
 {
- "_comment": [
-  "The never-auto floor (MESHSAT-862, 11 September 2026). A short written list of decisions no band may take.",
-  "Territory Grounder orders this check ABOVE the posture check, so a floor-class change is refused identically",
-  "whatever the mode; reserved.py does the same and the ordering is tested.",
-  "",
-  "A class is a file plus the pattern that identifies the reserved LINES in it. File-level would be useless:",
-  "gen_pcb_b3.py holds the net classes AND the region packer AND most of the placement, and only the first is",
-  "reserved. A changed line matching one of these patterns is a decision for the owner, with evidence attached."
- ],
- "classes": [
-  {
-   "name": "impedance targets and pair class geometry",
-   "why": "the target a pair is judged against, and the width and gap that meet it; changing either changes what MET means",
-   "sites": [
-    [
-     "intent.py",
-     "^Z_DEFAULT|\"z_diff\"|\"z_se\""
-    ],
-    [
-     "impedance_check.py",
-     "^CAL\\b|^CAL_TOL|^MICROSTRIP_FACTOR|^STRIPLINE_FACTOR|^FAN_MM|^UNREF_MM|^SHORT_MM"
-    ],
-    [
-     "boards/*.json",
-     "\"inner\""
-    ]
-   ]
-  },
-  {
-   "name": "net class widths and clearances",
-   "why": "a class clearance below the board minimum is a lie the router believes; A23 came back with 25 violations from one",
-   "sites": [
-    [
-     "gen_pcb_*3.py",
-     "^CLASSES\\s*=|^\\s*CLASSES\\[|^PATTERNS\\s*="
-    ]
-   ]
-  },
-  {
-   "name": "fab rules and board minimums",
-   "why": "via diameter, drill, clearance, hole clearance and board thickness are what the fab quotes and builds to",
-   "sites": [
-    [
-     "gen_pcb_*.py",
-     "m_MinClearance|m_TrackMinWidth|m_ViasMinSize|m_MinThroughDrill|m_HoleToHoleMin|m_CopperEdgeClearance|m_HoleClearance|SetBoardThickness"
-    ]
-   ]
-  },
-  {
-   "name": "layer count and stackup",
-   "why": "reopened as a P0 on 11 September: every board's layer count needs its own written decision with the measurement that forced it and the cost it adds",
-   "sites": [
-    [
-     "gen_pcb_*.py",
-     "SetCopperLayerCount|^COPPER_LAYERS"
-    ],
-    [
-     "stackup_write.py",
-     "^STACKS|JLC04161H|JLC06161H"
-    ]
-   ]
-  },
-  {
-   "name": "the intra-pair gap against the class clearance",
-   "why": "a 0.09 mm gap breaks KiCad's clearance rule because the class clearance applies between P and N; a fabrication and rules decision, not a router setting (32.103)",
-   "sites": [
-    [
-     "boards/*.json",
-     "0\\.09"
-    ]
-   ],
-   "may_match_nothing": "this class guards a value that must NOT appear: 0.09 mm between a pair's two nets breaks KiCad's own clearance rule and is a fabrication decision. A pattern that matches nothing today is this class working, not this class dead."
-  },
-  {
-   "name": "region definitions in the packer",
-   "why": "where a part may sit is the floor plan, and the floor plan is a design decision with thermal, RF and assembly consequences",
-   "sites": [
-    [
-     "gen_pcb_*3.py",
-     "^REGIONS\\s*="
-    ],
-    [
-     "panel1450.py",
-     "^WINDOW|^PLATE|^BAND|^B_OUTLINE|^XENARC|^EPAPER|^BUTTONS|^TOGGLES|^SOUNDER|^STATUS_LEDS|^BAR_LEDS"
-    ]
-   ]
-  },
-  {
-   "name": "the DRC policy",
-   "why": "the fifteen hard types are what clean means; the record found four different sets in use before they were centralised",
-   "sites": [
-    [
-     "hardset.py",
-     "^HARD_POST|^HARD_PRE|^KNOT|^REPORT"
-    ]
-   ]
-  },
-  {
-   "name": "the order set and anything ordered",
-   "why": "membership of the order set, the bench-fit exclusions and the JLC rotations decide what is bought and how it is placed",
-   "sites": [
-    [
-     "make_handoff.py",
-     "^BOARDS\\s*=|^EXCLUDE\\s*=|^JLC_ROT\\s*=|^PCB_OPTIONS\\s*=|^NONPART_PREFIX"
-    ],
-    [
-     "export_jlc.sh",
-     "layers, .*FR-4|ENIG|impedance"
-    ]
-   ]
-  },
-  {
-   "name": "the design record",
-   "why": "the appendix is the record of what was ruled and measured; a machine may add a measurement section, never change a number in one",
-   "sites": [
-    [
-     "docs/MESHSAT-709-geometry-appendix.md",
-     "^### 32\\."
-    ]
-   ]
-  }
- ]
+  "_comment": [
+    "The never-auto floor (MESHSAT-862, 11 September 2026). A short written list of decisions no band may take.",
+    "Territory Grounder orders this check ABOVE the posture check, so a floor-class change is refused identically",
+    "whatever the mode; reserved.py does the same and the ordering is tested.",
+    "",
+    "A class is a file plus the pattern that identifies the reserved LINES in it. File-level would be useless:",
+    "gen_pcb_b3.py holds the net classes AND the region packer AND most of the placement, and only the first is",
+    "reserved. A changed line matching one of these patterns is a decision for the owner, with evidence attached."
+  ],
+  "classes": [
+    {
+      "name": "impedance targets and pair class geometry",
+      "why": "the target a pair is judged against, and the width and gap that meet it; changing either changes what MET means",
+      "sites": [
+        [
+          "intent.py",
+          "^Z_DEFAULT|\"z_diff\"|\"z_se\""
+        ],
+        [
+          "impedance_check.py",
+          "^CAL\\b|^CAL_TOL|^MICROSTRIP_FACTOR|^STRIPLINE_FACTOR|^FAN_MM|^UNREF_MM|^SHORT_MM"
+        ],
+        [
+          "boards/*.json",
+          "\"inner\""
+        ]
+      ]
+    },
+    {
+      "name": "net class widths and clearances",
+      "why": "a class clearance below the board minimum is a lie the router believes; A23 came back with 25 violations from one",
+      "sites": [
+        [
+          "gen_pcb_*3.py",
+          "^CLASSES\\s*=|^\\s*CLASSES\\[|^PATTERNS\\s*="
+        ]
+      ]
+    },
+    {
+      "name": "fab rules and board minimums",
+      "why": "via diameter, drill, clearance, hole clearance and board thickness are what the fab quotes and builds to",
+      "sites": [
+        [
+          "gen_pcb_*.py",
+          "m_MinClearance|m_TrackMinWidth|m_ViasMinSize|m_MinThroughDrill|m_HoleToHoleMin|m_CopperEdgeClearance|m_HoleClearance|SetBoardThickness"
+        ]
+      ]
+    },
+    {
+      "name": "layer count and stackup",
+      "why": "reopened as a P0 on 11 September: every board's layer count needs its own written decision with the measurement that forced it and the cost it adds",
+      "sites": [
+        [
+          "gen_pcb_*.py",
+          "SetCopperLayerCount|^COPPER_LAYERS"
+        ],
+        [
+          "stackup_write.py",
+          "^STACKS|JLC04161H|JLC06161H"
+        ]
+      ]
+    },
+    {
+      "name": "the intra-pair gap against the class clearance",
+      "why": "a 0.09 mm gap breaks KiCad's clearance rule because the class clearance applies between P and N; a fabrication and rules decision, not a router setting (32.103)",
+      "sites": [
+        [
+          "boards/*.json",
+          "0\\.09"
+        ]
+      ],
+      "may_match_nothing": "this class guards a value that must NOT appear: 0.09 mm between a pair's two nets breaks KiCad's own clearance rule and is a fabrication decision. A pattern that matches nothing today is this class working, not this class dead."
+    },
+    {
+      "name": "region definitions in the packer",
+      "why": "where a part may sit is the floor plan, and the floor plan is a design decision with thermal, RF and assembly consequences",
+      "sites": [
+        [
+          "gen_pcb_*3.py",
+          "^REGIONS\\s*="
+        ],
+        [
+          "panel1450.py",
+          "^WINDOW|^PLATE|^BAND|^B_OUTLINE|^XENARC|^EPAPER|^BUTTONS|^TOGGLES|^SOUNDER|^STATUS_LEDS|^BAR_LEDS"
+        ]
+      ]
+    },
+    {
+      "name": "the DRC policy",
+      "why": "the fifteen hard types are what clean means; the record found four different sets in use before they were centralised",
+      "sites": [
+        [
+          "hardset.py",
+          "^HARD_POST|^HARD_PRE|^KNOT|^REPORT"
+        ]
+      ]
+    },
+    {
+      "name": "the order set and anything ordered",
+      "why": "membership of the order set, the bench-fit exclusions and the JLC rotations decide what is bought and how it is placed OWNER RULING 12 September 2026: the owner will not read the order notes and has delegated drafting AND approval of them. The prose rows of make_handoff.py are therefore NOT reserved any more. What stays reserved is anything that ORDERS: export_jlc.sh, the JLC rotation table, the exclusion table and the cart. Nothing is ordered and no cart line is touched without the owner, which this ruling did not change.",
+      "sites": [
+        [
+          "export_jlc.sh",
+          "layers, .*FR-4|ENIG|impedance"
+        ],
+        [
+          "make_handoff.py",
+          "^EXCLUDE\\s*=|^JLC_ROT\\s*=|^\\s+\"[^\"]+\":\\s*(\\{|set\\()"
+        ]
+      ]
+    },
+    {
+      "name": "the design record",
+      "why": "the appendix is the record of what was ruled and measured; a machine may add a measurement section, never change a number in one",
+      "sites": [
+        [
+          "docs/MESHSAT-709-geometry-appendix.md",
+          "^### 32\\."
+        ]
+      ]
+    }
+  ]
 }

@@ -507,3 +507,39 @@ work. If you confirm, I will record it as a change to the floor itself rather th
 - **C and E (decision 1)** are released from the pair hold and stand on their own gates from here.
 - **The layer set (decision 2)** gets six written decisions and one experiment. If A routes on four
   layers after today's finish, A's stackup becomes an owner decision again with a number attached.
+
+---
+
+## Decision 12: JLCPCB stocks three of E's tracker controller against a need of five (measured 12 September 2026, 17:20)
+
+**What I found, doing the orderability check you asked for before the draft order.** E's `U5` is the
+LT8705A buck-boost controller of the solar tracker stage. Its land is a QFN-38 with an exposed pad,
+5 x 7 mm. The code the row carried, `C674167`, is **LT8705AIFE#PBF, a TSSOP-38**: the same silicon in a
+different package, and it would not sit on that land at all. That is fixed at source, and the wrong code
+is on the block list so it cannot come back.
+
+**What is not fixable at source is the stock.** JLCPCB carries the QFN variant as `C674164`
+(LT8705AEUHF#TRPBF, 24.55 GBP) and `C580337` (LT8705AEUHF#PBF, 31.51 GBP), **both at stock 3**, against a
+need of 5 for five boards. Read back from JLCPCB's parts API on 12 September 2026. So JLC cannot place
+this part on five boards whatever else we decide.
+
+**What I need from you, and why I am not deciding it myself.** The exclusion table in `make_handoff.py`
+is the list of references JLC is told not to place, and it is on the never-auto floor because it decides
+what is bought. Taking `U5` off the assembly is therefore yours, not mine. (Your 12 September ruling
+delegated drafting and approving the order NOTES; it explicitly left anything that orders reserved, and
+this orders.)
+
+| option | what happens | cost |
+|---|---|---|
+| **A (recommended): U5 leaves the CPL, fitted by hand on all five boards** | JLC assembles everything around it; five controllers come from Mouser or Digi-Key and are soldered here. The stage is already described as bench-fitted in the schematic and in appendix 32.54 | five hand-soldered QFN-38 parts with an exposed pad, which is a reflow or hot-plate job, not an iron job. About 125 GBP of parts |
+| B: assemble three boards and leave two without the tracker | no hand soldering of this part | two of the five boards cannot run the solar tracker, and the five boards stop being identical, which the kit's whole logistics story rests on |
+| C: change the controller to a part JLC stocks in quantity | JLC places everything | a new device, new pin map, new compensation and a new footprint on a board that is otherwise finished. Days, and it reopens a settled stage |
+
+**My recommendation is A.** The tracker is already the one stage on E the record calls bench-fitted, the
+rest of E is unaffected, and it keeps the five boards identical. What it costs is a reflow step here,
+which we will be doing anyway for the other hand-fit parts on the list (the Coilcraft inductors, the
+Bourns choke, the Omron relay, the SA868).
+
+**Until you rule, nothing moves:** `U5` stays in the exclusion table exactly as it is, the corrected code
+`C674164` is in the generator so the deliverable BOM names the right part for whoever fits it, and the
+certification table reads the row HAND_FIT with its purchase route.
