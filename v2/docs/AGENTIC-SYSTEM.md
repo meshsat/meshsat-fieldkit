@@ -26,8 +26,11 @@ trustworthy, and the objective here is a pair count printed by a tool that has n
 ## What contains it
 
 Every property below is a property of the code, proved by a test that fails when the property is
-removed (`tests/test_agent_contract.py`, 25 rules; `tests/mutate_agent.sh` re-proves the eight text
-rules by putting each defect back into a copy of the tree and requiring its rule to fail).
+removed (`tests/test_agent_contract.py`, 25 rules). `tests/mutate_agent.sh` re-proves the text rules
+by putting each defect back into a copy of the tree and requiring its rule to fail: **ten mutations
+over nine rule names, 10 of 10 proved**. Each mutation also verifies that it actually changed the
+tree, because the first version of that script had one whose anchor had moved, and a mutation that
+changes nothing proves nothing while looking exactly like a pass.
 
 | property | where it lives |
 |---|---|
@@ -46,7 +49,10 @@ rules by putting each defect back into a copy of the tree and requiring its rule
 | the config is outside the tree and mode 600 | `~/.config/meshsat-fieldkit/agent.env`, the pattern `kb.env` already set. A world-readable config is refused before any call |
 | a missing config is INFRA_FAIL | never a fallback, never a default model, never a quiet skip |
 | no gate imports the agent | a model may inform a proposal and may never judge a board, the same separation the retrieval store runs under |
-| the budget is counted in work | calls and tokens, never seconds. A clock has decided a result on this project twice and was wrong both times |
+| the budget is counted in work, for the whole run | calls and tokens, never seconds. A clock has decided a result on this project twice and was wrong both times. The counters are module level and shared by every client in the process, because one cycle builds several (the proposer, each draft, each review round); every HTTP attempt is counted, retries included, and an answer that carries no usage block is charged at its cap rather than counted as free |
+| the reviewer gates the write-up | a cycle whose review is not APPROVE writes FAIL, and says that the number stands while the entry does not go into the record as it is. The arm's grade is untouched either way |
+| a row belongs to the cycle that produced it | rows are taken from the result ledger by name AND by being newer than the head the cycle started from, because the name is chosen by the model and an older row carrying the same one would otherwise be read as this measurement |
+| a tool change is proved in a worktree | `patch.py` cuts a git worktree at a stated sha, applies the diff there, reads it against the never-auto floor, runs the suite in it, and leaves a branch. It never touches the working tree and never copies the repo |
 | every call is recorded | the sha256 of what was sent and what came back, the model, the token counts, chained into `out/agent/agent.jsonl` |
 
 ## Configuration
@@ -83,6 +89,10 @@ python3 tools/agent/loop.py --letter b --template tools/agent/templates/b.json \
 
 # tier 2b alone, on a diff: fresh eyes before a commit
 python3 tools/agent/review.py --diff-range HEAD~1..HEAD --verdict-dir out
+
+# tier 2's third product: a tool change, proved in a worktree, left on a branch and never on main
+python3 tools/agent/patch.py --defect "<what is wrong and the evidence for it>" \
+    --file v2/ecad/tools/<the file> --sha HEAD --branch agent/<name>
 ```
 
 `--exec` takes the command on the command line and it is never stored in the tree, because the machine
@@ -91,8 +101,15 @@ needs `pcbnew`; on a host without it, the absence is INFRA_FAIL and never a sile
 
 ## What it does not promise
 
-That the boards get better because of the loop. What a model adds here is width of search, and the
-reviews' own table says design quality does not move with it. What it does add, measurably, is a
-second reader that has no stake in the change: on its first cycle tier 2b found that the pipeline was
-reporting a pair count under a knob with nothing to show the knob had reached the tool, which is the
-exact shape of four of the six defects that stood between A24's routed board and its deliverable.
+That the boards get better because of the loop. What a model adds here is width of search, against an
+objective that is trustworthy because a deterministic tool computes it.
+
+What it has already added, measurably, is a second reader with no stake in the change. Tier 2b found
+three things in its first three readings, and every one was real: that a cycle reported a pair count
+under a knob with nothing to show the knob had reached the tool, which is the exact shape of four of
+the six defects that stood between A24's routed board and its deliverable; that the draft was handed a
+result with no baseline, so every comparison in it came from memory; and, reading the very change that
+introduced it, that its own live floor check was written as a condition that could not evaluate false,
+that its reviewer's refusal gated nothing, and that its mutation script published an estate-shaped
+hostname in a repository that mirrors publicly. All seven of that last reading's findings were correct
+and all seven are fixed here.

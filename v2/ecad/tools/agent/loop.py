@@ -60,8 +60,10 @@ def run_spec(spec_path, exec_cmd, result_path, timeout=None):
     return armsmod.main([spec_path, "--parallel", "1", "--out-dir", os.path.dirname(result_path)])
 
 
-def read_rows(path, names):
-    """The rows the runner appended for these arms. The ledger is the source; nothing is re-derived."""
+def read_rows(path, names, after_seq=-1):
+    """The rows the runner appended FOR THIS CYCLE: the name matches and the row is newer than the head
+    the cycle started from. Tier 2b found the gap: selected by name alone, an older row carrying the same
+    model-chosen name is read as this cycle's measurement, and the name is chosen by the model."""
     out = []
     if not os.path.exists(path):
         return out
@@ -73,8 +75,9 @@ def read_rows(path, names):
             rec = json.loads(line)
         except ValueError:
             continue
+        seq = rec.get("seq", -1)
         rec = rec.get("rec", rec)
-        if rec.get("arm") in names:
+        if rec.get("arm") in names and seq > after_seq:
             out.append(rec)
     return out
 
@@ -185,9 +188,10 @@ def main(argv):
                              note="proposed and not run", out_dir=a.out_dir)
 
     result = a.result or os.path.join(a.out_dir, "arms.jsonl")
+    head_before = ledger.head(result)[0]          # every row after this one belongs to this cycle
     rc = run_spec(spec_path, a.exec_cmd, result, timeout=a.exec_timeout)
     names = {x["name"] for x in spec["arms"]}
-    rows = read_rows(result, names)
+    rows = read_rows(result, names, after_seq=head_before)
     if not rows:
         print("loop: the runner produced no row for %s (exit %s)" % (sorted(names), rc))
         return verdict.write("agent_loop", verdict.INCONCLUSIVE, counts={"rows": 0}, denominator=len(names),
@@ -244,10 +248,22 @@ def main(argv):
 
     met = sum(1 for r in rows if r["verdict"] == "MET")
     bad = sum(1 for r in rows if r["verdict"] == "INFRA_FAIL")
-    return verdict.write("agent_loop", verdict.INCONCLUSIVE if bad else verdict.PASS,
+    # Tier 2b gates the WRITE-UP, and a verdict file that reads PASS over a refused entry is a claim the
+    # code does not make good on (its own finding on the change that introduced it, 12 September 2026).
+    # The measurement stands either way: the arm's grade is above and the reviewer never touched it.
+    refused = bool(rev) and rev["verdict"] != "APPROVE"
+    if refused:
+        print("loop: tier 2b did not approve the entry (%s), so the cycle is FAIL: the number stands, the "
+              "write-up does not go into the record as it is" % rev["verdict"])
+    if rev is None and not a.no_review:
+        print("loop: no usable review, so the cycle is INCONCLUSIVE rather than PASS")
+    return verdict.write("agent_loop",
+                         verdict.INCONCLUSIVE if (bad or (rev is None and not a.no_review))
+                         else (verdict.FAIL if refused else verdict.PASS),
                          counts={"arms": len(rows), "met": met, "missed": len(rows) - met - bad,
                                  "infra_fail": bad, "best_pairs": max((r.get("pairs") or 0) for r in rows),
-                                 "review_findings": len((rev or {}).get("findings") or [])},
+                                 "review_findings": len((rev or {}).get("findings") or []),
+                                 "review": (rev or {}).get("verdict", "none")},
                          denominator=len(rows),
                          evidence=[nums, (rev or {}).get("summary", "no review")],
                          note="one cycle: proposed, run, graded mechanically, reviewed by a separate context",

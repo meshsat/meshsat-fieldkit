@@ -1,15 +1,23 @@
 {
- "_what": "The run shape for board B's DIFF100 pass, the 48 pairs that carry the board (boards/b.json, 12 September 2026). The layer set and the inner geometry are RESERVED and are set here from the board's declaration, never by the proposer: an inner-layer pair is a stripline and its geometry is an impedance target. The slack, the slim retry and the via mode are the board's measured values and an arm may move them.",
+ "_what": "The run shape for board B's DIFF100 pass, the 48 pairs that carry the board (boards/b.json, 12 September 2026). The layer set and the inner geometry are RESERVED and are set here from the board's declaration, never by the proposer: an inner-layer pair is a stripline and its geometry is an impedance target. The slack, the slim retry and the via mode are the board's measured values and an arm may move them. 12 September 2026: the source project is the placement carrying the 2.4 mm couple gap (placed board md5 952eecba618c), which is the board's current best at 22 of 48 on this pass; the arm is measured against that board and no other.",
  "board": "pcb-b-compute",
  "letter": "b",
- "source_project": "pcb-b-compute-b19",
+ "source_project": "pcb-b-compute-b19cg24",
  "placed": "out/pcb-b-compute-placed.kicad_pcb",
  "timeout_s": 10800,
  "_denominator": 48,
  "passes": [
-  {"classes": "DIFF100", "env": {"PAIR_BUDGET": 0, "PAIR_LAYERS": "F.Cu,In2.Cu,In3.Cu,B.Cu",
-                                 "PAIR_HOP_LAYERS": "In2.Cu,In3.Cu", "PAIR_INNER": "DIFF100:0.13/0.127",
-                                 "PAIR_CORRIDOR_SLACK": 0.06, "PAIR_CORRIDOR_SLACK_SLIM": 0.03,
-                                 "PAIR_VIA_MODE": "min"}}
+  {
+   "classes": "DIFF100",
+   "env": {
+    "PAIR_BUDGET": 0,
+    "PAIR_LAYERS": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+    "PAIR_HOP_LAYERS": "In2.Cu,In3.Cu",
+    "PAIR_INNER": "DIFF100:0.13/0.127",
+    "PAIR_CORRIDOR_SLACK": 0.06,
+    "PAIR_CORRIDOR_SLACK_SLIM": 0.03,
+    "PAIR_VIA_MODE": "min"
+   }
+  }
  ]
 }
