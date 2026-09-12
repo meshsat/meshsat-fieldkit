@@ -68,7 +68,10 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # 12 September 2026: the wall pair's own ribbon. The east strip is full (the gate refused (113, -62) for the
          # rod nut at (110.5, -73), correctly), and the FIXED position is PIN 1 with the rows running north, so this
          # puts the body in the free window at case (99, -20). Its pair sits on the END row (appendix 32.135).
-         "J_AB2": (100, -25, 0),
+         # rot 180 because the twist is a presentation, not a distance: at rot 0 J_AB2 and U29 (the wall port's ESD)
+         # put the pair's pads on opposite sides of the line between them, the legs must cross once, and the dive at
+         # the pad field left one crossing behind. Turning the connector round removes the twist at its source.
+         "J_AB2": (100, -25, 180),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          # A23: the converters south of their inductors, the rail column runs north to the connector
