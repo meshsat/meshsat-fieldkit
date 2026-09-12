@@ -5863,3 +5863,42 @@ was never what stopped them.
 the pairs' own coupling capacitors (the `couple` packing of 32.77 puts the two in a column at the packer's gap)
 and the approach to J_HDMI and T1. `PAIR_LEG_RETRY` stays off: it lays no pairs, and what it measured is recorded
 here instead.
+
+### 32.147 The station diagnosis paid: twice the couple gap lays eight more pairs (12 September 2026, 14:20 CEST; MESHSAT-862)
+
+32.146 said the wall was at the stations and that the answer was placement rather than search, and named the one
+station the packer controls: the pair's own two series coupling capacitors, which `gen_pcb_b3.py` stacks as a
+couple at its global 1.2 mm gap. `PLACE_COUPLE_GAP` opens that one gap. Two placements were regenerated on the
+same tools an hour apart, one at the packer's own gap and one at twice it, each with its own chain and gate, and
+the DIFF100 pass was laid on both. **A placement change moves every part in its region, so this is one placement
+against another and never a knob with a value** (32.109's caution, applied deliberately).
+
+| | couple gap 1.2 mm | couple gap 2.4 mm |
+|---|---:|---:|
+| placed board | e60373860936, gate ALL PASS | 952eecba618c, gate ALL PASS |
+| escapes laid / pads skipped | 1,493 / 279 | 1,488 / 284 |
+| **DIFF100 pairs laid of 48** | **14** | **22** |
+| failed attempts | 68 | 52 |
+| lines reading "the legs clear no smoothing of the centreline" | **102** | **8** |
+| of those, refused at a station | 26 | 8 |
+| of those, refused out in the corridor | **76** | **0** |
+| the pair refused for its own two legs, after laying | 22 | 40 |
+
+**Eight more pairs, and the failure class the diagnosis pointed at is gone**: 102 leg-fit refusals become 8, and
+the 76 that were refused out in the corridor become none. The prediction written before the run was "16 or more of
+48", from the share of refusals that sat at a couple; it held, and this time it under-claimed, which is the first
+time today a count of refusals was a safe basis for one. The reason it was safe here is that the change removes
+the LAST bar for those pairs rather than moving them to the next one: the room is at the station they were being
+refused at.
+
+**What the pairs meet next is the post-lay own-legs gate**, 22 refusals before and 40 after, which is what a
+larger population of laid pairs looks like: more pairs get far enough to be judged at the class clearance. That is
+the next bar, and it is measured where the legs turn into their pads (32.143), not in the corridor.
+
+**The escape quality is unchanged** (1,493 escapes and 279 skipped pads against 1,488 and 284), so this is not a
+placement that buys pairs by giving the fine-pitch parts more room at something else's expense. What it buys is
+the room the two legs of a pair need on their way into their own coupling capacitors.
+
+**`boards/b.json` carries the gap with this table as its reason.** It is a placement parameter, not a region, so
+it is not on the never-auto floor; the layer count, the class widths and the regions all are, and none of them
+moved.
