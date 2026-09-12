@@ -1385,8 +1385,11 @@ def main(a):
             for _i, t in enumerate(pieces):
                 near = False
                 if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net.GetNetname():
-                    for px_, py_ in ((mm(t.GetStart().x), mm(t.GetStart().y)), (mm(t.GetEnd().x), mm(t.GetEnd().y))):
-                        if math.hypot(px_ - x, py_ - y) < r: near = True; break
+                    # BOTH ends inside the radius, never one: a leg's last piece can be the whole corridor run, and
+                    # removing it for having one end at the station took 45.84 mm of A's /USB_D8_P away in one step
+                    # (12 September 2026). A piece that straddles the radius stays, so the trim is at most one piece long.
+                    near = all(math.hypot(px_ - x, py_ - y) < r
+                               for px_, py_ in ((mm(t.GetStart().x), mm(t.GetStart().y)), (mm(t.GetEnd().x), mm(t.GetEnd().y))))
                 if near: board_remove(b, t); cut += 1
                 else: keep_site[len(keep)] = piece_site.get(_i, "?"); keep.append(t)
             if not cut: return None
