@@ -72,7 +72,7 @@ while remaining > 0.1 and passes < 12:
     pts.append((ex, ey)); b.Remove(t)
     for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
         if math.hypot(x1 - x0, y1 - y0) < 1e-4: continue
-        nt = pcbnew.PCB_TRACK(b); nt.SetStart(pcbnew.VECTOR2I(int(round(x0 * 1e6)), int(round(y0 * 1e6)))); nt.SetEnd(pcbnew.VECTOR2I(int(round(x1 * 1e6)), int(round(y1 * 1e6)))); nt.SetWidth(width); nt.SetLayer(layer); nt.SetNet(net); b.Add(nt)
+        nt = pcbnew.PCB_TRACK(b); nt.SetStart(pcbnew.VECTOR2I(int(round(x0 * 1e6)), int(round(y0 * 1e6)))); nt.SetEnd(pcbnew.VECTOR2I(int(round(x1 * 1e6)), int(round(y1 * 1e6)))); nt.SetWidth(width); nt.SetLayer(layer); nt.SetNet(net); nt.SetLocked(True); b.Add(nt)   # 12 September 2026: LOCKED, because a meander is a deliberate length and the quality pass shortcuts unlocked router copper. A24's finish ran twice: the first matched USB_WALL at 0.00 mm by adding 7.54 mm to the P leg, and the second straightened 5.37 mm of that away before the pair gate looked, then could not place it again and refused the board
     added = 2 * A * n_fit; placed += added; remaining -= added
     print("meander: %s +%.2f mm as %d bumps of %.2f mm on %s along (%.1f, %.1f)-(%.1f, %.1f) side %+d, %.2f mm still to place" % (netname, added, n_fit, A, b.GetLayerName(layer), sx, sy, ex, ey, side, max(remaining, 0)))
 pcbnew.SaveBoard(sys.argv[1], b)

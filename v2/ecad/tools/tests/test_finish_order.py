@@ -271,3 +271,17 @@ def t_the_finish_stamps_the_phase_it_was_given_onto_the_silk():
     assert "PHASE = sys.argv[3]" in sfa, "the legend pass takes no phase"
     i = sfa.index("PHASE = sys.argv[3]")
     assert "REV" in sfa[i:i + 800], "the phase correction does not look at the title line"
+
+
+def t_a_meander_is_locked_copper():
+    """A meander is a deliberate length, not router copper. `straighten.py` shortcuts unlocked segments, and it
+    runs BEFORE the pair gate in the finish, so on a board finished twice it removes the previous run's meander:
+    A24 matched USB_WALL at 0.00 mm in its first finish by adding 7.54 mm to the P leg, and its second finish
+    straightened 5.37 mm of that away, failed to place it again in three rounds and refused the board with every
+    other gate passing (12 September 2026). Locked copper is exempt from the straightener and from the router's
+    rip-up, which is what a matched length needs from both."""
+    src = open(os.path.join(TOOLS, "meander.py"), errors="replace").read()
+    i = src.index("PCB_TRACK(b)")
+    assert "SetLocked(True)" in src[i:i + 700], "the meander's copper is not locked"
+    st = open(os.path.join(TOOLS, "straighten.py"), errors="replace").read()
+    assert "a.locked or c.locked" in st, "the straightener does not exempt locked copper"
