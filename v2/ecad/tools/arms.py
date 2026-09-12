@@ -107,12 +107,38 @@ def run_arm(spec, arm, ecad, out_dir):
         row.update(pairs=laid, of=total, seconds=secs, map_seconds=maps, logs=logs, knobs_seen=seen)
         err = knobs_arrived(arm.get("env") or {}, seen)
         if err: row["error"] = err
+        # THE PAIR COUNT ALONE IS A GAMEABLE OBJECTIVE (12 September 2026). An arm that lowers a legality
+        # bar buys pairs with copper the board cannot have, and nothing in the count would say so: the
+        # first arm an automated tier 2 ever proposed for board B reached for exactly such a knob. So the
+        # pre-route DRC runs on the board the arm laid and its hard count travels in the row. The record
+        # already states the rule this implements: the class number is judged once, on the copper that was
+        # laid (appendix 32.135), and here that judgement is part of the measurement rather than a later
+        # surprise. A board whose DRC cannot be read is UNMEASURED, never assumed clean.
+        if not row.get("error"):
+            row.update(_drc_of(board, dst, out_dir, name))
     except subprocess.TimeoutExpired: row["error"] = "timed out"
     except Exception as e: row["error"] = "%s: %s" % (type(e).__name__, e)
     finally:
         row["wall_s"] = round(time.time() - t0, 1)
         shutil.rmtree(dst, ignore_errors=True)
     return row
+
+
+def _drc_of(board, cwd, out_dir, name):
+    """The hard set on the board this arm laid: {hard, unrouted} or {drc_error} and never a guess."""
+    rep = os.path.join(out_dir, "arm-%s-drc.json" % name)
+    cnt = os.path.join(out_dir, "arm-%s-counts.txt" % name)
+    try:
+        r = subprocess.run(["bash", os.path.join(TOOLS, "drc.sh"), board, rep],
+                           capture_output=True, text=True, timeout=1800, cwd=cwd)
+        if r.returncode or not os.path.exists(rep):
+            return {"drc_error": (r.stderr or r.stdout).strip()[-300:] or "drc.sh exit %d" % r.returncode}
+        subprocess.run([sys.executable, os.path.join(TOOLS, "hardset.py"), rep, "pre", "--counts", cnt,
+                        "--label", "arm-%s" % name], capture_output=True, text=True, timeout=600, cwd=cwd)
+        hard, unrouted = open(cnt).read().split()
+        return {"hard": int(hard), "unrouted": int(unrouted)}
+    except Exception as e:
+        return {"drc_error": "%s: %s" % (type(e).__name__, e)}
 
 
 def knobs_arrived(want, seen):
@@ -130,10 +156,19 @@ def knobs_arrived(want, seen):
     return ""
 
 
-def grade(row):
-    """The mechanical judge. `pairs` against the arm's own written prediction, and nothing the arm said."""
+def grade(row, hard_baseline=0):
+    """The mechanical judge. `pairs` against the arm's own written prediction, and nothing the arm said.
+
+    Since 12 September the count is not the whole objective: an arm that lays MORE hard DRC violations
+    than the baseline has bought its pairs with copper the board cannot have, and it is graded ILLEGAL
+    whatever its number. A board whose DRC could not be read is UNMEASURED rather than assumed clean.
+    """
     p = row.get("predict") or {}
     if row.get("error"): return "INFRA_FAIL", row["error"]
+    if row.get("drc_error"): return "UNMEASURED", "the DRC on the arm's own board could not be read: %s" % row["drc_error"]
+    if row.get("hard") is not None and row["hard"] > hard_baseline:
+        return "ILLEGAL", ("%d hard DRC violation(s) against a baseline of %d: this arm's pairs are copper the "
+                           "board cannot have, so the count is not a result" % (row["hard"], hard_baseline))
     got = row.get("pairs")
     if got is None: return "UNMEASURABLE", "the pass printed no 'pairs laid' line"
     op, val = p.get("op", ">="), p.get("value")
@@ -176,21 +211,24 @@ def main(argv):
     with cf.ThreadPoolExecutor(max_workers=a.parallel) as ex:
         futs = {ex.submit(run_arm, spec, x, ecad, a.out_dir): x for x in spec["arms"]}
         for f in cf.as_completed(futs):
-            row = f.result(); v, note = grade(row); row["verdict"] = v; row["note"] = note
+            row = f.result(); v, note = grade(row, spec.get("hard_baseline", 0))
+            row["verdict"] = v; row["note"] = note
             rows.append(row)
             print("arms: %-14s %-12s %s  (%.0f s, maps %s s)" % (row["arm"], v, note, row.get("wall_s", 0), row.get("map_seconds", "?")))
             ledger.append(os.path.join(a.out_dir, "arms.jsonl"), row)
-    rows.sort(key=lambda r: (-(r.get("pairs") or -1), r["arm"]))
+    rows.sort(key=lambda r: (r["verdict"] in ("ILLEGAL", "INFRA_FAIL", "UNMEASURED"), -(r.get("pairs") or -1), r["arm"]))
     print("\narms: ranked by pairs laid")
     for r in rows:
-        print("  %-14s %-4s of %-4s  %-10s maps %-5s s  wall %-6s s  %s"
-              % (r["arm"], r.get("pairs", "-"), r.get("of", "-"), r["verdict"], r.get("map_seconds", "-"),
-                 r.get("wall_s", "-"), json.dumps(r.get("env", {}))[:60]))
-    met = sum(1 for r in rows if r["verdict"] == "MET"); bad = sum(1 for r in rows if r["verdict"] == "INFRA_FAIL")
+        print("  %-14s %-4s of %-4s  %-10s hard %-4s  maps %-5s s  wall %-6s s  %s"
+              % (r["arm"], r.get("pairs", "-"), r.get("of", "-"), r["verdict"], r.get("hard", "?"),
+                 r.get("map_seconds", "-"), r.get("wall_s", "-"), json.dumps(r.get("env", {}))[:60]))
+    met = sum(1 for r in rows if r["verdict"] == "MET")
+    bad = sum(1 for r in rows if r["verdict"] in ("INFRA_FAIL", "UNMEASURED"))
+    illegal = sum(1 for r in rows if r["verdict"] == "ILLEGAL")
     best = rows[0] if rows else {}
     return verdict.write("arms", verdict.INCONCLUSIVE if bad == len(rows) else verdict.PASS,
-                         counts={"arms": len(rows), "met": met, "missed": len(rows) - met - bad, "infra_fail": bad,
-                                 "best_pairs": best.get("pairs")},
+                         counts={"arms": len(rows), "met": met, "missed": len(rows) - met - bad - illegal,
+                                 "infra_fail": bad, "illegal": illegal, "best_pairs": best.get("pairs")},
                          denominator=len(rows), evidence=["%s %s %s" % (r["arm"], r["verdict"], r["note"]) for r in rows],
                          note="best %s with %s of %s; the judge is the pair count, never the arm" % (best.get("arm"), best.get("pairs"), best.get("of")),
                          out_dir=a.out_dir)

@@ -69,13 +69,50 @@ def known_knobs(tools=TOOLS):
     return out
 
 
+def knob_types(tools=TOOLS):
+    """Each knob's TYPE, default and the comment beside it, read from the line that reads it.
+
+    A knob name on its own is not enough to reason about, and tier 2 proved it: the first arm an
+    automated proposer ever wrote for board B set `PAIR_OWN_CLEAR=0.09`, reasoning carefully about
+    millimetres, and the tool reads that name as a FLAG (`!= "0"`), so 0.09 means exactly what the
+    default means and the arm could only ever measure nothing. The type is in the source, so it is
+    read from the source (12 September 2026).
+    """
+    out = {}
+    pat = re.compile(r'(?P<pre>[A-Za-z_]*\s*\(?\s*)?os\.environ\.get\(\s*"(?P<name>[A-Z][A-Z_0-9]*)"'
+                     r"(?:\s*,\s*(?P<dflt>\"[^\"]*\"|'[^']*'))?\s*\)(?P<post>[^\n#]*)(?:#\s*(?P<why>.*))?")
+    for f in ("pair_preroute.py", "gen_pcb_b3.py", "pairsearch.py"):
+        path = os.path.join(tools, f)
+        if not os.path.exists(path):
+            continue
+        for line in open(path, errors="replace"):
+            m = pat.search(line)
+            if not m or m.group("name") in out:
+                continue
+            pre, post = (m.group("pre") or ""), (m.group("post") or "")
+            if "float(" in line[:m.start() + len(pre)]:
+                kind = "number"
+            elif "int(" in line[:m.start() + len(pre)]:
+                kind = "integer"
+            elif '!= "0"' in post or '== "1"' in post or '!= "0"' in line[m.end() - len(post):]:
+                kind = "flag, 1 or 0 only: any other value reads as ON"
+            elif '== "1"' in line or '.split(' in post:
+                kind = "flag or list, read the comment"
+            else:
+                kind = "string"
+            d = (m.group("dflt") or "").strip("\"'")
+            out[m.group("name")] = {"type": kind, "default": d, "note": (m.group("why") or "").strip()[:120]}
+    return out
+
+
 def _scalar(v):
     return isinstance(v, (str, int, float, bool)) and not isinstance(v, type(None))
 
 
-def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_repeat=False):
+def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_repeat=False, types=None):
     """Returns (ok, errors, arms). Every refusal names the rule and what it saw."""
     errs, knobs = [], (knobs if knobs is not None else known_knobs())
+    types = knob_types() if types is None else types
     if not isinstance(proposal, dict):
         return False, ["the proposal is %s, not an object" % type(proposal).__name__], []
     stray = sorted(set(proposal) & SPEC_OWNS)
@@ -121,6 +158,17 @@ def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_r
                 errs.append("%s: %s is %s, and a knob value must be a scalar" % (tag, k, type(v).__name__))
             elif len(str(v)) > 200:
                 errs.append("%s: %s is %d characters" % (tag, k, len(str(v))))
+            else:
+                # A FLAG given a number reads as ON, which is usually its default, so the arm measures
+                # nothing and its result is indistinguishable from "this knob does not pay". The first arm
+                # an automated tier 2 wrote for board B did exactly this: PAIR_OWN_CLEAR=0.09, reasoned
+                # about in millimetres, read by the tool as a boolean (12 September 2026).
+                t = (types.get(k) or {}).get("type", "")
+                if t.startswith("flag") and str(v).strip() not in ("0", "1", "True", "False", "true", "false"):
+                    errs.append("%s: %s is a FLAG the tool reads as `!= \"0\"`, so %r sets it ON, which is %s. "
+                                "A flag takes 1 or 0. If you meant a threshold, this is not the knob for it"
+                                % (tag, k, v, "its default" if (types.get(k) or {}).get("default") != "0"
+                                   else "the opposite of its default"))
         p = arm.get("predict")
         if not isinstance(p, dict):
             errs.append("%s carries no prediction. An arm nobody predicted cannot disappoint, so it cannot "
