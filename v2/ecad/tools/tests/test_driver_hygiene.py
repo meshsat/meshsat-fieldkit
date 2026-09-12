@@ -356,9 +356,9 @@ def t_the_compiled_stub_search_defaults_off_without_numba():
 def t_no_router_takes_an_auto_selected_x_display_alone():
     """Two routes on one host must not race for a display.
 
-    12 September 2026: `xvfb-run -a` picked the same number for A's route as C10's was already using, and C10's
-    router died at pass 24 of 60 the moment A's started, with nothing in its own log. `-n` names a number per
-    work directory and `-a` still walks forward from it."""
+    12 September 2026: `xvfb-run -a` chooses by racing, so two routes a minute apart can land on the same display.
+    (The suspicion that this had killed C10's router at pass 24 was WRONG, and is recorded here because a false
+    cause in a comment outlives the bug it invents.) `-n` names a number and `-a` still walks forward from it."""
     import os, re
     tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     bad = []
@@ -374,7 +374,7 @@ def t_no_router_takes_an_auto_selected_x_display_alone():
 
 def t_no_script_kills_every_display_on_the_host():
     """`pkill -9 -f "^Xvfb"` cleared one script's stale display by killing every virtual display on the machine,
-    and with it every other route's router. A named display makes the problem local."""
+    which would take every other route's router with it. A named display makes the problem local."""
     import os, re
     tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     bad = [f for f in sorted(os.listdir(tools)) if f.endswith(".sh")
