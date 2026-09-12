@@ -26,7 +26,7 @@ declare -A KNOBS=( [base]="" [oit_0.5]="-oit 0.5" [us_global]="-us global" [us_h
 nosession=0
 run_one() {   # name, extra args...
   local name=$1; shift; local d="$W/$name"; mkdir -p "$d"; cp "$N.kicad_pcb" "$N.kicad_pro" "$d/"
-  local t0=$(date +%s); timeout 600 xvfb-run -a java -jar "$JAR" -de "$N.dsn" -do "$d/$N.ses" -mp ${MP:-40} -mt 1 -oit 2 -dct 0 "$@" > "$d/fr.log" 2>&1; local rc=$?; local t1=$(date +%s)
+  local t0=$(date +%s); timeout 600 xvfb-run -n $(( 200 + ($$ + RANDOM) % 700 )) -a java -jar "$JAR" -de "$N.dsn" -do "$d/$N.ses" -mp ${MP:-40} -mt 1 -oit 2 -dct 0 "$@" > "$d/fr.log" 2>&1; local rc=$?; local t1=$(date +%s)
   local auto=$(grep -a -o "Auto-routing was completed in [0-9]* minute(s) [0-9.]* seconds" "$d/fr.log" | head -1); local opt=$(grep -a -o "optimization was completed in [0-9]* minute(s) [0-9.]* seconds" "$d/fr.log" | head -1)
   if [ ! -s "$d/$N.ses" ]; then echo "  $name: NO SESSION (exit $rc, $((t1 - t0)) s)"; nosession=$((nosession + 1)); echo "\"$name\": {\"session\": false, \"exit\": $rc, \"wall_s\": $((t1 - t0)), \"args\": \"$*\"}" >> "$d/row.json"; return; fi
   python3 - "$d/$N.kicad_pcb" "$d/$N.ses" <<'PY' 2>&1 | grep -v "Debug\|assert"
@@ -44,7 +44,7 @@ for name in base oit_0.5 us_global us_hybrid_1_1 is_sequential is_random inc_PWR
 MP=10 run_one mp_10
 run_one rules_via200 -dr via200.rules
 # checkpoint probe: kill the jar after 20 s with -im and see whether any session or checkpoint file exists
-mkdir -p "$W/kill_im"; cp "$N.kicad_pcb" "$N.kicad_pro" "$W/kill_im/"; timeout 20 xvfb-run -a java -jar "$JAR" -de "$N.dsn" -do "$W/kill_im/$N.ses" -mp 200 -mt 1 -oit 0.01 -dct 0 -im > "$W/kill_im/fr.log" 2>&1; sleep 1
+mkdir -p "$W/kill_im"; cp "$N.kicad_pcb" "$N.kicad_pro" "$W/kill_im/"; timeout 20 xvfb-run -n $(( 200 + ($$ + RANDOM) % 700 )) -a java -jar "$JAR" -de "$N.dsn" -do "$W/kill_im/$N.ses" -mp 200 -mt 1 -oit 0.01 -dct 0 -im > "$W/kill_im/fr.log" 2>&1; sleep 1
 echo "\"kill_im\": {\"session_after_kill\": $([ -s "$W/kill_im/$N.ses" ] && echo true || echo false), \"files\": \"$(ls "$W/kill_im" | tr '\n' ' ')\"}" > "$W/kill_im/row.json"
 fi
 nosession=$(grep -l '"session": false' "$W"/*/row.json 2>/dev/null | wc -l)
