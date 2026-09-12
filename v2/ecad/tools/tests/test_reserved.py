@@ -72,3 +72,47 @@ def t_a_file_carrying_a_reserved_line_is_refused():
     assert rc == 1, (rc, out)
     assert "OWNER" in out and "layer count" in out, out
     assert "do not work around the floor" in out, out
+
+
+def t_every_reserved_pattern_still_matches_its_file():
+    """A reserved constant moved or renamed leaves the floor silently (red team round three L5).
+
+    `reserved.json` is a file glob plus a line pattern. If the line it guards is renamed, moved or
+    re-indented, the pattern matches nothing and the class quietly stops protecting anything, with no test
+    and no message. The floor is only a floor while its patterns still find the lines they were written
+    for. Matching here is the same as `reserved._matches`: the glob against the repo-relative path or
+    against the basename.
+    """
+    import os as _os, re as _re, json as _json, fnmatch as _fn
+    TOOLS_ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    REPO_ = _os.path.dirname(_os.path.dirname(_os.path.dirname(TOOLS_)))
+    d = _json.load(open(_os.path.join(TOOLS_, "reserved.json")))
+    files = []
+    for dp, dirs, fs in _os.walk(REPO_):
+        dirs[:] = [x for x in dirs if x not in (".git", "__pycache__", "out", "node_modules")]
+        for f in fs:
+            if f.endswith((".py", ".sh", ".json", ".md", ".txt")):
+                files.append(_os.path.join(dp, f))
+    dead = []
+    for c in d["classes"]:
+        if c.get("may_match_nothing"):
+            continue          # a class that guards a value which must be ABSENT; the reason is in the file
+        for glob_, pat in c["sites"]:
+            rx = _re.compile(pat, _re.M)
+            hit = False
+            for f in files:
+                rel = _os.path.relpath(f, REPO_)
+                # the same three-way match reserved.py does, or the test and the floor disagree
+                if not (_fn.fnmatch(rel, glob_) or _fn.fnmatch(_os.path.basename(rel), glob_)
+                        or _fn.fnmatch(rel, "*/" + glob_.lstrip("./"))):
+                    continue
+                try:
+                    if rx.search(open(f, errors="replace").read()):
+                        hit = True; break
+                except OSError:
+                    pass
+            if not hit:
+                dead.append("%s | %s | %s" % (c["name"], glob_, pat))
+    if dead:
+        raise AssertionError("%d reserved pattern(s) match no line in any file they name, so the class "
+                             "protects nothing:\n  %s" % (len(dead), "\n  ".join(dead)))

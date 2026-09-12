@@ -1,6 +1,6 @@
 # The pair pre-router's knobs, and which of them has a number behind it
 
-12 September 2026 (MESHSAT-862). `tools/pair_preroute.py` is 2,063 lines and reads **43 environment knobs**.
+12 September 2026 (MESHSAT-862). `tools/pair_preroute.py` is 2497 lines and reads **53 environment knobs**, and since 12 September 2026 every one of them is in the typed registry `tools/agent/knobs.json` with its category, type, unit and stage. **Category is the authority for what tier 2 may propose**; this document is the measurement behind each value.
 This is the map: what each one does, what it defaults to, and **what it measured**, because a knob with no
 measurement is a decision someone made once and nobody has checked since. Every number here is on one board
 with one placement, named beside it; the record's standing caution applies to all of them, that a value which

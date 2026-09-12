@@ -2,140 +2,115 @@
 """The fail-closed gate between a proposal and anything that runs (MESHSAT-862, 12 September 2026).
 
 Tier 2 proposes and never actuates. That sentence is only worth something if something mechanical
-stands between the proposal and the runner, so this is that thing, and it is deliberately narrow:
+stands between the proposal and the runner, so this is that thing.
 
-  * THE MODEL OWNS THREE FIELDS AND NOTHING ELSE: the arm's name, its env knobs and its written
-    prediction. The board, the letter, the source project, the placed board, the passes and the
-    timeout are filled in here from `boards/<letter>.json` and the spec template. A proposal that
-    carries any of those is REFUSED rather than stripped, because a model that tried to choose its
-    own board is telling you something you want to see in a verdict file, not silently correct.
-  * A KNOB THE TOOL DOES NOT READ IS REFUSED. The authority is `pair_preroute.py` itself, parsed,
-    never the knob document, which can drift. An arm on a knob nobody reads produces a null result
-    that reads exactly like a knob that does not pay, and this project has already spent a day on
-    one of those (`bypass_place.py`, which no chain ran, 9 September).
-  * RESERVED KNOBS ARE REFUSED WITH THEIR REASON and routed to the owner's decisions file. The
-    never-auto floor is checked before anything else, the way `reserved.py` orders it.
-  * BASIS-LOCKED KNOBS ARE REFUSED. `PAIR_VENV`, `PAIR_FAST_SEARCH` and `PAIR_FAST_STUBS` choose
-    which kernel runs. They are proved equivalent, so an arm that moves them measures the clock and
-    not the board, and its row is not comparable with any other row.
-  * AN ARM NAME BECOMES A DIRECTORY that `arms.py` removes with `shutil.rmtree`. So the name must be
-    a slug. This is not a hypothetical: the name is interpolated straight into a path.
-  * A REPEAT IS NOT LEARNING. An arm whose knobs and values have already been graded in the ledger
-    is refused unless the caller asks for a repeat on purpose.
+**CATEGORY IS THE AUTHORITY, and the red team was right that it used not to be.** The first version
+derived the proposable set by scanning the tools for `os.environ.get("PAIR_...")`, which told us a name
+exists and never that it is a lever: `PAIR_PLAN_OUT` (writes a file), `PAIR_DEBUG` (prints) and
+`PAIR_NO_NUMBA` (chooses the kernel) were all proposable, and an arm on any of them is a meaningless
+null that reads exactly like a knob that does not pay. `knobs.json` is the registry now: name, type,
+category, stage, default, unit and one line of description each. The source scan survives as a
+COMPLETENESS check, `t_every_knob_the_tools_read_is_in_the_registry`, which is the direction that is
+safe: a knob nobody registered is a test failure, not a licence.
+
+What the model owns and the rules that hold it:
+
+  * THREE FIELDS: the arm's name, its env knobs and its prediction. The board, the letter, the source
+    project, the placed board, the passes and the timeout come from the template. A proposal carrying
+    one of those is REFUSED rather than stripped.
+  * ONE VARIABLE, MECHANICALLY. The prompt said it and nothing enforced it, so two knobs in one arm
+    passed every check and the result named neither. `_max_knobs` in the template, default 1.
+  * THE METRIC IS CLOSED. The judge grades the pair count; a prediction that says it is predicting
+    runtime and is then graded against pairs is a row whose prose and meaning disagree.
+  * THE PREDICTION MUST BE ABLE TO BE WRONG. `>= 1` on a board that lays 22 is accepted by an operator
+    check, runs nineteen minutes and is graded MET. For `>=` and `>` the value must beat the best row
+    graded for this board and stage; for `<=` and `<` it must be under the worst.
+  * A KNOB THIS RUN CANNOT EXECUTE IS REFUSED, by the stage in the registry against the template's.
+  * A FLAG TAKES `0` OR `1`. The tools read a flag as `!= "0"`, so `false` arrives ON.
+  * AN ARM NAME IS A SLUG, because it becomes a directory `arms.py` removes with rmtree.
+  * A REPEAT IS NOT LEARNING.
 """
 import os, re, sys, json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.dirname(HERE)
+REGISTRY = os.path.join(HERE, "knobs.json")
 
 MODEL_OWNS = {"name", "env", "predict", "why"}
-# What the runner for a given spec actually EXECUTES. A knob read only by a file this run never runs
-# cannot act, and the arm then measures nothing while looking exactly like a knob that does not pay.
-# Tier 2 walked into this on its third arm for board B: told that only placement has ever paid there,
-# it proposed PLACE_FINE_MARGIN, which is read by the placement generator, while arms.py re-runs the
-# pre-router on a board that was placed hours earlier (12 September 2026).
-RUNS = {"pair": ("pair_preroute.py", "pairsearch.py"),
-        "place": ("gen_pcb_b3.py", "pair_preroute.py", "pairsearch.py")}
-SPEC_OWNS = {"board", "letter", "source_project", "placed", "passes", "timeout_s", "ecad", "tools_sha"}
+SPEC_OWNS = {"board", "letter", "source_project", "placed", "passes", "timeout_s", "ecad", "tools_sha",
+             "hard_baseline"}
 SLUG = re.compile(r"^[a-z0-9][a-z0-9_]*$")
 SLUG_MAX = 32
 OPS = {">=", ">", "==", "<=", "<"}
-
-# Knobs nobody may set automatically, with the reason and the reserved class they belong to.
-# These mirror the classes of tools/reserved.json; a proposal that wants one is evidence for the
-# owner's decisions file, never a job.
-RESERVED_KNOBS = {
-    "PAIR_INNER":       "pair class geometry: it sets the inner-layer width and gap, which is an impedance target (reserved.json: impedance targets and pair class geometry)",
-    "PAIR_INNER_GAP":   "pair class geometry: the intra-pair gap is an impedance target and at 0.09 mm it also breaks KiCad's own clearance rule, so it is a fabrication decision",
-    "PAIR_INNER_WIDTH": "pair class geometry: track width against the stackup is an impedance target",
-    "PAIR_LAYERS":      "a pair moved to an inner layer becomes a stripline and needs its own geometry, which is reserved; 32.102 measured every impedance-correct variant at or below the two-layer number",
-    "PAIR_HOP_LAYERS":  "same as PAIR_LAYERS: it decides which layers a pair may change on, and an inner hop is a stripline segment",
-}
-
-# Knobs that change WHICH implementation runs rather than what the board is asked. Proved equivalent,
-# so moving them measures the clock; a row that moves them cannot be compared with one that does not.
-BASIS_KNOBS = {
-    "PAIR_VENV":        "chooses the numba venv or the plain kernel; 13x the wall time, 0 of 7,706 items different",
-    "PAIR_FAST_SEARCH": "the compiled corridor search, proved identical by pairsearch selftest",
-    "PAIR_FAST_STUBS":  "the compiled stub search, proved identical on B19 (0 of 7,706 items differ)",
-    "PAIR_MAP_CHECK":   "an equivalence check, not a lever: it makes the pass slower and changes nothing",
-    "_PAIR_REEXEC":     "internal re-exec marker, never a knob",
-}
-
-
-# The files a knob may be read from. ONE list, shared by known_knobs and knob_types, after tier 2b
-# pointed out that two hard-coded lists drifting apart would type a knob "unknown" and silently exempt
-# it from the flag rule, which is the shape of the hard-coded net list that cost A24 two closures.
+UP = {">=", ">"}
+DOWN = {"<=", "<"}
+# The files a knob may be read from, for the completeness check only.
 KNOB_FILES = ("pair_preroute.py", "gen_pcb_b3.py", "pairsearch.py")
+# What each run shape EXECUTES, so a knob's stage can be checked against it. A place run regenerates the
+# placement and then runs the pair passes, so it can act on both; a pair run cannot act on a placement
+# knob at all, because the board it is handed was placed hours earlier.
+STAGES = {"pair": ("pair",), "place": ("place", "pair")}
+
+
+def registry(path=REGISTRY):
+    return json.load(open(path))["knobs"]
+
+
+def by_category(cat, reg=None):
+    reg = reg or registry()
+    return {k: v for k, v in reg.items() if v.get("category") == cat}
+
+
+# Kept as names for the older callers and the tests that read them.
+def RESERVED_KNOBS(reg=None):
+    return {k: v["description"] for k, v in by_category("reserved", reg).items()}
+
+
+def BASIS_KNOBS(reg=None):
+    return {k: v["description"] for k, v in by_category("basis", reg).items()}
 
 
 def known_knobs(tools=TOOLS):
-    """Every environment name the tools actually read. The source is the source, never the document."""
+    """Every environment name the tools actually read. COMPLETENESS only: the registry is the authority."""
     pat = re.compile(r'(?:os\.environ\.get|os\.getenv)\(\s*"([A-Z][A-Z_0-9]*)"|os\.environ\[\s*"([A-Z][A-Z_0-9]*)"\s*\]')
     out = set()
-    for f in KNOB_FILES:
-        p = os.path.join(tools, f)
-        if not os.path.exists(p):
-            continue
-        for m in pat.finditer(open(p, errors="replace").read()):
-            out.add(m.group(1) or m.group(2))
-    return out
-
-
-def knob_types(tools=TOOLS):
-    """Each knob's TYPE, default and the comment beside it, read from the line that reads it.
-
-    A knob name on its own is not enough to reason about, and tier 2 proved it: the first arm an
-    automated proposer ever wrote for board B set `PAIR_OWN_CLEAR=0.09`, reasoning carefully about
-    millimetres, and the tool reads that name as a FLAG (`!= "0"`), so 0.09 means exactly what the
-    default means and the arm could only ever measure nothing. The type is in the source, so it is
-    read from the source (12 September 2026).
-    """
-    out = {}
-    pat = re.compile(r'(?P<pre>[A-Za-z_]*\s*\(?\s*)?os\.environ\.get\(\s*"(?P<name>[A-Z][A-Z_0-9]*)"'
-                     r"(?:\s*,\s*(?P<dflt>[^)]*?))?\s*\)(?P<post>[^\n#]*)(?:#\s*(?P<why>.*))?")
     for f in KNOB_FILES:
         path = os.path.join(tools, f)
         if not os.path.exists(path):
             continue
-        for line in open(path, errors="replace"):
-            m = pat.search(line)
-            if not m or m.group("name") in out:
-                continue
-            pre, post = (m.group("pre") or ""), (m.group("post") or "")
-            if "float(" in line[:m.start() + len(pre)]:
-                kind = "number"
-            elif "int(" in line[:m.start() + len(pre)]:
-                kind = "integer"
-            elif '!= "0"' in post or '== "1"' in post or '!= "0"' in line[m.end() - len(post):]:
-                kind = "flag, 1 or 0 only: any other value reads as ON"
-            elif '== "1"' in line or '.split(' in post:
-                kind = "flag or list, read the comment"
-            else:
-                kind = "string"
-            d = (m.group("dflt") or "").strip("\"'")
-            out[m.group("name")] = {"type": kind, "default": d, "file": f,
-                                    "note": (m.group("why") or "").strip()[:120]}
-    return out
+        for m in pat.finditer(open(path, errors="replace").read()):
+            out.add(m.group(1) or m.group(2))
+    return {n for n in out if not n.startswith("_")}
+
+
+def knob_types(tools=TOOLS):
+    """The registry as the older shape (type, default, note), so the evidence pack needs no change."""
+    return {k: {"type": v["type"], "default": v.get("default", ""), "file": v.get("stage", ""),
+                "note": v.get("description", "")[:120], "category": v.get("category"),
+                "unit": v.get("unit", "")} for k, v in registry().items()}
 
 
 def _scalar(v):
-    return isinstance(v, (str, int, float, bool)) and not isinstance(v, type(None))
+    return isinstance(v, (str, int, float, bool))
 
 
-def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_repeat=False, types=None):
+def validate(proposal, spec_template, graded=(), reg=None, max_arms=1, allow_repeat=False,
+             best=None, worst=None):
     """Returns (ok, errors, arms). Every refusal names the rule and what it saw."""
-    errs, knobs = [], (knobs if knobs is not None else known_knobs())
-    types = knob_types() if types is None else types
+    errs = []
+    reg = reg if reg is not None else registry()
+    run = spec_template.get("_runs", "pair")
+    max_knobs = int(spec_template.get("_max_knobs", 1))
+    metric = spec_template.get("_metric", "pairs")
     if not isinstance(proposal, dict):
         return False, ["the proposal is %s, not an object" % type(proposal).__name__], []
     stray = sorted(set(proposal) & SPEC_OWNS)
     if stray:
         errs.append("the proposal sets fields it does not own: %s. The board, the project and the passes come "
-                    "from boards/<letter>.json, not from the proposer" % ", ".join(stray))
+                    "from the template, not from the proposer" % ", ".join(stray))
     arms = proposal.get("arms")
     if not isinstance(arms, list) or not arms:
-        return False, errs + ["no arms: expected {\"arms\": [{name, env, predict}], \"why\": [...]}"], []
+        return False, errs + ['no arms: expected {"arms": [{name, env, predict}], "why": [...]}'], []
     if len(arms) > max_arms:
         errs.append("%d arms proposed against a cap of %d for this run" % (len(arms), max_arms))
     seen = set()
@@ -159,52 +134,65 @@ def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_r
         if not isinstance(env, dict) or not env:
             errs.append("%s sets no knobs: an arm with an empty env measures nothing" % tag)
             env = {}
+        elif len(env) > max_knobs:
+            errs.append("%s sets %d knobs (%s) and this run allows %d. ONE VARIABLE: two knobs in one arm and "
+                        "the result names neither of them. A deliberate interaction experiment raises _max_knobs "
+                        "in the template and owes a factorial design" % (tag, len(env), ", ".join(sorted(env)), max_knobs))
         for k, v in env.items():
-            if k in RESERVED_KNOBS:
+            spec = reg.get(k)
+            if spec is None:
+                errs.append("%s sets %s, which is in no registry entry. A knob nobody registered is not a lever: "
+                            "add it to agent/knobs.json with its category, or it cannot be proposed" % (tag, k))
+                continue
+            cat = spec.get("category")
+            if cat == "reserved":
                 errs.append("%s sets the RESERVED knob %s. %s. This belongs in "
-                            "v2/docs/OWNER-DECISIONS-2026-09-11.md with its evidence, not in a job" % (tag, k, RESERVED_KNOBS[k]))
-            elif k in BASIS_KNOBS:
-                errs.append("%s sets %s, which is basis-locked: %s" % (tag, k, BASIS_KNOBS[k]))
-            elif k not in knobs:
-                errs.append("%s sets %s, which no tool in this tree reads. A knob nobody reads returns a null "
-                            "result that reads exactly like a knob that does not pay" % (tag, k))
-            else:
-                run = spec_template.get("_runs", "pair")
-                src = (types.get(k) or {}).get("file")
-                allowed = RUNS.get(run, RUNS["pair"])
-                if src and src not in allowed:
-                    errs.append("%s sets %s, which is read by %s. This run executes %s on a board that was already "
-                                "placed, so that knob cannot act here: the arm would measure nothing and the null "
-                                "result would read exactly like a knob that does not pay. A %s knob needs a run "
-                                "that regenerates the placement"
-                                % (tag, k, src, " and ".join(allowed), src.split(".")[0]))
+                            "v2/docs/OWNER-DECISIONS-2026-09-11.md with its evidence, not in a job"
+                            % (tag, k, spec.get("description", "")))
+            elif cat == "basis":
+                errs.append("%s sets %s, which is basis-locked: %s" % (tag, k, spec.get("description", "")))
+            elif cat != "experiment":
+                errs.append("%s sets %s, which is categorised %s in the registry: %s. It is not a routing lever, "
+                            "so an arm on it measures nothing about the board"
+                            % (tag, k, cat, spec.get("description", "")))
+            elif spec.get("stage") not in STAGES.get(run, ("pair",)):
+                errs.append("%s sets %s, which runs at the %r stage while this run is %r and executes %s. That "
+                            "knob cannot act here: the arm would measure nothing and the null would read exactly "
+                            "like a knob that does not pay"
+                            % (tag, k, spec.get("stage"), run, " then ".join(STAGES.get(run, ("pair",)))))
             if not _scalar(v):
                 errs.append("%s: %s is %s, and a knob value must be a scalar" % (tag, k, type(v).__name__))
-            elif len(str(v)) > 200:
-                errs.append("%s: %s is %d characters" % (tag, k, len(str(v))))
-            else:
-                # A FLAG given a number reads as ON, which is usually its default, so the arm measures
-                # nothing and its result is indistinguishable from "this knob does not pay". The first arm
-                # an automated tier 2 wrote for board B did exactly this: PAIR_OWN_CLEAR=0.09, reasoned
-                # about in millimetres, read by the tool as a boolean (12 September 2026).
-                t = (types.get(k) or {}).get("type", "")
-                # ONLY "0" and "1". Tier 2b found the hole the first version left: the tools read a flag as
-                # `!= "0"`, so `false`, `False`, `off` and `no` all arrive ON, and those are the most natural
-                # ways to write OFF. A rule that admits the natural spelling of the thing it forbids is not a
-                # rule. Python booleans are refused too, because `str(False)` is "False", which is ON.
-                if t.startswith("flag") and str(v).strip() not in ("0", "1"):
-                    errs.append("%s: %s is a FLAG the tool reads as `!= \"0\"`, so %r sets it ON, which is %s. "
-                                "A flag takes the string 1 or the string 0 and nothing else: false, False, off "
-                                "and no all arrive ON. If you meant a threshold, this is not the knob for it"
-                                % (tag, k, v, "its default" if (types.get(k) or {}).get("default") != "0"
-                                   else "the opposite of its default"))
+                continue
+            if len(str(v)) > 200:
+                errs.append("%s: %s is %d characters" % (tag, k, len(str(v)))); continue
+            t = (spec or {}).get("type", "")
+            if t == "flag" and str(v).strip() not in ("0", "1"):
+                errs.append("%s: %s is a FLAG the tool reads as `!= \"0\"`, so %r sets it ON. A flag takes the "
+                            "string 1 or the string 0 and nothing else: false, False, off and no all arrive ON"
+                            % (tag, k, v))
+            elif t.startswith("enum:"):
+                allowed = t.split(":", 1)[1].split(",")
+                if str(v) not in allowed:
+                    errs.append("%s: %s takes one of %s, not %r" % (tag, k, allowed, v))
+            elif t in ("number", "integer"):
+                try:
+                    fv = float(v)
+                    if t == "integer" and float(int(fv)) != fv:
+                        errs.append("%s: %s is an integer knob and %r is not one" % (tag, k, v))
+                except (TypeError, ValueError):
+                    errs.append("%s: %s is a %s and %r is not one" % (tag, k, t, v))
         p = arm.get("predict")
         if not isinstance(p, dict):
             errs.append("%s carries no prediction. An arm nobody predicted cannot disappoint, so it cannot "
                         "teach anything, and the runner refuses it" % tag)
         else:
-            if p.get("op") not in OPS:
-                errs.append("%s prediction operator %r is not one of %s" % (tag, p.get("op"), sorted(OPS)))
+            m = p.get("metric", metric)
+            if m != metric:
+                errs.append("%s predicts %r while the judge grades %r. A row whose prose and mechanical meaning "
+                            "disagree is worse than no row" % (tag, m, metric))
+            op = p.get("op")
+            if op not in OPS:
+                errs.append("%s prediction operator %r is not one of %s" % (tag, op, sorted(OPS)))
             val = p.get("value")
             if not isinstance(val, (int, float)) or isinstance(val, bool):
                 errs.append("%s predicts %r, which is not a number" % (tag, val))
@@ -212,6 +200,14 @@ def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_r
                 of = spec_template.get("_denominator")
                 if of and not (0 <= val <= of):
                     errs.append("%s predicts %s of a denominator of %s" % (tag, val, of))
+                # falsifiability: it must be able to be wrong in a way that matters
+                if op in UP and best is not None and val <= best:
+                    errs.append("%s predicts %s %s on a board whose best graded row is %s: an arm that changes "
+                                "nothing would meet it. For %s the value must beat the best measured row"
+                                % (tag, op, val, best, op))
+                if op in DOWN and worst is not None and val >= worst:
+                    errs.append("%s predicts %s %s on a board whose worst graded row is %s: an arm that changes "
+                                "nothing would meet it" % (tag, op, val, worst))
             basis = (p.get("basis") or "").strip()
             if len(basis) < 40:
                 errs.append("%s gives a basis of %d characters. The basis is what makes a missed prediction "
@@ -230,6 +226,7 @@ def build_spec(proposal, spec_template, arms):
     """The runnable arms.py spec: the template's own fields, plus the three the proposer owns."""
     spec = {k: v for k, v in spec_template.items() if not k.startswith("_")}
     spec["_why"] = ["Proposed by tier 2 on %s." % spec_template.get("_stamp", "")] + list(proposal.get("why") or [])
+    spec["runs"] = spec_template.get("_runs", "pair")
     spec["arms"] = [{"name": a["name"], "env": a.get("env", {}), "predict": a["predict"]} for a in arms]
     return spec
 

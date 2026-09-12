@@ -49,12 +49,17 @@ RULES, each of which a validator enforces mechanically:
      more than a safe one would have.
   5. why: a list of short sentences, the argument for this arm, naming what you expect to be the LAST
      bar for the pairs you are aiming at.
+  6. ONE KNOB PER ARM unless you are told otherwise. Two knobs in one arm and the result names neither.
+  7. The prediction must be able to be WRONG in a way that matters: for >= and > it must beat the best
+     row already graded on this board, which you are shown. A prediction inside the measured range is
+     refused, because an arm that changes nothing would meet it.
 
 Answer with one JSON object: {"arms": [{"name": ..., "env": {...}, "predict": {...}}], "why": [...]}
 No prose outside the JSON. No markdown fence is required but one is tolerated."""
 
 
-def ask(pack_text, ask_text, cfg=None, repair=2, max_arms=1, graded=(), template=None, max_tokens=2500):
+def ask(pack_text, ask_text, cfg=None, repair=2, max_arms=1, graded=(), template=None, max_tokens=2500,
+        best=None, worst=None):
     """Ask, validate, and on a refusal hand the refusal back once or twice. Returns (spec, arms, meta)."""
     c = client.Client(role="propose", cfg=cfg)
     user = pack_text + "\n\n=== WHAT TO PROPOSE ===\n" + ask_text
@@ -67,7 +72,7 @@ def ask(pack_text, ask_text, cfg=None, repair=2, max_arms=1, graded=(), template
         except Exception as e:
             proposal, parse_error = {}, "%s: %s" % (type(e).__name__, e)
         ok, errs, arms = (False, [parse_error], []) if parse_error else schema.validate(
-            proposal, template or {}, graded=graded, max_arms=max_arms)
+            proposal, template or {}, graded=graded, max_arms=max_arms, best=best, worst=worst)
         attempts.append({"attempt": i + 1, "accepted": ok, "errors": errs, "meta": meta,
                          "proposal": proposal if not parse_error else {"_unparseable": text[:800]}})
         if ok:

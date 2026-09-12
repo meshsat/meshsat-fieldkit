@@ -40,6 +40,8 @@ RULES:
      "test": "<the name of the test that fails before this change and passes after, or the words NEW
      TEST NEEDED>"}
   2. The diff must apply with `git apply -p1` against the stated commit. Use the exact paths given.
+  2b. `test` must be a RUNNABLE SELECTOR, not prose: the substring `tests/run.py` takes, for example
+     `t_a_knob_that_never_arrived`. It is run at the baseline BEFORE your patch and must FAIL there.
   3. SMALL. One defect. A diff that changes three things cannot be reviewed or reverted as one.
   4. A fix ships with the test that proves it. A rule that passes on the tree it was written to fail is
      worse than no rule, so say which test fails before your change.
@@ -53,9 +55,10 @@ def run(cmd, cwd=None, timeout=1800):
     return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
 
 
-def _worktree(sha, tmp):
+def _worktree(sha, at):
     """A worktree at a stated sha. Never a copy, never the working tree."""
-    wt = os.path.join(tmp, "wt")
+    wt = os.path.join(at, "wt")
+    os.makedirs(at, exist_ok=True)
     r = run(["git", "-C", REPO, "worktree", "add", "--detach", wt, sha])
     if r.returncode:
         raise client.Infra("could not cut a worktree at %s: %s" % (sha, r.stderr.strip()[:200]))
@@ -67,10 +70,65 @@ def _cleanup(wt):
     run(["git", "-C", REPO, "worktree", "prune"])
 
 
-def try_patch(diff, sha, tmp, test_cmd):
-    """Apply, check the floor, run the suite. Returns (ok, report) and leaves nothing behind."""
+def _red_side(wt, selector, timeout=900):
+    """Run the named regression at the BASELINE and require it to FAIL. Returns (proved, detail).
+
+    The contract said a fix ships with the test that proves it and the code never checked: an agent patch
+    could keep the suite green, name an existing test and add no targeted regression at all (red team,
+    12 September 2026). A green suite can defend a bug, which is this project's own most expensive
+    lesson, so the red side is run rather than asserted.
+    """
+    if not selector or not str(selector).strip() or str(selector).strip().upper().startswith("NEW TEST"):
+        return None, "the proposer named no runnable selector"
+    r = run([sys.executable, os.path.join(wt, "v2", "ecad", "tools", "tests", "run.py"), str(selector).strip()],
+            cwd=os.path.join(wt, "v2", "ecad", "tools"), timeout=timeout)
+    out = (r.stdout + r.stderr).strip()
+    tail = out.splitlines()[-1][:220] if out else "(no output)"
+    if re.search(r"\b0 passed, 0 failed", out):
+        return False, "the selector %r matched no test at the baseline: %s" % (selector, tail)
+    if re.search(r"\b0 failed", out):
+        return False, ("the selector %r PASSES at the baseline, so it cannot be the test that proves this fix: "
+                       "%s" % (selector, tail))
+    return True, tail
+
+
+def _test_hunks(diff):
+    """The hunks of a diff that touch a tests directory, so a patch bringing its own regression can be red."""
+    out, keep = [], False
+    for line in diff.splitlines(True):
+        if line.startswith("diff --git "):
+            keep = "/tests/" in line
+        if keep:
+            out.append(line)
+    return "".join(out)
+
+
+def try_patch(diff, sha, tmp, test_cmd, selector=None):
+    """Prove the red side at the baseline, then apply, check the floor and run the suite.
+
+    Two worktrees, both at the stated sha and both removed whatever happens: one to watch the named
+    regression FAIL before the change, one to watch it and the whole suite pass after it.
+    """
     report = {}
-    wt = _worktree(sha, tmp)
+    base = _worktree(sha, os.path.join(tmp, "base"))
+    try:
+        hunks = _test_hunks(diff)
+        if hunks.strip():
+            hp = os.path.join(tmp, "tests.diff"); open(hp, "w").write(hunks if hunks.endswith("\n") else hunks + "\n")
+            ra = run(["git", "-C", base, "apply", "-p1", "--whitespace=nowarn", hp])
+            report["test_hunks_applied"] = (ra.returncode == 0)
+            if ra.returncode:
+                report["red"] = False
+                report["red_detail"] = ("the patch brings its own test and that hunk does not apply to the "
+                                        "baseline: %s" % ra.stderr.strip()[:200])
+                return False, report
+        report["red"], report["red_detail"] = _red_side(base, selector)
+        if report["red"] is not True:
+            return False, report
+    finally:
+        _cleanup(base)
+
+    wt = _worktree(sha, os.path.join(tmp, "green"))
     try:
         dp = os.path.join(tmp, "proposed.diff")
         open(dp, "w").write(diff if diff.endswith("\n") else diff + "\n")
@@ -80,17 +138,24 @@ def try_patch(diff, sha, tmp, test_cmd):
             report["apply_error"] = r.stderr.strip()[:1200]
             return False, report
         r = run(["git", "-C", wt, "diff", "-U0"])
-        touched = []
-        cur = None
-        classes = reserved.load()
+        touched, cur, classes = [], None, reserved.load()
         for line in r.stdout.splitlines():
-            if line.startswith("+++ b/"): cur = line[6:]; continue
+            if line.startswith("+++ b/"):
+                cur = line[6:]; continue
             if line[:1] in "+-" and cur and not line.startswith(("+++", "---")):
-                for name, why in reserved._matches(cur, line[1:], classes):
-                    touched.append({"file": cur, "class": name, "why": why, "line": line[:120]})
+                for nm, why in reserved._matches(cur, line[1:], classes):
+                    touched.append({"file": cur, "class": nm, "why": why, "line": line[:120]})
         report["reserved"] = touched
         if touched:
             return False, report
+        ok_sel, detail = _red_side(wt, selector)
+        report["green"] = (ok_sel is False and "PASSES at the baseline" in detail) or ok_sel is None
+        # the selector must now PASS: _red_side returns False with "PASSES" when it does
+        if ok_sel is True:
+            report["green"] = False
+            report["green_detail"] = "the named regression still FAILS after the patch: %s" % detail
+            return False, report
+        report["green_detail"] = detail
         rt = run(test_cmd, cwd=wt, timeout=2400)
         report["tests_rc"] = rt.returncode
         report["tests_tail"] = (rt.stdout + rt.stderr).strip().splitlines()[-12:]
@@ -139,10 +204,16 @@ def main(argv):
                 attempts.append({"attempt": i + 1, "ok": False, "error": "empty diff", "why": d.get("why"), "meta": meta})
                 print("patch: the proposer returned no diff. Its reason: %s" % json.dumps(d.get("why"))[:400])
                 break
-            ok, report = try_patch(diff, sha, tmp, ["bash", os.path.join(REPO, a.test)])
+            ok, report = try_patch(diff, sha, tmp, ["bash", os.path.join(REPO, a.test)], d.get("test"))
             attempts.append({"attempt": i + 1, "ok": ok, "report": report, "why": d.get("why"),
                              "test": d.get("test"), "meta": meta, "diff": diff})
             print("patch: attempt %d %s" % (i + 1, "PASSES THE SUITE IN A WORKTREE" if ok else "refused"))
+            if report.get("red") is not True:
+                print("    the red side is not proved: %s" % report.get("red_detail", "")[:220])
+                user += ("\n\n=== YOUR NAMED TEST DID NOT FAIL AT THE BASELINE ===\n%s\nReturn a diff that brings a "
+                         "test which fails before your change, and name it in `test` as a selector "
+                         "tests/run.py accepts." % report.get("red_detail", ""))
+                continue
             if report.get("reserved"):
                 for t in report["reserved"]:
                     print("    RESERVED %s in %s: %s" % (t["class"], t["file"], t["why"][:100]))

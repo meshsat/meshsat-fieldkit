@@ -20,7 +20,7 @@ The shape is the one the control-plane programme settles on and it is deliberate
 
 Usage: arms.py <spec.json> [--parallel N] [--dry]
 """
-import os, re, sys, json, time, shutil, hashlib, argparse, subprocess, concurrent.futures as cf
+import os, re, sys, json, time, shutil, hashlib, argparse, subprocess, collections, concurrent.futures as cf
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict, ledger
@@ -53,6 +53,35 @@ def md5(path):
     return h.hexdigest()
 
 
+def tool_fingerprint(tools=TOOLS):
+    """WHICH CODE produced this measurement, computed by the runner and never carried by a template.
+
+    The row already recorded the host, the KiCad build and the placed board's md5, and `tools_sha` was a
+    field a template was supposed to fill and no template filled: the identity the comments said the
+    field existed to protect was normally the empty string (red team, 12 September 2026). It is the git
+    head plus a hash over the tools tree, so a dirty working copy is distinguishable from its commit,
+    and an empty fingerprint makes the row UNMEASURED rather than comparable.
+    """
+    head = subprocess.run(["git", "-C", tools, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    h = hashlib.sha256()
+    for root, dirs, files in os.walk(tools):
+        dirs[:] = sorted(d for d in dirs if d not in ("__pycache__", "out", "tests"))
+        for f in sorted(files):
+            if not f.endswith((".py", ".sh", ".json")):
+                continue
+            fp = os.path.join(root, f)
+            h.update(os.path.relpath(fp, tools).encode())
+            try:
+                with open(fp, "rb") as fh:
+                    for c in iter(lambda: fh.read(1 << 20), b""):
+                        h.update(c)
+            except OSError:
+                pass
+    return {"git_head": head[:12], "tools_tree_sha": h.hexdigest()[:16],
+            "pair_preroute_sha": verdict.sha256_file(os.path.join(tools, "pair_preroute.py")),
+            "pairsearch_sha": verdict.sha256_file(os.path.join(tools, "pairsearch.py"))}
+
+
 def _kicad_build():
     """The KiCad build this arm ran against, or "" when pcbnew is not importable here."""
     try:
@@ -75,13 +104,33 @@ def run_arm(spec, arm, ecad, out_dir):
     # two runs, so the two boards were never the same tree. NOTHING here shows determinism failing across hosts;
     # what the day showed is that a recorded md5 without the commit that produced it cannot answer the question.
     row = {"arm": name, "board": spec["board"], "letter": spec["letter"], "env": arm.get("env", {}),
-           "predict": arm["predict"], "tools_sha": spec.get("tools_sha", ""),
+           "predict": arm["predict"], "runs": spec.get("runs", "pair"),
+           "tools": spec.get("_fingerprint") or tool_fingerprint(),
            "host": os.uname().nodename, "kicad": _kicad_build()}
     try:
         shutil.rmtree(dst, ignore_errors=True)
         shutil.copytree(src, dst)
         placed = os.path.join(dst, spec["placed"])
         board = os.path.join(dst, spec["board"] + ".kicad_pcb")
+        # THE PLACE RUN SHAPE. `schema.py` has declared it since it was written and this file had no code
+        # path for it, so a template that asked for it would have passed the validator and measured the
+        # frozen placement anyway: the exact false experiment the validator exists to prevent (red team,
+        # 12 September 2026). A place arm regenerates the board through full.sh with PLACE_* in the
+        # environment and stops after the placement; the pair passes then run on what it produced.
+        if spec.get("runs") == "place":
+            env = dict(os.environ)
+            env.update({k: str(v) for k, v in (arm.get("env") or {}).items()})
+            env.update({"PREROUTE_STOP_AFTER_PLACE": "1", "PHASE": spec.get("phase", "ARM")})
+            log = os.path.join(out_dir, "arm-%s-place.log" % name)
+            with open(log, "w") as fh:
+                subprocess.run(["bash", os.path.join(TOOLS, "full.sh"), dst, spec["letter"]],
+                               cwd=dst, stdout=fh, stderr=subprocess.STDOUT, env=env,
+                               timeout=spec.get("place_timeout_s", 3600))
+            txt = open(log, errors="replace").read()
+            if "PREROUTE-DONE PLACED" not in txt:
+                row.update(error="the placement did not complete: %s" % txt.strip().splitlines()[-1][:160] if txt.strip() else "no output")
+                return row
+            row["place_log"] = os.path.basename(log)
         if not os.path.exists(placed):
             row.update(error="no placed board at %s" % spec["placed"]); return row
         row["placed_md5"] = md5(placed)
@@ -123,6 +172,23 @@ def run_arm(spec, arm, ecad, out_dir):
     except Exception as e: row["error"] = "%s: %s" % (type(e).__name__, e)
     finally:
         row["wall_s"] = round(time.time() - t0 - (row.get("drc_s") or 0), 1)   # the DRC is timed separately
+        # KEEP THE BOARD A LEGAL ARM PRODUCED. The ledger held the numbers, the knobs, the DRC counts and
+        # the logs, and the one thing it did not hold was the geometry that produced them: "show me what
+        # won" needed a rerun that assumes every hidden dependency was captured (red team, 12 September
+        # 2026). A row that measured something legal keeps its board and its DRC report; everything else
+        # is removed as before.
+        if not row.get("error") and row.get("pairs") is not None and os.path.exists(board):
+            keep = os.path.join(out_dir, "boards")
+            os.makedirs(keep, exist_ok=True)
+            try:
+                shutil.copyfile(board, os.path.join(keep, "arm-%s.kicad_pcb" % name))
+                pro = os.path.splitext(board)[0] + ".kicad_pro"
+                if os.path.exists(pro):
+                    shutil.copyfile(pro, os.path.join(keep, "arm-%s.kicad_pro" % name))
+                row["board_kept"] = "boards/arm-%s.kicad_pcb" % name
+                row["board_sha"] = verdict.sha256_file(board)
+            except OSError as e:
+                row["board_kept"] = "not kept: %s" % e
         shutil.rmtree(dst, ignore_errors=True)
     return row
 
@@ -173,6 +239,9 @@ def grade(row, hard_baseline=None):
     """
     p = row.get("predict") or {}
     if row.get("error"): return "INFRA_FAIL", row["error"]
+    if not (row.get("tools") or {}).get("tools_tree_sha"):
+        return "UNMEASURED", ("the row carries no tool fingerprint, so nothing identifies the code that produced "
+                              "this number and it cannot be compared with any other row")
     if row.get("drc_error"): return "UNMEASURED", "the DRC on the arm's own board could not be read: %s" % row["drc_error"]
     if hard_baseline is None and row.get("hard") is not None:
         return "UNMEASURED", ("the arm's board reads hard %d and no baseline was measured to compare it with, "
@@ -232,6 +301,18 @@ def main(argv):
         hb = d.get("hard")
         print("arms: the baseline board reads hard %s%s" % (hb, "" if hb is not None else
                                                             " (%s)" % d.get("drc_error", "not measured")))
+        # A DIRTY BASELINE IS REFUSED, not graded against. Every arm on board B was measured on a
+        # placement carrying 150 hard violations, and an arm was called ILLEGAL only when it laid MORE
+        # than that (red team, 12 September 2026). The allowance is zero unless the board declares one
+        # with its number and the section that measured it.
+        allow = int(spec.get("hard_allowance", 0))
+        if hb is not None and hb > allow:
+            print("arms: REFUSED. The placed board carries %d hard violation(s) against an allowance of %d, so "
+                  "every arm would be measured in a neighbourhood that is already illegal. Fix the placement or "
+                  "declare the allowance in the spec with its number." % (hb, allow))
+            return verdict.write("arms", verdict.FAIL, counts={"baseline_hard": hb, "allowance": allow},
+                                 denominator=len(spec["arms"]), evidence=[],
+                                 note="a dirty baseline is refused, never graded against", out_dir=a.out_dir)
     spec["hard_baseline"] = hb
     if hb is None:
         print("arms: no baseline hard count, so every arm's legality is UNMEASURED rather than assumed")
@@ -252,9 +333,12 @@ def main(argv):
         print("  %-14s %-4s of %-4s  %-10s hard %-4s  maps %-5s s  wall %-6s s  %s"
               % (r["arm"], r.get("pairs", "-"), r.get("of", "-"), r["verdict"], r.get("hard", "?"),
                  r.get("map_seconds", "-"), r.get("wall_s", "-"), json.dumps(r.get("env", {}))[:60]))
-    met = sum(1 for r in rows if r["verdict"] == "MET")
-    bad = sum(1 for r in rows if r["verdict"] in ("INFRA_FAIL", "UNMEASURED"))
-    illegal = sum(1 for r in rows if r["verdict"] == "ILLEGAL")
+    # EVERY GRADE COUNTED ON ITS OWN. `missed` used to be the remainder, so UNMEASURED, ILLEGAL and
+    # UNMEASURABLE all landed in it and a dashboard reading the aggregate got the wrong classification
+    # (red team, 12 September 2026). A count derived by subtraction is a count of "everything I did not
+    # think of".
+    g = collections.Counter(r["verdict"] for r in rows)
+    met, bad, illegal = g["MET"], g["INFRA_FAIL"] + g["UNMEASURED"], g["ILLEGAL"]
     legal = [r for r in rows if r["verdict"] in ("MET", "MISSED")]
     best = legal[0] if legal else {}          # a headline number may only come from a board that could exist
     # A cycle in which nothing legal ran is not a pass. Tier 2b found the first version reporting PASS
@@ -263,8 +347,10 @@ def main(argv):
          else verdict.FAIL if not legal
          else verdict.PASS)
     return verdict.write("arms", v,
-                         counts={"arms": len(rows), "met": met, "missed": len(rows) - met - bad - illegal,
-                                 "infra_fail": bad, "illegal": illegal, "best_pairs": best.get("pairs")},
+                         counts={"arms": len(rows), "met": g["MET"], "missed": g["MISSED"],
+                                 "illegal": g["ILLEGAL"], "unmeasured": g["UNMEASURED"],
+                                 "unmeasurable": g["UNMEASURABLE"], "infra_fail": g["INFRA_FAIL"],
+                                 "best_pairs": best.get("pairs")},
                          denominator=len(rows), evidence=["%s %s %s" % (r["arm"], r["verdict"], r["note"]) for r in rows],
                          note="best LEGAL arm %s with %s of %s, %d illegal; the judge is the measured pair count "
                               "and the measured hard set, never the arm"

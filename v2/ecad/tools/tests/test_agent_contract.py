@@ -72,7 +72,7 @@ def t_the_model_owns_three_fields():
 
 def t_a_knob_nobody_reads_is_refused():
     p = json.loads(json.dumps(GOOD)); p["arms"][0]["env"] = {"PAIR_MAGIC_MODE": 1}
-    _refuses(p, "no tool in this tree reads")
+    _refuses(p, "in no registry entry")
 
 
 def t_a_reserved_knob_is_refused_with_its_reason():
@@ -416,7 +416,8 @@ def t_the_pair_count_alone_is_not_the_objective():
     import importlib.util
     sp = importlib.util.spec_from_file_location("armsmod_legal", os.path.join(TOOLS, "arms.py"))
     m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
-    base = {"pairs": 40, "predict": {"op": ">=", "value": 32, "basis": "b"}}
+    base = {"pairs": 40, "predict": {"op": ">=", "value": 32, "basis": "b"},
+            "tools": {"tools_tree_sha": "deadbeefdeadbeef"}}
     if m.grade(dict(base, hard=7), 0)[0] != "ILLEGAL":
         raise AssertionError("an arm that laid hard violations was graded on its pair count")
     if m.grade(dict(base, hard=0), 0)[0] != "MET":
@@ -473,3 +474,184 @@ def t_there_is_only_one_judge():
         raise AssertionError("the loop grades rows that already carry a verdict")
     if "graded_by" not in src:
         raise AssertionError("a row does not record which judge decided it")
+
+
+# ---------------------------------------------------------------- the red team's findings, 12 September 2026
+
+def t_one_variable_is_mechanical_not_a_prompt_rule():
+    """The prompt said one variable and the validator accepted any number of knobs (red team P1).
+
+    An arm with two knobs may improve the number and the evidence cannot say which one paid. This is a
+    causal-attribution rule, not a style rule, and a rule that lives only in a prompt is not a rule.
+    """
+    p = json.loads(json.dumps(GOOD))
+    p["arms"][0]["env"] = {"PAIR_CORRIDOR_SLACK": 0.05, "PAIR_VIA_CANDS": 8}
+    _refuses(p, "ONE VARIABLE")
+    t = dict(TEMPLATE); t["_max_knobs"] = 2
+    ok, errs, _ = schema.validate(p, t)
+    if not ok:
+        raise AssertionError("a declared interaction experiment was still refused: %s" % errs)
+
+
+def t_the_metric_is_closed_and_the_judge_grades_it():
+    """A prediction that says runtime and is graded against pairs is a row whose prose and meaning differ."""
+    p = json.loads(json.dumps(GOOD)); p["arms"][0]["predict"]["metric"] = "runtime"
+    _refuses(p, "while the judge grades")
+
+
+def t_the_registry_is_the_authority_not_the_source_scan():
+    """Reading a name from the source says the name exists, never that it is a lever (red team P1).
+
+    `PAIR_PLAN_OUT` writes a file, `PAIR_DEBUG` prints, `PAIR_NO_NUMBA` chooses the kernel: all three were
+    proposable when the proposable set was "every environment name the tools read".
+    """
+    reg = schema.registry()
+    for k, cat in (("PAIR_PLAN_OUT", "io"), ("PAIR_DEBUG", "debug"), ("PAIR_NO_NUMBA", "basis"),
+                   ("PAIR_MAP_MODE", "basis"), ("PAIR_CORRIDOR_SLACK", "experiment"),
+                   ("PAIR_LAYERS", "reserved"), ("PLACE_COUPLE_GAP", "experiment")):
+        if reg.get(k, {}).get("category") != cat:
+            raise AssertionError("%s is categorised %r and should be %r" % (k, reg.get(k, {}).get("category"), cat))
+    for k in ("PAIR_PLAN_OUT", "PAIR_DEBUG", "PAIR_NO_NUMBA"):
+        p = json.loads(json.dumps(GOOD)); p["arms"][0]["env"] = {k: "1"}
+        ok, errs, _ = schema.validate(p, TEMPLATE)
+        if ok:
+            raise AssertionError("%s was accepted as a routing experiment" % k)
+
+
+def t_every_knob_the_tools_read_is_in_the_registry():
+    """COMPLETENESS, the safe direction: a knob nobody registered is a test failure, not a licence."""
+    missing = sorted(schema.known_knobs() - set(schema.registry()))
+    if missing:
+        raise AssertionError("the tools read these and the registry does not carry them, so their category "
+                             "is unknown: %s" % missing)
+
+
+def t_a_prediction_must_be_able_to_be_wrong():
+    """`>= 1` on a board that lays 22 runs nineteen minutes and is graded MET (red team round three H1)."""
+    p = json.loads(json.dumps(GOOD)); p["arms"][0]["predict"]["value"] = 20
+    ok, errs, _ = schema.validate(p, TEMPLATE, best=22)
+    if ok:
+        raise AssertionError("a prediction inside the measured range was accepted")
+    if not any("beat the best measured row" in e for e in errs):
+        raise AssertionError("refused, but not for falsifiability: %s" % errs)
+    p2 = json.loads(json.dumps(GOOD)); p2["arms"][0]["predict"]["value"] = 26
+    ok2, errs2, _ = schema.validate(p2, TEMPLATE, best=22)
+    if not ok2:
+        raise AssertionError("a prediction that beats the best row was refused: %s" % errs2)
+
+
+def t_a_row_without_a_tool_fingerprint_is_unmeasured():
+    """The field existed, no template filled it, and the identity it protects was the empty string."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("armsmod_fp", os.path.join(TOOLS, "arms.py"))
+    m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+    fp = m.tool_fingerprint()
+    for k in ("git_head", "tools_tree_sha", "pair_preroute_sha", "pairsearch_sha"):
+        if not fp.get(k):
+            raise AssertionError("the fingerprint carries no %s" % k)
+    base = {"pairs": 40, "hard": 0, "predict": {"op": ">=", "value": 32}}
+    if m.grade(dict(base, tools={}), 0)[0] != "UNMEASURED":
+        raise AssertionError("a row with no tool fingerprint was graded as a measurement")
+    if m.grade(dict(base, tools=fp), 0)[0] != "MET":
+        raise AssertionError("a row with a fingerprint was not graded")
+
+
+def t_the_evidence_refuses_a_ledger_that_does_not_verify():
+    """The chain was tamper-evident only when somebody called the verifier (red team P1)."""
+    import tempfile, importlib.util
+    sys.path.insert(0, TOOLS)
+    import ledger as _ledger
+    sp = importlib.util.spec_from_file_location("ev_t", os.path.join(AGENT, "evidence.py"))
+    ev = importlib.util.module_from_spec(sp); sp.loader.exec_module(ev)
+    d = tempfile.mkdtemp(); p = os.path.join(d, "arms.jsonl")
+    _ledger.append(p, {"arm": "a", "pairs": 5, "env": {"PAIR_CORRIDOR_SLACK": "0.06"}})
+    if len(ev.graded_rows([p])) != 1:
+        raise AssertionError("an intact chain was not read")
+    lines = open(p).read().splitlines()
+    open(p, "w").write(lines[0].replace('"pairs": 5', '"pairs": 9') + "\n")
+    try:
+        ev.graded_rows([p])
+    except ev.EvidenceCorrupt:
+        return
+    raise AssertionError("a tampered ledger was consumed as evidence")
+
+
+def t_the_patch_flow_proves_the_red_side():
+    """A green suite can defend a bug, so the named regression is RUN at the baseline (red team P1)."""
+    src = open(os.path.join(AGENT, "patch.py"), errors="replace").read()
+    if "_red_side(" not in src or "PASSES at the baseline" not in src:
+        raise AssertionError("patch.py does not run the named test at the baseline")
+    body = src.split('"""', 2)[2]
+    if "_red_side(base, selector)" not in body:
+        raise AssertionError("the baseline worktree is not asked to fail the named test")
+    if 'report["red"] is not True' not in body:
+        raise AssertionError("a patch whose red side is unproved is not refused")
+    if "_test_hunks(" not in body:
+        raise AssertionError("a patch that brings its own test cannot be proved red")
+
+
+def t_the_place_run_shape_is_implemented_or_absent():
+    """The validator must not promise a run shape the runner cannot keep (red team P1, round three C1)."""
+    declared = set(schema.STAGES)
+    src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
+    for shape in declared:
+        if shape == "pair":
+            continue
+        if 'spec.get("runs") == "%s"' % shape not in src:
+            raise AssertionError("schema declares the %r run shape and arms.py has no code path for it" % shape)
+
+
+def t_no_count_is_a_remainder():
+    """`missed` was `total - met - infra`, so UNMEASURED and ILLEGAL landed in it (red team P1)."""
+    for f in ("arms.py", os.path.join("agent", "loop.py")):
+        src = open(os.path.join(TOOLS, f), errors="replace").read()
+        if re.search(r'"missed":\s*len\(rows\)\s*-', src):
+            raise AssertionError("%s still derives `missed` by subtraction" % f)
+        if '"unmeasured"' not in src or '"illegal"' not in src:
+            raise AssertionError("%s does not count every grade on its own" % f)
+
+
+def t_a_legal_arm_keeps_its_board():
+    """"Show me what won" needed a rerun that assumes every hidden dependency was captured (red team P1)."""
+    src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
+    if "board_kept" not in src or "boards" not in src:
+        raise AssertionError("arms.py does not keep the board a legal arm produced")
+    i = src.index("shutil.rmtree(dst, ignore_errors=True)\n    return row")
+    if "board_kept" not in src[max(0, i - 1400):i]:
+        raise AssertionError("the board is removed before it is kept")
+
+
+def t_the_loop_actuates_through_an_argv():
+    """The one construction routeflow.sh() refuses, at the loop's one actuation point (red team H4)."""
+    src = open(os.path.join(AGENT, "loop.py"), errors="replace").read()
+    if "shell=True" in src:
+        raise AssertionError("the loop still executes a shell string")
+    if "shlex.split" not in src:
+        raise AssertionError("the exec template is not split into an argv")
+
+
+def t_the_cheap_gate_runs_before_the_expensive_stage():
+    """A one-minute DRC belongs in front of a nineteen-minute pass (red team round three C2)."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    snap = src.index("cp $N.kicad_pcb out/$N-placed.kicad_pcb")
+    pairs = src.index("THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT")
+    gate = src.find("placed_hard_allowance")
+    if not (snap < gate < pairs):
+        raise AssertionError("the placed board's DRC does not sit between the snapshot and the pair passes")
+    if "BLOCK the placed board carries" not in src:
+        raise AssertionError("a dirty placed board does not block")
+    block = src[gate:pairs]
+    if "exit 1" not in block:
+        raise AssertionError("the placed-board gate prints and does not stop the chain")
+    arms = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
+    if "a dirty baseline is refused" not in arms:
+        raise AssertionError("arms.py still grades against a dirty baseline instead of refusing it")
+
+
+def t_hardset_has_a_gate_verb_whose_exit_code_is_its_verdict():
+    """One exit code meant two things, which breaks the rule every other gate here keeps (red team P2)."""
+    src = open(os.path.join(TOOLS, "hardset.py"), errors="replace").read()
+    if 'a[0] in ("measure", "gate")' not in src:
+        raise AssertionError("hardset.py has no verb")
+    if 'if verb == "gate"' not in src:
+        raise AssertionError("the gate verb does not change the exit code")

@@ -36,7 +36,13 @@ def _matches(rel, line, classes):
     out = []
     for name, why, sites in classes:
         for glob, pat in sites:
-            if fnmatch.fnmatch(rel, glob) or fnmatch.fnmatch(os.path.basename(rel), glob):
+            # A GLOB WITH A DIRECTORY IN IT MUST STILL MATCH. `git diff` gives repo-relative paths
+            # (v2/ecad/tools/boards/b.json), and matching only the whole path or the basename meant
+            # `boards/*.json` and `../docs/...` matched NOTHING: three reserved classes had never once
+            # fired (red team round three L5, found by the test that asks whether each pattern still
+            # matches a line). The glob is tried against the path, its basename, and as a suffix.
+            if (fnmatch.fnmatch(rel, glob) or fnmatch.fnmatch(os.path.basename(rel), glob)
+                    or fnmatch.fnmatch(rel, "*/" + glob.lstrip("./"))):
                 if pat.search(line): out.append((name, why)); break
     return out
 

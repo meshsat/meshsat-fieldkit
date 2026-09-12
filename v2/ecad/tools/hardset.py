@@ -9,7 +9,15 @@ Two exemptions, both about one footprint against itself: a courtyard overlap of 
 receptacle) and a solder-mask bridge inside one footprint (two pads of a fine-pitch part, which JLC gang-masks, or a library mask drawing over its
 own pad; a bridge between different parts or pad to track stays hard).
 
-Usage: hardset.py <drc.json> [pre|post] [--score FILE] [--counts FILE] [--gate FILE] [--flag FILE] [--label TEXT] [--examples N]
+Usage: hardset.py [measure|gate] <drc.json> [pre|post] [--score FILE] [--counts FILE] [--gate FILE] [--flag FILE] [--label TEXT] [--examples N]
+
+TWO VERBS, because one exit code meant two things (red team, 12 September 2026). `--score` and `--counts`
+callers read exit 0 as "the report was readable", and the verdict file said PASS or FAIL, so a valid dirty
+board exited 0 while its verdict said FAIL. That is defensible for those callers and it breaks the rule the
+rest of this pipeline keeps, that a gate's exit code IS its verdict, and it means a generic stage runner
+cannot treat every gate alike. `hardset.py measure ...` exits 0 when the report was readable (the old
+behaviour, and the default when no verb is given, so nothing that calls it today changes). `hardset.py gate
+...` exits 0 PASS, 1 FAIL, 3 INCONCLUSIVE like every other gate here.
   prints  hardset: hard H of T types {type: n} unrouted U | report {type: n}
   --score writes H; --counts writes "H U"; --gate writes OK or BLOCK H; --flag writes clean or open (hard 0 and unrouted 0).  Exit 3 on an unreadable JSON (never a pass).
 
@@ -90,6 +98,10 @@ def _vname(label):
 
 
 def main(a):
+    # The verb, if one was given. `measure` is the default so every existing caller is unchanged.
+    verb = "measure"
+    if a and a[0] in ("measure", "gate"):
+        verb, a = a[0], a[1:]
     if not a or a[0] in ("-h", "--help"): print(__doc__); return 2
     which = "pre" if "pre" in a[1:2] else "post"
     def opt(k): return a[a.index(k) + 1] if k in a else None
@@ -129,7 +141,12 @@ def main(a):
                   note=((opt("--label") or "") +
                         (" (pre-route: only the hard set decides, an unrouted board is the expected input)" if not unrouted_counts
                          else " (routed board: hard and unrouted must both be zero)") +
-                        " (exit code stays the reader contract of --score and --counts)"))
+                        (" (exit code stays the reader contract of --score and --counts)" if verb == "measure"
+                         else " (gate: the exit code IS the verdict)")))
+    # THE VERB DECIDES THE EXIT CODE. `measure` keeps the reader contract every current caller relies on:
+    # zero means the report was readable. `gate` is a gate like every other one here: 0 PASS, 1 FAIL.
+    if verb == "gate":
+        return verdict.CODE[verdict.FAIL if bad else verdict.PASS]
     return 0
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

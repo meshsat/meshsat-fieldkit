@@ -47,7 +47,11 @@ cp $N.kicad_pcb out/$N-par-routed.kicad_pcb
 
 # --- the order, and it is the whole reason this file exists ---
 # 1. the router's knot (two nets' tracks tangled at one spot, 20 to 25 shorts) goes before anything else
-python3 $T/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep unknot && python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep cleanup
+# `unknot | grep unknot && cleanup` made the clean-up conditional on the WORD unknot appearing, in the file
+# whose whole point is that no driver branches on a gate's prose (red team round three L2). They are two
+# steps; the clean-up runs either way.
+python3 $T/unknot.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -E 'unknot' || true
+python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -E 'cleanup' || true
 $T/drc.sh $N.kicad_pcb out/$N-drc.json
 # 2. a pad its own plane cannot reach gets a via in the pad, then the dogbone past its tip
 python3 $T/zone_pad_via.py $N.kicad_pcb out/$N-drc.json 2>&1 | grep -v "^Debug" | tail -6; $T/drc.sh $N.kicad_pcb out/$N-drc.json
@@ -150,7 +154,14 @@ fi
 $T/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 $T/hardset.py out/$N-drc.json post --flag "$FLAG" --label 'routed-board gate' | sed 's/^hardset:/routed-board DRC:/'
 python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('  OPEN', ' ~ '.join(i['description'][:50] for i in u['items'])) for u in d.get('unconnected_items', [])[:6]]"
-[ -n "$PRUNED" ] && { python3 $T/pruned_gate.py $N.kicad_pcb out/$N-pruned.txt 2>&1 | grep -E 'pruned_gate' | tail -6; python3 $T/pruned_gate.py $N.kicad_pcb out/$N-pruned.txt >/dev/null 2>&1 || stop "PRUNED PAD NOT REACHED by the router"; }
+# ONE RUN, ONE DECISION. It ran twice, once to print and once to decide, which is the pattern stage 0
+# removed from every board gate and left here (red team round three L2). On B that is two passes over the
+# pruned list for one boolean, and worse, two runs can disagree.
+if [ -n "$PRUNED" ]; then
+  python3 $T/pruned_gate.py $N.kicad_pcb out/$N-pruned.txt > out/pruned_gate.log 2>&1; PRC=$?
+  grep -E 'pruned_gate' out/pruned_gate.log | tail -6
+  [ "$PRC" -eq 0 ] || stop "PRUNED PAD NOT REACHED by the router"
+fi
 
 # every gate below runs ONCE and its exit code is its verdict; the reason comes from its verdict JSON
 python3 $T/check_pcb_$L.py $N.kicad_pcb > out/gate-$N.log 2>&1; GATE=$?; grep -E "$GGREP" out/gate-$N.log | tail -14

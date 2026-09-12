@@ -16,6 +16,10 @@
 # Usage: drc.sh <board.kicad_pcb> <report.json> [extra kicad-cli arguments]
 set -uo pipefail
 B="$1"; R="$2"; shift 2
+# WHAT A DRC COSTS. finish.sh calls this twelve times and the project that will not quote a number without
+# what it was measured on did not know what its own finish cost (red team round three H3). The seconds and
+# the board hash go beside the report, so a stage runner can see where a finish spends its time.
+_T0=$(date +%s)
 TMP="$R.part"; ERR="$R.err"
 rm -f "$R" "$TMP" "$ERR"
 # A board file whose .kicad_pro is not beside it under its own stem is judged against the DEFAULT net class, and on
@@ -39,3 +43,17 @@ if not isinstance(d, dict) or "violations" not in d: raise SystemExit(1)
 PY
 mv -f "$TMP" "$R"; rm -f "$ERR"
 exit 0
+
+_T1=$(date +%s)
+python3 - "$R" "$B" "$((_T1 - _T0))" <<'PY2' 2>/dev/null || true
+import sys, json, os, hashlib
+rep, board, secs = sys.argv[1], sys.argv[2], int(sys.argv[3])
+try:
+    v = json.load(open(rep)).get("violations", [])
+except Exception:
+    v = []
+h = hashlib.sha256(open(board, "rb").read()).hexdigest()[:16] if os.path.exists(board) else ""
+json.dump({"seconds": secs, "violations": len(v), "board_sha": h, "report": os.path.basename(rep)},
+          open(os.path.join(os.path.dirname(rep) or ".", "drc-cost.json"), "w"), indent=1)
+print("drc: %d s, %d violation(s), board %s" % (secs, len(v), h))
+PY2

@@ -139,6 +139,12 @@ def t_routeflow_validate_agrees_with_these_rules():
     lock, so a box profile could not be checked from the runner at all. Ten of the twelve profiles as they
     stood before the collapse fail `routeflow.py validate`."""
     import subprocess
+    # `validate` judges a profile against the TREE, including the project directory its chain runs in, and
+    # those are generated. On a code-only checkout this was a FAIL for a missing input, which is the shape
+    # the suite exists to forbid (red team round three M1): it skips with the reason instead.
+    ecad = os.path.dirname(TOOLS)
+    if not glob.glob(os.path.join(ecad, "pcb-*-*")):
+        raise Skip("no phase project directories in this checkout; routeflow validate judges profiles against them")
     for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
         r = subprocess.run([sys.executable, os.path.join(TOOLS, "routeflow.py"), "validate", p],
                            capture_output=True, text=True)
