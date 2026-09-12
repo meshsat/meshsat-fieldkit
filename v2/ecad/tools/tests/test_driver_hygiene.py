@@ -540,3 +540,21 @@ def t_a_nearness_window_carries_the_pads_own_reach():
         if "qreach" not in h:
             raise AssertionError("escape.py short-circuits a pad test on the distance to the pad CENTRE "
                                  "with no allowance for the pad's own size: %s" % h.strip())
+
+
+def t_a_margin_against_the_board_is_the_boards_own():
+    """`prefanout.py`'s in-pad fallback kept a number typed into the tool (MESHSAT-862, 12 September 2026).
+
+    It placed a via at a pad's centre whenever every other-net pad was at least 0.15 mm away, while board
+    B's own hole clearance is 0.19 mm and its minimum clearance 0.127: a via could satisfy the tool and
+    fail the DRC, which is 25 of the 45 hard violations left on B19's placed board after the land patterns
+    and the escape window were corrected. A margin that is not the board's is a second opinion about the
+    board.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "prefanout.py"), errors="replace").read()
+    if "m_HoleClearance" not in src or "INPAD_CLR" not in src:
+        raise AssertionError("prefanout.py does not read the board's own hole and minimum clearance")
+    for m in _re.finditer(r"qr \+ VIA_D / 2 \+ ([A-Za-z_(0-9.)]+)", src):
+        if "INPAD_CLR" not in m.group(1):
+            raise AssertionError("the in-pad fallback keeps a typed margin from other pads: %s" % m.group(1))

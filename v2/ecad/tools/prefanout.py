@@ -22,6 +22,13 @@ def is_fine(fp):
 _ds = b.GetDesignSettings()
 VIA_D, VIA_DRILL, TRACK_W = max(_ds.m_ViasMinSize, FromMM(0.45)), max(_ds.m_MinThroughDrill, FromMM(0.25)), FromMM(0.4)   # 7 Sep 2026: the board's small via (0.45/0.25 on the four-layer boards) instead of 0.8/0.4, so a plane via fits beside a packed 0603; a 2-layer board keeps its 0.5/0.3 floor
 if b.GetCopperLayerCount() == 2: VIA_D, VIA_DRILL = max(VIA_D, FromMM(0.5)), max(VIA_DRILL, FromMM(0.3))
+# The board's OWN rules, not a number typed here. The in-pad fallback below kept a hard-wired 0.15 mm from
+# every other-net pad, and this board's hole clearance is 0.19 and its minimum clearance 0.127: a via placed
+# at a pad centre could satisfy the tool and fail the DRC, which is 25 of the 45 hard violations left on
+# B19's placed board (12 September 2026). A margin that is not the board's is a second opinion about the
+# board (appendix 32.149).
+_DS = b.GetDesignSettings()
+INPAD_CLR = max(_DS.m_HoleClearance, _DS.m_MinClearance, FromMM(0.15))
 allpads = [(p, p.GetPosition(), max(p.GetSize().x, p.GetSize().y) / 2) for fp in b.GetFootprints() for p in fp.Pads()]
 rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()] + [z for fp in b.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout; B13: footprint keep-outs (the E72 antenna) count too
 edges = b.GetBoardEdgesBoundingBox()
@@ -101,8 +108,8 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                     placed.append(v); placed_nets.append((v, pad.GetNetname())); added += 1; done = True; break
             if done: break
         if not done and min(pad.GetSize().x, pad.GetSize().y) >= VIA_D + FromMM(0.1) and not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed) \
-           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + FromMM(0.15) for q, qp, qr in allpads if q.GetNetname() != pad.GetNetname()) \
-           and all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + FromMM(0.15) for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname()):   # 8 Sep 2026: the in-pad fallback tested pads and vias but not TRACKS, so a via in a plane pad landed on a neighbour's locked escape and the escape was pruned for it (B17, 32.77). The via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
+           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + INPAD_CLR for q, qp, qr in allpads if q.GetNetname() != pad.GetNetname()) \
+           and all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + INPAD_CLR for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname()):   # 8 Sep 2026: the in-pad fallback tested pads and vias but not TRACKS, so a via in a plane pad landed on a neighbour's locked escape and the escape was pruned for it (B17, 32.77). The via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
             # 7 Sep 2026 (E6 run 8, D8 run 3): a plane pad with no room around it gets its via in the pad (0.45/0.25 inside a 0603 land), so no pour piece is ever left
             # hanging on a pad without a path to the plane; the count is reported for the order notes (via-in-pad is a prototype allowance)
             via = pcbnew.PCB_VIA(b); via.SetPosition(c); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)
