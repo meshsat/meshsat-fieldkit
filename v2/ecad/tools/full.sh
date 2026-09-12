@@ -16,6 +16,12 @@ cfg () { python3 -c "import json,sys; d=json.load(open(sys.argv[1])); v=d.get(sy
 cfg_env () { python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print(' '.join('%s=%s'%(k,v) for k,v in (d.get('escape_env') or {}).items()))" "$CFG"; }
 
 N="$(cfg name)"; FPGEN="$(cfg footprint_generator)"; EXTRA="$(cfg extra_compile)"
+# The phase the silk carries. It lived as a DEFAULT inside each generator (gen_pcb_c.py said C9 while C's
+# deliverable is C10) and only one of the six wrappers set it, so a board could be routed for hours and then have
+# its deliverable refused for naming another phase, which is what `verify_deliverable` checks and what A24's A18
+# silk was (12 September 2026). A caller's own PHASE still wins, which is how an older phase is rebuilt.
+export PHASE="${PHASE:-$(cfg phase)}"
+[ -n "$PHASE" ] && echo "full.sh: phase $PHASE"
 GATE1="$(cfg gate_before_placement)"; BPAFTER="$(cfg bypass_place_after)"
 PCLS="$(cfg pair_classes)"; PLAY="$(cfg pair_layers)"; PHOP="$(cfg pair_hop_layers)"; PTAIL="$(cfg pair_tail)"
 FANOUT="$(cfg fanout_nets)"; EPRUNE="$(cfg escape_prune_before_audit)"; ESCENV="$(cfg_env)"

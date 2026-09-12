@@ -67,6 +67,56 @@ def parse_items(drc):
     return out
 
 
+def pieces_of(b, net):
+    """every piece of copper of this net, as (kind, point, layers, label); a track contributes both its ends"""
+    out = []
+    for f in b.GetFootprints():
+        for p in f.Pads():
+            if p.GetNetname() != net: continue
+            out.append(("pad", p.GetPosition(), [l for l in p.GetLayerSet().CuStack()],
+                        "pad %s.%s" % (f.GetReference(), p.GetNumber()), p))
+    for t in b.GetTracks():
+        if t.GetNetname() != net: continue
+        if t.GetClass() == "PCB_VIA": out.append(("via", t.GetPosition(), [l for l in t.GetLayerSet().CuStack()], "via", t))
+        else:
+            out.append(("end", t.GetStart(), [t.GetLayer()], "track end", t))
+            out.append(("end", t.GetEnd(), [t.GetLayer()], "track end", t))
+    return out
+
+
+def clusters_of(b, net, items):
+    """union-find over the net's own copper, so the two sides of an open are the two CLUSTERS and not the two
+    pieces the DRC happened to name. A24's /+3V3 reads as 9.36 mm between the named pieces and the real gap
+    between the two clusters is what a closure has to cross (12 September 2026)."""
+    parent = list(range(len(items)))
+    def find(i):
+        while parent[i] != i: parent[i] = parent[parent[i]]; i = parent[i]
+        return i
+    def union(i, j):
+        a, c = find(i), find(j)
+        if a != c: parent[a] = c
+    bypos = {}
+    for i, (k, p, ls, lab, obj) in enumerate(items):
+        bypos.setdefault((p.x, p.y), []).append(i)
+        if k == "end":   # the two ends of one track are one piece
+            pass
+    for group in bypos.values():
+        for j in group[1:]: union(group[0], j)
+    # the two ends of the same track object are connected
+    byobj = {}
+    for i, (k, p, ls, lab, obj) in enumerate(items):
+        byobj.setdefault(id(obj) if k != "end" else (obj.GetStart().x, obj.GetStart().y, obj.GetEnd().x, obj.GetEnd().y, obj.GetLayer()), []).append(i)
+    for group in byobj.values():
+        for j in group[1:]: union(group[0], j)
+    # a point lying inside a pad of the net joins that pad
+    pads = [(i, it) for i, it in enumerate(items) if it[0] == "pad"]
+    for i, (k, p, ls, lab, obj) in enumerate(items):
+        if k == "pad": continue
+        for j, (k2, p2, ls2, lab2, pad) in pads:
+            if pad.HitTest(p): union(i, j)
+    return [find(i) for i in range(len(items))]
+
+
 def anchor(b, net, end):
     """the real copper of this net at the piece the DRC named, at the position it named it at.
 
@@ -124,6 +174,23 @@ def main(argv):
     for it in pairs:
         net = it["net"]; b = pcbnew.LoadBoard(bp)
         A = anchor(b, net, it["ends"][0]); B = anchor(b, net, it["ends"][1])
+        if A and B:
+            # the closest pair of points between the two CLUSTERS the DRC's two pieces belong to
+            items_ = pieces_of(b, net); lab = clusters_of(b, net, items_)
+            def near_idx(pt):
+                return min(range(len(items_)), key=lambda i: (items_[i][1].x - pt.x) ** 2 + (items_[i][1].y - pt.y) ** 2)
+            ca, cb = lab[near_idx(A[1])], lab[near_idx(B[1])]
+            if ca != cb:
+                best = None
+                for i, (k1, p1, l1, n1, o1) in enumerate(items_):
+                    if lab[i] != ca: continue
+                    for j, (k2, p2, l2, n2, o2) in enumerate(items_):
+                        if lab[j] != cb: continue
+                        if not [l for l in l1 if l in l2]: continue
+                        d2 = (p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2
+                        if best is None or d2 < best[0]: best = (d2, (0.0, p1, l1, n1), (0.0, p2, l2, n2))
+                if best and best[0] < (A[1].x - B[1].x) ** 2 + (A[1].y - B[1].y) ** 2:
+                    A, B = best[1], best[2]
         if not A or not B:
             rows.append({"net": net, "result": "no copper of the net at one end the DRC named"}); continue
         gap = math.hypot(mm(A[1].x - B[1].x), mm(A[1].y - B[1].y))
