@@ -9,6 +9,14 @@ wins one draw is a measurement and not a law.
 The measurements are on B19's placed board (113 pairs) unless a row says otherwise. `boards/<letter>.json` is
 where a board's own values live (`pair_env`), never the tool's defaults.
 
+**EVERY NUMBER BELOW WAS TAKEN ON A TOOL THAT COULD LAY COPPER ON ANOTHER NET (appendix 32.135), and the whole
+table is owed a re-measurement.** Six emissions laid copper without asking, the worst of them being the entry
+region of `legs_clear`, which skipped the occupancy map for the first and last 1.2 mm of every leg at an entry
+station. Closing that hole alone takes B19's DIFF100 pass from 22 of 48 to about 10, so the 57 of 113 this table
+rests on is an upper bound on a pass that was not legal throughout. `PAIR_ENTRY_STRICT=0` reproduces the old
+behaviour exactly, which is how the two are compared; the arm that decides whether those pairs were legal is a
+DRC of both boards, not a pair count.
+
 ## Measured
 
 | knob | default | what it does | what it measured |
