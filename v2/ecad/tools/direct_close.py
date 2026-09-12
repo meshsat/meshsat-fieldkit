@@ -198,6 +198,36 @@ def main(argv):
         if gap > MAXD:
             print("direct_close: %-14s %.3f mm apart (%s to %s): beyond --max=%.1f, left to the router" % (net, gap, A[3], B[3], MAXD))
             rows.append({"net": net, "result": "beyond max", "gap_mm": round(gap, 3)}); continue
+        # A PAD WALLED IN BY ITS OWN PACKAGE IS NOT THE PLACE TO START (12 September 2026, board C10). Its one
+        # open connection is /+3V3 at U3 pad 10, a 0.88 x 0.20 mm QFN finger, and every shape proposed from the
+        # pad bridged pad 11 or pad 14 on B.Cu. The pad already has a 1.52 mm escape stub of its own net leaving
+        # the ring; what it lacks is a via at the far end of that stub. So when an anchor is a pad and a track of
+        # its net ends ON it, the stub's OTHER end is offered as an anchor too, and the DRC decides as always.
+        # One hop, never a search: the point of this tool is proposed geometry, not a router.
+        hops = []
+        def _hop(anc):
+            if not anc or "pad" not in (anc[3] or "").lower():
+                return None
+            best = None
+            for tr in b.GetTracks():
+                # A zero-length track is not a stub: its far end IS the pad, so it offers the pad again and
+                # hides the real escape behind it (C10's U3 pad 10 carries one of each).
+                if tr.GetClass() != "PCB_TRACK" or tr.GetNetname() != net or tr.GetLength() < 50000: continue
+                for e, far in ((tr.GetStart(), tr.GetEnd()), (tr.GetEnd(), tr.GetStart())):
+                    if abs(e.x - anc[1].x) > 20000 or abs(e.y - anc[1].y) > 20000: continue
+                    L = tr.GetLayer()
+                    cand = (0.0, far, [L], "%s stub end on %s" % (anc[3], b.GetLayerName(L)))
+                    d2 = (far.x - (B[1].x if anc is A else A[1].x)) ** 2 + (far.y - (B[1].y if anc is A else A[1].y)) ** 2
+                    if best is None or d2 < best[0]: best = (d2, cand)
+            return best[1] if best else None
+        for _alt, _which in ((_hop(A), "A"), (_hop(B), "B")):
+            if _alt is None: continue
+            _a, _b = (_alt, B) if _which == "A" else (A, _alt)
+            _g = math.hypot(mm(_a[1].x - _b[1].x), mm(_a[1].y - _b[1].y))
+            if _g <= MAXD:
+                hops.append((_a, _b, _g, _alt[3]))
+                print("direct_close: %-14s a hop is available from %s, %.3f mm against %.3f from the pad"
+                      % (net, _alt[3], _g, gap))
         if not common:
             # TWO ENDS ON DIFFERENT LAYERS ARE NOT A REFUSAL, they are a hop (12 September 2026, board C10).
             # C10 ended its third round at 0 hard and one open: U3 pad 10 on B.Cu, 1.7 mm from a track of its
