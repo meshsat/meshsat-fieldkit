@@ -1,0 +1,10 @@
+(footprint "Slot_5x1.8_NPTH"
+	(version 20241229)
+	(generator "meshsat")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "NPTH slot 5 x 1.8 mm for a cable tie or strap")
+	(attr exclude_from_pos_files exclude_from_bom)
+	(pad "" np_thru_hole oval (at 0 0) (size 5 1.8) (drill oval 5 1.8) (layers "*.Cu" "*.Mask"))
+	(fp_rect (start -2.75 -1.15) (end 2.75 1.15) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))
+)

@@ -1,0 +1,334 @@
+** Drc report for pcb-a-power.kicad_pcb **
+** Created on 2026-09-12T18:16:22+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 96 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(142.0000 mm, 121.0000 mm): PCB text 'J_MEZZ_PWR1 VH2 (5 V)' on F.Silkscreen
+    @(150.0000 mm, 70.0000 mm): Segment on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(249.4325 mm, 126.0800 mm): Segment of J_AB2 on F.Silkscreen
+    @(250.0000 mm, 150.0000 mm): Segment on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(250.0000 mm, 150.0000 mm): Segment on F.Silkscreen
+    @(250.4325 mm, 125.5800 mm): Segment of J_AB2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(243.9000 mm, 31.7250 mm): Segment of J_MAINSW on F.Silkscreen
+    @(205.0000 mm, 33.5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A24)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(244.1900 mm, 32.0150 mm): Rectangle of J_MAINSW on F.Silkscreen
+    @(200.0000 mm, 36.7000 mm): PCB text 'MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 6 layers JLC06161H-3313  |  matte black  |  2026-09-07' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(205.0000 mm, 33.5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A24)' on F.Silkscreen
+    @(260.5000 mm, 37.0000 mm): Circle on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(260.5000 mm, 44.0000 mm): PCB text 'R4' on F.Silkscreen
+    @(257.3400 mm, 43.7375 mm): Segment of J_PA on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(244.1900 mm, 32.0150 mm): Rectangle of J_MAINSW on F.Silkscreen
+    @(205.0000 mm, 33.5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A24)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(205.0000 mm, 33.5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A24)' on F.Silkscreen
+    @(251.0500 mm, 34.2750 mm): Segment of J_MAINSW on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(251.8000 mm, 34.2750 mm): Segment of J_MAINSW on F.Silkscreen
+    @(205.0000 mm, 33.5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A24)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(250.0000 mm, 32.0250 mm): Rectangle of J_MAINSW on F.Silkscreen
+    @(205.0000 mm, 33.5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A24)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(200.0000 mm, 36.7000 mm): PCB text 'MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 6 layers JLC06161H-3313  |  matte black  |  2026-09-07' on F.Silkscreen
+    @(244.9500 mm, 34.2750 mm): Segment of J_MAINSW on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(200.0000 mm, 36.7000 mm): PCB text 'MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 6 layers JLC06161H-3313  |  matte black  |  2026-09-07' on F.Silkscreen
+    @(244.9500 mm, 37.2250 mm): Segment of J_MAINSW on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(239.9225 mm, 110.7100 mm): Segment of J_AB2 on F.Silkscreen
+    @(200.0000 mm, 110.0000 mm): PCB text 'SA868 exciter, LPF, T/R relay, USB codec set, PTT and EMCON logic on 4x M3 (32.56); the PA module is on the face plate' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(34.2779 mm, 91.0150 mm): Segment of R17 on F.Silkscreen
+    @(35.0000 mm, 90.0000 mm): PCB text 'PORT (-X)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(34.2779 mm, 87.5950 mm): Segment of R17 on F.Silkscreen
+    @(35.0000 mm, 90.0000 mm): PCB text 'PORT (-X)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(127.1825 mm, 32.3400 mm): Segment of J_5V_S3 on F.Silkscreen
+    @(130.0000 mm, 33.0000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(134.0625 mm, 32.3400 mm): Segment of J_5V_S3 on F.Silkscreen
+    @(130.0000 mm, 33.0000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(135.2625 mm, 32.3400 mm): Segment of J_5V_S3 on F.Silkscreen
+    @(130.0000 mm, 33.0000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(106.0000 mm, 59.6675 mm): Reference field of U5
+    @(111.3900 mm, 59.4900 mm): Segment of L4 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(127.3900 mm, 59.4900 mm): Segment of L5 on F.Silkscreen
+    @(122.0000 mm, 59.6675 mm): Reference field of U6
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(143.3900 mm, 59.4900 mm): Segment of L6 on F.Silkscreen
+    @(138.0000 mm, 59.6675 mm): Reference field of U7
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(95.3900 mm, 59.4900 mm): Segment of L3 on F.Silkscreen
+    @(90.0000 mm, 59.6675 mm): Reference field of U4
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(39.5000 mm, 44.0000 mm): PCB text 'R3' on F.Silkscreen
+    @(38.6200 mm, 43.5750 mm): Polygon of Q2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(266.7675 mm, 175.1500 mm): Segment of J_AB1 on F.Silkscreen
+    @(265.0000 mm, 170.0000 mm): PCB text 'STARBOARD (+X)' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(265.0000 mm, 170.0000 mm): PCB text 'STARBOARD (+X)' on F.Silkscreen
+    @(268.0775 mm, 176.4500 mm): Segment of J_AB1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(260.5000 mm, 176.0000 mm): PCB text 'R2' on F.Silkscreen
+    @(268.0775 mm, 176.4500 mm): Segment of J_AB1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(266.7675 mm, 175.1500 mm): Segment of J_AB1 on F.Silkscreen
+    @(260.5000 mm, 176.0000 mm): PCB text 'R2' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(239.9225 mm, 131.2900 mm): Segment of J_AB2 on F.Silkscreen
+    @(200.0000 mm, 110.0000 mm): PCB text 'SA868 exciter, LPF, T/R relay, USB codec set, PTT and EMCON logic on 4x M3 (32.56); the PA module is on the face plate' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(250.6875 mm, 125.0000 mm): Reference field of U29
+    @(250.4325 mm, 126.5800 mm): Segment of J_AB2 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(250.6875 mm, 125.0000 mm): Reference field of U29
+    @(250.4325 mm, 125.5800 mm): Segment of J_AB2 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(98.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(112.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(126.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(140.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(154.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(168.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(182.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(210.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(224.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(238.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(250.0000 mm, 176.0000 mm): Circle on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(35.0000 mm, 90.0000 mm): PCB text 'PORT (-X)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(265.0000 mm, 170.0000 mm): PCB text 'STARBOARD (+X)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(130.0000 mm, 33.0000 mm): PCB text 'BACK WALL (+Y)' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(39.5000 mm, 44.0000 mm): PCB text 'R3' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(260.5000 mm, 44.0000 mm): PCB text 'R4' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(205.0000 mm, 33.5000 mm): PCB text 'MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A24)' on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(265.0000 mm, 30.0000 mm): Segment on Edge.Cuts
+    @(131.2225 mm, 29.5500 mm): Reference field of J_5V_S3
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(265.0000 mm, 30.0000 mm): Segment on Edge.Cuts
+    @(99.2225 mm, 29.5500 mm): Reference field of J_5V_S1
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(265.0000 mm, 30.0000 mm): Segment on Edge.Cuts
+    @(115.2225 mm, 29.5500 mm): Reference field of J_5V_S2
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(265.0000 mm, 30.0000 mm): Segment on Edge.Cuts
+    @(147.2225 mm, 29.5500 mm): Reference field of J_5V_DEV
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(132.6250 mm, 42.5125 mm): Track [+3V3] on F.Cu, length 0.9014 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(85.3250 mm, 126.7250 mm): Track [+3V3] on F.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(140.2250 mm, 43.0125 mm): Via [/+5V_DEV] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(108.2250 mm, 42.2125 mm): Via [/+5V_S2] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(111.1375 mm, 140.6225 mm): Track [/+12V_HF] on F.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(174.2250 mm, 114.5125 mm): Via [/+13V8_PA] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(51.1375 mm, 138.9725 mm): Track [/+54V_POE] on F.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(87.5250 mm, 99.3375 mm): Track [/B33_SS] on F.Cu, length 0.8631 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(56.9521 mm, 101.2222 mm): Via [/CH_COMP1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(57.5021 mm, 100.4222 mm): Via [/CH_COMP2] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(97.3250 mm, 129.3250 mm): Track [/D8_EN] on F.Cu, length 2.4672 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(103.0500 mm, 129.9750 mm): Track [/D8_FLT] on F.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(93.5172 mm, 129.9750 mm): Via [/EXP2_SP5] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(85.3250 mm, 125.4250 mm): Track [/EXP_INT] on F.Cu, length 2.4672 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(53.1375 mm, 58.2725 mm): Track [/FE_OUT] on F.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(104.6875 mm, 130.6250 mm): Via [/HEAT_FLT] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(123.2319 mm, 145.9619 mm): Track [/HF_CS] on F.Cu, length 0.2024 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(118.5000 mm, 140.6225 mm): Via [/HF_CS] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(116.8625 mm, 133.4725 mm): Track [/HF_HDRV1] on F.Cu, length 2.4672 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(116.8625 mm, 138.6725 mm): Track [/HF_HDRV2] on F.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(109.5000 mm, 141.2725 mm): Via [/HF_OUT] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(118.5000 mm, 139.3225 mm): Via [/HF_SW2] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(50.8729 mm, 100.8000 mm): Via [/IADPT] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(51.4229 mm, 101.6000 mm): Via [/IBAT] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(36.8800 mm, 120.0000 mm): Track [/INA_ALERT] on F.Cu, length 0.7000 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(97.3250 mm, 128.0250 mm): Track [/MON_EN] on F.Cu, length 2.4672 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(108.8625 mm, 101.1225 mm): Track [/PA_BOOT1] on F.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(103.1375 mm, 101.7725 mm): Track [/PA_MODE] on F.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(110.5000 mm, 99.8225 mm): Via [/PA_SW1] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(89.1375 mm, 136.7825 mm): Track [/PA_SW_EN] on F.Cu, length 2.4672 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(108.8625 mm, 103.0725 mm): Track [/PA_VCC] on F.Cu, length 2.4672 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(199.3750 mm, 54.1050 mm): Track [/PD_CS] on F.Cu, length 0.0505 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(162.8375 mm, 46.2500 mm): Track [/PD_DVDD] on F.Cu, length 1.2500 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(190.5000 mm, 41.8225 mm): Via [/PD_SW1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(160.5875 mm, 41.3500 mm): Via [/PD_VBUS] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(56.8625 mm, 133.1225 mm): Track [/POE_BOOT1] on F.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(58.5000 mm, 139.6225 mm): Via [/POE_CS] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(49.5000 mm, 136.3725 mm): Via [/POE_SS] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(58.5000 mm, 138.3225 mm): Via [/POE_SW2] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(103.0500 mm, 131.9250 mm): Track [/PROCHOT] on F.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(53.1875 mm, 101.6500 mm): Via [/PROCHOT] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(180.6703 mm, 43.1225 mm): Via [/VBAT] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(53.1375 mm, 57.6225 mm): Track [/VBUS20] on F.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(51.5000 mm, 50.4725 mm): Via [/VIN_RAW] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
