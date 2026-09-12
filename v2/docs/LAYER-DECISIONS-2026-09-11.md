@@ -200,13 +200,28 @@ its job on an experiment, not a defect in the board.
 read. The first attempt reported a clean four-layer run and had quietly built the six-layer board: `copper
 layers: 6`, dive on In3. An experiment tree needs its own `ECAD` directory, not its own `tools` directory.
 
-**What is still open is the route**, which is the question that decides the layer count: does it reach zero opens
-with today's finish in the loop (continuation pass, then the stub router)? The recorded four-layer evidence is 4
-to 11 opens (`gen_pcb_a3.py:196`), which is inside what the finish now closes routinely. **The prediction written
-before the run:** four layers takes In3 and In4 away, so the board loses one of its two inner routing layers and
-the dive shares In2 with the VBAT plane; I expect opens in the low tens rather than zero, with the stub router
-and the continuation closing some but not all. If it reaches 0 hard and 0 unrouted, **A's stackup becomes an
-owner decision with a number attached**, which is the point of the exercise.
+**THE ROUTE IS RUN AND THE ANSWER IS NO, by a wide margin (12 September 2026, 19:20 CEST).** Same tools, same
+router, the settings that give the six-layer A24 a clean board, 18 passes, In1 as the power layer and GND as a
+plane:
+
+| A | hard | unrouted | vias | autoroute |
+|---|---:|---:|---:|---|
+| six layers (A24, committed) | 0 | **0** | its own | hours |
+| **four layers (this arm)** | **0** | **345** | 65 | **completed in 51 min** |
+
+**The autoroute COMPLETED**, so this is not a pass ceiling and not a timeout: the router finished its work and
+left 345 connections open. The prediction written before the run was "opens in the low tens"; it was wrong by an
+order of magnitude, and wrong in the direction that settles the question rather than reopening it.
+
+**So A's six layers are measured now rather than inherited**, which is what the P0 asked for. The recorded
+four-layer evidence of "4 to 11 opens in the converter zones" (`gen_pcb_a3.py:196`) was A22, a 285 x 160 board
+with no PoE stage, no QMX rail and no I/O high-availability fabric; A24 is 240 x 160 and carries all three. **An
+old measurement on an older board is not evidence about this one.**
+
+**What the arm cost and what it leaves:** one 51 minute route in its own ECAD tree, committed nowhere. The
+generator change it needed stays, because it is right on its own terms: `gen_pcb_a3.py` follows the board's
+copper layer count instead of naming In3 and In4 as literals, so the question can be asked again cheaply if the
+board ever shrinks.
 
 **The cost side is still missing for every row** and cannot be taken here: the runner never logs into JLCPCB and
 there is no open pricing endpoint. One quote per board at its real outline and quantity five, at four layers and
