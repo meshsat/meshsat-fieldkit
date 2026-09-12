@@ -1853,8 +1853,17 @@ def main(a):
                                 # laid by the same pass ten minutes earlier, inside exactly this 1.2 mm (12 September 2026,
                                 # appendix 32.135). The exemption asks the pads-only map now: the pair's own pads are not an
                                 # obstacle here, and nothing else is excused. Both map modes lay the same copper without it.
-                                if ((first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2)) \
-                                   and (L not in trkP or not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or not trkP[L][ii, jj]): continue
+                                if (first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2):
+                                    if L not in trkP or not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or not trkP[L][ii, jj]: continue
+                                    # The raster is grown by the clearance plus half a leg and rounded to a 0.1 mm cell, and this
+                                    # is the one place a leg MUST come close to other copper: it is entering a pad field. Asking
+                                    # the map alone cost B19's DIFF100 pass fourteen pairs (22 of 48 to 8), so a blocked cell here
+                                    # is put to the geometry before the pair is refused, which is what PAIR_LEG_EXACT does for the
+                                    # rest of the leg. The pair's own two nets are excused: they are judged exactly, twice, below.
+                                    _needE = CLR + wid(L) / 2 + 0.02
+                                    _dE = _nearest_edge(px_, py_, L, net, limit=_needE + 0.5, skip=(pn, nn))
+                                    if _dE is None or _dE >= _needE: continue
+                                    return False
                                 _m = trk1[net]
                                 if trk2 is not None and (math.hypot(px_ - _stA[0], py_ - _stA[1]) < _rA or math.hypot(px_ - _stB[0], py_ - _stB[1]) < _rB):
                                     _m = trk2   # the pair's own copper is not an obstacle at its own station
