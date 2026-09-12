@@ -846,6 +846,20 @@ def main(a):
     # so a cell it calls blocked is not yet a DRC violation: D10 ships 0 hard and this refused one of its five pairs.
     # The pre-route DRC remains the authority on clearance; what this adds is the NAME of the counterparty and of the
     # emission, at the moment the pair is laid. PAIR_CROSS_NET=block makes it a verdict, =off silences it.
+    # 12 September 2026, B19's DIFF100 arms: the LARGEST single failure class is a pair refused for its OWN two
+    # vias, 36 of the 74 failed attempts in one 48-pair pass, and the numbers are always the same shape:
+    # "0.800 mm of 0.822". The class via of DIFF100 is 0.70 mm (gen_pcb_b3.py CLASSES), so two of them need
+    # 0.70 + 0.127 = 0.827 mm centre to centre, and the HDMI and Ethernet fans this board has to leave are on an
+    # 0.8 mm pitch. A 0.70 mm via pair cannot leave an 0.8 mm fan on any layer, which is decision 6's finding in
+    # the via domain rather than the pad domain. The escape fan on this same board has laid 0.40/0.20 vias at
+    # fine pitch since 5 September (escape.py, the CM5IO scheme) because of the same arithmetic; the pre-router
+    # never took that step and lays the class via everywhere.
+    #
+    # A class via size is a DEFAULT for new copper, not a bar the DRC holds a via to: the bar is the board's own
+    # m_ViasMinSize, which is 0.40 on B, and the escape vias prove the DRC accepts it. So this is a router choice
+    # and not a net class change. It is a knob at `class` (today's behaviour) until an arm says what it is worth.
+    VIA_MODE = os.environ.get("PAIR_VIA_MODE", "class").lower()
+    if VIA_MODE not in ("class", "min"): raise SystemExit("pair_preroute: PAIR_VIA_MODE is `class` or `min`, not %r" % VIA_MODE)
     CROSS_NET = os.environ.get("PAIR_CROSS_NET", "report").lower()
     if CROSS_NET in ("1", "true", "yes"): CROSS_NET = "block"
     if CROSS_NET in ("0", "false", "no"): CROSS_NET = "off"
@@ -1137,6 +1151,10 @@ def main(a):
         pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
         pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
         vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); clr_c = float(cl.get("clearance", CLR))
+        if VIA_MODE == "min":   # the board's own via minimum, the size the escape fan already uses at fine pitch
+            try: _bv, _bd = b.GetDesignSettings().m_ViasMinSize / 1e6, b.GetDesignSettings().m_MinThroughDrill / 1e6
+            except Exception: _bv = _bd = 0.0
+            if _bv and _bv < vd: vd, vdr = _bv, (_bd if _bd else vdr)
         try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
         except Exception: min_clr = 0.0
         clr_c = max(clr_c, min_clr); s = max(s, clr_c + 0.013)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
