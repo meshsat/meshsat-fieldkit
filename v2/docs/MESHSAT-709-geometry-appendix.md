@@ -5406,9 +5406,22 @@ must come close to its own pad field, and put the blocked cells to the polygons 
 refusing. **It changed nothing: 8 of 48 again, and the USB pass fell from 21 of 65 to 15.** The geometry agrees
 with the raster, which means the copper really is there, and the question the pair count cannot answer is whether
 those fourteen pairs were ever legal. `PAIR_ENTRY_STRICT` exists now for exactly that: the same board with the old
-skip and with the check, each ending in a DRC breakdown of the items that involve a pair net. **Four more arms run
-beside it with one guard off each**, because the honest position tonight is that the number fell and the reason is
-not yet proved.
+skip and with the check, each ending in a DRC breakdown of the items that involve a pair net.
+
+**Four arms with one guard off each, measured on B19's DIFF100 pass, say it is none of them:**
+
+| arm | pairs of 48 |
+|---|---:|
+| every guard on | 8 |
+| `PAIR_OWN_CLEAR=0` | 8 |
+| `PAIR_FOLD_TEST=0` | 8 |
+| `PAIR_UNMERGE=0` | **5** |
+| all four off, the entry check still on | **10** |
+
+**So the entry-region check alone carries about twelve of the fourteen**, and two of the guards cost nothing
+measurable on this board. `PAIR_UNMERGE=0` is WORSE than leaving it on, which means the merge of two runs does
+fold the legs often enough that dropping the merge rescues pairs: a guard that pays for itself, found by trying
+to blame it.
 
 ### 32.136 Three pairs do not fit one 2x13, measured three ways, and the wall pair takes a ribbon of its own (12 September 2026, 04:00 CEST; MESHSAT-862)
 
