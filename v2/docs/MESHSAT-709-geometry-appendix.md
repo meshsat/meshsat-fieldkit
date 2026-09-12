@@ -5915,3 +5915,63 @@ the room the two legs of a pair need on their way into their own coupling capaci
 **`boards/b.json` carries the gap with this table as its reason.** It is a placement parameter, not a region, so
 it is not on the never-auto floor; the layer count, the class widths and the regions all are, and none of them
 moved.
+
+### 32.148 The agentic system: tiers 2 and 2b built, wired to a model, and what it found in its first three readings (12 September 2026, 14:45 CEST; MESHSAT-862)
+
+The control plane's programme names five tiers. Tiers 0 and 1, the deterministic runner and the supervisor, and
+the whole of stage 0 have been running since 11 September. **Tiers 2 and 2b, the proposing agent and the
+reviewer, did not exist, and no model was in the loop anywhere:** `arms.py` refused an arm that carried no
+written prediction and `bench_compare` was the mechanical judge, but both were driven by hand, and every one of
+the day's eleven arms, their predictions, their grading and their appendix entries were a session driving
+deterministic tools. They are built now, they run against `claude-cc-opus` on the estate's proxy, and the
+document is `v2/docs/AGENTIC-SYSTEM.md`.
+
+**The order is the contract:** counted evidence, tier 2 proposes ONE arm with a written prediction, a mechanical
+validator accepts or refuses it, the deterministic runner executes it, `arms.grade` judges it against that
+prediction, tier 2 drafts the record entry, tier 2b reviews it in a context that never saw it being made, and
+the ledger chains all of it. **The judge is never the proposer and the reviewer cannot move the grade.** That is
+the whole safety argument: the width a model adds pays only against an objective that is trustworthy, and the
+objective here is a pair count printed by a tool that has no idea a model exists.
+
+**Containment is a property of the code and never of a prompt**, and each property has a rule that fails when
+the property is removed. The proposer holds no `subprocess`, `exec` or delete. The model owns the arm's name,
+its knobs and its prediction, and nothing else: the board, the project, the placed board, the passes and the
+timeout come from the board's own declaration, and a proposal that sets one of them is refused rather than
+stripped, because a model that tried to choose its own board is something to see in a verdict file. A knob no
+tool reads is refused, the authority being `pair_preroute.py` parsed rather than the knob document, which can
+drift. **Five knobs are reserved with their reason and routed to the owner's decisions file** (`PAIR_INNER`,
+`PAIR_INNER_GAP`, `PAIR_INNER_WIDTH`, `PAIR_LAYERS`, `PAIR_HOP_LAYERS`: an inner-layer pair is a stripline and
+its geometry is an impedance target), and four more are basis-locked because they choose which kernel runs and
+a row that moves them is not comparable with one that does not. An arm name is a slug because it becomes a
+directory `arms.py` removes with `rmtree`, and `arms.py` refuses a bad name itself whoever wrote the spec. A
+repeat of knobs already in the ledger is refused. The budget is counted in calls and tokens for the whole run,
+never in seconds. **`tests/test_agent_contract.py` is 28 rules and `tests/mutate_agent.sh` puts each defect back
+into a copy of the tree and requires its rule to fail: 10 of 10 proved.** Each mutation also verifies that it
+changed the tree, after one of them silently became a no-op when an anchor moved and its rule then "passed"
+against a tree that never carried the defect, which is the `BooleanIntersection` shape of 10 September.
+
+**Nothing about the endpoint is in the tree**, which matters because this repository mirrors publicly within
+minutes. The code carries no default base and no default key, the config is `~/.config/meshsat-fieldkit/agent.env`
+at mode 600 outside the tree as `kb.env` already is, a world-readable config is refused before any call, a
+missing one is INFRA_FAIL and never a fallback, and the key is a virtual key scoped to one model alias with a
+budget and a rate limit, revocable in one call.
+
+**The reason to have a reviewer at all is not an argument here, it is three measurements.** Tier 2b found
+something real in each of its first three readings. On the first cycle it ever reviewed it said that the run
+reported a pair count under an arm's knob and that **nothing in the result showed the knob had reached the
+tool**: the exact shape of four of the six defects of 32.145. So `pair_preroute.py` echoes the knobs its process
+received, `arms.py` compares them with what the arm asked for, and a mismatch is INFRA_FAIL rather than a
+number. On the second it said the draft had been handed a result **with no baseline**, so every comparison in it
+came from memory, which is how "the staircase costs five pairs" and "C10 has five short opens" both happened;
+the loop carries a baseline now or states plainly that it has none. **On the third it was pointed at the commit
+that built it and made seven findings, every one correct:** the live floor check was written as
+`spec is None or not asked_reserved or spec is None`, which cannot evaluate false, so it reported PASS about
+nothing; the reviewer's own refusal gated nothing, the cycle writing PASS over a rejected write-up; the budget
+was per conversation while one cycle builds several clients; rows were taken from the result ledger by a name
+the model itself chooses, so an older row with the same name would have been read as this measurement; and the
+mutation script carried an estate-shaped hostname in a repository that mirrors publicly, while the grep proving
+that property scanned only `agent/*.py`. All seven are fixed.
+
+**What it does not promise** is that the boards get better. What a model adds is width of search. What it has
+added already is a second reader with no stake in the change, and the three readings above are what that is
+worth on this pipeline.
