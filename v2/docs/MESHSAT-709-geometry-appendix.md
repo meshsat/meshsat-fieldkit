@@ -5420,8 +5420,23 @@ skip and with the check, each ending in a DRC breakdown of the items that involv
 
 **The four guards together are worth about five pairs of 113**, which is inside the swing this board shows for
 any small change (a greedy pass with no rip-up: 32.117 measured twelve pairs from one hundredth of a millimetre
-of slack). **The entry-region check is the one that matters**, and the scale of it is the historical 57 of 113,
-which was measured before the check existed, against 28 with every other guard off. `PAIR_UNMERGE=0` is WORSE than leaving it on, which means the merge of two runs does
+of slack).
+
+**And then the entry check cleared itself too, fifteen minutes after I had named it as the cause.** With
+`PAIR_ENTRY_STRICT` measured directly, the same board, the same tools, one variable: **9 of 48 with the check and
+9 of 48 with the old skip.** It costs nothing here. So all five guards are cleared by measurement and **the fall
+from 22 of 48 to 8 is not attributable to any of them**.
+
+**What is left is the board.** B19 is not the same board it was this morning: the wall pair left `J_AB1` for
+`J_AB2`, which adds a connector on B's underside and moves what the packer does around it, and the DIFF100 pairs
+at the NVMe and PCIe parts are laid into whatever room that leaves. The record's own standing caution is exactly
+this one, from 32.109: "the baseline also moved because the placement did". **The number is not comparable across
+the ribbon split and nothing should be concluded from the difference until B19 is re-measured as the board it now
+is**, which is a sweep of the slack curve on the new placement, not an argument about guards.
+
+**Written down because I got it wrong twice in one night and the measurement caught it both times:** first the
+raster at the station, then the entry check itself. Each was a plausible cause, each was refuted in under twenty
+minutes by an arm with one variable, and neither would have survived being argued instead of measured. `PAIR_UNMERGE=0` is WORSE than leaving it on, which means the merge of two runs does
 fold the legs often enough that dropping the merge rescues pairs: a guard that pays for itself, found by trying
 to blame it.
 
