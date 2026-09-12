@@ -156,3 +156,16 @@ def t_the_entry_exemption_asks_the_pads_only_map():
     b = _body("legs_clear")
     assert "trkP" in b, "the entry exemption still skips the map instead of asking the pads-only one"
     assert "along < 1.2) or (last_run and fineB and total - along < 1.2)) \\" in b or "trkP[L][ii, jj]): continue" in b, "the exemption is not guarded"
+
+def t_every_helper_that_skips_nets_declares_the_parameter():
+    """A patch meant for `_what_is_at` landed in `_nearest_edge`, which sits above it and carried the same line:
+    the helper then referenced a `skip` it never took, and only `PAIR_LEG_EXACT=1` would have reached it.
+    Compiling proves nothing about a decision path, so the rule reads the bodies."""
+    s = _src()
+    for name in ("_nearest_edge", "_what_is_at"):
+        i = s.find("    def %s(" % name)
+        assert i > 0, name
+        body = s[i:s.find("\n    def ", i + 10)]
+        head = body.split("\n")[0]
+        if "in skip" in body:
+            assert "skip" in head, "%s uses `skip` and does not take it: %s" % (name, head.strip())
