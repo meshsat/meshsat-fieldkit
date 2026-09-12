@@ -86,6 +86,7 @@ guards. Each has a knob because each can cost pairs and the only way to know is 
 | `PAIR_VIA_MODE` | class | the via the pair's own hops are laid with: `class` is the net class's via, `min` is the board's own via minimum, which is what the escape fan uses at fine pitch |
 | `PAIR_END_STRICT` | 0 | the three end emissions judged against the partner at the post-lay gate's bar, and taken off when they fail (measured: 18 fewer refusals, the same 14 pairs) |
 | `PAIR_VIA_CANDS` | 12 | how many via sites a station tries before the section fails; the cap was never measured and 24 of B19's 68 remaining failures are "no via site with a hop path" |
+| `PAIR_LEG_RETRY` | 0 | when the offset legs fit no smoothing of a corridor, block the corridor cell they were refused at and search the section again, up to N times |
 
 **`PAIR_CROSS_NET` reports rather than blocks, and that default is a measurement.** The test asks a RASTER grown
 by the clearance plus half a leg, and the emitters deliberately relax that near a station (a direct leg runs pad
