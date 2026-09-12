@@ -835,6 +835,12 @@ def main(a):
     OWN_CLEAR = os.environ.get("PAIR_OWN_CLEAR", "1") != "0"   # the emissions that used to lay copper unasked ask the partner
     FOLD_TEST = os.environ.get("PAIR_FOLD_TEST", "1") != "0"   # the two offset legs judged against each other in the candidate ladder
     UNMERGE = os.environ.get("PAIR_UNMERGE", "1") != "0"       # a merge of two runs that folds the legs is dropped
+    # The entry region (the first and last 1.2 mm of a leg at an entry station) used to skip the occupancy map
+    # entirely, which is what let A lay a leg at 0.00 mm from another pair. It asks the pads-only map now and then
+    # the geometry. PAIR_ENTRY_STRICT=0 restores the skip, which is the ONLY way to measure what the guard costs:
+    # B19 reads 22 of 48 on its DIFF100 pass with the skip and 8 with the check (12 September 2026), and the
+    # question that decides which is right is whether the fourteen extra pairs pass a DRC, not whether they exist.
+    ENTRY_STRICT = os.environ.get("PAIR_ENTRY_STRICT", "1") != "0"
     # 12 September 2026: REPORT by default, not block. The test asks a RASTER grown by the clearance plus half a leg,
     # and the emitters deliberately relax that near a station (a direct leg runs pad to pad past its neighbours' pads),
     # so a cell it calls blocked is not yet a DRC violation: D10 ships 0 hard and this refused one of its five pairs.
@@ -1854,6 +1860,7 @@ def main(a):
                                 # appendix 32.135). The exemption asks the pads-only map now: the pair's own pads are not an
                                 # obstacle here, and nothing else is excused. Both map modes lay the same copper without it.
                                 if (first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2):
+                                    if not ENTRY_STRICT: continue   # the old skip, kept as the measurement's control arm
                                     if L not in trkP or not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or not trkP[L][ii, jj]: continue
                                     # The raster is grown by the clearance plus half a leg and rounded to a 0.1 mm cell, and this
                                     # is the one place a leg MUST come close to other copper: it is entering a pad field. Asking
