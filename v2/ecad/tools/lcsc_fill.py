@@ -101,6 +101,39 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"cell tap sense wires.*JST-XH 1x5", "JST_XH_B5B"): "C157991",   # JST B5B-XH-A(LF)(SN), 1x5P 2.5 mm, 14.9 mm body, stock 85,826
  (r"SMBus lead.*JST-XH 1x4", "JST_XH_B4B"): "C594232",             # JST B4B-XH-A-G, 1x4P 2.5 mm, 12.4 mm body, stock 20,031
  (r"cell thermistor.*JST-PH 1x2", "JST_PH_B2B"): "C5251182",       # JST B2B-PH-K-S-GW, 1x2P 2.0 mm, stock 15,304
+ # --- A24, 12 September 2026. Thirty-eight BOM lines carried no code and no hand-fit declaration, which is what
+ # `verify_deliverable` and `lcsc_fill` exist to catch, and the shipped A22 folder carries the same blanks because
+ # both gates postdate it. Every code below was read from JLCPCB's own catalogue that day, choosing a Basic part
+ # where one exists and otherwise the highest stock at the right tolerance and power. The values with a bracketed
+ # note in the schematic (the frequency, the slope, the mode) match on the number alone.
+ (r"^240k 1%", "R_0603"): "C137765",        # YAGEO RC0603FR-07240KL, 1%, stock 368,860
+ (r"^40\.2k", "R_0603"): "C12447",          # UNI-ROYAL 0603WAF4022T5E, 1%, stock 242,278 (the 300 kHz RT and the plain 40.2k)
+ (r"^30k", "R_0603"): "C22984",             # UNI-ROYAL 0603WAF3002T5E, 1%, BASIC, stock 2,302,525 (the slope resistors)
+ (r"^62k 1%", "R_0603"): "C23221",          # UNI-ROYAL 0603WAF6202T5E, 1%, stock 495,213
+ (r"^10R$", "R_0603"): "C22859",            # UNI-ROYAL 0603WAF100JT5E, BASIC, stock 8,987,863
+ (r"^10k \(", "R_0603"): "C25804",          # UNI-ROYAL 0603WAF1002T5E, 1%, BASIC, stock 27,090,447 (10k with a note after it)
+ (r"^60\.4k 1%", "R_0603"): "C23089",       # UNI-ROYAL 0603WAF6042T5E, 1%, stock 164,430 (BQ25731 CELL_BATPRESZ, 4S)
+ (r"^53\.6k 1%", "R_0603"): "C23074",       # UNI-ROYAL 0603WAF5362T5E, 1%, stock 125,271
+ (r"^68k", "R_0603"): "C23231",             # UNI-ROYAL 0603WAF6802T5E, 1%, BASIC, stock 1,386,930 (the 500 kHz RT)
+ (r"^31\.6k 1%", "R_0603"): "C25967",       # UNI-ROYAL 0603WAF3162T5E, 1%, stock 162,847
+ (r"^162k 1%", "R_0603"): "C22815",         # UNI-ROYAL 0603WAF1623T5E, 1%, stock 62,348
+ (r"^140k 1%", "R_0603"): "C185372",        # YAGEO RC0603FR-07140KL, 1%, stock 379,677
+ (r"^665k 1%", "R_0603"): "C2930125",       # FOJAN FRC0603F6653TS, 1%, stock 24,772
+ (r"^100k \(", "R_0603"): "C25803",         # UNI-ROYAL 0603WAF1003T5E, 1%, BASIC, stock 23,883,568 (100k with a note: MODE CCM)
+ (r"^22k$", "R_0603"): "C31850",            # UNI-ROYAL 0603WAF2202T5E, 1%, BASIC, stock 4,181,296
+ (r"^21\.0k 1%", "R_0603"): "C22956",       # UNI-ROYAL 0603WAF2102T5E, 1%, stock 58,706 (TPS25740A R_FBL2, 9 V)
+ (r"^14\.0k 1%", "R_0603"): "C22803",       # UNI-ROYAL 0603WAF1402T5E, 1%, stock 27,496 (TPS25740A R_FBL1, 15 V)
+ (r"^1M \(", "R_0603"): "C22935",           # UNI-ROYAL 0603WAF1004T5E, 1%, BASIC, stock 7,776,096
+ (r"^698k", "R_0603"): "C5126055",          # FOJAN FRC0603F6983TS, 1%, stock 97,399
+ (r"^10mOhm 1% 2512", "R_2512"): "C2903468",  # HoJLR2512-3W-10mR-1%, 3 W, stock 128,367 (ISNS, RAC)
+ (r"^5mOhm 1% 2512", "R_2512"): "C500739",    # LR2512D-3W-5mR-1%, 3 W, stock 15,156 (CS, RSR, the slot shunts)
+ (r"^2mOhm 1% 2512", "R_2512"): "C2903471",   # HoJLR2512-3W-2mR-1%, 3 W, stock 13,329
+ (r"^20mOhm 1% 2512", "R_2512"): "C500741",   # LR2512D-3W-20mR-1%, 3 W, stock 9,217
+ (r"^43R 1W 2512", "R_2512"): "C38957",       # UNI-ROYAL 25121WJ0430T4E, 1 W 5%, stock 20,954 (the PD discharge resistor)
+ (r"^CSD18510Q5B", "PowerPAK_SO-8"): "C2876544",  # TI CSD18510Q5B, VSON-8 5x6, stock 880: the land this board draws
+ (r"^750R 1%", "R_0603"): "C23241",        # UNI-ROYAL 0603WAF7500T5E, 1%, stock 604,141 (eFuse ILM, 1.2 A)
+ (r"^909R 1%", "R_0603"): "C203878",       # BOURNS CR0603-FX-9090ELF, 1%, stock 24,090 (eFuse ILM, 1.0 A)
+ (r"^453R 1%", "R_0603"): "C48136",        # UNI-ROYAL 0603WAF4530T5E, 1%, stock 2,604 (eFuse ILM, 2.0 A)
 }
 path = sys.argv[1]; rows = list(csv.DictReader(open(path))); filled = 0
 

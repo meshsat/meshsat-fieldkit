@@ -193,10 +193,14 @@ part("J_USBC_OUT", "Connector_Generic", "Conn_01x05", "wall USB-C outlet, power 
 def efuse(uref, vin, vout, en, flt, refs, ilim):
     cd, rilm, rflt, rov1, rov2, cin = refs
     ic(uref, 9, "TPS259631DDAR eFuse %s -> %s (%s)" % (vin, vout, ilim), "DDA8", {"1": "GND", "2": uref + "_DVDT", "3": en, "4": vin, "5": vout, "6": flt, "7": uref + "_ILM", "8": uref + "_OVLO", "9": "GND"}, "C2155778")
+    # 12 September 2026: the ILM resistor carried the CURRENT as its value ("1.2 A (ILM)"), so its BOM line named
+    # an ampere and no resistance and nothing could buy it. TPS2596 equation 7: RILM = 903 / (ILIM + 0.0112) ohms,
+    # which the datasheet's own test conditions confirm (1 A at 909 ohm, 2 A at 453 ohm). 750R for 1.2 A, 909R for
+    # 1.0 A, 453R for 2.0 A, each keeping its current in the note.
     c(cd, "10n", uref + "_DVDT", "GND"); r(rilm, ilim, uref + "_ILM", "GND"); r(rflt, "10k", flt, "+3V3"); r(rov1, "100k 1%", vin, uref + "_OVLO"); r(rov2, "10k 1% (OVLO)", uref + "_OVLO", "GND"); c(cin, "100n", vin, "GND")
-efuse("U21", "VBAT", "VMON", "MON_EN", "MON_FLT", ["C98", "R90", "R91", "R92", "R93", "C99"], "1.2 A (ILM)"); vh2("J_MON", "monitor supply lead to the Xenarc (JST-VH): + -", "VMON")
-efuse("U22", "VBAT", "VHEAT", "HEAT_EN", "HEAT_FLT", ["C100", "R94", "R95", "R96", "R97", "C101"], "1.0 A (ILM)"); part("J_HEAT", "Connector_Generic", "Conn_01x02", "heater mat under the 2590 cradle (XH2.5): + -", "XH2", {"1": "VHEAT", "2": "GND"})
-efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "2.0 A (ILM)"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
+efuse("U21", "VBAT", "VMON", "MON_EN", "MON_FLT", ["C98", "R90", "R91", "R92", "R93", "C99"], "750R 1% (ILM: 1.2 A)"); vh2("J_MON", "monitor supply lead to the Xenarc (JST-VH): + -", "VMON")
+efuse("U22", "VBAT", "VHEAT", "HEAT_EN", "HEAT_FLT", ["C100", "R94", "R95", "R96", "R97", "C101"], "909R 1% (ILM: 1.0 A)"); part("J_HEAT", "Connector_Generic", "Conn_01x02", "heater mat under the 2590 cradle (XH2.5): + -", "XH2", {"1": "VHEAT", "2": "GND"})
+efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "453R 1% (ILM: 2.0 A)"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
 # --- hardware EMCON gates: SN74LVC08APWR quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC).
 #     EMCON_HW is active LOW (low silences) and this board only READS it: gate 3 used to drive TX_INHIBIT_n from EMCON_HW, which closed a
 #     one-inversion loop through C7's inverter and put a push-pull output on the same net as the panel's mechanical toggle. Deleted 9 September
