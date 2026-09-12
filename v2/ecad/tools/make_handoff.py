@@ -13,7 +13,7 @@ DL = os.path.join(RELEASE, "boards")                                            
 EXCLUDE = {"pcb-a-power": {"J_DOCK", "J_PRE1", "F1"} | {"J_CP%d" % k for k in range(1, 5)} | {"J_CN%d" % k for k in range(1, 5)} | {"J_BM%d" % k for k in range(1, 12)},   # A22: the spring pins, the blade holder and the eleven blind-mate receptacles are bench parts
            "pcb-d-aprs": {"U2"},   # D8: the SA868 exciter is bench-fitted
            "pcb-c-display": {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1", "J_HSJ1", "J_HSJ2", "CAM_H1", "CAM_H2", "J_MAINSW", "J_PIJ2"},   # C7: the switches, the sounder, the headset jacks and the camera are plate parts; the lead lands have no BOM line
-           "pcb-e1-dock": {"F1", "F2", "F3", "J_BLK", "P_CP", "P_CN", "PAD_W1", "PAD_W2", "J_BATT"},
+           "pcb-e1-dock": {"F1", "F2", "F3", "J_BLK", "P_CP", "P_CN", "PAD_W1", "PAD_W2", "J_BATT", "U5"},   # E7: the blade holders, the block lands, the pack cable connector, the 12 AWG lands, and OWNER RULING 12 of 13 September 2026: the LT8705A, whose QFN JLCPCB stocks 3 of against a need of 5, is hand-fitted on all five boards
            "pcb-p-pack": {"W_BP", "W_BN", "W_P", "W_N"},   # P1: the wire lands are bench joints; the blade holder, the headers and the gauge are assembled   # E6: the blade holders, the block lands, the pack cable connector and the 12 AWG lands are bench parts
            "pcb-e5-block": set()}
 NONPART_PREFIX = ("TP", "H", "JP", "#")
