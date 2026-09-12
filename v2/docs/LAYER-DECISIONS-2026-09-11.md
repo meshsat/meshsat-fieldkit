@@ -115,6 +115,28 @@ layers and at six, nothing else changed.
 
 Each one that runs gets its result recorded here beside the row it answers.
 
+### E, measured 12 September 2026: In2's four pours are worth a quarter of a percentage point
+
+The experiment as the table asks it, on E7's own routed board: delete the four In2 power pours (CELL_F 2,863 mm2,
+VIN_RAW 1,269, PV_P 740, TRK_OUT 628, **5,500 mm2 of inner copper**), add nothing anywhere, refill and re-solve
+every rail. That is the pessimistic half of the question, because a real two-layer E would put some of that copper
+on its faces; if the rails survive it as they stand, the fourth layer is not carrying the power.
+
+| rail | E7 as it is | In2 emptied | what In2 is worth |
+|---|---|---|---|
+| CELL_F, 10 A | 13 mV, **0.09%** MET (In2 carries 43% of the current) | 26 mV, **0.18%** MET (B.Cu carries 97%) | 13 mV |
+| VIN_RAW, 8 A | 213 mV, **1.77%** MET (In2 carries 20%) | 241 mV, **2.01%** MISSED | 28 mV |
+
+**Five and a half thousand square millimetres of inner copper are worth 0.09 and 0.24 percentage points**, and
+with all of it gone the 10 A pack node still reads 0.18 percent of 14.4 V. VIN_RAW then sits one millivolt over
+its 2 percent line (241 mV against 240), which a wider band on either face closes without a layer.
+
+**So the four pours are not the reason E is a four-layer board.** What is left of E's layer question is In1, the
+solid ground plane, and the routing: `layer_audit` says neither inner layer carries one routed track, and 32.125's
+route history says the board's real difficulty is end-to-end signals on a 267 mm strip with two routing layers.
+That is a routing-space argument, not a power one, and it is the one to put to the owner.
+
+
 ---
 
 ## The decisions as they stand, 11 September 2026
