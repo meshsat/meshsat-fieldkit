@@ -28,9 +28,20 @@ def t_the_judge_never_says_reduce():
     bad = re.findall(r'["\']((?:REDUCE|DROP)\b[^"\']*)', code)
     if bad:
         raise AssertionError("layer_judge emits a decision rather than a measurement: %s" % bad[:2])
-    for word in ("KEEP", "QUESTION"):
+    for word in ("NOT_FREED", "QUESTION"):
         if word not in body:
             raise AssertionError("layer_judge no longer emits %r" % word)
+
+
+def t_not_freed_is_never_presented_as_necessity():
+    """A router given six layers uses six. The share measures what it did, not what the board needs."""
+    src = open(os.path.join(TOOLS, "layer_judge.py"), errors="replace").read()
+    if "THIS IS NOT EVIDENCE THAT THE LAYERS ARE NEEDED" not in src:
+        raise AssertionError("the NOT_FREED verdict does not say that it is not evidence of necessity")
+    if "route at the lower count" not in src:
+        raise AssertionError("the verdict does not name the measurement that would settle the count")
+    if "KEEP" in re.sub(r"#.*", "", src.split('\"\"\"', 2)[2]):
+        raise AssertionError("the endorsing word KEEP is still a verdict")
 
 
 def t_the_judge_changes_nothing():
