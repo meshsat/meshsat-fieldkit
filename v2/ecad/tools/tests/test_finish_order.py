@@ -257,3 +257,17 @@ def t_every_board_declares_the_phase_its_profile_cuts():
         if L in newest:
             assert d["phase"] == newest[L][1], \
                 "%s says phase %s and its newest profile %s cuts %s" % (os.path.basename(p), d["phase"], newest[L][2], newest[L][1])
+
+
+def t_the_finish_stamps_the_phase_it_was_given_onto_the_silk():
+    """`verify_deliverable` refuses a deliverable whose silk names another phase, and it is checked after the
+    route, which is the most expensive moment to find out: A24's routed board carried A18 and C's generator
+    default would have stamped C9 on a C10 deliverable. The generator writes the phase it was given, the legend
+    pass now CORRECTS it from the phase the finish itself was called with, and the two together mean a board
+    cannot reach the deliverable step carrying a phase nobody asked for (12 September 2026)."""
+    src = open(FINISH, errors="replace").read()
+    assert 'silk_fix_all.py $N.kicad_pcb $L "$PHASE"' in src, "the finish does not pass its phase to the legend pass"
+    sfa = open(os.path.join(TOOLS, "silk_fix_all.py"), errors="replace").read()
+    assert "PHASE = sys.argv[3]" in sfa, "the legend pass takes no phase"
+    i = sfa.index("PHASE = sys.argv[3]")
+    assert "REV" in sfa[i:i + 800], "the phase correction does not look at the title line"

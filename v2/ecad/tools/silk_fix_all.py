@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
-"""Legend (PCB_TEXT) corrections on the routed boards, by text content, no re-route. Usage: silk_fix_all.py <board.kicad_pcb> <key>
-key: a|b|c|d|e1|e2 (the spacer ring R1 is retired with C5). Rules: ("match", {"text"?, "pos"?, "layer"?, "size"?, "angle"?, "halign"?, "delete"?}); match = prefix of the current text."""
+"""Legend (PCB_TEXT) corrections on the routed boards, by text content, no re-route.
+Usage: silk_fix_all.py <board.kicad_pcb> <key> [phase]
+key: a|b|c|d|e1|e2 (the spacer ring R1 is retired with C5). Rules: ("match", {"text"?, "pos"?, "layer"?, "size"?, "angle"?, "halign"?, "delete"?}); match = prefix of the current text.
+
+With a PHASE argument (the finish passes its own), every phase token already on the silk is set to it. That is not
+the same thing as the rules this file used to carry: those wrote a FIXED string, which is how A's title said
+"REV A (A18)" on an A24 board and C's generator default would have stamped C9 on C10. A phase taken from the
+chain's own argument cannot go stale, and `verify_deliverable` refuses a deliverable whose silk names another
+phase, after the route, which is the most expensive moment to find out (12 September 2026)."""
 import sys, pcbnew
 from pcbnew import VECTOR2I, FromMM
 OX, OY = {"c": (297.0, 210.0), "e2": (200.0, 20.0)}.get(sys.argv[2], (150.0, 110.0))
@@ -17,7 +24,17 @@ F, B = pcbnew.F_SilkS, pcbnew.B_SilkS
 RULES = {
  "e12": [("MESHSAT PCB-E1 DOCK", dict(size=1.2, pos=(0, -52.3)))],
 }
+PHASE = sys.argv[3] if len(sys.argv) > 3 else ""
 b = pcbnew.LoadBoard(sys.argv[1]); n = 0
+if PHASE:
+    import re as _re
+    _pat = _re.compile(r"\b" + _re.escape(PHASE[0]) + r"\d\d?\b")
+    for d in list(b.GetDrawings()):
+        if not isinstance(d, pcbnew.PCB_TEXT) or d.GetLayer() not in (F, B): continue
+        t = d.GetText()
+        if "REV" not in t.upper(): continue
+        t2 = _pat.sub(PHASE, t)
+        if t2 != t: print("silk_fix_all: phase %s: %s" % (PHASE, t2)); d.SetText(t2); n += 1
 for d in list(b.GetDrawings()):
     if not isinstance(d, pcbnew.PCB_TEXT) or d.GetLayer() not in (F, B): continue
     s = d.GetText()

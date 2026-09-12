@@ -136,7 +136,7 @@ if [ -n "$(cfg x direct_close)" ] || [ -n "$(cfg x direct_close_max)" ]; then
   $T/drc.sh $N.kicad_pcb out/$N-drc.json
 fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
-python3 $T/silk_fix_all.py $N.kicad_pcb $L 2>&1 | grep -vE 'Debug|leak' | tail -2
+python3 $T/silk_fix_all.py $N.kicad_pcb $L "$PHASE" 2>&1 | grep -vE 'Debug|leak' | tail -3
 
 # the pair gate (owner ruling 5 Sep 2026 17:00): a differential pair over 1 mm blocks the finish
 if [ -n "$PAIRM" ]; then
