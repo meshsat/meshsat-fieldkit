@@ -3,6 +3,7 @@
 # (its tracks stay as normal wires, the router reroutes what is incomplete and may rip up the rest), then keep the result only if it is better.
 # Usage: cont_route.sh <project dir> <name> <passes> [timeout s]; prints "cont: ..." lines; the board is replaced only when unrouted drops and hard stays 0.
 set -uo pipefail
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fr_jar.sh"   # resolved before the cd below
 cd "$1"; N="$2"; P="${3:-80}"; T="${4:-900}"; W=$PWD/out/cont; mkdir -p "$W"   # absolute: the kill below must match only this directory's router (7 Sep 2026: a relative pattern killed four parallel continuations at once)
 cp "$N.kicad_pcb" "$W/$N-before.kicad_pcb"; cp "$N.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
 # 7 Sep 2026 (B16 chunks): the same plane and power-layer treatment as route_one.sh, or a continuation re-routes every plane pin as a wire
@@ -39,9 +40,13 @@ while True:
 open(fn, "w").write("".join(out)); print("cont: power layers in the DSN:", ", ".join(layers), "(%d layer types changed, %d wire keep-outs dropped)" % (n1, n2))
 PYPL
 fi
-JAR=$HOME/bin/freerouting-1.9.0.jar
+# 12 September 2026: this pinned the STOCK jar, which writes a session only when the whole job ends, while the
+# line below caps the job at 900 seconds and asks for 80 passes. C10 takes four hours over 60 passes, so the cap
+# binds on every board this set has and the continuation could keep nothing whatever it found. Our build writes
+# one after every pass, so the cap now leaves the best board reached instead of nothing.
+JAR="$(fr_jar cont_route)" || exit 2
 _XDISP=$(( 200 + ($$ + RANDOM) % 700 ))   # 12 September 2026: never let two routers race for a display (xvfb-run -a picks one by racing for it)
-timeout "$T" xvfb-run -n "$_XDISP" -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit ${FR_OIT:-2} -dct 0 > "$W/fr.log" 2>&1 || echo "cont: freerouting exit $?"
+timeout "$T" xvfb-run -n "$_XDISP" -a java -Dfreerouting.ses_per_pass="$W/$N.ses" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit ${FR_OIT:-2} -dct 0 > "$W/fr.log" 2>&1 || echo "cont: freerouting exit $?"
 pkill -9 -f "^java .*$W/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "cont: no session, board kept"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PYX'

@@ -11,7 +11,7 @@ while pgrep -f '^java .*freerouting' >/dev/null; do
   if [ "$W" -ge "${LONG_ROUTE_WAIT_S:-21600}" ]; then echo "long_route: another router still running after ${W} s; refusing"; echo LONG-ROUTE-DONE REFUSED; exit 1; fi
 done
 cp out/$N-preroute.kicad_pcb $N.kicad_pcb; rm -f out/$N-freerouting.log
-export FR_XVFB=1 FR_JAR=$HOME/bin/freerouting-1.9.0.jar
+export FR_XVFB=1   # the jar comes from fr_jar.sh through route_pcb.sh (it pinned the stock jar here)
 ( ../tools/route_pcb.sh . $N "$P" 2>&1 | grep -E 'SES import|tracks|non-zero' ) &
 RP=$!
 while kill -0 $RP 2>/dev/null; do sleep 20; [ -f out/$N-freerouting.log ] || continue; age=$(( $(date +%s) - $(stat -c %Y out/$N-freerouting.log) )); if [ $age -gt 900 ]; then echo "router idle ${age}s: killing"; pkill -9 -f '^java .*freerouting'; fi; done

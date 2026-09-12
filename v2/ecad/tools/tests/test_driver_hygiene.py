@@ -175,16 +175,52 @@ def t_the_router_does_not_fall_back_to_the_stock_jar_in_silence():
     """Round-two H5. Our build writes a session after every pass; the stock one writes one only when the whole job
     ends, so a cut run leaves nothing, and every pass ceiling in every profile exists because of that. route_one.sh
     chose the stock jar silently when ours was absent, and `onstart.sh` never built ours, so every fresh box routed
-    on stock while the pipeline behaved as though it had not. The fallback has to be a decision, not a silence."""
-    src = open(os.path.join(TOOLS, "route_one.sh"), errors="replace").read()
+    on stock while the pipeline behaved as though it had not. The fallback has to be a decision, not a silence.
+
+    12 September 2026: the decision moved into `fr_jar.sh`, because route_one.sh was the only launcher making it."""
+    src = open(os.path.join(TOOLS, "fr_jar.sh"), errors="replace").read()
     assert "FR_REQUIRE_MESH" in src, "there is no way to require the patched jar"
-    # from the first mention onwards, not between the first and the second: the message itself names the knob,
-    # so splitting on it cuts the window short and the rule failed on correct code
     tail = src[src.index("FR_REQUIRE_MESH"):]
-    assert "exit 2" in tail[:900], "requiring it must refuse, not warn and continue"
-    i = src.index("freerouting-1.9.0.jar\"")
+    assert "return 2" in tail[:1200], "requiring it must refuse, not warn and continue"
+    i = src.index('freerouting-1.9.0.jar"')
     assert "WARNING" in src[max(0, i - 400):i], "taking the stock jar must say so loudly"
 
+
+def t_every_freerouting_launcher_takes_the_one_jar_answer():
+    """12 September 2026. `jar_in_use()` gave the python side one answer in the middle of this same defect: a record
+    that named the stock jar while the patched one ran. The SHELL side kept the original of it. route_one.sh chose
+    properly; cont_route.sh, route_part.sh and long_route.sh each pinned `~/bin/freerouting-1.9.0.jar` by name, and
+    route_pcb.sh took `ls ~/bin/freerouting-*.jar | tail -1`, which is 2.4.1 on a host that has it, launched with
+    1.9.0 arguments under whatever java is first on PATH.
+
+    Every one of them runs under a `timeout`, which is what makes the pin cost something rather than merely being
+    untidy: on the stock jar a capped run leaves no session at all. cont_route.sh is declared at 80 passes in 900
+    seconds against a board whose 60 passes take four hours, so the continuation could never have kept anything.
+    fr_probe.sh is exempt and takes its jar as an argument, because comparing two jars is its whole purpose, and
+    cont21.sh names 2.1.0 in its own name."""
+    exempt = {"fr_probe.sh", "fr_jar.sh", "cont21.sh"}
+    launches, names = [], []
+    for f in sorted(os.listdir(TOOLS)):
+        if not f.endswith(".sh") or f in exempt: continue
+        src = "\n".join(l for l in open(os.path.join(TOOLS, f), errors="replace").read().splitlines()
+                        if not l.lstrip().startswith("#"))
+        chooses = "fr_jar " in src or "fr_jar)" in src
+        if "-jar" in src and not chooses: launches.append(f)          # runs the router itself
+        if "freerouting-" in src and ".jar" in src and not chooses: names.append(f)   # or pins one by name for a caller
+    assert not launches, "these launch the router without fr_jar.sh: %s" % ", ".join(launches)
+    assert not names, "these name a jar file rather than asking fr_jar.sh: %s" % ", ".join(names)
+
+
+def t_every_capped_router_run_asks_for_the_per_pass_session():
+    """The per-pass session is the only reason a cap is survivable, and it is a `-D` property the launcher has to
+    pass. route_one.sh passed it; cont_route.sh and route_part.sh did not, so even on our own jar their timeouts
+    threw the whole run away. The stock jar ignores an unknown property, so the line is safe with either."""
+    for f in ("route_one.sh", "cont_route.sh", "route_part.sh"):
+        src = open(os.path.join(TOOLS, f), errors="replace").read()
+        i = src.index("-jar ")
+        line = src[src.rindex("\n", 0, i) + 1:src.index("\n", i)]
+        assert "freerouting.ses_per_pass" in line, \
+            "%s runs the router under a timeout without asking for a session per pass" % f
 
 def t_the_verdict_horizon_is_taken_before_the_chain_runs():
     """`pre_started` is the timestamp that decides which verdicts belong to this stage. Taken AFTER the chain,
