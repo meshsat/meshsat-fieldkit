@@ -15,7 +15,7 @@ narrowing is inside the fab's own floor with margin on the axis that carries the
 Usage: gen_footprints_idc.py <meshsat.pretty dir> [<kicad Connector_IDC.pretty>]"""
 import sys, os, re
 
-SIZES = ("2x08", "2x13", "2x09", "2x10", "2x20", "2x07")   # every IDC header the generators name
+SIZES = ("2x05", "2x07", "2x08", "2x09", "2x10", "2x13", "2x20")   # every IDC header the generators name (2x05: the wall-port ribbon J_AB2, 12 September 2026)
 PAD_X, PAD_Y = 1.40, 1.70
 SRC_DEFAULT = "/usr/share/kicad/footprints/Connector_IDC.pretty"
 

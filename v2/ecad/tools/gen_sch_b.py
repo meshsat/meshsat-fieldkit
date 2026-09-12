@@ -82,7 +82,7 @@ FP = {
  "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm", "L4020": "Inductor_SMD:L_Coilcraft_XAL4020-XXX", "L6060": "Inductor_SMD:L_Coilcraft_XAL6060-XXX", "L0402": "Inductor_SMD:L_0402_1005Metric",
  "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "VH4": "Connector_JST:JST_VH_B4P-VH_1x04_P3.96mm_Vertical",
  "SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
- "IDC16": idc("2x08"), "IDC26": idc("2x13"),
+ "IDC16": idc("2x08"), "IDC26": idc("2x13"), "IDC10": idc("2x05"),
  "PH1x2": "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical", "PH1x3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "PH1x4": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
  "PH1x5": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical", "PH2x5": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
  "USBC": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "USB3A": "Connector_USB:USB3_A_Receptacle_Wuerth_692122030100", "HDMI": "Connector_Video:HDMI_A_Molex_208658-1001_Horizontal",
@@ -471,9 +471,17 @@ esd("U37", "USB_PNL_P", "USB_PNL_N", "+3V3_DEV")
 # be unequal and return-less through the ribbon. An odd pin and the even pin beside it are 2.54 mm apart across the rows,
 # which is the geometry J_PANEL already had for USB_PNL. The spare line AB_SPARE loses its seat here (it stays on the A to
 # D harness) and B's test point for it goes with it; SHORE_INHIBIT keeps its seat, being a cross-board contract.
+# 12 September 2026 (MESHSAT-862, appendix 32.135): THE WALL PAIR LEAVES J_AB1. Measured with the pre-router honest
+# about its own copper: J_AB1 carries three pairs, a 2x13 has two end rows, and the third pair's only escape is the
+# 1.14 mm channel between the columns, which EXITS AT THE SAME END the end-row pair leaves from. With USB_WALL laid
+# first the tool laid USB_D8 on top of it (0.00 mm, twelve DRC items); with either other order USB_WALL fails for
+# want of a corridor. Three pairs do not fit one 2x13 whatever the pin map, so the wall pair takes a ribbon of its
+# own: a 2x5 with the pair on pins 1/2 (an end row) and eight grounds behind it. J_AB1's pins 5 and 6 become GND.
 part("J_AB1", "Connector_Generic", "Conn_02x13_Odd_Even", "A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)", "IDC26", {
- "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "USB_WALL_P", "6": "USB_WALL_N", "7": "GND", "8": "GND", "9": "PI_SHDN_REQ", "10": "PI_KILL", "11": "SDA", "12": "SCL",
+ "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "GND", "9": "PI_SHDN_REQ", "10": "PI_KILL", "11": "SDA", "12": "SCL",
  "13": "EXP_INT", "14": "TR_APRS", "15": "EMCON_HW", "16": "TX_INHIBIT_n", "17": "SLOT_EN1", "18": "SLOT_EN2", "19": "SLOT_EN3", "20": "ZEROIZE_HW", "21": "SHORE_INHIBIT", "22": "GND", "23": "GND", "24": "GND", "25": "USB_E6_P", "26": "USB_E6_N"})
+part("J_AB2", "Connector_Generic", "Conn_02x05_Odd_Even", "A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it", "IDC10", {
+ "1": "USB_WALL_P", "2": "USB_WALL_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "GND", "9": "GND", "10": "GND"})
 for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "EMCON_HW", "ZEROIZE_HW", "GNSS_PPS", "SDA", "SCL", "+54V_POE", "POE_DRAIN", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "HDMI_SEL1", "HDMI_SEL2",
                         "+3V3_S1A", "+3V3_S1B", "+1V0_S1", "+1V1_S1", "+3V3_S2A", "+3V3_S2B", "+1V0_S2", "+1V1_S2", "+3V3_S3A", "+3V3_S3B", "+1V0_S3", "+1V1_S3"), 2):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})

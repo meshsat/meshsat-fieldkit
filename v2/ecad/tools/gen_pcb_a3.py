@@ -65,6 +65,9 @@ def place(ref, x, y, rot=0.0, back=False):
 RF_X = [-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 100]
 # run 11 (7 Sep 2026): the INA226 row U8, U9, U10, U11 at 12 mm pitch (the 0.5 mm MSOP fans of two neighbours at 8 mm collided and U10 got no escape at all)
 FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
+         # 12 September 2026: the wall pair's own ribbon, south of J_AB1 (which runs from y -46 up to -16) and
+         # clear of J_RF11 at (100, -56) and the M3 at (110, -73). Its pair sits on the END row (appendix 32.135).
+         "J_AB2": (113, -62, 0),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          # A23: the converters south of their inductors, the rail column runs north to the connector
