@@ -1,24 +1,44 @@
 ** Drc report for pcb-e1-dock.kicad_pcb **
-** Created on 2026-09-11T17:48:12+0000 **
+** Created on 2026-09-12T18:37:03+0000 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 84 DRC violations **
+** Found 81 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; 1 spokes connected to isolated island)
+    Local override; error
+    @(1.0000 mm, 223.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(130.2025 mm, 217.4500 mm): PTH pad 2 [GND] of J_SOLAR
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(1.0000 mm, 223.0000 mm): Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0
+    @(243.7300 mm, 194.1400 mm): Pad 4 [GND] of U11 on F.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(1.0000 mm, 223.0000 mm): Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0
+    @(73.8100 mm, 187.7700 mm): Pad 11 [GND] of J_BLK on F.Cu
 [starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)
     Local override; error
     @(1.0000 mm, 223.0000 mm): Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0
     @(191.9750 mm, 167.2825 mm): Pad 7 [GND] of U14 on F.Cu
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
+    @(12.0000 mm, 222.2000 mm): PCB text 'PACK' on F.Silkscreen
+    @(7.0000 mm, 222.1500 mm): Segment of J_BATT on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
     @(21.9000 mm, 221.4700 mm): Segment of F3 on F.Silkscreen
     @(30.0000 mm, 222.2000 mm): PCB text 'F3 25A' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(10.0777 mm, 212.6025 mm): Segment of R48 on F.Silkscreen
+    @(12.0000 mm, 212.7000 mm): Reference field of J_BATT
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(82.1825 mm, 222.3600 mm): Segment of J_DCIN on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(86.0000 mm, 222.2000 mm): PCB text 'DC IN' on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(90.2625 mm, 222.3600 mm): Segment of J_DCIN on F.Silkscreen
@@ -29,16 +49,16 @@
     @(93.9000 mm, 221.4700 mm): Segment of F1 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(102.0000 mm, 222.2000 mm): PCB text 'F1 10A' on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(93.9000 mm, 221.4700 mm): Segment of F1 on F.Silkscreen
     @(102.0000 mm, 222.2000 mm): PCB text 'F1 10A' on F.Silkscreen
+    @(93.9000 mm, 221.4700 mm): Segment of F1 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(6.0000 mm, 163.2700 mm): Reference field of J_SMB
-    @(4.6200 mm, 158.0300 mm): Segment of J_DCF on F.Silkscreen
+    @(7.3800 mm, 158.0300 mm): Segment of J_DCF on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(6.0000 mm, 163.2700 mm): Reference field of J_SMB
@@ -46,22 +66,14 @@
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(6.0000 mm, 163.2700 mm): Reference field of J_SMB
-    @(7.3800 mm, 158.0300 mm): Segment of J_DCF on F.Silkscreen
+    @(4.6200 mm, 158.0300 mm): Segment of J_DCF on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(12.0000 mm, 222.2000 mm): PCB text 'PACK' on F.Silkscreen
-    @(7.0000 mm, 222.1500 mm): Segment of J_BATT on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(10.0777 mm, 212.6025 mm): Segment of R48 on F.Silkscreen
-    @(12.0000 mm, 212.7000 mm): Reference field of J_BATT
+    @(252.0000 mm, 190.5000 mm): PCB text 'CLAMP LORA' on F.Silkscreen
+    @(256.3350 mm, 191.5750 mm): Arc of JP1 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(249.9750 mm, 190.6650 mm): Segment of Y1 on F.Silkscreen
-    @(252.0000 mm, 190.5000 mm): PCB text 'CLAMP LORA' on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(256.3350 mm, 191.5750 mm): Arc of JP1 on F.Silkscreen
     @(252.0000 mm, 190.5000 mm): PCB text 'CLAMP LORA' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
@@ -69,52 +81,52 @@
     @(224.0000 mm, 190.5000 mm): PCB text 'CLAMP 5G DIV' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
-    @(128.0000 mm, 222.2000 mm): PCB text 'PV' on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(132.2625 mm, 222.3600 mm): Segment of J_SOLAR on F.Silkscreen
-    @(128.0000 mm, 222.2000 mm): PCB text 'PV' on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
-    @(132.2625 mm, 222.3600 mm): Segment of J_SOLAR on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
-    @(135.9000 mm, 214.5300 mm): Segment of F2 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
-    @(135.9000 mm, 221.4700 mm): Segment of F2 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(124.1825 mm, 222.3600 mm): Segment of J_SOLAR on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
-    @(144.0000 mm, 222.2000 mm): PCB text 'F2 10A' on F.Silkscreen
+    @(128.0000 mm, 222.2000 mm): PCB text 'PV' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(132.2625 mm, 222.3600 mm): Segment of J_SOLAR on F.Silkscreen
+    @(128.0000 mm, 222.2000 mm): PCB text 'PV' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(132.2625 mm, 222.3600 mm): Segment of J_SOLAR on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(135.9000 mm, 214.5300 mm): Segment of F2 on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(135.9000 mm, 221.4700 mm): Segment of F2 on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
     @(144.0000 mm, 222.2000 mm): PCB text 'F2 10A' on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(144.0000 mm, 222.2000 mm): PCB text 'F2 10A' on F.Silkscreen
+    @(135.9000 mm, 221.4700 mm): Segment of F2 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(152.1000 mm, 221.4700 mm): Segment of F2 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(188.1900 mm, 221.3100 mm): Segment of L1 on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(203.8100 mm, 221.3100 mm): Segment of L1 on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
     @(203.8100 mm, 204.6900 mm): Segment of L1 on F.Silkscreen
+    @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
     @(150.0000 mm, 221.5000 mm): PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  BB-2590/U cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen
@@ -141,97 +153,79 @@
     @(12.0000 mm, 212.7000 mm): Reference field of J_BATT
 [track_dangling]: Track has unconnected end
     Local override; warning
+    @(191.7320 mm, 165.6290 mm): Track [/+3V3_E6] on F.Cu, length 0.0001 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(192.5688 mm, 166.4320 mm): Track [/+3V3_E6] on F.Cu, length 0.1711 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
     @(236.7875 mm, 200.5625 mm): Track [/+3V3_E6] on F.Cu, length 0.7375 mm
 [track_dangling]: Track has unconnected end
     Local override; warning
-    @(231.9890 mm, 201.4000 mm): Track [/+3V3_E6] on F.Cu, length 0.0659 mm
-[track_dangling]: Track has unconnected end
+    @(192.5688 mm, 166.4320 mm): Track [/+3V3_E6] on F.Cu, length 0.0798 mm
+[via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(193.3600 mm, 161.9100 mm): Track [/+3V3_E6] on F.Cu, length 0.5839 mm
-[track_dangling]: Track has unconnected end
+    @(236.3875 mm, 199.0400 mm): Via [/+3V3_E6] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(191.7320 mm, 165.6291 mm): Track [/+3V3_E6] on F.Cu, length 0.7614 mm
-[track_dangling]: Track has unconnected end
+    @(238.3875 mm, 199.8250 mm): Via [/+3V3_E6] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(192.5653 mm, 166.6598 mm): Track [/+3V3_E6] on F.Cu, length 0.0537 mm
-[track_dangling]: Track has unconnected end
+    @(231.2275 mm, 201.4000 mm): Via [/+3V3_E6] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(232.7500 mm, 205.0000 mm): Track [/+3V3_E6] on F.Cu, length 0.7375 mm
+    @(193.2100 mm, 162.4100 mm): Via [/+3V3_E6] on F.Cu - B.Cu
 [track_dangling]: Track has unconnected end
     Local override; warning
     @(6.9375 mm, 195.0500 mm): Track [/+5V_E6] on F.Cu, length 1.4625 mm
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(50.6500 mm, 218.0000 mm): Via [/CELL_F] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(233.5875 mm, 208.9600 mm): Via [/DCIN_PGD] on F.Cu - B.Cu
 [track_dangling]: Track has unconnected end
     Local override; warning
-    @(76.7050 mm, 199.8200 mm): Track [/DC_F] on F.Cu, length 0.7250 mm
+    @(76.7050 mm, 198.5500 mm): Track [/DC_F] on F.Cu, length 1.5100 mm
 [track_dangling]: Track has unconnected end
     Local override; warning
     @(76.7050 mm, 201.0900 mm): Track [/DC_F] on F.Cu, length 1.5100 mm
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(75.1950 mm, 198.5500 mm): Via [/DC_F] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
     @(44.9800 mm, 197.6000 mm): Via [/DC_P] on F.Cu - B.Cu
 [track_dangling]: Track has unconnected end
     Local override; warning
-    @(81.3550 mm, 199.7550 mm): Track [/DC_P] on B.Cu, length 1.4000 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(79.9550 mm, 199.7550 mm): Track [/DC_P] on B.Cu, length 1.4000 mm
+    @(236.7875 mm, 207.4375 mm): Track [/E6_DVDD] on F.Cu, length 1.5225 mm
 [track_dangling]: Track has unconnected end
     Local override; warning
     @(235.9875 mm, 200.5625 mm): Track [/E6_DVDD] on F.Cu, length 0.7375 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(237.9875 mm, 200.5625 mm): Track [/E6_DVDD] on F.Cu, length 1.5225 mm
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
-    @(236.7875 mm, 208.9600 mm): Via [/E6_DVDD] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(11.4147 mm, 196.0000 mm): Via [/E6_SW] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(183.4875 mm, 196.8500 mm): Via [/PV_P] on F.Cu - B.Cu
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(208.7050 mm, 196.3600 mm): Track [/Q2_G] on F.Cu, length 0.7250 mm
+    @(198.0750 mm, 200.3250 mm): Via [/PV_P] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(248.3300 mm, 194.5900 mm): Via [/QSPI_D0] on F.Cu - B.Cu
+    @(234.7875 mm, 199.0400 mm): Via [/QSPI_D0] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(241.9800 mm, 193.7900 mm): Via [/QSPI_D2] on F.Cu - B.Cu
+    @(235.5875 mm, 199.0400 mm): Via [/QSPI_D3] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(231.2275 mm, 203.0000 mm): Via [/SCL0] on F.Cu - B.Cu
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(193.5100 mm, 158.1100 mm): Track [/SDA1] on F.Cu, length 1.0440 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(150.7050 mm, 203.2700 mm): Track [/TRK_BG2] on F.Cu, length 0.7250 mm
+    @(232.0125 mm, 202.6000 mm): Via [/SDA0] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(182.9875 mm, 205.8754 mm): Via [/TRK_BG2] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(183.4875 mm, 205.1500 mm): Via [/TRK_BOOST2] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
-    @(179.1121 mm, 198.7500 mm): Via [/TRK_CSN] on F.Cu - B.Cu
+    @(186.8629 mm, 202.2500 mm): Via [/TRK_BOOST1] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(179.8375 mm, 199.2500 mm): Via [/TRK_CSP] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(182.4875 mm, 196.8500 mm): Via [/TRK_INTVCC] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
-    @(182.4875 mm, 205.1500 mm): Via [/TRK_INTVCC] on F.Cu - B.Cu
+    @(181.4875 mm, 196.8500 mm): Via [/TRK_IMONI] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(179.1121 mm, 199.7500 mm): Via [/TRK_LDO33] on F.Cu - B.Cu
@@ -249,43 +243,43 @@
     @(150.7050 mm, 195.0900 mm): Track [/TRK_SW1] on F.Cu, length 1.5100 mm
 [track_dangling]: Track has unconnected end
     Local override; warning
-    @(150.7050 mm, 193.8200 mm): Track [/TRK_SW1] on F.Cu, length 0.7250 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
-    @(165.1650 mm, 193.7550 mm): Track [/TRK_SW1] on B.Cu, length 1.4000 mm
-[track_dangling]: Track has unconnected end
-    Local override; warning
     @(161.9150 mm, 199.4600 mm): Track [/TRK_SW2] on F.Cu, length 1.5100 mm
-[via_dangling]: Via is not connected or connected on only one layer
+[track_dangling]: Track has unconnected end
     Local override; warning
-    @(155.3550 mm, 200.6650 mm): Via [/TRK_SW2] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
-    @(184.4875 mm, 205.1500 mm): Via [/TRK_SW2] on F.Cu - B.Cu
+    @(161.9150 mm, 200.7300 mm): Track [/TRK_SW2] on F.Cu, length 0.7250 mm
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(160.4050 mm, 202.0000 mm): Via [/TRK_SW2] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(155.3550 mm, 202.0650 mm): Via [/TRK_SW2] on F.Cu - B.Cu
+    @(184.4875 mm, 205.1500 mm): Via [/TRK_SW2] on F.Cu - B.Cu
 [track_dangling]: Track has unconnected end
     Local override; warning
     @(150.7050 mm, 196.3600 mm): Track [/TRK_TG1] on F.Cu, length 0.7250 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(183.9875 mm, 204.4375 mm): Track [/TRK_TG2] on F.Cu, length 1.4379 mm
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(183.9875 mm, 205.8754 mm): Via [/TRK_TG2] on F.Cu - B.Cu
+    @(179.1121 mm, 201.7500 mm): Via [/TRK_VC] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(88.1475 mm, 198.5500 mm): Track [/U3_VCAP] on F.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(239.6250 mm, 202.6000 mm): Track [/VIN_MON] on F.Cu, length 1.5225 mm
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
-    @(237.1875 mm, 199.0400 mm): Via [/USB_DP_R] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
-    @(62.0320 mm, 184.9064 mm): Via [/VIN_RAW] on F.Cu - B.Cu
-[via_dangling]: Via is not connected or connected on only one layer
-    Local override; warning
-    @(223.8850 mm, 194.4500 mm): Via [/VIN_RAW] on F.Cu - B.Cu
+    @(68.7300 mm, 183.5800 mm): Via [/VIN_RAW] on F.Cu - B.Cu
 [via_dangling]: Via is not connected or connected on only one layer
     Local override; warning
     @(66.8541 mm, 183.2378 mm): Via [/VIN_RAW] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(223.8850 mm, 194.4500 mm): Via [/VIN_RAW] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(235.5875 mm, 207.4375 mm): Track [/XIN] on F.Cu, length 0.7375 mm
 
 ** Found 0 unconnected pads **
 
