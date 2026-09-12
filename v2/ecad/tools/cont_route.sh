@@ -6,6 +6,12 @@ set -uo pipefail
 . "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fr_jar.sh"   # resolved before the cd below
 cd "$1"; N="$2"; P="${3:-80}"; T="${4:-900}"; W=$PWD/out/cont; mkdir -p "$W"   # absolute: the kill below must match only this directory's router (7 Sep 2026: a relative pattern killed four parallel continuations at once)
 cp "$N.kicad_pcb" "$W/$N-before.kicad_pcb"; cp "$N.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
+# 12 September 2026: the BEFORE copy is scored below, and a board whose .kicad_pro is not beside it under its own
+# name is judged against the DEFAULT net class: C10 printed "before hard 1074" for a board the finish had just
+# measured at hard 0. The decision does not rest on that number (it compares unrouted, and asks only that the
+# AFTER board be hard 0), but a line in the record that says 1074 where the truth is 0 is exactly what the
+# verdict channel exists to stop.
+cp "$N.kicad_pro" "$W/$N-before.kicad_pro"
 # 7 Sep 2026 (B16 chunks): the same plane and power-layer treatment as route_one.sh, or a continuation re-routes every plane pin as a wire
 python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" <<'PYX'
 import sys, pcbnew
