@@ -331,21 +331,30 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
         for ref, fp, hi in members:
             centre_on(fp, cx + w / 2, cy - dy - hi / 2); placed[ref] = fp; dy += hi
         cx += w; rowh = max(rowh, h)
-    # A THROUGH-HOLE PART OCCUPIES BOTH SIDES. The region rule exempts two regions on opposite sides,
-    # correctly for surface-mount parts and wrongly for a part with pins through the board: U62 sits in an
-    # underside pocket and its pins 1, 2 and 3 came out on the front inside BT1's VBAT land, which is the
-    # last six hard violations on B19's placed board (12 September 2026). Every through-hole pad just
-    # placed becomes an obstacle for every region packed after this one, whichever side it is on.
-    for ref, fp in ((r, placed[r]) for r in comps if r in placed):
-        for pd in fp.Pads():
-            if pd.GetAttribute() not in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):
-                continue
-            bb = pd.GetBoundingBox()
-            box = (pcbnew.ToMM(bb.GetLeft()) - OX - GAP, OY - pcbnew.ToMM(bb.GetBottom()) - GAP,
-                   pcbnew.ToMM(bb.GetRight()) - OX + GAP, OY - pcbnew.ToMM(bb.GetTop()) + GAP)
-            if box not in _OBSTACLES:
-                _OBSTACLES.append(box)
     if cy - rowh < y0 - 0.01: print("WARNING region %s overflows by %.1f mm" % (name, (y0 - (cy - rowh))))
+# A THROUGH-HOLE PART OCCUPIES BOTH SIDES, and this is a REPORT because making it a packer obstacle was
+# measured and made the board far worse (12 September 2026). The region rule exempts two regions on
+# opposite sides, correctly for surface-mount parts and wrongly for a part with pins through the board:
+# U62 sits in an underside pocket and its pins came out on the front inside BT1's VBAT land. Feeding
+# every through-hole pad back into the shelf packer as an obstacle took the placed board from 6 hard
+# violations to 107, with eight courtyard overlaps, because a shelf packer that steps around a hundred
+# new obstacles has nowhere left to step. The collision is NAMED here instead, so it is visible rather
+# than silent, and closing it needs a placement pass that can move a part rather than a row of shelves.
+_pth = [(r, pd) for r, fp in placed.items() for pd in fp.Pads()
+        if pd.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)]
+_hits = []
+for r, pd in _pth:
+    bb = pd.GetBoundingBox()
+    for r2, fp2 in placed.items():
+        if r2 == r:
+            continue
+        b2 = fp2.GetBoundingBox(False, False)
+        if bb.Intersects(b2):
+            _hits.append("%s pad %s through %s" % (r, pd.GetNumber(), r2))
+if _hits:
+    print("placement: %d through-hole pad(s) land inside another part's body, which no side exemption "
+          "covers because a pin goes through the board: %s" % (len(_hits), ", ".join(sorted(set(_hits))[:8])))
+
 missing = [r for r in comps if r not in placed and not r.startswith("#")]
 if missing: raise SystemExit("unplaced: %s" % missing)
 # --- nets
