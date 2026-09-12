@@ -19,14 +19,15 @@ T="$E/tools"; CFG="$T/boards/$L.json"
 cfg () { python3 -c "
 import json,sys
 d = json.load(open(sys.argv[1])).get('finish', {}); k = sys.argv[2]
-if k.startswith('cont_route_'): d = d.get('cont_route') or {}; k = k[len('cont_route_'):]
+for _b in ('cont_route', 'direct_close'):
+    if k.startswith(_b + '_'): d = d.get(_b) or {}; k = k[len(_b) + 1:]; break
 v = d.get(k)
 sep = ' ' if k == 'power_layers' else ','   # route_one.sh and cont_route.sh take layers space separated, nets comma separated
 print('' if v is None else (sep.join(v) if isinstance(v, list) else ('1' if v is True else ('' if v is False else v))))" "$CFG" "$2"; }
 N="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['name'])" "$CFG")"
 STUB_L="$(cfg x stub_layers)"; POUR="$(cfg x pour_nets)"; PAIRM="$(cfg x pair_match)"
 AUDIT="$(cfg x pair_audit_nets)"; PFIX="$(cfg x post_fix)"; PRUNED="$(cfg x pruned_gate)"; GGREP="$(cfg x gate_grep)"
-STUB_ENV="$(cfg x stub_env)"   # A gives the stub router a wider window and a higher node cap; nothing else does
+STUB_ENV="$(cfg x stub_env)"; DCL="$(cfg x direct_close_layers)"   # A gives the stub router a wider window and a higher node cap; nothing else does
 CONT="$(python3 -c "import json,sys; c=json.load(open(sys.argv[1])).get('finish',{}).get('cont_route'); print('' if not c else '%d %d %d' % (c['max_opens'], c['passes'], c['timeout_s']))" "$CFG")"
 TAG="$(echo "$PHASE" | tr 'A-Z' 'a-z')"; FLAG="out/$TAG-clean.txt"; DELIV="meshsat-pcb-$L-revA-$PHASE"
 cd "$E/$PROJ" || { echo "finish: no project directory $E/$PROJ"; exit 2; }
@@ -118,6 +119,15 @@ if [ "$PH" -gt "$BH" ] || [ "$PU" -gt "$BU" ]; then
 else
   echo "stitch_prune kept (hard $BH -> $PH, unrouted $BU -> $PU)"
 fi
+fi
+# 4c. the closure the router stopped short of, proposed as geometry and judged by the DRC (12 September 2026).
+# The stub router searches a 0.1 mm raster in which every cell beside a target pad is inside somebody's
+# clearance; the segment that closes the gap ends ON that pad, where the pad's own clearance does not apply to
+# its own net. A24: /CELL+ closed as a straight 9.59 mm locked track, hard 0, opens 3 to 2, after the stub
+# router had refused it. Declared per board, with the number, like every other pass that lays copper here.
+if [ -n "$(cfg x direct_close)" ] || [ -n "$(cfg x direct_close_max)" ]; then
+  python3 $T/direct_close.py $N.kicad_pcb out/$N-drc.json --max="$(cfg x direct_close_max)" ${DCL:+--layers=$DCL} 2>&1 | grep -a direct_close | tail -12
+  $T/drc.sh $N.kicad_pcb out/$N-drc.json
 fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
 python3 $T/silk_fix_all.py $N.kicad_pcb $L 2>&1 | grep -vE 'Debug|leak' | tail -2
