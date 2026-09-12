@@ -321,11 +321,30 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
                 break
             cx = hit + GAP                      # past its right edge, with the packer's own gap
             if cx + w > x1 + 0.01:
-                cx = x0; cy -= rowh; rowh = 0.0
+                # A WRAP MUST ALWAYS ADVANCE. The first version dropped to the next row with `cy -= rowh`
+                # and then zeroed rowh, so a second wrap inside this loop subtracted nothing and put the
+                # unit back on the row it had just left: five courtyard overlaps and a hundred more hard
+                # violations than the run before it (12 September 2026). The step is the taller of the row
+                # so far and this unit, so it is never zero.
+                cy -= max(rowh, h); cx = x0; rowh = 0.0
         dy = 0.0
         for ref, fp, hi in members:
             centre_on(fp, cx + w / 2, cy - dy - hi / 2); placed[ref] = fp; dy += hi
         cx += w; rowh = max(rowh, h)
+    # A THROUGH-HOLE PART OCCUPIES BOTH SIDES. The region rule exempts two regions on opposite sides,
+    # correctly for surface-mount parts and wrongly for a part with pins through the board: U62 sits in an
+    # underside pocket and its pins 1, 2 and 3 came out on the front inside BT1's VBAT land, which is the
+    # last six hard violations on B19's placed board (12 September 2026). Every through-hole pad just
+    # placed becomes an obstacle for every region packed after this one, whichever side it is on.
+    for ref, fp in ((r, placed[r]) for r in comps if r in placed):
+        for pd in fp.Pads():
+            if pd.GetAttribute() not in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):
+                continue
+            bb = pd.GetBoundingBox()
+            box = (pcbnew.ToMM(bb.GetLeft()) - OX - GAP, OY - pcbnew.ToMM(bb.GetBottom()) - GAP,
+                   pcbnew.ToMM(bb.GetRight()) - OX + GAP, OY - pcbnew.ToMM(bb.GetTop()) + GAP)
+            if box not in _OBSTACLES:
+                _OBSTACLES.append(box)
     if cy - rowh < y0 - 0.01: print("WARNING region %s overflows by %.1f mm" % (name, (y0 - (cy - rowh))))
 missing = [r for r in comps if r not in placed and not r.startswith("#")]
 if missing: raise SystemExit("unplaced: %s" % missing)

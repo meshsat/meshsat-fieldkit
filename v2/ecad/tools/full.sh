@@ -112,6 +112,31 @@ python3 ../tools/join_adjacent_pins.py $N.kicad_pcb 2>&1 | grep -E 'join_adjacen
 # board at all and PREROUTE_STOP_AFTER_PLACE=1 silently ran their whole chain instead of stopping. A flag that does nothing
 # on two of six boards and says nothing about it is the shape stage 0 exists to remove; the snapshot is one file copy.
 cp $N.kicad_pcb out/$N-placed.kicad_pcb
+
+# THE CHEAP GATE RUNS BEFORE THE EXPENSIVE STAGE (12 September 2026, red team round three C2). The first DRC
+# of the placed board used to be at the far side of the pair passes, which are about nineteen minutes on B,
+# and only on the branch the pair gate takes when it refuses. So B's whole pair programme, every arm in
+# arms/, was measured on a placement carrying 150 hard violations that nothing had read (appendix 32.149). A
+# one-minute DRC belongs in front of a nineteen-minute pass, and a board that is already illegal is not a
+# board to measure a pre-router on. The allowance is ZERO unless the board declares one with its number and
+# the appendix section that measured it (`placed_hard_allowance` in boards/<letter>.json).
+PLACED_ALLOW="$(cfg placed_hard_allowance)"; PLACED_ALLOW="${PLACED_ALLOW:-0}"
+bash ../tools/drc.sh $N.kicad_pcb out/$N-placed-drc.json >/dev/null 2>&1 || true
+if [ -s "out/$N-placed-drc.json" ]; then
+  python3 ../tools/hardset.py out/$N-placed-drc.json pre --counts out/placed-counts.txt --label placed >/dev/null 2>&1 || true
+  PLACED_HARD="$(cut -d' ' -f1 out/placed-counts.txt 2>/dev/null || echo 0)"
+  echo "placed board: hard $PLACED_HARD of the fifteen types, allowance $PLACED_ALLOW"
+  if [ "${PLACED_HARD:-0}" -gt "$PLACED_ALLOW" ]; then
+    echo "BLOCK the placed board carries $PLACED_HARD hard violation(s) against an allowance of $PLACED_ALLOW."
+    echo "      Nothing measured on it is a measurement of the pre-router: fix the placement, or declare the"
+    echo "      allowance in boards/<letter>.json as placed_hard_allowance with its number and its section."
+    echo "      The hard set is in out/$N-placed-drc.json and out/hardset-placed.verdict.json."
+    exit 1
+  fi
+else
+  echo "placed board: the DRC could not be read, so its legality is UNMEASURED and the pass below is not a measurement"
+fi
+
 [ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
 
 if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then

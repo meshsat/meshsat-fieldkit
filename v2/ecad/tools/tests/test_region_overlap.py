@@ -100,3 +100,21 @@ def t_a_band_is_not_a_packer_obstacle():
         raise AssertionError("the packer no longer reads the drilled holes and slots")
     if "not an obstacle" not in src:
         raise AssertionError("a dropped keep-out is not reported, so the cut is invisible")
+
+
+def t_a_through_hole_part_occupies_both_sides():
+    """The region rule exempts opposite sides, and a part with pins through the board has none.
+
+    U62 sits in an underside pocket on board B and its pins 1, 2 and 3 came out on the FRONT inside BT1's
+    VBAT land: the last six hard violations on B19's placed board after four tool causes were fixed
+    (MESHSAT-862, 12 September 2026). Surface-mount parts on opposite sides may share a footprint of
+    board; a through-hole part may not.
+    """
+    import os as _os
+    TOOLS_ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    src = open(_os.path.join(TOOLS_, "gen_pcb_b3.py"), errors="replace").read()
+    if "PAD_ATTRIB_PTH" not in src:
+        raise AssertionError("the packer does not treat a through-hole pad as occupying both sides")
+    body = src[src.index("cx += w; rowh = max(rowh, h)"):]
+    if "_OBSTACLES.append(box)" not in body[:1800]:
+        raise AssertionError("the through-hole pads of a packed region do not become obstacles for the next")

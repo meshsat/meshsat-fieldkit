@@ -1,0 +1,521 @@
+{
+ "_categories": {
+  "basis": "chooses which implementation runs; proved equivalent, so not comparable",
+  "debug": "prints; changes nothing the board sees",
+  "experiment": "a routing lever tier 2 may move",
+  "internal": "an internal mode, not a lever",
+  "io": "reads or writes a file; changes the input or the output, not the board",
+  "reserved": "the owner's, refused with its reason and routed to the decisions file"
+ },
+ "_stages": {
+  "pair": "runs pair_preroute on an already placed board",
+  "place": "regenerates the placement, then the pair passes"
+ },
+ "_what": "The typed knob registry (MESHSAT-862, 12 September 2026). CATEGORY IS THE AUTHORITY: only an `experiment` knob may be proposed by tier 2. Reading a name from the source told us the name exists, never that it is a lever, and the red team was right that this reversed the authority: PAIR_PLAN_OUT, PAIR_DEBUG and PAIR_NO_NUMBA were all proposable. The source scan is a COMPLETENESS check now: every name the tools read must appear here, and a test says so.",
+ "knobs": {
+  "PAIR_BUDGET": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "600",
+   "description": "the outer wall-clock safety net per pair; the work budget is the real one",
+   "stage": "pair",
+   "type": "number",
+   "unit": "s"
+  },
+  "PAIR_CONFLICT_OUT": {
+   "category": "io",
+   "comparable": false,
+   "default": "",
+   "description": "writes the contested-cell raster",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_CORRIDOR_SLACK": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0.12",
+   "description": "how much wider than the pair the corridor must be; the one lever with a curve",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_CORRIDOR_SLACK_SLIM": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0.05",
+   "description": "the per-pair retry slack when no corridor is found",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_COVER_LEGS": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "the corridor covers its own legs plus a grid cell",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_CROSS_NET": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "report",
+   "description": "what a cross-net raster hit does; report by default, a raster must not decide alone",
+   "stage": "pair",
+   "type": "enum:report,block,off",
+   "unit": ""
+  },
+  "PAIR_DEBUG": {
+   "category": "debug",
+   "comparable": false,
+   "default": "",
+   "description": "prints why a cell was refused; changes nothing the board sees",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_END_CANDS": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "12",
+   "description": "corridor-end candidates tried per section",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "candidates"
+  },
+  "PAIR_END_LEGS": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "the end emissions lay offset legs",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_END_OFFSET": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "the legs are offset by half the pair pitch",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_END_STRICT": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "judge the end emissions at the gate's bar as they are laid",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_ENTRY_STRICT": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "the entry region is asked rather than skipped",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_ENTRY_VIA": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "the escape-via entry as a per-pair fallback",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_EXPANSIONS": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "12000000",
+   "description": "work budget per pair across all its searches; 0 is off",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "expansions"
+  },
+  "PAIR_FAN_BACK": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1.0",
+   "description": "how far the P leg is pulled back before the N fan of a dive is laid",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_FAST_SEARCH": {
+   "category": "basis",
+   "comparable": false,
+   "default": "",
+   "description": "the compiled corridor search, proved identical by pairsearch selftest",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_FAST_STUBS": {
+   "category": "basis",
+   "comparable": false,
+   "default": "",
+   "description": "the compiled stub search, proved identical on B19",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_FOLD_TEST": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "the fold test at half the pair pitch",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_GRID_LONG": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "a coarser grid for the long pairs; 0 is off",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_HIST_IN": {
+   "category": "io",
+   "comparable": false,
+   "default": "",
+   "description": "reads a negotiated cost history",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_HOP_LAYERS": {
+   "category": "reserved",
+   "comparable": true,
+   "default": "",
+   "description": "same as PAIR_LAYERS: it decides which layers a pair may change on",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_INNER": {
+   "category": "reserved",
+   "comparable": true,
+   "default": "",
+   "description": "pair class geometry: the inner-layer width and gap are an impedance target",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_INNER_GAP": {
+   "category": "reserved",
+   "comparable": true,
+   "default": "",
+   "description": "the intra-pair gap is an impedance target and at 0.09 mm it breaks KiCad's own clearance rule",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_INNER_WIDTH": {
+   "category": "reserved",
+   "comparable": true,
+   "default": "",
+   "description": "track width against the stackup is an impedance target",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_LAYERS": {
+   "category": "reserved",
+   "comparable": true,
+   "default": "",
+   "description": "a pair moved to an inner layer becomes a stripline and needs its own geometry, which is reserved",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_LEG_EXACT": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "re-test a blocked leg point against the polygons",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_LEG_RETRY": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "block the refusing corridor cell and search again",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "retries"
+  },
+  "PAIR_LONG_MM": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "120",
+   "description": "the span above which a pair counts as long",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_MAP_CHECK": {
+   "category": "basis",
+   "comparable": false,
+   "default": "",
+   "description": "an equivalence check, not a lever: slower, and changes nothing",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_MAP_MODE": {
+   "category": "basis",
+   "comparable": false,
+   "default": "",
+   "description": "counts or reference occupancy maps, proved identical on all 75 of D's calls",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_MITRE_LIMIT": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1.2",
+   "description": "the corner mitre limit in the leg offset",
+   "stage": "pair",
+   "type": "number",
+   "unit": "x width"
+  },
+  "PAIR_NO_NUMBA": {
+   "category": "basis",
+   "comparable": false,
+   "default": "",
+   "description": "prevents the compiled kernel loading at all: the same basis question from the other side",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_ORDER": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "span",
+   "description": "the order pairs are attempted in; the pass is greedy so order decides",
+   "stage": "pair",
+   "type": "enum:span,name,scarce",
+   "unit": ""
+  },
+  "PAIR_ORDER_FILE": {
+   "category": "io",
+   "comparable": false,
+   "default": "",
+   "description": "reads the pair order from a file: changes the input, not the board",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_OWN_CLEAR": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "the emissions ask the partner before laying",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_PLAN_IN": {
+   "category": "io",
+   "comparable": false,
+   "default": "",
+   "description": "lays a negotiated plan instead of searching",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_PLAN_MODE": {
+   "category": "internal",
+   "comparable": false,
+   "default": "",
+   "description": "selects the negotiated planner, measured and rejected for B19 (32.102)",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_PLAN_OUT": {
+   "category": "io",
+   "comparable": false,
+   "default": "",
+   "description": "writes a negotiated plan",
+   "stage": "pair",
+   "type": "string",
+   "unit": ""
+  },
+  "PAIR_PRESENT": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "the presentation offset at an entry station",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_RIPUP": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "rip-up as a trial kept only when it leaves more pairs laid",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "episodes"
+  },
+  "PAIR_RIP_MARGIN": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "4.0",
+   "description": "the corridor margin a rip-up episode works in",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_RIP_MAX": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "6",
+   "description": "pairs one rip-up episode may lift",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "pairs"
+  },
+  "PAIR_RIP_TOTAL": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "60",
+   "description": "pairs all rip-up episodes may lift in a pass",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "pairs"
+  },
+  "PAIR_STAIRCASE": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "the staircase corridor build",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_STATION_OWN": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "the legs may pass the pair's own copper at a station",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_STRIP_MM": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "6.0",
+   "description": "how much escape chain is stripped at a fine-pitch station",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PAIR_STUB_EXPANSIONS": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "400000",
+   "description": "work budget for one stub search",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "expansions"
+  },
+  "PAIR_SWAP": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "swap a station's two parts to untwist the pair",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_SWAP_BOTH_SIDES": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "refuse a swap that crosses the parts' other pads",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_UNMERGE": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "judge the unmerged polyline as well as the merged one",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_VENV": {
+   "category": "basis",
+   "comparable": false,
+   "default": "",
+   "description": "chooses the numba venv or the plain kernel; 13x the wall time, 0 of 7,706 items different",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_VIA_CANDS": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "12",
+   "description": "via sites tried at a station before the section fails",
+   "stage": "pair",
+   "type": "integer",
+   "unit": "candidates"
+  },
+  "PAIR_VIA_MODE": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "class",
+   "description": "the via the pair uses: its class via or the board minimum",
+   "stage": "pair",
+   "type": "enum:class,min",
+   "unit": ""
+  },
+  "PAIR_WINDOW": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "25",
+   "description": "the search box around a pair",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PLACE_COUPLE_GAP": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1.2",
+   "description": "the gap between a differential pair's two coupling capacitors; +8 pairs on B at 2.4 (32.147)",
+   "stage": "place",
+   "type": "number",
+   "unit": "mm"
+  },
+  "PLACE_FINE_MARGIN": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1.6",
+   "description": "the margin the packer leaves around a fine-pitch part",
+   "stage": "place",
+   "type": "number",
+   "unit": "mm"
+  }
+ }
+}

@@ -17,12 +17,13 @@ What the pack contains, and why each piece is in it:
   * THE MEASURED KNOB TABLE from the knob document, which is the design record for this tool.
   * THE FAILURE PROFILE as counts (`pair_report.py --json`), so "what stops a pair" is a number per
     reason and per part rather than a story.
-  * THE KNOBS IT MAY PROPOSE, computed by `schema.known_knobs()` minus the reserved and basis-locked
-    sets, so the proposer is told the shape of the space instead of guessing it and being refused.
+  * THE KNOBS IT MAY PROPOSE, from the typed registry `agent/knobs.json` and its `experiment` category,
+    filtered to the stage this run executes. Reading a name from the source told us the name exists,
+    never that it is a lever, and the red team was right that this reversed the authority.
   * THE STANDING LAW measured on 12 September: on a greedy pass with no rip-up, removing a bar moves
     the failure rather than the pair, unless the bar was the last one. Six arms measured it.
 """
-import os, re, json
+import os, re, sys, json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.dirname(HERE)
@@ -52,20 +53,38 @@ def measured_table(path=None):
     return body.split("\n## ", 1)[0].strip()
 
 
-def graded_rows(ledger_paths):
-    """Every arm row ever appended, oldest first. A row is a measurement; a missing file is not an error."""
+class EvidenceCorrupt(Exception):
+    """The ledger this evidence would be drawn from does not verify. Never a partial pack."""
+
+
+def graded_rows(ledger_paths, verify=True):
+    """Every arm row ever appended, oldest first, from a ledger whose CHAIN VERIFIES FIRST.
+
+    The chain was tamper-evident only when somebody called the verifier, and the agent is the one
+    consumer that decides things from it: which experiments are already measured, what the evidence pack
+    says, whether a proposal is a repeat. A malformed row used to be skipped silently, which is exactly
+    how a measured arm disappears and gets proposed again (red team, 12 September 2026). A broken chain
+    is EVIDENCE_CORRUPT and stops the cycle; it does not yield a partially reconstructed pack.
+    """
+    sys.path.insert(0, TOOLS)
+    import ledger as _ledger
     rows = []
     for p in ledger_paths:
         if not os.path.exists(p):
             continue
-        for line in open(p, errors="replace"):
+        if verify:
+            ok, _n, problems = _ledger.verify(p)
+            if not ok:
+                raise EvidenceCorrupt("%s does not verify: %s" % (p, "; ".join(map(str, problems))[:300]))
+        for n, line in enumerate(open(p, errors="replace"), 1):
             line = line.strip()
             if not line:
                 continue
             try:
                 r = json.loads(line)
             except ValueError:
-                continue
+                raise EvidenceCorrupt("%s line %d is not JSON, and a skipped row is a measurement that "
+                                      "disappears from the evidence" % (p, n))
             rows.append(r.get("rec", r))
     return rows
 
@@ -92,13 +111,16 @@ def summarise_rows(rows, limit=40):
     return "\n".join(out)
 
 
-def pack(letter, board_json=None, profile=None, ledgers=(), knobs=None, extra=()):
+def pack(letter, board_json=None, profile=None, ledgers=(), knobs=None, extra=(), spec_template=None):
     """Everything tier 2 sees, as one dict. Nothing here is a log and nothing here is a secret."""
     import schema
     bj = board_json or os.path.join(TOOLS, "boards", "%s.json" % letter)
     rows = graded_rows(ledgers)
-    proposable = sorted((knobs if knobs is not None else schema.known_knobs())
-                        - set(schema.RESERVED_KNOBS) - set(schema.BASIS_KNOBS))
+    reg = schema.registry()
+    run = (spec_template or {}).get("_runs", "pair") if spec_template else "pair"
+    stages = schema.STAGES.get(run, ("pair",))
+    proposable = sorted(k for k, v in reg.items()
+                        if v.get("category") == "experiment" and v.get("stage") in stages)
     types = schema.knob_types()
     return {
         "letter": letter,
@@ -106,11 +128,14 @@ def pack(letter, board_json=None, profile=None, ledgers=(), knobs=None, extra=()
         "measured_knob_table": measured_table(),
         "graded_arms": summarise_rows(rows),
         "graded_count": len(rows),
+        "best_pairs": max([r["pairs"] for r in rows if isinstance(r.get("pairs"), int)] or [None]) if rows else None,
+        "worst_pairs": min([r["pairs"] for r in rows if isinstance(r.get("pairs"), int)] or [None]) if rows else None,
         "failure_profile": json.loads(_read(profile) or "{}") if profile else {},
         "proposable_knobs": proposable,
         "knob_types": {k: types.get(k, {"type": "unknown", "default": "", "note": ""}) for k in proposable},
-        "reserved_knobs": schema.RESERVED_KNOBS,
-        "basis_locked_knobs": schema.BASIS_KNOBS,
+        "reserved_knobs": schema.RESERVED_KNOBS(reg),
+        "basis_locked_knobs": schema.BASIS_KNOBS(reg),
+        "run_stage": run,
         "law": LAW,
         "notes": list(extra),
         "_signatures": sorted(signatures(rows)),
@@ -121,6 +146,10 @@ def render(p):
     """The pack as the text the proposer is given. One function, so a test can read exactly what was sent."""
     L = []
     L.append("BOARD %s. %d arms have been graded on this problem already." % (p["letter"].upper(), p["graded_count"]))
+    if p.get("best_pairs") is not None:
+        L.append("The best graded row on this board lays %s and the worst lays %s. A prediction of `>=` at or "
+                 "below %s is REFUSED: an arm that changed nothing would meet it."
+                 % (p["best_pairs"], p["worst_pairs"], p["best_pairs"]))
     L.append("\n=== THE LAW MEASURED ON THIS PROBLEM ===\n" + p["law"])
     if p["board_declarations"]:
         L.append("\n=== WHAT THE BOARD ALREADY DECLARES (boards/%s.json), each value with the measurement behind it ===\n%s"
@@ -131,12 +160,13 @@ def render(p):
         L.append("\n=== EVERY ARM GRADED SO FAR, with what it predicted and what it got ===\n" + p["graded_arms"])
     if p["failure_profile"]:
         L.append("\n=== THE FAILURE PROFILE, counted (pair_report.py --json) ===\n" + json.dumps(p["failure_profile"], indent=1)[:4000])
-    L.append("\n=== KNOBS YOU MAY PROPOSE, WITH THE TYPE THE TOOL ACTUALLY READS ===")
+    L.append("\n=== KNOBS YOU MAY PROPOSE at the %r stage, with the type the tool reads ===" % p.get("run_stage", "pair"))
     L.append("A knob's type is read from the line that reads it. A FLAG is 1 or 0 and nothing else: giving it a")
     L.append("number sets it ON, which is usually its default, and the arm then measures nothing.")
     for k in p["proposable_knobs"]:
         t = (p.get("knob_types") or {}).get(k, {})
-        L.append("  %-26s %-46s default %-12s %s" % (k, t.get("type", "unknown"), t.get("default", ""), t.get("note", "")))
+        L.append("  %-24s %-16s default %-12s %-10s %s"
+                 % (k, t.get("type", "unknown"), t.get("default", ""), t.get("unit", ""), t.get("note", "")))
     L.append("\n=== KNOBS THAT ARE REFUSED, and why ===")
     for k, why in sorted(p["reserved_knobs"].items()):
         L.append("  RESERVED %-18s %s" % (k, why))

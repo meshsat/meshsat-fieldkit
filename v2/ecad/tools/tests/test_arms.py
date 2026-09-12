@@ -32,7 +32,7 @@ def t_an_arm_without_a_prediction_is_refused():
 
 def t_the_judge_reads_the_measurement_not_the_arm():
     """grade() takes the pair count and the written prediction and nothing else the arm produced."""
-    row = {"pairs": 60, "of": 113, "predict": {"op": ">=", "value": 56, "basis": "the measured baseline"},
+    row = {"tools": {"tools_tree_sha": "fixture"}, "pairs": 60, "of": 113, "predict": {"op": ">=", "value": 56, "basis": "the measured baseline"},
            "claim": "this arm is excellent"}
     v, note = arms.grade(row)
     assert v == "MET" and "60 >= 56" in note, (v, note)
@@ -48,9 +48,9 @@ def t_a_crashed_arm_is_infra_fail_not_a_missed_prediction():
 
 
 def t_an_arm_that_printed_no_count_is_unmeasurable():
-    v, note = arms.grade({"predict": {"op": ">=", "value": 10}})
+    v, note = arms.grade({"tools": {"tools_tree_sha": "fixture"}, "predict": {"op": ">=", "value": 10}})
     assert v == "UNMEASURABLE", (v, note)
-    v, note = arms.grade({"pairs": 5, "predict": {}})
+    v, note = arms.grade({"tools": {"tools_tree_sha": "fixture"}, "pairs": 5, "predict": {}})
     assert v == "UNMEASURABLE", (v, note)
 
 

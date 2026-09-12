@@ -21,7 +21,7 @@ command template that runs `arms.py` where the boards are. The command is given 
 and never stored in the tree, because the machine it names is not this repo's business and this repo
 is public within minutes.
 """
-import os, sys, json, time, argparse, subprocess
+import os, sys, json, time, shlex, argparse, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.dirname(HERE)
@@ -47,9 +47,13 @@ with one JSON object: {"entry": "<the prose>", "headline": "<one sentence, at mo
 def run_spec(spec_path, exec_cmd, result_path, timeout=None):
     """Execute the spec. Either here (when pcbnew is importable) or through the caller's command."""
     if exec_cmd:
-        cmd = exec_cmd.replace("{spec}", spec_path).replace("{result}", result_path)
-        print("loop: executing through the caller's command")
-        r = subprocess.run(cmd, shell=True, timeout=timeout)
+        # AN ARGV, NOT A SHELL STRING. `routeflow.sh()` refuses the construction this used, and this is
+        # the loop's one actuation point: the operator authors the template, the model never does, and a
+        # substituted string is still the wrong shape for the place where a run begins (red team,
+        # 12 September 2026). Substitution happens per argument, after the split.
+        argv = [a.replace("{spec}", spec_path).replace("{result}", result_path) for a in shlex.split(exec_cmd)]
+        print("loop: executing %s" % " ".join(argv[:3] + (["..."] if len(argv) > 3 else [])))
+        r = subprocess.run(argv, timeout=timeout)
         return r.returncode
     try:
         import pcbnew                                             # noqa: F401
@@ -160,8 +164,13 @@ def main(argv):
     open(os.path.join(a.out_dir, "pack-%s.txt" % stamp), "w").write(pack_text)
     print("loop: evidence pack %d characters, %d arms already graded" % (len(pack_text), p["graded_count"]))
 
+    # WIDTH. One arm per cycle made a loop whose stated argument is width serial by construction; the
+    # runner has taken --parallel since it was written (red team, 12 September 2026). The template says
+    # how many, each with its own prediction, and they are dispatched together.
     spec, arms, attempts = propose.ask(pack_text, a.ask, repair=2,
-                                       graded=() if a.allow_repeat else p["_signatures"], template=template)
+                                       graded=() if a.allow_repeat else p["_signatures"], template=template,
+                                       max_arms=int(template.get("_max_arms", 1)),
+                                       best=p.get("best_pairs"), worst=p.get("worst_pairs"))
     for at in attempts:
         print("loop: propose attempt %d %s" % (at["attempt"], "ACCEPTED" if at["accepted"] else "REFUSED"))
         for e in at["errors"]:
@@ -222,7 +231,18 @@ def main(argv):
         context = ["The arm was proposed by an automated tier 2 from counted evidence and executed by a "
                    "deterministic runner. You are judging whether the numbers support the draft entry."]
         for cycle in range(a.revisions + 1):
-            material = reviewmod.build_material(diff="", verdicts={}, numbers=nums, draft=draft["entry"], extra=context)
+            # THE REVIEWER GETS THE ARTEFACTS, not a numbers block. It can only catch "the knob did not
+            # reach the tool" if it can see knobs_seen against env, and only weigh legality if it can see
+            # the hard count with its denominator (red team, 12 September 2026).
+            vs = {}
+            for f in sorted(os.listdir(a.out_dir)) if os.path.isdir(a.out_dir) else []:
+                if f.endswith(".verdict.json"):
+                    try: vs[f] = json.load(open(os.path.join(a.out_dir, f)))
+                    except ValueError: pass
+            vs["arm_rows"] = [{k: r.get(k) for k in ("arm", "env", "knobs_seen", "pairs", "of", "hard",
+                                                     "verdict", "note", "tools", "placed_md5", "board_sha")}
+                              for r in rows]
+            material = reviewmod.build_material(diff="", verdicts=vs, numbers=nums, draft=draft["entry"], extra=context)
             rev, rattempts = reviewmod.review(material)
             open(os.path.join(a.out_dir, "review-%s-%d.json" % (stamp, cycle)), "w").write(
                 json.dumps(rattempts, indent=1, default=str))
@@ -255,8 +275,13 @@ def main(argv):
                    "final_draft": draft["entry"],
                    "findings": len((rev or {}).get("findings") or [])})
 
-    met = sum(1 for r in rows if r["verdict"] == "MET")
-    bad = sum(1 for r in rows if r["verdict"] == "INFRA_FAIL")
+    # FOUR QUESTIONS, FOUR FIELDS. One verdict used to answer "did the experiment measure anything",
+    # "was the prediction met" and "was the write-up approved" at once, and `missed` was the remainder,
+    # so an UNMEASURED or ILLEGAL arm counted as a missed prediction (red team, 12 September 2026).
+    import collections as _c
+    g = _c.Counter(r.get("verdict") for r in rows)
+    met = g["MET"]
+    bad = g["INFRA_FAIL"] + g["UNMEASURED"] + g["UNMEASURABLE"]
     # Tier 2b gates the WRITE-UP, and a verdict file that reads PASS over a refused entry is a claim the
     # code does not make good on (its own finding on the change that introduced it, 12 September 2026).
     # The measurement stands either way: the arm's grade is above and the reviewer never touched it.
@@ -269,10 +294,14 @@ def main(argv):
     return verdict.write("agent_loop",
                          verdict.INCONCLUSIVE if (bad or (rev is None and not a.no_review))
                          else (verdict.FAIL if refused else verdict.PASS),
-                         counts={"arms": len(rows), "met": met, "missed": len(rows) - met - bad,
-                                 "infra_fail": bad, "best_pairs": max((r.get("pairs") or 0) for r in rows),
+                         counts={"arms": len(rows), "met": g["MET"], "missed": g["MISSED"],
+                                 "illegal": g["ILLEGAL"], "unmeasured": g["UNMEASURED"],
+                                 "unmeasurable": g["UNMEASURABLE"], "infra_fail": g["INFRA_FAIL"],
+                                 "best_pairs": max((r.get("pairs") or 0) for r in rows),
                                  "review_findings": len((rev or {}).get("findings") or []),
-                                 "review": (rev or {}).get("verdict", "none")},
+                                 "process_status": "PASS" if not bad else "INCONCLUSIVE",
+                                 "measurement_status": ("MEASURED" if met + g["MISSED"] else "NOT MEASURED"),
+                                 "review_status": (rev or {}).get("verdict", "none")},
                          denominator=len(rows),
                          evidence=[nums, (rev or {}).get("summary", "no review")],
                          note="one cycle: proposed, run, graded mechanically, reviewed by a separate context",

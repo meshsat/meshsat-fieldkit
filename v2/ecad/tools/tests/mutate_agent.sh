@@ -22,7 +22,7 @@ def _h(d):
     h = hashlib.sha256()
     for root, _, fs in os.walk(d):
         for f in sorted(fs):
-            if f.endswith(".py"):
+            if f.endswith((".py", ".sh", ".json")):
                 h.update(open(os.path.join(root, f), "rb").read())
     return h.hexdigest()
 before = _h(T)
@@ -46,7 +46,7 @@ TAIL
 
 run_case "a flag may be given a threshold" t_a_flag_given_a_threshold_is_refused '
 p = os.path.join(T, "agent", "schema.py"); s = open(p).read()
-s = s.replace("                if t.startswith(\"flag\") and str(v).strip() not in", "                if False and str(v).strip() not in", 1)
+s = s.replace("            if t == \"flag\" and str(v).strip() not in (\"0\", \"1\"):", "            if False:", 1)
 open(p, "w").write(s)'
 
 run_case "the count is the whole objective again" t_the_pair_count_alone_is_not_the_objective '
@@ -62,12 +62,55 @@ open(p, "w").write(s)'
 
 run_case "a knob this run cannot execute is allowed" t_a_knob_this_run_cannot_execute_is_refused '
 p = os.path.join(T, "agent", "schema.py"); s = open(p).read()
-s = s.replace("                if src and src not in allowed:", "                if False:", 1)
+s = s.replace("            elif spec.get(\"stage\") not in STAGES.get(run, (\"pair\",)):", "            elif False:", 1)
 open(p, "w").write(s)'
 
 run_case "the loop re-grades what the runner judged" t_there_is_only_one_judge '
 p = os.path.join(T, "agent", "loop.py"); s = open(p).read()
 s = s.replace("        if not r.get(\"verdict\"):", "        if True:", 1)
+open(p, "w").write(s)'
+
+run_case "two knobs in one arm are allowed" t_one_variable_is_mechanical '
+p = os.path.join(T, "agent", "schema.py"); s = open(p).read()
+s = s.replace("        elif len(env) > max_knobs:", "        elif False:", 1)
+open(p, "w").write(s)'
+
+run_case "the metric is ignored again" t_the_metric_is_closed '
+p = os.path.join(T, "agent", "schema.py"); s = open(p).read()
+s = s.replace("            if m != metric:", "            if False:", 1)
+open(p, "w").write(s)'
+
+run_case "the source scan is the authority again" t_the_registry_is_the_authority '
+p = os.path.join(T, "agent", "knobs.json"); import json as _j
+d = _j.load(open(p)); d["knobs"]["PAIR_DEBUG"]["category"] = "experiment"
+_j.dump(d, open(p, "w"), indent=1)'
+
+run_case "a prediction need not be falsifiable" t_a_prediction_must_be_able_to_be_wrong '
+p = os.path.join(T, "agent", "schema.py"); s = open(p).read()
+s = s.replace("                if op in UP and best is not None and val <= best:", "                if False:", 1)
+open(p, "w").write(s)'
+
+run_case "a row needs no tool fingerprint" t_a_row_without_a_tool_fingerprint '
+p = os.path.join(T, "arms.py"); s = open(p).read()
+s = s.replace("    if not (row.get(\"tools\") or {}).get(\"tools_tree_sha\"):", "    if False:", 1)
+open(p, "w").write(s)'
+
+run_case "the ledger is consumed unverified" t_the_evidence_refuses_a_ledger '
+p = os.path.join(T, "agent", "evidence.py"); s = open(p).read()
+s = s.replace("        if verify:", "        if False:", 1)
+open(p, "w").write(s)'
+
+run_case "the patch flow skips the red side" t_the_patch_flow_proves_the_red_side '
+p = os.path.join(T, "agent", "patch.py"); s = open(p).read()
+s = s.replace("        report[\"red\"], report[\"red_detail\"] = _red_side(base, selector)",
+              "        report[\"red\"], report[\"red_detail\"] = True, \"assumed\"", 1)
+open(p, "w").write(s)'
+
+run_case "the cheap gate moves back behind the pass" t_the_cheap_gate_runs_before '
+p = os.path.join(T, "full.sh"); s = open(p).read()
+i = s.index("BLOCK the placed board carries")
+j = s.index("exit 1", i)
+s = s[:j] + ": # the stop is gone" + s[j + 6:]
 open(p, "w").write(s)'
 
 echo "mutation proof: each rule must FAIL on a tree carrying its defect"
