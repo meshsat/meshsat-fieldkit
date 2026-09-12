@@ -6161,3 +6161,64 @@ which is already held by owner decision 13.
 
 **Tests:** `tests/test_exposed_pad_vias.py`, three rules, all three failing on the pre-fix tree. Suite 290
 passing, 7 skipped.
+
+### 32.152 A24, E7 and P3 are cut, and boards A, E and P certify with nothing open (12 September 2026, 19:00 CEST; MESHSAT-862)
+
+**Three deliverables, and for the first time since `jlc_certify.py` was written on 11 September it returns
+PASS on a board.** A and E together: **223 components, 194 CERTIFIED, 23 HAND_FIT each with a written
+purchase route, 6 BENCH_FITTED, nothing open.** P alone: **19 components, 19 CERTIFIED**, nothing hand-fit and
+nothing bench-fitted.
+
+| board | hard | unrouted | gate | other |
+|---|---:|---:|---|---|
+| **A24** | 0 | 0 | `check_pcb_a` ALL PASS, 798 checks | dc_drop 12 of 12 MET, impedance 3 of 3, netlist 2004 of 2004, `verify_deliverable` 35 of 35 |
+| **E7** | 0 | 0 | `check_pcb_e` 88 of 88 | dc_drop 2 of 2 MET, netlist 816 of 816, `verify_deliverable` 35 of 35 |
+| **P3** | 0 | 0 | routeflow end CLEAN | 55 vias, board sha256 5ae0ce7e verified against the folder's own record |
+
+**A24 carries owner ruling 10 and no copper moved to get it.** The twenty-five impossible `22u 50V X7R 1210`
+became C596319 and, on the PoE stage's three output parts, C5156756, and the board was compared item by item
+across the change: **5,212 tracks and vias, every zone's filled area and all 400 footprint positions
+identical.** `tools/apply_netlist_values.py` is that operation as a tool rather than a one-off: it reads the
+netlist the schematic generator just wrote and writes each reference's value onto the routed board, and it
+FAILS on a reference the netlist carries and the board does not, because that means the two are not the same
+design. Thirty-one references moved, none of them copper.
+
+**P3 took four attempts and every refusal was real.** This is the value of a gate that blocks rather than warns,
+and the list is worth reading as one sequence:
+
+1. **A blank BOM code**, because a comment reword stopped matching an `lcsc-allow` line that should never have
+   covered a socket. (The line said LEAD and meant it; the row is the socket the lead plugs into.)
+2. **A locked GND via dead at its B.Cu end**, and `stitch_prune`, written for exactly that, refused to touch it
+   because "2 tracks land on it": both were on F.Cu and the via spans F.Cu to B.Cu. **A track count is not a
+   connection test.** It is per end now, and `pad_at` takes a layer, because the pad it was finding is F.Cu only.
+3. **The same defect at a different via**, and behind it the finding of 32.151: the BQ4050's exposed pad had one
+   thermal via instead of four because `clear()` was refusing them against the land's own solder paste apertures.
+4. **The pruner declared at the TOP level of `boards/p.json`**, where `finish.sh`'s `cfg` cannot see it. Not an
+   error, not a warning: silently absent, so three routes in a row were refused by the one item the pruner
+   exists to remove while no `stitch_prune` line appeared in any finish log to say it had never run.
+
+**Two rules came out of that last one and both fail on the pre-fix tree.**
+`t_a_finish_declaration_lives_where_the_finish_looks_for_it` reads every key `finish.sh` passes to `cfg` and
+refuses a board file that declares one at the top level. And **owner ruling 10's own fill rule could never
+fire**: it was written as `(r"^10u 50V X7R 1210$", "C1210")` where the land is `C_1210_3225Metric`, so A24's
+first finish refused the deliverable for 22 blank lines on the very part the ruling chose.
+`t_every_fill_rule_names_a_land_this_project_draws` judges every `lcsc_fill` key against the lands the
+generators name AND the footprints that reach a shipped BOM, and it named one further corpse,
+`(r"^BC847BS", "SOT-363")`, retired in place.
+
+**The same prose defect a third and fourth time.** A's nine SMA jacks read *"SMA jack (Amphenol 132134,
+vertical), pigtail from the 5G-DIV device"*; parentheses are stripped before a part number is read, so the only
+token left with a digit was `5G-DIV` and the certifier compared a radio's name with a connector's. **A row's
+head names its own part**, and it now reads *"SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-DIV
+device)"*, which also names the land variant A actually draws.
+
+**Two operational rules, both learnt by doing it wrong first.** A board is identified by its **SHA**, never by
+the directory it sits in: the first attempt at A's text swap ran on the box's own copy of the phase directory,
+which is the PLACED board at 1,585 tracks and 499 unrouted, and the copper comparison passed trivially because
+it compared that board with itself. And the sha to check against comes from **git**, not from a literal: the
+literal went stale within the hour, when A24 was re-cut.
+
+**Still open:** D's re-route on owner ruling 9's 1.2 mm PWR class leaves **twelve connections open and all
+twelve are power nets**, where D reached 0 and 0 at 0.5 mm; an arm at the old width is running to prove the
+width is the cause. C10 is **0 hard and one unrouted**, its best ever, and that connection needs an escape or a
+placement change at U3 pad 10 rather than a closure. B is held by owner decision 13.
