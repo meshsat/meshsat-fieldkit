@@ -16,7 +16,13 @@ set -uo pipefail
 E="$1"; PROJ="$2"; L="$3"; PHASE="$4"; LOG="$5"
 T="$E/tools"; CFG="$T/boards/$L.json"
 [ -s "$CFG" ] || { echo "finish: no board file $CFG"; exit 2; }
-cfg () { python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('finish',{}); v=d.get(sys.argv[2]); print('' if v is None else (','.join(v) if isinstance(v,list) else ('1' if v is True else ('' if v is False else v))))" "$CFG" "$2"; }
+cfg () { python3 -c "
+import json,sys
+d = json.load(open(sys.argv[1])).get('finish', {}); k = sys.argv[2]
+if k.startswith('cont_route_'): d = d.get('cont_route') or {}; k = k[len('cont_route_'):]
+v = d.get(k)
+sep = ' ' if k == 'power_layers' else ','   # route_one.sh and cont_route.sh take layers space separated, nets comma separated
+print('' if v is None else (sep.join(v) if isinstance(v, list) else ('1' if v is True else ('' if v is False else v))))" "$CFG" "$2"; }
 N="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['name'])" "$CFG")"
 STUB_L="$(cfg x stub_layers)"; POUR="$(cfg x pour_nets)"; PAIRM="$(cfg x pair_match)"
 AUDIT="$(cfg x pair_audit_nets)"; PFIX="$(cfg x post_fix)"; PRUNED="$(cfg x pruned_gate)"; GGREP="$(cfg x gate_grep)"
@@ -54,7 +60,15 @@ $T/drc.sh $N.kicad_pcb out/$N-drc.json
 if [ -n "$CONT" ]; then
   set -- $CONT
   UN=$(python3 -c "import json; print(len(json.load(open('out/$N-drc.json')).get('unconnected_items', [])))") || stop "no readable DRC JSON before the continuation pass"
-  if [ "$UN" -gt 0 ] && [ "$UN" -le "$1" ]; then $T/cont_route.sh "$PWD" $N "$2" "$3" 2>&1 | grep -E 'cont:'; $T/drc.sh $N.kicad_pcb out/$N-drc.json; fi
+  if [ "$UN" -gt 0 ] && [ "$UN" -le "$1" ]; then
+    # The continuation exports its OWN DSN and has to be given the same plane treatment the route was given, or it
+    # re-routes every plane pin as a wire (C: GND on In1, most of the board's connections). finish.sh passed none and
+    # routeflow does not put it in the finish's environment either, so until 12 September 2026 every continuation on
+    # every board ran that way. A caller's value still wins, which is how an arm measures the treatment.
+    env FR_POWER_LAYERS="${FR_POWER_LAYERS:-$(cfg x cont_route_power_layers)}" FR_PLANE_NETS="${FR_PLANE_NETS:-$(cfg x cont_route_plane_nets)}" \
+        $T/cont_route.sh "$PWD" $N "$2" "$3" 2>&1 | grep -E 'cont:'
+    $T/drc.sh $N.kicad_pcb out/$N-drc.json
+  fi
 fi
 # 4. ONLY NOW the stub router, on a board that is clean and whose pours are filled
 env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || stop "stub router CRASHED, exit $? (out/$N-stub.log)" "out/$N-stub.log"

@@ -171,3 +171,38 @@ def t_the_stitch_pruner_is_reverted_when_it_opens_anything():
     # for an open the board already had, and could never help a board that was not already clean.
     assert '-gt "$BH"' in after and '-gt "$BU"' in after, \
         "the pruner is judged against zero rather than against the board it was given"
+
+
+def t_a_continuation_route_gets_the_same_plane_treatment_as_the_route():
+    """12 September 2026. `cont_route.sh` exports its OWN DSN from the routed board, so it needs the plane and
+    power-layer treatment the route itself was given (`FR_PLANE_NETS`, `FR_POWER_LAYERS`) or Freerouting sees no
+    plane and re-routes every plane pin as a wire. On C that is GND on In1, the majority of the board's
+    connections; on E it is five nets over two layers.
+
+    Nothing gave it that treatment. finish.sh passed none, and routeflow dispatches the finish with no environment
+    at all (`sh(expand(fin["argv"] ...))` takes the route's env only for the route), so every continuation on every
+    board since the stage was written ran against a planeless DSN. It is declared per board now, beside the
+    threshold that gates the stage, and held equal to the profiles that declare it for the route."""
+    treat = {}
+    for f in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        try: d = json.load(open(f))
+        except Exception: continue
+        r = d.get("route") or {}
+        if "power_layers" not in r and "plane_nets" not in r: continue
+        b = d.get("board") or ""
+        if not b.startswith("pcb-"): continue
+        treat.setdefault(b.split("-")[1][0], {})[os.path.basename(f)] = (
+            tuple(r.get("power_layers") or []), tuple(r.get("plane_nets") or []))
+    for L, per in sorted(treat.items()):
+        assert len(set(per.values())) == 1, "the %s profiles disagree about the plane treatment: %s" % (L, per)
+        cfg = json.load(open(os.path.join(TOOLS, "boards", "%s.json" % L)))
+        cont = (cfg.get("finish") or {}).get("cont_route")
+        if not cont: continue
+        got = (tuple(cont.get("power_layers") or []), tuple(cont.get("plane_nets") or []))
+        assert got == list(per.values())[0], \
+            "board %s's continuation would route against a different DSN than its route: %s against %s" % (L, got, list(per.values())[0])
+    src = open(FINISH, errors="replace").read()
+    i = src.index("$T/cont_route.sh")   # the invocation, not the comment that explains the stage
+    line = src[max(0, src.rindex("\n", 0, i - 200)):i]
+    assert "FR_PLANE_NETS" in line and "FR_POWER_LAYERS" in line, \
+        "finish.sh runs the continuation without handing it the board's plane treatment"
