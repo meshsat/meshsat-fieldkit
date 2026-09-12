@@ -104,7 +104,7 @@ CLASSIFIED = {
     "zone_pad_via.py": POST_ROUTE, "escape_prune.py": POST_ROUTE, "stub_accept.py": POST_ROUTE,
     "cleanup_dangling.py": POST_ROUTE, "straighten.py": POST_ROUTE, "via_merge.py": POST_ROUTE,
     "meander.py": POST_ROUTE, "ses_import_lock.py": POST_ROUTE, "ses_merge.py": POST_ROUTE,
-    "part_reconcile.py": POST_ROUTE, "hand_route.py": POST_ROUTE,
+    "part_reconcile.py": POST_ROUTE, "hand_route.py": POST_ROUTE, "direct_close.py": POST_ROUTE,
     "fix_a15_node.py": ONE_OFFS, "fix_a17_node.py": ONE_OFFS, "fix_a19_node.py": ONE_OFFS,
     "fix_a21_bands.py": ONE_OFFS, "bus_a21.py": ONE_OFFS, "bump_a18.py": ONE_OFFS,
     "fix_c7_u3.py": ONE_OFFS, "fix_d10_hubdm1.py": ONE_OFFS, "d9_gndvia.py": ONE_OFFS, "post_fix_a.py": ONE_OFFS,
