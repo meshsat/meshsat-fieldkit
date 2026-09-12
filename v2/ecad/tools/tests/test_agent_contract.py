@@ -390,6 +390,19 @@ def t_a_flag_given_a_threshold_is_refused():
     ok, errs, _ = schema.validate(q, TEMPLATE)
     if not ok:
         raise AssertionError("a flag given a real flag value was refused: %s" % errs)
+    # The natural spellings of OFF all arrive ON, because the tools read `!= "0"`. A rule that admits
+    # the natural spelling of the thing it forbids is not a rule (tier 2b's reading of the first fix).
+    for off in ("false", "False", "off", "no", True, False):
+        r = json.loads(json.dumps(GOOD, default=str)); r["arms"][0]["env"] = {"PAIR_OWN_CLEAR": off}
+        ok, errs, _ = schema.validate(r, TEMPLATE)
+        if ok:
+            raise AssertionError("PAIR_OWN_CLEAR=%r was accepted, and the tool reads it as ON" % off)
+    if schema.KNOB_FILES != tuple(schema.KNOB_FILES):
+        raise AssertionError("the knob file list is not shared")
+    types, names = schema.knob_types(), schema.known_knobs()
+    untyped = sorted(n for n in names if n not in types)
+    if untyped:
+        raise AssertionError("knobs the tools read but nothing types, so the flag rule cannot see them: %s" % untyped)
 
 
 def t_the_pair_count_alone_is_not_the_objective():
@@ -410,6 +423,17 @@ def t_the_pair_count_alone_is_not_the_objective():
         raise AssertionError("a legal arm that met its prediction was not graded MET")
     if m.grade(dict(base, drc_error="kicad-cli died"), 0)[0] != "UNMEASURED":
         raise AssertionError("an unreadable DRC was assumed clean")
+    if m.grade(dict(base, hard=0), None)[0] != "UNMEASURED":
+        raise AssertionError("a run with no measured baseline assumed one, which is the same as inventing it")
+    src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
+    if "the baseline board reads hard" not in src:
+        raise AssertionError("the baseline hard count is not measured on the source board")
+    if 'legal = [r for r in rows if r["verdict"] in ("MET", "MISSED")]' not in src:
+        raise AssertionError("a headline number may still come from an illegal board")
+    if "verdict.FAIL if not legal" not in src:
+        raise AssertionError("an all-illegal cycle can still report PASS")
+    if "row[\"drc_s\"]" not in src:
+        raise AssertionError("the DRC is not timed separately, so wall_s is not comparable with earlier rows")
     src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
     if "drc.sh" not in src or "hardset.py" not in src:
         raise AssertionError("arms.py no longer measures the legality of what the arm laid")
