@@ -363,10 +363,12 @@ def t_no_router_takes_an_auto_selected_x_display_alone():
     tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     bad = []
     for f in sorted(x for x in os.listdir(tools) if x.endswith(".sh")):
-        s = open(os.path.join(tools, f), errors="replace").read()
-        for m in re.finditer(r"xvfb-run\s+(-[a-z]+\s+)*", s):
-            seg = m.group(0)
-            if "-n" not in seg and "-a" in seg: bad.append("%s: %s" % (f, seg.strip()))
+        for ln in open(os.path.join(tools, f), errors="replace"):
+            if ln.lstrip().startswith("#"): continue   # a comment may quote the defect it describes
+            code = ln.split(" #", 1)[0]                # and so may a trailing one
+            for m in re.finditer(r"xvfb-run\s+(-[a-z]+\s+)*", code):
+                seg = m.group(0)
+                if "-n" not in seg and "-a" in seg: bad.append("%s: %s" % (f, code.strip()[:80]))
     assert not bad, "a router takes an auto-selected display with no number of its own:\n  " + "\n  ".join(bad)
 
 
