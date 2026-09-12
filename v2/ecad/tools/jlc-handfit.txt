@@ -59,3 +59,8 @@ M2044SD3A01        # NKK through Mouser, https://www.mouser.com/c/?q=M2044SD3A01
 SRF1260-4R7Y       # Bourns through Mouser, https://www.mouser.com/c/?q=SRF1260-4R7Y ; dual-winding choke, JLCPCB stock 0
 H5007NL            # Pulse through Mouser, https://www.mouser.com/c/?q=H5007NL ; 1000BASE-T magnetics
 G6K-2F-Y           # Omron through Mouser, https://www.mouser.com/c/?q=G6K-2F-Y ; 5 V DPDT signal relay, JLCPCB stock 0
+
+# --- Fuse holders and blade fuses. A blade holder is a through-hole part with a spring clip; JLCPCB does not
+#     place it and the fuse itself is fitted at build, so both are a build-time purchase (12 September 2026, A24).
+3568               # Keystone 3568 mini blade holder, Digi-Key https://www.digikey.com/en/products?keywords=Keystone%203568 ; the 25 A pack-node holder on A, F1
+25 A mini blade    # the fuse itself (Littelfuse MINI 25 A), Digi-Key https://www.digikey.com/en/products?keywords=0997025 ; fitted at build, not a board part
