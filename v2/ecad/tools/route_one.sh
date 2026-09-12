@@ -120,7 +120,12 @@ ADSN="$PWD/$W/$N.dsn"; ASES="$PWD/$W/$N.ses"
 # in ninety seconds, each importable by KiCad). It writes to the SAME path the run ends at, atomically, so a route that hits its
 # time limit now leaves the best board it reached instead of nothing. The stock jar ignores an unknown -D property, so this line
 # is safe with either jar and the NO_SESSION path stays for the stock one.
-timeout ${FR_TIMEOUT:-4500} xvfb-run -a "$JAVA" -Dfreerouting.ses_per_pass="$ASES" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
+# 12 September 2026: `xvfb-run -a` RACES. Two routes started a minute apart on this host picked the same display
+# number, and C10's router died the moment A's started, at pass 24 of 60, with nothing in its own log: the second
+# Xvfb took the display the first one's client was on. `-n` names a number per work directory (the PID mixes in a
+# second source) and `-a` still walks forward if that one is taken, so two routes on one box no longer collide.
+_XDISP=$(( 200 + ($$ + $(printf '%s' "$W" | cksum | cut -d' ' -f1)) % 700 ))
+timeout ${FR_TIMEOUT:-4500} xvfb-run -n "$_XDISP" -a "$JAVA" -Dfreerouting.ses_per_pass="$ASES" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
 pkill -9 -f "java .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
 # 10 September 2026 (round-two red teams, report 1 P0): the import, the DRC and the score used to fail silently and the attempt

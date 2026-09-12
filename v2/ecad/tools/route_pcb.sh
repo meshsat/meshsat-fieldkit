@@ -15,8 +15,11 @@ PY
 JAR="${FR_JAR:-$(ls ~/bin/freerouting-*.jar | grep -v disabled | tail -1)}"
 echo "freerouting: $JAR, max passes $PASSES"
 if [ -n "${FR_XVFB:-}" ] && command -v xvfb-run >/dev/null; then
-  pkill -9 -f "^Xvfb" 2>/dev/null || true; sleep 1   # stale virtual displays from killed runs block xvfb-run ("Couldn't create window frame")
-  nice -n 10 xvfb-run -a java -jar "$JAR" -de "out/$N.dsn" -do "out/$N.ses" -mp "$PASSES" -mt 1 -oit 2 -dct 0 > "out/$N-freerouting.log" 2>&1 || echo "freerouting exited non-zero (see log)"
+  # 12 September 2026: this killed EVERY virtual display on the host, so a second route starting here took the first
+  # one's router with it (C10 died at pass 24 of 60 the minute A's route began). A named display plus xvfb-run's own
+  # walk-forward makes the stale-display problem local, and nothing else's display is any of this script's business.
+_XDISP=$(( 200 + ($$ + RANDOM) % 700 ))   # 12 September 2026: never let two routers race for a display (xvfb-run -a picked the same number twice and killed a route at pass 24 of 60)
+  nice -n 10 xvfb-run -n "$_XDISP" -a java -jar "$JAR" -de "out/$N.dsn" -do "out/$N.ses" -mp "$PASSES" -mt 1 -oit 2 -dct 0 > "out/$N-freerouting.log" 2>&1 || echo "freerouting exited non-zero (see log)"
 else
   nice -n 10 java -Djava.awt.headless=true -jar "$JAR" -de "out/$N.dsn" -do "out/$N.ses" -mp "$PASSES" -mt 1 -oit 2 > "out/$N-freerouting.log" 2>&1 || echo "freerouting exited non-zero (see log)"
 fi
