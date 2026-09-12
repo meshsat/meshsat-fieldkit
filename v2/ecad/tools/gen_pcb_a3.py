@@ -71,12 +71,12 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # rot 180 because the twist is a presentation, not a distance: at rot 0 J_AB2 and U29 (the wall port's ESD)
          # put the pair's pads on opposite sides of the line between them, the legs must cross once, and the dive at
          # the pad field left one crossing behind. Turning the connector round removes the twist at its source.
-         "J_AB2": (100, -25, 180),
+         "J_AB2": (95, -11, 180),
          # 12 September 2026: U29 is the wall port's ESD and the packer had it in the test-point region at x 14, so the
          # pair ran 86 mm west to the diode and 96 mm back to its connector at x 109. A protection part belongs AT the
          # connector it protects (the D9 lesson of 32.73: a driver belongs at the part it drives). Beside J_USBW now,
          # ten millimetres from J_AB2, which is what makes the wall pair layable at all.
-         "U29": (103, -15, 0),
+         "U29": (103, -15, 90),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          # A23: the converters south of their inductors, the rail column runs north to the connector
@@ -122,7 +122,7 @@ REGIONS = [
  # and the packer duly put the charger's CSD18510Q5B FETs (a 7.19 x 5.59 mm courtyard) under the front end's resistor row:
  # four `courtyards_overlap` on the PLACED board, before the pre-router touched it, and no gate read them until the
  # pre-route DRC (appendix 32.135). The region moves down into free board (CHS ends at y 6, PAS starts at x -66).
- ("CHQ",   (-118, 17, -70, 29), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
+ ("CHQ",   (-118, 18.5, -70, 29), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
  ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  # 12 September 2026: POQ started at x -118 and ran under NODE (-118, -68, -106, -44), a 12 x 4 mm overlap the
  # packer never happened to fill. It starts clear of the pack node's column now; 58 x 16 mm still holds its eleven parts.
