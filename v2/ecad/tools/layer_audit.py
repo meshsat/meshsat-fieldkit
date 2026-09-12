@@ -65,14 +65,22 @@ def _layer_table(t):
 def audit(path):
     t = open(path, errors="replace").read()
     layers = _layer_table(t)
-    per = {L: {"tracks": 0, "mm": 0.0, "widths": set(), "nets": set()} for L in layers}
+    per = {L: {"tracks": 0, "mm": 0.0, "locked_mm": 0.0, "widths": set(), "nets": set()} for L in layers}
     for tag in ("segment", "arc"):
         for b in _blocks(t, tag):
             L = _str(b, "layer")
             if L not in per: continue
             a_, e_ = _one(b, "start", 2), _one(b, "end", 2); w = _one(b, "width")
             per[L]["tracks"] += 1
-            if a_ and e_: per[L]["mm"] += math.hypot(e_[0] - a_[0], e_[1] - a_[1])
+            # LOCKED length, because it is what tells a PLACED board from a ROUTED one. Every escape,
+            # fanout stub and pre-routed pair this pipeline lays is locked (KiCad writes them as
+            # `(locked yes)` and Freerouting keeps them as `(type fix)`), and the router's own copper is
+            # not. A board whose copper is all locked has never been routed, and reading what its layers
+            # carry as evidence about what they NEED is meaningless: layer_judge refused two placed
+            # boards' phase copies that way before this existed (12 September 2026).
+            _len = math.hypot(e_[0] - a_[0], e_[1] - a_[1]) if (a_ and e_) else 0.0
+            if a_ and e_: per[L]["mm"] += _len
+            if re.search(r"\(locked yes\)|\(status 0x", b) or "(locked yes)" in b: per[L]["locked_mm"] += _len
             if w: per[L]["widths"].add(round(w[0], 3))
             m = re.search(r"\(net (\d+)\)", b)
             if m: per[L]["nets"].add(int(m.group(1)))
@@ -108,7 +116,10 @@ def audit(path):
         "inner_nets": sorted({n for L in inner for n in per[L]["nets"]}) and len({n for L in inner for n in per[L]["nets"]}),
         "plane_only_inner": plane_only,
         "vias": len(vias), "via_kinds": sorted({v[0] for v in vias}),
-        "per_layer": {L: {"tracks": per[L]["tracks"], "mm": round(per[L]["mm"], 1), "nets": len(per[L]["nets"]),
+        "locked_mm": round(sum(per[L]["locked_mm"] for L in layers), 1),
+        "total_mm": round(sum(per[L]["mm"] for L in layers), 1),
+        "per_layer": {L: {"tracks": per[L]["tracks"], "mm": round(per[L]["mm"], 1),
+                          "locked_mm": round(per[L]["locked_mm"], 1), "nets": len(per[L]["nets"]),
                           "widths": sorted(per[L]["widths"])[:6],
                           "zones": sorted({z[1] or "(no net)" for z in zones if z[0] == L})} for L in layers},
     }
@@ -117,7 +128,14 @@ def audit(path):
 def main(a):
     if not a: print(__doc__); return 2
     out = []
-    for p in [x for x in a if not x.startswith("--")]:
+    # The value after an option is not a board. Without this, `layer_audit.py board --json out.json`
+    # tried to audit out.json and printed "no board at out.json" beside a correct audit, which is the
+    # kind of line a caller reads as a failure (12 September 2026).
+    skip = set()
+    for i, x in enumerate(a):
+        if x in ("--json",) and i + 1 < len(a):
+            skip.add(i + 1)
+    for p in [x for i, x in enumerate(a) if not x.startswith("--") and i not in skip]:
         if not os.path.exists(p): print("layer_audit: no board at %s" % p); continue
         r = audit(p); out.append(r)
         print("\n%s  %s  %d copper (%s)" % (r["board"], "%.0f x %.0f mm" % r["size_mm"] if r["size_mm"] else "size?",
