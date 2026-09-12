@@ -475,3 +475,17 @@ def t_no_post_route_pass_rewrites_a_phase_or_a_stackup_onto_the_silk():
     bad = [l for l in body.splitlines()
            if "text=" in l and re.search(r"REV A|\d+\s*x\s*\d+|\d\s*layers|\dL\b", l)]
     assert not bad, "a legend rule writes a phase, a size or a layer count onto the silk: %s" % (bad[0].strip()[:120],)
+
+
+def t_the_stub_router_reads_its_plane_nets_from_the_board():
+    """A net in PLANES takes a different branch: its goal becomes any cell a via may stand in, on the assumption
+    that a pour carries the rest of the connection. The set was the hard-coded string "GND,+5V,+3V3,CELL+", and
+    A24 has no +3V3 pour, so for /+3V3 the stub router never searched for the other cluster at all. It dropped one
+    via beside the source and reported "closed: 0 tracks, 1 vias, path 1 cells", twice, in two separate runs, and
+    the DRC named the same open pair after both (12 September 2026). A board's plane nets are a fact about the
+    board, and a fact about the board is read from the board."""
+    src = open(os.path.join(TOOLS, "stub_router.py"), errors="replace").read()
+    i = src.index("PLANES = ")
+    body = src[i:i + 600]
+    assert "GetFilledArea" in body, "the plane-net set is not read from the board's filled zones"
+    assert "_PLANES_ARG" in body, "there is no way to name the plane nets deliberately"
