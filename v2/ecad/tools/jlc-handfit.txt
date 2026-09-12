@@ -67,3 +67,12 @@ G6K-2F-Y           # Omron through Mouser, https://www.mouser.com/c/?q=G6K-2F-Y 
 
 # --- The panel tracker's controller. 12 September 2026, the orderability pass before the draft order.
 LT8705A            # Analog Devices through Mouser, https://www.mouser.com/c/?q=LT8705AEUHF ; E's U5 buck-boost controller. JLCPCB carries the QFN-38-EP(5x7) the land was drawn for as C674164 (LT8705AEUHF#TRPBF) and C580337 (#PBF), both at stock 3 against a need of 5, so JLC cannot place it on five boards whatever else is decided. C674167, which the row carried until 12 September 2026, is the TSSOP-38 variant on a QFN land and is blocked in lcsc-blocked.txt. The tracker stage is described as bench-fitted in the schematic and in appendix 32.54. WHETHER U5 LEAVES THE CPL is owner decision 12: the exclusion table is on the never-auto floor and this line does not move it
+
+# --- Panel and dock parts that are excluded from the CPL and had no purchase route written down until
+#     12 September 2026, so the certifier called them unchosen. Each is bought and fitted at build.
+9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)      # Mill-Max through Digi-Key, https://www.digikey.com/en/products?keywords=Mill-Max%200858 ; the 9 A spring pins of A's dock block, four CELL+ and four return. In A's CPL exclusion list already; the exact 0858 dash number is chosen against the block's 7.4 mm face height at build
+9 A spring pin, pack return (Mill-Max 0858 class, dock block) # the same part on the return side, same route
+MC-09-530-Q        # Floyd Bell through Mouser, https://www.mouser.com/c/?q=Floyd%20Bell%20MC-09 ; C's IP67 panel-mount sounder, two flying leads, a plate part in C's CPL exclusion list. A CLASS row: the dash number is picked from Floyd Bell's IP67 range against 5 V DC continuous before anything is ordered
+U-174/U headset jack 1 (Amphenol Nexus class, drawing owed)   # Amphenol Nexus through Mouser, https://www.mouser.com/c/?q=U-174%2FU ; a 17 mm panel hole through C's backer with a bushing nut below, five flying leads to D. Its footprint is a MountingHole: there is no BOM line for JLC to place. THE DRAWING IS STILL OWED and the hole diameter rests on it
+U-174/U headset jack 2 (Amphenol Nexus class, drawing owed)   # the same jack, same route, same owed drawing
+pre-charge pin, longer, mates first    # Mill-Max through Digi-Key, https://www.digikey.com/en/products?keywords=Mill-Max%200858 ; A's dock block pre-charge pin, the one that mates before the power pins. Same family as the 9 A pins above and in A's CPL exclusion list with them

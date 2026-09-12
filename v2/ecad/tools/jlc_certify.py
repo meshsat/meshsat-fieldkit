@@ -364,10 +364,17 @@ def hand_fit_route(comment, want, handfit):
         t = t.strip(".,;:-/")
         if len(t) >= 5 and any(c.isdigit() for c in t) and not NOT_PART.match(t):
             keys.append(t)
-    keys.append(comment[:60])
     for k in keys:
         hit = handfit.get(k)
         if hit:
+            return hit
+    # A row with no part number at all is declared by its own words, and counting characters to hit
+    # `comment[:60]` exactly is a trap: "9 A spring pin, pack return (Mill-Max 0858 class, dock block)"
+    # is 61 and its twin on the CELL+ side is 55, so one matched and the other did not. A declaration
+    # that is a PREFIX of the row's comment matches it. Twenty characters is the floor, because a short
+    # prefix would quietly cover rows nobody meant to declare.
+    for k, hit in handfit.items():
+        if len(k) >= 20 and comment.startswith(k):
             return hit
     return None
 
