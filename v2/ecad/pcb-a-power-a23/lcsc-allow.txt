@@ -12,3 +12,6 @@ spring pins to the dock block # Preci-Dip 813-S1-012-10-016101, hand-fit, route 
 pigtail header   # a land for a pigtail the builder solders, not a placed connector
 this header is the pigt       # same, the wall USB-C data pass-through
 XAL              # Coilcraft: not in JLCPCB's catalogue in any value or series, route in tools/jlc-handfit.txt
+25 A mini blade (Keystone 3568 # the holder is a through-hole blade clip JLC does not place and the fuse is fitted at build; route in tools/jlc-handfit.txt
+9 A spring pin      # Mill-Max 0858 class dock-block power pins, hand-fit, route in tools/jlc-handfit.txt
+pre-charge pin      # the longer Mill-Max pin that mates first, hand-fit, same route
