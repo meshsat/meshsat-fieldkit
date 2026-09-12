@@ -518,3 +518,25 @@ def t_a_leg_refusal_says_where_it_was_refused():
     assert "at the station" in window and "out in the corridor" in window, \
         "the leg-fit failure does not say whether it was refused at a station or in the corridor"
     assert "_leg_hit[0]" in window, "the failure line does not read the recorded refusal point"
+
+
+def t_a_nearness_window_carries_the_pads_own_reach():
+    """A window measured from a pad's CENTRE misses a pad that is wide (MESHSAT-862, 12 September 2026).
+
+    `escape.py` checks every candidate via against every other pad, and skipped the check entirely when
+    the pad's centre was more than a fixed 6 mm away. BT1 on board B is a CR2032 holder whose pad 2 is a
+    land many millimetres across, so an escape via three millimetres from its edge sat eight from its
+    centre, was never tested, and landed inside the pad: 53 of the 82 hard DRC violations left on B19's
+    placed board after the land patterns were corrected. The window carries the pad's own half extent
+    now. The rule is general because the mistake is: a proximity test against an extended shape may not
+    be short-circuited on the distance to its centre.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "escape.py"), errors="replace").read()
+    hits = _re.findall(r"abs\(v\.[xy] - qp\.[xy]\) > ([^:\n]+)", src)
+    if not hits:
+        raise AssertionError("escape.py no longer has the nearness window this rule guards")
+    for h in hits:
+        if "qreach" not in h:
+            raise AssertionError("escape.py short-circuits a pad test on the distance to the pad CENTRE "
+                                 "with no allowance for the pad's own size: %s" % h.strip())
