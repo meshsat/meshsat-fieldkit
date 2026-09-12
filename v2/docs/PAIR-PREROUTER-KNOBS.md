@@ -84,6 +84,7 @@ guards. Each has a knob because each can cost pairs and the only way to know is 
 | `PAIR_FAN_BACK` | 1.0 mm | how far a diving leg is pulled back from the station before the other leg's fan is laid |
 | `PAIR_CROSS_NET` | report | a laid pair sampled against a map that exempts its own two nets: `report` names the counterparty and the emission, `block` refuses the pair, `off` says nothing |
 | `PAIR_VIA_MODE` | class | the via the pair's own hops are laid with: `class` is the net class's via, `min` is the board's own via minimum, which is what the escape fan uses at fine pitch |
+| `PAIR_END_STRICT` | 0 | the three end emissions search on a map that carries the partner's already-laid copper at the bar the post-lay gate uses |
 
 **`PAIR_CROSS_NET` reports rather than blocks, and that default is a measurement.** The test asks a RASTER grown
 by the clearance plus half a leg, and the emitters deliberately relax that near a station (a direct leg runs pad

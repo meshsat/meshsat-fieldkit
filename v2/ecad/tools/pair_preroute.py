@@ -858,6 +858,15 @@ def main(a):
     # A class via size is a DEFAULT for new copper, not a bar the DRC holds a via to: the bar is the board's own
     # m_ViasMinSize, which is 0.40 on B, and the escape vias prove the DRC accepts it. So this is a router choice
     # and not a net class change. It is a knob at `class` (today's behaviour) until an arm says what it is worth.
+    # 12 September 2026, measured on B19's DIFF100 arms after the via size was fixed: every own-legs refusal that
+    # remains is track against track at 0.203 to 0.225 mm against a demand of 0.252, and the emissions named in all
+    # of them are the three END geometries (`the end stub into the pad`, `the end hop to a via beside the pad`, `the
+    # dive of a crossing end`). The corridor legs run at the pair's designed pitch; the ends are laid one leg at a
+    # time, each aiming at its own target, on a map that was built before the partner's own end was laid. So the
+    # search never sees the copper it has to keep away from, and the post-lay gate then refuses the whole pair at
+    # the class clearance. PAIR_END_STRICT=1 searches the end stubs on a map that carries the partner's laid copper
+    # at the gate's own bar. Off until an arm grades it, like every other knob here.
+    END_STRICT = os.environ.get("PAIR_END_STRICT", "0") != "0"
     VIA_MODE = os.environ.get("PAIR_VIA_MODE", "class").lower()
     if VIA_MODE not in ("class", "min"): raise SystemExit("pair_preroute: PAIR_VIA_MODE is `class` or `min`, not %r" % VIA_MODE)
     CROSS_NET = os.environ.get("PAIR_CROSS_NET", "report").lower()
@@ -1488,9 +1497,26 @@ def main(a):
                     if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < fold + _via_dia(t) / 2: return False
             return True
         # the stub, via-site and hop helpers of this pair (pair-level state only; they were inside the section loop and a pair whose last section took the direct legs left them undefined for the stub pass, 8 Sep 2026 12:47)
+        def partner_free(SL, net):
+            """this leg's own map with the copper the PARTNER has already laid stamped into it at the bar the
+            post-lay gate uses (12 September 2026). The per-leg maps are built once per pair, so the partner's
+            own end stub is invisible to this one, which is where the 0.203 mm of 0.252 comes from."""
+            if SL not in trk1[net.GetNetname()]: return None
+            blocked = trk1[net.GetNetname()][SL].copy()
+            o = other_of(net); r = max(0.0, clr_c - 0.005) + wid(SL) / 2
+            for t in pieces:
+                if t.GetNetname() != o: continue
+                if t.GetClass() == "PCB_TRACK":
+                    if t.GetLayer() != SL: continue
+                    gr.seg(blocked, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y), r)
+                elif t.GetClass() == "PCB_VIA":
+                    gr.disc(blocked, mm(t.GetPosition().x), mm(t.GetPosition().y), r + _via_dia(t) / 2)
+            return ~blocked
+
         def stub(ax_, ay_, bx_, by_, SL, net):
             """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
-            pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
+            pm = (partner_free(SL, net) if END_STRICT else None)
+            if pm is None: pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
             win2 = (gr.cell(min(ax_, bx_) - 8, min(ay_, by_) - 8), gr.cell(max(ax_, bx_) + 8, max(ay_, by_) + 8)); win2 = ((max(0, win2[0][0]), max(0, win2[0][1])), (min(gr.NX - 1, win2[1][0]), min(gr.NY - 1, win2[1][1])))
             if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G:   # the offset end already sits on the pad
                 if not own_clear(ax_, ay_, bx_, by_, SL, net): return False   # ... but not over the partner's own copper
