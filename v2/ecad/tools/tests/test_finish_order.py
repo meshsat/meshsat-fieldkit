@@ -293,3 +293,22 @@ def t_a_meander_is_locked_copper():
     assert "a.locked or c.locked" in st, "the straightener does not exempt locked copper"
     assert "PAIR_NETS" in st and st.count("a.net in PAIR_NETS") >= 2, \
         "the straightener still merges and shortcuts the nets of a differential pair class"
+
+
+def t_a_routed_board_that_passed_its_gate_is_kept():
+    """Four routed boards went with a destroyed rented box on 11 September (red team round three M5).
+
+    The lesson was written the same day and no step did it, so it depended on somebody remembering within
+    the hour. The finish puts the board, its project file, its DRC report and its verdicts beside the
+    deliverable, which is tracked.
+    """
+    src = open(os.path.join(TOOLS, "finish.sh"), errors="replace").read()
+    i = src.find("finish_board.sh")
+    if i < 0:
+        raise AssertionError("finish.sh no longer cuts a deliverable")
+    tail = src[i:]
+    if "kept:" not in tail or "routed" not in tail:
+        raise AssertionError("the finish does not keep the routed board anywhere tracked")
+    done = tail.rindex("FINISH-$PHASE-DONE")      # the LAST one: the earlier ones are refusal paths
+    if tail.index("kept:") > done:
+        raise AssertionError("the board is kept after the finish says DONE")
