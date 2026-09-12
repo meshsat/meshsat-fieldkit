@@ -1409,6 +1409,19 @@ def main(a):
             for L in trk1[o]: gr.disc(trk1[o][L], x, y, vd / 2 + clr_c + w / 2 + 0.01)
             for vm in via1n.values(): gr.disc(vm, x, y, vdr + 0.30 + 0.02)
             gr.disc(via, x, y, vdr + 0.30 + VIA_SPLIT)
+        def own_pad_at(x, y, L):
+            """Is this point inside one of THIS PAIR's own pads (grown by the clearance and half a leg)?
+
+            12 September 2026. `fan_leg` skipped the last 1.2 mm of a fan because the pair's own pads block the map
+            there, and that skip excused every other net's copper in the same 1.2 mm: A's /USB_D8_N fan crossed
+            /USB_WALL_P and /USB_WALL_N, laid minutes earlier by the same pass, and the pre-route DRC read six
+            shorting items and four crossings. The exemption is about the pair's own pads, so it asks about them."""
+            for _n in (pn, nn):
+                for q in pads[_n]:
+                    if not q.IsOnLayer(L) and q.GetAttribute() != pcbnew.PAD_ATTRIB_PTH: continue
+                    bb = q.GetBoundingBox(); g = clr_c + wid(L) / 2
+                    if (bb.GetLeft() / 1e6 - g) <= x <= (bb.GetRight() / 1e6 + g) and (bb.GetTop() / 1e6 - g) <= y <= (bb.GetBottom() / 1e6 + g): return True
+            return False
         def own_clear(x1, y1, x2, y2, L, net):
             """Is this piece clear of the copper THIS PAIR has already laid on its other leg? (12 September 2026, appendix 32.134.)
 
@@ -1488,13 +1501,14 @@ def main(a):
             if pm is None: seg(ex_, ey_, px_, py_, L_, net_); return True
             ln_ = math.hypot(px_ - ex_, py_ - ey_)
             clear = True
-            if ln_ > 1.2:
-                n_ = int(ln_ / gr.G) + 2
-                for k_ in range(n_ + 1):
-                    u_ = k_ / n_
-                    if ln_ * (1.0 - u_) < 1.2: break
-                    jj_, ii_ = gr.cell(ex_ + u_ * (px_ - ex_), ey_ + u_ * (py_ - ey_))
-                    if 0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX and pm[ii_, jj_]: clear = False; break
+            n_ = int(ln_ / gr.G) + 2
+            for k_ in range(n_ + 1):
+                u_ = k_ / n_
+                qx_, qy_ = ex_ + u_ * (px_ - ex_), ey_ + u_ * (py_ - ey_)
+                jj_, ii_ = gr.cell(qx_, qy_)
+                if 0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX and pm[ii_, jj_]:
+                    if ln_ * (1.0 - u_) < 1.2 and own_pad_at(qx_, qy_, L_): continue   # the pair's own pad field, which is where this fan is going
+                    clear = False; break
             if clear and own_clear(ex_, ey_, px_, py_, L_, net_): seg(ex_, ey_, px_, py_, L_, net_); return True
             return stub(ex_, ey_, px_, py_, L_, net_)
         def via_site(ex_, ey_, px_, py_, L, aL, net, away):
@@ -2046,10 +2060,8 @@ def main(a):
                                     report.append("TRIM  %s: the P leg ends %.2f mm short of %s so the N fan has room; it dives from there"
                                                   % (stem, math.hypot(_back[0] - lpx, _back[1] - lpy), st_[0].GetParentFootprint().GetReference()))
                                     lpx, lpy = _back
-                                if own_clear(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n) and own_clear(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n):
-                                    seg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n); seg(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n)
-                                elif not stub(lnx, lny, _nx_, _ny_, pcbnew.F_Cu, net_n):
-                                    failed = "%s -> %s (the N fan into %s lies on its own partner and no stub goes round it)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
+                                if not (fan_leg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n) and fan_leg(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n)):
+                                    failed = "%s -> %s (the N fan into %s has no path clear of the copper already laid)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
                                 nnx_, nny_ = (lnx - lpx, lny - lpy); nl2_ = math.hypot(nnx_, nny_) or 1.0
                                 at_site("the P dive under it")
                                 err_ = dive_p(mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), lpx, lpy, pcbnew.F_Cu, None, st_[0], net_p, (-nnx_ / nl2_, -nny_ / nl2_))
