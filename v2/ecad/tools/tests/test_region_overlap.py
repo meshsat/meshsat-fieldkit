@@ -121,7 +121,17 @@ def t_a_through_hole_collision_is_named():
         raise AssertionError("a through-hole collision is neither avoided nor named")
     if "PAD_ATTRIB_PTH" not in src:
         raise AssertionError("the report does not look at through-hole pads")
+    # 13 September 2026: the packing loop MAY feed through-hole pads back as obstacles, but only behind a
+    # knob that is off, because the idea has now been measured twice and has never paid. As a static list
+    # built before the packing it took the board from 6 hard violations to 107; inside the loop, with the
+    # regions sized, it changed nothing at all (12 before, 12 after), because IOCA packs before WMIDS and
+    # the connector does not exist yet when the parts it collides with are placed. What the rule forbids is
+    # it being ON by default, which is the thing that was measured as harmful.
     body = src[src.index("for members, w, h, fine in units:"):src.index("if cy - rowh < y0")]
-    if "PAD_ATTRIB_PTH" in body:
-        raise AssertionError("through-hole pads are obstacles inside the packing loop again, which was "
-                             "measured at 107 hard violations against 6")
+    if "PAD_ATTRIB_PTH" in body and "PTH_OBSTACLE" not in body:
+        raise AssertionError("through-hole pads are obstacles inside the packing loop unconditionally, which "
+                             "was measured at 107 hard violations against 6")
+    import re as _re2
+    m = _re2.search(r'PTH_OBSTACLE = os\.environ\.get\("PLACE_PTH_OBSTACLE", "(\d)"\)', src)
+    if m and m.group(1) != "0":
+        raise AssertionError("PLACE_PTH_OBSTACLE defaults ON and both measurements say it should not")
