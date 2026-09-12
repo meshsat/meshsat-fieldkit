@@ -290,11 +290,17 @@ def _stamp_new_copper(gr, b, layers, trk, via_clr, via_holes, half, via_r, split
     return n
 
 
-def _stamp_own(gr, layers, nets, idx, trk, via_clr, half, via_r, split):
-    """Just this pair's own copper, from the index: a handful of pads and the legs laid so far."""
+def _stamp_own(gr, layers, nets, idx, trk, via_clr, half, via_r, split, pads_only=False):
+    """Just this pair's own copper, from the index: a handful of pads and the legs laid so far.
+
+    `pads_only` stamps the PADS and not the tracks, which is the exemption a fan needs at its own station:
+    the pair's own pads legitimately block the map where the fan is going, its partner's tracks do not
+    (12 September 2026, appendix 32.135; A's /USB_D8 fan crossed /USB_WALL because a pad-shaped exemption
+    forgave every net's copper within 1.2 mm of a pad)."""
     for nm in nets:
         pads, tracks = idx.get(nm, ([], []))
         for ref, p in pads: _pad_stamp(gr, layers, ref, p, trk, via_clr, half, via_r, split)
+        if pads_only: continue
         for t in tracks: _track_stamp(gr, layers, t, trk, via_clr, half, via_r, split)
 
 
@@ -324,26 +330,29 @@ def _all_counts(gr, b, layers, half, via_r, split):
 MAP_CALLS = [0]   # how many times a pair asked for its maps; the seconds are _T["maps"], the counter that already existed
 
 
-def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
-    """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer)."""
+def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT, pads_only=False):
+    """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer).
+
+    `pads_only=True` exempts only the named nets' PADS, never their tracks."""
     MAP_CALLS[0] += 1
-    return _build_maps(gr, b, layers, nets, half, via_r, split)
+    return _build_maps(gr, b, layers, nets, half, via_r, split, pads_only)
 
 
-def _build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
+def _build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT, pads_only=False):
     if MAP_MODE == "reference" and not MAP_CHECK:
-        return _build_maps_reference(gr, b, layers, nets, half, via_r, split)
+        # the reference path has no pads-only form: the conservative map (nothing exempt) is the safe answer there
+        return _build_maps_reference(gr, b, layers, set() if pads_only else nets, half, via_r, split)
     rec = _all_counts(gr, b, layers, half, via_r, split)
     all_trk, all_via, holes, _seen, _ep, (own_trk, own_via), idx = rec
     for L in layers: own_trk[L].fill(0)
     own_via.fill(0)
-    _stamp_own(gr, layers, set(nets), idx, own_trk, own_via, half, via_r, split)
+    _stamp_own(gr, layers, set(nets), idx, own_trk, own_via, half, via_r, split, pads_only)
     # "some net other than this pair's blocks the cell" is a comparison of counts, never a bitwise subtraction: where
     # two nets' grown rasters overlap, clearing the pair's own bits would free a cell the other net blocks.
     trk = {L: all_trk[L] > own_trk[L] for L in layers}
     via = (all_via > own_via) | holes
     _edge_band(gr, trk, via)
-    if MAP_CHECK:
+    if MAP_CHECK and not pads_only:
         rtrk, rvia = _build_maps_reference(gr, b, layers, nets, half, via_r, split)
         bad = [L for L in layers if not np.array_equal(trk[L], rtrk[L])]
         if bad or not np.array_equal(via, rvia):
@@ -1349,12 +1358,15 @@ def main(a):
         # smoothing of the centreline" (32.131). PAIR_STATION_OWN=1 tests the legs inside the station radius
         # against this map instead, which excuses the pair's OWN copper and no one else's (12 September 2026).
         trk2 = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0] if STATION_OWN else None
+        # the map a fan is judged by where it enters its own pads: this pair's PADS are not obstacles, every track is
+        trkP = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2, pads_only=True)[0]
         def rebuild_maps():   # after a swap of two passives inside a section the maps still hold the pads at their old places (D9: a stub over the swapped pad, 8 Sep 2026 13:08)
-            nonlocal trk, via, via1n, trk1, trk2
+            nonlocal trk, via, via1n, trk1, trk2, trkP
             trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)
             via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}
             trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}
             if STATION_OWN: trk2 = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]
+            trkP = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2, pads_only=True)[0]
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         def rollback():
             for t in pieces: board_remove(b, t)
@@ -1409,19 +1421,6 @@ def main(a):
             for L in trk1[o]: gr.disc(trk1[o][L], x, y, vd / 2 + clr_c + w / 2 + 0.01)
             for vm in via1n.values(): gr.disc(vm, x, y, vdr + 0.30 + 0.02)
             gr.disc(via, x, y, vdr + 0.30 + VIA_SPLIT)
-        def own_pad_at(x, y, L):
-            """Is this point inside one of THIS PAIR's own pads (grown by the clearance and half a leg)?
-
-            12 September 2026. `fan_leg` skipped the last 1.2 mm of a fan because the pair's own pads block the map
-            there, and that skip excused every other net's copper in the same 1.2 mm: A's /USB_D8_N fan crossed
-            /USB_WALL_P and /USB_WALL_N, laid minutes earlier by the same pass, and the pre-route DRC read six
-            shorting items and four crossings. The exemption is about the pair's own pads, so it asks about them."""
-            for _n in (pn, nn):
-                for q in pads[_n]:
-                    if not q.IsOnLayer(L) and q.GetAttribute() != pcbnew.PAD_ATTRIB_PTH: continue
-                    bb = q.GetBoundingBox(); g = clr_c + wid(L) / 2
-                    if (bb.GetLeft() / 1e6 - g) <= x <= (bb.GetRight() / 1e6 + g) and (bb.GetTop() / 1e6 - g) <= y <= (bb.GetBottom() / 1e6 + g): return True
-            return False
         def own_clear(x1, y1, x2, y2, L, net):
             """Is this piece clear of the copper THIS PAIR has already laid on its other leg? (12 September 2026, appendix 32.134.)
 
@@ -1507,7 +1506,7 @@ def main(a):
                 qx_, qy_ = ex_ + u_ * (px_ - ex_), ey_ + u_ * (py_ - ey_)
                 jj_, ii_ = gr.cell(qx_, qy_)
                 if 0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX and pm[ii_, jj_]:
-                    if ln_ * (1.0 - u_) < 1.2 and own_pad_at(qx_, qy_, L_): continue   # the pair's own pad field, which is where this fan is going
+                    if ln_ * (1.0 - u_) < 1.2 and L_ in trkP and not trkP[L_][ii_, jj_]: continue   # inside the pair's own pad field, and nothing else is there
                     clear = False; break
             if clear and own_clear(ex_, ey_, px_, py_, L_, net_): seg(ex_, ey_, px_, py_, L_, net_); return True
             return stub(ex_, ey_, px_, py_, L_, net_)
