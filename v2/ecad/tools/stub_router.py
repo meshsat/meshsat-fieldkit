@@ -4,12 +4,22 @@ Usage: stub_router.py <board.kicad_pcb> <drc.json> [plane_nets=GND,+5V,+3V3,CELL
 import sys, re, math, json, heapq, pcbnew, numpy as np
 from pcbnew import VECTOR2I, FromMM
 BOARD, DRC = sys.argv[1], sys.argv[2]
-PLANES = set((sys.argv[3] if len(sys.argv) > 3 else "GND,+5V,+3V3,CELL+").split(","))
+_PLANES_ARG = sys.argv[3] if len(sys.argv) > 3 else None   # resolved against the board below
 G = float(__import__("os").environ.get("STUB_GRID", "0.05"))
 WIN_SCALE = float(__import__("os").environ.get("STUB_WIN_SCALE", "1.0"))   # 7 Sep 2026: the search window around the two ends (8 or 15 mm) times this; A22 closes its last gaps at 2.5   # grid, mm (STUB_GRID=0.1 for long connections)
 CLR = 0.16                   # clearance to other copper, mm (board rule 0.15)
 HOLE_CLR = 0.30              # clearance to a drilled pad or a mounting hole: the board's hole clearance rule is 0.25, and the 0.1 mm grid needs a margin over it (B12, 4 Sep: six 0.24 mm misses against two NPTH holes)
 b = pcbnew.LoadBoard(BOARD); drc = json.load(open(DRC))
+# 12 September 2026 (MESHSAT-862): PLANES WAS A HARD-CODED STRING, "GND,+5V,+3V3,CELL+", and a net in it takes a
+# different branch below: its goal becomes ANY cell a via may stand in, on the assumption that the plane carries
+# the rest of the connection. A24 has no +3V3 pour. So for /+3V3 the router never searched for the other cluster
+# at all: it dropped one via beside the source and reported "closed: 0 tracks, 1 vias, path 1 cells", twice, in two
+# separate runs, and the DRC named the same open pair after both. The set is the nets that have a FILLED zone on
+# this board, which is the only thing that makes the assumption true; the argument still overrides it.
+PLANES = (set(_PLANES_ARG.split(",")) if _PLANES_ARG else
+          {(z.GetNetname()[1:] if z.GetNetname().startswith("/") else z.GetNetname())
+           for z in b.Zones() if not z.GetIsRuleArea() and z.GetFilledArea() > 0})
+print("stub_router: plane nets on this board: %s" % (", ".join(sorted(PLANES)) or "none"))
 eb = b.GetBoardEdgesBoundingBox()
 X0, Y0 = eb.GetLeft() / 1e6 - 1.0, eb.GetTop() / 1e6 - 1.0
 NX, NY = int(eb.GetWidth() / 1e6 / G) + 20, int(eb.GetHeight() / 1e6 / G) + 20
