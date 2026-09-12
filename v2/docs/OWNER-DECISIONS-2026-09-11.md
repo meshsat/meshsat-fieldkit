@@ -639,3 +639,30 @@ needs is room, not a smaller number.
 
 **This does not block anything else.** D is the only board affected, its deliverable is the one that waits,
 and A24, E7, P3 and E5 are cut.
+
+---
+
+# OWNER RULINGS, 13 September 2026 00:40 CEST, asked as four questions and answered in one sitting
+
+**All four went to the recommended option.** They are rulings, not recommendations, and they are not reopened
+without a new one.
+
+| # | question | RULING |
+|---|---|---|
+| **13** | who resizes board B's seven overflowing regions | **I resize them, board B ONLY**, one region at a time, each reported with its overflow before and after. Nothing on the other six boards is touched. The region rectangles of A, C, D, E, P and E5 stay on the never-auto floor |
+| **12** | E's LT8705A, three in stock against a need of five | **U5 leaves the CPL and is hand-fitted on all five boards**, bought from Mouser or Digi-Key. About 125 GBP of parts and a reflow step, alongside the Coilcraft inductors, the Bourns choke, the Omron relay and the SA868 |
+| **9** (amended) | D's 1.2 mm PWR class costs twenty-seven connections | **KEEP 1.2 mm and rearrange D's parts to make the room.** The width is not narrowed to suit the router; the twenty-seven come back from the floor plan. The locked outer-copper pattern (option C, board A's) stays available if the placement pass does not close it, and would be a new ruling |
+| **8** (confirmed) | the order paperwork's approval step | **REMOVED, deliberately and on the record.** I draft the per-board notes, check them and apply them. **Nothing that orders changes:** the cart is untouched, the CPL exclusion table and the JLC rotation table stay reserved, and nothing is paid or submitted without the owner |
+
+## What each of these commits us to
+
+- **13** unblocks board B, which is roughly half the remaining work. Every region change is reported with its
+  number, and B's placement moves, so its pair measurements are re-taken on the new floor plan. That was
+  already true after decision 11.
+- **12** closes board E completely: E7 is cut, and with `U5` out of the CPL the whole board is either bought
+  from JLCPCB or has a written purchase route.
+- **9** keeps the electrical margin and spends about half a day on D's layout. D's deliverable is the only one
+  waiting on it.
+- **8** is a change to the never-auto floor itself, not a one-off. `reserved.json`'s order class records it:
+  the prose rows of `make_handoff.py` are off the floor, and `EXCLUDE`, `JLC_ROT`, `export_jlc.sh` and the cart
+  are still on it. **The rule that nothing is ordered without the owner is untouched.**
