@@ -113,7 +113,7 @@ c("C15", "100n", "+3V3_D8", "GND"); c("C16", "100n", "+3V3_D8", "GND"); c("C17",
 for port, (dp, dm, tp, tm, rs) in {1: ("HUB_DP1", "HUB_DM1", "USB1_P", "USB1_N", 12), 2: ("HUB_DP2", "HUB_DM2", "USB2_P", "USB2_N", 16), 3: ("HUB_DP3", "HUB_DM3", "USB3_P", "USB3_N", 20)}.items():
     r("R%d" % rs, "22", dp, tp); r("R%d" % (rs + 1), "22", dm, tm); r("R%d" % (rs + 2), "15k", tp, "GND"); r("R%d" % (rs + 3), "15k", tm, "GND")
 r("R24", "15k", "HUB_DP4", "GND"); r("R25", "15k", "HUB_DM4", "GND")
-part("J_USB3", "Connector_Generic", "Conn_01x04", "spare hub port 3 (JST-PH 1x4): 5V D- D+ GND", "PH4", {"1": "+5V_D8", "2": "USB3_N", "3": "USB3_P", "4": "GND"})
+part("J_USB3", "Connector_Generic", "Conn_01x04", "JST-PH 1x4 socket: spare hub port 3, 5V D- D+ GND (the lead is made up at build)", "PH4", {"1": "+5V_D8", "2": "USB3_N", "3": "USB3_P", "4": "GND"}, "C131334")
 # --- USB audio codec PCM2912A (VBUS 5 V, its regulator feeds VDD and the VCC pins: decoupling only; MAMP off = line level, POWER low, TEST1 high, TEST0 low)
 r("R26", "33", "USB1_P", "USB1_PR"); r("R27", "33", "USB1_N", "USB1_NR"); r("R28", "1.5k", "USB1_PR", "PCM_VDD")
 synth("U6", "PCM2912A", "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum", "TQFP32",
@@ -143,8 +143,8 @@ part("JP2", "Jumper", "SolderJumper_2_Open", "electret bias headset 2", "JP", {"
 c("C44", "1n NP0", "HS1_MIC", "GND", "C0402"); c("C45", "1n NP0", "HS2_MIC", "GND", "C0402")   # RF bypass beside a 30 W transmitter
 c("C46", "1u", "MICAMP_OUT", "MICAMP_AC"); r("R45", "10k", "MICAMP_AC", "MIC_SUM"); c("C47", "1u", "PCM_VOUTR", "PCM_R_AC"); r("R46", "10k", "PCM_R_AC", "MIC_SUM"); r("R47", "10k", "MIC_SUM", "GND"); c("C48", "1u", "MIC_SUM", "MIC_IN")
 # --- headset leads to the face plate's two U-174/U jacks (JST-PH 1x5): SPK GND MIC GND PTT
-part("J_HS1", "Connector_Generic", "Conn_01x05", "headset 1 lead (JST-PH 1x5 to the face plate U-174/U jack): SPK GND MIC GND PTT", "PH5", {"1": "HS1_SPK", "2": "GND", "3": "HS1_MIC", "4": "GND", "5": "PTT_HS1_n"})
-part("J_HS2", "Connector_Generic", "Conn_01x05", "headset 2 lead (JST-PH 1x5 to the face plate U-174/U jack): SPK GND MIC GND PTT", "PH5", {"1": "HS2_SPK", "2": "GND", "3": "HS2_MIC", "4": "GND", "5": "PTT_HS2_n"})
+part("J_HS1", "Connector_Generic", "Conn_01x05", "JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)", "PH5", {"1": "HS1_SPK", "2": "GND", "3": "HS1_MIC", "4": "GND", "5": "PTT_HS1_n"}, "C157993")
+part("J_HS2", "Connector_Generic", "Conn_01x05", "JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)", "PH5", {"1": "HS2_SPK", "2": "GND", "3": "HS2_MIC", "4": "GND", "5": "PTT_HS2_n"}, "C157993")
 c("C49", "100n", "PTT_HS1_n", "GND"); c("C50", "100n", "PTT_HS2_n", "GND")
 # --- PTT and EMCON logic (74LVC1G, 3.3 V): KEY = (PTT headset 1 OR 2 OR software) AND TX_INHIBIT_n; the exciter keys on KEY; PA_KEY = KEY AND PA_EN drives the relay and the gate bias switch
 ic("U9", 5, "74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high", "SOT235", {"1": "PTT_HS1_n", "2": "PTT_HS2_n", "3": "GND", "4": "PTT_HS_n", "5": "+3V3_D8"})
@@ -178,7 +178,7 @@ c("C58", "22p 500V NP0 1206", "RF_PAOUT", "GND", "C1206"); part("L1", "Device", 
 c("C59", "39p 500V NP0 1206", "RF_LPF_M", "GND", "C1206"); part("L2", "Device", "L", "68nH 0805 (LPF)", "L0805", {"1": "RF_LPF_M", "2": "RF_LPF_OUT"}); c("C60", "22p 500V NP0 1206", "RF_LPF_OUT", "GND", "C1206")
 part("J_ANT", "Connector", "Conn_Coaxial", "SMA jack: antenna pigtail to A22's VHF jack J_RF1", "SMA", {"1": "RF_ANT", "2": "GND"}, "C3174425")
 tps22810("U15", "+5V_D8", "PA_KEY", "VGG_SW", "VGG_CT"); c("C61", "4.7n", "VGG_CT", "GND", "C0402"); c("C62", "100n", "VGG_SW", "GND")
-part("J_VGG", "Connector_Generic", "Conn_01x02", "PA gate bias lead (JST-PH 1x2 to the RA30H1317M1 VGG): VGG GND", "PH2", {"1": "VGG_SW", "2": "GND"})
+part("J_VGG", "Connector_Generic", "Conn_01x02", "JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)", "PH2", {"1": "VGG_SW", "2": "GND"}, "C5251182")
 # --- expander PCA9555 0x26 on the kit bus (harness +3V3) with 2N7002 level stages into the mezzanine's 3.3 V domain
 part("U16", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares", "TSSOP24", {
  "1": "EXP_INT", "2": "+3V3", "3": "+3V3", "21": "GND", "22": "SCL", "23": "SDA", "24": "+3V3", "12": "GND",

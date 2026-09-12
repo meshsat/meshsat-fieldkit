@@ -4,5 +4,6 @@
 # bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
 
 (JST-XH          # cell tap and SMBus leads, made up with the pack
-(JST-PH          # the cell thermistor lead
+# (JST-PH        REMOVED 12 September 2026: the socket on the board is a JST B2B-PH-K-S-GW, C5251182,
+#                  stock 15,297, and it is placed. The LEAD is made up with the pack; the socket is not the lead.
 12 AWG           # pack and cell-block wires soldered to lands, not placed parts
