@@ -489,3 +489,17 @@ def t_the_stub_router_reads_its_plane_nets_from_the_board():
     body = src[i:i + 600]
     assert "GetFilledArea" in body, "the plane-net set is not read from the board's filled zones"
     assert "_PLANES_ARG" in body, "there is no way to name the plane nets deliberately"
+
+
+def t_a_via_standing_in_a_pad_of_its_own_net_is_not_dangling():
+    """`cleanup_dangling.py` counted the TRACKS touching a via and removed it below two. A via that joins a pad on
+    one layer to a track on another has one track and one pad, and it was removed as dangling: A24's /+3V3 via at
+    (233.4, 134.9) joined pad C104.1 to a B.Cu track, and the board went from 0 unrouted to 1 in the first ten
+    seconds of its finish, after the copper had been closed and measured (12 September 2026). A via in a pad of
+    its own net is the whole point of a via in a pad, and the same file already counts a track that merely passes
+    OVER a via."""
+    src = open(os.path.join(TOOLS, "cleanup_dangling.py"), errors="replace").read()
+    i = src.index("n = sum(1 for t in T")
+    window = src[i:i + 1400]
+    assert "HitTest" in window, "a via's connection count ignores the pads of its own net"
+    assert window.index("HitTest") < window.index("if n <= 1"), "the pad is counted after the decision"
