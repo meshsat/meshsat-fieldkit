@@ -166,8 +166,15 @@ REGIONS += [
  ("POE",   (-140.5, 59, -122, 86), ["U5", "Q1", "R12", "R13", "C31", "C32"], False),
  ("POEB",  (-140.5, 59, -122, 70), ["C33", "R9", "R10", "C29", "C30"], True),
  ("WNE",   (-121, 29, -102, 68), ["U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "J_5V_DEV"], False),
- ("GAP12", (-50, 33, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
- ("GAP23", (19, 33, 44, 97), ["BT1", "U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71"], False),
+ # OWNER RULING 12 September 2026, decision 11: BT1 moves from GAP23 to GAP12. Its front VBAT land sat over
+ # the three through-hole SWD pins of controller U62, which lives in the underside pocket at X 18 to 47, and a
+ # front region and a back region overlapping is correct for surface-mount parts and wrong for a part with pins
+ # through the board. Those six solder-mask bridges and shorting items were the last hard violations on B19's
+ # placed board after five tool causes were fixed (150 to 6, appendix 32.149). The alternative was moving the
+ # controller, which would have re-opened the 9 September argument that put the three controllers in three
+ # separate failure domains, so the passive part moves instead.
+ ("GAP12", (-50, 33, -32, 97), ["BT1", "U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
+ ("GAP23", (19, 33, 44, 97), ["U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71"], False),
  ("WMIDS", (-152, -97, -116, -69), ["U35", "D1", "D2", "J_54V", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
  ("NEX",   (96, 78, 123, 82), ["R14", "R15", "R16", "C37", "C38"], False),   # B17 (8 Sep 2026, 32.65): the two HDMI switches U3 and U4 are FIXED at 16 mm pitch above this strip (9.6 mm in the packed row collided their escape fans)
  ("SEX",   (96, -85, 112, -78), ["F2", "C39"], False),

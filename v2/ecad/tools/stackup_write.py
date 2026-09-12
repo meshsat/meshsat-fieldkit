@@ -15,6 +15,13 @@ STACKS = {
     "JLC06161H-3313": [("F.Cu", 0.035), ("pp", "FR4 prepreg 3313", 0.0994, 4.1), ("In1.Cu", 0.0152), ("core", "FR4 core", 0.55, 4.6), ("In2.Cu", 0.0152), ("pp", "FR4 prepreg 2116", 0.1088, 4.16),
                        ("In3.Cu", 0.0152), ("core", "FR4 core", 0.55, 4.6), ("In4.Cu", 0.0152), ("pp", "FR4 prepreg 3313", 0.0994, 4.1), ("B.Cu", 0.035)],
     "2L": [("F.Cu", 0.035), ("core", "FR4 core", 1.51, 4.6), ("B.Cu", 0.035)],
+    # OWNER RULING 12 September 2026, decision 7: P and E5 are ordered at 2 oz, which is what their prose has
+    # always claimed and what the order set must now say. 2 oz is 0.070 mm of copper against 1 oz's 0.035, and
+    # it is the reason the ruling went this way: P's FUSED band measured 193.5 A/mm2 at 1 oz against IPC-2221's
+    # 82.7, and doubling the copper halves the density on a board that carries the whole pack current. dc_drop
+    # and every current-density check judge against the stackup, so this entry is what makes the ruling real
+    # rather than a sentence in a document.
+    "2L-2oz": [("F.Cu", 0.070), ("core", "FR4 core", 1.44, 4.6), ("B.Cu", 0.070)],
 }
 LOSS = 0.02
 
@@ -43,7 +50,7 @@ def total(name): return round(sum(it[1] if len(it) == 2 else it[2] for it in STA
 def write(path, name=None):
     s = open(path, encoding="utf-8").read()
     ncu = len(re.findall(r'^\s+\(\d+ "(?:F|B|In\d+)\.Cu" (?:signal|power|mixed|jumper)\)', s, re.M))
-    if name is None: name = {4: "JLC04161H-7628", 6: "JLC06161H-3313"}.get(ncu, "2L")
+    if name is None: name = {4: "JLC04161H-7628", 6: "JLC06161H-3313"}.get(ncu, "2L-2oz")   # decision 7: two-layer boards are 2 oz
     want = [it[0] for it in STACKS[name] if len(it) == 2]
     if len(want) != ncu: raise SystemExit("stackup_write: %s has %d copper layers, board file lists %d" % (name, len(want), ncu))
     s2 = s; k = s.find("(stackup")   # drop an existing block by matching its parentheses (the regex to the first close cut a saved board in half, 8 Sep 2026)

@@ -207,7 +207,13 @@ cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)
 PATTERNS = [("+5V_*", "PWR"), ("+3V3*", "PWR"), ("VGG_SW", "PWR"), ("GND", "PWR"), ("RF_*", "RF"), ("USB*", "USB"), ("HUB_D*", "USB")]
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)
+    # OWNER RULING 12 September 2026, decision 9: PWR goes from 0.5 mm to 1.2 mm. `+5V_D8` carries 1 A and a
+    # 0.5 mm inner-layer track is rated 0.44 A by IPC-2221 at a 10 K rise, so the board was over the published
+    # limit by more than a factor of two on a rail that feeds the exciter and the 30 W amplifier. 1.2 mm carries
+    # 1 A with margin. The board is re-routed and its deliverable re-cut; the alternative considered and not
+    # taken was accepting five millivolts over budget on the grounds that the radio only draws it while
+    # transmitting, which is a coherent position on a duty-cycled rail and not one to buy boards on.
+    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 1.2, 0.8, 0.4); ns.SetNetclass("PWR", nc)
     nr = pcbnew.NETCLASS("RF"); cls(nr, 0.3, 0.35, 0.6, 0.3); ns.SetNetclass("RF", nr)
     nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2))   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground; ns.SetNetclass("USB", nu)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
@@ -220,7 +226,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.3, diff_pair_gap=0.2)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.5, 0.8, 0.4), C("RF", 1, 0.3, 0.35, 0.6, 0.3), C("USB", 2, 0.127, 0.3, 0.6, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 1.2, 0.8, 0.4), C("RF", 1, 0.3, 0.35, 0.6, 0.3), C("USB", 2, 0.127, 0.3, 0.6, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
     # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern
