@@ -56,9 +56,22 @@ def pad_poly(p):
 # outside a fixed 6 mm window, was never tested, and landed inside the pad. That is 53 of the 82 hard DRC
 # violations left on B19's placed board after the land patterns were corrected, and nothing had read them
 # because B19's chain blocks at the pair gate before the pre-route DRC (appendix 32.149, 12 September 2026).
+def _is_copper(p):
+    """A pad that exists on no copper layer is not an obstacle to anything.
+
+    12 September 2026, board P. KiCad draws a modern exposed pad as one copper pad plus a grid of
+    SOLDER PASTE apertures, and the apertures are pads too: F.Paste only, no number, no net. `clear()`
+    read the BQ4050's nine apertures as pads of another net and refused all four of its exposed pad's
+    thermal vias, on every board with such a land. P's gas gauge finished with the single via
+    zone_pad_via.py rescues at the pad centre; the router then ran three BAT_F segments 0.51 mm from it
+    on B.Cu, the ground fill retreated, and a QFN-32 gas gauge and primary protector ended with NO
+    ground connection to the bottom layer. Paste is not copper."""
+    return any(pcbnew.IsCopperLayer(L) for L in p.GetLayerSet().Seq())
+
+
 allpads = [(p, p.GetPosition(), pad_poly(p), p.GetNetname(), fp.GetReference(),
             max(p.GetSize().x, p.GetSize().y) / 2 + p.GetBoundingBox().GetWidth() / 2)
-           for fp in b.GetFootprints() for p in fp.Pads()]
+           for fp in b.GetFootprints() for p in fp.Pads() if _is_copper(p)]
 def ep_numbers(fp):
     """Pad numbers that belong to an exposed pad (any pad of that number >= 2 mm): their small pieces are not pins."""
     return {p.GetNumber() for p in fp.Pads() if max(p.GetSize().x, p.GetSize().y) >= FromMM(2.0)}
@@ -95,6 +108,7 @@ def clear(v, r, me, me_ref, net, lane=0.75):
         if o.Contains(VECTOR2I(int(v.x), int(v.y))) or o.Contains(VECTOR2I(int(v.x + r), int(v.y))) or o.Contains(VECTOR2I(int(v.x - r), int(v.y))) or o.Contains(VECTOR2I(int(v.x), int(v.y + r))) or o.Contains(VECTOR2I(int(v.x), int(v.y - r))): LAST[0] = "rule-area"; return False
     return True
 added = skipped = ep_skipped = 0
+ep_pads = []   # (ref, pad number, net, laid, wanted, refusal reasons) for every exposed pad that lost a via
 for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
     if not is_fine(fp) or (fp.GetReference().startswith("J") and min_pitch(fp) > FromMM(0.6)): continue      # coarse connectors route fine without escapes; a 0.5 mm M.2 socket (B14 J_WIFI1) does not (5 Sep: the router thrashed 75 min on its 67 bare pads)
     if fp.GetReference() in set(filter(None, __import__("os").environ.get("ESCAPE_SKIP", "").split(","))): continue   # A19: parts the router escapes itself (mixed pad sizes)
@@ -216,10 +230,18 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                 skipped += 1; print("  no escape for %s pad %s (%s)%s" % (fp.GetReference(), pad.GetNumber(), net, ("  last reject: " + LAST[0]) if fp.GetReference() == DEBUG_REF else ""))
     # exposed pad: give it vias of its own net when the footprint has none (KiCad's plain footprints carry no thermal vias)
     for pad in fp.Pads():
-        if pad.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or max(pad.GetSize().x, pad.GetSize().y) < FromMM(2.0) or pad.GetNetCode() <= 0: continue
+        # AN EXPOSED PAD IS SQUARE-ISH, NOT MERELY LONG (12 September 2026). The test was `max(size) >= 2 mm`,
+        # which reads every one of an HDMI receptacle's nineteen 0.3 x 2.5 mm signal fingers as an exposed pad
+        # asking for a thermal via at its own centre; B19 printed eleven such refusals, each naming the
+        # neighbouring finger. They laid nothing, so no copper ever depended on it, but the count and the
+        # denominator were wrong and the report unreadable. The smaller dimension is what separates a land
+        # from a finger.
+        if pad.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or min(pad.GetSize().x, pad.GetSize().y) < FromMM(1.2) \
+           or max(pad.GetSize().x, pad.GetSize().y) < FromMM(2.0) or pad.GetNetCode() <= 0: continue
         if any(q.GetNumber() == pad.GetNumber() and q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in fp.Pads()): continue
         c = pad.GetPosition(); big = min(pad.GetSize().x, pad.GetSize().y) >= FromMM(2.5)
         spots = [(dx, dy) for dx in ((-0.7, 0.7) if big else (0.0,)) for dy in ((-0.7, 0.7) if big else (0.0,))]
+        ep_laid, ep_why = 0, []
         for dx, dy in spots:
             v = VECTOR2I(int(c.x + FromMM(dx)), int(c.y + FromMM(dy)))
             # THIS LOOP USED TO LAY COPPER WITHOUT ASKING ANYTHING (12 September 2026). A thermal via sits
@@ -231,8 +253,19 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
             # (appendix 32.135): an exemption that is true of the pad is not true of the other side.
             if not clear(v, FromMM(0.3), pad, fp.GetReference(), pad.GetNetname()):
                 ep_skipped += 1
+                ep_why.append("(%+.1f,%+.1f) %s" % (dx, dy, LAST[0] or "?"))
                 continue
             via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(FromMM(0.3)); via.SetWidth(FromMM(0.6)); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via)
-            vias.append((v, FromMM(0.3), pad.GetNetname())); added += 1
+            vias.append((v, FromMM(0.3), pad.GetNetname())); added += 1; ep_laid += 1
+        # A COUNT IS NOT A DIAGNOSIS (12 September 2026, board P). P's chain printed "4 thermal via(s)
+        # refused" for two runs and nobody could say which pad or why; the BQ4050's 3.1 mm exposed pad
+        # ended with ONE via of the four it asks for, the router then ran three BAT_F segments 0.51 mm
+        # from it on B.Cu, the ground fill retreated, and the gas gauge's exposed pad finished with no
+        # ground connection to the bottom layer at all. Every refusal names its spot and what it hit.
+        if ep_why:
+            ep_pads.append((fp.GetReference(), pad.GetNumber(), pad.GetNetname(), ep_laid, len(spots), list(ep_why)))
 print("escape: %d escapes added, %d pads skipped, %d thermal via(s) refused for what is on the other side" % (added, skipped, ep_skipped))
+for ref, num, net, laid, want, why in ep_pads:
+    print("escape: exposed pad %s.%s (%s) got %d thermal via(s) of %d: %s%s"
+          % (ref, num, net, laid, want, "; ".join(why[:4]), "" if laid else "   <-- NO VIA AT ALL"))
 pcbnew.SaveBoard(sys.argv[1], b)

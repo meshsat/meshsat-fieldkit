@@ -31,18 +31,25 @@ def main(a):
     vias = [t for t in tracks if t.Type() == pcbnew.PCB_VIA_T]
     segs = [t for t in tracks if t.GetClass() == "PCB_TRACK"]
 
-    def ends_on(pt, net, skip=None):
+    def ends_on(pt, net, skip=None, layer=None):
         out = []
         for tr in segs:
             if tr is skip or tr.GetNetname() != net: continue
+            if layer is not None and tr.GetLayer() != layer: continue
             for e in (tr.GetStart(), tr.GetEnd()):
                 if abs(e.x - pt.x) < 20000 and abs(e.y - pt.y) < 20000: out.append(tr); break
         return out
 
-    def pad_at(pt, net):
+    def pad_at(pt, net, layer=None):
+        """A pad of this net at this point, on this layer when one is named.
+
+        12 September 2026: without the layer this answered True for board P's thermal via in U1's exposed
+        pad, which is F.Cu only, and so declared the via live on B.Cu as well. A pad that exists on one
+        layer says nothing about the other end of a via."""
         for f in b.GetFootprints():
             for p in f.Pads():
-                if p.GetNetname() == net and p.HitTest(pt): return True
+                if p.GetNetname() != net or not p.HitTest(pt): continue
+                if layer is None or p.IsOnLayer(layer): return True
         return False
 
     removed, kept, evidence = 0, 0, []
@@ -73,7 +80,32 @@ def main(a):
         if filled_anywhere: abandoned = None
         if abandoned is None: continue
         on = ends_on(pos, net)
-        if len(on) > 1: kept += 1; evidence.append("%s at (%.1f, %.1f): %d tracks land on it, left alone" % (net, pos.x / 1e6, pos.y / 1e6, len(on))); continue
+        # A TRACK COUNT IS NOT A CONNECTION TEST, and this is what board P proved on 12 September 2026. The rule
+        # was "more than one track lands on it, so it is alive", and P's one refused via has TWO tracks on it,
+        # both on F.Cu, on a via that spans F.Cu to B.Cu with the B.Cu fill retreated: dead at its pour end,
+        # which is the exact defect this tool exists for, and it was reported as the reason to leave it. The
+        # question is per END: a via is alive only if each of the two layers it spans carries something of its
+        # net, a track landing on it or a pad under it. (The fill is already answered above: `filled_anywhere`
+        # is false by the time we are here, on every layer.)
+        top, bot = v.TopLayer(), v.BottomLayer()
+        live = [L for L in (top, bot) if ends_on(pos, net, layer=L) or pad_at(pos, net, layer=L)]
+        if len(live) == 2:
+            kept += 1
+            evidence.append("%s at (%.1f, %.1f): live on both %s and %s, left alone"
+                            % (net, pos.x / 1e6, pos.y / 1e6, b.GetLayerName(top), b.GetLayerName(bot)))
+            continue
+        if len(on) > 1:
+            # Several tracks, all on ONE of its two layers: the via is dead at the other end and the tracks are
+            # not. Take the via and leave every track where it is; finish.sh re-runs the DRC and reverts if the
+            # unrouted count rose, which is the contract this tool works under.
+            evidence.append("%s at (%.1f, %.1f): %d track(s) on %s and nothing on %s, dead at its %s end"
+                            % (net, pos.x / 1e6, pos.y / 1e6, len(on),
+                               b.GetLayerName(live[0]) if live else "neither layer",
+                               b.GetLayerName(bot if (live and live[0] == top) else top),
+                               b.GetLayerName(bot if (live and live[0] == top) else top)))
+            if not dry: b.Remove(v)
+            removed += 1
+            continue
         stub = on[0] if on else None
         if stub is not None:
             far = stub.GetEnd() if abs(stub.GetStart().x - pos.x) < 20000 and abs(stub.GetStart().y - pos.y) < 20000 else stub.GetStart()

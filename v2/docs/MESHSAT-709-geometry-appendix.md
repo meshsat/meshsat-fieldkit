@@ -6029,3 +6029,135 @@ knob is swept. **No board changed here and nothing is ordered**; what changed is
 the knob echo proved the value had taken effect, and an identical 22 of 48 on an identical placed board is
 equally consistent with a knob that never reached the bar. It was right, and it was right before anyone knew
 the knob was a flag.
+
+### 32.150 The orderability pass: eleven rows that named the wrong part, and four floors with holes in them (12 September 2026, 18:30 CEST; MESHSAT-862)
+
+**Owner instruction of the afternoon:** *"I will not read anything, you do it and approve it, and check if
+everything is orderable or not before you finalise the draft order."* This is what that check found. The answer
+to the question itself is in `v2/release/revA/order/ORDERABILITY-2026-09-12.md`: **455 rows, 406 settled, 49
+open, about 2,255 GBP of certified parts for five of every board**, and the draft order is not finalised.
+
+**THE ROW THAT NAMED THE WRONG PART, and it is a family rather than an incident.** E's DC inlet read
+
+> vehicle and shore DC in 9-36 V, lead from the D38999 wall receptacle DC pair (JST-VH, 10 A): + -
+
+and carried no LCSC code. `jlc_certify` reads a part number out of a row's prose when the row has none, the
+prose names the **D38999**, which is the receptacle at the other end of the lead, and JLCPCB answered with an
+**Amphenol D3899922CF circular MIL connector, 34.57 GBP, stock 0**. The row read NO_STOCK, which is a supply
+problem where the fault was that the row never named its own part. **Eleven rows on four stocked lands were
+uncoded** (JST-VH, XT60, U.FL, SMA), four of them on B, found by a source scan rather than by the board run;
+and **eight more connector bodies were exempted from the BOM as wire** by `lcsc-allow.txt` lines that meant the
+LEAD and said the part. Nineteen placeable connectors, every one in stock. Each names its socket first now and
+carries its code, and all of them were put back through the live API: certified with stock covering the order.
+
+**A wrong package on a part that matters, and the stock behind it.** E's `U5`, the solar tracker's LT8705A,
+carried `C674167`, **LT8705AIFE#PBF, a TSSOP-38, on a WQFN-38-1EP 5x7 land**. The QFN variant is `C674164` at
+**stock 3 against a need of 5**, so JLC cannot place it on five boards whatever else is decided: **owner
+decision 12**. The wrong code is blocked with an `fp=WQFN-38` qualifier, because a code is wrong FOR A LAND.
+
+**A part that would not have turned on.** C's `Q6` asks in its own comment for a FET under 200 mOhm at 2.5 V of
+gate drive and carried a 2N7002, whose threshold runs to 3 V. Same land, same G S D order, so it is a Vishay
+**Si2302CDS-T1-GE3, C10488**, 85 mOhm at 2.5 V.
+
+**FOUR FLOORS WITH HOLES IN THEM, and every one was found by trying to walk through it.**
+
+1. **The exclusion table.** `reserved.json` named `^EXCLUDE\s*=`, the line the table OPENS on. Every per-board
+   row, which is where a decision about what JLC places actually lives, was outside the floor. Found by adding
+   `U5` to it and asking the floor, which said nothing. The edit was reverted and the class widened.
+2. **The region rectangles.** Same shape: `^REGIONS\s*=` matched the opening line and not one rectangle in the
+   table. Widening a region to stop an overflow would have gone through without a word.
+3. **A hand-fit declaration keyed on `comment[:60]`.** A character count is not a rule: "9 A spring pin, pack
+   return (Mill-Max 0858 class, dock block)" is 61 characters and its twin on the CELL+ side is 55, so one of a
+   matched pair was declared and the other read NO_PART_CHOSEN. A declaration that is a PREFIX of the row
+   matches it now, with a twenty-character floor so a short prefix cannot swallow rows nobody declared.
+4. **A part number inside parentheses could not find its own purchase route.** `intended_part` strips
+   parentheses before it reads a part number, which is right for identifying a row; C's three APEM toggles name
+   their part only inside the brackets, so they read NOT_CHECKED for a month while being declared, bought and
+   excluded from the CPL.
+
+**THE PACKER WALKED OVER THE PARTS THAT WERE ALREADY THERE, and behind that, a warning nobody had ever read.**
+Owner decision 11 moved B's CR2032 holder into GAP12. The regenerated placement read **16 hard** where the move
+was meant to clear 6, because BT1 landed across `J_FAN2`'s header and `C65` inside the M.2 socket `J_M2C1`, both
+FIXED parts standing in that region; the packer has known about drilled holes and small keep-outs since the
+morning and had never known about a placed part. Teaching it the 35 fixed references took the board to **78**,
+and reading why found the older thing:
+
+> `if cy - rowh < y0 - 0.01: print("WARNING region %s overflows by %.1f mm" ...)`
+
+**and then it places the parts that did not fit outside the rectangle, on top of whatever stands there.** In six
+generators, since the regions were drawn.
+
+| B19 placement | regions that overflow | worst |
+|---|---:|---|
+| as committed (b19cg24), the board every pair number rests on | 6 | IOCA 10.2 mm |
+| plus the two corrected TI land patterns | 7 | IOCA 15.1 mm |
+| plus BT1 into GAP12 (decision 11) | 8 | GAP12 22.9 mm |
+| plus the packer stepping around fixed parts | 12 | GAP12 64.7 mm |
+
+`tools/regionfit.py` is the one gate and an overflow blocks. A board with a measured, benign overflow declares
+the number with its reason, which is the `placed_hard_allowance` idiom: **A declares 1.5 mm** (NODE 1.0, FES
+1.4, and A24's placed board reads 0 hard at it) and **D declares 0.5 mm**. C, E and P overflow nothing. **B
+declares nothing and is blocked**, and its rectangles are **owner decision 13**.
+
+**A FOUR-LAYER BOARD A EXISTS FOR THE FIRST TIME (owner ruling 2).** The blocker the P0 named was one literal:
+`gen_pcb_a3.py` put the VIN_RAW dive on `pcbnew.In3_Cu` and the second ground on `pcbnew.In4_Cu`, neither of
+which a four-layer board has. Both follow the board's own copper layer count now, and reading the count is not
+setting it: `SetCopperLayerCount(6)` is untouched and the experiment patches that one line in its own tools tree.
+**The four-layer placed board reads 0 hard of the fifteen types, `netlist_board` 2004 of 2004 and `check_pcb_a`
+510 of 511**, the single failure being the gate asserting six layers, which is the gate doing its job. Its route
+is running with its prediction written.
+
+**A METHOD TRAP that cost the first attempt.** `full.sh` dispatches its generators as `../tools/gen_pcb_a.py`,
+relative to the project directory, so a patched copy of the tools anywhere else is never read: the first run
+reported a clean four-layer chain and had quietly built the six-layer board (`copper layers: 6`, dive on In3).
+**An experiment needs its own ECAD directory, not its own tools directory.**
+
+**Tests: 287 passing, 7 skipped.** `test_order_codes.py` is twelve rules and ten of them fail on the pre-fix
+tree; `test_region_fit.py` is five, four of which fail, and one runs the gate for real and reads its exit code,
+because the exit code is what `full.sh` acts on.
+
+### 32.151 A solder paste aperture was refusing every exposed pad's thermal vias, on every board (12 September 2026, 19:40 CEST; MESHSAT-862)
+
+P routed 0 hard and 0 unrouted twice and its finish refused the deliverable for **one gate item of 143**:
+
+> FAIL locked via GND at (83.3, 94.0) sits in the fill of 'GND pour B.Cu' on B.Cu
+
+Four tools had to be disbelieved in turn before it read correctly, and each of the first three was wrong.
+
+**1. `stitch_prune`, the tool written for exactly this, refused to touch it: "2 tracks land on it, left
+alone".** Both tracks are on **F.Cu** and the via spans **F.Cu to B.Cu**. A track count is not a connection
+test: a via is alive only where BOTH of its ends are. The test is per end now, and `pad_at` takes a layer too,
+because the pad it was finding is on F.Cu alone and was declaring the B.Cu end live.
+
+**2. The via is the ONLY one in the exposed pad of `U1`, the BQ4050 gas gauge and primary protector**, a
+QFN-32 with a 3.1 x 3.1 mm land, and the router had run three `/BAT_F` segments **0.51 mm** from it on B.Cu so
+the ground fill retreated. **A QFN-32 gas gauge finished with no ground connection to the bottom layer at
+all.** The single via is not the escape generator's: it is the one `zone_pad_via.py` rescues at the pad centre.
+
+**3. `escape.py` asks for four thermal vias in a 3.1 mm land and laid none, and said so as a count.** Two runs
+of P printed `4 thermal via(s) refused for what is on the other side` and nothing said which pad or why. Every
+refusal names its spot and what it hit now, and an exposed pad that ends with no via at all is called out in
+its own line.
+
+**4. THE CAUSE: KiCad draws a modern exposed pad as one copper pad plus a grid of SOLDER PASTE apertures, and
+an aperture is a pad too.** Nine of them on this land, `F.Paste` only, no number, no net. `clear()` read them
+as pads of another net inside the very land it was trying to via, and refused all four spots. **Paste is not
+copper.** The obstacle list takes only pads that exist on a copper layer, and P's exposed pad gets its full
+2 x 2 grid: `4 escapes added, 0 thermal via(s) refused`.
+
+**Measured on B19 before trusting it, because the guard this sits beside was written for B19's 25 hard
+violations** (32.135's family: an exemption that is true of the pad is not true of the other side). Same placed
+board, escape.py alone, one variable: **hard 16 before and hard 16 after**, and the guard still refuses 14 real
+pads. Excluding paste changes no copper anywhere it should not.
+
+**And the report, once readable, named a B19 placement item nobody had seen.** The exposed-pad test was
+`max(size) >= 2 mm`, which reads each of an HDMI receptacle's 0.3 x 2.5 mm signal fingers as an exposed pad
+asking for its own via (eleven such refusals, each naming the neighbouring finger; they laid nothing, so no
+copper depended on it, but the denominator was wrong). With the smaller dimension in the test as well, B19
+reads: **`U102`, `U202` and `U302`, the three bank USB hubs, get NO thermal via at all**, each blocked by the
+back-side parts sitting directly under them (`R147` on `/HUB1_XI` and `/HUB1_XO`, `R255`/`R256`, `R355`/`R356`),
+and `U101` gets 2 of 4. Three hub ICs with no ground via under their exposed pads is a placement item for B,
+which is already held by owner decision 13.
+
+**Tests:** `tests/test_exposed_pad_vias.py`, three rules, all three failing on the pre-fix tree. Suite 290
+passing, 7 skipped.
