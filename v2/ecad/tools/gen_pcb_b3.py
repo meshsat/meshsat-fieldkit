@@ -177,6 +177,13 @@ REGIONS += [
  ("RBX",   (96, -25, 126, 27), ["U23", "C56", "R36", "R37", "R38", "R39", "C57", "C58", "U33", "U24", "C61", "R43", "R44", "R45", "R46", "C62", "C63", "U18", "R40", "C59", "C60", "R41", "R42", "U15", "U16", "U17", "R24", "C43", "C44", "R26", "C48", "C49", "R27", "C50", "C51", "U21", "U22"], False),
 ]
 GAP = 1.2
+# 12 September 2026 (appendix 32.146): 30 of 46 leg refusals on B19's DIFF100 pass sit within 2 mm of one of the
+# pair's OWN pads, and 22 of those are at the pairs' own series coupling capacitors, which this packer places as
+# couples (the two parts stacked at GAP). PLACE_COUPLE_GAP opens that one gap without touching the rest of the
+# packing, so the pair's two legs have room to come in beside the parts rather than between them. It is an
+# experiment with a number owed, not a setting: a placement change moves every part in the region, so an arm that
+# changes it is compared as one placement against another and never as a knob with a value (32.109).
+COUPLE_GAP = float(os.environ.get("PLACE_COUPLE_GAP", GAP))
 # 10 September 2026: the room the packer leaves around a fine-pitch part is a knob, because place_audit's own envelope
 # (2.2 mm plus 0.12 per pad on a side) wants about 5 mm at a 99-pad QFN and this gives 1.6, which is why B19's audit
 # reports a third of the pads of U301, U201 and U101 with no escape at all. PLACE_FINE_MARGIN measures the trade against
@@ -245,7 +252,8 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
         o = COUPLE.get(ref)
         if o and o in _here and o not in _done:
             _, fp2, w2, h2, f2 = _here[o]; _done.add(ref); _done.add(o)
-            units.append(([(ref, fp, h), (o, fp2, h2)], max(w, w2), h + h2, fine or f2))
+            _extra = max(0.0, COUPLE_GAP - GAP)   # the couple's own gap, over the packer's
+            units.append(([(ref, fp, h + _extra / 2), (o, fp2, h2 + _extra / 2)], max(w, w2) + _extra, h + h2 + _extra, fine or f2))
         else:
             _done.add(ref); units.append(([(ref, fp, h)], w, h, fine))
     units.sort(key=lambda t: (not t[3], -(t[1] * t[2])))
