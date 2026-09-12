@@ -77,9 +77,12 @@ p = os.path.join(T, "hardset.py"); s = open(p).read()
 s = s.replace("import ", "from agent.client import Client  # a model on a verdict path\nimport ", 1)
 open(p, "w").write(s)'
 
+# The address is assembled at runtime so this file never itself carries one: the rule it proves scans
+# this file too, after tier 2b pointed out that the first version published an estate-shaped hostname.
 run_case "a host name lands in the tree" t_nothing_about_the_endpoint '
 p = os.path.join(T, "agent", "evidence.py"); s = open(p).read()
-s = s.replace("HERE = ", "ENDPOINT = \"http://nllei01example01:4000\"\nHERE = ", 1)
+addr = "10." + "0.0." + "1"
+s = s.replace("HERE = ", "ENDPOINT = \"http://%s:4000\"\nHERE = " % addr, 1)
 open(p, "w").write(s)'
 
 run_case "the config mode check is dropped" t_the_client_refuses_a_config_anyone_can_read '

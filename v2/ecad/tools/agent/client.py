@@ -57,6 +57,13 @@ def sha(s):
     return hashlib.sha256(s.encode("utf-8", "replace")).hexdigest()[:16]
 
 
+# The budget is per RUN, not per conversation. Tier 2b found the difference on the change that
+# introduced it: one loop run constructs several Clients (the proposer, each draft, each review cycle),
+# so a per-instance cap let a run with revisions spend several multiples of the documented number. The
+# counters live here, at module level, shared by every Client in the process (12 September 2026).
+SPENT = {"calls": 0, "requests": 0, "tokens": 0}
+
+
 class Client:
     """One conversation. A fresh Client is a fresh context, which is what makes tier 2b independent."""
 
@@ -72,9 +79,10 @@ class Client:
 
     def ask(self, system, user, max_tokens=4000, temperature=0.0, timeout=600, retries=3):
         """One completion. Returns (text, meta). Raises Infra rather than returning something plausible."""
-        if self.calls >= self.max_calls:
-            raise Infra("agent budget: %d calls is the cap for this run" % self.max_calls)
-        if self.tokens >= self.max_tokens_total:
+        if SPENT["calls"] >= self.max_calls:
+            raise Infra("agent budget: %d calls is the cap for this run and %d have been spent across %d request(s)"
+                        % (self.max_calls, SPENT["calls"], SPENT["requests"]))
+        if SPENT["tokens"] >= self.max_tokens_total:
             raise Infra("agent budget: %d tokens is the cap for this run" % self.max_tokens_total)
         body = json.dumps({
             "model": self.model, "max_tokens": max_tokens, "temperature": temperature,
@@ -88,6 +96,10 @@ class Client:
                 "Authorization": "Bearer " + self.cfg["MESHSAT_LLM_KEY"],
             })
             t0 = time.time()
+            SPENT["requests"] += 1          # every HTTP attempt, retries included, so the cap counts work
+            if SPENT["requests"] > self.max_calls * 4:
+                raise Infra("agent budget: %d requests against a %d call cap; the endpoint is retrying more than "
+                            "it is answering" % (SPENT["requests"], self.max_calls))
             try:
                 with urllib.request.urlopen(req, timeout=timeout) as r:
                     d = json.loads(r.read().decode("utf-8", "replace"))
@@ -109,7 +121,11 @@ class Client:
             raise Infra("%s: the endpoint returned an empty completion (finish_reason %r)" % (self.role, ch.get("finish_reason")))
         usage = d.get("usage") or {}
         self.calls += 1
-        self.tokens += int(usage.get("total_tokens") or 0)
+        SPENT["calls"] += 1
+        # An endpoint that returns no usage block would leave the token cap unenforced, which is how a
+        # budget quietly stops being one. An answer with no usage is charged at its cap instead.
+        SPENT["tokens"] += int(usage.get("total_tokens") or max_tokens)
+        self.tokens = SPENT["tokens"]
         meta = {"role": self.role, "model": d.get("model") or self.model, "call": self.calls,
                 "prompt_sha": sha(system + "\n" + user), "reply_sha": sha(text),
                 "prompt_tokens": usage.get("prompt_tokens"), "completion_tokens": usage.get("completion_tokens"),

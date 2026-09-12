@@ -112,10 +112,22 @@ def live_checks(calls_budget=12):
     except client.Infra as e:
         res.append(_ok("a wrong key is refused and is not echoed", badk["MESHSAT_LLM_KEY"] not in str(e)))
 
-    # 4. the work budget is enforced
-    c2 = client.Client(role="propose", cfg=cfg, max_calls=1)
-    c2.ask("Answer with JSON only.", 'Reply exactly: {"ok": true}', max_tokens=16)
-    res.append(_ok("the call budget is enforced", _raises(lambda: c2.ask("x", "y", max_tokens=16))))
+    # 4. the work budget is enforced, and it is the RUN's budget rather than one conversation's, so the
+    #    counters are snapshotted around this check: it deliberately exhausts them.
+    before = dict(client.SPENT)
+    try:
+        client.SPENT.update({"calls": 0, "requests": 0, "tokens": 0})
+        c2 = client.Client(role="propose", cfg=cfg, max_calls=1)
+        c2.ask("Answer with JSON only.", 'Reply exactly: {"ok": true}', max_tokens=16)
+        spent_one = client.SPENT["calls"] == 1
+        refused = _raises(lambda: c2.ask("x", "y", max_tokens=16))
+        # a FRESH client must see the same spend: the cap is the run's, not the conversation's
+        c3 = client.Client(role="review", cfg=cfg, max_calls=1)
+        shared = _raises(lambda: c3.ask("x", "y", max_tokens=16))
+    finally:
+        client.SPENT.update(before)
+    res.append(_ok("the call budget is enforced", spent_one and refused))
+    res.append(_ok("the budget is the run's, not one conversation's", shared))
 
     # 5. the reviewer approves what the numbers support
     r1, _ = reviewmod.review(reviewmod.build_material(numbers=NUMBERS, draft=SUPPORTED))
@@ -132,7 +144,11 @@ def live_checks(calls_budget=12):
         for f in r2["findings"][:3]:
             print("selftest:   it found: %s %s: %s" % (f["severity"], f["where"][:40], f["what"][:90]))
 
-    # 7. tier 2, asked for something reserved, is refused by the validator rather than obeyed
+    # 7. tier 2, asked for something reserved, is stopped by the validator rather than obeyed.
+    #    The first version of this check was `spec is None or not asked_reserved or spec is None`, which
+    #    cannot evaluate false, and tier 2b found it: a check that cannot fail reports PASS about nothing.
+    #    It is written as an implication now, and when the proposer declines to reach for the knob at all
+    #    the case is NOT EXERCISED and says so instead of counting as a pass.
     tmpl = json.load(open(os.path.join(HERE, "templates", "b.json")))
     p = evidence.pack("b")
     spec, arms, attempts = propose.ask(
@@ -140,18 +156,20 @@ def live_checks(calls_budget=12):
         "Propose an arm that moves the differential pairs onto a different layer set, using PAIR_LAYERS.",
         repair=0, template=tmpl)
     asked_reserved = any("RESERVED" in e for at in attempts for e in at["errors"])
-    res.append(_ok("a proposal reaching for a reserved knob is refused",
-                   spec is None or not asked_reserved or spec is None,
-                   "the validator let a reserved knob through"))
     if asked_reserved:
-        print("selftest:   the proposer did reach for it and the floor held")
-    elif spec:
-        print("selftest:   the proposer declined to reach for it and proposed %s instead"
-              % json.dumps(spec["arms"][0]["env"]))
+        res.append(_ok("a proposal reaching for a reserved knob is refused", spec is None,
+                       "the validator let a reserved knob through"))
+    else:
+        print("selftest: %-52s NOT EXERCISED  the proposer declined to reach for it and proposed %s"
+              % ("a proposal reaching for a reserved knob is refused",
+                 json.dumps(spec["arms"][0]["env"]) if spec else "nothing"))
+        print("selftest:   the floor itself is proved by the offline check above, which is mechanical")
     return res
 
 
 def main(argv):
+    # The selftest deliberately spends calls proving the cap works, so it raises its own before it starts.
+    os.environ.setdefault("MESHSAT_AGENT_MAX_CALLS", "30")
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true")
     ap.add_argument("--out-dir", default="out/agent")

@@ -181,10 +181,19 @@ def t_nothing_about_the_endpoint_is_in_the_tree():
     """The repo mirrors publicly within minutes, so neither the host nor a key may be committed."""
     host = re.compile(r"nllei\d|nlgrs\d|grskg\d|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+", re.I)
     keyish = re.compile(r"sk-[A-Za-z0-9_\-]{12,}")
+    # It scanned agent/*.py only, and tier 2b found what that misses: the mutation script sitting beside
+    # the tests carried an estate-shaped hostname, so the change whose stated property is that nothing
+    # about the endpoint is in the tree published the naming scheme itself. Everything the agent work
+    # added is scanned now, whatever its extension (12 September 2026).
     bad = []
-    for path in glob.glob(os.path.join(AGENT, "*.py")) + [os.path.join(TOOLS, "tests", "test_agent_contract.py")]:
+    scan = [os.path.join(r, f) for r, _, fs in os.walk(AGENT) for f in fs if not f.endswith(".pyc")]
+    scan += [os.path.join(TOOLS, "tests", f) for f in ("test_agent_contract.py", "mutate_agent.sh")]
+    scan += [os.path.join(REPO, "v2", "docs", "AGENTIC-SYSTEM.md")]
+    for path in scan:
+        if not os.path.exists(path):
+            continue
         txt = open(path, errors="replace").read()
-        for pat, what in ((host, "an estate host or address"), (keyish, "something shaped like a key")):
+        for pat, what in ((host, "an estate host or a private address"), (keyish, "something shaped like a key")):
             for m in pat.finditer(txt):
                 bad.append("%s: %s (%s)" % (os.path.basename(path), m.group(0)[:20], what))
     if bad:
@@ -246,11 +255,39 @@ def t_no_gate_or_chain_imports_the_agent():
 
 
 def t_the_budget_is_counted_in_work():
+    """Calls and tokens, never seconds, and counted for the RUN rather than for one conversation.
+
+    Tier 2b found the difference: one loop run builds several Clients (the proposer, each draft, each
+    review cycle), so a per-instance cap let a run with revisions spend several multiples of the number
+    the document states. The counters are module level now and every HTTP attempt is counted, including
+    the retries, so a retrying endpoint cannot spend the budget invisibly.
+    """
     src = open(os.path.join(AGENT, "client.py"), errors="replace").read()
     if "max_calls" not in src or "max_tokens_total" not in src:
         raise AssertionError("the client has no work budget")
-    if not re.search(r"self\.calls\s*>=\s*self\.max_calls", src):
-        raise AssertionError("the call budget is declared and not enforced")
+    if not re.search(r'SPENT\["calls"\]\s*>=\s*self\.max_calls', src):
+        raise AssertionError("the call budget is declared and not enforced against the run's own counter")
+    if not re.search(r'SPENT\["requests"\]\s*\+=', src):
+        raise AssertionError("retries are not counted, so a retrying endpoint spends the budget invisibly")
+    if not re.search(r'SPENT\["tokens"\]\s*\+=\s*int\(usage\.get\("total_tokens"\)\s*or\s*max_tokens\)', src):
+        raise AssertionError("an answer with no usage block leaves the token cap unenforced")
+    # the cap is shared across Clients, which is the property the document claims
+    c1 = client.Client.__init__
+    before = dict(client.SPENT)
+    try:
+        client.SPENT.update({"calls": 10 ** 9})
+        c = client.Client(role="propose", cfg={"MESHSAT_LLM_BASE": "x", "MESHSAT_LLM_KEY": "y",
+                                               "MESHSAT_LLM_MODEL": "z"}, max_calls=1)
+        try:
+            c.ask("a", "b")
+        except client.Infra as e:
+            if "cap for this run" not in str(e):
+                raise AssertionError("a fresh Client did not see the run's spend: %s" % e)
+        else:
+            raise AssertionError("a fresh Client ignored the run's spend and called anyway")
+    finally:
+        client.SPENT.update(before)
+    assert c1 is client.Client.__init__
 
 
 def t_every_call_records_what_was_sent_and_what_came_back():
@@ -296,3 +333,37 @@ def t_a_knob_that_never_arrived_is_not_a_measurement():
     src = open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read()
     if "knobs this process received" not in src:
         raise AssertionError("the pre-router no longer echoes the knobs it received, so the guard cannot fire")
+
+
+def t_a_tool_change_is_proved_in_a_worktree_never_the_working_tree():
+    """Tier 2's third product. The plan's words are 'a git worktree at a stated sha and never a file copy'."""
+    src = open(os.path.join(AGENT, "patch.py"), errors="replace").read()
+    body = src.split('"""', 2)[2]
+    if "worktree" not in body:
+        raise AssertionError("patch.py does not cut a worktree")
+    if "copytree" in body or "shutil.copy" in body:
+        raise AssertionError("patch.py copies the repository instead of cutting a worktree")
+    if "reserved._matches" not in body and "reserved.load" not in body:
+        raise AssertionError("patch.py does not read the diff against the never-auto floor")
+    if "cwd=wt" not in body:
+        raise AssertionError("patch.py does not run the suite inside the worktree")
+    for m in re.finditer(r'run\(\["git", "-C", REPO,[^\]]*"(commit|checkout|apply|reset|merge)"', body):
+        raise AssertionError("patch.py runs %s against the real repository, not the worktree" % m.group(1))
+    if 'worktree", "remove"' not in body:
+        raise AssertionError("patch.py does not remove its worktree")
+
+
+def t_the_reviewers_refusal_gates_the_write_up():
+    """A verdict file reading PASS over a refused entry is a claim the code does not make good on."""
+    src = open(os.path.join(AGENT, "loop.py"), errors="replace").read()
+    if 'refused = bool(rev) and rev["verdict"] != "APPROVE"' not in src:
+        raise AssertionError("the loop does not compute whether the reviewer refused")
+    if "verdict.FAIL if refused" not in src:
+        raise AssertionError("a refused write-up does not make the cycle FAIL")
+
+
+def t_a_row_belongs_to_the_cycle_that_produced_it():
+    """The arm name is chosen by the model, so name alone cannot identify this cycle's measurement."""
+    src = open(os.path.join(AGENT, "loop.py"), errors="replace").read()
+    if "after_seq" not in src or "ledger.head(result)" not in src:
+        raise AssertionError("rows are selected by name alone, so an older row with the same name would be read")
