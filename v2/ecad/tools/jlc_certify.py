@@ -321,7 +321,14 @@ def rows_to_check(only=None):
             # whatever else the prose says.
             if not comment:
                 continue
-            if LEAD.search(comment) and not (jlc_keyword(comment, fp) or intended_part(comment)):
+            # A row that carries a CODE is a component by definition: the code is the part's identity,
+            # and dropping it here is how a wrong or unstocked code reaches an order without ever being
+            # asked about. Before 12 September the drop was silent, and rewording a connector's prose so
+            # that it named the socket rather than the wall receptacle at the other end of its lead would
+            # have removed the row from the table instead of certifying it.
+            if code:
+                pass
+            elif LEAD.search(comment) and not (jlc_keyword(comment, fp) or intended_part(comment)):
                 continue
             key = (comment, fp)
             rec = out.setdefault(key, {"comment": comment, "fp": fp, "code": code,
@@ -333,14 +340,14 @@ def rows_to_check(only=None):
     return out
 
 
+CLASS_ROW = re.compile(r"\bclass\b|\bowed\b", re.I)   # prose that names a category where a part belongs
+
+
 def certify(rec, cache, handfit, aliases, refresh=False):
     """One row's verdict, with the evidence that produced it."""
     comment, fp, code = rec["comment"], rec["fp"], rec["code"]
     want = intended_part(comment)
     need = rec["qty"] * BOARD_QTY
-
-    if re.search(r"\bclass\b|\bowed\b", comment, re.I):
-        return dict(verdict="NO_PART_CHOSEN", note="the row names a class, not a part", need=need)
 
     # A bench header's comment names the chip it breaks out ("CC2652P cJTAG ZBA (bench): 3V3 ...") and
     # the extractor dutifully reads CC2652P out of it, then certifies a 5-pin 2.54 mm header against a
@@ -350,12 +357,24 @@ def certify(rec, cache, handfit, aliases, refresh=False):
         # Bench headers, test points and solder jumpers are fitted by hand at bring-up and JLC places
         # none of them (make_handoff.py already strips them from the CPL). They are a declared class,
         # not an open question, and saying NOT_CHECKED about them buried the rows that ARE unanswered.
-        return dict(verdict="BENCH_FITTED", need=need,
-                    note="a header, test point or solder jumper: fitted by hand, not placed by JLC")
+        note = "a header, test point or solder jumper: fitted by hand, not placed by JLC"
+        if CLASS_ROW.search(comment):
+            # The header is the board part and it is answered; the MODULE its prose names as a class is
+            # a separate, owner-side purchase. Say both, or the buyer reads a settled row and never
+            # learns that something still has to be chosen.
+            note += "; the module its comment names as a class is an owner-side purchase, not a JLC line"
+        return dict(verdict="BENCH_FITTED", need=need, note=note)
 
     hf = handfit.get(want or "") or handfit.get(comment[:60])
     if hf:
         return dict(verdict="HAND_FIT", note=hf, need=need)
+
+    # The class test runs LAST of the three declarations and only on a row that carries no code, because
+    # a code IS an answer: E's J_SOLAR reads "bare 12 V class panel in ... (JST-VH, 10 A)" and the land is
+    # a JST B2P-VH with a part number. Reading "class" out of the prose of a row whose part is chosen
+    # reported five answered connectors as unchosen and hid the two that really were wrong.
+    if not code and CLASS_ROW.search(comment):
+        return dict(verdict="NO_PART_CHOSEN", note="the row names a class, not a part", need=need)
 
     # A code that is already there is validated by the code itself; a blank row is searched by the
     # part it means, or by its value and package when it is a jellybean.

@@ -42,9 +42,25 @@ def t_a_changed_fab_minimum_is_the_owners():
     assert any("fab rules" in n for n, _ in hits), hits
 
 
-def t_a_changed_order_set_membership_is_the_owners():
-    hits = reserved._matches("make_handoff.py", 'BOARDS = [("meshsat-pcb-a-revA-A24", "pcb-a-power")]', reserved.load())
-    assert any("order set" in n for n, _ in hits), hits
+def t_what_orders_is_the_owners_and_the_prose_is_not():
+    """OWNER RULING 12 September 2026: the owner will not read the order notes and delegated drafting AND
+    approving them, so the BOARDS rows and the per-board prose of make_handoff.py left the floor. What did
+    NOT leave it is anything that places an order: the exclusion table, the rotation table, export_jlc.sh
+    and the cart. Nothing is ordered and no cart line is touched without the owner, which that ruling did
+    not change and this rule holds.
+    """
+    classes = reserved.load()
+    orders = [('make_handoff.py', 'EXCLUDE = {"pcb-a-power": ["TP1"]}'),
+              ('make_handoff.py', 'JLC_ROT = {"SOT-23": 180}'),
+              ('export_jlc.sh', 'echo "layers, 6, FR-4, ENIG" >> "$NOTES"')]
+    for path, line in orders:
+        hits = reserved._matches(path, line, classes)
+        assert any("order set" in n for n, _ in hits), "not reserved any more and must be: %s | %s" % (path, line)
+    prose = [('make_handoff.py', 'BOARDS = [("meshsat-pcb-a-revA-A24", "pcb-a-power")]'),
+             ('make_handoff.py', '    notes = "PCB-A POWER, 240 x 160 mm, six layers"')]
+    for path, line in prose:
+        assert reserved._matches(path, line, classes) == [], \
+            "the owner delegated the order prose and it is still refused: %s | %s" % (path, line)
 
 
 def t_ordinary_work_in_the_same_file_is_not_reserved():
@@ -116,3 +132,25 @@ def t_every_reserved_pattern_still_matches_its_file():
     if dead:
         raise AssertionError("%d reserved pattern(s) match no line in any file they name, so the class "
                              "protects nothing:\n  %s" % (len(dead), "\n  ".join(dead)))
+
+
+def t_a_per_board_exclusion_row_is_reserved_not_only_the_tables_first_line():
+    """12 September 2026, found by making the change and asking the floor about it.
+
+    The order class named `^EXCLUDE\\s*=`, which matches the line the table OPENS on and nothing else.
+    Every per-board exclusion actually lives on a continuation row, so adding a reference to a board's
+    bench-fit list, which is precisely a decision about what JLC places, went past the floor without a
+    word. The rule that the 12 September delegation drew stands the other way as well: the FABRICATION
+    NOTES rows of the same file open with a list and are prose, and must stay OFF the floor.
+    """
+    classes = reserved.load()
+    ordering = [('make_handoff.py', 'EXCLUDE = {"pcb-a-power": {"J_DOCK"},'),
+                ('make_handoff.py', '           "pcb-e1-dock": {"F1", "F2", "J_BATT", "U5"},'),
+                ('make_handoff.py', '           "pcb-e5-block": set()}')]
+    for path, line in ordering:
+        hits = reserved._matches(path, line, classes)
+        assert any("order set" in n for n, _ in hits), \
+            "a row of the exclusion table is not reserved and must be: %s" % line.strip()[:70]
+    prose = ('make_handoff.py', '    "pcb-e1-dock": ["FABRICATION NOTES (E7, the dock strip, appendix 32.125)",')
+    assert not reserved._matches(*prose, classes), \
+        "the delegated order prose is back on the floor: %s" % prose[1].strip()[:70]

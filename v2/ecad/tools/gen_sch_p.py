@@ -97,7 +97,7 @@ r("R6", "1k", "PACK_P", "PACK_F"); c("C7", "100n", "PACK_F", "GND")             
 r("R7", "1k", "PACK_P", "VCC_F"); c("C8", "100n", "VCC_F", "GND")                                               # VCC, the secondary supply from the pack terminal (wakes a shut-down pack from the charger)
 r("R8", "100R", "GND", "SRP_F"); r("R9", "100R", "PACK_N", "SRN_F"); c("C9", "100n", "SRP_F", "SRN_F")          # the coulomb counter across the sense resistor
 r("R10", "2m 2512 2W (sense)", "GND", "PACK_N", "RS2512")                                                       # 25 A gives 50 mV, inside the counter's range
-part("J_TS", "Connector_Generic", "Conn_01x02", "cell thermistor (JST-PH 1x2): the 103AT in the block", "PH2", {"1": "TS1", "2": "GND"}); c("C10", "100n", "TS1", "GND")
+part("J_TS", "Connector_Generic", "Conn_01x02", "JST-PH 1x2 socket for the cell thermistor lead (the 10k NTC, a 103AT, sits in the cell block)", "PH2", {"1": "TS1", "2": "GND"}); c("C10", "100n", "TS1", "GND")
 for k, n in ((11, "TS2"), (12, "TS3"), (13, "TS4")): r("R%d" % k, "10k", n, "GND")                             # unused thermistor inputs held valid
 r("R14", "10k", "PRES", "GND"); r("R15", "10k", "DISP", "GND")                                                  # embedded pack: present; no LED display
 # --- the high-side protection: fuse, charge FET, discharge FET (common drain), gate networks
