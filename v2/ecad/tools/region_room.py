@@ -130,10 +130,10 @@ def main(argv):
     regions = d["regions"]; over = d.get("overflow", {})
     b = pcbnew.LoadBoard(a.board)
     # the packer's frame: x right from OX, y DOWN from OY, which is what the rectangles are written in
-    src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                            "gen_pcb_%s3.py" % stem.split("-")[1][0]), encoding="utf-8").read() if False else ""
+    letter = _letter_of(stem)
     ox, oy = 150.0, 110.0
-    for line in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen_pcb_b3.py"), encoding="utf-8"):
+    gen = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen_pcb_%s3.py" % letter)
+    for line in open(gen, encoding="utf-8"):
         if line.startswith("OX, OY = "):
             ox, oy = (float(v) for v in line.split("=")[1].split(","))
             break
@@ -142,7 +142,7 @@ def main(argv):
                pcbnew.ToMM(bb.GetRight()) - ox, oy - pcbnew.ToMM(bb.GetTop()))
     fixed = []
     for f in b.GetFootprints():
-        if not f.IsLocked() and f.GetReference() not in _fixed_refs():
+        if not f.IsLocked() and f.GetReference() not in _fixed_refs(letter):
             continue
         fb = f.GetBoundingBox(False, False)
         fixed.append((f.GetReference(), (pcbnew.ToMM(fb.GetLeft()) - ox, oy - pcbnew.ToMM(fb.GetBottom()),
@@ -211,11 +211,21 @@ def main(argv):
                          note="the room each region has to grow into, and what stops it")
 
 
-def _fixed_refs():
-    """The references `gen_pcb_b3.py` places at planned positions: they are the blockers a region must respect."""
+def _letter_of(stem):
+    """`pcb-b-compute` is board b. The board's own generator holds its frame and its fixed parts, and reading
+    another board's was fine only while this tool served one board (13 September 2026)."""
+    parts = stem.split("-")
+    return parts[1] if len(parts) > 1 else "b"
+
+
+def _fixed_refs(letter="b"):
+    """The references `gen_pcb_<x>3.py` places at planned positions: blockers a region must respect."""
     import re
-    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen_pcb_b3.py")
-    s = open(p, encoding="utf-8").read()
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen_pcb_%s3.py" % letter)
+    try:
+        s = open(p, encoding="utf-8").read()
+    except OSError:
+        return set()
     m = re.search(r"^FIXED = \{(.*?)\n\n", s, re.S | re.M)
     return set(re.findall(r'"([A-Za-z_0-9]+)":', m.group(1))) if m else set()
 

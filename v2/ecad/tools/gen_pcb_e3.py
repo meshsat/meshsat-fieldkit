@@ -104,6 +104,7 @@ RESERVED = set() if _osx.environ.get("BYPASS_SLOTS") == "0" else bypass_slots.re
 for _r in RESERVED: placed[_r] = board.FindFootprintByReference(_r)
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
+    regionfit.record(name, (x0, y0, x1, y1), back, len(refs), stem=os.path.splitext(os.path.basename(BOARD))[0])
     fps = []
     for ref in refs:
         fp = place(ref, 0, 0, back=back); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
