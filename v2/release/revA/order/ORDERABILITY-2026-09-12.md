@@ -17,18 +17,24 @@ against a need of five boards, and its price. A line is settled only if one of t
 - **HAND_FIT**: we do not buy it through JLCPCB, and `tools/jlc-handfit.txt` says where we do.
 - **BENCH_FITTED**: a header, test point or solder land that JLC places on nothing and we fit by hand.
 
-**455 rows. 406 settled: 351 certified, 40 hand-fit with a written purchase route, 15 bench-fitted.
-49 open.** The certified parts come to about **2,255 GBP for five of every board** at single-unit prices,
+**469 rows. 432 settled: 376 certified, 41 hand-fit with a written purchase route, 15 bench-fitted.
+37 open.** The certified parts come to about **2,690 GBP for five of every board** at single-unit prices,
 before assembly, shipping and VAT.
 
 | board | open rows | what they are |
 |---|---:|---|
-| A power | 17 | almost all the shipped folder being A22, four phases behind A24 |
-| B compute | 22 | the shipped folder is B16-QUOTE of 8 September, superseded by B19 |
-| C panel backer | 3 | the shipped folder is C7; C10 is routing |
-| D APRS | 3 | fixed at source today, waiting on the re-cut that is running |
-| E1 dock | 3 | the same |
+| A power | 5 | **A24 was cut at 18:10 and took A from 17 to 5.** All five are the same row nine times over: the SMA jacks, whose prose named the radio at the far end of the pigtail. Corrected in the generator; they clear on A's next re-finish |
+| B compute | 22 | the shipped folder is B16-QUOTE of 8 September, superseded by B19, which is held by owner decision 13 |
+| C panel backer | 3 | the shipped folder is C7. **C10 is at 0 hard and 1 unrouted**, its best ever, and that last connection needs an escape or a placement change at U3 pad 10 |
+| D APRS | 3 | fixed at source today; D's re-route is held by the PWR width question below |
+| E1 dock | 3 | fixed at source today, waiting on the re-cut that is running |
 | P pack BMS | 1 | the same |
+
+**A24 IS CUT (18:10 CEST):** hard 0, unrouted 0, `check_pcb_a` ALL PASS on 798 checks, `dc_drop` 12 of 12
+rails MET, impedance 3 of 3 pairs, `netlist_board` 2004 of 2004, `verify_deliverable` ALL PASS on 35 of 35.
+It carries owner ruling 10's parts, **C596319** on the twenty-two 10 uF 50 V and **C5156756** on the three
+100 V parts of the PoE stage's output, and **no copper moved to get them**: 5,212 tracks and vias, every
+zone's filled area and all 400 footprint positions identical across the change.
 
 ## The three reasons, in order of size
 
@@ -78,8 +84,13 @@ Found by reading every non-certified row rather than by trusting the count:
    at its real outline and quantity five. JLCPCB's parts API answers without a login and its PCB pricing
    path does not, and the runner never logs into JLCPCB by standing rule, so this number has to come from
    the ordering session on the laptop. Until it does, "too many layers" has no price in this record.
-4. **Three deliverables are being re-cut as this is written** (D10, E7, P3) and two more are not cut at
-   all (A24, C10).
+4. **D's re-route answers owner ruling 9 and the answer is not free.** Widening the PWR class to 1.2 mm on
+   the inner layers leaves **twelve connections open, and all twelve are power nets** (`/+5V_D8` six, GND
+   three, `/+3V3_D8` two, `/PCM_VDD` one) where D reached 0 and 0 at 0.5 mm. An arm at the old width is
+   running to prove the width is the cause rather than the tools; the result goes to the owner with the
+   number, because 1.2 mm was ruled and the board cannot route it.
+5. **Two deliverables are being re-cut as this is written** (E7, P3) and one is not cut at all (C10, one
+   connection short). **A24 is cut.**
 
 ## What I will do next, without being asked
 
