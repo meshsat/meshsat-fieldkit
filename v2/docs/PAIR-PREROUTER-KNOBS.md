@@ -83,6 +83,7 @@ guards. Each has a knob because each can cost pairs and the only way to know is 
 | `PAIR_UNMERGE` | 1 | a merge of two runs whose legs then fold is dropped and the runs laid one by one |
 | `PAIR_FAN_BACK` | 1.0 mm | how far a diving leg is pulled back from the station before the other leg's fan is laid |
 | `PAIR_CROSS_NET` | report | a laid pair sampled against a map that exempts its own two nets: `report` names the counterparty and the emission, `block` refuses the pair, `off` says nothing |
+| `PAIR_VIA_MODE` | class | the via the pair's own hops are laid with: `class` is the net class's via, `min` is the board's own via minimum, which is what the escape fan uses at fine pitch |
 
 **`PAIR_CROSS_NET` reports rather than blocks, and that default is a measurement.** The test asks a RASTER grown
 by the clearance plus half a leg, and the emitters deliberately relax that near a station (a direct leg runs pad
@@ -90,6 +91,15 @@ to pad past its neighbours' pads), so a cell it calls blocked is not yet a DRC v
 one of D10's five pairs and one of A's three, on boards whose DRC reads 0 hard. The pre-route DRC remains the
 authority on clearance; what this adds is the NAME of the counterparty and of the emission at the moment the pair
 is laid, which is what turned twelve silent DRC items on A into one line naming `/USB_WALL`.
+
+**`PAIR_VIA_MODE` exists because a 0.70 mm via pair cannot leave an 0.8 mm fan.** B19's DIFF100 class carries a
+0.70 mm via, so the pair's own two vias need 0.70 + 0.127 = 0.827 mm centre to centre, and the HDMI and Ethernet
+fans this board leaves from are on an 0.8 mm pitch. In the contention arms of 12 September that single arithmetic
+is **36 of the 74 failed attempts of a 48-pair pass**, every one reading "0.800 mm of 0.822" or nearer. It is
+decision 6's finding in the via domain: the part's pitch decides, and no amount of searching moves it. A class via
+size is a DEFAULT for new copper and not a bar the DRC holds a via to (the bar is the board's `m_ViasMinSize`,
+0.40 on B, which is what `escape.py` has laid at fine pitch since 5 September), so this is a router choice rather
+than a net class change, and it is a knob at today's behaviour until an arm says what it is worth.
 
 **A sixth knob is not a knob:** `legs_clear`'s entry region (the first and last 1.2 mm of a leg at an entry
 station) asks the pads-only map and then, where that map refuses, asks the GEOMETRY through `_nearest_edge`
