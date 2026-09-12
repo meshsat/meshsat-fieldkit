@@ -661,7 +661,7 @@ def _via_dia(t):
     """A via's diameter in mm. KiCad 9 asserts on PCB_VIA::GetWidth() with no layer (it can differ per layer on a
     blind via); every via this tool lays is a through via, so the front copper answers for all of them."""
     try: return mm(t.GetWidth(pcbnew.F_Cu))
-    except TypeError: return mm(t.GetWidth())
+    except Exception: return mm(t.GetWidth())   # SWIG raises TypeError on some builds and NotImplementedError on others
 
 
 def _pt_seg(px, py, x1, y1, x2, y2):
