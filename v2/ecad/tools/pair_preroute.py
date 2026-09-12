@@ -1616,7 +1616,7 @@ def main(a):
                         legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
                     else: ok_ = False
                 if ok_:   # and the two legs against each other, which isx_ above answers only for a crossing (12 September 2026)
-                    _need3 = clr_c + wid(pcbnew.F_Cu) - 0.005
+                    _need3 = min(clr_c + wid(pcbnew.F_Cu), 2.0 * abs(dof(pcbnew.F_Cu))) * 0.5   # a fold detector, as in legs_clear above
                     _segA = [(legs_[0][1], legs_[0][2]), (legs_[0][2], legs_[0][3])]
                     _segB = [(legs_[1][1], legs_[1][2]), (legs_[1][2], legs_[1][3])]
                     for _u in _segA:
@@ -1794,7 +1794,14 @@ def main(a):
                     # whole pair back for. The cause is the offset of a hairpin: `offset_polyline` removes the loop the inner
                     # leg makes, and what is left lies on the other leg. Judged here instead, the pair simply takes the next
                     # smoothing, which is what the candidate ladder below exists for.
-                    _need2 = clr_c + wid(L) - 0.005
+                    # The demand here is a FOLD detector, not a clearance test, and the difference cost thirteen of
+                    # B19's DIFF100 pairs when it was written as the latter (22 of 48 to 9 of 48, 12 September 2026).
+                    # A correctly coupled pair runs at exactly 2*dof apart, and on the inner-layer DIFF100 geometry that
+                    # is 0.257 against a class demand of 0.257: every wobble of a rasterised candidate then reads as a
+                    # violation and the whole ladder of smoothings is refused. A FOLD is not marginal, it is the inner
+                    # leg lying on the outer one at a twentieth of the pitch (A measured 0.038 and 0.060 mm), so this
+                    # asks for half the pair's own pitch and the class number is judged once, on the copper, below.
+                    _need2 = min(clr_c + wid(L), 2.0 * abs(dof(L))) * 0.5
                     _pA, _pB = _polys[pn], _polys[nn]
                     for _k in range(len(_pA) - 1):
                         _x1, _y1 = _pA[_k]; _x2, _y2 = _pA[_k + 1]
