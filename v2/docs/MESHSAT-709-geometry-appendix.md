@@ -5519,3 +5519,58 @@ The plans themselves were never the weak part, and this run is the evidence.
 planned corridor is and let the greedy pass run in that order. The pass already takes `PAIR_ORDER_FILE`, so it is
 a computation over `plan-*.json` and `conflict-*.npz` and one ordinary run. Written before the measurement: a
 contention-first order is worth ten or more of the forty, against the 8 of 48 the alphabet-and-span order lays.
+
+### 32.138 THE CONTINUATION ROUTE HAS NEVER ONCE BEEN ABLE TO WORK, and three reasons why (12 September 2026, 10:45 CEST; MESHSAT-862)
+
+C10's 60-pass route came back 0 hard and **11 unrouted**, the stub router closed none of the eleven, and the
+board was refused. The stage that exists for exactly that board is `cont_route`, one more pass of the router on
+the routed board, kept only if it improves. It did not run, and following why took three defects, each of which
+would have been enough on its own.
+
+**1. The threshold excluded the case it was written for.** `boards/c.json` declares `cont_route.max_opens: 6`
+and C had eleven. The number was A21's, carried across when the fifteen finish clones were collapsed. A stage
+that cannot make a board worse (it keeps the result only if the opens drop and the hard count stays zero) has
+no reason to carry a low bar: the only cost of trying is the clock. C is at 15 now, with the measurement as its
+written reason.
+
+**2. It ran on the stock jar under a clock, so it could not have kept anything it found.** `cont_route.sh`
+pinned `~/bin/freerouting-1.9.0.jar` by name. That jar writes its Specctra session **only when the whole job
+ends**; our build writes one after every pass, which is the entire reason a capped run is survivable (32.118).
+The stage is declared as **80 passes in 900 seconds** against a board whose 60 passes take four hours. The cap
+therefore binds on every board this set has, and on the stock jar a cut run leaves no session at all, so
+`cont_route` would have printed "no session, board kept" whatever the router achieved.
+
+**The same pin was in three more places, and this is the shell-side twin of 32.118's finding.** That entry
+found every RECORDER of a jar carrying its own default string, and fixed it with one function, `jar_in_use()`.
+The launchers were never looked at the same way: `route_one.sh` chose properly, while `cont_route.sh`,
+`route_part.sh` and `long_route.sh` each named the stock jar, and `route_pcb.sh` took
+`ls ~/bin/freerouting-*.jar | tail -1`, **which is 2.4.1 on a host that has it, launched with 1.9.0 arguments
+under whatever `java` is first on PATH**. Every one of them runs under a `timeout`. `tools/fr_jar.sh` is the one
+answer now, `cont_route.sh` and `route_part.sh` ask for the per-pass session as well, and two rules hold it: no
+shell file may name a jar or launch the router without it, and every capped launcher must ask for the per-pass
+session.
+
+**3. It exported a DSN with every plane removed.** `cont_route.sh` builds its own DSN from the routed board and
+keeps the zones named in `FR_PLANE_NETS` on the layers in `FR_POWER_LAYERS`. Nothing ever set them: `finish.sh`
+passed no environment, and `routeflow.py` puts the plane treatment in the ROUTE stage's environment only, then
+dispatches the finish with none. So every continuation on every board since the stage was written has offered
+the router a board with no plane at all, which makes it route each plane pin as a wire. On C that is GND on In1,
+the majority of the board's connections; on E it is five nets over two layers. The treatment is declared per
+board now, beside the threshold, and a test holds it equal to the route's own profile.
+
+**What this cost, stated honestly:** nothing that was released. The stage is an improvement pass that keeps a
+result only if it improves, so its silence cost opportunities, not boards. What it did cost is the reading of
+every finish that ended with a handful of opens, because the line "cont: no session, board kept" reads as the
+router having failed to improve the board, and what it actually recorded was a stage that could not run.
+
+**A24, at the same time, got to one gate item of 799 and it is a via the router abandoned.** The stub router
+closed **9 of its 10 opens**; `pair_match` meandered `USB_WALL_P` by 7.54 mm and all three ribbon pairs read
+within 1 mm (0.23, 0.13, 0.00); the board is **0 hard with 3 open**. `check_pcb_a` then refused it for one
+thing: the locked VBAT stitch via at (101.5, 100.5) sits in the In2 plane's OUTLINE and not in its FILL. The
+route laid `/PA_SLOPE` and `/PA_RT` across In2 within 0.48 to 0.58 mm of it, the fill retreated by its
+clearance, and the via's plane end ends **0.91 mm from the nearest VBAT copper**, with a 0.2 mm locked escape
+stub on its other end. That is precisely the case `stitch_prune.py` was written for on 11 September and never
+had a board to prove it on. Measured on a copy before turning it on: **1 locked via removed of 621 on 38 zones,
+0 left alone, hard 0 and unrouted 3 both unchanged**, and the gate's failure is gone. A declares it; the
+admission rule changes from "no board may" to "a board that declares it carries the number that justified it",
+which is what the old rule's own message asked for.
