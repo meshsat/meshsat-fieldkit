@@ -1881,6 +1881,28 @@ def main(a):
                 pts_ = [gr.xy(j, i) for i, j in smoothed[r_i]]
                 if merged and merged[-1][0] == run[0][0]: merged[-1][1].extend(pts_[1:] if pts_ and merged[-1][1] and pts_[0] == merged[-1][1][-1] else pts_)
                 else: merged.append((run[0][0], list(pts_)))
+            # 12 September 2026: what `legs_clear` judged is NOT what is laid. It tested each run's own offset polylines;
+            # the emission below offsets the MERGED polyline, and joining two runs end to end can make a corner neither
+            # of them had. A's /USB_D8 came out of here with its two legs 0.060 mm apart in ten places on copper that
+            # had passed every test. The merged geometry is tested for the same fold, and a merge that folds is dropped
+            # (the runs are then laid one by one, which is what the tool did before the merge was introduced).
+            def _folds(mg):
+                for li_, pts_ in mg:
+                    L_ = layers[li_]
+                    if len(pts_) < 2: continue
+                    _a2 = offset_polyline(pts_, dof(L_) * p_side); _b3 = offset_polyline(pts_, -dof(L_) * p_side)
+                    _nd = min(clr_c + wid(L_), 2.0 * abs(dof(L_))) * 0.5
+                    for _k in range(len(_a2) - 1):
+                        _x1, _y1 = _a2[_k]; _x2, _y2 = _a2[_k + 1]
+                        for _m in range(len(_b3) - 1):
+                            _x3, _y3 = _b3[_m]; _x4, _y4 = _b3[_m + 1]
+                            if max(_x3, _x4) < min(_x1, _x2) - _nd or min(_x3, _x4) > max(_x1, _x2) + _nd: continue
+                            if max(_y3, _y4) < min(_y1, _y2) - _nd or min(_y3, _y4) > max(_y1, _y2) + _nd: continue
+                            if _seg_dist(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4) < _nd: return True
+                return False
+            if len(merged) < len(runs) and _folds(merged):
+                merged = [(run[0][0], [gr.xy(j, i) for i, j in smoothed[r_i]]) for r_i, run in enumerate(runs)]
+                report.append("UNMERGE %s: joining the runs into one polyline folded the legs onto each other; laid run by run" % stem)
             runs = [[(li, 0, 0)] for li, _ in merged]; smoothed = [None] * len(merged)   # the loop below reads the layer from runs and the points from merged
             for r_i, run in enumerate(runs):
                 L = layers[run[0][0]]; pts = list(merged[r_i][1])
