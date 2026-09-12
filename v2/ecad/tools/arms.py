@@ -26,7 +26,23 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict, ledger
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
+# An arm's name is interpolated into a directory path that this file then removes with rmtree, so it is
+# a slug or it is refused (12 September 2026, when tier 2 of the control plane began writing specs: a
+# name is no longer always typed by hand, and "it has only ever been typed by hand" is not a guard).
+ARM_NAME = re.compile(r"^[a-z0-9][a-z0-9_]*$")
+ARM_NAME_MAX = 32
+
+
+def safe_name(n):
+    return isinstance(n, str) and bool(ARM_NAME.match(n)) and len(n) <= ARM_NAME_MAX
+
+
 PAIRS = re.compile(r"pair_preroute: (\d+) of (\d+) pairs laid")
+# The echo the pre-router prints before it lays anything: the knobs the PROCESS received. Tier 2b asked
+# for it on the first cycle it reviewed, because a pair count under an arm's knob proves nothing about
+# the knob unless something shows the knob arrived. A row whose arm knob is missing from this echo is
+# INFRA_FAIL here and can never be read as a measurement (12 September 2026).
+KNOBS = re.compile(r"pair_preroute: knobs this process received: (\{.*?\}) \|")
 SECS = re.compile(r"pair_preroute: seconds (\d+) total, (\d+) in the occupancy maps")
 
 
@@ -69,7 +85,7 @@ def run_arm(spec, arm, ecad, out_dir):
         if not os.path.exists(placed):
             row.update(error="no placed board at %s" % spec["placed"]); return row
         row["placed_md5"] = md5(placed)
-        laid = total = 0; secs = maps = 0; logs = []
+        laid = total = 0; secs = maps = 0; logs = []; seen = {}
         for i, ps in enumerate(spec["passes"], 1):
             shutil.copyfile(placed, board) if i == 1 else None   # pass 1 starts from the placed board; later passes read what the earlier laid
             env = dict(os.environ); env.update({k: str(v) for k, v in ps.get("env", {}).items()})
@@ -84,13 +100,34 @@ def run_arm(spec, arm, ecad, out_dir):
             if m: laid += int(m.group(1)); total += int(m.group(2))
             t = SECS.search(txt)
             if t: secs += int(t.group(1)); maps += int(t.group(2))
-        row.update(pairs=laid, of=total, seconds=secs, map_seconds=maps, logs=logs)
+            k = KNOBS.search(txt)
+            if k:
+                try: seen.update(json.loads(k.group(1)))
+                except ValueError: pass
+        row.update(pairs=laid, of=total, seconds=secs, map_seconds=maps, logs=logs, knobs_seen=seen)
+        err = knobs_arrived(arm.get("env") or {}, seen)
+        if err: row["error"] = err
     except subprocess.TimeoutExpired: row["error"] = "timed out"
     except Exception as e: row["error"] = "%s: %s" % (type(e).__name__, e)
     finally:
         row["wall_s"] = round(time.time() - t0, 1)
         shutil.rmtree(dst, ignore_errors=True)
     return row
+
+
+def knobs_arrived(want, seen):
+    """"" if every knob the arm asked for is in the tool's own echo, else why the row is not a measurement."""
+    want = {str(k): str(v) for k, v in (want or {}).items()}
+    if not want:
+        return ""
+    if not seen:
+        return ("the pre-router printed no knob echo, so nothing shows this arm's knobs reached it; that is a "
+                "tool version mismatch, not a measurement")
+    bad = {k: {"asked": v, "the tool saw": seen.get(k)} for k, v in want.items() if str(seen.get(k)) != v}
+    if bad:
+        return ("the arm's knobs did not reach the tool: %s. A pair count under a knob that never arrived is "
+                "not a measurement" % json.dumps(bad, sort_keys=True))
+    return ""
 
 
 def grade(row):
@@ -114,6 +151,14 @@ def main(argv):
     spec = json.load(open(a.spec))
     ecad = os.path.abspath(spec.get("ecad") or os.path.dirname(TOOLS))
     os.makedirs(a.out_dir, exist_ok=True)
+
+    unsafe = [x.get("name") for x in spec["arms"] if not safe_name(x.get("name"))]
+    if unsafe:
+        print("arms: refused, these names are not slugs and become directories this file removes: %s" % unsafe)
+        return verdict.write("arms", verdict.FAIL, counts={"unsafe_names": len(unsafe)}, denominator=len(spec["arms"]),
+                             evidence=[str(u) for u in unsafe],
+                             note="an arm name is a lowercase slug of at most %d characters" % ARM_NAME_MAX,
+                             out_dir=a.out_dir)
 
     missing = [x.get("name", "?") for x in spec["arms"] if not x.get("predict", {}).get("value")]
     if missing:
