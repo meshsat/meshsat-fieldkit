@@ -5397,3 +5397,30 @@ CSD18510Q5B FETs (a 7.19 x 5.59 mm courtyard) under the front end's resistor row
 12 x 4 mm, which the packer happened never to fill. `tools/tests/test_region_overlap.py` reads the `REGIONS`
 table out of every placement generator and refuses any two rectangles on the same side that intersect; it names
 both of A's on the pre-fix tree and it knows that a front region and a back region may share a rectangle.
+
+
+### 32.136 Three pairs do not fit one 2x13, measured three ways, and the wall pair takes a ribbon of its own (12 September 2026, 04:00 CEST; MESHSAT-862)
+
+Decision 6 left this half open: `J_AB1` carries three differential pairs and a 2x13 has two end rows. With the
+pre-router honest about its own copper (32.135) the question answers itself, and all three orders were run on one
+placed board:
+
+| the order the pairs were laid in | result |
+|---|---|
+| `USB_WALL` first (what `boards/a.json` declared) | 3 of 3, and `USB_D8`'s leg lies **0.00 mm** from `USB_WALL`'s: twelve DRC items |
+| `USB_D8` first | 2 of 3: `USB_WALL` has no corridor out of `J_AB1` |
+| longest first | 2 of 3, the same failure |
+
+**The middle pair's only escape is the 1.14 mm channel between the columns, and that channel EXITS AT THE SAME
+END the end-row pair leaves from.** One lane, two pairs. No pin map, slack, layer set or search budget changes
+it, and the 3 of 3 of 32.134 was only ever possible because the tool could lay copper on copper.
+
+**So the wall pair takes a ribbon of its own.** `J_AB2` is a 2x5 IDC on both A and B: `USB_WALL_P` and
+`USB_WALL_N` on pins 1 and 2, which is an END row, and eight grounds behind them. `J_AB1` keeps `USB_D8` on 1/2
+and `USB_E6` on 25/26 and its pins 5 and 6 become GND. On A it sits at case (100, -25) and on B at (126, -70) on
+the underside; the two headers are joined by a cable, so they need no common XY. `check_contracts.py` carries the
+J_AB2 map contract and a check that its pair is on the end row, `pair-header-allow.txt` has lost all three J_AB1
+entries, and `tools/tests/test_pair_headers.py` now passes on A without an exception.
+
+**The first position was refused by A's own gate**, which is the system working: (113, -62) sits inside the rod
+nut keep-out at (110.5, -73), and `check_pcb_a` said so before anything was routed.
