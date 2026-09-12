@@ -177,6 +177,51 @@ REGIONS += [
  ("RBX",   (96, -25, 126, 27), ["U23", "C56", "R36", "R37", "R38", "R39", "C57", "C58", "U33", "U24", "C61", "R43", "R44", "R45", "R46", "C62", "C63", "U18", "R40", "C59", "C60", "R41", "R42", "U15", "U16", "U17", "R24", "C43", "C44", "R26", "C48", "C49", "R27", "C50", "C51", "U21", "U22"], False),
 ]
 GAP = 1.2
+# Every rule-area keep-out the mechanical generator drew, as a rectangle in the packer's own frame. The
+# slots, the standoffs and the pass-through holes all declare one, so the packer needs no new data: it
+# needed to look. Read once, after the board is loaded.
+_OBSTACLES = []
+# How large a keep-out may be and still be a thing a part steps around. The board-wide edge band is a
+# rule area too, and its BOUNDING BOX is the whole board: taking every rule area made every unit collide,
+# the loop wrapped 64 times, and the packer piled parts on top of each other (851 hard against 20, with
+# 199 courtyard overlaps, measured 12 September 2026). A bounding box is the wrong shape for an annular
+# band, so anything that large is not an obstacle here, and the cut is printed rather than assumed.
+OBSTACLE_MAX_MM = 30.0
+
+
+def _load_obstacles(board):
+    """Every mechanical feature a placed part must step around: the drilled holes and slots, and the
+    small named keep-outs drawn around them. NOT the board-wide bands."""
+    del _OBSTACLES[:]
+    dropped = []
+    for fp in board.GetFootprints():
+        for pd in fp.Pads():
+            if pd.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH:
+                continue
+            bb = pd.GetBoundingBox()
+            _OBSTACLES.append((pcbnew.ToMM(bb.GetLeft()) - OX - GAP, OY - pcbnew.ToMM(bb.GetBottom()) - GAP,
+                               pcbnew.ToMM(bb.GetRight()) - OX + GAP, OY - pcbnew.ToMM(bb.GetTop()) + GAP))
+    for z in board.Zones():
+        if not z.GetIsRuleArea():
+            continue
+        bb = z.GetBoundingBox()
+        w, h = pcbnew.ToMM(bb.GetWidth()), pcbnew.ToMM(bb.GetHeight())
+        if w > OBSTACLE_MAX_MM or h > OBSTACLE_MAX_MM:
+            dropped.append((z.GetZoneName() or "(unnamed)", w, h)); continue
+        _OBSTACLES.append((pcbnew.ToMM(bb.GetLeft()) - OX, OY - pcbnew.ToMM(bb.GetBottom()),
+                           pcbnew.ToMM(bb.GetRight()) - OX, OY - pcbnew.ToMM(bb.GetTop())))
+    for nm, w, h in dropped:
+        print("packer: not an obstacle, %.0f x %.0f mm is a band and not a feature: %s" % (w, h, nm))
+
+
+def _obstacle_hit(cx, cy, w, h):
+    """The right edge of the first keep-out this unit's box overlaps, or None. The box is (cx, cy) at its
+    top left, growing right and DOWN in the packer's frame, which is why cy - h is its floor."""
+    ax0, ay0, ax1, ay1 = cx, cy - h, cx + w, cy
+    for ox0, oy0, ox1, oy1 in _OBSTACLES:
+        if ax0 < ox1 and ox0 < ax1 and ay0 < oy1 and oy0 < ay1:
+            return ox1
+    return None
 # 12 September 2026 (appendix 32.146): 30 of 46 leg refusals on B19's DIFF100 pass sit within 2 mm of one of the
 # pair's OWN pads, and 22 of those are at the pairs' own series coupling capacitors, which this packer places as
 # couples (the two parts stacked at GAP). PLACE_COUPLE_GAP opens that one gap without touching the rest of the
@@ -225,6 +270,8 @@ for _r, _nn in _twopad.items():
 print("placement: %d differential-pair couples packed side by side" % (len(COUPLE) // 2))
 
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
+_load_obstacles(board)
+print("packer: %d keep-out(s) on the board are obstacles to the shelf packer" % len(_OBSTACLES))
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:
@@ -261,6 +308,20 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
     for members, w, h, fine in units:
         if cx + w > x1 + 0.01:
             cx = x0; cy -= rowh; rowh = 0.0
+        # THE PACKER HAD NO OBSTACLE AWARENESS AT ALL and filled its rectangle regardless of what stood
+        # inside it (12 September 2026). The QMX strap slots each declare a keep-out 0.8 mm larger than
+        # themselves, which stops the router and the escapes and stopped nothing here: C410, C411, R500
+        # and R487 were packed straight on top of S_QMX3 and S_QMX4, which is nine copper_edge_clearance
+        # and five solder_mask_bridge on B19's placed board. A comment saying a pocket is clear of the
+        # slots is not a check (appendix 32.149). The unit steps past an obstacle it meets, and wraps if
+        # the step runs it out of the region.
+        for _guard in range(64):
+            hit = _obstacle_hit(cx, cy, w, h)
+            if hit is None:
+                break
+            cx = hit + GAP                      # past its right edge, with the packer's own gap
+            if cx + w > x1 + 0.01:
+                cx = x0; cy -= rowh; rowh = 0.0
         dy = 0.0
         for ref, fp, hi in members:
             centre_on(fp, cx + w / 2, cy - dy - hi / 2); placed[ref] = fp; dy += hi
