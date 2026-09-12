@@ -64,7 +64,13 @@ def place(ref, x, y, rot=0.0, back=False):
 #     cards extending south (S2's NVMe along +X at the column's south end because the 3052 5G card takes the height); J_AB1 flipped over A22's header;
 #     the bay and band connectors (KiCad horizontal receptacles open toward local +y, the Molex HDMI toward local +x; a positive rotation is counter-clockwise); the HDMI receptacle at the south-east corner opening south, its switches at the north-east;
 #     the fan headers west of each module; the flashing USB-C receptacles on the south edge opening south (rot 0)
-FIXED = {"U30A": (-89.5, 57.5, 0), "U30B": (-55.5, 57.5, 0), "U31A": (-19.5, 57.5, 0), "U31B": (14.5, 57.5, 0), "U32A": (50.5, 57.5, 0), "U32B": (84.5, 57.5, 0),
+FIXED = {"J_54V": (-126.3, -84.0, 0),   # 13 September 2026: the 54 V PoE inlet is a THROUGH-HOLE JST-VH and
+         # the packer put it at y -76.2 to -66.6, astride the southern edge of IOCA, the control-plane pocket
+         # on the BACK. Its two pins came out on B.Cu inside that pocket and landed on R473 (/CANT_B and
+         # /CANL_B), R495 (GND) and C460 (/CANT_A): seven of board B's twelve remaining hard violations, and
+         # decision 11's defect in a second place. A through-hole part whose pins reach another side's pocket
+         # is placed, not packed, so it sits at y -88.8 to -79.2 now, inside WMIDS and clear of IOCA's -76.
+         "U30A": (-89.5, 57.5, 0), "U30B": (-55.5, 57.5, 0), "U31A": (-19.5, 57.5, 0), "U31B": (14.5, 57.5, 0), "U32A": (50.5, 57.5, 0), "U32B": (84.5, 57.5, 0),
          # M.2 sockets: place() centres the socket-plus-card box, so the target sits 13.65 (2230), 19.65 (2242) or 24.65 (3052) mm south of the socket body centre at Y 25
          "J_M2N1": (-85, 5.35, 0), "J_M2C1": (-57, 11.35, 0), "J_M2C2": (-20, 0.35, 0), "J_M2N2": (-9.35, -85, 90), "J_M2N3": (48, 5.35, 0), "J_M2C3": (79, 11.35, 0),
          "J_SIM1": (4.5, 22, 0), "J_SIM2": (4.5, 1, 0),
@@ -213,7 +219,7 @@ REGIONS += [
  ("GAP12", (-50, 33, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
  ("GAP23", (19, 33, 44, 97), ["U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71"], False),
  ("BATT",  (-134, -65, -106, -40), ["BT1"], False),
- ("WMIDS", (-152, -97, -116, -66), ["U35", "D1", "D2", "J_54V", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
+ ("WMIDS", (-156, -97, -116, -66), ["U35", "D1", "D2", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
  ("NEX",   (96, 78, 123, 82), ["R14", "R15", "R16", "C37", "C38"], False),   # B17 (8 Sep 2026, 32.65): the two HDMI switches U3 and U4 are FIXED at 16 mm pitch above this strip (9.6 mm in the packed row collided their escape fans)
  ("SEX",   (96, -85, 112, -78), ["F2", "C39"], False),
  ("SEXB",  (96, -85, 112, -78), ["R17", "R18", "R19", "R20"], True),
@@ -288,6 +294,9 @@ def _obstacle_hit(cx, cy, w, h):
 # experiment with a number owed, not a setting: a placement change moves every part in the region, so an arm that
 # changes it is compared as one placement against another and never as a knob with a value (32.109).
 COUPLE_GAP = float(os.environ.get("PLACE_COUPLE_GAP", GAP))
+# PLACE_PTH_OBSTACLE: a through-hole pad of a part already placed becomes an obstacle to the regions
+# packed after it, on either side. Measured, not assumed: see the note in the packing loop.
+PTH_OBSTACLE = os.environ.get("PLACE_PTH_OBSTACLE", "0") not in ("0", "")
 # 10 September 2026: the room the packer leaves around a fine-pitch part is a knob, because place_audit's own envelope
 # (2.2 mm plus 0.12 per pad on a side) wants about 5 mm at a 99-pad QFN and this gives 1.6, which is why B19's audit
 # reports a third of the pads of U301, U201 and U101 with no escape at all. PLACE_FINE_MARGIN measures the trade against
@@ -391,6 +400,19 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
         for ref, fp, hi in members:
             centre_on(fp, cx + w / 2, cy - dy - hi / 2); placed[ref] = fp; dy += hi
         cx += w; rowh = max(rowh, h)
+        # A THROUGH-HOLE PAD OF A PART THIS LOOP HAS JUST PLACED occupies the OTHER side too, and the next
+        # region on that side has to step around it. Measured on 12 September as a static obstacle list built
+        # before the packing it took the board from 6 hard violations to 107, because a shelf packer with a
+        # hundred new obstacles inside regions that already overflowed by up to 64 mm has nowhere to step.
+        # With the regions sized (owner ruling 13, 13 September) the room exists, so it is measured again, one
+        # variable, behind a knob that is OFF until the number says otherwise.
+        if PTH_OBSTACLE:
+            for _ref, _fp, _hi in members:
+                for _pd in _fp.Pads():
+                    if _pd.GetAttribute() not in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH): continue
+                    _bb = _pd.GetBoundingBox()
+                    _OBSTACLES.append((pcbnew.ToMM(_bb.GetLeft()) - OX - GAP, OY - pcbnew.ToMM(_bb.GetBottom()) - GAP,
+                                       pcbnew.ToMM(_bb.GetRight()) - OX + GAP, OY - pcbnew.ToMM(_bb.GetTop()) + GAP))
     if cy - rowh < y0 - 0.01: regionfit.note(name, y0 - (cy - rowh))
 # A THROUGH-HOLE PART OCCUPIES BOTH SIDES, and this is a REPORT because making it a packer obstacle was
 # measured and made the board far worse (12 September 2026). The region rule exempts two regions on
