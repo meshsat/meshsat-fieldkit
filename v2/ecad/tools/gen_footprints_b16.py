@@ -143,38 +143,54 @@ qfp_ep("TQFP-128_14x14mm_P0.4mm", "TQFP-128_14x14mm_P0.4mm_EP10.0", 10.0)
 #     checks it: both are generated here from the drawings so the claim is the drawing.
 def rks0020a():
     # SLASEP7A drawing 4222490/B: body 2.5 x 4.5, 0.5 mm pitch, exposed thermal pad 1.0 x 3.0, land pattern 20X (0.6) x (0.24),
-    # 16X (0.5), overall (2.3) x (4.3), three 0.2 mm vias in the pad at y 0 and +-1.25. Pin 1 top left, counter-clockwise seen
-    # from the top: 1 and 20 on the top short side, 2 to 9 down the left, 10 and 11 on the bottom short side, 12 to 19 up the right.
+    # 16X (0.5), three 0.2 mm vias in the pad at y 0 and +-1.25. Pin 1 top left, counter-clockwise seen from the top: 1 and 20
+    # on the top short side, 2 to 9 down the left, 10 and 11 on the bottom short side, 12 to 19 up the right.
+    #
+    # CORRECTED 12 September 2026. **A TI land pattern example dimensions CENTRELINE TO CENTRELINE, not overall**, and the
+    # first draft read (2.3) and (4.3) as outer extents. That pulled every land 0.3 mm inboard: the side lands ended 0.1 mm
+    # INSIDE the body edge, where there is no terminal to solder to, and sat 0.05 mm from the thermal pad, which is a
+    # clearance violation on every instance. B19's placed board carried 26 hard DRC items on each of its three TMUXHS4212s
+    # and nothing had ever read them (appendix 32.149). The dimensions are between the dash-dot centrelines of the two
+    # columns and of the two end rows, so the lands sit at x +-1.15 and y +-2.15, and the cross-check that says this is
+    # right is that every land then extends exactly 0.2 mm beyond the body edge on both axes, the same 0.2 mm as the
+    # RSE0010A below.
     name = "Texas_RKS0020A_VQFN-20_2.5x4.5mm"
-    body = head(name, "TI RKS0020A VQFN-20 2.5 x 4.5 mm, 0.5 mm pitch, exposed pad 1.0 x 3.0 (pad 21); land pattern of SLASEP7A drawing 4222490/B", "VQFN-20 RKS TMUXHS4212 Texas", -3.2, 3.2)
+    body = head(name, "TI RKS0020A VQFN-20 2.5 x 4.5 mm, 0.5 mm pitch, exposed pad 1.0 x 3.0 (pad 21); land pattern of SLASEP7A drawing 4222490/B, dimensions read centreline to centreline", "VQFN-20 RKS TMUXHS4212 Texas", -3.5, 3.5)
     n = 0
-    body += smd(1, -0.25, -1.85, 0.24, 0.6) + smd(20, 0.25, -1.85, 0.24, 0.6); n += 2
-    body += smd(10, -0.25, 1.85, 0.24, 0.6) + smd(11, 0.25, 1.85, 0.24, 0.6); n += 2
+    body += smd(1, -0.5, -2.15, 0.24, 0.6) + smd(20, 0.5, -2.15, 0.24, 0.6); n += 2
+    body += smd(10, -0.5, 2.15, 0.24, 0.6) + smd(11, 0.5, 2.15, 0.24, 0.6); n += 2
     for k in range(8):
-        body += smd(2 + k, -0.85, -1.75 + 0.5 * k, 0.6, 0.24); n += 1
-        body += smd(12 + k, 0.85, 1.75 - 0.5 * k, 0.6, 0.24); n += 1
+        body += smd(2 + k, -1.15, -1.75 + 0.5 * k, 0.6, 0.24); n += 1
+        body += smd(12 + k, 1.15, 1.75 - 0.5 * k, 0.6, 0.24); n += 1
     body += '\t(pad "21" smd rect (at 0 0) (size 1.00 3.00) (layers "F.Cu" "F.Mask"))\n'; n += 1
     for y in (-1.05, 0.0, 1.05):                      # paste in three windows, about 64 percent of the pad
         body += '\t(pad "" smd rect (at 0 %.3f) (size 0.80 0.80) (layers "F.Paste"))\n' % y; n += 1
-    body += rect(-1.25, -2.25, 1.25, 2.25, "F.Fab") + rect(-1.55, -2.55, 1.55, 2.55, "F.CrtYd", 0.05)
-    body += line(-1.25, -2.25, 1.25, -2.25, "F.SilkS") + line(-1.25, 2.25, 1.25, 2.25, "F.SilkS") + circ(-1.45, -2.45, 0.15, "F.SilkS")
+    body += rect(-1.25, -2.25, 1.25, 2.25, "F.Fab") + rect(-1.70, -2.70, 1.70, 2.70, "F.CrtYd", 0.05)
+    body += line(-1.25, -2.25, 1.25, -2.25, "F.SilkS") + line(-1.25, 2.25, 1.25, 2.25, "F.SilkS") + circ(-1.60, -2.60, 0.15, "F.SilkS")
     write(name, body, n)
 rks0020a()
 
 def rse0010a():
     # SCDS277C drawing 4220307/A: body 1.5 x 2.0, 0.5 mm pitch, no thermal pad. Land 8X (0.55) long on the sides with the four outer
-    # pads (1, 4, 6, 9) 0.25 wide and the four inner ones (2, 3, 7, 8) 0.2 wide, pins 5 and 10 0.3 x 0.6 on the short sides, overall
-    # (1.35) x (1.8). Pin 1 top left, 2 to 4 down the left, 5 bottom centre, 6 to 9 up the right, 10 top centre.
+    # pads (1, 4, 6, 9) 0.25 wide and the four inner ones (2, 3, 7, 8) 0.2 wide, pins 5 and 10 0.3 x 0.6 on the short sides.
+    # Pin 1 top left, 2 to 4 down the left, 5 bottom centre, 6 to 9 up the right, 10 top centre.
+    #
+    # CORRECTED 12 September 2026, the same error as the RKS0020A above and found the same way. (1.35) and (1.8) are
+    # CENTRELINE TO CENTRELINE, not overall: (1.35) is between the two side columns' dash-dot lines and (1.8) between the
+    # two end pads'. Read as outer extents they put the side lands at x +-0.4 and the end lands at y +-0.6, which makes the
+    # side lands OVERLAP the end lands by 0.025 mm in eight places. **A land whose own pads overlap makes every instance
+    # unbuildable**, and three of these sit on B19. `tests/test_footprint_pads.py` is the rule that would have caught it on
+    # 9 September: two pads with different numbers may not overlap, checked over the whole generated library.
     name = "Texas_RSE0010A_UQFN-10_1.5x2mm"
-    body = head(name, "TI RSE0010A UQFN-10 1.5 x 2.0 mm, 0.5 mm pitch, no thermal pad; land pattern of SCDS277C drawing 4220307/A", "UQFN-10 RSE TS3USB221A Texas", -1.9, 1.9)
+    body = head(name, "TI RSE0010A UQFN-10 1.5 x 2.0 mm, 0.5 mm pitch, no thermal pad; land pattern of SCDS277C drawing 4220307/A, dimensions read centreline to centreline", "UQFN-10 RSE TS3USB221A Texas", -2.1, 2.1)
     n = 0
     for k in range(4):
         w = 0.25 if k in (0, 3) else 0.2
-        body += smd(1 + k, -0.4, -0.75 + 0.5 * k, 0.55, w); n += 1
-        body += smd(6 + k, 0.4, 0.75 - 0.5 * k, 0.55, w); n += 1
-    body += smd(5, 0.0, 0.6, 0.3, 0.6) + smd(10, 0.0, -0.6, 0.3, 0.6); n += 2
-    body += rect(-0.75, -1.0, 0.75, 1.0, "F.Fab") + rect(-1.05, -1.3, 1.05, 1.3, "F.CrtYd", 0.05)
-    body += line(-0.75, -1.0, 0.75, -1.0, "F.SilkS") + line(-0.75, 1.0, 0.75, 1.0, "F.SilkS") + circ(-0.95, -1.2, 0.12, "F.SilkS")
+        body += smd(1 + k, -0.675, -0.75 + 0.5 * k, 0.55, w); n += 1
+        body += smd(6 + k, 0.675, 0.75 - 0.5 * k, 0.55, w); n += 1
+    body += smd(5, 0.0, 0.9, 0.3, 0.6) + smd(10, 0.0, -0.9, 0.3, 0.6); n += 2
+    body += rect(-0.75, -1.0, 0.75, 1.0, "F.Fab") + rect(-1.20, -1.45, 1.20, 1.45, "F.CrtYd", 0.05)
+    body += line(-0.75, -1.0, 0.75, -1.0, "F.SilkS") + line(-0.75, 1.0, 0.75, 1.0, "F.SilkS") + circ(-1.10, -1.35, 0.12, "F.SilkS")
     write(name, body, n)
 rse0010a()
 
