@@ -60,3 +60,43 @@ def t_the_rule_reads_a_real_table():
     """A rule that silently finds no regions passes on anything; this one says how many it read."""
     total = sum(len(_regions(f)) for f in os.listdir(TOOLS) if re.match(r"gen_pcb_\w+3\.py$", f))
     assert total >= 20, "only %d region(s) parsed out of the placement generators; the parser has drifted" % total
+
+
+def t_the_packer_reads_the_boards_keep_outs():
+    """A comment saying a pocket is clear of the slots is not a check (MESHSAT-862, 12 September 2026).
+
+    `gen_pcb_b3.py`'s shelf packer filled its region rectangle regardless of what stood inside it, and
+    the QMX strap slots each declare a keep-out 0.8 mm larger than themselves, which stops the router and
+    the escapes and stopped nothing here: C410, C411, R500 and R487 were packed straight onto S_QMX3 and
+    S_QMX4. That is nine copper_edge_clearance and five solder_mask_bridge on B19's placed board, and the
+    comment beside the region says the pocket is clear of its four strap slots.
+    """
+    import os as _os
+    TOOLS_ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    src = open(_os.path.join(TOOLS_, "gen_pcb_b3.py"), errors="replace").read()
+    for want in ("_load_obstacles(board)", "_obstacle_hit(", "GetIsRuleArea()"):
+        if want not in src:
+            raise AssertionError("the packer no longer reads the board's keep-outs: %s missing" % want)
+    body = src[src.index("for members, w, h, fine in units:"):]
+    if "_obstacle_hit(" not in body[:1200]:
+        raise AssertionError("the packing loop does not test a unit against the obstacles before placing it")
+
+
+def t_a_band_is_not_a_packer_obstacle():
+    """A bounding box is the wrong shape for an annular keep-out (MESHSAT-862, 12 September 2026).
+
+    The first version of the packer's obstacle list took every rule area on the board. The edge band is
+    one, and its bounding box is the whole board, so every unit collided, the step-and-wrap loop ran to
+    its guard, and the packer piled parts on top of each other: 851 hard violations against 20, with 199
+    courtyard overlaps where there had been none. The list is the drilled holes and slots plus the small
+    named keep-outs, and anything larger is printed as dropped rather than silently included.
+    """
+    import os as _os
+    TOOLS_ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    src = open(_os.path.join(TOOLS_, "gen_pcb_b3.py"), errors="replace").read()
+    if "OBSTACLE_MAX_MM" not in src:
+        raise AssertionError("the packer has no size cut, so a board-wide band can be an obstacle again")
+    if "PAD_ATTRIB_NPTH" not in src:
+        raise AssertionError("the packer no longer reads the drilled holes and slots")
+    if "not an obstacle" not in src:
+        raise AssertionError("a dropped keep-out is not reported, so the cut is invisible")
