@@ -17,7 +17,7 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^USB-C 2\.0 receptacle", "TYPE-C-31-M-12"): "C165948", (r"^BC847BS", "SOT-363"): "C8653",
  (r"^panel ribbon", "IDC-Header_2x10_P2.54mm_Vertical_SMD"): "C54803514", (r"^e-paper module lead", "PinHeader_1x08_P2.54mm_Vertical_SMD"): "C41417365",   # C5 underside SMD connectors (research note m, 4 Sep)
  # matched by the 3 Sep 2026 ordering session on PCB-D (ORDER-LOG.md section 2); the XAL6030 inductor has no JLC equivalent and is bench-fitted
- (r"^TPS61089", "VQFN-RNR0011A"): "C165129", (r"^22u (10|25)V X7R 1210", "C_1210"): "C2918511", (r"^301k", "R_0603"): "C2933194",
+ (r"^TPS61089", "VQFN-RNR0011A"): "C165129", (r"^22u (10|25)V( X7R)? 1210", "C_1210"): "C2918511", (r"^301k", "R_0603"): "C2933194",
  (r"^17\.4k", "R_0603"): "C304711", (r"^20k 1%", "R_0603"): "C4184", (r"^105k", "R_0603"): "C2933128", (r"^100k 1%", "R_0603"): "C25803",
 
  # --- respin values, 4 Sep 2026: every code below was read off its own JLCPCB part page (research notes in the session scratchpad,
@@ -56,6 +56,14 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^47n$", "C_0603"): "C1622",
  (r"^470n 25V$", "C_0603"): "C1623",
  (r"^2\.2u$", "C_0603"): "C57895",
+ # 12 September 2026 (A24): filled from JLCPCB's own catalogue, each the highest-stock part of its value in the land
+ # the board draws, read on that date. A rating ABOVE the one asked for is taken where the exact rating is scarce:
+ # never worse electrically, and it is what the stock says can actually be bought.
+ (r"^3\.3u$", "C_0805"): "C7393948",       # CCTC TCC0805X7R335K250FT, 25 V X7R, 194,376 in stock; C18 sits on REGN, the BQ25731's 6 V LDO
+ (r"^10u 35V 1210", "C_1210"): "C596319",  # YAGEO CC1210KKX7R9BB106, 10 uF 50 V X7R, 91,532 in stock: the 35 V part is a three-piece shelf at JLC, the 50 V one is not
+ (r"^220n$", "C_0603"): "C344195",         # CCTC TCC0603X7R224K500CT, 50 V X7R, 1,342,752 in stock (C94 on the TPS25740A DVDD)
+ (r"^330p$", "C_0603"): "C1664",           # Samsung CL10C331JB8NNNC, C0G 50 V, a BASIC part with a million in stock: the USB-C CC line caps want C0G
+ (r"^SMBJ18A", "D_SMB"): "C151256",        # Littelfuse SMBJ18A, DO-214AA, 7,993 in stock (D4, the VBUS clamp at the outlet)
  (r"^4\.7u$", "C_0805"): "C1779",
  (r"^4\.7u 25V$", "C_1206"): "C132170",   # 50 V part, covers both 1206 4.7u lines
  (r"^4\.7u 50V$", "C_1206"): "C132170",
