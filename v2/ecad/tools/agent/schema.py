@@ -56,11 +56,17 @@ BASIS_KNOBS = {
 }
 
 
+# The files a knob may be read from. ONE list, shared by known_knobs and knob_types, after tier 2b
+# pointed out that two hard-coded lists drifting apart would type a knob "unknown" and silently exempt
+# it from the flag rule, which is the shape of the hard-coded net list that cost A24 two closures.
+KNOB_FILES = ("pair_preroute.py", "gen_pcb_b3.py", "pairsearch.py")
+
+
 def known_knobs(tools=TOOLS):
     """Every environment name the tools actually read. The source is the source, never the document."""
     pat = re.compile(r'(?:os\.environ\.get|os\.getenv)\(\s*"([A-Z][A-Z_0-9]*)"|os\.environ\[\s*"([A-Z][A-Z_0-9]*)"\s*\]')
     out = set()
-    for f in ("pair_preroute.py", "gen_pcb_b3.py", "pairsearch.py"):
+    for f in KNOB_FILES:
         p = os.path.join(tools, f)
         if not os.path.exists(p):
             continue
@@ -80,8 +86,8 @@ def knob_types(tools=TOOLS):
     """
     out = {}
     pat = re.compile(r'(?P<pre>[A-Za-z_]*\s*\(?\s*)?os\.environ\.get\(\s*"(?P<name>[A-Z][A-Z_0-9]*)"'
-                     r"(?:\s*,\s*(?P<dflt>\"[^\"]*\"|'[^']*'))?\s*\)(?P<post>[^\n#]*)(?:#\s*(?P<why>.*))?")
-    for f in ("pair_preroute.py", "gen_pcb_b3.py", "pairsearch.py"):
+                     r"(?:\s*,\s*(?P<dflt>[^)]*?))?\s*\)(?P<post>[^\n#]*)(?:#\s*(?P<why>.*))?")
+    for f in KNOB_FILES:
         path = os.path.join(tools, f)
         if not os.path.exists(path):
             continue
@@ -101,7 +107,8 @@ def knob_types(tools=TOOLS):
             else:
                 kind = "string"
             d = (m.group("dflt") or "").strip("\"'")
-            out[m.group("name")] = {"type": kind, "default": d, "note": (m.group("why") or "").strip()[:120]}
+            out[m.group("name")] = {"type": kind, "default": d, "file": f,
+                                    "note": (m.group("why") or "").strip()[:120]}
     return out
 
 
@@ -164,9 +171,14 @@ def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_r
                 # an automated tier 2 wrote for board B did exactly this: PAIR_OWN_CLEAR=0.09, reasoned
                 # about in millimetres, read by the tool as a boolean (12 September 2026).
                 t = (types.get(k) or {}).get("type", "")
-                if t.startswith("flag") and str(v).strip() not in ("0", "1", "True", "False", "true", "false"):
+                # ONLY "0" and "1". Tier 2b found the hole the first version left: the tools read a flag as
+                # `!= "0"`, so `false`, `False`, `off` and `no` all arrive ON, and those are the most natural
+                # ways to write OFF. A rule that admits the natural spelling of the thing it forbids is not a
+                # rule. Python booleans are refused too, because `str(False)` is "False", which is ON.
+                if t.startswith("flag") and str(v).strip() not in ("0", "1"):
                     errs.append("%s: %s is a FLAG the tool reads as `!= \"0\"`, so %r sets it ON, which is %s. "
-                                "A flag takes 1 or 0. If you meant a threshold, this is not the knob for it"
+                                "A flag takes the string 1 or the string 0 and nothing else: false, False, off "
+                                "and no all arrive ON. If you meant a threshold, this is not the knob for it"
                                 % (tag, k, v, "its default" if (types.get(k) or {}).get("default") != "0"
                                    else "the opposite of its default"))
         p = arm.get("predict")

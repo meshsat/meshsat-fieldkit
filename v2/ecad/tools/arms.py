@@ -115,19 +115,27 @@ def run_arm(spec, arm, ecad, out_dir):
         # laid (appendix 32.135), and here that judgement is part of the measurement rather than a later
         # surprise. A board whose DRC cannot be read is UNMEASURED, never assumed clean.
         if not row.get("error"):
+            row["pass_s"] = round(time.time() - t0, 1)      # the pass alone, comparable with every earlier row
+            _t = time.time()
             row.update(_drc_of(board, dst, out_dir, name))
+            row["drc_s"] = round(time.time() - _t, 1)
     except subprocess.TimeoutExpired: row["error"] = "timed out"
     except Exception as e: row["error"] = "%s: %s" % (type(e).__name__, e)
     finally:
-        row["wall_s"] = round(time.time() - t0, 1)
+        row["wall_s"] = round(time.time() - t0 - (row.get("drc_s") or 0), 1)   # the DRC is timed separately
         shutil.rmtree(dst, ignore_errors=True)
     return row
 
 
 def _drc_of(board, cwd, out_dir, name):
     """The hard set on the board this arm laid: {hard, unrouted} or {drc_error} and never a guess."""
-    rep = os.path.join(out_dir, "arm-%s-drc.json" % name)
-    cnt = os.path.join(out_dir, "arm-%s-counts.txt" % name)
+    # ABSOLUTE, because the DRC runs with cwd set to the arm's own project directory and a relative
+    # out_dir does not exist there: the first run of this guard died on
+    # "out/agent-arms/arm-x-drc.json.err: No such file or directory" and the row came back UNMEASURED,
+    # which is the right refusal for the wrong reason (12 September 2026).
+    rep = os.path.abspath(os.path.join(out_dir, "arm-%s-drc.json" % name))
+    cnt = os.path.abspath(os.path.join(out_dir, "arm-%s-counts.txt" % name))
+    os.makedirs(os.path.dirname(rep), exist_ok=True)
     try:
         r = subprocess.run(["bash", os.path.join(TOOLS, "drc.sh"), board, rep],
                            capture_output=True, text=True, timeout=1800, cwd=cwd)
@@ -156,7 +164,7 @@ def knobs_arrived(want, seen):
     return ""
 
 
-def grade(row, hard_baseline=0):
+def grade(row, hard_baseline=None):
     """The mechanical judge. `pairs` against the arm's own written prediction, and nothing the arm said.
 
     Since 12 September the count is not the whole objective: an arm that lays MORE hard DRC violations
@@ -166,7 +174,10 @@ def grade(row, hard_baseline=0):
     p = row.get("predict") or {}
     if row.get("error"): return "INFRA_FAIL", row["error"]
     if row.get("drc_error"): return "UNMEASURED", "the DRC on the arm's own board could not be read: %s" % row["drc_error"]
-    if row.get("hard") is not None and row["hard"] > hard_baseline:
+    if hard_baseline is None and row.get("hard") is not None:
+        return "UNMEASURED", ("the arm's board reads hard %d and no baseline was measured to compare it with, "
+                              "so its legality is unknown and the count is not a result" % row["hard"])
+    if row.get("hard") is not None and hard_baseline is not None and row["hard"] > hard_baseline:
         return "ILLEGAL", ("%d hard DRC violation(s) against a baseline of %d: this arm's pairs are copper the "
                            "board cannot have, so the count is not a result" % (row["hard"], hard_baseline))
     got = row.get("pairs")
@@ -206,12 +217,31 @@ def main(argv):
         for x in spec["arms"]: print("  %-14s env %-44s predict %s %s" % (x["name"], json.dumps(x.get("env", {})), x["predict"].get("op"), x["predict"].get("value")))
         return 0
 
+    # The ILLEGAL test needs a baseline, and a default of zero is an assumption about a board nobody
+    # measured. So it is measured here, once, on the source project's own placed board, before any arm
+    # runs. A board that already carries hard violations is a legitimate baseline; what is not
+    # legitimate is inventing one (tier 2b, 12 September 2026).
+    hb = spec.get("hard_baseline")
+    if hb is None and not a.dry:
+        srcdir = os.path.join(ecad, spec["source_project"])
+        srcboard = os.path.join(srcdir, spec["board"] + ".kicad_pcb")
+        placed = os.path.join(srcdir, spec["placed"])
+        if os.path.exists(placed):
+            shutil.copyfile(placed, srcboard)
+        d = _drc_of(srcboard, srcdir, a.out_dir, "baseline") if os.path.exists(srcboard) else {}
+        hb = d.get("hard")
+        print("arms: the baseline board reads hard %s%s" % (hb, "" if hb is not None else
+                                                            " (%s)" % d.get("drc_error", "not measured")))
+    spec["hard_baseline"] = hb
+    if hb is None:
+        print("arms: no baseline hard count, so every arm's legality is UNMEASURED rather than assumed")
+
     print("arms: %d arm(s), %d at a time, source %s" % (len(spec["arms"]), a.parallel, spec["source_project"]))
     rows = []
     with cf.ThreadPoolExecutor(max_workers=a.parallel) as ex:
         futs = {ex.submit(run_arm, spec, x, ecad, a.out_dir): x for x in spec["arms"]}
         for f in cf.as_completed(futs):
-            row = f.result(); v, note = grade(row, spec.get("hard_baseline", 0))
+            row = f.result(); v, note = grade(row, spec.get("hard_baseline"))
             row["verdict"] = v; row["note"] = note
             rows.append(row)
             print("arms: %-14s %-12s %s  (%.0f s, maps %s s)" % (row["arm"], v, note, row.get("wall_s", 0), row.get("map_seconds", "?")))
@@ -225,12 +255,20 @@ def main(argv):
     met = sum(1 for r in rows if r["verdict"] == "MET")
     bad = sum(1 for r in rows if r["verdict"] in ("INFRA_FAIL", "UNMEASURED"))
     illegal = sum(1 for r in rows if r["verdict"] == "ILLEGAL")
-    best = rows[0] if rows else {}
-    return verdict.write("arms", verdict.INCONCLUSIVE if bad == len(rows) else verdict.PASS,
+    legal = [r for r in rows if r["verdict"] in ("MET", "MISSED")]
+    best = legal[0] if legal else {}          # a headline number may only come from a board that could exist
+    # A cycle in which nothing legal ran is not a pass. Tier 2b found the first version reporting PASS
+    # over an all-ILLEGAL set and headlining the pair count of a board that cannot be built.
+    v = (verdict.INCONCLUSIVE if bad == len(rows)
+         else verdict.FAIL if not legal
+         else verdict.PASS)
+    return verdict.write("arms", v,
                          counts={"arms": len(rows), "met": met, "missed": len(rows) - met - bad - illegal,
                                  "infra_fail": bad, "illegal": illegal, "best_pairs": best.get("pairs")},
                          denominator=len(rows), evidence=["%s %s %s" % (r["arm"], r["verdict"], r["note"]) for r in rows],
-                         note="best %s with %s of %s; the judge is the pair count, never the arm" % (best.get("arm"), best.get("pairs"), best.get("of")),
+                         note="best LEGAL arm %s with %s of %s, %d illegal; the judge is the measured pair count "
+                              "and the measured hard set, never the arm"
+                              % (best.get("arm"), best.get("pairs"), best.get("of"), illegal),
                          out_dir=a.out_dir)
 
 

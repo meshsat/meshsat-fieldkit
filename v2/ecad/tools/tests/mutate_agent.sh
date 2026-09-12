@@ -51,8 +51,13 @@ open(p, "w").write(s)'
 
 run_case "the count is the whole objective again" t_the_pair_count_alone_is_not_the_objective '
 p = os.path.join(T, "arms.py"); s = open(p).read()
-s = s.replace("    if row.get(\"hard\") is not None and row[\"hard\"] > hard_baseline:",
+s = s.replace("    if row.get(\"hard\") is not None and hard_baseline is not None and row[\"hard\"] > hard_baseline:",
               "    if False:", 1)
+open(p, "w").write(s)'
+
+run_case "an all-illegal cycle reports PASS again" t_the_pair_count_alone_is_not_the_objective '
+p = os.path.join(T, "arms.py"); s = open(p).read()
+s = s.replace("         else verdict.FAIL if not legal\n", "", 1)
 open(p, "w").write(s)'
 
 echo "mutation proof: each rule must FAIL on a tree carrying its defect"
