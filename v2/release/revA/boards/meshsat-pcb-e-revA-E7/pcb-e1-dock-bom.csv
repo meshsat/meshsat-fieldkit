@@ -32,17 +32,17 @@ SS14 flyback across fan 2,D8,D_SMB,C51897884
 10 A mini blade (Keystone 3568 holder): panel input,F2,Fuseholder_Blade_Mini_Keystone_3568,C10081
 25 A mini blade (Keystone 3568 holder): pack to the block,F3,Fuseholder_Blade_Mini_Keystone_3568,C4661
 BOOTSEL: short while powering to enter the USB bootloader,JP1,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
-"BB-2590/U cable (BTA-70762-2) on XT60-M: pin 2 (the pad nearer the fuse F3) is +, pin 1 is the return; the pack's own protection is inside it (E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)",J_BATT,AMASS_XT60-M_1x02_P7.20mm_Vertical,
+"Amass XT60-M: the BB-2590/U pack cable BTA-70762-2 (pin 2, the pad nearer the fuse F3, is +; pin 1 is the return; the pack's own protection is inside it. E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)",J_BATT,AMASS_XT60-M_1x02_P7.20mm_Vertical,C98733
 "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-4 VIN_RAW, 5-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare",J_BLK,PogoTargets_2x6,
 "DCF77 receiver module: 3.3 V, GND, pulse",J_DCF,PinHeader_1x03_P2.54mm_Vertical,
-"vehicle and shore DC in 9-36 V, lead from the D38999 wall receptacle DC pair (JST-VH, 10 A): + -",J_DCIN,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair): + -",J_DCIN,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,C274411
 "mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)",J_FAN1,PinHeader_1x03_P2.54mm_Vertical,
 "mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)",J_FAN2,PinHeader_1x03_P2.54mm_Vertical,
 "Geiger counter module (RadiationD-v1.1 class): 5 V, GND, pulse",J_GEIGER,PinHeader_1x03_P2.54mm_Vertical,
 "AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ",J_LTG,PinHeader_1x05_P2.54mm_Vertical,
 "outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL",J_POD,PinHeader_1x04_P2.54mm_Vertical,
 "pack SMBus (XH or pin header): section A SDA SCL on I2C0, section B SDA SCL on the sensor bus I2C1, GND GND",J_SMB,PinHeader_1x06_P2.54mm_Vertical,
-"bare 12 V class panel in, lead from the D38999 spare pair (JST-VH, 10 A): + - (36-cell panel, up to about 22 V open circuit, 100 W)",J_SOLAR,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,
+"JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up to about 22 V open circuit, 100 W): + -",J_SOLAR,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,C274411
 "10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)",L1,L_Coilcraft_XAL1510-103,C3911782
 "Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1 pins 1-2 on the positive line, winding 2 pins 3-4 on the return (pin map per the Bourns drawing, verified 7 Sep 2026)",L2,L_CommonModeChoke_Bourns_SRF1260,
 4.7uH XAL4030-472ME,L3,L_Coilcraft_XAL4020-XXX,
@@ -72,7 +72,7 @@ status (GPIO25),LED2,LED_0603_1608Metric,C2986059
 10k,"R13,R16,R17,R25,R31,R46,R47,R49,R50",R_0603_1608Metric,C25804
 100k 1%,"R14,R20,R22,R40,R42",R_0603_1608Metric,C25803
 15.0k 1% (SHDN: enable above about 9.5 V),R15,R_0603_1608Metric,C22809
-10mOhm 1% 2512 (hot-swap sense),R19,R_2512_6332Metric,C127692
+10mOhm 1% 2512 (hot-swap sense),R19,R_2512_6332Metric,C2903468
 38.3k 1% (UVLO: 9 V),R21,R_0603_1608Metric,C23034
 6.65k 1% (OVLO: 40 V),R23,R_0603_1608Metric,C60344
 20k (PWR: power limit),R24,R_0603_1608Metric,C4184
@@ -87,7 +87,7 @@ status (GPIO25),LED2,LED_0603_1608Metric,C2986059
 22R (pulse input series),R48,R_0603_1608Metric,C23345
 0R (CSB high: I2C mode; its own net keeps the pin joiner off the diagonal),R51,R_0603_1608Metric,C21189
 LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE,"U3,U4",SOT-23-6,C2941042
-"LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted",U5,WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm,C674167
+"LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted",U5,WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm,C674164
 "LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit",U6,VSSOP-10_3x3mm_P0.5mm,C111822
 RP2040 sensor controller (USB to B16 through the dock),U10,QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm,C2040
 "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)",U11,Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm,C2843335

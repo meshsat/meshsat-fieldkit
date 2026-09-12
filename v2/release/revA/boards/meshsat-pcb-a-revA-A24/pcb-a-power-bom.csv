@@ -52,17 +52,17 @@ D8 mezzanine 5 V (JST-VH): + -,J_MEZZ_PWR1,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,C
 monitor supply lead to the Xenarc (JST-VH): + -,J_MON,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,C274411
 "13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -",J_PA,JST_VH_B2P-VH_1x02_P3.96mm_Vertical,C274411
 "pre-charge pin, longer, mates first (32.24 AX)",J_PRE1,Mill-Max_0858_power_pin,
-"SMA jack (Amphenol 132134, vertical), pigtail from the VHF device",J_RF1,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the HF device",J_RF2,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the WIFI24 device",J_RF3,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the GNSS device",J_RF4,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the SDR device",J_RF5,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the P2P-A device",J_RF6,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the P2P-B device",J_RF7,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the 5G-MAIN device",J_RF8,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the 5G-DIV device",J_RF9,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the IRID device",J_RF10,SMA_Amphenol_132134-11_Vertical,C3174425
-"SMA jack (Amphenol 132134, vertical), pigtail from the LORA device",J_RF11,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the VHF device)",J_RF1,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the HF device)",J_RF2,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the WIFI24 device)",J_RF3,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the GNSS device)",J_RF4,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the SDR device)",J_RF5,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-A device)",J_RF6,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-B device)",J_RF7,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-MAIN device)",J_RF8,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-DIV device)",J_RF9,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the IRID device)",J_RF10,SMA_Amphenol_132134-11_Vertical,C3174425
+"SMA jack, Amphenol 132134-11 vertical (pigtail to the LORA device)",J_RF11,SMA_Amphenol_132134-11_Vertical,C3174425
 "wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2 GND GND",J_USBC_OUT,PinHeader_1x05_P2.54mm_Vertical,
 "JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the ribbon, this is the pigtail's data side (D+ D- GND GND)",J_USBW,JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical,C131334
 10uH XAL1010-103ME (Isat 14 A),L1,L_Coilcraft_XAL1010-XXX,

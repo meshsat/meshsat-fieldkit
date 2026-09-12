@@ -1082,7 +1082,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the WIFI24 device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the WIFI24 device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -20901,7 +20901,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the IRID device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the IRID device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -27509,7 +27509,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the 5G-DIV device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-DIV device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -29382,7 +29382,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the SDR device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the SDR device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -30597,7 +30597,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the GNSS device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the GNSS device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -31264,7 +31264,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the LORA device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the LORA device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -41247,7 +41247,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the 5G-MAIN device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-MAIN device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -42718,7 +42718,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the VHF device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the VHF device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -62776,7 +62776,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the P2P-A device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-A device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -64650,7 +64650,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the HF device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the HF device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -65309,7 +65309,7 @@
 				)
 			)
 		)
-		(property "Value" "SMA jack (Amphenol 132134, vertical), pigtail from the P2P-B device"
+		(property "Value" "SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-B device)"
 			(at 0 5 0)
 			(layer "F.Fab")
 			(hide yes)
