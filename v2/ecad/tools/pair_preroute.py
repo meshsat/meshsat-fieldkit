@@ -2130,30 +2130,37 @@ def main(a):
         for _t in pieces:
             if _t.GetClass() == "PCB_VIA" and _t.GetNetname() in _vias: _vias[_t.GetNetname()].append((mm(_t.GetPosition().x), mm(_t.GetPosition().y), mm(_t.GetWidth()) / 2))
         _cross = 0; _near = 0; _near_worst = 9.9; _near_at = []
-        _need = max(0.0, clr_c - 0.005) + max(w, w_in)   # edge to edge: the class clearance, centre to centre
+        _tol = 0.005   # the DRC's own rounding: a gap equal to the clearance is legal
         for _L in {k[1] for k in _segs}:
+            _needL = max(0.0, clr_c - _tol) + wid(_L)   # centre to centre for two tracks of THIS layer's width
             for _a in _segs.get((pn, _L), []):
                 for _b2 in _segs.get((nn, _L), []):
                     if _hit(*_a, *_b2): _cross += 1
                     else:
                         _g = _seg_gap(*_a, *_b2)
-                        if _g < _need:
+                        if _g < _needL:
                             _near += 1; _near_worst = min(_near_worst, _g)
-                            if len(_near_at) < 4: _near_at.append("%.3f mm on %s: %s (%.3f, %.3f)-(%.3f, %.3f) against %s (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, b.GetLayerName(_L), pn) + tuple(_a) + (nn,) + tuple(_b2)))
+                            if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f on %s: %s (%.3f, %.3f)-(%.3f, %.3f) against %s (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, _needL, b.GetLayerName(_L), pn) + tuple(_a) + (nn,) + tuple(_b2)))
             for _nm, _on in ((pn, nn), (nn, pn)):   # a via of one leg against the other leg's track on this layer (a through via is on every layer)
                 for _vx, _vy, _vr in _vias[_nm]:
+                    _needV = max(0.0, clr_c - _tol) + _vr + wid(_L) / 2
                     for _a in _segs.get((_on, _L), []):
-                        _g = _pt_seg(_vx, _vy, *_a) - _vr + max(w, w_in) / 2
-                        if _g < _need: _near += 1; _near_worst = min(_near_worst, _g)
+                        _g = _pt_seg(_vx, _vy, *_a)
+                        if _g < _needV:
+                            _near += 1; _near_worst = min(_near_worst, _g)
+                            if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f on %s: the %s via at (%.3f, %.3f) against %s (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, _needV, b.GetLayerName(_L), _nm, _vx, _vy, _on) + tuple(_a)))
         for _vx, _vy, _vr in _vias[pn]:
             for _wx, _wy, _wr in _vias[nn]:
-                _g = math.hypot(_vx - _wx, _vy - _wy) - _vr - _wr + max(w, w_in)
-                if _g < _need: _near += 1; _near_worst = min(_near_worst, _g)
+                _needVV = max(0.0, clr_c - _tol) + _vr + _wr
+                _g = math.hypot(_vx - _wx, _vy - _wy)
+                if _g < _needVV:
+                    _near += 1; _near_worst = min(_near_worst, _g)
+                    if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f: the %s via at (%.3f, %.3f) against the %s via at (%.3f, %.3f)" % (_g, _needVV, pn, _vx, _vy, nn, _wx, _wy))
         if _near and not _cross:
             rollback()
             for _w in _near_at: report.append("      %s" % _w)   # name the copper: which piece of which leg, on which layer (12 September 2026)
-            report.append("FAIL  %s: its own two legs come within %.3f mm centre to centre where the class needs %.3f (%d place(s)); rolled back, the router takes the pair"
-                          % (stem, _near_worst, _need, _near))
+            report.append("FAIL  %s: its own two legs come within %.3f mm of each other in %d place(s) against the class clearance %.3f; rolled back, the router takes the pair"
+                          % (stem, _near_worst, _near, clr_c))
             continue
         if _cross:
             rollback()
