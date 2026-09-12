@@ -460,3 +460,18 @@ def t_the_stub_router_checks_that_a_closure_closed_anything():
     window = src[max(0, i - 1200):i]
     assert "NOT CLOSED" in window and "b.Remove(t)" in window, \
         "a closure that did not connect is still counted as one"
+
+
+def t_no_post_route_pass_rewrites_a_phase_or_a_stackup_onto_the_silk():
+    """The facts on a board's silk belong to the generator that knows them. `silk_fix_all.py` ran in every finish
+    AFTER the generators and rewrote each board's title to a stale phase and a stale stackup: A's to "REV A (A18)"
+    and "285 x 160 x 1.6 mm FR-4, 4 layers ... 2026-09-04" on a board that is A24, 240 x 160, six layers; B's to
+    "REV A (B12)" and "245x170x1.6 4L"; C's to "REV A, C5". A24's routed board carries A18 on its front silk
+    because of it, and `verify_deliverable` refuses a deliverable whose silk names another phase, so this cost a
+    board its last step after the copper was finished (12 September 2026). D's rule set had already been dropped
+    for the same reason on 8 September, which is how the shape of this was recognisable."""
+    src = open(os.path.join(TOOLS, "silk_fix_all.py"), errors="replace").read()
+    body = src[src.index("RULES = {"):src.index("\nb = pcbnew.LoadBoard")]
+    bad = [l for l in body.splitlines()
+           if "text=" in l and re.search(r"REV A|\d+\s*x\s*\d+|\d\s*layers|\dL\b", l)]
+    assert not bad, "a legend rule writes a phase, a size or a layer count onto the silk: %s" % (bad[0].strip()[:120],)
