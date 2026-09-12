@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""direct_close.py <board.kicad_pcb> <drc.json> [--max=3.0] [--width=0] [--via=0.45/0.25] [--dry] [--json=out.json]
+"""direct_close.py <board.kicad_pcb> <drc.json> [--max=4.0] [--width=0] [--via=0.45/0.25] [--layers=In2.Cu,In3.Cu] [--dry]
 
 The closure the router stopped short of, proposed as geometry and judged by the DRC (12 September 2026, MESHSAT-862).
 
-A routed board of this set ends with a handful of connections open, and they are not all the same thing. Five of
-C10's nine open nets have a loose track END 0.74 to 1.76 mm from the pad it should reach, ON THE SAME LAYER, and
-A24's three are the same shape. The stub router answers "FAILED pad -> track" for every one of them with fourteen
-million free cells in its window, so what it lacks is not room: it searches a 0.1 mm raster in which every cell
-next to the target pad is inside somebody's clearance, while the track that would actually close the gap is a
-straight 0.7 mm segment ending ON that pad, where the pad's own clearance does not apply to its own net.
+A routed board of this set ends with a handful of connections open, and they are not all the same thing. A24's
+were short: /CELL+ was 9.59 mm of clear board and /VBUS20 0.80 mm, both refused by the stub router, which
+searches a 0.1 mm raster in which every cell next to the target pad is inside somebody's clearance, while the
+track that would close the gap ends ON that pad, where the pad's own clearance does not apply to its own net.
+
+C10's eleven, measured with this tool, are NOT that shape: every one is 39 to 298 mm, a connection the router
+never made. They were read as short ones first, by comparing each loose track end with the nearest pad of its
+net, and the nearest pad of the net is not the pad the connection is missing to (it was usually one already
+connected). Whatever measures an open has to read the DRC's own pair, which is what this tool does now.
 
 So this tool proposes the obvious geometry rather than searching for it: a straight locked track from the loose
 end to the pad, then the two L shapes, and it keeps the first that the DRC accepts. Every attempt is judged on
@@ -37,9 +40,9 @@ def counts(board_path, report):
     r = subprocess.run([os.path.join(os.path.dirname(os.path.abspath(__file__)), "drc.sh"), board_path, report],
                        capture_output=True, text=True)
     if r.returncode != 0: return None
-    try: c = hardset.counts(hardset.load(report))
+    try: d = hardset.load(report); c = hardset.counts(d)
     except Exception: return None
-    return c["hard"], c["unrouted"]
+    return c["hard"], c["unrouted"], d
 
 
 
@@ -109,11 +112,12 @@ def main(argv):
     opt = lambda k, d: next((a.split("=", 1)[1] for a in argv if a.startswith("--%s=" % k)), d)
     MAXD = float(opt("max", "4.0")); WIDTH = float(opt("width", "0")); DRY = "--dry" in argv
     VD, VDR = (float(v) for v in opt("via", "0.45/0.25").split("/"))
+    DETOUR = [x for x in opt("layers", "").split(",") if x]   # free layers to try a two-via detour on
     work = os.path.splitext(bp)[0] + "-close-drc.json"
     trial = os.path.splitext(bp)[0] + "-close-trial.kicad_pcb"
     before = counts(bp, work)
     if before is None: print("direct_close: the DRC did not run on the board as given"); return 3
-    H0, U0 = before
+    H0, U0 = before[0], before[1]; D0 = before[2]
     print("direct_close: board as given: hard %d unrouted %d" % (H0, U0))
     pairs = parse_items(json.load(open(drcp)))
     closed = 0; tried = 0; rows = []
@@ -132,30 +136,49 @@ def main(argv):
             rows.append({"net": net, "result": "no shared layer", "gap_mm": round(gap, 3)}); continue
         L = common[0] if len(common) == 1 else (A[2][0] if A[2][0] in common else common[0])
         tried += 1
-        shapes = [("direct", [A[1], B[1]]),
-                  ("L via x", [A[1], pcbnew.VECTOR2I(B[1].x, A[1].y), B[1]]),
-                  ("L via y", [A[1], pcbnew.VECTOR2I(A[1].x, B[1].y), B[1]])]
-        got = None
+        shapes = [("direct", [(L, A[1]), (L, B[1])]),
+                  ("L via x", [(L, A[1]), (L, pcbnew.VECTOR2I(B[1].x, A[1].y)), (L, B[1])]),
+                  ("L via y", [(L, A[1]), (L, pcbnew.VECTOR2I(A[1].x, B[1].y)), (L, B[1])])]
+        # and the same geometry one layer down, which is what the router would have done: a short stub on the
+        # anchors' own layer, a via at each end of it, and the run between them on a free layer. A's /+3V3 and
+        # /VBUS20 are both refused on F.Cu for crossing other nets, and a detour is the only shape left that is
+        # not hand work (12 September 2026).
+        for Ld in [b.GetLayerID(x) for x in DETOUR if b.GetLayerID(x) >= 0 and b.GetLayerID(x) != L]:
+            f = min(0.6 / gap, 0.33) if gap > 0 else 0.33
+            a1 = pcbnew.VECTOR2I(int(A[1].x + (B[1].x - A[1].x) * f), int(A[1].y + (B[1].y - A[1].y) * f))
+            b1 = pcbnew.VECTOR2I(int(B[1].x + (A[1].x - B[1].x) * f), int(B[1].y + (A[1].y - B[1].y) * f))
+            shapes.append(("via down to %s" % b.GetLayerName(Ld), [(L, A[1]), (L, a1), (Ld, a1), (Ld, b1), (L, b1), (L, B[1])]))
+        got = None; whys = []
         for name, pts in shapes:
             b = pcbnew.LoadBoard(bp); n = b.FindNet(net)
             if n is None: break
             w = FromMM(WIDTH) if WIDTH else None
             if w is None:
                 w = next((t.GetWidth() for t in b.GetTracks() if t.GetNetname() == net and t.GetClass() == "PCB_TRACK"), FromMM(0.2))
-            for p, q in zip(pts, pts[1:]):
+            for (lp, p), (lq, q) in zip(pts, pts[1:]):
+                if lp != lq:
+                    v = pcbnew.PCB_VIA(b); v.SetPosition(p); v.SetWidth(FromMM(VD)); v.SetDrill(FromMM(VDR))
+                    v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(n); v.SetLocked(True); b.Add(v)
+                    continue
                 if p == q: continue
-                t = pcbnew.PCB_TRACK(b); t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(L); t.SetNet(n); t.SetLocked(True); b.Add(t)
+                t = pcbnew.PCB_TRACK(b); t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(lp); t.SetNet(n); t.SetLocked(True); b.Add(t)
             pcbnew.ZONE_FILLER(b).Fill(b.Zones())
             pcbnew.SaveBoard(trial, b)
             pro = os.path.splitext(bp)[0] + ".kicad_pro"; tpro = os.path.splitext(trial)[0] + ".kicad_pro"
             if os.path.exists(pro): subprocess.run(["cp", pro, tpro])
             r = counts(trial, work)
             if r is None: continue
-            H1, U1 = r
+            H1, U1, D1 = r
             if H1 <= H0 and U1 < U0:
                 got = (name, H1, U1)
                 if not DRY: subprocess.run(["cp", trial, bp]); H0, U0 = H1, U1
                 break
+            # a refusal that does not name what it hit is the defect `escape_prune` was corrected for on 9 September
+            was = collections.Counter((v.get("type"), " / ".join(i.get("description", "")[:44] for i in v.get("items", []))) for v in D0.get("violations", []) if v.get("type") in hardset.HARD_POST)
+            now = collections.Counter((v.get("type"), " / ".join(i.get("description", "")[:44] for i in v.get("items", []))) for v in D1.get("violations", []) if v.get("type") in hardset.HARD_POST)
+            new_hits = [k for k in (now - was)][:4]
+            for t_, w_ in new_hits[:2]: whys.append("      %s: %s | %s" % (name, t_, w_))
+            if H1 <= H0 and U1 >= U0 and not new_hits: whys.append("      %s: legal, and it closed nothing (unrouted %d)" % (name, U1))
         if got:
             closed += 1
             print("direct_close: %-14s closed %.3f mm, %s to %s on %s (%s); hard %d unrouted %d"
@@ -163,6 +186,7 @@ def main(argv):
             rows.append({"net": net, "result": "closed", "shape": got[0], "gap_mm": round(gap, 3), "from": A[3], "to": B[3]})
         else:
             print("direct_close: %-14s %.3f mm, %s to %s on %s: no shape the DRC accepts" % (net, gap, A[3], B[3], b.GetLayerName(L)))
+            for w_ in whys[:14]: print("direct_close: %s" % w_)
             rows.append({"net": net, "result": "refused", "gap_mm": round(gap, 3), "from": A[3], "to": B[3]})
     for f in (trial, os.path.splitext(trial)[0] + ".kicad_pro"):
         if os.path.exists(f): os.remove(f)
