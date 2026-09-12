@@ -85,3 +85,16 @@ def t_a_boards_declared_pair_environment_never_overrides_its_caller():
     i = src.index("PENV=")
     line = src[i:src.index("\n", i)]
     assert "os.environ.get(k)" in line, "the board's pair_env is applied even when the caller set that variable: %s" % line
+
+
+def t_a_boards_declared_placement_environment_never_overrides_its_caller():
+    """`place_env` is the placement's half of what `escape_env` has always been: a board's own declaration, read
+    by the chain. B declares PLACE_COUPLE_GAP with the two placements that measured it (14 of 48 pairs at the
+    packer's own gap, 22 at twice it, appendix 32.147). An arm measures a value by setting it in the environment,
+    so the declaration must not overwrite what the caller already set, or the arm would silently measure the
+    board file instead of its own variable (12 September 2026; the same rule `pair_env` carries)."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    assert "PLACEENV=" in src, "the chain does not read a board's placement environment"
+    i = src.index("PLACEENV=")
+    window = src[i:i + 600]
+    assert '[ -n "${!_k:-}" ] || export' in window, "a declared placement value overwrites the caller's own"
