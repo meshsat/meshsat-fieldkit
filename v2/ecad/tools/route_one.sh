@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # One Freerouting attempt in its own scratch directory. Usage: route_one.sh <project dir> <name> <k> <passes>
 set -uo pipefail
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fr_jar.sh"   # resolved before the cd below
 cd "$1"; N="$2"; K="$3"; P="$4"; W="out/par/$K"; mkdir -p "$W"
 cp "out/$N-preroute.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
 # FR_PLANE_NETS="GND" (6 Sep 2026 04:50): the zones of these nets on the FR_POWER_LAYERS layers stay in the DSN as planes, so the router connects their pins
@@ -19,26 +20,7 @@ PY
 # and nothing else, proved: on the same D board DSN with the same options the two jars produced BYTE IDENTICAL final sessions
 # (139,311 bytes, cmp clean) and auto-routed in 1 min 23.13 s against 1 min 24.08 s. FR_JAR names another jar, e.g.
 # ~/bin/freerouting-2.4.1.jar (needs Java 25).
-JAR=${FR_JAR:-}
-if [ -z "$JAR" ]; then
-  if [ -s "$HOME/bin/freerouting-1.9.0-mesh.jar" ]; then JAR="$HOME/bin/freerouting-1.9.0-mesh.jar"
-  else
-    # THE FALLBACK IS NOT SILENT ANY MORE (round-two H5, 11 September 2026). Our build writes a session after
-    # every pass; the stock jar writes one only when the whole job ends, so a run that is cut leaves nothing and
-    # `-Dfreerouting.ses_per_pass` below is a no-op. Every pass ceiling in every profile exists because of that,
-    # and `onstart.sh` never built the jar, so every fresh box routed on stock while the pipeline behaved as
-    # though it had not. A route that silently loses its per-pass sessions is hours of box time with no artefact.
-    if [ "${FR_REQUIRE_MESH:-1}" != 0 ]; then
-      echo "route_one: no $HOME/bin/freerouting-1.9.0-mesh.jar on this host."
-      echo "route_one: that jar writes a session after every pass; the stock one writes one only at the end, so a"
-      echo "route_one: cut run leaves nothing and the pass ceilings exist to work around it. Build it (see"
-      echo "route_one: tools/freerouting/README.md) or set FR_REQUIRE_MESH=0 to route on stock deliberately."
-      exit 2
-    fi
-    echo "route_one: WARNING routing on the STOCK jar by FR_REQUIRE_MESH=0: no session until the job ends"
-    JAR="$HOME/bin/freerouting-1.9.0.jar"
-  fi
-fi
+JAR="$(fr_jar route_one)" || exit 2   # one answer for every launcher (tools/fr_jar.sh), python side routeflow.jar_in_use()
 JAVA=${FR_JAVA:-java}; V2_ARGS=()
 case "$(basename "$JAR")" in freerouting-2.*) [ -x /usr/lib/jvm/java-25-openjdk-amd64/bin/java ] && [ -z "${FR_JAVA:-}" ] && JAVA=/usr/lib/jvm/java-25-openjdk-amd64/bin/java
   V2_ARGS=(--gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false "--router.fanout.enabled=${FR_FANOUT:-false}" "--router.job_timeout=$(printf '%02d:%02d:%02d' $((${FR_TIMEOUT:-4500} / 3600)) $((${FR_TIMEOUT:-4500} % 3600 / 60)) $((${FR_TIMEOUT:-4500} % 60)))");;   # never -drc here: in 2.4.1 it turns the run into a DRC-only job (no session)

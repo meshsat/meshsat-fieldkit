@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Usage: route_pcb.sh <dir> <name> [passes]   : DSN export -> Freerouting -> SES import -> zone fill -> save
 set -euo pipefail
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fr_jar.sh"   # resolved before the cd below
 D="$1"; N="$2"; PASSES="${3:-40}"; cd "$D"; mkdir -p out
 python3 - "$N.kicad_pcb" "out/$N.dsn" <<'PY'
 import sys, pcbnew
@@ -12,7 +13,10 @@ for z in list(b.Zones()):
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
 b2 = pcbnew.LoadBoard(tmp); ok = pcbnew.ExportSpecctraDSN(b2, sys.argv[2]); print("DSN export (no planes):", ok)
 PY
-JAR="${FR_JAR:-$(ls ~/bin/freerouting-*.jar | grep -v disabled | tail -1)}"
+# 12 September 2026: this was `ls ~/bin/freerouting-*.jar | tail -1`, which on a host carrying 2.4.1 picks it and
+# launches it with 1.9.0 arguments under whatever java is first on PATH. long_route.sh pinned the stock jar by
+# name to dodge exactly that, and so lost the per-pass session as well.
+JAR="$(fr_jar route_pcb)" || exit 2
 echo "freerouting: $JAR, max passes $PASSES"
 if [ -n "${FR_XVFB:-}" ] && command -v xvfb-run >/dev/null; then
   # 12 September 2026: this killed EVERY virtual display on the host, which would take any other route's router with
