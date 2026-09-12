@@ -437,3 +437,25 @@ def t_the_pair_count_alone_is_not_the_objective():
     src = open(os.path.join(TOOLS, "arms.py"), errors="replace").read()
     if "drc.sh" not in src or "hardset.py" not in src:
         raise AssertionError("arms.py no longer measures the legality of what the arm laid")
+
+
+def t_a_knob_this_run_cannot_execute_is_refused():
+    """Told that only placement had ever paid on board B, tier 2 proposed a placement knob.
+
+    It was right about the evidence and wrong about the machine: arms.py re-runs the pre-router on a
+    board placed hours earlier, so PLACE_FINE_MARGIN cannot act, the arm measures nothing, and the null
+    reads exactly like a knob that does not pay. That is the same failure as a knob nobody reads, one
+    level down, so it is refused the same way and the refusal says what kind of run it would need.
+    """
+    for k in ("PLACE_FINE_MARGIN", "PLACE_COUPLE_GAP"):
+        p = json.loads(json.dumps(GOOD)); p["arms"][0]["env"] = {k: "2.4"}
+        _refuses(p, "cannot act here")
+    p = json.loads(json.dumps(GOOD)); p["arms"][0]["env"] = {"PLACE_COUPLE_GAP": "3.0"}
+    t = dict(TEMPLATE); t["_runs"] = "place"
+    ok, errs, _ = schema.validate(p, t)
+    if not ok:
+        raise AssertionError("a placement knob was refused on a run that regenerates the placement: %s" % errs)
+    q = json.loads(json.dumps(GOOD))                      # the pre-router's own knobs still pass
+    ok, errs, _ = schema.validate(q, TEMPLATE)
+    if not ok:
+        raise AssertionError("a pre-router knob was refused on a pre-router run: %s" % errs)

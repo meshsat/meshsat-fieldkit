@@ -19,5 +19,7 @@
     "PAIR_VIA_MODE": "min"
    }
   }
- ]
+ ],
+ "_runs": "pair",
+ "_runs_why": "What this run actually executes. arms.py re-runs the pre-router on an already placed board, so a knob read only by the placement generator cannot act and the validator refuses it rather than letting the arm measure nothing."
 }

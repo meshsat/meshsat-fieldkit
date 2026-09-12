@@ -60,6 +60,11 @@ p = os.path.join(T, "arms.py"); s = open(p).read()
 s = s.replace("         else verdict.FAIL if not legal\n", "", 1)
 open(p, "w").write(s)'
 
+run_case "a knob this run cannot execute is allowed" t_a_knob_this_run_cannot_execute_is_refused '
+p = os.path.join(T, "agent", "schema.py"); s = open(p).read()
+s = s.replace("                if src and src not in allowed:", "                if False:", 1)
+open(p, "w").write(s)'
+
 echo "mutation proof: each rule must FAIL on a tree carrying its defect"
 
 run_case "proposer gains a subprocess call" t_the_proposer_cannot_actuate '

@@ -29,6 +29,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.dirname(HERE)
 
 MODEL_OWNS = {"name", "env", "predict", "why"}
+# What the runner for a given spec actually EXECUTES. A knob read only by a file this run never runs
+# cannot act, and the arm then measures nothing while looking exactly like a knob that does not pay.
+# Tier 2 walked into this on its third arm for board B: told that only placement has ever paid there,
+# it proposed PLACE_FINE_MARGIN, which is read by the placement generator, while arms.py re-runs the
+# pre-router on a board that was placed hours earlier (12 September 2026).
+RUNS = {"pair": ("pair_preroute.py", "pairsearch.py"),
+        "place": ("gen_pcb_b3.py", "pair_preroute.py", "pairsearch.py")}
 SPEC_OWNS = {"board", "letter", "source_project", "placed", "passes", "timeout_s", "ecad", "tools_sha"}
 SLUG = re.compile(r"^[a-z0-9][a-z0-9_]*$")
 SLUG_MAX = 32
@@ -161,6 +168,16 @@ def validate(proposal, spec_template, graded=(), knobs=None, max_arms=1, allow_r
             elif k not in knobs:
                 errs.append("%s sets %s, which no tool in this tree reads. A knob nobody reads returns a null "
                             "result that reads exactly like a knob that does not pay" % (tag, k))
+            else:
+                run = spec_template.get("_runs", "pair")
+                src = (types.get(k) or {}).get("file")
+                allowed = RUNS.get(run, RUNS["pair"])
+                if src and src not in allowed:
+                    errs.append("%s sets %s, which is read by %s. This run executes %s on a board that was already "
+                                "placed, so that knob cannot act here: the arm would measure nothing and the null "
+                                "result would read exactly like a knob that does not pay. A %s knob needs a run "
+                                "that regenerates the placement"
+                                % (tag, k, src, " and ".join(allowed), src.split(".")[0]))
             if not _scalar(v):
                 errs.append("%s: %s is %s, and a knob value must be a scalar" % (tag, k, type(v).__name__))
             elif len(str(v)) > 200:
