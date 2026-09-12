@@ -14,7 +14,9 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^0\.25R 1% 2512$", "R_2512"): "C459675",   # RLP25FEER250, 2 W current sense, 1 percent (r"^600R@100MHz", "L_0603"): "C1002", (r"^ferrite 600R$", "L_0603"): "C1002",  # the C BOM writes the value this way round
  (r"^180R?$", "R_0603"): "C22828",        # the shipped C BOM carried C25270, an 0805, on these eleven 0603 lands
  (r"^8MHz", "5032"): "C115962", (r"^USBLC6-2SC6", "SOT-23-6"): "C7519", (r"^INA219", "SOT-23-8"): "C138024", (r"^PCA9555PW", "TSSOP-24"): "C2864778", (r"^FE1\.1s", "SSOP-28"): "C2848",
- (r"^USB-C 2\.0 receptacle", "TYPE-C-31-M-12"): "C165948", (r"^BC847BS", "SOT-363"): "C8653",
+ (r"^USB-C 2\.0 receptacle", "TYPE-C-31-M-12"): "C165948", # (r"^BC847BS", "SOT-363"): "C8653",   RETIRED 12 September 2026: no generator names a BC847BS and no
+ #   shipped BOM carries one or a SOT-363 land. A fill rule that can never fire reads as a code being
+ #   present; t_every_fill_rule_names_a_land_this_project_draws refuses one now.
  (r"^panel ribbon", "IDC-Header_2x10_P2.54mm_Vertical_SMD"): "C54803514", (r"^e-paper module lead", "PinHeader_1x08_P2.54mm_Vertical_SMD"): "C41417365",   # C5 underside SMD connectors (research note m, 4 Sep)
  # matched by the 3 Sep 2026 ordering session on PCB-D (ORDER-LOG.md section 2); the XAL6030 inductor has no JLC equivalent and is bench-fitted
  (r"^TPS61089", "VQFN-RNR0011A"): "C165129", (r"^22u (10|25)V( X7R)? 1210", "C_1210"): "C2918511", (r"^301k", "R_0603"): "C2933194",
@@ -66,8 +68,8 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  # and no such part exists: at that size and voltage the ceramic tops out near 10 uF, confirmed three ways
  # against JLCPCB's catalogue. The largest real X7R in the SAME land, so nothing moves, and a 100 V part for
  # the PoE stage's 54 V output, where a 50 V part is over its rating at any capacitance.
- (r"^10u 50V X7R 1210$", "C1210"): "C596319",     # YAGEO CC1210KKX7R9BB106, 10 uF 50 V X7R, 91,532 in stock
- (r"^10u 100V X7R 1210$", "C1210"): "C5156756",   # FS32X106K101EGG, 10 uF 100 V X7R, 426,107 in stock
+ (r"^10u 50V X7R 1210$", "C_1210"): "C596319",    # YAGEO CC1210KKX7R9BB106, 10 uF 50 V X7R, 91,532 in stock. The key was "C1210" when it was written on 12 September and the land is C_1210_3225Metric, so it matched nothing and A24 was refused for 22 blank lines
+ (r"^10u 100V X7R 1210$", "C_1210"): "C5156756",  # FS32X106K101EGG, 10 uF 100 V X7R, 426,107 in stock; same correction as the line above
  (r"^330p$", "C_0603"): "C1664",           # Samsung CL10C331JB8NNNC, C0G 50 V, a BASIC part with a million in stock: the USB-C CC line caps want C0G
  (r"^SMBJ18A", "D_SMB"): "C151256",        # Littelfuse SMBJ18A, DO-214AA, 7,993 in stock (D4, the VBUS clamp at the outlet)
  (r"^4\.7u$", "C_0805"): "C1779",

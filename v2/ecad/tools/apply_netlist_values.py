@@ -49,7 +49,7 @@ def main(a):
                              note="a netlist with no components says nothing about the board")
     b = pcbnew.LoadBoard(board_path)
     on_board = {f.GetReference(): f for f in b.GetFootprints()}
-    changed, missing, evidence = 0, [], []
+    changed, missing, evidence, no_field = 0, [], [], []
     for ref, (val, lcsc) in sorted(want.items()):
         f = on_board.get(ref)
         if f is None:
@@ -61,18 +61,24 @@ def main(a):
         if lcsc:
             cur = f.GetFieldByName("LCSC").GetText() if f.HasFieldByName("LCSC") else ""
             if cur != lcsc:
-                hits.append("LCSC %r -> %r" % (cur, lcsc))
-                if not dry:
-                    if f.HasFieldByName("LCSC"): f.GetFieldByName("LCSC").SetText(lcsc)
-                    else: f.AddField(pcbnew.PCB_FIELD(f, f.GetFieldCount(), "LCSC")).SetText(lcsc)
+                # Only an EXISTING field is written. Creating one needs a PCB_FIELD constructor whose
+                # signature differs across KiCad 9 builds and it buys nothing: the deliverable BOM takes its
+                # code from lcsc_fill.py at export, keyed on the value this tool has just corrected. A board
+                # that carries no LCSC field is reported, not invented into one (12 September 2026).
+                if f.HasFieldByName("LCSC"):
+                    hits.append("LCSC %r -> %r" % (cur, lcsc))
+                    if not dry: f.GetFieldByName("LCSC").SetText(lcsc)
+                else:
+                    no_field.append("%s (%s)" % (ref, lcsc))
         if hits:
             changed += 1
             evidence.append("%s: %s" % (ref, "; ".join(hits)))
     if changed and not dry:
         pcbnew.SaveBoard(board_path, b)
-    print("apply_netlist_values: %d of %d reference(s) updated%s%s"
+    print("apply_netlist_values: %d of %d reference(s) updated%s%s%s"
           % (changed, len(want), " (dry run)" if dry else "",
-             ", %d in the netlist and not on the board" % len(missing) if missing else ""))
+             ", %d in the netlist and not on the board" % len(missing) if missing else "",
+             ", %d carry an LCSC in the netlist and no LCSC field on the board (lcsc_fill supplies the code at export)" % len(no_field) if no_field else ""))
     for e in evidence[:12]:
         print("   " + e)
     if len(evidence) > 12:
