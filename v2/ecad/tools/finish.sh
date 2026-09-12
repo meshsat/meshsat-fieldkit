@@ -72,7 +72,13 @@ if [ -n "$CONT" ]; then
   fi
 fi
 # 4. ONLY NOW the stub router, on a board that is clean and whose pours are filled
-env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1 || stop "stub router CRASHED, exit $? (out/$N-stub.log)" "out/$N-stub.log"
+# A time limit on the search, not on a wait: a fine grid over a big window is the difference between closing a
+# connection and not (A24, 12 September 2026: the 0.1 mm grid refused both of its last two, the 0.05 mm grid with
+# a six-fold window closed both), and it is also the difference between ten minutes and an afternoon. A cut run
+# leaves the board as it was, which is the same outcome as a run that closes nothing, so the finish goes on.
+env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV timeout "${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}" nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?
+[ "$SR" -eq 124 ] && echo "stub router: cut at its time limit, the board is as it was"
+[ "$SR" -eq 0 ] || [ "$SR" -eq 124 ] || stop "stub router CRASHED, exit $SR (out/$N-stub.log)" "out/$N-stub.log"
 grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
 # 5. the refill before the check, so a legal closing via is not read against a stale fill
 python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'

@@ -26,7 +26,7 @@
   "post_fix": "-",
   "pruned_gate": false,
   "gate_grep": "FAIL|band|stitch|routed at|RESULT|^verdict:",
-  "stub_env": "STUB_WIN_SCALE=2.5 STUB_MAXN=16000000",
+  "stub_env": "STUB_WIN_SCALE=6 STUB_MAXN=80000000 STUB_GRID=0.05",
   "cont_route": {
    "max_opens": 6,
    "passes": 80,
@@ -49,7 +49,9 @@
     "In3.Cu"
    ]
   },
-  "_direct_close_why": "12 September 2026, A24. After the stub router had closed 9 of 10 and then 2 of 3, three connections were left and the stub router refused all three. direct_close proposed each as geometry and the DRC judged it: /CELL+ closed as a straight 9.59 mm locked track (hard 0, opens 3 to 2), and the other two were refused with what they hit named, which is the half that matters as much: /+3V3 crosses /PI_KILL and /PI_SHDN_REQ on F.Cu and meets /HEAT_EN and /EMCON_HW on both inner layers, /VBUS20 bridges the solder mask of U3 pad 2 in all five shapes. Declared for A alone: C10's eleven opens are 39 to 298 mm and this tool declines every one of them, which is the correct answer and not a reason to run it there."
+  "_direct_close_why": "12 September 2026, A24. After the stub router had closed 9 of 10 and then 2 of 3, three connections were left and the stub router refused all three. direct_close proposed each as geometry and the DRC judged it: /CELL+ closed as a straight 9.59 mm locked track (hard 0, opens 3 to 2), and the other two were refused with what they hit named, which is the half that matters as much: /+3V3 crosses /PI_KILL and /PI_SHDN_REQ on F.Cu and meets /HEAT_EN and /EMCON_HW on both inner layers, /VBUS20 bridges the solder mask of U3 pad 2 in all five shapes. Declared for A alone: C10's eleven opens are 39 to 298 mm and this tool declines every one of them, which is the correct answer and not a reason to run it there.",
+  "stub_timeout_s": 3600,
+  "_stub_env_why": "12 September 2026, A24, measured on a copy before it was declared. With the 0.1 mm grid and a 2.5-fold window the stub router closed 9 of 10 opens and then 0 of the last 2; with a 0.05 mm grid, a six-fold window and an 80 M node cap it closed BOTH of those two (/+3V3 with a single via, /VBUS20 with 11 tracks and a via), hard 0 throughout. The finer grid is what lets it see between the pads of U3, where /VBUS20's approach has to pass. It costs time, which is why `stub_timeout_s` exists: a cut run leaves the board as it was."
  },
  "pair_order": [
   "USB_WALL"
