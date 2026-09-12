@@ -119,8 +119,15 @@ COL = {1: (-98, -38), 2: (-36, 32), 3: (34, 94)}
 #   IOCA              15.1 mm over  16 mm south   (40 mm, then the outline)
 #   RBX               18.7 mm over  19 mm east    (39 mm, then the outline)
 #
-# ETH (19.9), RBX2 (31.8) and GAP12 (64.7) have no room in any direction and are NOT resized here: they need
-# a part to move rather than a rectangle to grow, and each is dealt with on its own.
+# ETH is 19.9 mm over and had 21 mm of empty board to its SOUTH that the instrument could not see until
+# its third defect was fixed: ETH's rectangle already overlaps the fixed magnetics T1 by a tenth of a
+# millimetre at its northern edge, and testing the whole grown rectangle rather than the strip being
+# added reported zero room on all four sides. Its parts were already spilling into that empty board.
+# RBX2 (31.8) and GAP12 (64.7) had no room in any direction, because a rectangle cannot grow
+# into a fixed part. RBX2 is FOLDED INTO RBX: eleven parts in 252 mm2 is 22.9 mm2 each, the densest
+# pocket on the front of the board, boxed on all four sides by the RockBLOCK bracket connector, and RBX
+# is the same cluster one millimetre to the north with 68.9 mm2 a part and no overflow. Together they are
+# 48 parts in 3486 mm2, 72.6 each, which is ordinary for this board. ETH and GAP12 follow separately.
 REGIONS = []   # (name, rect, refs, back): decoupling and pull-ups on the UNDERSIDE (B16 is assembled on both sides), never beneath a fine-pitch part whose escapes need the vias
 for s in (1, 2, 3):
     x0, x1 = COL[s]; U = lambda k: "U%d" % (100 * s + k); Q = lambda k: "Q%d" % (100 * s + k); L = lambda k: "L%d" % (100 * s + k)
@@ -181,7 +188,7 @@ REGIONS += [
  ("NORTH1", (-94, 88.5, -52, 97.5), ["TP%d" % k for k in range(1, 21)], False),
  ("NORTH2", (-23, 88.5, 18, 97.5), ["TP%d" % k for k in range(21, 32)] + ["LED6", "LED7", "LED8", "LED9"], False),
  ("NORTH3", (47, 88.5, 88, 97.5), ["TP%d" % k for k in range(41, 52)], False),
- ("ETH",   (-162, 30, -122, 59), ["U1", "Y1", "C14", "C15", "R3", "R57"] + ["C%d" % k for k in range(17, 29)], False),
+ ("ETH",   (-162, 9, -122, 59), ["U1", "Y1", "C14", "C15", "R3", "R57"] + ["C%d" % k for k in range(17, 29)], False),
  ("POE",   (-140.5, 59, -122, 86), ["U5", "Q1", "R12", "R13", "C31", "C32"], False),
  ("POEB",  (-140.5, 59, -122, 70), ["C33", "R9", "R10", "C29", "C30"], True),
  ("WNE",   (-121, 29, -102, 68), ["U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "J_5V_DEV"], False),
@@ -199,8 +206,7 @@ REGIONS += [
  ("SEX",   (96, -85, 112, -78), ["F2", "C39"], False),
  ("SEXB",  (96, -85, 112, -78), ["R17", "R18", "R19", "R20"], True),
  ("RADE",  (125.5, 41.5, 162, 67), ["R25", "R28", "R29", "R30", "R31", "R32", "R33", "R34", "R35", "J_ZBDBG1", "J_ZBDBG2", "J_LORA1", "U28", "U34", "J_CAM"], False),
- ("RBX2",  (96, -44, 110, -26), ["C45", "C46", "C47", "C52", "C53", "C54", "C55", "F4", "C64", "R47", "R48"], False),
- ("RBX",   (96, -25, 145, 27), ["U23", "C56", "R36", "R37", "R38", "R39", "C57", "C58", "U33", "U24", "C61", "R43", "R44", "R45", "R46", "C62", "C63", "U18", "R40", "C59", "C60", "R41", "R42", "U15", "U16", "U17", "R24", "C43", "C44", "R26", "C48", "C49", "R27", "C50", "C51", "U21", "U22"], False),
+ ("RBX",   (96, -44, 145, 27), ["C45", "C46", "C47", "C52", "C53", "C54", "C55", "F4", "C64", "R47", "R48", "U23", "C56", "R36", "R37", "R38", "R39", "C57", "C58", "U33", "U24", "C61", "R43", "R44", "R45", "R46", "C62", "C63", "U18", "R40", "C59", "C60", "R41", "R42", "U15", "U16", "U17", "R24", "C43", "C44", "R26", "C48", "C49", "R27", "C50", "C51", "U21", "U22"], False),
 ]
 GAP = 1.2
 # Every rule-area keep-out the mechanical generator drew, as a rectangle in the packer's own frame. The
