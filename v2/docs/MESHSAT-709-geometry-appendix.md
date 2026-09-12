@@ -5781,3 +5781,47 @@ there and is worth one pair, which is inside the noise this record already decla
 **Where that leaves B:** 37 of 113 with the small via, and the next lever is the leg geometry at a corner, which is
 finding C2(a) of the plan and has never been built. `PAIR_VIA_CANDS` stays at 12 (it lays no pairs and a larger
 cap costs search time), and both knobs keep their measurement here rather than a default.
+
+### 32.145 A24 is finished copper, and the six things that stood between it and that (12 September 2026, 13:00 CEST; MESHSAT-862)
+
+A24 reads, on the board the finish now holds: **0 hard of the fifteen types, 0 unrouted, `check_pcb_a` ALL PASS
+on 799 checks, `dc_drop` 12 of 12 rails MET, `impedance_check` 3 of 3 pairs within 10 percent of their target,
+`netlist_board` 2004 of 2004, `check_contracts` ALL PASS.** It is the first A of this set with every pair laid,
+coupled and matched (0.23, 0.13 and 0.00 mm), and the first with no open connection.
+
+Six defects stood between the routed board and that line, and every one of them was in the pipeline rather than
+in the copper. They are listed in the order they were met, because the order is the lesson: each was invisible
+until the one before it was gone.
+
+1. **The stub router's plane-net list was a hard-coded string.** `PLANES` defaulted to `"GND,+5V,+3V3,CELL+"`
+   whatever the board, and a net in it takes a different branch whose goal is any cell a via may stand in. A has
+   no `+3V3` pour, so for `/+3V3` the router never searched for the other cluster: it dropped one via beside the
+   source and reported a closure, **twice, in two separate runs**, with the DRC naming the same open pair after
+   both. Read from the board's filled zones, the same search closed it in 8 tracks and a via over 162 cells.
+2. **A closure that closes nothing was counted as a closure.** Every closure is now measured against KiCad's own
+   connectivity and taken back off the board when the unconnected count does not fall.
+3. **`cleanup_dangling` removed a via that stood in a pad of its own net.** It counted the tracks touching a via
+   and removed it below two; a via joining a pad on one layer to a track on another has one track and one pad. The
+   board went from 0 unrouted to 1 in the first ten seconds of its finish, after the copper had been closed.
+4. **The quality pass straightened the pair gate's meander away.** `straighten.py` shortcuts unlocked router
+   copper and runs BEFORE `pair_match`, so a board finished twice loses the previous run's length matching: A24
+   matched `USB_WALL` at 0.00 mm by adding 7.54 mm and the next finish took 5.37 mm of it off, then could not
+   place it again and refused the board. A meander is locked copper now and the straightener leaves every net of
+   a differential pair class alone.
+5. **The legend pass wrote a stale phase and a stale stackup onto the silk.** `silk_fix_all.py` set A's title to
+   "REV A (A18)" and "285 x 160 x 1.6 mm FR-4, 4 layers ... 2026-09-04" on a board that is A24, 240 x 160 and six
+   layers, and `verify_deliverable` refuses a deliverable whose silk names another phase. Those rule sets are gone
+   (D's had been dropped for the same reason on 8 September) and the pass stamps the phase the FINISH was given.
+6. **`dc_drop` failed CELL+ at 2.21 percent, and the rail was fine.** With no declared loads the solver splits the
+   current over every non-passive part on the net, so 10 A of pack current went through U3 pin 19, the BQ25731's
+   CELL+ **sense** input, and out of its 0.20 mm escape on a 0.4 mm pitch. Declared (`loads={"F1": 10.0}`, the
+   25 A blade to VBAT), the rail reads **12 mV, 0.08 percent**, with the current on the F.Cu and B.Cu bars where
+   it belongs. `VIN_RAW` carries the same correction and its own note said so since 8 September.
+
+**What is left is not copper: it is 25 capacitors that cannot be bought.** Every LM5176 stage asks for
+`22u 50V X7R 1210`, which does not exist in that land from anyone (1210 X7R at 50 V tops out near 10 uF), and on
+the PoE stage those same parts sit on a **54 V** output. That is owner decision 10, with three options and their
+costs; A24's deliverable waits on it and nothing else. The rest of the board's BOM went from **38 uncoded lines
+to zero** the same afternoon: 32 values read from JLCPCB's catalogue with their stock, three Mill-Max dock pins
+declared hand-fit, and three eFuse ILM resistors that carried a CURRENT as their value (`1.2 A (ILM)`) and now
+carry the resistance the TPS2596's own equation gives (750R, 909R, 453R).
