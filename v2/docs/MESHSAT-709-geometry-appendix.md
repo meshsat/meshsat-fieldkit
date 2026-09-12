@@ -5399,6 +5399,17 @@ table out of every placement generator and refuses any two rectangles on the sam
 both of A's on the pre-fix tree and it knows that a front region and a back region may share a rectangle.
 
 
+**A prediction of mine, measured and refused, on the night it was made.** The entry region of `legs_clear` (the
+first and last 1.2 mm of a leg at an entry station) used to skip the occupancy map entirely, and closing that hole
+took B19's DIFF100 pass from **22 of 48 to 8**. I predicted the cost was the RASTER being conservative where a leg
+must come close to its own pad field, and put the blocked cells to the polygons through `_nearest_edge` before
+refusing. **It changed nothing: 8 of 48 again, and the USB pass fell from 21 of 65 to 15.** The geometry agrees
+with the raster, which means the copper really is there, and the question the pair count cannot answer is whether
+those fourteen pairs were ever legal. `PAIR_ENTRY_STRICT` exists now for exactly that: the same board with the old
+skip and with the check, each ending in a DRC breakdown of the items that involve a pair net. **Four more arms run
+beside it with one guard off each**, because the honest position tonight is that the number fell and the reason is
+not yet proved.
+
 ### 32.136 Three pairs do not fit one 2x13, measured three ways, and the wall pair takes a ribbon of its own (12 September 2026, 04:00 CEST; MESHSAT-862)
 
 Decision 6 left this half open: `J_AB1` carries three differential pairs and a 2x13 has two end rows. With the
