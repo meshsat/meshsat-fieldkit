@@ -212,3 +212,20 @@ def t_a_continuation_route_gets_the_same_plane_treatment_as_the_route():
     line = src[max(0, src.rindex("\n", 0, i - 200)):i]
     assert "FR_PLANE_NETS" in line and "FR_POWER_LAYERS" in line, \
         "finish.sh runs the continuation without handing it the board's plane treatment"
+
+
+def t_a_pass_that_lays_copper_after_the_router_is_declared_with_its_number():
+    """The rule stitch_prune's admission taught, applied to the family rather than to one tool: any pass that adds
+    or removes copper on a ROUTED board runs only where a board asks for it, and a board asking for it carries the
+    measurement that justified it. `direct_close` joined that family on 12 September 2026 (A24: /CELL+ closed as a
+    straight 9.59 mm locked track after the stub router refused it, hard 0 and the opens 3 to 2)."""
+    t = open(FINISH, errors="replace").read()
+    for key in ("stitch_prune", "direct_close"):
+        assert 'cfg x %s' % key in t, "%s is not declared per board in the finish" % key
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        f = json.load(open(p))["finish"]
+        for key in ("stitch_prune", "direct_close"):
+            if not f.get(key): continue
+            why = f.get("_%s_why" % key, "")
+            assert len(why) > 200 and re.search(r"\d", why), \
+                "%s turns %s on without the board's own number for it" % (os.path.basename(p), key)
