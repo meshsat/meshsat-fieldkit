@@ -220,7 +220,9 @@ def plane(layer, netname, name, rect=(-117.5, -77.5, 117.5, 77.5), priority=0):
     z.SetAssignedPriority(priority)
     board.Add(z); return z
 plane(pcbnew.In1_Cu, "GND", "GND plane In1")
-plane(pcbnew.In4_Cu, "GND", "GND plane In4")   # A22 six layers (7 Sep 2026 10:10, appendix 32.61): In4 a second solid ground under B.Cu, In2 and In3 routable; four-layer runs left 4 to 11 opens in the converter zones
+NL_CU = board.GetCopperLayerCount()
+if NL_CU >= 6:
+    plane(pcbnew.In4_Cu, "GND", "GND plane In4")   # A22 six layers (7 Sep 2026 10:10, appendix 32.61): In4 a second solid ground under B.Cu, In2 and In3 routable; four-layer runs left 4 to 11 opens in the converter zones
 plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (west and middle columns)", rect=(-117.5, -44, -2, 77.5))
 plane(pcbnew.In2_Cu, "GND", "GND plane In2 (east)", rect=(-2, -77.5, 117.5, 77.5))
 plane(pcbnew.In2_Cu, "GND", "GND island In2 under the blind-mate row", rect=(-60, -77.5, 110, -48), priority=1)
@@ -237,7 +239,7 @@ z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.Se
 z.SetLayer(pcbnew.In1_Cu); z.SetZoneName("In1 solid ground: no tracks"); o = z.Outline(); o.NewOutline()
 for x, y in ((-119, -79), (119, -79), (119, 79), (-119, 79)): p = P(x, y); o.Append(p.x, p.y)
 board.Add(z)
-for L, nm in ((pcbnew.In4_Cu, "In4 solid ground: no tracks"),):   # the same rule for In4 (six layers)
+for L, nm in ((((pcbnew.In4_Cu, "In4 solid ground: no tracks"),) if NL_CU >= 6 else ())):   # the same rule for In4, which a four-layer board does not have
     z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
     z.SetLayer(L); z.SetZoneName(nm); o = z.Outline(); o.NewOutline()
     for x, y in ((-119, -79), (119, -79), (119, 79), (-119, 79)): p = P(x, y); o.Append(p.x, p.y)
@@ -286,6 +288,14 @@ jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
 PC.union(pa, "PA rail", [(pr[2] - 0.5, -13.75, 106.25, -9.25), (101.75, -13.75, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin
 col(pa, pr[2] + 1.3, -12.6, -10.4, 2)                                         # two vias in the head island, in the band
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
+# THE DIVE'S LAYER FOLLOWS THE BOARD (12 September 2026, owner ruling 2: test board A at four layers against six).
+# It was the literal In3, which a four-layer A does not have, so a four-layer A could not be GENERATED at all and
+# the one layer experiment the P0 asked for had never been run. On six layers In1 and In4 are the solid grounds and
+# In2 and In3 route, so the dive takes In3; on four, In1 is the ground by the owner's ruling of 5 September 17:08
+# and In2 is the one routing layer left, so the dive takes In2. Reading the count is not setting it: the count is
+# on the never-auto floor and stays where gen_pcb_a.py declares it.
+DIVE_CU = pcbnew.In3_Cu if board.GetCopperLayerCount() >= 6 else pcbnew.In2_Cu
+print("placement: the VIN_RAW dive goes on %s (%d copper layers)" % (board.GetLayerName(DIVE_CU), board.GetCopperLayerCount()))
 vr = "VIN_RAW"; vb = "VBAT"; jd = pads_rect(net_pads(vr, ["J_DOCK"]), 0.5)
 fe = pads_rect(net_pads(vr, ["Q2", "Q3", "C11", "C12"]), 1.0)
 PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 2.6, fe[2], fe[3])), pcbnew.F_Cu, priority=3)
@@ -304,9 +314,9 @@ PC.union(vr, "VIN_RAW east", dock, pcbnew.B_Cu, priority=4, keepout=False)   # f
 for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, pcbnew.B_Cu)
 PC.union(vr, "VIN_RAW dock top", dock, pcbnew.F_Cu, priority=4, keepout=False, min_width=0.25, clearance=0.15)   # no track keep-out on top: the header's signal pins escape there
 PC.union(vr, "VIN_RAW west", [(-118, -46, fx0_ - 0.8, -40), (-118, -46, -112, fe[1] - 0.4)], pcbnew.B_Cu, priority=3)
-PC.union(vr, "VIN_RAW under the trunk", [(fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5)] + dock, pcbnew.In3_Cu, priority=2, keepout=False)   # one In3 polygon from the dive to the dock pins (the pins join the layers)
-PC.keepout("keep tracks off VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), pcbnew.In3_Cu)
-for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, pcbnew.In3_Cu)
+PC.union(vr, "VIN_RAW under the trunk", [(fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5)] + dock, DIVE_CU, priority=2, keepout=False)   # one In3 polygon from the dive to the dock pins (the pins join the layers)
+PC.keepout("keep tracks off VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), DIVE_CU)
+for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, DIVE_CU)
 col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 2)
 row(vr, -117, -113, fe[1] - 1.3, 3)
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
