@@ -24,9 +24,16 @@ What it reads, per board, and why each piece is in the answer:
   * WHAT THE PAIRS NEED (`impedance_check.py`): an inner-layer pair is a stripline, so removing its
     layers is an impedance question and not only a routing one.
 
-The verdict is one of: KEEP (a measurement forces this count), QUESTION (nothing in these numbers forces
-it and a re-route experiment is owed), or INCONCLUSIVE (something could not be measured). It is never
+The verdict is one of: NOT_FREED (these numbers do not free a layer), QUESTION (nothing here forces the
+count and the experiment is owed), or INCONCLUSIVE (something could not be measured). It is never
 "REDUCE", because that is a decision and not a measurement.
+
+**NOT_FREED IS NOT "THE LAYERS ARE NECESSARY", and the distinction is the whole point of this file.**
+Give a router six layers and it will spread copper over six; the share of routed length on the inner
+layers measures what the router DID, not what the board NEEDED, and reading it as necessity is
+circular. A board at 68 percent inner might route perfectly well at four layers with the copper
+distributed differently. The only measurement that settles a layer count is A ROUTE AT THE LOWER COUNT,
+and this tool cannot run one: it says so in every verdict it returns.
 
 Usage: layer_judge.py <board.kicad_pcb> [--intent out/<name>-intent.json] [--out-dir out] [--json f.json]
 """
@@ -122,9 +129,11 @@ def judge(board, out_dir="out", intent=None):
                   "belongs in the owner's file with these numbers" % len(idle))
     elif counts["inner_track_share_pct"] >= 15.0:
         v, why = (verdict.PASS,
-                  "KEEP: the inner layers carry %.1f percent of this board's routed length, so removing them is "
-                  "a re-route and not an edit; the measurement that would change this is a full route at the "
-                  "lower count reaching zero open" % counts["inner_track_share_pct"])
+                  "NOT_FREED: the inner layers carry %.1f percent of this board's routed length, so removing "
+                  "them is a re-route and not an edit. THIS IS NOT EVIDENCE THAT THE LAYERS ARE NEEDED: a "
+                  "router given six layers uses six, so this measures what it did and not what the board "
+                  "requires. The only thing that settles the count is a route at the lower count reaching zero "
+                  "open, and that experiment is not run here" % counts["inner_track_share_pct"])
     else:
         v, why = (verdict.FAIL,
                   "QUESTION: the inner layers carry only %.1f percent of the routed length and none is idle, "
@@ -142,8 +151,9 @@ def main(argv):
     print("layer_judge: %s" % r["why"])
     for e in r["evidence"]:
         print("   %s" % e)
-    print("layer_judge: THIS TOOL CHANGES NOTHING. The layer count and the stackup are a reserved class and the")
-    print("             owner rules on them; what is written here is the evidence for that ruling.")
+    print("layer_judge: THIS TOOL CHANGES NOTHING and it does not prove a layer is needed. The count is settled")
+    print("             by a ROUTE AT THE LOWER COUNT, which is not run here; the layer count and the stackup are")
+    print("             a reserved class and the owner rules on them.")
     if a.json:
         json.dump(r, open(a.json, "w"), indent=1)
     return verdict.write("layer_judge", r["verdict"], counts=r["counts"],

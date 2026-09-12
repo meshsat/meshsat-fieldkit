@@ -211,10 +211,10 @@ boards routed read 82.5 and 55.3 percent of their length on the inner layers.
 
 | board | layers | inner share of routed length | idle inner layers | verdict |
 |---|---:|---:|---|---|
-| PCB-A power | 6 | 68.6 percent | In1, In4 (the planes) | KEEP: removing In2 and In3 is a re-route, not an edit |
-| PCB-B compute | 6 | 82.5 percent | In1, In4 (the planes) | KEEP |
-| PCB-C display | 4 | 55.3 percent | In1 (the plane) | KEEP |
-| PCB-D APRS | 4 | 33.5 percent | In1 (the plane) | KEEP |
+| PCB-A power | 6 | 68.6 percent | In1, In4 (the planes) | NOT_FREED |
+| PCB-B compute | 6 | 82.5 percent | In1, In4 (the planes) | NOT_FREED |
+| PCB-C display | 4 | 55.3 percent | In1 (the plane) | NOT_FREED |
+| PCB-D APRS | 4 | 33.5 percent | In1 (the plane) | NOT_FREED |
 | PCB-E1 dock | 4 | **0.0 percent** | **In1 and In2, both** | **QUESTION** |
 | PCB-E5 block, PCB-P pack | 2 | n/a | n/a | no inner layer to question |
 
@@ -226,8 +226,28 @@ layers on the POWER side. The routing side is the open half and it is not answer
 still carries opens on a 267 mm strip, and the measurement owed is a route at the lower count. **The
 decision is the owner's either way.**
 
-**What KEEP means here and what it does not.** A board whose inner layers carry a third or more of its
+**What NOT_FREED means here and what it does not.** A board whose inner layers carry a third or more of its
 routed length is not one you take layers from with an edit; the measurement that would change the
 answer is a full route at the lower count reaching zero open, which for A is the experiment P0 named
-and nobody has run. KEEP is "these numbers do not free the layer", never "the layer is proved
-necessary".
+and nobody has run. NOT_FREED is "these numbers do not free the layer", never "the layer is proved
+necessary", and the verdict word was changed from KEEP to NOT_FREED on 12 September because the first
+version read as endorsement when it was summarised.
+
+**The measurement is close to circular and must be read as such.** A router given six layers spreads
+copper over six; the inner share measures what the router DID, not what the board REQUIRED. A board at
+68 percent inner may well route at four with the copper distributed differently. Nothing but a route at
+the lower count settles a layer count, and this table runs none.
+
+**Read against the per-board evidence above, the standing position on 12 September is:** only **B** has
+a measurement behind its count (93 opens at 8 passes with In1 keep-outs). **C** has one (two-layer
+routes left 14 to 35 opens in the driver cluster). **D**'s four layers are defensible on RF grounds and
+that reason was written for the first time in this document. **A's six layers are supported by nothing**:
+the recorded four-layer evidence is 4 to 11 opens in the converter zones, which today's finish closes
+routinely, and the experiment is blocked on one generator line rather than on physics. **E's power
+justification is refuted** and what holds it at four is the routing half and In1.
+
+**And the cost side of P0 is still not taken.** A like-for-like four against six quote per board at the
+real dimensions and quantity 5 does not exist. JLCPCB's public parts API answers; its PCB price path
+returns 404 without a session, and the runner never logs into JLCPCB by standing rule, so this number
+has to come from the ordering session on the laptop. Until it does, "too many layers" has no price
+attached to it in this record.
