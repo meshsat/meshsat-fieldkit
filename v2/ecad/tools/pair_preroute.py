@@ -2047,7 +2047,20 @@ def main(a):
                 _sec_k -= 1; _leg_hit[0] = None
                 continue
             if smoothed is None:
-                failed = "%s -> %s (the legs clear no smoothing of the centreline)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference())
+                # 12 September 2026: say WHERE. This line was the largest failure class on B19 and read the same for a
+                # leg refused in open board as for one refused a millimetre from its own pad, which are different
+                # findings: 30 of 46 refusals measured that day were within 2 mm of one of the pair's own pads, at
+                # J_HDMI, T1 and the pairs' own coupling capacitors, and that is a placement answer rather than a
+                # search one (32.146). The instrument was a knob nobody will remember to set; it is the line now.
+                _where = ""
+                if _leg_hit[0]:
+                    _hx, _hy, _hL, _ = _leg_hit[0]
+                    _own = [(math.hypot(mm(q.GetPosition().x) - _hx, mm(q.GetPosition().y) - _hy), q) for q in (pa, na, pb, nb)]
+                    _d0, _q0 = min(_own, key=lambda t: t[0])
+                    _where = " refused at (%.2f, %.2f) on %s, %.2f mm from %s.%s%s" % (
+                        _hx, _hy, b.GetLayerName(_hL), _d0, _q0.GetParentFootprint().GetReference(), _q0.GetNumber(),
+                        ", at the station" if _d0 <= 2.0 else ", out in the corridor")
+                failed = "%s -> %s (the legs clear no smoothing of the centreline%s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), _where)
                 if os.environ.get("PAIR_DEBUG"):
                     # where the legs hit: the first forbidden cell of each leg on the raw path, under the SAME exemption legs_clear uses
                     # (the first and last 1.2 mm at a fine-pitch station are inside the pad pair and are not obstacles). Without the

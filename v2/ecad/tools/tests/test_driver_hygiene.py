@@ -503,3 +503,18 @@ def t_a_via_standing_in_a_pad_of_its_own_net_is_not_dangling():
     window = src[i:i + 1400]
     assert "HitTest" in window, "a via's connection count ignores the pads of its own net"
     assert window.index("HitTest") < window.index("if n <= 1"), "the pad is counted after the decision"
+
+
+def t_a_leg_refusal_says_where_it_was_refused():
+    """"the legs clear no smoothing of the centreline" was the largest single failure class on B19 and read the
+    same whether the leg was refused in open board or a millimetre from its own pad. Those are different
+    findings: 30 of 46 refusals measured on 12 September 2026 were within 2 mm of one of the pair's own pads, at
+    J_HDMI, T1 and the pairs' own coupling capacitors, which is a placement answer and not a search one, and the
+    only reason it was ever seen is that a knob nobody would remember to set happened to be on. The failure line
+    carries the position, the layer, the distance to the pair's nearest own pad and which side of 2 mm it is."""
+    src = open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read()
+    i = src.index("the legs clear no smoothing of the centreline%s")
+    window = src[max(0, i - 1400):i]
+    assert "at the station" in window and "out in the corridor" in window, \
+        "the leg-fit failure does not say whether it was refused at a station or in the corridor"
+    assert "_leg_hit[0]" in window, "the failure line does not read the recorded refusal point"
