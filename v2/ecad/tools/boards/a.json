@@ -56,5 +56,7 @@
  "pair_order": [
   "USB_WALL"
  ],
- "_pair_order_why": "12 September 2026: A's three ribbon pairs sit on J_AB1, two of them on the header's end rows and USB_WALL on an inner row, which can only leave through the 1.14 mm channel between the columns. Laid longest-first the end-row pairs go down and their copper crosses USB_WALL's fan out of the connector, and the pass ends 2 of 3; laid with USB_WALL first it is 3 of 3. The pass is greedy and never rips up, so the pair with the least freedom goes first."
+ "_pair_order_why": "12 September 2026: A's three ribbon pairs sit on J_AB1, two of them on the header's end rows and USB_WALL on an inner row, which can only leave through the 1.14 mm channel between the columns. Laid longest-first the end-row pairs go down and their copper crosses USB_WALL's fan out of the connector, and the pass ends 2 of 3; laid with USB_WALL first it is 3 of 3. The pass is greedy and never rips up, so the pair with the least freedom goes first.",
+ "phase": "A24",
+ "_phase_why": "12 September 2026: the phase is a fact about the board and it lived as a DEFAULT inside each generator, where gen_pcb_c.py still said C9 while the deliverable is C10, and full.sh set it for one board of six. A board's silk then names a phase `verify_deliverable` refuses, after the route, which is how A24 came to carry A18 on its front silk. `full.sh` exports this unless the caller has already set PHASE."
 }
