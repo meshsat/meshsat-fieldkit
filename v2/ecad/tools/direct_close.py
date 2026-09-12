@@ -199,18 +199,30 @@ def main(argv):
             print("direct_close: %-14s %.3f mm apart (%s to %s): beyond --max=%.1f, left to the router" % (net, gap, A[3], B[3], MAXD))
             rows.append({"net": net, "result": "beyond max", "gap_mm": round(gap, 3)}); continue
         if not common:
-            print("direct_close: %-14s %s and %s share no copper layer" % (net, A[3], B[3]))
-            rows.append({"net": net, "result": "no shared layer", "gap_mm": round(gap, 3)}); continue
-        L = common[0] if len(common) == 1 else (A[2][0] if A[2][0] in common else common[0])
-        tried += 1
-        shapes = [("direct", [(L, A[1]), (L, B[1])]),
-                  ("L via x", [(L, A[1]), (L, pcbnew.VECTOR2I(B[1].x, A[1].y)), (L, B[1])]),
-                  ("L via y", [(L, A[1]), (L, pcbnew.VECTOR2I(A[1].x, B[1].y)), (L, B[1])])]
+            # TWO ENDS ON DIFFERENT LAYERS ARE NOT A REFUSAL, they are a hop (12 September 2026, board C10).
+            # C10 ended its third round at 0 hard and one open: U3 pad 10 on B.Cu, 1.7 mm from a track of its
+            # own net on In2. The tool already lays a via wherever a shape changes layer (the detour shapes
+            # below do), and it was declining to use that for the one case where a via is the whole answer.
+            # This is `fix_d10_hubdm1.py`'s closure with the waypoints computed: a locked via and a short
+            # locked track to the pad, judged by the DRC like every other shape here.
+            La, Lb = A[2][0], B[2][0]
+            tried += 1
+            shapes = [("hop at %s" % B[3], [(La, A[1]), (La, B[1]), (Lb, B[1])]),
+                      ("hop at %s" % A[3], [(La, A[1]), (Lb, A[1]), (Lb, B[1])]),
+                      ("hop, L via x", [(La, A[1]), (La, pcbnew.VECTOR2I(B[1].x, A[1].y)), (La, B[1]), (Lb, B[1])]),
+                      ("hop, L via y", [(La, A[1]), (La, pcbnew.VECTOR2I(A[1].x, B[1].y)), (La, B[1]), (Lb, B[1])])]
+            L = La
+        else:
+            L = common[0] if len(common) == 1 else (A[2][0] if A[2][0] in common else common[0])
+            tried += 1
+            shapes = [("direct", [(L, A[1]), (L, B[1])]),
+                      ("L via x", [(L, A[1]), (L, pcbnew.VECTOR2I(B[1].x, A[1].y)), (L, B[1])]),
+                      ("L via y", [(L, A[1]), (L, pcbnew.VECTOR2I(A[1].x, B[1].y)), (L, B[1])])]
         # and the same geometry one layer down, which is what the router would have done: a short stub on the
         # anchors' own layer, a via at each end of it, and the run between them on a free layer. A's /+3V3 and
         # /VBUS20 are both refused on F.Cu for crossing other nets, and a detour is the only shape left that is
         # not hand work (12 September 2026).
-        for Ld in [b.GetLayerID(x) for x in DETOUR if b.GetLayerID(x) >= 0 and b.GetLayerID(x) != L]:
+        for Ld in ([b.GetLayerID(x) for x in DETOUR if b.GetLayerID(x) >= 0 and b.GetLayerID(x) != L] if common else []):
             f = min(0.6 / gap, 0.33) if gap > 0 else 0.33
             a1 = pcbnew.VECTOR2I(int(A[1].x + (B[1].x - A[1].x) * f), int(A[1].y + (B[1].y - A[1].y) * f))
             b1 = pcbnew.VECTOR2I(int(B[1].x + (A[1].x - B[1].x) * f), int(B[1].y + (A[1].y - B[1].y) * f))
