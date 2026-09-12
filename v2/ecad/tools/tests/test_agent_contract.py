@@ -459,3 +459,17 @@ def t_a_knob_this_run_cannot_execute_is_refused():
     ok, errs, _ = schema.validate(q, TEMPLATE)
     if not ok:
         raise AssertionError("a pre-router knob was refused on a pre-router run: %s" % errs)
+
+
+def t_there_is_only_one_judge():
+    """The loop used to re-grade every row and produced a different answer from the runner's.
+
+    On the first cycle where the two could differ they did: the runner graded an arm ILLEGAL against a
+    baseline hard count it had measured, and the loop re-graded the same row UNMEASURED because it had
+    no baseline to hand. Two graders with two answers is worse than either.
+    """
+    src = open(os.path.join(AGENT, "loop.py"), errors="replace").read()
+    if 'if not r.get("verdict"):' not in src:
+        raise AssertionError("the loop grades rows that already carry a verdict")
+    if "graded_by" not in src:
+        raise AssertionError("a row does not record which judge decided it")

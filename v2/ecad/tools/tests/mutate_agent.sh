@@ -65,6 +65,11 @@ p = os.path.join(T, "agent", "schema.py"); s = open(p).read()
 s = s.replace("                if src and src not in allowed:", "                if False:", 1)
 open(p, "w").write(s)'
 
+run_case "the loop re-grades what the runner judged" t_there_is_only_one_judge '
+p = os.path.join(T, "agent", "loop.py"); s = open(p).read()
+s = s.replace("        if not r.get(\"verdict\"):", "        if True:", 1)
+open(p, "w").write(s)'
+
 echo "mutation proof: each rule must FAIL on a tree carrying its defect"
 
 run_case "proposer gains a subprocess call" t_the_proposer_cannot_actuate '
@@ -90,7 +95,8 @@ open(p, "w").write(s)'
 
 run_case "the loop stops grading mechanically" t_the_judge_is_never_the_model '
 p = os.path.join(T, "agent", "loop.py"); s = open(p).read()
-s = s.replace("v, note = armsmod.grade(r)", "v, note = \"MET\", \"the model says so\"", 1)
+s = s.replace("            v, note = armsmod.grade(r, r.get(\"hard_baseline\"))",
+              "            v, note = \"MET\", \"the model says so\"", 1)
 open(p, "w").write(s)'
 
 run_case "a gate imports the agent" t_no_gate_or_chain_imports_the_agent '
