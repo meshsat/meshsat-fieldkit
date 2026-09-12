@@ -476,7 +476,7 @@ for k in range(-12, 13):
 # ------------------------------------------------------------------ world, lights, cameras, views
 S.render.engine = "CYCLES"; S.cycles.samples = int(os.environ.get("SAMPLES", "256")); S.cycles.use_denoising = False; S.cycles.device = "CPU"
 S.render.use_persistent_data = True   # 6 Sep 2026 16:58: keep the BVH between views (the drawing-built case is heavy; without this each view re-synced the scene for 80 s while the GPUs idled)
-if os.environ.get("CYCLES_GPU"):   # the build host nllei01gpu01 (RTX 3090 Ti): OptiX, else CUDA; run with the service group stopped
+if os.environ.get("CYCLES_GPU"):   # the build host the build VM (RTX 3090 Ti): OptiX, else CUDA; run with the service group stopped
     cp = bpy.context.preferences.addons["cycles"].preferences
     for dev_type in ("OPTIX", "CUDA"):
         try:

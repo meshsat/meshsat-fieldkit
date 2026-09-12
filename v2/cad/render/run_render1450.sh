@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# VM side (root@nllei01gpu01): the Peli 1450 render set. Waits for the C6 chain (C6-EXIT in ~/c6.log) and for the go flag ~/render3d/GO (set after the
+# VM side (root@<the build VM>): the Peli 1450 render set. Waits for the C6 chain (C6-EXIT in ~/c6.log) and for the go flag ~/render3d/GO (set after the
 # preview audit), exports the six boards as GLB with their case-frame origins, converts the STEP set, renders every view with the GPU, stamps a title
 # strip on each image, then prints RENDER-EXIT. The service group must be stopped before this runs (the chain scripts do that) and is started at the end.
 R=/root/gitlab/products/meshsat/meshsat-fieldkit; E=$R/v2/ecad; H=~/render3d; OUT=$H/out1450; export KICAD9_3DMODEL_DIR=$H/3dmodels
