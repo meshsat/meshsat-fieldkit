@@ -51,6 +51,19 @@ def _rows():
                 yield os.path.basename(path), m.group("ref"), fp, m.group("lcsc")
 
 
+def _rows_with_comment():
+    """_rows(), plus each row's comment, for the rules that have to read the prose."""
+    for path in GEN:
+        src = open(path, encoding="utf-8").read()
+        fps = _fpmap(src)
+        for m in CALL.finditer(src):
+            fp = fps.get(m.group("fp"))
+            if not fp:
+                continue
+            cm = re.search(r'part\(\s*"[^"]+"\s*,\s*"[^"]*"\s*,\s*"[^"]*"\s*,\s*"([^"]*)"', m.group(0))
+            yield (os.path.basename(path), m.group("ref"), fp, m.group("lcsc"), cm.group(1) if cm else "")
+
+
 def t_every_connector_row_on_a_stocked_land_names_its_part():
     """A JST-VH, XT60, U.FL or SMA land is a component JLC can place, so the row must name a code.
 
@@ -163,3 +176,43 @@ def t_a_declared_part_JLCPCB_cannot_supply_in_quantity_is_hand_fit_not_no_stock(
          "stockCount": 3, "initialPrice": 24.55}]}}
     ev = jc.certify(rec, cache, {"LT8705A": "Analog Devices through Mouser"}, jc.declared(jc.ALIASES))
     assert ev["verdict"] == "HAND_FIT" and "stock 3" in ev["note"], ev
+
+
+def t_a_socket_on_the_board_is_not_a_lead():
+    """An `lcsc-allow.txt` line says JLCPCB never places that part. It is right for a solder land and a
+    wire pad and wrong for a connector body: P's `(JST-PH` line covered the B2B-PH-K socket its own
+    thermistor lead plugs INTO, and D's covered four more (a 1x4 hub port, two 1x5 headset sockets and
+    the PA gate-bias 1x2). Five placeable connectors, in stock, were allow-listed as wire.
+
+    So a row whose footprint is a connector BODY must carry a code, whatever its prose calls it. The
+    solder lands stay exempt by their footprint (`SolderPad`, `SolderWire`, `TestPoint`), which is what
+    a land actually is."""
+    bodies = ("JST_PH_B", "JST_XH_B", "JST_VH_B", "AMASS_XT60", "U.FL_Hirose", "SMA_Amphenol",
+              "HDMI_A_Molex", "Molex_Pico")
+    # A row may take its code from lcsc_fill.py's map instead of from the generator, keyed on the
+    # comment and the land, so the rule asks both: it is about whether the BOM line ends up with a
+    # part, not about where the part number is written down.
+    # lcsc_fill.py runs its work at module level, so the map is read out of the source rather than
+    # imported. The key is (regex, footprint substring) and the value the code.
+    import ast
+    src = open(os.path.join(TOOLS, "lcsc_fill.py"), encoding="utf-8").read()
+    start = src.index("MAP = {")
+    depth = 0
+    for i in range(start + 6, len(src)):
+        if src[i] == "{":
+            depth += 1
+        elif src[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    fill_map = ast.literal_eval(src[start + len("MAP = "):end])
+    def filled(comment, fp):
+        for (rx, key), _code in fill_map.items():
+            if key in fp and re.search(rx, comment):
+                return True
+        return False
+    bad = ["%s %s on %s" % (f, ref, fp.split(":")[-1]) for f, ref, fp, code, comment in _rows_with_comment()
+           if any(b in fp for b in bodies) and not code and not filled(comment, fp)]
+    assert not bad, ("a connector body carries no LCSC code and a lead exemption cannot cover it:\n  "
+                     + "\n  ".join(bad))

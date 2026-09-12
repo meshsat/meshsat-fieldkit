@@ -95,7 +95,7 @@ part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block
 ic("U1", 8, "LTC2954CTS8-1 push-button on/off controller", "TSOT8", {"1": "VBAT", "2": "MAIN_PB", "3": "NC", "4": "GND", "5": "PI_SHDN_REQ", "6": "RAIL_EN", "7": "NC", "8": "KILL"}, "C683782")
 c("C4", "1u", "VBAT", "GND"); r("R2", "100k", "RAIL_EN", "VBAT"); r("R3", "100k", "PI_SHDN_REQ", "+3V3"); r("R4", "100k", "KILL", "VBAT")
 part("Q1", "Transistor_FET", "2N7002", "2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3 D)", "SOT23", {"1": "PI_KILL", "2": "GND", "3": "KILL"}); r("R5", "100k", "PI_KILL", "GND")
-part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead from the panel (XH2.5): PB, GND", "XH2", {"1": "MAIN_PB", "2": "GND"})
+part("J_MAINSW", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND", "XH2", {"1": "MAIN_PB", "2": "GND"}, "C265283")
 # --- LM5176 four-switch buck-boost stages (lm5176-datasheet.pdf, HTSSOP-28 PWP; Vref 0.8 V; pins: 1 EN/UVLO 2 VIN 3 VISNS 4 MODE 5 DITH 6 RT/SYNC 7 SLOPE 8 SS 9 COMP 10 AGND 11 FB 12 VOSNS
 #     13 ISNS- 14 ISNS+ 15 CSG 16 CS 17 PGOOD 18 SW2 19 HDRV2 20 BOOT2 21 LDRV2 22 PGND 23 VCC 24 BIAS 25 LDRV1 26 BOOT1 27 HDRV1 28 SW1, pad 29)
 def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isns="10m", rcs="5m", bias=None,
@@ -212,7 +212,7 @@ def efuse(uref, vin, vout, en, flt, refs, ilim):
     # 1.0 A, 453R for 2.0 A, each keeping its current in the note.
     c(cd, "10n", uref + "_DVDT", "GND"); r(rilm, ilim, uref + "_ILM", "GND"); r(rflt, "10k", flt, "+3V3"); r(rov1, "100k 1%", vin, uref + "_OVLO"); r(rov2, "10k 1% (OVLO)", uref + "_OVLO", "GND"); c(cin, "100n", vin, "GND")
 efuse("U21", "VBAT", "VMON", "MON_EN", "MON_FLT", ["C98", "R90", "R91", "R92", "R93", "C99"], "750R 1% (ILM: 1.2 A)"); vh2("J_MON", "monitor supply lead to the Xenarc (JST-VH): + -", "VMON")
-efuse("U22", "VBAT", "VHEAT", "HEAT_EN", "HEAT_FLT", ["C100", "R94", "R95", "R96", "R97", "C101"], "909R 1% (ILM: 1.0 A)"); part("J_HEAT", "Connector_Generic", "Conn_01x02", "heater mat under the 2590 cradle (XH2.5): + -", "XH2", {"1": "VHEAT", "2": "GND"})
+efuse("U22", "VBAT", "VHEAT", "HEAT_EN", "HEAT_FLT", ["C100", "R94", "R95", "R96", "R97", "C101"], "909R 1% (ILM: 1.0 A)"); part("J_HEAT", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the heater mat under the 2590 cradle, + and -", "XH2", {"1": "VHEAT", "2": "GND"}, "C265283")
 efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "453R 1% (ILM: 2.0 A)"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
 # --- hardware EMCON gates: SN74LVC08APWR quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC).
 #     EMCON_HW is active LOW (low silences) and this board only READS it: gate 3 used to drive TX_INHIBIT_n from EMCON_HW, which closed a
@@ -258,7 +258,7 @@ part("J_AB2", "Connector_Generic", "Conn_02x05_Odd_Even", "A-B wall-port ribbon 
 part("J_MEZZ1", "Connector_Generic", "Conn_02x08_Odd_Even", "D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C", "IDC16", {
  "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "TR_APRS", "8": "TX_INHIBIT_n", "9": "PA_EN", "10": "SDA", "11": "SCL", "12": "EXP_INT", "13": "+3V3", "14": "GND", "15": "ZEROIZE_HW", "16": "AB_SPARE"})
 r("R116", "100k", "TR_APRS", "GND"); r("R117", "10k", "ZEROIZE_HW", "+3V3"); r("R118", "100k", "SHORE_INHIBIT", "GND")
-part("J_USBW", "Connector_Generic", "Conn_01x04", "wall USB-C data pair to B16 passes here on the ribbon: this header is the pigtail's data side (D+ D- GND GND)", "PH4", {"1": "USB_WALL_P", "2": "USB_WALL_N", "3": "GND", "4": "GND"}); esd("U29", "USB_WALL_P", "USB_WALL_N", "+5V_DEV")
+part("J_USBW", "Connector_Generic", "Conn_01x04", "JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the ribbon, this is the pigtail's data side (D+ D- GND GND)", "PH4", {"1": "USB_WALL_P", "2": "USB_WALL_N", "3": "GND", "4": "GND"}, "C131334"); esd("U29", "USB_WALL_P", "USB_WALL_N", "+5V_DEV")
 # --- eleven blind-mate RF sites (32.56): top-side SMA jack for the device pigtail, bottom-side Radiall R222M00720 receptacle to the dock plug
 RF = (("VHF", "RF_VHF"), ("HF", "RF_HF"), ("WIFI24", "RF_WIFI24"), ("GNSS", "RF_GNSS"), ("SDR", "RF_SDR"), ("P2P-A", "RF_P2PA"), ("P2P-B", "RF_P2PB"), ("5G-MAIN", "RF_5G1"), ("5G-DIV", "RF_5G2"), ("IRID", "RF_IRIDIUM"), ("LORA", "RF_LORA"))
 for k, (nm, net) in enumerate(RF, 1):

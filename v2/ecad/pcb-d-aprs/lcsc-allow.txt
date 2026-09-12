@@ -3,7 +3,9 @@
 # A line here means JLCPCB never places that part: it is a lead, a solder land, a bench header, or a part
 # bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
 
-(JST-PH          # headset, PA gate-bias and spare-port leads, made up at build
+# (JST-PH        REMOVED 12 September 2026: the four rows it covered are JST B*B-PH-K SOCKETS on this
+#                  board, not leads: C131334 (1x4), C157993 (1x5, twice) and C5251182 (1x2), all in stock.
+#                  The LEADS are made up at build and have no BOM line of their own.
 (JST-VH          # the 5 V feed from A22's mezzanine
 (IDC 2x          # the A22 mezzanine harness
 electret bias    # a solder jumper, copper on our own board
