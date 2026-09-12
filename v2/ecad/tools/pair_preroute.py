@@ -2057,7 +2057,9 @@ def main(a):
                     _hx, _hy, _hL, _ = _leg_hit[0]
                     _own = [(math.hypot(mm(q.GetPosition().x) - _hx, mm(q.GetPosition().y) - _hy), q) for q in (pa, na, pb, nb)]
                     _d0, _q0 = min(_own, key=lambda t: t[0])
-                    _where = " refused at (%.2f, %.2f) on %s, %.2f mm from %s.%s%s" % (
+                    # no parentheses in this text: `pair_report.py` reads the reason as everything inside the
+                    # section line's own brackets, and a nested pair would cut the reason in half at the first one
+                    _where = " refused at %.2f, %.2f on %s, %.2f mm from %s.%s%s" % (
                         _hx, _hy, b.GetLayerName(_hL), _d0, _q0.GetParentFootprint().GetReference(), _q0.GetNumber(),
                         ", at the station" if _d0 <= 2.0 else ", out in the corridor")
                 failed = "%s -> %s (the legs clear no smoothing of the centreline%s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), _where)

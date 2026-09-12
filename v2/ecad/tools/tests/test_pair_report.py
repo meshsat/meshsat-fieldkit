@@ -19,6 +19,7 @@ pair_preroute: LAID  /HDMI1_CK: 3 section(s), 41.2 mm
 pair_preroute: FAIL  /ETH1_P1: section U1A -> C3 (the legs clear no smoothing of the centreline) on F.Cu,In2.Cu at w 0.13 s 0.127 (1 of 3 sections laid before it)
 pair_preroute: FAIL  /ETH1_P1: section C3 -> U1A (the legs clear no smoothing of the centreline) on F.Cu,In2.Cu at w 0.13 s 0.127 (1 of 3 sections laid before it)
 pair_preroute: FAIL  /SWP3_D: section C9 -> U4 (no stub path for /SWP3_D_P at U4) on F.Cu,In2.Cu at w 0.13 s 0.127 (0 of 2 sections laid before it)
+pair_preroute: FAIL  /ETH2_P1: section U1A -> C7 (the legs clear no smoothing of the centreline refused at 255.71, 196.95 on F.Cu, 1.08 mm from J_HDMI.7, at the station) on F.Cu,In2.Cu at w 0.13 s 0.127 (1 of 3 sections laid before it)
 pair_preroute:       0.800 mm of 0.822: the /HDMI3_D1_P via at (269.350, 22.350) against the /HDMI3_D1_N via at (269.250, 23.050)
 pair_preroute: FAIL  /HDMI3_D1: its own two legs come within 0.800 mm of each other in 3 place(s) against the class clearance 0.127; rolled back, the router takes the pair
 pair_preroute: FAIL  /HDMI2_D0: its own two legs come within 0.176 mm of each other in 1 place(s) against the class clearance 0.127; rolled back, the router takes the pair
@@ -54,6 +55,15 @@ def t_one_reason_does_not_split_on_its_measurements():
     rc, out = _run(LOG)
     line = [l for l in out.splitlines() if "own two legs come within" in l][0]
     assert line.strip().startswith("2 "), "the two own-legs refusals were counted as separate reasons: " + line
+
+
+def t_the_leg_refusal_line_parses_with_its_position_in_it():
+    """The refusal line carries a position now (12 September 2026), and the report reads a section failure's
+    reason as everything inside the line's own brackets: a nested pair of parentheses would cut the reason in
+    half at the first one, which is how the instrument fixed this morning would have broken by the afternoon."""
+    rc, out = _run(LOG)
+    assert "(unparsed)" not in out, out
+    assert "at the station" in out, "the position is lost from the reason:\n" + out
 
 
 def t_a_section_failure_still_names_the_part_it_died_at():
