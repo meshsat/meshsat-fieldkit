@@ -312,3 +312,26 @@ def t_a_routed_board_that_passed_its_gate_is_kept():
     done = tail.rindex("FINISH-$PHASE-DONE")      # the LAST one: the earlier ones are refusal paths
     if tail.index("kept:") > done:
         raise AssertionError("the board is kept after the finish says DONE")
+
+
+def t_a_finish_declaration_lives_where_the_finish_looks_for_it():
+    """`finish.sh` reads its per-board settings with `cfg`, which looks inside the `finish` block of
+    `tools/boards/<letter>.json`. A key written at the TOP level of that file is not an error and not a
+    warning: it is silently absent, and the stage it was meant to switch on simply does not run.
+
+    12 September 2026: board P declared `stitch_prune` at the top level with a paragraph of measurement
+    beside it, and three routes in a row were refused by the gate item the pruner exists to remove,
+    while the finish log carried no stitch_prune line at all to say it had never run.
+    """
+    import os as _os, re as _re, json as _json, glob as _glob
+    here = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    sh = open(_os.path.join(here, "finish.sh"), encoding="utf-8").read()
+    keys = set(_re.findall(r'cfg\s+\S+\s+([a-z_]+)', sh)) | set(_re.findall(r'\$\(cfg\s+\S+\s+([a-z_]+)\)', sh))
+    assert keys, "no cfg lookups found in finish.sh: this rule has lost its subject"
+    bad = []
+    for path in sorted(_glob.glob(_os.path.join(here, "boards", "*.json"))):
+        d = _json.load(open(path, encoding="utf-8"))
+        for k in sorted(keys & set(d)):
+            bad.append("%s declares %r at the top level; finish.sh reads it from the finish block"
+                       % (_os.path.basename(path), k))
+    assert not bad, "\n  ".join(bad)
