@@ -742,8 +742,28 @@ Grid.seg = _timed("stamp", Grid.seg)
 Grid.disc = _timed("stamp", Grid.disc)
 
 
+def _echo_knobs():
+    """Print the knobs this PROCESS received, once, before any pair is laid (12 September 2026).
+
+    Tier 2b of the control plane asked for this on the first cycle it reviewed, and the finding was
+    right: the run reported a pair count under an arm's knob and NOTHING in the result showed that the
+    knob had reached the tool. That is this project's most expensive shape, a tool reporting success
+    about something it had not done, and it had already cost six defects on A24 alone.
+
+    What this line proves and what it does not: it is os.environ as seen INSIDE the process that lays
+    the copper, after the numba re-exec, which is the same mapping every knob above is read from at
+    import. So it proves the value reached the tool. It does not prove any particular code path used
+    it; that is what a measured difference in the result is for.
+    """
+    seen = {k: v for k, v in sorted(os.environ.items()) if k.startswith(("PAIR_", "PLACE_")) and not k.startswith("_")}
+    print("pair_preroute: knobs this process received: %s | search kernel %s | stub kernel %s"
+          % (json.dumps(seen), _SEARCH_KERNEL, "compiled" if (_FAST_STUBS and pairsearch.HAVE_NUMBA) else "python"),
+          flush=True)
+
+
 def main(a):
     if not a: print(__doc__); return 2
+    _echo_knobs()
     board = a[0]; test = "--test" in a; g = float(a[a.index("--grid") + 1]) if "--grid" in a else 0.1
     _GLONG = float(os.environ.get("PAIR_GRID_LONG", "0")) or 0.0   # a coarser grid for the long pairs (0 = off)
     _LONG_MM = float(os.environ.get("PAIR_LONG_MM", "120"))

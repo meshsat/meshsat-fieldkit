@@ -13,8 +13,13 @@ failure class on that board was one of those: a pair refused for its own two via
 is "I could not parse this" answers a different question than the one asked of it, so the whole-pair shapes are read
 now and anything still unread is PRINTED rather than counted.
 
-Usage: pair_report.py <pair.log> [--top N]"""
-import sys, re, collections
+12 September 2026, second edit: `--json <path>` writes the same counts as an artefact. Tier 2 of the agentic
+system reads structured evidence and never a log, for the reason the appendix gives about logs generally (they
+carry the run's prose, which is where a wrong reading comes from); the profile is the one thing it needs that
+only a log holds, so the profile becomes a file with counts and a denominator, like every other verdict here.
+
+Usage: pair_report.py <pair.log> [--top N] [--json out.json]"""
+import sys, re, json, collections
 
 def main(a):
     if not a: print(__doc__); return 2
@@ -60,6 +65,15 @@ def main(a):
     if unread:
         print("pair_report: %d FAIL line(s) this tool cannot read, which is a gap in the tool and not in the run:" % len(unread))
         for l in unread[:3]: print("      %s" % l[:160])
+    if "--json" in a:
+        prof = {"laid": len(laid), "failed_attempts": len(fail), "swaps": len(swap), "twists": len(twist),
+                "distinct_pairs": total, "unparsed": len(unread),
+                "by_what_was_refused": dict(kinds.most_common()),
+                "by_reason": dict(reasons.most_common(top)),
+                "by_part": dict(parts.most_common(top)),
+                "by_pair": dict(stems.most_common(top))}
+        with open(a[a.index("--json") + 1], "w") as fh: json.dump(prof, fh, indent=1, sort_keys=True)
+        print("pair_report: profile written to %s" % a[a.index("--json") + 1])
     return 0
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

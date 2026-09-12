@@ -1,0 +1,12 @@
+{
+ "_what": "The run shape for board D's pair pass. The proposer is given knobs and a prediction to write; everything here is the board's own declaration and is NOT the proposer's to change (boards/d.json, 12 September 2026). D is the regression board: it lays 5 of 5 and any arm that costs it a pair is a finding.",
+ "board": "pcb-d-aprs",
+ "letter": "d",
+ "source_project": "pcb-d-aprs-d9",
+ "placed": "out/pcb-d-aprs-placed.kicad_pcb",
+ "timeout_s": 1800,
+ "_denominator": 5,
+ "passes": [
+  {"classes": "USB", "env": {"PAIR_BUDGET": 0, "PAIR_LAYERS": "F.Cu", "PAIR_HOP_LAYERS": "In2.Cu"}}
+ ]
+}
