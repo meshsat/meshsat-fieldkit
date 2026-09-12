@@ -64,7 +64,14 @@ def place(ref, x, y, rot=0.0, back=False):
 #     cards extending south (S2's NVMe along +X at the column's south end because the 3052 5G card takes the height); J_AB1 flipped over A22's header;
 #     the bay and band connectors (KiCad horizontal receptacles open toward local +y, the Molex HDMI toward local +x; a positive rotation is counter-clockwise); the HDMI receptacle at the south-east corner opening south, its switches at the north-east;
 #     the fan headers west of each module; the flashing USB-C receptacles on the south edge opening south (rot 0)
-FIXED = {"J_54V": (-126.3, -84.0, 0),   # 13 September 2026: the 54 V PoE inlet is a THROUGH-HOLE JST-VH and
+FIXED = {"J_GNSS1": (31.0, 93.0, 0),   # 13 September 2026: KiCad's U.FL land carries a keep-out on EVERY
+         # copper layer that forbids pads, which is Hirose's no-copper-under-the-launch rule taken to all six.
+         # Packed into GAP23 it sat at y 74.7 to 76.6, over IOCC, the control-plane pocket on the BACK, and
+         # seven unconnected pins of the LQFP-100 controller U61 fell inside it: the last five of board B's
+         # hard violations. GAP23's northern strip, y 88 to 97, is past IOCC's 88 and over no back pocket at
+         # all, and a U.FL pigtail does not mind ten millimetres. Same rule as J_54V below: a part whose
+         # keep-out or pins reach another side is placed, not packed.
+         "J_54V": (-126.3, -84.0, 0),   # 13 September 2026: the 54 V PoE inlet is a THROUGH-HOLE JST-VH and
          # the packer put it at y -76.2 to -66.6, astride the southern edge of IOCA, the control-plane pocket
          # on the BACK. Its two pins came out on B.Cu inside that pocket and landed on R473 (/CANT_B and
          # /CANL_B), R495 (GND) and C460 (/CANT_A): seven of board B's twelve remaining hard violations, and
@@ -217,7 +224,7 @@ REGIONS += [
  # controller, which would have re-opened the 9 September argument that put the three controllers in three
  # separate failure domains, so the passive part moves instead.
  ("GAP12", (-50, 33, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
- ("GAP23", (19, 33, 44, 97), ["U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71"], False),
+ ("GAP23", (19, 33, 44, 97), ["U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "U8", "U9", "U10", "C69", "C70", "C71"], False),
  ("BATT",  (-134, -65, -106, -40), ["BT1"], False),
  ("WMIDS", (-156, -97, -116, -66), ["U35", "D1", "D2", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
  ("NEX",   (96, 78, 123, 82), ["R14", "R15", "R16", "C37", "C38"], False),   # B17 (8 Sep 2026, 32.65): the two HDMI switches U3 and U4 are FIXED at 16 mm pitch above this strip (9.6 mm in the packed row collided their escape fans)
