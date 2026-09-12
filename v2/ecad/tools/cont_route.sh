@@ -40,7 +40,8 @@ open(fn, "w").write("".join(out)); print("cont: power layers in the DSN:", ", ".
 PYPL
 fi
 JAR=$HOME/bin/freerouting-1.9.0.jar
-timeout "$T" xvfb-run -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit ${FR_OIT:-2} -dct 0 > "$W/fr.log" 2>&1 || echo "cont: freerouting exit $?"
+_XDISP=$(( 200 + ($$ + RANDOM) % 700 ))   # 12 September 2026: never let two routers race for a display (xvfb-run -a picked the same number twice and killed a route at pass 24 of 60)
+timeout "$T" xvfb-run -n "$_XDISP" -a java -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit ${FR_OIT:-2} -dct 0 > "$W/fr.log" 2>&1 || echo "cont: freerouting exit $?"
 pkill -9 -f "^java .*$W/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "cont: no session, board kept"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PYX'

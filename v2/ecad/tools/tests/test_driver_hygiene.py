@@ -351,3 +351,30 @@ def t_the_compiled_stub_search_defaults_off_without_numba():
     m = re.search(r'_FAST_STUBS = os\.environ\.get\("PAIR_FAST_STUBS",\s*([^)]*)\)', src)
     assert m, "pair_preroute.py has no _FAST_STUBS default to check"
     assert "HAVE_NUMBA" in m.group(1), "the default is %s: it must read pairsearch.HAVE_NUMBA" % m.group(1).strip()
+
+
+def t_no_router_takes_an_auto_selected_x_display_alone():
+    """Two routes on one host must not race for a display.
+
+    12 September 2026: `xvfb-run -a` picked the same number for A's route as C10's was already using, and C10's
+    router died at pass 24 of 60 the moment A's started, with nothing in its own log. `-n` names a number per
+    work directory and `-a` still walks forward from it."""
+    import os, re
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bad = []
+    for f in sorted(x for x in os.listdir(tools) if x.endswith(".sh")):
+        s = open(os.path.join(tools, f), errors="replace").read()
+        for m in re.finditer(r"xvfb-run\s+(-[a-z]+\s+)*", s):
+            seg = m.group(0)
+            if "-n" not in seg and "-a" in seg: bad.append("%s: %s" % (f, seg.strip()))
+    assert not bad, "a router takes an auto-selected display with no number of its own:\n  " + "\n  ".join(bad)
+
+
+def t_no_script_kills_every_display_on_the_host():
+    """`pkill -9 -f "^Xvfb"` cleared one script's stale display by killing every virtual display on the machine,
+    and with it every other route's router. A named display makes the problem local."""
+    import os, re
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bad = [f for f in sorted(os.listdir(tools)) if f.endswith(".sh")
+           and re.search(r"pkill[^\n]*\^?Xvfb", open(os.path.join(tools, f), errors="replace").read())]
+    assert not bad, "these scripts kill every Xvfb on the host: " + ", ".join(bad)
