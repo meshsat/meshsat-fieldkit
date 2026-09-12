@@ -197,9 +197,18 @@ def main(argv):
         return verdict.write("agent_loop", verdict.INCONCLUSIVE, counts={"rows": 0}, denominator=len(names),
                              evidence=["exit %s" % rc, result], note="the arm did not run to a row", out_dir=a.out_dir)
 
-    for r in rows:                                                # the judge is mechanical and runs here too
-        v, note = armsmod.grade(r)
-        r["verdict"], r["note"] = v, note
+    # THE RUNNER IS THE JUDGE AND THERE IS ONLY ONE. This used to re-grade every row here, and on the
+    # first cycle where the two could differ they did: the runner graded an arm ILLEGAL against the
+    # baseline hard count it had measured, and this loop re-graded the same row UNMEASURED because it
+    # had no baseline to hand. Two graders with two answers is worse than either. The runner's verdict
+    # stands; a row that arrives without one is graded here and says so (12 September 2026).
+    for r in rows:
+        if not r.get("verdict"):
+            v, note = armsmod.grade(r, r.get("hard_baseline"))
+            r["verdict"], r["note"] = v, note
+            r["graded_by"] = "the loop, because the row carried no verdict"
+        else:
+            r.setdefault("graded_by", "the runner that measured it")
     nums = numbers_text(rows, a.baseline)
     print("loop: measured\n" + nums)
     open(os.path.join(a.out_dir, "numbers-%s.txt" % stamp), "w").write(nums)
