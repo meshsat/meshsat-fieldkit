@@ -77,6 +77,10 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # connector it protects (the D9 lesson of 32.73: a driver belongs at the part it drives). Beside J_USBW now,
          # ten millimetres from J_AB2, which is what makes the wall pair layable at all.
          "U29": (103, -15, 90),
+         # 12 September 2026: L2's box runs to y 19.7 and CHQ's floor is 18.5, so the packer, filling from the floor,
+         # put the charger's two switching-node capacitors on the inductor (two courtyard overlaps that survived every
+         # region move). They are L2's own capacitors: they are placed at it, 0.45 mm clear of its courtyard.
+         "C24": (-82.8, 21.8, 0), "C25": (-76.9, 21.8, 0),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          # A23: the converters south of their inductors, the rail column runs north to the connector
@@ -125,7 +129,7 @@ REGIONS = [
  # and the packer duly put the charger's CSD18510Q5B FETs (a 7.19 x 5.59 mm courtyard) under the front end's resistor row:
  # four `courtyards_overlap` on the PLACED board, before the pre-router touched it, and no gate read them until the
  # pre-route DRC (appendix 32.135). The region moves down into free board (CHS ends at y 6, PAS starts at x -66).
- ("CHQ",   (-118, 18.5, -70, 30), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
+ ("CHQ",   (-118, 18.5, -70, 30), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23"]),   # C24 and C25 are FIXED at L2
  ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  # 12 September 2026: POQ started at x -118 and ran under NODE (-118, -68, -106, -44), a 12 x 4 mm overlap the
  # packer never happened to fill. It starts clear of the pack node's column now; 58 x 16 mm still holds its eleven parts.
