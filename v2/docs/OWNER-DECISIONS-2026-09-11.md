@@ -310,6 +310,24 @@ is final in any case, and nothing is ordered.
 
 ---
 
+### Addendum, 12 September 2026: the prose half of this is done, and what is left is B
+
+`make_handoff.py` refused because its table named D8, E6 and P1 while the release folder holds **D10, E7 and P3**,
+and it refuses rather than attach one phase's notes to another's gerbers. That half is closed: each row now
+describes the phase that ships with what is true of it, and **D and E have fabrication notes of their own for the
+first time** (both four-layer boards whose zip carries four copper layers, both with via-in-pad on a handful of
+ground vias that an assembler has to be told about). The reserved-line checker reads the change as touching no
+protected declaration, which was verified rather than assumed (`reserved.py --diff`: 0 reserved lines over 9
+classes).
+
+**What still blocks the rebuild is B, and not only its blanks.** The set includes `meshsat-pcb-b-revA-B16-quote`,
+whose BOM carries 79 lines with no code, and the gate refuses it. Filling them would be work against a folder
+that is superseded in a deeper way than its blanks: that quote was exported from B16's placed board on 8
+September, and B is now **B19**, a different board with the I/O high-availability layer on it. So the order set
+should not be rebuilt around B16 at all; it waits for B19 to route, which the pair ruling holds.
+
+**Nothing is ordered and no cart line is touched.**
+
 ## 9. D's 5 V rail carries 1 A through a 0.5 mm class track, which IPC-2221 rates at 0.44 A (measured 12 September, 18:51)
 
 **D10 is otherwise the closest board in the set.** Its route came back 0 hard and 3 open, the finish closed all
