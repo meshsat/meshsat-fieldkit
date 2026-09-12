@@ -137,6 +137,14 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
     grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -"$PTAIL"
   fi
   echo "pair pre-router: $(grep -h "pairs laid," out/pair_preroute*.log | sed 's/^pair_preroute: //' | paste -sd'; ')"
+  # 12 September 2026: the DRC before the block, not after it. A board that fails the pair gate stopped here, so
+  # the copper the pre-router DID lay was never put to a DRC at all: B19 has laid pairs since 9 September and has
+  # never once been asked whether they are legal, which is how A's shorting fan survived a night. The gate still
+  # blocks; what changes is that the evidence exists when it does.
+  if [ "$PP" -ne 0 ] && [ "${PAIR_GATE:-1}" != 0 ]; then
+    ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json >/dev/null 2>&1 || true
+    [ -s out/$N-preroute-drc.json ] && python3 ../tools/hardset.py out/$N-preroute-drc.json pre --examples 4 --label 'pre-route DRC on the refused board' | sed 's/^hardset:/pre-route DRC (refused board):/' || true
+  fi
   [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || block "pair pre-router (out/pair_preroute.log)"
 fi
 

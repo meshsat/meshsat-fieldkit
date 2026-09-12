@@ -5423,8 +5423,8 @@ any small change (a greedy pass with no rip-up: 32.117 measured twelve pairs fro
 of slack).
 
 **And then the entry check cleared itself too, fifteen minutes after I had named it as the cause.** With
-`PAIR_ENTRY_STRICT` measured directly, the same board, the same tools, one variable: **9 of 48 with the check and
-9 of 48 with the old skip.** It costs nothing here. So all five guards are cleared by measurement and **the fall
+`PAIR_ENTRY_STRICT` measured directly, the same board, the same tools, one variable: **the old skip lays 25 of 113
+(9 of 48 and 16 of 65) and the check lays 26 (9 and 17).** The guard is worth PLUS ONE. It costs nothing here. So all five guards are cleared by measurement and **the fall
 from 22 of 48 to 8 is not attributable to any of them**.
 
 **What is left is the board.** B19 is not the same board it was this morning: the wall pair left `J_AB1` for
@@ -5433,6 +5433,11 @@ at the NVMe and PCIe parts are laid into whatever room that leaves. The record's
 this one, from 32.109: "the baseline also moved because the placement did". **The number is not comparable across
 the ribbon split and nothing should be concluded from the difference until B19 is re-measured as the board it now
 is**, which is a sweep of the slack curve on the new placement, not an argument about guards.
+
+**And a gap the arms exposed by accident: B19's chain blocks at the pair gate BEFORE the pre-route DRC**, so the
+copper the pre-router did lay on that board has never once been asked whether it is legal, since 9 September.
+That is how A's shorting fan survived a night. `full.sh` runs the DRC on the refused board and prints its hard
+set before it blocks now: the gate still refuses, and the evidence exists when it does.
 
 **Written down because I got it wrong twice in one night and the measurement caught it both times:** first the
 raster at the station, then the entry check itself. Each was a plausible cause, each was refuted in under twenty
