@@ -137,3 +137,12 @@ def t_the_trim_never_takes_a_whole_run():
     45.84 mm of A's /USB_D8_P in a single step, which is not a trim but a deletion."""
     b = _body("trim_leg")
     assert "all(math.hypot" in b, "trim_leg still removes a piece with only one end inside the radius"
+
+def t_a_laid_pair_is_judged_against_every_other_net():
+    """A's /USB_D8 laid its fan across /USB_WALL, laid minutes earlier by the same pass, and every emission on
+    that path had asked a map. The maps were right; nobody asked them about the copper as emitted."""
+    s = _src()
+    assert "CROSS_NET" in s, "there is no cross-net verdict on a laid pair"
+    i = s.find("if _foul:")
+    assert i > 0 and "rollback()" in s[i:i + 200], "a pair whose copper lies on another net is kept"
+    assert "_what_is_at(" in s[max(0, i - 1500):i], "the cross-net verdict does not name what it hit"
