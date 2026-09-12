@@ -45,89 +45,27 @@
 		(45 "User.4" user)
 	)
 	(setup
-		(stackup
-			(layer "F.SilkS"
-				(type "Top Silk Screen")
-			)
-			(layer "F.Paste"
-				(type "Top Solder Paste")
-			)
-			(layer "F.Mask"
-				(type "Top Solder Mask")
-				(thickness 0.01)
-			)
-			(layer "F.Cu"
-				(type "copper")
-				(thickness 0.035)
-			)
-			(layer "dielectric 1"
-				(type "prepreg")
-				(thickness 0.0994)
-				(material "FR4 prepreg 3313")
-				(epsilon_r 4.1)
-				(loss_tangent 0.02)
-			)
-			(layer "In1.Cu"
-				(type "copper")
-				(thickness 0.0152)
-			)
-			(layer "dielectric 2"
-				(type "core")
-				(thickness 0.55)
-				(material "FR4 core")
-				(epsilon_r 4.6)
-				(loss_tangent 0.02)
-			)
-			(layer "In2.Cu"
-				(type "copper")
-				(thickness 0.0152)
-			)
-			(layer "dielectric 3"
-				(type "prepreg")
-				(thickness 0.1088)
-				(material "FR4 prepreg 2116")
-				(epsilon_r 4.16)
-				(loss_tangent 0.02)
-			)
-			(layer "In3.Cu"
-				(type "copper")
-				(thickness 0.0152)
-			)
-			(layer "dielectric 4"
-				(type "core")
-				(thickness 0.55)
-				(material "FR4 core")
-				(epsilon_r 4.6)
-				(loss_tangent 0.02)
-			)
-			(layer "In4.Cu"
-				(type "copper")
-				(thickness 0.0152)
-			)
-			(layer "dielectric 5"
-				(type "prepreg")
-				(thickness 0.0994)
-				(material "FR4 prepreg 3313")
-				(epsilon_r 4.1)
-				(loss_tangent 0.02)
-			)
-			(layer "B.Cu"
-				(type "copper")
-				(thickness 0.035)
-			)
-			(layer "B.Mask"
-				(type "Bottom Solder Mask")
-				(thickness 0.01)
-			)
-			(layer "B.Paste"
-				(type "Bottom Solder Paste")
-			)
-			(layer "B.SilkS"
-				(type "Bottom Silk Screen")
-			)
-			(copper_finish "ENIG")
-			(dielectric_constraints no)
-		)
+  (stackup
+    (layer "F.SilkS" (type "Top Silk Screen"))
+    (layer "F.Paste" (type "Top Solder Paste"))
+    (layer "F.Mask" (type "Top Solder Mask") (thickness 0.01))
+    (layer "F.Cu" (type "copper") (thickness 0.035))
+    (layer "dielectric 1" (type "prepreg") (thickness 0.0994) (material "FR4 prepreg 3313") (epsilon_r 4.1) (loss_tangent 0.02))
+    (layer "In1.Cu" (type "copper") (thickness 0.0152))
+    (layer "dielectric 2" (type "core") (thickness 0.55) (material "FR4 core") (epsilon_r 4.6) (loss_tangent 0.02))
+    (layer "In2.Cu" (type "copper") (thickness 0.0152))
+    (layer "dielectric 3" (type "prepreg") (thickness 0.1088) (material "FR4 prepreg 2116") (epsilon_r 4.16) (loss_tangent 0.02))
+    (layer "In3.Cu" (type "copper") (thickness 0.0152))
+    (layer "dielectric 4" (type "core") (thickness 0.55) (material "FR4 core") (epsilon_r 4.6) (loss_tangent 0.02))
+    (layer "In4.Cu" (type "copper") (thickness 0.0152))
+    (layer "dielectric 5" (type "prepreg") (thickness 0.0994) (material "FR4 prepreg 3313") (epsilon_r 4.1) (loss_tangent 0.02))
+    (layer "B.Cu" (type "copper") (thickness 0.035))
+    (layer "B.Mask" (type "Bottom Solder Mask") (thickness 0.01))
+    (layer "B.Paste" (type "Bottom Solder Paste"))
+    (layer "B.SilkS" (type "Bottom Silk Screen"))
+    (copper_finish "ENIG")
+    (dielectric_constraints no)
+  )
 		(pad_to_mask_clearance 0)
 		(solder_mask_min_width 0.1)
 		(allow_soldermask_bridges_in_footprints no)
@@ -4226,7 +4164,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -4501,7 +4439,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -5443,7 +5381,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -7137,7 +7075,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 100V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -9131,7 +9069,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -9406,7 +9344,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -16605,7 +16543,7 @@
 				)
 			)
 		)
-		(property "Value" "TPS259631DDAR eFuse VBAT -> VMON (1.2 A (ILM))"
+		(property "Value" "TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))"
 			(at 0 3.4 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -16990,7 +16928,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -19151,7 +19089,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -22162,7 +22100,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -24408,7 +24346,7 @@
 				)
 			)
 		)
-		(property "Value" "heater mat under the 2590 cradle (XH2.5): + -"
+		(property "Value" "JST-XH 1x2 socket: the heater mat under the 2590 cradle, + and -"
 			(at 1.25 4.6 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -26889,7 +26827,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -27027,7 +26965,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 100V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -28891,7 +28829,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -29975,7 +29913,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -30386,7 +30324,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -32214,7 +32152,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -34115,7 +34053,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -39778,7 +39716,7 @@
 				)
 			)
 		)
-		(property "Value" "TPS259631DDAR eFuse VBAT -> VHEAT (1.0 A (ILM))"
+		(property "Value" "TPS259631DDAR eFuse VBAT -> VHEAT (909R 1% (ILM: 1.0 A))"
 			(at 0 3.4 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -41565,7 +41503,7 @@
 				)
 			)
 		)
-		(property "Value" "MAIN button lead from the panel (XH2.5): PB, GND"
+		(property "Value" "JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND"
 			(at 1.25 4.6 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -42396,7 +42334,7 @@
 				)
 			)
 		)
-		(property "Value" "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (2.0 A (ILM))"
+		(property "Value" "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))"
 			(at 0 3.4 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -43577,7 +43515,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 100V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -45696,7 +45634,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -54348,7 +54286,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -58533,7 +58471,7 @@
 				)
 			)
 		)
-		(property "Value" "wall USB-C data pair to B16 passes here on the ribbon: this header is the pigtail's data side (D+ D- GND GND)"
+		(property "Value" "JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the ribbon, this is the pigtail's data side (D+ D- GND GND)"
 			(at 3 4 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -60544,7 +60482,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -61097,7 +61035,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -61235,7 +61173,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -61511,7 +61449,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -64575,7 +64513,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -65235,7 +65173,7 @@
 				)
 			)
 		)
-		(property "Value" "22u 50V X7R 1210"
+		(property "Value" "10u 50V X7R 1210"
 			(at 0 2.3 0)
 			(layer "F.Fab")
 			(hide yes)
