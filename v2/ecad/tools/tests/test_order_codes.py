@@ -17,7 +17,7 @@ defects and one reporting defect sat behind `jlc_certify.py`'s 21 non-certified 
    row whose part IS chosen was reported as unchosen, and a pin-header land whose comment describes the
    module that plugs into it was reported the same way, which buried both.
 """
-import os, re, sys, glob, datetime
+import os, re, sys, glob, csv, datetime
 
 _today = datetime.date.today().isoformat()
 
@@ -234,3 +234,46 @@ def t_a_short_declaration_does_not_swallow_rows_nobody_declared():
     ev = jc.certify({"comment": "5 V rail decoupling, 10u 0805", "fp": "Capacitor_SMD:C_0805_2012Metric",
                      "code": "", "qty": 1}, {}, hf, {})
     assert ev["verdict"] != "HAND_FIT", ev
+
+
+def t_every_fill_rule_names_a_land_this_project_draws():
+    """`lcsc_fill.py`'s MAP is keyed on (value regex, footprint substring), and a substring that matches no
+    land we ever draw is a rule that can never fire. Owner ruling 10's two capacitor entries were written
+    with "C1210" where the land is `C_1210_3225Metric`, so A24's finish refused the deliverable for 22 blank
+    BOM lines on the very part the ruling chose. A key that matches nothing is worse than no key: the code
+    reads as present."""
+    import ast
+    s = open(os.path.join(TOOLS, "lcsc_fill.py"), encoding="utf-8").read()
+    start = s.index("MAP = {")
+    depth = 0
+    for i in range(start + 6, len(s)):
+        if s[i] == "{":
+            depth += 1
+        elif s[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    fill_map = ast.literal_eval(s[start + len("MAP = "):end])
+    # The denominator is every land that actually reaches a BOM, because that is what lcsc_fill reads, plus
+    # the strings the generators name. Several lands are built by helpers (`idc("2x10")`), so a scan of the
+    # generator source alone reports rules as dead that three shipped BOMs use.
+    import glob as _glob
+    lands = set()
+    for path in GEN + [os.path.join(TOOLS, f) for f in os.listdir(TOOLS) if f.startswith("gen_footprints")]:
+        src = open(path, encoding="utf-8").read()
+        lands |= set(re.findall(r'"([A-Za-z0-9_.\- ]+:[A-Za-z0-9_.\-]+)"', src))
+        lands |= set(re.findall(r'write\("([A-Za-z0-9_.\-]+)"', src))
+    boards = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "release", "revA", "boards")
+    for bom in _glob.glob(os.path.join(boards, "*", "*bom*.csv")):
+        try:
+            for row in csv.DictReader(open(bom, newline="", encoding="utf-8", errors="replace")):
+                fp = (row.get("Footprint") or "").strip()
+                if fp:
+                    lands.add(fp)
+        except Exception:
+            pass
+    blob = " ".join(lands)
+    dead = sorted({key for _rx, key in fill_map if key and key not in blob})
+    assert not dead, ("these fill rules name a footprint substring no generator draws, so they can never "
+                      "fire: %s" % ", ".join(dead))

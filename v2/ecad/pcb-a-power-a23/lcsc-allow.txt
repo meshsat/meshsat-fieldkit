@@ -4,13 +4,15 @@
 # bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
 
 (JST-VH          # rail and supply leads: wire assemblies made at build, not placed parts
-(XH2.5)          # panel button and heater-mat leads, wired at build
+# (XH2.5)        RETIRED 12 September 2026: the rows it covered are JST B2B-XH-A SOCKETS on this
+#                  board, C265283, stock 8,535. The LEADS are wired at build and have no BOM line.
 (IDC 2x          # board-to-board ribbons, made up from cable and IDC shells at build
 SMP-MAX slide-on receptacle   # Radiall R222M00720, hand-fit, route in tools/jlc-handfit.txt
 SMA jack (Amphenol 132134     # hand-fit bulkhead jack, route in tools/jlc-handfit.txt
 spring pins to the dock block # Preci-Dip 813-S1-012-10-016101, hand-fit, route in tools/jlc-handfit.txt
 pigtail header   # a land for a pigtail the builder solders, not a placed connector
-this header is the pigt       # same, the wall USB-C data pass-through
+# this header is the pigt     RETIRED 12 September 2026: J_USBW is a JST B4B-PH-K socket, C131334,
+#                  stock 168,574, not a land. Its pigtail is made up at build.
 XAL              # Coilcraft: not in JLCPCB's catalogue in any value or series, route in tools/jlc-handfit.txt
 25 A mini blade (Keystone 3568 # the holder is a through-hole blade clip JLC does not place and the fuse is fitted at build; route in tools/jlc-handfit.txt
 9 A spring pin      # Mill-Max 0858 class dock-block power pins, hand-fit, route in tools/jlc-handfit.txt
