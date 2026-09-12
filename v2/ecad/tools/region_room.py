@@ -50,10 +50,19 @@ def room(rect, side, others, blockers, outline, step=0.5, limit=80.0):
         g = 0.0
         while g + step <= limit:
             g += step
-            cand = (lo_x + dx0 * g, lo_y + dy0 * g, hi_x + dx1 * g, hi_y + dy1 * g)
+            # THE STRIP BEING ADDED, NOT THE WHOLE GROWN RECTANGLE (13 September 2026). Board B's ETH region
+            # already overlaps the fixed magnetics T1 by a tenth of a millimetre at its northern edge, so
+            # testing the grown rectangle reported zero room in ALL FOUR directions and read as boxed in on
+            # every side by a part that sits past one edge. A region is asking what is in the way of GROWING,
+            # and what it already overlaps is a different question, one the placed board answers.
+            cand = ((lo_x - g, lo_y, lo_x, hi_y) if d == "west" else
+                    (hi_x, lo_y, hi_x + g, hi_y) if d == "east" else
+                    (lo_x, lo_y - g, hi_x, lo_y) if d == "south" else
+                    (lo_x, hi_y, hi_x, hi_y + g))
+            whole = (lo_x + dx0 * g, lo_y + dy0 * g, hi_x + dx1 * g, hi_y + dy1 * g)
             hit = None
-            if outline and not (outline[0] <= cand[0] and cand[2] <= outline[2]
-                                and outline[1] <= cand[1] and cand[3] <= outline[3]):
+            if outline and not (outline[0] <= whole[0] and whole[2] <= outline[2]
+                                and outline[1] <= whole[1] and whole[3] <= outline[3]):
                 hit = "the board outline"
             if hit is None:
                 for nm, r, sd in others:
