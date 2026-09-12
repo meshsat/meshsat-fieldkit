@@ -131,3 +131,9 @@ def t_a_twist_is_declared_only_where_the_pads_are_on_opposite_sides():
     tail = s[i:i + 1200]
     assert "crossing = real_a * real_b < 0" in tail, "a pair with nothing to swap still takes the forced twist"
     assert "crossing = True" not in tail.split("crossing = real_a")[0], "the forced twist still reaches `crossing = True`"
+
+def t_the_trim_never_takes_a_whole_run():
+    """A leg's last piece can be the whole corridor run, and trimming it for having ONE end at the station took
+    45.84 mm of A's /USB_D8_P in a single step, which is not a trim but a deletion."""
+    b = _body("trim_leg")
+    assert "all(math.hypot" in b, "trim_leg still removes a piece with only one end inside the radius"
