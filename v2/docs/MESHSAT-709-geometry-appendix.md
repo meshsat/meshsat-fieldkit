@@ -5574,3 +5574,44 @@ had a board to prove it on. Measured on a copy before turning it on: **1 locked 
 0 left alone, hard 0 and unrouted 3 both unchanged**, and the gate's failure is gone. A declares it; the
 admission rule changes from "no board may" to "a board that declares it carries the number that justified it",
 which is what the old rule's own message asked for.
+
+### 32.139 The contention order is worth two pairs, not ten, and the reason the others fail is arithmetic (12 September 2026, 11:00 CEST; MESHSAT-862)
+
+32.137 ended with a written prediction: *"a contention-first order is worth ten or more of the forty, against the
+8 of 48 the alphabet-and-span order lays."* Two arms ran it on B19's placed board, DIFF100 only, one ranking the
+pairs by the total contention of their planned corridor and one by its most contested single cell.
+
+| order | pairs laid of 48 | against the baseline |
+|---|---:|---:|
+| alphabet and span (today) | 8 | |
+| `contended` (sum of contention over the corridor) | **10** | +2 |
+| `scarce` (the worst single cell of the corridor) | **11** | +3 |
+
+**The prediction failed and it failed by a factor of three.** Ordering the greedy pass by contention is worth two
+or three pairs of the forty, not ten. What is left of 32.137 is its measurement, which stands: every DIFF100 pair
+has a corridor when it is planned alone. What does not stand is the inference I drew from it, that allocation was
+therefore the constraint. **Knowing which pair should go first is worth almost nothing if the pair cannot be laid
+once it gets there.**
+
+**Reading the arms' own failure lines says why, and it is not a search problem at all.** Of the 74 failed attempts
+in the `scarce` arm, **36 are one sentence**: *"its own two legs come within 0.800 mm of each other in 1 place(s)
+against the class clearance 0.127"*, and the pieces named are always the pair's OWN TWO VIAS. The demand printed
+beside every one of them is 0.822 mm centre to centre, and the numbers measured are 0.707 to 0.800.
+
+**That is arithmetic, not congestion.** B19's DIFF100 class carries a **0.70 mm via** (`gen_pcb_b3.py`), so two of
+them need 0.70 + 0.127 = 0.827 mm between centres, and the HDMI and Ethernet fans these pairs leave from are on an
+**0.8 mm pitch**. A 0.70 mm via pair cannot leave an 0.8 mm fan on any layer, in any order, at any slack. It is
+decision 6's finding moved from the pad domain into the via domain: the part's pitch decides, and no amount of
+searching moves it.
+
+**The escape fan on this same board has known this since 5 September.** `escape.py` lays 0.40/0.20 vias at fine
+pitch (the CM5IO scheme) for exactly this arithmetic, and the pre-router never took that step: it lays the class
+via everywhere. A class via size is a default for new copper, not a bar the DRC holds a via to (the bar is the
+board's own `m_ViasMinSize`, 0.40 here, which those escape vias pass every time), so this is a router choice and
+not a net class change. `PAIR_VIA_MODE=min` is the knob, at today's behaviour until an arm grades it, and two arms
+are running with the prediction written down: twenty or more of 48 against the 11 that the same order lays today.
+
+**A note on the instrument.** `pair_report.py`'s largest bucket in both arms was `(unparsed)`, 38 and 42 lines, and
+the sentence above is one of the lines it cannot read. A report whose biggest category is "I could not parse this"
+answers a different question than the one asked of it, and the only reason the arithmetic above was found is that
+the raw log was read beside it.
