@@ -458,3 +458,52 @@ question are a debug header rather than the controller itself.
 **Nothing is blocked on this but board B.** A, C, D, E and P are unaffected, and B's pair work is blocked
 by it in the sense that matters: every pair number measured on that placement was measured in a
 neighbourhood carrying a short.
+
+---
+
+# OWNER RULINGS, 12 September 2026, asked one by one and answered in one sitting
+
+These eight answers close decisions 1, 2, 3, 6, 7, 8, 9, 10 and 11. **They are rulings, not
+recommendations, and they are not reopened without a new one.** Each is recorded with the option chosen
+and what it commits us to, so that no later session has to reconstruct it from a conversation.
+
+| # | question | RULING |
+|---|---|---|
+| 10 | A's 25 capacitors that do not exist | **the largest real part in the same land (10 uF 50 V, C596319), and the PoE stage's output on a 100 V part (C5156756) in the same land.** No layout change, no re-route; the ripple is re-measured before anything is ordered |
+| 11 | B's coin cell against the controller's through-hole pins | **move the CR2032 holder**, to the free area at the other end (GAP12), shuffling the wall-port cluster if it must |
+| 9 | D's 5 V rail at 1 A through a 0.44 A track | **widen the class to 1.2 mm on the inner layers** and re-route D; the deliverable is re-cut |
+| 7 | P and E5 copper weight | **order 2 oz**, which is what the prose already claims and which halves the pack board's current density |
+| 1 | does the pair hold bind C and E | **no: both are released from it.** Neither carries a pair with an impedance target, so the gate the ruling names can never refuse them. Board B remains held by it |
+| 2 | the layer P0 | **write up all seven from the evidence that exists, and TEST board A only** (four layers against six). The other six are documentation, not experiments |
+| 8 | the order paperwork | **draft and apply it myself, without an approval step.** See the note below: this one is overridden by a standing rule and I am asking again rather than acting on it |
+| 3 | the 0.09 mm intra-pair gap | **dropped.** Not investigated, removed from the options; the current geometry already hits its target |
+| 6 | the pair on a connector's end row | **ratified.** It is implemented, it costs nothing and board D lays 5 of 5 with it |
+
+## The one I am not acting on, and why
+
+**Decision 8** was answered "draft and apply it myself, without an approval step". I am not taking that
+as licence, for one reason: `make_handoff.py` and the order set are on the never-auto floor
+(`reserved.json`, class "the order set and anything ordered"), and that floor is checked before any mode
+and cannot be lifted by a mode. The floor exists because a wrong note travelling with the right gerbers
+is how the wrong board gets built, and the answer I was given is the one case here where the ruling and
+the standing rule disagree.
+
+**So I will draft it and leave it staged, and ask you once more to confirm that you want the approval
+step removed**, because removing it changes a safety property of the pipeline rather than a piece of
+work. If you confirm, I will record it as a change to the floor itself rather than as a one-off.
+
+## What each ruling commits us to
+
+- **A (decision 10)** is re-finished in about a day, with no re-route. The cost is capacitance: 20 uF in
+  and 30 uF out per converter against 44 and 66 designed, and ceramic loses more under bias. **The
+  ripple and loop margin on a 5 A converter are owed a measurement before the order, not before the
+  folder.**
+- **B (decision 11)** unblocks once the holder moves and the placement re-measures at zero hard
+  violations. B is roughly half the remaining work in the project.
+- **D (decision 9)** is re-routed and its deliverable re-cut. D was finished; it will be finished again
+  in about half a day, and correct this time.
+- **P and E5 (decision 7)** need the stackup and the order notes to say 2 oz, and `dc_drop` re-judged
+  against it.
+- **C and E (decision 1)** are released from the pair hold and stand on their own gates from here.
+- **The layer set (decision 2)** gets six written decisions and one experiment. If A routes on four
+  layers after today's finish, A's stackup becomes an owner decision again with a number attached.

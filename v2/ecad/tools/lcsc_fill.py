@@ -62,6 +62,12 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^3\.3u$", "C_0805"): "C7393948",       # CCTC TCC0805X7R335K250FT, 25 V X7R, 194,376 in stock; C18 sits on REGN, the BQ25731's 6 V LDO
  (r"^10u 35V 1210", "C_1210"): "C596319",  # YAGEO CC1210KKX7R9BB106, 10 uF 50 V X7R, 91,532 in stock: the 35 V part is a three-piece shelf at JLC, the 50 V one is not
  (r"^220n$", "C_0603"): "C344195",         # CCTC TCC0603X7R224K500CT, 50 V X7R, 1,342,752 in stock (C94 on the TPS25740A DVDD)
+ # Owner ruling 12 September 2026, decision 10. The five LM5176 stages asked for 22 uF 50 V in a 1210 land
+ # and no such part exists: at that size and voltage the ceramic tops out near 10 uF, confirmed three ways
+ # against JLCPCB's catalogue. The largest real X7R in the SAME land, so nothing moves, and a 100 V part for
+ # the PoE stage's 54 V output, where a 50 V part is over its rating at any capacitance.
+ (r"^10u 50V X7R 1210$", "C1210"): "C596319",     # YAGEO CC1210KKX7R9BB106, 10 uF 50 V X7R, 91,532 in stock
+ (r"^10u 100V X7R 1210$", "C1210"): "C5156756",   # FS32X106K101EGG, 10 uF 100 V X7R, 426,107 in stock
  (r"^330p$", "C_0603"): "C1664",           # Samsung CL10C331JB8NNNC, C0G 50 V, a BASIC part with a million in stock: the USB-C CC line caps want C0G
  (r"^SMBJ18A", "D_SMB"): "C151256",        # Littelfuse SMBJ18A, DO-214AA, 7,993 in stock (D4, the VBUS clamp at the outlet)
  (r"^4\.7u$", "C_0805"): "C1779",

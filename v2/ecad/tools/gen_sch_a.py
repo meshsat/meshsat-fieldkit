@@ -98,7 +98,8 @@ part("Q1", "Transistor_FET", "2N7002", "2N7002: panel controller high = pull KIL
 part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead from the panel (XH2.5): PB, GND", "XH2", {"1": "MAIN_PB", "2": "GND"})
 # --- LM5176 four-switch buck-boost stages (lm5176-datasheet.pdf, HTSSOP-28 PWP; Vref 0.8 V; pins: 1 EN/UVLO 2 VIN 3 VISNS 4 MODE 5 DITH 6 RT/SYNC 7 SLOPE 8 SS 9 COMP 10 AGND 11 FB 12 VOSNS
 #     13 ISNS- 14 ISNS+ 15 CSG 16 CS 17 PGOOD 18 SW2 19 HDRV2 20 BOOT2 21 LDRV2 22 PGND 23 VCC 24 BIAS 25 LDRV1 26 BOOT1 27 HDRV1 28 SW1, pad 29)
-def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isns="10m", rcs="5m", bias=None, rfb_val="10k 1%"):
+def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isns="10m", rcs="5m", bias=None,
+           rfb_val="10k 1%", cout="10u 50V X7R 1210"):
     """one stage with prefix p: refs = (Q_bh, Q_bl, Q_bsl, Q_bsh, R_fb_top, R_fb_bot, R_rt, R_slope, R_comp, C_comp, C_comp2, C_ss, C_vcc, C_boot1, C_boot2, R_isns, R_cs, R_pgood, R_en_top, R_en_bot, Cin1, Cin2, Cout1, Cout2, Cout3, R_mode)"""
     qbh, qbl, qsl, qsh, rft, rfb, rrt, rsl, rco, cco, cco2, css, cvcc, cb1, cb2, risns, rcs_, rpg, ret, reb, ci1, ci2, co1, co2, co3, rmd = refs
     N = lambda s: p + "_" + s
@@ -114,8 +115,19 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
     c(cb1, "100n 25V", N("BOOT1"), N("SW1")); c(cb2, "100n 25V", N("BOOT2"), N("SW2"))
     r(risns, isns + "Ohm 1% 2512 (ISNS)", N("OUT"), vout, "RS2512"); r(rcs_, rcs + "Ohm 1% 2512 (CS)", N("CS"), "GND", "RS2512"); r(rpg, "100k", N("PGOOD"), "+3V3")
     r(ret, "62k 1%", en, N("EN")); r(reb, "10k 1%", N("EN"), "GND"); r(rmd, "100k (MODE: CCM)", N("MODE"), N("VCC"))
-    c(ci1, "22u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "3"))   # the two VIN pins
-    for cr in (co1, co2, co3): c(cr, "22u 50V X7R 1210", vout, "GND", "C1210")
+    # OWNER RULING 12 September 2026, decision 10. These five stages asked for `22u 50V X7R 1210` in all 25
+    # positions and NO SUCH PART EXISTS: at a 1210 size and 50 V the ceramic tops out near 10 uF, which three
+    # queries of JLCPCB's catalogue confirm and the physics explains. The ruling is the largest real part that
+    # drops into the existing land, so nothing moves and A24 is re-finished rather than re-routed, with the
+    # ripple re-measured before anything is ordered rather than before the folder is cut.
+    #
+    # The OUTPUT value is per stage because the PoE stage's output is +54V_POE: a 50 V part there is over its
+    # rating before any derating or transient, which is wrong at any capacitance, so that stage takes a 100 V
+    # part in the same land (C5156756, X7R, 426,107 in stock). The cost of the ruling is capacitance: 20 uF in
+    # and 30 uF out per stage against 44 and 66, and X7R derates further under bias, so the ripple and loop
+    # margin on a 5 A converter are owed a measurement before the order.
+    c(ci1, "10u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "10u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "3"))   # the two VIN pins
+    for cr in (co1, co2, co3): c(cr, cout, vout, "GND", "C1210")
 # stage FE: the vehicle and shore input (9 to 36 V after E6's protection and filter) to the 20 V charge bus, 5 A; 60 V FETs
 lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
        ["Q2", "Q3", "Q4", "Q5", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119"])
@@ -169,7 +181,8 @@ lm5176("HF", "U15", "VBAT", "+12V_HF", "HF_EN", "140k", "L9", "6.8uH XAL1010-682
 vh2("J_HF", "12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -", "+12V_HF")
 # --- PoE rail: LM5176 in boost from VBAT to 54 V at 0.6 A for the TPS23861 PSE on B16 (the port magnetics sit beside the switch chip); 100 V FETs; software enable
 lm5176("POE", "U16", "VBAT", "+54V_POE", "POE_EN", "665k", "L10", "22uH XAL1010-223ME (Isat 9 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
-       ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], isns="20m", rcs="10m", bias="VBAT")
+       ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], isns="20m", rcs="10m", bias="VBAT",
+       cout="10u 100V X7R 1210")   # +54V_POE: a 50 V part on a 54 V rail is over its rating (decision 10)
 ic("U17", 10, "INA226 PoE rail monitor (0x47)", "VSSOP10", {"1": "+3V3", "2": "SCL", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "NC", "9": "+54V_POE", "10": "POE_OUT"}, "C49851")   # VBUS pin open: 54 V exceeds its 36 V range
 vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
 # --- USB-C PD outlet: TPS25740A source controller (ti-tps25740.pdf, VQFN-24 RGE; pins 1 VTX 2 CC1 3 CC2 4 GND 5 HIPWR 6 CTL1 7 CTL2 8 EN9V 9 N/C 10 N/C 11 UFP 12 PSEL 13 DVDD 14 PCTRL 15 GD 16 VAUX
