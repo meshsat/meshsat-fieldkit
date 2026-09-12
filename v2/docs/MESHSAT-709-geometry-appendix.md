@@ -5615,3 +5615,33 @@ are running with the prediction written down: twenty or more of 48 against the 1
 the sentence above is one of the lines it cannot read. A report whose biggest category is "I could not parse this"
 answers a different question than the one asked of it, and the only reason the arithmetic above was found is that
 the raw log was read beside it.
+
+### 32.140 The pair's own via size is worth six pairs, and the next bar is the end geometry (12 September 2026, 11:30 CEST; MESHSAT-862)
+
+32.139 named the arithmetic and predicted what removing it would be worth: *"twenty or more of 48 against the 11
+that the same order lays today."* Four arms on one placed board (md5 f8b5828a9d4e), DIFF100 only:
+
+| order | class via (0.70 mm) | board minimum via (0.40 mm) | worth |
+|---|---:|---:|---:|
+| alphabet and span (today) | 8 of 48 | **14 of 48** | +6 |
+| contention, `scarce` | 11 of 48 | **15 of 48** | +4 |
+
+**The prediction failed again, in the same direction and by less.** The via size is worth six pairs where twenty
+were predicted, and it is still the largest single knob measured on this board since the corridor slack. Two
+predictions in a row have over-claimed by a factor of three, and the shape of the error is the same both times: a
+count of the failures a change removes is not a count of the pairs it lays, because **a pair past one bar meets
+the next one**. The refusals themselves moved exactly as predicted (36 own-via refusals down to 18), and the
+pairs did not follow.
+
+**What the next bar is, measured on the same arms.** Every remaining own-legs refusal is now track against track
+at **0.203 to 0.225 mm against a demand of 0.252**, on the inner layers, and the emissions named in every one of
+them are the three END geometries: `the end stub into the pad`, `the end hop to a via beside the pad`, `the dive
+of a crossing end`. The pair's designed geometry on In2 and In3 is 0.13 mm wide at a 0.127 mm gap, which is 0.257
+mm centre to centre, so the legs are laid AT the bar along the corridor and pinch below it where each leg aims at
+its own target. The two legs' end hops are emitted one per leg, each toward its own via, and nothing makes the
+pair hold its pitch through the turn.
+
+**That is a geometry fix in three emitters and not a search parameter**, which is the same conclusion 32.103
+reached by counting and 32.139 reached by reading: the corridor is not what stops these pairs. `PAIR_VIA_MODE=min`
+is declared in `boards/b.json` for B alone, with its arms, because it is measured on B: A lays 3 of 3 with the
+class via at a 2.54 mm ribbon, where 0.827 mm between two vias is no constraint at all.
