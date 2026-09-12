@@ -867,7 +867,7 @@ def main(a):
         t = 0.0 if L2 <= 1e-9 else max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / L2))
         return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
 
-    def _nearest_edge(x, y, L, net, limit=3.0):
+    def _nearest_edge(x, y, L, net, limit=3.0, skip=()):
         """Distance in mm from a point to the nearest obstacle EDGE on one layer, ignoring `net`, or None past `limit`.
 
         Edges, not centres: the maps rasterise a pad by its polygon, so a centre distance is the wrong number to compare
@@ -909,11 +909,11 @@ def main(a):
         best = None
         for f in b.GetFootprints():
             for q in f.Pads():
-                if q.GetNetname() == net or not q.IsOnLayer(L): continue
+                if q.GetNetname() == net or q.GetNetname() in skip or not q.IsOnLayer(L): continue
                 d_ = math.hypot(mm(q.GetPosition().x) - x, mm(q.GetPosition().y) - y)
                 if best is None or d_ < best[0]: best = (d_, "pad %s.%s (%s)" % (f.GetReference(), q.GetNumber(), q.GetNetname() or "no net"))
         for t in b.GetTracks():
-            if t.GetNetname() == net: continue
+            if t.GetNetname() == net or t.GetNetname() in skip: continue
             if t.GetClass() == "PCB_VIA":
                 d_ = math.hypot(mm(t.GetPosition().x) - x, mm(t.GetPosition().y) - y); what = "via (%s)%s" % (t.GetNetname() or "no net", " locked" if t.IsLocked() else "")
             else:
