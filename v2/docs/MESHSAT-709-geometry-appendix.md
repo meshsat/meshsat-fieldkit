@@ -5424,3 +5424,23 @@ entries, and `tools/tests/test_pair_headers.py` now passes on A without an excep
 
 **The first position was refused by A's own gate**, which is the system working: (113, -62) sits inside the rod
 nut keep-out at (110.5, -73), and `check_pcb_a` said so before anything was routed.
+
+**A lays 3 of 3 with a clean pre-route, and the last four corrections were all placement.** With `J_AB2` in place
+the wall pair still failed, and each failure named the next thing: the ESD `U29` sat **86 mm from the connector it
+protects** and 96 mm from the ribbon (the packer had it in the test-point region), so it moved to J_USBW's side;
+its ROTATION then decided the pair's polarity presentation, and the four were measured in parallel on one board:
+**0 and 180 leave one crossing, 90 and 270 lay 3 of 3**. `J_AB2`'s first position was refused by A's own rod-nut
+gate and its second overlapped U29, so it sits at case (95, -11) now. And moving `CHQ` down to clear `FES` had put
+the charger's switching capacitors on the FIXED inductor `L2` (box y 12.3 to 19.7) because the packer fills a
+short region from its floor: `FES` moves up instead, and C24 and C25 are placed AT their inductor, 0.45 mm clear
+of its courtyard, which is where an output capacitor belongs anyway.
+
+**A's pre-route now reads `PREROUTE-DONE OK`: 3 of 3 pairs, 0 hard, gate ALL PASS on 511 checks, netlist_board
+2004 of 2004.** Its board is committed (`pcb-a-power-a23`), which is the 10 September rule about artefacts that
+exist only on a rented box, and **the A24 route is running** with the profile's own settings (18 attempts, one
+thread, In1 and In4 as power layers, GND a plane, a 5 h cap).
+
+**One correction to make in the same breath:** C10's router was suspected of dying when A's route started, and it
+had not; it is alive at pass 24 of 60 and the gap in its log was the pass cadence. What the suspicion did find is
+real and is fixed anyway: `xvfb-run -a` picks a display by racing for it, and `route_pcb.sh` cleared ITS stale
+display with `pkill -9 -f "^Xvfb"`, which would take every other route's router on the host with it.
