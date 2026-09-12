@@ -380,3 +380,12 @@ def t_no_script_kills_every_display_on_the_host():
     bad = [f for f in sorted(os.listdir(tools)) if f.endswith(".sh")
            and re.search(r"pkill[^\n]*\^?Xvfb", open(os.path.join(tools, f), errors="replace").read())]
     assert not bad, "these scripts kill every Xvfb on the host: " + ", ".join(bad)
+
+def t_the_contention_order_tool_is_classified():
+    """Every tool in this directory is one of the declared classes; a new one must say which."""
+    import os
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    assert os.path.exists(os.path.join(tools, "pair_order_from_plan.py")), "the contention-order tool is gone"
+    s = open(os.path.join(tools, "pair_order_from_plan.py"), errors="replace").read()
+    assert "PAIR_ORDER_FILE" not in s or "plan" in s, "the tool must say what it consumes"
+    assert "appendix 32.137" in s, "a tool born of a measurement carries the section that measured it"
