@@ -350,3 +350,42 @@ through `tools/power_copper.py` for exactly this reason.
 
 **What it blocks:** D10's deliverable, and nothing else. The board's other open item, one unrouted connection,
 is being worked by the router and is not a decision.
+
+## 10. A's five converters ask for a capacitor that does not exist, and on one stage it would be under-rated if it did (measured 12 September, 12:50)
+
+**What the schematic asks for.** Every LM5176 stage on A puts five `22u 50V X7R 1210` capacitors on its input and
+output: two at the two VIN pins, three at VOUT, five stages, **25 parts** (C11 to C15, C63 to C67, C74, C81 to
+C85, C92, C108 to C111, C116 to C119).
+
+**Finding 1: there is no 22 uF 50 V MLCC in a 1210 land.** Asked of JLCPCB's own catalogue on 12 September, three
+ways: `22uF 50V 1210 X7R`, `22uF 50V 1210 X5R` and the TDK part number `C3225X7R1H226` all come back with 10 uF,
+4.7 uF and 2.2 uF parts, or with electrolytic cans in plugin packages. The physics agrees: 1210 X7R at 50 V tops
+out around 10 uF, and 22 uF at 50 V is a 2220 part. **The 25 lines are the only thing left between A24 and its
+deliverable**, every other gate on that board having passed (0 hard, 0 unrouted, board gate ALL PASS on 799
+checks, 12 of 12 rails MET, 3 of 3 pairs within 1 mm and on their impedance target, netlist 2004 of 2004,
+contracts ALL PASS).
+
+**Finding 2, and it is the one that matters electrically: the POE stage's output is 54 V.** `lm5176("POE", "U16",
+"VBAT", "+54V_POE", ...)` puts those same "50 V" capacitors on a **54 V rail**, which is below the rail's own
+voltage before any derating or transient. That is a specification error independent of what can be bought, and it
+is on three output positions of that stage.
+
+**The options, with what each costs.**
+
+1. **10 uF 50 V X7R 1210 in every position** (YAGEO CC1210KKX7R9BB106, `C596319`, 91,532 in stock). No layout
+   change at all: the land, the placement and the routed copper stay exactly as they are. The cost is capacitance:
+   20 uF in and 30 uF out per stage instead of 44 and 66, and X7R at 50 V derates by roughly half at a 20 to 36 V
+   bias, so the effective figure is lower still. That is a ripple and loop-margin question on a 5 A converter, and
+   it is the reason this is your call and not mine.
+2. **22 uF 50 V in a 2220 land** (C5750X7R1H226 class). Keeps the capacitance, changes the footprint on 25 parts,
+   which is a placement change and a re-route of A.
+3. **Per-stage capacitors chosen properly**, which is the honest answer and the longest: each stage's input and
+   output sized from its own voltage, current and switching frequency, with the POE output on a 100 V part. This
+   is a schematic pass over five stages, and it fixes finding 2 rather than working around it.
+
+**What I recommend:** option 3 for the POE stage's output regardless of what you choose elsewhere, because a 50 V
+part on a 54 V rail is wrong at any capacitance, and option 1 for the other four stages if you want A24 cut this
+week, with the ripple re-checked before an order rather than before the folder.
+
+**What it blocks:** A24's deliverable, and nothing else. Every other board is unaffected; B, C, D and E do not use
+this value.
