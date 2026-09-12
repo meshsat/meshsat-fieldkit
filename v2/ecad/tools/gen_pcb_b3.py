@@ -71,9 +71,12 @@ FIXED = {"U30A": (-89.5, 57.5, 0), "U30B": (-55.5, 57.5, 0), "U31A": (-19.5, 57.
          "J_FLASH1": (-92.5, -95, 0), "J_FLASH2": (24, -95, 0), "J_FLASH3": (39.5, -95, 0), "J_5V_S1": (-92.5, -84.5, 0), "J_5V_S2": (27, -84, 0), "J_5V_S3": (39.5, -84.5, 0),
          "J_FAN1": (-97.5, 45, 90), "J_FAN2": (-27.5, 45, 90), "J_FAN3": (92.5, 44, 90),
          "J_AB1": (113, -46, 0), "J_ETH": (-152, 89.5, 180), "J_HDMI": (104.5, -93, 270), "J_PANEL": (-116, 92, 90), "T1": (-152, 68, 0),
+         # 12 September 2026: the wall pair's own ribbon (appendix 32.135), on the underside like J_AB1, in the free
+         # window east of it. The two ribbons are cables, so the headers need no common XY.
+         "J_AB2": (126, -70, 0),
          "U3": (100.5, 89, 0), "U4": (116.5, 89, 0),   # B17: the HDMI switches at 16 mm pitch (32.65)
          "U12": (111, 47.5, 0), "U13": (133.5, 84, 180), "U14": (154.5, 84, 180), "J_RB9704": (100.5, -56, 0)}
-BACK = {"J_AB1"}
+BACK = {"J_AB1", "J_AB2"}
 placed = {}
 for ref, (x, y, rot) in FIXED.items():
     if ref not in comps: print("WARNING not in netlist:", ref); continue

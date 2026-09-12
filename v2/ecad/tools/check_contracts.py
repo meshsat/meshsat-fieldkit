@@ -119,6 +119,15 @@ ma, mb = pinmap("A", "J_AB1", range(1, 27)), pinmap("B", "J_AB1", range(1, 27))
 diff = [p for p in range(1, 27) if not same(ma[p], mb[p])]
 check(ma and mb and all(ma.values()) and all(mb.values()) and not diff, "J_AB1 2x13 map identical on A and B",
       "differs on pins %s: %s" % (diff, {p: (ma[p], mb[p]) for p in diff[:4]}))
+# 7b. the wall-port ribbon J_AB2 (2x5 since 12 September 2026, appendix 32.135): the same map on both boards.
+# The wall pair left J_AB1 because a 2x13 has two end rows and the ribbon carried three pairs; this connector
+# exists so the third pair has an end row of its own.
+ma2, mb2 = pinmap("A", "J_AB2", range(1, 11)), pinmap("B", "J_AB2", range(1, 11))
+diff2 = [p for p in range(1, 11) if not same(ma2[p], mb2[p])]
+check(ma2 and mb2 and all(ma2.values()) and all(mb2.values()) and not diff2, "J_AB2 2x5 map identical on A and B",
+      "differs on pins %s: %s" % (diff2, {p: (ma2[p], mb2[p]) for p in diff2[:4]}))
+check(same(ma2.get(1), "USB_WALL_P") and same(ma2.get(2), "USB_WALL_N"), "J_AB2 carries the wall pair on its END row (pins 1 and 2)",
+      "pins 1 and 2 are %s and %s" % (ma2.get(1), ma2.get(2)))
 # 8. the mezzanine harness: A's J_MEZZ1 and D's J_HARN1 carry the same sixteen nets
 ma, md = pinmap("A", "J_MEZZ1", range(1, 17)), pinmap("D", "J_HARN1", range(1, 17))
 diff = [p for p in range(1, 17) if not same(ma[p], md[p])]
@@ -131,7 +140,7 @@ for net in ("USB_D8_P", "USB_D8_N"):
 # 10. the wall host port: its USB pair comes from B16's slot-1 hub over the ribbon and ends on A22's wall port part J_USBW
 for net in ("USB_WALL_P", "USB_WALL_N"):
     a = [r for r, p in B["A"][0].get(net, set())]; b = [r for r, p in B["B"][0].get(net, set())]
-    check("J_USBW" in a and "J_AB1" in a and "J_AB1" in b and any(r in ("U102", "U202", "U302") for r in b), "wall-port pair %s: B16 slot hub -> J_AB1 -> A22 J_USBW" % net, "A %s, B %s" % (sorted(a)[:5], sorted(b)[:5]))
+    check("J_USBW" in a and "J_AB2" in a and "J_AB2" in b and any(r in ("U102", "U202", "U302") for r in b), "wall-port pair %s: B16 slot hub -> J_AB2 -> A22 J_USBW" % net, "A %s, B %s" % (sorted(a)[:5], sorted(b)[:5]))
 # 11. the harness 3.3 V and the panel controller's USB: A22's +3V3 reaches D8 over the harness; B16's USB_PNL pair reaches C7 over the ribbon
 for k, ref in (("A", "J_MEZZ1"), ("D", "J_HARN1")):
     check(any(r == ref for r, _ in B[k][0].get("+3V3", set())), "+3V3 on %s %s" % (k, ref))
