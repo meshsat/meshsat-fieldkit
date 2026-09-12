@@ -5490,3 +5490,32 @@ thread, In1 and In4 as power layers, GND a plane, a 5 h cap).
 had not; it is alive at pass 24 of 60 and the gap in its log was the pass cadence. What the suspicion did find is
 real and is fixed anyway: `xvfb-run -a` picks a display by racing for it, and `route_pcb.sh` cleared ITS stale
 display with `pkill -9 -f "^Xvfb"`, which would take every other route's router on the host with it.
+
+
+### 32.137 THE FLOOR PLAN IS NOT THE PROBLEM: 110 of 113 pairs have a corridor (12 September 2026, 10:15 CEST; MESHSAT-862)
+
+The record has said since 9 September that B19's unlaid pairs "are not a router problem, they need a floor plan
+built around the pair corridors", and that sentence has been the named next lever ever since. **It is wrong, and
+one run of the tool's own plan mode says so.**
+
+`PAIR_PLAN_MODE=plan` searches every pair's corridor and lays NOTHING, so no pair takes room from another. On
+B19's placed board, at the board's own slack:
+
+| class | pairs with a corridor for EVERY section | contested cells | worst single cell |
+|---|---|---:|---:|
+| DIFF100 (four layers) | **48 of 48** | 87,901 | 6 pairs want it |
+| USB (two layers) | **62 of 65** | 69,534 | 7 pairs want it |
+
+**Every DIFF100 pair can be routed on this placement. None of them lacks a corridor.** The greedy pass lays 8 of
+those 48, so **forty of them lose their room to another pair**, and the map says where: one cell in the middle is
+wanted by six different pairs.
+
+**That moves the lever from placement to ALLOCATION**, which is a different and much cheaper problem. It also
+re-reads the negotiated router's rejection of 10 September (25 of 113 against the greedy 56): what failed there
+was LAYING a plan, because a planned path that turns out to be blocked fails outright where a search goes round.
+The plans themselves were never the weak part, and this run is the evidence.
+
+**The experiment this makes obvious, and it needs no placement change:** order the pairs by how contested their
+planned corridor is and let the greedy pass run in that order. The pass already takes `PAIR_ORDER_FILE`, so it is
+a computation over `plan-*.json` and `conflict-*.npz` and one ordinary run. Written before the measurement: a
+contention-first order is worth ten or more of the forty, against the 8 of 48 the alphabet-and-span order lays.
