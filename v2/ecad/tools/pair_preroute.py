@@ -1358,18 +1358,24 @@ def main(a):
             for t in stripped: b.Add(t)   # the escapes come back with the pair's failure
             stripped.clear()
         def other_of(net): return nn if net.GetNetname() == pn else pn
+        # 12 September 2026: every piece records WHICH emission laid it. A's /USB_D8 was refused for its own two
+        # legs and the four sites that can lay copper without asking are indistinguishable in a board file, so a
+        # day went into reading the code for something one word per piece answers.
+        _site = ["?"]; piece_site = {}
+        def at_site(name):
+            _site[0] = name
         def seg(x1, y1, x2, y2, L, net):
             nonlocal added
             if math.hypot(x2 - x1, y2 - y1) < 0.01: return
             wL = wid(L)
-            t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(x1), FromMM(y1))); t.SetEnd(VECTOR2I(FromMM(x2), FromMM(y2))); t.SetWidth(FromMM(wL)); t.SetLayer(L); t.SetNet(net); t.SetLocked(True); b.Add(t); added += 1; pieces.append(t)
+            t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(x1), FromMM(y1))); t.SetEnd(VECTOR2I(FromMM(x2), FromMM(y2))); t.SetWidth(FromMM(wL)); t.SetLayer(L); t.SetNet(net); t.SetLocked(True); b.Add(t); added += 1; pieces.append(t); piece_site[len(pieces) - 1] = _site[0]
             o = other_of(net)
             if L in trk1[o]: gr.seg(trk1[o][L], x1, y1, x2, y2, wL + clr_c + 0.01)   # the other leg keeps clear of this piece by the class clearance (the map's 0.16 floor blocked the other leg's own start 0.35 mm away)
             for vm in via1n.values(): gr.seg(vm, x1, y1, x2, y2, wL / 2 + clr_c + vd / 2 + 0.01)
             gr.seg(via, x1, y1, x2, y2, wL / 2 + CLR + vd / 2 + VIA_SPLIT)
         def via_at(x, y, net):
             nonlocal added
-            v = pcbnew.PCB_VIA(b); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetWidth(FromMM(vd)); v.SetDrill(FromMM(vdr)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(net); v.SetLocked(True); b.Add(v); added += 1; pieces.append(v)
+            v = pcbnew.PCB_VIA(b); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetWidth(FromMM(vd)); v.SetDrill(FromMM(vdr)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(net); v.SetLocked(True); b.Add(v); added += 1; pieces.append(v); piece_site[len(pieces) - 1] = _site[0]
             o = other_of(net)
             for L in trk1[o]: gr.disc(trk1[o][L], x, y, vd / 2 + clr_c + w / 2 + 0.01)
             for vm in via1n.values(): gr.disc(vm, x, y, vdr + 0.30 + 0.02)
@@ -1623,6 +1629,7 @@ def main(a):
                         for _v in _segB:
                             if _seg_dist(_u[0][0], _u[0][1], _u[1][0], _u[1][1], _v[0][0], _v[0][1], _v[1][0], _v[1][1]) < _need3: ok_ = False
                 if ok_:
+                    at_site("direct legs")
                     for net, S_, W_, E_ in legs_: seg(S_[0], S_[1], W_[0], W_[1], pcbnew.F_Cu, net); seg(W_[0], W_[1], E_[0], E_[1], pcbnew.F_Cu, net)
                     laid_sections += 1; continue
                 # not clear: the corridor takes over, with shorter entries so the two ends do not overlap
@@ -1908,9 +1915,11 @@ def main(a):
                 L = layers[run[0][0]]; pts = list(merged[r_i][1])
                 if len(pts) == 1: pts = pts * 2
                 lp = offset_polyline(pts, dof(L) * p_side); ln = offset_polyline(pts, -dof(L) * p_side)
+                at_site("corridor leg run %d" % (r_i + 1))
                 for poly, net in ((lp, net_p), (ln, net_n)):
                     for k in range(len(poly) - 1): seg(poly[k][0], poly[k][1], poly[k + 1][0], poly[k + 1][1], L, net)
                 if r_i > 0 and layers[runs[r_i - 1][0][0]] == L:   # the same layer (an entry run meets the corridor): the legs join with a short piece
+                    at_site("run join")
                     for poly_start, prev_poly_end, net in ((lp[0], prev_end[0], net_p), (ln[0], prev_end[1], net_n)): seg(prev_poly_end[0], prev_poly_end[1], poly_start[0], poly_start[1], L, net)
                 elif r_i > 0:   # the layer change: two vias VIA_SPLIT either side of the centreline, on the previous run's last direction, walked back until both sites are free
                     ppts = list(merged[r_i - 1][1])
@@ -1938,6 +1947,7 @@ def main(a):
                     cx_, cy_, nx, ny, split_ = spot
                     for sign, net, poly_start, prev_poly_end in ((p_side, net_p, lp[0], prev_end[0]), (-p_side, net_n, ln[0], prev_end[1])):
                         vx, vy = cx_ + nx * split_ * sign, cy_ + ny * split_ * sign
+                        at_site("layer change")
                         seg(prev_poly_end[0], prev_poly_end[1], vx, vy, Lprev, net); via_at(vx, vy, net); seg(vx, vy, poly_start[0], poly_start[1], L, net)
                 prev_end = (lp[-1], ln[-1])
             if failed: break
@@ -1991,15 +2001,18 @@ def main(a):
                                 # CROSSES the partner's copper; two segments 0.06 mm apart never cross, so the N fan came to lie
                                 # flat along the P leg's staircase and ten shorting items followed. The fan asks now, and takes the
                                 # searched stub when the straight one would sit on its own partner.
+                                at_site("the N fan of a dive")
                                 if own_clear(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n) and own_clear(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n):
                                     seg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n); seg(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n)
                                 elif not stub(lnx, lny, _nx_, _ny_, pcbnew.F_Cu, net_n):
                                     failed = "%s -> %s (the N fan into %s lies on its own partner and no stub goes round it)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
                                 nnx_, nny_ = (lnx - lpx, lny - lpy); nl2_ = math.hypot(nnx_, nny_) or 1.0
+                                at_site("the P dive under it")
                                 err_ = dive_p(mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), lpx, lpy, pcbnew.F_Cu, None, st_[0], net_p, (-nnx_ / nl2_, -nny_ / nl2_))
                                 if err_: failed = "%s -> %s (the fan into %s crosses, %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference(), err_); break
                                 report.append("DIVE  %s: the P leg crosses under the N fan into %s on %s" % (stem, st_[0].GetParentFootprint().GetReference(), b.GetLayerName(hop_of(pcbnew.F_Cu) or pcbnew.F_Cu)))
                                 continue
+                        at_site("fan into the pads")
                         okp = fan_leg(lpx, lpy, mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), pcbnew.F_Cu, net_p)
                         okn = fan_leg(lnx, lny, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
                         if not (okp and okn): failed = "%s -> %s (the fan into %s is blocked and has no path)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
@@ -2010,12 +2023,15 @@ def main(a):
                 _pf = obj.GetParentFootprint() if hasattr(obj, "GetParentFootprint") else None; ref_ = _pf.GetReference() if _pf else "via"   # a via's parent is None
                 def fail_(what): return "%s -> %s (%s for %s at %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), what, net.GetNetname(), ref_)
                 if crossing and net is net_p:
+                    at_site("the dive of a crossing end")
                     err_ = dive_p(x, y, ex, ey, L, aL, obj, net, away)
                     if err_: failed = fail_(err_); break
                     continue
                 if aL is None or aL == L:   # the pad (or an escape via) is on the corridor layer
+                    at_site("the end stub into the pad")
                     if not stub(ex, ey, x, y, L, net): failed = fail_("no stub path"); break
                     continue
+                at_site("the end hop to a via beside the pad")
                 site = via_hop(ex, ey, x, y, L, aL, net, away)   # the pad is on another layer: a via near the offset end with a hop path, the stub on the pad's layer
                 if site is None: failed = fail_("no via site with a hop path"); break
                 via_at(site[0], site[1], net); gr.disc(via, site[0], site[1], VIA_SPLIT)
@@ -2112,10 +2128,13 @@ def main(a):
         # offset legs can swap sides and swap back, which D10's USB3 did twice on F.Cu and shipped two tracks_crossing
         # violations between USB3_P and USB3_N into the pre-route gate. A pair the pre-router cannot lay is one unrouted
         # net the router will take; a pair it lays crossed is a short. The pair is rolled back and reported instead.
-        _segs = {}
-        for _t in pieces:
+        _segs = {}; _seg_site = {}
+        for _i_, _t in enumerate(pieces):
             if _t.GetClass() != "PCB_TRACK": continue
-            _segs.setdefault((_t.GetNetname(), _t.GetLayer()), []).append((mm(_t.GetStart().x), mm(_t.GetStart().y), mm(_t.GetEnd().x), mm(_t.GetEnd().y)))
+            _k_ = (mm(_t.GetStart().x), mm(_t.GetStart().y), mm(_t.GetEnd().x), mm(_t.GetEnd().y))
+            _segs.setdefault((_t.GetNetname(), _t.GetLayer()), []).append(_k_)
+            _seg_site[(_t.GetNetname(), _t.GetLayer()) + _k_] = piece_site.get(_i_, "?")
+        def _site_of(net, L, seg4): return _seg_site.get((net, L) + tuple(seg4), "?")
         def _hit(a, c, d, e, f, g_, h, i_):
             def _o(px, py, qx, qy, rx, ry): return (qx - px) * (ry - py) - (qy - py) * (rx - px)
             o1, o2, o3, o4 = _o(a, c, d, e, f, g_), _o(a, c, d, e, h, i_), _o(f, g_, h, i_, a, c), _o(f, g_, h, i_, d, e)
@@ -2140,7 +2159,7 @@ def main(a):
                         _g = _seg_gap(*_a, *_b2)
                         if _g < _needL:
                             _near += 1; _near_worst = min(_near_worst, _g)
-                            if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f on %s: %s (%.3f, %.3f)-(%.3f, %.3f) against %s (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, _needL, b.GetLayerName(_L), pn) + tuple(_a) + (nn,) + tuple(_b2)))
+                            if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f on %s: %s [%s] (%.3f, %.3f)-(%.3f, %.3f) against %s [%s] (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, _needL, b.GetLayerName(_L), pn, _site_of(pn, _L, _a)) + tuple(_a) + (nn, _site_of(nn, _L, _b2)) + tuple(_b2)))
             for _nm, _on in ((pn, nn), (nn, pn)):   # a via of one leg against the other leg's track on this layer (a through via is on every layer)
                 for _vx, _vy, _vr in _vias[_nm]:
                     _needV = max(0.0, clr_c - _tol) + _vr + wid(_L) / 2
