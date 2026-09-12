@@ -5683,3 +5683,33 @@ nine nets touch U3 (the RP2040) or J_PANEL.
 straight 9.59 mm locked track, hard 0 and the opens 3 to 2, and named what refuses the other two: /+3V3 crosses
 /PI_KILL and /PI_SHDN_REQ on F.Cu and meets /HEAT_EN and /EMCON_HW on both inner layers, /VBUS20 bridges the
 solder mask of U3 pad 2 whichever of the five shapes is drawn.
+
+### 32.142 B19 lays 37 of 113 on the small via, and this prediction held (12 September 2026, 11:55 CEST; MESHSAT-862)
+
+The via arms of 32.140 were the DIFF100 class alone. The USB class carries the same 0.70 mm class via and 65 of
+the 113 pairs, so the number that matters for the board was run the way the board runs it: both passes in the
+declared order on one placed board (md5 f8b5828a9d4e), the second reading the first's copper as an obstacle.
+**Prediction written before the run: 26 of 113 today, 34 or better with the small via.**
+
+| pass | today (0.70 mm class via) | board minimum via (0.40 mm) |
+|---|---:|---:|
+| DIFF100, four layers | 9 of 48 | **14 of 48** |
+| USB, two layers | 17 of 65 | **23 of 65** |
+| **the board** | **26 of 113** | **37 of 113** |
+
+**37 of 113, and the prediction held for the first time in three.** The two that failed both over-claimed by a
+factor of three, and both did it the same way: by counting the failures a change removes instead of the pairs it
+lays. This one was set from the measured arm (+6 of 48 scaled to the class sizes) rather than from the refusal
+count, which is the method to keep.
+
+**Where the remaining 76 fail, from the arms' own lines:** 22 of the DIFF100 pass's 68 refusals and **56 of the
+USB pass's 84** are the pair refused against its own partner, and now that the vias fit, every one of them is
+track against track in the three END emissions at 0.203 to 0.225 mm against a demand of 0.252. The legs run the
+corridor at their designed pitch and pinch below it where each aims at its own target, on a per-leg map built
+before the partner's own end was laid: **the search cannot avoid copper it cannot see**. `PAIR_END_STRICT=1`
+gives the end stubs a map carrying the partner's laid copper at the gate's own bar, and its arm is running with
+its prediction written: eighteen or more of 48 against the 14 the same configuration lays today.
+
+**B is still held by the pair ruling at 37 of 113 and that is the honest state of the board.** Nothing about
+tonight's numbers is a route: B19 has not been routed since the ribbon split, and the pair count is what decides
+when it can be.
