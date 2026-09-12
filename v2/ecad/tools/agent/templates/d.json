@@ -7,6 +7,15 @@
  "timeout_s": 1800,
  "_denominator": 5,
  "passes": [
-  {"classes": "USB", "env": {"PAIR_BUDGET": 0, "PAIR_LAYERS": "F.Cu", "PAIR_HOP_LAYERS": "In2.Cu"}}
- ]
+  {
+   "classes": "USB",
+   "env": {
+    "PAIR_BUDGET": 0,
+    "PAIR_LAYERS": "F.Cu",
+    "PAIR_HOP_LAYERS": "In2.Cu"
+   }
+  }
+ ],
+ "_runs": "pair",
+ "_runs_why": "What this run actually executes. arms.py re-runs the pre-router on an already placed board, so a knob read only by the placement generator cannot act and the validator refuses it rather than letting the arm measure nothing."
 }
