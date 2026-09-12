@@ -5755,3 +5755,29 @@ verdicts (its largest bucket was "(unparsed)" this morning):
 corridor they were given, and no via site with a hop path at the HDMI switches U3 and U4. Neither is a search
 budget and neither is the order the pairs are laid in. The next measurement is aimed at those two, and it will be
 set from an arm rather than from a count of refusals.
+
+### 32.144 Two aimed arms, +1 and +0, and the wall is the leg fit (12 September 2026, 12:35 CEST; MESHSAT-862)
+
+Both arms were aimed at the two bars 32.143 named, on the same placed board, one variable each, with their
+predictions written to `/root/arm_predictions.txt` before they ran.
+
+| arm | prediction | result | what moved |
+|---|---|---:|---|
+| `PAIR_VIA_CANDS=40` (the via-site cap was twelve and never measured) | 16 or more of 48 | **14 of 48** | "no via site with a hop path" fell from 24 failures to 6, and "no stub path" appeared instead |
+| `PAIR_COVER_LEGS=1` (the corridor covers its own legs) | 14 to 16 of 48 | **15 of 48** | nothing else moved |
+
+**Four predictions today, one held and one landed inside a range that was one pair wide.** The via-candidate cap
+was real: with forty candidates the search finds sites where twelve found none, and the failure simply moves one
+step along, to the stub path out of the site it found. That is the fourth time today a change removed its whole
+failure class and laid no pairs, and it is worth stating as the tool's own law: **on a greedy pass with no
+rip-up, removing a bar moves the failure rather than the pair, unless the bar was the LAST one.**
+
+**The bar that has not moved in any arm today is the leg fit: 28 failures of 68, "the legs clear no smoothing of
+the centreline", identical in every one of the five configurations measured.** A corridor is found and then
+neither the smoothed nor the staircase form of the two offset legs fits the maps. `PAIR_COVER_LEGS` aims exactly
+there and is worth one pair, which is inside the noise this record already declared for differences under five
+(32.116), so it stays off and B keeps its declared environment.
+
+**Where that leaves B:** 37 of 113 with the small via, and the next lever is the leg geometry at a corner, which is
+finding C2(a) of the plan and has never been built. `PAIR_VIA_CANDS` stays at 12 (it lays no pairs and a larger
+cap costs search time), and both knobs keep their measurement here rather than a default.
