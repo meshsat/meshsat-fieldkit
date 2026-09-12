@@ -828,6 +828,7 @@ def main(a):
     OWN_CLEAR = os.environ.get("PAIR_OWN_CLEAR", "1") != "0"   # the emissions that used to lay copper unasked ask the partner
     FOLD_TEST = os.environ.get("PAIR_FOLD_TEST", "1") != "0"   # the two offset legs judged against each other in the candidate ladder
     UNMERGE = os.environ.get("PAIR_UNMERGE", "1") != "0"       # a merge of two runs that folds the legs is dropped
+    CROSS_NET = os.environ.get("PAIR_CROSS_NET", "1") != "0"   # a laid pair is refused if its copper lies on another net       # a merge of two runs that folds the legs is dropped
     FAN_BACK = float(os.environ.get("PAIR_FAN_BACK", "1.0"))   # how far the P leg is pulled back before the N fan of a dive is laid (mm; 0 restores the old behaviour)       # re-test a blocked leg point against the polygons before refusing the pair
     # A station swap exchanges two identical passives so the pair's own fans stop crossing. It is judged on the side the
     # pair is laid from and NOT on the other side of the same two parts, and on D that is what left the board one open:
@@ -2233,6 +2234,32 @@ def main(a):
                 if _g < _needVV:
                     _near += 1; _near_worst = min(_near_worst, _g)
                     if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f: the %s via at (%.3f, %.3f) against the %s via at (%.3f, %.3f)" % (_g, _needVV, pn, _vx, _vy, nn, _wx, _wy))
+        # 12 September 2026: and the pair against EVERY OTHER NET, which is the same question one map further out.
+        # A's /USB_D8 laid its fan across /USB_WALL, laid minutes earlier by this same pass, and the pre-route DRC
+        # read twelve items on copper every one of whose emissions had asked a map. The map is right (the cell IS
+        # blocked); what was missing was anyone asking it about the copper as emitted. `trkP` exempts this pair's own
+        # PADS and nothing else, so a fan may enter its own pad field and may not lie on another net's track.
+        _foul = []
+        if CROSS_NET:
+            for _i_, _t in enumerate(pieces):
+                if _t.GetClass() != "PCB_TRACK": continue
+                _L = _t.GetLayer()
+                if _L not in trkP: continue
+                _x1, _y1, _x2, _y2 = mm(_t.GetStart().x), mm(_t.GetStart().y), mm(_t.GetEnd().x), mm(_t.GetEnd().y)
+                _ln = math.hypot(_x2 - _x1, _y2 - _y1); _n = int(_ln / gr.G) + 2
+                for _k in range(_n + 1):
+                    _u = _k / _n; _qx, _qy = _x1 + _u * (_x2 - _x1), _y1 + _u * (_y2 - _y1)
+                    _jj, _ii = gr.cell(_qx, _qy)
+                    if 0 <= _ii < gr.NY and 0 <= _jj < gr.NX and trkP[_L][_ii, _jj]:
+                        _foul.append((_t.GetNetname(), b.GetLayerName(_L), _qx, _qy, piece_site.get(_i_, "?"), _what_is_at(_qx, _qy, _L, _t.GetNetname())))
+                        break
+                if len(_foul) >= 4: break
+        if _foul:
+            rollback()
+            report.append("FAIL  %s: its copper lies on another net; rolled back, the router takes the pair" % stem)
+            for _nm, _Ln, _qx, _qy, _st, _wh in _foul:
+                report.append("      %s on %s at (%.3f, %.3f) [%s]: %s" % (_nm, _Ln, _qx, _qy, _st, _wh))
+            continue
         if _near and not _cross:
             rollback()
             for _w in _near_at: report.append("      %s" % _w)   # name the copper: which piece of which leg, on which layer (12 September 2026)
