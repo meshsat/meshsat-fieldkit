@@ -159,7 +159,7 @@ synth("J_EPD", "EPD24", "Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0
 part("Q5", "Transistor_FET", "AO3401A", "AO3401A P-FET: the e-paper's supply switch (EPD_PWR_n low = on)", "SOT23", {"1": "EPD_PWR_n", "2": "+3V3", "3": "EPD_VCC"}, "C15127"); r("R%d" % rn, "10k", "EPD_PWR_n", "+3V3"); rn += 1
 c("C28", "4.7u", "EPD_VCC", "GND", "C10u"); c("C29", "100n", "EPD_VCC", "GND")
 part("L1", "Device", "L", "10uH ATNR4010100MT 0.8 A (the boost inductor)", "L4020", {"1": "EPD_VCC", "2": "EPD_SW"})
-part("Q6", "Transistor_FET", "2N7002", "Si1308EDL class N-FET (RDS under 200 mOhm, VGS 2.5 V): the boost switch on GDR", "SOT23", {"1": "EPD_GDR", "2": "EPD_RESE", "3": "EPD_SW"}, "C8545")
+part("Q6", "Transistor_FET", "2N7002", "Si2302CDS-T1-GE3 logic-level N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VGS(th) 0.45 to 1.0 V, RDS 85 mOhm at VGS 2.5 V): the boost switch on GDR", "SOT23", {"1": "EPD_GDR", "2": "EPD_RESE", "3": "EPD_SW"}, "C10488")
 r("R%d" % rn, "0.47R 1%", "EPD_RESE", "GND"); rn += 1
 part("D19", "Device", "D_Schottky", "SS2040FL: EPD_SW -> VGH", "SOD123F", {"1": "EPD_SW", "2": "EPD_VGH"}); c("C30", "1u 25V", "EPD_VGH", "GND")
 c("C31", "1u 25V", "EPD_SW", "EPD_PUMP"); part("D20", "Device", "D_Schottky", "SS2040FL: pump clamp", "SOD123F", {"1": "EPD_PUMP", "2": "GND"}); part("D21", "Device", "D_Schottky", "SS2040FL: pump -> VGL", "SOD123F", {"1": "EPD_VGL", "2": "EPD_PUMP"}); c("C32", "1u 25V", "EPD_VGL", "GND")

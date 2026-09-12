@@ -161,7 +161,7 @@ def slot(s):
     part(ra, "Connector_Generic", "CM5A", "Amphenol 10164227-1004A1RLF receptacle A, slot S%d (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted" % s, "CM5A", {str(k): v for k, v in CM5.items() if k <= 100}, "C7435219")
     part(rb, "Connector_Generic", "CM5B", "Amphenol 10164227-1004A1RLF receptacle B, slot S%d (CM5 pins 101-200, high-speed side)" % s, "CM5B", {str(k): v for k, v in CM5.items() if k > 100}, "C7435219")
     # --- the slot rail: J_5V_Sx from A22 (AP64500 5.1 V, 32.55), bulk at the lead and at the module's 5 V pins
-    part("J_5V_S%d" % s, "Connector_Generic", "Conn_01x02", "5 V slot rail S%d from A22 J_5V_S%d (JST-VH, 16 AWG): + -" % (s, s), "VH2", {"1": n5, "2": "GND"})
+    part("J_5V_S%d" % s, "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: 5 V slot rail S%d from A22 J_5V_S%d, 16 AWG lead: + -" % (s, s), "VH2", {"1": n5, "2": "GND"}, "C274411")
     part("D%d" % (100 * s + 1), "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": n5, "2": "GND"})
     for k in (1, 2, 3, 4): c(C(k), "100u 10V", n5, "GND", "C100u")
     for k in (5, 6, 7, 8): c(C(k), "10u", n5, "GND", "C10u")
@@ -380,7 +380,7 @@ ts3("U3", "HDMI1", "HDMI2", "HDMIM", "HDMI_SEL1"); ts3("U4", "HDMIM", "HDMI3", "
 r("R14", "10k", "HDMI_SW_EN", "+3V3_DEV"); r("R15", "100k", "HDMI_SEL1", "GND"); r("R16", "100k", "HDMI_SEL2", "GND"); c("C37", "100n", "+3V3_DEV", "GND"); c("C38", "100n", "+3V3_DEV", "GND")
 part("J_HDMI", "Connector", "HDMI_A", "HDMI type A receptacle (Molex 208658-1001): cable to the Xenarc 709GNK pass-through on the face plate", "HDMI",
      {"1": "HDMIO_D2_P", "3": "HDMIO_D2_N", "4": "HDMIO_D1_P", "6": "HDMIO_D1_N", "7": "HDMIO_D0_P", "9": "HDMIO_D0_N", "10": "HDMIO_CK_P", "12": "HDMIO_CK_N", "2": "GND", "5": "GND", "8": "GND", "11": "GND",
-      "13": "HDMIO_CEC", "14": "NC", "15": "HDMIO_SCL", "16": "HDMIO_SDA", "17": "GND", "18": "+5V_HDMI", "19": "HDMIO_HPD_IN", "SH": "GND"})
+      "13": "HDMIO_CEC", "14": "NC", "15": "HDMIO_SCL", "16": "HDMIO_SDA", "17": "GND", "18": "+5V_HDMI", "19": "HDMIO_HPD_IN", "SH": "GND"}, "C916313")
 part("F2", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "+5V_HDMI"}); c("C39", "10u", "+5V_HDMI", "GND", "C10u")
 r("R17", "2.2k", "HDMIO_SCL", "+5V_HDMI"); r("R18", "2.2k", "HDMIO_SDA", "+5V_HDMI")   # source-side DDC pull-ups as the CM5IO board (2.2k)
 r("R19", "15k", "HDMIO_HPD_IN", "HDMIO_HPD"); r("R20", "22k", "HDMIO_HPD", "GND")   # the monitor's 5 V hot-plug level down to 3 V for the module pins

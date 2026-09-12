@@ -343,6 +343,35 @@ def rows_to_check(only=None):
 CLASS_ROW = re.compile(r"\bclass\b|\bowed\b", re.I)   # prose that names a category where a part belongs
 
 
+def hand_fit_route(comment, want, handfit):
+    """The declared purchase route for a row, or None.
+
+    `intended_part` strips parentheses before it reads a part number, because this project's BOM
+    convention puts the explanation there and the explanation is full of net names. That is right for
+    identifying a row and WRONG for matching a declaration: C's three APEM toggles read
+    `SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions latched)`, so the only part
+    number in the row sat inside the parentheses, `want` was None, and the declaration in
+    jlc-handfit.txt never matched anything. Three panel parts that are declared, bought and excluded
+    from the CPL were reported NOT_CHECKED for a month.
+
+    So the declaration is matched against every part-shaped token in the WHOLE comment. This widening
+    is bounded to rows that carry no code (see certify), because a row's prose often mentions a
+    hand-fit part it merely connects to: D's `PA drive (coax to the RA30H1317M1 input on the plate)` is
+    a U.FL socket JLC places, and the RA30H1317M1 is the module at the other end of the coax.
+    """
+    keys = [want] if want else []
+    for t in PART_TOKEN.findall(comment):
+        t = t.strip(".,;:-/")
+        if len(t) >= 5 and any(c.isdigit() for c in t) and not NOT_PART.match(t):
+            keys.append(t)
+    keys.append(comment[:60])
+    for k in keys:
+        hit = handfit.get(k)
+        if hit:
+            return hit
+    return None
+
+
 def certify(rec, cache, handfit, aliases, refresh=False):
     """One row's verdict, with the evidence that produced it."""
     comment, fp, code = rec["comment"], rec["fp"], rec["code"]
@@ -365,8 +394,13 @@ def certify(rec, cache, handfit, aliases, refresh=False):
             note += "; the module its comment names as a class is an owner-side purchase, not a JLC line"
         return dict(verdict="BENCH_FITTED", need=need, note=note)
 
-    hf = handfit.get(want or "") or handfit.get(comment[:60])
-    if hf:
+    hf = hand_fit_route(comment, want, handfit)
+    if hf and not code:
+        # A row with no code and a declared purchase route is answered. A row WITH a code is not: its
+        # code is checked first, because a hand-fit declaration that runs before the code check hides a
+        # package mismatch behind a purchase route, and the package is the defect that builds a board
+        # wrong. The declaration is applied at the stock check instead, which is the one verdict a
+        # purchase route legitimately answers.
         return dict(verdict="HAND_FIT", note=hf, need=need)
 
     # The class test runs LAST of the three declarations and only on a row that carries no code, because
@@ -471,6 +505,12 @@ def certify(rec, cache, handfit, aliases, refresh=False):
                   note="our land is %s, the part is %s" % (a, b))
         return ev
     if (ev["stock"] or 0) < need:
+        if hf:
+            # The part is right, the package is right and JLCPCB cannot supply the order: that is
+            # exactly what a declared purchase route answers, and it is the only verdict it answers.
+            ev.update(verdict="HAND_FIT",
+                      note="%s (JLCPCB stock %s against a need of %d)" % (hf, ev["stock"], need))
+            return ev
         ev.update(verdict="NO_STOCK", note="stock %s against a need of %d for %d boards"
                   % (ev["stock"], need, BOARD_QTY))
         return ev

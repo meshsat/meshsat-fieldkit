@@ -128,3 +128,38 @@ def t_a_connector_rows_prose_names_the_part_on_THIS_board_first():
                 bad.append("%s %s: its prose is searched for %r, not for the socket it is"
                            % (os.path.basename(path), m.group("ref"), want))
     assert not bad, "\n  ".join(bad)
+
+
+def t_a_declared_part_number_inside_parentheses_still_finds_its_purchase_route():
+    """C's three APEM toggles are declared, bought and excluded from the CPL, and read NOT_CHECKED for
+    a month because the only part number in the row sat inside the parentheses that `intended_part`
+    strips."""
+    rec = {"comment": "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions latched)",
+           "fp": "meshsat:APEM_5636_Panel", "code": "", "qty": 1}
+    hf = {"5636ADKB-2V": "APEM through Mouser"}
+    ev = jc.certify(rec, {}, hf, {})
+    assert ev["verdict"] == "HAND_FIT", ev
+
+
+def t_a_purchase_route_does_not_hide_a_package_mismatch():
+    """A hand-fit declaration answers "JLCPCB cannot supply this", never "the part fits this land".
+    Running it before the code check is how a TSSOP-38 on a QFN land would have gone out declared."""
+    rec = {"comment": "LT8705A buck-boost controller, 38-lead QFN 5x7; bench-fitted",
+           "fp": "Package_DFN_QFN:WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm", "code": "C674167", "qty": 1}
+    cache = {"C674167": {"asked": _today, "list": [
+        {"componentCode": "C674167", "componentModelEn": "LT8705AIFE#PBF", "componentBrandEn": "Analog Devices",
+         "componentSpecificationEn": "TSSOP-38-EP-4.4mm", "componentLibraryType": "expand",
+         "stockCount": 1, "initialPrice": 19.06}]}}
+    ev = jc.certify(rec, cache, {"LT8705A": "Analog Devices through Mouser"}, {})
+    assert ev["verdict"] == "PACKAGE_MISMATCH", ev
+
+
+def t_a_declared_part_JLCPCB_cannot_supply_in_quantity_is_hand_fit_not_no_stock():
+    rec = {"comment": "LT8705A buck-boost controller, 38-lead QFN 5x7; bench-fitted",
+           "fp": "Package_DFN_QFN:WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm", "code": "C674164", "qty": 1}
+    cache = {"C674164": {"asked": _today, "list": [
+        {"componentCode": "C674164", "componentModelEn": "LT8705AEUHF#TRPBF", "componentBrandEn": "Analog Devices",
+         "componentSpecificationEn": "QFN-38-EP(5x7)", "componentLibraryType": "expand",
+         "stockCount": 3, "initialPrice": 24.55}]}}
+    ev = jc.certify(rec, cache, {"LT8705A": "Analog Devices through Mouser"}, jc.declared(jc.ALIASES))
+    assert ev["verdict"] == "HAND_FIT" and "stock 3" in ev["note"], ev
