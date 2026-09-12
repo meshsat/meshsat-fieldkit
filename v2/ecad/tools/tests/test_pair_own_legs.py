@@ -118,3 +118,16 @@ def t_a_crossing_is_distance_zero():
     assert ns["_seg_dist"](0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 10.0, 0.0) == 0.0, "two crossing legs do not read as touching"
     assert abs(ns["_seg_dist"](0.0, 0.0, 10.0, 0.0, 0.0, 0.27, 10.0, 0.27) - 0.27) < 1e-9
     assert ns["_seg_gap"](0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 10.0, 0.0) > 4.9, "this is the trap the rule above exists for"
+
+def t_a_twist_is_declared_only_where_the_pads_are_on_opposite_sides():
+    """A's /USB_D8 runs between two IDC headers that both carry P on the same side, and the tool declared a
+    twist anyway: the entry-station branch forces side_a, side_b to +1 and -1 so the swap machinery gets its
+    chance, and when neither station is swappable that forced value fell straight through to `crossing = True`.
+    The pair then dived at a 2.54 mm pad field for no reason and laid its N fan across its own P leg."""
+    s = _src()
+    assert "real_a, real_b = side_a, side_b" in s, "the honest sides are not kept before the entry-station forcing"
+    i = s.find("if swappable_(pa, na): twist =")
+    assert i > 0
+    tail = s[i:i + 1200]
+    assert "crossing = real_a * real_b < 0" in tail, "a pair with nothing to swap still takes the forced twist"
+    assert "crossing = True" not in tail.split("crossing = real_a")[0], "the forced twist still reaches `crossing = True`"
