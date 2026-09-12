@@ -18,6 +18,16 @@ set -uo pipefail
 B="$1"; R="$2"; shift 2
 TMP="$R.part"; ERR="$R.err"
 rm -f "$R" "$TMP" "$ERR"
+# A board file whose .kicad_pro is not beside it under its own stem is judged against the DEFAULT net class, and on
+# these boards that is hundreds of false clearance and via violations with nothing saying so. It has cost this
+# pipeline twice: a copied project directory on 7 September (B19 read the B15-era file: 396 class assignments
+# against None), and on 12 September cont_route.sh's `-before` copy, which printed "before hard 1074" for a board
+# the finish had just measured at hard 0. The check belongs at the one place that judges, not in each caller.
+if [ "${DRC_REQUIRE_PROJECT:-1}" != 0 ] && [ ! -s "${B%.kicad_pcb}.kicad_pro" ]; then
+  echo "drc: no ${B%.kicad_pcb}.kicad_pro beside $B: every net class would be the default one."
+  echo "drc: copy the project file under the board's own stem, or set DRC_REQUIRE_PROJECT=0 to judge it that way deliberately."
+  exit 1
+fi
 kicad-cli pcb drc --severity-all --format json -o "$TMP" "$@" "$B" > "$ERR" 2>&1; X=$?
 fail () { echo "drc: $1 for $B"; [ -s "$ERR" ] && { echo "drc: kicad-cli said:"; sed 's/^/drc:   /' "$ERR" | tail -12; }; rm -f "$TMP"; exit 1; }
 [ "$X" -eq 0 ] || fail "kicad-cli exited $X"

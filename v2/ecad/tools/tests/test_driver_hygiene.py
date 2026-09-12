@@ -425,3 +425,23 @@ def t_the_contention_order_tool_is_classified():
     s = open(os.path.join(tools, "pair_order_from_plan.py"), errors="replace").read()
     assert "PAIR_ORDER_FILE" not in s or "plan" in s, "the tool must say what it consumes"
     assert "appendix 32.137" in s, "a tool born of a measurement carries the section that measured it"
+
+
+def t_a_board_is_never_drcd_without_its_project_file():
+    """A board file whose `.kicad_pro` is not beside it under its own stem is checked against the DEFAULT net
+    class: hundreds of false clearance and via violations, with nothing in the output saying which class set was
+    used. It has cost this pipeline twice. First on 7 September 2026, when `pcb-b-compute-b19` was staged from a
+    B15-era project file and `intent_checks.py` crashed on `netclass_assignments: None` against btest's 396.
+    Then on 12 September, when `cont_route.sh` scored its `-before` copy, whose stem no project file matches, and
+    printed "before hard 1074" for a board the finish had measured at hard 0 one minute earlier.
+
+    The check belongs at the one place that judges rather than in each caller, and it is a refusal, because a
+    number computed against the wrong rules is worse than no number."""
+    src = open(os.path.join(TOOLS, "drc.sh"), errors="replace").read()
+    assert "kicad_pro" in src, "drc.sh does not look for the board's project file"
+    i = src.index("${B%.kicad_pcb}.kicad_pro")   # the test itself, not the comment that explains it
+    assert "exit 1" in src[i:i + 700], "drc.sh warns about a missing project file instead of refusing"
+    assert "DRC_REQUIRE_PROJECT" in src, "there is no way to judge a board against the default classes deliberately"
+    # and every shell tool that makes a copy of a board under a NEW stem and scores it must copy the project too
+    src = open(os.path.join(TOOLS, "cont_route.sh"), errors="replace").read()
+    assert '"$W/$N-before.kicad_pro"' in src, "the continuation scores a board copy with no project file beside it"
