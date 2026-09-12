@@ -155,7 +155,9 @@ def t_the_entry_exemption_asks_the_pads_only_map():
     it was never the occupancy map: it was the exemption."""
     b = _body("legs_clear")
     assert "trkP" in b, "the entry exemption still skips the map instead of asking the pads-only one"
-    assert "along < 1.2) or (last_run and fineB and total - along < 1.2)) \\" in b or "trkP[L][ii, jj]): continue" in b, "the exemption is not guarded"
+    assert "_nearest_edge(" in b, "a blocked cell in the entry region is refused on the raster alone (it cost B19 fourteen pairs)"
+    i = b.find("trkP[L][ii, jj]")
+    assert i > 0 and "return False" in b[i:i + 900], "the entry region can no longer refuse a leg at all"
 
 def t_every_helper_that_skips_nets_declares_the_parameter():
     """A patch meant for `_what_is_at` landed in `_nearest_edge`, which sits above it and carried the same line:
