@@ -5410,16 +5410,18 @@ skip and with the check, each ending in a DRC breakdown of the items that involv
 
 **Four arms with one guard off each, measured on B19's DIFF100 pass, say it is none of them:**
 
-| arm | pairs of 48 |
-|---|---:|
-| every guard on | 8 |
-| `PAIR_OWN_CLEAR=0` | 8 |
-| `PAIR_FOLD_TEST=0` | 8 |
-| `PAIR_UNMERGE=0` | **5** |
-| all four off, the entry check still on | **10** |
+| arm | DIFF100 of 48 | USB of 65 | total of 113 |
+|---|---:|---:|---:|
+| every guard on | 8 | 15 | **23** |
+| `PAIR_OWN_CLEAR=0` | 8 | 19 | 27 |
+| `PAIR_FOLD_TEST=0` | 8 | 16 | 24 |
+| `PAIR_UNMERGE=0` | **5** | 20 | 25 |
+| all four off, the entry check still on | **10** | 18 | **28** |
 
-**So the entry-region check alone carries about twelve of the fourteen**, and two of the guards cost nothing
-measurable on this board. `PAIR_UNMERGE=0` is WORSE than leaving it on, which means the merge of two runs does
+**The four guards together are worth about five pairs of 113**, which is inside the swing this board shows for
+any small change (a greedy pass with no rip-up: 32.117 measured twelve pairs from one hundredth of a millimetre
+of slack). **The entry-region check is the one that matters**, and the scale of it is the historical 57 of 113,
+which was measured before the check existed, against 28 with every other guard off. `PAIR_UNMERGE=0` is WORSE than leaving it on, which means the merge of two runs does
 fold the legs often enough that dropping the merge rescues pairs: a guard that pays for itself, found by trying
 to blame it.
 
