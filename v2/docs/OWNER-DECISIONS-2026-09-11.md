@@ -543,3 +543,52 @@ Bourns choke, the Omron relay, the SA868).
 **Until you rule, nothing moves:** `U5` stays in the exclusion table exactly as it is, the corrected code
 `C674164` is in the generator so the deliverable BOM names the right part for whoever fits it, and the
 certification table reads the row HAND_FIT with its purchase route.
+
+---
+
+## Decision 13: seven of B's packer regions are smaller than the parts assigned to them, and have been since they were drawn (measured 12 September 2026, 17:55)
+
+**This is the cause behind decision 11, and decision 11's answer did not reach it.** You ruled that the
+CR2032 holder moves to GAP12. It moved, and B19's placed board went from 6 hard violations to 16, then
+to 78 when the packer was taught to step around the parts that are already there. Reading why found
+something older and larger.
+
+**The packer prints `WARNING region X overflows by N mm` and then places the parts that did not fit
+outside the rectangle, on top of whatever stands there. Nothing has ever read that line.** B19's
+committed placement, the one every pair measurement of the last three days rests on, overflows six
+regions already, `IOCA` by 10.2 mm.
+
+| placement | regions that overflow | worst |
+|---|---:|---|
+| B19 as committed (b19cg24) | 6 | IOCA 10.2 mm |
+| plus the two corrected TI land patterns | 7 | IOCA 15.1 mm |
+| plus BT1 into GAP12 (your decision 11) | 8 | GAP12 22.9 mm |
+| plus the packer stepping around fixed parts | 12 | GAP12 64.7 mm |
+
+**GAP12 cannot hold the coin cell.** With the fixed parts respected it is 64.7 mm short, and the parts
+that do not fit land on J_FAN2's header and inside the M.2 socket J_M2C1, which is what the 16 and the 78
+are. The move you ruled is right and the room for it does not exist at the rectangle's current size.
+
+**What I have done without asking, because none of it is reserved:** an overflow BLOCKS now, in all six
+placement generators, through one shared gate (`tools/regionfit.py`). A board with a measured, benign
+overflow declares the number in `tools/boards/<letter>.json` with its reason: **A declares 1.5 mm** (NODE
+1.0, FES 1.4, and A24's placed board reads 0 hard at it) and **D declares 0.5 mm** (CTRL 0.2, same
+evidence). C, E and P overflow nothing. **B declares nothing and is blocked**, which is the honest state.
+
+**What is yours: the rectangles.** A region is the floor plan, with thermal, RF and assembly
+consequences, and it is on the never-auto floor. (It was on the floor only in name until today: the
+pattern matched the line the table opens on, so every rectangle in it was unprotected. Fixed, and B's
+GAP12 was the change that found it.)
+
+| option | what happens | cost |
+|---|---|---|
+| **A (recommended): give me a budget to resize the regions of one board at a time, reporting each change and its overflow before and after** | I size GAP12 for the coin cell and the six older overflows, each as a separate measured step, and B's placed board goes to its floor | B's placement moves, so the pair numbers are re-measured on it. That was already true after decision 11 |
+| B: rule each rectangle yourself from the numbers | you hold the floor plan exactly | seven rectangles, and B is stopped until they are answered |
+| C: leave the regions and drop BT1 from the board | the overflow drops back to the pre-existing six | no coin cell means no holdover clock across a power cut, which is what the DS3231MZ is for |
+
+**My recommendation is A, bounded**: the regions of board B only, one change at a time, each reported
+with its before and after overflow, and nothing touched on the other six boards. What it is not is a
+free hand over the floor plan.
+
+**Until you rule, B's chain blocks at the placement.** Everything else carries on: A and D declare their
+measured numbers, C, E and P overflow nothing, and the D, E and P re-cuts are running.

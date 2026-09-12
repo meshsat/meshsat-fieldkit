@@ -92,6 +92,8 @@ if _dups: raise SystemExit("reference listed twice in the placement (two footpri
 # BEFORE the packer fills the regions. The old order shelf-packed them by reference number and moved afterwards only what still fitted;
 # measured across the released set, not one capacitor of any board was inside the 3 mm rule and A22's worst two sat 117 and 121 mm away.
 import json as _json, os as _osx, bypass_slots
+import regionfit
+regionfit.allowance('p')
 _ip = _osx.path.join(_osx.path.dirname(_osx.path.abspath(BOARD)), "out", _osx.path.splitext(_osx.path.basename(BOARD))[0] + "-intent.json")
 _entries = _json.load(open(_ip)).get("bypass", []) if _osx.path.exists(_ip) else []
 RESERVED = set() if _osx.environ.get("BYPASS_SLOTS") == "0" else bypass_slots.reserve(board, place, lambda v: (pcbnew.ToMM(v.x) - OX, OY - pcbnew.ToMM(v.y)), _entries)
@@ -116,7 +118,7 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
     for ref, fp, w, h, fine in fps:
         if cx + w > x1 + 0.01: cx = x0; cy -= rowh; rowh = 0.0
         centre_on(fp, cx + w / 2, cy - h / 2); placed[ref] = fp; cx += w; rowh = max(rowh, h)
-    if cy - rowh < y0 - 0.01: print("WARNING region %s overflows by %.1f mm" % (name, (y0 - (cy - rowh))))
+    if cy - rowh < y0 - 0.01: regionfit.note(name, y0 - (cy - rowh))
 missing = [r for r in comps if r not in placed and not r.startswith("#")]
 if missing: raise SystemExit("unplaced: %s" % missing)
 # ---------------------------------------------------------------- nets, pours, classes
