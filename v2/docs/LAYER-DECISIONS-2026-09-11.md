@@ -163,8 +163,14 @@ carries CELL_F at 10.0 A over F.Cu 133 mm2 plus B.Cu 2,327 mm2 plus **In2 2,962 
 and more than half of CELL_F's copper area and all of VIN_RAW's goes with it, against 23 hundredths of a
 percentage point of headroom. The second half of the decision is routing, not power: E is a **267 mm** strip and
 its opens are end-to-end signals, `/USB_E6_P` 196 mm and `/GEIGER_IN` 214 mm, which is what three rounds of the
-route were spent on. **A two-layer E is refused by both halves.** What is NOT settled is the opposite direction:
-whether In2 should carry routing as well as pours, which would have closed those two nets without a stub router.
+route were spent on. What is NOT settled is the opposite direction: whether In2 should carry routing as well as
+pours, which would have closed those two nets without a stub router.
+
+**CORRECTION, 12 September 2026: the power half of that paragraph was an argument from copper AREA and the
+measurement disagrees with it.** Deleting all four In2 pours and adding nothing costs CELL_F 13 mV and VIN_RAW
+28 mV (the experiment is written up above): with In2 empty the 10 A pack node still reads 0.18 percent and B.Cu
+carries 97 percent of its current. Area is not current. **So a two-layer E is refused by the ROUTING half alone**,
+and that is the argument to put to the owner rather than the power one.
 
 **P pack BMS and E5 dock block: two layers, decided, nothing inner to weigh.** P carries the pack current in 3 mm
 bands on both faces and E5 is a bare contact board with 112 mm of copper. Neither has a signal that leaves its
