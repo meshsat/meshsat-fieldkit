@@ -190,3 +190,44 @@ placement change and it is the work the experiment waits on.
 **The cost side is still missing for every row** and cannot be taken here: the runner never logs into JLCPCB and
 there is no open pricing endpoint. One quote per board at its real outline and quantity five, at four layers and
 at six, from the laptop ordering session, and the delta goes in beside each decision above.
+
+
+## The instrument, 12 September 2026: `tools/layer_judge.py`
+
+P0 asked for a written decision per board carrying the measurement that forced it. This is the
+measurement, taken mechanically and repeatably, and **it changes nothing**: the layer count and the
+stackup are a reserved class (`reserved.json`: `gen_pcb_*.py SetCopperLayerCount`, `stackup_write.py
+STACKS`), so an automatic path that tried to adopt one is refused before any test runs, proved end to
+end in a worktree by `tests/test_layer_judge.py`. The verdict it may return is KEEP, QUESTION or
+INCONCLUSIVE. **It may never return REDUCE**, because that is a decision and the owner makes it.
+
+It also refuses a board that is not routed: every escape, fanout stub and pre-routed pair here is
+locked and the router's own copper is not, so a board whose copper is nearly all locked has never been
+routed and what its layers carry says nothing about what they need. The first version of this tool did
+exactly that and read two placed phase copies as having four and two idle inner layers, where the same
+boards routed read 82.5 and 55.3 percent of their length on the inner layers.
+
+**On the routed boards in the tree, 12 September 2026:**
+
+| board | layers | inner share of routed length | idle inner layers | verdict |
+|---|---:|---:|---|---|
+| PCB-A power | 6 | 68.6 percent | In1, In4 (the planes) | KEEP: removing In2 and In3 is a re-route, not an edit |
+| PCB-B compute | 6 | 82.5 percent | In1, In4 (the planes) | KEEP |
+| PCB-C display | 4 | 55.3 percent | In1 (the plane) | KEEP |
+| PCB-D APRS | 4 | 33.5 percent | In1 (the plane) | KEEP |
+| PCB-E1 dock | 4 | **0.0 percent** | **In1 and In2, both** | **QUESTION** |
+| PCB-E5 block, PCB-P pack | 2 | n/a | n/a | no inner layer to question |
+
+**E1 dock is the one board these numbers question, and it agrees with what was measured by hand on 12
+September**: its two inner layers carry not one routed track, In1 being a ground plane and In2 four
+power pours, and deleting all 5,500 mm2 of that In2 power copper costs CELL_F 13 mV and VIN_RAW 28 mV,
+because B.Cu carries 97 percent of the 10 A pack node anyway. So nothing in E's own copper forces four
+layers on the POWER side. The routing side is the open half and it is not answered by this table: E7
+still carries opens on a 267 mm strip, and the measurement owed is a route at the lower count. **The
+decision is the owner's either way.**
+
+**What KEEP means here and what it does not.** A board whose inner layers carry a third or more of its
+routed length is not one you take layers from with an edit; the measurement that would change the
+answer is a full route at the lower count reaching zero open, which for A is the experiment P0 named
+and nobody has run. KEEP is "these numbers do not free the layer", never "the layer is proved
+necessary".
