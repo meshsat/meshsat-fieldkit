@@ -181,4 +181,23 @@ python3 $T/check_contracts.py .. > out/contracts.log 2>&1; CT=$?; grep -E 'FAIL|
 CLEAN=$(cat "$FLAG" 2>/dev/null || echo missing); [ "$CLEAN" = clean ] || { echo "$PHASE NOT CLEAN, not finishing"; echo "FINISH-$PHASE-DONE"; exit 1; }
 cd "$E"; ./tools/finish_board.sh "$PROJ" "$N" "$PFIX" "$DELIV" 2>&1 | tail -16
 [ "${PIPESTATUS[0]}" -eq 0 ] || { echo "$PHASE: finish_board REFUSED the deliverable"; echo "FINISH-$PHASE-DONE"; exit 1; }
+
+# A ROUTED BOARD THAT REACHED ITS GATE MUST LAND SOMEWHERE TRACKED BEFORE THIS SAYS DONE (red team round
+# three M5). The lesson was written on 11 September, when four routed boards went with a destroyed rented
+# box: "either the phase copies are tracked, or a route that reaches 0 hard is committed the same hour".
+# It was written and no step did it, so it depended on somebody remembering within the hour. The board,
+# its project file, its DRC report and its verdicts go beside the deliverable, which is tracked; the
+# commit is still a person's or a driver's to make, and this at least puts the bytes where one can.
+# NOT under release/: that is where fab artefacts live and the execution pin refused this file the moment
+# it wrote there, correctly (the pin names which files may produce a gerber, a BOM, a CPL or an order set).
+# A routed board and its verdicts are BOARD STATE, and the phase project directory is already tracked.
+KEEP="$PROJ/routed"
+mkdir -p "$KEEP" 2>/dev/null && {
+  cp "$PROJ/$N.kicad_pcb" "$KEEP/" 2>/dev/null
+  cp "$PROJ/$N.kicad_pro" "$KEEP/" 2>/dev/null
+  cp "$PROJ/out/$N-drc.json" "$KEEP/" 2>/dev/null
+  cp "$PROJ"/out/*.verdict.json "$KEEP/" 2>/dev/null
+  echo "kept: the routed board and its verdicts are in $KEEP ($(ls "$KEEP" | wc -l) file(s)); commit them"
+  echo "      (a board that exists only in a rented box's copy directory exists nowhere: 11 September)"
+}
 echo "FINISH-$PHASE-DONE"

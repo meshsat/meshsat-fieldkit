@@ -14,6 +14,22 @@ curl -fsSL -o /root/bin/freerouting-2.4.1.jar https://github.com/freerouting/fre
 echo "9084a4888937a7f31f857ecc12aa7a37407f51160e4d2892dff9c9bb47ae3102  /root/bin/freerouting-1.9.0.jar" | sha256sum -c - || { echo "SETUP-FAILED sha19"; exit 1; }
 echo "251101c3eeac22d7e7dfcf6796603279e5d1000283eb82d8f093780f7afc6aa9  /root/bin/freerouting-2.4.1.jar" | sha256sum -c - || { echo "SETUP-FAILED sha24"; exit 1; }
 mkdir -p /root/gitlab/products/meshsat && git clone --depth 1 https://github.com/meshsat/meshsat-fieldkit /root/gitlab/products/meshsat/meshsat-fieldkit || { echo "SETUP-FAILED clone"; exit 1; }
+# THE PATCHED JAR, BUILT HERE. `fr_jar.sh` refuses to route on the stock jar unless FR_REQUIRE_MESH=0,
+# because the stock jar writes a session only when the whole job ends and a capped run then leaves nothing
+# (appendix 32.118: C ran 2 h 08 min and wrote no session while E on the patched jar had one fifteen minutes
+# in). Every fresh box therefore refused to route until somebody ran the five manual steps in
+# tools/freerouting/README.md (red team round three H2). It is four commands; they belong here.
+apt-get install -y openjdk-17-jdk-headless >/dev/null 2>&1 || { echo "SETUP-FAILED jdk17"; exit 1; }
+( set -e
+  cd /root && rm -rf fr-src
+  git clone --depth 1 --branch v1.9.0 https://github.com/freerouting/freerouting.git fr-src
+  python3 /root/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad/tools/freerouting/ses_per_pass.py /root/fr-src
+  cd /root/fr-src && JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 ./gradlew --no-daemon assemble
+  cp build/libs/freerouting-executable.jar /root/bin/freerouting-1.9.0-mesh.jar
+) >/root/mesh-jar-build.log 2>&1 || { echo "SETUP-FAILED mesh jar (see /root/mesh-jar-build.log)"; exit 1; }
+[ -s /root/bin/freerouting-1.9.0-mesh.jar ] || { echo "SETUP-FAILED mesh jar is empty"; exit 1; }
+echo "SETUP: the per-pass jar is built, $(stat -c%s /root/bin/freerouting-1.9.0-mesh.jar) bytes"
+
 printf '#!/bin/sh\n# no service group on the cloud box; routeflow calls this before and after a run\nexit 0\n' > /root/meshsat-services.sh; chmod +x /root/meshsat-services.sh
 # The pre-router's corridor search is 13.5x faster compiled (pairsearch.py) and numba cannot go into the KiCad python, so a venv
 # that sees the system packages carries both; `pair_preroute.py` re-execs itself under it. Not fatal: without it the tool uses the

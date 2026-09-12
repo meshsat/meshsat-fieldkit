@@ -163,9 +163,13 @@ def remedy(sig, prof, applied):
     r = dict(prof["route"])
     if sig == "INFRA_FAIL": return None, "the router supervisor failed; fix the host or the invocation, do not change the route"
     if sig == "NO_SESSION":
-        if prof.get("plane_layers") and not r.get("power_layers") and "power_layers" not in applied: r["power_layers"] = list(prof["plane_layers"]); r["timeout"] = int(r.get("timeout", 4500)) * 2; return r, "plane layers to power layers, timeout x 2"
-        if "timeout" not in applied: r["timeout"] = int(r.get("timeout", 4500)) * 2; return r, "timeout x 2"
-        return None, "no session twice: needs the session (diagnostic route, route_audit.py)"
+        # NO REMEDY. Doubling a timeout was the answer to a jar that wrote its session only when the whole
+        # job ended, and our patched jar writes one after every pass, so a run that produces no session at
+        # all now means the router did not start, died, or was killed: an infrastructure question, and
+        # doubling the clock buys another hour of the same nothing (red team round three H2; the record's
+        # own reading of 12 September, "with the per-pass jar, no session is INFRA_FAIL").
+        return None, ("no session from a jar that writes one every pass: the router did not run. Read "
+                      "out/par/*/fr.log and fr_jar.sh; this is infrastructure, not a route to retune")
     if sig == "KNOT":
         if int(r.get("threads", 6)) != 1: r["threads"] = 1; return r, "single-thread optimiser (multi-thread knot)"
         return None, "knot with one thread: needs the session"
