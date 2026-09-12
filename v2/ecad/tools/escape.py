@@ -50,7 +50,15 @@ def min_pitch(fp):
 def pad_poly(p):
     L = next((l for l in (pcbnew.F_Cu, pcbnew.B_Cu, pcbnew.In1_Cu) if p.IsOnLayer(l)), pcbnew.F_Cu)
     return p.GetEffectivePolygon(L)
-allpads = [(p, p.GetPosition(), pad_poly(p), p.GetNetname(), fp.GetReference()) for fp in b.GetFootprints() for p in fp.Pads()]
+# The pad's own half extent travels with it, because the nearness window below is measured from the pad
+# CENTRE and a big land is nowhere near its own centre. BT1 is a CR2032 holder whose pad 2 is a land many
+# millimetres across: an escape via three millimetres from its edge sits eight from its centre, fell
+# outside a fixed 6 mm window, was never tested, and landed inside the pad. That is 53 of the 82 hard DRC
+# violations left on B19's placed board after the land patterns were corrected, and nothing had read them
+# because B19's chain blocks at the pair gate before the pre-route DRC (appendix 32.149, 12 September 2026).
+allpads = [(p, p.GetPosition(), pad_poly(p), p.GetNetname(), fp.GetReference(),
+            max(p.GetSize().x, p.GetSize().y) / 2 + p.GetBoundingBox().GetWidth() / 2)
+           for fp in b.GetFootprints() for p in fp.Pads()]
 def ep_numbers(fp):
     """Pad numbers that belong to an exposed pad (any pad of that number >= 2 mm): their small pieces are not pins."""
     return {p.GetNumber() for p in fp.Pads() if max(p.GetSize().x, p.GetSize().y) >= FromMM(2.0)}
@@ -70,11 +78,12 @@ def clear(v, r, me, me_ref, net, lane=0.75):
     relaxed to 0.35 on a second pass when a fine-pitch row has a neighbour part right past its tips), all vias, all tracks, rule areas."""
     LAST[0] = ""
     if not (edges.GetLeft() + FromMM(1.0) < v.x < edges.GetRight() - FromMM(1.0) and edges.GetTop() + FromMM(1.0) < v.y < edges.GetBottom() - FromMM(1.0)): LAST[0] = "edge"; return False
-    for q, qp, qpoly, qnet, qref in allpads:
+    for q, qp, qpoly, qnet, qref, qreach in allpads:
         if qp.x == me.GetPosition().x and qp.y == me.GetPosition().y: continue
         if qnet == net and qref == me_ref: continue
         gap = CLR if qref == me_ref else (FromMM(0.3) if qnet == net else FromMM(lane))
-        if abs(v.x - qp.x) > FromMM(6) or abs(v.y - qp.y) > FromMM(6): continue
+        # the window carries the pad's own reach, so a large land is not skipped for being wide
+        if abs(v.x - qp.x) > FromMM(6) + qreach or abs(v.y - qp.y) > FromMM(6) + qreach: continue
         if qpoly.Collide(VECTOR2I(int(v.x), int(v.y)), int(r + gap)): LAST[0] = "pad %s.%s(%s)" % (qref, q.GetNumber(), qnet); return False
     for vp, vr, vnet in vias:
         if math.hypot(v.x - vp.x, v.y - vp.y) < vr + r + (max(net_clr(net), net_clr(vnet)) if vnet != net else FromMM(0.3)): LAST[0] = "via(%s)" % vnet; return False   # same net: the 0.3 mm hole-to-hole rule (B16: the M.2 sockets' GND escapes sat 0.05 apart)
