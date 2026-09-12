@@ -1750,6 +1750,12 @@ def main(a):
                 if swappable_(pb, nb): twist = ("%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()), pb, nb); break
                 if swappable_(pa, na): twist = ("%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()), pa, na); break
                 crossing = True   # both stations are fixed parts (a connector, a hub): the legs cross once at the near station, one stub under the other
+                # 12 September 2026: say so. A twist between two FIXED parts is a placement finding, not a routing one:
+                # the pair's two pads present themselves on opposite sides at the two ends, so the legs must cross
+                # somewhere, and the tool's only answer is a dive at a pad field. Rotating one connector by 180 degrees
+                # removes it without touching the schematic, which nothing could propose while this was silent.
+                report.append("TWIST %s: %s and %s present the pair's pads on opposite sides; the legs must cross once and one of them dives at the pad field"
+                              % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()))
             def legs_clear(sm):   # each offset leg of every run against its own single-track map (the other leg and every other net are obstacles)
                 for r_i, run in enumerate(runs):
                     L = layers[run[0][0]]; pts = [gr.xy(j, i) for i, j in sm[r_i]]
@@ -2094,7 +2100,7 @@ def main(a):
         _vias = {pn: [], nn: []}
         for _t in pieces:
             if _t.GetClass() == "PCB_VIA" and _t.GetNetname() in _vias: _vias[_t.GetNetname()].append((mm(_t.GetPosition().x), mm(_t.GetPosition().y), mm(_t.GetWidth()) / 2))
-        _cross = 0; _near = 0; _near_worst = 9.9
+        _cross = 0; _near = 0; _near_worst = 9.9; _near_at = []
         _need = max(0.0, clr_c - 0.005) + max(w, w_in)   # edge to edge: the class clearance, centre to centre
         for _L in {k[1] for k in _segs}:
             for _a in _segs.get((pn, _L), []):
@@ -2102,7 +2108,9 @@ def main(a):
                     if _hit(*_a, *_b2): _cross += 1
                     else:
                         _g = _seg_gap(*_a, *_b2)
-                        if _g < _need: _near += 1; _near_worst = min(_near_worst, _g)
+                        if _g < _need:
+                            _near += 1; _near_worst = min(_near_worst, _g)
+                            if len(_near_at) < 4: _near_at.append("%.3f mm on %s: %s (%.3f, %.3f)-(%.3f, %.3f) against %s (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, b.GetLayerName(_L), pn) + tuple(_a) + (nn,) + tuple(_b2)))
             for _nm, _on in ((pn, nn), (nn, pn)):   # a via of one leg against the other leg's track on this layer (a through via is on every layer)
                 for _vx, _vy, _vr in _vias[_nm]:
                     for _a in _segs.get((_on, _L), []):
@@ -2114,6 +2122,7 @@ def main(a):
                 if _g < _need: _near += 1; _near_worst = min(_near_worst, _g)
         if _near and not _cross:
             rollback()
+            for _w in _near_at: report.append("      %s" % _w)   # name the copper: which piece of which leg, on which layer (12 September 2026)
             report.append("FAIL  %s: its own two legs come within %.3f mm centre to centre where the class needs %.3f (%d place(s)); rolled back, the router takes the pair"
                           % (stem, _near_worst, _need, _near))
             continue
