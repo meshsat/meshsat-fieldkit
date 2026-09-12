@@ -6,25 +6,15 @@ from pcbnew import VECTOR2I, FromMM
 OX, OY = {"c": (297.0, 210.0), "e2": (200.0, 20.0)}.get(sys.argv[2], (150.0, 110.0))
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 F, B = pcbnew.F_SilkS, pcbnew.B_SilkS
+# 12 September 2026 (MESHSAT-862): THE RULE SETS FOR a, b AND c ARE GONE, for the reason D's were dropped on 8
+# September and one worse. They rewrote each board's TITLE, and they rewrote it to a stale phase and a stale
+# stackup: A's said "REV A (A18)" and "285 x 160 x 1.6 mm FR-4, 4 layers ... 2026-09-04" while A24 is 240 x 160
+# on six layers, B's said "REV A (B12)" and "245x170x1.6 4L" on a six-layer board, C's said "REV A, C5". The
+# generators take the phase from the chain (`PHASE`) and write the size and the stackup from the board they are
+# building, and this pass ran AFTER them in every finish and put the old text back. A24's routed board carries
+# "A18" on its front silk because of it, which `verify_deliverable` correctly refuses. A legend pass may move a
+# legend; the facts on it belong to the generator that knows them.
 RULES = {
- "a": [("MESHSAT FIELD KIT  -  PCB-A POWER", dict(text="MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A18)", pos=(55, 76.5), size=2.2)),
-       ("MESHSAT-709  |  285 x 160", dict(text="MESHSAT-709  |  285 x 160 x 1.6 mm FR-4, 4 layers  |  matte black  |  2026-09-04", pos=(55, 73.3), size=1.1)),
-       ("BACK WALL (+Y)", dict(pos=(-20, 77.0))),
-       ("FRONT WALL (-Y)   v v v   LED row", dict(text="FRONT WALL (-Y)   v v v", pos=(20, -76.0))),
-       ("PCB-A UNDERSIDE - sits 2.4 mm", dict(text="PCB-A UNDERSIDE - on 6 mm spacers over the dock strip; spring pins J_DOCK land on PCB-E1", pos=(60, -76.0)))],
- "b": [("J_PANEL ribbon up to PCB-C", dict(pos=(86, 75.5), angle=0)),
-       ("PCB-B COMPUTE  REV A (", dict(text="PCB-B COMPUTE  REV A (B12)")),
-       ("MESHSAT-709 | 245x170x1.6 4L", dict(text="MESHSAT-709 | 245x170x1.6 4L | matte black | 2026-09-04")),
-       ("BACK WALL (+Y)", dict(pos=(-68, 83.0))),
-       ("FRONT WALL (-Y)   v v v", dict(pos=(45, -81.5))),
-       ("J_RTL1", dict(pos=(-12, 9.5))),
-       ("Pi 5 + cooler on 4x M2.5 standoffs", dict(pos=(-69, 40.0), size=0.9)),
-       ("B12: no X1202", dict(pos=(-69, -40.0), size=0.9))],
- "c": [("MESHSAT FIELD KIT  -  CONTROL PANEL PCB-C", dict(text="MESHSAT FIELD KIT  -  CONTROL PANEL")),
-       ("TD2 7in glass 189.32", dict(layer=B)), ("CONNECTOR END = PORT", dict(layer=B)), ("TAPE", dict(delete=True)),
-       ("BACK WALL (+Y)", dict(layer=B, pos=(-160, 139.6))), ("FRONT WALL (-Y)   v v v", dict(layer=B)), ("PORT (-X)", dict(layer=B)), ("STARBOARD (+X)", dict(layer=B)),
-       ("PCB-C UNDERSIDE", dict(text="PCB-C UNDERSIDE (REV A, C5, MESHSAT-709, 2026-09-04) - sealed face: plugged vias, gasket band, silicone beads on the LED joints - faces PCB-B - ribbon J_PANEL (SMD), leads J_MAINSW / J_PIJ2 on solder lands"))],
- # the D5-era legend rules (DMR858M on sockets, the D5 stamp) were dropped on 8 Sep 2026: the DMR858M left the device set on 6 September and D8 stamps "PCB-D APRS MEZZANINE", which none of them matched
  "e12": [("MESHSAT PCB-E1 DOCK", dict(size=1.2, pos=(0, -52.3)))],
 }
 b = pcbnew.LoadBoard(sys.argv[1]); n = 0
