@@ -871,6 +871,7 @@ def main(a):
     # partner at the gate's own bar and takes them off when they fail, so the caller tries its next candidate
     # instead of the pair being rolled back whole after it is laid. Off until an arm grades it.
     END_STRICT = os.environ.get("PAIR_END_STRICT", "0") != "0"
+    VIA_CANDS = max(1, int(os.environ.get("PAIR_VIA_CANDS", "12")))   # via sites tried at a station before the section fails
     VIA_MODE = os.environ.get("PAIR_VIA_MODE", "class").lower()
     if VIA_MODE not in ("class", "min"): raise SystemExit("pair_preroute: PAIR_VIA_MODE is `class` or `min`, not %r" % VIA_MODE)
     CROSS_NET = os.environ.get("PAIR_CROSS_NET", "report").lower()
@@ -1615,7 +1616,10 @@ def main(a):
                     if aL in trk1[net.GetNetname()] and trk1[net.GetNetname()][aL][ii, jj]: continue
                     score = r - 0.5 * ((cx_ - ex_) * away[0] + (cy_ - ey_) * away[1]) / r + 0.3 * math.hypot(cx_ - px_, cy_ - py_) / 10.0
                     cands.append((score, cx_, cy_))
-            cands.sort(); return [(c[1], c[2]) for c in cands[:12]]   # the best twelve, tried in order until a hop path exists
+            # 12 September 2026: the cap was twelve, and it was never measured. "no via site with a hop path" is 24 of
+            # the 68 failures left on B19's DIFF100 pass once the via size and the end geometry are right, all of them
+            # at the HDMI switches U3 and U4, and every one means all twelve candidates were refused by the stub search.
+            cands.sort(); return [(c[1], c[2]) for c in cands[:VIA_CANDS]]
         def via_hop(ex_, ey_, px_, py_, L, aL, net, away):
             """A via site with a hop path from the offset end on L: (vx, vy) or None; the hop is laid."""
             for vx_, vy_ in via_site(ex_, ey_, px_, py_, L, aL, net, away):
