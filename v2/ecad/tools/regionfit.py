@@ -19,6 +19,8 @@ import atexit, json, os, sys
 
 _SEEN = []
 _ALLOW = None
+_TABLE = []
+_OUT = [("out", None)]
 
 
 def allowance(letter):
@@ -33,6 +35,19 @@ def allowance(letter):
     return _ALLOW
 
 
+def record(name, rect, back, n_refs, out_dir="out", stem=None):
+    """One region as the packer was given it, for `region_room.py` to reason about.
+
+    13 September 2026, owner ruling 13: the session may resize board B's overflowing regions. A rectangle
+    cannot be sized from a warning, only from the room around it, and the room is decided by the regions of
+    the same side, the fixed parts and the board outline. The table is written beside the board so the
+    analysis needs no import of the generator, which runs off argv and cannot be imported.
+    """
+    _TABLE.append({"name": name, "rect": [round(float(v), 3) for v in rect],
+                   "side": "back" if back else "front", "refs": int(n_refs)})
+    _OUT[0] = (out_dir, stem)
+
+
 def note(name, mm):
     """One region that did not hold its parts. Printed as it happens, judged at exit."""
     _SEEN.append((name, float(mm)))
@@ -40,7 +55,29 @@ def note(name, mm):
 
 
 @atexit.register
+def _write_table():
+    if not _TABLE or _OUT[0] is None:
+        return
+    d, stem = _OUT[0]
+    try:
+        os.makedirs(d, exist_ok=True)
+        path = os.path.join(d, "%s-regions.json" % stem if stem else "regions.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({"regions": _TABLE, "overflow": {n: round(m, 3) for n, m in _SEEN}}, fh, indent=1)
+        print("region fit: %d region(s) recorded in %s" % (len(_TABLE), path))
+        _OUT[0] = None                      # written once, whichever handler got there first
+    except OSError as e:
+        print("region fit: could not write the region table (%s)" % e)
+
+
+@atexit.register
 def _judge():
+    # The table is written HERE, first, because `_judge` ends in `os._exit` on a block and os._exit skips
+    # every atexit handler that has not run yet. atexit runs in reverse registration order, so the writer
+    # registered above this one would never have run on the very runs that need it: the ones that block.
+    # (13 September 2026: the first attempt reported "no region table" on a blocked board, which is exactly
+    # the board the table is for.)
+    _write_table()
     if not _SEEN:
         return
     allow = _ALLOW if _ALLOW is not None else 0.0
