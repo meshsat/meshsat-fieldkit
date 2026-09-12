@@ -24,7 +24,7 @@ the net to each named position is then the anchor, and it is a pad centre, a via
 the middle of a track, where a closure would make a T the connectivity engine does not see.
 
 Prints one line per open with what it tried and what happened, and `direct_close: N closed of M`."""
-import sys, os, json, math, subprocess, collections
+import sys, os, re, json, math, subprocess, collections
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pcbnew, hardset
 from verdict import write as verdict_write
@@ -64,27 +64,42 @@ def parse_items(drc):
     return out
 
 
-def anchor(b, net, ex, ey, layer):
-    """the real copper of this net nearest the point the DRC named: a pad centre, a via centre, or a track END
-    (never the middle of a track, where a closure would make a T the connectivity engine does not see)"""
-    P = pcbnew.VECTOR2I(FromMM(ex), FromMM(ey))
+def anchor(b, net, end):
+    """the real copper of this net at the piece the DRC named, at the position it named it at.
+
+    The KIND matters and reading only the position got it wrong twice on A24 in one run: for `/VBUS20` the
+    nearest copper to the Track item's position was pad U3.1, so the tool proposed U3.1 to U3.3 (two pads of one
+    part, 0.8 mm apart, which is not the missing connection at all), and for `/CELL+` it anchored a Track item to
+    pad R1.2 and called the gap 8.66 mm. A Pad item names its footprint and pad number; a Track item is anchored
+    at a track END, never at the middle of a track, where a closure would make a T the connectivity engine does
+    not see."""
+    d = end["what"]; P = pcbnew.VECTOR2I(FromMM(end["x"]), FromMM(end["y"])); layer = end["layer"]
+    m = re.search(r"[Pp]ad (\S+) \[[^\]]*\] of (\S+)", d)
+    if m:   # "Pad 3 [/VBUS20] of U3 on F.Cu", "PTH pad 1 [/CELL+] of F1"
+        num, ref = m.group(1), m.group(2)
+        for f in b.GetFootprints():
+            if f.GetReference() != ref: continue
+            for p in f.Pads():
+                if p.GetNumber() == num:
+                    return (0.0, p.GetPosition(), [l for l in p.GetLayerSet().CuStack()], "pad %s.%s" % (ref, num))
     best = None
-    for f in b.GetFootprints():
-        for p in f.Pads():
-            if p.GetNetname() != net: continue
-            if layer and not p.IsOnLayer(b.GetLayerID(layer)): continue
-            d = math.hypot(mm(p.GetPosition().x - P.x), mm(p.GetPosition().y - P.y))
-            if best is None or d < best[0]: best = (d, p.GetPosition(), [l for l in p.GetLayerSet().CuStack()], "pad %s.%s" % (f.GetReference(), p.GetNumber()))
     for t in b.GetTracks():
         if t.GetNetname() != net: continue
         if t.GetClass() == "PCB_VIA":
-            d = math.hypot(mm(t.GetPosition().x - P.x), mm(t.GetPosition().y - P.y))
-            if best is None or d < best[0]: best = (d, t.GetPosition(), [l for l in t.GetLayerSet().CuStack()], "via")
+            if d.startswith("Via") or d.startswith("PTH"):
+                dd = math.hypot(mm(t.GetPosition().x - P.x), mm(t.GetPosition().y - P.y))
+                if best is None or dd < best[0]: best = (dd, t.GetPosition(), [l for l in t.GetLayerSet().CuStack()], "via")
             continue
         if layer and t.GetLayer() != b.GetLayerID(layer): continue
         for q in (t.GetStart(), t.GetEnd()):
-            d = math.hypot(mm(q.x - P.x), mm(q.y - P.y))
-            if best is None or d < best[0]: best = (d, q, [t.GetLayer()], "track end")
+            dd = math.hypot(mm(q.x - P.x), mm(q.y - P.y))
+            if best is None or dd < best[0]: best = (dd, q, [t.GetLayer()], "track end")
+    if best is None:   # a zone, or a piece we do not model: fall back to the nearest pad of the net
+        for f in b.GetFootprints():
+            for p in f.Pads():
+                if p.GetNetname() != net: continue
+                dd = math.hypot(mm(p.GetPosition().x - P.x), mm(p.GetPosition().y - P.y))
+                if best is None or dd < best[0]: best = (dd, p.GetPosition(), [l for l in p.GetLayerSet().CuStack()], "pad %s.%s" % (p.GetParentFootprint().GetReference(), p.GetNumber()))
     return best
 
 
@@ -104,8 +119,7 @@ def main(argv):
     closed = 0; tried = 0; rows = []
     for it in pairs:
         net = it["net"]; b = pcbnew.LoadBoard(bp)
-        A = anchor(b, net, it["ends"][0]["x"], it["ends"][0]["y"], it["ends"][0]["layer"])
-        B = anchor(b, net, it["ends"][1]["x"], it["ends"][1]["y"], it["ends"][1]["layer"])
+        A = anchor(b, net, it["ends"][0]); B = anchor(b, net, it["ends"][1])
         if not A or not B:
             rows.append({"net": net, "result": "no copper of the net at one end the DRC named"}); continue
         gap = math.hypot(mm(A[1].x - B[1].x), mm(A[1].y - B[1].y))
