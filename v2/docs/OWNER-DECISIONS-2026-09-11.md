@@ -405,5 +405,12 @@ is on three output positions of that stage.
 part on a 54 V rail is wrong at any capacitance, and option 1 for the other four stages if you want A24 cut this
 week, with the ripple re-checked before an order rather than before the folder.
 
+**What each option costs to apply, so the decision is not also a research task.** Option 1 is two strings in
+`gen_sch_a.py` (the `lm5176` helper's `ci1`/`ci2` and the `co1..co3` loop, both reading `22u 50V X7R 1210`) and a
+line in `lcsc_fill.py` pointing that value at `C596319`; the land, the placement and the routed copper are
+untouched, so A24 would be re-finished rather than re-routed, and the board's own gates would re-run in about
+twenty minutes. Option 2 changes the footprint on 25 parts, which moves the placement and needs a new route (five
+hours) plus a fresh pair pass. Option 3 is a schematic pass over five stages and then option 2's route.
+
 **What it blocks:** A24's deliverable, and nothing else. Every other board is unaffected; B, C, D and E do not use
 this value.
