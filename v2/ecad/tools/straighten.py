@@ -16,15 +16,28 @@ SNAP = 0.05
 board_fn = sys.argv[1]; out_fn = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else board_fn; do_short = "--no-shortcut" not in sys.argv
 b = pcbnew.LoadBoard(board_fn); mm = pcbnew.ToMM
 
-clear = {}; default_clear = 0.2
+clear = {}; default_clear = 0.2; PAIR_NETS = set()
 pro = os.path.splitext(board_fn)[0] + ".kicad_pro"
 if os.path.exists(pro):
     ns = json.load(open(pro)).get("net_settings", {}); cls = {c["name"]: c.get("clearance", 0.2) for c in ns.get("classes", [])}; default_clear = cls.get("Default", 0.2)
+    # 12 September 2026: a net of a DIFFERENTIAL PAIR class is never touched here. Its length is matched by
+    # `meander.py` under the owner's 1 mm ruling, and this pass runs BEFORE the pair gate in the finish, so on a
+    # board finished twice it shortcuts the previous run's meander away: A24 matched USB_WALL at 0.00 mm by adding
+    # 7.54 mm to its P leg and the next finish straightened 5.37 mm of that off, then could not place it again and
+    # refused the board with every other gate passing. A tidier that fights a gate is not a tidier.
+    _pairc = {c["name"] for c in ns.get("classes", []) if c.get("diff_pair_gap") or c.get("diff_pair_width")}
+    _assign = ns.get("netclass_assignments") or {}
     pats = [(p["pattern"], p["netclass"]) for p in ns.get("netclass_patterns", [])]
     for ni in b.GetNetInfo().NetsByName().values():
         nm = ni.GetNetname()
-        for pat, c in pats:
-            if fnmatch.fnmatch(nm, pat) or fnmatch.fnmatch(nm.lstrip("/"), pat): clear[ni.GetNetCode()] = cls.get(c, default_clear); break
+        _c = _assign.get(nm)
+        if _c is None:
+            for pat, c in pats:
+                if fnmatch.fnmatch(nm, pat) or fnmatch.fnmatch(nm.lstrip("/"), pat): _c = c; break
+        if _c is not None:
+            clear[ni.GetNetCode()] = cls.get(_c, default_clear)
+            if _c in _pairc: PAIR_NETS.add(ni.GetNetCode())
+print("straighten: %d net(s) of a differential pair class are left alone" % len(PAIR_NETS))
 
 # ---- by-value model
 class S:
@@ -69,7 +82,7 @@ while changed and checks[0] < BUDGET:
         a, c = ss
         if id(a) in touched or id(c) in touched: continue          # a segment already merged this pass has moved
         if a.dead or c.dead: continue
-        if a.locked or c.locked or a.net != c.net or a.w != c.w or busy(pt, layer): continue
+        if a.locked or c.locked or a.net in PAIR_NETS or a.net != c.net or a.w != c.w or busy(pt, layer): continue
         checks[0] += 1
         if checks[0] >= BUDGET: capped[0] = True; break
         pa, pc = other(a, pt), other(c, pt)
@@ -111,7 +124,7 @@ if do_short:
         if checks[0] >= BUDGET: capped[0] = True; break
         if len(ss) != 2: continue
         a, c = ss
-        if a.dead or c.dead or a.locked or c.locked or a.net != c.net or a.w != c.w or busy(pt, layer): continue
+        if a.dead or c.dead or a.locked or c.locked or a.net in PAIR_NETS or a.net != c.net or a.w != c.w or busy(pt, layer): continue
         pa, pc = other(a, pt), other(c, pt)
         if any(uid not in (a.uid, c.uid) and p not in (pa, pc) and (pt_on_seg(p, a, (a.w + w) / 2 + 1000) or pt_on_seg(p, c, (c.w + w) / 2 + 1000)) for p, uid, w in ends_by_layer.get(layer, [])): continue   # a T-junction rides on a or c
         if (pa, pc, layer) in tried or (pc, pa, layer) in tried: continue
