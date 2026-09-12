@@ -60,3 +60,16 @@ def t_a_board_declares_the_generator_that_writes_its_footprints():
         if any("NarrowPad" in n for n in names) and writers.get("NarrowPad") not in declared:
             bad.append("board %s names a narrow-pad land and declares %s" % (L, declared or "no footprint generator"))
     assert not bad, "\n  ".join(bad)
+
+def t_no_generator_names_a_stock_idc_land_directly():
+    """One source for a land pattern. `gen_pcb_a.py` placed `Connector_IDC:IDC-Header_2x08_P2.54mm_Vertical`
+    while `gen_sch_a.py` named the narrow-pad one, so A's J_MEZZ1 came out with 1.70 mm pads and a 0.84 mm
+    channel on a board whose schematic says 1.14; the mismatch printed a NOTE into a log nobody read."""
+    bad = []
+    for g in sorted(f for f in os.listdir(TOOLS) if re.match(r"gen_(sch|pcb)_\w+\.py$", f)):
+        s = open(os.path.join(TOOLS, g), errors="replace").read()
+        for m in re.finditer(r'"(Connector_IDC)"\s*,\s*"(IDC-Header_2x\d\d_P2\.54mm_Vertical)"', s):
+            bad.append("%s places %s:%s directly" % (g, m.group(1), m.group(2)))
+        for m in re.finditer(r'"Connector_IDC:(IDC-Header_2x\d\d_P2\.54mm_Vertical)"', s):
+            bad.append("%s names Connector_IDC:%s directly" % (g, m.group(1)))
+    assert not bad, "the IDC land has more than one source:\n  " + "\n  ".join(bad)
