@@ -2,7 +2,9 @@
  "name": "pcb-a-power",
  "letter": "a",
  "title": "PCB-A POWER + I/O",
- "footprint_generator": ["gen_footprints_idc.py"],
+ "footprint_generator": [
+  "gen_footprints_idc.py"
+ ],
  "extra_compile": [],
  "gate_before_placement": true,
  "bypass_place_after": "mechanical",
@@ -28,8 +30,16 @@
   "cont_route": {
    "max_opens": 6,
    "passes": 80,
-   "timeout_s": 900
-  }
+   "timeout_s": 900,
+   "power_layers": [
+    "In1.Cu",
+    "In4.Cu"
+   ],
+   "plane_nets": [
+    "GND"
+   ]
+  },
+  "_cont_route_planes_why": "12 September 2026: the continuation exports its own DSN, and it did so with every plane REMOVED, because finish.sh passed it no plane treatment and routeflow never put one in the finish's environment either. That makes the continuation re-route every plane pin as a wire: on C that is GND on In1, the majority of the board's connections. It is the same treatment the route itself is given in routeflow/<phase>.json, and a test holds the two in agreement."
  },
  "pair_order": [
   "USB_WALL"
