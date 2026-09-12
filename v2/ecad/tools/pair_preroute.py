@@ -657,6 +657,13 @@ def deloop(pts):
     return out
 
 
+def _via_dia(t):
+    """A via's diameter in mm. KiCad 9 asserts on PCB_VIA::GetWidth() with no layer (it can differ per layer on a
+    blind via); every via this tool lays is a through via, so the front copper answers for all of them."""
+    try: return mm(t.GetWidth(pcbnew.F_Cu))
+    except TypeError: return mm(t.GetWidth())
+
+
 def _pt_seg(px, py, x1, y1, x2, y2):
     """Distance from a point to a segment, in millimetres."""
     dx, dy = x2 - x1, y2 - y1; L2 = dx * dx + dy * dy
@@ -1454,7 +1461,7 @@ def main(a):
                     if t.GetLayer() != L: continue
                     if _seg_dist(x1, y1, x2, y2, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) < fold: return False
                 elif t.GetClass() == "PCB_VIA":
-                    if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < fold + mm(t.GetWidth()) / 2: return False
+                    if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < fold + _via_dia(t) / 2: return False
             return True
         # the stub, via-site and hop helpers of this pair (pair-level state only; they were inside the section loop and a pair whose last section took the direct legs left them undefined for the stub pass, 8 Sep 2026 12:47)
         def stub(ax_, ay_, bx_, by_, SL, net):
@@ -2220,7 +2227,7 @@ def main(a):
         # shipping 13 hard violations into the pre-route gate for the chain to refuse.
         _vias = {pn: [], nn: []}
         for _t in pieces:
-            if _t.GetClass() == "PCB_VIA" and _t.GetNetname() in _vias: _vias[_t.GetNetname()].append((mm(_t.GetPosition().x), mm(_t.GetPosition().y), mm(_t.GetWidth()) / 2))
+            if _t.GetClass() == "PCB_VIA" and _t.GetNetname() in _vias: _vias[_t.GetNetname()].append((mm(_t.GetPosition().x), mm(_t.GetPosition().y), _via_dia(_t) / 2))
         _cross = 0; _near = 0; _near_worst = 9.9; _near_at = []
         _tol = 0.005   # the DRC's own rounding: a gap equal to the clearance is legal
         for _L in {k[1] for k in _segs}:
