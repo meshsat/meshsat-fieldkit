@@ -20,6 +20,8 @@ ROD_DRILL, NUT_KEEPOUT_D = 3.2, 9.0
 OX, OY = 150.0, 110.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
 import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from idc_pads import idc   # the IDC land is a per-board measurement (IDC_PADS), not a default: see idc_pads.py
 PRJDIR = os.path.dirname(os.path.abspath(OUT))
 MSLIB = os.path.normpath(os.path.join(PRJDIR, "..", "meshsat.pretty"))
 os.makedirs(MSLIB, exist_ok=True)
@@ -177,7 +179,11 @@ text("D8 MEZZANINE SITE  100 x 80", 50.0, 3.0, pcbnew.F_SilkS, 1.4, 0.22)
 text("SA868 exciter, LPF, T/R relay, USB codec set, PTT and EMCON logic on 4x M3 (32.56); the PA module is on the face plate", 50.0, 0.0, pcbnew.F_SilkS, 0.9, 0.16)
 for (x, y) in MEZZ_HOLES:
     hole("H%d" % n, x, y, 3.2, "M3 standoff, mezzanine"); n += 1
-place("Connector_IDC", "IDC-Header_2x08_P2.54mm_Vertical", "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=0)   # along Y beside the mezzanine (its shroud is 29 mm long)
+# 12 September 2026: this placed the STOCK land while `gen_sch_a.py` names the narrow-pad one, so A's J_MEZZ1 came
+# out with 1.70 mm pads and a 0.84 mm channel on a board whose schematic says 1.14. The mismatch printed a NOTE into
+# a log nobody read. One source for the land, `idc_pads.idc`, and the board's own declaration decides it.
+_lib, _fp = idc("2x08").split(":")
+place(_lib, _fp, "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=0)   # along Y beside the mezzanine (its shroud is 29 mm long)
 text("J_MEZZ1", J_MEZZ[0] - 8.0, J_MEZZ[1], pcbnew.F_SilkS, 1.0, 0.18, angle=90)
 text("J_MEZZ_PWR1 VH2 (5 V)", J_MEZZ_PWR[0], J_MEZZ_PWR[1] + 7.0, pcbnew.F_SilkS, 0.9, 0.16)
 rect((J_AB[0] - 5.5, J_AB[1] - 21.0, J_AB[0] + 5.5, J_AB[1] + 21.0), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x13 -> B16 underside (113, -46)", J_AB[0] - 9.0, J_AB[1], pcbnew.Dwgs_User, 0.9, 0.15, angle=90)
