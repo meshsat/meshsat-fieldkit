@@ -145,18 +145,24 @@ def t_routeflow_validate_agrees_with_these_rules():
         assert r.returncode == 0, "%s: %s" % (os.path.basename(p), (r.stdout + r.stderr).strip().splitlines()[-1] if (r.stdout + r.stderr).strip() else r.returncode)
 
 
-def t_the_stitch_pruner_is_off_unless_a_board_asks_for_it():
+def t_the_stitch_pruner_is_off_unless_a_board_asks_for_it_with_its_number():
     """It cuts copper out of a board bound for manufacture, and on 12 September it was measured finding sixteen
-    abandoned vias on board E of which none was dead. That is fixed; what is not fixed is that it has never
-    removed a via that needed removing, so its risk is proved and its value is not. It is declared per board and
-    no board declares it."""
+    abandoned vias on board E of which none was dead. That is fixed; what was not fixed then is that it had never
+    removed a via that needed removing, so its risk was proved and its value was not, and no board declared it.
+
+    A24 is the board that presented the case: the route laid two nets across In2 within 0.5 mm of a locked VBAT
+    stitch via, the fill retreated, and the via ended 0.91 mm from the nearest copper of its own net with a 0.2 mm
+    escape stub on its other end. The board gate refused the board for that one item of 799 checks. So the rule is
+    not "no board may" any more; it is that a board turning it on carries the measurement that justified it, taken
+    on a copy before it went into the path: how many vias it removed, of how many, and what that did to the opens."""
     t = open(FINISH, errors="replace").read()
     assert 'if [ -n "$(cfg x stitch_prune)" ]' in t, "the pruner runs on every board rather than on request"
     for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
         f = json.load(open(p))["finish"]
-        assert not f.get("stitch_prune"), \
-            "%s turns the pruner on: record the board's own number for it here when you do" % os.path.basename(p)
-
+        if not f.get("stitch_prune"): continue
+        why = f.get("_stitch_prune_why", "")
+        assert len(why) > 200 and re.search(r"\d+ locked via", why) and "unrouted" in why, \
+            "%s turns the pruner on without the board's own number for it" % os.path.basename(p)
 
 def t_the_stitch_pruner_is_reverted_when_it_opens_anything():
     """It removes copper, so it is judged the way the stub router is: the board before it is kept, and it goes

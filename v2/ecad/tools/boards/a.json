@@ -39,7 +39,9 @@
     "GND"
    ]
   },
-  "_cont_route_planes_why": "12 September 2026: the continuation exports its own DSN, and it did so with every plane REMOVED, because finish.sh passed it no plane treatment and routeflow never put one in the finish's environment either. That makes the continuation re-route every plane pin as a wire: on C that is GND on In1, the majority of the board's connections. It is the same treatment the route itself is given in routeflow/<phase>.json, and a test holds the two in agreement."
+  "_cont_route_planes_why": "12 September 2026: the continuation exports its own DSN, and it did so with every plane REMOVED, because finish.sh passed it no plane treatment and routeflow never put one in the finish's environment either. That makes the continuation re-route every plane pin as a wire: on C that is GND on In1, the majority of the board's connections. It is the same treatment the route itself is given in routeflow/<phase>.json, and a test holds the two in agreement.",
+  "stitch_prune": true,
+  "_stitch_prune_why": "12 September 2026, A24, and this is the board that presented the case the tool was written for. A's route laid /PA_SLOPE and /PA_RT across In2 within 0.5 mm of the locked VBAT stitch via at (101.5, 100.5), the fill retreated by its clearance, and the via's plane end ended 0.91 mm from the nearest VBAT copper: a via connected to a 0.2 mm escape stub at one end and to nothing at the other. `check_pcb_a` refused the board for it, ONE failure of 799 checks, on a board that is 0 hard with every pair matched. Measured on a copy before it was turned on: 1 locked via removed of 621 on 38 zones, 0 left alone, hard 0 and unrouted 3 both unchanged, so nothing opened. It stays judged against the board before it (finish.sh 5b) and reverts if it opens anything."
  },
  "pair_order": [
   "USB_WALL"
