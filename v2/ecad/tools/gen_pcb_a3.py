@@ -106,9 +106,15 @@ REGIONS = [
  ("NODE",  (-118, -68, -106, -44), ["C1", "C2", "C3", "D1", "R1", "TP14", "TP9"]),
  ("FEQ",   (-118, 46, -100, 54), ["Q4", "Q5"]),   # A23: Q2, Q3 and the input caps are FIXED at the VIN_RAW band head; the region stays clear of the rod nut   # run 11: the FETs beside the controller U2 (-94, 56), their gate drives no longer cross the support passives (FE_HDRV1 and FE_BOOT1 open in runs 6 to 10)
  ("FES",   (-118, 30, -66, 43), ["R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R13", "R14", "R15", "R119", "C13", "C14", "C15", "TP12", "TP13", "R11", "R12", "D2"]),
- ("CHQ",   (-118, 18.5, -70, 30.5), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
+ # 12 September 2026: CHQ ended at y 30.5 and FES begins at 30, so the two rectangles OVERLAPPED by half a millimetre
+ # and the packer duly put the charger's CSD18510Q5B FETs (a 7.19 x 5.59 mm courtyard) under the front end's resistor row:
+ # four `courtyards_overlap` on the PLACED board, before the pre-router touched it, and no gate read them until the
+ # pre-route DRC (appendix 32.135). The region moves down into free board (CHS ends at y 6, PAS starts at x -66).
+ ("CHQ",   (-118, 17, -70, 29), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23", "C24", "C25"]),
  ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
- ("POQ",   (-118, -48, -46, -32), ["Q17", "Q18", "Q19", "Q20", "R71", "R72", "C81", "C82", "C83", "C84", "C85"]),
+ # 12 September 2026: POQ started at x -118 and ran under NODE (-118, -68, -106, -44), a 12 x 4 mm overlap the
+ # packer never happened to fill. It starts clear of the pack node's column now; 58 x 16 mm still holds its eleven parts.
+ ("POQ",   (-104, -48, -46, -32), ["Q17", "Q18", "Q19", "Q20", "R71", "R72", "C81", "C82", "C83", "C84", "C85"]),
  ("POS",   (-115, -17, -70, -6), ["R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R73", "R74", "R75", "R121", "U17"]),
  ("R1S",   (-61, 24, -49, 44), ["C28", "C31", "C32", "C33", "R28", "R29", "R30", "R45", "R129", "C112"]),
  ("VC1",   (-66, 58, -54, 63), ["C29", "C30"]), ("VC2", (-50, 58, -38, 63), ["C35", "C36"]), ("VC3", (-34, 58, -22, 63), ["C41", "C42"]), ("VC4", (-18, 58, -6, 63), ["C47", "C48"]),
