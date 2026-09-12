@@ -196,11 +196,26 @@ _OBSTACLES = []
 OBSTACLE_MAX_MM = 30.0
 
 
-def _load_obstacles(board):
-    """Every mechanical feature a placed part must step around: the drilled holes and slots, and the
-    small named keep-outs drawn around them. NOT the board-wide bands."""
+def _load_obstacles(board, fixed_refs=()):
+    """Every mechanical feature a placed part must step around: the drilled holes and slots, the small
+    named keep-outs drawn around them, and THE PARTS THAT ARE ALREADY THERE. NOT the board-wide bands.
+
+    12 September 2026: the packer knew about holes and keep-outs and not about the fixed parts standing
+    in its own regions, so moving BT1 into GAP12 under owner decision 11 laid the CR2032 holder across
+    J_FAN2's header and pushed C65 into the M.2 socket J_M2C1: hard 16 where the move was meant to
+    clear 6. A region may legitimately surround a fixed part, so the answer is for the shelf to flow
+    around it rather than for the region to be redrawn, which is reserved anyway.
+    """
     del _OBSTACLES[:]
     dropped = []
+    for fp in board.GetFootprints():
+        if fp.GetReference() not in fixed_refs:
+            continue            # every other footprint is still at the origin and would be a phantom
+        bb = fp.GetCourtyard(pcbnew.F_CrtYd).BBox() if not fp.IsFlipped() else fp.GetCourtyard(pcbnew.B_CrtYd).BBox()
+        if bb.GetWidth() <= 0 or bb.GetHeight() <= 0:
+            bb = fp.GetBoundingBox(False, False)
+        _OBSTACLES.append((pcbnew.ToMM(bb.GetLeft()) - OX - GAP, OY - pcbnew.ToMM(bb.GetBottom()) - GAP,
+                           pcbnew.ToMM(bb.GetRight()) - OX + GAP, OY - pcbnew.ToMM(bb.GetTop()) + GAP))
     for fp in board.GetFootprints():
         for pd in fp.Pads():
             if pd.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH:
@@ -277,8 +292,8 @@ for _r, _nn in _twopad.items():
 print("placement: %d differential-pair couples packed side by side" % (len(COUPLE) // 2))
 
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
-_load_obstacles(board)
-print("packer: %d keep-out(s) on the board are obstacles to the shelf packer" % len(_OBSTACLES))
+_load_obstacles(board, set(FIXED))
+print("packer: %d obstacle(s) on the board (holes, small keep-outs and the %d fixed parts)" % (len(_OBSTACLES), len(FIXED)))
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     fps = []
     for ref in refs:

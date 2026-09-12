@@ -75,7 +75,7 @@ def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""):
     """PowerPAK SO-8 single (Vishay 71655; the KiCad land): pads 1, 2, 3 = source, 4 = gate, 5 = the drain tab (five pads named 5). A22 round 1 (7 Sep 2026 05:30)
     found the three-pin Q_NMOS_GDS map putting the gate and drain nets on source pins: the symbol is a five-pin connector so every pad carries its net."""
     part(ref, "Connector_Generic", "Conn_01x05", value, fp, {"1": s, "2": s, "3": s, "4": g, "5": d}, lcsc)
-def vh2(ref, value, a, b="GND"): part(ref, "Connector_Generic", "Conn_01x02", value, "VH2", {"1": a, "2": b})
+def vh2(ref, value, a, b="GND"): part(ref, "Connector_Generic", "Conn_01x02", value, "VH2", {"1": a, "2": b}, "C274411")
 def tp(ref, net): part(ref, "Connector", "TestPoint", net, "TP", {"1": net})
 # --- pack node over the dock block (32.56): four CELL+ pins, four return pins, the pre-charge pin, then the 25 A blade to VBAT (the 2590 gives 10 A continuous, 18 A peak)
 for k in range(1, 5):
@@ -262,7 +262,7 @@ part("J_USBW", "Connector_Generic", "Conn_01x04", "wall USB-C data pair to B16 p
 # --- eleven blind-mate RF sites (32.56): top-side SMA jack for the device pigtail, bottom-side Radiall R222M00720 receptacle to the dock plug
 RF = (("VHF", "RF_VHF"), ("HF", "RF_HF"), ("WIFI24", "RF_WIFI24"), ("GNSS", "RF_GNSS"), ("SDR", "RF_SDR"), ("P2P-A", "RF_P2PA"), ("P2P-B", "RF_P2PB"), ("5G-MAIN", "RF_5G1"), ("5G-DIV", "RF_5G2"), ("IRID", "RF_IRIDIUM"), ("LORA", "RF_LORA"))
 for k, (nm, net) in enumerate(RF, 1):
-    part("J_RF%d" % k, "Connector", "Conn_Coaxial", "SMA jack (Amphenol 132134, vertical), pigtail from the %s device" % nm, "SMAV", {"1": net, "2": "GND"})
+    part("J_RF%d" % k, "Connector", "Conn_Coaxial", "SMA jack (Amphenol 132134, vertical), pigtail from the %s device" % nm, "SMAV", {"1": net, "2": "GND"}, "C3174425")
     part("J_BM%d" % k, "Connector", "Conn_Coaxial", "SMP-MAX slide-on receptacle R222M00720 (underside), %s to the dock plug" % nm, "SMPMAX", {"1": net, "2": "GND"})
 # --- test points and flags
 for ref, net in (("TP9", "VBAT"), ("TP10", "GND"), ("TP11", "+3V3"), ("TP12", "VBUS20"), ("TP13", "VIN_RAW"), ("TP14", "CELL+"), ("TP15", "EMCON_HW"), ("TP16", "RAIL_EN"), ("TP17", "SDA"), ("TP18", "SCL"), ("TP19", "IADPT"), ("TP20", "IBAT"), ("TP21", "DOCK_SPARE"), ("TP22", "REGN"), ("TP27", "AB_SPARE")): tp(ref, net)   # TP27: AB_SPARE lost its seat on J_AB1 when the ribbon pairs took their columns (10 Sep 2026), and it reaches D alone
