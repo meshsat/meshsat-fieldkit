@@ -2,7 +2,10 @@
  "name": "pcb-b-compute",
  "letter": "b",
  "title": "PCB-B COMPUTE",
- "footprint_generator": ["gen_footprints_b16.py", "gen_footprints_idc.py"],
+ "footprint_generator": [
+  "gen_footprints_b16.py",
+  "gen_footprints_idc.py"
+ ],
  "extra_compile": [],
  "gate_before_placement": true,
  "bypass_place_after": "mechanical",
@@ -56,5 +59,5 @@
   "PAIR_CORRIDOR_SLACK": 0.06,
   "PAIR_CORRIDOR_SLACK_SLIM": 0.03
  },
- "_pair_env_why": "12 September 2026, ten arms on one placed board with the compiled stub search, 113 pairs: 0.03 lays 41, 0.04 lays 44, 0.05 lays 53, 0.06 lays 57, 0.07 lays 52, 0.08 lays 47, 0.10 lays 48, 0.12 lays 46, 0.14 lays 49, 0.16 lays 47. One peak at 0.06 with a clean rise and fall around it and a noisy plateau from 0.10 out. The value here is 0.06 because that is where the curve peaks, and it is recorded HERE and not as a global default because the same board read 62 at 0.08 in the morning sweep of 11 September on tools and a placement that have both moved since: re-measure the curve when either does."
+ "_pair_env_why": "12 September 2026, ten arms on one placed board with the compiled stub search, 113 pairs: 0.03 lays 41, 0.04 lays 44, 0.05 lays 53, 0.06 lays 57, 0.07 lays 52, 0.08 lays 47, 0.10 lays 48, 0.12 lays 46, 0.14 lays 49, 0.16 lays 47. One peak at 0.06 with a clean rise and fall around it and a noisy plateau from 0.10 out. The value here is 0.06 because that is where the curve peaks, and it is recorded HERE and not as a global default because the same board read 62 at 0.08 in the morning sweep of 11 September on tools and a placement that have both moved since: re-measure the curve when either does. ADDENDUM 12 September 2026 04:00: the sweep above is superseded as a NUMBER and kept as a method. Six emissions in the pre-router could lay copper on another net (appendix 32.135) and every one of them is asked now, so the curve was measured on a tool that laid illegal copper: B19's DIFF100 pass read 8 of 48 against the old 22 before the entry-region geometry test landed. RE-MEASURE THE WHOLE CURVE before trusting 0.06 again."
 }
