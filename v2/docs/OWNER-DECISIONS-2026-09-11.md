@@ -223,6 +223,23 @@ the pair laid (appendix 32.124).
 
 ---
 
+### CLOSED, 12 September 2026 04:00: the third pair took a ribbon of its own, and this decision needs nothing from you
+
+**Measured three ways on one placed board, with the pre-router honest about its own copper (appendix 32.135):**
+laying `USB_WALL` first puts `USB_D8`'s leg **0.00 mm** from it (twelve DRC items); laying `USB_D8` first, or
+longest first, leaves `USB_WALL` with no corridor out of `J_AB1` at all. The reason is geometric and final: the
+middle pair's only escape is the 1.14 mm channel between the columns, and **that channel exits at the same end
+the end-row pair leaves from**. One lane, two pairs.
+
+**So the wall pair has its own ribbon.** `J_AB2` is a 2x5 IDC on A and B: `USB_WALL_P` and `USB_WALL_N` on pins 1
+and 2, an END row, with eight grounds behind them; `J_AB1` keeps `USB_D8` on 1/2 and `USB_E6` on 25/26 and its
+pins 5 and 6 become GND. One connector and one short ribbon per kit, no class geometry changed, no pad changed,
+nothing on the never-auto floor touched. **A lays 3 of 3 pairs with `PREROUTE-DONE OK`** and its route is running.
+
+**None of options 1 to 3 is needed** (a wider channel, a finer class, an accepted uncoupled fan). They stay above
+for the record. The three `J_AB1` lines are gone from `tools/pair-header-allow.txt`, and `check_contracts.py`
+carries the J_AB2 map contract plus a check that its pair sits on an end row.
+
 ## 7. P and E5 are described as 2 oz and ordered as 1 oz, and P's current density is already over IPC at either (measured 11 September, 23:45)
 
 **The contradiction, in the order set itself.** `make_handoff.py` writes three things about copper weight:
