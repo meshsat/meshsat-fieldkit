@@ -120,7 +120,7 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # an INNER row of the header, which can only leave through the channel between the columns, was laid before
   # the two on the end rows, which have the open board in front of them (12 September 2026, appendix 32.134).
   PORD="$(python3 -c "import json,sys; print('\n'.join(json.load(open(sys.argv[1])).get('pair_order') or []))" "$CFG")"
-  if [ -n "$PORD" ]; then printf '%s\n' "$PORD" > out/pair-order.txt; PENV="$PENV PAIR_ORDER_FILE=$PWD/out/pair-order.txt"; echo "pair order: $(printf '%s' "$PORD" | tr '\n' ' ')first, then the longest of the rest"; fi
+  if [ -n "$PORD" ]; then printf '%s\n' "$PORD" > out/pair-order.txt; PENV="$PENV PAIR_ORDER_FILE=$PWD/out/pair-order.txt"; echo "pair order: $(printf '%s' "$PORD" | tr '\n' ' ')first in the list, then the longest of the rest"; fi
   PP=0; PIDX=0
   if [ -n "$PPASSES" ]; then
     while IFS=$'\t' read -r pcls play phop pinner; do
