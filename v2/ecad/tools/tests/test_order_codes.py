@@ -216,3 +216,21 @@ def t_a_socket_on_the_board_is_not_a_lead():
            if any(b in fp for b in bodies) and not code and not filled(comment, fp)]
     assert not bad, ("a connector body carries no LCSC code and a lead exemption cannot cover it:\n  "
                      + "\n  ".join(bad))
+
+
+def t_a_declaration_matches_a_row_by_prefix_not_by_character_count():
+    """`9 A spring pin, pack return (Mill-Max 0858 class, dock block)` is 61 characters and its twin on
+    the CELL+ side is 55, so keying a declaration on `comment[:60]` declared one of a matched pair and
+    left the other reading NO_PART_CHOSEN. A declaration that is a prefix of the row matches it."""
+    hf = {"9 A spring pin, pack return (Mill-Max 0858 class, dock block)": "Mill-Max through Digi-Key"}
+    for c in ("9 A spring pin, pack return (Mill-Max 0858 class, dock block)",
+              "9 A spring pin, pack return (Mill-Max 0858 class, dock block), four of them"):
+        ev = jc.certify({"comment": c, "fp": "meshsat:Mill-Max_0858_power_pin", "code": "", "qty": 1}, {}, hf, {})
+        assert ev["verdict"] == "HAND_FIT", (c, ev)
+
+
+def t_a_short_declaration_does_not_swallow_rows_nobody_declared():
+    hf = {"5 V": "somewhere"}
+    ev = jc.certify({"comment": "5 V rail decoupling, 10u 0805", "fp": "Capacitor_SMD:C_0805_2012Metric",
+                     "code": "", "qty": 1}, {}, hf, {})
+    assert ev["verdict"] != "HAND_FIT", ev

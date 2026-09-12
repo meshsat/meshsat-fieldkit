@@ -180,12 +180,33 @@ own face. **Open on P, and it is decision 7, not this document: P is described a
 and three CM5 at 0.4 mm receptacle pitch measured 93 opens at 8 passes with In1 keep-outs on 5 September. It is
 the one layer decision in this set that was ever taken on a measurement at the time.
 
-**A power: OPEN, and the experiment is named and cheap.** Does A's four-layer route reach zero opens with today's
-finish in the loop (a continuation pass at six opens or fewer, then the stub router)? The recorded four-layer
-evidence is 4 to 11 opens, which is inside what the finish now closes routinely. **The blocker to running it is
-not the router:** `gen_pcb_a3.py:280` dives the VIN_RAW trunk onto In3 to cross the VBAT trunk, and a four-layer
-A has no In3, so that dive needs somewhere else to go before a four-layer A can be generated at all. That is a
-placement change and it is the work the experiment waits on.
+**A power: OPEN, and as of 12 September the four-layer board EXISTS.** Owner ruling 2 of that day is "write up
+all seven from the evidence that exists, and TEST board A only".
+
+**The blocker was one literal and it is gone.** `gen_pcb_a3.py` dived the VIN_RAW trunk under the VBAT trunk on
+`pcbnew.In3_Cu` and put the second solid ground on `pcbnew.In4_Cu`, neither of which a four-layer board has, so a
+four-layer A could not be generated at all. The dive follows the board's own copper layer count now, In3 on six
+and In2 on four, and the In4 plane and its no-tracks rule area exist only on six. Reading the count is not
+setting it: `board.SetCopperLayerCount(6)` is untouched and stays on the never-auto floor; the experiment patches
+that one line in its own tools tree, which is committed nowhere.
+
+**The four-layer placed board, measured 12 September 2026 at 16:35 CEST:** 4 copper layers, the dive on In2
+beside the VBAT plane, **0 hard of the fifteen types**, `netlist_board` 2004 of 2004, and `check_pcb_a` **510 of
+511**. The single failure is `FAIL 6 copper layers`, which is the gate asserting the declared stackup and doing
+its job on an experiment, not a defect in the board.
+
+**A METHOD TRAP that cost the first run, worth carrying.** `full.sh` dispatches its generators as
+`../tools/gen_pcb_a.py`, relative to the project directory, so a patched copy of the tools anywhere else is never
+read. The first attempt reported a clean four-layer run and had quietly built the six-layer board: `copper
+layers: 6`, dive on In3. An experiment tree needs its own `ECAD` directory, not its own `tools` directory.
+
+**What is still open is the route**, which is the question that decides the layer count: does it reach zero opens
+with today's finish in the loop (continuation pass, then the stub router)? The recorded four-layer evidence is 4
+to 11 opens (`gen_pcb_a3.py:196`), which is inside what the finish now closes routinely. **The prediction written
+before the run:** four layers takes In3 and In4 away, so the board loses one of its two inner routing layers and
+the dive shares In2 with the VBAT plane; I expect opens in the low tens rather than zero, with the stub router
+and the continuation closing some but not all. If it reaches 0 hard and 0 unrouted, **A's stackup becomes an
+owner decision with a number attached**, which is the point of the exercise.
 
 **The cost side is still missing for every row** and cannot be taken here: the runner never logs into JLCPCB and
 there is no open pricing endpoint. One quote per board at its real outline and quantity five, at four layers and
