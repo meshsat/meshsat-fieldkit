@@ -74,7 +74,7 @@
     },
     {
       "name": "region definitions in the packer",
-      "why": "where a part may sit is the floor plan, and the floor plan is a design decision with thermal, RF and assembly consequences",
+      "why": "where a part may sit is the floor plan, and the floor plan is a design decision with thermal, RF and assembly consequences OWNER RULING 13 September 2026 00:40 (decision 13): the seven overflowing regions of BOARD B ONLY may be resized by the session, one at a time, each reported with its overflow before and after. Every other board's regions stay on this floor, and so do B's once its overflow reads zero. A region change outside that is still the owner's.",
       "sites": [
         [
           "gen_pcb_*3.py",
@@ -98,7 +98,7 @@
     },
     {
       "name": "the order set and anything ordered",
-      "why": "membership of the order set, the bench-fit exclusions and the JLC rotations decide what is bought and how it is placed OWNER RULING 12 September 2026: the owner will not read the order notes and has delegated drafting AND approval of them. The prose rows of make_handoff.py are therefore NOT reserved any more. What stays reserved is anything that ORDERS: export_jlc.sh, the JLC rotation table, the exclusion table and the cart. Nothing is ordered and no cart line is touched without the owner, which this ruling did not change.",
+      "why": "membership of the order set, the bench-fit exclusions and the JLC rotations decide what is bought and how it is placed OWNER RULING 12 September 2026, CONFIRMED 13 September 2026 00:40 as a deliberate change to this floor rather than a one-off: the owner will not read the order notes and has delegated drafting AND approval of them. He was asked a second time precisely because removing an approval step changes a safety property, and he removed it. The prose rows of make_handoff.py are therefore NOT reserved any more. What stays reserved is anything that ORDERS: export_jlc.sh, the JLC rotation table, the exclusion table and the cart. Nothing is ordered and no cart line is touched without the owner, which this ruling did not change.",
       "sites": [
         [
           "export_jlc.sh",
