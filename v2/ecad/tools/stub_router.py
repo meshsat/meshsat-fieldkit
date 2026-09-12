@@ -305,7 +305,9 @@ def _unconnected():
         b.BuildConnectivity(); return b.GetConnectivity().GetUnconnectedCount(False)
     except Exception:
         return None
-_U = _unconnected()
+_U = None   # taken lazily, just before the first closure: BuildConnectivity on a board with nothing to close is
+            # work nobody asked for, and the finish that found this crashed inside the stub router with an empty
+            # log on a board that had zero opens (12 September 2026)
 for it1, it2 in pairs:
     net = it1["net"]; netobj = b.FindNet(net)
     if netobj is None or netobj.GetNetCode() <= 0: net = netname(net); netobj = b.FindNet(net)
@@ -366,6 +368,7 @@ for it1, it2 in pairs:
                 row += "S" if src[Ls][i, j] else ("G" if any(M[i, j] for M in goal_cells.values()) else ("#" if trk[Ls][i, j] else "."))
             print("    " + row)
         continue
+    if _U is None: _U = _unconnected()
     _n_before = len(list(b.GetTracks()))
     nt, nv = emit(netobj, path)
     L_end, i_end, j_end = path[-1]
