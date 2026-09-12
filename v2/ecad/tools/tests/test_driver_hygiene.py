@@ -558,3 +558,23 @@ def t_a_margin_against_the_board_is_the_boards_own():
     for m in _re.finditer(r"qr \+ VIA_D / 2 \+ ([A-Za-z_(0-9.)]+)", src):
         if "INPAD_CLR" not in m.group(1):
             raise AssertionError("the in-pad fallback keeps a typed margin from other pads: %s" % m.group(1))
+
+
+def t_no_via_is_laid_without_a_clearance_test():
+    """`escape.py`'s exposed-pad loop added thermal vias unconditionally (MESHSAT-862, 12 September 2026).
+
+    A thermal via sits inside its own exposed pad, so it looked safe. It is a THROUGH via and this board
+    is assembled on both sides: it emerges on B.Cu among the underside decoupling and landed on other
+    parts' pads, which is 25 of the hard violations on B19's placed board. The same shape as the
+    pre-router's six unasked emissions in 32.135: an exemption that is true of the pad is not true of the
+    other side of the board. Every via this file lays passes clear() now.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "escape.py"), errors="replace").read()
+    body = src.split('"""', 2)[2] if src.count('"""') >= 2 else src
+    for m in _re.finditer(r"\n(\s*)via = pcbnew\.PCB_VIA\(b\)", body):
+        start = max(0, m.start() - 700)
+        window = body[start:m.start()]
+        if "clear(" not in window:
+            raise AssertionError("escape.py lays a via with no clearance test in the 700 characters before it: "
+                                 "...%s" % body[m.start():m.start() + 90].strip())

@@ -94,7 +94,7 @@ def clear(v, r, me, me_ref, net, lane=0.75):
         o = z.Outline()
         if o.Contains(VECTOR2I(int(v.x), int(v.y))) or o.Contains(VECTOR2I(int(v.x + r), int(v.y))) or o.Contains(VECTOR2I(int(v.x - r), int(v.y))) or o.Contains(VECTOR2I(int(v.x), int(v.y + r))) or o.Contains(VECTOR2I(int(v.x), int(v.y - r))): LAST[0] = "rule-area"; return False
     return True
-added = skipped = 0
+added = skipped = ep_skipped = 0
 for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
     if not is_fine(fp) or (fp.GetReference().startswith("J") and min_pitch(fp) > FromMM(0.6)): continue      # coarse connectors route fine without escapes; a 0.5 mm M.2 socket (B14 J_WIFI1) does not (5 Sep: the router thrashed 75 min on its 67 bare pads)
     if fp.GetReference() in set(filter(None, __import__("os").environ.get("ESCAPE_SKIP", "").split(","))): continue   # A19: parts the router escapes itself (mixed pad sizes)
@@ -222,7 +222,17 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
         spots = [(dx, dy) for dx in ((-0.7, 0.7) if big else (0.0,)) for dy in ((-0.7, 0.7) if big else (0.0,))]
         for dx, dy in spots:
             v = VECTOR2I(int(c.x + FromMM(dx)), int(c.y + FromMM(dy)))
+            # THIS LOOP USED TO LAY COPPER WITHOUT ASKING ANYTHING (12 September 2026). A thermal via sits
+            # inside its own exposed pad, so it looked safe, and it is a THROUGH via on a board assembled
+            # on both sides: it comes out on B.Cu where the underside decoupling lives, and it landed on
+            # other parts' pads there. That is 25 of the hard violations on B19's placed board, reading as
+            # clearance, hole_clearance, solder_mask_bridge and shorting_items against a handful of
+            # back-side resistors. It is the same shape as the pre-router's six unasked emissions
+            # (appendix 32.135): an exemption that is true of the pad is not true of the other side.
+            if not clear(v, FromMM(0.3), pad, fp.GetReference(), pad.GetNetname()):
+                ep_skipped += 1
+                continue
             via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(FromMM(0.3)); via.SetWidth(FromMM(0.6)); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via)
             vias.append((v, FromMM(0.3), pad.GetNetname())); added += 1
-print("escape: %d escapes added, %d pads skipped" % (added, skipped))
+print("escape: %d escapes added, %d pads skipped, %d thermal via(s) refused for what is on the other side" % (added, skipped, ep_skipped))
 pcbnew.SaveBoard(sys.argv[1], b)
