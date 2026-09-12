@@ -8,7 +8,7 @@
 "F1","25 A mini blade (Keystone 3568 holder): the pack's fuse","Fuse:Fuseholder_Blade_Mini_Keystone_3568","","1"
 "J_CELL?","cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN","Connector_JST:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical","","1"
 "J_SMB?","SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND PRES","Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical","","1"
-"J_TS?","cell thermistor (JST-PH 1x2): the 103AT in the block","Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical","","1"
+"J_TS?","JST-PH 1x2 socket for the cell thermistor lead (the 10k NTC, a 103AT, sits in the cell block)","Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical","C5251182","1"
 "Q1","CSD17570Q5B 30 V N-FET, charge switch","Package_SO:PowerPAK_SO-8_Single","C529279","1"
 "Q2","CSD17570Q5B 30 V N-FET, discharge switch","Package_SO:PowerPAK_SO-8_Single","C529279","1"
 "R1-R5,R8,R9,R20,R21","100R","Resistor_SMD:R_0603_1608Metric","","9"
