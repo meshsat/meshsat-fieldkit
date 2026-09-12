@@ -84,11 +84,39 @@ def room(rect, side, others, blockers, outline, step=0.5, limit=80.0):
     return out
 
 
+def free_rects(w, h, side, others, blockers, outline, step=2.0):
+    """Every place on one side where a w by h rectangle fits with nothing of that side in it.
+
+    13 September 2026: board B's GAP12 is 18 mm wide and owner decision 11 put a 23.79 mm coin cell holder
+    in it, which is the whole of its 64.7 mm overflow and cannot be fixed by resizing a pocket with 2 mm of
+    room. A part that fits nowhere in its own region has to go somewhere, and somewhere is a measurement,
+    not a guess. Coarse on purpose: a 2 mm grid, reporting distinct areas rather than every offset.
+    """
+    x0, y0, x1, y1 = outline
+    found = []
+    y = y0 + 1.0
+    while y + h <= y1 - 1.0:
+        x = x0 + 1.0
+        while x + w <= x1 - 1.0:
+            cand = (x, y, x + w, y + h)
+            clash = any(_overlap(cand, r, EPS) for nm, r, sd in others if sd == side)
+            if not clash:
+                clash = any(_overlap(cand, r, EPS) for nm, r in blockers)
+            if not clash:
+                found.append((round(x, 1), round(y, 1)))
+                x += w
+            else:
+                x += step
+        y += step
+    return found
+
+
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("board")
     ap.add_argument("--json")
     ap.add_argument("--only")
+    ap.add_argument("--free", help="W,H,side: where a W by H mm rectangle fits on that side")
     a = ap.parse_args(argv)
     import pcbnew
     stem = os.path.splitext(os.path.basename(a.board))[0]
@@ -119,7 +147,45 @@ def main(argv):
         fb = f.GetBoundingBox(False, False)
         fixed.append((f.GetReference(), (pcbnew.ToMM(fb.GetLeft()) - ox, oy - pcbnew.ToMM(fb.GetBottom()),
                                          pcbnew.ToMM(fb.GetRight()) - ox, oy - pcbnew.ToMM(fb.GetTop()))))
+    # A MOUNTING HOLE IS NOT A FIXED PART and it stops a region just as hard (13 September 2026): the first
+    # free-space query on board B answered with the south-east corner, which carries H19 and H20 and their
+    # keep-outs. Holes and the small named keep-outs drawn around them are blockers too; the board-wide
+    # bands are not, which is `gen_pcb_b3._load_obstacles`'s own rule, so the same 30 mm cap applies.
+    # A THROUGH-HOLE PAD OCCUPIES BOTH SIDES. This is owner decision 11's whole subject made mechanical: a
+    # front region over a back part's through-hole pins is a short, which is why the coin cell had to leave
+    # GAP23. The first BATT pocket this tool proposed sat over U42's /+3V3_IOCA pin and reproduced it exactly
+    # (13 September 2026), so every PTH and NPTH pad on the board is a blocker for a region of EITHER side.
+    for f in b.GetFootprints():
+        for pd in f.Pads():
+            if pd.GetAttribute() not in (pcbnew.PAD_ATTRIB_NPTH, pcbnew.PAD_ATTRIB_PTH):
+                continue
+            hb = pd.GetBoundingBox()
+            kind = "hole" if pd.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH else "through-hole pin"
+            fixed.append(("%s %s.%s" % (kind, f.GetReference(), pd.GetNumber()),
+                          (pcbnew.ToMM(hb.GetLeft()) - ox, oy - pcbnew.ToMM(hb.GetBottom()),
+                           pcbnew.ToMM(hb.GetRight()) - ox, oy - pcbnew.ToMM(hb.GetTop()))))
+    for z in b.Zones():
+        if not z.GetIsRuleArea():
+            continue
+        zb = z.GetBoundingBox()
+        w, h = pcbnew.ToMM(zb.GetWidth()), pcbnew.ToMM(zb.GetHeight())
+        if w > 30.0 or h > 30.0:
+            continue
+        fixed.append(("keep-out %s" % (z.GetZoneName() or "unnamed")[:18],
+                      (pcbnew.ToMM(zb.GetLeft()) - ox, oy - pcbnew.ToMM(zb.GetBottom()),
+                       pcbnew.ToMM(zb.GetRight()) - ox, oy - pcbnew.ToMM(zb.GetTop()))))
     others = [(r["name"], r["rect"], r["side"]) for r in regions]
+    if a.free:
+        fw, fh, fside = a.free.split(",")
+        hits = free_rects(float(fw), float(fh), fside.strip(),
+                          [(r["name"], r["rect"], r["side"]) for r in regions], fixed, outline)
+        print("region_room: %s by %s mm on the %s fits in %d place(s)" % (fw, fh, fside, len(hits)))
+        for x, y in hits[:24]:
+            print("   at (%.1f, %.1f) to (%.1f, %.1f)" % (x, y, x + float(fw), y + float(fh)))
+        return verdict.write("region_room", verdict.PASS, counts={"free_places": len(hits)},
+                             denominator=max(len(hits), 1),
+                             evidence=["%s by %s on the %s: %d place(s)" % (fw, fh, fside, len(hits))],
+                             inputs={"board": a.board}, note="where a rectangle of that size fits on that side")
     want = set((a.only or "").split(",")) if a.only else None
     rows, ev = [], []
     print("%-9s %6s  %-22s %-22s %-22s %s" % ("region", "over", "west", "east", "south", "north"))

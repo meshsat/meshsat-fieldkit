@@ -123,7 +123,18 @@ COL = {1: (-98, -38), 2: (-36, 32), 3: (34, 94)}
 # its third defect was fixed: ETH's rectangle already overlaps the fixed magnetics T1 by a tenth of a
 # millimetre at its northern edge, and testing the whole grown rectangle rather than the strip being
 # added reported zero room on all four sides. Its parts were already spilling into that empty board.
-# RBX2 (31.8) and GAP12 (64.7) had no room in any direction, because a rectangle cannot grow
+# GAP12's 64.7 mm is ONE PART. Owner decision 11 moved the CR2032 holder into it and the holder is
+# 23.79 by 21.04 mm against a pocket 18 mm wide: it does not fit the WIDTH, so the packer puts it in and
+# every row after it overflows. GAP12 can reach 21.5 mm with every millimetre around it, which is 29
+# percent more area against the 100 percent the overflow asks for, so no resize can hold it. BT1 takes a
+# pocket of its own, BATT, in the empty front band at the west end (28 by 25 mm, measured with
+# region_room --free). The FIRST pocket it proposed, at x -164, reproduced decision 11's defect exactly:
+# it sat over U42's /+3V3_IOCA through-hole pin and the holder's ground land shorted to it. A through-hole
+# pad occupies BOTH sides, so the free-space query counts every PTH and NPTH pad as a blocker for a
+# region of either side now, and this pocket is what it answers with. The net is VBAT, a
+# microamp backup for the three modules' RTCs, the LG290P and the DS3231, so its position is electrically
+# free; if it is wrong for access in the case, it is one rectangle to change.
+# RBX2 (31.8) had no room in any direction, because a rectangle cannot grow
 # into a fixed part. RBX2 is FOLDED INTO RBX: eleven parts in 252 mm2 is 22.9 mm2 each, the densest
 # pocket on the front of the board, boxed on all four sides by the RockBLOCK bracket connector, and RBX
 # is the same cluster one millimetre to the north with 68.9 mm2 a part and no overflow. Together they are
@@ -199,8 +210,9 @@ REGIONS += [
  # placed board after five tool causes were fixed (150 to 6, appendix 32.149). The alternative was moving the
  # controller, which would have re-opened the 9 September argument that put the three controllers in three
  # separate failure domains, so the passive part moves instead.
- ("GAP12", (-50, 33, -32, 97), ["BT1", "U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
+ ("GAP12", (-50, 33, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
  ("GAP23", (19, 33, 44, 97), ["U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "J_GNSS1", "U8", "U9", "U10", "C69", "C70", "C71"], False),
+ ("BATT",  (-134, -65, -106, -40), ["BT1"], False),
  ("WMIDS", (-152, -97, -116, -66), ["U35", "D1", "D2", "J_54V", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
  ("NEX",   (96, 78, 123, 82), ["R14", "R15", "R16", "C37", "C38"], False),   # B17 (8 Sep 2026, 32.65): the two HDMI switches U3 and U4 are FIXED at 16 mm pitch above this strip (9.6 mm in the packed row collided their escape fans)
  ("SEX",   (96, -85, 112, -78), ["F2", "C39"], False),
