@@ -5713,3 +5713,45 @@ its prediction written: eighteen or more of 48 against the 14 the same configura
 **B is still held by the pair ruling at 37 of 113 and that is the honest state of the board.** Nothing about
 tonight's numbers is a route: B19 has not been routed since the ribbon split, and the pair count is what decides
 when it can be.
+
+### 32.143 The third prediction fails the same way, and the failure profile is finally legible (12 September 2026, 12:10 CEST; MESHSAT-862)
+
+`PAIR_END_STRICT` was written against the finding of 32.142 and predicted at **eighteen or more of 48** against
+the 14 the same configuration lays. Measured on the same placed board:
+
+| arm | pairs laid of 48 | own-legs refusals |
+|---|---:|---:|
+| min via (today) | 14 | 22 |
+| min via + `PAIR_END_STRICT=1` | **14** | **4** |
+
+**Three predictions today, three failures, every one the same shape.** The guard does exactly what it was built to
+do: eighteen of the twenty-two own-legs refusals are gone, because the copper that violated is no longer laid. And
+**not one pair was laid as a result**, because a pair past one bar meets the next one. That is now a measured law
+of this tool rather than a suspicion: *counting the failures a change removes never predicts the pairs it lays*,
+and the only prediction that held today (32.142) was the one set from a measured arm instead.
+
+**Its first version was also wrong in an instructive way.** It searched the end stubs on a map carrying the
+partner's copper, and two runs came out BYTE IDENTICAL. Instrumented, the map already blocks the partner at a
+larger margin than the gate's bar: seven partner pieces stamped, **zero cells newly blocked**. The violating
+copper was never chosen by a search at all. It is the copper laid without asking a map: the last hop from the
+path's final cell into the pad, the straight piece taken when the two ends sit in one cell, and the same final hop
+in the fallback that aims at the net's own escape. Those three are judged at the gate's bar now and taken back off
+when they fail, so the caller tries its next candidate instead of the pair being rolled back whole after it is
+laid. The knob stays OFF: it changes no count, and what it buys is honesty at the ends, not pairs.
+
+**What it did buy is a legible failure profile**, read by `pair_report.py` now that it understands the whole-pair
+verdicts (its largest bucket was "(unparsed)" this morning):
+
+| the reason the section or the pair was lost | count |
+|---|---:|
+| the legs clear no smoothing of the centreline | 28 |
+| no via site with a hop path, at U4, U3, U1 | 24 |
+| the two legs cross each other on the laid path | 6 |
+| its own two legs come within the clearance | 4 |
+| no stub path at U3 | 4 |
+| the expansion budget | 2 |
+
+**Two bars carry 52 of the 68 failures, and both sit at the fine-pitch parts**: the offset legs not fitting the
+corridor they were given, and no via site with a hop path at the HDMI switches U3 and U4. Neither is a search
+budget and neither is the order the pairs are laid in. The next measurement is aimed at those two, and it will be
+set from an arm rather than from a count of refusals.
