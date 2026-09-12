@@ -285,3 +285,5 @@ def t_a_meander_is_locked_copper():
     assert "SetLocked(True)" in src[i:i + 700], "the meander's copper is not locked"
     st = open(os.path.join(TOOLS, "straighten.py"), errors="replace").read()
     assert "a.locked or c.locked" in st, "the straightener does not exempt locked copper"
+    assert "PAIR_NETS" in st and st.count("a.net in PAIR_NETS") >= 2, \
+        "the straightener still merges and shortcuts the nets of a differential pair class"
