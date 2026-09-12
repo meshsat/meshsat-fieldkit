@@ -815,7 +815,8 @@ def main(a):
     # guaranteed to fit again once its room has been taken by the pair that ripped it, and nothing checks that the episode paid.
     # The episode has to become a trial that is accepted only when it leaves more pairs laid than it found; until it is, the flag
     # stays off (PAIR_RIPUP=1 to reproduce the measurement).
-    LEG_EXACT = os.environ.get("PAIR_LEG_EXACT", "0") != "0"       # re-test a blocked leg point against the polygons before refusing the pair
+    LEG_EXACT = os.environ.get("PAIR_LEG_EXACT", "0") != "0"
+    FAN_BACK = float(os.environ.get("PAIR_FAN_BACK", "1.0"))   # how far the P leg is pulled back before the N fan of a dive is laid (mm; 0 restores the old behaviour)       # re-test a blocked leg point against the polygons before refusing the pair
     # A station swap exchanges two identical passives so the pair's own fans stop crossing. It is judged on the side the
     # pair is laid from and NOT on the other side of the same two parts, and on D that is what left the board one open:
     # round one swapped R12 and R13, which put the hub's DM1 pin across from the resistor of DP1, and /HUB_DM1 came back
@@ -1358,6 +1359,31 @@ def main(a):
             for t in stripped: b.Add(t)   # the escapes come back with the pair's failure
             stripped.clear()
         def other_of(net): return nn if net.GetNetname() == pn else pn
+        def trim_leg(net, x, y, r):
+            """Remove this leg's own laid tracks within r of (x, y) and answer the end it is left with, or None.
+
+            12 September 2026 (appendix 32.135). When the two fans of a station cross, the P leg dives under the N
+            fan, so every millimetre of P that reached the station is copper the fan has to get past and P does not
+            need. On A's J_AB1, a 2.54 mm through-hole row with a 0.13/0.14 pair, that is exactly what the fan came
+            to lie on: 0.044 mm from a leg whose own next move was to leave the layer."""
+            keep, keep_site, cut = [], {}, 0
+            for _i, t in enumerate(pieces):
+                near = False
+                if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net.GetNetname():
+                    for px_, py_ in ((mm(t.GetStart().x), mm(t.GetStart().y)), (mm(t.GetEnd().x), mm(t.GetEnd().y))):
+                        if math.hypot(px_ - x, py_ - y) < r: near = True; break
+                if near: board_remove(b, t); cut += 1
+                else: keep_site[len(keep)] = piece_site.get(_i, "?"); keep.append(t)
+            if not cut: return None
+            pieces[:] = keep; piece_site.clear(); piece_site.update(keep_site)
+            best = None
+            for t in pieces:
+                if t.GetClass() != "PCB_TRACK" or t.GetNetname() != net.GetNetname(): continue
+                for px_, py_ in ((mm(t.GetStart().x), mm(t.GetStart().y)), (mm(t.GetEnd().x), mm(t.GetEnd().y))):
+                    d_ = math.hypot(px_ - x, py_ - y)
+                    if best is None or d_ < best[0]: best = (d_, px_, py_)
+            rebuild_maps()   # the removed copper is still an obstacle in the cached maps until they are rebuilt
+            return None if best is None else (best[1], best[2])
         # 12 September 2026: every piece records WHICH emission laid it. A's /USB_D8 was refused for its own two
         # legs and the four sites that can lay copper without asking are indistinguishable in a board file, so a
         # day went into reading the code for something one word per piece answers.
@@ -2002,6 +2028,11 @@ def main(a):
                                 # flat along the P leg's staircase and ten shorting items followed. The fan asks now, and takes the
                                 # searched stub when the straight one would sit on its own partner.
                                 at_site("the N fan of a dive")
+                                _back = trim_leg(net_p, lpx, lpy, FAN_BACK) if FAN_BACK > 0 else None
+                                if _back:
+                                    report.append("TRIM  %s: the P leg ends %.2f mm short of %s so the N fan has room; it dives from there"
+                                                  % (stem, math.hypot(_back[0] - lpx, _back[1] - lpy), st_[0].GetParentFootprint().GetReference()))
+                                    lpx, lpy = _back
                                 if own_clear(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n) and own_clear(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n):
                                     seg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n); seg(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n)
                                 elif not stub(lnx, lny, _nx_, _ny_, pcbnew.F_Cu, net_n):
