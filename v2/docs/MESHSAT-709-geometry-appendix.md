@@ -5312,3 +5312,88 @@ geometry. **The chain refuses it, correctly.**
 so the fan at a 2.5 mm station on a 0.13/0.14 class had never run. It is the next piece of work and it is named
 here with its evidence: the fan emission must be checked against the copper already on the board, its own
 partner leg included.
+
+### 32.135 A pair shorting its own partner, and the six places that laid copper without asking (12 September 2026, 03:00 CEST; MESHSAT-862)
+
+32.134 ended with a named defect: A's three ribbon pairs laid 3 of 3 and the pre-route DRC then read **22 hard,
+thirteen of them between the pair nets themselves**, `/USB_D8_N` against its own `/USB_D8_P` as `shorting_items`
+and `clearance` on 0.1 mm segments. This section is what it turned out to be, and it is one sentence:
+
+**every test in the tool asked whether two pieces CROSS, and none asked how close they run.** The leg-crossing
+gate of 9 September (32.83), the `xing()` test at a station fan and the `isx_` test on the direct legs are the
+same orientation predicate three times over, and **two segments 0.06 mm apart never cross**. So the pre-router
+could lay a pair whose two legs lie flat along each other for ten segments and report it as laid.
+
+**Six emissions laid copper without asking anything, and every exemption was true of PADS and not of tracks:**
+
+| where | why it was exempt | what it did |
+|---|---|---|
+| `fan_leg`, the last 1.2 mm into the pad | the pair's own PAD blocks the map there | excused every other net's copper in the same 1.2 mm |
+| `stub`, start and goal inside one grid cell | the offset end already sits on the pad | a straight piece, unasked |
+| the N fan of a dive | the P leg dives under it, so the crossing is handled | laid **straight and untested**, against anything |
+| the two offset legs of a run, against each other | no occupancy map can answer it | nothing asked at all |
+| the merged polyline | `legs_clear` judged the runs before they were merged | a corner neither run had |
+| the direct legs | `isx_` answers crossings | two legs may run alongside instead |
+
+The fourth is the one no map could have caught: both legs are laid by this pair, so when the maps are built
+neither is on the board, and each leg's map excuses its partner by construction.
+
+**A twist was also declared where there was none.** `if fineA0 or fineB0: side_a, side_b = 1.0, -1.0` forces a
+twist at an entry station so the swap machinery gets its chance (a station of two passives is untwisted by
+exchanging them), and when neither station is swappable that forced value fell straight through to
+`crossing = True`. **A's `/USB_D8` runs between two IDC headers that both carry P on the same side** (side_a and
+side_b both +60.5, measured), and the tool dived at a 2.54 mm pad field for no reason. The honest sides are kept
+now and the fallback uses them; a real twist is reported as `TWIST` with both parts named, because a twist
+between two FIXED parts is a placement finding and nothing could say so while it was silent.
+
+**The repairs, in the order a pair meets them.** `legs_clear` measures the P polyline against the N polyline and
+the merged geometry is measured again before it is emitted (a merge that folds is dropped, `UNMERGE`).
+`own_clear` is the question the unasked emissions ask: is this piece clear of the copper THIS PAIR has already
+laid on its other leg, vias included. `fan_leg` walks its whole length and forgives a blocked cell only where
+one of the pair's OWN pads is (`own_pad_at`), which is what the 1.2 mm skip was always about. A diving leg is
+pulled back from the station first (`TRIM`), because every millimetre of it that reaches the pad field is copper
+the other leg's fan has to get past and the diving leg does not need. And a laid pair is judged once more before
+it is kept, per layer and per via radius, against the class clearance.
+
+**Measured.** A's `/USB_D8`: **0.038 mm centre to centre in eleven places against a 0.249 mm demand**, then
+0.060 in ten, then 0.044 with the offending copper named at last (the verdict prints the segments and which
+emission laid each of them). **D is unchanged at 5 of 5 throughout**, which is the regression that matters,
+and it now reports its one real twist (`R12` and `R26`) and trims 2.25 mm off the diving leg.
+
+**My own first cut of the fold test was wrong and B19 measured it.** Written as a second clearance test inside
+the candidate ladder (`clr_c + wid(L)`), it refused smoothing after smoothing on a board whose DIFF100 pairs are
+designed at 0.13/0.127, where the coupled run sits AT the class number: **B19's DIFF100 pass went from 22 of 48
+to 9**. The candidate ladder is not the place for the class number. A fold is not a marginal gap, it is the
+inner leg lying on the outer one at a twentieth of the pitch, so every in-ladder test asks for **half the pair's
+own pitch** and the class clearance is judged exactly once, on the copper that was actually laid. Each of the
+four guards has a knob (`PAIR_OWN_CLEAR`, `PAIR_FOLD_TEST`, `PAIR_UNMERGE`, `PAIR_FAN_BACK`) because each can
+cost pairs and the only way to know is to measure it.
+
+**A defect of a different kind, found by running the tree rather than the box.** The narrow-pad IDC lands of
+32.134 were generated on the rented box, used by four boards for a day, and **never committed or declared**:
+`git archive` of origin/main plus A's own chain stop at `footprint missing:
+meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad`. It is the footprint version of the lesson of 10 September,
+when four routed boards were lost with a destroyed box. The six lands are in `meshsat.pretty` now,
+`boards/<letter>.json` takes a LIST of footprint generators, and `tools/tests/test_footprint_library.py` fails
+on the tree of an hour ago.
+
+**The rule this leaves behind:** a predicate that answers "do these two cross" is not a clearance test, and a
+clearance test is not a fold detector. All three now exist by name in one file, `tools/tests/test_pair_own_legs.py`,
+whose nine rules fail on the pre-fix tree.
+
+**Then the same question one map further out, and it is the one that mattered on A.** With its own legs legal,
+`/USB_D8` still came back with twelve DRC items against `/USB_WALL`, **a pair this same pass had laid ten
+minutes earlier**. Every emission on that path had asked a map and the maps were right: the cell at
+(263.42, 138.85) on F.Cu reads BLOCKED when asked directly. What was missing was anyone asking about the copper
+as EMITTED. A laid pair is now sampled against a map that exempts its own two nets and nothing else, and a pair
+whose copper lies on another net is rolled back with the counterparty named by `_what_is_at`. The two pairs are
+in genuine conflict: `J_AB1` is a 2x13 with two end rows and three pairs, and the middle pair's channel exits at
+the same end the end-row pair leaves from, which is decision 6's open half measured at last.
+
+**And a placement defect of the same shape, found because the DRC was finally being read.** A's four
+`courtyards_overlap` are on the PLACED board, before the pre-router touches anything: `CHQ` ends at y 30.5 and
+`FES` begins at y 30, the two rectangles **overlap by half a millimetre**, and the packer duly put the charger's
+CSD18510Q5B FETs (a 7.19 x 5.59 mm courtyard) under the front end's resistor row. `NODE` and `POQ` overlap by
+12 x 4 mm, which the packer happened never to fill. `tools/tests/test_region_overlap.py` reads the `REGIONS`
+table out of every placement generator and refuses any two rectangles on the same side that intersect; it names
+both of A's on the pre-fix tree and it knows that a front region and a back region may share a rectangle.
