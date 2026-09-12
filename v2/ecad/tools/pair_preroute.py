@@ -861,11 +861,15 @@ def main(a):
     # 12 September 2026, measured on B19's DIFF100 arms after the via size was fixed: every own-legs refusal that
     # remains is track against track at 0.203 to 0.225 mm against a demand of 0.252, and the emissions named in all
     # of them are the three END geometries (`the end stub into the pad`, `the end hop to a via beside the pad`, `the
-    # dive of a crossing end`). The corridor legs run at the pair's designed pitch; the ends are laid one leg at a
-    # time, each aiming at its own target, on a map that was built before the partner's own end was laid. So the
-    # search never sees the copper it has to keep away from, and the post-lay gate then refuses the whole pair at
-    # the class clearance. PAIR_END_STRICT=1 searches the end stubs on a map that carries the partner's laid copper
-    # at the gate's own bar. Off until an arm grades it, like every other knob here.
+    # dive of a crossing end`).
+    #
+    # The first explanation was that the per-leg map could not see the partner's own end, and it was WRONG: with the
+    # stamping instrumented, the map already blocks the partner at a larger margin than the gate's bar (7 partner
+    # pieces stamped, 0 cells newly blocked). What violates is the copper laid WITHOUT asking the map: the last hop
+    # from the path's final cell into the pad, the straight piece taken when the two ends sit in one cell, and the
+    # same final hop in the fallback that aims at the net's own escape. PAIR_END_STRICT=1 judges those against the
+    # partner at the gate's own bar and takes them off when they fail, so the caller tries its next candidate
+    # instead of the pair being rolled back whole after it is laid. Off until an arm grades it.
     END_STRICT = os.environ.get("PAIR_END_STRICT", "0") != "0"
     VIA_MODE = os.environ.get("PAIR_VIA_MODE", "class").lower()
     if VIA_MODE not in ("class", "min"): raise SystemExit("pair_preroute: PAIR_VIA_MODE is `class` or `min`, not %r" % VIA_MODE)
@@ -1497,34 +1501,52 @@ def main(a):
                     if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < fold + _via_dia(t) / 2: return False
             return True
         # the stub, via-site and hop helpers of this pair (pair-level state only; they were inside the section loop and a pair whose last section took the direct legs left them undefined for the stub pass, 8 Sep 2026 12:47)
-        def partner_free(SL, net):
-            """this leg's own map with the copper the PARTNER has already laid stamped into it at the bar the
-            post-lay gate uses (12 September 2026). The per-leg maps are built once per pair, so the partner's
-            own end stub is invisible to this one, which is where the 0.203 mm of 0.252 comes from."""
-            if SL not in trk1[net.GetNetname()]: return None
-            blocked = trk1[net.GetNetname()][SL].copy()
-            o = other_of(net); r = max(0.0, clr_c - 0.005) + wid(SL) / 2
-            for t in pieces:
-                if t.GetNetname() != o: continue
-                if t.GetClass() == "PCB_TRACK":
-                    if t.GetLayer() != SL: continue
-                    gr.seg(blocked, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y), r)
-                elif t.GetClass() == "PCB_VIA":
-                    gr.disc(blocked, mm(t.GetPosition().x), mm(t.GetPosition().y), r + _via_dia(t) / 2)
-            return ~blocked
+        def own_gate(n0, net):
+            """Do the pieces this call has just laid clear the PARTNER's copper at the bar the post-lay gate uses?
+
+            12 September 2026, and the first answer was wrong, which is the useful part. The guess was that the end
+            stubs searched a map that could not see the partner's copper; instrumented (`PAIR_DEBUG_END`), the map
+            already blocks the partner at a LARGER margin than the gate's bar: 7 partner pieces stamped, **0 cells
+            newly blocked**. So the violating copper is not copper the search chose. It is the copper laid without
+            asking the map at all: the last hop from the path's final cell INTO the pad, the straight piece taken
+            when the two ends sit in one cell, and the same final hop in the fallback that aims at the net's own
+            escape. Those three are why the post-lay gate reads 0.203 mm of 0.252 and refuses the whole pair.
+
+            The bar here is the gate's, not `own_clear`'s fold bar: this is the last millimetre at a station, where
+            the two legs are turning into their own pads, and it is exactly where the class number has to hold."""
+            if not END_STRICT: return True
+            o = other_of(net); bar = max(0.0, clr_c - 0.005)
+            mine = [t for t in pieces[n0:] if t.GetClass() == "PCB_TRACK"]
+            if not mine: return True
+            for t in mine:
+                x1, y1, x2, y2 = mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)
+                L_ = t.GetLayer(); need = bar + wid(L_)
+                for u in pieces[:n0]:
+                    if u.GetNetname() != o: continue
+                    if u.GetClass() == "PCB_TRACK":
+                        if u.GetLayer() != L_: continue
+                        if _seg_dist(x1, y1, x2, y2, mm(u.GetStart().x), mm(u.GetStart().y), mm(u.GetEnd().x), mm(u.GetEnd().y)) < need: return False
+                    elif u.GetClass() == "PCB_VIA":
+                        if _pt_seg(mm(u.GetPosition().x), mm(u.GetPosition().y), x1, y1, x2, y2) < bar + wid(L_) / 2 + _via_dia(u) / 2: return False
+            return True
 
         def stub(ax_, ay_, bx_, by_, SL, net):
             """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
-            pm = (partner_free(SL, net) if END_STRICT else None)
-            if pm is None: pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
+            _n0 = len(pieces)
+            def _ok():   # PAIR_END_STRICT: the pieces just laid against the partner, at the gate's bar
+                if own_gate(_n0, net): return True
+                for t in pieces[_n0:]: board_remove(b, t)
+                return False
+            pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
             win2 = (gr.cell(min(ax_, bx_) - 8, min(ay_, by_) - 8), gr.cell(max(ax_, bx_) + 8, max(ay_, by_) + 8)); win2 = ((max(0, win2[0][0]), max(0, win2[0][1])), (min(gr.NX - 1, win2[1][0]), min(gr.NY - 1, win2[1][1])))
             if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G:   # the offset end already sits on the pad
                 if not own_clear(ax_, ay_, bx_, by_, SL, net): return False   # ... but not over the partner's own copper
-                seg(ax_, ay_, bx_, by_, SL, net); return True
+                seg(ax_, ay_, bx_, by_, SL, net); return _ok()
             sp = stub_path(gr, pm.copy(), (ax_, ay_), (bx_, by_), win2) if pm is not None else None
             if sp and len(sp) >= 2:
                 for k in range(len(sp) - 1): seg(sp[k][0], sp[k][1], sp[k + 1][0], sp[k + 1][1], SL, net)
-                seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net); return True
+                seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net)
+                if _ok(): return True
             # A stub has to reach its own NET, not one point of it. Aiming only at the escape via made the last half millimetre the hardest
             # cell on the board, because the via sits inside its own part's fan: 34 of B18's 66 pair failures were "no stub path at via"
             # (9 September 2026). The escape track that leads to the via is the same copper and is reachable a millimetre earlier, so when
@@ -1542,7 +1564,7 @@ def main(a):
                     if sp2 and len(sp2) >= 2:
                         for k in range(len(sp2) - 1): seg(sp2[k][0], sp2[k][1], sp2[k + 1][0], sp2[k + 1][1], SL, net)
                         seg(sp2[-1][0], sp2[-1][1], px_, py_, SL, net)
-                        return True
+                        if _ok(): return True
             if os.environ.get("PAIR_DEBUG") and pm is not None:   # the stub map around the goal, one character per cell (S start, G goal, # forbidden)
                 js, is_ = gr.cell(ax_, ay_); jg, ig = gr.cell(bx_, by_); r = 20
                 print("pair_preroute: stub map 4 mm around the START (%.2f, %.2f):" % (ax_, ay_))
