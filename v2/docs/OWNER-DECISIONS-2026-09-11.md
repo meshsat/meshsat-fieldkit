@@ -592,3 +592,50 @@ free hand over the floor plan.
 
 **Until you rule, B's chain blocks at the placement.** Everything else carries on: A and D declare their
 measured numbers, C, E and P overflow nothing, and the D, E and P re-cuts are running.
+
+---
+
+## Decision 9 REOPENED, with the number it was ruled without: the 1.2 mm PWR class costs board D twenty-seven connections (measured 13 September 2026, 00:20)
+
+**You ruled it on 12 September:** *"widen the class to 1.2 mm on the inner layers and re-route D; the
+deliverable is re-cut."* The defect behind it was real and still is: D's 5 V rail carries 1 A through a 0.5 mm
+class track and IPC-2221 rates that at 0.44 A on an inner layer. **What the ruling did not have was the cost,
+because nobody had routed the board at the new width. Now it is measured.**
+
+**D re-routed at 1.2 mm and stopped at twelve open connections, and all twelve are power nets**: `/+5V_D8`
+six, GND three, `/+3V3_D8` two, `/PCM_VDD` one. D had reached 0 hard and 0 unrouted at 0.5 mm on 11 September.
+
+**Two arms, one variable, same router invocation** (the first arm did not have that and its number was
+withdrawn: it changed the width AND the invocation, so its 105 opens answered nothing):
+
+| D, same placed board, same router call, 100 passes | hard | unrouted |
+|---|---:|---:|
+| PWR class **0.5 mm** | 0 | **105** |
+| PWR class **1.2 mm** (your ruling) | 0 | **132** |
+
+**So the width costs 27 connections of the 416 the board starts with.** Both numbers are far worse than the
+production route's 12, which is routeflow with a `via_costs` rules file and its rounds doing their work; the
+comparison that matters is the 27 between them, not either number against the production route.
+
+**What 1 A actually needs, IPC-2221, so the options have a floor rather than a feeling:**
+
+| where the rail runs | 10 K rise | 20 K | 30 K |
+|---|---:|---:|---:|
+| inner layer, 0.5 oz (JLC's four-layer stack) | **1.54 mm** | 1.01 mm | 0.79 mm |
+| outer layer, 1 oz | 0.30 mm | 0.19 mm | |
+
+Your 1.2 mm sits at about a 15 K rise on an inner layer. **0.5 mm was never defensible inside the board; on an
+OUTER layer the same 1 A needs 0.30 mm and 0.5 mm was always fine there.**
+
+| option | what happens | cost |
+|---|---|---|
+| **A (recommended): keep 1.2 mm and give me a placement pass on D** | the width stays where you ruled it, and the twenty-seven connections come back by making room rather than by narrowing copper | half a day on D's floor plan, and D's deliverable waits for it |
+| B: 1.0 mm, a 20 K rise | about half the twenty-seven back for a hotter rail | a rail at 20 K over ambient inside a sealed case with no vents. I would not take this one |
+| C: keep 0.5 mm on the inner layers and carry the rail in locked outer copper, the A21 pattern | the width question disappears: 0.30 mm suffices on an outer layer and the class stops deciding it | this is the architecturally right answer and it is a day on D, with `power_copper.py` already written for A |
+| D: 1.2 mm and accept twelve opens | nothing to do | not an option: a board with open connections is not a board |
+
+**My recommendation is A, with C as the thing to do if A does not close it.** The ruling was right; what it
+needs is room, not a smaller number.
+
+**This does not block anything else.** D is the only board affected, its deliverable is the one that waits,
+and A24, E7, P3 and E5 are cut.
