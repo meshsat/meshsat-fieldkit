@@ -5825,3 +5825,41 @@ costs; A24's deliverable waits on it and nothing else. The rest of the board's B
 to zero** the same afternoon: 32 values read from JLCPCB's catalogue with their stock, three Mill-Max dock pins
 declared hand-fit, and three eFuse ILM resistors that carried a CURRENT as their value (`1.2 A (ILM)`) and now
 carry the resistance the TPS2596's own equation gives (750R, 909R, 453R).
+
+### 32.146 The leg-fit wall is at the STATIONS, and no corridor can move it (12 September 2026, 13:40 CEST; MESHSAT-862)
+
+32.144 left one bar standing: "the legs clear no smoothing of the centreline", 28 of 68 failures, unmoved by every
+configuration measured. `PAIR_LEG_RETRY` was built for exactly it, and it is the first thing today that could
+teach the search something it did not know: when the two offset legs fit no smoothing of a corridor, block the
+corridor cell they were refused at and search the section again.
+
+**Measured, prediction 17 or more of 48: it lays 14, the same as without it.** The fifth failed prediction of the
+day, and the leg-fit bucket moved only from 28 to 26. What it bought instead is the diagnosis, because it makes
+the tool print WHERE the legs were refused, and the answer settles the question:
+
+| of the 46 leg refusals in that run | count |
+|---|---:|
+| within 2 mm of one of the pair's OWN pads, at a station | **30** |
+| further out, in the corridor | 16 |
+| **retries refused again within 0.3 mm of the first refusal** | **22 of 22** |
+
+**Every single retry was refused at the point it was refused before.** That is not a search that needs more
+freedom: it is a place the corridor cannot help with, because the last stretch into a station is not part of the
+searched path at all. It is the entry run, a straight line from the corridor's end into the pad pair, and blocking
+a corridor cell cannot move a straight line between two fixed points.
+
+**Where the 30 station refusals sit**, by the part the pair's own pad belongs to: **J_HDMI 8, T1 8**, and then the
+pairs' own series coupling capacitors, C376 6, C177 4, C176 4, C378 4, C279 2, C277 2. Mean distance from the
+pair's own pad 1.12 mm, range 0.45 to 1.96. The copper they are refused by is another net's: the entry check
+exempts the pair's own two nets and asks the geometry for everything else.
+
+**So B19's remaining pairs are stopped where they enter their own parts, by the copper of the pairs laid before
+them.** That is the same family as decision 6 (a pair cannot leave a 2.54 mm IDC header) and as 32.140 (a 0.70 mm
+via pair cannot leave an 0.8 mm fan): the constraint is at the part, not on the way between parts. The plan-mode
+measurement of 32.137 is consistent with it and now reads correctly: every pair HAS a corridor, and the corridor
+was never what stopped them.
+
+**What follows, and it is placement work rather than tool work:** room at the stations, which on this board means
+the pairs' own coupling capacitors (the `couple` packing of 32.77 puts the two in a column at the packer's gap)
+and the approach to J_HDMI and T1. `PAIR_LEG_RETRY` stays off: it lays no pairs, and what it measured is recorded
+here instead.
