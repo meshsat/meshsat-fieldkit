@@ -168,6 +168,7 @@ def is_fine(fp):
     return best <= FromMM(0.7)
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED]) for _n, _rect, _refs in REGIONS]   # a reserved capacitor is placed already
 for name, (x0, y0, x1, y1), refs in REGIONS:
+    regionfit.record(name, (x0, y0, x1, y1), False, len(refs), stem=os.path.splitext(os.path.basename(BOARD))[0])
     fps = []
     for ref in refs:
         if ref not in comps: print("WARNING %s not in netlist" % ref); continue

@@ -137,6 +137,7 @@ _all = [r for _, _, refs, _ in REGIONS for r in refs] + list(FIXED)
 _dups = sorted({r for r in _all if _all.count(r) > 1})
 if _dups: raise SystemExit("reference listed twice in the placement (two footprints per reference make the DSN export refuse the board): %s" % _dups)
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
+    regionfit.record(name, (x0, y0, x1, y1), back, len(refs), stem=os.path.splitext(os.path.basename(BOARD))[0])
     fps = []
     for ref in refs:
         fp = place(ref, 0, 0, back=back); bb = fp.GetBoundingBox(False, False); fine = is_fine(fp); mx = my = 0.0
