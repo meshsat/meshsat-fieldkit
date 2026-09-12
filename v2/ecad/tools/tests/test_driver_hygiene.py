@@ -445,3 +445,18 @@ def t_a_board_is_never_drcd_without_its_project_file():
     # and every shell tool that makes a copy of a board under a NEW stem and scores it must copy the project too
     src = open(os.path.join(TOOLS, "cont_route.sh"), errors="replace").read()
     assert '"$W/$N-before.kicad_pro"' in src, "the continuation scores a board copy with no project file beside it"
+
+
+def t_the_stub_router_checks_that_a_closure_closed_anything():
+    """A claimed closure that does not close is worse than a refusal: the finish reads the count, the record
+    reads the count, and the board carries a via that touches nothing. A24's /+3V3 was reported as
+    "closed: 0 tracks, 1 vias, path 1 cells" in two separate runs and the DRC named the same open pair after
+    both, because the search reaches a GOAL CELL, which is the target cluster's copper grown by the search
+    margin, and a via dropped in such a cell can touch no copper at all. Every closure is checked against
+    KiCad's own connectivity now and taken back off the board when it did not connect (12 September 2026)."""
+    src = open(os.path.join(TOOLS, "stub_router.py"), errors="replace").read()
+    assert "GetUnconnectedCount" in src, "the stub router does not ask KiCad whether its closure connected anything"
+    i = src.index("closed += 1")
+    window = src[max(0, i - 1200):i]
+    assert "NOT CLOSED" in window and "b.Remove(t)" in window, \
+        "a closure that did not connect is still counted as one"

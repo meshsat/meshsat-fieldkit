@@ -285,6 +285,17 @@ def emit(net_item, path):
                 t.SetWidth(FromMM(TW)); t.SetLayer(LR[a[0]]); t.SetNet(net); b.Add(t); nt += 1
     return nt, nv
 closed = 0
+# 12 September 2026 (MESHSAT-862): a closure that does not close is worse than a refusal, because the finish and
+# the record both read the count. A24's /+3V3 was reported "closed: 0 tracks, 1 vias, path 1 cells" TWICE, in two
+# separate runs, and the DRC named the same open pair afterwards both times: the search reached a GOAL CELL, which
+# is the target cluster's copper grown by the margin, and dropped a via in it that touches no copper at all. Every
+# closure is now checked against KiCad's own connectivity and taken back off the board when it did not connect.
+def _unconnected():
+    try:
+        b.BuildConnectivity(); return b.GetConnectivity().GetUnconnectedCount(False)
+    except Exception:
+        return None
+_U = _unconnected()
 for it1, it2 in pairs:
     net = it1["net"]; netobj = b.FindNet(net)
     if netobj is None or netobj.GetNetCode() <= 0: net = netname(net); netobj = b.FindNet(net)
@@ -345,6 +356,7 @@ for it1, it2 in pairs:
                 row += "S" if src[Ls][i, j] else ("G" if any(M[i, j] for M in goal_cells.values()) else ("#" if trk[Ls][i, j] else "."))
             print("    " + row)
         continue
+    _n_before = len(list(b.GetTracks()))
     nt, nv = emit(netobj, path)
     L_end, i_end, j_end = path[-1]
     end_is_inner = c.get("inner") and INNER_GOAL is not None and INNER_GOAL[i_end, j_end]
@@ -356,5 +368,13 @@ for it1, it2 in pairs:
     if a.get("inner") and not first_is_via:                        # inner-layer source reached on an outer layer: the joining via at the start (A19, 4 Sep: a B.Cu stub end 0.02 mm from an In2 track stayed open)
         L, i, j = path[0]; v3 = pcbnew.PCB_VIA(b); v3.SetPosition(VECTOR2I(FromMM(float(X0 + j * G)), FromMM(float(Y0 + i * G)))); v3.SetDrill(FromMM(VIA_DR)); v3.SetWidth(FromMM(VIA_D))
         v3.SetViaType(pcbnew.VIATYPE_THROUGH); v3.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v3.SetNet(netobj); b.Add(v3); nv += 1
+    _U1 = _unconnected()
+    if _U is not None and _U1 is not None and _U1 >= _U:
+        for t in list(b.GetTracks())[_n_before:]: b.Remove(t)
+        b.BuildConnectivity()
+        print("  NOT CLOSED: %s  %s -> %s (the path reached a goal CELL whose copper it does not touch; %d piece(s) taken back off)"
+              % (net, a.get("kind"), c.get("kind"), nt + nv))
+        continue
+    _U = _U1 if _U1 is not None else _U
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))
 pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(BOARD, b); print("stub_router: closed %d of %d" % (closed, len(pairs)))
