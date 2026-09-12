@@ -5645,3 +5645,41 @@ pair hold its pitch through the turn.
 reached by counting and 32.139 reached by reading: the corridor is not what stops these pairs. `PAIR_VIA_MODE=min`
 is declared in `boards/b.json` for B alone, with its arms, because it is measured on B: A lays 3 of 3 with the
 class via at a 2.54 mm ribbon, where 0.827 mm between two vias is no constraint at all.
+
+### 32.141 CORRECTION: C10's eleven opens are not short closures, they are 39 to 298 mm the router never made (12 September 2026, 11:45 CEST; MESHSAT-862)
+
+32.138 says *"five of C10's nine open nets have a loose track END 0.74 to 1.76 mm from the pad it should reach,
+on the same layer"*. **That is wrong, and the tool built on it measured the truth an hour later.**
+
+The five numbers came from a script of mine that took each loose track end and looked for the NEAREST PAD of the
+same net. The nearest pad of a net is not the pad the connection is missing to; on these boards it is usually one
+the net already reaches. `direct_close.py` made the same mistake in its first run on A24, proposing to close
+`/+3V3` to U11.1 at 2.035 mm when the DRC's own unconnected item named C104, and `/VBUS20` from pad U3.1 to pad
+U3.3, two pads of one part 0.8 mm apart that are not the missing connection at all. It reads the DRC's own pair
+now, at the two positions the DRC gives, and anchors each to the piece the DRC named.
+
+**What C10's opens actually are**, every one of the eleven, measured that way:
+
+| net | the pair the DRC names | apart |
+|---|---|---:|
+| /EPD_BUSY | pad J_EPD.9 to a track end | 244.5 mm |
+| /EPD_PWR_n | track end to pad U3.41 | 298.7 mm |
+| /EPD_SCL | track end to track end | 251.1 mm |
+| /HDMI_SEL1 | pad J_PANEL.12 to a track end | 290.2 mm |
+| /MESH_A | pad D6.2 to pad R25.2 | 89.5 mm |
+| /PANEL_PWM | pad R19.1 to a track end | 46.5 mm |
+| /QSPI_D1 | track end to pad U3.55 | 39.0 mm |
+| /SLOT_EN2 | pad TP32.1 to pad U3.17, and U3.17 to J_PANEL.22 | 51.1, 297.9 mm |
+| /TX_K | pad D17.2 to pad Q3.3, and Q3.3 to pad D3.1 | 81.8, 104.1 mm |
+
+**So C10 has a routing problem and not a closure problem**, and nothing in the closure family can touch it: the
+stub router closed 0 of 11 at a 0.1 mm grid and 0 of 11 again at 0.05 with a 64 M node cap, and `direct_close`
+declines all eleven as beyond any straight geometry. The stub router's own diagnosis is worth keeping: for
+`/EPD_PWR_n` it reports **17 source cells** against 424 goal cells in a window of 14.4 million free cells, so what
+stops it is not the journey but the first millimetre, at a pad whose neighbourhood is walled in. Seven of the
+nine nets touch U3 (the RP2040) or J_PANEL.
+
+**A24 by contrast is closure work and one of its three is already closed:** `direct_close` laid /CELL+ as a
+straight 9.59 mm locked track, hard 0 and the opens 3 to 2, and named what refuses the other two: /+3V3 crosses
+/PI_KILL and /PI_SHDN_REQ on F.Cu and meets /HEAT_EN and /EMCON_HW on both inner layers, /VBUS20 bridges the
+solder mask of U3 pad 2 whichever of the five shapes is drawn.
