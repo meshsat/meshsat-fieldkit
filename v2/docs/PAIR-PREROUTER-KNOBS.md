@@ -74,6 +74,18 @@ guards. Each has a knob because each can cost pairs and the only way to know is 
 | `PAIR_FOLD_TEST` | 1 | the two offset legs of a run judged against each other in the candidate ladder |
 | `PAIR_UNMERGE` | 1 | a merge of two runs whose legs then fold is dropped and the runs laid one by one |
 | `PAIR_FAN_BACK` | 1.0 mm | how far a diving leg is pulled back from the station before the other leg's fan is laid |
+| `PAIR_CROSS_NET` | report | a laid pair sampled against a map that exempts its own two nets: `report` names the counterparty and the emission, `block` refuses the pair, `off` says nothing |
+
+**`PAIR_CROSS_NET` reports rather than blocks, and that default is a measurement.** The test asks a RASTER grown
+by the clearance plus half a leg, and the emitters deliberately relax that near a station (a direct leg runs pad
+to pad past its neighbours' pads), so a cell it calls blocked is not yet a DRC violation: as a verdict it refused
+one of D10's five pairs and one of A's three, on boards whose DRC reads 0 hard. The pre-route DRC remains the
+authority on clearance; what this adds is the NAME of the counterparty and of the emission at the moment the pair
+is laid, which is what turned twelve silent DRC items on A into one line naming `/USB_WALL`.
+
+**A sixth knob is not a knob:** `legs_clear`'s entry region (the first and last 1.2 mm of a leg at an entry
+station) asks the pads-only map and then, where that map refuses, asks the GEOMETRY through `_nearest_edge`
+before the pair is lost. Asking the raster alone there cost B19's DIFF100 pass fourteen pairs.
 
 **The bar inside all of them is half the pair's own pitch, not the class clearance**, and that distinction is
 worth thirteen pairs: written as a second clearance test, the fold test took B19's DIFF100 pass from 22 of 48
