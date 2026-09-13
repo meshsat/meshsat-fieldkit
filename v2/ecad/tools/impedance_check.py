@@ -20,6 +20,7 @@ standard case; JLCPCB's calculator values are the reference the record still owe
 
 Usage: impedance_check.py <board.kicad_pcb> [--tolerance 0.10] [--json out.json]   -> one line per pair, `impedance: N of M pairs within tol`, exit 1 on a miss."""
 import sys, os, re, math, json
+import netclass
 FAN_MM, UNREF_MM, SHORT_MM = 3.0, 3.0, 5.0   # the pin-fan radius left unjudged, the unreferenced length allowed, the judged length under which a pair is SHORT (docstring)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -125,9 +126,7 @@ def main(a):
     pro = os.path.splitext(a[0])[0] + ".kicad_pro"; assign = {}
     if os.path.exists(pro): assign = json.load(open(pro)).get("net_settings", {}).get("netclass_assignments", {})
     names = {b.GetNetInfo().GetNetItem(k).GetNetname() for k in range(1, b.GetNetInfo().GetNetCount())}
-    def cls_of(net):
-        c = assign.get(net) or assign.get("/" + net.lstrip("/")) or assign.get(net.lstrip("/"))
-        return c[0] if isinstance(c, list) and c else (c if isinstance(c, str) else None)   # KiCad 9 stores the assignment as a list of class names
+    def cls_of(net): return netclass.class_of(assign, net)   # KiCad 9 stores the assignment as a list of class names
     pairs = sorted({n[:-2] for n in names if n.endswith("_P") and n[:-2] + "_N" in names})
     planes = {}   # layer -> list of filled polys of plane nets
     for z in b.Zones():

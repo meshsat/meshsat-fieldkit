@@ -2,6 +2,7 @@
 """Close the connections a DRC report lists as unconnected: grid A* on F.Cu/B.Cu with vias, obstacles from every other-net copper item.
 Usage: stub_router.py <board.kicad_pcb> <drc.json> [plane_nets=GND,+5V,+3V3,CELL+]"""
 import sys, re, math, json, heapq, pcbnew, numpy as np
+import netclass
 from pcbnew import VECTOR2I, FromMM
 BOARD, DRC = sys.argv[1], sys.argv[2]
 _PLANES_ARG = sys.argv[3] if len(sys.argv) > 3 else None   # resolved against the board below
@@ -320,7 +321,11 @@ for it1, it2 in pairs:
         # width gate refused it; the project's explicit netclass_assignments (written by the placement generators) are the truth here
         try:
             _pro = __import__("json").load(open(__import__("os").path.splitext(BOARD)[0] + ".kicad_pro")); _ns = _pro.get("net_settings", {})
-            _cl = (_ns.get("netclass_assignments") or {}).get(net.GetNetname())
+            # 13 September 2026: this compared the assignment with a class NAME, and KiCad 9 stores it as a
+            # LIST of names, which never equals one. So _c was empty on every net of every board whose project
+            # carries assignments and the default width and via size were kept in silence, which is the worse
+            # half of this defect: straighten.py crashed on the same value and a crash at least reports itself.
+            _cl = netclass.class_of(_ns.get("netclass_assignments"), net.GetNetname())
             if _cl:
                 _c = [c for c in _ns.get("classes", []) if c.get("name") == _cl]
                 if _c: TW = max(0.25, min(float(_c[0].get("track_width", TW)), 1.0)); VIA_D = max(0.6, float(_c[0].get("via_diameter", VIA_D))); VIA_DR = max(0.3, float(_c[0].get("via_drill", VIA_DR)))
