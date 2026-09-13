@@ -226,13 +226,15 @@ for dy in (1.91, 0.64, -0.64): track("FUSED", (q1[0] - 2.67, q1[1] + dy), (q1_sr
 # A VIA IN EACH SOURCE TRACK, which is the one place the current has to change layer: the FET's source pads
 # are SMD on F.Cu and the band's other half is on B.Cu. Five attempts at the band's own stations moved the
 # worst barrel from 2.67 A to 1.88 because they were all downstream of this point. Each track is 1.93 mm long
-# and 1.2 mm wide, so a 0.9 mm via sits at its midpoint with 0.15 mm to each edge, and the three are 1.27 mm
-# apart, which is 0.77 mm hole to hole.
-_srcvia("FUSED", [(q1[0] - 3.6, q1[1] + dy) for dy in (1.91, 0.64, -0.64)])
+# and 1.2 mm wide. One via per track took PACK_P's worst barrel from 1.83 A to 1.51 against its 1.30 and
+# FUSED's to 1.82, so each track takes TWO, at 3.15 and 4.05 mm from the FET: 0.9 mm apart along the track,
+# which is 0.4 mm hole to hole, and 0.15 mm to each edge across it. Six barrels per FET where there were
+# three, and the three tracks are 1.27 mm apart, 0.77 mm hole to hole.
+_srcvia("FUSED", [(q1[0] - x, q1[1] + dy) for dy in (1.91, 0.64, -0.64) for x in (3.15, 4.05)])
 band("SW", (q1[0] + 0.69, q1[1]), (q2[0] - 0.69, q2[1]))                                  # tab to tab
 q2_src = (q2[0] + 4.6, q2[1] - 0.64); band("PACK_P", q2_src, short_of(q2_src, wp), w=2.8)  # the discharge FET's source side to the pack + land
 for dy in (-1.91, -0.64, 0.64): track("PACK_P", (q2[0] + 2.67, q2[1] + dy), (q2_src[0], q2[1] + dy), 1.2, pcbnew.F_Cu)
-_srcvia("PACK_P", [(q2[0] + 3.6, q2[1] + dy) for dy in (-1.91, -0.64, 0.64)])
+_srcvia("PACK_P", [(q2[0] + x, q2[1] + dy) for dy in (-1.91, -0.64, 0.64) for x in (3.15, 4.05)])
 band("GND", short_of(r10a, wbn), short_of(wbn, r10a, 0.5)); band("PACK_N", short_of(wn, r10b, 0.5), short_of(r10b, wn))   # B- land, shunt, pack - land
 def pour(layer, netname, name, rect, priority=0):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
