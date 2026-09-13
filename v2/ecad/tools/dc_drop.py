@@ -132,11 +132,24 @@ def main(a):
             return out
         src = [n for f, p in pads if f.GetReference() == r["source"] for n in pad_nodes(f, p)]
         loads = r.get("loads") or {}
+        guessed = None
         if not loads:
             cands = [f for f, p in pads if f.GetReference() != r["source"] and f.GetReference()[0] in "UJ" and not f.GetReference().startswith("JP")]
             if not cands: cands = [f for f, p in pads if f.GetReference() != r["source"] and not f.GetReference().startswith(("TP", "C", "R", "D"))]   # a pack board: the FETs and the leads
             refs = sorted({f.GetReference() for f in cands})
             loads = {ref: r["amps_typ"] / len(refs) for ref in refs} if refs else {}
+            guessed = refs
+            # 13 September 2026: A GUESSED LOAD IS NOT A MEASUREMENT, and this fallback was quietly deciding
+            # boards. On 12 September CELL+ failed at 2.21 percent because it declared no loads and the guess
+            # pushed 10 A through the charger's SENSE pin and its 0.20 mm escape; that rail was given its load
+            # and the tool was left alone, so the same defect sat untouched in five more rails. It surfaced when
+            # ruling 16 made the density a verdict: FIVE of the ten rails then failing declare no loads, and one
+            # of them, A24's +12V_HF, reported its worst cell where the net has no copper within 3 mm, which is
+            # what a current path invented between the wrong pads looks like.
+            #
+            # The fix is to the CLASS and not to the instance: a rail whose loads are undeclared is
+            # INCONCLUSIVE. It still blocks, the way the seven silent passes of 11 September block, and the
+            # line names what would have been guessed so the declaration can be written.
         sinks = {}
         for ref, amps in loads.items():
             ns = [n for f, p in pads if f.GetReference() == ref for n in pad_nodes(f, p)]
@@ -202,6 +215,16 @@ def main(a):
         # A rail may declare its own rise with a reason in the intent file (`density_dT`), the way it may
         # already declare its own drop budget; the default is IPC's 10 K. A DECLARED rise is a design decision
         # with a written reason, which is not the same thing as ignoring the number.
+        if guessed is not None:
+            results.append((net, "UNDECLARED",
+                            "the intent declares no loads for this rail, so its %.1f A has nowhere measured to go. "
+                            "Neither the drop nor the density is judged. Guessing would have put the current into %s, "
+                            "split evenly, which is how CELL+ came to read 2.21 percent through a 0.20 mm sense escape "
+                            "on 12 September. Declare the loads in the schematic generator's intent and re-measure."
+                            % (r.get("amps_typ", 0.0), ", ".join(guessed) if guessed else "nothing on the net"),
+                            0, 0, 0, {}))
+            miss += 1
+            continue
         dT = float(r.get("density_dT", 10.0))
         if dT != 10.0:
             jl = ipc_limit(cell * t_of(worst_l), dT, worst_l not in (pcbnew.F_Cu, pcbnew.B_Cu)) / (cell * t_of(worst_l)) if worst_l is not None else jl
@@ -224,11 +247,17 @@ def main(a):
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
                         note="the intent file lists no rail, so no drop was computed")
-    for net, v, text, *_ in results: print("dc_drop: %-10s %-10s %s" % (v, net, text))
-    print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)" % (len(results) - miss, len(results), cell, budget * 100))
+    for net, v, text, *_ in results: print("dc_drop: %-11s %-10s %s" % (v, net, text))
+    undecl = [r[0] for r in results if r[1] == "UNDECLARED"]
+    print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)%s"
+          % (len(results) - miss, len(results), cell, budget * 100,
+             "; %d rail(s) NOT JUDGED for want of a declared load: %s" % (len(undecl), ", ".join(undecl)) if undecl else ""))
     if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
-    return _v.write("dc_drop", _v.PASS if not miss else _v.FAIL,
-                    counts={"met": len(results) - miss, "missed": miss},
+    # A rail nobody declared a load for is INCONCLUSIVE, never FAIL: the board is not refused for a property of
+    # the board, it is refused for a property of the intent file, and the two have different remedies.
+    _verdict = _v.PASS if not miss else (_v.INCONCLUSIVE if len(undecl) == miss else _v.FAIL)
+    return _v.write("dc_drop", _verdict,
+                    counts={"met": len(results) - miss, "missed": miss - len(undecl), "undeclared": len(undecl)},
                     denominator=len(results),
                     evidence=["%s %s %.2f%% of %.1f V" % (r[1], r[0], r[4] * 100, rails[r[0]]["volts"]) for r in results if r[1] != "MET"],
                     inputs={"board": a[0]},

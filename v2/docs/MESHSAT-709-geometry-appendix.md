@@ -6433,3 +6433,50 @@ ends far away read as "no copper within the radius". Point to segment now. The l
 keeps relearning in new clothes: **a probe that reports nothing is not a diagnosis, it is a probe with a bug**,
 and the first thing to disbelieve is the new instrument. The `+12V_HF` anomaly survived the fix, which is why
 it is recorded as open rather than as an answer.
+
+### 32.161 Half the density failures were a GUESSED load, and the guess had been deciding boards since the day it was found (13 September 2026, 13:10 CEST; MESHSAT-862)
+
+Owner ruling 16 made the current density a verdict, ruling 19 gave it a 1.1x tolerance, and ten rails across
+four boards then failed it. **Five of those ten declare no load at all**, and `dc_drop` does not leave such a
+rail unsolved: it **guesses**, splitting the rail's current evenly over every U or J footprint on the net.
+
+**This exact fallback was caught once before and fixed in the wrong place.** On 12 September CELL+ read 2.21
+percent because it declared no loads and the guess pushed 10 A through the charger's SENSE pin and its 0.20 mm
+escape. **CELL+ was given its load and the tool was left alone**, so the defect stayed in every other
+undeclared rail and only surfaced when a verdict started depending on it.
+
+| board | rail | amps | the guess |
+|---|---|---:|---|
+| A24 | VBUS20 | 6.0 | U3, the charger, whose only pads on this net are 0.13 and 0.20 mm sense pins |
+| A24 | +3V3 | 0.3 | ten parts |
+| A24 | +12V_HF | 1.0 | J_HF |
+| A24 | +54V_POE | 0.3 | J_54V, U17 |
+| E7 | CELL_F | 10.0 | J_FAN1, J_FAN2, U12 |
+| E7 | VIN_RAW | 8.0 | J_BLK, U4 |
+| D10 | +5V_D8 | 1.0 | eight parts |
+
+**It also explains 32.160's anomaly.** `+12V_HF`'s worst cell was reported where the net has no copper within
+3 mm; the current it carried was invented between a source and a guessed load, so the cell it came out at is
+not a fact about the board.
+
+**A rail whose loads are undeclared is UNDECLARED now**, neither drop nor density judged, still blocking, and
+the board's verdict is **INCONCLUSIVE rather than FAIL, because the defect is in the intent file and not in
+the copper** and the two have different remedies. The refusal names the parts it would have guessed, so the
+declaration can be written straight from the message.
+
+**What that leaves as real, which is half of what the day started with:**
+
+| board | verdict | real failures |
+|---|---|---|
+| A24 | FAIL | VBAT 8.2x, +13V8_PA 2.1x, VIN_RAW 1.6x. Four rails not judged |
+| P3 | FAIL | PACK_P 1.74x, FUSED 1.42x |
+| E7 | **INCONCLUSIVE** | none. Both its rails are undeclared, so E7 was never measured |
+| D10 | **INCONCLUSIVE** | none. Its one rail is undeclared |
+| C10 | PASS | none |
+
+**D's density failure was never a measurement**, which matters because it sat beside owner ruling 9. It does
+not disturb ruling 9's premise: 0.5 mm of 0.5 oz inner copper is rated 0.44 A against a 1 A rail by IPC-2221,
+and that is arithmetic on the geometry rather than anything the mesh computed.
+
+**The lesson, and it is the same one in new clothes: fixing the instance and leaving the class is how a defect
+gets a second life.** The rule that holds this refuses a tool that judges a rail it had to guess at.
