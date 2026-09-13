@@ -892,6 +892,14 @@ def main(a):
     # partner at the gate's own bar and takes them off when they fail, so the caller tries its next candidate
     # instead of the pair being rolled back whole after it is laid. Off until an arm grades it.
     END_STRICT = os.environ.get("PAIR_END_STRICT", "0") != "0"
+    # 13 September 2026: PAIR_END_FIT, and it is the answer END_STRICT was reaching for. 84 of B19's 152 failed
+    # attempts are the pair's own two legs at the END emissions, and the gap they miss by is 1 to 15 micrometres
+    # against a bar of 0.249 to 0.252: an inner pair whose gap IS its class clearance has no margin, so the last
+    # hop into the pad, laid without asking anything, decides the pair. END_STRICT asked afterwards and threw the
+    # copper away, which cannot lay a pair; this asks BEFORE the copper exists and, when the hop is the violation,
+    # comes at the pad from the side the partner is not on. Counted per pass and printed, so it is never a claim.
+    END_FIT = os.environ.get("PAIR_END_FIT", "1") != "0"
+    _end_fit = [0]
     # 12 September 2026: the wall. "the legs clear no smoothing of the centreline" is 28 of the 68 failures left on
     # B19's DIFF100 pass and it did not move in ANY of the five configurations measured today. It means a corridor was
     # found and then neither the smoothed nor the staircase form of the two OFFSET legs fits the maps, so the pair is
@@ -1562,23 +1570,85 @@ def main(a):
                         if _pt_seg(mm(u.GetPosition().x), mm(u.GetPosition().y), x1, y1, x2, y2) < bar + wid(L_) / 2 + _via_dia(u) / 2: return False
             return True
 
+        def partner_clear(cand, SL, net):
+            """Would these segments, which are NOT on the board yet, clear the partner at the post-lay gate's bar?
+
+            13 September 2026 (MESHSAT-862). 84 of B19's 152 failed pair attempts are the pair's own two legs, and
+            every one of them misses by between 1 and 15 micrometres: 0.251 mm of 0.252, 0.249 of 0.249, 0.244 of
+            0.249. An inner pair's gap IS the class clearance here (0.127 both), so the geometry has no margin at
+            all and any rounding at the ends refuses the whole pair. The copper that violates is the last hop into
+            the pad, which is laid without asking anything (32.134 named it and `PAIR_END_STRICT` measured it).
+            Asking AFTER laying it is what made END_STRICT worth nothing: `_ok()` removed the pieces from the board
+            and left them in `pieces`, and their stamps on the partner's map behind, so every later emission of that
+            pair was judged against copper that no longer existed and searched a map that still forbade it. The
+            question is asked here instead, before anything is added, which needs no undo at all."""
+            o = other_of(net); bar = max(0.0, clr_c - 0.005); need = bar + wid(SL)
+            for x1, y1, x2, y2 in cand:
+                for u in pieces:
+                    if u.GetNetname() != o: continue
+                    if u.GetClass() == "PCB_TRACK":
+                        if u.GetLayer() != SL: continue
+                        if _seg_dist(x1, y1, x2, y2, mm(u.GetStart().x), mm(u.GetStart().y), mm(u.GetEnd().x), mm(u.GetEnd().y)) < need: return False
+                    elif u.GetClass() == "PCB_VIA":
+                        if _pt_seg(mm(u.GetPosition().x), mm(u.GetPosition().y), x1, y1, x2, y2) < bar + wid(SL) / 2 + _via_dia(u) / 2: return False
+            return True
+
         def stub(ax_, ay_, bx_, by_, SL, net):
             """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
             _n0 = len(pieces)
             def _ok():   # PAIR_END_STRICT: the pieces just laid against the partner, at the gate's bar
                 if own_gate(_n0, net): return True
                 for t in pieces[_n0:]: board_remove(b, t)
+                del pieces[_n0:]                      # and out of the pair's own list: removed copper is not the pair's geometry
                 return False
+            def _path_segs(sp_, gx_, gy_):
+                c = [(sp_[k][0], sp_[k][1], sp_[k + 1][0], sp_[k + 1][1]) for k in range(len(sp_) - 1)]
+                c.append((sp_[-1][0], sp_[-1][1], gx_, gy_))   # the last hop into the goal: the piece nothing used to ask about
+                return c
+            def _lay(cand):
+                for x1, y1, x2, y2 in cand: seg(x1, y1, x2, y2, SL, net)
+                return True
+            def _approach(pm_):
+                """Points a third of a millimetre or so off the pad, ordered by how far they sit from the partner's
+                copper: an entry that comes at the pad from the far side turns away from the partner instead of into
+                it. Only cells the leg's own map calls free are offered."""
+                o = other_of(net)
+                parts = [(mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y))
+                         for t in pieces if t.GetNetname() == o and t.GetClass() == "PCB_TRACK" and t.GetLayer() == SL]
+                out = []
+                for r10 in (3, 5, 8):
+                    r = r10 / 10.0
+                    for a10 in range(0, 360, 20):
+                        a = math.radians(a10); gx_, gy_ = bx_ + r * math.cos(a), by_ + r * math.sin(a)
+                        jj_, ii_ = gr.cell(gx_, gy_)
+                        if not (0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX) or not pm_[ii_, jj_]: continue
+                        d_ = min((_seg_dist(gx_, gy_, bx_, by_, *_p) for _p in parts), default=9.9)
+                        out.append((-d_, r, gx_, gy_))
+                out.sort()
+                return [(o_[2], o_[3]) for o_ in out[:8]]
             pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
             win2 = (gr.cell(min(ax_, bx_) - 8, min(ay_, by_) - 8), gr.cell(max(ax_, bx_) + 8, max(ay_, by_) + 8)); win2 = ((max(0, win2[0][0]), max(0, win2[0][1])), (min(gr.NX - 1, win2[1][0]), min(gr.NY - 1, win2[1][1])))
             if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G:   # the offset end already sits on the pad
                 if not own_clear(ax_, ay_, bx_, by_, SL, net): return False   # ... but not over the partner's own copper
+                if END_FIT and not partner_clear([(ax_, ay_, bx_, by_)], SL, net): return False
                 seg(ax_, ay_, bx_, by_, SL, net); return _ok()
             sp = stub_path(gr, pm.copy(), (ax_, ay_), (bx_, by_), win2) if pm is not None else None
             if sp and len(sp) >= 2:
-                for k in range(len(sp) - 1): seg(sp[k][0], sp[k][1], sp[k + 1][0], sp[k + 1][1], SL, net)
-                seg(sp[-1][0], sp[-1][1], bx_, by_, SL, net)
-                if _ok(): return True
+                cand = _path_segs(sp, bx_, by_)
+                if not END_FIT or partner_clear(cand, SL, net):
+                    _lay(cand)
+                    if _ok(): return True
+                else:
+                    # The path is fine and its LAST HOP is the violation, by a few micrometres. Come at the pad
+                    # from a point off to the side the partner is not on, and hop in from there.
+                    for _gx, _gy in _approach(pm):
+                        sp2_ = stub_path(gr, pm.copy(), (ax_, ay_), (_gx, _gy), win2)
+                        if not (sp2_ and len(sp2_) >= 2): continue
+                        cand2 = _path_segs(sp2_, _gx, _gy) + [(_gx, _gy, bx_, by_)]
+                        if not partner_clear(cand2, SL, net): continue
+                        _end_fit[0] += 1
+                        _lay(cand2)
+                        if _ok(): return True
             # A stub has to reach its own NET, not one point of it. Aiming only at the escape via made the last half millimetre the hardest
             # cell on the board, because the via sits inside its own part's fan: 34 of B18's 66 pair failures were "no stub path at via"
             # (9 September 2026). The escape track that leads to the via is the same copper and is reachable a millimetre earlier, so when
@@ -1594,8 +1664,9 @@ def main(a):
                 for _d, px_, py_ in sorted(alts)[:8]:
                     sp2 = stub_path(gr, pm.copy(), (ax_, ay_), (px_, py_), win2)
                     if sp2 and len(sp2) >= 2:
-                        for k in range(len(sp2) - 1): seg(sp2[k][0], sp2[k][1], sp2[k + 1][0], sp2[k + 1][1], SL, net)
-                        seg(sp2[-1][0], sp2[-1][1], px_, py_, SL, net)
+                        cand3 = _path_segs(sp2, px_, py_)
+                        if END_FIT and not partner_clear(cand3, SL, net): continue
+                        _lay(cand3)
                         if _ok(): return True
             if os.environ.get("PAIR_DEBUG") and pm is not None:   # the stub map around the goal, one character per cell (S start, G goal, # forbidden)
                 js, is_ = gr.cell(ax_, ay_); jg, ig = gr.cell(bx_, by_); r = 20
@@ -2484,6 +2555,7 @@ def main(a):
         print("pair_preroute: MOVED %s from (%.2f, %.2f) to (%.2f, %.2f)" % (r_, mm(a_[0]), mm(a_[1]), mm(c_[0]), mm(c_[1])))
     if _moved: print("pair_preroute: %d footprint(s) moved by this pass" % len(_moved))
     print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
+    if END_FIT: print("pair_preroute: the end fit moved the approach into the pad %d time(s) (PAIR_END_FIT=0 to measure it off)" % _end_fit[0])
     print("pair_preroute: search kernel %s%s" % (_SEARCH_KERNEL, (", rasteriser fell back to the per-cell predicate %d time(s)" % _RASTER_FALLBACK[0]) if _RASTER_FALLBACK[0] else ""))
     # `_T["maps"]` already counted this and a second counter beside it would be one more pair of numbers to drift apart,
     # which this project has paid for twice. The map mode and the call count join the line that exists (11 Sep 2026).
