@@ -962,18 +962,18 @@ margin, and it touches 70 pads on 31 parts instead of 191 on 124. The nine hard 
 from tracks spilling past small pads, and at 0.70 mm the four parts with pads under 0.5 mm are the only ones
 that can still do it.
 
-**THE ROUTE COST IS MEASURED, both widths through one identical invocation on the same placed board:**
+**THE ROUTE COST IS MEASURED, all three widths through one identical script, one variable, same placed board:**
 
 | PWR class | hard | unrouted | vias |
 |---|---:|---:|---:|
-| 0.50 mm (today) | **1** (one clearance) | **2** | 171 |
-| **0.70 mm** | **0** | **4** | 187 |
-| 1.20 mm (ruled), recorded 13 September | 9 (clearance 2, shorting 6, mask bridge 1) | 11 | 192 |
+| 0.50 mm (today) | 1 (one clearance) | **2** | 171 |
+| **0.70 mm** | **0** | 4 | 187 |
+| 1.20 mm (ruled) | 2 (two clearance) | **15** | 182 |
 
-**0.70 mm costs two connections against 0.50 mm and no hard items at all**, where the ruled 1.2 mm costs nine
-hard and eleven connections. It is closer to today's board than to the ruling, and it carries the current the
-rail was measured to have. A 1.2 mm arm is running through this same script so all three are like for like;
-its recorded numbers came from another session's invocation.
+**0.70 mm is the only one of the three with no hard violation at all**, and it costs two connections against
+today's 0.50 mm where the ruled 1.2 mm costs thirteen. The 1.2 mm figures recorded on 13 September (hard 9,
+unrouted 11) came from another session's invocation; through this one it is hard 2 and unrouted 15, which is
+the same conclusion by a different route and is why all three were re-run rather than two.
 
 **The first attempt at the 0.70 arm is withdrawn.** It came back hard 0
 with 121 unrouted and FOUR vias, and the cause was the arm rather than the width: it set neither
