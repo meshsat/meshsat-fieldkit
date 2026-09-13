@@ -898,3 +898,22 @@ lenient at every width but exactly one cell: +18 percent at 0.4 mm, +21 at 1 mm,
 A24 this passes the three slot rails at 1.006x and changes nothing else**: VBAT at 8.2x, VBUS20 at 2.6x,
 +13V8_PA at 2.1x and VIN_RAW at 1.6x still fail. E7's two rails and P3's two rails are all above 1.1x and are
 untouched by it.
+
+---
+
+# OWNER RULINGS 20 and 21, 13 September 2026 13:25 CEST
+
+| # | question | RULING |
+|---|---|---|
+| **20** | ruling 19's tolerance, whose stated reason I got wrong | **SIZE THE TOLERANCE TO THE REAL CAUSE.** The legitimate error is the raster's own discretisation of a track's true width, not "uncertainty" in the bar. Measure what that is worth and set the tolerance to it. The number stops being one I picked |
+| **21** | one order or six boards ahead of B | **ONE ORDER, WHEN ALL SEVEN ARE READY.** One shipment, one set of fees, both free confirmations used once, and every cross-board contract judged against boards that all exist. The six wait for B |
+
+**Why 20 was asked at all.** Ruling 19 was ruled on a rationale I wrote and tier 2b refuted the same hour: what
+the leniency measurement shows is a **bias in one direction**, the per-cell bar being 18 to 98 percent too
+generous, not noise about it. A rail 0.6 percent over such a bar is genuinely over IPC, and at exactly one cell
+width the bar is EXACT, where a 1.1x tolerance is ten percent over IPC outright. **There is still a real error
+source, the 0.5 mm raster against a track's true width**, and that is what the tolerance is now sized against
+rather than a figure chosen to clear the three rails in front of it.
+
+**21 keeps the plan as one set.** It costs the six boards a few days waiting on B's floor plan, and it means
+the cross-board contracts are checked against seven boards that exist rather than six plus a file.
