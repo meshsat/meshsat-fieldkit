@@ -184,7 +184,14 @@ pour(pcbnew.B_Cu, "CELL_F", "CELL_F band B.Cu (the blade lands and the west end:
 # Checked against the placement before they are drawn: a via that would sit on another net's pad is a short,
 # and drawing one blind is how this would go wrong.
 import power_copper as _pcmod
-VIN_VIAS = [(-41.6, -89.8), (-40.5, -89.8), (-39.4, -89.8),          # inside L2 pad 2, the rail's source
+# 13 September 2026 (appendix 32.166): three vias in the source pad left 1.29 A of the rail's 8 on the LOCKED
+# 0.400 mm escape stub beside them, which IPC gives 1.23 A: ratio 1.05, and the In2 pour's worst cell clear of
+# every via read 1.21. The current divides between the stub and the barrels by conductance, so a second row of
+# three lowers the barrel path's resistance and draws current off both. L2 pad 2 is 4.50 x 2.15 mm: two rows
+# 1.1 mm apart put a 0.8 mm via 0.13 mm inside the pad's own edge at the worst corner, and the self-check
+# below refuses any of them that lands on another net's pad.
+VIN_VIAS = [(-41.6, -89.25), (-40.5, -89.25), (-39.4, -89.25),      # inside L2 pad 2, the rail's source
+            (-41.6, -90.35), (-40.5, -90.35), (-39.4, -90.35),      # the second row, same pad
             (-86.35, -75.23), (-83.81, -75.23), (-81.27, -75.23), (-78.73, -75.23)]   # one per J_BLK land
 if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
     _hits = []
