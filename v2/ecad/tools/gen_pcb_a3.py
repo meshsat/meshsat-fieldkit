@@ -344,7 +344,15 @@ row(vr, -117, -113, fe[1] - 1.3, 3)
 row(vr, -115, -111, fe[3] - 3.0, 3)                                            # the head's north end, where the cell measure put the neck
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
 f1 = f1_; fx0, fx1 = fx0_, fx1_
-PC.union(vb, "VBAT", [(fx0, f1[1], fx1, 44.5), (fx0, 38.5, -4, 44.5), (fx0, -12.5, -48, -7.5)], pcbnew.B_Cu, priority=2)   # one comb: the trunk from F1, the collector under the converters, the PA spur
+# 13 September 2026, MEASURED ON A26: THE COMB FILLS IN TWO PIECES AND THE CUT IS A VIA COLUMN. The trunk
+# fills from F1 north to y 100.5 and the collector from y 95.5 south, and in the five millimetres between
+# them stands the charger's east escape column: seven 0.45 mm vias at x 57.5 to 57.8 from y 95.6 to 100.4
+# (/CELL+, /CH_SRP twice, /CH_SW2, /CH_CELL, /CH_COMP2, /CH_HIDRV2). A 5 mm band cannot pass a via column
+# standing in it, so the pack's 10 A went round through the In2 plane and, for 3.29 A of it, through a
+# 0.500 mm In3 router track. B.Cu east of that column is EMPTY from x 58 to 70 and y 92 to 104 (measured,
+# not assumed), so the comb takes a bay out there and walks round the column on solid copper.
+PC.union(vb, "VBAT", [(fx0, f1[1], fx1, 44.5), (fx0, 38.5, -4, 44.5), (fx0, -12.5, -48, -7.5),
+                      (fx1 - 0.5, 5.0, fx1 + 5.5, 19.0)], pcbnew.B_Cu, priority=2)   # one comb: the trunk from F1, the collector under the converters, the PA spur, the bay past the charger's via column
 for n, xL, Lr, Rr, Jr, out in SLOT:
     ur = pads_rect(net_pads(vb, ["U%d" % {"1": 4, "2": 5, "3": 6, "D": 7}[n]]), 0.5, 0.5)   # the converter's VIN pin (pin 2, west side)
     # an L: a via column west of the pin row (the other pins would slice a rectangle to 48 percent fill, 32.69) and a finger into the pin's pad
