@@ -1,6 +1,8 @@
 # EasyEDA Pro imports of the V2 carrier boards
 
-KiCad 9 is the source of every V2 board (`v2/ecad/pcb-*` and the generators in `v2/ecad/tools/`). The projects here are one-way imports of the released deliverable snapshots into EasyEDA Pro, made on 8 Sep 2026 for the cooperation with EasyEDA and JLCPCB (MESHSAT-776). Nothing is edited on the site and nothing here feeds back into the KiCad sources; when a board is regenerated (A23, B17, C8, D9, and so on), it needs a fresh import from its new deliverable and a new folder here.
+KiCad 9 is the source of every V2 board (`v2/ecad/pcb-*` and the generators in `v2/ecad/tools/`). The archives here are one-way imports into EasyEDA Pro, first made on 8 Sep 2026 for the cooperation with EasyEDA and JLCPCB (MESHSAT-776). Nothing is edited on the site and nothing here feeds back into the KiCad sources; when a board is regenerated it needs a fresh archive.
+
+**REBUILT 13 September 2026 for an outside review.** `tools/easyeda_import_set.py` builds the archives for whatever the tree holds, so the set is a rebuild rather than a one-off: **A24, B19, C10, D10, E7, E5, P3**, in `import/`. The September archives and site exports are kept beside them as the record of that generation (A22, B16, C7, D8, E6, E5, P2), and every one of those describes a board we are no longer building.
 
 Every project on the site is Private on the shared JLCPCB login (Personal workspace), none is published on OSHWLab, and no order is placed from them.
 
@@ -51,3 +53,32 @@ The project-library symbols `Connector_Generic_Conn_NNxNN` carry the source libr
 ## Cart of the same day
 
 The JLCPCB quote cart of this set (13 lines, all ticked: merchandise 4594.90 EUR, estimated shipping 129.22 EUR, subtotal 4724.11 EUR, nothing paid) is recorded in `v2/release/revA/order/ORDER-LOG.md` section 5.1 with the screenshot `v2/release/revA/order/cart-830-set-2026-09-08.jpg`.
+
+
+## Rebuild for the review, 13 September 2026
+
+The 12 September reviewer works in EasyEDA, and every project of the September set was a generation behind, so
+`tools/easyeda_import_set.py` rebuilt the archives from the current tree. It is a tool rather than a procedure
+because this will happen again on the next regeneration.
+
+| Board | Revision | Built from | State of that board |
+|---|---|---|---|
+| PCB-A power | A24 | deliverable `meshsat-pcb-a-revA-A24` | routed and cut, 0 hard, 0 unrouted; eight of twelve rails over IPC current density |
+| PCB-B compute | B19 | phase directory `pcb-b-compute-b19` | **not routed**, hard 30 and 499 unrouted after the pair pass, hard 0 placed underneath |
+| PCB-C backer | C10 | phase directory `pcb-c-display-c8` | routed, not cut, 0 hard and 1 unrouted, to be read as two |
+| PCB-D APRS | D10 | deliverable `meshsat-pcb-d-revA-D10` | routed and cut, 0 hard, 0 unrouted; its 5 V rail's width is under review |
+| PCB-E1 dock | E7 | deliverable `meshsat-pcb-e-revA-E7` | routed and cut, 0 hard, 0 unrouted; both rails over IPC current density |
+| PCB-E5 block | E5 | deliverable `meshsat-pcb-e5-revA-E5` | routed and cut, nothing open, no schematic by design |
+| PCB-P pack | P3 | deliverable `meshsat-pcb-p-revA-P3` | routed and cut, 0 hard, 0 unrouted; two of three rails over IPC current density |
+
+**The source rule, kept from September:** the archive comes from the DELIVERABLE snapshot where one exists, so
+what a reviewer opens is the same copper the gerbers were cut from. A board with no deliverable yet comes from
+its phase directory and its note says so.
+
+**Every archive carries `<stem>/IMPORT-NOTE.txt`** with that board's measured state, how to import it, and what
+the import is not. Handing someone a board without its numbers invites them to assume it is finished, and two
+of these seven are not.
+
+**Nothing here has been uploaded to the site.** The September generation was imported on the shared JLCPCB
+login; this one is archives only, for a reviewer to import into his own account. The runner does not log in
+anywhere, which is a standing rule of this project and not a limitation of the format.
