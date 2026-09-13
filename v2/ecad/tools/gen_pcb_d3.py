@@ -231,9 +231,16 @@ board.Add(z)
 # declared BEFORE the ground pours, which fill around it at their own priority 0.
 from power_copper import PowerCopper as _PC
 _pc = _PC(board, net_for, P)
-_pc.union("+5V_D8", "+5V_D8 trunk In2", [(-43.4, -18.7, -41.7, 22.9),    # J_PWR1 north along the west edge, 1.7 mm
-                                         (-43.4, 21.4, -29.4, 22.9),      # east to FB1's pad and over U1's upper pad, 1.5 mm
-                                         (-36.3, 19.6, -34.6, 22.4)],     # the stub down to U1's lower pad
+# WHERE IT RUNS, and the first attempt is why this is written down. A trunk straight north from J_PWR1's pad
+# at x -42.5 goes through **J_HARN1's pin field**: that connector is a through-hole 2x8 with its columns at
+# x -42.75 and -40.21, so its pads exist on In2 and the band filled 36 of its 92 mm2. The clear corridor is
+# x -37.5: 1.11 mm from the nearer pin column's pad edge, and the only other thing near it is C7, a bypass
+# capacitor of this same rail. So the band jogs east along y -17.8 from the source pad, runs north at
+# x -37.5, and stops at y 23.0, which is 0.69 mm below C7's pad and clear of C7's GROUND pad beside it.
+_pc.union("+5V_D8", "+5V_D8 trunk In2", [(-43.4, -18.6, -36.7, -16.9),    # east from J_PWR1's pad, clear of its GND pin at y -13.8
+                                         (-38.4, -18.6, -36.7, 23.0),      # north in the corridor between J_HARN1's pins and C7, 1.7 mm
+                                         (-38.4, 21.4, -29.4, 22.9),       # east to FB1's pad and over U1's upper pad, 1.5 mm
+                                         (-36.3, 19.6, -34.6, 22.4)],      # the stub down to U1's lower pad
           pcbnew.In2_Cu, priority=2, min_width=0.25, clearance=0.15)
 _pc.stitch("+5V_D8", [(-31.4, 22.15), (-34.9, 22.15), (-35.46, 20.1)])    # one via per load pad, beside it and inside the band
 print("D11 power copper: the +5V_D8 trunk and west branch on In2, %d zone(s) and keep-out(s)" % len(_pc.made))
