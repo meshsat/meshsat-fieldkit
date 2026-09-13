@@ -6,7 +6,7 @@ Usage: gen_pcb_b3.py <board.kicad_pcb> <netlist.net>
 - places connectors at planned case-frame positions, small parts packed into regions near their connectors
 - creates nets, assigns pads, adds GND (In1) and +5V (In2) planes, saves
 """
-import sys, re, math, pcbnew
+import sys, re, math, os, pcbnew   # os: `regionfit.record(..., stem=os.path...)` at the region loop uses it, 250 lines before the `import json, os` further down (13 September 2026)
 from pcbnew import VECTOR2I, FromMM
 BOARD, NET = sys.argv[1], sys.argv[2]
 OX, OY = 150.0, 110.0
