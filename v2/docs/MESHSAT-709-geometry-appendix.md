@@ -6823,7 +6823,24 @@ about 2.5 A per 0.4 mm hole, is more than twice that.
 | 1 | 1.0/0.6 at 1.6 mm along | 2.16 A, 1.45 | 2.25 A, 1.52 |
 | 2 | a pair across at 1.6 mm | 1.85 A, 1.25 | 2.59 A, 1.74 |
 | 3 | three across at 1.0 mm, 0.6 mm drill | 2.00 A, 1.35 | 2.44 A, 1.65 |
-| 4 | three across at 0.8 mm, **0.5 mm drill** | running | running |
+| 4 | three across at 0.8 mm, **0.5 mm drill** | 1.88 A, 1.45 | 2.25 A, 1.73 |
+
+**The worst barrel sits at the same coordinate in every one of those four attempts**, (114.8, 85.9) for
+PACK_P and (92.8, 83.9) for FUSED, which is the CENTRE via of the station nearest where the current changes
+layer. Its two neighbours across the band share less than it does, and adding stations further along the band
+does not reach it. The two open items are named rather than guessed at:
+
+- **FUSED's band is under 4.4 mm long, so it gets exactly ONE station**, three barrels, and its centre one
+  carries 2.25 A against a 0.5 mm barrel's 1.30. Giving a short band more stations means moving vias nearer
+  the band's ends, and those ends sit at the wire lands' 2.4 mm holes where the 2.2 mm margin exists for a
+  0.3 mm hole-to-hole clearance. **That change was written and then reverted**, because from here I cannot
+  verify the end clearance it would leave and a guess there buys a hard violation on a board that is
+  otherwise 0 and 0.
+- The remaining crossing current is what it is because a **FET's source pads are SMD on one layer**. The
+  measure now says how much: PACK_P carries 73 percent on F.Cu and 27 on B.Cu. A band that carried the whole
+  rail on F.Cu alone would need **3.58 mm** at 2 oz against the 2.8 mm it has, and would need no crossing at
+  all. That is the next thing to try and it is a layout change on a small board, so it is measured before it
+  is written.
 
 **Attempt 3 is the one worth keeping in the record.** It put 27 barrels in a band that had 3, and the worst
 one still carried 2.00 A. The reason is geometric: at 0.9 mm across with a 0.6 mm drill the outer two vias sit
