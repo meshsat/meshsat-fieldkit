@@ -76,6 +76,9 @@ if [ -n "$CONT" ]; then
   fi
 fi
 # 4. ONLY NOW the stub router, on a board that is clean and whose pours are filled
+# The count it is handed, taken here because here is the only place the board is still the router's own: the
+# stub stage must not leave it more open than it found it (13 September 2026, A25 went in at 13 and out at 80).
+$T/drc.sh $N.kicad_pcb out/$N-drc-before-stub.json
 # A time limit on the search, not on a wait: a fine grid over a big window is the difference between closing a
 # connection and not (A24, 12 September 2026: the 0.1 mm grid refused both of its last two, the 0.05 mm grid with
 # a six-fold window closed both), and it is also the difference between ten minutes and an afternoon. A cut run
@@ -99,6 +102,26 @@ if [ "$H" -ne 0 ]; then
   H=$(python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub_accept' >/dev/null; cat out/par-score.txt)
   echo "after stub_accept: hard $H"
   [ "$H" -eq 0 ] || { echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; }
+fi
+# 13 September 2026 (MESHSAT-862): AND IT MUST NOT LEAVE THE BOARD MORE OPEN THAN IT FOUND IT. stub_accept
+# drops a closure only when a DRC finds it in a HARD violation, so a set of closures that opens other
+# connections without breaking a rule is kept. On A25 the board went in at 13 unrouted, came out of the stub
+# router at 81, and stub_accept kept nine closure nets and left it at 80: the guard existed and measured the
+# wrong thing. It is the fault the record already names twice, `stitch_prune` judging against zero instead of
+# against the board it was given, and a routeflow remedy throwing away a better board. Compare the count with
+# what the stub router was handed, and revert the lot if it is worse.
+if [ -s out/$N-drc-before-stub.json ]; then
+  python3 $T/hardset.py out/$N-drc-before-stub.json post --counts out/stub-before.txt --label 'the count the stub stage was handed' >/dev/null 2>&1 || true
+  $T/drc.sh $N.kicad_pcb out/$N-drc.json
+  python3 $T/hardset.py out/$N-drc.json post --counts out/stub-after.txt --label 'the count the stub stage left' >/dev/null 2>&1 || true
+  if [ -s out/stub-before.txt ] && [ -s out/stub-after.txt ]; then
+    read _HB _UB < out/stub-before.txt; read _HA _UA < out/stub-after.txt
+    if [ "$_UA" -gt "$_UB" ]; then
+      echo "the stub stage left the board MORE OPEN than it found it ($_UB -> $_UA unrouted): reverting every closure"
+      cp out/$N-par-routed.kicad_pcb $N.kicad_pcb
+      $T/drc.sh $N.kicad_pcb out/$N-drc.json
+    fi
+  fi
 fi
 python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
 # 5b. a locked stitch via the fill no longer covers is dead at its pour end: the router ran a track past it and
