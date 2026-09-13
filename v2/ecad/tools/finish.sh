@@ -159,7 +159,12 @@ fi
 # its own net. A24: /CELL+ closed as a straight 9.59 mm locked track, hard 0, opens 3 to 2, after the stub
 # router had refused it. Declared per board, with the number, like every other pass that lays copper here.
 if [ -n "$(cfg x direct_close)" ] || [ -n "$(cfg x direct_close_max)" ]; then
-  python3 $T/direct_close.py $N.kicad_pcb out/$N-drc.json --max="$(cfg x direct_close_max)" ${DCL:+--layers=$DCL} 2>&1 | grep -a direct_close | tail -12
+  # `python3 -u`, and the exit status read: on A26 this tool SEGFAULTED after 1,812 lines of output and the
+  # finish showed not one of them, because a buffered stdout dies with the process and a pipeline hides
+  # the exit code. A stage that crashes has to say so (14 September 2026).
+  python3 -u $T/direct_close.py $N.kicad_pcb out/$N-drc.json --max="$(cfg x direct_close_max)" ${DCL:+--layers=$DCL} > out/$N-direct_close.log 2>&1; DCX=$?
+  grep -a direct_close out/$N-direct_close.log | tail -12
+  [ "$DCX" -eq 0 ] || echo "direct_close exited $DCX (out/$N-direct_close.log): its closures, if any, are still judged by the DRC below"
   $T/drc.sh $N.kicad_pcb out/$N-drc.json
 fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
