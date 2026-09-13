@@ -6950,3 +6950,54 @@ last hop is the violation it **moves the approach**: the pad is entered from a p
 millimetre off it on the side the partner is not on, chosen from the cells the leg's own map calls free and
 ordered by distance from the partner's copper. The count of moved approaches is printed every pass, so the knob
 is never a claim. Two arms, same placement, same tools, one variable, are the grade.
+
+### 32.174 B19 goes from 38 to 65 of 113 on two changes, and the third was refused by its own floor plan (13 September 2026, 22:45 CEST; MESHSAT-862)
+
+Three arms on one placed board, one variable each, all with the chain and the gates that cut a deliverable.
+
+**1. The end fit is worth +16.** Same board, same tools, `PAIR_END_FIT` the only difference: **38 of 113 off
+(20 DIFF100 + 18 USB) against 54 of 113 on (35 + 19)**. The DIFF100 pass, which is the one the record has
+tracked since 9 September, goes **20 to 35**. The failed attempts fall from 152 to 118 and the pair's own two
+legs from 84 of them to 10. The count of moved approaches is printed: 16 and 5 on the two passes, so sixteen
+pairs were laid by entering the pad from the other side and the rest of the gain is the earlier refusal not
+happening at all.
+
+**2. The corridor slack's peak has MOVED, and the declared value is now the worst point of the sweep.** With
+the end fit on, eight arms in parallel on the same placement:
+
+| slack | DIFF100 | USB | of 113 |
+|---|---:|---:|---:|
+| 0.04 | 32 | 32 | 64 |
+| 0.05 | 35 | 29 | 64 |
+| **0.06 (declared)** | 35 | 19 | **54** |
+| 0.07 | 34 | 30 | 64 |
+| **0.08** | 37 | 28 | **65** |
+| 0.09 | 34 | 26 | 60 |
+| 0.10 | 34 | 28 | 62 |
+| 0.12 | 32 | 26 | 58 |
+
+0.06's DIFF100 pass is as good as any at 35 and it leaves the USB pass **19** where every neighbour leaves it
+26 to 32: a greedy pass with no rip-up, where what the first pass lays decides what the second can. `b.json`
+carries 0.08 with the whole table as its reason, and the 11 September caution unchanged in its own words:
+re-measure the curve when the tools or the placement move. **It has now been true twice.**
+
+**3. The underside under a fine-pitch part: measured, refused, and the refusal is the finding.** This file's
+own region comment says the underside decoupling goes "never beneath a fine-pitch part whose escapes need the
+vias". The placed board has **71 back-side parts sitting under one**: fifteen under U301, fourteen under U101,
+thirteen under U201, each a 133-pad 0.40 mm PCIe switch, plus nine under each of U102, U302 and six under
+U202. The pre-router's largest remaining failure after the end fit is `no stub path at via` at exactly those
+parts, which is a leg that cannot cross B.Cu where it is leaving from.
+
+`PLACE_NO_UNDER_FINE` makes each fine-pitch front courtyard an obstacle to the underside regions. The arm
+**blocked at `regionfit`: five regions overflow, the worst by 86.2 mm**, because the underside region
+rectangles are DRAWN under the IC pockets (`S1_SWEB` is `S1_SWIC`'s own area on the other side). So the rule
+cannot be enforced by the packer without moving the regions, and moving them fights the decoupling rule, which
+wants those capacitors within 3 mm of the pin they serve. **The knob stays off with this number beside it**,
+and what it says about owner ruling 18 is that B's floor plan is not a matter of finding room somewhere else:
+the underside of a three-slot compute board IS the decoupling of its three slots.
+
+**Where that leaves B: 65 of 113 with every pair the pre-router lays measured and legal**, against the pair
+hold of 10 September, which releases no board until every pair is laid. The remaining 48 are named by part:
+18 `no stub path at via`, 8 the pair's own legs, 8 the two legs crossing, 6 at U209, the rest scattered over
+U3, U4 and the corridor. That number and its options go to the owner's decisions file rather than stopping the
+run.
