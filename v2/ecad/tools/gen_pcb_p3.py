@@ -153,15 +153,24 @@ def pad_at(ref, num):
 def mm(v): return (v.x / 1e6 - OX, OY - v.y / 1e6)
 def track(netname, a, b, w, L):
     t = pcbnew.PCB_TRACK(board); t.SetStart(P(*a)); t.SetEnd(P(*b)); t.SetWidth(FromMM(w)); t.SetLayer(L); t.SetNet(net_for(netname, create=False)); t.SetLocked(True); board.Add(t)
-def band(netname, a, b, w=3.0, vias=3):
-    """A locked band on both outer layers between two board-frame points, stitched by locked 0.8/0.4 vias; the ends stop 0.8 mm short of a pad centre when told."""
+def band(netname, a, b, w=3.0, vias=12):
+    """A locked band on both outer layers between two board-frame points, stitched by locked 1.0/0.6 vias.
+
+    13 September 2026 (MESHSAT-862): THE BARRELS WERE THE NECK AND NOTHING HAD EVER JUDGED THEM. Three
+    0.8/0.4 vias stitched a band carrying 10 A, and the barrel measure added that day found one of them
+    taking 2.67 A where IPC-2221 gives a 0.4 mm barrel's 0.0314 mm2 of wall 1.11 A at a 10 K rise. The
+    project's own rule of thumb, about 2.5 A per 0.4 mm hole, was more than twice optimistic.
+    A 0.6 mm drill has 0.0471 mm2 of wall and carries 1.48 A, and the spacing rather than a count of three
+    now decides how many there are: one per 1.6 mm of band, which leaves 1.0 mm hole to hole. Six of them
+    carry 8.90 A against the three's 3.32.
+    """
     for L in (pcbnew.F_Cu, pcbnew.B_Cu): track(netname, a, b, w, L)
     net = net_for(netname, create=False)
     L = math.hypot(b[0] - a[0], b[1] - a[1]); n = max(1, min(vias, int((L - 4.4) / 1.6) + 1)) if L >= 4.4 else 1
     for k in range(n):
         d = L / 2 if n == 1 else 2.2 + k * (L - 4.4) / (n - 1); f = d / L   # every via at least 2.2 mm from a band end (the wire lands' 2.4 mm holes, hole-to-hole 0.3)
         v = pcbnew.PCB_VIA(board); v.SetPosition(P(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f))
-        v.SetWidth(FromMM(0.8)); v.SetDrill(FromMM(0.4)); v.SetNet(net); v.SetLocked(True); board.Add(v)
+        v.SetWidth(FromMM(1.0)); v.SetDrill(FromMM(0.6)); v.SetNet(net); v.SetLocked(True); board.Add(v)
 def short_of(a, b, d=0.8):
     """the point d mm before b on the way from a"""
     L = math.hypot(b[0] - a[0], b[1] - a[1]); return (b[0] - (b[0] - a[0]) / L * d, b[1] - (b[1] - a[1]) / L * d)
