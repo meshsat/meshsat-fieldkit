@@ -88,7 +88,17 @@ _intent.rail("+3V3_DEV", 3.3, 1.2, 2.0, "L1", loads=_3V3_LOADS,
 # since 13 September. The return is declared at each branch's own converter or connector rather than at the
 # leaf parts behind it: a branch's parts sit beside the converter that feeds them and return into the same
 # local ground copper, so this puts the current within a few millimetres of where it really enters the plane.
-_GND_LOADS = dict(_DEV_LOADS)
+# THE RETURN IS NOT ALWAYS AT THE SAME PART AS THE SUPPLY, and the schematic generator refused this rail
+# until it said so: `rail GND names load F1, which is not on that net`. F1, F2 and F3 are polyfuses, two-pin
+# parts with no ground pin at all, and what they feed leaves the board. Their current returns where it comes
+# back: F1 feeds PANEL_5V over the panel ribbon, so its return is at J_PANEL; F3 feeds the QMX unit over a
+# lead, so its return is at J_QMX; F2 feeds +5V_HDMI, which is the two display switches U3 and U4, and those
+# are on this board with ground pins of their own.
+_GND_LOADS = {k: v for k, v in _DEV_LOADS.items() if k not in ("F1", "F2", "F3")}
+_GND_LOADS["J_PANEL"] = _DEV_LOADS["F1"]
+_GND_LOADS["J_QMX"] = _DEV_LOADS["F3"]
+_GND_LOADS["U3"] = _GND_LOADS.get("U3", 0.0) + _DEV_LOADS["F2"] / 2
+_GND_LOADS["U4"] = _GND_LOADS.get("U4", 0.0) + _DEV_LOADS["F2"] / 2
 for _n in (1, 2, 3): _GND_LOADS.update(_SLOT_LOADS(_n))
 _intent.rail("GND", 0.0, 10.0, 21.0, ["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV"], loads=_GND_LOADS,
              note="the return of every rail: the three slot rails and the device rail, 19.4 A with all four at their declared peak")
