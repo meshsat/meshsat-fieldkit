@@ -8,6 +8,7 @@ carry its current" or "is this pair at its impedance". Each gen_sch_*.py now col
 and writes out/<name>-intent.json beside the netlist. The gates read it with load(); a missing file is a FAIL there (fail closed), an empty
 list is reported with its zero denominator ("bypass 0 of 0 checked"), never hidden."""
 import json, os, sys, time
+import re as _re
 
 Z_DEFAULT = {"USB": {"z_diff": 90.0, "z_se": 50.0}, "DIFF100": {"z_diff": 100.0, "z_se": 50.0}, "PCIE": {"z_diff": 100.0}, "HDMI": {"z_diff": 100.0}, "RF": {"z_se": 50.0}}
 
@@ -16,7 +17,7 @@ _I = {"bypass": [], "rails": {}, "pair_classes": dict(Z_DEFAULT)}
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
-def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None):
+def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic=""):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026)."""
@@ -25,6 +26,20 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
     # for five days (A24's CELL+ at 2.21 percent through a SENSE pin; VBUS20's 6 A through two more). The
     # tool refuses such a rail at measurement time now; this refuses it where the fix belongs, in the
     # generator, so the next rail cannot be written without saying where its current goes.
+    # THE SOURCE IS THE POWER PATH, NOT THE PART THAT CONTROLS IT (13 September 2026). `dc_drop` holds the
+    # source part's pads at 0 V and takes the rail's whole current out of them, so naming a switching
+    # controller sends that current through its output SENSE pin: A24's VBUS20 put 2.90 A of 6 down a locked
+    # 0.200 mm escape and read 3.90 against IPC, on copper that was never carrying it. The current of a buck
+    # or a buck-boost leaves through the INDUCTOR and the sense SHUNT beside it, not through the chip. Four
+    # rails named a controller (A's VBUS20, +12V_HF and +54V_POE, B's +3V3_DEV). A part whose output pin is a
+    # real power pin, an LDO for instance, says so with `source_ic="<why>"`.
+    _sr = source if isinstance(source, (list, tuple)) else [source]
+    for _s in _sr:
+        if _re.match(r"^U\d", str(_s)) and not source_ic:
+            raise SystemExit("intent: rail %s names %s as its source, and a multi-pin IC's pad on its own output net is a "
+                             "SENSE pin: dc_drop would take the rail's %.2f A out of it. Name the inductor or the sense "
+                             "shunt the current really leaves through, or pass source_ic=\"<why this part's pin is a "
+                             "power pin>\"." % (net, _s, amps_typ))
     if not loads: raise SystemExit("intent: rail %s declares no loads. Name where its current goes: "
                                    "loads={\"<ref>\": <amps>, ...}, summing to at most the rail's %.2f A peak. "
                                    "Undeclared, dc_drop would split %.2f A evenly over every U and J on the net, "
