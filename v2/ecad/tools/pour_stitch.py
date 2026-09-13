@@ -9,7 +9,7 @@ For each island without a via of its net, the pass picks the point inside it fur
 locked via there, refills and re-reads the board, and keeps the via only if the hard count does not rise, the way
 stub_accept.py keeps the stub router's closures. Islands too small or too crowded for a via are named and left.
 
-Usage: pour_stitch.py <board.kicad_pcb> [--nets GND,+3V3] [--min-area 1.0] [--via=0.6/0.3] [--dry]"""
+Usage: pour_stitch.py <board.kicad_pcb> [--nets=GND,+3V3] [--min-area=1.0] [--via=0.6/0.3] [--dry]   (every option takes its value after an `=`)"""
 import sys, os, re, math, json, subprocess, pcbnew
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
