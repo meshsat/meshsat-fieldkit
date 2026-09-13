@@ -258,36 +258,62 @@ def main(argv):
             b1 = pcbnew.VECTOR2I(int(B[1].x + (A[1].x - B[1].x) * f), int(B[1].y + (A[1].y - B[1].y) * f))
             shapes.append(("via down to %s" % b.GetLayerName(Ld), [(L, A[1]), (L, a1), (Ld, a1), (Ld, b1), (L, b1), (L, B[1])]))
         got = None; whys = []
-        for name, pts in shapes:
-            b = pcbnew.LoadBoard(bp); n = b.FindNet(net)
-            if n is None: break
-            w = FromMM(WIDTH) if WIDTH else None
-            if w is None:
-                w = next((t.GetWidth() for t in b.GetTracks() if t.GetNetname() == net and t.GetClass() == "PCB_TRACK"), FromMM(0.2))
-            for (lp, p), (lq, q) in zip(pts, pts[1:]):
-                if lp != lq:
-                    v = pcbnew.PCB_VIA(b); v.SetPosition(p); v.SetWidth(FromMM(VD)); v.SetDrill(FromMM(VDR))
-                    v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(n); v.SetLocked(True); b.Add(v)
-                    continue
-                if p == q: continue
-                t = pcbnew.PCB_TRACK(b); t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(lp); t.SetNet(n); t.SetLocked(True); b.Add(t)
-            pcbnew.ZONE_FILLER(b).Fill(b.Zones())
-            pcbnew.SaveBoard(trial, b)
-            pro = os.path.splitext(bp)[0] + ".kicad_pro"; tpro = os.path.splitext(trial)[0] + ".kicad_pro"
-            if os.path.exists(pro): subprocess.run(["cp", pro, tpro])
-            r = counts(trial, work)
-            if r is None: continue
-            H1, U1, D1 = r
-            if H1 <= H0 and U1 < U0:
-                got = (name, H1, U1)
-                if not DRY: subprocess.run(["cp", trial, bp]); H0, U0 = H1, U1
-                break
-            # a refusal that does not name what it hit is the defect `escape_prune` was corrected for on 9 September
-            was = collections.Counter((v.get("type"), " / ".join(i.get("description", "")[:44] for i in v.get("items", []))) for v in D0.get("violations", []) if v.get("type") in hardset.HARD_POST)
-            now = collections.Counter((v.get("type"), " / ".join(i.get("description", "")[:44] for i in v.get("items", []))) for v in D1.get("violations", []) if v.get("type") in hardset.HARD_POST)
-            new_hits = [k for k in (now - was)][:4]
-            for t_, w_ in new_hits[:2]: whys.append("      %s: %s | %s" % (name, t_, w_))
-            if H1 <= H0 and U1 >= U0 and not new_hits: whys.append("      %s: legal, and it closed nothing (unrouted %d)" % (name, U1))
+
+        def _try(shape_list, _L):
+            """Lay each shape on a copy and keep the first the DRC accepts. Returns (name, hard, unrouted)."""
+            nonlocal H0, U0, D0
+            for name, pts in shape_list:
+                b = pcbnew.LoadBoard(bp); n = b.FindNet(net)
+                if n is None: return None
+                w = FromMM(WIDTH) if WIDTH else None
+                if w is None:
+                    w = next((t.GetWidth() for t in b.GetTracks() if t.GetNetname() == net and t.GetClass() == "PCB_TRACK"), FromMM(0.2))
+                for (lp, p), (lq, q) in zip(pts, pts[1:]):
+                    if lp != lq:
+                        v = pcbnew.PCB_VIA(b); v.SetPosition(p); v.SetWidth(FromMM(VD)); v.SetDrill(FromMM(VDR))
+                        v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(n); v.SetLocked(True); b.Add(v)
+                        continue
+                    if p == q: continue
+                    t = pcbnew.PCB_TRACK(b); t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(lp); t.SetNet(n); t.SetLocked(True); b.Add(t)
+                pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+                pcbnew.SaveBoard(trial, b)
+                pro = os.path.splitext(bp)[0] + ".kicad_pro"; tpro = os.path.splitext(trial)[0] + ".kicad_pro"
+                if os.path.exists(pro): subprocess.run(["cp", pro, tpro])
+                r = counts(trial, work)
+                if r is None: continue
+                H1, U1, D1 = r
+                if H1 <= H0 and U1 < U0:
+                    if not DRY:
+                        subprocess.run(["cp", trial, bp]); H0, U0, D0 = H1, U1, D1
+                    return (name, H1, U1)
+                # a refusal that does not name what it hit is the defect `escape_prune` was corrected for on 9 September
+                was = collections.Counter((v.get("type"), " / ".join(i.get("description", "")[:44] for i in v.get("items", []))) for v in D0.get("violations", []) if v.get("type") in hardset.HARD_POST)
+                now = collections.Counter((v.get("type"), " / ".join(i.get("description", "")[:44] for i in v.get("items", []))) for v in D1.get("violations", []) if v.get("type") in hardset.HARD_POST)
+                new_hits = [k for k in (now - was)][:4]
+                for t_, w_ in new_hits[:2]: whys.append("      %s: %s | %s" % (name, t_, w_))
+                if H1 <= H0 and U1 >= U0 and not new_hits: whys.append("      %s: legal, and it closed nothing (unrouted %d)" % (name, U1))
+            return None
+
+        got = _try(shapes, L)
+        if got is None and hops:
+            # FURTHER BUT LEGAL BEATS CLOSER BUT ILLEGAL, which is the whole situation at a walled-in pad
+            # (13 September 2026, board C10). Its one open connection is /+3V3 at U3 pad 10, a 0.88 by
+            # 0.20 mm QFN finger, and every shape from that pad bridges U3's own pads 11 or 14 on B.Cu. The
+            # pad's own escape stub ends 2.466 mm from the same target against 1.741 from the pad: further,
+            # and outside the package's ring. Distance decides which is TRIED first, never which is right.
+            for _a, _bb, _g, _lbl in sorted(hops, key=lambda h: h[2]):
+                _common = [l for l in _a[2] if l in _bb[2]]
+                _L = _common[0] if _common else _a[2][0]
+                if _common:
+                    _sh = [("from %s, direct" % _lbl, [(_L, _a[1]), (_L, _bb[1])]),
+                           ("from %s, L via x" % _lbl, [(_L, _a[1]), (_L, pcbnew.VECTOR2I(_bb[1].x, _a[1].y)), (_L, _bb[1])]),
+                           ("from %s, L via y" % _lbl, [(_L, _a[1]), (_L, pcbnew.VECTOR2I(_a[1].x, _bb[1].y)), (_L, _bb[1])])]
+                else:
+                    _sh = [("from %s, hop" % _lbl, [(_a[2][0], _a[1]), (_a[2][0], _bb[1]), (_bb[2][0], _bb[1])])]
+                got = _try(_sh, _L)
+                if got:
+                    A, B, gap, L = _a, _bb, _g, _L
+                    break
         if got:
             closed += 1
             print("direct_close: %-14s closed %.3f mm, %s to %s on %s (%s); hard %d unrouted %d"
