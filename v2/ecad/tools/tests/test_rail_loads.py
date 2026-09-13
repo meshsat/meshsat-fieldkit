@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Every declared rail names where its current goes (MESHSAT-862, 13 September 2026).
+
+`dc_drop` does not leave a rail without loads unsolved: it splits the current evenly over every U and J
+footprint on the net. That guess decided boards for five days. On 12 September it made CELL+ read 2.21 percent
+by pushing 10 A through the charger's SENSE pin and its 0.20 mm escape; CELL+ was given its load and the tool
+was left alone. When owner ruling 16 made the current density a verdict, FIVE of the ten failing rails turned
+out to declare nothing, and the guesses were wrong in ways that mattered:
+
+  * A24's `VBUS20`: 6 A into U3, whose only pads on the net are 0.13 and 0.20 mm sense pins. The real path is
+    the whole charge current through R16, a 10 mOhm 2512 shunt.
+  * E7's `CELL_F`: the guess MISSED the load carrying almost all of it, because `P_CP` starts with a P and the
+    fallback only considers U and J references.
+  * E7's `VIN_RAW`: half the rail into U4, which is the ideal diode FEEDING the bus, so current was being
+    pulled backwards through a source.
+
+The tool refuses such a rail now. This rule is the other half: it refuses the DECLARATION, in the generator,
+where the fix belongs, so the next rail cannot be written without saying where its current goes.
+"""
+import os, re, sys, glob
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+RAIL = re.compile(r'_intent\.rail\(\s*(.*?)\)\s*(?:#|$)', re.S)
+
+
+def _calls(src):
+    """Every `_intent.rail(...)` call's argument text, brackets balanced."""
+    out = []
+    for m in re.finditer(r'_intent\.rail\(', src):
+        i = m.end(); depth = 1; j = i
+        while j < len(src) and depth:
+            if src[j] == "(": depth += 1
+            elif src[j] == ")": depth -= 1
+            j += 1
+        out.append((src[:m.start()].count("\n") + 1, src[i:j - 1]))
+    return out
+
+
+def t_every_rail_declares_its_loads():
+    bad = []
+    for f in sorted(glob.glob(os.path.join(TOOLS, "gen_sch_*.py"))):
+        src = open(f).read()
+        for line, args in _calls(src):
+            if "loads=" not in args:
+                net = (re.search(r'"([^"]+)"', args) or [None, "?"])[1]
+                bad.append("%s:%d rail %s declares no loads, so dc_drop would GUESS them"
+                           % (os.path.basename(f), line, net))
+    assert not bad, ("a rail without loads is a rail whose current dc_drop invents:\n  " + "\n  ".join(bad))
+
+
+def t_a_rails_loads_sum_to_about_its_declared_current():
+    """A split that does not add up is a different claim from the one in the rail's own amps_typ."""
+    bad = []
+    for f in sorted(glob.glob(os.path.join(TOOLS, "gen_sch_*.py"))):
+        src = open(f).read()
+        for line, args in _calls(src):
+            m = re.search(r'loads\s*=\s*\{(.*?)\}', args, re.S)
+            if not m: continue
+            nums = [float(x) for x in re.findall(r':\s*([0-9.]+)', m.group(1))]
+            amps = re.match(r'\s*"[^"]+"\s*,\s*[0-9.]+\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)', args)
+            if not amps or not nums: continue
+            typ = float(amps.group(1)); peak = float(amps.group(2)); tot = sum(nums)
+            # A rail may be apportioned at its typical draw or at its PEAK, and declaring the peak is the
+            # conservative choice (A24's +13V8_PA puts all 6 A of its peak into J_PA, where the record's
+            # typical is 5). What is refused is a sum ABOVE the peak, which is a current the rail's own
+            # record does not carry, and a token sum under half the typical, which measures nothing.
+            if tot > peak * 1.02 or tot < typ * 0.5:
+                net = (re.search(r'"([^"]+)"', args) or [None, "?"])[1]
+                bad.append("%s:%d rail %s declares %.2f A typical and %.2f A peak, and its loads sum to %.2f A"
+                           % (os.path.basename(f), line, net, typ, peak, tot))
+    assert not bad, ("a rail's loads do not account for its current:\n  " + "\n  ".join(bad))
+
+
+def t_intent_refuses_a_rail_that_declares_no_loads():
+    """The floor in the declaration, not only in the rule above: the generator dies where the fix belongs."""
+    import intent
+    try:
+        intent.rail("T_NOLOADS", 5.0, 1.0, 2.0, "J1")
+    except SystemExit as e:
+        assert "declares no loads" in str(e), "refused for the wrong reason: %s" % e
+        return
+    raise AssertionError("intent.rail accepted a rail with no loads, so dc_drop would invent its current")
+
+
+def t_intent_refuses_loads_that_exceed_the_rails_own_peak():
+    """The loads and the peak are two statements about one current; they may not contradict each other."""
+    import intent
+    try:
+        intent.rail("T_OVER", 5.0, 1.0, 2.0, "J1", loads={"U1": 3.0})
+    except SystemExit as e:
+        assert "peak" in str(e)
+        return
+    raise AssertionError("intent.rail accepted loads summing above the rail's declared peak")
+
+
+def t_intent_refuses_a_load_with_no_current():
+    import intent
+    for bad in ({"U1": 0}, {"U1": -0.5}, {"U1": "a lot"}):
+        try:
+            intent.rail("T_ZERO", 5.0, 1.0, 2.0, "J1", loads=bad); raise AssertionError("accepted %r" % bad)
+        except SystemExit:
+            pass
+
+
+def t_a_rail_may_declare_several_sources():
+    """A ground returns through every connector it leaves by. Holding one of B19's four JST-VH grounds at 0 V
+    would put all 21 A through one pin and measure a board that does not exist."""
+    import intent
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    assert "srcrefs" in src and "isinstance(r[\"source\"], (list, tuple))" in src, \
+        "dc_drop resolves one source reference only, so a ground cannot be declared honestly"
+    assert 'f.GetReference() in srcrefs' in src, "dc_drop still compares the source with a single =="
+    assert 'f.GetReference() not in srcrefs' in src, "the load guess still excludes one source reference only"

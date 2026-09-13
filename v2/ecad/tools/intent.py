@@ -17,7 +17,23 @@ def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None):
-    """budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026)."""
+    """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
+
+    budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026)."""
+    # 13 September 2026 (MESHSAT-862): a rail without loads is not declarable. `dc_drop` used to split the
+    # current evenly over every U and J on the net when nothing was declared, and that guess decided boards
+    # for five days (A24's CELL+ at 2.21 percent through a SENSE pin; VBUS20's 6 A through two more). The
+    # tool refuses such a rail at measurement time now; this refuses it where the fix belongs, in the
+    # generator, so the next rail cannot be written without saying where its current goes.
+    if not loads: raise SystemExit("intent: rail %s declares no loads. Name where its current goes: "
+                                   "loads={\"<ref>\": <amps>, ...}, summing to at most the rail's %.2f A peak. "
+                                   "Undeclared, dc_drop would split %.2f A evenly over every U and J on the net, "
+                                   "which is a guess and not a measurement." % (net, amps_peak, amps_typ))
+    _bad = [k for k, v in loads.items() if not isinstance(v, (int, float)) or v <= 0]
+    if _bad: raise SystemExit("intent: rail %s gives a load no current: %s" % (net, sorted(_bad)))
+    _tot = sum(loads.values())
+    if _tot > amps_peak * 1.02: raise SystemExit("intent: rail %s declares a %.2f A peak and its loads sum to %.2f A. "
+                                                 "The loads are a claim about the same current as the peak: correct one of them." % (net, amps_peak, _tot))
     _I["rails"][net] = {"volts": volts, "amps_typ": amps_typ, "amps_peak": amps_peak, "source": source, "loads": loads or {}, "note": note, **({"budget": budget} if budget else {})}
 
 def pair_class(name, z_diff=None, z_se=None):
@@ -36,7 +52,8 @@ def write(sch_path, project, parts=None):
         for net, r in _I["rails"].items():
             on_net = {p["ref"] for p in parts if net in p["nets"].values()}
             if not on_net: raise SystemExit("intent: rail %s is not a net of the schematic" % net)
-            if r["source"] not in on_net: raise SystemExit("intent: rail %s names source %s, which is not on that net (refs on it: %s)" % (net, r["source"], sorted(on_net)[:8]))
+            for _sr in (r["source"] if isinstance(r["source"], (list, tuple)) else [r["source"]]):
+                if _sr not in on_net: raise SystemExit("intent: rail %s names source %s, which is not on that net (refs on it: %s)" % (net, _sr, sorted(on_net)[:8]))
             for ref in r["loads"]:
                 if ref not in on_net: raise SystemExit("intent: rail %s names load %s, which is not on that net" % (net, ref))
     d = dict(board=project, written=time.strftime("%Y-%m-%d %H:%M"), **_I)

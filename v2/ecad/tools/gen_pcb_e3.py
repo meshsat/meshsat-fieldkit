@@ -165,7 +165,13 @@ z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.Se
 z.SetLayer(pcbnew.In1_Cu); z.SetZoneName("In1 solid ground: no tracks"); o = z.Outline(); o.NewOutline()
 for x, y in ((-150, -114), (119, -114), (119, -44), (-150, -44)): p_ = P(x, y); o.Append(p_.x, p_.y)
 board.Add(z)
-pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands)", (-92, -100, -26, -80))
+# 13 September 2026, owner ruling 16 and 22. The conductor measure found 4.89 A of this 8 A rail going through
+# a LOCKED 0.400 mm escape stub and a single 0.45/0.25 mm escape via at L2 pad 2, the choke that is the rail's
+# own source, against IPC's 1.23 A for that track. The pour existed and the current was not in it, for two
+# reasons this line and the block below fix: the pour stopped at y -80 while the block lands it feeds sit at
+# y -75.2, so the last 5 mm was router track; and a 4.50 x 2.15 mm source pad reached the pour through one
+# signal via. This is the CELL+ lesson in another place: a rail's current finding geometry meant for signals.
+pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)", (-92, -100, -26, -74))
 pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-26, -113, -2, -80))
 pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (56, -113, 76, -80))
 pour(pcbnew.In2_Cu, "CELL_F", "CELL_F plane In2 (the west end: the pack node to the pack parts, the fans and the monitor divider; a DSN plane on the power layer In2 since E6 round 4)", (-148, -112, -100, -46), priority=1)
@@ -173,6 +179,29 @@ pour(pcbnew.F_Cu, "CELL_F", "CELL_F pour F.Cu (blade to the pad)", (-128, -112, 
 for L in (pcbnew.F_Cu, pcbnew.B_Cu):
     pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-149, -113, 118, -45), priority=0)
 pour(pcbnew.B_Cu, "CELL_F", "CELL_F band B.Cu (the blade lands and the west end: the pack node to the fans and the monitor divider; E6 route 2 left them open)", (-148, -112, -100, -46), priority=1)
+# ---------------------------------------------------------------- power vias where the 8 A leaves its pads
+# A 0.8/0.4 mm via carries about 2.5 A, so three at the source and one per block land cover 8 A with margin.
+# Checked against the placement before they are drawn: a via that would sit on another net's pad is a short,
+# and drawing one blind is how this would go wrong.
+import power_copper as _pcmod
+VIN_VIAS = [(-41.6, -89.8), (-40.5, -89.8), (-39.4, -89.8),          # inside L2 pad 2, the rail's source
+            (-86.35, -75.23), (-83.81, -75.23), (-81.27, -75.23), (-78.73, -75.23)]   # one per J_BLK land
+if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
+    _hits = []
+    for _vx, _vy in VIN_VIAS:
+        for _ref, _fp in placed.items():
+            for _pd in _fp.Pads():
+                if _pd.GetNetname() in ("VIN_RAW", "/VIN_RAW"): continue
+                _bb = _pd.GetBoundingBox()
+                _dx = max(_bb.GetLeft() / 1e6 - OX - _vx, 0, _vx - (_bb.GetRight() / 1e6 - OX))
+                _dy = max((OY - _bb.GetBottom() / 1e6) - _vy, 0, _vy - (OY - _bb.GetTop() / 1e6))
+                if (_dx * _dx + _dy * _dy) ** 0.5 - 0.4 < 0.35:
+                    _hits.append("via at (%+.2f, %+.2f) touches %s.%s [%s]" % (_vx, _vy, _ref, _pd.GetNumber(), _pd.GetNetname() or "-"))
+    if _hits:
+        raise SystemExit("power vias: %d of them sit on another net's pad:\n  %s" % (len(_hits), "\n  ".join(_hits[:10])))
+    _pcmod.PowerCopper(board, net_for, P).stitch("VIN_RAW", VIN_VIAS, drill=0.4, width=0.8)
+    print("power copper: %d VIN_RAW power via(s) at the source pad and the block lands" % len(VIN_VIAS))
+
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))

@@ -16,13 +16,23 @@ import intent as _intent
 _intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", loads={"U4": 2.0, "U5": 2.0, "U6": 2.0, "U7": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2}, note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
 _intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", loads={"F1": 10.0}, note="the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)")
 _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5, "C12": 0.5}, note="shore and vehicle input from E6 over the dock, 10 A fuse; the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)")
-_intent.rail("VBUS20", 20.0, 6.0, 8.0, "U2", note="the charge bus, BQ25731 up to 8 A")
+# LOADS DECLARED 13 September 2026. This rail carried none and dc_drop guessed, putting 6 A into U3, whose
+# only pads on this net are the charger's 0.13 and 0.20 mm VBUS SENSE pins. The real path is the whole charge
+# current through R16, the 10 mOhm 2512 input-current shunt, and on into the charger; U3's pins sense the bus
+# and carry nothing. This is the CELL+ defect of 12 September in a second place.
+_intent.rail("VBUS20", 20.0, 6.0, 8.0, "U2", loads={"R16": 6.0}, note="the charge bus, BQ25731 up to 8 A")
 for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, note="one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt")
 _intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "R43", loads={"J_5V_DEV": 3.2}, note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails, or a bank would die with the module it fails away from. The AP64500 is a 5 A part, so the headroom is there; what this declaration buys is that dc_drop judges the copper at the current it now carries.")
-_intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
+# LOADS DECLARED 13 September 2026, apportioning the declared 0.3 A rather than measuring it: this is logic,
+# tens of milliamps a part, and the biggest single draw is the gated 3.3 V leaving on the mezzanine harness.
+_intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03,
+             loads={"J_MEZZ1": 0.10, "U8": 0.03, "U9": 0.03, "U10": 0.03, "U11": 0.03,
+                    "U14": 0.02, "U17": 0.02, "U26": 0.02, "U27": 0.01, "U28": 0.01}, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
 _intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, note="the RA30H1317M1 on the face plate")
-_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "U15", budget=0.03, note="the QMX")
-_intent.rail("+54V_POE", 54.0, 0.3, 0.6, "U16", note="the TPS23861 PSE on B16")
+_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "U15", budget=0.03, loads={"J_HF": 1.0},
+             note="the QMX")   # the whole rail leaves at J_HF for the HF unit in the lid tray
+_intent.rail("+54V_POE", 54.0, 0.3, 0.6, "U16", loads={"J_54V": 0.3},
+             note="the TPS23861 PSE on B16")   # the whole rail leaves at J_54V on the VH lead to B
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers
