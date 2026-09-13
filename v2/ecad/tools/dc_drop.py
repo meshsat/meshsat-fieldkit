@@ -205,13 +205,21 @@ def main(a):
         dT = float(r.get("density_dT", 10.0))
         if dT != 10.0:
             jl = ipc_limit(cell * t_of(worst_l), dT, worst_l not in (pcbnew.F_Cu, pcbnew.B_Cu)) / (cell * t_of(worst_l)) if worst_l is not None else jl
+        # OWNER RULING 19, 13 September 2026 13:00: under 1.1x counts as MET, with the reason recorded here.
+        # The bar is IPC's current for ONE raster cell and it is LENIENT against the whole-track figure at
+        # every width but exactly one cell: +18 percent at 0.4 mm, +21 at 1 mm, +64 at 3 mm, +65 at 0.25,
+        # +94 at 0.2, +98 at 6 mm. A rail 0.6 percent over such a bar is inside the measurement's own
+        # uncertainty, and gating on it spends a board re-cut on noise: that is exactly what A24's three slot
+        # rails were at 83.2 against 82.7. Everything above 1.1x still fails and still gets fixed, which on
+        # A24 is VBAT at 8.2x, VBUS20 at 2.6x, +13V8_PA at 2.1x and VIN_RAW at 1.6x.
+        DENSITY_TOL = 1.1
         drop_ok = pct <= rb
-        dens_ok = (worst_j <= jl) if worst else True
+        dens_ok = (worst_j <= jl * DENSITY_TOL) if worst else True
         verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
         why = "" if verdict == "MET" else (
             " [MISSED on %s]" % (" and ".join(([] if drop_ok else ["the drop"]) + ([] if dens_ok else ["the current density"]))))
         if verdict != "MET": miss += 1
-        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at %.0f K (GATED since owner ruling 16; this per-cell bar is LENIENT against the whole-track IPC figure by 18 to 98 percent over the widths in this design, so an exceedance is a floor)%s; layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, dT, why, share), drop, pct, worst_j, share))
+        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at %.0f K (GATED since owner ruling 16, with ruling 19's 1.1x tolerance; this per-cell bar is LENIENT against the whole-track IPC figure by 18 to 98 percent over the widths in this design, so an exceedance is a floor)%s; layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, dT, why, share), drop, pct, worst_j, share))
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},

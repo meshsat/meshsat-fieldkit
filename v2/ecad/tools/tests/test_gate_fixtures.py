@@ -518,3 +518,25 @@ def t_the_current_density_decides_the_verdict_alongside_the_drop():
     assert "reported, not gated" not in src, "the report still calls the density ungated"
     assert "density_dT" in src, \
         "a rail cannot declare its own temperature rise, so the only way past the gate would be to ignore it"
+
+
+def t_the_density_tolerance_is_ruling_19_and_says_so():
+    """OWNER RULING 19, 13 September 2026: under 1.1x counts as MET, with the reason recorded.
+
+    Ruling 16 made the density a verdict and the gate as first built refused any exceedance at all, which
+    made A24 unable to pass its own gate over three rails sitting 0.6 percent above a bar that my own
+    measurement shows is 18 to 98 percent generous. A tolerance that is not written down alongside the
+    measurement justifying it is the kind of number a later session deletes as unexplained slack, so the rule
+    checks both: the value, and that the file still carries the ruling and the leniency figures behind it.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    m = _re.search(r'DENSITY_TOL\s*=\s*([0-9.]+)', src)
+    assert m, "dc_drop no longer declares a density tolerance"
+    tol = float(m.group(1))
+    assert abs(tol - 1.1) < 1e-9, "the density tolerance is %s where owner ruling 19 says 1.1" % tol
+    assert "RULING 19" in src, "the tolerance does not name the ruling that set it"
+    assert "lenient" in src.lower() and "98 percent" in src, \
+        "the tolerance no longer carries the measurement that justifies it"
+    # and it must still be applied, not merely declared
+    assert _re.search(r'jl\s*\*\s*DENSITY_TOL', src), "the tolerance is declared and not used"
