@@ -6,7 +6,27 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^10k$", "R_0603"): "C25804", (r"^100k$", "R_0603"): "C25803", (r"^1k$", "R_0603"): "C21190", (r"^4\.7k$", "R_0603"): "C23162", (r"^5\.1k$", "R_0603"): "C23186",
  (r"^1\.5k$", "R_0603"): "C22843", (r"^100R$", "R_0603"): "C22775", (r"^22R$", "R_0603"): "C23345", (r"^330R$", "R_0603"): "C23138", (r"^2k$", "R_0603"): "C22975",
  (r"^100n", "C_0603"): "C14663", (r"^22p", "C_0603"): "C1653", (r"^4\.7u$", "C_0603"): "C19666", (r"^4\.7n", "C_0603"): "C53987", (r"^1u$", "C_0603"): "C15849",
- (r"^10u$", "C_0805"): "C15850", (r"^green", "LED_0603"): "C2986059", (r"^red", "LED_0603"): "C2286",
+ (r"^10u$", "C_0805"): "C15850",
+ # BOARD B'S LANDS, 13 September 2026 (MESHSAT-862). B lays its logic decoupling on 0402 and its bulk on
+ # 0805, and this table had a rule for neither, which is most of what its BOM's 44 uncoded lines were: not
+ # missing parts, missing rules. Every code below was read back from JLCPCB's API with its model, package
+ # and stock, and every model encodes the value it is bought for (C0G 180 = 18 pF, X7R 104 = 100 nF).
+ (r"^100n", "C_0402"): "C60474",          # YAGEO CC0402KRX7R7BB104, 15.7 M in stock
+ (r"^18p", "C_0402"): "C106202",          # CC0402JRNPO9BN180, C0G
+ (r"^22p", "C_0402"): "C106203",          # CC0402JRNPO9BN220, C0G
+ (r"^33p", "C_0402"): "C107005",          # CC0402JRNPO9BN330, C0G
+ (r"^47p", "C_0402"): "C60137",           # CC0402JRNPO9BN470, C0G
+ (r"^22u 6\.3V", "C_0805"): "C6119902",   # CGA0805X5R226M6R3MT
+ (r"^1n 2kV", "C_1812"): "C36077",        # 1812B102K202NT, 2 kV: the Bob Smith termination
+ (r"^100n 100V", "C_0805"): "C106243",    # YAGEO CC0805KKX7R0BB104, 100 V
+ # the 0603 resistor values B uses and this table had not met
+ (r"^6\.04k 1%", "R_0603"): "C25977", (r"^75$", "R_0603"): "C4275", (r"^2\.2k$", "R_0603"): "C4190",
+ (r"^26\.7k 1%", "R_0603"): "C22923", (r"^475 1%", "R_0603"): "C137716", (r"^1\.43k 1%", "R_0603"): "C217848",
+ (r"^9\.53k 1%", "R_0603"): "C23127", (r"^90\.9k 1%", "R_0603"): "C2930136", (r"^1M$", "R_0603"): "C22935",
+ (r"^60R4 1%", "R_0603"): "C2933247", (r"^330$", "R_0603"): "C23138", (r"^15k$", "R_0603"): "C22809",
+ (r"^1k \(strap", "R_0603"): "C21190", (r"^20\.0k 1%", "R_0603"): "C4184",
+ (r"^301R 1%", "R_0603"): "C25192",       # the eFuse ILM resistors: TPS2596 equation 7 at 3.0 A
+ (r"^0R 2512", "R_2512"): "C25469",       # 25121WJ0000T4E, the PoE_P link (r"^green", "LED_0603"): "C2986059", (r"^red", "LED_0603"): "C2286",
  (r"^blue", "LED_0603"): "C2288",        # KT-0603B, the blue of the same Hubei KENTO series as the red above
  (r"^amber", "LED_0603"): "C165983",     # BL-HJC36G-AV-TRB 605 nm; JLCPCB stocks no amber in the KENTO series
  (r"^status\b", "LED_0603"): "C2986059",# the bare "status (GPIO25)" rows name no colour: green, like every other indicator
