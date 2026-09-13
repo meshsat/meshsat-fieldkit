@@ -156,3 +156,17 @@ def t_the_barrel_limit_uses_the_wall_and_not_the_hole():
     a_mil2 = wall / (0.0254 ** 2)
     amps = 0.024 * (10.0 ** 0.44) * (a_mil2 ** 0.725)
     assert 0.9 < amps < 1.4, "a 0.4 mm barrel should carry about 1.1 A at 10 K, got %.2f" % amps
+
+
+def t_a_piece_shorter_than_a_conductor_is_reported_and_not_gated():
+    """IPC-2221's curve is the steady-state rise of a LONG trace, where heat has nowhere to go sideways. A
+    segment shorter than its own width is a joint: the copper at both ends conducts its heat away. P3 was
+    being failed on a 0.500 mm segment 0.0 mm long and D10 on one 0.1 mm long, each a router's junction
+    between two pieces that ARE judged."""
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    assert "ln < max(1.0, 2.0 * w)" in src, "a segment shorter than its own width is still judged as a conductor"
+    assert "short.append" in src and "short.sort" in src, "the skipped pieces are not collected"
+    assert "shorter than a conductor were not judged" in src, \
+        "the skipped pieces are not reported, so a real neck could hide in one"
+    i, j = src.find("short.append"), src.find("cond.append((best / lim_a")
+    assert 0 < i < j, "the skip must come before the conductor list, or both lists carry it"
