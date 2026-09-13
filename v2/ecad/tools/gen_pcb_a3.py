@@ -355,11 +355,17 @@ col(vb, qr[0] - 1.9, -11.6, -8.4, 2)
 # B.Cu together carry it with margin.
 vbs = "VBUS20"
 vbr = pads_rect(net_pads(vbs, ["R11", "C13", "C14", "C15"]), 1.4, 1.2)
-PC.island(vbs, "VBUS20 head", rect_pts(vbr), pcbnew.F_Cu, priority=3)
-PC.band(vbs, "VBUS20 head", vbr, (pcbnew.B_Cu,), priority=2)
-row(vbs, vbr[0] + 2.2, vbr[2] - 2.2, (vbr[1] + vbr[3]) / 2, 5)                 # five stitch vias along the head, so the two layers share the current over a front
-_r16 = pads_rect(net_pads(vbs, ["R16"]), 1.2, 1.2); _r16x = (_r16[0] + _r16[2]) / 2
-PC.rail_run(vbs, "VBUS20 to the input shunt", (_r16x, vbr[1] + 0.5), (_r16x, _r16[3] - 0.5), 3.0, (pcbnew.B_Cu,))
+_r16 = pads_rect(net_pads(vbs, ["R16"]), 1.0, 1.0); _r16x = (_r16[0] + _r16[2]) / 2
+# ONE F.Cu island in the shape of the path, and nothing else. The first attempt added a B.Cu band under it
+# with stitch vias along the row, and that bought two hard items and no current: two same-net B.Cu zones at
+# one priority that touch are `zones_intersect`, and a stitch row across a strip of 2512 and 1210 lands has
+# to miss every pad of every OTHER net between them. The island alone is 5.4 mm tall where IPC wants 3.56 mm
+# for 6 A on one outer layer, and the leg to the charger's input shunt is 4.5 mm, so the copper is there
+# without a single via. Every pad of this net joins it solid (RAIL_NETS below).
+_leg = 2.25
+PC.island(vbs, "VBUS20", [(vbr[0], vbr[1]), (_r16x - _leg, vbr[1]), (_r16x - _leg, _r16[1]), (_r16x + _leg, _r16[1]),
+                          (_r16x + _leg, vbr[1]), (vbr[2], vbr[1]), (vbr[2], vbr[3]), (vbr[0], vbr[3])],
+           pcbnew.F_Cu, priority=3)
 # 6. +12V_HF: ALSO NO POWER COPPER, and the whole rail travelled 75.6 mm on one 0.400 mm In3 track, which
 # IPC gives 0.37 A against the rail's 1.0. That is not a marginal number: solving I = k dT^0.44 A^0.725 for
 # the rise gives about 93 K on that track. The band follows the corridor the ROUTER found, which is the
@@ -381,7 +387,8 @@ if NL_CU >= 6:
                              (98.0, _jh[1], _jh[2], _jh[3])],                    # east into J_HF
              pcbnew.In3_Cu, priority=2)
     col(hf, hfr[2] - 0.6, hfr[1] + 1.0, hfr[3] - 1.0, 3)                         # the head island to the band
-    row(hf, _jh[0] + 1.0, _jh[2] - 1.0, (_jh[1] + _jh[3]) / 2, 3)                # and at the connector
+    # NO stitch vias at J_HF: it is a JST-VH, its pins are through-hole and already join every layer, and a
+    # via placed inside its land is `hole_to_hole` against those pins (four of them, first attempt).
 else:
     print("placement: +12V_HF gets NO power copper on a %d layer board (In3 does not exist; In2 would cut the east GND plane and B.Cu would cross the PA band). Its density will read MISSED, which is a real cost of four layers." % NL_CU)
 # every pad of a rail net joins its pour solid (no thermal spokes): a through-hole pin's four spokes are the neck of an 8 A path, and the mesh judge sees them as no connection
