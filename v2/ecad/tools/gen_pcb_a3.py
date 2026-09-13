@@ -363,9 +363,21 @@ _r16 = pads_rect(net_pads(vbs, ["R16"]), 1.0, 1.0); _r16x = (_r16[0] + _r16[2]) 
 # for 6 A on one outer layer, and the leg to the charger's input shunt is 4.5 mm, so the copper is there
 # without a single via. Every pad of this net joins it solid (RAIL_NETS below).
 _leg = 2.25
-PC.island(vbs, "VBUS20", [(vbr[0], vbr[1]), (_r16x - _leg, vbr[1]), (_r16x - _leg, _r16[1]), (_r16x + _leg, _r16[1]),
-                          (_r16x + _leg, vbr[1]), (vbr[2], vbr[1]), (vbr[2], vbr[3]), (vbr[0], vbr[3])],
-           pcbnew.F_Cu, priority=3)
+_vbus_poly = [(vbr[0], vbr[1]), (_r16x - _leg, vbr[1]), (_r16x - _leg, _r16[1]), (_r16x + _leg, _r16[1]),
+              (_r16x + _leg, vbr[1]), (vbr[2], vbr[1]), (vbr[2], vbr[3]), (vbr[0], vbr[3])]
+PC.island(vbs, "VBUS20", _vbus_poly, pcbnew.F_Cu, priority=3)
+# THE F.Cu ISLAND ALONE WAS CUT AND THE CURRENT FOUND AN INNER TRACK. Measured on the first route with this
+# copper: the island fills (208 mm2) and 35 percent of the rail still travels on In2, with 5.36 A in a 1.0 mm
+# inner stub beside U2, because signal tracks crossing the island on F.Cu break it into pieces and an In2
+# track bridges them. It is VBAT's In2 neck in miniature and it has the same two answers, a second layer and
+# a keep-out. The second layer is taken here because the keep-out would have to cover a 31 by 18 mm field of
+# the front end's own gate drives and sense lines: B.Cu carries the same polygon, and the two are tied at the
+# two places the current enters and leaves, inside the shunts' own 2512 lands, where nothing else can be.
+PC.union(vbs, "VBUS20 under", [(vbr[0], vbr[1], vbr[2], vbr[3]), (_r16x - _leg, _r16[1], _r16x + _leg, vbr[3])],
+         pcbnew.B_Cu, priority=2, keepout=False)
+_r11 = pads_rect(net_pads(vbs, ["R11"]), 0)
+col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 0.55, (_r11[1] + _r11[3]) / 2 + 0.55, 2)   # in the ISNS shunt's own pad
+col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 0.55, (_r16[1] + _r16[3]) / 2 + 0.55, 2)                      # and in the charger's input shunt
 # 6. +12V_HF: ALSO NO POWER COPPER, and the whole rail travelled 75.6 mm on one 0.400 mm In3 track, which
 # IPC gives 0.37 A against the rail's 1.0. That is not a marginal number: solving I = k dT^0.44 A^0.725 for
 # the rise gives about 93 K on that track. The band follows the corridor the ROUTER found, which is the
@@ -376,7 +388,10 @@ PC.island(vbs, "VBUS20", [(vbr[0], vbr[1]), (_r16x - _leg, vbr[1]), (_r16x - _le
 # one layer, 32.39). So the four-layer board is generated WITHOUT this copper and says so: its +12V_HF will
 # read MISSED, and that is a true cost of four layers for the layer P0 to carry, not something to hide.
 hf = "+12V_HF"
-hfr = pads_rect(net_pads(hf, ["R65", "C109", "C110", "C111"]), 1.2, 1.2)
+# 0.5 mm of growth, not 1.2: at 1.2 the island reached into the HF stage's own gate drive and the router
+# came back with EIGHT shorting_items between /HF_HDRV1 and /HF_SW1, which are the FET gate and the switch
+# node of this very converter. Power copper that squeezes its own stage's drive is not power copper.
+hfr = pads_rect(net_pads(hf, ["R65", "C109", "C110", "C111"]), 0.5, 0.5)
 PC.island(hf, "HF rail head", rect_pts(hfr), pcbnew.F_Cu, priority=3)
 if NL_CU >= 6:
     _jh = pads_rect(net_pads(hf, ["J_HF"]), 0.8)
