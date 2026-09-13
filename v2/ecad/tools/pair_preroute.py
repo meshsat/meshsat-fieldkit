@@ -18,6 +18,7 @@ turns it off and restores the plain greedy pass; PAIR_RIP_MARGIN, PAIR_RIP_MAX a
 Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
   prints one line per pair and `pair_preroute: N of M pairs laid, R rip-up event(s)`, exit 1 when a pair failed."""
 import sys, os, re, math, json, heapq, time
+import netclass
 
 # ---------------------------------------------------------------- the compiled search needs an interpreter that has numba
 # The corridor search is 13.5x faster compiled (2.26 million expansions a second against 167 thousand; `pairsearch.py bench`),
@@ -796,7 +797,7 @@ def main(a):
     # routed (the hub pin to its series resistor, D's last open) must be in the report (11 September 2026).
     _POS0 = {f_.GetReference(): (f_.GetPosition().x, f_.GetPosition().y) for f_ in b.GetFootprints()}
     def cls_of(n):
-        c = assign.get(n) or assign.get("/" + n.lstrip("/")) or assign.get(n.lstrip("/")); return (c[0] if isinstance(c, list) and c else c) or "Default"
+        return netclass.class_of(assign, n, "Default")   # KiCad 9 stores the assignment as a list of class names
     want_classes = set(a[a.index("--classes") + 1].split(",")) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
     layers = [_ALL[x] for x in (a[a.index("--layers") + 1].split(",") if "--layers" in a else os.environ.get("PAIR_LAYERS", "F.Cu,B.Cu").split(",")) if x in _ALL]
     # the hop layers carry only the dives and the stubs' hops, never a corridor run: on the 7628 four-layer stack a 0.30/0.20 pair on In2 reads 137 ohm

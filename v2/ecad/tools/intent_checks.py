@@ -10,6 +10,7 @@
 A board without an intent file is a FAIL (fail closed). Denominators print on every summary line.
 Used as a module by the check_pcb_*.py gates: intent_checks.run(board, check)  or standalone: intent_checks.py <board.kicad_pcb>."""
 import sys, os, math, json
+import netclass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pcbnew, intent
 
@@ -20,9 +21,7 @@ def run(b, check, path=None):
     if not it: check(False, "intent file present (out/<stem>-intent.json from the schematic generator)"); return "intent_checks: no intent file, nothing checked"
     pro = os.path.splitext(path)[0] + ".kicad_pro"; assign = {}
     if os.path.exists(pro): assign = json.load(open(pro)).get("net_settings", {}).get("netclass_assignments", {})
-    def cls_of(net):
-        c = assign.get(net) or assign.get("/" + net.lstrip("/")) or assign.get(net.lstrip("/")) or "Default"
-        return c[0] if isinstance(c, list) and c else (c if isinstance(c, str) else "Default")   # KiCad 9 stores the assignment as a list of class names
+    def cls_of(net): return netclass.class_of(assign, net, "Default")   # KiCad 9 stores the assignment as a list of class names
     targets = {k for k, v in it.get("pair_classes", {}).items() if v}
     cu = list(b.GetEnabledLayers().CuStack())   # KiCad 9: F.Cu 0, In1.Cu 4, In2.Cu 6, ..., B.Cu 2; the stack in order
     if not it.get("rails") and not it.get("bypass") and not it.get("pair_classes"): check(False, "intent file carries at least one rail, bypass entry or pair class (an empty file is not a pass)")

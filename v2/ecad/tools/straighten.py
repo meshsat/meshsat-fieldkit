@@ -10,6 +10,7 @@ A junction point is busy when a via lies within its radius of it or a pad covers
 The pass works on a by-value model of the tracks and applies the result by UUID in one sweep (SWIG proxies die after Remove: the pattern of
 cleanup_dangling.py). Prints a summary line with denominators; quality_pass.sh requires that line. Usage: straighten.py <board> [--out other] [--no-shortcut]"""
 import sys, math, json, os, fnmatch, pcbnew
+import netclass
 from pcbnew import VECTOR2I
 
 SNAP = 0.05
@@ -35,7 +36,10 @@ if os.path.exists(pro):
             for pat, c in pats:
                 if fnmatch.fnmatch(nm, pat) or fnmatch.fnmatch(nm.lstrip("/"), pat): _c = c; break
         if _c is not None:
-            clear[ni.GetNetCode()] = cls.get(_c, default_clear)
+            # 13 September 2026: this was `cls.get(_c, ...)` and _c is a LIST in KiCad 9's project format, so
+            # this line raised `TypeError: unhashable type: 'list'` and the whole straighten stage had never run
+            # on board C. netclass.class_of is the one answer to what class a net is in.
+            clear[ni.GetNetCode()] = cls.get(netclass.class_of({nm: _c}, nm), default_clear)
             if _c in _pairc: PAIR_NETS.add(ni.GetNetCode())
 print("straighten: %d net(s) of a differential pair class are left alone" % len(PAIR_NETS))
 
