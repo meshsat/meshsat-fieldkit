@@ -6222,3 +6222,71 @@ literal went stale within the hour, when A24 was re-cut.
 twelve are power nets**, where D reached 0 and 0 at 0.5 mm; an arm at the old width is running to prove the
 width is the cause. C10 is **0 hard and one unrouted**, its best ever, and that connection needs an escape or a
 placement change at U3 pad 10 rather than a closure. B is held by owner decision 13.
+
+### 32.153 Board B's placed board reads hard 0, and its pair count did not move (13 September 2026, 02:10 CEST; MESHSAT-862)
+
+**B19's placed board carried 150 hard DRC violations on 12 September and now carries none.** Owner decision
+13 released B's seven overflowing packer regions to the session, one at a time; with them resized and the
+placement corrected, `hardset` on the placed board (md5 of its DRC 877402828d86af88) reads **hard 0 of the
+fifteen types, 499 unrouted**, against the 12 September baseline of clearance 53, shorting_items 44,
+solder_mask_bridge 25, hole_clearance 19 and copper_edge_clearance 9. What is left on that board is the soft
+set and nothing else: 199 `via_dangling` (the escape stubs, which is what an unrouted board looks like), 69
+`silk_overlap`, 47 `silk_over_copper` and 9 `silk_edge_clearance`.
+
+**The pair count on the new, legal placement is 37 of 113: DIFF100 20 of 48 and USB 17 of 65.** That is the
+number to keep, because it is the first B pair measurement taken on a board that is legal before the pairs are
+laid. It is also, to the pair, **the same 37 of 113 the record already carried** from 12 September, when the
+board underneath it had 150 hard violations.
+
+**Which settles something worth stating plainly: the 150 violations were not what was stopping the pairs.**
+They were real and they had to go, since a board that is illegal before it is routed cannot be ordered
+whatever its pair count, and the pre-router had been searching in that neighbourhood since 9 September. But
+the wall is where 32.146 measured it, at the stations: 30 of 46 leg refusals within 2 mm of one of the pair's
+own pads, and a straight entry run that no corridor search can move. B is still held by the pair ruling, now
+with a clean board under the hold.
+
+### 32.154 A routeflow run whose tools and its board came from different trees, and it produced a number (13 September 2026, 02:20 CEST; MESHSAT-862)
+
+**Every routeflow profile pins `repo`, and `run` reads that key in preference to the directory the command was
+given in.** That is right for a production run and silently wrong for a measurement. Owner ruling 9's cost had
+to be measured at the old 0.5 mm width, so the tree was copied to `/root/d05_ecad`, ONE number was patched in
+`gen_pcb_d3.py`, and `python3 tools/routeflow.py run tools/routeflow/d9.json` was run inside the copy. The
+pinned repo sent every stage to the box clone instead: the chain regenerated and routed the **production**
+board with the **production** tools, overwrote a committed phase board on the way, and was ten minutes from
+reporting an open count that the arm's patch had never touched.
+
+**This is the shape of three of the four agentic nulls of 11 September (32.149): a result identical to the
+baseline is indistinguishable from an honest answer.** It was caught by reading which directory the router
+process was actually working in, not by anything in the tool.
+
+**Closed mechanically.** `routeflow.one_tree()` refuses when the routeflow.py that is executing is not the
+tools directory beside the project its stages will call. The test is structural and carries no assumption
+about the layout: every stage calls `./tools/finish.sh` from the ECAD directory or `../tools/full_*.sh` from
+the project, so the executing routeflow must BE one of those tools. An isolated copy stays a first-class way
+to measure, which is what `routeflow/cloud/iso_chain.sh` is built on; copy the profile too and point its
+`repo` at the copy. `validate` reports the same property, judged only where the pinned repo exists, because
+on the runner a box path is simply absent and that says nothing about the profile. Two rules in
+`tests/test_driver_hygiene.py`, both proved to fail on the pre-fix tree.
+
+The phase directory was restored with `git checkout origin/main -- <the four board files>` and its board's
+sha256 verified against `origin/main` (6a1cb1873c3973e6) before anything else ran.
+
+### 32.155 Two fabrication claims in every order note were constants, and both were wrong on a board in the tree (13 September 2026, 02:35 CEST; MESHSAT-862)
+
+`export_jlc.sh` writes each board's `README-fab.txt`, the note the fab reads. Two of its lines asserted
+fabrication properties instead of reading them.
+
+**The stackup was named only when the board had four layers.** So A24 and B16, which are built on
+JLC06161H-3313, went out asking JLCPCB to *"tune for 90 ohm differential on the 7628 stackup"*, a stack they
+are not on, and their six-layer stackup was named nowhere in the note.
+
+**The copper weight was the literal string "1 oz".** Owner ruling 7 of 12 September contradicts that for P
+and E5: both are ordered at 2 oz, both carry 0.070 mm of copper in their own stackup block where
+`stackup_write.py` put it, and `dc_drop` has judged them against it since. The note the fab reads said 1 oz.
+
+**Both are read off the board file now**, so the note is a measurement of the file the fab receives and
+cannot drift from a stackup decision again; the stackup itself is untouched and stays the owner's. Read back
+on the tree: **A24 six layers JLC06161H-3313 1 oz, D10 and E7 four layers JLC04161H-7628 1 oz, P3 and E5 two
+layers 2 oz.** A board file carrying no stackup block says so plainly rather than inheriting the old claim:
+`full.sh` writes a stackup into every board it generates, so that fallback fires only on a folder cut before
+8 September, which is C7 alone. One rule in `tests/test_order_codes.py`, proved to fail on the pre-fix tree.
