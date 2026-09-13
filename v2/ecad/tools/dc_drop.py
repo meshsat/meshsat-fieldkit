@@ -75,11 +75,12 @@ def main(a):
                     for k in range(0, len(xin) - 1, 2):
                         for gx in range(max(0, int((xin[k] - x0) / cell)), min(nx, int((xin[k + 1] - x0) / cell) + 1)): occ[L][gy, gx] = value
         raster_note = []
+        zone_occ = {L: np.zeros((ny, nx), dtype=bool) for L in cu_layers}   # cells a POUR or a pad of this net fills
         for z in b.Zones():
             if z.GetIsRuleArea() or z.GetNetname() not in netnames or z.GetFilledArea() <= 0: continue
             L = z.GetFirstLayer()
             if L in occ:
-                before = int(occ[L].sum()); mark(L, z.GetFilledPolysList(L)); raster_note.append("%s %.0f of %.0f mm2" % (z.GetZoneName()[:18], (int(occ[L].sum()) - before) * cell * cell, z.GetFilledArea() / 1e12))
+                before = int(occ[L].sum()); mark(L, z.GetFilledPolysList(L)); zone_occ[L] |= occ[L]; raster_note.append("%s %.0f of %.0f mm2" % (z.GetZoneName()[:18], (int(occ[L].sum()) - before) * cell * cell, z.GetFilledArea() / 1e12))
         vias = []
         # OWNER RULING 22, 13 September 2026: the per-cell density does not converge for copper narrower than
         # a cell (32.162: the verdict moved 41 to 56 percent between a 0.50 and a 0.25 mm cell, and CELL+
@@ -129,7 +130,13 @@ def main(a):
         if N == 0: results.append((net, "UNRESOLVED", "no copper of this net", 0, 0, 0, {})); miss += 1; continue
         rows = []; cols = []; vals = []
         def add(i, j, g): rows.extend([i, j, i, j]); cols.extend([i, j, j, i]); vals.extend([g, g, -g, -g])
-        for L in occ: frac[L][occ[L] & (frac[L] == 0.0)] = 1.0   # pour and pad copper fills its cell; a track set its own
+        # 13 September 2026: a cell a POUR fills is full copper even where a track crosses it. This line used
+        # to fill only cells whose fraction was still zero, so a track lying INSIDE its own rail's island was
+        # modelled as a bare 0.4 mm conductor with the island's copper thrown away, and the conductor pass
+        # then judged it carrying current the island was really sharing. A24's +5V_S1 and +5V_S3 read exactly
+        # 1.00 that way, on 4.9 mm of track that sits inside an 84 mm2 island of their own net.
+        for L in occ: frac[L][zone_occ[L]] = 1.0
+        for L in occ: frac[L][occ[L] & (frac[L] == 0.0)] = 1.0   # pad copper fills its cell; a track set its own
         for (L, gy, gx), i in index.items():
             g = 1.0 / sheet(t_of(L)); f_i = frac[L][gy, gx] or 1.0
             for dy, dx in ((0, 1), (1, 0)):
@@ -280,6 +287,11 @@ def main(a):
                 seen.add((gy, gx))
                 nd = index.get((L, gy, gx))
                 if nd is None: continue
+                # A track inside a filled pour of its OWN net is not a lone conductor: the pour is beside it
+                # carrying the same current, and the pour is judged by the cell measure at those very cells.
+                # Judging such a stretch on the track's own width counts the copper once and asks it to carry
+                # everything. Only the stretches out in the open are judged here.
+                if zone_occ[L][gy, gx]: continue
                 f_i = frac[L][gy, gx] or 1.0
                 comp = []
                 for dy, dx in ((0, 1), (1, 0)):

@@ -118,3 +118,16 @@ def t_an_impossible_conductor_current_is_not_judged():
     assert '_clamped' in src and 'min(c[2], amps)' in src, "a small excess is not clamped to what the rail can supply"
     assert '"UNMEASURED"' in src
     assert '("UNDECLARED", "UNMEASURED")' in src, "an unmeasured rail does not reach the board's inconclusive verdict"
+
+
+def t_a_pour_cell_is_full_copper_even_where_a_track_crosses_it():
+    """A24's +5V_S1 and +5V_S3 read exactly 1.00 on 4.9 mm of track that lies INSIDE an 84 mm2 island of
+    their own net. The mesh was giving that cell the track's fraction and throwing the island away, and then
+    the conductor pass asked the track to carry what the island was sharing."""
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    assert "zone_occ" in src, "the raster does not record which cells a pour fills"
+    assert "frac[L][zone_occ[L]] = 1.0" in src, "a cell a pour fills is still modelled as a bare track"
+    assert "if zone_occ[L][gy, gx]: continue" in src, \
+        "the conductor pass still judges a track stretch that lies inside a pour of its own net"
+    i = src.find("zone_occ[L] |= occ[L]")
+    assert i > 0, "the zone mask is never filled from the zone raster"
