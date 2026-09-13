@@ -6290,3 +6290,53 @@ on the tree: **A24 six layers JLC06161H-3313 1 oz, D10 and E7 four layers JLC041
 layers 2 oz.** A board file carrying no stackup block says so plainly rather than inheriting the old claim:
 `full.sh` writes a stackup into every board it generates, so that fallback fires only on a folder cut before
 8 September, which is C7 alone. One rule in `tests/test_order_codes.py`, proved to fail on the pre-fix tree.
+
+### 32.156 The stub router's class lookup was dead twice over, and a closure has been laid at 0.25 mm all week (13 September 2026, 03:20 CEST; MESHSAT-862)
+
+**Found by fixing something else.** `straighten.py` crashed on board C with `TypeError: unhashable type:
+'list'`, because KiCad 9 writes `net_settings.netclass_assignments` as a map from net name to a LIST of class
+names and the tool used that value as a dict key. Its whole straighten stage had never run on C: C10's quality
+pass reports "straighten+via_merge FAILED" and "straighten only FAILED" and accepted `via_merge` alone.
+
+**Five tools read that map and they did not agree about it.** Three carried the same three-line expression with
+the same comment, written three times; `straighten.py` crashed on it; and `stub_router.py` compared the value
+with a class NAME, which a list never equals. `netclass.py` is the one answer now, in the shape `hardset.py`
+has for the hard DRC set, and a rule forbids any tool from touching the map directly, because the first patch
+fixed `straighten`'s dict-key use and left the identical list-against-a-set four lines below. **A defect with
+two use sites is normalised where the value is FETCHED, not repaired at each use.**
+
+**Then the stub router turned out to be worse than a wrong comparison.** It reads the class twice, from pcbnew
+and from the project file. On KiCad 9 `netobj.GetNetClass()` returns a bare SwigPyObject whose
+`GetTrackWidth()` raises `AttributeError`, and **the project-file fallback, written on 7 September precisely to
+repair that, was nested INSIDE the same `try`, after the raising line.** So the exception jumped past it every
+time and neither lookup has ever produced a class. **Every stub closure since has been laid at the default
+0.25 mm track with a 0.6/0.3 mm via, whatever the net's class declared.** The width was never printed, which
+is how it survived.
+
+**A fallback inside the `try` of the thing it is a fallback for is not a fallback.** The rule that holds this
+reads the file's syntax tree rather than its text and requires the two lookups to be separate statements.
+
+**Measured on C10's routed board.** `/+3V3` is class RAIL, 0.5 mm wide with a 0.8/0.4 mm via. With both
+lookups alive the stub router reports `class RAIL, track 0.500 mm, via 0.80/0.40 mm` and **refuses the
+closure**, where at 0.25 mm and 0.6/0.3 it had made it: **C10 is two connections open at its own class width,
+not one**, and `/+3V3` at U3 pad 10 is confirmed as a placement problem rather than a closure one. `straighten`
+now runs on that board for the first time: **segments 4,028 to 3,921, 106 shortcuts and one merge**, length
+29,384 mm, hard 0 before and after and unrouted unchanged.
+
+### 32.157 What owner ruling 9 costs board D, measured through the launcher the deliverable is cut with (13 September 2026, 03:10 CEST; MESHSAT-862)
+
+| D, same placement chain, same router call, 100 passes, In1 power layer, GND plane | hard | by type | unrouted | vias | route |
+|---|---:|---|---:|---:|---|
+| PWR class 0.5 mm | **0** | none | **5** | 174 | 3 min |
+| PWR class 1.2 mm (the ruling) | **9** | clearance 2, shorting_items 6, solder_mask_bridge 1 | **11** | 192 | about 40 min |
+
+**The width costs six connections and nine hard violations**, where the 12 September pair reported 27
+connections. Both pairs are internally honest with one variable each; what differs ACROSS them is the
+launcher, which is a third variable. The earlier pair ran `route_pcb.sh`, which routes in place and does not
+ask for the per-pass session; this pair ran `route_parallel.sh` into `route_one.sh`, which asks for a session
+every pass and imports the best, and that is the path the deliverable is cut through. **The nine hard items are
+information no earlier arm reported: at 1.2 mm the rail copper does not merely fail to close, it collides.**
+
+**And the first attempt at this measurement measured the wrong board entirely**, which is 32.154: it went
+through routeflow, whose profile pins `repo`, so the chain regenerated and routed the production board with
+the production tools while the arm's patched generator sat unused in a copy.

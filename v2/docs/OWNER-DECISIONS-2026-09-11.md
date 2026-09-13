@@ -666,3 +666,55 @@ without a new one.
 - **8** is a change to the never-auto floor itself, not a one-off. `reserved.json`'s order class records it:
   the prose rows of `make_handoff.py` are off the floor, and `EXCLUDE`, `JLC_ROT`, `export_jlc.sh` and the cart
   are still on it. **The rule that nothing is ordered without the owner is untouched.**
+
+---
+
+## Decision 9, the cost re-measured on the production router path (13 September 2026, 03:10 CEST)
+
+**You ruled to keep the 1.2 mm PWR class and rearrange D's parts, and that ruling stands. What follows is the
+number it was ruled against, corrected, because it was measured through the wrong launcher.**
+
+The 27 connections came from a pair of arms that both ran `route_pcb.sh`. That launcher routes in place and
+does not ask for the per-pass session, so a capped run keeps whatever the last write left; the production
+route runs `route_parallel.sh` into `route_one.sh`, which asks for a session every pass and imports the best
+one. **Both pairs are internally honest, one variable each. They disagree about the size of the effect and
+agree about its sign.** The pair below is the one that describes what the board will actually do, because it
+is the path the deliverable is cut through.
+
+| D, same placement chain, same router call, 100 passes, In1 as power layer, GND as a plane | hard | by type | unrouted | vias | route |
+|---|---:|---|---:|---:|---|
+| PWR class **0.5 mm** | **0** | none | **5** | 174 | 3 min |
+| PWR class **1.2 mm** (your ruling) | **9** | clearance 2, shorting_items 6, solder_mask_bridge 1 | **11** | 192 | about 40 min |
+| the same two through `route_pcb.sh`, 12 September | 0 / not read | | 105 / 132 | | |
+
+**So the width costs six connections and nine hard violations, not twenty-seven connections.** The nine are
+new information that no earlier arm reported: at 1.2 mm the rail tracks do not merely fail to close, they
+**collide**, which is what `shorting_items 6` and `clearance 2` are. The route also takes about thirteen times
+as long, which is the same congestion showing up as time.
+
+**This does not change your ruling and it makes it cheaper than you were told.** Six connections and nine
+collisions is half a day of floor plan, which is what option A was costed at. It does sharpen what the
+placement pass has to achieve: it is not only opening six paths, it is giving the 1.2 mm copper somewhere to
+run where it is not already touching something else.
+
+**What I got wrong and how:** I compared today's 0.5 mm arm against the record's 27 and reported a
+contradiction before checking that the earlier pair used a different launcher. The launcher is a third
+variable across the two pairs, not within either. Both numbers stay on the record with their launcher named.
+
+## Board C's last connection is narrower than its own class, and at the class width it does not close (13 September 2026, 03:20 CEST)
+
+**Not a decision yet, a measurement you should have before C is finished.** `stub_router.py` had two class
+lookups and both were dead: `netobj.GetNetClass()` raises on KiCad 9, and the project-file fallback written on
+7 September to repair that was nested inside the same `try`, after the raising line, so it never ran on any
+board. Every stub closure since has been laid at the default **0.25 mm** with a 0.6/0.3 mm via, whatever the
+net's class asked for.
+
+**On C that matters.** `/+3V3` is in class RAIL, whose width is **0.5 mm** and whose via is 0.8/0.4 mm. C10's
+recorded "0 hard, 1 unrouted", its best result ever, was reached by closing `/+3V3` at **half its class
+width**. With both lookups alive the same closure is refused: the 0.5 mm track and the 0.8 mm via do not fit
+where the 0.25 mm track and the 0.6 mm via did.
+
+**So C10 is two connections open at the width its own class declares, not one.** That is consistent with what
+the record already suspected about this board: `/+3V3` at U3 pad 10 is a **placement** problem, not a closure
+one. Nothing is decided here and C's regions stay on the never-auto floor; when C comes up, the question will
+be whether to give U3 room or to declare the rail narrower, and the second is a class change, which is yours.
