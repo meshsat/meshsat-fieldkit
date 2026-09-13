@@ -169,7 +169,7 @@ for zr, label in ((FRONT_ZONE, "FRONT END: LM5176 9-36 V -> 20 V BUS"), (CHARGER
                   (CTRL_ZONE, "CONTROL: LTC2954, EXPANDERS, EMCON GATES"), (MID_ZONE, "3.3 V BUCK, CONTROL PASSIVES"), (TP_ZONE, "TEST POINTS"), (NE_ZONE, "USB-C PD OUTLET + EFUSES (MONITOR, HEATER, D8)"), (EAST_STRIP, "LEAD CONNECTORS")):
     rect(zr, pcbnew.Dwgs_User, 0.15); text(label, (zr[0] + zr[2]) / 2, zr[3] + 1.8, pcbnew.Dwgs_User, 0.9, 0.16)
 rect(DOCK_BLOCK, pcbnew.Dwgs_User, 0.15); text("DOCK BLOCK (underside): J_DOCK 2x6 + 9 A pins + pre-charge pin, land on E6's block", (DOCK_BLOCK[0] + DOCK_BLOCK[2]) / 2, DOCK_BLOCK[1] - 1.8, pcbnew.Dwgs_User, 0.9, 0.16)
-text("BB-2590/U PACK IN ITS CRADLE WEST OF THIS BOARD (32.49 item 12), ITS CABLE INTO E6, THE NODE OVER THE DOCK PINS", -60.0, -79.0, pcbnew.F_SilkS, 1.0, 0.16)
+text("4S SMART PACK IN ITS CRADLE WEST OF THIS BOARD (32.62), ITS CABLE INTO E7, THE NODE OVER THE DOCK PINS", -60.0, -79.0, pcbnew.F_SilkS, 1.0, 0.16)
 for x, nm in zip(RF_X, RF_NAMES):
     circle(x, RF_Y, 12.0, pcbnew.Dwgs_User, 0.1); circle(x, RF_Y, 8.3, pcbnew.B_SilkS, 0.12)
     text("BM %s" % nm, x, RF_Y - 8.0, pcbnew.B_SilkS, 0.9, 0.16, mirror=True); text("SMA %s" % nm, x, RF_JY + 6.0, pcbnew.F_SilkS, 0.85, 0.15)
