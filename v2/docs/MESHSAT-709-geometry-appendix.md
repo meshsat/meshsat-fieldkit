@@ -6723,3 +6723,80 @@ cannot see it. `tools/tests/test_import_before_use.py` walks every tool's module
 before the import that binds it, with the scope stated in the file: a name inside a function body is bound by
 the time that function runs, and an import nested in an `if` binds from its own line, which is how
 `escape_prune.py` legitimately imports `os` inside the branch that uses it.
+
+### 32.167 A comment that ate the code after it, three times in one sitting and once already in the tree (13 September 2026, 15:35 CEST; MESHSAT-862)
+
+Section 8 of the handover has carried this warning since 5 September, when `# ...` appended after
+`ina219("U14", ...)` swallowed the two `c()` calls sharing that line and the generator died at layout while
+the chain quietly rebuilt from the previous schematic. **It happened three more times today, in my own edits**,
+and the third time was not a syntax error: the eaten code sat after a semicolon, so the line still PARSED.
+`python3 -W error -c compile(...)`, which every chain gates on, was happy. So was `ast.parse`. The generator
+ran to `KeyError: 'C12'` at layout, 300 lines later.
+
+**Looking for the shape mechanically then found it already in the tree, on three boards:**
+
+```
+nu = pcbnew.NETCLASS("USB"); cls(nu, ...); nu.SetDiffPairGap(FromMM(0.2))   # ... ; ns.SetNetclass("USB", nu)
+```
+
+in `gen_pcb_c3.py`, `gen_pcb_d3.py` and `gen_pcb_e3.py` alike. **The USB net class was built and configured on
+C, D and E and never registered with the board's net settings.** Nothing had failed, because the project JSON
+writes the four classes too and that is the copy the tools read (32.39: the KiCad 9 API does not expose net
+classes, so `escape.py` reads the `.kicad_pro`), but the board's own copy carried three classes where the
+design names four, and any reader trusting the board would have given every USB net the Default 0.25 mm.
+
+**The rule is `tools/tests/test_swallowed_code.py` and its scope is what makes it usable.** A comment that
+FOLLOWS CODE on its line may not contain a call with a quoted argument, because prose does not write `foo("`;
+a comment on a line of its own may quote code freely, which is how the eight comments in this tree that
+mention `idc("2x10")` or `cl.get("via_diameter")` stay legal, and it is also the fix, since a trailing comment
+that needs to name code goes on its own line. Beside it the defect is asserted directly from the AST: a net
+class that is built is registered. Both fail on the tree they were written against.
+
+### 32.168 Board B's BOM, and the two defects behind its uncoded lines (13 September 2026, 15:40 CEST; MESHSAT-862)
+
+Exported from the board that exists rather than from the 8 September B16 quote folder: **215 lines, 67 without
+a code, 23 of those allow-listed and 44 needing one.** The record's reading of the 79 blanks holds: they were
+largely a stale export.
+
+**Most of the 44 were not missing parts, they were missing RULES.** B lays its logic decoupling on **0402** and
+its bulk on **0805**, and the fill table had a rule for neither; several of its values carry trailing prose
+that the anchored patterns cannot match (`1k (strap ...)` against `^1k$`). Every code added was read back from
+JLCPCB's API with its model, package and stock, and every model encodes the value it is bought for: C0G 180 is
+18 pF, X7R 104 is 100 nF, `0603WAF9531` is 9.53k. That is the 12 September rule applied, look it up by MODEL
+and never by the words of the search.
+
+**Two real defects were behind them.**
+
+- **Two resistors carried a CURRENT as their value.** U23's and U24's eFuse current-limit resistors read
+  `3.0 A (ILM)`, so their BOM line named an ampere and no resistance and nothing could buy them. It is the
+  defect A24 fixed on 12 September, still sitting on B. TPS2596 equation 7: 903 / (3.0 + 0.0112) = 299.9 ohm,
+  so **301R 1%**, with the current kept in the note.
+- **C35 was a part nobody sells**, in the shape of owner ruling 10's twenty-five capacitors: **10 uF 100 V in
+  an 1812 land**, where JLCPCB's only exact match reads stock ZERO and everything else in 1812 at 100 V tops
+  out at 2.2 uF. It exists in the **smaller 1210** land: Murata GRM32EC72A106KE05L, X7S, 243,928 in stock. The
+  land changes and the value does not, so this needed no ruling: the 54 V rail still gets its 10 uF at 100 V,
+  in less board area than before.
+
+BT1's Keystone 3034 is hand-fit with a purchase route, JLCPCB stocking no CR2032 holder at all (its own two
+read zero). Two allow lines that covered nothing are gone, which is what `lcsc_fill`'s stale-line check is
+for, and **the phase copy's allow file matching the project's is what caught the edit going to one and not the
+other**.
+
+### 32.169 D's class width measured at three widths through one invocation (13 September 2026, 15:42 CEST; MESHSAT-862)
+
+Decision 23 asks the owner to look again at ruling 9 with a number that did not exist when it was ruled: with
+the rail's loads declared, **the worst single piece of copper on `+5V_D8` carries 0.53 A and not the rail's
+whole 1.0**, which IPC-2221 gives **0.65 mm** on 0.5 oz inner copper rather than 1.56.
+
+| PWR class | hard | unrouted | vias | pads narrower than it |
+|---|---:|---:|---:|---|
+| 0.50 mm (today) | 1 (one clearance) | 2 | 171 | 16 of 230, on 4 parts |
+| **0.70 mm** | **0** | **4** | 187 | **70 of 230, on 31 parts** |
+| 1.20 mm (ruled) | 9 | 11 | 192 | 191 of 230, on 124 parts |
+
+**The first 0.70 arm was withdrawn before it was used.** It came back hard 0 with 121 unrouted and FOUR vias,
+and the cause was the arm rather than the width: it set neither `FR_POWER_LAYERS` nor `FR_PLANE_NETS`, which
+D's own route profile declares as `In1.Cu` and `GND`, so every ground pin went into the wire list at the class
+width instead of being reached by vias through a plane. That is a second variable, and it is the 11 September
+lesson again: **a launcher difference is a variable**, and the pair of numbers is the only comparison either
+supports. Both widths were run again through one identical script.
