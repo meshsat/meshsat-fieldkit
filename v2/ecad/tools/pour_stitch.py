@@ -9,13 +9,14 @@ For each island without a via of its net, the pass picks the point inside it fur
 locked via there, refills and re-reads the board, and keeps the via only if the hard count does not rise, the way
 stub_accept.py keeps the stub router's closures. Islands too small or too crowded for a via are named and left.
 
-Usage: pour_stitch.py <board.kicad_pcb> [--nets=GND,+3V3] [--min-area=1.0] [--via=0.6/0.3] [--dry]   (every option takes its value after an `=`)"""
+Usage: pour_stitch.py <board.kicad_pcb> [--nets=GND,+3V3] [--min-area=1.0] [--via=0.6/0.3] [--spots=6] [--dry]   (every option takes its value after an `=`)"""
 import sys, os, re, math, json, subprocess, pcbnew
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import boardorder
 
 bp = sys.argv[1]
+SPOTS = int(next((a.split("=", 1)[1] for a in sys.argv[2:] if a.startswith("--spots=")), 6))   # how many candidate points an island is given before it is left
 nets = set((next((a.split("=",1)[1] for a in sys.argv[2:] if a.startswith("--nets=")), None) or "GND").split(","))
 min_area = float(next((a.split("=",1)[1] for a in sys.argv[2:] if a.startswith("--min-area=")), 1.0))
 opt = next((a.split("=",1)[1] for a in sys.argv[2:] if a.startswith("--via=")), None)
@@ -91,7 +92,7 @@ for z in boardorder.zones(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its 
             o = fp.Outline(i); area = o.Area() / 1e12
             if area < min_area: continue
             if any(t.GetClass() == "PCB_VIA" and t.GetNetname() == z.GetNetname() and o.PointInside(t.GetPosition()) for t in b.GetTracks()): continue
-            bb = o.BBox(); best = None
+            bb = o.BBox(); pts = []
             x0, x1, y0, y1 = mm(bb.GetLeft()), mm(bb.GetRight()), mm(bb.GetTop()), mm(bb.GetBottom())
             step = max(0.25, min(1.0, (x1 - x0 + y1 - y0) / 60))
             yy = y0
@@ -99,23 +100,40 @@ for z in boardorder.zones(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its 
                 xx = x0
                 while xx <= x1:
                     if o.PointInside(pcbnew.VECTOR2I(pcbnew.FromMM(xx), pcbnew.FromMM(yy))):
-                        d = clearance_at(xx, yy, ka)
-                        if best is None or d > best[0]: best = (d, xx, yy)
+                        pts.append((clearance_at(xx, yy, ka), xx, yy))
                     xx += step
                 yy += step
-            cands.append((area, b.GetLayerName(L), best, z.GetNet(), z.GetNetname()))
+            # 13 September 2026: KEEP THE SPOTS, NOT THE SPOT. One candidate per island meant that when the
+            # clearest point was still illegal the island was abandoned, and E8's last open connection was
+            # exactly that: a 13.4 mm2 GND island in the sensor-header field whose clearest point sits between
+            # J_LTG's own pins, where a via is a hole-clearance violation. The next spot down the list is
+            # usually fine, and every one of them is judged by the same DRC the first was.
+            pts.sort(reverse=True)
+            spots = []
+            for _d, _x, _y in pts:                      # the clearest few, spread out: near-identical points answer the same way
+                if all((_x - sx) ** 2 + (_y - sy) ** 2 > 1.0 for _, sx, sy in spots): spots.append((_d, _x, _y))
+                if len(spots) >= SPOTS: break
+            cands.append((area, b.GetLayerName(L), spots, z.GetNet(), z.GetNetname()))
 placed = 0; left = 0
-for area, lname, best, netobj, netname in sorted(cands, key=lambda c: -c[0]):
-    if best is None or best[0] < VD / 2 + 0.2:
-        print("pour_stitch: %s island of %.1f mm2 on %s has no room for a via (clearest point %.2f mm)" % (netname, area, lname, best[0] if best else -1)); left += 1; continue
-    v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(best[1]), pcbnew.FromMM(best[2])))
-    v.SetWidth(pcbnew.FromMM(VD)); v.SetDrill(pcbnew.FromMM(VDR)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
-    v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(netobj); v.SetLocked(True); b.Add(v)
-    st = measure()
-    if st[0] > cur[0]:
-        b.Remove(v); print("pour_stitch: the via for the %.1f mm2 island at %.2f,%.2f raised hard %d -> %d, taken out" % (area, best[1], best[2], cur[0], st[0])); left += 1; continue
-    print("pour_stitch: %.1f mm2 %s island on %s stitched at %.2f, %.2f (clearest %.2f mm); unrouted %d -> %d" % (area, netname, lname, best[1], best[2], best[0], cur[1], st[1]))
-    cur = st; placed += 1
+for area, lname, spots, netobj, netname in sorted(cands, key=lambda c: -c[0]):
+    spots = [sp for sp in (spots or []) if sp[0] >= VD / 2 + 0.2]
+    if not spots:
+        print("pour_stitch: %s island of %.1f mm2 on %s has no room for a via (clearest point %.2f mm)" % (netname, area, lname, -1)); left += 1; continue
+    done = False
+    for _try, (_d, _x, _y) in enumerate(spots):
+        v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(_x), pcbnew.FromMM(_y)))
+        v.SetWidth(pcbnew.FromMM(VD)); v.SetDrill(pcbnew.FromMM(VDR)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
+        v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(netobj); v.SetLocked(True); b.Add(v)
+        st = measure()
+        if st[0] > cur[0]:
+            b.Remove(v)
+            print("pour_stitch: the via for the %.1f mm2 island at %.2f,%.2f raised hard %d -> %d, taken out%s"
+                  % (area, _x, _y, cur[0], st[0], "" if _try + 1 == len(spots) else "; trying the next spot"))
+            continue
+        print("pour_stitch: %.1f mm2 %s island on %s stitched at %.2f, %.2f (clearest %.2f mm, spot %d of %d); unrouted %d -> %d"
+              % (area, netname, lname, _x, _y, _d, _try + 1, len(spots), cur[1], st[1]))
+        cur = st; placed += 1; done = True; break
+    if not done: left += 1
 final = measure()
 print("pour_stitch: %d island(s) stitched, %d left; hard %d, unrouted %d" % (placed, left, final[0], final[1]))
 sys.exit(0 if final[1] == 0 else 1)
