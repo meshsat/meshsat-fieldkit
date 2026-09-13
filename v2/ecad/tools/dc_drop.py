@@ -405,9 +405,21 @@ def main(a):
         zone_ratio = (czone_j / jl) if czone_at else 0.0
         via_ratio = via_worst[0] if via_worst else 0.0
         drop_ok = pct <= rb
-        dens_ok = cond_ratio <= 1.0 and zone_ratio <= ZONE_TOL and via_ratio <= 1.0
+        # THE BARREL NUMBER IS REPORTED AND NOT GATED, and the measurement that decides this is the one
+        # ruling 22 was built on. A barrel's current is read off the mesh as the branch current of a single
+        # edge between two cells, and how much current chooses that edge depends on the conductance of the
+        # cells around it, which is a function of the raster. Measured on P3's own board, one variable:
+        # PACK_P's worst barrel reads 1.20 at a 0.50 mm cell and 1.71 at 0.25, and CELL4 goes MET to MISSED
+        # across the same change. That is the per-cell density's defect in a new place, so it gets the same
+        # answer: it does not decide a board until it is expressed with no grid in it.
+        #
+        # What it found before it was demoted is real and is fixed in the generators: P3 stitched a 10 A band
+        # with THREE 0.4 mm barrels, which IPC gives 1.11 A each, and this project's rule of thumb of about
+        # 2.5 A per 0.4 mm hole is more than twice that; E7's source pad had one. P3 now has eighteen 0.5 mm
+        # barrels at the crossing and E7's pad has ten.
+        dens_ok = cond_ratio <= 1.0 and zone_ratio <= ZONE_TOL
         verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
-        bad = ([] if drop_ok else ["the drop"]) + ([] if cond_ratio <= 1.0 else ["a track"]) + ([] if zone_ratio <= ZONE_TOL else ["a pour"]) + ([] if via_ratio <= 1.0 else ["a via"])
+        bad = ([] if drop_ok else ["the drop"]) + ([] if cond_ratio <= 1.0 else ["a track"]) + ([] if zone_ratio <= ZONE_TOL else ["a pour"])
         why = "" if verdict == "MET" else " [MISSED on %s]" % " and ".join(bad)
         if cond:
             cr, cw, ca, cl, cL, cx, cy, cln = cond[0]
@@ -430,7 +442,7 @@ def main(a):
         # the cell bar is being applied to a spreading region and the honest check at that point is the
         # BARREL's own cross-section. Both numbers are printed so the answer comes from boards and not from me.
         via_txt = (("worst VIA %.2f mm drill at (%.1f, %.1f): %.2f A against IPC's %.2f A for its own %.4f mm2 of "
-                    "barrel wall, ratio %.2f" % (via_worst[3], via_worst[5], via_worst[6], via_worst[1], via_worst[2],
+                    "barrel wall, ratio %.2f (REPORTED, not gated: it moves with the raster)" % (via_worst[3], via_worst[5], via_worst[6], via_worst[1], via_worst[2],
                                                  via_worst[4], via_worst[0]))
                    if via_worst else "this net has no via")
         if vzone_at:
@@ -444,7 +456,7 @@ def main(a):
         if verdict != "MET": miss += 1
         results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s; %s%s; layer share %s"
                         % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, via_txt, why, share),
-                        drop, pct, max(cond_ratio, zone_ratio, via_ratio), share))
+                        drop, pct, max(cond_ratio, zone_ratio), share))
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
