@@ -318,7 +318,7 @@ def main(a):
         via_worst = None
         for vx, vy, vd, vwall, vrv, vnodes in net_vias:
             cur = max((abs(v[vnodes[k]] - v[vnodes[k + 1]]) / vrv for k in range(len(vnodes) - 1)), default=0.0)
-            lim = ipc_limit(vwall, dT, True)   # a barrel is enclosed copper: the inner-layer constant
+            lim = ipc_limit(vwall, dT_of(r), True)   # a barrel is enclosed copper: the inner-layer constant
             if lim <= 0: continue
             if via_worst is None or cur / lim > via_worst[0]: via_worst = (cur / lim, cur, lim, vd, vwall, vx, vy)
         tot = sum(share.values()) or 1.0; share = {k: round(x / tot, 2) for k, x in share.items()}
