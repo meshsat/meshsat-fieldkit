@@ -6403,3 +6403,33 @@ land, whatever the floor plan. The inner layers, where the ruling actually put t
 The implementation that matches the ruling as written is the class back at 0.5 mm with the rail carried at
 1.2 mm in locked inner copper, which is `power_copper.py` and board A's pattern. That is option C of the first
 reading and the owner said it would be a new ruling, so it is asked for in the decisions file with this number.
+
+### 32.160 What is actually AT each of A24's over-density cells, and one reading the instrument cannot support (13 September 2026, 12:55 CEST; MESHSAT-862)
+
+Owner ruling 16 gates the current density and re-cuts the worst. A density figure is not yet a fix, because it
+has three different causes needing three different answers, so `tools/density_probe.py` prints what sits within
+a radius of the cell `dc_drop` names: the net's own tracks with their widths, its vias, the zone that covers
+the point, and every OTHER net's copper nearby, which is what pinches a pour.
+
+| A24 rail | over | at | what is there | cause |
+|---|---:|---|---|---|
+| **VBAT** | 8.2x | In2 (91.7, 109.2) | the 8,926 mm2 VBAT In2 plane, with a `+3V3` **0.400 mm track 0.85 mm away** and two 0.700 mm vias at 1.01 and 2.10 mm | **a plane pinched by another net crossing it** |
+| **VBUS20** | 2.6x | F.Cu (42.2, 76.2) | four **0.500 mm router tracks**, no zone, no via | **the rail runs in router tracks at the class width and has no power copper at all** |
+| **+13V8_PA** | 2.1x | B.Cu (243.2, 122.2) | the 718 mm2 PA rail band, nothing else within 3 mm | **the band itself is the neck**, so it is width or a tap, not an intruder |
+| **VIN_RAW** | 1.6x | F.Cu (39.2, 44.2) | the 147 mm2 VIN_RAW head island with a `/FE_SW1` 0.500 mm track **0.69 mm away** | a pinched island, the VBAT case in miniature |
+| **+5V_S1, S2, S3** | 1.006x | F.Cu | a 0.400 mm track and the rail island | **marginal**, 0.6 percent over a bar that is itself lenient |
+
+**So the eight rails are four jobs, not eight**, and only two of them are about copper being too narrow.
+
+**THE ONE READING NOT TO ACT ON.** `+12V_HF` is reported at In3 (223.7, 111.7) and **no copper of that net is
+within 3 mm of that point**; its nearest In3 track is tens of millimetres away, and the rail has no zone at all
+(`raster -`). Five of the six probes land exactly on the right net's copper, including `VBUS20`, which also has
+no zone, so this is not a coordinate frame problem. It is unexplained, and `+12V_HF` is left out of the re-cut
+until it is explained rather than fixed on a number nothing corroborates.
+
+**THE PROBE'S OWN FIRST VERSION WAS WRONG AND NEARLY WROTE THAT UP AS A DEFECT IN `dc_drop`.** It measured the
+distance to a track's two ENDPOINTS, so a long track running straight through the point of interest with both
+ends far away read as "no copper within the radius". Point to segment now. The lesson is the one the record
+keeps relearning in new clothes: **a probe that reports nothing is not a diagnosis, it is a probe with a bug**,
+and the first thing to disbelieve is the new instrument. The `+12V_HF` anomaly survived the fix, which is why
+it is recorded as open rather than as an answer.
