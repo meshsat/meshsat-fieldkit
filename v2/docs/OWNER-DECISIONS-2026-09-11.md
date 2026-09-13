@@ -871,3 +871,30 @@ goes on the OUTER layers**, as option C originally said. The PWR class returns t
 carried from `J_PWR1` to its consumers in locked F.Cu and B.Cu bands with stitched crossings, so no part of
 the 1 A path runs in a 0.5 oz inner track. The substance of ruling 15 is unchanged; the layer in my sentence
 was wrong and is corrected here rather than built.
+
+---
+
+# OWNER RULINGS 18 and 19, 13 September 2026 13:00 CEST, two questions and both to the recommendation
+
+| # | question | RULING |
+|---|---|---|
+| **18** | how board B gets past 37 of 113 pairs, now that the knobs AND the placement lever are both spent | **A FLOOR PLAN BUILT AROUND THE PAIR CORRIDORS.** B is re-placed with the pair corridors as the primary constraint instead of region packing. Two to three days on B alone, and every pair number is re-measured from scratch afterwards. The pair ruling of 10 September is unchanged: no per-pair exception, no coupled-fraction gate |
+| **19** | how strict the density gate is, given that its own bar is lenient by 18 to 98 percent | **UNDER 1.1x COUNTS AS MET**, with the reason recorded. A 0.6 percent exceedance of a bar that is itself 18 to 98 percent generous is inside the instrument's own error and is not worth a board re-cut. Everything above 1.1x still fails and still gets fixed |
+
+## What each commits us to
+
+**18 is the largest single piece of work left in the project and it was chosen with its cost stated.** The
+evidence that forced it: seven arms at the peak slack moved the pair count by nothing; the couple gap was
+worth +8 once and nothing since; and decision 13's region resizes took B's placed board from 150 hard
+violations to **0** while the pair count stayed at **37 of 113, to the pair**. 30 of 46 leg refusals are
+within 2 mm of the pair's own pads and 22 of 22 retries were refused within 0.3 mm of the first, so no search
+can move a straight entry run between two fixed points. **The only thing left that changes the geometry the
+search is given is where the parts are**, and that is what this ruling buys. The coupled-fraction gate was
+offered a second time with new evidence and refused a second time; it is not offered again.
+
+**19 changes what MET means and is recorded as such.** The bar is IPC's current for ONE raster cell, measured
+lenient at every width but exactly one cell: +18 percent at 0.4 mm, +21 at 1 mm, +64 at 3 mm, +65 at 0.25,
++94 at 0.2, +98 at 6 mm. A rail inside 1.1x of that bar is inside the measurement's own uncertainty. **On
+A24 this passes the three slot rails at 1.006x and changes nothing else**: VBAT at 8.2x, VBUS20 at 2.6x,
++13V8_PA at 2.1x and VIN_RAW at 1.6x still fail. E7's two rails and P3's two rails are all above 1.1x and are
+untouched by it.
