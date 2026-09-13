@@ -23,7 +23,13 @@ from idc_pads import idc   # the IDC land is a per-board measurement (IDC_PADS),
 import kisch
 from kisch import (U, c, emit_part, emit_pwr_flag, ensure, esd, extents, find_sym, flatten, flatten_raw, ic, label, lib_tree, noconn, parse, part, pins_of, place_symbol, q, r, rename_units, ser, synth_symbol, text, tps22810, uq, usb_c_recept, wire)
 import intent as _intent
-_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.03, note="the mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default: every consumer either regulates this rail or tolerates a wide range (the TLV75533 3.3 V LDO with 1.5 V of headroom, the CP2102N bridge at a 4.0 V minimum, the ESD reference, and the exciter's own boost behind FB1). D10 measures 108 mV at 1.0 A, 2.16 percent, leaving 4.89 V at the tightest consumer (9 September 2026).")
+# LOADS DECLARED 13 September 2026. This rail carried none, so dc_drop guessed it over eight parts evenly and
+# the board read MISSED on a current path nobody designed. The dominant consumer is the SA868 exciter behind
+# the ferrite FB1, whose transmit pulses are what the 2 A peak is for; the 3.3 V LDO feeds all the logic, and
+# the codec, the headphone amplifier, the bridge and the spare port take the rest. The split apportions the
+# declared 1.0 A typical and is a design estimate of where the current goes, not a measurement.
+_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.03,
+             loads={"FB1": 0.50, "U1": 0.25, "U6": 0.10, "J_USB3": 0.05, "U7": 0.05, "U3": 0.03, "U15": 0.02}, note="the mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default: every consumer either regulates this rail or tolerates a wide range (the TLV75533 3.3 V LDO with 1.5 V of headroom, the CP2102N bridge at a 4.0 V minimum, the ESD reference, and the exciter's own boost behind FB1). D10 measures 108 mV at 1.0 A, 2.16 percent, leaving 4.89 V at the tightest consumer (9 September 2026).")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)

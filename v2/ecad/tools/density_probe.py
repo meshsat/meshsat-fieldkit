@@ -14,6 +14,22 @@ import sys, math, pcbnew
 def mm(v): return v / 1e6
 
 
+def seg_dist(px, py, ax, ay, bx, by):
+    """Point to SEGMENT, not point to endpoints.
+
+    13 September 2026. The first version took the smaller of the distances to a track's two ENDS, so a long
+    track running straight through the point of interest with both ends far away read as "no copper within the
+    radius", and the tool printed that absence as a definite negative. Tier 2b caught it on the diff, which is
+    the second half of the story: the fix had been WRITTEN once already and never applied, because the shell
+    line that was meant to patch this file began with a `cd` that failed, and the appendix and a commit message
+    then both claimed "point to segment now". A claim about a change is not the change.
+    """
+    dx, dy = bx - ax, by - ay
+    if dx == 0 and dy == 0: return math.hypot(px - ax, py - ay)
+    t = max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)))
+    return math.hypot(px - (ax + t * dx), py - (ay + t * dy))
+
+
 def main(a):
     if len(a) < 4:
         print(__doc__); return 2
@@ -28,7 +44,8 @@ def main(a):
     for t in b.GetTracks():
         if t.GetNetname() not in names: continue
         p0, p1 = t.GetStart(), t.GetEnd()
-        d = min(math.hypot(mm(p0.x) - x, mm(p0.y) - y), math.hypot(mm(p1.x) - x, mm(p1.y) - y))
+        d = (math.hypot(mm(p0.x) - x, mm(p0.y) - y) if t.GetClass() == "PCB_VIA"
+             else seg_dist(x, y, mm(p0.x), mm(p0.y), mm(p1.x), mm(p1.y)))
         if d > r: continue
         if t.GetClass() == "PCB_VIA":
             vias.append((d, mm(t.GetWidth()), mm(t.GetDrill()), b.GetLayerName(t.TopLayer()), b.GetLayerName(t.BottomLayer()), mm(p0.x), mm(p0.y)))
@@ -69,8 +86,9 @@ def main(a):
     for t in b.GetTracks():
         if t.GetNetname() in names or not t.GetNetname(): continue
         if want_layer and b.GetLayerName(t.GetLayer()) != want_layer and t.GetClass() != "PCB_VIA": continue
-        p0 = t.GetStart()
-        d = math.hypot(mm(p0.x) - x, mm(p0.y) - y)
+        p0, p1 = t.GetStart(), t.GetEnd()
+        d = (math.hypot(mm(p0.x) - x, mm(p0.y) - y) if t.GetClass() == "PCB_VIA"
+             else seg_dist(x, y, mm(p0.x), mm(p0.y), mm(p1.x), mm(p1.y)))
         if d <= r:
             k = t.GetNetname()
             if k not in near or d < near[k][0]: near[k] = (d, t.GetClass(), mm(t.GetWidth()))

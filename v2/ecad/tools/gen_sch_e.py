@@ -11,8 +11,22 @@ import os as _os; sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)
 import kisch
 from kisch import (U, c, emit_part, emit_pwr_flag, ensure, extents, find_sym, flatten, flatten_raw, ic, label, lib_tree, noconn, parse, part, pins_of, place_symbol, q, r, rename_units, ser, text, uq, wire)
 import intent as _intent
-_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", note="the pack node after the 25 A blade F3, to the block pads")
-_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", note="shore and vehicle entry after the filter choke, 10 A fuse")
+# LOADS DECLARED 13 September 2026. Until today this rail carried none, and dc_drop does not leave such a rail
+# unsolved: it guesses, over every U and J footprint on the net. Here the guess was J_FAN1, J_FAN2 and U12,
+# and it MISSED the load that carries almost all of the current, because `P_CP` starts with a P. Nearly the
+# whole pack node leaves this board through that 12 AWG solder pad to the block's CELL+ targets and on to
+# board A; what stays here is the local 5 V buck and the two mixer fans. The split apportions the declared
+# 10 A typical: it is a design estimate of where the current goes, not a measurement of what it is.
+_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3",
+             loads={"P_CP": 9.0, "U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1},
+             note="the pack node after the 25 A blade F3, to the block pads")
+# LOADS DECLARED 13 September 2026. The guess for this one was J_BLK and U4 at 4 A each, and U4 is the ideal
+# diode that ORs the tracker output INTO this bus: it is a SOURCE, so half the rail's current was being pulled
+# backwards through it. The whole of this bus leaves through the block lands J_BLK pins 1 to 4 for board A's
+# front end to regulate; the monitor divider R40 and the indicator LED1 are microamps and milliamps.
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2",
+             loads={"J_BLK": 8.0},
+             note="shore and vehicle entry after the filter choke, 10 A fuse")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers
