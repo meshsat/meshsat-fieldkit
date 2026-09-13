@@ -33,12 +33,47 @@ def ipc_limit(area_mm2, dT=10.0, internal=False):
     a_mil2 = area_mm2 / (0.0254 ** 2); k = 0.024 if internal else 0.048
     return k * (dT ** 0.44) * (a_mil2 ** 0.725)
 
+def _draw(png, net, jmap, occ, lname, cu_layers, x0, y0, cell, nx, ny, jl, marks, amps, verdict):
+    """One panel per copper layer: the net's copper in grey, the current density on it, and the three worst
+    places marked. This is what `--png` has meant in the usage line since 8 September 2026 and never did:
+    the option was read by nothing, so every run that asked for a picture got a silent nothing back. It is
+    written now because the necks this tool reports are geometry, and the record's own rule for a stopped
+    chain is to draw the region and read it rather than reason about coordinates (owner decision 2, 5 Sep)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt, numpy as np
+    live = [L for L in cu_layers if occ[L].any()]
+    if not live: return
+    ncol = min(3, len(live)); nrow = (len(live) + ncol - 1) // ncol
+    fig, axes = plt.subplots(nrow, ncol, figsize=(6.2 * ncol, 4.6 * nrow), squeeze=False)
+    ext = (x0, x0 + nx * cell, y0 + ny * cell, y0)          # board coordinates, y down as KiCad draws it
+    for k, L in enumerate(live):
+        ax = axes[k // ncol][k % ncol]
+        ax.imshow(np.where(occ[L], 1.0, np.nan), extent=ext, cmap="Greys", vmin=0, vmax=3, interpolation="nearest")
+        j = np.where(jmap[L] > 0, jmap[L], np.nan)
+        im = ax.imshow(j, extent=ext, cmap="inferno", vmin=0, vmax=max(jl * 2.0, float(np.nanmax(j)) if np.isfinite(np.nanmax(j)) else jl), interpolation="nearest")
+        fig.colorbar(im, ax=ax, shrink=0.8, label="A/mm2 (bar %.0f)" % jl)
+        for txt, mlay, mx, my, mk in marks:
+            if mlay is not None and mlay != lname[L]: continue
+            ax.plot([mx], [my], mk, mfc="none", mec="deepskyblue", ms=13, mew=2)
+        ax.set_title("%s on %s" % (net, lname[L]), fontsize=9); ax.set_aspect("equal")
+        ax.tick_params(labelsize=7)
+    for k in range(len(live), nrow * ncol): axes[k // ncol][k % ncol].axis("off")
+    fig.suptitle("%s: %s, %.1f A. %s" % (net, verdict, amps, "; ".join(m[0] for m in marks)), fontsize=10)
+    fig.tight_layout()
+    out = png if len(png) > 4 and png.endswith(".png") else png + ".png"
+    out = out[:-4] + "-" + net.strip("/").replace("+", "p") + ".png"
+    fig.savefig(out, dpi=110); plt.close(fig)
+    print("dc_drop: wrote %s" % out)
+
+
 def main(a):
     if not a: print(__doc__); return 2
     import pcbnew, numpy as np, intent
     import verdict as _v
     from impedance_check import read_stackup
     cell = float(a[a.index("--cell") + 1]) if "--cell" in a else 0.5
+    png = a[a.index("--png") + 1] if "--png" in a else None
     budget = float(a[a.index("--budget") + 1]) if "--budget" in a else 0.02
     b = pcbnew.LoadBoard(a[0]); it = intent.load(a[0])
     if not it:
@@ -235,6 +270,7 @@ def main(a):
         zone_j = 0.0; zone_at = None; zone_l = None      # the cell measure restricted to copper that is NOT a track
         czone_j = 0.0; czone_at = None; czone_l = None   # the same, clear of every via: a plane cell that is not a funnel
         vzone_j = 0.0; vzone_at = None; vzone_l = None   # the worst cell that IS at a via, with that cell's barrels
+        jmap = {L: np.zeros((ny, nx)) for L in cu_layers} if png else None   # the picture the usage line has promised since 8 September
         for (L, gy, gx), i in index.items():
             g0 = 1.0 / sheet(t_of(L)); t = t_of(L); f_i = frac[L][gy, gx] or 1.0
             for dy, dx in ((0, 1), (1, 0)):
@@ -242,6 +278,8 @@ def main(a):
                 if j is None: continue
                 g = g0 * min(f_i, frac[L][gy + dy, gx + dx] or 1.0)
                 cur = abs(v[i] - v[j]) * g; jd = cur / (cell * t)   # A/mm2 through the cell face (width cell, thickness t)
+                if jmap is not None:
+                    jmap[L][gy, gx] = max(jmap[L][gy, gx], jd); jmap[L][gy + dy, gx + dx] = max(jmap[L][gy + dy, gx + dx], jd)
                 share[lname[L]] = share.get(lname[L], 0.0) + cur
                 if jd > worst_j: worst_j = jd; worst_l = L; worst = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur)
                 # A face whose two cells are both off any track of this net is plane or pad copper, which is
@@ -457,6 +495,12 @@ def main(a):
         results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s; %s%s; layer share %s"
                         % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, via_txt, why, share),
                         drop, pct, max(cond_ratio, zone_ratio), share))
+        if png:
+            marks = []
+            if cond: marks.append(("worst conductor %.2f A in %.3f mm on %s (ratio %.2f)" % (cond[0][2], cond[0][1], cond[0][4], cond[0][0]), cond[0][4], cond[0][5], cond[0][6], "o"))
+            if czone_at: marks.append(("worst pour cell clear of a via %.0f A/mm2 (ratio %.2f)" % (czone_j, czone_j / jl), czone_at[0], czone_at[1], czone_at[2], "s"))
+            if via_worst: marks.append(("worst via %.2f A of %.2f (ratio %.2f)" % (via_worst[1], via_worst[2], via_worst[0]), None, via_worst[5], via_worst[6], "^"))
+            _draw(png, net, jmap, occ, lname, cu_layers, x0, y0, cell, nx, ny, jl, marks, amps, verdict)
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},

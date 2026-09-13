@@ -18,7 +18,8 @@ Usage:
   impedance_2d.py --w 0.30 --s 0.20 --t 0.035 --h 0.2104 --er 4.4 [--mode microstrip|stripline] [--h2 mm] [--ppmm 200]
   impedance_2d.py --selftest          the geometries of the record's two JLC stacks, against the closed forms
 
-Prints one line per case: the geometry, Zodd, Zeven, Zdiff, and (with --target) the difference from the target.
+Prints one line per case: the geometry, Zodd, Zeven, Zdiff, and, in the selftest, the class target each case is
+measured against (the targets belong to the CASES table below; this tool takes no target on the command line).
 
 Result of the first run (8 September 2026, 100 px/mm, the four outer-layer geometries of the record). The solder mask is
 the term the closed forms leave out and it is worth 6 to 12 percent on an outer layer, so the like-for-like comparison is
