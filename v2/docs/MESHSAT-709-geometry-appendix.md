@@ -6667,3 +6667,59 @@ refuses it at the source, `verify_deliverable` refuses a folder whose BOM carrie
 folder under `release/` says **none does**: B19 has never cut a deliverable. A tolerance is not a conversion,
 so `26.7k 1%` and `50% duty` are untouched. It is the same defect as the footprint `%.2f` of 5 September,
 where an unfilled label placeholder made `FootprintLoad` return None with no message.
+
+### 32.166 The source of a rail is the power path, and board A's placement generator could not run (13 September 2026, 14:50 CEST; MESHSAT-862)
+
+**Three of A's rails and one of B's named their CONTROLLER as the rail's source.** `dc_drop` holds the source
+part's pads at 0 V and takes the rail's whole current out of them, so naming an LM5176 sends that current
+through its output SENSE pins: `VBUS20` put **2.90 A of its 6 down a locked 0.200 mm escape stub** and read
+3.90 against IPC, on copper that was never carrying it, and no amount of power copper would have fixed it.
+An LM5176 stage's output is its **ISNS shunt**, the node after the inductor and the FETs: `VBUS20` takes R11,
+`+12V_HF` R65, `+54V_POE` R71 (R12, R122 and R72 are the CS resistors, which are not it). B's `+3V3_DEV` named
+U25, an AP63203 whose pad on that net is the feedback sense, and takes its inductor L1. **`intent.rail`
+refuses a source matching `^U\d` now**; a part whose output pin really is a power pin passes `source_ic` with
+the reason, which is the `erc-allow` idiom. This is the third time this shape has been found in two days:
+`CELL+`'s guessed load through a sense pin on 12 September, `VBUS20`'s guessed load through two more on the
+morning of the 13th, and now the source side of the same thing.
+
+**A24's list, settled, on copper that has not changed since it was cut: 7 of 12 rails MET.** The four that
+were never failures are `+3V3` (the 25.44 artefact), `+54V_POE`, and `+5V_S1` and `+5V_S3`, whose "failure"
+was **a track lying inside its own rail's 84 mm2 island**: the raster gave that cell the track's fraction and
+threw the island away, so the mesh forced the rail's current through a 0.4 mm conductor with copper lying on
+top of it. A pour cell is full copper now even where a track crosses it, and the conductor test skips the
+stretches of a track that lie inside a pour of its own net, which is what the pour bar is for. `+5V_S2`, the
+same geometry, had been reading 0.97 while its two siblings read exactly 1.00.
+
+**The five that remain are real and each names one thing**, and two of them had **no power copper at all**:
+
+| rail | conductor | pour | the fix in `gen_pcb_a3.py` |
+|---|---|---|---|
+| VBAT | 1.31 A in 0.500 mm on In3, 3.32 | 428 A/mm2 In2, **8.23** | a track keep-out on the In2 plane's neck: the router had laid `+3V3` and `/PA_HDRV1` across the plane 0.62 and 1.01 mm apart, leaving an isthmus IPC gives 1.02 A carrying about 3.7 A |
+| VIN_RAW | 0.42 A in 0.500 mm on In3, 1.07 | 130.9 F.Cu, 1.58 | open: `/FE_SW1` at 0.34 and 0.82 mm, and it is the front end's own switch node |
+| **VBUS20** | 4.91 A in 0.500 mm on F.Cu over 11.8 mm, **3.39** | 0.84 | an island over the ISNS shunt and the three output capacitors, a band of the same rectangle under it, a 3.0 mm run to the charger's input shunt |
+| +13V8_PA | 0.57 A in 0.400 mm on In2 over 29.1 mm, 1.70 | 175.5 B.Cu, 2.12 | the east run 4.5 to 7.0 mm and a third stitch via: 4.5 mm already carried 7.12 A against the rail's 6.0, so the number was current hugging one edge rather than a width |
+| **+12V_HF** | 1.00 A in 0.400 mm on In3 over **75.6 mm**, 2.97 | 0.62 | a 4 mm In3 band along the corridor the ROUTER found, which is the proof the space is free |
+
+**+12V_HF is where the layer count shows up as a number.** Solving IPC's relation for the rise rather than
+the current gives that 0.4 mm inner track at 1 A about **93 K**. On four layers there is no In3, and the
+alternatives are In2, where a 100 mm band cuts the east GND plane, or B.Cu, where it crosses the PA rail's
+band. **The four-layer board is generated without that copper and prints why**, so its `+12V_HF` reads MISSED:
+a true cost of four layers for the layer P0 to carry rather than something to hide.
+
+**P3: 2 of 3 rails MET, and `FUSED`'s 193.2 A/mm2 of ruling 7 is gone with the broken measure.** `PACK_P`
+reads 1.52: the pack's 10 A enters its 2.8 mm band through **three 0.6 mm tracks** off the PowerPAK's source
+pins, and it does not divide evenly over them, the one nearest the band's entry taking 4.16 A against IPC's
+2.73. At 1.2 mm each carries 4.51 A; the pads sit on a 1.27 mm pitch so the three nearly merge, which is what
+is wanted, and the gate pad keeps 0.37 mm. **D10: one rail, and it misses at 1.34**, which is decision 23.
+
+**AND BOARD A'S PLACEMENT GENERATOR COULD NOT RUN, for fifteen hours, and nothing said so until a chain
+tried.** `gen_pcb_a3.py` calls `regionfit.record(..., stem=os.path.splitext(...))` at the region loop on line
+171 and imported `os` on line **422**. It compiles: a NameError is a runtime event, and this one fires 250
+lines before the import that would have fixed it. Every A regeneration since `2721884` (13 September 01:55)
+blocked at `BLOCK placement generator exit 1`, the chain refusing correctly while the cause sat two words long
+in a line nobody read. It is the family of the footprint `%.2f` of 5 September: a file that is syntactically
+perfect and dead at the moment it matters, and `python3 -W error -c compile(...)`, which every chain gates on,
+cannot see it. `tools/tests/test_import_before_use.py` walks every tool's module scope for a name loaded
+before the import that binds it, with the scope stated in the file: a name inside a function body is bound by
+the time that function runs, and an import nested in an `if` binds from its own line, which is how
+`escape_prune.py` legitimately imports `os` inside the branch that uses it.
