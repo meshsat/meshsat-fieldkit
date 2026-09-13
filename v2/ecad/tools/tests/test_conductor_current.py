@@ -140,7 +140,8 @@ def t_a_via_is_judged_on_its_own_barrel_and_not_on_the_cell_it_funnels_through()
     a spreading region a millimetre across, not a conductor at thermal steady state."""
     src = open(os.path.join(TOOLS, "dc_drop.py")).read()
     assert "net_vias.append" in src, "the barrels of a net are not collected"
-    assert "via_worst" in src and "ipc_limit(vwall, dT, True)" in src, "no barrel is judged on its own wall cross-section"
+    assert "via_worst" in src and "ipc_limit(vwall, dT_of(r), True)" in src, \
+        "no barrel is judged on its own wall cross-section, with the rail's own rise read where it is needed"
     assert "via_ratio <= 1.0" in src, "the via ratio does not reach the verdict"
     assert "zone_ratio = (czone_j / jl)" in src, "the pour is still gated on a cell that may be a via's funnel"
     assert 'max(cond_ratio, zone_ratio, via_ratio)' in src, "the reported ratio does not carry the via"
