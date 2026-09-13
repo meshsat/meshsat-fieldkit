@@ -6868,3 +6868,85 @@ rail still travelled on In2 with 5.36 A in a 1.0 mm inner stub beside U2**: sign
 break it into pieces and an inner track bridges them. It is the VBAT In2 neck in miniature with the same two
 answers, a second layer or a keep-out, and the second layer was taken because a keep-out there would have to
 cover a 31 by 18 mm field of the front end's own gate drives and sense lines.
+
+### 32.171 An option a usage line offers must be read by the tool that offers it (13 September 2026, 19:00 CEST; MESHSAT-862)
+
+`dc_drop.py` has offered `--png out.png` in its usage line since it was written on 8 September. **Not one line
+of it ever looked for `--png`**: a run that asked for the picture got exit 0, no file and no complaint. The
+same shape sat in two more places: `pour_stitch.py` offered `--nets GND,+3V3` and `--min-area 1.0` in the space
+form while its parser reads only `--nets=` and `--min-area=`, so a caller writing the documented form stitched
+the default net and said nothing about it; and `impedance_2d.py`'s prose promised "(with `--target`) the
+difference from the target" where the targets live in its own CASES table and no command line is read at all.
+
+It is the family of 32.153 to 32.156 and of owner ruling 10's fill rule that could never fire: **a promise in
+the tree that nothing keeps, which is worse than an absent feature because a reader believes it.**
+
+`tests/test_documented_options.py` takes every `--name` from each tool's usage BLOCK and requires the tool's own
+CODE to hold that string. Two things had to be got right before it was worth anything. **A mention is not a
+reader**: the first version passed `dc_drop` because the new drawing function's docstring says the words
+`--png`, so the rule tokenises the source and keeps only short string literals, which is what an option parser
+actually looks for. And **a sentence about another program is not this tool's promise**: `erc_gate`'s reference
+to `kicad-cli sch erc --format json` and `pairsearch`'s `python3 -m venv --system-site-packages` recipe are
+prose, so only the usage block is read. Six rules, and the general one fails on the tree as it stood this
+morning.
+
+**`--png` is implemented rather than deleted**, because the picture is what this pass needed: one panel per
+copper layer, the rail's copper in grey, the current density on it, and the worst conductor, the worst pour
+cell and the worst via marked. Every number in 32.172 was read off one of those panels, and the owner's own
+rule for a stopped chain (decision 2, 5 September) is to draw the region and look at it rather than reason
+about coordinates.
+
+### 32.172 A25 measured on its own routed copper: four rails, four causes, and one of them was this morning's fix (13 September 2026, 21:00 CEST; MESHSAT-862)
+
+A25 routed and its finish stopped at the routed-board gate, so the rails were measured on the best round's
+board directly: **8 of 12 MET**, against A24's 7 of 12 on the same corrected measure. The four that miss are
+VBAT, VIN_RAW, `+13V8_PA` and `+12V_HF`, and none of the four is a marginal number that a tolerance would
+settle. Every one was read off the density panels and then off a drawing of the layer, and **each has a cause
+that is geometry rather than arithmetic**.
+
+| rail | what fails | the cause, read off the board |
+|---|---|---|
+| VBAT, 10 A | conductor 3.29 A in a 0.500 mm In3 track, ratio 8.34; worst pour cell 256 A/mm2 of 52, ratio 4.93 | **its B.Cu comb is in TWO pieces.** The trunk from F1 fills as far as y 100.5 and the collector under the four converters from x 76.1 east, and between them sits `VBUS20 under B.Cu`, 27.5 by 20 mm, drawn THIS MORNING by the density pass itself |
+| VIN_RAW, 8 A | pour cell 134.6 A/mm2 of 52, ratio 2.59, in the head island | the west band stopped at the head's south edge: the island where 8 A enters the board from the dock had **one layer of copper** and the front end's own `FE_SW1` escape 0.34 mm from it |
+| +13V8_PA, 6 A | pour cell 132.5 A/mm2 of 82.7, ratio 1.60; 3.68 A through one 0.40 mm barrel | **the B.Cu band began 15 mm east of the head it feeds.** The rail's first 15 mm ran on the F.Cu island alone and the router's tracks cut that island in two |
+| +12V_HF, 1 A | conductor 0.71 A in a 0.400 mm In2 track, ratio 2.10; pour cell 105.3 A/mm2 of 52, ratio 2.02 | the head fills in FOUR pieces around the converter's own parts and the piece holding R65, the shunt the rail is measured at, has no via of its own to the band; and the east run passes **through J_AB2's ten through-hole pads**, where the fill threads between the pins |
+
+**The lesson that generalises, and it is now a printed measure.** `power_copper.union()` refuses rectangles
+that do not form one polygon, and until today **nothing asked what the FILL made of them**. Five pours on this
+board are drawn as one polygon and fill in two, four, eight pieces, and the current between the pieces travels
+in whatever the router happened to lay: a 0.5 mm inner track carrying 3.29 A of a pack node is not a routing
+choice anybody made. `copper_checks.py` reports every band and island (priority 2 and up, which is what
+`union()` and `island()` draw) that fills in more than one piece, with the piece areas. A PLANE on a routing
+layer is sliced by tracks and that is expected, so priority 0 and 1 are not measured. **Measured on the cut
+boards before it was written into the gate path: D11 has one such pour and it is whole, P4 and E7 declare none,
+so the measure costs the set nothing.**
+
+**A26 carries the four answers**: the PA band starts at its shunt's own output pad with two vias in that pad;
+VIN_RAW's west band covers the head island with a second via row at the north end; VBUS20's second layer moves
+from B.Cu to In3, where nothing of any rail is within 40 mm, which gives VBAT its trunk back; and the HF east
+run steps north of J_AB2's top pin, where In3 is empty from x 232 to 252.
+
+### 32.173 The pair wall on B19 is 84 refusals of between one and fifteen micrometres (13 September 2026, 21:20 CEST; MESHSAT-862)
+
+B19 lays **37 of 113** (20 of 48 DIFF100, 17 of 65 USB). Reading the 152 failed attempts by reason rather than
+by count: **84 of them are the pair's own two legs against each other**, and the gaps are 0.186 to 0.251 mm
+against a bar of 0.249 to 0.252. **Most miss by between one and fifteen micrometres.** Every one of them names
+an END emission: `the end stub into the pad`, `the end hop to a via beside the pad`, `the dive of a crossing
+end`.
+
+The arithmetic behind that: an inner pair here has a 0.127 mm gap and its class clearance is 0.127 mm, so **the
+pair's own geometry sits exactly on the rule with no margin at all**, and any rounding at the ends refuses the
+whole pair after it is laid. The copper that violates is the last hop from the path's final cell INTO the pad,
+which is emitted without asking anything; 32.134 named it and `PAIR_END_STRICT` was written to measure it.
+
+**END_STRICT was worth nothing and the reason is instructive.** It asked AFTER the copper was laid and then
+removed it: `_ok()` took the pieces off the board, **left them in the pair's own `pieces` list, and left their
+stamps on the partner's occupancy map**. So every later emission of that pair was judged against copper that no
+longer existed and searched a map that still forbade it. A check that cannot undo what it refuses is not a
+check.
+
+`PAIR_END_FIT` (default on) asks the question **before any copper exists**, which needs no undo, and when the
+last hop is the violation it **moves the approach**: the pad is entered from a point about a third of a
+millimetre off it on the side the partner is not on, chosen from the cells the leg's own map calls free and
+ordered by distance from the partner's copper. The count of moved approaches is printed every pass, so the knob
+is never a claim. Two arms, same placement, same tools, one variable, are the grade.
