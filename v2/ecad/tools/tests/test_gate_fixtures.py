@@ -520,27 +520,34 @@ def t_the_current_density_decides_the_verdict_alongside_the_drop():
         "a rail cannot declare its own temperature rise, so the only way past the gate would be to ignore it"
 
 
-def t_the_density_tolerance_is_ruling_19_and_says_so():
-    """OWNER RULING 19, 13 September 2026: under 1.1x counts as MET, with the reason recorded.
+def t_the_density_is_judged_on_the_conductor_and_the_pour_tolerance_is_measured():
+    """OWNER RULING 22, 13 September 2026: judge a rail by the conductor, not by a grid square.
 
-    Ruling 16 made the density a verdict and the gate as first built refused any exceedance at all, which
-    made A24 unable to pass its own gate over three rails sitting 0.6 percent above a bar that my own
-    measurement shows is 18 to 98 percent generous. A tolerance that is not written down alongside the
-    measurement justifying it is the kind of number a later session deletes as unexplained slack, so the rule
-    checks both: the value, and that the file still carries the ruling and the leniency figures behind it.
+    Ruling 16 made the density a verdict; 32.162 then measured that the per-cell number moves 41 to 56 percent
+    with the cell size and that CELL+ flips, so no tolerance of ruling 19's shape could make it honest. The
+    instrument was rebuilt instead: every TRACK is judged on its own width against IPC for its own
+    cross-section, with NO tolerance because there is no grid error left in it, and the raster keeps the POURS,
+    where 32.162 measured that it does converge (the two plane-carried rails moved 6 and 9 percent against a
+    two-fold change of cell, where every track-carried rail moved by half).
+
+    The rule holds the shape and the numbers: a conductor test that gates at 1.0, a pour tolerance of 1.10 with
+    the measurement behind it still written beside it, and a verdict that says WHICH of the two refused a rail.
     """
     import re as _re
     src = open(os.path.join(TOOLS, "dc_drop.py")).read()
-    m = _re.search(r'DENSITY_TOL\s*=\s*([0-9.]+)', src)
-    assert m, "dc_drop no longer declares a density tolerance"
-    tol = float(m.group(1))
-    assert abs(tol - 1.1) < 1e-9, "the density tolerance is %s where owner ruling 19 says 1.1" % tol
-    assert "RULING 19" in src, "the tolerance does not name the ruling that set it"
-    assert "lenient" in src.lower() and "98 percent" in src, \
-        "the tolerance no longer carries the measurement that justifies it"
-    # and it must still be applied, not merely declared
-    assert _re.search(r'jl\s*\*\s*DENSITY_TOL', src), "the tolerance is declared and not used"
-
+    assert "cond_ratio" in src and "zone_ratio" in src, "dc_drop no longer separates the conductor and the pour"
+    m = _re.search(r'ZONE_TOL\s*=\s*([0-9.]+)', src)
+    assert m and abs(float(m.group(1)) - 1.10) < 1e-9, "the pour tolerance is not the measured 1.10"
+    assert _re.search(r'cond_ratio\s*<=\s*1\.0', src), \
+        "the conductor test carries a tolerance; it must not, because a track's width is exact"
+    assert "RULING 22" in src, "the rebuilt measure does not name the ruling that asked for it"
+    assert "6 and -9 percent" in src or "+6 and -9 percent" in src or "6 and 9" in src, \
+        "the pour tolerance no longer carries the measurement that sizes it"
+    # and the verdict must say which half refused the rail, or a reader cannot act on it
+    assert '"a track"' in src and '"a pour"' in src, "the verdict does not say whether a track or a pour failed"
+    # the conductor line must name the thing to widen
+    assert "worst CONDUCTOR" in src and "mm wide on" in src, \
+        "the conductor line does not name the conductor's width and place, which is the whole point of it"
 
 def t_a_rail_with_no_declared_load_is_not_judged():
     """13 September 2026: a guessed load is not a measurement, and the guess was deciding boards.

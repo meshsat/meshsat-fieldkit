@@ -25,6 +25,9 @@ PLATING = 25e-6
 
 def sheet(t_mm): return RHO / (t_mm * 1e-3)   # ohm per square
 
+
+def dT_of(rail): return float(rail.get("density_dT", 10.0))   # a rail may declare its own rise, with a reason
+
 def ipc_limit(area_mm2, dT=10.0, internal=False):
     """IPC-2221 current for a cross-section (mm2) at dT K; returns amps."""
     a_mil2 = area_mm2 / (0.0254 ** 2); k = 0.024 if internal else 0.048
@@ -78,18 +81,38 @@ def main(a):
             if L in occ:
                 before = int(occ[L].sum()); mark(L, z.GetFilledPolysList(L)); raster_note.append("%s %.0f of %.0f mm2" % (z.GetZoneName()[:18], (int(occ[L].sum()) - before) * cell * cell, z.GetFilledArea() / 1e12))
         vias = []
+        # OWNER RULING 22, 13 September 2026: the per-cell density does not converge for copper narrower than
+        # a cell (32.162: the verdict moved 41 to 56 percent between a 0.50 and a 0.25 mm cell, and CELL+
+        # flipped). A TRACK has a width, so it does not need a grid to be judged: its through-current is read
+        # off the solved mesh and compared with IPC-2221 for its own cross-section. The raster keeps the zones,
+        # where it measurably does converge (VBAT moved 6 percent, the PA band 9). These two lists are what
+        # that pass needs, collected here because this is where the geometry is already being walked.
+        net_tracks = []
+        trk_occ = {L: np.zeros((ny, nx), dtype=bool) for L in occ}
+        # THE OTHER HALF OF RULING 22. Giving the LIMIT a track's real width is not enough while the mesh still
+        # models that track as a cell-wide conductor: the current it attracts is then a function of the cell,
+        # and the conductor ratio moves with it (measured: VBAT 4.69 to 2.32 across a two-fold cell change).
+        # Every in-plane edge got one square of sheet resistance, which is right for a cell FULL of copper and
+        # wrong for a cell a 0.4 mm track passes through. `frac` is the effective copper width in a cell as a
+        # fraction of the cell, 1.0 for pour and pad copper and w/cell for a narrower track, and an edge is
+        # scaled by the NARROWER of the two cells it joins, which is the series view. As the cell shrinks below
+        # a track's width the factor goes to 1 and the model converges.
+        frac = {L: np.zeros((ny, nx)) for L in occ}
         for tr in b.GetTracks():
             if tr.GetNetname() not in netnames: continue
             if tr.GetClass() == "PCB_VIA": vias.append(tr); continue
             L = tr.GetLayer()
             if L not in occ: continue
             n = max(2, int(tr.GetLength() / 1e6 / cell) + 2); w = tr.GetWidth() / 1e6
+            net_tracks.append((L, tr.GetStart().x / 1e6, tr.GetStart().y / 1e6, tr.GetEnd().x / 1e6, tr.GetEnd().y / 1e6, w, tr.GetLength() / 1e6))
             for k in range(n):
                 u = k / (n - 1); px = (tr.GetStart().x + u * (tr.GetEnd().x - tr.GetStart().x)) / 1e6; py = (tr.GetStart().y + u * (tr.GetEnd().y - tr.GetStart().y)) / 1e6
                 for dx in (-w / 2, 0, w / 2):
                     for dy in (-w / 2, 0, w / 2):
                         gx, gy = int((px + dx - x0) / cell), int((py + dy - y0) / cell)
-                        if 0 <= gx < nx and 0 <= gy < ny: occ[L][gy, gx] = True
+                        if 0 <= gx < nx and 0 <= gy < ny:
+                            occ[L][gy, gx] = True; trk_occ[L][gy, gx] = True
+                            frac[L][gy, gx] = max(frac[L][gy, gx], min(1.0, w / cell))
         pads = []
         for f in fps:
             for p in f.Pads():
@@ -106,11 +129,13 @@ def main(a):
         if N == 0: results.append((net, "UNRESOLVED", "no copper of this net", 0, 0, 0, {})); miss += 1; continue
         rows = []; cols = []; vals = []
         def add(i, j, g): rows.extend([i, j, i, j]); cols.extend([i, j, j, i]); vals.extend([g, g, -g, -g])
+        for L in occ: frac[L][occ[L] & (frac[L] == 0.0)] = 1.0   # pour and pad copper fills its cell; a track set its own
         for (L, gy, gx), i in index.items():
-            g = 1.0 / sheet(t_of(L))
+            g = 1.0 / sheet(t_of(L)); f_i = frac[L][gy, gx] or 1.0
             for dy, dx in ((0, 1), (1, 0)):
                 j = index.get((L, gy + dy, gx + dx))
-                if j is not None: add(i, j, g)
+                if j is None: continue
+                add(i, j, g * min(f_i, frac[L][gy + dy, gx + dx] or 1.0))
         barrels = [(v.GetPosition(), v.GetDrillValue() / 1e6, v.TopLayer(), v.BottomLayer()) for v in vias]
         barrels += [(p.GetPosition(), max(p.GetDrillSize().x, 1e5) / 1e6, pcbnew.F_Cu, pcbnew.B_Cu) for f, p in pads if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH]   # a through-hole pad is a barrel through every layer (review of 8 Sep 2026)
         for pos, d, Lt, Lb in barrels:
@@ -185,21 +210,47 @@ def main(a):
         drop = -v.min() if v.min() < 0 else v.max(); drop = abs(v).max()
         # branch currents and density
         worst_j = 0.0; worst = None; worst_l = None; share = {}
+        zone_j = 0.0; zone_at = None; zone_l = None      # the cell measure restricted to copper that is NOT a track
         for (L, gy, gx), i in index.items():
-            g = 1.0 / sheet(t_of(L)); t = t_of(L)
+            g0 = 1.0 / sheet(t_of(L)); t = t_of(L); f_i = frac[L][gy, gx] or 1.0
             for dy, dx in ((0, 1), (1, 0)):
                 j = index.get((L, gy + dy, gx + dx))
                 if j is None: continue
+                g = g0 * min(f_i, frac[L][gy + dy, gx + dx] or 1.0)
                 cur = abs(v[i] - v[j]) * g; jd = cur / (cell * t)   # A/mm2 through the cell face (width cell, thickness t)
                 share[lname[L]] = share.get(lname[L], 0.0) + cur
                 if jd > worst_j: worst_j = jd; worst_l = L; worst = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur)
+                # A face whose two cells are both off any track of this net is plane or pad copper, which is
+                # where the raster converges (32.162). That is the only copper the cell measure now gates on.
+                if not (trk_occ[L][gy, gx] or trk_occ[L][gy + dy, gx + dx]):
+                    if jd > zone_j: zone_j = jd; zone_l = L; zone_at = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur)
+
+        # ---- OWNER RULING 22: every TRACK judged on its own width, with no grid in the answer.
+        # The mesh gives the potentials; a track's through-current is the largest face current along its
+        # centreline, current being conserved along a series conductor. That current is compared with
+        # IPC-2221 for the track's REAL cross-section, so the result does not move when the cell does.
+        cond = []    # (ratio, width, amps, limit_amps, layer, x, y, length)
+        for L, ax, ay, bx, by, w, ln in net_tracks:
+            if L not in occ or ln <= 0: continue
+            t = t_of(L); g = (1.0 / sheet(t)) * min(1.0, w / cell)
+            steps = max(2, int(ln / cell) + 2)
+            best = 0.0; at = None
+            prev = None
+            for k in range(steps):
+                u = k / (steps - 1)
+                px, py = ax + u * (bx - ax), ay + u * (by - ay)
+                gx, gy = int((px - x0) / cell), int((py - y0) / cell)
+                nd = index.get((L, gy, gx))
+                if nd is not None and prev is not None and prev[0] != nd:
+                    cur = abs(v[nd] - v[prev[0]]) * g
+                    if cur > best: best = cur; at = (px, py)
+                if nd is not None: prev = (nd, px, py)
+            if best <= 0 or at is None: continue
+            lim_a = ipc_limit(w * t, dT_of(r), L not in (pcbnew.F_Cu, pcbnew.B_Cu))
+            if lim_a > 0: cond.append((best / lim_a, w, best, lim_a, lname[L], at[0], at[1], ln))
+        cond.sort(reverse=True)
         tot = sum(share.values()) or 1.0; share = {k: round(x / tot, 2) for k, x in share.items()}
         amps = sum(sinks.values()); pct = drop / r["volts"] if r["volts"] else 0.0
-        # density limit: the IPC-2221 current for one cell width of this copper at 10 K, as A/mm2
-        lim = {}
-        for L in cu_layers:
-            t = t_of(L); lim[lname[L]] = ipc_limit(cell * t, 10.0, L not in (pcbnew.F_Cu, pcbnew.B_Cu)) / (cell * t)
-        jl = lim.get(worst[0], 1e9) if worst else 1e9
         rb = float(r.get("budget", budget))   # a rail may carry its own budget in the intent (8 Sep 2026)
         # 8 September 2026 said the density "overstates by the cell-to-width ratio" and left it reported, not
         # gated, until the raster was validated. THE DIRECTION WAS BACKWARDS, measured 13 September 2026.
@@ -227,42 +278,49 @@ def main(a):
                             None, None, None, {}))
             miss += 1
             continue
-        dT = float(r.get("density_dT", 10.0))
-        if dT != 10.0:
-            jl = ipc_limit(cell * t_of(worst_l), dT, worst_l not in (pcbnew.F_Cu, pcbnew.B_Cu)) / (cell * t_of(worst_l)) if worst_l is not None else jl
-        # OWNER RULING 19, 13 September 2026 13:00: under 1.1x counts as MET, with the reason recorded here.
-        # The bar is IPC's current for ONE raster cell and it is LENIENT against the whole-track figure at
-        # every width but exactly one cell: +18 percent at 0.4 mm, +21 at 1 mm, +64 at 3 mm, +65 at 0.25,
-        # +94 at 0.2, +98 at 6 mm. A rail 0.6 percent over such a bar is inside the measurement's own
-        # uncertainty, and gating on it spends a board re-cut on noise: that is exactly what A24's three slot
-        # rails were at 83.2 against 82.7. Everything above 1.1x still fails and still gets fixed, which on
-        # A24 is VBAT at 8.2x, VBUS20 at 2.6x, +13V8_PA at 2.1x and VIN_RAW at 1.6x.
-        DENSITY_TOL = 1.1
+        dT = dT_of(r)
+        jl = (ipc_limit(cell * t_of(zone_l), dT, zone_l not in (pcbnew.F_Cu, pcbnew.B_Cu)) / (cell * t_of(zone_l))) if zone_l is not None else 1e9
+
+        # RULING 22's answer to ruling 20, and the tolerance is now measured rather than picked.
+        #   TRACKS are judged on their own width, so there is NO grid error and NO tolerance: 1.00.
+        #   ZONES keep the raster, because 32.162 measured that it converges there: the two rails carrying
+        #   their current in planes and bands moved by +6 and -9 percent across a two-fold change of cell,
+        #   where every track-carried rail moved by half. 1.10 is that measured sensitivity, rounded up.
+        ZONE_TOL = 1.10
+        cond_ratio = cond[0][0] if cond else 0.0
+        zone_ratio = (zone_j / jl) if zone_at else 0.0
         drop_ok = pct <= rb
-        dens_ok = (worst_j <= jl * DENSITY_TOL) if worst else True
+        dens_ok = cond_ratio <= 1.0 and zone_ratio <= ZONE_TOL
         verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
-        # A rail that is over the bar and under the tolerance must SAY SO. Tier 2b, reviewing this change on
-        # 13 September: "a tool reports success about a rail that did not meet the bar it names, so the three
-        # A24 slot rails leave no trace of having been excused". Right, and that is the shape of half the
-        # defects in this record. Such a rail reads MET(tol) and prints by how much.
-        excused = bool(worst) and worst_j > jl and dens_ok
-        if excused: verdict = "MET(tol)"
-        why = (" [over the bar by %.1f percent, excused by ruling 19's %.2gx tolerance]" % ((worst_j / jl - 1) * 100, DENSITY_TOL)) if excused else (
-            "" if verdict == "MET" else
-            " [MISSED on %s]" % (" and ".join(([] if drop_ok else ["the drop"]) + ([] if dens_ok else ["the current density"]))))
-        if verdict not in ("MET", "MET(tol)"): miss += 1
-        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at %.0f K (GATED since owner ruling 16, with ruling 19's 1.1x tolerance; this per-cell bar is LENIENT against the whole-track IPC figure by 18 to 98 percent over the widths in this design, so an exceedance is a floor)%s; layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, dT, why, share), drop, pct, worst_j, share))
+        bad = ([] if drop_ok else ["the drop"]) + ([] if cond_ratio <= 1.0 else ["a track"]) + ([] if zone_ratio <= ZONE_TOL else ["a pour"])
+        why = "" if verdict == "MET" else " [MISSED on %s]" % " and ".join(bad)
+        if cond:
+            cr, cw, ca, cl, cL, cx, cy, cln = cond[0]
+            cond_txt = ("worst CONDUCTOR %.3f mm wide on %s at (%.1f, %.1f), %.1f mm long: %.2f A against IPC's %.2f A "
+                        "for its own cross-section at %.0f K, ratio %.2f" % (cw, cL, cx, cy, cln, ca, cl, dT, cr))
+        else:
+            cond_txt = "no track of this net carries a measurable current, so the conductor test judged nothing"
+        # The pour bar is IPC's current for ONE cell's cross-section, and it is LENIENT against the whole-track
+        # figure because IPC is sublinear in area: 18 percent at 0.4 mm width, 21 at 1 mm, 64 at 3 mm, 98 at 6.
+        # So a pour ratio over 1 is a floor on the exceedance, never a ceiling. The direction is written here
+        # because it was recorded backwards for five days and a gate was built on the wrong sign.
+        zone_txt = ("worst POUR cell %.1f A/mm2 at %s (%.1f, %.1f) against %.1f, ratio %.2f (raster, tolerance %.2f; "
+                    "this per-cell bar is LENIENT against the whole-track IPC figure, so an exceedance is a floor)"
+                    % (zone_j, zone_at[0], zone_at[1], zone_at[2], jl, zone_ratio, ZONE_TOL)) if zone_at else "this net has no pour copper"
+        if verdict != "MET": miss += 1
+        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s%s; layer share %s"
+                        % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, why, share),
+                        drop, pct, max(cond_ratio, zone_ratio), share))
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
                         note="the intent file lists no rail, so no drop was computed")
     for net, v, text, *_ in results: print("dc_drop: %-11s %-10s %s" % (v, net, text))
     undecl = [r[0] for r in results if r[1] == "UNDECLARED"]
-    excused_rails = [r[0] for r in results if r[1] == "MET(tol)"]
     print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)%s"
           % (len(results) - miss, len(results), cell, budget * 100,
              ("; %d rail(s) NOT JUDGED for want of a declared load: %s" % (len(undecl), ", ".join(undecl)) if undecl else "")
-             + ("; %d rail(s) over the density bar and excused by ruling 19's tolerance: %s" % (len(excused_rails), ", ".join(excused_rails)) if excused_rails else "")))
+))
     if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
     # A rail nobody declared a load for is INCONCLUSIVE, never FAIL: the board is not refused for a property of
     # the board, it is refused for a property of the intent file, and the two have different remedies.

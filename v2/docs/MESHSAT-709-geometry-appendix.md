@@ -6539,3 +6539,43 @@ a point and its width, so the missing half is attributing current to it. That co
 it has no grid in it.
 
 **Rulings 16, 19 and 20 all rest on the per-cell number, and this is the honest report back on it.**
+
+### 32.163 The conductor-based density measure (owner ruling 22), what it converges on and what it does not (13 September 2026, 14:05 CEST; MESHSAT-862)
+
+Ruling 22: judge a rail by the narrowest piece of copper carrying a meaningful share of its current, that
+current against IPC-2221 for that piece's own cross-section. Built in `dc_drop.py` in two halves, because the
+first half alone does not converge.
+
+**Half one, the limit.** Every TRACK of the rail is walked, its through-current read off the solved mesh as
+the largest face current along its centreline, and compared with IPC's current for its own width and the
+layer's copper thickness. The verdict names the conductor: width, layer, position, length, amps, limit, ratio.
+That alone is worth the change, because the old line named a grid square and this one names a track you can
+go and widen.
+
+**Half two, the mesh.** Giving the limit a real width is not enough while the mesh models a 0.4 mm track as a
+cell-wide conductor, because then the CURRENT is a function of the cell. Every in-plane edge had one square of
+sheet resistance, which is right for a cell full of copper and wrong for a cell a narrow track passes through.
+The edge conductance is scaled by the copper fraction of the narrower of its two cells now.
+
+**Measured, same board, three cell sizes.** The conductor ratio:
+
+| rail | 0.50 | 0.35 | 0.25 | |
+|---|---:|---:|---:|---|
+| +5V_S1, S2, S3 | 1.00 | 1.02 | 1.02 | **converged** |
+| +5V_DEV | 0.36 | 0.44 | 0.56 | converged as a PASS at every size |
+| +13V8_PA | 2.47 | 1.58 | 1.41 | not converged, MISSED at every size |
+| VBAT | 4.70 | 3.19 | 2.32 | not converged, MISSED at every size |
+
+**What converges and why.** A rail whose current runs in TRACKS converges: the slot rails give 1.00, 1.02,
+1.02 and name a 0.400 mm F.Cu track carrying 1.26 A against IPC's 1.23. A rail whose current DIVIDES between a
+track and a parallel plane does not, because that division is what a coarse raster resolves worst, and at
+0.25 mm the cell is still coarser than a 0.127 mm track.
+
+**So the honest statement of what the gate can do.** It gives a converged verdict for track-carried rails; it
+gives a stable VERDICT but an unconverged NUMBER for plane-and-track rails, every one of which is MISSED at
+every cell size tested; and one rail, `CELL+`, still flips on the pour measure between 0.50 and 0.35. The
+conservative reading is the finest cell.
+
+**And it is actionable in a way the cell measure never was.** "A 0.400 mm track on F.Cu at (97.0, 41.0),
+4.9 mm long, carrying 1.26 A against a 1.23 A limit" is a thing to widen. "83.2 A/mm2 in a grid square" was
+not.

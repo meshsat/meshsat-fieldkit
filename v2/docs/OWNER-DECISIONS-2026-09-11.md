@@ -917,3 +917,15 @@ rather than a figure chosen to clear the three rails in front of it.
 
 **21 keeps the plan as one set.** It costs the six boards a few days waiting on B's floor plan, and it means
 the cross-board contracts are checked against seven boards that exist rather than six plus a file.
+
+## OWNER RULING 22, 13 September 2026 13:40 CEST
+
+**BUILD THE CONDUCTOR-BASED DENSITY MEASURE.** A rail is judged by the narrowest piece of copper carrying a
+meaningful share of its current, that current against IPC-2221 for that piece's own cross-section. No grid, so
+it converges by construction. It settles rulings 16, 19 and 20 together and it answers `CELL+` and `+5V_DEV`,
+the two A24 rails whose verdict currently depends on a parameter nobody chose on physical grounds.
+
+**The evidence pointed at the split to build.** In 32.162 the rails that barely move with cell size, VBAT at
++6 percent and +13V8_PA at -9, are the ones carrying their current in **planes and bands**, which a 0.5 mm
+cell resolves. Every rail that moves by half carries it in **tracks narrower than the cell**. So the raster is
+sound where the copper is wide and wrong where it is narrow, and the new measure is aimed at exactly that.
