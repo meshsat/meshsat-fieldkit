@@ -534,6 +534,15 @@
    "type": "number",
    "why": "The shelf packer's own spacing on board D. Owner ruling 9 of 13 September keeps the 1.2 mm PWR class and asks for the room to come from rearranging parts; D's regions are not the constraint (two overflow by 0.2 mm against a declared 0.5 allowance), its density is, and this is the one lever that widens every channel at once without touching a region rectangle, which is reserved. A placement change moves every part in the region, so an arm on it is compared as one placement against another and never as a knob with a value (appendix 32.109)."
   },
+  "PLACE_NO_UNDER_FINE": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "a fine-pitch front part's courtyard is an obstacle to the underside regions, so no back-side passive sits where its escape vias come through",
+   "stage": "place",
+   "type": "flag",
+   "unit": ""
+  },
   "PLACE_PTH_OBSTACLE": {
    "category": "experiment",
    "default": "0",
