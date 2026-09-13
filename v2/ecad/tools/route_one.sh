@@ -1,8 +1,38 @@
 #!/usr/bin/env bash
 # One Freerouting attempt in its own scratch directory. Usage: route_one.sh <project dir> <name> <k> <passes>
 set -uo pipefail
-. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fr_jar.sh"   # resolved before the cd below
+_TOOLS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # resolved before the cd below, like the jar
+. "$_TOOLS/fr_jar.sh"
 cd "$1"; N="$2"; K="$3"; P="$4"; W="out/par/$K"; mkdir -p "$W"
+# 13 September 2026 (MESHSAT-862): A ROUTE THAT DROPS ITS BOARD'S PLANE NETS MEASURES NOTHING, and I made
+# that mistake twice in one afternoon. D's PWR class arm came back hard 0 with 121 unrouted and FOUR vias,
+# and C's route hard 0 with 37 open, both because the driver set neither FR_PLANE_NETS nor FR_POWER_LAYERS
+# while the board's own routeflow profile declares them: every ground pin then goes into the WIRE list at the
+# class width instead of being reached by a via into a plane. Both numbers were withdrawn. The profiles are
+# where those settings live, so a route started without them on a board whose profile declares them is
+# refused here, at the one place every launcher passes through. FR_PLANES_CHECKED=0 says it was deliberate.
+if [ "${FR_PLANES_CHECKED:-1}" != "0" ] && [ -z "${FR_PLANE_NETS:-}${FR_POWER_LAYERS:-}" ]; then
+  _want=$(python3 - "$_TOOLS/routeflow" "$N" <<'PYCHK'
+import glob, json, os, sys
+d, stem = sys.argv[1], sys.argv[2]
+for f in sorted(glob.glob(os.path.join(d, "*.json"))):
+    try: p = json.load(open(f))
+    except Exception: continue
+    if p.get("board") != stem: continue
+    r = p.get("route") or {}
+    if r.get("plane_nets") or r.get("power_layers"):
+        print("%s declares plane_nets %s on power_layers %s" % (os.path.basename(f), r.get("plane_nets"), r.get("power_layers")))
+        break
+PYCHK
+)
+  if [ -n "$_want" ]; then
+    echo "route_one: REFUSED. This board's profile $_want, and this route sets neither FR_PLANE_NETS nor" >&2
+    echo "           FR_POWER_LAYERS, so every pin of those nets would be routed as a wire and the result" >&2
+    echo "           would measure the launcher and not the board. Set them, or FR_PLANES_CHECKED=0 to say" >&2
+    echo "           the omission is deliberate." >&2
+    exit 2
+  fi
+fi
 cp "out/$N-preroute.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
 # FR_PLANE_NETS="GND" (6 Sep 2026 04:50): the zones of these nets on the FR_POWER_LAYERS layers stay in the DSN as planes, so the router connects their pins
 # by a via into the plane instead of routing them as wires (B15's DSN listed 258 GND pins for the router, 37 percent of its connections). Default: none, as before.
