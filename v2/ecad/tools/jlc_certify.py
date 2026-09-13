@@ -248,7 +248,20 @@ def same_part(want, got):
     n = 0
     while n < min(len(a), len(b)) and a[n] == b[n]:
         n += 1
-    return n >= 6
+    if n >= 6:
+        return True
+    # 13 September 2026: an order code also carries the MANUFACTURER at the FRONT. We ask for 74LVC08APW,
+    # which is the part as its datasheet names it, and JLCPCB answers SN74LVC08APWR, TI's full order code:
+    # SN is the prefix, R the reel. The common-prefix test above compares from character one, so it scored
+    # zero and two of board B's rows read WRONG_MODEL for a part that is exactly what was asked for.
+    # A containment test needs a floor or it pairs anything with anything: eight characters of letters and
+    # digits is long enough that a coincidence is not credible, and every part number this is written for is
+    # longer than that. The shorter string must be the one contained, and it must be the part WE named.
+    if len(a) >= 8 and a in b:
+        return True
+    if len(b) >= 8 and b in a:
+        return True
+    return False
 
 
 def intended_part(comment):
