@@ -7045,3 +7045,42 @@ out there and walks round it on solid copper.
 A26's gate refused it for ONE item of 835: a locked VBAT via at (49.5, 132.5) sitting outside the fill of the
 In2 plane, in the PoE controller's own escape fan, where two columns of 0.45 mm vias at 0.65 mm pitch shred the
 plane. With the refill of 32.175 in place that item is measured against the fill the board actually has.
+
+### 32.177 E9 is cut, and the optimiser that produced nothing for two hours and forty minutes (14 September 2026, 01:45 CEST; MESHSAT-862)
+
+**`meshsat-pcb-e-revA-E9` is committed**: 0 hard of the fifteen types, **0 unrouted**, `check_pcb_e` RESULT ALL
+PASS, **dc_drop 2 of 2 rails MET** (CELL_F and VIN_RAW), `netlist_board` agreed, contracts ALL PASS,
+`verify_deliverable` **ALL PASS on 36 of 36**, board sha256 `1309202460f2149dd0d0` verified three ways (the
+box's deliverable, the box's project copy and the folder's own `pcb-e1-dock-board.sha256`), 148 CPL rows and 97
+BOM lines. It carries the VIN_RAW copper of E8 plus the In2 pour taken north of its own via heads, and it is
+the first E cut whose rails were measured on the fill the board is being cut with (32.175).
+
+**The route took nine minutes and the job took two hours and fifty.** E8's autoroute completed at pass 229 in
+15 minutes and wrote its session; the OPTIMISER then ran for **2 h 40 min** to the job's own three-hour cap and
+contributed nothing, because `route_one.sh` imports the per-pass session and the optimiser never wrote one.
+`-oit 2` is a percentage improvement threshold, not a pass count, and on this board it does not terminate
+inside any budget worth spending.
+
+`optkill.sh` waits for that job's own log to say `Auto-routing was completed` and then stops the optimiser,
+leaving the session where it is. E9's route stage: **9.4 minutes**, against E8's 180. Nothing about the route
+changed; what changed is how long the box is held after it is finished.
+
+### 32.178 `direct_close` was measuring a board at KiCad's own unconnected cap, and the finish could not see it crash (14 September 2026, 01:50 CEST; MESHSAT-862)
+
+A26 ended its finish with **12 connections open and not one line from `direct_close`** between `stitch_prune`
+and `quality`, on a board whose profile declares that stage. It had run. Run again by hand with `python3 -u`:
+**1,812 lines of output and then `exit 139`, a segmentation fault in pcbnew**, and every trial it had judged
+along the way reported the same number: *"legal, and it closed nothing (unrouted 499)"*.
+
+**499 is KiCad's cap on the unconnected list** (section 8 of the handover: "the pre-route count is capped,
+never a denominator"). The real board has twelve. The tool lays a candidate track on a copy, fills the zones
+and asks the DRC whether the board improved; it was filling with a **stale net graph**, so the pour connections
+of the trial board all read as open and `U1 < U0` could never be true. **On this board it could not have
+accepted any shape it proposed, whatever the geometry.** `b.BuildConnectivity()` before the fill and again
+before the save is the fix.
+
+**And the reason a 1,812-line crash showed as silence**: the finish ran it as
+`python3 ... 2>&1 | grep -a direct_close`, so stdout was block-buffered and died with the process, while the
+pipeline threw the exit code away. It runs `python3 -u` into a log now and reports a non-zero exit. This is the
+family of 32.171 with the failure mode inverted: there the tree promised something nothing did, here something
+did the work and nothing could hear it.
