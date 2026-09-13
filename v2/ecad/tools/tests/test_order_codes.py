@@ -320,3 +320,24 @@ def t_the_fab_note_reads_the_copper_weight_and_the_stackup_off_the_board():
         nl = len(re.findall(r'\(layer "(?:F|B|In\d+)\.Cu" \(type "copper"\)', st))
         got_stack = "JLC%02d161H-%s" % (nl, pp[0]) if pp else None
         assert got_stack == stack, "%s reads stackup %s where the record says %s" % (folder, got_stack, stack)
+
+
+def t_a_manufacturers_prefix_on_an_order_code_is_the_same_part():
+    """13 September 2026. An order code carries the manufacturer at the FRONT as well as the reel at the back.
+
+    `same_part` compared suffixes and common prefixes from character one, so asking for 74LVC08APW and being
+    answered SN74LVC08APWR, TI's own full order code, scored a common prefix of ZERO and two of board B's rows
+    read WRONG_MODEL for exactly the part they asked for. The containment test that fixes it needs a floor or
+    it pairs anything with anything; eight characters of letters and digits is the floor, and the rule must
+    still refuse the real mismatches the certification found, which is what the second half checks.
+    """
+    for want, got in (("74LVC08APW", "SN74LVC08APWR"),      # TI prefix and reel
+                      ("LM74700-Q1", "LM74700QDBVRQ1"),     # suffix in the middle
+                      ("TPS2065CDBV", "TPS2065DBVR")):
+        assert jc.same_part(want, got), "%s and %s are the same part and were not matched" % (want, got)
+    for want, got in (("ATECC608B-SSHDA-T", "BMI270"),      # the secure element against an IMU
+                      ("1-2199119-5", "HYCW01B-05NGFF-420B"),   # TE M.2 socket against a house brand
+                      ("MDT420M02001", "HYCW25M-05NGFF-230B"),
+                      ("SMCJ15A", "SMCJ18A"),               # one digit apart and a different clamp voltage
+                      ("1k", "X1kY")):                      # too short to be contained credibly
+        assert not jc.same_part(want, got), "%s and %s are NOT the same part and were matched" % (want, got)
