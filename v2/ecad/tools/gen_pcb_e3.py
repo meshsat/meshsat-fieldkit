@@ -201,8 +201,14 @@ import power_copper as _pcmod
 # 1.11 A, ratio 1.95. The lands are 2.00 mm pogo targets: TWO vias fit side by side at 1.0 mm apart, and a
 # 0.5 mm drill has 0.0393 mm2 of wall and carries 1.30 A, so a pair carries 2.60 A against the 2 A each land
 # takes of the rail's 8. Hole to hole is 0.5 mm and each via's 0.9 mm body sits 0.05 mm inside the pad edge.
-VIN_VIAS = [(-41.6, -89.25), (-40.5, -89.25), (-39.4, -89.25),      # inside L2 pad 2, the rail's source
-            (-41.6, -90.35), (-40.5, -90.35), (-39.4, -90.35),      # the second row, same pad
+# THIRD READING, same day: with two rows of THREE in the source pad, the worst barrel there still carried
+# 1.69 A against that 1.30. L2's pad 2 is 4.50 x 2.15 mm, which takes FIVE columns at 0.8 mm and two rows at
+# 1.1, so ten barrels carry 13.0 A against the rail's 8 and the worst should take about a tenth of it. Hole
+# to hole is 0.30 mm across the columns and 0.60 between the rows, and each 0.9 mm body sits 0.2 mm inside
+# the pad's own edge. Everything else on that rail is now under its bar: the conductor reads 0.55 and the
+# pour, clear of every via, exactly 1.00.
+VIN_VIAS = [(-42.1, -89.25), (-41.3, -89.25), (-40.5, -89.25), (-39.7, -89.25), (-38.9, -89.25),
+            (-42.1, -90.35), (-41.3, -90.35), (-40.5, -90.35), (-39.7, -90.35), (-38.9, -90.35),
             (-86.35, -74.73), (-83.81, -74.73), (-81.27, -74.73), (-78.73, -74.73),   # two per J_BLK land,
             (-86.35, -75.73), (-83.81, -75.73), (-81.27, -75.73), (-78.73, -75.73)]   # 1.0 mm apart across it
 if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
