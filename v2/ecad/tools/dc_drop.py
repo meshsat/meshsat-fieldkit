@@ -281,6 +281,7 @@ def main(a):
         # on the track's direction. It is exact for an axis-aligned track and correct for a diagonal one,
         # where the current really does split between the two edge directions.
         cond = []    # (ratio, width, amps, limit_amps, layer, x, y, length)
+        short = []   # the same, for pieces too short to be a conductor: reported, never gated
         for L, ax, ay, bx, by, w, ln in net_tracks:
             if L not in occ or ln <= 0: continue
             t = t_of(L); g0 = 1.0 / sheet(t)
@@ -312,8 +313,18 @@ def main(a):
                 if cur > best: best = cur; at = (px, py)
             if best <= 0 or at is None: continue
             lim_a = ipc_limit(w * t, dT_of(r), L not in (pcbnew.F_Cu, pcbnew.B_Cu))
-            if lim_a > 0: cond.append((best / lim_a, w, best, lim_a, lname[L], at[0], at[1], ln))
-        cond.sort(reverse=True)
+            if lim_a <= 0: continue
+            # A JOINT IS NOT A CONDUCTOR (13 September 2026). IPC-2221's curve is the steady-state rise of a
+            # LONG trace, where the heat has nowhere to go sideways. A segment shorter than its own width is
+            # a joint: the copper at both ends conducts its heat away and it cannot reach that rise at any
+            # current. P3 was being failed on a 0.500 mm segment 0.0 mm long and D10 on one 0.1 mm long, both
+            # of them a router's junction between two pieces that ARE judged. The bar is the larger of 1 mm
+            # and twice the width, and every skipped piece is counted and the worst of them printed, so a
+            # real neck hiding in a short segment shows up rather than disappearing.
+            if ln < max(1.0, 2.0 * w):
+                short.append((best / lim_a, w, best, lim_a, lname[L], at[0], at[1], ln)); continue
+            cond.append((best / lim_a, w, best, lim_a, lname[L], at[0], at[1], ln))
+        cond.sort(reverse=True); short.sort(reverse=True)
         # every barrel of this net on its own cross-section, the same question the conductor pass asks of a track
         via_worst = None
         for vx, vy, vd, vwall, vrv, vnodes in net_vias:
@@ -404,6 +415,10 @@ def main(a):
                         "for its own cross-section at %.0f K, ratio %.2f" % (cw, cL, cx, cy, cln, ca, cl, dT, cr))
         else:
             cond_txt = "no track of this net carries a measurable current, so the conductor test judged nothing"
+        if short:
+            cond_txt += ("; %d piece(s) shorter than a conductor were not judged, the worst %.3f mm wide and %.2f mm "
+                         "long on %s at (%.1f, %.1f) carrying %.2f A against %.2f A"
+                         % (len(short), short[0][1], short[0][7], short[0][4], short[0][5], short[0][6], short[0][2], short[0][3]))
         # The pour bar is IPC's current for ONE cell's cross-section, and it is LENIENT against the whole-track
         # figure because IPC is sublinear in area: 18 percent at 0.4 mm width, 21 at 1 mm, 64 at 3 mm, 98 at 6.
         # So a pour ratio over 1 is a floor on the exceedance, never a ceiling. The direction is written here
