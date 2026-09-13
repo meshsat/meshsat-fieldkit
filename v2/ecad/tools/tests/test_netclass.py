@@ -81,6 +81,12 @@ def t_no_tool_carries_its_own_copy_of_the_lookup():
                 offenders.append("%s:%d %s" % (b, n, line.strip()[:100]))
             if "isinstance(" in line and "list" in line and ("assign" in line or "netclass_assignments" in line):
                 offenders.append("%s:%d %s" % (b, n, line.strip()[:100]))
+            # The second straighten site was found by RUNNING the fixed tool, not by this rule: the first
+            # patch fixed the dict-key use and left `if _c in _pairc`, the same list against a set, four
+            # lines below. So the map itself is off limits: the only way to a class name is class_of, and
+            # the value is normalised once where it is fetched.
+            if re.search(r'\b_?assign\w*\.get\(', line) and "class_of" not in line:
+                offenders.append("%s:%d reads the assignment map directly: %s" % (b, n, line.strip()[:90]))
     assert not offenders, ("these carry their own copy of the class lookup instead of calling netclass.class_of:\n  "
                           + "\n  ".join(offenders))
 
