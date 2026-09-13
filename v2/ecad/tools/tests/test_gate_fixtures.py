@@ -540,3 +540,29 @@ def t_the_density_tolerance_is_ruling_19_and_says_so():
         "the tolerance no longer carries the measurement that justifies it"
     # and it must still be applied, not merely declared
     assert _re.search(r'jl\s*\*\s*DENSITY_TOL', src), "the tolerance is declared and not used"
+
+
+def t_a_rail_with_no_declared_load_is_not_judged():
+    """13 September 2026: a guessed load is not a measurement, and the guess was deciding boards.
+
+    dc_drop falls back to splitting a rail's current evenly over every U or J footprint on the net when the
+    intent declares no loads. On 12 September that fallback made CELL+ read 2.21 percent by pushing 10 A
+    through the charger's SENSE pin and its 0.20 mm escape. That rail was given its load and THE TOOL WAS LEFT
+    ALONE, so the same defect sat in every other undeclared rail until owner ruling 16 made the density a
+    verdict and five of the ten failing rails turned out to declare nothing.
+
+    The fix belongs to the CLASS: such a rail is UNDECLARED, neither drop nor density is judged, it still
+    blocks, and the board's verdict is INCONCLUSIVE rather than FAIL because the defect is in the intent file
+    and not in the copper. The two have different remedies and a reader must be able to tell them apart.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    assert "UNDECLARED" in src, "dc_drop no longer distinguishes an undeclared rail"
+    i = src.index("guessed is not None")
+    body = src[i:i + 900]
+    assert "UNDECLARED" in body, "the undeclared branch does not produce an UNDECLARED verdict"
+    assert "continue" in body, "the undeclared branch falls through and judges the rail anyway"
+    assert _re.search(r'_v\.INCONCLUSIVE if len\(undecl\) == miss', src), \
+        "a board whose only failures are undeclared rails is still reported as FAIL, which blames the copper"
+    assert "would have put the current into" in src, \
+        "the refusal does not name the parts it would have guessed, so it does not say how to fix itself"
