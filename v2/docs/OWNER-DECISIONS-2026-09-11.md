@@ -962,7 +962,20 @@ margin, and it touches 70 pads on 31 parts instead of 191 on 124. The nine hard 
 from tracks spilling past small pads, and at 0.70 mm the four parts with pads under 0.5 mm are the only ones
 that can still do it.
 
-**The route cost at 0.70 mm is being measured, and the first attempt at it is withdrawn.** It came back hard 0
+**THE ROUTE COST IS MEASURED, both widths through one identical invocation on the same placed board:**
+
+| PWR class | hard | unrouted | vias |
+|---|---:|---:|---:|
+| 0.50 mm (today) | **1** (one clearance) | **2** | 171 |
+| **0.70 mm** | **0** | **4** | 187 |
+| 1.20 mm (ruled), recorded 13 September | 9 (clearance 2, shorting 6, mask bridge 1) | 11 | 192 |
+
+**0.70 mm costs two connections against 0.50 mm and no hard items at all**, where the ruled 1.2 mm costs nine
+hard and eleven connections. It is closer to today's board than to the ruling, and it carries the current the
+rail was measured to have. A 1.2 mm arm is running through this same script so all three are like for like;
+its recorded numbers came from another session's invocation.
+
+**The first attempt at the 0.70 arm is withdrawn.** It came back hard 0
 with 121 unrouted and FOUR vias, and the cause was the arm rather than the width: it set neither
 `FR_POWER_LAYERS` nor `FR_PLANE_NETS`, which D's own route profile declares as `In1.Cu` and `GND`, so every
 ground pin went into the wire list at the class width instead of being reached by vias through a plane. That
