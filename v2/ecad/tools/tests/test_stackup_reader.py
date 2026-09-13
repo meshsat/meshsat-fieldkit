@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""The stackup a board declares, read whichever way KiCad wrote it (MESHSAT-862, 13 September 2026).
+
+`read_stackup` parsed the block LINE BY LINE, with a regex that wanted `(layer "F.Cu" (type "copper")
+(thickness 0.07))` all on one line. KiCad 9 saves it with every field on its own line, so a board that has
+been through `SaveBoard` matched nothing and the reader returned an empty stackup, silently.
+
+Nothing said so, because both readers of it have a fallback that is right for most of this set: `dc_drop`
+falls back to 0.035 mm outer and 0.0152 inner, which IS what the four and six layer boards carry. It showed
+on P3, which owner ruling 7 orders at **2 oz**: the committed board still carries the older one-line form and
+reads 2 of 3 rails MET, and a freshly REGENERATED one was judged at half its copper and read 0 of 3, with
+IPC's figure for a 0.500 mm track falling from 2.39 A to 1.45.
+
+So the two forms must give the same answer, and a declared stackup must never be silently replaced by a
+default. The reader walks brackets now.
+"""
+import os, sys, tempfile
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, TOOLS)
+
+ONE = '''  (stackup
+    (layer "F.Mask" (type "Top Solder Mask") (thickness 0.01))
+    (layer "F.Cu" (type "copper") (thickness 0.07))
+    (layer "dielectric 1" (type "core") (thickness 1.44) (material "FR4 core") (epsilon_r 4.6) (loss_tangent 0.02))
+    (layer "B.Cu" (type "copper") (thickness 0.07))
+  )
+'''
+MANY = '''\t\t(stackup
+\t\t\t(layer "F.Mask"
+\t\t\t\t(type "Top Solder Mask")
+\t\t\t\t(thickness 0.01)
+\t\t\t)
+\t\t\t(layer "F.Cu"
+\t\t\t\t(type "copper")
+\t\t\t\t(thickness 0.07)
+\t\t\t)
+\t\t\t(layer "dielectric 1"
+\t\t\t\t(type "core")
+\t\t\t\t(thickness 1.44)
+\t\t\t\t(material "FR4 core")
+\t\t\t\t(epsilon_r 4.6)
+\t\t\t)
+\t\t\t(layer "B.Cu"
+\t\t\t\t(type "copper")
+\t\t\t\t(thickness 0.07)
+\t\t\t)
+\t\t)
+'''
+
+
+def _read(txt):
+    from impedance_check import read_stackup
+    with tempfile.NamedTemporaryFile("w", suffix=".kicad_pcb", delete=False) as fh:
+        fh.write(txt); p = fh.name
+    try: return read_stackup(p)
+    finally: os.unlink(p)
+
+
+def t_both_forms_give_the_same_stackup():
+    a, b = _read(ONE), _read(MANY)
+    assert a == b, "the same stackup read two ways gives two answers:\n  one line:   %s\n  many lines: %s" % (a, b)
+
+
+def t_the_multi_line_form_is_not_empty():
+    """The failure as it happened: the reader returned nothing and the caller's default took over."""
+    b = _read(MANY)
+    assert b, "a board saved by KiCad 9 reads as having no stackup at all"
+    cu = [x for x in b if x[1] == "copper"]
+    assert len(cu) == 2 and all(abs(t - 0.07) < 1e-9 for _, _, t, _ in cu), \
+        "the 2 oz copper of owner ruling 7 did not survive the read: %s" % cu
+
+
+def t_a_dielectric_without_epsilon_still_carries_none():
+    """The old parser's one deliberate property: no default epsilon, because a dielectric without one is
+    refused rather than guessed. It must survive the rewrite."""
+    txt = ONE.replace(' (epsilon_r 4.6)', '')
+    core = [x for x in _read(txt) if x[1] == "core"]
+    assert core and core[0][3] is None, "a dielectric with no epsilon_r came back with one: %s" % core
