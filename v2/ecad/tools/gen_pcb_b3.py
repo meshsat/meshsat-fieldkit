@@ -313,6 +313,15 @@ PTH_OBSTACLE = os.environ.get("PLACE_PTH_OBSTACLE", "0") not in ("0", "")
 # every packed part and the pairs that won their corridor lose it again. The two knobs do not compose; the default goes
 # back to 1.6 and PLACE_FINE_MARGIN carries the experiment.
 FINE_MARGIN = float(os.environ.get("PLACE_FINE_MARGIN", "1.6"))
+# PLACE_NO_UNDER_FINE, 13 September 2026 (MESHSAT-862), owner ruling 18's floor plan measured rather than drawn.
+# This file's own region comment says the underside decoupling goes "never beneath a fine-pitch part whose escapes
+# need the vias", and the placed board has **71 back-side parts sitting under one**: fifteen under U301, fourteen
+# under U101, thirteen under U201, each a 133-pad 0.40 mm PCIe switch whose escape vias come through exactly there.
+# The pair pre-router's largest remaining failure class after the end fit is "no stub path at via" at those three
+# switches and the two M.2 card sockets, which is a leg that cannot cross B.Cu under the part it is leaving.
+# The rule was a sentence; this makes it a packer obstacle, and it is OFF until an arm grades it, because the
+# same shape (PLACE_PTH_OBSTACLE) took the board from 6 hard to 107 when the regions had no room to step.
+NO_UNDER_FINE = os.environ.get("PLACE_NO_UNDER_FINE", "0") not in ("0", "")
 import re as _re
 def is_fine(fp):
     if _re.search(r"SOT-23-[68]|SOT-583|TSOT-23-6", fp.GetFPIDAsString()): return True
@@ -347,8 +356,18 @@ print("placement: %d differential-pair couples packed side by side" % (len(COUPL
 REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, _rect, _refs, _bk in REGIONS]   # a reserved capacitor is placed already
 _load_obstacles(board, set(FIXED))
 print("packer: %d obstacle(s) on the board (holes, small keep-outs and the %d fixed parts)" % (len(_OBSTACLES), len(FIXED)))
+_under_done = set()
 for name, (x0, y0, x1, y1), refs, back in REGIONS:
     regionfit.record(name, (x0, y0, x1, y1), back, len(refs), stem=os.path.splitext(os.path.basename(BOARD))[0])
+    if NO_UNDER_FINE and back:
+        # every fine-pitch front part placed so far is a hole in the underside: its escape vias are there
+        for _ref, _fp in list(placed.items()):
+            if _ref in _under_done or _fp.IsFlipped() or not is_fine(_fp): continue
+            if len([_p for _p in _fp.Pads() if _p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]) < 16: continue
+            _under_done.add(_ref); _bb = _fp.GetBoundingBox(False, False)
+            _OBSTACLES.append((pcbnew.ToMM(_bb.GetLeft()) - OX - GAP, OY - pcbnew.ToMM(_bb.GetBottom()) - GAP,
+                               pcbnew.ToMM(_bb.GetRight()) - OX + GAP, OY - pcbnew.ToMM(_bb.GetTop()) + GAP))
+        if _under_done: print("packer: %d fine-pitch front part(s) are obstacles to the underside regions (PLACE_NO_UNDER_FINE)" % len(_under_done))
     fps = []
     for ref in refs:
         if ref not in comps: print("WARNING %s not in netlist" % ref); continue
