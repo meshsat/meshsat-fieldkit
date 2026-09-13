@@ -171,7 +171,13 @@ board.Add(z)
 # reasons this line and the block below fix: the pour stopped at y -80 while the block lands it feeds sit at
 # y -75.2, so the last 5 mm was router track; and a 4.50 x 2.15 mm source pad reached the pour through one
 # signal via. This is the CELL+ lesson in another place: a rail's current finding geometry meant for signals.
-pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)", (-92, -100, -26, -74))
+# 13 September 2026, SECOND READING on E8's routed board: the pour's north edge ran along the heads of the
+# ten power vias it was given. The vias sit at y -74.7 and -75.7 with 0.45 mm of radius, so each one's
+# clearance ate into a strip 0.25 mm wide, and the worst pour cell clear of any via read 59.3 A/mm2 against
+# 52.0 (ratio 1.14) a millimetre south-east of them. In2 is EMPTY from y -71 to -74 across this whole span
+# (measured: three of this net's own vias and one GND via in 66 by 4 mm), so the pour takes that room and
+# the current spreads round the via heads instead of squeezing past them.
+pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)", (-92, -100, -26, -71))
 # The rail's 8 A leaves L2's pad 2 and 2.23 A of it was measured on the LOCKED 0.400 mm escape stub beside the
 # pad, which IPC gives 1.23 A: the rail has copper on In2 and none on the layer its source pad is on, so that
 # stub is a lone conductor with nothing beside it. A small F.Cu island over the pad and the stub's own run
