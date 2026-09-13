@@ -178,9 +178,13 @@ for s in (1, 2, 3):
     #   ETH     2.9 mm over -> south, 9 to 3. IOCA's top is -4, so 7 mm still separates them.
     #   GAP12   2.6 mm over -> south, 33 to 25.
     #   RADE    1.8 mm over -> north, 67 to 74.
-    #   IOCA    1.8 mm over -> west, -160 to -164, which is the board edge.
-    #   S1_RAIL 1.0 mm over -> WEST, x0-2 to x0-4.
-    #   S3_RAIL 1.0 mm over -> EAST, x1 to x1+4: west of it at this y is S2_RAIL, which S1 does not have.
+    #   IOCA    1.8 mm over -> NORTH, -4 to 2. West to the board edge was tried first and cost twenty hard
+    #                              items on the 1.6 mm baseline, two of them shorts on IOCA's own nets
+    #                              (/IOCA_SWDIO and /+3V3_IOCA): at the edge the packer had nowhere to put
+    #                              what it moved. North is free, because ETH's south edge is now 3.
+    #   S1_RAIL 1.0 mm over -> WEST, x0-2 to x0-7. BATT starts at x -106, so -105 is the limit.
+    #   S3_RAIL 1.0 mm over -> EAST, x1 to x1+8: west of it at this y is S2_RAIL, which S1 does not have,
+    #                              and RBX and SEX to the east are at other y ranges entirely.
     if s == 2:
         REGIONS += [("S2_SWIC", (-38, -60, -3, -8), [U(1), U(2), U(9), U(10)], False),
                     ("S2_SWE", (10, -57, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (-36, -57, 32, -30), sw_b + card_b + sup_b, True),
@@ -189,7 +193,7 @@ for s in (1, 2, 3):
     else:
         REGIONS += [("S%d_SWIC" % s, (x0 - 1, -52, x0 + 43, -8), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
                     ("S%d_SWE" % s, (x0 + 43, -52, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -52, x1, -21), sw_b + card_b + sup_b, True),
-                    ("S%d_RAIL" % s, ((x0 - 4) if s == 1 else (x0 - 2), -70, x1 if s == 1 else (x1 + 4), -52), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -52), rail_b + straps + sw_dec, True),
+                    ("S%d_RAIL" % s, ((x0 - 7) if s == 1 else (x0 - 2), -70, x1 if s == 1 else (x1 + 8), -52), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -52), rail_b + straps + sw_dec, True),
                     ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
 # 9 September 2026 (ARCH-PCB-B-IOHA section 6): the I/O control plane goes on the UNDERSIDE, and the three controllers
 # go in three SEPARATE pockets rather than one band. Two reasons, both measured on the board. First, a single rect
@@ -214,7 +218,7 @@ VOTE_PARTS = (["U%d" % n for n in range(70, 80)] + ["U80"] + ["C%d" % n for n in
               + ["R%d" % n for n in range(480, 501)])
 # each CAN fabric is terminated at its two PHYSICAL ends, which are controller A in the west pocket and controller C in
 # the east one; a bus terminated once, in the middle, reflects off both ends (caught reading the placement, 9 Sep 2026)
-REGIONS += [("IOCA", (-164.0, -76.0, -103.0, -4.0), _ioc(0) + VOTE_PARTS + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
+REGIONS += [("IOCA", (-160.0, -76.0, -103.0, 2.0), _ioc(0) + VOTE_PARTS + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
             ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1), True),
             ("IOCC", (18.0, 32.0, 47.0, 88.0), _ioc(2) + ["R504", "R505", "R506", "R507", "C506", "C507"], True),
 
