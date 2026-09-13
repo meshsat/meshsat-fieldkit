@@ -74,7 +74,7 @@
     },
     {
       "name": "region definitions in the packer",
-      "why": "where a part may sit is the floor plan, and the floor plan is a design decision with thermal, RF and assembly consequences OWNER RULING 13 September 2026 00:40 (decision 13): the seven overflowing regions of BOARD B ONLY may be resized by the session, one at a time, each reported with its overflow before and after. Every other board's regions stay on this floor, and so do B's once its overflow reads zero. A region change outside that is still the owner's.",
+      "why": "where a part may sit is the floor plan, and the floor plan is a design decision with thermal, RF and assembly consequences OWNER RULING 13 September 2026 00:40 (decision 13): the seven overflowing regions of BOARD B ONLY may be resized by the session, one at a time, each reported with its overflow before and after. Every other board's regions stay on this floor, and so do B's once its overflow reads zero. A region change outside that is still the owner's. OWNER RULING 17 of 13 September 2026 11:20 extends the same release to BOARD C ONLY, on the same terms: one region at a time, each reported with its overflow before and after, and only what U3's /+3V3 needs. Boards A, D, E, P and E5 keep their regions on this floor, and so do B's and C's once their overflow reads zero.",
       "sites": [
         [
           "gen_pcb_*3.py",

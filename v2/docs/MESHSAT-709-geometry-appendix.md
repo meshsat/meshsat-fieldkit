@@ -6291,7 +6291,7 @@ layers 2 oz.** A board file carrying no stackup block says so plainly rather tha
 `full.sh` writes a stackup into every board it generates, so that fallback fires only on a folder cut before
 8 September, which is C7 alone. One rule in `tests/test_order_codes.py`, proved to fail on the pre-fix tree.
 
-### 32.156 The stub router's class lookup was dead twice over, and a closure has been laid at 0.25 mm all week (13 September 2026, 03:20 CEST; MESHSAT-862)
+### 32.156 The stub router's class lookup was dead twice over, and a closure has been laid at 0.25 mm all week (13 September 2026, 02:55 CEST; MESHSAT-862)
 
 **Found by fixing something else.** `straighten.py` crashed on board C with `TypeError: unhashable type:
 'list'`, because KiCad 9 writes `net_settings.netclass_assignments` as a map from net name to a LIST of class
@@ -6323,7 +6323,7 @@ not one**, and `/+3V3` at U3 pad 10 is confirmed as a placement problem rather t
 now runs on that board for the first time: **segments 4,028 to 3,921, 106 shortcuts and one merge**, length
 29,384 mm, hard 0 before and after and unrouted unchanged.
 
-### 32.157 What owner ruling 9 costs board D, measured through the launcher the deliverable is cut with (13 September 2026, 03:10 CEST; MESHSAT-862)
+### 32.157 What owner ruling 9 costs board D, measured through the launcher the deliverable is cut with (13 September 2026, 02:55 CEST; MESHSAT-862)
 
 | D, same placement chain, same router call, 100 passes, In1 power layer, GND plane | hard | by type | unrouted | vias | route |
 |---|---:|---|---:|---:|---|
@@ -6341,7 +6341,7 @@ information no earlier arm reported: at 1.2 mm the rail copper does not merely f
 through routeflow, whose profile pins `repo`, so the chain regenerated and routed the production board with
 the production tools while the arm's patched generator sat unused in a copy.
 
-### 32.158 The current-density check has been lenient, not strict, and twelve rails exceed it (13 September 2026, 03:45 CEST; MESHSAT-862)
+### 32.158 The current-density check has been lenient, not strict, and twelve rails exceed it (13 September 2026, 03:00 CEST; MESHSAT-862)
 
 `dc_drop.py` prints a worst current density per rail and gates on the drop alone. The comment written on
 8 September says the density "overstates by the cell-to-width ratio" and is reported "until the raster is
@@ -6381,7 +6381,7 @@ the 2 mm floor is what separates those from a rail running narrow. **The first v
 reported zero on every board because its regex matched nothing**, which is the reminder that a clean result from
 a parser is worth nothing until the parser is shown to have parsed.
 
-### 32.159 Owner ruling 9's class is wider than 191 of the 230 pads it has to reach (13 September 2026, 04:05 CEST; MESHSAT-862)
+### 32.159 Owner ruling 9's class is wider than 191 of the 230 pads it has to reach (13 September 2026, 03:05 CEST; MESHSAT-862)
 
 The ruling says "widen D's PWR class to 1.2 mm **on the inner layers**". A KiCad net class carries one track
 width for every layer, so it was applied everywhere, and on the outer layers that is the whole problem.
