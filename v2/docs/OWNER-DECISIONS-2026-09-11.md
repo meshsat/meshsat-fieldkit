@@ -929,3 +929,47 @@ the two A24 rails whose verdict currently depends on a parameter nobody chose on
 +6 percent and +13V8_PA at -9, are the ones carrying their current in **planes and bands**, which a 0.5 mm
 cell resolves. Every rail that moves by half carries it in **tracks narrower than the cell**. So the raster is
 sound where the copper is wide and wrong where it is narrow, and the new measure is aimed at exactly that.
+
+---
+
+## DECISION 23, OPEN: ruling 9's 1.2 mm is sized for a current D's rail does not carry in one place (13 September 2026, 16:40 CEST)
+
+**This does not reopen ruling 9. It puts a number in front of it that did not exist when it was ruled**, and
+the number changes what the ruling costs by two thirds. D is blocked either way until you answer.
+
+**What was known when you ruled.** `+5V_D8` is a 1 A rail; IPC-2221 gives 1 A on 0.5 oz inner copper a width
+of **1.56 mm** at a 10 K rise, so 1.2 mm was the practical call and the 0.5 mm it had was rated 0.44 A. The
+cost measured afterwards: **191 of the 230 pads on the PWR class's nets are narrower than 1.2 mm, on 124
+parts, the narrowest 0.25 mm**, and a track wider than its pad spills past the pad edges. All nine hard items
+of the 1.2 mm arm sat at one place, D2's SOD-123 with 0.90 mm pads.
+
+**What is known now.** The rail's loads are declared, so the current is no longer split evenly over every part
+on the net by a guess. Measured on the cut D10 board with the corrected conductor pass, **the worst single
+piece of copper on this rail carries 0.53 A, not 1.0**: the 1 A is the rail's total and it divides among the
+loads well before the narrowest track. IPC gives 0.53 A **0.65 mm**.
+
+**And the cost falls with it, counted on D10's own pads:**
+
+| class width | pads narrower than it | parts affected | what it carries on 0.5 oz inner |
+|---|---:|---:|---|
+| 0.50 mm (today) | 16 of 230 | 4 | 0.44 A, under the measured 0.53 |
+| **0.70 mm** | **70 of 230** | **31** | **0.61 A, over the measured 0.53** |
+| 1.00 mm | 167 of 230 | 109 | 0.86 A |
+| 1.20 mm (ruled) | 191 of 230 | 124 | 1.05 A |
+
+**Option A, recommended: the PWR class goes to 0.70 mm.** It covers the current the rail actually carries with
+margin, and it touches 70 pads on 31 parts instead of 191 on 124. The nine hard items of the 1.2 mm arm came
+from tracks spilling past small pads, and at 0.70 mm the four parts with pads under 0.5 mm are the only ones
+that can still do it. The route cost is not yet measured at this width; it is a 40 minute run and I will have
+the number before you answer.
+
+**Option B: keep 1.2 mm as ruled.** It is the width for the whole rail in one conductor, which is the
+conservative reading and needs no new argument. It costs six connections and nine hard items measured, and
+"rearrange D's parts" cannot close it, because moving a SOT-23-5 does not widen its pads.
+
+**Option C, from the 13 September batch and still open: the class goes back to 0.5 mm and the rail carries its
+current in locked inner copper**, the A21 pattern, `power_copper.py`. The class then only has to carry what
+the router lays between the copper and the pads.
+
+**Option D: 0.70 mm now, and the copper of option C later if a measurement asks for it.** This is option A
+with the door left open, and it is what I would do if the answer were mine.
