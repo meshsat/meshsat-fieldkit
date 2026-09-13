@@ -932,7 +932,7 @@ sound where the copper is wide and wrong where it is narrow, and the new measure
 
 ---
 
-## DECISION 23, OPEN: ruling 9's 1.2 mm is sized for a current D's rail does not carry in one place (13 September 2026, 16:40 CEST)
+## DECISION 23, OPEN: ruling 9's 1.2 mm is sized for a current D's rail does not carry in one place (13 September 2026, 14:40 CEST)
 
 **This does not reopen ruling 9. It puts a number in front of it that did not exist when it was ruled**, and
 the number changes what the ruling costs by two thirds. D is blocked either way until you answer.
