@@ -315,22 +315,28 @@ for it1, it2 in pairs:
     if netobj is None or netobj.GetNetCode() <= 0: print("  skip: net not found", it1["net"]); continue
     net = netobj.GetNetname()
     TW = 0.25; VIA_D, VIA_DR, VIA_COST = 0.6, 0.3, 50.0
+    # 13 September 2026, measured: BOTH halves of this were dead, and the second was dead because of the first.
+    # On KiCad 9 `netobj.GetNetClass()` returns a bare SwigPyObject with no methods, so the line below raises
+    # AttributeError; the project-file fallback written on 7 September to repair exactly that was nested INSIDE
+    # the same try, after the raising statement, so it was never reached on any board. Every stub closure since
+    # has been laid at this TW of 0.25 mm (0.2 leaving a fine pad) with a 0.6/0.3 via, whatever the net's class
+    # asked for: on board C that is 0.25 mm for a RAIL net whose class width is 0.5. The two lookups are
+    # separate statements now, so a failure of one cannot silence the other.
     try:
         nc = netobj.GetNetClass(); TW = max(0.25, min(mm(nc.GetTrackWidth()), 1.0)); VIA_D = max(0.6, mm(nc.GetViaDiameter())); VIA_DR = max(0.3, mm(nc.GetViaDrill()))
-        # 7 Sep 2026 (A22 round 2): a bare LoadBoard resolves no class for a root-sheet label on KiCad 9.0.9, so the closure of a 0.6 mm node net came out 0.25 and the
-        # width gate refused it; the project's explicit netclass_assignments (written by the placement generators) are the truth here
-        try:
-            _pro = __import__("json").load(open(__import__("os").path.splitext(BOARD)[0] + ".kicad_pro")); _ns = _pro.get("net_settings", {})
-            # 13 September 2026: this compared the assignment with a class NAME, and KiCad 9 stores it as a
-            # LIST of names, which never equals one. So _c was empty on every net of every board whose project
-            # carries assignments and the default width and via size were kept in silence, which is the worse
-            # half of this defect: straighten.py crashed on the same value and a crash at least reports itself.
-            _cl = netclass.class_of(_ns.get("netclass_assignments"), net.GetNetname())
-            if _cl:
-                _c = [c for c in _ns.get("classes", []) if c.get("name") == _cl]
-                if _c: TW = max(0.25, min(float(_c[0].get("track_width", TW)), 1.0)); VIA_D = max(0.6, float(_c[0].get("via_diameter", VIA_D))); VIA_DR = max(0.3, float(_c[0].get("via_drill", VIA_DR)))
-        except Exception as _e: pass
     except Exception: pass
+    # The project's explicit netclass_assignments (written by the placement generators) are the truth here, and
+    # they are read whether or not pcbnew answered. `net` is the net NAME by this point, a string.
+    _cl = None
+    try:
+        _pro = __import__("json").load(open(__import__("os").path.splitext(BOARD)[0] + ".kicad_pro")); _ns = _pro.get("net_settings", {})
+        _cl = netclass.class_of(_ns.get("netclass_assignments"), net)
+        if _cl:
+            _c = [c for c in _ns.get("classes", []) if c.get("name") == _cl]
+            if _c: TW = max(0.25, min(float(_c[0].get("track_width", TW)), 1.0)); VIA_D = max(0.6, float(_c[0].get("via_diameter", VIA_D))); VIA_DR = max(0.3, float(_c[0].get("via_drill", VIA_DR)))
+    except Exception: pass
+    # The width a closure is laid at was never printed, which is how 0.25 mm on a 0.5 mm class survived a week.
+    print("  %s: class %s, track %.3f mm, via %.2f/%.2f mm" % (net, _cl or "(none resolved)", TW, VIA_D, VIA_DR))
     fine = [it for it in (it1, it2) if it["kind"] == "pad" and it["pad"] is not None and min(mm(it["pad"].GetSize().x), mm(it["pad"].GetSize().y)) < 0.4]
     if fine: TW = 0.2                                              # leaving a fine-pitch pad: thinnest allowed track
     trk, via = build_maps(net)

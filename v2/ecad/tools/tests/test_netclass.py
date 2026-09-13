@@ -98,3 +98,44 @@ def t_every_reader_imports_the_one_answer():
         assert re.search(r'^import netclass$|^import .*\bnetclass\b', src, re.M), \
             "%s reads netclass_assignments and does not import the one answer" % b
         assert "netclass.class_of(" in src, "%s imports it and does not use it" % b
+
+
+def t_the_project_file_lookup_is_not_inside_the_try_it_is_the_fallback_for():
+    """13 September 2026, and this is the defect that hid the netclass one for a week.
+
+    `stub_router.py` reads the net's class twice: from pcbnew, and from the project file. The second was
+    written on 7 September precisely because the first does not work (`netobj.GetNetClass()` returns a bare
+    SwigPyObject on KiCad 9 and `GetTrackWidth()` on it raises AttributeError) and it was nested INSIDE the
+    same `try` as the first, AFTER the raising statement. So the exception jumped past it every time and the
+    fallback never ran on any board. Every stub closure since has been laid at the default 0.25 mm with a
+    0.6/0.3 via whatever the net's class asked for, which on board C is half the width of a RAIL net.
+
+    **A fallback inside the try of the thing it is a fallback for is not a fallback.** The rule reads the
+    file's syntax tree rather than its text: the two lookups must be separate statements.
+    """
+    import ast
+    src = open(os.path.join(TOOLS, "stub_router.py")).read()
+    tree = ast.parse(src)
+
+    def calls(node, name):
+        return any(isinstance(n, ast.Attribute) and n.attr == name for n in ast.walk(node))
+
+    def reads_project(node):
+        return any(isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value == ".kicad_pro"
+                   for n in ast.walk(node))
+
+    bad = []
+    for t in (n for n in ast.walk(tree) if isinstance(n, ast.Try)):
+        if not calls(t, "GetNetClass"): continue
+        for stmt in t.body:
+            if reads_project(stmt) or any(isinstance(n, ast.Try) and reads_project(n) for n in ast.walk(stmt)):
+                bad.append("line %d" % getattr(t, "lineno", 0))
+    assert not bad, ("the project-file class lookup sits inside the try that guards the pcbnew one, so it is "
+                     "skipped whenever pcbnew raises, which on KiCad 9 is always (%s)" % ", ".join(bad))
+
+
+def t_a_stub_closure_says_what_width_it_is_laid_at():
+    """0.25 mm on a 0.5 mm class survived a week because the number was never printed."""
+    src = open(os.path.join(TOOLS, "stub_router.py")).read()
+    assert re.search(r'print\([^)]*track [^)]*mm', src), \
+        "stub_router does not report the track width of the closure it lays"
