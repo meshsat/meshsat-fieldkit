@@ -669,7 +669,7 @@ without a new one.
 
 ---
 
-## Decision 9, the cost re-measured on the production router path (13 September 2026, 03:10 CEST)
+## Decision 9, the cost re-measured on the production router path (13 September 2026, 02:55 CEST)
 
 **You ruled to keep the 1.2 mm PWR class and rearrange D's parts, and that ruling stands. What follows is the
 number it was ruled against, corrected, because it was measured through the wrong launcher.**
@@ -701,7 +701,7 @@ run where it is not already touching something else.
 contradiction before checking that the earlier pair used a different launcher. The launcher is a third
 variable across the two pairs, not within either. Both numbers stay on the record with their launcher named.
 
-## Board C's last connection is narrower than its own class, and at the class width it does not close (13 September 2026, 03:20 CEST)
+## Board C's last connection is narrower than its own class, and at the class width it does not close (13 September 2026, 02:55 CEST)
 
 **Not a decision yet, a measurement you should have before C is finished.** `stub_router.py` had two class
 lookups and both were dead: `netobj.GetNetClass()` raises on KiCad 9, and the project-file fallback written on
@@ -719,7 +719,7 @@ the record already suspected about this board: `/+3V3` at U3 pad 10 is a **place
 one. Nothing is decided here and C's regions stay on the never-auto floor; when C comes up, the question will
 be whether to give U3 room or to declare the rail narrower, and the second is a class change, which is yours.
 
-## Decision 14: twelve rails on four boards carry more current than IPC-2221 allows, and the check that says so has never gated anything (measured 13 September 2026, 03:45 CEST)
+## Decision 14: twelve rails on four boards carry more current than IPC-2221 allows, and the check that says so has never gated anything (measured 13 September 2026, 03:00 CEST)
 
 **This is the one thing I found today that touches boards you would order, so it needs you rather than me.**
 
@@ -768,7 +768,7 @@ are in the tool and in a rule that fails if the sign is ever claimed the other w
 **My recommendation is A for A24's VBAT specifically, and B or C for the rest**, because 8.2x is a different
 kind of number from 1.01x and only the first four rows are clearly worth a re-cut.
 
-## Decision 9, third reading: the 1.2 mm class is wider than 191 of the 230 pads it has to reach (measured 13 September 2026, 04:05 CEST)
+## Decision 9, third reading: the 1.2 mm class is wider than 191 of the 230 pads it has to reach (measured 13 September 2026, 03:05 CEST)
 
 **Your ruling says "widen D's PWR class to 1.2 mm ON THE INNER LAYERS". The class carries ONE width for every
 layer, so it was applied everywhere, and on the outer layers that is the whole problem.**
@@ -806,3 +806,29 @@ stays available and would be a new ruling. This is me asking for that ruling, wi
 **What I got wrong:** I read the standing ruling as a floor-plan problem and spent a packer-gap arm on it before
 measuring the pads. The pad measurement takes ten seconds and would have said the floor plan was the wrong
 lever. The arm is on the record with its numbers either way.
+
+---
+
+# OWNER RULINGS, 13 September 2026 11:20 CEST, asked as three questions and answered in one sitting
+
+**All three went to the recommended option. They are rulings, not recommendations, and they are not reopened
+without a new one.**
+
+| # | question | RULING |
+|---|---|---|
+| **15** | how ruling 9 is implemented, now that the 1.2 mm class is wider than 191 of D's 230 pads | **OPTION C: the PWR class goes back to 0.5 mm and the rail is carried at 1.2 mm on the INNER layers as locked pre-routed copper**, board A's `power_copper.py` pattern. This is ruling 9 implemented where it was actually put. The electrical margin is kept and the router can still reach a 0.25 mm pad |
+| **16** | the current density that has never gated anything, twelve rails over a bar that is itself lenient | **GATE IT, and re-cut the worst.** The density becomes a verdict. A24 is re-cut for VBAT at 8.2x, VBUS20 2.6x, +13V8_PA 2.1x and +12V_HF 2.5x; E7 and P3 are largely the 2 oz question already ruled in 7. The three deliverables re-open |
+| **17** | board C's U3, whose `/+3V3` will not close at its own class width | **C's regions are RELEASED to the session, board C ONLY**, on decision 13's terms: one region at a time, each reported with its overflow before and after, and nothing on the other boards touched |
+
+## What each of these commits us to
+
+- **15** unblocks D. `power_copper.py` exists and is proved on board A; what is new is applying it to an inner
+  layer rather than an outer one, and D's deliverable is re-cut after it. The 0.5 mm class is what the ROUTER
+  sees; the 1.2 mm copper is laid before it and locked, so the router never has to fit a 1.2 mm track to a
+  0.25 mm pad. **Ruling 9 is not weakened: the rail still carries 1 A in 1.2 mm of inner copper.**
+- **16** re-opens A24, E7 and P3, which were the three cut deliverables. It is the largest piece of work of the
+  three and it is the one that touches what would be bought. A24's VBAT at 8.2x is the real item; E7 and P3
+  should mostly fall out of the 2 oz stackup that ruling 7 already ordered, and that is measured rather than
+  assumed before any copper moves.
+- **17** unblocks C on the same terms as B. **Boards A, D, E, P and E5 keep their regions on the never-auto
+  floor**, and so do B's and C's once their overflow reads zero.
