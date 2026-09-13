@@ -236,10 +236,14 @@ _pc = _PC(board, net_for, P)
 # x -42.75 and -40.21, so its pads exist on In2 and the band filled 36 of its 92 mm2. The clear corridor is
 # x -37.5: 1.11 mm from the nearer pin column's pad edge, and the only other thing near it is C7, a bypass
 # capacitor of this same rail. So the band jogs east along y -17.8 from the source pad, runs north at
-# x -37.5, and stops at y 23.0, which is 0.69 mm below C7's pad and clear of C7's GROUND pad beside it.
-_pc.union("+5V_D8", "+5V_D8 trunk In2", [(-43.4, -18.6, -36.7, -16.9),    # east from J_PWR1's pad, clear of its GND pin at y -13.8
-                                         (-38.4, -18.6, -36.7, 23.0),      # north in the corridor between J_HARN1's pins and C7, 1.7 mm
-                                         (-38.4, 21.4, -29.4, 22.9),       # east to FB1's pad and over U1's upper pad, 1.5 mm
+# x -37.25, and REACHES C7's own pad at y 23.9. Stopping 0.69 mm short of it, as the first version did, left
+# that pad with no copper of its net on any layer it could reach: its nearest +5V_D8 via was 2.77 mm away and
+# the decoupling gate refused the board for it. A pad of the band's own net that the band overlaps is
+# connected to it, so no via is needed at all. C7's GROUND pad ends at x -38.30 and the band starts at
+# -38.10, which is 0.20 mm of clearance against the 0.15 the fill wants.
+_pc.union("+5V_D8", "+5V_D8 trunk In2", [(-43.4, -18.6, -36.4, -16.9),    # east from J_PWR1's pad, clear of its GND pin at y -13.8
+                                         (-38.1, -18.6, -36.4, 23.9),      # north in the corridor between J_HARN1's pins and C7, 1.7 mm
+                                         (-38.1, 21.4, -29.4, 22.9),       # east to FB1's pad and over U1's upper pad, 1.5 mm
                                          (-36.3, 19.6, -34.6, 22.4)],      # the stub down to U1's lower pad
           pcbnew.In2_Cu, priority=2, min_width=0.25, clearance=0.15)
 _pc.stitch("+5V_D8", [(-31.4, 22.15), (-34.9, 22.15), (-35.46, 20.1)])    # one via per load pad, beside it and inside the band
