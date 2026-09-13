@@ -1,0 +1,78 @@
+{
+ "board": "pcb-e1-dock",
+ "project": "v2/ecad/pcb-e1-dock-e7",
+ "phase": "E8",
+ "issue": "MESHSAT-830",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "argv": [
+   "bash",
+   "../tools/full_e6.sh",
+   "<PROJECT>"
+  ],
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 1,
+  "gen_logs": []
+ },
+ "plane_layers": [
+  "In1.Cu",
+  "In2.Cu"
+ ],
+ "route": {
+  "attempts": [
+   250
+  ],
+  "threads": 1,
+  "timeout": 10800,
+  "power_layers": [
+   "In1.Cu",
+   "In2.Cu"
+  ],
+  "plane_nets": [
+   "GND",
+   "CELL_F",
+   "VIN_RAW",
+   "PV_P",
+   "TRK_OUT"
+  ],
+  "log": "out/parallel-e6.log",
+  "layer_rules": {
+   "USB": [
+    "F.Cu"
+   ]
+  },
+  "_jar_unpinned": "11 September 2026: this pinned ~/bin/freerouting-1.9.0.jar, the STOCK jar, which set FR_JAR and so bypassed route_one's own choice AND its refusal. Our 1.9.0 build writes a session after every pass; the stock one writes one only when the whole job ends, so a run that is cut leaves nothing, which is what every NO_SESSION round in the record is. Unpinned: route_one takes the patched jar when the host has it and refuses when it does not, unless FR_REQUIRE_MESH=0 says otherwise deliberately.",
+  "_passes_raised": "11 September 2026: 100 passes leaves one or two nets open and WHICH net varies by round, so every net is routable and no single round has landed them all. 100 passes takes 7 to 12 minutes on the patched jar, which writes a session after every pass, so 250 passes is 35 minutes with an artefact at every point along it. The old ceiling was [100].",
+  "optimiser_passes": 8,
+  "_optimiser_capped": "11 September 2026, measured: E's autoroute completed at pass 221 in 17 min 24 s and wrote its session, and the optimiser then ran for 20 minutes more without writing another, with 2.5 h of the route's budget still to spend. -oit is a THRESHOLD IN PERCENT, not a pass count, so the default 2 keeps optimising until a pass improves the board by less than 2 percent. 8 stops it sooner. The autoroute's own session is what the board is made from either way; this only stops the box grinding for length after the routing question is answered."
+ },
+ "finish": {
+  "argv": [
+   "./tools/finish.sh",
+   "<ECAD>",
+   "pcb-e1-dock-e7",
+   "e",
+   "E8",
+   "out/parallel-e6.log"
+  ],
+  "cwd": "<ECAD>",
+  "clean_flag": "out/e8-clean.txt",
+  "stub_log": "out/pcb-e1-dock-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-e-revA-E8",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 90
+ },
+ "notes": "E6 (7 Sep 2026): the dock strip of the A22 generation with the sensor controller folded in (32.57); four layers, In1 the ground plane and In2 the power pours (CELL_F, VIN_RAW, PV_P, TRK_OUT) as power layers, one attempt on 1.9.0 single thread.",
+ "baseline_key": "E4",
+ "_phase_dir": "11 September 2026: E7 gets its own phase directory like every other board of the wave, so the committed pcb-e1-dock is not the thing a route writes into.",
+ "clean_flag": "out/e8-clean.txt",
+ "_phase_note": "E8, 13 September 2026 (MESHSAT-862): VIN_RAW's copper. The In2 pour reaches the block lands, L2's source pad carries ten 0.9/0.5 barrels where it had one 0.45, each J_BLK land has two, and a small F.Cu island sits over the source pad because the rail had no copper at all on the layer its own pad is on and 2.23 A of 8 was on a 0.400 mm escape stub. Measured in an isolated tree: both rails MET, conductor 0.60 and 0.51, pours 0.69 and 1.00."
+}
