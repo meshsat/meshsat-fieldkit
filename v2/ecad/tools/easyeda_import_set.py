@@ -83,7 +83,12 @@ def main():
             z.write(fplib, "%s/fp-lib-table" % stem)
             for m in sorted(os.listdir(pretty)):
                 if m.endswith(".kicad_mod"): z.write(os.path.join(pretty, m), "meshsat.pretty/" + m); n_mod += 1
-            z.writestr("%s/IMPORT-NOTE.txt" % stem, "\n".join([
+            # The note sits at the archive ROOT, not inside the project folder. The folder that the importer
+            # reads has to match the structure proved on 8 September exactly: project, schematic, board,
+            # fp-lib-table and nothing else. An unexplained extra file in there is a variable nobody has
+            # tested, and the September run already needed retries on three boards for the site's own
+            # reasons; adding one more unknown to a flaky step is how a reviewer's evening gets wasted.
+            z.writestr("IMPORT-NOTE.txt", "\n".join([
                 "MeshSat V2 PCB-%s, revision %s" % (letter, rev),
                 "Archive built %s from %s" % (stamp, src),
                 "",
