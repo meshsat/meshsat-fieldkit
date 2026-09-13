@@ -24,10 +24,72 @@ from idc_pads import idc   # the IDC land is a per-board measurement (IDC_PADS),
 import kisch
 from kisch import (U, c, emit_part, emit_pwr_flag, ensure, esd, extents, find_sym, flatten, flatten_raw, ic, label, lib_tree, noconn, parse, part, pins_of, place_symbol, q, r, rename_units, ser, synth_symbol, text, tps22810, uq, usb_c_recept, wire)
 import intent as _intent
-for _n in ("1", "2", "3"): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, "J_5V_S%s" % _n, note="slot rail from A22 (JST-VH); the CM5 draws up to 5 A")
-_intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", note="the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)")
-_intent.rail("+3V3_DEV", 3.3, 1.2, 5.0, "U25", note="shared logic, the KSZ IO, the three hub VDD33 (99 mA each), the muxes, the three supervisor LDOs; U25 is a 2 A part")
-_intent.rail("GND", 0.0, 10.0, 21.0, "J_5V_S1", note="the return of every rail")
+# ------------------------------------------------------------------ the rails, with where their current goes
+# LOADS DECLARED 13 September 2026 (MESHSAT-862). Undeclared, `dc_drop` splits a rail's current evenly over
+# every U and J footprint on it, and that guess has decided boards: it put 10 A through a SENSE pin on A24's
+# CELL+ and 6 A through one on VBUS20. Each figure below is a branch of the rail apportioned to its own
+# documented draw where a document gives one, and otherwise to the part's rating; the sum is held under the
+# rail's declared peak. What it buys is that the copper is judged at the current each branch really carries.
+#
+# THE MODULE'S OWN DRAW IS 0.9 A, NOT 5. The note this line used to carry said "the CM5 draws up to 5 A",
+# which is the datasheet's INPUT capability ("Single 5 V power input with USB power delivery support for up
+# to 5 A at 5 V", CM5 datasheet section 1.3): that 5 A is what a carrier may feed a CM5 for itself AND its
+# peripherals. The module's own figure is Table 9, current consumption: idle 400 mA, operation 900 mA
+# typical, no maximum given. Ours is declared at 1.6 A, which is the typical with headroom for the SoC under
+# stress, and it leaves the slot rail's 5 A to the three converters that share it, which the old reading did
+# not: at 5 A for the module alone there was nothing left for the card socket, the NVMe or the switch core.
+_SLOT_LOADS = lambda s: {
+    "U3%dA" % (s - 1): 1.6,          # the Compute Module 5 on its receptacle: 0.9 A typical (Table 9) plus stress headroom
+    "U%d03" % s: 2.2,                # buck S%dA -> the M.2 card socket's 3.3 V: the RM520N asks for 3.0 A continuous at 3.3 V (Quectel hardware design v1.1 section 3.3.1), which is 2.2 A here
+    "U%d04" % s: 0.7,                # buck S%dB -> the NVMe socket and the PCIe switch's 3.3 V
+    "U%d05" % s: 0.15,               # buck S%dC -> the PI7C9X2G404SL's 1.0 V core
+    "J_FAN%d" % s: 0.1,              # the slot's IP68 cooler fan
+}
+for _n in (1, 2, 3):
+    _intent.rail("+5V_S%d" % _n, 5.1, 2.5, 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n),
+                 note="slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan")
+_DEV_LOADS = {"U23": 1.2,            # eFuse -> +5V_LIME, the LimeSDR Mini 2.4 (the eFuse's ILM is 3.0 A)
+              "U25": 0.90,           # the AP63203 buck -> +3V3_DEV, 1.4 A at 3.3 V through it
+              "U21": 0.60,           # load switch -> +5V_LORA, the E22-900M30S at 1 W transmit
+              "F1": 0.60,            # polyfuse -> PANEL_5V, board C's own 5 V rail (its intent declares 0.6 A)
+              "U24": 0.45,           # eFuse -> +5V_RB, the RockBLOCK 9704 on a transmit burst
+              "F3": 0.30,            # polyfuse -> VBUS_QMX, the HF unit in the lid tray
+              "U28": 0.25,           # TPS2065 -> +5V_CAM
+              "F2": 0.20,            # polyfuse -> +5V_HDMI, the two TS3DV642 display switches
+              "U26": 0.15,           # TPS62933 -> the KSZ9897R's 1.2 V core
+              "U106": 0.10, "U206": 0.10, "U306": 0.10,   # the three 1.1 V hub cores, always on: a bank outlives its module
+              "U40": 0.05, "U50": 0.05, "U60": 0.05,      # the three controllers' private 3.3 V LDOs
+              "U15": 0.02, "U16": 0.02, "U17": 0.02, "U18": 0.02}   # the four CP2102N bridges
+_intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", loads=_DEV_LOADS,
+             note="the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)")
+# THE PEAK IS THE SOURCE PART'S RATING. This rail declared 5.0 A peak behind U25, an AP63203 whose rating is
+# 2 A: a peak the source cannot deliver is not a peak, and the density verdict would have judged the copper
+# against a current that can never flow in it. 2.0 A is what the part gives; the loads below sum to 1.38 A.
+_3V3_LOADS = {"U1": 0.25,            # KSZ9897R seven-port switch, its 3.3 V I/O
+              "U22": 0.25,           # load switch -> +3V3_ZB, the two E72 radios
+              "U27": 0.15,           # AP2112K -> the switch's 2.5 V analog rail
+              "U11": 0.05,           # LG290P GNSS
+              "U5": 0.02,            # TPS23861 PoE controller
+              "U6": 0.01, "U7": 0.01,            # the two PCA9555
+              "U3": 0.01, "U4": 0.01,            # the two TS3DV642 display switches
+              "U19": 0.01, "U20": 0.01, "U80": 0.01,   # the EMCON gates and the break-before-make XOR
+              "U8": 0.005, "U9": 0.005, "U10": 0.005}  # the secure element, the holdover clock, the temperature sensor
+for _n in (1, 2, 3):
+    _3V3_LOADS["U%d02" % _n] = 0.10  # the TUSB8041 hub's VDD33: 99 mA on its sheet
+    _3V3_LOADS["U%d09" % _n] = 0.05  # TMUXHS4212 SuperSpeed host select
+    _3V3_LOADS["U%d10" % _n] = 0.01  # TS3USB221A USB2 host select
+for _v in ("U70", "U71", "U72", "U73", "U74", "U75", "U76", "U77", "U78", "U79"): _3V3_LOADS[_v] = 0.01   # the voted logic
+_intent.rail("+3V3_DEV", 3.3, 1.2, 2.0, "U25", loads=_3V3_LOADS,
+             note="shared logic, the KSZ IO, the three hub VDD33 (99 mA each), the muxes, the three supervisor LDOs; U25 is a 2 A part and that is this rail's peak")
+# THE GROUND HAS FOUR SOURCES AND THE DECLARATION SAID ONE. Holding only J_5V_S1 at 0 V would have returned
+# all 21 A through one connector's ground pin and measured a board that does not exist; `source` takes a list
+# since 13 September. The return is declared at each branch's own converter or connector rather than at the
+# leaf parts behind it: a branch's parts sit beside the converter that feeds them and return into the same
+# local ground copper, so this puts the current within a few millimetres of where it really enters the plane.
+_GND_LOADS = dict(_DEV_LOADS)
+for _n in (1, 2, 3): _GND_LOADS.update(_SLOT_LOADS(_n))
+_intent.rail("GND", 0.0, 10.0, 21.0, ["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV"], loads=_GND_LOADS,
+             note="the return of every rail: the three slot rails and the device rail, 19.4 A with all four at their declared peak")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
@@ -183,7 +245,7 @@ def slot(s):
     buck33(U(4), "S%dB" % s, n5, "EN33_S%d" % s, b33, [L(2), C(18), C(19), C(20), C(21), C(22), C(23), R(7), R(8), R(9), R(10), C(24)])
     r(R(11), "100k", cm33, "EN33_S%d" % s); r(R(12), "100k", "EN33_S%d" % s, "GND")   # 1.65 V when the module's 3.3 V is up
     buck_small(U(5), "S%dC" % s, n5, "EN33_S%d" % s, v10, [L(3), C(25), C(26), C(27), C(28), C(29), R(13), R(14)], "40.2k 1%", "1.0 V PCIe switch core S%d" % s)
-    buck_small(U(6), "S%dD" % s, "+5V_DEV", "+5V_DEV", v11, [L(4), C(30), C(31), C(32), C(33), C(34), R(15), R(16)], "26.7k 1%", "1.1 V hub core S%d (on the device rail and always on: the bank outlives its module)")
+    buck_small(U(6), "S%dD" % s, "+5V_DEV", "+5V_DEV", v11, [L(4), C(30), C(31), C(32), C(33), C(34), R(15), R(16)], "26.7k 1%", "1.1 V hub core S%d (on the device rail and always on: the bank outlives its module)" % s)
     # --- PCIe switch PI7C9X2G404SL: upstream port 0 to the module, port 1 the NVMe socket, port 2 the card socket, port 3 unused; the integrated clock buffer fans the module's 100 MHz to the switch core and both sockets
     m = {}
     for n, nm in PI7C.items():

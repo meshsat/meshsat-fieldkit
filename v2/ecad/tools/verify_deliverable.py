@@ -74,6 +74,13 @@ def check_dir(D, name, ncu, bench=("H", "S_", "TP", "W_", "JP", "PAD", "P_"), ba
                 refs += ["%s%d" % (m.group(1), k) for k in range(int(m.group(2)), int(m.group(3)) + 1)] if m else ([x] if x else [])
         ok(not any(re.match(r"^[A-Za-z_]+\d+-", x) for r in rows for x in r.get("Designator", "").split(",")), "BOM designators listed one by one, no ranges")
         ok(not any("?" in r for r in refs), "no '?' designator in the BOM")
+        # 13 September 2026 (MESHSAT-862): a %-conversion left in a Comment is a string that was meant to be
+        # formatted and was not, and the Comment is what a parts-matching operator reads. B19 carries three
+        # ("1.1 V hub core S%d", the one argument of a per-slot loop nobody appended `% s` to). `kisch.part`
+        # refuses it at the source now; this refuses it where it would reach the fab. A tolerance ("1%") ends
+        # at the percent sign and is not a conversion.
+        _ph = [r.get("Comment", "") for r in rows if re.search(r"%[-+#0]*[0-9]*(?:\.[0-9]+)?[diouxXeEfFgGcrs]", r.get("Comment", ""))]
+        ok(not _ph, "no BOM comment carries an unformatted placeholder%s" % ("" if not _ph else ": " + "; ".join(_ph[:3])))
         if cpl_refs:
             missing = [r for r in refs if r not in cpl_refs and not r.startswith(bench)]
             ok(not missing, "every BOM designator is in the CPL (%d of %d; missing %s)" % (len(refs) - len(missing), len(refs), missing[:8]))

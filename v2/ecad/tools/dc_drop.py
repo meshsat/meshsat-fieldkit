@@ -155,12 +155,16 @@ def main(a):
                 n = index.get((L, gy, gx))
                 if n is not None: out.append(n)
             return out
-        src = [n for f, p in pads if f.GetReference() == r["source"] for n in pad_nodes(f, p)]
+        # A rail may enter the board at more than one place, and a GROUND always does: B19's return leaves
+        # through four JST-VH connectors, and holding one of them at 0 V would send all 21 A through one
+        # connector's ground pin and measure a board that does not exist. `source` takes a list for that.
+        srcrefs = list(r["source"]) if isinstance(r["source"], (list, tuple)) else [r["source"]]
+        src = [n for f, p in pads if f.GetReference() in srcrefs for n in pad_nodes(f, p)]
         loads = r.get("loads") or {}
         guessed = None
         if not loads:
-            cands = [f for f, p in pads if f.GetReference() != r["source"] and f.GetReference()[0] in "UJ" and not f.GetReference().startswith("JP")]
-            if not cands: cands = [f for f, p in pads if f.GetReference() != r["source"] and not f.GetReference().startswith(("TP", "C", "R", "D"))]   # a pack board: the FETs and the leads
+            cands = [f for f, p in pads if f.GetReference() not in srcrefs and f.GetReference()[0] in "UJ" and not f.GetReference().startswith("JP")]
+            if not cands: cands = [f for f, p in pads if f.GetReference() not in srcrefs and not f.GetReference().startswith(("TP", "C", "R", "D"))]   # a pack board: the FETs and the leads
             refs = sorted({f.GetReference() for f in cands})
             loads = {ref: r["amps_typ"] / len(refs) for ref in refs} if refs else {}
             guessed = refs
@@ -179,7 +183,7 @@ def main(a):
         for ref, amps in loads.items():
             ns = [n for f, p in pads if f.GetReference() == ref for n in pad_nodes(f, p)]
             for n in ns: sinks[n] = sinks.get(n, 0.0) + amps / len(ns)
-        if not src or not sinks: results.append((net, "UNRESOLVED", "source %s pads %d, load pads %d" % (r["source"], len(src), len(sinks)), 0, 0, 0, {})); miss += 1; continue
+        if not src or not sinks: results.append((net, "UNRESOLVED", "source %s pads %d, load pads %d" % ("+".join(srcrefs), len(src), len(sinks)), 0, 0, 0, {})); miss += 1; continue
         try:
             import scipy.sparse as sp, scipy.sparse.linalg as spl, scipy.sparse.csgraph as csg
             G = sp.coo_matrix((vals, (rows, cols)), shape=(N, N)).tocsr()
@@ -194,7 +198,7 @@ def main(a):
                 for c_, ns_ in sorted(by.items(), key=lambda kv: -len(kv[1]))[:8]:
                     Ls_ = sorted({lname[coords[n_][0]] for n_ in ns_}); xs_ = [x0 + (coords[n_][2] + 0.5) * cell for n_ in ns_]; ys_ = [y0 + (coords[n_][1] + 0.5) * cell for n_ in ns_]
                     print("dc_drop:   piece of %s: %d cells on %s, x %.0f..%.0f y %.0f..%.0f%s%s" % (net, len(ns_), "+".join(Ls_), min(xs_), max(xs_), min(ys_), max(ys_), " SOURCE" if any(n_ in srcset for n_ in ns_) else "", (" loads %d" % sum(1 for n_ in ns_ if n_ in sinks)) if any(n_ in sinks for n_ in ns_) else ""))
-                results.append((net, "MISSED", "%d of %d load pads on copper not connected to the source %s through this net's copper and vias (the mesh: %d pieces)" % (len(unreachable), len(sinks), r["source"], ncomp), 0, 1.0, 0, {})); miss += 1; continue
+                results.append((net, "MISSED", "%d of %d load pads on copper not connected to the source %s through this net's copper and vias (the mesh: %d pieces)" % (len(unreachable), len(sinks), "+".join(srcrefs), ncomp), 0, 1.0, 0, {})); miss += 1; continue
             keep = np.array([i for i in range(N) if lab[i] in reach and i not in set(src)]); i_vec = np.zeros(N)
             for n, amps in sinks.items(): i_vec[n] -= amps
             Gk = G[keep][:, keep].tocsc(); v = np.zeros(N)

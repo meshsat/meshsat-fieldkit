@@ -162,8 +162,18 @@ def ensure(lib, name):
     if key not in libsyms: libsyms[key] = synth_symbol(lib, name) if name in SYNTH else flatten(lib, name)
     return libsyms[key]
 
+# A %-conversion left in a value is a string that was meant to be formatted and was not, and `value` is what
+# reaches the silk, the schematic and the BOM's Comment column. B19 shipped three of them: the three 1.1 V hub
+# core bucks all read "1.1 V hub core S%d", because that note was the one argument of the per-slot loop that
+# nobody appended `% s` to. A tolerance ("26.7k 1%") ends at the percent sign and is untouched; this matches
+# only a real conversion, a percent followed by its flags and a type letter.
+_UNFORMATTED = __import__("re").compile(r"%[-+#0]*[0-9]*(?:\.[0-9]+)?[diouxXeEfFgGcrs]")
+
 def part(ref, lib, sym, value, fp, nets, lcsc=""):
     if any(p["ref"] == ref for p in P): raise SystemExit("duplicate reference " + ref)
+    _m = _UNFORMATTED.search(str(value))
+    if _m: raise SystemExit("part %s: its value carries an unformatted placeholder %r and that string reaches the "
+                            "silk, the schematic and the BOM: %r" % (ref, _m.group(0), value))
     P.append(dict(ref=ref, lib=lib, sym=sym, value=value, fp=FP.get(fp, fp), nets={str(k): v for k, v in nets.items()}, lcsc=lcsc))
 
 def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
