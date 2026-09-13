@@ -1,0 +1,13 @@
+(footprint "SolderPad_8x6"
+	(version 20241229)
+	(generator "meshsat")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "8 x 6 mm solder land for a 12 AWG wire (hand soldered)")
+	(tags "pad wire")
+	(attr smd exclude_from_pos_files exclude_from_bom)
+	(property "Reference" "REF**" (at 0 -4.5 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+	(property "Value" "VAL**" (at 0 4.5 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+	(pad "1" smd rect (at 0 0) (size 8.0 6.0) (layers "F.Cu" "F.Mask"))
+	(fp_rect (start -4.25 -3.25) (end 4.25 3.25) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))
+)
