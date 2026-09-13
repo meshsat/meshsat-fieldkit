@@ -153,7 +153,7 @@ def pad_at(ref, num):
 def mm(v): return (v.x / 1e6 - OX, OY - v.y / 1e6)
 def track(netname, a, b, w, L):
     t = pcbnew.PCB_TRACK(board); t.SetStart(P(*a)); t.SetEnd(P(*b)); t.SetWidth(FromMM(w)); t.SetLayer(L); t.SetNet(net_for(netname, create=False)); t.SetLocked(True); board.Add(t)
-def band(netname, a, b, w=3.0, vias=12):
+def band(netname, a, b, w=3.0, vias=20):
     """A locked band on both outer layers between two board-frame points, stitched by locked 1.0/0.6 vias.
 
     13 September 2026 (MESHSAT-862): THE BARRELS WERE THE NECK AND NOTHING HAD EVER JUDGED THEM. Three
@@ -166,14 +166,17 @@ def band(netname, a, b, w=3.0, vias=12):
     """
     for L in (pcbnew.F_Cu, pcbnew.B_Cu): track(netname, a, b, w, L)
     net = net_for(netname, create=False)
-    L = math.hypot(b[0] - a[0], b[1] - a[1]); n = max(1, min(vias, int((L - 4.4) / 1.6) + 1)) if L >= 4.4 else 1
+    L = math.hypot(b[0] - a[0], b[1] - a[1]); n = max(1, min(vias, int((L - 4.4) / 1.0) + 1)) if L >= 4.4 else 1
     # AND THEY GO ACROSS THE BAND, NOT ONLY ALONG IT. Spacing them along the band took the worst barrel from
-    # 2.67 A to 2.16 against its 1.48, a fifth, because the current does not divide evenly over a line of
-    # vias: the one nearest where the current enters takes the most and the far ones take little. A PAIR at
-    # each station, set across the band's width, shares that station's crossing between two barrels. On a
-    # 2.8 mm band they sit 1.4 mm apart, which is 0.4 mm hole to hole at a 0.6 mm drill.
+    # 2.67 A to 2.16 against its 1.48, and a pair at 1.6 mm along took PACK_P's to 1.85 and left FUSED's at
+    # 2.59, because the current does not divide evenly over a line of vias. The crossing happens where the
+    # current has to change layer, and that is at ONE end: the FET's source pads are SMD and F.Cu only, so
+    # everything arriving on B.Cu crosses at the vias nearest them. THREE across at 1.0 mm along is what
+    # spreads it: on a 2.8 mm band they sit at the centre and 0.9 mm either side, 0.3 mm hole to hole at a
+    # 0.6 mm drill, with the outer bodies reaching exactly the band's edge. 27 barrels in a 12.7 mm band
+    # where there were 3, and FUSED's 2.59 A becomes about 1.15 in the worst of them.
     ux, uy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
-    across = [(-0.7, 0.7)] if w >= 2.4 else [(0.0,)]
+    across = [(-0.9, 0.0, 0.9)] if w >= 2.4 else [(0.0,)]
     for k in range(n):
         d = L / 2 if n == 1 else 2.2 + k * (L - 4.4) / (n - 1); f = d / L   # every via at least 2.2 mm from a band end (the wire lands' 2.4 mm holes, hole-to-hole 0.3)
         for off in across[0]:
