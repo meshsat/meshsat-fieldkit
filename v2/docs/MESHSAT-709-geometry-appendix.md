@@ -6800,3 +6800,54 @@ D's own route profile declares as `In1.Cu` and `GND`, so every ground pin went i
 width instead of being reached by vias through a plane. That is a second variable, and it is the 11 September
 lesson again: **a launcher difference is a variable**, and the pair of numbers is the only comparison either
 supports. Both widths were run again through one identical script.
+
+### 32.170 The copper the corrected measure asked for, and what each attempt at it cost (13 September 2026, 17:15 CEST; MESHSAT-862)
+
+Every change below is in a generator, every number is measured on a board that was built and routed from it,
+and the ones that did not work are here with the ones that did.
+
+**E7 is the clearest.** `VIN_RAW`'s 8 A leaves L2's pad 2 and **2.23 A of it was on the locked 0.400 mm escape
+stub beside the pad**, which IPC gives 1.23 A: the rail has copper on In2 and **none at all on the layer its
+source pad is on**, so that stub was a lone conductor with nothing beside it. A 6 x 4.5 mm F.Cu island over
+the pad took its conductor ratio from **1.81 to 0.60**, and `CELL_F` is MET. What is left there is the barrels
+(1.27) and the pour, and the board routes to one open connection.
+
+**The barrel measure earned itself on the first board it ran on and then took four attempts to satisfy.**
+P3's bands are drawn on both outer layers and stitched, and the stitch was three 0.8/0.4 vias for a 10 A rail.
+IPC gives a 0.4 mm barrel's 0.0314 mm2 of wall **1.11 A**, and this project's own rule of thumb in section 8,
+about 2.5 A per 0.4 mm hole, is more than twice that.
+
+| attempt | what changed | worst barrel, PACK_P | FUSED |
+|---|---|---:|---:|
+| as cut | three 0.8/0.4 along the band | 2.67 A, **2.41** | |
+| 1 | 1.0/0.6 at 1.6 mm along | 2.16 A, 1.45 | 2.25 A, 1.52 |
+| 2 | a pair across at 1.6 mm | 1.85 A, 1.25 | 2.59 A, 1.74 |
+| 3 | three across at 1.0 mm, 0.6 mm drill | 2.00 A, 1.35 | 2.44 A, 1.65 |
+| 4 | three across at 0.8 mm, **0.5 mm drill** | running | running |
+
+**Attempt 3 is the one worth keeping in the record.** It put 27 barrels in a band that had 3, and the worst
+one still carried 2.00 A. The reason is geometric: at 0.9 mm across with a 0.6 mm drill the outer two vias sit
+**exactly on a 2.8 mm band's edge**, and a via tangent to the copper it is meant to join is not joined to it.
+Two of every three were carrying nothing. At 0.8 mm across with a 0.5 mm drill the outer bodies stop 0.15 mm
+inside the edge and hole to hole is exactly the 0.30 mm minimum.
+
+**The other lesson from that table: the current crosses layers where it MUST, not where the vias are.** A
+FET's source pads are SMD and on one layer only, so everything the band carries on the other layer crosses at
+the vias nearest those pads. Spreading vias ALONG a band does nothing for a current that is not travelling
+along it, which is why attempt 1 bought a fifth and attempt 2 made `FUSED` worse.
+
+**A25 is A24 plus the copper its rails asked for** (`tools/routeflow/a25.json`, validating 20 of 20): an F.Cu
+island in the shape of VBUS20's path with a B.Cu polygon under it tied at the two shunts' own lands, a 4 mm
+In3 band for `+12V_HF` along the corridor the router itself found, the PA rail's east run 4.5 to 7.0 mm, and a
+track keep-out on the VBAT In2 plane's neck. **Two bare 18-pass routes of it came back hard 9 and hard 17**,
+against A24's finished 0 and 0, and each named its own cause: the first was eight `shorting_items` between
+`/HF_HDRV1` and `/HF_SW1`, the HF converter's own gate and switch node, which its head island grown 1.2 mm had
+reached into (0.5 mm now); the second was `/PD_LDRV1` against `/PD_PGOOD` and ten clearance items at 0.10 to
+0.12 mm against 0.127. **A24 reached 0 and 0 through routeflow's ROUNDS and its finish, not a single route**,
+so that is the path A25 is being given rather than another bare one.
+
+**And VBUS20's island had to be told twice.** Alone on F.Cu it fills, 208 mm2 of it, and **35 percent of the
+rail still travelled on In2 with 5.36 A in a 1.0 mm inner stub beside U2**: signal tracks crossing the island
+break it into pieces and an inner track bridges them. It is the VBAT In2 neck in miniature with the same two
+answers, a second layer or a keep-out, and the second layer was taken because a keep-out there would have to
+cover a 31 by 18 mm field of the front end's own gate drives and sense lines.
