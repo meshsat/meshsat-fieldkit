@@ -1,0 +1,21 @@
+{
+ "counts": {
+  "collisions": 0,
+  "fine_pitch": 8,
+  "footprints": 189,
+  "measured": 8
+ },
+ "denominator": 8,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "c436b37bf371baae"
+  }
+ },
+ "note": "",
+ "tool": "place_audit",
+ "ts": "2026-09-13T22:12:09Z",
+ "verdict": "PASS",
+ "version": "d974d581e3a9+dirty"
+}

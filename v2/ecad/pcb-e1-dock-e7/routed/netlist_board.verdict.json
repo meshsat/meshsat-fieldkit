@@ -1,0 +1,27 @@
+{
+ "counts": {
+  "agree": 816,
+  "aliased_pins": 18,
+  "board_footprints": 189,
+  "board_only_inert": 0,
+  "fail": 0,
+  "netlist_refs": 161
+ },
+ "denominator": 816,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "1309202460f2149d"
+  },
+  "netlist": {
+   "path": "out/pcb-e1-dock.net",
+   "sha256_16": "8266589561bae94d"
+  }
+ },
+ "note": "the board against the schematic it was placed from",
+ "tool": "netlist_board",
+ "ts": "2026-09-13T22:25:21Z",
+ "verdict": "PASS",
+ "version": "d974d581e3a9+dirty"
+}

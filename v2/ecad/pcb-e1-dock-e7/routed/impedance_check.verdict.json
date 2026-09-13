@@ -1,0 +1,21 @@
+{
+ "counts": {
+  "classes_declared": 5,
+  "met": 0,
+  "missed": 0,
+  "pairs_on_board": 1
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "1309202460f2149d"
+  }
+ },
+ "note": "the board declares its pair classes and gives none a target, which is its recorded design",
+ "tool": "impedance_check",
+ "ts": "2026-09-13T22:25:20Z",
+ "verdict": "PASS",
+ "version": "d974d581e3a9+dirty"
+}

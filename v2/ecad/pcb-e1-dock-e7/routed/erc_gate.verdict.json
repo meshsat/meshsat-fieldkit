@@ -1,0 +1,20 @@
+{
+ "counts": {
+  "allowed": 0,
+  "blocking": 0,
+  "violations": 272
+ },
+ "denominator": 272,
+ "evidence": [],
+ "inputs": {
+  "project": {
+   "path": ".",
+   "sha256_16": null
+  }
+ },
+ "note": "",
+ "tool": "erc_gate",
+ "ts": "2026-09-13T22:11:47Z",
+ "verdict": "PASS",
+ "version": "d974d581e3a9+dirty"
+}
