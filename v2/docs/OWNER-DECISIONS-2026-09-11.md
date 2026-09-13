@@ -832,3 +832,42 @@ without a new one.**
   assumed before any copper moves.
 - **17** unblocks C on the same terms as B. **Boards A, D, E, P and E5 keep their regions on the never-auto
   floor**, and so do B's and C's once their overflow reads zero.
+
+## A CORRECTION TO RULING 15, found while building it (13 September 2026, 11:40 CEST)
+
+**1.2 mm of inner copper does not carry 1 A.** JLC's four-layer stack is 0.5 oz inner, and IPC-2221 at a 10 K
+rise gives:
+
+| for 1.0 A | 10 K | 20 K | 30 K |
+|---|---:|---:|---:|
+| inner 0.5 oz (JLC four-layer) | **1.56 mm** | 1.03 mm | 0.80 mm |
+| outer 1 oz | **0.30 mm** | 0.20 mm | 0.15 mm |
+
+| what a width carries at 10 K | inner 0.5 oz | outer 1 oz |
+|---|---:|---:|
+| 0.50 mm | 0.44 A | **1.45 A** |
+| 1.20 mm | **0.83 A** | 2.73 A |
+| 1.56 mm | 0.99 A | 3.27 A |
+
+**So ruling 9's 1.2 mm was already short on an inner layer**, at about a 15 K rise rather than 10 K, and
+**0.5 mm on an OUTER layer has always been fine for this rail, with 45 percent margin.** The defect ruling 9
+was written against is real and is specifically an INNER-layer defect: the router put a 1 A rail on In2 at
+0.5 mm, which IPC rates at 0.44 A.
+
+**And ruling 15 is recorded in my wording, not the original option C's.** The first reading of decision 9 said
+option C was *"keep 0.5 mm on the inner layers and carry the rail in locked OUTER copper, the A21 pattern"*.
+The third reading, which is what was ruled on, said "locked inner copper". The owner chose option C and the
+A21 pattern, and the A21 pattern is outer bands with inner feeds; the physics above says outer is also the
+right answer. **The substance the owner chose is unchanged; the layer in my sentence was wrong.**
+
+**What this changes in the build:** the PWR class goes back to 0.5 mm either way, and `+5V_D8` is carried from
+`J_PWR1` to its consumers in locked copper. The question is only which layer that copper is on, and the
+numbers above say the outer layers, because 1.2 mm of inner copper is 0.83 A and 0.5 mm of outer copper is
+1.45 A. Taking the rail off In2 is also exactly what `dc_drop` is refusing: its worst cell for `+5V_D8` is
+**In2 at 73.0 A/mm2 against 52.0**.
+
+**RULING 15 AMENDED, 13 September 2026 11:45 CEST, asked as one question and answered:** **the locked copper
+goes on the OUTER layers**, as option C originally said. The PWR class returns to 0.5 mm and `+5V_D8` is
+carried from `J_PWR1` to its consumers in locked F.Cu and B.Cu bands with stitched crossings, so no part of
+the 1 A path runs in a 0.5 oz inner track. The substance of ruling 15 is unchanged; the layer in my sentence
+was wrong and is corrected here rather than built.

@@ -29,7 +29,7 @@
     },
     {
       "name": "net class widths and clearances",
-      "why": "a class clearance below the board minimum is a lie the router believes; A23 came back with 25 violations from one",
+      "why": "a class clearance below the board minimum is a lie the router believes; A23 came back with 25 violations from one OWNER RULING 15 of 13 September 2026 11:20, amended 11:45: D's PWR class returns to 0.5 mm and the 1 A rail is carried in locked OUTER copper (F.Cu and B.Cu bands, stitched), because 1.2 mm of JLC's 0.5 oz inner copper carries 0.83 A at 10 K against the 1.56 mm the rail needs, while 0.5 mm of outer 1 oz copper carries 1.45 A. The class number itself stays on this floor.",
       "sites": [
         [
           "gen_pcb_*3.py",
