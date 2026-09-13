@@ -168,15 +168,28 @@ for s in (1, 2, 3):
     eth = Cs(s, 75, 82)
     card = {1: ["Q106", "LED15"], 2: ["Q206", "Q207", "Q208", "LED25"], 3: ["Q306", "LED35"]}[s]
     card_b = {1: [R(1, 37), R(1, 38), R(1, 39)], 2: [R(2, 37), R(2, 38), R(2, 40), R(2, 39)] + Cs(2, 86, 91), 3: [R(3, 37), R(3, 38), R(3, 39)]}[s]
+    # OWNER RULING 13, 13 September 2026: B's region rectangles are released to this session, board B
+    # only, one at a time and each reported with its overflow before and after. At the 2.6 mm fine-pitch
+    # margin (PLACE_FINE_MARGIN, the experiment ruling 18 asks for) NINE regions overflow, worst 8.4 mm, and
+    # the packer puts what does not fit OUTSIDE the rectangle on top of whatever is there. Before and after:
+    #   S1_SWIC 8.4 mm over -> north, -20 to -8. The band y -20..32 in that column holds no region at all.
+    #   S2_SWIC 5.7 mm over -> north to -8 AND east 10 to -3, because S2_SUP2 starts at x -3.
+    #   S3_SWIC 3.7 mm over -> north with S1, the same formula.
+    #   ETH     2.9 mm over -> south, 9 to 3. IOCA's top is -4, so 7 mm still separates them.
+    #   GAP12   2.6 mm over -> south, 33 to 25.
+    #   RADE    1.8 mm over -> north, 67 to 74.
+    #   IOCA    1.8 mm over -> west, -160 to -164, which is the board edge.
+    #   S1_RAIL 1.0 mm over -> WEST, x0-2 to x0-4.
+    #   S3_RAIL 1.0 mm over -> EAST, x1 to x1+4: west of it at this y is S2_RAIL, which S1 does not have.
     if s == 2:
-        REGIONS += [("S2_SWIC", (-38, -60, 10, -30), [U(1), U(2), U(9), U(10)], False),
+        REGIONS += [("S2_SWIC", (-38, -60, -3, -8), [U(1), U(2), U(9), U(10)], False),
                     ("S2_SWE", (10, -57, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (-36, -57, 32, -30), sw_b + card_b + sup_b, True),
                     ("S2_RAIL", (-36, -73.4, 32, -60), [r for r in rail if r not in (U(5), U(6), L(3), L(4)) and r not in Cs(2, 25, 27) + Cs(2, 30, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -57), rail_b + straps + sw_dec, True),
                     ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -8), [U(5), U(6), L(3), L(4)] + Cs(2, 25, 27) + Cs(2, 30, 32), False)]
     else:
-        REGIONS += [("S%d_SWIC" % s, (x0 - 1, -52, x0 + 43, -20), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
+        REGIONS += [("S%d_SWIC" % s, (x0 - 1, -52, x0 + 43, -8), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
                     ("S%d_SWE" % s, (x0 + 43, -52, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -52, x1, -21), sw_b + card_b + sup_b, True),
-                    ("S%d_RAIL" % s, (x0 - 2, -70, x1, -52), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -52), rail_b + straps + sw_dec, True),
+                    ("S%d_RAIL" % s, ((x0 - 4) if s == 1 else (x0 - 2), -70, x1 if s == 1 else (x1 + 4), -52), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -52), rail_b + straps + sw_dec, True),
                     ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
 # 9 September 2026 (ARCH-PCB-B-IOHA section 6): the I/O control plane goes on the UNDERSIDE, and the three controllers
 # go in three SEPARATE pockets rather than one band. Two reasons, both measured on the board. First, a single rect
@@ -201,7 +214,7 @@ VOTE_PARTS = (["U%d" % n for n in range(70, 80)] + ["U80"] + ["C%d" % n for n in
               + ["R%d" % n for n in range(480, 501)])
 # each CAN fabric is terminated at its two PHYSICAL ends, which are controller A in the west pocket and controller C in
 # the east one; a bus terminated once, in the middle, reflects off both ends (caught reading the placement, 9 Sep 2026)
-REGIONS += [("IOCA", (-160.0, -76.0, -103.0, -4.0), _ioc(0) + VOTE_PARTS + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
+REGIONS += [("IOCA", (-164.0, -76.0, -103.0, -4.0), _ioc(0) + VOTE_PARTS + ["R470", "R471", "R472", "R473", "C460", "C461"], True),
             ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1), True),
             ("IOCC", (18.0, 32.0, 47.0, 88.0), _ioc(2) + ["R504", "R505", "R506", "R507", "C506", "C507"], True),
 
@@ -212,7 +225,7 @@ REGIONS += [
  ("NORTH1", (-94, 88.5, -52, 97.5), ["TP%d" % k for k in range(1, 21)], False),
  ("NORTH2", (-23, 88.5, 18, 97.5), ["TP%d" % k for k in range(21, 32)] + ["LED6", "LED7", "LED8", "LED9"], False),
  ("NORTH3", (47, 88.5, 88, 97.5), ["TP%d" % k for k in range(41, 52)], False),
- ("ETH",   (-162, 9, -122, 59), ["U1", "Y1", "C14", "C15", "R3", "R57"] + ["C%d" % k for k in range(17, 29)], False),
+ ("ETH",   (-162, 3, -122, 59), ["U1", "Y1", "C14", "C15", "R3", "R57"] + ["C%d" % k for k in range(17, 29)], False),
  ("POE",   (-140.5, 59, -122, 86), ["U5", "Q1", "R12", "R13", "C31", "C32"], False),
  ("POEB",  (-140.5, 59, -122, 70), ["C33", "R9", "R10", "C29", "C30"], True),
  ("WNE",   (-121, 29, -102, 68), ["U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "J_5V_DEV"], False),
@@ -223,14 +236,14 @@ REGIONS += [
  # placed board after five tool causes were fixed (150 to 6, appendix 32.149). The alternative was moving the
  # controller, which would have re-opened the 9 September argument that put the three controllers in three
  # separate failure domains, so the passive part moves instead.
- ("GAP12", (-50, 33, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
+ ("GAP12", (-50, 25, -32, 97), ["U6", "U7", "U19", "U20", "U29", "U37", "C65", "C66", "C67", "C68", "R49", "R50", "R51", "R52", "R53", "R58", "R59", "R60", "R61", "R62", "R54", "R55", "R56", "F1", "R5", "R6", "R7", "R8", "LED1", "LED2", "LED3", "LED4", "Q2", "R4", "C16"], False),
  ("GAP23", (19, 33, 44, 97), ["U11", "R21", "R22", "R23", "L3", "C40", "C41", "C42", "U8", "U9", "U10", "C69", "C70", "C71"], False),
  ("BATT",  (-134, -65, -106, -40), ["BT1"], False),
  ("WMIDS", (-156, -97, -116, -66), ["U35", "D1", "D2", "J_QMX", "F3", "C34", "C35", "C1", "C2", "C36", "R11"], False),
  ("NEX",   (96, 78, 123, 82), ["R14", "R15", "R16", "C37", "C38"], False),   # B17 (8 Sep 2026, 32.65): the two HDMI switches U3 and U4 are FIXED at 16 mm pitch above this strip (9.6 mm in the packed row collided their escape fans)
  ("SEX",   (96, -85, 112, -78), ["F2", "C39"], False),
  ("SEXB",  (96, -85, 112, -78), ["R17", "R18", "R19", "R20"], True),
- ("RADE",  (125.5, 41.5, 162, 67), ["R25", "R28", "R29", "R30", "R31", "R32", "R33", "R34", "R35", "J_ZBDBG1", "J_ZBDBG2", "J_LORA1", "U28", "U34", "J_CAM"], False),
+ ("RADE",  (125.5, 41.5, 162, 74), ["R25", "R28", "R29", "R30", "R31", "R32", "R33", "R34", "R35", "J_ZBDBG1", "J_ZBDBG2", "J_LORA1", "U28", "U34", "J_CAM"], False),
  ("RBX",   (96, -44, 145, 27), ["C45", "C46", "C47", "C52", "C53", "C54", "C55", "F4", "C64", "R47", "R48", "U23", "C56", "R36", "R37", "R38", "R39", "C57", "C58", "U33", "U24", "C61", "R43", "R44", "R45", "R46", "C62", "C63", "U18", "R40", "C59", "C60", "R41", "R42", "U15", "U16", "U17", "R24", "C43", "C44", "R26", "C48", "C49", "R27", "C50", "C51", "U21", "U22"], False),
 ]
 GAP = 1.2
