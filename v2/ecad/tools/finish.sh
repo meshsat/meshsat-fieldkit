@@ -174,6 +174,15 @@ if [ -n "$PAIRM" ]; then
     stop "PAIRS NOT MATCHED, not finishing (audit images in out/audit)"
   fi
 fi
+# 13 September 2026 (MESHSAT-862): REFILL BEFORE ANYTHING JUDGES THE COPPER, and this is not a tidy-up.
+# The only refill in this script was after the stub router, and between it and the judgements below run
+# `stub_accept` (which removes closure copper), `stitch_prune` and its revert (which COPIES BACK a board that
+# was never filled), `direct_close` and `quality_pass` (which merged 108 segments out of A26 and 146 out of
+# C11). Every one of those changes what a pour can fill, so the gate and `dc_drop` were reading a fill from
+# several steps ago. Measured on E8: the finish read `CELL_F pour F.Cu 122 mm2` and refused the rail at a
+# conductor ratio of 1.04, and the same board refilled reads **163 mm2 and the rail MET**. A verdict off a
+# stale fill is not a verdict about this board.
+python3 -c "import pcbnew, sys; b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b); print('zones refilled before the gate and the rail checks')" $N 2>&1 | grep -vE 'Debug|leak'
 $T/drc.sh $N.kicad_pcb out/$N-drc.json
 python3 $T/hardset.py out/$N-drc.json post --flag "$FLAG" --label 'routed-board gate' | sed 's/^hardset:/routed-board DRC:/'
 python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('  OPEN', ' ~ '.join(i['description'][:50] for i in u['items'])) for u in d.get('unconnected_items', [])[:6]]"
