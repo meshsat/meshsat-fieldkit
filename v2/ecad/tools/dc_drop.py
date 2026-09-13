@@ -171,7 +171,7 @@ def main(a):
             results.append((net, "UNRESOLVED", "scipy missing on this host (apt-get install python3-scipy)", 0, 0, 0, {})); miss += 1; continue
         drop = -v.min() if v.min() < 0 else v.max(); drop = abs(v).max()
         # branch currents and density
-        worst_j = 0.0; worst = None; share = {}
+        worst_j = 0.0; worst = None; worst_l = None; share = {}
         for (L, gy, gx), i in index.items():
             g = 1.0 / sheet(t_of(L)); t = t_of(L)
             for dy, dx in ((0, 1), (1, 0)):
@@ -179,7 +179,7 @@ def main(a):
                 if j is None: continue
                 cur = abs(v[i] - v[j]) * g; jd = cur / (cell * t)   # A/mm2 through the cell face (width cell, thickness t)
                 share[lname[L]] = share.get(lname[L], 0.0) + cur
-                if jd > worst_j: worst_j = jd; worst = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur)
+                if jd > worst_j: worst_j = jd; worst_l = L; worst = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur)
         tot = sum(share.values()) or 1.0; share = {k: round(x / tot, 2) for k, x in share.items()}
         amps = sum(sinks.values()); pct = drop / r["volts"] if r["volts"] else 0.0
         # density limit: the IPC-2221 current for one cell width of this copper at 10 K, as A/mm2
@@ -195,11 +195,23 @@ def main(a):
         # 0.5 mm cell the per-cell bar is EXACT at 0.5 mm width and lenient everywhere else: +18 percent at
         # 0.4 mm, +65 at 0.25, +94 at 0.2, +21 at 1 mm, +64 at 3 mm, +98 at 6 mm. So a rail that exceeds this
         # bar exceeds a bar that is already too generous, and the exceedance is a floor, not a ceiling.
-        # It is still reported rather than gated, because turning it into a verdict would refuse boards that
-        # are cut, and that is the owner's call; it is in OWNER-DECISIONS-2026-09-11.md with its numbers.
-        verdict = "MET" if pct <= rb else "MISSED"   # the drop decides
+        # OWNER RULING 16, 13 September 2026 11:20: GATE IT. Twelve rails on three cut boards were over this
+        # bar while every one of them read MET, because only the drop decided. A rail can be electrically quiet
+        # and locally too hot at the same time, which is what a density check is for. Both now decide, and the
+        # verdict names which of the two refused it so a reader is never left guessing.
+        # A rail may declare its own rise with a reason in the intent file (`density_dT`), the way it may
+        # already declare its own drop budget; the default is IPC's 10 K. A DECLARED rise is a design decision
+        # with a written reason, which is not the same thing as ignoring the number.
+        dT = float(r.get("density_dT", 10.0))
+        if dT != 10.0:
+            jl = ipc_limit(cell * t_of(worst_l), dT, worst_l not in (pcbnew.F_Cu, pcbnew.B_Cu)) / (cell * t_of(worst_l)) if worst_l is not None else jl
+        drop_ok = pct <= rb
+        dens_ok = (worst_j <= jl) if worst else True
+        verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
+        why = "" if verdict == "MET" else (
+            " [MISSED on %s]" % (" and ".join(([] if drop_ok else ["the drop"]) + ([] if dens_ok else ["the current density"]))))
         if verdict != "MET": miss += 1
-        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at 10 K (reported, not gated; this per-cell bar is LENIENT against the whole-track IPC figure by 18 to 98 percent over the widths in this design, so an exceedance is a floor); layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, share), drop, pct, worst_j, share))
+        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at %.0f K (GATED since owner ruling 16; this per-cell bar is LENIENT against the whole-track IPC figure by 18 to 98 percent over the widths in this design, so an exceedance is a floor)%s; layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, dT, why, share), drop, pct, worst_j, share))
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},

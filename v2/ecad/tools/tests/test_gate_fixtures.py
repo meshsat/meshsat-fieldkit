@@ -494,3 +494,27 @@ def t_the_per_cell_density_bar_is_lenient_and_the_tool_says_so():
 
     assert "LENIENT" in src and "floor" in src, \
         "dc_drop does not tell its reader which way its density bar errs, which is how the sign stayed wrong"
+
+
+def t_the_current_density_decides_the_verdict_alongside_the_drop():
+    """OWNER RULING 16, 13 September 2026: gate it.
+
+    Twelve rails on three cut boards were over the IPC bar while every one of them read MET, because only the
+    drop decided. A rail can be electrically quiet and locally too hot at the same time, which is exactly what
+    a density check is for. The rule reads the source because the tool needs pcbnew and the runner has none;
+    the numbers themselves are measured on the box and land in the appendix.
+    """
+    import ast
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    tree = ast.parse(src)
+    verdicts = [n for n in ast.walk(tree)
+                if isinstance(n, ast.Assign) and any(getattr(t, "id", "") == "verdict" for t in n.targets)]
+    assert verdicts, "dc_drop no longer assigns a verdict; this rule is looking at the wrong thing"
+    names = set()
+    for v in verdicts:
+        names |= {n.id for n in ast.walk(v.value) if isinstance(n, ast.Name)}
+    assert "dens_ok" in names, "the verdict does not consider the current density: %s" % sorted(names)
+    assert "drop_ok" in names, "the verdict no longer considers the drop: %s" % sorted(names)
+    assert "reported, not gated" not in src, "the report still calls the density ungated"
+    assert "density_dT" in src, \
+        "a rail cannot declare its own temperature rise, so the only way past the gate would be to ignore it"
