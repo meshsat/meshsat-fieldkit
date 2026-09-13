@@ -1,0 +1,29 @@
+{
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_over_copper": 4,
+   "silk_overlap": 25,
+   "starved_thermal": 2,
+   "track_dangling": 14,
+   "via_dangling": 25
+  },
+  "stage": "post",
+  "types_checked": 15,
+  "unrouted": 0
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-e1-dock-drc.json",
+   "sha256_16": "2f9b03b6676f9a05"
+  }
+ },
+ "note": "DRC (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "tool": "hardset-drc",
+ "ts": "2026-09-13T22:25:27Z",
+ "verdict": "PASS",
+ "version": "d974d581e3a9+dirty"
+}

@@ -76,7 +76,7 @@ CERTIFIED	15p NP0	C_0402_1005Metric	C	2	10		C1548	0402CG150J500NT	FH (Guangdong 
 CERTIFIED	16.5k 1%	R_0603_1608Metric	A	1	5	C22812	C22812	0603WAF1652T5E	UNI-ROYAL(Uniroyal Elec)	0603	expand	115190	0.0022	2026-09-11	
 CERTIFIED	162k 1%	R_0603_1608Metric	A	1	5	C22815	C22815	0603WAF1623T5E	UNI-ROYAL(Uniroyal Elec)	0603	expand	62228	0.0018	2026-09-12	
 CERTIFIED	18p	C_0402_1005Metric	B	8	40		C1549	0402CG180J500NT	FH (Guangdong Fenghua Advanced Tech)	0402	base	981789	0.0048	2026-09-11	
-CERTIFIED	18p NP0	C_0402_1005Metric	D	2	10	C1549	C1549	0402CG180J500NT	FH (Guangdong Fenghua Advanced Tech)	0402	base	953820	0.0049	2026-09-12	
+CERTIFIED	18p NP0	C_0402_1005Metric	D	2	10	C106202	C106202	CC0402JRNPO9BN180	YAGEO	0402	expand	2088634	0.0062	2026-09-13	
 CERTIFIED	1M	R_0603_1608Metric	B,E	5	25	C22935	C22935	0603WAF1004T5E	UNI-ROYAL(Uniroyal Elec)	0603	base	7768834	0.0023	2026-09-12	
 CERTIFIED	1M (GD to VPWR, 9.1.3)	R_0603_1608Metric	A	1	5	C22935	C22935	0603WAF1004T5E	UNI-ROYAL(Uniroyal Elec)	0603	base	7768834	0.0023	2026-09-12	
 CERTIFIED	1N4148W coil flyback	D_SOD-123	D	1	5	C81598	C81598	1N4148W	ST(Semtech)	SOD-123	base	3342965	0.0126	2026-09-12	
@@ -280,7 +280,12 @@ CERTIFIED	INA226 rail monitor +5V_S1	VSSOP-10_3x3mm_P0.5mm	A	1	5	C49851	C49851	I
 CERTIFIED	INA226 rail monitor +5V_S2	VSSOP-10_3x3mm_P0.5mm	A	1	5	C49851	C49851	INA226AIDGSR	Texas Instruments	VSSOP-10	expand	33808	0.7726	2026-09-11	
 CERTIFIED	INA226 rail monitor +5V_S3	VSSOP-10_3x3mm_P0.5mm	A	1	5	C49851	C49851	INA226AIDGSR	Texas Instruments	VSSOP-10	expand	33808	0.7726	2026-09-11	
 CERTIFIED	JST-PH 1x2 socket for the cell thermistor lead (the 10k NTC, a 103AT, sits in the cell block)	JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical	P	1	5	C5251182	C5251182	B2B-PH-K-S-GW	JST	Plugin,P=2mm	expand	15297	0.1485	2026-09-12	
+CERTIFIED	JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)	JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical	D	1	5	C5251182	C5251182	B2B-PH-K-S-GW	JST	Plugin,P=2mm	expand	15297	0.1485	2026-09-12	
+CERTIFIED	JST-PH 1x4 socket: spare hub port 3, 5V D- D+ GND (the lead is made up at build)	JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical	D	1	5	C131334	C131334	B4B-PH-K-S(LF)(SN)	JST	Plugin,P=2mm	expand	168574	0.0455	2026-09-12	
 CERTIFIED	JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the ribbon, this is the pigtail's data side (D+ D- GND GND)	JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical	A	1	5	C131334	C131334	B4B-PH-K-S(LF)(SN)	JST	Plugin,P=2mm	expand	168574	0.0455	2026-09-12	
+CERTIFIED	JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)	JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical	D	1	5	C157993	C157993	B5B-PH-K-S(LF)(SN)	JST	Plugin,P=2mm	expand	103595	0.0546	2026-09-13	
+CERTIFIED	JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)	JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical	D	1	5	C157993	C157993	B5B-PH-K-S(LF)(SN)	JST	Plugin,P=2mm	expand	103595	0.0546	2026-09-13	
+CERTIFIED	JST-VH socket, 10 A: 5 V from A22 J_MEZZ_PWR1 (behind A22's 2 A eFuse U23): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	D	1	5	C274411	C274411	B2P-VH-BL(LF)(SN)	JST	Plugin,P=3.96mm	expand	10946	0.1073	2026-09-12	
 CERTIFIED	JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up to about 22 V open circuit, 100 W): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	E	1	5	C274411	C274411	B2P-VH-BL(LF)(SN)	JST	Plugin,P=3.96mm	expand	10946	0.1073	2026-09-12	
 CERTIFIED	JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	E	1	5	C274411	C274411	B2P-VH-BL(LF)(SN)	JST	Plugin,P=3.96mm	expand	10946	0.1073	2026-09-12	
 CERTIFIED	JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND	JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical	A	1	5	C265283	C265283	B2B-XH-A-GU	JST	Plugin,P=2.5mm	expand	8535	0.2766	2026-09-12	
@@ -316,6 +321,8 @@ CERTIFIED	SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-B device)	SM
 CERTIFIED	SMA jack, Amphenol 132134-11 vertical (pigtail to the SDR device)	SMA_Amphenol_132134-11_Vertical	A	1	5	C3174425	C3174425	132134	Amphenol ICC	Plugin	expand	2139	4.5033	2026-09-12	
 CERTIFIED	SMA jack, Amphenol 132134-11 vertical (pigtail to the VHF device)	SMA_Amphenol_132134-11_Vertical	A	1	5	C3174425	C3174425	132134	Amphenol ICC	Plugin	expand	2139	4.5033	2026-09-12	
 CERTIFIED	SMA jack, Amphenol 132134-11 vertical (pigtail to the WIFI24 device)	SMA_Amphenol_132134-11_Vertical	A	1	5	C3174425	C3174425	132134	Amphenol ICC	Plugin	expand	2139	4.5033	2026-09-12	
+CERTIFIED	SMA jack: PA output (coax from the RA30H1317M1 output on the plate)	SMA_Amphenol_132134_Vertical	D	1	5	C3174425	C3174425	132134	Amphenol ICC	Plugin	expand	2139	4.5033	2026-09-12	
+CERTIFIED	SMA jack: antenna pigtail to A22's VHF jack J_RF1	SMA_Amphenol_132134_Vertical	D	1	5	C3174425	C3174425	132134	Amphenol ICC	Plugin	expand	2139	4.5033	2026-09-12	
 CERTIFIED	SMBJ18A (VBUS clamp at the outlet)	D_SMB	A	1	5	C151256	C151256	SMBJ18A	Littelfuse	DO-214AA	expand	7963	0.148	2026-09-12	
 CERTIFIED	SMBJ20A	D_SMB	P	1	5	C364296	C364296	SMBJ20A	MDD(Microdiode Semiconductor)	DO-214AA(SMB)	expand	120933	0.0572	2026-09-12	
 CERTIFIED	SMBJ5.0A	D_SMB	A,B,D	6	30	C113974	C113974	SMBJ5.0A	MDD(Microdiode Semiconductor)	DO-214AA(SMB)	expand	156740	0.0586	2026-09-11	
@@ -363,6 +370,7 @@ CERTIFIED	TPS62933DRLR buck 1.1 V hub core S2	SOT-583-8	B	1	5		C3200405	TPS62933
 CERTIFIED	TPS62933DRLR buck 1.1 V hub core S3	SOT-583-8	B	1	5		C3200405	TPS62933DRLR	Texas Instruments	SOT-583	expand	5299	0.5742	2026-09-11	
 CERTIFIED	TPS62933DRLR buck 1.2 V Ethernet switch core	SOT-583-8	B	1	5		C3200405	TPS62933DRLR	Texas Instruments	SOT-583	expand	5299	0.5742	2026-09-11	
 CERTIFIED	TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)	LQFP-32_7x7mm_P0.8mm	D	1	5	C167642	C167642	TUSB2046BVFR	Texas Instruments	LQFP-32(7x7)	expand	418	2.7717	2026-09-12	
+CERTIFIED	U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)	U.FL_Hirose_U.FL-R-SMT-1_Vertical	D	1	5	C88373	C88373	U.FL-R-SMT-1(10)	HRS(Hirose)	SMD	expand	775	0.2268	2026-09-12	
 CERTIFIED	USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay	USB3_A_Receptacle_Wuerth_692122030100	B	1	5	C5355286	C5355286	692122030100	Wurth Elektronik	SMD	expand	138	3.2192	2026-09-12	
 CERTIFIED	USB device rail to B16 (JST-VH): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	A	1	5	C274411	C274411	B2P-VH-BL(LF)(SN)	JST	Plugin,P=3.96mm	expand	10946	0.1073	2026-09-12	
 CERTIFIED	USB-C 2.0 receptacle	USB_C_Receptacle_HRO_TYPE-C-31-M-12	B	3	15	C165948	C165948	TYPE-C-31-M-12	Korean Hroparts Elec	SMD	expand	275747	0.1858	2026-09-11	
@@ -370,8 +378,8 @@ CERTIFIED	USBLC6-2SC6	SOT-23-6	A,B,C,D	12	60	C7519	C7519	USBLC6-2SC6	STMicroelec
 CERTIFIED	USBLC6-2SC6 ESD clamp on the SMBus pair	SOT-23-6	P	1	5	C7519	C7519	USBLC6-2SC6	STMicroelectronics	SOT-23-6L	expand	38849	0.1827	2026-09-11	
 CERTIFIED	Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10	Vishay_VEML7700	C	1	5	C504893	C504893	VEML7700-TR	Vishay Intertech	SMD-4P	expand	5979	1.1678	2026-09-11	
 CERTIFIED	W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)	Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm	C,E	2	10	C2843335	C2843335	W25Q16JVUXIQ	Winbond Elec	USON-8-EP(2x3)	expand	1697	1.576	2026-09-11	
-CERTIFIED	amber PA keyed	LED_0603_1608Metric	D	1	5	C165983	C165983	BL-HJC36G-AV-TRB	BrtLed(Bright LED Elec)	0603	expand	14090	0.0227	2026-09-12	
-CERTIFIED	amber record	LED_0603_1608Metric	D	1	5	C165983	C165983	BL-HJC36G-AV-TRB	BrtLed(Bright LED Elec)	0603	expand	14090	0.0227	2026-09-12	
+CERTIFIED	amber PA keyed	LED_0603_1608Metric	D	1	5	C2287	C2287	KT-0603Y	Hubei KENTO Elec	0603	expand	97839	0.0107	2026-09-13	
+CERTIFIED	amber record	LED_0603_1608Metric	D	1	5	C2287	C2287	KT-0603Y	Hubei KENTO Elec	0603	expand	97839	0.0107	2026-09-13	
 CERTIFIED	cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN	JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical	P	1	5	C157991	C157991	B5B-XH-A(LF)(SN)	JST	Plugin,P=2.5mm	expand	85408	0.0853	2026-09-12	
 CERTIFIED	green 5 V S1	LED_0603_1608Metric	B	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
 CERTIFIED	green 5 V S2	LED_0603_1608Metric	B	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
@@ -385,9 +393,9 @@ CERTIFIED	green NVMe link (PORTSTATUS0)	LED_0603_1608Metric	B	3	15	C2986059	C298
 CERTIFIED	green ZBA (DIO_8)	LED_0603_1608Metric	B	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
 CERTIFIED	green ZBB (DIO_8)	LED_0603_1608Metric	B	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
 CERTIFIED	green card link (PORTSTATUS1)	LED_0603_1608Metric	B	3	15	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
-CERTIFIED	green playback	LED_0603_1608Metric	D	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
-CERTIFIED	green power	LED_0603_1608Metric	D	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
-CERTIFIED	green receive (AUDIO_ON low)	LED_0603_1608Metric	D	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
+CERTIFIED	green playback	LED_0603_1608Metric	D	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
+CERTIFIED	green power	LED_0603_1608Metric	D	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
+CERTIFIED	green receive (AUDIO_ON low)	LED_0603_1608Metric	D	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
 CERTIFIED	green: vehicle input present	LED_0603_1608Metric	E	1	5	C2986059	C2986059	19-217/GHC-YR1S2/6T	Everlight Elec	0603	expand	280758	0.0178	2026-09-11	
 CERTIFIED	monitor supply lead to the Xenarc (JST-VH): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	A	1	5	C274411	C274411	B2P-VH-BL(LF)(SN)	JST	Plugin,P=3.96mm	expand	10946	0.1073	2026-09-12	
 CERTIFIED	nano-SIM push-push GCT SIM8060 (SIM 1)	nanoSIM_GCT_SIM8060-6-0-14-00	B	1	5		C6296715	SIM8060-6-0-14-00-A	Global Connector Technology	SMD	expand	4054	1.6427	2026-09-11	
@@ -444,13 +452,10 @@ HAND_FIT	pre-charge pin, longer, mates first (32.24 AX)	Mill-Max_0858_power_pin	
 HAND_FIT	spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare	PogoPins_2x6	A	1	5										Preci-Dip, https://www.preci-dip.com ; 2x6 signal spring pins, sheet in v2/vendor/precidip/
 NOT_AT_JLC	3.3uH XAL6060-332ME	L_Coilcraft_XAL6060-XXX	B	6	30									2026-09-11	no component for 'XAL6060-332ME'
 NOT_AT_JLC	4.7uH XAL4020-472ME	L_Coilcraft_XAL4020-XXX	B	1	5									2026-09-11	no component for 'XAL4020-472ME'
-NOT_AT_JLC	5 V from A22 J_MEZZ_PWR1 (JST-VH, 2 A eFuse on A22): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	D	1	5									2026-09-11	no component for '5 5V'
 NOT_AT_JLC	5 V slot rail S1 from A22 J_5V_S1 (JST-VH, 16 AWG): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	B	1	5									2026-09-11	no component for '5 5V'
 NOT_AT_JLC	5 V slot rail S2 from A22 J_5V_S2 (JST-VH, 16 AWG): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	B	1	5									2026-09-11	no component for '5 5V'
 NOT_AT_JLC	5 V slot rail S3 from A22 J_5V_S3 (JST-VH, 16 AWG): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	B	1	5									2026-09-11	no component for '5 5V'
 NOT_AT_JLC	54 V PoE feed from A22 J_54V (JST-VH): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	B	1	5									2026-09-11	no component for '54 54V'
-NOT_CHECKED	PA drive (U.FL, coax to the RA30H1317M1 input on the plate)	U.FL_Hirose_U.FL-R-SMT-1_Vertical	D	1	5										no part number and no value this search understands: 'PA drive (U.FL, coax to the RA30H1317M1 input on t'
-NOT_CHECKED	PA output (SMA, coax from the RA30H1317M1 output on the plate)	SMA_Amphenol_132134_Vertical	D	1	5										no part number and no value this search understands: 'PA output (SMA, coax from the RA30H1317M1 output o'
 NOT_CHECKED	amber 5G network	LED_0603_1608Metric	B	1	5										no part number and no value this search understands: 'amber 5G network'
 NOT_CHECKED	amber NVMe activity	LED_0603_1608Metric	B	3	15										no part number and no value this search understands: 'amber NVMe activity'
 NOT_CHECKED	amber spare drive activity	LED_0603_1608Metric	B	1	5										no part number and no value this search understands: 'amber spare drive activity'
