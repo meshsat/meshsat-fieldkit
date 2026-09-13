@@ -31,15 +31,16 @@ if os.path.exists(pro):
     pats = [(p["pattern"], p["netclass"]) for p in ns.get("netclass_patterns", [])]
     for ni in b.GetNetInfo().NetsByName().values():
         nm = ni.GetNetname()
-        _c = _assign.get(nm)
+        # 13 September 2026: `_assign.get(nm)` returns a LIST in KiCad 9's project format, and this block then
+        # used it as a dict key and as a set member, twice raising `TypeError: unhashable type: 'list'`. The
+        # whole straighten stage had never run on board C because of it. Normalise ONCE, here, through the one
+        # answer, so everything downstream holds a class name; fixing it at either use site leaves the other.
+        _c = netclass.class_of(_assign, nm)
         if _c is None:
             for pat, c in pats:
                 if fnmatch.fnmatch(nm, pat) or fnmatch.fnmatch(nm.lstrip("/"), pat): _c = c; break
         if _c is not None:
-            # 13 September 2026: this was `cls.get(_c, ...)` and _c is a LIST in KiCad 9's project format, so
-            # this line raised `TypeError: unhashable type: 'list'` and the whole straighten stage had never run
-            # on board C. netclass.class_of is the one answer to what class a net is in.
-            clear[ni.GetNetCode()] = cls.get(netclass.class_of({nm: _c}, nm), default_clear)
+            clear[ni.GetNetCode()] = cls.get(_c, default_clear)
             if _c in _pairc: PAIR_NETS.add(ni.GetNetCode())
 print("straighten: %d net(s) of a differential pair class are left alone" % len(PAIR_NETS))
 
