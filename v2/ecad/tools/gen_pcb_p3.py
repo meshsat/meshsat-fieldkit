@@ -194,7 +194,13 @@ q1, q2 = FIXED["Q1"][:2], FIXED["Q2"][:2]
 f1a, f1b, r10a, r10b = mm(pad_at("F1", "1")), mm(pad_at("F1", "2")), mm(pad_at("R10", "1")), mm(pad_at("R10", "2"))
 wbp, wp, wbn, wn = mm(pad_at("W_BP", "1")), mm(pad_at("W_P", "1")), mm(pad_at("W_BN", "1")), mm(pad_at("W_N", "1"))
 band("CELL4", short_of(f1a, wbp), short_of(wbp, f1a))                                                    # B+ land to the blade holder
-q1_src = (q1[0] - 4.6, q1[1] + 0.64); band("FUSED", short_of(q1_src, f1b), q1_src, w=2.8)                   # the blade to the charge FET's source side
+# 13 September 2026: 3.6 mm, not 2.8. IPC-2221 gives 2.8 mm at 2 oz 8.34 A on ONE outer layer against this
+# rail's 10, so the band needs both layers and therefore needs the current to CROSS, and the crossing is what
+# the barrels were failing on: four attempts at the vias took PACK_P's worst from 2.67 A to 1.88 against its
+# 1.30 and left FUSED's at 2.25. At 3.6 mm one layer carries 10.01 A, which is the rail exactly, so either
+# layer can take the whole of it and the crossing becomes whatever the copper decides rather than something
+# the barrels have to force. It is not margin on one layer; it is margin on the pair of them.
+q1_src = (q1[0] - 4.6, q1[1] + 0.64); band("FUSED", short_of(q1_src, f1b), q1_src, w=3.6)                   # the blade to the charge FET's source side
 # 13 September 2026 (MESHSAT-862, appendix 32.164): THE PACK CURRENT ENTERS THE BAND THROUGH THESE THREE
 # TRACKS AND THEY WERE 0.6 mm. IPC-2221 gives 0.6 mm at 2 oz 2.73 A, and the measure found 4.16 A in one of
 # PACK_P's three (ratio 1.52) and 2.09 A in one of FUSED's: the 10 A does not divide evenly over three
@@ -203,7 +209,7 @@ q1_src = (q1[0] - 4.6, q1[1] + 0.64); band("FUSED", short_of(q1_src, f1b), q1_sr
 # the gate pad is 1.27 mm beyond the outermost source pin and keeps 0.37 mm of clearance at this width.
 for dy in (1.91, 0.64, -0.64): track("FUSED", (q1[0] - 2.67, q1[1] + dy), (q1_src[0], q1[1] + dy), 1.2, pcbnew.F_Cu)
 band("SW", (q1[0] + 0.69, q1[1]), (q2[0] - 0.69, q2[1]))                                  # tab to tab
-q2_src = (q2[0] + 4.6, q2[1] - 0.64); band("PACK_P", q2_src, short_of(q2_src, wp), w=2.8)  # the discharge FET's source side to the pack + land
+q2_src = (q2[0] + 4.6, q2[1] - 0.64); band("PACK_P", q2_src, short_of(q2_src, wp), w=3.6)  # the discharge FET's source side to the pack + land
 for dy in (-1.91, -0.64, 0.64): track("PACK_P", (q2[0] + 2.67, q2[1] + dy), (q2_src[0], q2[1] + dy), 1.2, pcbnew.F_Cu)
 band("GND", short_of(r10a, wbn), short_of(wbn, r10a, 0.5)); band("PACK_N", short_of(wn, r10b, 0.5), short_of(r10b, wn))   # B- land, shunt, pack - land
 def pour(layer, netname, name, rect, priority=0):
