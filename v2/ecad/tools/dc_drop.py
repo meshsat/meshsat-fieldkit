@@ -143,6 +143,7 @@ def main(a):
                 j = index.get((L, gy + dy, gx + dx))
                 if j is None: continue
                 add(i, j, g * min(f_i, frac[L][gy + dy, gx + dx] or 1.0))
+        net_vias = []    # (x, y, drill mm, barrel wall mm2, rv ohm, mesh nodes) for every barrel of this net
         barrels = [(v.GetPosition(), v.GetDrillValue() / 1e6, v.TopLayer(), v.BottomLayer()) for v in vias]
         barrels += [(p.GetPosition(), max(p.GetDrillSize().x, 1e5) / 1e6, pcbnew.F_Cu, pcbnew.B_Cu) for f, p in pads if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH]   # a through-hole pad is a barrel through every layer (review of 8 Sep 2026)
         via_cells = {}   # (gy, gx) -> [barrel count, total barrel wall cross-section mm2]: where current enters a plane
@@ -155,6 +156,14 @@ def main(a):
             if len(nodes) < 2: continue
             rv = RHO * (1.6e-3 / max(1, len(span) - 1)) / (math.pi * d * 1e-3 * PLATING)
             for k in range(len(nodes) - 1): add(nodes[k], nodes[k + 1], 1.0 / rv)
+            # RULING 22 APPLIED TO A VIA (13 September 2026). A plane cell at a via is a funnel: the barrel's
+            # whole current crosses one cell face, and IPC-2221's figure is for a long conductor at thermal
+            # steady state, not for a spreading region a millimetre across. E7's VIN_RAW read 2.20 on such a
+            # cell while the barrel carrying it sat at 0.79 of its OWN limit, and clear of every via that
+            # rail's worst cell reads 1.21. So the via is judged as a via, on its barrel's cross-section,
+            # and the pour bar is applied to pour copper. The list is kept here because this is where the
+            # geometry is walked; the current comes off the solved mesh below.
+            net_vias.append((pos.x / 1e6, pos.y / 1e6, d, math.pi * d * PLATING * 1e3, rv, list(nodes)))
         # sources and loads
         def pad_nodes(f, p):
             out = []
@@ -305,6 +314,13 @@ def main(a):
             lim_a = ipc_limit(w * t, dT_of(r), L not in (pcbnew.F_Cu, pcbnew.B_Cu))
             if lim_a > 0: cond.append((best / lim_a, w, best, lim_a, lname[L], at[0], at[1], ln))
         cond.sort(reverse=True)
+        # every barrel of this net on its own cross-section, the same question the conductor pass asks of a track
+        via_worst = None
+        for vx, vy, vd, vwall, vrv, vnodes in net_vias:
+            cur = max((abs(v[vnodes[k]] - v[vnodes[k + 1]]) / vrv for k in range(len(vnodes) - 1)), default=0.0)
+            lim = ipc_limit(vwall, dT, True)   # a barrel is enclosed copper: the inner-layer constant
+            if lim <= 0: continue
+            if via_worst is None or cur / lim > via_worst[0]: via_worst = (cur / lim, cur, lim, vd, vwall, vx, vy)
         tot = sum(share.values()) or 1.0; share = {k: round(x / tot, 2) for k, x in share.items()}
         amps = sum(sinks.values()); pct = drop / r["volts"] if r["volts"] else 0.0
         # FAIL CLOSED ON AN IMPOSSIBLE NUMBER. A series conductor cannot carry more current than the rail has:
@@ -367,11 +383,20 @@ def main(a):
         #   where every track-carried rail moved by half. 1.10 is that measured sensitivity, rounded up.
         ZONE_TOL = 1.10
         cond_ratio = cond[0][0] if cond else 0.0
-        zone_ratio = (zone_j / jl) if zone_at else 0.0
+        # THE POUR BAR IS APPLIED TO POUR COPPER, AND A VIA IS JUDGED AS A VIA (13 September 2026). The cell
+        # the current funnels through at a barrel is not a conductor cross-section, and the two boards where
+        # this was measured say so in opposite directions: on all twelve of A24's rails the worst pour cell
+        # is clear of every via, and on E7's VIN_RAW it IS a via, reading 2.20 while the barrel carrying that
+        # current sits at 0.79 of its own limit and the worst cell clear of vias reads 1.21. So the gated
+        # pour number is the worst cell CLEAR of every via, and every barrel is gated on its own wall
+        # cross-section beside it. The funnel cell is still printed, because it is how a via with too little
+        # copper around it shows up before the barrel itself is over.
+        zone_ratio = (czone_j / jl) if czone_at else 0.0
+        via_ratio = via_worst[0] if via_worst else 0.0
         drop_ok = pct <= rb
-        dens_ok = cond_ratio <= 1.0 and zone_ratio <= ZONE_TOL
+        dens_ok = cond_ratio <= 1.0 and zone_ratio <= ZONE_TOL and via_ratio <= 1.0
         verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
-        bad = ([] if drop_ok else ["the drop"]) + ([] if cond_ratio <= 1.0 else ["a track"]) + ([] if zone_ratio <= ZONE_TOL else ["a pour"])
+        bad = ([] if drop_ok else ["the drop"]) + ([] if cond_ratio <= 1.0 else ["a track"]) + ([] if zone_ratio <= ZONE_TOL else ["a pour"]) + ([] if via_ratio <= 1.0 else ["a via"])
         why = "" if verdict == "MET" else " [MISSED on %s]" % " and ".join(bad)
         if cond:
             cr, cw, ca, cl, cL, cx, cy, cln = cond[0]
@@ -389,18 +414,22 @@ def main(a):
         # DIAGNOSTIC, 13 September 2026, deciding nothing yet: is the worst pour cell a via's funnel? If it is,
         # the cell bar is being applied to a spreading region and the honest check at that point is the
         # BARREL's own cross-section. Both numbers are printed so the answer comes from boards and not from me.
+        via_txt = (("worst VIA %.2f mm drill at (%.1f, %.1f): %.2f A against IPC's %.2f A for its own %.4f mm2 of "
+                    "barrel wall, ratio %.2f" % (via_worst[3], via_worst[5], via_worst[6], via_worst[1], via_worst[2],
+                                                 via_worst[4], via_worst[0]))
+                   if via_worst else "this net has no via")
         if vzone_at:
             _vl = ipc_limit(vzone_at[4][1], dT, True) if vzone_at[4] else 0.0
             zone_txt += ("; the worst cell AT A VIA is %.1f A/mm2 at %s (%.1f, %.1f), %d barrel(s) of %.4f mm2 wall "
                          "carrying %.2f A, which IPC gives %.2f A for its own cross-section, ratio %.2f"
                          % (vzone_j, vzone_at[0], vzone_at[1], vzone_at[2], vzone_at[4][0] if vzone_at[4] else 0,
                             vzone_at[4][1] if vzone_at[4] else 0.0, vzone_at[3], _vl, (vzone_at[3] / _vl) if _vl else 0.0))
-        zone_txt += ("; clear of every via the worst pour cell is %.1f A/mm2 at %s (%.1f, %.1f), ratio %.2f"
-                     % (czone_j, czone_at[0], czone_at[1], czone_at[2], czone_j / jl)) if czone_at else "; no pour cell of this net is clear of a via"
+        zone_txt += ("; GATED on the worst pour cell clear of every via, %.1f A/mm2 at %s (%.1f, %.1f), ratio %.2f"
+                     % (czone_j, czone_at[0], czone_at[1], czone_at[2], czone_j / jl)) if czone_at else "; no pour cell of this net is clear of a via, so the pour is not gated"
         if verdict != "MET": miss += 1
-        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s%s; layer share %s"
-                        % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, why, share),
-                        drop, pct, max(cond_ratio, zone_ratio), share))
+        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s; %s%s; layer share %s"
+                        % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, via_txt, why, share),
+                        drop, pct, max(cond_ratio, zone_ratio, via_ratio), share))
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
