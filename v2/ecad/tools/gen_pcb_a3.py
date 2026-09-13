@@ -292,7 +292,16 @@ jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
 # the head island gains a third stitch via so the current enters the band over a front rather than at a
 # point (32.164: a cell at a via is a funnel). A via further along the run would stand on B.Cu alone, and
 # `cleanup_dangling` removes a via whose other end touches nothing.
-PC.union(pa, "PA rail", [(pr[2] - 0.5, -15.0, 106.25, -8.0), (101.75, -15.0, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin
+# 13 September 2026, A25 MEASURED: THE BAND STARTED 15 mm EAST OF THE HEAD IT FEEDS. The B.Cu band began at
+# the head island's east end, so the rail's first 15 mm ran on the F.Cu island alone, the router's tracks cut
+# that island into two pieces, and the worst pour cell read 132.5 A/mm2 against 82.7 at (167.2, 121.2), ratio
+# 1.60, with 3.68 A through one 0.40 mm barrel behind it. B.Cu under the head is empty for 50 mm in every
+# direction (drawn and read, not assumed), so the band starts at the shunt's own output pad instead, and two
+# vias IN that pad put the rail on 35 um copper at the point it is made. It is the VBUS20 pattern of this
+# morning, and the reason it is right here too: a rail should meet its outer copper at its source.
+_r55 = pads_rect(net_pads(pa, ["R55"]), 0)                                    # the shunt's output pad: the rail's source
+PC.union(pa, "PA rail", [(_r55[0] - 1.0, -15.0, 106.25, -8.0), (101.75, -15.0, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin
+col(pa, (_r55[0] + _r55[2]) / 2, (_r55[1] + _r55[3]) / 2 - 1.1, (_r55[1] + _r55[3]) / 2 + 1.1, 2)   # in the shunt's own pad
 col(pa, pr[2] + 1.3, -13.4, -9.6, 3)                                          # three vias in the head island, in the band: a via mid-run has no F.Cu copper at its other end and cleanup_dangling would take it
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
 # THE DIVE'S LAYER FOLLOWS THE BOARD (12 September 2026, owner ruling 2: test board A at four layers against six).
@@ -320,12 +329,19 @@ dock = [(jd[0], jd_s, jd[2], -40), (fx1_ + 0.8, -46, jd[2], -40), (fx1_ + 0.8, -
 PC.union(vr, "VIN_RAW east", dock, pcbnew.B_Cu, priority=4, keepout=False)   # from the four dock pins themselves (a band that missed them left the link to a 0.4 mm In2 track: 667 A/mm2, 32.69); priority 4 over the VBAT plane's corner
 for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, pcbnew.B_Cu)
 PC.union(vr, "VIN_RAW dock top", dock, pcbnew.F_Cu, priority=4, keepout=False, min_width=0.25, clearance=0.15)   # no track keep-out on top: the header's signal pins escape there
-PC.union(vr, "VIN_RAW west", [(-118, -46, fx0_ - 0.8, -40), (-118, -46, -112, fe[1] - 0.4)], pcbnew.B_Cu, priority=3)
+# 13 September 2026, A25 MEASURED: the west band stopped at the head island's south edge, so the head, which
+# is where 8 A enters the board from the dock, had one layer of copper and the front end's own FE_SW1 escape
+# 0.34 mm from it. The worst pour cell read 134.6 A/mm2 against 52.0 there (ratio 2.59). B.Cu under the head
+# carries three foreign vias and nothing else, so the band covers the head as well and a second via row joins
+# them at the north end, where the neck is: one row at the south edge was the whole join.
+_head = (min(fe[0], -118), fe[1] - 2.6, fe[2], fe[3])
+PC.union(vr, "VIN_RAW west", [(-118, -46, fx0_ - 0.8, -40), (-118, -46, -112, fe[1] - 0.4), _head], pcbnew.B_Cu, priority=3)
 PC.union(vr, "VIN_RAW under the trunk", [(fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5)] + dock, DIVE_CU, priority=2, keepout=False)   # one In3 polygon from the dive to the dock pins (the pins join the layers)
 PC.keepout("keep tracks off VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), DIVE_CU)
 for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, DIVE_CU)
 col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 2)
 row(vr, -117, -113, fe[1] - 1.3, 3)
+row(vr, -115, -111, fe[3] - 3.0, 3)                                            # the head's north end, where the cell measure put the neck
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
 f1 = f1_; fx0, fx1 = fx0_, fx1_
 PC.union(vb, "VBAT", [(fx0, f1[1], fx1, 44.5), (fx0, 38.5, -4, 44.5), (fx0, -12.5, -48, -7.5)], pcbnew.B_Cu, priority=2)   # one comb: the trunk from F1, the collector under the converters, the PA spur
@@ -373,8 +389,22 @@ PC.island(vbs, "VBUS20", _vbus_poly, pcbnew.F_Cu, priority=3)
 # a keep-out. The second layer is taken here because the keep-out would have to cover a 31 by 18 mm field of
 # the front end's own gate drives and sense lines: B.Cu carries the same polygon, and the two are tied at the
 # two places the current enters and leaves, inside the shunts' own 2512 lands, where nothing else can be.
-PC.union(vbs, "VBUS20 under", [(vbr[0], vbr[1], vbr[2], vbr[3]), (_r16x - _leg, _r16[1], _r16x + _leg, vbr[3])],
-         pcbnew.B_Cu, priority=2, keepout=False)
+# THE SECOND LAYER GOES ON In3, NOT B.Cu, AND THAT IS VBAT'S 10 A (13 September 2026, measured on A25).
+# On B.Cu this polygon is 27.5 by 20 mm at (48.5, 65.2) to (76.0, 85.2), and VBAT's trunk from F1 runs north
+# at x 53.5 to 58.5 straight through it to the collector under the four converters. Two bands of different
+# nets never cross on one layer (32.39) and this one was drawn this morning without reading what was already
+# there: the trunk filled as far as y 100.5 and stopped, the collector filled from x 76.1 east, and VBAT's
+# comb was in TWO PIECES with the pack's 10 A left to find its way through the In2 plane's cut-up sheet and,
+# for 3.29 A of it, through a 0.500 mm In3 router track (ratio 8.34, the worst number on the board).
+# In3 is a pure routing layer here with no power copper within 40 mm, so VBUS20's second layer goes there: at
+# 15.2 um it is 0.43 of B.Cu, and the F.Cu island alone is already 5.4 mm tall where IPC wants 3.56 at 6 A,
+# so the second layer is bridging cuts rather than carrying the rail. On four layers there is no In3 and In2
+# is the VBAT plane, so the second layer is not drawn at all and the four-layer board says so.
+if NL_CU >= 6:
+    PC.union(vbs, "VBUS20 under", [(vbr[0], vbr[1], vbr[2], vbr[3]), (_r16x - _leg, _r16[1], _r16x + _leg, vbr[3])],
+             DIVE_CU, priority=2, keepout=False)
+else:
+    print("placement: VBUS20 gets no second layer on a %d layer board (In3 does not exist, In2 is the VBAT plane and B.Cu is VBAT's trunk)" % NL_CU)
 _r11 = pads_rect(net_pads(vbs, ["R11"]), 0)
 col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 0.55, (_r11[1] + _r11[3]) / 2 + 0.55, 2)   # in the ISNS shunt's own pad
 col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 0.55, (_r16[1] + _r16[3]) / 2 + 0.55, 2)                      # and in the charger's input shunt
@@ -395,13 +425,27 @@ hfr = pads_rect(net_pads(hf, ["R65", "C109", "C110", "C111"]), 0.5, 0.5)
 PC.island(hf, "HF rail head", rect_pts(hfr), pcbnew.F_Cu, priority=3)
 if NL_CU >= 6:
     _jh = pads_rect(net_pads(hf, ["J_HF"]), 0.8)
+    # 13 September 2026, A25 MEASURED: the east run passed THROUGH J_AB2's pin field. The 4.0 mm run at y 115
+    # to 119 crosses the ribbon header's ten through-hole pads at x 243.2 and 245.8, y 115.9 to 126.1, and the
+    # fill retreats round every one of them: the worst pour cell read 105.3 A/mm2 against 52.0 (ratio 2.02) in
+    # the isthmus between two pads. A pour does not pass a pin field, it threads it. The run steps north of the
+    # header's top pin instead, where In3 is empty from x 232 to 252, and rejoins the north run above it.
     PC.union(hf, "HF rail", [(hfr[0], hfr[1] - 0.5, hfr[2] + 2.0, hfr[3]),      # the head, over the shunt and the caps
                              (hfr[2] - 2.0, -9.0, hfr[2] + 2.0, hfr[3]),        # north out of the head
-                             (hfr[2] - 2.0, -9.0, 102.0, -5.0),                 # east under the PA band's own run, on another layer
+                             (hfr[2] - 2.0, -9.0, 86.0, -5.0),                  # east under the PA band's own run, on another layer
+                             (82.0, -9.0, 86.0, 0.0),                           # north, clear of J_AB2's west pin column
+                             (82.0, -4.0, 102.0, 0.0),                          # east above the header's top pin (its pads end at y 115.9)
                              (98.0, -9.0, 102.0, _jh[3]),                        # north past J_54V, west of the PA band's north run
                              (98.0, _jh[1], _jh[2], _jh[3])],                    # east into J_HF
              pcbnew.In3_Cu, priority=2)
     col(hf, hfr[2] - 0.6, hfr[1] + 1.0, hfr[3] - 1.0, 3)                         # the head island to the band
+    # AND THE SOURCE MEETS THE BAND AT THE SHUNT. The head island fills in four pieces, because the converter's
+    # own parts (L9, Q16, Q23, the output capacitors) stand in the rectangle, and the piece that holds R65, the
+    # shunt the rail is measured at, is not the piece the three vias above are in: 0.71 A of this 1.0 A rail was
+    # crossing on a 0.400 mm In2 router track, ratio 2.10. Two vias inside the shunt's own output pad put the
+    # current on the band where it is made, which is the answer the record already reached for VBUS20's shunts.
+    _r65 = pads_rect(net_pads(hf, ["R65"]), 0)
+    col(hf, (_r65[0] + _r65[2]) / 2, (_r65[1] + _r65[3]) / 2 - 1.1, (_r65[1] + _r65[3]) / 2 + 1.1, 2)
     # NO stitch vias at J_HF: it is a JST-VH, its pins are through-hole and already join every layer, and a
     # via placed inside its land is `hole_to_hole` against those pins (four of them, first attempt).
 else:

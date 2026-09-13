@@ -83,6 +83,22 @@ def run(b, check, nets=None):
             if t.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != z.GetFirstLayer() and o.GetFilledArea() / 1e12 >= 0.8 * outline_area(o) for o in pz): continue   # a ground via reaches the solid plane
             if not touched and not z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()): print("NOTE stitch via %s at (%.1f, %.1f) outside the fill of '%s' (no track on it: it carries nothing)" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed")); continue   # P2's ground grid where the router's tracks pushed the fill away
             check(z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()), "locked via %s at (%.1f, %.1f) sits in the fill of '%s' on %s" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed", b.GetLayerName(z.GetFirstLayer()))); n2 += 1
+    # 13 September 2026 (MESHSAT-862): A BAND DRAWN AS ONE POLYGON THAT FILLS IN TWO IS A CONDUCTOR WITH A GAP
+    # IN IT. `power_copper` refuses rectangles that do not form one polygon, and until today nothing asked what
+    # the FILL made of them. On A25 five did: VBAT's B.Cu comb in two pieces (VBUS20's own new band sat across
+    # its trunk), the PA head in two, the HF head in four, VIN_RAW's dock top in two, and the current went
+    # round through the router's 0.4 and 0.5 mm tracks, which is the whole reason the density pass exists.
+    # A plane (priority 0 or 1) on a routing layer is sliced by tracks and that is expected, so the measure is
+    # of BANDS AND ISLANDS only, priority 2 and up, which is what `union()` and `island()` draw. Reported with
+    # its numbers first, on every board of the set, before it is anyone's verdict.
+    for z in pz:
+        if z.GetAssignedPriority() < 2: continue
+        L = z.GetFirstLayer(); fp = z.GetFilledPolysList(L)
+        big = [fp.Outline(i).Area() / 1e12 for i in range(fp.OutlineCount())]
+        big = sorted([a for a in big if a >= SLIVER], reverse=True)
+        if len(big) > 1:
+            print("NOTE band '%s' (%s, %s) is drawn as ONE polygon and FILLS in %d pieces of %s mm2: the current between them travels in whatever the router laid"
+                  % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), len(big), ", ".join("%.0f" % a for a in big[:6])))
     bynet = {}
     for z in pz: bynet.setdefault(z.GetNetname(), []).append(z)
     for net, zs in bynet.items():
