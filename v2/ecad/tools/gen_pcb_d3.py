@@ -124,7 +124,17 @@ REGIONS = [(_n, _rect, [_r for _r in _refs if _r not in RESERVED], _bk) for _n, 
 
 rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
 if rest: REGIONS.append(("REST", (-46, -30, -38, -22), rest, False))
-GAP = 1.2; FINE_MARGIN = 2.2   # E6 round 4: 1.4 left R14 inside the tracker's escape row and four pads of U5 without escapes
+# OWNER RULING 9 (13 September 2026): keep the 1.2 mm PWR class and make the room by rearranging parts.
+# D's regions are not the constraint (two overflow by 0.2 mm against a declared 0.5), the DENSITY is: 211
+# footprints on 100 by 80 mm with almost every region boxed by its siblings, and a 1.2 mm rail needs a
+# 1.2 mm channel. PLACE_GAP is the packer's own spacing and is the one lever that widens every channel at
+# once without touching a region rectangle, which is the owner's. MEASURED 13 September 2026 and it does
+# NOT answer the ruling: 1.8 overflows six regions worst 3.8 mm and 2.4 overflows thirteen worst 7.6 mm, both
+# against D's declared 0.5 mm allowance, so neither value reaches a route and neither can be compared with the
+# twelve opens the 1.2 mm width leaves. The knob stays, at the packer's own 1.2, because the arm is reproducible
+# and the next lever has to be measured against it. What the WIDTH itself costs is measured separately, by
+# routing the same placement at 0.5 mm under the same router call.
+GAP = float(os.environ.get("PLACE_GAP", "1.2")); FINE_MARGIN = 2.2   # E6 round 4: 1.4 left R14 inside the tracker's escape row and four pads of U5 without escapes
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
     pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e9

@@ -19,7 +19,7 @@ chain on identical input differed in four tracks and four vias, the escape stubs
 `boardorder.py` carries the stable order and the whole story; this rule is what stops a fifth laying pass
 from being written without it.
 """
-import os, re, glob
+import os, re, glob, sys, json, tempfile, subprocess
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ECAD = os.path.dirname(TOOLS)
@@ -578,3 +578,45 @@ def t_no_via_is_laid_without_a_clearance_test():
         if "clear(" not in window:
             raise AssertionError("escape.py lays a via with no clearance test in the 700 characters before it: "
                                  "...%s" % body[m.start():m.start() + 90].strip())
+
+
+def t_a_run_whose_tools_and_board_come_from_different_trees_is_refused():
+    """13 September 2026, written after making the mistake and watching it produce a number.
+
+    Every routeflow profile pins `repo`, and `run` reads that key in preference to the directory the command
+    was given in. That is right for a production run and silently wrong for a measurement: an arm copied the
+    tree, patched ONE number in a generator and ran `tools/routeflow.py run tools/routeflow/d9.json` inside
+    the copy. The pinned repo sent every stage to the box clone instead, so the chain regenerated and routed
+    the PRODUCTION board with the PRODUCTION tools, overwrote a committed phase board on the way, and would
+    have reported an open count the arm's patch had never touched. Three of the four agentic nulls of 11
+    September had this shape: a result identical to the baseline reads exactly like an honest answer.
+
+    Two rules, because either alone is passable. The first runs a copied routeflow against a real profile and
+    requires the refusal. The second requires both entry points to ask, since a guard wired into one of them
+    is a guard for half the runs.
+    """
+    import shutil
+    prof = os.path.join(TOOLS, "routeflow", "d9.json")
+    d = tempfile.mkdtemp(prefix="onetree-")
+    iso = os.path.join(d, "ecad", "tools"); os.makedirs(iso)
+    for f in os.listdir(TOOLS):
+        if f.endswith(".py"): shutil.copy(os.path.join(TOOLS, f), iso)
+    repo = os.path.join(d, "repo"); os.makedirs(os.path.join(repo, "v2", "ecad", "pcb-d-aprs-d9"))
+    p = json.load(open(prof)); p["repo"] = repo
+    pf = os.path.join(d, "d9.json"); json.dump(p, open(pf, "w"))
+    r = subprocess.run([sys.executable, os.path.join(iso, "routeflow.py"), "run", pf],
+                       capture_output=True, text=True, timeout=180, cwd=d)
+    out = r.stdout + r.stderr
+    assert r.returncode == 2, "a run whose tools and board come from different trees was not refused: rc=%s\n%s" % (r.returncode, out[-2000:])
+    assert "REFUSED" in out and "different trees" in out, out[-2000:]
+    # and nothing was written into the board's tree before the refusal
+    assert not os.path.exists(os.path.join(repo, "v2", "ecad", "pcb-d-aprs-d9", "out")), \
+        "the refusal came after routeflow had already written into the tree it was refusing to touch"
+
+
+def t_both_routeflow_entry_points_ask_whether_it_is_one_tree():
+    src = open(os.path.join(TOOLS, "routeflow.py")).read()
+    for fn in ("def run(", "def experiment("):
+        i = src.index(fn)
+        body = src[i:src.index("\ndef ", i + 1)]
+        assert "one_tree(" in body, "%s does not ask whether its tools and its board come from one tree" % fn.strip("def (")

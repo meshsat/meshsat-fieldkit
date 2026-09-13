@@ -524,6 +524,14 @@
    "read_by": "gen_pcb_b3.py",
    "stage": "place",
    "why": "A through-hole pad of a part the packer has just placed becomes an obstacle to the regions packed after it, on either side. Measured twice and it has never paid: as a static list built before the packing it took B19's placed board from 6 hard violations to 107 (12 September 2026, on regions that overflowed by up to 64 mm), and inside the packing loop with the regions sized it changed nothing at all, 12 before and 12 after (13 September). The reason the second run was null is the packing ORDER: IOCA packs before WMIDS, so J_54V does not exist when the parts it collides with are placed. It stays for a board that packs the other way round."
+  },
+  "PLACE_GAP": {
+   "category": "experiment",
+   "type": "number",
+   "default": "1.2",
+   "read_by": "gen_pcb_d3.py",
+   "stage": "place",
+   "why": "The shelf packer's own spacing on board D. Owner ruling 9 of 13 September keeps the 1.2 mm PWR class and asks for the room to come from rearranging parts; D's regions are not the constraint (two overflow by 0.2 mm against a declared 0.5 allowance), its density is, and this is the one lever that widens every channel at once without touching a region rectangle, which is reserved. A placement change moves every part in the region, so an arm on it is compared as one placement against another and never as a knob with a value (appendix 32.109)."
   }
  }
 }

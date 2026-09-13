@@ -318,6 +318,18 @@ def validate(profile_fn, repo=None):
         return verdict.write("routeflow_validate", verdict.FAIL, denominator=len(lines), evidence=fails,
                              counts={"fail": len(fails)}, inputs={"profile": b})
 
+    # 13 September 2026: a profile that pins `repo` routes THAT tree's board whatever directory the command was
+    # given in, which is right for a production run and is how an isolated arm came to measure the production
+    # board with the production tools (see `one_tree`). Reported here so a copied profile that was not repointed
+    # is caught by reading it rather than by an hour of routing.
+    # Judged only where the pinned repo EXISTS: every profile pins the BOX's path, and on the runner that path
+    # is simply absent, which says nothing about the profile. A property that cannot be evaluated is not a FAIL.
+    pinned = prof.get("repo")
+    if pinned and os.path.isdir(pinned):
+        _proj = os.path.abspath(os.path.join(pinned, prof["project"]))
+        ok(os.path.realpath(os.path.join(os.path.dirname(_proj), "tools")) == os.path.realpath(tools),
+           "the pinned repo is the tree this routeflow belongs to (%s)" % pinned)
+
     proj = os.path.basename(str(prof["project"]).rstrip("/")); phase = prof["phase"]
     fin = prof["finish"]; argv = fin.get("argv") or []
     ok(bool(argv), "the finish declares an argv")
@@ -376,9 +388,40 @@ def validate(profile_fn, repo=None):
                          note="the profile against the tree, with nothing written and no host touched")
 
 
+def one_tree(project, what):
+    """The TOOLS that run and the BOARD they run on must come from one tree, or the run measures neither.
+
+    13 September 2026, found by making the mistake. Every profile pins `repo`, and line one of `run` reads that
+    key in preference to where the command was invoked from, which is correct for a production run and silently
+    wrong for a measurement: an arm copied the tree to /root/d05_ecad, patched ONE number in its generator and
+    called `python3 tools/routeflow.py run tools/routeflow/d9.json` there. The profile's pinned repo sent every
+    stage to the box clone's phase directory, so the chain regenerated and routed the PRODUCTION board with the
+    PRODUCTION tools, overwrote a committed phase board on the way, and would have reported a number the arm's
+    own patch never touched. That is the shape the record keeps meeting: a result identical to the baseline is
+    indistinguishable from an honest answer.
+
+    The test is structural and carries no assumption about the layout: every stage calls the tools beside the
+    project (`./tools/finish.sh` from the ECAD directory, `../tools/full_*.sh` from the project), so the
+    routeflow.py that is executing must BE one of those tools. An isolated copy is a first-class way to measure
+    (`routeflow/cloud/iso_chain.sh` is built on one) and it stays available: copy the profile too and point its
+    `repo` at the copy.
+    """
+    ecad = os.path.dirname(project)
+    mine = os.path.realpath(os.path.dirname(os.path.abspath(__file__)))
+    theirs = os.path.realpath(os.path.join(ecad, "tools"))
+    if mine == theirs: return
+    sys.stderr.write(
+        "routeflow: REFUSED. The tools running and the board to be %s come from different trees, so this run\n"
+        "  would measure neither. Copy the profile into the tree you are measuring and point its `repo` there.\n"
+        "    tools executing: %s\n"
+        "    tools the stages would call: %s\n" % (what, mine, theirs))
+    sys.exit(2)
+
+
 def run(profile_fn, rounds, use_services, dry):
     prof = json.load(open(profile_fn)); repo = prof.get("repo") or os.getcwd()
     project = os.path.abspath(os.path.join(repo, prof["project"])); ecad = os.path.dirname(project); name = prof["board"]
+    one_tree(project, "routed")
     os.makedirs(os.path.join(project, "out", "routeflow"), exist_ok=True)
     fp = fingerprint(repo, prof, project); rdir = new_run_dir(project, fp); rid = os.path.basename(rdir)
     json.dump(provenance(repo, prof, project, fp), open(os.path.join(rdir, "provenance.json"), "w"), indent=1)
@@ -594,6 +637,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
     RULES_MODE = "inject"   # part of every configuration key since 6 Sep 2026 11:30: the settings go into the DSN; the -dr rows of the night before (which lost the design's clearances) have other keys and are never reused
     exp = json.load(open(exp_fn)); repo = exp.get("repo") or os.getcwd(); tools = os.path.dirname(os.path.abspath(__file__))
     project = os.path.abspath(os.path.join(repo, exp["project"])); ecad = os.path.dirname(project); name = exp["board"]
+    one_tree(project, "measured")
     _tools = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, _tools); import bench_compare as _bc
     key = exp.get("board_key") or _bc.board_key(name)
     # 10 September 2026 (both red teams, C3): 66 of 81 measured router hours were thrown away by a dictionary lookup that ran
