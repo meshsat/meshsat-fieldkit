@@ -6340,3 +6340,43 @@ information no earlier arm reported: at 1.2 mm the rail copper does not merely f
 **And the first attempt at this measurement measured the wrong board entirely**, which is 32.154: it went
 through routeflow, whose profile pins `repo`, so the chain regenerated and routed the production board with
 the production tools while the arm's patched generator sat unused in a copy.
+
+### 32.158 The current-density check has been lenient, not strict, and twelve rails exceed it (13 September 2026, 03:45 CEST; MESHSAT-862)
+
+`dc_drop.py` prints a worst current density per rail and gates on the drop alone. The comment written on
+8 September says the density "overstates by the cell-to-width ratio" and is reported "until the raster is
+validated". **Validated now, and the sign was wrong.**
+
+The bar is `ipc_limit(cell*t)`, IPC's current for ONE raster cell's cross-section, and IPC-2221 is
+`I = k dT^0.44 A^0.725`, sublinear in area. N cells each at their own limit therefore carry `N^0.275` times
+what IPC allows the whole track. Measured with the tool's own function at a 0.5 mm cell:
+
+| track width | the per-cell bar against the whole-track IPC figure |
+|---:|---|
+| 0.20 mm | lenient by 94 percent |
+| 0.25 mm | lenient by 65 percent |
+| 0.40 mm | lenient by 18 percent |
+| 0.50 mm | exact (one cell) |
+| 1.00 mm | lenient by 21 percent |
+| 3.00 mm | lenient by 64 percent |
+| 6.00 mm | lenient by 98 percent |
+
+**So a rail over this bar is over a bar that is already too generous, and its number is a floor.** Twelve rails
+across A24, E7 and P3 are over it, A24's VBAT by 8.2x (428.2 A/mm2 against 52.0), E7's VIN_RAW by 3.4x, P3's
+PACK_P by 2.9x, and every one of them reads MET because the drop decides and the drop is fine. **A rail can be
+electrically quiet and locally too hot at the same time**, which is what a density check is for. P3's FUSED at
+193.2 is the number that became owner ruling 7; the same class of number sat in A24's and E7's logs unread,
+because nothing reads the line.
+
+**The direction is corrected in the tool with its measurement, and a rule recomputes the ratio from the tool's
+own `ipc_limit` and fails if the sign is ever claimed the other way.** Turning the density into a verdict would
+refuse three cut boards and change what MET means, so it is decision 14 rather than a commit.
+
+**A separate geometric measurement, taken the same way and independent of the raster:** on the cut boards, copper
+that runs under its own class width for more than 2 mm at a stretch. A24 12 nets and 149 mm (VBAT 30 runs at
+0.200 mm against a 0.500 class), C7 3 nets and 77 mm, D10 4 nets and 37 mm, E7 7 nets and 86 mm including
+`/CELL_F`, the 10 A pack node, with 19.2 mm at 0.250 mm against a **3.000 mm** class and a 6.0 mm longest run,
+P3 1 net and 5 mm, E5 none. Most of the short ones are escape stubs and pad entries, which are thin by design;
+the 2 mm floor is what separates those from a rail running narrow. **The first version of this measurement
+reported zero on every board because its regex matched nothing**, which is the reminder that a clean result from
+a parser is worth nothing until the parser is shown to have parsed.
