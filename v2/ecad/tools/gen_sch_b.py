@@ -194,7 +194,7 @@ def buck33(uref, tag, vin, en, out, refs):
 def buck_small(uref, tag, vin, en, out, refs, rb_val, note):
     """TPS62933 3 A buck (SOT-583: 1 RT 2 EN 3 VIN 4 GND 5 SW 6 BST 7 SS/PG 8 FB; 0.8 V reference, RT floating = 500 kHz): 10k top, rb_val bottom."""
     L, ci, co1, co2, cb, css, rt, rb = refs
-    ic(uref, 8, "TPS62933DRLR buck %s" % note, "SOT583", {"1": "NC", "2": en, "3": vin, "4": "GND", "5": tag + "_SW", "6": tag + "_BST", "7": tag + "_SS", "8": tag + "_FB"})
+    ic(uref, 8, "TPS62933DRLR buck %s" % note, "SOT583", {"1": "NC", "2": en, "3": vin, "4": "GND", "5": tag + "_SW", "6": tag + "_BST", "7": tag + "_SS", "8": tag + "_FB"}, "C3200405")   # the code A22 already buys this part with
     part(L, "Device", "L", "2.2uH XAL4020-222ME", "L4020", {"1": tag + "_SW", "2": out}); c(ci, "10u", vin, "GND", "C10u", bypass=(uref, "3")); c(co1, "22u 6.3V", out, "GND", "C10u"); c(co2, "22u 6.3V", out, "GND", "C10u")
     c(cb, "100n", tag + "_BST", tag + "_SW"); c(css, "10n", tag + "_SS", "GND"); r(rt, "10k 1%", out, tag + "_FB"); r(rb, rb_val, tag + "_FB", "GND")
 def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
@@ -299,7 +299,7 @@ def slot(s):
         r(R(40), "10k", "5G_RST_n", a33); nfet(Q(8), "5G_RESET", "GND", "5G_RST_n", "2N7002 expander -> RESET#")
         r(R(39), "1k", a33, "LED_5G_A"); led("LED25", "amber 5G network", "LED_5G_A", "5G_nLED")
         for k, (vcc, rst, clk, io) in ((1, ("SIM1_VCC", "SIM1_RST", "SIM1_CLK", "SIM1_IO")), (2, ("SIM2_VCC", "SIM2_RST", "SIM2_CLK", "SIM2_IO"))):
-            part("J_SIM%d" % k, "Connector", "SIM_Card_Shielded", "nano-SIM push-push GCT SIM8060 (SIM %d)" % k, "NANOSIM", {"1": vcc, "2": rst, "3": clk, "5": "GND", "6": "NC", "7": io, "SH": "GND"})
+            part("J_SIM%d" % k, "Connector", "SIM_Card_Shielded", "nano-SIM push-push GCT SIM8060 (SIM %d)" % k, "NANOSIM", {"1": vcc, "2": rst, "3": clk, "5": "GND", "6": "NC", "7": io, "SH": "GND"}, "C6296715")
             c(C(83 + 3 * k), "100n", vcc, "GND"); c(C(84 + 3 * k), "33p", io, "GND", "C0402"); c(C(85 + 3 * k), "33p", clk, "GND", "C0402")
     else:   # 9 September 2026 (ARCH-PCB-B-IOHA ruling 3): the spare M-key drive slot carries a SECOND WiFi card instead.
             # The mesh link is the one bearer with no second path in the kit, and the card is single-homed to slot 1's
@@ -397,10 +397,10 @@ for s in (1, 2, 3): slot(s)
 # ================================================================= shared: power
 part("J_5V_DEV", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: USB device rail from A22 J_5V_DEV: + -", "VH2", {"1": "+5V_DEV", "2": "GND"}, "C274411")
 part("D1", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V_DEV", "2": "GND"}); c("C1", "100u 10V", "+5V_DEV", "GND", "C100u"); c("C2", "100u 10V", "+5V_DEV", "GND", "C100u")
-ic("U25", 6, "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)", "TSOT6", {"1": "+3V3_DEV", "2": "+5V_DEV", "3": "+5V_DEV", "4": "GND", "5": "DEV_SW", "6": "DEV_BST"})
+ic("U25", 6, "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)", "TSOT6", {"1": "+3V3_DEV", "2": "+5V_DEV", "3": "+5V_DEV", "4": "GND", "5": "DEV_SW", "6": "DEV_BST"}, "C780769")   # TSOT-23-6, 12,477 in stock
 part("L1", "Device", "L", "4.7uH XAL4030-472ME", "L4020", {"1": "DEV_SW", "2": "+3V3_DEV"}); c("C3", "100n", "DEV_BST", "DEV_SW"); c("C4", "10u", "+5V_DEV", "GND", "C10u"); c("C5", "22u 6.3V", "+3V3_DEV", "GND", "C10u"); c("C6", "22u 6.3V", "+3V3_DEV", "GND", "C10u")
 buck_small("U26", "KSZC", "+5V_DEV", "+5V_DEV", "+1V2_KSZ", ["L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2"], "20.0k 1%", "1.2 V Ethernet switch core")
-ic("U27", 5, "AP2112K-2.5 LDO: the switch's 2.5 V analog rail", "SOT235", {"1": "+3V3_DEV", "2": "GND", "3": "+3V3_DEV", "4": "NC", "5": "+2V5_KSZ"}); c("C12", "1u", "+2V5_KSZ", "GND"); c("C13", "1u", "+3V3_DEV", "GND")
+ic("U27", 5, "AP2112K-2.5 LDO: the switch's 2.5 V analog rail", "SOT235", {"1": "+3V3_DEV", "2": "GND", "3": "+3V3_DEV", "4": "NC", "5": "+2V5_KSZ"}, "C176945")   # Diodes AP2112K-2.5, 2.5 V 600 mA, 2,997 in stock; the only other hit is a house-brand relabel; c("C12", "1u", "+2V5_KSZ", "GND"); c("C13", "1u", "+3V3_DEV", "GND")
 part("BT1", "Device", "Battery_Cell", "CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231", "CR2032", {"1": "VBAT", "2": "GND"})
 # ================================================================= Ethernet switch KSZ9897R: ports 1-3 the modules, port 4 the wall RJ45 through the magnetics with the PoE injector
 k = {}
@@ -416,7 +416,7 @@ for n, nm in KSZ.items():
     else: k[n] = "NC"
 k.update({125: "KSZ_XO", 126: "KSZ_XI", 127: "KSZ_ISET", 96: "KSZ_RST_n", 94: "EXP_INT", 98: "SDA", 101: "SCL", 105: "KSZ_LED1", 91: "KSZ_LED2", 88: "KSZ_LED3", 85: "KSZ_LED4", 86: "KSZ_STRAP_I2C"})
 synth("U1", "KSZ9897R", "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus", "TQFP128EP", k, "C638299")
-part("Y1", "Device", "Crystal_GND24", "25 MHz 3225", "XTAL", {"1": "KSZ_XI", "3": "KSZ_XO", "2": "GND", "4": "GND"}); c("C14", "18p", "KSZ_XI", "GND", "C0402"); c("C15", "18p", "KSZ_XO", "GND", "C0402")
+part("Y1", "Device", "Crystal_GND24", "25 MHz 3225", "XTAL", {"1": "KSZ_XI", "3": "KSZ_XO", "2": "GND", "4": "GND"}, "C164047"); c("C14", "18p", "KSZ_XI", "GND", "C0402"); c("C15", "18p", "KSZ_XO", "GND", "C0402")
 r("R57", "1k (strap [LED4_1, LED3_1] = 01: I2C management, Table 3-3)", "KSZ_STRAP_I2C", "GND"); r("R3", "6.04k 1% (ISET)", "KSZ_ISET", "GND"); r("R4", "10k", "KSZ_RST_n", "+3V3_DEV"); c("C16", "10u", "KSZ_RST_n", "GND", "C10u"); nfet("Q2", "KSZ_RST", "GND", "KSZ_RST_n", "2N7002 expander -> switch reset")
 for i, nm in enumerate(("KSZ_LED1", "KSZ_LED2", "KSZ_LED3", "KSZ_LED4"), 1):
     r("R%d" % (4 + i), "1k", "+3V3_DEV", "LED_KSZ_A%d" % i); led("LED%d" % i, "green Ethernet port %d link" % i, "LED_KSZ_A%d" % i, nm)
@@ -432,7 +432,13 @@ part("J_ETH", "Connector", "RJ45_Shielded", "RJ45 jack (Amphenol RJHSE5380): pat
      {"1": "MDI_A_P", "2": "MDI_A_N", "3": "MDI_B_P", "4": "MDI_C_P", "5": "MDI_C_N", "6": "MDI_B_N", "7": "MDI_D_P", "8": "MDI_D_N", "SH": "GND"})
 # PoE injector TPS23861 (one port used; unused ports per section 8.2.2: SEN grounded, GATE floating, DRAIN open); 54 V from A22's LM5176 boost over J_54V
 part("J_54V", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: 54 V PoE feed from A22 J_54V: + -", "VH2", {"1": "+54V_POE", "2": "GND"}, "C274411")
-part("D2", "Device", "D_TVS", "SMBJ58A", "TVS", {"1": "+54V_POE", "2": "GND"}); c("C34", "100n 100V", "+54V_POE", "GND", "C10u"); c("C35", "10u 100V", "+54V_POE", "GND", "C1812")
+part("D2", "Device", "D_TVS", "SMBJ58A", "TVS", {"1": "+54V_POE", "2": "GND"}, "C135085"); c("C34", "100n 100V", "+54V_POE", "GND", "C10u", "C106243")
+# C35 WAS A PART NOBODY SELLS, in the shape of owner ruling 10's twenty-five capacitors: 10 uF 100 V in an
+# 1812 land, and JLCPCB's only exact match is a SANYEAR part at stock ZERO, everything else in 1812 at 100 V
+# topping out at 2.2 uF. It exists in the SMALLER 1210 land: Murata GRM32EC72A106KE05L, X7S, 243,928 in
+# stock. So the land changes and the value does not, which needs no ruling: the design still gets its 10 uF
+# at 100 V on the 54 V rail, in less board area than before.
+c("C35", "10u 100V", "+54V_POE", "GND", "C1210", "C576517")
 synth("U5", "TPS23861", "TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus", "TSSOP28",
       {1: "+3V3_DEV", 2: "POE_RST_n", 3: "SCL", 4: "SDA", 5: "SDA", 6: "EXP_INT", 7: "GND", 22: "GND", 28: "+54V_POE", 15: "POE_SEN", 16: "POE_DRAIN", 17: "POE_GATE", 18: "GND", 11: "GND", 8: "GND", 12: "GND", 19: "GND"}, "C93245")
 r("R11", "10k", "POE_RST_n", "+3V3_DEV"); c("C36", "100n", "+3V3_DEV", "GND")
@@ -464,7 +470,7 @@ g = {n: "GND" for n, nm in LG.items() if nm == "GND"}
 g.update({23: "+3V3_DEV", 22: "VBAT", 20: "GNSS_TXD", 21: "GNSS_RXD", 3: "GNSS_PPS", 8: "GNSS_RST_n", 9: "GNSS_VDD_RF", 11: "GNSS_RF_IN", 6: "GNSS_TXD2", 7: "GNSS_RXD2"})
 synth("U11", "LG290P", "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack", "LG290P", g, "C29781241")
 r("R21", "10k", "GNSS_RST_n", "+3V3_DEV"); c("C40", "100n", "+3V3_DEV", "GND"); c("C41", "10u", "+3V3_DEV", "GND", "C10u"); r("R22", "10k", "GNSS_PPS", "GND")
-r("R23", "10R", "GNSS_VDD_RF", "GNSS_BIAS"); part("L3", "Device", "L", "27nH 0402 (antenna bias tee)", "L0402", {"1": "GNSS_BIAS", "2": "GNSS_ANT"}); c("C42", "47p", "GNSS_ANT", "GNSS_RF_IN", "C0402")
+r("R23", "10R", "GNSS_VDD_RF", "GNSS_BIAS"); part("L3", "Device", "L", "27nH 0402 (antenna bias tee)", "L0402", {"1": "GNSS_BIAS", "2": "GNSS_ANT"}, "C12669"); c("C42", "47p", "GNSS_ANT", "GNSS_RF_IN", "C0402")
 part("J_GNSS1", "Connector", "Conn_Coaxial", "U.FL socket: pigtail to A22's GNSS jack J_RF4", "UFL", {"1": "GNSS_ANT", "2": "GND"}, "C88373")
 part("J_GNSS2", "Connector_Generic", "Conn_01x03", "LG290P UART2 (bench): GND TX RX", "PH1x3", {"1": "GND", "2": "GNSS_TXD2", "3": "GNSS_RXD2"})
 cp2102("U15", "GNSS", "+5V_DEV", "GNSS_DP", "GNSS_DM", "GNSS_RXD", "GNSS_TXD", refs=("R24", "C43", "C44"))
@@ -489,12 +495,12 @@ tps22810("U22", "+3V3_DEV", "E72_EN", "+3V3_ZB", "E72_CT"); c("C52", "1n", "E72_
 part("J_LIME", "Connector", "USB3_A", "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", "USB3A",
      {"1": "+5V_LIME", "2": "LIME_DM", "3": "LIME_DP", "4": "GND", "5": "LIME_SSRX_N", "6": "LIME_SSRX_P", "7": "GND", "8": "LIME_SSTX_N", "9": "LIME_SSTX_P", "10": "GND"}, "C5355286")
 esd("U33", "LIME_DP", "LIME_DM", "+5V_LIME")
-efuse("U23", "+5V_DEV", "+5V_LIME", "LIME_EN", "LIME_FLT", ["C56", "R36", "R37", "R38", "R39", "C57"], "3.0 A (ILM)"); c("C58", "22u 6.3V", "+5V_LIME", "GND", "C10u")
+efuse("U23", "+5V_DEV", "+5V_LIME", "LIME_EN", "LIME_FLT", ["C56", "R36", "R37", "R38", "R39", "C57"], "301R 1% (ILM: 3.0 A)"); c("C58", "22u 6.3V", "+5V_LIME", "GND", "C10u")
 part("J_RB9704", "Connector_Generic", "Conn_02x08_Odd_Even", "RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket", "IDC16", {
  "1": "GND", "2": "NC", "3": "RB_IEN", "4": "GND", "5": "NC", "6": "RB_CTRL", "7": "RB_STATUS", "8": "RB_XMTG", "9": "NC", "10": "GND", "11": "NC", "12": "NC", "13": "RB_TXD", "14": "RB_RXD", "15": "+5V_RB", "16": "GND"})
 cp2102("U18", "RB", "+5V_DEV", "RB_DP", "RB_DM", "RB_RXD", "RB_TXD", refs=("R40", "C59", "C60"))
 r("R41", "10k", "RB_STATUS", "+3V3_DEV"); r("R42", "10k", "RB_XMTG", "+3V3_DEV")
-efuse("U24", "+5V_DEV", "+5V_RB", "RB_EN", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "3.0 A (ILM)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
+efuse("U24", "+5V_DEV", "+5V_RB", "RB_EN", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "301R 1% (ILM: 3.0 A)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
 # ================================================================= camera, QMX and spare USB headers, the wall USB pair (bank 3 hub, port 3) with its ESD
 tps2065("U28", "+5V_DEV", "CAM_EN", "+5V_CAM", "CAM_FLT"); r("R47", "10k", "CAM_FLT", "+3V3_DEV"); r("R48", "100k", "CAM_EN", "GND"); c("C64", "10u", "+5V_CAM", "GND", "C10u")
 part("J_CAM", "Connector_Generic", "Conn_01x04", "camera lead (USB 2.0, bank 1 hub, port 3): 5V D- D+ GND", "PH1x4", {"1": "+5V_CAM", "2": "CAM_DM", "3": "CAM_DP", "4": "GND"}); esd("U34", "CAM_DP", "CAM_DM", "+5V_CAM")
@@ -604,7 +610,7 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
     r(R_(0), "10k", "IOC%s_RST_n" % _tag, v33); c(C_(9), "100n", "IOC%s_RST_n" % _tag, "GND")
     r(R_(1), "10k", "IOC%s_BOOT0" % _tag, "GND")
     part("Y%d" % (2 + _k), "Device", "Crystal_GND24", "25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI)", "XTAL",
-         {"1": "IOC%s_XI" % _tag, "3": "IOC%s_XO" % _tag, "2": "GND", "4": "GND"})
+         {"1": "IOC%s_XI" % _tag, "3": "IOC%s_XO" % _tag, "2": "GND", "4": "GND"}, "C164047")
     c(C_(10), "18p", "IOC%s_XI" % _tag, "GND", "C0402"); c(C_(11), "18p", "IOC%s_XO" % _tag, "GND", "C0402")
     r(R_(2), "1k", v33, "IOC%s_LED_K" % _tag); led("LED%d" % (40 + _k), "green IOCTRL %s alive" % _tag, "IOC%s_LED_A" % _tag, "IOC%s_LED_K" % _tag)
     ic(U_(2), 5, "SWD pads, controller %s: 3V3 SWDIO SWCLK NRST GND" % _tag, "PH1x5",
