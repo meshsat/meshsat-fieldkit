@@ -173,16 +173,19 @@ def band(netname, a, b, w=3.0, vias=20):
     # current has to change layer, and that is at ONE end: the FET's source pads are SMD and F.Cu only, so
     # everything arriving on B.Cu crosses at the vias nearest them. THREE across at 1.0 mm along is what
     # spreads it: on a 2.8 mm band they sit at the centre and 0.9 mm either side, 0.3 mm hole to hole at a
-    # 0.6 mm drill, with the outer bodies reaching exactly the band's edge. 27 barrels in a 12.7 mm band
-    # where there were 3, and FUSED's 2.59 A becomes about 1.15 in the worst of them.
+    # 0.5 mm drill, and the outer bodies stop 0.15 mm INSIDE the band's edge. At 0.9 mm across with a 0.6 mm
+    # drill they reached the edge exactly, and the measure then showed one barrel still taking the whole
+    # 2.44 A while its two neighbours took nothing: a via tangent to the copper it is meant to join is not
+    # joined to it. A 0.5 mm drill has 0.0393 mm2 of wall and carries 1.30 A, three of them 3.90 A.
+    # A band shorter than 4.4 mm gets ONE station, which is why FUSED had three barrels where PACK_P had 27.
     ux, uy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
-    across = [(-0.9, 0.0, 0.9)] if w >= 2.4 else [(0.0,)]
+    across = [(-0.8, 0.0, 0.8)] if w >= 2.4 else [(0.0,)]
     for k in range(n):
         d = L / 2 if n == 1 else 2.2 + k * (L - 4.4) / (n - 1); f = d / L   # every via at least 2.2 mm from a band end (the wire lands' 2.4 mm holes, hole-to-hole 0.3)
         for off in across[0]:
             v = pcbnew.PCB_VIA(board)
             v.SetPosition(P(a[0] + (b[0] - a[0]) * f - uy * off, a[1] + (b[1] - a[1]) * f + ux * off))
-            v.SetWidth(FromMM(1.0)); v.SetDrill(FromMM(0.6)); v.SetNet(net); v.SetLocked(True); board.Add(v)
+            v.SetWidth(FromMM(0.9)); v.SetDrill(FromMM(0.5)); v.SetNet(net); v.SetLocked(True); board.Add(v)
 def short_of(a, b, d=0.8):
     """the point d mm before b on the way from a"""
     L = math.hypot(b[0] - a[0], b[1] - a[1]); return (b[0] - (b[0] - a[0]) / L * d, b[1] - (b[1] - a[1]) / L * d)
