@@ -7001,3 +7001,47 @@ hold of 10 September, which releases no board until every pair is laid. The rema
 18 `no stub path at via`, 8 the pair's own legs, 8 the two legs crossing, 6 at U209, the rest scattered over
 U3, U4 and the corridor. That number and its options go to the owner's decisions file rather than stopping the
 run.
+
+### 32.175 The gate and the rail checks were reading a fill from four stages earlier (14 September 2026, 00:15 CEST; MESHSAT-862)
+
+`finish.sh` filled the zones once, after the stub router, with a comment saying why: a closing via must not be
+read against a stale fill. **Between that refill and the judgements at the end of the script, four stages
+change copper**: `stub_accept` removes closures, `stitch_prune` removes vias and **its revert copies back a
+board that was never filled at all**, `direct_close` lays track, and `quality_pass` merges segments (108 out of
+A26, 146 out of C11). A pour fills differently after every one of them.
+
+**Measured on E8, which is how it was found.** Its finish reported `CELL_F pour F.Cu 122 of 114 mm2` and
+refused the rail: worst conductor 1.28 A in a 0.400 mm F.Cu track against IPC's 1.23, ratio 1.04. The same
+board, refilled and measured again, reads **163 mm2 and CELL_F MET**. Nothing about the copper changed; the
+fill the judge was given did.
+
+The finish refills immediately before the routed-board DRC now, so the gate, `dc_drop`, `impedance_check` and
+`netlist_board` all read the board that is about to be cut. `tests/test_fill_before_judgement.py` holds the
+order: a refill after the last stage that changes copper, and before each of those four readers.
+
+**Two smaller things the same session found and fixed.** `stitch_prune` on an UNFILLED board offers to remove
+every locked via of every pour, because its whole question is "the fill no longer covers this": a dry run on
+A26's post-gate board offered **366 of 660**. It refuses an unfilled board now rather than trusting its
+caller's order. And `pour_stitch` gave each island ONE candidate spot, the point furthest from other copper,
+and abandoned the island when the DRC refused a via there; **E8's last open connection was exactly that**, a
+13.4 mm2 GND island in the sensor-header field whose clearest point sits between J_LTG's own pins. It keeps the
+clearest six, spread a millimetre apart, and each is judged by the same DRC as the first.
+
+### 32.176 A26 and what its own copper said next (14 September 2026, 00:20 CEST; MESHSAT-862)
+
+A26 routed **0 hard, 12 unrouted** (A25: 13) with the four copper changes of 32.172, and three of the four
+landed: `VIN_RAW dock top`, the `PA rail head` and the VBAT In2 plane all fill as ONE piece now, where the plane
+was in EIGHT. **The stub stage then tried to close the twelve and left the board at 52 open, and this morning's
+guard reverted every closure**, which is the first time that rule has fired on a real board: 12 in, 52 out, 12
+kept.
+
+**The comb is still in two pieces and the cut is now named.** `VBAT B.Cu` fills 656.6 mm2 from y 65.5 to 95.5
+and 527.1 mm2 from y 100.5 to 165.6, and in the five millimetres between them stands the charger's east escape
+column: seven 0.45 mm vias at x 57.5 to 57.8, from y 95.6 to 100.4 (`/CELL+`, `/CH_SRP` twice, `/CH_SW2`,
+`/CH_CELL`, `/CH_COMP2`, `/CH_HIDRV2`). **A 5 mm band cannot pass a via column standing in it.** B.Cu east of
+that column is empty from x 58 to 70 and y 92 to 104, measured rather than assumed, so A27's comb takes a bay
+out there and walks round it on solid copper.
+
+A26's gate refused it for ONE item of 835: a locked VBAT via at (49.5, 132.5) sitting outside the fill of the
+In2 plane, in the PoE controller's own escape fan, where two columns of 0.45 mm vias at 0.65 mm pitch shred the
+plane. With the refill of 32.175 in place that item is measured against the fill the board actually has.
