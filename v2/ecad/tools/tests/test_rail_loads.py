@@ -112,3 +112,36 @@ def t_a_rail_may_declare_several_sources():
         "dc_drop resolves one source reference only, so a ground cannot be declared honestly"
     assert 'f.GetReference() in srcrefs' in src, "dc_drop still compares the source with a single =="
     assert 'f.GetReference() not in srcrefs' in src, "the load guess still excludes one source reference only"
+
+
+def t_no_rail_names_a_controller_as_its_source():
+    """dc_drop holds the source's pads at 0 V and takes the rail's whole current out of them. A multi-pin IC's
+    pad on its own output net is a SENSE pin: A24's VBUS20 put 2.90 A of 6 down a locked 0.200 mm escape that
+    way and read 3.90 against IPC, on copper that was never carrying it."""
+    bad = []
+    for f in sorted(glob.glob(os.path.join(TOOLS, "gen_sch_*.py"))):
+        src = open(f).read()
+        for line, args in _calls(src):
+            if "source_ic=" in args: continue
+            q = re.findall(r'"([^"]+)"', args)
+            if len(q) < 2: continue
+            net = q[0]
+            # the source is the 5th positional argument: net, volts, typ, peak, source
+            m = re.match(r'\s*"[^"]+"\s*,\s*[0-9.]+\s*,\s*[0-9.]+\s*,\s*[0-9.]+\s*,\s*("([^"]+)"|\[[^]]*\])', args)
+            if not m: continue
+            srcs = re.findall(r'"([^"]+)"', m.group(1))
+            for s_ in srcs:
+                if re.match(r"^U\d", s_):
+                    bad.append("%s:%d rail %s names the controller %s as its source" % (os.path.basename(f), line, net, s_))
+    assert not bad, ("a rail's current would be taken out of a sense pin:\n  " + "\n  ".join(bad))
+
+
+def t_intent_refuses_a_controller_source_and_accepts_a_declared_one():
+    import intent
+    try:
+        intent.rail("T_IC", 5.0, 1.0, 2.0, "U25", loads={"X1": 0.9}); raise AssertionError("a controller source was accepted")
+    except SystemExit as e:
+        assert "SENSE pin" in str(e)
+    intent.rail("T_IC2", 5.0, 1.0, 2.0, "U40", loads={"X1": 0.9}, source_ic="an LDO: pin 5 is a real power pin")
+    for good in ("L1", "R11", "J_DOCK", "F1"):
+        intent.rail("T_OK_" + good, 5.0, 1.0, 2.0, good, loads={"X1": 0.9})

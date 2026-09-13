@@ -79,7 +79,9 @@ for _n in (1, 2, 3):
     _3V3_LOADS["U%d09" % _n] = 0.05  # TMUXHS4212 SuperSpeed host select
     _3V3_LOADS["U%d10" % _n] = 0.01  # TS3USB221A USB2 host select
 for _v in ("U70", "U71", "U72", "U73", "U74", "U75", "U76", "U77", "U78", "U79"): _3V3_LOADS[_v] = 0.01   # the voted logic
-_intent.rail("+3V3_DEV", 3.3, 1.2, 2.0, "U25", loads=_3V3_LOADS,
+# The source is L1, the buck's inductor, not U25: the AP63203's pin 1 on this net is its feedback sense, and
+# the current leaves through DEV_SW and the inductor. Naming the chip sends 1.4 A out of a sense pin.
+_intent.rail("+3V3_DEV", 3.3, 1.2, 2.0, "L1", loads=_3V3_LOADS,
              note="shared logic, the KSZ IO, the three hub VDD33 (99 mA each), the muxes, the three supervisor LDOs; U25 is a 2 A part and that is this rail's peak")
 # THE GROUND HAS FOUR SOURCES AND THE DECLARATION SAID ONE. Holding only J_5V_S1 at 0 V would have returned
 # all 21 A through one connector's ground pin and measured a board that does not exist; `source` takes a list

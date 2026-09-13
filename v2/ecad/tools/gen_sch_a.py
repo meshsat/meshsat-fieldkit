@@ -20,7 +20,15 @@ _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5,
 # only pads on this net are the charger's 0.13 and 0.20 mm VBUS SENSE pins. The real path is the whole charge
 # current through R16, the 10 mOhm 2512 input-current shunt, and on into the charger; U3's pins sense the bus
 # and carry nothing. This is the CELL+ defect of 12 September in a second place.
-_intent.rail("VBUS20", 20.0, 6.0, 8.0, "U2", loads={"R16": 6.0}, note="the charge bus, BQ25731 up to 8 A")
+# THE SOURCE IS THE POWER PATH, NOT THE PART THAT CONTROLS IT (13 September 2026, MESHSAT-862). These three
+# rails named their LM5176 CONTROLLER as the source, so `dc_drop` held that chip's pads at 0 V and took the
+# rail's whole current out of them. VBUS20's 6 A left through pin 12/13, the output SENSE pins, and 2.90 A of
+# it went down a locked 0.200 mm escape stub: ratio 3.90 against IPC, and no copper anywhere would have fixed
+# it because the current was never meant to be there. It is the CELL+ defect of 12 September and the VBUS20
+# load defect of this morning for a third time, now on the source side. An LM5176 stage's output node is its
+# ISNS shunt: the switch node goes through the inductor to the FETs, out through the shunt, and only then is
+# it the rail. R11, R65 and R71 are those shunts (R12, R122 and R72 are the CS resistors, which are not).
+_intent.rail("VBUS20", 20.0, 6.0, 8.0, "R11", loads={"R16": 6.0}, note="the charge bus, BQ25731 up to 8 A; the stage's output is its ISNS shunt R11, not the controller U2")
 for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")): _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, note="one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt")
 _intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "R43", loads={"J_5V_DEV": 3.2}, note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails, or a bank would die with the module it fails away from. The AP64500 is a 5 A part, so the headroom is there; what this declaration buys is that dc_drop judges the copper at the current it now carries.")
 # LOADS DECLARED 13 September 2026, apportioning the declared 0.3 A rather than measuring it: this is logic,
@@ -29,9 +37,9 @@ _intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03,
              loads={"J_MEZZ1": 0.10, "U8": 0.03, "U9": 0.03, "U10": 0.03, "U11": 0.03,
                     "U14": 0.02, "U17": 0.02, "U26": 0.02, "U27": 0.01, "U28": 0.01}, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
 _intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, note="the RA30H1317M1 on the face plate")
-_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "U15", budget=0.03, loads={"J_HF": 1.0},
+_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "R65", budget=0.03, loads={"J_HF": 1.0},
              note="the QMX")   # the whole rail leaves at J_HF for the HF unit in the lid tray
-_intent.rail("+54V_POE", 54.0, 0.3, 0.6, "U16", loads={"J_54V": 0.3},
+_intent.rail("+54V_POE", 54.0, 0.3, 0.6, "R71", loads={"J_54V": 0.3},
              note="the TPS23861 PSE on B16")   # the whole rail leaves at J_54V on the VH lead to B
 SYMDIR = "/usr/share/kicad/symbols/"
 
