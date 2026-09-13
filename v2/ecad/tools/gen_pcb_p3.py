@@ -174,12 +174,13 @@ def band(netname, a, b, w=3.0, vias=20, layers=(pcbnew.F_Cu, pcbnew.B_Cu)):
     # current has to change layer, and that is at ONE end: the FET's source pads are SMD and F.Cu only, so
     # everything arriving on B.Cu crosses at the vias nearest them. THREE across at 1.0 mm along is what
     # spreads it: on a 2.8 mm band they sit at the centre and 0.9 mm either side, 0.3 mm hole to hole at a
-    # AND THE TWO BANDS THAT KEPT FAILING GAVE UP THE SECOND LAYER ALTOGETHER. Widening them to 3.6 mm made
-    # the barrels WORSE, not better (PACK_P 1.45 to 1.83, and the conductors fell to 0.60 and 0.76), because a
-    # wider band on both layers gives B.Cu a larger share and every ampere of that share has to CROSS at the
-    # FET end, where the source pads are SMD and on one layer. The crossing was the whole problem, so FUSED
-    # and PACK_P are F.Cu only now: 3.6 mm at 2 oz carries 10.01 A, which is the rail, and there is nothing
-    # left to cross. The B.Cu ground pour fills what they gave up.
+    # TWO THINGS THAT DID NOT WORK, kept here because the next person will think of both. Widening these
+    # bands to 3.6 mm made the barrels WORSE, not better (PACK_P 1.45 to 1.83, while the conductors fell to
+    # 0.60 and 0.76): a wider band on both layers gives B.Cu a larger share and every ampere of that share
+    # has to CROSS at the FET end, where the source pads are SMD and on one layer. And dropping B.Cu
+    # altogether, which would remove the crossing, is refused by check_pcb_p, which requires a locked band of
+    # each rail on B.Cu: that is this board's own invariant for a 10 A rail and not something to edit around.
+    # So the width goes back to 2.8 and the vias go WHERE THE CROSSING IS, in the FET's own source tracks.
     # 0.5 mm drill, and the outer bodies stop 0.15 mm INSIDE the band's edge. At 0.9 mm across with a 0.6 mm
     # drill they reached the edge exactly, and the measure then showed one barrel still taking the whole
     # 2.44 A while its two neighbours took nothing: a via tangent to the copper it is meant to join is not
@@ -193,6 +194,13 @@ def band(netname, a, b, w=3.0, vias=20, layers=(pcbnew.F_Cu, pcbnew.B_Cu)):
             v = pcbnew.PCB_VIA(board)
             v.SetPosition(P(a[0] + (b[0] - a[0]) * f - uy * off, a[1] + (b[1] - a[1]) * f + ux * off))
             v.SetWidth(FromMM(0.9)); v.SetDrill(FromMM(0.5)); v.SetNet(net); v.SetLocked(True); board.Add(v)
+def _srcvia(netname, pts):
+    """A locked 0.9/0.5 via at each point: the crossing at a FET's SMD source pads into the B.Cu band."""
+    net = net_for(netname, create=False)
+    for x, y in pts:
+        v = pcbnew.PCB_VIA(board); v.SetPosition(P(x, y))
+        v.SetWidth(FromMM(0.9)); v.SetDrill(FromMM(0.5)); v.SetNet(net); v.SetLocked(True); board.Add(v)
+
 def short_of(a, b, d=0.8):
     """the point d mm before b on the way from a"""
     L = math.hypot(b[0] - a[0], b[1] - a[1]); return (b[0] - (b[0] - a[0]) / L * d, b[1] - (b[1] - a[1]) / L * d)
@@ -207,7 +215,7 @@ band("CELL4", short_of(f1a, wbp), short_of(wbp, f1a))                           
 # 1.30 and left FUSED's at 2.25. At 3.6 mm one layer carries 10.01 A, which is the rail exactly, so either
 # layer can take the whole of it and the crossing becomes whatever the copper decides rather than something
 # the barrels have to force. It is not margin on one layer; it is margin on the pair of them.
-q1_src = (q1[0] - 4.6, q1[1] + 0.64); band("FUSED", short_of(q1_src, f1b), q1_src, w=3.6, layers=(pcbnew.F_Cu,))                   # the blade to the charge FET's source side
+q1_src = (q1[0] - 4.6, q1[1] + 0.64); band("FUSED", short_of(q1_src, f1b), q1_src, w=2.8)                   # the blade to the charge FET's source side
 # 13 September 2026 (MESHSAT-862, appendix 32.164): THE PACK CURRENT ENTERS THE BAND THROUGH THESE THREE
 # TRACKS AND THEY WERE 0.6 mm. IPC-2221 gives 0.6 mm at 2 oz 2.73 A, and the measure found 4.16 A in one of
 # PACK_P's three (ratio 1.52) and 2.09 A in one of FUSED's: the 10 A does not divide evenly over three
@@ -215,9 +223,16 @@ q1_src = (q1[0] - 4.6, q1[1] + 0.64); band("FUSED", short_of(q1_src, f1b), q1_sr
 # sit on a 1.27 mm pitch so the three nearly merge, which is what is wanted, and they are all the same net;
 # the gate pad is 1.27 mm beyond the outermost source pin and keeps 0.37 mm of clearance at this width.
 for dy in (1.91, 0.64, -0.64): track("FUSED", (q1[0] - 2.67, q1[1] + dy), (q1_src[0], q1[1] + dy), 1.2, pcbnew.F_Cu)
+# A VIA IN EACH SOURCE TRACK, which is the one place the current has to change layer: the FET's source pads
+# are SMD on F.Cu and the band's other half is on B.Cu. Five attempts at the band's own stations moved the
+# worst barrel from 2.67 A to 1.88 because they were all downstream of this point. Each track is 1.93 mm long
+# and 1.2 mm wide, so a 0.9 mm via sits at its midpoint with 0.15 mm to each edge, and the three are 1.27 mm
+# apart, which is 0.77 mm hole to hole.
+_srcvia("FUSED", [(q1[0] - 3.6, q1[1] + dy) for dy in (1.91, 0.64, -0.64)])
 band("SW", (q1[0] + 0.69, q1[1]), (q2[0] - 0.69, q2[1]))                                  # tab to tab
-q2_src = (q2[0] + 4.6, q2[1] - 0.64); band("PACK_P", q2_src, short_of(q2_src, wp), w=3.6, layers=(pcbnew.F_Cu,))  # the discharge FET's source side to the pack + land
+q2_src = (q2[0] + 4.6, q2[1] - 0.64); band("PACK_P", q2_src, short_of(q2_src, wp), w=2.8)  # the discharge FET's source side to the pack + land
 for dy in (-1.91, -0.64, 0.64): track("PACK_P", (q2[0] + 2.67, q2[1] + dy), (q2_src[0], q2[1] + dy), 1.2, pcbnew.F_Cu)
+_srcvia("PACK_P", [(q2[0] + 3.6, q2[1] + dy) for dy in (-1.91, -0.64, 0.64)])
 band("GND", short_of(r10a, wbn), short_of(wbn, r10a, 0.5)); band("PACK_N", short_of(wn, r10b, 0.5), short_of(r10b, wn))   # B- land, shunt, pack - land
 def pour(layer, netname, name, rect, priority=0):
     z = pcbnew.ZONE(board); z.SetLayer(layer); z.SetNet(net_for(netname, create=False)); z.SetZoneName(name)
