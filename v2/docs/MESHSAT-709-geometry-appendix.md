@@ -6496,3 +6496,46 @@ and that is arithmetic on the geometry rather than anything the mesh computed.
 
 **The lesson, and it is the same one in new clothes: fixing the instance and leaving the class is how a defect
 gets a second life.** The rule that holds this refuses a tool that judges a rail it had to guess at.
+
+### 32.162 The density verdict depends on the raster cell size by up to 56 percent, so it cannot be made honest with a tolerance (13 September 2026, 13:35 CEST; MESHSAT-862)
+
+Owner ruling 20 said: size the density tolerance to its real cause, the raster's own discretisation of a
+track's width, and measure what that is worth rather than picking a number. **Measured, on A24, one board,
+three cell sizes, everything else identical.**
+
+| rail | ratio at 0.50 mm | at 0.35 mm | at 0.25 mm | |
+|---|---:|---:|---:|---|
+| VBAT | 8.23 | 6.94 | 8.76 | stable, **+6 percent** |
+| +13V8_PA | 2.09 | 2.11 | 1.90 | stable, **-9 percent** |
+| VIN_RAW | 1.58 | 2.09 | 2.23 | **+41 percent** |
+| +5V_S1, S2, S3 | 1.01 | 1.24 | 1.54 | **+53 percent** |
+| +5V_DEV | 0.64 | 0.79 | 0.98 | **+53 percent**, one step from failing |
+| CELL+ | **0.98 MET** | 1.23 | **1.53** | **+56 percent, and the verdict flips** |
+
+**The prediction written before the run was that a finer cell would report a HIGHER density for narrow copper,
+because less of it is smeared, and that if so the 0.5 mm reading understates. That is what happened.**
+
+**Two things follow and the second is the serious one.**
+
+**A tolerance cannot express this.** The error is 41 to 56 percent on five of eight rails, not the few percent a
+discretisation allowance would cover, and it is not noise about a value: it is a one-directional under-reading
+that grows as the cell coarsens. Ruling 19's 1.1x and any replacement of the same shape are answering the wrong
+question.
+
+**The measurement has not converged, so no single cell size is the truth.** The pattern says why: the two rails
+that barely move, VBAT and +13V8_PA, are the ones carrying their current in **planes and bands**, which a
+0.5 mm cell resolves. Every rail that moves by half carries its current in **tracks narrower than the cell**,
+which the raster smears into a cell-wide conductor. At 0.25 mm the cell is still coarser than a 0.127 mm track,
+so 0.25 is not converged either.
+
+**What the gate can and cannot do.** It **ranks** reliably: VBAT is the worst rail at every resolution. It
+**cannot decide a pass** at any single cell size, and it has been under-reporting: at 0.25 mm, seven of the
+eight judged rails on A24 fail, against four at 0.5 mm, and CELL+ crosses the line between them.
+
+**The instrument this needs instead** is a density computed from the ACTUAL conductor, not from a raster cell:
+for each rail, the narrowest piece of copper carrying a meaningful share of its current, judged as that
+current against IPC-2221 for that piece's own cross-section. `density_probe.py` already finds the conductor at
+a point and its width, so the missing half is attributing current to it. That converges by construction because
+it has no grid in it.
+
+**Rulings 16, 19 and 20 all rest on the per-cell number, and this is the honest report back on it.**
