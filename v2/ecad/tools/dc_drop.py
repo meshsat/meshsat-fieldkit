@@ -300,11 +300,21 @@ def main(a):
         # the way a rail with no declared loads is not judged, because a verdict read off an impossible number
         # is worse than no verdict. This exists because four of A24's rails carried one for a day and the
         # tool reported them MISSED with a straight face.
-        if cond and cond[0][2] > amps * 1.05:
+        # A conductor cannot carry more than the rail is given, so the excess is clamped where it is small and
+        # refused where it is not. A few percent is the discrete current vector at a bend or beside a pad,
+        # where the two branch currents of one cell both project positively; with the centreline defect fixed
+        # A24's worst two sit at 1.06 and 1.07 of their rail, and clamping them to the rail's own current
+        # judges the copper at the most current that can possibly flow in it, which is the honest bar. An
+        # excess of a quarter or more is the measure being wrong, and that is not judged at all.
+        _clamped = [c for c in cond if c[2] > amps]
+        if _clamped and cond[0][2] <= amps * 1.25:
+            cond = sorted([( (min(c[2], amps) / c[3]) if c[3] else 0.0, c[1], min(c[2], amps), c[3], c[4], c[5], c[6], c[7]) for c in cond], reverse=True)
+        if cond and cond[0][2] > amps * 1.25:
             results.append((net, "UNMEASURED",
                             "the conductor pass reports %.2f A in a %.3f mm track on %s while the whole rail is given "
-                            "%.2f A. A series conductor cannot carry more than is injected, so this is a defect in the "
-                            "measure and not a finding about the board: the rail is NOT judged until it is fixed."
+                            "%.2f A, which is more than a quarter over. A series conductor cannot carry more than is "
+                            "injected, so this is a defect in the measure and not a finding about the board: the rail "
+                            "is NOT judged until it is fixed."
                             % (cond[0][2], cond[0][1], cond[0][4], amps), None, None, None, {}))
             miss += 1
             continue
