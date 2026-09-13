@@ -138,8 +138,10 @@ def main(a):
                 add(i, j, g * min(f_i, frac[L][gy + dy, gx + dx] or 1.0))
         barrels = [(v.GetPosition(), v.GetDrillValue() / 1e6, v.TopLayer(), v.BottomLayer()) for v in vias]
         barrels += [(p.GetPosition(), max(p.GetDrillSize().x, 1e5) / 1e6, pcbnew.F_Cu, pcbnew.B_Cu) for f, p in pads if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH]   # a through-hole pad is a barrel through every layer (review of 8 Sep 2026)
+        via_cells = {}   # (gy, gx) -> [barrel count, total barrel wall cross-section mm2]: where current enters a plane
         for pos, d, Lt, Lb in barrels:
             gx, gy = int((pos.x / 1e6 - x0) / cell), int((pos.y / 1e6 - y0) / cell)
+            _vc = via_cells.setdefault((gy, gx), [0, 0.0]); _vc[0] += 1; _vc[1] += math.pi * d * PLATING * 1e3
             i_t, i_b = cu_layers.index(Lt) if Lt in cu_layers else 0, cu_layers.index(Lb) if Lb in cu_layers else len(cu_layers) - 1
             span = cu_layers[min(i_t, i_b):max(i_t, i_b) + 1]
             nodes = [index.get((L, gy, gx)) for L in span]; nodes = [n for n in nodes if n is not None]
@@ -215,6 +217,8 @@ def main(a):
         # branch currents and density
         worst_j = 0.0; worst = None; worst_l = None; share = {}
         zone_j = 0.0; zone_at = None; zone_l = None      # the cell measure restricted to copper that is NOT a track
+        czone_j = 0.0; czone_at = None; czone_l = None   # the same, clear of every via: a plane cell that is not a funnel
+        vzone_j = 0.0; vzone_at = None; vzone_l = None   # the worst cell that IS at a via, with that cell's barrels
         for (L, gy, gx), i in index.items():
             g0 = 1.0 / sheet(t_of(L)); t = t_of(L); f_i = frac[L][gy, gx] or 1.0
             for dy, dx in ((0, 1), (1, 0)):
@@ -228,33 +232,82 @@ def main(a):
                 # where the raster converges (32.162). That is the only copper the cell measure now gates on.
                 if not (trk_occ[L][gy, gx] or trk_occ[L][gy + dy, gx + dx]):
                     if jd > zone_j: zone_j = jd; zone_l = L; zone_at = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur)
+                    # 13 September 2026: A PLANE CELL AT A VIA IS A FUNNEL, NOT A CONDUCTOR. Where a via
+                    # injects a rail's current into a plane, the cell faces beside it carry the whole barrel
+                    # current through one cell width, and IPC-2221's figure is for a long conductor at
+                    # thermal steady state, not for a spreading region a millimetre across. The worst cell
+                    # CLEAR of any via is measured beside it so the difference can be read rather than
+                    # assumed, and the barrel itself is judged on its own cross-section below.
+                    _at_via = (gy, gx) in via_cells or (gy + dy, gx + dx) in via_cells
+                    if _at_via:
+                        if jd > vzone_j: vzone_j = jd; vzone_l = L; vzone_at = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur, via_cells.get((gy, gx)) or via_cells.get((gy + dy, gx + dx)))
+                    elif jd > czone_j:
+                        czone_j = jd; czone_l = L; czone_at = (lname[L], x0 + (gx + 0.5) * cell, y0 + (gy + 0.5) * cell, cur)
 
         # ---- OWNER RULING 22: every TRACK judged on its own width, with no grid in the answer.
         # The mesh gives the potentials; a track's through-current is the largest face current along its
         # centreline, current being conserved along a series conductor. That current is compared with
         # IPC-2221 for the track's REAL cross-section, so the result does not move when the cell does.
+        # 13 September 2026, THE CURRENT THIS PASS REPORTED COULD NOT BE TRUE. A24's +3V3, a rail given 0.3 A,
+        # reported 22.27 A in a 0.250 mm track, and three more of A's rails reported a conductor carrying more
+        # than the whole rail (+12V_HF 2.00 A of 1.0, +54V_POE 0.60 of 0.3, VBUS20 6.80 of 6.0). A series
+        # conductor cannot carry more than is injected, so the number was not a measurement.
+        #
+        # The cause: it took `abs(v[nd] - v[prev]) * g` for consecutive cells ALONG THE CENTRELINE and a `g`
+        # of its own construction. The mesh connects orthogonal neighbours only, and the cells a line steps
+        # through are diagonal neighbours wherever the line is not axis-aligned, which is most tracks: that
+        # potential difference is then taken across two hops or a longer path and multiplied by one cell's
+        # conductance. The doubling is visible in the two rails that read exactly 2.0 times their own current.
+        #
+        # What replaces it is the mesh's OWN branch currents, which are conserved because they come from the
+        # same conductances the system was solved with. At each cell the two branch currents to the x and y
+        # neighbours make a current vector, and the through-current along the track is that vector projected
+        # on the track's direction. It is exact for an axis-aligned track and correct for a diagonal one,
+        # where the current really does split between the two edge directions.
         cond = []    # (ratio, width, amps, limit_amps, layer, x, y, length)
         for L, ax, ay, bx, by, w, ln in net_tracks:
             if L not in occ or ln <= 0: continue
-            t = t_of(L); g = (1.0 / sheet(t)) * min(1.0, w / cell)
+            t = t_of(L); g0 = 1.0 / sheet(t)
+            ux, uy = (bx - ax) / ln, (by - ay) / ln
             steps = max(2, int(ln / cell) + 2)
             best = 0.0; at = None
-            prev = None
+            seen = set()
             for k in range(steps):
                 u = k / (steps - 1)
                 px, py = ax + u * (bx - ax), ay + u * (by - ay)
                 gx, gy = int((px - x0) / cell), int((py - y0) / cell)
+                if (gy, gx) in seen: continue
+                seen.add((gy, gx))
                 nd = index.get((L, gy, gx))
-                if nd is not None and prev is not None and prev[0] != nd:
-                    cur = abs(v[nd] - v[prev[0]]) * g
-                    if cur > best: best = cur; at = (px, py)
-                if nd is not None: prev = (nd, px, py)
+                if nd is None: continue
+                f_i = frac[L][gy, gx] or 1.0
+                comp = []
+                for dy, dx in ((0, 1), (1, 0)):
+                    j = index.get((L, gy + dy, gx + dx))
+                    if j is None: comp.append(0.0); continue
+                    ge = g0 * min(f_i, frac[L][gy + dy, gx + dx] or 1.0)
+                    comp.append((v[nd] - v[j]) * ge)   # signed: +x and +y branch currents out of this cell
+                cur = abs(comp[0] * ux + comp[1] * uy)
+                if cur > best: best = cur; at = (px, py)
             if best <= 0 or at is None: continue
             lim_a = ipc_limit(w * t, dT_of(r), L not in (pcbnew.F_Cu, pcbnew.B_Cu))
             if lim_a > 0: cond.append((best / lim_a, w, best, lim_a, lname[L], at[0], at[1], ln))
         cond.sort(reverse=True)
         tot = sum(share.values()) or 1.0; share = {k: round(x / tot, 2) for k, x in share.items()}
         amps = sum(sinks.values()); pct = drop / r["volts"] if r["volts"] else 0.0
+        # FAIL CLOSED ON AN IMPOSSIBLE NUMBER. A series conductor cannot carry more current than the rail has:
+        # if this pass says it does, the pass is wrong and the rail has not been measured. It is NOT judged,
+        # the way a rail with no declared loads is not judged, because a verdict read off an impossible number
+        # is worse than no verdict. This exists because four of A24's rails carried one for a day and the
+        # tool reported them MISSED with a straight face.
+        if cond and cond[0][2] > amps * 1.05:
+            results.append((net, "UNMEASURED",
+                            "the conductor pass reports %.2f A in a %.3f mm track on %s while the whole rail is given "
+                            "%.2f A. A series conductor cannot carry more than is injected, so this is a defect in the "
+                            "measure and not a finding about the board: the rail is NOT judged until it is fixed."
+                            % (cond[0][2], cond[0][1], cond[0][4], amps), None, None, None, {}))
+            miss += 1
+            continue
         rb = float(r.get("budget", budget))   # a rail may carry its own budget in the intent (8 Sep 2026)
         # 8 September 2026 said the density "overstates by the cell-to-width ratio" and left it reported, not
         # gated, until the raster was validated. THE DIRECTION WAS BACKWARDS, measured 13 September 2026.
@@ -311,6 +364,17 @@ def main(a):
         zone_txt = ("worst POUR cell %.1f A/mm2 at %s (%.1f, %.1f) against %.1f, ratio %.2f (raster, tolerance %.2f; "
                     "this per-cell bar is LENIENT against the whole-track IPC figure, so an exceedance is a floor)"
                     % (zone_j, zone_at[0], zone_at[1], zone_at[2], jl, zone_ratio, ZONE_TOL)) if zone_at else "this net has no pour copper"
+        # DIAGNOSTIC, 13 September 2026, deciding nothing yet: is the worst pour cell a via's funnel? If it is,
+        # the cell bar is being applied to a spreading region and the honest check at that point is the
+        # BARREL's own cross-section. Both numbers are printed so the answer comes from boards and not from me.
+        if vzone_at:
+            _vl = ipc_limit(vzone_at[4][1], dT, True) if vzone_at[4] else 0.0
+            zone_txt += ("; the worst cell AT A VIA is %.1f A/mm2 at %s (%.1f, %.1f), %d barrel(s) of %.4f mm2 wall "
+                         "carrying %.2f A, which IPC gives %.2f A for its own cross-section, ratio %.2f"
+                         % (vzone_j, vzone_at[0], vzone_at[1], vzone_at[2], vzone_at[4][0] if vzone_at[4] else 0,
+                            vzone_at[4][1] if vzone_at[4] else 0.0, vzone_at[3], _vl, (vzone_at[3] / _vl) if _vl else 0.0))
+        zone_txt += ("; clear of every via the worst pour cell is %.1f A/mm2 at %s (%.1f, %.1f), ratio %.2f"
+                     % (czone_j, czone_at[0], czone_at[1], czone_at[2], czone_j / jl)) if czone_at else "; no pour cell of this net is clear of a via"
         if verdict != "MET": miss += 1
         results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s%s; layer share %s"
                         % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, why, share),
@@ -320,10 +384,10 @@ def main(a):
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
                         note="the intent file lists no rail, so no drop was computed")
     for net, v, text, *_ in results: print("dc_drop: %-11s %-10s %s" % (v, net, text))
-    undecl = [r[0] for r in results if r[1] == "UNDECLARED"]
+    undecl = [r[0] for r in results if r[1] in ("UNDECLARED", "UNMEASURED")]
     print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)%s"
           % (len(results) - miss, len(results), cell, budget * 100,
-             ("; %d rail(s) NOT JUDGED for want of a declared load: %s" % (len(undecl), ", ".join(undecl)) if undecl else "")
+             ("; %d rail(s) NOT JUDGED (a declared load is missing, or the measure returned an impossible current): %s" % (len(undecl), ", ".join(undecl)) if undecl else "")
 ))
     if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
     # A rail nobody declared a load for is INCONCLUSIVE, never FAIL: the board is not refused for a property of
