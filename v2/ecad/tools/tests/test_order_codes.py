@@ -277,3 +277,46 @@ def t_every_fill_rule_names_a_land_this_project_draws():
     dead = sorted({key for _rx, key in fill_map if key and key not in blob})
     assert not dead, ("these fill rules name a footprint substring no generator draws, so they can never "
                       "fire: %s" % ", ".join(dead))
+
+
+def t_the_fab_note_reads_the_copper_weight_and_the_stackup_off_the_board():
+    """13 September 2026. Two claims in the order notes were CONSTANTS and both were wrong on a board in the tree.
+
+    `export_jlc.sh` named a stackup only when the board had four layers, so A24 and B16, which are built on
+    JLC06161H-3313, went out asking JLCPCB to "tune for 90 ohm differential on the 7628 stackup", a stack
+    they are not on; and the copper weight was the literal "1 oz", which owner ruling 7 of 12 September
+    contradicts for P and E5, both of which carry 0.070 mm in their own stackup block. A note that asserts a
+    fabrication property instead of reading it will drift from the board every time a stackup decision is
+    taken, and the fab reads the note.
+
+    Two halves. The constants must be gone from the note lines, and the expressions that replaced them must
+    produce the right answer on the boards in the tree, which is checked without pcbnew by reading the same
+    stackup block the script reads.
+    """
+    src = open(os.path.join(TOOLS, "export_jlc.sh")).read()
+    # comments are excluded on purpose: the comment that records this defect quotes the old text verbatim,
+    # and a rule that reads its own explanation as the defect can never be satisfied.
+    note = "\n".join(l for l in src.split("\n")
+                     if not l.lstrip().startswith("#") and ('"- Board:' in l or 'tune for 90 ohm' in l))
+    assert note.strip(), "the fab-note lines were not found; this rule is looking at the wrong file"
+    assert "1 oz outer copper" not in note, "the fab note still asserts a copper weight instead of reading it: %s" % note[:200]
+    assert "on the 7628 stackup" not in note, "the fab note still names one stackup for every board: %s" % note[:200]
+
+    REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
+    want = {"meshsat-pcb-a-revA-A24": ("1 oz", "JLC06161H-3313"),
+            "meshsat-pcb-d-revA-D10": ("1 oz", "JLC04161H-7628"),
+            "meshsat-pcb-e-revA-E7": ("1 oz", "JLC04161H-7628"),
+            "meshsat-pcb-p-revA-P3": ("2 oz", None),      # owner ruling 7
+            "meshsat-pcb-e5-revA-E5": ("2 oz", None)}     # owner ruling 7
+    for folder, (oz, stack) in want.items():
+        b = glob.glob(os.path.join(REPO, "v2", "release", "revA", "boards", folder, "*.kicad_pcb"))
+        if not b: continue                                 # a folder not in this clone is not this rule's business
+        st = open(b[0], errors="replace").read()
+        cu = re.search(r'\(layer "F\.Cu" \(type "copper"\) \(thickness ([0-9.]+)\)', st)
+        assert cu, "%s carries no stackup, so the note cannot read its copper weight" % folder
+        got = "%g oz" % round(float(cu.group(1)) / 0.035)
+        assert got == oz, "%s reads %s where the record says %s" % (folder, got, oz)
+        pp = re.findall(r'\(material "FR4 prepreg ([0-9]+)"', st)
+        nl = len(re.findall(r'\(layer "(?:F|B|In\d+)\.Cu" \(type "copper"\)', st))
+        got_stack = "JLC%02d161H-%s" % (nl, pp[0]) if pp else None
+        assert got_stack == stack, "%s reads stackup %s where the record says %s" % (folder, got_stack, stack)

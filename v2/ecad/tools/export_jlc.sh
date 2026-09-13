@@ -30,7 +30,7 @@ with open("out/jlc/%s-bom.csv" % N, "w", newline="") as f:
 print("JLC BOM + CPL written to out/jlc/")
 PY
 python3 - "$N" <<'PY'
-import sys, csv, os, pcbnew
+import sys, csv, os, re, pcbnew
 n = sys.argv[1]; b = pcbnew.LoadBoard(n + ".kicad_pcb"); bb = b.GetBoardEdgesBoundingBox(); ds = b.GetDesignSettings()
 W, H, NL, T = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, b.GetCopperLayerCount(), ds.GetBoardThickness() / 1e6
 title = b.GetTitleBlock().GetTitle() or n
@@ -40,12 +40,26 @@ if os.path.exists("out/jlc/%s-cpl.csv" % n):
         if r.get("Layer", "").lower().startswith("t"): top += 1
         else: bot += 1
 usb = any("USB_" in str(k) and str(k).endswith(("_P", "_N")) for k in b.GetNetInfo().NetsByName().keys())
-stack = "JLC04161H-7628 stackup, " if NL == 4 else ""
+# 13 September 2026. These two claims were CONSTANTS and both were wrong on a board in the tree. The stackup
+# was named only for a four-layer board, so A24 and B16, which are on JLC06161H-3313, went out asking the fab
+# to "tune for 90 ohm differential on the 7628 stackup", a stack they are not built on; and the copper weight
+# was the literal "1 oz", which owner ruling 7 of 12 September contradicts for P and E5, both of which carry
+# 0.070 mm in their own stackup block. Read both off the board instead: the note is then a measurement of the
+# file the fab receives, and it cannot drift from a stackup decision again. The stackup itself is untouched
+# and stays the owner's.
+_st = open(n + ".kicad_pcb", errors="replace").read()
+_cu = re.search(r'\(layer "F\.Cu" \(type "copper"\) \(thickness ([0-9.]+)\)', _st)
+# A board file with no stackup block says nothing about its copper, and claiming "1 oz" for it is the same
+# constant this change removes. `full.sh` writes a stackup into every board it generates, so this fallback
+# fires only on a folder cut before 8 September 2026 (C7 is the one in the tree), and it says so plainly.
+_oz = "%g oz" % round(float(_cu.group(1)) / 0.035) if _cu else "copper weight NOT DECLARED in the board file (ask before quoting)"
+_pp = re.findall(r'\(material "FR4 prepreg ([0-9]+)"', _st)   # file order: the FIRST is the outer prepreg, which is what names the stack
+stack = ("JLC%02d161H-%s stackup, " % (NL, _pp[0]) if _pp else "") if _cu else ("JLC04161H-7628 stackup, " if NL == 4 else "")
 asm = "none (bare board)" if top + bot == 0 else ("top %d" % top + (", bottom %d" % bot if bot else ""))
 lines = ["MeshSat field-kit carrier %s Rev A - JLCPCB order notes (generated from the board file)" % title.replace("MeshSat Field Kit carrier - ", ""),
          "- Gerbers + drill: out/%s-gerbers.zip (KiCad 9, Protel extensions, Excellon mm)" % n,
-         "- Board: %.0f x %.0f mm, %d layers, %.1f mm FR-4, %s1 oz outer copper, ENIG, matte black soldermask, white silkscreen" % (W, H, NL, T, stack)]
-if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at 0.2 mm / 0.15 mm on the outer layers; ask JLC to tune for 90 ohm differential on the 7628 stackup")
+         "- Board: %.0f x %.0f mm, %d layers, %.1f mm FR-4, %s%s outer copper, ENIG, matte black soldermask, white silkscreen" % (W, H, NL, T, stack, _oz)]
+if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at 0.2 mm / 0.15 mm on the outer layers; ask JLC to tune for 90 ohm differential on the %s" % (stack.replace(" stackup, ", " stackup") or "stackup this board is built on"))
 lines += ["- Assembly: %s. BOM: %s-bom.csv, CPL: %s-cpl.csv" % (asm, n, n) if top + bot else "- Assembly: none, bare board",
           "- LCSC part numbers: verified codes filled by tools/lcsc_fill.py; lines without a code are bench-fitted parts (see ORDER-NOTES.txt in the order folder)",
           "- Not assembled by JLC: the bench-fit list of the order folder's ORDER-NOTES.txt and docs/ASSEMBLY.md section 9"]
