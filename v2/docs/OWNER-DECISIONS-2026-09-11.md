@@ -960,8 +960,14 @@ loads well before the narrowest track. IPC gives 0.53 A **0.65 mm**.
 **Option A, recommended: the PWR class goes to 0.70 mm.** It covers the current the rail actually carries with
 margin, and it touches 70 pads on 31 parts instead of 191 on 124. The nine hard items of the 1.2 mm arm came
 from tracks spilling past small pads, and at 0.70 mm the four parts with pads under 0.5 mm are the only ones
-that can still do it. The route cost is not yet measured at this width; it is a 40 minute run and I will have
-the number before you answer.
+that can still do it.
+
+**The route cost at 0.70 mm is being measured, and the first attempt at it is withdrawn.** It came back hard 0
+with 121 unrouted and FOUR vias, and the cause was the arm rather than the width: it set neither
+`FR_POWER_LAYERS` nor `FR_PLANE_NETS`, which D's own route profile declares as `In1.Cu` and `GND`, so every
+ground pin went into the wire list at the class width instead of being reached by vias through a plane. That
+is a second variable and the number measures nothing. Both widths are running again through one identical
+invocation, which is the only comparison either supports.
 
 **Option B: keep 1.2 mm as ruled.** It is the width for the whole rail in one conductor, which is the
 conservative reading and needs no new argument. It costs six connections and nine hard items measured, and
