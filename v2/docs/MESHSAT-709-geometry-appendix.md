@@ -6579,3 +6579,91 @@ conservative reading is the finest cell.
 **And it is actionable in a way the cell measure never was.** "A 0.400 mm track on F.Cu at (97.0, 41.0),
 4.9 mm long, carrying 1.26 A against a 1.23 A limit" is a thing to widen. "83.2 A/mm2 in a grid square" was
 not.
+
+### 32.164 The current the density verdict was reading could not have been flowing (13 September 2026, 14:30 CEST; MESHSAT-862)
+
+Owner ruling 22 made a track's own current against IPC-2221 a verdict, so that number decides boards. On A24
+it reported **a conductor carrying more current than the whole rail, on four of the twelve rails**: `+3V3`
+**22.27 A** in a 0.250 mm track on a rail given 0.3 A, `+12V_HF` 2.00 A of 1.0, `+54V_POE` 0.60 A of 0.3,
+`VBUS20` 6.80 A of 6.0. A series conductor cannot carry more than is injected into it. The number was not a
+measurement, and three of those rails were being reported MISSED on it.
+
+**The cause is one line and it is geometric, not numerical.** The pass took `abs(v[nd] - v[prev]) * g` for
+consecutive cells along the track's centreline, with a `g` of its own construction. The mesh connects
+**orthogonal** neighbours only, and the cells a straight line steps through are **diagonal** neighbours
+wherever the line is not axis-aligned, which is most tracks: that potential difference is then taken across
+two hops, or across a whole path where the line steps over a cell the net has no copper in, and multiplied by
+one cell's conductance. The two rails reading exactly **2.0 times** their own current are the two-hop version
+in the open; `+3V3`'s 74 times is the unbounded one.
+
+**What replaces it.** The mesh's own branch currents, which are conserved because they come from the same
+conductances the system was solved with: at each cell the branch currents to the x and y neighbours make a
+current vector, and the through-current is that vector projected on the track's direction. Exact for an
+axis-aligned track, correct for a diagonal one, where the current really does split between the two edge
+directions. `tools/tests/test_conductor_current.py` builds the mesh the tool builds with a known current in it
+and measures both estimators: **the old one overstates a 45 degree line by exactly the square root of two**,
+and is unbounded where the line leaves the net's copper.
+
+**And it fails closed now.** A conductor current above the rail's own total is clamped to that total where the
+excess is under a quarter (the discrete current vector at a bend or beside a pad; A24's worst two sit at 1.06
+and 1.07), and above a quarter the rail is **UNMEASURED and not judged at all**, the way a rail with no
+declared loads is not judged. A verdict read off an impossible number is worse than no verdict.
+
+**A24 on unchanged copper, before and after: 2 of 12 rails MET becomes 5 of 12.** `+3V3`, `+54V_POE` and
+`+5V_S2` were never failures. The measurement that decided items 4 to 8 of the fab-ready queue was wrong, and
+the queue is re-derived from the list below rather than from the old one. Two of the old items survive it
+exactly (VBAT's neck and VIN_RAW's `FE_SW1`), which is worth saying plainly: a broken instrument still found
+two real things.
+
+| rail | worst CONDUCTOR | worst POUR cell | what is actually there |
+|---|---|---|---|
+| **VBAT** | 1.31 A in 0.500 mm on In3 at (100.0, 100.5), **3.32** | 428.0 A/mm2 In2 at (91.7, 109.2), **8.23** | the pour neck has **`+3V3`, a 0.400 mm track, 0.62 mm away** across the In2 plane; the conductor is two 0.5 mm router tracks on In2 and In3 where the design carries VBAT in a B.Cu trunk |
+| **VIN_RAW** | 0.42 A in 0.500 mm on In3 at (41.2, 51.1), **1.07** | 130.9 A/mm2 F.Cu at (38.7, 44.2), **1.58** | **`/FE_SW1`, a 0.500 mm track at 0.34 and 0.82 mm**, pinching the 147 mm2 head island. The front end's own switch node |
+| **VBUS20** | 2.90 A in **0.200 mm** on F.Cu at (53.1, 57.6), **3.90** | 0.84, within | a **LOCKED 0.200 mm escape stub 2.47 mm long** carrying half the charge current, and a second at 0.63 mm. **This rail has no zone at all**: "no zone of this net covers this point" |
+| **+5V_S1**, **+5V_S3** | 1.23 A in 0.400 mm on F.Cu, **1.00** | 0.54, within | a 4.92 mm run off the 84 mm2 island at exactly IPC's figure. `+5V_S2` is the same geometry at 1.19 A and reads MET: the three differ by hundredths |
+| **+13V8_PA** | 2.34 A in 0.400 mm on F.Cu at (157.0, 121.5), **1.90** | 175.5 A/mm2 B.Cu at (243.2, 122.2), **2.12** | two 0.400 mm tracks past the end of an 80.6 mm2 head island, `/HEAT_FLT` 0.19 mm away; and the B.Cu band necks at (243, 122) with **nothing of another net within 2.8 mm**, so the band is narrow there by its own geometry |
+| **+12V_HF** | 1.00 A in 0.400 mm on **In3**, **75.63 mm long**, **2.97** | 0.62, within | the whole rail travels 75 mm on one inner-layer 0.4 mm track. **No zone of this net exists anywhere on the board** |
+
+**The via question, asked and answered on the same run.** E7's `VIN_RAW` missed on a pour cell 0.32 mm from a
+via added that morning to feed it, which raised the question whether the cell measure is judging a via's
+funnel against a conductor bar. The measure now reports, beside every worst pour cell, the worst cell **at a
+via** with that cell's barrel count and wall cross-section against IPC for the barrel, and the worst cell
+**clear of every via**. **On all twelve of A24's rails the worst pour cell is clear of every via**, and every
+barrel is comfortably inside its own limit, the worst at 0.65. So the funnel is real where it happens and it
+is not what is failing these boards; E7 is the single case, and it is treated there rather than by weakening
+the bar everywhere.
+
+### 32.165 Every rail names where its current goes, and the two things that found (13 September 2026, 14:45 CEST; MESHSAT-862)
+
+`dc_drop` splits an undeclared rail's current evenly over every U and J on the net, and 32.161 recorded that
+the guess had been deciding boards. All ten of A's rails and all four of B's declare their loads now, and
+**`intent.rail` refuses a rail that declares none**, along with a load given no current and loads summing
+above the rail's own peak. The refusal is in the generator, where the fix belongs; the literal-reading rule in
+`tools/tests/test_rail_loads.py` is the second line, and it would have caught all seven at once.
+
+Writing B's four meant reading what is really on each net, and two of the declarations were wrong in a way
+that mattered.
+
+- **The module's own draw is 0.9 A, not 5.** B's note read "the CM5 draws up to 5 A", which is the datasheet's
+  **input capability**: "Single 5 V power input with USB power delivery support for up to 5 A at 5 V", which
+  is what a carrier may feed a CM5 for itself **and its peripherals**. The module's own figure is Table 9,
+  current consumption: **idle 400 mA, operation 900 mA typical**, no maximum given. Declared at 1.6 A with
+  headroom for the SoC under stress, which leaves the slot rail's 5 A to the three converters that share it:
+  the M.2 card socket's 3.3 V (the RM520N asks for **3.0 A continuous and 4 A peak at 3.3 V**, its hardware
+  design v1.1 section 3.3.1, so 2.2 A here), the NVMe and PCIe switch 3.3 V, the 1.0 V switch core and the
+  fan. At 5 A for the module alone there was nothing left for any of them.
+- **`+3V3_DEV` declared a 5.0 A peak behind U25, an AP63203 rated 2 A.** A peak the source cannot deliver is
+  not a peak, and the density verdict would have judged that copper against a current that cannot flow in it.
+- **`GND` declared one source and has four.** Holding one JST-VH ground at 0 V returns all 21 A through one
+  connector's pin and measures a board that does not exist. A rail's `source` takes a **list** now. The return
+  is declared at each branch's own converter rather than at the leaf parts behind it: a branch's parts sit
+  beside the converter that feeds them and return into the same local ground copper.
+
+**Also, a string that was meant to be formatted and was not.** B19 carries three part values reading
+`1.1 V hub core S%d`: the per-slot loop formats every other argument it passes and nobody appended the format
+to that one, so the three 1.1 V hub core bucks all describe a slot with no number. `value` reaches the silk,
+the schematic and the BOM's Comment column, which is what a parts-matching operator reads. `kisch.part`
+refuses it at the source, `verify_deliverable` refuses a folder whose BOM carries one, and a sweep of every
+folder under `release/` says **none does**: B19 has never cut a deliverable. A tolerance is not a conversion,
+so `26.7k 1%` and `50% duty` are untouched. It is the same defect as the footprint `%.2f` of 5 September,
+where an unfilled label placeholder made `FootprintLoad` return None with no message.
