@@ -6427,12 +6427,26 @@ within 3 mm of that point**; its nearest In3 track is tens of millimetres away, 
 no zone, so this is not a coordinate frame problem. It is unexplained, and `+12V_HF` is left out of the re-cut
 until it is explained rather than fixed on a number nothing corroborates.
 
+> **RETRACTED the same day, and by a reviewer rather than by me. There IS copper there**: a **0.400 mm track,
+> 75.6 mm long, 0.05 mm from the point**, on In3. The paragraph above is an artefact of the probe's own
+> endpoint test, described in the correction below, and `+12V_HF` is not an anomaly. It is a 1 A rail running
+> 75 mm in a 0.400 mm inner track, which IPC-2221 rates at about 0.34 A on 0.5 oz copper. Its load is still
+> undeclared (32.161), so the current DISTRIBUTION is a guess, but the geometry is a fact.
+
 **THE PROBE'S OWN FIRST VERSION WAS WRONG AND NEARLY WROTE THAT UP AS A DEFECT IN `dc_drop`.** It measured the
 distance to a track's two ENDPOINTS, so a long track running straight through the point of interest with both
-ends far away read as "no copper within the radius". Point to segment now. The lesson is the one the record
-keeps relearning in new clothes: **a probe that reports nothing is not a diagnosis, it is a probe with a bug**,
-and the first thing to disbelieve is the new instrument. The `+12V_HF` anomaly survived the fix, which is why
-it is recorded as open rather than as an answer.
+ends far away read as "no copper within the radius", and the tool printed that absence as a definite negative.
+
+**AND THE FIX WAS WRITTEN, NOT APPLIED, AND THE RECORD CLAIMED IT ANYWAY.** The shell line meant to patch the
+file began with a `cd` that failed, so the patch never ran; the tool was then rsynced unchanged to the box,
+re-measured, and the unchanged answer was read as "the anomaly survived the fix". This paragraph originally
+ended "Point to segment now", and both that sentence and a commit message were false. **A claim about a change
+is not the change**, and nothing in the pipeline checks the difference.
+
+**Tier 2b found it on the diff within the hour**, which is the measurement that justifies keeping a reviewer on
+changes: it read the committed file rather than the prose about it. The lesson the record keeps relearning is
+the same either way: **a probe that reports nothing is not a diagnosis**, and the first thing to disbelieve is
+the new instrument. The second is your own account of having fixed it.
 
 ### 32.161 Half the density failures were a GUESSED load, and the guess had been deciding boards since the day it was found (13 September 2026, 13:10 CEST; MESHSAT-862)
 
@@ -6455,9 +6469,11 @@ undeclared rail and only surfaced when a verdict started depending on it.
 | E7 | VIN_RAW | 8.0 | J_BLK, U4 |
 | D10 | +5V_D8 | 1.0 | eight parts |
 
-**It also explains 32.160's anomaly.** `+12V_HF`'s worst cell was reported where the net has no copper within
-3 mm; the current it carried was invented between a source and a guessed load, so the cell it came out at is
-not a fact about the board.
+**It bears on 32.160's anomaly, though it is not the whole of it.** `+12V_HF`'s current is invented between a
+source and a guessed load, so its DISTRIBUTION is not a fact about the board. The claim in 32.160 that its
+worst cell had no copper within 3 mm is **retracted**: that was the probe's endpoint test, and there is a
+0.400 mm track 0.05 mm away running 75.6 mm across In3. The rail therefore has a real geometric problem as
+well as an undeclared one.
 
 **A rail whose loads are undeclared is UNDECLARED now**, neither drop nor density judged, still blocking, and
 the board's verdict is **INCONCLUSIVE rather than FAIL, because the defect is in the intent file and not in

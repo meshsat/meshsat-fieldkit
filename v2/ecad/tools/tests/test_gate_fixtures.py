@@ -555,13 +555,22 @@ def t_a_rail_with_no_declared_load_is_not_judged():
     blocks, and the board's verdict is INCONCLUSIVE rather than FAIL because the defect is in the intent file
     and not in the copper. The two have different remedies and a reader must be able to tell them apart.
     """
-    import re as _re
+    import re as _re, ast as _ast
     src = open(os.path.join(TOOLS, "dc_drop.py")).read()
     assert "UNDECLARED" in src, "dc_drop no longer distinguishes an undeclared rail"
-    i = src.index("guessed is not None")
-    body = src[i:i + 900]
-    assert "UNDECLARED" in body, "the undeclared branch does not produce an UNDECLARED verdict"
-    assert "continue" in body, "the undeclared branch falls through and judges the rail anyway"
+    # The branch is found in the SYNTAX TREE, not by slicing a fixed window of text. The first version of this
+    # rule read 900 characters after the `if` and broke the moment a comment was added inside the branch, which
+    # is a rule that fails for a reason having nothing to do with the property it protects.
+    tree = _ast.parse(src)
+    branch = None
+    for n in _ast.walk(tree):
+        if isinstance(n, _ast.If) and "guessed is not None" in _ast.unparse(n.test).replace(" ", " "):
+            branch = n; break
+    assert branch is not None, "dc_drop no longer has an `if guessed is not None` branch"
+    body_src = "\n".join(_ast.unparse(st) for st in branch.body)
+    assert "UNDECLARED" in body_src, "the undeclared branch does not produce an UNDECLARED verdict"
+    assert any(isinstance(st, _ast.Continue) for st in branch.body), \
+        "the undeclared branch falls through and judges the rail anyway"
     assert _re.search(r'_v\.INCONCLUSIVE if len\(undecl\) == miss', src), \
         "a board whose only failures are undeclared rails is still reported as FAIL, which blames the copper"
     assert "would have put the current into" in src, \

@@ -222,7 +222,9 @@ def main(a):
                             "split evenly, which is how CELL+ came to read 2.21 percent through a 0.20 mm sense escape "
                             "on 12 September. Declare the loads in the schematic generator's intent and re-measure."
                             % (r.get("amps_typ", 0.0), ", ".join(guessed) if guessed else "nothing on the net"),
-                            0, 0, 0, {}))
+                            # None, never 0: a value that was explicitly NOT judged must not sit in the same
+                            # slot as a measured one, or a later reader takes it for a measured zero.
+                            None, None, None, {}))
             miss += 1
             continue
         dT = float(r.get("density_dT", 10.0))
@@ -239,9 +241,16 @@ def main(a):
         drop_ok = pct <= rb
         dens_ok = (worst_j <= jl * DENSITY_TOL) if worst else True
         verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
-        why = "" if verdict == "MET" else (
+        # A rail that is over the bar and under the tolerance must SAY SO. Tier 2b, reviewing this change on
+        # 13 September: "a tool reports success about a rail that did not meet the bar it names, so the three
+        # A24 slot rails leave no trace of having been excused". Right, and that is the shape of half the
+        # defects in this record. Such a rail reads MET(tol) and prints by how much.
+        excused = bool(worst) and worst_j > jl and dens_ok
+        if excused: verdict = "MET(tol)"
+        why = (" [over the bar by %.1f percent, excused by ruling 19's %.2gx tolerance]" % ((worst_j / jl - 1) * 100, DENSITY_TOL)) if excused else (
+            "" if verdict == "MET" else
             " [MISSED on %s]" % (" and ".join(([] if drop_ok else ["the drop"]) + ([] if dens_ok else ["the current density"]))))
-        if verdict != "MET": miss += 1
+        if verdict not in ("MET", "MET(tol)"): miss += 1
         results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); worst density %.1f A/mm2 at %s (%.1f, %.1f) against IPC-2221 %.1f A/mm2 at %.0f K (GATED since owner ruling 16, with ruling 19's 1.1x tolerance; this per-cell bar is LENIENT against the whole-track IPC figure by 18 to 98 percent over the widths in this design, so an exceedance is a floor)%s; layer share %s" % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, worst_j, worst[0], worst[1], worst[2], jl, dT, why, share), drop, pct, worst_j, share))
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
@@ -249,9 +258,11 @@ def main(a):
                         note="the intent file lists no rail, so no drop was computed")
     for net, v, text, *_ in results: print("dc_drop: %-11s %-10s %s" % (v, net, text))
     undecl = [r[0] for r in results if r[1] == "UNDECLARED"]
+    excused_rails = [r[0] for r in results if r[1] == "MET(tol)"]
     print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)%s"
           % (len(results) - miss, len(results), cell, budget * 100,
-             "; %d rail(s) NOT JUDGED for want of a declared load: %s" % (len(undecl), ", ".join(undecl)) if undecl else ""))
+             ("; %d rail(s) NOT JUDGED for want of a declared load: %s" % (len(undecl), ", ".join(undecl)) if undecl else "")
+             + ("; %d rail(s) over the density bar and excused by ruling 19's tolerance: %s" % (len(excused_rails), ", ".join(excused_rails)) if excused_rails else "")))
     if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
     # A rail nobody declared a load for is INCONCLUSIVE, never FAIL: the board is not refused for a property of
     # the board, it is refused for a property of the intent file, and the two have different remedies.
@@ -259,7 +270,9 @@ def main(a):
     return _v.write("dc_drop", _verdict,
                     counts={"met": len(results) - miss, "missed": miss - len(undecl), "undeclared": len(undecl)},
                     denominator=len(results),
-                    evidence=["%s %s %.2f%% of %.1f V" % (r[1], r[0], r[4] * 100, rails[r[0]]["volts"]) for r in results if r[1] != "MET"],
+                    evidence=[("%s %s NOT JUDGED" % (r[1], r[0])) if r[4] is None else
+                              ("%s %s %.2f%% of %.1f V" % (r[1], r[0], r[4] * 100, rails[r[0]]["volts"]))
+                              for r in results if r[1] != "MET"],
                     inputs={"board": a[0]},
                     note="cell %.2f mm, default budget %.0f%%" % (cell, budget * 100))
 
