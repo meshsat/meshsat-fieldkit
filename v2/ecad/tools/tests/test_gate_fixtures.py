@@ -461,3 +461,36 @@ def t_a_blocked_code_can_name_the_land_it_is_wrong_on():
         r = subprocess.run([sys.executable, os.path.join(TOOLS, "lcsc_fill.py"), p], capture_output=True, text=True)
         hit = "is blocked" in (r.stdout + r.stderr)
         assert hit == blocks, "on a %s land the block should be %s: %s" % (fp, blocks, (r.stdout + r.stderr)[:200])
+
+
+def t_the_per_cell_density_bar_is_lenient_and_the_tool_says_so():
+    """13 September 2026. The claim in a comment is a claim, and this one had its sign wrong for five days.
+
+    `dc_drop.py` compares the current through one raster cell with `ipc_limit(cell*t)`, the IPC-2221 current
+    for one cell's cross-section. 8 September recorded that this "overstates by the cell-to-width ratio" and
+    left the density reported rather than gated until the raster could be validated. IPC's law is
+    I = k dT^0.44 A^0.725, sublinear in area, so N cells each at their own limit carry N^0.275 times what IPC
+    allows the whole track: the per-cell bar is exact at the cell width and LENIENT everywhere else. Twelve
+    rails across four cut boards report above that bar, so the direction matters: they exceed a bar that is
+    already too generous, which makes each number a floor rather than a ceiling.
+
+    The rule computes the ratio from the tool's own `ipc_limit` and requires the tool to say which way it errs.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    m = _re.search(r'def ipc_limit\(.*?\n(?=\ndef |\n[A-Za-z_]+ =)', src, _re.S)
+    assert m, "dc_drop no longer defines ipc_limit; this rule is looking at the wrong thing"
+    ns = {}; exec(m.group(0), ns); ipc = ns["ipc_limit"]
+
+    cell = 0.5
+    for t, inner in ((0.035, False), (0.0152, True)):
+        per_cell = ipc(cell * t, 10.0, inner)
+        for w in (0.2, 0.25, 0.4, 1.0, 3.0, 6.0):
+            cells = max(1.0, w / cell)
+            ratio = (cells * per_cell) / ipc(w * t, 10.0, inner)
+            assert ratio > 1.0, ("the per-cell bar is STRICT at width %.2f mm (ratio %.2f), which contradicts "
+                                 "what dc_drop now says about itself" % (w, ratio))
+        assert abs((1.0 * per_cell) / ipc(cell * t, 10.0, inner) - 1.0) < 1e-9, "it should be exact at the cell width"
+
+    assert "LENIENT" in src and "floor" in src, \
+        "dc_drop does not tell its reader which way its density bar errs, which is how the sign stayed wrong"

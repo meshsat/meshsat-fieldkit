@@ -718,3 +718,52 @@ where the 0.25 mm track and the 0.6 mm via did.
 the record already suspected about this board: `/+3V3` at U3 pad 10 is a **placement** problem, not a closure
 one. Nothing is decided here and C's regions stay on the never-auto floor; when C comes up, the question will
 be whether to give U3 room or to declare the rail narrower, and the second is a class change, which is yours.
+
+## Decision 14: twelve rails on four boards carry more current than IPC-2221 allows, and the check that says so has never gated anything (measured 13 September 2026, 03:45 CEST)
+
+**This is the one thing I found today that touches boards you would order, so it needs you rather than me.**
+
+`dc_drop.py` computes two numbers per rail: the voltage drop, which decides the verdict, and the worst current
+density, which is printed and ignored. The printed comment since 8 September says the density "overstates by
+the cell-to-width ratio" and is "reported, not gated, until the raster is validated". **The raster has now been
+validated and the direction was backwards.**
+
+The bar is IPC's current for one raster cell's cross-section. IPC-2221 is `I = k dT^0.44 A^0.725`, sublinear in
+area, so N cells each at their own limit carry `N^0.275` times what IPC allows the whole track. Measured with
+the tool's own function at a 0.5 mm cell: **exact at 0.5 mm width, and lenient by +18 percent at 0.4 mm, +21 at
+1 mm, +64 at 3 mm, +65 at 0.25 mm, +94 at 0.2 mm, +98 at 6 mm.** So every rail below is over a bar that is
+already too generous, and its number is a floor.
+
+| board | rail | worst density | the (lenient) bar | over by |
+|---|---|---:|---:|---:|
+| A24 | VBAT | 428.2 A/mm2 | 52.0 | **8.2x** |
+| A24 | VBUS20 | 217.4 | 82.7 | 2.6x |
+| A24 | +13V8_PA | 172.5 | 82.7 | 2.1x |
+| A24 | +12V_HF | 131.6 | 52.0 | 2.5x |
+| A24 | VIN_RAW | 130.9 | 82.7 | 1.6x |
+| A24 | +5V_S1, +5V_S2, +5V_S3 | 83.2, 83.2, 83.1 | 82.7 | 1.01x |
+| E7 | VIN_RAW | 279.2 | 82.7 | **3.4x** |
+| E7 | CELL_F | 102.0 | 52.0 | 2.0x |
+| P3 | PACK_P | 241.1 | 82.7 | 2.9x |
+| P3 | FUSED | 193.2 | 82.7 | 2.3x |
+| P3 | CELL4 | 87.4 | 82.7 | 1.06x |
+
+**Every one of them reads MET, because the drop decides and the drop is fine.** A24's VBAT drops 148 mV of a
+2 percent budget while its worst cell carries eight times what that cell may carry: a rail can be electrically
+quiet and locally too hot at the same time, which is exactly what a density check is for.
+
+**P3's FUSED at 193.2 is the number that became your ruling 7**, the 2 oz order. The same class of number was
+sitting in the log for A24 and E7 and nobody escalated it, because nothing reads the line.
+
+**What I have NOT done:** turned the density into a verdict. That would refuse A24, E7 and P3 today, all three
+of which are cut, and it changes what "MET" means, which is yours. The corrected direction and its measurement
+are in the tool and in a rule that fails if the sign is ever claimed the other way.
+
+| option | what happens | cost |
+|---|---|---|
+| **A (recommended): gate the density and re-cut the three boards** | the boards that ship carry copper IPC agrees with | the three deliverables re-open; A24's VBAT needs real work at 8.2x, E7 and P3 are mostly the 2 oz question you already ruled on |
+| B: gate it at a declared rise above 10 K, per rail with its reason | 20 K costs about a third of the width, 30 K about half; a sealed case with no vents makes a high rise expensive | half a day, and every rail needs a written rise |
+| C: leave it reported and order as it stands | nothing to do now | a prototype run that may run hot at the necks, found on the bench instead of on the screen. For five boards of a prototype this is defensible, and it should be a decision rather than an omission |
+
+**My recommendation is A for A24's VBAT specifically, and B or C for the rest**, because 8.2x is a different
+kind of number from 1.01x and only the first four rows are clearly worth a re-cut.
