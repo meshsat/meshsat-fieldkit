@@ -142,9 +142,13 @@ def t_a_via_is_judged_on_its_own_barrel_and_not_on_the_cell_it_funnels_through()
     assert "net_vias.append" in src, "the barrels of a net are not collected"
     assert "via_worst" in src and "ipc_limit(vwall, dT_of(r), True)" in src, \
         "no barrel is judged on its own wall cross-section, with the rail's own rise read where it is needed"
-    assert "via_ratio <= 1.0" in src, "the via ratio does not reach the verdict"
+    assert "via_ratio <= 1.0" not in src, \
+        ("the barrel ratio is gating again. It does not converge: measured on P3, one variable, PACK_P's "
+         "worst barrel reads 1.20 at a 0.50 mm cell and 1.71 at 0.25, and CELL4 goes MET to MISSED across "
+         "the same change. Report it; do not let it decide a board until it has no grid in it.")
+    assert "REPORTED, not gated" in src, "the report does not say the barrel number is not gated"
     assert "zone_ratio = (czone_j / jl)" in src, "the pour is still gated on a cell that may be a via's funnel"
-    assert 'max(cond_ratio, zone_ratio, via_ratio)' in src, "the reported ratio does not carry the via"
+    assert 'max(cond_ratio, zone_ratio)' in src, "the reported ratio carries a number that does not converge"
 
 
 def t_the_barrel_limit_uses_the_wall_and_not_the_hole():
