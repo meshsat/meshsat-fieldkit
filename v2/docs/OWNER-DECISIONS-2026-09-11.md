@@ -992,3 +992,46 @@ the router lays between the copper and the pads.
 
 **Option D: 0.70 mm now, and the copper of option C later if a measurement asks for it.** This is option A
 with the door left open, and it is what I would do if the answer were mine.
+
+## DECISION 24, OPEN: board B lays 65 of its 113 pairs, and the pair hold releases no board under 113 (13 September 2026, 22:50 CEST)
+
+**What the hold says.** Owner ruling 10 September 02:00: *every board is held until the pre-router lays every
+pair*, no per-pair exception, and the session's own recommendation at the time (gate the controlled fraction at
+80 percent) was NOT taken. A, C, D, E and P each carry three to five pairs and meet it. **B carries 113.**
+
+**Where B stands today, measured on the tools that would cut its deliverable** (appendix 32.174): **65 of 113**,
+up from 38 this morning, on two changes that are in the tree and graded:
+
+| change | of 113 | what it is |
+|---|---:|---|
+| this morning | 38 | the board as the record last measured it |
+| `PAIR_END_FIT` | 54 | the end emissions asked about the partner BEFORE they are laid; 84 of 152 failed attempts were the pair's own two legs missing by 1 to 15 micrometres |
+| corridor slack 0.06 to 0.08 | **65** | the curve re-swept on those tools, eight arms; the declared 0.06 turned out to be the worst point of the sweep |
+
+**The 48 that remain are named**: 18 `no stub path at via` (the leg cannot reach its own escape via through
+the fan), 8 the pair's own legs, 8 the two legs crossing, 6 at U209, the rest at U3, U4 and out in the
+corridor. **They concentrate at the three PCIe switches, the two M.2 card sockets and the USB muxes**, which is
+the station neighbourhood rather than the corridor.
+
+**Ruling 18's floor plan was tried and the board refused it.** Making each fine-pitch front part's courtyard an
+obstacle to the underside regions (the rule this board's own generator states in a comment, and breaks 71
+times) overflows five regions, the worst by 86.2 mm: the underside region rectangles ARE the IC pockets on the
+other side, and the parts under them are the decoupling the 3 mm rule wants there. **The underside of a
+three-slot compute board is the decoupling of its three slots**, so there is no elsewhere to put it inside the
+present outline.
+
+**Three options, with what each costs.**
+
+1. **Keep grinding the pre-router.** Today's two changes were worth +27 between them and each took an evening.
+   The next named causes are the stub into a fan (18) and the leg crossing (8). Nothing says how many of the 48
+   are reachable this way, and the last three knobs measured before today were each worth zero.
+2. **Gate the controlled fraction** (the 9 September recommendation, refused then): a pair passes when 80
+   percent of its judged length is coupled, the router laying the last millimetre into the fan. It ships B at
+   its present placement, and it is a change to what "controlled impedance" means on this board.
+3. **Give B more board.** The pairs fail where 133-pad 0.40 mm parts sit 17 mm apart with their decoupling
+   underneath. A larger outline, or four slots' worth of area for three slots, is the placement answer that
+   ruling 18 asks for and the present 330 by 200 mm cannot give.
+
+**Recommendation: 2, with 1 continuing underneath it.** The impedance gate reads back what was laid either
+way, so the number in the record stays true; what changes is the bar a pair must clear to ship. **Nothing is
+being weakened while this is open: B stays held, and the other six boards are unaffected.**
