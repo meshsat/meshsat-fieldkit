@@ -172,6 +172,12 @@ board.Add(z)
 # y -75.2, so the last 5 mm was router track; and a 4.50 x 2.15 mm source pad reached the pour through one
 # signal via. This is the CELL+ lesson in another place: a rail's current finding geometry meant for signals.
 pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)", (-92, -100, -26, -74))
+# The rail's 8 A leaves L2's pad 2 and 2.23 A of it was measured on the LOCKED 0.400 mm escape stub beside the
+# pad, which IPC gives 1.23 A: the rail has copper on In2 and none on the layer its source pad is on, so that
+# stub is a lone conductor with nothing beside it. A small F.Cu island over the pad and the stub's own run
+# gives the current somewhere to go, and the conductor test then judges the island's cells rather than a
+# 0.4 mm track, which is what the pour bar is for.
+pour(pcbnew.F_Cu, "VIN_RAW", "VIN_RAW island F.Cu at the source pad", (-43.5, -92.0, -37.5, -87.5), priority=1)
 pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-26, -113, -2, -80))
 pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (56, -113, 76, -80))
 pour(pcbnew.In2_Cu, "CELL_F", "CELL_F plane In2 (the west end: the pack node to the pack parts, the fans and the monitor divider; a DSN plane on the power layer In2 since E6 round 4)", (-148, -112, -100, -46), priority=1)
@@ -190,9 +196,15 @@ import power_copper as _pcmod
 # three lowers the barrel path's resistance and draws current off both. L2 pad 2 is 4.50 x 2.15 mm: two rows
 # 1.1 mm apart put a 0.8 mm via 0.13 mm inside the pad's own edge at the worst corner, and the self-check
 # below refuses any of them that lands on another net's pad.
+# 13 September 2026, SECOND READING: the barrels are the neck here too. The measure that judges a via on its
+# own wall found each J_BLK land's single 0.4 mm via carrying 2.16 A where IPC gives that 0.0314 mm2 of wall
+# 1.11 A, ratio 1.95. The lands are 2.00 mm pogo targets: TWO vias fit side by side at 1.0 mm apart, and a
+# 0.5 mm drill has 0.0393 mm2 of wall and carries 1.30 A, so a pair carries 2.60 A against the 2 A each land
+# takes of the rail's 8. Hole to hole is 0.5 mm and each via's 0.9 mm body sits 0.05 mm inside the pad edge.
 VIN_VIAS = [(-41.6, -89.25), (-40.5, -89.25), (-39.4, -89.25),      # inside L2 pad 2, the rail's source
             (-41.6, -90.35), (-40.5, -90.35), (-39.4, -90.35),      # the second row, same pad
-            (-86.35, -75.23), (-83.81, -75.23), (-81.27, -75.23), (-78.73, -75.23)]   # one per J_BLK land
+            (-86.35, -74.73), (-83.81, -74.73), (-81.27, -74.73), (-78.73, -74.73),   # two per J_BLK land,
+            (-86.35, -75.73), (-83.81, -75.73), (-81.27, -75.73), (-78.73, -75.73)]   # 1.0 mm apart across it
 if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
     _hits = []
     for _vx, _vy in VIN_VIAS:
@@ -206,7 +218,7 @@ if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
                     _hits.append("via at (%+.2f, %+.2f) touches %s.%s [%s]" % (_vx, _vy, _ref, _pd.GetNumber(), _pd.GetNetname() or "-"))
     if _hits:
         raise SystemExit("power vias: %d of them sit on another net's pad:\n  %s" % (len(_hits), "\n  ".join(_hits[:10])))
-    _pcmod.PowerCopper(board, net_for, P).stitch("VIN_RAW", VIN_VIAS, drill=0.4, width=0.8)
+    _pcmod.PowerCopper(board, net_for, P).stitch("VIN_RAW", VIN_VIAS, drill=0.5, width=0.9)
     print("power copper: %d VIN_RAW power via(s) at the source pad and the block lands" % len(VIN_VIAS))
 
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
