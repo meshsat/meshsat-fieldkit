@@ -275,7 +275,15 @@ def main(argv):
                         continue
                     if p == q: continue
                     t = pcbnew.PCB_TRACK(b); t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(lp); t.SetNet(n); t.SetLocked(True); b.Add(t)
+                # 14 September 2026: BUILD THE CONNECTIVITY BEFORE FILLING A BOARD YOU HAVE JUST ADDED TRACK TO.
+                # Without it the filler works from a stale net graph and the trial board came back with 499
+                # unconnected items, KiCad's own cap, against the 12 the real board has: every pour connection
+                # read as open, so `U1 < U0` could never be true and this tool could never accept a shape. It
+                # was silent about it because the finish pipes it through `grep direct_close` without `-u`, so
+                # the buffered output died with the process when pcbnew then segfaulted.
+                b.BuildConnectivity()
                 pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+                b.BuildConnectivity()
                 pcbnew.SaveBoard(trial, b)
                 pro = os.path.splitext(bp)[0] + ".kicad_pro"; tpro = os.path.splitext(trial)[0] + ".kicad_pro"
                 if os.path.exists(pro): subprocess.run(["cp", pro, tpro])
