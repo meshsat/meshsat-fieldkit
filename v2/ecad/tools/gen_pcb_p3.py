@@ -167,10 +167,19 @@ def band(netname, a, b, w=3.0, vias=12):
     for L in (pcbnew.F_Cu, pcbnew.B_Cu): track(netname, a, b, w, L)
     net = net_for(netname, create=False)
     L = math.hypot(b[0] - a[0], b[1] - a[1]); n = max(1, min(vias, int((L - 4.4) / 1.6) + 1)) if L >= 4.4 else 1
+    # AND THEY GO ACROSS THE BAND, NOT ONLY ALONG IT. Spacing them along the band took the worst barrel from
+    # 2.67 A to 2.16 against its 1.48, a fifth, because the current does not divide evenly over a line of
+    # vias: the one nearest where the current enters takes the most and the far ones take little. A PAIR at
+    # each station, set across the band's width, shares that station's crossing between two barrels. On a
+    # 2.8 mm band they sit 1.4 mm apart, which is 0.4 mm hole to hole at a 0.6 mm drill.
+    ux, uy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+    across = [(-0.7, 0.7)] if w >= 2.4 else [(0.0,)]
     for k in range(n):
         d = L / 2 if n == 1 else 2.2 + k * (L - 4.4) / (n - 1); f = d / L   # every via at least 2.2 mm from a band end (the wire lands' 2.4 mm holes, hole-to-hole 0.3)
-        v = pcbnew.PCB_VIA(board); v.SetPosition(P(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f))
-        v.SetWidth(FromMM(1.0)); v.SetDrill(FromMM(0.6)); v.SetNet(net); v.SetLocked(True); board.Add(v)
+        for off in across[0]:
+            v = pcbnew.PCB_VIA(board)
+            v.SetPosition(P(a[0] + (b[0] - a[0]) * f - uy * off, a[1] + (b[1] - a[1]) * f + ux * off))
+            v.SetWidth(FromMM(1.0)); v.SetDrill(FromMM(0.6)); v.SetNet(net); v.SetLocked(True); board.Add(v)
 def short_of(a, b, d=0.8):
     """the point d mm before b on the way from a"""
     L = math.hypot(b[0] - a[0], b[1] - a[1]); return (b[0] - (b[0] - a[0]) / L * d, b[1] - (b[1] - a[1]) / L * d)
