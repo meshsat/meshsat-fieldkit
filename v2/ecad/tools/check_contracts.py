@@ -16,6 +16,21 @@ def load(stem):
     cands = [c for c in _glob.glob(os.path.join(ECAD, stem + "*", "out", stem + ".net")) if os.path.isfile(c)]
     path = max(cands, key=os.path.getmtime) if cands else os.path.join(ECAD, stem, "out", stem + ".net")
     if not os.path.exists(path): return None, None
+    # 13 September 2026 (MESHSAT-862): A NETLIST OLDER THAN ITS SCHEMATIC DESCRIBES A BOARD THAT NO LONGER
+    # EXISTS. Board B's netlist in the box clone was five hours older than its schematic and carried no J_AB2
+    # at all, because every B run that day had been in an isolated tree. Four contracts then failed on every
+    # board's finish, naming the A-to-B ribbon, and the two generators had been identical all along. The
+    # check compared a current A against a B from before the ribbon split. It is reported here and counted as
+    # a missing netlist, which is already INCONCLUSIVE rather than a pass: a comparison against stale data is
+    # not a result in either direction.
+    _sch = os.path.join(os.path.dirname(os.path.dirname(path)), stem + ".kicad_sch")
+    if os.path.exists(_sch) and os.path.getmtime(path) < os.path.getmtime(_sch) - 1:
+        import datetime as _dt
+        _f = lambda t: _dt.datetime.fromtimestamp(t).strftime("%d %b %H:%M")
+        print("STALE netlist for %s: %s is from %s and its schematic is from %s. Regenerate it (gen_sch then "
+              "build_sch) before trusting any contract that names this board."
+              % (stem, os.path.relpath(path, ECAD), _f(os.path.getmtime(path)), _f(os.path.getmtime(_sch))))
+        return None, None
     txt = open(path, encoding="utf-8", errors="replace").read()
     by_net, by_pin = {}, {}
     for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\n    \(net |\n  \)\n)', txt, re.S):
