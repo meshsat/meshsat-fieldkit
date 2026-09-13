@@ -6380,3 +6380,26 @@ P3 1 net and 5 mm, E5 none. Most of the short ones are escape stubs and pad entr
 the 2 mm floor is what separates those from a rail running narrow. **The first version of this measurement
 reported zero on every board because its regex matched nothing**, which is the reminder that a clean result from
 a parser is worth nothing until the parser is shown to have parsed.
+
+### 32.159 Owner ruling 9's class is wider than 191 of the 230 pads it has to reach (13 September 2026, 04:05 CEST; MESHSAT-862)
+
+The ruling says "widen D's PWR class to 1.2 mm **on the inner layers**". A KiCad net class carries one track
+width for every layer, so it was applied everywhere, and on the outer layers that is the whole problem.
+
+| D, class PWR at 1.200 mm | pads on the class's nets | narrower than the class | narrowest |
+|---|---:|---:|---|
+| | 230 | **191, on 124 parts** | 0.25 mm |
+
+A track wider than the pad it leaves spills past the pad edges. **All nine hard violations of the 1.2 mm arm
+sit at ONE place**, D2's SOD-123 relay diode with 0.90 mm pads: `/RLY_K` against `/+3V3_D8` on B.Cu at
+(81, 106), six `shorting_items`, two `clearance` at 0.0986 and 0.0779 mm against the class's own 0.127 mm, and
+one mask bridge. One of the eleven opens is `/+5V_D8` at U1, a SOT-23-5 whose two `+5V_D8` pads straddle GND at
+0.95 mm pitch with 0.60 mm pads: two 1.2 mm tracks cannot be 0.95 mm apart at any clearance.
+
+**So the packer-gap arm was the wrong lever and the pad measurement would have said so in ten seconds.**
+Moving a SOT-23-5 does not widen its pads; on 83 percent of this rail's pads the class width does not fit the
+land, whatever the floor plan. The inner layers, where the ruling actually put the 1.2 mm, have no pads at all.
+
+The implementation that matches the ruling as written is the class back at 0.5 mm with the rail carried at
+1.2 mm in locked inner copper, which is `power_copper.py` and board A's pattern. That is option C of the first
+reading and the owner said it would be a new ruling, so it is asked for in the decisions file with this number.

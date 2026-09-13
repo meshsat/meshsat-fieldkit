@@ -767,3 +767,42 @@ are in the tool and in a rule that fails if the sign is ever claimed the other w
 
 **My recommendation is A for A24's VBAT specifically, and B or C for the rest**, because 8.2x is a different
 kind of number from 1.01x and only the first four rows are clearly worth a re-cut.
+
+## Decision 9, third reading: the 1.2 mm class is wider than 191 of the 230 pads it has to reach (measured 13 September 2026, 04:05 CEST)
+
+**Your ruling says "widen D's PWR class to 1.2 mm ON THE INNER LAYERS". The class carries ONE width for every
+layer, so it was applied everywhere, and on the outer layers that is the whole problem.**
+
+| D, class PWR at 1.200 mm | pads on the class's nets | narrower than the class | narrowest |
+|---|---:|---:|---|
+| | **230** | **191, on 124 parts** | **0.25 mm** |
+
+A track wider than the pad it leaves spills past the pad edges, and that is precisely what the nine hard
+violations are. All nine sit at ONE place, D2's relay diode: `/RLY_K` and `/+3V3_D8` on B.Cu at (81, 106),
+six `shorting_items`, two `clearance` at 0.0986 and 0.0779 mm against the class's own 0.127, and one mask
+bridge. D2 is a SOD-123 with **0.90 mm pads**. U1, a SOT-23-5 whose `/+5V_D8` sits on pads 1 and 3 with GND
+between them at **0.95 mm pitch and 0.60 mm pads**, accounts for one of the opens: two 1.2 mm tracks cannot be
+0.95 mm apart at any clearance.
+
+**So "rearrange D's parts" cannot close this, and that is why the packer-gap arm failed.** Moving a SOT-23-5
+does not widen its pads. On 83 percent of this rail's pads the class width does not fit the land it has to
+land on, whatever the floor plan.
+
+**The inner layers have no pads at all, only vias.** Your ruling as written has no conflict anywhere: the
+1.2 mm belongs where you put it, and the outer layers need 0.30 mm for 1 A at 1 oz and had 0.5 mm already.
+
+**What it takes to implement it as written.** A KiCad net class has one track width, and Freerouting takes that
+one number from the DSN, so per-layer width is not expressible as a class. The rail is carried at 1.2 mm on the
+inner layers as locked pre-routed copper, which is `power_copper.py`, board A's pattern, with the class left at
+0.5 mm so the router can still reach a 0.25 mm pad. **That is option C of the first reading, which you said
+stays available and would be a new ruling. This is me asking for that ruling, with the number that forces it.**
+
+| option | what happens | cost |
+|---|---|---|
+| **C (recommended now): class back to 0.5 mm, the rail carried at 1.2 mm in locked inner copper** | your ruling implemented where you actually put it, and the router keeps a width that fits a 0.25 mm pad | a day on D with `power_copper.py` already written; D's deliverable waits for it |
+| A (the standing ruling): keep 1.2 mm on every layer and rearrange parts | cannot work: 191 of 230 pads are narrower than the class and a floor plan does not change a pad | the half day would be spent and the nine violations would still be there |
+| B: 1.2 mm class with a taper at every pad | the tool would have to lay a pad-width stub and widen away from it, for 191 pads | new work in `escape.py` for wide classes, and 191 tapers is a lot of copper nobody has checked |
+
+**What I got wrong:** I read the standing ruling as a floor-plan problem and spent a packer-gap arm on it before
+measuring the pads. The pad measurement takes ten seconds and would have said the floor plan was the wrong
+lever. The arm is on the record with its numbers either way.
