@@ -27,6 +27,15 @@ def main(a):
     import pcbnew
     b = pcbnew.LoadBoard(path)
     zones = [z for z in b.Zones() if not z.GetIsRuleArea()]
+    # AN UNFILLED BOARD IS NOT AN ANSWER (13 September 2026). Every judgement here is "the fill no longer
+    # covers this via", so on a board whose zones carry no fill EVERY locked via reads as abandoned: a dry run
+    # on A26's post-gate board offered to remove 366 of its 660. The finish refills before calling this, so the
+    # case never arose there; the tool refuses it now rather than relying on its caller's order.
+    if zones and not any(z.GetFilledArea() > 0 for z in zones):
+        print("stitch_prune: the board's %d zone(s) carry no fill, so 'the fill no longer covers it' cannot be "
+              "asked of any via: refill the board first (nothing removed)" % len(zones))
+        return verdict.write("stitch_prune", verdict.INCONCLUSIVE, denominator=0, inputs={"board": path},
+                             note="no zone on this board is filled, so no via could be judged")
     tracks = list(b.GetTracks())
     vias = [t for t in tracks if t.Type() == pcbnew.PCB_VIA_T]
     segs = [t for t in tracks if t.GetClass() == "PCB_TRACK"]
