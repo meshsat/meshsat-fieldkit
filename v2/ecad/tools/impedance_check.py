@@ -81,13 +81,41 @@ def calibrated(mode, w, s, h, er, closed, length=0.0):
     CAL_USED["stripline factor (two solved points)"] += length; return closed * STRIPLINE_FACTOR, "stripline factor"
 
 def read_stackup(path):
-    """[(name, kind, thickness_mm, er)] from the (stackup ...) block written by stackup_write.py; copper layers carry kind 'copper'."""
-    s = open(path, encoding="utf-8").read(); m = re.search(r"\n[ \t]+\(stackup\n(.*?)\n[ \t]+\)\n", s, re.S)
-    if not m: return None
+    """[(name, kind, thickness_mm, er)] from the (stackup ...) block; copper layers carry kind 'copper'.
+
+    13 September 2026: THIS WAS PARSED LINE BY LINE and KiCad 9 saves the block with every field on its own
+    line, so a board that has been through `SaveBoard` matched nothing and the reader returned an empty
+    stackup. Nothing said so: `dc_drop` then fell back to 0.035 mm outer and `impedance_check` to whatever a
+    missing geometry gives. On the 1 oz boards the fallback happens to equal the declared value and nothing
+    showed; on P3, which owner ruling 7 orders at 2 oz, a REGENERATED board was judged at half its copper and
+    read 0 of 3 rails MET where the committed one, still carrying the older one-line form, read 2 of 3.
+    It reads the block by brackets now, so both forms give the same answer.
+    """
+    s = open(path, encoding="utf-8").read()
+    i = s.find("(stackup")
+    if i < 0: return None
+    d = 0; j = i
+    while j < len(s):
+        if s[j] == "(": d += 1
+        elif s[j] == ")":
+            d -= 1
+            if d == 0: break
+        j += 1
+    blk = s[i:j + 1]
     out = []
-    for line in m.group(1).splitlines():
-        mm = re.match(r'\s*\(layer "([^"]+)" \(type "([^"]+)"\)(?: \(thickness ([0-9.]+)\))?(?: \(material "[^"]*"\))?(?: \(epsilon_r ([0-9.]+)\))?', line)
-        if mm and mm.group(2) in ("copper", "prepreg", "core"): out.append((mm.group(1), mm.group(2), float(mm.group(3) or 0), float(mm.group(4)) if mm.group(4) else None))   # no default epsilon: a dielectric without one is refused
+    for m in re.finditer(r'\(layer\s+"([^"]+)"', blk):
+        k = m.end(); dd = 1; e = k
+        while e < len(blk) and dd:          # the layer's own sub-block, however it is broken across lines
+            if blk[e] == "(": dd += 1
+            elif blk[e] == ")": dd -= 1
+            e += 1
+        body = blk[m.start():e]
+        kind = re.search(r'\(type\s+"([^"]+)"\)', body)
+        if not kind or kind.group(1) not in ("copper", "prepreg", "core"): continue
+        th = re.search(r'\(thickness\s+([0-9.]+)', body)
+        er = re.search(r'\(epsilon_r\s+([0-9.]+)', body)
+        out.append((m.group(1), kind.group(1), float(th.group(1)) if th else 0.0,
+                    float(er.group(1)) if er else None))   # no default epsilon: a dielectric without one is refused
     return out
 
 def geometry(stack, layer):
