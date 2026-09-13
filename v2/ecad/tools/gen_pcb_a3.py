@@ -286,8 +286,14 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
 pa = "+13V8_PA"; pr = pads_rect(net_pads(pa, ["R55", "C65", "C66", "C67"]), 1.2, 1.0)
 PC.island(pa, "PA rail head", rect_pts((pr[0], pr[1], pr[2] + 2.5, pr[3])), pcbnew.F_Cu, priority=3)
 jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
-PC.union(pa, "PA rail", [(pr[2] - 0.5, -13.75, 106.25, -9.25), (101.75, -13.75, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin
-col(pa, pr[2] + 1.3, -12.6, -10.4, 2)                                         # two vias in the head island, in the band
+# 13 September 2026: the east run was 4.5 mm, which IPC gives 7.12 A against this rail's 6.0, and the cell
+# measure still read 175.5 A/mm2 at (93.2, -12.2) with nothing of another net within 2.8 mm: the current is
+# not spread across the band, it hugs one edge between the head island and the turn. It is 7.0 mm now, and
+# the head island gains a third stitch via so the current enters the band over a front rather than at a
+# point (32.164: a cell at a via is a funnel). A via further along the run would stand on B.Cu alone, and
+# `cleanup_dangling` removes a via whose other end touches nothing.
+PC.union(pa, "PA rail", [(pr[2] - 0.5, -15.0, 106.25, -8.0), (101.75, -15.0, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin
+col(pa, pr[2] + 1.3, -13.4, -9.6, 3)                                          # three vias in the head island, in the band: a via mid-run has no F.Cu copper at its other end and cleanup_dangling would take it
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
 # THE DIVE'S LAYER FOLLOWS THE BOARD (12 September 2026, owner ruling 2: test board A at four layers against six).
 # It was the literal In3, which a four-layer A does not have, so a four-layer A could not be GENERATED at all and
@@ -328,11 +334,58 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
     # an L: a via column west of the pin row (the other pins would slice a rectangle to 48 percent fill, 32.69) and a finger into the pin's pad
     PC.island(vb, "VBAT in S%s" % n, [(ur[0] - 2.6, 40.0), (ur[0] - 0.6, 40.0), (ur[0] - 0.6, ur[1]), (ur[2], ur[1]), (ur[2], ur[3]), (ur[0] - 2.6, ur[3])], pcbnew.F_Cu, priority=3)
     col(vb, ur[0] - 1.6, 41.0, 43.6, 3)
+# THE In2 PLANE IS A CONDUCTOR AND THE ROUTER WAS CUTTING IT (13 September 2026, appendix 32.164). VBAT's
+# worst cell read 428 A/mm2 against 52 at (-58.3, 0.8) in the case frame, with `+3V3` 0.62 mm away and
+# `/PA_HDRV1` 1.01 mm away: two signal tracks the router laid ACROSS the plane, leaving an isthmus about
+# 1.5 mm wide, which IPC gives 1.02 A, carrying about 3.7 A. This board's own rule since 32.39 is that every
+# band carries a track keep-out on its layer with vias allowed, and the plane that carries 51 percent of a
+# 10 A rail had none. The keep-out is the neighbourhood of the neck rather than the whole plane, because an
+# In1 keep-out over a whole layer left A19 with 83 unrouted nets and that lesson is in section 8.
+PC.keepout("keep tracks off the VBAT In2 plane at the neck", (-70.0, -11.0, -46.0, 13.0), pcbnew.In2_Cu)
 qr = pads_rect(net_pads(vb, ["Q11", "C63", "C64"]), 1.0)
 PC.island(vb, "VBAT PA head", rect_pts((qr[0] - 3.5, min(qr[1], -12.0), qr[2], qr[3])), pcbnew.F_Cu, priority=3)
 col(vb, qr[0] - 1.9, -11.6, -8.4, 2)
+# 5. VBUS20, the 20 V charge bus: IT HAD NO POWER COPPER (13 September 2026, appendix 32.164). The router
+# carried 4.91 A of its 6 on a 0.500 mm F.Cu track for 11.8 mm, ratio 3.39 against IPC, on a dog-leg west to
+# the feedback divider and back. The stage's output is R11's pad 2 (the ISNS shunt, not the controller U2:
+# naming U2 as the rail's source is what put 2.90 A through a 0.200 mm sense escape in the measurement
+# before this one). From R11 the current goes through the three output capacitors to R16, the charger's
+# input-current shunt. An island over those pads with a band of the same rectangle under it, which is the
+# slot rails' pattern, and a 3.0 mm run south to R16. IPC wants 3.56 mm at 6 A on one outer layer; F.Cu and
+# B.Cu together carry it with margin.
+vbs = "VBUS20"
+vbr = pads_rect(net_pads(vbs, ["R11", "C13", "C14", "C15"]), 1.4, 1.2)
+PC.island(vbs, "VBUS20 head", rect_pts(vbr), pcbnew.F_Cu, priority=3)
+PC.band(vbs, "VBUS20 head", vbr, (pcbnew.B_Cu,), priority=2)
+row(vbs, vbr[0] + 2.2, vbr[2] - 2.2, (vbr[1] + vbr[3]) / 2, 5)                 # five stitch vias along the head, so the two layers share the current over a front
+_r16 = pads_rect(net_pads(vbs, ["R16"]), 1.2, 1.2); _r16x = (_r16[0] + _r16[2]) / 2
+PC.rail_run(vbs, "VBUS20 to the input shunt", (_r16x, vbr[1] + 0.5), (_r16x, _r16[3] - 0.5), 3.0, (pcbnew.B_Cu,))
+# 6. +12V_HF: ALSO NO POWER COPPER, and the whole rail travelled 75.6 mm on one 0.400 mm In3 track, which
+# IPC gives 0.37 A against the rail's 1.0. That is not a marginal number: solving I = k dT^0.44 A^0.725 for
+# the rise gives about 93 K on that track. The band follows the corridor the ROUTER found, which is the
+# proof that the space is free: the caps east, north past the mezzanine, east under the PA band and north
+# into J_HF. It goes on In3, which on a six-layer A is a pure routing layer with no plane on it.
+# ON FOUR LAYERS THERE IS NO In3, and the only layers left are In2, where a 100 mm band would cut the east
+# GND plane, and B.Cu, where it would cross the PA rail's band (two bands of different nets never cross on
+# one layer, 32.39). So the four-layer board is generated WITHOUT this copper and says so: its +12V_HF will
+# read MISSED, and that is a true cost of four layers for the layer P0 to carry, not something to hide.
+hf = "+12V_HF"
+hfr = pads_rect(net_pads(hf, ["R65", "C109", "C110", "C111"]), 1.2, 1.2)
+PC.island(hf, "HF rail head", rect_pts(hfr), pcbnew.F_Cu, priority=3)
+if NL_CU >= 6:
+    _jh = pads_rect(net_pads(hf, ["J_HF"]), 0.8)
+    PC.union(hf, "HF rail", [(hfr[0], hfr[1] - 0.5, hfr[2] + 2.0, hfr[3]),      # the head, over the shunt and the caps
+                             (hfr[2] - 2.0, -9.0, hfr[2] + 2.0, hfr[3]),        # north out of the head
+                             (hfr[2] - 2.0, -9.0, 102.0, -5.0),                 # east under the PA band's own run, on another layer
+                             (98.0, -9.0, 102.0, _jh[3]),                        # north past J_54V, west of the PA band's north run
+                             (98.0, _jh[1], _jh[2], _jh[3])],                    # east into J_HF
+             pcbnew.In3_Cu, priority=2)
+    col(hf, hfr[2] - 0.6, hfr[1] + 1.0, hfr[3] - 1.0, 3)                         # the head island to the band
+    row(hf, _jh[0] + 1.0, _jh[2] - 1.0, (_jh[1] + _jh[3]) / 2, 3)                # and at the connector
+else:
+    print("placement: +12V_HF gets NO power copper on a %d layer board (In3 does not exist; In2 would cut the east GND plane and B.Cu would cross the PA band). Its density will read MISSED, which is a real cost of four layers." % NL_CU)
 # every pad of a rail net joins its pour solid (no thermal spokes): a through-hole pin's four spokes are the neck of an 8 A path, and the mesh judge sees them as no connection
-RAIL_NETS = {"VBAT", "CELL+", "VIN_RAW", "+5V_S1", "+5V_S2", "+5V_S3", "+5V_DEV", "+13V8_PA", "S1_OUT", "S2_OUT", "S3_OUT", "SD_OUT"}
+RAIL_NETS = {"VBAT", "CELL+", "VIN_RAW", "+5V_S1", "+5V_S2", "+5V_S3", "+5V_DEV", "+13V8_PA", "S1_OUT", "S2_OUT", "S3_OUT", "SD_OUT", "VBUS20", "+12V_HF"}
 _solid = 0
 for fp in board.GetFootprints():
     for pd in fp.Pads():
