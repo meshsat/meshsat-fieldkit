@@ -212,6 +212,31 @@ z = pcbnew.ZONE(board); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.Se
 z.SetLayer(pcbnew.In1_Cu); z.SetZoneName("In1 solid ground: no tracks"); o = z.Outline(); o.NewOutline()
 for x, y in ((-51, -41), (51, -41), (51, 41), (-51, 41)): p_ = P(x, y); o.Append(p_.x, p_.y)
 board.Add(z)
+# ------------------------------------------------------------------ OWNER RULING 15 (13 September 2026)
+# "The PWR class goes back to 0.5 mm and the rail is carried at 1.2 mm on the INNER layers as locked
+# pre-routed copper, board A's power_copper.py pattern. This is ruling 9 implemented where it was actually
+# put." Ruling 9 asked for the width on the inner layers, and a KiCad class carries one width for EVERY
+# layer, so as a class it put 1.2 mm tracks on pads narrower than that: 191 of the 230 pads on these nets, on
+# 124 parts, the narrowest 0.25 mm, and the nine hard items of that arm all sat at one SOD-123 with 0.90 mm
+# pads. As locked copper it goes exactly where it was meant to and touches no pad's width.
+#
+# WHERE THE CURRENT ACTUALLY GOES, from the rail's own declared loads rather than from its total: the source
+# is J_PWR1 at (-42.55, -17.76) and the load is 1.0 A, but it divides at once. FB1 takes 0.50 A and U1 0.25,
+# both in the north-west corner; U6, J_USB3, U7, U3 and U15 take 0.25 A between them across the whole east
+# half. So the TRUNK carries 1.0 A and the west branch 0.75, while the east branch's 0.25 A is inside what
+# the 0.5 mm class carries (0.44 A) and needs no locked copper at all. On 0.5 oz inner copper IPC-2221 gives
+# 1.7 mm 1.06 A and 1.5 mm 0.97 A at a 10 K rise, so the trunk is 1.7 and the west branch 1.5.
+#
+# In1 is the solid ground plane and takes no tracks, so the inner layer this can go on is In2. The band is
+# declared BEFORE the ground pours, which fill around it at their own priority 0.
+from power_copper import PowerCopper as _PC
+_pc = _PC(board, net_for, P)
+_pc.union("+5V_D8", "+5V_D8 trunk In2", [(-43.4, -18.7, -41.7, 22.9),    # J_PWR1 north along the west edge, 1.7 mm
+                                         (-43.4, 21.4, -29.4, 22.9),      # east to FB1's pad and over U1's upper pad, 1.5 mm
+                                         (-36.3, 19.6, -34.6, 22.4)],     # the stub down to U1's lower pad
+          pcbnew.In2_Cu, priority=2, min_width=0.25, clearance=0.15)
+_pc.stitch("+5V_D8", [(-31.4, 22.15), (-34.9, 22.15), (-35.46, 20.1)])    # one via per load pad, beside it and inside the band
+print("D11 power copper: the +5V_D8 trunk and west branch on In2, %d zone(s) and keep-out(s)" % len(_pc.made))
 for L in (pcbnew.In2_Cu, pcbnew.F_Cu, pcbnew.B_Cu): pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-50, -40, 50, 40), priority=0)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
@@ -226,7 +251,7 @@ try:
     # 1 A with margin. The board is re-routed and its deliverable re-cut; the alternative considered and not
     # taken was accepting five millivolts over budget on the grounds that the radio only draws it while
     # transmitting, which is a coherent position on a duty-cycled rail and not one to buy boards on.
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 1.2, 0.8, 0.4); ns.SetNetclass("PWR", nc)
+    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)   # ruling 15: back to 0.5 mm, the rail is in locked inner copper below
     nr = pcbnew.NETCLASS("RF"); cls(nr, 0.3, 0.35, 0.6, 0.3); ns.SetNetclass("RF", nr)
     nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2)); ns.SetNetclass("USB", nu)   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
@@ -239,7 +264,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.3, diff_pair_gap=0.2)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 1.2, 0.8, 0.4), C("RF", 1, 0.3, 0.35, 0.6, 0.3), C("USB", 2, 0.127, 0.3, 0.6, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.5, 0.8, 0.4), C("RF", 1, 0.3, 0.35, 0.6, 0.3), C("USB", 2, 0.127, 0.3, 0.6, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
     # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern
