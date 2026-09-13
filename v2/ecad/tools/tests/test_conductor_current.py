@@ -131,3 +131,27 @@ def t_a_pour_cell_is_full_copper_even_where_a_track_crosses_it():
         "the conductor pass still judges a track stretch that lies inside a pour of its own net"
     i = src.find("zone_occ[L] |= occ[L]")
     assert i > 0, "the zone mask is never filled from the zone raster"
+
+
+def t_a_via_is_judged_on_its_own_barrel_and_not_on_the_cell_it_funnels_through():
+    """Measured on two boards in opposite directions. On all twelve of A24's rails the worst pour cell is
+    clear of every via. On E7's VIN_RAW it IS a via: the cell reads 2.20 while the barrel carrying that
+    current sits at 0.79 of its own limit, and the worst cell clear of vias reads 1.21. A cell at a barrel is
+    a spreading region a millimetre across, not a conductor at thermal steady state."""
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    assert "net_vias.append" in src, "the barrels of a net are not collected"
+    assert "via_worst" in src and "ipc_limit(vwall, dT, True)" in src, "no barrel is judged on its own wall cross-section"
+    assert "via_ratio <= 1.0" in src, "the via ratio does not reach the verdict"
+    assert "zone_ratio = (czone_j / jl)" in src, "the pour is still gated on a cell that may be a via's funnel"
+    assert 'max(cond_ratio, zone_ratio, via_ratio)' in src, "the reported ratio does not carry the via"
+
+
+def t_the_barrel_limit_uses_the_wall_and_not_the_hole():
+    """pi * d * plating is the copper, and the hole is not copper. A 0.4 mm drill at 25 um plating is
+    0.0314 mm2 of wall, which IPC gives about 1.1 A: the number E7's worst barrel was judged against."""
+    import math
+    wall = math.pi * 0.4 * 25e-6 * 1e3
+    assert abs(wall - 0.0314) < 0.0005, "the barrel wall arithmetic moved: %.4f" % wall
+    a_mil2 = wall / (0.0254 ** 2)
+    amps = 0.024 * (10.0 ** 0.44) * (a_mil2 ** 0.725)
+    assert 0.9 < amps < 1.4, "a 0.4 mm barrel should carry about 1.1 A at 10 K, got %.2f" % amps
