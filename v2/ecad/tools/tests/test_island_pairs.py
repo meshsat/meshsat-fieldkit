@@ -93,3 +93,15 @@ def t_a_via_and_a_track_end_at_one_point_are_one_point():
         assert j > 0, "the candidate builder moved: %s" % anchor
         near = DC[max(0, j - 400):j + 200]
         assert "layers_at(" in near, "a candidate is still built from one piece's own layer list: %s" % anchor
+
+
+def t_the_ladder_has_a_wall_clock_budget():
+    """Every shape costs a full board DRC. A27 had two opens and the island ladder was minutes; A29's route
+    left twelve, and twelve opens times eight island pairs times up to twenty shapes is thousands of DRC
+    runs on a six-layer board that takes the better part of a minute each."""
+    assert 'BUDGET_S = float(opt("budget-s"' in DC, "there is no budget at all"
+    assert "--budget-s" in DC.split('"""')[1], "the budget is not in the usage line"
+    i = DC.find("def _try(")
+    body = DC[i:i + 1400]
+    assert "time.time() - T0 > BUDGET_S" in body, "the budget is not checked between shapes"
+    assert "of a %.0f s budget" in DC, "the run does not say what it spent"

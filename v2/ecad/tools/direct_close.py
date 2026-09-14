@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""direct_close.py <board.kicad_pcb> <drc.json> [--max=4.0] [--width=0] [--via=0.45/0.25] [--layers=In2.Cu,In3.Cu] [--island-tries=8] [--dry]
+"""direct_close.py <board.kicad_pcb> <drc.json> [--max=4.0] [--width=0] [--via=0.45/0.25] [--layers=In2.Cu,In3.Cu] [--island-tries=8] [--budget-s=1800] [--dry]
 
 The closure the router stopped short of, proposed as geometry and judged by the DRC (12 September 2026, MESHSAT-862).
 
@@ -33,7 +33,7 @@ apart on an empty back side. Further but legal beats closer but illegal, which w
 at a walled-in pad and was simply never applied to the pairing itself.
 
 Prints one line per open with what it tried and what happened, and `direct_close: N closed of M`."""
-import sys, os, re, json, math, subprocess, collections
+import sys, os, re, json, math, time, subprocess, collections
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pcbnew, hardset
 from verdict import write as verdict_write
@@ -197,6 +197,14 @@ def main(argv):
     opt = lambda k, d: next((a.split("=", 1)[1] for a in argv if a.startswith("--%s=" % k)), d)
     MAXD = float(opt("max", "4.0")); WIDTH = float(opt("width", "0")); DRY = "--dry" in argv
     ISLAND_TRIES = int(opt("island-tries", "8"))   # how many further pairs of the two islands are offered
+    # 14 September 2026: A BUDGET, BECAUSE EVERY SHAPE COSTS A FULL BOARD DRC. A27 had two opens and the island
+    # ladder was minutes; A29's route left twelve, and twelve opens times eight island pairs times up to twenty
+    # shapes is thousands of DRC runs on a six-layer board that takes the better part of a minute each. The
+    # finish would sit in this tool for a day. The budget is wall clock because that is what is being spent,
+    # it is checked between shapes so a trial in flight always finishes, and what it has already closed is
+    # kept: this tool writes each accepted closure to the board as it goes.
+    BUDGET_S = float(opt("budget-s", "1800"))
+    T0 = time.time()
     VD, VDR = (float(v) for v in opt("via", "0.45/0.25").split("/"))
     DETOUR = [x for x in opt("layers", "").split(",") if x]   # free layers to try a two-via detour on
     work = os.path.splitext(bp)[0] + "-close-drc.json"
@@ -330,6 +338,9 @@ def main(argv):
             about to throw away, which is also why it can afford to offer eight more pairs than it used to."""
             nonlocal H0, U0, D0
             for name, pts in shape_list:
+                if time.time() - T0 > BUDGET_S:
+                    whys.append("      the budget of %.0f s ran out before %s" % (BUDGET_S, name))
+                    return None
                 spec = {"net": net, "width": WIDTH, "via": [VD, VDR],
                         "pts": [[int(lp), int(p.x), int(p.y)] for lp, p in pts]}
                 r_ = subprocess.run([sys.executable, os.path.abspath(__file__), "--lay", bp, trial, json.dumps(spec)],
@@ -418,9 +429,11 @@ def main(argv):
             rows.append({"net": net, "result": "refused", "gap_mm": round(gap, 3), "from": A[3], "to": B[3]})
     for f in (trial, os.path.splitext(trial)[0] + ".kicad_pro"):
         if os.path.exists(f): os.remove(f)
-    print("direct_close: %d closed of %d tried (%d open pair(s) named by the DRC)" % (closed, tried, len(pairs)))
+    _spent = time.time() - T0
+    print("direct_close: %d closed of %d tried (%d open pair(s) named by the DRC), %.0f s of a %.0f s budget"
+          % (closed, tried, len(pairs), _spent, BUDGET_S))
     verdict_write("direct_close", "PASS", counts={"closed": closed, "tried": tried, "open_pairs": len(pairs)},
-                  denominator=len(pairs), note="a closure the router stopped short of, proposed as geometry and judged by the DRC",
+                  denominator=len(pairs), note="a closure the router stopped short of, proposed as geometry and judged by the DRC (%.0f s of a %.0f s budget)" % (_spent, BUDGET_S),
                   evidence=rows)
     return 0
 
