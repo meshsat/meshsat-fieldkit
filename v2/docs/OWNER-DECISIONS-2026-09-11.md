@@ -1035,3 +1035,52 @@ present outline.
 **Recommendation: 2, with 1 continuing underneath it.** The impedance gate reads back what was laid either
 way, so the number in the record stays true; what changes is the bar a pair must clear to ship. **Nothing is
 being weakened while this is open: B stays held, and the other six boards are unaffected.**
+
+## DECISION 25, OPEN: board A's USB_WALL pair is 1.47 mm apart and nothing in the tree can close it (14 September 2026, 07:55 CEST)
+
+**The gate.** Owner ruling 5 September 17:00: a differential pair over **1 mm** of intra-pair length mismatch
+blocks the chain, and the session never hands the stop to the owner. A24 met it (0.23, 0.13, 0.00 mm). A27
+does not: after the density copper of 32.172 and 32.176 the same three pairs come out at
+
+| pair | P | N | apart |
+|---|---:|---:|---:|
+| USB_D8 | 140.29 | 138.52 | **1.78 mm** at the old corridor slack; **inside 0.5 mm** at the new one, so it is answered |
+| USB_WALL | 36.04 | 37.51 | **1.47 mm**, at both slacks |
+| USB_E6 | matched | | |
+
+**What was tried, in order, and what each said.**
+
+1. **`meander.py`**, the tool written for this in September: it placed nothing, three rounds running, because a
+   pair the pre-router lays end to end has **no unlocked copper** and this tool only ever touched unlocked
+   track. It is given the locked copper now (`MEANDER_LOCKED`, guarded by the DRC as before) and still places
+   nothing.
+2. **A length matcher in the pre-router itself** (`PAIR_LEG_MATCH`, new today): it measures the whole net, not
+   just what the pass laid, because **the mismatch is half in the escape stubs** (0.61 mm) and half in the
+   corridor run (1.17 mm). It proposes bumps on the short leg's own copper, on the side the partner is not on,
+   and every one is judged before it exists. On A **every bump is refused by the leg's own map**: A's pair
+   corridors have no free copper beside them. The tool names that refusal rather than saying "no room".
+3. **A wider corridor** (slack 0.30 against the default): the same 3 of 3 pairs, and **USB_D8 falls inside
+   half a millimetre by itself**, which is the fix for that pair and is declared in `boards/a.json`.
+   USB_WALL does not move: 23 of its 36 mm sit within 2 mm of a pad, in the wall connector's own fan, where
+   nothing is free.
+
+**What 1.47 mm is, electrically.** USB_WALL is a USB 2.0 pair at 480 Mbit/s. 1.47 mm of FR-4 is about **10
+picoseconds**, against a unit interval of 2,083 ps and a USB 2.0 intra-pair skew budget of 100 ps. It is a
+number this project's own gate refuses and the standard does not.
+
+**Three options.**
+
+1. **Raise the gate for the USB class only**, to 3 mm, with the timing argument above written into the rule.
+   The 90 and 100 ohm DIFF100 classes keep 1 mm. Cost: one line in the gate and a sentence in the record;
+   board A ships.
+2. **Equalise the escapes** (`escape.py` gives a pair's two pads the same escape length on coarse-pitch parts).
+   It is the honest structural fix for the 0.61 mm half, it does not touch the fine-pitch rows where the
+   record already refused this on measurement, and it changes a tool every board uses: a day with its own
+   measurements on all seven.
+3. **Keep routing A** and hope a route lands inside 1 mm. Three rounds today did not; the mismatch is
+   geometry this pass reproduces exactly, so this is the option with the least evidence behind it.
+
+**Recommendation: 1, with 2 done afterwards on its own merits.** Nothing about the board changes under option
+1; what changes is the bar, and the bar is currently stricter than the standard by a factor of ten.
+**A is otherwise finished**: 0 hard, one connection open at the last count, every rail measured on the fill it
+is cut with, and its copper answers all four density findings.
