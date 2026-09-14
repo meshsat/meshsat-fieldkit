@@ -285,10 +285,19 @@ def main(argv):
                       (pre + "hop, L via x", [(La, a_[1]), (La, pcbnew.VECTOR2I(b_[1].x, a_[1].y)), (La, b_[1]), (Lb, b_[1])]),
                       (pre + "hop, L via y", [(La, a_[1]), (La, pcbnew.VECTOR2I(a_[1].x, b_[1].y)), (La, b_[1]), (Lb, b_[1])])]
                 return sh, La
+            # EVERY LAYER THE TWO ANCHORS SHARE, not just the first of them (14 September 2026, A27's /VBUS20).
+            # Both anchors of its cheapest island pair are THROUGH VIAS, so every copper layer is common, and
+            # the tool laid the run on `cm_[0]`, which is F.Cu: straight back through the pad row of the QFN
+            # that refused it in the first place. The back side of this board carries under six percent of its
+            # copper. A shared layer that is never tried is not a shared layer.
             L_ = cm_[0] if len(cm_) == 1 else (a_[2][0] if a_[2][0] in cm_ else cm_[0])
-            sh = [(pre + "direct", [(L_, a_[1]), (L_, b_[1])]),
-                  (pre + "L via x", [(L_, a_[1]), (L_, pcbnew.VECTOR2I(b_[1].x, a_[1].y)), (L_, b_[1])]),
-                  (pre + "L via y", [(L_, a_[1]), (L_, pcbnew.VECTOR2I(a_[1].x, b_[1].y)), (L_, b_[1])])]
+            order = [L_] + [l for l in cm_ if l != L_]
+            sh = []
+            for Lc in order:
+                tg = pre + ("" if Lc == L_ else "on %s, " % b.GetLayerName(Lc))
+                sh += [(tg + "direct", [(Lc, a_[1]), (Lc, b_[1])]),
+                       (tg + "L via x", [(Lc, a_[1]), (Lc, pcbnew.VECTOR2I(b_[1].x, a_[1].y)), (Lc, b_[1])]),
+                       (tg + "L via y", [(Lc, a_[1]), (Lc, pcbnew.VECTOR2I(a_[1].x, b_[1].y)), (Lc, b_[1])])]
             for Ld in [b.GetLayerID(x) for x in DETOUR if b.GetLayerID(x) >= 0 and b.GetLayerID(x) != L_]:
                 f = min(0.6 / g_, 0.33) if g_ > 0 else 0.33
                 a1 = pcbnew.VECTOR2I(int(a_[1].x + (b_[1].x - a_[1].x) * f), int(a_[1].y + (b_[1].y - a_[1].y) * f))
