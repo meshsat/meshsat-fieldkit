@@ -30,8 +30,13 @@ def t_an_unjudgeable_contract_check_is_not_a_failure():
 
 
 def t_it_opens_no_board_and_touches_no_host():
-    for bad in ("pcbnew", "ssh ", "route_one", "freerouting"):
+    # the IMPORT, not the word: the first version of this rule failed on its own docstring
+    for bad in ("import pcbnew", "ssh ", "route_one", "freerouting"):
         assert bad not in SRC, "final_gate should read artefacts only, found %r" % bad
+
+
+def t_it_does_not_pick_a_board_by_globbing():
+    assert "*.kicad_pcb" not in SRC, "the stem must come from the gerber zip's name, not from a board glob"
 
 
 def t_the_summary_line_comes_from_the_gate_itself():
