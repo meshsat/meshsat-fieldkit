@@ -43,7 +43,7 @@
   "stub_env": "STUB_WIN_SCALE=25 STUB_GRID=0.2 STUB_MAXN=80000000",
   "_stub_env_why": "14 September 2026, C11. The board routes to THREE opens and the stub router closes two of them; the one it refuses is `/EPD_SDA`, 249 mm from J_EPD pin 14 to U3 pad 5, both ends already escaped to vias. That is not a closure the default window can even see: the stub search is given a box around the two ends, and at the default scale a quarter-metre connection across the whole panel is outside it. This is the A22 recipe of 7 September (HEAT_FLT and HEAT_EN closed at scale 25, a 0.2 mm grid and an 80 M node cap) applied to the board that now presents the same shape: a coarse grid is what makes a window that large affordable, and the panel is mostly empty copper, which is where a coarse grid is safe."
  },
- "phase": "C14",
+ "phase": "C15",
  "_phase_why": "12 September 2026: the phase is a fact about the board and it lived as a DEFAULT inside each generator, where gen_pcb_c.py still said C9 while the deliverable is C10, and full.sh set it for one board of six. A board's silk then names a phase `verify_deliverable` refuses, after the route, which is how A24 came to carry A18 on its front silk. `full.sh` exports this unless the caller has already set PHASE.",
  "prelay_nets": "/EPD_SDA",
  "prelay_layers": "F.Cu,In2.Cu,B.Cu",
