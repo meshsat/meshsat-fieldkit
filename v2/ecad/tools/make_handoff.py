@@ -127,7 +127,12 @@ if missing and os.environ.get("HANDOFF_ALLOW_MISSING") != "1":
 def _status(f, stem):
     return os.path.join(DL, QUOTE.get(f, f), stem + "-bom.status")
 blank = [f for f, stem, *_ in BOARDS if os.path.exists(_status(f, stem)) and open(_status(f, stem)).read().strip() != "OK"]
-nostatus = [f for f, stem, *_ in BOARDS if not os.path.exists(_status(f, stem))]
+# A BARE board has no BOM to check, so it cannot have a BOM status: E5 is the dock block, copper, holes and
+# twenty-one contact targets with not one part on it, and `verify_deliverable` is told the same thing by
+# `--bare`. Asking it for a status file is asking for a reading of a file that does not exist (14 Sept 2026).
+def _bare(f, stem):
+    return not os.path.exists(os.path.join(DL, QUOTE.get(f, f), stem + "-bom.csv"))
+nostatus = [f for f, stem, *_ in BOARDS if not os.path.exists(_status(f, stem)) and not _bare(f, stem)]
 if blank and os.environ.get("HANDOFF_ALLOW_BLANK") != "1":   # 8 Sep 2026 (MESHSAT-862): lcsc_fill's blank count used to be printed and read by nobody
     sys.exit("make_handoff: the BOM of %s carries LCSC blanks that no lcsc-allow.txt line explains (see <deliverable>/<stem>-bom.status).\n"
              "Fill the codes in tools/lcsc_fill.py or allow-list the bench-fitted lines with a reason, refinish, then rerun; HANDOFF_ALLOW_BLANK=1 only to build the set regardless." % ", ".join(blank))
