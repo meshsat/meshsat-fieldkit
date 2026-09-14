@@ -1128,3 +1128,41 @@ make it one. The router itself, given 45 passes and a via-cost remedy, does not 
 **Recommendation: 1, and 3 only if the schedule forces it.** C is otherwise finished, and the board is already
 laid out around a display window that leaves it one corridor: the next C phase should widen that corridor
 rather than keep asking the router for a lane that is not there.
+
+### DECISION 25 IS CLOSED AND NEEDS NOTHING FROM YOU (14 September 2026, 11:50 CEST)
+
+**The gate was never the problem and the 1 mm bar stands.** `meander.py` was refused by a condition in its own
+code, not by board A. `MEANDER_LOCKED`, written yesterday so that a pair the pre-router lays end to end can
+still be lengthened, was gated on the net having **no unlocked copper at all**. That was a hypothesis about
+what "laid end to end" means, and the board says otherwise: `/USB_D8_N` carries 12 segments totalling 138.54 mm
+of which **four are unlocked, at 0.03, 0.00, 0.00 and 0.00 mm**, the router's own zero-length junction pieces.
+Four pieces of nothing were enough to keep the branch shut, so three rounds of length matching chose between
+them and reported "could not place the last 1.78 mm".
+
+**Measured on A27's own board, all four legs read the same way:**
+
+| leg | unlocked, longest | locked, longest | windows found, before | after |
+|---|---:|---:|---:|---:|
+| USB_D8_N | 0.03 mm | 109.45 mm | 0 at every amplitude | 2 |
+| USB_D8_P | 0.02 mm | 109.63 mm | 0 | 2 |
+| USB_WALL_P | 2.27 mm | 8.33 mm | 0 | 2 |
+| USB_WALL_N | 2.27 mm | 8.87 mm | 0 | 3 |
+
+**With the locked copper offered alongside the unlocked, the gate passes on the board as cut**, in one round,
+with the DRC deciding as it always has:
+
+```
+meander: USB_D8_N +1.78 mm as 1 bump of 0.89 mm on F.Cu, 0.00 mm still to place
+meander: USB_WALL_P +1.50 mm as 1 bump of 0.75 mm on F.Cu, 0.00 mm still to place
+pair_match: every pair within 1 mm (round 2)
+PASS USB_D8 140.32 / 140.32 mm, 0.01 mm apart
+PASS USB_E6 200.25 / 200.38 mm, 0.13 mm apart
+PASS USB_WALL 39.50 / 39.50 mm, 0.00 mm apart
+hard 0, unrouted unchanged
+```
+
+**So no option is taken and no bar moves.** Option 1 (a 3 mm gate for the USB class) is withdrawn: the 1 mm
+ruling holds on every board and A meets it. Option 2 (equalising a pair's two escapes in `escape.py`) stays
+worth doing on its own merits and is not needed by any board today. What this cost is two hours and it is the
+second time this week that a tool reported a board's limit when it was reporting its own.
+
