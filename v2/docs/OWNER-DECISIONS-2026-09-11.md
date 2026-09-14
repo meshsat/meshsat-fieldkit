@@ -1129,7 +1129,7 @@ make it one. The router itself, given 45 passes and a via-cost remedy, does not 
 laid out around a display window that leaves it one corridor: the next C phase should widen that corridor
 rather than keep asking the router for a lane that is not there.
 
-### DECISION 25 IS CLOSED AND NEEDS NOTHING FROM YOU (14 September 2026, 11:50 CEST)
+### DECISION 25 IS CLOSED AND NEEDS NOTHING FROM YOU (14 September 2026, 12:05 CEST)
 
 **The gate was never the problem and the 1 mm bar stands.** `meander.py` was refused by a condition in its own
 code, not by board A. `MEANDER_LOCKED`, written yesterday so that a pair the pre-router lays end to end can
