@@ -224,7 +224,12 @@ plane(pcbnew.In1_Cu, "GND", "GND plane In1")
 NL_CU = board.GetCopperLayerCount()
 if NL_CU >= 6:
     plane(pcbnew.In4_Cu, "GND", "GND plane In4")   # A22 six layers (7 Sep 2026 10:10, appendix 32.61): In4 a second solid ground under B.Cu, In2 and In3 routable; four-layer runs left 4 to 11 opens in the converter zones
-plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (west and middle columns)", rect=(-117.5, -44, -2, 77.5))
+# 15 September 2026, MEASURED ON A30's CLOSED BOARD (32.191): the plane's south edge stood at y -44 and F1's pad
+# a few millimetres south of it, so the pack's current climbed a 0.500 mm In2 router track from the fuse into
+# the plane (ratio 2.25) in parallel with the B.Cu trunk, because that track is the shorter path. The plane
+# reaches the fuse now; the rail meets its plane where it is made, and a via field north of that is a second
+# route rather than the only one.
+plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (west and middle columns)", rect=(-117.5, -48.5, -2, 77.5))
 plane(pcbnew.In2_Cu, "GND", "GND plane In2 (east)", rect=(-2, -77.5, 117.5, 77.5))
 plane(pcbnew.In2_Cu, "GND", "GND island In2 under the blind-mate row", rect=(-60, -77.5, 110, -48), priority=1)
 def outer_pour(netname, name, rect, layers=(pcbnew.F_Cu, pcbnew.B_Cu), priority=2):
@@ -374,6 +379,11 @@ col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(
 # board carries 3.25 A through one 0.40 mm barrel at (-113.0, 64.7), which IPC rates at 1.11, and the worst
 # pour cell sits a millimetre from it at 171 A/mm2 against 82.7 (ratio 2.06): a cell at a via is a funnel,
 # and this one funnels the whole head. Six a row is 6.7 A each and the two rows together carry the rail.
+# 15 September 2026 (32.191): the router bridged the head to the front-end FET's escape via with an 8.7 mm
+# 0.500 mm track ON In2, which at that place is the VBAT plane. One track, two rails hurt: VIN_RAW at ratio
+# 2.54 in it, and a cut through VBAT's plane. The head's footprint on In2 is closed to tracks; the FET escapes
+# land on In3 or B.Cu, where VIN_RAW's own copper is.
+PC.keepout("keep tracks off the VBAT In2 plane under the VIN_RAW head", (fe[0] - 2.0, fe[1] - 2.0, fe[2] + 2.0, fe[3] + 2.0), pcbnew.In2_Cu)
 row(vr, -117.5, -112.5, fe[1] - 1.3, 6)
 row(vr, -116.0, -110.0, fe[3] - 3.0, 6)                                        # the head's north end, where the cell measure put the neck
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
@@ -468,8 +478,12 @@ PC.island(vbs, "VBUS20", _vbus_poly, pcbnew.F_Cu, priority=3)
 # so the second layer is bridging cuts rather than carrying the rail. On four layers there is no In3 and In2
 # is the VBAT plane, so the second layer is not drawn at all and the four-layer board says so.
 if NL_CU >= 6:
+    # 15 September 2026 (32.191): with keepout=False the router laid a 13.4 mm 0.500 mm In2 track from the pad
+    # row straight down to R16's own vias, and the solver put 3.4 A of the rail's 6 through it (ratio 8.61)
+    # because the F.Cu leg and this polygon were both cut where other nets cross. A keep-out on the DIVE layer
+    # forbids nobody's joins, there being no pad on it, and it is the rule every band has carried since 32.39.
     PC.union(vbs, "VBUS20 under", [(vbr[0], vbr[1], vbr[2], vbr[3]), (_r16x - _leg, _r16[1], _r16x + _leg, vbr[3])],
-             DIVE_CU, priority=2, keepout=False)
+             DIVE_CU, priority=2, keepout=True)
 else:
     print("placement: VBUS20 gets no second layer on a %d layer board (In3 does not exist, In2 is the VBAT plane and B.Cu is VBAT's trunk)" % NL_CU)
 _r11 = pads_rect(net_pads(vbs, ["R11"]), 0)
