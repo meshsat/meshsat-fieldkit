@@ -620,3 +620,23 @@ def t_both_routeflow_entry_points_ask_whether_it_is_one_tree():
         i = src.index(fn)
         body = src[i:src.index("\ndef ", i + 1)]
         assert "one_tree(" in body, "%s does not ask whether its tools and its board come from one tree" % fn.strip("def (")
+
+
+def t_the_cross_board_check_reads_the_declared_phase_directory():
+    """Forty-one directories match `pcb-b-compute*` on the box, every one an arm laid down to measure a
+    knob, and taking the NEWEST of them puts an arm's netlist into the one check that exists to compare
+    boards with each other. That is the wrong-tree defect of 32.153 in the cross-board gate.
+
+    The phase a board cuts is declared in boards/<letter>.json and the routeflow profile of that phase names
+    its project directory, so the directory is read rather than guessed. The glob stays as the fallback."""
+    import os
+    src = open(os.path.join(TOOLS, "check_contracts.py")).read()
+    assert "def netlist_path(" in src, "there is no one answer to which netlist a board's contract is read from"
+    body = src[src.find("def netlist_path("):src.find("def load(")]
+    assert '"boards"' in body and '"routeflow"' in body, (
+        "the netlist directory is not resolved from the declared phase and its profile")
+    for fn in ("def load(", "def _value_of("):
+        i = src.find(fn)
+        blk = src[i:i + 600]
+        assert "netlist_path(" in blk, "%s still finds its own netlist, so the two can disagree" % fn
+        assert "getmtime" not in blk, "%s still takes the newest directory that matches the stem" % fn
