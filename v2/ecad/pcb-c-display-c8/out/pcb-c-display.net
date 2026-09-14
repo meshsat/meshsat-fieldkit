@@ -1,7 +1,7 @@
 (export (version "E")
   (design
     (source "/root/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_sch")
-    (date "2026-09-11T13:33:53+0000")
+    (date "2026-09-14T05:13:35+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block
@@ -1295,15 +1295,15 @@
       (sheetpath (names "/") (tstamps "/"))
       (tstamps "77ce1d96-13a4-584d-8abe-6b9406334e08"))
     (comp (ref "Q6")
-      (value "Si1308EDL class N-FET (RDS under 200 mOhm, VGS 2.5 V): the boost switch on GDR")
+      (value "Si2302CDS-T1-GE3 logic-level N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VGS(th) 0.45 to 1.0 V, RDS 85 mOhm at VGS 2.5 V): the boost switch on GDR")
       (footprint "Package_TO_SOT_SMD:SOT-23")
       (fields
-        (field (name "LCSC") "C8545")
+        (field (name "LCSC") "C10488")
         (field (name "Footprint") "Package_TO_SOT_SMD:SOT-23")
         (field (name "Datasheet"))
         (field (name "Description")))
       (libsource (lib "Transistor_FET") (part "2N7002") (description "0.115A Id, 60V Vds, N-Channel MOSFET, SOT-23"))
-      (property (name "LCSC") (value "C8545"))
+      (property (name "LCSC") (value "C10488"))
       (property (name "Sheetname") (value ""))
       (property (name "Sheetfile") (value "pcb-c-display.kicad_sch"))
       (property (name "ki_keywords") (value "N-Channel Switching MOSFET"))

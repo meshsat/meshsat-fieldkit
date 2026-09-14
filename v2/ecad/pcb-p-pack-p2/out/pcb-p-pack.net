@@ -1,7 +1,7 @@
 (export (version "E")
   (design
     (source "/root/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch")
-    (date "2026-09-11T14:58:48+0000")
+    (date "2026-09-13T18:18:40+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block
@@ -261,13 +261,15 @@
       (sheetpath (names "/") (tstamps "/"))
       (tstamps "80793027-801e-5cbf-ad6e-e3116b6b142a"))
     (comp (ref "J_TS")
-      (value "cell thermistor (JST-PH 1x2): the 103AT in the block")
+      (value "JST-PH 1x2 socket for the cell thermistor lead (the 10k NTC, a 103AT, sits in the cell block)")
       (footprint "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical")
       (fields
+        (field (name "LCSC") "C5251182")
         (field (name "Footprint") "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical")
         (field (name "Datasheet"))
         (field (name "Description")))
       (libsource (lib "Connector_Generic") (part "Conn_01x02") (description "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (property (name "LCSC") (value "C5251182"))
       (property (name "Sheetname") (value ""))
       (property (name "Sheetfile") (value "pcb-p-pack.kicad_sch"))
       (property (name "ki_keywords") (value "connector"))
