@@ -7385,7 +7385,7 @@ is journalled `FINISH_SKIPPED` now, and the restore is one function on every exi
 selftest had read 53 of 54 for two days**: its `NO_SESSION` predicate still asked for the remedy of 11 September
 after that remedy was removed on the 12th, and nobody read the line under "53 of 54". 54 of 54.
 
-### 32.190 An island without a wall is a routing channel, and an island with one costs the route (14 September 2026, 23:40 CEST; MESHSAT-862)
+### 32.190 An island without a wall is a routing channel, and an island with one costs the route (14 September 2026, 23:25 CEST; MESHSAT-862)
 
 Every F.Cu island on board A is a priority-3 zone with no track keep-out, and `copper_checks` refuses a board
 whose island fills under half its outline. Measured across three routes of the same placement:
