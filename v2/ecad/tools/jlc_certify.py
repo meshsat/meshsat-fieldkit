@@ -272,7 +272,30 @@ def intended_part(comment):
     `10.0k 1% (RFBOUT2)` was being searched for as a part called RFBOUT2, and `Ebyte E22-900M30S 1 W
     LoRa (SX1262)` as the bare silicon rather than the module we buy. **And the FIRST token wins**,
     because `Ebyte E72-2G4M20S1E CC2652P` means the module and names the chip inside it second."""
-    head = re.sub(r"\([^)]*\)", " ", comment)
+    # Parentheses are blanked rather than removed, so every position below is a position in the comment as
+    # written and "the FIRST token wins" can be applied to the whole row instead of to the prose alone.
+    masked = re.sub(r"\(([^)]*)\)", lambda m: " " * (len(m.group(0))), comment)
+    cands = []
+    got = _first_token(masked)
+    if got: cands.append((masked.index(got), got))
+    # 14 September 2026: A PARENTHETICAL OF THE FORM "(Maker PartNumber)" NAMES THE PART. Blanking every
+    # parenthesis is right when the parenthesis is an explanation, which is what it usually is here, and it was
+    # written for `10.0k 1% (RFBOUT2)` being searched for as a part called RFBOUT2. But board B's HDMI
+    # receptacle reads "HDMI type A receptacle (Molex 208658-1001): cable to the Xenarc 709GNK pass-through on
+    # the face plate": the only part number in the row is inside the parentheses, so the tool reached past them,
+    # found 709GNK, the MONITOR the cable goes to, and called a correct order code WRONG_MODEL. The refinement
+    # is narrow on purpose: it offers a candidate only for a parenthetical that opens with a capitalised maker
+    # word followed by something part-shaped, so a bare `(RFBOUT2)` and a bare `(SX1262)` stay explanations and
+    # the two rules those were written for still hold. Position decides between the candidates, as before.
+    for m in re.finditer(r"\(([^)]*)\)", comment):
+        mm = re.match(r"\s*[A-Z][A-Za-z&.\-]{2,}[\s,]+(.+)$", m.group(1))
+        if not mm: continue
+        t = _first_token(mm.group(1))
+        if t: cands.append((m.start(), t))
+    return min(cands)[1] if cands else None
+
+
+def _first_token(head):
     for t in PART_TOKEN.findall(head):
         t = t.strip(".,;:-/")
         if len(t) < 5:
