@@ -7329,3 +7329,32 @@ partner's tracks within 1.65 mm of R44, and a board-wide search at a 0.1 mm grid
 at the panel's own class clearance of 0.127 rather than the tool's old 0.16 literal, finds no path for either.
 In2 already carries 1,439 tracks and 11,014 mm, 37 percent of the board's copper; In1 is the ruled solid
 ground plane. Decision 26 is where that goes.
+
+### 32.188 A's four remaining rails were all layer transitions, and the barrel is what they were short of (14 September 2026, 17:20 CEST; MESHSAT-862)
+
+A28 reads 8 of 12 rails MET. The four that miss are the same defect four times: the rail has copper on two
+layers and not enough via wall between them, so the current goes wherever the router laid it.
+
+| rail | what joined its two layers on A28 | A28 worst conductor | A28 worst pour | A29 conductor | A29 pour |
+|---|---|---:|---:|---:|---:|
+| VBAT | nothing at the source; the first vias were 80 mm north at the converter islands | 2.96 | 1.36 | **1.33** | **1.04** |
+| VBUS20 | four barrels, two in each shunt's pad, rated 4.4 A against the rail's 6 | 3.23 | 3.04 | **0.99** | 1.73 |
+| VIN_RAW | three vias a row, 3.3 A against the rail's 8 | 0.94 | 2.06 | 1.74 | **1.61** |
+| +13V8_PA | five barrels and a right-angled turn | 0.78 | 1.54 | 1.00 | 1.52 |
+
+**The copper is right and the route is not.** A29 lays fifteen vias across the VBAT trunk's full width where
+`free_run()` finds the longest stretch of it with no pad of another net within 0.55 mm; six inside VBUS20's own
+1210 pads; six a row at VIN_RAW's head; and a chamfer on the PA turn. **VBUS20's F.Cu island now carries 77
+percent of that rail where it carried 22**, which is the number that says the barrel was the constraint.
+
+What A29 did not do is route: 10 hard of one kind (a knot between `/HF_HDRV1` and `/HF_SW1` that the clean-up
+removed) and 10 unrouted, of which the finish closed four and five are further than twelve millimetres. A30
+routes the same copper with `via_costs 100` from the first round.
+
+**Three things that cost an iteration each, and all three are the same mistake.** The VBAT via field was typed
+at a y this file could not see was occupied by U16 and Q18: thirteen hard violations on the placed board. The
+VBUS20 keep-out was drawn at the island's rectangle and forbade the three locked joins between the output
+capacitors' ground pads; redrawn as two strips it forbade a GND track crossing the leg. **The gap between two
+of these capacitors IS the next one's ground pad**: they are 1210 lands lying along x, C13's VBUS20 pad at x
+62.4 and its GND pad at 65.3, which is exactly the midpoint between C13's and C14's. Geometry typed from a
+part list is a guess; geometry read from the placed board is a measurement.
