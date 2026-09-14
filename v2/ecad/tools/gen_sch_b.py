@@ -387,7 +387,7 @@ def slot(s):
     r(R(48), "1k", cm33, "LED_ACT_A%d" % s); led("LED%d6" % s, "green ACT (LED_nACT sinks)", "LED_ACT_A%d" % s, "LED_nACT%d" % s)
     part(Q(1), "Transistor_BJT", "BC857", "BC857: LED_nPWR must be buffered (datasheet Table 4)", "SOT23", {"1": "Q%dB" % s, "2": cm33, "3": "Q%dC" % s})
     r(R(49), "10k", "LED_nPWR%d" % s, "Q%dB" % s); r(R(50), "1k", "Q%dC" % s, "LED_PWR_A%d" % s); led("LED%d7" % s, "red PWR", "LED_PWR_A%d" % s, "GND")
-    part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d (JST-SH 1.0): 5V GND TACHO PWM" % s, "SH4", {"1": n5, "2": "GND", "3": "FAN_TACHO%d" % s, "4": "FAN_PWM%d" % s}); r(R(51), "10k", "FAN_PWM%d" % s, cm33)
+    part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d (JST-SH 1.0): 5V GND TACHO PWM" % s, "SH4", {"1": n5, "2": "GND", "3": "FAN_TACHO%d" % s, "4": "FAN_PWM%d" % s}, "C160390")   # JST BM04B-SRSS-TB(LF)(SN), the part this line names (JLCPCB stock 70,953 on 14 Sep 2026); r(R(51), "10k", "FAN_PWM%d" % s, cm33)
     usb_c_recept("J_FLASH%d" % s, "USB_OTG_P%d" % s, "USB_OTG_N%d" % s, "VBUS_FLASH%d" % s, "CC1_F%d" % s, "CC2_F%d" % s); r(R(52), "5.1k", "CC1_F%d" % s, "GND"); r(R(53), "5.1k", "CC2_F%d" % s, "GND")
     esd(U(7), "USB_OTG_P%d" % s, "USB_OTG_N%d" % s, "VBUS_FLASH%d" % s)
     part("J_RPIBOOT%d" % s, "Connector_Generic", "Conn_01x02", "nRPIBOOT jumper S%d: fit to flash the eMMC over J_FLASH%d" % (s, s), "PH1x2", {"1": "nRPIBOOT%d" % s, "2": "GND"})
