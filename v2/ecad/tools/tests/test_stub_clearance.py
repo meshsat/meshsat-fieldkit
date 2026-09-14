@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""A closure is searched at the clearance the net's CLASS asks for (MESHSAT-862, 14 September 2026).
+
+The width and the via of a stub closure were taught to read the net's class on 13 September, after "every stub
+closure since has been laid at the default 0.25 mm with a 0.6/0.3 via" (32.157). The CLEARANCE was left behind
+as the literal 0.16 mm, for every net of every board.
+
+It is wrong in the direction that costs connections. C12 ends 0 hard with two opens, `/PWM1` and `/HB2`, and
+both pads sit in open ground: nothing within 2.12 mm of TP29, nothing but its own partner's tracks within
+1.65 mm of R44. A board-wide search at a 0.1 mm grid on three layers came back with no path for either in
+eight minutes, because the lanes it would have to use were laid at the panel's own class number and a map
+built at 0.16 mm closes them.
+
+KiCad's rule is that the clearance between two items is the LARGER of their two classes', so that is what the
+obstacle map uses, net by net, with the grid's own hundredth of a millimetre on top. `stub_accept` still
+judges the result with the board's DRC, which is what makes a finer search safe to try.
+"""
+import os
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SR = open(os.path.join(TOOLS, "stub_router.py")).read()
+
+
+def t_the_clearance_comes_from_the_class():
+    assert "def net_clr(" in SR, "there is no per-net clearance at all"
+    assert "netclass.class_of(_ASSIGN" in SR, "the project's own netclass assignments are not read"
+
+
+def t_the_larger_of_the_two_classes_decides():
+    i = SR.find("def build_maps(")
+    body = SR[i:i + 2600]
+    assert "def clr_to(other): return max(_me, net_clr(other))" in body, (
+        "the map does not take the larger of the two nets' clearances, which is KiCad's own rule")
+
+
+def t_no_obstacle_is_still_inflated_by_the_literal():
+    i = SR.find("def build_maps(")
+    body = SR[i:SR.find("\n    for d in b.GetDrawings()", i)]
+    for bad in ("CLR + w2", "CLR + vr"):
+        for line in body.splitlines():
+            if bad in line and "HOLE_CLR" not in line and "GetIsRuleArea" not in line and "z.Outline()" not in line:
+                raise AssertionError("an obstacle is still inflated by the literal clearance: %s" % line.strip()[:90])
+
+
+def t_the_number_is_printed():
+    assert "clearance %.3f mm from its own class" in SR, (
+        "the clearance a search ran at is not printed, which is how 0.25 mm on a 0.5 mm class survived a week")
+
+
+def t_the_literal_survives_as_the_fallback():
+    assert "CLR = 0.16" in SR, "a net whose class cannot be resolved has no answer at all"
+    assert "_CLR_CACHE[n] = CLR if v is None else v + 0.01" in SR, "the fallback is not the literal"
