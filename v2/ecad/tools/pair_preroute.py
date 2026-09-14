@@ -1618,14 +1618,20 @@ def main(a):
                 ln = math.hypot(x2 - x1, y2 - y1)
                 if ln < 4 * p_ + 1.0: _why["the piece is shorter than two bumps"] += 1; continue
                 ux, uy = (x2 - x1) / ln, (y2 - y1) / ln
-                # the side away from the partner: take the partner's nearest piece on this layer as the sign
-                sx = sy = 0.0
+                # The side away from the partner, decided LOCALLY. Summing every partner piece on the layer
+                # gives the direction of its CENTROID, which on a long winding pair is the wrong side over
+                # half the run: five bumps were refused for coming within the class clearance of the partner
+                # they were supposed to be moving away from (14 September 2026). The nearest partner piece to
+                # THIS segment is what decides.
+                mxp, myp = (x1 + x2) / 2, (y1 + y2) / 2
+                near, ndist = None, 1e9
                 for u in pieces:
                     if u.GetNetname() != o_name or u.GetClass() != "PCB_TRACK" or u.GetLayer() != L_: continue
                     ox, oy = (mm(u.GetStart().x) + mm(u.GetEnd().x)) / 2, (mm(u.GetStart().y) + mm(u.GetEnd().y)) / 2
-                    sx += ox - (x1 + x2) / 2; sy += oy - (y1 + y2) / 2
+                    d_ = math.hypot(ox - mxp, oy - myp)
+                    if d_ < ndist: ndist, near = d_, (ox, oy)
                 vx, vy = -uy, ux
-                if vx * sx + vy * sy > 0: vx, vy = -vx, -vy        # point AWAY from the partner
+                if near is not None and vx * (near[0] - mxp) + vy * (near[1] - myp) > 0: vx, vy = -vx, -vy
                 for A in (0.6, 0.4, 0.25, 0.15, 0.10):
                     n_fit = int((ln - 1.0) / (2 * p_))
                     if n_fit < 1: continue
