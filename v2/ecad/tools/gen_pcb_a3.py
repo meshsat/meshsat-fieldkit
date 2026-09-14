@@ -417,7 +417,10 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
     # strip west of the pin row that holds this island's three vias and no pad of any other net, never the
     # finger into the converter's pin row, which is where a keep-out forbids other pins' own joins (the VBUS20
     # lesson of this morning, twice).
-    PC.keepout("keep tracks off the VBAT column in S%s" % n, (ur[0] - 2.6, 40.0, ur[0] - 0.6, ur[3]), pcbnew.F_Cu)
+    # ...and it stops at the FINGER's foot: the keep-out to ur[3] took the island's own 2.575 mm track into the
+    # VIN pad with it, four items_not_allowed on the placed board, one per slot (A31's first pre-route). A rule
+    # area knows no net; the column below the finger is the part that holds nobody's copper but the vias.
+    PC.keepout("keep tracks off the VBAT column in S%s" % n, (ur[0] - 2.6, 40.0, ur[0] - 0.6, ur[1] - 0.3), pcbnew.F_Cu)
     col(vb, ur[0] - 1.6, 41.0, 43.6, 3)
 # THE In2 PLANE IS A CONDUCTOR AND THE ROUTER WAS CUTTING IT (13 September 2026, appendix 32.164). VBAT's
 # worst cell read 428 A/mm2 against 52 at (-58.3, 0.8) in the case frame, with `+3V3` 0.62 mm away and
