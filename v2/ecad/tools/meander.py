@@ -8,7 +8,7 @@ FromMM, ToMM = pcbnew.FromMM, pcbnew.ToMM
 b = pcbnew.LoadBoard(sys.argv[1]); netname = sys.argv[2]; remaining = float(sys.argv[3]); A_MAX = float(sys.argv[4]) if len(sys.argv) > 4 else 1.5
 net = b.GetNetInfo().GetNetItem(netname) or b.GetNetInfo().GetNetItem("/" + netname)
 if not net: print("meander: net not found", netname); sys.exit(1)
-CLR = 0.15; MARGIN = 0.8
+CLR = 0.15; MARGIN = 0.8   # clear run kept at each end of a meander window, so a bump never starts on a corner
 def strip_shape(x0, y0, x1, y1, w_out):
     """polygon covering the band from the segment's far edge out to w_out on side v (mm in, polygon in nm)"""
     p = pcbnew.SHAPE_POLY_SET(); p.NewOutline()
@@ -52,7 +52,13 @@ while remaining > 0.1 and passes < 12:
     if tracks: w = ToMM(tracks[0].GetWidth())
     p = w + CLR + 0.25                       # pitch between the two legs of one bump; a bump adds 2 A
     choice = None
-    for A in (A_MAX, 1.0, 0.7, 0.5):
+    # 14 September 2026: THE LADDER GOES DOWN TO A QUARTER OF A MILLIMETRE. A27's route left USB_D8 1.77 mm
+    # apart and USB_WALL 1.50, and three rounds of this tool placed nothing: the band a bump needs beside
+    # its track is A + w + clearance, so a 1.5 mm bump asks for 1.95 mm of clear copper and a 0.25 mm bump
+    # asks for 0.70. On a board whose free space is between other people's escapes, that is the difference
+    # between no window anywhere and several. Small bumps add less each, and the pass loop above already
+    # accumulates across passes, so the only cost is more segments carrying a little meander each.
+    for A in (A_MAX, 1.0, 0.7, 0.5, 0.35, 0.25):
         n_want = max(1, math.ceil(remaining / (2 * A))); need = 2 * p * n_want
         for t in sorted(tracks, key=lambda t: -t.GetLength()):
             for side in (1, -1):
