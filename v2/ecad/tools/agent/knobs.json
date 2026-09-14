@@ -259,8 +259,8 @@
   "PAIR_LEG_MATCH": {
    "category": "experiment",
    "comparable": true,
-   "default": "1",
-   "description": "after a pair is laid, the short leg is given the length difference back in small bumps on its own copper, away from the partner",
+   "default": "0",
+   "description": "after a pair is laid, the short leg is given the length difference back in small bumps on its own copper, away from the partner (off: on B it costs ten pairs, on A it fits nothing)",
    "stage": "pair",
    "type": "flag",
    "unit": ""
