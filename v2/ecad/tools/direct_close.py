@@ -162,7 +162,36 @@ def anchor(b, net, end):
     return best
 
 
+def lay(bp, trial, spec):
+    """--lay: build ONE trial board and exit. Its own process, so a pcbnew crash is a refused shape and not
+    the end of the pass, and so the interpreter that judges never carries forty discarded boards."""
+    b = pcbnew.LoadBoard(bp); n = b.FindNet(spec["net"])
+    if n is None: return 4
+    VD, VDR = spec["via"]
+    w = FromMM(spec["width"]) if spec["width"] else None
+    if w is None:
+        w = next((t.GetWidth() for t in b.GetTracks() if t.GetNetname() == spec["net"] and t.GetClass() == "PCB_TRACK"), FromMM(0.2))
+    pts = [(l, pcbnew.VECTOR2I(x, y)) for l, x, y in spec["pts"]]
+    for (lp, p), (lq, q) in zip(pts, pts[1:]):
+        if lp != lq:
+            v = pcbnew.PCB_VIA(b); v.SetPosition(p); v.SetWidth(FromMM(VD)); v.SetDrill(FromMM(VDR))
+            v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(n); v.SetLocked(True); b.Add(v)
+            continue
+        if p == q: continue
+        t = pcbnew.PCB_TRACK(b); t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(lp); t.SetNet(n); t.SetLocked(True); b.Add(t)
+    # 14 September 2026: BUILD THE CONNECTIVITY BEFORE FILLING A BOARD YOU HAVE JUST ADDED TRACK TO. Without it
+    # the filler works from a stale net graph and the trial board came back with 499 unconnected items, KiCad's
+    # own cap, against the 12 the real board has: every pour connection read as open, so `U1 < U0` could never
+    # be true and this tool could never accept a shape.
+    b.BuildConnectivity()
+    pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+    b.BuildConnectivity()
+    pcbnew.SaveBoard(trial, b)
+    return 0
+
+
 def main(argv):
+    if argv[:1] == ["--lay"]: return lay(argv[1], argv[2], json.loads(argv[3]))
     if len(argv) < 2: print(__doc__); return 2
     bp, drcp = argv[0], argv[1]
     opt = lambda k, d: next((a.split("=", 1)[1] for a in argv if a.startswith("--%s=" % k)), d)
@@ -272,31 +301,23 @@ def main(argv):
         got = None; whys = []
 
         def _try(shape_list, _L):
-            """Lay each shape on a copy and keep the first the DRC accepts. Returns (name, hard, unrouted)."""
+            """Lay each shape on a copy and keep the first the DRC accepts. Returns (name, hard, unrouted).
+
+            14 September 2026: EACH TRIAL BOARD IS BUILT IN ITS OWN PROCESS. A27's /VBUS20 took the island
+            ladder to a fortieth LoadBoard-fill-SaveBoard in one interpreter and pcbnew died of a segmentation
+            fault, after the run had already closed /POE_SW2 and written it to disk. A crash in one trial is a
+            refused shape now, named as one, and not the end of the pass; the parent never loads a board it is
+            about to throw away, which is also why it can afford to offer eight more pairs than it used to."""
             nonlocal H0, U0, D0
             for name, pts in shape_list:
-                b = pcbnew.LoadBoard(bp); n = b.FindNet(net)
-                if n is None: return None
-                w = FromMM(WIDTH) if WIDTH else None
-                if w is None:
-                    w = next((t.GetWidth() for t in b.GetTracks() if t.GetNetname() == net and t.GetClass() == "PCB_TRACK"), FromMM(0.2))
-                for (lp, p), (lq, q) in zip(pts, pts[1:]):
-                    if lp != lq:
-                        v = pcbnew.PCB_VIA(b); v.SetPosition(p); v.SetWidth(FromMM(VD)); v.SetDrill(FromMM(VDR))
-                        v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(n); v.SetLocked(True); b.Add(v)
-                        continue
-                    if p == q: continue
-                    t = pcbnew.PCB_TRACK(b); t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(lp); t.SetNet(n); t.SetLocked(True); b.Add(t)
-                # 14 September 2026: BUILD THE CONNECTIVITY BEFORE FILLING A BOARD YOU HAVE JUST ADDED TRACK TO.
-                # Without it the filler works from a stale net graph and the trial board came back with 499
-                # unconnected items, KiCad's own cap, against the 12 the real board has: every pour connection
-                # read as open, so `U1 < U0` could never be true and this tool could never accept a shape. It
-                # was silent about it because the finish pipes it through `grep direct_close` without `-u`, so
-                # the buffered output died with the process when pcbnew then segfaulted.
-                b.BuildConnectivity()
-                pcbnew.ZONE_FILLER(b).Fill(b.Zones())
-                b.BuildConnectivity()
-                pcbnew.SaveBoard(trial, b)
+                spec = {"net": net, "width": WIDTH, "via": [VD, VDR],
+                        "pts": [[int(lp), int(p.x), int(p.y)] for lp, p in pts]}
+                r_ = subprocess.run([sys.executable, os.path.abspath(__file__), "--lay", bp, trial, json.dumps(spec)],
+                                    capture_output=True, text=True)
+                if r_.returncode != 0:
+                    tail = [l for l in (r_.stderr or "").strip().splitlines() if l.strip()]
+                    whys.append("      %s: the trial board could not be built (%s)" % (name, (tail[-1] if tail else "exit %d" % r_.returncode)[:90]))
+                    continue
                 pro = os.path.splitext(bp)[0] + ".kicad_pro"; tpro = os.path.splitext(trial)[0] + ".kicad_pro"
                 if os.path.exists(pro): subprocess.run(["cp", pro, tpro])
                 r = counts(trial, work)

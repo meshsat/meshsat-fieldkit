@@ -53,3 +53,17 @@ def t_the_further_pairs_are_judged_the_same_way():
     body = DC[i:i + 2600]
     assert "got = _try(" in body, "an island pair is accepted without the DRC deciding"
     assert "MAXD" in body, "an island pair beyond the tool's own reach is still offered"
+
+
+def t_a_trial_board_is_built_in_its_own_process():
+    """A27's /VBUS20 took the island ladder to a fortieth LoadBoard-fill-SaveBoard in one interpreter and
+    pcbnew died of a segmentation fault, after the run had already closed /POE_SW2 and written it to disk.
+    A crash in one trial must be a refused shape, not the end of the pass."""
+    assert 'if argv[:1] == ["--lay"]' in DC, "there is no one-trial mode to spawn"
+    assert "def lay(" in DC, "the trial board is not built by a function of its own"
+    i = DC.find("def _try(")
+    body = DC[i:i + 2200]
+    assert '"--lay"' in body and "subprocess.run([sys.executable" in body, (
+        "the judging process still lays the trial board itself, so one pcbnew crash ends the whole pass")
+    assert "pcbnew.LoadBoard" not in body, "the judge still loads a board it is about to throw away"
+    assert "could not be built" in body, "a crashed trial is not reported as a refused shape"
