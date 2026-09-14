@@ -7084,3 +7084,51 @@ before the save is the fix.
 pipeline threw the exit code away. It runs `python3 -u` into a log now and reports a non-zero exit. This is the
 family of 32.171 with the failure mode inverted: there the tree promised something nothing did, here something
 did the work and nothing could hear it.
+
+### 32.179 One tree, one owner: a re-finish and a remedy round in the same phase directory (14 September 2026, 03:40 CEST; MESHSAT-862)
+
+A27's finish stopped at the pair gate, so the board was re-finished from the board its route produced. The
+re-finish restored a 5.6 MB routed board, printed its sha, and then judged **a board with nine footprints, no
+tracks and every rail "no copper of this net"**. Nothing was wrong with the copy: `routeflow` was still alive,
+its finish had just failed, and at 00:08 it started a remedy round whose first act is to REGENERATE the board
+in that directory. Two owners, one tree, and the finish was reading the other one's half-built board.
+
+It then compounded: routeflow's own round-2 gate read the `dc_drop` verdict JSON the re-finish had written and
+blocked on it. **A verdict file is shared state as much as a board file is.**
+
+The rule is the one 32.153 already wrote for arms, in a place it was not applied: **a re-finish first stops the
+routeflow run that owns the phase directory**, by PID, and only then restores and runs. It is in
+`refinish_a27.sh` and `refinish_c11.sh` with that sentence as its comment.
+
+The same session produced the counter-example that makes the rule worth keeping: the LEGITIMATE way to close
+A's opens is routeflow's ROUNDS, which is how A24 reached 0 and 0 in the first place, so A27 is now running
+under `--rounds 3` with nothing else touching its directory.
+
+### 32.180 Board B's parts list is answered, and the certification reads both declarations at last (14 September 2026, 03:45 CEST; MESHSAT-862)
+
+**`meshsat-pcb-b-revA-B19-quote` replaces the B16 quote of 8 September**, whose BOM carried 79 uncoded lines.
+It is exported from the placed board of the arm that lays the most pairs (end fit, cover legs, slack 0.08:
+71 of 113), 1,002 footprints, 215 BOM rows, 885 CPL rows, six copper layers in the zip, and **every blank line
+is declared**: 61 filled by `lcsc_fill` and 26 allow-listed with their reasons. It says QUOTE ONLY in its own
+folder, with what is right in it (outline, stack, footprints, parts) and what is not (the copper, because B is
+held).
+
+Three things had to be corrected to get there, and the first two are the same defect twice.
+
+1. **`lcsc_fill` resolves the allow list three directories up from the BOM**, so a quote copy that does not
+   carry `lcsc-allow.txt` reads every declared blank as undeclared: 26 of 215 "not allow-listed" on the first
+   run, 0 on the second, with nothing about the board changed.
+2. **`jlc_certify` read `tools/jlc-handfit.txt` and not the boards' own `lcsc-allow.txt`.** A blank row is
+   answered by two files, one saying where the part is bought and one saying JLCPCB never places it, and the
+   certifier could see one of them; `verify_deliverable` was corrected for exactly this on 11 September. With
+   both read, the set goes from 23 open rows to **4**, all of them C's, from a folder that predates today's
+   codes: **513 of 517 rows settled** (452 CERTIFIED, 41 HAND_FIT, 20 BENCH_FITTED).
+   **The ORDER of the three declarations is the whole of it**: put the allow list before the purchase route
+   and 35 rows with real Digi-Key routes read as bench parts; put it before the class test and "12 V class
+   mixer fan" reads as answered. It runs last, and a rule holds each ordering.
+3. **Five through-hole headers were given JLCPCB codes and the codes were withdrawn the same hour.** The
+   BH254V boxed IDC and PZ254V pin headers are the right parts, and `pcb-b-compute/lcsc-allow.txt` already
+   says JLCPCB never places them: the assembly these boards are quoted for is SMT and a through-hole header is
+   soldered at build. A code on such a row does not make it buyable, it puts a part into a CPL the line cannot
+   place. The JST-SH fan connector kept its code (C160390): it is SMD, it is the part the schematic names, and
+   JLCPCB holds 70,953 of them.
