@@ -2318,7 +2318,29 @@ def main(a):
                         for sign in (p_side, -p_side):
                             jj, ii = gr.cell(cx_ + nx_ * split_ * sign, cy_ + ny_ * split_ * sign)
                             if not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or via1n[net_p.GetNetname() if sign == p_side else net_n.GetNetname()][ii, jj]: return False
-                        return abs(2 * split_) >= vd + clr_c + 0.02
+                        if abs(2 * split_) < vd + clr_c + 0.02: return False
+                        # 14 September 2026: AND THE COPPER EITHER SIDE OF THOSE VIAS, against each other. The
+                        # two sites are separated by a via plus the clearance, and the four SEGMENTS that reach
+                        # them are not: with the end emissions asked before they are laid (PAIR_END_FIT), every
+                        # own-legs refusal left on B19 names this emission, 14 of them `layer change` against
+                        # `layer change`. The legs' pieces are built here and judged against each other at the
+                        # post-lay gate's own bar, before either exists, so a spot that cannot work is simply
+                        # not taken and the search walks on to the next one.
+                        if not END_FIT: return True
+                        vs = {}
+                        for sign, net_, poly_start_, prev_end_ in ((p_side, net_p, lp[0], prev_end[0]), (-p_side, net_n, ln[0], prev_end[1])):
+                            vx_, vy_ = cx_ + nx_ * split_ * sign, cy_ + ny_ * split_ * sign
+                            vs[net_.GetNetname()] = ((prev_end_[0], prev_end_[1], vx_, vy_, Lprev), (vx_, vy_, poly_start_[0], poly_start_[1], L), (vx_, vy_))
+                        P_, N_ = vs[net_p.GetNetname()], vs[net_n.GetNetname()]
+                        _bar = max(0.0, clr_c - 0.005)
+                        for a_ in P_[:2]:
+                            for b_ in N_[:2]:
+                                if a_[4] != b_[4]: continue
+                                if _seg_dist(a_[0], a_[1], a_[2], a_[3], b_[0], b_[1], b_[2], b_[3]) < _bar + wid(a_[4]): return False
+                        for a_, other in ((P_, N_), (N_, P_)):   # a via of one leg against the other leg's two pieces
+                            for b_ in other[:2]:
+                                if _pt_seg(a_[2][0], a_[2][1], b_[0], b_[1], b_[2], b_[3]) < _bar + vd / 2 + wid(b_[4]) / 2: return False
+                        return True
                     spot = None
                     for split_ in (VIA_SPLIT, 0.7, 0.55):   # the vias either side of the centreline; closer when the corridor is tight (their spacing stays a via plus the clearance)
                         if not (r_i == 1 and fineA):   # back along the previous run (never into an entry run: that is the pad row), up to 8 mm
