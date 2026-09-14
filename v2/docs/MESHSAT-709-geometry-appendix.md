@@ -7165,7 +7165,7 @@ USB_WALL does not move at either value: 23 of its 36 mm are within 2 mm of a pad
 fan, and it is **owner decision 25** with what 1.47 mm is worth on a USB 2.0 pair (about 10 ps against a 100 ps
 budget) and three options.
 
-### 32.182 Three tools reported their own limits as board A's, and A closes (14 September 2026, 12:55 CEST; MESHSAT-862)
+### 32.182 Three tools reported their own limits as board A's, and A closes (14 September 2026, 12:50 CEST; MESHSAT-862)
 
 **A28 reads 0 hard and 0 unrouted.** Nothing on the board moved to get there. A27's routed copper carries one
 meander bump on `/USB_D8_N`, one on `/USB_WALL_P`, a short `/POE_SW2` run with a via down to In2, and a 1.635 mm
@@ -7214,7 +7214,7 @@ it to disk, so the second open was never judged and nothing said why. Each trial
 process now: the judge never loads a board it is about to throw away, and a crash in one trial is a refused
 shape named as one.
 
-### 32.183 The stub router searched every board at one clearance, and C's classes are finer than it (14 September 2026, 12:55 CEST; MESHSAT-862)
+### 32.183 The stub router searched every board at one clearance, and C's classes are finer than it (14 September 2026, 12:50 CEST; MESHSAT-862)
 
 `stub_router.py` was taught to read the net's class for its WIDTH and its VIA on 13 September, after every
 closure for a week had been laid at the default 0.25 mm with a 0.6/0.3 via (32.157). **The CLEARANCE was left
@@ -7235,7 +7235,7 @@ the default 100, which is the second lever `fr_rules` writes and has never been 
 leg searches read, so it decides pairs rather than closures. `PAIR_CLASS_CLEAR` makes it class-aware and is off
 until an arm grades it.
 
-### 32.184 The layer-change test is correct copper and costs fourteen of B19's pairs (14 September 2026, 12:55 CEST; MESHSAT-862)
+### 32.184 The layer-change test is correct copper and costs fourteen of B19's pairs (14 September 2026, 12:50 CEST; MESHSAT-862)
 
 Yesterday's last change judged the pair's layer-change emission, four segments and two vias, against itself
 before the spot is taken. Two arms at the declared B19 baseline, one variable each, the same placed board:
