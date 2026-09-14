@@ -3,7 +3,7 @@
  "project": "v2/ecad/pcb-c-display-c8",
  "phase": "C14",
  "issue": "MESHSAT-862",
- "repo": "/root/ciso",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
  "pre": {
   "cwd": "<PROJECT>",
