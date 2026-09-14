@@ -10,11 +10,37 @@ import sys, os, re, collections
 ECAD = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 NETS = {"A": "pcb-a-power", "B": "pcb-b-compute", "C": "pcb-c-display", "D": "pcb-d-aprs", "E": "pcb-e1-dock"}
 
+def netlist_path(stem):
+    """The netlist of the DECLARED phase directory, or the newest copy when nothing declares one.
+
+    8 September 2026: a board generated in a copy directory (pcb-a-power-a23) carries the newest netlist, so
+    the newest of `<stem>*/out/<stem>.net` counted. 14 September 2026: THAT IS THE WRONG DIRECTORY ON THE BOX.
+    Forty-one directories match `pcb-b-compute*` there, every one of them an arm laid down to measure a knob,
+    and the newest is whichever arm ran last. A cross-board contract judged against an arm's netlist is the
+    "wrong tree" defect of 32.153 in the one check that exists to compare boards with each other. The phase a
+    board is cutting is declared in `boards/<letter>.json`, and the routeflow profile of that phase names its
+    project directory, so the answer is read rather than guessed; the glob stays as the fallback for a tree
+    that carries no profiles."""
+    import glob as _glob, json as _json
+    here = os.path.dirname(os.path.abspath(__file__))
+    for _letter, _stem in NETS.items():
+        if _stem != stem: continue
+        try:
+            _b = _json.load(open(os.path.join(here, "boards", _letter.lower() + ".json")))
+            _phase = (_b.get("phase") or "").lower()
+            for _pf in _glob.glob(os.path.join(here, "routeflow", "*.json")):
+                _p = _json.load(open(_pf))
+                if (_p.get("phase") or "").lower() != _phase or _p.get("board") != stem: continue
+                _d = os.path.join(ECAD, os.path.basename(_p.get("project", "")), "out", stem + ".net")
+                if os.path.isfile(_d): return _d
+        except Exception: pass
+    cands = [c for c in _glob.glob(os.path.join(ECAD, stem + "*", "out", stem + ".net")) if os.path.isfile(c)]
+    return max(cands, key=os.path.getmtime) if cands else os.path.join(ECAD, stem, "out", stem + ".net")
+
+
 def load(stem):
     """{net name: {(ref, pin)}} and {(ref, pin): net name} from a KiCad netlist."""
-    import glob as _glob   # 8 Sep 2026: a board generated in a copy directory (pcb-a-power-a23) carries the newest netlist; the newest of <stem>*/out/<stem>.net counts
-    cands = [c for c in _glob.glob(os.path.join(ECAD, stem + "*", "out", stem + ".net")) if os.path.isfile(c)]
-    path = max(cands, key=os.path.getmtime) if cands else os.path.join(ECAD, stem, "out", stem + ".net")
+    path = netlist_path(stem)
     if not os.path.exists(path): return None, None
     # 13 September 2026 (MESHSAT-862): A NETLIST OLDER THAN ITS SCHEMATIC DESCRIBES A BOARD THAT NO LONGER
     # EXISTS. Board B's netlist in the box clone was five hours older than its schematic and carried no J_AB2
@@ -170,10 +196,9 @@ check(any(r == "J_HARN1" for r, _ in B["D"][0].get("TX_INHIBIT_n", set())) and a
 # ribbon is not there. The defect they would have caught: C7 inverted the toggle into two boards that were both built on "low silences", so
 # asserting EMCON enabled the 30 W PA and released both M.2 radios, and A22 drove TX_INHIBIT_n back from EMCON_HW, closing a feedback loop.
 def _value_of(stem, ref):
-    import glob as _g
-    cands = [c for c in _g.glob(os.path.join(ECAD, stem + "*", "out", stem + ".net")) if os.path.isfile(c)]
-    if not cands: return ""
-    txt = open(max(cands, key=os.path.getmtime), encoding="utf-8", errors="replace").read()
+    _p = netlist_path(stem)
+    if not os.path.isfile(_p): return ""
+    txt = open(_p, encoding="utf-8", errors="replace").read()
     m = re.search(r'\(comp \(ref "%s"\)\s*\(value "([^"]*)"\)' % re.escape(ref), txt)
     return m.group(1) if m else ""
 
