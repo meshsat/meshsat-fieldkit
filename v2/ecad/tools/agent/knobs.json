@@ -22,6 +22,15 @@
    "type": "number",
    "unit": "s"
   },
+  "PAIR_CLASS_CLEAR": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "grows each obstacle by the larger of the two nets' class clearances instead of the 0.16 mm literal",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
   "PAIR_CONFLICT_OUT": {
    "category": "io",
    "comparable": false,

@@ -83,6 +83,24 @@ STATION_OWN = os.environ.get("PAIR_STATION_OWN", "0") != "0"
 _SEARCH_KERNEL = ("compiled" if (_FAST_SEARCH and pairsearch.HAVE_NUMBA) else "heapq")   # printed and recorded: a 13x difference must never be invisible (round-two red teams, L2)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
+# 14 September 2026: EVERY OBSTACLE ON EVERY BOARD IS GROWN BY THE SAME 0.16 mm, whatever class it belongs to
+# and whatever class the pair belongs to. `stub_router` carried the identical literal and it cost board C two
+# connections; here it is the obstacle map the corridor and the leg searches read, so it decides pairs. B19's
+# DIFF100 and USB classes ask for 0.127, and the escape fans the legs have to reach their own vias through are
+# laid at 0.127 with 0.127 tracks: a lane of 0.254 mm loses a quarter of its width to 0.033 mm of margin at
+# each side. 18 of B19's 48 remaining refusals are `no stub path at via`, which is exactly that geometry.
+# KiCad's rule is that the clearance between two items is the LARGER of their two classes'. `PAIR_CLASS_CLEAR`
+# is off until an arm grades it, because a map this tool reads everywhere is not a thing to change untested;
+# with it off every number in the record stands unchanged.
+CLASS_CLEAR = os.environ.get("PAIR_CLASS_CLEAR", "0") != "0"
+_CLR_NOW = [CLR]     # the clearance of the class being laid, set per pair
+_NET_CLR = {}        # net name (no leading slash) -> its class clearance
+def _obs_clr(name):
+    """the bar between the pair being laid and one obstacle: the larger of the two classes', or the literal"""
+    if not CLASS_CLEAR: return CLR
+    if not name: return _CLR_NOW[0]
+    v = _NET_CLR.get(name[1:] if name.startswith("/") else name)
+    return _CLR_NOW[0] if v is None else max(_CLR_NOW[0], v)
 # The geometry a pair takes on an INNER layer, per class, because an inner layer is a stripline and the class width that hits
 # its target outside does not hit it inside. Measured with the field solver on the JLC 3313 six-layer stack (appendix 32.102):
 # at 0.127/0.127 an inner pair is 102 ohm, which is 13 percent high of a 90 ohm target and 2 percent high of a 100 ohm one, so
@@ -234,21 +252,22 @@ def _pad_stamp(gr, layers, ref, p, trk, via_clr, half, via_r, split):
     pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
     pk = "%s.%s@%d,%d" % (ref, p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 12:59)
     for L in layers:
-        if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
+        if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), _obs_clr(p.GetNetname()) + half, key=(pk, L))
         if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
     anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
-    if anyL is not None or pth: gr.poly(via_clr, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split, key=(pk, "via", anyL))
+    if anyL is not None or pth: gr.poly(via_clr, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), _obs_clr(p.GetNetname()) + via_r + split, key=(pk, "via", anyL))
 
 
 def _track_stamp(gr, layers, t, trk, via_clr, half, via_r, split):
     """One track or via's clearance into the count rasters."""
+    _c = _obs_clr(t.GetNetname())
     if t.GetClass() == "PCB_VIA":
         c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
-        for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + CLR + half)
+        for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + _c + half)
     else:
         a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
-        if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + half)
-        gr.seg(via_clr, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + via_r + split)
+        if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + _c + half)
+        gr.seg(via_clr, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + _c + via_r + split)
 
 
 def _stamp_board(gr, b, layers, trk, via_clr, via_holes, half, via_r, split, idx):
@@ -311,7 +330,7 @@ def _all_counts(gr, b, layers, half, via_r, split):
     This is the change of 11 September 2026 (round-two C3). Four of the five `build_maps` calls a pair makes exclude
     that pair's own nets, so the cache key was unique per pair and every one rebuilt the board in full: 1,010 s of a
     1,327 s B19 pass, 76 percent, against 115 s in the corridor search the pass exists to run."""
-    ck = ((gr.G, gr.X0, gr.Y0, gr.NX, gr.NY), tuple(layers), round(half, 5), round(via_r, 5), round(split, 5))
+    ck = ((gr.G, gr.X0, gr.Y0, gr.NX, gr.NY), tuple(layers), round(half, 5), round(via_r, 5), round(split, 5), round(_CLR_NOW[0], 5))
     hit = _ALLMAPS.get(ck)
     if hit is not None and hit[4] == MAP_EPOCH[0]:
         _stamp_new_copper(gr, b, layers, hit[0], hit[1], hit[2], half, via_r, split, hit[3], hit[6])
@@ -369,7 +388,7 @@ def _build_maps_reference(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
     one. The caller mutates what it gets (`via1` is shared and written into), so a copy goes out and the cache keeps its own."""
     # Keyed by the grid's IDENTITY, not its address: one Grid per cell size is kept today so id() is safe today, but a
     # freed Grid whose address were reused would match a stale map (round-two red teams, L3).
-    ck = ((gr.G, gr.X0, gr.Y0, gr.NX, gr.NY), tuple(layers), frozenset(nets), round(half, 5), round(via_r, 5), round(split, 5))
+    ck = ((gr.G, gr.X0, gr.Y0, gr.NX, gr.NY), tuple(layers), frozenset(nets), round(half, 5), round(via_r, 5), round(split, 5), round(_CLR_NOW[0], 5))
     hit = _MAPS.get(ck)
     if hit is not None and hit[3] == MAP_EPOCH[0]:
         trk, via, seen = hit[0], hit[1], hit[2]
@@ -384,10 +403,10 @@ def _build_maps_reference(gr, b, layers, nets, half, via_r, split=VIA_SPLIT):
             if p.GetNetname() in nets: continue
             pk = "%s.%s@%d,%d" % (fp.GetReference(), p.GetNumber(), p.GetPosition().x, p.GetPosition().y)   # the position is part of the key: a swapped resistor keeps its raster otherwise (D9, 8 Sep 2026 12:59)
             for L in layers:
-                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), CLR + half, key=(pk, L))
+                if p.IsOnLayer(L): gr.poly(trk[L], p.GetEffectivePolygon(L), _obs_clr(p.GetNetname()) + half, key=(pk, L))
                 if pth and p.IsOnLayer(L): c = p.GetPosition(); d = p.GetDrillSize(); gr.disc(trk[L], mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + HOLE_CLR + half)
             anyL = next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # any copper layer: a via is a hole through every layer
-            if anyL is not None or pth: gr.poly(via, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), CLR + via_r + split, key=(pk, "via", anyL))
+            if anyL is not None or pth: gr.poly(via, p.GetEffectivePolygon(anyL if anyL is not None else pcbnew.F_Cu), _obs_clr(p.GetNetname()) + via_r + split, key=(pk, "via", anyL))
     seen = set(); _stamp_tracks(gr, b, layers, nets, half, via_r, split, trk, via, seen)
     # Footprint-local rule areas count too: they are not in b.Zones(), so a keep-out that belongs to a part (the E72's antenna clearance,
     # a connector's own no-track area) was invisible here while `prefanout.py` already read them. B17's pre-route came back with five
@@ -798,6 +817,10 @@ def main(a):
     _POS0 = {f_.GetReference(): (f_.GetPosition().x, f_.GetPosition().y) for f_ in b.GetFootprints()}
     def cls_of(n):
         return netclass.class_of(assign, n, "Default")   # KiCad 9 stores the assignment as a list of class names
+    if CLASS_CLEAR:   # one lookup per net of the board, once, so the obstacle map can ask per item
+        for _n in {t.GetNetname() for t in b.GetTracks()} | {p.GetNetname() for f_ in b.GetFootprints() for p in f_.Pads()}:
+            _cl = classes.get(cls_of(_n), {})
+            if "clearance" in _cl: _NET_CLR[_n[1:] if _n.startswith("/") else _n] = float(_cl["clearance"])
     want_classes = set(a[a.index("--classes") + 1].split(",")) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
     layers = [_ALL[x] for x in (a[a.index("--layers") + 1].split(",") if "--layers" in a else os.environ.get("PAIR_LAYERS", "F.Cu,B.Cu").split(",")) if x in _ALL]
     # the hop layers carry only the dives and the stubs' hops, never a corridor run: on the 7628 four-layer stack a 0.30/0.20 pair on In2 reads 137 ohm
@@ -1221,6 +1244,7 @@ def main(a):
         try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
         except Exception: min_clr = 0.0
         clr_c = max(clr_c, min_clr); s = max(s, clr_c + 0.013)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
+        _CLR_NOW[0] = max(clr_c, min_clr) if CLASS_CLEAR else CLR   # what the obstacle map grows this pair's obstacles by
         # 10 September 2026, measured: the corridor's margin over its legs was 0.25 mm (a 0.15 mm mask margin plus one grid
         # cell) and that slack decides how many pairs can be laid. A leg needs w/2 + 0.02 from other copper on its own map
         # and sits (w + s)/2 off the centreline, so the centreline needs w + s/2 + 0.02; anything beyond that is clearance
