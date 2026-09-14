@@ -8,7 +8,7 @@ BOARD, DRC = sys.argv[1], sys.argv[2]
 _PLANES_ARG = sys.argv[3] if len(sys.argv) > 3 else None   # resolved against the board below
 G = float(__import__("os").environ.get("STUB_GRID", "0.05"))
 WIN_SCALE = float(__import__("os").environ.get("STUB_WIN_SCALE", "1.0"))   # 7 Sep 2026: the search window around the two ends (8 or 15 mm) times this; A22 closes its last gaps at 2.5   # grid, mm (STUB_GRID=0.1 for long connections)
-CLR = 0.16                   # clearance to other copper, mm (board rule 0.15)
+CLR = 0.16                   # the fallback clearance to other copper, mm (board rule 0.15); the real bar is per pair of nets, below
 HOLE_CLR = 0.30              # clearance to a drilled pad or a mounting hole: the board's hole clearance rule is 0.25, and the 0.1 mm grid needs a margin over it (B12, 4 Sep: six 0.24 mm misses against two NPTH holes)
 b = pcbnew.LoadBoard(BOARD); drc = json.load(open(DRC))
 # 12 September 2026 (MESHSAT-862): PLANES WAS A HARD-CODED STRING, "GND,+5V,+3V3,CELL+", and a net in it takes a
@@ -88,11 +88,43 @@ for v in drc.get("unconnected_items", []):
     if len(its) == 2 and all(its): pairs.append(its)
 print("unconnected pairs:", len(pairs))
 def netname(n): return n[1:] if n.startswith("/") else n
+# ---- THE CLEARANCE BETWEEN TWO NETS IS THE LARGER OF THEIR TWO CLASSES', NEVER A LITERAL (14 September 2026).
+# The width and the via of a closure were taught to read the net's class on 13 September and the CLEARANCE was
+# left as 0.16 mm for every net of every board. On C that is wrong in the direction that costs connections: the
+# panel's own classes are finer than 0.16, so a lane laid at the class number reads as blocked, and a
+# board-wide 0.1 mm search for /PWM1 and /HB2 came back with no path at all in eight minutes on a board whose
+# two ends are both in open ground. The bar is the class clearance plus one hundredth of a millimetre, the same
+# margin over the rule that 0.16 was over the board's 0.15; CLR stays the answer for a net that cannot be
+# resolved, and the board's own DRC still decides, through `stub_accept`, whether a closure is kept.
+_PRO_CLASSES, _ASSIGN = {}, None
+try:
+    _pro_j = __import__("json").load(open(__import__("os").path.splitext(BOARD)[0] + ".kicad_pro"))
+    _ns_j = _pro_j.get("net_settings", {})
+    _ASSIGN = _ns_j.get("netclass_assignments")
+    for _c in _ns_j.get("classes", []):
+        if _c.get("name") and _c.get("clearance") is not None: _PRO_CLASSES[_c["name"]] = float(_c["clearance"])
+except Exception: pass
+_CLR_CACHE = {}
+def net_clr(n):
+    """the class clearance of one net plus the grid's margin; CLR when no class resolves"""
+    n = netname(n or "")
+    if n not in _CLR_CACHE:
+        v = None
+        try:
+            cl = netclass.class_of(_ASSIGN, n)
+            if cl and cl in _PRO_CLASSES: v = _PRO_CLASSES[cl]
+        except Exception: v = None
+        if v is None: v = _PRO_CLASSES.get("Default")
+        _CLR_CACHE[n] = CLR if v is None else v + 0.01
+    return _CLR_CACHE[n]
 # ---- build obstacle maps once per net (other-net copper)
 def build_maps(net):
-    trk = {L: np.zeros((NY, NX), dtype=bool) for L in LAYERS}    # track-centre forbidden (inflated by CLR + w/2)
-    via = np.zeros((NY, NX), dtype=bool)                          # via-centre forbidden (inflated by CLR + via_r on every layer)
+    trk = {L: np.zeros((NY, NX), dtype=bool) for L in LAYERS}    # track-centre forbidden (inflated by the clearance + w/2)
+    via = np.zeros((NY, NX), dtype=bool)                          # via-centre forbidden (inflated by the clearance + via_r on every layer)
     w2, vr = TW / 2, VIA_D / 2
+    _me = net_clr(net)
+    def clr_to(other): return max(_me, net_clr(other))   # KiCad's own rule: the larger of the two classes decides
+    print("  %s: clearance %.3f mm from its own class, and per obstacle the larger of the two" % (net, _me))
     for fp in b.GetFootprints():
         for p in fp.Pads():
             if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):   # hole to hole against drilled pads of any net
@@ -100,20 +132,22 @@ def build_maps(net):
             if p.GetNetname() == net: continue
             anyL = _pad_layer(p)
             for L in LAYERS:
-                if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) else CLR) + w2)
-            if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) or any(p.IsOnLayer(L) for L in INNER + LAYERS): poly(via, p.GetEffectivePolygon(anyL), CLR + vr)
+                if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) else clr_to(p.GetNetname())) + w2)
+            if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) or any(p.IsOnLayer(L) for L in INNER + LAYERS): poly(via, p.GetEffectivePolygon(anyL), clr_to(p.GetNetname()) + vr)
     for t in b.GetTracks():
         if t.GetClass() == "PCB_VIA":                                  # hole to hole (0.30 mm) against every via, its own net included (B13, 5 Sep: two SDA vias 0.175 mm apart)
             c = t.GetPosition(); disc(via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + VIA_DR / 2 + 0.30)
         if t.GetNetname() == net: continue
         if t.GetClass() == "PCB_VIA":
             c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
-            for L in LAYERS: disc(trk[L], mm(c.x), mm(c.y), r + CLR + w2)
-            disc(via, mm(c.x), mm(c.y), r + CLR + vr)
+            _c = clr_to(t.GetNetname())
+            for L in LAYERS: disc(trk[L], mm(c.x), mm(c.y), r + _c + w2)
+            disc(via, mm(c.x), mm(c.y), r + _c + vr)
         else:
             a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
-            if L in trk: segment(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + w2)
-            segment(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + CLR + vr)
+            _c = clr_to(t.GetNetname())
+            if L in trk: segment(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + _c + w2)
+            segment(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + _c + vr)
     for z in b.Zones():
         if z.GetIsRuleArea():
             for L in LAYERS:
