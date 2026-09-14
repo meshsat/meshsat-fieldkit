@@ -265,6 +265,30 @@ def pads_rect(pads, gx, gy=None):
         bb = pd.GetBoundingBox(); xs += [bb.GetLeft() / 1e6 - OX, bb.GetRight() / 1e6 - OX]; ys += [OY - bb.GetBottom() / 1e6, OY - bb.GetTop() / 1e6]
     return (min(xs) - gx, min(ys) - gy, max(xs) + gx, max(ys) + gy)
 def rect_pts(r): return [(r[0], r[1]), (r[2], r[1]), (r[2], r[3]), (r[0], r[3])]
+def free_run(x0, x1, y0, y1, net, clear=0.55, want=1.0):
+    """The longest stretch of [y0, y1] where the strip x0..x1 carries no pad of ANOTHER net within `clear` mm.
+
+    14 September 2026. The first VBAT via field was written at a y this file could not see was occupied: the
+    trunk runs north past U16, the PoE controller, and Q18, and fifteen through vias landed on their pads for
+    thirteen hard violations before the pre-router ever ran. A via field belongs where the band is clear, and
+    which stretch that is, is a fact about the placed board rather than a number to type. Returns (y, y) of the
+    longest free run, or None when nothing of `want` mm is free."""
+    bad = []
+    for fp in board.GetFootprints():
+        for pd in fp.Pads():
+            if pd.GetNetname() == net or (pd.GetNetname() or "").lstrip("/") == net.lstrip("/"): continue
+            bb = pd.GetBoundingBox()
+            px0, px1 = bb.GetLeft() / 1e6 - OX, bb.GetRight() / 1e6 - OX
+            py0, py1 = OY - bb.GetBottom() / 1e6, OY - bb.GetTop() / 1e6
+            if px1 + clear < x0 or px0 - clear > x1: continue
+            bad.append((py0 - clear, py1 + clear))
+    bad.sort(); best = None; cur = y0
+    for b0, b1 in bad + [(y1, y1)]:
+        if b0 > cur and (best is None or b0 - cur > best[1] - best[0]): best = (cur, min(b0, y1))
+        cur = max(cur, b1)
+        if cur >= y1: break
+    if cur < y1 and (best is None or y1 - cur > best[1] - best[0]): best = (cur, y1)
+    return best if best and best[1] - best[0] >= want else None
 def row(net, x0, x1, y, n=3): PC.stitch(net, [(x0 + (x1 - x0) * k / (n - 1) if n > 1 else (x0 + x1) / 2, y) for k in range(n)])
 def col(net, x, y0, y1, n=3): PC.stitch(net, [(x, y0 + (y1 - y0) * k / (n - 1) if n > 1 else (y0 + y1) / 2) for k in range(n)])
 # 1. the four slot rails: converter output island (inductor OUT pad, output caps, shunt pad 1) with a bottom band; the rail after the shunt (shunt pad 2, connector pin 1) the same
@@ -372,7 +396,15 @@ PC.union(vb, "VBAT", [(fx0, f1[1], fx1, 44.5), (fx0, 38.5, -4, 44.5), (fx0, -12.
 # across the trunk's full five millimetres hand the rail over on a front instead: IPC gives a 0.4 mm barrel
 # 1.11 A, so the field is rated 16 A against the 5 the plane takes. They sit north of y -39.5, clear of the
 # VIN_RAW dive's In3 polygon under the trunk, which a through via would otherwise stand in.
-for _dx in (0.9, 2.5, 4.1): col(vb, fx0 + _dx, -38.0, -28.0, 5)
+_vfield = free_run(fx0 + 0.6, fx1 - 0.6, -38.0, 38.0, vb, want=4.0)
+if _vfield:
+    _fy0, _fy1 = _vfield[0] + 0.8, _vfield[1] - 0.8
+    if _fy1 - _fy0 > 12.0: _fy1 = _fy0 + 12.0
+    _fn = max(2, min(5, int((_fy1 - _fy0) / 2.0) + 1))
+    for _dx in (0.9, 2.5, 4.1): col(vb, fx0 + _dx, _fy0, _fy1, _fn)
+    print("placement: VBAT hands the trunk to the In2 plane at y %.1f to %.1f, %d vias in 3 columns" % (_fy0, _fy1, 3 * _fn))
+else:
+    print("placement: VBAT found no clear stretch of its trunk for the hand-over vias; the plane keeps the router's")
 for n, xL, Lr, Rr, Jr, out in SLOT:
     ur = pads_rect(net_pads(vb, ["U%d" % {"1": 4, "2": 5, "3": 6, "D": 7}[n]]), 0.5, 0.5)   # the converter's VIN pin (pin 2, west side)
     # an L: a via column west of the pin row (the other pins would slice a rectangle to 48 percent fill, 32.69) and a finger into the pin's pad
