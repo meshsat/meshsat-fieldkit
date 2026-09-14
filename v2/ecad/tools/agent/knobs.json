@@ -256,6 +256,15 @@
    "type": "string",
    "unit": ""
   },
+  "PAIR_LAYER_CHANGE_FIT": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0",
+   "description": "the layer change's four segments judged against each other before the spot is taken",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
   "PAIR_LEG_EXACT": {
    "category": "experiment",
    "comparable": true,

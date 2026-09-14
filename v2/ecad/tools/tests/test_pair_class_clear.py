@@ -56,6 +56,12 @@ def t_the_clearance_in_force_is_part_of_every_cache_key():
             "a map built at one class's clearance can be handed to another class's pass: %s" % anchor)
 
 
+def t_the_layer_change_test_is_registered_and_off():
+    reg = json.load(open(os.path.join(TOOLS, "agent", "knobs.json")))["knobs"]
+    assert "PAIR_LAYER_CHANGE_FIT" in reg, "the layer-change knob is not in the agent's registry"
+    assert reg["PAIR_LAYER_CHANGE_FIT"]["default"] == "0", "it is on by default and it costs 14 of B19's pairs"
+
+
 def t_it_is_registered_and_documented():
     reg = json.load(open(os.path.join(TOOLS, "agent", "knobs.json")))["knobs"]
     assert "PAIR_CLASS_CLEAR" in reg, "the knob is not in the agent's registry"
