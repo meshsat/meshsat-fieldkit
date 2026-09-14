@@ -68,6 +68,15 @@ def t_a_via_is_judged_against_the_other_legs_copper():
     assert "_pt_seg(" in _pair_free(), "a via of one leg is never checked against the other leg's pieces"
 
 
-def t_it_is_the_same_knob_as_the_end_fit():
+def t_it_has_a_knob_of_its_own_and_it_is_off():
+    """MEASURED 14 September 2026, one variable, same placed board, the declared B19 baseline: no test lays
+    71 of 113 (38 DIFF100 + 33 USB), the class clearance 58 (36 + 22), the fold detector 57 (33 + 24).
+
+    The test is correct copper and it costs pairs at either bar, which is 32.95's law restated: on a greedy
+    pass with no rip-up a bar that refuses a spot moves the failure rather than the pair. It is off, and it is
+    its OWN knob rather than PAIR_END_FIT's, because END_FIT is worth +16 on the same board and the two must
+    be separable."""
     blk = _pair_free()
-    assert "if not END_FIT: return True" in blk, "the check cannot be turned off to measure it"
+    assert "if not LAYER_FIT: return True" in blk, "the check cannot be turned off on its own to measure it"
+    assert 'LAYER_FIT = os.environ.get("PAIR_LAYER_CHANGE_FIT", "0")' in SRC, "the knob is missing or is on by default"
+    assert "if not END_FIT: return True" not in blk, "it still rides on the end fit's knob, so neither can be measured"

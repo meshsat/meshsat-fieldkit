@@ -877,6 +877,15 @@ def main(a):
     # stays off (PAIR_RIPUP=1 to reproduce the measurement).
     LEG_EXACT = os.environ.get("PAIR_LEG_EXACT", "0") != "0"
     OWN_CLEAR = os.environ.get("PAIR_OWN_CLEAR", "1") != "0"   # the emissions that used to lay copper unasked ask the partner
+    # 14 September 2026, MEASURED AND OFF: judging the layer change's four segments against each other before
+    # the spot is taken is correct copper and it costs pairs, at either bar. On B19 at the declared baseline,
+    # one variable, same placed board: no test 71 of 113 (38 DIFF100 + 33 USB), the class clearance 58
+    # (36 + 22), the fold detector 57 (33 + 24). This is the day's law restated (32.95): on a greedy pass with
+    # no rip-up, a bar that refuses a spot moves the failure rather than the pair, and a spot refused early
+    # sends the corridor somewhere that costs more later. The post-lay gate still judges the copper and rolls
+    # the pair back if it violates, which is what happened before this test existed. The guard stays here,
+    # measurable, for the board where the rollback is the expensive half.
+    LAYER_FIT = os.environ.get("PAIR_LAYER_CHANGE_FIT", "0") != "0"
     FOLD_TEST = os.environ.get("PAIR_FOLD_TEST", "1") != "0"   # the two offset legs judged against each other in the candidate ladder
     UNMERGE = os.environ.get("PAIR_UNMERGE", "1") != "0"       # a merge of two runs that folds the legs is dropped
     # The entry region (the first and last 1.2 mm of a leg at an entry station) used to skip the occupancy map
@@ -2350,7 +2359,7 @@ def main(a):
                         # `layer change`. The legs' pieces are built here and judged against each other at the
                         # post-lay gate's own bar, before either exists, so a spot that cannot work is simply
                         # not taken and the search walks on to the next one.
-                        if not END_FIT: return True
+                        if not LAYER_FIT: return True
                         vs = {}
                         for sign, net_, poly_start_, prev_end_ in ((p_side, net_p, lp[0], prev_end[0]), (-p_side, net_n, ln[0], prev_end[1])):
                             vx_, vy_ = cx_ + nx_ * split_ * sign, cy_ + ny_ * split_ * sign
