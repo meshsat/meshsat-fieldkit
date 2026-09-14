@@ -50,3 +50,16 @@ def t_the_number_is_printed():
 def t_the_literal_survives_as_the_fallback():
     assert "CLR = 0.16" in SR, "a net whose class cannot be resolved has no answer at all"
     assert "_CLR_CACHE[n] = CLR if v is None else v + 0.01" in SR, "the fallback is not the literal"
+
+
+def t_a_track_goal_is_the_tracks_copper_and_not_a_disc_around_a_point():
+    """A31's stub router laid ten closures and took all ten back with 'reached a goal cell whose copper it
+    does not touch'. The fallback goal for a track item was a 0.15 mm DISC around the point the DRC named,
+    so a path could stop up to 0.15 mm off the copper, and a 0.2 mm closure ending there overlaps nothing.
+    The other-cluster goal already stamps every track at its own width; the fallback does the same now, and
+    keeps the disc only for a point no segment of the net is near."""
+    i = SR.find("def copper_cells(")
+    body = SR[i:SR.find("\nINNER_GOAL = None", i)]
+    assert "segment(M, mm(a.x), mm(a.y), mm(e.x), mm(e.y), mm(t.GetWidth()) / 2)" in body, (
+        "a track goal is still a disc around the DRC's point rather than the track's own copper")
+    assert "if not found: disc(M, item[\"x\"], item[\"y\"], 0.15)" in body, "the disc is gone entirely, so a point with no segment near it has no goal"
