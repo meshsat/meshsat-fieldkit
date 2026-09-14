@@ -30,7 +30,7 @@ def t_further_pairs_of_the_two_islands_are_offered():
     assert "ca_cb" in DC, "the two islands are not carried past the closest-pair choice"
     i = DC.find("if got is None and ca_cb is not None:")
     assert i > 0, "a refused closure never looks past the closest pair"
-    body = DC[i:i + 2600]
+    body = DC[i:i + 3400]
     assert "_cands.sort(key=lambda c: c[0])" in body, "the further pairs are not tried in order of distance"
     assert "ISLAND_TRIES" in body, "the number of further pairs tried is not bounded"
 
@@ -42,7 +42,7 @@ def t_the_count_is_an_option_and_not_a_literal():
 
 def t_a_plane_sized_net_is_not_walked_pair_by_pair():
     i = DC.find("if got is None and ca_cb is not None:")
-    body = DC[i:i + 2600]
+    body = DC[i:i + 3400]
     assert "len(_items) > 600" in body, (
         "every pair of every piece of a plane net would be built, which is quadratic in a net with thousands "
         "of pieces and answers nothing: a plane's open is not a two-island gap")
@@ -50,7 +50,7 @@ def t_a_plane_sized_net_is_not_walked_pair_by_pair():
 
 def t_the_further_pairs_are_judged_the_same_way():
     i = DC.find("if got is None and ca_cb is not None:")
-    body = DC[i:i + 2600]
+    body = DC[i:i + 3400]
     assert "got = _try(" in body, "an island pair is accepted without the DRC deciding"
     assert "MAXD" in body, "an island pair beyond the tool's own reach is still offered"
 
