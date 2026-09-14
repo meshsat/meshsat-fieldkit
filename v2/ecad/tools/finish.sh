@@ -83,7 +83,7 @@ $T/drc.sh $N.kicad_pcb out/$N-drc-before-stub.json
 # connection and not (A24, 12 September 2026: the 0.1 mm grid refused both of its last two, the 0.05 mm grid with
 # a six-fold window closed both), and it is also the difference between ten minutes and an afternoon. A cut run
 # leaves the board as it was, which is the same outcome as a run that closes nothing, so the finish goes on.
-env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV timeout "${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}" nice -n 10 python3 $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?
+env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV timeout "${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}" nice -n 10 python3 -u $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?   # -u: a search that runs for an hour under a timeout must leave its line when it is cut, not in a buffer that dies with it (14 September 2026; the same defect the direct_close note of 32.178 names)
 [ "$SR" -eq 124 ] && echo "stub router: cut at its time limit, the board is as it was"
 [ "$SR" -eq 0 ] || [ "$SR" -eq 124 ] || stop "stub router CRASHED, exit $SR (out/$N-stub.log)" "out/$N-stub.log"
 grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
