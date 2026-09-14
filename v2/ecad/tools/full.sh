@@ -190,6 +190,28 @@ if [ -n "$EPRUNE" ]; then
   ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
   python3 ../tools/escape_prune.py $N.kicad_pcb out/$N-preroute-drc.json 2>&1 | grep escape_prune
 fi
+# PRE-LAY: a long net the router will not take, laid before the router runs (14 September 2026, board C).
+# `prelay_nets` in boards/<letter>.json names them and `prelay_layers` gives the layers to search. On the
+# ROUTED board there is no lane left for C's `/EPD_SDA`, 249 mm from J_EPD pin 14 to U3 pad 5 across a panel
+# that is a ring: four routes in a row left it, or left another net exactly like it, because the strips are
+# the only corridors and whoever reaches them first takes them. On the PLACED board those strips are empty.
+# The board is kept only if the hard count does not rise, judged on the board itself, and the search is the
+# same stub router the finish uses, restricted to the named nets by STUB_NETS.
+PRELAY="$(cfg prelay_nets)"
+if [ -n "$PRELAY" ]; then
+  cp $N.kicad_pcb out/$N-preprelay.kicad_pcb
+  ../tools/drc.sh $N.kicad_pcb out/$N-prelay-in.json
+  python3 ../tools/hardset.py out/$N-prelay-in.json pre --score out/prelay-h0.txt --label "before the pre-lay" >/dev/null 2>&1 || true
+  env STUB_NETS="$PRELAY" STUB_LAYERS="$(cfg prelay_layers)" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" STUB_MAXN="${PRELAY_MAXN:-200000000}" \
+    timeout "${PRELAY_TIMEOUT_S:-3600}" nice -n 10 python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay.log 2>&1
+  grep -aE "stub_router:|closed |FAILED|NOT CLOSED" out/$N-prelay.log | tail -8
+  ../tools/drc.sh $N.kicad_pcb out/$N-prelay-out.json
+  python3 ../tools/hardset.py out/$N-prelay-out.json pre --score out/prelay-h1.txt --label "after the pre-lay" >/dev/null 2>&1 || true
+  H0=$(cat out/prelay-h0.txt 2>/dev/null || echo 0); H1=$(cat out/prelay-h1.txt 2>/dev/null || echo 999)
+  if [ "$H1" -gt "$H0" ]; then cp out/$N-preprelay.kicad_pcb $N.kicad_pcb; echo "prelay: hard $H0 -> $H1, the lane hurt the board and was taken back"
+  else echo "prelay: hard $H0 -> $H1, the lane is kept"; fi
+fi
+
 env $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?
 grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
 [ "$PA" -eq 0 ] || [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || block "placement predictor (out/place_audit.log, out/place_audit.png)"
