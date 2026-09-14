@@ -409,6 +409,15 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
     ur = pads_rect(net_pads(vb, ["U%d" % {"1": 4, "2": 5, "3": 6, "D": 7}[n]]), 0.5, 0.5)   # the converter's VIN pin (pin 2, west side)
     # an L: a via column west of the pin row (the other pins would slice a rectangle to 48 percent fill, 32.69) and a finger into the pin's pad
     PC.island(vb, "VBAT in S%s" % n, [(ur[0] - 2.6, 40.0), (ur[0] - 0.6, 40.0), (ur[0] - 0.6, ur[1]), (ur[2], ur[1]), (ur[2], ur[3]), (ur[0] - 2.6, ur[3])], pcbnew.F_Cu, priority=3)
+    # 14 September 2026, MEASURED ON A30: THE ISLAND'S VIA COLUMN IS A ROUTING CHANNEL TO THE ROUTER. The SD
+    # island fills 10.7 mm2 of its 22 with 65 mm of other nets' track laid through it on F.Cu (/SCL 31.5 mm,
+    # /INA_ALERT 18.9, /SD_RT 13.9), and check_pcb_a refuses the board at exactly 50 percent; the other three
+    # carry 20 to 22 mm of foreign track each and pass. Every BAND on this board has carried a track keep-out
+    # on its layer since 32.39 and no island ever has. The keep-out covers the COLUMN alone, the two-millimetre
+    # strip west of the pin row that holds this island's three vias and no pad of any other net, never the
+    # finger into the converter's pin row, which is where a keep-out forbids other pins' own joins (the VBUS20
+    # lesson of this morning, twice).
+    PC.keepout("keep tracks off the VBAT column in S%s" % n, (ur[0] - 2.6, 40.0, ur[0] - 0.6, ur[3]), pcbnew.F_Cu)
     col(vb, ur[0] - 1.6, 41.0, 43.6, 3)
 # THE In2 PLANE IS A CONDUCTOR AND THE ROUTER WAS CUTTING IT (13 September 2026, appendix 32.164). VBAT's
 # worst cell read 428 A/mm2 against 52 at (-58.3, 0.8) in the case frame, with `+3V3` 0.62 mm away and
