@@ -1204,3 +1204,31 @@ here is against a control arm run beside the experiment, never against a remembe
 is what today bought +2 from. Ruling 18's floor plan, option 3's "give B more board", is the same request in
 two forms and the packer has now said so twice with a number. Options 2 and 3 are yours; nothing is being
 weakened while this is open, B stays held, and the other six boards are unaffected.
+
+### DECISION 26, THE SIX ROUTES OF BOARD C IN ONE TABLE (15 September 2026, 01:55 CEST)
+
+Nothing here needs a ruling of yours that the section above did not already ask for; this is the evidence that
+has accumulated since it was written, so that the decision is taken on the whole of it.
+
+| route | what changed | router left | the finish left | which nets |
+|---|---|---:|---:|---|
+| C11 | 30 passes, then `via_costs 100` | 3 | **1** | `/EPD_SDA` |
+| C12 | 45 passes, then `via_costs 100` | 4 | 2 | `/PWM1`, `/HB2` to its test point |
+| C13 | rip-up cost 10 | 59 | | |
+| C14 | 30 passes with `via_costs 100` from the first round, then 39 | 4 | **2** | `/EPD_SDA`, `/HB3` to its test point |
+| C15 | C14 plus `/EPD_SDA` pre-laid on the placed board | 10 | 8 | the bus's other lines, the switch lands, `/GPS_A` |
+| C16 | C14 plus the whole six-wire e-paper bus pre-laid (5 of 7 laid) | 15, 16 | 13 | |
+
+**Every net C fails to route is one of two kinds:** a long panel line from the RP2040 in the right strip to the
+top strip (the e-paper bus, `/PWM1` to the LED rail switch in the left strip), or a branch to a test point or a
+switch land in the bottom strip. **Pre-laying the long lines makes the board worse, twice**: a lane taken by
+hand on a board whose strips are its only corridors is a lane the router loses, and it loses two or three more
+for it. The stage exists and is declared for no board.
+
+**So the board that stands is C14's: 0 hard, 2 unrouted, committed (sha256 c23512db603477852b4f).** Its two
+opens are `/EPD_SDA`, 249 mm and one corridor, and `/HB3` to TP30, 57 mm from the net in the bottom strip.
+The second kind is a placement fact that needs no ruling: the panel's test points sit in a row in the bottom
+strip and the nets they tap run in the top and right strips, and a test point placed beside its net is a
+millimetre of track. That change is in C's generator and is the next thing built. The first kind is the
+decision above, unchanged: a placement that gives the panel a second corridor, or a wire link on the assembled
+board.
