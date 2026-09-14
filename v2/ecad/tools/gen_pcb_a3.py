@@ -508,7 +508,17 @@ hf = "+12V_HF"
 # came back with EIGHT shorting_items between /HF_HDRV1 and /HF_SW1, which are the FET gate and the switch
 # node of this very converter. Power copper that squeezes its own stage's drive is not power copper.
 hfr = pads_rect(net_pads(hf, ["R65", "C109", "C110", "C111"]), 0.5, 0.5)
-PC.island(hf, "HF rail head", rect_pts(hfr), pcbnew.F_Cu, priority=3)
+# 14 September 2026, MEASURED ON A28: THE HEAD ISLAND IS THE BOUNDING BOX OF FOUR SCATTERED PADS AND MOST OF
+# WHAT IS INSIDE IT BELONGS TO SOMEBODY ELSE. R65 sits at (120.2, 153.3) and the three output capacitors at
+# (135.5 to 141.3, 139.7 to 144.1), fifteen millimetres apart, so the rectangle is 23.3 by 17.7 mm and it
+# swallows the whole HF stage: L9, Q16, Q23, R60 to R64, C69 to C71 and every gate drive and sense line they
+# carry. It fills **70 of 412 mm2 in three pieces**, and `check_pcb_a` refuses the board for it, which is the
+# only failure in 835 checks. The comment below has known it fills in pieces since the 13th and answered the
+# electrical half with two vias in the shunt's own pad; this is the other half. The island is the capacitor
+# column alone, which is copper this net's own pads sit in, and R65 meets the rail at the band through those
+# vias, where it is made. The In3 band is unchanged: it carries 95 percent of this rail and reads MET.
+hfr_head = pads_rect(net_pads(hf, ["C109", "C110", "C111"]), 0.5, 0.5)
+PC.island(hf, "HF rail head", rect_pts(hfr_head), pcbnew.F_Cu, priority=3)
 if NL_CU >= 6:
     _jh = pads_rect(net_pads(hf, ["J_HF"]), 0.8)
     # 13 September 2026, A25 MEASURED: the east run passed THROUGH J_AB2's pin field. The 4.0 mm run at y 115
@@ -524,7 +534,7 @@ if NL_CU >= 6:
                              (98.0, -9.0, 102.0, _jh[3]),                        # north past J_54V, west of the PA band's north run
                              (98.0, _jh[1], _jh[2], _jh[3])],                    # east into J_HF
              pcbnew.In3_Cu, priority=2)
-    col(hf, hfr[2] - 0.6, hfr[1] + 1.0, hfr[3] - 1.0, 3)                         # the head island to the band
+    col(hf, hfr_head[2] - 0.6, hfr_head[1] + 1.0, hfr_head[3] - 1.0, 3)          # the head island to the band
     # AND THE SOURCE MEETS THE BAND AT THE SHUNT. The head island fills in four pieces, because the converter's
     # own parts (L9, Q16, Q23, the output capacitors) stand in the rectangle, and the piece that holds R65, the
     # shunt the rail is measured at, is not the piece the three vias above are in: 0.71 A of this 1.0 A rail was
