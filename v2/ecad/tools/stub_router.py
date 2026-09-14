@@ -187,7 +187,22 @@ def copper_cells(item, net):
     else:
         L = _ALL.get(item["layer"]); L = L if L in LAYERS else None
         if L is not None:
-            M = np.zeros((NY, NX), dtype=bool); disc(M, item["x"], item["y"], 0.15); out[L] = M
+            # 14 September 2026: THE GOAL IS THE TRACK'S COPPER, NOT A DISC AROUND THE POINT THE DRC NAMED. A 0.15 mm
+            # disc at a track end let the path stop at a cell up to 0.15 mm off the copper, and a 0.2 mm closure
+            # ending there overlaps nothing: the closure is laid, KiCad's connectivity does not move, and the
+            # pieces are taken back off with "reached a goal cell whose copper it does not touch". The segments
+            # of this net that pass within 0.3 mm of the named point are stamped at their own width, which is
+            # what the other-cluster goal already does for every track it holds; the disc stays as the fallback
+            # for a point no segment is near.
+            M = np.zeros((NY, NX), dtype=bool); found = 0
+            for t in b.GetTracks():
+                if t.GetClass() != "PCB_TRACK" or t.GetNetname() != net or t.GetLayer() != L: continue
+                a, e = t.GetStart(), t.GetEnd(); dx, dy = mm(e.x) - mm(a.x), mm(e.y) - mm(a.y); L2 = dx * dx + dy * dy
+                u = 0 if L2 == 0 else max(0, min(1, ((item["x"] - mm(a.x)) * dx + (item["y"] - mm(a.y)) * dy) / L2))
+                if math.hypot(item["x"] - (mm(a.x) + u * dx), item["y"] - (mm(a.y) + u * dy)) < 0.3:
+                    segment(M, mm(a.x), mm(a.y), mm(e.x), mm(e.y), mm(t.GetWidth()) / 2); found += 1
+            if not found: disc(M, item["x"], item["y"], 0.15)
+            out[L] = M
         else:                                   # inner layer: every cell along the segment(s) of this net near the point, on both outer layers (reached with a via)
             lname = item["layer"]; M = np.zeros((NY, NX), dtype=bool); found = 0
             for t in b.GetTracks():
