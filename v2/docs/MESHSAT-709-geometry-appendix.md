@@ -7384,3 +7384,27 @@ regenerated over. The restore-and-finish of the best board ran on `STOPPED_BUDGE
 is journalled `FINISH_SKIPPED` now, and the restore is one function on every exit. **And the supervisor's own
 selftest had read 53 of 54 for two days**: its `NO_SESSION` predicate still asked for the remedy of 11 September
 after that remedy was removed on the 12th, and nobody read the line under "53 of 54". 54 of 54.
+
+### 32.190 An island without a wall is a routing channel, and an island with one costs the route (14 September 2026, 23:40 CEST; MESHSAT-862)
+
+Every F.Cu island on board A is a priority-3 zone with no track keep-out, and `copper_checks` refuses a board
+whose island fills under half its outline. Measured across three routes of the same placement:
+
+| route | copper | router | after the finish | the island the gate refused |
+|---|---|---:|---:|---|
+| A30 | A29's vias | 0 hard, 8 open | **3 open** | `VBAT in SD`, 10.7 of 22 mm2, 65 mm of other nets' track through it |
+| A31 | A30 plus a 2 mm track keep-out on each slot island's via column | 0 hard, 14 open | 13 open | `VBUS20`, 104 of 223 mm2 |
+
+**Four two-millimetre walls beside the converters' pin rows cost the router six connections and the finish
+ten**, and the coverage bar then fired on a different island, because the router that could no longer cross the
+VBAT columns crossed the VBUS20 island instead. The walls are taken back. An island is a routing channel to the
+router; forbidding the channel moves the crossing to the next island and the opens to the pin rows beside the
+wall, which is where all ten of A31's refused closures sat (`/CH_ACN` at U3 pad 2, `/HF_LDRV2`, `/FE_LDRV2`,
+`/POE_BOOT2`, `/PA_PGOOD`, `/PA_VCC`).
+
+**What is true of the rail either way:** every one of the four missed rails improved on A29's copper (32.188),
+so the vias are right and the coverage bar is the thing that fires on a healthy rail. `+12V_HF` read MET at
+42 mV on a head that filled 17 percent; `VBAT` reads pour ratio 1.04 with its SD island at 50. The bar was
+written for BANDS, where fill is the conductor; on an island whose job is to tie pads to vias, a router track
+crossing it costs a few square millimetres of parallel copper and nothing the rail measure can see. That is a
+question about what the bar means on an island, and it is put to the record rather than answered by a wall.
