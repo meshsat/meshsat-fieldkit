@@ -52,6 +52,9 @@ def t_it_runs_before_the_pre_route_drc_that_judges_the_board():
 
 def t_c_declares_it_with_its_reason():
     d = json.load(open(os.path.join(TOOLS, "boards", "c.json")))
-    assert d.get("prelay_nets") == "/EPD_SDA", "board C does not declare the net this was built for"
+    nets = {n.strip() for n in (d.get("prelay_nets") or "").split(",")}
+    assert {"/EPD_SDA", "/EPD_SCL", "/EPD_DC", "/EPD_RST", "/EPD_CS", "/EPD_BUSY"} <= nets, (
+        "board C does not declare the whole e-paper bus; C15 pre-laid SDA alone and the route then left "
+        "DC, RST and SCL open, the lines beside it in the same corridor: %s" % sorted(nets))
     assert d.get("prelay_layers"), "no layers are named, so the search would take the tool's default two"
     assert "249 mm" in d.get("_prelay_why", ""), "the declaration does not carry the measurement behind it"
