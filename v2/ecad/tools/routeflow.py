@@ -546,7 +546,18 @@ def run(profile_fn, rounds, use_services, dry):
             if met is not None:
                 journal(project, dict(run=rid, round=rnd, board=name, stage="expect",
                                       status="MET" if met else "MISSED", note="the profile predicted: " + enote))
-            if sig in ("CLEAN", "OPEN", "HARD", "KNOT", "EDGE"):
+            _worse = (sig not in ("NO_SESSION", "TOOL_CRASH", "INFRA_FAIL") and best_board[0] is not None
+                      and best_board[2] != rnd)
+            if _worse and sig in ("CLEAN", "OPEN", "HARD", "KNOT", "EDGE"):
+                # 14 September 2026: A WORSE ROUND'S BOARD IS NOT FINISHED. A30's round two came back 13 unrouted
+                # against round one's 8, the journal said "the better board is kept", and the finish then spent
+                # an hour of stub router and closure ladder on the 13-open board that was about to be discarded,
+                # while round one's FINISHED board, which had reached 3, had already been regenerated over. The
+                # finish runs on the board that is kept, once, when the run ends.
+                journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="FINISH_SKIPPED",
+                                      note="round %d's board is worse than round %d's and is not finished" % (rnd, best_board[2])))
+                fst = "REFUSED"; sig = "OPEN" if sig == "CLEAN" else sig
+            elif sig in ("CLEAN", "OPEN", "HARD", "KNOT", "EDGE"):
                 # the finish gets its chance on every routed board: cleanup, stub router, pairs, the routed-board gate
                 fin = prof["finish"]; flog = os.path.join(rdir, "round%d-finish.log" % rnd)
                 journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="FINISHING", note=" ".join(fin["argv"])))
@@ -563,11 +574,12 @@ def run(profile_fn, rounds, use_services, dry):
                     status = "CLEAN"; break
                 if fst == "TOOL_CRASH": status = fst; break
                 if sig == "CLEAN": sig = "OPEN"   # the router was clean but the finish refused: treat as opens for the table
-            if rnd > rounds:
-                status = "STOPPED_BUDGET"
-                journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="%d automatic rounds spent on %s" % (rounds, sig)))
-                # The run ends on whatever the last remedy produced, which may be the worst board of the run.
-                # Put the best one back, so what is left on disk is the best this run reached.
+            def _restore_best_and_finish(status):
+                """The run ends on whatever the last remedy produced, which may be the worst board of the run.
+                Put the best one back, so what is left on disk is the best this run reached, and finish it.
+                14 September 2026: this ran on STOPPED_BUDGET alone. STOPPED_NEEDS_GENERATOR, which is how A30
+                ended (opens after the via-cost remedy and more passes), left round two's worse board in the
+                phase directory with round one's better one sitting in best-round1.kicad_pcb, unfinished."""
                 if best_board[1] and best_board[2] != rnd and os.path.exists(best_board[1]):
                     try:
                         shutil.copy(best_board[1], os.path.join(project, name + ".kicad_pcb"))
@@ -594,9 +606,17 @@ def run(profile_fn, rounds, use_services, dry):
                             journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status=fst, note=fnote + " (restored best board)"))
                             if fst == "CLEAN": status = "CLEAN"
                     except OSError as _e: journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="could not restore the best board: %s" % _e))
+                return status
+            if rnd > rounds:
+                status = "STOPPED_BUDGET"
+                journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="%d automatic rounds spent on %s" % (rounds, sig)))
+                status = _restore_best_and_finish(status)
                 break
             new_route, why = remedy(sig, prof, applied)
-            if new_route is None: status = "STOPPED_NEEDS_GENERATOR"; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note=why)); break
+            if new_route is None:
+                status = "STOPPED_NEEDS_GENERATOR"; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note=why))
+                status = _restore_best_and_finish(status)
+                break
             for k in ("power_layers", "timeout", "threads", "attempts", "via_costs"):
                 if new_route.get(k) != route.get(k): applied.add("passes" if k == "attempts" else k)
             prof["route"] = new_route; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status="REMEDY", note="%s -> %s" % (sig, why)))
@@ -875,7 +895,10 @@ def selftest():
     chk("clean signature", signature({"violations": [{"type": "silk_overlap", "items": []}], "unconnected_items": []})[0] == "CLEAN")
     chk("opens signature", signature({"violations": [], "unconnected_items": [1, 2]})[0] == "OPEN")
     prof = {"route": {"attempts": [50], "threads": 2, "timeout": 4500}, "plane_layers": ["In1.Cu", "In4.Cu"]}
-    r, why = remedy("NO_SESSION", prof, set()); chk("no session -> power layers and timeout x 2", r and r.get("power_layers") == ["In1.Cu", "In4.Cu"] and r["timeout"] == 9000)
+    # 14 September 2026: this predicate asked for the remedy of 11 September (power layers, timeout x 2) after the
+    # remedy itself was removed on the 12th (red team round three H2: a per-pass jar with no session is
+    # infrastructure), so the supervisor's own selftest had read "53 of 54" for two days and nobody read the line.
+    r, why = remedy("NO_SESSION", prof, set()); chk("no session -> no remedy, named as infrastructure", r is None and "infrastructure" in why)
     r, why = remedy("KNOT", prof, set()); chk("knot -> one thread", r and r["threads"] == 1)
     r, why = remedy("KNOT", {"route": {"attempts": [50], "threads": 1}}, set()); chk("knot with one thread stops", r is None)
     r, why = remedy("EDGE", prof, set()); chk("edge stops for the generator", r is None)

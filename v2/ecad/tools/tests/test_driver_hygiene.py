@@ -305,13 +305,19 @@ def t_the_supervisor_keeps_the_best_routed_board_of_a_run():
     i = src.index("def run(profile_fn")
     body = src[i:]
     assert "RESTORED_BEST" in body, "nothing restores the best board when the rounds run out"
-    j = body.index('status = "STOPPED_BUDGET"')
-    tail = body[j:j + 1400]
-    assert "shutil.copy(best_board[1]" in tail, \
-        "the budget stop does not put the best board back, so the run ends on the worst round"
+    k = body.index("def _restore_best_and_finish(")
+    assert "shutil.copy(best_board[1]" in body[k:k + 1200], "the restore does not put the best board back"
     # and a restored board is not a finished board: the finish is what closes the last opens, runs every gate
     # and cuts the deliverable, and it last ran on the round being discarded.
     assert "restored best board" in body, "the restored board never gets its finish"
+    # 14 September 2026: EVERY exit restores it, not the budget stop alone. A30 ended STOPPED_NEEDS_GENERATOR
+    # with round two's worse board in the phase directory and round one's better one unfinished on disk.
+    for exit_ in ('status = "STOPPED_BUDGET"', 'status = "STOPPED_NEEDS_GENERATOR"'):
+        j = body.index(exit_)
+        assert "_restore_best_and_finish(status)" in body[j:j + 400], "%s does not restore the best board" % exit_
+    # and a round that is worse than the best is not finished at all: an hour of stub router and closure
+    # ladder on a board about to be discarded, while the better board's finished state is regenerated over.
+    assert "FINISH_SKIPPED" in body, "a worse round's board still gets the whole finish"
 
 
 def t_a_phase_copy_declares_what_its_board_declares():
