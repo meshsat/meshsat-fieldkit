@@ -1166,3 +1166,41 @@ ruling holds on every board and A meets it. Option 2 (equalising a pair's two es
 worth doing on its own merits and is not needed by any board today. What this cost is two hours and it is the
 second time this week that a tool reported a board's limit when it was reporting its own.
 
+
+### DECISION 24, THE FLOOR PLAN MEASURED A SECOND TIME AND BOARD B REFUSES IT AGAIN (14 September 2026, 13:55 CEST)
+
+**Ruling 18 asked for a floor plan built around the pair corridors. Both ways of asking the packer for one are
+now measured on today's tree, and the board refuses both by the same mechanism.**
+
+| arm | what it asks for | what the board says |
+|---|---|---|
+| `PLACE_NO_UNDER_FINE=1` | no back-side part under a fine-pitch front part, which is this generator's own written rule and it breaks it 71 times | **5 regions overflow, the worst by 86.2 mm** |
+| `PLACE_FINE_MARGIN=2.6` | the room `place_audit`'s own escape envelope wants at a 99-pad QFN, against the 1.6 it gets | **9 regions overflow, the worst by 8.4 mm** |
+
+**86.2 mm is not a rectangle that can be redrawn.** The underside regions ARE the IC pockets of the other
+side, and the parts in them are the decoupling those ICs need within 3 mm. The underside of a three-slot
+compute board is the decoupling of its three slots, so there is no elsewhere inside this outline. Decision 13
+released B's rectangles and that is not the constraint: the constraint is area.
+
+**What did move today, measured with a control arm beside every experiment:**
+
+| arm | of 113 | DIFF100 | USB |
+|---|---:|---:|---:|
+| control, today's tree | **62** | 35 | 27 |
+| the obstacle map at the nets' own class clearances | **64** | 37 | 27 |
+| the layer change judged before it is laid, class bar | 58 | 36 | 22 |
+| the layer change judged before it is laid, fold bar | 57 | 33 | 24 |
+
+The class-aware map is +2 and is declared for B; it is the correct model rather than a lever, because KiCad's
+rule is that the clearance between two items is the larger of their two classes' and the map was using one
+literal for every net on every board. The layer-change test costs pairs at either bar and is off.
+
+**A CORRECTION THAT MATTERS TO EVERY NUMBER IN THIS FILE.** The control says **62** where this board's record
+carried **71** last night. The generators moved between the two, so 71 is not reproducible on today's tree.
+Appendix 32.109's caution, word for word: the baseline also moved because the board did. Every comparison from
+here is against a control arm run beside the experiment, never against a remembered number.
+
+**So decision 24 stands exactly as written, with one option fewer.** Option 1 (keep grinding the pre-router)
+is what today bought +2 from. Ruling 18's floor plan, option 3's "give B more board", is the same request in
+two forms and the packer has now said so twice with a number. Options 2 and 3 are yours; nothing is being
+weakened while this is open, B stays held, and the other six boards are unaffected.
