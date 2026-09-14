@@ -1,0 +1,9 @@
+QUOTE ONLY. This folder is board B's PLACED board with 71 of its 113 differential pairs pre-routed, exported on
+14 September 2026 for a JLCPCB price quote of the current set (MESHSAT-776, MESHSAT-862). It is NOT a
+deliverable and must never be ordered: B is held by the pair ruling of 10 September, which releases no board
+until every pair is laid, and owner decision 24 carries the number and the options.
+
+What is right in it: the outline, the layer count and stack, the finish, the 950 footprints and their positions,
+and the parts list, which is what a quote is priced from. What is not: the copper, because the board is not
+routed. It replaces meshsat-pcb-b-revA-B16-quote of 8 September, whose BOM carried 79 uncoded lines that the
+generators have since filled.
