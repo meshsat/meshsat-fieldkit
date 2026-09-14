@@ -7260,3 +7260,46 @@ pair back, which is exactly what happened before the test existed, so nothing il
 
 **And the first number from the class-aware obstacle map, with the layer-change test still on: 67 of 113 against
 57**, so the map is worth about +10 on that arm. The decisive pair of arms, with the layer test off, is running.
+
+### 32.185 Ruling 18's floor plan measured a second time, and board B refuses it by 86.2 mm (14 September 2026, 14:05 CEST; MESHSAT-862)
+
+Two arms, each one variable, each with a control arm beside it on the same tree.
+
+| arm | what it asks the packer for | what the board says |
+|---|---|---|
+| `PLACE_NO_UNDER_FINE=1` | no back-side part under a fine-pitch front part, which is `gen_pcb_b3.py`'s own written rule and the board breaks it 71 times | **5 regions overflow, worst 86.2 mm** |
+| `PLACE_FINE_MARGIN=2.6` | the room `place_audit`'s escape envelope wants at a 99-pad QFN against the 1.6 mm it gets | **9 regions overflow, worst 8.4 mm** |
+
+**86.2 mm is not a rectangle that can be redrawn**, and decision 13 already released B's rectangles, so the
+constraint is not permission, it is area: the underside regions ARE the IC pockets of the other side and the
+parts in them are the decoupling those ICs need within three millimetres. The pair numbers that did move:
+
+| arm | of 113 | DIFF100 | USB |
+|---|---:|---:|---:|
+| control, today's tree | **62** | 35 | 27 |
+| `PAIR_CLASS_CLEAR=1` | **64** | 37 | 27 |
+| `PAIR_LAYER_CHANGE_FIT=1`, class bar | 58 | 36 | 22 |
+| `PAIR_LAYER_CHANGE_FIT=1`, fold bar | 57 | 33 | 24 |
+
+**AND THE CONTROL IS 62 WHERE THE RECORD CARRIED 71 LAST NIGHT.** The generators moved between the two, so 71
+is not reproducible on today's tree. That is 32.109 word for word, the baseline also moved because the board
+did, and it is the reason a control arm ran beside each experiment rather than a remembered number being used.
+
+### 32.186 A netlist older than its schematic had left the cross-board gate unable to judge, and on the box it was reading an arm (14 September 2026, 14:05 CEST; MESHSAT-862)
+
+`check_contracts` reported every board of the set MISSING in this tree. The cause is its own staleness rule,
+working correctly: the netlist committed beside each phase board was older than the schematic committed beside
+it, B's by two days and C's by one, because the chains that regenerate them run on the box and only the board
+file was being fetched back. A netlist older than its schematic is not a netlist of that board, and a
+comparison against stale data is not a result in either direction.
+
+Fetched schematic and netlist together from the directories that generated them: **ALL CONTRACTS PASS, 42 of
+42**, the first reading of this gate on seven boards that all exist.
+
+**And a second defect behind it, on the host where it matters.** The check found its netlist by globbing
+`<stem>*/out/<stem>.net` and taking the newest, which was written for a board generated in a copy directory.
+**Forty-one directories match `pcb-b-compute*` on the box**, every one an arm laid down to measure a knob, so
+the newest is whichever arm ran last: the one gate that exists to compare boards with each other could be
+reading an arm's netlist. The phase a board cuts is declared in `boards/<letter>.json` and the routeflow
+profile of that phase names its project directory, so the directory is read rather than guessed, with the glob
+left as the fallback for a tree that carries no profiles.
