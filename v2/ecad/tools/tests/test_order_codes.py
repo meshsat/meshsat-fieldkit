@@ -341,3 +341,30 @@ def t_a_manufacturers_prefix_on_an_order_code_is_the_same_part():
                       ("SMCJ15A", "SMCJ18A"),               # one digit apart and a different clamp voltage
                       ("1k", "X1kY")):                      # too short to be contained credibly
         assert not jc.same_part(want, got), "%s and %s are NOT the same part and were matched" % (want, got)
+
+
+def t_a_maker_and_a_part_number_inside_parentheses_name_the_part():
+    """Board B's HDMI receptacle reads "HDMI type A receptacle (Molex 208658-1001): cable to the Xenarc
+    709GNK pass-through on the face plate". Parentheses are blanked before the search, for the good reason
+    that they usually hold an explanation full of net names, so the only part number in the row was thrown
+    away and the tool reached past it to 709GNK, which is the MONITOR the cable goes to. A correct order
+    code read WRONG_MODEL for a fortnight.
+
+    The refinement has to stay narrow: a bare `(RFBOUT2)` and a bare `(SX1262)` are still explanations, and
+    position still decides, so `Ebyte E72-2G4M20S1E CC2652P` still means the module and not the chip in it.
+    """
+    import importlib.util, os
+    spec = importlib.util.spec_from_file_location("jc", os.path.join(TOOLS, "jlc_certify.py"))
+    jc = importlib.util.module_from_spec(spec); spec.loader.exec_module(jc)
+    cases = [
+        ("HDMI type A receptacle (Molex 208658-1001): cable to the Xenarc 709GNK pass-through on the face plate",
+         "208658-1001", "the maker's part number inside the parentheses"),
+        ("10.0k 1% (RFBOUT2)", None, "a bare parenthetical is a net name, not a part"),
+        ("Ebyte E22-900M30S 1 W LoRa (SX1262)", "E22-900M30S", "the module, not the silicon inside it"),
+        ("Ebyte E72-2G4M20S1E CC2652P", "E72-2G4M20S1E", "the first token still wins"),
+        ("100nF 50V X7R (decoupling for U5)", None, "a jellybean with a lower-case explanation stays a jellybean"),
+    ]
+    for comment, want, why in cases:
+        got = jc.intended_part(comment)
+        if got != want:
+            raise AssertionError("%s: asked for %r, the tool says %r (%s)" % (why, want, got, comment[:60]))
