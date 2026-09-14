@@ -1084,3 +1084,47 @@ number this project's own gate refuses and the standard does not.
 1; what changes is the bar, and the bar is currently stricter than the standard by a factor of ten.
 **A is otherwise finished**: 0 hard, one connection open at the last count, every rail measured on the fill it
 is cut with, and its copper answers all four density findings.
+
+## DECISION 26, OPEN: board C is one connection short and no tool in this tree can close it (14 September 2026, 10:55 CEST)
+
+**Where C stands.** C11 routes to **0 hard and ONE unrouted**, passes `check_pcb_c` ALL PASS on the refilled
+board, `dc_drop` 1 of 1 rail MET, `impedance` (no pair on this board carries a target, declared that way in the
+schematic), and `check_contracts` ALL PASS. The deliverable is refused for that one connection, and the gate is
+right to: the set's own definition of clean is 0 unrouted.
+
+**The connection is `/EPD_SDA`**, from J_EPD pin 14 at (225.75, 116.95) to U3 pad 5 at (420.89, 273.95): **249
+mm across the panel**, both ends already escaped to their own vias, and not one millimetre of it laid. The
+panel is a U with the display window through the middle, so that connection has exactly ONE corridor: east
+along the top strip, then south down the right strip. Drawn and read on both routing layers, **that corridor is
+a dense parallel bundle** of the panel's other signals.
+
+**Everything that was tried, and what each said.**
+
+| attempt | result |
+|---|---|
+| 30-pass route (C11 round 1) | 7 unrouted; the finish closed 6 |
+| `via_costs` remedy round (C11 round 2) | **3 unrouted**, the finish closed 2: the board's best, ONE open |
+| continuation, 8 passes in 3600 s (its budget corrected from 80 passes in 900 s, which bought ONE pass) | 3 in, 3 out |
+| stub router, window scale 25, grid 0.2, 80 M nodes (the A22 recipe) | closed the other two, `FAILED: /EPD_SDA track -> track` |
+| stub router, the same window at **grid 0.1** | the same: it closes the other two and refuses this one |
+| **45-pass route (C12 round 1)** | **12 unrouted**: more passes made it worse |
+| C12 round 2 with `via_costs` | 4 unrouted, the stub router closed 2, leaving **two** |
+
+**What that adds up to.** A search on a 0.1 mm grid over the whole board, on all three routing layers, finds no
+path: the lane is not there to be found, so this is not a closure problem and no amount of stub searching will
+make it one. The router itself, given 45 passes and a via-cost remedy, does not free one either.
+
+**Three options.**
+
+1. **A placement change on C**, which is what the record has said about this board twice (C10's last connection
+   was also at U3, walled in by its own package). Moving U3 or J_EPD, or splitting the bundle so one lane is
+   free, is a day with a re-route behind it.
+2. **Rip up a neighbour by hand** and let the router lay both: `unknot` does this for a router knot, but
+   choosing which net to sacrifice is a judgement nothing in the tree makes.
+3. **Ship C with the connection made as a wire link** on the assembled board, declared in the assembly notes.
+   It is a panel backer, the signal is an I2C SDA line to the e-paper at 400 kHz, and a 250 mm wire is
+   electrically unremarkable. Cost: a hand-soldered link on five boards and a line in `ASSEMBLY.md`.
+
+**Recommendation: 1, and 3 only if the schedule forces it.** C is otherwise finished, and the board is already
+laid out around a display window that leaves it one corridor: the next C phase should widen that corridor
+rather than keep asking the router for a lane that is not there.
