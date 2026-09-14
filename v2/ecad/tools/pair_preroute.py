@@ -903,7 +903,12 @@ def main(a):
     # the difference back in bumps on its own copper. A's USB_D8 comes off this pass 1.77 mm apart in every
     # route, because the mismatch is this pass's corner geometry and not the router's, and the owner's gate is
     # 1 mm. The tolerance is the gate's own margin: a pair inside it is left alone.
-    LEG_MATCH = os.environ.get("PAIR_LEG_MATCH", "1") != "0"
+    # OFF by default on its own measurement (14 September 2026). On A it fits nothing, because A's pair
+    # corridors have no free copper beside them, and it says so with the test that refused each bump. On
+    # B it fits plenty: 26 pairs got bumps and the pass fell from **71 of 113 to 61**, because copper
+    # added to match one pair is copper the next pair has to route around. A length matcher that costs
+    # ten pairs to fix none is not a default; a board that wants it declares it.
+    LEG_MATCH = os.environ.get("PAIR_LEG_MATCH", "0") != "0"
     LEG_MATCH_TOL = float(os.environ.get("PAIR_LEG_MATCH_TOL", "0.5"))
     _end_fit = [0]
     # 12 September 2026: the wall. "the legs clear no smoothing of the centreline" is 28 of the 68 failures left on
@@ -1636,6 +1641,7 @@ def main(a):
                     n_fit = int((ln - 1.0) / (2 * p_))
                     if n_fit < 1: continue
                     n_use = min(n_fit, max(1, int(math.ceil((want - got) / (2 * A)))))
+                    A = min(A, (want - got) / (2 * n_use))   # never add more than the difference: /ETH2_P2 was 2.71 mm apart and got 3.60 back (14 September 2026)
                     a0 = (ln - n_use * 2 * p_) / 2.0
                     pts = [(x1, y1), (x1 + ux * a0, y1 + uy * a0)]
                     cx, cy = pts[-1]
