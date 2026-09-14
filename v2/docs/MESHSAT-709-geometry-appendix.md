@@ -7164,3 +7164,99 @@ path and a straighter path is two legs of one length. `boards/a.json` declares i
 USB_WALL does not move at either value: 23 of its 36 mm are within 2 mm of a pad, in the wall connector's own
 fan, and it is **owner decision 25** with what 1.47 mm is worth on a USB 2.0 pair (about 10 ps against a 100 ps
 budget) and three options.
+
+### 32.182 Three tools reported their own limits as board A's, and A closes (14 September 2026, 12:55 CEST; MESHSAT-862)
+
+**A28 reads 0 hard and 0 unrouted.** Nothing on the board moved to get there. A27's routed copper carries one
+meander bump on `/USB_D8_N`, one on `/USB_WALL_P`, a short `/POE_SW2` run with a via down to In2, and a 1.635 mm
+`/VBUS20` run on B.Cu. Every one of those four was refused this morning, and every refusal was a tool describing
+itself.
+
+**1. The length matcher was gated on a hypothesis.** `MEANDER_LOCKED` was written on 13 September so that a pair
+the pre-router lays end to end can still be lengthened, and it fired only when the net had **no unlocked copper
+at all**. The board says otherwise. Measured on A27's own four legs:
+
+| leg | segments | unlocked | unlocked, longest | locked, longest | windows before | after |
+|---|---:|---:|---:|---:|---:|---:|
+| `/USB_D8_N` | 12 | 4 | 0.03 mm | 109.45 mm | 0 at every amplitude | 2 |
+| `/USB_D8_P` | 16 | 4 | 0.02 mm | 109.63 mm | 0 | 2 |
+| `/USB_WALL_P` | 25 | 5 | 2.27 mm | 8.33 mm | 0 | 2 |
+| `/USB_WALL_N` | 21 | 5 | 2.27 mm | 8.87 mm | 0 | 3 |
+
+The unlocked pieces are the router's own zero-length junction fragments. **Four pieces of nothing were enough to
+keep the branch shut**, so three rounds of length matching chose between them and reported "could not place the
+last 1.78 mm". With the locked copper offered ALONGSIDE the unlocked, one round closes the gate: USB_D8 0.01 mm,
+USB_E6 0.13, USB_WALL 0.00, hard 0 and unrouted unchanged. **Decision 25 is withdrawn and the 1 mm ruling is
+untouched.** My own rule of the day before had pinned the hypothesis rather than the measurement, and it passed
+on a tool that could never fire.
+
+**2. The closest two pieces of two islands can be the one place a closure cannot go.** `direct_close` reads the
+DRC's unconnected pair, walks it out to the two ISLANDS of the net's copper, and takes the closest pair between
+them. For `/VBUS20` that pair is **pad 3 and pad 1 of the same QFN, 0.800 mm apart with pad 2 (`/CH_ACN`)
+between them**, so every shape bridges pad 2's solder mask; the tool printed "no shape the DRC accepts" on three
+runs. The further pairs of the same two islands are offered now, in order of distance, capped by
+`--island-tries`. "Further but legal beats closer but illegal" was already this tool's rule for the hop at a
+walled-in pad; it had never been applied to the PAIRING, only to one end of it. `/POE_SW2` closed on the first
+such pair.
+
+**3. A via and a track end at one point are one point.** The pair that closes `/VBUS20` is the two islands' own
+vias, 1.635 mm apart, on a back side carrying under six percent of this board's copper. It was offered, and it
+was offered **five shapes, every one on F.Cu**: both vias have a track ending on them, `pieces_of` lists the
+track end first, and the candidate was built from that end's single layer. With the layers at a point unioned,
+the same pair gets twenty shapes across six layers and the first one, `on B.Cu, direct`, is accepted. **A shared
+layer that is never tried is not a shared layer**, and the tool could not tell me which of the two it was doing
+until each island pair was printed as it was tried: the `whys` list is capped at fourteen and the first
+attempt's shapes filled it.
+
+**And one of its own crashes was invisible.** The island ladder took a fortieth `LoadBoard`-fill-`SaveBoard` in
+one interpreter and pcbnew died of a segmentation fault, after the run had already closed `/POE_SW2` and written
+it to disk, so the second open was never judged and nothing said why. Each trial board is built in its own
+process now: the judge never loads a board it is about to throw away, and a crash in one trial is a refused
+shape named as one.
+
+### 32.183 The stub router searched every board at one clearance, and C's classes are finer than it (14 September 2026, 12:55 CEST; MESHSAT-862)
+
+`stub_router.py` was taught to read the net's class for its WIDTH and its VIA on 13 September, after every
+closure for a week had been laid at the default 0.25 mm with a 0.6/0.3 via (32.157). **The CLEARANCE was left
+behind as the literal `CLR = 0.16`**, for every net of every board. C's four classes are all **0.127**, so the
+obstacle map was 0.033 mm too fat on every side of every lane the panel's own copper was laid in. The bar is the
+larger of the two nets' classes now, KiCad's own rule, with the grid's hundredth of a millimetre on top, and the
+number is printed beside the width and the via.
+
+**On C it changed nothing, and that is the answer it was asked for.** C12 ends 0 hard with two opens, `/PWM1`
+and `/HB2`, and both pads sit in OPEN GROUND: nothing within 2.12 mm of TP29, nothing but its own partner's
+tracks within 1.65 mm of R44. A board-wide search at a 0.1 mm grid on all three routing layers, at 0.137 mm
+instead of 0.16, finds no path for either. **The lanes are not there and no closure will make them**: In2 already
+carries 1,439 tracks and 11,014 mm, 37 percent of the board's copper, In1 is the ruled solid ground plane, and
+the U-shaped outline leaves the strips as the only corridors. C13 is running with the rip-up cost at 10 against
+the default 100, which is the second lever `fr_rules` writes and has never been moved on this board.
+
+**The same literal is in the pair pre-router**, where the map it inflates is what the corridor search and both
+leg searches read, so it decides pairs rather than closures. `PAIR_CLASS_CLEAR` makes it class-aware and is off
+until an arm grades it.
+
+### 32.184 The layer-change test is correct copper and costs fourteen of B19's pairs (14 September 2026, 12:55 CEST; MESHSAT-862)
+
+Yesterday's last change judged the pair's layer-change emission, four segments and two vias, against itself
+before the spot is taken. Two arms at the declared B19 baseline, one variable each, the same placed board:
+
+| the layer-change test | of 113 | DIFF100 | USB |
+|---|---:|---:|---:|
+| not there (the record's number) | **71** | 38 | 33 |
+| at the class clearance | 58 | 36 | 22 |
+| at the fold detector | 57 | 33 | 24 |
+
+**The bar was wrong and correcting it recovered nothing.** Writing an own-legs test as a clearance test rather
+than a fold detector is appendix 32.135's finding, and it cost thirteen DIFF100 pairs then (22 of 48 to 9) as it
+costs them now; the two legs arrive at a layer change AT THE PAIR PITCH, which on the inner-layer DIFF100
+geometry is 0.257 mm against a class demand of 0.257. But with the fold detector in place the number is 57, not
+71, so the bar was never the whole story. **This is 32.95's law restated, and I had written that law into this
+same file forty lines above the change**: on a greedy pass with no rip-up, a bar that refuses a spot moves the
+failure rather than the pair, and a spot refused early sends the corridor somewhere that costs more later.
+
+`PAIR_LAYER_CHANGE_FIT`, off, and its OWN knob rather than `PAIR_END_FIT`'s, because END_FIT is worth +16 on the
+same board and the two have to be separable. The post-lay gate still judges the copper and rolls a violating
+pair back, which is exactly what happened before the test existed, so nothing illegal ships either way.
+
+**And the first number from the class-aware obstacle map, with the layer-change test still on: 67 of 113 against
+57**, so the map is worth about +10 on that arm. The decisive pair of arms, with the layer test off, is running.
