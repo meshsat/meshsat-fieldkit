@@ -486,14 +486,14 @@ for _c in ("C13", "C14", "C15"):
     _cr = pads_rect(net_pads(vbs, [_c]), 0)
     _cy = (_cr[1] + _cr[3]) / 2
     col(vbs, (_cr[0] + _cr[2]) / 2, _cy - 0.55, _cy + 0.55, 2)
-# The keep-out is the two strips of island copper ABOVE and BELOW the pad row, which carry the current and
-# hold no pad of any net; the row itself is left alone, ground pads, joins and all.
-_vbp = pads_rect(net_pads(vbs, ["R11", "C13", "C14", "C15"]), 0.0, 0.0)
-PC.keepout("keep tracks off the VBUS20 island, north", (vbr[0], _vbp[3] + 0.15, vbr[2], vbr[3]), pcbnew.F_Cu)
-PC.keepout("keep tracks off the VBUS20 island, south", (vbr[0], vbr[1], vbr[2], _vbp[1] - 0.15), pcbnew.F_Cu)
-_r16b = pads_rect(net_pads(vbs, ["R16"]), 0)
-if _r16b[3] + 0.4 < _vbp[1] - 0.15:   # a degenerate rectangle is not a keep-out, it is a bug with an outline
-    PC.keepout("keep tracks off the VBUS20 leg", (_r16x - _leg + 0.2, _r16b[3] + 0.15, _r16x + _leg - 0.2, _vbp[1] - 0.15), pcbnew.F_Cu)
+# NO KEEP-OUT ON THIS ISLAND, and the two attempts at one are why (14 September 2026). Drawn at the island's
+# own rectangle it forbade the three locked joins `join_adjacent_pins` lays between the output capacitors'
+# ground pads; drawn as the two strips above and below the pad row plus the leg, it forbade a GND track
+# crossing the leg. The leg is 4.5 mm of a board whose front side is the front end's own gate drives and
+# sense lines, and a keep-out there is a wall across other people's routing. The six vias above are the
+# change with a physical argument behind them: they are barrel, and barrel is what the rail was short of.
+# If the island is still cut into pieces on the next route, the answer is a wider island or a second layer,
+# not a wall.
 # 6. +12V_HF: ALSO NO POWER COPPER, and the whole rail travelled 75.6 mm on one 0.400 mm In3 track, which
 # IPC gives 0.37 A against the rail's 1.0. That is not a marginal number: solving I = k dT^0.44 A^0.725 for
 # the rise gives about 93 K on that track. The band follows the corridor the ROUTER found, which is the
