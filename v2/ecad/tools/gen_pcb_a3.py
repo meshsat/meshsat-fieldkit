@@ -300,7 +300,13 @@ jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
 # vias IN that pad put the rail on 35 um copper at the point it is made. It is the VBUS20 pattern of this
 # morning, and the reason it is right here too: a rail should meet its outer copper at its source.
 _r55 = pads_rect(net_pads(pa, ["R55"]), 0)                                    # the shunt's output pad: the rail's source
-PC.union(pa, "PA rail", [(_r55[0] - 1.0, -15.0, 106.25, -8.0), (101.75, -15.0, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin
+# 14 September 2026, MEASURED ON A28: THE CURRENT CROWDS THE INSIDE OF THE TURN. The east run is 7 mm and
+# the north run 4.5, and where they meet the worst pour cell reads 128 A/mm2 against 82.7 (ratio 1.54) at
+# (95.2, -9.7), which is the inside corner. A right-angled turn in a band is a neck whatever the two widths
+# are, because the shortest path hugs the inside of it; the chamfer block below is 2.5 by 4 mm of copper on
+# that corner and it costs nothing anywhere else.
+PC.union(pa, "PA rail", [(_r55[0] - 1.0, -15.0, 106.25, -8.0), (101.75, -15.0, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25),
+                         (99.25, -15.0, 101.75, -11.0)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin, and the chamfer on the turn
 col(pa, (_r55[0] + _r55[2]) / 2, (_r55[1] + _r55[3]) / 2 - 1.1, (_r55[1] + _r55[3]) / 2 + 1.1, 2)   # in the shunt's own pad
 col(pa, pr[2] + 1.3, -13.4, -9.6, 3)                                          # three vias in the head island, in the band: a via mid-run has no F.Cu copper at its other end and cleanup_dangling would take it
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
@@ -340,8 +346,12 @@ PC.union(vr, "VIN_RAW under the trunk", [(fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5)]
 PC.keepout("keep tracks off VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), DIVE_CU)
 for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, DIVE_CU)
 col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 2)
-row(vr, -117, -113, fe[1] - 1.3, 3)
-row(vr, -115, -111, fe[3] - 3.0, 3)                                            # the head's north end, where the cell measure put the neck
+# 14 September 2026, MEASURED ON A28: three vias a row is 3.3 A against this rail's 8. The worst via on the
+# board carries 3.25 A through one 0.40 mm barrel at (-113.0, 64.7), which IPC rates at 1.11, and the worst
+# pour cell sits a millimetre from it at 171 A/mm2 against 82.7 (ratio 2.06): a cell at a via is a funnel,
+# and this one funnels the whole head. Six a row is 6.7 A each and the two rows together carry the rail.
+row(vr, -117.5, -112.5, fe[1] - 1.3, 6)
+row(vr, -116.0, -110.0, fe[3] - 3.0, 6)                                        # the head's north end, where the cell measure put the neck
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
 f1 = f1_; fx0, fx1 = fx0_, fx1_
 # 13 September 2026, MEASURED ON A26: THE COMB FILLS IN TWO PIECES AND THE CUT IS A VIA COLUMN. The trunk
@@ -353,6 +363,16 @@ f1 = f1_; fx0, fx1 = fx0_, fx1_
 # not assumed), so the comb takes a bay out there and walks round the column on solid copper.
 PC.union(vb, "VBAT", [(fx0, f1[1], fx1, 44.5), (fx0, 38.5, -4, 44.5), (fx0, -12.5, -48, -7.5),
                       (fx1 - 0.5, 5.0, fx1 + 5.5, 19.0)], pcbnew.B_Cu, priority=2)   # one comb: the trunk from F1, the collector under the converters, the PA spur, the bay past the charger's via column
+# 14 September 2026, MEASURED ON A28: THE TRUNK AND THE PLANE ARE THE SAME RAIL AND NOTHING JOINED THEM AT
+# THE SOURCE. The B.Cu trunk runs north from F1's pad and the In2 plane covers the same ground from y -44, and
+# the only vias between them were the three at each converter island at y 41 to 43.6, eighty millimetres north.
+# So the pack's 10 A arrived on B.Cu at F1, and the 51 percent of it the In2 plane carries had to get there
+# through whatever the router laid: a 0.500 mm In2 track at (-96.7, -42.6) carrying 1.17 A against IPC's 0.40
+# (ratio 2.96) and a single 0.25 mm via at (-95.5, -37.3) carrying 1.57 A against 0.79. Fifteen 0.8/0.4 vias
+# across the trunk's full five millimetres hand the rail over on a front instead: IPC gives a 0.4 mm barrel
+# 1.11 A, so the field is rated 16 A against the 5 the plane takes. They sit north of y -39.5, clear of the
+# VIN_RAW dive's In3 polygon under the trunk, which a through via would otherwise stand in.
+for _dx in (0.9, 2.5, 4.1): col(vb, fx0 + _dx, -38.0, -28.0, 5)
 for n, xL, Lr, Rr, Jr, out in SLOT:
     ur = pads_rect(net_pads(vb, ["U%d" % {"1": 4, "2": 5, "3": 6, "D": 7}[n]]), 0.5, 0.5)   # the converter's VIN pin (pin 2, west side)
     # an L: a via column west of the pin row (the other pins would slice a rectangle to 48 percent fill, 32.69) and a finger into the pin's pad
@@ -416,6 +436,20 @@ else:
 _r11 = pads_rect(net_pads(vbs, ["R11"]), 0)
 col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 0.55, (_r11[1] + _r11[3]) / 2 + 0.55, 2)   # in the ISNS shunt's own pad
 col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 0.55, (_r16[1] + _r16[3]) / 2 + 0.55, 2)                      # and in the charger's input shunt
+# 14 September 2026, MEASURED ON A28: FOUR VIAS CARRY A SIX AMP RAIL BETWEEN ITS TWO LAYERS. The F.Cu island
+# and the In3 polygon under it are tied only inside the two shunts' pads, two vias each, and IPC gives a
+# 0.4 mm barrel 1.11 A: four of them are rated 4.4 A against the rail's 6. The measurement says where the
+# current went instead, In3 carrying 78 percent of it with a 0.500 mm router track at (-95.2, 37.1) taking
+# 1.28 A against IPC's 0.40 (ratio 3.23) and the worst pour cell at 158 A/mm2 against 52 (ratio 3.04).
+# Six more vias stand in the island's own copper between the three output capacitors, where the only pads are
+# this net's; and the island gets the track keep-out every BAND on this board has carried since 32.39 and no
+# island ever has, because the island being cut into pieces by the router's signal tracks is what sent the
+# current down to In3 in the first place (the comment above predicted it and the first route confirmed it).
+_vcaps = sorted(pads_rect(net_pads(vbs, [_c]), 0) for _c in ("C13", "C14", "C15"))
+for _a, _b in zip(_vcaps, _vcaps[1:]):
+    _my = (_a[1] + _a[3]) / 2
+    col(vbs, (_a[2] + _b[0]) / 2, _my - 0.9, _my + 0.9, 3)
+PC.keepout("keep tracks off the VBUS20 island", (vbr[0], vbr[1], vbr[2], vbr[3]), pcbnew.F_Cu)
 # 6. +12V_HF: ALSO NO POWER COPPER, and the whole rail travelled 75.6 mm on one 0.400 mm In3 track, which
 # IPC gives 0.37 A against the rail's 1.0. That is not a marginal number: solving I = k dT^0.44 A^0.725 for
 # the rise gives about 93 K on that track. The band follows the corridor the ROUTER found, which is the
