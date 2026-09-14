@@ -2332,11 +2332,23 @@ def main(a):
                             vx_, vy_ = cx_ + nx_ * split_ * sign, cy_ + ny_ * split_ * sign
                             vs[net_.GetNetname()] = ((prev_end_[0], prev_end_[1], vx_, vy_, Lprev), (vx_, vy_, poly_start_[0], poly_start_[1], L), (vx_, vy_))
                         P_, N_ = vs[net_p.GetNetname()], vs[net_n.GetNetname()]
+                        # 14 September 2026, MEASURED AND CORRECTED THE SAME DAY, and it is the mistake of
+                        # 32.135 made a second time in the same file. Written with the CLASS clearance as its
+                        # bar, this test took B19 from 71 of 113 to 58 in one arm, against the 22 of 48 to 9
+                        # the fold detector above records for exactly the same error in exactly the same
+                        # place. The two legs of one pair arrive at a layer change AT THE PAIR PITCH, which on
+                        # the inner-layer DIFF100 geometry is 0.257 mm against a class demand of 0.257, so a
+                        # rasterised candidate wobbles across the bar and the whole spot is refused. Between
+                        # the pair's own two TRACKS the demand is a fold detector, half the pair's own pitch;
+                        # between a VIA of one leg and a track of the other it stays the class number, because
+                        # a 0.4 to 0.7 mm via beside the partner's track is not a marginal geometry and the
+                        # post-lay gate judges it at the class clearance with no pair exemption anywhere.
                         _bar = max(0.0, clr_c - 0.005)
                         for a_ in P_[:2]:
                             for b_ in N_[:2]:
                                 if a_[4] != b_[4]: continue
-                                if _seg_dist(a_[0], a_[1], a_[2], a_[3], b_[0], b_[1], b_[2], b_[3]) < _bar + wid(a_[4]): return False
+                                _fold = min(clr_c + wid(a_[4]), 2.0 * abs(dof(a_[4]))) * 0.5
+                                if _seg_dist(a_[0], a_[1], a_[2], a_[3], b_[0], b_[1], b_[2], b_[3]) < _fold: return False
                         for a_, other in ((P_, N_), (N_, P_)):   # a via of one leg against the other leg's two pieces
                             for b_ in other[:2]:
                                 if _pt_seg(a_[2][0], a_[2][1], b_[0], b_[1], b_[2], b_[3]) < _bar + vd / 2 + wid(b_[4]) / 2: return False
