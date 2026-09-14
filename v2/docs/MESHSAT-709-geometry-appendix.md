@@ -7303,3 +7303,29 @@ the newest is whichever arm ran last: the one gate that exists to compare boards
 reading an arm's netlist. The phase a board cuts is declared in `boards/<letter>.json` and the routeflow
 profile of that phase names its project directory, so the directory is read rather than guessed, with the glob
 left as the fallback for a tree that carries no profiles.
+
+### 32.187 Board C is at a congestion cliff: more search wanders, and a free rip-up wanders furthest (14 September 2026, 14:35 CEST; MESHSAT-862)
+
+Three routes of the same copper, one variable each, and they do not order the way more effort would suggest.
+
+| route | passes | rules | hard | unrouted | vias |
+|---|---:|---|---:|---:|---:|
+| C11 round 2 | 30 | `via_costs 100` | 0 | **3** (the finish closed two) | |
+| C12 round 2 | 45 | `via_costs 100` | 0 | 4 (the finish closed two) | 385 |
+| C13 | 45 | `via_costs 100`, `ripup 10` | 0 | **59** | 133 |
+
+**The rip-up cost is a real lever and it points the other way.** At 10 against the default 100 the router tears
+up freely and never converges: it lays a third of the vias and leaves fifty-nine connections. It is not tried
+higher, because the first two rows already say the simpler thing: **thirty passes beat forty-five on this
+board**, twice, and a board whose strips are its only corridors does not reward more search.
+
+C14 is C11's recipe on today's copper, thirty passes with the via-cost remedy applied from the first round
+rather than the second, because on C11 that remedy is what took seven unrouted to three.
+
+**And the two connections C12 could not make are not a search problem at all.** `/PWM1` runs from U3 pad 12 in
+the right strip to R44 in the left, 255 mm the long way round a display window, and `/HB2` needs a branch to
+TP29 in the bottom strip. Both pads sit in open ground, nothing within 2.12 mm of TP29 and nothing but its own
+partner's tracks within 1.65 mm of R44, and a board-wide search at a 0.1 mm grid on all three routing layers,
+at the panel's own class clearance of 0.127 rather than the tool's old 0.16 literal, finds no path for either.
+In2 already carries 1,439 tracks and 11,014 mm, 37 percent of the board's copper; In1 is the ruled solid
+ground plane. Decision 26 is where that goes.
