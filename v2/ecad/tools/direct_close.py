@@ -213,6 +213,16 @@ def main(argv):
         if A and B:
             # the closest pair of points between the two CLUSTERS the DRC's two pieces belong to
             items_ = pieces_of(b, net); lab = clusters_of(b, net, items_)
+            # A VIA AND A TRACK END AT ONE POINT ARE ONE POINT, and until today the track end won (14 September
+            # 2026, A27's /VBUS20). Its cheapest island pair is the two islands' vias, 1.635 mm apart on a back
+            # side that carries under six percent of this board's copper; both vias have a track ending on them,
+            # `pieces_of` lists the track end first, and the candidate was built with that end's single layer.
+            # So the pair was offered five shapes, all of them on F.Cu, straight back through the QFN pad row
+            # that had already refused every earlier shape, and the back side was never tried at all. The layers
+            # available at a point are the union of the layers of every piece of this net that touches it.
+            pos_layers = {}
+            for _k0, _p0, _l0, _n0, _o0 in items_: pos_layers.setdefault((_p0.x, _p0.y), set()).update(_l0)
+            def layers_at(pt, fallback): return sorted(pos_layers.get((pt.x, pt.y), set(fallback)))
             def near_idx(pt):
                 return min(range(len(items_)), key=lambda i: (items_[i][1].x - pt.x) ** 2 + (items_[i][1].y - pt.y) ** 2)
             ca, cb = lab[near_idx(A[1])], lab[near_idx(B[1])]
@@ -223,9 +233,10 @@ def main(argv):
                     if lab[i] != ca: continue
                     for j, (k2, p2, l2, n2, o2) in enumerate(items_):
                         if lab[j] != cb: continue
-                        if not [l for l in l1 if l in l2]: continue
+                        L1, L2 = layers_at(p1, l1), layers_at(p2, l2)
+                        if not [l for l in L1 if l in L2]: continue
                         d2 = (p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2
-                        if best is None or d2 < best[0]: best = (d2, (0.0, p1, l1, n1), (0.0, p2, l2, n2))
+                        if best is None or d2 < best[0]: best = (d2, (0.0, p1, L1, n1), (0.0, p2, L2, n2))
                 if best and best[0] < (A[1].x - B[1].x) ** 2 + (A[1].y - B[1].y) ** 2:
                     A, B = best[1], best[2]
         if not A or not B:
@@ -380,7 +391,7 @@ def main(argv):
                     _seen.add(_key)
                     _g = math.hypot(mm(_p1.x - _p2.x), mm(_p1.y - _p2.y))
                     if _g > MAXD: continue
-                    _cands.append((_g, (0.0, _p1, _l1, _n1), (0.0, _p2, _l2, _n2)))
+                    _cands.append((_g, (0.0, _p1, layers_at(_p1, _l1), _n1), (0.0, _p2, layers_at(_p2, _l2), _n2)))
             _cands.sort(key=lambda c: c[0])
             if _cands:
                 print("direct_close: %-14s %d more pairs of the two islands are within %.1f mm, nearest %s to %s at %.3f"

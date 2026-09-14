@@ -78,3 +78,18 @@ def t_every_shared_layer_is_offered_not_only_the_first():
     assert "for Lc in order:" in body, "the ladder is built on one shared layer only"
     assert "order = [L_] + [l for l in cm_ if l != L_]" in body, (
         "the layer the anchors prefer must still be tried first, and the rest after it")
+
+
+def t_a_via_and_a_track_end_at_one_point_are_one_point():
+    """A27's /VBUS20: both islands end in a through via with a track ending on it, `pieces_of` lists the
+    track end first, and the candidate was built with that end's SINGLE layer. The pair was offered five
+    shapes, every one on F.Cu, straight back through the QFN pad row that had already refused everything,
+    and the back side was never tried."""
+    assert "pos_layers" in DC, "the layers available at a point are not unioned at all"
+    i = DC.find("def layers_at(")
+    assert i > 0, "there is no lookup of the layers at a point"
+    for anchor in ("_cands.append((_g,", "if best is None or d2 < best[0]"):
+        j = DC.find(anchor)
+        assert j > 0, "the candidate builder moved: %s" % anchor
+        near = DC[max(0, j - 400):j + 200]
+        assert "layers_at(" in near, "a candidate is still built from one piece's own layer list: %s" % anchor
