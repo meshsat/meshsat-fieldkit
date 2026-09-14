@@ -17,7 +17,7 @@ turns it off and restores the plain greedy pass; PAIR_RIP_MARGIN, PAIR_RIP_MAX a
 
 Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
   prints one line per pair and `pair_preroute: N of M pairs laid, R rip-up event(s)`, exit 1 when a pair failed."""
-import sys, os, re, math, json, heapq, time
+import sys, os, re, math, json, heapq, time, collections
 import netclass
 
 # ---------------------------------------------------------------- the compiled search needs an interpreter that has numba
@@ -1607,7 +1607,7 @@ def main(a):
             the partner is NOT on, and every replacement is judged by `partner_clear` and by this leg's own
             obstacle map before any copper is laid: a bump that would touch anything is simply not made.
             Returns the millimetres actually added."""
-            got = 0.0
+            got = 0.0; _why = collections.Counter()
             o_name = long_net.GetNetname()
             mine = [t for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == short_net.GetNetname()]
             mine.sort(key=lambda t: -t.GetLength())
@@ -1616,7 +1616,7 @@ def main(a):
                 L_ = t.GetLayer(); wl = wid(L_); p_ = wl + clr_c + 0.05
                 x1, y1 = mm(t.GetStart().x), mm(t.GetStart().y); x2, y2 = mm(t.GetEnd().x), mm(t.GetEnd().y)
                 ln = math.hypot(x2 - x1, y2 - y1)
-                if ln < 4 * p_ + 1.0: continue
+                if ln < 4 * p_ + 1.0: _why["the piece is shorter than two bumps"] += 1; continue
                 ux, uy = (x2 - x1) / ln, (y2 - y1) / ln
                 # the side away from the partner: take the partner's nearest piece on this layer as the sign
                 sx = sy = 0.0
@@ -1626,7 +1626,7 @@ def main(a):
                     sx += ox - (x1 + x2) / 2; sy += oy - (y1 + y2) / 2
                 vx, vy = -uy, ux
                 if vx * sx + vy * sy > 0: vx, vy = -vx, -vy        # point AWAY from the partner
-                for A in (0.6, 0.4, 0.25):
+                for A in (0.6, 0.4, 0.25, 0.15, 0.10):
                     n_fit = int((ln - 1.0) / (2 * p_))
                     if n_fit < 1: continue
                     n_use = min(n_fit, max(1, int(math.ceil((want - got) / (2 * A)))))
@@ -1640,7 +1640,7 @@ def main(a):
                     pts.append((x2, y2))
                     cand = [(pts[k][0], pts[k][1], pts[k + 1][0], pts[k + 1][1]) for k in range(len(pts) - 1)]
                     cand = [c for c in cand if math.hypot(c[2] - c[0], c[3] - c[1]) > 1e-4]
-                    if not partner_clear(cand, L_, short_net): continue
+                    if not partner_clear(cand, L_, short_net): _why["the bump comes within the class clearance of the partner"] += 1; continue
                     pm_ = trk1[short_net.GetNetname()].get(L_)
                     if pm_ is not None:
                         bad = False
@@ -1651,13 +1651,18 @@ def main(a):
                                 jj, ii = gr.cell(qx, qy)
                                 if 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]: bad = True; break
                             if bad: break
-                        if bad: continue
+                        if bad: _why["the bump lies on copper this leg's own map forbids"] += 1; continue
                     board_remove(b, t)
                     try: pieces.remove(t)
                     except ValueError: pass
                     for (ax_, ay_, bx_, by_) in cand: seg(ax_, ay_, bx_, by_, L_, short_net)
                     got += 2 * A * n_use
                     break
+            # A refusal that does not name what it hit is the defect `escape_prune` was corrected for on
+            # 9 September: say which test refused the bumps and how often.
+            if got < 0.02 and _why:
+                report.append("      %s: no bump fitted (%s)" % (short_net.GetNetname(),
+                              ", ".join("%s x%d" % (k, v) for k, v in _why.most_common(3))))
             return got
 
         def stub(ax_, ay_, bx_, by_, SL, net):
@@ -2613,8 +2618,12 @@ def main(a):
             # `pn` and `nn` are the net NAMES here (the gate above keys its segment map on them); the net
             # objects are `net_p` and `net_n`. Getting that wrong is an AttributeError on the first pair, which
             # is how it was found.
+            # THE WHOLE NET, not just what this pass laid: measured on A, the pre-router's own legs come out
+            # matched and the 1.77 mm the board gate reports is in the ESCAPE stubs, which `escape.py` laid
+            # before this pass ever ran and which are locked like everything else. A length gate judges the
+            # net; so does this.
             _lens = {pn: 0.0, nn: 0.0}
-            for _t in pieces:
+            for _t in b.GetTracks():
                 if _t.GetClass() == "PCB_TRACK" and _t.GetNetname() in _lens: _lens[_t.GetNetname()] += mm(_t.GetLength())
             _d = _lens[pn] - _lens[nn]
             if abs(_d) > LEG_MATCH_TOL:
