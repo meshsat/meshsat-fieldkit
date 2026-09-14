@@ -477,17 +477,23 @@ col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 0.55, (_r16[1] + _r16[3]) / 2 + 0.55, 
 # this net's; and the island gets the track keep-out every BAND on this board has carried since 32.39 and no
 # island ever has, because the island being cut into pieces by the router's signal tracks is what sent the
 # current down to In3 in the first place (the comment above predicted it and the first route confirmed it).
-_vcaps = sorted(pads_rect(net_pads(vbs, [_c]), 0) for _c in ("C13", "C14", "C15"))
-for _a, _b in zip(_vcaps, _vcaps[1:]):
-    _my = (_a[1] + _a[3]) / 2
-    col(vbs, (_a[2] + _b[0]) / 2, _my - 0.9, _my + 0.9, 3)
-# The keep-out is the PAD ROW's own band and the leg, never the island's outer margin: at vbr it reached
-# 1 mm into the output capacitors' GND pads and forbade the three locked joins `join_adjacent_pins` lays
-# between them, three items_not_allowed on the placed board (14 September 2026). The VBUS20 pads end 0.2 mm
-# short of the GND pads on these 1210 lands, so the band grows in x and not at all in y.
-_vbk = pads_rect(net_pads(vbs, ["R11", "C13", "C14", "C15"]), 0.3, 0.0)
-PC.keepout("keep tracks off the VBUS20 island", (_vbk[0], _vbk[1], _vbk[2], _vbk[3]), pcbnew.F_Cu)
-PC.keepout("keep tracks off the VBUS20 leg", (_r16x - _leg + 0.2, _r16[1], _r16x + _leg - 0.2, _vbk[1]), pcbnew.F_Cu)
+# THE GAP BETWEEN TWO OF THESE CAPACITORS IS THE NEXT ONE'S GND PAD (14 September 2026). These are 1210
+# lands lying along x: C13's VBUS20 pad is at x 62.4 and its GND pad at 65.3, which is exactly the midpoint
+# between C13 and C14's VBUS20 pads, so a via "between the capacitors" stands in a ground pad and a keep-out
+# across the row forbids the three locked joins `join_adjacent_pins` lays between those pads. The vias go
+# where R11's and R16's already do, INSIDE this net's own pads, two per 1210 land along its 2.70 mm axis.
+for _c in ("C13", "C14", "C15"):
+    _cr = pads_rect(net_pads(vbs, [_c]), 0)
+    _cy = (_cr[1] + _cr[3]) / 2
+    col(vbs, (_cr[0] + _cr[2]) / 2, _cy - 0.55, _cy + 0.55, 2)
+# The keep-out is the two strips of island copper ABOVE and BELOW the pad row, which carry the current and
+# hold no pad of any net; the row itself is left alone, ground pads, joins and all.
+_vbp = pads_rect(net_pads(vbs, ["R11", "C13", "C14", "C15"]), 0.0, 0.0)
+PC.keepout("keep tracks off the VBUS20 island, north", (vbr[0], _vbp[3] + 0.15, vbr[2], vbr[3]), pcbnew.F_Cu)
+PC.keepout("keep tracks off the VBUS20 island, south", (vbr[0], vbr[1], vbr[2], _vbp[1] - 0.15), pcbnew.F_Cu)
+_r16b = pads_rect(net_pads(vbs, ["R16"]), 0)
+if _r16b[3] + 0.4 < _vbp[1] - 0.15:   # a degenerate rectangle is not a keep-out, it is a bug with an outline
+    PC.keepout("keep tracks off the VBUS20 leg", (_r16x - _leg + 0.2, _r16b[3] + 0.15, _r16x + _leg - 0.2, _vbp[1] - 0.15), pcbnew.F_Cu)
 # 6. +12V_HF: ALSO NO POWER COPPER, and the whole rail travelled 75.6 mm on one 0.400 mm In3 track, which
 # IPC gives 0.37 A against the rail's 1.0. That is not a marginal number: solving I = k dT^0.44 A^0.725 for
 # the rise gives about 93 K on that track. The band follows the corridor the ROUTER found, which is the
