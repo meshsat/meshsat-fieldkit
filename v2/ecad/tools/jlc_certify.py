@@ -448,18 +448,6 @@ def certify(rec, cache, handfit, aliases, refresh=False):
         # purchase route legitimately answers.
         return dict(verdict="HAND_FIT", note=hf, need=need)
 
-    # THE BOARD'S OWN DECLARATION, and it runs AFTER the purchase route on purpose: a part bought from
-    # Digi-Key is HAND_FIT, which says where it comes from, and only a row with no route at all is the
-    # board saying "JLCPCB never places this" (a ribbon header, a wire land, a solder jumper). Putting it
-    # first made 35 rows with real purchase routes read as bench parts, which is a worse answer than the
-    # one it replaced.
-    global PROJECT_ALLOW
-    if PROJECT_ALLOW is None: PROJECT_ALLOW = project_allow()
-    if not code:
-        for k, (why, proj) in PROJECT_ALLOW.items():
-            if k in comment:
-                return dict(verdict="BENCH_FITTED", need=need,
-                            note="declared in %s/lcsc-allow.txt: %s" % (proj, why))
 
     # The class test runs LAST of the three declarations and only on a row that carries no code, because
     # a code IS an answer: E's J_SOLAR reads "bare 12 V class panel in ... (JST-VH, 10 A)" and the land is
@@ -467,6 +455,20 @@ def certify(rec, cache, handfit, aliases, refresh=False):
     # reported five answered connectors as unchosen and hid the two that really were wrong.
     if not code and CLASS_ROW.search(comment):
         return dict(verdict="NO_PART_CHOSEN", note="the row names a class, not a part", need=need)
+
+
+    # THE BOARD'S OWN DECLARATION, and it runs after BOTH the purchase route and the class test. A part
+    # bought from Digi-Key is HAND_FIT, which says where it comes from; a row that names a CLASS rather
+    # than a part is still unanswered, whatever any allow list says, because an allow line declares what a
+    # row IS and not that somebody has chosen it. Putting this first cost both distinctions: 35 rows with
+    # real purchase routes read as bench parts, and "12 V class mixer fan" read as answered.
+    global PROJECT_ALLOW
+    if PROJECT_ALLOW is None: PROJECT_ALLOW = project_allow()
+    if not code:
+        for k, (why, proj) in PROJECT_ALLOW.items():
+            if k in comment:
+                return dict(verdict="BENCH_FITTED", need=need,
+                            note="declared in %s/lcsc-allow.txt: %s" % (proj, why))
 
     # A code that is already there is validated by the code itself; a blank row is searched by the
     # part it means, or by its value and package when it is a jellybean.

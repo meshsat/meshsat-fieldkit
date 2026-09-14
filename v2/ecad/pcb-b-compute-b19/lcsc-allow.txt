@@ -16,3 +16,4 @@ camera lead      # a lead to a camera module bought separately
 XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-handfit.txt
 QMX USB lead     # a pigtail to the QMX unit's own USB-C, made up at build
 CR2032 holder Keystone 3034   # hand-fit, route in tools/jlc-handfit.txt: JLCPCB stocks no CR2032 holder at all
+SWD pads,        # the three controllers' programming lands: five 2.54 mm holes each, copper on our own board and no part fitted
