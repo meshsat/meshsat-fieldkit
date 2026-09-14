@@ -7132,3 +7132,35 @@ Three things had to be corrected to get there, and the first two are the same de
    soldered at build. A code on such a row does not make it buyable, it puts a part into a CPL the line cannot
    place. The JST-SH fan connector kept its code (C160390): it is SMD, it is the part the schematic names, and
    JLCPCB holds 70,953 of them.
+
+### 32.181 A's pairs are laid end to end, so the length gate had nothing to work with (14 September 2026, 08:00 CEST; MESHSAT-862)
+
+A27 routes to one open connection and is refused by the PAIR gate: USB_D8 1.78 mm apart, USB_WALL 1.47, against
+the owner's 1 mm. Three tools were pointed at it and each said something the next one needed.
+
+**`meander.py` placed nothing, and the reason is one line of its own code.** It considers UNLOCKED track only,
+and A's four pair legs are **8 to 20 segments each, every one locked**: the pre-router lays the corridor, the
+offset legs and the stubs into the pads, and the router adds nothing. Its amplitude ladder was extended down to
+0.25 mm first, which changed nothing, because the problem was never the amplitude. `MEANDER_LOCKED=1` offers
+the locked copper when there is none else, guarded by the DRC as before.
+
+**The mismatch is half the escapes and half the corners.** Measured by splitting each leg at 2 mm from a pad:
+USB_D8 is 5.30 mm of escape and 134.99 of run against 4.69 and 133.82, so **0.61 mm of it is copper
+`escape.py` laid before the pair pass existed** and 1.17 mm is the corridor run, which is where an offset pair
+always loses it: at every corner the outer leg is longer than the inner by about the pitch times the turn.
+
+**`PAIR_LEG_MATCH`, new, measures the whole net and gives the short leg the difference back** in bumps on its
+own copper, on the side the partner is not on, each judged by `partner_clear` before it exists. Two defects in
+it were found by running it: the pair's net NAMES and its net OBJECTS are different things in that scope (an
+AttributeError on the first pair of the first arm), and the side was taken from the partner's CENTROID, which
+on a winding pair is the wrong side half the time (five bumps refused for approaching the partner they were
+moving away from; the nearest partner piece decides now). On B it fits nothing and says so; on A it fits
+nothing and says so, and **because it names the test that refused each bump, the answer is not "no room" but
+"the leg's own map forbids it 25 times"**: A's pair corridors have no free copper beside them at all.
+
+**What did move it: a wider corridor.** At slack 0.30 against the tool's default, the same board lays the same
+3 of 3 pairs and **USB_D8 comes out inside half a millimetre by itself** — a wider corridor is a straighter
+path and a straighter path is two legs of one length. `boards/a.json` declares it with that measurement.
+USB_WALL does not move at either value: 23 of its 36 mm are within 2 mm of a pad, in the wall connector's own
+fan, and it is **owner decision 25** with what 1.47 mm is worth on a USB 2.0 pair (about 10 ps against a 100 ps
+budget) and three options.
