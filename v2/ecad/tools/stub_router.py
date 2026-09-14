@@ -83,11 +83,23 @@ def item_of(it):
     if m: return dict(kind="track", net=m.group(1), x=x, y=y, layer=m.group(2).rstrip(","))
     return None
 pairs = []
+def netname(n): return n[1:] if n.startswith("/") else n
+# STUB_NETS (14 September 2026): only these nets are attempted, everything else in the report is left alone.
+# It is what makes this tool usable BEFORE the route as well as after it. Board C's `/EPD_SDA` is 249 mm from
+# J_EPD pin 14 to U3 pad 5 across a panel that is a ring, and on the ROUTED board there is no lane left for it:
+# four routes in a row left it, or left another net exactly like it, because the strips are the only corridors
+# and whoever gets there first takes them. On the PLACED board those strips are empty. A search that cannot
+# find a path through other people's copper finds one easily before they lay it, and a locked lane is
+# something the router then works around, which is the `bus_a21.py` pattern of 5 September with the waypoints
+# searched instead of typed.
+_WANT = {n.strip().lstrip("/") for n in __import__("os").environ.get("STUB_NETS", "").split(",") if n.strip()}
 for v in drc.get("unconnected_items", []):
     its = [item_of(i) for i in v.get("items", [])]
-    if len(its) == 2 and all(its): pairs.append(its)
+    if len(its) == 2 and all(its):
+        if _WANT and netname(its[0]["net"]) not in _WANT: continue
+        pairs.append(its)
+if _WANT: print("stub_router: STUB_NETS names %d net(s); %d of the report's pairs are on them" % (len(_WANT), len(pairs)))
 print("unconnected pairs:", len(pairs))
-def netname(n): return n[1:] if n.startswith("/") else n
 # ---- THE CLEARANCE BETWEEN TWO NETS IS THE LARGER OF THEIR TWO CLASSES', NEVER A LITERAL (14 September 2026).
 # The width and the via of a closure were taught to read the net's class on 13 September and the CLEARANCE was
 # left as 0.16 mm for every net of every board. On C that is wrong in the direction that costs connections: the
