@@ -899,6 +899,12 @@ def main(a):
     # copper away, which cannot lay a pair; this asks BEFORE the copper exists and, when the hop is the violation,
     # comes at the pad from the side the partner is not on. Counted per pass and printed, so it is never a claim.
     END_FIT = os.environ.get("PAIR_END_FIT", "1") != "0"
+    # PAIR_LEG_MATCH, 14 September 2026: the two legs of a laid pair are measured and the short one is given
+    # the difference back in bumps on its own copper. A's USB_D8 comes off this pass 1.77 mm apart in every
+    # route, because the mismatch is this pass's corner geometry and not the router's, and the owner's gate is
+    # 1 mm. The tolerance is the gate's own margin: a pair inside it is left alone.
+    LEG_MATCH = os.environ.get("PAIR_LEG_MATCH", "1") != "0"
+    LEG_MATCH_TOL = float(os.environ.get("PAIR_LEG_MATCH_TOL", "0.5"))
     _end_fit = [0]
     # 12 September 2026: the wall. "the legs clear no smoothing of the centreline" is 28 of the 68 failures left on
     # B19's DIFF100 pass and it did not move in ANY of the five configurations measured today. It means a corridor was
@@ -1592,6 +1598,67 @@ def main(a):
                     elif u.GetClass() == "PCB_VIA":
                         if _pt_seg(mm(u.GetPosition().x), mm(u.GetPosition().y), x1, y1, x2, y2) < bar + wid(SL) / 2 + _via_dia(u) / 2: return False
             return True
+
+        def _equalise(short_net, long_net, want):
+            """Add `want` mm to the short leg as small bumps on its own straight pieces, away from the partner.
+
+            One bump of amplitude A on a straight piece adds 2A and needs 2p of run along it, p being the
+            leg's own width plus its clearance. The pieces are taken longest first, the offset side is the one
+            the partner is NOT on, and every replacement is judged by `partner_clear` and by this leg's own
+            obstacle map before any copper is laid: a bump that would touch anything is simply not made.
+            Returns the millimetres actually added."""
+            got = 0.0
+            o_name = long_net.GetNetname()
+            mine = [t for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == short_net.GetNetname()]
+            mine.sort(key=lambda t: -t.GetLength())
+            for t in mine:
+                if got >= want - 0.02: break
+                L_ = t.GetLayer(); wl = wid(L_); p_ = wl + clr_c + 0.05
+                x1, y1 = mm(t.GetStart().x), mm(t.GetStart().y); x2, y2 = mm(t.GetEnd().x), mm(t.GetEnd().y)
+                ln = math.hypot(x2 - x1, y2 - y1)
+                if ln < 4 * p_ + 1.0: continue
+                ux, uy = (x2 - x1) / ln, (y2 - y1) / ln
+                # the side away from the partner: take the partner's nearest piece on this layer as the sign
+                sx = sy = 0.0
+                for u in pieces:
+                    if u.GetNetname() != o_name or u.GetClass() != "PCB_TRACK" or u.GetLayer() != L_: continue
+                    ox, oy = (mm(u.GetStart().x) + mm(u.GetEnd().x)) / 2, (mm(u.GetStart().y) + mm(u.GetEnd().y)) / 2
+                    sx += ox - (x1 + x2) / 2; sy += oy - (y1 + y2) / 2
+                vx, vy = -uy, ux
+                if vx * sx + vy * sy > 0: vx, vy = -vx, -vy        # point AWAY from the partner
+                for A in (0.6, 0.4, 0.25):
+                    n_fit = int((ln - 1.0) / (2 * p_))
+                    if n_fit < 1: continue
+                    n_use = min(n_fit, max(1, int(math.ceil((want - got) / (2 * A)))))
+                    a0 = (ln - n_use * 2 * p_) / 2.0
+                    pts = [(x1, y1), (x1 + ux * a0, y1 + uy * a0)]
+                    cx, cy = pts[-1]
+                    for _ in range(n_use):
+                        pts.append((cx + vx * A, cy + vy * A)); cx, cy = cx + ux * p_, cy + uy * p_
+                        pts.append((cx + vx * A, cy + vy * A)); pts.append((cx, cy)); cx, cy = cx + ux * p_, cy + uy * p_
+                        pts.append((cx, cy))
+                    pts.append((x2, y2))
+                    cand = [(pts[k][0], pts[k][1], pts[k + 1][0], pts[k + 1][1]) for k in range(len(pts) - 1)]
+                    cand = [c for c in cand if math.hypot(c[2] - c[0], c[3] - c[1]) > 1e-4]
+                    if not partner_clear(cand, L_, short_net): continue
+                    pm_ = trk1[short_net.GetNetname()].get(L_)
+                    if pm_ is not None:
+                        bad = False
+                        for (ax_, ay_, bx_, by_) in cand:
+                            n_ = int(math.hypot(bx_ - ax_, by_ - ay_) / gr.G) + 2
+                            for k in range(n_ + 1):
+                                qx, qy = ax_ + (bx_ - ax_) * k / n_, ay_ + (by_ - ay_) * k / n_
+                                jj, ii = gr.cell(qx, qy)
+                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]: bad = True; break
+                            if bad: break
+                        if bad: continue
+                    board_remove(b, t)
+                    try: pieces.remove(t)
+                    except ValueError: pass
+                    for (ax_, ay_, bx_, by_) in cand: seg(ax_, ay_, bx_, by_, L_, short_net)
+                    got += 2 * A * n_use
+                    break
+            return got
 
         def stub(ax_, ay_, bx_, by_, SL, net):
             """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
@@ -2529,6 +2596,30 @@ def main(a):
                 continue
             report.append("FAIL  %s: the two legs cross each other %d time(s) on the laid path; rolled back, the router takes the pair" % (stem, _cross))
             continue
+        # ---- THE TWO LEGS ARE MEASURED AND THE SHORT ONE IS LENGTHENED (14 September 2026, MESHSAT-862).
+        # A's USB_D8 comes off this pass at P 140.32 mm and N 138.54: a 1.77 mm mismatch, identical in every
+        # route because it is THIS pass's geometry and not the router's. The owner's length gate is 1 mm, and
+        # `meander.py` could place nothing, because a pair laid end to end here leaves no unlocked copper and
+        # no free band beside it. The difference is where it always is on an offset pair: at every corner the
+        # outer leg is longer than the inner by about the pitch times the turn, and over a winding corridor
+        # those add up.
+        #
+        # The fix is the one a pair router owes: give the short leg the difference back, in small bumps on its
+        # own straight pieces, on the side AWAY from the partner, and only where the leg's own map says the
+        # copper is free. Every bump is judged by `partner_clear` before it exists, which is the same test the
+        # end emissions pass, so this cannot lay copper on the partner. If a bump does not fit, the leg keeps
+        # the length it has and the gate says so: this pass is a length matcher, not a length promise.
+        if LEG_MATCH:
+            _lens = {pn.GetNetname(): 0.0, nn.GetNetname(): 0.0}
+            for _t in pieces:
+                if _t.GetClass() == "PCB_TRACK" and _t.GetNetname() in _lens: _lens[_t.GetNetname()] += mm(_t.GetLength())
+            _d = _lens[pn.GetNetname()] - _lens[nn.GetNetname()]
+            if abs(_d) > LEG_MATCH_TOL:
+                _short, _long = (nn, pn) if _d > 0 else (pn, nn)
+                _added = _equalise(_short, _long, abs(_d))
+                report.append("MATCH %s: legs %.2f and %.2f mm, %.2f mm apart; %.2f mm added to %s%s"
+                              % (stem, _lens[pn.GetNetname()], _lens[nn.GetNetname()], abs(_d), _added,
+                                 _short.GetNetname(), "" if _added >= abs(_d) - LEG_MATCH_TOL else " (the rest has no room)"))
         laid += 1; on_board[stem] = (list(pieces), list(stripped))
         report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
     settle_episode()   # an episode that was still open at the end of the list is judged like any other

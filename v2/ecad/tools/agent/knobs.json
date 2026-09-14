@@ -256,6 +256,24 @@
    "type": "flag",
    "unit": ""
   },
+  "PAIR_LEG_MATCH": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "1",
+   "description": "after a pair is laid, the short leg is given the length difference back in small bumps on its own copper, away from the partner",
+   "stage": "pair",
+   "type": "flag",
+   "unit": ""
+  },
+  "PAIR_LEG_MATCH_TOL": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0.5",
+   "description": "a pair whose legs are closer than this is left alone; the owner's length gate is 1.0 mm",
+   "stage": "pair",
+   "type": "mm",
+   "unit": "mm"
+  },
   "PAIR_LEG_RETRY": {
    "category": "experiment",
    "comparable": true,
