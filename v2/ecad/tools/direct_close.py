@@ -387,6 +387,11 @@ def main(argv):
                       % (net, len(_cands), MAXD, _cands[0][1][3], _cands[0][2][3], _cands[0][0]))
             for _g, _a, _bb in _cands[:ISLAND_TRIES]:
                 _sh, _L = _shapes(_a, _bb, "island %s to %s" % (_a[3], _bb[3]))
+                # Named as it is tried. Without this the only evidence a refused net leaves is the `whys` list,
+                # which is capped and fills up with the first attempt's shapes, so an island pair that was
+                # offered and refused is indistinguishable from one that was never built (14 September 2026).
+                print("direct_close: %-14s island try %s to %s, %.3f mm, %d shape(s) from %s"
+                      % (net, _a[3], _bb[3], _g, len(_sh), b.GetLayerName(_L)))
                 got = _try(_sh, _L)
                 if got:
                     A, B, gap, L = _a, _bb, _g, _L
@@ -398,7 +403,7 @@ def main(argv):
             rows.append({"net": net, "result": "closed", "shape": got[0], "gap_mm": round(gap, 3), "from": A[3], "to": B[3]})
         else:
             print("direct_close: %-14s %.3f mm, %s to %s on %s: no shape the DRC accepts" % (net, gap, A[3], B[3], b.GetLayerName(L)))
-            for w_ in whys[:14]: print("direct_close: %s" % w_)
+            for w_ in whys[:40]: print("direct_close: %s" % w_)
             rows.append({"net": net, "result": "refused", "gap_mm": round(gap, 3), "from": A[3], "to": B[3]})
     for f in (trial, os.path.splitext(trial)[0] + ".kicad_pro"):
         if os.path.exists(f): os.remove(f)
