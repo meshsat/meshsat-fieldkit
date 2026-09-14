@@ -7408,3 +7408,30 @@ so the vias are right and the coverage bar is the thing that fires on a healthy 
 written for BANDS, where fill is the conductor; on an island whose job is to tie pads to vias, a router track
 crossing it costs a few square millimetres of parallel copper and nothing the rail measure can see. That is a
 question about what the bar means on an island, and it is put to the record rather than answered by a wall.
+
+### 32.191 A30 closes to 0 hard and 0 unrouted by hand, and the same copper measures differently on a different route (15 September 2026, 01:20 CEST; MESHSAT-862)
+
+A30's round-one route (0 hard, 8 unrouted, `via_costs 100`) re-finished in its own tree: the stub router
+closed seven of eight, the closure ladder three, a second ladder pass with sixteen island pairs and a
+forty-minute budget closed the VBUS20 gap at U3, and two GND stubs whose free ends touched no plane got a
+through via each into In1 and In4, which the probe showed FILLED at both points. **0 hard, 0 unrouted, every
+pair inside 1 mm, sha256 f12e58d877f56f75de95, committed.** The gate reads 834 of 835: `VBAT in SD` fills
+10.652 of 22.415 mm2, ratio 0.4752 in two pieces, where the other three slot islands read 0.71 to 0.91 (32.190).
+
+**And the rails on this board are not A29's rails, on the same copper.**
+
+| rail | A29 routed board | A30 closed board | where A30's current is |
+|---|---:|---:|---|
+| VBAT | cond 1.33, pour 1.04 | cond **2.25**, pour 0.96 | a 0.500 mm In2 track at (55.0, 154.6), between F1 and the via field |
+| VBUS20 | cond 0.99, pour 1.73 | cond **8.61**, pour 2.03 | a 0.500 mm In2 track at (68.1, 81.2) carrying 3.4 A, a via at (68.5, 82.0) carrying 4.75 A |
+| VIN_RAW | cond 1.74, pour 1.61 | cond 2.54, pour **3.57** | a 0.500 mm In2 track at (49.6, 51.2) and F.Cu at (42.7, 42.7) |
+| +13V8_PA | cond 1.00, pour 1.52 | cond 0.94, pour 1.54 | the east run's north edge, unchanged |
+
+The vias are necessary and they are not sufficient. Where the rail's own copper leaves a gap the router is free
+to bridge, it bridges it with a 0.5 mm inner track, and the solver then puts the rail through that track
+because it is the shortest path. Which gaps the router bridges depends on the route, so the number moves with
+the route while the copper stands still. **What holds a rail to its copper is the copper being continuous
+from source to load with no gap the router can fill**, and on VBAT the gap is measured: the fifteen-via field
+sits at the LONGEST free stretch of the trunk, twelve to twenty millimetres north of F1, and the pack's current
+climbs the 0.5 mm track from F1 to the field's south end. The field belongs at the stretch NEAREST the source,
+which `free_run` can be asked for.
