@@ -23,18 +23,26 @@ def t_the_equaliser_exists_and_is_asked_for_by_a_knob():
     assert 'os.environ.get("PAIR_LEG_MATCH"' in SRC, "it cannot be turned off to measure it"
 
 
-def t_every_bump_is_judged_before_it_is_laid():
+def _equalise_body():
     i = SRC.find("def _equalise")
-    blk = SRC[i:i + 4200]
+    j = SRC.find("\n            return got", i)
+    assert i > 0 and j > i, "the equaliser is gone or no longer returns what it added"
+    return SRC[i:j]
+
+
+def t_every_bump_is_judged_before_it_is_laid():
+    blk = _equalise_body()
     assert "partner_clear(cand" in blk, "the bumps are not judged against the partner"
     assert "board_remove(b, t)" in blk and blk.find("partner_clear(cand") < blk.find("board_remove(b, t)"), \
         "copper is removed before the replacement is judged"
 
 
 def t_the_bump_goes_away_from_the_partner():
-    i = SRC.find("def _equalise")
-    blk = SRC[i:i + 4200]
-    assert "AWAY from the partner" in blk, "nothing chooses the side"
+    blk = _equalise_body()
+    assert "away from the partner" in blk.lower(), "nothing chooses the side"
+    # and it is the NEAREST partner piece that decides, not the partner's centroid: on a winding pair the
+    # centroid is the wrong side half the time (five bumps refused on 14 September for exactly that)
+    assert "near, ndist" in blk and "d_ < ndist" in blk, "the side is not decided by the nearest partner piece"
 
 
 def t_the_names_are_not_the_objects():
