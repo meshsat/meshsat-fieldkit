@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""direct_close.py <board.kicad_pcb> <drc.json> [--max=4.0] [--width=0] [--via=0.45/0.25] [--layers=In2.Cu,In3.Cu] [--dry]
+"""direct_close.py <board.kicad_pcb> <drc.json> [--max=4.0] [--width=0] [--via=0.45/0.25] [--layers=In2.Cu,In3.Cu] [--island-tries=8] [--dry]
 
 The closure the router stopped short of, proposed as geometry and judged by the DRC (12 September 2026, MESHSAT-862).
 
@@ -25,6 +25,12 @@ version looked for the nearest pad of the net to a loose track end and proposed 
 already connected (A24's +3V3, 2.035 mm to U11.1, where the DRC's own item said C104). The nearest copper of
 the net to each named position is then the anchor, and it is a pad centre, a via centre or a track END, never
 the middle of a track, where a closure would make a T the connectivity engine does not see.
+
+And when every shape between those two pieces is refused, the OTHER pairs of the same two islands are offered
+in order of distance (`--island-tries`, 8 by default). A27's /VBUS20 is why: its closest pair is two pads of one
+QFN 0.800 mm apart with a third pad between them, and its second-closest is the two islands' own vias 1.635 mm
+apart on an empty back side. Further but legal beats closer but illegal, which was already the rule for the hop
+at a walled-in pad and was simply never applied to the pairing itself.
 
 Prints one line per open with what it tried and what happened, and `direct_close: N closed of M`."""
 import sys, os, re, json, math, subprocess, collections
@@ -161,6 +167,7 @@ def main(argv):
     bp, drcp = argv[0], argv[1]
     opt = lambda k, d: next((a.split("=", 1)[1] for a in argv if a.startswith("--%s=" % k)), d)
     MAXD = float(opt("max", "4.0")); WIDTH = float(opt("width", "0")); DRY = "--dry" in argv
+    ISLAND_TRIES = int(opt("island-tries", "8"))   # how many further pairs of the two islands are offered
     VD, VDR = (float(v) for v in opt("via", "0.45/0.25").split("/"))
     DETOUR = [x for x in opt("layers", "").split(",") if x]   # free layers to try a two-via detour on
     work = os.path.splitext(bp)[0] + "-close-drc.json"
@@ -172,7 +179,7 @@ def main(argv):
     pairs = parse_items(json.load(open(drcp)))
     closed = 0; tried = 0; rows = []
     for it in pairs:
-        net = it["net"]; b = pcbnew.LoadBoard(bp)
+        net = it["net"]; b = pcbnew.LoadBoard(bp); ca_cb = None
         A = anchor(b, net, it["ends"][0]); B = anchor(b, net, it["ends"][1])
         if A and B:
             # the closest pair of points between the two CLUSTERS the DRC's two pieces belong to
@@ -181,6 +188,7 @@ def main(argv):
                 return min(range(len(items_)), key=lambda i: (items_[i][1].x - pt.x) ** 2 + (items_[i][1].y - pt.y) ** 2)
             ca, cb = lab[near_idx(A[1])], lab[near_idx(B[1])]
             if ca != cb:
+                ca_cb = (ca, cb, items_, lab)
                 best = None
                 for i, (k1, p1, l1, n1, o1) in enumerate(items_):
                     if lab[i] != ca: continue
@@ -228,35 +236,39 @@ def main(argv):
                 hops.append((_a, _b, _g, _alt[3]))
                 print("direct_close: %-14s a hop is available from %s, %.3f mm against %.3f from the pad"
                       % (net, _alt[3], _g, gap))
-        if not common:
-            # TWO ENDS ON DIFFERENT LAYERS ARE NOT A REFUSAL, they are a hop (12 September 2026, board C10).
-            # C10 ended its third round at 0 hard and one open: U3 pad 10 on B.Cu, 1.7 mm from a track of its
-            # own net on In2. The tool already lays a via wherever a shape changes layer (the detour shapes
-            # below do), and it was declining to use that for the one case where a via is the whole answer.
-            # This is `fix_d10_hubdm1.py`'s closure with the waypoints computed: a locked via and a short
-            # locked track to the pad, judged by the DRC like every other shape here.
-            La, Lb = A[2][0], B[2][0]
-            tried += 1
-            shapes = [("hop at %s" % B[3], [(La, A[1]), (La, B[1]), (Lb, B[1])]),
-                      ("hop at %s" % A[3], [(La, A[1]), (Lb, A[1]), (Lb, B[1])]),
-                      ("hop, L via x", [(La, A[1]), (La, pcbnew.VECTOR2I(B[1].x, A[1].y)), (La, B[1]), (Lb, B[1])]),
-                      ("hop, L via y", [(La, A[1]), (La, pcbnew.VECTOR2I(A[1].x, B[1].y)), (La, B[1]), (Lb, B[1])])]
-            L = La
-        else:
-            L = common[0] if len(common) == 1 else (A[2][0] if A[2][0] in common else common[0])
-            tried += 1
-            shapes = [("direct", [(L, A[1]), (L, B[1])]),
-                      ("L via x", [(L, A[1]), (L, pcbnew.VECTOR2I(B[1].x, A[1].y)), (L, B[1])]),
-                      ("L via y", [(L, A[1]), (L, pcbnew.VECTOR2I(A[1].x, B[1].y)), (L, B[1])])]
-        # and the same geometry one layer down, which is what the router would have done: a short stub on the
-        # anchors' own layer, a via at each end of it, and the run between them on a free layer. A's /+3V3 and
-        # /VBUS20 are both refused on F.Cu for crossing other nets, and a detour is the only shape left that is
-        # not hand work (12 September 2026).
-        for Ld in ([b.GetLayerID(x) for x in DETOUR if b.GetLayerID(x) >= 0 and b.GetLayerID(x) != L] if common else []):
-            f = min(0.6 / gap, 0.33) if gap > 0 else 0.33
-            a1 = pcbnew.VECTOR2I(int(A[1].x + (B[1].x - A[1].x) * f), int(A[1].y + (B[1].y - A[1].y) * f))
-            b1 = pcbnew.VECTOR2I(int(B[1].x + (A[1].x - B[1].x) * f), int(B[1].y + (A[1].y - B[1].y) * f))
-            shapes.append(("via down to %s" % b.GetLayerName(Ld), [(L, A[1]), (L, a1), (Ld, a1), (Ld, b1), (L, b1), (L, B[1])]))
+        def _shapes(a_, b_, tag=""):
+            """the ladder for one pair of anchors: the straight run, the two L shapes, and the same geometry one
+            layer down; a hop when the two anchors share no copper layer. Returns (shapes, the layer it works on).
+
+            TWO ENDS ON DIFFERENT LAYERS ARE NOT A REFUSAL, they are a hop (12 September 2026, board C10). C10
+            ended its third round at 0 hard and one open: U3 pad 10 on B.Cu, 1.7 mm from a track of its own net
+            on In2. The tool already lays a via wherever a shape changes layer, and it was declining to use that
+            for the one case where a via is the whole answer. This is `fix_d10_hubdm1.py`'s closure with the
+            waypoints computed. And the detour is what the router would have done: a short stub on the anchors'
+            own layer, a via at each end of it, and the run between them on a free layer."""
+            g_ = math.hypot(mm(a_[1].x - b_[1].x), mm(a_[1].y - b_[1].y))
+            cm_ = [l for l in a_[2] if l in b_[2]]
+            pre = (tag + ", ") if tag else ""
+            if not cm_:
+                La, Lb = a_[2][0], b_[2][0]
+                sh = [(pre + "hop at %s" % b_[3], [(La, a_[1]), (La, b_[1]), (Lb, b_[1])]),
+                      (pre + "hop at %s" % a_[3], [(La, a_[1]), (Lb, a_[1]), (Lb, b_[1])]),
+                      (pre + "hop, L via x", [(La, a_[1]), (La, pcbnew.VECTOR2I(b_[1].x, a_[1].y)), (La, b_[1]), (Lb, b_[1])]),
+                      (pre + "hop, L via y", [(La, a_[1]), (La, pcbnew.VECTOR2I(a_[1].x, b_[1].y)), (La, b_[1]), (Lb, b_[1])])]
+                return sh, La
+            L_ = cm_[0] if len(cm_) == 1 else (a_[2][0] if a_[2][0] in cm_ else cm_[0])
+            sh = [(pre + "direct", [(L_, a_[1]), (L_, b_[1])]),
+                  (pre + "L via x", [(L_, a_[1]), (L_, pcbnew.VECTOR2I(b_[1].x, a_[1].y)), (L_, b_[1])]),
+                  (pre + "L via y", [(L_, a_[1]), (L_, pcbnew.VECTOR2I(a_[1].x, b_[1].y)), (L_, b_[1])])]
+            for Ld in [b.GetLayerID(x) for x in DETOUR if b.GetLayerID(x) >= 0 and b.GetLayerID(x) != L_]:
+                f = min(0.6 / g_, 0.33) if g_ > 0 else 0.33
+                a1 = pcbnew.VECTOR2I(int(a_[1].x + (b_[1].x - a_[1].x) * f), int(a_[1].y + (b_[1].y - a_[1].y) * f))
+                b1 = pcbnew.VECTOR2I(int(b_[1].x + (a_[1].x - b_[1].x) * f), int(b_[1].y + (a_[1].y - b_[1].y) * f))
+                sh.append((pre + "via down to %s" % b.GetLayerName(Ld), [(L_, a_[1]), (L_, a1), (Ld, a1), (Ld, b1), (L_, b1), (L_, b_[1])]))
+            return sh, L_
+
+        tried += 1
+        shapes, L = _shapes(A, B)
         got = None; whys = []
 
         def _try(shape_list, _L):
@@ -310,14 +322,41 @@ def main(argv):
             # pad's own escape stub ends 2.466 mm from the same target against 1.741 from the pad: further,
             # and outside the package's ring. Distance decides which is TRIED first, never which is right.
             for _a, _bb, _g, _lbl in sorted(hops, key=lambda h: h[2]):
-                _common = [l for l in _a[2] if l in _bb[2]]
-                _L = _common[0] if _common else _a[2][0]
-                if _common:
-                    _sh = [("from %s, direct" % _lbl, [(_L, _a[1]), (_L, _bb[1])]),
-                           ("from %s, L via x" % _lbl, [(_L, _a[1]), (_L, pcbnew.VECTOR2I(_bb[1].x, _a[1].y)), (_L, _bb[1])]),
-                           ("from %s, L via y" % _lbl, [(_L, _a[1]), (_L, pcbnew.VECTOR2I(_a[1].x, _bb[1].y)), (_L, _bb[1])])]
-                else:
-                    _sh = [("from %s, hop" % _lbl, [(_a[2][0], _a[1]), (_a[2][0], _bb[1]), (_bb[2][0], _bb[1])])]
+                _sh, _L = _shapes(_a, _bb, "from %s" % _lbl)
+                got = _try(_sh, _L)
+                if got:
+                    A, B, gap, L = _a, _bb, _g, _L
+                    break
+        if got is None and ca_cb is not None:
+            # THE CLOSEST TWO PIECES OF THE TWO ISLANDS CAN BE THE ONE PLACE A CLOSURE CANNOT GO, and until
+            # today nothing looked past them (14 September 2026, board A27, /VBUS20). Its two islands are
+            # U3's pad 3 with its own escape stub and a via, against the rest of the net; the closest pair
+            # is pad 3 and pad 1 of the SAME QFN, 0.800 mm apart with pad 2 (/CH_ACN) between them, so every
+            # shape bridges pad 2's mask and the tool reported "no shape the DRC accepts" three runs running.
+            # The second-closest pair is the two islands' VIAS, 1.635 mm apart, on a back side that carries
+            # under six percent of this board's copper. Distance decides which is TRIED first, never which is
+            # right, which is the same sentence the hop above was written for; it was simply never applied to
+            # the pairing itself. The list is capped and every candidate is judged by the DRC like any other.
+            _ca, _cb, _items, _lab = ca_cb
+            _seen = {(A[1].x, A[1].y, B[1].x, B[1].y)}
+            _cands = []
+            if len(_items) > 600: _items = []   # a net this big is a plane, and its open is not a two-island gap
+            for _i, (_k1, _p1, _l1, _n1, _o1) in enumerate(_items):
+                if _lab[_i] != _ca: continue
+                for _j, (_k2, _p2, _l2, _n2, _o2) in enumerate(_items):
+                    if _lab[_j] != _cb: continue
+                    _key = (_p1.x, _p1.y, _p2.x, _p2.y)
+                    if _key in _seen: continue
+                    _seen.add(_key)
+                    _g = math.hypot(mm(_p1.x - _p2.x), mm(_p1.y - _p2.y))
+                    if _g > MAXD: continue
+                    _cands.append((_g, (0.0, _p1, _l1, _n1), (0.0, _p2, _l2, _n2)))
+            _cands.sort(key=lambda c: c[0])
+            if _cands:
+                print("direct_close: %-14s %d more pairs of the two islands are within %.1f mm, nearest %s to %s at %.3f"
+                      % (net, len(_cands), MAXD, _cands[0][1][3], _cands[0][2][3], _cands[0][0]))
+            for _g, _a, _bb in _cands[:ISLAND_TRIES]:
+                _sh, _L = _shapes(_a, _bb, "island %s to %s" % (_a[3], _bb[3]))
                 got = _try(_sh, _L)
                 if got:
                     A, B, gap, L = _a, _bb, _g, _L
