@@ -67,3 +67,14 @@ def t_a_trial_board_is_built_in_its_own_process():
         "the judging process still lays the trial board itself, so one pcbnew crash ends the whole pass")
     assert "pcbnew.LoadBoard" not in body, "the judge still loads a board it is about to throw away"
     assert "could not be built" in body, "a crashed trial is not reported as a refused shape"
+
+
+def t_every_shared_layer_is_offered_not_only_the_first():
+    """A27's /VBUS20: both anchors of its cheapest island pair are THROUGH VIAS, so every copper layer is
+    shared, and the run was laid on cm_[0], which is F.Cu, straight back through the QFN pad row that
+    refused it. The back side of that board carries under six percent of its copper."""
+    i = DC.find("def _shapes(")
+    body = DC[i:DC.find("\n        tried += 1", i)]
+    assert "for Lc in order:" in body, "the ladder is built on one shared layer only"
+    assert "order = [L_] + [l for l in cm_ if l != L_]" in body, (
+        "the layer the anchors prefer must still be tried first, and the rest after it")
