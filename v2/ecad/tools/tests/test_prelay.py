@@ -50,11 +50,14 @@ def t_it_runs_before_the_pre_route_drc_that_judges_the_board():
     assert 0 < i < j, "the pre-lay runs after the gate that would have to judge its copper"
 
 
-def t_c_declares_it_with_its_reason():
+def t_no_board_declares_a_pre_lay_and_c_carries_the_measurement_that_says_why():
+    """C15 pre-laid /EPD_SDA alone and ended at 8 open against C14's 2; C16 pre-laid the whole six-wire bus,
+    5 of 7 laid on the placed board, and routed 15 and 16 open against C14's 12 and 4. A lane taken by hand
+    on a board whose strips are its only corridors costs the router more than it buys. The stage stays for
+    the board that measures otherwise; today none does."""
+    for letter in ("a", "b", "c", "d", "e", "p"):
+        d = json.load(open(os.path.join(TOOLS, "boards", letter + ".json")))
+        assert not d.get("prelay_nets"), "board %s declares a pre-lay and the only measurements say it costs opens" % letter
     d = json.load(open(os.path.join(TOOLS, "boards", "c.json")))
-    nets = {n.strip() for n in (d.get("prelay_nets") or "").split(",")}
-    assert {"/EPD_SDA", "/EPD_SCL", "/EPD_DC", "/EPD_RST", "/EPD_CS", "/EPD_BUSY"} <= nets, (
-        "board C does not declare the whole e-paper bus; C15 pre-laid SDA alone and the route then left "
-        "DC, RST and SCL open, the lines beside it in the same corridor: %s" % sorted(nets))
-    assert d.get("prelay_layers"), "no layers are named, so the search would take the tool's default two"
-    assert "249 mm" in d.get("_prelay_why", ""), "the declaration does not carry the measurement behind it"
+    assert "C16 MEASURED" in d.get("_prelay_why", "") and "C15" in d.get("_prelay_why", ""), (
+        "the declaration was removed without the two measurements that removed it")
