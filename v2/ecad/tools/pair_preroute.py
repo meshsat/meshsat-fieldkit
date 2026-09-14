@@ -2610,16 +2610,19 @@ def main(a):
         # end emissions pass, so this cannot lay copper on the partner. If a bump does not fit, the leg keeps
         # the length it has and the gate says so: this pass is a length matcher, not a length promise.
         if LEG_MATCH:
-            _lens = {pn.GetNetname(): 0.0, nn.GetNetname(): 0.0}
+            # `pn` and `nn` are the net NAMES here (the gate above keys its segment map on them); the net
+            # objects are `net_p` and `net_n`. Getting that wrong is an AttributeError on the first pair, which
+            # is how it was found.
+            _lens = {pn: 0.0, nn: 0.0}
             for _t in pieces:
                 if _t.GetClass() == "PCB_TRACK" and _t.GetNetname() in _lens: _lens[_t.GetNetname()] += mm(_t.GetLength())
-            _d = _lens[pn.GetNetname()] - _lens[nn.GetNetname()]
+            _d = _lens[pn] - _lens[nn]
             if abs(_d) > LEG_MATCH_TOL:
-                _short, _long = (nn, pn) if _d > 0 else (pn, nn)
+                _short, _long = (net_n, net_p) if _d > 0 else (net_p, net_n)
                 _added = _equalise(_short, _long, abs(_d))
                 report.append("MATCH %s: legs %.2f and %.2f mm, %.2f mm apart; %.2f mm added to %s%s"
-                              % (stem, _lens[pn.GetNetname()], _lens[nn.GetNetname()], abs(_d), _added,
-                                 _short.GetNetname(), "" if _added >= abs(_d) - LEG_MATCH_TOL else " (the rest has no room)"))
+                              % (stem, _lens[pn], _lens[nn], abs(_d), _added, _short.GetNetname(),
+                                 "" if _added >= abs(_d) - LEG_MATCH_TOL else " (the rest has no room)"))
         laid += 1; on_board[stem] = (list(pieces), list(stripped))
         report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
     settle_episode()   # an episode that was still open at the end of the list is judged like any other
