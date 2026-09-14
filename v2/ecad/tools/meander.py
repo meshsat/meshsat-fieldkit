@@ -3,7 +3,7 @@
 inserted into its straight segments (any angle) wherever the layer is free beside them, until the requested extra length is reached.
 Usage: meander.py <board.kicad_pcb> <net name> <extra mm> [amplitude mm]   (run in the project directory; the caller runs DRC and reverts on harm)
 Prints 'meander: ...' lines and exits 1 when the extra length could not be placed."""
-import sys, math, pcbnew
+import sys, os, math, pcbnew
 FromMM, ToMM = pcbnew.FromMM, pcbnew.ToMM
 b = pcbnew.LoadBoard(sys.argv[1]); netname = sys.argv[2]; remaining = float(sys.argv[3]); A_MAX = float(sys.argv[4]) if len(sys.argv) > 4 else 1.5
 net = b.GetNetInfo().GetNetItem(netname) or b.GetNetInfo().GetNetItem("/" + netname)
@@ -49,6 +49,19 @@ placed = 0.0; passes = 0
 while remaining > 0.1 and passes < 12:
     passes += 1; w = 0.2
     tracks = [t for t in b.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetNetCode() == net.GetNetCode() and not t.IsLocked()]
+    # 14 September 2026: A PAIR THE PRE-ROUTER LAID END TO END HAS NO UNLOCKED COPPER AT ALL. Board A's four
+    # ribbon legs are 8 to 20 segments each and EVERY ONE is locked: the pre-router lays the corridor, the legs
+    # and the stubs into the pads, and the router adds nothing, so this tool had nothing it was allowed to
+    # touch and placed nothing at any amplitude. A27's finish was refused for USB_D8 at 1.77 mm and USB_WALL at
+    # 1.50 three rounds running, on a board that is otherwise one connection from a deliverable.
+    # With MEANDER_LOCKED=1 the locked copper of THIS net is offered when there is no unlocked copper. The
+    # safety is unchanged and it is the caller's: `pair_match.sh` re-runs the DRC after every round and keeps
+    # the board only if the hard count is still zero, so a bump that breaks a clearance is reverted, not
+    # shipped. What it costs is coupling over the few millimetres the bump occupies, which is why it is asked
+    # for by the caller rather than taken by default.
+    if not tracks and os.environ.get("MEANDER_LOCKED", "0") not in ("0", ""):
+        tracks = [t for t in b.GetTracks() if t.Type() == pcbnew.PCB_TRACE_T and t.GetNetCode() == net.GetNetCode()]
+        if tracks and passes == 1: print("meander: %s has no unlocked copper; MEANDER_LOCKED is on, so its %d locked segments are offered" % (netname, len(tracks)))
     if tracks: w = ToMM(tracks[0].GetWidth())
     p = w + CLR + 0.25                       # pitch between the two legs of one bump; a bump adds 2 A
     choice = None
