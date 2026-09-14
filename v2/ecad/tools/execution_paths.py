@@ -55,6 +55,7 @@ READERS = {
     "routeflow.py":          "names the deliverable folder to judge a finish; writes no artefact in it",
     "build_sch.sh":          "exports the schematic and the netlist, which are not fab artefacts",
     "kb/kb_inventory.py":    "writes its own inventory CSV, which is a report about documents",
+    "final_gate.py":         "re-reads every deliverable folder through verify_deliverable and prints one table; writes no artefact in any of them",
 }
 
 

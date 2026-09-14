@@ -10,7 +10,7 @@ instead of seven logs, and that a folder nobody re-read since it was cut cannot 
 folder is judged today, by today's rules, or it is not judged at all (14 September 2026, MESHSAT-862).
 
 Every verdict here is a re-reading of a written artefact. It does not open a board, route anything or touch a
-host, so it is safe to run on the runner, which has no pcbnew.
+host, so it is safe to run on a host with no KiCad python at all.
 """
 import sys, os, re, glob, json, subprocess
 
@@ -46,9 +46,11 @@ def main(argv):
         # verify_deliverable takes the folder, the board's stem and the copper layer count, and every one of
         # the three is IN the folder: the stem is the board file's name and the layer count is what the gerber
         # zip carries, which is the same reading the gate itself does against the board (3 September's bug).
-        stem = next((os.path.splitext(os.path.basename(f))[0] for f in sorted(glob.glob(os.path.join(folder, "*.kicad_pcb")))), None)
-        if stem is None:
-            stem = next((os.path.basename(f)[:-len("-gerbers.zip")] for f in glob.glob(os.path.join(folder, "*-gerbers.zip"))), name)
+        # The stem comes from the GERBER ZIP's name, not from globbing the folder for a board: a tool that
+        # picks a board by globbing is the trap of 11 September (a nine-day-old b5m.kicad_pcb sorted first in
+        # a project directory and a whole BOM was exported from it), and the rule against it is mechanical.
+        stem = next((os.path.basename(f)[:-len("-gerbers.zip")] for f in sorted(glob.glob(os.path.join(folder, "*-gerbers.zip")))), None)
+        if stem is None: stem = re.sub(r"^meshsat-(pcb-[a-z0-9]+)-revA-.*$", r"\1", name)
         cu = 0
         for z in glob.glob(os.path.join(folder, "*-gerbers.zip")):
             try:
