@@ -7358,3 +7358,29 @@ capacitors' ground pads; redrawn as two strips it forbade a GND track crossing t
 of these capacitors IS the next one's ground pad**: they are 1210 lands lying along x, C13's VBUS20 pad at x
 62.4 and its GND pad at 65.3, which is exactly the midpoint between C13's and C14's. Geometry typed from a
 part list is a guess; geometry read from the placed board is a measurement.
+
+### 32.189 A lane the router will not take is laid before the router runs, and one lane taken by hand moves the shortage to the lines beside it (14 September 2026, 21:20 CEST; MESHSAT-862)
+
+`/EPD_SDA` is 249 mm from J_EPD pin 14 to U3 pad 5 across a ring-shaped panel with one corridor, and four
+routes of C's copper each left it or a net exactly like it (32.187). On the ROUTED board there is no lane; on
+the PLACED board the strips are empty. `STUB_NETS` restricts the stub router to named nets, which is what lets
+it run on a board where every net is unconnected, and `full.sh` lays the declared lanes after the fanout and
+before the pre-route DRC, keeping the board only if the hard count does not rise. It is `bus_a21.py`'s pattern
+of 5 September with the waypoints searched instead of typed.
+
+**C15, `/EPD_SDA` alone: closed 1 of 1 on the placed board, hard 0 to 0.** The round-one route then left
+`/EPD_DC`, `/EPD_RST` and `/EPD_SCL` open, the three sibling lines of the same six-wire bus, which had never
+been open on any C route before. A lane taken by hand moves the shortage to the next net: 32.95's law for the
+pre-router's greedy pass, seen from the router's side. **C16 pre-lays the bus as a bus**, all six signal lines
+from the RP2040 to the e-paper connector: **5 of 7 pairs closed on the placed board** (DC and SDA refused, the
+lanes laid before them having taken their room), hard 0 to 0, and it routes with two of six left to the router
+instead of six.
+
+**The supervisor was finishing a worse round and not the best one.** A30's round two came back 13 unrouted
+against round one's 8; the journal said "the better board is kept" and the finish then spent an hour on the
+13-open board about to be discarded, while round one's FINISHED board, which had reached 3, had already been
+regenerated over. The restore-and-finish of the best board ran on `STOPPED_BUDGET` alone, and
+`STOPPED_NEEDS_GENERATOR`, which is how A30 ended, left the worse board in the phase directory. A worse round
+is journalled `FINISH_SKIPPED` now, and the restore is one function on every exit. **And the supervisor's own
+selftest had read 53 of 54 for two days**: its `NO_SESSION` predicate still asked for the remedy of 11 September
+after that remedy was removed on the 12th, and nobody read the line under "53 of 54". 54 of 54.
