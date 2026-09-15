@@ -7661,3 +7661,14 @@ refracting glass and no picture) and the monitor's rear block 7 mm above the gla
 and the block under the shell, and set ten is rendered on a rented RTX 4090 (18 views in nine minutes, 0.4 USD/h; the
 CPU box carries the routes). The pack is re-issued under the same name and link a second time with every schematic, the
 import archives and the renders replaced.
+
+**Addendum 19:35 CEST, what an engineer expects to read.** The owner's next question was why the parts were not connected to
+each other: the pages carried labels, not lines. The convention now: a net that stays on one page is DRAWN as a wire between
+its parts (the page keeps an occupancy of every body, text, wire and label; each edge of a minimum spanning tree over the
+net's label anchors is routed as three to five orthogonal legs leaving each anchor along its lane under its own label text,
+then a swept corridor; a net that finds no path keeps its labels, so connectivity never rests on this pass), and a signal
+that leaves a page carries the pages it goes to beside its label. Two more of KiCad's rules were measured on the way: a wire
+may not pass OVER a label anchor of its own net (the label and its pin dangle), and two collinear overlapping wires are merged
+on load, which turns a junction between them into a plain interior (B's R29). Both are refused by construction. B's shared
+area is sectioned by the generator's own headings (fourteen sections). All six netlists identical, ERC clean; c26f6a2, b69c270;
+the pack re-issued a third time under the same link (91 MB).
