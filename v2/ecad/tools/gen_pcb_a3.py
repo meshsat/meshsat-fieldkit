@@ -336,7 +336,8 @@ _r55 = pads_rect(net_pads(pa, ["R55"]), 0)                                    # 
 # that corner and it costs nothing anywhere else.
 PC.union(pa, "PA rail", [(_r55[0] - 1.0, -15.0, 106.25, -8.0), (101.75, -15.0, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25),
                          (99.25, -15.0, 101.75, -11.0),
-                         (jp[0] - 3.0, yP - 4.5, jp[2] + 0.8, yP + 4.5)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin, the chamfer on the turn, and a foot at the pin (15 Sep 2026: the run's end at J_PA read ratio 1.61)
+                         (jp[0] - 3.0, yP - 4.5, jp[2] + 0.8, yP + 4.5),
+                         (85.0, -22.0, 106.25, -15.0)], pcbnew.B_Cu, priority=2)   # 15 Sep 2026, A33 measured: J_AB2's ten through-hole pins stand IN the east run at x 93 to 96, y -6 to -14, and the run's worst cell (ratio 1.61, unchanged by the foot at the pin) is what they leave of it; the run doubles south of them   # one polygon: east, north, pin, the chamfer on the turn, and a foot at the pin (15 Sep 2026: the run's end at J_PA read ratio 1.61)
 col(pa, (_r55[0] + _r55[2]) / 2, (_r55[1] + _r55[3]) / 2 - 1.1, (_r55[1] + _r55[3]) / 2 + 1.1, 2)   # in the shunt's own pad
 col(pa, pr[2] + 1.3, -13.4, -9.6, 3)                                          # three vias in the head island, in the band: a via mid-run has no F.Cu copper at its other end and cleanup_dangling would take it
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
@@ -351,6 +352,12 @@ print("placement: the VIN_RAW dive goes on %s (%d copper layers)" % (board.GetLa
 vr = "VIN_RAW"; vb = "VBAT"; jd = pads_rect(net_pads(vr, ["J_DOCK"]), 0.5)
 fe = pads_rect(net_pads(vr, ["Q2", "Q3", "C11", "C12"]), 1.0)
 PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 4.0, fe[2], fe[3])), pcbnew.F_Cu, priority=3)   # 4.0 north since 15 Sep 2026: the 8 A squeezed along the head's north edge past a foreign pad, ratio 2.69 (32.193)
+# 15 September 2026, A33 MEASURED: the head's worst cell (ratio 2.70) sits WEST of Q2's three FE_SW1 pins: the 8 A that
+# arrives from the west band's vias had to pass that pin column on F.Cu to reach Q2's drain tab (pad 5, VIN_RAW, 3.8 by
+# 3.9 mm). The west band on B.Cu already runs under the tab, so four vias in the tab hand the current up where it is used
+# and the F.Cu throat carries only what the capacitors take. Growing the island (4.0 mm, A33) moved nothing.
+_q2 = pads_rect(net_pads(vr, ["Q2"]), 0); _q2x, _q2y = (_q2[0] + _q2[2]) / 2, (_q2[1] + _q2[3]) / 2
+col(vr, _q2x - 0.8, _q2y - 0.8, _q2y + 0.8, 2); col(vr, _q2x + 0.8, _q2y - 0.8, _q2y + 0.8, 2)   # in the FET's own drain tab
 # the west run crosses the VBAT trunk (x fx0 to fx1): two bands of different nets never cross on one layer (32.39), so VIN_RAW dives to In3 under the trunk on five vias a side;
 # each side of the dive is ONE polygon (the dock riser with the east run, the west run with the west riser): abutting same-net zones with priorities read as separate pieces (32.69)
 f1_ = pads_rect(net_pads(vb, ["F1"]), 0.5); f1c_ = (f1_[0] + f1_[2]) / 2; fx0_, fx1_ = f1c_ - 4.5, f1c_ + 0.5   # the trunk on the west half of F1's pad 2, clear of the dock pins' riser
@@ -440,6 +447,12 @@ PC.keepout("keep tracks off the VBAT In2 plane at the neck", (-70.0, -11.0, -46.
 # current reached them through the plane's corner and the router's tracks. A tongue of the plane under the converter
 # row, above the GND plane there (In1 and In4 carry the return), puts the islands' via columns on the plane itself.
 _urs = [pads_rect(net_pads(vb, ["U%d" % k]), 0.5, 0.5) for k in (4, 5, 6, 7)]
+# 15 September 2026, A33 MEASURED: with the tongues in place VBAT's worst pour cell moved to (60.2, 55.7), which is the In2
+# plane threading U2's escape-via fan (the front-end controller's east pin column at x 58.9, 0.65 mm pitch): 0.5 oz copper
+# between vias carrying what the B.Cu collector beside it should. The plane keeps off U2's fan on In2, tracks and vias
+# untouched, so the rail takes the band there and the plane resumes past the fan.
+_u2b = board.FindFootprintByReference("U2").GetBoundingBox(); _u2a, _u2c = case_xy(pcbnew.VECTOR2I(_u2b.GetLeft(), _u2b.GetBottom())), case_xy(pcbnew.VECTOR2I(_u2b.GetRight(), _u2b.GetTop()))
+PC.nopour("VBAT plane keeps off U2's escape fan", (_u2a[0] - 2.5, _u2a[1] - 2.5, _u2c[0] + 2.5, _u2c[1] + 2.5), pcbnew.In2_Cu)
 plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (tongue under the converter row)", rect=(-2.5, 36.0, max(u[2] for u in _urs) + 2.0, min(77.5, max(u[3] for u in _urs) + 3.0)), priority=2)
 qr = pads_rect(net_pads(vb, ["Q11", "C63", "C64"]), 1.0)
 PC.island(vb, "VBAT PA head", rect_pts((qr[0] - 3.5, min(qr[1], -12.0), qr[2], qr[3])), pcbnew.F_Cu, priority=3)
@@ -520,10 +533,17 @@ _bands.sort(); _cuts = []
 for _b0, _b1 in _bands:
     if _cuts and _b0 <= _cuts[-1][1]: _cuts[-1] = (_cuts[-1][0], max(_cuts[-1][1], _b1))
     else: _cuts.append((_b0, _b1))
-_y = _klo; _n = 0
+_y = _klo; _n = 0; _pcs = []
 for _b0, _b1 in _cuts + [(_khi, _khi)]:
-    if _b0 - _y >= 1.0: PC.keepout("keep tracks off the VBUS20 F.Cu leg to R16", (_r16x - _leg, _y, _r16x + _leg, _b0), pcbnew.F_Cu); _n += 1
+    if _b0 - _y >= 1.0: PC.keepout("keep tracks off the VBUS20 F.Cu leg to R16", (_r16x - _leg, _y, _r16x + _leg, _b0), pcbnew.F_Cu); _n += 1; _pcs.append((_y, _b0))
     _y = max(_y, _b1)
+# 15 September 2026, A33 MEASURED: with the leg at 8 mm the worst cell fell from 2.41 to 1.73 and moved to R16's via
+# column, where four vias still carry the whole crossing between F.Cu and In3. A row of five across the leg on the
+# keep-out piece nearest R16 (VBUS20 copper on both layers there, no foreign pad) spreads the crossing over a front.
+if _pcs:
+    _pc = min(_pcs, key=lambda q: min(abs(q[0] - _ry), abs(q[1] - _ry))); _yr = (_pc[0] + _pc[1]) / 2
+    row(vbs, _r16x - _leg + 1.2, _r16x + _leg - 1.2, _yr, 5)
+    print("placement: VBUS20 via row across the leg at y %.2f" % _yr)
 print("placement: the VBUS20 leg keep-out runs y %.2f to %.2f in %d piece(s), %d foreign pad row(s) left free (R16 at %.2f)" % (_klo, _khi, _n, len(_cuts), _ry))
 # 14 September 2026, MEASURED ON A28: FOUR VIAS CARRY A SIX AMP RAIL BETWEEN ITS TWO LAYERS. The F.Cu island
 # and the In3 polygon under it are tied only inside the two shunts' pads, two vias each, and IPC gives a
