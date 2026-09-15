@@ -22,6 +22,7 @@ Usage: place_audit.py <board.kicad_pcb> [--png out.png] [--near 6] [--reach 5] [
 import sys, os, math, re, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pcbnew
+import return_via   # the free-site test of the return-via fixer, one answer to "can a via go here"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict
 
@@ -187,6 +188,8 @@ def main(a):
     for t in locked:
         if t.GetClass() == "PCB_TRACK": locked_starts.add((t.GetStart().x, t.GetStart().y)); locked_starts.add((t.GetEnd().x, t.GetEnd().y))
     unreached = []
+    track_keepouts = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
+    ds = b.GetDesignSettings(); via_d = max(0.4, ds.m_ViasMinSize / 1e6); clr = max(0.127, ds.m_MinClearance / 1e6)
     for f in fps:
         for p in f.Pads():
             n = p.GetNetname()
@@ -196,9 +199,16 @@ def main(a):
             if (c.x, c.y) in locked_starts: continue
             L = pcbnew.F_Cu if p.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
             if any(z.GetFirstLayer() == L and z.GetFilledPolysList(L).Contains(c) for z in zone_nets[n]): continue
-            unreached.append("%s.%s (%s)" % (f.GetReference(), p.GetNumber(), n.lstrip("/")))
+            # The pad has no connection YET, which is the normal state of a plane pad before the route (A36's placed board
+            # had 244 such pads and the first form of this class refused the board for them, 15 September 2026 20:04 UTC:
+            # a hypothesis about the data). The A33 to A35 class is narrower: the pad has NOWHERE to go, no free via site
+            # within 1.5 mm at the board's own via and clearance, or a track keep-out on its own layer over its centre.
+            cx, cy = c.x / 1e6, c.y / 1e6
+            if any(k.IsOnLayer(L) and k.Outline().Contains(c) for k in track_keepouts): unreached.append("%s.%s (%s, under a track keep-out)" % (f.GetReference(), p.GetNumber(), n.lstrip("/"))); continue
+            if any(return_via._site_free(b, round(cx + r * math.cos(k * math.pi / 8), 3), round(cy + r * math.sin(k * math.pi / 8), 3), via_d, clr, n) for r in (0.6, 1.0, 1.5) for k in range(16)): continue
+            unreached.append("%s.%s (%s, no via site)" % (f.GetReference(), p.GetNumber(), n.lstrip("/")))
     if unreached:
-        lines.append("FAIL  %d plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper): %s" % (len(unreached), ", ".join(unreached[:12]) + (" ..." if len(unreached) > 12 else ""))); coll += 1
+        lines.append("FAIL  %d plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper, and no free via site within 1.5 mm or a track keep-out over the pad): %s" % (len(unreached), ", ".join(unreached[:12]) + (" ..." if len(unreached) > 12 else ""))); coll += 1
     else:
         lines.append("INFO  every plane pad reaches its plane before the route (a via, its own fill, or locked copper)")
     keepouts = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
