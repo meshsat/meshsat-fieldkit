@@ -30,24 +30,29 @@ def netname(n): return n[1:] if n.startswith("/") else n
 want = {netname(n) for n in names if n}
 def unconnected():
     b.BuildConnectivity(); return b.GetConnectivity().GetUnconnectedCount(False)
+# Every candidate's geometry is read as plain numbers BEFORE the first connectivity build: after BuildConnectivity() the
+# python wrappers of the pieces come back as bare SwigPyObjects (no .x, no Cast), measured on KiCad 9.0.9, 15 Sep 2026.
+cands = []
+for n in sorted(want):
+    for t in b.GetTracks():
+        if t.IsLocked() or netname(t.GetNetname()) != n or t.GetClass() not in ("PCB_TRACK", "PCB_VIA"): continue
+        via = t.GetClass() == "PCB_VIA"
+        s_, e_ = t.GetPosition(), (t.GetPosition() if via else t.GetEnd())
+        cands.append(dict(t=t, net=n, via=via, code=t.GetNetCode(), layer=t.GetLayer(), sx=s_.x, sy=s_.y, ex=e_.x, ey=e_.y, w=t.GetWidth(),
+                          drill=t.GetDrill() if via else 0, vtype=t.GetViaType() if via else 0, top=t.TopLayer() if via else 0, bot=t.BottomLayer() if via else 0,
+                          L=0.0 if via else t.GetLength() / 1e6))
+cands.sort(key=lambda c: (c["net"], c["via"], -c["L"]))   # per rail: tracks longest first, then vias
 u0 = unconnected()
 removed = {}; length = {}
-for n in sorted(want):
-    # tracks and vias only: an arc (the pre-router's corners) has no start and end to put back and is left alone
-    pieces = [t for t in b.GetTracks() if not t.IsLocked() and netname(t.GetNetname()) == n and t.GetClass() in ("PCB_TRACK", "PCB_VIA")]
-    def L(t): return 0.0 if t.GetClass() == "PCB_VIA" else math.hypot(t.GetStart().x - t.GetEnd().x, t.GetStart().y - t.GetEnd().y) / 1e6
-    pieces.sort(key=lambda t: (t.GetClass() == "PCB_VIA", -L(t)))   # tracks longest first, then vias
-    for t in pieces:
-        keep = (t.GetClass(), t.GetNetCode(), t.GetLayer(), t.GetStart(), t.GetEnd(), t.GetWidth(),
-                (t.GetDrill(), t.GetViaType(), t.TopLayer(), t.BottomLayer()) if t.GetClass() == "PCB_VIA" else None)
-        b.Remove(t)
-        if unconnected() > u0:
-            if keep[0] == "PCB_VIA":
-                v = pcbnew.PCB_VIA(b); v.SetPosition(keep[3]); v.SetWidth(keep[5]); v.SetDrill(keep[6][0]); v.SetViaType(keep[6][1]); v.SetLayerPair(keep[6][2], keep[6][3]); v.SetNetCode(keep[1]); b.Add(v)
-            else:
-                s = pcbnew.PCB_TRACK(b); s.SetStart(keep[3]); s.SetEnd(keep[4]); s.SetWidth(keep[5]); s.SetLayer(keep[2]); s.SetNetCode(keep[1]); b.Add(s)
-            continue
-        removed[n] = removed.get(n, 0) + 1; length[n] = length.get(n, 0.0) + L(t)
+for c in cands:
+    b.Remove(c["t"])
+    if unconnected() > u0:   # the only path: it goes back as it was
+        if c["via"]:
+            v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(c["sx"], c["sy"])); v.SetWidth(c["w"]); v.SetDrill(c["drill"]); v.SetViaType(c["vtype"]); v.SetLayerPair(c["top"], c["bot"]); v.SetNetCode(c["code"]); b.Add(v)
+        else:
+            k = pcbnew.PCB_TRACK(b); k.SetStart(pcbnew.VECTOR2I(c["sx"], c["sy"])); k.SetEnd(pcbnew.VECTOR2I(c["ex"], c["ey"])); k.SetWidth(c["w"]); k.SetLayer(c["layer"]); k.SetNetCode(c["code"]); b.Add(k)
+        continue
+    removed[c["net"]] = removed.get(c["net"], 0) + 1; length[c["net"]] = length.get(c["net"], 0.0) + c["L"]
 for n in sorted(removed): print("rail_prune:   %-10s %d router piece(s) off, %.1f mm; the rail's own copper carries it" % (n, removed[n], length[n]))
 if removed: pcbnew.SaveBoard(BOARD, b)
 print("rail_prune: %d router piece(s) off %d rail(s) of %d, unconnected %d -> %d (%s)" % (sum(removed.values()), len(removed), len(want), u0, unconnected(), "board written" if removed else "nothing to do"))
