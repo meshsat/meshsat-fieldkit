@@ -7876,3 +7876,11 @@ per-launch copy now (`/root/drivers/`). The rule was already in CLAUDE.md; this 
 
 **D with the grid** laid 1,288 ground vias before the route (267 sites refused for copper, 59 for no ground fill, 31 removed
 by the DRC), passed the pre-route gate at hard 0, and its route is running under a one-hour cap.
+
+**B19 sat two and a half hours on the normalization dialog again (21:03 to 23:37 CEST), and this time the watchdog of 32.193
+saw it and could do nothing:** the new box 51145697 was set up by hand on 15 September evening from a typed package list,
+not from `tools/routeflow/cloud/onstart.sh`, and the list lacked `xdotool`, so the watchdog printed that it had no way to
+dismiss a dialog and the route waited. `xdotool` is installed, Return was sent to the router's own display (`:322`, the
+DISPLAY and XAUTHORITY read out of the java process's environment), and B19's router has been computing since 23:37. The
+rule: a box is set up by `onstart.sh` and nothing else; a typed subset of it is the 15 September evening's loss.
+
