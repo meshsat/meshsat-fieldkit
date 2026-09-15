@@ -5,13 +5,13 @@
 
 Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
-**Readiness: INCONCLUSIVE**
+**Readiness: NOT_READY**
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 0 | 0.0 |
-| FAIL | 0 | 0.0 |
-| INCONCLUSIVE | 49 | 100.0 |
+| PASS | 4 | 8.2 |
+| FAIL | 2 | 4.1 |
+| INCONCLUSIVE | 43 | 87.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **49** | 100.0 |
 
@@ -19,11 +19,11 @@ Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no verification: the prototype-framing rule is carried by CLAUDE.md and by review, not by a check over the shipped documents |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-11T13:33:46, before the evidence epoch 2026-09-16 00:35:00 |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts PASS of 42 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: the transmit-inhibit chain is checked; ZEROIZE has NO hardware path at all (the secure element carries power and I2C only) and the sh |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a chec |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no jlc_certify verdict for this board |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no jlc_certify verdict for this board |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the check confirms a DECLARED rail exists on the board; nothing compares the declared set agains |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a check |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file |
@@ -40,7 +40,7 @@ Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no verification: nothing determines the reference conductor before and after a transition; return_via's same-plane exemption is the nearest thing and  |
 | RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no return_via verdict for this board |
 | IMP-001 an impedance target is feasible and asked for | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the  |
-| IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: the generator guards the API path; board B's project file ships USB and DIFF100 at 0.10 mm against a 0.127 mm board minimum, and boar |
+| IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no class_floor verdict for this board |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no impedance_check verdict for this board |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sen |
@@ -55,14 +55,14 @@ Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-
 | VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not  |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no check_zone_nets verdict for this board |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
-| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-11T13:33:29, before the evidence epoch 2026-09-16 00:35:00 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no verify_deliverable verdict for this board |
+| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-11T13:33:29, before the evidence epoch 2026-09-16T00:35:00 |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: test points exist; no bring-up sheet exists for any board |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | no verification: nothing considers vibration, mating cycles or moisture for any interface |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no final_gate verdict for this board |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'contracts_rc': 0, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the  |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no final_gate verdict for this board |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'contracts_rc': 0, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no verification: being built by this audit; until it runs, no board has a computed per-rule result |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | no verification: thermal, RF self-compatibility and ingress are named in the record as prototype-only; they are not a list anything reads |
