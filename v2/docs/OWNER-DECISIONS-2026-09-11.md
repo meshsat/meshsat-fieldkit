@@ -1357,7 +1357,7 @@ nothing for rule 1's via transitions.
 3. **A larger floor for the four-layer boards** (25 mm). Cost: a number chosen for the board, which is what the calibrated
    tolerance was written to avoid.
 
-**The grid measured on D, 15 September 2026 23:30 CEST (`/root/dgrid`).** With 1,288 ground vias laid before the route (2.1 mm
+**The grid measured on D, 15 September 2026 23:27 CEST (`/root/dgrid`).** With 1,288 ground vias laid before the route (2.1 mm
 pitch, every site free of other copper, inside ground, outside the rail band and the fine-pitch fans) the In2-plane D routed
 to **2 open and 1 hard** in its one attempt, the stub router closed both opens, and the gate reads **rule 2: 279 of 289
 signal vias with a ground via** (10 without a site, against 138 of 185 without the grid) and **rule 1: 11 nets over**, the

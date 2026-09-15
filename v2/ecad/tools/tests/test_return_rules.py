@@ -77,3 +77,14 @@ def t_the_ground_via_grid_is_laid_after_the_fanout_and_before_the_pre_route_drc(
     g = open(os.path.join(TOOLS, "gnd_grid.py")).read()
     for must in ("other_zones", "via_keepouts", "_in_gnd_fill", "_site_free", "_own_hard"):
         assert must in g, "gnd_grid.py lacks its %s test" % must
+
+
+def t_a_solder_jumpers_pads_carry_the_class_clearance_before_the_route():
+    """D12's grid route (15 September 2026): KiCad's SolderJumper footprints declare a zero local pad clearance, the DSN hands it
+    to the router, and the routed board carries a hard clearance item at the jumper. full.sh sets the class clearance on those
+    pads after the placement and before the escapes, on every board."""
+    src = open(os.path.join(TOOLS, "full.sh")).read()
+    i_gen = src.index("gen_pcb_${L}3.py"); i_j = src.index("jumper_clearance.py"); i_esc = src.index("escape.py $N.kicad_pcb")
+    assert i_gen < i_j < i_esc, "jumper_clearance.py is not between the placement and the escapes"
+    g = open(os.path.join(TOOLS, "jumper_clearance.py")).read()
+    assert "SolderJumper" in g and "SetLocalClearance" in g, "jumper_clearance.py does not set the pads' local clearance"
