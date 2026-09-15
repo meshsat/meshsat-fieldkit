@@ -142,6 +142,13 @@ def run_arm(spec, arm, ecad, out_dir):
         if not os.path.exists(placed):
             row.update(error="no placed board at %s" % spec["placed"]); return row
         row["placed_md5"] = md5(placed)
+        if spec.get("runs") == "place":
+            # the knob READ BACK off the board it produced, not recited (the reviewer of the fifth B placement cycle, 15 September 2026)
+            try:
+                cg = json.loads(subprocess.run([sys.executable, os.path.join(TOOLS, "couple_gap.py"), placed, "--json"], capture_output=True, text=True, timeout=600).stdout.strip().splitlines()[-1])
+                row["couple_gap"] = cg
+            except Exception as e:
+                row["couple_gap"] = {"error": str(e)[:120]}
         laid = total = 0; secs = maps = 0; logs = []; seen = {}
         for i, ps in enumerate(spec["passes"], 1):
             shutil.copyfile(placed, board) if i == 1 else None   # pass 1 starts from the placed board; later passes read what the earlier laid
