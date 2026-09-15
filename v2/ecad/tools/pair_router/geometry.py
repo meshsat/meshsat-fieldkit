@@ -129,9 +129,10 @@ def offset_polyline(pts, d):
 # ELSEWHERE, which is half a pass in the one bucket nothing has ever measured. Three more wrappers name most of
 # it: the stub search that reaches a pad from a corridor end, the leg offsets that legs_clear walks, and the
 # stamping of laid copper into the maps. The cost is one time.time() per call of five functions.
-Grid.seg = _timed("stamp", Grid.seg)
-Grid.disc = _timed("stamp", Grid.disc)
 
 
+
+from .search import _timed   # noqa: E402
+offset_polyline = _timed("legs", offset_polyline)   # the timed wrapper rebinds the polyline offset once it exists
 
 __all__ = [_n for _n in dir() if not _n.startswith("__")]

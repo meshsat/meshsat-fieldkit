@@ -211,6 +211,7 @@ def simplify(path):
 # the timed wrappers rebind the searches once they exist; they sat past the geometry anchor in the first split and
 # raised a NameError at import (A36's pre-route, 15 September 2026 21:55 CEST)
 stub_path = _timed("stubs", stub_path)
-offset_polyline = _timed("legs", offset_polyline)
+Grid.seg = _timed("stamp", Grid.seg)
+Grid.disc = _timed("stamp", Grid.disc)
 
 __all__ = [_n for _n in dir() if not _n.startswith("__")]
