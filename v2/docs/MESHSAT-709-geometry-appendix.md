@@ -7616,3 +7616,48 @@ review pack re-issued under the same name and link with B's two schematic PDFs a
 the read-me carrying the correction; one A3 tile of the new B pages was viewed. B19's route was relaunched
 on the fixed generators. The B19 placed board committed on 14 September carries R151; every B19 placement
 made between 3457117 and this fix did not.
+
+### 32.196 The schematics are redrawn as engineering pages: a layout engine, its verifier, and what KiCad's connectivity really requires (15 September 2026, 18:35 CEST; MESHSAT-862)
+
+The owner opened the re-issued pack and said what the drawings were: "one component connected to the next in straight
+endless lines, no engineer can read this". He was right. Since A19 every board's schematic had been one row of 92 mm
+columns, every IC a `Conn_01xNN` connector symbol up to 250 mm tall, every passive a 5 mm stub and a label, stacked so
+the stubs read as one line; 32.194 had only put that on a page that held it. It was a netlist with pictures.
+
+`tools/schlayout.py` replaces the layout and changes nothing electrical. Per SECTION of a generator it draws an IC
+registered through `ic()` (and a power FET) as a box of its own, rails on the top edge, grounds on the bottom, signals
+left and right in pin order with the net name as the pin name; a two-pin passive as a satellite of the pin it serves
+(a pull-up or pull-down standing at the end of the lane with its rail or ground beyond it, a series part inline with
+its far net labelled, a decoupling capacitor in a row on a rail bus beside the part it bypasses, by the intent's
+`bypass` declaration or the first part in the block carrying that rail); connectors and modules with their library
+symbols and a labelled lane per pin; power symbols on vertical pins and global labels on side pins so the global nets
+keep their names; local labels everywhere else so every `/NAME` is unchanged. Blocks flow onto A3 cells of one user
+sheet (a hierarchy would rename every single-sheet net), each cell framed and headed, and `build_sch.sh` cuts the sheet
+along the grid with `sch_pages.py`, so the PDF is the pages: A 11, B 32, C 5, D 5, E 4, P 1.
+
+**Nothing is placed on anything else, by construction.** Every body, text and wire is registered in a per-cell
+occupancy list; a satellite that finds no room is drawn on its own in a row under the cell, never on top of something;
+a wire may cross a wire and never a body, and no wire end lands on another net's wire or label anchor.
+
+**KiCad's connectivity, measured rather than assumed, because three of its rules each broke a netlist once:** a wire
+ending on the interior of another wire connects only with a junction; a junction on the interior of an UNSPLIT wire
+disconnects everything past it (U1's second rail pin read unconnected while the first connected); a label on a wire's
+interior dangles. So every wire is split at junctions and at its own net's label anchors before emission. The engine
+verifies the drawing against the generator's pin map with those rules before the file is written (a union of wire
+ends, pins, junctions and label anchors at one point; every component one name; every net a label; every part drawn
+once) and stops the generator on any short, unnamed net or missing part. It caught, in order: pull-downs mounted upside
+down (both pins on the lane), a second series part wired to the first's far net, a stub shortened with its satellites
+dropped, interleaved rail buses on one edge crossing each other, eleven parts never emitted.
+
+**Read back, page by page.** Every page of A, C, D, E and P and a seventh of B's were viewed at reading resolution and
+fourteen rounds of defects fixed from what they showed: labels 0.07 mm taller than a lane; a part's value text placed
+where its own bottom pin's lane runs; a diode's library symbol lying flat where a resistor's stands (the orientation is
+read off the pins now); text boxes sized on the hidden full value; label text lying BEYOND its anchor, which halves every
+lane without satellites; a heading orphaned at a page bottom; the flag's value text. Every board regenerates with ERC
+clean and its netlist identical to the committed one on every net and node line; suite 463.
+
+The same afternoon: the render scene had the display's screen INSIDE its glass slab (every set-nine view showed dark
+refracting glass and no picture) and the monitor's rear block 7 mm above the glass; the lit screen sits on the glass now
+and the block under the shell, and set ten is rendered on a rented RTX 4090 (18 views in nine minutes, 0.4 USD/h; the
+CPU box carries the routes). The pack is re-issued under the same name and link a second time with every schematic, the
+import archives and the renders replaced.
