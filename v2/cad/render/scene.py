@@ -313,11 +313,13 @@ for k, (x, y) in enumerate(P.STANDOFFS): cyl("standoff_c7_%d" % k, 5.0, P.BACKER
 DX, DY = P.XENARC["c"]; XW, XH = P.XENARC["body"]; XT = P.XENARC["height"]; XB = P.XENARC["bezel_depth"]
 rounded_box("xenarc_bezel", XW, XH, XB, 15.0, (DX, DY, FACE - XB), M["black"])                                   # the flange, in the plate
 rounded_box("xenarc_shell", XW - 14.0, XH - 14.0, P.XENARC["shell_depth"], 10.0, (DX, DY, FACE - XT), M["black"], top_scale=(0.96, 0.96))   # the smaller rear shell below it
-scr = box("xenarc_screen", (P.XENARC["active"][0], P.XENARC["active"][1], 0.3), (DX, DY + 10.5, FACE - 0.35), M["dark"]); textured(scr, "ui.png", 4.0)
+# 15 Sep 2026 (owner, set nine): the screen sat INSIDE the glass slab (FACE - 0.5 to FACE - 0.2 against the glass at FACE - 0.4 to FACE) and
+# every view showed dark refracting glass with no picture. The lit screen now sits ON the glass, 0.1 mm proud, so every camera sees it.
+scr = box("xenarc_screen", (P.XENARC["active"][0], P.XENARC["active"][1], 0.1), (DX, DY + 10.5, FACE + 0.05), M["dark"]); textured(scr, "ui.png", 4.0)
 box("xenarc_glass", (P.XENARC["glass"][0], P.XENARC["glass"][1], 0.4), (DX, DY, FACE - 0.2), M["glass"])          # the glass surface AT the face
 for (fx_, fy_) in P.XENARC["frame_holes"]: cyl("xenarc_frame_%d_%d" % (int(fx_), int(fy_)), 7.0, 2.0, (fx_, fy_, PLATE_UNDER - 1.0), M["steel_dark"])
 box("xenarc_frame_bar", (XW + 30.0, 18.0, 3.0), (DX, DY, FACE - XT - 1.5), M["steel_dark"], bevel=1.0)            # the rear retaining frame
-bx, by, bw, bh = P.XENARC["block"]; box("xenarc_block", (bw, bh, P.XENARC["block_depth"]), (bx, by, FACE - XT + P.XENARC["block_depth"] / 2), M["black"], bevel=1.5)
+bx, by, bw, bh = P.XENARC["block"]; box("xenarc_block", (bw, bh, P.XENARC["block_depth"]), (bx, by, FACE - XT - P.XENARC["block_depth"] / 2), M["black"], bevel=1.5)   # 15 Sep 2026: it hung 7 mm ABOVE the glass in sets eight and nine (centre at FACE - XT + depth/2); it hangs under the shell
 box("xenarc_seal", (XW + 3.0, XH + 3.0, 1.2), (DX, DY, PLATE_UNDER - 0.6), M["rubber"], bevel=0.4)                # the window seal at the plate land
 # Pervasive Displays E2370KS0C1: the bare glass taped under the lens in the window, its flex to the ZIF on the top strip
 EX, EY = P.EPAPER["c"]; ET = FACE - P.EPAPER["pocket_depth"]
