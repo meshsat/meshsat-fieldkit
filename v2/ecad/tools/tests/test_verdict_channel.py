@@ -23,7 +23,12 @@ import verdict
 GATES = ["check_pcb_a.py", "check_pcb_b.py", "check_pcb_c.py", "check_pcb_d.py", "check_pcb_e.py",
          "check_pcb_p.py", "hardset.py", "impedance_check.py", "dc_drop.py", "check_contracts.py",
          "check_zone_nets.py", "intent_checks.py", "place_audit.py", "erc_gate.py",
-         "verify_deliverable.py", "pruned_gate.py", "lcsc_fill.py"]
+         "verify_deliverable.py", "pruned_gate.py", "lcsc_fill.py",
+         # added 16 September 2026 with the rule registry: every rule with an ENFORCED maturity needs a gate in
+         # this catalogue, or the admission rule below cannot see whether it has fixtures
+         # couple_gap.py (a measurement read back off the copper) and jumper_clearance.py (a fixer that widens
+         # a pad's own clearance) are deliberately NOT here: neither decides whether a board may ship
+         "class_floor.py", "claims_check.py", "return_via.py"]
 
 WRITES = re.compile(r"\b(?:verdict|_v)\.write\s*\(")
 IMPORTS = re.compile(r"^\s*import verdict(?: as _v)?\s*$", re.M)

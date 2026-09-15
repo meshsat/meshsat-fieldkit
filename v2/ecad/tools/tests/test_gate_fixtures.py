@@ -582,3 +582,57 @@ def t_a_rail_with_no_declared_load_is_not_judged():
         "a board whose only failures are undeclared rails is still reported as FAIL, which blames the copper"
     assert "would have put the current into" in src, \
         "the refusal does not name the parts it would have guessed, so it does not say how to fix itself"
+
+
+# ---------------------------------------------------------------- claims_check (rule ENV-002)
+
+def _doc(d, text):
+    os.makedirs(d, exist_ok=True)
+    p = os.path.join(d, "doc.md")                 # never README.md: the allow file matches by filename substring
+    open(p, "w").write(text)
+    return p
+
+
+def t_a_rating_claimed_without_its_test_is_refused_and_an_intention_passes():
+    """Rule ENV-002, and the distinction it exists to hold.
+
+    Nothing in this project has been fabricated or powered, so a sentence saying the kit IS sealed to a rating
+    is a promise to whoever would carry it. The same sentence with "designed to" in front of it is a design
+    statement and is what this project is allowed to publish. Both are exercised here, because a screen that
+    refuses everything is as useless as one that refuses nothing.
+    """
+    d = tempfile.mkdtemp(prefix="claims-fail-")
+    bad = _doc(d, "# Kit\n\nThe case is IP67 and the enclosure is waterproof.\n")
+    rc, out = _run([os.path.join(TOOLS, "claims_check.py"), bad], cwd=d)
+    assert rc == 1, "an unqualified rating passed the claims screen:\n%s" % out[-400:]
+    v = _verdict(d, "claims_check")
+    assert v["verdict"] == "FAIL" and v["counts"]["unqualified"] >= 1, v
+
+    d2 = tempfile.mkdtemp(prefix="claims-pass-")
+    good = _doc(d2, "# Kit\n\nThe case is designed to an IP67-class construction; no rating is claimed until the\n"
+                    "bench procedure has run.\n")
+    rc2, out2 = _run([os.path.join(TOOLS, "claims_check.py"), good], cwd=d2)
+    assert rc2 == 0, "a qualified design statement was refused:\n%s" % out2[-400:]
+    assert _verdict(d2, "claims_check")["counts"]["claims"] >= 1, "the screen did not even see the sentence"
+
+
+def t_the_claims_screen_reads_a_negation_as_the_opposite_of_a_claim():
+    """"Nothing here has been field deployed" is the sentence the project is REQUIRED to carry, and the first
+    version of this screen flagged it as a claim because it contains the words. A screen that refuses the
+    correct sentence teaches its readers to delete the qualifier."""
+    d = tempfile.mkdtemp(prefix="claims-neg-")
+    p = _doc(d, "# Kit\n\nNothing here has been field deployed and no board has been powered.\n")
+    rc, out = _run([os.path.join(TOOLS, "claims_check.py"), p], cwd=d)
+    assert rc == 0, "the screen refused a sentence that denies the claim:\n%s" % out[-400:]
+
+
+def t_the_allow_file_carries_a_reason_on_every_line():
+    """An allow entry without a reason is an exemption nobody can audit, which is how the four floors of
+    12 September came to have holes in them."""
+    p = os.path.join(TOOLS, "claims-allow.txt")
+    bad = []
+    for n, line in enumerate(open(p), 1):
+        s = line.strip()
+        if not s or s.startswith("#"): continue
+        if "#" not in s: bad.append("line %d: %s" % (n, s[:70]))
+    assert not bad, "allow entries with no reason: %s" % bad

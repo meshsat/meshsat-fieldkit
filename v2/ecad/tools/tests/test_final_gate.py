@@ -33,6 +33,8 @@ def _world(folders, sub, phases=None):
             return rc, out
         if tool == "check_contracts.py": return sub.get("contracts", (0, "contracts: ALL PASS 42 of 42"))
         if tool == "jlc_certify.py": return sub.get("certify", (0, "jlc_certify: 469 components, CERTIFIED 469"))
+        if tool == "claims_check.py":
+            return sub.get("claims", (0, "claims_check: 19 claim sentence(s) in 8 document(s), 0 without a qualifier, an evidence reference or a declared reason"))
         raise AssertionError("unexpected command %s" % cmd)
     return d, bdir, rdir, run
 
@@ -120,3 +122,18 @@ def t_a_folder_that_is_not_the_declared_phase_fails_the_set():
     assert v["counts"]["fail"] == 1 and v["counts"]["pass"] == 6, v["counts"]
     rc2, res2, v2 = _verdict([], FULL, {}, None)   # the same folders, each the declared phase
     assert res2 == "PASS", (res2, v2)
+
+
+def t_a_rating_claimed_in_a_public_document_fails_the_set():
+    """Rule ENV-002 at the release gate. The documents go to the public mirror within minutes of a push, and
+    nothing in this project has been fabricated or powered: a rating asserted without the test that
+    establishes it is a promise to whoever would carry the kit, and it stops the release exactly as a failed
+    folder does."""
+    rc, res, v = _verdict([], FULL, {"claims": (1, "claims_check: 19 claim sentence(s) in 8 document(s), 3 without a qualifier, an evidence reference or a declared reason")}, None)
+    assert res == "FAIL" and rc != 0, "an unqualified rating in a public document passed the release gate: %s" % v
+    assert any("claims" in e for e in v.get("evidence", [])), "the refusal does not say the claims screen is why: %s" % v
+
+
+def t_an_unreadable_claims_screen_is_inconclusive_and_never_a_pass():
+    rc, res, v = _verdict([], FULL, {"claims": (3, "claims_check: INCONCLUSIVE")}, None)
+    assert res == "INCONCLUSIVE", "a claims screen that could not judge read as a pass: %s" % v

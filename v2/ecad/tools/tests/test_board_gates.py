@@ -150,3 +150,42 @@ def t_a_signal_via_without_a_ground_via_beside_it_fails_the_return_via_rule_and_
     if "kicad-cli" in (rc.stdout + rc.stderr) and "not found" in (rc.stdout + rc.stderr): raise Skip("no kicad-cli for the fixer's DRC")
     r = return_via.judge(pcbnew.LoadBoard(p), p)
     assert not r["lacking"], "the fixer must place a ground via beside the lone signal via:\n%s" % (rc.stdout + rc.stderr)[-800:]
+
+
+def t_a_class_below_the_board_minimum_is_refused_and_a_class_at_it_passes():
+    """Rule IMP-002. A class number below the board's own manufacturing minimum is a lie the router believes:
+    the DSN carries the class, the router lays copper to it, and the DRC finds the violations afterwards. It
+    cost A23 twenty-five clearance violations (appendix 32.79) and it was live on board B on 16 September,
+    whose project file shipped USB and DIFF100 at 0.10 mm against a 0.127 mm board minimum."""
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="class-floor-test-")
+    b = _board(pcbnew)
+    ds = b.GetDesignSettings()
+    ds.m_MinClearance = pcbnew.FromMM(0.127); ds.m_TrackMinWidth = pcbnew.FromMM(0.127)
+    ds.m_ViasMinSize = pcbnew.FromMM(0.40); ds.m_MinThroughDrill = pcbnew.FromMM(0.20)
+    path = os.path.join(tmp, "brd.kicad_pcb"); b.Save(path)
+
+    def run(clearance):
+        pro = os.path.join(tmp, "brd.kicad_pro")
+        json.dump({"net_settings": {"classes": [
+            {"name": "Default", "clearance": 0.2, "track_width": 0.25, "via_diameter": 0.6, "via_drill": 0.3},
+            {"name": "DIFF100", "clearance": clearance, "track_width": 0.2, "via_diameter": 0.4, "via_drill": 0.2}]}},
+            open(pro, "w"))
+        return subprocess.run([sys.executable, os.path.join(TOOLS, "class_floor.py"), path],
+                              cwd=tmp, capture_output=True, text=True)
+
+    p = run(0.10)
+    assert p.returncode == 1, "a class at 0.10 mm passed a board whose minimum is 0.127:\n%s" % (p.stdout + p.stderr)[-400:]
+    v = json.load(open(os.path.join(tmp, "out", "class_floor.verdict.json")))
+    assert v["counts"]["below_floor"] == 1, v
+    p = run(0.127)
+    assert p.returncode == 0, "a class AT the board minimum was refused:\n%s" % (p.stdout + p.stderr)[-400:]
+
+
+def t_a_board_with_no_project_file_is_inconclusive_and_never_a_pass():
+    """The classes live in the project file and the router reads them there. A board without one has no class
+    to judge, which is the absence case: INCONCLUSIVE, never a silent pass."""
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="class-floor-none-")
+    b = _board(pcbnew); path = os.path.join(tmp, "lonely.kicad_pcb"); b.Save(path)
+    p = subprocess.run([sys.executable, os.path.join(TOOLS, "class_floor.py"), path],
+                       cwd=tmp, capture_output=True, text=True)
+    assert p.returncode == 3, "a board with no project file did not come out INCONCLUSIVE:\n%s" % (p.stdout + p.stderr)[-300:]

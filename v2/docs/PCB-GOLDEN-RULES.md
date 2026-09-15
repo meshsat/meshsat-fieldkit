@@ -65,8 +65,8 @@ establishes it has been run and recorded.
 | risk | DOCUMENTATION, SAFETY |
 | verified by | SCRIPT, MANUAL_REVIEW at RELEASE_PACKAGE (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | NONE_YET |
-| maturity | **DOCUMENTED_ONLY** |
+| implementation | claims_check.py plus claims-allow.txt, one declared exemption per line with its reason |
+| maturity | **ENFORCED** |
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -77,7 +77,13 @@ by the test record that establishes it, or is written as an intent ("designed to
 
 **If violated** A kit is trusted in conditions nobody tested it in.
 
-**Today** the prototype-framing rule is carried by CLAUDE.md and by review, not by a check over the shipped documents
+**Today** 16 September 2026: a screen over the eight public documents, in final_gate.py because the release package is
+a set of documents as much as a set of folders and they reach the public mirror within minutes. It finds the
+sentences that assert a rating or a capability and asks each for a qualifier, an evidence reference, a
+negation, or a declared reason. The distinction it holds: a rating attached to a part the project BUYS is the
+maker's own claim and quoting it is a fact about the bill of materials, while the same rating attached to
+THIS KIT is a promise about hardware that has never been built. Nine vendor ratings are declared with their
+reason; 19 claim sentences, 0 unqualified
 
 ## Schematic Integrity
 
