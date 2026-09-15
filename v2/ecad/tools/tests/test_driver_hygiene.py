@@ -102,6 +102,7 @@ CLASSIFIED = {
     "finish_stubs.py": POST_ROUTE, "fix_pad_escapes.py": POST_ROUTE, "gap_closer_checked.py": POST_ROUTE,
     "stub_router.py": POST_ROUTE, "pair_preroute.py": POST_ROUTE, "pair_shadow.py": POST_ROUTE,
     "zone_pad_via.py": POST_ROUTE, "escape_prune.py": POST_ROUTE, "stub_accept.py": POST_ROUTE,
+    "rail_prune.py": POST_ROUTE,   # removes the router's parallel copper on a rail; it re-creates a piece only to put back one the net needed (15 Sep 2026)
     "cleanup_dangling.py": POST_ROUTE, "straighten.py": POST_ROUTE, "via_merge.py": POST_ROUTE,
     "meander.py": POST_ROUTE, "ses_import_lock.py": POST_ROUTE, "ses_merge.py": POST_ROUTE,
     "part_reconcile.py": POST_ROUTE, "hand_route.py": POST_ROUTE, "direct_close.py": POST_ROUTE,

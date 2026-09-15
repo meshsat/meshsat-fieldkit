@@ -179,6 +179,10 @@ if [ -n "$PAIRM" ]; then
     stop "PAIRS NOT MATCHED, not finishing (audit images in out/audit)"
   fi
 fi
+# 15 September 2026 (MESHSAT-862): the router's own copper on a rail the rail's copper already carries comes off
+# before the refill and the judgements (rail_prune.py, declared per board): Freerouting never sees a pour, so it
+# lays a 0.5 mm inner track in parallel with a band and the solver takes a share of the rail through it.
+if [ -n "$(cfg x rail_prune)" ]; then python3 $T/rail_prune.py $N.kicad_pcb 2>&1 | grep -E 'rail_prune|Traceback|Error'; fi
 # 13 September 2026 (MESHSAT-862): REFILL BEFORE ANYTHING JUDGES THE COPPER, and this is not a tidy-up.
 # The only refill in this script was after the stub router, and between it and the judgements below run
 # `stub_accept` (which removes closure copper), `stitch_prune` and its revert (which COPIES BACK a board that
