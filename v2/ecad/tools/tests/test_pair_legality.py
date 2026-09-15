@@ -82,3 +82,17 @@ def t_a_profiles_gate_count_is_its_boards_declaration():
         want = 2 if json.load(open(bp)).get("gate_before_placement") else 1
         if d["pre"].get("min_all_pass") != want: bad.append("%s min_all_pass %s, board %s runs %d" % (os.path.basename(p), d["pre"].get("min_all_pass"), letter, want))
     assert not bad, "; ".join(bad)
+
+
+def t_the_routers_parallel_copper_on_a_rail_comes_off_before_the_judgement():
+    """A32 (15 Sep 2026): four rails MISSED on copper that reads MET alone, because Freerouting never sees a pour and laid
+    a 0.5 mm inner track in parallel with each band; the solver took a share of the rail through it. rail_prune.py
+    removes an unlocked rail piece when the net stays connected without it, before the refill that precedes the gate."""
+    s = open(os.path.join(TOOLS, "rail_prune.py")).read()
+    assert "IsLocked()" in s and "GetUnconnectedCount" in s and "-intent.json" in s, "the prune must touch only router copper, judge by connectivity, and read the rails from the intent"
+    assert "if unconnected() > u0" in s, "a piece that is the only path must go back"
+    f = open(os.path.join(TOOLS, "finish.sh")).read()
+    i = f.find("rail_prune.py"); j = f.find("zones refilled before t"); assert 0 < i < j, "the prune must run before the refill the judgements read"
+    assert 'cfg x rail_prune' in f, "the prune is not declared per board"
+    a = json.load(open(os.path.join(TOOLS, "boards", "a.json")))
+    assert a["finish"].get("rail_prune") is True and "_rail_prune_why" in a["finish"], "A does not declare it with its measurement"
