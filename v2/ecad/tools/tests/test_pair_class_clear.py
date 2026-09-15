@@ -16,6 +16,7 @@ at all, and with it on the clearance in force is part of every cache key, so a m
 handed to another.
 """
 import os, json
+from harness import need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = open(os.path.join(TOOLS, "pair_preroute.py")).read()
@@ -66,5 +67,5 @@ def t_it_is_registered_and_documented():
     reg = json.load(open(os.path.join(TOOLS, "agent", "knobs.json")))["knobs"]
     assert "PAIR_CLASS_CLEAR" in reg, "the knob is not in the agent's registry"
     assert reg["PAIR_CLASS_CLEAR"]["type"] == "flag", "a flag given a threshold is the defect of 32.149"
-    doc = open(os.path.join(TOOLS, "..", "..", "docs", "PAIR-PREROUTER-KNOBS.md")).read()
+    doc = open(need(os.path.join(TOOLS, "..", "..", "docs", "PAIR-PREROUTER-KNOBS.md"), "the knob map is a document outside the tools tree")).read()
     assert "PAIR_CLASS_CLEAR" in doc, "the knob map does not carry it"

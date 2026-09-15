@@ -7,6 +7,7 @@ all of the pre-router's making (the placed board reads 0), and the chain would h
 that refuses locked copper it cannot change. Three causes are fixed at their source, and one floor catches the rest.
 """
 import os, json
+from harness import need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "docs")
@@ -47,7 +48,7 @@ def t_the_gap_cushion_is_one_knob_applied_to_both_layers():
         "the INNER gap takes no cushion: 13 of B19's 64 pre-route hard items were an inner pair's own two legs at 0.122 to 0.126 mm against 0.127")
     k = json.load(open(os.path.join(TOOLS, "agent", "knobs.json")))["knobs"]
     assert "PAIR_GAP_CUSHION" in k and k["PAIR_GAP_CUSHION"]["type"] == "number", "the knob is not registered for the agent"
-    assert "`PAIR_GAP_CUSHION`" in open(os.path.join(DOCS, "PAIR-PREROUTER-KNOBS.md")).read(), "the knob has no row in the map"
+    assert "`PAIR_GAP_CUSHION`" in open(need(os.path.join(DOCS, "PAIR-PREROUTER-KNOBS.md"), "the knob map is a document outside the tools tree")).read(), "the knob has no row in the map"
 
 
 def t_the_via_in_the_pad_between_a_stations_pads_asks_every_layer_first():

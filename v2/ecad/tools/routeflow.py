@@ -677,15 +677,31 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
     # the project lock (6 Sep 2026 03:50): two experiments on one project directory share out/<name>-preroute.kicad_pcb and out/par/exp-<config>; the
     # B14 strip overwrote the B15 pre-route board while both ran and every B row of that night had to be discarded. A busy project directory refuses.
     plock = os.path.join(project, "out", "routeflow", "experiment.lock"); os.makedirs(os.path.dirname(plock), exist_ok=True)
-    try:
-        o = json.load(open(plock))
+    # A CLAIM, not a check-then-write (15 September 2026, red team report 1 P1): the lock file is created with O_EXCL,
+    # so two experiments cannot both read "nobody here" and both write the lock. A stale lock (its pid gone) is
+    # removed and claimed again once.
+    def _claim():
+        try:
+            fd = os.open(plock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        except FileExistsError:
+            return False
+        with os.fdopen(fd, "w") as f: json.dump({"exp": os.path.basename(exp_fn), "pid": os.getpid(), "since": now()}, f)
+        return True
+    if not _claim():
+        try: o = json.load(open(plock))
+        except (OSError, ValueError): o = {}
         if os.path.exists("/proc/%d" % o.get("pid", -1)) and o.get("pid") != os.getpid():
             jn(dict(run="exp", board=name, phase=key, stage="lock", status="PREFLIGHT_FAIL", note="project directory busy: experiment %s (pid %d since %s); give this experiment its own project directory" % (o.get("exp"), o.get("pid"), o.get("since"))))
             try: os.remove(LOCK)
             except OSError: pass
             return 2
-    except (OSError, ValueError): pass
-    json.dump({"exp": os.path.basename(exp_fn), "pid": os.getpid(), "since": now()}, open(plock, "w"))
+        try: os.remove(plock)
+        except OSError: pass
+        if not _claim():
+            jn(dict(run="exp", board=name, phase=key, stage="lock", status="PREFLIGHT_FAIL", note="project directory claimed by another experiment between two of our attempts"))
+            try: os.remove(LOCK)
+            except OSError: pass
+            return 2
     try:
         # the pre-route board: "strip:<released board>" strips the router copper (locked copper stays); a path is used as is; nothing means out/<name>-preroute.kicad_pcb
         pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); src = exp.get("preroute")

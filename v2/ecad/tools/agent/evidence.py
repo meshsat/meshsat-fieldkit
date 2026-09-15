@@ -89,6 +89,40 @@ def graded_rows(ledger_paths, verify=True):
     return rows
 
 
+def cohort_rows(rows, letter, run, spec_template=None):
+    """Only rows measured in THIS cohort count: the same board letter, the same run stage, the same placed board (when the
+    template's source board can be hashed here) and the same tool fingerprint. A best-on-this-board taken from another
+    board, another placement or another tool basis raises the falsifiability bar to a number this board never reached,
+    and a repeat signature from another cohort refuses a knob that was never measured HERE (15 September 2026, red team
+    report 1 P1). Returns (rows in the cohort, {reason: count} for the rest, the cohort description)."""
+    placed = None
+    try:
+        if spec_template and spec_template.get("source_project") and spec_template.get("placed"):
+            pb = os.path.join(TOOLS, "..", spec_template["source_project"], spec_template["placed"])
+            if os.path.exists(pb):
+                import hashlib
+                placed = hashlib.md5(open(pb, "rb").read()).hexdigest()
+    except Exception:
+        placed = None
+    tools = None
+    try:
+        sys.path.insert(0, TOOLS); import arms as _arms
+        tools = _arms.tool_fingerprint() or None
+    except Exception:
+        tools = None
+    cohort = {"letter": letter, "runs": run, "placed_md5": placed, "tools": tools}
+    keep, excluded = [], {}
+    for r in rows:
+        why = None
+        if r.get("letter") and r.get("letter") != letter: why = "other board"
+        elif (r.get("runs") or "pair") != run: why = "other stage"
+        elif placed and r.get("placed_md5") and r.get("placed_md5") != placed: why = "other placed board"
+        elif tools and r.get("tools") and r.get("tools") != tools: why = "other tool fingerprint"
+        if why: excluded[why] = excluded.get(why, 0) + 1
+        else: keep.append(r)
+    return keep, excluded, cohort
+
+
 def signatures(rows):
     """The knob signatures already graded, so the validator can refuse a repeat."""
     out = set()
@@ -115,9 +149,10 @@ def pack(letter, board_json=None, profile=None, ledgers=(), knobs=None, extra=()
     """Everything tier 2 sees, as one dict. Nothing here is a log and nothing here is a secret."""
     import schema
     bj = board_json or os.path.join(TOOLS, "boards", "%s.json" % letter)
-    rows = graded_rows(ledgers)
+    all_rows = graded_rows(ledgers)
     reg = schema.registry()
     run = (spec_template or {}).get("_runs", "pair") if spec_template else "pair"
+    rows, excluded, cohort = cohort_rows(all_rows, letter, run, spec_template)
     stages = schema.STAGES.get(run, ("pair",))
     proposable = sorted(k for k, v in reg.items()
                         if v.get("category") == "experiment" and v.get("stage") in stages)
@@ -136,6 +171,8 @@ def pack(letter, board_json=None, profile=None, ledgers=(), knobs=None, extra=()
         "reserved_knobs": schema.RESERVED_KNOBS(reg),
         "basis_locked_knobs": schema.BASIS_KNOBS(reg),
         "run_stage": run,
+        "cohort": cohort,
+        "evidence_excluded": excluded,
         "law": LAW,
         "notes": list(extra),
         "_signatures": sorted(signatures(rows)),
