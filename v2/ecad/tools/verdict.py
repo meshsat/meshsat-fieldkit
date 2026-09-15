@@ -83,13 +83,54 @@ def _tools():
     _TOOLS_CACHE.update(out); return dict(out)
 
 
+_RULESET = [None]
+
+
+def _rule_set_fingerprint():
+    """The identity of the rule registry this verdict was taken under (MESHSAT-862, 16 September 2026). Evidence
+    that does not name its rule set cannot be shown to be current, and rules_status.py treats it as stale."""
+    if _RULESET[0] is None:
+        try:
+            import rules_lib as _r; _RULESET[0] = _r.fingerprint()
+        except Exception: _RULESET[0] = ""
+    return _RULESET[0]
+
+
+_BY_TOOL = [None]
+
+
+def _rules_for_tool(tool):
+    """Which rule ids this verdict decides, read from the coverage map rather than typed into twenty gates.
+    The coverage map names, per rule, the verdict that carries its evidence; this is that mapping inverted,
+    so the registry stays the single source and a gate cannot drift from it."""
+    if _BY_TOOL[0] is None:
+        m = {}
+        try:
+            import rules_lib as _r
+            cov = (_r._yaml().safe_load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                          "pcb_rules_coverage.yaml"))) or {}).get("coverage", {})
+            for rid, c in cov.items():
+                name = ((c or {}).get("verification") or {}).get("verdict")
+                if name: m.setdefault(name, []).append(rid)
+        except Exception: m = {}
+        _BY_TOOL[0] = m
+    m = _BY_TOOL[0]; out = set(m.get(tool, []))
+    for name, ids in m.items():                      # check_pcb_<letter> and friends: the union, never the first match
+        if "<letter>" in name and tool.startswith(name.split("<letter>")[0]): out |= set(ids)
+    return sorted(out)
+
+
 def _policy():
+    d = {}
     try:
-        import hardset as _h; return {"hard_types": len(_h.HARD_POST)}
-    except Exception: return {}
+        import hardset as _h; d["hard_types"] = len(_h.HARD_POST)
+    except Exception: pass
+    fp = _rule_set_fingerprint()
+    if fp: d["rule_set_fingerprint"] = fp
+    return d
 
 
-def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None):
+def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None, rules=None):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
 
     `advisory` (or VERDICT_ADVISORY=1 in the environment) marks a verdict that is a MEASUREMENT for the record and
@@ -119,6 +160,10 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "inputs": dict(inputs or {}),
         "evidence": list(evidence or [])[:50],
         "note": note,
+        # THE RULE IDS THIS VERDICT DECIDES (MESHSAT-862, 16 September 2026). A gate with no rule id decides
+        # something the registry does not know about, which is how this project came to enforce rules it had
+        # never written down; tests/test_rule_gate_mapping.py holds the list.
+        "rules": sorted(set(rules or _rules_for_tool(tool))),
     }
     # An input given as a path is recorded by its hash as well as its name: the verdict then names the bytes it judged.
     for k, v in list(rec["inputs"].items()):
