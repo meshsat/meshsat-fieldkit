@@ -11,9 +11,16 @@ R = lambda n, v: {"arm": n, "verdict": v, "pairs": 10}   # the runner's rows car
 APPROVE = {"verdict": "APPROVE"}; REFUSE = {"verdict": "REFUSE"}
 
 
-def t_a_runner_that_exits_non_zero_is_incomplete_whatever_rows_exist():
-    inc = loop.incomplete([R("a", "MET"), R("b", "MET")], {"a", "b"}, rc=1)
-    assert inc and inc["counts"]["infra_fail"] == 1 and "exited 1" in inc["why"]
+def t_a_runner_that_did_not_run_to_a_verdict_is_incomplete_whatever_rows_exist():
+    inc = loop.incomplete([R("a", "MET"), R("b", "MET")], {"a", "b"}, rc=2)
+    assert inc and inc["counts"]["infra_fail"] == 1 and "exited 2" in inc["why"]
+    inc = loop.incomplete([R("a", "MET"), R("b", "MET")], {"a", "b"}, rc=-9)
+    assert inc and inc["counts"]["infra_fail"] == 1
+
+
+def t_the_runners_fail_verdict_over_a_complete_row_set_is_the_rows_business():
+    """arms.py exits 1 when no row is legal (an all-ILLEGAL set): the rows carry that and the cycle is complete."""
+    assert loop.incomplete([R("a", "ILLEGAL")], {"a"}, rc=1) is None
 
 
 def t_fewer_rows_than_arms_is_incomplete():
