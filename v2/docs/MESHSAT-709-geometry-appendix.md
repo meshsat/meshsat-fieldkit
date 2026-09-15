@@ -7827,7 +7827,7 @@ material, a stale-artefact defect of the loop's own: it takes only this cycle's 
 it, after the split into `pair_router/`) read D identical across all three (75613add2bca, 5 of 5 pairs, 262 items) and B
 identical across the first two (a350f7bd8340, 48 of 113, 5,601 items); the split arm of the first run crashed on the
 NameError that 32.198 recorded as fixed, because the proof's tree predated the fix, and re-runs on the current tools with D
-identical again and **B identical too** (a350f7bd8340, 48 of 113, 5,601 items, 22:30 CEST): the knob deletion and the split are behaviour-preserving on both boards, which is the proof the plan's item 5 asked for.
+identical again and **B identical too** (a350f7bd8340, 48 of 113, 5,601 items, 22:27 CEST): the knob deletion and the split are behaviour-preserving on both boards, which is the proof the plan's item 5 asked for.
 
 **Running on box 51145697 at 22:25 CEST:** A35's finish (stub stage on 16 opens), **A36 routing** with the rail planes,
 P5's route (signals on the top layer), E10 round two (round two's board was worse than round one's and was not finished;
