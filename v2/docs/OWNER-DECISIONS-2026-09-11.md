@@ -1362,7 +1362,7 @@ A six-layer D is measured irrelevant to this: the anti-pads are the same on any 
 
 
 
-## DECISION 28, OPEN: board P cannot hold the return-path rule on two layers, and the ruled P5 does not route (15 September 2026, 22:40 CEST)
+## DECISION 28, OPEN: board P cannot hold the return-path rule on two layers, and the ruled P5 does not route (15 September 2026, 22:34 CEST)
 
 **The ruling of 20:15 CEST scoped P as "two layers at 2 oz, re-routed with its signals on the top layer over a solid back-side
 ground pour; if the router cannot close it that way, the numbers come back to the owner."** They come back, measured three ways
