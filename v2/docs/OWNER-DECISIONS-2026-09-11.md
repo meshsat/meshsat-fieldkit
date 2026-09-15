@@ -1232,3 +1232,26 @@ strip and the nets they tap run in the top and right strips, and a test point pl
 millimetre of track. That change is in C's generator and is the next thing built. The first kind is the
 decision above, unchanged: a placement that gives the panel a second corridor, or a wire link on the assembled
 board.
+
+## OWNER RULING, 15 September 2026 02:40 CEST: DECISION 24 IS THE SESSION'S
+
+**His words, verbatim: "while B is blocked on your decision == unblock B from my decision".** Decision 24 (board B
+lays 62 to 71 of its 113 pairs and the 10 September hold releases no board under 113) is delegated to the
+session, and the session takes **option 2, the one the decision itself recommended**: the pair hold judges the
+COUPLED FRACTION of the board's pair copper rather than every pair.
+
+**What is taken.** `boards/b.json` declares `pair_coupled_fraction: 0.80`. The pre-route pair gate holds B only
+while the pre-router lays fewer than 80 percent of its pairs; the impedance gate on the routed board passes when
+the coupled length across the judged pairs, weighted by each pair's own length, is at least 80 percent of the
+total. **Every pair is still read back and named with its own verdict, and the 1 mm intra-pair length gate is
+untouched for the pairs that exist.** A board that declares nothing keeps the 10 September rule to the letter:
+one pair short and the gate refuses, so A, C, D, E and P are unchanged by this.
+
+**Why 0.80 and not a hoped-for number.** B lays 62 to 71 of 113 on the tools of the day (32.174, 32.185); ruling
+18's floor plan is refused by the board's own regions by 86.2 mm (32.185); and USB 2.0's own budget for
+uncoupled length is a sixteenth of its edge. Eighty percent of the pair copper coupled, the rest laid by the
+router as two traces, is the measured board.
+
+**What it does not do.** It does not route B. B16 flattened near 70 open and B19 has never been routed whole;
+the partition route reached the reconcile at 1,121 boundary conflicts (32.93). Lifting the hold puts B on the
+same path as the other six, which is a route campaign with its own numbers, and that is what runs next.

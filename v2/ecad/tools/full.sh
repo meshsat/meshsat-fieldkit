@@ -182,6 +182,17 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
     ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json >/dev/null 2>&1 || true
     [ -s out/$N-preroute-drc.json ] && python3 ../tools/hardset.py out/$N-preroute-drc.json pre --examples 4 --label 'pre-route DRC on the refused board' | sed 's/^hardset:/pre-route DRC (refused board):/' || true
   fi
+  # 15 September 2026, owner ruling 02:40 CEST (decision 24 delegated to the session, option 2 taken): a board that
+  # declares pair_coupled_fraction is held only while the pre-router lays FEWER than that fraction of its pairs;
+  # the impedance gate judges the coupled length on the routed board against the same number. A board that
+  # declares nothing is held until every pair is laid, the 10 September rule.
+  PCF="$(cfg pair_coupled_fraction)"
+  if [ "$PP" -ne 0 ] && [ -n "$PCF" ]; then
+    LAID=$(grep -h "pairs laid," out/pair_preroute*.log | sed -E 's/.*: ([0-9]+) of ([0-9]+) pairs laid.*/\1 \2/' | awk '{a+=$1; b+=$2} END {print a, b}')
+    if python3 -c "import sys; a,b=map(int,'$LAID'.split()); sys.exit(0 if b and a/b >= float('$PCF') else 1)"; then
+      echo "pair gate: $LAID laid, at or above the declared coupled fraction $PCF; the board proceeds (every unlaid pair is the impedance gate's to name)"; PP=0
+    else echo "pair gate: $LAID laid, under the declared coupled fraction $PCF"; fi
+  fi
   [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || block "pair pre-router (out/pair_preroute.log)"
 fi
 
