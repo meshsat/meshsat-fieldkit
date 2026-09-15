@@ -6,6 +6,21 @@ ledger, the never-auto floor, the execution pin) have been running since 11 Sept
 document is tiers 2 and 2b, the proposing agent and the reviewer, which is where a model enters the
 loop for the first time.**
 
+## State, 15 September 2026 22:00 CEST
+
+Since the 12 September text below: the knob registry (`agent/knobs.json`, typed, with a stage per knob and a completeness
+rule against the source) is the authority and the source scan a check; a **placement run shape** (`_runs: "place"`) regenerates
+the board through `full.sh` with one `PLACE_*` knob and measures the pair pass on what it produced, and `agent/templates/b-place.json`
+points it at board B for the first time; the **falsifiability bar** refuses a prediction the cohort's best row already meets;
+**a cycle is complete or it is nothing** (the runner's verdict code, exactly one row per requested arm, ILLEGAL counted as
+unmeasured, the verdict the arms' and the review a count, `loop.incomplete` and `loop.cycle_result` as pure functions with an
+executed truth table); **evidence is scoped to its cohort** (letter, stage, placed board, tools tree content); arm artefacts live
+under `out/arms/cycles/<ledger head>-<stamp>/` and are never overwritten; the ledger appends under a lock; a placement the
+chain's own gate refuses is graded UNMEASURABLE with the gate's line. The B loop's first two cycles: `PLACE_FINE_MARGIN 2.6`
+refused by the region gate (nine regions overflow by 8.4 mm, as appendix 32.185 measured), `PLACE_COUPLE_GAP 3.2` laid 39 of
+48 DIFF100 pairs against 35 on B19's own placement and was graded ILLEGAL for four hard DRC items on its placed board.
+Owed: the SQLite experiment store with a `cycle_id` and a stage-result envelope (red team report 1 of 15 September).
+
 ## The loop, in the order that is the contract
 
 ```
