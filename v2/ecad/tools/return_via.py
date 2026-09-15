@@ -222,11 +222,15 @@ def fix(path, dry=False, radius=RETURN_MM):
         b = pcbnew.LoadBoard(path); new = []
         for pt, cands in todo.items():
             if pt in placed: continue
-            spot = None
+            spot = None; n_copper = n_fill = 0
             while cands:
                 c = cands.pop(0)
-                if _site_free(b, c[0], c[1], VD, clr, "GND") and _in_gnd_fill(b, c[0], c[1], VD): spot = c; break
-            if spot is None: refused[pt] = "no candidate site free of other-net copper inside a ground fill"; continue
+                if not _site_free(b, c[0], c[1], VD, clr, "GND"): n_copper += 1; continue
+                if not _in_gnd_fill(b, c[0], c[1], VD): n_fill += 1; continue
+                spot = c; break
+            # the two refusals are named apart (the D and C readings of 15 September 2026 said "copper inside a ground fill"
+            # for 70 and 94 vias and neither number said which of the two conditions the sites failed)
+            if spot is None: refused[pt] = "no site: %d candidate(s) on other-net copper, %d outside every ground fill and pad" % (n_copper, n_fill); continue
             v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(int(spot[0] * 1e6), int(spot[1] * 1e6)))
             v.SetDrill(int(VDR * 1e6)); v.SetWidth(int(VD * 1e6)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetNet(gnd_net); v.SetLocked(True)
             b.Add(v); new.append((pt, spot))
