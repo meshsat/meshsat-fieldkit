@@ -51,11 +51,14 @@ def coverage(path=None):
 
 
 def _project_dirs(letter, m):
-    """Where a board's evidence can be: its phase directory's out/ and routed/, and the plain project dir."""
+    """Where a board's evidence can be: its phase directory's out/ and routed/, plus the SET-LEVEL out/ where
+    the across-the-set gates write (the final gate, the contracts and the parts certification judge the whole
+    manifest at once, and their verdict is evidence for every board in it)."""
     proj = (m["boards"].get(letter) or {}).get("project", "")
     out = []
     for d in sorted(glob.glob(os.path.join(ECAD, proj + "*"))):
         out += [os.path.join(d, "out"), os.path.join(d, "routed")]
+    out.append(os.path.join(ECAD, "out"))
     return [d for d in out if os.path.isdir(d)]
 
 
@@ -72,13 +75,30 @@ def _verdicts(letter, m):
     return found
 
 
+def _instant(s):
+    """One instant from either clock. A verdict writes UTC without an offset and the manifest's epoch carries
+    one: comparing the two as strings made a verdict written at 23:16 UTC look older than an epoch of
+    00:35+02:00, which is the same moment as 22:35 UTC (found 16 September 2026, the first time the status
+    was asked to read current evidence). Times are compared as instants here, never as text."""
+    import datetime as _dt
+    t = (s or "").strip().replace("Z", "+00:00")
+    try: d = _dt.datetime.fromisoformat(t)
+    except ValueError:
+        try: d = _dt.datetime.fromisoformat(t[:19])
+        except ValueError: return None
+    if d.tzinfo is None: d = d.replace(tzinfo=_dt.timezone.utc)   # a verdict writes UTC without saying so
+    return d
+
+
 def _fresh(rec, m, fingerprint):
     """(ok, why): is this verdict current evidence? The epoch and the rule-set fingerprint are the identity;
     a verdict from before the audit is history, not a decision."""
     ts = str(rec.get("ts", ""))
-    epoch = str(m.get("evidence", {}).get("epoch", ""))[:19].replace("T", " ")
+    epoch_s = str(m.get("evidence", {}).get("epoch", ""))
     if not ts: return False, "the verdict carries no timestamp"
-    if ts[:19].replace("T", " ") < epoch: return False, "PRE_AUDIT: taken %s, before the evidence epoch %s" % (ts[:19], epoch[:19])
+    t, e = _instant(ts), _instant(epoch_s)
+    if t is None: return False, "the verdict's timestamp %r cannot be read" % ts[:25]
+    if e is not None and t < e: return False, "PRE_AUDIT: taken %s, before the evidence epoch %s" % (ts[:19], epoch_s[:19])
     got = (rec.get("policy") or {}).get("rule_set_fingerprint") or rec.get("rule_set_fingerprint")
     if fingerprint and got and got != fingerprint: return False, "taken under rule set %s, current is %s" % (got, fingerprint)
     if fingerprint and not got: return False, "the verdict does not name the rule set it was taken under"
