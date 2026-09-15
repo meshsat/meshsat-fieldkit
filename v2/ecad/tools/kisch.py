@@ -50,6 +50,39 @@ def configure(fp=None, power=None, synth=None, stub=None, symdir=None, root=None
     if root is not None: ROOT = root
 
 
+def reband(items, colw=92.0, w_max=2024.0, page_h=800.0, gap=60.0, x0=20.0, margin=30.0):
+    """Fold the row of columns `layout()` drew into bands under a page that CONTAINS the drawing, and return the paper
+    field for the sheet header.
+
+    15 September 2026 (MESHSAT-862, appendix 32.194): every board's schematic was written on an A0 sheet and laid out
+    as one row of 92 mm columns, 800 mm tall, as many columns as the parts needed: A's row is 2.8 m wide and B's 3.9 m.
+    An exporter clips to the page, so the PDF a reviewer opened was an empty A0 frame with a title block. Eeschema takes
+    a user page up to 3048 mm a side (tested on the box: 2100 x 1800 exports with its ink), so the row is folded into
+    bands `w_max` wide, one under the other, and the paper is the drawing plus a margin. Positions only: no net, label
+    or reference changes, and `build_sch` proves it by the netlist."""
+    import re
+    cols_per_band = max(1, int(w_max // colw)); band_w = cols_per_band * colw
+    def first_x(item):
+        m = re.search(r"\((?:at|xy) (-?[\d.]+) (-?[\d.]+)", item); return float(m.group(1)) if m else x0
+    def shifted(item, dx, dy):
+        return re.sub(r"\((at|xy) (-?[\d.]+) (-?[\d.]+)", lambda m: "(%s %.2f %.2f" % (m.group(1), float(m.group(2)) + dx, float(m.group(3)) + dy), item)
+    bands = 0; new = []
+    for it in items:
+        b = max(0, int((first_x(it) - x0) // band_w)); bands = max(bands, b + 1)
+        new.append(shifted(it, -b * band_w, b * (page_h + gap)) if b else it)
+    items[:] = new
+    W = band_w + x0 + margin if bands > 1 else max(first_x_max(items) + margin, 297.0)
+    H = bands * (page_h + gap) - gap + margin + x0
+    if W <= 1189 and H <= 841 and bands == 1: return '"A0"'
+    return '"User" %.0f %.0f' % (min(W, 3048.0), min(H, 3048.0))
+
+
+def first_x_max(items):
+    import re
+    xs = [float(m.group(1)) for it in items for m in re.finditer(r"\((?:at|xy) (-?[\d.]+) (-?[\d.]+)", it)]
+    return max(xs) if xs else 0.0
+
+
 def reset_body():
     """Start a fresh sheet body; the parts and the symbol library survive (`layout()` is called more than once per run)."""
     global out
