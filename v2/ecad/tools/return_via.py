@@ -150,7 +150,10 @@ def _site_free(b, x, y, vd, clr, own):
     return True
 
 
-def _in_gnd_fill(b, x, y):
+def _in_gnd_fill(b, x, y, vd=0.4):
+    """A site inside a filled ground zone on some layer, or inside a ground pad with room for the via's ring (a via in a
+    ground pad connects through the pad; the second C18 reading refused 94 of 205 sites for want of a fill next to crowded
+    copper where a ground pad was the one thing there, 15 September 2026)."""
     p = pcbnew.VECTOR2I(int(x * 1e6), int(y * 1e6))
     for z in b.Zones():
         if z.GetIsRuleArea() or z.GetNetname().lstrip("/") != "GND": continue
@@ -158,6 +161,12 @@ def _in_gnd_fill(b, x, y):
             try:
                 if z.GetFilledPolysList(L).Contains(p): return True
             except Exception: pass
+    for fp in b.GetFootprints():
+        for pad in fp.Pads():
+            if pad.GetNetname().lstrip("/") != "GND": continue
+            c = pad.GetPosition(); sx, sy = pad.GetSize().x, pad.GetSize().y
+            if min(sx, sy) < (vd + 0.2) * 1e6: continue   # the pad must hold the ring with 0.1 mm to spare each side
+            if abs(p.x - c.x) <= (sx - vd * 1e6) / 2 - 0.1e6 and abs(p.y - c.y) <= (sy - vd * 1e6) / 2 - 0.1e6: return True
     return False
 
 
@@ -216,7 +225,7 @@ def fix(path, dry=False, radius=RETURN_MM):
             spot = None
             while cands:
                 c = cands.pop(0)
-                if _site_free(b, c[0], c[1], VD, clr, "GND") and _in_gnd_fill(b, c[0], c[1]): spot = c; break
+                if _site_free(b, c[0], c[1], VD, clr, "GND") and _in_gnd_fill(b, c[0], c[1], VD): spot = c; break
             if spot is None: refused[pt] = "no candidate site free of other-net copper inside a ground fill"; continue
             v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(int(spot[0] * 1e6), int(spot[1] * 1e6)))
             v.SetDrill(int(VDR * 1e6)); v.SetWidth(int(VD * 1e6)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetNet(gnd_net); v.SetLocked(True)
