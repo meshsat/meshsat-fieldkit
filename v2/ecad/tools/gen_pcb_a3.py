@@ -335,7 +335,8 @@ _r55 = pads_rect(net_pads(pa, ["R55"]), 0)                                    # 
 # are, because the shortest path hugs the inside of it; the chamfer block below is 2.5 by 4 mm of copper on
 # that corner and it costs nothing anywhere else.
 PC.union(pa, "PA rail", [(_r55[0] - 1.0, -15.0, 106.25, -8.0), (101.75, -15.0, 106.25, yP + 2.25), (101.75, yP - 2.25, jp[2] + 0.8, yP + 2.25),
-                         (99.25, -15.0, 101.75, -11.0)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin, and the chamfer on the turn
+                         (99.25, -15.0, 101.75, -11.0),
+                         (jp[0] - 3.0, yP - 4.5, jp[2] + 0.8, yP + 4.5)], pcbnew.B_Cu, priority=2)   # one polygon: east, north, pin, the chamfer on the turn, and a foot at the pin (15 Sep 2026: the run's end at J_PA read ratio 1.61)
 col(pa, (_r55[0] + _r55[2]) / 2, (_r55[1] + _r55[3]) / 2 - 1.1, (_r55[1] + _r55[3]) / 2 + 1.1, 2)   # in the shunt's own pad
 col(pa, pr[2] + 1.3, -13.4, -9.6, 3)                                          # three vias in the head island, in the band: a via mid-run has no F.Cu copper at its other end and cleanup_dangling would take it
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
@@ -349,7 +350,7 @@ DIVE_CU = pcbnew.In3_Cu if board.GetCopperLayerCount() >= 6 else pcbnew.In2_Cu
 print("placement: the VIN_RAW dive goes on %s (%d copper layers)" % (board.GetLayerName(DIVE_CU), board.GetCopperLayerCount()))
 vr = "VIN_RAW"; vb = "VBAT"; jd = pads_rect(net_pads(vr, ["J_DOCK"]), 0.5)
 fe = pads_rect(net_pads(vr, ["Q2", "Q3", "C11", "C12"]), 1.0)
-PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 2.6, fe[2], fe[3])), pcbnew.F_Cu, priority=3)
+PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 4.0, fe[2], fe[3])), pcbnew.F_Cu, priority=3)   # 4.0 north since 15 Sep 2026: the 8 A squeezed along the head's north edge past a foreign pad, ratio 2.69 (32.193)
 # the west run crosses the VBAT trunk (x fx0 to fx1): two bands of different nets never cross on one layer (32.39), so VIN_RAW dives to In3 under the trunk on five vias a side;
 # each side of the dive is ONE polygon (the dock riser with the east run, the west run with the west riser): abutting same-net zones with priorities read as separate pieces (32.69)
 f1_ = pads_rect(net_pads(vb, ["F1"]), 0.5); f1c_ = (f1_[0] + f1_[2]) / 2; fx0_, fx1_ = f1c_ - 4.5, f1c_ + 0.5   # the trunk on the west half of F1's pad 2, clear of the dock pins' riser
@@ -435,8 +436,19 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
 # 10 A rail had none. The keep-out is the neighbourhood of the neck rather than the whole plane, because an
 # In1 keep-out over a whole layer left A19 with 83 unrouted nets and that lesson is in section 8.
 PC.keepout("keep tracks off the VBAT In2 plane at the neck", (-70.0, -11.0, -46.0, 13.0), pcbnew.In2_Cu)
+# 15 September 2026 (32.193): the four converters' VIN islands sit east of the In2 plane's edge at x -2, so the pack's
+# current reached them through the plane's corner and the router's tracks. A tongue of the plane under the converter
+# row, above the GND plane there (In1 and In4 carry the return), puts the islands' via columns on the plane itself.
+_urs = [pads_rect(net_pads(vb, ["U%d" % k]), 0.5, 0.5) for k in (4, 5, 6, 7)]
+plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (tongue under the converter row)", rect=(-2.5, 36.0, max(u[2] for u in _urs) + 2.0, min(77.5, max(u[3] for u in _urs) + 3.0)), priority=2)
 qr = pads_rect(net_pads(vb, ["Q11", "C63", "C64"]), 1.0)
 PC.island(vb, "VBAT PA head", rect_pts((qr[0] - 3.5, min(qr[1], -12.0), qr[2], qr[3])), pcbnew.F_Cu, priority=3)
+# 15 September 2026, A32 MEASURED (32.193): VBAT's worst pour cell sits at the In2 plane's EAST EDGE at (-8.8, -25.3),
+# ratio 1.42, because the PA head's vias stand just inside x -2 and the whole 6 A of the PA converter's input funnels
+# through the plane's corner to reach them. In2 east of -2 is a GND plane on a board whose In1 and In4 are solid
+# ground; a VBAT tongue at a higher priority takes the strip under the PA head, so the rail meets its head on a front.
+if qr[2] > -4.0:
+    plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (tongue under the PA head)", rect=(-2.5, min(qr[1], -12.0) - 3.0, qr[2] + 1.0, qr[3] + 3.0), priority=2)
 col(vb, qr[0] - 1.9, -11.6, -8.4, 2)
 # 5. VBUS20, the 20 V charge bus: IT HAD NO POWER COPPER (13 September 2026, appendix 32.164). The router
 # carried 4.91 A of its 6 on a 0.500 mm F.Cu track for 11.8 mm, ratio 3.39 against IPC, on a dog-leg west to
@@ -455,7 +467,7 @@ _r16 = pads_rect(net_pads(vbs, ["R16"]), 1.0, 1.0); _r16x = (_r16[0] + _r16[2]) 
 # to miss every pad of every OTHER net between them. The island alone is 5.4 mm tall where IPC wants 3.56 mm
 # for 6 A on one outer layer, and the leg to the charger's input shunt is 4.5 mm, so the copper is there
 # without a single via. Every pad of this net joins it solid (RAIL_NETS below).
-_leg = 2.25
+_leg = 4.0   # 15 September 2026: 2.25 gave a 4.5 mm column on 0.5 oz In3 that carried the rail alone once F.Cu was cut; ratio 2.41 at its corner (32.193)
 _vbus_poly = [(vbr[0], vbr[1]), (_r16x - _leg, vbr[1]), (_r16x - _leg, _r16[1]), (_r16x + _leg, _r16[1]),
               (_r16x + _leg, vbr[1]), (vbr[2], vbr[1]), (vbr[2], vbr[3]), (vbr[0], vbr[3])]
 PC.island(vbs, "VBUS20", _vbus_poly, pcbnew.F_Cu, priority=3)
@@ -482,13 +494,15 @@ if NL_CU >= 6:
     # row straight down to R16's own vias, and the solver put 3.4 A of the rail's 6 through it (ratio 8.61)
     # because the F.Cu leg and this polygon were both cut where other nets cross. A keep-out on the DIVE layer
     # forbids nobody's joins, there being no pad on it, and it is the rule every band has carried since 32.39.
-    PC.union(vbs, "VBUS20 under", [(vbr[0], vbr[1], vbr[2], vbr[3]), (_r16x - _leg, _r16[1], _r16x + _leg, vbr[3])],
+    PC.union(vbs, "VBUS20 under", [(vbr[0], vbr[1], vbr[2], vbr[3]), (_r16x - _leg, _r16[1], _r16x + _leg, vbr[3]),
+                                   (_r16x - _leg - 3.0, vbr[3] - 3.0, _r16x + _leg + 3.0, vbr[3] + 3.0)],   # a foot where the column leaves the bar: the inside corner was the worst cell (32.193)
              DIVE_CU, priority=2, keepout=True)
 else:
     print("placement: VBUS20 gets no second layer on a %d layer board (In3 does not exist, In2 is the VBAT plane and B.Cu is VBAT's trunk)" % NL_CU)
 _r11 = pads_rect(net_pads(vbs, ["R11"]), 0)
-col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 0.55, (_r11[1] + _r11[3]) / 2 + 0.55, 2)   # in the ISNS shunt's own pad
-col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 0.55, (_r16[1] + _r16[3]) / 2 + 0.55, 2)                      # and in the charger's input shunt
+col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 1.65, (_r11[1] + _r11[3]) / 2 + 1.65, 4)   # in the ISNS shunt's own pad (four since 15 Sep 2026: two carried 3.69 A each, ratio 3.07)
+col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 1.65, (_r16[1] + _r16[3]) / 2 + 1.65, 4)                      # and in the charger's input shunt
+PC.keepout("keep tracks off the VBUS20 F.Cu leg to R16", (_r16x - _leg, min(vbr[1], _r16[1]), _r16x + _leg, max(vbr[1], _r16[1])), pcbnew.F_Cu)   # the leg carries no foreign pad; cut, it sent the rail down to In3 (32.193)
 # 14 September 2026, MEASURED ON A28: FOUR VIAS CARRY A SIX AMP RAIL BETWEEN ITS TWO LAYERS. The F.Cu island
 # and the In3 polygon under it are tied only inside the two shunts' pads, two vias each, and IPC gives a
 # 0.4 mm barrel 1.11 A: four of them are rated 4.4 A against the rail's 6. The measurement says where the
