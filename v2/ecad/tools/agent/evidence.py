@@ -89,6 +89,13 @@ def graded_rows(ledger_paths, verify=True):
     return rows
 
 
+def _tools_key(fp):
+    """The CONTENT of the tools tree identifies the code, not the commit it was checked out at: the box runs the same
+    tools from `git checkout origin/main -- v2/ecad/tools` in a clone whose HEAD never moves."""
+    if isinstance(fp, dict): return fp.get("tools_tree_sha") or json.dumps(fp, sort_keys=True)
+    return fp
+
+
 def cohort_rows(rows, letter, run, spec_template=None):
     """Only rows measured in THIS cohort count: the same board letter, the same run stage, the same placed board (when the
     template's source board can be hashed here) and the same tool fingerprint. A best-on-this-board taken from another
@@ -117,7 +124,7 @@ def cohort_rows(rows, letter, run, spec_template=None):
         if r.get("letter") and r.get("letter") != letter: why = "other board"
         elif (r.get("runs") or "pair") != run: why = "other stage"
         elif placed and r.get("placed_md5") and r.get("placed_md5") != placed: why = "other placed board"
-        elif tools and r.get("tools") and r.get("tools") != tools: why = "other tool fingerprint"
+        elif tools and r.get("tools") and _tools_key(r.get("tools")) != _tools_key(tools): why = "other tool fingerprint"
         if why: excluded[why] = excluded.get(why, 0) + 1
         else: keep.append(r)
     return keep, excluded, cohort
