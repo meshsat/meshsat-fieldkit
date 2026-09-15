@@ -4,7 +4,7 @@ Written 11 September 2026. **This document exists because the plan it replaces l
 `~/.claude/plans/` and was overwritten three times.** A plan an owner ruling depends on belongs in the
 repository. `CLAUDE.md` points here now, not at a filename that gets recycled.
 
-## State, 15 September 2026 22:00 CEST (regenerated from the record; the sections below are the 11 September programme as written)
+## State, 15 September 2026 21:35 CEST (regenerated from the record; the sections below are the 11 September programme as written)
 
 - **Boards**: P4, D11, E5, E9, C17 pass the final gate; A35 routes; B19 routes for a deliverable under the coupled-fraction
   ruling (decision 24). The two return-current rules of 15 September (a plane under every signal net, a ground via beside

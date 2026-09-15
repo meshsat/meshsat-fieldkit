@@ -6,7 +6,7 @@ ledger, the never-auto floor, the execution pin) have been running since 11 Sept
 document is tiers 2 and 2b, the proposing agent and the reviewer, which is where a model enters the
 loop for the first time.**
 
-## State, 15 September 2026 22:00 CEST
+## State, 15 September 2026 21:35 CEST
 
 Since the 12 September text below: the knob registry (`agent/knobs.json`, typed, with a stage per knob and a completeness
 rule against the source) is the authority and the source scan a check; a **placement run shape** (`_runs: "place"`) regenerates
