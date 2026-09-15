@@ -7490,3 +7490,67 @@ Routeflow's round two (via_costs 100, five hours) runs, and beside it the island
 round-one board with 24 island pairs, all four shared layers and a 3000 s budget, the recipe that closed A30.
 **The number A32 exists for, whether the rail copper of 32.191 holds all twelve rails, is still unread**: the
 finish refuses at the gate before `dc_drop` runs, so it is read on the closed board.
+
+### 32.193 A32 closes by hand, the router's parallel copper comes off the rails, and four necks are named; B's router sat three hours on a dialog (15 September 2026, 08:45 CEST; MESHSAT-862)
+
+**C17 is the first C deliverable and the final gate reads six of seven folders PASS** (`9507c6c`): after 32.192's
+six blank lines, three more tool defects stood between the 0/0 board and its folder, each found by cutting it. A
+stub router with nothing to close walked into its map build and died at exit 139, and a crash refuses the board by
+rule (it leaves through `os._exit` now); the two camera HOLES were BOM lines because a `Mechanical:MountingHole`
+symbol is in the BOM while the library footprint is out of the position file (`kisch.part` carries `in_bom`); and
+the final gate refused the folder for a literal `C7 BACKER RING` legend in `gen_pcb_c3.py`, a phase token the
+chain never stamps (the rule reads the board's own letter, because `F3 25A` on E is a fuse).
+
+**A32 is 0 hard and 0 unrouted by hand and the recipe is the A28 one with one rip.** The last open was `/VBUS20`
+between U3 pad 3's 0.2 mm escape stub and pad 1's island, 0.8 mm apart with pad 2 (`/CH_ACN`) between them on
+F.Cu; the straight run between the two islands' own vias, 1.635 mm, was crossed on EVERY layer by one router
+track (B.Cu `/CH_BTST1`, In3 `/CH_LODRV1`, In2 `/INA_ALERT`), and the stub router at a board-wide window failed
+first because it asked for the NODE class's 0.5 mm track and 0.80 mm via through a 0.4 mm QFN's escape field (a
+closure is no wider than the track end it joins now, and takes the board's minimum via under 0.25 mm), then
+because its goal raster for a plane net is the zone's outline rather than its fill. The closure: `/CH_BTST1`'s
+four B.Cu pieces ripped, the VBUS20 link laid on B.Cu at 0.25 mm between the vias, `/CH_BTST1` re-laid by the
+stub router in 15 tracks and a via, hard 0 and unrouted 0 (`b7e0d28`, sha 58e26c67).
+
+**Then the finish refused it twice and both refusals are the same mechanism, measured.** The gate: the VBUS20
+F.Cu island fills 97 of 223 mm2, 43 percent against 50. The rails: 8 of 12 MET, and every miss carried a 0.5 mm
+INNER ROUTER TRACK as its worst conductor: VBAT 1.46 A at ratio 3.69 in a 2.7 mm In2 piece at the SD island,
+VIN_RAW 0.63 A at 1.60 in an 8.8 mm In2 track beside its own 6 mm B.Cu band, VBUS20 0.66 A at 1.66 in the 13.3
+mm In2 trunk to U3. **Freerouting never sees a pour.** A band, an island or a plane is a zone and a zone is not in
+the DSN, so for every rail pad the router lays a wire of its own to the nearest copper it does see, and where the
+rail already runs source to load in a band it lays a track IN PARALLEL with the band; the solver then takes a
+share of the rail through that track because it is a conductor of the net. 32.191 met this at a GAP in the
+copper; this is the mechanism with no gap at all. `rail_prune.py` takes an unlocked track or via on a rail net off
+when the net stays as connected without it, judged by the board's connectivity per piece, longest first, before
+the refill that precedes the gate; declared for A. **On A32 it removes 327 router pieces from twelve rails (VBAT
+124 pieces and 328 mm, VIN_RAW 59 and 188 mm, VBUS20 23) with unconnected 0 before and after, and every worst
+conductor drops below 1** (VBAT 3.69 to 0.54, VIN_RAW to 0.00, VBUS20 to 0.00, the PA rail to 0.00). Two traps
+inside it: after `BuildConnectivity()` the python wrappers of the pieces come back as bare SwigPyObjects (no `.x`,
+no `Cast`), so every piece's geometry is read as plain numbers first; and an arc has no start and end to put back.
+
+**What is left after that is four POUR necks, each at a named place, each a generator item, and A33 carries them:**
+
+| rail | worst pour cell after rail_prune | where | A33 |
+|---|---|---|---|
+| VBUS20 | 125.5 A/mm2 on In3, ratio 2.41; the via at (68.5, 82.0) carries 3.69 A of the 6 | the inside corner where the In3 polygon's 4.5 mm column leaves its bar, and two vias in each shunt | the leg and column at 8 mm, four vias a shunt, a 14 mm foot at the corner, the F.Cu leg under a track keep-out (cut, it sent the whole rail down to In3) |
+| VIN_RAW | 222.6 A/mm2 on F.Cu, ratio 2.69 | the head island's north edge, where 8 A squeezes past a foreign pad | the head grows 1.4 mm north |
+| VBAT | 117.0 A/mm2 on In2, ratio 1.42 | the In2 plane's east edge at (-8.8, -25.3), the corner through which the PA converter's 6 A reaches the PA head's vias; the four converters' VIN islands sit east of the same edge | two tongues of the plane on In2, under the PA head and under the converter row, at a priority above the GND plane there (In1 and In4 carry the return) |
+| +13V8_PA | 133.4 A/mm2 on B.Cu, ratio 1.61 | the 4.5 mm run's end at J_PA's pin | a 9 mm foot at the pin |
+
+**B19's first route sat THREE HOURS on a dialog.** The pre stage passed at 03:33 UTC (66 of 113 pairs laid, 12
+pruned, hard 0), the router's java process then showed 27 seconds of CPU in 2 h 45 and a screenshot of its Xvfb
+display (xwd through the cookie xvfb-run writes) showed a modal "WARNING The normalization of net '/PCIE2_CLK_N'
+failed" with an OK button, five pair nets, Freerouting's `We reached the maximum normalization depth (16)` on
+their fixed pieces. Return sent to that display with xdotool started the route at once (150 percent CPU a minute
+later). `route_one.sh` runs the router in the background now and watches its CPU time: no movement for 60 s
+inside the first twenty minutes and Return goes to that display, said in the log; the box setup installs xdotool.
+Why those five nets and not the other 64 with sub-0.05 mm locked pieces is not known; Ts and collinear overlaps
+do not separate them. B19 has 3 h of its 6 h cap left at the time of writing, with the per-pass session.
+
+**Three more supervisor defects, each read off a B19 stage that printed OK and was judged blocked.** A
+measurement written as a verdict (the pre-route DRC on the pair copper BEFORE the prune, hard 15) was taken as
+the stage's; verdicts carry `advisory` now and the collector leaves those out of the worst. A profile constant
+(`min_all_pass: 2`) expected two `RESULT: ALL PASS` lines from a board that declares `gate_before_placement
+false` and prints one; a rule ties every profile's count to its board's declaration (B16, B17, B19 corrected).
+And `pair_prune`'s first run judged nothing because `hardset`'s exit was read through a pipe (fixed with the
+prune itself). Suite 456 passing, 7 skipped. **Four self-matching kills tonight**, the last a `pgrep -f` naming a
+session file in the same ssh line as the file: bracket the pattern, never name the file beside it.
