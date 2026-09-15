@@ -177,18 +177,22 @@ board.Add(z)
 # 52.0 (ratio 1.14) a millimetre south-east of them. In2 is EMPTY from y -71 to -74 across this whole span
 # (measured: three of this net's own vias and one GND via in 66 by 4 mm), so the pour takes that room and
 # the current spreads round the via heads instead of squeezing past them.
-pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)", (-92, -100, -26, -71))
+pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)", (-92, -100, -26, -71), priority=1)
 # The rail's 8 A leaves L2's pad 2 and 2.23 A of it was measured on the LOCKED 0.400 mm escape stub beside the
 # pad, which IPC gives 1.23 A: the rail has copper on In2 and none on the layer its source pad is on, so that
 # stub is a lone conductor with nothing beside it. A small F.Cu island over the pad and the stub's own run
 # gives the current somewhere to go, and the conductor test then judges the island's cells rather than a
 # 0.4 mm track, which is what the pour bar is for.
 pour(pcbnew.F_Cu, "VIN_RAW", "VIN_RAW island F.Cu at the source pad", (-43.5, -92.0, -37.5, -87.5), priority=1)
-pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-26, -113, -2, -80))
-pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (56, -113, 76, -80))
+pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-26, -113, -2, -80), priority=1)
+pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (56, -113, 76, -80), priority=1)
 pour(pcbnew.In2_Cu, "CELL_F", "CELL_F plane In2 (the west end: the pack node to the pack parts, the fans and the monitor divider; a DSN plane on the power layer In2 since E6 round 4)", (-148, -112, -100, -46), priority=1)
 pour(pcbnew.F_Cu, "CELL_F", "CELL_F pour F.Cu (blade to the pad)", (-128, -112, -100, -103.5), priority=1)
-for L in (pcbnew.F_Cu, pcbnew.B_Cu):
+# 15 September 2026 (decision 27, appendix 32.198): In2 carries a GROUND fill under everything its four power pours do not
+# cover (they take priority 1, the fill 0). Measured before this: 88 percent of E's back-side signal track ran over bare
+# dielectric on In2 with In1's plane a core away, 59 of 76 signal nets over the return-path limit. The router already
+# treats In2 as a power layer, so the fill is one more DSN plane and costs no routing room.
+for L in (pcbnew.F_Cu, pcbnew.B_Cu, pcbnew.In2_Cu):
     pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-149, -113, 118, -45), priority=0)
 pour(pcbnew.B_Cu, "CELL_F", "CELL_F band B.Cu (the blade lands and the west end: the pack node to the fans and the monitor divider; E6 route 2 left them open)", (-148, -112, -100, -46), priority=1)
 # ---------------------------------------------------------------- power vias where the 8 A leaves its pads
