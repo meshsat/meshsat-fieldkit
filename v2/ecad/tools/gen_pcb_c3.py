@@ -99,7 +99,7 @@ PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", 
 # of U3. The two e-paper panel-voltage points go to CLUSTER3 beside the boost that makes them.
 _TP_COLUMN = [r for r in sorted((r for r in comps if r.startswith("TP")), key=lambda r: int(r[2:])) if r not in ("TP26", "TP27")]
 for _i, _r in enumerate(_TP_COLUMN):
-    FIXED[_r] = (162.0 + 4.0 * (_i % 2), 82.0 - 3.5 * (_i // 2), 0, True)
+    FIXED[_r] = (165.0 + 3.5 * (_i % 2), 82.0 - 3.5 * (_i // 2), 0, True)   # the switches' COURTYARDS run to case x 162.5 (board 459.5), 2.3 mm past their cut-out keep-outs: twelve hard on C17's first placed board, four courtyard overlaps and eight pad-to-pad shorts with SW_MAIN and SW_PI. At 165.0 and 168.5 the columns clear them by 1.2 mm and the edge band by 1.1
 # placed by the one FIXED loop below: `place()` loads and adds a footprint on every call, so a second loop over the
 # same references put every test point on the board twice (C17's first pre-route, 15 September 2026).
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
