@@ -12,14 +12,17 @@
   {
    "classes": "DIFF100",
    "env": {
+    "PAIR_CORRIDOR_SLACK": 0.08,
+    "PAIR_CORRIDOR_SLACK_SLIM": 0.03,
+    "PAIR_VIA_MODE": "min",
+    "PAIR_COVER_LEGS": 1,
+    "PAIR_CLASS_CLEAR": 1,
     "PAIR_BUDGET": 0,
     "PAIR_LAYERS": "F.Cu,In2.Cu,In3.Cu,B.Cu",
     "PAIR_HOP_LAYERS": "In2.Cu,In3.Cu",
-    "PAIR_INNER": "DIFF100:0.13/0.127",
-    "PAIR_CORRIDOR_SLACK": 0.08,
-    "PAIR_CORRIDOR_SLACK_SLIM": 0.03,
-    "PAIR_VIA_MODE": "min"
-   }
+    "PAIR_INNER": "DIFF100:0.13/0.127"
+   },
+   "_env_why": "15 September 2026 22:50 CEST: this pass is the board's OWN first pair pass, boards/b.json pair_env plus pair_passes[0], not a hand-copied dict. The five placement cycles of the evening ran without PAIR_COVER_LEGS and PAIR_CLASS_CLEAR, so their numbers (35 at 2.4, 38 at 2.6) were measured on a basis the production chain does not use; B20's chain laid 31 at 2.6. tests/test_agent_contract.py holds the two in agreement."
   }
  ],
  "_runs": "place",
