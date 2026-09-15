@@ -712,3 +712,29 @@ def t_the_placed_board_drc_fails_closed():
         "the chain does not block when the placed-board DRC fails to run"
     assert "UNMEASURED and nothing below it is a measurement" in src, \
         "an unreadable placed-board DRC report does not block"
+
+
+def t_the_gate_sweep_is_read_only_by_construction():
+    """A sweep exists to produce EVIDENCE about a board, so it must not be able to change the board it judges.
+
+    Two properties, both mechanical. It names no tool that writes copper, and `return_via.py` appears only with
+    --check, because that one file is a judge and a fixer and only the judge belongs here. And it compares the
+    board's sha256 before and after, writing no evidence if they differ: the project has lost boards to a tool
+    that ran where nobody expected it (a clone's stale board rsynced over a finished phase board, 15 September),
+    so "it does not write" is asserted against the artefact rather than trusted.
+    """
+    p = os.path.join(TOOLS, "gate_sweep.sh")
+    from harness import Skip
+    if not os.path.exists(p): raise Skip("the gate sweep does not exist in this tree")
+    src = open(p).read()
+    fixers = ["stub_router.py", "pour_stitch.py", "zone_pad_via.py", "cleanup_dangling.py", "stitch_prune.py",
+              "rail_prune.py", "straighten.py", "gnd_grid.py", "escape.py", "direct_close.py", "unknot.py",
+              "quality_pass.sh", "pair_preroute.py", "silk_fix_all.py"]
+    named = [f for f in fixers if f in src]
+    assert not named, "a read-only sweep names tools that write copper: %s" % named
+    for line in src.splitlines():
+        if "return_via.py" in line and not line.strip().startswith("#"):
+            assert "--check" in line, "return_via runs as the FIXER in the sweep: %s" % line.strip()[:110]
+    assert "BEFORE" in src and "AFTER" in src and "sha256sum" in src, \
+        "the sweep does not take the board's hash before and after"
+    assert "no evidence written" in src, "the sweep does not refuse to write evidence when the board changed"
