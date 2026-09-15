@@ -7778,3 +7778,58 @@ PLACE_FINE_MARGIN 2.6 refused by the region gate as 32.185 measured, PLACE_COUPL
 48 and both were graded ILLEGAL by the mechanical judge, every hard item a solder-mask bridge at an antenna jack the gap had
 moved onto other copper, and tier 2b refused a draft that demoted the ILLEGAL grade to "what the cycle printed". The loop
 works as designed; the placement knob it has measured is the wrong lever. B19 is on pass one of twenty.
+
+### 32.199 The return rules meet the four-layer boards' anatomy; a predictor written as a hypothesis; the first legal placement gain (15 September 2026, 22:25 CEST; MESHSAT-862)
+
+**What the measurements of 32.198 say once they are read to the millimetre.** D with In2 as a ground plane (decision 27's
+measurement, `/root/dexp`) closed to 0 hard, 0 unrouted at every round; its board gate refuses it on rule 1 for 13 of 127
+signal nets and on rule 2 for 47 of 185 signal vias. `tools/return_gaps.py` (new) prints the runs behind rule 1's number,
+and the anatomy is not what 32.198 assumed. **The uncovered millimetres are the nets' own via transitions**: 0.6 to 1.0 mm
+of track over the anti-pad of each of the net's own vias, 15 to 36 vias per net, plus one 12.7 mm run on TX_INHIBIT_n along
+the seam between the In2 ground fill and ruling 15's rail band (the track runs in the band's 0.3 mm clearance beside the
+harness header). The number does not move with the sample (13, 9 and 7 nets over at 1.0, 0.5 and 0.25 mm, the totals
+within 0.6 mm), so it is a property of the board and the rule, not of the instrument: **a via-dense net on a four-layer
+board exceeds the 10 mm floor on its transitions alone**, where A22's long nets, on which the tolerance was calibrated,
+absorb theirs inside the 5 percent. Rule 2's other half: the fixer's refusal line now says which of its two site
+conditions failed, and for all 47 it is **every one of the 64 candidate sites on another net's copper**, in the PTT and
+expander fanout and the module's socket rows. Both findings and the reading they ask for (a via transition that rule 2
+satisfies is not counted again under rule 1) are decision 27's third entry. C18's re-finish read the same rules on C's
+stack: 78 failures, the long ones stack (TR_APRS 209 of 453 mm, USB_PNL_N 262 of 527) and 94 of 232 signal vias without a
+site; C waits on its ruling.
+
+**Rule 2 by construction: `tools/gnd_grid.py`.** A ground-via grid at 2.1 mm pitch laid BEFORE the route (no point further
+than 1.5 mm from a grid via), each via placed only where the site is free of other-net copper at the board's own via and
+clearance, inside ground copper on some layer, outside every other net's filled zone (a via through a rail band slices
+copper the rail rules sized), outside every via keep-out, clear of the fine-pitch fans and not within half a pitch of a
+ground via already there. `full.sh` runs it between the fanout and the pre-route DRC where a board declares
+`gnd_grid: {pitch}`; the DRC then judges the grid with everything else and a grid via in a hard violation comes off. It is
+declared for no board yet: **D measures it** (`/root/dgrid`, In2 plane plus grid, the same D12 route) and the question it
+answers is whether the two-routing-layer D still closes with the grid down and what the return-via count reads after.
+
+**A predictor written as a hypothesis, caught by its own first board.** The two placed-board classes of report 2 M1 went
+into `place_audit.py` this evening; the first, "a plane pad with no via within 1.5 mm, not in its own fill, no locked
+copper", refused A36's placed board for **244 pads**, which is what every plane pad looks like before the route. The A33 to
+A35 class is narrower: a pad with NOWHERE to go. It reads now as a pad with no free via site within 1.5 mm at the board's
+own via and clearance (the return-via fixer's own site test) or a track keep-out over its centre, and A36's pre-route
+passes. The same evening's second lesson is operational: **two launches of one driver one second apart shared a tree**,
+each wiped the other's pre stage, and both died on a run directory the other had removed; the driver holds a pid file
+now, and NOT a pgrep pattern, because the ssh line that launches it names its own arguments.
+
+**The B placement loop's fifth cycle is the first legal gain**: PLACE_COUPLE_GAP 2.6 lays **38 of 48** DIFF100 pairs at
+hard 0 against 35 at the declared 2.4 (2.8 and 3.2 lay 36 and 39 but move the antenna jacks onto other copper). 2.6 is
+declared in `boards/b.json` with the five-cycle table. Tier 2b refused the draft entry for a reason that improved the
+machine: nothing read the applied gap back off the placed board. `tools/couple_gap.py` does, per couple, and the number
+is not the knob: **PLACE_COUPLE_GAP 2.4 reads 1.80 mm between the parts' boxes** (the packer's gap includes its own
+margin), which every placement arm's row now carries. The reviewer was also handed the previous cycle's verdict file as
+material, a stale-artefact defect of the loop's own: it takes only this cycle's verdicts now, never its own.
+
+**The pre-router split is proved on D and half-proved on B.** The three-way geometry proof (before the knob deletion, after
+it, after the split into `pair_router/`) read D identical across all three (75613add2bca, 5 of 5 pairs, 262 items) and B
+identical across the first two (a350f7bd8340, 48 of 113, 5,601 items); the split arm of the first run crashed on the
+NameError that 32.198 recorded as fixed, because the proof's tree predated the fix, and re-runs on the current tools with D
+identical again and B pending.
+
+**Running on box 51145697 at 22:25 CEST:** A35's finish (stub stage on 16 opens), **A36 routing** with the rail planes,
+P5's route (signals on the top layer), E10 round two (round two's board was worse than round one's and was not finished;
+round three routes), the D grid measurement, the B19 route (pass one), the split proof's B arm, the B loop's sixth cycle
+(PLACE_GAP 1.8). Suite 494 passing, 9 skipped.
