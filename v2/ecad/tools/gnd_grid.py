@@ -75,16 +75,21 @@ def main(a):
         y += pitch
     pcbnew.SaveBoard(path, b)
     removed = 0
+    # The DRC judges the grid and every via it names comes off, and it is asked AGAIN until it names none (15 September 2026
+    # 23:55 CEST, C on six layers: one pass removed 222 and left 104, every one a via inside a rule area, because a single
+    # report is not proof that what is left is clean).
     if new:
         od = os.path.join(os.path.dirname(os.path.abspath(path)), "out"); os.makedirs(od, exist_ok=True)
         rep = os.path.join(od, os.path.basename(os.path.splitext(path)[0]) + "-gnd_grid-drc.json")
-        subprocess.run([os.path.join(TOOLS, "drc.sh"), path, rep], capture_output=True, text=True)
-        d = hardset.load(rep); bad = return_via._own_hard(d, new)
-        if bad:
+        left = {pt for pt in new}
+        for _ in range(3):
+            subprocess.run([os.path.join(TOOLS, "drc.sh"), path, rep], capture_output=True, text=True)
+            d = hardset.load(rep); bad = return_via._own_hard(d, sorted(left))
+            if not bad: break
             b = pcbnew.LoadBoard(path)
             for t in list(boardorder.tracks(b)):   # the grid itself is walked in x and y; board order decides nothing here
                 if t.GetClass() == "PCB_VIA" and t.GetNetname().lstrip("/") == "GND" and (round(_mm(t.GetPosition().x), 3), round(_mm(t.GetPosition().y), 3)) in bad: b.Remove(t); removed += 1
-            pcbnew.SaveBoard(path, b)
+            pcbnew.SaveBoard(path, b); left -= bad
     print("gnd_grid: pitch %.2f mm, via %.2f/%.2f, %d candidate points, %d placed, skipped: %s; removed by the DRC %d" % (pitch, vd, vdr, n_cand, len(new) - removed, ", ".join("%s %d" % kv for kv in skipped.items()), removed))
     return 0
 
