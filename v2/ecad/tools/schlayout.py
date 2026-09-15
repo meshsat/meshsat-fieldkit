@@ -93,14 +93,17 @@ class Occ:
     """Rectangles that nothing else may touch, and wires with their nets (a wire end on another net's wire is a short)."""
     def __init__(self):
         self.rects = []; self.wires = []; self.anchors = []      # anchors: (x, y, net) of every label, a connection point
+        self.label_rects = []                                    # (rect, net): a label's text; a wire of its own net may run under it
 
     def free(self, r, pad=0.0):
         x0, y0, x1, y1 = r
-        for a0, b0, a1, b1 in self.rects:
+        for a0, b0, a1, b1 in self.rects + [lr for lr, _ in self.label_rects]:
             if x0 - pad < a1 and x1 + pad > a0 and y0 - pad < b1 and y1 + pad > b0: return False
         return True
 
     def add(self, r): self.rects.append(r)
+
+    def add_label(self, r, net): self.label_rects.append((r, base(net)))
 
     def seg_free(self, x0, y0, x1, y1, net):
         """An axis-parallel wire: no body in its way, no end on another net's wire, no other net's end on it."""
@@ -110,14 +113,24 @@ class Occ:
         lo_x, hi_x, lo_y, hi_y = min(x0, x1), max(x0, x1), min(y0, y1), max(y0, y1)
         for a0, b0, a1, b1 in self.rects:
             if lo_x < a1 and hi_x > a0 and lo_y < b1 and hi_y > b0: return "rect %s" % ((round(a0, 2), round(b0, 2), round(a1, 2), round(b1, 2)),)
+        for (a0, b0, a1, b1), n in self.label_rects:
+            if n != base(net) and lo_x < a1 and hi_x > a0 and lo_y < b1 and hi_y > b0: return "label text of %s" % n
         for (p0, q0, p1, q1, n) in self.wires:
+            # a collinear overlap with ANY wire: KiCad merges the two on load and a wire that ended on the point in between
+            # becomes an interior with no junction (B's R29, 15 Sep 2026)
+            if abs(x0 - x1) < 1e-6 and abs(p0 - p1) < 1e-6 and abs(x0 - p0) < 1e-6 and min(y0, y1) < max(q0, q1) - 1e-6 and max(y0, y1) > min(q0, q1) + 1e-6: return "overlaps wire of %s" % n
+            if abs(y0 - y1) < 1e-6 and abs(q0 - q1) < 1e-6 and abs(y0 - q0) < 1e-6 and min(x0, x1) < max(p0, p1) - 1e-6 and max(x0, x1) > min(p0, p1) + 1e-6: return "overlaps wire of %s" % n
             if n == net: continue
             for ex, ey in ((x0, y0), (x1, y1)):
                 if min(p0, p1) - 1e-6 <= ex <= max(p0, p1) + 1e-6 and min(q0, q1) - 1e-6 <= ey <= max(q0, q1) + 1e-6: return "end on wire of %s %s" % (n, (p0, q0, p1, q1))
             for ex, ey in ((p0, q0), (p1, q1)):
                 if lo_x - 1e-6 <= ex <= hi_x + 1e-6 and lo_y - 1e-6 <= ey <= hi_y + 1e-6: return "wire end of %s at %s" % (n, (ex, ey))
         for (ax, ay, n) in self.anchors:
-            if n != net and lo_x - 1e-6 <= ax <= hi_x + 1e-6 and lo_y - 1e-6 <= ay <= hi_y + 1e-6: return "anchor of %s at %s" % (n, (ax, ay))
+            inside = lo_x - 1e-6 <= ax <= hi_x + 1e-6 and lo_y - 1e-6 <= ay <= hi_y + 1e-6
+            at_end = (abs(ax - x0) < 1e-6 and abs(ay - y0) < 1e-6) or (abs(ax - x1) < 1e-6 and abs(ay - y1) < 1e-6)
+            # another net's anchor anywhere on the wire is a short; the same net's anchor on the INTERIOR leaves that label
+            # and its pin dangling (KiCad connects at wire ends only; measured on U8's OPB_OUT, 15 Sep 2026)
+            if inside and (n != net or not at_end): return "anchor of %s at %s" % (n, (ax, ay))
         return None
 
     def add_anchor(self, x, y, net): self.anchors.append((x, y, net))
@@ -402,10 +415,10 @@ class Engine:
         if pw and not sats and dy != 0:
             ems.append(("power", pw, ex, ey, 0 if dy < 0 else 180)); occ.add(self.power_rect(ex, ey, dx, dy)); return
         if pw and not sats:                       # a power net on a side pin: a global label keeps the symbol upright elsewhere and the net global
-            ems.append(("glabel", base(net), ex, ey, 0 if dx > 0 else 180)); occ.add_anchor(ex, ey, base(net)); occ.add(self.label_rect(net, ex, ey, dx, dy, 3.0)); return
+            ems.append(("glabel", base(net), ex, ey, 0 if dx > 0 else 180)); occ.add_anchor(ex, ey, base(net)); occ.add_label(self.label_rect(net, ex, ey, dx, dy, 3.0), net); return
         lrot = {(-1, 0): 180, (1, 0): 0, (0, 1): 270, (0, -1): 90}[(dx, dy)]
         lx, ly = (sx + dx * GRID, sy + dy * GRID) if sats else (ex, ey)
-        ems.append(("label", net, lx, ly, lrot)); occ.add_anchor(lx, ly, net); occ.add(self.label_rect(net, lx, ly, dx, dy))
+        ems.append(("label", net, lx, ly, lrot)); occ.add_anchor(lx, ly, net); occ.add_label(self.label_rect(net, lx, ly, dx, dy), net)
         if not sats: return None
         if not place_sats: return (net, ex, ey, dx, dy, sats)
         self.lane_sats(occ, ems, net, ex, ey, dx, dy, sats)
@@ -459,10 +472,10 @@ class Engine:
         ems.append(("wire", fx, fy, ex, ey)); occ.add_seg(fx, fy, ex, ey, far_net)
         pw = self.power.get(base(far_net)) if base(far_net) in self.power else None
         if pw and dy != 0: ems.append(("power", pw, ex, ey, 0 if dy < 0 else 180)); occ.add(self.power_rect(ex, ey, dx, dy))
-        elif pw: ems.append(("glabel", base(far_net), ex, ey, 0 if dx > 0 else 180)); occ.add_anchor(ex, ey, base(far_net)); occ.add(self.label_rect(far_net, ex, ey, dx, dy, 3.0))
+        elif pw: ems.append(("glabel", base(far_net), ex, ey, 0 if dx > 0 else 180)); occ.add_anchor(ex, ey, base(far_net)); occ.add_label(self.label_rect(far_net, ex, ey, dx, dy, 3.0), far_net)
         else:
             lrot = {(-1, 0): 180, (1, 0): 0, (0, 1): 270, (0, -1): 90}[(dx, dy)]
-            ems.append(("label", far_net, ex, ey, lrot)); occ.add_anchor(ex, ey, far_net); occ.add(self.label_rect(far_net, ex, ey, dx, dy))
+            ems.append(("label", far_net, ex, ey, lrot)); occ.add_anchor(ex, ey, far_net); occ.add_label(self.label_rect(far_net, ex, ey, dx, dy), far_net)
         return ex, ey
 
     def pull_item(self, occ, ems, s, cx, cy, dx, net):
@@ -541,7 +554,7 @@ class Engine:
         top = ey + dy * (2 * GRID if len(tips) > 1 else 0)
         if len(tips) > 1: ems.append(("wire", mx, ey, mx, top)); occ.add_seg(mx, ey, mx, top, net)
         if pw: ems.append(("power", pw, mx, top, 0 if dy < 0 else 180)); occ.add(self.power_rect(mx, top, 0, dy))
-        else: ems.append(("label", net, mx, top, 90 if dy < 0 else 270)); occ.add_anchor(mx, top, net); occ.add(self.label_rect(net, mx, top, 0, dy))
+        else: ems.append(("label", net, mx, top, 90 if dy < 0 else 270)); occ.add_anchor(mx, top, net); occ.add_label(self.label_rect(net, mx, top, 0, dy), net)
 
     def decap_row(self, occ, ems, rail, caps, x0, y0):
         """A row of decoupling capacitors between a rail bus (above, with its symbol) and ground symbols (below)."""
@@ -551,7 +564,7 @@ class Engine:
         ems.append(("wire", x0, y_bus, x0, y_bus - 2 * GRID)); occ.add_seg(x0, y_bus, x0, y_bus - 2 * GRID, rail)
         pw = self.power.get(base(rail)) if base(rail) in self.power else None
         if pw: ems.append(("power", pw, x0, y_bus - 2 * GRID, 0)); occ.add(self.power_rect(x0, y_bus - 2 * GRID, 0, -1))
-        else: ems.append(("label", rail, x0, y_bus - 2 * GRID, 90)); occ.add_anchor(x0, y_bus - 2 * GRID, rail); occ.add(self.label_rect(rail, x0, y_bus - 2 * GRID, 0, -1))
+        else: ems.append(("label", rail, x0, y_bus - 2 * GRID, 90)); occ.add_anchor(x0, y_bus - 2 * GRID, rail); occ.add_label(self.label_rect(rail, x0, y_bus - 2 * GRID, 0, -1), rail)
         ybot = y_bus
         for i, c in enumerate(caps):
             x = x0 + DECAP_PITCH * i
@@ -569,7 +582,7 @@ class Engine:
             ems.append(("wire", bx, by, bx, ey)); occ.add_seg(bx, by, bx, ey, bot_net)
             pwg = self.power.get(base(bot_net)) if base(bot_net) in self.power else None
             if pwg: ems.append(("power", pwg, bx, ey, 180)); occ.add(self.power_rect(bx, ey, 0, 1))
-            else: ems.append(("label", bot_net, bx, ey, 270)); occ.add_anchor(bx, ey, bot_net); occ.add(self.label_rect(bot_net, bx, ey, 0, 1))
+            else: ems.append(("label", bot_net, bx, ey, 270)); occ.add_anchor(bx, ey, bot_net); occ.add_label(self.label_rect(bot_net, bx, ey, 0, 1), bot_net)
             ybot = max(ybot, ey + 4 * GRID)
         return ybot
 
@@ -598,7 +611,7 @@ class Engine:
             ems.append(("wire", 0.0, 0.0, 0.0, 2 * GRID)); occ.add_seg(0.0, 0.0, 0.0, 2 * GRID, net)
             pw = self.power.get(base(net)) if base(net) in self.power else None
             if pw: ems.append(("power", pw, 0.0, 2 * GRID, 180)); occ.add(self.power_rect(0.0, 2 * GRID, 0, 1))
-            else: ems.append(("label", net, 0.0, 2 * GRID, 270)); occ.add_anchor(0.0, 2 * GRID, net); occ.add(self.label_rect(net, 0.0, 2 * GRID, 0, 1))
+            else: ems.append(("label", net, 0.0, 2 * GRID, 270)); occ.add_anchor(0.0, 2 * GRID, net); occ.add_label(self.label_rect(net, 0.0, 2 * GRID, 0, 1), net)
             return self.finish_cell(occ, ems)
         pins = self.sym_pins(p, 0.0, 0.0, 0); body = self.body_rect(p, 0.0, 0.0, 0)
         sv = short_value(p["value"])
@@ -658,11 +671,12 @@ class Engine:
             inner.sort(key=lambda c: (c[0] - x0) ** 2 + (c[1] - y0) ** 2)
             pts += inner + [(x1, y1)]
             for (a, b), (c_, d) in zip(pts, pts[1:]): ems.append(("wire", a, b, c_, d))
-        xs0 = [r[0] for r in occ.rects] + [w[0] for w in occ.wires] + [w[2] for w in occ.wires]
-        xs1 = [r[2] for r in occ.rects] + [w[0] for w in occ.wires] + [w[2] for w in occ.wires]
-        ys0 = [r[1] for r in occ.rects] + [w[1] for w in occ.wires] + [w[3] for w in occ.wires]
-        ys1 = [r[3] for r in occ.rects] + [w[1] for w in occ.wires] + [w[3] for w in occ.wires]
-        return dict(ems=ems, x0=min(xs0), y0=min(ys0), x1=max(xs1), y1=max(ys1))
+        rects = occ.rects + [lr for lr, _ in occ.label_rects]
+        xs0 = [r[0] for r in rects] + [w[0] for w in occ.wires] + [w[2] for w in occ.wires]
+        xs1 = [r[2] for r in rects] + [w[0] for w in occ.wires] + [w[2] for w in occ.wires]
+        ys0 = [r[1] for r in rects] + [w[1] for w in occ.wires] + [w[3] for w in occ.wires]
+        ys1 = [r[3] for r in rects] + [w[1] for w in occ.wires] + [w[3] for w in occ.wires]
+        return dict(ems=ems, x0=min(xs0), y0=min(ys0), x1=max(xs1), y1=max(ys1), occ=occ)
 
     # ---- pages
     def pack(self, title, cells):
@@ -699,13 +713,102 @@ class Engine:
             cols = MAX_COLS; rows = math.ceil(len(self.pages) / cols)
             if rows > MAX_ROWS: raise SystemExit("schlayout: %d pages do not fit a %d x %d sheet" % (len(self.pages), MAX_COLS, MAX_ROWS))
         total = len(self.pages)
+        net_pages = {}
+        for i, page in enumerate(self.pages):
+            for c, dx, dy in page["cells"]:
+                for e in c["ems"]:
+                    if e[0] == "label": net_pages.setdefault(base(e[1]), set()).add(i + 1)
         for i, page in enumerate(self.pages):
             col, row = i % cols, i // cols; ox, oy = col * CELL_W, row * CELL_H
             self.frame(ox, oy, page, i + 1, total)
             for c, dx, dy in page["cells"]:
                 for e in c["ems"]: self.emit_one(e, ox + dx, oy + dy)
+            self.page_wiring(page, ox, oy, i + 1, net_pages)
         W = cols * CELL_W; H = rows * CELL_H
         return '"User" %.2f %.2f' % (W, H), total, cols, rows
+
+    def page_wiring(self, page, ox, oy, pageno, net_pages):
+        """What an engineer expects: a net that stays on this page is DRAWN between its parts, and a signal that leaves the page
+        says where it goes. The labels stay (they name the net and prove it); the wires are drawn anchor to anchor through
+        free space of the page, three or four orthogonal legs each, never through a body or a text, never ending on another
+        net. A net that finds no path keeps its labels, so connectivity never depends on this pass."""
+        occ = Occ(); anchors = {}; cell_ends = collections.Counter()
+        # the page's walls: no wire outside the usable area, in from the frame and under the title strip
+        x0, y0, x1, y1 = ox + MARGIN - GRID, oy + TITLE_H - GRID, ox + CELL_W - MARGIN + GRID, oy + CELL_H - MARGIN + GRID
+        for wall in ((x0 - 50, y0 - 50, x0, y1 + 50), (x1, y0 - 50, x1 + 50, y1 + 50), (x0 - 50, y0 - 50, x1 + 50, y0), (x0 - 50, y1, x1 + 50, y1 + 50)): occ.add(wall)
+        for c, dx, dy in page["cells"]:
+            sx, sy = ox + dx, oy + dy
+            for (a0, b0, a1, b1) in c["occ"].rects: occ.add((a0 + sx, b0 + sy, a1 + sx, b1 + sy))
+            for (a0, b0, a1, b1), n in c["occ"].label_rects: occ.add_label((a0 + sx, b0 + sy, a1 + sx, b1 + sy), n)
+            for (x0, y0, x1, y1, n) in c["occ"].wires:
+                occ.add_seg(x0 + sx, y0 + sy, x1 + sx, y1 + sy, n)
+                for ex, ey in ((x0 + sx, y0 + sy), (x1 + sx, y1 + sy)): cell_ends[(round(ex, 2), round(ey, 2), base(n))] += 1
+            for e in c["ems"]:
+                if e[0] == "label":
+                    net, x, y, rot = base(e[1]), e[2] + sx, e[3] + sy, e[4]
+                    occ.add_anchor(x, y, e[1])
+                    if not (is_rail(net, self.power, self.rails) or is_gnd(net)):
+                        anchors.setdefault(net, []).append((round(x, 2), round(y, 2), rot))   # the label's own printed coordinate
+        wires = []; ends = collections.Counter(cell_ends)
+        FREE = {0: (1, 0), 180: (-1, 0), 90: (0, -1), 270: (0, 1)}   # onward along the lane, under the label's own text
+        for net, pts in anchors.items():
+            if len(net_pages.get(net, ())) != 1 or len(pts) < 2: continue
+            # a minimum spanning tree over the anchors, each edge routed as it comes
+            done = [pts[0]]; rest = pts[1:]
+            while rest:
+                best = min(((abs(a[0] - b[0]) + abs(a[1] - b[1]), a, b) for a in done for b in rest), key=lambda t: t[0])
+                _, a, b = best; rest.remove(b); done.append(b)
+                path = self.route_pair(occ, a, b, FREE[a[2]], FREE[b[2]], net, ka0=int(text_w(net) / (2 * GRID)) + 2)
+                if not path: continue
+                for (x0, y0), (x1, y1) in zip(path, path[1:]):
+                    if abs(x0 - x1) < 0.05 and abs(y0 - y1) < 0.05: continue
+                    occ.add_seg(x0, y0, x1, y1, net); wires.append((x0, y0, x1, y1))
+                    ends[(round(x0, 2), round(y0, 2), net)] += 1; ends[(round(x1, 2), round(y1, 2), net)] += 1
+        for (x0, y0, x1, y1) in wires: self.emit_one(("wire", x0, y0, x1, y1), 0.0, 0.0)
+        for (ex, ey, n), cnt in ends.items():
+            if cnt >= 3 and cell_ends.get((ex, ey, n), 0) < 3: self.emit_one(("junction", ex, ey), 0.0, 0.0)
+        # off-page references beside the label of every signal that also lives on other pages
+        for c, dx, dy in page["cells"]:
+            sx, sy = ox + dx, oy + dy
+            for e in c["ems"]:
+                if e[0] != "label": continue
+                net = base(e[1]); others = sorted(net_pages.get(net, set()) - {pageno})
+                if not others or is_rail(net, self.power, self.rails) or is_gnd(net): continue
+                t = "p" + ",".join(str(k) for k in others[:4]) + (",.." if len(others) > 4 else "")
+                x, y, rot = e[2] + sx, e[3] + sy, e[4]; w = text_w(t, 0.9); h = text_h(0.9)
+                if rot == 0: tx, ty = x + text_w(net) + 1.5, y - 0.1
+                elif rot == 180: tx, ty = x - text_w(net) - 1.5 - w, y - 0.1
+                elif rot == 90: tx, ty = x + 0.6, y - text_w(net) - 1.5
+                else: tx, ty = x + 0.6, y + text_w(net) + 1.5 + h
+                r = (tx, ty - h, tx + w, ty)
+                if occ.free(r): occ.add(r); self.emit_one(("text", t, tx, ty, 0.9), 0.0, 0.0)
+
+    def route_pair(self, occ, a, b, fa, fb, net, ka0=1):
+        """An orthogonal path from anchor a to anchor b leaving each along its free side (away from its label text): a first leg
+        of one to twelve grid steps from each end, a corridor between them, every leg checked against the page."""
+        (ax, ay, _), (bx, by, _) = a, b
+        if (abs(ax - bx) < 1e-6 or abs(ay - by) < 1e-6) and occ.seg_free(ax, ay, bx, by, net): return [(ax, ay), (bx, by)]   # in line: one wire
+        for ka in range(ka0, ka0 + 12):
+            pa = (round(ax + fa[0] * 2 * GRID * ka, 2), round(ay + fa[1] * 2 * GRID * ka, 2))
+            if not occ.seg_free(ax, ay, pa[0], pa[1], net): break
+            if abs(pa[0] - bx) < 1e-6 and abs(pa[1] - by) < 1e-6: return [(ax, ay), (bx, by)]
+            for kb in range(ka0, ka0 + 12):
+                pb = (round(bx + fb[0] * 2 * GRID * kb, 2), round(by + fb[1] * 2 * GRID * kb, 2))
+                if not occ.seg_free(bx, by, pb[0], pb[1], net): break
+                if abs(pb[0] - ax) < 1e-6 and abs(pb[1] - ay) < 1e-6: return [(ax, ay), (bx, by)]
+                for mid in ((pa[0], pb[1]), (pb[0], pa[1])):     # the two L shapes between the two leg ends
+                    if occ.seg_free(pa[0], pa[1], mid[0], mid[1], net) and occ.seg_free(mid[0], mid[1], pb[0], pb[1], net):
+                        return [(ax, ay), pa, mid, pb, (bx, by)]
+                if ka <= ka0 + 2 and kb <= ka0 + 2:                  # then a corridor: a vertical or horizontal run between the leg ends, swept sideways
+                    lo, hi = min(pa[0], pb[0]), max(pa[0], pb[0])
+                    for xc in sorted(set(round(v, 2) for v in [lo + 4 * GRID * k for k in range(0, int((hi - lo) / (4 * GRID)) + 1)] + [lo - 4 * GRID * k for k in range(1, 9)] + [hi + 4 * GRID * k for k in range(1, 9)]), key=lambda v: abs(v - (lo + hi) / 2)):
+                        if occ.seg_free(pa[0], pa[1], xc, pa[1], net) and occ.seg_free(xc, pa[1], xc, pb[1], net) and occ.seg_free(xc, pb[1], pb[0], pb[1], net):
+                            return [(ax, ay), pa, (xc, pa[1]), (xc, pb[1]), pb, (bx, by)]
+                    lo, hi = min(pa[1], pb[1]), max(pa[1], pb[1])
+                    for yc in sorted(set(round(v, 2) for v in [lo + 4 * GRID * k for k in range(0, int((hi - lo) / (4 * GRID)) + 1)] + [lo - 4 * GRID * k for k in range(1, 9)] + [hi + 4 * GRID * k for k in range(1, 9)]), key=lambda v: abs(v - (lo + hi) / 2)):
+                        if occ.seg_free(pa[0], pa[1], pa[0], yc, net) and occ.seg_free(pa[0], yc, pb[0], yc, net) and occ.seg_free(pb[0], yc, pb[0], pb[1], net):
+                            return [(ax, ay), pa, (pa[0], yc), (pb[0], yc), pb, (bx, by)]
+        return None
 
     def frame(self, ox, oy, page, k, total):
         kisch.rect(ox + 2 * GRID, oy + 2 * GRID, ox + CELL_W - 2 * GRID, oy + CELL_H - 2 * GRID)
