@@ -110,7 +110,7 @@ EPD_PARTS = ["Q5", "Q6", "L1", "D19", "D20", "D21", "R42", "R43"] + ["C%d" % k f
 EPD_PARTS += [r for r in ("TP26", "TP27") if r in comps]
 SPREAD = lambda r: r.startswith(("TP", "JP", "FB")) or r == "D17"
 REGIONS = [("CLUSTER3", L.CLUSTER3, [r for r in EPD_PARTS if r in comps], False),
-           ("CLUSTER2", L.CLUSTER2, [r for r in comps if r not in placed and not r.startswith("H") and SPREAD(r)], True),
+           ("CLUSTER2", L.CLUSTER2, [r for r in comps if r not in placed and not r.startswith("H") and SPREAD(r) and r not in EPD_PARTS], True),   # TP26/TP27 belong to the boost cluster
            ("CLUSTER", L.CLUSTER, [r for r in comps if r not in placed and not r.startswith("H") and not SPREAD(r) and r not in EPD_PARTS], True)]
 GAP = 1.2; FINE_MARGIN = 2.2
 def is_fine(fp):
