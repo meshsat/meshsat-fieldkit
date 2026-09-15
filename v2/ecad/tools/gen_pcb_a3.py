@@ -314,6 +314,7 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
 # 2. the PA rail: the shunt's pad 2 and the output caps in an island at the head of a 4.5 mm bottom band east along y -11.5, north at x 104, into J_PA's pin 1
 pa = "+13V8_PA"; pr = pads_rect(net_pads(pa, ["R55", "C65", "C66", "C67"]), 1.2, 1.0)
 PC.island(pa, "PA rail head", rect_pts((pr[0], pr[1], pr[2] + 2.5, pr[3])), pcbnew.F_Cu, priority=3)
+PC.keepout("keep tracks off the PA rail head", (pr[0], pr[1], pr[2] + 2.5, pr[3]), pcbnew.F_Cu)   # 15 Sep 2026 (A34): router tracks across the head left its fill at 51 of 102 mm2, under the gate's half
 jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
 # 13 September 2026: the east run was 4.5 mm, which IPC gives 7.12 A against this rail's 6.0, and the cell
 # measure still read 175.5 A/mm2 at (93.2, -12.2) with nothing of another net within 2.8 mm: the current is
