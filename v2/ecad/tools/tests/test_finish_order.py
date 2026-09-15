@@ -23,6 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import Skip, need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GUARD = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"), errors="replace").read()
 FINISH = os.path.join(TOOLS, "finish.sh")
 
 STAGES = ("unknot", "cleanup_dangling", "zone_pad_via", "pour_stitch", "stub_router")
@@ -173,18 +174,11 @@ def t_the_stitch_pruner_is_off_unless_a_board_asks_for_it_with_its_number():
             "%s turns the pruner on without the board's own number for it" % os.path.basename(p)
 
 def t_the_stitch_pruner_is_reverted_when_it_opens_anything():
-    """It removes copper, so it is judged the way the stub router is: the board before it is kept, and it goes
-    back if hard or unrouted ROSE. A cleanup that can only be trusted when it happens to be right is a gamble."""
+    """It removes copper, so it is judged the way every copper pass is since 15 September 2026: under the one guard,
+    against the board BEFORE it (never against zero), restored if hard or unrouted ROSE."""
     t = open(FINISH, errors="replace").read()
-    i = t.index("stitch_prune.py")
-    after = t[i:i + 900]
-    assert "-prestitch.kicad_pcb" in t[:i], "no copy of the board is taken before the pruner runs"
-    assert "reverting" in after and "cp out/$N-prestitch.kicad_pcb" in after, \
-        "the pruner's result is not reverted when it opens something"
-    # and judged against the board BEFORE it, never against zero: written against zero it blamed the pruner
-    # for an open the board already had, and could never help a board that was not already clean.
-    assert '-gt "$BH"' in after and '-gt "$BU"' in after, \
-        "the pruner is judged against zero rather than against the board it was given"
+    assert "prune_stitch() { guarded stitch_prune python3 $T/stitch_prune.py" in t, "the pruner does not run under the guard"
+    assert '"$AH" -gt "$BH"' in GUARD and '"$AU" -gt "$BU"' in GUARD, "the guard does not compare both counts against the handed-in board"
 
 
 def t_a_continuation_route_gets_the_same_plane_treatment_as_the_route():
