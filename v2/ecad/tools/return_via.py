@@ -230,7 +230,11 @@ def fix(path, dry=False, radius=RETURN_MM):
                 spot = c; break
             # the two refusals are named apart (the D and C readings of 15 September 2026 said "copper inside a ground fill"
             # for 70 and 94 vias and neither number said which of the two conditions the sites failed)
-            if spot is None: refused[pt] = "no site: %d candidate(s) on other-net copper, %d outside every ground fill and pad" % (n_copper, n_fill); continue
+            if spot is None:
+                # a later round finds the list already spent and must not overwrite round one's reason with zeros
+                if n_copper + n_fill: refused[pt] = "no site: %d candidate(s) on other-net copper, %d outside every ground fill and pad" % (n_copper, n_fill)
+                elif pt not in refused: refused[pt] = "no site: every candidate refused by the DRC"
+                continue
             v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(int(spot[0] * 1e6), int(spot[1] * 1e6)))
             v.SetDrill(int(VDR * 1e6)); v.SetWidth(int(VD * 1e6)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetNet(gnd_net); v.SetLocked(True)
             b.Add(v); new.append((pt, spot))
