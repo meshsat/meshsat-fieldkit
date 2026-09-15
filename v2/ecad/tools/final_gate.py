@@ -45,6 +45,13 @@ def run(cmd):
     return r.returncode, (r.stdout or "") + (r.stderr or "")
 
 
+def _declared_phase(letter, boards_dir=None):
+    """The phase `boards/<letter>.json` declares, which is what the generators stamp and the chains cut; E5 declares none."""
+    p = os.path.join(boards_dir or os.path.join(HERE, "boards"), "%s.json" % letter)
+    try: return (json.load(open(p)).get("phase") or "").strip()
+    except Exception: return ""
+
+
 def required_letters(boards_dir=None):
     """The manifest: every letter that has a boards/<letter>.json, plus e5 (the bare dock block has no chain)."""
     d = boards_dir or os.path.join(HERE, "boards")
@@ -84,8 +91,16 @@ def main(argv, run=None, boards_dir=None):
         rc, out = run(args)
         sm = [l for l in out.splitlines() if l.startswith("verify_deliverable:") and ("ALL PASS" in l or " of " in l)]
         summary = (sm[-1].replace("verify_deliverable: ", "") if sm else "no summary line")
-        rows.append(dict(board=letter.upper(), phase=num, folder=name, quote=quote,
-                         verdict=("QUOTE" if quote else ("PASS" if rc == 0 else "FAIL")), summary=summary.strip()))
+        # THE FOLDER MUST BE THE PHASE THE BOARD DECLARES (15 September 2026 after the return-current rules: every
+        # folder in the tree was cut before those gates existed, and each one passed here, because verify_deliverable
+        # judges a folder against ITSELF. `boards/<letter>.json` carries the phase the generators stamp and the chains
+        # cut; a folder naming an earlier one is a board this set is not building, whatever its own properties say.)
+        declared = _declared_phase(letter, boards_dir)
+        stale = bool(declared) and not name.upper().endswith(declared.upper()) and not name.upper().endswith(declared.upper() + "-QUOTE")
+        if stale:
+            summary = "the tree declares %s and this folder is %s: re-cut it, the folder is judged against itself and cannot know" % (declared, name.split("-")[-1])
+        rows.append(dict(board=letter.upper(), phase=num, folder=name, quote=quote, stale=stale, declared=declared,
+                         verdict=("QUOTE" if quote else ("STALE" if stale else ("PASS" if rc == 0 else "FAIL"))), summary=summary.strip()))
     want = [l for l in required if not only or l in only]
     missing = [l for l in want if l not in found]
     subset = bool(only) and set(only) != set(required)
@@ -104,7 +119,7 @@ def main(argv, run=None, boards_dir=None):
     for l in missing: print("  %-3s %-34s %-6s %s" % (l.upper(), "(no deliverable folder)", "FAIL", "a required board with no folder is a failure of the set"))
     print("  contracts : %s" % contracts.strip()[:120])
     print("  parts     : %s" % certify.strip()[:120])
-    bad = [r for r in rows if r["verdict"] == "FAIL"]
+    bad = [r for r in rows if r["verdict"] in ("FAIL", "STALE")]
     held = [r for r in rows if r["quote"]]
     c_word = "PASS" if rc_c == 0 else ("NOT JUDGED HERE (no netlist in this tree)" if contracts_absent else "FAIL")
     j_word = "PASS" if rc_j == 0 else ("NOT JUDGED (certification could not ask)" if rc_j == 3 else "OPEN")

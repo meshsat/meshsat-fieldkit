@@ -16,13 +16,13 @@ import verdict
 LETTERS = ("a", "b", "c", "d", "e", "e5", "p")
 
 
-def _world(folders, sub):
+def _world(folders, sub, phases=None):
     """A boards directory with the given deliverable folders and a fake `run` answering each sub-gate.
     `sub` maps 'deliverable:<folder>' | 'contracts' | 'certify' to (rc, stdout)."""
     d = tempfile.mkdtemp(prefix="final-gate-")
     bdir = os.path.join(d, "boards"); os.makedirs(bdir)
     for L in LETTERS:
-        if L != "e5": open(os.path.join(bdir, "%s.json" % L), "w").write("{}")
+        if L != "e5": open(os.path.join(bdir, "%s.json" % L), "w").write(json.dumps({"phase": (phases or {}).get(L, "%s1" % L.upper())}))
     rdir = os.path.join(d, "release"); os.makedirs(rdir)
     for f in folders:
         os.makedirs(os.path.join(rdir, f)); open(os.path.join(rdir, f, "%s-gerbers.zip" % f.split("-revA")[0].replace("meshsat-", "")), "w").write("")
@@ -37,9 +37,9 @@ def _world(folders, sub):
     return d, bdir, rdir, run
 
 
-def _verdict(argv, folders, sub, out_dir):
+def _verdict(argv, folders, sub, out_dir, phases=None):
     fg = importlib.import_module("final_gate")
-    d, bdir, rdir, run = _world(folders, sub)
+    d, bdir, rdir, run = _world(folders, sub, phases)
     fg.BOARDS = rdir
     cwd = os.getcwd(); os.chdir(d)
     try:
@@ -109,3 +109,14 @@ def t_it_opens_no_board_and_touches_no_host():
         assert bad not in src, "final_gate should read artefacts only, found %r" % bad
     assert "*.kicad_pcb" not in src, "the stem must come from the gerber zip's name, not from a board glob"
     assert 'l.startswith("verify_deliverable:")' in src, "the summary is reconstructed instead of read"
+
+
+def t_a_folder_that_is_not_the_declared_phase_fails_the_set():
+    """15 September 2026, after the return-current rules became gates: every folder in the tree had been cut before those gates
+    existed and every one passed here, because verify_deliverable judges a folder against ITSELF. The tree declares the phase
+    its generators stamp; a folder naming an earlier one is a board this set is not building."""
+    rc, res, v = _verdict([], FULL, {}, None, phases={"c": "C9"})
+    assert res == "FAIL" and rc == 1, (res, rc, v)
+    assert v["counts"]["fail"] == 1 and v["counts"]["pass"] == 6, v["counts"]
+    rc2, res2, v2 = _verdict([], FULL, {}, None)   # the same folders, each the declared phase
+    assert res2 == "PASS", (res2, v2)
