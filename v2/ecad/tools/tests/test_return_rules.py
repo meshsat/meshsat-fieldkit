@@ -88,3 +88,17 @@ def t_a_solder_jumpers_pads_carry_the_class_clearance_before_the_route():
     assert i_gen < i_j < i_esc, "jumper_clearance.py is not between the placement and the escapes"
     g = open(os.path.join(TOOLS, "jumper_clearance.py")).read()
     assert "SolderJumper" in g and "SetLocalClearance" in g, "jumper_clearance.py does not set the pads' local clearance"
+
+
+def t_no_net_class_sits_below_the_boards_own_minimum():
+    """Rule IMP-002. Board B's project file shipped USB and DIFF100 at 0.10 mm against its own 0.127 mm board
+    minimum while the generator's table said 0.127: two hand-written copies that had drifted. The project
+    classes are built from the generator's table now, and full.sh gates the board on it."""
+    src = open(os.path.join(TOOLS, "full.sh")).read()
+    i_gen = src.index("gen_pcb_${L}3.py"); i_cf = src.index("class_floor.py"); i_drc = src.index("--label 'pre-route DRC'")
+    assert i_gen < i_cf < i_drc, "class_floor.py does not run between the placement and the pre-route DRC"
+    assert "block \"a net class is below" in src, "the chain does not block on it"
+    b3 = open(os.path.join(TOOLS, "gen_pcb_b3.py")).read()
+    i_cls = b3.index('net_settings", {})["classes"]')
+    block = b3[i_cls - 400:i_cls + 200]
+    assert "CLASSES[" in block, "board B writes its project classes from a second hand-written list again"

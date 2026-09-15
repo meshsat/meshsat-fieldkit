@@ -544,7 +544,16 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def Cc(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [Cc("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15), Cc("USB", 0, 0.10, 0.127, 0.7, 0.3, 0.127, 0.127), Cc("DIFF100", 1, 0.10, 0.127, 0.7, 0.3, 0.127, 0.20), Cc("PWR", 2, 0.127, 0.4, 0.8, 0.4, 0.4, 0.25), Cc("HV", 3, 0.18, 0.5, 0.8, 0.4, 0.5, 0.5)]
+    # THE PROJECT FILE'S CLASSES COME FROM `CLASSES`, THE TABLE ABOVE, AND FROM NOWHERE ELSE (16 September 2026,
+    # rule IMP-002). Until today this line carried a SECOND hand-written copy, and the two had drifted: the table
+    # says USB and DIFF100 clear 0.127 mm, the project file said 0.10, and the project file is what the router,
+    # the DSN and every gate read. A class clearance below the board's own 0.127 minimum is a lie the router
+    # believes, which is the defect that put 25 clearance violations into A23 (appendix 32.79).
+    _PRIO = {"USB": 0, "DIFF100": 1, "PWR": 2, "HV": 3}
+    _cls = [Cc("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)]
+    for _n in ("USB", "DIFF100", "PWR", "HV"):
+        _c = CLASSES[_n]; _cls.append(Cc(_n, _PRIO[_n], _c[0], _c[1], _c[2], _c[3], _c[4], _c[5]))
+    d.setdefault("net_settings", {})["classes"] = _cls
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
     # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern

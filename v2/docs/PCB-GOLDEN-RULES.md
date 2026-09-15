@@ -793,8 +793,8 @@ reaches the router or the fabricator.
 | risk | FABRICATION, YIELD, ELECTRICAL_FUNCTION |
 | verified by | SCRIPT at PLACED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | gen_pcb_*3.py class guard |
-| maturity | **OPEN** |
+| implementation | gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September) |
+| maturity | **ENFORCED** |
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -807,8 +807,9 @@ today.
 
 **If violated** The router lays copper the fabricator will not build, and the DRC only finds it afterwards.
 
-**Today** the generator guards the API path; board B's project file ships USB and DIFF100 at 0.10 mm against a 0.127 mm
-board minimum, and board E's project file and API path disagree
+**Today** 16 September 2026: board B's project file shipped USB and DIFF100 at 0.10 mm against its own 0.127 mm
+minimum, a second hand-written copy that had drifted from the generator's table. The project classes come
+from the table now and full.sh blocks the placed board on class_floor.py
 
 ## Differential Pairs
 

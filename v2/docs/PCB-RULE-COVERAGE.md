@@ -26,7 +26,7 @@ appears in the gap register.
 | GND-001 | GROUNDING_SHIELDING | MUST_JUSTIFY | gen_pcb_*3.py pours | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
 | GND-002 | GROUNDING_SHIELDING | MUST_JUSTIFY | gen_pcb_c3.py standoffs | none |  | **DOCUMENTED_ONLY** |
 | IMP-001 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py net classes | impedance_check.py -> impedance_check |  | **SOURCE_UNVERIFIED** |
-| IMP-002 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py class guard | none |  | **OPEN** |
+| IMP-002 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September) | class_floor.py -> class_floor | tests/test_return_rules.py | **ENFORCED** |
 | INT-001 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_*.py | none |  | **SOURCE_UNVERIFIED** |
 | INT-002 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_b.py coupling and termination | none |  | **SOURCE_UNVERIFIED** |
 | ISO-001 | ISOLATION_SPACING | BLOCKER | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class | none |  | **OPEN** |
@@ -70,9 +70,9 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 18 |
+| ENFORCED | 19 |
 | GENERATED_ONLY | 10 |
 | DOCUMENTED_ONLY | 3 |
-| OPEN | 18 |
+| OPEN | 17 |
 | SOURCE_UNVERIFIED | 6 |
 | OWNER_DECISION_REQUIRED | 1 |

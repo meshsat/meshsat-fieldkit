@@ -127,9 +127,10 @@ coverage:
    note: "closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricator confirmation and no coupon",
    remediation: {action: "solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it", owner: SESSION, depends_on: [STK-001], p50_h: 8, p80_h: 24}}
 
- IMP-002: {implementation: "gen_pcb_*3.py class guard", verification: {tool: none}, maturity: OPEN, gap_category: CROSS_BOARD_INCONSISTENT,
-   note: "the generator guards the API path; board B's project file ships USB and DIFF100 at 0.10 mm against a 0.127 mm board minimum, and board E's project file and API path disagree",
-   remediation: {action: "one check over every project file and generator against the board minimum, with a fixture", owner: SESSION, depends_on: [], p50_h: 2, p80_h: 5}}
+ IMP-002: {implementation: "gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September)",
+   verification: {tool: class_floor.py, verdict: class_floor, fixtures: tests/test_return_rules.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: board B's project file shipped USB and DIFF100 at 0.10 mm against its own 0.127 mm minimum, a second hand-written copy that had drifted from the generator's table. The project classes come from the table now and full.sh blocks the placed board on class_floor.py"}
 
  PAIR-001: {implementation: "pair_preroute.py, meander.py", verification: {tool: pair_match.sh, verdict: impedance_check, fixtures: tests/test_pair_leg_match.py},
    maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
