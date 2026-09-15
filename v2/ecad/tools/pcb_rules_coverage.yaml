@@ -1,0 +1,252 @@
+# PHASE B: where each rule of pcb_rules.yaml is generated, where it is verified, and what its evidence is
+# worth (MESHSAT-862, 16 September 2026). Written AFTER the registry, by reading the tools; the registry was
+# written first so that the catalogue is not a description of the gates that happen to exist.
+#
+# maturity meanings (rules_lib.MATURITY), applied strictly:
+#   ENFORCED           an executable decision gate exists, writes a machine-readable verdict, and has
+#                      behavioural fixtures (a failing input that must fail, a passing input that must pass)
+#   GENERATED_ONLY     generation intends to comply; no independent verification of the property
+#   VERIFIED_MANUALLY  a controlled review, calculation, simulation or lab protocol exists with its artefact
+#   DOCUMENTED_ONLY    prose exists, no current evidence
+#   OPEN               no adequate implementation or verification
+#   SOURCE_UNVERIFIED  the governing authority or threshold is not established
+#   OWNER_DECISION_REQUIRED  more than one valid choice and the reserved decision is unresolved
+#
+# gap_category is one of the nine the audit separates:
+#   ABSENT GENERATED_ONLY PROSE_ONLY NO_BEHAVIOURAL_TEST NO_PROTOCOL DUPLICATED_OR_STALE HEURISTIC_AS_LAW
+#   SOURCE_OR_APPLICABILITY_UNRESOLVED CROSS_BOARD_INCONSISTENT   (or NONE when the rule is covered)
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+rule_set_fingerprint: "88f207606ad2945a"
+
+coverage:
+
+ ENV-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every derating rule resolves against nothing",
+   remediation: {action: "write the envelope from the owner's use case and the enclosure's own ratings", owner: OWNER, depends_on: [], p50_h: 3, p80_h: 8}}
+
+ ENV-002: {implementation: NONE_YET, verification: {tool: none}, maturity: DOCUMENTED_ONLY, gap_category: NO_BEHAVIOURAL_TEST,
+   note: "the prototype-framing rule is carried by CLAUDE.md and by review, not by a check over the shipped documents",
+   remediation: {action: "a script over README, BUILD, ASSEMBLY and the release notes for rating words without an evidence link", owner: SESSION, depends_on: [], p50_h: 2, p80_h: 4}}
+
+ SCH-001: {implementation: "gen_sch_*.py", verification: {tool: erc_gate.py, verdict: erc_gate, fixtures: tests/test_erc_gate.py},
+   maturity: ENFORCED, gap_category: NONE, note: "an allow line without a reason waves nothing through, proved by fixture"}
+
+ SCH-002: {implementation: "gen_pcb_*3.py", verification: {tool: netlist_board.py, verdict: netlist_board, fixtures: tests/test_netlist_board.py},
+   maturity: ENFORCED, gap_category: NONE, note: "three comparisons with denominators; runs on the placed and on the routed board"}
+
+ SCH-003: {implementation: "gen_sch_*.py", verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written list and their completeness is not itself checked"}
+
+ SCH-004: {implementation: "gen_sch_b.py, gen_sch_c.py, gen_sch_d.py", verification: {tool: check_contracts.py, verdict: check_contracts},
+   maturity: OPEN, gap_category: ABSENT,
+   note: "the transmit-inhibit chain is checked; ZEROIZE has NO hardware path at all (the secure element carries power and I2C only) and the shore-inhibit and kill lines are not checked for fail-safe direction",
+   remediation: {action: "decide ZEROIZE's hardware path (owner), then a fail-safe direction check per safety line", owner: OWNER, depends_on: [SCH-003], p50_h: 6, p80_h: 20}}
+
+ CMP-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a check",
+   remediation: {action: "a stress table per board from the intent rails and the part list, with DC-bias derating for MLCCs", owner: SESSION, depends_on: [PWR-001], p50_h: 8, p80_h: 24}}
+
+ CMP-002: {implementation: "lcsc_fill.py", verification: {tool: jlc_certify.py, verdict: jlc_certify, fixtures: tests/test_order_codes.py},
+   maturity: ENFORCED, gap_category: NONE, note: "package mismatch is caught against the supplier's own record, with a date"}
+
+ SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt", verification: {tool: jlc_certify.py, verdict: jlc_certify, fixtures: tests/test_order_codes.py},
+   maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
+
+ PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_rail_loads.py},
+   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "the check confirms a DECLARED rail exists on the board; nothing compares the declared set against the power nets the board actually carries, and B's per-slot cores and E's downstream rails are undeclared",
+   remediation: {action: "count power nets on the board against the declaration and refuse an undeclared one above a current threshold", owner: SESSION, depends_on: [], p50_h: 4, p80_h: 10}}
+
+ PWR-002: {implementation: "gen_sch_a.py, gen_sch_b.py", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a check",
+   remediation: {action: "a sequencing sheet per board from the enables in the netlist, reviewed against each module's requirement", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 16}}
+
+ PWR-003: {implementation: "gen_sch_a.py, gen_sch_e.py, gen_sch_p.py", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file",
+   remediation: {action: "a protection chain study with the fuse curves obtained from the makers", owner: SESSION, depends_on: [ENV-001, BAT-002], p50_h: 8, p80_h: 20}}
+
+ DEC-001: {implementation: "bypass_slots.py, bypass_place.py", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_board_gates.py},
+   maturity: ENFORCED, gap_category: HEURISTIC_AS_LAW,
+   note: "the 3 mm distance is a project number applied to every device; the loop inductance it stands for is never computed, and a board declares exceptions in an allow file",
+   remediation: {action: "derive the distance per device class from the current's spectral content; keep the 3 mm as a screen", owner: SESSION, depends_on: [SI-001], p50_h: 6, p80_h: 16}}
+
+ PI-001: {implementation: "power_copper.py, gen_pcb_*3.py bands", verification: {tool: dc_drop.py, verdict: dc_drop, fixtures: tests/test_conductor_current.py},
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the conductor measure is implemented and tested; its limit comes from a formula in a code comment, no IPC document is in the tree, and IPC-2152 has never been considered",
+   remediation: {action: "obtain the standard, pin it under v2/vendor/, cite the clause, and re-judge the four boards", owner: SESSION, depends_on: [], p50_h: 4, p80_h: 12}}
+
+ PI-002: {implementation: "power_copper.py", verification: {tool: dc_drop.py, verdict: dc_drop, fixtures: tests/test_conductor_current.py},
+   maturity: ENFORCED, gap_category: NONE, note: "the solver's residual is checked before the number is read"}
+
+ PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "via current capacity is asserted in generator comments and measured by nothing",
+   remediation: {action: "count vias per rail transition and compare against the barrel's capacity from the plating spec", owner: SESSION, depends_on: [PI-001, STK-001], p50_h: 4, p80_h: 10}}
+
+ GND-001: {implementation: "gen_pcb_*3.py pours", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
+   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate or where a crossing happens",
+   remediation: {action: "a per-board ground statement and a check that no signal crosses an undeclared split", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 16}}
+
+ GND-002: {implementation: "gen_pcb_c3.py standoffs", verification: {tool: none}, maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
+   note: "eight standoffs bond C's ground to the plate; no chassis-bond or shield strategy is written for the kit",
+   remediation: {action: "write the chassis and shield strategy, then check the bonds against it", owner: SESSION, depends_on: [ENV-001], p50_h: 4, p80_h: 10}}
+
+ STK-001: {implementation: "stackup_write.py", verification: {tool: impedance_check.py, verdict: impedance_check},
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the stackup is written into the board and read back by the impedance check; the fabricator capability file in the tree is an empty JavaScript page and nothing reads it",
+   remediation: {action: "obtain the current capability and stackup sheets as documents, pin them, and confirm both stacks with the fabricator", owner: SESSION, depends_on: [], p50_h: 3, p80_h: 10}}
+
+ STK-002: {implementation: NONE_YET, verification: {tool: layer_judge.py, verdict: layer_judge},
+   maturity: OWNER_DECISION_REQUIRED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need",
+   remediation: {action: "quotes from the ordering session for both counts on C and P, then the two rulings", owner: OWNER, depends_on: [], p50_h: 2, p80_h: 72}}
+
+ RET-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "the governing principle is not implemented anywhere: no net is classified by edge rate, and no adequacy criterion per class exists. What runs today is the screen RET-002",
+   remediation: {action: "classify every net by edge rate from its driver's datasheet, state the criterion per class, then judge", owner: SESSION, depends_on: [SI-001], p50_h: 10, p80_h: 30}}
+
+ RET-002: {implementation: "gen_pcb_*3.py pours", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_board_gates.py, report: return_gaps.py},
+   maturity: ENFORCED, gap_category: HEURISTIC_AS_LAW,
+   note: "it blocks boards today as though it were RET-001; it counts a net's own via anti-pads as uncovered, which is most of D's and E's failures",
+   remediation: {action: "demote to a screen in the finish, keep the report, and let RET-001 decide", owner: OWNER, depends_on: [RET-001], p50_h: 2, p80_h: 6}}
+
+ RET-003: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "nothing determines the reference conductor before and after a transition; return_via's same-plane exemption is the nearest thing and is a geometric approximation of it",
+   remediation: {action: "compute the reference layer per track segment from the stackup and the fills, then judge each via's transition", owner: SESSION, depends_on: [RET-001], p50_h: 12, p80_h: 30}}
+
+ RET-004: {implementation: "gnd_grid.py, return_via.py fixer", verification: {tool: return_via.py, verdict: return_via, fixtures: tests/test_board_gates.py},
+   maturity: ENFORCED, gap_category: HEURISTIC_AS_LAW,
+   note: "1.5 mm and the 0.5 mm fan exemption are project calibrations; the grid makes the screen pass by construction on D, and costs E its route",
+   remediation: {action: "keep as a screen under RET-003; record the grid's per-board measurement", owner: SESSION, depends_on: [RET-003], p50_h: 2, p80_h: 6}}
+
+ IMP-001: {implementation: "gen_pcb_*3.py net classes", verification: {tool: impedance_check.py, verdict: impedance_check, second_opinion: impedance_2d.py},
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricator confirmation and no coupon",
+   remediation: {action: "solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it", owner: SESSION, depends_on: [STK-001], p50_h: 8, p80_h: 24}}
+
+ IMP-002: {implementation: "gen_pcb_*3.py class guard", verification: {tool: none}, maturity: OPEN, gap_category: CROSS_BOARD_INCONSISTENT,
+   note: "the generator guards the API path; board B's project file ships USB and DIFF100 at 0.10 mm against a 0.127 mm board minimum, and board E's project file and API path disagree",
+   remediation: {action: "one check over every project file and generator against the board minimum, with a fixture", owner: SESSION, depends_on: [], p50_h: 2, p80_h: 5}}
+
+ PAIR-001: {implementation: "pair_preroute.py, meander.py", verification: {tool: pair_match.sh, verdict: impedance_check, fixtures: tests/test_pair_leg_match.py},
+   maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew budget is not cited beside it",
+   remediation: {action: "cite each interface's skew budget and judge against it", owner: SESSION, depends_on: [INT-001], p50_h: 3, p80_h: 8}}
+
+ SI-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification",
+   remediation: {action: "a per-driver edge-rate table from the datasheets, the critical length on each stackup, and the net classification", owner: SESSION, depends_on: [], p50_h: 10, p80_h: 30}}
+
+ CLK-001: {implementation: "gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "crystal loads and straps are chosen in the generators; nothing checks a load capacitance against the crystal, or a strap's state at reset",
+   remediation: {action: "a check of every crystal's load network against its datasheet and every strap's pull", owner: SESSION, depends_on: [], p50_h: 5, p80_h: 12}}
+
+ ANA-001: {implementation: "gen_pcb_p3.py Kelvin sense, gen_sch_d.py mic network", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes or measures their separation from switching copper",
+   remediation: {action: "declare sensitive nodes in the intent file and check their clearance and reference", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 16}}
+
+ RF-001: {implementation: "gen_pcb_d3.py, gen_pcb_b3.py keep-outs", verification: {tool: check_pcb_d.py, verdict: check_pcb_d},
+   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no filter is verified, and the LPF values are flagged for a simulation that has not run",
+   remediation: {action: "compute each RF line on its stackup, simulate the LPF, and record the module keep-out check", owner: SESSION, depends_on: [IMP-001], p50_h: 8, p80_h: 24}}
+
+ RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE, note: "driver count, sense and fail-safe pull are checked across three boards"}
+
+ INT-001: {implementation: "gen_sch_*.py", verification: {tool: none}, maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "no interface specification is in the tree; the PCIe lanes carry the 90 ohm USB class because they inherited it",
+   remediation: {action: "per-interface sheets from the official specifications, starting with PCIe/M.2, USB and Ethernet", owner: SESSION, depends_on: [], p50_h: 12, p80_h: 40}}
+
+ INT-002: {implementation: "gen_sch_b.py coupling and termination", verification: {tool: none}, maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the switch vendor's checklist permits the topology; the compute module's own PHY document is not in the tree and the check the 9 September review asked for has not been done",
+   remediation: {action: "obtain the module PHY's document and compare both ends", owner: SESSION, depends_on: [], p50_h: 3, p80_h: 12}}
+
+ TRN-001: {implementation: "gen_sch_*.py protection devices", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "every external port has a device; no port table exists and no clamping voltage has been compared against a protected part's maximum",
+   remediation: {action: "a port table with threat, device, clamping and parasitics", owner: SESSION, depends_on: [ENV-001], p50_h: 5, p80_h: 14}}
+
+ ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been measured on any board, and no pollution degree or material group is declared",
+   remediation: {action: "declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and pack nets", owner: OWNER, depends_on: [ENV-001], p50_h: 8, p80_h: 24}}
+
+ THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit stage",
+   remediation: {action: "a dissipation table per board and a thermal estimate for the sealed enclosure, then a prototype measurement plan", owner: SESSION, depends_on: [ENV-001], p50_h: 10, p80_h: 30}}
+
+ PLC-001: {implementation: "gen_pcb_*3.py, regionfit.py", verification: {tool: hardset.py, verdict: hardset-placed, fixtures: tests/test_region_fit.py},
+   maturity: ENFORCED, gap_category: NONE, note: "the cheap gate runs before the expensive stage and blocks above a declared allowance"}
+
+ PLC-002: {implementation: NONE_YET, verification: {tool: none}, maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
+   note: "the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers two of the classes",
+   remediation: {action: "each closer names its class and its prevention attempt; extend the predictor", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 20}}
+
+ RTE-001: {implementation: "gen_pcb_*.py design rules", verification: {tool: drc.sh, verdict: hardset-routed-board-gate},
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the DRC enforces the board's own rules; those rules were copied from a capability record that is not in the tree",
+   remediation: {action: "pin the capability document and compare every board minimum against it", owner: SESSION, depends_on: [STK-001], p50_h: 2, p80_h: 6}}
+
+ RTE-002: {implementation: "routeflow.py, finish.sh", verification: {tool: hardset.py, verdict: hardset-routed-board-gate, fixtures: tests/test_hardset.py},
+   maturity: ENFORCED, gap_category: NONE, note: "fifteen types, two exemptions, denominators, and a report that cannot be read as a pass"}
+
+ VIA-001: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums", verification: {tool: check_pcb_c.py, verdict: check_pcb_c},
+   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not checked anywhere, and several boards carry vias in pads",
+   remediation: {action: "a via table per board against the capability record, and the assembly note for vias in pads", owner: SESSION, depends_on: [RTE-001], p50_h: 4, p80_h: 10}}
+
+ PLN-001: {implementation: "pour_stitch.py, zone_pad_via.py, stitch_prune.py", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE, note: "isolated copper is a hard type and pour islands are stitched or removed under a guard"}
+
+ EMC-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "no EMC analysis of any kind exists; eleven radios and a sealed metal box",
+   remediation: {action: "an EMC sheet per board and a pre-compliance plan for the kit", owner: SESSION, depends_on: [ENV-001, SI-001], p50_h: 10, p80_h: 40}}
+
+ MEC-001: {implementation: "panel1450.py, gen_pcb_*.py", verification: {tool: "check_pcb_*.py", verdict: "check_pcb_<letter>", fixtures: tests/test_board_gates.py},
+   maturity: ENFORCED, gap_category: NONE, note: "every mechanical number is asserted against the single module that owns it"}
+
+ DFM-001: {implementation: "build_pcb.sh, export_jlc.sh", verification: {tool: verify_deliverable.py, verdict: verify_deliverable, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE, note: "the gerber zip is counted against the board's copper layer count"}
+
+ DFA-001: {implementation: "export_jlc.sh, jlc-rotations.csv", verification: {tool: verify_deliverable.py, verdict: verify_deliverable},
+   maturity: GENERATED_ONLY, gap_category: NO_PROTOCOL,
+   note: "the CPL's form is checked; the rotation of each polarised footprint has never been verified against its own drawing or the assembler's preview, and the rotation table is inherited",
+   remediation: {action: "a per-footprint rotation verification protocol with the assembler's preview as the artefact", owner: SESSION, depends_on: [], p50_h: 4, p80_h: 12}}
+
+ TST-001: {implementation: "gen_sch_*.py test points", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "test points exist; no bring-up sheet exists for any board",
+   remediation: {action: "a bring-up sheet per board", owner: SESSION, depends_on: [PWR-002], p50_h: 5, p80_h: 14}}
+
+ REL-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "nothing considers vibration, mating cycles or moisture for any interface",
+   remediation: {action: "a reliability sheet per board and the test plan for the prototype", owner: OWNER, depends_on: [ENV-001], p50_h: 6, p80_h: 20}}
+
+ BAT-001: {implementation: "gen_sch_p.py BQ4050 and protection FETs", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "the protection is designed and its thresholds are configured in software; no check compares a threshold against the cell's own limits, and the cell is not chosen",
+   remediation: {action: "the cell's datasheet on file, the threshold table derived from it, and the prototype protection test", owner: OWNER, depends_on: [ENV-001], p50_h: 6, p80_h: 20}}
+
+ BAT-002: {implementation: "gen_sch_a.py, gen_sch_e.py, gen_pcb_e5.py, gen_sch_p.py", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end",
+   remediation: {action: "the chain diagram with ratings and prospective fault current at each stage", owner: SESSION, depends_on: [PWR-003], p50_h: 4, p80_h: 12}}
+
+ DOC-001: {implementation: "full.sh PHASE, silk_fix_all.py", verification: {tool: final_gate.py, verdict: final_gate, fixtures: tests/test_final_gate.py},
+   maturity: ENFORCED, gap_category: NONE, note: "added 16 September: a folder that is not the declared phase fails the set, with a truth-table fixture"}
+
+ DOC-002: {implementation: "ledger.py, provenance.json", verification: {tool: ledger_verify.py, verdict: ledger_verify, fixtures: tests/test_ledger.py},
+   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
+   note: "the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the artefacts they came from",
+   remediation: {action: "evidence ids in the record entries, emitted by the same writer", owner: SESSION, depends_on: [SGN-001], p50_h: 4, p80_h: 12}}
+
+ OUT-001: {implementation: "make_handoff.py", verification: {tool: final_gate.py, verdict: final_gate, fixtures: tests/test_final_gate.py},
+   maturity: ENFORCED, gap_category: DUPLICATED_OR_STALE,
+   note: "the gate refuses a stale or quote-only set correctly; the set on disk is built from folders three to five phases behind and has not been rebuilt",
+   remediation: {action: "rebuild the order set from the current folders once the boards are cut", owner: SESSION, depends_on: [DOC-001], p50_h: 2, p80_h: 6}}
+
+ SGN-001: {implementation: NONE_YET, verification: {tool: rules_status.py, verdict: rules_status}, maturity: OPEN, gap_category: ABSENT,
+   note: "being built by this audit; until it runs, no board has a computed per-rule result",
+   remediation: {action: "rules_status.py with its truth table", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 14}}
+
+ SGN-002: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
+   note: "thermal, RF self-compatibility and ingress are named in the record as prototype-only; they are not a list anything reads",
+   remediation: {action: "generate the prototype-only list from the registry's verification_phase field", owner: SESSION, depends_on: [SGN-001], p50_h: 2, p80_h: 4}}
