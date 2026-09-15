@@ -137,7 +137,30 @@ ADSN="$PWD/$W/$N.dsn"; ASES="$PWD/$W/$N.ses"
 # THAT WAS WRONG (the router was alive and the gap was the pass cadence), but the race is real and naming a
 # display costs nothing. `-n` names one per work directory and `-a` still walks forward if it is taken.
 _XDISP=$(( 200 + ($$ + $(printf '%s' "$W" | cksum | cut -d' ' -f1)) % 700 ))
-timeout ${FR_TIMEOUT:-4500} xvfb-run -n "$_XDISP" -a "$JAVA" -Dfreerouting.ses_per_pass="$ASES" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?"
+# 15 September 2026 (MESHSAT-862): B19's router sat for THREE HOURS on a modal dialog under Xvfb ("The normalization of net
+# /PCIE2_CLK_N failed: We reached the maximum normalization depth (16)", five pair nets whose fixed pieces Freerouting could
+# not normalise), computing nothing, until a screenshot of its display showed the OK button and Return was sent to it; the
+# route then ran normally. A warning the GUI holds for a click is not a route result. The router runs in the background and
+# a watchdog reads its CPU time every 30 s; when it has not moved for 60 s inside the first twenty minutes and xdotool is
+# on the host, Return goes to that display (the auth cookie is the one xvfb-run wrote for it) and the log says so.
+timeout ${FR_TIMEOUT:-4500} xvfb-run -n "$_XDISP" -a "$JAVA" -Dfreerouting.ses_per_pass="$ASES" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?" &
+_RPID=$!; _CPU0=-1; _STILL=0; _T0=$(date +%s)
+while kill -0 "$_RPID" 2>/dev/null; do
+  sleep 30
+  _J=$(pgrep -f "[j]ava .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " | head -1)
+  [ -n "$_J" ] || continue
+  _CPU=$(awk '{print $14+$15}' /proc/$_J/stat 2>/dev/null || echo -1)
+  if [ "$_CPU" = "$_CPU0" ]; then _STILL=$((_STILL+1)); else _STILL=0; fi; _CPU0=$_CPU
+  if [ "$_STILL" -ge 2 ] && [ $(( $(date +%s) - _T0 )) -lt 1200 ]; then
+    if command -v xdotool >/dev/null 2>&1; then
+      for _XA in $(ls -t /tmp/xvfb-run.*/Xauthority 2>/dev/null); do
+        XAUTHORITY="$_XA" DISPLAY=":$_XDISP" xdotool key --clearmodifiers Return >/dev/null 2>&1 && { echo "route_one: the router had no CPU progress for 60 s on display :$_XDISP; Return sent to its window (a modal warning Freerouting holds for a click)"; break; }
+      done
+    else echo "route_one: the router has had no CPU progress for 60 s on display :$_XDISP and xdotool is not on this host to dismiss a dialog"; fi
+    _STILL=0
+  fi
+done
+wait "$_RPID" 2>/dev/null || true
 pkill -9 -f "java .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
 # 10 September 2026 (round-two red teams, report 1 P0): the import, the DRC and the score used to fail silently and the attempt

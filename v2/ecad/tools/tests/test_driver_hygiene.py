@@ -670,3 +670,15 @@ def t_b_runs_no_gate_before_placement():
     b = json.load(open(os.path.join(TOOLS, "boards", "b.json")))
     assert b.get("gate_before_placement") is False, "B still runs its gate on the mechanical board"
     assert "52 FAIL" in b.get("_gate_before_placement_why", ""), "the reason is not recorded with its number"
+
+
+def t_the_router_launcher_dismisses_a_modal_warning_it_would_otherwise_wait_on():
+    """B19's first route (15 Sep 2026) sat three hours on Freerouting's "normalization of net failed" dialog under Xvfb,
+    computing nothing; Return sent to its display started the route. route_one.sh runs the router in the background,
+    watches its CPU time and sends Return to the display when it stalls inside the first twenty minutes, and the box
+    setup installs xdotool so it can."""
+    s = open(os.path.join(TOOLS, "route_one.sh")).read()
+    assert "_RPID=$!" in s and "/proc/$_J/stat" in s and "xdotool key --clearmodifiers Return" in s and 'DISPLAY=":$_XDISP"' in s, "the launcher has no dialog watchdog"
+    assert s.find("xdotool key") < s.find('wait "$_RPID"'), "the watchdog must run while the router does"
+    o = open(os.path.join(TOOLS, "routeflow", "cloud", "onstart.sh")).read()
+    assert "xdotool" in o, "a new box would have no xdotool for the watchdog"
