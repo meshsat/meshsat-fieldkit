@@ -18,6 +18,7 @@ defects and one reporting defect sat behind `jlc_certify.py`'s 21 non-certified 
    module that plugs into it was reported the same way, which buried both.
 """
 import os, re, sys, glob, csv, datetime
+from harness import need
 
 _today = datetime.date.today().isoformat()
 
@@ -242,6 +243,7 @@ def t_every_fill_rule_names_a_land_this_project_draws():
     with "C1210" where the land is `C_1210_3225Metric`, so A24's finish refused the deliverable for 22 blank
     BOM lines on the very part the ruling chose. A key that matches nothing is worse than no key: the code
     reads as present."""
+    need(os.path.join(TOOLS, "..", "..", "release", "revA", "boards"), "the lands that reach a shipped BOM are read from the deliverable folders")
     import ast
     s = open(os.path.join(TOOLS, "lcsc_fill.py"), encoding="utf-8").read()
     start = s.index("MAP = {")

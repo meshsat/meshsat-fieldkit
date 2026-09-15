@@ -24,6 +24,7 @@ with no network, no endpoint and no KiCad.
   no gate imports the agent              a model may inform a proposal and may never judge a board
 """
 import os, re, sys, json, glob, stat, tempfile
+from harness import need
 from harness import Skip   # noqa: F401
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -354,12 +355,18 @@ def t_a_tool_change_is_proved_in_a_worktree_never_the_working_tree():
 
 
 def t_the_reviewers_refusal_gates_the_write_up():
-    """A verdict file reading PASS over a refused entry is a claim the code does not make good on."""
+    """The reviewer gates the WRITE-UP and nothing else: a refused entry is recorded as refused (`entry_refused`), does
+    not go into the record, and does not change the arms' grade. Until 15 September 2026 a refusal made the CYCLE fail,
+    which graded the write-up instead of the measurement (red team round four M4, report 1 P0)."""
     src = open(os.path.join(AGENT, "loop.py"), errors="replace").read()
     if 'refused = bool(rev) and rev["verdict"] != "APPROVE"' not in src:
         raise AssertionError("the loop does not compute whether the reviewer refused")
-    if "verdict.FAIL if refused" not in src:
-        raise AssertionError("a refused write-up does not make the cycle FAIL")
+    if '"entry_refused"' not in src or '"entry_review"' not in src:
+        raise AssertionError("the review's verdict does not travel as a count")
+    if "verdict.FAIL if refused" in src:
+        raise AssertionError("a refused write-up grades the cycle; the verdict is the arms' verdict")
+    if "does not go into the record" not in src:
+        raise AssertionError("nothing says a refused write-up stays out of the record")
 
 
 def t_a_row_belongs_to_the_cycle_that_produced_it():
@@ -542,6 +549,7 @@ def t_a_prediction_must_be_able_to_be_wrong():
 
 def t_a_row_without_a_tool_fingerprint_is_unmeasured():
     """The field existed, no template filled it, and the identity it protects was the empty string."""
+    need(os.path.join(TOOLS, "..", "..", ".git"), "the tool fingerprint reads git HEAD, which a code-only archive lacks")
     import importlib.util
     sp = importlib.util.spec_from_file_location("armsmod_fp", os.path.join(TOOLS, "arms.py"))
     m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)

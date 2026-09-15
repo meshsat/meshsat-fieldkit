@@ -64,6 +64,36 @@ def run_spec(spec_path, exec_cmd, result_path, timeout=None):
     return armsmod.main([spec_path, "--parallel", "1", "--out-dir", os.path.dirname(result_path)])
 
 
+def incomplete(rows, names, rc):
+    """COMPLETENESS IS AUTHORITATIVE (15 September 2026, red team report 1 P0). The loop used to go on whenever at
+    least one row matched: one arm of eight writing its row before the runner died was drafted, reviewed and returned
+    as a cycle. The runner's exit status decides first; then exactly one row per requested arm, no duplicates. Returns
+    None for a complete cycle, else {why, counts, evidence}."""
+    import collections as _c0
+    names = set(names)
+    got = _c0.Counter(r.get("name") for r in rows)
+    dup = sorted(n for n, c in got.items() if c > 1); absent = sorted(names - set(got))
+    if rc == 0 and not absent and not dup: return None
+    why = ("the runner exited %s" % rc) if rc != 0 else ("no row for %s" % absent if absent else "duplicate rows for %s" % dup)
+    return {"why": why,
+            "counts": {"rows": len(rows), "requested": len(names), "absent": len(absent), "duplicate": len(dup), "runner_rc": rc, "infra_fail": 1 if rc != 0 else 0},
+            "evidence": ["absent: %s" % n for n in absent] + ["duplicate: %s" % n for n in dup]}
+
+
+def cycle_result(rows, rev, no_review):
+    """THE VERDICT IS THE ARMS' VERDICT: PASS when every prediction was MET, FAIL when one was MISSED, INCONCLUSIVE when
+    anything was not measured (INFRA_FAIL, UNMEASURED, UNMEASURABLE, ILLEGAL: the runner refuses an all-ILLEGAL set and
+    this loop must not soften that) or the entry was not reviewed. The review's verdict travels as a COUNT and no longer
+    grades the cycle (15 September 2026, red team report 1 P0 and round four M4)."""
+    import collections as _c
+    g = _c.Counter(r.get("verdict") for r in rows)
+    bad = g["INFRA_FAIL"] + g["UNMEASURED"] + g["UNMEASURABLE"] + g["ILLEGAL"]
+    refused = bool(rev) and rev["verdict"] != "APPROVE"
+    if bad or (rev is None and not no_review): res = verdict.INCONCLUSIVE
+    else: res = verdict.FAIL if g["MISSED"] else verdict.PASS
+    return res, g, bad, refused
+
+
 def read_rows(path, names, after_seq=-1):
     """The rows the runner appended FOR THIS CYCLE: the name matches and the row is newer than the head
     the cycle started from. Tier 2b found the gap: selected by name alone, an older row carrying the same
@@ -159,7 +189,10 @@ def main(argv):
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     template = json.load(open(a.template))
     template.setdefault("_stamp", stamp)
-    p = evidence.pack(a.letter, profile=a.profile, ledgers=a.ledger, extra=a.note)
+    # the template decides the run shape, so the evidence pack is built FOR it: a placement template shows the
+    # placement knobs, a pair template the pair knobs (15 September 2026, red team report 1 P1: this called pack()
+    # without the template, so every proposal saw the pair stage whatever the template said)
+    p = evidence.pack(a.letter, profile=a.profile, ledgers=a.ledger, extra=a.note, spec_template=template)
     pack_text = evidence.render(p)
     open(os.path.join(a.out_dir, "pack-%s.txt" % stamp), "w").write(pack_text)
     print("loop: evidence pack %d characters, %d arms already graded" % (len(pack_text), p["graded_count"]))
@@ -201,10 +234,11 @@ def main(argv):
     rc = run_spec(spec_path, a.exec_cmd, result, timeout=a.exec_timeout)
     names = {x["name"] for x in spec["arms"]}
     rows = read_rows(result, names, after_seq=head_before)
-    if not rows:
-        print("loop: the runner produced no row for %s (exit %s)" % (sorted(names), rc))
-        return verdict.write("agent_loop", verdict.INCONCLUSIVE, counts={"rows": 0}, denominator=len(names),
-                             evidence=["exit %s" % rc, result], note="the arm did not run to a row", out_dir=a.out_dir)
+    inc = incomplete(rows, names, rc)
+    if inc:
+        print("loop: the cycle is INCOMPLETE (%s): %d row(s) for %d requested arm(s); nothing is drafted from a partial cycle" % (inc["why"], len(rows), len(names)))
+        return verdict.write("agent_loop", verdict.INCONCLUSIVE, counts=inc["counts"], denominator=len(names),
+                             evidence=["exit %s" % rc, result] + inc["evidence"], note="an incomplete cycle is not evidence: " + inc["why"], out_dir=a.out_dir)
 
     # THE RUNNER IS THE JUDGE AND THERE IS ONLY ONE. This used to re-grade every row here, and on the
     # first cycle where the two could differ they did: the runner graded an arm ILLEGAL against the
@@ -278,23 +312,23 @@ def main(argv):
     # FOUR QUESTIONS, FOUR FIELDS. One verdict used to answer "did the experiment measure anything",
     # "was the prediction met" and "was the write-up approved" at once, and `missed` was the remainder,
     # so an UNMEASURED or ILLEGAL arm counted as a missed prediction (red team, 12 September 2026).
-    import collections as _c
-    g = _c.Counter(r.get("verdict") for r in rows)
+    res, g, bad, refused = cycle_result(rows, rev, a.no_review)
     met = g["MET"]
-    bad = g["INFRA_FAIL"] + g["UNMEASURED"] + g["UNMEASURABLE"]
     # Tier 2b gates the WRITE-UP, and a verdict file that reads PASS over a refused entry is a claim the
     # code does not make good on (its own finding on the change that introduced it, 12 September 2026).
     # The measurement stands either way: the arm's grade is above and the reviewer never touched it.
-    refused = bool(rev) and rev["verdict"] != "APPROVE"
     if refused:
         print("loop: tier 2b did not approve the entry (%s), so the cycle is FAIL: the number stands, the "
               "write-up does not go into the record as it is" % rev["verdict"])
     if rev is None and not a.no_review:
         print("loop: no usable review, so the cycle is INCONCLUSIVE rather than PASS")
-    return verdict.write("agent_loop",
-                         verdict.INCONCLUSIVE if (bad or (rev is None and not a.no_review))
-                         else (verdict.FAIL if refused else verdict.PASS),
+    # THE VERDICT IS THE ARMS' VERDICT: PASS when every prediction was MET, FAIL when one was MISSED, INCONCLUSIVE
+    # when anything was not measured or the entry was not reviewed. The review's verdict travels as a COUNT
+    # (`entry_review`); it no longer grades the cycle (15 September 2026, red team round four M4 and report 1 P0).
+    # A refused write-up still does not go into the record as it is: that is the drafter's rule, not this verdict's.
+    return verdict.write("agent_loop", res,
                          counts={"arms": len(rows), "met": g["MET"], "missed": g["MISSED"],
+                                 "entry_review": (rev or {}).get("verdict", "none"), "entry_refused": 1 if refused else 0,
                                  "illegal": g["ILLEGAL"], "unmeasured": g["UNMEASURED"],
                                  "unmeasurable": g["UNMEASURABLE"], "infra_fail": g["INFRA_FAIL"],
                                  "best_pairs": max((r.get("pairs") or 0) for r in rows),

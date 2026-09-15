@@ -7,6 +7,9 @@ pair over 1 mm is a REGRESSION when the baseline board has fewer such pairs (the
 lower is better, 1.0 is the released board. Time is printed beside Q and never folded into it.
 Usage: bench_compare.py <baseline.json> <metrics.json> [--board KEY] [--json out]   (KEY defaults to the metrics' tag, then its board stem)"""
 import sys, json, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hardset
+NHARD = len(hardset.HARD_POST)   # the hard set a row must have been judged under to rank (15 September 2026)
 
 # 10 September 2026 (both red teams, C3): the baseline was keyed by PHASE, so every C6 and B15 experiment looked its key up,
 # found C5 and B14, and graded UNMEASURABLE after the route had been paid for: 66 of the 81 measured router hours. A baseline
@@ -26,6 +29,10 @@ def arg(name, default=None): return sys.argv[sys.argv.index(name) + 1] if name i
 
 def compare(base, m):
     if m.get("hard") is None or m.get("unrouted") is None: return "UNMEASURABLE", "no DRC numbers in the metrics", None
+    # A row judged under fewer hard types than today's set is not comparable with one judged under all of them: it
+    # is quarantined here, never ranked, never promoted (15 September 2026, red team report 1 P0/P1: every stored
+    # baseline and all 233 metric rows were six-type, and the report's asterisk was disclosure, not a gate).
+    if int(m.get("hard_types_checked", 0) or 0) < NHARD: return "INELIGIBLE", "judged under %d hard types where the current set has %d: quarantined, regenerate the row" % (int(m.get("hard_types_checked", 0) or 0), NHARD), None
     if m["hard"] > 0 or m["unrouted"] > 0: return "INELIGIBLE", "hard %d (over %d types), unrouted %d of %d connections" % (m["hard"], m["hard_types_checked"], m["unrouted"], m["connections"]), None
     if m.get("pairs_over_1mm", 0) > base.get("pairs_over_1mm", 0): return "REGRESSION", "%d differential pairs over 1 mm (baseline %d)" % (m["pairs_over_1mm"], base.get("pairs_over_1mm", 0)), None
     bv, bl, bs = max(1, base["vias_router"]), max(1e-9, base["length_mm"]), max(1, base["tracks"])

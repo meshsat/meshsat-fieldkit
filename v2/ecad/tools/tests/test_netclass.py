@@ -17,6 +17,7 @@ These rules hold the one answer in place: the function's behaviour on every valu
 carry, and the requirement that no tool reads the map its own way again.
 """
 import os, re, sys, glob, json
+from harness import Skip
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
@@ -47,7 +48,9 @@ def t_a_string_assignment_still_works_and_nothing_else_becomes_a_class():
 def t_the_list_form_of_a_real_project_file_resolves():
     """The tree's own project files, not a fixture: this is the format the tools actually meet."""
     seen = 0
-    for pro in glob.glob(os.path.join(os.path.dirname(TOOLS), "pcb-*", "*.kicad_pro")):
+    pros = glob.glob(os.path.join(os.path.dirname(TOOLS), "pcb-*", "*.kicad_pro"))
+    if not pros: raise Skip("no project file in this checkout (a code-only archive)")
+    for pro in pros:
         ns = (json.load(open(pro)).get("net_settings") or {})
         a = ns.get("netclass_assignments") or {}
         if not a: continue

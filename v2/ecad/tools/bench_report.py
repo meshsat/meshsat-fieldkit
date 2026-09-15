@@ -76,7 +76,8 @@ for key in sorted(by_board):
         m = r.get("metrics") or {}; raw = r.get("raw") or {}
         return ("yes" if r.get("verdict") != "NO_SESSION" else "NO"), "%s / %s (%s)" % (m.get("hard", "-"), m.get("unrouted", "-"), raw.get("unrouted", "-")), m.get("vias_router", "-"), ("%.3f" % r["Q"]) if r.get("Q") is not None else "-"
     s19, s24 = cell(r19), cell(r24); m19 = r19.get("metrics") or {}; m24 = r24.get("metrics") or {}
-    if r24.get("verdict") == "NO_SESSION": v = "FAIL (no session)"
+    if r19.get("six_type") or r24.get("six_type"): v = "not rankable (a six-type row is quarantined: regenerate it under the %d-type set)" % NHARD   # 15 Sep 2026, report 1 P0
+    elif r24.get("verdict") == "NO_SESSION": v = "FAIL (no session)"
     elif (m24.get("unrouted", 999) > m19.get("unrouted", 999)) or (m24.get("hard", 999) > m19.get("hard", 999)): v = "FAIL (completion below 1.9.0)"
     elif r19.get("Q") is not None and r24.get("Q") is not None: v = "BETTER" if r24["Q"] <= r19["Q"] * 0.95 else "REGRESSED" if r24["Q"] > r19["Q"] else "SAME"
     else: v = "not rankable (a board is INELIGIBLE on both)"

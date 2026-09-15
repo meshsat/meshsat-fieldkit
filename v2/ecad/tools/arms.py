@@ -20,7 +20,7 @@ The shape is the one the control-plane programme settles on and it is deliberate
 
 Usage: arms.py <spec.json> [--parallel N] [--dry]
 """
-import os, re, sys, json, time, shutil, hashlib, argparse, subprocess, collections, concurrent.futures as cf
+import time, os, re, sys, json, time, shutil, hashlib, argparse, subprocess, collections, concurrent.futures as cf
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict, ledger
@@ -141,12 +141,18 @@ def run_arm(spec, arm, ecad, out_dir):
             env.update({k: str(v) for k, v in arm.get("env", {}).items()})
             log = os.path.join(out_dir, "arm-%s-pass%d.log" % (name, i))
             with open(log, "w") as fh:
-                subprocess.run([sys.executable, os.path.join(TOOLS, "pair_preroute.py"), board,
-                                "--classes", ps["classes"]], cwd=dst, stdout=fh, stderr=subprocess.STDOUT,
-                               env=env, timeout=spec.get("timeout_s", 14400))
+                pr = subprocess.run([sys.executable, os.path.join(TOOLS, "pair_preroute.py"), board,
+                                     "--classes", ps["classes"]], cwd=dst, stdout=fh, stderr=subprocess.STDOUT,
+                                    env=env, timeout=spec.get("timeout_s", 14400))
             txt = open(log, errors="replace").read(); logs.append(os.path.basename(log))
             m = PAIRS.search(txt)
-            if m: laid += int(m.group(1)); total += int(m.group(2))
+            # THE EXIT-STATUS CONTRACT (15 September 2026, red team report 1 P1): pair_preroute exits 0 when every pair
+            # was laid and 1 when some were not, and BOTH print the summary line; anything else (a usage refusal is 2,
+            # a crash is a traceback, a kill is negative) or a missing summary is a process failure and never a count.
+            if pr.returncode not in (0, 1) or not m:
+                row.update(error="pass %d: pair_preroute exited %s%s" % (i, pr.returncode, "" if m else " with no summary line"), pairs=None, of=None)
+                return row
+            laid += int(m.group(1)); total += int(m.group(2))
             t = SECS.search(txt)
             if t: secs += int(t.group(1)); maps += int(t.group(2))
             k = KNOBS.search(txt)
@@ -203,12 +209,19 @@ def _drc_of(board, cwd, out_dir, name):
     cnt = os.path.abspath(os.path.join(out_dir, "arm-%s-counts.txt" % name))
     os.makedirs(os.path.dirname(rep), exist_ok=True)
     try:
+        # the OLD counts file goes first, and hardset's own status is read: a hardset that failed beside a same-named
+        # file from an earlier run handed the earlier board's counts to this one (15 September 2026, report 1 P1)
+        for f in (rep, cnt):
+            try: os.remove(f)
+            except OSError: pass
         r = subprocess.run(["bash", os.path.join(TOOLS, "drc.sh"), board, rep],
                            capture_output=True, text=True, timeout=1800, cwd=cwd)
         if r.returncode or not os.path.exists(rep):
             return {"drc_error": (r.stderr or r.stdout).strip()[-300:] or "drc.sh exit %d" % r.returncode}
-        subprocess.run([sys.executable, os.path.join(TOOLS, "hardset.py"), rep, "pre", "--counts", cnt,
-                        "--label", "arm-%s" % name], capture_output=True, text=True, timeout=600, cwd=cwd)
+        h = subprocess.run([sys.executable, os.path.join(TOOLS, "hardset.py"), rep, "pre", "--counts", cnt,
+                            "--label", "arm-%s" % name], capture_output=True, text=True, timeout=600, cwd=cwd)
+        if h.returncode not in (0, 1) or not os.path.exists(cnt):
+            return {"drc_error": "hardset exited %d with%s counts file" % (h.returncode, "" if os.path.exists(cnt) else " no")}
         hard, unrouted = open(cnt).read().split()
         return {"hard": int(hard), "unrouted": int(unrouted)}
     except Exception as e:
@@ -266,6 +279,15 @@ def main(argv):
     spec = json.load(open(a.spec))
     ecad = os.path.abspath(spec.get("ecad") or os.path.dirname(TOOLS))
     os.makedirs(a.out_dir, exist_ok=True)
+    # ARTEFACTS BY CYCLE, never overwritten (15 September 2026, red team report 1 P1): the logs, DRC reports, counts
+    # and kept boards of an arm used to live at arm-<name> under out_dir, and a later cycle reusing a name (which the
+    # model chooses, and --allow-repeat permits) overwrote the evidence an earlier ledger row points at. Every cycle's
+    # artefacts go under cycles/<ledger head sha>-<utc stamp>/, and the ledger row records that directory.
+    _head = ledger.head(os.path.join(a.out_dir, "arms.jsonl"))
+    cycle_dir = os.path.join(a.out_dir, "cycles", "%s-%s" % ((_head[1] or "genesis")[:12], time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())))
+    if os.path.exists(cycle_dir): raise SystemExit("arms: cycle directory %s already exists; artefacts are never overwritten" % cycle_dir)
+    os.makedirs(cycle_dir)
+    ledger_path = os.path.join(a.out_dir, "arms.jsonl"); a.out_dir = cycle_dir
 
     unsafe = [x.get("name") for x in spec["arms"] if not safe_name(x.get("name"))]
     if unsafe:
@@ -328,7 +350,8 @@ def main(argv):
             row["verdict"] = v; row["note"] = note
             rows.append(row)
             print("arms: %-14s %-12s %s  (%.0f s, maps %s s)" % (row["arm"], v, note, row.get("wall_s", 0), row.get("map_seconds", "?")))
-            ledger.append(os.path.join(a.out_dir, "arms.jsonl"), row)
+            row["artefacts"] = os.path.relpath(cycle_dir, os.path.dirname(ledger_path))
+            ledger.append(ledger_path, row)
     rows.sort(key=lambda r: (r["verdict"] in ("ILLEGAL", "INFRA_FAIL", "UNMEASURED"), -(r.get("pairs") or -1), r["arm"]))
     print("\narms: ranked by pairs laid")
     for r in rows:

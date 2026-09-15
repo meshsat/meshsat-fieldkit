@@ -12,6 +12,7 @@ row links to must exist. Nothing here judges whether a board is good, only that 
 in the tree.
 """
 import os, re
+from harness import need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
@@ -40,6 +41,7 @@ def _rows(path):
 
 
 def t_every_revision_named_is_the_newest_deliverable_folder():
+    need(BOARDS, "the deliverable folders are not in a code-only archive")
     seen = 0
     for path, key, cells in list(_rows("README.md")) + list(_rows("v2/README.md")):
         newest = _newest(STEM[key])
@@ -53,6 +55,7 @@ def t_every_revision_named_is_the_newest_deliverable_folder():
 
 
 def t_every_folder_a_public_table_links_to_exists():
+    need(BOARDS, "the deliverable folders are not in a code-only archive")
     for path in ("README.md", "v2/README.md"):
         txt = open(os.path.join(REPO, path), encoding="utf-8").read()
         for m in re.finditer(r"release/revA/boards/(meshsat-[A-Za-z0-9-]+)", txt):

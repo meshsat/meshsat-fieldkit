@@ -9,6 +9,7 @@ The classes are data with a pattern per site, because file level would be useles
 classes and the region packer and most of the placement, and only the first two are the owner's.
 """
 import os, re, sys, json, tempfile, subprocess
+from harness import need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
@@ -102,6 +103,7 @@ def t_every_reserved_pattern_still_matches_its_file():
     import os as _os, re as _re, json as _json, fnmatch as _fn
     TOOLS_ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
     REPO_ = _os.path.dirname(_os.path.dirname(_os.path.dirname(TOOLS_)))
+    need(_os.path.join(REPO_, "v2", "release"), "some reserved sites live in the release tree, which a code-only archive lacks")
     d = _json.load(open(_os.path.join(TOOLS_, "reserved.json")))
     files = []
     for dp, dirs, fs in _os.walk(REPO_):
