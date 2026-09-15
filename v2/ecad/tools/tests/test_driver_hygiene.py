@@ -86,7 +86,7 @@ def t_no_project_directory_holds_a_second_board():
 
 # Passes that lay copper GREEDILY, walking the board and taking room as they go, so that what fits depends
 # on the order they walk in. A new one belongs here with the others.
-LAYING = ("escape.py", "prefanout.py", "join_adjacent_pins.py", "pour_stitch.py")
+LAYING = ("escape.py", "prefanout.py", "join_adjacent_pins.py", "pour_stitch.py", "return_via.py")
 
 # The other ways a tool in this tree creates copper, each of which lays from its own ordered source rather
 # than from the board's file order, so a random uuid cannot reach it. These are classifications, not

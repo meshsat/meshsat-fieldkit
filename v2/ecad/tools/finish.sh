@@ -188,6 +188,17 @@ fi
 # lays a 0.5 mm inner track in parallel with a band and the solver takes a share of the rail through it.
 if [ -n "$(cfg x rail_prune)" ]; then python3 $T/rail_prune.py $N.kicad_pcb 2>&1 | grep -E 'rail_prune|Traceback|Error'; fi
 if [ -n "$(cfg x rail_prune)" ] && [ -n "$(cfg x stitch_prune)" ]; then $T/drc.sh $N.kicad_pcb out/$N-drc.json; prune_stitch; fi   # the second pass, on copper the rail prune has just changed
+# 6. a ground via beside every signal via (owner ruling 15 September 2026 20:15 CEST, rule 2): after every stage that lays
+# or removes copper and before the final refill and the routed-board gate, which judges the vias it placed like any other
+# copper. The tool keeps its vias only if neither the hard nor the unrouted count rose against the board it was handed.
+# Declared per board (`return_via` in boards/<letter>.json), and the gate that follows refuses a board with a signal via
+# left without one whether or not the stage ran, so a board that turns it off still has to pass.
+if [ -n "$(cfg x return_via)" ]; then
+  python3 -u $T/return_via.py $N.kicad_pcb > out/$N-return_via.log 2>&1; RVX=$?
+  grep -a return_via out/$N-return_via.log | head -8
+  [ "$RVX" -eq 0 ] || echo "return_via exited $RVX (out/$N-return_via.log): its vias, if kept, are judged by the DRC below"
+  $T/drc.sh $N.kicad_pcb out/$N-drc.json
+fi
 # 13 September 2026 (MESHSAT-862): REFILL BEFORE ANYTHING JUDGES THE COPPER, and this is not a tidy-up.
 # The only refill in this script was after the stub router, and between it and the judgements below run
 # `stub_accept` (which removes closure copper), `stitch_prune` and its revert (which COPIES BACK a board that

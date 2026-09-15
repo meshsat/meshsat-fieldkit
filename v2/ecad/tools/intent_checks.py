@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """The intent gates on a routed board (MESHSAT-862 Stage C, 8 Sep 2026): read out/<stem>-intent.json (intent.py) and the board, and check
-  1. return path: every track of a net in a pair class with an impedance target (USB, DIFF100, PCIE, HDMI, RF) has a filled plane (GND or a
-     power net's pour) on the copper layer next to it, sampled every SAMPLE mm; a sample with no plane on either neighbouring layer is a gap
-     (an In1 rule-area window around the CM5 receptacles, a plane cut-out, a pour the router ate); reported per net as mm of gap, FAIL above 0.5 mm;
+  1. return path: every track of EVERY SIGNAL NET (signalnets.classify: not ground, not a net that owns a filled zone, not a rail of the
+     intent file, not a power class; owner ruling 15 September 2026 20:15 CEST, "every signal net"; until then only the pair classes with an
+     impedance target were judged) has a filled plane (GND or a power net's pour) on the copper layer next to it, sampled every SAMPLE mm; a
+     sample with no plane on either neighbouring layer is a gap (an In1 rule-area window around the CM5 receptacles, a plane cut-out, a pour
+     the router ate, a two-layer board's back-side track under a front-side track); reported per net as mm of gap, FAIL above the larger of
+     GAP_MM or 5 percent of the net's length (via anti-pads and connector ends). A board with tracks and no signal net at all is a FAIL (the
+     scope filter swallowed everything); a board with no tracks passes with "0 of 0";
+  4. return via: every signal via has a ground via within return_via.RETURN_MM, fine-pitch escape fans exempt (return_via.judge);
   2. decoupling: every bypass entry (capacitor, part, pin) has its capacitor's rail pad within LOOP_MM of the pin's pad centre (3.0 mm for 100 nF
      and smaller, 6.0 mm for bulk), and both the capacitor's rail pad and its ground pad reach a via or a pour within 1.5 mm (the loop closes
      through the planes, not across the board); reported per entry, FAIL on distance;
@@ -12,7 +17,7 @@ Used as a module by the check_pcb_*.py gates: intent_checks.run(board, check)  o
 import sys, os, math, json
 import netclass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import pcbnew, intent
+import pcbnew, intent, signalnets, return_via
 
 SAMPLE = 1.0; GAP_MM = 10.0; NEAR_VIA = 1.5
 
@@ -33,20 +38,31 @@ def run(b, check, path=None):
             pl = z.GetFilledPolysList(z.GetFirstLayer()); planes.setdefault(z.GetFirstLayer(), []).append(pl); planes_net.setdefault((z.GetFirstLayer(), z.GetNetname()), []).append(pl)
     def neighbours(L):
         i = cu.index(L); return [cu[j] for j in (i - 1, i + 1) if 0 <= j < len(cu)]
-    # 1. return path
-    gaps = {}; total = {}; n_nets = 0
+    # 1. return path, under every signal net (and the pair-class nets, which are signals too but keep their own class in the line)
+    signals, _why = signalnets.classify(b, path, it.get("rails", {}).keys())
+    gaps = {}; total = {}; n_nets = 0; n_tracks = 0
     for tr in b.GetTracks():
         if tr.GetClass() != "PCB_TRACK": continue
-        net = tr.GetNetname()
-        if cls_of(net) not in targets: continue
+        n_tracks += 1; net = tr.GetNetname()
+        if cls_of(net) not in targets and not signalnets.is_signal(net, signals): continue
         L = tr.GetLayer(); length = tr.GetLength() / 1e6; n = max(1, int(length / SAMPLE)); total[net] = total.get(net, 0.0) + length
         for k in range(n + 1):
             u = k / n; p = pcbnew.VECTOR2I(int(tr.GetStart().x + u * (tr.GetEnd().x - tr.GetStart().x)), int(tr.GetStart().y + u * (tr.GetEnd().y - tr.GetStart().y)))
             if not any(pl.Contains(p) for Ln in neighbours(L) for pl in planes.get(Ln, [])): gaps[net] = gaps.get(net, 0.0) + length / (n + 1)
+    if n_tracks and not total: check(False, "return path: the board has %d tracks and not one signal net was found to judge (signalnets.classify excluded every net: %s)" % (n_tracks, ", ".join(sorted(set(_why.values())))))
+    if not n_tracks: check(True, "return path: 0 of 0 signal nets, the board has no tracks")
+    n_over = 0; worst = ("", 0.0)
     for net in sorted(total):
         n_nets += 1; g = gaps.get(net, 0.0)
+        if g > worst[1]: worst = (net.lstrip("/"), g)
         lim = max(GAP_MM, 0.05 * total[net])   # the connector ends and via transitions of a long net sit over anti-pads: 5 percent of the length or 10 mm, whichever is larger (A22's 19 nets at 3 to 9 percent; C7 and D8 at 20 to 60 percent are the real class)
+        if g > lim: n_over += 1
         check(g <= lim, "return path under %s (%s): %.1f of %.1f mm without a plane on a neighbouring layer (limit %.1f)" % (net.lstrip("/"), cls_of(net), g, total[net], lim))
+    print("intent_checks: return path judged on %d signal nets (%d excluded as ground, rail, zone owner or power class), %d over their limit, worst %s at %.1f mm" % (n_nets, len(_why), n_over, worst[0] or "none", worst[1]))
+    # 4. return via (rule 2 of the same ruling): a ground via beside every signal via, judged by return_via.py
+    rv = return_via.judge(b, path)
+    check(not rv["lacking"], "return via: %d of %d signal vias have a ground via within %.1f mm (%d exempt in fine-pitch fans); without one: %s" % (
+        rv["judged"] - len(rv["lacking"]), rv["judged"], return_via.RETURN_MM, rv["exempt"], "; ".join(rv["lacking"][:8]) + (" ..." if len(rv["lacking"]) > 8 else "") or "none"))
     # 2. decoupling
     pads = {(f.GetReference(), p.GetNumber()): p for f in b.GetFootprints() for p in f.Pads()}
     vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
@@ -85,7 +101,7 @@ def run(b, check, path=None):
     names = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
     for net in it.get("rails", {}): check(net.lstrip("/") in names, "intent rail %s is a net of the board" % net)
     if n_far: print("intent_checks: %d of %d bypass entries are past their limit and allowed by bypass-allow.txt" % (n_far, n_by))
-    return "intent_checks: return path on %d nets, %d bypass entries, %d rails checked" % (n_nets, n_by, len(it.get("rails", {})))
+    return "intent_checks: return path on %d nets, return via on %d signal vias, %d bypass entries, %d rails checked" % (n_nets, rv["judged"], n_by, len(it.get("rails", {})))
 
 if __name__ == "__main__":
     if len(sys.argv) < 2: print(__doc__); sys.exit(2)

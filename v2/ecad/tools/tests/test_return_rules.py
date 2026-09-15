@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""The two return-current rules of 15 September 2026 (owner ruling 20:15 CEST, appendix 32.198) as structure: what the
+finish runs, in which order, what every board declares, and that the signal filter reads its exclusions from data.
+The board-level fixtures (a track with and without a plane under it, a via with and without its ground via) are in
+test_board_gates.py, where pcbnew is."""
+import os, re, json, glob
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _src(name): return open(os.path.join(TOOLS, name), errors="replace").read()
+
+
+def _code(name):
+    """The finish without its comment lines."""
+    return "".join(l for l in open(os.path.join(TOOLS, name), errors="replace") if not l.strip().startswith("#"))
+
+
+def t_the_finish_places_return_vias_after_the_last_copper_stage_and_before_the_final_refill():
+    t = _code("finish.sh")
+    i_rail = t.index("rail_prune.py"); i_rv = t.index("return_via.py"); i_fill = t.rindex("ZONE_FILLER"); i_gate = t.index("routed-board gate")
+    assert i_rail < i_rv < i_fill < i_gate, "return_via.py must run after rail_prune and before the final refill and the routed-board gate (positions %d %d %d %d)" % (i_rail, i_rv, i_fill, i_gate)
+    assert "cfg x return_via" in t, "the stage is declared per board through cfg, like every other finish stage"
+
+
+def t_every_board_declares_return_via_with_its_reason():
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        d = json.load(open(p)).get("finish", {})
+        assert d.get("return_via") is True, "%s: finish.return_via must be true (owner ruling 15 Sep 2026: every board)" % os.path.basename(p)
+        assert "32.198" in d.get("_return_via_why", ""), "%s: _return_via_why names the appendix section" % os.path.basename(p)
+
+
+def t_the_intent_check_judges_every_signal_net_and_the_return_vias():
+    s = _src("intent_checks.py")
+    assert "signalnets.classify" in s and "signalnets.is_signal" in s, "rule 1 judges the signal nets from signalnets, not the pair classes alone"
+    assert "return_via.judge" in s, "rule 2 is judged inside the board gate (intent_checks item 4)"
+    assert "cls_of(net) not in targets and not signalnets.is_signal" in s, "a pair-class net and a signal net are both judged; neither filter alone"
+
+
+def t_the_signal_filter_reads_its_exclusions_from_data_not_a_net_list():
+    s = _src("signalnets.py")
+    body = s.split('"""', 2)[2]   # past the docstring
+    lits = re.findall(r'"([^"\n]*)"', body)
+    allowed = {"GND", "unconnected-", "Default", "ground", "unconnected pin", "owns a filled zone", "rail of the intent file", "class %s", ".kicad_pro", "net_settings", "netclass_assignments", "/", ""}
+    names = [l for l in lits if l not in allowed and not l.isupper()]
+    assert not names, "signalnets.py must not carry net names as literals (it reads zone owners, intent rails and classes): %s" % names
+    assert "GetZoneName" not in body and "z.GetNetname()" in body, "a zone owner is read off the zone's net, not its name"
+    assert "POWER_CLASSES" in body and "class_of" in body, "power nets are excluded by their CLASS from the project file"
+
+
+def t_the_return_via_tool_is_a_gate_and_a_fixer_with_the_finish_s_judgement():
+    s = _src("return_via.py")
+    assert "verdict.write(\"return_via\"" in s, "--check writes the verdict file"
+    assert "h1 > h0 or u1 > u0" in s, "the fixer reverts when the hard or the unrouted count rose against the board it was handed"
+    assert "FAN_PITCH_MM = 0.5" in s and "RETURN_MM = 1.5" in s, "the ruled numbers: 0.5 mm fans exempt, 1.5 mm to the ground via"
+    assert "_in_gnd_fill" in s, "a ground via is placed only inside a ground fill"
