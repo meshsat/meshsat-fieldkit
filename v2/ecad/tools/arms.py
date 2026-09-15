@@ -104,7 +104,7 @@ def run_arm(spec, arm, ecad, out_dir):
     # two runs, so the two boards were never the same tree. NOTHING here shows determinism failing across hosts;
     # what the day showed is that a recorded md5 without the commit that produced it cannot answer the question.
     row = {"arm": name, "board": spec["board"], "letter": spec["letter"], "env": arm.get("env", {}),
-           "predict": arm["predict"], "runs": spec.get("runs", "pair"),
+           "predict": arm["predict"], "runs": spec.get("runs", "pair"), "cycle_id": spec.get("cycle_id"),   # the cycle this row belongs to, minted by the loop before the proposal (15 Sep 2026)
            "tools": spec.get("_fingerprint") or tool_fingerprint(),
            "host": os.uname().nodename, "kicad": _kicad_build()}
     try:

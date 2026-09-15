@@ -64,6 +64,31 @@ def _version():
         return "unknown"
 
 
+_TOOLS_CACHE = {}
+
+
+def _tools():
+    """The git head and the content hash of the tools tree, once per process (subprocess git, no import of arms.py)."""
+    if _TOOLS_CACHE: return dict(_TOOLS_CACHE)
+    here = os.path.dirname(os.path.abspath(__file__)); out = {"git_head": "", "tools_tree_sha": ""}
+    try:
+        out["git_head"] = subprocess.run(["git", "-C", here, "rev-parse", "HEAD"], capture_output=True, text=True, timeout=10).stdout.strip()[:12]
+        h = hashlib.sha256()
+        for root, dirs, files in os.walk(here):
+            dirs[:] = sorted(d for d in dirs if d not in ("__pycache__", "out", "tests"))
+            for f in sorted(files):
+                if f.endswith((".py", ".sh", ".json")): h.update(open(os.path.join(root, f), "rb").read())
+        out["tools_tree_sha"] = h.hexdigest()[:16]
+    except Exception: pass
+    _TOOLS_CACHE.update(out); return dict(out)
+
+
+def _policy():
+    try:
+        import hardset as _h; return {"hard_types": len(_h.HARD_POST)}
+    except Exception: return {}
+
+
 def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
 
@@ -85,6 +110,8 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "tool": tool,
         "version": _version(),
         "ts": now(),
+        "tools": _tools(),         # the code that judged: git head and the tools tree's content hash (a StageResult field, 15 Sep 2026)
+        "policy": _policy(),       # the hard set the judgement is under, so a verdict from an older policy is not read as today's
         "verdict": result,
         "advisory": bool(advisory),
         "counts": dict(counts or {}),
