@@ -1311,7 +1311,7 @@ C became four layers with In2 routable. The rule as ruled cannot hold on C's sta
 Until the word, the run does what needs no ruling: E's pour, D's measurement, A's re-finish, P5's route, the return
 vias on every board, and C's re-finish for rule 2 alone (its rule 1 verdict stands as refused).
 
-**Measured since, 15 September 2026 21:55 CEST.** D with In2 as a ground plane (two routing layers, `/root/dexp`, the D12
+**Measured since, 15 September 2026 21:46 CEST.** D with In2 as a ground plane (two routing layers, `/root/dexp`, the D12
 profile with its plane treatment changed for the run) routed **0 hard, 6 open** at round one, **0 hard, 3 open** at round two
 and its finish closed those to **0 hard, 0 unrouted**; the return-path gate then read **13 of 47 signal nets over the 10 mm
 floor by 2 to 4 mm** (AF_OUT 13.9 of 132 mm, KEY 14.0 of 166, PA_EN 14.1 of 179), which is the plane's own anti-pads along
