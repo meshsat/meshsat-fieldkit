@@ -42,3 +42,14 @@ def t_the_hard_zero_revert_is_still_there():
     assert "stub_accept.py" in FIN, "the per-closure acceptance is gone"
 
 
+
+
+def t_a_pass_that_closed_nothing_writes_nothing():
+    """16 September 2026, A35 round two: both closures were taken back off and the fill-and-save of the unchanged
+    board segfaulted in KiCad's filler (exit 139), which cost the phase. A pass that changed nothing has nothing
+    to write, and the fill and the save are the two most expensive and least safe things the tool does."""
+    src = open(os.path.join(TOOLS, "stub_router.py"), errors="replace").read()
+    i = src.index("if closed == 0:")
+    tail = src[i:i + 600]
+    assert "the board is untouched" in tail, "the zero-closure path does not say the board is untouched"
+    assert tail.index("else:") < tail.index("SaveBoard"), "the board is saved outside the closed-something branch"

@@ -484,4 +484,12 @@ for it1, it2 in pairs:
         continue
     _U = _U1 if _U1 is not None else _U
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))
-pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(BOARD, b); print("stub_router: closed %d of %d" % (closed, len(pairs)))
+# A PASS THAT CLOSED NOTHING WRITES NOTHING (16 September 2026, A35's round two: both candidate closures were
+# taken back off, and the fill-and-save of the unchanged board then segfaulted in KiCad's filler, exit 139, which
+# the finish correctly refused as a tool crash. The board was identical to the input, so the whole write was a
+# risk taken for no change. Filling and saving are the two most expensive and least safe things this tool does.)
+if closed == 0:
+    print("stub_router: closed 0 of %d, the board is untouched (nothing to fill and nothing to save)" % len(pairs))
+else:
+    pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(BOARD, b)
+    print("stub_router: closed %d of %d" % (closed, len(pairs)))
