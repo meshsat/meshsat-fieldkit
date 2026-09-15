@@ -1,0 +1,276 @@
+#!/usr/bin/env python3
+"""The rule registry: load it, validate it, fingerprint it, and decide which rules apply to which board
+(MESHSAT-862, 16 September 2026; owner instruction of 16 September 00:30).
+
+This project accumulated its gates one incident at a time. Every one of them exists because a board taught it,
+and there has never been a complete, versioned statement of what a board here must satisfy. Two consequences
+were measured rather than suspected: every deliverable folder in the tree passed the final gate because
+`verify_deliverable` judges a folder against ITSELF, and two heuristics ("a plane on a neighbouring layer",
+"a ground via within 1.5 mm") are refusing boards today with no authority, no applicability condition and no
+false-positive analysis behind them.
+
+`pcb_rules.yaml` is the single canonical registry. Every document under v2/docs/ that describes a rule is
+GENERATED from it (`rules_render.py`), every board result is computed from it (`rules_status.py`), and every
+gate names the rule ids it decides. This module is the only reader: nothing else parses the YAML.
+
+The rule shape, and what each field is for:
+
+  id                     stable, e.g. RET-001; never reused, never renumbered
+  domain                 one of DOMAINS below, the coverage axis
+  short_name             a few words, for tables
+  requirement            what must be true, in one sentence, as an engineering statement
+  classification         REGULATORY | STANDARD | INTERFACE_REQUIREMENT | COMPONENT_REQUIREMENT | FAB_LIMIT |
+                         ASSEMBLY_LIMIT | PHYSICS_PRINCIPLE | PROJECT_DECISION | HEURISTIC
+  applicability          UNIVERSAL_FOR_THIS_PROJECT | CONDITIONAL | NOT_APPLICABLE
+  condition              machine-readable (see `applies_to`): required for CONDITIONAL and NOT_APPLICABLE
+  risk_class             one or more of RISKS
+  release_effect         BLOCKER | MUST_JUSTIFY | ADVISORY
+  source_status          VERIFIED | SOURCE_UNVERIFIED | CONFLICTING | NOT_REQUIRED_FOR_PROJECT_DECISION
+  sources                list of {title, issuer, revision, clause, url_or_path, accessed}
+  acceptance_criteria    objectively testable; need not be numeric
+  rationale              why the requirement exists
+  failure_mode           what goes wrong in the built hardware when it is violated
+  verification_method    ERC | DRC | SCRIPT | CALCULATION | SIMULATION | MANUAL_REVIEW | VENDOR_CONFIRMATION |
+                         PROTOTYPE_MEASUREMENT (one or more)
+  verification_phase     SCHEMATIC | PLACED_BOARD | ROUTED_BOARD | RELEASE_PACKAGE | ASSEMBLY | PROTOTYPE
+  automation_feasibility AUTOMATABLE | PARTIALLY_AUTOMATABLE | HUMAN_OR_LAB_ONLY
+  boards_affected        letters, or ALL, or a condition-resolved list
+  interfaces_affected    interface names, or NONE
+  implementation_location where compliance is GENERATED (file[:symbol]), or NONE_YET
+  evidence_scope         the identities that must match for evidence to be reusable
+  owner                  who decides: SESSION | OWNER | VENDOR | LAB
+  waiver_policy          {allowed, authority, evidence, scope, expiry, residual_risk} or NOT_WAIVABLE
+  maturity               UNASSESSED | ENFORCED | GENERATED_ONLY | VERIFIED_MANUALLY | DOCUMENTED_ONLY | OPEN |
+                         SOURCE_UNVERIFIED | OWNER_DECISION_REQUIRED
+
+A condition is DATA, never code: {"all": [...]}, {"any": [...]}, {"not": {...}} around leaves
+{"fact": "layers", "op": "ge", "value": 4} or {"fact": "interfaces", "op": "contains", "value": "PCIe"}.
+`applies_to(rule, facts)` evaluates it against one board's facts; nothing is eval'd.
+
+CLI:
+  rules_lib.py validate [<registry>]      shape, allowed values, source policy; exits 0/1
+  rules_lib.py fingerprint [<registry>]   the sha256 the evidence records
+  rules_lib.py facts                      the board facts the conditions are resolved against
+  rules_lib.py applicable <letter>        the rule ids that apply to one board
+"""
+import os, sys, json, hashlib, datetime
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REGISTRY = os.path.join(HERE, "pcb_rules.yaml")
+FACTS = os.path.join(HERE, "pcb_board_facts.yaml")
+
+DOMAINS = (
+    "PRODUCT_ENVELOPE", "SCHEMATIC_INTEGRITY", "COMPONENT_SELECTION", "LIFECYCLE_SUPPLY",
+    "POWER_TREE", "DECOUPLING", "POWER_INTEGRITY", "GROUNDING_SHIELDING", "STACKUP",
+    "RETURN_PATH", "CONTROLLED_IMPEDANCE", "DIFFERENTIAL_PAIRS", "SIGNAL_INTEGRITY",
+    "CLOCKS_RESET_BOOT", "ANALOG_MIXED_SIGNAL", "RF", "INTERFACE_COMPLIANCE", "TRANSIENT_PROTECTION",
+    "ISOLATION_SPACING", "THERMAL", "PLACEMENT", "ROUTING", "VIAS", "PLANES_POURS", "EMC",
+    "MECHANICAL", "FABRICATION_DFM", "ASSEMBLY_DFA", "TEST_BRINGUP", "RELIABILITY",
+    "ENERGY_STORAGE", "DOCUMENTATION_CONTROL", "MANUFACTURING_OUTPUTS", "VERIFICATION_SIGNOFF",
+)
+CLASSIFICATIONS = ("REGULATORY", "STANDARD", "INTERFACE_REQUIREMENT", "COMPONENT_REQUIREMENT", "FAB_LIMIT",
+                   "ASSEMBLY_LIMIT", "PHYSICS_PRINCIPLE", "PROJECT_DECISION", "HEURISTIC")
+APPLICABILITY = ("UNIVERSAL_FOR_THIS_PROJECT", "CONDITIONAL", "NOT_APPLICABLE")
+RISKS = ("SAFETY", "ELECTRICAL_FUNCTION", "SIGNAL_INTEGRITY", "POWER_INTEGRITY", "EMC", "THERMAL",
+         "FABRICATION", "ASSEMBLY", "YIELD", "RELIABILITY", "TESTABILITY", "MECHANICAL", "DOCUMENTATION",
+         "SUPPLY_CHAIN")
+EFFECTS = ("BLOCKER", "MUST_JUSTIFY", "ADVISORY")
+SOURCE_STATUS = ("VERIFIED", "SOURCE_UNVERIFIED", "CONFLICTING", "NOT_REQUIRED_FOR_PROJECT_DECISION")
+METHODS = ("ERC", "DRC", "SCRIPT", "CALCULATION", "SIMULATION", "MANUAL_REVIEW", "VENDOR_CONFIRMATION",
+           "PROTOTYPE_MEASUREMENT")
+PHASES = ("SCHEMATIC", "PLACED_BOARD", "ROUTED_BOARD", "RELEASE_PACKAGE", "ASSEMBLY", "PROTOTYPE")
+FEASIBILITY = ("AUTOMATABLE", "PARTIALLY_AUTOMATABLE", "HUMAN_OR_LAB_ONLY")
+MATURITY = ("UNASSESSED", "ENFORCED", "GENERATED_ONLY", "VERIFIED_MANUALLY", "DOCUMENTED_ONLY", "OPEN",
+            "SOURCE_UNVERIFIED", "OWNER_DECISION_REQUIRED")
+OWNERS = ("SESSION", "OWNER", "VENDOR", "LAB")
+RESULTS = ("PASS", "FAIL", "INCONCLUSIVE", "WAIVED", "NOT_APPLICABLE")
+
+REQUIRED = ("id", "domain", "short_name", "requirement", "classification", "applicability", "risk_class",
+            "release_effect", "source_status", "sources", "acceptance_criteria", "rationale", "failure_mode",
+            "verification_method", "verification_phase", "automation_feasibility", "boards_affected",
+            "interfaces_affected", "implementation_location", "evidence_scope", "owner", "waiver_policy",
+            "maturity")
+OPS = ("eq", "ne", "ge", "gt", "le", "lt", "contains", "not_contains", "in", "truthy")
+
+
+def _yaml():
+    try:
+        import yaml
+        return yaml
+    except ImportError:                                    # the box's KiCad python has it; a bare host may not
+        raise SystemExit("rules_lib: PyYAML is required to read the registry")
+
+
+def load(path=None):
+    """The registry as a dict, with `rules` a list. The ONLY place this file is parsed."""
+    path = path or REGISTRY
+    if not os.path.exists(path): raise SystemExit("rules_lib: no registry at %s" % path)
+    d = _yaml().safe_load(open(path)) or {}
+    if not isinstance(d.get("rules"), list): raise SystemExit("rules_lib: %s has no `rules` list" % path)
+    return d
+
+
+def facts(path=None):
+    """Per-board facts the conditions are resolved against (layers, interfaces, rails, energy, assembly).
+    Generated in Phase A from the schematics, the board files and the mechanical generators; it is DATA about
+    the product, never about the gates."""
+    path = path or FACTS
+    if not os.path.exists(path): return {}
+    return _yaml().safe_load(open(path)) or {}
+
+
+def board_facts(f=None):
+    """Only the board entries of the facts file: a board is a mapping, the metadata keys are scalars, and an
+    entry beginning with an underscore is product-level rather than a board."""
+    f = facts() if f is None else f
+    return {k: v for k, v in f.items() if isinstance(v, dict) and not k.startswith("_")}
+
+
+def _leaf(cond, f):
+    fact = cond.get("fact"); op = cond.get("op", "truthy"); want = cond.get("value")
+    if op not in OPS: raise ValueError("unknown op %r" % op)
+    have = f.get(fact)
+    if op == "truthy": return bool(have)
+    if have is None: return False
+    if op == "eq": return have == want
+    if op == "ne": return have != want
+    if op == "ge": return have >= want
+    if op == "gt": return have > want
+    if op == "le": return have <= want
+    if op == "lt": return have < want
+    if op == "contains": return want in (have or [])
+    if op == "not_contains": return want not in (have or [])
+    if op == "in": return have in (want or [])
+    return False
+
+
+def evaluate(cond, f):
+    """A condition is DATA: all/any/not around leaves. Nothing here evaluates code."""
+    if cond is None: return True
+    if "all" in cond: return all(evaluate(c, f) for c in cond["all"])
+    if "any" in cond: return any(evaluate(c, f) for c in cond["any"])
+    if "not" in cond: return not evaluate(cond["not"], f)
+    return _leaf(cond, f)
+
+
+def applies_to(rule, board_facts):
+    """(applies, why). UNIVERSAL applies everywhere; NOT_APPLICABLE never applies and must say why;
+    CONDITIONAL applies where its condition holds against this board's facts."""
+    a = rule.get("applicability")
+    if a == "UNIVERSAL_FOR_THIS_PROJECT": return True, "universal for this project"
+    if a == "NOT_APPLICABLE": return False, rule.get("condition", {}).get("reason", "declared not applicable")
+    c = rule.get("condition")
+    if not c: return False, "conditional with no condition: treated as not applying, and validate() refuses it"
+    try: ok = evaluate(c, board_facts)
+    except ValueError as e: return False, "condition unreadable: %s" % e
+    return ok, ("the board's facts satisfy the condition" if ok else "the board's facts do not satisfy the condition")
+
+
+def fingerprint(reg=None):
+    """The identity evidence records. Changing any rule changes it, so evidence taken under an older registry
+    is stale by construction rather than by anyone remembering."""
+    reg = reg or load()
+    body = json.dumps({"schema": reg.get("schema_version"), "rules": reg.get("rules")}, sort_keys=True, default=str)
+    return hashlib.sha256(body.encode()).hexdigest()[:16]
+
+
+def by_id(reg=None):
+    reg = reg or load()
+    return {r["id"]: r for r in reg["rules"]}
+
+
+def rules_for(letter, reg=None, f=None):
+    """[(rule, why)] for the rules that apply to one board letter."""
+    reg = reg or load(); f = (f if f is not None else facts()).get(letter, {})
+    out = []
+    for r in reg["rules"]:
+        b = r.get("boards_affected")
+        if isinstance(b, list) and b and letter not in b and "ALL" not in b: continue
+        ok, why = applies_to(r, f)
+        if ok: out.append((r, why))
+    return out
+
+
+def validate(reg=None, path=None):
+    """(errors, warnings). The shape, the allowed values, and the source policy: a BLOCKER that claims a
+    VERIFIED source must name one, a CONDITIONAL rule must carry a machine-readable condition, a rule whose
+    source is unverified may not also claim to be ENFORCED as a blocker without saying so."""
+    reg = reg or load(path)
+    errs, warns = [], []
+    seen = set()
+    for i, r in enumerate(reg.get("rules", [])):
+        rid = r.get("id", "<no id at index %d>" % i)
+        for k in REQUIRED:
+            if k not in r: errs.append("%s: missing %s" % (rid, k))
+        if rid in seen: errs.append("%s: duplicate id" % rid)
+        seen.add(rid)
+        def one_of(field, allowed):
+            v = r.get(field)
+            vs = v if isinstance(v, list) else [v]
+            for x in vs:
+                if x not in allowed: errs.append("%s: %s %r is not one of %s" % (rid, field, x, ", ".join(allowed)))
+        one_of("domain", DOMAINS); one_of("classification", CLASSIFICATIONS); one_of("applicability", APPLICABILITY)
+        one_of("risk_class", RISKS); one_of("release_effect", EFFECTS); one_of("source_status", SOURCE_STATUS)
+        one_of("verification_method", METHODS); one_of("verification_phase", PHASES)
+        one_of("automation_feasibility", FEASIBILITY); one_of("maturity", MATURITY); one_of("owner", OWNERS)
+        if r.get("applicability") == "CONDITIONAL" and not r.get("condition"):
+            errs.append("%s: CONDITIONAL with no machine-readable condition" % rid)
+        if r.get("applicability") == "NOT_APPLICABLE" and not (r.get("condition") or {}).get("reason"):
+            errs.append("%s: NOT_APPLICABLE with no recorded reason" % rid)
+        if r.get("condition") and r.get("applicability") == "CONDITIONAL":
+            try: evaluate(r["condition"], {})
+            except ValueError as e: errs.append("%s: condition is unreadable (%s)" % (rid, e))
+        srcs = r.get("sources") or []
+        if r.get("source_status") == "VERIFIED":
+            if not srcs: errs.append("%s: source_status VERIFIED with no source" % rid)
+            for s in srcs:
+                for k in ("title", "issuer", "url_or_path"):
+                    if not s.get(k): errs.append("%s: a VERIFIED source is missing %s" % (rid, k))
+        if r.get("release_effect") == "BLOCKER" and r.get("source_status") == "SOURCE_UNVERIFIED" \
+           and r.get("maturity") not in ("SOURCE_UNVERIFIED", "OWNER_DECISION_REQUIRED"):
+            errs.append("%s: a BLOCKER on an unverified source must carry maturity SOURCE_UNVERIFIED or "
+                        "OWNER_DECISION_REQUIRED, so the gap is visible" % rid)
+        if r.get("classification") == "HEURISTIC" and r.get("release_effect") == "BLOCKER":
+            errs.append("%s: a HEURISTIC may not be a BLOCKER; raise its classification with a source or "
+                        "lower its release effect" % rid)
+        if r.get("automation_feasibility") == "AUTOMATABLE" and r.get("implementation_location") in (None, "", "NONE_YET") \
+           and r.get("maturity") == "ENFORCED":
+            errs.append("%s: ENFORCED with no implementation location" % rid)
+        w = r.get("waiver_policy")
+        if isinstance(w, dict) and w.get("allowed") and not w.get("authority"):
+            errs.append("%s: a waivable rule must name the authority" % rid)
+        if r.get("release_effect") == "BLOCKER" and r.get("risk_class") and "SAFETY" in (
+                r["risk_class"] if isinstance(r["risk_class"], list) else [r["risk_class"]]):
+            if isinstance(w, dict) and w.get("allowed") and r.get("classification") == "REGULATORY":
+                errs.append("%s: a regulatory safety requirement is not waivable" % rid)
+        if r.get("maturity") == "ENFORCED" and not (r.get("evidence_scope")):
+            warns.append("%s: ENFORCED without an evidence scope: evidence cannot be shown to be current" % rid)
+    bf = board_facts()
+    for letter in (reg.get("manifest") or {}).get("boards", []):
+        if letter not in bf: warns.append("manifest board %s has no facts entry" % letter)
+    return errs, warns
+
+
+def main(argv):
+    cmd = (argv[0] if argv else "validate")
+    path = argv[1] if len(argv) > 1 and not argv[1].startswith("-") else None
+    if cmd == "validate":
+        reg = load(path); errs, warns = validate(reg, path)
+        for w in warns: print("warn  %s" % w)
+        for e in errs: print("ERROR %s" % e)
+        print("rules_lib: %d rule(s), %d error(s), %d warning(s), fingerprint %s"
+              % (len(reg["rules"]), len(errs), len(warns), fingerprint(reg)))
+        return 1 if errs else 0
+    if cmd == "fingerprint":
+        print(fingerprint(load(path))); return 0
+    if cmd == "facts":
+        print(json.dumps(facts(), indent=1, sort_keys=True)); return 0
+    if cmd == "applicable" and len(argv) > 1:
+        rs = rules_for(argv[1])
+        for r, why in rs: print("%-10s %-22s %s" % (r["id"], r["domain"], why))
+        print("rules_lib: %d rule(s) apply to board %s" % (len(rs), argv[1]))
+        return 0
+    print(__doc__); return 2
+
+
+if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

@@ -1,0 +1,40 @@
+{
+ "schema_version": "1.0.0",
+ "why": "The versioned statement of WHAT IS EXPECTED, so that a percentage or a gate verdict can never be read without the manifest it was computed against. Written 16 September 2026 under the owner's engineering-control instruction; before it, 'fab-ready' was a judgement with no denominator, and every deliverable folder in the tree passed the final gate because verify_deliverable judges a folder against itself (appendix 32.201).",
+ "manifest_version": "2026-09-16.1",
+ "boards": {
+  "a": {"project": "pcb-a-power", "title": "PCB-A POWER + I/O", "required": true},
+  "b": {"project": "pcb-b-compute", "title": "PCB-B COMPUTE", "required": true},
+  "c": {"project": "pcb-c-display", "title": "PCB-C CONTROL PANEL BACKER", "required": true},
+  "d": {"project": "pcb-d-aprs", "title": "PCB-D APRS", "required": true},
+  "e": {"project": "pcb-e1-dock", "title": "PCB-E1 DOCK STRIP", "required": true},
+  "e5": {"project": "pcb-e2-rfjunction", "title": "PCB-E5 DOCK BLOCK", "required": true, "no_chain": true,
+         "note": "a bare contact board: no schematic chain, no routed copper, built by build_e5.sh"},
+  "p": {"project": "pcb-p-pack", "title": "PCB-P PACK BMS", "required": true}
+ },
+ "promotion": {
+  "frozen": true,
+  "frozen_at": "2026-09-16T00:35:00+02:00",
+  "why": "Owner instruction of 16 September 2026: evidence produced before the rule registry exists is PRE_AUDIT and is not promoted. Running jobs are NOT stopped; their outputs are labelled and re-judged under the registry.",
+  "lifts_when": "pcb_rules.yaml validates, rules_status.py computes a per-board result for every applicable rule, and the readiness gate state is READY_FOR_PROTOTYPE for the board being promoted.",
+  "authority": "OWNER"
+ },
+ "evidence": {
+  "epoch": "2026-09-16T00:35:00+02:00",
+  "why": "Evidence written before this instant was taken under an unversioned rule set. It is readable as history and is INCONCLUSIVE for a current decision until it is reproduced under the registry fingerprint.",
+  "identity_fields": ["board_sha256", "schematic_sha256", "stage", "stackup", "tools_tree_sha", "kicad_build",
+                      "rule_set_fingerprint", "hardset_policy_version", "manifest_version", "configuration_sha"]
+ },
+ "rule_set": {
+  "registry": "v2/ecad/tools/pcb_rules.yaml",
+  "fingerprint": null,
+  "fingerprint_note": "null until the registry's first validated commit; rules_status.py refuses to compute a readiness state while it is null."
+ },
+ "gate_states": ["NOT_READY", "INCONCLUSIVE", "READY_FOR_PROTOTYPE", "PRODUCTION_RELEASE_READY"],
+ "qualifier": "WITH_WAIVERS is appended whenever any applicable rule on the board is WAIVED; it is never hidden by a percentage.",
+ "dimensions": ["design_implementation", "verification_coverage", "fab_package", "procurement", "assembly",
+                "prototype_validation", "production_release"],
+ "percentages": {
+  "rule": "verified_compliance_percent, waived_percent, failed_percent and inconclusive_percent share ONE denominator (applicable rule-board pairs required at the current phase) and sum to 100 subject to rounding; the project aggregate sums rule-board pairs and never averages board percentages."
+ }
+}
