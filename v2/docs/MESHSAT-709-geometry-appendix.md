@@ -7833,3 +7833,46 @@ identical again and **B identical too** (a350f7bd8340, 48 of 113, 5,601 items, 2
 P5's route (signals on the top layer), E10 round two (round two's board was worse than round one's and was not finished;
 round three routes), the D grid measurement, the B19 route (pass one), the split proof's B arm, the B loop's sixth cycle
 (PLACE_GAP 1.8). Suite 494 passing, 9 skipped.
+
+### 32.200 Board P's two layers cannot hold the return rule (decision 28); the placement loop measured on the wrong basis and inside its own scatter; a running driver overwritten (15 September 2026, 23:15 CEST; MESHSAT-862)
+
+**P (decision 28).** The ruled P5, B.Cu a power layer and every wire on F.Cu, routed **0 hard and 44 connections open of the
+board's 35 nets** with 4 vias in 23 minutes: one routing layer does not carry P. P4 as committed reads 29 of 29 signal nets
+over rule 1 (43 to 104 mm each), and P4 with a board-wide F.Cu ground pour added to a copy still reads 29 of 29 (30 to 65
+mm): on two layers every track cuts the pour the other side references. **A four-layer P** (In1 and In2 ground planes, the
+2 oz pack bands on the outer layers, the 0.45/0.25 via the four-layer tools assume) **routes 0 hard, 0 unrouted, 53 vias in
+one attempt**; rule 1 then reads 2 of 29 nets over by 0.2 and 2.2 mm (via transitions) and the return-via fixer places 26 of
+32 with 6 left without a site in the gauge's cluster. With `gnd_grid.py` laid before the route (436 grid vias) the same
+board reads 61 of 64 signal vias with a ground via and 1 net over rule 1, but the route left 3 open at the 30-minute cap
+and its remedy rounds are running. The layer count is reserved: decision 28 carries the three options with these numbers.
+
+**The B placement loop, and what its numbers were.** B20's production chain laid **31 of 48** DIFF100 pairs at the 2.6 gap
+the loop had declared on 38 of 48. Taken apart on the box: the loop's template pass ran WITHOUT `PAIR_COVER_LEGS` and
+`PAIR_CLASS_CLEAR`, two knobs `boards/b.json` declares, so every cycle measured a basis the chain does not use (fixed: a B
+template's pass is the board's own first pass, `tests/test_agent_contract.py` holds it); the placement generator is
+deterministic (four regenerations, seeded and unseeded, one hash); the arm's placed board and B20's are the same board to
+the footprint; and the same board under the arm's own environment lays **33 in three reproductions** where the arm laid
+38, the only difference found being ONE ground escape via. A greedy pass without rip-up turns one cell into five pairs
+(32.117 said so of the slack), so a single arm cannot resolve a placement knob inside about five pairs. **The declaration
+goes back to 2.4** with the whole table; 2.8 and 3.2 are ILLEGAL (mask bridges), PLACE_GAP 1.8 and PLACE_PTH_OBSTACLE 1 are
+ILLEGAL on the placed board (2 and 14 hard), the two floor-plan knobs are refused by the region gate. Cycle 7 never ran
+(a runner hash typed by hand); cycle 8 ran on the production basis. B20 is stopped; B19 routes on at 2.4. The escape
+stage's determinism is being measured (`/root/esc.log`).
+
+**E10's honest number, and a check that counted the wrong copper.** Rule 1's plane set was a list of net-name prefixes
+(`GND`, `+`, `VBAT`, `CELL`, `VBUS`, `PACK`) and E's In2 power pours are `VIN_RAW`, `PV_P`, `TRK_OUT`: E10 read 18 nets over
+for tracks running over solid copper. Every filled zone is a reference now (a zone here is ground or a rail, and signalnets
+already excludes every zone owner from the signal set on that ground). On E10's best board (the In2 ground fill of 32.198,
+round one, 0 hard, 1 open) rule 1 reads **9 of 76 nets over**, the via-transition class of decision 27 plus one 14.5 mm
+run on BLK_SPARE over an In2 fill edge; its one open is a ground pour island the stitch did not connect, and 40 of 130
+signal vias still lack a ground via. Rounds two and three were worse and were not finished.
+
+**A running driver overwritten, and what it cost.** `run_phase.sh` was rewritten twice this evening while E10's and A36's
+drivers were sitting on their routeflow line; bash reads a script by offset, so when E10's routeflow ended its driver ran
+lines of the NEW file: the rsync that builds a tree, which put the clone's E9-era board over E10's finished phase board
+(the best round-one board and the finish's guard snapshots survive in `out/`), then a routeflow of a profile the tree does
+not have. A36's driver was killed before its routeflow ends (the child runs on); every driver is launched from a
+per-launch copy now (`/root/drivers/`). The rule was already in CLAUDE.md; this is what breaking it looks like.
+
+**D with the grid** laid 1,288 ground vias before the route (267 sites refused for copper, 59 for no ground fill, 31 removed
+by the DRC), passed the pre-route gate at hard 0, and its route is running under a one-hour cap.
