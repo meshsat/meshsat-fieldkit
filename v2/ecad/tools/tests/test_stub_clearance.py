@@ -63,3 +63,14 @@ def t_a_track_goal_is_the_tracks_copper_and_not_a_disc_around_a_point():
     assert "segment(M, mm(a.x), mm(a.y), mm(e.x), mm(e.y), mm(t.GetWidth()) / 2)" in body, (
         "a track goal is still a disc around the DRC's point rather than the track's own copper")
     assert "if not found: disc(M, item[\"x\"], item[\"y\"], 0.15)" in body, "the disc is gone entirely, so a point with no segment near it has no goal"
+
+
+def t_the_stub_router_with_nothing_to_close_leaves_before_pcbnew_can_crash_it():
+    """C17's second re-finish (15 Sep 2026): the board was already at 0 unrouted, the stub router printed
+    `unconnected pairs: 0`, went on to build its maps and died with exit 139, and the finish refused the board for
+    the crash. A run with no pair to close must say so and leave through os._exit before any pcbnew teardown."""
+    s = open(os.path.join(TOOLS, "stub_router.py")).read()
+    i = s.find('print("unconnected pairs:", len(pairs))'); assert i > 0
+    body = s[i:i + 900]
+    assert "if not pairs:" in body and "os._exit(0)" in body and "closed 0 of 0" in body, (
+        "a stub router with nothing to close still walks into the map build and pcbnew's teardown")

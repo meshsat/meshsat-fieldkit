@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Close the connections a DRC report lists as unconnected: grid A* on F.Cu/B.Cu with vias, obstacles from every other-net copper item.
 Usage: stub_router.py <board.kicad_pcb> <drc.json> [plane_nets=GND,+5V,+3V3,CELL+]"""
-import sys, re, math, json, heapq, pcbnew, numpy as np
+import os, sys, re, math, json, heapq, pcbnew, numpy as np
 import netclass
 from pcbnew import VECTOR2I, FromMM
 BOARD, DRC = sys.argv[1], sys.argv[2]
@@ -100,6 +100,12 @@ for v in drc.get("unconnected_items", []):
         pairs.append(its)
 if _WANT: print("stub_router: STUB_NETS names %d net(s); %d of the report's pairs are on them" % (len(_WANT), len(pairs)))
 print("unconnected pairs:", len(pairs))
+if not pairs:
+    # 15 September 2026 (MESHSAT-862): C17's second re-finish, on a board already at 0 unrouted, died here with exit 139 and
+    # took the finish with it (a stub-router crash refuses the board by rule). With no pair to close there is no map to
+    # build, no fill to run and nothing to save; the board is untouched, and the interpreter is left before pcbnew's
+    # teardown can segfault it, the way direct_close leaves its trials.
+    print("stub_router: closed 0 of 0 (nothing to close, the board is untouched)"); sys.stdout.flush(); os._exit(0)
 # ---- THE CLEARANCE BETWEEN TWO NETS IS THE LARGER OF THEIR TWO CLASSES', NEVER A LITERAL (14 September 2026).
 # The width and the via of a closure were taught to read the net's class on 13 September and the CLEARANCE was
 # left as 0.16 mm for every net of every board. On C that is wrong in the direction that costs connections: the
