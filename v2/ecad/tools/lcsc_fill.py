@@ -113,6 +113,7 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^SMCJ33A\b", "D_SMC"): "C42371548",
  (r"^SMCJ15A$", "D_SMC"): "C42371550",    # the design asked SMBJ15A on an SMC land; the value became SMCJ15A, which also matches the other two TVS parts on that board
  (r"^AP2112K-3\.3\b", "SOT-23-5"): "C51118",
+ (r"^74LVC1G34\b", "SOT-23-5"): "C526347",   # Diodes 74LVC1G34W5-7, SOT-25 (JLCPCB's name for the five lead SOT-23, package-aliases.txt), stock 1961 read 15 Sep 2026; C's EMCON buffer U9
  (r"^TPS2065CDBV\b", "SOT-23-5"): "C353882",   # TI SLVSAU6I: the DBV package is a 5 pin SOT-23, the land was corrected on A19, B12 and D5
  (r"^TPS563201\b", "SOT-23-6"): "C116592",
  (r"^Amphenol 10164227-1004A1RLF", "CM5_Conn"): "C7435219",   # B13: the CM5 receptacles, 4.0 mm stack (BergStak sheet in vendor/cm5/)
