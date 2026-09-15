@@ -79,7 +79,6 @@ _FAST_STUBS = os.environ.get("PAIR_FAST_STUBS", "1" if pairsearch.HAVE_NUMBA els
 STUB_EXPANSIONS = int(os.environ.get("PAIR_STUB_EXPANSIONS", "400000"))
 # Test the legs against a map that exempts the pair's OWN two nets inside the station radius: a leg fans to its
 # own pad there and passes its partner's pad on the way, which is an obstacle along the pair and not at its ends.
-STATION_OWN = os.environ.get("PAIR_STATION_OWN", "0") != "0"
 _SEARCH_KERNEL = ("compiled" if (_FAST_SEARCH and pairsearch.HAVE_NUMBA) else "heapq")   # printed and recorded: a 13x difference must never be invisible (round-two red teams, L2)
 
 CLR = 0.16; HOLE_CLR = 0.30; VIA_COST = 60.0; VIA_SPLIT = 0.9
@@ -820,8 +819,6 @@ def main(a):
     if not a: print(__doc__); return 2
     _echo_knobs()
     board = a[0]; test = "--test" in a; g = float(a[a.index("--grid") + 1]) if "--grid" in a else 0.1
-    _GLONG = float(os.environ.get("PAIR_GRID_LONG", "0")) or 0.0   # a coarser grid for the long pairs (0 = off)
-    _LONG_MM = float(os.environ.get("PAIR_LONG_MM", "120"))
     # The pair classes live in the PROJECT file, not the board. A board without one, or with one that carries no
     # netclass assignments, has no pairs by construction, and this tool then printed "0 of 0 pairs laid" and exited 0.
     # A pre-router that finds no pairs and reports success is the exact shape this pipeline spent two days removing,
@@ -910,7 +907,6 @@ def main(a):
     # guaranteed to fit again once its room has been taken by the pair that ripped it, and nothing checks that the episode paid.
     # The episode has to become a trial that is accepted only when it leaves more pairs laid than it found; until it is, the flag
     # stays off (PAIR_RIPUP=1 to reproduce the measurement).
-    LEG_EXACT = os.environ.get("PAIR_LEG_EXACT", "0") != "0"
     OWN_CLEAR = os.environ.get("PAIR_OWN_CLEAR", "1") != "0"   # the emissions that used to lay copper unasked ask the partner
     # 14 September 2026, MEASURED AND OFF: judging the layer change's four segments against each other before
     # the spot is taken is correct copper and it costs pairs, at either bar. On B19 at the declared baseline,
@@ -920,7 +916,6 @@ def main(a):
     # sends the corridor somewhere that costs more later. The post-lay gate still judges the copper and rolls
     # the pair back if it violates, which is what happened before this test existed. The guard stays here,
     # measurable, for the board where the rollback is the expensive half.
-    LAYER_FIT = os.environ.get("PAIR_LAYER_CHANGE_FIT", "0") != "0"
     FOLD_TEST = os.environ.get("PAIR_FOLD_TEST", "1") != "0"   # the two offset legs judged against each other in the candidate ladder
     UNMERGE = os.environ.get("PAIR_UNMERGE", "1") != "0"       # a merge of two runs that folds the legs is dropped
     # The entry region (the first and last 1.2 mm of a leg at an entry station) used to skip the occupancy map
@@ -958,7 +953,6 @@ def main(a):
     # same final hop in the fallback that aims at the net's own escape. PAIR_END_STRICT=1 judges those against the
     # partner at the gate's own bar and takes them off when they fail, so the caller tries its next candidate
     # instead of the pair being rolled back whole after it is laid. Off until an arm grades it.
-    END_STRICT = os.environ.get("PAIR_END_STRICT", "0") != "0"
     # 13 September 2026: PAIR_END_FIT, and it is the answer END_STRICT was reaching for. 84 of B19's 152 failed
     # attempts are the pair's own two legs at the END emissions, and the gap they miss by is 1 to 15 micrometres
     # against a bar of 0.249 to 0.252: an inner pair whose gap IS its class clearance has no margin, so the last
@@ -1001,15 +995,7 @@ def main(a):
     # with not one track laid on it. Round three of the same run did not swap them and routed that net. PAIR_SWAP=0 turns
     # every swap off, which is how the cost of the swap is measured rather than argued (11 September 2026).
     SWAP_OK = os.environ.get("PAIR_SWAP", "1") != "0"
-    SWAP_BOTH = os.environ.get("PAIR_SWAP_BOTH_SIDES", "0") != "0"   # refuse a swap that crosses the parts' OTHER pads
-    RIPUP = int(os.environ.get("PAIR_RIPUP", "0"))                 # rip-up events one pair may trigger
-    RIP_MARGIN = float(os.environ.get("PAIR_RIP_MARGIN", "4.0"))   # mm from the failed section's line for a piece to count as in the way
-    RIP_MAX = int(os.environ.get("PAIR_RIP_MAX", "6"))             # laid pairs taken off the board per event
-    RIP_TOTAL = int(os.environ.get("PAIR_RIP_TOTAL", "60"))        # rip-up events in the whole pass (the pass is bounded by this)
     on_board = {}     # stem -> (pieces, stripped escapes) of a pair that is laid and can be ripped
-    rip_events = {}   # stem -> how often this pair has ripped others
-    rip_done = [0]
-    episode = [None]  # the open rip-up episode: what it took off the board, and how many pairs were laid before it
     cur_seg = [0.0, 0.0, 0.0, 0.0]   # the section the corridor search is working on, for the rip-up window
 
     def _seg_d(px, py, x1, y1, x2, y2):
@@ -1087,41 +1073,6 @@ def main(a):
             if best is None or d_ < best[0]: best = (d_, what)
         return "nothing within reach" if best is None else "%s at %.2f mm" % (best[1], best[0])
 
-    def _in_way(pcs, x1, y1, x2, y2):
-        """The distance from a laid pair's copper to the failed section's straight line (mm), 1e9 when it has none."""
-        d = 1e9
-        for t_ in pcs:
-            if t_.GetClass() == "PCB_TRACK":
-                d = min(d, _seg_d(mm(t_.GetStart().x), mm(t_.GetStart().y), x1, y1, x2, y2), _seg_d(mm(t_.GetEnd().x), mm(t_.GetEnd().y), x1, y1, x2, y2))
-            else:
-                d = min(d, _seg_d(mm(t_.GetPosition().x), mm(t_.GetPosition().y), x1, y1, x2, y2))
-            if d <= RIP_MARGIN: break
-        return d
-    def settle_episode():
-        """A rip-up episode is a TRIAL: it is kept only when it leaves more pairs laid than it found (10 September 2026).
-
-        Measured without this: 47 episodes, 224 lays and 29 of B19's 113 pairs against the greedy pass's 38. A ripped pair is
-        not guaranteed to fit again once the pair that ripped it has taken the room, so an episode that does not pay must be
-        undone in full: what the members laid comes off, what was ripped goes back."""
-        nonlocal laid
-        ep = episode[0]
-        if ep is None: return
-        if laid <= ep["laid_before"]:
-            for st2 in list(ep["members"]):
-                if st2 in on_board:
-                    pcs2, str2 = on_board.pop(st2)
-                    for t_ in pcs2: board_remove(b, t_)
-                    for t_ in str2: b.Add(t_)
-                    laid -= 1
-            for st2, (pcs2, str2) in ep["saved"].items():
-                for t_ in pcs2: b.Add(t_)
-                for t_ in str2: board_remove(b, t_)
-                on_board[st2] = (pcs2, str2); laid += 1
-            report.append("RIPUP %s: the episode ended with %d pairs laid against %d before it; every piece is put back" % (ep["trigger"], laid, ep["laid_before"]))
-        else:
-            report.append("RIPUP %s: the episode ended with %d pairs laid against %d before it; kept" % (ep["trigger"], laid, ep["laid_before"]))
-        episode[0] = None
-
     def pinned(f):
         """A footprint whose pads already hold a track end (a section laid for another stem of the same nets, an escape) must not be moved: the second swap of
         R26/R27 on D9 (8 Sep 2026 12:20) left four locked pieces on pads of the wrong net."""
@@ -1130,48 +1081,6 @@ def main(a):
     def _seg_cross(a1, a2, b1, b2):
         def ccw(p, q, r): return (r[1] - p[1]) * (q[0] - p[0]) > (q[1] - p[1]) * (r[0] - p[0])
         return ccw(a1, b1, b2) != ccw(a2, b1, b2) and ccw(a1, a2, b1) != ccw(a1, a2, b2)
-
-    def swap_breaks_other_side(fa, fb, pair_nets):
-        """Would exchanging these two passives make the connections on their OTHER pads cross?
-
-        A station swap is decided by the pair's own fans and the other side of the same two parts is not looked
-        at. On D that cost the board its only open: exchanging R12 and R13 put the hub's DM1 pin across from
-        DP1's resistor, the two hub-side connections crossed in a 2.7 mm gap, and /HUB_DM1 came back with not
-        one track on it (11 September 2026, appendix 32.128). This asks the question the swap never asked.
-        True means the swap introduces a crossing that is not there now, which is a reason to refuse it."""
-        def _signal(n_):
-            # A plane or rail pad has no single counterpart to cross with: its "nearest pad of the same net" is
-            # whichever GND pad happens to be closest, and a crossing test on that is noise. Measured: without this
-            # the guard refused four of D's swaps and cost the board two pairs (5 of 5 down to 3 of 5).
-            k_ = n_.lstrip("/")
-            return bool(k_) and k_ != "GND" and not k_.startswith(("+", "VBAT", "CELL", "VBUS", "PACK", "FUSED", "VIN", "PV_", "TRK_"))
-        def other(f_):
-            for q in f_.Pads():
-                if q.GetNetname() not in pair_nets and _signal(q.GetNetname()): return q
-            return None
-        qa, qb = other(fa), other(fb)
-        if qa is None or qb is None: return False
-        def mate(q):
-            """The nearest pad of the same net on another footprint: what that pad has to reach."""
-            best = None
-            for f2 in b.GetFootprints():
-                if f2.GetReference() in (fa.GetReference(), fb.GetReference()): continue
-                for p2 in f2.Pads():
-                    if p2.GetNetname() != q.GetNetname(): continue
-                    d_ = dist_p(q, p2)
-                    if best is None or d_ < best[0]: best = (d_, (mm(p2.GetPosition().x), mm(p2.GetPosition().y)))
-            return None if best is None else best[1]
-        ma, mb = mate(qa), mate(qb)
-        if ma is None or mb is None: return False
-        pa_ = (mm(qa.GetPosition().x), mm(qa.GetPosition().y)); pb_ = (mm(qb.GetPosition().x), mm(qb.GetPosition().y))
-        # after the swap each pad moves by the vector between the two footprint origins
-        da = (mm(fb.GetPosition().x) - mm(fa.GetPosition().x), mm(fb.GetPosition().y) - mm(fa.GetPosition().y))
-        pa2 = (pa_[0] + da[0], pa_[1] + da[1]); pb2 = (pb_[0] - da[0], pb_[1] - da[1])
-        now = _seg_cross(pa_, ma, pb_, mb); after = _seg_cross(pa2, ma, pb2, mb)
-        if after and not now:
-            report.append("SWAP-REFUSED %s and %s: the swap uncrosses this pair's fans and CROSSES %s and %s on their other pads"
-                          % (fa.GetReference(), fb.GetReference(), qa.GetNetname(), qb.GetNetname()))
-        return after and not now
 
     def dist_p(p, q): return math.hypot(p.GetPosition().x - q.GetPosition().x, p.GetPosition().y - q.GetPosition().y) / 1e6
     pre_vias = []   # the locked vias present before a pair is laid (its own end vias must not become anchors of its next section)
@@ -1228,7 +1137,6 @@ def main(a):
     #   PAIR_PRESENT=<w>     the weight of the cells THIS iteration has already given away
     #   PAIR_PLAN_OUT=<json> where the corridors go; PAIR_PLAN_IN=<json> lays a negotiated plan instead of searching
     PLAN_MODE = os.environ.get("PAIR_PLAN_MODE", "") == "plan"
-    PRESENT_W = float(os.environ.get("PAIR_PRESENT", "0"))
     _li = {L: i for i, L in enumerate(layers)}
     NEG_COST = None; NEG_OCC = None
     _hist_in = os.environ.get("PAIR_HIST_IN")
@@ -1259,10 +1167,8 @@ def main(a):
                 if abs(a_[1] - b_[1]) + abs(a_[2] - b_[2]) > 4: continue   # a layer change is not a run
                 gr.seg(tmp, x1, y1, x2, y2, half_mm)
             NEG_OCC[Lidx][tmp] += 1
-            if PRESENT_W: NEG_COST[Lidx][tmp] += PRESENT_W
 
     for stem in stems:   # a swapped pair is appended and laid again
-        if episode[0] is not None and stem not in episode[0]["members"]: settle_episode()   # the episode's members are queued together: the first stem past them ends it
         PAIR_DEADLINE[0] = time.time() + PAIR_BUDGET if PAIR_BUDGET > 0 else 0.0
         PAIR_SPENT[0] = 0
         # 9 September 2026 (B19): the long pairs die on the expansion cap, not on geometry. SWP3_D spans 261 mm and its
@@ -1272,11 +1178,9 @@ def main(a):
         # 10 September 2026 (report 1, P1): the negotiation rasters are allocated once from the grid in use, so a pass that
         # changes the cell size mid-run would index them in another coordinate system. The two are not composable and the tool
         # says so rather than reading the wrong cells.
-        if _GLONG and (NEG_COST is not None or plan_in):
-            raise SystemExit("pair_preroute: PAIR_GRID_LONG cannot be combined with the negotiated plan or its cost rasters (they are sized from one grid)")
         # One Grid per cell size, kept: the polygon raster cache is instance-local since the fix above, so building a fresh Grid
         # for every long pair threw the whole board's pad rasters away twice per pair (10 September 2026).
-        want = _GLONG if (_GLONG and _span(stem) >= _LONG_MM) else g
+        want = g
         if gr.G != want: gr = _grids.setdefault(want, Grid(b, want))
         pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
         pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
@@ -1531,7 +1435,7 @@ def main(a):
         # only for a fine-pitch row. 21 of B19's 52 remaining failures at the peak slack are "the legs clear no
         # smoothing of the centreline" (32.131). PAIR_STATION_OWN=1 tests the legs inside the station radius
         # against this map instead, which excuses the pair's OWN copper and no one else's (12 September 2026).
-        trk2 = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0] if STATION_OWN else None
+        trk2 = None   # the station-own map was never measured and is deleted (15 September 2026)
         # the map a fan is judged by where it enters its own pads: this pair's PADS are not obstacles, every track is
         trkP = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2, pads_only=True)[0]
         def rebuild_maps():   # after a swap of two passives inside a section the maps still hold the pads at their old places (D9: a stub over the swapped pad, 8 Sep 2026 13:08)
@@ -1539,7 +1443,6 @@ def main(a):
             trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)
             via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}
             trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}
-            if STATION_OWN: trk2 = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]
             trkP = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2, pads_only=True)[0]
         net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
         _sec_retry_at = [-1]; _trk_private = [False]   # PAIR_LEG_RETRY: which section is being retried, and whether this pair owns its corridor map
@@ -1636,22 +1539,7 @@ def main(a):
 
             The bar here is the gate's, not `own_clear`'s fold bar: this is the last millimetre at a station, where
             the two legs are turning into their own pads, and it is exactly where the class number has to hold."""
-            if not END_STRICT: return True
-            o = other_of(net); bar = max(0.0, clr_c - 0.005)
-            mine = [t for t in pieces[n0:] if t.GetClass() == "PCB_TRACK"]
-            if not mine: return True
-            for t in mine:
-                x1, y1, x2, y2 = mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)
-                L_ = t.GetLayer(); need = bar + wid(L_)
-                for u in pieces[:n0]:
-                    if u.GetNetname() != o: continue
-                    if u.GetClass() == "PCB_TRACK":
-                        if u.GetLayer() != L_: continue
-                        if _seg_dist(x1, y1, x2, y2, mm(u.GetStart().x), mm(u.GetStart().y), mm(u.GetEnd().x), mm(u.GetEnd().y)) < need: return False
-                    elif u.GetClass() == "PCB_VIA":
-                        if _pt_seg(mm(u.GetPosition().x), mm(u.GetPosition().y), x1, y1, x2, y2) < bar + wid(L_) / 2 + _via_dia(u) / 2: return False
-            return True
-
+            return True   # the strict end test measured 0 of 48 on B19 and was deleted (appendix 32.146, 15 September 2026); PAIR_END_FIT answers what it reached for
         def partner_clear(cand, SL, net):
             """Would these segments, which are NOT on the board yet, clear the partner at the post-lay gate's bar?
 
@@ -2023,7 +1911,7 @@ def main(a):
                     return ccw(a_, c_, d_) != ccw(b_, c_, d_) and ccw(a_, b_, c_) != ccw(a_, b_, d_)
                 if ok_ and isx_(legs_[0][1], legs_[0][2], legs_[1][1], legs_[1][2]):   # the two fans cross: exchange the wide station's passives when they are a pair
                     fa2, fb2 = stW[0].GetParentFootprint(), stW[1].GetParentFootprint()
-                    if SWAP_OK and not (SWAP_BOTH and swap_breaks_other_side(fa2, fb2, (pn, nn))) and fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked() and not pinned(fa2) and not pinned(fb2):
+                    if SWAP_OK and fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked() and not pinned(fa2) and not pinned(fb2):
                         p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference())); rebuild_maps()
                         legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
                     else: ok_ = False
@@ -2215,10 +2103,7 @@ def main(a):
                                     # CLR + w/2 + 0.02, so the same question exactly is whether the nearest edge is that far.
                                     # Measured on D: 0.367 mm against a 0.330 demand, refused by 37 micrometres of rounding.
                                     # PAIR_LEG_EXACT=1 turns it on; it costs a local scan only where a pair would be refused.
-                                    if not LEG_EXACT: _leg_hit[0] = (px_, py_, L, pts); return False
-                                    _need = CLR + wid(L) / 2 + 0.02
-                                    _d = _nearest_edge(px_, py_, L, net, limit=_need + 0.5)
-                                    if _d is None or _d < _need: _leg_hit[0] = (px_, py_, L, pts); return False
+                                    _leg_hit[0] = (px_, py_, L, pts); return False   # the exact re-test was measured worth no pairs and deleted (32.128)
                             walked += ln_
                     # THE TWO LEGS AGAINST EACH OTHER, which no occupancy map can answer: both are laid by this pair, so
                     # neither is on the board when the maps are built and each leg's map excuses its partner's copper by
@@ -2397,33 +2282,7 @@ def main(a):
                         # `layer change`. The legs' pieces are built here and judged against each other at the
                         # post-lay gate's own bar, before either exists, so a spot that cannot work is simply
                         # not taken and the search walks on to the next one.
-                        if not LAYER_FIT: return True
-                        vs = {}
-                        for sign, net_, poly_start_, prev_end_ in ((p_side, net_p, lp[0], prev_end[0]), (-p_side, net_n, ln[0], prev_end[1])):
-                            vx_, vy_ = cx_ + nx_ * split_ * sign, cy_ + ny_ * split_ * sign
-                            vs[net_.GetNetname()] = ((prev_end_[0], prev_end_[1], vx_, vy_, Lprev), (vx_, vy_, poly_start_[0], poly_start_[1], L), (vx_, vy_))
-                        P_, N_ = vs[net_p.GetNetname()], vs[net_n.GetNetname()]
-                        # 14 September 2026, MEASURED AND CORRECTED THE SAME DAY, and it is the mistake of
-                        # 32.135 made a second time in the same file. Written with the CLASS clearance as its
-                        # bar, this test took B19 from 71 of 113 to 58 in one arm, against the 22 of 48 to 9
-                        # the fold detector above records for exactly the same error in exactly the same
-                        # place. The two legs of one pair arrive at a layer change AT THE PAIR PITCH, which on
-                        # the inner-layer DIFF100 geometry is 0.257 mm against a class demand of 0.257, so a
-                        # rasterised candidate wobbles across the bar and the whole spot is refused. Between
-                        # the pair's own two TRACKS the demand is a fold detector, half the pair's own pitch;
-                        # between a VIA of one leg and a track of the other it stays the class number, because
-                        # a 0.4 to 0.7 mm via beside the partner's track is not a marginal geometry and the
-                        # post-lay gate judges it at the class clearance with no pair exemption anywhere.
-                        _bar = max(0.0, clr_c - 0.005)
-                        for a_ in P_[:2]:
-                            for b_ in N_[:2]:
-                                if a_[4] != b_[4]: continue
-                                _fold = min(clr_c + wid(a_[4]), 2.0 * abs(dof(a_[4]))) * 0.5
-                                if _seg_dist(a_[0], a_[1], a_[2], a_[3], b_[0], b_[1], b_[2], b_[3]) < _fold: return False
-                        for a_, other in ((P_, N_), (N_, P_)):   # a via of one leg against the other leg's two pieces
-                            for b_ in other[:2]:
-                                if _pt_seg(a_[2][0], a_[2][1], b_[0], b_[1], b_[2], b_[3]) < _bar + vd / 2 + wid(b_[4]) / 2: return False
-                        return True
+                        return True   # the layer-change fit was measured to cost 14 pairs and deleted (32.185, 14 and 15 September 2026)
                     spot = None
                     for split_ in (VIA_SPLIT, 0.7, 0.55):   # the vias either side of the centreline; closer when the corridor is tight (their spacing stays a via plus the clearance)
                         if not (r_i == 1 and fineA):   # back along the previous run (never into an entry run: that is the pad row), up to 8 mm
@@ -2477,7 +2336,7 @@ def main(a):
                             return False
                         if xing():
                             fa_, fb_ = st_[0].GetParentFootprint(), st_[1].GetParentFootprint()
-                            if SWAP_OK and not (SWAP_BOTH and swap_breaks_other_side(fa_, fb_, (pn, nn))) and fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_):
+                            if SWAP_OK and fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_):
                                 pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference())); rebuild_maps()
                             if xing():   # still crossing (one part's two pins, a pinned station): the N fan is laid straight and the P leg dives under it (8 Sep 2026 12:26)
                                 # the N fan first runs 0.5 mm on along the corridor, then turns: its diagonal passed 1 um under the class clearance at P's turn into the dive (13:08)
@@ -2539,7 +2398,7 @@ def main(a):
             # their positions is a legal pre-route placement move that untwists the pair (the packer placed them in arbitrary order); done once, then the pair is laid again
             twist, pa2, na2 = twist
             fa, fb = pa2.GetParentFootprint(), na2.GetParentFootprint()
-            if SWAP_OK and not (SWAP_BOTH and swap_breaks_other_side(fa, fb, (pn, nn))) and fa.GetReference() != fb.GetReference() and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped and not pinned(fa) and not pinned(fb):
+            if SWAP_OK and fa.GetReference() != fb.GetReference() and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped and not pinned(fa) and not pinned(fb):
                 pa_, pb_ = fa.GetPosition(), fb.GetPosition(); fa.SetPosition(pb_); fb.SetPosition(pa_); MAP_EPOCH[0] += 1; swapped.add(stem)   # a swap moves pads, so every cached occupancy map is stale
                 for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and t not in stripped]: board_remove(b, t)   # its locked pieces so far go with the retry
                 for t in stripped: b.Add(t)
@@ -2549,26 +2408,6 @@ def main(a):
             report.append("TWIST %s: the P leg changes side between the stations %s (no swap: %s); a crossing would be needed, left to the router" % (stem, twist, why)); continue
         if failed:
             rollback()
-            blockers = []
-            if RIPUP and episode[0] is None and rip_done[0] < RIP_TOTAL and rip_events.get(stem, 0) < RIPUP:
-                x1_, y1_, x2_, y2_ = cur_seg
-                for st2, (pcs2, _s2) in on_board.items():
-                    if st2 in swapped: continue   # a swapped pair's escapes were stripped at the old positions and the swap is not undone
-                    d2 = _in_way(pcs2, x1_, y1_, x2_, y2_)
-                    if d2 <= RIP_MARGIN: blockers.append((d2, st2))
-                blockers = [s2 for _d2, s2 in sorted(blockers)[:RIP_MAX]]
-            if blockers:
-                rip_events[stem] = rip_events.get(stem, 0) + 1; rip_done[0] += 1
-                saved = {}
-                for st2 in blockers:
-                    pcs2, str2 = on_board.pop(st2); saved[st2] = (pcs2, str2)
-                    for t_ in pcs2: board_remove(b, t_)
-                    for t_ in str2: b.Add(t_)   # that pair's escape pieces come back with it
-                    laid -= 1
-                episode[0] = {"trigger": stem, "members": set([stem]) | set(blockers), "saved": saved, "laid_before": laid + len(blockers)}
-                stems.append(stem); stems.extend(blockers)
-                report.append("RIPUP %s: section %s is blocked; %d laid pair(s) taken off the board (%s), this pair is laid again first and they follow" % (stem, failed, len(blockers), ", ".join(blockers)))
-                continue
             # 10 September 2026, measured both ways: ending the legs at an IC's escape vias instead of stripping the escape and
             # entering the pads lays 27 more of B19's 113 pairs and COSTS D10 two of its five, so it is not a mode to switch on.
             # It is a fallback: the pads are tried first, and a pair that fails is laid again ending at the vias.
@@ -2751,7 +2590,6 @@ def main(a):
                                  "" if _added >= abs(_d) - LEG_MATCH_TOL else " (the rest has no room)"))
         laid += 1; on_board[stem] = (list(pieces), list(stripped))
         report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
-    settle_episode()   # an episode that was still open at the end of the list is judged like any other
     if PLAN_MODE:
         _po = os.environ.get("PAIR_PLAN_OUT")
         if _po: json.dump(plan_out, open(_po, "w"))
@@ -2774,7 +2612,7 @@ def main(a):
     for r_, a_, c_ in sorted(_moved):
         print("pair_preroute: MOVED %s from (%.2f, %.2f) to (%.2f, %.2f)" % (r_, mm(a_[0]), mm(a_[1]), mm(c_[0]), mm(c_[1])))
     if _moved: print("pair_preroute: %d footprint(s) moved by this pass" % len(_moved))
-    print("pair_preroute: %d of %d pairs laid, %d rip-up event(s) -> %s" % (laid, n_pairs, rip_done[0], out))
+    print("pair_preroute: %d of %d pairs laid -> %s" % (laid, n_pairs, out))
     if END_FIT: print("pair_preroute: the end fit moved the approach into the pad %d time(s) (PAIR_END_FIT=0 to measure it off)" % _end_fit[0])
     print("pair_preroute: search kernel %s%s" % (_SEARCH_KERNEL, (", rasteriser fell back to the per-cell predicate %d time(s)" % _RASTER_FALLBACK[0]) if _RASTER_FALLBACK[0] else ""))
     # `_T["maps"]` already counted this and a second counter beside it would be one more pair of numbers to drift apart,

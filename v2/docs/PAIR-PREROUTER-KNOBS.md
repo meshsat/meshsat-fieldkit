@@ -118,3 +118,21 @@ to 9. A correctly coupled pair runs AT the class number on the inner-layer geome
 clearance test inside the candidate ladder refuses the tool's own design. The class number is judged exactly
 once, on the copper that was actually laid.
 
+
+
+## Removed 15 September 2026 (red team round four C3: a knob that lost is deleted with its section cited)
+
+| knob | measured | section |
+|---|---|---|
+| `PAIR_RIPUP`, `PAIR_RIP_MARGIN`, `PAIR_RIP_MAX`, `PAIR_RIP_TOTAL` | 29 of 113 against 38 without; as a trial, 106 episodes with none kept | 32.95, 32.98 |
+| `PAIR_END_STRICT` | 0 of 48: it removes 18 late rollbacks and lays nothing; `PAIR_END_FIT` answers what it reached for | 32.146 |
+| `PAIR_LEG_EXACT` | 47 of 113 either way: the rounding is real and worth no pairs | 32.128 |
+| `PAIR_LAYER_CHANGE_FIT` | costs 14 pairs | 32.185 |
+| `PAIR_SWAP_BOTH_SIDES` | refusing a swap for the other side costs D two of five pairs | 32.133 |
+| `PAIR_GRID_LONG`, `PAIR_LONG_MM`, `PAIR_PRESENT` | never measured; they belong to the negotiated router, which was measured and rejected | 32.103 |
+| `PAIR_STATION_OWN` | never measured | 32.131 |
+
+The knobs that stay unset by any board are the ones that WON and whose off position is how an arm measures them
+(`PAIR_OWN_CLEAR`, `PAIR_FOLD_TEST`, `PAIR_UNMERGE`, `PAIR_ENTRY_STRICT`, `PAIR_SWAP`, `PAIR_GAP_CUSHION`, `PAIR_CROSS_NET`,
+`PAIR_FAN_BACK`, `PAIR_VIA_CANDS`, `PAIR_LEG_MATCH`, `PAIR_LEG_MATCH_TOL`, `PAIR_MITRE_LIMIT`, `PAIR_STUB_EXPANSIONS`): the
+suite holds that a guard the record measured stays measurable.

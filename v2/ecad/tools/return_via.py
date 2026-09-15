@@ -85,13 +85,18 @@ def _plane_layers(b):
 
 
 def _reference(layer, cu, planes):
-    """The plane layer(s) a signal on `layer` references: the nearest plane layer in the stack, both when equidistant."""
-    i = cu.index(layer); best = None; refs = set()
+    """The plane layer a signal on `layer` references: the nearest plane layer in the stack OTHER than its own (a pour on
+    the track's own layer is beside it, not under it); when an inner plane and an outer pour are equidistant the inner
+    one is the reference (an inner plane is solid where an outer pour is cut by the tracks on it). On C18 the first
+    reading counted every outer ground pour as a plane and F.Cu referenced itself, so no via ever shared a plane."""
+    i = cu.index(layer); outer = {pcbnew.F_Cu, pcbnew.B_Cu}; best = None; refs = set()
     for L in planes:
+        if L == layer: continue
         d = abs(cu.index(L) - i)
         if best is None or d < best: best, refs = d, {L}
         elif d == best: refs.add(L)
-    return frozenset(refs)
+    inner = {L for L in refs if L not in outer}
+    return frozenset(inner or refs)
 
 
 def judge(b, path=None, radius=RETURN_MM):

@@ -58,9 +58,12 @@ def t_the_clearance_in_force_is_part_of_every_cache_key():
 
 
 def t_the_layer_change_test_is_registered_and_off():
+    """Until 15 September 2026 this held that the layer-change fit was registered as an experiment knob and off (it was
+    measured to cost 14 pairs, 32.185). A knob that lost is deleted with its section cited (red team round four C3), so the
+    rule now holds the opposite: the knob is gone from the registry, the source and the knob map records the removal."""
     reg = json.load(open(os.path.join(TOOLS, "agent", "knobs.json")))["knobs"]
-    assert "PAIR_LAYER_CHANGE_FIT" in reg, "the layer-change knob is not in the agent's registry"
-    assert reg["PAIR_LAYER_CHANGE_FIT"]["default"] == "0", "it is on by default and it costs 14 of B19's pairs"
+    assert "PAIR_LAYER_CHANGE_FIT" not in reg, "the deleted knob is back in the registry"
+    assert "PAIR_LAYER_CHANGE_FIT" not in open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read(), "the deleted knob is back in the source"
 
 
 def t_it_is_registered_and_documented():
