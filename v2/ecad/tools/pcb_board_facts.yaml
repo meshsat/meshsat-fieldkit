@@ -1,0 +1,260 @@
+# The product facts a rule's applicability is resolved against (MESHSAT-862, Phase A, 16 September 2026).
+#
+# DATA ABOUT THE PRODUCT, never about the gates. Read from the schematic and placement generators, the board
+# declarations and the stackup table on 16 September 2026; every entry is traceable to a file, and where the
+# tree contradicts itself the contradiction is recorded here rather than resolved silently, because a rule
+# that is applicable "depending on which file you read" is the shape this whole exercise exists to remove.
+#
+# Sources read for this file (Phase A source set):
+#   v2/ecad/tools/gen_sch_{a,b,c,d,e,p}.py, gen_pcb_{a,b,c,d,e,p}.py, gen_pcb_{a,b,c,d,e,p}3.py, gen_pcb_e5.py
+#   v2/ecad/tools/boards/*.json, stackup_write.py, intent.py, make_handoff.py, jlc-handfit.txt, panel1450.py
+#   v2/docs/V2-SPEC.md, OWNER-DECISIONS-2026-09-11.md, LAYER-DECISIONS-2026-09-11.md
+#
+# `interfaces` uses these names and no others, so a condition can be written against them:
+#   PCIE USB2 USB3 USBC_PD HDMI EPAPER ETHERNET POE SMBUS I2C SPI UART CAN AUDIO_ANALOG RF_TX RF_RX GNSS
+#   M2_SOCKET SIM IDC_RIBBON BLIND_MATE_RF SOLDER_LANDS
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+
+a:
+  title: PCB-A POWER + I/O
+  project: pcb-a-power
+  phase_declared: A36
+  outline_mm: [240, 160]
+  layers: 6
+  thickness_mm: 1.6
+  stackup: JLC06161H-3313
+  copper_outer_oz: 1
+  copper_inner_oz: 0.5
+  planes: [In1.Cu, In4.Cu]
+  routing_layers: [F.Cu, In2.Cu, In3.Cu, B.Cu]
+  has_tracks: true
+  interfaces: [USB2, USBC_PD, I2C, IDC_RIBBON, BLIND_MATE_RF, SOLDER_LANDS]
+  impedance_controlled: true
+  pair_classes: [USB]
+  max_rail_voltage_v: 54
+  max_rail_current_a: 18
+  energy_source: false          # carries the pack node, does not contain cells
+  carries_pack_node: true
+  fuses: [F1 25 A mini blade]
+  isolation_barrier: false
+  poe: sourcing                 # generates +54V_POE for B
+  rf_transmit: false            # pigtails only, no radio on this board
+  assembled_sides: [top, bottom]
+  hand_fitted: true
+  rails: 12
+  rails_declared_in_intent: 12
+  notes:
+    - "the checked-in out/pcb-a-power-intent.json is stale against gen_sch_a.py (it still names U2/U15/U16 as rail sources)"
+
+b:
+  title: PCB-B COMPUTE
+  project: pcb-b-compute
+  phase_declared: B19
+  outline_mm: [330, 200]
+  layers: 6
+  thickness_mm: 1.6
+  stackup: JLC06161H-3313
+  copper_outer_oz: 1
+  copper_inner_oz: 0.5
+  planes: [In1.Cu, In4.Cu]
+  routing_layers: [F.Cu, In2.Cu, In3.Cu, B.Cu]
+  has_tracks: true
+  interfaces: [PCIE, USB2, USB3, HDMI, ETHERNET, POE, I2C, SPI, UART, CAN, SMBUS, M2_SOCKET, SIM, GNSS,
+               RF_TX, RF_RX, IDC_RIBBON]
+  impedance_controlled: true
+  pair_classes: [USB, DIFF100]
+  pcie_lanes: 9
+  max_rail_voltage_v: 54
+  max_rail_current_a: 21
+  energy_source: false
+  carries_pack_node: false
+  coin_cell: true
+  fuses: [F1 2 A polyfuse, F2 0.5 A, F3 0.5 A]
+  isolation_barrier: true       # H5007NL Ethernet magnetics on the wall port, the only galvanic barrier in the product
+  poe: sourcing                 # TPS23861 PSE, 802.3at, 100 V FET
+  rf_transmit: true             # LoRa 1 W, two CC2652P, 5G module, Iridium, LimeSDR
+  assembled_sides: [top, bottom]
+  hand_fitted: true
+  rails: 4
+  rails_declared_in_intent: 4
+  notes:
+    - "many local rails carry no intent entry (KSZ cores, per-slot 1.0/1.1/3.3 V, device sub-rails): dc_drop judges only declared rails"
+    - "pcb-b-compute.kicad_pro ships USB and DIFF100 at 0.10 mm clearance, below the board's own 0.127 minimum"
+    - "PCIE*, NVME*, CARD* are mapped to the 90 ohm USB class; PCIe and M.2 ask for 85 ohm"
+
+c:
+  title: PCB-C CONTROL PANEL BACKER
+  project: pcb-c-display
+  phase_declared: C18
+  outline_mm: [344, 228]
+  outline_shape: ring           # 240 x 176 void for the monitor and the plate window
+  layers: 4
+  thickness_mm: 1.6
+  stackup: JLC04161H-7628
+  copper_outer_oz: 1
+  copper_inner_oz: 0.5
+  planes: [In1.Cu]
+  routing_layers: [F.Cu, In2.Cu, B.Cu]
+  has_tracks: true
+  interfaces: [USB2, EPAPER, I2C, SPI, IDC_RIBBON, SOLDER_LANDS]
+  impedance_controlled: false   # its one USB pair is declared with no target: RP2040 full speed
+  pair_classes: [USB]
+  max_rail_voltage_v: 5
+  max_rail_current_a: 1
+  energy_source: false
+  carries_pack_node: false
+  fuses: []
+  isolation_barrier: false
+  poe: none
+  rf_transmit: false
+  assembled_sides: [top, bottom]
+  hand_fitted: true
+  rails: 1
+  rails_declared_in_intent: 1
+  panel_face: true              # the only board that is part of the sealed face
+  notes:
+    - "In2 carries 55 percent of the routing, so a back-side track references a cut pour: decision 27"
+
+d:
+  title: PCB-D APRS
+  project: pcb-d-aprs
+  phase_declared: D12
+  outline_mm: [100, 80]
+  layers: 4
+  thickness_mm: 1.6
+  stackup: JLC04161H-7628
+  copper_outer_oz: 1
+  copper_inner_oz: 0.5
+  planes: [In1.Cu, In2.Cu]      # In2 became a ground plane on 15 September (decision 27's measurement)
+  routing_layers: [F.Cu, B.Cu]
+  has_tracks: true
+  interfaces: [USB2, I2C, UART, AUDIO_ANALOG, RF_TX, RF_RX, IDC_RIBBON]
+  impedance_controlled: true
+  pair_classes: [USB]
+  rf_power_w: 30                # the external RA30H1317M1 PA keyed from this board
+  rf_band_mhz: 145
+  max_rail_voltage_v: 5
+  max_rail_current_a: 2
+  energy_source: false
+  carries_pack_node: false
+  fuses: []
+  isolation_barrier: false
+  poe: none
+  rf_transmit: true
+  assembled_sides: [top, bottom]
+  hand_fitted: true
+  rails: 1
+  rails_declared_in_intent: 1
+  notes:
+    - "the only board that keys a transmitter: KEY = any PTT AND TX_INHIBIT_n, PA_KEY = KEY AND PA_EN"
+
+e:
+  title: PCB-E1 DOCK STRIP
+  project: pcb-e1-dock
+  phase_declared: E11
+  outline_mm: [267, 68]
+  layers: 4
+  thickness_mm: 1.6
+  stackup: JLC04161H-7628
+  copper_outer_oz: 1
+  copper_inner_oz: 0.5
+  planes: [In1.Cu]
+  routing_layers: [F.Cu, In2.Cu, B.Cu]
+  has_tracks: true
+  interfaces: [USB2, SMBUS, I2C, SPI, BLIND_MATE_RF, SOLDER_LANDS]
+  impedance_controlled: false
+  pair_classes: [USB]
+  max_rail_voltage_v: 36        # vehicle and shore input 9 to 36 V; solar panel about 22 V Voc
+  max_rail_current_a: 18
+  energy_source: false
+  carries_pack_node: true
+  fuses: [F3 25 A pack, F1 10 A vehicle, F2 10 A solar]
+  isolation_barrier: false      # the isolated TRACO of E4 was removed; the vehicle return joins kit ground
+  poe: none
+  rf_transmit: false
+  assembled_sides: [top, bottom]
+  hand_fitted: true
+  rails: 2
+  rails_declared_in_intent: 2
+  notes:
+    - "In2 carries CELL_F, VIN_RAW, PV_P and TRK_OUT as power pours plus a ground fill added 15 September"
+    - "PV_P, TRK_OUT, +5V_E6 and +3V3_E6 carry no intent entry"
+
+e5:
+  title: PCB-E5 DOCK BLOCK
+  project: pcb-e5-block
+  phase_declared: E5
+  outline_mm: [43, 26]
+  layers: 2
+  thickness_mm: 1.6
+  stackup: 2L-2oz
+  copper_outer_oz: 2
+  planes: []
+  routing_layers: [F.Cu, B.Cu]
+  interfaces: [SOLDER_LANDS]
+  impedance_controlled: false
+  pair_classes: []
+  has_schematic: false
+  has_tracks: false             # a bare contact interposer: no routed copper at all
+  max_rail_voltage_v: 14.4
+  max_rail_current_a: 10
+  energy_source: false
+  carries_pack_node: true
+  fuses: []
+  isolation_barrier: false
+  poe: none
+  rf_transmit: false
+  assembled_sides: [top]
+  hand_fitted: true
+  rails: 0
+  rails_declared_in_intent: 0
+  notes:
+    - "no schematic and no netlist: its nets are copied from A's board by pin position"
+
+p:
+  title: PCB-P PACK BMS
+  project: pcb-p-pack
+  phase_declared: P5
+  outline_mm: [70, 44]
+  layers: 2
+  thickness_mm: 1.6
+  stackup: 2L-2oz
+  copper_outer_oz: 2
+  planes: []
+  routing_layers: [F.Cu, B.Cu]
+  has_tracks: true
+  interfaces: [SMBUS, SOLDER_LANDS]
+  impedance_controlled: false
+  pair_classes: []
+  max_rail_voltage_v: 14.4
+  max_rail_current_a: 18
+  energy_source: true           # THE battery board: 4S block, about 200 Wh
+  carries_pack_node: true
+  cells_series: 4
+  pack_energy_wh: 200
+  fuses: [F1 25 A mini blade]
+  protection_fets: 2            # CSD17570Q5B in series, common drain, BQ4050 CHG/DSG
+  gauge: BQ4050
+  isolation_barrier: false
+  poe: none
+  rf_transmit: false
+  assembled_sides: [top]
+  hand_fitted: true
+  rails: 3
+  rails_declared_in_intent: 3
+  notes:
+    - "the power path never travels in router tracks: locked 2 oz bands on both layers with stitch vias"
+
+# Product-level facts, for rules whose applicability is about the kit rather than one board.
+_product:
+  enclosure: Peli 1450 with a 3 mm aluminium face plate, sealed, no vent opening anywhere
+  ingress_claim: IP67-class construction, untested; never labelled IP68
+  operating_modes: [lid open full power, lid closed reduced, blackout, NVG, EMCON]
+  environment: field portable, unconditioned, vehicle transport; no temperature range ruled yet
+  energy_chain: "cells (P) -> XT60 -> E (F3 25 A) -> 12 AWG -> e5 (four 9 A targets) -> A (F1 25 A) -> everything"
+  galvanic_barriers: 1          # B's H5007NL on the wall Ethernet port
+  above_48v: [a, b]             # +54V_POE only
+  transmitters: [b, d]
+  prototype_built: false        # nothing has been fabricated or powered

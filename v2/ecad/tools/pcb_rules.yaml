@@ -1,0 +1,1840 @@
+# THE PCB RULE REGISTRY (MESHSAT-862, owner instruction of 16 September 2026).
+#
+# This file is canonical. `v2/docs/PCB-GOLDEN-RULES.md` and every coverage, gap and board-status document are
+# GENERATED from it by rules_render.py; nothing else is an authority, and a hand-edited document fails the suite.
+# rules_lib.py is the only reader. rules_status.py computes each board's result. Every gate names the rule ids
+# it decides, so a gate with no rule id, and a rule with no verification, are both visible.
+#
+# Phase A (16 September 2026) wrote the candidate catalogue from product and vendor sources BEFORE the existing
+# gates were opened, to keep the catalogue from being a description of what the tools already do. The Phase A
+# source set and what was deliberately NOT read are recorded in `phase_a` below. Maturity is UNASSESSED until
+# Phase B maps each rule to its implementation and its evidence.
+#
+# Honesty rules this file enforces on itself (rules_lib.validate):
+#   * a HEURISTIC may not be a BLOCKER;
+#   * a BLOCKER whose source is unverified must carry maturity SOURCE_UNVERIFIED or OWNER_DECISION_REQUIRED,
+#     so "we block on this" and "we cannot cite this" are never both invisible;
+#   * a CONDITIONAL rule carries a machine-readable condition over pcb_board_facts.yaml, never prose;
+#   * a VERIFIED source names title, issuer and a path or URL that resolves.
+
+schema_version: "1.0.0"
+registry_version: "2026-09-16.1"
+manifest:
+  boards: [a, b, c, d, e, e5, p]
+  manifest_version: "2026-09-16.1"
+
+phase_a:
+  read:
+    - v2/docs/V2-SPEC.md, TEST-PLAN.md, PANEL.md, ASSEMBLY.md, ARCH-PCB-B-IOHA.md
+    - v2/docs/OWNER-DECISIONS-2026-09-11.md, LAYER-DECISIONS-2026-09-11.md
+    - v2/ecad/tools/gen_sch_*.py, gen_pcb_*.py, gen_pcb_*3.py, boards/*.json, stackup_write.py, intent.py
+    - v2/vendor/ (cm5, cluster, microchip, ti, quectel, weact, peli, rf, switches, m2, battery, seals)
+    - the fabricator's published capability page as filed in v2/vendor/seals/
+  not_read_in_phase_a:
+    - the gate implementations (check_pcb_*.py, intent_checks.py, return_via.py, dc_drop.py, impedance_check.py,
+      verify_deliverable.py, final_gate.py, hardset.py and the rest of tools/), so the catalogue is not a
+      description of the tools
+  claim: >
+    These files were read and those were not. This is not a claim that the catalogue was written blind: the
+    author of this registry has worked on the tools, and the only defence against that is the source column,
+    which is why a rule with no authority is marked SOURCE_UNVERIFIED rather than presented as settled.
+
+# ---------------------------------------------------------------------------------------------------------
+# 1. PRODUCT ENVELOPE
+# ---------------------------------------------------------------------------------------------------------
+rules:
+ - id: ENV-001
+   domain: PRODUCT_ENVELOPE
+   short_name: operating envelope declared
+   requirement: >
+     The product's electrical envelope, environmental limits, operating modes, expected life and foreseeable
+     misuse are written down and dated, and every derating, spacing, thermal and reliability rule resolves its
+     numbers against that declaration rather than against an assumption.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [SAFETY, RELIABILITY, DOCUMENTATION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     A dated envelope document exists naming, at minimum: ambient temperature range in use and in storage,
+     humidity and ingress expectation, altitude, vibration and shock expectation, input voltage ranges, the
+     defined operating modes, and the single-fault conditions the design is expected to survive. Every rule in
+     this registry whose limit depends on one of those numbers cites it.
+   rationale: >
+     Derating, creepage, current capacity and thermal limits are all functions of the envelope. Without a
+     declared envelope each rule silently picks its own, and two rules can then contradict each other while
+     both look satisfied.
+   failure_mode: >
+     A board qualified at a bench temperature fails in a vehicle in summer; a spacing chosen for pollution
+     degree 2 sits in a kit carried through rain.
+   verification_method: [MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version, rule_set_fingerprint]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: ENV-002
+   domain: PRODUCT_ENVELOPE
+   short_name: no claim without a test
+   requirement: >
+     No environmental or protection rating is claimed in any public or shipped document unless the test that
+     establishes it has been run and recorded.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [DOCUMENTATION, SAFETY]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Every rating word in README, BUILD, ASSEMBLY, the release notes and the order paperwork is either
+     accompanied by the test record that establishes it, or is written as an intent ("designed to", "untested").
+   rationale: "An ingress or environmental claim is a promise to whoever carries the kit."
+   failure_mode: "A kit is trusted in conditions nobody tested it in."
+   verification_method: [SCRIPT, MANUAL_REVIEW]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+# ---------------------------------------------------------------------------------------------------------
+# 2. SCHEMATIC INTEGRITY
+# ---------------------------------------------------------------------------------------------------------
+ - id: SCH-001
+   domain: SCHEMATIC_INTEGRITY
+   short_name: ERC clean or explained
+   requirement: >
+     The schematic passes electrical rule checking with no error-severity violation that is not individually
+     explained in writing.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_schematic, op: ne, value: false}
+   risk_class: [ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: "Zero error-severity ERC violations, or each one covered by an allow entry carrying a reason."
+   rationale: "An unconnected or conflicting pin is the cheapest defect to find and the most expensive to find later."
+   failure_mode: "A driver contention or a floating enable ships."
+   verification_method: [ERC]
+   verification_phase: SCHEMATIC
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, tools_tree_sha, kicad_build]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "a written reason per allowed violation",
+                   scope: "one violation on one board", expiry: "the next schematic regeneration",
+                   residual_risk: "the reason is the only thing standing behind it"}
+   maturity: UNASSESSED
+
+ - id: SCH-002
+   domain: SCHEMATIC_INTEGRITY
+   short_name: board matches its netlist
+   requirement: >
+     The board being judged is the board that was placed from the schematic being shipped: every component,
+     every net and every pin connection agrees between the netlist and the board file.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_schematic, op: ne, value: false}
+   risk_class: [ELECTRICAL_FUNCTION, DOCUMENTATION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Three comparisons, each with its denominator: every netlist component is on the board, every board
+     footprint carrying a net is in the netlist, and every net's pin set agrees. KiCad's synthetic
+     unconnected-pin placeholders are not nets on either side.
+   rationale: >
+     A stale netlist makes every downstream gate judge a design nobody is building. It has happened here: a
+     comment swallowed three resistors and the board placed, routed and passed every gate three parts short.
+   failure_mode: "A board is fabricated from a schematic that no longer describes it."
+   verification_method: [SCRIPT]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, schematic_sha256, stage, tools_tree_sha]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: SCH-003
+   domain: SCHEMATIC_INTEGRITY
+   short_name: cross-board contracts
+   requirement: >
+     Every signal that leaves one board and arrives on another agrees at both ends: pin for pin on the
+     connector, in name, in direction, and in the number of drivers.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {any: [{fact: interfaces, op: contains, value: IDC_RIBBON},
+                     {fact: interfaces, op: contains, value: SOLDER_LANDS}]}
+   risk_class: [ELECTRICAL_FUNCTION, SAFETY]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Every declared contract passes on the netlists of the boards in the manifest; a board whose netlist is
+     absent makes the check INCONCLUSIVE, never passing.
+   rationale: >
+     No single-board gate can see a contract. The EMCON line was once wired as a ring oscillator with its
+     polarity inverted between two boards, and each board's own gate passed.
+   failure_mode: "Asserting a safety line enables the thing it is meant to inhibit."
+   verification_method: [SCRIPT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, e5, p]
+   interfaces_affected: [IDC_RIBBON, SOLDER_LANDS]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, manifest_version, tools_tree_sha]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: SCH-004
+   domain: SCHEMATIC_INTEGRITY
+   short_name: a safety line fails safe
+   requirement: >
+     Every line whose assertion inhibits a hazard (transmit inhibit, zeroize, shore inhibit, kill) is designed
+     so that a disconnected cable, an unpowered board or a missing module leaves the system in the safe state.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {any: [{fact: rf_transmit, op: truthy}, {fact: carries_pack_node, op: truthy}]}
+   risk_class: [SAFETY, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     For each such line: the pull direction, the driver count and the behaviour with the far board absent are
+     stated and verified on the netlist; the safe state is the unpowered state.
+   rationale: "A hardware inhibit that depends on a cable being present is not an inhibit."
+   failure_mode: >
+     The panel is unplugged and the transmitter is enabled; or ZEROIZE is asserted and nothing wipes, which is
+     the state recorded in the 9 September review and still open.
+   verification_method: [SCRIPT, MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d]
+   interfaces_affected: [IDC_RIBBON]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, manifest_version]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+# ---------------------------------------------------------------------------------------------------------
+# 3. COMPONENT SELECTION AND DERATING   4. LIFECYCLE AND SUPPLY
+# ---------------------------------------------------------------------------------------------------------
+ - id: CMP-001
+   domain: COMPONENT_SELECTION
+   short_name: absolute maximum never reached
+   requirement: >
+     No component is operated at or above any absolute maximum rating of its datasheet under any declared
+     operating mode, including startup, shutdown, hot-plug and the single-fault conditions the envelope names.
+   classification: COMPONENT_REQUIREMENT
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [SAFETY, RELIABILITY, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     For every part on a net whose nominal voltage exceeds 80 percent of the part's rating, and for every part
+     in a current path above 1 A, a recorded comparison of the applied stress against the datasheet maximum,
+     citing the datasheet page. Capacitor DC bias derating is applied to every MLCC used for energy storage
+     or filtering.
+   rationale: >
+     A 50 V capacitor on a 54 V output is not a margin question, it is a wrong part; the tree carried exactly
+     that on the PoE stage until owner ruling 10.
+   failure_mode: "A part fails short on the bench or in the field, often taking the stage with it."
+   verification_method: [SCRIPT, MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: CMP-002
+   domain: COMPONENT_SELECTION
+   short_name: the package on the land is the package ordered
+   requirement: "Every part's ordered package matches the land pattern it is placed on."
+   classification: COMPONENT_REQUIREMENT
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [ASSEMBLY, ELECTRICAL_FUNCTION, SUPPLY_CHAIN]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Every BOM row's ordering code is checked against the supplier's own record for package, and the package
+     agrees with the footprint the board places, with the check dated.
+   rationale: >
+     A TSSOP-38 order code sat on a QFN-38 land here, and a footprint key in a generator is a claim about a
+     package that nothing checked for four board phases.
+   failure_mode: "The assembler places a part that cannot solder to the land, or solders a wrong die."
+   verification_method: [SCRIPT, VENDOR_CONFIRMATION]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [bom_sha256, certification_date, manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "a written purchase route for a hand-fitted part",
+                   scope: "one designator on one board", expiry: "the next BOM export",
+                   residual_risk: "the part is fitted by hand and is not machine-verified"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: SUP-001
+   domain: LIFECYCLE_SUPPLY
+   short_name: every placed part is buyable
+   requirement: >
+     Every part the assembler is asked to place is available in the quantity the order needs, at the time of
+     the order, or is declared hand-fitted with a written purchase route.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [SUPPLY_CHAIN, ASSEMBLY]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Every BOM row is CERTIFIED against the supplier's live catalogue with its stock at a recorded date, or
+     HAND_FIT with a route, or BENCH_FITTED and excluded from the placement file.
+   rationale: "Stock of three against a need of five is a schedule risk that must be seen before the order, not after."
+   failure_mode: "An order is placed that cannot be assembled."
+   verification_method: [SCRIPT, VENDOR_CONFIRMATION]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [bom_sha256, certification_date]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "a purchase route", scope: "one part",
+                   expiry: "the order", residual_risk: "a hand-fitted part is a build step and a lead time"}
+   maturity: UNASSESSED
+
+# ---------------------------------------------------------------------------------------------------------
+# 5. POWER TREE   6. DECOUPLING   7. POWER INTEGRITY
+# ---------------------------------------------------------------------------------------------------------
+ - id: PWR-001
+   domain: POWER_TREE
+   short_name: every rail is declared with its loads
+   requirement: >
+     Every rail on the board is declared with its nominal voltage, its typical and peak current, its source,
+     its drop budget and the loads that draw it; a rail that exists in copper and not in the declaration is a
+     rail nothing judges.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [POWER_INTEGRITY, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The count of rails in the board's intent declaration equals the count of distinct power nets carrying
+     more than a declared threshold current on the board, and every declared rail names where its current goes.
+   rationale: >
+     The drop and density checks judge only declared rails. B's per-slot cores and E's downstream rails carry
+     no declaration today, so nothing has ever measured them.
+   failure_mode: "A rail droops or overheats and no check ever looked at it."
+   verification_method: [SCRIPT]
+   verification_phase: SCHEMATIC
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, tools_tree_sha]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the measured current of the undeclared rail",
+                   scope: "one rail", expiry: "the next schematic regeneration",
+                   residual_risk: "an undeclared rail is unmeasured"}
+   maturity: UNASSESSED
+
+ - id: PWR-002
+   domain: POWER_TREE
+   short_name: sequencing and inrush
+   requirement: >
+     The order in which rails come up and go down is defined, and every rail's inrush, hot-plug and
+     back-powering behaviour is bounded by design rather than by luck.
+   classification: COMPONENT_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {fact: rails, op: ge, value: 2}
+   risk_class: [ELECTRICAL_FUNCTION, RELIABILITY, SAFETY]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A written sequencing statement per board naming, for each rail, what enables it, what it depends on, the
+     inrush limit and the device requirement it satisfies (for example a module's rail-order requirement).
+   rationale: "Modules with multiple supplies latch up or brown out when their rails arrive in the wrong order."
+   failure_mode: "A module fails to boot intermittently, or draws current through a protection diode at startup."
+   verification_method: [MANUAL_REVIEW, SIMULATION]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the device requirement being met another way",
+                   scope: "one rail", expiry: "prototype validation", residual_risk: "startup behaviour is untested"}
+   maturity: UNASSESSED
+
+ - id: PWR-003
+   domain: POWER_TREE
+   short_name: protection coordination
+   requirement: >
+     Every fuse, eFuse, ideal diode and protection device is coordinated with what it protects: the clearing
+     characteristic sits below the damage characteristic of the weakest element downstream and above the
+     worst legitimate current.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {any: [{fact: fuses, op: truthy}, {fact: carries_pack_node, op: truthy}]}
+   risk_class: [SAFETY, RELIABILITY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     For each protective element: the rated and peak current of the path, the element's rating and clearing
+     curve reference, the fault current available at that point, and the element downstream it is protecting.
+   rationale: >
+     Four boards sit on one energy chain from the cells with two 25 A blades on it; a fuse that never opens
+     before the conductor does is decoration.
+   failure_mode: "A short in the kit is cleared by a track or a connector instead of by the fuse."
+   verification_method: [CALCULATION, MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, e, e5, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, manifest_version]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: DEC-001
+   domain: DECOUPLING
+   short_name: decoupling loop area
+   requirement: >
+     Every decoupling capacitor forms a loop with the pin it serves and its return that is small enough for
+     the frequencies that pin's current actually contains.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [POWER_INTEGRITY, EMC, SIGNAL_INTEGRITY]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Each declared decoupling entry states its pin, its distance, its via count and the loop it forms; an
+     entry beyond the declared distance carries a written reason. The distance itself is derived per device
+     from the current's spectral content, not taken as one project-wide number.
+   rationale: >
+     Loop inductance, not capacitance, decides high-frequency decoupling. The project's present 3 mm number is
+     a heuristic and is recorded as one.
+   failure_mode: "Rail collapse at switching edges, radiated emissions, and marginal digital timing."
+   verification_method: [SCRIPT, CALCULATION]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage, schematic_sha256]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the loop the part actually forms",
+                   scope: "one capacitor", expiry: "the next placement", residual_risk: "measured at prototype"}
+   maturity: UNASSESSED
+
+ - id: PI-001
+   domain: POWER_INTEGRITY
+   short_name: conductor current capacity
+   requirement: >
+     Every conductor carrying a rail's current is wide enough, in the copper weight it is actually built in,
+     to carry that current within the temperature rise the envelope allows, judged on the narrowest piece of
+     copper that carries a meaningful share of the current.
+   classification: STANDARD
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [SAFETY, THERMAL, RELIABILITY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources:
+    - {title: "IPC-2221 generic standard on printed board design, current-carrying capacity charts",
+       issuer: IPC, revision: "unknown to this tree", clause: "current capacity charts",
+       url_or_path: "NOT IN THIS TREE", accessed: ""}
+    - {title: "IPC-2152 standard for determining current-carrying capacity", issuer: IPC,
+       revision: "unknown to this tree", clause: "", url_or_path: "NOT IN THIS TREE", accessed: "",
+       note: "the modern replacement for the IPC-2221 charts; this project has never considered it"}
+   acceptance_criteria: >
+     For every declared rail: the narrowest conductor carrying above a declared share of the rail current,
+     its cross-section computed from the board's own stackup copper weight, and the resulting temperature rise
+     against the envelope's limit. The limit and the standard edition are cited.
+   rationale: >
+     The project's density check was lenient by up to 98 percent for two weeks and twelve rails on four boards
+     exceeded the published limit while every one read MET, because the verdict was taken on voltage drop.
+   failure_mode: "A track runs hot, its resin degrades, and the failure is progressive rather than sudden."
+   verification_method: [SCRIPT, CALCULATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, stage, tools_tree_sha, rule_set_fingerprint]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: PI-002
+   domain: POWER_INTEGRITY
+   short_name: rail voltage drop
+   requirement: "Every rail arrives at its loads inside the drop budget declared for it."
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [POWER_INTEGRITY, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     A resistive solve of the filled board from source pad to every load pad at the declared peak current,
+     reported as millivolts and as a percentage against the rail's own budget, with the solver's residual
+     checked before the number is read.
+   rationale: "A rail that droops at peak is a brown-out that only appears under load."
+   failure_mode: "A module resets when a transmitter keys."
+   verification_method: [SCRIPT, CALCULATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage, tools_tree_sha]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the measured drop and the load's own tolerance",
+                   scope: "one rail on one board", expiry: "prototype measurement",
+                   residual_risk: "the load's behaviour at the low end is untested"}
+   maturity: UNASSESSED
+
+ - id: PI-003
+   domain: POWER_INTEGRITY
+   short_name: via current capacity
+   requirement: >
+     Every via carrying rail current is counted and rated: the number of vias at a layer transition carries
+     the rail's peak current within the same temperature rise the conductor rule allows.
+   classification: STANDARD
+   applicability: CONDITIONAL
+   condition: {all: [{fact: has_tracks, op: truthy}, {fact: layers, op: ge, value: 4}]}
+   risk_class: [THERMAL, RELIABILITY, SAFETY]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     For each rail transition: via count, barrel cross-section from the plating thickness the fabricator
+     quotes, current per via and the total against the rail's peak.
+   rationale: "A 0.4 mm barrel carries about an ampere; a 10 A rail crossing on three vias is a heater."
+   failure_mode: "Barrel cracking and progressive resistance rise at the transition."
+   verification_method: [SCRIPT, CALCULATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, stage]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the measured count and the plating spec",
+                   scope: "one transition", expiry: "the next route", residual_risk: "thermal, not functional"}
+   maturity: UNASSESSED
+
+# ---------------------------------------------------------------------------------------------------------
+# 8. GROUNDING AND SHIELDING   9. STACKUP   10. RETURN PATH
+# ---------------------------------------------------------------------------------------------------------
+ - id: GND-001
+   domain: GROUNDING_SHIELDING
+   short_name: one deliberate ground system
+   requirement: >
+     The board's ground system is deliberate: every partition, moat or separate ground is there for a written
+     reason, and every conductor crossing between them does so at a defined point.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [EMC, SIGNAL_INTEGRITY, SAFETY]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Either the board has one ground and says so, or every partition is drawn deliberately with its crossing
+     points named and the signals that cross listed.
+   rationale: "An accidental split is the commonest cause of a return path taking the long way round."
+   failure_mode: "Radiated emissions, coupled noise into analogue nodes, and common-mode current on cables."
+   verification_method: [SCRIPT, MANUAL_REVIEW]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the written partition reason", scope: "one board",
+                   expiry: "the next placement", residual_risk: "EMC behaviour is untested until pre-compliance"}
+   maturity: UNASSESSED
+
+ - id: GND-002
+   domain: GROUNDING_SHIELDING
+   short_name: chassis and cable-shield strategy
+   requirement: >
+     How signal ground meets the metal of the enclosure, and what happens to every cable shield entering or
+     leaving the kit, is decided once and implemented the same way everywhere.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {any: [{fact: panel_face, op: truthy}, {fact: interfaces, op: contains, value: BLIND_MATE_RF},
+                     {fact: interfaces, op: contains, value: ETHERNET}]}
+   risk_class: [EMC, SAFETY]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A written chassis-bond statement: which points bond, through what impedance, and the intended path for
+     electrostatic discharge and for cable-borne common-mode current.
+   rationale: "Eleven coaxial jacks and a metal face plate make the enclosure part of the circuit whether it is designed or not."
+   failure_mode: "Discharge current finds a path through a signal return; the kit fails an ESD test at a connector."
+   verification_method: [MANUAL_REVIEW]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: HUMAN_OR_LAB_ONLY
+   boards_affected: [a, b, c, e]
+   interfaces_affected: [BLIND_MATE_RF, ETHERNET, USBC_PD]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the written strategy", scope: "the kit",
+                   expiry: "pre-compliance testing", residual_risk: "untested until a chamber sees it"}
+   maturity: UNASSESSED
+
+ - id: STK-001
+   domain: STACKUP
+   short_name: the stackup is declared, feasible and in the board
+   requirement: >
+     The board file carries the stackup it will be built on, that stackup is one the chosen fabricator builds,
+     and every impedance, current and spacing rule resolves against it rather than against a default.
+   classification: FAB_LIMIT
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [FABRICATION, SIGNAL_INTEGRITY, POWER_INTEGRITY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources:
+    - {title: "fabricator PCB capability page", issuer: "the selected fabricator", revision: "scraped 4 September 2026",
+       clause: "", url_or_path: "v2/vendor/seals/jlcpcb-pcb-capabilities-page.txt",
+       accessed: "2026-09-04",
+       note: "the scrape contains no capability data: the page requires JavaScript. The stackup names and
+              dielectric numbers in stackup_write.py are therefore unpinned."}
+   acceptance_criteria: >
+     The board's copper layer count, thickness, per-layer copper weight and dielectric constants are present
+     in the board file and match a named, dated fabricator stackup; the order paperwork names the same one.
+   rationale: "Every impedance and current number is a function of the stack; an unstated stack makes them all unfounded."
+   failure_mode: "Boards arrive on a different stack and the controlled impedances are wrong."
+   verification_method: [SCRIPT, VENDOR_CONFIRMATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, vendor_capability_revision]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: STK-002
+   domain: STACKUP
+   short_name: a layer count is decided and costed
+   requirement: >
+     Every board's layer count carries its own written decision: the measurement that forced it and the cost
+     it adds. A stackup is never inherited from a sibling board and never promoted silently when a route fails.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [DOCUMENTATION, FABRICATION, SUPPLY_CHAIN]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     For each board: a dated decision naming the measurement (a route at the lower count, or a requirement the
+     lower count cannot meet) and the price difference from the fabricator.
+   rationale: >
+     Four layers entered this project as a first board's default and was copied; two promotions to six were
+     session decisions recorded inside an owner rulings list. The layer count is a reserved class.
+   failure_mode: "The kit is built on more copper than it needs, or on less than it needs, and nobody can say which."
+   verification_method: [MANUAL_REVIEW, VENDOR_CONFIRMATION]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version, vendor_quote_date]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: OWNER_DECISION_REQUIRED
+
+ - id: RET-001
+   domain: RETURN_PATH
+   short_name: a continuous adjacent return path
+   requirement: >
+     Every signal's return current has a continuous, low-impedance path adjacent to its outgoing conductor for
+     the whole of the conductor's length, adequate for the spectral content that signal's edge rate produces.
+     Adequacy is judged from edge rate, electrical length, the reference structures the signal actually runs
+     over, the discontinuities it crosses and the interface's own requirement, not from a single geometric
+     proxy.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [SIGNAL_INTEGRITY, EMC]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Every signal net is classified by edge rate and electrical length. For each class, the adequacy criterion
+     is stated (for a fast edge: an uninterrupted reference plane on an adjacent layer for the length of the
+     run, with every reference change accompanied by a return transition; for a slow edge: a return path whose
+     loop area is bounded). Each net is then judged against its own class's criterion, with the classification
+     recorded.
+   rationale: >
+     Return current flows under its conductor at high frequency and takes the lowest-resistance path at low
+     frequency. What must be continuous is the RETURN, and what makes a discontinuity matter is the current's
+     spectrum, not the existence of copper on a neighbouring layer.
+   failure_mode: >
+     Radiated emission from an enlarged loop, crosstalk into neighbouring nets, reflections at the
+     discontinuity, and common-mode conversion on differential pairs.
+   verification_method: [SCRIPT, CALCULATION, MANUAL_REVIEW]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [PCIE, USB2, USB3, HDMI, ETHERNET, RF_TX, RF_RX]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, stage, rule_set_fingerprint, tools_tree_sha]
+   owner: OWNER
+   waiver_policy: {allowed: true, authority: OWNER,
+                   evidence: "the edge rate, the loop the signal actually forms and why it is acceptable here",
+                   scope: "one net class on one board", expiry: "prototype EMC measurement",
+                   residual_risk: "emission and coupling are unmeasured until a chamber sees the kit"}
+   maturity: OWNER_DECISION_REQUIRED
+
+ - id: RET-002
+   domain: RETURN_PATH
+   short_name: plane-adjacency screen
+   requirement: >
+     As a screening test for RET-001, the fraction of each signal net's track length that has no filled
+     reference zone on an adjacent layer is measured and reported, and a net above the screening threshold is
+     examined against RET-001 rather than failed outright.
+   classification: HEURISTIC
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [SIGNAL_INTEGRITY, EMC]
+   release_effect: MUST_JUSTIFY
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The screen reports, per net: total track length, uncovered length, the runs that make it up, and what
+     sits on the neighbouring layers at each run. The present threshold, the larger of 10 mm or 5 percent, is
+     a calibration against one board's measured behaviour and is recorded as such, not as a limit from an
+     authority.
+   rationale: >
+     The screen is cheap, mechanical and finds real discontinuities. It is not a law: it counts a net's own
+     via anti-pads as uncovered, which is how D and E read 11 and 9 nets over while their reference structure
+     is continuous everywhere a signal actually runs.
+   failure_mode: >
+     Used as a law it refuses good boards (false positives at every via) and passes bad ones (a covered net
+     whose reference changes layer with no return transition).
+   verification_method: [SCRIPT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, stage, tools_tree_sha, sample_pitch_mm]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the RET-001 judgement for the net",
+                   scope: "one net", expiry: "the next route", residual_risk: "none: it is a screen"}
+   maturity: UNASSESSED
+
+ - id: RET-003
+   domain: RETURN_PATH
+   short_name: return transition at a reference change
+   requirement: >
+     Where a signal changes layer and its reference conductor changes with it, a return path for that
+     transition exists: a via between the two reference conductors when they are different nets at the same
+     potential, a stitching capacitor when they are different potentials, or no transition at all.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {all: [{fact: has_tracks, op: truthy}, {fact: layers, op: ge, value: 4}]}
+   risk_class: [SIGNAL_INTEGRITY, EMC]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     For each signal via, the reference conductor before and after the transition is determined. A transition
+     that does not change the reference needs nothing. A transition that changes it carries a return path
+     whose form is stated and whose position is close enough for the signal's spectral content.
+   rationale: >
+     The discontinuity is the reference CHANGE, not the via. A via between two layers that share one reference
+     plane needs no companion; a via that moves a signal from one plane's field to another's does.
+   failure_mode: "The return current detours around the anti-pad or through a decoupling capacitor, enlarging the loop."
+   verification_method: [SCRIPT, CALCULATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e]
+   interfaces_affected: [PCIE, USB2, USB3, HDMI, ETHERNET]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, stage, rule_set_fingerprint]
+   owner: OWNER
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the reference structure at the transition",
+                   scope: "one class of transition on one board", expiry: "prototype EMC measurement",
+                   residual_risk: "unmeasured until a chamber sees it"}
+   maturity: OWNER_DECISION_REQUIRED
+
+ - id: RET-004
+   domain: RETURN_PATH
+   short_name: ground-via proximity screen
+   requirement: >
+     As a screening test for RET-003, every signal via outside a fine-pitch escape fan is measured for the
+     distance to the nearest ground via, and a via beyond the screening distance is examined against RET-003
+     rather than failed outright.
+   classification: HEURISTIC
+   applicability: CONDITIONAL
+   condition: {all: [{fact: has_tracks, op: truthy}, {fact: layers, op: ge, value: 4}]}
+   risk_class: [SIGNAL_INTEGRITY, EMC]
+   release_effect: MUST_JUSTIFY
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The screen reports signal vias judged, vias exempt with the reason, vias satisfied, and vias lacking with
+     their positions and nets. The present 1.5 mm distance and the 0.5 mm fine-pitch exemption are project
+     calibrations and are recorded as such.
+   rationale: >
+     Ground vias beside a transition are the usual implementation of RET-003 and are cheap to place before a
+     route. The distance that matters follows from the signal's spectrum and the via field geometry, not from
+     one number.
+   failure_mode: "Used as a law it demands vias where the reference never changed, and it says nothing about a transition that has a via at the wrong potential."
+   verification_method: [SCRIPT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage, tools_tree_sha, screen_distance_mm]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the RET-003 judgement for that transition",
+                   scope: "one via", expiry: "the next route", residual_risk: "none: it is a screen"}
+   maturity: UNASSESSED
+
+# ---------------------------------------------------------------------------------------------------------
+# 11 to 17. IMPEDANCE, PAIRS, SIGNAL INTEGRITY, CLOCKS, ANALOG, RF, INTERFACE COMPLIANCE
+# ---------------------------------------------------------------------------------------------------------
+ - id: IMP-001
+   domain: CONTROLLED_IMPEDANCE
+   short_name: an impedance target is feasible and asked for
+   requirement: >
+     Every net whose interface specifies a characteristic impedance is routed in a geometry that achieves it
+     on the board's own stackup, the target and tolerance are stated to the fabricator, and the fabricator
+     confirms it can build and test it.
+   classification: INTERFACE_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {fact: impedance_controlled, op: truthy}
+   risk_class: [SIGNAL_INTEGRITY, FABRICATION]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources:
+    - {title: "IPC-2141 controlled impedance circuit boards and high speed logic design", issuer: IPC,
+       revision: "unknown to this tree", clause: "closed-form microstrip and stripline",
+       url_or_path: "NOT IN THIS TREE", accessed: ""}
+   acceptance_criteria: >
+     Per controlled class: the target, the tolerance, the geometry as built, the computed impedance from the
+     board's own stackup, a second opinion from a field solver where the closed form is known to be weak, and
+     the fabricator's written confirmation with a coupon where the tolerance demands it.
+   rationale: >
+     The closed forms and the 2D solver in this tree disagree by 38 percent on the stripline case and only one
+     solved point exists, so an impedance claimed from the closed form alone is not yet a claim.
+   failure_mode: "Reflections, failed compliance testing, and a link that works on the bench and not in the field."
+   verification_method: [SCRIPT, SIMULATION, VENDOR_CONFIRMATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, d]
+   interfaces_affected: [PCIE, USB2, USB3, HDMI, ETHERNET]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, vendor_capability_revision, solver_version]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the interface's own tolerance and the link budget",
+                   scope: "one class on one board", expiry: "prototype measurement",
+                   residual_risk: "the link is unverified until a prototype is measured"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: IMP-002
+   domain: CONTROLLED_IMPEDANCE
+   short_name: a class clearance is never below the board minimum
+   requirement: >
+     No net class carries a clearance or width below the board's own manufacturing minimum, in any file that
+     reaches the router or the fabricator.
+   classification: FAB_LIMIT
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [FABRICATION, YIELD, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Every class in the project file and every class the generator writes has clearance and width at or above
+     the board's declared minimum; the project file and the generator agree.
+   rationale: >
+     A class clearance below the board minimum is a lie the router believes, and it put 25 clearance
+     violations into one A route. Board B's project file ships USB and DIFF100 at 0.10 mm against a 0.127 mm
+     board minimum today.
+   failure_mode: "The router lays copper the fabricator will not build, and the DRC only finds it afterwards."
+   verification_method: [SCRIPT]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, project_file_sha256, tools_tree_sha]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: PAIR-001
+   domain: DIFFERENTIAL_PAIRS
+   short_name: a pair is coupled and matched
+   requirement: >
+     A differential pair is routed as a pair: the two conductors run together at the geometry its target
+     demands, their lengths match inside the budget the interface allows, and both ends of the pair are
+     symmetrical.
+   classification: INTERFACE_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {fact: pair_classes, op: truthy}
+   risk_class: [SIGNAL_INTEGRITY, EMC]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Per pair: the coupled length as a fraction of the judged length, the intra-pair length difference against
+     the interface's own skew budget, and the via and station symmetry. The project's present 1 mm gate is a
+     project decision, and the interface's own budget is cited beside it.
+   rationale: "An uncoupled pair is two single-ended nets with the wrong impedance and a common-mode current."
+   failure_mode: "Common-mode conversion, radiated emission at the pair's own rate, and link errors."
+   verification_method: [SCRIPT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, d]
+   interfaces_affected: [PCIE, USB2, USB3, HDMI, ETHERNET]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, stage]
+   owner: OWNER
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the measured coupled fraction and the interface budget",
+                   scope: "one class on one board", expiry: "prototype measurement",
+                   residual_risk: "the link margin is unmeasured"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: SI-001
+   domain: SIGNAL_INTEGRITY
+   short_name: transmission-line classification
+   requirement: >
+     Every net is classified by whether it behaves as a transmission line, from its rise time, propagation
+     delay and electrical length, and its topology and termination follow from that classification, not from
+     its bit rate or clock frequency.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [SIGNAL_INTEGRITY, EMC]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A per-board table: net class, driver edge rate from the device datasheet, the length above which that
+     edge rate makes the net a transmission line on this stackup, and the nets that exceed it with their
+     topology and termination.
+   rationale: >
+     A 100 kHz bus with a 1 ns edge is a transmission line; a 10 MHz clock with a 20 ns edge over 30 mm is not.
+     Frequency alone decides nothing.
+   failure_mode: "Overshoot into a protection diode, double-clocking, and emissions from an unterminated stub."
+   verification_method: [CALCULATION, MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, stackup]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the edge rate and the length", scope: "one net class",
+                   expiry: "prototype measurement", residual_risk: "measured at the prototype"}
+   maturity: UNASSESSED
+
+ - id: CLK-001
+   domain: CLOCKS_RESET_BOOT
+   short_name: oscillators, straps and boot pins
+   requirement: >
+     Every crystal, oscillator, reset and boot or configuration strap is loaded, referenced and placed as its
+     device's own documentation requires, and every strap's state at reset is defined by hardware.
+   classification: COMPONENT_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {any: [{fact: interfaces, op: contains, value: CAN}, {fact: interfaces, op: contains, value: ETHERNET},
+                     {fact: interfaces, op: contains, value: USB2}]}
+   risk_class: [ELECTRICAL_FUNCTION, EMC, RELIABILITY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Per oscillator: load capacitance against the crystal's own specification, keep-out and reference under
+     the loop, and a bounded return path. Per strap: the resistor, the state it sets and the device page that
+     defines it.
+   rationale: "A mis-loaded crystal and a floating strap are the two defects that make a board 'sometimes work'."
+   failure_mode: "Intermittent boot, frequency error, and a clock that radiates."
+   verification_method: [SCRIPT, MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [b, c, d, e]
+   interfaces_affected: [CAN, ETHERNET, USB2]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: ANA-001
+   domain: ANALOG_MIXED_SIGNAL
+   short_name: sensitive analogue nodes
+   requirement: >
+     Every high-impedance or low-level analogue node is identified and protected: its source impedance, its
+     reference, its filtering and its distance from switching copper are decided rather than inherited.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {any: [{fact: interfaces, op: contains, value: AUDIO_ANALOG},
+                     {fact: energy_source, op: truthy},
+                     {fact: carries_pack_node, op: truthy}]}
+   risk_class: [ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A list per board of the sensitive nodes (microphone inputs, current-shunt sense pairs, cell taps,
+     thermistors, reference inputs) with, for each, its reference, its filter and its clearance from switching
+     nodes, and Kelvin connections where the measurement demands them.
+   rationale: >
+     A 2 milliohm shunt measured 100 millimetres from its sense amplifier through shared copper measures the
+     copper as much as the current.
+   failure_mode: "Gauge error that becomes a state-of-charge error, and audio noise beside a 30 W transmitter."
+   verification_method: [MANUAL_REVIEW, SCRIPT]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, d, e, p]
+   interfaces_affected: [AUDIO_ANALOG, SMBUS]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, schematic_sha256, stage]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the node's own measurement budget",
+                   scope: "one node", expiry: "prototype measurement", residual_risk: "accuracy unverified"}
+   maturity: UNASSESSED
+
+ - id: RF-001
+   domain: RF
+   short_name: RF paths are designed as RF
+   requirement: >
+     Every RF conductor is a transmission line of the intended impedance from launch to connector, its
+     reference is continuous beneath it, its matching and filtering are as the module's own documentation
+     requires, and the keep-outs the modules demand are respected.
+   classification: INTERFACE_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {any: [{fact: rf_transmit, op: truthy}, {fact: interfaces, op: contains, value: BLIND_MATE_RF}]}
+   risk_class: [ELECTRICAL_FUNCTION, EMC, SAFETY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Per RF path: the line geometry and its computed impedance on this stackup, the ground continuity beneath
+     it, the module's keep-out honoured, the filter's topology and part values with their source, and the
+     connector transition.
+   rationale: "A 30 W stage and eleven coaxial paths in a sealed metal box are an RF system, not a set of nets."
+   failure_mode: "Power reflected into a PA, harmonics outside the licensed band, and desense of the receivers beside it."
+   verification_method: [SCRIPT, SIMULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [b, d]
+   interfaces_affected: [RF_TX, RF_RX, BLIND_MATE_RF]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, stage, module_datasheet_revision]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: RF-002
+   domain: RF
+   short_name: transmit inhibit is hardware
+   requirement: >
+     Every transmitter can be inhibited by a hardware path that does not depend on software, and the inhibit
+     is asserted by the unpowered and disconnected states.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: rf_transmit, op: truthy}
+   risk_class: [SAFETY, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The inhibit chain is traced on the netlists from the panel switch to the keying gate, its driver count is
+     one, its sense is verified, and the behaviour with each board absent is stated.
+   rationale: "EMCON is a hardware line by owner ruling; a software-only inhibit is not an inhibit."
+   failure_mode: "A transmitter keys when the operator has commanded silence."
+   verification_method: [SCRIPT]
+   verification_phase: SCHEMATIC
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d]
+   interfaces_affected: [RF_TX, IDC_RIBBON]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, manifest_version]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: INT-001
+   domain: INTERFACE_COMPLIANCE
+   short_name: each interface is designed to its own specification
+   requirement: >
+     Every implemented interface is designed against its current official specification and the device
+     documentation of both ends: impedance, skew, termination, coupling, isolation, protection and pin map.
+   classification: INTERFACE_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {fact: interfaces, op: truthy}
+   risk_class: [ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY, EMC]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A per-interface sheet naming the specification and revision used, the requirement lines taken from it,
+     and where each is implemented. An interface whose specification is not in the tree is SOURCE_UNVERIFIED
+     and says so.
+   rationale: >
+     The PCIe lanes on board B are assigned to a 90 ohm class because they inherited the USB class, and no
+     PCIe or M.2 specification is in this tree to say otherwise.
+   failure_mode: "A link that does not meet its own specification and cannot be certified."
+   verification_method: [MANUAL_REVIEW, SCRIPT]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e]
+   interfaces_affected: [PCIE, USB2, USB3, USBC_PD, HDMI, ETHERNET, POE, SMBUS, I2C, SPI, UART, CAN, GNSS, M2_SOCKET]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, spec_revision]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the deviation and its measured consequence",
+                   scope: "one interface on one board", expiry: "prototype validation",
+                   residual_risk: "the interface may not certify"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: INT-002
+   domain: INTERFACE_COMPLIANCE
+   short_name: a transformerless Ethernet link is verified at both ends
+   requirement: >
+     Where an Ethernet link is built PHY-to-PHY without magnetics, both PHYs' own documentation is checked to
+     permit it, and the coupling, termination, common-mode handling and bias are as both require.
+   classification: INTERFACE_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {fact: interfaces, op: contains, value: ETHERNET}
+   risk_class: [ELECTRICAL_FUNCTION, EMC, RELIABILITY]
+   release_effect: BLOCKER
+   source_status: CONFLICTING
+   sources:
+    - {title: "KSZ989x hardware design checklist", issuer: Microchip, revision: "DS00004151A",
+       clause: "page 12, transformer-less PHY-to-PHY links through 0.1 uF capacitors",
+       url_or_path: "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf", accessed: "2026-09"}
+    - {title: "the compute module PHY's own documentation", issuer: "the module's PHY vendor", revision: "",
+       clause: "", url_or_path: "NOT IN THIS TREE", accessed: "",
+       note: "the other end of the same three links: nothing in this tree states whether it permits a
+              transformerless link, and the 9 September review asked for exactly this check"}
+   acceptance_criteria: >
+     Both PHYs' documents on file, the permitted topology quoted from each, and the implemented coupling and
+     termination compared against both.
+   rationale: "One end's permission is not the link's permission."
+   failure_mode: "Link instability, bias fighting between the two PHYs, and emissions from an unbalanced pair."
+   verification_method: [MANUAL_REVIEW, VENDOR_CONFIRMATION]
+   verification_phase: SCHEMATIC
+   automation_feasibility: HUMAN_OR_LAB_ONLY
+   boards_affected: [b]
+   interfaces_affected: [ETHERNET]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, vendor_document_revision]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+# ---------------------------------------------------------------------------------------------------------
+# 18 to 25. TRANSIENTS, ISOLATION AND SPACING, THERMAL, PLACEMENT, ROUTING, VIAS, PLANES, EMC
+# ---------------------------------------------------------------------------------------------------------
+ - id: TRN-001
+   domain: TRANSIENT_PROTECTION
+   short_name: every exposed port is protected
+   requirement: >
+     Every conductor that leaves the enclosure or touches a user is protected against electrostatic discharge
+     and, where the port can see them, against surge and fast transients; the protection device is rated for
+     the working voltage, clamps below the protected part's absolute maximum, and its own parasitics are
+     acceptable to the signal.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {any: [{fact: interfaces, op: contains, value: ETHERNET}, {fact: interfaces, op: contains, value: USBC_PD},
+                     {fact: interfaces, op: contains, value: BLIND_MATE_RF}, {fact: panel_face, op: truthy},
+                     {fact: carries_pack_node, op: truthy}]}
+   risk_class: [SAFETY, RELIABILITY, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A port table: every external conductor, its working voltage, the threat it is exposed to, the device
+     fitted, its standoff and clamping voltage against the protected part's maximum, its capacitance against
+     the signal's needs, and the discharge path to the enclosure.
+   rationale: "A sealed kit is handled, plugged and unplugged in the field; the connector is where the energy arrives."
+   failure_mode: "A discharge at a panel switch or an antenna jack destroys the device behind it."
+   verification_method: [MANUAL_REVIEW, SCRIPT]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, e, p]
+   interfaces_affected: [ETHERNET, USBC_PD, BLIND_MATE_RF, USB2, SMBUS]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the port's exposure and the device's own rating",
+                   scope: "one port", expiry: "prototype validation", residual_risk: "untested until a discharge gun sees it"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: ISO-001
+   domain: ISOLATION_SPACING
+   short_name: creepage and clearance
+   requirement: >
+     Every conductor pair whose working voltage difference is significant is separated by enough creepage and
+     clearance for the working voltage, the transient it can see, the pollution degree the enclosure allows
+     and the material group of the laminate.
+   classification: REGULATORY
+   applicability: CONDITIONAL
+   condition: {fact: max_rail_voltage_v, op: ge, value: 30}
+   risk_class: [SAFETY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources:
+    - {title: "IEC 60664-1 insulation coordination for equipment within low-voltage systems", issuer: IEC,
+       revision: "unknown to this tree", clause: "creepage and clearance tables",
+       url_or_path: "NOT IN THIS TREE", accessed: ""}
+   acceptance_criteria: >
+     For every net pair above the declared threshold: the working voltage, the required creepage and clearance
+     for the declared pollution degree and material group, and the measured minimum spacing on the board,
+     including under parts and across the assembly, with the standard edition cited.
+   rationale: >
+     The kit carries 54 V PoE on two boards and a 14.4 V pack on four, in an enclosure that is carried
+     outdoors. Nothing in this tree has ever measured a creepage distance.
+   failure_mode: "Tracking or flashover in humidity, at a connector or under a part."
+   verification_method: [SCRIPT, MANUAL_REVIEW]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, e]
+   interfaces_affected: [POE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage, envelope_version]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: THM-001
+   domain: THERMAL
+   short_name: every dissipating part has a path
+   requirement: >
+     Every part dissipating above a declared threshold has a stated thermal path to somewhere the heat can
+     go, and its junction temperature at the envelope's maximum ambient is estimated and recorded.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [THERMAL, RELIABILITY, SAFETY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A per-board dissipation table: part, estimated loss at the worst declared mode, thermal path (copper
+     area, thermal vias, exposed pad, heatsink, enclosure), and the estimated rise against the part's own
+     limit at the envelope's ambient.
+   rationale: >
+     The enclosure is sealed with no vent by ruling, and the kit contains a 30 W transmitter stage, three
+     compute modules and several converters above an ampere.
+   failure_mode: "Silent derating, shortened life, and thermal shutdown in the sun."
+   verification_method: [CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, board_sha256, envelope_version]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the estimate and the measurement plan",
+                   scope: "one part", expiry: "prototype thermal measurement",
+                   residual_risk: "the sealed enclosure's real rise is unmeasured"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: PLC-001
+   domain: PLACEMENT
+   short_name: the placement is legal before anything is routed
+   requirement: >
+     The placed board carries no violation of the project's hard rule set before the router is asked to route
+     it, and no part sits outside the area assigned to it.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [FABRICATION, ASSEMBLY, ELECTRICAL_FUNCTION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The placed board's hard violation count is zero, or at a declared allowance carrying its number and the
+     section that measured it; every packer region holds the parts assigned to it.
+   rationale: >
+     A board's whole pair programme was once measured on a placement carrying 150 hard violations that nothing
+     had read. A cheap gate belongs in front of an expensive stage.
+   failure_mode: "Hours of routing on a board that was never buildable."
+   verification_method: [DRC, SCRIPT]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage, hardset_policy_version, tools_tree_sha]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the allowance with its measured number",
+                   scope: "one board", expiry: "the next placement", residual_risk: "named in the allowance"}
+   maturity: UNASSESSED
+
+ - id: PLC-002
+   domain: PLACEMENT
+   short_name: prevention before repair
+   requirement: >
+     A defect class that a placement can prevent is prevented in the placement, and a post-route closer is
+     added only when prevention is shown to be impossible and that is written down.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [YIELD, DOCUMENTATION]
+   release_effect: MUST_JUSTIFY
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Each closer in the finish names the defect class it repairs and the reason prevention was not possible;
+     the placed-board predictor covers the classes that have been repaired more than once.
+   rationale: "The finish grew into a second router: ten copper-editing passes to close a handful of connections."
+   failure_mode: "Every board needs a rescue, and the rescue's own defects are found after the route."
+   verification_method: [MANUAL_REVIEW, SCRIPT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [tools_tree_sha]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "why prevention is impossible", scope: "one closer",
+                   expiry: "the next phase", residual_risk: "the class recurs"}
+   maturity: UNASSESSED
+
+ - id: RTE-001
+   domain: ROUTING
+   short_name: geometry a fabricator will build
+   requirement: >
+     Every track, gap, annular ring, hole and copper-to-edge distance on the finished board is at or above the
+     chosen fabricator's current published capability for the process being ordered.
+   classification: FAB_LIMIT
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [FABRICATION, YIELD]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources:
+    - {title: "fabricator capability, current at the order date", issuer: "the selected fabricator",
+       revision: "", clause: "", url_or_path: "NOT USABLY IN THIS TREE", accessed: ""}
+   acceptance_criteria: >
+     Every geometric minimum in the board's design rules is compared against a dated capability record from
+     the fabricator, and the DRC runs with those rules.
+   rationale: "The board's own rules are only as good as the capability record they were copied from."
+   failure_mode: "The order is rejected, re-quoted at a finer process, or built at reduced yield."
+   verification_method: [DRC, VENDOR_CONFIRMATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, vendor_capability_revision, kicad_build]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: RTE-002
+   domain: ROUTING
+   short_name: nothing unrouted, nothing shorted
+   requirement: >
+     The finished board has every connection of its netlist made in copper and carries no violation of the
+     project's hard rule set.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [ELECTRICAL_FUNCTION, FABRICATION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: "Zero unrouted connections and zero hard violations on the filled routed board, both with denominators."
+   rationale: "This is the floor under every other routed-board rule."
+   failure_mode: "A board that cannot work as drawn."
+   verification_method: [DRC, SCRIPT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage, hardset_policy_version, kicad_build]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: VIA-001
+   domain: VIAS
+   short_name: every via is a via the process makes
+   requirement: >
+     Every via's diameter, drill, aspect ratio, annular ring and treatment (tented, plugged, filled, capped,
+     in pad) is one the chosen process produces, and a via in a pad is declared to the assembler.
+   classification: FAB_LIMIT
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [FABRICATION, ASSEMBLY, RELIABILITY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A via table per board: sizes used, aspect ratio against the fabricator's limit for the finished
+     thickness, treatment, and the count of vias in pads with the assembly note that accompanies them.
+   rationale: "A via in a pad without a declared treatment is a solder thief the assembler does not expect."
+   failure_mode: "Voided joints, open barrels, and a board that passes electrical test and fails in vibration."
+   verification_method: [SCRIPT, VENDOR_CONFIRMATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stackup, vendor_capability_revision]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the fabricator's confirmation for that treatment",
+                   scope: "one via class", expiry: "the order", residual_risk: "assembly yield"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: PLN-001
+   domain: PLANES_POURS
+   short_name: no orphan copper
+   requirement: >
+     Every piece of filled copper is connected to its net, or it is not there; every plane pad reaches its
+     plane; no pour piece floats.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [EMC, ELECTRICAL_FUNCTION, FABRICATION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: "Zero isolated copper pieces of any net on the filled board; every zone's islands either connected or removed."
+   rationale: "Floating copper is an antenna and a manufacturing question nobody asked."
+   failure_mode: "Radiation from a floating island; a pad that looks connected and is not."
+   verification_method: [DRC, SCRIPT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, stage]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the piece's size and why it is harmless",
+                   scope: "one piece", expiry: "the next fill", residual_risk: "EMC only"}
+   maturity: UNASSESSED
+
+ - id: EMC-001
+   domain: EMC
+   short_name: source, path, victim
+   requirement: >
+     For each intentional and unintentional emitter on the board, the coupling path to each susceptible
+     victim is identified and broken by design: loop area, edge containment, filtering at the boundary,
+     cable treatment and shielding where they are needed.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [EMC, ELECTRICAL_FUNCTION]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     An EMC sheet per board: the switching sources with their frequencies and edge rates, the sensitive
+     victims, the coupling paths considered, and the measures taken at each; a pre-compliance measurement plan
+     for what cannot be decided on paper.
+   rationale: "Eleven radios and a sealed metal box make every switching edge somebody's noise floor."
+   failure_mode: "Receiver desense in the kit's own box, and a product that cannot pass an emissions test."
+   verification_method: [MANUAL_REVIEW, SIMULATION, PROTOTYPE_MEASUREMENT]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: HUMAN_OR_LAB_ONLY
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [RF_TX, RF_RX, ETHERNET, USB3]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the pre-compliance plan", scope: "the kit",
+                   expiry: "pre-compliance testing", residual_risk: "unmeasured until a chamber sees it"}
+   maturity: UNASSESSED
+
+# ---------------------------------------------------------------------------------------------------------
+# 26 to 34. MECHANICAL, DFM, DFA, TEST, RELIABILITY, ENERGY, DOCUMENTATION, OUTPUTS, SIGNOFF
+# ---------------------------------------------------------------------------------------------------------
+ - id: MEC-001
+   domain: MECHANICAL
+   short_name: the board fits what it is fitted to
+   requirement: >
+     Outline, mounting holes, keep-outs, connector positions and part heights agree with the enclosure, the
+     plate, the neighbouring boards and the cables, with the tolerances stated.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [MECHANICAL, ASSEMBLY]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Every mechanical number in the board is checked against the single source that owns it (the panel and
+     case geometry module, the vendor drawings), and the stack height between boards is computed rather than
+     assumed.
+   rationale: "A board that does not fit is discovered at assembly, when five of each have been made."
+   failure_mode: "The stack does not close, a connector fouls a rib, a part touches the board above it."
+   verification_method: [SCRIPT, MANUAL_REVIEW]
+   verification_phase: PLACED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [board_sha256, mechanical_source_sha]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: DFM-001
+   domain: FABRICATION_DFM
+   short_name: the fabrication set is complete and consistent
+   requirement: >
+     The fabrication package contains every layer the board has, the drill data that matches it, the stackup
+     and impedance notes, and nothing that contradicts the board file.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [FABRICATION, DOCUMENTATION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     One copper layer file per copper layer of the board, mask, paste, silk, edge, drill and map present and
+     non-empty; the note file names the stackup and copper weight the board file carries.
+   rationale: "A gerber set that dropped two inner layers shipped here once; the zip's layer count is now counted."
+   failure_mode: "Boards are built without an inner layer, or on the wrong stack."
+   verification_method: [SCRIPT]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [gerber_zip_sha256, board_sha256, stackup]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: DFA-001
+   domain: ASSEMBLY_DFA
+   short_name: the assembly set is buildable
+   requirement: >
+     The placement file names every part the assembler places, with a position, a side and a rotation that
+     matches the part's own datasheet orientation, and excludes every part fitted by hand.
+   classification: ASSEMBLY_LIMIT
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [ASSEMBLY, YIELD]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Every designator in the parts list appears in the placement file or is declared hand-fitted; every
+     polarised part's rotation is verified against its own drawing and against the assembler's convention,
+     with the verification dated.
+   rationale: >
+     Rotation conventions differ per footprint and are the classic assembly defect; this project's rotations
+     come from a table that has never been re-verified per footprint.
+   failure_mode: "Polarised parts placed backwards across a whole batch."
+   verification_method: [SCRIPT, VENDOR_CONFIRMATION, MANUAL_REVIEW]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [cpl_sha256, bom_sha256, rotation_table_sha]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the assembler's own preview check",
+                   scope: "one footprint family", expiry: "the order", residual_risk: "a whole batch is at stake"}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: TST-001
+   domain: TEST_BRINGUP
+   short_name: the board can be brought up safely
+   requirement: >
+     Every rail can be brought up current-limited and measured before the loads are enabled, every
+     programmable device can be programmed in circuit, and the signals a bring-up needs are reachable.
+   classification: PROJECT_DECISION
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [TESTABILITY, SAFETY]
+   release_effect: MUST_JUSTIFY
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     A bring-up sheet per board: the order rails are enabled, where each is measured, what isolates a stage,
+     the programming interfaces and the test points that exist for them.
+   rationale: "The first power-up of a 200 Wh kit is not the moment to discover there is no way to current-limit it."
+   failure_mode: "A short in one stage destroys parts across the board at first power-up."
+   verification_method: [MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the bring-up plan", scope: "one board",
+                   expiry: "prototype bring-up", residual_risk: "carried by the person at the bench"}
+   maturity: UNASSESSED
+
+ - id: REL-001
+   domain: RELIABILITY
+   short_name: the build survives its service life
+   requirement: >
+     Vibration, shock, flexure, connector mating cycles, moisture, contamination and thermal cycling as the
+     envelope describes them are considered for every mechanical and electrical interface.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [RELIABILITY, MECHANICAL]
+   release_effect: MUST_JUSTIFY
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A per-board list of the parts and joints that carry mechanical load or see cycling, the expected cycles
+     or level, and the measure taken (staking, support, strain relief, coating, mating cycle rating).
+   rationale: "A kit that is carried in a vehicle sees more vibration in transport than in use."
+   failure_mode: "A tall part shears its joints, a connector wears, a coated board traps moisture."
+   verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+   verification_phase: PROTOTYPE
+   automation_feasibility: HUMAN_OR_LAB_ONLY
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version, envelope_version]
+   owner: OWNER
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the service assumption", scope: "the kit",
+                   expiry: "prototype validation", residual_risk: "field failures"}
+   maturity: UNASSESSED
+
+ - id: BAT-001
+   domain: ENERGY_STORAGE
+   short_name: the cell block is protected in hardware
+   requirement: >
+     The cell block has over-voltage, under-voltage, over-current, short-circuit and over-temperature
+     protection in hardware, independent of any software, with the trip points set from the cell
+     manufacturer's own limits.
+   classification: REGULATORY
+   applicability: CONDITIONAL
+   condition: {fact: energy_source, op: truthy}
+   risk_class: [SAFETY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     Each protection function names the device that implements it, its configured threshold, the cell
+     datasheet limit it is derived from, and the test that will demonstrate it on the prototype.
+   rationale: "A 200 Wh lithium block is the one part of this kit that can hurt somebody."
+   failure_mode: "Thermal runaway from an over-charge, a deep discharge, or an external short."
+   verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [p]
+   interfaces_affected: [SMBUS]
+   implementation_location: NONE_YET
+   evidence_scope: [schematic_sha256, cell_datasheet_revision]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: BAT-002
+   domain: ENERGY_STORAGE
+   short_name: the energy chain is bounded end to end
+   requirement: >
+     From the cells to every load, the maximum fault current is bounded at each stage by a protective element
+     sized for the conductors and connectors of that stage.
+   classification: PHYSICS_PRINCIPLE
+   applicability: CONDITIONAL
+   condition: {fact: carries_pack_node, op: truthy}
+   risk_class: [SAFETY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources: []
+   acceptance_criteria: >
+     A chain diagram with, at each stage, the conductor and connector rating, the protective element and its
+     rating, and the prospective fault current.
+   rationale: "Four boards, two blade fuses, a pre-charge pin and 12 AWG wiring are one circuit, not four."
+   failure_mode: "A fault in one board is cleared by copper in another."
+   verification_method: [CALCULATION, MANUAL_REVIEW]
+   verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [a, e, e5, p]
+   interfaces_affected: [SOLDER_LANDS]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version, schematic_sha256]
+   owner: OWNER
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: SOURCE_UNVERIFIED
+
+ - id: DOC-001
+   domain: DOCUMENTATION_CONTROL
+   short_name: the folder is the board
+   requirement: >
+     Every deliverable folder names the board phase it was cut from, and that phase is the phase the tree
+     declares; a folder is never judged only against itself.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [DOCUMENTATION, FABRICATION]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The folder's phase equals the board file's declared phase; the board hash in the folder equals the board
+     hash in the tree; the silk carries the same phase.
+   rationale: >
+     Five folders passed the final gate while predating the rules they were judged under, because
+     verify_deliverable judges a folder against itself.
+   failure_mode: "An order is placed from a folder describing a board nobody is building any more."
+   verification_method: [SCRIPT]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [folder_sha256, board_sha256, manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: DOC-002
+   domain: DOCUMENTATION_CONTROL
+   short_name: provenance for every claim
+   requirement: >
+     Every number a document asserts about the hardware is traceable to the artefact it was measured from,
+     with the date and the identity of that artefact.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [DOCUMENTATION]
+   release_effect: MUST_JUSTIFY
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: "Each asserted number carries its artefact hash or its evidence id, or is marked as an estimate."
+   rationale: "A number without provenance cannot be re-checked when the board moves, and every board here moves."
+   failure_mode: "The record describes a board that no longer exists."
+   verification_method: [MANUAL_REVIEW, SCRIPT]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: SESSION, evidence: "the estimate marked as one", scope: "one claim",
+                   expiry: "", residual_risk: "a reader may take an estimate as a measurement"}
+   maturity: UNASSESSED
+
+ - id: OUT-001
+   domain: MANUFACTURING_OUTPUTS
+   short_name: the order set is the current set
+   requirement: >
+     The order package is built from the current deliverable folder of every board in the manifest, and its
+     prose describes those boards.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [DOCUMENTATION, SUPPLY_CHAIN]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     Every board in the manifest has a current folder in the order set; the notes name that phase; no board is
+     quote-only; the checksums in the set match the folders.
+   rationale: "The set on disk today is built from folders three to five phases behind the tree."
+   failure_mode: "The wrong gerbers are uploaded under the right name."
+   verification_method: [SCRIPT]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [order_set_sha256, manifest_version, folder_sha256]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: SGN-001
+   domain: VERIFICATION_SIGNOFF
+   short_name: every applicable rule has a result
+   requirement: >
+     Before any board is released, every rule applicable to it has a result of PASS, WAIVED or
+     NOT_APPLICABLE, computed from current evidence; absence, staleness or a failed check is INCONCLUSIVE and
+     blocks.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [DOCUMENTATION, SAFETY]
+   release_effect: BLOCKER
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The board's computed status carries a result for every applicable rule, each with its evidence id; the
+     readiness gate state is reported before any percentage.
+   rationale: "This registry is worth only the computation that reads it."
+   failure_mode: "A board is released because nobody asked a question that was never written down."
+   verification_method: [SCRIPT]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [rule_set_fingerprint, manifest_version, board_sha256]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
+
+ - id: SGN-002
+   domain: VERIFICATION_SIGNOFF
+   short_name: a prototype-only unknown is named
+   requirement: >
+     Every property that cannot be decided before hardware exists is named as such, with the measurement that
+     will decide it, rather than being left to look like a pass.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   risk_class: [DOCUMENTATION, SAFETY, EMC, THERMAL]
+   release_effect: MUST_JUSTIFY
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: "A list per board of the prototype-only unknowns with the protocol that will close each."
+   rationale: "Thermal behaviour, RF self-compatibility and ingress are the three this kit cannot know on paper."
+   failure_mode: "A prototype is built without the measurements that justify building it being planned."
+   verification_method: [MANUAL_REVIEW]
+   verification_phase: RELEASE_PACKAGE
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [ALL]
+   interfaces_affected: [NONE]
+   implementation_location: NONE_YET
+   evidence_scope: [manifest_version]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity: UNASSESSED
