@@ -481,7 +481,9 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
             rc = 0
             if not dry:
                 for argv in (pre.get("steps") or [pre["argv"]]):   # fixed argument vectors, one process each, no shell string
-                    rc = sh(expand(argv, project, ecad, name), project if pre.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, plog)
+                    # the phase reaches the chain (and the silk) from the resolved profile: with one profile per letter there is
+                    # no per-phase wrapper exporting PHASE any more (15 September 2026)
+                    rc = sh(expand(argv, project, ecad, name), project if pre.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, plog, env={"PHASE": prof["phase"]})
                     if rc != 0: break
             gen_logs = [dict(g, file=os.path.join(project, g["file"])) for g in pre.get("gen_logs", [])]
             st, note = judge_pre(read(plog), pre.get("must_contain", []), pre.get("min_all_pass", 1), gen_logs) if not dry else ("GATED", "dry run")
