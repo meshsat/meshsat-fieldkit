@@ -34,7 +34,11 @@ def run(b, check, path=None):
     for z in b.Zones():
         if z.GetIsRuleArea() or z.GetFilledArea() <= 0: continue
         n = z.GetNetname().lstrip("/")
-        if n == "GND" or n.startswith(("+", "VBAT", "CELL", "VBUS", "PACK")):
+        # EVERY filled zone is a reference for the track over it (15 September 2026 23:15 CEST): the list of name prefixes
+        # missed E's In2 power pours (VIN_RAW, PV_P, TRK_OUT), so E10 read 18 nets over rule 1 for tracks running over solid
+        # copper. A filled zone in this project is ground or a rail (signalnets excludes every zone owner from the signal set
+        # on the same ground), so the fill's net name decides nothing here.
+        if n:
             pl = z.GetFilledPolysList(z.GetFirstLayer()); planes.setdefault(z.GetFirstLayer(), []).append(pl); planes_net.setdefault((z.GetFirstLayer(), z.GetNetname()), []).append(pl)
     def neighbours(L):
         i = cu.index(L); return [cu[j] for j in (i - 1, i + 1) if 0 <= j < len(cu)]
