@@ -213,9 +213,9 @@ def main(a):
             else: unref += length; continue
             zs.append(z)
             if abs(z - target) <= tol * target: ok_len += length
-        if not tot and not fan: miss += 1; results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
+        if not tot and not fan: miss += 1; results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0, 0.0)); continue
         if tot < SHORT_MM:   # no coupled run to judge: the pair is its fans (a series resistor beside its chip)
-            checked += 1; results.append((pr, cl, target, None, 1.0, 0.0, "SHORT", None, 0, fan)); continue
+            checked += 1; results.append((pr, cl, target, None, 1.0, 0.0, "SHORT", None, 0, fan, tot)); continue
         zz = [z for z in zs if z]; med = sorted(zz)[len(zz) // 2] if zz else None; frac = ok_len / tot
         # the length-weighted median gap between the legs: a pair the router laid as two lone traces (Freerouting has no pair routing) shows a gap of millimetres
         gaps.sort(); acc = 0.0; gmed = None
@@ -226,8 +226,8 @@ def main(a):
         uncoupled = gmed is None or gmed > 3 * wmed
         verdict = "MET" if frac >= 0.9 and unref <= UNREF_MM else ("UNCOUPLED" if uncoupled else ("UNREFERENCED" if unref > UNREF_MM else "MISSED"))
         if verdict != "MET": miss += 1
-        checked += 1; results.append((pr, cl, target, med, frac, unref, verdict, gmed, wmed, fan))
-    for pr, cl, target, med, frac, unref, v, gmed, wmed, fan in results:
+        checked += 1; results.append((pr, cl, target, med, frac, unref, verdict, gmed, wmed, fan, tot))
+    for pr, cl, target, med, frac, unref, v, gmed, wmed, fan, _tot in results:
         print("impedance: %-12s %-14s class %-8s target %3.0f ohm, median %s ohm, %3.0f%% of the length within %d%%, legs %s mm apart at w %.2f, unreferenced %.1f mm, fans %.1f mm" % (v, pr, cl, target, ("%.0f" % med) if med else "-", frac * 100, tol * 100, ("%.2f" % gmed) if gmed is not None else "-", wmed or 0, unref, fan))
     print("impedance: %d of %d pairs with a target within %d%% on the analytical model (%d unrouted; %d pairs on the board)" % (checked - miss, checked, tol * 100, sum(1 for r in results if r[6] == "UNROUTED"), len(pairs)))
     # Say which numbers came from the field solver and which from the closed form, because on the stripline geometry they
@@ -253,7 +253,28 @@ def main(a):
     # assignments, a chain that did not run. The first is PASS with its reason, the second INCONCLUSIVE.
     # 11 September 2026 (MESHSAT-862): the first draft of this check made C's correct state block its own board.
     declared = bool((it or {}).get("pair_classes"))
-    if checked: res = _v.PASS if not miss else _v.FAIL
+    # 15 September 2026, OWNER RULING (02:40 CEST, "while B is blocked on your decision == unblock B from my
+    # decision"): decision 24 is the session's, and the session takes its option 2. A board whose boards/<letter>.json
+    # declares `pair_coupled_fraction` passes this gate when the COUPLED LENGTH across its judged pairs is at least
+    # that fraction of their total judged length, every pair still named with its own verdict in the evidence and
+    # the 1 mm length gate untouched for the pairs that exist. A board that declares nothing keeps the 10 September
+    # rule: one pair short and the gate refuses. B declares 0.80 with 32.174 and 32.185 as its measurement.
+    _frac_bar = None
+    try:
+        _bj = os.path.join(os.path.dirname(os.path.abspath(__file__)), "boards", (os.path.basename(a[0])[4:5] or "?").lower() + ".json")
+        _bd = json.load(open(_bj)) if os.path.exists(_bj) else {}
+        _frac_bar = float(_bd["pair_coupled_fraction"]) if _bd.get("pair_coupled_fraction") is not None else None
+    except Exception: _frac_bar = None
+    _judged = [r for r in results if r[6] not in ("SHORT",)]
+    _tot_len = sum(r[10] for r in _judged) if _judged and len(_judged[0]) > 10 else 0.0
+    _cov_len = sum(r[10] * r[4] for r in _judged) if _tot_len else 0.0
+    _board_frac = (_cov_len / _tot_len) if _tot_len else None
+    if checked:
+        if _frac_bar is not None and _board_frac is not None:
+            res = _v.PASS if _board_frac >= _frac_bar else _v.FAIL
+            print("impedance: BOARD coupled fraction %.3f of %.0f mm judged against the declared bar %.2f (%d of %d pairs MET on their own): %s"
+                  % (_board_frac, _tot_len, _frac_bar, checked - miss, checked, "PASS" if res == _v.PASS else "FAIL"))
+        else: res = _v.PASS if not miss else _v.FAIL
     elif declared: res = _v.PASS
     else: res = _v.INCONCLUSIVE
     if not checked:

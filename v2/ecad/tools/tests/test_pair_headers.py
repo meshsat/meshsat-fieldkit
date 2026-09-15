@@ -104,3 +104,30 @@ def t_the_two_maps_of_one_harness_agree():
         a, b = maps["J_HARN1"], maps["J_MEZZ1"]
         diff = [k for k in sorted(set(a) | set(b)) if a.get(k) != b.get(k)]
         assert not diff, "the harness maps differ at pins %s" % diff
+
+
+def t_a_board_that_declares_no_coupled_fraction_keeps_the_10_september_rule():
+    """Owner ruling 15 September 2026 02:40 CEST, delegating decision 24 to the session, which took option 2.
+    Only a board that declares pair_coupled_fraction is judged on its coupled length; every other board is
+    held until every pair is laid, the 10 September rule, and nothing weakens for A, C, D, E or P."""
+    import json, os
+    src = open(os.path.join(TOOLS, "impedance_check.py")).read()
+    assert '_bd.get("pair_coupled_fraction")' in src, "the gate does not read the declaration"
+    assert "res = _v.PASS if not miss else _v.FAIL" in src, "the undeclared board no longer refuses on one missed pair"
+    full = open(os.path.join(TOOLS, "full.sh")).read()
+    assert 'PCF="$(cfg pair_coupled_fraction)"' in full and 'if [ "$PP" -ne 0 ] && [ -n "$PCF" ]' in full, (
+        "the pre-route pair gate does not read the same declaration, so the two gates could disagree")
+    for letter in ("a", "c", "d", "e", "p"):
+        d = json.load(open(os.path.join(TOOLS, "boards", letter + ".json")))
+        assert d.get("pair_coupled_fraction") is None, "board %s declares a coupled fraction nobody ruled for it" % letter
+    b = json.load(open(os.path.join(TOOLS, "boards", "b.json")))
+    assert b.get("pair_coupled_fraction") == 0.80, "B does not declare the 0.80 the session took"
+    assert "unblock B from my decision" in b.get("_pair_coupled_fraction_why", ""), "the declaration does not carry the owner's words"
+
+
+def t_the_board_fraction_is_length_weighted_and_every_pair_is_still_named():
+    import os
+    src = open(os.path.join(TOOLS, "impedance_check.py")).read()
+    assert "_cov_len = sum(r[10] * r[4] for r in _judged)" in src, "the board fraction is not weighted by each pair's judged length"
+    assert 'evidence=["%s %s class %s target %s ohm" % (r[6], r[0], r[1], r[2]) for r in results if r[6] != "MET"]' in src, (
+        "a pair that misses is no longer named in the verdict's evidence")
