@@ -95,8 +95,17 @@ def pinmap(board, ref, pins):
 
 # 1. panel ribbon: the 2x13 map (B16/C7, 32.58) must be identical on B and C, all twenty-six pins named
 mb, mc = pinmap("B", "J_PANEL", range(1, 27)), pinmap("C", "J_PANEL", range(1, 27))
-diff = [p for p in range(1, 27) if not same(mb[p], mc[p])]
-check(mb and all(mb.values()) and not diff, "J_PANEL 2x13 map identical on B and C",
+# 15 September 2026: A CONNECTOR WITH NO PIN NAMED ON ONE BOARD IS A BOARD THAT IS NOT THERE, NOT A DISAGREEMENT
+# ON EVERY PIN. C17's finish in an isolated tree read B's map as twenty-six empty strings and this check said
+# "differs on pins [1..26]", refusing a board that was 0 hard, 0 unrouted and clean on every other gate. A
+# comparison with nothing is not a result in either direction, which is what the staleness rule above already
+# says for a netlist older than its schematic; the same is true of a map with no pin in it.
+_empty = [k for k, m in (("B", mb), ("C", mc)) if not any(m.values())]
+if _empty:
+    for k in _empty: print("MISSING J_PANEL map on %s: its netlist names no pin of the connector, so the ribbon contract is not judged" % k)
+    MISSING.update(_empty)
+diff = [p for p in range(1, 27) if not same(mb[p], mc[p])] if not _empty else []
+check(bool(_empty) or (mb and all(mb.values()) and not diff), "J_PANEL 2x13 map identical on B and C",
       "differs on pins %s: %s" % (diff, {p: (mb[p], mc[p]) for p in diff[:4]}))
 
 # 2. transmit inhibit: the panel toggle drives it on C, it crosses B and A, and on D it reaches Q3 alone

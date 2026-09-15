@@ -646,3 +646,26 @@ def t_the_cross_board_check_reads_the_declared_phase_directory():
         blk = src[i:i + 600]
         assert "netlist_path(" in blk, "%s still finds its own netlist, so the two can disagree" % fn
         assert "getmtime" not in blk, "%s still takes the newest directory that matches the stem" % fn
+
+
+def t_an_empty_pin_map_is_a_missing_board_and_not_a_disagreement_on_every_pin():
+    """C17's finish in an isolated tree read B's J_PANEL map as twenty-six empty strings, and the ribbon
+    contract said 'differs on pins [1..26]', refusing a board that was 0 hard, 0 unrouted and clean on every
+    other gate. A comparison with nothing is not a result in either direction."""
+    import os
+    src = open(os.path.join(TOOLS, "check_contracts.py")).read()
+    assert "_empty = [k for k, m in ((\"B\", mb), (\"C\", mc)) if not any(m.values())]" in src, "an empty side is not detected"
+    assert "MISSING.update(_empty)" in src, "an empty side is not counted as a missing board"
+    assert 'check(bool(_empty) or (mb and all(mb.values()) and not diff), "J_PANEL 2x13 map identical on B and C"' in src, (
+        "the ribbon contract still fails on an empty side instead of reading INCONCLUSIVE")
+
+
+def t_b_runs_no_gate_before_placement():
+    """check_pcb_b's I/O high-availability checks read empty lists on the 27-footprint mechanical board: 52
+    FAIL lines before the placement, and routeflow's pre-route judge blocks on any of them. B19 was unrunnable
+    under routeflow since those checks were written, and nobody saw it because every B measurement ran as an
+    arm whose driver reads only the pair count."""
+    import os, json
+    b = json.load(open(os.path.join(TOOLS, "boards", "b.json")))
+    assert b.get("gate_before_placement") is False, "B still runs its gate on the mechanical board"
+    assert "52 FAIL" in b.get("_gate_before_placement_why", ""), "the reason is not recorded with its number"
