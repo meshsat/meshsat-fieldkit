@@ -1366,6 +1366,20 @@ own, a /PCM_XTI track against a solder jumper's pad on F.Cu, a generator item an
 rule 2 is the grid, and what stands between D and both rules is the reading of rule 1 asked above.
 
 
+**Where the four-layer boards stand at 00:25 CEST on 16 September, after the plane fix** (rule 1 counts every filled zone as
+a reference now; the earlier readings counted only zones whose net name matched a list, which missed E's In2 power pours):
+
+| board | route | rule 1 | rule 2 |
+|---|---|---|---|
+| **D** (In2 a ground plane, the grid before the route) | 0 hard, 0 unrouted | **11 of 127 nets** over, all via transitions | **279 of 289** signal vias have a return via |
+| **E** (In2 ground fill, no grid: the grid costs E its route) | 0 hard, 1 open (a ground pour island) | **9 of 76 nets** over: the via transitions plus one 14.5 mm run along an In2 fill edge | **109 of 130**, 21 without a site |
+| **C** (four layers as built) | 0 hard, 0 unrouted | **81 of 127 nets** over: stack, not transitions (TR_APRS 209 of 453 mm) | 138 of 232, 94 without a site |
+| **P** (two layers) | 0 hard, 0 unrouted | **29 of 29 nets** over | the fixer places what it can |
+
+D and E are one ruling from both rules: the reading above (a transition rule 2 satisfies is not counted again under rule 1),
+plus a keep-out strip beside D's rail band and E's In2 fill edge, which are generator changes the run makes itself. C and P
+are the stack, which is yours.
+
 **Option 1 for C is being measured, 15 September 2026 23:50 CEST (`/root/ciso6`):** C on six layers (In1 and In4 ground planes,
 In2 and In3 routing, the ground-via grid before the route, the gate reading six), the same route the four-layer C18 had, so
 the ruling has the number rather than the argument. C's route takes about six hours; the numbers go here when it lands.
