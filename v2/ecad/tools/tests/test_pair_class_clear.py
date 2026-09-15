@@ -19,7 +19,8 @@ import os, json
 from harness import need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = open(os.path.join(TOOLS, "pair_preroute.py")).read()
+from harness import pre_router_source
+SRC = pre_router_source(TOOLS)
 
 
 def t_the_knob_exists_and_is_off():
@@ -63,7 +64,7 @@ def t_the_layer_change_test_is_registered_and_off():
     rule now holds the opposite: the knob is gone from the registry, the source and the knob map records the removal."""
     reg = json.load(open(os.path.join(TOOLS, "agent", "knobs.json")))["knobs"]
     assert "PAIR_LAYER_CHANGE_FIT" not in reg, "the deleted knob is back in the registry"
-    assert "PAIR_LAYER_CHANGE_FIT" not in open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read(), "the deleted knob is back in the source"
+    assert "PAIR_LAYER_CHANGE_FIT" not in pre_router_source(TOOLS), "the deleted knob is back in the source"
 
 
 def t_it_is_registered_and_documented():

@@ -45,7 +45,7 @@ OPS = {">=", ">", "==", "<=", "<"}
 UP = {">=", ">"}
 DOWN = {"<=", "<"}
 # The files a knob may be read from, for the completeness check only.
-KNOB_FILES = ("pair_preroute.py", "gen_pcb_b3.py", "pairsearch.py")
+KNOB_FILES = ("pair_preroute.py", "pair_router/config.py", "pair_router/occupancy.py", "pair_router/search.py", "pair_router/geometry.py", "gen_pcb_b3.py", "pairsearch.py")   # the pre-router is a package since 15 Sep 2026
 # What each run shape EXECUTES, so a knob's stage can be checked against it. A place run regenerates the
 # placement and then runs the pair passes, so it can act on both; a pair run cannot act on a placement
 # knob at all, because the board it is handed was placed hours earlier.

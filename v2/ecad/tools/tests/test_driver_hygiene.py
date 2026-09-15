@@ -390,7 +390,7 @@ def t_the_compiled_stub_search_defaults_off_without_numba():
     numba that same kernel is a numpy heap in a Python loop, which is slower than the heapq it replaces, so a
     bare default would quietly make every host that lacks numba worse while the measurement that justified the
     change was taken on one that has it."""
-    src = open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read()
+    from harness import pre_router_source; src = pre_router_source(TOOLS)
     m = re.search(r'_FAST_STUBS = os\.environ\.get\("PAIR_FAST_STUBS",\s*([^)]*)\)', src)
     assert m, "pair_preroute.py has no _FAST_STUBS default to check"
     assert "HAVE_NUMBA" in m.group(1), "the default is %s: it must read pairsearch.HAVE_NUMBA" % m.group(1).strip()
@@ -519,7 +519,7 @@ def t_a_leg_refusal_says_where_it_was_refused():
     J_HDMI, T1 and the pairs' own coupling capacitors, which is a placement answer and not a search one, and the
     only reason it was ever seen is that a knob nobody would remember to set happened to be on. The failure line
     carries the position, the layer, the distance to the pair's nearest own pad and which side of 2 mm it is."""
-    src = open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read()
+    from harness import pre_router_source; src = pre_router_source(TOOLS)
     i = src.index("the legs clear no smoothing of the centreline%s")
     window = src[max(0, i - 1400):i]
     assert "at the station" in window and "out in the corridor" in window, \

@@ -331,7 +331,7 @@ def t_a_knob_that_never_arrived_is_not_a_measurement():
            "predict": {"op": ">=", "value": 1}}
     if m.grade(row)[0] != "INFRA_FAIL":
         raise AssertionError("a row whose knob never arrived was graded as a measurement: %s" % (m.grade(row),))
-    src = open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read()
+    from harness import pre_router_source; src = pre_router_source(TOOLS)
     if "knobs this process received" not in src:
         raise AssertionError("the pre-router no longer echoes the knobs it received, so the guard cannot fire")
 
