@@ -1,0 +1,170 @@
+** Drc report for pcb-c-display.kicad_pcb **
+** Created on 2026-09-15T02:37:08+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 48 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(445.2750 mm, 281.4350 mm): Pad 2 [GND] of Y1 on B.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(463.8000 mm, 286.0900 mm): Pad 2 [GND] of C11 on B.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(424.0900 mm, 290.7400 mm): Pad 2 [GND] of C13 on B.Cu
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(281.4400 mm, 312.0800 mm): Segment of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(293.4400 mm, 312.0800 mm): Segment of D15 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(148.0000 mm, 101.0000 mm): PCB text 'LEFT: SOS, EMCON, ZEROIZE, LIGHT' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(446.0000 mm, 101.0000 mm): PCB text 'RIGHT: MAIN, PI, TEST, status LEDs' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(425.0000 mm, 144.5000 mm): Reference field of U_LIGHT
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(427.3490 mm, 275.9735 mm): Track [/+3V3] on B.Cu, length 0.2582 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(424.9300 mm, 269.5175 mm): Track [/C_DVDD] on B.Cu, length 0.7375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(426.1300 mm, 276.3925 mm): Track [/C_DVDD] on B.Cu, length 0.7375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.3700 mm, 273.5550 mm): Via [/EPD_DC] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.3700 mm, 272.7550 mm): Via [/EPD_RST] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.3700 mm, 274.3550 mm): Via [/EPD_SCL] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(420.8925 mm, 273.9550 mm): Track [/EPD_SDA] on B.Cu, length 0.7375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(226.7500 mm, 118.9500 mm): Track [/EPD_VCC] on F.Cu, length 0.9132 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(226.4711 mm, 118.9000 mm): Via [/EPD_VCC] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(231.2711 mm, 119.7000 mm): Via [/EPD_VDL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(232.0711 mm, 119.3000 mm): Via [/EPD_VGL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.3700 mm, 270.3550 mm): Via [/HB2] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(433.8350 mm, 269.1500 mm): Via [/MESH_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(447.5600 mm, 271.7500 mm): Via [/MSG_K] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(449.1975 mm, 271.1000 mm): Track [/PIRING_K] on B.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(422.5300 mm, 277.9150 mm): Via [/QSPI_D2] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(429.2900 mm, 273.9550 mm): Via [/RAIL_SENSE] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(446.7303 mm, 272.4000 mm): Via [/SHORE_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(422.1300 mm, 267.9950 mm): Via [/SLOT_EN1] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441.1975 mm, 269.8000 mm): Track [/SPARE2] on B.Cu, length 1.6375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441.1975 mm, 270.4500 mm): Track [/SPARE3] on B.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442.8350 mm, 271.1000 mm): Via [/SPARE4] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457.3897 mm, 269.1500 mm): Via [/SPARE8] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(454.9225 mm, 270.4500 mm): Track [/SPARE10] on B.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457.3897 mm, 271.7500 mm): Via [/SPARE12] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(456.5600 mm, 267.2000 mm): Via [/TX_LAMPTEST] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(423.7300 mm, 267.9950 mm): Via [/XIN] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(429.2900 mm, 272.3550 mm): Via [/ZEROIZE_HW] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
