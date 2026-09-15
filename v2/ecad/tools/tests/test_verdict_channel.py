@@ -253,3 +253,32 @@ def t_the_horizon_and_the_stamp_come_from_one_clock():
     i = src.index("pre_started =")
     line = src[i:src.index("\n", i)]
     assert "verdict.now()" in line, "the horizon is taken from routeflow's local display clock: %s" % line.strip()
+
+
+def t_an_advisory_verdict_is_recorded_and_never_decides_a_stage():
+    """B19's pre stage printed PREROUTE-DONE OK and routeflow read GATE_BLOCKED (15 Sep 2026): the pre-route DRC on the
+    pair copper BEFORE the prune and the predictor the board declares as a report had each written a FAIL, and the
+    collector took the worst of everything in the directory. A measurement for the record is written, listed and
+    hashed like any verdict, and left out of the stage's worst."""
+    d = tempfile.mkdtemp(prefix="vc-")
+    verdict.write("gate", verdict.PASS, denominator=3, out_dir=d, quiet=True)
+    verdict.write("measure", verdict.FAIL, denominator=15, out_dir=d, quiet=True, advisory=True)
+    worst, found, missing = verdict.collect(d)
+    assert worst == 0 and "measure" in found and found["measure"].get("advisory") is True, (worst, found)
+    os.environ["VERDICT_ADVISORY"] = "1"
+    try: verdict.write("measure2", verdict.INCONCLUSIVE, denominator=0, out_dir=d, quiet=True)
+    finally: os.environ.pop("VERDICT_ADVISORY", None)
+    assert verdict.collect(d)[0] == 0, "the environment form must mark the verdict advisory too"
+    e = tempfile.mkdtemp(prefix="vc-")
+    verdict.write("only", verdict.PASS, denominator=1, out_dir=e, quiet=True, advisory=True)
+    assert verdict.collect(e)[0] == 3, "a directory holding only measurements has judged nothing: INCONCLUSIVE"
+
+
+def t_the_pair_copper_measurement_and_a_declared_off_predictor_are_advisory():
+    s = open(os.path.join(TOOLS, "full.sh")).read()
+    i = s.find("--label 'pre-route DRC on the pair copper'"); assert i > 0
+    assert "VERDICT_ADVISORY=1" in s[s.rfind("\n", 0, i):i], "the pair-copper DRC before the prune is a bar the supervisor would read as the stage's"
+    j = s.find("--label 'pre-route DRC on the refused board'"); assert j > 0
+    assert "VERDICT_ADVISORY=1" in s[s.rfind("\n", 0, j):j], "the refused-board DRC is printed for the record and the chain's own DRC decides"
+    assert 'PAOFF="VERDICT_ADVISORY=1"' in s and "env $PAOFF $ESCENV python3 ../tools/place_audit.py" in s, (
+        "a board that declares the predictor as a report must not have its FAIL verdict read as the stage's")
