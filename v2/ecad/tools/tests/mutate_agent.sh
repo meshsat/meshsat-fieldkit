@@ -172,6 +172,34 @@ s = s.replace("    if not seen:\n        return (\"the pre-router printed no kno
               "    if True:\n        return \"\"\n    if not seen:\n        return (\"the pre-router printed no knob echo", 1)
 open(p, "w").write(s)'
 
+# 15 September 2026: the decision rules of the two red-team reports, each proved to fail when its defect is put back.
+run_case "a quote folder passes the set again" t_a_quote_only_folder_fails_the_set '
+p = os.path.join(T, "final_gate.py"); s = open(p).read()
+s = s.replace("    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1))", "    failed = bool(bad or (rc_c == 1))", 1)
+open(p, "w").write(s)'
+
+run_case "open certification passes the set again" t_open_certification_is_fail '
+p = os.path.join(T, "final_gate.py"); s = open(p).read()
+s = s.replace("    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1))", "    failed = bool(bad or held or missing or (rc_c == 1))", 1)
+open(p, "w").write(s)'
+
+run_case "an all-ILLEGAL cycle is measured again" t_an_all_illegal_set_is_inconclusive_never_pass '
+p = os.path.join(T, "agent", "loop.py"); s = open(p).read()
+s = s.replace("    bad = g[\"INFRA_FAIL\"] + g[\"UNMEASURED\"] + g[\"UNMEASURABLE\"] + g[\"ILLEGAL\"]", "    bad = g[\"INFRA_FAIL\"] + g[\"UNMEASURED\"] + g[\"UNMEASURABLE\"]", 1)
+open(p, "w").write(s)'
+
+run_case "a partial cycle is complete again" t_fewer_rows_than_arms_is_incomplete '
+p = os.path.join(T, "agent", "loop.py"); s = open(p).read()
+s = s.replace("    if not infra and not absent and not dup: return None", "    if not infra: return None", 1)
+open(p, "w").write(s)'
+
+run_case "a duplicate arm is stored" t_a_duplicate_arm_name_in_one_cycle_is_refused_by_the_schema '
+# two defences guard this: the UNIQUE (cycle_id, name) constraint and the experiment id derived from the pair; both go
+p = os.path.join(T, "expstore.py"); s = open(p).read()
+s = s.replace("  UNIQUE (cycle_id, name));", "  note2 TEXT);", 1)
+s = s.replace("        eid = hashlib.sha256((\"%s:%s\" % (cycle_id, name)).encode()).hexdigest()[:16]", "        eid = uuid.uuid4().hex[:16]", 1)
+open(p, "w").write(s)'
+
 echo "mutation proof: $pass proved, $fail NOT proved"
 rm -rf "$WORK"
 [ "$fail" -eq 0 ]
