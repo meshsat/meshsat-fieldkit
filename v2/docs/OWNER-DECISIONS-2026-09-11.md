@@ -1262,3 +1262,51 @@ making before the router ran (appendix 32.192). Three causes are fixed at the so
 the DRC on every board now, with a refused pair taken off whole so the fraction is judged on legal copper. The
 fraction itself is unchanged at 0.80 by length; nothing here moves it.
 
+
+## DECISION 27, OPEN: the four-layer boards cannot carry a plane under their back-side signals as built (15 September 2026, 21:30 CEST)
+
+**The ruling of 20:15 CEST** made two return-current rules gates for every board: a filled plane on a neighbouring
+layer under every signal track (the larger of 10 mm or 5 percent of a net's length allowed for anti-pads and connector
+ends), and a ground via within 1.5 mm of every signal via outside a fine-pitch fan. **Both were measured on every
+committed board before anything was re-finished** (`tools/return_report.py`, appendix 32.198). Rule 2 is a tool's job
+and needs no ruling: the finish places the ground vias. Rule 1 is a property of the STACK and this is what it reads:
+
+| board | layers | back-side signal track with no plane on a neighbouring layer | nets over their limit |
+|---|---|---|---|
+| A (A34 committed) | 6 | 7 percent (134 of 1,935 mm); F.Cu 5, In2 6, In3 5 | **3 of 197**, each 10 to 16 mm |
+| B (B19 placed, no fill yet) | 6 | not measurable before the route | 21 of 617 rails-as-signals, an intent-file artefact |
+| C (C17) | 4 | **62 percent** (6,173 of 9,930 mm) | **81 of 127** |
+| D (D11) | 4 | **55 percent** (677 of 1,236 mm) | **27 of 127** |
+| E (E9) | 4 | **88 percent** (2,283 of 2,582 mm) | **59 of 76** |
+| P (P4) | 2 | 100 percent on B.Cu, 57 percent on F.Cu | 29 of 29 |
+
+**Why.** On JLC's four-layer stack a back-side track's nearest layer is In2, 0.2 mm away, and In1's ground plane is a
+1.065 mm core beyond it. C and D route signals on In2 (a third of C's track, a third of D's), so their In2 ground pours
+are cut wherever a track runs, and the back-side tracks over those cuts have their return a core away: the loop the
+rule refuses. E's In2 carries its power pours and nothing else, and its back-side tracks run between those pours over
+bare dielectric. P is two layers and is ruled already (P5: signals on the top layer over the ground pour).
+
+**What needs no ruling and is running.** E: an In2 ground pour under everything the power pours do not cover (a
+generator change, no layer change), then E10 re-routed and measured. D: a measurement route with In2 as a power layer
+(a solid ground plane, wires on F.Cu and B.Cu only; D is 416 connections and routed 0 and 0 with three routing
+layers), in an isolated tree, to see whether two routing layers close it. A: the three nets at 10 to 16 mm are
+closed by the return-via fixer and a re-finish, or named. B: read on B19's routed board.
+
+**What needs a ruling: board C.** C routes 9,045 mm of signal on In2; two routing layers were measured on 6 September
+(the In1 keep-out board left 14 to 35 connections open in the driver cluster, appendix 32.44 and 32.47), which is why
+C became four layers with In2 routable. The rule as ruled cannot hold on C's stack. Options, costed:
+
+1. **C to six layers (JLC06161H-3313: F.Cu, In1 ground, In2 and In3 routing, In4 ground, B.Cu), RECOMMENDED.** Every
+   signal layer then has a plane next to it (In2 against In1, In3 against In4). The generators already carry the six-layer
+   form for A and B. Cost: about twice the bare-board price of the four-layer C (the largest board of the set, the U
+   backer), one regeneration and one route (C's routes take about six hours). A layer count is a reserved class, so it
+   waits for the word.
+2. **Keep four layers, In2 a solid ground plane, route on F.Cu and B.Cu.** Cheapest if it routes; the 6 September
+   measurement says it does not, and nothing in the tools has changed that would make it. The measurement can be
+   repeated as D's is, one route, before the six-layer C is cut.
+3. **Keep four layers and exempt C's back-side tracks from rule 1 with a written reason** (the panel backer carries
+   LEDs, switches and low-speed I2C and SPI). The rule then does not hold on all seven boards, which the 20:15 ruling
+   asked for.
+
+Until the word, the run does what needs no ruling: E's pour, D's measurement, A's re-finish, P5's route, the return
+vias on every board, and C's re-finish for rule 2 alone (its rule 1 verdict stands as refused).
