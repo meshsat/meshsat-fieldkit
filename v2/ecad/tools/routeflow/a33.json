@@ -52,7 +52,7 @@
    "out/parallel-a23.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/a32-clean.txt",
+  "clean_flag": "out/a33-clean.txt",
   "stub_log": "out/pcb-a-power-stub.log",
   "_collapsed": "11 September 2026 (MESHSAT-862): finish_a23.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
  },
@@ -64,6 +64,6 @@
  },
  "notes": "A23 (8 Sep 2026, MESHSAT-862 rule 3, appendix 32.69): the A22 profile on the pcb-a-power-a23 copy with the power copper of gen_pcb_a3.py; finish_a23.sh is finish_a22.sh on that directory. | A33 (15 Sep 2026): the four rails A32 missed after rail_prune, each at a named neck (32.193): the VBUS20 leg and column widened with four vias a shunt and a foot at the corner, the F.Cu leg under a track keep-out; the In2 VBAT plane gets tongues under the PA head and the converter row; the VIN_RAW head grows north; the PA run gets a foot at J_PA's pin.",
  "baseline_key": "A21",
- "clean_flag": "out/a32-clean.txt",
+ "clean_flag": "out/a33-clean.txt",
  "_phase_note": "A33, 15 September 2026 (MESHSAT-862): A32 closed to 0/0 by hand and four rails still missed on pour cells at named necks after rail_prune took the router's parallel copper off (32.193); A33 is the copper at those four places."
 }
