@@ -7884,3 +7884,26 @@ dismiss a dialog and the route waited. `xdotool` is installed, Return was sent t
 DISPLAY and XAUTHORITY read out of the java process's environment), and B19's router has been computing since 23:37. The
 rule: a box is set up by `onstart.sh` and nothing else; a typed subset of it is the 15 September evening's loss.
 
+### 32.201 Every deliverable folder in the tree passed a gate that could not see the rules it predates (16 September 2026, 00:15 CEST; MESHSAT-862)
+
+`final_gate.py` read the seven folders tonight and printed six passes: A24, C17, D11, E9, P4 and E5 all ALL PASS, B a quote.
+**Every one of those five was cut before the return-current rules existed**, and each passed because `verify_deliverable`
+judges a folder against ITSELF: its gerbers against its own layer count, its BOM against its own board. The folder cannot
+know what the tree has learned since. The gate now reads the phase `boards/<letter>.json` declares, which is what the
+generators stamp and the chains cut, and refuses a folder that names an earlier one with the reason printed; the truth table
+in `tests/test_final_gate.py` carries the case. It reads 1 of 7 today, which is the honest number: only E5, the bare dock
+block with no chain and no phase, is current. The declarations are A36, B19, C18, D12, E11, P5.
+
+**The same evening's two self-inflicted defects, both of a kind this record already names.** A patch script replaced
+`COPPER_LAYERS = 4;` with `COPPER_LAYERS = 6;   # decision 27 measurement: six layers` on a line that continued
+`ds.SetCopperLayerCount(COPPER_LAYERS)`, so the comment swallowed the call and the six-layer C measurement built a
+TWO-layer board (KiCad's default) whose gate then failed on the layer count: the 5 September rule "never append a comment
+to a generator line without looking at what follows on it" holds for a patch script as much as for a generator. And
+`bash /root/drivers/c6l_1*.sh $H` matched two copies of the driver, so bash ran the first with the second's path as its
+hash. Both were found within minutes because the gate refused the board; neither would have been visible in a log.
+
+**The grid asks the DRC until it names none.** On C's six-layer board one pass removed 222 grid vias and left 104, every
+one `items_not_allowed` inside a rule area whose geometry the tool's own containment test had not caught. `gnd_grid.py`
+re-runs the DRC and removes again, up to three rounds, and C's stack is measured without the grid so that the layer count
+is the only variable.
+
