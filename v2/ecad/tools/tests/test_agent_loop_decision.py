@@ -57,3 +57,11 @@ def t_the_review_is_a_count_not_the_grade():
     assert res == verdict.PASS and refused, "a refused write-up must be recorded, not turn a met prediction into FAIL"
     res, g, bad, refused = loop.cycle_result([R("a", "MET")], None, False)
     assert res == verdict.INCONCLUSIVE, "no review at all leaves the cycle unjudged"
+
+
+def t_the_reviewer_is_handed_only_this_cycles_verdicts():
+    """Tier 2b found it on the fourth live cycle (15 September 2026): the previous cycle's agent_loop.verdict.json was in
+    the material and the reviewer judged a gate file grading another arm."""
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "agent", "loop.py"), errors="replace").read()
+    assert 'not f.startswith("agent_loop")' in src, "the loop's own verdict is handed to the reviewer as material"
+    assert 'rec.get("ts", "")' in src, "a verdict written before this cycle is handed to the reviewer as material"
