@@ -112,6 +112,11 @@ def main(argv, run=None, boards_dir=None):
     contracts_absent = rc_c == 3 or "absent" in contracts or "missing_boards" in contracts
     rc_j, out_j = run([sys.executable, os.path.join(HERE, "jlc_certify.py")] + (["--boards", ",".join(sorted(only))] if only else []))
     certify = next((l for l in out_j.splitlines() if l.startswith("jlc_certify:")), "no certification line")
+    # Rule ENV-002: the release package is a set of DOCUMENTS as much as a set of folders, and the documents go
+    # public on the mirror within minutes. A rating claimed in them without the test that establishes it is a
+    # promise to whoever would carry the kit, and nothing has been fabricated or powered.
+    rc_m, out_m = run([sys.executable, os.path.join(HERE, "claims_check.py")])
+    claims = next((l for l in out_m.splitlines() if l.startswith("claims_check:")), "no claims line")
 
     print("final_gate: %d deliverable folder(s), %d required" % (len(rows), len(want)))
     for r in rows:
@@ -119,6 +124,7 @@ def main(argv, run=None, boards_dir=None):
     for l in missing: print("  %-3s %-34s %-6s %s" % (l.upper(), "(no deliverable folder)", "FAIL", "a required board with no folder is a failure of the set"))
     print("  contracts : %s" % contracts.strip()[:120])
     print("  parts     : %s" % certify.strip()[:120])
+    print("  claims    : %s" % claims.strip()[:120])
     bad = [r for r in rows if r["verdict"] in ("FAIL", "STALE")]
     held = [r for r in rows if r["quote"]]
     c_word = "PASS" if rc_c == 0 else ("NOT JUDGED HERE (no netlist in this tree)" if contracts_absent else "FAIL")
@@ -127,22 +133,26 @@ def main(argv, run=None, boards_dir=None):
           % (len(rows) - len(bad) - len(held), len(rows), len(held), len(missing), c_word, j_word, " (a subset, never the set)" if subset else ""))
     if "--json" in argv:
         json.dump(dict(rows=rows, missing=missing, contracts=contracts.strip(), certify=certify.strip(),
-                       contracts_rc=rc_c, certify_rc=rc_j), open(argv[argv.index("--json") + 1], "w"), indent=1)
+                       claims=claims.strip(), contracts_rc=rc_c, certify_rc=rc_j, claims_rc=rc_m),
+                  open(argv[argv.index("--json") + 1], "w"), indent=1)
     # THE DECISION, fail closed: any failure is FAIL; anything unjudged with no failure is INCONCLUSIVE; PASS is the
     # whole manifest present, every folder passing, no held board, contracts PASS and certification PASS.
-    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1))
-    unjudged = bool(subset or contracts_absent or rc_j == 3 or rc_c not in (0, 1, 3) or rc_j not in (0, 1, 3))
+    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1) or (rc_m == 1))
+    unjudged = bool(subset or contracts_absent or rc_j == 3 or rc_m == 3
+                    or rc_c not in (0, 1, 3) or rc_j not in (0, 1, 3) or rc_m not in (0, 1, 3))
     res = _v.FAIL if failed else (_v.INCONCLUSIVE if unjudged else _v.PASS)
     evidence = (["%s %s: %s" % (r["board"], r["folder"], r["summary"][:60]) for r in rows if r["verdict"] != "PASS"]
                 + ["%s: no deliverable folder" % l.upper() for l in missing]
                 + (["contracts: %s" % contracts.strip()[:80]] if rc_c != 0 else [])
-                + (["parts: %s" % certify.strip()[:80]] if rc_j != 0 else []))
+                + (["parts: %s" % certify.strip()[:80]] if rc_j != 0 else [])
+                + (["claims: %s" % claims.strip()[:80]] if rc_m != 0 else []))
     return _v.write("final_gate", res,
                     counts={"pass": len(rows) - len(bad) - len(held), "fail": len(bad), "quote": len(held), "missing": len(missing),
-                            "contracts_rc": rc_c, "certify_rc": rc_j},
+                            "contracts_rc": rc_c, "certify_rc": rc_j, "claims_rc": rc_m},
                     denominator=len(want),
                     evidence=evidence,
-                    note="deliverable folders re-read today; contracts %s; parts %s; %s" % (c_word, j_word, certify.strip()[:80]))
+                    note="deliverable folders re-read today; contracts %s; parts %s; claims %s; %s"
+                         % (c_word, j_word, "PASS" if rc_m == 0 else "OPEN", certify.strip()[:80]))
 
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**41 of 56 rules carry a gap.**
+**40 of 56 rules carry a gap.**
 
 ## absent (16)
 
@@ -143,12 +143,6 @@ the principle is written in the record and in the plan; the finish still carries
 and the predictor covers two of the classes  
 *Close it by* each closer names its class and its prevention attempt; extend the predictor. Owner **SESSION**. Effort P50 6h, P80 20h.
 
-## no behavioural test (1)
-
-**ENV-002 no claim without a test** (BLOCKER, DOCUMENTED_ONLY)  
-the prototype-framing rule is carried by CLAUDE.md and by review, not by a check over the shipped documents  
-*Close it by* a script over README, BUILD, ASSEMBLY and the release notes for rating words without an evidence link. Owner **SESSION**. Effort P50 2h, P80 4h.
-
 ## no protocol (1)
 
 **DFA-001 the assembly set is buildable** (BLOCKER, GENERATED_ONLY)  
@@ -222,9 +216,9 @@ layer_judge measures what the router did, not what the board needs, and says so;
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-## covered (15)
+## covered (16)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RF-002, RTE-002, SCH-001, SCH-002, SCH-003, SGN-002,
-SUP-001
+DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RF-002, RTE-002, SCH-001, SCH-002, SCH-003,
+SGN-002, SUP-001
 

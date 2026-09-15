@@ -1,0 +1,16 @@
+# Claims that are allowed, one per line as <file>:<substring>  # the reason (rule ENV-002, 16 September 2026).
+#
+# THE DISTINCTION THIS FILE CARRIES: a rating attached to a named part the project BUYS is the maker's claim
+# about their part, and quoting it is a fact about the bill of materials. A rating attached to THIS KIT is a
+# promise about hardware that has never been built, and it needs the test that establishes it or the word
+# "designed" in front of it. Everything below is the first kind.
+README.md:IP67 case                         # Peli's rating of the case the V1 kits are built in, quoted from the maker (two sentences, one an image caption)
+README.md:Xenarc IP67 monitor               # Xenarc's rating of the 709GNK, a purchased part
+v1/README.md:IP67 case                      # Peli's rating of the case, quoted
+v2/BUILD.md:Xenarc 709GNK (IP67             # Xenarc's own rating of the monitor
+v2/BUILD.md:Five IP68 fans                  # the fan maker's rating; the kit's own rating is not claimed anywhere
+v2/docs/ASSEMBLY.md:MIL-STD-130 style       # a labelling STYLE the drawings follow, not a certification of the kit
+v2/docs/PANEL.md:MIL-STD-1472               # the human-factors reference the switch pitch is taken from, not a certification
+v1/BUILD.md:has run since                   # the V1 kits are built and running; this is V1's history, not a V2 claim
+v1/README.md:until those boards are proven  # says the opposite of a claim: the V1 kits stay until V2 is proven
+v2/docs/V2-SPEC.md:the IP68 fans       # a list of vendor DOCUMENTS still owed, not a rating of anything we built

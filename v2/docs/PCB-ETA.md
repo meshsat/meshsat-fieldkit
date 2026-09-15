@@ -9,11 +9,11 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 196 h | 570 h |
+| engineering effort, one worker | 194 h | 566 h |
 | critical path through the dependencies | 34 h | 96 h |
-| at 6 engineering hours a day | 32.7 days | 95.0 days |
+| at 6 engineering hours a day | 32.3 days | 94.3 days |
 
-41 open item(s): 34 are this session's work and 7 are waits on the owner, a vendor or a lab. Waits are not
+40 open item(s): 33 are this session's work and 7 are waits on the owner, a vendor or a lab. Waits are not
 engineering time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens

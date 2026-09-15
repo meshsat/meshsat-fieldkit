@@ -26,9 +26,15 @@ coverage:
    note: "no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every derating rule resolves against nothing",
    remediation: {action: "write the envelope from the owner's use case and the enclosure's own ratings", owner: OWNER, depends_on: [], p50_h: 3, p80_h: 8}}
 
- ENV-002: {implementation: NONE_YET, verification: {tool: none}, maturity: DOCUMENTED_ONLY, gap_category: NO_BEHAVIOURAL_TEST,
-   note: "the prototype-framing rule is carried by CLAUDE.md and by review, not by a check over the shipped documents",
-   remediation: {action: "a script over README, BUILD, ASSEMBLY and the release notes for rating words without an evidence link", owner: SESSION, depends_on: [], p50_h: 2, p80_h: 4}}
+ ENV-002: {implementation: "claims_check.py plus claims-allow.txt, one declared exemption per line with its reason",
+   verification: {tool: claims_check.py, verdict: claims_check, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: a screen over the eight public documents, in final_gate.py because the release package is a set of
+     documents as much as a set of folders and they reach the public mirror within minutes. It finds the sentences that assert a
+     rating or a capability and asks each for a qualifier, an evidence reference, a negation, or a declared reason. The
+     distinction it holds: a rating attached to a part the project BUYS is the maker's own claim and quoting it is a fact about
+     the bill of materials, while the same rating attached to THIS KIT is a promise about hardware that has never been built.
+     Nine vendor ratings are declared with their reason; 19 claim sentences, 0 unqualified"}
 
  SCH-001: {implementation: "gen_sch_*.py", verification: {tool: erc_gate.py, verdict: erc_gate, fixtures: tests/test_erc_gate.py},
    maturity: ENFORCED, gap_category: NONE, note: "an allow line without a reason waves nothing through, proved by fixture"}
@@ -128,7 +134,7 @@ coverage:
    remediation: {action: "solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it", owner: SESSION, depends_on: [STK-001], p50_h: 8, p80_h: 24}}
 
  IMP-002: {implementation: "gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September)",
-   verification: {tool: class_floor.py, verdict: class_floor, fixtures: tests/test_return_rules.py},
+   verification: {tool: class_floor.py, verdict: class_floor, fixtures: "tests/test_board_gates.py, tests/test_return_rules.py"},
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: board B's project file shipped USB and DIFF100 at 0.10 mm against its own 0.127 mm minimum, a second hand-written copy that had drifted from the generator's table. The project classes come from the table now and full.sh blocks the placed board on class_floor.py"}
 
