@@ -603,14 +603,14 @@ def t_a_run_whose_tools_and_board_come_from_different_trees_is_refused():
     is a guard for half the runs.
     """
     import shutil
-    prof = os.path.join(TOOLS, "routeflow", "d9.json")
+    prof = os.path.join(TOOLS, "routeflow", "d.json")
     d = tempfile.mkdtemp(prefix="onetree-")
     iso = os.path.join(d, "ecad", "tools"); os.makedirs(iso)
     for f in os.listdir(TOOLS):
         if f.endswith(".py"): shutil.copy(os.path.join(TOOLS, f), iso)
     repo = os.path.join(d, "repo"); os.makedirs(os.path.join(repo, "v2", "ecad", "pcb-d-aprs-d9"))
     p = json.load(open(prof)); p["repo"] = repo
-    pf = os.path.join(d, "d9.json"); json.dump(p, open(pf, "w"))
+    pf = os.path.join(d, "d.json"); json.dump(p, open(pf, "w"))
     r = subprocess.run([sys.executable, os.path.join(iso, "routeflow.py"), "run", pf],
                        capture_output=True, text=True, timeout=180, cwd=d)
     out = r.stdout + r.stderr
