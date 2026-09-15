@@ -508,8 +508,23 @@ _ends = sorted((vbr[1], _r16[1])); _ry = (_r16[1] + _r16[3]) / 2
 if abs(_ends[1] - _ry) < abs(_ends[0] - _ry): _ends[1] -= 3.0   # the end nearer R16's centre is shortened, whichever way the frame runs
 else: _ends[0] += 3.0
 _klo, _khi = _ends
-print("placement: the VBUS20 leg keep-out runs y %.2f to %.2f (R16 at %.2f)" % (_klo, _khi, _ry))
-PC.keepout("keep tracks off the VBUS20 F.Cu leg to R16", (_r16x - _leg, _klo, _r16x + _leg, _khi), pcbnew.F_Cu)   # the leg carries no foreign pad; cut, it sent the rail down to In3 (32.193)
+# The leg is not free of foreign pads after all: three GND pads with their fanout stubs sit across it at one y, and a
+# track keep-out over them is three `items_not_allowed` before the route (15 Sep 2026). The keep-out is the leg minus
+# a 1.8 mm band around every foreign pad's row, so the fanout keeps its stubs and the rail keeps the rest of the leg.
+_bands = []
+for _f in board.GetFootprints():
+    for _p in _f.Pads():
+        _cx, _cy = case_xy(_p.GetPosition())
+        if _p.GetNetname().lstrip("/") != vbs and _r16x - _leg - 0.6 <= _cx <= _r16x + _leg + 0.6 and _klo <= _cy <= _khi: _bands.append((_cy - 1.8, _cy + 1.8))
+_bands.sort(); _cuts = []
+for _b0, _b1 in _bands:
+    if _cuts and _b0 <= _cuts[-1][1]: _cuts[-1] = (_cuts[-1][0], max(_cuts[-1][1], _b1))
+    else: _cuts.append((_b0, _b1))
+_y = _klo; _n = 0
+for _b0, _b1 in _cuts + [(_khi, _khi)]:
+    if _b0 - _y >= 1.0: PC.keepout("keep tracks off the VBUS20 F.Cu leg to R16", (_r16x - _leg, _y, _r16x + _leg, _b0), pcbnew.F_Cu); _n += 1
+    _y = max(_y, _b1)
+print("placement: the VBUS20 leg keep-out runs y %.2f to %.2f in %d piece(s), %d foreign pad row(s) left free (R16 at %.2f)" % (_klo, _khi, _n, len(_cuts), _ry))
 # 14 September 2026, MEASURED ON A28: FOUR VIAS CARRY A SIX AMP RAIL BETWEEN ITS TWO LAYERS. The F.Cu island
 # and the In3 polygon under it are tied only inside the two shunts' pads, two vias each, and IPC gives a
 # 0.4 mm barrel 1.11 A: four of them are rated 4.4 A against the rail's 6. The measurement says where the
