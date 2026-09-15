@@ -12,6 +12,7 @@ Documents:
   v2/docs/PCB-GOLDEN-RULES.md      the rulebook, by domain
   v2/docs/PCB-RULE-COVERAGE.md     rule -> implementation, verification, fixtures, maturity
   v2/docs/PCB-GAP-REGISTER.md      the gaps, by category, with remediation, owner and effort
+  v2/docs/PCB-ETA.md               the computed ETA from those remediations and the measured run history
   v2/docs/PCB-RULE-STATUS-<L>.md   per board, from out/rule-audit/<L>.json when it exists
 """
 import os, sys, json, glob
@@ -157,11 +158,43 @@ def board_doc(letter, st, reg, cov):
     return "\n".join(L) + "\n"
 
 
+def eta_doc():
+    import rules_eta as E
+    m = E.model(); items = E.open_items()
+    L = [HEAD, "# ETA, computed\n",
+         _wrap("Derived from the gap register's remediation entries and the route durations measured in this "
+               "tree's own journals. It is regenerated, never typed: change an estimate in the coverage map "
+               "and this page changes with it."), "",
+         "| | P50 | P80 |", "|---|---|---|",
+         "| engineering effort, one worker | %.0f h | %.0f h |" % (m["engineering_hours"]["p50"], m["engineering_hours"]["p80"]),
+         "| critical path through the dependencies | %.0f h | %.0f h |" % (m["critical_path_hours"]["p50"], m["critical_path_hours"]["p80"]),
+         "| at %.0f engineering hours a day | %.1f days | %.1f days |" % (m["hours_per_day"], m["calendar_days"]["p50"], m["calendar_days"]["p80"]),
+         "",
+         _wrap("%d open item(s): %d are this session's work and %d are waits on the owner, a vendor or a lab. "
+               "Waits are not engineering time and are listed separately below." % (m["open_items"], m["session_items"], m["wait_items"])), "",
+         "## Waits, which no amount of engineering shortens\n",
+         "| rule | what it needs | owner |", "|---|---|---|"]
+    for w in m["owner_waits"]:
+        L.append("| %s | %s | %s |" % (w["rule"], w["action"], next((i["owner"] for i in items if i["rule"] == w["rule"]), "")))
+    L += ["", "## Measured route history\n",
+          _wrap("Route durations this tree has recorded, in minutes per attempt: median %s, worst %s, over %d board(s). "
+                "A board's re-route is elapsed time, not engineering time, and several run at once on the rented box."
+                % (m["route_history"]["median_minutes"], m["route_history"]["worst_minutes"], len(m["route_history"]["boards"]))), "",
+          "## Assumptions\n"]
+    for a in m["assumptions"]: L.append("- " + a)
+    L += ["", _wrap("This estimate covers making every applicable rule verified. It does not cover prototype "
+                    "manufacture, assembly or physical validation, none of which can start before the set is "
+                    "ordered, and it is separate from the question of when the seven boards pass the gates that "
+                    "exist today."), ""]
+    return "\n".join(L) + "\n"
+
+
 def render(out_dir=None):
     reg = R.load(); cov = S.coverage(); docs = out_dir or DOCS
     files = {os.path.join(docs, "PCB-GOLDEN-RULES.md"): rulebook(reg, cov),
              os.path.join(docs, "PCB-RULE-COVERAGE.md"): coverage_doc(reg, cov),
-             os.path.join(docs, "PCB-GAP-REGISTER.md"): gap_register(reg, cov)}
+             os.path.join(docs, "PCB-GAP-REGISTER.md"): gap_register(reg, cov),
+             os.path.join(docs, "PCB-ETA.md"): eta_doc()}
     audit = os.path.join(os.path.dirname(HERE), "out", "rule-audit")
     for f in sorted(glob.glob(os.path.join(audit, "*.json"))):
         letter = os.path.basename(f)[:-5]
