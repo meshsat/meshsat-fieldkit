@@ -504,9 +504,11 @@ col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 1.65, (_r11[1] + _r1
 col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 1.65, (_r16[1] + _r16[3]) / 2 + 1.65, 4)                      # and in the charger's input shunt
 # the keep-out stops 2.5 mm short of R16: the shunt's own sense escapes (/CH_SRP, /CH_SRN) leave its pads along that edge
 # and the placed board carried two `items_not_allowed` on them at the first try (15 Sep 2026)
-_klo, _khi = sorted((vbr[1], _r16[1]))
-if _r16[1] < vbr[1]: _klo += 2.5
-else: _khi -= 2.5
+_ends = sorted((vbr[1], _r16[1])); _ry = (_r16[1] + _r16[3]) / 2
+if abs(_ends[1] - _ry) < abs(_ends[0] - _ry): _ends[1] -= 3.0   # the end nearer R16's centre is shortened, whichever way the frame runs
+else: _ends[0] += 3.0
+_klo, _khi = _ends
+print("placement: the VBUS20 leg keep-out runs y %.2f to %.2f (R16 at %.2f)" % (_klo, _khi, _ry))
 PC.keepout("keep tracks off the VBUS20 F.Cu leg to R16", (_r16x - _leg, _klo, _r16x + _leg, _khi), pcbnew.F_Cu)   # the leg carries no foreign pad; cut, it sent the rail down to In3 (32.193)
 # 14 September 2026, MEASURED ON A28: FOUR VIAS CARRY A SIX AMP RAIL BETWEEN ITS TWO LAYERS. The F.Cu island
 # and the In3 polygon under it are tied only inside the two shunts' pads, two vias each, and IPC gives a
