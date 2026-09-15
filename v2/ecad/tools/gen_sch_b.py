@@ -404,7 +404,9 @@ def slot(s):
         c(C(75 + 2 * k), "100n", "ETH%d_P%d_P" % (s, k), "SWP%d_%s_P" % (s, x), "C0402"); c(C(76 + 2 * k), "100n", "ETH%d_P%d_N" % (s, k), "SWP%d_%s_N" % (s, x), "C0402")
 for s in (1, 2, 3): slot(s)
 
+_SEC_MARKS = []   # 15 Sep 2026: the shared parts are sectioned by the headings below, in the order they are registered
 # ================================================================= shared: power
+_SEC_MARKS.append(('SHARED: POWER', len(P)))
 part("J_5V_DEV", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: USB device rail from A22 J_5V_DEV: + -", "VH2", {"1": "+5V_DEV", "2": "GND"}, "C274411")
 part("D1", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V_DEV", "2": "GND"}); c("C1", "100u 10V", "+5V_DEV", "GND", "C100u"); c("C2", "100u 10V", "+5V_DEV", "GND", "C100u")
 ic("U25", 6, "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)", "TSOT6", {"1": "+3V3_DEV", "2": "+5V_DEV", "3": "+5V_DEV", "4": "GND", "5": "DEV_SW", "6": "DEV_BST"}, "C780769")   # TSOT-23-6, 12,477 in stock
@@ -415,6 +417,7 @@ buck_small("U26", "KSZC", "+5V_DEV", "+5V_DEV", "+1V2_KSZ", ["L2", "C7", "C8", "
 ic("U27", 5, "AP2112K-2.5 LDO: the switch's 2.5 V analog rail", "SOT235", {"1": "+3V3_DEV", "2": "GND", "3": "+3V3_DEV", "4": "NC", "5": "+2V5_KSZ"}, "C176945"); c("C12", "1u", "+2V5_KSZ", "GND"); c("C13", "1u", "+3V3_DEV", "GND")
 part("BT1", "Device", "Battery_Cell", "CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231", "CR2032", {"1": "VBAT", "2": "GND"})
 # ================================================================= Ethernet switch KSZ9897R: ports 1-3 the modules, port 4 the wall RJ45 through the magnetics with the PoE injector
+_SEC_MARKS.append(('ETHERNET SWITCH KSZ9897R: PORTS 1-3 THE MODULES, PORT 4 THE WALL RJ45 THROUGH THE..', len(P)))
 k = {}
 for n, nm in KSZ.items():
     if nm == "VDDIO": k[n] = "+3V3_DEV"
@@ -463,6 +466,7 @@ r("R12", "0.25R 1% 2512", "POE_SEN", "GND", "R2512"); r("R13", "0R 2512 (POE_P l
 # 44 V minimum, and dissipated 9 W in a part rated for 0.1 W. Detection and classification are the TPS23861's own pins; nothing belongs in the feed.
 # A 0 ohm 2512 link keeps a place to open the path on the bench and carries the port current.
 # ================================================================= display switch: two TS3DV642 in cascade to the HDMI receptacle; SEL2 chooses the slot (SEL1 high = all channels), selects from the panel controller
+_SEC_MARKS.append(('DISPLAY SWITCH: TWO TS3DV642 IN CASCADE TO THE HDMI RECEPTACLE; SEL2 CHOOSES THE SLOT..', len(P)))
 def ts3(ref, a, b, cmn, sel):
     d = {1: "+3V3_DEV", 2: "HDMI_SW_EN", 16: "HDMI_SW_EN", 17: sel, 9: "NC", 30: "NC", 43: "GND",
          5: cmn + "_D0_P", 6: cmn + "_D0_N", 7: cmn + "_D1_P", 8: cmn + "_D1_N", 10: cmn + "_D2_P", 11: cmn + "_D2_N", 12: cmn + "_CK_P", 13: cmn + "_CK_N", 3: cmn + "_SCL", 4: cmn + "_SDA", 14: cmn + "_HPD", 15: cmn + "_CEC",
@@ -478,6 +482,7 @@ part("F2", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2"
 r("R17", "2.2k", "HDMIO_SCL", "+5V_HDMI"); r("R18", "2.2k", "HDMIO_SDA", "+5V_HDMI")   # source-side DDC pull-ups as the CM5IO board (2.2k)
 r("R19", "15k", "HDMIO_HPD_IN", "HDMIO_HPD"); r("R20", "22k", "HDMIO_HPD", "GND")   # the monitor's 5 V hot-plug level down to 3 V for the module pins
 # ================================================================= GNSS LG290P on a CP2102N bridge (bank 2 hub, port 1; a BANK is not a slot since the I/O HA work: bank s is hosted by slot s or by its neighbour); 1PPS to the three slots through level stages; active antenna bias from VDD_RF
+_SEC_MARKS.append(('GNSS LG290P ON A CP2102N BRIDGE (BANK 2 HUB, PORT 1; A BANK IS NOT A SLOT SINCE THE I/O..', len(P)))
 g = {n: "GND" for n, nm in LG.items() if nm == "GND"}
 g.update({23: "+3V3_DEV", 22: "VBAT", 20: "GNSS_TXD", 21: "GNSS_RXD", 3: "GNSS_PPS", 8: "GNSS_RST_n", 9: "GNSS_VDD_RF", 11: "GNSS_RF_IN", 6: "GNSS_TXD2", 7: "GNSS_RXD2"})
 synth("U11", "LG290P", "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack", "LG290P", g, "C29781241")
@@ -487,12 +492,14 @@ part("J_GNSS1", "Connector", "Conn_Coaxial", "U.FL socket: pigtail to A22's GNSS
 part("J_GNSS2", "Connector_Generic", "Conn_01x03", "LG290P UART2 (bench): GND TX RX", "PH1x3", {"1": "GND", "2": "GNSS_TXD2", "3": "GNSS_RXD2"})
 cp2102("U15", "GNSS", "+5V_DEV", "GNSS_DP", "GNSS_DM", "GNSS_RXD", "GNSS_TXD", refs=("R24", "C43", "C44"))
 # ================================================================= LoRa E22-900M30S on S3's SPI0, 5 V through a TPS22810 gated by EMCON; antenna pad to a U.FL for A22's LoRa jack
+_SEC_MARKS.append(("LORA E22-900M30S ON S3'S SPI0, 5 V THROUGH A TPS22810 GATED BY EMCON; ANTENNA PAD TO A..", len(P)))
 e22 = {n: "GND" for n, nm in E22P.items() if nm == "GND"}
 e22.update({9: "+5V_LORA", 10: "+5V_LORA", 6: "LORA_RXEN", 7: "LORA_TXEN", 8: "NC", 13: "SPI3_IO24", 14: "SPI3_IO23", 15: "SPI3_IO26", 16: "SPI3_MISO", 17: "SPI3_MOSI", 18: "SPI3_SCLK", 19: "SPI3_CE1", 21: "LORA_ANT"})
 synth("U12", "E22_900M30S", "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd", "E22", e22, "C411294")
 tps22810("U21", "+5V_DEV", "E22_EN", "+5V_LORA", "E22_CT"); c("C45", "1n", "E22_CT", "GND"); c("C46", "10u", "+5V_LORA", "GND", "C10u"); c("C47", "100n", "+5V_LORA", "GND"); r("R25", "10k", "SPI3_CE1", "+3V3_S3B")
 part("J_LORA1", "Connector", "Conn_Coaxial", "U.FL socket: pigtail to A22's LoRa jack J_RF11", "UFL", {"1": "LORA_ANT", "2": "GND"}, "C88373")
 # ================================================================= two E72 CC2652P radios (Zigbee coordinator, Thread RCP) on CP2102N bridges (bank 2 hub, ports 2 and 3), 3.3 V through one TPS22810 gated by EMCON
+_SEC_MARKS.append(('TWO E72 CC2652P RADIOS (ZIGBEE COORDINATOR, THREAD RCP) ON CP2102N BRIDGES (BANK 2 HUB,..', len(P)))
 for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", "C49")), ("ZBB", "U14", "U17", ("R27", "C50", "C51"))), 1):
     E72 = {n: "GND" for n in (1, 11, 12, 19, 23, 34)}
     E72.update({2: tag + "_LED_R", 3: tag + "_LED_G", 7: tag + "_RXD", 8: tag + "_TXD", 10: tag + "_BSL", 13: tag + "_TMSC", 14: tag + "_TCKC", 20: "+3V3_ZB", 24: tag + "_RST_n"})
@@ -504,6 +511,7 @@ for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", 
     cp2102(ub, tag, "+5V_DEV", tag + "_DP", tag + "_DM", tag + "_RXD", tag + "_TXD", rts=tag + "_RST_n", dtr=tag + "_BSL", refs=refs)
 tps22810("U22", "+3V3_DEV", "E72_EN", "+3V3_ZB", "E72_CT"); c("C52", "1n", "E72_CT", "GND"); c("C53", "10u", "+3V3_ZB", "GND", "C10u"); c("C54", "100n", "+3V3_ZB", "GND"); c("C55", "100n", "+3V3_ZB", "GND")
 # ================================================================= LimeSDR Mini receptacle (bank 1 hub, port 1, USB 3) and the RockBLOCK 9704 header (bank 1 hub, port 4, through a CP2102N), both behind TPS259631 eFuses
+_SEC_MARKS.append(('LIMESDR MINI RECEPTACLE (BANK 1 HUB, PORT 1, USB 3) AND THE ROCKBLOCK 9704 HEADER (BANK..', len(P)))
 part("J_LIME", "Connector", "USB3_A", "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", "USB3A",
      {"1": "+5V_LIME", "2": "LIME_DM", "3": "LIME_DP", "4": "GND", "5": "LIME_SSRX_N", "6": "LIME_SSRX_P", "7": "GND", "8": "LIME_SSTX_N", "9": "LIME_SSTX_P", "10": "GND"}, "C5355286")
 esd("U33", "LIME_DP", "LIME_DM", "+5V_LIME")
@@ -514,6 +522,7 @@ cp2102("U18", "RB", "+5V_DEV", "RB_DP", "RB_DM", "RB_RXD", "RB_TXD", refs=("R40"
 r("R41", "10k", "RB_STATUS", "+3V3_DEV"); r("R42", "10k", "RB_XMTG", "+3V3_DEV")
 efuse("U24", "+5V_DEV", "+5V_RB", "RB_EN", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "301R 1% (ILM: 3.0 A)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
 # ================================================================= camera, QMX and spare USB headers, the wall USB pair (bank 3 hub, port 3) with its ESD
+_SEC_MARKS.append(('CAMERA, QMX AND SPARE USB HEADERS, THE WALL USB PAIR (BANK 3 HUB, PORT 3) WITH ITS ESD', len(P)))
 tps2065("U28", "+5V_DEV", "CAM_EN", "+5V_CAM", "CAM_FLT"); r("R47", "10k", "CAM_FLT", "+3V3_DEV"); r("R48", "100k", "CAM_EN", "GND"); c("C64", "10u", "+5V_CAM", "GND", "C10u")
 part("J_CAM", "Connector_Generic", "Conn_01x04", "camera lead (USB 2.0, bank 1 hub, port 3): 5V D- D+ GND", "PH1x4", {"1": "+5V_CAM", "2": "CAM_DM", "3": "CAM_DP", "4": "GND"}); esd("U34", "CAM_DP", "CAM_DM", "+5V_CAM")
 part("F3", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "VBUS_QMX"})
@@ -524,6 +533,7 @@ part("J_QMX", "Connector_Generic", "Conn_01x04", "QMX USB lead (bank 2 hub, port
 # takes its VBUS from its own socket rail, so no fuse is needed here.
 esd("U29", "USB_WALL_P", "USB_WALL_N", "+3V3_DEV")
 # ================================================================= hardware EMCON gates (74LVC08APW: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC); EMCON_HW low silences every transmitter on this board
+_SEC_MARKS.append(('HARDWARE EMCON GATES (74LVC08APW: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B..', len(P)))
 part("U19", "Connector_Generic", "Conn_01x14", "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)", "TSSOP14",
      {"1": "EMCON_HW", "2": "LIME_HW_EN", "3": "LIME_EN_A", "4": "LIME_EN_A", "5": "LIME_SW_EN", "6": "LIME_EN", "7": "GND", "8": "RB_EN", "9": "EMCON_HW", "10": "RB_SW_EN", "11": "E22_EN", "12": "EMCON_HW", "13": "LORA_ON", "14": "+3V3_DEV"}, "C465737")
 part("U20", "Connector_Generic", "Conn_01x14", "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded", "TSSOP14",
@@ -539,6 +549,7 @@ r("R60", "100k", "KSZ_RST", "GND"); r("R61", "100k", "5G_OFF", "GND"); r("R62", 
 # present, which wins over these three boards' 100k pull-downs in parallel (2.5 V, a solid high).
 r("R58", "100k", "EMCON_HW", "GND"); r("R59", "100k", "TX_INHIBIT_n", "GND")
 # ================================================================= expanders, secure element, holdover clock, temperature (kit I2C bus, mastered by the panel controller over J_PANEL)
+_SEC_MARKS.append(('EXPANDERS, SECURE ELEMENT, HOLDOVER CLOCK, TEMPERATURE (KIT I2C BUS, MASTERED BY THE..', len(P)))
 part("U6", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)", "EXP", {
  "24": "+3V3_DEV", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "GND", "3": "GND",
  "4": "KSZ_RST", "5": "LIME_SW_EN", "6": "RB_SW_EN", "7": "LORA_ON", "8": "ZB_ON", "9": "CAM_EN", "10": "5G_OFF", "11": "5G_RESET",
@@ -553,6 +564,7 @@ ic("U8", 8, "ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE", 
 ic("U9", 8, "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed", "SOIC8", {"1": "NC", "4": "NC", "2": "+3V3_DEV", "3": "EXP_INT", "5": "GND", "6": "VBAT", "7": "SDA", "8": "SCL"}, "C9866"); c("C70", "100n", "+3V3_DEV", "GND")
 part("U10", "Sensor_Temperature", "TMP117xxDRV", "TMP117AIDRVR board temperature under the coolers (I2C 0x49)", "WSON6", {"1": "SCL", "2": "GND", "3": "EXP_INT", "4": "+3V3_DEV", "5": "+3V3_DEV", "6": "SDA", "7": "GND"}, "C699536"); c("C71", "100n", "+3V3_DEV", "GND")
 # ================================================================= the panel ribbon J_PANEL (2x13) to C7's controller and the A22 ribbon J_AB1 (2x13, underside)
+_SEC_MARKS.append(("THE PANEL RIBBON J_PANEL (2X13) TO C7'S CONTROLLER AND THE A22 RIBBON J_AB1 (2X13,..", len(P)))
 part("F1", "Device", "Polyfuse", "2A hold 1812", "F1812", {"1": "+5V_DEV", "2": "PANEL_5V"})
 part("J_PANEL", "Connector_Generic", "Conn_02x13_Odd_Even", "panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines", "IDC26", {
  "1": "PANEL_5V", "2": "PANEL_5V", "3": "GND", "4": "SDA", "5": "SCL", "6": "EXP_INT", "7": "TR_APRS", "8": "EMCON_HW", "9": "GND", "10": "ZEROIZE_HW", "11": "TX_INHIBIT_n", "12": "HDMI_SEL1", "13": "HDMI_SEL2",
@@ -579,6 +591,7 @@ for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", 
                         "+3V3_S1A", "+3V3_S1B", "+1V0_S1", "+1V1_S1", "+3V3_S2A", "+3V3_S2B", "+1V0_S2", "+1V1_S2", "+3V3_S3A", "+3V3_S3B", "+1V0_S3", "+1V1_S3"), 2):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
 # ================================================================= the I/O high-availability control plane (ARCH-PCB-B-IOHA)
+_SEC_MARKS.append(('THE I/O HIGH-AVAILABILITY CONTROL PLANE (ARCH-PCB-B-IOHA)', len(P)))
 # Three equivalent supervisors. They decide which module owns each bank and never carry a byte of peripheral traffic:
 # no USB, no PCIe and no Ethernet payload passes through one. Their decisions reach the fabric only through the 2-of-3
 # majority voters below, so a controller wedged in any state is outvoted by the other two and no firmware is trusted.
@@ -642,6 +655,7 @@ r("R504", "60R4 1%", "CANH_A", "CANT2_A"); r("R505", "60R4 1%", "CANT2_A", "CANL
 r("R506", "60R4 1%", "CANH_B", "CANT2_B"); r("R507", "60R4 1%", "CANT2_B", "CANL_B"); c("C507", "4.7n", "CANT2_B", "GND")
 
 # ----------------------------------------------------------------- the 2-of-3 majority voters
+_SEC_MARKS.append(('THE 2-OF-3 MAJORITY VOTERS', len(P)))
 # One voter per control bit: out = AB + BC + CA, three AND gates and two OR gates. A controller stuck high or low is a
 # minority of one and cannot move the bit, which is what makes the split-brain guarantee a property of the circuit and
 # not of firmware. 74LVC08 and 74LVC32 share a pinout and the EMCON chain already uses the 08, so this adds no new
@@ -705,6 +719,7 @@ for _b in (1, 2, 3):
     r("R%d" % (473 + _b), "10k", "BSEL%d" % _b, "BSEL%d_D" % _b); c("C%d" % (480 + _b), "10n", "BSEL%d_D" % _b, "GND")
 
 # ----------------------------------------------------------------- the shared WiFi antennas and their changeover
+_SEC_MARKS.append(('THE SHARED WIFI ANTENNAS AND THEIR CHANGEOVER', len(P)))
 # The two AW7915-AED cards (slot 1 and slot 3) feed the SAME pair of P2P antennas through two Skyworks SKY13351-378LF
 # SPDT switches, one per antenna chain. Data sheet 201132I: 20 MHz to 6.0 GHz, insertion loss 0.35 dB typical below
 # 3 GHz and 0.50 dB typical from 3 to 6 GHz, isolation 24 dB, IP0.5dB +30 dBm at VCTL 2.7 V against the card's +20 dBm,
@@ -741,7 +756,12 @@ for s in (1, 2, 3):
     mine = lambda ref, s=s: (ref[0] in "RCLQDUY" and ref[1:].isdigit() and 100 * s <= int(ref[1:]) < 100 * (s + 1)) or ref in ("U3%dA" % (s - 1), "U3%dB" % (s - 1)) or ref.startswith("LED%d" % s) and len(ref) == 5 or ref.endswith("%d" % s) and ref.startswith(("J_5V_S", "J_FAN", "J_FLASH", "J_RPIBOOT", "J_DBG", "J_SPI", "J_M2N", "J_M2C")) or (s == 2 and ref in ("J_SIM1", "J_SIM2"))
     SECTIONS.append(("SLOT S%d: COMPUTE MODULE 5, PCIe SWITCH, USB 3 HUB, M.2 SOCKETS, RAILS, SUPPORT" % s, refs_matching(mine)))
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
-SECTIONS.append(("SHARED: ETHERNET SWITCH, MAGNETICS, RJ45, PoE; HDMI SWITCH; GNSS; LoRa; E72 x2; BRIDGES; LimeSDR; ROCKBLOCK; HEADERS; EMCON; EXPANDERS; RIBBONS", [p["ref"] for p in P if p["ref"] not in placed_refs]))
+for _k, (_t, _s) in enumerate(_SEC_MARKS):   # one section per heading of the shared area, the parts registered under it
+    _e = _SEC_MARKS[_k + 1][1] if _k + 1 < len(_SEC_MARKS) else len(P)
+    _refs = [p["ref"] for p in P[_s:_e] if p["ref"] not in placed_refs]
+    if _refs: SECTIONS.append(("SHARED: " + _t, _refs))
+_rest = [p["ref"] for p in P if p["ref"] not in {r for _, rs in SECTIONS for r in rs}]
+if _rest: SECTIONS.append(("SHARED: THE REST", _rest))
 def layout(page_h):
     global out, pf_n
     out = kisch.reset_body(); placed = set(); COLW = 92.0; x = 20.0; y = 30.0
