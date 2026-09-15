@@ -30,7 +30,7 @@ with open("out/jlc/%s-bom.csv" % N, "w", newline="") as f:
 print("JLC BOM + CPL written to out/jlc/")
 PY
 python3 - "$N" <<'PY'
-import sys, csv, os, re, pcbnew
+import sys, csv, os, re, json, pcbnew
 n = sys.argv[1]; b = pcbnew.LoadBoard(n + ".kicad_pcb"); bb = b.GetBoardEdgesBoundingBox(); ds = b.GetDesignSettings()
 W, H, NL, T = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, b.GetCopperLayerCount(), ds.GetBoardThickness() / 1e6
 title = b.GetTitleBlock().GetTitle() or n
@@ -39,7 +39,19 @@ if os.path.exists("out/jlc/%s-cpl.csv" % n):
     for r in csv.DictReader(open("out/jlc/%s-cpl.csv" % n)):
         if r.get("Layer", "").lower().startswith("t"): top += 1
         else: bot += 1
-usb = any("USB_" in str(k) and str(k).endswith(("_P", "_N")) for k in b.GetNetInfo().NetsByName().keys())
+# 15 September 2026: the impedance line was written for any board with USB_*_P/N nets and said "0.2 mm / 0.15 mm"
+# and "90 ohm" as constants. C declares its USB class with NO target (the RP2040 is full speed, appendix 32.79) and
+# D's pairs are 0.30/0.20 since 8 September, so the note asked the fab to tune a board that needs no tuning and named
+# a geometry two boards do not carry. The target comes from the intent file and the geometry from the project's class.
+usb = False; _zt = None; _w = _g = None
+try:
+    _it = json.load(open("out/%s-intent.json" % n)); _zt = (_it.get("pair_classes") or {}).get("USB", {}).get("z_diff")
+except Exception: _zt = None
+try:
+    _pro = json.load(open(n + ".kicad_pro")); _cls = [c for c in _pro.get("net_settings", {}).get("classes", []) if c.get("name") == "USB"]
+    if _cls: _w, _g = _cls[0].get("track_width"), _cls[0].get("diff_pair_gap")
+except Exception: pass
+usb = bool(_zt) and any("USB_" in str(k) and str(k).endswith(("_P", "_N")) for k in b.GetNetInfo().NetsByName().keys())
 # 13 September 2026. These two claims were CONSTANTS and both were wrong on a board in the tree. The stackup
 # was named only for a four-layer board, so A24 and B16, which are on JLC06161H-3313, went out asking the fab
 # to "tune for 90 ohm differential on the 7628 stackup", a stack they are not built on; and the copper weight
@@ -59,7 +71,7 @@ asm = "none (bare board)" if top + bot == 0 else ("top %d" % top + (", bottom %d
 lines = ["MeshSat field-kit carrier %s Rev A - JLCPCB order notes (generated from the board file)" % title.replace("MeshSat Field Kit carrier - ", ""),
          "- Gerbers + drill: out/%s-gerbers.zip (KiCad 9, Protel extensions, Excellon mm)" % n,
          "- Board: %.0f x %.0f mm, %d layers, %.1f mm FR-4, %s%s outer copper, ENIG, matte black soldermask, white silkscreen" % (W, H, NL, T, stack, _oz)]
-if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at 0.2 mm / 0.15 mm on the outer layers; ask JLC to tune for 90 ohm differential on the %s" % (stack.replace(" stackup, ", " stackup") or "stackup this board is built on"))
+if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at %s mm / %s mm on the outer layers; ask JLC to tune for %.0f ohm differential on the %s" % (("%g" % _w) if _w else "the class", ("%g" % _g) if _g else "the class", _zt, (stack.replace(" stackup, ", " stackup") or "stackup this board is built on"))
 lines += ["- Assembly: %s. BOM: %s-bom.csv, CPL: %s-cpl.csv" % (asm, n, n) if top + bot else "- Assembly: none, bare board",
           "- LCSC part numbers: verified codes filled by tools/lcsc_fill.py; lines without a code are bench-fitted parts (see ORDER-NOTES.txt in the order folder)",
           "- Not assembled by JLC: the bench-fit list of the order folder's ORDER-NOTES.txt and docs/ASSEMBLY.md section 9"]
