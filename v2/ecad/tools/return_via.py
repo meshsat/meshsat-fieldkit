@@ -150,7 +150,8 @@ def fix(path, dry=False, radius=RETURN_MM):
         path = tmp; print("return_via: dry run on %s" % tmp)
     b = pcbnew.LoadBoard(path); ds = b.GetDesignSettings()
     VD, VDR = max(0.6, mm(ds.m_ViasMinSize)), max(0.3, mm(ds.m_MinThroughDrill))
-    clr = max(mm(ds.GetDefault().GetClearance()), 0.127)
+    # the board's own minimum clearance (KiCad 9's BOARD_DESIGN_SETTINGS has no GetDefault(); the first run on C18 died here)
+    clr = max(mm(ds.m_MinClearance), 0.127)
     gnd_net = b.FindNet("GND")
     if gnd_net is None: print("return_via: the board has no GND net; nothing placed"); return 0
     before = judge(b, path, radius)
