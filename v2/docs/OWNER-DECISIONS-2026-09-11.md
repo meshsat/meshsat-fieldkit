@@ -1360,3 +1360,36 @@ nothing for rule 1's via transitions.
 A six-layer D is measured irrelevant to this: the anti-pads are the same on any stack. C's ruling above stands unchanged
 (its misses are stack, 209 of 453 mm on one net); the same via-transition question will apply to C after its stack is ruled.
 
+
+
+## DECISION 28, OPEN: board P cannot hold the return-path rule on two layers, and the ruled P5 does not route (15 September 2026, 22:40 CEST)
+
+**The ruling of 20:15 CEST scoped P as "two layers at 2 oz, re-routed with its signals on the top layer over a solid back-side
+ground pour; if the router cannot close it that way, the numbers come back to the owner."** They come back, measured three ways
+on the same evening:
+
+| board | rule 1 (a plane under every signal net) | route |
+|---|---|---|
+| P4 as committed (two layers, wires on both, the B.Cu ground pour) | **29 of 29 signal nets over** their limit, 43 to 104 mm uncovered per net (SMBC 104 of 123 mm) | 0 hard, 0 unrouted |
+| P4 plus a board-wide F.Cu ground pour (option "pours on both sides", added to a copy and refilled) | **29 of 29 over**, 30 to 65 mm per net | unchanged |
+| **P5 as ruled** (B.Cu a power layer, wires on F.Cu only, `/root/piso`) | not reached | **0 hard, 44 connections open of the board's 35 nets, 4 vias**, 23 minutes: a single routing layer does not carry this board |
+
+**Why.** On two layers a track's only neighbouring layer is the other side, and every track on that side cuts the pour the
+first one references; with pours on both sides each side references the other's pour except under its tracks, which on a
+70 x 44 mm board carrying the pack path in 3 mm bands and 35 nets is most of the length. The rule is a property of the
+stack, exactly as decision 27 found for C, and a two-layer board cannot hold it except by being nearly empty.
+
+**Options, costed, the recommendation first.**
+
+1. **P to four layers (JLC's four-layer stack with 2 oz outer copper, In1 and In2 ground planes, the pack bands on the outer
+   layers as they are), RECOMMENDED.** Rule 1 holds by construction on both outer layers; ruling 7's 2 oz stays on the
+   layers that carry the pack current; the 35-net route is trivial with two routing layers. Cost: the four-layer price of a
+   70 x 44 mm board (small in absolute terms; JLCPCB prices this size in tens of euros for five), a stackup line in the
+   order notes, one regeneration. **Measured now in `/root/piso4`** (the same route under routeflow with both inner layers
+   as ground planes) so the ruling has the number rather than the argument.
+2. **Keep P on two layers and exempt it from rule 1 with a written reason** (a pack gauge board: SMBus at 100 kHz, thermistor
+   and sense lines, the pack path in bands, no fast edge anywhere). Cost: the rule then does not hold on all seven boards,
+   which the 20:15 ruling asked for, and the exemption is a per-board sentence of the kind the pair ruling refused.
+3. **P5 as ruled.** Measured above: it does not route.
+
+E5, the bare dock block, is untouched by this: it carries no track and passes rule 1 as "0 of 0 signal nets".
