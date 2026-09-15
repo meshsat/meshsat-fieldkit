@@ -110,6 +110,14 @@ def _obs_clr(name):
 #   PAIR_INNER_WIDTH / PAIR_INNER_GAP                the same for every class (the scalar form, kept)
 W_INNER = float(os.environ.get("PAIR_INNER_WIDTH", "0"))
 S_INNER = float(os.environ.get("PAIR_INNER_GAP", "0"))
+# 15 September 2026 (MESHSAT-862), B19's first route for a deliverable. The pre-route DRC on the pair copper read 64 hard,
+# and 13 of them were a pair's OWN two legs at 0.122 to 0.126 mm against the 0.127 mm board minimum: the outer gap carried a
+# 0.013 mm cushion over the clearance since 12 September and the INNER gap (INNER_BY_CLASS, PAIR_INNER_GAP) carried none, so
+# every inner-layer pair laid at exactly the class gap came out a few micrometres under it at its arcs (the offset polyline
+# of a chord is not the offset of the arc). On F.Cu the same happened by 18 micrometres with the 0.013 in place. The cushion
+# is one number for both, read here, and 0.025 mm absorbs what was measured with a margin: on the 3313 stack it moves an
+# inner 100 ohm pair by about 5 percent of its target, inside the judge's 10 percent.
+GAP_CUSHION = float(os.environ.get("PAIR_GAP_CUSHION", "0.025"))
 INNER_BY_CLASS = {}
 for _e in os.environ.get("PAIR_INNER", "").split(","):
     if ":" not in _e: continue
@@ -349,6 +357,33 @@ def _all_counts(gr, b, layers, half, via_r, split):
 
 MAP_CALLS = [0]   # how many times a pair asked for its maps; the seconds are _T["maps"], the counter that already existed
 
+
+
+def _via_site_blocked(b, pos, vd, clr, own, fp_own):
+    """A through via spans every copper layer, so its site is judged against the copper of EVERY layer, not the one the pad
+    is on. B19 is assembled on both sides and the via the pre-router drops into a station's middle pin (an ESD's ground
+    pin between the pair's two pads) landed 0.01 to 0.12 mm from R147, R256 and R150 on the underside, eight of the
+    pre-route DRC's 64 hard items (15 Sep 2026). Returns what blocks the site or None. The pads of the pin's own part are
+    not asked: that is the geometry the station was drawn with and every board's pre-route DRC has judged it clean."""
+    x, y = pos.x, pos.y; need = (vd / 2 + clr) * 1e6
+    def seg_d(t):
+        ax, ay, bx, by = t.GetStart().x, t.GetStart().y, t.GetEnd().x, t.GetEnd().y
+        L2 = (bx - ax) ** 2 + (by - ay) ** 2
+        u = 0.0 if L2 == 0 else max(0.0, min(1.0, ((x - ax) * (bx - ax) + (y - ay) * (by - ay)) / L2))
+        return math.hypot(x - (ax + u * (bx - ax)), y - (ay + u * (by - ay)))
+    for fp in b.GetFootprints():
+        if fp is fp_own or fp.GetReference() == fp_own.GetReference(): continue
+        for p in fp.Pads():
+            if p.GetNetname() == own: continue
+            bb = p.GetBoundingBox(); c = bb.GetCenter()
+            dx = max(0.0, abs(x - c.x) - bb.GetWidth() / 2.0); dy = max(0.0, abs(y - c.y) - bb.GetHeight() / 2.0)
+            if math.hypot(dx, dy) < need: return "%s pad %s [%s] on %s" % (fp.GetReference(), p.GetNumber(), p.GetNetname(), "B.Cu" if fp.IsFlipped() else "F.Cu")
+    for t in b.GetTracks():
+        if t.GetNetname() == own: continue
+        if t.GetClass() == "PCB_VIA":
+            if math.hypot(t.GetPosition().x - x, t.GetPosition().y - y) < need + t.GetWidth() / 2.0: return "via [%s]" % t.GetNetname()
+        elif seg_d(t) < need + t.GetWidth() / 2.0: return "track [%s] on %s" % (t.GetNetname(), t.GetLayerName())
+    return None
 
 def build_maps(gr, b, layers, nets, half, via_r, split=VIA_SPLIT, pads_only=False):
     """Forbidden centreline cells per layer (other-net copper grown by half + CLR) and forbidden via-centre cells (any layer).
@@ -1252,7 +1287,7 @@ def main(a):
             if _bv and _bv < vd: vd, vdr = _bv, (_bd if _bd else vdr)
         try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
         except Exception: min_clr = 0.0
-        clr_c = max(clr_c, min_clr); s = max(s, clr_c + 0.013)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
+        clr_c = max(clr_c, min_clr); s = max(s, clr_c + GAP_CUSHION)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
         _CLR_NOW[0] = max(clr_c, min_clr) if CLASS_CLEAR else CLR   # what the obstacle map grows this pair's obstacles by
         # 10 September 2026, measured: the corridor's margin over its legs was 0.25 mm (a 0.15 mm mask margin plus one grid
         # cell) and that slack decides how many pairs can be laid. A leg needs w/2 + 0.02 from other copper on its own map
@@ -1275,6 +1310,7 @@ def main(a):
         # one map serves every layer and it must never under-block.
         _ic = INNER_BY_CLASS.get(cls_of(pn))
         w_in, s_in = (_ic if _ic else (W_INNER or w, S_INNER or s))
+        s_in = max(s_in, clr_c + GAP_CUSHION)   # the inner gap takes the same cushion over the clearance as the outer one (15 Sep 2026, 13 of B19's 64)
         def wid(L): return w_in if L in _INNER_CU else w
         def gap(L): return s_in if L in _INNER_CU else s
         def dof(L): return (wid(L) + gap(L)) / 2
@@ -1469,7 +1505,7 @@ def main(a):
             for p in pads[net]:
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or via_entry(p.GetParentFootprint()) or not fanned_part(p.GetParentFootprint()): continue   # PAIR_ENTRY_VIA keeps an IC's escape and ends the legs at its vias
                 for t in _escape_chain(p, net): board_remove(b, t); stripped.append(t)
-        inpad = 0
+        inpad = 0; inpad_refused = []
         for p_, n_ in stations:   # a pin between the station's two pads (the SOT-23-6 ESD's ground pin 2): its escape stub would sit under the legs; a via in its pad instead
             f_ = p_.GetParentFootprint()
             if f_.GetReference() != n_.GetParentFootprint().GetReference() or not fanned_part(f_): continue
@@ -1477,10 +1513,12 @@ def main(a):
                 if q.GetNetname() in (pn, nn) or q.GetAttribute() != pcbnew.PAD_ATTRIB_SMD: continue
                 d1, d2 = dist_p(q, p_), dist_p(q, n_)
                 if abs(d1 + d2 - dist_p(p_, n_)) > 0.3: continue   # not between them
+                _blk = _via_site_blocked(b, q.GetPosition(), min(vd, 0.5), max(CLR, clr_c), q.GetNetname(), f_)
+                if _blk: inpad_refused.append("%s.%s against %s" % (f_.GetReference(), q.GetNumber(), _blk)); continue
                 near = [t for t in b.GetTracks() if t.IsLocked() and t.GetNetname() == q.GetNetname() and math.hypot(t.GetPosition().x - q.GetPosition().x, t.GetPosition().y - q.GetPosition().y) < 2.5e6]
                 for t in near: board_remove(b, t); stripped.append(t)
                 v = pcbnew.PCB_VIA(b); v.SetPosition(q.GetPosition()); v.SetWidth(FromMM(min(vd, 0.5))); v.SetDrill(FromMM(min(vdr, 0.25))); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(q.GetNet()); v.SetLocked(True); b.Add(v); pieces.append(v); inpad += 1
-        if stripped or inpad: print("pair_preroute: %s: %d escape pieces of fine-pitch station pads removed, the legs enter those pads directly; %d via(s) in the pad of a pin between them" % (stem, len(stripped), inpad))
+        if stripped or inpad or inpad_refused: print("pair_preroute: %s: %d escape pieces of fine-pitch station pads removed, the legs enter those pads directly; %d via(s) in the pad of a pin between them" % (stem, len(stripped), inpad) + ("; %d via site(s) refused, the escape stays: %s" % (len(inpad_refused), ", ".join(inpad_refused)) if inpad_refused else ""))
         pre_vias[:] = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA" and t.IsLocked()]
         trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)   # every net's copper, the pair's own pads included: the corridor stops outside the stations, the stubs enter
         via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}   # sites for a single end via per leg (plain margins; the other leg's pads block)

@@ -96,7 +96,8 @@ def t_a_coupled_pair_at_its_own_pitch_is_never_refused():
     centre to centre, and the demand is the class clearance plus one width. The generator's own floor
     (`s = max(s, clr_c + 0.013)`) is what keeps those two apart, so it is checked here as well."""
     s = _src()
-    assert re.search(r"s = max\(s, clr_c \+ 0\.01\d\)", s), "the intra-pair gap no longer has the class clearance as its floor"
+    # 15 Sep 2026: the 0.013 literal became the knob PAIR_GAP_CUSHION (0.025, both layers); the floor is what this rule keeps
+    assert re.search(r"s = max\(s, clr_c \+ (0\.01\d|GAP_CUSHION)\)", s), "the intra-pair gap no longer has the class clearance as its floor"
     w, gap_, clr = 0.13, 0.14, 0.127
     need = max(0.0, clr - 0.005) + w
     assert w + gap_ > need, "a correctly coupled pair would be refused by its own clearance test (%.3f against %.3f)" % (w + gap_, need)
