@@ -71,7 +71,7 @@ asm = "none (bare board)" if top + bot == 0 else ("top %d" % top + (", bottom %d
 lines = ["MeshSat field-kit carrier %s Rev A - JLCPCB order notes (generated from the board file)" % title.replace("MeshSat Field Kit carrier - ", ""),
          "- Gerbers + drill: out/%s-gerbers.zip (KiCad 9, Protel extensions, Excellon mm)" % n,
          "- Board: %.0f x %.0f mm, %d layers, %.1f mm FR-4, %s%s outer copper, ENIG, matte black soldermask, white silkscreen" % (W, H, NL, T, stack, _oz)]
-if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at %s mm / %s mm on the outer layers; ask JLC to tune for %.0f ohm differential on the %s" % (("%g" % _w) if _w else "the class", ("%g" % _g) if _g else "the class", _zt, (stack.replace(" stackup, ", " stackup") or "stackup this board is built on"))
+if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at %s mm / %s mm on the outer layers; ask JLC to tune for %.0f ohm differential on the %s" % (("%g" % _w) if _w else "the class", ("%g" % _g) if _g else "the class", _zt, (stack.replace(" stackup, ", " stackup") or "stackup this board is built on")))
 lines += ["- Assembly: %s. BOM: %s-bom.csv, CPL: %s-cpl.csv" % (asm, n, n) if top + bot else "- Assembly: none, bare board",
           "- LCSC part numbers: verified codes filled by tools/lcsc_fill.py; lines without a code are bench-fitted parts (see ORDER-NOTES.txt in the order folder)",
           "- Not assembled by JLC: the bench-fit list of the order folder's ORDER-NOTES.txt and docs/ASSEMBLY.md section 9"]
