@@ -611,7 +611,8 @@ def t_a_run_whose_tools_and_board_come_from_different_trees_is_refused():
     repo = os.path.join(d, "repo"); os.makedirs(os.path.join(repo, "v2", "ecad", "pcb-d-aprs-d9"))
     p = json.load(open(prof)); p["repo"] = repo
     pf = os.path.join(d, "d.json"); json.dump(p, open(pf, "w"))
-    r = subprocess.run([sys.executable, os.path.join(iso, "routeflow.py"), "run", pf],
+    # the copied tools carry no boards/ directory, so the letter profile's <PHASE> is given here (15 September 2026)
+    r = subprocess.run([sys.executable, os.path.join(iso, "routeflow.py"), "run", pf, "--phase", "D12"],
                        capture_output=True, text=True, timeout=180, cwd=d)
     out = r.stdout + r.stderr
     assert r.returncode == 2, "a run whose tools and board come from different trees was not refused: rc=%s\n%s" % (r.returncode, out[-2000:])
