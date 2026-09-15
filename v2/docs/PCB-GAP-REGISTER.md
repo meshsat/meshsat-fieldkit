@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**43 of 56 rules carry a gap.**
+**42 of 56 rules carry a gap.**
 
 ## absent (17)
 
@@ -227,15 +227,8 @@ layer_judge measures what the router did, not what the board needs, and says so;
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-## cross board inconsistent (1)
-
-**IMP-002 a class clearance is never below the board minimum** (BLOCKER, OPEN)  
-the generator guards the API path; board B's project file ships USB and DIFF100 at 0.10 mm against a 0.127 mm
-board minimum, and board E's project file and API path disagree  
-*Close it by* one check over every project file and generator against the board minimum, with a fixture. Owner **SESSION**. Effort P50 2h, P80 5h.
-
-## covered (13)
+## covered (14)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, MEC-001, PI-002, PLC-001, PLN-001, RF-002, RTE-002, SCH-001, SCH-002, SCH-003, SUP-001
+DOC-001, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RF-002, RTE-002, SCH-001, SCH-002, SCH-003, SUP-001
 

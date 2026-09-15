@@ -92,6 +92,9 @@ grep -q saved out/gen_pcb_$L.log || block "mechanical generator (out/gen_pcb_$L.
 python3 ../tools/gen_pcb_${L}3.py $N.kicad_pcb out/$N.net > out/gen3.log 2>&1; GEN3=$?
 grep -E 'saved|WARN|Trace|Error|overflow|unplaced|missing|SystemExit|zone net|not in the netlist|footprint missing' out/gen3.log
 python3 ../tools/jumper_clearance.py $N.kicad_pcb 2>&1 | grep -E 'jumper_clearance'   # a solder jumper's zero pad clearance would be handed to the router (D12, 15 Sep 2026)
+python3 ../tools/class_floor.py $N.kicad_pcb > out/class_floor.log 2>&1; CF=$?
+grep -E 'class_floor:|FAIL' out/class_floor.log
+[ "$CF" -eq 0 ] || block "a net class is below the board's own minimum (rule IMP-002, out/class_floor.log)" out/class_floor.log
 [ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3"
 python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1   # the JLC stackup in the board file, so the impedance read-back reads the project
 [ "$BPAFTER" = stackup ] && python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
