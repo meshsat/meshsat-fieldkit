@@ -128,6 +128,14 @@ def run_arm(spec, arm, ecad, out_dir):
                                timeout=spec.get("place_timeout_s", 3600))
             txt = open(log, errors="replace").read()
             if "PREROUTE-DONE PLACED" not in txt:
+                # A placement the chain's OWN GATE refused (region fit, the placed-board DRC, the predictor) is a measured
+                # outcome of the knob, not an infrastructure failure: the arm is UNMEASURABLE with the gate's line as its
+                # note, so the evidence pack tells the next proposal what that value did (15 September 2026: the first B
+                # placement arm, PLACE_FINE_MARGIN 2.6, overflowed nine regions by 8.4 mm, exactly appendix 32.185).
+                blk = [l for l in txt.splitlines() if l.startswith("BLOCK") or "region fit:" in l or "placed board: hard" in l or "predicted collision" in l]
+                if "PREROUTE-DONE BLOCK" in txt and blk:
+                    row.update(unmeasurable="the placement was refused by the chain's gate: " + " | ".join(x.strip()[:120] for x in blk[-2:]))
+                    return row
                 row.update(error="the placement did not complete: %s" % txt.strip().splitlines()[-1][:160] if txt.strip() else "no output")
                 return row
             row["place_log"] = os.path.basename(log)
@@ -255,6 +263,7 @@ def grade(row, hard_baseline=None):
     if not (row.get("tools") or {}).get("tools_tree_sha"):
         return "UNMEASURED", ("the row carries no tool fingerprint, so nothing identifies the code that produced "
                               "this number and it cannot be compared with any other row")
+    if row.get("unmeasurable"): return "UNMEASURABLE", row["unmeasurable"]   # the chain's own gate refused the arm's placement: measured, and not a number
     if row.get("drc_error"): return "UNMEASURED", "the DRC on the arm's own board could not be read: %s" % row["drc_error"]
     if hard_baseline is None and row.get("hard") is not None:
         return "UNMEASURED", ("the arm's board reads hard %d and no baseline was measured to compare it with, "

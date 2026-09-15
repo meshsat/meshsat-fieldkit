@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import loop, verdict
 
-R = lambda n, v: {"name": n, "verdict": v, "pairs": 10}
+R = lambda n, v: {"arm": n, "verdict": v, "pairs": 10}   # the runner's rows carry the name as "arm" (the first live cycle read every row as absent)
 APPROVE = {"verdict": "APPROVE"}; REFUSE = {"verdict": "REFUSE"}
 
 
