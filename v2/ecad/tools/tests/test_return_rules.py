@@ -65,3 +65,15 @@ def t_every_copper_editing_pass_after_the_router_runs_under_the_one_guard():
     assert "GUARD_MODE=pre guarded prelay" in _code("full.sh"), "the pre-lay is not under the guard"
     g = _src("guarded.sh")
     assert '"$AH" -gt "$BH"' in g and '"$AU" -gt "$BU"' in g and 'verdict.write("guard-"' in g, "the guard compares both counts and writes a verdict"
+
+
+def t_the_ground_via_grid_is_laid_after_the_fanout_and_before_the_pre_route_drc():
+    """gnd_grid.py (15 September 2026) lays rule 2's ground vias before the route, on the board with its escapes, fanout and
+    pair copper down, and the pre-route DRC then judges them with everything else; it runs only where a board declares it."""
+    src = open(os.path.join(TOOLS, "full.sh")).read()
+    i_fan = src.index("prefanout.py"); i_grid = src.index("gnd_grid.py"); i_drc = src.index("--label 'pre-route DRC'")
+    assert i_fan < i_grid < i_drc, "the grid stage is not between the fanout and the pre-route DRC"
+    assert "get('gnd_grid')" in src, "the grid stage is not read from the board file"
+    g = open(os.path.join(TOOLS, "gnd_grid.py")).read()
+    for must in ("other_zones", "via_keepouts", "_in_gnd_fill", "_site_free", "_own_hard"):
+        assert must in g, "gnd_grid.py lacks its %s test" % must

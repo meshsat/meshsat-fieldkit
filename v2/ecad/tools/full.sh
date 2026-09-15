@@ -209,6 +209,10 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
 fi
 
 python3 ../tools/prefanout.py $N.kicad_pcb "$FANOUT" fine 2>&1 | grep -E 'fanout:'   # only nets with a plane or pour to land on
+# A GROUND-VIA GRID before the route where the board declares one (15 September 2026, rule 2 of the return-current ruling by
+# construction: the fixer after the route found no site for 47 of D12's 185 signal vias, every candidate on other-net copper).
+GG="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('gnd_grid'); print(d.get('pitch', 2.1) if isinstance(d, dict) else '')" "$CFG")"
+[ -n "$GG" ] && { python3 ../tools/gnd_grid.py $N.kicad_pcb --pitch "$GG" 2>&1 | grep -E 'gnd_grid:'; }
 if [ -n "$EPRUNE" ]; then
   ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
   python3 ../tools/escape_prune.py $N.kicad_pcb out/$N-preroute-drc.json 2>&1 | grep escape_prune

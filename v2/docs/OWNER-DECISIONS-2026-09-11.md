@@ -1320,3 +1320,43 @@ close D**, and what remains is whether a net that runs beside a via row for 8 to
 as ruled (the larger of 10 mm or 5 percent). That number is the owner's if the tolerance is to move; the run does not
 move it. E10 (the In2 ground fill) routed 0 hard, 2 open at round one, the stub router closed one, round two is running.
 C's numbers stand as above.
+
+**Measured again, 15 September 2026 22:16 CEST, the third D round and where its misses ARE.** The In2-plane D closed to
+**0 hard, 0 unrouted** at round three as well; its board gate then refused it on rule 1 for **13 of 127 signal nets** and on
+rule 2 for **47 of 185 signal vias**, and both numbers are now anatomised (`tools/return_gaps.py`, the fixer's split
+refusal line):
+
+- **Rule 1.** The nets over their limit are over by 0.3 to 11.7 mm, and the millimetres are the nets' OWN VIA TRANSITIONS:
+  0.6 to 1.0 mm of track over the anti-pad of each of the net's own vias, 15 to 36 vias per net (PTT_HS1_n 16.8 of 226 mm
+  in 25 runs, AF_OUT 13.9 of 132 in 24, KEY 14.0 of 166 in 22), plus ONE 12.7 mm run on TX_INHIBIT_n along the seam
+  between the In2 ground fill and ruling 15's 1.2 mm rail band (the track runs in the band's 0.3 mm clearance for that
+  length, beside the harness header). The number is not a sampling artefact: at a 0.5 mm sample 9 nets are over, at 0.25 mm
+  7, the totals within 0.6 mm. So the finding is: **a via-dense net on a four-layer board exceeds the 10 mm floor on its
+  transitions alone**, where A22's long nets (the boards the tolerance was calibrated on) absorb theirs in the 5 percent.
+- **Rule 2.** The fixer places a ground via beside 138 of the 185; for the other 47 **every one of the 64 candidate sites
+  (four rings to 1.5 mm, sixteen directions) is on another net's copper**, none is outside a ground fill. They sit in the
+  fanout of the PTT and expander cluster (x 62 to 67, y 105 to 121) and the module's socket rows: the router took the room
+  first.
+
+**What needs no ruling and is running.** A ground-via GRID laid before the route (`tools/gnd_grid.py`, pitch 2.1 mm so no
+point is further than 1.5 mm from a grid via, placed only where the site is free, inside ground copper, outside every other
+net's zone and via keep-out, and clear of the fine-pitch fans) is measured on D in its own tree: if the In2-plane D still
+routes to 0 and 0 with the grid down, rule 2 holds by construction and the same stage goes to every board. The grid does
+nothing for rule 1's via transitions.
+
+**What needs a ruling, for D and for every via-dense net on the four-layer boards**, in the order recommended:
+
+1. **Rule 1 does not count a via transition that rule 2 satisfies, RECOMMENDED.** A track's last millimetre over its own
+   via's anti-pad is the layer change itself; with a ground via within 1.5 mm of that via the return current has its path,
+   which is what rule 2 exists to assure. Judging the same millimetre under both rules refuses a board for the transition
+   twice. Under this reading D's rule 1 misses shrink to the one seam run (a keep-out strip beside the band, a generator
+   change), and the tolerance stays where it is for every run that is not a judged transition. Cost: none in copper; a
+   change to what the check counts, which is why it is asked.
+2. **The tolerance stays literal and D is routed for fewer vias** (a higher via cost, unmeasured whether the In2-plane D
+   still closes; each net would need a third fewer vias) plus the seam keep-out. Cost: routes, and no guarantee.
+3. **A larger floor for the four-layer boards** (25 mm). Cost: a number chosen for the board, which is what the calibrated
+   tolerance was written to avoid.
+
+A six-layer D is measured irrelevant to this: the anti-pads are the same on any stack. C's ruling above stands unchanged
+(its misses are stack, 209 of 453 mm on one net); the same via-transition question will apply to C after its stack is ruled.
+
