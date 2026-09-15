@@ -21,12 +21,13 @@ command template that runs `arms.py` where the boards are. The command is given 
 and never stored in the tree, because the machine it names is not this repo's business and this repo
 is public within minutes.
 """
-import os, sys, json, time, shlex, argparse, subprocess
+import os, sys, json, hashlib, time, shlex, argparse, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.dirname(HERE)
 sys.path.insert(0, HERE); sys.path.insert(0, TOOLS)
 import client, schema, evidence, propose, review as reviewmod     # noqa: E402
+import expstore                                                   # noqa: E402
 import verdict, ledger, arms as armsmod                           # noqa: E402
 
 DRAFT_SYSTEM = """You write one entry for a hardware project's design record, from measurements only.
@@ -98,7 +99,7 @@ def cycle_result(rows, rev, no_review):
     return res, g, bad, refused
 
 
-def read_rows(path, names, after_seq=-1):
+def read_rows(path, names, after_seq=-1, cycle_id=None):
     """The rows the runner appended FOR THIS CYCLE: the name matches and the row is newer than the head
     the cycle started from. Tier 2b found the gap: selected by name alone, an older row carrying the same
     model-chosen name is read as this cycle's measurement, and the name is chosen by the model."""
@@ -115,7 +116,7 @@ def read_rows(path, names, after_seq=-1):
             continue
         seq = rec.get("seq", -1)
         rec = rec.get("rec", rec)
-        if rec.get("arm") in names and seq > after_seq:
+        if rec.get("arm") in names and seq > after_seq and (cycle_id is None or rec.get("cycle_id") == cycle_id):   # a row belongs to THIS cycle by its id, not by a name the model chose and a horizon (15 Sep 2026)
             out.append(rec)
     return out
 
@@ -223,6 +224,15 @@ def main(argv):
                              denominator=len(attempts), evidence=attempts[-1]["errors"],
                              note="the validator refused every proposal", out_dir=a.out_dir)
 
+    # THE CYCLE IS A FIRST-CLASS OBJECT (15 September 2026, red team report 1 rec. 1 and 2): minted here, before the
+    # run, with its cohort's context hash and the exact arm set; every row, artefact and review names it, and the store's
+    # constraints make a partial or duplicate cycle unrepresentable.
+    store = expstore.Store(os.path.join(a.out_dir, "store.db"))
+    context_hash = hashlib.sha256(json.dumps(p.get("cohort", {}), sort_keys=True).encode()).hexdigest()[:16]
+    cycle_id = store.new_cycle(p.get("board_declarations", {}).get("name", "pcb-%s" % a.letter), p.get("run_stage", "pair"), context_hash, len(spec["arms"]), note=stamp)
+    for x in spec["arms"]: store.add_arm(cycle_id, x["name"], x.get("env"), x["predict"])
+    spec["cycle_id"] = cycle_id
+    print("loop: cycle %s, context %s, %d arm(s)" % (cycle_id, context_hash, len(spec["arms"])))
     spec_path = os.path.join(a.out_dir, "proposal-%s.json" % stamp)
     json.dump(spec, open(spec_path, "w"), indent=1)
     for x in spec["arms"]:
@@ -237,8 +247,18 @@ def main(argv):
     head_before = ledger.head(result)[0]          # every row after this one belongs to this cycle
     rc = run_spec(spec_path, a.exec_cmd, result, timeout=a.exec_timeout)
     names = {x["name"] for x in spec["arms"]}
-    rows = read_rows(result, names, after_seq=head_before)
+    rows = read_rows(result, names, after_seq=head_before, cycle_id=cycle_id)
+    for r in rows:
+        try:
+            store.finish_arm(cycle_id, r["arm"], r.get("verdict", "INFRA_FAIL"), note=str(r.get("note", ""))[:400],
+                             metrics={"pairs": (r.get("pairs"), r.get("of")), "hard": r.get("hard"), "unrouted": r.get("unrouted"), "seconds": r.get("seconds")},
+                             tools=r.get("tools"), placed_md5=r.get("placed_md5"))
+        except (ValueError, KeyError) as e:
+            print("loop: the store refused a row for %s: %s" % (r.get("arm"), e))
+    ok_c, why_c = store.complete(cycle_id)
     inc = incomplete(rows, names, rc)
+    if inc is None and not ok_c: inc = {"why": "the store reads the cycle as incomplete: " + why_c, "counts": {"rows": len(rows), "requested": len(names), "absent": 0, "duplicate": 0, "runner_rc": rc, "infra_fail": 0}, "evidence": [why_c]}
+    if inc: store.finish_cycle(cycle_id, "INCOMPLETE", inc["why"])
     if inc:
         print("loop: the cycle is INCOMPLETE (%s): %d row(s) for %d requested arm(s); nothing is drafted from a partial cycle" % (inc["why"], len(rows), len(names)))
         return verdict.write("agent_loop", verdict.INCONCLUSIVE, counts=inc["counts"], denominator=len(names),
@@ -317,6 +337,8 @@ def main(argv):
     # "was the prediction met" and "was the write-up approved" at once, and `missed` was the remainder,
     # so an UNMEASURED or ILLEGAL arm counted as a missed prediction (red team, 12 September 2026).
     res, g, bad, refused = cycle_result(rows, rev, a.no_review)
+    if rev is not None: store.add_review(cycle_id, (rev.get("meta") or {}).get("model", "") if isinstance(rev.get("meta"), dict) else "", rev.get("verdict", ""), rev.get("findings") or [])
+    store.finish_cycle(cycle_id, res)
     met = g["MET"]
     # Tier 2b gates the WRITE-UP, and a verdict file that reads PASS over a refused entry is a claim the
     # code does not make good on (its own finding on the change that introduced it, 12 September 2026).
