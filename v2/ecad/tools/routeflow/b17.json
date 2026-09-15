@@ -16,8 +16,9 @@
    "single-pin nets",
    "PREROUTE-DONE OK"
   ],
-  "min_all_pass": 2,
-  "gen_logs": []
+  "min_all_pass": 1,
+  "gen_logs": [],
+  "_min_all_pass_why": "15 Sep 2026: boards/b.json declares gate_before_placement false (the 27-footprint mechanical board fails the HA checks by construction), so the chain prints ONE RESULT: ALL PASS; a 2 here read PREROUTE-DONE OK as GATE_BLOCKED"
  },
  "plane_layers": [
   "In1.Cu",
