@@ -33,7 +33,8 @@ def unconnected():
 u0 = unconnected()
 removed = {}; length = {}
 for n in sorted(want):
-    pieces = [t for t in b.GetTracks() if not t.IsLocked() and netname(t.GetNetname()) == n]
+    # tracks and vias only: an arc (the pre-router's corners) has no start and end to put back and is left alone
+    pieces = [t for t in b.GetTracks() if not t.IsLocked() and netname(t.GetNetname()) == n and t.GetClass() in ("PCB_TRACK", "PCB_VIA")]
     def L(t): return 0.0 if t.GetClass() == "PCB_VIA" else math.hypot(t.GetStart().x - t.GetEnd().x, t.GetStart().y - t.GetEnd().y) / 1e6
     pieces.sort(key=lambda t: (t.GetClass() == "PCB_VIA", -L(t)))   # tracks longest first, then vias
     for t in pieces:
