@@ -66,3 +66,19 @@ def t_b_declares_the_predictor_as_a_report_with_its_reason():
     for L in "acdep":
         d = json.load(open(os.path.join(TOOLS, "boards", "%s.json" % L)))
         assert not d.get("place_audit_gate_off"), "board %s turns the predictor off without a measured reason" % L
+
+
+def t_a_profiles_gate_count_is_its_boards_declaration():
+    """B19's third pre stage printed PREROUTE-DONE OK and routeflow read GATE_BLOCKED, 'RESULT: ALL PASS 1 of 2 gates':
+    the profile carried min_all_pass 2 (the placed-board check and the pre-route check) while boards/b.json declares
+    gate_before_placement false, so the chain runs one. The number is the board's declaration, never a profile literal."""
+    import glob
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "[a-p]*[0-9].json"))):
+        d = json.load(open(p)); L = d.get("board", "")
+        letter = L.split("-")[1][0] if L.startswith("pcb-") else ""
+        bp = os.path.join(TOOLS, "boards", "%s.json" % letter)
+        if not os.path.exists(bp) or "pre" not in d: continue
+        want = 2 if json.load(open(bp)).get("gate_before_placement") else 1
+        if d["pre"].get("min_all_pass") != want: bad.append("%s min_all_pass %s, board %s runs %d" % (os.path.basename(p), d["pre"].get("min_all_pass"), letter, want))
+    assert not bad, "; ".join(bad)
