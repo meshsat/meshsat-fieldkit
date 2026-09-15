@@ -193,6 +193,12 @@ p = os.path.join(T, "agent", "loop.py"); s = open(p).read()
 s = s.replace("    if not infra and not absent and not dup: return None", "    if not infra: return None", 1)
 open(p, "w").write(s)'
 
+run_case "the reviewer is handed the loop's own verdict of the previous cycle" t_the_reviewer_is_handed_only_this_cycles_verdicts '
+p = os.path.join(T, "agent", "loop.py"); s = open(p).read()
+s = s.replace("""if f.endswith(".verdict.json") and not f.startswith("agent_loop"):""", """if f.endswith(".verdict.json"):""", 1)
+s = s.replace("""if str(rec.get("ts", "")) >= cycle_iso: vs[f] = rec""", """vs[f] = rec""", 1)
+open(p, "w").write(s)'
+
 run_case "a duplicate arm is stored" t_a_duplicate_arm_name_in_one_cycle_is_refused_by_the_schema '
 # two defences guard this: the UNIQUE (cycle_id, name) constraint and the experiment id derived from the pair; both go
 p = os.path.join(T, "expstore.py"); s = open(p).read()
