@@ -1255,3 +1255,10 @@ router as two traces, is the measured board.
 **What it does not do.** It does not route B. B16 flattened near 70 open and B19 has never been routed whole;
 the partition route reached the reconcile at 1,121 boundary conflicts (32.93). Lifting the hold puts B on the
 same path as the other six, which is a route campaign with its own numbers, and that is what runs next.
+
+**Implementation note, 15 September 2026 04:20 CEST.** The first route under this ruling met a defect the ruling
+did not create and could not have seen: B19's pair copper carried 64 hard DRC items of the pre-router's own
+making before the router ran (appendix 32.192). Three causes are fixed at the source and the pair copper meets
+the DRC on every board now, with a refused pair taken off whole so the fraction is judged on legal copper. The
+fraction itself is unchanged at 0.80 by length; nothing here moves it.
+
