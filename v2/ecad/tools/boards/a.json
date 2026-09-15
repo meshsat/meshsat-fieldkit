@@ -53,7 +53,9 @@
   "stub_timeout_s": 3600,
   "_stub_env_why": "12 September 2026, A24, measured on a copy before it was declared. With the 0.1 mm grid and a 2.5-fold window the stub router closed 9 of 10 opens and then 0 of the last 2; with a 0.05 mm grid, a six-fold window and an 80 M node cap it closed BOTH of those two (/+3V3 with a single via, /VBUS20 with 11 tracks and a via), hard 0 throughout. The finer grid is what lets it see between the pads of U3, where /VBUS20's approach has to pass. It costs time, which is why `stub_timeout_s` exists: a cut run leaves the board as it was.",
   "rail_prune": true,
-  "_rail_prune_why": "15 September 2026, A32: 0 hard, 0 unrouted, and four rails MISSED where the rail copper alone reads MET, because the router laid its own 0.5 mm inner tracks in parallel with the bands it cannot see (VIN_RAW: a 0.5 mm In2 track the whole west side beside the 6 mm B.Cu band, carrying 0.63 A at ratio 1.60). A router piece on a rail net comes off when the net stays connected without it."
+  "_rail_prune_why": "15 September 2026, A32: 0 hard, 0 unrouted, and four rails MISSED where the rail copper alone reads MET, because the router laid its own 0.5 mm inner tracks in parallel with the bands it cannot see (VIN_RAW: a 0.5 mm In2 track the whole west side beside the 6 mm B.Cu band, carrying 0.63 A at ratio 1.60). A router piece on a rail net comes off when the net stays connected without it.",
+  "return_via": true,
+  "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one."
  },
  "pair_order": [
   "USB_WALL"
