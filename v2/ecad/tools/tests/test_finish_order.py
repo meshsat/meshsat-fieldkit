@@ -329,3 +329,11 @@ def t_a_finish_declaration_lives_where_the_finish_looks_for_it():
             bad.append("%s declares %r at the top level; finish.sh reads it from the finish block"
                        % (_os.path.basename(path), k))
     assert not bad, "\n  ".join(bad)
+
+
+def t_routeflow_hands_the_phase_to_the_chain():
+    """With one profile per letter there is no per-phase wrapper exporting PHASE, so the supervisor gives the resolved
+    phase to the pre-route chain itself; without it the silk names the board file's phase and the deliverable of any other
+    phase is refused at its last step (15 September 2026)."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    assert 'env={"PHASE": prof["phase"]}' in src, "routeflow runs the chain without handing it the phase"
