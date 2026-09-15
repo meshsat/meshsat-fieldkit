@@ -167,6 +167,47 @@ def main(a):
         lines.append("INFO  decoupling: %d of %d bypass capacitors within 3 mm of their pin%s" % (len(it["bypass"]) - far, len(it["bypass"]), " (%d allowed by bypass-allow.txt)" % far if allowed and far else ""))
         if not allowed: coll += far
     else: lines.append("INFO  decoupling: 0 of 0 bypass entries (no intent file or none listed)")
+    # 5. two classes A's phases A33 to A35 found only after a five-hour route (15 September 2026, red team round four M1):
+    #    a PLANE PAD with no path to its plane (no via of its net within reach, not inside a fill of its net on its own
+    #    layer, no locked copper leaving it), which the fanout skipped for want of room and the router then had to reach
+    #    by a wire; and a RAIL POUR on an outer layer with no track keep-out on its layer, which the router slices (A34's
+    #    PA head island filled 51 of 102 mm2). The first is a FAIL, the second a WARN (A's VIN_RAW dock top is drawn
+    #    without a keep-out on purpose: the header's signal pins escape there).
+    try:
+        pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+    except Exception: pass
+    zone_nets = {}
+    for z in b.Zones():
+        if z.GetIsRuleArea() or z.GetFilledArea() <= 0: continue
+        zone_nets.setdefault(z.GetNetname(), []).append(z)
+    vias_by_net = {}
+    for t in b.GetTracks():
+        if t.GetClass() == "PCB_VIA": vias_by_net.setdefault(t.GetNetname(), []).append(t.GetPosition())
+    locked_starts = set()
+    for t in locked:
+        if t.GetClass() == "PCB_TRACK": locked_starts.add((t.GetStart().x, t.GetStart().y)); locked_starts.add((t.GetEnd().x, t.GetEnd().y))
+    unreached = []
+    for f in fps:
+        for p in f.Pads():
+            n = p.GetNetname()
+            if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or n not in zone_nets or p.GetNetCode() <= 0: continue
+            c = p.GetPosition()
+            if any(math.hypot(v.x - c.x, v.y - c.y) <= 1.5e6 for v in vias_by_net.get(n, [])): continue
+            if (c.x, c.y) in locked_starts: continue
+            L = pcbnew.F_Cu if p.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
+            if any(z.GetFirstLayer() == L and z.GetFilledPolysList(L).Contains(c) for z in zone_nets[n]): continue
+            unreached.append("%s.%s (%s)" % (f.GetReference(), p.GetNumber(), n.lstrip("/")))
+    if unreached:
+        lines.append("FAIL  %d plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper): %s" % (len(unreached), ", ".join(unreached[:12]) + (" ..." if len(unreached) > 12 else ""))); coll += 1
+    else:
+        lines.append("INFO  every plane pad reaches its plane before the route (a via, its own fill, or locked copper)")
+    keepouts = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
+    bare = []
+    for z in b.Zones():
+        if z.GetIsRuleArea() or z.GetFirstLayer() not in (pcbnew.F_Cu, pcbnew.B_Cu) or z.GetNetname().lstrip("/") == "GND": continue
+        bb = z.GetBoundingBox(); c = bb.GetCenter()
+        if not any(k.GetFirstLayer() == z.GetFirstLayer() and k.Outline().Contains(c) for k in keepouts): bare.append("%s (%s on %s)" % (z.GetZoneName()[:30], z.GetNetname().lstrip("/"), b.GetLayerName(z.GetFirstLayer())))
+    if bare: lines.append("WARN  %d rail pour(s) on an outer layer with no track keep-out on their layer, which the router may slice (A34's PA head): %s" % (len(bare), "; ".join(bare[:8]) + (" ..." if len(bare) > 8 else "")))
     n_esc = sum(1 for r in env); lines.append("INFO  escapes measured on %d of %d fine-pitch parts (%d parts, %d locked pieces on the board)" % (n_esc, len(fine), len(fps), len(locked)))
     for l in lines: print("place_audit: " + l)
     print("place_audit: %d predicted collision(s) among %d fine-pitch parts of %d; %s" % (coll, len(fine), len(fps), "FAIL" if coll else "ALL PASS"))
