@@ -182,6 +182,17 @@ def prototype_doc(reg, cov):
     return "\n".join(L) + "\n"
 
 
+# Documents that are a pure function of the registry and the coverage map, with no board evidence in them.
+# rules_status reads this to judge a VERIFIED_MANUALLY rule whose evidence IS one of these pages: it can
+# rebuild the page in memory and compare, which is what makes "the list has not quietly shrunk" a fact rather
+# than a habit. The board pages are deliberately absent: they are generated FROM the status, so asking the
+# status to check them would be a circle.
+SELF_CONTAINED = {"PCB-PROTOTYPE-UNKNOWNS.md": prototype_doc,
+                  "PCB-GOLDEN-RULES.md": rulebook,
+                  "PCB-RULE-COVERAGE.md": coverage_doc,
+                  "PCB-GAP-REGISTER.md": gap_register}
+
+
 def eta_doc():
     import rules_eta as E
     m = E.model(); items = E.open_items()

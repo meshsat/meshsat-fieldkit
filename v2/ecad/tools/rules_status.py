@@ -105,6 +105,37 @@ def _fresh(rec, m, fingerprint):
     return True, "current"
 
 
+_DOC_CACHE = {}
+
+
+def _document_current(rel):
+    """A generated document is evidence only while it still matches the registry it claims to come from.
+
+    The page is rebuilt in memory from the registry and compared with the file. A hand edit, a rule added to
+    the registry after the page was last written, or a deleted row all read as INCONCLUSIVE, because a list of
+    unknowns that has quietly shrunk looks exactly like a list of unknowns that is complete.
+    """
+    if rel in _DOC_CACHE: return _DOC_CACHE[rel]
+    name = os.path.basename(rel)
+    path = os.path.join(ECAD, "..", "docs", name)
+    try:
+        import rules_render as RR                       # imported here: rules_render imports this module
+        fn = RR.SELF_CONTAINED.get(name)
+        if fn is None:
+            out = (False, "%s is not a document this tool can rebuild, so it cannot be checked" % name)
+        elif not os.path.exists(path):
+            out = (False, "the record %s does not exist" % name)
+        else:
+            want = fn(R.load(), coverage())
+            have = open(path, errors="replace").read()
+            out = ((True, "%s is current with the registry" % name) if want == have
+                   else (False, "%s differs from the registry it is generated from: regenerate it" % name))
+    except Exception as e:
+        out = (False, "%s could not be checked (%s)" % (name, type(e).__name__))
+    _DOC_CACHE[rel] = out
+    return out
+
+
 def result_for(rule, letter, cov, vs, m, fingerprint, phase=None):
     """One rule on one board. Everything that is not a positive, current PASS is INCONCLUSIVE or FAIL."""
     rid = rule["id"]; c = cov.get(rid) or {}
@@ -119,6 +150,13 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None):
         return dict(result=INCONCLUSIVE, why="the authority behind this rule's limit is not established: %s" % c.get("note", "")[:140], evidence=None)
     if c.get("maturity") == "OWNER_DECISION_REQUIRED":
         return dict(result=INCONCLUSIVE, why="an owner decision is open: %s" % c.get("note", "")[:140], evidence=None)
+    if c.get("maturity") == "VERIFIED_MANUALLY":
+        doc = (c.get("verification") or {}).get("document")
+        if not doc:
+            return dict(result=INCONCLUSIVE, why="a manual verification with no record is not evidence", evidence=None)
+        ok, why = _document_current(doc)
+        return (dict(result=PASS, why=why, evidence=doc) if ok
+                else dict(result=INCONCLUSIVE, why=why, evidence=doc))
     if c.get("maturity") == "GENERATED_ONLY":
         return dict(result=INCONCLUSIVE, why="generation intends to comply and nothing verifies it: %s" % c.get("note", "")[:140], evidence=None)
     name = (c.get("verification") or {}).get("verdict")
