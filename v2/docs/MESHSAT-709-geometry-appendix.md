@@ -7435,3 +7435,58 @@ from source to load with no gap the router can fill**, and on VBAT the gap is me
 sits at the LONGEST free stretch of the trunk, twelve to twenty millimetres north of F1, and the pack's current
 climbs the 0.5 mm track from F1 to the field's south end. The field belongs at the stretch NEAREST the source,
 which `free_run` can be asked for.
+
+### 32.192 B's first route under the delegated ruling did not start: the pair copper was illegal before the router saw it (15 September 2026, 04:20 CEST; MESHSAT-862)
+
+The owner's ruling of 02:40 made decision 24 the session's; option 2 was taken (`pair_coupled_fraction: 0.80`,
+judged by length on the routed board) and B19 was launched for a deliverable for the first time, twelve passes
+under routeflow in a tree of its own. **It ended at 01:53 UTC in the pre-route stage, GATE_BLOCKED, without a
+pass routed.** The block named was the placement predictor (9 predicted collisions among 75 fine-pitch parts:
+U19, U20, U7, U102 and U209, the stations of 32.146), and behind it stood a number nothing had been asked to
+act on: **the pre-route DRC on the pair copper read hard 64 of the fifteen types on a placed board that reads
+0.** Every one of the 64 was laid by the pair pre-router (48 of its 113 pairs' worth of copper, 36 of 48
+DIFF100 and 29 of 65 USB laid), and a chain that routes six hours on top of locked copper the finish will
+refuse is a chain that ends refused.
+
+**The 64, read from the DRC file rather than counted:**
+
+| items | what | cause |
+|---:|---|---|
+| 13 | a pair's OWN two legs at 0.122 to 0.126 mm against the 0.127 mm board minimum (HDMI2/3, HDMIM, SWP1/2/4 on In2 and In3; BANK1_UPTX on F.Cu) | the outer gap carried a 0.013 mm cushion over the clearance since 12 September and the INNER gap (`INNER_BY_CLASS`, `PAIR_INNER_GAP`) carried none; at an arc the offset of a chord is not the offset of the arc, and F.Cu lost 18 micrometres of its 13 the same way |
+| 8 | a hop via 0.087 to 0.092 mm from the partner's leg (HOST1_1RX, HOST3_0D, ETH1_P1, ETH2_P1) | the layer-change emission, the one `PAIR_LAYER_CHANGE_FIT` was written for and measured at minus 14 pairs (32.186) |
+| 8 | the via the pre-router drops into a station's MIDDLE pin (the ESD's ground pad between the pair's two pads) against R147 (0.033 mm), R256 (0.115), R150 (0.010) and the HDMIM_CK and HDMI1_CK legs | a through via spans every layer and the site was judged against none: B is assembled on both sides and those three resistors sit on the underside directly beneath the stations |
+| 10 | U209's BANK2_UPTX station: the N leg across pad 3 (P) and the P leg across pad 4 (N), mask bridges and shorts | the fine-station entry at a 0.4 mm pitch, one station |
+| 8 | tracks crossing: ETH1_P2 across SWP2_B and SWP3_A on In3, which were laid 121 mm long earlier in the same pass; LIME_SSRX_N across LIME_SSTX_N; a GND track across HOST2_0TX_P | `PAIR_CROSS_NET` reports and does not decide (32.135), and nothing after it asked |
+
+**Fixed at the source, three of the five; a floor under the other two.** `PAIR_GAP_CUSHION` (0.025 mm) is
+the one cushion over the DRC clearance for both legs on the outer AND the inner layers; on the 3313 stack it
+moves an inner 100 ohm pair by about five percent of its target, inside the judge's ten. `_via_site_blocked`
+judges the via-in-pad site against the pads of every other part on every layer and every net's copper before
+the via is dropped and before the pin's escape is stripped, and a refused site is printed with what blocked
+it. And **`pair_prune.py`: the pair copper is put to the DRC on every board right after the pre-router, and a
+pair the DRC refuses comes off WHOLE, both nets, so the router lays it uncoupled and the impedance judge
+measures the router's version against the declared fraction;** never a piece, which escape_prune's own note
+of 9 September explains. What tells a laid leg from an escape stub on the same net is the chain it belongs to
+(locked copper joined end to end over 5 mm is pair copper; a shorter chain is an escape and stays for
+escape_prune). A pruned pair holds a board that declares no fraction exactly as an unlaid one does. B declares
+the predictor's verdict as a report (`place_audit_gate_off`, with its why), which is what B18 did by
+environment on 9 September without writing it down. Seven rules in `tests/test_pair_legality.py`, every one
+failing on the tree it was written against; suite 447 passing, 7 skipped.
+
+**C17 is 0 hard and 0 unrouted, and was refused for six blank BOM lines.** The re-finish of its round-one
+route in the clone (where the sibling netlists are, 32.191's contract defect fixed) read `stub_router: closed
+2 of 2`, `routed-board gate: hard 0 unrouted 0`, `RESULT: ALL PASS`, `dc_drop: 1 of 1 rails MET`, and then
+`lcsc_fill` refused the BOM: BZ1, CAM_H1, CAM_H2, J_HSJ1, J_HSJ2 and U9 carried no code and no allow line.
+Five of them have had their purchase route in `tools/jlc-handfit.txt` since the orderability pass (the Floyd
+Bell sounder, the two U-174/U jacks) or are copper (the camera's two M2 holes), and the allow file of the C
+project never said so; U9, the 74LVC1G34 EMCON buffer, takes **C526347** (Diodes 74LVC1G34W5-7, SOT-25 being
+JLCPCB's name for the five-lead SOT-23, `package-aliases.txt` line 16; stock 1961 read back 15 September). The
+board is committed (`3d6d844`, sha256 a962a651) and the finish runs again on the corrected tools.
+
+**A32 routed 0 hard and 12 unrouted, and its finish closed eleven.** pour_stitch stitched four islands, the
+stub router took 12 to 1, every pair is within 1 mm, the routed-board gate reads hard 0 unrouted 1: `/VBUS20`,
+which direct_close tried as one island pair and one shape, refused for /CH_ACN's 0.1 mm track on F.Cu.
+Routeflow's round two (via_costs 100, five hours) runs, and beside it the island ladder runs on a copy of the
+round-one board with 24 island pairs, all four shared layers and a 3000 s budget, the recipe that closed A30.
+**The number A32 exists for, whether the rail copper of 32.191 holds all twelve rails, is still unread**: the
+finish refuses at the gate before `dc_drop` runs, so it is read on the closed board.
