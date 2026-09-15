@@ -248,6 +248,6 @@ coverage:
    note: "being built by this audit; until it runs, no board has a computed per-rule result",
    remediation: {action: "rules_status.py with its truth table", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 14}}
 
- SGN-002: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "thermal, RF self-compatibility and ingress are named in the record as prototype-only; they are not a list anything reads",
-   remediation: {action: "generate the prototype-only list from the registry's verification_phase field", owner: SESSION, depends_on: [SGN-001], p50_h: 2, p80_h: 4}}
+ SGN-002: {implementation: "rules_render.py prototype_doc", verification: {tool: rules_render.py, verdict: none, fixtures: tests/test_rule_gate_mapping.py},
+   maturity: VERIFIED_MANUALLY, gap_category: NONE,
+   note: "16 September 2026: v2/docs/PCB-PROTOTYPE-UNKNOWNS.md is generated from the registry's verification phase and methods, so the list cannot quietly shrink; rules_render --check refuses a hand-edited copy and the suite runs it"}
