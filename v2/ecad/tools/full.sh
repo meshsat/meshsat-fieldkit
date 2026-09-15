@@ -188,10 +188,12 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # declares nothing is held until every pair is laid, the 10 September rule.
   PCF="$(cfg pair_coupled_fraction)"
   if [ "$PP" -ne 0 ] && [ -n "$PCF" ]; then
-    LAID=$(grep -h "pairs laid," out/pair_preroute*.log | sed -E 's/.*: ([0-9]+) of ([0-9]+) pairs laid.*/\1 \2/' | awk '{a+=$1; b+=$2} END {print a, b}')
-    if python3 -c "import sys; a,b=map(int,'$LAID'.split()); sys.exit(0 if b and a/b >= float('$PCF') else 1)"; then
-      echo "pair gate: $LAID laid, at or above the declared coupled fraction $PCF; the board proceeds (every unlaid pair is the impedance gate's to name)"; PP=0
-    else echo "pair gate: $LAID laid, under the declared coupled fraction $PCF"; fi
+    # The ruling's number is a LENGTH fraction on the routed board, which only impedance_check can measure; a
+    # count of pairs laid before the route is not that number (62 of 113 pairs is 55 percent by count and
+    # nobody has measured what it is by length). So a board that declares the fraction is not held here at
+    # all: it routes, and the impedance gate judges the copper that was laid. What is printed is the count,
+    # for the record, beside the bar it is NOT compared with.
+    echo "pair gate: $(grep -h "pairs laid," out/pair_preroute*.log | sed 's/^pair_preroute: //' | paste -sd'; ') on a board that declares a coupled fraction of $PCF; the routed board's impedance gate judges it by length, so the chain proceeds"; PP=0
   fi
   [ "$PP" -eq 0 ] || [ "${PAIR_GATE:-1}" = 0 ] || block "pair pre-router (out/pair_preroute.log)"
 fi

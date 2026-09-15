@@ -116,7 +116,9 @@ def t_a_board_that_declares_no_coupled_fraction_keeps_the_10_september_rule():
     assert "res = _v.PASS if not miss else _v.FAIL" in src, "the undeclared board no longer refuses on one missed pair"
     full = open(os.path.join(TOOLS, "full.sh")).read()
     assert 'PCF="$(cfg pair_coupled_fraction)"' in full and 'if [ "$PP" -ne 0 ] && [ -n "$PCF" ]' in full, (
-        "the pre-route pair gate does not read the same declaration, so the two gates could disagree")
+        "the pre-route pair gate does not read the declaration, so a fraction board would still be held on a count")
+    assert "judges it by length, so the chain proceeds" in full, (
+        "the pre-route gate compares a COUNT of pairs with a bar the ruling states as a LENGTH fraction")
     for letter in ("a", "c", "d", "e", "p"):
         d = json.load(open(os.path.join(TOOLS, "boards", letter + ".json")))
         assert d.get("pair_coupled_fraction") is None, "board %s declares a coupled fraction nobody ruled for it" % letter
