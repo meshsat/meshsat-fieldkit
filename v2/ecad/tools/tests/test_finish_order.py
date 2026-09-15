@@ -206,12 +206,19 @@ def t_a_continuation_route_gets_the_same_plane_treatment_as_the_route():
         treat.setdefault(b.split("-")[1][0], {})[os.path.basename(f)] = (
             tuple(r.get("power_layers") or []), tuple(r.get("plane_nets") or []))
     for L, per in sorted(treat.items()):
-        assert len(set(per.values())) == 1, "the %s profiles disagree about the plane treatment: %s" % (L, per)
         cfg = json.load(open(os.path.join(TOOLS, "boards", "%s.json" % L)))
+        # The profile of the DECLARED phase decides; an older profile may differ only when the current one says why
+        # (15 September 2026: P5 makes B.Cu a power layer where P1 to P4 declared none, owner ruling 20:15 CEST).
+        curf = "%s.json" % str(cfg.get("phase", "")).lower()
+        assert curf in per, "%s: the declared phase %s has no profile among those that declare a plane treatment: %s" % (L, cfg.get("phase"), sorted(per))
+        cur = per[curf]; others = {f: v for f, v in per.items() if v != cur}
+        if others:
+            why = json.load(open(os.path.join(TOOLS, "routeflow", curf))).get("_plane_treatment_why", "")
+            assert why, "the %s profiles disagree about the plane treatment and %s does not say why (_plane_treatment_why): %s" % (L, curf, others)
         cont = (cfg.get("finish") or {}).get("cont_route")
         if not cont: continue
         got = (tuple(cont.get("power_layers") or []), tuple(cont.get("plane_nets") or []))
-        assert got == list(per.values())[0], \
+        assert got == cur, \
             "board %s's continuation would route against a different DSN than its route: %s against %s" % (L, got, list(per.values())[0])
     src = open(FINISH, errors="replace").read()
     i = src.index("$T/cont_route.sh")   # the invocation, not the comment that explains the stage

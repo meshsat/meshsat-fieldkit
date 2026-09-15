@@ -1,0 +1,62 @@
+{
+ "board": "pcb-p-pack",
+ "project": "v2/ecad/pcb-p-pack-p2",
+ "phase": "P5",
+ "issue": "MESHSAT-862",
+ "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
+ "services_script": "~/meshsat-services.sh",
+ "pre": {
+  "argv": [
+   "bash",
+   "../tools/full_p1.sh",
+   "<PROJECT>"
+  ],
+  "cwd": "<PROJECT>",
+  "must_contain": [
+   "single-pin nets",
+   "PREROUTE-DONE OK"
+  ],
+  "min_all_pass": 1,
+  "gen_logs": []
+ },
+ "plane_layers": [],
+ "route": {
+  "attempts": [
+   60
+  ],
+  "threads": 1,
+  "timeout": 1800,
+  "power_layers": [
+   "B.Cu"
+  ],
+  "plane_nets": [
+   "GND"
+  ],
+  "log": "out/parallel-p2.log",
+  "_jar_unpinned": "11 September 2026: this pinned ~/bin/freerouting-1.9.0.jar, the STOCK jar, which set FR_JAR and so bypassed route_one's own choice AND its refusal. Our 1.9.0 build writes a session after every pass; the stock one writes one only when the whole job ends, so a run that is cut leaves nothing, which is what every NO_SESSION round in the record is. Unpinned: route_one takes the patched jar when the host has it and refuses when it does not, unless FR_REQUIRE_MESH=0 says otherwise deliberately."
+ },
+ "finish": {
+  "argv": [
+   "./tools/finish.sh",
+   "<ECAD>",
+   "pcb-p-pack-p2",
+   "p",
+   "P5",
+   "out/parallel-p2.log"
+  ],
+  "cwd": "<ECAD>",
+  "clean_flag": "out/p5-clean.txt",
+  "stub_log": "out/pcb-p-pack-stub.log"
+ },
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-p-revA-P5",
+ "expect": {
+  "hard": 0,
+  "unrouted": 0,
+  "autoroute_minutes_max": 15
+ },
+ "notes": "P2 (8 Sep 2026, MESHSAT-862, appendix 32.70): the P1 profile on the v2/ecad/pcb-p-pack-p2 copy.",
+ "baseline_key": "P1",
+ "clean_flag": "out/p5-clean.txt",
+ "_phase_note": "P5, 15 September 2026 (MESHSAT-862, appendix 32.198): owner scope answer 1 of the return-current ruling, P keeps two layers at 2 oz and is re-routed with its SIGNALS ON THE TOP LAYER over a solid back-side ground pour: B.Cu is a power layer in the DSN (the router lays no wire there, vias pass) and the ground pour is its plane; the pack path's locked bands on both layers are tracks the router keeps. If the router cannot close the board this way the numbers go back to the owner.",
+ "_plane_treatment_why": "15 September 2026, owner scope answer 1 of the return-current ruling: P1 to P4 routed both layers freely; P5 makes B.Cu a power layer with the ground pour as its plane so every signal stays on the top layer over solid ground (rule 1 cannot hold for a back-side track on a two-layer board)."
+}

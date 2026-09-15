@@ -57,7 +57,9 @@ def t_the_opt_out_is_explicit_and_works():
 
 
 def t_a_board_whose_profiles_declare_none_is_not_refused():
-    """P's profile declares no plane net, and a P route must not be blocked by a guard about other boards."""
-    d = _fixture("pcb-p-pack")
-    r = _run(d, "pcb-p-pack", {"FR_PLANE_NETS": "", "FR_POWER_LAYERS": "", "FR_PLANES_CHECKED": "1"})
+    """A board no profile declares a plane for must not be blocked by a guard about other boards. P was that board until
+    15 September 2026 (P5 routes with B.Cu as a power layer, owner ruling 20:15 CEST); the bare contact board E5 has no
+    routeflow profile at all and is the fixture now."""
+    d = _fixture("pcb-e5-block")
+    r = _run(d, "pcb-e5-block", {"FR_PLANE_NETS": "", "FR_POWER_LAYERS": "", "FR_PLANES_CHECKED": "1"})
     assert "REFUSED" not in r.stderr, "a board that declares no plane net was refused anyway: %s" % r.stderr[:200]
