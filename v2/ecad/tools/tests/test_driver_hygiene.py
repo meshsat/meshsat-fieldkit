@@ -682,3 +682,17 @@ def t_the_router_launcher_dismisses_a_modal_warning_it_would_otherwise_wait_on()
     assert s.find("xdotool key") < s.find('wait "$_RPID"'), "the watchdog must run while the router does"
     o = open(os.path.join(TOOLS, "routeflow", "cloud", "onstart.sh")).read()
     assert "xdotool" in o, "a new box would have no xdotool for the watchdog"
+
+
+def t_every_python_block_embedded_in_a_shell_tool_parses():
+    """export_jlc.sh (15 Sep 2026) carried a python heredoc with an unclosed parenthesis for one commit: the shell parsed,
+    the suite passed, and every deliverable re-cut on that commit kept its old fab note because the export failed
+    silently inside finish_board.sh. A heredoc is code and is compiled here."""
+    import glob, re
+    bad = []
+    for sh in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
+        s = open(sh).read()
+        for m in re.finditer(r"<<'PY'\n(.*?)\nPY\n", s, re.S):
+            try: compile(m.group(1), sh, "exec")
+            except SyntaxError as e: bad.append("%s: %s" % (os.path.basename(sh), e))
+    assert not bad, "; ".join(bad)

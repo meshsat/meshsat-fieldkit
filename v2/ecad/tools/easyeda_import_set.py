@@ -26,33 +26,34 @@ OUT = os.path.join(ECAD, "easyeda-pro", "import")
 # (letter, rev, project stem, source directory relative to the repo, measured state)
 # The state lines are measurements, each taken with tools/drc.sh plus tools/hardset.py on the board named.
 BOARDS = [
-    ("A", "A24", "pcb-a-power", "v2/release/revA/boards/meshsat-pcb-a-revA-A24",
-     "routed and cut: 0 hard of the fifteen types, 0 unrouted, gate ALL PASS on 798 checks, netlist 2004 of 2004, "
-     "three USB pairs matched to 0.23, 0.13 and 0.00 mm. Open against it: eight of its twelve rails exceed IPC-2221 "
-     "current density, VBAT worst at 8.2x, which became a verdict on 13 September and re-opens this deliverable."),
+    ("A", "A32", "pcb-a-power", "v2/ecad/pcb-a-power-a23",
+     "routed and closed by hand to 0 hard of the fifteen types and 0 unrouted (15 September 2026), from the working "
+     "phase directory, NOT cut as a deliverable: eight of its twelve rails meet IPC-2221 current density and four miss "
+     "on one pour cell each (VBAT 1.42x at the plane under U2's escape fan, VIN_RAW 2.70x at the head island, VBUS20 1.73x "
+     "at R16's vias, the PA rail 1.61x where J_AB2's pins stand in its run); A33 and A34 carry the copper for those four "
+     "and are routing. The BOM is certified against JLCPCB with owner ruling 10's 10 uF 50 V and 100 V capacitors."),
     ("B", "B19", "pcb-b-compute", "v2/ecad/pcb-b-compute-b19",
-     "NOT ROUTED, and this is the working phase directory rather than a deliverable. The board as it stands is "
-     "hard 30 (clearance 14, shorting_items 8, solder_mask_bridge 8) and 499 unrouted, AFTER the pair pre-router "
-     "laid 37 of its 113 differential pairs. The placed board underneath, before any pair copper, is hard 0. "
-     "Read this one for the floor plan, the schematic and the fabric, not for finished copper."),
-    ("C", "C10", "pcb-c-display", "v2/ecad/pcb-c-display-c8",
-     "routed, not yet cut as a deliverable, from the working phase directory: 0 hard of the fifteen types and "
-     "1 unrouted. Read it as TWO open: the closure that took it from two to one was laid at 0.25 mm by a tool "
-     "whose net class lookup was dead, against the 0.5 mm this rail's class declares, and at the real width it "
-     "does not fit. /+3V3 at U3 pad 10 needs room, which is a placement change."),
-    ("D", "D10", "pcb-d-aprs", "v2/release/revA/boards/meshsat-pcb-d-revA-D10",
-     "routed and cut: 0 hard, 0 unrouted, gate ALL PASS on 231 checks, netlist 994 of 994, four of four pairs "
-     "within 1 mm. Its last connection was closed by hand after three measured refusals. Open against it: the "
-     "5 V rail's class width is under review and its current density exceeds IPC-2221 by 1.4x."),
-    ("E1", "E7", "pcb-e1-dock", "v2/release/revA/boards/meshsat-pcb-e-revA-E7",
-     "routed and cut: 0 hard, 0 unrouted, 415 vias, gate 88 of 88, netlist 816 of 816. Open against it: both "
-     "rails exceed IPC-2221 current density, VIN_RAW at 3.4x."),
+     "NOT ROUTED, and this is the working phase directory rather than a deliverable: the placed board reads 0 hard of the "
+     "fifteen types; the pair pre-router lays 66 of its 113 differential pairs and twelve of those come off again for "
+     "legality, so 54 stay coupled and the rest are the router's; the first plain route of 15 September left about 500 "
+     "connections open after one 2 h 40 pass, and the route campaign continues under a coupled-length judgement of 0.80 "
+     "(owner decision 24, delegated). Read this one for the floor plan, the schematic and the fabric, not for finished copper."),
+    ("C", "C17", "pcb-c-display", "v2/release/revA/boards/meshsat-pcb-c-revA-C17",
+     "routed and cut (15 September 2026, the first C deliverable): 0 hard, 0 unrouted, check ALL PASS, its 5 V rail MET, "
+     "netlist 852 of 852, contracts ALL PASS, verify_deliverable 36 of 36 and the final gate 38 of 38. Its only pair, the "
+     "RP2040's full-speed USB, is declared with no impedance target. Nothing is open against it."),
+    ("D", "D11", "pcb-d-aprs", "v2/release/revA/boards/meshsat-pcb-d-revA-D11",
+     "routed and cut (14 September 2026): 0 hard, 0 unrouted, four of four pairs within 1 mm and on target, contracts 42 of 42; "
+     "owner ruling 15 built, the 1 A rail carried in locked inner copper with the PWR class back at 0.5 mm. Nothing is open against it."),
+    ("E1", "E9", "pcb-e1-dock", "v2/release/revA/boards/meshsat-pcb-e-revA-E9",
+     "routed and cut (14 September 2026): 0 hard, 0 unrouted, check_pcb_e ALL PASS, both rails MET on the fill the board is cut with, "
+     "verify_deliverable 36 of 36. The LT8705A U5 is hand-fitted on every board (owner ruling 12). Nothing is open against it."),
     ("E5", "E5", "pcb-e5-block", "v2/release/revA/boards/meshsat-pcb-e5-revA-E5",
      "routed and cut, two layers at 2 oz. A bare contact board with no schematic by design: every target carries "
      "the net of the spring pin above it, read from board A. Nothing is open against it."),
-    ("P", "P3", "pcb-p-pack", "v2/release/revA/boards/meshsat-pcb-p-revA-P3",
-     "routed and cut: 0 hard, 0 unrouted, 55 vias, every part certified against JLCPCB's catalogue. Open against "
-     "it: two of three rails exceed IPC-2221 current density at the 2 oz copper it is ordered on."),
+    ("P", "P4", "pcb-p-pack", "v2/release/revA/boards/meshsat-pcb-p-revA-P4",
+     "routed and cut (14 September 2026): 0 hard, 0 unrouted, three of three rails MET at the 2 oz copper it is ordered on "
+     "(owner ruling 7), 36 of 36, every part certified against JLCPCB's catalogue. Nothing is open against it."),
 ]
 
 

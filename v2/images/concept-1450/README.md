@@ -1,5 +1,11 @@
 # Concept renders, the kit in the Peli 1450 (rendered 7 September 2026, eighth set: the MESHSAT-830 board set)
 
+> **15 September 2026, set nine (`set-nine/`, 18 views):** the monitor in set eight below stands 28.7 mm proud of the face plate,
+> a scene defect corrected on 9 September (design record 32.85: the Xenarc sits IN the plate with its glass level with the
+> plate's top face, held to 1 mm at most). Set nine renders the corrected scene with the boards as they stand on 15 September
+> (A32, B19 placed, C17, D11, E9, E5, P4); read `set-nine/README.md` for its views. The images below are set eight and are
+> superseded where they show the face.
+
 Concept illustrations of the V2 kit as designed on 7 September 2026 (design record 32.49 to 32.61): the Peli 1450 with the 1450PF frame, the 3 mm aluminium face plate with the Xenarc 709GNK monitor lying on it, the backer ring C7 under it, the RA30H1317M1 amplifier module on the plate's underside, the rod stack of A22 (with the D8 mezzanine) and B16 (three Compute Module 5 slots with their coolers, the M.2 cards and drives, the LimeSDR bay, the RockBLOCK, the radios), the dock strip E6 with the raised block E5 and the eleven blind-mate float clamps, the eleven SMA couplers at Z 88 in the end walls, the connector plate on the back wall and the QMX HF unit in its tray on the lid. The BB-2590/U is not drawn: its place is the open ruling of 32.60 item 7 and 32.61 item 7. Blender 4.2 Cycles on an H100 box, the boards from the released KiCad projects (`kicad-cli pcb export glb` with the library models), the case from Peli's drawing 1451-931, the makers' STEP files for the modules, stand-in shapes for the rest. Nothing has been built; every picture is design intent.
 
 Every image carries rulers (white bars, 10 mm ticks, numerals every 50 mm) along the case's edges on the ground and standing at the front corners, a 50 mm floor grid, and a title strip with the view name.
