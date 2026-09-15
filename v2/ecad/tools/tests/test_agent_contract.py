@@ -668,7 +668,7 @@ def t_hardset_has_a_gate_verb_whose_exit_code_is_its_verdict():
 
 
 def t_a_b_templates_pair_pass_is_the_boards_own_first_pass():
-    """15 September 2026 22:50 CEST: the B placement loop measured five cycles under a pass environment that lacked two of the
+    """15 September 2026 22:39 CEST: the B placement loop measured five cycles under a pass environment that lacked two of the
     board's declared pair knobs (PAIR_COVER_LEGS, PAIR_CLASS_CLEAR), so its numbers were not the production chain's. A B
     template's first pass carries boards/b.json's pair_env and pair_passes[0] exactly; a knob declared in the board file and
     absent from the template, or a layer set that differs, is a measurement on another basis."""
