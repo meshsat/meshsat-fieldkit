@@ -7581,3 +7581,38 @@ stand today (A32, B19 placed, C17, D11, E9, E5, P4, their GLBs exported fresh) a
 the glass is in the plate's plane, 0 mm proud against the owner's bound of 1 mm. The pack is
 `meshsat-fieldkit-review-set-2026-09-15.zip` on the `revA` release (109 MB, 103 files) and the 13 September
 asset is deleted; the boards' states are in `READ-ME-FIRST.md` and in every import archive's note, dated.
+
+### 32.195 The folded page had separated B's wide symbols from their labels, and the regeneration that proved the fix found three resistors a comment had dropped (15 September 2026, 16:00 CEST; MESHSAT-862)
+
+32.194's page folding (`kisch.reband`) assigned every drawing item to a band by the item's OWN first coordinate.
+A part whose labels and wires reach past the band seam at 2044 mm then kept its symbol in band 0 while those
+labels moved to band 1: on B19's 3,976 mm row that was U301 and its neighbours, and the ERC on the regenerated
+sheet read 62 `pin_not_connected` and 23 `label_dangling` where the day before it read none. The netlist
+differed from the committed one by 319 net and node lines. The 13:05 pack shipped that PDF and its import
+archive, and the 2a9543a commit that called every netlist "identical apart from its source path" had checked
+board A alone; A, C, D and P happened to have no part on a seam.
+
+A band is a property of a column and the column is the part's. The body (`kisch.Body`) records, for every
+item, the x of the emission that wrote it; `emit_part`, `emit_pwr_flag` and `text` set that anchor (a section
+title sits 15 mm left of its column and anchors to the column), and `reband` bands by the anchor's column.
+`tests/test_schematic_paging.py` holds it with a seam fixture: a label at 2030.5 mm belonging to a column 21
+part stays in band 0, and column 22 opens band 1 at (40, 960).
+
+All six schematics were regenerated on the box at the fixed tree and every netlist compared with the one
+committed on 14 September (259ae3c), stamps and source paths stripped: A, C, D, E and P identical; B identical
+on every net and node line, with eight lines of difference that are one connector's value text and six LCSC
+fields the generator gained since. **The first comparison, before that, read B six net and node lines
+short: the fan PWM pull-ups R151, R251 and R351 were not in the generated netlist.** `git log -S` put it at
+3457117 (14 September, the certification pass): a stock note was appended to `J_FAN%d`'s `part(...)` line in
+`gen_sch_b.py` and landed before the `; r(R(51), "10k", "FAN_PWM%d" % s, cm33)` that shared the line. The
+generator ran, the board was placed, `netlist_board` passed (it compares the board with the netlist of the
+same generation), and the design had three resistors fewer with nothing to say so. This is the third comment
+of its kind in the record (5 September, C18 and C19; 5 September, A21's boost jog) and the first that killed
+nothing. `tests/test_swallowed_calls.py` refuses a comment token in any generator that carries `; name(`;
+it failed on the tree as it stood and passes with the line restored.
+
+B19's schematic and netlist are recommitted (183e9d1), its EasyEDA Pro archive rebuilt (fbe6fe0), and the
+review pack re-issued under the same name and link with B's two schematic PDFs and its archive replaced,
+the read-me carrying the correction; one A3 tile of the new B pages was viewed. B19's route was relaunched
+on the fixed generators. The B19 placed board committed on 14 September carries R151; every B19 placement
+made between 3457117 and this fix did not.
