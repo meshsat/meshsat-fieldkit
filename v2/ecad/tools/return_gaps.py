@@ -15,13 +15,15 @@ from intent_checks import SAMPLE, GAP_MM
 def main(a):
     path = a[0]; want_all = "--all" in a; top = int(a[a.index("--top") + 1]) if "--top" in a else 8
     b = pcbnew.LoadBoard(path); it = intent.load(path) or {}
+    try: pcbnew.ZONE_FILLER(b).Fill(b.Zones())   # a saved board can carry stale or empty fills; the gate judges the filled board
+    except Exception: pass
     pro = os.path.splitext(path)[0] + ".kicad_pro"; assign = json.load(open(pro)).get("net_settings", {}).get("netclass_assignments", {}) if os.path.exists(pro) else {}
     cu = list(b.GetEnabledLayers().CuStack())
     planes = {}
     for z in b.Zones():
         if z.GetIsRuleArea() or z.GetFilledArea() <= 0: continue
         n = z.GetNetname().lstrip("/")
-        if n == "GND" or n.startswith(("+", "VBAT", "CELL", "VBUS", "PACK")): planes.setdefault(z.GetFirstLayer(), []).append(z.GetFilledPolysList(z.GetFirstLayer()))
+        if n: planes.setdefault(z.GetFirstLayer(), []).append(z.GetFilledPolysList(z.GetFirstLayer()))   # every filled zone, as the gate counts it
     def neighbours(L):
         i = cu.index(L); return [cu[j] for j in (i - 1, i + 1) if 0 <= j < len(cu)]
     targets = {k for k, v in it.get("pair_classes", {}).items() if v}
