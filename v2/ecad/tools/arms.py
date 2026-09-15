@@ -275,7 +275,9 @@ def main(argv):
                              note="an arm name is a lowercase slug of at most %d characters" % ARM_NAME_MAX,
                              out_dir=a.out_dir)
 
-    missing = [x.get("name", "?") for x in spec["arms"] if not x.get("predict", {}).get("value")]
+    # presence by KEY and TYPE, not truthiness: a prediction of exactly 0 (no opens, no hard) is a prediction and was
+    # refused here while the schema accepted it (15 September 2026, red team report 1 P2)
+    missing = [x.get("name", "?") for x in spec["arms"] if not isinstance((x.get("predict") or {}).get("value"), (int, float)) or isinstance((x.get("predict") or {}).get("value"), bool)]
     if missing:
         print("arms: refused, these carry no prediction: %s" % missing)
         print("arms: an arm nobody predicted cannot disappoint, so it cannot teach anything")

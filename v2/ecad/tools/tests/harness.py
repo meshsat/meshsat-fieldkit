@@ -5,3 +5,12 @@ and a test importing `run` would get a second copy of the exception and every sk
 
 class Skip(Exception):
     """A test whose host cannot run it (no pcbnew, no kicad-cli, no scipy): reported, never a failure."""
+
+
+def need(path, why):
+    """Skip a rule whose artefact is not on this host (a code-only checkout has no release/, no board, no appendix, no
+    .git); the reason prints with the skip. 15 September 2026, red team round four H3: the Skip path written for that
+    host had a NameError and five rules failed on a code-only archive."""
+    import os
+    if not os.path.exists(path): raise Skip("%s: %s" % (why, path))
+    return path

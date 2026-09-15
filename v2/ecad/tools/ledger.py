@@ -56,15 +56,23 @@ def head(path):
 
 
 def append(path, rec):
-    """Append one row, chained to the head. Returns the row as written."""
-    seq, prev = head(path)
-    row = dict(rec)
-    row["seq"] = seq + 1
-    row["prev_sha"] = prev
-    row.setdefault("ts", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
-    row["sha"] = row_sha(row)
+    """Append one row, chained to the head, under an exclusive lock on <path>.lock: the head is read and the row written
+    inside the same lock, so two processes cannot both read one head and write two rows with the same seq and prev_sha
+    (15 September 2026, red team report 1 P1: the check-then-append had no lock). Returns the row as written."""
+    import fcntl
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
-    with open(path, "a") as f: f.write(json.dumps(row, sort_keys=True) + "\n")
+    with open(path + ".lock", "a+") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        try:
+            seq, prev = head(path)
+            row = dict(rec)
+            row["seq"] = seq + 1
+            row["prev_sha"] = prev
+            row.setdefault("ts", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+            row["sha"] = row_sha(row)
+            with open(path, "a") as f: f.write(json.dumps(row, sort_keys=True) + "\n"); f.flush(); os.fsync(f.fileno())
+        finally:
+            fcntl.flock(lk, fcntl.LOCK_UN)
     return row
 
 
