@@ -88,11 +88,6 @@ _q4g = [r for r, pin in (nets.get("Q4_G") or nets.get("/Q4_G") or []) if r.start
 for _i, _r in enumerate(sorted(_q4g)[:2]): FIXED[_r] = (_sx + 18.6, _sy - 11.0 - 4.0 * _i, 0, True)
 
 PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1", "J_HSJ1", "J_HSJ2", "CAM_H1", "CAM_H2"}
-for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
-for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light guides; the legends are laser marked on the plate
-text("C7 BACKER RING: LEDs under the plate light guides, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
-# ---------------------------------------------------------------- packed regions: the controller and drivers on the underside of the right strip, the e-paper boost on the top strip's top side, the spread parts on the bottom strip
-EPD_PARTS = ["Q5", "Q6", "L1", "D19", "D20", "D21", "R42", "R43"] + ["C%d" % k for k in range(28, 38)]
 # 15 September 2026 (MESHSAT-862, decision 26's second kind): THE TEST POINTS SIT BESIDE THE NETS THEY TAP. The
 # forty of them were packed as a row in CLUSTER2 on the underside of the bottom strip, and the nets they tap
 # leave the RP2040 in the right strip and run up it to the top strip: every C route since C12 has left one or
@@ -107,6 +102,11 @@ for _i, _r in enumerate(_TP_COLUMN):
     FIXED[_r] = (162.0 + 4.0 * (_i % 2), 82.0 - 3.5 * (_i // 2), 0, True)
 # placed by the one FIXED loop below: `place()` loads and adds a footprint on every call, so a second loop over the
 # same references put every test point on the board twice (C17's first pre-route, 15 September 2026).
+for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
+for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light guides; the legends are laser marked on the plate
+text("C7 BACKER RING: LEDs under the plate light guides, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
+# ---------------------------------------------------------------- packed regions: the controller and drivers on the underside of the right strip, the e-paper boost on the top strip's top side, the spread parts on the bottom strip
+EPD_PARTS = ["Q5", "Q6", "L1", "D19", "D20", "D21", "R42", "R43"] + ["C%d" % k for k in range(28, 38)]
 EPD_PARTS += [r for r in ("TP26", "TP27") if r in comps]
 SPREAD = lambda r: r.startswith(("TP", "JP", "FB")) or r == "D17"
 REGIONS = [("CLUSTER3", L.CLUSTER3, [r for r in EPD_PARTS if r in comps], False),
