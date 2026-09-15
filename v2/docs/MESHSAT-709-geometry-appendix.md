@@ -7582,7 +7582,7 @@ the glass is in the plate's plane, 0 mm proud against the owner's bound of 1 mm.
 `meshsat-fieldkit-review-set-2026-09-15.zip` on the `revA` release (109 MB, 103 files) and the 13 September
 asset is deleted; the boards' states are in `READ-ME-FIRST.md` and in every import archive's note, dated.
 
-### 32.195 The folded page had separated B's wide symbols from their labels, and the regeneration that proved the fix found three resistors a comment had dropped (15 September 2026, 16:00 CEST; MESHSAT-862)
+### 32.195 The folded page had separated B's wide symbols from their labels, and the regeneration that proved the fix found three resistors a comment had dropped (15 September 2026, 15:50 CEST; MESHSAT-862)
 
 32.194's page folding (`kisch.reband`) assigned every drawing item to a band by the item's OWN first coordinate.
 A part whose labels and wires reach past the band seam at 2044 mm then kept its symbol in band 0 while those
