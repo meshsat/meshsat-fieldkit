@@ -32498,7 +32498,7 @@
 			)
 		)
 	)
-	(gr_text "C7 BACKER RING: LEDs under the plate light guides, no face legends here"
+	(gr_text "BACKER RING: LEDs under the plate light guides, no face legends here"
 		(at 297 312 0)
 		(layer "F.SilkS")
 		(uuid "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df")
