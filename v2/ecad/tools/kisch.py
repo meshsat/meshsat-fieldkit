@@ -264,12 +264,16 @@ def emit_pwr_flag(p, x, y):
         lib, nm2 = POWER[net]; place_symbol(lib, nm2, "#PWR%03d" % pf_n[0], net, "", x, y + STUB); pf_n[0] += 1
     else: label(net, x, y + STUB, 270)
 
-def place_symbol(lib, name, ref, value, fp, x, y, lcsc="", hide_props=False, in_bom=True):
+def place_symbol(lib, name, ref, value, fp, x, y, lcsc="", hide_props=False, in_bom=True, rot=0, ref_at=None, val_at=None, hide_value=False, font=1.27):
+    """rot is the symbol's orientation on the sheet (0, 90, 180, 270, counter-clockwise); ref_at and val_at place the two visible
+    properties (sheet coordinates, left-justified text with its baseline at y), else they sit beside the top-right pin as before."""
     sym = ensure(lib, name); pins = pins_of(sym); x0, x1, y0, y1 = extents(sym)
-    s = '(symbol (lib_id %s) (at %.2f %.2f 0) (unit 1) (exclude_from_sim no) (in_bom %s) (on_board %s) (dnp no) (fields_autoplaced yes) (uuid "%s")\n' % (
-        q(lib + ":" + name), x, y, "no" if lib == "power" or name in ("TestPoint",) or not in_bom else "yes", "no" if lib == "power" else "yes", U())
-    def prop(k, v, px, py, hide): return '\t(property %s %s (at %.2f %.2f 0) (effects (font (size 1.27 1.27)) (justify left)%s))\n' % (q(k), q(v), px, py, " (hide yes)" if hide else "")
-    s += prop("Reference", ref, x + x1 + 1.27, y - y1 - 1.27, hide_props); s += prop("Value", value, x + x1 + 1.27, y - y1 + 1.27, hide_props)
+    s = '(symbol (lib_id %s) (at %.2f %.2f %d) (unit 1) (exclude_from_sim no) (in_bom %s) (on_board %s) (dnp no)%s (uuid "%s")\n' % (
+        q(lib + ":" + name), x, y, rot, "no" if lib == "power" or name in ("TestPoint",) or not in_bom else "yes", "no" if lib == "power" else "yes",
+        "" if ref_at else " (fields_autoplaced yes)", U())
+    def prop(k, v, px, py, hide): return '\t(property %s %s (at %.2f %.2f 0) (effects (font (size %.2f %.2f)) (justify left bottom)%s))\n' % (q(k), q(v), px, py, font, font, " (hide yes)" if hide else "")
+    ra = ref_at or (x + x1 + 1.27, y - y1 - 1.27); va = val_at or (x + x1 + 1.27, y - y1 + 1.27)
+    s += prop("Reference", ref, ra[0], ra[1], hide_props or lib == "power"); s += prop("Value", value, va[0], va[1], hide_props or hide_value)
     s += prop("Footprint", fp, x, y, True); s += prop("Datasheet", "", x, y, True); s += prop("Description", "", x, y, True)
     if lcsc: s += prop("LCSC", lcsc, x, y, True)
     for num, nm, px, py, rot in pins: s += '\t(pin %s (uuid "%s"))\n' % (q(num), U())
@@ -282,12 +286,26 @@ def label(net, x, y, rot):
     just = {0: "left bottom", 180: "right bottom", 90: "left bottom", 270: "right bottom"}[rot]
     out.append('(label %s (at %.2f %.2f %d) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify %s)) (uuid "%s"))\n' % (q(net), x, y, rot, just, U()))
 
+def glabel(net, x, y, rot):
+    """A global label: the net keeps the global name a power symbol gives it (GND, +3V3), where an upright symbol has no room."""
+    just = {0: "left", 180: "right", 90: "left", 270: "right"}[rot]
+    out.append('(global_label %s (shape input) (at %.2f %.2f %d) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify %s)) (uuid "%s")\n\t(property "Intersheetrefs" "${INTERSHEET_REFS}" (at %.2f %.2f 0) (effects (font (size 1.27 1.27)) (hide yes)))\n)\n' % (q(net), x, y, rot, just, U(), x, y))
+
+
 def text(t, x, y, size=2.0):
     _ANCHOR[0] = x + 16.0   # a section title sits 15 mm left of its column; the anchor is the column's
     return _text(t, x, y, size)
 
 
-def _text(t, x, y, size=2.0): out.append('(text %s (exclude_from_sim no) (at %.2f %.2f 0) (effects (font (size %.2f %.2f) bold) (justify left bottom)) (uuid "%s"))\n' % (q(t), x, y, size, size, U()))
+def _text(t, x, y, size=2.0, bold=True): out.append('(text %s (exclude_from_sim no) (at %.2f %.2f 0) (effects (font (size %.2f %.2f)%s) (justify left bottom)) (uuid "%s"))\n' % (q(t), x, y, size, size, " bold" if bold else "", U()))
+
+
+def junction(x, y): out.append('(junction (at %.2f %.2f) (diameter 0) (color 0 0 0 0) (uuid "%s"))\n' % (x, y, U()))
+
+
+def rect(x0, y0, x1, y1, width=0.25):
+    """A graphic rectangle (a page frame); no electrical meaning."""
+    out.append('(rectangle (start %.2f %.2f) (end %.2f %.2f) (stroke (width %.2f) (type default)) (fill (type none)) (uuid "%s"))\n' % (x0, y0, x1, y1, width, U()))
 
 def emit_part(p, x, y):
     _ANCHOR[0] = x
