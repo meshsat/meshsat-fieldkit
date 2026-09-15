@@ -125,9 +125,17 @@ cp $N.kicad_pcb out/$N-placed.kicad_pcb
 # board to measure a pre-router on. The allowance is ZERO unless the board declares one with its number and
 # the appendix section that measured it (`placed_hard_allowance` in boards/<letter>.json).
 PLACED_ALLOW="$(cfg placed_hard_allowance)"; PLACED_ALLOW="${PLACED_ALLOW:-0}"
-bash ../tools/drc.sh $N.kicad_pcb out/$N-placed-drc.json >/dev/null 2>&1 || true
+# A DRC THAT DID NOT RUN IS NOT A CLEAN BOARD (16 September 2026, red team report 1 P1: this line swallowed
+# drc.sh's exit status with `|| true` and the branch below then printed "UNMEASURED" and carried on into a
+# five-hour route. A cheap gate that fails open is not a gate; the subprocess's failure is the chain's.)
+rm -f out/$N-placed-drc.json out/placed-counts.txt
+bash ../tools/drc.sh $N.kicad_pcb out/$N-placed-drc.json >/dev/null 2>&1; DRCRC=$?
+[ "$DRCRC" -eq 0 ] || block "the placed-board DRC did not run (drc.sh exit $DRCRC): its legality is UNMEASURED and the route below is not a measurement"
+[ -s "out/$N-placed-drc.json" ] || block "the placed-board DRC wrote no report: its legality is UNMEASURED"
 if [ -s "out/$N-placed-drc.json" ]; then
-  python3 ../tools/hardset.py out/$N-placed-drc.json pre --counts out/placed-counts.txt --label placed >/dev/null 2>&1 || true
+  python3 ../tools/hardset.py out/$N-placed-drc.json pre --counts out/placed-counts.txt --label placed >/dev/null 2>&1; HSRC=$?
+  [ "$HSRC" -eq 0 ] || block "hardset could not read the placed-board DRC report (exit $HSRC)"
+  [ -s out/placed-counts.txt ] || block "hardset wrote no counts for the placed board"
   PLACED_HARD="$(cut -d' ' -f1 out/placed-counts.txt 2>/dev/null || echo 0)"
   echo "placed board: hard $PLACED_HARD of the fifteen types, allowance $PLACED_ALLOW"
   if [ "${PLACED_HARD:-0}" -gt "$PLACED_ALLOW" ]; then
@@ -138,7 +146,7 @@ if [ -s "out/$N-placed-drc.json" ]; then
     exit 1
   fi
 else
-  echo "placed board: the DRC could not be read, so its legality is UNMEASURED and the pass below is not a measurement"
+  block "the placed-board DRC report is empty: the board's legality is UNMEASURED and nothing below it is a measurement"
 fi
 
 [ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
