@@ -665,3 +665,18 @@ def t_hardset_has_a_gate_verb_whose_exit_code_is_its_verdict():
         raise AssertionError("hardset.py has no verb")
     if 'if verb == "gate"' not in src:
         raise AssertionError("the gate verb does not change the exit code")
+
+
+def t_a_b_templates_pair_pass_is_the_boards_own_first_pass():
+    """15 September 2026 22:50 CEST: the B placement loop measured five cycles under a pass environment that lacked two of the
+    board's declared pair knobs (PAIR_COVER_LEGS, PAIR_CLASS_CLEAR), so its numbers were not the production chain's. A B
+    template's first pass carries boards/b.json's pair_env and pair_passes[0] exactly; a knob declared in the board file and
+    absent from the template, or a layer set that differs, is a measurement on another basis."""
+    import json
+    b = json.load(open(os.path.join(TOOLS, "boards", "b.json")))
+    pe = b["pair_env"]; p1 = b["pair_passes"][0]
+    for name in ("b-place.json", "b.json"):
+        t = json.load(open(os.path.join(TOOLS, "agent", "templates", name))); env = t["passes"][0]["env"]
+        for k, v in pe.items(): assert str(env.get(k)) == str(v), "%s: %s is %r in the board file and %r in the template" % (name, k, v, env.get(k))
+        assert env.get("PAIR_LAYERS") == p1["layers"] and env.get("PAIR_HOP_LAYERS") == p1["hop_layers"] and env.get("PAIR_INNER") == p1["inner"], "%s: the pass layers or inner geometry differ from pair_passes[0]" % name
+        assert t["passes"][0]["classes"] == p1["classes"], "%s: the pass classes differ from pair_passes[0]" % name
