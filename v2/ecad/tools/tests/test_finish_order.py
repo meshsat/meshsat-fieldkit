@@ -19,6 +19,8 @@ itself about which phase it cuts (five did not, and one of those would have had 
 the finish never wrote).
 """
 import os, re, sys, json, glob
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import Skip, need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FINISH = os.path.join(TOOLS, "finish.sh")

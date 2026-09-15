@@ -1,43 +1,111 @@
 #!/usr/bin/env python3
-"""The final gate pass reads the folders that exist and says what it could not judge (14 September 2026).
+"""The final gate's DECISION, executed against every state it can meet (15 September 2026, red team report 1 P0).
 
-`final_gate.py` runs no new logic: it re-reads every deliverable folder with `verify_deliverable`, then
-`check_contracts` and `jlc_certify` once each, and prints one table. Two properties make it worth having
-rather than seven logs: a folder nobody re-read since it was cut cannot pass by being forgotten, and a check
-that CANNOT run here says so instead of reading as a failure (`check_contracts` compares netlists that live in
-each project's untracked out/, so on the runner every board is absent, which is inconclusive and not broken).
-"""
-import os
-
+The first version of this file checked that words existed in the source ("newest_folders", "QUOTE", "INCONCLUSIVE")
+and the decision underneath was wrong on three counts: parts certification was recorded and never used, a quote-only
+folder was counted as held and ignored by the PASS condition, and a board with no folder fell out of the denominator.
+A source-scanning rule cannot see that. These rules run `final_gate.main` against a synthetic boards directory and a
+fake `run` that answers each sub-gate with a chosen exit code, and assert the verdict for each state of the table:
+all pass, a deliverable failure, a quote folder, a missing board, contracts failed, contracts unjudgeable,
+certification open, certification unjudgeable, and a subset."""
+import os, sys, json, tempfile, importlib
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = open(os.path.join(TOOLS, "final_gate.py")).read()
+import verdict
+
+LETTERS = ("a", "b", "c", "d", "e", "e5", "p")
 
 
-def t_it_judges_every_folder_it_finds():
-    assert "newest_folders" in SRC and "verify_deliverable.py" in SRC
+def _world(folders, sub):
+    """A boards directory with the given deliverable folders and a fake `run` answering each sub-gate.
+    `sub` maps 'deliverable:<folder>' | 'contracts' | 'certify' to (rc, stdout)."""
+    d = tempfile.mkdtemp(prefix="final-gate-")
+    bdir = os.path.join(d, "boards"); os.makedirs(bdir)
+    for L in LETTERS:
+        if L != "e5": open(os.path.join(bdir, "%s.json" % L), "w").write("{}")
+    rdir = os.path.join(d, "release"); os.makedirs(rdir)
+    for f in folders:
+        os.makedirs(os.path.join(rdir, f)); open(os.path.join(rdir, f, "%s-gerbers.zip" % f.split("-revA")[0].replace("meshsat-", "")), "w").write("")
+    def run(cmd):
+        tool = os.path.basename(cmd[1])
+        if tool == "verify_deliverable.py":
+            rc, out = sub.get("deliverable:" + os.path.basename(cmd[2]), (0, "verify_deliverable: ALL PASS (36 of 36 properties)"))
+            return rc, out
+        if tool == "check_contracts.py": return sub.get("contracts", (0, "contracts: ALL PASS 42 of 42"))
+        if tool == "jlc_certify.py": return sub.get("certify", (0, "jlc_certify: 469 components, CERTIFIED 469"))
+        raise AssertionError("unexpected command %s" % cmd)
+    return d, bdir, rdir, run
 
 
-def t_a_bare_board_and_a_quote_folder_are_declared_not_failed():
-    i = SRC.find('args.append("--bare")')
-    assert i > 0, "nothing declares a bare board"
-    blk = SRC[max(0, i - 300):i + 60]
-    assert "quote" in blk and "bom.csv" in blk, "only one of the two cases is handled"
+def _verdict(argv, folders, sub, out_dir):
+    fg = importlib.import_module("final_gate")
+    d, bdir, rdir, run = _world(folders, sub)
+    fg.BOARDS = rdir
+    cwd = os.getcwd(); os.chdir(d)
+    try:
+        rc = fg.main(list(argv), run=run, boards_dir=bdir)
+    finally:
+        os.chdir(cwd)
+    v = json.load(open(os.path.join(d, "out", "final_gate.verdict.json")))
+    return rc, v["result"] if "result" in v else v.get("verdict"), v
 
 
-def t_an_unjudgeable_contract_check_is_not_a_failure():
-    assert "contracts_absent" in SRC, "an absent netlist reads as a broken contract"
-    assert "INCONCLUSIVE" in SRC, "the verdict cannot say it was not judged"
+FULL = ["meshsat-pcb-%s-revA-%s1" % (L, L.upper()) for L in LETTERS]
+
+
+def t_the_whole_manifest_passing_is_pass():
+    rc, res, v = _verdict([], FULL, {}, None)
+    assert res == "PASS" and rc == 0, (res, rc, v)
+    assert v["denominator"] == 7
+
+
+def t_a_deliverable_failure_is_fail():
+    rc, res, v = _verdict([], FULL, {"deliverable:meshsat-pcb-c-revA-C1": (1, "verify_deliverable: 1 FAIL (35 of 36 properties)")}, None)
+    assert res == "FAIL" and rc != 0, (res, rc)
+
+
+def t_a_quote_only_folder_fails_the_set():
+    folders = [f for f in FULL if "-pcb-b-" not in f] + ["meshsat-pcb-b-revA-B1-quote"]
+    rc, res, v = _verdict([], folders, {}, None)
+    assert res == "FAIL", "a held board read as a pass of the set: %s" % v
+    assert v["counts"]["quote"] == 1
+
+
+def t_a_required_board_with_no_folder_fails_the_set():
+    folders = [f for f in FULL if "-pcb-d-" not in f]
+    rc, res, v = _verdict([], folders, {}, None)
+    assert res == "FAIL", "a board that vanished from the table read as a pass: %s" % v
+    assert v["counts"]["missing"] == 1 and any("D: no deliverable folder" in e for e in v["evidence"])
+    assert v["denominator"] == 7, "the denominator is the manifest, not the folders that exist"
+
+
+def t_failed_contracts_are_fail_and_absent_contracts_are_inconclusive():
+    rc, res, v = _verdict([], FULL, {"contracts": (1, "contracts: 2 FAIL of 42")}, None)
+    assert res == "FAIL", v
+    rc, res, v = _verdict([], FULL, {"contracts": (3, "6 board netlist(s) absent from this tree")}, None)
+    assert res == "INCONCLUSIVE", v
+
+
+def t_open_certification_is_fail_and_unasked_certification_is_inconclusive():
+    rc, res, v = _verdict([], FULL, {"certify": (1, "jlc_certify: 469 components, CERTIFIED 460, WRONG_MODEL 9")}, None)
+    assert res == "FAIL", "parts certification OPEN and the gate said PASS: %s" % v
+    rc, res, v = _verdict([], FULL, {"certify": (3, "jlc_certify: 469 components, NOT_CHECKED 469")}, None)
+    assert res == "INCONCLUSIVE", v
+
+
+def t_a_failure_beats_an_unjudged_component():
+    rc, res, v = _verdict([], FULL, {"contracts": (3, "absent"), "deliverable:meshsat-pcb-a-revA-A1": (1, "verify_deliverable: 1 FAIL (35 of 36 properties)")}, None)
+    assert res == "FAIL", "an unjudged contract check hid a real deliverable failure: %s" % v
+
+
+def t_a_subset_is_never_the_set():
+    rc, res, v = _verdict(["--boards", "c,d"], FULL, {}, None)
+    assert res == "INCONCLUSIVE", "a two-board look read as the set's PASS: %s" % v
 
 
 def t_it_opens_no_board_and_touches_no_host():
-    # the IMPORT, not the word: the first version of this rule failed on its own docstring
+    src = open(os.path.join(TOOLS, "final_gate.py")).read()
     for bad in ("import pcbnew", "ssh ", "route_one", "freerouting"):
-        assert bad not in SRC, "final_gate should read artefacts only, found %r" % bad
-
-
-def t_it_does_not_pick_a_board_by_globbing():
-    assert "*.kicad_pcb" not in SRC, "the stem must come from the gerber zip's name, not from a board glob"
-
-
-def t_the_summary_line_comes_from_the_gate_itself():
-    assert 'l.startswith("verify_deliverable:")' in SRC, "the summary is reconstructed instead of read"
+        assert bad not in src, "final_gate should read artefacts only, found %r" % bad
+    assert "*.kicad_pcb" not in src, "the stem must come from the gerber zip's name, not from a board glob"
+    assert 'l.startswith("verify_deliverable:")' in src, "the summary is reconstructed instead of read"

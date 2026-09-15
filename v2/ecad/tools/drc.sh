@@ -42,8 +42,8 @@ d = json.load(open(sys.argv[1]))
 if not isinstance(d, dict) or "violations" not in d: raise SystemExit(1)
 PY
 mv -f "$TMP" "$R"; rm -f "$ERR"
-exit 0
-
+# The cost line, AFTER the report is in place (15 September 2026, red team report 1 P2: this block sat after `exit 0`
+# and never ran, so the pipeline could not say what its twelve DRC calls per finish cost).
 _T1=$(date +%s)
 python3 - "$R" "$B" "$((_T1 - _T0))" <<'PY2' 2>/dev/null || true
 import sys, json, os, hashlib
@@ -57,3 +57,4 @@ json.dump({"seconds": secs, "violations": len(v), "board_sha": h, "report": os.p
           open(os.path.join(os.path.dirname(rep) or ".", "drc-cost.json"), "w"), indent=1)
 print("drc: %d s, %d violation(s), board %s" % (secs, len(v), h))
 PY2
+exit 0
