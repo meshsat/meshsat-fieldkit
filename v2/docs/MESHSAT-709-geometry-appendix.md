@@ -7554,3 +7554,30 @@ false` and prints one; a rule ties every profile's count to its board's declarat
 And `pair_prune`'s first run judged nothing because `hardset`'s exit was read through a pipe (fixed with the
 prune itself). Suite 456 passing, 7 skipped. **Four self-matching kills tonight**, the last a `pgrep -f` naming a
 session file in the same ssh line as the file: bracket the pattern, never name the file beside it.
+
+### 32.194 The review pack's schematic PDFs were empty frames, and the pack is rebuilt with everything read back (15 September 2026, 13:05 CEST; MESHSAT-862)
+
+The owner opened a schematic PDF from the 13 September review pack and it was white. It was: every board's
+schematic was written on an A0 sheet and laid out as one row of 92 mm columns, 800 mm tall, as many columns as
+the parts needed, so A's drawing was 2.8 m wide and B's 3.9 m, and an exporter clips to the page. The generator's
+own print said "the schematic PDF is a netlist record, not a drawing" and nobody had opened one. `kisch.reband`
+folds the row into bands under a user page that holds the drawing (eeschema takes up to 3048 mm a side, tested
+on the box: A is 2074 x 1230 mm in two bands, B 2074 x 1710), positions only, and every regenerated netlist is
+identical to the committed one apart from its source path. For reading, each sheet is also cut into A3 pages
+with `mutool poster`, empty tiles dropped, the whole sheet as page one (A 24 pages, B 31, C 7, D 7, E 10, P 4);
+every page 1 and 2 of the twelve PDFs was measured for ink and page 2 of each viewed before the pack shipped.
+
+Reading the pack back found two more constants in the fab note: it asked the fab to tune USB pairs "designed at
+0.2 mm / 0.15 mm" for "90 ohm" on every board with USB nets, where C and E declare no target and D's pairs are
+0.30/0.20; the line reads the board's own class and the intent's target now, and C's note carries no impedance
+line. The first commit of that fix had an unclosed parenthesis inside the shell script's python heredoc: the
+shell parsed, the suite passed, and every re-cut kept its old note because the export failed inside
+`finish_board.sh`; a heredoc in a tool is compiled by the suite from here.
+
+The renders in the old pack were set eight of 7 September, which stood the Xenarc 28.7 mm proud of the face plate;
+the scene had held its glass level with the plate since 9 September (32.85) and no set had been rendered since.
+Set nine, eighteen views, was rendered on a rented H100 (about an hour, then destroyed) from the boards as they
+stand today (A32, B19 placed, C17, D11, E9, E5, P4, their GLBs exported fresh) and the face detail was viewed:
+the glass is in the plate's plane, 0 mm proud against the owner's bound of 1 mm. The pack is
+`meshsat-fieldkit-review-set-2026-09-15.zip` on the `revA` release (109 MB, 103 files) and the 13 September
+asset is deleted; the boards' states are in `READ-ME-FIRST.md` and in every import archive's note, dated.
