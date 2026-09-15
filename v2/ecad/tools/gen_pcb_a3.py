@@ -314,7 +314,9 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
 # 2. the PA rail: the shunt's pad 2 and the output caps in an island at the head of a 4.5 mm bottom band east along y -11.5, north at x 104, into J_PA's pin 1
 pa = "+13V8_PA"; pr = pads_rect(net_pads(pa, ["R55", "C65", "C66", "C67"]), 1.2, 1.0)
 PC.island(pa, "PA rail head", rect_pts((pr[0], pr[1], pr[2] + 2.5, pr[3])), pcbnew.F_Cu, priority=3)
-PC.keepout("keep tracks off the PA rail head", (pr[0], pr[1] + 1.0, pr[2] + 2.5, pr[3] - 1.0), pcbnew.F_Cu)   # 15 Sep 2026 (A34): router tracks across the head left its fill at 51 of 102 mm2, under the gate's half; the pads' own y band only, the caps' GND escapes run in the island's 1.0 mm margin (A35's first pre-route: 3 items_not_allowed)
+gp = pads_rect(net_pads("GND", ["C65", "C66", "C67"]), 0)                  # the output caps' ground pads, whose escapes leave north and west
+PC.keepout("keep tracks off the PA rail head", (pr[0], pr[1], pr[2] + 2.5, gp[1] - 0.15), pcbnew.F_Cu)   # 15 Sep 2026 (A34): router tracks across the head left its fill at 51 of 102 mm2, under the gate's half. The band covers the PA pads' side of the caps only: A35's first two pre-routes were refused for the caps' own GND escapes (three 2 mm F.Cu stubs starting at the GND pad centres), so the rule area stops 0.15 mm short of the GND pads' south edge
+PC.keepout("keep tracks off the PA rail head", (pr[0], pr[1], gp[0] - 2.0, pr[3]), pcbnew.F_Cu)   # and the shunt's side west of the caps, clear of C65's westward GND escape (it ends 2 mm past the pad)
 jp = pads_rect(net_pads(pa, ["J_PA"]), 0); yP = (jp[1] + jp[3]) / 2
 # 13 September 2026: the east run was 4.5 mm, which IPC gives 7.12 A against this rail's 6.0, and the cell
 # measure still read 175.5 A/mm2 at (93.2, -12.2) with nothing of another net within 2.8 mm: the current is
