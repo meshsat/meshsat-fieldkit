@@ -1366,6 +1366,10 @@ own, a /PCM_XTI track against a solder jumper's pad on F.Cu, a generator item an
 rule 2 is the grid, and what stands between D and both rules is the reading of rule 1 asked above.
 
 
+**Option 1 for C is being measured, 15 September 2026 23:50 CEST (`/root/ciso6`):** C on six layers (In1 and In4 ground planes,
+In2 and In3 routing, the ground-via grid before the route, the gate reading six), the same route the four-layer C18 had, so
+the ruling has the number rather than the argument. C's route takes about six hours; the numbers go here when it lands.
+
 A six-layer D is measured irrelevant to this: the anti-pads are the same on any stack. C's ruling above stands unchanged
 (its misses are stack, 209 of 453 mm on one net); the same via-transition question will apply to C after its stack is ruled.
 
