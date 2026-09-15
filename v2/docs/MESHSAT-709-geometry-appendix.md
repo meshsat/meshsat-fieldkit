@@ -7694,7 +7694,7 @@ Also this evening: the schematic PDFs alone are on the release as `meshsat-field
 (17 MB, the six boards' engineering pages and uncut sheets, the same files as the third issue of the review set), with
 the link on the laptop; A35 and B19 continue on box 51119564.
 
-### 32.198 The two return-current rules become gates, measured on every board first; the reviewers' fixes; the box lost and replaced (15 September 2026, 21:50 CEST; MESHSAT-862)
+### 32.198 The two return-current rules become gates, measured on every board first; the reviewers' fixes; the box lost and replaced (15 September 2026, 21:20 CEST; MESHSAT-862)
 
 **The ruling (20:15 CEST).** Asked whether the golden rule of EMC, the return beside every signal, holds on all seven
 boards, the honest answer was: the ground plane on five of seven, the return path checked only under the pair-class nets,
