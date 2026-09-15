@@ -697,3 +697,18 @@ def t_every_python_block_embedded_in_a_shell_tool_parses():
             try: compile(m.group(1), sh, "exec")
             except SyntaxError as e: bad.append("%s: %s" % (os.path.basename(sh), e))
     assert not bad, "; ".join(bad)
+
+
+def t_the_placed_board_drc_fails_closed():
+    """Red team report 1, P1 (16 September 2026): full.sh ran the placed-board DRC with `|| true`, so a DRC that
+    did not run printed UNMEASURED and the chain carried on into a five-hour route. The cheap gate in front of
+    the expensive stage is worth nothing if its own failure is a pass."""
+    src = open(os.path.join(TOOLS, "full.sh")).read()
+    i = src.index("placed-drc.json")
+    win = src[max(0, i - 400):i + 1200]
+    assert "drc.sh $N.kicad_pcb out/$N-placed-drc.json >/dev/null 2>&1 || true" not in win, \
+        "the placed-board DRC still swallows its own exit status"
+    assert "DRCRC" in win and "block \"the placed-board DRC did not run" in win, \
+        "the chain does not block when the placed-board DRC fails to run"
+    assert "UNMEASURED and nothing below it is a measurement" in src, \
+        "an unreadable placed-board DRC report does not block"
