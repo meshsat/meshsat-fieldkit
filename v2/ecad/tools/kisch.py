@@ -26,7 +26,20 @@ import intent as _intent   # `c(..., bypass=(part, pin))` records the pin a deco
 SYMDIR = os.environ.get("KICAD_SYMBOLS", "/usr/share/kicad/symbols/")
 LIBCACHE = {}
 libsyms = {}
-out = []
+_ANCHOR = [None]   # the column-defining x of the emission in progress: every item appended while a part is placed carries it
+anchors = []
+
+
+class Body(list):
+    """The sheet body: a list of item strings that also remembers, per item, the x of the emission that wrote it. B19's
+    banded page (15 Sep 2026, 32.194) moved each item by its OWN first coordinate, so a wide part's labels and wires
+    crossed the band seam away from their symbol and 62 pins of U301 came loose; a band is a property of a column, and
+    the column is the part's, so the anchor travels with every item."""
+    def append(self, item):
+        super().append(item); anchors.append(_ANCHOR[0])
+
+
+out = Body()   # A and E never call reset_body(): the import-time body records anchors too
 P = []
 pf_n = [0]
 ROOT = str(uuid.uuid4())
@@ -67,8 +80,10 @@ def reband(items, colw=92.0, w_max=2024.0, page_h=800.0, gap=60.0, x0=20.0, marg
     def shifted(item, dx, dy):
         return re.sub(r"\((at|xy) (-?[\d.]+) (-?[\d.]+)", lambda m: "(%s %.2f %.2f" % (m.group(1), float(m.group(2)) + dx, float(m.group(3)) + dy), item)
     bands = 0; new = []
-    for it in items:
-        b = max(0, int((first_x(it) - x0) // band_w)); bands = max(bands, b + 1)
+    anc = anchors if len(anchors) == len(items) else [None] * len(items)
+    for it, a in zip(items, anc):
+        col = int((a - x0) // colw) if a is not None else int((first_x(it) - x0) // colw)   # the column is the emission's, never the item's own
+        b = max(0, col // cols_per_band); bands = max(bands, b + 1)
         new.append(shifted(it, -b * band_w, b * (page_h + gap)) if b else it)
     items[:] = new
     W = band_w + x0 + margin if bands > 1 else max(first_x_max(items) + margin, 297.0)
@@ -86,7 +101,7 @@ def first_x_max(items):
 def reset_body():
     """Start a fresh sheet body; the parts and the symbol library survive (`layout()` is called more than once per run)."""
     global out
-    out = []
+    out = Body(); del anchors[:]
     pf_n[0] = 0
     _UUID_N[0] = 0   # a fresh body starts the uuid sequence again, so two runs of one board agree
     return out
@@ -243,6 +258,7 @@ def usb_c_recept(ref, dp, dm, vbus, cc1, cc2):
          {"A1": "GND", "A12": "GND", "B1": "GND", "B12": "GND", "A4": vbus, "A9": vbus, "B4": vbus, "B9": vbus, "A5": cc1, "B5": cc2, "A6": dp, "B6": dp, "A7": dm, "B7": dm, "A8": "NC", "B8": "NC", "S1": "GND"}, "C165948")
 
 def emit_pwr_flag(p, x, y):
+    _ANCHOR[0] = x
     place_symbol("power", "PWR_FLAG", p["ref"], "PWR_FLAG", "", x, y); net = p["nets"]["1"]; wire(x, y, x, y + STUB)
     if net in POWER:
         lib, nm2 = POWER[net]; place_symbol(lib, nm2, "#PWR%03d" % pf_n[0], net, "", x, y + STUB); pf_n[0] += 1
@@ -266,9 +282,15 @@ def label(net, x, y, rot):
     just = {0: "left bottom", 180: "right bottom", 90: "left bottom", 270: "right bottom"}[rot]
     out.append('(label %s (at %.2f %.2f %d) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify %s)) (uuid "%s"))\n' % (q(net), x, y, rot, just, U()))
 
-def text(t, x, y, size=2.0): out.append('(text %s (exclude_from_sim no) (at %.2f %.2f 0) (effects (font (size %.2f %.2f) bold) (justify left bottom)) (uuid "%s"))\n' % (q(t), x, y, size, size, U()))
+def text(t, x, y, size=2.0):
+    _ANCHOR[0] = x + 16.0   # a section title sits 15 mm left of its column; the anchor is the column's
+    return _text(t, x, y, size)
+
+
+def _text(t, x, y, size=2.0): out.append('(text %s (exclude_from_sim no) (at %.2f %.2f 0) (effects (font (size %.2f %.2f) bold) (justify left bottom)) (uuid "%s"))\n' % (q(t), x, y, size, size, U()))
 
 def emit_part(p, x, y):
+    _ANCHOR[0] = x
     pins = place_symbol(p["lib"], p["sym"], p["ref"], p["value"], p["fp"], x, y, p["lcsc"], in_bom=p.get("in_bom", True)); seen = set()
     for num, nm, px, py, rot in pins:
         sx, sy = x + px, y - py; key = (round(sx, 2), round(sy, 2)); net = p["nets"].get(num)
