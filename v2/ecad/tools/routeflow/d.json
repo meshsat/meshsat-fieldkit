@@ -1,7 +1,7 @@
 {
  "board": "pcb-d-aprs",
  "project": "v2/ecad/pcb-d-aprs-d9",
- "phase": "D11",
+ "phase": "<PHASE>",
  "issue": "MESHSAT-862",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -24,7 +24,7 @@
  ],
  "route": {
   "attempts": [
-   100
+   200
   ],
   "threads": 1,
   "timeout": 3600,
@@ -44,21 +44,20 @@
    "<ECAD>",
    "pcb-d-aprs-d9",
    "d",
-   "D11",
+   "<PHASE>",
    "out/parallel-d9.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/d11-clean.txt",
+  "clean_flag": "out/<phase>-clean.txt",
   "stub_log": "out/pcb-d-aprs-stub.log"
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-d-revA-D11",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-d-revA-<PHASE>",
  "expect": {
   "hard": 0,
   "unrouted": 0,
   "autoroute_minutes_max": 40
  },
- "notes": "D9 (8 Sep 2026, MESHSAT-862 rules 1 and 2, appendix 32.70): the D8 profile on the pcb-d-aprs-d9 copy with the USB cluster on the top layer and the pair pre-router in the chain; the USB and RF classes on F.Cu and In2.Cu.",
+ "notes": "One profile per letter (15 September 2026, red team round four H1): the phase comes from boards/d.json, --phase or ROUTEFLOW_PHASE; every phase note since d12 is in v2/docs/ROUTEFLOW-PHASES.md. The pass ceiling is the timeout: the per-pass jar keeps the best pass of a cut run, so the attempt count no longer protects anything and is set high.",
  "baseline_key": "D7",
- "clean_flag": "out/d11-clean.txt",
- "_phase_note": "D11, 13 September 2026 (MESHSAT-862): OWNER RULING 15 implemented. The PWR class goes back to 0.5 mm and +5V_D8's trunk and west branch are locked In2 copper at 1.7 and 1.5 mm, sized to the current the rail's declared loads actually put in them (1.0 A and 0.75, not the rail's total in one conductor). Measured in an isolated tree first: 0 hard, 0 unrouted after the finish, the board gate ALL PASS, the rail MET, 4 of 4 pairs."
+ "clean_flag": "out/<phase>-clean.txt"
 }

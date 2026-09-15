@@ -47,7 +47,7 @@ def main(a):
     for ln, (t, g) in sorted(by_layer.items()): print("return_report: rule 1 on %-6s %6.0f mm of signal track, %6.0f mm (%3.0f%%) with no plane on a neighbouring layer" % (ln, t, g, 100.0 * g / t if t else 0))
     print("return_report: rule 1: %d of %d signal nets over their limit%s" % (len(over), len(total), "" if not over else "; worst: " + "; ".join("%s %.0f of %.0f mm (limit %.0f)" % (n, g, t, l) for g, n, t, l in over[:nshow])))
     rv = return_via.judge(b, path)
-    print("return_report: rule 2: %d of %d signal vias without a ground via within %.1f mm (%d exempt in fine-pitch fans)" % (len(rv["lacking"]), rv["judged"], return_via.RETURN_MM, rv["exempt"]))
+    print("return_report: rule 2: %d of %d signal vias without a ground via within %.1f mm (%d exempt in fine-pitch fans, %d on one reference plane)" % (len(rv["lacking"]), rv["judged"], return_via.RETURN_MM, rv["exempt"], rv["same_plane"]))
     return 0
 
 if __name__ == "__main__":

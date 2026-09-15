@@ -75,7 +75,7 @@ def t_a_profiles_gate_count_is_its_boards_declaration():
     gate_before_placement false, so the chain runs one. The number is the board's declaration, never a profile literal."""
     import glob
     bad = []
-    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "[a-p]*[0-9].json"))):
+    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "[a-p].json"))):
         d = json.load(open(p)); L = d.get("board", "")
         letter = L.split("-")[1][0] if L.startswith("pcb-") else ""
         bp = os.path.join(TOOLS, "boards", "%s.json" % letter)

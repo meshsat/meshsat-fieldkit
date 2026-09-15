@@ -592,7 +592,7 @@ def t_a_run_whose_tools_and_board_come_from_different_trees_is_refused():
 
     Every routeflow profile pins `repo`, and `run` reads that key in preference to the directory the command
     was given in. That is right for a production run and silently wrong for a measurement: an arm copied the
-    tree, patched ONE number in a generator and ran `tools/routeflow.py run tools/routeflow/d9.json` inside
+    tree, patched ONE number in a generator and ran `tools/routeflow.py run tools/routeflow/d.json` inside
     the copy. The pinned repo sent every stage to the box clone instead, so the chain regenerated and routed
     the PRODUCTION board with the PRODUCTION tools, overwrote a committed phase board on the way, and would
     have reported an open count the arm's patch had never touched. Three of the four agentic nulls of 11

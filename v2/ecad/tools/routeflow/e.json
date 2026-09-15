@@ -1,7 +1,7 @@
 {
  "board": "pcb-e1-dock",
  "project": "v2/ecad/pcb-e1-dock-e7",
- "phase": "E8",
+ "phase": "<PHASE>",
  "issue": "MESHSAT-830",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -25,7 +25,7 @@
  ],
  "route": {
   "attempts": [
-   250
+   200
   ],
   "threads": 1,
   "timeout": 10800,
@@ -57,22 +57,21 @@
    "<ECAD>",
    "pcb-e1-dock-e7",
    "e",
-   "E8",
+   "<PHASE>",
    "out/parallel-e6.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/e8-clean.txt",
+  "clean_flag": "out/<phase>-clean.txt",
   "stub_log": "out/pcb-e1-dock-stub.log"
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-e-revA-E8",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-e-revA-<PHASE>",
  "expect": {
   "hard": 0,
   "unrouted": 0,
   "autoroute_minutes_max": 90
  },
- "notes": "E6 (7 Sep 2026): the dock strip of the A22 generation with the sensor controller folded in (32.57); four layers, In1 the ground plane and In2 the power pours (CELL_F, VIN_RAW, PV_P, TRK_OUT) as power layers, one attempt on 1.9.0 single thread.",
+ "notes": "One profile per letter (15 September 2026, red team round four H1): the phase comes from boards/e.json, --phase or ROUTEFLOW_PHASE; every phase note since e10 is in v2/docs/ROUTEFLOW-PHASES.md. The pass ceiling is the timeout: the per-pass jar keeps the best pass of a cut run, so the attempt count no longer protects anything and is set high.",
  "baseline_key": "E4",
  "_phase_dir": "11 September 2026: E7 gets its own phase directory like every other board of the wave, so the committed pcb-e1-dock is not the thing a route writes into.",
- "clean_flag": "out/e8-clean.txt",
- "_phase_note": "E8, 13 September 2026 (MESHSAT-862): VIN_RAW's copper. The In2 pour reaches the block lands, L2's source pad carries ten 0.9/0.5 barrels where it had one 0.45, each J_BLK land has two, and a small F.Cu island sits over the source pad because the rail had no copper at all on the layer its own pad is on and 2.23 A of 8 was on a 0.400 mm escape stub. Measured in an isolated tree: both rails MET, conductor 0.60 and 0.51, pours 0.69 and 1.00."
+ "clean_flag": "out/<phase>-clean.txt"
 }
