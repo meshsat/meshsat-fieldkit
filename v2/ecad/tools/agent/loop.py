@@ -71,7 +71,7 @@ def incomplete(rows, names, rc):
     None for a complete cycle, else {why, counts, evidence}."""
     import collections as _c0
     names = set(names)
-    got = _c0.Counter(r.get("name") for r in rows)
+    got = _c0.Counter(r.get("name") or r.get("arm") for r in rows)   # the runner's rows carry the name as "arm"
     dup = sorted(n for n, c in got.items() if c > 1); absent = sorted(names - set(got))
     if rc == 0 and not absent and not dup: return None
     why = ("the runner exited %s" % rc) if rc != 0 else ("no row for %s" % absent if absent else "duplicate rows for %s" % dup)
