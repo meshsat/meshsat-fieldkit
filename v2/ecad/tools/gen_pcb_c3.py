@@ -105,8 +105,8 @@ EPD_PARTS = ["Q5", "Q6", "L1", "D19", "D20", "D21", "R42", "R43"] + ["C%d" % k f
 _TP_COLUMN = [r for r in sorted((r for r in comps if r.startswith("TP")), key=lambda r: int(r[2:])) if r not in ("TP26", "TP27")]
 for _i, _r in enumerate(_TP_COLUMN):
     FIXED[_r] = (162.0 + 4.0 * (_i % 2), 82.0 - 3.5 * (_i // 2), 0, True)
-for ref, (x, y, rot, back) in FIXED.items():
-    if ref.startswith("TP") and ref not in placed: placed[ref] = place(ref, x, y, rot, back)
+# placed by the one FIXED loop below: `place()` loads and adds a footprint on every call, so a second loop over the
+# same references put every test point on the board twice (C17's first pre-route, 15 September 2026).
 EPD_PARTS += [r for r in ("TP26", "TP27") if r in comps]
 SPREAD = lambda r: r.startswith(("TP", "JP", "FB")) or r == "D17"
 REGIONS = [("CLUSTER3", L.CLUSTER3, [r for r in EPD_PARTS if r in comps], False),
