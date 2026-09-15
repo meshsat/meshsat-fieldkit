@@ -135,24 +135,27 @@ python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail 
 # that needed removing, so its risk is proved and its value is not, and a pass that cuts copper out of a board
 # bound for manufacture does not sit in the path on that balance. It goes back on for a board that presents the
 # case, one board at a time, with the number that justified it.
-if [ -n "$(cfg x stitch_prune)" ]; then
-cp $N.kicad_pcb out/$N-prestitch.kicad_pcb
-python3 $T/hardset.py out/$N-drc.json post --counts out/prune-before.txt --label 'before stitch_prune' >/dev/null
-read BH BU < out/prune-before.txt
-python3 $T/stitch_prune.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | head -4
-$T/drc.sh $N.kicad_pcb out/$N-drc.json
-python3 $T/hardset.py out/$N-drc.json post --counts out/prune-score.txt --label 'after stitch_prune' >/dev/null
-read PH PU < out/prune-score.txt
-# Judged against the board BEFORE it, never against zero. Written against zero, it blamed the pruner for an
-# open the board already had: E reached the pruner at one open, the pruner changed nothing about that open, and
-# the revert fired every time, so the pruner could never help a board that was not already clean
-# (11 September 2026, found by reading the line beside "after stub router: hard 0 unrouted 1").
-if [ "$PH" -gt "$BH" ] || [ "$PU" -gt "$BU" ]; then
-  echo "stitch_prune hurt (hard $BH -> $PH, unrouted $BU -> $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
-else
-  echo "stitch_prune kept (hard $BH -> $PH, unrouted $BU -> $PU)"
-fi
-fi
+# 15 September 2026 (A34): a locked stitch via the fill has abandoned can be dead only AFTER rail_prune has taken the
+# router's parallel copper off the rail (before it, a router track still ended on the via and removing it opened a
+# connection: "stitch_prune hurt, reverting"), so the pass runs twice, here and again after rail_prune.
+prune_stitch() {
+  cp $N.kicad_pcb out/$N-prestitch.kicad_pcb
+  python3 $T/hardset.py out/$N-drc.json post --counts out/prune-before.txt --label 'before stitch_prune' >/dev/null
+  read BH BU < out/prune-before.txt
+  python3 $T/stitch_prune.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | head -4
+  $T/drc.sh $N.kicad_pcb out/$N-drc.json
+  python3 $T/hardset.py out/$N-drc.json post --counts out/prune-score.txt --label 'after stitch_prune' >/dev/null
+  read PH PU < out/prune-score.txt
+  # Judged against the board BEFORE it, never against zero. Written against zero, it blamed the pruner for an
+  # open the board already had: E reached the pruner at one open, the pruner changed nothing about that open, and
+  # the revert fired every time, so the pruner could never help a board that was not already clean
+  # (11 September 2026, found by reading the line beside "after stub router: hard 0 unrouted 1").
+  if [ "$PH" -gt "$BH" ] || [ "$PU" -gt "$BU" ]; then
+    echo "stitch_prune hurt (hard $BH -> $PH, unrouted $BU -> $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
+  else
+    echo "stitch_prune kept (hard $BH -> $PH, unrouted $BU -> $PU)"
+}
+if [ -n "$(cfg x stitch_prune)" ]; then prune_stitch; fi
 # 4c. the closure the router stopped short of, proposed as geometry and judged by the DRC (12 September 2026).
 # The stub router searches a 0.1 mm raster in which every cell beside a target pad is inside somebody's
 # clearance; the segment that closes the gap ends ON that pad, where the pad's own clearance does not apply to
@@ -183,6 +186,7 @@ fi
 # before the refill and the judgements (rail_prune.py, declared per board): Freerouting never sees a pour, so it
 # lays a 0.5 mm inner track in parallel with a band and the solver takes a share of the rail through it.
 if [ -n "$(cfg x rail_prune)" ]; then python3 $T/rail_prune.py $N.kicad_pcb 2>&1 | grep -E 'rail_prune|Traceback|Error'; fi
+if [ -n "$(cfg x rail_prune)" ] && [ -n "$(cfg x stitch_prune)" ]; then $T/drc.sh $N.kicad_pcb out/$N-drc.json; prune_stitch; fi   # the second pass, on copper the rail prune has just changed
 # 13 September 2026 (MESHSAT-862): REFILL BEFORE ANYTHING JUDGES THE COPPER, and this is not a tidy-up.
 # The only refill in this script was after the stub router, and between it and the judgements below run
 # `stub_accept` (which removes closure copper), `stitch_prune` and its revert (which COPIES BACK a board that
