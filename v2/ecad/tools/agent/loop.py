@@ -73,10 +73,14 @@ def incomplete(rows, names, rc):
     names = set(names)
     got = _c0.Counter(r.get("name") or r.get("arm") for r in rows)   # the runner's rows carry the name as "arm"
     dup = sorted(n for n, c in got.items() if c > 1); absent = sorted(names - set(got))
-    if rc == 0 and not absent and not dup: return None
-    why = ("the runner exited %s" % rc) if rc != 0 else ("no row for %s" % absent if absent else "duplicate rows for %s" % dup)
+    # the runner's exit code is its VERDICT code (0 PASS, 1 FAIL with graded rows, 3 INCONCLUSIVE): a FAIL over a
+    # complete row set is the rows' business (an all-ILLEGAL set, a MISSED prediction); anything else is the runner
+    # not running to a verdict (the first live cycle read arms' FAIL over one ILLEGAL row as an incomplete cycle)
+    infra = rc not in (0, 1, 3)
+    if not infra and not absent and not dup: return None
+    why = ("the runner exited %s" % rc) if infra else ("no row for %s" % absent if absent else "duplicate rows for %s" % dup)
     return {"why": why,
-            "counts": {"rows": len(rows), "requested": len(names), "absent": len(absent), "duplicate": len(dup), "runner_rc": rc, "infra_fail": 1 if rc != 0 else 0},
+            "counts": {"rows": len(rows), "requested": len(names), "absent": len(absent), "duplicate": len(dup), "runner_rc": rc, "infra_fail": 1 if infra else 0},
             "evidence": ["absent: %s" % n for n in absent] + ["duplicate: %s" % n for n in dup]}
 
 
