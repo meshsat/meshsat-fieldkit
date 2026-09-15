@@ -57,6 +57,12 @@ class PowerCopper:
     def keepout(self, name, rect, layer):
         z = pcbnew.ZONE(self.b); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
         z.SetLayer(layer); z.SetZoneName(name); o = z.Outline(); o.NewOutline(); self._rect_outline(o, rect); self.b.Add(z); return self
+    def nopour(self, name, rect, layer):
+        """A rule area that keeps every POUR off a rectangle on one layer and leaves tracks, vias and pads alone: where a
+        plane would only thread a via fan (A33's VBAT plane between U2's escape vias, ratio 2.48) the rail is better
+        carried by the outer band beside it, and the plane resumes past the fan (15 Sep 2026, MESHSAT-862)."""
+        z = pcbnew.ZONE(self.b); z.SetIsRuleArea(True); z.SetDoNotAllowTracks(False); z.SetDoNotAllowVias(False); z.SetDoNotAllowCopperPour(True); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+        z.SetLayer(layer); z.SetZoneName(name); o = z.Outline(); o.NewOutline(); self._rect_outline(o, rect); self.b.Add(z); return self
     def island(self, net, name, pts, layer=pcbnew.F_Cu, priority=3, min_width=0.25, clearance=0.15):
         z = pcbnew.ZONE(self.b); z.SetLayer(layer); z.SetNet(self.net_for(net, create=False)); z.SetZoneName("%s %s" % (name, self.b.GetLayerName(layer)))
         z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL); z.SetMinThickness(FromMM(min_width)); z.SetLocalClearance(FromMM(clearance)); o = z.Outline(); o.NewOutline()
