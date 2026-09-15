@@ -134,3 +134,33 @@ def t_the_committed_registry_and_coverage_compute_for_every_board():
         assert st["rows"], letter
         for row in st["rows"]:
             assert row["result"] in R.RESULTS, row
+
+
+def t_a_manual_verification_whose_record_is_a_generated_page_is_judged_by_rebuilding_it():
+    """SGN-002 and every rule like it. The evidence for a manually verified rule is a RECORD, and the record
+    here is a page generated from the registry. It counts as evidence only while it still matches the registry:
+    a hand edit, a rule added after the page was last written, or a deleted row all read INCONCLUSIVE, because
+    a list of prototype unknowns that has quietly shrunk looks exactly like a list that is complete.
+    """
+    doc = os.path.join(S.ECAD, "..", "docs", "PCB-PROTOTYPE-UNKNOWNS.md")   # the tool's own resolution, not a second copy of it
+    S._DOC_CACHE.clear()
+    ok, why = S._document_current("docs/PCB-PROTOTYPE-UNKNOWNS.md")
+    assert ok, "the generated record does not match the registry: %s" % why
+
+    original = open(doc).read()
+    try:
+        open(doc, "w").write(original.replace("| rule | what is unknown", "| rule | what is KNOWN", 1))
+        S._DOC_CACHE.clear()
+        ok2, why2 = S._document_current("docs/PCB-PROTOTYPE-UNKNOWNS.md")
+        assert not ok2, "a hand-edited record still counted as evidence"
+        cov = _cov("VERIFIED_MANUALLY"); cov["R-1"]["verification"] = {"tool": "rules_render.py", "document": "docs/PCB-PROTOTYPE-UNKNOWNS.md"}
+        assert _result(cov, {}) == S.INCONCLUSIVE, "a stale record passed the rule it is the evidence for"
+    finally:
+        open(doc, "w").write(original)
+        S._DOC_CACHE.clear()
+
+
+def t_a_manual_verification_with_no_record_is_never_a_pass():
+    cov = _cov("VERIFIED_MANUALLY"); cov["R-1"]["verification"] = {"tool": "a person reads it"}
+    assert _result(cov, _verdict("PASS")) == S.INCONCLUSIVE, \
+        "a rule claiming manual verification with no record to point at read as verified"
