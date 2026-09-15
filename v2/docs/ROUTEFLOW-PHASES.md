@@ -226,7 +226,7 @@ route: attempts [100], threads 1, timeout 3600 s, power layers ['In1.Cu'], plane
 - D9 (8 Sep 2026, MESHSAT-862 rules 1 and 2, appendix 32.70): the D8 profile on the pcb-d-aprs-d9 copy with the USB cluster on the top layer and the pair pre-router in the chain; the USB and RF classes on F.Cu and In2.Cu.
 
 - D12, 15 September 2026 (MESHSAT-862, appendix 32.198): the same routed board as D11 re-finished under the two return-current gates of the owner ruling of 20:15 CEST (a plane under every signal net, a ground via beside every signal via, placed by the finish).
-- D12, 15 September 2026 23:47 CEST (decision 27, appendix 32.199 and 32.200): In2 is a ground plane in the DSN (two routing layers close D at every round) and `gnd_grid.py` lays the ground-via grid before the route (measured in /root/dgrid: 0 open after the stub router, 279 of 289 signal vias with a return via); a solder jumper's pads carry the class clearance before the route. Rule 1 keeps the via-transition nets over their limit until decision 27's reading is ruled.
+- D12, 15 September 2026 23:31 CEST (decision 27, appendix 32.199 and 32.200): In2 is a ground plane in the DSN (two routing layers close D at every round) and `gnd_grid.py` lays the ground-via grid before the route (measured in /root/dgrid: 0 open after the stub router, 279 of 289 signal vias with a return via); a solder jumper's pads carry the class clearance before the route. Rule 1 keeps the via-transition nets over their limit until decision 27's reading is ruled.
 
 ## e6 (E7, pcb-e1-dock)
 
@@ -259,7 +259,7 @@ route: attempts [250], threads 1, timeout 10800 s, power layers ['In1.Cu', 'In2.
 - E10, 15 September 2026 (MESHSAT-862, appendix 32.198): the same routed board as E9 re-finished under the two return-current gates of the owner ruling of 20:15 CEST (a plane under every signal net, a ground via beside every signal via, placed by the finish).
 
 ## e11 (E11, pcb-e1-dock)
-- E11, 15 September 2026 23:47 CEST (appendix 32.200): E10's In2 ground fill plus the ground-via grid before the route (declared in boards/e.json after D's measurement; E10's best board had 40 of 130 signal vias without a site). Rule 1 on E10's best board read 9 of 76 nets over once every filled zone counted as a plane; E10's one open is a ground pour island.
+- E11, 15 September 2026 23:31 CEST (appendix 32.200): E10's In2 ground fill plus the ground-via grid before the route (declared in boards/e.json after D's measurement; E10's best board had 40 of 130 signal vias without a site). Rule 1 on E10's best board read 9 of 76 nets over once every filled zone counted as a plane; E10's one open is a ground pour island.
 
 ## p1 (P1, pcb-p-pack)
 

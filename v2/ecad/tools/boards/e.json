@@ -48,5 +48,5 @@
  "gnd_grid": {
   "pitch": 2.1
  },
- "_gnd_grid_why": "15 September 2026 23:45 CEST: declared after D's measurement (279 of 289 signal vias with a return via against 138 of 185 from the fixer alone; the route still closed). E10's best board had 40 of 130 signal vias without a site after the route; E11 measures the grid on E, and this line is reverted if E's route does not close with it."
+ "_gnd_grid_why": "15 September 2026 23:30 CEST: declared after D's measurement (279 of 289 signal vias with a return via against 138 of 185 from the fixer alone; the route still closed). E10's best board had 40 of 130 signal vias without a site after the route; E11 measures the grid on E, and this line is reverted if E's route does not close with it."
 }

@@ -51,6 +51,6 @@
  "gnd_grid": {
   "pitch": 2.1
  },
- "_gnd_grid_why": "15 September 2026 23:35 CEST, measured on D in /root/dgrid (decision 27, appendix 32.200): with 1,288 ground vias laid before the route the In2-plane D closed to 0 open after the stub router and the return-via gate read 279 of 289 signal vias with a ground via, against 138 of 185 when the fixer ran after the route with no room left. The grid is rule 2 by construction; it does nothing for rule 1.",
+ "_gnd_grid_why": "15 September 2026 23:29 CEST, measured on D in /root/dgrid (decision 27, appendix 32.200): with 1,288 ground vias laid before the route the In2-plane D closed to 0 open after the stub router and the return-via gate read 279 of 289 signal vias with a ground via, against 138 of 185 when the fixer ran after the route with no room left. The grid is rule 2 by construction; it does nothing for rule 1.",
  "_cont_route_planes_why": " 15 September 2026: In2 is a ground plane on D (decision 27's measurement: two routing layers close the board, 0 hard 0 unrouted at every round), so the continuation route carries it as a power layer like the route."
 }
