@@ -7753,3 +7753,28 @@ in the predictor, the 32 registry-only knobs, the pre-router split, the experime
 **The box.** The host of 51119564 went offline at 18:05 UTC with A35 at pass 1 and B19 at pass 3; 51145697 (EPYC 7R13,
 48 threads, 0.30 USD an hour) replaced it at 18:36 UTC and both routes were relaunched at 18:48 on the same trees;
 the old instance is destroyed.
+
+**Addendum 21:56 CEST, the rest of the reviewers' list and what the evening's runs measured.** The experiment store
+(`expstore.py`: SQLite in WAL mode, a cycle with an exact arm set, one terminal result per arm, artefacts, metrics,
+reviews, promotions, the chained ledger as its export) holds every agent cycle now; a `cycle_id` is minted before the
+proposal and every row names it, so a row is accepted for a cycle by identity and not by a name the model chose. Every
+verdict JSON carries the tools tree's content hash and the hard-set policy it was judged under. The mutation proof gained
+five cases for the decision rules (28 of 28 proved). **Twelve measured-loser pre-router knobs and their branches are
+deleted** with their sections cited in `PAIR-PREROUTER-KNOBS.md` (2,790 to 2,628 lines), and the module-level
+machinery is split into `pair_router/{config,occupancy,search,geometry}` with its state shared (main() stays the
+orchestration at 1,879 lines). The split failed once on the box and not on the runner: two timed wrappers sat past the
+geometry anchor and the package raised NameError at import, which the runner's suite cannot see without pcbnew; a rule
+now resolves every module-level name of the package in import order statically. The behavioural proof runs on the box
+(the pre-router on D's and B's placed boards, before the knobs, after them, after the split, judged by a geometry hash
+of the copper laid, since KiCad mints a uuid per item on every save and a file md5 says nothing).
+
+**Measured tonight.** D with In2 a ground plane closed 0 hard 0 unrouted at round two; 13 nets sit 2 to 4 mm over rule 1's
+10 mm floor along via and pin rows (decision 27 carries it). E10 with the In2 ground fill routed to 2 open, the stub router
+closed one, round two runs. A35 routed 0 hard, 16 open at round one (A34: 4), its finish runs; A36 routes with the rails'
+bands as DSN planes (`rail_planes`, the C2a measurement, judged by `rail_prune` removing nothing). C18 under the
+refined fixer: 56 of 288 signal vias share one reference plane and owe no via, 122 placed, 94 refused for want of a site,
+which is why a return via may now sit inside a ground pad. The B placement loop ran three cycles against the box:
+PLACE_FINE_MARGIN 2.6 refused by the region gate as 32.185 measured, PLACE_COUPLE_GAP 3.2 laid 39 of 48 and 2.8 laid 36 of
+48 and both were graded ILLEGAL by the mechanical judge, every hard item a solder-mask bridge at an antenna jack the gap had
+moved onto other copper, and tier 2b refused a draft that demoted the ILLEGAL grade to "what the cycle printed". The loop
+works as designed; the placement knob it has measured is the wrong lever. B19 is on pass one of twenty.
