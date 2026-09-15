@@ -154,6 +154,7 @@ prune_stitch() {
     echo "stitch_prune hurt (hard $BH -> $PH, unrouted $BU -> $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
   else
     echo "stitch_prune kept (hard $BH -> $PH, unrouted $BU -> $PU)"
+  fi
 }
 if [ -n "$(cfg x stitch_prune)" ]; then prune_stitch; fi
 # 4c. the closure the router stopped short of, proposed as geometry and judged by the DRC (12 September 2026).
