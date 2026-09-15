@@ -655,7 +655,7 @@ def t_an_empty_pin_map_is_a_missing_board_and_not_a_disagreement_on_every_pin():
     import os
     src = open(os.path.join(TOOLS, "check_contracts.py")).read()
     assert "_empty = [k for k, m in ((\"B\", mb), (\"C\", mc)) if not any(m.values())]" in src, "an empty side is not detected"
-    assert "MISSING.update(_empty)" in src, "an empty side is not counted as a missing board"
+    assert "MISSING.extend(k for k in _empty if k not in MISSING)" in src, "an empty side is not counted as a missing board"
     assert 'check(bool(_empty) or (mb and all(mb.values()) and not diff), "J_PANEL 2x13 map identical on B and C"' in src, (
         "the ribbon contract still fails on an empty side instead of reading INCONCLUSIVE")
 

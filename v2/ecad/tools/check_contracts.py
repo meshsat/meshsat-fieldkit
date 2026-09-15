@@ -103,7 +103,7 @@ mb, mc = pinmap("B", "J_PANEL", range(1, 27)), pinmap("C", "J_PANEL", range(1, 2
 _empty = [k for k, m in (("B", mb), ("C", mc)) if not any(m.values())]
 if _empty:
     for k in _empty: print("MISSING J_PANEL map on %s: its netlist names no pin of the connector, so the ribbon contract is not judged" % k)
-    MISSING.update(_empty)
+    MISSING.extend(k for k in _empty if k not in MISSING)
 diff = [p for p in range(1, 27) if not same(mb[p], mc[p])] if not _empty else []
 check(bool(_empty) or (mb and all(mb.values()) and not diff), "J_PANEL 2x13 map identical on B and C",
       "differs on pins %s: %s" % (diff, {p: (mb[p], mc[p]) for p in diff[:4]}))
