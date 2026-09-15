@@ -53,3 +53,15 @@ def t_the_return_via_tool_is_a_gate_and_a_fixer_with_the_finish_s_judgement():
     assert "h1 > h0 or u1 > u0" in s, "the fixer reverts when the hard or the unrouted count rose against the board it was handed"
     assert "FAN_PITCH_MM = 0.5" in s and "RETURN_MM = 1.5" in s, "the ruled numbers: 0.5 mm fans exempt, 1.5 mm to the ground via"
     assert "_in_gnd_fill" in s, "a ground via is placed only inside a ground fill"
+
+
+def t_every_copper_editing_pass_after_the_router_runs_under_the_one_guard():
+    """15 September 2026, red team round four H2: five hand-rolled keep-or-revert blocks with three comparison rules
+    became one function. A copper pass added later must go through it too."""
+    t = _code("finish.sh")
+    for stage in ("guarded stub stub_stage", "guarded stitch_prune", "guarded direct_close", "guarded return_via"):
+        assert stage in t, "%s is not under the guard" % stage
+    assert '. "$T/guarded.sh"' in t, "the finish does not source the guard"
+    assert "GUARD_MODE=pre guarded prelay" in _code("full.sh"), "the pre-lay is not under the guard"
+    g = _src("guarded.sh")
+    assert '"$AH" -gt "$BH"' in g and '"$AU" -gt "$BU"' in g and 'verdict.write("guard-"' in g, "the guard compares both counts and writes a verdict"

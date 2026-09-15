@@ -53,8 +53,10 @@ try:
 except Exception:
     v = []
 h = hashlib.sha256(open(board, "rb").read()).hexdigest()[:16] if os.path.exists(board) else ""
-json.dump({"seconds": secs, "violations": len(v), "board_sha": h, "report": os.path.basename(rep)},
-          open(os.path.join(os.path.dirname(rep) or ".", "drc-cost.json"), "w"), indent=1)
+import time
+rec = {"seconds": secs, "violations": len(v), "board_sha": h, "report": os.path.basename(rep), "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "t": int(time.time())}
+json.dump(rec, open(os.path.join(os.path.dirname(rep) or ".", "drc-cost.json"), "w"), indent=1)
+with open(os.path.join(os.path.dirname(rep) or ".", "drc-costs.jsonl"), "a") as f: f.write(json.dumps(rec) + "\n")   # one line per call, so a finish can add up what it spent
 print("drc: %d s, %d violation(s), board %s" % (secs, len(v), h))
 PY2
 exit 0

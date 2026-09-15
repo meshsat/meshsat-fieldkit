@@ -30,12 +30,25 @@ AUDIT="$(cfg x pair_audit_nets)"; PFIX="$(cfg x post_fix)"; PRUNED="$(cfg x prun
 STUB_ENV="$(cfg x stub_env)"; DCL="$(cfg x direct_close_layers)"   # A gives the stub router a wider window and a higher node cap; nothing else does
 CONT="$(python3 -c "import json,sys; c=json.load(open(sys.argv[1])).get('finish',{}).get('cont_route'); print('' if not c else '%d %d %d' % (c['max_opens'], c['passes'], c['timeout_s']))" "$CFG")"
 TAG="$(echo "$PHASE" | tr 'A-Z' 'a-z')"; FLAG="out/$TAG-clean.txt"; DELIV="meshsat-pcb-$L-revA-$PHASE"
+. "$T/guarded.sh"; F_T0=$(date +%s)
+# what a finish costs, said at every exit (15 September 2026, red team round four L2): the wall seconds and the DRC
+# calls and seconds since this finish began, read from the per-call lines drc.sh appends to out/drc-costs.jsonl
+costs () { python3 - "$F_T0" <<'PY' 2>/dev/null || true
+import json, sys, time, os
+t0 = int(sys.argv[1]); n = 0; secs = 0
+for l in open("out/drc-costs.jsonl") if os.path.exists("out/drc-costs.jsonl") else []:
+    try: r = json.loads(l)
+    except ValueError: continue
+    if r.get("t", 0) >= t0: n += 1; secs += r.get("seconds", 0)
+print("finish: %d s wall, %d DRC call(s), %d s in DRC" % (int(time.time()) - t0, n, secs))
+PY
+}
 cd "$E/$PROJ" || { echo "finish: no project directory $E/$PROJ"; exit 2; }
 rm -f "$FLAG" out/par-score.txt out/contracts.log   # a stale clean flag must never finish a board (register class 6)
 # A stop names a log; print its tail with it. The clones exited before their own grep on a crash too, so this
 # is not a regression they had and we lost, but the evidence lives on a rented box that is destroyed when its
 # last job is fetched, and a message naming a file nobody will ever read is not evidence (11 September 2026).
-stop () { echo "$PHASE $1"; [ -n "${2:-}" ] && [ -s "${2:-}" ] && { echo "--- tail of $2"; tail -12 "$2"; }; echo open > "$FLAG"; echo "FINISH-$PHASE-DONE"; exit 1; }
+stop () { echo "$PHASE $1"; [ -n "${2:-}" ] && [ -s "${2:-}" ] && { echo "--- tail of $2"; tail -12 "$2"; }; echo open > "$FLAG"; costs; echo "FINISH-$PHASE-DONE"; exit 1; }
 
 # A wait with a deadline: if the producer crashes or the marker is never written this job used to be immortal.
 W=0; while ! grep -q PARALLEL-DONE "$LOG" 2>/dev/null; do sleep 30; W=$((W + 30));
@@ -78,51 +91,43 @@ fi
 # 4. ONLY NOW the stub router, on a board that is clean and whose pours are filled
 # The count it is handed, taken here because here is the only place the board is still the router's own: the
 # stub stage must not leave it more open than it found it (13 September 2026, A25 went in at 13 and out at 80).
-$T/drc.sh $N.kicad_pcb out/$N-drc-before-stub.json
-# A time limit on the search, not on a wait: a fine grid over a big window is the difference between closing a
-# connection and not (A24, 12 September 2026: the 0.1 mm grid refused both of its last two, the 0.05 mm grid with
-# a six-fold window closed both), and it is also the difference between ten minutes and an afternoon. A cut run
-# leaves the board as it was, which is the same outcome as a run that closes nothing, so the finish goes on.
-env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV timeout "${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}" nice -n 10 python3 -u $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?   # -u: a search that runs for an hour under a timeout must leave its line when it is cut, not in a buffer that dies with it (14 September 2026; the same defect the direct_close note of 32.178 names)
-[ "$SR" -eq 124 ] && echo "stub router: cut at its time limit, the board is as it was"
-[ "$SR" -eq 0 ] || [ "$SR" -eq 124 ] || stop "stub router CRASHED, exit $SR (out/$N-stub.log)" "out/$N-stub.log"
-grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
-# 5. the refill before the check, so a legal closing via is not read against a stale fill
-python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'
+# THE ONE GUARD (15 September 2026, red team round four H2): every copper-editing pass from here on runs under
+# `guarded` (tools/guarded.sh): snapshot, run, DRC, compare hard AND unrouted against the board the pass was HANDED,
+# keep or restore, one verdict JSON per pass. The stub stage used to carry two hand-rolled guards (hard alone, then the
+# open count after A25 went in at 13 and out at 80) and restored `par-routed`, the RAW router board, which is older than
+# the board it was handed; the guard restores its own snapshot.
+stub_stage () {
+  # A time limit on the search, not on a wait: a fine grid over a big window is the difference between closing a
+  # connection and not (A24, 12 September 2026: the 0.1 mm grid refused both of its last two, the 0.05 mm grid with
+  # a six-fold window closed both), and it is also the difference between ten minutes and an afternoon. A cut run
+  # leaves the board as it was, which is the same outcome as a run that closes nothing, so the finish goes on.
+  env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV timeout "${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}" nice -n 10 python3 -u $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?
+  [ "$SR" -eq 124 ] && echo "stub router: cut at its time limit, the board is as it was"
+  [ "$SR" -eq 0 ] || [ "$SR" -eq 124 ] || stop "stub router CRASHED, exit $SR (out/$N-stub.log)" "out/$N-stub.log"
+  grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
+  # the refill before the check, so a legal closing via is not read against a stale fill
+  python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'
 import pcbnew, sys
 b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b); print('zones refilled after the stub router')
 PY
-$T/drc.sh $N.kicad_pcb out/$N-drc.json
-python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' | grep -v '^hardset:'
-[ -s out/par-score.txt ] || stop "no DRC score after the stub router (hardset refused)"
-read H < out/par-score.txt
-if [ "$H" -ne 0 ]; then
-  python3 $T/stub_accept.py out/$N-par-routed.kicad_pcb $N.kicad_pcb out/$N-drc.json 2>&1 | grep stub_accept
   $T/drc.sh $N.kicad_pcb out/$N-drc.json
-  H=$(python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub_accept' >/dev/null; cat out/par-score.txt)
-  echo "after stub_accept: hard $H"
-  [ "$H" -eq 0 ] || { echo 'stub router hurt: reverting'; cp out/$N-par-routed.kicad_pcb $N.kicad_pcb; }
-fi
-# 13 September 2026 (MESHSAT-862): AND IT MUST NOT LEAVE THE BOARD MORE OPEN THAN IT FOUND IT. stub_accept
-# drops a closure only when a DRC finds it in a HARD violation, so a set of closures that opens other
-# connections without breaking a rule is kept. On A25 the board went in at 13 unrouted, came out of the stub
-# router at 81, and stub_accept kept nine closure nets and left it at 80: the guard existed and measured the
-# wrong thing. It is the fault the record already names twice, `stitch_prune` judging against zero instead of
-# against the board it was given, and a routeflow remedy throwing away a better board. Compare the count with
-# what the stub router was handed, and revert the lot if it is worse.
-if [ -s out/$N-drc-before-stub.json ]; then
-  python3 $T/hardset.py out/$N-drc-before-stub.json post --counts out/stub-before.txt --label 'the count the stub stage was handed' >/dev/null 2>&1 || true
-  $T/drc.sh $N.kicad_pcb out/$N-drc.json
-  python3 $T/hardset.py out/$N-drc.json post --counts out/stub-after.txt --label 'the count the stub stage left' >/dev/null 2>&1 || true
-  if [ -s out/stub-before.txt ] && [ -s out/stub-after.txt ]; then
-    read _HB _UB < out/stub-before.txt; read _HA _UA < out/stub-after.txt
-    if [ "$_UA" -gt "$_UB" ]; then
-      echo "the stub stage left the board MORE OPEN than it found it ($_UB -> $_UA unrouted): reverting every closure"
-      cp out/$N-par-routed.kicad_pcb $N.kicad_pcb
-      $T/drc.sh $N.kicad_pcb out/$N-drc.json
-    fi
+  python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' | grep -v '^hardset:'
+  [ -s out/par-score.txt ] || stop "no DRC score after the stub router (hardset refused)"
+  read H < out/par-score.txt
+  if [ "$H" -ne 0 ]; then
+    # a closure the DRC finds in a hard violation comes off; the rest stay; the guard around this stage then
+    # judges what is left against the board it was handed
+    python3 $T/stub_accept.py out/$N-guard-stub.kicad_pcb $N.kicad_pcb out/$N-drc.json 2>&1 | grep stub_accept
+    python3 - "$N" <<'PY' 2>&1 | grep -vE 'Debug|leak'
+import pcbnew, sys
+b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b)
+PY
+    $T/drc.sh $N.kicad_pcb out/$N-drc.json
+    H=$(python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub_accept' >/dev/null; cat out/par-score.txt)
+    echo "after stub_accept: hard $H"
   fi
-fi
+}
+guarded stub stub_stage
 python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
 # 5b. a locked stitch via the fill no longer covers is dead at its pour end: the router ran a track past it and
 # the fill retreated by its clearance. cleanup_dangling leaves it because a via with a track on it is not
@@ -138,24 +143,7 @@ python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail 
 # 15 September 2026 (A34): a locked stitch via the fill has abandoned can be dead only AFTER rail_prune has taken the
 # router's parallel copper off the rail (before it, a router track still ended on the via and removing it opened a
 # connection: "stitch_prune hurt, reverting"), so the pass runs twice, here and again after rail_prune.
-prune_stitch() {
-  cp $N.kicad_pcb out/$N-prestitch.kicad_pcb
-  python3 $T/hardset.py out/$N-drc.json post --counts out/prune-before.txt --label 'before stitch_prune' >/dev/null
-  read BH BU < out/prune-before.txt
-  python3 $T/stitch_prune.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | head -4
-  $T/drc.sh $N.kicad_pcb out/$N-drc.json
-  python3 $T/hardset.py out/$N-drc.json post --counts out/prune-score.txt --label 'after stitch_prune' >/dev/null
-  read PH PU < out/prune-score.txt
-  # Judged against the board BEFORE it, never against zero. Written against zero, it blamed the pruner for an
-  # open the board already had: E reached the pruner at one open, the pruner changed nothing about that open, and
-  # the revert fired every time, so the pruner could never help a board that was not already clean
-  # (11 September 2026, found by reading the line beside "after stub router: hard 0 unrouted 1").
-  if [ "$PH" -gt "$BH" ] || [ "$PU" -gt "$BU" ]; then
-    echo "stitch_prune hurt (hard $BH -> $PH, unrouted $BU -> $PU): reverting"; cp out/$N-prestitch.kicad_pcb $N.kicad_pcb; $T/drc.sh $N.kicad_pcb out/$N-drc.json
-  else
-    echo "stitch_prune kept (hard $BH -> $PH, unrouted $BU -> $PU)"
-  fi
-}
+prune_stitch() { guarded stitch_prune python3 $T/stitch_prune.py $N.kicad_pcb; }
 if [ -n "$(cfg x stitch_prune)" ]; then prune_stitch; fi
 # 4c. the closure the router stopped short of, proposed as geometry and judged by the DRC (12 September 2026).
 # The stub router searches a 0.1 mm raster in which every cell beside a target pad is inside somebody's
@@ -166,10 +154,8 @@ if [ -n "$(cfg x direct_close)" ] || [ -n "$(cfg x direct_close_max)" ]; then
   # `python3 -u`, and the exit status read: on A26 this tool SEGFAULTED after 1,812 lines of output and the
   # finish showed not one of them, because a buffered stdout dies with the process and a pipeline hides
   # the exit code. A stage that crashes has to say so (14 September 2026).
-  python3 -u $T/direct_close.py $N.kicad_pcb out/$N-drc.json --max="$(cfg x direct_close_max)" ${DCL:+--layers=$DCL} > out/$N-direct_close.log 2>&1; DCX=$?
-  grep -a direct_close out/$N-direct_close.log | tail -12
-  [ "$DCX" -eq 0 ] || echo "direct_close exited $DCX (out/$N-direct_close.log): its closures, if any, are still judged by the DRC below"
-  $T/drc.sh $N.kicad_pcb out/$N-drc.json
+  GUARD_QUIET=1 guarded direct_close python3 -u $T/direct_close.py $N.kicad_pcb out/$N-drc.json --max="$(cfg x direct_close_max)" ${DCL:+--layers=$DCL}
+  grep -a direct_close out/guard-direct_close.log | tail -12
 fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
 python3 $T/silk_fix_all.py $N.kicad_pcb $L "$PHASE" 2>&1 | grep -vE 'Debug|leak' | tail -3
@@ -194,10 +180,8 @@ if [ -n "$(cfg x rail_prune)" ] && [ -n "$(cfg x stitch_prune)" ]; then $T/drc.s
 # Declared per board (`return_via` in boards/<letter>.json), and the gate that follows refuses a board with a signal via
 # left without one whether or not the stage ran, so a board that turns it off still has to pass.
 if [ -n "$(cfg x return_via)" ]; then
-  python3 -u $T/return_via.py $N.kicad_pcb > out/$N-return_via.log 2>&1; RVX=$?
-  grep -a return_via out/$N-return_via.log | head -8
-  [ "$RVX" -eq 0 ] || echo "return_via exited $RVX (out/$N-return_via.log): its vias, if kept, are judged by the DRC below"
-  $T/drc.sh $N.kicad_pcb out/$N-drc.json
+  GUARD_QUIET=1 guarded return_via python3 -u $T/return_via.py $N.kicad_pcb
+  grep -a return_via out/guard-return_via.log | head -8
 fi
 # 13 September 2026 (MESHSAT-862): REFILL BEFORE ANYTHING JUDGES THE COPPER, and this is not a tidy-up.
 # The only refill in this script was after the stub router, and between it and the judgements below run
@@ -235,7 +219,7 @@ python3 $T/check_contracts.py .. > out/contracts.log 2>&1; CT=$?; grep -E 'FAIL|
 # against nothing. It still stops the finish, but it is not a verdict on the design and must not read as one.
 [ "$CT" -eq 3 ] && stop "CONTRACTS NOT JUDGED: a board this set depends on has not been generated in this tree" "out/contracts.log"
 [ "$CT" -eq 0 ] && echo 'contracts: ALL PASS' || stop "CONTRACTS FAILED (out/contracts.log)" "out/contracts.log"
-CLEAN=$(cat "$FLAG" 2>/dev/null || echo missing); [ "$CLEAN" = clean ] || { echo "$PHASE NOT CLEAN, not finishing"; echo "FINISH-$PHASE-DONE"; exit 1; }
+CLEAN=$(cat "$FLAG" 2>/dev/null || echo missing); [ "$CLEAN" = clean ] || { echo "$PHASE NOT CLEAN, not finishing"; costs; echo "FINISH-$PHASE-DONE"; exit 1; }
 cd "$E"; ./tools/finish_board.sh "$PROJ" "$N" "$PFIX" "$DELIV" 2>&1 | tail -16
 [ "${PIPESTATUS[0]}" -eq 0 ] || { echo "$PHASE: finish_board REFUSED the deliverable"; echo "FINISH-$PHASE-DONE"; exit 1; }
 
@@ -257,4 +241,5 @@ mkdir -p "$KEEP" 2>/dev/null && {
   echo "kept: the routed board and its verdicts are in $KEEP ($(ls "$KEEP" | wc -l) file(s)); commit them"
   echo "      (a board that exists only in a rented box's copy directory exists nowhere: 11 September)"
 }
+costs
 echo "FINISH-$PHASE-DONE"

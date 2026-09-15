@@ -17,6 +17,8 @@ TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DC = open(os.path.join(TOOLS, "direct_close.py")).read()
 FIN = open(os.path.join(TOOLS, "finish.sh")).read()
 
+GUARD = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"), errors="replace").read()
+
 
 def t_the_trial_board_has_its_connectivity_rebuilt_before_the_fill():
     i = DC.find("pcbnew.ZONE_FILLER(b).Fill(b.Zones())")
@@ -36,7 +38,9 @@ def t_the_finish_runs_it_unbuffered():
 
 
 def t_the_finish_reads_its_exit_status():
-    i = FIN.find("direct_close.py")
-    blk = FIN[i:i + 700]
-    assert "DCX=$?" in blk, "the exit status is thrown away by a pipeline"
-    assert "exited $DCX" in blk, "a crash is not reported"
+    """direct_close runs under the guard, which runs the command in the current shell (a process substitution, not a
+    pipe) and reads its exit status into RC and the verdict file."""
+    assert "guarded direct_close python3 -u $T/direct_close.py" in FIN, "direct_close does not run under the guard"
+    assert 'RC=$?' in GUARD and '"$@" > >(tee' in GUARD, "the exit status is thrown away by a pipeline"
+
+

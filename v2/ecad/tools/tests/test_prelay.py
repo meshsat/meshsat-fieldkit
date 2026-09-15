@@ -19,6 +19,8 @@ TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FULL = open(os.path.join(TOOLS, "full.sh")).read()
 SR = open(os.path.join(TOOLS, "stub_router.py")).read()
 
+GUARD = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"), errors="replace").read()
+
 
 def t_the_search_can_be_restricted_to_named_nets():
     assert 'os").environ.get("STUB_NETS"' in SR, "there is no net filter, so a placed board would be routed whole"
@@ -37,11 +39,12 @@ def t_the_stage_is_declared_per_board_and_off_by_default():
 
 
 def t_the_board_is_kept_only_if_the_hard_count_does_not_rise():
+    """15 September 2026: the pre-lay runs under the one guard on the pre-route basis; the guard restores its snapshot
+    when hard or unrouted rose against the board it was handed."""
     i = FULL.find('PRELAY="$(cfg prelay_nets)"')
     body = FULL[i:i + 2200]
-    assert "preprelay" in body, "there is no copy to go back to"
-    assert 'if [ "$H1" -gt "$H0" ]' in body, "nothing compares the hard count before and after"
-    assert "the lane hurt the board and was taken back" in body, "a refused lane is not reported as one"
+    assert "GUARD_MODE=pre guarded prelay" in body, "the pre-lay does not run under the guard on the pre-route basis"
+    assert '"$AH" -gt "$BH"' in GUARD and "restored as it was handed in" in GUARD, "a refused lane is not taken back and reported"
 
 
 def t_it_runs_before_the_pre_route_drc_that_judges_the_board():
