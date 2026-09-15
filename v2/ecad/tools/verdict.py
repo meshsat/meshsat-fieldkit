@@ -64,8 +64,14 @@ def _version():
         return "unknown"
 
 
-def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False):
+def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
+
+    `advisory` (or VERDICT_ADVISORY=1 in the environment) marks a verdict that is a MEASUREMENT for the record and
+    not a bar: it is written, listed and hashed like any other, and `collect` leaves it out of the stage's worst.
+    15 September 2026 (MESHSAT-862): B19's pre stage printed PREROUTE-DONE OK and routeflow read GATE_BLOCKED,
+    because the pre-route DRC on the pair copper BEFORE the prune (hard 15, the number the prune acts on) and the
+    placement predictor the board declares as a report had each written a FAIL the collector took as the stage's.
 
     `result` must be PASS, FAIL or INCONCLUSIVE; anything else is a usage error, because a verdict this module does not
     recognise must not resolve to a pass by falling through."""
@@ -74,11 +80,13 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
     # `out` beside the board is the house default; a driver that runs a gate from elsewhere sets VERDICT_DIR
     # rather than teaching every gate an argument it would otherwise never take.
     out_dir = out_dir or os.environ.get("VERDICT_DIR") or "out"
+    if advisory is None: advisory = os.environ.get("VERDICT_ADVISORY", "0") not in ("0", "")
     rec = {
         "tool": tool,
         "version": _version(),
         "ts": now(),
         "verdict": result,
+        "advisory": bool(advisory),
         "counts": dict(counts or {}),
         "denominator": denominator,
         "inputs": dict(inputs or {}),
@@ -99,7 +107,7 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
     if not quiet:
         d = "" if denominator is None else " of %s" % denominator
         c = (" " + json.dumps(rec["counts"], sort_keys=True)) if rec["counts"] else ""
-        print("verdict: %-22s %-12s%s%s%s" % (tool, result, d, c, (" | " + note) if note else ""))
+        print("verdict: %-22s %-12s%s%s%s%s" % (tool, result, d, c, " (advisory: a measurement, not a bar)" if advisory else "", (" | " + note) if note else ""))
     return CODE[result]
 
 
@@ -160,8 +168,11 @@ def collect(out_dir="out", require=(), since=None):
     # this against the rule it was written to enforce, 11 September 2026.
     if not found: return CODE[INCONCLUSIVE], found, missing
     worst = 0
-    for rec in found.values(): worst = max(worst, CODE.get(rec.get("verdict"), CODE[INCONCLUSIVE]))
+    for rec in found.values():
+        if rec.get("advisory"): continue   # a measurement for the record; it never decides the stage
+        worst = max(worst, CODE.get(rec.get("verdict"), CODE[INCONCLUSIVE]))
     if missing: worst = max(worst, CODE[INCONCLUSIVE])
+    if not any(not r.get("advisory") for r in found.values()): worst = max(worst, CODE[INCONCLUSIVE])   # only advisories is nothing judged
     return worst, found, missing
 
 

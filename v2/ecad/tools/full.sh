@@ -180,7 +180,7 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # holds a board that declares no coupled fraction, exactly as an unlaid one does.
   ../tools/drc.sh $N.kicad_pcb out/$N-pairs-drc.json >/dev/null 2>&1 || true
   if [ -s out/$N-pairs-drc.json ]; then
-    python3 ../tools/hardset.py out/$N-pairs-drc.json pre --examples 4 --label 'pre-route DRC on the pair copper' | sed 's/^hardset:/pre-route DRC (pair copper):/' || true
+    VERDICT_ADVISORY=1 python3 ../tools/hardset.py out/$N-pairs-drc.json pre --examples 4 --label 'pre-route DRC on the pair copper' | sed 's/^hardset:/pre-route DRC (pair copper):/' || true   # a measurement: the prune acts on it, the chain's own DRC below decides
     python3 ../tools/pair_prune.py $N.kicad_pcb out/$N-pairs-drc.json 2>&1 | grep -E "pair_prune|Traceback|Error"; PRUNE=${PIPESTATUS[0]}
     [ "$PRUNE" -ne 2 ] || [ "$PP" -ne 0 ] || PP=2
   fi
@@ -190,7 +190,7 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # blocks; what changes is that the evidence exists when it does.
   if [ "$PP" -ne 0 ] && [ "${PAIR_GATE:-1}" != 0 ]; then
     ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json >/dev/null 2>&1 || true
-    [ -s out/$N-preroute-drc.json ] && python3 ../tools/hardset.py out/$N-preroute-drc.json pre --examples 4 --label 'pre-route DRC on the refused board' | sed 's/^hardset:/pre-route DRC (refused board):/' || true
+    [ -s out/$N-preroute-drc.json ] && VERDICT_ADVISORY=1 python3 ../tools/hardset.py out/$N-preroute-drc.json pre --examples 4 --label 'pre-route DRC on the refused board' | sed 's/^hardset:/pre-route DRC (refused board):/' || true
   fi
   # 15 September 2026, owner ruling 02:40 CEST (decision 24 delegated to the session, option 2 taken): a board that
   # declares pair_coupled_fraction is held only while the pre-router lays FEWER than that fraction of its pairs;
@@ -235,7 +235,8 @@ if [ -n "$PRELAY" ]; then
   else echo "prelay: hard $H0 -> $H1, the lane is kept"; fi
 fi
 
-env $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?
+PAOFF=""; { [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off)" ]; } && PAOFF="VERDICT_ADVISORY=1"   # a declared report writes an advisory verdict, so the supervisor reads what the chain reads
+env $PAOFF $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?
 grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
 # 15 September 2026: a board may declare the predictor's verdict as a report rather than a block (B19: its nine predicted
 # collisions are the fine-pitch stations of 32.146, the router resolves or leaves them and the routed-board gate decides).
