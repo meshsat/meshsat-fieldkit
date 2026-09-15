@@ -1,7 +1,7 @@
 (export (version "E")
   (design
     (source "/root/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch")
-    (date "2026-09-13T22:11:45+0000")
+    (date "2026-09-15T10:14:11+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block
