@@ -15,7 +15,8 @@ object and died with an AttributeError on the first pair of the first arm.
 import os
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = open(os.path.join(TOOLS, "pair_preroute.py")).read()
+from harness import pre_router_source
+SRC = pre_router_source(TOOLS)
 
 
 def t_the_equaliser_exists_and_is_asked_for_by_a_knob():

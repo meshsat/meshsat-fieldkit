@@ -22,11 +22,11 @@ The rules read the source: the defect leaves no exception and no log line, only 
 import math, os, re
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.environ.get("PAIR_OWN_SRC", os.path.join(TOOLS, "pair_preroute.py"))
+SRC = os.environ.get("PAIR_OWN_SRC", "")   # empty: the pre-router package (tools/pair_router) since 15 Sep 2026
 
 
 def _src():
-    return open(SRC, errors="replace").read()
+    return (open(SRC, errors="replace").read() if SRC else __import__("harness").pre_router_source(TOOLS))
 
 
 def _body(name, src=None):

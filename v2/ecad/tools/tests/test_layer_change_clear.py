@@ -6,7 +6,9 @@ layer change are still separated by the via plus the class clearance, which is t
 question."""
 import os
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = open(os.path.join(TOOLS, "pair_preroute.py"), errors="replace").read()
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import pre_router_source
+SRC = pre_router_source(TOOLS)
 
 
 def t_the_via_sites_are_still_separated():

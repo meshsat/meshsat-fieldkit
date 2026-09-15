@@ -14,17 +14,17 @@ no log line, just a pair that does not lay and a message about smoothing."""
 import os, re
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.environ.get("PAIR_SIDE_SRC", os.path.join(TOOLS, "pair_preroute.py"))
+SRC = os.environ.get("PAIR_SIDE_SRC", "")   # empty: the pre-router package (tools/pair_router) since 15 Sep 2026
 
 
 def t_the_centre_of_a_footprint_is_its_pads():
-    s = open(SRC, errors="replace").read()
+    s = (open(SRC, errors="replace").read() if SRC else __import__("harness").pre_router_source(TOOLS))
     assert re.search(r"^def fp_centre\(fp\):", s, re.M), "pair_preroute.py has no fp_centre helper"
 
 
 def t_no_station_side_test_uses_the_footprint_origin():
     """The exact shape that was wrong, four times over: averaging two parent footprints' GetPosition()."""
-    s = open(SRC, errors="replace").read()
+    s = (open(SRC, errors="replace").read() if SRC else __import__("harness").pre_router_source(TOOLS))
     bad = [ln.strip()[:120] for ln in s.splitlines()
            if re.search(r"GetPosition\(\)\.x \+ \w+\.GetPosition\(\)\.x", ln)]
     assert not bad, "a station-side test still averages two footprint origins:\n  " + "\n  ".join(bad)
@@ -32,7 +32,7 @@ def t_no_station_side_test_uses_the_footprint_origin():
 
 def t_the_helper_falls_back_when_a_footprint_has_no_pad():
     """A footprint with no pad (a logo, a mechanical marking) must not divide by zero here."""
-    s = open(SRC, errors="replace").read()
+    s = (open(SRC, errors="replace").read() if SRC else __import__("harness").pre_router_source(TOOLS))
     parts = s.split("def fp_centre(fp):", 1)
     assert len(parts) == 2, "pair_preroute.py has no fp_centre helper to check"
     body = parts[1].split("\ndef ", 1)[0]

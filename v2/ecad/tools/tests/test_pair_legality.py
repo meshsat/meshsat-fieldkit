@@ -11,7 +11,8 @@ from harness import need
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "docs")
-PRE = open(os.path.join(TOOLS, "pair_preroute.py")).read()
+from harness import pre_router_source
+PRE = pre_router_source(TOOLS)
 FULL = open(os.path.join(TOOLS, "full.sh")).read()
 PRUNE_PATH = os.path.join(TOOLS, "pair_prune.py")
 
