@@ -7672,3 +7672,24 @@ may not pass OVER a label anchor of its own net (the label and its pin dangle), 
 on load, which turns a junction between them into a plain interior (B's R29). Both are refused by construction. B's shared
 area is sectioned by the generator's own headings (fourteen sections). All six netlists identical, ERC clean; c26f6a2, b69c270;
 the pack re-issued a third time under the same link (91 MB).
+
+### 32.197 A35: a keep-out drawn over a part's OTHER pads refuses that part's own escapes (15 September 2026, 19:50 CEST; MESHSAT-862)
+
+A34's finish was refused on the PA rail head (the island under R55 and C65 to C67 filled 51 of 102 mm2 with router tracks
+laid across it) and on a dead VBAT stitch via the fill had abandoned, which `stitch_prune` could only see after
+`rail_prune` had taken the router's parallel copper off the rails. The answer for A35 is a `wire_keepout` over the head
+on F.Cu, and the finish prunes stitch vias a second time after the rail prune. The keep-out then refused A35 twice at
+the pre-route, both times for the same three items: the 2 mm ground escape stubs of C65, C66 and C67, locked F.Cu tracks
+that start at the caps' GND pad centres and leave north (and west for C65). The head rectangle is the bounding box of
+the PA-net pads grown by 1.0 mm, and each 1210 cap is 2.7 mm tall with its GND pad on the north side, so the rectangle
+covers both pads of every cap; narrowing it by 1.0 mm top and bottom (the first correction) still left the GND pad
+centres inside it. **The rule area now covers only the PA side of the caps** (from the island's south edge to 0.15 mm
+short of the ground pads' south edge) plus the shunt's strip west of the caps, stopping 2 mm short of C65's ground pad
+so its westward escape ends clear. The pre-route passed at once (8 gate verdicts, 3 of 3 pairs, 0 hard) and A35 routes
+in `/root/aiso7` (18 passes, In1 and In4 as power layers, the GND plane, `via_costs 100`). **The lesson is the
+`wire_keepout` rule of 5 September in a new shape: a keep-out is drawn over PADS, not over parts, and the escape pass
+runs before the keep-out is judged, so any keep-out that covers a pad of another net covers that pad's escape stub.**
+
+Also this evening: the schematic PDFs alone are on the release as `meshsat-fieldkit-schematics-2026-09-15.zip`
+(17 MB, the six boards' engineering pages and uncut sheets, the same files as the third issue of the review set), with
+the link on the laptop; A35 and B19 continue on box 51119564.
