@@ -392,5 +392,6 @@ def t_no_placement_generator_writes_a_literal_phase_into_a_legend():
         if not os.path.exists(p): continue
         for line in open(p):
             if line.lstrip().startswith("#"): continue
-            m = re.search(r'text\("([A-Z]\d{1,2}) ', line)
+            # a phase token is the BOARD'S OWN letter with digits (C7 on C); F3 on E is a fuse's designator, not a phase
+            m = re.search(r'text\("(' + L.upper() + r'\d{1,2}) ', line)
             assert not m, "%s writes the literal phase %s into a legend: %s" % (os.path.basename(p), m.group(1), line.strip()[:90])
