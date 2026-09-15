@@ -549,12 +549,14 @@ def t_a_prediction_must_be_able_to_be_wrong():
 
 def t_a_row_without_a_tool_fingerprint_is_unmeasured():
     """The field existed, no template filled it, and the identity it protects was the empty string."""
-    need(os.path.join(TOOLS, "..", "..", ".git"), "the tool fingerprint reads git HEAD, which a code-only archive lacks")
     import importlib.util
     sp = importlib.util.spec_from_file_location("armsmod_fp", os.path.join(TOOLS, "arms.py"))
     m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
     fp = m.tool_fingerprint()
-    for k in ("git_head", "tools_tree_sha", "pair_preroute_sha", "pairsearch_sha"):
+    # the git head needs a repository; the content hashes and the grade below do not (a code-only archive, and the
+    # mutation script's copied tree, still judge the grade: 15 September 2026, the first version skipped the whole rule)
+    keys = ("git_head", "tools_tree_sha", "pair_preroute_sha", "pairsearch_sha") if os.path.isdir(os.path.join(TOOLS, "..", "..", ".git")) else ("tools_tree_sha", "pair_preroute_sha", "pairsearch_sha")
+    for k in keys:
         if not fp.get(k):
             raise AssertionError("the fingerprint carries no %s" % k)
     base = {"pairs": 40, "hard": 0, "predict": {"op": ">=", "value": 32}}
