@@ -118,8 +118,9 @@ def t_a_profile_agrees_with_itself_about_the_phase_it_cuts():
     """`finish.sh` derives the deliverable folder from the phase argument, and routeflow verifies the folder
     named in `deliverable`. Five profiles named a phase one behind the folder their finish actually wrote, so
     the supervisor would have looked for a folder that was never going to exist."""
+    sys.path.insert(0, TOOLS); import routeflow as _rf
     for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
-        d = json.load(open(p)); fin = d.get("finish") or {}
+        d = _rf.resolve_phase(json.load(open(p))); fin = d.get("finish") or {}
         if not fin.get("argv") or os.path.basename(fin["argv"][0]) != "finish.sh": continue
         _, _, proj, letter, phase, _log = fin["argv"]
         b = os.path.basename(p)
@@ -205,8 +206,8 @@ def t_a_continuation_route_gets_the_same_plane_treatment_as_the_route():
         cfg = json.load(open(os.path.join(TOOLS, "boards", "%s.json" % L)))
         # The profile of the DECLARED phase decides; an older profile may differ only when the current one says why
         # (15 September 2026: P5 makes B.Cu a power layer where P1 to P4 declared none, owner ruling 20:15 CEST).
-        curf = "%s.json" % str(cfg.get("phase", "")).lower()
-        assert curf in per, "%s: the declared phase %s has no profile among those that declare a plane treatment: %s" % (L, cfg.get("phase"), sorted(per))
+        curf = "%s.json" % L
+        assert curf in per, "%s: the letter profile is not among those that declare a plane treatment: %s" % (L, sorted(per))
         cur = per[curf]; others = {f: v for f, v in per.items() if v != cur}
         if others:
             why = json.load(open(os.path.join(TOOLS, "routeflow", curf))).get("_plane_treatment_why", "")
@@ -241,31 +242,21 @@ def t_a_pass_that_lays_copper_after_the_router_is_declared_with_its_number():
 
 
 def t_every_board_declares_the_phase_its_profile_cuts():
-    """The phase reaches the silk, and `verify_deliverable` refuses a deliverable whose silk names another one, so
-    a wrong phase is a board routed for hours and refused at its last step. It lived as a DEFAULT inside each
-    generator: `gen_pcb_c.py` said C9 while C's deliverable is C10, and one wrapper of six set PHASE at all. A24's
-    routed board carries A18 on its front silk for the same family of reason (12 September 2026).
-
-    So the phase is declared in the board file, `full.sh` exports it, and it has to equal the phase the board's
-    NEWEST routeflow profile cuts."""
+    """The phase reaches the silk, and `verify_deliverable` refuses a deliverable whose silk names another one, so a
+    wrong phase is a board routed for hours and refused at its last step. It lived as a DEFAULT inside each generator
+    (12 September 2026), then in 34 per-phase profiles that differed in the phase string and a note (red team round
+    four H1, 15 September). It lives in ONE place now: boards/<letter>.json, which full.sh exports to the silk and
+    routeflow.resolve_phase substitutes into the letter profile's <PHASE> placeholders."""
     src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
     assert 'export PHASE="${PHASE:-$(cfg phase)}"' in src, "full.sh does not take the phase from the board file"
-    newest = {}
-    for f in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
-        try: d = json.load(open(f))
-        except Exception: continue
-        bd = d.get("board") or ""; ph = d.get("phase")
-        if not bd.startswith("pcb-") or not ph: continue
-        L = bd.split("-")[1][0]
-        n = int(re.sub(r"\D", "", ph) or 0)
-        if L not in newest or n > newest[L][0]: newest[L] = (n, ph, os.path.basename(f))
-    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
-        L = os.path.basename(p)[0]
-        d = json.load(open(p))
-        assert d.get("phase"), "%s declares no phase" % os.path.basename(p)
-        if L in newest:
-            assert d["phase"] == newest[L][1], \
-                "%s says phase %s and its newest profile %s cuts %s" % (os.path.basename(p), d["phase"], newest[L][2], newest[L][1])
+    profiles = sorted(os.path.basename(f) for f in glob.glob(os.path.join(TOOLS, "routeflow", "*.json")))
+    for bf in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        L = os.path.basename(bf)[:-5]; d = json.load(open(bf))
+        assert re.match(r"^[A-Z]+[0-9]+$", str(d.get("phase", ""))), "%s declares no phase" % os.path.basename(bf)
+        assert "%s.json" % L in profiles, "no letter profile routeflow/%s.json" % L
+        t = open(os.path.join(TOOLS, "routeflow", "%s.json" % L)).read()
+        assert "<PHASE>" in t and "<phase>" in t, "routeflow/%s.json types a phase instead of carrying <PHASE>" % L
+        assert not [f for f in profiles if re.match(r"^%s\d+\.json$" % L, f)], "per-phase profiles for %s still exist: %s" % (L, [f for f in profiles if re.match(r"^%s\d+" % L, f)])
 
 
 def t_the_finish_stamps_the_phase_it_was_given_onto_the_silk():

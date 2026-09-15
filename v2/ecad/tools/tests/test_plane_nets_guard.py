@@ -41,7 +41,7 @@ def t_a_route_without_the_plane_nets_its_profile_declares_is_refused():
 def t_the_refusal_names_the_profile_that_declares_them():
     d = _fixture("pcb-d-aprs")
     r = _run(d, "pcb-d-aprs", {"FR_PLANE_NETS": "", "FR_POWER_LAYERS": "", "FR_PLANES_CHECKED": "1"})
-    assert re.search(r"\b[a-z]\d+\.json\b", r.stderr), "the refusal does not name the profile: %s" % r.stderr[:200]
+    assert re.search(r"\b[a-z]\d*\.json\b", r.stderr), "the refusal does not name the profile: %s" % r.stderr[:200]
 
 
 def t_setting_them_gets_past_the_check():

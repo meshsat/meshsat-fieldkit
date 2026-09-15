@@ -14,7 +14,7 @@ Usage:
   routeflow.py selftest                               kill the predicates with empty inputs; every one must block
   routeflow.py experiment <exp.json> [--budget-hours H] [--no-services] [--parallel N]   one route per configuration (rules file knobs, jar) on one pre-route board, measured into bench/results.jsonl; N configurations at once
 
-Profile (JSON): see tools/routeflow/*.json. Placeholders in argv: <PROJECT> (the project dir), <ECAD> (its parent), <NAME> (the board stem).
+Profile (JSON): tools/routeflow/<letter>.json, one per board. Placeholders in argv: <PROJECT> (the project dir), <ECAD> (its parent), <NAME> (the board stem); <PHASE> and <phase> anywhere in the profile, resolved from --phase, ROUTEFLOW_PHASE or boards/<letter>.json (resolve_phase).
 """
 import platform, sys, os, re, json, time, glob, hashlib, subprocess, shutil, collections, tempfile, datetime, fcntl
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -295,7 +295,7 @@ def services(script, action, log):
 
 def expand(argv, project, ecad, name): return [a.replace("<PROJECT>", project).replace("<ECAD>", ecad).replace("<NAME>", name) for a in argv]
 
-def validate(profile_fn, repo=None):
+def validate(profile_fn, repo=None, phase=None):
     """Everything about a profile that can be judged without a host, a board or a filesystem write.
 
     11 September 2026 (MESHSAT-862). `--dry-run` was not one: it still created the run directory, wrote
@@ -303,7 +303,7 @@ def validate(profile_fn, repo=None):
     and the first thing that read it was an eight-hour wave. Five profiles were carrying a phase one behind the
     deliverable their own finish cuts when this was written; that is the class of defect this catches in a
     second. Prints one line per property and returns a verdict code."""
-    prof = json.load(open(profile_fn)); b = os.path.basename(profile_fn)
+    prof = resolve_phase(json.load(open(profile_fn)), phase); b = os.path.basename(profile_fn)
     repo = repo or os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     ecad = os.path.join(repo, "v2", "ecad"); tools = os.path.join(ecad, "tools")
     fails, lines = [], []
@@ -418,8 +418,27 @@ def one_tree(project, what):
     sys.exit(2)
 
 
-def run(profile_fn, rounds, use_services, dry):
-    prof = json.load(open(profile_fn)); repo = prof.get("repo") or os.getcwd()
+def resolve_phase(prof, phase=None):
+    """ONE PROFILE PER LETTER (15 September 2026, red team round four H1): the 34 per-phase profiles differed from one
+    another in the phase string and a note, and the supervisor versioned by filename. A letter profile carries <PHASE>
+    (and <phase>, lower case) where the phase used to be typed, and the phase comes from `--phase`, ROUTEFLOW_PHASE, or
+    the board's own declaration in boards/<letter>.json, which is what full.sh exports to the silk. A profile with no
+    placeholder is returned as it is."""
+    text = json.dumps(prof)
+    if "<PHASE>" not in text and "<phase>" not in text: return prof
+    ph = phase or os.environ.get("ROUTEFLOW_PHASE")
+    if not ph:
+        letter = str(prof.get("board", "")).split("-")[1][0] if str(prof.get("board", "")).startswith("pcb-") else ""
+        bf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "boards", "%s.json" % letter)
+        if not os.path.exists(bf): raise SystemExit("routeflow: the profile carries <PHASE> and no phase was given (--phase, ROUTEFLOW_PHASE) and no boards/%s.json declares one" % letter)
+        ph = json.load(open(bf)).get("phase")
+        if not ph: raise SystemExit("routeflow: boards/%s.json declares no phase" % letter)
+    if not re.match(r"^[A-Z]+[0-9]+[A-Z0-9]*$", ph): raise SystemExit("routeflow: %r is not a phase (A35, C18, P5)" % ph)
+    return json.loads(text.replace("<PHASE>", ph).replace("<phase>", ph.lower()))
+
+
+def run(profile_fn, rounds, use_services, dry, phase=None):
+    prof = resolve_phase(json.load(open(profile_fn)), phase); repo = prof.get("repo") or os.getcwd()
     project = os.path.abspath(os.path.join(repo, prof["project"])); ecad = os.path.dirname(project); name = prof["board"]
     one_tree(project, "routed")
     os.makedirs(os.path.join(project, "out", "routeflow"), exist_ok=True)
@@ -1018,7 +1037,8 @@ if __name__ == "__main__":
     if a[0] == "preflight": sys.exit(preflight(a[a.index("--repo") + 1] if "--repo" in a else os.getcwd()))
     if a[0] == "selftest": sys.exit(selftest())
     if a[0] == "status": sys.exit(status(a[1], "--markdown" in a))
-    if a[0] == "validate": sys.exit(validate(a[1], a[a.index("--repo") + 1] if "--repo" in a else None))
-    if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a))
+    _ph = a[a.index("--phase") + 1] if "--phase" in a else None
+    if a[0] == "validate": sys.exit(validate(a[1], a[a.index("--repo") + 1] if "--repo" in a else None, _ph))
+    if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a, _ph))
     if a[0] == "experiment": sys.exit(experiment(a[1], float(a[a.index("--budget-hours") + 1]) if "--budget-hours" in a else 6.0, "--no-services" not in a, int(a[a.index("--parallel") + 1]) if "--parallel" in a else 1))
     print(__doc__); sys.exit(2)

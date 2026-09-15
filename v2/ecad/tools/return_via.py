@@ -33,7 +33,9 @@ import boardorder
 RETURN_MM = 1.5          # centre to centre, signal via to its ground via
 FAN_PITCH_MM = 0.5       # a footprint whose finest SMD pad pitch is this or under is a fine-pitch fan
 FAN_MM = 2.2             # a via this close to such a footprint's pads is inside its fan
-RINGS = (1.0, 1.25, 1.5) # candidate distances for the ground via
+RINGS = (0.75, 1.0, 1.25, 1.5) # candidate distances for the ground via
+DIRS = 16                # candidate directions per ring
+PLANE_FRACTION = 0.2     # a layer whose ground zones fill this share of the board is a reference plane
 ROUNDS = 3
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 mm = lambda v: v / 1e6
@@ -72,21 +74,54 @@ def _near(pt, pts, r):
     return any(abs(px - x) <= r and abs(py - y) <= r and math.hypot(px - x, py - y) <= r for px, py in pts)
 
 
+def _plane_layers(b):
+    """The copper layers that carry a ground plane: a GND zone filled over PLANE_FRACTION of the board's area."""
+    bb = b.GetBoardEdgesBoundingBox(); area = (bb.GetWidth() / 1e6) * (bb.GetHeight() / 1e6) or 1.0
+    out = set()
+    for z in b.Zones():
+        if z.GetIsRuleArea() or z.GetNetname().lstrip("/") != "GND": continue
+        if z.GetFilledArea() / 1e12 >= PLANE_FRACTION * area: out.add(z.GetFirstLayer())
+    return out
+
+
+def _reference(layer, cu, planes):
+    """The plane layer(s) a signal on `layer` references: the nearest plane layer in the stack, both when equidistant."""
+    i = cu.index(layer); best = None; refs = set()
+    for L in planes:
+        d = abs(cu.index(L) - i)
+        if best is None or d < best: best, refs = d, {L}
+        elif d == best: refs.add(L)
+    return frozenset(refs)
+
+
 def judge(b, path=None, radius=RETURN_MM):
+    """Every signal via is judged unless it sits in a fine-pitch fan (exempt) or every layer its net's tracks attach on
+    references the SAME ground plane (same_plane: the return current never leaves that plane, so no ground via is owed;
+    a via from F.Cu to In2 on a stack whose In1 is the ground plane is that case). A via whose attached layers reference
+    different planes, or a power plane, needs a ground via or a plated ground pad within `radius`."""
     path = path or b.GetFileName(); it = intent.load(path) or {}
     signals, _ = signalnets.classify(b, path, it.get("rails", {}).keys())
     fine = _fine_pads(b); gnd = _gnd_points(b)
-    judged = exempt = 0; lacking = []; positions = []
+    cu = list(b.GetEnabledLayers().CuStack()); planes = _plane_layers(b)
+    ends = {}
+    for t in b.GetTracks():
+        if t.GetClass() != "PCB_TRACK": continue
+        for e in (t.GetStart(), t.GetEnd()): ends.setdefault((t.GetNetname(), round(mm(e.x), 2), round(mm(e.y), 2)), set()).add(t.GetLayer())
+    judged = exempt = same_plane = 0; lacking = []; positions = []
     for t in boardorder.tracks(b):   # this loop DECIDES which via gets the first candidate site; board order follows a random uuid
         if t.GetClass() != "PCB_VIA": continue
         net = t.GetNetname()
         if not signalnets.is_signal(net, signals): continue
         pt = (mm(t.GetPosition().x), mm(t.GetPosition().y))
         if _near(pt, fine, FAN_MM): exempt += 1; continue
+        attached = ends.get((net, round(pt[0], 2), round(pt[1], 2)), set())
+        if planes and len(attached) >= 2:
+            refs = {_reference(L, cu, planes) for L in attached}
+            if len(refs) == 1 and next(iter(refs)): same_plane += 1; continue
         judged += 1
         if not _near(pt, gnd, radius):
             lacking.append("%s at (%.2f, %.2f)" % (net.lstrip("/"), pt[0], pt[1])); positions.append((t, pt))
-    return {"judged": judged, "exempt": exempt, "lacking": lacking, "positions": positions, "signals": len(signals)}
+    return {"judged": judged, "exempt": exempt, "same_plane": same_plane, "lacking": lacking, "positions": positions, "signals": len(signals)}
 
 
 def _site_free(b, x, y, vd, clr, own):
@@ -149,13 +184,15 @@ def fix(path, dry=False, radius=RETURN_MM):
             if os.path.exists(os.path.splitext(path)[0] + e): shutil.copy(os.path.splitext(path)[0] + e, os.path.splitext(tmp)[0] + e)
         path = tmp; print("return_via: dry run on %s" % tmp)
     b = pcbnew.LoadBoard(path); ds = b.GetDesignSettings()
-    VD, VDR = max(0.6, mm(ds.m_ViasMinSize)), max(0.3, mm(ds.m_MinThroughDrill))
+    # the board's OWN minimum via, the one its fab rules allow and its fine-pitch fans already use (C18's first run
+    # placed 73 of 253 at 0.6/0.3: a 0.4/0.2 via fits where a 0.6 does not)
+    VD, VDR = max(0.4, mm(ds.m_ViasMinSize)), max(0.2, mm(ds.m_MinThroughDrill))
     # the board's own minimum clearance (KiCad 9's BOARD_DESIGN_SETTINGS has no GetDefault(); the first run on C18 died here)
     clr = max(mm(ds.m_MinClearance), 0.127)
     gnd_net = b.FindNet("GND")
     if gnd_net is None: print("return_via: the board has no GND net; nothing placed"); return 0
     before = judge(b, path, radius)
-    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d without a ground via within %.1f mm (%d signal nets)" % (before["judged"], before["exempt"], len(before["lacking"]), radius, before["signals"]))
+    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d without a ground via within %.1f mm (%d signal nets)" % (before["judged"], before["exempt"], before["same_plane"], len(before["lacking"]), radius, before["signals"]))
     if not before["lacking"]: return 0
     keep = path + ".return_via.bak"; shutil.copy(path, keep)
     h0, u0, _ = _measure(path)
@@ -163,8 +200,8 @@ def fix(path, dry=False, radius=RETURN_MM):
     for pt in todo:
         cands = []
         for r in RINGS:
-            for k in range(8):
-                a = k * math.pi / 4; cands.append((round(pt[0] + r * math.cos(a), 3), round(pt[1] + r * math.sin(a), 3)))
+            for k in range(DIRS):
+                a = k * 2 * math.pi / DIRS; cands.append((round(pt[0] + r * math.cos(a), 3), round(pt[1] + r * math.sin(a), 3)))
         todo[pt] = cands
     placed = {}; refused = {}
     for rnd in range(1, ROUNDS + 1):
@@ -207,9 +244,9 @@ def check(path, radius=RETURN_MM):
     b = pcbnew.LoadBoard(path); r = judge(b, path, radius)
     n_tracks = sum(1 for t in b.GetTracks() if t.GetClass() == "PCB_TRACK")
     res = verdict.INCONCLUSIVE if (n_tracks and not r["judged"] and not r["exempt"]) else (verdict.PASS if not r["lacking"] else verdict.FAIL)
-    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d without a ground via within %.1f mm" % (r["judged"], r["exempt"], len(r["lacking"]), radius))
+    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d without a ground via within %.1f mm" % (r["judged"], r["exempt"], r["same_plane"], len(r["lacking"]), radius))
     for l in r["lacking"][:20]: print("return_via:   " + l)
-    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "lacking": len(r["lacking"])}, denominator=r["judged"],
+    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "same_plane": r["same_plane"], "lacking": len(r["lacking"])}, denominator=r["judged"],
                          evidence=r["lacking"][:200], inputs={"board": path},
                          note="" if res != verdict.INCONCLUSIVE else "the board has tracks and no signal via at all: the scope filter is suspect",
                          out_dir=os.path.join(os.path.dirname(os.path.abspath(path)), "out"))

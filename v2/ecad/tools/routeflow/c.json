@@ -1,7 +1,7 @@
 {
  "board": "pcb-c-display",
  "project": "v2/ecad/pcb-c-display-c8",
- "phase": "C14",
+ "phase": "<PHASE>",
  "issue": "MESHSAT-862",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -39,7 +39,7 @@
  },
  "route": {
   "attempts": [
-   30
+   200
   ],
   "threads": 1,
   "timeout": 21600,
@@ -65,24 +65,23 @@
    "<ECAD>",
    "pcb-c-display-c8",
    "c",
-   "C14",
+   "<PHASE>",
    "out/parallel-c8.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/c14-clean.txt",
+  "clean_flag": "out/<phase>-clean.txt",
   "stub_log": "out/pcb-c-display-stub.log"
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-c-revA-C14",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-c-revA-<PHASE>",
  "expect": {
   "hard": 0,
   "unrouted": 0,
   "autoroute_minutes_max": 60
  },
- "notes": "C13, 14 September 2026 (MESHSAT-862): C12's copper routed with the rip-up cost at 10 instead of the default 100, in an isolated tree so the tools can move under the rest of the work. Everything else is C12's.",
+ "notes": "One profile per letter (15 September 2026, red team round four H1): the phase comes from boards/c.json, --phase or ROUTEFLOW_PHASE; every phase note since c18 is in v2/docs/ROUTEFLOW-PHASES.md. The pass ceiling is the timeout: the per-pass jar keeps the best pass of a cut run, so the attempt count no longer protects anything and is set high.",
  "baseline_key": "C6",
  "plane_layers": [
   "In1.Cu"
  ],
- "clean_flag": "out/c14-clean.txt",
- "_phase_note": "C14, 14 September 2026 (MESHSAT-862): C11's recipe on today's copper, which is the best this board has ever routed. Thirty passes with the via-cost remedy applied from the first round instead of the second, because on C11 that remedy is what took 7 unrouted to 3. Forty-five passes were tried twice and did worse both times, once at the default rip-up cost (4 unrouted) and once at 10 (59): this board is at a congestion cliff where more search wanders."
+ "clean_flag": "out/<phase>-clean.txt"
 }

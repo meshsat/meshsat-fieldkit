@@ -1,7 +1,7 @@
 {
  "board": "pcb-p-pack",
  "project": "v2/ecad/pcb-p-pack-p2",
- "phase": "P5",
+ "phase": "<PHASE>",
  "issue": "MESHSAT-862",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -22,7 +22,7 @@
  "plane_layers": [],
  "route": {
   "attempts": [
-   60
+   200
   ],
   "threads": 1,
   "timeout": 1800,
@@ -41,22 +41,21 @@
    "<ECAD>",
    "pcb-p-pack-p2",
    "p",
-   "P5",
+   "<PHASE>",
    "out/parallel-p2.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/p5-clean.txt",
+  "clean_flag": "out/<phase>-clean.txt",
   "stub_log": "out/pcb-p-pack-stub.log"
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-p-revA-P5",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-p-revA-<PHASE>",
  "expect": {
   "hard": 0,
   "unrouted": 0,
   "autoroute_minutes_max": 15
  },
- "notes": "P2 (8 Sep 2026, MESHSAT-862, appendix 32.70): the P1 profile on the v2/ecad/pcb-p-pack-p2 copy.",
+ "notes": "One profile per letter (15 September 2026, red team round four H1): the phase comes from boards/p.json, --phase or ROUTEFLOW_PHASE; every phase note since p5 is in v2/docs/ROUTEFLOW-PHASES.md. The pass ceiling is the timeout: the per-pass jar keeps the best pass of a cut run, so the attempt count no longer protects anything and is set high.",
  "baseline_key": "P1",
- "clean_flag": "out/p5-clean.txt",
- "_phase_note": "P5, 15 September 2026 (MESHSAT-862, appendix 32.198): owner scope answer 1 of the return-current ruling, P keeps two layers at 2 oz and is re-routed with its SIGNALS ON THE TOP LAYER over a solid back-side ground pour: B.Cu is a power layer in the DSN (the router lays no wire there, vias pass) and the ground pour is its plane; the pack path's locked bands on both layers are tracks the router keeps. If the router cannot close the board this way the numbers go back to the owner.",
+ "clean_flag": "out/<phase>-clean.txt",
  "_plane_treatment_why": "15 September 2026, owner scope answer 1 of the return-current ruling: P1 to P4 routed both layers freely; P5 makes B.Cu a power layer with the ground pour as its plane so every signal stays on the top layer over solid ground (rule 1 cannot hold for a back-side track on a two-layer board)."
 }

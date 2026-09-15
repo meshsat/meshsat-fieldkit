@@ -1,7 +1,7 @@
 {
  "board": "pcb-b-compute",
  "project": "v2/ecad/pcb-b-compute-b19",
- "phase": "B19",
+ "phase": "<PHASE>",
  "issue": "MESHSAT-862",
  "repo": "/root/gitlab/products/meshsat/meshsat-fieldkit",
  "services_script": "~/meshsat-services.sh",
@@ -26,7 +26,7 @@
  ],
  "route": {
   "attempts": [
-   12
+   200
   ],
   "threads": 1,
   "timeout": 21600,
@@ -49,20 +49,20 @@
    "<ECAD>",
    "pcb-b-compute-b19",
    "b",
-   "B19",
+   "<PHASE>",
    "out/parallel-b19.log"
   ],
   "cwd": "<ECAD>",
-  "clean_flag": "out/b19-clean.txt",
+  "clean_flag": "out/<phase>-clean.txt",
   "stub_log": "out/pcb-b-compute-stub.log",
   "_collapsed": "11 September 2026 (MESHSAT-862): finish_b19.sh retired into tools/finish.sh, whose stage order carries its two written reasons once. The clone did not run netlist_board.py, and most did not run pruned_gate.py either."
  },
- "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-B19",
+ "deliverable": "v2/release/revA/boards/meshsat-pcb-b-revA-<PHASE>",
  "expect": {
   "hard": 0,
   "unrouted": 0,
   "autoroute_minutes_max": 200
  },
- "notes": "B19 (9 September 2026, MESHSAT-862, appendix 32.86): the first B phase with the I/O high-availability layer. The board builds and check_pcb_b.py prints ALL PASS on it; this profile measures how the new DSN routes. B18 is superseded and no release is cut against it.",
+ "notes": "One profile per letter (15 September 2026, red team round four H1): the phase comes from boards/b.json, --phase or ROUTEFLOW_PHASE; every phase note since b19 is in v2/docs/ROUTEFLOW-PHASES.md. The pass ceiling is the timeout: the per-pass jar keeps the best pass of a cut run, so the attempt count no longer protects anything and is set high.",
  "baseline_key": "B15"
 }
