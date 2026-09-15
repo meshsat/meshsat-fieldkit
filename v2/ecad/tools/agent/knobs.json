@@ -121,15 +121,6 @@
    "type": "flag",
    "unit": ""
   },
-  "PAIR_END_STRICT": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "judge the end emissions at the gate's bar as they are laid",
-   "stage": "pair",
-   "type": "flag",
-   "unit": ""
-  },
   "PAIR_ENTRY_STRICT": {
    "category": "experiment",
    "comparable": true,
@@ -193,15 +184,6 @@
    "type": "flag",
    "unit": ""
   },
-  "PAIR_GRID_LONG": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "a coarser grid for the long pairs; 0 is off",
-   "stage": "pair",
-   "type": "number",
-   "unit": "mm"
-  },
   "PAIR_HIST_IN": {
    "category": "io",
    "comparable": false,
@@ -256,24 +238,6 @@
    "type": "string",
    "unit": ""
   },
-  "PAIR_LAYER_CHANGE_FIT": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "the layer change's four segments judged against each other before the spot is taken",
-   "stage": "pair",
-   "type": "flag",
-   "unit": ""
-  },
-  "PAIR_LEG_EXACT": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "re-test a blocked leg point against the polygons",
-   "stage": "pair",
-   "type": "flag",
-   "unit": ""
-  },
   "PAIR_LEG_MATCH": {
    "category": "experiment",
    "comparable": true,
@@ -300,15 +264,6 @@
    "stage": "pair",
    "type": "integer",
    "unit": "retries"
-  },
-  "PAIR_LONG_MM": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "120",
-   "description": "the span above which a pair counts as long",
-   "stage": "pair",
-   "type": "number",
-   "unit": "mm"
   },
   "PAIR_MAP_CHECK": {
    "category": "basis",
@@ -400,65 +355,11 @@
    "type": "string",
    "unit": ""
   },
-  "PAIR_PRESENT": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "the presentation offset at an entry station",
-   "stage": "pair",
-   "type": "number",
-   "unit": "mm"
-  },
-  "PAIR_RIPUP": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "rip-up as a trial kept only when it leaves more pairs laid",
-   "stage": "pair",
-   "type": "integer",
-   "unit": "episodes"
-  },
-  "PAIR_RIP_MARGIN": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "4.0",
-   "description": "the corridor margin a rip-up episode works in",
-   "stage": "pair",
-   "type": "number",
-   "unit": "mm"
-  },
-  "PAIR_RIP_MAX": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "6",
-   "description": "pairs one rip-up episode may lift",
-   "stage": "pair",
-   "type": "integer",
-   "unit": "pairs"
-  },
-  "PAIR_RIP_TOTAL": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "60",
-   "description": "pairs all rip-up episodes may lift in a pass",
-   "stage": "pair",
-   "type": "integer",
-   "unit": "pairs"
-  },
   "PAIR_STAIRCASE": {
    "category": "experiment",
    "comparable": true,
    "default": "1",
    "description": "the staircase corridor build",
-   "stage": "pair",
-   "type": "flag",
-   "unit": ""
-  },
-  "PAIR_STATION_OWN": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "the legs may pass the pair's own copper at a station",
    "stage": "pair",
    "type": "flag",
    "unit": ""
@@ -486,15 +387,6 @@
    "comparable": true,
    "default": "1",
    "description": "swap a station's two parts to untwist the pair",
-   "stage": "pair",
-   "type": "flag",
-   "unit": ""
-  },
-  "PAIR_SWAP_BOTH_SIDES": {
-   "category": "experiment",
-   "comparable": true,
-   "default": "0",
-   "description": "refuse a swap that crosses the parts' other pads",
    "stage": "pair",
    "type": "flag",
    "unit": ""
