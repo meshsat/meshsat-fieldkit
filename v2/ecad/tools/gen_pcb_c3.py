@@ -93,6 +93,21 @@ for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x
 text("C7 BACKER RING: LEDs under the plate light guides, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
 # ---------------------------------------------------------------- packed regions: the controller and drivers on the underside of the right strip, the e-paper boost on the top strip's top side, the spread parts on the bottom strip
 EPD_PARTS = ["Q5", "Q6", "L1", "D19", "D20", "D21", "R42", "R43"] + ["C%d" % k for k in range(28, 38)]
+# 15 September 2026 (MESHSAT-862, decision 26's second kind): THE TEST POINTS SIT BESIDE THE NETS THEY TAP. The
+# forty of them were packed as a row in CLUSTER2 on the underside of the bottom strip, and the nets they tap
+# leave the RP2040 in the right strip and run up it to the top strip: every C route since C12 has left one or
+# two of those branches open (/HB2 to TP29, /HB3 to TP30, /LED_RAIL_SW to TP5), each a 50 to 60 mm haul through
+# the fullest copper on the board for a probe land. Measured on C14's board: the underside of the right strip
+# between y 125 and 260 (board frame) holds no footprint at all, only the three switch cut-outs at x 437 to 457
+# and the THT LED column at x 424. Two columns at case x 162 and 166, 3.5 mm pitch, from case y 82 southward,
+# clear the cut-outs by 0.8 mm and the edge keep-out by 4.4, and put every test point within a few centimetres
+# of U3. The two e-paper panel-voltage points go to CLUSTER3 beside the boost that makes them.
+_TP_COLUMN = [r for r in sorted((r for r in comps if r.startswith("TP")), key=lambda r: int(r[2:])) if r not in ("TP26", "TP27")]
+for _i, _r in enumerate(_TP_COLUMN):
+    FIXED[_r] = (162.0 + 4.0 * (_i % 2), 82.0 - 3.5 * (_i // 2), 0, True)
+for ref, (x, y, rot, back) in FIXED.items():
+    if ref.startswith("TP") and ref not in placed: placed[ref] = place(ref, x, y, rot, back)
+EPD_PARTS += [r for r in ("TP26", "TP27") if r in comps]
 SPREAD = lambda r: r.startswith(("TP", "JP", "FB")) or r == "D17"
 REGIONS = [("CLUSTER3", L.CLUSTER3, [r for r in EPD_PARTS if r in comps], False),
            ("CLUSTER2", L.CLUSTER2, [r for r in comps if r not in placed and not r.startswith("H") and SPREAD(r)], True),
