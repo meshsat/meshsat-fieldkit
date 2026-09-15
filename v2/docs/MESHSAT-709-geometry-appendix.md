@@ -7693,3 +7693,63 @@ runs before the keep-out is judged, so any keep-out that covers a pad of another
 Also this evening: the schematic PDFs alone are on the release as `meshsat-fieldkit-schematics-2026-09-15.zip`
 (17 MB, the six boards' engineering pages and uncut sheets, the same files as the third issue of the review set), with
 the link on the laptop; A35 and B19 continue on box 51119564.
+
+### 32.198 The two return-current rules become gates, measured on every board first; the reviewers' fixes; the box lost and replaced (15 September 2026, 21:50 CEST; MESHSAT-862)
+
+**The ruling (20:15 CEST).** Asked whether the golden rule of EMC, the return beside every signal, holds on all seven
+boards, the honest answer was: the ground plane on five of seven, the return path checked only under the pair-class nets,
+no tool placing a ground via beside a signal via. The owner ruled both rules gates and every board re-finished, with
+three scope answers: P keeps two layers and is re-routed with its signals on the top layer (P5); rule 1 judges every
+signal net at the existing tolerance (the larger of 10 mm or 5 percent of a net's length without a plane on a
+neighbouring layer); rule 2 exempts fine-pitch escape fans (0.5 mm pitch or under) and wants a ground via within 1.5 mm
+of every other signal via.
+
+**The tools.** `signalnets.py` classifies a net from the board's own data (ground, a zone owner, an intent rail, a power
+class: HV, NODE, PWR, RAIL, SW, BANK, GNDC), never from a literal net list, and a rule holds that. `intent_checks.py`
+judges rule 1 on every signal net (item 1) and rule 2 through `return_via.judge` (item 4), so the board gate refuses
+both. `return_via.py` is judge and fixer: candidate sites on rings of 0.75 to 1.5 mm in sixteen directions, the board's
+own minimum via, a site only where it keeps the class clearance from every other net on every layer AND lies inside a
+ground fill, all placements judged by one DRC, refused ones retried, the whole kept only if neither the hard nor the
+unrouted count rose. A via whose attached layers reference the SAME ground plane owes no return via (the current never
+leaves that plane: F.Cu to In2 on a stack whose In1 is ground), and that case is counted. `finish.sh` runs the fixer
+after the last copper-changing stage. `return_report.py` measures both rules per layer with no verdict.
+
+**Measured before anything was re-finished (decision 27 carries the table).** A (six layers): 3 of 197 signal nets over
+the limit, each by 10 to 16 mm; 165 of 235 signal vias without a ground via. C: 62 percent of its back-side signal
+track has no plane next to it, 81 of 127 nets. D: 55 percent, 27 of 127. E: 88 percent, 59 of 76. P: 100 percent on
+the back, 57 on the front, 29 of 29. **The four-layer stack is the cause**: a back-side track's neighbour is In2, a
+routing layer with a cut pour on C and D and bare dielectric between the power pours on E, and In1's ground is a core
+away. E gets an In2 ground fill under everything its power pours do not cover (a generator change, E10 routing); D is
+measured with In2 as a ground plane and two routing layers (`/root/dexp`); C, which routes a third of its signal on In2
+and was measured on 6 September to fail on two routing layers, is **decision 27** (six layers recommended). A's three
+nets and every board's return vias are the fixer's; P5 routes with B.Cu as a power layer.
+
+**C18, the first re-finish under the gates, read twice.** The first run crashed the fixer on a KiCad 9 call that does
+not exist (`GetDefault()`), which the board fixture on the box would have caught and the runner's skip did not: the
+suite runs on the box now too. The second run placed 73 ground vias of 253 wanted at a 0.6 mm via; the refinement above
+(the board's own 0.4 mm via, sixteen directions, the same-plane case) is being read as this is written. The board
+gate refused C18 on rule 1 as expected (81 nets), which is decision 27's evidence.
+
+**The reviewers' fixes, in the order given (20:50 CEST: everything before the set).** Two reports of 15 September
+(`v2/docs/RED-TEAM-2026-09-15-agentic.md`, `-round4.md`). Done tonight: the final gate fails closed (a seven-board
+manifest, quote and missing folders and open certification fail the set, unjudged is never PASS, an executed truth
+table of nine states); the agent loop is complete or it is nothing (the runner's status, one row per arm, ILLEGAL
+unmeasured, the verdict the arms' and the review a count, decisions as pure functions with their own truth table); the
+arm runner's exit-status contract (0 or 1 with a summary, else INFRA_FAIL), no stale counts, artefacts under a cycle
+directory that is never overwritten, a placement the chain's own gate refuses graded UNMEASURABLE with the gate's line;
+evidence scoped to its cohort (letter, stage, placed board, tools tree content); the ledger appended under a lock; the
+experiment lock a claim; six-type benchmark rows quarantined from ranking and promotion; `drc.sh`'s cost line runs and
+the finish says what it cost (C18: 63 s wall, 11 DRC calls, 13 s in DRC); one `guarded` function for every
+copper-editing pass (the five hand-rolled blocks and their three comparison rules are gone, and the stub stage now
+restores the board it was HANDED rather than the raw router board); one routeflow profile per letter with the phase
+from the board file (`v2/docs/ROUTEFLOW-PHASES.md` keeps the 34 notes), the pass ceiling at the timeout; the Skip
+helper and the suite green on a code-only archive (`tests/run_code_only.sh`: 473 passed, 21 skipped); the B placement
+run shape pointed at B for the first time (`agent/templates/b-place.json`, the loop running against the box: the first
+arm, PLACE_FINE_MARGIN 2.6, was refused by the region gate exactly as 32.185 measured, the second, PLACE_COUPLE_GAP 3.2,
+is being laid). Still owed from the reports: the rail fanout before the route (the record's own measurement says a
+band cannot be a DSN plane without cutting its own neck, so this is a measurement first), the two placed-board classes
+in the predictor, the 32 registry-only knobs, the pre-router split, the experiment store, the documents.
+
+**The box.** The host of 51119564 went offline at 18:05 UTC with A35 at pass 1 and B19 at pass 3; 51145697 (EPYC 7R13,
+48 threads, 0.30 USD an hour) replaced it at 18:36 UTC and both routes were relaunched at 18:48 on the same trees;
+the old instance is destroyed.
