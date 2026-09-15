@@ -1393,3 +1393,12 @@ stack, exactly as decision 27 found for C, and a two-layer board cannot hold it 
 3. **P5 as ruled.** Measured above: it does not route.
 
 E5, the bare dock block, is untouched by this: it carries no track and passes rule 1 as "0 of 0 signal nets".
+
+**Option 1 measured, 15 September 2026 22:50 CEST (`/root/piso4`).** Four-layer P (In1 and In2 ground planes, the 2 oz pack bands on
+the outer layers, wires on F.Cu and B.Cu) **routes 0 hard, 0 unrouted, 53 vias, in one attempt**; the return-path gate then
+reads **2 of 29 signal nets over the limit by 0.2 and 2.2 mm** (DSG_R 10.2 of 74.5, SMBD 12.2 of 79.1, the via-transition
+class of decision 27) and the return-via fixer places 26 of 32 ground vias with **6 signal vias left without a site** in the
+gauge's cluster (every candidate on other-net copper). The same board with the ground-via grid laid before the route is being
+measured (`/root/piso4g`). So option 1 is one small step from both rules where two layers are 29 nets and 30 to 100 mm away
+from rule 1 alone.
+
