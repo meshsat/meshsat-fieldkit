@@ -495,6 +495,7 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
             env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(route.get("timeout", 4500))}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])   # zones of these nets on the power layers stay in the DSN as planes (6 Sep 2026: GND by vias into In1, not as wires)
+            if route.get("rail_planes"): env["FR_RAIL_PLANES"] = "1"   # the rails' locked bands and islands as DSN planes on their own layers (15 Sep 2026, a measurement on A)
             if route.get("jar"): env["FR_JAR"] = os.path.expanduser(route["jar"])
             # the optimiser is where a route disappears: C8's auto-route finished in 14 min 21 s and the two default optimiser passes
             # then ran past a 90 minute limit with no session written, three times (8 Sep 2026 19:35). A profile may cap it.
@@ -773,6 +774,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_RULES_INJECT": "1" if rules else "0", "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])
+            if route.get("rail_planes"): env["FR_RAIL_PLANES"] = "1"
             ses = os.path.join(w, name + ".ses"); t0 = time.time(); starts = 0; flog = os.path.join(w, "finish.log"); board = os.path.join(w, name + ".kicad_pcb")
             for attempt in (1, 2):
                 starts += 1; sh(["../tools/route_one.sh", ".", name, k, str(route.get("passes", 60))], project, os.path.join(w, "route_one.log"), env)

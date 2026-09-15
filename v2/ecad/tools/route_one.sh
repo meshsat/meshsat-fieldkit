@@ -36,13 +36,29 @@ fi
 cp "out/$N-preroute.kicad_pcb" "$W/$N.kicad_pcb"; cp "$N.kicad_pro" "$W/$N.kicad_pro"
 # FR_PLANE_NETS="GND" (6 Sep 2026 04:50): the zones of these nets on the FR_POWER_LAYERS layers stay in the DSN as planes, so the router connects their pins
 # by a via into the plane instead of routing them as wires (B15's DSN listed 258 GND pins for the router, 37 percent of its connections). Default: none, as before.
-python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" <<'PY'
-import sys, pcbnew
-b = pcbnew.LoadBoard(sys.argv[1]); keep_nets = set(x for x in sys.argv[3].split(",") if x); keep_layers = set(sys.argv[4].split()); kept = 0
+# FR_RAIL_PLANES=1 (15 September 2026, red team round four C2a, a MEASUREMENT): the locked rail copper of power_copper.py
+# (a band or island whose net is a rail of the intent file and which carries a same-layer track keep-out) stays in the
+# DSN as a plane on its own layer, so the router sees the rail's pads connected and lays no parallel wire for rail_prune
+# to take off afterwards. The record's caution stands (32.39: a DSN plane is a connection and not an obstacle, and a track
+# along a plane's edge made the fill retreat and cut an island's neck), which is why this is off until an A route
+# measures it: rail_prune must then report nothing removed and the rails must still read MET.
+python3 - "$W/$N.kicad_pcb" "$W/$N.dsn" "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" "${FR_RAIL_PLANES:-0}" "out/$N-intent.json" <<'PY'
+import sys, json, os, pcbnew
+b = pcbnew.LoadBoard(sys.argv[1]); keep_nets = set(x for x in sys.argv[3].split(",") if x); keep_layers = set(sys.argv[4].split()); kept = 0; rails_kept = 0
+rails = set()
+if sys.argv[5] == "1" and os.path.exists(sys.argv[6]):
+    rails = {r.lstrip("/") for r in (json.load(open(sys.argv[6])).get("rails") or {})}
+keepouts = [(z.GetFirstLayer(), z.Outline()) for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
+def rail_zone(z):
+    if z.GetIsRuleArea() or z.GetNetname().lstrip("/") not in rails: return False
+    c = z.GetBoundingBox().GetCenter()
+    return any(L == z.GetFirstLayer() and o.Contains(c) for L, o in keepouts)
 for z in list(b.Zones()):
     if not z.GetIsRuleArea() and z.GetNetname() in keep_nets and any(b.GetLayerName(l) in keep_layers for l in z.GetLayerSet().Seq()): kept += 1; continue
+    if rails and rail_zone(z): rails_kept += 1; continue
     if not z.GetIsRuleArea() and not z.GetZoneName().startswith(("VOUT island", "inductor tap")): b.Remove(z)
-if keep_nets: print("planes kept in the DSN:", kept, "zone(s) of", sorted(keep_nets), "on", sorted(keep_layers))          # the A21 output islands and inductor taps stay as planes (their pads are connected by the fill and the gate checks it); every other plane, band and island out of the DSN: GND/+5V route as ordinary nets (A21 run 8 of 5 Sep 2026: bands exported as planes made the router end tracks at band edges the fill never reached; bands are protected by track keep-outs instead)
+if keep_nets: print("planes kept in the DSN:", kept, "zone(s) of", sorted(keep_nets), "on", sorted(keep_layers))
+if rails: print("rail planes kept in the DSN (FR_RAIL_PLANES):", rails_kept, "zone(s) of", sorted(rails))          # the A21 output islands and inductor taps stay as planes (their pads are connected by the fill and the gate checks it); every other plane, band and island out of the DSN: GND/+5V route as ordinary nets (A21 run 8 of 5 Sep 2026: bands exported as planes made the router end tracks at band edges the fill never reached; bands are protected by track keep-outs instead)
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
 b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
 PY
