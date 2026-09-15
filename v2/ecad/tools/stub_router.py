@@ -406,6 +406,22 @@ for it1, it2 in pairs:
     print("  %s: class %s, track %.3f mm, via %.2f/%.2f mm" % (net, _cl or "(none resolved)", TW, VIA_D, VIA_DR))
     fine = [it for it in (it1, it2) if it["kind"] == "pad" and it["pad"] is not None and min(mm(it["pad"].GetSize().x), mm(it["pad"].GetSize().y)) < 0.4]
     if fine: TW = 0.2                                              # leaving a fine-pitch pad: thinnest allowed track
+    # 15 September 2026 (MESHSAT-862), A32's last open. A closure is no wider than the piece it joins: /VBUS20 at U3 pad 3
+    # was a TRACK end, the pad's own 0.2 mm escape stub, and the search asked for the NODE class's 0.5 mm track with a
+    # 0.80/0.40 via through a 0.4 mm QFN's escape field, so it FAILED "track -> track" at a board-wide window while a
+    # 0.25 mm run fits. A track end takes that track's width (never under 0.2), and a closure at or under 0.25 mm takes
+    # the board's own minimum via, the one the escapes are laid with.
+    for it in (it1, it2):
+        if it["kind"] != "track" or it.get("x") is None: continue
+        px, py = FromMM(it["x"]), FromMM(it["y"])
+        ends = [t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net
+                and min(math.hypot(t.GetStart().x - px, t.GetStart().y - py), math.hypot(t.GetEnd().x - px, t.GetEnd().y - py)) < 60000]
+        if ends:
+            w_end = min(mm(t.GetWidth()) for t in ends)
+            if w_end < TW: print("  %s: the track end joined is %.2f mm wide, the closure takes that width instead of the class's %.2f" % (net, w_end, TW)); TW = max(0.2, w_end)
+    if TW <= 0.25:
+        _ds = b.GetDesignSettings(); _vd, _vdr = max(0.4, mm(_ds.m_ViasMinSize)), max(0.2, mm(_ds.m_MinThroughDrill))
+        if _vd < VIA_D: print("  %s: a %.2f mm closure takes the board's minimum via %.2f/%.2f instead of the class's %.2f/%.2f" % (net, TW, _vd, _vdr, VIA_D, VIA_DR)); VIA_D, VIA_DR = _vd, _vdr
     trk, via = build_maps(net)
     # source = the pad if there is one, else the other item; goal = other item, or any via-able cell for plane nets
     a, c = (it1, it2) if it1["kind"] == "pad" else (it2, it1)

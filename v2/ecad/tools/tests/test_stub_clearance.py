@@ -74,3 +74,13 @@ def t_the_stub_router_with_nothing_to_close_leaves_before_pcbnew_can_crash_it():
     body = s[i:i + 900]
     assert "if not pairs:" in body and "os._exit(0)" in body and "closed 0 of 0" in body, (
         "a stub router with nothing to close still walks into the map build and pcbnew's teardown")
+
+
+def t_a_closure_is_no_wider_than_the_track_end_it_joins():
+    """A32's last open (15 Sep 2026): /VBUS20 between U3 pad 3's 0.2 mm escape stub and pad 1's island; the search asked
+    for the NODE class's 0.5 mm track and 0.80/0.40 via through a 0.4 mm QFN's escape field and FAILED at a board-wide
+    window. A track end takes its own width, and a closure at or under 0.25 mm takes the board's minimum via."""
+    s = open(os.path.join(TOOLS, "stub_router.py")).read()
+    i = s.find("the closure takes that width instead of the class's"); assert i > 0, "a track end still takes the class width"
+    assert "TW = max(0.2, w_end)" in s and "m_ViasMinSize" in s and "if TW <= 0.25:" in s, "the width is not capped by the joined end, or the via does not follow it"
+    assert s.find("trk, via = build_maps(net)") > i, "the width must be settled before the maps are built"
