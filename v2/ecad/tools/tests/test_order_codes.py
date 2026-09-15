@@ -380,3 +380,17 @@ def t_a_hole_is_not_a_bom_line():
     assert "in_bom=False" in line, "the camera holes still reach the BOM"
     k = open(os.path.join(TOOLS, "kisch.py")).read()
     assert 'in_bom=p.get("in_bom", True)' in k and "or not in_bom else" in k, "kisch does not carry a part's in_bom flag into the symbol"
+
+
+def t_no_placement_generator_writes_a_literal_phase_into_a_legend():
+    """C17's folder was refused by the final gate for 'no other phase of this board on the silk (stale: C7)': gen_pcb_c3.py
+    wrote the legend 'C7 BACKER RING: ...' as a literal while the title text took its phase from the chain (15 Sep 2026).
+    The phase reaches the silk through PHASE and silk_fix_all.py, never as a literal in a legend."""
+    import re
+    for L in "abcdep":
+        p = os.path.join(TOOLS, "gen_pcb_%s3.py" % L)
+        if not os.path.exists(p): continue
+        for line in open(p):
+            if line.lstrip().startswith("#"): continue
+            m = re.search(r'text\("([A-Z]\d{1,2}) ', line)
+            assert not m, "%s writes the literal phase %s into a legend: %s" % (os.path.basename(p), m.group(1), line.strip()[:90])

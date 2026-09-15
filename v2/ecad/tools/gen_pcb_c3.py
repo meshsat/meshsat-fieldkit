@@ -104,7 +104,7 @@ for _i, _r in enumerate(_TP_COLUMN):
 # same references put every test point on the board twice (C17's first pre-route, 15 September 2026).
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back, centre=ref not in PANEL_MOUNT)
 for ref, (x, y), label in L.STATUS_LEDS + L.BAR_LEDS: placed[ref] = place(ref, x, y, 0)   # THT LEDs on the top face, under the plate's light guides; the legends are laser marked on the plate
-text("C7 BACKER RING: LEDs under the plate light guides, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)
+text("BACKER RING: LEDs under the plate light guides, no face legends here", 0, L.STRIP_B[1] + 12.0, pcbnew.F_SilkS, 1.6, 0.25)   # no phase token here: the title text carries the phase (C17's folder was refused for a literal C7, 15 Sep 2026)
 # ---------------------------------------------------------------- packed regions: the controller and drivers on the underside of the right strip, the e-paper boost on the top strip's top side, the spread parts on the bottom strip
 EPD_PARTS = ["Q5", "Q6", "L1", "D19", "D20", "D21", "R42", "R43"] + ["C%d" % k for k in range(28, 38)]
 EPD_PARTS += [r for r in ("TP26", "TP27") if r in comps]

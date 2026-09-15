@@ -8,7 +8,7 @@ The rulings that bind the design (details in `docs/MESHSAT-709-geometry-appendix
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O | A24 | 240 x 160 | 6 | `ecad/pcb-a-power-a23/` | `release/revA/boards/meshsat-pcb-a-revA-A24/` |
 | PCB-B COMPUTE | B19 | 330 x 200 | 6 | `ecad/pcb-b-compute-b19/` | `release/revA/boards/meshsat-pcb-b-revA-B19-quote/` (quote only: placed, not routed) |
-| PCB-C PANEL BACKER | C7 | 344 x 228 ring | 4 | `ecad/pcb-c-display-c8/` | `release/revA/boards/meshsat-pcb-c-revA-C7/` |
+| PCB-C PANEL BACKER | C17 | 344 x 228 ring | 4 | `ecad/pcb-c-display-c8/` | `release/revA/boards/meshsat-pcb-c-revA-C17/` |
 | PCB-D VHF APRS | D11 | 100 x 80 | 4 | `ecad/pcb-d-aprs-d9/` | `release/revA/boards/meshsat-pcb-d-revA-D11/` |
 | PCB-E1 DOCK STRIP | E9 | 267 x 68 | 4 | `ecad/pcb-e1-dock-e7/` | `release/revA/boards/meshsat-pcb-e-revA-E9/` |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | `ecad/pcb-e5-block/` | `release/revA/boards/meshsat-pcb-e5-revA-E5/` |
