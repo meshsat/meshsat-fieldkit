@@ -296,12 +296,13 @@ def main(argv):
             # agent_loop.verdict.json sat in the out directory and the reviewer was handed a gate file grading another
             # arm). A verdict written before this cycle's stamp is not evidence about this cycle, and agent_loop's own
             # verdict is written after the review by construction, so it is never material.
+            cycle_iso = "%s-%s-%sT%s:%s:%sZ" % (stamp[:4], stamp[4:6], stamp[6:8], stamp[9:11], stamp[11:13], stamp[13:15])  # verdict.now() form
             vs = {}
             for f in sorted(os.listdir(a.out_dir)) if os.path.isdir(a.out_dir) else []:
                 if f.endswith(".verdict.json") and not f.startswith("agent_loop"):
                     try:
                         rec = json.load(open(os.path.join(a.out_dir, f)))
-                        if str(rec.get("ts", "")) >= stamp.replace("T", "T")[:0] + stamp[:4] + "-" + stamp[4:6] + "-" + stamp[6:8] + "T" + stamp[9:11] + ":" + stamp[11:13] + ":" + stamp[13:15] + "Z": vs[f] = rec
+                        if str(rec.get("ts", "")) >= cycle_iso: vs[f] = rec
                     except ValueError: pass
             vs["arm_rows"] = [{k: r.get(k) for k in ("arm", "env", "knobs_seen", "pairs", "of", "hard",
                                                      "verdict", "note", "tools", "placed_md5", "board_sha")}
