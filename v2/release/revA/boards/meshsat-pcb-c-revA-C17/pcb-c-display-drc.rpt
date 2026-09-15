@@ -1,8 +1,8 @@
 ** Drc report for pcb-c-display.kicad_pcb **
-** Created on 2026-09-15T02:37:08+0000 **
+** Created on 2026-09-15T02:43:22+0000 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 48 DRC violations **
+** Found 50 DRC violations **
 [starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
     Local override; error
     @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
@@ -17,58 +17,66 @@
     @(424.0900 mm, 290.7400 mm): Pad 2 [GND] of C13 on B.Cu
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(275.4400 mm, 312.0800 mm): Segment of D12 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(281.4400 mm, 312.0800 mm): Segment of D13 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
-    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(287.4400 mm, 312.0800 mm): Segment of D14 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
-    @(293.4400 mm, 312.0800 mm): Segment of D15 on F.Silkscreen
-[silk_overlap]: Silkscreen overlap
-    Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(299.4400 mm, 312.0800 mm): Segment of D16 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
 [silk_overlap]: Silkscreen overlap
     Rule: board setup constraints silk; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
     @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(148.0000 mm, 101.0000 mm): PCB text 'LEFT: SOS, EMCON, ZEROIZE, LIGHT' on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
-    @(297.0000 mm, 312.0000 mm): PCB text 'C7 BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
 [silk_over_copper]: Silkscreen clipped by solder mask
     Local override; warning
     @(446.0000 mm, 101.0000 mm): PCB text 'RIGHT: MAIN, PI, TEST, status LEDs' on F.Silkscreen
