@@ -169,12 +169,12 @@ def ensure(lib, name):
 # only a real conversion, a percent followed by its flags and a type letter.
 _UNFORMATTED = __import__("re").compile(r"%[-+#0]*[0-9]*(?:\.[0-9]+)?[diouxXeEfFgGcrs]")
 
-def part(ref, lib, sym, value, fp, nets, lcsc=""):
+def part(ref, lib, sym, value, fp, nets, lcsc="", in_bom=True):
     if any(p["ref"] == ref for p in P): raise SystemExit("duplicate reference " + ref)
     _m = _UNFORMATTED.search(str(value))
     if _m: raise SystemExit("part %s: its value carries an unformatted placeholder %r and that string reaches the "
                             "silk, the schematic and the BOM: %r" % (ref, _m.group(0), value))
-    P.append(dict(ref=ref, lib=lib, sym=sym, value=value, fp=FP.get(fp, fp), nets={str(k): v for k, v in nets.items()}, lcsc=lcsc))
+    P.append(dict(ref=ref, lib=lib, sym=sym, value=value, fp=FP.get(fp, fp), nets={str(k): v for k, v in nets.items()}, lcsc=lcsc, in_bom=in_bom))
 
 def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
     part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)
@@ -215,10 +215,10 @@ def emit_pwr_flag(p, x, y):
         lib, nm2 = POWER[net]; place_symbol(lib, nm2, "#PWR%03d" % pf_n[0], net, "", x, y + STUB); pf_n[0] += 1
     else: label(net, x, y + STUB, 270)
 
-def place_symbol(lib, name, ref, value, fp, x, y, lcsc="", hide_props=False):
+def place_symbol(lib, name, ref, value, fp, x, y, lcsc="", hide_props=False, in_bom=True):
     sym = ensure(lib, name); pins = pins_of(sym); x0, x1, y0, y1 = extents(sym)
     s = '(symbol (lib_id %s) (at %.2f %.2f 0) (unit 1) (exclude_from_sim no) (in_bom %s) (on_board %s) (dnp no) (fields_autoplaced yes) (uuid "%s")\n' % (
-        q(lib + ":" + name), x, y, "no" if lib == "power" or name in ("TestPoint",) else "yes", "no" if lib == "power" else "yes", U())
+        q(lib + ":" + name), x, y, "no" if lib == "power" or name in ("TestPoint",) or not in_bom else "yes", "no" if lib == "power" else "yes", U())
     def prop(k, v, px, py, hide): return '\t(property %s %s (at %.2f %.2f 0) (effects (font (size 1.27 1.27)) (justify left)%s))\n' % (q(k), q(v), px, py, " (hide yes)" if hide else "")
     s += prop("Reference", ref, x + x1 + 1.27, y - y1 - 1.27, hide_props); s += prop("Value", value, x + x1 + 1.27, y - y1 + 1.27, hide_props)
     s += prop("Footprint", fp, x, y, True); s += prop("Datasheet", "", x, y, True); s += prop("Description", "", x, y, True)
@@ -236,7 +236,7 @@ def label(net, x, y, rot):
 def text(t, x, y, size=2.0): out.append('(text %s (exclude_from_sim no) (at %.2f %.2f 0) (effects (font (size %.2f %.2f) bold) (justify left bottom)) (uuid "%s"))\n' % (q(t), x, y, size, size, U()))
 
 def emit_part(p, x, y):
-    pins = place_symbol(p["lib"], p["sym"], p["ref"], p["value"], p["fp"], x, y, p["lcsc"]); seen = set()
+    pins = place_symbol(p["lib"], p["sym"], p["ref"], p["value"], p["fp"], x, y, p["lcsc"], in_bom=p.get("in_bom", True)); seen = set()
     for num, nm, px, py, rot in pins:
         sx, sy = x + px, y - py; key = (round(sx, 2), round(sy, 2)); net = p["nets"].get(num)
         if net is None: raise SystemExit("%s pin %s (%s) has no net assignment" % (p["ref"], num, nm))

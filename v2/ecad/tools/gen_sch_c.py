@@ -180,7 +180,9 @@ part("BZ1", "Device", "Buzzer", "IP67 panel-mount sounder, 5 V DC continuous, be
 nfet("Q4", "Q4_G", "GND", "BZ_K"); r("R%d" % rn, "100R", "PWM1", "Q4_G", "R", "C22775"); rn += 1; r("R%d" % rn, "100k", "Q4_G", "GND", "R", "C25803"); rn += 1
 # --- ambient light sensor (right strip, top side, under its own Mentor light guide) and the camera module's mount (its USB lead goes to B16's J_CAM)
 ic("U_LIGHT", 4, "Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10", "VEML", {"1": "SCL", "2": "+3V3", "3": "GND", "4": "SDA"}, "C504893"); c("C38", "100n", "+3V3", "GND")
-for i in (1, 2): part("CAM_H%d" % i, "Mechanical", "MountingHole", "M2 screw of the USB camera module (25 x 25 board, sheet owed) behind the plate's sealed window", "CAMH", {})
+# 15 Sep 2026: a hole is not a BOM line. The library MountingHole footprint is excluded from the position file, so the two
+# camera holes reached the BOM and not the CPL and C17's deliverable was refused for "every BOM designator is in the CPL".
+for i in (1, 2): part("CAM_H%d" % i, "Mechanical", "MountingHole", "M2 screw of the USB camera module (25 x 25 board, sheet owed) behind the plate's sealed window", "CAMH", {}, in_bom=False)
 for i in (1, 2): part("J_HSJ%d" % i, "Mechanical", "MountingHole", "U-174/U headset jack %d (Amphenol Nexus class, drawing owed): 17 mm hole through the backer, bushing nut below; its five leads run to D8 J_HS%d" % (i, i), "HSJ", {})
 # --- chassis bond: the eight standoff screws through GND ring pads (MIL-STD-461 bonding of the aluminium plate)
 for i in range(1, 9): part("H%d" % i, "Mechanical", "MountingHole_Pad", "M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate", "MHPAD", {"1": "GND"})

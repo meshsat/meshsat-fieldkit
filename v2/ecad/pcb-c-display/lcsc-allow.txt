@@ -14,4 +14,3 @@ toggle DPDT ON-ON-ON            # the lighting toggle, a panel body wired to the
 ATNR4010100MT    # Abracon boost inductor, not at JLCPCB, route in tools/jlc-handfit.txt
 Floyd Bell MC-09-530-Q          # the IP67 panel-mount sounder, a plate part with flying leads to the board, route in tools/jlc-handfit.txt (15 Sep 2026)
 U-174/U headset jack            # the two Amphenol Nexus jacks, 17 mm panel holes through the backer, leads to D's J_HS1 and J_HS2, route in tools/jlc-handfit.txt (15 Sep 2026)
-M2 screw of the USB camera module   # two plated M2 holes for the camera module's screws: copper on our own board, no part is placed (15 Sep 2026)

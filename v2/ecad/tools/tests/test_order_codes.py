@@ -368,3 +368,15 @@ def t_a_maker_and_a_part_number_inside_parentheses_name_the_part():
         got = jc.intended_part(comment)
         if got != want:
             raise AssertionError("%s: asked for %r, the tool says %r (%s)" % (why, want, got, comment[:60]))
+
+
+def t_a_hole_is_not_a_bom_line():
+    """C17's deliverable was refused for 'every BOM designator is in the CPL (142 of 144; missing CAM_H1, CAM_H2)': the
+    two camera holes are Mechanical:MountingHole symbols on the library MountingHole footprint, which KiCad keeps out
+    of the position file, so they reached the BOM and not the CPL (15 Sep 2026). A mechanical hole declares in_bom=False."""
+    import re
+    src = open(os.path.join(TOOLS, "gen_sch_c.py")).read()
+    line = next(l for l in src.split("\n") if 'part("CAM_H%d"' in l)
+    assert "in_bom=False" in line, "the camera holes still reach the BOM"
+    k = open(os.path.join(TOOLS, "kisch.py")).read()
+    assert 'in_bom=p.get("in_bom", True)' in k and "or not in_bom else" in k, "kisch does not carry a part's in_bom flag into the symbol"
