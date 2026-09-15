@@ -4,6 +4,24 @@ Written 11 September 2026. **This document exists because the plan it replaces l
 `~/.claude/plans/` and was overwritten three times.** A plan an owner ruling depends on belongs in the
 repository. `CLAUDE.md` points here now, not at a filename that gets recycled.
 
+## State, 15 September 2026 22:00 CEST (regenerated from the record; the sections below are the 11 September programme as written)
+
+- **Boards**: P4, D11, E5, E9, C17 pass the final gate; A35 routes; B19 routes for a deliverable under the coupled-fraction
+  ruling (decision 24). The two return-current rules of 15 September (a plane under every signal net, a ground via beside
+  every signal via) are gates now, measured on every board first: C, D and E fail the first by their four-layer stack, which
+  is **decision 27** (E gets an In2 ground fill, D is measured with In2 as a plane, C needs a ruling).
+- **The supervisor**: one profile per letter (`routeflow/<letter>.json`, the phase from `boards/<letter>.json` or `--phase`;
+  `ROUTEFLOW-PHASES.md` keeps the 34 phase notes); one `guarded` function for every copper-editing pass of the finish; the
+  finish says what it cost; `drc.sh` keeps a cost line per call.
+- **The decisions**: the final gate fails closed on a seven-board manifest, quote folders and open certification (an
+  executed truth table); the agent loop is complete or nothing, the arms' verdict is the verdict and the review a count;
+  evidence is scoped to its cohort; artefacts live under a cycle directory; six-type benchmark rows are quarantined.
+- **The pre-router**: twelve measured-loser knobs and their branches deleted (2,790 to 2,628 lines,
+  `PAIR-PREROUTER-KNOBS.md` cites each section); the placement run shape is pointed at B (`agent/templates/b-place.json`).
+- **Still owed** (red teams of 15 September, `RED-TEAM-2026-09-15-agentic.md` and `-round4.md`): the experiment store
+  with a cycle identity and a stage-result envelope, the pre-router split at measurable boundaries, the rail fanout before
+  the route (a measurement: the record says a band cannot be a DSN plane without cutting its own neck).
+
 ## Why
 
 Two engineering red teams reviewed the code pack on 10 September and the answer pack the same evening.
