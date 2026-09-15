@@ -174,6 +174,16 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
     grep -E "pair_preroute:" out/pair_preroute.log | grep -v "map " | tail -"$PTAIL"
   fi
   echo "pair pre-router: $(grep -h "pairs laid," out/pair_preroute*.log | sed 's/^pair_preroute: //' | paste -sd'; ')"
+  # 15 September 2026: the pair copper is put to the DRC HERE, on every board, and a pair the DRC refuses comes off
+  # whole before the fanout and the escapes are laid around it (pair_prune.py). B19's pre-route board carried 64 hard
+  # items of the pre-router's own making and would have routed six hours towards a refused finish. A pruned pair
+  # holds a board that declares no coupled fraction, exactly as an unlaid one does.
+  ../tools/drc.sh $N.kicad_pcb out/$N-pairs-drc.json >/dev/null 2>&1 || true
+  if [ -s out/$N-pairs-drc.json ]; then
+    python3 ../tools/hardset.py out/$N-pairs-drc.json pre --examples 4 --label 'pre-route DRC on the pair copper' | sed 's/^hardset:/pre-route DRC (pair copper):/' || true
+    python3 ../tools/pair_prune.py $N.kicad_pcb out/$N-pairs-drc.json 2>&1 | grep -E "pair_prune|Traceback|Error"; PRUNE=${PIPESTATUS[0]}
+    [ "$PRUNE" -ne 2 ] || [ "$PP" -ne 0 ] || PP=2
+  fi
   # 12 September 2026: the DRC before the block, not after it. A board that fails the pair gate stopped here, so
   # the copper the pre-router DID lay was never put to a DRC at all: B19 has laid pairs since 9 September and has
   # never once been asked whether they are legal, which is how A's shorting fan survived a night. The gate still
@@ -227,7 +237,9 @@ fi
 
 env $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?
 grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
-[ "$PA" -eq 0 ] || [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || block "placement predictor (out/place_audit.log, out/place_audit.png)"
+# 15 September 2026: a board may declare the predictor's verdict as a report rather than a block (B19: its nine predicted
+# collisions are the fine-pitch stations of 32.146, the router resolves or leaves them and the routed-board gate decides).
+[ "$PA" -eq 0 ] || [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off)" ] || block "placement predictor (out/place_audit.log, out/place_audit.png)"
 
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json

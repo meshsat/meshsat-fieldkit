@@ -586,6 +586,15 @@
    "stage": "place",
    "type": "flag",
    "why": "A through-hole pad of a part the packer has just placed becomes an obstacle to the regions packed after it, on either side. Measured twice and it has never paid: as a static list built before the packing it took B19's placed board from 6 hard violations to 107 (12 September 2026, on regions that overflowed by up to 64 mm), and inside the packing loop with the regions sized it changed nothing at all, 12 before and 12 after (13 September). The reason the second run was null is the packing ORDER: IOCA packs before WMIDS, so J_54V does not exist when the parts it collides with are placed. It stays for a board that packs the other way round."
+  },
+  "PAIR_GAP_CUSHION": {
+   "category": "experiment",
+   "comparable": true,
+   "default": "0.025",
+   "description": "how far above the clearance the DRC will apply both legs' gap is laid, outer and inner layer alike; the arcs of an offset polyline close a chord's gap by a few micrometres",
+   "stage": "pair",
+   "type": "number",
+   "unit": "mm"
   }
  }
 }
