@@ -7,9 +7,9 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**42 of 56 rules carry a gap.**
+**41 of 56 rules carry a gap.**
 
-## absent (17)
+## absent (16)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
@@ -70,11 +70,6 @@ and I2C only) and the shore-inhibit and kill lines are not checked for fail-safe
 **SGN-001 every applicable rule has a result** (BLOCKER, OPEN)  
 being built by this audit; until it runs, no board has a computed per-rule result  
 *Close it by* rules_status.py with its truth table. Owner **SESSION**. Effort P50 6h, P80 14h.
-
-**SGN-002 a prototype-only unknown is named** (MUST_JUSTIFY, OPEN)  
-thermal, RF self-compatibility and ingress are named in the record as prototype-only; they are not a list
-anything reads  
-*Close it by* generate the prototype-only list from the registry's verification_phase field. Owner **SESSION**, after SGN-001. Effort P50 2h, P80 4h.
 
 **SI-001 transmission-line classification** (MUST_JUSTIFY, OPEN)  
 no net in this project has ever been classified by edge rate; every impedance and return decision rests on
@@ -227,8 +222,9 @@ layer_judge measures what the router did, not what the board needs, and says so;
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-## covered (14)
+## covered (15)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RF-002, RTE-002, SCH-001, SCH-002, SCH-003, SUP-001
+DOC-001, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RF-002, RTE-002, SCH-001, SCH-002, SCH-003, SGN-002,
+SUP-001
 

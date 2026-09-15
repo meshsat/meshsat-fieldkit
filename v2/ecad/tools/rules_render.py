@@ -13,6 +13,7 @@ Documents:
   v2/docs/PCB-RULE-COVERAGE.md     rule -> implementation, verification, fixtures, maturity
   v2/docs/PCB-GAP-REGISTER.md      the gaps, by category, with remediation, owner and effort
   v2/docs/PCB-ETA.md               the computed ETA from those remediations and the measured run history
+  v2/docs/PCB-PROTOTYPE-UNKNOWNS.md what only hardware can decide, so it never reads as a pass
   v2/docs/PCB-RULE-STATUS-<L>.md   per board, from out/rule-audit/<L>.json when it exists
 """
 import os, sys, json, glob
@@ -158,6 +159,29 @@ def board_doc(letter, st, reg, cov):
     return "\n".join(L) + "\n"
 
 
+def prototype_doc(reg, cov):
+    """SGN-002: the properties that cannot be decided before hardware exists, generated from the registry so
+    the list cannot quietly shrink. A prototype-only unknown that is not named reads exactly like a pass."""
+    L = [HEAD, "# Prototype-only unknowns\n",
+         _wrap("Generated from the registry: every rule verified at the prototype, or whose verification needs a "
+               "physical measurement, together with what will decide it. Nothing on this page can be closed by "
+               "any amount of work on the boards; each one needs hardware that does not exist yet."), "",
+         "| rule | what is unknown | what decides it | owner |", "|---|---|---|---|"]
+    n = 0
+    for r in reg["rules"]:
+        meths = r["verification_method"] if isinstance(r["verification_method"], list) else [r["verification_method"]]
+        if r["verification_phase"] != "PROTOTYPE" and "PROTOTYPE_MEASUREMENT" not in meths: continue
+        n += 1
+        c = cov.get(r["id"]) or {}
+        rem = (c.get("remediation") or {}).get("action", "")
+        L.append("| %s %s | %s | %s | %s |" % (r["id"], r["short_name"], " ".join(r["failure_mode"].split())[:110],
+                                               " ".join(str(rem).split())[:110] or "a measurement on the built board", r["owner"]))
+    L += ["", _wrap("%d rule(s) of %d wait on hardware. Nothing has been fabricated or powered, so each of these "
+                    "is UNKNOWN rather than passing or failing, and the readiness state says so."
+                    % (n, len(reg["rules"]))), ""]
+    return "\n".join(L) + "\n"
+
+
 def eta_doc():
     import rules_eta as E
     m = E.model(); items = E.open_items()
@@ -194,7 +218,8 @@ def render(out_dir=None):
     files = {os.path.join(docs, "PCB-GOLDEN-RULES.md"): rulebook(reg, cov),
              os.path.join(docs, "PCB-RULE-COVERAGE.md"): coverage_doc(reg, cov),
              os.path.join(docs, "PCB-GAP-REGISTER.md"): gap_register(reg, cov),
-             os.path.join(docs, "PCB-ETA.md"): eta_doc()}
+             os.path.join(docs, "PCB-ETA.md"): eta_doc(),
+             os.path.join(docs, "PCB-PROTOTYPE-UNKNOWNS.md"): prototype_doc(reg, cov)}
     audit = os.path.join(os.path.dirname(HERE), "out", "rule-audit")
     for f in sorted(glob.glob(os.path.join(audit, "*.json"))):
         letter = os.path.basename(f)[:-5]

@@ -1696,8 +1696,8 @@ decide it, rather than being left to look like a pass.
 | risk | DOCUMENTATION, SAFETY, EMC, THERMAL |
 | verified by | MANUAL_REVIEW at RELEASE_PACKAGE (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | NONE_YET |
-| maturity | **OPEN** |
+| implementation | rules_render.py prototype_doc |
+| maturity | **VERIFIED_MANUALLY** |
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1707,6 +1707,7 @@ decide it, rather than being left to look like a pass.
 
 **If violated** A prototype is built without the measurements that justify building it being planned.
 
-**Today** thermal, RF self-compatibility and ingress are named in the record as prototype-only; they are not a list
-anything reads
+**Today** 16 September 2026: v2/docs/PCB-PROTOTYPE-UNKNOWNS.md is generated from the registry's verification phase and
+methods, so the list cannot quietly shrink; rules_render --check refuses a hand-edited copy and the suite
+runs it
 

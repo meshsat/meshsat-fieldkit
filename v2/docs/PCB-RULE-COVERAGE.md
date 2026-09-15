@@ -56,7 +56,7 @@ appears in the gap register.
 | SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | check_contracts.py -> check_contracts | tests/test_gate_fixtures.py | **ENFORCED** |
 | SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | check_contracts.py -> check_contracts |  | **OPEN** |
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | NONE_YET | rules_status.py -> rules_status |  | **OPEN** |
-| SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
+| SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | rules_render.py prototype_doc | rules_render.py -> none | tests/test_rule_gate_mapping.py | **VERIFIED_MANUALLY** |
 | SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
 | STK-001 | STACKUP | BLOCKER | stackup_write.py | impedance_check.py -> impedance_check |  | **SOURCE_UNVERIFIED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
@@ -72,7 +72,8 @@ appears in the gap register.
 |---|---|
 | ENFORCED | 19 |
 | GENERATED_ONLY | 10 |
+| VERIFIED_MANUALLY | 1 |
 | DOCUMENTED_ONLY | 3 |
-| OPEN | 17 |
+| OPEN | 16 |
 | SOURCE_UNVERIFIED | 6 |
 | OWNER_DECISION_REQUIRED | 1 |
