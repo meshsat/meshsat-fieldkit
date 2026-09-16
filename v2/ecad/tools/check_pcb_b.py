@@ -72,8 +72,22 @@ if placed:
             if nm: bynet.setdefault(nm, set()).add(f.GetReference())
     for s in (1, 2, 3):
         rb = "U3%dB" % (s - 1); sw = "U%d01" % s; hub = "U%d02" % s
-        for nm in ("PCIE%d_TX_P" % s, "PCIE%d_TX_N" % s, "PCIE%d_RX_P" % s, "PCIE%d_RX_N" % s, "PCIE%d_CLK_P" % s, "PCIE%d_CLK_N" % s, "PCIE%d_nRST" % s):
+        # THE RECEIVE LINES RUN THROUGH A COUPLING CAPACITOR SINCE 16 SEPTEMBER 2026, so the switch is no longer
+        # ON those two nets and this check has to follow the path rather than assert a membership that the
+        # CM5 datasheet forbids. Section 2.3.1 asks for 220 nF in series in every PCIe RECEIVE line close to the
+        # driving source, which is the switch; section 2.3 says the module carries its own on the transmit side.
+        # The path is therefore U<slot>01 -> PCIE<slot>_RXSW_x -> C<slot>5x -> PCIE<slot>_RX_x -> U3<slot-1>B,
+        # and a check that still demanded the switch on the receive net refused board B's pre-route at 04:27
+        # with four failures that were the gate describing the design before the capacitors.
+        for nm in ("PCIE%d_TX_P" % s, "PCIE%d_TX_N" % s, "PCIE%d_CLK_P" % s, "PCIE%d_CLK_N" % s, "PCIE%d_nRST" % s):
             check(rb in bynet.get(nm, set()) and sw in bynet.get(nm, set()), "%s reaches %s and the PCIe switch %s (got %s)" % (nm, rb, sw, sorted(bynet.get(nm, set()))))
+        for half in ("P", "N"):
+            rx = "PCIE%d_RX_%s" % (s, half); sw_side = "PCIE%d_RXSW_%s" % (s, half)
+            on_rx = bynet.get(rx, set()); on_sw = bynet.get(sw_side, set())
+            cap = sorted(on_rx & on_sw)
+            check(rb in on_rx and sw in on_sw and len(cap) == 1,
+                  "%s reaches %s through exactly one series coupling capacitor from the switch %s (module side %s, "
+                  "switch side %s, in series %s)" % (rx, rb, sw, sorted(on_rx), sorted(on_sw), cap))
         # 9 September 2026 (ARCH-PCB-B-IOHA): the module no longer faces its hub directly. Port 0 goes to its OWN bank's
         # pair of muxes and port 1 to the bank that adopts this slot, and the bank's upstream runs from the muxes to the
         # hub, so the three checks below follow that path rather than the direct one they used to.
