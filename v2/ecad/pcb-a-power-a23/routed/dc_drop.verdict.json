@@ -28,9 +28,9 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "288dee48fb9918aa"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T04:40:45Z",
+ "ts": "2026-09-16T05:13:58Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

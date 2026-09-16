@@ -4,7 +4,8 @@
  "counts": {
   "fail": 12,
   "missing_boards": 0,
-  "pass": 42
+  "pass": 42,
+  "rails_unsplit": 0
  },
  "denominator": 54,
  "evidence": [
@@ -38,9 +39,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "288dee48fb9918aa"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T04:40:17Z",
+ "ts": "2026-09-16T05:17:34Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

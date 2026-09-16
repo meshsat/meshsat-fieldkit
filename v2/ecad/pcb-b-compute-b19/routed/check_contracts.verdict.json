@@ -2,25 +2,13 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 12,
+  "fail": 0,
   "missing_boards": 0,
-  "pass": 42
+  "pass": 60,
+  "rails_unsplit": 0
  },
- "denominator": 54,
- "evidence": [
-  "B: PCIE1_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE1_RX_P enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE1_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE1_RX_N enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE2_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE2_RX_P enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE2_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE2_RX_N enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE3_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE3_RX_P enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE3_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE3_RX_N enters one IC only, so the capacitor is in series and not a stub"
- ],
+ "denominator": 60,
+ "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E"
  },
@@ -38,9 +26,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T03:52:26Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T05:15:42Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

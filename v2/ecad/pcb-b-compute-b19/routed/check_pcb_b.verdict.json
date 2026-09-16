@@ -2,13 +2,19 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 1,
+  "fail": 7,
   "footprints": 951,
   "intent_items_reported": 0,
-  "pass": 2142
+  "pass": 2136
  },
  "denominator": 2143,
  "evidence": [
+  "PCIE1_RX_P reaches U30B through exactly one series coupling capacitor from the switch U101 (module side ['U101', 'U30B'], switch side [], in series [])",
+  "PCIE1_RX_N reaches U30B through exactly one series coupling capacitor from the switch U101 (module side ['U101', 'U30B'], switch side [], in series [])",
+  "PCIE2_RX_P reaches U31B through exactly one series coupling capacitor from the switch U201 (module side ['U201', 'U31B'], switch side [], in series [])",
+  "PCIE2_RX_N reaches U31B through exactly one series coupling capacitor from the switch U201 (module side ['U201', 'U31B'], switch side [], in series [])",
+  "PCIE3_RX_P reaches U32B through exactly one series coupling capacitor from the switch U301 (module side ['U301', 'U32B'], switch side [], in series [])",
+  "PCIE3_RX_N reaches U32B through exactly one series coupling capacitor from the switch U301 (module side ['U301', 'U32B'], switch side [], in series [])",
   "pair PCIE3_RCLK0 has one leg routed and one not (P 0.00 mm, N 1.04 mm)"
  ],
  "inputs": {
@@ -28,9 +34,9 @@
  "tool": "check_pcb_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T03:51:26Z",
+ "ts": "2026-09-16T05:14:40Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

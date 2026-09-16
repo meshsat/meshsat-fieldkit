@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "declared_dissipators": 0,
+  "efficiency_undeclared": 4,
+  "no_thermal_path": 0,
+  "rails": 4,
+  "watts_lost_estimated": 0.0,
+  "watts_out": 16.7
+ },
+ "denominator": 4,
+ "evidence": [
+  "+3V3: 0.3 W out of J_HARN1 and no efficiency declared, so its loss is unknown",
+  "+3V3_D8: 0.8 W out of U1 and no efficiency declared, so its loss is unknown",
+  "+5V_D8: 10.0 W out of J_PWR1 and no efficiency declared, so its loss is unknown",
+  "+5V_SA: 5.5 W out of FB1 and no efficiency declared, so its loss is unknown"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-d-aprs.kicad_pcb",
+   "sha256_16": "929bf82d2bf6eed4"
+  }
+ },
+ "note": "4 rail(s) carry no declared efficiency, so this board's loss is a floor and not an estimate",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "THM-001"
+ ],
+ "tool": "thermal",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "465a81f6fa3c600d"
+ },
+ "ts": "2026-09-16T05:16:49Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}
