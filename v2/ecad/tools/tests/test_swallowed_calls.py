@@ -32,3 +32,28 @@ def t_the_rule_reads_the_comment_token_not_the_line():
     src = 'r("R1", "10k", "A", "B"); r("R2", "10k", "C", "D")   # two parts, one line\n'
     toks = [t for t in tokenize.generate_tokens(io.StringIO(src).readline) if t.type == tokenize.COMMENT]
     assert toks and not re.search(r";\s*[A-Za-z_][A-Za-z_0-9.]*\(", toks[0].string)
+
+
+def t_every_part_the_b_schematic_makes_has_a_seat_in_the_b_placement():
+    """A part added to a schematic needs a seat in the same change (MESHSAT-862, 16 September 2026).
+
+    The six PCIe receive coupling capacitors the CM5 datasheet requires went into gen_sch_b.py at 02:40 and
+    nowhere into gen_pcb_b3.py, so the placement generator refused the board with "unplaced: C151, C152, C251,
+    C252, C351, C352" and board B routed for nine and a half hours on the design without them. The rule is
+    cheap and it is specific: the references the B schematic creates for those capacitors must appear in the B
+    placement's region table."""
+    import os, re
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sch = open(os.path.join(tools, "gen_sch_b.py"), encoding="utf-8").read()
+    plc = open(os.path.join(tools, "gen_pcb_b3.py"), encoding="utf-8").read()
+    # the schematic makes them as C(51) and C(52) inside the per-slot loop
+    made = set(re.findall(r'c\(C\((\d+)\),\s*"220n[^"]*PCIe', sch))
+    assert made, "the PCIe coupling capacitors are gone from the B schematic"
+    # the placement names them either singly, C(s, k), or by range, Cs(s, a, b), and a range covers its ends
+    seated = set()
+    for a, bnd in re.findall(r"Cs\((?:s|1|2|3),\s*(\d+),\s*(\d+)\)", plc):
+        seated |= {str(n) for n in range(int(a), int(bnd) + 1)}
+    seated |= set(re.findall(r"C\((?:s|1|2|3),\s*(\d+)\)", plc))
+    for k in sorted(made):
+        assert k in seated, \
+            "the B placement has no region for the capacitor the schematic makes as C(%s)" % k
