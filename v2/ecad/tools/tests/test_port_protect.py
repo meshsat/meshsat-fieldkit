@@ -183,3 +183,22 @@ def t_an_empty_declaration_is_an_answer_and_a_missing_one_is_a_question():
     d = json.load(open(tbl, encoding="utf-8"))
     assert "external_ports" in d and d["external_ports"] == [], "board P no longer declares its ports"
     assert len((d.get("_external_ports_why") or "")) > 80, "board P's empty declaration carries no reason"
+
+
+def t_the_rule_blocks_what_ships_and_not_what_routes():
+    """Board E's route was refused for an owner decision that a route cannot change (16 September 2026).
+
+    Four of E's conductors meet their clamp only through an active part, which is decision 31 and is open with
+    the owner. TRN-001 is a SCHEMATIC property: the netlist decides it, a routing pass cannot make it better or
+    worse, and stopping the route for it turns an open decision into a stop on unrelated work. The pre-route
+    chain reports it; the finish blocks on it, which is the last gate before a board is cut."""
+    import os
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    full = open(os.path.join(tools, "full.sh"), encoding="utf-8").read()
+    fin = open(os.path.join(tools, "finish.sh"), encoding="utf-8").read()
+    i = full.index("port_protect.py")
+    seg = full[i:i + 900]
+    assert "block " not in seg.split("\n")[1], "the pre-route chain still blocks on the port rule"
+    assert "does not block the route" in seg, "the pre-route chain does not say what it is doing"
+    assert "port_protect.py" in fin and "PORTS a conductor leaves the case" in fin, \
+        "the finish does not block on TRN-001, so moving it out of the pre-route weakened the rule"

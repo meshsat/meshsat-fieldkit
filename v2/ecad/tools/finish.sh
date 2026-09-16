@@ -225,6 +225,15 @@ python3 $T/check_pcb_$L.py $N.kicad_pcb > out/gate-$N.log 2>&1; GATE=$?; grep -E
 # it is mapped to, so board D's single open item, one signal via short of a ground via, failed the MECHANICAL
 # rule on six boards. The gate reports them now and these five decide, so the finish stops in exactly the same
 # places it did and the readiness names the rule that actually failed.
+# RULE TRN-001 BLOCKS THE DELIVERABLE (16 September 2026). Every conductor that leaves the enclosure is
+# followed from its connector to a clamp; the netlist is where that is decided, and this is the last gate
+# before a board is cut. The pre-route chain reports it and does not stop for it, because a route cannot
+# change it and owner decision 31 is open.
+if [ -s out/$N.net ]; then
+  python3 $T/port_protect.py out/$N.net > out/port_protect-finish.log 2>&1; PPF=$?
+  grep -aE 'port_protect:|FAIL' out/port_protect-finish.log | head -6
+  [ "$PPF" -eq 1 ] && stop "PORTS a conductor leaves the case and meets a chip with nothing between (rule TRN-001)" "out/port_protect-finish.log"
+fi
 for _iv in intent_return_path intent_return_via intent_decoupling intent_rails intent_other; do
   [ -f "out/$_iv.verdict.json" ] || continue
   python3 $T/verdict.py read "out/$_iv.verdict.json" > out/intent-verdict.txt 2>&1 || \
