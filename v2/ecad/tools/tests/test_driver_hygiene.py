@@ -859,3 +859,33 @@ def t_racing_attempts_differ_in_something_the_router_reads():
     assert 'FR_RULES="$PWD/out/par/$K/variant.rules"' in s, "the rules file is not handed to the attempt that owns it"
     # the old form must still work: a bare pass count takes the caller's own rules
     assert 'if [ "$REST" = "$V" ]' in s, "a bare pass count is no longer accepted"
+
+
+def t_the_sweep_judges_the_folder_of_the_declared_phase_and_not_the_first_one_a_glob_returns():
+    """16 September 2026. `ls <boards>/*-E*/pcb-e1-dock-bom.csv | head -1` returns the folder cut on
+    4 September, because E4 sorts before E9: board E's order codes were judged against a bill of materials
+    eleven days and five phases old, and so was every other board's, each reading its own oldest folder.
+
+    This is the "a tool picks a board by globbing a directory" rule of 11 September, in a tool written after
+    it. The phase a board is cutting is declared in boards/<letter>.json and nowhere else."""
+    src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
+    assert "boards/$L.json" in src, "the sweep does not read the declared phase for the order-code gate"
+    lines = [l for l in src.splitlines() if l.strip().startswith("_BOM=") or "-bom.csv" in l]
+    assert lines, "no line in the sweep resolves a bill of materials"
+    for l in lines:
+        if "-bom.csv" not in l: continue
+        assert "$_PHASE" in l, "a bill of materials is resolved without the declared phase: %s" % l.strip()
+
+
+def t_the_sweep_removes_the_verdicts_of_the_gates_it_is_about_to_run():
+    """A gate that cannot run must leave NO verdict, not the previous run's. The sweep copies what it produced
+    into <phase>/routed/, and an old answer taken on the SAME board passes the freshness check, so it reads as
+    this sweep's result. Board E's order-code FAIL of 16 September was exactly that, carried in from a sweep in
+    another tree."""
+    src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
+    assert 'rm -f "$P/routed/$_g.verdict.json"' in src, "the sweep keeps stale verdicts for gates it runs"
+    i = src.index('rm -f "$P/routed/$_g.verdict.json"')
+    assert i < src.index("--- board gate") if "--- board gate" in src else True, \
+        "the removal must happen before the gates run"
+    for g in ("derate", "lcsc_fill", "check_contracts", "place_audit"):
+        assert g in src[src.index("for _g in"):i], "%s is not in the list the sweep clears" % g

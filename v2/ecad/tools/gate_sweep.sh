@@ -44,6 +44,18 @@ P=$E/$PD
 [ -f "$P/$N.kicad_pcb" ] || { echo "gate_sweep: no board $P/$N.kicad_pcb"; exit 2; }
 S=$P/out/sweep
 rm -rf $S; mkdir -p $S/out
+# A GATE THIS SWEEP MEANS TO RUN AND CANNOT MUST LEAVE NO VERDICT (16 September 2026). The sweep copies the
+# verdicts it produced into <phase>/routed/, and a gate that did not run this time left the PREVIOUS run's
+# answer sitting there, taken on the same board, so the freshness check could not see it either. Board E's
+# order-code rule read FAIL for exactly that reason, from a sweep in another tree. The verdicts of the gates
+# below are removed first: absence is INCONCLUSIVE, which is the honest reading of "this sweep did not judge
+# it", and every other producer's evidence in that directory is left alone.
+for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
+          intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
+          return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
+          edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill; do
+  rm -f "$P/routed/$_g.verdict.json"
+done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
 cp $P/$N.kicad_pcb $P/$N.kicad_pro $S/ 2>/dev/null
 [ -f $P/$N.kicad_prl ] && cp $P/$N.kicad_prl $S/
@@ -101,10 +113,18 @@ run "cross-board contracts" python3 $T/check_contracts.py "$E"
 # read-only is this tool's whole property, and a producer that writes only into its own copy is still a
 # producer. Where the deliverable folder holds a BOM, it is judged; where it does not, the rule stays
 # INCONCLUSIVE, which is the honest reading of "nobody has exported one".
-_BOM=$(ls "$E/../release/revA/boards/"*"-$(echo $L | tr a-z A-Z)"*/$N-bom.csv 2>/dev/null | head -1)
-[ -z "$_BOM" ] && _BOM=$(ls "$E/../release/revA/boards/"*/$N-bom.csv 2>/dev/null | head -1)
+# AND IT READS THE FOLDER OF THE PHASE THIS BOARD DECLARES, not the first one a glob returns (16 September
+# 2026). `ls <boards>/*-E*/...  | head -1` returns meshsat-pcb-e-revA-E4, the folder cut on 4 September, so
+# board E's order codes were being judged against a bill of materials eleven days and five phases old: eleven
+# blank codes that the board being built does not have. Every board has three or four folders, so every board
+# was reading its oldest. A folder for a phase the tree is not cutting is not evidence about the board, in
+# either direction, so where the declared phase has no folder the rule stays INCONCLUSIVE and says why.
+_PHASE=$(python3 -c "import json,sys;print((json.load(open(sys.argv[1])).get('phase') or '').upper())" "$T/boards/$L.json" 2>/dev/null)
+_BOM=""
+if [ -n "$_PHASE" ]; then _BOM=$(ls "$E/../release/revA/boards/"*"-$_PHASE"/$N-bom.csv 2>/dev/null | head -1); fi
 if [ -n "$_BOM" ]; then run "order codes" python3 $T/lcsc_fill.py "$_BOM"
-else echo "--- order codes"; echo "gate_sweep: no BOM in any deliverable folder for $N, so the order-code rule is not judged here"; fi
+elif [ -n "$_PHASE" ]; then echo "--- order codes"; echo "gate_sweep: no deliverable folder for $N at its declared phase $_PHASE (the folders that exist are for earlier phases), so the order-code rule is not judged here"
+else echo "--- order codes"; echo "gate_sweep: $L declares no phase, so there is no folder to judge"; fi
 # return_gaps.py is a REPORT and not a gate: it says where rule 1's uncovered millimetres are, which is what a
 # person needs to fix them, while intent_checks item 1 is what decides. Its output is kept as a log beside the
 # verdicts, never as evidence.
