@@ -28,14 +28,31 @@ import intent, signalnets
 
 
 def planes(b, frac):
-    """{layer: net} for every zone filled over `frac` of the board: a reference is a reference whatever its net."""
+    """{layer: [(net, zone)]} for every zone filled over `frac` of the board: a reference is a reference whatever
+    its net. The ZONE travels with the net because a layer can carry several pours and the one that matters is
+    the one UNDER THE TRANSITION: board A's In2 carries GND and VBAT side by side, and which of them a via
+    references is a question about that via's position, not about the layer."""
     bb = b.GetBoardEdgesBoundingBox(); area = (bb.GetWidth() / 1e6) * (bb.GetHeight() / 1e6) or 1.0
     out = {}
     for z in b.Zones():
         if z.GetIsRuleArea(): continue
         if z.GetFilledArea() / 1e12 < frac * area: continue
-        out.setdefault(z.GetFirstLayer(), set()).add(z.GetNetname().lstrip("/"))
+        out.setdefault(z.GetFirstLayer(), []).append((z.GetNetname().lstrip("/"), z))
     return out
+
+
+def net_at(pl, layer, x, y):
+    """The net of the pour that is actually under (x, y) on `layer`, or None where the fill does not reach."""
+    import pcbnew as _p
+    pt = _p.VECTOR2I(int(x * 1e6), int(y * 1e6))
+    for net, z in pl.get(layer, ()):
+        try:
+            if z.HitTestFilledArea(layer, pt, 0): return net
+        except Exception:
+            try:
+                if z.GetFilledPolysList(layer).Contains(pt): return net
+            except Exception: pass
+    return None
 
 
 def nearest(layer, cu, pl):
@@ -58,7 +75,7 @@ def main(a):
     cu = list(b.GetEnabledLayers().CuStack()); pl = planes(b, frac)
     print("ref_change: %s: %d layer(s) carry a reference plane over %.0f%% of the board: %s"
           % (os.path.basename(path), len(pl), frac * 100,
-             ", ".join("%s=%s" % (b.GetLayerName(L), "/".join(sorted(n))) for L, n in sorted(pl.items()))))
+             ", ".join("%s=%s" % (b.GetLayerName(L), "/".join(sorted(n for n, _z in zs))) for L, zs in sorted(pl.items()))))
     ends = {}
     for t in b.GetTracks():
         if t.GetClass() != "PCB_TRACK": continue
@@ -73,7 +90,9 @@ def main(a):
         attached = ends.get((net, p[0], p[1]), set())
         if len(attached) < 2: unknown += 1; continue
         refs = [nearest(L, cu, pl) for L in attached]
-        nets = [frozenset(n for L in r for n in pl.get(L, ())) for r in refs]
+        # the reference is the pour UNDER THIS VIA, not every pour that shares the layer with it
+        nets = [frozenset(n for L in r for n in ([net_at(pl, L, p[0], p[1])] if net_at(pl, L, p[0], p[1]) else []))
+                for r in refs]
         if not all(nets): unknown += 1; continue
         if len(set(nets)) == 1 and len(set(frozenset(r) for r in refs)) == 1: same += 1; continue
         allnets = set().union(*nets)
