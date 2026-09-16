@@ -39,7 +39,7 @@ appears in the gap register.
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py | **ENFORCED** |
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | NONE_YET | none |  | **DOCUMENTED_ONLY** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
-| PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_checks | tests/test_rail_loads.py | **GENERATED_ONLY** |
+| PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_checks | tests/test_rail_loads.py | **ENFORCED** |
 | PWR-002 | POWER_TREE | MUST_JUSTIFY | gen_sch_a.py, gen_sch_b.py | none |  | **OPEN** |
 | PWR-003 | POWER_TREE | BLOCKER | gen_sch_a.py, gen_sch_e.py, gen_sch_p.py | none |  | **OPEN** |
 | REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
@@ -64,16 +64,17 @@ appears in the gap register.
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | none |  | **OPEN** |
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection devices | none |  | **GENERATED_ONLY** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | gen_sch_*.py test points | none |  | **OPEN** |
-| VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | check_pcb_c.py -> check_pcb_c |  | **GENERATED_ONLY** |
+| VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py, check_pcb_c.py -> via_audit, check_pcb_c | tests/test_board_gates.py | **ENFORCED** |
+| VIA-002 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py -> via_annular | tests/test_board_gates.py | **SOURCE_UNVERIFIED** |
 
 ## Maturity
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 21 |
-| GENERATED_ONLY | 13 |
+| ENFORCED | 23 |
+| GENERATED_ONLY | 11 |
 | VERIFIED_MANUALLY | 1 |
 | DOCUMENTED_ONLY | 2 |
 | OPEN | 13 |
-| SOURCE_UNVERIFIED | 4 |
+| SOURCE_UNVERIFIED | 5 |
 | OWNER_DECISION_REQUIRED | 2 |

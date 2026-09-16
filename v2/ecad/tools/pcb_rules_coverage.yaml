@@ -254,10 +254,26 @@ coverage:
    _tool_why: "two tools, and the second is why: escape_prune removes an escape stub that sits in a hard violation and leaves the pad to the router with only a count printed. On a 0.4 mm receptacle row that pad can end with no via site on any layer, and the routed board looks complete because the router simply never reached it (board A19s SDA pin, 8 September 2026)",
    maturity: ENFORCED, gap_category: NONE, note: "fifteen types, two exemptions, denominators, and a report that cannot be read as a pass"}
 
- VIA-001: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums", verification: {tool: check_pcb_c.py, verdict: check_pcb_c},
-   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
-   note: "one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not checked anywhere, and several boards carry vias in pads",
-   remediation: {action: "a via table per board against the capability record, and the assembly note for vias in pads", owner: SESSION, depends_on: [RTE-001], p50_h: 4, p80_h: 10}}
+ VIA-001: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums",
+   verification: {tool: "via_audit.py, check_pcb_c.py", verdict: "via_audit, check_pcb_c", fixtures: tests/test_board_gates.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: every via on the board is judged against the BOARD'S OWN minimum diameter and drill, which
+     the board carries and the DRC already believes, and the vias that sit inside a pad are counted and named. A via in
+     a pad is NOT a defect here: it is a deliberate technique on exposed pads and fine-pitch escapes, and it carries a
+     fabrication cost (filled and capped) that the order paperwork has to name, so reporting it is how that note gets
+     written. The ANNULAR RING is a separate verdict under VIA-002 because it is judged against a FABRICATOR
+     capability and not against the board"}
+
+ VIA-002: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums",
+   verification: {tool: via_audit.py, verdict: via_annular, fixtures: tests/test_board_gates.py},
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the copper left around each hole is the number a fabricator quotes and the one a via actually fails at, and it
+     is measured on every board. What is missing is the FLOOR: this tree's only fabricator capability file is a
+     JavaScript-blocked page scrape with no capability data in it, so no board declares annular_min_mm and the verdict
+     is INCONCLUSIVE rather than passing at a figure this project made up. That is the same refusal the registry makes
+     of every other unsourced limit",
+   remediation: {action: "obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge",
+     owner: SESSION, depends_on: [], p50_h: 2, p80_h: 6}}
 
  PLN-001: {implementation: "pour_stitch.py, zone_pad_via.py, stitch_prune.py", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
    maturity: ENFORCED, gap_category: NONE, note: "isolated copper is a hard type and pour islands are stitched or removed under a guard"}

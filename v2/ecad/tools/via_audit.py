@@ -84,19 +84,32 @@ def main(argv):
               % (len(r["in_pad"]), ", ".join(r["in_pad"][:10]), " ..." if len(r["in_pad"]) > 10 else ""))
     if "--json" in argv: print(json.dumps(r, indent=1))
     if not r["vias"]:
+        _v.write("via_annular", _v.INCONCLUSIVE, denominator=0, inputs={"board": path}, quiet=True,
+                 note="the board carries no via, so nothing was judged")
         return _v.write("via_audit", _v.INCONCLUSIVE, denominator=0, inputs={"board": path},
                         note="the board carries no via, so nothing was judged")
-    res = _v.FAIL if r["bad"] else (_v.PASS if amin is not None else _v.INCONCLUSIVE)
-    return _v.write("via_audit", res,
-                    counts={"vias": r["vias"], "below_floor": len(r["bad"]), "via_in_pad": len(r["in_pad"])},
-                    denominator=r["vias"], evidence=r["bad"][:20],
-                    inputs={"board": path, "annular_min_mm": amin},
-                    note=("every via at or above the board's own minimums and the declared annular floor"
-                          if res == _v.PASS else
-                          ("this board declares no annular floor, so the ring was not judged: the fabricator's "
-                           "capability page is unverified in the registry and a floor asserted without it would "
-                           "be the heuristic-as-law this audit exists to remove" if res == _v.INCONCLUSIVE else
-                           "a via below the process floor is a via the fabricator may not make")))
+    # TWO CRITERIA, TWO VERDICTS, for the same reason dc_drop has two: they have different authorities. The
+    # diameter and the drill are judged against the BOARD'S OWN minimums, which the board carries and the DRC
+    # already believes, so that question can be answered here. The annular ring is judged against a FABRICATOR
+    # capability, and this tree's only fabricator capability file is a JavaScript-blocked page scrape with no
+    # capability data in it. Answering the first honestly must not depend on the second being unanswerable.
+    ring_bad = [x for x in r["bad"] if "annular" in x]
+    floor_bad = [x for x in r["bad"] if "annular" not in x]
+    _v.write("via_annular", (_v.INCONCLUSIVE if amin is None else (_v.FAIL if ring_bad else _v.PASS)),
+             counts={"vias": r["vias"], "below_ring": len(ring_bad)}, denominator=r["vias"],
+             evidence=ring_bad[:20], inputs={"board": path, "annular_min_mm": amin}, quiet=True,
+             note=("this board declares no annular floor, so the ring was not judged: the fabricator's capability "
+                   "page is SOURCE_UNVERIFIED in the registry and a floor asserted without it would be the "
+                   "heuristic-as-law this audit exists to remove" if amin is None else
+                   "the copper left around every hole against the floor this board declares"))
+    return _v.write("via_audit", _v.FAIL if floor_bad else _v.PASS,
+                    counts={"vias": r["vias"], "below_floor": len(floor_bad), "via_in_pad": len(r["in_pad"]),
+                            "below_ring": len(ring_bad)},
+                    denominator=r["vias"], evidence=floor_bad[:20],
+                    inputs={"board": path},
+                    note=("every via at or above the board's own minimum diameter and drill; the annular ring is "
+                          "judged separately in via_annular.verdict.json, and %s"
+                          % ("no floor is declared for it" if amin is None else "%d via(s) are under its floor" % len(ring_bad))))
 
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

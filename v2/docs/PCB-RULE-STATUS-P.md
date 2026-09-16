@@ -9,9 +9,9 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 10 | 24.4 |
+| PASS | 9 | 22.0 |
 | FAIL | 6 | 14.6 |
-| INCONCLUSIVE | 25 | 61.0 |
+| INCONCLUSIVE | 26 | 63.4 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **41** | 100.0 |
 
@@ -42,7 +42,7 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the DRC enforces the board's own rules; those rules were copied from a capability record th |
-| RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
+| RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no pruned_gate verdict for this board |
 | VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not  |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 1 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |

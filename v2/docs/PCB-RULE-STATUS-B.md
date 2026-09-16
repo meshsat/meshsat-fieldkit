@@ -9,8 +9,8 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 7 | 14.0 |
-| FAIL | 11 | 22.0 |
+| PASS | 8 | 16.0 |
+| FAIL | 10 | 20.0 |
 | INCONCLUSIVE | 32 | 64.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **50** | 100.0 |
@@ -28,7 +28,7 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a check |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 215, 'pass': 388} |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the conductor measure is implemented and tested; its limit comes from a formula in a code c |
-| PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **FAIL** | dc_drop FAIL: {'met': 0, 'missed': 6, 'undeclared': 0} |
+| PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 36 |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: via current capacity is asserted in generator comments and measured by nothing |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: phantom-net pours are refused and pour coverage is measured; no check asks whether a partition i |
 | GND-002 chassis and cable-shield strategy | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | no verification: eight standoffs bond C's ground to the plate; no chassis-bond or shield strategy is written for the kit |
