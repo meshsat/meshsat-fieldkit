@@ -576,8 +576,8 @@ reason, and every conductor crossing between them does so at a defined point.
 | risk | EMC, SIGNAL_INTEGRITY, SAFETY |
 | verified by | SCRIPT, MANUAL_REVIEW at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_pcb_*3.py pours |
-| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
+| implementation | the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one board, expires the next placement |
 
@@ -589,7 +589,14 @@ points named and the signals that cross listed.
 **If violated** Radiated emissions, coupled noise into analogue nodes, and common-mode current on cables.
 
 **Today** phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate
-or where a crossing happens
+or where a crossing happens 16 September 2026: IT IS READ FROM THE NETLIST AND COMPARED WITH THE BOARD'S OWN
+DECLARATION. ground_system.py finds every ground net, the parts that touch more than one of them (the
+crossing points) and every net whose parts sit on both sides (the signals that cross), and requires each to
+be declared in boards/<letter>.json. Six boards declare one ground; board E declares two, and what the gate
+found there is the reason this rule exists: GND_V, the vehicle-side return, meets GND at exactly one part,
+the second winding of the SRF1260 common-mode choke, and DCIN_PGD and SHORE_INHIBIT cross the partition. The
+declaration says in words that this is a FILTER and not an isolation barrier, which is the reading that would
+otherwise be made by anyone designing to it.
 
 ### GND-002  chassis and cable-shield strategy
 

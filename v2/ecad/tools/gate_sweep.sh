@@ -54,7 +54,7 @@ for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks i
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
-          energy_chain pruned_gate power_sequence; do
+          energy_chain pruned_gate power_sequence ground_system; do
   rm -f "$P/routed/$_g.verdict.json"
 done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
@@ -120,6 +120,11 @@ run "electrical length"  python3 $T/edge_length.py $N.kicad_pcb
 # it says what the board itself declares rather than what a document once said; the deadlock it looks for, a
 # rail whose enable is driven only by a device powered from that same rail, cannot be seen on a schematic.
 [ -s out/$N.net ] && run "power sequence" python3 $T/power_sequence.py out/$N.net
+# ONE GROUND OR A DELIBERATE PARTITION (rule GND-001). Board E has two grounds that meet at one part, the
+# common-mode choke's second winding, and two signals cross there; nothing in this tree said so until the gate
+# was written, and its declaration now says the thing that matters: that partition is a filter and NOT an
+# isolation barrier.
+[ -s out/$N.net ] && run "ground system" python3 $T/ground_system.py out/$N.net --board $L
 [ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read

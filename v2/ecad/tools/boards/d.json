@@ -326,5 +326,11 @@
    "why": "the second headset jack"
   }
  ],
- "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes."
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",
+ "grounds": {
+  "GND": {
+   "what": "the board's single ground: every return on this board is this net"
+  }
+ },
+ "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this."
 }

@@ -133,9 +133,9 @@ coverage:
      current comes from dc_drop's solved mesh",
    remediation: {action: "read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [STK-001, PI-001], p50_h: 6, p80_h: 16}}
 
- GND-001: {implementation: "gen_pcb_*3.py pours", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
-   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
-   note: "phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate or where a crossing happens",
+ GND-001: {implementation: "the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py", verification: {tool: ground_system.py, verdict: ground_system, fixtures: tests/test_ground_system.py},
+   maturity: ENFORCED, gap_category: GENERATED_ONLY,
+   note: "phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate or where a crossing happens 16 September 2026: IT IS READ FROM THE NETLIST AND COMPARED WITH THE BOARD'S OWN DECLARATION. ground_system.py finds every ground net, the parts that touch more than one of them (the crossing points) and every net whose parts sit on both sides (the signals that cross), and requires each to be declared in boards/<letter>.json. Six boards declare one ground; board E declares two, and what the gate found there is the reason this rule exists: GND_V, the vehicle-side return, meets GND at exactly one part, the second winding of the SRF1260 common-mode choke, and DCIN_PGD and SHORE_INHIBIT cross the partition. The declaration says in words that this is a FILTER and not an isolation barrier, which is the reading that would otherwise be made by anyone designing to it.",
    remediation: {action: "a per-board ground statement and a check that no signal crosses an undeclared split", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 16}}
 
  GND-002: {implementation: "gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination",

@@ -60,9 +60,16 @@ the ledger is tamper-evident and verified; the appendix's numbers are not machin
 they came from  
 *Close it by* evidence ids in the record entries, emitted by the same writer. Owner **SESSION**, after SGN-001. Effort P50 4h, P80 12h.
 
-**GND-001 one deliberate ground system** (MUST_JUSTIFY, GENERATED_ONLY)  
+**GND-001 one deliberate ground system** (MUST_JUSTIFY, ENFORCED)  
 phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate
-or where a crossing happens  
+or where a crossing happens 16 September 2026: IT IS READ FROM THE NETLIST AND COMPARED WITH THE BOARD'S OWN
+DECLARATION. ground_system.py finds every ground net, the parts that touch more than one of them (the
+crossing points) and every net whose parts sit on both sides (the signals that cross), and requires each to
+be declared in boards/<letter>.json. Six boards declare one ground; board E declares two, and what the gate
+found there is the reason this rule exists: GND_V, the vehicle-side return, meets GND at exactly one part,
+the second winding of the SRF1260 common-mode choke, and DCIN_PGD and SHORE_INHIBIT cross the partition. The
+declaration says in words that this is a FILTER and not an isolation barrier, which is the reading that would
+otherwise be made by anyone designing to it.  
 *Close it by* a per-board ground statement and a check that no signal crosses an undeclared split. Owner **SESSION**. Effort P50 6h, P80 16h.
 
 **RF-001 RF paths are designed as RF** (BLOCKER, GENERATED_ONLY)  

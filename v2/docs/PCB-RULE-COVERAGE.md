@@ -23,7 +23,7 @@ appears in the gap register.
 | EMC-001 | EMC | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
 | ENV-001 | PRODUCT_ENVELOPE | BLOCKER | NONE_YET | none |  | **OWNER_DECISION_REQUIRED** |
 | ENV-002 | PRODUCT_ENVELOPE | BLOCKER | claims_check.py plus claims-allow.txt, one declared exemption per line with its reason | claims_check.py -> claims_check | tests/test_gate_fixtures.py | **ENFORCED** |
-| GND-001 | GROUNDING_SHIELDING | MUST_JUSTIFY | gen_pcb_*3.py pours | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
+| GND-001 | GROUNDING_SHIELDING | MUST_JUSTIFY | the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py | ground_system.py -> ground_system | tests/test_ground_system.py | **ENFORCED** |
 | GND-002 | GROUNDING_SHIELDING | MUST_JUSTIFY | gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination | a written strategy and a bench measurement |  | **DOCUMENTED_ONLY** |
 | IMP-001 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py net classes | impedance_check.py -> impedance_check |  | **SOURCE_UNVERIFIED** |
 | IMP-002 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September) | class_floor.py -> class_floor | tests/test_board_gates.py, tests/test_return_rules.py | **ENFORCED** |
@@ -71,8 +71,8 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 31 |
-| GENERATED_ONLY | 8 |
+| ENFORCED | 32 |
+| GENERATED_ONLY | 7 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
 | OPEN | 2 |
