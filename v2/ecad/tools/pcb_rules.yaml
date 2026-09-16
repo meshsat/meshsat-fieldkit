@@ -1287,6 +1287,18 @@ rules:
 # 18 to 25. TRANSIENTS, ISOLATION AND SPACING, THERMAL, PLACEMENT, ROUTING, VIAS, PLANES, EMC
 # ---------------------------------------------------------------------------------------------------------
  - id: TRN-001
+   false_positive_analysis: >
+     This check produced four distinct false positives before it produced a finding, and each is closed in a
+     way the next reader can see. A part FAMILY is followed by its part number with no word boundary, so
+     "SMBJ58A" was read past. GALVANIC ISOLATION is protection and the strongest kind: eight Ethernet lines
+     behind their magnetics were called unprotected because the part's value says "magnetics". PROTECTION IS A
+     CHAIN: a DC inlet's clamp normally sits behind the fuse, and demanding it on the connector's own net
+     refused an inlet for having its fuse in the right place. And a search must not walk out through a POWER
+     RAIL, because every part on a board touches one: a sensor pod was reported as protected by a choke on the
+     other side of the board. A fifth case is reported rather than refused: a clamp reached only THROUGH an
+     active part protects everything except that part, which is a different finding from no protection at all
+     and is counted separately. An internal connector is never judged: the board declares which of its
+     connectors leave the enclosure, with a reason for each, because nothing else knows.
    domain: TRANSIENT_PROTECTION
    short_name: every exposed port is protected
    requirement: >

@@ -287,5 +287,16 @@
  "annular_min_mm": 0.2,
  "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): four layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands.",
  "copper_layers": 4,
- "_copper_layers_why": "Four layers as built. OWNER DECISION 27 IS OPEN on this: the four-layer board fails the return-path rule by its stack, and the six-layer arm measured on 16 September routes 0 and 0 in 14.7 minutes against six hours. If the ruling goes to six, this is the line that changes."
+ "_copper_layers_why": "Four layers as built. OWNER DECISION 27 IS OPEN on this: the four-layer board fails the return-path rule by its stack, and the six-layer arm measured on 16 September routes 0 and 0 in 14.7 minutes against six hours. If the ruling goes to six, this is the line that changes.",
+ "external_ports": [
+  {
+   "ref": "J_PIJ2",
+   "why": "the panel's exposed jack on the face"
+  },
+  {
+   "ref": "J_MAINSW",
+   "why": "the main switch on the face, which a person touches"
+  }
+ ],
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes."
 }

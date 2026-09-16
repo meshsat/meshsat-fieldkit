@@ -417,5 +417,24 @@
  "annular_min_mm": 0.2,
  "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): six layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands.",
  "copper_layers": 6,
- "_copper_layers_why": "Six layers since 7 September 2026. Under the P0 ruling of 11 September this is OPEN: the record's own note says A's 33 hard on four layers turned out to be one router knot, and no four-layer rerun with unknot.py was ever done. The number lives here so that answering P0 is a declaration and not an edit to a gate."
+ "_copper_layers_why": "Six layers since 7 September 2026. Under the P0 ruling of 11 September this is OPEN: the record's own note says A's 33 hard on four layers turned out to be one router knot, and no four-layer rerun with unknot.py was ever done. The number lives here so that answering P0 is a declaration and not an edit to a gate.",
+ "external_ports": [
+  {
+   "ref": "J_DOCK",
+   "pins": [
+    "1",
+    "2"
+   ],
+   "why": "shore and vehicle DC arriving over the dock from the wall receptacle; the USB pair and the spare on this same connector are board A to board E INSIDE the case and are not external conductors"
+  },
+  {
+   "ref": "J_USBW",
+   "why": "the wall USB host port through the MIL-DTL-38999 receptacle: a person plugs a stranger's stick into this"
+  },
+  {
+   "ref": "J_USBC_OUT",
+   "why": "the USB-C outlet on the connector plate, out of the case"
+  }
+ ],
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes."
 }

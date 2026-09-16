@@ -40,7 +40,7 @@ Manifest **2026-09-16.1**, rule set **e590541697c8914f**, evidence epoch **2026-
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 4 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification |
-| CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: crystal loads and straps are chosen in the generators; nothing checks a load capacitance against |
+| CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | clock_check INCONCLUSIVE |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sen |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is c |
 | RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42} |

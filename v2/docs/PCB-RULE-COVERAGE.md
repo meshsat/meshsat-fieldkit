@@ -62,7 +62,7 @@ appears in the gap register.
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | none |  | **OPEN** |
-| TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection devices | none |  | **GENERATED_ONLY** |
+| TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts and each board's external_ports declaration | port_protect.py -> port_protect | tests/test_port_protect.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |
 | VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py, check_pcb_c.py -> via_audit, check_pcb_c | tests/test_board_gates.py | **ENFORCED** |
 | VIA-002 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py -> via_annular | tests/test_board_gates.py | **SOURCE_UNVERIFIED** |
@@ -71,8 +71,8 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 26 |
-| GENERATED_ONLY | 10 |
+| ENFORCED | 27 |
+| GENERATED_ONLY | 9 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
 | OPEN | 11 |

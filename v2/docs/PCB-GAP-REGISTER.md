@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**32 of 57 rules carry a gap.**
+**31 of 57 rules carry a gap.**
 
 ## absent (12)
 
@@ -71,7 +71,7 @@ no dissipation estimate exists for any board; the enclosure is sealed by ruling 
 stage  
 *Close it by* a dissipation table per board and a thermal estimate for the sealed enclosure, then a prototype measurement plan. Owner **SESSION**, after ENV-001. Effort P50 10h, P80 30h.
 
-## generated only (6)
+## generated only (5)
 
 **ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, GENERATED_ONLY)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
@@ -97,11 +97,6 @@ or where a crossing happens
 the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
 filter is verified, and the LPF values are flagged for a simulation that has not run  
 *Close it by* compute each RF line on its stackup, simulate the LPF, and record the module keep-out check. Owner **SESSION**, after IMP-001. Effort P50 8h, P80 24h.
-
-**TRN-001 every exposed port is protected** (BLOCKER, GENERATED_ONLY)  
-every external port has a device; no port table exists and no clamping voltage has been compared against a
-protected part's maximum  
-*Close it by* a port table with threat, device, clamping and parasitics. Owner **SESSION**, after ENV-001. Effort P50 5h, P80 14h.
 
 ## prose only (3)
 
@@ -228,9 +223,9 @@ verdict is INCONCLUSIVE rather than passing at a figure this project made up. Th
 registry makes of every other unsourced limit  
 *Close it by* obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge. Owner **SESSION**. Effort P50 2h, P80 6h.
 
-## covered (25)
+## covered (26)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-002,
 DFM-001, DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RET-004, RF-002,
-RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, STK-001, SUP-001, TST-001, VIA-001
+RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
 

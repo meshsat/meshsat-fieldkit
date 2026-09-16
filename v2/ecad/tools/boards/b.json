@@ -900,5 +900,16 @@
  "annular_min_mm": 0.2,
  "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): six layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands.",
  "copper_layers": 6,
- "_copper_layers_why": "Six layers, and this is the one board of the set whose layer count stands on its own measurement: three compute modules at 0.4 mm receptacle pitch need two inner signal layers, and a board-wide In1 keep-out left 93 opens at eight passes."
+ "_copper_layers_why": "Six layers, and this is the one board of the set whose layer count stands on its own measurement: three compute modules at 0.4 mm receptacle pitch need two inner signal layers, and a board-wide In1 keep-out left 93 opens at eight passes.",
+ "external_ports": [
+  {
+   "ref": "J_ETH",
+   "why": "the internal RJ45 whose patch lead reaches the sealed wall RJ45: a cable-borne port"
+  },
+  {
+   "ref": "J_54V",
+   "why": "the Power over Ethernet feed, which leaves the case on that same wall jack"
+  }
+ ],
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes."
 }

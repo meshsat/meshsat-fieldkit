@@ -111,6 +111,11 @@ python3 ../tools/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.lo
 # value string while doing something else (12 September 2026).
 # RULE CLK-001: every crystal's load network, from the netlist, before any copper. A crystal that does not
 # start is a board that is perfectly routed, perfectly assembled and dead, and every other check passes it.
+# RULE TRN-001: every conductor that leaves the enclosure, followed from its connector to a clamp. It runs on
+# the netlist because it is a schematic property: eleven conductors on three boards reach a chip with nothing
+# between them, and nothing had ever asked (owner decision 31).
+python3 ../tools/port_protect.py out/$N.net > out/port_protect.log 2>&1; PP=$?; grep -E 'port_protect:|FAIL' out/port_protect.log | head -6
+[ "$PP" -eq 1 ] && block "a conductor leaves the case unprotected (rule TRN-001, out/port_protect.log)" out/port_protect.log
 python3 ../tools/clock_check.py out/$N.net > out/clock_check.log 2>&1; CK=$?; grep -E 'clock_check:|FAIL' out/clock_check.log | head -6
 [ "$CK" -eq 1 ] && block "a crystal's load network (rule CLK-001, out/clock_check.log)" out/clock_check.log
 python3 ../tools/derate.py out/$N.net > out/derate.log 2>&1; DR=$?; grep -E 'derate:|FAIL|UNDECLARED' out/derate.log | head -8
