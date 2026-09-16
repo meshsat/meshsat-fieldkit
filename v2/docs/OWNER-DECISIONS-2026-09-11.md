@@ -1432,7 +1432,7 @@ from rule 1 alone.
 
 ---
 
-## 29. Board B's three compute-module Ethernet links have no magnetics, and one end's maker has never been asked (16 September 2026, 02:10 CEST)
+## DECISION 29, OPEN: board B's three compute-module Ethernet links have no magnetics, and one end's maker has never been asked (16 September 2026, 02:10 CEST)
 
 **What was found, and by whom.** Rule INT-002 of the new registry says that where an Ethernet link is built PHY to PHY
 without magnetics, BOTH ends' own documentation has to permit it. Nobody had read either document. Both were read today
