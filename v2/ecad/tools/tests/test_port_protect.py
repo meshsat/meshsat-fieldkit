@@ -148,3 +148,19 @@ def t_every_committed_declaration_says_where_the_port_goes():
             if not isinstance(e, dict) or not e.get("ref"): bad.append("%s: %r" % (letter, e))
             elif len((e.get("why") or "").strip()) < 20: bad.append("%s %s: no reason" % (letter, e.get("ref")))
     assert not bad, "external port declarations with no reason: %s" % bad
+
+
+def t_the_counts_carry_the_category_that_decided_the_verdict():
+    """Board A's sweep read FAIL beside "unprotected: 0" (MESHSAT-862, 16 September 2026).
+
+    Its two failing conductors are the USB-C configuration channels, whose only clamp sits behind the Power
+    Delivery controller, so the controller takes the transient itself. That is the rule's second category and
+    the counts did not carry it, which makes a true verdict read as a contradiction. A verdict has to contain
+    its own cause."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "port_protect.py"),
+               encoding="utf-8").read()
+    i = src.index('_v.write("port_protect", _v.FAIL if bad else _v.PASS')
+    seg = src[i:i + 900]
+    assert "behind_an_active_part" in seg, "the counts do not carry the behind-an-active-part category"
+    assert "unprotected" in seg
