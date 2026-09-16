@@ -1501,14 +1501,17 @@ rules:
    condition: {fact: has_tracks, op: truthy}
    risk_class: [FABRICATION, RELIABILITY]
    release_effect: BLOCKER
-   source_status: SOURCE_UNVERIFIED
+   source_status: VERIFIED
    sources:
-    - {title: "fabricator PCB capability page", issuer: "the selected fabricator", revision: "scraped 4 September 2026",
-       clause: "", url_or_path: "v2/vendor/seals/jlcpcb-pcb-capabilities-page.txt", accessed: "2026-09-04",
-       note: "the only fabricator capability file in this tree, and it carries NO capability data: it is a
-         JavaScript-blocked page scrape filed in the wrong folder, and nothing reads it. Until a real document
-         replaces it, no board declares an annular floor and this rule is INCONCLUSIVE on every board, which is
-         the honest state rather than a number this project made up"}
+    - {title: "JLCPCB rigid PCB manufacturing capabilities", issuer: JLCPCB,
+       revision: "the live capability page as it read on 16 September 2026; no revision number is published",
+       clause: "annular ring: PTH multilayer 1 oz recommended 0.20 mm or above, absolute minimum 0.15 mm; PTH 2-layer 1 oz recommended 0.25 mm or above, absolute minimum 0.18 mm; NPTH pad >= 0.45 mm. The 2 oz case is NOT stated, so boards E5 and P stay unjudged on the ring",
+       url_or_path: "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md", accessed: "2026-09-16",
+       note: "transcribed row by row from https://jlcpcb.com/capabilities/pcb-capabilities. It replaces the
+         4 September scrape in v2/vendor/seals/, which is a JavaScript-blocked page with no capability data in
+         it. A fabricator's capability page is not a controlled document and can change without notice, which
+         is why the date it was read travels with every limit taken from it"}
+
    acceptance_criteria: >
      Each board declares annular_min_mm from the fabricator's own document, with the clause cited, and every
      via and plated hole on the board is at or above it.

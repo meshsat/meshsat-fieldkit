@@ -112,3 +112,4 @@ sources.txt          tooling   # where each vendor document came from, folder le
 duplicates-allowed.txt   tooling   # the declared reasons a file is kept in two places
 bulgin       current   # the sealed wall parts: PX0833 RJ45 coupler and the 4000 series C-type USB receptacle
 polyphaser   current   # GTH-SFF-AL SMA surge protector at the antenna bulkheads
+fabricator  current  # the chosen fabricator's own PCB capability page, fetched 16 September 2026: the authority behind every via, annular ring, track width and stackup limit this project enforces (rules VIA-001, VIA-002, RTE-001, STK-001, IMP-001)

@@ -265,5 +265,7 @@
    "class": "LOW_SPEED_OR_DC",
    "basis": "the hub's overcurrent flag, an open-drain static level with a pull-up"
   }
- ]
+ ],
+ "annular_min_mm": 0.2,
+ "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): four layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands."
 }
