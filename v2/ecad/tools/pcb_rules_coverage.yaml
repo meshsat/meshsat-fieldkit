@@ -22,9 +22,10 @@ rule_set_fingerprint: "88f207606ad2945a"
 
 coverage:
 
- ENV-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every derating rule resolves against nothing",
-   remediation: {action: "write the envelope from the owner's use case and the enclosure's own ratings", owner: OWNER, depends_on: [], p50_h: 3, p80_h: 8}}
+ ENV-001: {implementation: NONE_YET, verification: {tool: none, document: OPERATING-ENVELOPE.md},
+   maturity: OWNER_DECISION_REQUIRED, gap_category: OWNER_DECISION_REQUIRED,
+   note: "16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather than from an assumption, and it is owner decision 34. Writing it found that the two narrowest parts in the kit are the battery-bay VOC sensor at -20 to +55 C and the e-paper at -15 to +60 C, not the compute modules or the radios, and that with the estimated 16 K inside-air rise of the no-vent ruling the outside ambient ceiling is about +39 C with three modules loaded and charging is limited from an ambient near +25 C by the cells own +45 C charge limit. The envelope is not ruled, so this stays INCONCLUSIVE; what has changed is that the four rules that resolve against it now have a document to cite and a number to argue with",
+   remediation: {action: "rule decision 34: the envelope of section 4, the part swaps of option 2, or the narrow envelope of option 3, and the altitude", owner: OWNER, depends_on: [], p50_h: 1, p80_h: 4}}
 
  ENV-002: {implementation: "claims_check.py plus claims-allow.txt, one declared exemption per line with its reason",
    verification: {tool: claims_check.py, verdict: claims_check, fixtures: tests/test_gate_fixtures.py},
