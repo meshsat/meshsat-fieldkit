@@ -9,7 +9,7 @@ answered yet, made visible so it cannot be forgotten.
 
 **31 of 57 rules carry a gap.**
 
-## absent (9)
+## absent (8)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
@@ -23,11 +23,6 @@ no EMC analysis of any kind exists; eleven radios and a sealed metal box
 no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are
 unwritten, and every derating rule resolves against nothing  
 *Close it by* write the envelope from the owner's use case and the enclosure's own ratings. Owner **OWNER**. Effort P50 3h, P80 8h.
-
-**ISO-001 creepage and clearance** (BLOCKER, OPEN)  
-an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been
-measured on any board, and no pollution degree or material group is declared  
-*Close it by* declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and pack nets. Owner **OWNER**, after ENV-001. Effort P50 8h, P80 24h.
 
 **PWR-002 sequencing and inrush** (MUST_JUSTIFY, OPEN)  
 sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
@@ -149,7 +144,7 @@ the 3 mm distance is a project number applied to every device; the loop inductan
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (10)
+## source or applicability unresolved (11)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -167,6 +162,18 @@ a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this canno
 this project can obtain. Owner decision 29, with three costed options; the recommendation is to fit the
 magnetics board B already carries on its wall port  
 *Close it by* owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype. Owner **OWNER**. Effort P50 6h, P80 30h.
+
+**ISO-001 creepage and clearance** (BLOCKER, GENERATED_ONLY)  
+16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the
+router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid piece of
+copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and above: board
+A's VBUS20 and +54V_POE, board B's +54V_POE) and measures the real distance to the nearest conductor of any
+other net on the same layer, pads and fills included, and names the ten tightest. What it cannot do is say
+whether the number is ENOUGH: creepage and clearance come from a standard's table for a working voltage, a
+pollution degree and a material group, and IEC 60664-1 is not in this tree. A board declares hv_spacing_mm
+when it has an authority and is judged against it; where nothing is declared the measurement is reported and
+the rule stays unjudged, which is what 'no source' has to mean  
+*Close it by* declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_mm per board; the measurement is already there to judge against it. Owner **OWNER**, after ENV-001. Effort P50 4h, P80 16h.
 
 **PAIR-001 a pair is coupled and matched** (BLOCKER, ENFORCED)  
 coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew

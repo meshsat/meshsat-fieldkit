@@ -23,7 +23,7 @@ engineering time and are listed separately below.
 | BAT-001 | the cell's datasheet on file, the threshold table derived from it, and the prototype prote | OWNER |
 | ENV-001 | write the envelope from the owner's use case and the enclosure's own ratings | OWNER |
 | INT-002 | owner decision 29: fit magnetics on the three module links, ask the module vendor, or defe | OWNER |
-| ISO-001 | declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and | OWNER |
+| ISO-001 | declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_ | OWNER |
 | REL-001 | a reliability sheet per board and the test plan for the prototype | OWNER |
 | SCH-004 | owner decision 30: the supervisors execute the wipe, power removal only, or accept the sof | OWNER |
 | STK-002 | quotes from the ordering session for both counts on C and P, then the two rulings | OWNER |
