@@ -45,14 +45,38 @@ You are given the arm, its written prediction, the measured result and the mecha
 with one JSON object: {"entry": "<the prose>", "headline": "<one sentence, at most 120 characters>"}"""
 
 
-def run_spec(spec_path, exec_cmd, result_path, timeout=None):
-    """Execute the spec. Either here (when pcbnew is importable) or through the caller's command."""
+def _max_arms(template, path):
+    """The template's declared width. AN ABSENT VALUE IS AN ERROR, NOT A QUIET ONE (16 September 2026).
+
+    This was `template.get("_max_arms", 1)`, so a template that declared nothing was narrowed to a single
+    arm and said nothing about it: `b.json` and `d.json` both declared nothing, which is two of the three
+    templates in the tree. A default that silently halves the width of the work is the same shape as the
+    knob whose arrival nothing proved (12 September), and it is refused here instead."""
+    v = template.get("_max_arms")
+    if v is None:
+        raise SystemExit("loop: %s declares no _max_arms. A template says how many arms a cycle proposes, "
+                         "each with its own prediction; a missing value used to mean one silently, which is "
+                         "how a 96-thread box ran one arm at a time. Add _max_arms with a reason." % path)
+    v = int(v)
+    if v < 1: raise SystemExit("loop: %s declares _max_arms %d, which is not a width" % (path, v))
+    return v
+
+
+def run_spec(spec_path, exec_cmd, result_path, timeout=None, parallel=None):
+    """Execute the spec. Either here (when pcbnew is importable) or through the caller's command.
+
+    WIDTH IS AN ARGUMENT, NOT A LITERAL (16 September 2026). This called the runner with `--parallel 1`
+    while `arms.py` has taken a width since it was written and defaults to 8, so every local arm set ran
+    one arm at a time on a box with 96 threads and 29 workers' worth of memory. The width comes from the
+    template's `_max_arms` by way of the caller, and `{parallel}` in an --exec command carries it to a
+    remote runner, because a remote arm set was serial for exactly the same reason."""
     if exec_cmd:
         # AN ARGV, NOT A SHELL STRING. `routeflow.sh()` refuses the construction this used, and this is
         # the loop's one actuation point: the operator authors the template, the model never does, and a
         # substituted string is still the wrong shape for the place where a run begins (red team,
         # 12 September 2026). Substitution happens per argument, after the split.
-        argv = [a.replace("{spec}", spec_path).replace("{result}", result_path) for a in shlex.split(exec_cmd)]
+        argv = [a.replace("{spec}", spec_path).replace("{result}", result_path).replace("{parallel}", str(parallel or 1))
+                for a in shlex.split(exec_cmd)]
         print("loop: executing %s" % " ".join(argv[:3] + (["..."] if len(argv) > 3 else [])))
         r = subprocess.run(argv, timeout=timeout)
         return r.returncode
@@ -62,7 +86,7 @@ def run_spec(spec_path, exec_cmd, result_path, timeout=None):
         raise client.Infra("no pcbnew here and no --exec given, so nothing can run the arm (%s). "
                            "This is INFRA_FAIL and never a fallback: a loop that quietly skips the run "
                            "would report a proposal as a measurement" % type(e).__name__)
-    return armsmod.main([spec_path, "--parallel", "1", "--out-dir", os.path.dirname(result_path)])
+    return armsmod.main([spec_path, "--parallel", str(parallel or 1), "--out-dir", os.path.dirname(result_path)])
 
 
 def incomplete(rows, names, rc):
@@ -188,6 +212,9 @@ def main(argv):
     ap.add_argument("--revisions", type=int, default=1,
                     help="how many times a refused draft is rewritten against the findings and reviewed again")
     ap.add_argument("--allow-repeat", action="store_true")
+    ap.add_argument("--parallel", type=int, default=None,
+                    help="arms to run at once; defaults to the template's _max_arms. Refused above the host's "
+                         "measured admission, which is min(threads/1.3, 0.80*free GiB/3.0) for this workload")
     a = ap.parse_args(argv)
 
     os.makedirs(a.out_dir, exist_ok=True)
@@ -207,7 +234,7 @@ def main(argv):
     # how many, each with its own prediction, and they are dispatched together.
     spec, arms, attempts = propose.ask(pack_text, a.ask, repair=2,
                                        graded=() if a.allow_repeat else p["_signatures"], template=template,
-                                       max_arms=int(template.get("_max_arms", 1)),
+                                       max_arms=_max_arms(template, a.template),
                                        best=p.get("best_pairs"), worst=p.get("worst_pairs"))
     for at in attempts:
         print("loop: propose attempt %d %s" % (at["attempt"], "ACCEPTED" if at["accepted"] else "REFUSED"))
@@ -245,7 +272,8 @@ def main(argv):
 
     result = a.result or os.path.join(a.out_dir, "arms.jsonl")
     head_before = ledger.head(result)[0]          # every row after this one belongs to this cycle
-    rc = run_spec(spec_path, a.exec_cmd, result, timeout=a.exec_timeout)
+    rc = run_spec(spec_path, a.exec_cmd, result, timeout=a.exec_timeout,
+                  parallel=(a.parallel if a.parallel is not None else _max_arms(template, a.template)))
     names = {x["name"] for x in spec["arms"]}
     rows = read_rows(result, names, after_seq=head_before, cycle_id=cycle_id)
     for r in rows:

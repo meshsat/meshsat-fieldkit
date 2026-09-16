@@ -680,3 +680,38 @@ def t_a_b_templates_pair_pass_is_the_boards_own_first_pass():
         for k, v in pe.items(): assert str(env.get(k)) == str(v), "%s: %s is %r in the board file and %r in the template" % (name, k, v, env.get(k))
         assert env.get("PAIR_LAYERS") == p1["layers"] and env.get("PAIR_HOP_LAYERS") == p1["hop_layers"] and env.get("PAIR_INNER") == p1["inner"], "%s: the pass layers or inner geometry differ from pair_passes[0]" % name
         assert t["passes"][0]["classes"] == p1["classes"], "%s: the pass classes differ from pair_passes[0]" % name
+
+
+def t_the_arm_width_is_an_argument_and_a_missing_declaration_is_refused():
+    """DEFECTIVE fixture: a template with no `_max_arms` must be REFUSED, not narrowed to one in silence.
+    ACCEPTABLE fixture: a template that declares a width returns it.
+
+    `agent/loop.py` called the runner with a literal `--parallel 1` while `arms.py` has taken a width since
+    it was written and defaults to 8, so every local arm set ran one arm at a time on a 96-thread box whose
+    measured admission is 29. Beside it, `template.get("_max_arms", 1)` narrowed the PROPOSAL to one arm for
+    any template that declared nothing, which was `b.json` and `d.json`, two of the three in the tree. A
+    default that halves the work in silence is the shape of the knob whose arrival nothing proved.
+
+    Making the absence an error breaks both templates unless they are given a value in the same change, so
+    this also asserts that every committed template declares one.
+    """
+    import glob, json
+    sys.path.insert(0, os.path.join(TOOLS, "agent"))
+    import loop as loopmod
+
+    assert loopmod._max_arms({"_max_arms": 4}, "x.json") == 4, "a declared width is not returned"
+    try:
+        loopmod._max_arms({}, "x.json")
+    except SystemExit as e:
+        assert "_max_arms" in str(e), e
+    else:
+        raise AssertionError("a template with no _max_arms was accepted and narrowed to one in silence")
+
+    src = open(os.path.join(TOOLS, "agent", "loop.py"), errors="replace").read()
+    assert '"--parallel", "1"' not in src, "the runner is still called with a literal width of one"
+    assert "{parallel}" in src, "an --exec command cannot carry the width to a remote runner"
+
+    for t in sorted(glob.glob(os.path.join(TOOLS, "agent", "templates", "*.json"))):
+        d = json.load(open(t, encoding="utf-8"))
+        assert isinstance(d.get("_max_arms"), int) and d["_max_arms"] >= 1, \
+            "%s declares no usable _max_arms, so the loop now refuses it" % os.path.basename(t)
