@@ -30,6 +30,29 @@ import intent as _intent
 # declared 1.0 A typical and is a design estimate of where the current goes, not a measurement.
 _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.03,
              loads={"FB1": 0.50, "U1": 0.25, "U6": 0.10, "J_USB3": 0.05, "U7": 0.05, "U3": 0.03, "U15": 0.02}, note="the mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default: every consumer either regulates this rail or tolerates a wide range (the TLV75533 3.3 V LDO with 1.5 V of headroom, the CP2102N bridge at a 4.0 V minimum, the ESD reference, and the exciter's own boost behind FB1). D10 measures 108 mV at 1.0 A, 2.16 percent, leaving 4.89 V at the tightest consumer (9 September 2026).")
+# DECLARED 16 September 2026. These three were not in the intent file, so `signalnets` could not know they
+# were rails and the return-path gate judged them as SIGNAL NETS, while `dc_drop` and `derate` could not see
+# them at all. A rail that is not declared is not excluded: it is silently checked against the wrong question
+# and silently missed by the right one. The currents are design estimates of where the current goes, in the
+# same form as the rails above, and every load is named because a rail without loads is not declarable.
+_intent.rail("+3V3_D8", 3.3, 0.18, 0.30, "U1", budget=0.03,
+             source_ic="U1 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
+             loads={"U4": 0.055, "U9": 0.002, "U10": 0.002, "U11": 0.002, "U12": 0.002, "U13": 0.002,
+                    "U14": 0.002, "Q3": 0.001, "Q4": 0.001, "Q5": 0.001, "Q6": 0.001, "Q7": 0.001,
+                    "Q8": 0.001, "Q9": 0.001, "U7": 0.020, "J_HARN1": 0.080},
+             note="the local 3.3 V from U1: the USB hub's logic, the seven single-gate PTT and inhibit gates, "
+                  "their level shifters, the headphone amplifier's logic and the gated 3.3 V leaving on the "
+                  "harness. Budget 3 percent: every consumer is a logic part with a wide supply range")
+_intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05,
+             loads={"U2": 1.10},
+             note="the exciter's own 5 V behind the 600R ferrite FB1: the SA868 draws about 350 mA receiving "
+                  "and up to 1 A on a transmit pulse, which is what the bead and its bulk capacitor are for. "
+                  "Budget 5 percent because the module's own range is 3.3 to 5.5 V")
+_intent.rail("+3V3", 3.3, 0.06, 0.10, "J_HARN1", budget=0.03,
+             loads={"U16": 0.060},
+             note="board A's always-on 3.3 V arriving over the mezzanine harness, which on this board feeds "
+                  "only the PTT inhibit's pull-ups through U16. It is a rail of board A and a load of this one")
+
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)

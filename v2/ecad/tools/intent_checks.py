@@ -94,6 +94,23 @@ def run(b, check, path=None):
         print("intent_checks: %d signal net(s) carry no declared signal class and were judged at the strictest bar: %s%s"
               % (len(undeclared), ", ".join(undeclared[:12]), " ..." if len(undeclared) > 12 else ""))
     print("intent_checks: return path judged on %d signal nets (%d excluded as ground, rail, zone owner or power class), %d over their limit, worst %s at %.1f mm" % (n_nets, len(_why), n_over, worst[0] or "none", worst[1]))
+    # 3b. EVERY POWER-SYMBOL NET IS A DECLARED RAIL (16 September 2026). This project writes a rail as a KiCad
+    # power symbol, so a net whose name begins with "+" is a rail by the generators' own convention. Board B
+    # declared six and has thirty-six; the other thirty were invisible three ways at once: signalnets could not
+    # know they were rails, so the return-path rule above judged each as a SIGNAL and measured its reference
+    # coverage, which says nothing about a power net; dc_drop computed no drop and no current density for any of
+    # them; and derate could not compare one part's rating against them. A rail that is not declared is not
+    # excluded: it is asked the wrong question and missed by the right one, and both silently.
+    _declared = {r.lstrip("/") for r in (it.get("rails") or {})}
+    _power_nets = set()
+    _ni = b.GetNetInfo()
+    for _code in range(_ni.GetNetCount()):
+        _nm = _ni.GetNetItem(_code).GetNetname()
+        if _nm and _nm.lstrip("/").startswith("+"): _power_nets.add(_nm.lstrip("/"))
+    _undeclared = sorted(_power_nets - _declared)
+    check(not _undeclared, "every power-symbol net is a declared rail (%d of %d)"
+          % (len(_power_nets) - len(_undeclared), len(_power_nets)),
+          "not in the intent file: %s" % ", ".join(_undeclared[:12]) if _undeclared else "")
     # 4. return via (rule 2 of the same ruling): a ground via beside every signal via, judged by return_via.py
     rv = return_via.judge(b, path)
     check(not rv["lacking"], "return via: %d of %d signal vias have a ground via within %.1f mm (%d exempt in fine-pitch fans, %d on one reference plane); without one: %s" % (
