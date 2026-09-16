@@ -41,7 +41,11 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^15p NP0$", "C_0402"): "C1548",       # 0402CG150J500NT, C0G 50 V, a BASIC part (no extended fee), 1.6 M in stock: the RP2040 crystal loads
  (r"^1u 25V$", "C_0603"): "C106858",      # CC0603KRX7R8BB105, X7R 25 V, 134 k in stock: the e-paper pump rail
  (r"^4\.7u$", "C_0805"): "C354262",       # CC0805KKX7R8BB475, X7R 25 V, 581 k in stock (the 0603 4.7u already here is C19666)
- (r"^SS2040FL", "D_SOD-123F"): "C268712", # SS2040FL, 40 V 2 A Schottky, 10 k in stock: the e-paper pump diodes
+ (r"^SS2040FL", "D_SOD-123F"): "C268712",
+ (r"^27R$", "R_0603"): "C25190",           # 0603WAF270JT5E, 218 k in stock: the RP2040 USB series pair
+ (r"^0\.47R 1%$", "R_0603"): "C23411",      # 0603WAF470LT5E, 470 mOhm 1 percent, 125 k in stock: the LED rail sense
+ (r"^TLV75533PDBV", "SOT-23-5"): "C404027", # TLV75533PDBVR, TI's own order code, 57 k in stock: the panel 3.3 V LDO
+ # SS2040FL, 40 V 2 A Schottky, 10 k in stock: the e-paper pump diodes
  (r"^180R?$", "R_0603"): "C22828",        # the shipped C BOM carried C25270, an 0805, on these eleven 0603 lands
  (r"^8MHz", "5032"): "C115962", (r"^USBLC6-2SC6", "SOT-23-6"): "C7519", (r"^INA219", "SOT-23-8"): "C138024", (r"^PCA9555PW", "TSSOP-24"): "C2864778", (r"^FE1\.1s", "SSOP-28"): "C2848",
  (r"^USB-C 2\.0 receptacle", "TYPE-C-31-M-12"): "C165948", # (r"^BC847BS", "SOT-363"): "C8653",   RETIRED 12 September 2026: no generator names a BC847BS and no
