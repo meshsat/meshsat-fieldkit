@@ -9,11 +9,11 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 188 h | 552 h |
+| engineering effort, one worker | 183 h | 534 h |
 | critical path through the dependencies | 34 h | 96 h |
-| at 6 engineering hours a day | 31.3 days | 92.0 days |
+| at 6 engineering hours a day | 30.5 days | 89.0 days |
 
-39 open item(s): 32 are this session's work and 7 are waits on the owner, a vendor or a lab. Waits are not
+39 open item(s): 31 are this session's work and 8 are waits on the owner, a vendor or a lab. Waits are not
 engineering time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens
@@ -22,6 +22,7 @@ engineering time and are listed separately below.
 |---|---|---|
 | BAT-001 | the cell's datasheet on file, the threshold table derived from it, and the prototype prote | OWNER |
 | ENV-001 | write the envelope from the owner's use case and the enclosure's own ratings | OWNER |
+| INT-002 | owner decision 29: fit magnetics on the three module links, ask the module vendor, or defe | OWNER |
 | ISO-001 | declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and | OWNER |
 | REL-001 | a reliability sheet per board and the test plan for the prototype | OWNER |
 | RET-002 | demote to a screen in the finish, keep the report, and let RET-001 decide | OWNER |

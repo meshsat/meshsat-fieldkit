@@ -12,6 +12,9 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  # missing parts, missing rules. Every code below was read back from JLCPCB's API with its model, package
  # and stock, and every model encodes the value it is bought for (C0G 180 = 18 pF, X7R 104 = 100 nF).
  (r"^100n", "C_0402"): "C60474",          # YAGEO CC0402KRX7R7BB104, 15.7 M in stock
+ # 16 September 2026: board B's PCIe receive coupling, required by the CM5 datasheet 2.3.1 at 220 nF.
+ # CCTC TCC0402X7R224K160AT, 16 V X7R 10 percent, 592,808 in stock, read back from the fabricator's API.
+ (r"^220n", "C_0402"): "C696846",
  (r"^18p", "C_0402"): "C106202",          # CC0402JRNPO9BN180, C0G
  (r"^22p", "C_0402"): "C106203",          # CC0402JRNPO9BN220, C0G
  (r"^33p", "C_0402"): "C107005",          # CC0402JRNPO9BN330, C0G

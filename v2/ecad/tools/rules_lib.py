@@ -75,7 +75,12 @@ RISKS = ("SAFETY", "ELECTRICAL_FUNCTION", "SIGNAL_INTEGRITY", "POWER_INTEGRITY",
          "FABRICATION", "ASSEMBLY", "YIELD", "RELIABILITY", "TESTABILITY", "MECHANICAL", "DOCUMENTATION",
          "SUPPLY_CHAIN")
 EFFECTS = ("BLOCKER", "MUST_JUSTIFY", "ADVISORY")
-SOURCE_STATUS = ("VERIFIED", "SOURCE_UNVERIFIED", "CONFLICTING", "NOT_REQUIRED_FOR_PROJECT_DECISION")
+# PARTIALLY_VERIFIED added 16 September 2026, for the state the Ethernet question is actually in: one end's
+# document was read and permits the design in terms that match it exactly, the other end's document was read
+# and is silent, and a third document is not obtainable at any price. The four-value vocabulary forced that to
+# be recorded as VERIFIED or as SOURCE_UNVERIFIED, and both would have been false.
+SOURCE_STATUS = ("VERIFIED", "PARTIALLY_VERIFIED", "SOURCE_UNVERIFIED", "CONFLICTING",
+                 "NOT_REQUIRED_FOR_PROJECT_DECISION")
 METHODS = ("ERC", "DRC", "SCRIPT", "CALCULATION", "SIMULATION", "MANUAL_REVIEW", "VENDOR_CONFIRMATION",
            "PROTOTYPE_MEASUREMENT")
 PHASES = ("SCHEMATIC", "PLACED_BOARD", "ROUTED_BOARD", "RELEASE_PACKAGE", "ASSEMBLY", "PROTOTYPE")
@@ -166,12 +171,33 @@ def applies_to(rule, board_facts):
     return ok, ("the board's facts satisfy the condition" if ok else "the board's facts do not satisfy the condition")
 
 
+# The fields that can change a board's RESULT. A fingerprint over these is the identity evidence records, and a
+# fingerprint over everything else would make documenting a source invalidate a DRC run about another rule.
+# 16 September 2026: the first version hashed the whole rule. Writing down which clause of a vendor datasheet a
+# limit comes from then marked every board's evidence stale, which taxes the one activity this audit exists to
+# encourage. What makes evidence stale is a change to what the rule DEMANDS, not to how it is explained.
+DECIDING = ("id", "requirement", "applicability", "condition", "release_effect", "acceptance_criteria",
+            "verification_method", "verification_phase", "boards_affected", "interfaces_affected",
+            "waiver_policy", "threshold", "limit", "tolerance")
+
+
 def fingerprint(reg=None):
-    """The identity evidence records. Changing any rule changes it, so evidence taken under an older registry
-    is stale by construction rather than by anyone remembering."""
+    """The identity evidence records: a digest of every rule's DECIDING fields. Change what a rule demands and
+    evidence taken under the old demand is stale by construction rather than by anyone remembering. Change a
+    rationale, a source citation or a short name and the evidence stands, because the board was not asked
+    anything different."""
     reg = reg or load()
-    body = json.dumps({"schema": reg.get("schema_version"), "rules": reg.get("rules")}, sort_keys=True, default=str)
+    body = json.dumps({"schema": reg.get("schema_version"),
+                       "rules": [{k: r[k] for k in DECIDING if k in r} for r in reg.get("rules", [])]},
+                      sort_keys=True, default=str)
     return hashlib.sha256(body.encode()).hexdigest()[:16]
+
+
+def documentation_digest(reg=None):
+    """The whole registry, deciding fields and prose alike. Not an evidence identity: a change marker for the
+    record, so a document can say which text it was generated from."""
+    reg = reg or load()
+    return hashlib.sha256(json.dumps(reg, sort_keys=True, default=str).encode()).hexdigest()[:16]
 
 
 def by_id(reg=None):

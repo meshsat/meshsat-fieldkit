@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **88f207606ad2945a**, 56 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **a453bedd2b5ad14d**, 56 rules over 34 domains.
 
 ## How to read a rule
 
@@ -1017,9 +1017,10 @@ documentation of both ends: impedance, skew, termination, coupling, isolation, p
 | release effect | **BLOCKER** |
 | risk | ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY, EMC |
 | verified by | MANUAL_REVIEW, SCRIPT at SCHEMATIC (partially automatable) |
-| source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_*.py |
-| maturity | **SOURCE_UNVERIFIED** |
+| source | PARTIALLY_VERIFIED |
+| | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2.1 connector and design guidance; 2.3 and 2.3.1 PCIe, routing guidance; pin table, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
+| implementation | gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py |
+| maturity | **GENERATED_ONLY** |
 | owner | SESSION |
 | waiver | by OWNER, scope one interface on one board, expires prototype validation |
 
@@ -1032,8 +1033,14 @@ M.2 specification is in this tree to say otherwise.
 
 **If violated** A link that does not meet its own specification and cannot be certified.
 
-**Today** no interface specification is in the tree; the PCIe lanes carry the 90 ohm USB class because they inherited
-it
+**Today** 16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it
+decided three things. PCIe on this host is 90 ohm differential with intra-pair match within 0.1 mm, so the
+class board B already assigns is correct and the PCIe wants 85 note of 9 September is withdrawn for this
+design. Every PCIe receive line needs a 220 nF series capacitor before it enters the IC, and board B had none
+on three slots: six capacitors added at the source and a contract now holds the shape (the module's receive
+net carries exactly one capacitor and never a second device). Ethernet is 100 ohm differential, intra-pair
+within 0.15 mm. This closes ONE interface of several: USB, M.2 and HDMI have no sheet, which is why the
+maturity is GENERATED_ONLY and not ENFORCED
 
 ### INT-002  a transformerless Ethernet link is verified at both ends
 
@@ -1047,11 +1054,12 @@ permit it, and the coupling, termination, common-mode handling and bias are as b
 | release effect | **BLOCKER** |
 | risk | ELECTRICAL_FUNCTION, EMC, RELIABILITY |
 | verified by | MANUAL_REVIEW, VENDOR_CONFIRMATION at SCHEMATIC (human or lab only) |
-| source | CONFLICTING |
-| | KSZ989x hardware design checklist, Microchip, page 12, transformer-less PHY-to-PHY links through 0.1 uF capacitors -- v2/vendor/cluster/ksz989x-hw-design-checklist.pdf |
-| | the compute module PHY's own documentation, the module's PHY vendor -- NOT IN THIS TREE |
-| implementation | gen_sch_b.py coupling and termination |
-| maturity | **SOURCE_UNVERIFIED** |
+| source | PARTIALLY_VERIFIED |
+| | KSZ989x/KSZ956x/KSZ9477 hardware design checklist, Microchip, 6.6 Capacitive Coupling Option, page 12 -- v2/vendor/cluster/ksz989x-hw-design-checklist.pdf |
+| | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2.1 connector and design guidance; pin table, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
+| | BCM54210PE datasheet, Broadcom -- NOT IN THIS TREE |
+| implementation | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics |
+| maturity | **OWNER_DECISION_REQUIRED** |
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1062,8 +1070,15 @@ termination compared against both.
 
 **If violated** Link instability, bias fighting between the two PHYs, and emissions from an unbalanced pair.
 
-**Today** the switch vendor's checklist permits the topology; the compute module's own PHY document is not in the tree
-and the check the 9 September review asked for has not been done
+**Today** BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact
+topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less
+where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight
+signals, no additional components between the switch and the capacitor). The module's datasheet describes ONE
+topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and the switch vendor's own clause
+names the gap in a sentence, the other device may require termination or other circuitry. The module's PHY is
+a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this cannot be closed from any document
+this project can obtain. Owner decision 29, with three costed options; the recommendation is to fit the
+magnetics board B already carries on its wall port
 
 ## Transient Protection
 
