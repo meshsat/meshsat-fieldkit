@@ -76,3 +76,28 @@ Section 8 of the handover carries the trap: a footprint key is a claim about a p
 checks it, and `TPS2065CDBV` sat on a SOT-23-6 land for four board phases. Its sheet is now in the
 tree, and its ordering table settles it in one line: `TPS2061DBVR ... SOT-23 (DBV) | 5`. The rule
 that a package is confirmed from the same datasheet page can now actually be followed for this part.
+
+## 16 September 2026: an authority for the return-path principle
+
+`ti/ti-scaa082a-high-speed-layout-guidelines.pdf`, TI SCAA082A, "High-Speed Layout Guidelines",
+November 2006 revised August 2017, 10 pages, fetched from ti.com/lit/pdf/scaa082.
+
+**What it settles, and it is the principle rather than any of our numbers.** Section 1.6: with DC the
+return current takes the path of least resistance, at high frequency it flows along the path of least
+impedance, "and this is directly beside the signal"; a slot in the reference forces it around, and the
+resulting loop area is what radiates. That is the sentence rule RET-001 rests on, and until now this
+tree held no source for it at all. Section 2.5 gives the same answer for a layer change: "use ground
+vias around the signal via to make sure that the return current can flow as close as possible to the
+signal", which is rule RET-002's fixer stated as practice.
+
+**What it does NOT settle, said plainly so the citation is not stretched.** It states no per-class
+tolerance in millimetres, and no critical-length criterion. RET-001's per-class numbers and
+`edge_length.py`'s k are still this project's own, so both stay marked as such.
+
+**What it independently checks.** Table 2 gives measured propagation delays on FR-4 at er 4.6:
+microstrip 171.9 mm/ns (5.82 ps/mm) and stripline 139.8 mm/ns (7.15 ps/mm). `edge_length.py` computes
+5.5 and 6.9 ps/mm from the board's own stackup, which is within 6 percent of both, so the arithmetic
+in that tool has a second opinion it did not have this morning.
+
+**Vendors that refuse this host, appended to the section 7 list:** analog.com (HTTP/2 stream error on
+every request) and intel.com's literature path (403).

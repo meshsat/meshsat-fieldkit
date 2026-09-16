@@ -715,7 +715,12 @@ the relaxed class asks a different QUESTION rather than a looser number. It is G
 ENFORCED for one reason and it is the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS,
 not a standard's. The 10 mm or 5 percent of the fast classes is the 15 September ruling's figure calibrated
 on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judgement. Until a source backs
-them, they are a written screen and say so
+them, they are a written screen and say so 16 September 2026, an authority for the PRINCIPLE and not for the
+numbers: TI SCAA082A section 1.6 (v2/vendor/ti/ti-scaa082a-high-speed-layout-guidelines.pdf) states that at
+high frequency the return current flows along the lowest impedance path, directly beside the signal, and that
+a slot in the reference forces a loop whose area is what radiates. That is what this rule rests on and this
+tree held no source for it until today. It states NO per-class tolerance, so the millimetres here are still
+this project's own and the maturity does not move.
 
 ### RET-002  plane-adjacency screen
 
@@ -750,7 +755,9 @@ reference changes layer with no return transition).
 **Today** 16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
 against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a
 net's own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they
-read
+read 16 September 2026: TI SCAA082A section 2.5 states the fixer as practice, 'use ground vias around the
+signal via to make sure that the return current can flow as close as possible to the signal'. It gives no
+distance, which is the number this rule still wants.
 
 ### RET-003  return transition at a reference change
 
@@ -788,7 +795,9 @@ carries both side by side; C 62 and 166 and none; D 145 and none; E 202 and none
 RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between two
 DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared per
 board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its pin) and
-it is OURS, so the maturity is GENERATED_ONLY until a document states it
+it is OURS, so the maturity is GENERATED_ONLY until a document states it 16 September 2026: TI SCAA082A
+section 2.5 asks for ground vias AROUND the signal via and gives no figure for how far away one may sit, so
+the search radius here remains unsourced.
 
 ### RET-004  ground-via proximity screen
 
@@ -965,7 +974,10 @@ is a property of the driver and board A's fast nets are gate drives while board 
 compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per board with
 its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however carefully it is
 chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated, and the verdict is
-INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project
+INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project 16 September 2026: TI
+SCAA082A Table 2 gives measured propagation delays on FR-4 at er 4.6, microstrip 171.9 mm/ns and stripline
+139.8 mm/ns (5.82 and 7.15 ps/mm), which is within 6 percent of the 5.5 and 6.9 ps/mm edge_length.py computes
+from the board's own stackup: the arithmetic has a second opinion. The criterion k still has none.
 
 ## Clocks Reset Boot
 
