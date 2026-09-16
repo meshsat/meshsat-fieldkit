@@ -320,9 +320,18 @@ coverage:
    note: "the CPL's form is checked; the rotation of each polarised footprint has never been verified against its own drawing or the assembler's preview, and the rotation table is inherited",
    remediation: {action: "a per-footprint rotation verification protocol with the assembler's preview as the artefact", owner: SESSION, depends_on: [], p50_h: 4, p80_h: 12}}
 
- TST-001: {implementation: "gen_sch_*.py test points", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "test points exist; no bring-up sheet exists for any board",
-   remediation: {action: "a bring-up sheet per board", owner: SESSION, depends_on: [PWR-002], p50_h: 5, p80_h: 14}}
+ TST-001: {implementation: "rules_render.py bringup_doc, from each board's own intent file",
+   verification: {tool: rules_render.py, document: "docs/PCB-BRING-UP.md", fixtures: tests/test_rules_status.py},
+   maturity: VERIFIED_MANUALLY, gap_category: NONE,
+   note: "16 September 2026. A bring-up sheet per board, GENERATED from what the board itself declares, so it cannot
+     describe a rail the board does not have and cannot miss one it does. An INPUT is applied from a bench supply
+     current-limited to the rail's own typical current; a DERIVED rail is never applied, its step is a measurement, and
+     a reading outside plus or minus 5 percent stops the sequence. The order is by DEPENDENCY and not by voltage: the
+     first draft sorted by voltage ascending and would have had a supply put 3.3 V onto board A's logic rail before the
+     14.4 V pack node feeding the converter that makes it. Where a rail's declared source is an inductor or a ferrite
+     the tool says it CANNOT TELL a filter choke on an incoming feed from a converter's output, and lists those
+     separately to be decided before powering, rather than choosing. It is a procedure and a person does it, which is
+     why this is VERIFIED_MANUALLY and the record is the page"}
 
  REL-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
    note: "nothing considers vibration, mating cycles or moisture for any interface",
