@@ -12,7 +12,7 @@ appears in the gap register.
 | ANA-001 | ANALOG_MIXED_SIGNAL | MUST_JUSTIFY | gen_pcb_p3.py Kelvin sense, gen_sch_d.py mic network | none |  | **GENERATED_ONLY** |
 | BAT-001 | ENERGY_STORAGE | BLOCKER | gen_sch_p.py BQ4050 and protection FETs | none |  | **GENERATED_ONLY** |
 | BAT-002 | ENERGY_STORAGE | BLOCKER | gen_sch_a.py, gen_sch_e.py, gen_pcb_e5.py, gen_sch_p.py | none |  | **OPEN** |
-| CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py | none |  | **GENERATED_ONLY** |
+| CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_*.py crystal networks | clock_check.py -> clock_check | tests/test_clock_check.py | **ENFORCED** |
 | CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings and each board's intent rails | derate.py -> derate | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
 | CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_decoupling | tests/test_board_gates.py | **ENFORCED** |
@@ -71,8 +71,8 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 25 |
-| GENERATED_ONLY | 11 |
+| ENFORCED | 26 |
+| GENERATED_ONLY | 10 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
 | OPEN | 11 |

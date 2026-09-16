@@ -109,6 +109,10 @@ python3 ../tools/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.lo
 # it needs no copper and a part rated below its rail is a schematic defect: catching it after a route is a
 # re-route. Board A shipped twenty-five 50 V capacitors on a 54 V output and a person found them by reading a
 # value string while doing something else (12 September 2026).
+# RULE CLK-001: every crystal's load network, from the netlist, before any copper. A crystal that does not
+# start is a board that is perfectly routed, perfectly assembled and dead, and every other check passes it.
+python3 ../tools/clock_check.py out/$N.net > out/clock_check.log 2>&1; CK=$?; grep -E 'clock_check:|FAIL' out/clock_check.log | head -6
+[ "$CK" -eq 1 ] && block "a crystal's load network (rule CLK-001, out/clock_check.log)" out/clock_check.log
 python3 ../tools/derate.py out/$N.net > out/derate.log 2>&1; DR=$?; grep -E 'derate:|FAIL|UNDECLARED' out/derate.log | head -8
 [ "$DR" -eq 1 ] && block "a part is rated below the rail it sits on (rule CMP-001, out/derate.log)" out/derate.log
 

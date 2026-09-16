@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**33 of 57 rules carry a gap.**
+**32 of 57 rules carry a gap.**
 
 ## absent (12)
 
@@ -71,7 +71,7 @@ no dissipation estimate exists for any board; the enclosure is sealed by ruling 
 stage  
 *Close it by* a dissipation table per board and a thermal estimate for the sealed enclosure, then a prototype measurement plan. Owner **SESSION**, after ENV-001. Effort P50 10h, P80 30h.
 
-## generated only (7)
+## generated only (6)
 
 **ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, GENERATED_ONLY)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
@@ -82,11 +82,6 @@ or measures their separation from switching copper
 the protection is designed and its thresholds are configured in software; no check compares a threshold
 against the cell's own limits, and the cell is not chosen  
 *Close it by* the cell's datasheet on file, the threshold table derived from it, and the prototype protection test. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
-
-**CLK-001 oscillators, straps and boot pins** (BLOCKER, GENERATED_ONLY)  
-crystal loads and straps are chosen in the generators; nothing checks a load capacitance against the crystal,
-or a strap's state at reset  
-*Close it by* a check of every crystal's load network against its datasheet and every strap's pull. Owner **SESSION**. Effort P50 5h, P80 12h.
 
 **DOC-002 provenance for every claim** (MUST_JUSTIFY, GENERATED_ONLY)  
 the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the artefacts
@@ -225,9 +220,9 @@ verdict is INCONCLUSIVE rather than passing at a figure this project made up. Th
 registry makes of every other unsourced limit  
 *Close it by* obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge. Owner **SESSION**. Effort P50 2h, P80 6h.
 
-## covered (24)
+## covered (25)
 
-These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RET-004, RF-002, RTE-001,
-RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, STK-001, SUP-001, TST-001, VIA-001
+These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-002,
+DFM-001, DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RET-004, RF-002,
+RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, STK-001, SUP-001, TST-001, VIA-001
 
