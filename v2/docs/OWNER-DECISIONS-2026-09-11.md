@@ -1760,3 +1760,103 @@ unpressurised aircraft, that has to be said before those boards are cut.
 **What does not change whichever you take:** the envelope becomes a dated document that every rule cites,
 and the three measurements it rests on (the inside-air rise, the seal, the bond resistances) stay owed and
 are named in it rather than assumed.
+
+## Decision 31, the technical packet: eleven conductors leave the case and four meet their clamp only through an active part, and two of those have no clamp at all (16 September 2026)
+
+**Status of board E while this is open:** `ROUTING_STATUS = PASS` (0 hard, 0 unrouted, board gate 69 of 69),
+`ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31`, `FAB_READINESS = NOT_READY`,
+`PUBLICATION_STATUS = HELD`. No orderable fabrication package exists or will be made while this is open.
+
+**This packet could not be written until today**, because `port_protect.py` recorded only a boolean for the
+active part: every row said "the clamp is behind an active part" and no row said which part. Fixed at the
+source, so each path below names the part that takes the transient and the part that is supposed to stop it.
+
+### The four conductors, end to end
+
+| # | pin | net | the ACTIVE part that sees the transient | the CLAMP behind it | distance from the connector to the clamp |
+|---|---|---|---|---|---|
+| 1 | `J_DCIN.1` | `DC_IN` | **Q1** BSC039N06NS, 60 V 3.9 mOhm N-FET (ideal-diode pass element, controller U3 LM74700-Q1) | **D1** SMCJ33A on `DC_P` | 12.8 mm to F1, 23.6 mm on to Q1, 19.3 mm on to D1: about **56 mm** of track |
+| 2 | `J_POD.1` | `+3V3_E6` | **U6** LM5069MM-2 hot-swap controller | **L2** Bourns SRF1260-4R7Y common-mode choke on `DC_HS` | 106 mm, and **L2 is a filter, not a clamp** |
+| 3 | `J_POD.3` | `SDA1` | **U10** RP2040 sensor controller | **D3** SMCJ18A on `CELL_F`, a **different net**, reached only by walking through U10 | 29.8 mm to D3, but 227 mm to U10 |
+| 4 | `J_POD.4` | `SCL1` | **U10** RP2040 sensor controller | as above | as above |
+
+### What paths 3 and 4 actually are
+
+`SDA1` and `SCL1` carry **no clamp of their own**. The clamp the tool names, D3, is the pack-node TVS on
+`CELL_F`; the walk reaches it by traversing through the RP2040 and out into the power domain, which is not a
+protection path for the I2C lines in any useful sense. The two conductors run **227 mm** from the outdoor
+connector to the RP2040 and **251 mm** to their 4.7k pull-ups, and on the way they are wired to:
+
+`U10` RP2040 pins 6 and 7, `U14` BME688, `U15` BMI270, `J_LTG` the AS3935 lightning module, and **`J_SMB`,
+the pack SMBus**, whose connector sits **6.5 mm** from `J_POD` on the same net.
+
+So a transient on the outside sensor pod's lead is presented, with nothing in between, to five devices
+including the battery management bus. That is materially worse than the category "clamp behind an active
+part" reads, and it is the substance of this decision.
+
+Path 2 is the same shape one level up: `+3V3_E6` is the board's whole 3.3 V rail, 43 nodes including every
+RP2040 supply pin, the QSPI flash and the LDO output, and the part named as its guard is a common-mode
+choke, which filters and does not clamp.
+
+Path 1 is the benign case the category describes: the fuse is in the right place, the ideal-diode FET takes
+the transient, and a real TVS clamps behind it.
+
+### A second finding on path 1, independent of any transient level
+
+| D1 SMCJ33A, Vishay SMCJ series, `v2/vendor/vishay/vishay-smcj-series-tvs.pdf` | value |
+|---|---|
+| stand-off voltage V_WM | **33 V** |
+| breakdown V_BR at 1 mA | 36.7 V min, 40.6 V max |
+| clamping voltage V_C at I_PPM | 53.3 V |
+| peak pulse current I_PPM, 10/1000 us | 28.1 A |
+| leakage at V_WM | 1.0 uA |
+| dynamic resistance, derived (V_C - V_BR)/I_PPM | about **0.59 ohm** |
+| junction capacitance | a curve, figure 4; not a single number |
+
+**The declared input range is 9 to 36 V** (V2-SPEC, the filtered vehicle and shore input). At the top of its
+own declared range this rail sits **3 V above the TVS stand-off voltage and 0.7 V below the minimum of the
+breakdown distribution**. A device at the low end of that spread conducts continuously at 36 V in. This is a
+part-selection error that does not depend on decision 34 at all.
+
+And the part that meets the transient first, **Q1, is a 60 V FET** while D1 lets 53.3 V through at 28.1 A:
+6.7 V of margin. **The BSC039N06NS datasheet is not in this tree**, so its avalanche energy is unknown and is
+owed before the margin can be called adequate.
+
+D3 SMCJ18A for reference: V_WM 18 V, V_BR 20.0 to 22.1 V, V_C 29.2 V at 51.4 A, derived dynamic resistance
+about 0.18 ohm.
+
+### What is owed rather than estimated
+
+- **The transient requirement itself.** IEC 61000-4-2 contact and air discharge levels, 61000-4-4 EFT and
+  61000-4-5 surge levels all come from the operating envelope, which is **decision 34 and unruled**. Nothing
+  below picks a clamp energy, because that number does not exist yet.
+- **BSC039N06NS datasheet** (Infineon), for Q1's avalanche rating.
+- **System-level IEC ratings** for the RP2040, BME688, BMI270 and AS3935. Their makers publish HBM and CDM,
+  which are handling figures for a factory, and **HBM must not be substituted for system-level qualification**.
+  If no maker publishes a system-level figure, that is itself the answer: the lines need external protection.
+- Junction capacitance at the working point for any clamp chosen for the I2C lines, because a TVS across a
+  400 kHz bus loads it.
+
+### Options, costed. This is coupled to decision 34 and each option is written to stay valid under any envelope
+
+**A. Protect the pod lead at the connector, RECOMMENDED.** Add a low-capacitance bidirectional TVS array on
+`SDA1`, `SCL1` and `+3V3_E6` at `J_POD`, plus series resistance on the two I2C lines, and correct D1 to a
+part whose stand-off is above 36 V (SMCJ40A or SMCJ43A). Cost: one board E phase, four to six parts, a
+re-route of a board that is otherwise at 0 hard and 0 unrouted, about half a day of box time. Buys: the
+outdoor lead stops being wired straight to the pack SMBus and five devices. **Valid under every envelope**:
+the clamp's energy rating is chosen once decision 34 names a level; the topology does not change with it.
+
+**B. Move the pod off the shared bus.** Give `J_POD` its own I2C segment behind a buffer or an isolator, so
+a transient reaches one part rather than five, and correct D1 as in A. Cost: one board E phase plus a part
+and its footprint, about a day. Buys: containment rather than clamping, and it survives a level nobody has
+specified yet. Residual: more parts, and the isolator itself needs a system-level rating.
+
+**C. Prototype-only waiver, explicitly recorded.** Cut board E's folder with the four conductors named in
+its order notes, build prototypes, and measure. Cost: nothing now. Buys: a board. Residual: the first ESD
+event on the pod lead may take the RP2040, the two sensors and the pack SMBus with it, and **a waiver is
+recorded as a waiver and never counted as a PASS** in the readiness number. I do not recommend this for the
+pod lines; it is defensible for D1 alone, because D1 is a part swap with no layout change.
+
+**What does not change whichever you take:** decision 34 is answered first or alongside, because the clamp
+energy for A and B comes from it; and D1's stand-off voltage is wrong against the board's own declared input
+range whatever the transient levels turn out to be.
