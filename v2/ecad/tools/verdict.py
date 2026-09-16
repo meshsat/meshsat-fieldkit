@@ -144,7 +144,7 @@ def _policy():
     return d
 
 
-def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None, rules=None):
+def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None, rules=None, applicable=True):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
 
     `advisory` (or VERDICT_ADVISORY=1 in the environment) marks a verdict that is a MEASUREMENT for the record and
@@ -152,6 +152,15 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
     15 September 2026 (MESHSAT-862): B19's pre stage printed PREROUTE-DONE OK and routeflow read GATE_BLOCKED,
     because the pre-route DRC on the pair copper BEFORE the prune (hard 15, the number the prune acts on) and the
     placement predictor the board declares as a report had each written a FAIL the collector took as the stage's.
+
+    `applicable=False` says the rule this tool decides does not apply to THIS board: the board carries none of
+    the thing the rule is about. It stays INCONCLUSIVE, because absence is never a pass and a gate that could
+    not judge must never read as one, and it carries `applicable: false` so a collector can tell "this board has
+    no crystal" apart from "the crystal check did not run". Board P's route was blocked on 16 September 2026 by
+    exactly that confusion: the pre-route gate refused the board because its crystal check and its exposed-port
+    check both said, correctly, that there was nothing of theirs on the board. The registry remains the
+    authority on applicability; this field is the tool reporting the board fact it observed, and
+    `rules_status.py` compares the two.
 
     `result` must be PASS, FAIL or INCONCLUSIVE; anything else is a usage error, because a verdict this module does not
     recognise must not resolve to a pass by falling through."""
@@ -169,6 +178,7 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "policy": _policy(),       # the hard set the judgement is under, so a verdict from an older policy is not read as today's
         "verdict": result,
         "advisory": bool(advisory),
+        "applicable": bool(applicable),
         "counts": dict(counts or {}),
         "denominator": denominator,
         "inputs": dict(inputs or {}),
@@ -193,7 +203,7 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
     if not quiet:
         d = "" if denominator is None else " of %s" % denominator
         c = (" " + json.dumps(rec["counts"], sort_keys=True)) if rec["counts"] else ""
-        print("verdict: %-22s %-12s%s%s%s%s" % (tool, result, d, c, " (advisory: a measurement, not a bar)" if advisory else "", (" | " + note) if note else ""))
+        print("verdict: %-22s %-12s%s%s%s%s" % (tool, result, d, c, (" (advisory: a measurement, not a bar)" if advisory else ("" if applicable else " (this rule does not apply to this board)")), (" | " + note) if note else ""))
     return CODE[result]
 
 
@@ -256,9 +266,11 @@ def collect(out_dir="out", require=(), since=None):
     worst = 0
     for rec in found.values():
         if rec.get("advisory"): continue   # a measurement for the record; it never decides the stage
+        if rec.get("applicable") is False: continue   # the board carries none of what this rule is about
         worst = max(worst, CODE.get(rec.get("verdict"), CODE[INCONCLUSIVE]))
     if missing: worst = max(worst, CODE[INCONCLUSIVE])
-    if not any(not r.get("advisory") for r in found.values()): worst = max(worst, CODE[INCONCLUSIVE])   # only advisories is nothing judged
+    if not any((not r.get("advisory")) and r.get("applicable") is not False for r in found.values()):
+        worst = max(worst, CODE[INCONCLUSIVE])   # only advisories and inapplicable rules is nothing judged
     return worst, found, missing
 
 

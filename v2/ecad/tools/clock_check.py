@@ -103,8 +103,13 @@ def main(argv):
     if rows: print("  the load capacitor VALUE is not judged here: C_L is per part and lives in its own datasheet")
     if "--json" in argv: print(json.dumps(rows, indent=1))
     if not rows:
+        # NOT APPLICABLE, which is a different thing from "could not judge" (16 September 2026): board P's
+        # route was blocked by this verdict and by the exposed-port one, both of them saying correctly that
+        # there is nothing of theirs on that board. The verdict stays INCONCLUSIVE, because absence is never a
+        # pass, and it says the rule does not apply here so a pre-route gate can tell the two apart.
         return _v.write("clock_check", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path},
-                        note="this board carries no crystal, so nothing was judged")
+                        applicable=False,
+                        note="this board carries no crystal, so CLK-001 has nothing on it to judge")
     return _v.write("clock_check", _v.FAIL if bad else _v.PASS,
                     counts={"crystals": len(rows), "bad": len(bad)}, denominator=len(rows),
                     evidence=bad[:20], inputs={"netlist": path},
