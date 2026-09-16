@@ -21,7 +21,9 @@ import verdict
 
 # The gates named by the programme: each decides something a driver or a human acts on.
 GATES = ["check_pcb_a.py", "check_pcb_b.py", "check_pcb_c.py", "check_pcb_d.py", "check_pcb_e.py",
-         "check_pcb_p.py", "hardset.py", "impedance_check.py", "dc_drop.py", "check_contracts.py",
+         # check_pcb_e5.py, 16 September 2026: the seventh board had no gate at all, and it is the contact
+         # block the whole energy chain passes through
+         "check_pcb_e5.py", "check_pcb_p.py", "hardset.py", "impedance_check.py", "dc_drop.py", "check_contracts.py",
          "check_zone_nets.py", "intent_checks.py", "place_audit.py", "erc_gate.py",
          "verify_deliverable.py", "pruned_gate.py", "lcsc_fill.py",
          # added 16 September 2026 with the rule registry: every rule with an ENFORCED maturity needs a gate in
