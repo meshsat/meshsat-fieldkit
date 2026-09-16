@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards": 1,
+  "classes": 3,
+  "covered": 6,
+  "fail": 0
+ },
+ "denominator": 9,
+ "evidence": [],
+ "inputs": {
+  "list": "pcb_reliability.yaml"
+ },
+ "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "REL-001"
+ ],
+ "tool": "reliability",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9bccfac7573e3ce1"
+ },
+ "ts": "2026-09-16T16:42:08Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

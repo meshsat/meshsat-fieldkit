@@ -1,0 +1,51 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards": 1,
+  "fail": 7,
+  "unchecked_footprints": 12,
+  "unverified_rows": 7
+ },
+ "denominator": 19,
+ "evidence": [
+  "A: IDC-Header_2x05_P2.54mm_Vertical_NarrowPad (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
+  "A: IDC-Header_2x08_P2.54mm_Vertical_NarrowPad (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
+  "A: IDC-Header_2x13_P2.54mm_Vertical_NarrowPad (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
+  "A: SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm (matched by ^SOIC-8) carries a rotation offset nobody has compared with the assembler's preview",
+  "A: SOT-23 (matched by ^SOT-23) carries a rotation offset nobody has compared with the assembler's preview",
+  "A: SOT-23-6 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
+  "A: TSSOP-24_4.4x7.8mm_P0.65mm (matched by ^TSSOP-24) carries a rotation offset nobody has compared with the assembler's preview",
+  "not compared with a preview: D_SMB",
+  "not compared with a preview: D_SMC",
+  "not compared with a preview: Fuseholder_Blade_Mini_Keystone_3568",
+  "not compared with a preview: JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
+  "not compared with a preview: JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
+  "not compared with a preview: JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical",
+  "not compared with a preview: PinHeader_1x05_P2.54mm_Vertical",
+  "not compared with a preview: QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm",
+  "not compared with a preview: QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm",
+  "not compared with a preview: SOT-583-8",
+  "not compared with a preview: TSSOP-14_4.4x5mm_P0.65mm",
+  "not compared with a preview: VSSOP-10_3x3mm_P0.5mm"
+ ],
+ "inputs": {
+  "rotations": "../release/revA/order/jlc-rotations.csv"
+ },
+ "note": "every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "DFA-001"
+ ],
+ "tool": "assembly_set",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9bccfac7573e3ce1"
+ },
+ "ts": "2026-09-16T16:38:10Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

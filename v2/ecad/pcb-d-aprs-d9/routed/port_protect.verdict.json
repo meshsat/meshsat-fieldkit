@@ -18,7 +18,7 @@
   "board": "d",
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "ed54ff33d1d4b1be"
+   "sha256_16": "76b8ff664a8a6dd4"
   }
  },
  "note": "7 conductor(s) reach a semiconductor with nothing between, and 0 meet their clamp only through an active part, which therefore sees the transient itself",
@@ -32,9 +32,9 @@
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "8ab9a87c66026600"
+  "tools_tree_sha": "9bccfac7573e3ce1"
  },
- "ts": "2026-09-16T16:09:31Z",
+ "ts": "2026-09-16T16:41:13Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "collisions": 0,
+  "fine_pitch": 8,
+  "footprints": 189,
+  "measured": 8
+ },
+ "denominator": 8,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "5fc1ffce0dc5ab1c"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "PLC-001"
+ ],
+ "tool": "place_audit",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9bccfac7573e3ce1"
+ },
+ "ts": "2026-09-16T16:41:48Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

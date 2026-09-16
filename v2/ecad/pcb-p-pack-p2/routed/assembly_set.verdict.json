@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards": 1,
+  "fail": 1,
+  "unchecked_footprints": 6,
+  "unverified_rows": 1
+ },
+ "denominator": 7,
+ "evidence": [
+  "P: SOT-23-6 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
+  "not compared with a preview: D_SMB",
+  "not compared with a preview: Fuseholder_Blade_Mini_Keystone_3568",
+  "not compared with a preview: JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical",
+  "not compared with a preview: JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
+  "not compared with a preview: JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical",
+  "not compared with a preview: QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm"
+ ],
+ "inputs": {
+  "rotations": "../release/revA/order/jlc-rotations.csv"
+ },
+ "note": "every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "DFA-001"
+ ],
+ "tool": "assembly_set",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9bccfac7573e3ce1"
+ },
+ "ts": "2026-09-16T16:42:09Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

@@ -28,9 +28,9 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "8ab9a87c66026600"
+  "tools_tree_sha": "9bccfac7573e3ce1"
  },
- "ts": "2026-09-16T16:10:32Z",
+ "ts": "2026-09-16T16:42:18Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
