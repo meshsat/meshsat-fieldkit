@@ -839,3 +839,23 @@ def t_the_dialog_watchdog_watches_the_jvm_and_not_its_wrapper():
     assert "/proc/$_J/environ" in s, "the display is guessed rather than read from the process"
     # and it must not stop watching: Freerouting raises one dialog per failing net, at any pass
     assert "1200" not in s, "the watchdog still gives up after twenty minutes"
+
+
+def t_racing_attempts_differ_in_something_the_router_reads():
+    """Freerouting is deterministic, so N attempts with identical parameters are one attempt run N times.
+
+    Measured 5 September 2026: three parallel attempts differing only in their pass ceiling returned
+    byte-identical results, because the autorouter finished before any ceiling bound. route_parallel.sh took
+    a list of pass counts and gave every attempt the same rules file, so the parallelism it offered was real
+    only when a ceiling happened to bind. The capability probe of 6 September found the lever the router does
+    read: via_costs 200 against the default 50 cut board D's vias by 25 percent for 13 percent more length.
+
+    A variant is now `<passes>[:<via_costs>[:<ripup>]]` and carries its own rules file. A bare number keeps
+    the old meaning, so no existing caller changes.
+    """
+    s = open(os.path.join(TOOLS, "route_parallel.sh"), errors="replace").read()
+    assert "fr_rules.py" in s, "attempts cannot differ in the one thing 1.9.0 honours"
+    assert "--via-costs" in s, "the via cost is not per attempt"
+    assert 'FR_RULES="$PWD/out/par/$K/variant.rules"' in s, "the rules file is not handed to the attempt that owns it"
+    # the old form must still work: a bare pass count takes the caller's own rules
+    assert 'if [ "$REST" = "$V" ]' in s, "a bare pass count is no longer accepted"
