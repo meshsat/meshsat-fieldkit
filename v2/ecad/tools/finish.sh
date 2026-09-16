@@ -214,6 +214,11 @@ python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('  OPEN', 
 if [ -n "$PRUNED" ]; then
   python3 $T/pruned_gate.py $N.kicad_pcb out/$N-pruned.txt > out/pruned_gate.log 2>&1; PRC=$?
   grep -E 'pruned_gate' out/pruned_gate.log | tail -6
+  # THE LIST TRAVELS WITH THE BOARD (16 September 2026). escape_prune writes it in the ROUTE tree, the board is
+  # committed without it, and every later reading of that board then has no way to ask whether a pruned pad was
+  # reached: RTE-002 read "no pruned_gate verdict for this board" on five boards for that reason alone. It is
+  # this morning's DRC-report lesson in a second place, an artefact that decides a rule belongs beside the board.
+  mkdir -p routed && cp out/$N-pruned.txt routed/$N-pruned.txt 2>/dev/null || true
   [ "$PRC" -eq 0 ] || stop "PRUNED PAD NOT REACHED by the router"
 fi
 

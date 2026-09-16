@@ -17,14 +17,18 @@ import intent as _intent
 # whole pack node leaves this board through that 12 AWG solder pad to the block's CELL+ targets and on to
 # board A; what stays here is the local 5 V buck and the two mixer fans. The split apportions the declared
 # 10 A typical: it is a design estimate of where the current goes, not a measurement of what it is.
-_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3",
+_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True,
+             always_on_why="the pack node after this board's 25 A blade: a fuse is protection and not a switch, and what opens this node is the pack's own gauge two stages upstream",
              loads={"P_CP": 9.0, "U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1},
              note="the pack node after the 25 A blade F3, to the block pads")
 # LOADS DECLARED 13 September 2026. The guess for this one was J_BLK and U4 at 4 A each, and U4 is the ideal
 # diode that ORs the tracker output INTO this bus: it is a SOURCE, so half the rail's current was being pulled
 # backwards through it. The whole of this bus leaves through the block lands J_BLK pins 1 to 4 for board A's
 # front end to regulate; the monitor divider R40 and the indicator LED1 are microamps and milliamps.
-_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2",
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", switch="U6", enable_net="HS_UVLO",
+             # the hot-swap controller IS the switch and its enable is the UVLO divider: the rail comes
+             # up when the input passes 9 V and drops out above 40 V, which is the LM5069's own gate.
+
              loads={"J_BLK": 8.0}, budget=0.02, share=0.005,
              note="shore and vehicle entry after the filter choke, 10 A fuse. THIS BOARD'S SHARE is 0.5 of the "
                   "rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on "
@@ -34,7 +38,8 @@ _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2",
 # rails and the return-path gate judged them as SIGNALS: +3V3_E6 came back 194.7 of 502.0 mm without an
 # adjacent reference, which is what a power net looks like and says nothing about signal integrity. A rail that
 # is not declared is not excluded, and the same omission would have hidden its drop and its current density.
-_intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13",
+_intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13", always_on=True,
+             always_on_why="U13 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V the AP63205 makes and has no switch of its own",
              source_ic="U13 is a TLV75533 LDO in a SOT-23-5: pin 5 IS its output power pin and the whole rail "
                        "current really does leave through it, which is what source_ic is for",
              loads={"U10": 0.06, "U11": 0.05, "U14": 0.04, "U15": 0.04,
@@ -45,7 +50,8 @@ _intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13",
 # The source is the INDUCTOR, not the chip. U12 is an AP63205 buck and its output current leaves through L3;
 # naming the controller would hold its SOT-23-6 pin at 0 V and pull 0.3 A down a pin that never carries it,
 # which is the defect board A's VBUS20 had (2.90 A of 6 down a 0.200 mm escape, 13 September 2026).
-_intent.rail("+5V_E6", 5.0, 0.30, 0.50, "L3",
+_intent.rail("+5V_E6", 5.0, 0.30, 0.50, "L3", always_on=True,
+             always_on_why="U12 is an AP63205 whose EN pin is tied to CELL_F, the pack node it runs from, so this rail follows the pack and has no switch of its own",
              loads={"U13": 0.20, "J_GEIGER": 0.10},
              note="the local 5 V buck U12: the 3.3 V regulator's input and the Geiger tube's high-voltage "
                   "supply on its own header")

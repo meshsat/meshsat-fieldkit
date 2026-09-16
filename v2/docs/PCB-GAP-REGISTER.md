@@ -15,9 +15,19 @@ answered yet, made visible so it cannot be forgotten.
 no EMC analysis of any kind exists; eleven radios and a sealed metal box  
 *Close it by* an EMC sheet per board and a pre-compliance plan for the kit. Owner **SESSION**, after ENV-001, SI-001. Effort P50 10h, P80 40h.
 
-**PWR-002 sequencing and inrush** (MUST_JUSTIFY, OPEN)  
+**PWR-002 sequencing and inrush** (MUST_JUSTIFY, ENFORCED)  
 sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
-check  
+check 16 September 2026: IT IS DERIVED AND CHECKED, not written. power_sequence.py reads each rail's
+declaration in the intent (the part whose enable pin switches it, or `always_on` with the reason there is no
+such part) and checks it against the netlist: the declared switch exists, it has that enable pin, and the
+parts driving that net are named with the rails they are powered from. What it DECIDES is the deadlock a
+schematic cannot show, a rail whose enable is driven only by a device powered from that same rail, which
+cannot start. What it does not decide is the ORDER between rails, because which order is correct is a
+property of the modules' own datasheets and belongs with INT-001. Boards A (13 rails), C (2), D (4), E (4)
+and P (3) pass; board B declares 36 rails and none of them yet, so it reads INCONCLUSIVE with the list.
+Deriving the switch instead of declaring it was tried and withdrawn the same hour: a walk across two-pin
+passives from the rail's own net reached 28 candidate parts on board A, and a search that answers 'one of
+twenty-eight' is not an answer.  
 *Close it by* a sequencing sheet per board from the enables in the netlist, reviewed against each module's requirement. Owner **SESSION**. Effort P50 6h, P80 16h.
 
 **REL-001 the build survives its service life** (MUST_JUSTIFY, OPEN)  
@@ -131,7 +141,7 @@ computed, and a board declares exceptions in an allow file
 
 ## source or applicability unresolved (14)
 
-**BAT-002 the energy chain is bounded end to end** (BLOCKER, SOURCE_UNVERIFIED)  
+**BAT-002 the energy chain is bounded end to end** (BLOCKER, ENFORCED)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end 16
 September 2026: THE CHAIN IS DRAWN AND GATED. pcb_energy_chain.yaml carries it end to end, nine stages from
 the 4S cell block to the eFused branches and a second entry for the shore and vehicle input, each with its
@@ -144,7 +154,14 @@ pack node's 18 A peak while naming a 2 A eFuse as its protection, which was a mo
 stages. WHAT REMAINS is the rule's own authority: the ratings come from the parts' datasheets (Littelfuse
 ATOF, Samsung INR18650-35E, Amass XT60, TI BQ4050 and CSD17570Q5B) but the SELECTION CRITERIA are engineering
 practice, and the standards the fuse cites for them (SAE J1284, ISO 8820-3) are not in this tree.
-littelfuse.com refuses this host with 403.  
+littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED (the CLK-001 shape): the gate
+decides four things that are definitional rather than empirical, that the element is at or below the rating
+of what it protects, at or above the path's own declared peak, able to interrupt the fault current declared
+at its position, and followed by the stage it protects; plus that every rating's source file is in this tree
+and every protective element is in its board's netlist. What it PRINTS rather than decides is the melting
+time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own
+authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status
+SOURCE_UNVERIFIED.  
 *Close it by* obtain an authority for the SELECTION CRITERIA (SAE J1284 or ISO 8820-3, which the fuse's own datasheet names, or an accessible maker's selection guide; littelfuse.com refuses this host), then the rule's limits are sourced and the gate that already passes decides. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
@@ -205,7 +222,7 @@ A through one via). The arithmetic is right and the attribution is not, so the v
 rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh  
 *Close it by* read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority. Owner **SESSION**, after STK-001, PI-001. Effort P50 6h, P80 16h.
 
-**PWR-003 protection coordination** (BLOCKER, SOURCE_UNVERIFIED)  
+**PWR-003 protection coordination** (BLOCKER, ENFORCED)  
 two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on
 file 16 September 2026: the coordination study exists as data and as a gate, energy_chain.py over
 pcb_energy_chain.yaml, 69 checks passing. For every protective element it carries the rated and peak current
@@ -214,7 +231,14 @@ available at that point with its derivation, and the element downstream it prote
 worst fault is printed from the I2t (4.3 ms for the 25 A blades at 480 A, 2.9 ms for the 10 A at 200 A). The
 interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. WHAT REMAINS is the
 authority for the selection criteria themselves, which the fuse's datasheet names as SAE J1284 and ISO 8820-3
-and this tree does not hold; littelfuse.com refuses this host with 403.  
+and this tree does not hold; littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED
+(the CLK-001 shape): the gate decides four things that are definitional rather than empirical, that the
+element is at or below the rating of what it protects, at or above the path's own declared peak, able to
+interrupt the fault current declared at its position, and followed by the stage it protects; plus that every
+rating's source file is in this tree and every protective element is in its board's netlist. What it PRINTS
+rather than decides is the melting time from the I2t figure, because a clearing curve is a curve and this
+reads one point of it. The rule's own authority for the SELECTION CRITERIA is still not in the tree, which is
+why the registry keeps source_status SOURCE_UNVERIFIED.  
 *Close it by* obtain an authority for the SELECTION CRITERIA (SAE J1284 or ISO 8820-3, which the fuse's own datasheet names, or an accessible maker's selection guide; littelfuse.com refuses this host), then the rule's limits are sourced and the gate that already passes decides. Owner **SESSION**, after ENV-001, BAT-002. Effort P50 8h, P80 20h.
 
 **RET-001 a continuous adjacent return path** (BLOCKER, SOURCE_UNVERIFIED)  
