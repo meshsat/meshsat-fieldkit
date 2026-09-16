@@ -1860,3 +1860,48 @@ pod lines; it is defensible for D1 alone, because D1 is a part swap with no layo
 **What does not change whichever you take:** decision 34 is answered first or alongside, because the clamp
 energy for A and B comes from it; and D1's stand-off voltage is wrong against the board's own declared input
 range whatever the transient levels turn out to be.
+
+### Decision 31 extended: it is three boards and ten conductors, not one board and four (16 September 2026)
+
+The packet above covered board E. With the tool naming the active part, the same question was put to boards A
+and C, and **board C's case is the worst of the three**: its conductors are in the `unprotected` category, not
+`behind an active part`, and one of them is a switch a person touches.
+
+**Board C, 4 conductors, nothing between them and a chip.** `J_MAINSW` is the main power button on the face
+and `J_PIJ2` the module button beside it, both exposed on the panel:
+
+| pin | net | what is on the conductor | what is missing |
+|---|---|---|---|
+| `J_MAINSW.1` | `MAINSW_A2` | FB1, ferrite 600R; C26, 100n across the pair | no clamp to a return |
+| `J_MAINSW.2` | `MAINSW_B2` | FB2, ferrite 600R; C26 | no clamp to a return |
+| `J_PIJ2.1` | `PIJ2_A2` | FB3, ferrite 600R; C27, 100n across the pair | no clamp to a return |
+| `J_PIJ2.2` | `PIJ2_B2` | FB4, ferrite 600R; C27 | no clamp to a return |
+
+A 600 ohm ferrite and a differential capacitor are an EMC filter. They raise the source impedance a transient
+sees and they do not clamp it to anything, so the energy still arrives at the far end. **A person's finger on
+the main power button is the most ordinary ESD entry point a kit of this shape has**, and it is the one port
+of the ten with no clamp of any kind on its own conductor.
+
+**Board A, 2 conductors, behind an active part.** The USB-C outlet on the connector plate:
+
+| pin | net | ACTIVE part that sees the transient | CLAMP behind it |
+|---|---|---|---|
+| `J_USBC_OUT.2` | `PD_CC1` | **U18** TPS25740ARGER USB-C PD source controller | **D4** SMBJ18A, on `PD_VBUS`, a different net |
+| `J_USBC_OUT.3` | `PD_CC2` | **U18** as above | as above |
+
+The configuration-channel pins of a USB-C outlet run to the PD controller, and the only clamp in reach is on
+VBUS. This is the same shape as board E's I2C lines: the clamp that the walk finds is not on the conductor
+that carries the transient.
+
+**Board E, 4 conductors**, as in the packet above.
+
+**What this changes about the decision.** It is not one board's port cluster, it is a pattern across the set:
+**of the ten conductors that leave the case and were judged, none has a transient clamp on its own
+conductor.** Every one either reaches a semiconductor directly or reaches a clamp that sits on a different
+net behind an active part. The options in the packet above therefore apply to A, C and E together, and the
+cost of option A changes from one board phase to three, which is still one wave on the current fleet.
+
+**Priority within it, if you want to take this in pieces:** board C first, because its four are unprotected
+outright and one is a button a person presses; board E second, because its two I2C lines reach five devices
+including the pack SMBus; board A last, because its two are CC pins behind a controller that has some
+tolerance of its own, which its datasheet states and which is owed to this packet.
