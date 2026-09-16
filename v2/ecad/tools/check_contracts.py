@@ -8,7 +8,15 @@ Usage: check_contracts.py [ecad dir]   (default: the directory above this script
 import sys, os, re, collections
 
 ECAD = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-NETS = {"A": "pcb-a-power", "B": "pcb-b-compute", "C": "pcb-c-display", "D": "pcb-d-aprs", "E": "pcb-e1-dock"}
+# 16 September 2026: BOARD P IS IN THE SET. It was left out because the contracts were written for the five
+# boards that share connectors, and the pack is joined to board E by two 12 AWG wires rather than a header. A
+# wire is a conductor like any other: P's W_P and W_N land on E's XT60, and rule SCH-003 read INCONCLUSIVE on
+# board P for as long as no contract named it, which is "absence is never a pass" in the one check that exists
+# to compare boards with each other. Board E5, the dock block, has no schematic and therefore no netlist: its
+# targets are GENERATED from board A's own board file, so the thing to check there is the board and not the
+# netlist, and it is named as a gap rather than left silent.
+NETS = {"A": "pcb-a-power", "B": "pcb-b-compute", "C": "pcb-c-display", "D": "pcb-d-aprs", "E": "pcb-e1-dock",
+        "P": "pcb-p-pack"}
 
 def netlist_path(stem):
     """The netlist of the DECLARED phase directory, or the newest copy when nothing declares one.
@@ -286,6 +294,33 @@ _u9 = _value_of("pcb-c-display", "U9")
 check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read", boards={"C"})
 
 
+# 15b. THE PACK'S TWO WIRES ARE A CONNECTOR (16 September 2026). Board P's pack leads are solder lands and
+# 12 AWG wire to the XT60 on board E, which is why this set left board P out for as long as it existed and why
+# rule SCH-003 had nothing to say about it. A wire is a conductor: what makes it a contract is that both ends
+# agree about which conductor carries what, and getting the pack's polarity wrong at the XT60 is the one
+# mistake on this kit that destroys a board rather than failing a test.
+if "P" in B and B["P"][1] and B["E"][1]:
+    _pp = B["P"][1].get(("W_P", "1"), "")
+    _pn = B["P"][1].get(("W_N", "1"), "")
+    _e2 = B["E"][1].get(("J_BATT", "2"), "")
+    _e1 = B["E"][1].get(("J_BATT", "1"), "")
+    check(_pp == "PACK_P" and _pn == "PACK_N",
+          "P: the pack leads are the pack's own two nets, W_P on the positive and W_N on the return",
+          "W_P %r, W_N %r" % (_pp, _pn), boards={"P"})
+    check(_e2 == "CELL+" and _e1 == "GND",
+          "E: the XT60 carries the pack on pin 2 and the return on pin 1, which is what P's leads land on",
+          "J_BATT.2 %r, J_BATT.1 %r" % (_e2, _e1), boards={"E", "P"})
+    # The two boards name the same conductor differently and that is correct: the pack board calls its output
+    # PACK_P and the dock calls its input CELL+, because each names its own branch. What must be true is that
+    # each end is the POSITIVE of the pair on its own board, which is what the two checks above establish, and
+    # that neither board has quietly put the return on the conductor the other calls positive.
+    check(_pp != "PACK_N" and _e2 != "GND",
+          "the pack pair is not crossed between board P's leads and board E's XT60",
+          "P positive %r, E pin 2 %r" % (_pp, _e2), boards={"E", "P"})
+    _fuse = B["P"][1].get(("F1", "1"), "") or B["P"][1].get(("F1", "2"), "")
+    check(bool(_fuse), "P: the pack's blade fuse is on the netlist and carries a net", "F1 %r" % _fuse,
+          boards={"P"})
+
 # 16. an in-line part is in line with something (9 Sep 2026, E7, appendix 32.83). R48 on E is drawn as the Geiger
 # module's "pulse input series" resistor, but U10 pin 9 sat on GEIGER_PULSE with the connector, so the pulse reached
 # the RP2040 directly and the resistor hung off it with only TP13 on its far side: a part that does nothing, the same
@@ -359,7 +394,21 @@ import verdict as _v
 # A PER-BOARD VERDICT BESIDE THE SET ONE (16 September 2026), the pattern final_gate already uses. The set
 # verdict is what the contracts as a whole say and it still blocks; these say what each board's own contracts
 # say, so a board is no longer reported as failing a rule because of a defect on a board it does not touch.
-for _bd in sorted(set(list(per_board) + list(B))):
+# BOARD E5 HAS NO NETLIST BY CONSTRUCTION and must still say so here (16 September 2026). The dock block has
+# no schematic: `gen_pcb_e5.py` reads board A's BOARD FILE and puts a target under each of its spring pins,
+# carrying the net of the pin above it. So the contract that matters for E5 is between two BOARDS rather than
+# two netlists, and this file cannot judge it. It writes the board an INCONCLUSIVE that says exactly that,
+# because "no verdict at all" reads as an oversight and this is a known gap with a named shape.
+for _bd in sorted(set(list(per_board) + list(B) + ["E5"])):
+    if _bd == "E5" and _bd not in B:
+        _v.write("check_contracts_e5", _v.INCONCLUSIVE, counts={"fail": 0, "pass": 0}, denominator=0,
+                 inputs={"boards": ",".join(sorted(B))},
+                 note="board E5 has no schematic and no netlist: gen_pcb_e5.py reads board A's BOARD FILE and "
+                      "puts a target under each spring pin carrying that pin's net, so its contract is between "
+                      "two boards rather than two netlists and this check cannot judge it. It is a gap with a "
+                      "known shape, not an oversight",
+                 quiet=True)
+        continue
     _r = per_board.get(_bd) or {"pass": 0, "fail": []}
     _n = _r["pass"] + len(_r["fail"])
     _v.write("check_contracts_%s" % _bd.lower(),
