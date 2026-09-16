@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 1,
+  "pass": 0
+ },
+ "denominator": 1,
+ "evidence": [
+  "return via: 8 of 40 signal vias have a ground via within 1.5 mm (54 exempt in fine-pitch fans, 27 on one reference plane, 168 on a net whose declared class has no edge to return); without one: FE_HDRV1 at (39.90, 47.80); FE_LDRV2 at (40.81, 60.78); FE_HDRV2 at (44.49, 62.30); CH_LODRV1 at (44.49, 86.25); PROCHOT at (48.00, 109.84); POE_HDRV1 at (48.42, 148.10); FE_LDRV1 at (49.42, 51.25); CH_BTST1 at (50.75, 93.25) ..."
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  }
+ },
+ "note": "a ground via at a signal's reference change",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [],
+ "tool": "intent_return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:42:25Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

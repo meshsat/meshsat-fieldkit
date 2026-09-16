@@ -1,0 +1,50 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 17,
+  "pass": 110
+ },
+ "denominator": 127,
+ "evidence": [
+  "return path under EPD_DC (Default, CLOCKED_DIGITAL): 324.2 of 359.4 mm without a plane on a neighbouring layer (limit 53.9) [the e-paper's data and command select, an edge per transfer]",
+  "return path under EPD_SCL (Default, CLOCKED_DIGITAL): 356.9 of 359.8 mm without a plane on a neighbouring layer (limit 54.0) [the e-paper's SPI clock, a few megahertz at most]",
+  "return path under EPD_SDA (Default, CLOCKED_DIGITAL): 203.7 of 359.8 mm without a plane on a neighbouring layer (limit 54.0) [the e-paper's SPI data, same rate]",
+  "return path under HB1 (Default, CLOCKED_DIGITAL): 77.0 of 488.0 mm without a plane on a neighbouring layer (limit 73.2) [a heartbeat line from a compute module, a slow square wave that must k]",
+  "return path under HB2 (Default, CLOCKED_DIGITAL): 304.6 of 462.8 mm without a plane on a neighbouring layer (limit 69.4) [a heartbeat line from a compute module, a slow square wave that must k]",
+  "return path under MESH_K (LOW_SPEED_OR_DC): a reference exists under -0.0 of 68.0 mm [an indicator LED cathode, the return of the same]",
+  "return path under PWM1 (Default, CLOCKED_DIGITAL): 275.7 of 607.2 mm without a plane on a neighbouring layer (limit 91.1) [the sounder drive PWM, an audio-rate square wave into a gate]",
+  "return path under Q2_D (Default, HIGH_SPEED_DIGITAL): 13.1 of 22.0 mm without a plane on a neighbouring layer (limit 10.0) [a switched FET drain]",
+  "return path under Q2_G (Default, HIGH_SPEED_DIGITAL): 10.1 of 18.4 mm without a plane on a neighbouring layer (limit 10.0) [a FET gate drive]",
+  "return path under QSPI_D2 (Default, HIGH_SPEED_DIGITAL): 25.2 of 68.9 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_SS (Default, HIGH_SPEED_DIGITAL): 27.8 of 70.1 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under SDA (Default, CLOCKED_DIGITAL): 243.0 of 478.9 mm without a plane on a neighbouring layer (limit 71.8) [the data half of the same I2C bus]",
+  "return path under USB_DP_R (USB, HIGH_SPEED_DIGITAL): 10.9 of 27.3 mm without a plane on a neighbouring layer (limit 10.0) [the same USB pair after its series resistors]",
+  "return path under USB_PNL_N (USB, HIGH_SPEED_DIGITAL): 263.0 of 526.6 mm without a plane on a neighbouring layer (limit 26.3) [the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanos]",
+  "return path under XIN (Default, HIGH_SPEED_DIGITAL): 38.0 of 94.8 mm without a plane on a neighbouring layer (limit 10.0) [the 12 MHz crystal drive node]",
+  "return path under XOUT (Default, HIGH_SPEED_DIGITAL): 16.2 of 47.7 mm without a plane on a neighbouring layer (limit 10.0) [the other half of the same crystal loop]",
+  "return path under XOUT_R (Default, HIGH_SPEED_DIGITAL): 13.4 of 37.0 mm without a plane on a neighbouring layer (limit 10.0) [the other half of the same crystal loop]"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "410eeb604ec12c4c"
+  }
+ },
+ "note": "the reference under a signal net, judged per spectral class",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "RET-001",
+  "RET-002"
+ ],
+ "tool": "intent_return_path",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:44:27Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 3,
+  "pass": 30
+ },
+ "denominator": 33,
+ "evidence": [
+  "return path under IOCA_VCAP (LOW_SPEED_OR_DC): a reference exists under -0.0 of 2.9 mm [an internal-supply decoupling node, a local rail]",
+  "return path under IOCB_VCAP (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.9 mm [an internal-supply decoupling node, a local rail]",
+  "return path under IOCC_VCAP (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.9 mm [an internal-supply decoupling node, a local rail]"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  }
+ },
+ "note": "the loop from a decoupling capacitor to the pin it serves",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "DEC-001"
+ ],
+ "tool": "intent_decoupling",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:43:08Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

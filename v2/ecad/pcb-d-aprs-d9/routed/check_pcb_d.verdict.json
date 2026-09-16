@@ -7,7 +7,7 @@
  },
  "denominator": 328,
  "evidence": [
-  "return via: 5 of 20 signal vias have a ground via within 1.5 mm (16 exempt in fine-pitch fans, 13 on one reference plane, 115 on a net whose declared class has no edge to return); without one: PCM_VIN at (105.94, 113.05); PCM_VIN at (108.91, 107.39); PCM_VOUTL at (109.49, 113.83); PCM_L_AC at (110.74, 113.83); HUB_DP0 at (115.77, 83.23); PCM_VCCR at (117.80, 116.64); PCM_VCCP at (117.88, 115.88); PCM_VCCP at (118.66, 119.51) ..."
+  "return via: 3 of 9 signal vias have a ground via within 1.5 mm (16 exempt in fine-pitch fans, 7 on one reference plane, 132 on a net whose declared class has no edge to return); without one: HUB_DP0 at (115.77, 83.23); HUB_DM1 at (121.15, 92.75); HUB_DP1 at (121.65, 90.85); HUB_RST_n at (121.65, 85.52); HUB_DM3 at (128.52, 87.87); HUB_DM3 at (130.46, 87.24)"
  ],
  "inputs": {
   "board": {
@@ -27,9 +27,9 @@
  "tool": "check_pcb_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "dd71612d0b190e2e"
+  "tools_tree_sha": "914d59b06253bedc"
  },
- "ts": "2026-09-16T01:33:04Z",
+ "ts": "2026-09-16T01:44:51Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
