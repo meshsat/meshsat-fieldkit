@@ -9,9 +9,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 12 | 28.6 |
+| PASS | 13 | 31.0 |
 | FAIL | 6 | 14.3 |
-| INCONCLUSIVE | 24 | 57.1 |
+| INCONCLUSIVE | 23 | 54.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -19,7 +19,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | check_contracts INCONCLUSIVE |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42} |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carr |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
@@ -47,7 +47,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no check_pcb_c verdict for this board |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 1 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
-| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_p FAIL: {'fail': 7, 'footprints': 60, 'pass': 169} |
+| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_p PASS of 139 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |

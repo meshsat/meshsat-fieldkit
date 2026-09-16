@@ -9,7 +9,7 @@ answered yet, made visible so it cannot be forgotten.
 
 **31 of 57 rules carry a gap.**
 
-## absent (11)
+## absent (10)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
@@ -42,11 +42,6 @@ file
 **REL-001 the build survives its service life** (MUST_JUSTIFY, OPEN)  
 nothing considers vibration, mating cycles or moisture for any interface  
 *Close it by* a reliability sheet per board and the test plan for the prototype. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
-
-**RET-003 return transition at a reference change** (BLOCKER, OPEN)  
-nothing determines the reference conductor before and after a transition; return_via's same-plane exemption
-is the nearest thing and is a geometric approximation of it  
-*Close it by* compute the reference layer per track segment from the stackup and the fills, then judge each via's transition. Owner **SESSION**, after RET-001. Effort P50 12h, P80 30h.
 
 **SCH-004 a safety line fails safe** (BLOCKER, OWNER_DECISION_REQUIRED)  
 the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches
@@ -159,7 +154,7 @@ the 3 mm distance is a project number applied to every device; the loop inductan
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (8)
+## source or applicability unresolved (9)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -200,8 +195,12 @@ but the curve is IPC-2221's and that document is not in this tree, so the maturi
 number is a calculation this project made rather than a limit a document gave it. It lands where the trade's
 own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has
 no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times
-the computed figure and cites nothing  
-*Close it by* obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind this number has an authority. Owner **SESSION**, after STK-001. Effort P50 2h, P80 8h.
+the computed figure and cites nothing. Its first run on real boards found something on all seven and most of
+it is one false shape: a rail's weakest SITE is often a lone stitch via at the end of a pour carrying almost
+none of the current, while the current travels in a band with a via field under it (board E's CELL_F reads 18
+A through one via). The arithmetic is right and the attribution is not, so the verdict is ADVISORY and the
+rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh  
+*Close it by* read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority. Owner **SESSION**, after STK-001, PI-001. Effort P50 6h, P80 16h.
 
 **RET-001 a continuous adjacent return path** (BLOCKER, GENERATED_ONLY)  
 16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
@@ -217,6 +216,18 @@ not a standard's. The 10 mm or 5 percent of the fast classes is the 15 September
 on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judgement. Until a source backs
 them, they are a written screen and say so  
 *Close it by* obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are. Owner **SESSION**, after SI-001. Effort P50 8h, P80 26h.
+
+**RET-003 return transition at a reference change** (BLOCKER, GENERATED_ONLY)  
+16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING around
+the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the first
+version of this measurement came back with every via undetermined on every board). Measured: board A 86 vias
+keep their reference, 131 move between two ground planes, 35 move between GND and VBAT because A's In2
+carries both side by side; C 62 and 166 and none; D 145 and none; E 202 and none. The first two cases are
+RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between two
+DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared per
+board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its pin) and
+it is OURS, so the maturity is GENERATED_ONLY until a document states it  
+*Close it by* find a published figure for how far a plane-stitching capacitor may sit from the transition it serves, or measure one. Owner **SESSION**, after RET-001. Effort P50 3h, P80 12h.
 
 **STK-002 a layer count is decided and costed** (BLOCKER, OWNER_DECISION_REQUIRED)  
 layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for

@@ -194,9 +194,18 @@ coverage:
    remediation: {action: "measure the anti-pad share of each failing net's gap, so RET-003's question can be separated from this one",
      owner: SESSION, depends_on: [RET-003], p50_h: 3, p80_h: 8}}
 
- RET-003: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "nothing determines the reference conductor before and after a transition; return_via's same-plane exemption is the nearest thing and is a geometric approximation of it",
-   remediation: {action: "compute the reference layer per track segment from the stackup and the fills, then judge each via's transition", owner: SESSION, depends_on: [RET-001], p50_h: 12, p80_h: 30}}
+ RET-003: {implementation: "gen_pcb_a3.py In2 pours", verification: {tool: ref_change.py, verdict: return_stitch, fixtures: tests/test_ref_change.py},
+   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING
+     around the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the
+     first version of this measurement came back with every via undetermined on every board). Measured: board A
+     86 vias keep their reference, 131 move between two ground planes, 35 move between GND and VBAT because A's
+     In2 carries both side by side; C 62 and 166 and none; D 145 and none; E 202 and none. The first two cases
+     are RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between
+     two DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared
+     per board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its
+     pin) and it is OURS, so the maturity is GENERATED_ONLY until a document states it",
+   remediation: {action: "find a published figure for how far a plane-stitching capacitor may sit from the transition it serves, or measure one", owner: SESSION, depends_on: [RET-001], p50_h: 3, p80_h: 12}}
 
  RET-004: {implementation: "gnd_grid.py, return_via.py fixer",
    verification: {tool: return_via.py, verdict: return_via, fixtures: "tests/test_board_gates.py, tests/test_signal_class.py"},

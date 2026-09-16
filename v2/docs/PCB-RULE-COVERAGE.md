@@ -45,7 +45,7 @@ appears in the gap register.
 | REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
 | RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_return_path | tests/test_signal_class.py | **GENERATED_ONLY** |
 | RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_return_path | tests/test_board_gates.py | **ENFORCED** |
-| RET-003 | RETURN_PATH | BLOCKER | NONE_YET | none |  | **OPEN** |
+| RET-003 | RETURN_PATH | BLOCKER | gen_pcb_a3.py In2 pours | ref_change.py -> return_stitch | tests/test_ref_change.py | **GENERATED_ONLY** |
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py, tests/test_signal_class.py | **ENFORCED** |
 | RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | check_pcb_d.py -> check_pcb_d |  | **GENERATED_ONLY** |
 | RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> check_contracts | tests/test_gate_fixtures.py | **ENFORCED** |
@@ -72,9 +72,9 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 28 |
-| GENERATED_ONLY | 10 |
+| GENERATED_ONLY | 11 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 10 |
+| OPEN | 9 |
 | SOURCE_UNVERIFIED | 2 |
 | OWNER_DECISION_REQUIRED | 3 |
