@@ -687,6 +687,30 @@ def t_the_router_launcher_dismisses_a_modal_warning_it_would_otherwise_wait_on()
     assert "xdotool" in o, "a new box would have no xdotool for the watchdog"
 
 
+def t_the_optimiser_is_bounded_and_the_autoroute_session_survives_it():
+    """The optimiser has held this box for hours after the route was already on disk.
+
+    Our build writes the Specctra session after every autoroute pass, so the moment the autoroute finishes the
+    result exists; the optimiser then improves length and vias and its work reaches the board only if the
+    WHOLE job ends before the time limit. E8 on 14 September 2026: fifteen minutes of autoroute, two hours
+    forty of optimiser, nothing used. E12 today: twenty-eight minutes of autoroute converging at pass 232 of
+    260, and an optimiser that would have run to the three-hour cap and been killed with nothing kept.
+
+    So the optimiser gets a bound, it is expressed in SECONDS rather than in Freerouting's -oit, which is an
+    improvement threshold in percent and has no time in it at all, and it is stopped by PID rather than by a
+    pattern that could match another route on the same host.
+    """
+    s = open(os.path.join(TOOLS, "route_one.sh")).read()
+    assert "Auto-routing was completed" in s, "nothing notices that the autoroute has finished"
+    assert "FR_OPT_MAX_S" in s, "the optimiser bound cannot be set or removed"
+    assert 'kill -TERM "$_J"' in s, "the optimiser is not stopped by the pid the watchdog already holds"
+    i, j = s.find("Auto-routing was completed"), s.find('wait "$_RPID"')
+    assert 0 < i < j, "the bound must be applied while the router is running"
+    # the session has to be on disk before anything is stopped, or the attempt scores 9999 and the round is lost
+    k = s.find("stopping the optimiser")
+    assert s.rfind('[ -s "$W/$N.ses" ]', 0, k) > 0, "the optimiser may only be stopped once a session exists"
+
+
 def t_every_python_block_embedded_in_a_shell_tool_parses():
     """export_jlc.sh (15 Sep 2026) carried a python heredoc with an unclosed parenthesis for one commit: the shell parsed,
     the suite passed, and every deliverable re-cut on that commit kept its old fab note because the export failed

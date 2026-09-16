@@ -167,6 +167,25 @@ while kill -0 "$_RPID" 2>/dev/null; do
   [ -n "$_J" ] || continue
   _CPU=$(awk '{print $14+$15}' /proc/$_J/stat 2>/dev/null || echo -1)
   if [ "$_CPU" = "$_CPU0" ]; then _STILL=$((_STILL+1)); else _STILL=0; fi; _CPU0=$_CPU
+  # THE OPTIMISER IS NOT THE ROUTE, AND IT HAS HELD THIS BOX FOR HOURS (16 September 2026; the evidence is
+  # 14 September's E8, fifteen minutes of autoroute and two hours forty of optimiser, none of it used, and
+  # today's E12, twenty-eight minutes of autoroute converging at pass 232 of 260 and an optimiser that would
+  # have run to the three-hour cap and been killed with nothing kept). Our build writes the session after
+  # every autoroute pass, so the moment the autoroute is finished the result is already on disk; the
+  # optimiser only improves length and vias, and only if the WHOLE job ends before the time limit. It is
+  # given the autoroute's own duration to do that, with a five-minute floor, and then the run is stopped and
+  # the session kept. FR_OPT_MAX_S sets the bound directly; FR_OPT_MAX_S=0 removes it.
+  if [ -z "${_OPT_T0:-}" ] && grep -q "Auto-routing was completed" "$W/fr.log" 2>/dev/null; then
+    _OPT_T0=$(date +%s); _AUTO=$(( _OPT_T0 - _T0 ))
+    _OPT_CAP=${FR_OPT_MAX_S-$_AUTO}; [ "$_OPT_CAP" -lt 300 ] && [ "$_OPT_CAP" != 0 ] && _OPT_CAP=300
+    echo "route_one: the autoroute finished in ${_AUTO}s and the optimiser has started; it is bounded to ${_OPT_CAP}s (0 = unbounded)"
+  fi
+  if [ -n "${_OPT_T0:-}" ] && [ "${_OPT_CAP:-0}" != 0 ] && [ -s "$W/$N.ses" ] \
+     && [ $(( $(date +%s) - _OPT_T0 )) -ge "$_OPT_CAP" ]; then
+    echo "route_one: stopping the optimiser after ${_OPT_CAP}s; the session the last autoroute pass wrote is kept"
+    kill -TERM "$_J" 2>/dev/null || true
+    break
+  fi
   if [ "$_STILL" -ge 2 ] && [ $(( $(date +%s) - _T0 )) -lt 1200 ]; then
     if command -v xdotool >/dev/null 2>&1; then
       for _XA in $(ls -t /tmp/xvfb-run.*/Xauthority 2>/dev/null); do
