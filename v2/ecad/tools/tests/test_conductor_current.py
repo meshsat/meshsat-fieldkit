@@ -174,3 +174,18 @@ def t_a_piece_shorter_than_a_conductor_is_reported_and_not_gated():
         "the skipped pieces are not reported, so a real neck could hide in one"
     i, j = src.find("short.append"), src.find("cond.append((best / lim_a")
     assert 0 < i < j, "the skip must come before the conductor list, or both lists carry it"
+
+
+def t_the_drop_line_prints_the_bar_it_was_judged_against():
+    """16 September 2026. dc_drop judges a rail against its declared SHARE where there is one, and printed the
+    bar with "%.0f", so board A's 1.5 percent share came out as "budget 2%" and board C's 0.75 as "1". The
+    number it judged by was right throughout; the sentence about it was not, and a line that cannot be checked
+    against the number it claims is how a wrong bar survives a reading.
+
+    The share exists to make a split visible, so printing it rounded to the whole rail's budget defeats the
+    declaration this project just made on seven rails."""
+    src = open(os.path.join(TOOLS, "dc_drop.py"), encoding="utf-8").read()
+    line = next(l for l in src.splitlines() if "worst drop" in l and "%" in l)
+    assert "budget %.0f%%" not in line, "the bar is still printed rounded to whole percent: %s" % line.strip()[:120]
+    assert "%.3g%%" in line, "the bar must be printed at the precision it is judged at"
+    assert "bar %.3g%%" in line, "say BAR rather than budget, because a share is not the rail's budget"
