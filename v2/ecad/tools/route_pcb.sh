@@ -16,6 +16,7 @@ PY
 # 12 September 2026: this was `ls ~/bin/freerouting-*.jar | tail -1`, which on a host carrying 2.4.1 picks it and
 # launches it with 1.9.0 arguments under whatever java is first on PATH. long_route.sh pinned the stock jar by
 # name to dodge exactly that, and so lost the per-pass session as well.
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fr_dialog_watch.sh"
 JAR="$(fr_jar route_pcb)" || exit 2
 echo "freerouting: $JAR, max passes $PASSES"
 if [ -n "${FR_XVFB:-}" ] && command -v xvfb-run >/dev/null; then
@@ -23,7 +24,11 @@ if [ -n "${FR_XVFB:-}" ] && command -v xvfb-run >/dev/null; then
   # it. A named display plus xvfb-run's own walk-forward makes the stale-display problem local, and nothing else's
   # display is any of this script's business.
 _XDISP=$(( 200 + ($$ + RANDOM) % 700 ))   # 12 September 2026: never let two routers race for a display (xvfb-run -a picks one by racing for it)
-  nice -n 10 xvfb-run -n "$_XDISP" -a java -jar "$JAR" -de "out/$N.dsn" -do "out/$N.ses" -mp "$PASSES" -mt 1 -oit 2 -dct 0 > "out/$N-freerouting.log" 2>&1 || echo "freerouting exited non-zero (see log)"
+  # the dialog watchdog, 16 September 2026 (fr_dialog_watch.sh): this launcher never had it either
+  nice -n 10 xvfb-run -n "$_XDISP" -a java -jar "$JAR" -de "out/$N.dsn" -do "out/$N.ses" -mp "$PASSES" -mt 1 -oit 2 -dct 0 > "out/$N-freerouting.log" 2>&1 &
+  _RPID=$!
+  fr_watch "$_RPID" "$_XDISP" "$PWD/out/$N.dsn" "route_pcb"
+  wait "$_RPID" || echo "freerouting exited non-zero (see log)"
 else
   nice -n 10 java -Djava.awt.headless=true -jar "$JAR" -de "out/$N.dsn" -do "out/$N.ses" -mp "$PASSES" -mt 1 -oit 2 > "out/$N-freerouting.log" 2>&1 || echo "freerouting exited non-zero (see log)"
 fi

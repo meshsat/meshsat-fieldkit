@@ -4,6 +4,7 @@
 # tools/routeflow/bench/capabilities.json: a knob is PROBED only when it changes a measured number or the jar rejects it. Refuses to write the
 # file if any run produced no session. Usage (on the build VM, service group stopped): fr_probe.sh [repo dir] [jar]
 set -uo pipefail
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fr_dialog_watch.sh"   # resolved before any cd below
 R=${1:-$(cd "$(dirname "$0")/../../.." && pwd)}; T=$R/v2/ecad/tools; JAR=${2:-$HOME/bin/freerouting-1.9.0.jar}; OUT=$T/routeflow/bench; mkdir -p "$OUT"
 W=${FR_PROBE_DIR:-$HOME/fr_probe}
 if [ "${3:-}" = "--assemble" ]; then cd "$W"; JAR=${2:-$HOME/bin/freerouting-1.9.0.jar}; ASSEMBLE_ONLY=1; else rm -rf "$W"; mkdir -p "$W"; cd "$W"; ASSEMBLE_ONLY=0; fi
@@ -26,7 +27,12 @@ declare -A KNOBS=( [base]="" [oit_0.5]="-oit 0.5" [us_global]="-us global" [us_h
 nosession=0
 run_one() {   # name, extra args...
   local name=$1; shift; local d="$W/$name"; mkdir -p "$d"; cp "$N.kicad_pcb" "$N.kicad_pro" "$d/"
-  local t0=$(date +%s); timeout 600 xvfb-run -n $(( 200 + ($$ + RANDOM) % 700 )) -a java -jar "$JAR" -de "$N.dsn" -do "$d/$N.ses" -mp ${MP:-40} -mt 1 -oit 2 -dct 0 "$@" > "$d/fr.log" 2>&1; local rc=$?; local t1=$(date +%s)
+  # the dialog watchdog, 16 September 2026 (fr_dialog_watch.sh): a probe that stalls on the modal warning
+  # reports a pass rate that is the dialog's, not the board's, and every pass ceiling is read off a probe
+  local t0=$(date +%s); local _XD=$(( 200 + ($$ + RANDOM) % 700 ))
+  timeout 600 xvfb-run -n "$_XD" -a java -jar "$JAR" -de "$N.dsn" -do "$d/$N.ses" -mp ${MP:-40} -mt 1 -oit 2 -dct 0 "$@" > "$d/fr.log" 2>&1 &
+  local _RP=$!; fr_watch "$_RP" "$_XD" "$PWD/$N.dsn" "fr_probe $name"
+  wait "$_RP"; local rc=$?; local t1=$(date +%s)
   local auto=$(grep -a -o "Auto-routing was completed in [0-9]* minute(s) [0-9.]* seconds" "$d/fr.log" | head -1); local opt=$(grep -a -o "optimization was completed in [0-9]* minute(s) [0-9.]* seconds" "$d/fr.log" | head -1)
   if [ ! -s "$d/$N.ses" ]; then echo "  $name: NO SESSION (exit $rc, $((t1 - t0)) s)"; nosession=$((nosession + 1)); echo "\"$name\": {\"session\": false, \"exit\": $rc, \"wall_s\": $((t1 - t0)), \"args\": \"$*\"}" >> "$d/row.json"; return; fi
   python3 - "$d/$N.kicad_pcb" "$d/$N.ses" <<'PY' 2>&1 | grep -v "Debug\|assert"

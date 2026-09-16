@@ -795,3 +795,27 @@ def t_a_function_whose_stdout_is_read_as_a_number_lets_nothing_else_write_to_it(
                 bad.append("%s: %s() calls drc.sh without redirecting its stdout, which is read as a number"
                            % (os.path.basename(p), name))
     assert not bad, "; ".join(bad)
+
+
+def t_every_launcher_that_starts_freerouting_under_xvfb_dismisses_its_modal_dialog():
+    """The fix went to one launcher of two, and the other is the parallel route.
+
+    On 15 September 2026 board B's router sat three hours on Freerouting's "The normalization of net
+    failed" warning under Xvfb, computing nothing, and `route_one.sh` got a CPU-stall watchdog that sends
+    Return to the display. `route_part.sh` launches the same jar the same way, was written on 7 September
+    and never received it: the first confined partition run of board B, on 16 September, stalled on exactly
+    that warning at 6 percent of one core and went to 1.27 cores the moment Return reached its display by
+    hand. Every partition run in the record was exposed to it.
+
+    A router under Xvfb that can be stopped by a dialog needs the watchdog wherever it is launched.
+    """
+    import glob
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
+        s = open(p, errors="replace").read()
+        if "xvfb-run" not in s or "-jar" not in s: continue
+        shared = "fr_dialog_watch.sh" in s and "fr_watch " in s
+        inline = "xdotool key" in s and "/proc/$_J/stat" in s
+        if not (shared or inline):
+            bad.append("%s launches Freerouting under Xvfb with no dialog watchdog" % os.path.basename(p))
+    assert not bad, "; ".join(bad)
