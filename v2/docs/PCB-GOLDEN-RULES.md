@@ -777,8 +777,13 @@ number.
 **If violated** Used as a law it demands vias where the reference never changed, and it says nothing about a transition that
 has a via at the wrong potential.
 
-**Today** 1.5 mm and the 0.5 mm fan exemption are project calibrations; the grid makes the screen pass by construction
-on D, and costs E its route
+**Today** 16 September 2026: it reads the SAME spectral-content class rule 1 reads, so a net cannot be slow for one
+rule and fast for the other. A return via exists so the return current can follow its signal through a
+reference change; where the signal has no edge worth speaking of there is no loop worth closing, and
+demanding one anyway refuses boards for nothing. Board D was one item from a clean gate on fifteen vias, and
+every one of them is a push-to-talk line or an expander output that changes state when a person presses a
+switch. The skip is a COUNTED category in the verdict, not a silent one, and a net nobody classified is
+judged as though it were fast
 
 ## Controlled Impedance
 

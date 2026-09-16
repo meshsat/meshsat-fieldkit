@@ -106,19 +106,35 @@ def judge(b, path=None, radius=RETURN_MM):
     different planes, or a power plane, needs a ground via or a plated ground pad within `radius`."""
     path = path or b.GetFileName(); it = intent.load(path) or {}
     signals, _ = signalnets.classify(b, path, it.get("rails", {}).keys())
+    # WHAT A VIA TRANSITION COSTS DEPENDS ON THE SIGNAL (rule RET-004, 16 September 2026; the owner's
+    # instruction of the same day names this rule as a heuristic that must not become a law). A return via
+    # exists so the return current can follow its signal through a reference change without going the long way
+    # round; where the signal has no edge worth speaking of there is no loop worth closing, and demanding one
+    # anyway refuses boards for nothing. Board D's fifteen remaining vias are its push-to-talk lines and its
+    # expander outputs, which change state when a person presses a switch.
+    #
+    # The class comes from the same declaration rule 1 uses, so a net cannot be slow for one rule and fast for
+    # the other, and a net NOBODY classified is judged as though it were fast, which is the safe direction.
+    try:
+        import signal_class as _sc
+        _targets = {k for k, v in (it.get("pair_classes") or {}).items() if v}
+        _cls = _sc.classify(b, path, _targets, None)[0]
+    except Exception:
+        _cls = {}
     fine = _fine_pads(b); gnd = _gnd_points(b)
     cu = list(b.GetEnabledLayers().CuStack()); planes = _plane_layers(b)
     ends = {}
     for t in b.GetTracks():
         if t.GetClass() != "PCB_TRACK": continue
         for e in (t.GetStart(), t.GetEnd()): ends.setdefault((t.GetNetname(), round(mm(e.x), 2), round(mm(e.y), 2)), set()).add(t.GetLayer())
-    judged = exempt = same_plane = 0; lacking = []; positions = []
+    judged = exempt = same_plane = slow = 0; lacking = []; positions = []
     for t in boardorder.tracks(b):   # this loop DECIDES which via gets the first candidate site; board order follows a random uuid
         if t.GetClass() != "PCB_VIA": continue
         net = t.GetNetname()
         if not signalnets.is_signal(net, signals): continue
         pt = (mm(t.GetPosition().x), mm(t.GetPosition().y))
         if _near(pt, fine, FAN_MM): exempt += 1; continue
+        if (_cls.get(net) or ("UNKNOWN", ""))[0] == "LOW_SPEED_OR_DC": slow += 1; continue
         attached = ends.get((net, round(pt[0], 2), round(pt[1], 2)), set())
         if planes and len(attached) >= 2:
             refs = {_reference(L, cu, planes) for L in attached}
@@ -126,7 +142,8 @@ def judge(b, path=None, radius=RETURN_MM):
         judged += 1
         if not _near(pt, gnd, radius):
             lacking.append("%s at (%.2f, %.2f)" % (net.lstrip("/"), pt[0], pt[1])); positions.append((t, pt))
-    return {"judged": judged, "exempt": exempt, "same_plane": same_plane, "lacking": lacking, "positions": positions, "signals": len(signals)}
+    return {"judged": judged, "exempt": exempt, "same_plane": same_plane, "slow": slow,
+            "lacking": lacking, "positions": positions, "signals": len(signals)}
 
 
 def _site_free(b, x, y, vd, clr, own):
@@ -206,7 +223,7 @@ def fix(path, dry=False, radius=RETURN_MM):
     gnd_net = b.FindNet("GND")
     if gnd_net is None: print("return_via: the board has no GND net; nothing placed"); return 0
     before = judge(b, path, radius)
-    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d without a ground via within %.1f mm (%d signal nets)" % (before["judged"], before["exempt"], before["same_plane"], len(before["lacking"]), radius, before["signals"]))
+    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d on a net with no edge to return, %d without a ground via within %.1f mm (%d signal nets)" % (before["judged"], before["exempt"], before["same_plane"], before.get("slow", 0), len(before["lacking"]), radius, before["signals"]))
     if not before["lacking"]: return 0
     keep = path + ".return_via.bak"; shutil.copy(path, keep)
     h0, u0, _ = _measure(path)
@@ -266,9 +283,9 @@ def check(path, radius=RETURN_MM):
     b = pcbnew.LoadBoard(path); r = judge(b, path, radius)
     n_tracks = sum(1 for t in b.GetTracks() if t.GetClass() == "PCB_TRACK")
     res = verdict.INCONCLUSIVE if (n_tracks and not r["judged"] and not r["exempt"]) else (verdict.PASS if not r["lacking"] else verdict.FAIL)
-    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d without a ground via within %.1f mm" % (r["judged"], r["exempt"], r["same_plane"], len(r["lacking"]), radius))
+    print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d on a net with no edge to return, %d without a ground via within %.1f mm" % (r["judged"], r["exempt"], r["same_plane"], r.get("slow", 0), len(r["lacking"]), radius))
     for l in r["lacking"][:20]: print("return_via:   " + l)
-    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "same_plane": r["same_plane"], "lacking": len(r["lacking"])}, denominator=r["judged"],
+    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "same_plane": r["same_plane"], "slow": r.get("slow", 0), "lacking": len(r["lacking"])}, denominator=r["judged"],
                          evidence=r["lacking"][:200], inputs={"board": path},
                          note="" if res != verdict.INCONCLUSIVE else "the board has tracks and no signal via at all: the scope filter is suspect",
                          out_dir=os.path.join(os.path.dirname(os.path.abspath(path)), "out"))
