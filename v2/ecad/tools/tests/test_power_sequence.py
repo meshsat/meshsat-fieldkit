@@ -100,3 +100,17 @@ def t_an_indexed_enable_net_is_still_an_enable():
     of them because it required EN to be the last characters of the name."""
     assert P.EN.search("SLOT_EN1") and P.EN.search("DEV_EN") and P.EN.search("EN")
     assert not P.EN.search("HS_UVLO") and not P.EN.search("+5V")
+
+
+def t_a_rail_may_declare_several_sources():
+    """Board B's GND is held at zero at four connectors, and the always-on branch joined that list into a
+    string and crashed the gate on the one board with 36 rails (16 September 2026)."""
+    d = tempfile.mkdtemp(prefix="seq-multi-")
+    net = _board(d, {"J1": "vh", "J2": "vh"},
+                 {"GND": [("J1", "2", "GND"), ("J2", "2", "GND")]},
+                 {"GND": {"volts": 0.0, "source": ["J1", "J2"], "always_on": True,
+                          "always_on_why": "the return, which nothing switches"}})
+    r = P.judge(net)
+    assert not r["unresolved"] and not r["deadlocks"], r
+    row = next(x for x in r["rows"] if x["rail"] == "GND")
+    assert row["source"] == ["J1", "J2"], row
