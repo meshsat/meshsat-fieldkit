@@ -263,6 +263,24 @@ grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
 # collisions are the fine-pitch stations of 32.146, the router resolves or leaves them and the routed-board gate decides).
 [ "$PA" -eq 0 ] || [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off)" ] || block "placement predictor (out/place_audit.log, out/place_audit.png)"
 
+# THE STACKUP IS WRITTEN AGAIN HERE, AND THIS IS THE ONE THAT SURVIVES (16 September 2026). It is written into
+# the board as TEXT, and every pcbnew save after it drops the block: the placement generator's own save at line
+# 99 was followed by bypass_place, escape.py, join_adjacent_pins and the pair pre-router, so boards A and B
+# reached the router with NO STACKUP AT ALL while their pre-route log said it had been written. The impedance
+# check, the fabricator-limit check and the order notes' copper weight all read the stackup, and all three were
+# reading nothing on the two six-layer boards. Writing it last is the fix; the check below is what proves it.
+python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1
+python3 - "$N.kicad_pcb" <<'PYSTACK'
+import re, sys
+s = open(sys.argv[1], errors="replace").read()
+th = re.findall(r'\(layer "[FB]\.Cu" \(type "copper"\) \(thickness ([\d.]+)\)', s)
+if not th:
+    print("BLOCK the board carries no stackup: every pcbnew save after stackup_write drops the block, so it must be written last")
+    sys.exit(1)
+print("stackup: %s mm of outer copper on the board handed to the router" % th[0])
+PYSTACK
+[ $? -eq 0 ] || block "the board reached the router with no stackup (rule STK-001)"
+
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
 python3 ../tools/hardset.py out/$N-preroute-drc.json pre --gate out/preroute-gate.txt --examples 6 --label 'pre-route DRC' | sed 's/^hardset:/pre-route DRC:/'
