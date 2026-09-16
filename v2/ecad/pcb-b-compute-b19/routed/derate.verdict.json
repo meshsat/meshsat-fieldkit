@@ -2,25 +2,19 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "judged": 143,
-  "undeclared_nets": 15,
+  "by_vendor_reference": 0,
+  "judged": 162,
+  "undeclared_nets": 0,
   "under_rated": 0,
-  "unrated_parts": 353
+  "unrated_parts": 319
  },
- "denominator": 143,
- "evidence": [
-  "no declared voltage: LED_5V_A1",
-  "no declared voltage: LED_5V_A2",
-  "no declared voltage: LED_5V_A3",
-  "no declared voltage: PCIE1_RXSW_N",
-  "no declared voltage: PCIE1_RXSW_P",
-  "no declared voltage: PCIE1_RX_N"
- ],
+ "denominator": 162,
+ "evidence": [],
  "inputs": {
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "5ba87af5e641dfb1"
+   "sha256_16": "9d3b38caaceb9f6c"
   }
  },
  "note": "a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
@@ -34,9 +28,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9cbf474537ee9ad0"
+  "tools_tree_sha": "e30bbb71e47ee7c0"
  },
- "ts": "2026-09-16T17:22:31Z",
+ "ts": "2026-09-16T18:11:04Z",
  "verdict": "PASS",
  "version": "unknown"
 }

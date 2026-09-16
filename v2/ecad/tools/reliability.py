@@ -32,6 +32,14 @@ REL = os.path.join(HERE, "pcb_reliability.yaml")
 # What counts as load-bearing or cycling, by the words a part's own value carries. A part here is asked for;
 # a part not here is not, which is why the list is in one place and tested against the boards.
 WEAR = re.compile(r"socket|receptacle|holder|SMA|XT60|JST|IDC|header|standoff|U\.FL|M\.2|blade", re.I)
+# ...AND THE WORD HAS TO BE ABOUT A MECHANICAL PART (16 September 2026). A transient suppressor's value says
+# what it STANDS OFF, which is a voltage: "SMCJ40A (40 V standoff on a line specified to 36 V)" matched
+# `standoff` and six correct diodes on three boards were reported as load-bearing parts in no declared class.
+# A capacitor, a resistor, an inductor, a diode, a transistor or a ferrite is never a socket, a holder or a
+# standoff whatever its prose says, and the prefix is the letters matched exactly, never the first of them,
+# which is the lesson derate.py learnt twice. A connector (J), a module receptacle (U), a fuse holder (F) and
+# a battery holder (BT) stay in, because those are the parts this rule exists for.
+NOT_WEAR_PREFIX = ("C", "R", "L", "D", "Q", "FB", "TP", "FID", "LOGO")
 
 
 def netlist_for(stem, ecad=None):
@@ -58,7 +66,8 @@ def judge(rel=None, ecad=None, only=None, vendor=None):
         if net:
             txt = open(net, encoding="utf-8", errors="replace").read()
             parts = {r: v for r, v in re.findall(r'\(comp \(ref "([^"]+)"\)\s*\(value "([^"]*)"\)', txt)}
-            wear = {r for r, v in parts.items() if WEAR.search(v or "")}
+            wear = {r for r, v in parts.items()
+                    if WEAR.search(v or "") and R.ref_prefix(r) not in NOT_WEAR_PREFIX}
             for r in sorted(wear):
                 hit = [c for c in classes if any(fnmatch.fnmatchcase(r, p) for p in (c.get("refs") or []))]
                 if not hit:

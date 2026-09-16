@@ -2,23 +2,19 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "judged": 3,
-  "undeclared_nets": 4,
+  "by_vendor_reference": 0,
+  "judged": 13,
+  "undeclared_nets": 0,
   "under_rated": 0,
-  "unrated_parts": 68
+  "unrated_parts": 61
  },
- "denominator": 3,
- "evidence": [
-  "no declared voltage: GND",
-  "no declared voltage: RF_LPF_M",
-  "no declared voltage: RF_LPF_OUT",
-  "no declared voltage: RF_PAOUT"
- ],
+ "denominator": 13,
+ "evidence": [],
  "inputs": {
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "961b0bfd7636fe78"
+   "sha256_16": "fa8ea17ce3354471"
   }
  },
  "note": "a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
@@ -32,9 +28,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9cbf474537ee9ad0"
+  "tools_tree_sha": "4e7275f50f847a15"
  },
- "ts": "2026-09-16T17:24:34Z",
+ "ts": "2026-09-16T18:04:00Z",
  "verdict": "PASS",
  "version": "unknown"
 }

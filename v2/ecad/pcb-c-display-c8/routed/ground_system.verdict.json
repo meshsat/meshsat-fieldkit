@@ -24,9 +24,9 @@
  "tool": "ground_system",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9cbf474537ee9ad0"
+  "tools_tree_sha": "4e7275f50f847a15"
  },
- "ts": "2026-09-16T17:23:57Z",
+ "ts": "2026-09-16T18:03:12Z",
  "verdict": "PASS",
  "version": "unknown"
 }

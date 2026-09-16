@@ -215,6 +215,18 @@ DECIDING = ("id", "requirement", "applicability", "condition", "release_effect",
             "waiver_policy", "threshold", "limit", "tolerance")
 
 
+def ref_prefix(ref):
+    """The LETTERS of a reference designator, which is its prefix: `TP6` -> TP, `LED11` -> LED, `D2` -> D.
+
+    It lives here because three tools now decide something by a prefix and each of them got it wrong the same
+    way first, by taking the first CHARACTER: `derate.py` read a test point as a tantalum and an indicator as
+    an inductor, and `reliability.py` read a transient suppressor as a mechanical part. A prefix is compared
+    EXACTLY against a list, and a prefix nobody has classified falls out of the list rather than into it.
+    """
+    if not ref: return ""
+    return ref[:len(ref) - len(ref.lstrip("ABCDEFGHIJKLMNOPQRSTUVWXYZ_"))].rstrip("_")
+
+
 def fingerprint(reg=None):
     """The identity evidence records: a digest of every rule's DECIDING fields. Change what a rule demands and
     evidence taken under the old demand is stale by construction rather than by anyone remembering. Change a

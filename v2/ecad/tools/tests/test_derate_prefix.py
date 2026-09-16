@@ -190,3 +190,19 @@ def t_a_node_with_neither_a_voltage_nor_a_citation_is_refused_at_declaration():
         assert "no vendor reference" in str(e), e
     else:
         raise AssertionError("a node with no voltage and no citation was accepted")
+
+
+def t_a_suppressors_standoff_voltage_is_not_a_mechanical_standoff():
+    """16 September 2026. `reliability.py` finds load-bearing and cycling parts by the words in a value, and
+    `standoff` is one of them because a threaded spacer is one. A transient suppressor's value says what it
+    STANDS OFF, which is a voltage, so six correct diodes on three boards were reported as mechanical parts in
+    no declared class the moment their values were corrected to say so. A capacitor, a resistor, an inductor,
+    a diode, a transistor or a ferrite is never a socket or a holder whatever its prose says."""
+    import rules_lib as R, reliability
+    assert R.ref_prefix("D2") == "D" and R.ref_prefix("U30A") == "U" and R.ref_prefix("LED11") == "LED"
+    assert "D" in reliability.NOT_WEAR_PREFIX and "U" not in reliability.NOT_WEAR_PREFIX, \
+        "a module receptacle must stay a wear item and a diode must not be one"
+    v = "SMCJ40A (40 V standoff on a line specified to 36 V)"
+    assert reliability.WEAR.search(v), "the word is there, which is why the prefix has to decide"
+    assert R.ref_prefix("D2") in reliability.NOT_WEAR_PREFIX, "the diode is still read as a mechanical part"
+    assert R.ref_prefix("J_RF1") not in reliability.NOT_WEAR_PREFIX, "a connector must stay a wear item"
