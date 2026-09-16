@@ -2234,3 +2234,21 @@ it): the three 24 MHz hub crystals carried C70571, an 18 pF load part, with 18 p
 which make about 12 pF once the pins and tracks are counted. A third light pulls a 24 MHz crystal roughly
 54 ppm fast, inside USB's +-500 ppm and outside what the part is specified for. The code is now C164058,
 +-10 ppm and a 12 pF load, the same family as the 25 MHz part already on that board, 75,000 in stock.
+
+## Board E's one density miss is a via funnel, not thin copper (16 September 2026, evidence for rule PI-001)
+
+Not a question: a measurement that changes what the remedy is. Board E fails the current-density half of PI-001
+on one rail, `CELL_F`, at 1.12 of its limit, and the number alone does not say whether the copper is too thin
+or the current is being funnelled. Solved on the board the repository holds: the worst POUR cell is
+**92.7 A/mm2 at F.Cu (45.2, 221.7) against 82.7**, and the worst via is **a single 0.30 mm barrel at
+(44.3, 221.8) carrying 1.93 A against the 0.90 A its own wall is rated for, a ratio of 2.15**. The two are the
+same place. The pour is not thin; it is the approach to one hole.
+
+So board E's remedy is board A's: more barrels at that hand-over, spread across the current front rather than
+in a row, and the rail's own copper left alone. The drop is 8 mV, 0.06 percent of 14.4 V, so nothing about
+this rail's voltage is in question and nothing about its width is either.
+
+**Read with care, and stated so it is not mistaken for a finding:** the same run reported `+3V3_E6` with ten of
+twenty-seven load pads not reachable from their source through this net's copper. That run generated a CURRENT
+intent file against a board cut days ago, and a rail whose declared loads have moved since is exactly what that
+looks like. It is a question for board E's next routed board, not a defect on this one.
