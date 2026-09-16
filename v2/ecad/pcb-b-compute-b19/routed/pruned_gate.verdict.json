@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "reached": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  }
+ },
+ "note": "no pruned list at /root/sw_all/v2/ecad/pcb-b-compute-b19/out/sweep/pcb-b-compute-pruned.txt, and board B declares the prune stage",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RTE-002"
+ ],
+ "tool": "pruned_gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9cbf474537ee9ad0"
+ },
+ "ts": "2026-09-16T17:22:24Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

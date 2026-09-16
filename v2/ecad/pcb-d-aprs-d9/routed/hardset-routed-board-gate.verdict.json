@@ -20,7 +20,7 @@
  "inputs": {
   "drc": {
    "path": "out/pcb-d-aprs-drc.json",
-   "sha256_16": "001b3d176de016c3"
+   "sha256_16": "c8e65a753757ec7c"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
@@ -35,9 +35,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ed2daa46baf29d51"
+  "tools_tree_sha": "9cbf474537ee9ad0"
  },
- "ts": "2026-09-16T16:52:50Z",
+ "ts": "2026-09-16T17:24:10Z",
  "verdict": "PASS",
  "version": "unknown"
 }

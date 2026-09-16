@@ -517,14 +517,35 @@ rules:
    condition: {fact: has_tracks, op: truthy}
    risk_class: [SAFETY, THERMAL, RELIABILITY]
    release_effect: BLOCKER
-   source_status: SOURCE_UNVERIFIED
+   source_status: PARTIALLY_VERIFIED
    sources:
+    - {title: "ECSS-Q-ST-70-12C, Design rules for printed circuit boards, Annex D (D.1.2 the formula, D.2 the
+         IPC-2152 fit, D.3 the CNES fit, D.4 the IPC-2221A fit, D.1.3 the worked example)",
+       issuer: "ECSS Secretariat, ESA-ESTEC Requirements and Standards Division",
+       revision: "C, 14 July 2014", clause: "Annex D",
+       url_or_path: "v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md",
+       accessed: "2026-09-16",
+       note: "the clauses this project cites, transcribed; the PDF is published free of charge by ECSS and is
+         fetched rather than redistributed here (sha256 01d7fd413efd071c4c17d4bed80a72eadb582b73dbc72dfb7581d8a042ba026a).
+         It publishes closed-form curve fits of BOTH IPC models with their constants, which is what makes the
+         number this project judges rails with something anyone can look up. tools/track_current.py implements
+         the formula and proves itself against the standard's own worked example (D.1.3: 1 A at 5 K on 0.925 by
+         0.025 mm, reproduced to 1.0002 A), and dc_drop's internal-conductor bar agrees with the published
+         D.4 constants to within 0.20 percent over 96 geometries"}
     - {title: "IPC-2221 generic standard on printed board design, current-carrying capacity charts",
-       issuer: IPC, revision: "unknown to this tree", clause: "current capacity charts",
-       url_or_path: "NOT IN THIS TREE", accessed: ""}
+       issuer: IPC, revision: "A, as cited by ECSS-Q-ST-70-12C D.4", clause: "Figure 6-4 curve C, internal conductors",
+       url_or_path: "NOT IN THIS TREE, cited through the ECSS transcription above", accessed: "",
+       note: "this is the model dc_drop uses. ECSS D.1.1 records that it dates from a 1950s National Bureau of
+         Standards chart and is SUPERSEDED by IPC-2152, and D.4 a publishes the range it is valid over: below
+         0.7 A at 1 K, 0.9 A at 2 K, 1.0 A at 5 K and 1.2 A at 10 K. This project's rails run to 18 A"}
     - {title: "IPC-2152 standard for determining current-carrying capacity", issuer: IPC,
-       revision: "unknown to this tree", clause: "", url_or_path: "NOT IN THIS TREE", accessed: "",
-       note: "the modern replacement for the IPC-2221 charts; this project has never considered it"}
+       revision: "August 2009, as cited by ECSS-Q-ST-70-12C D.2", clause: "chapter 5.2.2, figure 5-14",
+       url_or_path: "NOT IN THIS TREE, its curve fit is cited through the ECSS transcription above", accessed: "",
+       note: "the modern replacement. MEASURED, 16 September 2026: the two fits cross at 0.268 mm2 of copper at
+         10 K, so below that the model this project uses is the conservative one and ABOVE it, which is every
+         2 oz pour wider than 3.8 mm and every 1 oz pour wider than 7.7 mm, our bar reads HIGHER than the
+         modern standard. dc_drop prints the other two numbers beside any conductor past that line and gates on
+         neither, because moving the bar changes MET on boards that are already cut"}
    acceptance_criteria: >
      For every declared rail: the narrowest conductor carrying above a declared share of the rail current,
      its cross-section computed from the board's own stackup copper weight, and the resulting temperature rise
@@ -538,11 +559,25 @@ rules:
    automation_feasibility: AUTOMATABLE
    boards_affected: [a, b, c, d, e, p]
    interfaces_affected: [NONE]
-   implementation_location: NONE_YET
+   implementation_location: "dc_drop.py (the dc_density verdict), track_current.py (the published models)"
    evidence_scope: [board_sha256, stackup, stage, tools_tree_sha, rule_set_fingerprint]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
    maturity_at_writing: SOURCE_UNVERIFIED
+   false_positive_analysis: >
+     A WRONG REFUSAL here looks like this: a rail is failed for a conductor that carries almost none of its
+     current. The measure is a solved mesh, so every piece gets the current the solver puts through it rather
+     than the rail total, and a piece shorter than a conductor is reported and not judged, because IPC's curve
+     is the steady-state rise of a long conductor and a 0.4 mm joint between two pours is not one. The second
+     shape is a rail failed on a raster artefact: the pour bar is the current for ONE cell's cross-section and
+     is LENIENT against the whole-track figure by 18 to 98 percent, so a pour exceedance is a floor on the
+     real one and never a ceiling, and the via number is printed and gated on nothing at all. The third shape
+     is a rail failed for a temperature rise nobody asked for: the rise is the board's own declaration and
+     defaults to IPC's 10 K, and a board that declares its own is judged against that. What is NOT protected
+     against and is written here rather than hidden: the external-conductor factor of two (k 0.048 against the
+     internal 0.024) is IPC-2221A's own external curve and the ECSS annex fits only the internal one, so an
+     OUTER-layer refusal rests on a constant this tree cannot cite; and above 0.268 mm2 of copper at 10 K the
+     model is the optimistic one, so on the widest pours the risk is a wrong PASS rather than a wrong refusal.
 
  - id: PI-002
    false_positive_analysis: >
