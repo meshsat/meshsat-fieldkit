@@ -38,3 +38,37 @@ def t_a_net_with_no_declared_edge_is_named_and_never_estimated():
 def t_the_rise_time_comes_from_the_declaration_beside_the_class_entry():
     assert "def rise_for(" in SRC and "fnmatch" in SRC, "the per-entry rise time is not matched per net"
     assert "a property of the DRIVER" in SRC, "the tool does not say why a class name is not enough"
+
+
+def t_being_a_transmission_line_is_not_by_itself_a_defect():
+    """The first version failed every net past its critical length. At a 200 ps edge that is every net on a
+    285 mm board, and a verdict that fails all of them reports physics rather than a defect. A net past its
+    critical length is asked what it HAS first: an impedance target, a series resistor, or a declaration."""
+    assert "def mitigation(" in SRC, "nothing asks a long net what it has"
+    i = SRC.index("if L > crit:")
+    w = SRC[i:i + 700]
+    assert "mitigation(" in w, "the length test does not consult the mitigation"
+    assert "mitigated.append" in w and "over.append" in w, "a long net has only one outcome"
+    assert "long_and_answered" in SRC, "the verdict does not separate the answered from the unanswered"
+
+
+def t_a_pull_up_is_not_a_series_termination():
+    """A resistor to a rail damps nothing on the line: it sets a level. Only a resistor between two SIGNAL
+    nets is the shape of a source termination, and the value has to be in the range one is built from."""
+    i = SRC.index("for fp in b.GetFootprints():")
+    w = SRC[i:i + 900]
+    assert "_is_rail(a_) or _is_rail(b_)" in w, "a resistor to a rail counts as a termination"
+    assert "10.0 <= ohm <= 150.0" in w, "any resistance counts as a termination"
+    assert "a_ == b_" in w, "a resistor with both ends on one net counts"
+
+
+def t_the_series_reading_declares_itself_a_screen():
+    """The board file knows neither which end drives nor what sits at the far end, so this reading can accept
+    a damping resistor in a filter. It says so where it is written down, because a screen presented as a proof
+    is how a rule stops finding anything."""
+    assert "SCREEN and says so" in SRC or "This is a SCREEN" in SRC, "the limitation is not written down"
+
+
+def t_the_criterion_carries_the_calibration_it_was_chosen_against():
+    assert "ECSS-E-HB-20-07A" in SRC, "the criterion cites no document at all"
+    assert "35 mm" in SRC and "200 ps" in SRC, "the handbook's worked case is not the calibration point"

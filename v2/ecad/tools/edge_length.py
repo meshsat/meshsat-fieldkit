@@ -22,8 +22,27 @@ WHAT IT COMPUTES, from the board and from declarations that carry their basis:
     is that the edge decides and an edge nobody wrote down decides nothing;
   * the CRITICAL LENGTH, l = t_r / (k * t_pd), where k is the criterion. The common engineering readings are
     k = 6 (conservative, a line is "electrically long" past a sixth of the rise distance) and k = 2 (the
-    lumped limit). The board declares `critical_k` with its reason; no source in this tree states either, so
-    this rule stays GENERATED_ONLY however carefully the number is chosen.
+    lumped limit). The board declares `critical_k` with its reason. NO STANDARD IN THIS TREE STATES A VALUE
+    FOR k, and one document now calibrates it: ECSS-E-HB-20-07A section 6.1.2.3, transcribed in
+    v2/vendor/standards/, works a real case where a 35 mm clock track with a 200 ps edge failed a radiated
+    emission test at 1.4 GHz. That track is one rise distance long (t_r / t_pd = 34.5 mm on its microstrip),
+    which is k = 1, and the handbook calls it a textbook radiator. So k = 1 is measured to be too long, k = 2
+    is half of a known failure, and k = 6 puts a judged net at a sixth of it. The number is still this
+    project's choice; what the handbook removes is the pretence that it was chosen against nothing.
+
+WHAT A NET PAST ITS CRITICAL LENGTH MEANS, which is the half this rule got wrong on its first day. Being a
+transmission line is not a defect: at a 200 ps edge every net on a 285 mm board is one, and a rule that fails
+them all says only that physics holds. What is a defect is an UNCONTROLLED and UNTERMINATED transmission line.
+So a net past its critical length is asked what it has, in the order the handbook's own bullets give
+(6.1.2.5.2: "Use of tracks with controlled characteristic impedance: microstrips or striplines; matched
+terminations", and its example's fix is a 1 kOhm series resistor, not a shorter track):
+  * CONTROLLED: the net carries an impedance target, so it was designed as a transmission line;
+  * SERIES: a resistor of 10 to 150 ohm sits on the net with its other end on another signal net, which is
+    what a source termination looks like from the board alone. This is a SCREEN and says so: the board file
+    knows neither which end drives nor what the receiver is, so a damping resistor in a filter counts here too
+    and the list is printed for reading rather than trusted as proof;
+  * DECLARED: the board names the net in `edge_allow` with a reason, the erc-allow idiom;
+  * and anything left is the finding: a long, fast, unterminated net with no impedance target.
 
 Then every signal net's routed length is measured and compared with the critical length for ITS class. A net
 past it is reported with both numbers: that is the list SI-001 asks for, and it is the list that says which
@@ -80,6 +99,20 @@ def main(a):
         cls = _sc.classify(b, path, targets, None)[0]
     except Exception:
         cls = {}
+        targets = set()
+    # every net whose own class carries an impedance target, read from the project file the board is judged with
+    # An impedance target is a property of the net's CLASS, and the class assignment lives in the project file
+    # beside the board, which is also where impedance_check reads it (KiCad's Python exposes no net class).
+    cls_target = {}
+    try:
+        import netclass as _nc
+        _pro = os.path.splitext(path)[0] + ".kicad_pro"
+        _assign = json.load(open(_pro)).get("net_settings", {}).get("netclass_assignments", {}) if os.path.exists(_pro) else {}
+        for _net in list(_assign):
+            _klass = _nc.class_of(_assign, _net)
+            if _klass and _klass in targets: cls_target[str(_net).lstrip("/")] = _klass
+    except Exception:
+        pass
     # the per-entry rise time, matched the way signal_class matches: a shell glob over the net name
     import fnmatch
     entries = [e for e in (_bt.value(letter, "signal_classes", []) or []) if e.get("rise_ns")]
@@ -90,7 +123,42 @@ def main(a):
             if fnmatch.fnmatch(n, e["pattern"]): return e["rise_ns"], e["pattern"]
         return rise.get(klass), klass
     signals, _ = signalnets.classify(b, path, (it.get("rails") or {}).keys())
-    length, worst_layer = {}, {}
+    # WHAT A LONG NET HAS. Read from the board, once, because a per-net walk over every footprint is quadratic
+    # on board B's 951.
+    _rails = {r.lstrip("/") for r in (it.get("rails") or {})}
+    def _is_rail(nm):
+        nm = (nm or "").lstrip("/")
+        return (not nm) or nm.startswith("+") or nm in _rails or nm.upper() in ("GND", "GNDA", "AGND", "GND_V")
+    def _ohms(v):
+        v = (v or "").strip().upper().replace(" ", "")
+        m2 = __import__("re").match(r"^(\d+(?:\.\d+)?)(R|K|M)?$", v.replace("OHM", "").replace("\u03a9", ""))
+        if not m2: return None
+        x = float(m2.group(1))
+        return x * {None: 1.0, "R": 1.0, "K": 1e3, "M": 1e6}[m2.group(2)]
+    series = {}
+    for fp in b.GetFootprints():
+        if not fp.GetReference().startswith("R"): continue
+        pads = [p for p in fp.Pads()]
+        if len(pads) != 2: continue
+        ohm = _ohms(fp.GetValue())
+        if ohm is None or not (10.0 <= ohm <= 150.0): continue
+        a_, b_ = pads[0].GetNetname(), pads[1].GetNetname()
+        if _is_rail(a_) or _is_rail(b_) or a_ == b_: continue      # a pull-up is not a termination
+        for this, other in ((a_, b_), (b_, a_)):
+            series.setdefault(this, []).append("%s %s to %s" % (fp.GetReference(), fp.GetValue(), other.lstrip("/")))
+    _allow = _bt.value(letter, "edge_allow", []) or []
+    import fnmatch as _fn
+    def mitigation(net):
+        nm = net.lstrip("/")
+        if (cls_target or {}).get(net) or (cls_target or {}).get(nm):
+            return "an impedance target on its class, so it is a designed transmission line"
+        if net in series or nm in series:
+            return "a series resistor on it (%s), which is what a source termination looks like from the board" % \
+                   ", ".join(series.get(net) or series.get(nm))[:80]
+        for e in _allow:
+            if _fn.fnmatch(nm, e.get("pattern", "")): return "declared: %s" % str(e.get("why", ""))[:90]
+        return None
+    length, worst_layer, mitigated = {}, {}, []
     for t in b.GetTracks():
         if t.GetClass() != "PCB_TRACK": continue
         n = t.GetNetname()
@@ -110,22 +178,32 @@ def main(a):
         crit = (float(tr) * 1000.0) / (float(k) * tpd)
         rows.append(dict(net=n.lstrip("/"), cls=c, mm=round(L, 1), critical_mm=round(crit, 1), rise_ns=tr))
         if L > crit:
-            over.append("%s (%s): %.0f mm routed against a critical length of %.0f mm at a %.1f ns edge"
-                        % (n.lstrip("/"), c, L, crit, float(tr)))
+            why = mitigation(n)
+            rows[-1]["mitigation"] = why or "none"
+            if why: mitigated.append("%s (%s): %.0f mm past %.0f mm, %s" % (n.lstrip("/"), c, L, crit, why))
+            else:
+                over.append("%s (%s): %.0f mm routed against a critical length of %.0f mm at a %.1f ns edge, "
+                            "with no impedance target, no series resistor on it and no declaration"
+                            % (n.lstrip("/"), c, L, crit, float(tr)))
     print("edge_length: er %.2f, criterion l = t_r / (%s x t_pd); %d signal net(s) judged, %d past their "
-          "critical length, %d with a class but no declared edge"
-          % (er, k, len(rows), len(over), len(undeclared)))
+          "critical length of which %d are controlled, terminated or declared and %d are not, %d with a class "
+          "but no declared edge"
+          % (er, k, len(rows), len(over) + len(mitigated), len(mitigated), len(over), len(undeclared)))
+    for x in sorted(mitigated)[:12]: print("  long and answered: %s" % x)
     if undeclared: print("  no declared edge: %s%s" % (", ".join(sorted(undeclared)[:12]),
                                                        " ..." if len(undeclared) > 12 else ""))
     for x in sorted(over)[:20]: print("  OVER %s" % x)
     if "--json" in a: print(json.dumps(rows, indent=1))
     return _v.write("edge_length", _v.FAIL if over else (_v.INCONCLUSIVE if (not rows or undeclared) else _v.PASS),
                     counts={"judged": len(rows), "over_critical_length": len(over),
-                            "no_declared_edge": len(undeclared)},
+                            "long_and_answered": len(mitigated), "no_declared_edge": len(undeclared)},
                     denominator=len(rows) or 1, evidence=sorted(over)[:20],
                     inputs={"board": path, "critical_k": k, "epsilon_r": round(er, 3)},
                     note=("no net on this board carries a class with a declared rise time" if not rows else
-                          "every signal net's routed length against the critical length its own class implies"),
+                          "every signal net's routed length against the critical length its own class implies, "
+                          "and a net past it is asked whether it is impedance-controlled, series-terminated or "
+                          "declared before it is called a defect: being a transmission line is physics, being "
+                          "an uncontrolled one is the finding"),
                     out_dir=out_dir)
 
 

@@ -58,27 +58,37 @@
   {
    "pattern": "USB1_?R",
    "class": "HIGH_SPEED_DIGITAL",
-   "basis": "the upstream USB pair after its series resistors: the same 480 Mbit/s signalling as before them"
+   "basis": "the upstream USB pair after its series resistors: the same 480 Mbit/s signalling as before them",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
   },
   {
    "pattern": "USB*_P",
    "class": "HIGH_SPEED_DIGITAL",
-   "basis": "a USB 2.0 high-speed pair into the TUSB hub: 480 Mbit/s with sub-nanosecond edges"
+   "basis": "a USB 2.0 high-speed pair into the TUSB hub: 480 Mbit/s with sub-nanosecond edges",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
   },
   {
    "pattern": "USB*_N",
    "class": "HIGH_SPEED_DIGITAL",
-   "basis": "the other half of the same USB 2.0 pair"
+   "basis": "the other half of the same USB 2.0 pair",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
   },
   {
    "pattern": "HUB_DP*",
    "class": "HIGH_SPEED_DIGITAL",
-   "basis": "a hub downstream USB data line, same signalling as above"
+   "basis": "a hub downstream USB data line, same signalling as above",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
   },
   {
    "pattern": "HUB_DM*",
    "class": "HIGH_SPEED_DIGITAL",
-   "basis": "the other half of the same hub port"
+   "basis": "the other half of the same hub port",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
   },
   {
    "pattern": "HUB_XTAL*",
@@ -332,5 +342,7 @@
    "what": "the board's single ground: every return on this board is this net"
   }
  },
- "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this."
+ "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this.",
+ "critical_k": 6,
+ "critical_k_why": "l = t_r / (6 t_pd). ECSS-E-HB-20-07A section 6.1.2.3 works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test: that track is ONE rise distance long (t_r / t_pd = 34.5 mm on its microstrip), which is k = 1, and the handbook calls it a textbook radiator. k = 2 is half a known failure and k = 6 is a sixth of it. The number is this project's choice; the handbook is what it was calibrated against, and no standard in this tree states a value for k"
 }

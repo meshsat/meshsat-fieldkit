@@ -38,7 +38,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 7 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | port_protect INCONCLUSIVE |
-| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the first half exists. thermal.py builds a per-board table from the boar |
+| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | closer_audit FAIL: {'declared': 14, 'fail': 0, 'in_finish': 14, 'uncovered_classes': 3} |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
