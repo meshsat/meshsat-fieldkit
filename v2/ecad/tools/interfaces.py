@@ -126,13 +126,28 @@ def main(argv):
     for f in fails[:25]: print("  FAIL %s" % f)
     for n in notes[:8]: print("  note %s" % n)
     if "--json" in argv: print(json.dumps(res, indent=1))
+    # ONE VERDICT PER BOARD, NOT ONE FOR THE SET (16 September 2026, and this project has paid for the other
+    # shape already). A set-level paperwork verdict decided every board's own result on 16 September, so board
+    # E5, the one folder that passed, read FAIL on both paperwork rules because six other folders were stale.
+    # Eight of today's disagreements are boards A and B; boards C, D and E carry USB at full speed, declare no
+    # impedance target, and agree with their parts' datasheets exactly. They are not failed for another board.
+    _note = ("every interface's impedance target and matching tolerance against the specification of the part "
+             "that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own "
+             "datasheets")
+    for letter, v in sorted(res.items()):
+        _f = v["fails"]; _n = len(v["rows"])
+        _v.write("interfaces_%s" % letter, _v.FAIL if _f else (_v.INCONCLUSIVE if not _n else _v.PASS),
+                 counts={"assignments": _n, "disagreements": len(_f)}, denominator=_n, evidence=_f[:12],
+                 inputs={"spec": os.path.basename(SPEC), "board": letter},
+                 note=_note if _n else "board %s declares no interface assignment" % letter.upper(),
+                 quiet=True)
     return _v.write("interfaces", _v.FAIL if fails else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"assignments": rows, "boards": len(res), "disagreements": len(fails)},
                     denominator=rows, evidence=fails[:25],
                     inputs={"spec": os.path.basename(SPEC)},
-                    note=("every interface's impedance target and matching tolerance against the specification "
-                          "of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' "
-                          "and modules' own datasheets" if rows else
+                    note=(_note + "; each board also carries its own interfaces_<letter> verdict, because a "
+                          "set-level result deciding every board's own is a defect this project has already "
+                          "met once" if rows else
                           "no interface assignment is declared, so nothing was compared"))
 
 

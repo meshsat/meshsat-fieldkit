@@ -96,3 +96,23 @@ def t_the_boards_impedance_targets_agree_with_the_parts_today():
             continue
         bad += [f for f in v["fails"] if "ohm" in f and "times tighter" not in f]
     assert not bad, "an impedance target disagrees with the part that defines it: %s" % bad[:3]
+
+
+def t_the_verdict_is_per_board_and_not_one_for_the_set():
+    """16 September 2026, and this project has paid for the other shape already: a set-level paperwork verdict
+    decided every board's own result, so board E5, the one folder that passed, read FAIL on both paperwork
+    rules because six other folders were stale. Eight of today's interface disagreements are boards A and B;
+    boards C and E carry USB at full speed, declare no target and agree with their parts' datasheets exactly,
+    and must not be failed for another board."""
+    import interfaces, yaml
+    src = open(os.path.join(TOOLS, "interfaces.py"), encoding="utf-8").read()
+    assert '_v.write("interfaces_%s" % letter' in src, "there is no per-board verdict"
+    cov = yaml.safe_load(open(os.path.join(TOOLS, "pcb_rules_coverage.yaml"), encoding="utf-8"))
+    ent = (cov["rules"] if isinstance(cov.get("rules"), dict) else {})
+    text = open(os.path.join(TOOLS, "pcb_rules_coverage.yaml"), encoding="utf-8").read()
+    i = text.index("INT-001:")
+    assert "interfaces_<letter>" in text[i:i + 400], \
+        "INT-001 still reads a set-level verdict, so one board's disagreement decides every board"
+    res = interfaces.judge()
+    assert not res["c"]["fails"], "board C disagrees with its own parts: %s" % res["c"]["fails"][:2]
+    assert res["b"]["fails"], "board B's tolerance gap is no longer reported"
