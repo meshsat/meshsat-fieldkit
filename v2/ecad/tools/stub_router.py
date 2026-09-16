@@ -304,6 +304,21 @@ def other_cluster_cells(a, net, viamap):
                 for r in pts(kj, ij):
                     if abs(q.x - r.x) < 2000 and abs(q.y - r.y) < 2000: return True
                 if kj == "via" and abs(q.x - ij.GetPosition().x) < FromMM(0.35) and abs(q.y - ij.GetPosition().y) < FromMM(0.35): return True
+                # A TRACK END ON ANOTHER TRACK'S BODY IS A CONNECTION, and this test only ever compared ENDS
+                # (16 September 2026). KiCad connects a T-junction, and the record already carries the lesson
+                # for post_fix_b13, which cut such a foot off because it read the same way. Here the effect is
+                # the opposite and quieter: the union-find splits ONE KiCad cluster into two, the search is
+                # given a goal that is already connected to its source, the closure is laid, KiCad's count does
+                # not move and the piece comes back off. That is board A's A37 finish refusing a closure whose
+                # two ends it measured at 0.000 mm from the net's own copper, with 22 unconnected before and
+                # 22 after. A cluster test stricter than the connectivity it stands for invents work.
+                if kj == "trk" and ij.GetClass() == "PCB_TRACK":
+                    _a, _b = ij.GetStart(), ij.GetEnd(); _w = ij.GetWidth() / 2 + 2000
+                    _dx, _dy = _b.x - _a.x, _b.y - _a.y; _l2 = _dx * _dx + _dy * _dy
+                    if _l2 > 0:
+                        _u = max(0.0, min(1.0, ((q.x - _a.x) * _dx + (q.y - _a.y) * _dy) / _l2))
+                        if (q.x - (_a.x + _u * _dx)) ** 2 + (q.y - (_a.y + _u * _dy)) ** 2 <= _w * _w: return True
+                    elif abs(q.x - _a.x) <= _w and abs(q.y - _a.y) <= _w: return True
         if ki == "via" and kj == "trk":
             for r in pts(kj, ij):
                 if abs(r.x - ii.GetPosition().x) < FromMM(0.35) and abs(r.y - ii.GetPosition().y) < FromMM(0.35): return True
