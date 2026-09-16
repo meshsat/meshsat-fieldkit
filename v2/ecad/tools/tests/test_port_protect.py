@@ -202,3 +202,10 @@ def t_the_rule_blocks_what_ships_and_not_what_routes():
     assert "does not block the route" in seg, "the pre-route chain does not say what it is doing"
     assert "port_protect.py" in fin and "PORTS a conductor leaves the case" in fin, \
         "the finish does not block on TRN-001, so moving it out of the pre-route weakened the rule"
+    # and not blocking is only half of it: routeflow's pre stage collects every verdict and requires PASS, so
+    # the phase has to reach the VERDICT as well as the shell (board E was refused twice for the same thing)
+    assert "VERDICT_ADVISORY=1 python3 ../tools/port_protect.py" in full, \
+        "the pre-route verdict is still a bar, so the collector refuses the route even though the shell does not"
+    i2 = fin.index("port_protect.py")
+    assert "VERDICT_ADVISORY" not in fin[max(0, i2 - 200):i2], \
+        "the finish's own run is advisory too, which would leave TRN-001 deciding nothing anywhere"
