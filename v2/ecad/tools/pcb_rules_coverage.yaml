@@ -110,14 +110,30 @@ coverage:
    note: "layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need",
    remediation: {action: "quotes from the ordering session for both counts on C and P, then the two rulings", owner: OWNER, depends_on: [], p50_h: 2, p80_h: 72}}
 
- RET-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "the governing principle is not implemented anywhere: no net is classified by edge rate, and no adequacy criterion per class exists. What runs today is the screen RET-002",
-   remediation: {action: "classify every net by edge rate from its driver's datasheet, state the criterion per class, then judge", owner: SESSION, depends_on: [SI-001], p50_h: 10, p80_h: 30}}
+ RET-001: {implementation: "signal_class.py plus each board's signal_classes table, judged by intent_checks.py",
+   verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_signal_class.py},
+   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
+     gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration in
+     boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each class is asked
+     the question it deserves: a fast net for an ADJACENT reference within a tolerance, a slow one for whether a return
+     path EXISTS at all. Four properties keep a relaxation from becoming an exemption mechanism, each with a rule:
+     a declaration without a reason is refused, an unclassified net is judged at the STRICTEST bar and named, a
+     declaration cannot downgrade a net the board itself calls impedance-targeted, and the relaxed class asks a
+     different QUESTION rather than a looser number. It is GENERATED_ONLY and not ENFORCED for one reason and it is
+     the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS, not a standard's. The 10 mm or 5 percent
+     of the fast classes is the 15 September ruling's figure calibrated on board A's anti-pad rows; the 30 mm or 15
+     percent of CLOCKED_DIGITAL is a judgement. Until a source backs them, they are a written screen and say so",
+   remediation: {action: "obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are",
+     owner: SESSION, depends_on: [SI-001], p50_h: 8, p80_h: 26}}
 
  RET-002: {implementation: "gen_pcb_*3.py pours", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_board_gates.py, report: return_gaps.py},
-   maturity: ENFORCED, gap_category: HEURISTIC_AS_LAW,
-   note: "it blocks boards today as though it were RET-001; it counts a net's own via anti-pads as uncovered, which is most of D's and E's failures",
-   remediation: {action: "demote to a screen in the finish, keep the report, and let RET-001 decide", owner: OWNER, depends_on: [RET-001], p50_h: 2, p80_h: 6}}
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
+     against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a net's
+     own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they read",
+   remediation: {action: "measure the anti-pad share of each failing net's gap, so RET-003's question can be separated from this one",
+     owner: SESSION, depends_on: [RET-003], p50_h: 3, p80_h: 8}}
 
  RET-003: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
    note: "nothing determines the reference conductor before and after a transition; return_via's same-plane exemption is the nearest thing and is a geometric approximation of it",

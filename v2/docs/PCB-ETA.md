@@ -9,11 +9,11 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 183 h | 534 h |
-| critical path through the dependencies | 34 h | 96 h |
-| at 6 engineering hours a day | 30.5 days | 89.0 days |
+| engineering effort, one worker | 184 h | 538 h |
+| critical path through the dependencies | 33 h | 94 h |
+| at 6 engineering hours a day | 30.7 days | 89.7 days |
 
-39 open item(s): 31 are this session's work and 8 are waits on the owner, a vendor or a lab. Waits are not
+39 open item(s): 32 are this session's work and 7 are waits on the owner, a vendor or a lab. Waits are not
 engineering time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens
@@ -25,7 +25,6 @@ engineering time and are listed separately below.
 | INT-002 | owner decision 29: fit magnetics on the three module links, ask the module vendor, or defe | OWNER |
 | ISO-001 | declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and | OWNER |
 | REL-001 | a reliability sheet per board and the test plan for the prototype | OWNER |
-| RET-002 | demote to a screen in the finish, keep the report, and let RET-001 decide | OWNER |
 | SCH-004 | decide ZEROIZE's hardware path (owner), then a fail-safe direction check per safety line | OWNER |
 | STK-002 | quotes from the ordering session for both counts on C and P, then the two rulings | OWNER |
 

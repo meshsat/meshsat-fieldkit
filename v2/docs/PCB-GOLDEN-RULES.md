@@ -634,8 +634,8 @@ discontinuities it crosses and the interface's own requirement, not from a singl
 | risk | SIGNAL_INTEGRITY, EMC |
 | verified by | SCRIPT, CALCULATION, MANUAL_REVIEW at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | NONE_YET |
-| maturity | **OPEN** |
+| implementation | signal_class.py plus each board's signal_classes table, judged by intent_checks.py |
+| maturity | **GENERATED_ONLY** |
 | owner | OWNER |
 | waiver | by OWNER, scope one net class on one board, expires prototype EMC measurement |
 
@@ -652,8 +652,18 @@ spectrum, not the existence of copper on a neighbouring layer.
 **If violated** Radiated emission from an enlarged loop, crosstalk into neighbouring nets, reflections at the discontinuity,
 and common-mode conversion on differential pairs.
 
-**Today** the governing principle is not implemented anywhere: no net is classified by edge rate, and no adequacy
-criterion per class exists. What runs today is the screen RET-002
+**Today** 16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
+gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration
+in boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each
+class is asked the question it deserves: a fast net for an ADJACENT reference within a tolerance, a slow one
+for whether a return path EXISTS at all. Four properties keep a relaxation from becoming an exemption
+mechanism, each with a rule: a declaration without a reason is refused, an unclassified net is judged at the
+STRICTEST bar and named, a declaration cannot downgrade a net the board itself calls impedance-targeted, and
+the relaxed class asks a different QUESTION rather than a looser number. It is GENERATED_ONLY and not
+ENFORCED for one reason and it is the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS,
+not a standard's. The 10 mm or 5 percent of the fast classes is the 15 September ruling's figure calibrated
+on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judgement. Until a source backs
+them, they are a written screen and say so
 
 ### RET-002  plane-adjacency screen
 
@@ -685,8 +695,10 @@ continuous everywhere a signal actually runs.
 **If violated** Used as a law it refuses good boards (false positives at every via) and passes bad ones (a covered net whose
 reference changes layer with no return transition).
 
-**Today** it blocks boards today as though it were RET-001; it counts a net's own via anti-pads as uncovered, which is
-most of D's and E's failures
+**Today** 16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
+against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a
+net's own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they
+read
 
 ### RET-003  return transition at a reference change
 

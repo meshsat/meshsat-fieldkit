@@ -43,7 +43,7 @@ appears in the gap register.
 | PWR-002 | POWER_TREE | MUST_JUSTIFY | gen_sch_a.py, gen_sch_b.py | none |  | **OPEN** |
 | PWR-003 | POWER_TREE | BLOCKER | gen_sch_a.py, gen_sch_e.py, gen_sch_p.py | none |  | **OPEN** |
 | REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
-| RET-001 | RETURN_PATH | BLOCKER | NONE_YET | none |  | **OPEN** |
+| RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_checks | tests/test_signal_class.py | **GENERATED_ONLY** |
 | RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_checks | tests/test_board_gates.py | **ENFORCED** |
 | RET-003 | RETURN_PATH | BLOCKER | NONE_YET | none |  | **OPEN** |
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py | **ENFORCED** |
@@ -71,9 +71,9 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 21 |
-| GENERATED_ONLY | 11 |
+| GENERATED_ONLY | 12 |
 | VERIFIED_MANUALLY | 1 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 15 |
+| OPEN | 14 |
 | SOURCE_UNVERIFIED | 4 |
 | OWNER_DECISION_REQUIRED | 2 |

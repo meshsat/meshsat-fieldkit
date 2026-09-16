@@ -17,7 +17,7 @@ Used as a module by the check_pcb_*.py gates: intent_checks.run(board, check)  o
 import sys, os, math, json
 import netclass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import pcbnew, intent, signalnets, return_via
+import pcbnew, intent, signalnets, return_via, signal_class
 
 SAMPLE = 1.0; GAP_MM = 10.0; NEAR_VIA = 1.5
 
@@ -55,13 +55,44 @@ def run(b, check, path=None):
             if not any(pl.Contains(p) for Ln in neighbours(L) for pl in planes.get(Ln, [])): gaps[net] = gaps.get(net, 0.0) + length / (n + 1)
     if n_tracks and not total: check(False, "return path: the board has %d tracks and not one signal net was found to judge (signalnets.classify excluded every net: %s)" % (n_tracks, ", ".join(sorted(set(_why.values())))))
     if not n_tracks: check(True, "return path: 0 of 0 signal nets, the board has no tracks")
-    n_over = 0; worst = ("", 0.0)
+    # WHAT IS ASKED OF A RETURN PATH DEPENDS ON WHAT THE SIGNAL IS (rule RET-001, 16 September 2026, owner
+    # instruction of the same day). "A plane under every signal" is a heuristic and this project had made it a
+    # law: it refused board E for SHORE_INHIBIT, WATER_SENSE and TRK_INTVCC, an opto inhibit, a sensor input
+    # and an LDO output, over anti-pad gaps of one to four millimetres. The governing principle is return-path
+    # adequacy FOR THE SIGNAL'S SPECTRAL CONTENT, so each net is judged by its class: a fast net is asked for
+    # an ADJACENT reference within a tolerance, a slow one is asked whether a return path EXISTS AT ALL, and a
+    # net whose class nothing establishes is held to the STRICTEST bar and named, so that being unclassified
+    # can never be the easy way through.
+    sig_cls, cls_bad = signal_class.classify(b, path, targets, cls_of)
+    for x in cls_bad: check(False, "signal class declaration: %s" % x)
+    n_over = 0; worst = ("", 0.0); undeclared = []
     for net in sorted(total):
         n_nets += 1; g = gaps.get(net, 0.0)
         if g > worst[1]: worst = (net.lstrip("/"), g)
-        lim = max(GAP_MM, 0.05 * total[net])   # the connector ends and via transitions of a long net sit over anti-pads: 5 percent of the length or 10 mm, whichever is larger (A22's 19 nets at 3 to 9 percent; C7 and D8 at 20 to 60 percent are the real class)
-        if g > lim: n_over += 1
-        check(g <= lim, "return path under %s (%s): %.1f of %.1f mm without a plane on a neighbouring layer (limit %.1f)" % (net.lstrip("/"), cls_of(net), g, total[net], lim))
+        sc, basis = sig_cls.get(net, ("UNKNOWN", ""))
+        if sc == "UNKNOWN":
+            undeclared.append(net.lstrip("/"))
+            lim = max(GAP_MM, 0.05 * total[net])        # the strictest bar, held until the board declares it
+            if g > lim: n_over += 1
+            check(g <= lim, "return path under %s (%s, UNDECLARED so judged at the strictest bar): %.1f of %.1f mm without a plane on a neighbouring layer (limit %.1f)"
+                  % (net.lstrip("/"), cls_of(net), g, total[net], lim))
+        elif signal_class.QUESTION[sc] == "EXISTS":
+            # No edge to speak of, so adjacency is not the question; a return path that EXISTS is. A net with
+            # no reference anywhere under any of its copper has a loop the size of the board, whatever its speed.
+            covered = total[net] - g
+            check(covered > 0, "return path under %s (%s): a reference exists under %.1f of %.1f mm [%s]"
+                  % (net.lstrip("/"), sc, covered, total[net], basis[:80]))
+            if covered <= 0: n_over += 1
+        else:
+            lim = signal_class.limit(sc, total[net])
+            if g > lim: n_over += 1
+            check(g <= lim, "return path under %s (%s, %s): %.1f of %.1f mm without a plane on a neighbouring layer (limit %.1f) [%s]"
+                  % (net.lstrip("/"), cls_of(net), sc, g, total[net], lim, basis[:70]))
+    # An undeclared net is not a failure of the copper and must not be reported as one: it is a gap in what this
+    # project has written down about its own design, and it is named here so it can be closed.
+    if undeclared:
+        print("intent_checks: %d signal net(s) carry no declared signal class and were judged at the strictest bar: %s%s"
+              % (len(undeclared), ", ".join(undeclared[:12]), " ..." if len(undeclared) > 12 else ""))
     print("intent_checks: return path judged on %d signal nets (%d excluded as ground, rail, zone owner or power class), %d over their limit, worst %s at %.1f mm" % (n_nets, len(_why), n_over, worst[0] or "none", worst[1]))
     # 4. return via (rule 2 of the same ruling): a ground via beside every signal via, judged by return_via.py
     rv = return_via.judge(b, path)
