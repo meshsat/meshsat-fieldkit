@@ -116,8 +116,9 @@ def run(b, check, path=None):
              ("; not in the intent file: " + ", ".join(_undeclared[:12])) if _undeclared else ""))
     # 4. return via (rule 2 of the same ruling): a ground via beside every signal via, judged by return_via.py
     rv = return_via.judge(b, path)
-    check(not rv["lacking"], "return via: %d of %d signal vias have a ground via within %.1f mm (%d exempt in fine-pitch fans, %d on one reference plane); without one: %s" % (
-        rv["judged"] - len(rv["lacking"]), rv["judged"], return_via.RETURN_MM, rv["exempt"], rv["same_plane"], "; ".join(rv["lacking"][:8]) + (" ..." if len(rv["lacking"]) > 8 else "") or "none"))
+    check(not rv["lacking"], "return via: %d of %d signal vias have a ground via within %.1f mm (%d exempt in fine-pitch fans, %d on one reference plane, %d on a net whose declared class has no edge to return); without one: %s" % (
+        rv["judged"] - len(rv["lacking"]), rv["judged"], return_via.RETURN_MM, rv["exempt"], rv["same_plane"],
+        rv.get("slow", 0), "; ".join(rv["lacking"][:8]) + (" ..." if len(rv["lacking"]) > 8 else "") or "none"))
     # 2. decoupling
     pads = {(f.GetReference(), p.GetNumber()): p for f in b.GetFootprints() for p in f.Pads()}
     vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]

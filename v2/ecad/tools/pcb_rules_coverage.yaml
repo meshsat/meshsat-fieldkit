@@ -159,10 +159,15 @@ coverage:
    note: "nothing determines the reference conductor before and after a transition; return_via's same-plane exemption is the nearest thing and is a geometric approximation of it",
    remediation: {action: "compute the reference layer per track segment from the stackup and the fills, then judge each via's transition", owner: SESSION, depends_on: [RET-001], p50_h: 12, p80_h: 30}}
 
- RET-004: {implementation: "gnd_grid.py, return_via.py fixer", verification: {tool: return_via.py, verdict: return_via, fixtures: tests/test_board_gates.py},
-   maturity: ENFORCED, gap_category: HEURISTIC_AS_LAW,
-   note: "1.5 mm and the 0.5 mm fan exemption are project calibrations; the grid makes the screen pass by construction on D, and costs E its route",
-   remediation: {action: "keep as a screen under RET-003; record the grid's per-board measurement", owner: SESSION, depends_on: [RET-003], p50_h: 2, p80_h: 6}}
+ RET-004: {implementation: "gnd_grid.py, return_via.py fixer",
+   verification: {tool: return_via.py, verdict: return_via, fixtures: "tests/test_board_gates.py, tests/test_signal_class.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: it reads the SAME spectral-content class rule 1 reads, so a net cannot be slow for one rule
+     and fast for the other. A return via exists so the return current can follow its signal through a reference change;
+     where the signal has no edge worth speaking of there is no loop worth closing, and demanding one anyway refuses
+     boards for nothing. Board D was one item from a clean gate on fifteen vias, and every one of them is a push-to-talk
+     line or an expander output that changes state when a person presses a switch. The skip is a COUNTED category in the
+     verdict, not a silent one, and a net nobody classified is judged as though it were fast"}
 
  IMP-001: {implementation: "gen_pcb_*3.py net classes", verification: {tool: impedance_check.py, verdict: impedance_check, second_opinion: impedance_2d.py},
    maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,

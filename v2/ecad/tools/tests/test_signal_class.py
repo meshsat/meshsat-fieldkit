@@ -148,3 +148,26 @@ def t_the_board_letter_comes_from_the_board_table_and_not_the_directory():
     src = open(os.path.join(TOOLS, "signal_class.py")).read()
     assert "os.path.dirname(os.path.abspath(path))" not in src, \
         "the letter is being read from the directory again"
+
+
+def t_the_return_via_screen_reads_the_same_class_as_the_return_path_rule():
+    """RET-004. The owner's instruction names "a ground via beside every signal via" as a heuristic that must
+    not become a law, and the governing principle is the same one rule 1 answers: a return via exists so the
+    return current can follow its signal through a reference change. Where the signal has no edge worth
+    speaking of there is no loop worth closing, and demanding one anyway refuses boards for nothing.
+
+    Board D was one item from a clean gate on fifteen vias, and every one of them is a push-to-talk line or an
+    expander output that changes state when a person presses a switch.
+
+    Two properties: the screen reads the SAME declaration rule 1 reads, so a net cannot be slow for one rule
+    and fast for the other; and a net nobody classified is judged as though it were fast.
+    """
+    src = open(os.path.join(TOOLS, "return_via.py")).read()
+    assert "import signal_class" in src, "the return-via screen does not read the signal classification"
+    assert 'LOW_SPEED_OR_DC' in src, "the screen does not exempt the slow class"
+    assert '"UNKNOWN"' in src or "'UNKNOWN'" in src, \
+        "an unclassified net is not defaulted, so it could fall into the slow branch"
+    # the exemption is a COUNTED category and not a silent skip: the count travels in the verdict
+    assert '"slow"' in src, "the slow vias are skipped without being counted, so nobody can see how many"
+    import re
+    assert re.search(r'counts=\{[^}]*"slow"', src), "the verdict does not carry the slow count"

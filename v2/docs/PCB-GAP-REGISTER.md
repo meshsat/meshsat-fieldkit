@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**36 of 57 rules carry a gap.**
+**35 of 57 rules carry a gap.**
 
 ## absent (13)
 
@@ -158,17 +158,12 @@ the gate refuses a stale or quote-only set correctly; the set on disk is built f
 phases behind and has not been rebuilt  
 *Close it by* rebuild the order set from the current folders once the boards are cut. Owner **SESSION**, after DOC-001. Effort P50 2h, P80 6h.
 
-## heuristic as law (2)
+## heuristic as law (1)
 
 **DEC-001 decoupling loop area** (MUST_JUSTIFY, ENFORCED)  
 the 3 mm distance is a project number applied to every device; the loop inductance it stands for is never
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
-
-**RET-004 ground-via proximity screen** (MUST_JUSTIFY, ENFORCED)  
-1.5 mm and the 0.5 mm fan exemption are project calibrations; the grid makes the screen pass by construction
-on D, and costs E its route  
-*Close it by* keep as a screen under RET-003; record the grid's per-board measurement. Owner **SESSION**, after RET-003. Effort P50 2h, P80 6h.
 
 ## source or applicability unresolved (8)
 
@@ -235,9 +230,9 @@ verdict is INCONCLUSIVE rather than passing at a figure this project made up. Th
 registry makes of every other unsourced limit  
 *Close it by* obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge. Owner **SESSION**. Effort P50 2h, P80 6h.
 
-## covered (21)
+## covered (22)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RF-002, RTE-001, RTE-002,
-SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, SUP-001, VIA-001
+DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RET-004, RF-002, RTE-001,
+RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, SUP-001, VIA-001
 
