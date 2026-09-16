@@ -167,3 +167,20 @@ def t_a_rail_that_crosses_a_connector_declares_its_share_of_one_budget():
         s = open(os.path.join(tools, f), encoding="utf-8").read()
         i = s.index('_intent.rail("+5V_D8"')
         assert want in s[i:i + 400], "%s does not declare its share of the mezzanine rail" % f
+
+def t_an_unsplit_shared_rail_is_an_open_question_and_not_a_failed_contract():
+    """Six rails cross a connector with no share declared (MESHSAT-862, 16 September 2026).
+
+    Declaring a share is an engineering judgement about where the drop is allowed to fall, not a fact the tree
+    already holds: writing 50/50 for each of them would be a number with no basis, which this registry refuses
+    everywhere else. So an unsplit rail makes the contract set INCONCLUSIVE, the way an absent netlist does,
+    and it is named every run until someone splits it. Shares that ARE declared and sum past the budget remain
+    a failure."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "check_contracts.py"),
+               encoding="utf-8").read()
+    assert "UNSPLIT" in src, "an unsplit rail is not tracked"
+    i = src.index("UNSPLIT.append")
+    assert "check(" not in src[i - 400:i], "an unsplit rail is still counted as a failed contract"
+    assert "rails_unsplit" in src, "the verdict does not carry how many rails are unsplit"
+    assert "the shares sum to" in src, "the sum rule is gone, so a declared split could exceed the budget"
