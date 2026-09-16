@@ -25,9 +25,9 @@
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "288dee48fb9918aa"
  },
- "ts": "2026-09-16T03:50:43Z",
+ "ts": "2026-09-16T04:40:42Z",
  "verdict": "PASS",
  "version": "unknown"
 }

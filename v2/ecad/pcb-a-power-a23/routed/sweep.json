@@ -2,8 +2,8 @@
  "what": "a read-only re-judgement of this board under the rule set named in each verdict",
  "board": "pcb-a-power",
  "board_sha256": "58e26c67987b1daa8eb236777a435480617ba0e918e263a5398e5060d64db3e9",
- "label": "sweep-28e97de",
+ "label": "sweep-8f7a31d",
  "tools": "",
- "taken": "2026-09-16T03:51:05+00:00",
+ "taken": "2026-09-16T04:41:05+00:00",
  "read_only": "the board sha256 was identical before and after; a sweep that changes a board writes nothing"
 }

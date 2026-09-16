@@ -95,16 +95,28 @@ def main(a):
     print("ref_change: %s: %d layer(s) carry a reference plane over %.0f%% of the board: %s"
           % (os.path.basename(path), len(pl), frac * 100,
              ", ".join("%s=%s" % (b.GetLayerName(L), "/".join(sorted(n for n, _z in zs))) for L, zs in sorted(pl.items()))))
+    # WHAT A REFERENCE CHANGE COSTS DEPENDS ON THE SIGNAL, which is the same law rules RET-001 and RET-004 were
+    # rewritten under on 16 September 2026 and which this gate was missing on its first run: of board A's 34
+    # transitions without a stitching capacitor, most are enable lines and inhibit lines, and a line that
+    # changes state when a person presses a switch has no return loop worth closing. The class comes from the
+    # same declaration those rules use, and a net nobody classified is judged as though it were fast.
+    try:
+        import signal_class as _sc
+        _targets = {k for k, v in ((it.get("pair_classes") or {}).items()) if v}
+        _cls = _sc.classify(b, path, _targets, None)[0]
+    except Exception:
+        _cls = {}
     ends = {}
     for t in b.GetTracks():
         if t.GetClass() != "PCB_TRACK": continue
         for e in (t.GetStart(), t.GetEnd()):
             ends.setdefault((t.GetNetname(), round(mm(e.x), 2), round(mm(e.y), 2)), set()).add(t.GetLayer())
-    same = other_gnd = to_power = unknown = 0; examples = []; power_vias = []
+    same = other_gnd = to_power = unknown = slow = 0; examples = []; power_vias = []
     for t in b.GetTracks():
         if t.GetClass() != "PCB_VIA": continue
         net = t.GetNetname()
         if not signalnets.is_signal(net, signals): continue
+        if (_cls.get(net) or ("UNKNOWN", ""))[0] == "LOW_SPEED_OR_DC": slow += 1; continue
         p = (round(mm(t.GetPosition().x), 2), round(mm(t.GetPosition().y), 2))
         attached = ends.get((net, p[0], p[1]), set())
         if len(attached) < 2: unknown += 1; continue
@@ -129,8 +141,9 @@ def main(a):
                                 " -> ".join("/".join(sorted(n)) for n in nets)))
     print("ref_change: signal vias: %d keep one reference, %d move between GROUND planes (a ground via closes "
           "those, rule RET-004), %d change to or from a POWER plane (a ground via cannot close those: the "
-          "return needs a capacitor between the two planes), %d undetermined"
-          % (same, other_gnd, to_power, unknown))
+          "return needs a capacitor between the two planes), %d undetermined, %d slow (no edge worth a return "
+          "loop, by the same declaration rules RET-001 and RET-004 read)"
+          % (same, other_gnd, to_power, unknown, slow))
     for e in examples: print("  %s" % e)
     if "--check" not in a: return 0
 
@@ -141,7 +154,7 @@ def main(a):
     out_dir = os.path.join(os.path.dirname(os.path.abspath(path)), "out")
     if r is None:
         return _v.write("return_stitch", _v.INCONCLUSIVE, denominator=len(power_vias),
-                        counts={"plane_change_to_power": len(power_vias)}, inputs={"board": path},
+                        counts={"plane_change_to_power": len(power_vias), "slow": slow}, inputs={"board": path},
                         applicable=not power_vias,
                         note=("this board has no transition between two different reference nets, so RET-003 has "
                               "nothing on it to judge" if not power_vias else
@@ -165,7 +178,7 @@ def main(a):
           "within %.1f mm" % (len(power_vias), len(bad), r))
     for x in bad[:20]: print("  FAIL %s" % x)
     return _v.write("return_stitch", _v.FAIL if bad else _v.PASS,
-                    counts={"plane_change_to_power": len(power_vias), "without_capacitor": len(bad)},
+                    counts={"plane_change_to_power": len(power_vias), "without_capacitor": len(bad), "slow": slow},
                     denominator=len(power_vias) or 1, evidence=bad[:20],
                     inputs={"board": path, "stitch_cap_mm": r},
                     note="a return current that has to cross between two different reference conductors crosses "
