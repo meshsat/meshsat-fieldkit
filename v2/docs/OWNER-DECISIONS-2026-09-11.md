@@ -2287,3 +2287,38 @@ clearances are on the never-auto floor.
 
 **The session's reading: option 1.** The number that is wrong is the one this project chose, not the one the
 part and the fabricator agree on. It is one line, it is board B only, and the boards that keep 0.127 keep it.
+
+## The P0's measurement, taken at last: every board's layer count, with numbers (17 September 2026, rule STK-002)
+
+The owner reopened every board's layer count as a P0 on 11 September and asked for the measurement that forces
+each one and the cost it adds. `layer_judge.py` was written for it on 12 September and **no chain has ever run
+it**; it ran on all seven boards tonight, and for boards D and E it took the second reading its own docstring
+had been promising and never made, `dc_drop` on a copy with the idle inner pours deleted.
+
+| board | layers | inner layers with no routed track | share of routed length on the inner layers | rails as it stands | rails with the idle inner pours deleted | reading |
+|---|---|---|---|---|---|---|
+| **A** | 6 | 2 of 4 | **38.2 percent** | 10 of 18 lines MET | not applicable, its inner layers route | NOT_FREED: removing them is a re-route |
+| **B** | 6 | 2 of 4 | 24.7 percent of locked copper | not judged | not judged | **cannot be judged**: 100 percent of its copper is locked escapes and pre-routed pairs. Judge the routed board |
+| **C** | 4 | 1 of 2 | **23.7 percent** | 3 MET, 0 not | not applicable | NOT_FREED: removing them is a re-route |
+| **D** | 4 | 1 of 2 | 0.2 percent | **5 MET, 0 not** | **5 MET, 0 not, identical** | QUESTION: its In1 pours carry no DC duty its other copper does not already carry |
+| **E** | 4 | **2 of 2** | 0.0 percent | 3 MET, 3 not | **identical, 3 MET, 3 not** | QUESTION: the same, for both inner layers |
+| **P** | 2 | none | 0.0 | 3 MET | not applicable | a two-layer board has no inner layer to question |
+| **E5** | 2 | none | 0.0 | no rail | not applicable | the same |
+
+**What this does and does not settle, in the tool's own words and mine.** It does not say REDUCE and it never
+will: a router given six layers uses six, so the share of routed length measures what the router DID and not
+what the board needs, and **the only thing that settles a routing question is a route at the lower count
+reaching zero open.** For boards A and C that experiment is owed and is not run here. For D and E the reading
+is different and it is real: their inner layers carry no routed track at all, and with their pours deleted the
+rails read exactly what they read with them.
+
+**And the half this measurement does NOT cover, stated so nobody reads it as a licence.** Those inner layers
+are GROUND. Deleting them costs nothing in DC drop and would take away the reference plane every fast net on
+those boards returns through, which is rules RET-001 and RET-002 and a different question with a different
+answer: this project's own return-path measurement already says the four-layer boards fail rule 1 by their
+stack. So the honest sentence for D and E is that **their fourth layer is not carrying power, it is carrying
+the return path**, and that is what a decision would be trading away.
+
+**What is still owed, and it is what decisions 27 and 28 asked for:** a like-for-like price. Two quotes per
+board from the ordering session, four layers against six on C, and two against four on P, which is the cost
+side the P0 asked for and the only part of this question that no measurement here can produce.

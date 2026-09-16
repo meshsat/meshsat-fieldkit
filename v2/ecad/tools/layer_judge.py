@@ -81,11 +81,23 @@ def _without_inner_pours(board, intent, idle, out_dir):
     except Exception as e:
         return 0, 0, "pcbnew is not importable here (%s)" % e
     try:
+        # THE COPY LIVES IN ITS OWN DIRECTORY, UNDER THE SAME STEM. dc_drop finds a board's intent by its own
+        # convention, out/<stem>-intent.json beside the board, so a copy under a new name in out/ sends it
+        # looking in out/out/ and it reads no rail at all: the first two runs of this measurement reported
+        # "dc_drop said nothing about the copy" for exactly that. And the copy may not sit in the project
+        # directory, because a project directory that holds a second board is refused by this project's own
+        # driver-hygiene rule and has cost it a day (17 September 2026).
         stem = os.path.splitext(os.path.basename(board))[0]
-        cp = os.path.join(out_dir, stem + "-no-inner-pours.kicad_pcb")
+        d = os.path.join(out_dir, "layer-copy"); os.makedirs(os.path.join(d, "out"), exist_ok=True)
+        cp = os.path.join(d, stem + ".kicad_pcb")
         shutil.copy(board, cp)
         pro = os.path.splitext(board)[0] + ".kicad_pro"
         if os.path.exists(pro): shutil.copy(pro, os.path.splitext(cp)[0] + ".kicad_pro")
+        # AND THE INTENT, UNDER THE COPY'S OWN NAME. dc_drop takes a board and finds its intent beside it as
+        # out/<stem>-intent.json; the path this function was handed is not an argument dc_drop reads. The first
+        # run of this measurement therefore solved a board with no declared rail at all and printed nothing,
+        # which the caller reported honestly as "dc_drop said nothing about the copy" (17 September 2026).
+        shutil.copy(intent, os.path.join(d, "out", stem + "-intent.json"))
         b = pcbnew.LoadBoard(cp)
         names = set(idle)
         gone = 0
@@ -95,7 +107,7 @@ def _without_inner_pours(board, intent, idle, out_dir):
         if not gone: return 0, 0, "no pour of %s to delete" % ", ".join(idle)
         pcbnew.ZONE_FILLER(b).Fill(b.Zones())
         pcbnew.SaveBoard(cp, b)
-        r = _run([sys.executable, os.path.join(HERE, "dc_drop.py"), cp, intent], cwd=os.path.dirname(board) or ".")
+        r = _run([sys.executable, os.path.join(HERE, "dc_drop.py"), os.path.basename(cp)], cwd=d)
         met = len(re.findall(r"\bMET\b", r.stdout)); missed = len(re.findall(r"\bMISSED|\bNOT MET", r.stdout))
         if not met and not missed: return 0, 0, "dc_drop said nothing about the copy"
         return met, missed, ""
