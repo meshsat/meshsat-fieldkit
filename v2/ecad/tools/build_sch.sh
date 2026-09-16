@@ -11,7 +11,7 @@ kicad-cli sch export netlist --format kicadsexpr -o "out/$N.net" "$N.kicad_sch" 
 # a set-level contract verdict came to fail twelve contracts about six capacitors that had been in the design
 # since 02:40. The sidecar names the generator by content, and a check that runs under different content says
 # so instead of deciding. The letter is the second field of the stem, `pcb-b-compute` -> `b`.
-python3 "$(dirname "$0")/sch_prov.py" write "out/$N.net" "$(echo "$N" | cut -d- -f2)" || true
+python3 "$(dirname "$0")/sch_prov.py" write "out/$N.net" "$N" || true
 # 15 Sep 2026 (MESHSAT-862, 32.196): the sheet is a grid of A3 cells (schlayout.py), so the PDF a reader opens is that grid cut into
 # A3 pages, one block per page, no drawing-sheet border across the cells. The whole sheet stays beside it for a viewer that wants it.
 kicad-cli sch export pdf --exclude-drawing-sheet -o "out/$N-schematic-sheet.pdf" "$N.kicad_sch" >/dev/null && echo "sheet pdf: out/$N-schematic-sheet.pdf"
