@@ -43,7 +43,7 @@ coverage:
  SCH-002: {implementation: "gen_pcb_*3.py", verification: {tool: netlist_board.py, verdict: netlist_board, fixtures: tests/test_netlist_board.py},
    maturity: ENFORCED, gap_category: NONE, note: "three comparisons with denominators; runs on the placed and on the routed board"}
 
- SCH-003: {implementation: "gen_sch_*.py", verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
+ SCH-003: {implementation: "gen_sch_*.py", verification: {tool: check_contracts.py, verdict: "check_contracts_<letter>", fixtures: tests/test_gate_fixtures.py},
    maturity: ENFORCED, gap_category: NONE,
    note: "INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written list and their completeness is not itself checked"}
 
@@ -270,7 +270,7 @@ coverage:
    note: "the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no filter is verified, and the LPF values are flagged for a simulation that has not run. This entry NAMES NO VERDICT on purpose (16 September 2026): it named check_pcb_d, board D's own gate, while the rule applies to B as well, so the day it was promoted board B would have read a PASS off a gate that looks at no RF line. Nothing verifies this rule on either board, and the coverage map says so rather than pointing at the nearest gate",
    remediation: {action: "compute each RF line on its stackup, simulate the LPF, and record the module keep-out check", owner: SESSION, depends_on: [IMP-001], p50_h: 8, p80_h: 24}}
 
- RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
+ RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: "check_contracts_<letter>", fixtures: tests/test_gate_fixtures.py},
    maturity: ENFORCED, gap_category: NONE, note: "driver count, sense and fail-safe pull are checked across three boards"}
 
  INT-001: {implementation: "gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py",

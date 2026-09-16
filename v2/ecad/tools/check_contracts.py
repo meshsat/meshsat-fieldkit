@@ -83,11 +83,26 @@ ALIAS = [({"PANEL_5V", "+5V"}, "B fuses the panel feed (F6) and names the branch
 def same(a, b):
     return a == b or any({a, b} == pair for pair, _ in ALIAS)
 
+# WHICH BOARDS A CONTRACT IS ABOUT (16 September 2026). Board B was missing six PCIe coupling capacitors, and
+# the set verdict this file writes is read as evidence by EVERY board, so five boards that have nothing to do
+# with those capacitors reported a failed rule. A contract between two boards is rightly a failure on both; a
+# contract that names one board is not evidence about the other six.
+#
+# Every contract DECLARES its boards rather than having them read out of its sentence. The first version
+# inferred them from the text, which is where the sentences already name them, and it was wrong on board A
+# within nine tries: "rail X leaves A on J_Y" and "A: the pre-charge pin lands on a cell node net" both lost
+# their board, because the English article "A" had to be stripped for the inference to work at all. An
+# attribution that is right most of the time puts a board's failure on another board's page.
 fails = []; checked = []
-def check(ok, text, detail=""):
+per_board = collections.defaultdict(lambda: {"pass": 0, "fail": []})
+def check(ok, text, detail="", boards=None):
+    if not boards: raise AssertionError("contract %r declares no board: say which boards it is about" % text[:70])
     print(("PASS  " if ok else "FAIL  ") + text + (("   " + detail) if detail and not ok else ""))
     checked.append(text)
     if not ok: fails.append(text)
+    for _b in boards:
+        if ok: per_board[_b]["pass"] += 1
+        else: per_board[_b]["fail"].append(text)
 
 def pinmap(board, ref, pins):
     """net name per pin of one connector, '' where the pin is absent."""
@@ -106,12 +121,12 @@ if _empty:
     MISSING.extend(k for k in _empty if k not in MISSING)
 diff = [p for p in range(1, 27) if not same(mb[p], mc[p])] if not _empty else []
 check(bool(_empty) or (mb and all(mb.values()) and not diff), "J_PANEL 2x13 map identical on B and C",
-      "differs on pins %s: %s" % (diff, {p: (mb[p], mc[p]) for p in diff[:4]}))
+      "differs on pins %s: %s" % (diff, {p: (mb[p], mc[p]) for p in diff[:4]}), boards={"B", "C"})
 
 # 2. transmit inhibit: the panel toggle drives it on C, it crosses B and A, and on D it reaches Q3 alone
 for k, ref in (("C", "SW_EMCON"), ("B", "J_PANEL"), ("A", "J_AB1"), ("D", "J_HARN1")):
     names = [n for n in B[k][0] if "INHIBIT" in n or "EMCON" in n]
-    check(bool(names), "transmit inhibit present on %s (%s)" % (k, ref), "no EMCON or INHIBIT net")
+    check(bool(names), "transmit inhibit present on %s (%s)" % (k, ref), "no EMCON or INHIBIT net", boards={k})
 def reaches(board, netname, target):
     """The net itself, plus one hop through any series or pull resistor on it."""
     nodes = B[board][0].get(netname, set()); seen = set(r for r, _ in nodes)
@@ -124,81 +139,81 @@ d_inh = [n for n in B["D"][0] if "INHIBIT" in n]
 if d_inh:
     nodes = B["D"][0][d_inh[0]]
     ok, seen = reaches("D", d_inh[0], "U12")
-    check(ok, "D: %s reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)" % d_inh[0], str(sorted(seen)))
-    check(all(r in ("J_HARN1", "U12") or r.startswith(("R", "TP")) for r, _ in nodes), "D: nothing but the harness, its pull-down, a test point and the KEY gate touches %s" % d_inh[0], str(sorted(nodes)))
+    check(ok, "D: %s reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)" % d_inh[0], str(sorted(seen)), boards={"D"})
+    check(all(r in ("J_HARN1", "U12") or r.startswith(("R", "TP")) for r, _ in nodes), "D: nothing but the harness, its pull-down, a test point and the KEY gate touches %s" % d_inh[0], str(sorted(nodes)), boards={"D"})
 
 # 3. four 5 V rails from A22 to B16 (VH pairs, same net names on both boards; 32.56)
 for rail, ja, jb in (("+5V_S1", "J_5V_S1", "J_5V_S1"), ("+5V_S2", "J_5V_S2", "J_5V_S2"), ("+5V_S3", "J_5V_S3", "J_5V_S3"), ("+5V_DEV", "J_5V_DEV", "J_5V_DEV")):
     a = [n for (r, p), n in B["A"][1].items() if r == ja and n == rail]
     b = [n for (r, p), n in B["B"][1].items() if r == jb and n == rail]
     check(bool(a) and bool(b), "rail %s leaves A on %s and enters B on %s" % (rail, ja, jb),
-          "A pins %d, B pins %d" % (len(a), len(b)))
+          "A pins %d, B pins %d" % (len(a), len(b)), boards={"A", "B"})
 
 # 4. dock signal contacts: A's J_DOCK 1..12 against the strip's J_BLK 1..12 (the block passes each contact through)
 ma, me = pinmap("A", "J_DOCK", range(1, 13)), pinmap("E", "J_BLK", range(1, 13))
 diff = [p for p in range(1, 13) if ma[p] and me[p] and not same(ma[p], me[p])]
 check(ma and me and not diff, "dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)",
-      "differs on %s: %s" % (diff, {p: (ma[p], me[p]) for p in diff[:6]}))
-check(ma.get(8, "") == "SHORE_INHIBIT", "A J_DOCK pin 8 is SHORE_INHIBIT", ma.get(8, "absent"))
+      "differs on %s: %s" % (diff, {p: (ma[p], me[p]) for p in diff[:6]}), boards={"A", "E"})
+check(ma.get(8, "") == "SHORE_INHIBIT", "A J_DOCK pin 8 is SHORE_INHIBIT", ma.get(8, "absent"), boards={"A"})
 inh = B["E"][0].get("SHORE_INHIBIT", set())
 reach = set(r for r, _ in inh)
 for r, pin in list(inh):                       # one hop through the series resistor and the pull-down
     if r.startswith("R"):
         for n2, nodes in B["E"][0].items():
             if any(x == r and y != pin for x, y in nodes): reach |= set(x for x, _ in nodes)
-check("U10" in reach, "E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)", str(sorted(reach)))
+check("U10" in reach, "E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)", str(sorted(reach)), boards={"E"})
 
 # 5. dock power contacts: four CELL+ pins, four returns and the pre-charge pin on A; the strip's lands on E
 cp = [r for r, p in B["A"][0].get("CELL+", set()) if r.startswith("J_CP")]
 cn = [r for r, p in B["A"][0].get("GND", set()) if r.startswith("J_CN")]
-check(len(cp) == 4 and len(cn) == 4, "A22: four CELL+ pins and four return pins (GND, the In1 plane, 32.56) on the dock block", "CELL+ %s, return %s" % (sorted(cp), sorted(cn)))
+check(len(cp) == 4 and len(cn) == 4, "A22: four CELL+ pins and four return pins (GND, the In1 plane, 32.56) on the dock block", "CELL+ %s, return %s" % (sorted(cp), sorted(cn)), boards={"A"})
 pre = B["A"][1].get(("J_PRE1", "1"), "")
-check(pre.startswith("CELL") or "PRE" in pre, "A: the pre-charge pin lands on a cell node net", pre or "absent")
+check(pre.startswith("CELL") or "PRE" in pre, "A: the pre-charge pin lands on a cell node net", pre or "absent", boards={"A"})
 check(("P_CP", "1") in B["E"][1] and ("P_CN", "1") in B["E"][1], "E: the 12 AWG lands P_CP and P_CN exist",
-      "%s / %s" % (B["E"][1].get(("P_CP", "1"), "absent"), B["E"][1].get(("P_CN", "1"), "absent")))
-check(B["E"][1].get(("P_CN", "1"), "") == "GND", "E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)", B["E"][1].get(("P_CN", "1"), "absent"))
+      "%s / %s" % (B["E"][1].get(("P_CP", "1"), "absent"), B["E"][1].get(("P_CN", "1"), "absent")), boards={"E"})
+check(B["E"][1].get(("P_CN", "1"), "") == "GND", "E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)", B["E"][1].get(("P_CN", "1"), "absent"), boards={"E"})
 
 # 6. shutdown pair on the A to B ribbon
 for net in ("PI_SHDN_REQ", "PI_KILL"):
     a = [r for r, p in B["A"][0].get(net, set())]
     b = [r for r, p in B["B"][0].get(net, set())]
-    check(bool(a) and bool(b), "ribbon net %s exists on A and B" % net, "A %s, B %s" % (sorted(a), sorted(b)))
+    check(bool(a) and bool(b), "ribbon net %s exists on A and B" % net, "A %s, B %s" % (sorted(a), sorted(b)), boards={"A", "B"})
 
 # 7. the A to B ribbon (2x13 since A22/B16, 32.56): identical map on both boards, all twenty-six pins named
 ma, mb = pinmap("A", "J_AB1", range(1, 27)), pinmap("B", "J_AB1", range(1, 27))
 diff = [p for p in range(1, 27) if not same(ma[p], mb[p])]
 check(ma and mb and all(ma.values()) and all(mb.values()) and not diff, "J_AB1 2x13 map identical on A and B",
-      "differs on pins %s: %s" % (diff, {p: (ma[p], mb[p]) for p in diff[:4]}))
+      "differs on pins %s: %s" % (diff, {p: (ma[p], mb[p]) for p in diff[:4]}), boards={"A", "B"})
 # 7b. the wall-port ribbon J_AB2 (2x5 since 12 September 2026, appendix 32.135): the same map on both boards.
 # The wall pair left J_AB1 because a 2x13 has two end rows and the ribbon carried three pairs; this connector
 # exists so the third pair has an end row of its own.
 ma2, mb2 = pinmap("A", "J_AB2", range(1, 11)), pinmap("B", "J_AB2", range(1, 11))
 diff2 = [p for p in range(1, 11) if not same(ma2[p], mb2[p])]
 check(ma2 and mb2 and all(ma2.values()) and all(mb2.values()) and not diff2, "J_AB2 2x5 map identical on A and B",
-      "differs on pins %s: %s" % (diff2, {p: (ma2[p], mb2[p]) for p in diff2[:4]}))
+      "differs on pins %s: %s" % (diff2, {p: (ma2[p], mb2[p]) for p in diff2[:4]}), boards={"A", "B"})
 check(same(ma2.get(1), "USB_WALL_P") and same(ma2.get(2), "USB_WALL_N"), "J_AB2 carries the wall pair on its END row (pins 1 and 2)",
-      "pins 1 and 2 are %s and %s" % (ma2.get(1), ma2.get(2)))
+      "pins 1 and 2 are %s and %s" % (ma2.get(1), ma2.get(2)), boards={"A", "B"})
 # 8. the mezzanine harness: A's J_MEZZ1 and D's J_HARN1 carry the same sixteen nets
 ma, md = pinmap("A", "J_MEZZ1", range(1, 17)), pinmap("D", "J_HARN1", range(1, 17))
 diff = [p for p in range(1, 17) if not same(ma[p], md[p])]
 check(ma and md and all(ma.values()) and all(md.values()) and not diff, "J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical",
-      "differs on pins %s: %s" % (diff, {p: (ma[p], md[p]) for p in diff[:4]}))
+      "differs on pins %s: %s" % (diff, {p: (ma[p], md[p]) for p in diff[:4]}), boards={"A", "D"})
 # 9. D8 is a USB device set (32.52): its USB pair leaves B16's slot-3 hub, crosses J_AB1 to A22 and the harness to D8's hub
 for net in ("USB_D8_P", "USB_D8_N"):
     a = [r for r, p in B["A"][0].get(net, set())]; b = [r for r, p in B["B"][0].get(net, set())]; d = [r for r, p in B["D"][0].get(net, set())]
-    check("J_AB1" in a and "J_MEZZ1" in a and "J_AB1" in b and "J_HARN1" in d, "D8 USB pair %s: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1" % net, "A %s, B %s, D %s" % (sorted(a)[:4], sorted(b)[:4], sorted(d)[:4]))
+    check("J_AB1" in a and "J_MEZZ1" in a and "J_AB1" in b and "J_HARN1" in d, "D8 USB pair %s: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1" % net, "A %s, B %s, D %s" % (sorted(a)[:4], sorted(b)[:4], sorted(d)[:4]), boards={"A", "B", "D"})
 # 10. the wall host port: its USB pair comes from B16's slot-1 hub over the ribbon and ends on A22's wall port part J_USBW
 for net in ("USB_WALL_P", "USB_WALL_N"):
     a = [r for r, p in B["A"][0].get(net, set())]; b = [r for r, p in B["B"][0].get(net, set())]
-    check("J_USBW" in a and "J_AB2" in a and "J_AB2" in b and any(r in ("U102", "U202", "U302") for r in b), "wall-port pair %s: B16 slot hub -> J_AB2 -> A22 J_USBW" % net, "A %s, B %s" % (sorted(a)[:5], sorted(b)[:5]))
+    check("J_USBW" in a and "J_AB2" in a and "J_AB2" in b and any(r in ("U102", "U202", "U302") for r in b), "wall-port pair %s: B16 slot hub -> J_AB2 -> A22 J_USBW" % net, "A %s, B %s" % (sorted(a)[:5], sorted(b)[:5]), boards={"A", "B"})
 # 11. the harness 3.3 V and the panel controller's USB: A22's +3V3 reaches D8 over the harness; B16's USB_PNL pair reaches C7 over the ribbon
 for k, ref in (("A", "J_MEZZ1"), ("D", "J_HARN1")):
-    check(any(r == ref for r, _ in B[k][0].get("+3V3", set())), "+3V3 on %s %s" % (k, ref))
+    check(any(r == ref for r, _ in B[k][0].get("+3V3", set())), "+3V3 on %s %s" % (k, ref), boards={k})
 for net in ("USB_PNL_P", "USB_PNL_N"):
-    check(any(r == "J_PANEL" for r, _ in B["B"][0].get(net, set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get(net, set())), "panel controller USB pair %s on B16 and C7 J_PANEL" % net)
+    check(any(r == "J_PANEL" for r, _ in B["B"][0].get(net, set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get(net, set())), "panel controller USB pair %s on B16 and C7 J_PANEL" % net, boards={"B", "C"})
 # 12. the hardware EMCON line: C7's toggle makes TX_INHIBIT_n and EMCON_HW, both cross to B16; TX_INHIBIT_n reaches D8's KEY gate, EMCON_HW the radio disable stages on B16
-check(any(r == "SW_EMCON" for r, _ in B["C"][0].get("TX_INHIBIT_n", set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get("EMCON_HW", set())), "C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL")
-check(any(r == "J_HARN1" for r, _ in B["D"][0].get("TX_INHIBIT_n", set())) and any(r.startswith("U") for r, _ in B["D"][0].get("TX_INHIBIT_n", set())), "D8: TX_INHIBIT_n from J_HARN1 into the KEY gate")
+check(any(r == "SW_EMCON" for r, _ in B["C"][0].get("TX_INHIBIT_n", set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get("EMCON_HW", set())), "C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL", boards={"C"})
+check(any(r == "J_HARN1" for r, _ in B["D"][0].get("TX_INHIBIT_n", set())) and any(r.startswith("U") for r, _ in B["D"][0].get("TX_INHIBIT_n", set())), "D8: TX_INHIBIT_n from J_HARN1 into the KEY gate", boards={"D"})
 
 # 13 to 15: the safety lines, added 9 September 2026 after a red team found that check 12 passes on a design that does the OPPOSITE of what
 # it says (appendix 32.81). Check 12 asks whether the nets exist. These ask who drives them, in which sense, and what happens when the panel
@@ -228,32 +243,32 @@ for _s in (1, 2, 3):
         _caps = sorted({r for r, _ in _nodes if r.startswith("C")})
         _ics = sorted({r for r, _ in _nodes if r.startswith("U") or r.startswith("J_M2") or r.startswith("J_")})
         check(len(_caps) == 1, "B: %s has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)" % _net,
-              "capacitors on the net: %s" % (_caps or "none"))
+              "capacitors on the net: %s" % (_caps or "none"), boards={"B"})
         check(len(_ics) <= 1, "B: %s enters one IC only, so the capacitor is in series and not a stub" % _net,
-              "devices on the net: %s" % _ics)
+              "devices on the net: %s" % _ics, boards={"B"})
         for _c in _caps:
             # NOT `_v`: that is the name this file imports the verdict writer under, further down, and a loop
             # variable at module scope would shadow it. The suite caught it, which is what that rule is for.
             _cv = _value_of("pcb-b-compute", _c)
             check(_cv.startswith("220n"), "B: %s on %s is the 220 nF the module's datasheet asks for" % (_c, _net),
-                  "value %r" % _cv)
+                  "value %r" % _cv, boards={"B"})
 
 # 13. one driver: the inhibit line is made by the panel toggle and read everywhere else. No gate output may sit on it.
 for _bd, _stem in (("A", "pcb-a-power"), ("B", "pcb-b-compute")):
     _u = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("U")})
-    check(not _u, "%s: no device drives TX_INHIBIT_n, the panel toggle is its only source" % _bd, "found %s" % _u)
+    check(not _u, "%s: no device drives TX_INHIBIT_n, the panel toggle is its only source" % _bd, "found %s" % _u, boards={_bd})
 _u26 = sorted({pin for r, pin in B["A"][0].get("EMCON_HW", set()) if r == "U26"})
-check(set(_u26) <= {"1", "4"}, "A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output", "U26 pins %s" % _u26)
+check(set(_u26) <= {"1", "4"}, "A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output", "U26 pins %s" % _u26, boards={"A"})
 
 # 14. fail safe: with the panel ribbon out, every consumer must read the inhibit line LOW, so each holds it down itself.
 for _bd in ("A", "B", "D"):
     _gnd = {r for r, _ in B[_bd][0].get("GND", set())}
     _pull = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("R") and r in _gnd})
-    check(bool(_pull), "%s: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits" % _bd, "pull-downs %s" % _pull)
+    check(bool(_pull), "%s: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits" % _bd, "pull-downs %s" % _pull, boards={_bd})
 
 # 15. the sense: C7 buffers the toggle into EMCON_HW, it does not invert it (both consumer boards silence on LOW).
 _u9 = _value_of("pcb-c-display", "U9")
-check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read")
+check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read", boards={"C"})
 
 
 # 16. an in-line part is in line with something (9 Sep 2026, E7, appendix 32.83). R48 on E is drawn as the Geiger
@@ -273,7 +288,7 @@ for _bd, _stem in NETS.items():
         if "series" not in _val.lower(): continue
         _bad = [n for n in _pp.values()
                 if not [q for q, _ in _nets.get(n, set()) if q != _r and not q.startswith(_IGNORE)]]
-        check(not _bad, "%s: %s (%s) is in series with a real pin on both sides" % (_bd, _r, _val), "dead net(s) %s" % _bad)
+        check(not _bad, "%s: %s (%s) is in series with a real pin on both sides" % (_bd, _r, _val), "dead net(s) %s" % _bad, boards={_bd})
 
 # A board whose netlist is not in this tree has not been checked; every contract that names it then reads as a
 # 13. A RAIL THAT CROSSES A CONNECTOR IS ONE CONDUCTOR, AND ITS BUDGET IS ONE BUDGET (16 September 2026).
@@ -311,7 +326,8 @@ for _net, _by in sorted(_shared.items()):
     if all(_shares.values()):
         _tot = sum(float(v) for v in _shares.values()); _bud = min(_budgets.values())
         check(_tot <= _bud + 1e-9,
-              "rail %s: the shares sum to %.1f%% within the %.1f%% the rail declares" % (_net, 100 * _tot, 100 * _bud))
+              "rail %s: the shares sum to %.1f%% within the %.1f%% the rail declares" % (_net, 100 * _tot, 100 * _bud),
+              boards=set(_by))
 
 # FAIL of the contract, which is a claim about the design. It is a claim about the tree. On a rented box where
 # only one board has been regenerated, P3's finish printed eleven contract FAILs naming A, and A had simply
@@ -325,6 +341,20 @@ import os as _osv
 sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
 import verdict as _v
 # A contract set that checked nothing has found nothing wrong, which is not the same as agreement.
+# A PER-BOARD VERDICT BESIDE THE SET ONE (16 September 2026), the pattern final_gate already uses. The set
+# verdict is what the contracts as a whole say and it still blocks; these say what each board's own contracts
+# say, so a board is no longer reported as failing a rule because of a defect on a board it does not touch.
+for _bd in sorted(set(list(per_board) + list(B))):
+    _r = per_board.get(_bd) or {"pass": 0, "fail": []}
+    _n = _r["pass"] + len(_r["fail"])
+    _v.write("check_contracts_%s" % _bd.lower(),
+             _v.INCONCLUSIVE if (not _n or _bd in MISSING) else (_v.PASS if not _r["fail"] else _v.FAIL),
+             counts={"fail": len(_r["fail"]), "pass": _r["pass"]}, denominator=_n,
+             evidence=_r["fail"][:20], inputs={"boards": ",".join(sorted(B))},
+             note=("this board's netlist is absent from this tree" if _bd in MISSING else
+                   "no contract of this set names this board" if not _n else
+                   "the contracts that name this board; the set's own verdict is check_contracts"),
+             quiet=True)
 sys.exit(_v.write("check_contracts",
                   _v.INCONCLUSIVE if (not checked or MISSING or (UNSPLIT and not fails)) else (_v.PASS if not fails else _v.FAIL),
                   counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING),
