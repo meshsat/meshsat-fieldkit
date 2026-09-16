@@ -82,6 +82,26 @@ def run(b, check, nets=None):
         # where a solid plane of this net carries the return on another layer, this pour's coverage is reported
         # with its number and does not decide. A board with no such plane is judged exactly as before.
         _cover_ok = area >= MIN_COVER * rect
+        # AND THE SAME ARGUMENT IS NOT ABOUT GROUND (16 September 2026). The exemption above says: where a
+        # SOLID pour of this net on another layer carries the current, a cut-up pour on a routing layer is
+        # reported rather than refused. That is true of a power rail word for word, and board A is the case:
+        # its `VBUS20 F.Cu` island fills 97 of 223 mm2, 44 percent, because the front end's own gate drives
+        # and sense lines cross it, and the generator says so in eleven lines of comment ending "the second
+        # layer is taken here because the keep-out would have to cover a 31 by 18 mm field". The second layer
+        # is `VBUS20 under In3.Cu`, which fills 219 of 223, 98 percent, behind the keep-out that field allows.
+        # So the rail has continuous copper, dc_drop measures it at 0.18 percent of 20 V, and the board was
+        # being refused by a proxy for the question dc_drop answers directly.
+        # What is NOT exempted is the loose-piece bar above: a floating piece of a power net is a defect
+        # whatever another layer does, and this only ever touches the coverage number.
+        _solid_other = any(o.GetNetname() == z.GetNetname() and o.GetFirstLayer() != L
+                           and o.GetFilledArea() / 1e12 >= 0.8 * outline_area(o) for o in pz)
+        if _solid_other and not solid_gnd and not _cover_ok:
+            print("NOTE pour '%s' (%s, %s): fill %.0f of %.0f mm2 (%.0f%%); a pour of the same net on another "
+                  "layer fills at least 80%% of its own outline and carries the current, so the coverage bar "
+                  "does not decide here. The drop is judged by dc_drop, which measures the copper rather than "
+                  "the area of a rectangle"
+                  % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), area, rect, 100.0 * area / (rect or 1)))
+            _cover_ok = True
         if solid_gnd and not _cover_ok:
             print("NOTE pour '%s' (%s, %s): fill %.0f of %.0f mm2 (%.0f%%) on a routing layer; the solid ground plane on another layer carries the return, so the coverage bar does not decide"
                   % (z.GetZoneName() or "unnamed", z.GetNetname(), b.GetLayerName(L), area, rect, 100.0 * area / (rect or 1)))
