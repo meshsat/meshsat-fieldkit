@@ -43,9 +43,9 @@
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "62751d9695561e0a"
+  "tools_tree_sha": "5545137ae86e02ef"
  },
- "ts": "2026-09-16T14:46:08Z",
+ "ts": "2026-09-16T15:18:31Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

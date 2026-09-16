@@ -28,9 +28,9 @@
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "62751d9695561e0a"
+  "tools_tree_sha": "5545137ae86e02ef"
  },
- "ts": "2026-09-16T14:48:06Z",
+ "ts": "2026-09-16T15:20:28Z",
  "verdict": "PASS",
  "version": "unknown"
 }
