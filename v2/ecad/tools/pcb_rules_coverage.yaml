@@ -304,9 +304,18 @@ coverage:
      protection, protection treated as a single net rather than a chain, and a search that walked out through a power
      rail and found a clamp on the other side of the board"}
 
- ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been measured on any board, and no pollution degree or material group is declared",
-   remediation: {action: "declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and pack nets", owner: OWNER, depends_on: [ENV-001], p50_h: 8, p80_h: 24}}
+ ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: spacing.py, verdict: spacing, fixtures: tests/test_spacing.py},
+   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to
+     the router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid
+     piece of copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and
+     above: board A's VBUS20 and +54V_POE, board B's +54V_POE) and measures the real distance to the nearest
+     conductor of any other net on the same layer, pads and fills included, and names the ten tightest. What it
+     cannot do is say whether the number is ENOUGH: creepage and clearance come from a standard's table for a
+     working voltage, a pollution degree and a material group, and IEC 60664-1 is not in this tree. A board
+     declares hv_spacing_mm when it has an authority and is judged against it; where nothing is declared the
+     measurement is reported and the rule stays unjudged, which is what 'no source' has to mean",
+   remediation: {action: "declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_mm per board; the measurement is already there to judge against it", owner: OWNER, depends_on: [ENV-001], p50_h: 4, p80_h: 16}}
 
  THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: thermal.py, verdict: thermal, fixtures: tests/test_thermal.py},
    maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,

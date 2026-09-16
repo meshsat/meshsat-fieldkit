@@ -80,6 +80,7 @@ run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
 run "via current"        python3 $T/via_current.py $N.kicad_pcb
 run "reference change"   python3 $T/ref_change.py $N.kicad_pcb --check
 run "thermal"            python3 $T/thermal.py $N.kicad_pcb
+run "hv spacing"         python3 $T/spacing.py $N.kicad_pcb
 # These two read the NETLIST this sweep rebuilt, not the board: a part's rating against the rail it sits on,
 # and every crystal's load network. Both are schematic properties, so they are true of the board whether or not
 # it has been routed.

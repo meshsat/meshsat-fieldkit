@@ -29,7 +29,7 @@ appears in the gap register.
 | IMP-002 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September) | class_floor.py -> class_floor | tests/test_board_gates.py, tests/test_return_rules.py | **ENFORCED** |
 | INT-001 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py | check_contracts.py -> check_contracts | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
 | INT-002 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics | both vendors' documents, read 16 September 2026 |  | **OWNER_DECISION_REQUIRED** |
-| ISO-001 | ISOLATION_SPACING | BLOCKER | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class | none |  | **OPEN** |
+| ISO-001 | ISOLATION_SPACING | BLOCKER | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class | spacing.py -> spacing | tests/test_spacing.py | **GENERATED_ONLY** |
 | MEC-001 | MECHANICAL | BLOCKER | panel1450.py, gen_pcb_*.py | check_pcb_*.py -> check_pcb_<letter> | tests/test_board_gates.py | **ENFORCED** |
 | OUT-001 | MANUFACTURING_OUTPUTS | BLOCKER | make_handoff.py | final_gate.py -> final_gate | tests/test_final_gate.py | **ENFORCED** |
 | PAIR-001 | DIFFERENTIAL_PAIRS | BLOCKER | pair_preroute.py, meander.py | pair_match.sh -> impedance_check | tests/test_pair_leg_match.py | **ENFORCED** |
@@ -72,9 +72,9 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 28 |
-| GENERATED_ONLY | 12 |
+| GENERATED_ONLY | 13 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 8 |
+| OPEN | 7 |
 | SOURCE_UNVERIFIED | 2 |
 | OWNER_DECISION_REQUIRED | 3 |

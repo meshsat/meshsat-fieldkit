@@ -1219,7 +1219,7 @@ the material group of the laminate.
 | source | SOURCE_UNVERIFIED |
 | | IEC 60664-1 insulation coordination for equipment within low-voltage systems, IEC, creepage and clearance tables -- NOT IN THIS TREE |
 | implementation | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class |
-| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1232,8 +1232,15 @@ Nothing in this tree has ever measured a creepage distance.
 
 **If violated** Tracking or flashover in humidity, at a connector or under a part.
 
-**Today** an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been
-measured on any board, and no pollution degree or material group is declared
+**Today** 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the
+router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid piece of
+copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and above: board
+A's VBUS20 and +54V_POE, board B's +54V_POE) and measures the real distance to the nearest conductor of any
+other net on the same layer, pads and fills included, and names the ten tightest. What it cannot do is say
+whether the number is ENOUGH: creepage and clearance come from a standard's table for a working voltage, a
+pollution degree and a material group, and IEC 60664-1 is not in this tree. A board declares hv_spacing_mm
+when it has an authority and is judged against it; where nothing is declared the measurement is reported and
+the rule stays unjudged, which is what 'no source' has to mean
 
 ## Thermal
 
