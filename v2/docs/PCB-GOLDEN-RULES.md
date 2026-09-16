@@ -443,7 +443,10 @@ exceeded the published limit while every one read MET, because the verdict was t
 **If violated** A track runs hot, its resin degrades, and the failure is progressive rather than sudden.
 
 **Today** the conductor measure is implemented and tested; its limit comes from a formula in a code comment, no IPC
-document is in the tree, and IPC-2152 has never been considered
+document is in the tree, and IPC-2152 has never been considered. 16 September 2026: it reads its OWN verdict
+now (dc_density). One verdict served both power rules, so a density miss failed the board through the drop
+rule and a limit with no source decided a board through a rule that has one. Board A read MISSED VBAT 0.38
+percent of 14.4 V, which looks like a voltage failure and is a density one
 
 ### PI-002  rail voltage drop
 
@@ -470,7 +473,9 @@ before the number is read.
 
 **If violated** A module resets when a transmitter keys.
 
-**Today** the solver's residual is checked before the number is read
+**Today** the solver's residual is checked before the number is read. Since 16 September the dc_drop verdict carries
+the VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under
+PI-001
 
 ### PI-003  via current capacity
 

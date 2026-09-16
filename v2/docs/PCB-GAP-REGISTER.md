@@ -197,7 +197,10 @@ budget is not cited beside it
 
 **PI-001 conductor current capacity** (BLOCKER, SOURCE_UNVERIFIED)  
 the conductor measure is implemented and tested; its limit comes from a formula in a code comment, no IPC
-document is in the tree, and IPC-2152 has never been considered  
+document is in the tree, and IPC-2152 has never been considered. 16 September 2026: it reads its OWN verdict
+now (dc_density). One verdict served both power rules, so a density miss failed the board through the drop
+rule and a limit with no source decided a board through a rule that has one. Board A read MISSED VBAT 0.38
+percent of 14.4 V, which looks like a voltage failure and is a density one  
 *Close it by* obtain the standard, pin it under v2/vendor/, cite the clause, and re-judge the four boards. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 **RET-001 a continuous adjacent return path** (BLOCKER, GENERATED_ONLY)  

@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 0,
+  "zones": 4
+ },
+ "denominator": 4,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "410eeb604ec12c4c"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "GND-001",
+  "PLN-001"
+ ],
+ "tool": "check_zone_nets",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:14:18Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

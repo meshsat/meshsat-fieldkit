@@ -28,6 +28,10 @@ def sheet(t_mm): return RHO / (t_mm * 1e-3)   # ohm per square
 
 def dT_of(rail): return float(rail.get("density_dT", 10.0))   # a rail may declare its own rise, with a reason
 
+# {net: {"drop": bool, "density": bool}} for the rails that missed, filled as each is judged. Two rules read
+# this tool and each needs its own evidence; see the comment where it is written.
+_MISSED_ON = {}
+
 def ipc_limit(area_mm2, dT=10.0, internal=False):
     """IPC-2221 current for a cross-section (mm2) at dT K; returns amps."""
     a_mil2 = area_mm2 / (0.0254 ** 2); k = 0.024 if internal else 0.048
@@ -458,6 +462,12 @@ def main(a):
         dens_ok = cond_ratio <= 1.0 and zone_ratio <= ZONE_TOL
         verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
         bad = ([] if drop_ok else ["the drop"]) + ([] if cond_ratio <= 1.0 else ["a track"]) + ([] if zone_ratio <= ZONE_TOL else ["a pour"])
+        # WHICH criterion missed travels with the rail. Two rules read this tool: PI-002 is the voltage drop and
+        # PI-001 is the conductor's current capacity, and they have different authorities and different
+        # remedies. Board A read "MISSED VBAT 0.38% of 14.4 V" on 16 September, which looks like a voltage
+        # failure and is a density one; a reader cannot act on that, and the rule with no verified source was
+        # failing a board through the rule that has one.
+        missed_on = {"drop": not drop_ok, "density": not dens_ok}
         why = "" if verdict == "MET" else " [MISSED on %s]" % " and ".join(bad)
         if cond:
             cr, cw, ca, cl, cL, cx, cy, cln = cond[0]
@@ -492,6 +502,7 @@ def main(a):
         zone_txt += ("; GATED on the worst pour cell clear of every via, %.1f A/mm2 at %s (%.1f, %.1f), ratio %.2f"
                      % (czone_j, czone_at[0], czone_at[1], czone_at[2], czone_j / jl)) if czone_at else "; no pour cell of this net is clear of a via, so the pour is not gated"
         if verdict != "MET": miss += 1
+        _MISSED_ON[net] = missed_on
         results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s; %s%s; layer share %s"
                         % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, via_txt, why, share),
                         drop, pct, max(cond_ratio, zone_ratio), share))
@@ -514,14 +525,47 @@ def main(a):
     if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
     # A rail nobody declared a load for is INCONCLUSIVE, never FAIL: the board is not refused for a property of
     # the board, it is refused for a property of the intent file, and the two have different remedies.
-    _verdict = _v.PASS if not miss else (_v.INCONCLUSIVE if len(undecl) == miss else _v.FAIL)
+    # TWO CRITERIA, TWO VERDICTS. The voltage drop and the conductor's current capacity are different questions
+    # with different authorities: the drop is judged against a budget this project sets for its own rails, and
+    # the capacity against a current-capacity standard whose text this tree does not hold. Writing one verdict
+    # for both meant a density miss failed the board through the drop rule, and a rule with no verified source
+    # decided a board through a rule that has one. Each verdict now carries only the rails that missed ITS
+    # criterion, and the registry maps PI-002 to the drop and PI-001 to the density.
+    def _rows(kind):
+        out = []
+        for r in results:
+            if r[1] == "MET": continue
+            if r[1] in ("UNDECLARED", "UNMEASURED"): out.append(r); continue
+            if (_MISSED_ON.get(r[0]) or {}).get(kind): out.append(r)
+        return out
+
+    def _evidence(rows, kind):
+        return [("%s %s NOT JUDGED" % (r[1], r[0])) if r[4] is None else
+                ("%s %s on %s: %.2f%% of %.1f V" % (r[1], r[0], kind, r[4] * 100, rails[r[0]]["volts"]))
+                for r in rows]
+
+    dens_rows = _rows("density"); dens_undecl = [r for r in dens_rows if r[1] in ("UNDECLARED", "UNMEASURED")]
+    dens_miss = len(dens_rows) - len(dens_undecl)
+    _v.write("dc_density", _v.PASS if not dens_rows else (_v.INCONCLUSIVE if len(dens_undecl) == len(dens_rows) else _v.FAIL),
+             counts={"met": len(results) - len(dens_rows), "missed": dens_miss, "undeclared": len(dens_undecl)},
+             denominator=len(results), evidence=_evidence(dens_rows, "current density"),
+             inputs={"board": a[0]},
+             note="the conductor and pour current capacity at %.0f K, cell %.2f mm. The LIMIT behind this verdict has "
+                  "no authoritative text in this tree: the registry records it as SOURCE_UNVERIFIED and this is a "
+                  "screen, not a law" % (dT, cell),
+             quiet=True)
+
+    drop_rows = _rows("drop"); drop_undecl = [r for r in drop_rows if r[1] in ("UNDECLARED", "UNMEASURED")]
+    drop_miss = len(drop_rows) - len(drop_undecl)
+    _verdict = _v.PASS if not drop_rows else (_v.INCONCLUSIVE if len(drop_undecl) == len(drop_rows) else _v.FAIL)
     return _v.write("dc_drop", _verdict,
-                    counts={"met": len(results) - miss, "missed": miss - len(undecl), "undeclared": len(undecl)},
+                    counts={"met": len(results) - len(drop_rows), "missed": drop_miss, "undeclared": len(drop_undecl),
+                            "density_missed": dens_miss},
                     denominator=len(results),
-                    evidence=[("%s %s NOT JUDGED" % (r[1], r[0])) if r[4] is None else
-                              ("%s %s %.2f%% of %.1f V" % (r[1], r[0], r[4] * 100, rails[r[0]]["volts"]))
-                              for r in results if r[1] != "MET"],
+                    evidence=_evidence(drop_rows, "the voltage drop"),
                     inputs={"board": a[0]},
-                    note="cell %.2f mm, default budget %.0f%%" % (cell, budget * 100))
+                    note="the voltage drop against each rail's budget (cell %.2f mm, default %.0f%%); the current "
+                         "capacity is judged separately in dc_density.verdict.json, where %d rail(s) missed"
+                         % (cell, budget * 100, dens_miss))
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

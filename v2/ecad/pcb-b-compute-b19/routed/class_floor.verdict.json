@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "counts": {
+  "below_floor": 2,
+  "classes": 5
+ },
+ "denominator": 20,
+ "evidence": [
+  "class DIFF100 clearance 0.1000 mm is below the board minimum 0.1270 mm",
+  "class USB clearance 0.1000 mm is below the board minimum 0.1270 mm"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  },
+  "project": {
+   "path": "pcb-b-compute.kicad_pro",
+   "sha256_16": "787373fe97195b0b"
+  }
+ },
+ "note": "a class below the board minimum is a lie the router believes",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "IMP-002"
+ ],
+ "tool": "class_floor",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:14:01Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

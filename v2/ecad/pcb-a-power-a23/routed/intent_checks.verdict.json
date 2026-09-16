@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 4,
+  "pass": 236
+ },
+ "denominator": 240,
+ "evidence": [
+  "return path under PD_EN (Default): 14.5 of 194.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PD_PGOOD (Default): 15.6 of 180.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under POE_EN (Default): 10.3 of 178.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return via: 50 of 167 signal vias have a ground via within 1.5 mm (54 exempt in fine-pitch fans, 68 on one reference plane); without one: CHG_ILIM at (39.70, 107.37); FE_HDRV1 at (39.90, 47.80); FE_LDRV2 at (40.81, 60.78); FE_EN at (42.04, 77.35); FE_HDRV2 at (44.49, 62.30); CH_LODRV1 at (44.49, 86.25); POE_COMP at (44.49, 117.62); FE_MODE at (46.60, 77.21) ..."
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "DEC-001",
+  "PWR-001",
+  "RET-002"
+ ],
+ "tool": "intent_checks",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:13:25Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

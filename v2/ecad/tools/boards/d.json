@@ -52,5 +52,218 @@
   "pitch": 2.1
  },
  "_gnd_grid_why": "15 September 2026 23:29 CEST, measured on D in /root/dgrid (decision 27, appendix 32.200): with 1,288 ground vias laid before the route the In2-plane D closed to 0 open after the stub router and the return-via gate read 279 of 289 signal vias with a ground via, against 138 of 185 when the fixer ran after the route with no room left. The grid is rule 2 by construction; it does nothing for rule 1.",
- "_cont_route_planes_why": " 15 September 2026: In2 is a ground plane on D (decision 27's measurement: two routing layers close the board, 0 hard 0 unrouted at every round), so the continuation route carries it as a power layer like the route."
+ "_cont_route_planes_why": " 15 September 2026: In2 is a ground plane on D (decision 27's measurement: two routing layers close the board, 0 hard 0 unrouted at every round), so the continuation route carries it as a power layer like the route.",
+ "_signal_classes_why": "Rule RET-001, 16 September 2026. The return-path rule asks what a net's spectral content deserves, so every signal net needs a class and a reason. A net matched by no entry here is UNKNOWN and is judged at the STRICTEST bar, so an omission costs a failure rather than buying a pass. Patterns are shell globs over the net name without its leading slash, first match wins.",
+ "signal_classes": [
+  {
+   "pattern": "USB1_?R",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the upstream USB pair after its series resistors: the same 480 Mbit/s signalling as before them"
+  },
+  {
+   "pattern": "USB*_P",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a USB 2.0 high-speed pair into the TUSB hub: 480 Mbit/s with sub-nanosecond edges"
+  },
+  {
+   "pattern": "USB*_N",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other half of the same USB 2.0 pair"
+  },
+  {
+   "pattern": "HUB_DP*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a hub downstream USB data line, same signalling as above"
+  },
+  {
+   "pattern": "HUB_DM*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other half of the same hub port"
+  },
+  {
+   "pattern": "HUB_XTAL*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the hub's 24 MHz crystal loop, a continuous periodic source"
+  },
+  {
+   "pattern": "PCM_XT*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the codec's crystal loop"
+  },
+  {
+   "pattern": "RF_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the VHF transmit chain at 144 MHz and its 30 W stage: the only true radio-frequency nets on this board"
+  },
+  {
+   "pattern": "VGG_SW",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the negative-bias generator's switching node, a square wave into a charge pump"
+  },
+  {
+   "pattern": "SCL",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "I2C at 100 or 400 kHz, open drain, the edge set by the pull-up"
+  },
+  {
+   "pattern": "SDA",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same I2C bus"
+  },
+  {
+   "pattern": "SA_RXD",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the radio module's control UART, 9600 to 115200 baud through a bridge"
+  },
+  {
+   "pattern": "SA_TXD",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the other direction of the same UART"
+  },
+  {
+   "pattern": "PCM_*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the codec's I2S and analogue-supply nodes, a 24 MHz master clock at most and audio-band signals under it"
+  },
+  {
+   "pattern": "EXP_INT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the expander's interrupt, an edge into a GPIO"
+  },
+  {
+   "pattern": "HUB_RST_n",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the hub's reset, a logic edge with an RC on it"
+  },
+  {
+   "pattern": "PTT_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a push-to-talk line: a static level that changes when a person presses a switch"
+  },
+  {
+   "pattern": "X_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an expander output or input: a static level written or read over I2C"
+  },
+  {
+   "pattern": "AMP_IN*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a headphone amplifier's audio input, a 20 Hz to 20 kHz analogue level"
+  },
+  {
+   "pattern": "AMP_CP*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the amplifier's charge-pump flying-capacitor nodes, switched in the tens of kilohertz"
+  },
+  {
+   "pattern": "AMP_HPV*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the amplifier's own generated supply rails, decoupled locally"
+  },
+  {
+   "pattern": "AMP_EN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the amplifier's enable, a static level"
+  },
+  {
+   "pattern": "AF_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "audio-frequency paths from the radio module, 300 Hz to 3 kHz"
+  },
+  {
+   "pattern": "MIC*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "microphone paths, audio band into a preamplifier"
+  },
+  {
+   "pattern": "HS?_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a headset jack's microphone, speaker and bias lines, audio band"
+  },
+  {
+   "pattern": "OPB_OUT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an op-amp output in the audio chain"
+  },
+  {
+   "pattern": "MMUTE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the mute control, a static level"
+  },
+  {
+   "pattern": "KEY",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the transmit key line, a static level"
+  },
+  {
+   "pattern": "PA_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the power amplifier's enable and key lines, static levels"
+  },
+  {
+   "pattern": "RLY_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the antenna relay's drive and coil, switched at most once per transmission"
+  },
+  {
+   "pattern": "LED_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an indicator LED anode or cathode"
+  },
+  {
+   "pattern": "SA_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the radio module's power-down, high-low power and audio-enable controls, static levels"
+  },
+  {
+   "pattern": "SAU_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the module's supply and reset nodes"
+  },
+  {
+   "pattern": "TX_INHIBIT_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down"
+  },
+  {
+   "pattern": "ZEROIZE_HW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the zeroize line from the panel, a static level"
+  },
+  {
+   "pattern": "TR_APRS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the transmit-indication line to the panel, a static level"
+  },
+  {
+   "pattern": "EXP_SPARE*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an unused expander pin, driven by nothing"
+  },
+  {
+   "pattern": "AB_SPARE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a spare conductor on the A-to-B ribbon, connected to a test point and no driver"
+  },
+  {
+   "pattern": "VREF",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an analogue reference, a DC level with its own capacitor"
+  },
+  {
+   "pattern": "VGG_CT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the negative bias output after its filter, a DC level"
+  },
+  {
+   "pattern": "RX_MIX",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the receive audio mix node, audio band"
+  },
+  {
+   "pattern": "HUB_OVRCUR_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the hub's overcurrent flag, an open-drain static level with a pull-up"
+  }
+ ]
 }

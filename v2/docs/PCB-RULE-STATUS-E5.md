@@ -5,35 +5,35 @@
 
 Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
-**Readiness: INCONCLUSIVE**
+**Readiness: NOT_READY**
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 2 | 10.0 |
-| FAIL | 0 | 0.0 |
-| INCONCLUSIVE | 18 | 90.0 |
+| PASS | 6 | 30.0 |
+| FAIL | 3 | 15.0 |
+| INCONCLUSIVE | 11 | 55.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **20** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42} |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a chec |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the stackup is written into the board and read back by the impedance check; the fabricator  |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the DRC enforces the board's own rules; those rules were copied from a capability record th |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no check_pcb_e5 verdict for this board |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | no verification: nothing considers vibration, mating cycles or moisture for any interface |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 1, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the  |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 1, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 294 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

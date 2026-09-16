@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 1,
+  "footprints": 951,
+  "pass": 2142
+ },
+ "denominator": 2143,
+ "evidence": [
+  "pair PCIE3_RCLK0 has one leg routed and one not (P 0.00 mm, N 1.04 mm)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "MEC-001"
+ ],
+ "tool": "check_pcb_b",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:13:57Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

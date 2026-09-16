@@ -1,0 +1,84 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 80,
+  "pass": 523
+ },
+ "denominator": 603,
+ "evidence": [
+  "return path under BANK2_UPD_N (USB): 43.2 of 43.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BANK2_UPD_P (USB): 42.7 of 42.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BANK2_UPTX_N (USB): 15.5 of 15.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BANK2_UPTX_P (USB): 15.2 of 15.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BSEL1 (Default): 11.1 of 11.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BSEL2 (Default): 12.1 of 12.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BSEL3 (Default): 11.1 of 11.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CARD1_CLK_N (USB): 114.3 of 114.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CARD1_CLK_P (USB): 116.5 of 116.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CARD1_RX_N (USB): 111.8 of 111.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CARD1_RX_P (USB): 111.7 of 111.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under EMCON_HW (Default): 10.2 of 10.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH1_P1_N (DIFF100): 112.1 of 112.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH1_P1_P (DIFF100): 113.8 of 113.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH1_P2_N (DIFF100): 111.3 of 111.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH1_P2_P (DIFF100): 113.1 of 113.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH1_P3_N (DIFF100): 114.7 of 114.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH1_P3_P (DIFF100): 115.6 of 115.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH3_P3_N (DIFF100): 109.3 of 109.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under ETH3_P3_P (DIFF100): 107.3 of 107.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMI1_CK_N (DIFF100): 167.6 of 167.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMI1_CK_P (DIFF100): 166.5 of 166.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMI1_D2_N (DIFF100): 168.7 of 168.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMI1_D2_P (DIFF100): 168.6 of 168.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMI2_CK_N (DIFF100): 96.1 of 96.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMI2_CK_P (DIFF100): 95.5 of 95.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMIM_CK_N (DIFF100): 22.3 of 22.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMIM_CK_P (DIFF100): 22.3 of 22.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMIM_D0_N (DIFF100): 22.3 of 22.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMIM_D0_P (DIFF100): 21.6 of 21.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMIM_D1_N (DIFF100): 24.0 of 24.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HDMIM_D1_P (DIFF100): 27.8 of 27.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HOST3_0TX_N (USB): 153.2 of 153.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HOST3_0TX_P (USB): 130.6 of 130.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HOST3_1D_N (USB): 183.2 of 183.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HOST3_1D_P (USB): 196.4 of 196.4 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HOST3_1TX_N (USB): 147.5 of 147.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HOST3_1TX_P (USB): 137.7 of 137.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HUB1_D1TX_N (USB): 33.3 of 33.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HUB1_D1TX_P (USB): 33.4 of 33.4 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under NVME2_CLK_N (USB): 47.2 of 47.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under NVME2_CLK_P (USB): 46.2 of 46.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under NVME2_TX_N (USB): 56.8 of 56.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under NVME2_TX_P (USB): 56.5 of 56.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under NVME3_CLK_N (USB): 65.1 of 65.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under NVME3_CLK_P (USB): 81.2 of 81.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PCIE1_RX_N (USB): 137.1 of 137.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PCIE1_RX_P (USB): 117.5 of 117.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PCIE3_CLK_N (USB): 120.7 of 120.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PCIE3_CLK_P (USB): 124.4 of 124.4 mm without a plane on a neighbouring layer (limit 10.0)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "DEC-001",
+  "PWR-001",
+  "RET-002"
+ ],
+ "tool": "intent_checks",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:13:58Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

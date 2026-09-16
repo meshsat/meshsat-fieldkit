@@ -578,8 +578,15 @@ def t_a_rail_with_no_declared_load_is_not_judged():
     assert "UNDECLARED" in body_src, "the undeclared branch does not produce an UNDECLARED verdict"
     assert any(isinstance(st, _ast.Continue) for st in branch.body), \
         "the undeclared branch falls through and judges the rail anyway"
-    assert _re.search(r'_v\.INCONCLUSIVE if len\(undecl\) == miss', src), \
-        "a board whose only failures are undeclared rails is still reported as FAIL, which blames the copper"
+    # Both verdicts this tool writes must carry the property, not just one: since 16 September the drop and the
+    # current capacity are separate verdicts, because they have different authorities, and an undeclared rail is
+    # a property of the intent file under either of them.
+    inconclusive = _re.findall(r'_v\.INCONCLUSIVE if len\((\w+)\) == len\((\w+)\)', src)
+    assert len(inconclusive) >= 2, \
+        ("a board whose only failures are undeclared rails is still reported as FAIL, which blames the copper; "
+         "found %d of the 2 verdicts guarded" % len(inconclusive))
+    for undecl_name, rows_name in inconclusive:
+        assert undecl_name.endswith("undecl") and rows_name.endswith("rows"), (undecl_name, rows_name)
     assert "would have put the current into" in src, \
         "the refusal does not name the parts it would have guessed, so it does not say how to fix itself"
 

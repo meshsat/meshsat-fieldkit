@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "counts": {
+  "below_floor": 0,
+  "classes": 8
+ },
+ "denominator": 32,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "project": {
+   "path": "pcb-a-power.kicad_pro",
+   "sha256_16": "a5f669ecb899545f"
+  }
+ },
+ "note": "every class at or above the board's minimums",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "IMP-002"
+ ],
+ "tool": "class_floor",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:13:29Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

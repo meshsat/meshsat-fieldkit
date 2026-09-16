@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "counts": {
+  "agree": 852,
+  "aliased_pins": 0,
+  "board_footprints": 192,
+  "board_only_inert": 4,
+  "fail": 0,
+  "netlist_refs": 188
+ },
+ "denominator": 852,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "410eeb604ec12c4c"
+  },
+  "netlist": {
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "f6beb431b5cc1556"
+  }
+ },
+ "note": "the board against the schematic it was placed from",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "SCH-002"
+ ],
+ "tool": "netlist_board",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:14:23Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

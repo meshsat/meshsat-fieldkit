@@ -44,5 +44,78 @@
   "_stub_layers_why": "15 September 2026 (P5): the back side is the ground plane and the pack bands; a closure on B.Cu would cut the pour under a front-side signal, which is the gap rule 1 refuses. The stub router closes on F.Cu only."
  },
  "phase": "P5",
- "_phase_why": "12 September 2026: the phase is a fact about the board and it lived as a DEFAULT inside each generator, where gen_pcb_c.py still said C9 while the deliverable is C10, and full.sh set it for one board of six. A board's silk then names a phase `verify_deliverable` refuses, after the route, which is how A24 came to carry A18 on its front silk. `full.sh` exports this unless the caller has already set PHASE."
+ "_phase_why": "12 September 2026: the phase is a fact about the board and it lived as a DEFAULT inside each generator, where gen_pcb_c.py still said C9 while the deliverable is C10, and full.sh set it for one board of six. A board's silk then names a phase `verify_deliverable` refuses, after the route, which is how A24 came to carry A18 on its front silk. `full.sh` exports this unless the caller has already set PHASE.",
+ "_signal_classes_why": "Rule RET-001, 16 September 2026. The return-path rule asks what a net's spectral content deserves, so every signal net needs a class and a reason. A net matched by no entry here is UNKNOWN and is judged at the STRICTEST bar, so an omission costs a failure rather than buying a pass. Patterns are shell globs over the net name without its leading slash, first match wins.",
+ "signal_classes": [
+  {
+   "pattern": "SMB*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus capacitance"
+  },
+  {
+   "pattern": "BTP_INT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the gauge's battery-trip interrupt, an edge into the host"
+  },
+  {
+   "pattern": "PRES",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the pack-present pin, a static level pulled through a resistor"
+  },
+  {
+   "pattern": "DISP",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the display-request button input, pressed by a person"
+  },
+  {
+   "pattern": "PBI",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the push-button input of the gauge, the same"
+  },
+  {
+   "pattern": "TS?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a thermistor divider, a DC level changing with temperature"
+  },
+  {
+   "pattern": "VC?_F",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a cell-voltage sense line through its filter, DC by construction"
+  },
+  {
+   "pattern": "CELL?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a cell tap, a DC node of the pack"
+  },
+  {
+   "pattern": "SR?_F",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a shunt sense line through its filter, millivolts of DC"
+  },
+  {
+   "pattern": "CHG_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the charge FET gate drive and its return, switched at most once per charge cycle"
+  },
+  {
+   "pattern": "DSG_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the discharge FET gate drive and its return, the same"
+  },
+  {
+   "pattern": "VCC_F",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the gauge's own supply after its filter"
+  },
+  {
+   "pattern": "SW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the protector's switched node between the two FETs, a DC node except at a protection event"
+  },
+  {
+   "pattern": "BAT_F",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the battery sense node through its filter"
+  }
+ ]
 }

@@ -1,0 +1,52 @@
+{
+ "advisory": false,
+ "counts": {
+  "agree": 6722,
+  "aliased_pins": 0,
+  "board_footprints": 951,
+  "board_only_inert": 0,
+  "fail": 12,
+  "netlist_refs": 931
+ },
+ "denominator": 6734,
+ "evidence": [
+  "C151 is in the netlist and not on the board",
+  "C152 is in the netlist and not on the board",
+  "C251 is in the netlist and not on the board",
+  "C252 is in the netlist and not on the board",
+  "C351 is in the netlist and not on the board",
+  "C352 is in the netlist and not on the board",
+  "U101.123 is PCIE1_RX_N on the board and PCIE1_RXSW_N in the netlist",
+  "U101.124 is PCIE1_RX_P on the board and PCIE1_RXSW_P in the netlist",
+  "U201.123 is PCIE2_RX_N on the board and PCIE2_RXSW_N in the netlist",
+  "U201.124 is PCIE2_RX_P on the board and PCIE2_RXSW_P in the netlist",
+  "U301.123 is PCIE3_RX_N on the board and PCIE3_RXSW_N in the netlist",
+  "U301.124 is PCIE3_RX_P on the board and PCIE3_RXSW_P in the netlist"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  },
+  "netlist": {
+   "path": "out/pcb-b-compute.net",
+   "sha256_16": "86f7f383900c901c"
+  }
+ },
+ "note": "the board against the schematic it was placed from",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "SCH-002"
+ ],
+ "tool": "netlist_board",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:14:01Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

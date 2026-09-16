@@ -1,0 +1,64 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 30,
+  "pass": 6
+ },
+ "denominator": 36,
+ "evidence": [
+  "return path under BAT_F (Default): 26.3 of 35.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BTP_INT (Default): 11.1 of 22.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CELL1 (SENSE): 35.3 of 46.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CELL2 (SENSE): 21.4 of 31.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CELL3 (SENSE): 27.6 of 33.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CHG_G (Default): 27.8 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CHG_R (Default): 55.5 of 81.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under DISP (Default): 20.8 of 29.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under DSG_G (Default): 26.3 of 27.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under DSG_R (Default): 58.4 of 74.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under FUSE (Default): 12.6 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PACK_F (Default): 33.1 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PBI (Default): 12.4 of 16.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PRES (Default): 31.0 of 48.9 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SMBC (Default): 103.6 of 123.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SMBC_I (Default): 42.8 of 47.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SMBD (Default): 70.4 of 121.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SMBD_I (Default): 24.7 of 26.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SRN_F (Default): 41.8 of 68.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SRP_F (Default): 29.6 of 34.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under TS1 (Default): 30.9 of 79.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under TS2 (Default): 76.8 of 77.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under TS3 (Default): 36.7 of 43.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under TS4 (Default): 16.6 of 23.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under VC1_F (Default): 37.0 of 37.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under VC2_F (Default): 38.3 of 47.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under VC3_F (Default): 20.4 of 27.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under VC4_F (Default): 27.5 of 32.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under VCC_F (Default): 54.1 of 60.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return via: 18 of 61 signal vias have a ground via within 1.5 mm (21 exempt in fine-pitch fans, 0 on one reference plane); without one: SMBC at (77.14, 110.88); VC3_F at (77.51, 100.43); SRP_F at (79.50, 100.23); CELL1 at (80.25, 105.59); CELL1 at (80.48, 110.77); VC2_F at (81.78, 87.72); PBI at (82.45, 87.31); PACK_F at (83.29, 105.10) ..."
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "DEC-001",
+  "PWR-001",
+  "RET-002"
+ ],
+ "tool": "intent_checks",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:15:12Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

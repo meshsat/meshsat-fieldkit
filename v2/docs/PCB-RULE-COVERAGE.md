@@ -33,7 +33,7 @@ appears in the gap register.
 | MEC-001 | MECHANICAL | BLOCKER | panel1450.py, gen_pcb_*.py | check_pcb_*.py -> check_pcb_<letter> | tests/test_board_gates.py | **ENFORCED** |
 | OUT-001 | MANUFACTURING_OUTPUTS | BLOCKER | make_handoff.py | final_gate.py -> final_gate | tests/test_final_gate.py | **ENFORCED** |
 | PAIR-001 | DIFFERENTIAL_PAIRS | BLOCKER | pair_preroute.py, meander.py | pair_match.sh -> impedance_check | tests/test_pair_leg_match.py | **ENFORCED** |
-| PI-001 | POWER_INTEGRITY | BLOCKER | power_copper.py, gen_pcb_*3.py bands | dc_drop.py -> dc_drop | tests/test_conductor_current.py | **SOURCE_UNVERIFIED** |
+| PI-001 | POWER_INTEGRITY | BLOCKER | power_copper.py, gen_pcb_*3.py bands | dc_drop.py -> dc_density | tests/test_conductor_current.py | **SOURCE_UNVERIFIED** |
 | PI-002 | POWER_INTEGRITY | BLOCKER | power_copper.py | dc_drop.py -> dc_drop | tests/test_conductor_current.py | **ENFORCED** |
 | PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias | none |  | **OPEN** |
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py -> hardset-placed | tests/test_region_fit.py | **ENFORCED** |

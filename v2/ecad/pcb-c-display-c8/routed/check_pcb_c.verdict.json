@@ -1,0 +1,84 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 82,
+  "footprints": 192,
+  "pass": 196
+ },
+ "denominator": 278,
+ "evidence": [
+  "return path under BAT1_A (Default): 122.4 of 192.9 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BAT2_A (Default): 130.2 of 189.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BAT3_A (Default): 124.7 of 133.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BAT4_A (Default): 123.6 of 134.4 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BAT4_K (Default): 10.9 of 187.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BAT5_K (Default): 10.7 of 174.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under BOOT_J (Default): 10.9 of 119.4 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under CHG_A (Default): 13.6 of 96.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under C_DVDD (Default): 12.1 of 31.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under C_RUN (Default): 45.7 of 219.1 mm without a plane on a neighbouring layer (limit 11.0)",
+  "return path under EMCON_HW (Default): 79.5 of 480.7 mm without a plane on a neighbouring layer (limit 24.0)",
+  "return path under EPD_BUSY (Default): 278.4 of 408.0 mm without a plane on a neighbouring layer (limit 20.4)",
+  "return path under EPD_DC (Default): 324.2 of 359.4 mm without a plane on a neighbouring layer (limit 18.0)",
+  "return path under EPD_RST (Default): 77.5 of 359.5 mm without a plane on a neighbouring layer (limit 18.0)",
+  "return path under EPD_SCL (Default): 356.9 of 359.8 mm without a plane on a neighbouring layer (limit 18.0)",
+  "return path under EPD_SDA (Default): 203.7 of 359.8 mm without a plane on a neighbouring layer (limit 18.0)",
+  "return path under EPD_VDDD (Default): 12.7 of 47.7 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under EXP_INT (Default): 67.7 of 470.7 mm without a plane on a neighbouring layer (limit 23.5)",
+  "return path under GPS_A (Default): 71.8 of 100.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under HB1 (Default): 77.0 of 488.0 mm without a plane on a neighbouring layer (limit 24.4)",
+  "return path under HB2 (Default): 304.6 of 462.8 mm without a plane on a neighbouring layer (limit 23.1)",
+  "return path under HB3 (Default): 48.0 of 465.7 mm without a plane on a neighbouring layer (limit 23.3)",
+  "return path under HDMI_SEL1 (Default): 31.5 of 455.0 mm without a plane on a neighbouring layer (limit 22.8)",
+  "return path under HDMI_SEL2 (Default): 215.7 of 449.4 mm without a plane on a neighbouring layer (limit 22.5)",
+  "return path under LED_STAT (Default): 23.7 of 55.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under LED_STAT_A (Default): 13.3 of 62.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under LIGHT_DAY_n (Default): 168.8 of 728.1 mm without a plane on a neighbouring layer (limit 36.4)",
+  "return path under LTE_A (Default): 10.8 of 102.9 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under MAINSW_A (Default): 14.2 of 237.9 mm without a plane on a neighbouring layer (limit 11.9)",
+  "return path under MAINSW_A2 (Default): 62.5 of 206.0 mm without a plane on a neighbouring layer (limit 10.3)",
+  "return path under MAINSW_B (Default): 18.3 of 284.7 mm without a plane on a neighbouring layer (limit 14.2)",
+  "return path under MESH_A (Default): 10.6 of 108.8 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under MESH_K (Default): 68.0 of 68.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under MSG_A (Default): 18.1 of 88.2 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under MSG_K (Default): 20.2 of 34.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under MWARN_A (Default): 22.9 of 140.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PANEL_PWM (Default): 13.8 of 94.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PIJ2_A (Default): 88.6 of 250.6 mm without a plane on a neighbouring layer (limit 12.5)",
+  "return path under PIJ2_A2 (Default): 11.5 of 191.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PIJ2_B (Default): 73.4 of 213.2 mm without a plane on a neighbouring layer (limit 10.7)",
+  "return path under PIRING_A (Default): 51.0 of 97.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PIRING_K (Default): 53.4 of 70.3 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PI_KILL (Default): 35.0 of 471.8 mm without a plane on a neighbouring layer (limit 23.6)",
+  "return path under PI_SHDN_REQ (Default): 112.7 of 456.5 mm without a plane on a neighbouring layer (limit 22.8)",
+  "return path under PWM1 (Default): 275.7 of 607.2 mm without a plane on a neighbouring layer (limit 30.4)",
+  "return path under Q2_D (Default): 13.1 of 22.0 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under Q2_G (Default): 10.1 of 18.4 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under QSPI_D2 (Default): 25.2 of 68.9 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under QSPI_SS (Default): 27.8 of 70.1 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under RAIL_SENSE (Default): 25.6 of 48.1 mm without a plane on a neighbouring layer (limit 10.0)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "410eeb604ec12c4c"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "MEC-001",
+  "VIA-001"
+ ],
+ "tool": "check_pcb_c",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:14:17Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}
