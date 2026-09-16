@@ -53,6 +53,12 @@ run "return vias"       python3 $T/return_via.py $N.kicad_pcb --check
 # fans will collide, which the DRC on a placed board cannot say; lcsc_fill refuses a BOM line with no order
 # code, which asking the fabricator about a code cannot say because there is no code to ask about.
 run "via table"         python3 $T/via_audit.py $N.kicad_pcb
+run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
+# These two read the NETLIST this sweep rebuilt, not the board: a part's rating against the rail it sits on,
+# and every crystal's load network. Both are schematic properties, so they are true of the board whether or not
+# it has been routed.
+[ -s out/$N.net ] && run "derating" python3 $T/derate.py out/$N.net
+[ -s out/$N.net ] && run "crystals" python3 $T/clock_check.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # The order-code gate reads a BOM THAT ALREADY EXISTS and never makes one. Exporting it here would turn this
 # sweep into a producer of a fabrication artefact, which the execution-paths floor refuses and is right to:
