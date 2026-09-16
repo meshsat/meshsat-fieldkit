@@ -41,6 +41,26 @@ MARGIN = 0.20
 VOLT = re.compile(r"(?<![\d.])(\d+(?:\.\d+)?)\s*V\b", re.I)
 # Parts whose value string carries a voltage that is a RATING rather than a set point.
 RATED = ("C", "D", "F", "L", "T")
+# ... and the references that START with one of those letters and are NOT such a part. The membership test
+# is on the FIRST CHARACTER, so "T" for a tantalum capacitor also caught "TP", a test point (16 September
+# 2026). A test point's value string is the NET IT TAPS, so board C's `TP6` carried the value "+5V", was
+# read as a part rated 5.0 V, was judged against the 5.0 V rail it taps, and failed for wanting a 20 percent
+# margin over itself. CMP-001 is a BLOCKER, so that one line stopped board C's whole chain at the pre-route
+# gate: "BLOCK a part is rated below the rail it sits on". A test point is a via with a name; it has no
+# rating and nothing to derate.
+NOT_RATED = ("TP", "FID", "LOGO", "DNP", "MH")
+
+
+def rated_kind(ref):
+    """True if this reference designates a part whose value string carries a RATING.
+
+    The prefix of a reference is its LETTERS, not its first character. `TP6` is a test point and `T6` is a
+    tantalum capacitor, and a one-character test cannot tell them apart; the letters are taken whole and
+    judged against both tables, so a new prefix is decided here and in no other place.
+    """
+    letters = ref[:len(ref) - len(ref.lstrip("ABCDEFGHIJKLMNOPQRSTUVWXYZ_"))].rstrip("_") if ref else ""
+    if letters in NOT_RATED: return False
+    return letters[:1] in RATED
 
 
 def netlist(path):
@@ -71,7 +91,7 @@ def judge(net_path, intent_path=None, margin=MARGIN):
     for net, nodes in sorted(by_net.items()):
         r = rails.get(net)
         for ref, _pin in sorted(nodes):
-            if not ref[:1] in RATED: continue
+            if not rated_kind(ref): continue
             rated = rating(values.get(ref, ""))
             if rated is None:
                 unrated.append(ref); continue
