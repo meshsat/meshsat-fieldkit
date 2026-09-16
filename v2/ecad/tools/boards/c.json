@@ -70,12 +70,16 @@
   {
    "pattern": "USB_PNL_*",
    "class": "HIGH_SPEED_DIGITAL",
-   "basis": "the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanoseconds"
+   "basis": "the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanoseconds",
+   "rise_ns": 4.0,
+   "rise_basis": "USB 2.0 full speed: the specification's own minimum transition time, TFR/TFF 4 ns 10 to 90 percent (Table 7-9). The bit rate is 40 times slower than high speed and the edge only 8 times"
   },
   {
    "pattern": "USB_D*_R",
    "class": "HIGH_SPEED_DIGITAL",
-   "basis": "the same USB pair after its series resistors"
+   "basis": "the same USB pair after its series resistors",
+   "rise_ns": 4.0,
+   "rise_basis": "USB 2.0 full speed: the specification's own minimum transition time, TFR/TFF 4 ns 10 to 90 percent (Table 7-9). The bit rate is 40 times slower than high speed and the edge only 8 times"
   },
   {
    "pattern": "LED_RAIL_SW",
@@ -306,5 +310,7 @@
    "what": "the board's single ground: every return on this board is this net"
   }
  },
- "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this."
+ "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this.",
+ "critical_k": 6,
+ "critical_k_why": "l = t_r / (6 t_pd). ECSS-E-HB-20-07A section 6.1.2.3 works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test: that track is ONE rise distance long (t_r / t_pd = 34.5 mm on its microstrip), which is k = 1, and the handbook calls it a textbook radiator. k = 2 is half a known failure and k = 6 is a sixth of it. The number is this project's choice; the handbook is what it was calibrated against, and no standard in this tree states a value for k"
 }

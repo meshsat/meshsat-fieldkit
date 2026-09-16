@@ -1045,7 +1045,24 @@ chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never e
 INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project 16 September 2026: TI
 SCAA082A Table 2 gives measured propagation delays on FR-4 at er 4.6, microstrip 171.9 mm/ns and stripline
 139.8 mm/ns (5.82 and 7.15 ps/mm), which is within 6 percent of the 5.5 and 6.9 ps/mm edge_length.py computes
-from the board's own stackup: the arithmetic has a second opinion. The criterion k still has none.
+from the board's own stackup: the arithmetic has a second opinion. The criterion k still has none. 16
+September 2026, evening: BOTH HALVES OF THE INPUT ARE NOW PARTLY SOURCED AND THE REST IS MEASURED WORK, NOT
+SESSION WORK. The criterion is declared 6 on every board and calibrated against a document for the first
+time: ECSS-E-HB-20-07A section 6.1.2.3 (transcribed in v2/vendor/standards/) works a real case where a 35 mm
+clock track with a 200 ps edge failed a radiated emission test, and that track is ONE rise distance long, k =
+1, so k = 6 is a sixth of a known failure. Fifteen entries over five boards now carry a rise time from a
+SPECIFICATION rather than from nobody: USB 2.0 gives 500 ps for high speed (7.1.2.2, THSR/THSF minimum) and 4
+ns for full speed (Table 7-9, TFR/TFF minimum), both 10 to 90 percent, both minimums, which is the worst case
+a board is designed for. What the other classes need was CHECKED before it was called a gap: the RP2040
+datasheet documents a slew-rate control bit and no number, the 74LVC family datasheets from TI and from
+Nexperia specify only the input transition rate they tolerate, and TI SCAA082A gives propagation delay and no
+edge. A rise time those parts do not publish cannot be declared by this session at all: it is an oscilloscope
+at bring-up or a vendor's answer, and putting it in the session queue put work in the critical path that no
+session could start. AND THE RULE NOW ASKS THE RIGHT QUESTION OF A LONG NET: being a transmission line is
+physics, not a defect, so a net past its critical length is asked whether it is impedance-controlled,
+series-terminated (a screen that says so: the board file knows neither which end drives nor what the far end
+is) or declared with a reason, and only what is left is the finding. The first version would have failed
+every net on every board at a sub-nanosecond edge and reported physics.
 
 ## Clocks Reset Boot
 
