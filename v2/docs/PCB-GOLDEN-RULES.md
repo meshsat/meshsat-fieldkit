@@ -1585,7 +1585,7 @@ shielding where they are needed.
 | verified by | MANUAL_REVIEW, SIMULATION, PROTOTYPE_MEASUREMENT at ROUTED_BOARD (human or lab only) |
 | source | SOURCE_UNVERIFIED |
 | implementation | NONE_YET |
-| maturity | **OPEN** |  (at writing: UNASSESSED)
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope the kit, expires pre-compliance testing |
 
@@ -1597,7 +1597,15 @@ cannot be decided on paper.
 
 **If violated** Receiver desense in the kit's own box, and a product that cannot pass an emissions test.
 
-**Today** no EMC analysis of any kind exists; eleven radios and a sealed metal box
+**Today** no EMC analysis of any kind exists; eleven radios and a sealed metal box 16 September 2026: THE SHEET IS DATA
+AND IT IS COMPARED WITH THE BOARDS. pcb_emc.yaml carries, per board, every switching source with its
+frequency and the datasheet or timing resistor that sets it, the sensitive victims by reference, the coupling
+paths with the measure taken at each and the evidence for it, and a pre-compliance plan. emc_sheet.py checks
+it against each board's own netlist, and the check that makes it a gate is completeness: every switching part
+in the netlist must be declared as a source, because a sheet listing thirteen of a board's fourteen
+converters reads as complete. 27 sources, 10 paths and a plan on all seven boards; C, D, P and E5 carry no
+converter at all and each says why. What is NOT decided here is any emission: no edge rate is invented where
+a datasheet publishes none, and the measurement half of this rule is the laboratory stage.
 
 ## Mechanical
 
