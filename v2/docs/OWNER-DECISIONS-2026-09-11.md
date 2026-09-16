@@ -1533,3 +1533,23 @@ They do not depend on any compute module being alive.
 **What the session does while this is open.** Nothing on this line. Rule SCH-004's result stays
 OWNER_DECISION_REQUIRED on boards A, B and C, so no folder can be promoted on it either way, and the boards
 route and are measured as they stand.
+
+**DECISION 27 MEASURED FOR BOARD C, 16 September 2026 03:55 CEST (`/root/ciso6`).** The six-layer arm is in.
+
+| arm | route | gate |
+|---|---|---|
+| **C on SIX layers** (In1 and In4 ground planes, two inner routing layers) | **0 hard, 1 unrouted of 133 nets, 179 vias, 14.7 minutes**; the finish's stub router closed the one open (`/BZ_K`, the sounder return, 36 tracks) so the board is **0 and 0** | **3 FAIL of 202** |
+| C on four layers, as built | six hours of routing across three rounds | fails rule 1 **by its stack**: back-side tracks reference In2, a routing layer, on 81 of 127 nets |
+
+**And the three failures on the six-layer board are not three defects.** One is the gate asserting "4 copper
+layers (In1 ground plane), 1.6 mm thick" against a six-layer board, which is `check_pcb_c.py` describing the
+old decision and is a line to change with the ruling, not a fault in the copper. One is `QSPI_SS` at 10.2 mm
+of 73.8 without an adjacent reference against a 10.0 mm limit, which is **two tenths of a millimetre over** on
+the flash bus and is a real if marginal item. The third is eighteen signal vias without a ground via beside
+them, out of fifty-five judged once the slow nets are excluded.
+
+So the recommendation of the original decision stands and now has its number: **six layers routes this board in
+a quarter of an hour where four layers took six hours, and it holds the return-path rule by construction where
+four layers cannot hold it at all.** The cost is the six-layer price for a 442 x 311 mm panel backer, which is
+the largest board in the set and therefore the most expensive place in the kit to add two layers. That number
+is the one thing still missing and it is a quotation, not a measurement.
