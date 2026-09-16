@@ -66,15 +66,18 @@ def t_the_committed_declaration_covers_every_stage_of_the_real_finish():
     assert r["declared"] == r["in_finish"], (r["declared"], r["in_finish"])
 
 
-def t_three_classes_are_covered_on_the_boards_that_declare_the_grid_and_not_on_the_others():
-    """The per-board half, and the state of the set on 16 September 2026: D and E declare the ground-via grid
-    and are covered; A, C and P do not and are not, which is a design item rather than a bookkeeping one."""
+def t_the_grid_class_is_covered_where_the_grid_is_declared_and_not_where_it_is_not():
+    """The per-board half. On 16 September this read three classes on the boards without a grid; two of those
+    three were measured that evening and have a prevention that does not depend on a grid at all (prefanout
+    lays the plane-pad vias, and the refill plus the band keep-outs stop a pour retreating from its own stitch
+    via). What is left is the one that is honestly unprevented: a pour island with no via of its own net,
+    which fires on every board and every round. D and E declare the grid and are covered; A, C and P do not."""
     for letter in ("d", "e"):
         assert not C.judge(letter=letter)["uncovered"], letter
     for letter in ("a", "c", "p"):
         u = C.judge(letter=letter)["uncovered"]
-        assert len(u) == 3, (letter, u)
-        assert all("gnd_grid" in x for x in u), u
+        assert len(u) == 1, (letter, u)
+        assert "pour_stitch" in u[0] and "gnd_grid" in u[0], u
 
 
 def t_a_board_with_no_chain_has_no_closers():
