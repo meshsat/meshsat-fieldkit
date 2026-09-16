@@ -53,12 +53,23 @@ def netlist_refs(stem, ecad=None):
     return set(re.findall(r'\(comp \(ref "([^"]+)"\)', txt))
 
 
-def check(chain=None, ecad=None):
+def check(chain=None, ecad=None, vendor=None):
     y = _yaml().safe_load(open(chain or CHAIN, encoding="utf-8"))
+    # A TREE WITHOUT THE VENDOR FOLDER CANNOT JUDGE A CITATION, and must not report one as false (16 September
+    # 2026). The sweep runs in a tree archived from v2/ecad alone, so every basis file read as missing and the
+    # gate turned eleven true citations into failures in its first run there. Absence of the folder is an
+    # unjudgeable condition, reported as its own count, while the coordination arithmetic below is judged as
+    # always: a missing library says nothing about whether a fuse is above its conductor.
     stages = y.get("stages") or []
     ids = {s["id"] for s in stages}
     fails, notes, checked = [], [], 0
     refs_cache = {}
+    vdir = vendor or VENDOR
+    have_vendor = os.path.isdir(vdir)
+    unjudged_citations = 0
+    if not have_vendor:
+        notes.append("the vendor library is not in this tree (%s), so no citation could be checked; the "
+                     "coordination arithmetic below is judged as always" % os.path.relpath(vdir, ECAD))
 
     def basis_ok(b):
         """A citation names a file; the punctuation around it in a sentence is not part of the name.
@@ -71,7 +82,7 @@ def check(chain=None, ecad=None):
         for tok in b.replace(",", " ").split():
             if not tok.startswith("v2/vendor/"): continue
             name = tok.rstrip(".,;:)]}\"'")
-            if not os.path.exists(os.path.join(VENDOR, name[len("v2/vendor/"):])): return False, name
+            if not os.path.exists(os.path.join(vdir, name[len("v2/vendor/"):])): return False, name
         return True, None
 
     for s in stages:
@@ -84,6 +95,8 @@ def check(chain=None, ecad=None):
             checked += 1
             if not blk.get("basis"):
                 fails.append("%s: the %s carries no basis" % (sid, what)); continue
+            if not have_vendor:
+                unjudged_citations += 1; continue
             ok, miss = basis_ok(blk.get("basis"))
             if not ok: fails.append("%s: the %s names %s, which is not in this tree" % (sid, what, miss))
         # 2. the element is on the board it claims
@@ -134,7 +147,8 @@ def check(chain=None, ecad=None):
     for o in orphan:
         if o == "SHORE_INPUT": continue   # a second source, not a link in the pack's chain
         fails.append("%s: no stage protects it, so the chain has a break at it" % o)
-    return dict(stages=len(stages), checked=checked, fails=fails, notes=notes)
+    return dict(stages=len(stages), checked=checked, fails=fails, notes=notes,
+                unjudged_citations=unjudged_citations, vendor_seen=bool(have_vendor))
 
 
 def main(argv):
@@ -151,9 +165,13 @@ def main(argv):
     for n in r["notes"]: print("  note %s" % n)
     for f in r["fails"]: print("  FAIL %s" % f)
     if "--json" in argv: print(json.dumps(r, indent=1))
+    # The coordination is what this rule is about, and it is judged wherever the chain file is. A tree with no
+    # vendor library leaves the citations unjudged, which is reported and does not turn a passing chain into a
+    # failing one; it is also not silently a pass, because the count travels in the verdict.
     res = _v.FAIL if r["fails"] else _v.PASS
     return _v.write("energy_chain", res,
-                    counts={"stages": r["stages"], "checks": r["checked"], "fail": len(r["fails"])},
+                    counts={"stages": r["stages"], "checks": r["checked"], "fail": len(r["fails"]),
+                            "citations_unjudged": r.get("unjudged_citations", 0)},
                     denominator=r["checked"], evidence=r["fails"][:20],
                     inputs={"chain": os.path.basename(ch or CHAIN)},
                     rules=["BAT-002", "PWR-003"],
