@@ -409,6 +409,17 @@ for _bd in sorted(set(list(per_board) + list(B) + ["E5"])):
                       "known shape, not an oversight",
                  quiet=True)
         continue
+    # A HOST THAT CANNOT SEE THE NETLIST HAS NOTHING TO SAY ABOUT IT, and saying it anyway DESTROYS the
+    # reading taken where the netlist existed (16 September 2026). The netlists are written by the chains into
+    # each project's untracked out/, so on the runner every board is absent; one incidental run of this check
+    # from `final_gate.py` overwrote board C's contract PASS, taken on the box an hour earlier, with an
+    # INCONCLUSIVE about this host. Absence is already INCONCLUSIVE to the readiness computation ("absence is
+    # never a pass"), so writing nothing gives the same answer on a fresh tree and keeps the evidence on a
+    # tree that has some. The missing board is named on stdout, which is where a report belongs.
+    if _bd in MISSING:
+        print("check_contracts: %s has no netlist in this tree, so nothing was judged for it and its verdict "
+              "is left as it stands" % _bd)
+        continue
     _r = per_board.get(_bd) or {"pass": 0, "fail": []}
     _n = _r["pass"] + len(_r["fail"])
     _v.write("check_contracts_%s" % _bd.lower(),
@@ -419,6 +430,15 @@ for _bd in sorted(set(list(per_board) + list(B) + ["E5"])):
                    "no contract of this set names this board" if not _n else
                    "the contracts that name this board; the set's own verdict is check_contracts"),
              quiet=True)
+if not checked or MISSING:
+    # The same rule for the SET verdict, and it is stricter, because of what this verdict MEANS: the seven
+    # boards agree with each other. That cannot be read with a board absent, and an INCONCLUSIVE written from
+    # here replaces the set's real reading with a fact about this host. The runner has no netlist for any
+    # board (the chains write them into each project's untracked out/), so one incidental run from
+    # `final_gate.py` demoted the whole set. Absence is INCONCLUSIVE to the readiness computation already.
+    print("check_contracts: %s, so the set was not judged here and its verdict is left as it stands"
+          % ("no netlist in this tree" if not checked else "no netlist for " + ", ".join(MISSING)))
+    sys.exit(3)
 sys.exit(_v.write("check_contracts",
                   _v.INCONCLUSIVE if (not checked or MISSING or (UNSPLIT and not fails)) else (_v.PASS if not fails else _v.FAIL),
                   counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING),
