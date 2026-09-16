@@ -3,6 +3,11 @@
 the M.2 sockets and their standoffs, the QMX, LimeSDR and RockBLOCK sites, J_AB1 under the board, the fabric nets reaching their receptacles, six layers;
 on a placed board the net-class patterns; on a routed board the pair report."""
 import sys, re, pcbnew, itertools
+import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
+                           # literal here: six gates carried one, so a layer decision meant editing a
+                           # gate, and two experiments came back with their only failure being the gate
+                           # describing the previous decision (board A, 12 September; board C, today)
 from pcbnew import FromMM
 OX, OY = 150.0, 110.0
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))

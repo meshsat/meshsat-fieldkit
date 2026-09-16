@@ -285,5 +285,7 @@
  ],
  "_gnd_grid_why": "NOT MEASURED ON THIS BOARD YET (16 September 2026). The grid is worth 90 to 109 of 130 satisfied signal vias on board E and costs board P its route, so it is a per-board measurement and not a default. Board C gets one when its current route ends and its return-via count is known.",
  "annular_min_mm": 0.2,
- "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): four layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands."
+ "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): four layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands.",
+ "copper_layers": 4,
+ "_copper_layers_why": "Four layers as built. OWNER DECISION 27 IS OPEN on this: the four-layer board fails the return-path rule by its stack, and the six-layer arm measured on 16 September routes 0 and 0 in 14.7 minutes against six hours. If the ruling goes to six, this is the line that changes."
 }

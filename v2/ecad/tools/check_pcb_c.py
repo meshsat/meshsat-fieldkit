@@ -5,6 +5,11 @@ board share the file, so a site here is a hole there), the toggle body slots, th
 the underside, the e-paper ZIF and the light sensor on the top side, the MIL-STD-1472 pitch, and the height rule: every deep face part clears B16's tall parts by 2 mm
 (panel1450.clearance_report) and the backer's parts clear the stack under the strips."""
 import sys, math, os, pcbnew
+import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
+                           # literal here: six gates carried one, so a layer decision meant editing a
+                           # gate, and two experiments came back with their only failure being the gate
+                           # describing the previous decision (board A, 12 September; board C, today)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import panel1450 as L
 OX, OY = 297.0, 210.0

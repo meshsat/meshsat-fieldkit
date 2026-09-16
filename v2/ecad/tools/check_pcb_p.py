@@ -2,6 +2,11 @@
 """PCB-P P1 numeric gate (MESHSAT-830, appendix 32.62): outline 70 x 44, four M3 holes at (+-32, +-19), two copper layers, the power path parts at their sites,
 the locked bands present on both layers at 4 mm for every power net, every part on the top side, the gauge U1 on the QFN-32 land."""
 import sys, pcbnew
+import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
+                           # literal here: six gates carried one, so a layer decision meant editing a
+                           # gate, and two experiments came back with their only failure being the gate
+                           # describing the previous decision (board A, 12 September; board C, today)
 b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 100.0, 100.0; fails = []; checked = []
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 def check(c, m):

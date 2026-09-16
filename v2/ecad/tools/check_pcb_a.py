@@ -2,6 +2,11 @@
 """Numeric verification of PCB-A phase A22 (MESHSAT-830, appendix 32.56): outline, rods, the dock block, the eleven blind-mate sites, the mezzanine, the
 zones, the fixed parts; on a placed board the net-class patterns; on a routed board the width read-back of the node and rail nets and the pair report."""
 import sys, pcbnew, itertools
+import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
+                           # literal here: six gates carried one, so a layer decision meant editing a
+                           # gate, and two experiments came back with their only failure being the gate
+                           # describing the previous decision (board A, 12 September; board C, today)
 OX, OY = 150.0, 110.0
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 b = pcbnew.LoadBoard(sys.argv[1]); fails = []; checked = []

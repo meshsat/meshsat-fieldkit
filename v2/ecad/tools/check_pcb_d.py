@@ -2,6 +2,11 @@
 """PCB-D D8 numeric gate (MESHSAT-830): outline 100 x 80, four M3 standoff holes at (+-45, +-35), the connectors and the RF chain where gen_pcb_d3.py fixes them,
 the RF nets on the right pads (exciter ANT to the relay, relay to the antenna SMA, pad to the drive U.FL, LPF to the output SMA), four copper layers, the SA868 footprint present."""
 import sys, math, pcbnew
+import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
+                           # literal here: six gates carried one, so a layer decision meant editing a
+                           # gate, and two experiments came back with their only failure being the gate
+                           # describing the previous decision (board A, 12 September; board C, today)
 b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 100.0, 100.0; fails = []; checked = []
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 def check(c, m):
