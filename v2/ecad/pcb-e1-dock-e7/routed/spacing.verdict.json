@@ -1,0 +1,29 @@
+{
+ "advisory": false,
+ "applicable": false,
+ "counts": {},
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "f7c80ab10705bd16"
+  }
+ },
+ "note": "no rail on this board reaches 20 V",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "ISO-001"
+ ],
+ "tool": "spacing",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "465a81f6fa3c600d"
+ },
+ "ts": "2026-09-16T05:17:18Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

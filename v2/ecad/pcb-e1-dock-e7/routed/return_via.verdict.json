@@ -3,15 +3,14 @@
  "applicable": true,
  "counts": {
   "exempt": 79,
-  "judged": 67,
-  "lacking": 5,
+  "judged": 60,
+  "lacking": 4,
   "same_plane": 0,
-  "slow": 58
+  "slow": 65
  },
- "denominator": 67,
+ "denominator": 60,
  "evidence": [
   "E6_BST at (10.67, 195.05)",
-  "FAN2_TACH at (19.77, 187.54)",
   "USB_E6_N at (70.45, 187.15)",
   "Q1_G at (92.62, 199.50)",
   "Q2_G at (224.62, 193.50)"
@@ -33,9 +32,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df25cbd5ec06a775"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T04:11:38Z",
+ "ts": "2026-09-16T05:17:14Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

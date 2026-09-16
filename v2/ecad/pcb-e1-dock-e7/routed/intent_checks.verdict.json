@@ -8,7 +8,7 @@
  },
  "denominator": 98,
  "evidence": [
-  "return via: 62 of 67 signal vias have a ground via within 1.5 mm (79 exempt in fine-pitch fans, 0 on one reference plane, 58 on a net whose declared class has no edge to return); without one: E6_BST at (10.67, 195.05); FAN2_TACH at (19.77, 187.54); USB_E6_N at (70.45, 187.15); Q1_G at (92.62, 199.50); Q2_G at (224.62, 193.50)"
+  "return via: 56 of 60 signal vias have a ground via within 1.5 mm (79 exempt in fine-pitch fans, 0 on one reference plane, 65 on a net whose declared class has no edge to return); without one: E6_BST at (10.67, 195.05); USB_E6_N at (70.45, 187.15); Q1_G at (92.62, 199.50); Q2_G at (224.62, 193.50)"
  ],
  "inputs": {
   "board": {
@@ -25,9 +25,9 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df25cbd5ec06a775"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T04:11:35Z",
+ "ts": "2026-09-16T05:17:10Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

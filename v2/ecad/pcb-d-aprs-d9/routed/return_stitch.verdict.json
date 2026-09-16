@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "plane_change_to_power": 0,
+  "slow": 244
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-d-aprs.kicad_pcb",
+   "sha256_16": "929bf82d2bf6eed4"
+  }
+ },
+ "note": "this board has no transition between two different reference nets, so RET-003 has nothing on it to judge",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RET-003"
+ ],
+ "tool": "return_stitch",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "465a81f6fa3c600d"
+ },
+ "ts": "2026-09-16T05:16:49Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}
