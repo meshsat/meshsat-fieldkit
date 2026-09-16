@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "counts": {
+  "below_floor": 0,
+  "classes": 1
+ },
+ "denominator": 4,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "project": {
+   "path": "pcb-e5-block.kicad_pro",
+   "sha256_16": "4022241628945956"
+  }
+ },
+ "note": "every class at or above the board's minimums",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "IMP-002"
+ ],
+ "tool": "class_floor",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "8acc10d50ab6bbb5"
+ },
+ "ts": "2026-09-16T03:24:47Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "counts": {
+  "classes_declared": 0,
+  "met": 0,
+  "missed": 0,
+  "pairs_on_board": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "note": "the board declares no pair class: nothing was judged",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "IMP-001",
+  "PAIR-001",
+  "STK-001"
+ ],
+ "tool": "impedance_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "8acc10d50ab6bbb5"
+ },
+ "ts": "2026-09-16T03:24:46Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

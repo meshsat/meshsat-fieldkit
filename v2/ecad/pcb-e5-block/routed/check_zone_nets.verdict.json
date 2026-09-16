@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 0,
+  "zones": 4
+ },
+ "denominator": 4,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "GND-001",
+  "PLN-001"
+ ],
+ "tool": "check_zone_nets",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "8acc10d50ab6bbb5"
+ },
+ "ts": "2026-09-16T03:24:45Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
