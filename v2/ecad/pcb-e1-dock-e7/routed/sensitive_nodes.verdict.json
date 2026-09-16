@@ -8,8 +8,8 @@
  },
  "denominator": 2,
  "evidence": [
-  "TRK_LSENSE runs -0.377 mm from TRK_SW2 and its own list asks for 0.50",
-  "WATER_SENSE runs 0.430 mm from TRK_SW1 and its own list asks for 1.00"
+  "TRK_LSENSE runs 0.209 mm from TRK_SW2 and its own list asks for 0.50",
+  "WATER_SENSE runs 0.556 mm from TRK_SW1 and its own list asks for 1.00"
  ],
  "inputs": {
   "board": "e",
@@ -26,9 +26,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccfac7573e3ce1"
+  "tools_tree_sha": "ed2daa46baf29d51"
  },
- "ts": "2026-09-16T16:41:45Z",
+ "ts": "2026-09-16T16:53:48Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

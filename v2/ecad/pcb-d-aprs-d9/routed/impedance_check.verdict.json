@@ -2,26 +2,20 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "MET": 2,
-  "MISSED": 1,
-  "SHORT": 1,
   "classes_declared": 5,
-  "met": 3,
-  "missed": 1,
+  "met": 0,
+  "missed": 0,
   "pairs_on_board": 6
  },
- "denominator": 4,
- "evidence": [
-  "MISSED /USB1 class USB target 90.0 ohm",
-  "SHORT /USB2 class USB target 90.0 ohm"
- ],
+ "denominator": 0,
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-d-aprs.kicad_pcb",
    "sha256_16": "929bf82d2bf6eed4"
   }
  },
- "note": "",
+ "note": "the board declares its pair classes and gives none a target, which is its recorded design",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -34,9 +28,9 @@
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccfac7573e3ce1"
+  "tools_tree_sha": "ed2daa46baf29d51"
  },
- "ts": "2026-09-16T16:41:04Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T16:53:07Z",
+ "verdict": "PASS",
  "version": "unknown"
 }
