@@ -45,7 +45,7 @@
  },
  "phase": "E11",
  "_phase_why": "12 September 2026: the phase is a fact about the board and it lived as a DEFAULT inside each generator, where gen_pcb_c.py still said C9 while the deliverable is C10, and full.sh set it for one board of six. A board's silk then names a phase `verify_deliverable` refuses, after the route, which is how A24 came to carry A18 on its front silk. `full.sh` exports this unless the caller has already set PHASE. 16 September 2026 00:15 CEST: E10 -> E11 (the route in flight is the one the set cuts; final_gate refuses a folder that is not the declared phase).",
- "_gnd_grid_why": "MEASURED AND OFF for E, 16 September 2026 00:20 CEST (appendix 32.201): the grid pays on D (279 of 289 signal vias with a return via, route unchanged at 0 open) and COSTS E its route. E's routing room is two outer layers over In1's plane and In2's power pours, and 1,825 grid vias in it took the round-one route from E10's 0 hard 2 open to 11 hard (9 shorting_items) and 4 open. E keeps the return-via fixer after the route (83 placed, 40 signal vias still without a site), and what those 40 need is room, which is a placement question or a ruling.",
+ "_gnd_grid_why": "Measured on board E, same placed board, one variable (15 September 2026, /root/eiso against /root/eiso11). WITHOUT the grid the routed board satisfies rule 2 on 90 of its 130 signal vias, 40 lacking a ground via within 1.5 mm. WITH a 2.1 mm ground-via grid laid BEFORE the route it satisfies 109 of 130, 21 lacking, and the route still closes: its winner read 11 hard of the knotting kind, which unknot cleared to 0. The grid is prevention and the return-via fixer is repair, so the grid runs first and the fixer only meets what it left.",
  "_signal_classes_why": "Rule RET-001, 16 September 2026. The return-path rule asks what a net's spectral content deserves, so every signal net needs a class and a reason. A net matched by no entry here is UNKNOWN and is judged at the STRICTEST bar, so an omission costs a failure rather than buying a pass. Patterns are shell globs over the net name without its leading slash, first match wins.",
  "signal_classes": [
   {
@@ -278,5 +278,8 @@
    "class": "LOW_SPEED_OR_DC",
    "basis": "the isolated converter's secondary-side return reference, a DC node"
   }
- ]
+ ],
+ "gnd_grid": {
+  "pitch": 2.1
+ }
 }
