@@ -949,3 +949,25 @@ def t_a_finish_refusal_a_route_cannot_change_stops_the_run():
     open(opens, "w").write("routed-board gate: hard 0 unrouted 3\nPRUNED PAD NOT REACHED by the router\n")
     assert rf.finish_blocker(opens) == "OPEN", "a real open must still be read as one"
     assert rf.finish_blocker(os.path.join(d, "absent.log")) == "OPEN", "an unreadable log must not stop a run"
+
+
+def t_no_driver_is_patched_while_a_copy_of_it_is_running():
+    """16 September 2026, learnt again and written down. bash reads a shell script INCREMENTALLY by byte
+    offset, so editing one under a running instance makes that instance resume at the wrong place: patching
+    /root/sweep_set.sh while the previous sweep was still in its gates stage made it try to execute a line of
+    the embedded python (`syntax error near unexpected token "project",`) and abort. The record has carried
+    'never overwrite a running bash script' since 8 September for CHAINS; a driver is a bash script too.
+
+    This rule cannot see the box, so what it holds is the property that makes the mistake survivable: every
+    driver this tree generates is written to a PER-LAUNCH copy, so a patch to the template never reaches an
+    instance already running. `run_phase.sh` does this (`/root/drivers/`), and the rule is that it keeps
+    doing it."""
+    for name in ("run_phase.sh", "refinish.sh"):
+        p = os.path.join(TOOLS, "routeflow", "cloud", name)
+        if not os.path.exists(p):
+            p = os.path.join(TOOLS, name)
+        if not os.path.exists(p):
+            continue
+        src = open(p, encoding="utf-8").read()
+        assert "drivers/" in src or "mktemp" in src or "per-launch" in src, \
+            "%s launches a driver without giving it its own copy, so patching the template hits a running run" % name
