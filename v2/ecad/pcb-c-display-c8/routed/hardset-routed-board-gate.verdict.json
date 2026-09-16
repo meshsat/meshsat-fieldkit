@@ -20,7 +20,7 @@
  "inputs": {
   "drc": {
    "path": "out/pcb-c-display-drc.json",
-   "sha256_16": "52851b6241dfc7bd"
+   "sha256_16": "26b1906a7aaef89d"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
@@ -35,9 +35,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "868b1e0b2f4fd075"
+  "tools_tree_sha": "8ef5a7ab396fe830"
  },
- "ts": "2026-09-16T13:53:25Z",
+ "ts": "2026-09-16T14:18:16Z",
  "verdict": "PASS",
  "version": "unknown"
 }
