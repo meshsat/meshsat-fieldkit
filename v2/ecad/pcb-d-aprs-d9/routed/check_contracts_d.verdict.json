@@ -8,23 +8,20 @@
  "denominator": 11,
  "evidence": [],
  "inputs": {
-  "boards": "A,B,C,D,E"
+  "boards": "A,B,C,D,E,P"
  },
  "note": "the contracts that name this board; the set's own verdict is check_contracts",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [
-  "RF-002",
-  "SCH-003"
- ],
+ "rules": [],
  "tool": "check_contracts_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "549451ba7ccf0670"
+  "tools_tree_sha": "899e45e5644d50cb"
  },
- "ts": "2026-09-16T19:00:25Z",
+ "ts": "2026-09-16T19:14:45Z",
  "verdict": "PASS",
  "version": "unknown"
 }

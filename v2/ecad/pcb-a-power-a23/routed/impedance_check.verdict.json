@@ -21,17 +21,13 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [
-  "IMP-001",
-  "PAIR-001",
-  "STK-001"
- ],
+ "rules": [],
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "549451ba7ccf0670"
+  "tools_tree_sha": "1db46485306a1462"
  },
- "ts": "2026-09-16T18:56:59Z",
+ "ts": "2026-09-16T19:11:25Z",
  "verdict": "PASS",
  "version": "unknown"
 }

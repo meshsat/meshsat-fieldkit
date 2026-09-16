@@ -42,9 +42,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "549451ba7ccf0670"
+  "tools_tree_sha": "899e45e5644d50cb"
  },
- "ts": "2026-09-16T19:00:53Z",
+ "ts": "2026-09-16T19:15:12Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

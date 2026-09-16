@@ -18,15 +18,13 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [
-  "PWR-001"
- ],
+ "rules": [],
  "tool": "intent_rails",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "549451ba7ccf0670"
+  "tools_tree_sha": "899e45e5644d50cb"
  },
- "ts": "2026-09-16T19:01:09Z",
+ "ts": "2026-09-16T19:15:27Z",
  "verdict": "PASS",
  "version": "unknown"
 }
