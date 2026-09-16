@@ -936,8 +936,8 @@ rate or clock frequency.
 | risk | SIGNAL_INTEGRITY, EMC |
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | NONE_YET |
-| maturity | **OPEN** |  (at writing: UNASSESSED)
+| implementation | signal_class.py declarations |
+| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one net class, expires prototype measurement |
 
@@ -950,8 +950,16 @@ Frequency alone decides nothing.
 
 **If violated** Overshoot into a protection diode, double-clocking, and emissions from an unterminated stub.
 
-**Today** no net in this project has ever been classified by edge rate; every impedance and return decision rests on
-that classification
+**Today** 16 September 2026: half of this note was already wrong and the other half is now addressed. Every net IS
+classified, by spectral content, 413 declarations across the seven boards; what was missing was the
+arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer from
+the board's own stackup (an outer layer is a microstrip and sees about (er+1)/2, an inner one sees er: 5.5
+and 6.9 ps/mm on FR-4), takes the rise time from the DECLARATION beside each class entry, because a rise time
+is a property of the driver and board A's fast nets are gate drives while board B's are a memory bus, and
+compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per board with
+its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however carefully it is
+chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated, and the verdict is
+INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project
 
 ## Clocks Reset Boot
 

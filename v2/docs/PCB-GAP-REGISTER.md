@@ -9,7 +9,7 @@ answered yet, made visible so it cannot be forgotten.
 
 **31 of 57 rules carry a gap.**
 
-## absent (8)
+## absent (7)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
@@ -46,11 +46,6 @@ up as owner decision 30 with three costed options. The fact that shapes them is 
 ERASE PIN, so no option is a pure hardware wipe; the fact that makes option 1 cheap is that the three
 supervisors are already on the same I2C bus as the secure element and depend on no compute module being alive  
 *Close it by* owner decision 30: the supervisors execute the wipe, power removal only, or accept the software path and rename the feature everywhere. Owner **OWNER**. Effort P50 8h, P80 24h.
-
-**SI-001 transmission-line classification** (MUST_JUSTIFY, OPEN)  
-no net in this project has ever been classified by edge rate; every impedance and return decision rests on
-that classification  
-*Close it by* a per-driver edge-rate table from the datasheets, the critical length on each stackup, and the net classification. Owner **SESSION**. Effort P50 10h, P80 30h.
 
 ## generated only (5)
 
@@ -144,7 +139,7 @@ the 3 mm distance is a project number applied to every device; the loop inductan
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (11)
+## source or applicability unresolved (12)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -230,6 +225,19 @@ DIFFERENT reference nets crosses at a capacitor or it goes the long way round. T
 board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its pin) and
 it is OURS, so the maturity is GENERATED_ONLY until a document states it  
 *Close it by* find a published figure for how far a plane-stitching capacitor may sit from the transition it serves, or measure one. Owner **SESSION**, after RET-001. Effort P50 3h, P80 12h.
+
+**SI-001 transmission-line classification** (MUST_JUSTIFY, GENERATED_ONLY)  
+16 September 2026: half of this note was already wrong and the other half is now addressed. Every net IS
+classified, by spectral content, 413 declarations across the seven boards; what was missing was the
+arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer from
+the board's own stackup (an outer layer is a microstrip and sees about (er+1)/2, an inner one sees er: 5.5
+and 6.9 ps/mm on FR-4), takes the rise time from the DECLARATION beside each class entry, because a rise time
+is a property of the driver and board A's fast nets are gate drives while board B's are a memory bus, and
+compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per board with
+its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however carefully it is
+chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated, and the verdict is
+INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project  
+*Close it by* declare a rise time beside each signal-class entry from the driver's own datasheet, and a critical-length criterion per board with its reason; the arithmetic is already there to judge against them. Owner **SESSION**, after RET-001. Effort P50 8h, P80 24h.
 
 **STK-002 a layer count is decided and costed** (BLOCKER, OWNER_DECISION_REQUIRED)  
 layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for

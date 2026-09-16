@@ -232,9 +232,19 @@ coverage:
    note: "coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew budget is not cited beside it",
    remediation: {action: "cite each interface's skew budget and judge against it", owner: SESSION, depends_on: [INT-001], p50_h: 3, p80_h: 8}}
 
- SI-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification",
-   remediation: {action: "a per-driver edge-rate table from the datasheets, the critical length on each stackup, and the net classification", owner: SESSION, depends_on: [], p50_h: 10, p80_h: 30}}
+ SI-001: {implementation: "signal_class.py declarations", verification: {tool: edge_length.py, verdict: edge_length, fixtures: tests/test_edge_length.py},
+   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "16 September 2026: half of this note was already wrong and the other half is now addressed. Every net
+     IS classified, by spectral content, 413 declarations across the seven boards; what was missing was the
+     arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer
+     from the board's own stackup (an outer layer is a microstrip and sees about (er+1)/2, an inner one sees er:
+     5.5 and 6.9 ps/mm on FR-4), takes the rise time from the DECLARATION beside each class entry, because a
+     rise time is a property of the driver and board A's fast nets are gate drives while board B's are a memory
+     bus, and compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per
+     board with its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however
+     carefully it is chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated,
+     and the verdict is INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project",
+   remediation: {action: "declare a rise time beside each signal-class entry from the driver's own datasheet, and a critical-length criterion per board with its reason; the arithmetic is already there to judge against them", owner: SESSION, depends_on: [RET-001], p50_h: 8, p80_h: 24}}
 
  CLK-001: {implementation: "gen_sch_*.py crystal networks",
    verification: {tool: clock_check.py, verdict: clock_check, fixtures: tests/test_clock_check.py},
