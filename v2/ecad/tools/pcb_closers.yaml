@@ -84,7 +84,12 @@ closers:
    why_prevention_failed: "same shape as the stitching: the plane is laid at placement time and the pad's
      access is decided by what the router puts beside it"
    repeated: true
-   prevented_by: null
+   prevented_by: "prefanout.py lays a via at every pad whose net has a plane BEFORE the route, with a
+     via-in-pad and an exposed-pad fallback, and escape.py fans the fine-pitch parts. MEASURED across 25
+     finish logs on six boards, 16 September 2026: 'no pad-to-zone item on the filled board' on every one of
+     them except a single board D round, which found two and closed one. A class that fires once in
+     twenty-five runs is prevented, and the repair is what catches the pad the router's own copper cut off
+     afterwards"
    prevented_by_board_declaration: gnd_grid
    _prevention_why: "the same grid: a via in the pad's own plane reach at placement time is what this repairs
      after the route, and the grid is where those vias come from"
@@ -118,7 +123,12 @@ closers:
    why_prevention_failed: "the retreat happens when the router lays copper near the via, which is after the
      stitch was placed"
    repeated: true
-   prevented_by: null
+   prevented_by: "two things that landed on 14 and 15 September: the finish REFILLS before it judges, so the
+     pour this pruner reads is the one the board has rather than one from four stages earlier, and
+     power_copper.py's wire keep-outs stop the router laying copper along a rail band's edge, which is what
+     made a fill retreat from its own stitch via. MEASURED across 25 finish logs on six boards, 16 September
+     2026: 0 locked vias removed on every board, against 673 locked vias on 43 zones on board A alone. The
+     class was real on P3 and A32 and it has not fired since the refill moved"
    prevented_by_board_declaration: gnd_grid
    _prevention_why: "the same class as pour_stitch seen from the other end: with the grid laid before the route
      the fill retreats from fewer vias, because the router works around them instead of past them"
