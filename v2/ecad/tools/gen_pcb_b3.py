@@ -155,6 +155,12 @@ COL = {1: (-98, -38), 2: (-36, 32), 3: (34, 94)}
 REGIONS = []   # (name, rect, refs, back): decoupling and pull-ups on the UNDERSIDE (B16 is assembled on both sides), never beneath a fine-pitch part whose escapes need the vias
 for s in (1, 2, 3):
     x0, x1 = COL[s]; U = lambda k: "U%d" % (100 * s + k); Q = lambda k: "Q%d" % (100 * s + k); L = lambda k: "L%d" % (100 * s + k)
+    # THE PCIe RECEIVE COUPLING CAPACITORS GO WITH THE SWITCH THAT DRIVES THEM (16 September 2026). The CM5
+    # datasheet 2.3.1 asks for 220 nF in series in every PCIe RECEIVE line "close to the driving source (the
+    # peripheral's TX)", which on this board is the switch U<slot>01, and section 2.3 says the module already has
+    # them on its own transmit side. They went into the schematic at 02:40 and NOWHERE into the placement, so
+    # the placement generator refused the board with "unplaced: C151, C152, C251, C252, C351, C352" and board B
+    # routed all night on the design without them. A part added to a schematic needs a seat in the same change.
     sw_dec = Cs(s, 35, 48)                                                     # the switch's twelve 100 nF (the exposed pad's fanout via needs the centre, so they sit under the rail band)
     # 9 September 2026 (ARCH-PCB-B-IOHA): the bank's two host-selection switches sit beside the hub they feed, and their
     # decoupling and the two pull-downs that hold the safe state go with the hub's own back-side group.
@@ -169,12 +175,12 @@ for s in (1, 2, 3):
     card = {1: ["Q106", "LED15"], 2: ["Q206", "Q207", "Q208", "LED25"], 3: ["Q306", "LED35"]}[s]
     card_b = {1: [R(1, 37), R(1, 38), R(1, 39)], 2: [R(2, 37), R(2, 38), R(2, 40), R(2, 39)] + Cs(2, 86, 91), 3: [R(3, 37), R(3, 38), R(3, 39)]}[s]
     if s == 2:
-        REGIONS += [("S2_SWIC", (-38, -60, 10, -30), [U(1), U(2), U(9), U(10)], False),
+        REGIONS += [("S2_SWIC", (-38, -60, 10, -30), [U(1), U(2), U(9), U(10)] + Cs(2, 51, 52), False),
                     ("S2_SWE", (10, -57, 32, -30), ["Y201"] + card + eth + ["LED22", "LED23"], False), ("S2_SWEB", (-36, -57, 32, -30), sw_b + card_b + sup_b, True),
                     ("S2_RAIL", (-36, -73.4, 32, -60), [r for r in rail if r not in (U(5), U(6), L(3), L(4)) and r not in Cs(2, 25, 27) + Cs(2, 30, 32)], False), ("S2_RAILB", (-36, -73.4, 32, -57), rail_b + straps + sw_dec, True),
                     ("S2_SUP", (12, -30, 32, 28), sup + ["J_USBX", "U36", "J_GNSS2"], False), ("S2_SUP2", (-3, -30, 12, -8), [U(5), U(6), L(3), L(4)] + Cs(2, 25, 27) + Cs(2, 30, 32), False)]
     else:
-        REGIONS += [("S%d_SWIC" % s, (x0 - 1, -52, x0 + 43, -20), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)], False),
+        REGIONS += [("S%d_SWIC" % s, (x0 - 1, -52, x0 + 43, -20), [U(1), U(2), U(9), U(10), "Y%d" % (100 * s + 1)] + Cs(s, 51, 52), False),
                     ("S%d_SWE" % s, (x0 + 43, -52, x1, -21), card + eth + ["LED%d2" % s, "LED%d3" % s], False), ("S%d_SWEB" % s, (x0, -52, x1, -21), sw_b + card_b + sup_b, True),
                     ("S%d_RAIL" % s, (x0 - 2, -70, x1, -52), rail, False), ("S%d_RAILB" % s, (x0 + 14, -70, x1, -52), rail_b + straps + sw_dec, True),
                     ("S%d_SUP" % s, (x0 + 12, -97, x1, -70), sup + (["J_SPI3"] if s == 3 else []), False)]
