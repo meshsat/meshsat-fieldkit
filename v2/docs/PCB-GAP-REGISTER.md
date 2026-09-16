@@ -9,11 +9,7 @@ answered yet, made visible so it cannot be forgotten.
 
 **31 of 57 rules carry a gap.**
 
-## absent (6)
-
-**BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
-the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
-*Close it by* the chain diagram with ratings and prospective fault current at each stage. Owner **SESSION**. Effort P50 4h, P80 12h.
+## absent (4)
 
 **EMC-001 source, path, victim** (MUST_JUSTIFY, OPEN)  
 no EMC analysis of any kind exists; eleven radios and a sealed metal box  
@@ -23,11 +19,6 @@ no EMC analysis of any kind exists; eleven radios and a sealed metal box
 sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
 check  
 *Close it by* a sequencing sheet per board from the enables in the netlist, reviewed against each module's requirement. Owner **SESSION**. Effort P50 6h, P80 16h.
-
-**PWR-003 protection coordination** (BLOCKER, OPEN)  
-two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on
-file  
-*Close it by* a protection chain study with the fuse curves obtained from the makers. Owner **SESSION**, after ENV-001, BAT-002. Effort P50 8h, P80 20h.
 
 **REL-001 the build survives its service life** (MUST_JUSTIFY, OPEN)  
 nothing considers vibration, mating cycles or moisture for any interface  
@@ -138,7 +129,23 @@ the 3 mm distance is a project number applied to every device; the loop inductan
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (12)
+## source or applicability unresolved (14)
+
+**BAT-002 the energy chain is bounded end to end** (BLOCKER, SOURCE_UNVERIFIED)  
+the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end 16
+September 2026: THE CHAIN IS DRAWN AND GATED. pcb_energy_chain.yaml carries it end to end, nine stages from
+the 4S cell block to the eFused branches and a second entry for the shore and vehicle input, each with its
+conductor and connector rating, its protective element, the prospective fault current with the derivation,
+and the stage it protects. energy_chain.py judges 69 checks over it: every number's source is a file this
+tree holds, every protective element is in its board's own netlist by reference, and the four coordination
+tests (the element is at or below what it protects, at or above the path's peak, able to interrupt what is
+available, and followed by the stage it protects). It passes. Its first run refused a stage that carried the
+pack node's 18 A peak while naming a 2 A eFuse as its protection, which was a modelling error and is now two
+stages. WHAT REMAINS is the rule's own authority: the ratings come from the parts' datasheets (Littelfuse
+ATOF, Samsung INR18650-35E, Amass XT60, TI BQ4050 and CSD17570Q5B) but the SELECTION CRITERIA are engineering
+practice, and the standards the fuse cites for them (SAE J1284, ISO 8820-3) are not in this tree.
+littelfuse.com refuses this host with 403.  
+*Close it by* obtain an authority for the SELECTION CRITERIA (SAE J1284 or ISO 8820-3, which the fuse's own datasheet names, or an accessible maker's selection guide; littelfuse.com refuses this host), then the rule's limits are sourced and the gate that already passes decides. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -197,6 +204,18 @@ none of the current, while the current travels in a band with a via field under 
 A through one via). The arithmetic is right and the attribution is not, so the verdict is ADVISORY and the
 rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh  
 *Close it by* read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority. Owner **SESSION**, after STK-001, PI-001. Effort P50 6h, P80 16h.
+
+**PWR-003 protection coordination** (BLOCKER, SOURCE_UNVERIFIED)  
+two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on
+file 16 September 2026: the coordination study exists as data and as a gate, energy_chain.py over
+pcb_energy_chain.yaml, 69 checks passing. For every protective element it carries the rated and peak current
+of the path, the element's rating and its I2t figure with the datasheet it comes from, the fault current
+available at that point with its derivation, and the element downstream it protects; the melting time at the
+worst fault is printed from the I2t (4.3 ms for the 25 A blades at 480 A, 2.9 ms for the 10 A at 200 A). The
+interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. WHAT REMAINS is the
+authority for the selection criteria themselves, which the fuse's datasheet names as SAE J1284 and ISO 8820-3
+and this tree does not hold; littelfuse.com refuses this host with 403.  
+*Close it by* obtain an authority for the SELECTION CRITERIA (SAE J1284 or ISO 8820-3, which the fuse's own datasheet names, or an accessible maker's selection guide; littelfuse.com refuses this host), then the rule's limits are sourced and the gate that already passes decides. Owner **SESSION**, after ENV-001, BAT-002. Effort P50 8h, P80 20h.
 
 **RET-001 a continuous adjacent return path** (BLOCKER, SOURCE_UNVERIFIED)  
 16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net

@@ -1,0 +1,206 @@
+# THE ENERGY CHAIN, END TO END, AS DATA (rules BAT-002 and PWR-003, MESHSAT-862, 16 September 2026).
+#
+# Both rules are BLOCKERs and both read "no verification" on four boards, for the same reason: the chain
+# crosses four boards with two 25 A blades, an XT60 and 12 AWG wiring, and no document drew it end to end.
+# A stored-energy chain that nobody has drawn is not a chain nobody has checked; it is a chain whose weakest
+# stage is unknown, and the weakest stage is where a fault burns a conductor instead of opening a fuse.
+#
+# EVERY NUMBER HERE CARRIES ITS SOURCE, and the source is a file in v2/vendor that this repository holds.
+# `energy_chain.py` refuses a stage whose numbers name a file that is not there, refuses a protective element
+# that is not in the board's own netlist, and refuses the four coordination arithmetic checks below. It is a
+# gate, not a drawing.
+#
+# The four things asked of every stage, which are rule PWR-003's acceptance criteria in order:
+#   1. the rated and peak current of the path                -> `continuous_a`, `peak_a`
+#   2. the element's rating and its clearing-curve reference -> `protection.rating_a`, `.basis`, `.i2t_a2s`
+#   3. the fault current available at that point             -> `prospective_fault_a` with its derivation
+#   4. the element downstream it is protecting               -> `protects`
+#
+# WHAT IS NOT KNOWN IS WRITTEN AS NOT KNOWN. The pack is "4S3P or 4S4P, about 200 Wh" in the P generator's own
+# header and the exact configuration is still a research item, so the prospective fault current is given as a
+# RANGE derived from the cell's own impedance for both, and the coordination is checked against the WORST of
+# them. A single number invented here would be the kind of assertion this registry exists to stop.
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+
+sources:
+  cell:
+    part: "Samsung INR18650-35E"
+    basis: "v2/vendor/battery/samsung-35e-orbtronic.pdf"
+    nominal_v: 3.6
+    max_v: 4.2
+    capacity_ah: 3.45
+    max_continuous_discharge_a: 8.0
+    max_pulse_discharge_a: 13.0
+    internal_impedance_mohm: 35.0       # "Initial internal impedance <= 35 mOhm", AC 1 kHz, section 7.4
+    note: "the AC 1 kHz impedance is LOWER than the DC resistance, so a fault current computed from it is an
+      upper bound on the current and a lower bound on the clearing time: the conservative direction for a fuse
+      coordination check and the wrong direction for a wire rating, which is why the conductor ratings below
+      come from the conductor's own standard and never from this number"
+
+stages:
+
+ - id: PACK_CELLS
+   board: P
+   from: "the 4S block (4S3P or 4S4P, about 200 Wh; gen_sch_p.py header)"
+   to: "CELL4, the top cell tap at the fuse"
+   continuous_a: 10.0
+   peak_a: 18.0
+   conductor: {what: "2 oz locked bands on board P plus the cell block's own nickel strip", rating_a: 25.0,
+               basis: "gen_pcb_p3.py power bands at 2 oz; IPC-2221 for a 6 mm band at 2 oz is above 25 A at 10 K"}
+   prospective_fault_a: {low: 240, high: 480,
+                         basis: "4 series stages of 3 or 4 parallel 35 mOhm cells: 4 x 35/4 = 35 mOhm (4S4P) or
+                           4 x 35/3 = 47 mOhm (4S3P), plus about 15 mOhm of strip and lead. At 16.8 V full
+                           charge that is 350 A and 270 A from the AC impedance; the DC resistance is higher,
+                           so the real figure is lower and the range above brackets both configurations with
+                           margin"}
+   protection: {ref: F1, what: "25 A ATOF blade fuse in a Keystone 3568 holder", rating_a: 25.0,
+                interrupting_a: 1000.0, i2t_a2s: 1000.0, cold_resistance_mohm: 2.52,
+                basis: "v2/vendor/battery/littelfuse-287-atof.pdf, Ratings table and Specifications"}
+   protects: PACK_FETS
+   note: "at the high end of the fault range the melting time from I2t is 1000/480^2 = 4.3 ms, and at the low
+     end 17 ms; the interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V"
+
+ - id: PACK_FETS
+   board: P
+   from: "FUSED"
+   to: "PACK_P"
+   continuous_a: 10.0
+   peak_a: 18.0
+   conductor: {what: "two CSD17570Q5B PowerPAK N-FETs in series, common drain, on 2 oz bands", rating_a: 30.0,
+               basis: "v2/vendor/battery/ti-csd17570q5b.pdf (30 V N-FET); the pair is the BQ4050's charge and
+                 discharge switch"}
+   prospective_fault_a: {low: 240, high: 480, basis: "the same node as PACK_CELLS, upstream of the fuse"}
+   protection: {ref: U1, what: "BQ4050 primary protection: overcurrent in discharge and charge, short circuit,
+                  over and under voltage, over temperature, opening the FETs above",
+                rating_a: 25.0, interrupting_a: null, i2t_a2s: null,
+                basis: "v2/vendor/battery/ti-bq4050.pdf (SLUSC67B), protection subsystem"}
+   protects: PACK_LEAD
+   note: "this is the FAST protection and the blade is the LAST one: the gauge opens the FETs in milliseconds
+     on a short, and the fuse is what remains if the FETs fail closed, which is the failure the fuse exists for"
+
+ - id: PACK_LEAD
+   board: "P to E"
+   from: "PACK_P and PACK_N on the solder lands W_P and W_N"
+   to: "J_BATT on board E"
+   continuous_a: 10.0
+   peak_a: 18.0
+   conductor: {what: "12 AWG (3.31 mm2) silicone lead", rating_a: 40.0,
+               basis: "the Amass XT60 specification recommends 12 AWG for this connector
+                 (v2/vendor/battery/amass-xt60-spec-tme.pdf); 12 AWG chassis wiring carries well above the
+                 connector's own rating, so the connector is the limit and not the wire"}
+   connector: {what: "Amass XT60", rating_a: 30.0, peak_a: 60.0,
+               basis: "v2/vendor/battery/amass-xt60-spec-tme.pdf: rated current 30 A, instantaneous 60 A"}
+   prospective_fault_a: {low: 240, high: 480, basis: "downstream of the pack fuse, which is what limits it"}
+   protection: {ref: F1, what: "the pack's own 25 A blade, upstream", rating_a: 25.0, interrupting_a: 1000.0,
+                i2t_a2s: 1000.0, basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
+   protects: DOCK_ENTRY
+   note: "the 25 A fuse is below the connector's 30 A continuous rating, which is the coordination this stage
+     exists to state: the fuse opens before the XT60 is over its rating"
+
+ - id: DOCK_ENTRY
+   board: E
+   from: "J_BATT"
+   to: "CELL_F, through the blade F3"
+   continuous_a: 10.0
+   peak_a: 18.0
+   conductor: {what: "board E's 2 oz power bands to the dock block pads", rating_a: 25.0,
+               basis: "gen_pcb_e3.py bands; IPC-2221 at 2 oz"}
+   prospective_fault_a: {low: 240, high: 480, basis: "the pack is the source and F1 is upstream"}
+   protection: {ref: F3, what: "25 A ATOF blade fuse (Keystone 3568 holder)", rating_a: 25.0,
+                interrupting_a: 1000.0, i2t_a2s: 1000.0,
+                basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
+   protects: DOCK_BLOCK
+   note: "two 25 A blades in series, one in the pack and one on the strip, are deliberate: the pack may be
+     carried and connected on its own, and the strip may be fed by a pack this kit did not build"
+
+ - id: DOCK_BLOCK
+   board: "E5 to A"
+   from: "the dock block's CELL+ targets"
+   to: "J_CP1 on board A"
+   continuous_a: 10.0
+   peak_a: 18.0
+   conductor: {what: "four CELL+ and four return Mill-Max spring pins in parallel", rating_a: 36.0,
+               basis: "9 A per pin, four in parallel (appendix 32.22 and the Mill-Max drawing in
+                 v2/vendor/precidip/); the block's own copper is 2 oz"}
+   prospective_fault_a: {low: 240, high: 480, basis: "behind two blades, both 25 A"}
+   protection: {ref: F3, what: "board E's 25 A blade, upstream", rating_a: 25.0, interrupting_a: 1000.0,
+                i2t_a2s: 1000.0, basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
+   protects: BOARD_A_NODE
+   note: "the four pins in parallel are rated 36 A against a 25 A fuse: the contact set is not the weakest
+     stage, which is the property this row exists to record"
+
+ - id: BOARD_A_NODE
+   board: A
+   from: "CELL+"
+   to: "VBAT, through the blade F1"
+   continuous_a: 10.0
+   peak_a: 18.0
+   conductor: {what: "board A's VBAT bands and In2 plane at 1 oz outer and 0.5 oz inner", rating_a: 25.0,
+               basis: "gen_pcb_a3.py power copper; dc_drop measures the copper itself on the routed board"}
+   prospective_fault_a: {low: 240, high: 480, basis: "the pack, through two blades"}
+   protection: {ref: F1, what: "25 A ATOF blade fuse (Keystone 3568 holder): pack node to VBAT", rating_a: 25.0,
+                interrupting_a: 1000.0, i2t_a2s: 1000.0,
+                basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
+   protects: BOARD_A_CONVERTERS
+   note: "the third 25 A blade of the chain, and the one that protects the power board's own copper"
+
+ - id: BOARD_A_CONVERTERS
+   board: A
+   from: "VBAT"
+   to: "the four converters and the eFused outputs"
+   continuous_a: 10.0
+   peak_a: 18.0
+   conductor: {what: "board A's own copper into each converter", rating_a: 25.0, basis: "gen_pcb_a3.py"}
+   prospective_fault_a: {low: 240, high: 480, basis: "behind three 25 A blades"}
+   protection: {ref: F1, what: "the board's own 25 A blade, upstream at the pack node", rating_a: 25.0,
+                interrupting_a: 1000.0, i2t_a2s: 1000.0,
+                basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
+   protects: A_EFUSED_BRANCHES
+   note: "THE FIRST RUN OF THIS GATE CAUGHT A MODELLING ERROR HERE, 16 September 2026: the stage carried the
+     pack node's 18 A peak and named a 2 A eFuse as its protection, which the check read as an element that
+     opens in normal use, and it was right. The eFuses do not protect the VBAT node; they protect their own
+     branches, which are the stage below"
+
+ - id: A_EFUSED_BRANCHES
+   board: A
+   from: "VBAT and the 5 V rails"
+   to: "the monitor, heater and mezzanine outputs"
+   continuous_a: 1.0
+   peak_a: 2.0
+   conductor: {what: "board A's own track and pour copper on each branch", rating_a: 3.0,
+               basis: "the RAIL and PWR classes in gen_pcb_a3.py at 0.4 to 0.5 mm on 1 oz; dc_drop measures
+                 each branch on the routed board"}
+   prospective_fault_a: {low: 0, high: 2.0,
+                         basis: "an eFuse LIMITS: the current in this branch cannot exceed the TPS2596's own
+                           programmed limit, whatever is upstream of it, which is what makes this the end of
+                           the stored-energy chain"}
+   protection: {ref: U23, what: "TPS2596 eFuse, ILM 453R, limit 2.0 A (U21 monitor and U22 heater are the same
+                  part with their own resistors)", rating_a: 2.0, interrupting_a: null, i2t_a2s: null,
+                basis: "the ILM resistors in gen_sch_a.py; the TPS2596 limits current rather than interrupting
+                  a fault, so its rating is a limit and not a breaking capacity"}
+   protects: null
+   note: "the chain ends here for stored energy: every path beyond this point is behind an electronic limiter
+     whose own output cannot exceed its programmed limit"
+
+ - id: SHORE_INPUT
+   board: E
+   from: "J_DCIN, the vehicle and shore DC inlet"
+   to: "VIN_RAW"
+   continuous_a: 8.0
+   peak_a: 10.0
+   conductor: {what: "board E's input bands at 2 oz", rating_a: 10.0, basis: "gen_pcb_e3.py"}
+   prospective_fault_a: {low: 0, high: 200,
+                         basis: "NOT MEASURED AND NOT KNOWN: the source is a vehicle electrical system or a
+                           shore supply, and neither is specified in this project. The upper figure is a
+                           placeholder for a vehicle battery through 12 AWG and is why ENV-001, the operating
+                           envelope, is owner decision 34: the fault current available at a vehicle's own
+                           battery is a property of the vehicle"}
+   protection: {ref: F1, what: "10 A ATOF blade fuse (Keystone 3568 holder): vehicle input", rating_a: 10.0,
+                interrupting_a: 1000.0, i2t_a2s: 115.0,
+                basis: "v2/vendor/battery/littelfuse-287-atof.pdf, the 10 A row"}
+   protects: null
+   note: "an ideal-diode FET and an SMCJ33A clamp sit behind this fuse; decision 31 records that the clamp's
+     33 V stand-off is wrong against the board's own declared 9 to 36 V input range, which is a part choice
+     and not a coordination error"
