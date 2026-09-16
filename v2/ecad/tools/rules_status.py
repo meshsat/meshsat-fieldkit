@@ -233,6 +233,29 @@ def main(argv):
         print("%-3s %-28s %s" % (letter.upper(), gate_state(st["rows"], m),
                                  "PASS %d  FAIL %d  INCONCLUSIVE %d  WAIVED %d  of %d required rule(s)"
                                  % (c[PASS], c[FAIL], c[INCONCLUSIVE], c[WAIVED], c["denominator"])))
+    # SGN-001, and it is a DIFFERENT question from readiness: not "does this board pass" but "did every rule
+    # that applies to it reach a decision at all". A rule that applies and produces nothing is the failure this
+    # whole registry exists to make impossible, and it would otherwise be invisible, since a rule missing from
+    # the table looks exactly like a rule that is not applicable.
+    # It is written at the END of a run and read by the NEXT one, like every other gate's verdict: a tool does
+    # not read its own answer while producing it. So SGN-001 reports on the previous computation, which is what
+    # evidence is, and a first run on a fresh tree leaves it INCONCLUSIVE rather than assuming itself correct.
+    unresolved = [r for r in all_rows if r["result"] not in R.RESULTS]
+    val, _warn = R.validate(reg)          # (errors, warnings): a warning is not a missing decision
+    no_cov = sorted({r["rule"] for r in all_rows if r["rule"] not in cov})
+    complete = not (unresolved or val or no_cov)
+    _v.write("rules_complete", _v.PASS if complete else _v.FAIL,
+             counts={"pairs": len(all_rows), "unresolved": len(unresolved),
+                     "registry_errors": len(val), "rules_without_coverage": len(no_cov)},
+             denominator=len(all_rows),
+             evidence=([str(x)[:110] for x in val[:10]]
+                       + ["%s on %s produced %r" % (r["rule"], r.get("board", "?"), r["result"]) for r in unresolved[:10]]
+                       + ["%s has no coverage entry" % x for x in no_cov[:10]]),
+             inputs={"manifest_version": m.get("manifest_version"), "rule_set_fingerprint": fp},
+             note=("every applicable rule reached one of the five results on every board in the manifest"
+                   if complete else "a rule that applies reached no result, which is what the registry exists to prevent"),
+             # a SET-LEVEL verdict, so it goes where the set-level gates write and every board can read it
+             out_dir=os.path.join(ECAD, "out"), quiet=True)
     agg = counts(all_rows); state = gate_state(all_rows, m)
     summary = dict(manifest_version=m.get("manifest_version"), rule_set_fingerprint=fp,
                    promotion_frozen=bool(m.get("promotion", {}).get("frozen")), phase=phase or "ALL",

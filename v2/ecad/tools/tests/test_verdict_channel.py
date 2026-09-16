@@ -287,3 +287,37 @@ def t_the_pair_copper_measurement_and_a_declared_off_predictor_are_advisory():
     assert "VERDICT_ADVISORY=1" in s[s.rfind("\n", 0, j):j], "the refused-board DRC is printed for the record and the chain's own DRC decides"
     assert 'PAOFF="VERDICT_ADVISORY=1"' in s and "env $PAOFF $ESCENV python3 ../tools/place_audit.py" in s, (
         "a board that declares the predictor as a report must not have its FAIL verdict read as the stage's")
+
+
+def t_a_verdict_is_written_even_where_the_registry_cannot_be_read():
+    """A gate's decision must not depend on the host being able to read the rule registry.
+
+    16 September 2026, found by running the sweep on the box: `rules_lib` raises SystemExit when PyYAML is
+    absent, SystemExit does not descend from Exception, and the two best-effort `except Exception` guards in
+    the verdict writer let it straight through. Every gate on that host printed its result, wrote NO verdict
+    file and exited 1, so a passing board read as a failing one and no evidence existed either way.
+
+    Stamping the rule set is evidence ABOUT a verdict. It can never decide whether the verdict exists, and when
+    it is missing the record says why, so a reader can tell "written before the registry" from "written on a
+    host that could not read it".
+    """
+    import builtins, tempfile, importlib
+    d = tempfile.mkdtemp(prefix="verdict-noyaml-")
+    real = builtins.__import__
+
+    def fake(name, *a, **k):
+        if name in ("yaml", "rules_lib"): raise ImportError("not on this host")
+        return real(name, *a, **k)
+
+    v = importlib.import_module("verdict")
+    v._RULESET[0] = None; v._BY_TOOL[0] = None; v._RULESET_WHY[0] = ""
+    builtins.__import__ = fake
+    try:
+        rc = v.write("probe", v.PASS, denominator=7, out_dir=d, quiet=True)
+    finally:
+        builtins.__import__ = real
+        v._RULESET[0] = None; v._BY_TOOL[0] = None; v._RULESET_WHY[0] = ""
+    rec = json.load(open(os.path.join(d, "probe.verdict.json")))
+    assert rc == 0 and rec["verdict"] == "PASS", (rc, rec)
+    assert rec["policy"].get("rule_set_fingerprint_absent"), \
+        "the verdict does not say why it carries no rule-set fingerprint: %s" % rec["policy"]
