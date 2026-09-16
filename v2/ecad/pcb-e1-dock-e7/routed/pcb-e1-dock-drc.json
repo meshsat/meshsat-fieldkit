@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-09-16T09:56:34+0000",
+    "date": "2026-09-16T10:09:49+0000",
     "included_severities": [
         "error",
         "warning",
@@ -10,31 +10,7 @@
     "kicad_version": "9.0.9",
     "schematic_parity": [],
     "source": "pcb-e1-dock.kicad_pcb",
-    "unconnected_items": [
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Track [/WATER_SENSE] on B.Cu, length 15.6329 mm",
-                    "pos": {
-                        "x": 113.8533,
-                        "y": 217.7945
-                    },
-                    "uuid": "3df09119-2fba-44e9-833e-0375576888f5"
-                },
-                {
-                    "description": "Track [/WATER_SENSE] on F.Cu, length 0.9000 mm",
-                    "pos": {
-                        "x": 98.95,
-                        "y": 216.45
-                    },
-                    "uuid": "ee8f4ea6-86b4-40dd-858d-69cb0399a4c1"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        }
-    ],
+    "unconnected_items": [],
     "violations": [
         {
             "description": "Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)",
@@ -695,15 +671,107 @@
             "type": "silk_over_copper"
         },
         {
+            "description": "Drilled holes co-located",
+            "items": [
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 93.862,
+                        "y": 200.737
+                    },
+                    "uuid": "03eaf156-6126-45d2-900e-4acec4f3c0ae"
+                },
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 93.862,
+                        "y": 200.737
+                    },
+                    "uuid": "f3edba77-3049-490b-b138-61cd201fa6f2"
+                }
+            ],
+            "severity": "warning",
+            "type": "holes_co_located"
+        },
+        {
+            "description": "Drilled holes co-located",
+            "items": [
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 10.005,
+                        "y": 193.433
+                    },
+                    "uuid": "247ed14b-a4a6-42a5-95bb-af2906e26d27"
+                },
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 10.005,
+                        "y": 193.433
+                    },
+                    "uuid": "674b89cb-098b-462e-b29f-11af9ef91a53"
+                }
+            ],
+            "severity": "warning",
+            "type": "holes_co_located"
+        },
+        {
+            "description": "Drilled holes co-located",
+            "items": [
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 226.241,
+                        "y": 194.17
+                    },
+                    "uuid": "72ae2abb-5e64-403b-ac72-ca4038e3347c"
+                },
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 226.241,
+                        "y": 194.17
+                    },
+                    "uuid": "d4c81c71-7eb1-4777-898a-c66c005633e8"
+                }
+            ],
+            "severity": "warning",
+            "type": "holes_co_located"
+        },
+        {
+            "description": "Drilled holes co-located",
+            "items": [
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 71.311,
+                        "y": 189.229
+                    },
+                    "uuid": "9b25a393-5a61-4fd2-8407-2e95bdbec86d"
+                },
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 71.311,
+                        "y": 189.229
+                    },
+                    "uuid": "bf98fc25-05a9-4431-aaf9-fb4a69f94aa8"
+                }
+            ],
+            "severity": "warning",
+            "type": "holes_co_located"
+        },
+        {
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/+3V3_E6] on F.Cu, length 0.5682 mm",
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.3437 mm",
                     "pos": {
-                        "x": 193.36,
-                        "y": 162.4782
+                        "x": 191.975,
+                        "y": 165.386
                     },
-                    "uuid": "0db138c7-f493-4e44-b849-3acff39dd9c8"
+                    "uuid": "223a6d07-4b27-4a2f-b815-4d12311bbbf7"
                 }
             ],
             "severity": "warning",
@@ -728,12 +796,12 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/+3V3_E6] on F.Cu, length 0.0659 mm",
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.2297 mm",
                     "pos": {
-                        "x": 232.0721,
-                        "y": 201.4
+                        "x": 192.4968,
+                        "y": 165.812
                     },
-                    "uuid": "65278954-11c7-43b7-b610-07bd334afa93"
+                    "uuid": "5b886fc8-1835-421d-b666-c79e4b642f61"
                 }
             ],
             "severity": "warning",
@@ -758,12 +826,27 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/+3V3_E6] on F.Cu, length 0.3437 mm",
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.0665 mm",
                     "pos": {
-                        "x": 191.732,
-                        "y": 165.6291
+                        "x": 232.072,
+                        "y": 201.4
                     },
-                    "uuid": "c723d6cf-dfd5-4ffa-bc57-bb933f5a5107"
+                    "uuid": "b6163775-3003-42c6-86e6-b23f00fb157d"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.5680 mm",
+                    "pos": {
+                        "x": 193.36,
+                        "y": 162.478
+                    },
+                    "uuid": "f5aa1d20-7554-419c-be6f-9bdc12587e3e"
                 }
             ],
             "severity": "warning",
@@ -893,12 +976,12 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/DC_IN] on F.Cu, length 2.3571 mm",
+                    "description": "Track [/DC_IN] on F.Cu, length 2.3573 mm",
                     "pos": {
                         "x": 86.1577,
                         "y": 218.062
                     },
-                    "uuid": "6b89622b-e5b5-4a0d-8b62-85bc2576e62f"
+                    "uuid": "984a4d98-847b-4c01-b86d-30d66ae53bf5"
                 }
             ],
             "severity": "warning",
@@ -913,22 +996,7 @@
                         "x": 79.955,
                         "y": 201.155
                     },
-                    "uuid": "761693eb-d4cf-4da3-873d-726466a96add"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/DC_P] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 79.955,
-                        "y": 199.755
-                    },
-                    "uuid": "886d0cfb-aa1c-4b65-923b-e35846f1a808"
+                    "uuid": "486a2b53-3a56-4561-a401-58b57da9cea7"
                 }
             ],
             "severity": "warning",
@@ -944,6 +1012,21 @@
                         "y": 200.45
                     },
                     "uuid": "c5bbf7dd-2d7b-462a-b4eb-747be1ec2857"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/DC_P] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 79.955,
+                        "y": 199.755
+                    },
+                    "uuid": "cd1e10e0-63f3-492d-b9d2-fb07fbebcd6c"
                 }
             ],
             "severity": "warning",
@@ -1378,7 +1461,7 @@
                         "x": 153.955,
                         "y": 202.065
                     },
-                    "uuid": "77ba10eb-3160-4382-a31d-58e9764da7ee"
+                    "uuid": "18ad948f-9f4c-43c3-ae0e-a93931e3fe9f"
                 }
             ],
             "severity": "warning",
@@ -1393,7 +1476,7 @@
                         "x": 153.955,
                         "y": 200.665
                     },
-                    "uuid": "8d9f6e48-5cbb-4bd4-8d4f-334f7d8f16b7"
+                    "uuid": "88bd846b-c709-4811-bae3-c37fe715d1ef"
                 }
             ],
             "severity": "warning",
@@ -1448,31 +1531,16 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/WATER_SENSE] on F.Cu, length 1.3616 mm",
+                    "description": "Track [/WATER_SENSE] on F.Cu, length 0.4086 mm",
                     "pos": {
                         "x": 97.7209,
-                        "y": 217.9437
+                        "y": 217.944
                     },
-                    "uuid": "521dc146-3f86-44c5-b681-d0628bc5af81"
+                    "uuid": "1eee5e27-ad6e-41e6-bb8c-33147ef88548"
                 }
             ],
             "severity": "warning",
             "type": "track_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/WATER_SENSE] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 113.8533,
-                        "y": 217.9646
-                    },
-                    "uuid": "ffefaf43-ca01-4f72-aa73-8bac5e1ba809"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
         }
     ]
 }

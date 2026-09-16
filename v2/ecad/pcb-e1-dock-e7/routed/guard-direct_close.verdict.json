@@ -1,0 +1,30 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "exit": 0,
+  "hard_after": 0,
+  "hard_before": 0,
+  "kept": 1,
+  "seconds": 9,
+  "unrouted_after": 0,
+  "unrouted_before": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {},
+ "note": "kept only if neither count rose against the board it was handed",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [],
+ "tool": "guard-direct_close",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "ef840c5c19ae80bd"
+ },
+ "ts": "2026-09-16T10:08:54Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
