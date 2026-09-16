@@ -1,5 +1,5 @@
 {
- "advisory": false,
+ "advisory": true,
  "applicable": true,
  "counts": {
   "no_via": 0,
@@ -20,7 +20,7 @@
   "rise_k": 10.0,
   "site_mm": 6.0
  },
- "note": "every rail's weakest layer transition against IPC-2221 for a barrel of the fabricator's own plating thickness",
+ "note": "every rail's weakest layer transition against IPC-2221 for a barrel of the fabricator's own plating thickness; ADVISORY until it can tell a via the current crosses from a via of the same net that carries almost none",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -31,9 +31,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "df25cbd5ec06a775"
  },
- "ts": "2026-09-16T03:53:31Z",
+ "ts": "2026-09-16T04:11:14Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

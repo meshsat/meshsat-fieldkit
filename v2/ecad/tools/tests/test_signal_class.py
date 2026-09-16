@@ -171,3 +171,25 @@ def t_the_return_via_screen_reads_the_same_class_as_the_return_path_rule():
     assert '"slow"' in src, "the slow vias are skipped without being counted, so nobody can see how many"
     import re
     assert re.search(r'counts=\{[^}]*"slow"', src), "the verdict does not carry the slow count"
+
+
+def t_no_declaration_contradicts_its_own_basis():
+    """A class is what the spectral content IS, and the basis is where that content is written down.
+
+    Board E declared `FAN?_TACH` as CLOCKED_DIGITAL with the basis "under a kilohertz with a slow edge", which
+    is the definition of the slow class in the same table. The rule was found by reading the five vias the
+    return-via fixer could not place on board E: four are real (a bootstrap node, two gate drives and a USB
+    line, all with edges), and the fifth was a declaration arguing with itself. A declaration that says one
+    thing in its class and another in its reason is worse than no declaration, because it reads as considered."""
+    import json, os, re, glob
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    slow = re.compile(r"under a kilohertz|a few hertz|slow edge|held static|changes once", re.I)
+    bad = []
+    for f in sorted(glob.glob(os.path.join(tools, "boards", "*.json"))):
+        d = json.load(open(f, encoding="utf-8"))
+        for e in (d.get("signal_classes") or []):
+            if e.get("class") != "LOW_SPEED_OR_DC" and slow.search(e.get("basis", "")) \
+               and "contradicted" not in e.get("basis", ""):
+                bad.append("%s: %s is %s but its basis says %r" %
+                           (os.path.basename(f), e["pattern"], e["class"], e["basis"][:70]))
+    assert not bad, "; ".join(bad)

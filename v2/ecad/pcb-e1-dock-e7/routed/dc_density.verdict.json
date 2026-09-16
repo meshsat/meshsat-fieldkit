@@ -2,16 +2,18 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "met": 4,
-  "missed": 0,
+  "met": 3,
+  "missed": 1,
   "undeclared": 0
  },
  "denominator": 4,
- "evidence": [],
+ "evidence": [
+  "MISSED CELL_F on current density: 0.06% of 14.4 V"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "1309202460f2149d"
+   "sha256_16": "f7c80ab10705bd16"
   }
  },
  "note": "the conductor and pour current capacity at 10 K, cell 0.50 mm. The LIMIT behind this verdict has no authoritative text in this tree: the registry records it as SOURCE_UNVERIFIED and this is a screen, not a law",
@@ -25,9 +27,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "df25cbd5ec06a775"
  },
- "ts": "2026-09-16T03:53:52Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T04:11:36Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }

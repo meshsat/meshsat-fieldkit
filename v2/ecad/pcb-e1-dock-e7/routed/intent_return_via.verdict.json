@@ -2,15 +2,17 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 0,
-  "pass": 1
+  "fail": 1,
+  "pass": 0
  },
  "denominator": 1,
- "evidence": [],
+ "evidence": [
+  "return via: 62 of 67 signal vias have a ground via within 1.5 mm (79 exempt in fine-pitch fans, 0 on one reference plane, 58 on a net whose declared class has no edge to return); without one: E6_BST at (10.67, 195.05); FAN2_TACH at (19.77, 187.54); USB_E6_N at (70.45, 187.15); Q1_G at (92.62, 199.50); Q2_G at (224.62, 193.50)"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "1309202460f2149d"
+   "sha256_16": "f7c80ab10705bd16"
   }
  },
  "note": "a ground via at a signal's reference change",
@@ -22,9 +24,9 @@
  "tool": "intent_return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "df25cbd5ec06a775"
  },
- "ts": "2026-09-16T03:53:51Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T04:11:35Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }

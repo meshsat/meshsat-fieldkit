@@ -148,8 +148,8 @@
   },
   {
    "pattern": "FAN?_TACH",
-   "class": "CLOCKED_DIGITAL",
-   "basis": "the fan tachometer, two pulses a revolution through a pull-up: under a kilohertz with a slow edge"
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the fan tachometer, two pulses a revolution through a pull-up: under a kilohertz, and the edge is the pull-up's RC rather than a driver's. Declared CLOCKED_DIGITAL until 16 September 2026, which contradicted this very sentence: the class is what the spectral content is, and a sub-kilohertz open-drain line pulled up by a resistor has none worth a return path. It is corrected here because the basis was already right, not because a rule was refusing the board"
   },
   {
    "pattern": "*_PULSE",

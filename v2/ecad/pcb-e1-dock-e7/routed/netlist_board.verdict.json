@@ -14,11 +14,11 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "1309202460f2149d"
+   "sha256_16": "f7c80ab10705bd16"
   },
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "bacf4051a7ff3dd9"
+   "sha256_16": "9b870dd65aaf3771"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -32,9 +32,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "df25cbd5ec06a775"
  },
- "ts": "2026-09-16T03:53:53Z",
+ "ts": "2026-09-16T04:11:37Z",
  "verdict": "PASS",
  "version": "unknown"
 }
