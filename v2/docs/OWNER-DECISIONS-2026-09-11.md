@@ -1605,3 +1605,39 @@ outright. Board E's sensor pod is in the second group rather than the first.
 **One thing this decision does NOT cover.** Board E's inlet clamp is on the wrong side of the FET whichever
 option is taken: that is a topology error rather than a missing part, and option 1 includes moving it. If you
 take option 2 or 3, say whether that move is in or out, because it costs nothing and changes no part count.
+
+## Decision 32, board D's last return via, 16 September 2026
+
+**The state.** D12 routes **0 hard and 0 unrouted**, every gate passes, and one check refuses it: of 37 signal
+vias, 36 carry a ground via within the declared 1.5 mm and one does not. It is `HUB_DM3` at (130.01, 87.42),
+in the hub port cluster that has been the tight place on this board since 11 September. All 64 candidate
+positions inside 1.5 mm sit on another net's copper. The fixer now searches outward and takes the nearest free
+site it can find, recording the distance, and the judge is deliberately NOT moved with it: a via placed at 2 mm
+still reads as lacking, which is why this is on your desk rather than quietly passing.
+
+**What the rule is for, so the choice is about physics and not about a number.** A via that carries a fast
+signal from one layer to another changes the plane its return current is riding. The return has to cross
+between those planes somewhere, and the nearest place it can is the nearest ground via. The loop that opens up
+between the signal via and that ground via is what radiates and what shows up as an impedance step. `HUB_DM3`
+is one half of a USB 2.0 high-speed pair at 480 Mbit/s. The 1.5 mm figure in this project is OURS: it carries
+maturity GENERATED_ONLY in the registry because no source in the tree states it, and the governing principle is
+the loop, not the number.
+
+**Options, costed, the recommendation first.**
+
+1. **Take the measured return via and record the distance, RECOMMENDED.** Let the fixer place the ground via at
+   the nearest free site, print the distance it achieved, and record that distance in the board's own
+   declaration with this decision beside it. Cost: nothing but the via already placed. Buys: the shortest
+   return loop this copper allows, a board that is otherwise finished, and an honest number in the record
+   rather than a rule read as satisfied. The residual is one via of 37 whose return crosses a longer loop than
+   the other 36.
+2. **Re-route `HUB_DM3` so it needs no layer change there.** Cost: another D route, which is about 40 minutes
+   of box time plus its finish, and no guarantee: the same station refused a via at three of the four hub ports
+   before, and the router resolved the fourth with the via this decision is about. Buys: the rule satisfied as
+   written, with no exemption anywhere.
+3. **Make room in the generator and re-place the cluster.** Cost: a placement change on a board that is
+   otherwise finished, which means a new phase (D13), a new route and a new finish, half a day. Buys: room for
+   this ground via and for the next one at that station.
+
+**Not asked, because it is not a trade-off:** the ground via goes in whichever option you take. Nothing here
+moves a placed part or a routed track.

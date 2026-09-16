@@ -102,3 +102,33 @@ def t_no_net_class_sits_below_the_boards_own_minimum():
     i_cls = b3.index('net_settings", {})["classes"]')
     block = b3[i_cls - 400:i_cls + 200]
     assert "CLASSES[" in block, "board B writes its project classes from a second hand-written list again"
+
+
+def t_the_fixer_may_reach_past_the_target_but_the_judge_may_not():
+    """Reaching further is a repair; moving the bar is a ruling (MESHSAT-862, 16 September 2026).
+
+    Board D12 routed 0 hard and 0 unrouted and one signal via of 37, HUB_DM3 at the hub port, had all 64 of its
+    candidate ground-via sites inside 1.5 mm on another net's copper. A ground via at 2 mm is not the declared
+    number, and it is a shorter return loop than no via at all, so the fixer now searches outward and prints
+    what it achieved. The thing that must NOT happen is the bar moving with it: the verdict is still taken at
+    the declared radius, so a via placed at 2 mm still reads as lacking and reaches the owner as a measured
+    choice rather than disappearing into a pass."""
+    src = open(os.path.join(TOOLS, "return_via.py"), encoding="utf-8").read()
+    assert "OUTER = (" in src, "the outer rings are gone"
+    i_outer = src.index("OUTER = (")
+    # the judge is called with the radius it was given, never with a widened one
+    for call in ("before = judge(b, path, radius)", "after = judge(b, path, radius)"):
+        assert call in src, "the fixer stopped judging at the declared radius: %r" % call
+    assert "judge(b, path, radius + " not in src and "judge(b, path, OUTER" not in src, \
+        "the judge was widened to match the fixer, which is the bar moving"
+    # and a placement beyond the radius is reported rather than silently kept
+    assert "BEYOND the declared" in src, "a ground via placed past the target is not reported"
+
+
+def t_the_check_reads_the_declared_radius_and_says_so():
+    """The verdict names the number it judged at, because a return-path figure with no radius beside it is the
+    kind of claim this registry exists to refuse."""
+    src = open(os.path.join(TOOLS, "return_via.py"), encoding="utf-8").read()
+    i = src.index("def check(")
+    seg = src[i:i + 1600]
+    assert "within %.1f mm" in seg and "radius" in seg, "the check does not print the radius it used"
