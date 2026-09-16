@@ -14,3 +14,5 @@ toggle DPDT ON-ON-ON            # the lighting toggle, a panel body wired to the
 ATNR4010100MT    # Abracon boost inductor, not at JLCPCB, route in tools/jlc-handfit.txt
 Floyd Bell MC-09-530-Q          # the IP67 panel-mount sounder, a plate part with flying leads to the board, route in tools/jlc-handfit.txt (15 Sep 2026)
 U-174/U headset jack            # the two Amphenol Nexus jacks, 17 mm panel holes through the backer, leads to D's J_HS1 and J_HS2, route in tools/jlc-handfit.txt (15 Sep 2026)
+3 mm             # the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+M3 x 6 into the face plate      # the eight plate screws that make the backer's ground bond: hardware, fitted at assembly
