@@ -508,7 +508,11 @@ def main(a):
                      % (czone_j, czone_at[0], czone_at[1], czone_at[2], czone_j / jl)) if czone_at else "; no pour cell of this net is clear of a via, so the pour is not gated"
         if verdict != "MET": miss += 1
         _MISSED_ON[net] = missed_on
-        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, budget %.0f%%); %s; %s; %s%s; layer share %s"
+        # THE BAR IS PRINTED AS IT IS JUDGED (16 September 2026). "%.0f" rounded board A's 1.5 percent share to
+        # "budget 2%", which reads as the whole rail's budget and hides the very split the share exists to make;
+        # board C's 0.75 would have printed as 1. The value is right and was always right; the line about it was
+        # not, and a line nobody can check against the number it claims is how a wrong bar survives.
+        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, bar %.3g%%); %s; %s; %s%s; layer share %s"
                         % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, via_txt, why, share),
                         drop, pct, max(cond_ratio, zone_ratio), share))
         if png:
@@ -523,7 +527,8 @@ def main(a):
                         note="the intent file lists no rail, so no drop was computed")
     for net, v, text, *_ in results: print("dc_drop: %-11s %-10s %s" % (v, net, text))
     undecl = [r[0] for r in results if r[1] in ("UNDECLARED", "UNMEASURED")]
-    print("dc_drop: %d of %d rails MET (cell %.2f mm, budget %.0f%%)%s"
+    print("dc_drop: %d of %d rails MET (cell %.2f mm, default budget %.3g%%; a rail with a declared share is "
+          "judged against THAT)%s"
           % (len(results) - miss, len(results), cell, budget * 100,
              ("; %d rail(s) NOT JUDGED (a declared load is missing, or the measure returned an impossible current): %s" % (len(undecl), ", ".join(undecl)) if undecl else "")
 ))
