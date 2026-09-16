@@ -94,7 +94,11 @@ REQUIRED = ("id", "domain", "short_name", "requirement", "classification", "appl
             "release_effect", "source_status", "sources", "acceptance_criteria", "rationale", "failure_mode",
             "verification_method", "verification_phase", "automation_feasibility", "boards_affected",
             "interfaces_affected", "implementation_location", "evidence_scope", "owner", "waiver_policy",
-            "maturity")
+            # PHASE A's assessment, taken before any gate implementation was opened, kept as the record of what was
+            # known at writing. The LIVE maturity lives in the coverage map and only there: two fields with one name
+            # drifted on 51 of the 56 rules within a day, and the registry read UNASSESSED for rules that block
+            # boards. A rule may not carry a bare `maturity` any more, and the validator refuses one.
+            "maturity_at_writing")
 OPS = ("eq", "ne", "ge", "gt", "le", "lt", "contains", "not_contains", "in", "truthy")
 
 
@@ -224,6 +228,18 @@ def validate(reg=None, path=None):
     reg = reg or load(path)
     errs, warns = [], []
     seen = set()
+
+    _cov = [None]
+
+    def cov_maturity(rid):
+        """The LIVE maturity, from the coverage map, which owns it. Read once, lazily and tolerantly: the
+        validator has to run on a tree where the coverage map is absent or is being rewritten."""
+        if _cov[0] is None:
+            try:
+                _cov[0] = (_yaml().safe_load(open(os.path.join(HERE, "pcb_rules_coverage.yaml"))) or {}).get("coverage", {})
+            except BaseException:
+                _cov[0] = {}
+        return ((_cov[0].get(rid) or {}).get("maturity"))
     for i, r in enumerate(reg.get("rules", [])):
         rid = r.get("id", "<no id at index %d>" % i)
         for k in REQUIRED:
@@ -238,7 +254,7 @@ def validate(reg=None, path=None):
         one_of("domain", DOMAINS); one_of("classification", CLASSIFICATIONS); one_of("applicability", APPLICABILITY)
         one_of("risk_class", RISKS); one_of("release_effect", EFFECTS); one_of("source_status", SOURCE_STATUS)
         one_of("verification_method", METHODS); one_of("verification_phase", PHASES)
-        one_of("automation_feasibility", FEASIBILITY); one_of("maturity", MATURITY); one_of("owner", OWNERS)
+        one_of("automation_feasibility", FEASIBILITY); one_of("maturity_at_writing", MATURITY); one_of("owner", OWNERS)
         if r.get("applicability") == "CONDITIONAL" and not r.get("condition"):
             errs.append("%s: CONDITIONAL with no machine-readable condition" % rid)
         if r.get("applicability") == "NOT_APPLICABLE" and not (r.get("condition") or {}).get("reason"):
@@ -253,15 +269,26 @@ def validate(reg=None, path=None):
                 for k in ("title", "issuer", "url_or_path"):
                     if not s.get(k): errs.append("%s: a VERIFIED source is missing %s" % (rid, k))
         if r.get("release_effect") == "BLOCKER" and r.get("source_status") == "SOURCE_UNVERIFIED" \
-           and r.get("maturity") not in ("SOURCE_UNVERIFIED", "OWNER_DECISION_REQUIRED"):
+           and r.get("maturity_at_writing") not in ("SOURCE_UNVERIFIED", "OWNER_DECISION_REQUIRED"):
             errs.append("%s: a BLOCKER on an unverified source must carry maturity SOURCE_UNVERIFIED or "
                         "OWNER_DECISION_REQUIRED, so the gap is visible" % rid)
         if r.get("classification") == "HEURISTIC" and r.get("release_effect") == "BLOCKER":
             errs.append("%s: a HEURISTIC may not be a BLOCKER; raise its classification with a source or "
                         "lower its release effect" % rid)
         if r.get("automation_feasibility") == "AUTOMATABLE" and r.get("implementation_location") in (None, "", "NONE_YET") \
-           and r.get("maturity") == "ENFORCED":
+           and r.get("maturity_at_writing") == "ENFORCED":
             errs.append("%s: ENFORCED with no implementation location" % rid)
+        # PROCESS CONTROL 4 (owner instruction, 16 September 2026): no hard gate without authority, applicability,
+        # acceptance criteria AND A FALSE-POSITIVE ANALYSIS. This project has shipped gates that refused correct
+        # boards five times in a week: a predictor that called 244 normal plane pads a defect, a DRC judgement that
+        # failed a pre-route board for being unrouted, a netlist comparison that read KiCad's unconnected-pin
+        # placeholder as a net, a pour coverage measured against a rectangle the board is not, and a return-path
+        # rule that refused an opto inhibit. A rule that can refuse a board has to say what a WRONG refusal would
+        # look like and what stops it, or the next one is found by a board being wrong for a week.
+        if r.get("release_effect") == "BLOCKER" and cov_maturity(rid) == "ENFORCED" \
+           and len(str(r.get("false_positive_analysis") or "").strip()) < 80:
+            errs.append("%s: an ENFORCED BLOCKER with no false-positive analysis. Say what a wrong refusal would "
+                        "look like and what stops it" % rid)
         w = r.get("waiver_policy")
         if isinstance(w, dict) and w.get("allowed") and not w.get("authority"):
             errs.append("%s: a waivable rule must name the authority" % rid)
@@ -269,7 +296,7 @@ def validate(reg=None, path=None):
                 r["risk_class"] if isinstance(r["risk_class"], list) else [r["risk_class"]]):
             if isinstance(w, dict) and w.get("allowed") and r.get("classification") == "REGULATORY":
                 errs.append("%s: a regulatory safety requirement is not waivable" % rid)
-        if r.get("maturity") == "ENFORCED" and not (r.get("evidence_scope")):
+        if r.get("maturity_at_writing") == "ENFORCED" and not (r.get("evidence_scope")):
             warns.append("%s: ENFORCED without an evidence scope: evidence cannot be shown to be current" % rid)
     bf = board_facts()
     for letter in (reg.get("manifest") or {}).get("boards", []):

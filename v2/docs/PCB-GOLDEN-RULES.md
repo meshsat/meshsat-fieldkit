@@ -33,7 +33,7 @@ numbers against that declaration rather than against an assumption.
 | verified by | MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | NONE_YET |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -66,7 +66,7 @@ establishes it has been run and recorded.
 | verified by | SCRIPT, MANUAL_REVIEW at RELEASE_PACKAGE (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | claims_check.py plus claims-allow.txt, one declared exemption per line with its reason |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -101,7 +101,7 @@ explained in writing.
 | verified by | ERC at SCHEMATIC (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_*.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one violation on one board, expires the next schematic regeneration |
 
@@ -127,7 +127,7 @@ net and every pin connection agrees between the netlist and the board file.
 | verified by | SCRIPT at PLACED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_pcb_*3.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -156,7 +156,7 @@ in name, in direction, and in the number of drivers.
 | verified by | SCRIPT at ROUTED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_*.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -185,7 +185,7 @@ that a disconnected cable, an unpowered board or a missing module leaves the sys
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -216,7 +216,7 @@ operating mode, including startup, shutdown, hot-plug and the single-fault condi
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | NONE_YET |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -245,7 +245,7 @@ Every part's ordered package matches the land pattern it is placed on.
 | verified by | SCRIPT, VENDOR_CONFIRMATION at RELEASE_PACKAGE (automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | lcsc_fill.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one designator on one board, expires the next BOM export |
 
@@ -275,7 +275,7 @@ order, or is declared hand-fitted with a written purchase route.
 | verified by | SCRIPT, VENDOR_CONFIRMATION at RELEASE_PACKAGE (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | lcsc_fill.py, jlc-handfit.txt |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope one part, expires the order |
 
@@ -305,7 +305,7 @@ nothing judges.
 | verified by | SCRIPT at SCHEMATIC (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_*.py via intent.rail() |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one rail, expires the next schematic regeneration |
 
@@ -334,7 +334,7 @@ behaviour is bounded by design rather than by luck.
 | verified by | MANUAL_REVIEW, SIMULATION at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_a.py, gen_sch_b.py |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope one rail, expires prototype validation |
 
@@ -363,7 +363,7 @@ legitimate current.
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_a.py, gen_sch_e.py, gen_sch_p.py |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -394,7 +394,7 @@ frequencies that pin's current actually contains.
 | verified by | SCRIPT, CALCULATION at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | bypass_slots.py, bypass_place.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one capacitor, expires the next placement |
 
@@ -429,7 +429,7 @@ that carries a meaningful share of the current.
 | | IPC-2221 generic standard on printed board design, current-carrying capacity charts, IPC, current capacity charts -- NOT IN THIS TREE |
 | | IPC-2152 standard for determining current-carrying capacity, IPC -- NOT IN THIS TREE |
 | implementation | power_copper.py, gen_pcb_*3.py bands |
-| maturity | **SOURCE_UNVERIFIED** |
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -461,7 +461,7 @@ Every rail arrives at its loads inside the drop budget declared for it.
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | power_copper.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope one rail on one board, expires prototype measurement |
 
@@ -491,7 +491,7 @@ rail's peak current within the same temperature rise the conductor rule allows.
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | prefanout.py, gen_pcb_*3.py stitch vias |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one transition, expires the next route |
 
@@ -520,7 +520,7 @@ reason, and every conductor crossing between them does so at a defined point.
 | verified by | SCRIPT, MANUAL_REVIEW at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_*3.py pours |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one board, expires the next placement |
 
@@ -548,7 +548,7 @@ leaving the kit, is decided once and implemented the same way everywhere.
 | verified by | MANUAL_REVIEW at PLACED_BOARD (human or lab only) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_c3.py standoffs |
-| maturity | **DOCUMENTED_ONLY** |
+| maturity | **DOCUMENTED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope the kit, expires pre-compliance testing |
 
@@ -579,7 +579,7 @@ every impedance, current and spacing rule resolves against it rather than agains
 | source | SOURCE_UNVERIFIED |
 | | fabricator PCB capability page, the selected fabricator -- v2/vendor/seals/jlcpcb-pcb-capabilities-page.txt |
 | implementation | stackup_write.py |
-| maturity | **SOURCE_UNVERIFIED** |
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -607,7 +607,7 @@ adds. A stackup is never inherited from a sibling board and never promoted silen
 | verified by | MANUAL_REVIEW, VENDOR_CONFIRMATION at RELEASE_PACKAGE (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | NONE_YET |
-| maturity | **OWNER_DECISION_REQUIRED** |
+| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -640,7 +640,7 @@ discontinuities it crosses and the interface's own requirement, not from a singl
 | verified by | SCRIPT, CALCULATION, MANUAL_REVIEW at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | signal_class.py plus each board's signal_classes table, judged by intent_checks.py |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | by OWNER, scope one net class on one board, expires prototype EMC measurement |
 
@@ -685,7 +685,7 @@ against RET-001 rather than failed outright.
 | verified by | SCRIPT at ROUTED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_pcb_*3.py pours |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one net, expires the next route |
 
@@ -720,7 +720,7 @@ stitching capacitor when they are different potentials, or no transition at all.
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | NONE_YET |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | by OWNER, scope one class of transition on one board, expires prototype EMC measurement |
 
@@ -751,7 +751,7 @@ rather than failed outright.
 | verified by | SCRIPT at ROUTED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gnd_grid.py, return_via.py fixer |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one via, expires the next route |
 
@@ -787,7 +787,7 @@ it can build and test it.
 | source | SOURCE_UNVERIFIED |
 | | IPC-2141 controlled impedance circuit boards and high speed logic design, IPC, closed-form microstrip and stripline -- NOT IN THIS TREE |
 | implementation | gen_pcb_*3.py net classes |
-| maturity | **SOURCE_UNVERIFIED** |
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one class on one board, expires prototype measurement |
 
@@ -817,7 +817,7 @@ reaches the router or the fabricator.
 | verified by | SCRIPT at PLACED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September) |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -850,7 +850,7 @@ their lengths match inside the budget the interface allows, and both ends of the
 | verified by | SCRIPT at ROUTED_BOARD (automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | pair_preroute.py, meander.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | by OWNER, scope one class on one board, expires prototype measurement |
 
@@ -882,7 +882,7 @@ rate or clock frequency.
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | NONE_YET |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one net class, expires prototype measurement |
 
@@ -914,7 +914,7 @@ device's own documentation requires, and every strap's state at reset is defined
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -945,7 +945,7 @@ reference, its filtering and its distance from switching copper are decided rath
 | verified by | MANUAL_REVIEW, SCRIPT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_p3.py Kelvin sense, gen_sch_d.py mic network |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one node, expires prototype measurement |
 
@@ -978,7 +978,7 @@ keep-outs the modules demand are respected.
 | verified by | SCRIPT, SIMULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_d3.py, gen_pcb_b3.py keep-outs |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1007,7 +1007,7 @@ asserted by the unpowered and disconnected states.
 | verified by | SCRIPT at SCHEMATIC (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1037,7 +1037,7 @@ documentation of both ends: impedance, skew, termination, coupling, isolation, p
 | source | PARTIALLY_VERIFIED |
 | | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2.1 connector and design guidance; 2.3 and 2.3.1 PCIe, routing guidance; pin table, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
 | implementation | gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one interface on one board, expires prototype validation |
 
@@ -1076,7 +1076,7 @@ permit it, and the coupling, termination, common-mode handling and bias are as b
 | | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2.1 connector and design guidance; pin table, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
 | | BCM54210PE datasheet, Broadcom -- NOT IN THIS TREE |
 | implementation | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics |
-| maturity | **OWNER_DECISION_REQUIRED** |
+| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1115,7 +1115,7 @@ the signal.
 | verified by | MANUAL_REVIEW, SCRIPT at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_*.py protection devices |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one port, expires prototype validation |
 
@@ -1148,7 +1148,7 @@ the material group of the laminate.
 | source | SOURCE_UNVERIFIED |
 | | IEC 60664-1 insulation coordination for equipment within low-voltage systems, IEC, creepage and clearance tables -- NOT IN THIS TREE |
 | implementation | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1180,7 +1180,7 @@ its junction temperature at the envelope's maximum ambient is estimated and reco
 | verified by | CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_*3.py copper and thermal vias |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one part, expires prototype thermal measurement |
 
@@ -1212,7 +1212,7 @@ and no part sits outside the area assigned to it.
 | verified by | DRC, SCRIPT at PLACED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_pcb_*3.py, regionfit.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one board, expires the next placement |
 
@@ -1240,7 +1240,7 @@ only when prevention is shown to be impossible and that is written down.
 | verified by | MANUAL_REVIEW, SCRIPT at ROUTED_BOARD (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | NONE_YET |
-| maturity | **DOCUMENTED_ONLY** |
+| maturity | **DOCUMENTED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one closer, expires the next phase |
 
@@ -1271,7 +1271,7 @@ chosen fabricator's current published capability for the process being ordered.
 | source | SOURCE_UNVERIFIED |
 | | fabricator capability, current at the order date, the selected fabricator -- NOT USABLY IN THIS TREE |
 | implementation | gen_pcb_*.py design rules |
-| maturity | **SOURCE_UNVERIFIED** |
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1299,7 +1299,7 @@ project's hard rule set.
 | verified by | DRC, SCRIPT at ROUTED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | routeflow.py, finish.sh |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1327,7 +1327,7 @@ pad) is one the chosen process produces, and a via in a pad is declared to the a
 | verified by | SCRIPT, VENDOR_CONFIRMATION at ROUTED_BOARD (automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | escape.py, prefanout.py, gen_pcb_*.py minimums |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one via class, expires the order |
 
@@ -1357,7 +1357,7 @@ no pour piece floats.
 | verified by | DRC, SCRIPT at ROUTED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | pour_stitch.py, zone_pad_via.py, stitch_prune.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one piece, expires the next fill |
 
@@ -1386,7 +1386,7 @@ shielding where they are needed.
 | verified by | MANUAL_REVIEW, SIMULATION, PROTOTYPE_MEASUREMENT at ROUTED_BOARD (human or lab only) |
 | source | SOURCE_UNVERIFIED |
 | implementation | NONE_YET |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope the kit, expires pre-compliance testing |
 
@@ -1416,7 +1416,7 @@ the neighbouring boards and the cables, with the tolerances stated.
 | verified by | SCRIPT, MANUAL_REVIEW at PLACED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | panel1450.py, gen_pcb_*.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1445,7 +1445,7 @@ impedance notes, and nothing that contradicts the board file.
 | verified by | SCRIPT at RELEASE_PACKAGE (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | build_pcb.sh, export_jlc.sh |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1474,7 +1474,7 @@ the part's own datasheet orientation, and excludes every part fitted by hand.
 | verified by | SCRIPT, VENDOR_CONFIRMATION, MANUAL_REVIEW at RELEASE_PACKAGE (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | export_jlc.sh, jlc-rotations.csv |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one footprint family, expires the order |
 
@@ -1506,7 +1506,7 @@ device can be programmed in circuit, and the signals a bring-up needs are reacha
 | verified by | MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_*.py test points |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one board, expires prototype bring-up |
 
@@ -1535,7 +1535,7 @@ envelope describes them are considered for every mechanical and electrical inter
 | verified by | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at PROTOTYPE (human or lab only) |
 | source | SOURCE_UNVERIFIED |
 | implementation | NONE_YET |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: UNASSESSED)
 | owner | OWNER |
 | waiver | by OWNER, scope the kit, expires prototype validation |
 
@@ -1564,7 +1564,7 @@ in hardware, independent of any software, with the trip points set from the cell
 | verified by | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_p.py BQ4050 and protection FETs |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1592,7 +1592,7 @@ sized for the conductors and connectors of that stage.
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_a.py, gen_sch_e.py, gen_pcb_e5.py, gen_sch_p.py |
-| maturity | **OPEN** |
+| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1621,7 +1621,7 @@ declares; a folder is never judged only against itself.
 | verified by | SCRIPT at RELEASE_PACKAGE (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | full.sh PHASE, silk_fix_all.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1649,7 +1649,7 @@ the date and the identity of that artefact.
 | verified by | MANUAL_REVIEW, SCRIPT at RELEASE_PACKAGE (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | ledger.py, provenance.json |
-| maturity | **GENERATED_ONLY** |
+| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one claim, expires  |
 
@@ -1678,7 +1678,7 @@ describes those boards.
 | verified by | SCRIPT at RELEASE_PACKAGE (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | make_handoff.py |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1708,7 +1708,7 @@ computed from current evidence; absence, staleness or a failed check is INCONCLU
 | verified by | SCRIPT at RELEASE_PACKAGE (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml |
-| maturity | **ENFORCED** |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1741,7 +1741,7 @@ decide it, rather than being left to look like a pass.
 | verified by | MANUAL_REVIEW at RELEASE_PACKAGE (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | rules_render.py prototype_doc |
-| maturity | **VERIFIED_MANUALLY** |
+| maturity | **VERIFIED_MANUALLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
 

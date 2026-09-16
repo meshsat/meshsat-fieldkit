@@ -56,7 +56,9 @@ def t_a_heuristic_may_not_be_a_blocker():
 def t_a_blocker_with_no_citable_source_must_say_so_in_its_maturity():
     reg = copy.deepcopy(_reg())
     r = next(x for x in reg["rules"] if x["release_effect"] == "BLOCKER" and x["source_status"] == "SOURCE_UNVERIFIED")
-    r["maturity"] = "ENFORCED"
+    # the registry's field is the PHASE A assessment; the live maturity lives in the coverage map, and the two
+    # were one name on two facts until 16 September, when they had drifted on 51 of the 56 rules
+    r["maturity_at_writing"] = "ENFORCED"
     errs, _ = R.validate(reg)
     assert any(r["id"] in e and "unverified source" in e for e in errs), \
         "a blocker with no authority claimed to be enforced and validated"
@@ -133,3 +135,33 @@ def t_the_fingerprint_moves_when_a_rule_changes_what_it_demands_and_not_when_pro
     # and the whole-text digest still exists, because a generated document has to be able to say which text it
     # came from even when the demands did not move
     assert R.documentation_digest(prose) != R.documentation_digest(reg)
+
+
+def t_an_enforced_blocker_carries_a_false_positive_analysis():
+    """Process control 4 of the owner's instruction of 16 September: no hard gate without authority,
+    applicability, acceptance criteria AND a false-positive analysis.
+
+    This project shipped gates that refused CORRECT boards five times in one week: a placement predictor that
+    called 244 normal plane pads a defect, a DRC judgement that failed a pre-route board for being unrouted, a
+    netlist comparison that read KiCad's unconnected-pin placeholder as a net, a pour coverage measured against
+    a rectangle the board is not, and a return-path rule that refused an opto inhibit. Each cost a day or more,
+    and each was found by a board being wrong rather than by anyone asking the question in advance. A rule that
+    can refuse a board now has to say what a WRONG refusal would look like and what stops it.
+    """
+    import copy
+    reg = copy.deepcopy(_reg())
+    r = next(x for x in reg["rules"] if x["id"] == "PLC-001")
+    assert len(str(r.get("false_positive_analysis") or "")) >= 80, "PLC-001 lost its false-positive analysis"
+    r["false_positive_analysis"] = "none worth writing"
+    errs, _ = R.validate(reg)
+    assert any("PLC-001" in e and "false-positive" in e for e in errs), \
+        "an enforced blocker validated with no false-positive analysis"
+
+
+def t_the_registry_does_not_carry_a_live_maturity():
+    """One fact, one owner. The registry's maturity and the coverage map's drifted apart on 51 of the 56 rules
+    within a day of both existing, and the registry then read UNASSESSED for rules that were refusing boards."""
+    reg = _reg()
+    bare = [r["id"] for r in reg["rules"] if "maturity" in r]
+    assert not bare, "these rules carry a bare `maturity`, which the coverage map owns: %s" % bare[:8]
+    assert all("maturity_at_writing" in r for r in reg["rules"]), "a rule lost its Phase A assessment"
