@@ -2,9 +2,9 @@
  "advisory": false,
  "counts": {
   "fail": 215,
-  "pass": 388
+  "pass": 419
  },
- "denominator": 603,
+ "denominator": 634,
  "evidence": [
   "return path under 5G_OFF (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.6 mm [a module power-off request, a static level]",
   "return path under 5G_PWROFF_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a module power-off line, a static level]",
@@ -66,7 +66,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "DEC-001",
@@ -77,9 +77,9 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T00:40:53Z",
+ "ts": "2026-09-16T01:31:17Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

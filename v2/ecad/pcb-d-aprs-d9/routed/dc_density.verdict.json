@@ -1,11 +1,11 @@
 {
  "advisory": false,
  "counts": {
-  "met": 1,
+  "met": 4,
   "missed": 0,
   "undeclared": 0
  },
- "denominator": 1,
+ "denominator": 4,
  "evidence": [],
  "inputs": {
   "board": {
@@ -16,7 +16,7 @@
  "note": "the conductor and pour current capacity at 10 K, cell 0.50 mm. The LIMIT behind this verdict has no authoritative text in this tree: the registry records it as SOURCE_UNVERIFIED and this is a screen, not a law",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "PI-001"
@@ -24,9 +24,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T00:41:37Z",
+ "ts": "2026-09-16T01:33:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }

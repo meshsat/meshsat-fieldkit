@@ -1,0 +1,33 @@
+{
+ "advisory": false,
+ "counts": {
+  "below_floor": 0,
+  "below_ring": 404,
+  "via_in_pad": 14,
+  "vias": 441
+ },
+ "denominator": 441,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "1309202460f2149d"
+  }
+ },
+ "note": "every via at or above the board's own minimum diameter and drill; the annular ring is judged separately in via_annular.verdict.json, and 404 via(s) are under its floor",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "VIA-001"
+ ],
+ "tool": "via_audit",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "dd71612d0b190e2e"
+ },
+ "ts": "2026-09-16T01:33:29Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

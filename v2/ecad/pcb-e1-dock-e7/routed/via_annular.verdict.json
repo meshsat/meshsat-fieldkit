@@ -1,0 +1,53 @@
+{
+ "advisory": false,
+ "counts": {
+  "below_ring": 404,
+  "vias": 441
+ },
+ "denominator": 441,
+ "evidence": [
+  "via /+3V3_E6 at (231.23, 201.40): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (232.01, 205.00): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (36.46, 213.90): annular ring 0.150 below the declared 0.200",
+  "via /+3V3_E6 at (240.76, 206.88): annular ring 0.150 below the declared 0.200",
+  "via /+3V3_E6 at (236.39, 208.18): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (238.39, 199.82): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (20.51, 187.28): annular ring 0.150 below the declared 0.200",
+  "via /+3V3_E6 at (248.33, 192.19): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (187.87, 173.27): annular ring 0.150 below the declared 0.200",
+  "via /+3V3_E6 at (29.23, 189.53): annular ring 0.150 below the declared 0.200",
+  "via /+3V3_E6 at (100.93, 211.46): annular ring 0.150 below the declared 0.200",
+  "via /+3V3_E6 at (241.15, 205.00): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (236.39, 199.04): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (193.21, 162.41): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (196.51, 160.51): annular ring 0.100 below the declared 0.200",
+  "via /+3V3_E6 at (240.36, 201.40): annular ring 0.100 below the declared 0.200",
+  "via /+5V_E6 at (5.47, 195.05): annular ring 0.150 below the declared 0.200",
+  "via /BLK_SPARE at (108.78, 221.83): annular ring 0.150 below the declared 0.200",
+  "via /BLK_SPARE at (105.81, 208.50): annular ring 0.150 below the declared 0.200",
+  "via /BLK_SPARE at (83.20, 187.77): annular ring 0.150 below the declared 0.200"
+ ],
+ "inputs": {
+  "annular_min_mm": 0.2,
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "1309202460f2149d"
+  }
+ },
+ "note": "the copper left around every hole against the floor this board declares",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "VIA-002"
+ ],
+ "tool": "via_annular",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "dd71612d0b190e2e"
+ },
+ "ts": "2026-09-16T01:33:29Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

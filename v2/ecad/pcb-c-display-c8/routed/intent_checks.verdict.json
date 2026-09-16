@@ -2,9 +2,9 @@
  "advisory": false,
  "counts": {
   "fail": 18,
-  "pass": 130
+  "pass": 132
  },
- "denominator": 148,
+ "denominator": 150,
  "evidence": [
   "return path under EPD_DC (Default, CLOCKED_DIGITAL): 324.2 of 359.4 mm without a plane on a neighbouring layer (limit 53.9) [the e-paper's data and command select, an edge per transfer]",
   "return path under EPD_SCL (Default, CLOCKED_DIGITAL): 356.9 of 359.8 mm without a plane on a neighbouring layer (limit 54.0) [the e-paper's SPI clock, a few megahertz at most]",
@@ -23,7 +23,7 @@
   "return path under XIN (Default, HIGH_SPEED_DIGITAL): 38.0 of 94.8 mm without a plane on a neighbouring layer (limit 10.0) [the 12 MHz crystal drive node]",
   "return path under XOUT (Default, HIGH_SPEED_DIGITAL): 16.2 of 47.7 mm without a plane on a neighbouring layer (limit 10.0) [the other half of the same crystal loop]",
   "return path under XOUT_R (Default, HIGH_SPEED_DIGITAL): 13.4 of 37.0 mm without a plane on a neighbouring layer (limit 10.0) [the other half of the same crystal loop]",
-  "return via: 27 of 232 signal vias have a ground via within 1.5 mm (63 exempt in fine-pitch fans, 56 on one reference plane); without one: LIGHT_NIGHT_n at (137.83, 267.54); PWM1 at (165.69, 316.84); PI_SHDN_REQ at (169.57, 110.78); SLOT_EN1 at (169.89, 117.00); SLOT_EN2 at (172.00, 108.79); HB2 at (172.00, 116.47); SLOT_EN3 at (173.88, 114.42); USB_PNL_P at (177.40, 116.73) ..."
+  "return via: 11 of 68 signal vias have a ground via within 1.5 mm (63 exempt in fine-pitch fans, 17 on one reference plane, 203 on a net whose declared class has no edge to return); without one: PWM1 at (165.69, 316.84); HB2 at (172.00, 116.47); USB_PNL_P at (177.40, 116.73); USB_PNL_N at (178.75, 107.22); USB_PNL_N at (182.86, 97.48); SCL at (192.11, 118.09); HB2 at (197.52, 114.16); PWM1 at (197.63, 119.62) ..."
  ],
  "inputs": {
   "board": {
@@ -34,7 +34,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "DEC-001",
@@ -45,9 +45,9 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T00:41:13Z",
+ "ts": "2026-09-16T01:32:39Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
