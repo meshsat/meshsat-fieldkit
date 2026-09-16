@@ -30,20 +30,45 @@ import pcbnew
 from pcbnew import FromMM, ToMM
 
 
-def hard_count(board_path, label):
-    """The fifteen-type hard set on this board, through the tools that already decide it."""
+def hard_count(board_path, label, want_report=False):
+    """The fifteen-type hard set on this board, through the tools that already decide it.
+
+    With `want_report` it also returns the DRC path, because WHERE a violation is decides which segments have
+    to give the width back: a rail is not refused by its whole length, it is refused at the two or three places
+    where the corridor is full."""
     drc = os.path.join(os.path.dirname(os.path.abspath(board_path)) or ".", "out", "widen-%s-drc.json" % label)
     os.makedirs(os.path.dirname(drc), exist_ok=True)
     subprocess.run([os.path.join(HERE, "drc.sh"), board_path, drc], capture_output=True, text=True)
     r = subprocess.run([sys.executable, os.path.join(HERE, "hardset.py"), drc, "post", "--counts"],
                        capture_output=True, text=True)
     out = (r.stdout or "") + (r.stderr or "")
+    n = None
     try:
-        return int(next(t.split()[1] for t in out.splitlines() if t.strip().startswith("hard ")))
+        n = int(next(t.split()[1] for t in out.splitlines() if t.strip().startswith("hard ")))
     except Exception:
         import re
         m = re.search(r"hard (\d+)", out)
-        return int(m.group(1)) if m else None
+        n = int(m.group(1)) if m else None
+    return (n, drc) if want_report else n
+
+
+def hard_places(drc_path):
+    """(x, y) in mm of every hard violation in this report, so the offenders can be found by position."""
+    try:
+        d = json.load(open(drc_path, encoding="utf-8"))
+    except Exception:
+        return []
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("hardset", os.path.join(HERE, "hardset.py"))
+    hs = importlib.util.module_from_spec(spec); spec.loader.exec_module(hs)
+    types = set(getattr(hs, "HARD_POST", ()) or ())
+    out = []
+    for v in (d.get("violations") or []):
+        if types and v.get("type") not in types: continue
+        for it in (v.get("items") or []):
+            p = it.get("pos") or {}
+            if "x" in p and "y" in p: out.append((float(p["x"]), float(p["y"])))
+    return out
 
 
 def pad_limit(board, net):
@@ -91,6 +116,7 @@ def widen(board_path, net, steps, layers=None, dry=False):
             if not segs:
                 print("widen_net: nothing to widen at %.2f mm (%d segment(s) already at or above it, %d at a narrow pad)"
                       % (target, kept, skipped)); continue
+            orig_w = {t.m_Uuid.AsString(): ToMM(t.GetWidth()) for t in segs}
             for t in segs: t.SetWidth(FromMM(target))
             if dry:
                 print("widen_net: DRY RUN, %d segment(s) would go to %.2f mm" % (len(segs), target)); return 0
@@ -99,13 +125,45 @@ def widen(board_path, net, steps, layers=None, dry=False):
             # no longer exists.
             pcbnew.ZONE_FILLER(board).Fill(board.Zones())
             pcbnew.SaveBoard(board_path, board)
-            after = hard_count(board_path, "after")
+            after, drc = hard_count(board_path, "after", want_report=True)
             if after is not None and after <= base:
                 print("widen_net: KEPT %d segment(s) at %.2f mm (%d left at a narrow pad); hard %d -> %d"
                       % (len(segs), target, skipped, base, after))
                 return 0
-            print("widen_net: %.2f mm made it worse (hard %s against %d), reverting and trying narrower"
-                  % (target, after, base))
+            # THE RAIL IS NOT REFUSED BY ITS LENGTH, IT IS REFUSED AT THE PLACES WHERE THE CORRIDOR IS FULL
+            # (16 September 2026). Board A's +5V_D8 at 1.0 mm read 7 hard and at 0.6 mm read 3, and giving the
+            # whole rail back for them wastes the ninety percent of its length that had room. Each round hands
+            # the width back ONLY where a violation is, and asks the board again; it stops when the board is
+            # clean or when a round gives nothing back, which is the honest end of the search.
+            for _round in range(3):
+                places = hard_places(drc)
+                if not places: break
+                board = pcbnew.LoadBoard(board_path)
+                gave, R = 0, 2.0   # mm: a violation is reported at a point, the segment that caused it is near it
+                for t in board.GetTracks():
+                    if t.GetClass() != "PCB_TRACK": continue
+                    if t.GetNetname().lstrip("/") != net.lstrip("/"): continue
+                    if abs(ToMM(t.GetWidth()) - target) > 1e-6: continue
+                    sx, sy = ToMM(t.GetStart().x), ToMM(t.GetStart().y)
+                    ex, ey = ToMM(t.GetEnd().x), ToMM(t.GetEnd().y)
+                    mx, my = (sx + ex) / 2.0, (sy + ey) / 2.0
+                    if any(min((px - sx) ** 2 + (py - sy) ** 2, (px - ex) ** 2 + (py - ey) ** 2,
+                               (px - mx) ** 2 + (py - my) ** 2) <= R * R for px, py in places):
+                        t.SetWidth(FromMM(orig_w.get(t.m_Uuid.AsString(), 0.4))); gave += 1
+                if not gave: break
+                pcbnew.ZONE_FILLER(board).Fill(board.Zones()); pcbnew.SaveBoard(board_path, board)
+                after, drc = hard_count(board_path, "after", want_report=True)
+                print("widen_net: gave %d segment(s) back at the %d violation site(s); hard now %s"
+                      % (gave, len(places), after))
+                if after is not None and after <= base:
+                    left = sum(1 for t in pcbnew.LoadBoard(board_path).GetTracks()
+                               if t.GetClass() == "PCB_TRACK" and t.GetNetname().lstrip("/") == net.lstrip("/")
+                               and abs(ToMM(t.GetWidth()) - target) < 1e-6)
+                    print("widen_net: KEPT %d of %d segment(s) at %.2f mm; hard %d -> %d"
+                          % (left, len(segs), target, base, after))
+                    return 0
+            print("widen_net: %.2f mm made it worse (hard %s against %d) and giving the offenders back did not "
+                  "recover it, reverting and trying narrower" % (target, after, base))
             shutil.copy(backup, board_path)
         print("widen_net: no width in %s could be kept; the board is unchanged"
               % ", ".join("%.2f" % s for s in steps))

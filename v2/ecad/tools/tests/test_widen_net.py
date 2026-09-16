@@ -26,7 +26,7 @@ def t_it_measures_before_and_after_and_reverts_on_a_worse_board():
     assert "hard_count(board_path, \"before\")" in src, "nothing measures the board before the change"
     assert "after <= base" in src, "the keep test does not compare against the baseline"
     assert "shutil.copy(backup, board_path)" in src, "there is no revert"
-    i, j = src.index("pcbnew.ZONE_FILLER"), src.index('after = hard_count')
+    i, j = src.index("pcbnew.ZONE_FILLER"), src.index('after, drc = hard_count')
     assert i < j, "the board is judged before it is refilled, which is the 14 September defect"
 
 

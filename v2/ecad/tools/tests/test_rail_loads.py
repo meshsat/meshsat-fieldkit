@@ -163,10 +163,22 @@ def t_a_rail_that_crosses_a_connector_declares_its_share_of_one_budget():
     assert 'r.get("share")' in dd, "dc_drop still judges a shared rail against the whole budget"
     cc = open(os.path.join(tools, "check_contracts.py"), encoding="utf-8").read()
     assert "the shares sum to" in cc, "nothing adds the shares up"
-    for f, want in (("gen_sch_a.py", "share=0.015"), ("gen_sch_d.py", "share=0.015")):
+    # THE PROPERTY, NOT THE NUMBER (16 September 2026). This asserted share=0.015 on both boards, and when the
+    # budget was re-derived from the tightest consumer's own datasheet (the PCM2912A codec at 4.35 V minimum)
+    # the shares moved with it and the rule failed for the change it exists to require. What must hold is that
+    # both boards declare a share of the SAME budget and that the two do not sum past it.
+    shares, budgets = {}, {}
+    for f in ("gen_sch_a.py", "gen_sch_d.py"):
         s = open(os.path.join(tools, f), encoding="utf-8").read()
         i = s.index('_intent.rail("+5V_D8"')
-        assert want in s[i:i + 400], "%s does not declare its share of the mezzanine rail" % f
+        seg = s[i:i + 600]
+        m = re.search(r"share=([0-9.]+)", seg); b = re.search(r"budget=([0-9.]+)", seg)
+        assert m, "%s does not declare its share of the mezzanine rail" % f
+        assert b, "%s declares a share of a budget it does not name" % f
+        shares[f] = float(m.group(1)); budgets[f] = float(b.group(1))
+    assert len(set(budgets.values())) == 1, "the two boards declare different budgets for one conductor: %s" % budgets
+    assert sum(shares.values()) <= min(budgets.values()) + 1e-9, \
+        "the shares sum to %.3f past the %.3f the rail declares" % (sum(shares.values()), min(budgets.values()))
 
 def t_an_unsplit_shared_rail_is_an_open_question_and_not_a_failed_contract():
     """Six rails cross a connector with no share declared (MESHSAT-862, 16 September 2026).
