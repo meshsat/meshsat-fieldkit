@@ -8275,3 +8275,93 @@ not evidence. Where a pass is known to differ from itself, a configuration is ru
 result is not reported as a difference. Four production-configuration replicates are running to say whether
 the shipping path varies the same way; if it does, the pre-route becomes best-of-K rather than a draw, which
 costs ten minutes of wall clock on a box that admits twenty-four workers.
+
+### 32.208 The rules that had no document now have one, and asking a protector its own question found six defects (16 September 2026, 20:15 CEST; MESHSAT-862)
+
+**A number a project cannot look up decides nothing, however carefully it was chosen.** Two of the registry's
+blockers rested on figures that existed only inside this tree: `dc_drop.py` judged every rail on all seven
+boards against `I = k dT^0.44 A^0.725` written in a code comment as "IPC-2221", and `spacing.py` measured
+creepage and clearance and could not say whether the millimetres it measured were enough. Both IPC standards
+are paywalled and neither is here. **ECSS-Q-ST-70-12C, "Design rules for printed circuit boards" (14 July 2014),
+is published free of charge by the standards body of ESA and settles both questions with published tables.**
+The clauses used are transcribed in `v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md` with the URL, the
+date and the sha256 of the file read; the document itself is fetched, never redistributed here.
+
+**The current bar was right and the project could not prove it.** Annex D publishes closed-form curve fits of
+the IPC-2221A, IPC-2152 and CNES models with their constants, their validity ranges and a worked example.
+`tools/track_current.py` implements the formula and reproduces the standard's own example (1 A at 5 K on a
+0.925 by 0.025 mm track) to **1.0002 A**, and this project's internal-conductor bar turns out to BE the
+published D.4 model, **within 0.20 percent over 96 geometries**. Two things the document settles that nobody
+had asked: the model is a curve fit of a 1950s National Bureau of Standards chart which IPC-2152 **supersedes**,
+and it is published as valid only below 1.2 A at a 10 K rise, where this project's pack node carries 10 A.
+**And the two fits cross.** Both are functions of area alone, so the crossover is one area per temperature
+rise: **0.194 mm2 at 5 K, 0.268 at 10 K, 0.388 at 20 K**. Below it our bar is the conservative one; above it,
+which is every 2 oz pour wider than 3.8 mm, it reads HIGHER than the standard that replaced it, so on the
+widest copper the risk is a wrong PASS. `dc_drop` prints the other two models beside any conductor past that
+line and gates on neither, because moving a bar changes MET on boards that are already cut: **decision 35**.
+PI-001 is `PARTIALLY_VERIFIED` and ENFORCED, the external factor of two being IPC-2221A's own external curve
+which the annex does not fit.
+
+**The density verdict was reporting the voltage drop.** Board A's four misses read "MISSED VBAT on current
+density: 0.38 percent of 14.4 V", a voltage figure beside the word density, and 0.38 percent of 14.4 V is a
+PASS of the other criterion. Each verdict carries the number that decided it now.
+
+**The insulation question has a table and two measured numbers.** Table 13-3 gives minimum insulation distance
+against voltage, and it is the CONSERVATIVE envelope rather than the requirement: it is written for space
+hardware and its own Note 2 says it covers any elevation. Measured: **board B's +54V_POE is 0.900 mm from
+another net against the table's 0.500 mm floor** and passes with 80 percent to spare, while **board A's 20 V
+VBUS20 runs 0.129 mm from FE_FB on an outer layer against 0.300 mm**. The net that sounds alarming is the one
+with margin. Which standard governs a sealed terrestrial kit is decision 34, and the numbers are filed with it.
+
+**THE NETS WHERE THE HIGHEST VOLTAGES LIVE ARE NOT RAILS, and none of them was declared.** A switching node, a
+bootstrap, a charge pump and a transmitter's output are not supplies with a current and loads, so `rail()`
+could not describe them: `derate.py` reported **29 of board A's nets as UNDECLARED, 15 of board B's, 14 of
+board E's, and board C judged NO PART AT ALL**. `intent.node()` declares a net's peak with the basis for the
+number; `rides_on` records that a bootstrap capacitor sees its driver's 7.6 V bias and not the 61 V the node
+reaches, which is why every one of them is a 25 V part; `v_work` records the working maximum where it differs
+from the nominal (VBAT is declared 14.4 and a 4S pack terminates at 16.8; VIN_RAW is declared 12 and the
+vehicle line is specified 9 to 36); and `vendor_reference` records the one case where the voltage lives inside
+a part this project does not open and the part maker states the PART instead, board C's nine e-paper pump nets
+against PDI's own driving-circuit note. **0 undeclared nets on all six boards now, and 379 part-on-net
+comparisons where there were 174.** CMP-001 is ENFORCED.
+
+**Asking a protector its own question found six defects of one class.** A transient suppressor is not judged on
+whether it survives the voltage it itself produces, which is circular; it is judged on whether its STAND-OFF is
+above the line's own working maximum, because below that it conducts in normal service. **Three SMCJ33A sat on
+lines specified to 36 V** (board A's VIN_RAW clamp, board E's input and bus clamps) **and three SMBJ5.0A on
+5.1 V slot rails**, every one of them leaking or conducting in service rather than only on a transient. All six
+are replaced at the source with the next standard stand-off, and the SMCJ40A's higher clamping voltage is paid
+for where it lands: board A's front-end input capacitors and board E's bus capacitor move from 50 V to the
+100 V part the set already buys. **A seventh item is the opposite fault**: board E's panel clamp did not begin
+to conduct until 36.7 V, which is ABOVE the 35 V rating of the bulk capacitors it guards, and is an SMCJ28A now
+that conducts at 31.1. **The question had to be asked before the value string was read for a rating**, or the
+answer depends on prose: board A's clamp states no volts in its value and board E's happens to mention "50 V
+100 ms" in a note, the same part and the same defect, one of them caught and the other silent.
+
+**Three false refusals were removed on the way, each with a fixture that fails without the fix.** An indicator
+was read as an inductor because the prefix test took one character, so `LED11`'s value "green 5 V S1" became a
+5 V rating judged against the 5 V rail it indicates: three refusals on a correct design under a BLOCKER rule.
+A bootstrap capacitor was judged on the height of the node it rides on. And a protector was asked whether it
+survives its own clamping voltage. **The prefix is the letters, matched exactly: TP is not T and LED is not L.**
+
+**A zero a board DECLARES is an answer.** RET-002 read INCONCLUSIVE on five of seven boards and not one of them
+was unmeasured: `escape_prune` runs only where the board table declares it, board B is the only board that
+does, and on the other five no escape is ever pruned, so the hazard `pruned_gate` exists to catch cannot arise.
+It PASSES them with the declaration as its evidence and stays INCONCLUSIVE where a board declares the stage and
+has lost its list. **And the placement's evidence travels with the board now**: `full.sh` measures the placed
+board and writes `hardset-placed`, `place_audit` and `regionfit` in the route tree's `out/`, which nobody kept,
+so three boards read "no hardset-placed verdict" about placements that were measured and a fourth read one from
+three days ago.
+
+**Board A's six charger filter parts had nowhere to sit.** The parts the BQ25731's own pin table asks for went
+into the schematic in the morning and into no placement, so `gen_pcb_a3.py` refused the board (`unplaced:
+['C121', 'C122', 'R146', 'R147', 'R148', 'R149']`) and A38's pre-route printed `BLOCK placement generator exit
+1` with the reason four hundred lines up behind one swig memory-leak line per footprint. They are seated at the
+pins they filter, west for ACN and ACP and east for SRN and SRP, and a chain's BLOCK carries its own cause now.
+Their values are bare: a value is the BOM's Comment column and "10n (CDIFF across the input sense)" matches the
+rule `^10n$` in neither the map nor the certified table, so the six would have reached the BOM as blank lines
+and the finish would have refused the board for them.
+
+**Readiness 49.7 to 52.7 percent verified** at the first re-judgement (158 PASS, 47 FAIL, 95 INCONCLUSIVE of
+300), with PI-001 moving six boards off INCONCLUSIVE, four to PASS and two to a FAIL that was always there:
+board A has four rails over the published current bar and board E has one. Suite 755.
