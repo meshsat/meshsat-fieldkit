@@ -15,5 +15,14 @@ python3 "$(dirname "$0")/sch_prov.py" write "out/$N.net" "$N" || true
 # 15 Sep 2026 (MESHSAT-862, 32.196): the sheet is a grid of A3 cells (schlayout.py), so the PDF a reader opens is that grid cut into
 # A3 pages, one block per page, no drawing-sheet border across the cells. The whole sheet stays beside it for a viewer that wants it.
 kicad-cli sch export pdf --exclude-drawing-sheet -o "out/$N-schematic-sheet.pdf" "$N.kicad_sch" >/dev/null && echo "sheet pdf: out/$N-schematic-sheet.pdf"
-python3 "$(dirname "$0")/sch_pages.py" "$N.kicad_sch" "out/$N-schematic-sheet.pdf" "out/$N-schematic.pdf" && echo "pdf: out/$N-schematic.pdf"
+# A MISSING TOOL IS A REFUSAL HERE, NOT A MISSING FILE THREE STAGES LATER (17 September 2026). sch_pages.py
+# needs mutool and the hub box did not have it, so board C's paged schematic PDF was never written, nothing
+# said so, and the deliverable failed at `cp: cannot stat out/pcb-c-display-schematic.pdf` with no clue what
+# had gone wrong. The single-sheet PDF is NOT a fallback: the 13 September pack shipped A0 frames with the
+# drawing running metres off the page, which is exactly what that file is.
+if ! python3 "$(dirname "$0")/sch_pages.py" "$N.kicad_sch" "out/$N-schematic-sheet.pdf" "out/$N-schematic.pdf"; then
+  echo "build_sch: FAILED to page the schematic (sch_pages.py). mutool is what it needs: apt-get install mupdf-tools" >&2
+  exit 3
+fi
+echo "pdf: out/$N-schematic.pdf"
 kicad-cli sch export bom --fields 'Reference,Value,Footprint,LCSC,${QUANTITY}' --group-by Value,Footprint --sort-field Reference -o "out/$N-bom.csv" "$N.kicad_sch" >/dev/null 2>&1 && echo "bom: out/$N-bom.csv" || true
