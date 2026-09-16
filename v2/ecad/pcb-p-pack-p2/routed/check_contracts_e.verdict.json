@@ -22,9 +22,9 @@
  "tool": "check_contracts_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9284cacf93cf36b3"
+  "tools_tree_sha": "8ab9a87c66026600"
  },
- "ts": "2026-09-16T15:47:24Z",
+ "ts": "2026-09-16T16:10:26Z",
  "verdict": "PASS",
  "version": "unknown"
 }
