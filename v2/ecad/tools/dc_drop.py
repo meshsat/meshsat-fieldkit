@@ -93,6 +93,7 @@ def main(a):
     bb = b.GetBoardEdgesBoundingBox(); x0, y0 = bb.GetLeft() / 1e6, bb.GetTop() / 1e6; W, H = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6
     nx, ny = int(W / cell) + 2, int(H / cell) + 2
     fps = list(b.GetFootprints()); results = []; miss = 0
+    _via_amps = {}          # {net: [{x, y, drill_mm, wall_mm2, amps, limit_a}]}, written beside the board below
     for net, r in rails.items():
         netnames = {net, "/" + net.lstrip("/")}
         # occupancy per layer
@@ -372,6 +373,15 @@ def main(a):
         for vx, vy, vd, vwall, vrv, vnodes in net_vias:
             cur = max((abs(v[vnodes[k]] - v[vnodes[k + 1]]) / vrv for k in range(len(vnodes) - 1)), default=0.0)
             lim = ipc_limit(vwall, dT_of(r), True)   # a barrel is enclosed copper: the inner-layer constant
+            # THE SOLVED CURRENT OF EVERY BARREL, WRITTEN OUT (16 September 2026, rule PI-003). `via_current.py`
+            # had to assume that a rail's whole current crosses its weakest SITE, because nothing told it what
+            # each barrel actually carries, and on these boards a rail's weakest site is usually a lone stitch
+            # via at the end of a pour carrying almost nothing while the current travels in a band with a via
+            # field under it: board E's CELL_F read 18 A through one via. The arithmetic was right and the
+            # attribution was not, which is why that rule has been ADVISORY. This pass already solves for it.
+            _via_amps.setdefault(net, []).append({"x": round(vx, 3), "y": round(vy, 3), "drill_mm": round(vd, 4),
+                                                  "wall_mm2": round(vwall, 6), "amps": round(cur, 4),
+                                                  "limit_a": round(lim, 4)})
             if lim <= 0: continue
             if via_worst is None or cur / lim > via_worst[0]: via_worst = (cur / lim, cur, lim, vd, vwall, vx, vy)
         tot = sum(share.values()) or 1.0; share = {k: round(x / tot, 2) for k, x in share.items()}
@@ -589,6 +599,18 @@ def main(a):
             else:
                 out.append("%s %s on %s: %.2f%% of %.1f V" % (r[1], r[0], kind, r[4] * 100, rails[r[0]]["volts"]))
         return out
+
+    # Beside the board, in the same out/ the verdicts go to, so a later reading of this board can use it and a
+    # board that has never been solved simply has no file and its rule says so.
+    try:
+        _vp = os.path.join(os.path.dirname(os.path.abspath(a[0])), "out",
+                           os.path.splitext(os.path.basename(a[0]))[0] + "-via-currents.json")
+        os.makedirs(os.path.dirname(_vp), exist_ok=True)
+        json.dump({"board": os.path.basename(a[0]), "rise_k": dT, "nets": _via_amps}, open(_vp, "w"), indent=1)
+        print("dc_drop: %d barrel current(s) over %d net(s) written to %s"
+              % (sum(len(x) for x in _via_amps.values()), len(_via_amps), os.path.basename(_vp)))
+    except Exception as _e:
+        print("dc_drop: could not write the barrel currents (%s)" % _e)
 
     dens_rows = _rows("density"); dens_undecl = [r for r in dens_rows if r[1] in ("UNDECLARED", "UNMEASURED")]
     dens_miss = len(dens_rows) - len(dens_undecl)

@@ -1,15 +1,16 @@
 {
- "advisory": true,
+ "advisory": false,
  "applicable": true,
  "counts": {
+  "measured_rails": 3,
   "no_via": 0,
   "over": 2,
   "rails": 3
  },
  "denominator": 3,
  "evidence": [
-  "CELL4: 18.00 A crosses a transition of 1 via(s) at (97.2, 113.0) rated 0.90 A at 10 K (18 um plating)",
-  "FUSED: 18.00 A crosses a transition of 1 via(s) at (104.3, 100.0) rated 0.90 A at 10 K (18 um plating)"
+  "FUSED: a barrel at (96.8, 85.6) carries 1.74 A of the solved mesh against 1.05 A for its own wall at 10 K (18 um plating), ratio 1.66",
+  "PACK_P: a barrel at (114.8, 85.9) carries 1.96 A of the solved mesh against 1.05 A for its own wall at 10 K (18 um plating), ratio 1.87"
  ],
  "inputs": {
   "board": {
@@ -20,7 +21,7 @@
   "rise_k": 10.0,
   "site_mm": 6.0
  },
- "note": "every rail's weakest layer transition against IPC-2221 for a barrel of the fabricator's own plating thickness; ADVISORY until it can tell a via the current crosses from a via of the same net that carries almost none",
+ "note": "every rail's barrels against IPC-2221's curve for a barrel of the fabricator's own plating thickness, on the current dc_drop's solved mesh puts through each of them. The curve is the internal-conductor model published with its constants in ECSS-Q-ST-70-12C Annex D (D.4), transcribed in v2/vendor/standards/ and implemented in tools/track_current.py",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -31,9 +32,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4e7275f50f847a15"
+  "tools_tree_sha": "f4ca0a150f927f41"
  },
- "ts": "2026-09-16T18:04:54Z",
+ "ts": "2026-09-16T18:19:03Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
