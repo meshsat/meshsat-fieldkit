@@ -562,7 +562,7 @@ leaving the kit, is decided once and implemented the same way everywhere.
 | risk | EMC, SAFETY |
 | verified by | MANUAL_REVIEW at PLACED_BOARD (human or lab only) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_pcb_c3.py standoffs |
+| implementation | gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination |
 | maturity | **DOCUMENTED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope the kit, expires pre-compliance testing |
@@ -575,7 +575,15 @@ not.
 
 **If violated** Discharge current finds a path through a signal return; the kit fails an ESD test at a connector.
 
-**Today** eight standoffs bond C's ground to the plate; no chassis-bond or shield strategy is written for the kit
+**Today** 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit
+has no single conductive enclosure: the Peli 1450 is plastic and every piece of metal in it is an island held
+by plastic, so the only thing joining them is whatever this design says joins them. Board B's magnetics
+termination matches the switch vendor's clause exactly except in one respect: the 1 nF 2 kV common-node
+capacitor and the RJ45 shell both land on SIGNAL ground, where the clause says chassis, and THERE IS NO
+CHASSIS NET ANYWHERE IN THIS KIT. The four board changes that would make the strategy true are listed in the
+document; they are schematic changes on three boards and they touch owner decision 29's territory, so they
+wait on that ruling rather than being made piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by
+a four-wire measurement and an emissions sweep, neither of which exists until there is hardware
 
 ## Stackup
 

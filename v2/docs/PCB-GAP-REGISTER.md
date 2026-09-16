@@ -106,8 +106,16 @@ protected part's maximum
 ## prose only (3)
 
 **GND-002 chassis and cable-shield strategy** (MUST_JUSTIFY, DOCUMENTED_ONLY)  
-eight standoffs bond C's ground to the plate; no chassis-bond or shield strategy is written for the kit  
-*Close it by* write the chassis and shield strategy, then check the bonds against it. Owner **SESSION**, after ENV-001. Effort P50 4h, P80 10h.
+16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit
+has no single conductive enclosure: the Peli 1450 is plastic and every piece of metal in it is an island held
+by plastic, so the only thing joining them is whatever this design says joins them. Board B's magnetics
+termination matches the switch vendor's clause exactly except in one respect: the 1 nF 2 kV common-node
+capacitor and the RJ45 shell both land on SIGNAL ground, where the clause says chassis, and THERE IS NO
+CHASSIS NET ANYWHERE IN THIS KIT. The four board changes that would make the strategy true are listed in the
+document; they are schematic changes on three boards and they touch owner decision 29's territory, so they
+wait on that ruling rather than being made piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by
+a four-wire measurement and an emissions sweep, neither of which exists until there is hardware  
+*Close it by* make the four changes the strategy names once decision 29 is answered, then the bond resistances and the pre-compliance sweep at the prototype. Owner **SESSION**, after INT-002. Effort P50 4h, P80 12h.
 
 **INT-001 each interface is designed to its own specification** (BLOCKER, GENERATED_ONLY)  
 16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it
