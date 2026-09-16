@@ -92,7 +92,14 @@ def judge(net_path, letter=None):
             if net.upper() in SKIP_NETS: continue
             if pins_wanted and pin not in [str(x) for x in pins_wanted]: continue
             if off: continue        # protected by a part in the wall, named in the declaration and listed below
-            guards, seen, frontier, crossed_active = [], {net}, [(net, False, True)], False
+            # WHICH active part, not whether one was crossed (16 September 2026). This carried
+            # `crossed_active` as a boolean, so the evidence could say "the clamp is behind an active part"
+            # and never say WHICH part takes the transient. That is the one fact an owner needs to rule on
+            # the topology: the protection path is connector -> ACTIVE PART -> clamp, and naming only the
+            # clamp describes two thirds of it. The frontier now carries the first active reference it
+            # crossed, and the row names it beside the clamp.
+            guards, seen, frontier = [], {net}, [(net, None, True)]
+            crossed_active = None
             for _hop in range(HOPS + 1):
                 nxt = []
                 for n, was_active, is_start in frontier:
@@ -102,20 +109,23 @@ def judge(net_path, letter=None):
                     if n in rails and not is_start: continue
                     for r, _p in sorted(by_net.get(n, ())):
                         if PROTECT.search(values.get(r, "") or "") or PROTECT.search(r):
-                            guards.append("%s on %s" % (r, n))
-                            if was_active: crossed_active = True
+                            guards.append(("%s on %s" % (r, n), values.get(r, "") or "", was_active))
+                            if was_active and crossed_active is None: crossed_active = was_active
                             continue
                         act = bool(ACTIVE.match(r))
                         if (SERIES.match(r) or act) and len(by_ref.get(r, ())) >= 2:
                             for _q, n2 in by_ref[r]:
                                 if n2 not in seen and n2.upper() not in SKIP_NETS:
-                                    seen.add(n2); nxt.append((n2, was_active or act, False))
+                                    # the FIRST active part on this branch is the one that sees the transient
+                                    seen.add(n2); nxt.append((n2, was_active or (("%s on %s" % (r, n)) if act else None), False))
                 if guards: break
                 frontier = nxt
             if not guards: unprotected.append("%s.%s on %s" % (ref, pin, net))
             elif crossed_active:
-                behind.append("%s.%s on %s: the clamp (%s) is behind an active part, which therefore sees the transient itself"
-                              % (ref, pin, net, guards[0]))
+                _g, _gv, _ = guards[0]
+                behind.append("%s.%s on %s: ACTIVE %s (%s) sees the transient; CLAMP %s (%s) is behind it"
+                              % (ref, pin, net, crossed_active, values.get(crossed_active.split(" on ")[0], "") or "value not in the netlist",
+                                 _g, _gv or "value not in the netlist"))
         rows.append(dict(ref=ref, why=why, pins=len(by_ref[ref]), unprotected=unprotected, behind=behind,
                          off_board=(entry.get("off_board") if isinstance(entry, dict) else None)))
         if behind:
