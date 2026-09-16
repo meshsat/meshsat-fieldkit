@@ -3,24 +3,13 @@
  "applicable": true,
  "counts": {
   "boards": 1,
-  "fail": 6,
-  "unchecked_footprints": 6,
-  "unverified_rows": 6
+  "fail": 1,
+  "unchecked_footprints": 0,
+  "unverified_rows": 0
  },
- "denominator": 12,
+ "denominator": 1,
  "evidence": [
-  "C: IDC-Header_2x13_P2.54mm_Vertical_SMD (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
-  "C: LED_0603_1608Metric (matched by ^LED_0603) carries a rotation offset nobody has compared with the assembler's preview",
-  "C: SOT-23 (matched by ^SOT-23) carries a rotation offset nobody has compared with the assembler's preview",
-  "C: SOT-23-5 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
-  "C: SOT-23-6 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
-  "C: TSSOP-24_4.4x7.8mm_P0.65mm (matched by ^TSSOP-24) carries a rotation offset nobody has compared with the assembler's preview",
-  "not compared with a preview: Crystal_SMD_3225-4Pin_3.2x2.5mm",
-  "not compared with a preview: D_SOD-123",
-  "not compared with a preview: D_SOD-123F",
-  "not compared with a preview: Hirose_FH34SRJ-24S",
-  "not compared with a preview: LED_D3.0mm",
-  "not compared with a preview: QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"
+  "there is no rotation table at ../release/revA/order/jlc-rotations.csv, so no rotation has been verified at all"
  ],
  "inputs": {
   "rotations": "../release/revA/order/jlc-rotations.csv"
@@ -36,9 +25,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T19:33:42Z",
+ "ts": "2026-09-16T23:26:23Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -7,12 +7,12 @@
  },
  "denominator": 1,
  "evidence": [
-  "return via: 11 of 68 signal vias have a ground via within 1.5 mm (63 exempt in fine-pitch fans, 17 on one reference plane, 203 on a net whose declared class has no edge to return); without one: PWM1 at (165.69, 316.84); HB2 at (172.00, 116.47); USB_PNL_P at (177.40, 116.73); USB_PNL_N at (178.75, 107.22); USB_PNL_N at (182.86, 97.48); SCL at (192.11, 118.09); HB2 at (197.52, 114.16); PWM1 at (197.63, 119.62) ..."
+  "return via: 53 of 85 signal vias have a ground via within 1.5 mm (61 exempt in fine-pitch fans, 35 on one reference plane, 278 on a net whose declared class has no edge to return); without one: USB_PNL_N at (190.53, 103.06); USB_PNL_P at (198.98, 105.43); EPD_SDA at (216.91, 112.15); EXP_INT at (274.91, 107.52); Q1_G at (419.11, 288.82); SCL at (419.39, 120.99); XOUT_R at (419.44, 277.21); XOUT_R at (420.41, 279.10) ..."
  ],
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "410eeb604ec12c4c"
+   "sha256_16": "2a273803757c68fb"
   }
  },
  "note": "a ground via at a signal's reference change",
@@ -24,9 +24,9 @@
  "tool": "intent_return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "465a81f6fa3c600d"
+  "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T05:16:02Z",
+ "ts": "2026-09-16T23:26:08Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

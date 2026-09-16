@@ -11,7 +11,7 @@
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "367ce54a296e20f4"
+   "sha256_16": "2a273803757c68fb"
   }
  },
  "note": "the conductor and pour current capacity at 10 K, cell 0.50 mm. THE LIMIT HAS A DOCUMENT since 16 September 2026: the internal-conductor model is IPC-2221A figure 6-4 curve C, published as a curve fit with its constants in ECSS-Q-ST-70-12C Annex D (D.4), transcribed in v2/vendor/standards/ and implemented and self-tested in tools/track_current.py. Two gaps are named rather than hidden: the external factor of two is fitted nowhere in that annex, and above 0.268 mm2 of copper at 10 K this model reads HIGHER than the IPC-2152 fit that supersedes it, so on the widest pours the bar is the optimistic one",
@@ -27,7 +27,7 @@
   "git_head": "",
   "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T23:23:55Z",
+ "ts": "2026-09-16T23:26:09Z",
  "verdict": "PASS",
  "version": "unknown"
 }
