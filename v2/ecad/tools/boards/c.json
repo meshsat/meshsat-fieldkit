@@ -282,5 +282,6 @@
    "class": "LOW_SPEED_OR_DC",
    "basis": "the sounder's return"
   }
- ]
+ ],
+ "_gnd_grid_why": "NOT MEASURED ON THIS BOARD YET (16 September 2026). The grid is worth 90 to 109 of 130 satisfied signal vias on board E and costs board P its route, so it is a per-board measurement and not a default. Board C gets one when its current route ends and its return-via count is known."
 }
