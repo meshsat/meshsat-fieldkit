@@ -1388,7 +1388,7 @@ only when prevention is shown to be impossible and that is written down.
 | verified by | MANUAL_REVIEW, SCRIPT at ROUTED_BOARD (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | NONE_YET |
-| maturity | **DOCUMENTED_ONLY** |  (at writing: UNASSESSED)
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one closer, expires the next phase |
 
@@ -1400,7 +1400,16 @@ placed-board predictor covers the classes that have been repaired more than once
 **If violated** Every board needs a rescue, and the rescue's own defects are found after the route.
 
 **Today** the principle is written in the record and in the plan; the finish still carries ten copper-editing passes
-and the predictor covers two of the classes
+and the predictor covers two of the classes 16 September 2026: EVERY REPAIR IN THE FINISH IS DECLARED AND THE
+COVERAGE IS JUDGED PER BOARD. pcb_closers.yaml names all fourteen copper-changing stages with the defect
+class each repairs and why prevention was not possible, and closer_audit.py takes the list of stages from
+finish.sh itself, so a stage added and not declared is a failure rather than a silence. Three classes are
+repaired on every board and prevented by one thing, a ground-via grid laid BEFORE the route: a pour island
+with no via of its own net, a pad its plane cannot reach, and a stitch via the fill has retreated from.
+Boards D and E declare the grid and are covered; A, B, C and P do not and are not, which is a design item
+with a measured cost (board P measured the grid at 21 open connections against 0 without, which is why it
+declares none) and board C is measuring it on two arms right now. Board E5 has no chain, so no closer runs on
+it at all.
 
 ## Routing
 

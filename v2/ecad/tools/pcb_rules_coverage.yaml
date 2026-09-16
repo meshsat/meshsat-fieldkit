@@ -346,8 +346,8 @@ coverage:
  PLC-001: {implementation: "gen_pcb_*3.py, regionfit.py", verification: {tool: "hardset.py, place_audit.py", verdict: "hardset-placed, place_audit", fixtures: "tests/test_region_fit.py, tests/test_board_gates.py"},
    maturity: ENFORCED, gap_category: NONE, note: "the cheap gate runs before the expensive stage and blocks above a declared allowance"}
 
- PLC-002: {implementation: NONE_YET, verification: {tool: none}, maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
-   note: "the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers two of the classes",
+ PLC-002: {implementation: NONE_YET, verification: {tool: closer_audit.py, verdict: closer_audit, fixtures: tests/test_closer_audit.py}, maturity: ENFORCED, gap_category: PROSE_ONLY,
+   note: "the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers two of the classes 16 September 2026: EVERY REPAIR IN THE FINISH IS DECLARED AND THE COVERAGE IS JUDGED PER BOARD. pcb_closers.yaml names all fourteen copper-changing stages with the defect class each repairs and why prevention was not possible, and closer_audit.py takes the list of stages from finish.sh itself, so a stage added and not declared is a failure rather than a silence. Three classes are repaired on every board and prevented by one thing, a ground-via grid laid BEFORE the route: a pour island with no via of its own net, a pad its plane cannot reach, and a stitch via the fill has retreated from. Boards D and E declare the grid and are covered; A, B, C and P do not and are not, which is a design item with a measured cost (board P measured the grid at 21 open connections against 0 without, which is why it declares none) and board C is measuring it on two arms right now. Board E5 has no chain, so no closer runs on it at all.",
    remediation: {action: "each closer names its class and its prevention attempt; extend the predictor", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 20}}
 
  RTE-001: {implementation: "gen_pcb_*.py design rules",
