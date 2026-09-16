@@ -34,6 +34,13 @@ RETURN_MM = 1.5          # centre to centre, signal via to its ground via
 FAN_PITCH_MM = 0.5       # a footprint whose finest SMD pad pitch is this or under is a fine-pitch fan
 FAN_MM = 2.2             # a via this close to such a footprint's pads is inside its fan
 RINGS = (0.75, 1.0, 1.25, 1.5) # candidate distances for the ground via
+# 16 September 2026, board D12. Every one of the 64 candidate sites inside 1.5 mm sat on another net's copper
+# for ONE via, HUB_DM3 at the hub port that has been the tight spot on this board since 11 September, and the
+# board is 0 hard and 0 unrouted otherwise. A return via at 2 mm is not the rule's number, but it is a shorter
+# return loop than no via at all, so the search goes on outward and RECORDS WHAT IT ACHIEVED. The judge is not
+# moved by this: `judge()` still asks for the declared radius, the verdict still fails, and the evidence now
+# carries the distance so the choice put to the owner is a measured one rather than "no site".
+OUTER = (1.75, 2.0, 2.25, 2.5, 3.0)
 DIRS = 16                # candidate directions per ring
 PLANE_FRACTION = 0.2     # a layer whose ground zones fill this share of the board is a reference plane
 ROUNDS = 3
@@ -230,7 +237,7 @@ def fix(path, dry=False, radius=RETURN_MM):
     todo = {pt: [] for _, pt in before["positions"]}
     for pt in todo:
         cands = []
-        for r in RINGS:
+        for r in tuple(RINGS) + tuple(OUTER):
             for k in range(DIRS):
                 a = k * 2 * math.pi / DIRS; cands.append((round(pt[0] + r * math.cos(a), 3), round(pt[1] + r * math.sin(a), 3)))
         todo[pt] = cands
@@ -273,7 +280,13 @@ def fix(path, dry=False, radius=RETURN_MM):
         print("return_via: HURT (hard %d -> %d, unrouted %d -> %d): reverting every ground via" % (h0, h1, u0, u1)); shutil.copy(keep, path); os.remove(keep); return 1
     os.remove(keep)
     left = [t for t in after["lacking"]]
+    far = sorted((math.hypot(sp[0] - pt[0], sp[1] - pt[1]), pt, sp) for pt, sp in placed.items()
+                 if math.hypot(sp[0] - pt[0], sp[1] - pt[1]) > radius + 1e-6)
     print("return_via: placed %d ground vias, %d signal vias still without one (hard %d -> %d, unrouted %d -> %d)%s" % (len(placed), len(left), h0, h1, u0, u1, "" if not left else ": " + "; ".join(left[:12]) + (" ..." if len(left) > 12 else "")))
+    for d_, pt, sp in far[:12]:
+        print("return_via:   (%.2f, %.2f): the nearest free ground site is %.2f mm away, BEYOND the declared %.2f mm, "
+              "and it was taken: a longer return loop is still a shorter one than none, and the judge is not "
+              "moved by it" % (pt[0], pt[1], d_, radius))
     for pt, why in list(refused.items())[:12]: print("return_via:   (%.2f, %.2f): %s" % (pt[0], pt[1], why))
     return 0
 
