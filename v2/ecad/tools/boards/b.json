@@ -931,5 +931,49 @@
  },
  "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this.",
  "critical_k": 6,
- "critical_k_why": "l = t_r / (6 t_pd). ECSS-E-HB-20-07A section 6.1.2.3 works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test: that track is ONE rise distance long (t_r / t_pd = 34.5 mm on its microstrip), which is k = 1, and the handbook calls it a textbook radiator. k = 2 is half a known failure and k = 6 is a sixth of it. The number is this project's choice; the handbook is what it was calibrated against, and no standard in this tree states a value for k"
+ "critical_k_why": "l = t_r / (6 t_pd). ECSS-E-HB-20-07A section 6.1.2.3 works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test: that track is ONE rise distance long (t_r / t_pd = 34.5 mm on its microstrip), which is k = 1, and the handbook calls it a textbook radiator. k = 2 is half a known failure and k = 6 is a sixth of it. The number is this project's choice; the handbook is what it was calibrated against, and no standard in this tree states a value for k",
+ "crystals": {
+  "Y1": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y2": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y3": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y4": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y101": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM24M4RFBCCT2T (C164058), 24 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry. The code it replaces, C70571, is an 18 pF part, which the same 18 pF capacitors loaded a third light",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y201": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM24M4RFBCCT2T (C164058), 24 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry. The code it replaces, C70571, is an 18 pF part, which the same 18 pF capacitors loaded a third light",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y301": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM24M4RFBCCT2T (C164058), 24 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry. The code it replaces, C70571, is an 18 pF part, which the same 18 pF capacitors loaded a third light",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  }
+ }
 }
