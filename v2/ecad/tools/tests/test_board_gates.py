@@ -266,3 +266,29 @@ def t_a_via_is_judged_by_the_via_rows_and_a_component_hole_by_the_annular_row():
     thin = os.path.join(tmp, "thin.kicad_pcb"); b2.Save(thin)
     r3 = va.audit(thin, annular_min=0.20, via_ring_min=0.05)
     assert r3["thin_pads"], "a plated component hole at 0.05 mm of ring must still be refused"
+
+
+def t_a_board_that_controls_no_impedance_and_says_so_is_a_declared_zero():
+    """16 September 2026. Board E5 is a 43 by 26 mm contact interposer with no schematic, no routed track and
+    no differential pair, and pcb_board_facts.yaml says so in as many words: `impedance_controlled: false`,
+    `pair_classes: []`. Reading only the board FILE, impedance_check found no pair class and answered
+    INCONCLUSIVE, which held rule STK-001 open on a board where the question cannot arise. A zero the project
+    declares is an answer; a zero nobody declared is not.
+
+    The letter has to come from the facts' own `project` field and not from the board table: E5 has no
+    boards/e5.json because it has no chain to drive, so `letter_for` answers '' for it and the one board this
+    branch exists for fell straight through on the first attempt."""
+    import os, sys
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, tools)
+    import rules_lib, boardtable
+    facts = rules_lib.board_facts() or {}
+    assert facts.get("e5", {}).get("impedance_controlled") is False, "board E5's facts no longer declare it"
+    assert boardtable.letter_for("pcb-e5-block.kicad_pcb") == "", \
+        "board E5 has a board table entry now; the fallback in impedance_check can be simplified"
+    stem = "pcb-e5-block"
+    letter = next((k for k, v in facts.items() if (v or {}).get("project") == stem), "")
+    assert letter == "e5", "the facts no longer resolve %s to a letter" % stem
+    src = open(os.path.join(tools, "impedance_check.py"), encoding="utf-8").read()
+    assert 'get("project") == _stem' in src, "impedance_check resolves the letter some other way again"
+    assert 'impedance_controlled") is False' in src, "the declared zero is not read from the facts"
