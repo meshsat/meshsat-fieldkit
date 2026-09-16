@@ -43,3 +43,8 @@ C455160      C473333      FDMC3612, a 3.3 x 3.3 mm Power-33 body, cannot sit on 
 # Added 12 September 2026 by the orderability pass before the draft order (MESHSAT-862). Read back from
 # JLCPCB's parts API the same afternoon.
 C674167      C674164      fp=WQFN-38 LT8705AIFE#PBF is a TSSOP-38-EP 4.4 mm part and E's U5 land is WQFN-38-1EP 5x7. C674164 is LT8705AEUHF#TRPBF, the QFN-38-EP(5x7) the land was drawn for; JLCPCB stocks it at 3 against a need of 5, so U5 is hand-fitted and declared in jlc-handfit.txt
+
+# Added 17 September 2026 by the crystal sweep (rule CLK-001, decision 37). A value that BEGINS with a
+# frequency is a part whose frequency IS the part, and jlc_certify compares it with the catalogue entry now;
+# this line stops the wrong one reaching a BOM by any other route.
+C448646      -            fp=Crystal_SMD_3225 a 6 MHz row on board D was certified against NX3225SA-25MHz, which is a 25 MHz part: a hub whose PLL wants 6 MHz does not enumerate at 25. There is no replacement code because JLCPCB lists NO passive 6 MHz crystal in a 3225 package at all, which is decision 37: board D's land cannot hold the part it draws
