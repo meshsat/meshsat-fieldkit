@@ -1,0 +1,33 @@
+{
+ "advisory": false,
+ "counts": {
+  "exempt": 87,
+  "judged": 0,
+  "lacking": 0,
+  "same_plane": 126
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "1309202460f2149d"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "RET-004"
+ ],
+ "tool": "return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:15:02Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

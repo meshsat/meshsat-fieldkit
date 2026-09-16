@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "counts": {
+  "agree": 241,
+  "aliased_pins": 0,
+  "board_footprints": 60,
+  "board_only_inert": 0,
+  "fail": 0,
+  "netlist_refs": 56
+ },
+ "denominator": 241,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  },
+  "netlist": {
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "50ba00263d3cb71b"
+  }
+ },
+ "note": "the board against the schematic it was placed from",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "SCH-002"
+ ],
+ "tool": "netlist_board",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:15:13Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

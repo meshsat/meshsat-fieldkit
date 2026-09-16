@@ -1,0 +1,84 @@
+{
+ "advisory": false,
+ "counts": {
+  "exempt": 54,
+  "judged": 167,
+  "lacking": 117,
+  "same_plane": 68
+ },
+ "denominator": 167,
+ "evidence": [
+  "CHG_ILIM at (39.70, 107.37)",
+  "FE_HDRV1 at (39.90, 47.80)",
+  "FE_LDRV2 at (40.81, 60.78)",
+  "FE_EN at (42.04, 77.35)",
+  "FE_HDRV2 at (44.49, 62.30)",
+  "CH_LODRV1 at (44.49, 86.25)",
+  "POE_COMP at (44.49, 117.62)",
+  "FE_MODE at (46.60, 77.21)",
+  "POE_VCC at (47.48, 119.15)",
+  "PROCHOT at (48.00, 109.84)",
+  "POE_HDRV1 at (48.42, 148.10)",
+  "POE_EN at (48.67, 131.82)",
+  "FE_RT at (48.96, 73.25)",
+  "FE_LDRV1 at (49.42, 51.25)",
+  "FE_EN at (50.67, 49.82)",
+  "CH_BTST1 at (50.75, 93.25)",
+  "CH_BTST1 at (50.82, 103.63)",
+  "CHG_ILIM at (51.17, 111.39)",
+  "POE_PGOOD at (51.47, 130.76)",
+  "CH_VDDA at (52.15, 103.24)",
+  "FE_COMP at (52.59, 72.29)",
+  "FE_SLOPE at (52.90, 73.25)",
+  "FE_HDRV1 at (57.65, 49.95)",
+  "POE_HDRV1 at (59.33, 132.47)",
+  "POE_HDRV2 at (59.33, 137.67)",
+  "CH_BTST1 at (59.98, 108.44)",
+  "CH_BTST2 at (60.26, 106.60)",
+  "FE_BOOT1 at (60.50, 51.12)",
+  "CH_VDDA at (60.86, 107.28)",
+  "FE_LDRV1 at (61.33, 51.77)",
+  "FE_HDRV2 at (61.33, 55.67)",
+  "FE_VCC at (61.76, 63.08)",
+  "FE_SS at (62.45, 64.23)",
+  "REGN at (64.63, 104.44)",
+  "FE_BOOT1 at (68.55, 64.68)",
+  "CHG_INHIBIT at (75.92, 125.76)",
+  "PD_PGOOD at (81.76, 128.34)",
+  "EXP2_SPD at (82.86, 129.32)",
+  "POE_PGOOD at (82.86, 130.62)",
+  "PA_PGOOD at (83.69, 129.97)",
+  "PA_PGOOD at (85.44, 95.85)",
+  "EMCON_HW at (86.67, 138.08)",
+  "PA_EN at (87.50, 137.43)",
+  "B33_FB at (88.58, 96.24)",
+  "PD_PGOOD at (90.97, 124.74)",
+  "PD_EN at (92.35, 132.50)",
+  "PD_UFP at (92.69, 131.93)",
+  "EXP2_SP3 at (93.52, 131.28)",
+  "POE_EN at (95.69, 129.97)",
+  "PA_VCC at (99.65, 94.70)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "RET-004"
+ ],
+ "tool": "return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:13:30Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

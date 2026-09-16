@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "counts": {
+  "classes_declared": 5,
+  "met": 0,
+  "missed": 0,
+  "pairs_on_board": 1
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  }
+ },
+ "note": "the board declares its pair classes and gives none a target, which is its recorded design",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "IMP-001",
+  "PAIR-001",
+  "STK-001"
+ ],
+ "tool": "impedance_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:15:13Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

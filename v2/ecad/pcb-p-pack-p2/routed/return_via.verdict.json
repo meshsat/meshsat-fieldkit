@@ -1,0 +1,77 @@
+{
+ "advisory": false,
+ "counts": {
+  "exempt": 21,
+  "judged": 61,
+  "lacking": 43,
+  "same_plane": 0
+ },
+ "denominator": 61,
+ "evidence": [
+  "SMBC at (77.14, 110.88)",
+  "VC3_F at (77.51, 100.43)",
+  "SRP_F at (79.50, 100.23)",
+  "CELL1 at (80.25, 105.59)",
+  "CELL1 at (80.48, 110.77)",
+  "VC2_F at (81.78, 87.72)",
+  "PBI at (82.45, 87.31)",
+  "PACK_F at (83.29, 105.10)",
+  "DSG_R at (84.65, 85.64)",
+  "SRN_F at (85.16, 88.06)",
+  "VC1_F at (85.86, 103.62)",
+  "CELL2 at (88.89, 105.09)",
+  "VC2_F at (89.78, 103.57)",
+  "SMBC_I at (90.02, 94.67)",
+  "VCC_F at (90.02, 95.98)",
+  "SRP_F at (90.28, 104.72)",
+  "TS3 at (90.42, 96.84)",
+  "PACK_F at (91.05, 100.33)",
+  "SRP_F at (93.39, 104.06)",
+  "VC1_F at (94.75, 90.79)",
+  "VCC_F at (95.50, 102.21)",
+  "VC2_F at (95.97, 88.62)",
+  "CHG_R at (96.10, 100.41)",
+  "SRN_F at (96.23, 93.19)",
+  "VCC_F at (96.77, 96.09)",
+  "CHG_G at (100.25, 90.25)",
+  "CELL3 at (100.25, 106.65)",
+  "CHG_G at (102.30, 101.36)",
+  "CHG_R at (102.32, 106.19)",
+  "VCC_F at (102.52, 95.84)",
+  "SMBC_I at (103.16, 96.39)",
+  "CELL1 at (103.18, 110.77)",
+  "VCC_F at (105.64, 93.44)",
+  "SMBD at (105.91, 80.84)",
+  "SMBD at (106.59, 103.08)",
+  "DSG_G at (109.48, 82.52)",
+  "DSG_R at (110.10, 81.45)",
+  "DSG_G at (110.24, 100.61)",
+  "PRES at (110.31, 97.97)",
+  "SMBC at (110.67, 89.55)",
+  "SMBD at (110.67, 91.45)",
+  "DSG_R at (111.98, 101.49)",
+  "SMBC_I at (114.48, 100.49)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  }
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "RET-004"
+ ],
+ "tool": "return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:15:14Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

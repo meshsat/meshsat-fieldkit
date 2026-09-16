@@ -1,0 +1,9 @@
+{
+ "what": "a read-only re-judgement of this board under the rule set named in each verdict",
+ "board": "pcb-c-display",
+ "board_sha256": "410eeb604ec12c4c7214340c2bc2efd4c6775b815dca002623bd4453e9a3615a",
+ "label": "sweep-0ceb6f1",
+ "tools": "",
+ "taken": "2026-09-16T00:14:35+00:00",
+ "read_only": "the board sha256 was identical before and after; a sweep that changes a board writes nothing"
+}

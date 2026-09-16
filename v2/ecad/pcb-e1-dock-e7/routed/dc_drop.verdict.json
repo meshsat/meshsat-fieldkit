@@ -1,4 +1,5 @@
 {
+ "advisory": false,
  "counts": {
   "met": 2,
   "missed": 0,
@@ -9,12 +10,24 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5801c9149c3e8a75"
+   "sha256_16": "1309202460f2149d"
   }
  },
  "note": "cell 0.50 mm, default budget 2%",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "PI-001",
+  "PI-002"
+ ],
  "tool": "dc_drop",
- "ts": "2026-09-13T22:25:19Z",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:15:00Z",
  "verdict": "PASS",
- "version": "d974d581e3a9+dirty"
+ "version": "unknown"
 }

@@ -1,0 +1,66 @@
+{
+ "advisory": false,
+ "counts": {
+  "by_type": {
+   "clearance": 14,
+   "shorting_items": 8,
+   "solder_mask_bridge": 8
+  },
+  "hard": 30,
+  "report": {
+   "copper_sliver": 1,
+   "silk_edge_clearance": 9,
+   "silk_over_copper": 47,
+   "silk_overlap": 69,
+   "track_dangling": 1,
+   "via_dangling": 199
+  },
+  "stage": "post",
+  "types_checked": 15,
+  "unrouted": 499
+ },
+ "denominator": 15,
+ "evidence": [
+  "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 6.2310 mm",
+  "   clearance | Pad 8 [/BANK2_UPD_P] of U210 on F.Cu / Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm",
+  "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 92.6570 mm",
+  "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 57.2907 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
+  "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 0.4105 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
+  "   clearance | Track [/HOST3_0TX_N] on B.Cu, length 0.5670 mm / Track [/HOST3_0TX_P] on B.Cu, length 1.2105 mm",
+  "   shorting_items | Pad 8 [/BANK2_UPD_P] of U210 on F.Cu / Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm",
+  "   shorting_items | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
+  "   shorting_items | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
+  "   shorting_items | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
+  "   shorting_items | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
+  "   shorting_items | Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm / Pad 8 [/BANK2_UPD_P] of U210 on F.Cu",
+  "   solder_mask_bridge | Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm / Pad 8 [/BANK2_UPD_P] of U210 on F.Cu",
+  "   solder_mask_bridge | Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm / Pad 8 [/BANK2_UPD_P] of U210 on F.Cu",
+  "   solder_mask_bridge | Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm / Pad 8 [/BANK2_UPD_P] of U210 on F.Cu",
+  "   solder_mask_bridge | Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm / Pad 8 [/BANK2_UPD_P] of U210 on F.Cu",
+  "   solder_mask_bridge | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
+  "   solder_mask_bridge | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu"
+ ],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-b-compute-drc.json",
+   "sha256_16": "416d4f49bab11ee6"
+  }
+ },
+ "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "RTE-001",
+  "RTE-002"
+ ],
+ "tool": "hardset-routed-board-gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:13:56Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

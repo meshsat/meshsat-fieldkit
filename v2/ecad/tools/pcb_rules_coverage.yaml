@@ -79,13 +79,18 @@ coverage:
    note: "the 3 mm distance is a project number applied to every device; the loop inductance it stands for is never computed, and a board declares exceptions in an allow file",
    remediation: {action: "derive the distance per device class from the current's spectral content; keep the 3 mm as a screen", owner: SESSION, depends_on: [SI-001], p50_h: 6, p80_h: 16}}
 
- PI-001: {implementation: "power_copper.py, gen_pcb_*3.py bands", verification: {tool: dc_drop.py, verdict: dc_drop, fixtures: tests/test_conductor_current.py},
+ PI-001: {implementation: "power_copper.py, gen_pcb_*3.py bands", verification: {tool: dc_drop.py, verdict: dc_density, fixtures: tests/test_conductor_current.py},
    maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "the conductor measure is implemented and tested; its limit comes from a formula in a code comment, no IPC document is in the tree, and IPC-2152 has never been considered",
+   note: "the conductor measure is implemented and tested; its limit comes from a formula in a code comment, no IPC document is in the tree, and IPC-2152 has never been considered.
+     16 September 2026: it reads its OWN verdict now (dc_density). One verdict served both power rules, so a density
+     miss failed the board through the drop rule and a limit with no source decided a board through a rule that has
+     one. Board A read MISSED VBAT 0.38 percent of 14.4 V, which looks like a voltage failure and is a density one",
    remediation: {action: "obtain the standard, pin it under v2/vendor/, cite the clause, and re-judge the four boards", owner: SESSION, depends_on: [], p50_h: 4, p80_h: 12}}
 
  PI-002: {implementation: "power_copper.py", verification: {tool: dc_drop.py, verdict: dc_drop, fixtures: tests/test_conductor_current.py},
-   maturity: ENFORCED, gap_category: NONE, note: "the solver's residual is checked before the number is read"}
+   maturity: ENFORCED, gap_category: NONE,
+   note: "the solver's residual is checked before the number is read. Since 16 September the dc_drop verdict carries the
+     VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under PI-001"}
 
  PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
    note: "via current capacity is asserted in generator comments and measured by nothing",

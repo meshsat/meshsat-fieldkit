@@ -1,0 +1,33 @@
+{
+ "advisory": false,
+ "counts": {
+  "met": 1,
+  "missed": 0,
+  "undeclared": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-d-aprs.kicad_pcb",
+   "sha256_16": "81614025d9446af5"
+  }
+ },
+ "note": "cell 0.50 mm, default budget 2%",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "PI-001",
+  "PI-002"
+ ],
+ "tool": "dc_drop",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:14:44Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

@@ -69,5 +69,348 @@
   "PAIR_CORRIDOR_SLACK": 0.3,
   "PAIR_CORRIDOR_SLACK_SLIM": 0.1
  },
- "_pair_env_why": "14 September 2026, measured on A's own placed board, one variable. At the tool's default corridor slack the pre-router lays 3 of 3 pairs and leaves USB_D8's two legs 1.78 mm apart, which the owner's 1 mm length gate refuses and no meander can fix: every bump the leg-length matcher proposes is refused by the leg's own map, because A's pair corridors have no free copper beside them. At 0.30 (slim 0.10) the same board lays the same 3 of 3 and **USB_D8 comes out inside the matcher's own half-millimetre tolerance**, so it never needs a bump: a wider corridor is a straighter path, and a straighter path is two legs of the same length. USB_WALL stays 1.47 mm apart at both values and is owner decision 25."
+ "_pair_env_why": "14 September 2026, measured on A's own placed board, one variable. At the tool's default corridor slack the pre-router lays 3 of 3 pairs and leaves USB_D8's two legs 1.78 mm apart, which the owner's 1 mm length gate refuses and no meander can fix: every bump the leg-length matcher proposes is refused by the leg's own map, because A's pair corridors have no free copper beside them. At 0.30 (slim 0.10) the same board lays the same 3 of 3 and **USB_D8 comes out inside the matcher's own half-millimetre tolerance**, so it never needs a bump: a wider corridor is a straighter path, and a straighter path is two legs of the same length. USB_WALL stays 1.47 mm apart at both values and is owner decision 25.",
+ "_signal_classes_why": "Rule RET-001, 16 September 2026. The return-path rule asks what a net's spectral content deserves, so every signal net needs a class and a reason. A net matched by no entry here is UNKNOWN and is judged at the STRICTEST bar, so an omission costs a failure rather than buying a pass. Patterns are shell globs over the net name without its leading slash, first match wins.",
+ "signal_classes": [
+  {
+   "pattern": "USB_*_P",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a USB 2.0 data line: 480 Mbit/s with sub-nanosecond edges"
+  },
+  {
+   "pattern": "USB_*_N",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other half of the same USB pair"
+  },
+  {
+   "pattern": "RF_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a radio-frequency path to an SMA jack or a blind-mate receptacle, from 144 MHz to 6 GHz"
+  },
+  {
+   "pattern": "*_SW",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a converter switch node: the fastest edges on this board and its primary radiated source"
+  },
+  {
+   "pattern": "*_SW1",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a four-switch buck-boost's first switch node"
+  },
+  {
+   "pattern": "*_SW2",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the same converter's second switch node"
+  },
+  {
+   "pattern": "*_BOOT1",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a bootstrap node riding on a switch node"
+  },
+  {
+   "pattern": "*_BOOT2",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the second bootstrap node of the same converter"
+  },
+  {
+   "pattern": "*_BOOT",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the bootstrap node of a single-switch buck, riding on its switch node and carrying the same edges"
+  },
+  {
+   "pattern": "*_BST",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a bootstrap node riding on a switch node"
+  },
+  {
+   "pattern": "*_BTST?",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a charger's bootstrap node, as above"
+  },
+  {
+   "pattern": "*_HDRV?",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a high-side gate drive: amperes into a FET gate in nanoseconds"
+  },
+  {
+   "pattern": "*_LDRV?",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a low-side gate drive, as above"
+  },
+  {
+   "pattern": "*_HIDRV?",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a charger's high-side gate drive"
+  },
+  {
+   "pattern": "*_LODRV?",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a charger's low-side gate drive"
+  },
+  {
+   "pattern": "PD_CC?",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "USB Power Delivery's configuration channel, BMC at 300 kHz"
+  },
+  {
+   "pattern": "PD_VTX",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the PD controller's transmit node into the same channel"
+  },
+  {
+   "pattern": "SCL",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "I2C at 100 or 400 kHz, open drain"
+  },
+  {
+   "pattern": "SDA",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same I2C bus"
+  },
+  {
+   "pattern": "EXP_INT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the expander's interrupt, an edge into a GPIO"
+  },
+  {
+   "pattern": "INA_ALERT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a current monitor's alert, an open-drain edge"
+  },
+  {
+   "pattern": "PROCHOT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the charger's processor-hot flag, an open-drain edge that must be seen quickly"
+  },
+  {
+   "pattern": "*_PGOOD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a power-good flag, an open-drain static level"
+  },
+  {
+   "pattern": "*_FB",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a converter's feedback divider tap: a DC level inside the control loop"
+  },
+  {
+   "pattern": "*_COMP",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an error amplifier's compensation node, a capacitor and a resistor to ground"
+  },
+  {
+   "pattern": "*_COMPC",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the second element of the same compensation network"
+  },
+  {
+   "pattern": "*_SS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a soft-start capacitor node, a ramp of milliseconds"
+  },
+  {
+   "pattern": "*_RT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a frequency-setting resistor node, a DC bias"
+  },
+  {
+   "pattern": "*_SLOPE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slope-compensation node, a DC bias"
+  },
+  {
+   "pattern": "*_MODE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a mode-select pin, strapped to a static level"
+  },
+  {
+   "pattern": "*_CS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a current-sense input across a shunt, millivolts of DC with a filter"
+  },
+  {
+   "pattern": "*_VCC",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a controller's own supply pin with its decoupling, a local rail"
+  },
+  {
+   "pattern": "*_VDDA",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an analogue supply pin with its decoupling"
+  },
+  {
+   "pattern": "*_DVDD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a digital supply pin with its decoupling"
+  },
+  {
+   "pattern": "*_VAUX",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an auxiliary supply node, decoupled locally"
+  },
+  {
+   "pattern": "*_EN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an enable, a static level with an RC on it"
+  },
+  {
+   "pattern": "*_FLT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a fault flag, an open-drain static level"
+  },
+  {
+   "pattern": "*_ILM",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an eFuse current-limit resistor node, a DC bias"
+  },
+  {
+   "pattern": "*_DVDT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an eFuse slew-rate capacitor node, deliberately slow"
+  },
+  {
+   "pattern": "*_OVLO",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an overvoltage-lockout divider tap, a DC level"
+  },
+  {
+   "pattern": "CH_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a charger control or sense node: comparator inputs, divider taps and local supplies"
+  },
+  {
+   "pattern": "PD_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a Power Delivery control, gate or supply node other than the configuration channel above"
+  },
+  {
+   "pattern": "SLOT_EN?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot enable, a static level"
+  },
+  {
+   "pattern": "EXP2_SP*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an unused expander pin, driven by nothing"
+  },
+  {
+   "pattern": "*_SPARE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a spare conductor with no driver, landing on a test point"
+  },
+  {
+   "pattern": "DOCK_SPARE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a spare dock contact with no driver"
+  },
+  {
+   "pattern": "TX_INHIBIT_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down"
+  },
+  {
+   "pattern": "EMCON_HW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the emission-control line, a static level"
+  },
+  {
+   "pattern": "ZEROIZE_HW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the zeroize line, a static level"
+  },
+  {
+   "pattern": "SHORE_INHIBIT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the shore and cold-charge inhibit, a static level through an optocoupler"
+  },
+  {
+   "pattern": "PI_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the shutdown-request and kill lines, static levels"
+  },
+  {
+   "pattern": "KILL",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the main power controller's kill input, a static level"
+  },
+  {
+   "pattern": "MAIN_PB",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the main push-button input, pressed by a person"
+  },
+  {
+   "pattern": "PRECHG",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the pre-charge contact, a DC path through a resistor"
+  },
+  {
+   "pattern": "CHRG_OK",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the charger's status flag, a static level"
+  },
+  {
+   "pattern": "CHG_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a charger current-limit or inhibit node, a DC bias or a static level"
+  },
+  {
+   "pattern": "IADPT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the adapter current monitor output, a DC level"
+  },
+  {
+   "pattern": "IBAT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the battery current monitor output, a DC level"
+  },
+  {
+   "pattern": "PSYS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the system power monitor output, a DC level"
+  },
+  {
+   "pattern": "VMON",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a voltage monitor divider tap into an ADC"
+  },
+  {
+   "pattern": "MON_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a monitor enable or fault flag, static levels"
+  },
+  {
+   "pattern": "HEAT_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the heating pad's enable and fault, static levels"
+  },
+  {
+   "pattern": "RAIL_EN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a rail enable, a static level"
+  },
+  {
+   "pattern": "DEV_EN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the device rail's enable, a static level"
+  },
+  {
+   "pattern": "D8_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the APRS board's rail enable and fault, static levels"
+  },
+  {
+   "pattern": "TR_APRS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the transmit indication from the APRS board, a static level"
+  },
+  {
+   "pattern": "REGN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the charger's internal regulator output, a local supply with its own capacitor"
+  },
+  {
+   "pattern": "*_OUT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a converter's own output node after its inductor and capacitors, a DC rail"
+  }
+ ]
 }

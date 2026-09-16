@@ -1,4 +1,5 @@
 {
+ "advisory": false,
  "counts": {
   "by_type": {},
   "hard": 0,
@@ -18,12 +19,24 @@
  "inputs": {
   "drc": {
    "path": "out/pcb-e1-dock-drc.json",
-   "sha256_16": "3e7b0aa541e9923b"
+   "sha256_16": "e3d0b3301a6260df"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "RTE-001",
+  "RTE-002"
+ ],
  "tool": "hardset-routed-board-gate",
- "ts": "2026-09-13T22:25:17Z",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:14:55Z",
  "verdict": "PASS",
- "version": "d974d581e3a9+dirty"
+ "version": "unknown"
 }

@@ -1,0 +1,42 @@
+{
+ "advisory": false,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_edge_clearance": 4,
+   "silk_over_copper": 17,
+   "silk_overlap": 39,
+   "track_dangling": 31,
+   "via_dangling": 60
+  },
+  "stage": "post",
+  "types_checked": 15,
+  "unrouted": 0
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-a-power-drc.json",
+   "sha256_16": "bbb42a7bd7ab9be2"
+  }
+ },
+ "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "RTE-001",
+  "RTE-002"
+ ],
+ "tool": "hardset-routed-board-gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "4954c9b46c4e42f0"
+ },
+ "ts": "2026-09-16T00:13:11Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
