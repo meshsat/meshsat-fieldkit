@@ -1226,6 +1226,19 @@ rules:
    maturity_at_writing: UNASSESSED
 
  - id: RF-001
+   false_positive_analysis: >
+     A wrong refusal here has four shapes and each is answered. A net is judged only because its CLASS carries
+     a single-ended target, so a DC feed that happens to sit in the RF class would be measured as a
+     transmission line: the classes are declared per board and the RF class holds RF conductors only, which
+     the netlist shows. A line on an inner layer is judged against the copper layers above and below it
+     whether or not they are a reference under that particular track, which is impedance_check's harder
+     question for a pair and is not asked here, so a line over a routing layer is reported with the form used
+     and not silently excused. A stub of a millimetre is not a transmission line at any frequency this kit
+     uses, and the length is printed beside every verdict so a short one can be read as what it is. And the
+     closed form is the closed form: this project's 2D-solver calibration was measured on differential
+     geometries and is deliberately NOT applied to a single-ended line, so the number carries the form's own
+     few percent and the tolerance is ten. The finding it produced on its first run is not marginal: eleven
+     lines at 25.5 ohm against 50.
    domain: RF
    short_name: RF paths are designed as RF
    requirement: >

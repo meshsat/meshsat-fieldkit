@@ -9,7 +9,7 @@ the boards; each one needs hardware that does not exist yet.
 
 | rule | what is unknown | what decides it | owner |
 |---|---|---|---|
-| RF-001 RF paths are designed as RF | Power reflected into a PA, harmonics outside the licensed band, and desense of the receivers beside it. | compute each RF line on its stackup, simulate the LPF, and record the module keep-out check | OWNER |
+| RF-001 RF paths are designed as RF | Power reflected into a PA, harmonics outside the licensed band, and desense of the receivers beside it. | board A's eleven RF paths take an outer layer at the class width (the A40 placement), then the LPF simulation  | OWNER |
 | THM-001 every dissipating part has a path | Silent derating, shortened life, and thermal shutdown in the sun. | the efficiencies and the dissipators are DECLARED as of 16 September 2026 and five boards carry a dissipation  | SESSION |
 | EMC-001 source, path, victim | Receiver desense in the kit's own box, and a product that cannot pass an emissions test. | an EMC sheet per board and a pre-compliance plan for the kit | SESSION |
 | REL-001 the build survives its service life | A tall part shears its joints, a connector wears, a coated board traps moisture. | a reliability sheet per board and the test plan for the prototype | OWNER |

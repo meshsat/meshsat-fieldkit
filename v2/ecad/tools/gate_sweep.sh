@@ -142,6 +142,10 @@ run "reliability" python3 $T/reliability.py --ecad "$E" --board $L
 # real distance from each sensitive node's copper to the nearest switching copper and reports it beside the
 # clearance the board asked for.
 run "sensitive nodes" python3 $T/sensitive_nodes.py $N.kicad_pcb --board $L
+# A SINGLE-ENDED CONTROLLED LINE IS THE WIDTH ITS OWN STACKUP MAKES 50 OHM (rule RF-001, 16 September 2026).
+# Every board declares an RF class with a 50 ohm single-ended target and impedance_check judges PAIRS: the
+# string z_se does not appear in it. The target was declared on every board and read by nothing.
+run "rf lines" python3 $T/rf_line.py $N.kicad_pcb
 # THE ROTATIONS (rule DFA-001). Every polarised footprint the boards place, against the table the ordering
 # session keeps and the date each row was compared with the assembler's own preview.
 run "assembly set" python3 $T/assembly_set.py --ecad "$E" --board $L

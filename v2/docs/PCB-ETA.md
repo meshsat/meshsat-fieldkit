@@ -11,8 +11,8 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 102 h | 308 h |
-| the same at 6 hours a day | 17.0 days | 51.3 days |
+| engineering effort, one worker | 100 h | 302 h |
+| the same at 6 hours a day | 16.7 days | 50.3 days |
 | critical path through the dependencies | 22 h | 72 h |
 
 Read the table above as WORK REMAINING and never as a delivery date. The two are different questions: a
@@ -27,7 +27,7 @@ figures are below.
 | PARALLEL_AGENT | 13 | 81 h | 248 h | session work with no shared file, so several may run at once in their own worktrees |
 | OWNER | 10 | 40 h | 207 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | VENDOR_OR_STANDARD_WAIT | 5 | 29 h | 134 h | a third party's answer, or a document that has to be obtained and read |
-| PARALLEL_BOX | 3 | 17 h | 48 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
+| PARALLEL_BOX | 3 | 15 h | 42 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
 | SEQUENTIAL | 2 | 4 h | 12 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
 
 ## Elapsed, at 1 session worker(s) and 2 rented box(es)
@@ -35,7 +35,7 @@ figures are below.
 | | P50 | P80 |
 |---|---|---|
 | session pool | 14.2 days | 43.3 days |
-| fleet pool | 0.4 days | 1.0 days |
+| fleet pool | 0.3 days | 0.9 days |
 | longest dependency chain | 3.3 days | 12.0 days |
 | **design package ready for prototype** | **14.2 days** | **43.3 days** |
 
