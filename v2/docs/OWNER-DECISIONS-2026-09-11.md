@@ -1612,6 +1612,15 @@ outright. Board E's sensor pod is in the second group rather than the first.
 option is taken: that is a topology error rather than a missing part, and option 1 includes moving it. If you
 take option 2 or 3, say whether that move is in or out, because it costs nothing and changes no part count.
 
+**DECISION 28, CONFIRMED AT THE CORRECTED DESIGN RULES, 16 September 2026 06:10 CEST (`/root/piso6`).** The two
+layer case was measured again, this time on a board generated at the 0.16 mm track and clearance the fabricator
+states for 2 oz on two layers, which is what board P had been designed below. **P6 round one: 0 hard, 45
+connections open of 35 nets, four vias, 21 minutes.** P5 at the old 0.127 mm rules left 44 open of the same 35
+nets. So the design rules were never what stopped this board: **two layers cannot route it**, at either rule
+set, and the four layer arm that routed it 0 and 0 is still the only arm that has. The round two remedy is
+running for completeness; nothing about it can change the shape of that answer.
+
+
 ## Decision 32, board D's last return via, 16 September 2026
 
 **The state.** D12 routes **0 hard and 0 unrouted**, every gate passes, and one check refuses it: of 37 signal
