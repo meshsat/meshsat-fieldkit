@@ -365,8 +365,15 @@ def _size(net, n, drill, where):
     worst = 0.0
     for _b in _VIA_MEASURED.get(net.lstrip("/"), []):
         if math.hypot(_b[0] - where[0], _b[1] - where[1]) <= 2.0: worst = max(worst, _b[2])
+    # THE SITE'S WHOLE CURRENT, not one barrel's, because the two say different things (16 September 2026,
+    # second reading). Three of the thirteen sites this reported already carry FOUR or SIX barrels and still
+    # have one over its rating: at those the count is not the defect, the SHARING is, and "this site wants
+    # about 4" read as though four more were needed. The site total and the even share are measured here so
+    # the sentence can say which of the two it is.
+    total = sum(b[2] for b in _VIA_MEASURED.get(net.lstrip("/"), [])
+                if math.hypot(b[0] - where[0], b[1] - where[1]) <= 2.0)
     if worst > lim:
-        _VIA_SHORT.append((net, where, n, int(math.ceil(worst / max(lim, 1e-6))), worst, drill))
+        _VIA_SHORT.append((net, where, n, int(math.ceil(total / max(lim, 1e-6))), worst, drill, total))
 
 
 def row(net, x0, x1, y, n=3, drill=0.4):
@@ -745,10 +752,15 @@ except Exception as e:
 # answer. Every site is listed with what it carries and what one barrel of its own drill is rated for.
 if _VIA_SHORT:
     print("placement: %d via hand-over(s) had a barrel over its rating on the last solved board:" % len(_VIA_SHORT))
-    for _n, _w, _have, _need, _a, _d in sorted(_VIA_SHORT, key=lambda t: -t[4]):
-        print("placement:   %-10s at (%6.1f, %6.1f): %d barrel(s) of %.2f mm here, and the mesh put %.2f A "
-              "through one of them against %.2f A for its wall, so this site wants about %d"
-              % (_n, _w[0], _w[1], _have, _d, _a, barrel_a(_d), _need))
+    for _n, _w, _have, _need, _a, _d, _tot in sorted(_VIA_SHORT, key=lambda t: -t[4]):
+        _lim = barrel_a(_d); _share = _tot / max(_have, 1)
+        _why = ("the barrels do not SHARE: %d here would carry %.2f A each if they did, which is inside %.2f A, "
+                "so this is copper feeding one of them and not a shortage of holes"
+                % (_have, _share, _lim)) if _share <= _lim and _have >= _need else \
+               ("it wants about %d barrel(s) of this drill for the %.2f A the site carries" % (_need, _tot))
+        print("placement:   %-10s at (%6.1f, %6.1f): %d barrel(s) of %.2f mm, the site carries %.2f A and the "
+              "worst one %.2f A against %.2f A for its wall; %s"
+              % (_n, _w[0], _w[1], _have, _d, _tot, _a, _lim, _why))
 elif _VIA_MEASURED:
     print("placement: no via hand-over on the last solved board had a barrel over its rating")
 pcbnew.SaveBoard(BOARD, board)
