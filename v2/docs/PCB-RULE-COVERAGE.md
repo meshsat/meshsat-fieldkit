@@ -57,7 +57,7 @@ appears in the gap register.
 | SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | check_contracts.py -> check_contracts |  | **OWNER_DECISION_REQUIRED** |
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml | rules_status.py -> rules_complete | tests/test_rules_status.py | **ENFORCED** |
 | SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | rules_render.py prototype_doc | rules_render.py | tests/test_rule_gate_mapping.py | **VERIFIED_MANUALLY** |
-| SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
+| SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | signal_class.py declarations | edge_length.py -> edge_length | tests/test_edge_length.py | **GENERATED_ONLY** |
 | STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | impedance_check.py, fab_limits.py -> impedance_check, fab_limits | tests/test_stackup_reader.py, tests/test_fab_limits.py | **ENFORCED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
@@ -72,9 +72,9 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 28 |
-| GENERATED_ONLY | 13 |
+| GENERATED_ONLY | 14 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 7 |
+| OPEN | 6 |
 | SOURCE_UNVERIFIED | 2 |
 | OWNER_DECISION_REQUIRED | 3 |

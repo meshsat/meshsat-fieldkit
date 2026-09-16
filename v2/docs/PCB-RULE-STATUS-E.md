@@ -10,8 +10,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | result | rules | percent |
 |---|---|---|
 | PASS | 16 | 33.3 |
-| FAIL | 6 | 12.5 |
-| INCONCLUSIVE | 26 | 54.2 |
+| FAIL | 7 | 14.6 |
+| INCONCLUSIVE | 25 | 52.1 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
@@ -19,7 +19,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | check_contracts INCONCLUSIVE |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42, 'rails_unsplit': 0} |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carr |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
@@ -37,15 +37,15 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the principle is implemented and the heuristic is no longer standing in for i |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | intent_return_path PASS of 75 |
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a |
-| RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'exempt': 79, 'judged': 67, 'lacking': 5, 'same_plane': 0, 'slow': 58} |
+| RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'exempt': 79, 'judged': 60, 'lacking': 4, 'same_plane': 0, 'slow': 65} |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification |
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 1 |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sen |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datash |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect FAIL: {'behind_an_active_part': 4, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 0} |
-| ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no verification: an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been measured on any board, and no p |
-| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit stage |
+| ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruct |
+| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's o |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-13T22:12:06, before the evidence epoch 2026-09-16T00:35:00 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | hardset-routed-board-gate FAIL: {'by_type': {}, 'hard': 0, 'report': {'silk_over_copper': 4, 'silk_overlap': 25, 'starved_thermal': 1, 'track_dangling |

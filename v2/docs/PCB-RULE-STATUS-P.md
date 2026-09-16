@@ -10,8 +10,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | result | rules | percent |
 |---|---|---|
 | PASS | 13 | 31.0 |
-| FAIL | 5 | 11.9 |
-| INCONCLUSIVE | 24 | 57.1 |
+| FAIL | 6 | 14.3 |
+| INCONCLUSIVE | 23 | 54.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -19,7 +19,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | check_contracts INCONCLUSIVE |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42, 'rails_unsplit': 0} |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carr |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
@@ -38,7 +38,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sen |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | port_protect INCONCLUSIVE |
-| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit stage |
+| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's o |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
