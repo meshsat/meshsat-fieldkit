@@ -8106,7 +8106,7 @@ declaration changed: the six-layer route reached 0 hard and 1 unrouted in 14.7 m
 before any finish, which is the state the stub router exists for. Four-layer C fails rule 1 on 81 of 127 nets
 by its stack; that is the comparison the decision needs.
 
-### 32.205 A route stopped at nine and a half hours, and two boards came within one item of clean (16 September 2026, 06:45 CEST; MESHSAT-862)
+### 32.205 A route stopped at nine and a half hours, and two boards came within one item of clean (16 September 2026, 06:15 CEST; MESHSAT-862)
 
 **Board B's route was routing a design that cannot ship, and the cross-board contract had been saying so all
 night.** SCH-003 failed on all seven boards with the same twelve lines, every one of them about board B:
