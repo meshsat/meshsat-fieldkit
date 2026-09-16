@@ -1337,8 +1337,8 @@ thickness, and the aspect ratio of every hole is inside the same document's limi
 | release effect | **BLOCKER** |
 | risk | FABRICATION, RELIABILITY |
 | verified by | SCRIPT, VENDOR_CONFIRMATION at ROUTED_BOARD (automatable) |
-| source | SOURCE_UNVERIFIED |
-| | fabricator PCB capability page, the selected fabricator -- v2/vendor/seals/jlcpcb-pcb-capabilities-page.txt |
+| source | VERIFIED |
+| | JLCPCB rigid PCB manufacturing capabilities, JLCPCB, annular ring: PTH multilayer 1 oz recommended 0.20 mm or above, absolute minimum 0.15 mm; PTH 2-layer 1 oz recommended 0.25 mm or above, absolute minimum 0.18 mm; NPTH pad >= 0.45 mm. The 2 oz case is NOT stated, so boards E5 and P stay unjudged on the ring -- v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md |
 | implementation | escape.py, prefanout.py, gen_pcb_*.py minimums |
 | maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
