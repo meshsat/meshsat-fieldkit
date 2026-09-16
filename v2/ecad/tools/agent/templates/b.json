@@ -24,5 +24,7 @@
   }
  ],
  "_runs": "pair",
- "_runs_why": "What this run actually executes. arms.py re-runs the pre-router on an already placed board, so a knob read only by the placement generator cannot act and the validator refuses it rather than letting the arm measure nothing."
+ "_runs_why": "What this run actually executes. arms.py re-runs the pre-router on an already placed board, so a knob read only by the placement generator cannot act and the validator refuses it rather than letting the arm measure nothing.",
+ "_max_arms": 4,
+ "_max_arms_why": "Board B's pair run. Four arms a cycle: the DIFF100 pass is the measurement and one pass is about ten minutes on the placement box, so four fit inside one wall-clock cycle and the box admits twenty-four. Declared explicitly on 16 September 2026 because an absent value used to mean one silently."
 }

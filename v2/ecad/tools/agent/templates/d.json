@@ -17,5 +17,7 @@
   }
  ],
  "_runs": "pair",
- "_runs_why": "What this run actually executes. arms.py re-runs the pre-router on an already placed board, so a knob read only by the placement generator cannot act and the validator refuses it rather than letting the arm measure nothing."
+ "_runs_why": "What this run actually executes. arms.py re-runs the pre-router on an already placed board, so a knob read only by the placement generator cannot act and the validator refuses it rather than letting the arm measure nothing.",
+ "_max_arms": 2,
+ "_max_arms_why": "Board D's pair run. Two arms a cycle: D lays five pairs, so the signal per arm is small and a wide cycle spends the box on a board that is already at 0 hard and 0 unrouted. Declared explicitly on 16 September 2026 because an absent value used to mean one silently."
 }

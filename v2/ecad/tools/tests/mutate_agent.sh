@@ -175,12 +175,12 @@ open(p, "w").write(s)'
 # 15 September 2026: the decision rules of the two red-team reports, each proved to fail when its defect is put back.
 run_case "a quote folder passes the set again" t_a_quote_only_folder_fails_the_set '
 p = os.path.join(T, "final_gate.py"); s = open(p).read()
-s = s.replace("    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1))", "    failed = bool(bad or (rc_c == 1))", 1)
+s = s.replace("    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1) or (rc_m == 1))", "    failed = bool(bad or (rc_c == 1))", 1)
 open(p, "w").write(s)'
 
 run_case "open certification passes the set again" t_open_certification_is_fail '
 p = os.path.join(T, "final_gate.py"); s = open(p).read()
-s = s.replace("    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1))", "    failed = bool(bad or held or missing or (rc_c == 1))", 1)
+s = s.replace("    failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1) or (rc_m == 1))", "    failed = bool(bad or held or missing or (rc_c == 1))", 1)
 open(p, "w").write(s)'
 
 run_case "an all-ILLEGAL cycle is measured again" t_an_all_illegal_set_is_inconclusive_never_pass '
