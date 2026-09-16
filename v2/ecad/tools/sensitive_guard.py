@@ -95,7 +95,19 @@ def main(argv):
         z.SetDoNotAllowTracks(True); z.SetDoNotAllowVias(False)
         z.SetDoNotAllowCopperPour(False); z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
         z.SetLayer(layer)
-        z.SetOutline(band)
+        # THE POINTS GO INTO THE ZONE'S OWN OUTLINE, NEVER A POLYGON HANDED TO IT. `SetOutline(poly)` takes
+        # ownership of a Python-owned SHAPE_POLY_SET and the board then frees it twice: the first version of
+        # this segfaulted at the save, silently, after printing every band it had computed (16 September 2026,
+        # and it is the second segfault of the day from KiCad's C++ ownership rules).
+        o = z.Outline(); o.RemoveAllContours()
+        for i in range(band.OutlineCount()):
+            ol = band.Outline(i); o.NewOutline()
+            for k in range(ol.PointCount()):
+                q = ol.CPoint(k); o.Append(q.x, q.y)
+            for hh in range(band.HoleCount(i)):
+                hl = band.Hole(i, hh); hidx = o.NewHole(i)
+                for k in range(hl.PointCount()):
+                    q = hl.CPoint(k); o.Append(q.x, q.y, i, hidx)
         z.SetZoneName("sensitive %s keep %.2f mm" % (nm, keep))
         b.Add(z); made += 1
         print("sensitive_guard: %s on %s, %.2f mm band, %d outline(s), %d foreign pad(s) punched out"
