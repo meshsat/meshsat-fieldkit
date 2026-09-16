@@ -18,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "ba69f1dfcd70e435"
+   "sha256_16": "1cc521014d9038b4"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -32,9 +32,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9284cacf93cf36b3"
+  "tools_tree_sha": "8ab9a87c66026600"
  },
- "ts": "2026-09-16T15:46:52Z",
+ "ts": "2026-09-16T16:09:56Z",
  "verdict": "PASS",
  "version": "unknown"
 }
