@@ -8187,7 +8187,7 @@ gate reads the same spectral-content declarations that rules RET-001 and RET-004
 morning, counts the slow ones rather than hiding them, and judges a net nobody classified as though it were
 fast. **Readiness: NOT_READY, 32.3 percent verified, 12.7 failed, 55.0 inconclusive of 300 pairs.**
 
-### 32.206 Three rules that had nothing now measure something, and the sixth rail crossing a connector (16 September 2026, 07:20 CEST; MESHSAT-862)
+### 32.206 Three rules that had nothing now measure something, and the seven rails crossing a connector (16 September 2026, 07:10 CEST; MESHSAT-862)
 
 Three of the registry's blockers carried the same note in different words: **nothing measures this**. Each now
 has a tool that measures what the board can answer and says plainly which half it cannot.
