@@ -250,9 +250,15 @@ coverage:
    note: "the gate refuses a stale or quote-only set correctly; the set on disk is built from folders three to five phases behind and has not been rebuilt",
    remediation: {action: "rebuild the order set from the current folders once the boards are cut", owner: SESSION, depends_on: [DOC-001], p50_h: 2, p80_h: 6}}
 
- SGN-001: {implementation: NONE_YET, verification: {tool: rules_status.py, verdict: rules_status}, maturity: OPEN, gap_category: ABSENT,
-   note: "being built by this audit; until it runs, no board has a computed per-rule result",
-   remediation: {action: "rules_status.py with its truth table", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 14}}
+ SGN-001: {implementation: "rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml",
+   verification: {tool: rules_status.py, verdict: rules_complete, fixtures: tests/test_rules_status.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026. The verdict read here is rules_complete and NOT rules_status, because the two answer different
+     questions: rules_status says whether the boards pass, rules_complete says whether every rule that applies to a board
+     reached one of the five results at all. The second is the property this registry exists for, and it is the one that
+     would otherwise be invisible, since a rule missing from the table looks exactly like a rule that does not apply. It is
+     FAIL when any pair produces a result outside the five, when the registry fails its own validator, or when an applied
+     rule has no coverage entry; 294 of 294 pairs resolve today"}
 
  SGN-002: {implementation: "rules_render.py prototype_doc", verification: {tool: rules_render.py, document: docs/PCB-PROTOTYPE-UNKNOWNS.md, fixtures: tests/test_rule_gate_mapping.py},
    maturity: VERIFIED_MANUALLY, gap_category: NONE,

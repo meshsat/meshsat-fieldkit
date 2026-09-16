@@ -90,12 +90,18 @@ def _rule_set_fingerprint():
     """The identity of the rule registry this verdict was taken under (MESHSAT-862, 16 September 2026). Evidence
     that does not name its rule set cannot be shown to be current, and rules_status.py treats it as stale."""
     if _RULESET[0] is None:
+        # BaseException, not Exception, and the difference is a live defect found on 16 September: rules_lib
+        # raises SystemExit when PyYAML is absent, SystemExit does not descend from Exception, and so a gate on
+        # a host without PyYAML EXITED at the moment it wrote its verdict. It printed its result, wrote no
+        # verdict file and returned 1, which reads as a failing board. Stamping the rule set is evidence about
+        # the verdict; it can never be allowed to decide whether the verdict exists.
         try:
             import rules_lib as _r; _RULESET[0] = _r.fingerprint()
-        except Exception: _RULESET[0] = ""
+        except BaseException as e: _RULESET[0] = ""; _RULESET_WHY[0] = "%s: %s" % (type(e).__name__, str(e)[:90])
     return _RULESET[0]
 
 
+_RULESET_WHY = [""]
 _BY_TOOL = [None]
 
 
@@ -112,7 +118,7 @@ def _rules_for_tool(tool):
             for rid, c in cov.items():
                 name = ((c or {}).get("verification") or {}).get("verdict")
                 if name: m.setdefault(name, []).append(rid)
-        except Exception: m = {}
+        except BaseException: m = {}          # as above: a coverage map this host cannot read is not a failure of the gate
         _BY_TOOL[0] = m
     m = _BY_TOOL[0]; out = set(m.get(tool, []))
     for name, ids in m.items():                      # check_pcb_<letter> and friends: the union, never the first match
@@ -127,6 +133,10 @@ def _policy():
     except Exception: pass
     fp = _rule_set_fingerprint()
     if fp: d["rule_set_fingerprint"] = fp
+    elif _RULESET_WHY[0]:
+        # Say WHY it is missing. Unstamped evidence is treated as stale by rules_status, and a reader has to be
+        # able to tell "written before the registry existed" from "written on a host that could not read it".
+        d["rule_set_fingerprint_absent"] = _RULESET_WHY[0]
     return d
 
 

@@ -1675,8 +1675,8 @@ computed from current evidence; absence, staleness or a failed check is INCONCLU
 | risk | DOCUMENTATION, SAFETY |
 | verified by | SCRIPT at RELEASE_PACKAGE (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | NONE_YET |
-| maturity | **OPEN** |
+| implementation | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml |
+| maturity | **ENFORCED** |
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1687,7 +1687,13 @@ readiness gate state is reported before any percentage.
 
 **If violated** A board is released because nobody asked a question that was never written down.
 
-**Today** being built by this audit; until it runs, no board has a computed per-rule result
+**Today** 16 September 2026. The verdict read here is rules_complete and NOT rules_status, because the two answer
+different questions: rules_status says whether the boards pass, rules_complete says whether every rule that
+applies to a board reached one of the five results at all. The second is the property this registry exists
+for, and it is the one that would otherwise be invisible, since a rule missing from the table looks exactly
+like a rule that does not apply. It is FAIL when any pair produces a result outside the five, when the
+registry fails its own validator, or when an applied rule has no coverage entry; 294 of 294 pairs resolve
+today
 
 ### SGN-002  a prototype-only unknown is named
 

@@ -164,3 +164,24 @@ def t_a_manual_verification_with_no_record_is_never_a_pass():
     cov = _cov("VERIFIED_MANUALLY"); cov["R-1"]["verification"] = {"tool": "a person reads it"}
     assert _result(cov, _verdict("PASS")) == S.INCONCLUSIVE, \
         "a rule claiming manual verification with no record to point at read as verified"
+
+
+def t_the_completeness_verdict_asks_a_different_question_from_readiness():
+    """SGN-001. rules_status says whether the boards pass; rules_complete says whether every rule that applies
+    to a board reached one of the five results AT ALL. The second is the property the registry exists for and
+    the one that would otherwise be invisible, because a rule missing from the table looks exactly like a rule
+    that does not apply. Executed: run the computation into a temporary directory and read both verdicts back.
+    """
+    import subprocess, glob
+    d = tempfile.mkdtemp(prefix="rules-complete-")
+    ecad = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    p = subprocess.run([sys.executable, os.path.join(ecad, "tools", "rules_status.py"), "--out-dir", d],
+                       cwd=ecad, capture_output=True, text=True, timeout=600)
+    assert p.returncode in (0, 1, 3), p.stdout[-400:] + p.stderr[-400:]
+    rec = json.load(open(os.path.join(ecad, "out", "rules_complete.verdict.json")))
+    assert rec["verdict"] == "PASS", "a rule that applies to a board reached no result: %s" % rec.get("evidence")
+    assert rec["denominator"] > 0 and rec["counts"]["unresolved"] == 0, rec
+    # and it is NOT the readiness verdict: the set is not ready today, and completeness still passes
+    rs = json.load(open(os.path.join(d, "rules_status.verdict.json")))
+    assert rs["verdict"] != rec["verdict"], \
+        "the completeness verdict is tracking the readiness verdict, so it is asking the same question"
