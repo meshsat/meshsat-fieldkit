@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_over_copper": 5,
+   "silk_overlap": 14,
+   "via_dangling": 165
+  },
+  "stage": "pre",
+  "types_checked": 15,
+  "unrouted": 376
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-c-display-placed-drc.json",
+   "sha256_16": "0835b811dda8f994"
+  }
+ },
+ "note": "placed (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "PLC-001"
+ ],
+ "tool": "hardset-placed",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "2f73f0c1bb69c24e"
+ },
+ "ts": "2026-09-16T20:36:16Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

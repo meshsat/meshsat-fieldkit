@@ -6,19 +6,18 @@
   "efficiency_undeclared": 2,
   "no_thermal_path": 0,
   "rails": 2,
-  "watts_lost_all_peaks_at_once": 0.0,
-  "watts_lost_typical": 0.0,
-  "watts_peak_sum_not_simultaneous": 5.7
+  "watts_lost_estimated": 0.0,
+  "watts_out": 5.7
  },
  "denominator": 2,
  "evidence": [
-  "+3V3: 0.7 W out of U5 and the rail does not say whether it converts, so its loss is unknown",
-  "+5V: 5.0 W out of J_PANEL and the rail does not say whether it converts, so its loss is unknown"
+  "+3V3: 0.7 W out of U5 and no efficiency declared, so its loss is unknown",
+  "+5V: 5.0 W out of J_PANEL and no efficiency declared, so its loss is unknown"
  ],
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "410eeb604ec12c4c"
   }
  },
  "note": "2 rail(s) carry no declared efficiency, so this board's loss is a floor and not an estimate",
@@ -32,9 +31,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T19:33:39Z",
+ "ts": "2026-09-16T05:16:08Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

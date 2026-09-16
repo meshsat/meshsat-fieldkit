@@ -10,9 +10,9 @@
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "410eeb604ec12c4c"
   },
-  "copper_layers": null,
+  "copper_layers": 4,
   "copper_oz": 1.0,
   "document": "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"
  },
@@ -28,9 +28,9 @@
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T19:33:37Z",
+ "ts": "2026-09-16T05:16:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }

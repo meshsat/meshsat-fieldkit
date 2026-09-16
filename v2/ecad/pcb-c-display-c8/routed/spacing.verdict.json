@@ -7,7 +7,7 @@
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "410eeb604ec12c4c"
   }
  },
  "note": "no rail on this board reaches 20 V",
@@ -21,9 +21,9 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T19:33:39Z",
+ "ts": "2026-09-16T05:16:08Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

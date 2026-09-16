@@ -5,15 +5,15 @@
   "below_ring": 0,
   "npth_holes": 12,
   "plated_holes": 40,
-  "vias": 502
+  "vias": 765
  },
- "denominator": 542,
+ "denominator": 805,
  "evidence": [],
  "inputs": {
   "annular_min_mm": 0.2,
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "367ce54a296e20f4"
   },
   "via_ring_min_mm": 0.05
  },
@@ -28,9 +28,9 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T19:33:36Z",
+ "ts": "2026-09-16T23:23:46Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -3,14 +3,14 @@
  "applicable": true,
  "counts": {
   "plane_change_to_power": 0,
-  "slow": 255
+  "slow": 231
  },
  "denominator": 0,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "410eeb604ec12c4c"
   }
  },
  "note": "this board has no transition between two different reference nets, so RET-003 has nothing on it to judge",
@@ -24,9 +24,9 @@
  "tool": "return_stitch",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T19:33:38Z",
+ "ts": "2026-09-16T05:16:07Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

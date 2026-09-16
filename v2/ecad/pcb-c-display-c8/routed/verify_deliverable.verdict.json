@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "info": 0,
+  "pass": 36
+ },
+ "denominator": 36,
+ "evidence": [],
+ "inputs": {
+  "copper_layers": "4",
+  "folder": {
+   "path": "/root/c24/v2/release/revA/boards/meshsat-pcb-c-revA-C24.staging.1910202",
+   "sha256_16": null
+  },
+  "name": "pcb-c-display"
+ },
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "DFM-001"
+ ],
+ "tool": "verify_deliverable",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "572f493cca8aad3d"
+ },
+ "ts": "2026-09-16T23:24:11Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

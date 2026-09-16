@@ -3,16 +3,16 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "footprints": 192,
+  "footprints": 194,
   "intent_items_reported": 150,
-  "pass": 124
+  "pass": 303
  },
- "denominator": 124,
+ "denominator": 303,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "367ce54a296e20f4"
   }
  },
  "note": "",
@@ -26,9 +26,9 @@
  "tool": "check_pcb_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T19:33:27Z",
+ "ts": "2026-09-16T23:23:54Z",
  "verdict": "PASS",
  "version": "unknown"
 }

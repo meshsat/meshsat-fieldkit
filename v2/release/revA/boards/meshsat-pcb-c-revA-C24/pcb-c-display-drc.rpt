@@ -1,0 +1,1020 @@
+** Drc report for pcb-c-display.kicad_pcb **
+** Created on 2026-09-16T23:24:02+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 264 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(461.4650 mm, 268.5250 mm): Pad 4 [GND] of U4 on B.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0
+    @(217.2500 mm, 115.7000 mm): Pad 25 [GND] of J_EPD on F.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(419.0150 mm, 304.1950 mm): Pad 2 [GND] of C5 on B.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(459.3750 mm, 283.1350 mm): Pad 4 [GND] of Y1 on B.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(125.0000 mm, 324.0000 mm): Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0
+    @(464.7375 mm, 282.2350 mm): Pad 2 [GND] of U5 on B.Cu
+[copper_sliver]: Copper sliver (F.Cu)
+    Local override; warning
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(275.4400 mm, 312.0800 mm): Segment of D12 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(277.0000 mm, 311.0000 mm): Arc of D12 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(281.4400 mm, 312.0800 mm): Segment of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(283.0000 mm, 311.0000 mm): Arc of D13 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(287.4400 mm, 312.0800 mm): Segment of D14 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(289.0000 mm, 311.0000 mm): Arc of D14 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(295.0000 mm, 311.0000 mm): Arc of D15 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(299.4400 mm, 312.0800 mm): Segment of D16 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(301.0000 mm, 311.0000 mm): Arc of D16 on F.Silkscreen
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(148.0000 mm, 101.0000 mm): PCB text 'LEFT: SOS, EMCON, ZEROIZE, LIGHT' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 312.0000 mm): PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(446.0000 mm, 101.0000 mm): PCB text 'RIGHT: MAIN, PI, TEST, status LEDs' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(297.0000 mm, 316.0000 mm): PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(425.0000 mm, 144.5000 mm): Reference field of U_LIGHT
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+    @(197.5920 mm, 106.0050 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+    @(420.9840 mm, 122.5830 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+    @(275.9750 mm, 108.5850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+    @(428.0510 mm, 176.8860 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+    @(442.2250 mm, 281.2850 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+    @(462.5680 mm, 278.8650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+    @(458.8700 mm, 274.6570 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+    @(441.3270 mm, 261.8750 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+    @(449.5220 mm, 260.2650 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+    @(190.5330 mm, 106.0620 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+    @(449.2610 mm, 259.7400 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+    @(454.5440 mm, 253.3000 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+    @(420.7320 mm, 289.4920 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+    @(214.8290 mm, 111.2910 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+    @(424.7790 mm, 298.0970 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[holes_co_located]: Drilled holes co-located
+    Local override; warning
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+    @(459.2370 mm, 273.8150 mm): Via [GND] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(456.5600 mm, 272.4000 mm): Via [/+3V3] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(427.3490 mm, 275.9735 mm): Track [/+3V3] on B.Cu, length 0.2582 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(424.5300 mm, 276.3925 mm): Track [/+3V3] on B.Cu, length 0.7375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(449.1975 mm, 270.4500 mm): Track [/BAT1_K] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(446.7303 mm, 269.8000 mm): Via [/BAT2_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(446.7303 mm, 268.5000 mm): Via [/BAT4_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(447.5600 mm, 267.8500 mm): Via [/BAT5_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(426.1300 mm, 277.1300 mm): Via [/C_DVDD] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(424.1300 mm, 276.3925 mm): Track [/C_DVDD] on B.Cu, length 1.5225 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(424.9300 mm, 269.5175 mm): Track [/C_DVDD] on B.Cu, length 0.7375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(429.2900 mm, 271.5550 mm): Via [/EMCON_HW] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.3700 mm, 273.5550 mm): Via [/EPD_DC] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(218.4711 mm, 118.9000 mm): Via [/EPD_GDR] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.3700 mm, 272.7550 mm): Via [/EPD_RST] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(226.7500 mm, 118.9500 mm): Track [/EPD_VCC] on F.Cu, length 0.9132 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(436.2375 mm, 281.2850 mm): Track [/EXP_INT] on B.Cu, length 1.4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(419.3700 mm, 270.3550 mm): Via [/HB2] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(426.9300 mm, 267.9950 mm): Via [/HDMI_SEL2] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(444.3875 mm, 283.1850 mm): Track [/MAINSW_A2] on B.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(444.3875 mm, 281.2850 mm): Track [/MAINSW_B2] on B.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(435.4725 mm, 271.1000 mm): Track [/MCAUT_K] on B.Cu, length 2.4672 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(442.8350 mm, 268.5000 mm): Via [/PANEL_ID] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(452.5375 mm, 283.1850 mm): Track [/PIJ2_A2] on B.Cu, length 1.4625 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(454.8125 mm, 281.2850 mm): Track [/PIJ2_B2] on B.Cu, length 1.4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(429.2900 mm, 270.7550 mm): Via [/PI_KILL] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(422.9300 mm, 276.3925 mm): Track [/QSPI_D0] on B.Cu, length 0.7375 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(460.5650 mm, 269.5250 mm): Track [/QSPI_D1] on B.Cu, length 0.8631 mm
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(421.7300 mm, 276.3925 mm): Track [/QSPI_SS] on B.Cu, length 1.5225 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(433.0053 mm, 269.8000 mm): Via [/SAT_K] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(431.8250 mm, 281.2850 mm): Via [/SCL] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(422.1300 mm, 267.9950 mm): Via [/SLOT_EN1] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(422.9300 mm, 267.9950 mm): Via [/SLOT_EN3] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(433.0053 mm, 272.4000 mm): Via [/SOSACT_K] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(441.1975 mm, 271.1000 mm): Track [/SPARE4] on B.Cu, length 1.6375 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457.3897 mm, 267.8500 mm): Via [/SPARE6] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457.3897 mm, 270.4500 mm): Via [/SPARE10] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(457.3897 mm, 271.7500 mm): Via [/SPARE12] on F.Cu - B.Cu
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(436.2375 mm, 283.1850 mm): Track [/TR_APRS] on B.Cu, length 1.4625 mm
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(456.5600 mm, 267.2000 mm): Via [/TX_LAMPTEST] on F.Cu - B.Cu
+[via_dangling]: Via is not connected or connected on only one layer
+    Local override; warning
+    @(425.7300 mm, 277.9150 mm): Via [/USB_DM_R] on F.Cu - B.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
