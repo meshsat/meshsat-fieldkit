@@ -173,7 +173,14 @@ coverage:
 
  GND-002: {implementation: "gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination",
    verification: {tool: "a written strategy and a bench measurement", document: "docs/GROUNDING-AND-SHIELDS.md"},
-   maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
+   maturity: OWNER_DECISION_REQUIRED, gap_category: PROSE_ONLY,
+   _maturity_why: "16 September 2026, second reading: DOCUMENTED_ONLY said the gap was a missing tool and it is
+     not. The strategy names four changes that make it true (a CHASSIS net and a bonding pad on board A, the
+     1 nF 2 kV common-node capacitor and the RJ45 shell moved to it on board B) and its own last paragraph says
+     they wait on owner DECISION 29, the transformerless Ethernet link, rather than being made piecemeal. A tool
+     written today would report those four as not done, which the document already says in words. The rule is
+     waiting on a ruling, and recording it as waiting on a tool put a day of session work in the critical path
+     that no session can start."
    note: "16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has
      no single conductive enclosure: the Peli 1450 is plastic and every piece of metal in it is an island held by
      plastic, so the only thing joining them is whatever this design says joins them. Board B's magnetics termination
