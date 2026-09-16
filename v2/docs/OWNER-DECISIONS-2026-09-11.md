@@ -1553,3 +1553,55 @@ a quarter of an hour where four layers took six hours, and it holds the return-p
 four layers cannot hold it at all.** The cost is the six-layer price for a 442 x 311 mm panel backer, which is
 the largest board in the set and therefore the most expensive place in the kit to add two layers. That number
 is the one thing still missing and it is a quotation, not a measurement.
+
+---
+
+## DECISION 31, OPEN: eleven conductors leave the case and meet a chip with nothing in between, and three more meet it behind a part that takes the hit first (16 September 2026, 04:15 CEST)
+
+**How this was found.** Rule TRN-001 asks that every exposed port be protected, and nothing had ever checked
+it. `port_protect.py` now does, from the netlist: each board declares which of its connectors carry conductors
+out of the enclosure, with a sentence saying where each goes, and for every such conductor the tool follows the
+chain through fuses, beads, chokes and resistors looking for a clamp. Most connectors on these boards are
+internal, so the declaration is per board and each entry says why it is external.
+
+**Board B passes.** Its wall Ethernet is behind the H5007NL magnetics, which is galvanic isolation and the
+strongest protection there is, and its Power over Ethernet feed carries an SMBJ58A.
+
+**What the other four boards look like.**
+
+| board | conductor | what is there | what is not |
+|---|---|---|---|
+| A | the USB-C outlet's CC1 and CC2 | 330 pF to ground each, then the TPS25740A | no clamp. VBUS on the same connector HAS one, an SMBJ18A, so the power pin is protected and the two signal pins are not |
+| C | `J_PIJ2` pins 1 and 2, `J_MAINSW` pins 1 and 2 | nothing | four conductors on the panel FACE, which a person touches, straight to a chip |
+| D | `HS1_MIC`, `HS2_MIC` | two capacitors and a solder jumper | no clamp on a microphone line in a jack a person plugs a headset into |
+| D | `HS1_SPK`, `HS2_SPK`, `PTT_HS1_n`, `PTT_HS2_n` | nothing | the speaker return and the push-to-talk sense of each jack, bare to the amplifier and the gates |
+| D | `RF_PAOUT` | nothing on the board | the antenna bulkhead's arrestor is in the wall, which covers `J_ANT`; whether it covers this path depends on where the arrestor sits |
+| E | the sensor pod's 3.3 V | nothing | a supply leaving the case through an M8 receptacle to an outdoor pod |
+| E | the shore DC inlet | a 10 A fuse, then the pass FET, then an SMCJ33A | the clamp is BEHIND the ideal-diode FET, so that FET's 60 V drain sees the transient the 53 V clamp is there to stop |
+
+**The count, measured.** Eleven conductors reach a chip with NOTHING between: four on board C's panel face,
+six across board D's two headset jacks, and the power amplifier's output. Three more reach a clamp only
+THROUGH an active part, which protects everything except that part: the USB-C outlet's two configuration
+channels behind the Power Delivery controller, and board E's shore inlet behind its pass FET. Board B passes
+outright. Board E's sensor pod is in the second group rather than the first.
+
+**Options, costed, the recommendation first.**
+
+1. **Protect all of them, RECOMMENDED.** Two USBLC6-2SC6 or equivalent on the USB-C configuration channels and on
+   the two headset jacks' microphone and PTT lines; a small TVS array on board C's four face conductors; an
+   SMCJ on the pod's supply at the connector; and board E's SMCJ33A moved from `DC_P` to `DC_F`, in front of
+   the pass FET rather than behind it. Cost: about eight parts across four boards, perhaps 11 EUR in fives, and
+   the board area of six small packages, all in places that have room. Every one is a schematic change; none
+   moves a placed part or a routed track. Buys: a kit whose exposed conductors behave the way its documents
+   imply they do, and a defensible answer at the electrostatic discharge test the test plan already names.
+2. **Protect the panel face and the headset jacks and accept the rest with a written reason.** The panel face conductors and the
+   headset microphones are the ones a person touches; the pod supply and the CC lines are behind a sealed
+   connector a person rarely opens. Cost: three parts. Buys: most of the benefit for half the change, and a
+   written exemption for the others that a reviewer will ask about.
+3. **Change nothing and record it.** Cost: nothing now. The rule's result stays FAIL on four boards, the
+   prototype meets its first electrostatic discharge test with these conductors bare, and if one of them fails
+   there it is a board re-spin rather than a part.
+
+**One thing this decision does NOT cover.** Board E's inlet clamp is on the wrong side of the FET whichever
+option is taken: that is a topology error rather than a missing part, and option 1 includes moving it. If you
+take option 2 or 3, say whether that move is in or out, because it costs nothing and changes no part count.

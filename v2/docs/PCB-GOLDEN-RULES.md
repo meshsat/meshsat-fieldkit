@@ -1157,8 +1157,8 @@ the signal.
 | risk | SAFETY, RELIABILITY, ELECTRICAL_FUNCTION |
 | verified by | MANUAL_REVIEW, SCRIPT at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_*.py protection devices |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| implementation | gen_sch_*.py protection parts and each board's external_ports declaration |
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one port, expires prototype validation |
 
@@ -1170,8 +1170,17 @@ needs, and the discharge path to the enclosure.
 
 **If violated** A discharge at a panel switch or an antenna jack destroys the device behind it.
 
-**Today** every external port has a device; no port table exists and no clamping voltage has been compared against a
-protected part's maximum
+**Today** 16 September 2026: every conductor that leaves the enclosure is followed from its connector through fuses,
+beads, chokes and resistors until it meets a clamp. Board B passes: its wall Ethernet is behind the H5007NL
+magnetics, which is galvanic isolation and the strongest protection there is. The other four boards carry
+NINE conductors that reach a chip with nothing between, and they are owner decision 31: the USB-C outlet's
+two configuration channels (its VBUS pin is clamped and they are not), four conductors on board C's panel
+FACE which a person touches, two headset microphone lines, the sensor pod's supply through its sealed M8
+receptacle, and board E's shore inlet whose SMCJ33A sits BEHIND the pass FET so that FET sees the transient
+the clamp exists to stop. The check took four rounds of false-positive removal to get there, each recorded in
+its own docstring: a part family matched with a word boundary that a part number does not have, galvanic
+isolation not recognised as protection, protection treated as a single net rather than a chain, and a search
+that walked out through a power rail and found a clamp on the other side of the board
 
 ## Isolation Spacing
 

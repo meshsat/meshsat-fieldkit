@@ -29,7 +29,7 @@ GATES = ["check_pcb_a.py", "check_pcb_b.py", "check_pcb_c.py", "check_pcb_d.py",
          # couple_gap.py (a measurement read back off the copper) and jumper_clearance.py (a fixer that widens
          # a pad's own clearance) are deliberately NOT here: neither decides whether a board may ship
          "class_floor.py", "claims_check.py", "return_via.py", "derate.py", "via_audit.py",
-         "fab_limits.py", "clock_check.py"]
+         "fab_limits.py", "clock_check.py", "port_protect.py"]
 
 WRITES = re.compile(r"\b(?:verdict|_v)\.write\s*\(")
 IMPORTS = re.compile(r"^\s*import verdict(?: as _v)?\s*$", re.M)

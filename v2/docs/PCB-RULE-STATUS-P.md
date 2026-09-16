@@ -10,8 +10,8 @@ Manifest **2026-09-16.1**, rule set **e590541697c8914f**, evidence epoch **2026-
 | result | rules | percent |
 |---|---|---|
 | PASS | 12 | 28.6 |
-| FAIL | 5 | 11.9 |
-| INCONCLUSIVE | 25 | 59.5 |
+| FAIL | 6 | 14.3 |
+| INCONCLUSIVE | 24 | 57.1 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -37,7 +37,7 @@ Manifest **2026-09-16.1**, rule set **e590541697c8914f**, evidence epoch **2026-
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sen |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: every external port has a device; no port table exists and no clamping voltage has been compared |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect FAIL: {'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 0} |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit stage |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |

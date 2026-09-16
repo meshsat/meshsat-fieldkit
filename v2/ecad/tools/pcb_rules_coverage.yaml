@@ -266,9 +266,20 @@ coverage:
    remediation: {action: "owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype",
      owner: OWNER, depends_on: [], p50_h: 6, p80_h: 30}}
 
- TRN-001: {implementation: "gen_sch_*.py protection devices", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
-   note: "every external port has a device; no port table exists and no clamping voltage has been compared against a protected part's maximum",
-   remediation: {action: "a port table with threat, device, clamping and parasitics", owner: SESSION, depends_on: [ENV-001], p50_h: 5, p80_h: 14}}
+ TRN-001: {implementation: "gen_sch_*.py protection parts and each board's external_ports declaration",
+   verification: {tool: port_protect.py, verdict: port_protect, fixtures: tests/test_port_protect.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: every conductor that leaves the enclosure is followed from its connector through fuses,
+     beads, chokes and resistors until it meets a clamp. Board B passes: its wall Ethernet is behind the H5007NL
+     magnetics, which is galvanic isolation and the strongest protection there is. The other four boards carry NINE
+     conductors that reach a chip with nothing between, and they are owner decision 31: the USB-C outlet's two
+     configuration channels (its VBUS pin is clamped and they are not), four conductors on board C's panel FACE which a
+     person touches, two headset microphone lines, the sensor pod's supply through its sealed M8 receptacle, and board
+     E's shore inlet whose SMCJ33A sits BEHIND the pass FET so that FET sees the transient the clamp exists to stop.
+     The check took four rounds of false-positive removal to get there, each recorded in its own docstring: a part
+     family matched with a word boundary that a part number does not have, galvanic isolation not recognised as
+     protection, protection treated as a single net rather than a chain, and a search that walked out through a power
+     rail and found a clamp on the other side of the board"}
 
  ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
    note: "an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been measured on any board, and no pollution degree or material group is declared",

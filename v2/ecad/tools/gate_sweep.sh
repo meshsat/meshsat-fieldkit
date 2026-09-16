@@ -59,6 +59,7 @@ run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
 # it has been routed.
 [ -s out/$N.net ] && run "derating" python3 $T/derate.py out/$N.net
 [ -s out/$N.net ] && run "crystals" python3 $T/clock_check.py out/$N.net
+[ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # The order-code gate reads a BOM THAT ALREADY EXISTS and never makes one. Exporting it here would turn this
 # sweep into a producer of a fabrication artefact, which the execution-paths floor refuses and is right to:
