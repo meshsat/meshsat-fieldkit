@@ -1543,7 +1543,13 @@ route and are measured as they stand.
 
 **And the three failures on the six-layer board are not three defects.** One is the gate asserting "4 copper
 layers (In1 ground plane), 1.6 mm thick" against a six-layer board, which is `check_pcb_c.py` describing the
-old decision and is a line to change with the ruling, not a fault in the copper. One is `QSPI_SS` at 10.2 mm
+old decision and is a line to change with the ruling, not a fault in the copper.
+
+> **Confirmed at 05:35 CEST, and that line is gone.** Every board gate reads its copper layer count from the
+> board's own declaration now rather than carrying it (all six imported the reader and used none of it). The
+> same six-layer board, finished on current tools in its own ECAD directory with one declaration changed, reads
+> **0 hard, 0 unrouted and 2 FAIL of 202**: `QSPI_SS` two tenths of a millimetre over rule 1's limit, and the
+> eighteen return vias. The third failure was the gate, exactly as this paragraph said. One is `QSPI_SS` at 10.2 mm
 of 73.8 without an adjacent reference against a 10.0 mm limit, which is **two tenths of a millimetre over** on
 the flash bus and is a real if marginal item. The third is eighteen signal vias without a ground via beside
 them, out of fifty-five judged once the slow nets are excluded.
