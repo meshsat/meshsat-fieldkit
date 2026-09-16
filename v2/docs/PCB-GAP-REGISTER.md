@@ -9,7 +9,7 @@ answered yet, made visible so it cannot be forgotten.
 
 **31 of 57 rules carry a gap.**
 
-## absent (12)
+## absent (11)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
@@ -28,10 +28,6 @@ unwritten, and every derating rule resolves against nothing
 an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been
 measured on any board, and no pollution degree or material group is declared  
 *Close it by* declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and pack nets. Owner **OWNER**, after ENV-001. Effort P50 8h, P80 24h.
-
-**PI-003 via current capacity** (MUST_JUSTIFY, OPEN)  
-via current capacity is asserted in generator comments and measured by nothing  
-*Close it by* count vias per rail transition and compare against the barrel's capacity from the plating spec. Owner **SESSION**, after PI-001, STK-001. Effort P50 4h, P80 10h.
 
 **PWR-002 sequencing and inrush** (MUST_JUSTIFY, OPEN)  
 sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
@@ -163,7 +159,7 @@ the 3 mm distance is a project number applied to every device; the loop inductan
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (7)
+## source or applicability unresolved (8)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -195,6 +191,18 @@ rule and a limit with no source decided a board through a rule that has one. Boa
 percent of 14.4 V, which looks like a voltage failure and is a density one  
 *Close it by* obtain the standard, pin it under v2/vendor/, cite the clause, and re-judge the four boards. Owner **SESSION**. Effort P50 4h, P80 12h.
 
+**PI-003 via current capacity** (MUST_JUSTIFY, GENERATED_ONLY)  
+16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of that
+net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's peak
+current is compared against the weakest site, because a transition is a series element. The barrel is
+geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published 18 um,
+but the curve is IPC-2221's and that document is not in this tree, so the maturity is GENERATED_ONLY and the
+number is a calculation this project made rather than a limit a document gave it. It lands where the trade's
+own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has
+no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times
+the computed figure and cites nothing  
+*Close it by* obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind this number has an authority. Owner **SESSION**, after STK-001. Effort P50 2h, P80 8h.
+
 **RET-001 a continuous adjacent return path** (BLOCKER, GENERATED_ONLY)  
 16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
 gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration
@@ -215,13 +223,15 @@ layer_judge measures what the router did, not what the board needs, and says so;
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-**VIA-002 the annular ring is one the fabricator makes** (BLOCKER, SOURCE_UNVERIFIED)  
-the copper left around each hole is the number a fabricator quotes and the one a via actually fails at, and
-it is measured on every board. What is missing is the FLOOR: this tree's only fabricator capability file is a
-JavaScript-blocked page scrape with no capability data in it, so no board declares annular_min_mm and the
-verdict is INCONCLUSIVE rather than passing at a figure this project made up. That is the same refusal the
-registry makes of every other unsourced limit  
-*Close it by* obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge. Owner **SESSION**. Effort P50 2h, P80 6h.
+**VIA-002 the annular ring is one the fabricator makes** (BLOCKER, ENFORCED)  
+the floor arrived on 16 September with the fabricator's own capability page, and reading it carefully split
+this rule in two: the ANNULAR RING row governs a plated COMPONENT hole, and a VIA is governed by the via
+rows, which leave 0.05 mm of copper per side at that document's own minimum of 0.25 mm on 0.15 mm. Applied
+the other way round it refused board D12, a board at 0 hard and 0 unrouted, for one 0.45/0.20 via at 0.125 mm
+of ring. A, B, C, D and E declare both floors with the clause cited; E5 and P are 2 oz, the annular rows are
+stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged against a number for another
+process  
+*Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
 ## covered (26)
 

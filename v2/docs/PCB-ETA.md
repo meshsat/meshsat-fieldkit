@@ -9,11 +9,11 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 157 h | 466 h |
+| engineering effort, one worker | 153 h | 458 h |
 | critical path through the dependencies | 33 h | 94 h |
-| at 6 engineering hours a day | 26.2 days | 77.7 days |
+| at 6 engineering hours a day | 25.5 days | 76.3 days |
 
-33 open item(s): 26 are this session's work and 7 are waits on the owner, a vendor or a lab. Waits are not
+33 open item(s): 25 are this session's work and 8 are waits on the owner, a vendor or a lab. Waits are not
 engineering time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens
@@ -27,6 +27,7 @@ engineering time and are listed separately below.
 | REL-001 | a reliability sheet per board and the test plan for the prototype | OWNER |
 | SCH-004 | owner decision 30: the supervisors execute the wipe, power removal only, or accept the sof | OWNER |
 | STK-002 | quotes from the ordering session for both counts on C and P, then the two rulings | OWNER |
+| VIA-002 | ask the fabricator for the annular ring rows AT 2 oz, which its published page does not st | VENDOR |
 
 ## Measured route history
 

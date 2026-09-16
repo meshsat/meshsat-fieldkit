@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **e590541697c8914f**, 57 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **8087c341773d75a1**, 57 rules over 34 domains.
 
 ## How to read a rule
 
@@ -506,7 +506,7 @@ rail's peak current within the same temperature rise the conductor rule allows.
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | prefanout.py, gen_pcb_*3.py stitch vias |
-| maturity | **OPEN** |  (at writing: UNASSESSED)
+| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one transition, expires the next route |
 
@@ -517,7 +517,15 @@ current per via and the total against the rail's peak.
 
 **If violated** Barrel cracking and progressive resistance rise at the transition.
 
-**Today** via current capacity is asserted in generator comments and measured by nothing
+**Today** 16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of that
+net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's peak
+current is compared against the weakest site, because a transition is a series element. The barrel is
+geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published 18 um,
+but the curve is IPC-2221's and that document is not in this tree, so the maturity is GENERATED_ONLY and the
+number is a calculation this project made rather than a limit a document gave it. It lands where the trade's
+own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has
+no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times
+the computed figure and cites nothing
 
 ## Grounding Shielding
 
@@ -1375,8 +1383,9 @@ project's hard rule set.
 ### VIA-002  the annular ring is one the fabricator makes
 
 The copper left around every drilled hole, (pad or via diameter minus drill) divided by two, is at or above
-the minimum annular ring the chosen fabricator guarantees for the chosen process and the finished board
-thickness, and the aspect ratio of every hole is inside the same document's limit.
+the minimum the chosen fabricator publishes FOR THAT KIND OF HOLE at the chosen process and copper weight:
+the annular ring row for a plated component hole, and what the via rows leave for a via. The aspect ratio of
+every hole is inside the same document's limit.
 
 | | |
 |---|---|
@@ -1385,15 +1394,16 @@ thickness, and the aspect ratio of every hole is inside the same document's limi
 | release effect | **BLOCKER** |
 | risk | FABRICATION, RELIABILITY |
 | verified by | SCRIPT, VENDOR_CONFIRMATION at ROUTED_BOARD (automatable) |
-| source | VERIFIED |
-| | JLCPCB rigid PCB manufacturing capabilities, JLCPCB, annular ring: PTH multilayer 1 oz recommended 0.20 mm or above, absolute minimum 0.15 mm; PTH 2-layer 1 oz recommended 0.25 mm or above, absolute minimum 0.18 mm; NPTH pad >= 0.45 mm. The 2 oz case is NOT stated, so boards E5 and P stay unjudged on the ring -- v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md |
-| implementation | escape.py, prefanout.py, gen_pcb_*.py minimums |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| source | PARTIALLY_VERIFIED |
+| | JLCPCB rigid PCB manufacturing capabilities, JLCPCB, two rows, two kinds of hole. PLATED COMPONENT HOLE, section Annular ring: PTH multilayer 1 oz recommended 0.20 mm or above, absolute minimum 0.15 mm; PTH 2-layer 1 oz recommended 0.25 mm or above, absolute minimum 0.18 mm; NPTH pad >= 0.45 mm. VIA, section Holes and vias: minimum via diameter 0.25 mm on a minimum via hole of 0.15 mm for 2 or more layers, which leaves 0.05 mm of copper per side. The 2 oz case is NOT stated for the annular rows, so boards E5 and P stay unjudged on the ring -- v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md |
+| implementation | escape.py, prefanout.py, gen_pcb_*.py minimums; boards/<letter>.json annular_min_mm and via_ring_min_mm |
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one via class, expires the order |
 
-**Accept when** Each board declares annular_min_mm from the fabricator's own document, with the clause cited, and every via
-and plated hole on the board is at or above it.
+**Accept when** Each board declares TWO floors from the fabricator's own document with the clause cited, annular_min_mm for a
+plated component hole and via_ring_min_mm for a via, every hole of each kind on the board is at or above the
+floor for its own kind, and a board that declares only one of them reads INCONCLUSIVE.
 
 **Why** The annular ring is the number a fabricator quotes and the one a via actually fails at: a 0.45 mm via on a
 0.35 mm drill leaves 0.05 mm per side, and a process guaranteeing 0.075 will not make it reliably. The drill
@@ -1402,11 +1412,13 @@ and the diameter can be judged against the board; the ring can only be judged ag
 **If violated** A breakout: the hole misses its own pad, and the net is open on a board that passes every check this project
 can run.
 
-**Today** the copper left around each hole is the number a fabricator quotes and the one a via actually fails at, and
-it is measured on every board. What is missing is the FLOOR: this tree's only fabricator capability file is a
-JavaScript-blocked page scrape with no capability data in it, so no board declares annular_min_mm and the
-verdict is INCONCLUSIVE rather than passing at a figure this project made up. That is the same refusal the
-registry makes of every other unsourced limit
+**Today** the floor arrived on 16 September with the fabricator's own capability page, and reading it carefully split
+this rule in two: the ANNULAR RING row governs a plated COMPONENT hole, and a VIA is governed by the via
+rows, which leave 0.05 mm of copper per side at that document's own minimum of 0.25 mm on 0.15 mm. Applied
+the other way round it refused board D12, a board at 0 hard and 0 unrouted, for one 0.45/0.20 via at 0.125 mm
+of ring. A, B, C, D and E declare both floors with the clause cited; E5 and P are 2 oz, the annular rows are
+stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged against a number for another
+process
 
 ### VIA-001  every via is a via the process makes
 
