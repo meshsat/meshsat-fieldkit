@@ -190,9 +190,19 @@ if __name__ == "__main__":
                ("intent_return_via", ("return via",), "a ground via at a signal's reference change"),
                ("intent_decoupling", ("bypass", "decoupling"), "the loop from a decoupling capacitor to the pin it serves"),
                ("intent_rails", ("is a declared rail", "intent rail", "intent file carries"), "every power-symbol net declared with its loads"))
-    claimed = set()
+    # A CHECK BELONGS TO EXACTLY ONE RULE, and the first version decided that by searching the whole message
+    # (16 September 2026, evening). Every return-path line QUOTES the net's declared basis in brackets, and
+    # board B's three STM32 core-regulator nets are declared as "an internal-supply decoupling node, a local
+    # rail": the word decoupling in that quotation put three RETURN-PATH failures into the DECOUPLING verdict,
+    # so rule DEC-001 failed on board B for something that is not decoupling and has nothing to do with the
+    # loop it measures. The same shape as the composite verdict this bucket split was written to fix, one level
+    # down. The evidence quotation is stripped before the keys are matched, and a line that two buckets claim
+    # is named rather than counted twice.
+    head = lambda t: t.split("[")[0]
+    claimed, multi = set(), {}
     for name, keys, note in BUCKETS:
-        mine = [t for t in checked if any(k in t for k in keys)]
+        mine = [t for t in checked if any(k in head(t) for k in keys)]
+        for t in mine: multi.setdefault(t, []).append(name)
         claimed.update(mine)
         bad = [t for t in mine if t in fails]
         _v.write(name, _v.INCONCLUSIVE if not mine else (_v.FAIL if bad else _v.PASS),
@@ -201,7 +211,11 @@ if __name__ == "__main__":
                  note=note if mine else "nothing of this kind was checked on this board")
     # anything this file checks that no bucket claims still has to decide something, or a rule could be added
     # here and silently belong to nothing
-    rest = [t for t in checked if t not in claimed]
+    both = sorted(t for t, ns in multi.items() if len(ns) > 1)
+    for t in both:
+        print("intent_checks: THIS CHECK BELONGS TO %d RULES AND MUST BELONG TO ONE (%s): %s"
+              % (len(multi[t]), ", ".join(multi[t]), t[:120]))
+    rest = [t for t in checked if t not in claimed] + both
     if rest:
         _v.write("intent_other", _v.FAIL if [t for t in rest if t in fails] else _v.PASS,
                  counts={"fail": len([t for t in rest if t in fails]), "pass": len([t for t in rest if t not in fails])},
