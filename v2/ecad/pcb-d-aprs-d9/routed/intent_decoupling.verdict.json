@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "fail": 0,
   "pass": 32
@@ -9,7 +10,7 @@
  "inputs": {
   "board": {
    "path": "pcb-d-aprs.kicad_pcb",
-   "sha256_16": "81614025d9446af5"
+   "sha256_16": "929bf82d2bf6eed4"
   }
  },
  "note": "the loop from a decoupling capacitor to the pin it serves",
@@ -23,9 +24,9 @@
  "tool": "intent_decoupling",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:13:54Z",
+ "ts": "2026-09-16T03:53:26Z",
  "verdict": "PASS",
  "version": "unknown"
 }

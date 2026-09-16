@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "collisions": 0,
   "fine_pitch": 19,
@@ -25,9 +26,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:11:44Z",
+ "ts": "2026-09-16T03:50:58Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -1,20 +1,14 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
-  "fail": 7,
+  "fail": 0,
   "footprints": 60,
-  "pass": 169
+  "intent_items_reported": 37,
+  "pass": 139
  },
- "denominator": 176,
- "evidence": [
-  "return path under FUSE (Default, UNDECLARED so judged at the strictest bar): 12.6 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 33.1 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under SMBC (Default, CLOCKED_DIGITAL): 103.6 of 123.0 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
-  "return path under SMBC_I (Default, CLOCKED_DIGITAL): 42.8 of 47.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
-  "return path under SMBD (Default, CLOCKED_DIGITAL): 70.4 of 121.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
-  "return path under VC1_F (LOW_SPEED_OR_DC): a reference exists under -0.0 of 37.0 mm [a cell-voltage sense line through its filter, DC by construction]",
-  "return via: 4 of 14 signal vias have a ground via within 1.5 mm (21 exempt in fine-pitch fans, 0 on one reference plane, 47 on a net whose declared class has no edge to return); without one: SMBC at (77.14, 110.88); PACK_F at (83.29, 105.10); SMBC_I at (90.02, 94.67); PACK_F at (91.05, 100.33); SMBC_I at (103.16, 96.39); SMBD at (105.91, 80.84); SMBD at (106.59, 103.08); SMBC at (110.67, 89.55) ..."
- ],
+ "denominator": 139,
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-p-pack.kicad_pcb",
@@ -32,9 +26,9 @@
  "tool": "check_pcb_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:14:30Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T03:54:17Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

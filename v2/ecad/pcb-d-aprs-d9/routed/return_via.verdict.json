@@ -1,25 +1,21 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
-  "exempt": 16,
-  "judged": 9,
-  "lacking": 6,
-  "same_plane": 7,
-  "slow": 132
+  "exempt": 20,
+  "judged": 37,
+  "lacking": 1,
+  "same_plane": 3,
+  "slow": 227
  },
- "denominator": 9,
+ "denominator": 37,
  "evidence": [
-  "HUB_DP0 at (115.77, 83.23)",
-  "HUB_DM1 at (121.15, 92.75)",
-  "HUB_DP1 at (121.65, 90.85)",
-  "HUB_RST_n at (121.65, 85.52)",
-  "HUB_DM3 at (128.52, 87.87)",
-  "HUB_DM3 at (130.46, 87.24)"
+  "HUB_DM3 at (130.01, 87.42)"
  ],
  "inputs": {
   "board": {
    "path": "pcb-d-aprs.kicad_pcb",
-   "sha256_16": "81614025d9446af5"
+   "sha256_16": "929bf82d2bf6eed4"
   }
  },
  "note": "",
@@ -33,9 +29,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:13:57Z",
+ "ts": "2026-09-16T03:53:29Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -1,8 +1,10 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "fail": 1,
   "footprints": 951,
+  "intent_items_reported": 0,
   "pass": 2142
  },
  "denominator": 2143,
@@ -26,9 +28,9 @@
  "tool": "check_pcb_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:12:11Z",
+ "ts": "2026-09-16T03:51:26Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "agree": 241,
   "aliased_pins": 0,
@@ -17,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "8866d2beec6f281f"
+   "sha256_16": "d3b02959eda1af54"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -31,9 +32,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:14:33Z",
+ "ts": "2026-09-16T03:54:19Z",
  "verdict": "PASS",
  "version": "unknown"
 }

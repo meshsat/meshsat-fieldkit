@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "collisions": 1,
   "fine_pitch": 6,
@@ -8,12 +9,12 @@
  },
  "denominator": 6,
  "evidence": [
-  "FAIL  3 plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper, and no free via site within 1.5 mm or a track keep-out over the pad): U6.28 (GND, no via site), Y2.2 (GND, no via site), C57.1 (+5V_D8, no via site)"
+  "FAIL  2 plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper, and no free via site within 1.5 mm or a track keep-out over the pad): U6.2 (+5V_D8, no via site), C3.1 (+5V_D8, no via site)"
  ],
  "inputs": {
   "board": {
    "path": "pcb-d-aprs.kicad_pcb",
-   "sha256_16": "81614025d9446af5"
+   "sha256_16": "929bf82d2bf6eed4"
   }
  },
  "note": "",
@@ -27,9 +28,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:14:01Z",
+ "ts": "2026-09-16T03:53:36Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
