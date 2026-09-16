@@ -69,9 +69,9 @@ PY
 # is thrown away after the export. SENSITIVE_GUARD=0 turns it off, and a board that declares no node gets
 # nothing.
 if [ "${SENSITIVE_GUARD:-1}" != "0" ] && [ -f "$_TOOLS/sensitive_guard.py" ]; then
-  # the letter comes from the BOARD NAME (pcb-a-power -> a); $W here is the attempt's scratch directory
-  _SGL="$(echo "$N" | sed -n 's/^pcb-\([a-z0-9]*\)-.*/\1/p')"
-  [ -n "$_SGL" ] && python3 "$_TOOLS/sensitive_guard.py" "$W/$N-noplanes.kicad_pcb" "$_SGL" 2>&1 | grep -a "sensitive_guard" | tail -4
+  # The tool resolves the letter from the board table itself: slicing it out of the stem gives "e1" for
+  # pcb-e1-dock, whose letter is "e". The stem is passed as the fallback and nothing more.
+  python3 "$_TOOLS/sensitive_guard.py" "$W/$N-noplanes.kicad_pcb" "$N" 2>&1 | grep -a "sensitive_guard" | tail -4
 fi
 python3 - "$W/$N.dsn" <<'PY'
 import sys, pcbnew

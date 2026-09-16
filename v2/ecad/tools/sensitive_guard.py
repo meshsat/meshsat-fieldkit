@@ -40,6 +40,16 @@ def main(argv):
     import pcbnew
     from pcbnew import FromMM
     path, letter = argv[0], argv[1]
+    # THE LETTER IS RESOLVED FROM THE BOARD, NOT FROM ITS NAME (17 September 2026). A caller that slices the
+    # letter out of a stem with a pattern gets "e1" for pcb-e1-dock, whose letter is "e", and "e5" for the one
+    # board whose letter really is e5; the guard would then find no declaration and silently do nothing. The
+    # board table is the one place that knows, and the argument stays as the fallback for a board it has never
+    # heard of.
+    try:
+        import boardtable as _bt
+        letter = _bt.letter_for(path) or _bt.letter_for(os.path.basename(path).split(".")[0]) or letter
+    except Exception:
+        pass
     clr = float(argv[argv.index("--clearance") + 1]) if "--clearance" in argv else 0.127
     dry = "--dry" in argv
     nodes = nodes_for(letter)
