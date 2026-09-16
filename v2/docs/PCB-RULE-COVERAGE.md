@@ -61,7 +61,7 @@ appears in the gap register.
 | STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | impedance_check.py, fab_limits.py -> impedance_check, fab_limits | tests/test_stackup_reader.py, tests/test_fab_limits.py | **ENFORCED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
-| THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | none |  | **OPEN** |
+| THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **GENERATED_ONLY** |
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts and each board's external_ports declaration | port_protect.py -> port_protect | tests/test_port_protect.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |
 | VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py, check_pcb_c.py -> via_audit, check_pcb_c | tests/test_board_gates.py | **ENFORCED** |
@@ -72,9 +72,9 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 28 |
-| GENERATED_ONLY | 11 |
+| GENERATED_ONLY | 12 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 9 |
+| OPEN | 8 |
 | SOURCE_UNVERIFIED | 2 |
 | OWNER_DECISION_REQUIRED | 3 |

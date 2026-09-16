@@ -1251,7 +1251,7 @@ its junction temperature at the envelope's maximum ambient is estimated and reco
 | verified by | CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_*3.py copper and thermal vias |
-| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one part, expires prototype thermal measurement |
 
@@ -1264,8 +1264,17 @@ modules and several converters above an ampere.
 
 **If violated** Silent derating, shortened life, and thermal shutdown in the sun.
 
-**Today** no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit
-stage
+**Today** 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent
+(rails, currents, the source part) and from what each board declares: a converter's loss is P_out *
+(1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part that
+dissipates for another reason (the power amplifier, a shunt, a linear regulator) is declared in
+boards/<letter>.json with its watts and its sentence. The thermal path is measured off the board, the part's
+own pad area and the vias inside its courtyard, because on a sealed case with no airflow that is what carries
+the heat out. What is MISSING is the second half: a junction temperature needs the envelope's maximum
+ambient, which is ENV-001 and is an owner decision nobody has written, so the rule stays short of its
+acceptance criteria and says which half is absent rather than inventing it. A rail with no declared
+efficiency is listed as unknown and makes the verdict INCONCLUSIVE, so the table is a floor until every
+converter carries its number
 
 ## Placement
 

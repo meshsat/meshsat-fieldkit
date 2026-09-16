@@ -17,10 +17,14 @@ _I = {"bypass": [], "rails": {}, "pair_classes": dict(Z_DEFAULT)}
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
-def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None):
+def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None, efficiency=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
+
+    efficiency: the converter's efficiency at this rail's current, as a fraction, WITH ITS BASIS IN THE NOTE
+    (rule THM-001, 16 September 2026). `thermal.py` turns it into the watts this board has to get rid of; a
+    rail that declares none is listed as unknown rather than estimated at a figure nobody wrote down.
 
     share: THIS BOARD'S PART of a rail that crosses to another board (16 September 2026). `+5V_D8` is one
     conductor from board A's eFuse, out through the mezzanine connector, into board D's loads, and each board
@@ -58,7 +62,8 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
     if _tot > amps_peak * 1.02: raise SystemExit("intent: rail %s declares a %.2f A peak and its loads sum to %.2f A. "
                                                  "The loads are a claim about the same current as the peak: correct one of them." % (net, amps_peak, _tot))
     _I["rails"][net] = {"volts": volts, "amps_typ": amps_typ, "amps_peak": amps_peak, "source": source, "loads": loads or {}, "note": note,
-                        **({"budget": budget} if budget else {}), **({"share": share} if share else {})}
+                        **({"budget": budget} if budget else {}), **({"share": share} if share else {}),
+                        **({"efficiency": efficiency} if efficiency else {})}
 
 def pair_class(name, z_diff=None, z_se=None):
     _I["pair_classes"][name] = {k: v for k, v in (("z_diff", z_diff), ("z_se", z_se)) if v is not None}
