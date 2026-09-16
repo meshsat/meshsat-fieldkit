@@ -26,7 +26,7 @@ from kisch import (parse, ser, find_sym, flatten_raw, flatten, rename_units, lib
                    ensure, part, ic, c, r, esd, noconn, q, uq, U, tps22810, usb_c_recept, emit_pwr_flag,
                    place_symbol, wire, label, text, emit_part)
 import intent as _intent
-_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, switch="U1", enable_net="DSG_R",   # the GAUGE's own pin; R18, 5.1k, sits between it and the FET gate DSG_G
+_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, switch="U1", enable_net="DSG_R", v_work=16.8,   # the GAUGE's own pin; R18, 5.1k, sits between it and the FET gate DSG_G
              note="the pack lead. THE SWITCH IS THE GAUGE: Q2 is the discharge FET and the BQ4050 drives its gate on DSG_G, so the pack terminal is live only while the gauge allows it, which is the first stage of the energy chain")
 _intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP", always_on=True, loads={"F1": 10.0},
              always_on_why="the cell block itself: there is nothing upstream of it to switch, which is why everything downstream is protected rather than enabled",
@@ -112,6 +112,13 @@ r("R5", "100R", "CELL4", "BAT_F"); c("C6", "100n", "BAT_F", "GND")              
 r("R6", "1k", "PACK_P", "PACK_F"); c("C7", "100n", "PACK_F", "GND")                                             # PACK sense
 r("R7", "1k", "PACK_P", "VCC_F"); c("C8", "100n", "VCC_F", "GND")                                               # VCC, the secondary supply from the pack terminal (wakes a shut-down pack from the charger)
 r("R8", "100R", "GND", "SRP_F"); r("R9", "100R", "PACK_N", "SRN_F"); c("C9", "100n", "SRP_F", "SRN_F")          # the coulomb counter across the sense resistor
+# PACK_N is the pack's negative terminal, on the far side of the 2 mOhm coulomb-counting shunt from the board's
+# own ground: 25 A through it is 50 mV, so it is a reference and not a live net, and it is declared so that the
+# parts across it are judged rather than reported as sitting on an undeclared net (16 September 2026, CMP-001).
+_intent.node("PACK_N", 0.05, "the pack negative, one 2 mOhm shunt away from GND: 50 mV at the 25 A the "
+             "counter is scaled for, which is a reference and not a voltage a part has to withstand")
+_intent.node("GND", 0.0, "the board's reference, so a part between a live net and ground is judged against "
+             "the live net rather than reported as sitting on an undeclared one")
 r("R10", "2m 2512 2W (sense)", "GND", "PACK_N", "RS2512")                                                       # 25 A gives 50 mV, inside the counter's range
 part("J_TS", "Connector_Generic", "Conn_01x02", "JST-PH 1x2 socket for the cell thermistor lead (the 10k NTC, a 103AT, sits in the cell block)", "PH2", {"1": "TS1", "2": "GND"}, "C5251182"); c("C10", "100n", "TS1", "GND")
 for k, n in ((11, "TS2"), (12, "TS3"), (13, "TS4")): r("R%d" % k, "10k", n, "GND")                             # unused thermistor inputs held valid

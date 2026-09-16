@@ -59,19 +59,32 @@ coverage:
    remediation: {action: "owner decision 30: the supervisors execute the wipe, power removal only, or accept the software path and rename the feature everywhere",
      owner: OWNER, execution: OWNER, depends_on: [], p50_h: 8, p80_h: 24}}
 
- CMP-001: {implementation: "gen_sch_*.py value strings and each board's intent rails",
-   verification: {tool: derate.py, verdict: derate, fixtures: tests/test_gate_fixtures.py},
-   maturity: GENERATED_ONLY, gap_category: NO_BEHAVIOURAL_TEST,
-   note: "16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carries a rating is
-     compared with the declared voltage of every rail its pins touch, at a 20 percent margin, and board A's 48 rated
-     pairs come back clean, which is owner ruling 10's fix confirmed rather than re-found. THREE THINGS ARE STILL OPEN
-     and the tool says so in its own output rather than implying coverage it does not have: a part whose value carries no
-     rating (90 of them on board A) has its absolute maximum in a datasheet nothing reads; DC-BIAS CAPACITANCE DERATING
-     is not implemented at all, and it is a different failure (a decoupling network that is not there, rather than a part
-     failing short); and a rated part on a net with no declared voltage is reported as UNDECLARED, 29 nets on board A,
-     mostly switch and bootstrap nodes. That is why this is GENERATED_ONLY and not ENFORCED",
-   remediation: {action: "declare the switching and bootstrap nodes voltages so their parts can be judged; then the DC-bias curves for the decoupling on the fastest rails",
-     owner: SESSION, execution: PARALLEL_AGENT, depends_on: [PWR-001], p50_h: 6, p80_h: 18}}
+ CMP-001: {implementation: "gen_sch_*.py value strings, each board's intent rails and its declared nodes",
+   verification: {tool: derate.py, verdict: derate, fixtures: "tests/test_gate_fixtures.py, tests/test_derate_prefix.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026, SECOND PASS: THE NETS WHERE THE HIGHEST VOLTAGES LIVE ARE NOT RAILS, and until today
+     none of them was declared. A switching node, a bootstrap, a charge pump and a transmitter's output are not
+     supplies with a current and loads, so `rail()` could not describe them and `derate` reported them as
+     UNDECLARED: 29 such nets on board A, 15 on B, 14 on E, and board C judged NO PART AT ALL. `intent.node()`
+     declares a net's peak with the basis for the number, `rides_on` records that a bootstrap sees its driver's
+     bias and not the height of the node it rides on, `v_work` records the working maximum where it differs from
+     the nominal (VBAT is declared 14.4 and a 4S pack terminates at 16.8; VIN_RAW is declared 12 and the vehicle
+     line it comes from is specified 9 to 36), and `vendor_reference` records the one case where the voltage lives
+     inside a part this project does not open and the PART MAKER STATES THE PART instead. The seven boards now
+     declare 0 undeclared nets and 379 part-on-net comparisons where there were 174.
+     IT FOUND SIX REAL DEFECTS ON THREE BOARDS, all of one class and all invisible before: a transient suppressor
+     whose stand-off is BELOW its line's own working maximum conducts in normal service rather than only on a
+     transient. Three SMCJ33A sat on lines specified to 36 V (board A's VIN_RAW clamp, board E's input and bus
+     clamps) and three SMBJ5.0A on 5.1 V slot rails. All six are replaced at the source with the next standard
+     stand-off, and the SMCJ40A's higher clamping voltage is paid for where it lands: board A's front-end input
+     capacitors and board E's bus capacitor move from 50 V to the 100 V part the set already buys. A seventh item
+     was found the same way and is not a stand-off: board E's panel clamp did not begin to conduct until 36.7 V,
+     above the 35 V rating of the bulk capacitors it guards, and is now an SMCJ28A that conducts at 31.1.
+     STILL OPEN and said out loud rather than implied: DC-bias capacitance derating is not implemented and is a
+     different failure; a part whose value states no rating is counted and reported, never assumed good; and the
+     comparison is against the declared STEADY voltage, so transients and ringing are outside it",
+   remediation: {action: "the DC-bias curves for the decoupling on the fastest rails, and a rating from the ordered part for the values that state none",
+     owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 18}}
 
  CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
    maturity: ENFORCED, gap_category: NONE, note: "package mismatch is caught against the supplier's own record, with a date"}

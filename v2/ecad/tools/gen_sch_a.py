@@ -13,11 +13,11 @@ import kisch
 from kisch import (U, c, emit_part, emit_pwr_flag, ensure, esd, extents, find_sym, flatten, flatten_raw, ic, label, lib_tree, noconn, parse, part, pins_of, place_symbol, q, r, rename_units, ser, text, tps22810, uq, usb_c_recept, wire)
 import intent as _intent
 # Rails of A22 (appendix 32.55; the record's currents, not measurements): the node from the pack, the 20 V charge bus, the slot rails, the device rail, the PA and HF rails, PoE
-_intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", always_on=True,
+_intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", always_on=True, v_work=16.8,
              always_on_why="the fused pack node: nothing on this board switches it. What opens it is the pack's own BQ4050 protection FETs and the 25 A blade F1, which are the first two stages of the energy chain", loads={"U4": 2.0, "U5": 2.0, "U6": 2.0, "U7": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2}, note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
-_intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", always_on=True,
+_intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", always_on=True, v_work=16.8,
              always_on_why="the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here", loads={"F1": 10.0}, note="the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)")
-_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5, "C12": 0.5}, budget=0.02, share=0.015,
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5, "C12": 0.5}, budget=0.02, share=0.015, v_work=36.0,
              always_on=True, always_on_why="shore and vehicle input arriving over the dock behind board E's own 10 A blade and ideal diode; this board does not switch it, it consumes it", note="shore and vehicle input from E6 over the dock, 10 A fuse; the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)")
 # LOADS DECLARED 13 September 2026. This rail carried none and dc_drop guessed, putting 6 A into U3, whose
 # only pads on this net are the charger's 0.13 and 0.20 mm VBUS SENSE pins. The real path is the whole charge
@@ -146,7 +146,7 @@ part("J_MAINSW", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the MAIN
 # --- LM5176 four-switch buck-boost stages (lm5176-datasheet.pdf, HTSSOP-28 PWP; Vref 0.8 V; pins: 1 EN/UVLO 2 VIN 3 VISNS 4 MODE 5 DITH 6 RT/SYNC 7 SLOPE 8 SS 9 COMP 10 AGND 11 FB 12 VOSNS
 #     13 ISNS- 14 ISNS+ 15 CSG 16 CS 17 PGOOD 18 SW2 19 HDRV2 20 BOOT2 21 LDRV2 22 PGND 23 VCC 24 BIAS 25 LDRV1 26 BOOT1 27 HDRV1 28 SW1, pad 29)
 def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isns="10m", rcs="5m", bias=None,
-           rfb_val="10k 1%", cout="10u 50V X7R 1210"):
+           rfb_val="10k 1%", cout="10u 50V X7R 1210", cin="10u 50V X7R 1210"):
     """one stage with prefix p: refs = (Q_bh, Q_bl, Q_bsl, Q_bsh, R_fb_top, R_fb_bot, R_rt, R_slope, R_comp, C_comp, C_comp2, C_ss, C_vcc, C_boot1, C_boot2, R_isns, R_cs, R_pgood, R_en_top, R_en_bot, Cin1, Cin2, Cout1, Cout2, Cout3, R_mode)"""
     qbh, qbl, qsl, qsh, rft, rfb, rrt, rsl, rco, cco, cco2, css, cvcc, cb1, cb2, risns, rcs_, rpg, ret, reb, ci1, ci2, co1, co2, co3, rmd = refs
     N = lambda s: p + "_" + s
@@ -173,12 +173,44 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
     # part in the same land (C5156756, X7R, 426,107 in stock). The cost of the ruling is capacitance: 20 uF in
     # and 30 uF out per stage against 44 and 66, and X7R derates further under bias, so the ripple and loop
     # margin on a 5 A converter are owed a measurement before the order.
-    c(ci1, "10u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "10u 50V X7R 1210", vin, "GND", "C1210", bypass=(uref, "3"))   # the two VIN pins
+    c(ci1, cin, vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, cin, vin, "GND", "C1210", bypass=(uref, "3"))   # the two VIN pins
     for cr in (co1, co2, co3): c(cr, cout, vout, "GND", "C1210")
+    # THE STAGE'S OWN NON-RAIL NETS, DECLARED HERE AND NOT IN TWENTY HAND-WRITTEN LINES (16 September 2026,
+    # rule CMP-001). A buck-boost's two switching nodes are where the highest voltage on the board appears and
+    # nothing declared them: `derate.py` reported twenty-nine of board A's nets as UNDECLARED and judged no
+    # part on any of them. The numbers come from the topology, which is right here: SW1 is the BUCK side and
+    # swings between a diode drop below ground and the input rail; SW2 is the BOOST side and swings to the
+    # output rail; each BOOT rides on its own SW at the controller's VCC, which is why the bootstrap
+    # capacitors are 25 V parts and why judging them against the node's height above ground would refuse a
+    # correct design. VCC is the LM5176's own regulator output, 7.6 V typical (datasheet, electrical
+    # characteristics); the CS node is the drop across a 5 mOhm shunt at the stage's peak current.
+    _vin_v = _intent.net_volts(vin); _vout_v = _intent.net_volts(vout); _vcc = 7.6
+    _why = "LM5176 stage %s, %s to %s: " % (p, vin, vout)
+    _intent.node(N("SW1"), _vin_v, _why + "the buck-side switching node reaches the input rail", v_min=-1.0)
+    _intent.node(N("SW2"), _vout_v, _why + "the boost-side switching node reaches the output rail", v_min=-1.0)
+    _intent.node(N("BOOT1"), _vin_v + _vcc, _why + "the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+                 rides_on=N("SW1"), bias_v=_vcc)
+    _intent.node(N("BOOT2"), _vout_v + _vcc, _why + "the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+                 rides_on=N("SW2"), bias_v=_vcc)
+    _intent.node(N("OUT"), _vout_v, _why + "the output before the ISNS shunt")
+    _intent.node(N("VCC"), _vcc, _why + "the controller's own regulator output, 7.6 V typical")
+    _intent.node(N("CS"), 1.0, _why + "the current-sense node: the drop across a %s Ohm shunt, under a volt at any current this stage carries" % rcs)
 # stage FE: the vehicle and shore input (9 to 36 V after E6's protection and filter) to the 20 V charge bus, 5 A; 60 V FETs
+# THE INPUT CAPACITORS OF THIS STAGE ARE 100 V PARTS AND THE CLAMP STANDS OFF 40 (16 September 2026, CMP-001).
+# VIN_RAW is the vehicle and shore line: 9 to 36 V in service, and its clamp was an SMCJ33A, which stands off
+# 33 V. A suppressor whose standoff is BELOW the line's own working maximum conducts in normal service rather
+# than only on a transient, and at 36 V in it would sit there dissipating until it failed short. The same part
+# was on board E's two input nets, three places and one defect, found the first time a rule asked a protector
+# its own question instead of asking whether it survives the voltage it itself produces.
+# The replacement is the same land and the next standard standoff up, SMCJ40A (Littelfuse, C224052, DO-214AB,
+# stock 3,987 on 16 September 2026), and it is NOT a free swap: its clamping voltage is 64.5 V at 23.2 A where
+# the SMCJ33A's is 53.3, so this stage's input capacitors move from 50 V to the 100 V part the PoE stage's
+# output already uses (C5156756, 10 uF 100 V X7R in the same 1210 land, stock 394,648). The other four stages
+# sit on VBAT behind an SMCJ18A that clamps at 29.2 V and keep the 50 V part.
 lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
-       ["Q2", "Q3", "Q4", "Q5", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119"])
-part("D2", "Device", "D_TVS", "SMCJ33A (VIN_RAW clamp behind E6's filter)", "TVSC", {"1": "VIN_RAW", "2": "GND"})
+       ["Q2", "Q3", "Q4", "Q5", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119"],
+       cin="10u 100V X7R 1210")
+part("D2", "Device", "D_TVS", "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)", "TVSC", {"1": "VIN_RAW", "2": "GND"}, "C224052")
 # --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET: the battery side IS the system, the pack node CELL+ through RSR): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,
 #     charge inhibited by pulling ILIM_HIZ low through Q6 (the SHORE_INHIBIT function of PANEL.md section 9 becomes CHG_INHIBIT on the expander); cell count set on CELL_BATPRESZ
 ic("U3", 33, "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B", "QFN32_04", {
@@ -216,6 +248,25 @@ for k in range(3): c("C%d" % (23 + k), "22u 25V 1210", "CH_SRP", "GND", "C1210")
 r("R19", "16.5k 1%", "REGN", "CHG_ILIM"); r("R20", "34.8k 1%", "CHG_ILIM", "GND"); part("Q6", "Transistor_FET", "2N7002", "2N7002: CHG_INHIBIT high = ILIM_HIZ low = charger in HiZ", "SOT23", {"1": "CHG_INHIBIT", "2": "GND", "3": "CHG_ILIM"}); r("R21", "100k", "CHG_INHIBIT", "GND")
 r("R22", "10k", "CHRG_OK", "+3V3"); r("R23", "10k", "PROCHOT", "+3V3"); r("R24", "10k (PSYS load)", "PSYS", "GND"); r("R25", "10k", "CH_COMP1", "CH_COMP1C"); c("C26", "10n", "CH_COMP1C", "GND"); c("C27", "1n", "CH_COMP2", "GND")
 r("R26", "60.4k 1% (CELL_BATPRESZ: 4S per Table, from VDDA)", "CH_VDDA", "CH_CELL"); r("R27", "40.2k 1%", "CH_CELL", "GND")
+# THE CHARGER'S OWN NON-RAIL NETS (16 September 2026, rule CMP-001). Same shape as the LM5176 stages above and
+# the same topology: Q7's drain is the input node, Q10's the output node, the two SW nodes swing between them
+# and ground, and each BTST rides on its own SW at REGN. The pack ceiling is 16.8 V and not the 14.4 the rail
+# declares: VBAT is declared at its NOMINAL voltage, which is the right number for a drop budget and the wrong
+# one for a part's rating, and 4S lithium ion terminates at 4.2 V a cell.
+_CELL_MAX = 16.8
+_intent.node("CH_ACN", 20.0, "the charger's input node behind the 10 mOhm input shunt: the 20 V charge bus")
+_intent.node("CH_SRP", _CELL_MAX, "the charger's output node before the 5 mOhm charge shunt: the pack at its "
+             "4S termination voltage of 4.2 V a cell, not the 14.4 V nominal the rail declares")
+_intent.node("CH_SW1", 20.0, "BQ25731 buck-side switching node: it reaches the 20 V input bus", v_min=-1.0)
+_intent.node("CH_SW2", _CELL_MAX, "BQ25731 boost-side switching node: it reaches the pack", v_min=-1.0)
+_intent.node("CH_BTST1", 26.0, "the bootstrap rides on CH_SW1 at REGN, the charger's own 6 V regulator",
+             rides_on="CH_SW1", bias_v=6.0)
+_intent.node("CH_BTST2", _CELL_MAX + 6.0, "the bootstrap rides on CH_SW2 at REGN",
+             rides_on="CH_SW2", bias_v=6.0)
+_intent.node("REGN", 6.0, "the BQ25731's own 6 V regulator output, which supplies both gate drivers")
+_intent.node("CH_VDDA", 6.0, "the charger's analogue supply, REGN through R18")
+_intent.node("GND", 0.0, "the board's reference. It is declared so that a part between a live net and ground "
+             "is judged against the live net rather than reported as sitting on an undeclared one")
 # --- per-slot 5 V rails: Diodes AP64500SP-13 (diodes/diodes-ap64500.pdf, SO-8 with exposed pad; pins 1 BST 2 VIN 3 EN 4 RT/CLK 5 FB 6 COMP 7 GND 8 SW 9 pad; 3.8 to 40 V in, 5 A,
 #     Vref 0.8 V, 5.1 V from 53.6k/10k), enable from the panel controller over J_AB1, INA226 on each output (ti-ina226.pdf, VSSOP-10; pins 1 A1 2 A0 3 ALERT 4 SDA 5 SCL 6 VS 7 GND 8 VBUS 9 IN- 10 IN+)
 def buck5(n, uref, en, out, refs, ina, a1, a0):
@@ -257,6 +308,14 @@ vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
 # --- USB-C PD outlet: TPS25740A source controller (ti-tps25740.pdf, VQFN-24 RGE; pins 1 VTX 2 CC1 3 CC2 4 GND 5 HIPWR 6 CTL1 7 CTL2 8 EN9V 9 N/C 10 N/C 11 UFP 12 PSEL 13 DVDD 14 PCTRL 15 GD 16 VAUX
 #     17 VDD 18 AGND 19 ISNS 20 VPWR 21 VBUS 22 GDNG 23 GDNS 24 DSCG, pad 25) with a fifth LM5176 stage as the power supply: CTL2 and CTL1 (open drain) switch R(FBL2) and R(FBL1) in
 #     parallel with the stage's 20k bottom resistor (section 9.1.4 of the sheet): 5 V idle, 9 V and 15 V on request (45 W, 3 A); GDNG drives the VBUS N-FET, DSCG discharges through 43 Ohm
+# The PD stage's output is not a rail: it is regulated to 5, 9 or 15 V on the sink's request through the two
+# feedback resistors CTL1 and CTL2 switch in, so its ceiling is the 15 V profile and every part on it is judged
+# against that (rule CMP-001, 16 September 2026). PD_SW is the same node behind the VBUS N-FET and PD_VBUS is
+# the outlet itself, at the same ceiling.
+_intent.node("PD_VPWR", 15.0, "the TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the "
+             "LM5176's feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling")
+_intent.node("PD_SW", 15.0, "the PD supply behind Q27, the VBUS switch: the same 15 V ceiling")
+_intent.node("PD_VBUS", 15.0, "the USB-C outlet itself, behind the ISNS shunt: the same 15 V ceiling")
 lm5176("PD", "U19", "VBAT", "PD_VPWR", "PD_EN", "105k", "L11", "6.8uH XAL1010-682ME", "CSD18510Q5B 40 V N-FET", "",
        ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], isns="10m", rfb_val="20k 1% (R_FBL)")
 r("R136", "21.0k 1% (R_FBL2: 9 V when CTL2 is low)", "PD_FB", "PD_CTL2"); r("R137", "14.0k 1% (R_FBL1: 15 V when CTL1 is low too)", "PD_FB", "PD_CTL1")
