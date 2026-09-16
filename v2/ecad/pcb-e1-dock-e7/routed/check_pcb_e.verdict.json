@@ -1,37 +1,14 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
-  "fail": 24,
+  "fail": 0,
   "footprints": 189,
-  "pass": 143
+  "intent_items_reported": 98,
+  "pass": 69
  },
- "denominator": 167,
- "evidence": [
-  "return path under DCF_PULSE (Default, CLOCKED_DIGITAL): 49.5 of 273.6 mm without a plane on a neighbouring layer (limit 41.0) [a counted pulse input (Geiger, DCF77): the rate is low and the edge is]",
-  "return path under HS_GATE (Default, HIGH_SPEED_DIGITAL): 21.7 of 25.9 mm without a plane on a neighbouring layer (limit 10.0) [the hot-swap FET gate: slew-limited by design, but it is a gate drive ]",
-  "return path under IMU_INT1 (Default, CLOCKED_DIGITAL): 52.2 of 77.9 mm without a plane on a neighbouring layer (limit 30.0) [the IMU's SPI chip select and its interrupt line, both driven by the R]",
-  "return path under QSPI_D0 (Default, HIGH_SPEED_DIGITAL): 20.8 of 22.8 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_D1 (Default, HIGH_SPEED_DIGITAL): 10.7 of 17.5 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_D2 (Default, HIGH_SPEED_DIGITAL): 14.5 of 16.4 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_D3 (Default, HIGH_SPEED_DIGITAL): 15.6 of 19.3 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_SCLK (Default, HIGH_SPEED_DIGITAL): 25.0 of 26.9 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_SS (Default, HIGH_SPEED_DIGITAL): 31.8 of 38.1 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under SCL0 (Default, CLOCKED_DIGITAL): 67.7 of 283.1 mm without a plane on a neighbouring layer (limit 42.5) [I2C at 100 or 400 kHz with an open-drain pull-up: the edge is set by t]",
-  "return path under SCL1 (Default, CLOCKED_DIGITAL): 84.0 of 310.4 mm without a plane on a neighbouring layer (limit 46.6) [I2C at 100 or 400 kHz with an open-drain pull-up: the edge is set by t]",
-  "return path under SDA1 (Default, CLOCKED_DIGITAL): 163.6 of 354.5 mm without a plane on a neighbouring layer (limit 53.2) [the data half of the same I2C bus]",
-  "return path under SWCLK (Default, CLOCKED_DIGITAL): 31.8 of 34.9 mm without a plane on a neighbouring layer (limit 30.0) [the SWD debug port, a few MHz and used only on a bench with a probe at]",
-  "return path under SWDIO (Default, CLOCKED_DIGITAL): 35.3 of 37.7 mm without a plane on a neighbouring layer (limit 30.0) [the SWD debug port, a few MHz and used only on a bench with a probe at]",
-  "return path under TRK_BG1 (Default, HIGH_SPEED_DIGITAL): 24.0 of 30.9 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bottom gate drives, as above]",
-  "return path under TRK_BG2 (Default, HIGH_SPEED_DIGITAL): 43.9 of 45.4 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bottom gate drives, as above]",
-  "return path under TRK_BOOST1 (Default, HIGH_SPEED_DIGITAL): 20.3 of 45.8 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bootstrap nodes, which ride on the switch nodes and carr]",
-  "return path under TRK_BOOST2 (Default, HIGH_SPEED_DIGITAL): 30.4 of 32.1 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bootstrap nodes, which ride on the switch nodes and carr]",
-  "return path under TRK_TG1 (Default, HIGH_SPEED_DIGITAL): 16.5 of 58.6 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's top gate drives: amperes into a FET gate in nanoseconds]",
-  "return path under TRK_TG2 (Default, HIGH_SPEED_DIGITAL): 26.6 of 28.1 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's top gate drives: amperes into a FET gate in nanoseconds]",
-  "return path under USB_DM_R (Default, HIGH_SPEED_DIGITAL): 12.0 of 16.0 mm without a plane on a neighbouring layer (limit 10.0) [USB 1.1 full speed at 12 Mbit/s into the RP2040's own transceiver: the]",
-  "return path under USB_DP_R (Default, HIGH_SPEED_DIGITAL): 31.6 of 42.4 mm without a plane on a neighbouring layer (limit 10.0) [USB 1.1 full speed at 12 Mbit/s into the RP2040's own transceiver: the]",
-  "return path under XIN (Default, HIGH_SPEED_DIGITAL): 16.7 of 25.7 mm without a plane on a neighbouring layer (limit 10.0) [the 12 MHz crystal oscillator's drive node, a continuous periodic sour]",
-  "return path under XOUT_R (Default, HIGH_SPEED_DIGITAL): 31.1 of 32.8 mm without a plane on a neighbouring layer (limit 10.0) [the other half of the same 12 MHz oscillator loop]"
- ],
+ "denominator": 69,
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
@@ -49,9 +26,9 @@
  "tool": "check_pcb_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:14:12Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T03:53:49Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

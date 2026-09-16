@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {},
  "denominator": 0,
  "evidence": [],
@@ -20,9 +21,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "8acc10d50ab6bbb5"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:24:47Z",
+ "ts": "2026-09-16T03:54:07Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

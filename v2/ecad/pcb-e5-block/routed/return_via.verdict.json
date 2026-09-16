@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "exempt": 0,
   "judged": 6,
@@ -33,9 +34,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "8acc10d50ab6bbb5"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:24:47Z",
+ "ts": "2026-09-16T03:54:08Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

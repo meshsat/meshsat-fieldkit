@@ -1,14 +1,15 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "by_type": {},
   "hard": 0,
   "report": {
    "silk_over_copper": 9,
    "silk_overlap": 54,
-   "starved_thermal": 11,
-   "track_dangling": 12,
-   "via_dangling": 1
+   "starved_thermal": 10,
+   "track_dangling": 14,
+   "via_dangling": 6
   },
   "stage": "post",
   "types_checked": 15,
@@ -19,7 +20,7 @@
  "inputs": {
   "drc": {
    "path": "out/pcb-d-aprs-drc.json",
-   "sha256_16": "7d737f6500d18e1e"
+   "sha256_16": "bbdf7c79c87ee294"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
@@ -34,9 +35,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:13:51Z",
+ "ts": "2026-09-16T03:53:11Z",
  "verdict": "PASS",
  "version": "unknown"
 }

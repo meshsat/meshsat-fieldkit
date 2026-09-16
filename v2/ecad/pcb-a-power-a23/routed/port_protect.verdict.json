@@ -1,6 +1,8 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
+  "behind_an_active_part": 2,
   "declared": 3,
   "not_on_netlist": 0,
   "ports": 3,
@@ -14,10 +16,10 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "75271be96f3d315d"
+   "sha256_16": "999867b84c9e6ca5"
   }
  },
- "note": "a conductor leaves the case and reaches a semiconductor with nothing between",
+ "note": "0 conductor(s) reach a semiconductor with nothing between, and 2 meet their clamp only through an active part, which therefore sees the transient itself",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -28,9 +30,9 @@
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:11:38Z",
+ "ts": "2026-09-16T03:50:52Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

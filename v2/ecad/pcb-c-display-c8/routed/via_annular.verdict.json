@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "below_ring": 0,
   "npth_holes": 12,
@@ -27,9 +28,9 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:13:32Z",
+ "ts": "2026-09-16T03:52:50Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "fail": 0,
   "pass": 0
@@ -23,9 +24,9 @@
  "tool": "intent_rails",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "8acc10d50ab6bbb5"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:24:46Z",
+ "ts": "2026-09-16T03:54:06Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

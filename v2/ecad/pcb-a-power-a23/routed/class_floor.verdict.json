@@ -1,5 +1,6 @@
 {
  "advisory": false,
+ "applicable": true,
  "counts": {
   "below_floor": 0,
   "classes": 8
@@ -27,9 +28,9 @@
  "tool": "class_floor",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f309c9db5b5a5378"
+  "tools_tree_sha": "512c63752dfabdf7"
  },
- "ts": "2026-09-16T03:11:36Z",
+ "ts": "2026-09-16T03:50:48Z",
  "verdict": "PASS",
  "version": "unknown"
 }
