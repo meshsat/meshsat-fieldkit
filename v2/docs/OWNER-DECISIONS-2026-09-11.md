@@ -1930,3 +1930,89 @@ standing on board C (8 September, appendix 32.76), and it is a reading of two da
 trade-off. It is written down so it can be reversed in one line if the owner disagrees: delete
 `_intent.pair_class("USB")` from `gen_sch_d.py` and board D is judged against 90 ohm again.
 
+
+---
+
+## Decision 35, 16 September 2026: which published current-rating model this project's copper is judged against
+
+**Why it is being asked.** Until today `dc_drop.py` judged every rail on all seven boards against a formula
+written in a code comment: `I = k dT^0.44 A^0.725`, with k 0.024 inside the board and 0.048 on an outer layer,
+labelled "IPC-2221". No IPC standard is in this tree, neither is free, and rule PI-001 has carried
+`SOURCE_UNVERIFIED` since the rule registry was written for exactly that reason. It now has a document.
+
+**The document.** ECSS-Q-ST-70-12C, "Design rules for printed circuit boards", 14 July 2014, published free of
+charge by the European Cooperation for Space Standardization (the standards body of ESA). Its Annex D
+publishes closed-form curve fits of three current-rating models with their constants, the range each is valid
+over, and a worked example. The clauses this project cites are transcribed in
+`v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md` with the URL, the date and the sha256 of the file read;
+the standard itself is fetched rather than redistributed. `tools/track_current.py` implements the formula and
+proves itself against the standard's own example (1 A at 5 K on a 0.925 by 0.025 mm track, reproduced to
+1.0002 A).
+
+**What it says about the number this project has been using, and it is good news twice.** The formula in the
+comment IS the published IPC-2221A internal-conductor model: measured over 96 geometries at three temperature
+rises, the tool's bar and the standard's constants agree to within **0.20 percent**. And the standard states
+plainly what the model is: a curve fit of a 1950s National Bureau of Standards chart, **superseded by
+IPC-2152**, and the most conservative of the three.
+
+**The finding that needs a ruling.** The two models cross. Both are functions of cross-sectional area alone,
+so the crossover is one area per temperature rise, measured:
+
+| temperature rise | the two fits cross at | that is a 1 oz pour | or a 2 oz pour |
+|---|---|---|---|
+| 5 K | 0.194 mm2 | 5.5 mm wide | 2.8 mm wide |
+| 10 K | 0.268 mm2 | 7.7 mm wide | 3.8 mm wide |
+| 20 K | 0.388 mm2 | 11.1 mm wide | 5.5 mm wide |
+
+**Below those areas the bar this project uses is the conservative one. Above them it reads HIGHER than the
+modern standard**, by up to a few percent at the widest pours, which is every 2 oz pour on boards P and E5
+wider than 3.8 mm and every 1 oz band wider than 7.7 mm. On the widest copper the risk is a wrong PASS rather
+than a wrong refusal. The standard also publishes the range the IPC-2221A fit is valid over at all (below
+1.2 A at a 10 K rise); this project's pack node carries 10 A, which is fifteen times that.
+
+**The options, and nothing is gated on any of them today.** `dc_drop` prints the other two models' numbers
+beside any conductor past the crossover and decides on none of them, because moving the bar changes MET on
+boards that are already cut.
+
+| | option | what it costs |
+|---|---|---|
+| 1 | **Keep the IPC-2221A bar** and keep printing the second opinion. | Nothing changes. The set is judged against a model its own authority calls superseded, and on the widest pours that model is the optimistic one. |
+| 2 | **Take the most conservative of the three models at each area** (recommended). | The bar tightens only above the crossover, which is where it is currently optimistic; no rail that passes today on narrow copper is affected. Every board's rails are re-judged, and rails that are close on wide pours may move to MISSED. |
+| 3 | **Move to the IPC-2152 fit.** | The modern standard, but it is the LEAST conservative below the crossover, which is most of the copper on these boards; several rails that currently miss would pass without anything changing on the board. |
+
+**Recommendation: option 2.** It never reads higher than any published model, it is one line in `dc_drop`, and
+the only rails it can move are the ones where the present bar is known to be optimistic. The cost is a
+re-judgement of every board, which the sweep does anyway.
+
+**What is NOT in this decision.** The external-conductor factor of two (k 0.048 against 0.024) is IPC-2221A's
+own external curve and the ECSS annex fits only the internal one, so it stays this project's own number and
+rule PI-001 is recorded as `PARTIALLY_VERIFIED` rather than `VERIFIED`. Finding an authority for it is
+separate work.
+
+---
+
+## Recorded, not asked: six transient suppressors stood off less than the line they protect (16 September 2026)
+
+Rule CMP-001 asks whether any part is operated at or above a rating. It had never been able to ask about the
+nets where the highest voltages on a board actually live, because those nets are not rails: a switching node,
+a bootstrap, a charge pump and a transmitter's output are not supplies with a current and loads. Twenty-nine
+of board A's nets, fifteen of board B's and fourteen of board E's were reported as UNDECLARED, and **board C
+judged no part at all**. They are declared now, with the basis for each number, and the rule found this:
+
+| board | part | was | is | why |
+|---|---|---|---|---|
+| A | D2, VIN_RAW clamp | SMCJ33A | **SMCJ40A** (C224052) | the line is specified 9 to 36 V and a 33 V stand-off conducts in normal service at the top of it |
+| E | D1, input clamp | SMCJ33A | **SMCJ40A** | the same line, the same defect |
+| E | D2, bus clamp | SMCJ33A | **SMCJ40A** | the same |
+| B | D101, D201, D301, slot rail clamps | SMBJ5.0A | **SMBJ6.0A** (C83270) | the rails are regulated to 5.1 V, so each clamp sat above its own stand-off and leaked there permanently |
+| E | D4, panel clamp | SMCJ33A | **SMCJ28A** (C224047) | it did not begin to conduct until 36.7 V, which is ABOVE the 35 V rating of the bulk capacitors it guards |
+
+**The SMCJ40A is not a free swap and the cost is paid in the same change:** it clamps at 64.5 V where the
+SMCJ33A clamps at 53.3, so board A's front-end input capacitors and board E's bus capacitor move from 50 V to
+the 10 uF 100 V X7R part in the same 1210 land that the PoE stage's output already uses (C5156756). Nothing
+moves on any board and no re-route is needed; the boards are re-cut from their generators as they were for
+owner ruling 10.
+
+**Why recorded rather than asked:** each is a part on a line whose own specification the part violates, which
+is a defect rather than a trade-off, and it follows the precedent of the 24.9 ohm resistor in the PoE feed and
+the 2N7002 whose threshold was above its gate drive. Every one is reversible in one line of its generator.
