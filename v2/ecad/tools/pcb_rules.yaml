@@ -1325,12 +1325,26 @@ rules:
    automation_feasibility: PARTIALLY_AUTOMATABLE
    boards_affected: [a, b, c, d, e]
    interfaces_affected: [PCIE, USB2, USB3, USBC_PD, HDMI, ETHERNET, POE, SMBUS, I2C, SPI, UART, CAN, GNSS, M2_SOCKET]
-   implementation_location: NONE_YET
+   implementation_location: "interfaces.py over pcb_interfaces.yaml, with check_contracts.py holding the module's own clauses"
    evidence_scope: [schematic_sha256, spec_revision]
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the deviation and its measured consequence",
                    scope: "one interface on one board", expiry: "prototype validation",
                    residual_risk: "the interface may not certify"}
+   false_positive_analysis: >
+     A WRONG REFUSAL here is a requirement this project invented. The numbers are not chosen: each one is
+     quoted in `pcb_interfaces.yaml` from the datasheet of the part that DEFINES the interface, with the
+     clause and a path to the document, and a rule refuses any entry whose source file is not in this tree. An
+     interface nothing in this tree describes is not given a requirement at all, and a board that declares NO
+     impedance target is not failed for it where its parts say the interface has none: boards C, D and E carry
+     USB at full speed and their hub and codec datasheets say so, which is a declared zero with a reason. The
+     second shape is a wrong refusal at a tolerance BAND: 90 ohm is inside 100 ohm plus or minus 10 percent and
+     inside the module's 85 plus or minus 10, so a class that satisfies both ends of a link passes, and the
+     fixture that proves the refusal works had to state a narrower band to produce one. The third is stale
+     evidence: a board whose committed netlist predates its own generator is judged on a design that has moved,
+     and that is skipped with its reason rather than reported as a disagreement with a datasheet. What is NOT
+     protected against: a link whose two ends state requirements that genuinely cannot both be met would be
+     reported as two failures rather than as one conflict, and no such link exists on this set today.
    maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: INT-002
