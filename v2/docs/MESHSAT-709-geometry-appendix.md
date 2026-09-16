@@ -8365,3 +8365,69 @@ and the finish would have refused the board for them.
 **Readiness 49.7 to 52.7 percent verified** at the first re-judgement (158 PASS, 47 FAIL, 95 INCONCLUSIVE of
 300), with PI-001 moving six boards off INCONCLUSIVE, four to PASS and two to a FAIL that was always there:
 board A has four rails over the published current bar and board E has one. Suite 755.
+
+### 32.209 Board C is finished copper, the current in a via stopped being an assumption, and the set has a watt figure (16 September 2026, 21:00 CEST; MESHSAT-862)
+
+**BOARD C ROUTED 0 HARD AND 0 UNROUTED OF 133 NETS.** C22 ended at three opens, all of one shape and all small:
+`/+5V` was a pad on B.Cu and a 4.9 mm track on F.Cu, a missing layer change, and `/BAT3_K` and `/BAT5_K` were
+each a 1 mm stub left beside their own 112 and 124 mm run on In2. The stub router could not join them after the
+route because the corridors were full. C23 pre-laid all six of board C's difficult nets on the PLACED board,
+where the strips are empty, and the router took the rest. Its gate passes 184 of 184 and its contracts pass.
+**The only thing that refused its finish is rule TRN-001**, four conductors on the panel jack and the main
+switch reaching a chip with nothing between: a property of the schematic, and owner decision 31. **Decision 31
+now holds two finished boards**, C and E, rather than one.
+
+**And the supervisor answered that refusal with another route.** Every finish refusal on a clean route became
+the OPEN signature, whose remedies are a different via cost and thirty percent more passes, so a board whose
+copper is finished was sent back to the router over a schematic property, and would have been until its round
+budget ran out at about half an hour of rented box a round. The reasons a route cannot touch are named now
+(the port rule, a board that does not match its own netlist, a cross-board contract) and they end the run with
+the rule that refused it in the line. Everything else still reads as opens, including a pruned pad the router
+never reached.
+
+**THE CURRENT IN A VIA IS MEASURED NOW AND IT WAS AN ASSUMPTION BEFORE.** Rule PI-003 has been ADVISORY since
+it was written, for a reason its own note gave: a rail's weakest cluster of its own vias is usually a lone
+stitch via at the end of a pour carrying almost none of its current, while the current travels in a band with a
+via field under it, so attributing the rail's WHOLE current to that barrel refused eleven of board A's rails
+and read "18 A through one via" on board E. **`dc_drop` was already solving for the current in every barrel on
+its way to the density verdict and throwing it away.** It writes them beside the board, `via_current` judges
+each barrel on what the mesh puts through it, and board A's eleven attributed refusals become **five barrels
+that really do carry more than their wall is rated for**, the worst a VBUS20 barrel at (68.5, 82.0) carrying
+**3.40 A against 0.90**. Board C passes the rule for the first time; D reports one and P two; board B
+contributes no barrel at all and says why, its committed board being unrouted, so no load is reachable from any
+source and the mesh finds nothing. The curve has a document as of this morning, and the rule is ENFORCED.
+
+**What the thirteen named sites say is not what I expected.** Board A's generator lists every hand-over where a
+measured barrel is over its rating: two of them already carry FOUR and SIX barrels and still put 3.40 and
+2.47 A through one. A via group does not share evenly, so the answer is more barrels where the mesh names them
+rather than a different number typed into the generator, and that is board A's next phase. The first version of
+that report divided the rail's whole current by one barrel at every site and called 29 of 31 short, which is
+the same attribution error moved to generation time; it reports a measurement or it says nothing.
+
+**THE SET HAS A DISSIPATION FIGURE FOR THE FIRST TIME: ABOUT 28 W.** No rail on any board declared a converter
+efficiency, so rule THM-001 could put no watt figure on anything, and asking every rail for one made the gap
+look five times larger than it is: 59 rails, most of them not converter outputs at all. A rail declares whether
+it CONVERTS now. The first version of that inferred it from `switch` and was wrong within the hour and in the
+dangerous direction: **board E passed with a dissipation of zero** because its 3.3 V and 5 V rails declare no
+switch, nothing switching them off, and were therefore asked nothing at all. `switch` names what turns a rail
+on and a pass FET is as common there as a controller. A rail that does not SAY is unknown, which caught board
+D's own hollow pass in the same run.
+
+| board | conversion loss, typical load | with every rail at its peak at once |
+|---|---|---|
+| A | **23.8 W** | 36.6 W |
+| B | **3.9 W** | 8.0 W |
+| E | 0.4 W | 0.7 W |
+| D | 0.2 W | 0.4 W |
+| P | 0.0 W | 0.0 W |
+
+**And the headline number was the wrong one at first.** This tool already said that the sum of every rail's
+peak is not a board power because the peaks do not coincide, and then computed the dissipation from those same
+peaks. Both are computed and both are labelled now. Every efficiency is the part's own published figure at the
+conditions its datasheet states, taken at or below the low end of what it plots; a linear regulator's is
+arithmetic, and board D's TLV75533 dropping 5.0 V to 3.3 is that board's largest dissipator after the
+transmitter at 0.4 W. **28 W is the conversion loss alone, before three compute modules, a 30 W transmitter and
+the radios, in a sealed case with no vent anywhere**, and it is filed with decision 34, where the maximum
+ambient it has to be added to is.
+
+**Readiness 55.0 percent verified** (165 of 300), inconclusive 106 to 86 across the evening. Suite 758.
