@@ -1,0 +1,52 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards": 1,
+  "fail": 12,
+  "unchecked_footprints": 18,
+  "unverified_rows": 12
+ },
+ "denominator": 30,
+ "evidence": [
+  "B: IDC-Header_2x05_P2.54mm_Vertical_NarrowPad (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: IDC-Header_2x08_P2.54mm_Vertical_NarrowPad (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: IDC-Header_2x13_P2.54mm_Vertical_NarrowPad (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: LED_0603_1608Metric (matched by ^LED_0603) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm (matched by ^SOIC-8) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: SOIC-8_3.9x4.9mm_P1.27mm (matched by ^SOIC-8) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: SOT-23 (matched by ^SOT-23) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: SOT-23-5 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: SOT-23-6 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: TSSOP-24_4.4x7.8mm_P0.65mm (matched by ^TSSOP-24) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: USB_C_Receptacle_HRO_TYPE-C-31-M-12 (matched by ^USB_C_Receptacle) carries a rotation offset nobody has compared with the assembler's preview",
+  "B: WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm (matched by ^WSON-6) carries a rotation offset nobody has compared with the assembler's preview",
+  "not compared with a preview: BatteryHolder_Keystone_3034_1x20mm",
+  "not compared with a preview: Crystal_SMD_3225-4Pin_3.2x2.5mm",
+  "not compared with a preview: D_SMB",
+  "not compared with a preview: JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
+  "not compared with a preview: JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
+  "not compared with a preview: LQFP-100_14x14mm_P0.5mm",
+  "not compared with a preview: LQFP-128_14x14mm_P0.4mm_EP6.0",
+  "not compared with a preview: PinHeader_1x02_P2.54mm_Vertical"
+ ],
+ "inputs": {
+  "rotations": "../release/revA/order/jlc-rotations.csv"
+ },
+ "note": "every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "DFA-001"
+ ],
+ "tool": "assembly_set",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9bccfac7573e3ce1"
+ },
+ "ts": "2026-09-16T16:39:02Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

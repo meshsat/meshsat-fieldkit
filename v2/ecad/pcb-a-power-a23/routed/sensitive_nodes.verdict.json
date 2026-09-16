@@ -1,0 +1,44 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "declared": 19,
+  "fail": 12,
+  "measured": 15
+ },
+ "denominator": 19,
+ "evidence": [
+  "CH_SRP_F is declared sensitive and the board has no such net",
+  "CH_SRN_F is declared sensitive and the board has no such net",
+  "CH_ACP_F is declared sensitive and the board has no such net",
+  "CH_ACN_F is declared sensitive and the board has no such net",
+  "FE_CS runs -0.212 mm from FE_SW2 and its own list asks for 0.50",
+  "PA_CS runs 0.192 mm from PA_SW1 and its own list asks for 0.50",
+  "HF_CS runs 0.309 mm from HF_SW1 and its own list asks for 0.50",
+  "PD_CS runs -0.344 mm from PD_SW2 and its own list asks for 0.50",
+  "POE_CS runs -0.362 mm from POE_SW1 and its own list asks for 0.50",
+  "HF_FB runs 0.211 mm from HF_SW2 and its own list asks for 0.50",
+  "PD_FB runs -0.243 mm from PD_SW2 and its own list asks for 0.50",
+  "B33_FB runs 0.350 mm from B33_SW and its own list asks for 0.50"
+ ],
+ "inputs": {
+  "board": "a",
+  "list": "pcb_sensitive.yaml"
+ },
+ "note": "every sensitive node declared with its filter and its Kelvin partner where the measurement is a difference, and, where pcbnew is present, the real distance from each one to the nearest switching copper measured on the routed board and reported beside the clearance the board asks for. The clearances are this project's own",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "ANA-001"
+ ],
+ "tool": "sensitive_nodes",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9bccfac7573e3ce1"
+ },
+ "ts": "2026-09-16T16:38:09Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

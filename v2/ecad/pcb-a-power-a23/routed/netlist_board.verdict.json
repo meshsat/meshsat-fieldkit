@@ -2,15 +2,26 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "agree": 2004,
+  "agree": 2000,
   "aliased_pins": 0,
   "board_footprints": 400,
   "board_only_inert": 0,
-  "fail": 0,
-  "netlist_refs": 392
+  "fail": 10,
+  "netlist_refs": 398
  },
- "denominator": 2004,
- "evidence": [],
+ "denominator": 2010,
+ "evidence": [
+  "C121 is in the netlist and not on the board",
+  "C122 is in the netlist and not on the board",
+  "R146 is in the netlist and not on the board",
+  "R147 is in the netlist and not on the board",
+  "R148 is in the netlist and not on the board",
+  "R149 is in the netlist and not on the board",
+  "U3.19 is CELL+ on the board and CH_SRN_F in the netlist",
+  "U3.2 is CH_ACN on the board and CH_ACN_F in the netlist",
+  "U3.20 is CH_SRP on the board and CH_SRP_F in the netlist",
+  "U3.3 is VBUS20 on the board and CH_ACP_F in the netlist"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
@@ -18,7 +29,7 @@
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "eeec625638ebca7e"
+   "sha256_16": "715f89890962f247"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -32,9 +43,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "8ab9a87c66026600"
+  "tools_tree_sha": "9bccfac7573e3ce1"
  },
- "ts": "2026-09-16T16:06:13Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T16:37:59Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }
