@@ -85,8 +85,11 @@ P = kisch.P                           # one list, shared with the engine (not a 
 # are declared there. Without this line the return-path gate judged a 5 V rail as a signal net.
 _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "U23",
              source_ic="U23 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
-             loads={"J_MEZZ_PWR1": 1.0}, budget=0.03, share=0.015,
-             note="the APRS board's 5 V behind the eFuse U23 (ILM 453R, 2.0 A), leaving on the mezzanine "
+             loads={"J_MEZZ_PWR1": 1.0}, budget=0.06, share=0.04,
+             note="BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. THIS BOARD'S SHARE is 4 of the 6 points, because the long copper is here: the eFuse "
+                  "sits at case (90, 66) and the mezzanine header at (-8, -18), about 129 mm apart, and the "
+                  "route measures 134 mV at 1.0 A, 2.68 percent. Board D's own half measures 0.58. "
+                  "The APRS board's 5 V behind the eFuse U23 (ILM 453R, 2.0 A), leaving on the mezzanine "
                   "JST-VH. Board D declares the same rail with its own consumers. ONE CONDUCTOR, ONE BUDGET "
                   "(16 September 2026): board D declares 3 percent end to end with its reason, and this board "
                   "carries the half from the eFuse to the connector, so its share is 1.5. Until today each "
