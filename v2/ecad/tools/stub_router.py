@@ -362,6 +362,41 @@ def emit(net_item, path):
                 t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(float(X0 + a[2] * G)), FromMM(float(Y0 + a[1] * G)))); t.SetEnd(VECTOR2I(FromMM(float(X0 + c[2] * G)), FromMM(float(Y0 + c[1] * G))))
                 t.SetWidth(FromMM(TW)); t.SetLayer(LR[a[0]]); t.SetNet(net); b.Add(t); nt += 1
     return nt, nv
+
+def _nearest_copper(net, L, x, y, reach=1.2):
+    """The nearest point of this net's own copper on layer L to (x, y), or None.
+
+    16 September 2026, board A35. The search reaches a GOAL CELL and the closure is emitted to that cell's
+    CENTRE, which is the grid's idea of the copper, not the copper. A cell is a goal when the target's raster
+    covers it, so the centre can sit a fraction of a cell outside the real edge, and a narrow closure laid to
+    it then overlaps nothing: KiCad's connectivity does not move and the pieces are taken back off. Twelve of
+    board A's opens sat behind that message, /POE_EN and /VBUS20 among them, each a path that was found and
+    thrown away for the last few hundredths of a millimetre. So before giving up, the closure is finished ON
+    the copper: the nearest point of this net's own track or pad is computed exactly and one short segment is
+    laid to it. The retry is judged the same way as the closure itself, by KiCad's connectivity, and if it
+    still does not connect everything comes off as before."""
+    best = None
+    for t in b.GetTracks():
+        if t.GetNetname() != net: continue
+        if t.GetClass() == "PCB_VIA":
+            px, py = mm(t.GetPosition().x), mm(t.GetPosition().y)
+        elif t.GetLayer() == L:
+            ax, ay = mm(t.GetStart().x), mm(t.GetStart().y); ex, ey = mm(t.GetEnd().x), mm(t.GetEnd().y)
+            dx, dy = ex - ax, ey - ay; L2 = dx * dx + dy * dy
+            u = 0.0 if L2 == 0 else max(0.0, min(1.0, ((x - ax) * dx + (y - ay) * dy) / L2))
+            px, py = ax + u * dx, ay + u * dy
+        else:
+            continue
+        d = math.hypot(x - px, y - py)
+        if d <= reach and (best is None or d < best[0]): best = (d, px, py)
+    for fp in b.GetFootprints():
+        for pad in fp.Pads():
+            if pad.GetNetname() != net or not pad.IsOnLayer(L): continue
+            px, py = mm(pad.GetPosition().x), mm(pad.GetPosition().y)
+            d = math.hypot(x - px, y - py)
+            if d <= reach and (best is None or d < best[0]): best = (d, px, py)
+    return None if best is None else (best[1], best[2])
+
 closed = 0
 # 12 September 2026 (MESHSAT-862): a closure that does not close is worse than a refusal, because the finish and
 # the record both read the count. A24's /+3V3 was reported "closed: 0 tracks, 1 vias, path 1 cells" TWICE, in two
@@ -477,11 +512,38 @@ for it1, it2 in pairs:
         v3.SetViaType(pcbnew.VIATYPE_THROUGH); v3.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v3.SetNet(netobj); b.Add(v3); nv += 1
     _U1 = _unconnected()
     if _U is not None and _U1 is not None and _U1 >= _U:
-        for t in list(b.GetTracks())[_n_before:]: b.Remove(t)
-        b.BuildConnectivity()
-        print("  NOT CLOSED: %s  %s -> %s (the path reached a goal CELL whose copper it does not touch; %d piece(s) taken back off)"
-              % (net, a.get("kind"), c.get("kind"), nt + nv))
-        continue
+        # the last fraction of a cell: finish on the copper itself before giving the closure up
+        landed = 0
+        for (Lp, ip, jp) in (path[-1], path[0]):
+            ex, ey = float(X0 + jp * G), float(Y0 + ip * G)
+            near = _nearest_copper(net, LR[Lp], ex, ey)
+            if near is None: continue
+            tx, ty = near
+            if math.hypot(tx - ex, ty - ey) < 1e-6: continue
+            t2 = pcbnew.PCB_TRACK(b); t2.SetStart(VECTOR2I(FromMM(ex), FromMM(ey))); t2.SetEnd(VECTOR2I(FromMM(tx), FromMM(ty)))
+            t2.SetWidth(FromMM(TW)); t2.SetLayer(LR[Lp]); t2.SetNet(netobj); b.Add(t2); landed += 1
+        _U2 = _unconnected() if landed else None
+        if _U2 is not None and _U is not None and _U2 < _U:
+            nt += landed; _U1 = _U2
+            print("  landed on the copper: %s  %d short segment(s) from the goal cell centre to the net's own edge" % (net, landed))
+        else:
+            for t in list(b.GetTracks())[_n_before:]: b.Remove(t)
+            b.BuildConnectivity()
+            # THE MEASUREMENT, not a story. The obvious explanation (the goal cell centre sitting outside the
+            # copper it stands for) is not supported by these rasterisers, which sample a cell CENTRE against
+            # the shape's own half width, so the centre is on the copper and a 0.20 mm closure ending there
+            # overlaps a 0.10 mm track. Rather than name a cause nothing measured, the refusal carries the two
+            # end distances and the counts, and the next board that hits it says why (16 September 2026).
+            def _gap(pt):
+                Lp, ip, jp = pt; ex, ey = float(X0 + jp * G), float(Y0 + ip * G)
+                near = _nearest_copper(net, LR[Lp], ex, ey, reach=5.0)
+                return -1.0 if near is None else math.hypot(near[0] - ex, near[1] - ey)
+            print("  NOT CLOSED: %s  %s -> %s (a path was found and it did not connect: start %.3f mm and "
+                  "end %.3f mm from this net's nearest copper on their own layers, unconnected %s before and "
+                  "%s after; %d piece(s) taken back off)"
+                  % (net, a.get("kind"), c.get("kind"), _gap(path[0]), _gap(path[-1]),
+                     _U, _U1, nt + nv + landed))
+            continue
     _U = _U1 if _U1 is not None else _U
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))
 # A PASS THAT CLOSED NOTHING WRITES NOTHING (16 September 2026, A35's round two: both candidate closures were

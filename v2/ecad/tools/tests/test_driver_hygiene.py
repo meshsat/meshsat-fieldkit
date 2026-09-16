@@ -464,7 +464,9 @@ def t_the_stub_router_checks_that_a_closure_closed_anything():
     src = open(os.path.join(TOOLS, "stub_router.py"), errors="replace").read()
     assert "GetUnconnectedCount" in src, "the stub router does not ask KiCad whether its closure connected anything"
     i = src.index("closed += 1")
-    window = src[max(0, i - 1200):i]
+    # the window is the acceptance block, and it grew on 16 September when the refusal learnt to try landing on
+    # the copper first and to report the distances it measured: the property is the same, the text is longer
+    window = src[max(0, i - 3000):i]
     assert "NOT CLOSED" in window and "b.Remove(t)" in window, \
         "a closure that did not connect is still counted as one"
 
