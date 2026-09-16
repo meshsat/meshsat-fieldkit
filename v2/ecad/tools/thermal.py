@@ -59,11 +59,17 @@ def main(a):
         return dict(pad_mm2=round(area, 1), vias_in_courtyard=vias)
 
     rows, unknown = [], []
-    total_out = total_loss = 0.0
+    total_out = total_loss = total_loss_typ = 0.0
     for net, r in sorted(rails.items()):
         v = float(r.get("volts") or 0); i = float(r.get("amps_peak") or r.get("amps_typ") or 0)
         if v <= 0 or i <= 0: continue
-        p_out = v * i; total_out += p_out
+        # TWO LOADS, TWO LOSSES (16 September 2026). This file already says that the sum of every rail's PEAK
+        # is not a board power, because the peaks do not coincide; the dissipation figure was computed from
+        # those same peaks and inherited exactly that, so board A's "36.6 W" was the loss with every rail at
+        # its maximum at once. Both are computed now and both are labelled: the typical figure is what the
+        # case has to get rid of continuously and the peak figure is the worst case that cannot last.
+        i_typ = float(r.get("amps_typ") or 0) or i
+        p_out = v * i; p_out_typ = v * i_typ; total_out += p_out
         eff = r.get("efficiency")
         src = r.get("source"); src = src[0] if isinstance(src, (list, tuple)) and src else src
         # A RAIL WITH NO CONVERTER HAS NO CONVERSION LOSS (16 September 2026). The first reading asked every
@@ -93,6 +99,8 @@ def main(a):
                    converted=converted, thermal_path=path_of(src) if src else None)
         if eff:
             loss = p_out * (1.0 / float(eff) - 1.0); row["watts_lost"] = round(loss, 2); total_loss += loss
+            loss_typ = p_out_typ * (1.0 / float(eff) - 1.0); row["watts_lost_typ"] = round(loss_typ, 2)
+            total_loss_typ += loss_typ
         elif converted is None:
             unknown.append("%s: %.1f W out of %s and the rail does not say whether it converts, so its loss is "
                            "unknown" % (net, p_out, src or "an unnamed source"))
@@ -106,7 +114,7 @@ def main(a):
                                   "its pass part dissipates, which belongs in the board's dissipators list")
         rows.append(row)
     for d in declared:
-        w = float(d.get("watts") or 0); total_loss += w
+        w = float(d.get("watts") or 0); total_loss += w; total_loss_typ += w
         rows.append(dict(part=d.get("ref"), watts_lost=w, why=(d.get("why") or "")[:120],
                          thermal_path=path_of(d.get("ref"))))
 
@@ -115,15 +123,17 @@ def main(a):
     # pack node's fault-current capability and three slot rails that never peak together. A number like that in
     # a verdict is worse than no number. The per-rail figures stay, the board total is the DISSIPATION, which
     # is what this rule is about, and the throughput is printed as the sum of peaks with that said out loud.
-    print("thermal: %d rail(s); estimated dissipation %.1f W from %d declared figure(s); %d rail(s) with no "
-          "efficiency declared. The rails' peaks add to %.0f W, which is NOT a board power: the peaks do not "
-          "coincide and a pack node's rating is not a load"
-          % (len([r for r in rows if r.get("rail")]), total_loss,
+    print("thermal: %d rail(s); estimated dissipation %.1f W at the TYPICAL load and %.1f W with every rail at "
+          "its peak at once, from %d declared figure(s); %d rail(s) with no efficiency declared. The rails' "
+          "peaks add to %.0f W of throughput, which is NOT a board power: the peaks do not coincide and a pack "
+          "node's rating is not a load"
+          % (len([r for r in rows if r.get("rail")]), total_loss_typ, total_loss,
              len([r for r in rows if r.get("watts_lost") is not None]), len(unknown), total_out))
     for r in rows:
         if r.get("watts_lost") is None: continue
         tp = r.get("thermal_path") or {}
-        print("  %-14s %6.2f W into %s" % (r.get("rail") or r.get("part"), r["watts_lost"],
+        print("  %-14s %6.2f W typical, %6.2f W at peak into %s"
+              % (r.get("rail") or r.get("part"), r.get("watts_lost_typ", r["watts_lost"]), r["watts_lost"],
               ("%.0f mm2 of pad and %d via(s) in its courtyard" % (tp.get("pad_mm2", 0), tp.get("vias_in_courtyard", 0)))
               if tp else "a part this board does not carry"))
     for u in unknown[:12]: print("  unknown %s" % u)
@@ -133,7 +143,9 @@ def main(a):
     return _v.write("thermal", res,
                     counts={"rails": len([r for r in rows if r.get("rail")]),
                             "watts_peak_sum_not_simultaneous": round(total_out, 1),
-                            "watts_lost_estimated": round(total_loss, 1), "efficiency_undeclared": len(unknown),
+                            "watts_lost_typical": round(total_loss_typ, 1),
+                            "watts_lost_all_peaks_at_once": round(total_loss, 1),
+                            "efficiency_undeclared": len(unknown),
                             "declared_dissipators": len(declared), "no_thermal_path": len(missing_path)},
                     denominator=len(rows), evidence=unknown[:20] + ["%s names a part this board does not carry" % (r.get("part") or r.get("rail")) for r in missing_path][:5],
                     inputs={"board": path},
