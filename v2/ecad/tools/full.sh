@@ -271,6 +271,28 @@ fi
 # the only corridors and whoever reaches them first takes them. On the PLACED board those strips are empty.
 # The board is kept only if the hard count does not rise, judged on the board itself, and the search is the
 # same stub router the finish uses, restricted to the named nets by STUB_NETS.
+# A SECOND PRE-LAY GROUP, with its own layers (16 September 2026, rule RF-001). Board A's eleven blind-mate RF
+# paths are ten millimetres each and the router takes them onto In2, where the RF class's 0.35 mm is 25.5 ohm
+# against the 50 its own class declares; on an outer layer the same width is about 50. The other four pre-laid
+# nets are local escapes in the densest corner of the board and need every layer, so one layer set for all of
+# them is the wrong shape: `prelay_groups` is a list of {nets, layers, why} and the flat keys stay as they are.
+python3 -c "
+import json,sys
+for g in json.load(open(sys.argv[1])).get('prelay_groups') or []:
+    print('%s\t%s' % (g['nets'], g.get('layers','')))" "$CFG" 2>/dev/null |
+while IFS=$'\t' read -r GNETS GLAYERS; do
+  [ -n "$GNETS" ] || continue
+  T=../tools; . ../tools/guarded.sh
+  gstage () {
+    ../tools/drc.sh $N.kicad_pcb out/$N-prelay-in.json
+    env STUB_NETS="$GNETS" STUB_LAYERS="$GLAYERS" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" \
+        STUB_MAXN="${PRELAY_MAXN:-200000000}" timeout "${PRELAY_TIMEOUT_S:-3600}" nice -n 10 \
+        python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay-group.log 2>&1
+    grep -aE "stub_router:|closed |FAILED|NOT CLOSED" out/$N-prelay-group.log | tail -6
+  }
+  echo "prelay group: $GNETS on ${GLAYERS:-every layer}"
+  GUARD_MODE=pre guarded "prelay-group" gstage
+done
 PRELAY="$(cfg prelay_nets)"
 if [ -n "$PRELAY" ]; then
   # under the one guard (tools/guarded.sh, 15 September 2026): hard AND unrouted against the board handed in, on the

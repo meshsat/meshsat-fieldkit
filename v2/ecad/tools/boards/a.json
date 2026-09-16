@@ -519,5 +519,12 @@
   "width_mm": 60.0,
   "layer": "F.SilkS",
   "why": "16 September 2026: silk_space.py reports an 80 by 31 mm rectangle free of every footprint at case (49.9, 27.5) on this board, which is the sticker master's own size. 60 mm is taken instead of 80 so the mark keeps 10 mm of clear silk on each side, and the centre is the 60 mm candidate's own"
- }
+ },
+ "prelay_groups": [
+  {
+   "nets": "/RF_5G1,/RF_5G2,/RF_GNSS,/RF_HF,/RF_IRIDIUM,/RF_LORA,/RF_P2PA,/RF_P2PB,/RF_SDR,/RF_VHF,/RF_WIFI24",
+   "layers": "F.Cu,B.Cu",
+   "why": "16 September 2026, rule RF-001: all eleven of these ten-millimetre blind-mate paths were routed on In2.Cu at the RF class's 0.350 mm, which computes 25.5 ohm on this stackup against the 50 the class itself declares. The width is right for an OUTER layer, where the same copper is about 50, so the remedy is the layer and not the width: they are laid outside before the router runs, where there is room, and rf_line.py reads the result back off the routed board."
+  }
+ ]
 }
