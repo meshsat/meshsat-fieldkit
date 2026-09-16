@@ -9,17 +9,17 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 13 | 31.0 |
-| FAIL | 6 | 14.3 |
+| PASS | 14 | 33.3 |
+| FAIL | 5 | 11.9 |
 | INCONCLUSIVE | 23 | 54.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
-| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
+| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42, 'rails_unsplit': 0} |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no check_contracts_p verdict for this board |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carr |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
@@ -32,19 +32,19 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: phantom-net pours are refused and pour coverage is measured; no check asks whether a partition i |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
-| RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the principle is implemented and the heuristic is no longer standing in for i |
+| RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the principle is implemented and the heuristic is no longer standing in  |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_return_path FAIL: {'fail': 6, 'pass': 23} |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
-| SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification |
+| SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sen |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | port_protect INCONCLUSIVE |
-| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's o |
+| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the first half exists. thermal.py builds a per-board table from the boar |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no pruned_gate verdict for this board |
 | VIA-002 the annular ring is one the fabricator makes | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | via_annular INCONCLUSIVE |
-| VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no check_pcb_c verdict for this board |
+| VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **PASS** | via_audit PASS of 241 |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 1 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_p PASS of 139 |

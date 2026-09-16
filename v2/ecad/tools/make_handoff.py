@@ -140,6 +140,24 @@ if nostatus and os.environ.get("HANDOFF_ALLOW_BLANK") != "1":
     sys.exit("make_handoff: no BOM status file for %s (expected <deliverable>/<stem>-bom.status).\n"
              "That file is written by finish_board.sh after lcsc_fill.py passes, so its absence means the BOM was never checked.\n"
              "Refinish those boards, then rerun; HANDOFF_ALLOW_BLANK=1 only to build the set regardless." % ", ".join(nostatus))
+# A BOARD HELD BY AN OPEN OWNER DECISION DOES NOT ENTER AN ORDER SET (16 September 2026, board E and
+# decision 31). This file is the one producer of the JLCPCB upload set, so it is the one place a held board
+# could become orderable by accident, and the hold is data rather than a rule result precisely because board
+# E's own rules can all pass while the question that holds it is unanswered. There is no environment variable
+# to step past this one: the other two guards above ask about the project's own paperwork and this one asks
+# about the owner's decision, which is not a session's to override. Lift it by deleting the entry in
+# pcb_board_holds.yaml when the decision is ruled.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import rules_lib as _R
+_held = _R.board_holds()
+_in_set = sorted({l for l in _held if any(("-%s-" % l) in f.lower() or f.lower().startswith("meshsat-pcb-%s-" % l)
+                                          for f, stem, *_ in BOARDS)})
+if _in_set:
+    sys.exit("make_handoff: board(s) %s are HELD by an open owner decision and an order set may not contain "
+             "them.\n%s\nA review package marked NOT_FOR_FAB is permitted; an orderable one is not. Delete "
+             "the entry in tools/pcb_board_holds.yaml when the decision is ruled."
+             % (", ".join(x.upper() for x in _in_set),
+                "\n".join("  %s: %s" % (l.upper(), _R.hold_banner(_held[l])) for l in _in_set)))
 shutil.rmtree(REV, ignore_errors=True); os.makedirs(REV, exist_ok=True); os.makedirs(JLC, exist_ok=True)   # JLCPCB/ is never wiped: ORDER-LOG.md and upload/ copies live there
 def run(cmd): r = subprocess.run(cmd, capture_output=True, text=True); return r.returncode == 0, (r.stdout + r.stderr)[-300:]
 order_index = ["# MeshSat field-kit carrier boards, JLCPCB order set (generated %s)" % subprocess.run(["date", "+%Y-%m-%d %H:%M"], capture_output=True, text=True).stdout.strip(), "",

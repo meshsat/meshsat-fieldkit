@@ -148,6 +148,13 @@ def board_doc(letter, st, reg, cov):
          "Manifest **%s**, rule set **%s**, evidence epoch **%s**.\n"
          % (st.get("manifest_version"), st.get("rule_set_fingerprint"), st.get("evidence_epoch")),
          "**Readiness: %s**\n" % S.gate_state(st["rows"], m)]
+    hold = R.board_holds().get(letter.lower())
+    if hold:
+        L += ["> **HELD BY OWNER DECISION %s.** %s" % (hold["decision"], R.hold_banner(hold)), ">",
+              "> " + " ".join(str(hold.get("why", "")).split()), ">",
+              "> Permitted while held: %s." % " ".join(str(hold.get("permitted", "nothing")).split()), ">",
+              "> Forbidden while held: %s." % " ".join(str(hold.get("forbidden", "promotion")).split()), ">",
+              "> This lifts when %s." % " ".join(str(hold.get("lifts_when", "the decision is ruled")).split()), ""]
     c = S.counts(st["rows"])
     L += ["| result | rules | percent |", "|---|---|---|"]
     for k in ("PASS", "FAIL", "INCONCLUSIVE", "WAIVED"):

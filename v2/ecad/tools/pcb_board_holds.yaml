@@ -1,0 +1,37 @@
+# Boards held by an open decision (MESHSAT-862, 16 September 2026).
+#
+# A HOLD IS NOT A RULE RESULT. Every rule on a held board may read PASS and the board is still not promotable,
+# because what holds it is a question nobody has answered, not a measurement nobody has taken. Keeping it in
+# the rule results would mean either inventing a failing rule, which is false, or leaving the board looking
+# releasable, which is worse. So it is its own data, read by the three places that could otherwise let a held
+# board through: the generated status page, the final gate, and the order-set builder.
+#
+# LIFTING A HOLD IS A DATA EDIT, and that is the point. When the owner rules, the entry is deleted with the
+# ruling quoted in the commit message; until then no tool can promote the board and no argument in a log can
+# either.
+#
+# The four status fields are the owner's own words of 16 September 2026 and are carried verbatim wherever the
+# board is reported.
+
+schema_version: "1.0.0"
+
+holds:
+
+ e:
+   decision: 31
+   opened: "2026-09-16"
+   title: "board E's exposed-port protection"
+   ROUTING_STATUS: PASS
+   ELECTRICAL_PROTECTION_STATUS: BLOCKED_DECISION_31
+   FAB_READINESS: NOT_READY
+   PUBLICATION_STATUS: HELD
+   why: "rule TRN-001 is a BLOCKER and reads FAIL on board E: four exposed ports have a clamp that sits
+     BEHIND an active part, so the transient reaches the active part first and the clamp protects what is
+     already damaged. The fix is a schematic change, which a route cannot make, and which of the options is
+     taken is the owner's to rule because it trades parts, board area and the operating envelope against each
+     other. The envelope itself is decision 34, which is why 31 cannot be ruled before it"
+   permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated, so the board can be read
+     and reviewed while it is held"
+   forbidden: "any orderable fabrication package, any promotion of the board or its folder, any publication of
+     the board file or its evidence"
+   lifts_when: "decision 31 is ruled in v2/docs/OWNER-DECISIONS-2026-09-11.md and this entry is deleted"

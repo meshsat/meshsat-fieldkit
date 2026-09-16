@@ -33,7 +33,7 @@ numbers against that declaration rather than against an assumption.
 | verified by | MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | NONE_YET |
-| maturity | **OPEN** |  (at writing: UNASSESSED)
+| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: UNASSESSED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -49,8 +49,14 @@ satisfied.
 **If violated** A board qualified at a bench temperature fails in a vehicle in summer; a spacing chosen for pollution degree
 2 sits in a kit carried through rain.
 
-**Today** no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are
-unwritten, and every derating rule resolves against nothing
+**Today** 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from
+the parts own datasheets rather than from an assumption, and it is owner decision 34. Writing it found that
+the two narrowest parts in the kit are the battery-bay VOC sensor at -20 to +55 C and the e-paper at -15 to
++60 C, not the compute modules or the radios, and that with the estimated 16 K inside-air rise of the no-vent
+ruling the outside ambient ceiling is about +39 C with three modules loaded and charging is limited from an
+ambient near +25 C by the cells own +45 C charge limit. The envelope is not ruled, so this stays
+INCONCLUSIVE; what has changed is that the four rules that resolve against it now have a document to cite and
+a number to argue with
 
 ### ENV-002  no claim without a test
 
@@ -506,7 +512,7 @@ rail's peak current within the same temperature rise the conductor rule allows.
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | prefanout.py, gen_pcb_*3.py stitch vias |
-| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one transition, expires the next route |
 
@@ -681,7 +687,7 @@ discontinuities it crosses and the interface's own requirement, not from a singl
 | verified by | SCRIPT, CALCULATION, MANUAL_REVIEW at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | signal_class.py plus each board's signal_classes table, judged by intent_checks.py |
-| maturity | **GENERATED_ONLY** |  (at writing: OWNER_DECISION_REQUIRED)
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | by OWNER, scope one net class on one board, expires prototype EMC measurement |
 
@@ -761,7 +767,7 @@ stitching capacitor when they are different potentials, or no transition at all.
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_a3.py In2 pours |
-| maturity | **GENERATED_ONLY** |  (at writing: OWNER_DECISION_REQUIRED)
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | by OWNER, scope one class of transition on one board, expires prototype EMC measurement |
 
@@ -937,7 +943,7 @@ rate or clock frequency.
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | signal_class.py declarations |
-| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one net class, expires prototype measurement |
 
@@ -1061,7 +1067,11 @@ transition.
 **If violated** Power reflected into a PA, harmonics outside the licensed band, and desense of the receivers beside it.
 
 **Today** the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
-filter is verified, and the LPF values are flagged for a simulation that has not run
+filter is verified, and the LPF values are flagged for a simulation that has not run. This entry NAMES NO
+VERDICT on purpose (16 September 2026): it named check_pcb_d, board D's own gate, while the rule applies to B
+as well, so the day it was promoted board B would have read a PASS off a gate that looks at no RF line.
+Nothing verifies this rule on either board, and the coverage map says so rather than pointing at the nearest
+gate
 
 ### RF-002  transmit inhibit is hardware
 
@@ -1227,7 +1237,7 @@ the material group of the laminate.
 | source | SOURCE_UNVERIFIED |
 | | IEC 60664-1 insulation coordination for equipment within low-voltage systems, IEC, creepage and clearance tables -- NOT IN THIS TREE |
 | implementation | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1266,7 +1276,7 @@ its junction temperature at the envelope's maximum ambient is estimated and reco
 | verified by | CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_*3.py copper and thermal vias |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one part, expires prototype thermal measurement |
 
