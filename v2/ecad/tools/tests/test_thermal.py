@@ -13,10 +13,16 @@ SRC = open(os.path.join(TOOLS, "thermal.py"), encoding="utf-8").read()
 
 def t_a_rail_with_no_declared_efficiency_is_unknown_and_never_estimated():
     assert "no efficiency declared" in SRC, "a rail with no efficiency is silently given one"
+    # The RAIL LOOP, not a fixed number of characters after a line. The first version of this took the next
+    # 700 bytes, which is a window that a comment can push the code out of: it failed on 16 September when the
+    # loop gained the paragraph explaining why a hot-swap FET is not a converter, with the collection it was
+    # looking for eight lines further down and perfectly correct (this file's own brittle-window lesson, the
+    # same one tests/test_driver_hygiene.py learnt about one-line shell loops).
     i = SRC.index("eff = r.get(\"efficiency\")")
-    seg = SRC[i:i + 700]
+    seg = SRC[i:SRC.index("for d in declared", i)]
     assert "unknown.append" in seg, "the unknown rails are not collected"
-    assert "0.9" not in seg and "0.85" not in seg, "an efficiency is assumed in the code rather than declared"
+    for lit in ("0.9,", "0.9)", "= 0.9", "0.85"):
+        assert lit not in seg, "an efficiency is assumed in the code rather than declared: %r" % lit
 
 
 def t_the_verdict_is_inconclusive_while_any_rail_is_unknown():

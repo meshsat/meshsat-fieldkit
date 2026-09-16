@@ -18,7 +18,8 @@ def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
-         efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None):
+         efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None,
+         converted=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
@@ -81,7 +82,15 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                         # terminates at 16.8, and VIN_RAW is declared 12 V and the vehicle input it comes
                         # from is specified 9 to 36. A transient suppressor is judged on this number, because
                         # a clamp that stands off less than the line's own working maximum conducts in service.
-                        **({"v_work": float(v_work)} if v_work is not None else {})}
+                        **({"v_work": float(v_work)} if v_work is not None else {}),
+                        # converted: is there a CONVERSION on this rail, or is it switched through a pass
+                        # element? `switch` names what turns a rail on, and that is a FET as often as it is a
+                        # controller: board E's VIN_RAW is switched by a hot-swap FET and board P's PACK_P by
+                        # the protector's own, and neither converts anything. A converter's loss is
+                        # P_out * (1/eff - 1) and a pass element's is I2R in one part, which is the
+                        # `dissipators` list's business, so the two cannot share one question (16 September
+                        # 2026, rule THM-001).
+                        **({"converted": bool(converted)} if converted is not None else {})}
 
 def node(net, v_max, basis, v_min=0.0, rides_on=None, bias_v=None, vendor_reference=None, v_work=None):
     """A NET THAT IS NOT A RAIL, and the largest voltage a part on it can see (rule CMP-001, 16 September 2026).

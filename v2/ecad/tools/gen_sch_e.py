@@ -17,7 +17,19 @@ import intent as _intent
 # whole pack node leaves this board through that 12 AWG solder pad to the block's CELL+ targets and on to
 # board A; what stays here is the local 5 V buck and the two mixer fans. The split apportions the declared
 # 10 A typical: it is a design estimate of where the current goes, not a measurement of what it is.
-_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True, v_work=16.8,
+
+# THE EFFICIENCIES, AND WHICH RAILS CONVERT AT ALL (16 September 2026, rule THM-001). CELL_F arrives from the
+# pack on a wire behind a fuse and VIN_RAW is switched by a hot-swap FET: neither converts, and their loss is
+# the I2R their own copper carries, which dc_drop measures. The other two are made here and take their figures
+# from their own parts' datasheets, at or below the low end of what those plot, because a lower efficiency is
+# a higher loss and a dissipation figure is only useful as a floor.
+#   AP63205 (U12, the 5 V 2 A buck feeding the controller, the Geiger module and the fans' logic): 0.88 at the
+#   0.3 to 0.5 A this rail actually draws, which is a light load for a 2 A part and the region where a small
+#   buck is least efficient.
+#   U13's 3.3 V (0.35 to 0.6 A from the 5 V rail): 0.85, a small step-down at a light load.
+# Neither is a measurement of this board, and the junction temperature this rule really wants needs the
+# envelope's maximum ambient, which is owner decision 34.
+_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True, v_work=16.8, converted=False,
              always_on_why="the pack node after this board's 25 A blade: a fuse is protection and not a switch, and what opens this node is the pack's own gauge two stages upstream",
              loads={"P_CP": 9.0, "U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1},
              note="the pack node after the 25 A blade F3, to the block pads")
@@ -25,7 +37,7 @@ _intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True, v_work=16.8,
 # diode that ORs the tracker output INTO this bus: it is a SOURCE, so half the rail's current was being pulled
 # backwards through it. The whole of this bus leaves through the block lands J_BLK pins 1 to 4 for board A's
 # front end to regulate; the monitor divider R40 and the indicator LED1 are microamps and milliamps.
-_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", switch="U6", enable_net="HS_UVLO", v_work=36.0,
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", switch="U6", enable_net="HS_UVLO", v_work=36.0, converted=False,
              # the hot-swap controller IS the switch and its enable is the UVLO divider: the rail comes
              # up when the input passes 9 V and drops out above 40 V, which is the LM5069's own gate.
 
@@ -38,7 +50,7 @@ _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", switch="U6", enable_net="HS_UVLO"
 # rails and the return-path gate judged them as SIGNALS: +3V3_E6 came back 194.7 of 502.0 mm without an
 # adjacent reference, which is what a power net looks like and says nothing about signal integrity. A rail that
 # is not declared is not excluded, and the same omission would have hidden its drop and its current density.
-_intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13", always_on=True,
+_intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13", always_on=True, converted=True, efficiency=0.85,
              always_on_why="U13 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V the AP63205 makes and has no switch of its own",
              source_ic="U13 is a TLV75533 LDO in a SOT-23-5: pin 5 IS its output power pin and the whole rail "
                        "current really does leave through it, which is what source_ic is for",
@@ -50,7 +62,7 @@ _intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13", always_on=True,
 # The source is the INDUCTOR, not the chip. U12 is an AP63205 buck and its output current leaves through L3;
 # naming the controller would hold its SOT-23-6 pin at 0 V and pull 0.3 A down a pin that never carries it,
 # which is the defect board A's VBUS20 had (2.90 A of 6 down a 0.200 mm escape, 13 September 2026).
-_intent.rail("+5V_E6", 5.0, 0.30, 0.50, "L3", always_on=True,
+_intent.rail("+5V_E6", 5.0, 0.30, 0.50, "L3", always_on=True, converted=True, efficiency=0.88,
              always_on_why="U12 is an AP63205 whose EN pin is tied to CELL_F, the pack node it runs from, so this rail follows the pack and has no switch of its own",
              loads={"U13": 0.20, "J_GEIGER": 0.10},
              note="the local 5 V buck U12: the 3.3 V regulator's input and the Geiger tube's high-voltage "
