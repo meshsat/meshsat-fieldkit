@@ -362,16 +362,24 @@ def eta_doc():
     return "\n".join(L) + "\n"
 
 
-def render(out_dir=None):
+def render(out_dir=None, board_docs=True, generated=True):
+    """The documents, as a path -> body map.
+
+    TWO GROUPS, and the split is not cosmetic. The generated documents are rendered from the registry alone.
+    The per-board status pages are rendered from `out/rule-audit/<L>.json`, which `rules_status.py` wrote, and
+    two of the rules that audit decides (TST-001 and SGN-002) judge a GENERATED document. So a single pass that
+    rewrites a stale bring-up page and renders the status pages in the same breath reports the stale answer:
+    the audit it read was taken before the page existed in its current form. `main` writes group one, refreshes
+    the audit when group one changed, and only then renders group two."""
     reg = R.load(); cov = S.coverage(); docs = out_dir or DOCS
-    files = {os.path.join(docs, "PCB-GOLDEN-RULES.md"): rulebook(reg, cov),
+    files = {} if not generated else {os.path.join(docs, "PCB-GOLDEN-RULES.md"): rulebook(reg, cov),
              os.path.join(docs, "PCB-RULE-COVERAGE.md"): coverage_doc(reg, cov),
              os.path.join(docs, "PCB-GAP-REGISTER.md"): gap_register(reg, cov),
              os.path.join(docs, "PCB-ETA.md"): eta_doc(),
              os.path.join(docs, "PCB-PROTOTYPE-UNKNOWNS.md"): prototype_doc(reg, cov),
              os.path.join(docs, "PCB-BRING-UP.md"): bringup_doc(reg, cov)}
     audit = os.path.join(os.path.dirname(HERE), "out", "rule-audit")
-    for f in sorted(glob.glob(os.path.join(audit, "*.json"))):
+    for f in (sorted(glob.glob(os.path.join(audit, "*.json"))) if board_docs else []):
         letter = os.path.basename(f)[:-5]
         if letter == "summary": continue
         try: st = json.load(open(f))
@@ -381,16 +389,47 @@ def render(out_dir=None):
     return files
 
 
+def _write(files):
+    """Write each body, return the paths that actually changed."""
+    changed = []
+    for p, body in sorted(files.items()):
+        old = open(p, encoding="utf-8").read() if os.path.exists(p) else None
+        if old == body: continue
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        open(p, "w", encoding="utf-8").write(body)
+        print("rules_render: wrote %s (%d lines)" % (os.path.relpath(p), body.count("\n")))
+        changed.append(p)
+    return changed
+
+
+def _refresh_audit():
+    """Re-run the readiness computation so the status pages read an audit taken AFTER the pages it judges.
+
+    It is the same call a sweep makes, with its stdout put aside: this is a rendering step, not a second
+    opinion, and printing a whole readiness table in the middle of a document run would read as one."""
+    import io, contextlib
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(buf): S.main([])
+        return True
+    except BaseException as e:                     # a SystemExit here is a failure to refresh, not a refusal
+        print("rules_render: the audit could not be refreshed (%s: %s); the status pages below are rendered "
+              "from the audit as it stands" % (type(e).__name__, str(e)[:80]))
+        return False
+
+
 def main(argv):
-    files = render()
     if "--check" in argv:
+        files = render()
         bad = [p for p, body in files.items() if not os.path.exists(p) or open(p).read() != body]
         for p in bad: print("rules_render: %s differs from what the registry renders" % os.path.relpath(p))
         print("rules_render: %d document(s), %d out of date" % (len(files), len(bad)))
         return 1 if bad else 0
-    for p, body in files.items():
-        os.makedirs(os.path.dirname(p), exist_ok=True); open(p, "w").write(body)
-        print("rules_render: wrote %s (%d lines)" % (os.path.relpath(p), body.count("\n")))
+    # Group one: the documents the registry alone decides, two of which rules judge.
+    changed = _write(render(board_docs=False))
+    # Group two: the per-board status pages, from an audit taken after group one was written.
+    if changed and "--no-refresh" not in argv: _refresh_audit()
+    _write(render(generated=False))
     return 0
 
 
