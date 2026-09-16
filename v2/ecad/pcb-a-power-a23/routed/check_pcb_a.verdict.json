@@ -2,15 +2,13 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 1,
+  "fail": 0,
   "footprints": 400,
   "intent_items_reported": 242,
-  "pass": 811
+  "pass": 812
  },
  "denominator": 812,
- "evidence": [
-  "pour 'VBUS20 F.Cu' (/VBUS20, F.Cu): every piece anchored by a pad or via of its net (0 of 5 loose), fill 97 of 223 mm2 of its outline (at least 50%)"
- ],
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
@@ -28,9 +26,9 @@
  "tool": "check_pcb_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "868b1e0b2f4fd075"
+  "tools_tree_sha": "8ef5a7ab396fe830"
  },
- "ts": "2026-09-16T13:51:06Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T14:15:57Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

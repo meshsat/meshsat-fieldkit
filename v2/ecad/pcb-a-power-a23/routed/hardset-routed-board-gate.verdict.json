@@ -20,7 +20,7 @@
  "inputs": {
   "drc": {
    "path": "out/pcb-a-power-drc.json",
-   "sha256_16": "ec234cfeb1ec0955"
+   "sha256_16": "ce1c926deaadd81c"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
@@ -35,9 +35,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "868b1e0b2f4fd075"
+  "tools_tree_sha": "8ef5a7ab396fe830"
  },
- "ts": "2026-09-16T13:50:56Z",
+ "ts": "2026-09-16T14:15:48Z",
  "verdict": "PASS",
  "version": "unknown"
 }
