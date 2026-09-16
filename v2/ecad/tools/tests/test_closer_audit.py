@@ -109,3 +109,18 @@ def t_a_declaration_is_not_an_invocation():
     w = src[i:i + 1400]
     assert '"*.yaml"' not in w, "a yaml declaration still counts as an invocation"
     assert 'l.split("#", 1)[0]' in w, "a mention in a comment still counts as an invocation"
+
+
+def t_the_mark_the_owner_ruled_is_drawn_by_a_stage_and_placed_by_a_declaration():
+    """No board of the seven carried a silkscreen polygon: logo_silk.py could draw the mark and nothing chose
+    where it goes. The position is declared per board, never found at generation time, because a position that
+    moves whenever a part moves rewrites the board file on every generation."""
+    import os, json
+    full = open(os.path.join(TOOLS, "full.sh"), encoding="utf-8").read()
+    assert "logo_stage.py" in full, "no chain draws the mark"
+    src = open(os.path.join(TOOLS, "logo_stage.py"), encoding="utf-8").read()
+    assert '_bt.value(letter, "logo")' in src, "the position is not read from the board's own declaration"
+    assert "not drawing a second mark" in src, "a second run would draw the mark twice"
+    a = json.load(open(os.path.join(TOOLS, "boards", "a.json"), encoding="utf-8"))
+    assert a.get("logo", {}).get("width_mm"), "board A declares no position for the mark"
+    assert a["logo"].get("why"), "the position is declared with no reason"
