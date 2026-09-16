@@ -35,6 +35,13 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^status\b", "LED_0603"): "C2986059",# the bare "status (GPIO25)" rows name no colour: green, like every other indicator
  (r"^SS14\b", "D_SMB"): "C51897884",     # the fan flyback diodes on E6
  (r"^0\.25R 1% 2512$", "R_2512"): "C459675",   # RLP25FEER250, 2 W current sense, 1 percent (r"^600R@100MHz", "L_0603"): "C1002", (r"^ferrite 600R$", "L_0603"): "C1002",  # the C BOM writes the value this way round
+ # BOARD C'S REMAINING BLANKS, 17 September 2026. Its deliverable was refused for 24 uncoded rows and
+ # these four values are the ones that are ordinary parts rather than hand-fitted panel pieces. Each is
+ # read back from JLCPCB with its stock at the time it was chosen.
+ (r"^15p NP0$", "C_0402"): "C1548",       # 0402CG150J500NT, C0G 50 V, a BASIC part (no extended fee), 1.6 M in stock: the RP2040 crystal loads
+ (r"^1u 25V$", "C_0603"): "C106858",      # CC0603KRX7R8BB105, X7R 25 V, 134 k in stock: the e-paper pump rail
+ (r"^4\.7u$", "C_0805"): "C354262",       # CC0805KKX7R8BB475, X7R 25 V, 581 k in stock (the 0603 4.7u already here is C19666)
+ (r"^SS2040FL", "D_SOD-123F"): "C268712", # SS2040FL, 40 V 2 A Schottky, 10 k in stock: the e-paper pump diodes
  (r"^180R?$", "R_0603"): "C22828",        # the shipped C BOM carried C25270, an 0805, on these eleven 0603 lands
  (r"^8MHz", "5032"): "C115962", (r"^USBLC6-2SC6", "SOT-23-6"): "C7519", (r"^INA219", "SOT-23-8"): "C138024", (r"^PCA9555PW", "TSSOP-24"): "C2864778", (r"^FE1\.1s", "SSOP-28"): "C2848",
  (r"^USB-C 2\.0 receptacle", "TYPE-C-31-M-12"): "C165948", # (r"^BC847BS", "SOT-363"): "C8653",   RETIRED 12 September 2026: no generator names a BC847BS and no
