@@ -110,3 +110,19 @@ def t_the_generators_via_sizing_report_is_a_measurement_or_silence():
     assert "amps / max(barrel_a" not in body and "ceil(amps /" not in body, \
         "the rail's whole current is being attributed to a single site again"
     assert '_b[2]' in body and 'hypot' in body, "the report does not read the measured barrels near the site"
+
+
+def t_a_site_that_already_has_the_barrels_is_a_sharing_problem_and_says_so():
+    """The second reading of the same report, 16 September 2026. Three of the thirteen sites carry four or six
+    barrels and still have one over its rating: there the count is not the defect, the SHARING is, and the
+    first sentence ("this site wants about 4") read as though four more were needed. The site's own total is
+    measured so the report can tell a shortage of holes from copper that feeds one of them."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "gen_pcb_a3.py"),
+               encoding="utf-8").read()
+    body = src[src.index("def _size("):src.index("def row(net")]
+    assert "total = sum(" in body, "the site's whole current is never summed, so a share cannot be computed"
+    assert "ceil(total /" in body, "the wanted count is still taken from one barrel rather than from the site"
+    rep = src[src.index("if _VIA_SHORT:"):src.index("elif _VIA_MEASURED:")]
+    assert "do not SHARE" in rep, "a site with barrels enough is still reported as wanting more"
+    assert "the site carries" in rep, "the report does not say what the site carries"
