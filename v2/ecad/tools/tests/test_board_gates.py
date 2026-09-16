@@ -209,3 +209,60 @@ def t_every_check_call_in_the_rules_passes_one_message():
             if len(n.args) != 2 or n.keywords:
                 bad.append("line %d: check() called with %d argument(s)" % (n.lineno, len(n.args)))
     assert not bad, ("the board gates' check() takes (ok, message) and nothing else: " + "; ".join(bad))
+
+
+def _via(pcbnew, b, x, y, dia, drill, net=None):
+    """One through via at (x, y) with an explicit diameter and drill, both in mm."""
+    v = pcbnew.PCB_VIA(b)
+    v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    v.SetWidth(pcbnew.FromMM(dia)); v.SetDrill(pcbnew.FromMM(drill))
+    v.SetViaType(pcbnew.VIATYPE_THROUGH)
+    b.Add(v); return v
+
+
+def _tht_footprint(pcbnew, b, ref, x, y, pad=1.6, drill=0.9, plated=True):
+    """One through-hole pad: a plated component hole unless plated is False, when it is a mounting hole."""
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference(ref)
+    fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    p = pcbnew.PAD(fp); p.SetNumber("1")
+    p.SetAttribute(pcbnew.PAD_ATTRIB_PTH if plated else pcbnew.PAD_ATTRIB_NPTH)
+    p.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
+    p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(pad), pcbnew.FromMM(pad)))
+    p.SetDrillSize(pcbnew.VECTOR2I(pcbnew.FromMM(drill), pcbnew.FromMM(drill)))
+    p.SetPosition(fp.GetPosition())
+    fp.Add(p); b.Add(fp); return fp
+
+
+def t_a_via_is_judged_by_the_via_rows_and_a_component_hole_by_the_annular_row():
+    """The fabricator states two floors and they are not interchangeable (rule VIA-002, 16 September 2026).
+
+    Board D12 routed 0 hard and 0 unrouted on 16 September and was refused for ONE via, a 0.45/0.20 through via
+    with 0.125 mm of copper per side, against the 0.20 mm PTH ANNULAR RING row. That row cannot be about vias:
+    the same document's smallest via is 0.25 mm of copper on a 0.15 mm hole, which is 0.05 mm per side, so a
+    floor of 0.20 would refuse the fabricator's own minimum via. This fixture holds the split in place from
+    both sides: the via that was refused must pass, and a plated component hole genuinely under the annular
+    row must still fail."""
+    pcbnew = _pcbnew()
+    import importlib
+    va = importlib.import_module("via_audit")
+
+    b = _board(pcbnew)
+    _via(pcbnew, b, 10.0, 10.0, 0.45, 0.20)          # D12's via: 0.125 mm of ring
+    _tht_footprint(pcbnew, b, "J1", 20.0, 10.0, pad=1.60, drill=0.90)   # 0.35 mm of ring, a fine component hole
+    _tht_footprint(pcbnew, b, "H1", 30.0, 10.0, pad=3.20, drill=3.20, plated=False)  # a mounting hole, no ring
+    tmp = tempfile.mkdtemp(prefix="via-ring-test-")
+    good = os.path.join(tmp, "good.kicad_pcb"); b.Save(good)
+    r = va.audit(good, annular_min=0.20, via_ring_min=0.05)
+    assert r["vias"] == 1 and r["plated_holes"] == 1 and r["npth_holes"] == 1, r
+    assert not r["bad"], "the fabricator's own via minimum must not be refused: %s" % r["bad"]
+    assert not r["thin_pads"], r["thin_pads"]
+
+    # the same via against the component-hole row, which is the defect this split removes
+    r2 = va.audit(good, annular_min=0.20, via_ring_min=0.20)
+    assert r2["bad"], "with the component row applied to the via the refusal is the D12 one, and it is wrong"
+
+    b2 = _board(pcbnew)
+    _tht_footprint(pcbnew, b2, "J2", 20.0, 10.0, pad=1.00, drill=0.90)  # 0.05 mm of ring on a component hole
+    thin = os.path.join(tmp, "thin.kicad_pcb"); b2.Save(thin)
+    r3 = va.audit(thin, annular_min=0.20, via_ring_min=0.05)
+    assert r3["thin_pads"], "a plated component hole at 0.05 mm of ring must still be refused"

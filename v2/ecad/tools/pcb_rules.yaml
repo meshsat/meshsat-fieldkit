@@ -1541,20 +1541,31 @@ rules:
  - id: VIA-002
    domain: VIAS
    short_name: the annular ring is one the fabricator makes
+   false_positive_analysis: >
+     A false refusal here is a VIA judged against the row that governs a PLATED COMPONENT HOLE, and it is not
+     hypothetical: on 16 September board D12 routed 0 hard and 0 unrouted and was refused for one 0.45/0.20 via
+     at 0.125 mm of ring, a via nearly two and a half times the same document's own via minimum. The two rows
+     cannot both be about vias, because no via at the stated minimum 0.25 mm on 0.15 mm can carry 0.20 mm of
+     ring, so the annular ring row is about a component hole and the via rows are about a via. The second shape
+     is a NON-PLATED hole, a mounting hole with no copper of its own, failed for a ring it was never meant to
+     have: those are counted and left unjudged, because their row is a different one again. The third is a
+     board at a copper weight the document does not state the rows for, which is E5 and P at 2 oz: they declare
+     no floor and read INCONCLUSIVE rather than being judged against a 1 oz number.
    requirement: >
      The copper left around every drilled hole, (pad or via diameter minus drill) divided by two, is at or
-     above the minimum annular ring the chosen fabricator guarantees for the chosen process and the finished
-     board thickness, and the aspect ratio of every hole is inside the same document's limit.
+     above the minimum the chosen fabricator publishes FOR THAT KIND OF HOLE at the chosen process and copper
+     weight: the annular ring row for a plated component hole, and what the via rows leave for a via. The
+     aspect ratio of every hole is inside the same document's limit.
    classification: FAB_LIMIT
    applicability: CONDITIONAL
    condition: {fact: has_tracks, op: truthy}
    risk_class: [FABRICATION, RELIABILITY]
    release_effect: BLOCKER
-   source_status: VERIFIED
+   source_status: PARTIALLY_VERIFIED
    sources:
     - {title: "JLCPCB rigid PCB manufacturing capabilities", issuer: JLCPCB,
        revision: "the live capability page as it read on 16 September 2026; no revision number is published",
-       clause: "annular ring: PTH multilayer 1 oz recommended 0.20 mm or above, absolute minimum 0.15 mm; PTH 2-layer 1 oz recommended 0.25 mm or above, absolute minimum 0.18 mm; NPTH pad >= 0.45 mm. The 2 oz case is NOT stated, so boards E5 and P stay unjudged on the ring",
+       clause: "two rows, two kinds of hole. PLATED COMPONENT HOLE, section Annular ring: PTH multilayer 1 oz recommended 0.20 mm or above, absolute minimum 0.15 mm; PTH 2-layer 1 oz recommended 0.25 mm or above, absolute minimum 0.18 mm; NPTH pad >= 0.45 mm. VIA, section Holes and vias: minimum via diameter 0.25 mm on a minimum via hole of 0.15 mm for 2 or more layers, which leaves 0.05 mm of copper per side. The 2 oz case is NOT stated for the annular rows, so boards E5 and P stay unjudged on the ring",
        url_or_path: "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md", accessed: "2026-09-16",
        note: "transcribed row by row from https://jlcpcb.com/capabilities/pcb-capabilities. It replaces the
          4 September scrape in v2/vendor/seals/, which is a JavaScript-blocked page with no capability data in
@@ -1562,8 +1573,9 @@ rules:
          is why the date it was read travels with every limit taken from it"}
 
    acceptance_criteria: >
-     Each board declares annular_min_mm from the fabricator's own document, with the clause cited, and every
-     via and plated hole on the board is at or above it.
+     Each board declares TWO floors from the fabricator's own document with the clause cited, annular_min_mm
+     for a plated component hole and via_ring_min_mm for a via, every hole of each kind on the board is at or
+     above the floor for its own kind, and a board that declares only one of them reads INCONCLUSIVE.
    rationale: >
      The annular ring is the number a fabricator quotes and the one a via actually fails at: a 0.45 mm via on a
      0.35 mm drill leaves 0.05 mm per side, and a process guaranteeing 0.075 will not make it reliably. The

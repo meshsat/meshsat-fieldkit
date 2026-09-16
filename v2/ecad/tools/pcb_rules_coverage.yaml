@@ -323,16 +323,17 @@ coverage:
      written. The ANNULAR RING is a separate verdict under VIA-002 because it is judged against a FABRICATOR
      capability and not against the board"}
 
- VIA-002: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums",
+ VIA-002: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums; boards/<letter>.json annular_min_mm and via_ring_min_mm",
    verification: {tool: via_audit.py, verdict: via_annular, fixtures: tests/test_board_gates.py},
-   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "the copper left around each hole is the number a fabricator quotes and the one a via actually fails at, and it
-     is measured on every board. What is missing is the FLOOR: this tree's only fabricator capability file is a
-     JavaScript-blocked page scrape with no capability data in it, so no board declares annular_min_mm and the verdict
-     is INCONCLUSIVE rather than passing at a figure this project made up. That is the same refusal the registry makes
-     of every other unsourced limit",
-   remediation: {action: "obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge",
-     owner: SESSION, depends_on: [], p50_h: 2, p80_h: 6}}
+   maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the floor arrived on 16 September with the fabricator's own capability page, and reading it carefully split
+     this rule in two: the ANNULAR RING row governs a plated COMPONENT hole, and a VIA is governed by the via rows,
+     which leave 0.05 mm of copper per side at that document's own minimum of 0.25 mm on 0.15 mm. Applied the other way
+     round it refused board D12, a board at 0 hard and 0 unrouted, for one 0.45/0.20 via at 0.125 mm of ring. A, B, C, D
+     and E declare both floors with the clause cited; E5 and P are 2 oz, the annular rows are stated for 1 oz only, and
+     they stay INCONCLUSIVE rather than being judged against a number for another process",
+   remediation: {action: "ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive",
+     owner: VENDOR, depends_on: [], p50_h: 2, p80_h: 48}}
 
  PLN-001: {implementation: "pour_stitch.py, zone_pad_via.py, stitch_prune.py", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
    maturity: ENFORCED, gap_category: NONE, note: "isolated copper is a hard type and pour islands are stitched or removed under a guard"}
