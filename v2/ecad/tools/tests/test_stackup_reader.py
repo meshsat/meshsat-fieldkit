@@ -119,3 +119,34 @@ def t_the_pre_route_chain_refuses_a_board_with_no_stackup():
     src = open(_os.path.join(TOOLSDIR, "full.sh"), errors="replace").read()
     assert "the board carries no stackup" in src, "full.sh does not check that the stackup survived"
     assert "no stackup (rule STK-001)" in src, "the refusal does not name the rule it serves"
+
+
+def t_a_stackup_written_across_several_lines_reads_the_same_as_one_written_on_one():
+    """16 September 2026. KiCad writes a stackup layer on ONE line when a tool writes the block and across
+    SEVERAL when pcbnew saves the file itself, so a board that has been through SaveBoard since its stackup was
+    written does not match a single-line expression. Three places carried one, and on boards A, D and E, whose
+    files are in the expanded form, all three read 'no stackup at all': fab_limits reported rules RTE-001 and
+    STK-001 as unanswerable on three boards that carry a stackup, export_jlc.sh would have sent the fabricator
+    an order note saying the copper weight was NOT DECLARED, and this file's own sibling rule would have failed
+    on the same folders. One reader now, and both forms are the same board."""
+    import os, sys
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, tools)
+    import stackup_read
+    one = '(layer "F.Cu" (type "copper") (thickness 0.035))\n(layer "B.Cu" (type "copper") (thickness 0.035))\n'
+    multi = ('(layer "F.Cu"\n  (type "copper")\n  (thickness 0.035)\n)\n'
+             '(layer "B.Cu"\n  (type "copper")\n  (thickness 0.035)\n)\n')
+    assert stackup_read.outer_copper_mm(one) == 0.035, stackup_read.outer_copper_mm(one)
+    assert stackup_read.outer_copper_mm(multi) == 0.035, "the expanded form still reads as no stackup"
+    assert stackup_read.outer_copper_oz(one) == stackup_read.outer_copper_oz(multi) == 1.0
+    # two ounces, and the thickness must come from the layer's OWN block and never the next one's
+    mixed = ('(layer "F.Cu"\n  (type "copper")\n  (thickness 0.070)\n)\n'
+             '(layer "dielectric 1"\n  (type "prepreg")\n  (thickness 0.2104)\n)\n')
+    assert stackup_read.outer_copper_mm(mixed) == 0.070, stackup_read.outer_copper_mm(mixed)
+    # a board with no stackup says so rather than guessing
+    assert stackup_read.outer_copper_oz("(kicad_pcb)\n") is None
+    # and the three call sites use it rather than their own expression
+    for f in ("fab_limits.py", "export_jlc.sh"):
+        src = open(os.path.join(tools, f), encoding="utf-8").read()
+        assert "stackup_read" in src, "%s does not use the one reader" % f
+        assert '(type "copper")\\) \\(thickness' not in src, "%s still carries the single-line expression" % f

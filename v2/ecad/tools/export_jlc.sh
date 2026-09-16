@@ -29,7 +29,7 @@ with open("out/jlc/%s-bom.csv" % N, "w", newline="") as f:
         w.writerow([r["Value"], ",".join(refs), r["Footprint"].split(":")[-1], r.get("LCSC", "")])
 print("JLC BOM + CPL written to out/jlc/")
 PY
-python3 - "$N" <<'PY'
+python3 - "$N" "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" <<'PY'
 import sys, csv, os, re, json, pcbnew
 n = sys.argv[1]; b = pcbnew.LoadBoard(n + ".kicad_pcb"); bb = b.GetBoardEdgesBoundingBox(); ds = b.GetDesignSettings()
 W, H, NL, T = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6, b.GetCopperLayerCount(), ds.GetBoardThickness() / 1e6
@@ -60,11 +60,18 @@ usb = bool(_zt) and any("USB_" in str(k) and str(k).endswith(("_P", "_N")) for k
 # file the fab receives, and it cannot drift from a stackup decision again. The stackup itself is untouched
 # and stays the owner's.
 _st = open(n + ".kicad_pcb", errors="replace").read()
-_cu = re.search(r'\(layer "F\.Cu" \(type "copper"\) \(thickness ([0-9.]+)\)', _st)
+# 16 September 2026: BOTH s-expression forms. KiCad writes a stackup layer on one line when a tool writes the
+# block and across several when pcbnew saves the file, and this expression matched only the first, so boards A,
+# D and E, whose files are in the expanded form, would have gone to the fabricator with "copper weight NOT
+# DECLARED". The reader is tools/stackup_read.py, in one place, because the same expression was in three.
+sys.path.insert(0, sys.argv[2])          # the tools directory, passed in: a heredoc has no __file__
+import stackup_read as _sr
+_cu_mm = _sr.outer_copper_mm(_st)
+_cu = _cu_mm is not None
 # A board file with no stackup block says nothing about its copper, and claiming "1 oz" for it is the same
 # constant this change removes. `full.sh` writes a stackup into every board it generates, so this fallback
 # fires only on a folder cut before 8 September 2026 (C7 is the one in the tree), and it says so plainly.
-_oz = "%g oz" % round(float(_cu.group(1)) / 0.035) if _cu else "copper weight NOT DECLARED in the board file (ask before quoting)"
+_oz = "%g oz" % round(_cu_mm / 0.035) if _cu else "copper weight NOT DECLARED in the board file (ask before quoting)"
 _pp = re.findall(r'\(material "FR4 prepreg ([0-9]+)"', _st)   # file order: the FIRST is the outer prepreg, which is what names the stack
 stack = ("JLC%02d161H-%s stackup, " % (NL, _pp[0]) if _pp else "") if _cu else ("JLC04161H-7628 stackup, " if NL == 4 else "")
 asm = "none (bare board)" if top + bot == 0 else ("top %d" % top + (", bottom %d" % bot if bot else ""))
