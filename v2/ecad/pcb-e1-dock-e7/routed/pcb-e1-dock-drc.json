@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-09-13T22:25:26+0000",
+    "date": "2026-09-16T09:56:34+0000",
     "included_severities": [
         "error",
         "warning",
@@ -10,7 +10,31 @@
     "kicad_version": "9.0.9",
     "schematic_parity": [],
     "source": "pcb-e1-dock.kicad_pcb",
-    "unconnected_items": [],
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [/WATER_SENSE] on B.Cu, length 15.6329 mm",
+                    "pos": {
+                        "x": 113.8533,
+                        "y": 217.7945
+                    },
+                    "uuid": "3df09119-2fba-44e9-833e-0375576888f5"
+                },
+                {
+                    "description": "Track [/WATER_SENSE] on F.Cu, length 0.9000 mm",
+                    "pos": {
+                        "x": 98.95,
+                        "y": 216.45
+                    },
+                    "uuid": "ee8f4ea6-86b4-40dd-858d-69cb0399a4c1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
     "violations": [
         {
             "description": "Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)",
@@ -21,30 +45,7 @@
                         "x": 1.0,
                         "y": 223.0
                     },
-                    "uuid": "7d699ccd-3952-4283-9ebf-202a21b575fb"
-                },
-                {
-                    "description": "Pad 7 [GND] of U14 on F.Cu",
-                    "pos": {
-                        "x": 191.975,
-                        "y": 167.2825
-                    },
-                    "uuid": "a945b433-cc35-4f5d-9a06-e194c4efcfa3"
-                }
-            ],
-            "severity": "error",
-            "type": "starved_thermal"
-        },
-        {
-            "description": "Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)",
-            "items": [
-                {
-                    "description": "Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0",
-                    "pos": {
-                        "x": 1.0,
-                        "y": 223.0
-                    },
-                    "uuid": "7d699ccd-3952-4283-9ebf-202a21b575fb"
+                    "uuid": "1ddc3b04-e0c0-4966-b480-4610412ff2fe"
                 },
                 {
                     "description": "Pad 2 [GND] of Y1 on F.Cu",
@@ -52,11 +53,195 @@
                         "x": 253.135,
                         "y": 193.225
                     },
-                    "uuid": "020d5222-534c-4f27-a1ae-e5d629ced94b"
+                    "uuid": "3a722a96-8793-4cc6-80b5-b931e40f70f3"
                 }
             ],
             "severity": "error",
             "type": "starved_thermal"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "Segment of F3 on F.Silkscreen",
+                    "pos": {
+                        "x": 21.9,
+                        "y": 221.47
+                    },
+                    "uuid": "4bd9431b-a771-4153-95ba-460cd2c6ed14"
+                },
+                {
+                    "description": "PCB text 'F3 25A' on F.Silkscreen",
+                    "pos": {
+                        "x": 30.0,
+                        "y": 222.2
+                    },
+                    "uuid": "bce85871-0258-4124-9862-c3b961d9b142"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "pos": {
+                        "x": 150.0,
+                        "y": 221.5
+                    },
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
+                {
+                    "description": "PCB text 'DC IN' on F.Silkscreen",
+                    "pos": {
+                        "x": 86.0,
+                        "y": 222.2
+                    },
+                    "uuid": "57c23bc7-60ad-4f88-b3e5-65cf7dbb6899"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "Segment of J_DCIN on F.Silkscreen",
+                    "pos": {
+                        "x": 90.2625,
+                        "y": 222.36
+                    },
+                    "uuid": "4248890f-4eec-4286-b018-16b762b8fd89"
+                },
+                {
+                    "description": "PCB text 'DC IN' on F.Silkscreen",
+                    "pos": {
+                        "x": 86.0,
+                        "y": 222.2
+                    },
+                    "uuid": "57c23bc7-60ad-4f88-b3e5-65cf7dbb6899"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "pos": {
+                        "x": 150.0,
+                        "y": 221.5
+                    },
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
+                {
+                    "description": "Segment of F1 on F.Silkscreen",
+                    "pos": {
+                        "x": 93.9,
+                        "y": 214.53
+                    },
+                    "uuid": "b32721b5-8a24-491a-a202-bbc705088a7a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "pos": {
+                        "x": 150.0,
+                        "y": 221.5
+                    },
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
+                {
+                    "description": "Segment of F1 on F.Silkscreen",
+                    "pos": {
+                        "x": 93.9,
+                        "y": 221.47
+                    },
+                    "uuid": "eb418e33-1186-41d9-94fa-c390576d69d9"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "pos": {
+                        "x": 150.0,
+                        "y": 221.5
+                    },
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
+                {
+                    "description": "PCB text 'F1 10A' on F.Silkscreen",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 222.2
+                    },
+                    "uuid": "b2886054-2450-4143-8c53-2c9d09b6c6da"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'F1 10A' on F.Silkscreen",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 222.2
+                    },
+                    "uuid": "b2886054-2450-4143-8c53-2c9d09b6c6da"
+                },
+                {
+                    "description": "Segment of F1 on F.Silkscreen",
+                    "pos": {
+                        "x": 93.9,
+                        "y": 221.47
+                    },
+                    "uuid": "eb418e33-1186-41d9-94fa-c390576d69d9"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "pos": {
+                        "x": 150.0,
+                        "y": 221.5
+                    },
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
+                {
+                    "description": "Segment of J_DCIN on F.Silkscreen",
+                    "pos": {
+                        "x": 90.2625,
+                        "y": 215.34
+                    },
+                    "uuid": "a5ad5a43-987c-4798-9ed5-342c48a56731"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
         },
         {
             "description": "Silkscreen overlap",
@@ -67,7 +252,7 @@
                         "x": 12.0,
                         "y": 222.2
                     },
-                    "uuid": "21fc03e6-fb98-499f-a4f6-003c0f7188f8"
+                    "uuid": "33553068-97cb-4eb8-9ed5-c9d6a92992df"
                 },
                 {
                     "description": "Segment of J_BATT on F.Silkscreen",
@@ -75,7 +260,7 @@
                         "x": 7.0,
                         "y": 222.15
                     },
-                    "uuid": "964bf237-d2a5-43e9-be16-b25c1cf82a98"
+                    "uuid": "7bb74355-058d-47f6-ae8d-d7b15bcafc6f"
                 }
             ],
             "severity": "warning",
@@ -84,205 +269,21 @@
         {
             "description": "Silkscreen overlap",
             "items": [
-                {
-                    "description": "PCB text 'F3 25A' on F.Silkscreen",
-                    "pos": {
-                        "x": 30.0,
-                        "y": 222.2
-                    },
-                    "uuid": "3064f72c-1a82-4c66-801d-f9befc07ace0"
-                },
-                {
-                    "description": "Segment of F3 on F.Silkscreen",
-                    "pos": {
-                        "x": 21.9,
-                        "y": 221.47
-                    },
-                    "uuid": "7bef7622-a2aa-471d-9b0a-4dd7115222d7"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "Segment of R48 on F.Silkscreen",
-                    "pos": {
-                        "x": 10.077742,
-                        "y": 212.6025
-                    },
-                    "uuid": "3c91b4f6-52e6-4e8b-8378-27ed312beba2"
-                },
                 {
                     "description": "Reference field of J_BATT",
                     "pos": {
                         "x": 12.0,
                         "y": 212.7
                     },
-                    "uuid": "f3a75919-fce5-4944-8982-66ca9f512108"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "PCB text 'DC IN' on F.Silkscreen",
-                    "pos": {
-                        "x": 86.0,
-                        "y": 222.2
-                    },
-                    "uuid": "249386ed-3f2e-4480-88b0-9304aee0f093"
+                    "uuid": "225d62eb-a4cb-4002-9b07-64cf74b9743a"
                 },
                 {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "description": "Segment of R48 on F.Silkscreen",
                     "pos": {
-                        "x": 150.0,
-                        "y": 221.5
+                        "x": 10.077742,
+                        "y": 212.6025
                     },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "PCB text 'DC IN' on F.Silkscreen",
-                    "pos": {
-                        "x": 86.0,
-                        "y": 222.2
-                    },
-                    "uuid": "249386ed-3f2e-4480-88b0-9304aee0f093"
-                },
-                {
-                    "description": "Segment of J_DCIN on F.Silkscreen",
-                    "pos": {
-                        "x": 90.2625,
-                        "y": 222.36
-                    },
-                    "uuid": "df5b0123-3e9a-4106-8a2a-8822de92f4c5"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
-                    "pos": {
-                        "x": 150.0,
-                        "y": 221.5
-                    },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
-                },
-                {
-                    "description": "Segment of F1 on F.Silkscreen",
-                    "pos": {
-                        "x": 93.9,
-                        "y": 214.53
-                    },
-                    "uuid": "a4b5d6f6-4787-4770-97f1-3902109a8961"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
-                    "pos": {
-                        "x": 150.0,
-                        "y": 221.5
-                    },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
-                },
-                {
-                    "description": "Segment of F1 on F.Silkscreen",
-                    "pos": {
-                        "x": 93.9,
-                        "y": 221.47
-                    },
-                    "uuid": "934abff5-2e4e-4b0f-af2e-347d0bf17694"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
-                    "pos": {
-                        "x": 150.0,
-                        "y": 221.5
-                    },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
-                },
-                {
-                    "description": "PCB text 'F1 10A' on F.Silkscreen",
-                    "pos": {
-                        "x": 102.0,
-                        "y": 222.2
-                    },
-                    "uuid": "5fd0db7f-6447-4b97-9cee-28e5b941197c"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "PCB text 'F1 10A' on F.Silkscreen",
-                    "pos": {
-                        "x": 102.0,
-                        "y": 222.2
-                    },
-                    "uuid": "5fd0db7f-6447-4b97-9cee-28e5b941197c"
-                },
-                {
-                    "description": "Segment of F1 on F.Silkscreen",
-                    "pos": {
-                        "x": 93.9,
-                        "y": 221.47
-                    },
-                    "uuid": "934abff5-2e4e-4b0f-af2e-347d0bf17694"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "Segment of J_DCIN on F.Silkscreen",
-                    "pos": {
-                        "x": 90.2625,
-                        "y": 215.34
-                    },
-                    "uuid": "2984c60e-c2ea-4f61-a7c2-1c9cb8b75206"
-                },
-                {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
-                    "pos": {
-                        "x": 150.0,
-                        "y": 221.5
-                    },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
+                    "uuid": "d8686a12-2f3a-4eeb-8c28-98b3e61956c7"
                 }
             ],
             "severity": "warning",
@@ -297,7 +298,7 @@
                         "x": 4.62,
                         "y": 158.03
                     },
-                    "uuid": "50461162-336c-475f-8fbb-e33dd193d6e8"
+                    "uuid": "57a65d7f-ae89-4b76-9cb5-2bc2cf90d737"
                 },
                 {
                     "description": "Reference field of J_SMB",
@@ -305,7 +306,7 @@
                         "x": 6.0,
                         "y": 163.27
                     },
-                    "uuid": "b30b7296-ef61-45a6-b54a-6792c2b310e1"
+                    "uuid": "fd68f98d-42d7-4e2f-a270-7c3a525dbae1"
                 }
             ],
             "severity": "warning",
@@ -320,7 +321,7 @@
                         "x": 4.62,
                         "y": 163.22
                     },
-                    "uuid": "5c72d1d7-7dd8-4055-a2f9-e0141b1fd957"
+                    "uuid": "de305774-a0f7-4668-93a6-ae6c89c6839c"
                 },
                 {
                     "description": "Reference field of J_SMB",
@@ -328,7 +329,7 @@
                         "x": 6.0,
                         "y": 163.27
                     },
-                    "uuid": "b30b7296-ef61-45a6-b54a-6792c2b310e1"
+                    "uuid": "fd68f98d-42d7-4e2f-a270-7c3a525dbae1"
                 }
             ],
             "severity": "warning",
@@ -337,21 +338,21 @@
         {
             "description": "Silkscreen overlap",
             "items": [
-                {
-                    "description": "Reference field of J_SMB",
-                    "pos": {
-                        "x": 6.0,
-                        "y": 163.27
-                    },
-                    "uuid": "b30b7296-ef61-45a6-b54a-6792c2b310e1"
-                },
                 {
                     "description": "Segment of J_DCF on F.Silkscreen",
                     "pos": {
                         "x": 7.38,
                         "y": 158.03
                     },
-                    "uuid": "cf88712d-80bd-4559-be0f-c087f1e9935f"
+                    "uuid": "c47fd352-e601-4022-86e0-6ae6696a8d58"
+                },
+                {
+                    "description": "Reference field of J_SMB",
+                    "pos": {
+                        "x": 6.0,
+                        "y": 163.27
+                    },
+                    "uuid": "fd68f98d-42d7-4e2f-a270-7c3a525dbae1"
                 }
             ],
             "severity": "warning",
@@ -360,44 +361,21 @@
         {
             "description": "Silkscreen overlap",
             "items": [
-                {
-                    "description": "PCB text 'CLAMP LORA' on F.Silkscreen",
-                    "pos": {
-                        "x": 252.0,
-                        "y": 190.5
-                    },
-                    "uuid": "055721cc-5ce9-469b-82a7-9242c8177a3d"
-                },
                 {
                     "description": "Arc of JP1 on F.Silkscreen",
                     "pos": {
                         "x": 256.334999,
                         "y": 191.574999
                     },
-                    "uuid": "1944a328-6edf-44b9-81cd-fc4eb6eb5e3e"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
+                    "uuid": "df552f36-fbe6-4f94-8c21-9f839fcb30fa"
+                },
                 {
                     "description": "PCB text 'CLAMP LORA' on F.Silkscreen",
                     "pos": {
                         "x": 252.0,
                         "y": 190.5
                     },
-                    "uuid": "055721cc-5ce9-469b-82a7-9242c8177a3d"
-                },
-                {
-                    "description": "Segment of Y1 on F.Silkscreen",
-                    "pos": {
-                        "x": 249.975,
-                        "y": 190.665
-                    },
-                    "uuid": "5000a7b5-ba2b-4aeb-ac5c-1952af071d85"
+                    "uuid": "f339bbe6-3634-4f0d-b17e-421b30669f2f"
                 }
             ],
             "severity": "warning",
@@ -407,20 +385,43 @@
             "description": "Silkscreen overlap",
             "items": [
                 {
-                    "description": "PCB text 'CLAMP 5G DIV' on F.Silkscreen",
+                    "description": "Segment of Y1 on F.Silkscreen",
                     "pos": {
-                        "x": 224.0,
+                        "x": 249.975,
+                        "y": 190.665
+                    },
+                    "uuid": "6ba0752e-fa2f-4a22-9991-a4ca76153da4"
+                },
+                {
+                    "description": "PCB text 'CLAMP LORA' on F.Silkscreen",
+                    "pos": {
+                        "x": 252.0,
                         "y": 190.5
                     },
-                    "uuid": "d15f22f1-103e-4a17-97d8-13dfcd1affe6"
-                },
+                    "uuid": "f339bbe6-3634-4f0d-b17e-421b30669f2f"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
                 {
                     "description": "Reference field of U4",
                     "pos": {
                         "x": 221.285,
                         "y": 191.1
                     },
-                    "uuid": "de8177ff-4a3a-439e-8f03-24d6870d60d1"
+                    "uuid": "1b70178f-a8c3-44f3-ba80-baf83b4105d7"
+                },
+                {
+                    "description": "PCB text 'CLAMP 5G DIV' on F.Silkscreen",
+                    "pos": {
+                        "x": 224.0,
+                        "y": 190.5
+                    },
+                    "uuid": "436595c7-e792-40e1-831d-18d417e6f1d9"
                 }
             ],
             "severity": "warning",
@@ -435,7 +436,7 @@
                         "x": 150.0,
                         "y": 221.5
                     },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
                 },
                 {
                     "description": "Segment of J_SOLAR on F.Silkscreen",
@@ -443,7 +444,7 @@
                         "x": 124.1825,
                         "y": 222.36
                     },
-                    "uuid": "d2a19b74-3a26-435c-8af5-2654c7d44716"
+                    "uuid": "1abe9de9-c6bf-4448-837f-d545e7ef85a4"
                 }
             ],
             "severity": "warning",
@@ -452,36 +453,13 @@
         {
             "description": "Silkscreen overlap",
             "items": [
-                {
-                    "description": "PCB text 'PV' on F.Silkscreen",
-                    "pos": {
-                        "x": 128.0,
-                        "y": 222.2
-                    },
-                    "uuid": "70f2d1d6-d278-47b6-a0ee-5626ecf6f8bc"
-                },
                 {
                     "description": "Segment of J_SOLAR on F.Silkscreen",
                     "pos": {
                         "x": 132.2625,
                         "y": 222.36
                     },
-                    "uuid": "8c38c431-68d6-40ea-ba9f-d32e2a4f81a2"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
-                {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
-                    "pos": {
-                        "x": 150.0,
-                        "y": 221.5
-                    },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
+                    "uuid": "1be79393-2b24-4fa9-852c-58d1a123ff98"
                 },
                 {
                     "description": "PCB text 'PV' on F.Silkscreen",
@@ -489,7 +467,7 @@
                         "x": 128.0,
                         "y": 222.2
                     },
-                    "uuid": "70f2d1d6-d278-47b6-a0ee-5626ecf6f8bc"
+                    "uuid": "5b6dbbbd-2779-4c31-936c-6d4ce979fbe1"
                 }
             ],
             "severity": "warning",
@@ -499,20 +477,66 @@
             "description": "Silkscreen overlap",
             "items": [
                 {
-                    "description": "Segment of F2 on F.Silkscreen",
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
                     "pos": {
-                        "x": 135.9,
-                        "y": 221.47
+                        "x": 150.0,
+                        "y": 221.5
                     },
-                    "uuid": "1eff693b-4dd3-4c87-8050-dffc020d8088"
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
                 },
+                {
+                    "description": "PCB text 'PV' on F.Silkscreen",
+                    "pos": {
+                        "x": 128.0,
+                        "y": 222.2
+                    },
+                    "uuid": "5b6dbbbd-2779-4c31-936c-6d4ce979fbe1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
                 {
                     "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
                     "pos": {
                         "x": 150.0,
                         "y": 221.5
                     },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
+                {
+                    "description": "Segment of F2 on F.Silkscreen",
+                    "pos": {
+                        "x": 135.9,
+                        "y": 221.47
+                    },
+                    "uuid": "e227fb81-8c39-4a1f-9a38-a81b2f0ae30f"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "pos": {
+                        "x": 150.0,
+                        "y": 221.5
+                    },
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
+                {
+                    "description": "PCB text 'F2 10A' on F.Silkscreen",
+                    "pos": {
+                        "x": 144.0,
+                        "y": 222.2
+                    },
+                    "uuid": "222c066c-8c51-4d08-a2ba-b1f799ddd9d3"
                 }
             ],
             "severity": "warning",
@@ -527,38 +551,15 @@
                         "x": 144.0,
                         "y": 222.2
                     },
-                    "uuid": "21bef52d-aa39-4309-8624-47afe11601d6"
+                    "uuid": "222c066c-8c51-4d08-a2ba-b1f799ddd9d3"
                 },
-                {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
-                    "pos": {
-                        "x": 150.0,
-                        "y": 221.5
-                    },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen overlap",
-            "items": [
                 {
                     "description": "Segment of F2 on F.Silkscreen",
                     "pos": {
                         "x": 135.9,
                         "y": 221.47
                     },
-                    "uuid": "1eff693b-4dd3-4c87-8050-dffc020d8088"
-                },
-                {
-                    "description": "PCB text 'F2 10A' on F.Silkscreen",
-                    "pos": {
-                        "x": 144.0,
-                        "y": 222.2
-                    },
-                    "uuid": "21bef52d-aa39-4309-8624-47afe11601d6"
+                    "uuid": "e227fb81-8c39-4a1f-9a38-a81b2f0ae30f"
                 }
             ],
             "severity": "warning",
@@ -567,21 +568,21 @@
         {
             "description": "Silkscreen overlap",
             "items": [
+                {
+                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
+                    "pos": {
+                        "x": 150.0,
+                        "y": 221.5
+                    },
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
+                },
                 {
                     "description": "Segment of L1 on F.Silkscreen",
                     "pos": {
                         "x": 203.81,
                         "y": 221.31
                     },
-                    "uuid": "49a9c8cc-9144-48dd-ba41-5eaa04a9d7ed"
-                },
-                {
-                    "description": "PCB text 'D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor' on F.Silkscreen",
-                    "pos": {
-                        "x": 150.0,
-                        "y": 221.5
-                    },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
+                    "uuid": "9d68f7fe-bf94-4a00-bcb0-06dd344b8bf6"
                 }
             ],
             "severity": "warning",
@@ -596,15 +597,15 @@
                         "x": 194.01,
                         "y": 157.26
                     },
-                    "uuid": "30086bbb-de3b-4fdb-8342-3c664afc930c"
+                    "uuid": "0792159e-bdee-43cc-8b91-d29add287b39"
                 },
                 {
-                    "description": "PCB text 'MESHSAT PCB-E1 DOCK (E9)  -  pack 14.4 V and vehicle 9-36 V to the raised block -> A22  -  panel tracker  -  sensor controller on USB  -  eleven blind-mate clamps' on F.Silkscreen",
+                    "description": "PCB text 'MESHSAT PCB-E1 DOCK (E11)  -  pack 14.4 V and vehicle 9-36 V to the raised block -> A22  -  panel tracker  -  sensor controller on USB  -  eleven blind-mate clamps' on F.Silkscreen",
                     "pos": {
                         "x": 150.0,
                         "y": 156.3
                     },
-                    "uuid": "f8be79e3-11cd-4c90-9520-b74cab33234c"
+                    "uuid": "d83fcb0a-2e1d-41eb-b443-a59c356def4d"
                 }
             ],
             "severity": "warning",
@@ -619,7 +620,7 @@
                         "x": 191.165,
                         "y": 164.375
                     },
-                    "uuid": "89004623-4ce3-4b35-8aea-156a3889833c"
+                    "uuid": "23f78c4f-3cf5-4092-9f06-59dda4b2bdec"
                 },
                 {
                     "description": "Reference field of U14",
@@ -627,7 +628,7 @@
                         "x": 192.375,
                         "y": 163.645
                     },
-                    "uuid": "ae9619c9-85f8-446f-b270-a614f244fb3b"
+                    "uuid": "263d2ce4-c3c1-42c2-9188-c41a8ce743bc"
                 }
             ],
             "severity": "warning",
@@ -642,7 +643,7 @@
                         "x": 252.0,
                         "y": 190.5
                     },
-                    "uuid": "055721cc-5ce9-469b-82a7-9242c8177a3d"
+                    "uuid": "f339bbe6-3634-4f0d-b17e-421b30669f2f"
                 }
             ],
             "severity": "warning",
@@ -657,7 +658,7 @@
                         "x": 150.0,
                         "y": 221.5
                     },
-                    "uuid": "4ebb3a4b-94a5-4c0a-9c7d-6f8b051bd2c5"
+                    "uuid": "0f6255f0-358d-44e1-b7a8-4c3c3fb211f2"
                 }
             ],
             "severity": "warning",
@@ -672,7 +673,7 @@
                         "x": 150.0,
                         "y": 220.0
                     },
-                    "uuid": "31a422c7-23af-4972-9751-e6b01b4ebfc2"
+                    "uuid": "31efebf1-dba0-40fa-b4ec-d729ffa458e1"
                 }
             ],
             "severity": "warning",
@@ -687,7 +688,7 @@
                         "x": 12.0,
                         "y": 212.7
                     },
-                    "uuid": "f3a75919-fce5-4944-8982-66ca9f512108"
+                    "uuid": "225d62eb-a4cb-4002-9b07-64cf74b9743a"
                 }
             ],
             "severity": "warning",
@@ -697,12 +698,42 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/+3V3_E6] on F.Cu, length 0.7614 mm",
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.5682 mm",
                     "pos": {
-                        "x": 191.975,
-                        "y": 164.9075
+                        "x": 193.36,
+                        "y": 162.4782
                     },
-                    "uuid": "1f6ce37b-6bb2-4a9b-a890-fe44384bea61"
+                    "uuid": "0db138c7-f493-4e44-b849-3acff39dd9c8"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.7375 mm",
+                    "pos": {
+                        "x": 232.75,
+                        "y": 205.0
+                    },
+                    "uuid": "4190c2a0-6fc0-45ac-aed9-6b41c17a2df9"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.0659 mm",
+                    "pos": {
+                        "x": 232.0721,
+                        "y": 201.4
+                    },
+                    "uuid": "65278954-11c7-43b7-b610-07bd334afa93"
                 }
             ],
             "severity": "warning",
@@ -717,7 +748,7 @@
                         "x": 236.7875,
                         "y": 200.5625
                     },
-                    "uuid": "9c27f691-6786-408a-b2e3-4d1feca2e245"
+                    "uuid": "8aa7c20e-a6c2-4ea5-99b8-62dbeda0f1c3"
                 }
             ],
             "severity": "warning",
@@ -727,16 +758,46 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/+3V3_E6] on F.Cu, length 0.5584 mm",
+                    "description": "Track [/+3V3_E6] on F.Cu, length 0.3437 mm",
                     "pos": {
-                        "x": 193.36,
-                        "y": 162.4684
+                        "x": 191.732,
+                        "y": 165.6291
                     },
-                    "uuid": "e3b61960-44f1-41be-9367-fb8d9a66a6f8"
+                    "uuid": "c723d6cf-dfd5-4ffa-bc57-bb933f5a5107"
                 }
             ],
             "severity": "warning",
             "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/+3V3_E6] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 236.3875,
+                        "y": 199.040041
+                    },
+                    "uuid": "061a7a7c-1dc7-4a8a-9653-f97ebb5a9126"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/+3V3_E6] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 238.3875,
+                        "y": 199.825
+                    },
+                    "uuid": "6064a8b5-28e4-4b42-bd4a-f4b59d6341bb"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
         },
         {
             "description": "Via is not connected or connected on only one layer",
@@ -747,7 +808,22 @@
                         "x": 50.65,
                         "y": 218.0
                     },
-                    "uuid": "8bb15010-0458-43d8-bc76-bb3a0c9d334e"
+                    "uuid": "82a3438e-72d8-45b1-98fa-79facf6b459b"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/CELL_MON] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 240.3625,
+                        "y": 202.2
+                    },
+                    "uuid": "ee6f71ca-9408-4f71-acf7-bca6d6711523"
                 }
             ],
             "severity": "warning",
@@ -762,7 +838,7 @@
                         "x": 76.705,
                         "y": 198.549999
                     },
-                    "uuid": "5b555022-c9e6-4b11-86e7-d88f0854c4e3"
+                    "uuid": "5974d7b9-b9f3-43b4-b08c-df058ca2e38d"
                 }
             ],
             "severity": "warning",
@@ -777,7 +853,52 @@
                         "x": 76.705,
                         "y": 201.089999
                     },
-                    "uuid": "6d4da187-3fbe-4ea5-9007-aaddee49a2cb"
+                    "uuid": "80b3b343-c3f9-432a-860e-dcb50e019c5f"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/DC_F] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 86.685,
+                        "y": 200.45
+                    },
+                    "uuid": "3017e9e9-fdc6-4757-baef-849b5d2baa9b"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/DC_HS] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 53.43,
+                        "y": 197.6
+                    },
+                    "uuid": "2819f7b9-0b3f-42f5-ab08-106ac371ed07"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/DC_IN] on F.Cu, length 2.3571 mm",
+                    "pos": {
+                        "x": 86.1577,
+                        "y": 218.062
+                    },
+                    "uuid": "6b89622b-e5b5-4a0d-8b62-85bc2576e62f"
                 }
             ],
             "severity": "warning",
@@ -789,10 +910,25 @@
                 {
                     "description": "Via [/DC_P] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 44.98,
-                        "y": 197.6
+                        "x": 79.955,
+                        "y": 201.155
                     },
-                    "uuid": "00f84cc1-2825-4609-9f0f-a11a0a3867d9"
+                    "uuid": "761693eb-d4cf-4da3-873d-726466a96add"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/DC_P] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 79.955,
+                        "y": 199.755
+                    },
+                    "uuid": "886d0cfb-aa1c-4b65-923b-e35846f1a808"
                 }
             ],
             "severity": "warning",
@@ -807,7 +943,7 @@
                         "x": 91.885,
                         "y": 200.45
                     },
-                    "uuid": "098ebcb9-67f7-4c87-9702-ac3a247cde72"
+                    "uuid": "c5bbf7dd-2d7b-462a-b4eb-747be1ec2857"
                 }
             ],
             "severity": "warning",
@@ -819,55 +955,10 @@
                 {
                     "description": "Via [/DC_P] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 81.355,
-                        "y": 199.755
+                        "x": 44.98,
+                        "y": 197.6
                     },
-                    "uuid": "8f35028b-af17-4509-88c6-32fccf92fb35"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/DC_P] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 79.955,
-                        "y": 201.155
-                    },
-                    "uuid": "976e09b9-3cbb-44cf-b05b-6339c8bda205"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/DC_P] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 81.355,
-                        "y": 201.155
-                    },
-                    "uuid": "9c625d11-4ba9-427e-8fd6-45a06e5c398c"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/DC_P] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 79.955,
-                        "y": 199.755
-                    },
-                    "uuid": "bc54666b-2e81-436f-af60-bfd3fe1c9ef7"
+                    "uuid": "ddb95669-1ff2-4888-9b2c-67393ce8d241"
                 }
             ],
             "severity": "warning",
@@ -882,7 +973,7 @@
                         "x": 237.9875,
                         "y": 200.5625
                     },
-                    "uuid": "36c7630f-afb4-4fab-a9f5-70b40af04017"
+                    "uuid": "94c34758-741b-4611-b9c4-cb65f50ae4ba"
                 }
             ],
             "severity": "warning",
@@ -897,7 +988,37 @@
                         "x": 235.9875,
                         "y": 200.5625
                     },
-                    "uuid": "45cdd642-d2e9-4327-8819-eaa9f5d421b3"
+                    "uuid": "a07635cf-ab0b-4713-bbf2-6324040d90cb"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/E6_DVDD] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 236.7875,
+                        "y": 208.959959
+                    },
+                    "uuid": "07b961f0-caa2-473c-8220-e6da4b282c68"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/E6_RUN] on F.Cu, length 0.7375 mm",
+                    "pos": {
+                        "x": 237.9875,
+                        "y": 207.4375
+                    },
+                    "uuid": "c5e20e03-55a4-42b1-9c62-9cadde39469d"
                 }
             ],
             "severity": "warning",
@@ -912,7 +1033,37 @@
                         "x": 11.414671,
                         "y": 196.0
                     },
-                    "uuid": "2d95d3ee-8aad-40f8-8f33-0772752ec1d6"
+                    "uuid": "947ac61c-737c-4978-b92c-5055a2ae0700"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/FAN1_PWM] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 231.227541,
+                        "y": 205.4
+                    },
+                    "uuid": "43de4ae5-1678-4d50-a491-192ffaa71505"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/FAN1_TACH] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 231.227541,
+                        "y": 206.2
+                    },
+                    "uuid": "17f29ad2-661f-4f6e-b912-2d16580d8f3c"
                 }
             ],
             "severity": "warning",
@@ -922,12 +1073,42 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/FAN2_PWM] on F.Cu, length 0.7375 mm",
+                    "description": "Track [/FAN2_TACH] on F.Cu, length 0.7375 mm",
                     "pos": {
                         "x": 232.75,
-                        "y": 205.8
+                        "y": 206.6
                     },
-                    "uuid": "ad322f70-7634-4f4a-83b0-f85a160f4a2f"
+                    "uuid": "adc770e1-bd15-44df-b9f2-cff51f0c7e57"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/GEIGER_IN] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 231.227541,
+                        "y": 204.6
+                    },
+                    "uuid": "4ed918e2-2b96-443b-97ed-6cc6b3bfbad8"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/HS_OVLO] on F.Cu, length 0.9014 mm",
+                    "pos": {
+                        "x": 45.830001,
+                        "y": 198.9
+                    },
+                    "uuid": "0dcd3087-6f82-44d2-bb5f-4040991891c0"
                 }
             ],
             "severity": "warning",
@@ -942,7 +1123,22 @@
                         "x": 241.147459,
                         "y": 203.4
                     },
-                    "uuid": "e70c2c43-229d-478d-b3fd-5c22e4e2a27d"
+                    "uuid": "7690ff7a-dce9-473c-961b-c1f3735552b9"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/LTG_IRQ] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 234.3875,
+                        "y": 208.959959
+                    },
+                    "uuid": "32db5b59-7ef1-4f3f-861b-37086d3a9647"
                 }
             ],
             "severity": "warning",
@@ -957,7 +1153,7 @@
                         "x": 183.4875,
                         "y": 196.85
                     },
-                    "uuid": "fa689b1a-791a-417c-b97a-a935bc3c9083"
+                    "uuid": "bd4755f6-3a59-4c1c-9829-44877146ae00"
                 }
             ],
             "severity": "warning",
@@ -967,12 +1163,42 @@
             "description": "Via is not connected or connected on only one layer",
             "items": [
                 {
-                    "description": "Via [/QSPI_D1] on F.Cu - B.Cu",
+                    "description": "Via [/QSPI_D0] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 248.33,
+                        "y": 194.589999
+                    },
+                    "uuid": "5f913f63-203f-4c0e-9d79-0fdffec2cbcc"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/QSPI_D2] on F.Cu - B.Cu",
                     "pos": {
                         "x": 241.98,
-                        "y": 192.989999
+                        "y": 193.789999
                     },
-                    "uuid": "73b6e42e-d47f-4799-822c-ae7f1c530d4f"
+                    "uuid": "2cffc78b-b38b-4c08-81a0-5cb35a63c813"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/SCL1] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 231.227541,
+                        "y": 203.8
+                    },
+                    "uuid": "15c5ef3e-af79-4a8c-af59-4778d84a2bca"
                 }
             ],
             "severity": "warning",
@@ -982,31 +1208,16 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/QSPI_D3] on F.Cu, length 0.8631 mm",
+                    "description": "Track [/TRK_BG1] on F.Cu, length 0.7250 mm",
                     "pos": {
-                        "x": 247.479999,
-                        "y": 193.139999
+                        "x": 161.915,
+                        "y": 196.359999
                     },
-                    "uuid": "c4283232-bf6a-4de9-88d8-95a569ec45ea"
+                    "uuid": "251a4b98-210d-4b17-ae8f-e83457675a72"
                 }
             ],
             "severity": "warning",
             "type": "track_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/SDA0] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 232.0125,
-                        "y": 202.6
-                    },
-                    "uuid": "25c7a703-fa06-48ce-8589-6bef5c916bd1"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
         },
         {
             "description": "Via is not connected or connected on only one layer",
@@ -1017,7 +1228,7 @@
                         "x": 181.9875,
                         "y": 205.875369
                     },
-                    "uuid": "08842b81-a5c0-408e-b839-aff444b3b8bb"
+                    "uuid": "f8d25957-9d22-4704-87ef-171064610d19"
                 }
             ],
             "severity": "warning",
@@ -1027,12 +1238,12 @@
             "description": "Via is not connected or connected on only one layer",
             "items": [
                 {
-                    "description": "Via [/TRK_BOOST1] on F.Cu - B.Cu",
+                    "description": "Via [/TRK_BOOST2] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 186.862869,
-                        "y": 202.25
+                        "x": 183.4875,
+                        "y": 205.15
                     },
-                    "uuid": "13cf679c-5c9a-488b-8a47-29caab1ca20f"
+                    "uuid": "0f6b07a8-bff5-4b54-a994-90588c116b65"
                 }
             ],
             "severity": "warning",
@@ -1042,27 +1253,12 @@
             "description": "Via is not connected or connected on only one layer",
             "items": [
                 {
-                    "description": "Via [/TRK_CSP] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 179.8375,
-                        "y": 199.25
-                    },
-                    "uuid": "0a967d54-60a5-4976-9b21-958586612a2b"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/TRK_FBOUT] on F.Cu - B.Cu",
+                    "description": "Via [/TRK_CSN] on F.Cu - B.Cu",
                     "pos": {
                         "x": 179.112131,
-                        "y": 200.75
+                        "y": 198.75
                     },
-                    "uuid": "c67691b9-c748-41b3-a1f2-a9eef18d2532"
+                    "uuid": "76ac8a4c-d83e-4463-9800-c0a7aff9ff8a"
                 }
             ],
             "severity": "warning",
@@ -1072,27 +1268,12 @@
             "description": "Via is not connected or connected on only one layer",
             "items": [
                 {
-                    "description": "Via [/TRK_IMONI] on F.Cu - B.Cu",
+                    "description": "Via [/TRK_INTVCC] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 181.4875,
-                        "y": 196.85
+                        "x": 182.4875,
+                        "y": 205.15
                     },
-                    "uuid": "33d9d4d2-655c-41d8-8ce0-926bf2cf0669"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/TRK_LDO33] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 179.112131,
-                        "y": 199.75
-                    },
-                    "uuid": "d5386d92-4a69-4108-a8c6-0c6816261278"
+                    "uuid": "d02b1234-2ffb-46da-8613-5b503c003d74"
                 }
             ],
             "severity": "warning",
@@ -1107,22 +1288,7 @@
                         "x": 186.1375,
                         "y": 198.25
                     },
-                    "uuid": "ebdeaa9a-b6be-4fd7-ba0f-1dde65b2ec8a"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/TRK_SS] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 179.8375,
-                        "y": 202.25
-                    },
-                    "uuid": "2f500d34-3957-43e1-a9f1-357666e43f09"
+                    "uuid": "40aa8963-c285-437e-a6bf-562f40cd9c63"
                 }
             ],
             "severity": "warning",
@@ -1137,22 +1303,7 @@
                         "x": 150.705,
                         "y": 192.549999
                     },
-                    "uuid": "0cf316fc-7ec7-4275-85b4-8f8e593ab061"
-                }
-            ],
-            "severity": "warning",
-            "type": "track_dangling"
-        },
-        {
-            "description": "Track has unconnected end",
-            "items": [
-                {
-                    "description": "Track [/TRK_SW1] on F.Cu, length 1.5100 mm",
-                    "pos": {
-                        "x": 150.705,
-                        "y": 195.089999
-                    },
-                    "uuid": "9e17bbb7-44f8-4bea-b036-39090506a918"
+                    "uuid": "c4627108-1885-4ddc-a62c-7f808cc28783"
                 }
             ],
             "severity": "warning",
@@ -1164,10 +1315,25 @@
                 {
                     "description": "Via [/TRK_SW1] on F.Cu - B.Cu",
                     "pos": {
+                        "x": 149.195041,
+                        "y": 195.089999
+                    },
+                    "uuid": "70dc4c82-6ad1-48fa-bd6d-42687dfb4a37"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/TRK_SW1] on F.Cu - B.Cu",
+                    "pos": {
                         "x": 186.862869,
                         "y": 203.25
                     },
-                    "uuid": "e7c8380e-ea81-4159-93c6-9ceddd590b8e"
+                    "uuid": "a928a045-08f1-40ed-9f6f-77413c734d11"
                 }
             ],
             "severity": "warning",
@@ -1182,7 +1348,22 @@
                         "x": 161.915,
                         "y": 199.46
                     },
-                    "uuid": "4557409d-40dc-4db4-ad9d-1be8872166c6"
+                    "uuid": "828b8fc1-bd6f-4e9b-8b8e-ab6eb6e5201f"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/TRK_SW2] on F.Cu, length 0.7250 mm",
+                    "pos": {
+                        "x": 161.915,
+                        "y": 200.73
+                    },
+                    "uuid": "fc76a92c-a84f-4044-b2d8-5c634bf86151"
                 }
             ],
             "severity": "warning",
@@ -1194,10 +1375,10 @@
                 {
                     "description": "Via [/TRK_SW2] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 160.405041,
-                        "y": 202.0
+                        "x": 153.955,
+                        "y": 202.065
                     },
-                    "uuid": "0ea020f2-719f-4632-b2e2-ae6db99e5c43"
+                    "uuid": "77ba10eb-3160-4382-a31d-58e9764da7ee"
                 }
             ],
             "severity": "warning",
@@ -1209,10 +1390,10 @@
                 {
                     "description": "Via [/TRK_SW2] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 184.4875,
-                        "y": 205.15
+                        "x": 153.955,
+                        "y": 200.665
                     },
-                    "uuid": "67f30d75-06e5-4553-9efe-c20e4be7c041"
+                    "uuid": "8d9f6e48-5cbb-4bd4-8d4f-334f7d8f16b7"
                 }
             ],
             "severity": "warning",
@@ -1227,7 +1408,22 @@
                         "x": 150.705,
                         "y": 196.359999
                     },
-                    "uuid": "661ab84b-5a8a-4309-abf4-d67405175745"
+                    "uuid": "7b219940-af40-41da-93d2-563e6bc02d86"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/U4_VCAP] on F.Cu, length 1.4625 mm",
+                    "pos": {
+                        "x": 220.1475,
+                        "y": 192.55
+                    },
+                    "uuid": "0209be02-81da-4d26-9a31-b0147c3dd0d7"
                 }
             ],
             "severity": "warning",
@@ -1237,27 +1433,12 @@
             "description": "Via is not connected or connected on only one layer",
             "items": [
                 {
-                    "description": "Via [/USB_DP_R] on F.Cu - B.Cu",
+                    "description": "Via [/VIN_MON] on F.Cu - B.Cu",
                     "pos": {
-                        "x": 237.1875,
-                        "y": 199.040041
+                        "x": 241.147459,
+                        "y": 202.6
                     },
-                    "uuid": "2cda2c76-da89-4974-8694-745e35e4a392"
-                }
-            ],
-            "severity": "warning",
-            "type": "via_dangling"
-        },
-        {
-            "description": "Via is not connected or connected on only one layer",
-            "items": [
-                {
-                    "description": "Via [/VIN_RAW] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 223.885,
-                        "y": 194.45
-                    },
-                    "uuid": "8a268f77-b590-46b4-bcb4-056c32d7ff6b"
+                    "uuid": "6e6ceb1a-411f-4ca7-b19c-a5dbb5a16f99"
                 }
             ],
             "severity": "warning",
@@ -1267,16 +1448,31 @@
             "description": "Track has unconnected end",
             "items": [
                 {
-                    "description": "Track [/XIN] on F.Cu, length 0.7375 mm",
+                    "description": "Track [/WATER_SENSE] on F.Cu, length 1.3616 mm",
                     "pos": {
-                        "x": 235.5875,
-                        "y": 207.4375
+                        "x": 97.7209,
+                        "y": 217.9437
                     },
-                    "uuid": "401bc24c-0057-4234-9b9e-cdce8d347cfb"
+                    "uuid": "521dc146-3f86-44c5-b681-d0628bc5af81"
                 }
             ],
             "severity": "warning",
             "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/WATER_SENSE] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 113.8533,
+                        "y": 217.9646
+                    },
+                    "uuid": "ffefaf43-ca01-4f72-aa73-8bac5e1ba809"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
         }
     ]
 }

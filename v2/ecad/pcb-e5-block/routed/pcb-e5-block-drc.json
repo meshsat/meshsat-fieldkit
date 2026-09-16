@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-09-16T09:56:55+0000",
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "9.0.9",
+    "schematic_parity": [],
+    "source": "pcb-e5-block.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Arc on F.Silkscreen",
+                    "pos": {
+                        "x": 46.4,
+                        "y": 176.4
+                    },
+                    "uuid": "d5a664a7-3122-4713-b48b-500b28da48fa"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Segment on F.Silkscreen",
+                    "pos": {
+                        "x": 63.599999,
+                        "y": 174.4
+                    },
+                    "uuid": "e355a1f9-5f8c-4669-af10-0c6db23388fc"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB text 'RETURN 12 AWG' on F.Silkscreen",
+                    "pos": {
+                        "x": 51.0,
+                        "y": 173.5
+                    },
+                    "uuid": "243e159f-0db1-49f3-b687-2c1ec56bc3a9"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB text 'CELL+ 12 AWG' on F.Silkscreen",
+                    "pos": {
+                        "x": 54.0,
+                        "y": 193.5
+                    },
+                    "uuid": "3994f416-e0ba-450e-9a8b-3e3fa0451670"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        }
+    ]
+}

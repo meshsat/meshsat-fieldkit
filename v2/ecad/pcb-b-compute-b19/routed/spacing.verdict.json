@@ -1,0 +1,57 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "below_limit": 0,
+  "closest_mm": 0.9,
+  "hv_nets": 1,
+  "pairs_measured": 32
+ },
+ "denominator": 32,
+ "evidence": [
+  "0.900 mm +54V_POE to GND on F.Cu at (21.5, 202.7)",
+  "1.260 mm +54V_POE to GND on B.Cu at (21.9, 193.4)",
+  "1.260 mm +54V_POE to GND on F.Cu at (21.9, 193.4)",
+  "1.750 mm +54V_POE to GND on F.Cu at (21.5, 202.7)",
+  "1.795 mm +54V_POE to GND on F.Cu at (9.5, 191.3)",
+  "1.800 mm +54V_POE to GND on F.Cu at (9.5, 191.3)",
+  "2.046 mm +54V_POE to POE_GATE on F.Cu at (11.0, 45.9)",
+  "2.250 mm +54V_POE to +5V_DEV on F.Cu at (59.2, 18.1)",
+  "2.250 mm +54V_POE to POE_DRAIN on F.Cu at (59.2, 18.1)",
+  "2.504 mm +54V_POE to GND on F.Cu at (-4.4, 204.4)",
+  "2.700 mm +54V_POE to GND on F.Cu at (-4.4, 204.4)",
+  "3.316 mm +54V_POE to POE_SEN on F.Cu at (11.0, 45.9)",
+  "3.389 mm +54V_POE to POE_SEN on F.Cu at (11.0, 45.9)",
+  "3.500 mm +54V_POE to GND on F.Cu at (17.9, 25.6)",
+  "3.537 mm +54V_POE to GND on B.Cu at (20.1, 25.6)",
+  "3.537 mm +54V_POE to GND on F.Cu at (20.1, 25.6)",
+  "3.575 mm +54V_POE to GND on F.Cu at (20.1, 25.6)",
+  "3.595 mm +54V_POE to POE_DRAIN on F.Cu at (11.0, 45.9)",
+  "3.600 mm +54V_POE to GND on F.Cu at (17.9, 25.6)",
+  "3.600 mm +54V_POE to GND on F.Cu at (18.4, 25.6)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  },
+  "hv_spacing_mm": null,
+  "volts": 20.0
+ },
+ "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "ISO-001"
+ ],
+ "tool": "spacing",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "ef840c5c19ae80bd"
+ },
+ "ts": "2026-09-16T09:55:08Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

@@ -7,7 +7,7 @@
   "no_thermal_path": 0,
   "rails": 2,
   "watts_lost_estimated": 0.0,
-  "watts_out": 5.7
+  "watts_peak_sum_not_simultaneous": 5.7
  },
  "denominator": 2,
  "evidence": [
@@ -31,9 +31,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "465a81f6fa3c600d"
+  "tools_tree_sha": "ef840c5c19ae80bd"
  },
- "ts": "2026-09-16T05:16:08Z",
+ "ts": "2026-09-16T09:55:34Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

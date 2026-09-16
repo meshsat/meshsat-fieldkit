@@ -21,15 +21,14 @@
   "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
-  "MEC-001",
-  "VIA-001"
+  "MEC-001"
  ],
  "tool": "check_pcb_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "465a81f6fa3c600d"
+  "tools_tree_sha": "ef840c5c19ae80bd"
  },
- "ts": "2026-09-16T05:15:58Z",
+ "ts": "2026-09-16T09:55:24Z",
  "verdict": "PASS",
  "version": "unknown"
 }
