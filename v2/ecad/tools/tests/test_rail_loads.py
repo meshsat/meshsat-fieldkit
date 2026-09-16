@@ -145,3 +145,25 @@ def t_intent_refuses_a_controller_source_and_accepts_a_declared_one():
     intent.rail("T_IC2", 5.0, 1.0, 2.0, "U40", loads={"X1": 0.9}, source_ic="an LDO: pin 5 is a real power pin")
     for good in ("L1", "R11", "J_DOCK", "F1"):
         intent.rail("T_OK_" + good, 5.0, 1.0, 2.0, good, loads={"X1": 0.9})
+
+
+def t_a_rail_that_crosses_a_connector_declares_its_share_of_one_budget():
+    """One conductor, one budget (MESHSAT-862, 16 September 2026).
+
+    `+5V_D8` runs from board A's eFuse, out through the mezzanine connector, into board D's loads. Each board
+    measured its own half against the WHOLE budget: A read 2.68 percent against the 2 percent default while D
+    read its half against the 3 percent it declares with a reason, so the two halves could sum past the rail's
+    real budget and both boards would pass. The share is what each board's copper may spend, dc_drop judges
+    against it, and check_contracts adds them up."""
+    import os, re
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    it = open(os.path.join(tools, "intent.py"), encoding="utf-8").read()
+    assert "share=None" in it and '"share": share' in it, "the rail declaration cannot carry a share"
+    dd = open(os.path.join(tools, "dc_drop.py"), encoding="utf-8").read()
+    assert 'r.get("share")' in dd, "dc_drop still judges a shared rail against the whole budget"
+    cc = open(os.path.join(tools, "check_contracts.py"), encoding="utf-8").read()
+    assert "the shares sum to" in cc, "nothing adds the shares up"
+    for f, want in (("gen_sch_a.py", "share=0.015"), ("gen_sch_d.py", "share=0.015")):
+        s = open(os.path.join(tools, f), encoding="utf-8").read()
+        i = s.index('_intent.rail("+5V_D8"')
+        assert want in s[i:i + 400], "%s does not declare its share of the mezzanine rail" % f

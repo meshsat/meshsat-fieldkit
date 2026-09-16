@@ -76,9 +76,13 @@ P = kisch.P                           # one list, shared with the engine (not a 
 # are declared there. Without this line the return-path gate judged a 5 V rail as a signal net.
 _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "U23",
              source_ic="U23 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
-             loads={"J_MEZZ_PWR1": 1.0},
+             loads={"J_MEZZ_PWR1": 1.0}, budget=0.03, share=0.015,
              note="the APRS board's 5 V behind the eFuse U23 (ILM 453R, 2.0 A), leaving on the mezzanine "
-                  "JST-VH. Board D declares the same rail with its own consumers")
+                  "JST-VH. Board D declares the same rail with its own consumers. ONE CONDUCTOR, ONE BUDGET "
+                  "(16 September 2026): board D declares 3 percent end to end with its reason, and this board "
+                  "carries the half from the eFuse to the connector, so its share is 1.5. Until today each "
+                  "board measured its own half against the whole, and this half alone reads 2.68 percent, "
+                  "which is the finding: A's copper is spending nearly all of a budget it shares with D")
 def usb_c_plug(ref, dp, dm, vbus, cc):
     # captive USB-C pigtail (4-wire cable with the Rp resistor in the plug) on a JST-PH 4-pin header: VBUS, D-, D+, GND
     part(ref, "Connector_Generic", "Conn_01x04", "USB-C pigtail header (JST-PH 2.0): VBUS D- D+ GND", "PH4", {"1": vbus, "2": dm, "3": dp, "4": "GND"})
