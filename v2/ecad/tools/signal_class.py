@@ -66,11 +66,22 @@ TOLERANCE = {"CONTROLLED_IMPEDANCE": (10.0, 0.05), "HIGH_SPEED_DIGITAL": (10.0, 
 
 
 def board_letter(path):
-    """The letter from the phase directory beside the board, never guessed from the file name."""
-    d = os.path.basename(os.path.dirname(os.path.abspath(path)))
-    for pre, L in (("pcb-a-", "a"), ("pcb-b-", "b"), ("pcb-c-", "c"), ("pcb-d-", "d"),
-                   ("pcb-e5-", "e5"), ("pcb-e1-", "e"), ("pcb-e2-", "e"), ("pcb-p-", "p")):
-        if d.startswith(pre): return L
+    """The letter from the BOARD TABLE, matched on the board's own stem.
+
+    Not from the directory: the first version read the phase directory's name, and the gate sweep runs every
+    gate in a COPY of the project under out/sweep/, so the directory was called "sweep", no declarations were
+    found, and all 76 of board E's signal nets came out UNKNOWN and were judged at the strictest bar. The gate
+    then read 54 failures on a board with ten. The board table is the one place that says which file belongs to
+    which letter, and every other tool in this project reads it for exactly that reason.
+    """
+    stem = os.path.splitext(os.path.basename(os.path.abspath(path)))[0]
+    d = os.path.join(HERE, "boards")
+    if not os.path.isdir(d): return ""
+    for f in sorted(os.listdir(d)):
+        if not f.endswith(".json"): continue
+        try: name = (json.load(open(os.path.join(d, f), encoding="utf-8")) or {}).get("name")
+        except (ValueError, OSError): continue
+        if name and stem == name: return os.path.splitext(f)[0]
     return ""
 
 

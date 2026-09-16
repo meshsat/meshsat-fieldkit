@@ -32,7 +32,7 @@ class _NI:
 
 
 class _Board:
-    def __init__(self, names, path="/tmp/pcb-e1-dock-x/pcb-e1-dock.kicad_pcb"):
+    def __init__(self, names, path="/tmp/anywhere/pcb-e1-dock.kicad_pcb"):   # the STEM is what names the board
         self._ni = _NI(names); self._p = path
     def GetNetInfo(self): return self._ni
     def GetFileName(self): return self._p
@@ -78,7 +78,7 @@ def t_an_unclassified_net_is_judged_at_the_strictest_bar_not_waved_through():
     restore = _with_declarations("e", [
         {"pattern": "SLOW_*", "class": "LOW_SPEED_OR_DC", "basis": "a divider tap into an ADC, filtered"}])
     try:
-        m, bad = S.classify(_Board(["/SLOW_A", "/MYSTERY"]), "/tmp/pcb-e1-dock-x/b.kicad_pcb")
+        m, bad = S.classify(_Board(["/SLOW_A", "/MYSTERY"]), "/tmp/anywhere/pcb-e1-dock.kicad_pcb")
         assert not bad, bad
         assert m["/SLOW_A"][0] == "LOW_SPEED_OR_DC"
         assert m["/MYSTERY"][0] == "UNKNOWN", m["/MYSTERY"]
@@ -97,7 +97,7 @@ def t_a_declaration_cannot_downgrade_a_net_the_board_itself_calls_controlled_imp
     restore = _with_declarations("e", [
         {"pattern": "USB_*", "class": "LOW_SPEED_OR_DC", "basis": "an attempt to relax a pair that must not work"}])
     try:
-        m, _bad = S.classify(_Board(["/USB_E6_P"]), "/tmp/pcb-e1-dock-x/b.kicad_pcb",
+        m, _bad = S.classify(_Board(["/USB_E6_P"]), "/tmp/anywhere/pcb-e1-dock.kicad_pcb",
                              targets={"USB"}, cls_of=lambda n: "USB")
         assert m["/USB_E6_P"][0] == "CONTROLLED_IMPEDANCE", \
             "a declaration downgraded a net the board's own class calls impedance-targeted: %s" % (m["/USB_E6_P"],)
@@ -128,3 +128,23 @@ def t_the_committed_declarations_carry_a_basis_each():
         good, errs = S.declarations(letter)
         bad += ["%s: %s" % (letter, e) for e in errs]
     assert not bad, "signal class declarations that are not usable: %s" % bad
+
+
+def t_the_board_letter_comes_from_the_board_table_and_not_the_directory():
+    """Found by running the gate sweep, 16 September 2026.
+
+    The first version read the phase directory's name. The sweep runs every gate in a COPY of the project under
+    out/sweep/, so the directory was called "sweep", no declarations were found, all 76 of board E's signal nets
+    came out UNKNOWN and were judged at the strictest bar, and the gate reported 54 failures on a board with
+    ten. A tool must learn which board it has from the board table, which is the one place that says so, and not
+    from where the file happens to be sitting: this project has the same rule for how a tool picks a board at
+    all (test_driver_hygiene), for the same reason.
+    """
+    assert S.board_letter("/root/sw_e/v2/ecad/pcb-e1-dock-e7/out/sweep/pcb-e1-dock.kicad_pcb") == "e"
+    assert S.board_letter("/tmp/anywhere/at/all/pcb-b-compute.kicad_pcb") == "b"
+    assert S.board_letter("/x/pcb-p-pack.kicad_pcb") == "p"
+    assert S.board_letter("/x/not-a-board-of-this-project.kicad_pcb") == "", \
+        "a file this project does not know came back with a letter, so some board's declarations would be applied to it"
+    src = open(os.path.join(TOOLS, "signal_class.py")).read()
+    assert "os.path.dirname(os.path.abspath(path))" not in src, \
+        "the letter is being read from the directory again"
