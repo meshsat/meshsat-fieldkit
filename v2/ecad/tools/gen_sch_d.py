@@ -48,6 +48,20 @@ _intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True,
              note="the local 3.3 V from U1: the USB hub's logic, the seven single-gate PTT and inhibit gates, "
                   "their level shifters, the headphone amplifier's logic and the gated 3.3 V leaving on the "
                   "harness. Budget 3 percent: every consumer is a logic part with a wide supply range")
+# EVERY USB LINK ON THIS BOARD IS FULL SPEED, so the 90 ohm differential target does not apply to it
+# (16 September 2026, rules STK-001 and PAIR-001; the same reading board C was given on 8 September).
+# The hub is a TI TUSB2046B, whose own datasheet's first page says "Full-Speed Hub" and "All Downstream Ports
+# Support Full-Speed and Low-Speed Operations" at 12 Mb/s (v2/vendor/ti/ti-tusb2046b.pdf); the codec is a
+# PCM2912A, "USB revision 2.0, full-speed" (v2/vendor/ti/ti-pcm2912a.pdf); the two CP2102N bridges and the
+# spare port are full speed as well. The 90 ohm target of the shared USB class belongs to USB 2.0 HIGH speed
+# signalling, and requiring it here is a wrong requirement rather than a strict one: at 12 Mb/s with the
+# specification's own 4 to 20 ns edges, a 30 mm pair is electrically short.
+# What this changes in the judgement: impedance_check skips a class with no target, so D's /USB1 stops being
+# MISSED for having 48 percent of its length coupled, which is what a pair with a series-resistor station at
+# each end looks like. The GEOMETRY does not change at all: the pairs stay at 0.30 mm on 0.20 mm as routed,
+# and the pre-router still lays them as pairs.
+_intent.pair_class("USB")
+
 _intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05, always_on=True,
              always_on_why="the exciter's rail behind the ferrite FB1: a ferrite is not a switch, so this rail follows +5V_D8. What gates the transmitter is the PTT chain, not this rail",
              loads={"U2": 1.10},
