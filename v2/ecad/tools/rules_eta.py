@@ -42,10 +42,42 @@ def open_items(cov=None):
     return out
 
 
+def cycles(items):
+    """Every dependency cycle in the gap register, as a list of rule ids.
+
+    A CYCLE IS REFUSED, NOT ABSORBED (16 September 2026). `cost()` below carries a seen-set and returns zero
+    on a revisit, which keeps it from recursing for ever and also makes a cycle invisible: the critical path
+    is then computed by silently truncating one of the two edges, and nothing says which one was dropped or
+    that the number is short. The register held exactly that, RET-001 depending on SI-001 and SI-001 on
+    RET-001, while the critical path it produced was being reported every ten minutes."""
+    by = {i["rule"]: i for i in items}
+    found, colour = [], {}
+
+    def walk(rid, stack):
+        if colour.get(rid) == 2: return
+        if rid in stack:
+            found.append(stack[stack.index(rid):] + [rid]); return
+        i = by.get(rid)
+        if i is None: return
+        for d in i["depends_on"]: walk(d, stack + [rid])
+        colour[rid] = 2
+
+    for i in items: walk(i["rule"], [])
+    uniq, seen = [], set()
+    for c in found:
+        k = frozenset(c)
+        if k not in seen: seen.add(k); uniq.append(c)
+    return uniq
+
+
 def critical_path(items, key="p50"):
     """The longest chain through the dependency graph, in hours. Items with no dependency between them are
     concurrent only in the sense that they do not extend each other's chain; the worker model is applied by
-    the caller."""
+    the caller. Raises on a cycle rather than returning a number that quietly omits an edge."""
+    cyc = cycles(items)
+    if cyc:
+        raise ValueError("the gap register has %d dependency cycle(s) and a critical path through a cycle is "
+                         "not a duration: %s" % (len(cyc), "; ".join(" -> ".join(c) for c in cyc[:4])))
     by = {i["rule"]: i for i in items}
     memo = {}
 
