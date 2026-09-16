@@ -79,10 +79,16 @@ def main(a):
         rows.append(dict(part=d.get("ref"), watts_lost=w, why=(d.get("why") or "")[:120],
                          thermal_path=path_of(d.get("ref"))))
 
-    print("thermal: %d rail(s) delivering %.1f W; estimated loss %.1f W from %d declared efficiency/dissipator "
-          "figure(s); %d rail(s) with no efficiency declared"
-          % (len([r for r in rows if r.get("rail")]), total_out, total_loss,
-             len([r for r in rows if r.get("watts_lost") is not None]), len(unknown)))
+    # THE SUM OF EVERY RAIL'S PEAK IS NOT A BOARD'S POWER (16 September 2026). The first run printed 1,056 W
+    # for board A and 777 for board P, which is what you get by adding the peak of every rail including the
+    # pack node's fault-current capability and three slot rails that never peak together. A number like that in
+    # a verdict is worse than no number. The per-rail figures stay, the board total is the DISSIPATION, which
+    # is what this rule is about, and the throughput is printed as the sum of peaks with that said out loud.
+    print("thermal: %d rail(s); estimated dissipation %.1f W from %d declared figure(s); %d rail(s) with no "
+          "efficiency declared. The rails' peaks add to %.0f W, which is NOT a board power: the peaks do not "
+          "coincide and a pack node's rating is not a load"
+          % (len([r for r in rows if r.get("rail")]), total_loss,
+             len([r for r in rows if r.get("watts_lost") is not None]), len(unknown), total_out))
     for r in rows:
         if r.get("watts_lost") is None: continue
         tp = r.get("thermal_path") or {}
@@ -94,7 +100,8 @@ def main(a):
     missing_path = [r for r in rows if r.get("watts_lost") and not r.get("thermal_path")]
     res = _v.INCONCLUSIVE if (unknown or not rows) else _v.PASS
     return _v.write("thermal", res,
-                    counts={"rails": len([r for r in rows if r.get("rail")]), "watts_out": round(total_out, 1),
+                    counts={"rails": len([r for r in rows if r.get("rail")]),
+                            "watts_peak_sum_not_simultaneous": round(total_out, 1),
                             "watts_lost_estimated": round(total_loss, 1), "efficiency_undeclared": len(unknown),
                             "declared_dissipators": len(declared), "no_thermal_path": len(missing_path)},
                     denominator=len(rows), evidence=unknown[:20] + ["%s names a part this board does not carry" % (r.get("part") or r.get("rail")) for r in missing_path][:5],
