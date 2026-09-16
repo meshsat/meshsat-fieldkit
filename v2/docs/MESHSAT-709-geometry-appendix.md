@@ -8160,3 +8160,29 @@ measurement for the record until the per-via current comes from `dc_drop`'s solv
 **Readiness: NOT_READY, 32.0 percent verified, 16.0 failed, 52.0 inconclusive of 300 applicable rule-board
 pairs**, promotion frozen. Running: B21 from the corrected design, A36's second round, A35's re-finish, P6 at
 the corrected 0.16 mm design rules on its second round, E12 for board E's last connection.
+
+**ADDENDUM to 32.205, 16 September 2026 07:00 CEST.** Board B is **routing on the corrected design** since
+04:51 UTC: thirteen of thirteen pre-route gates pass and the pair pre-router lays **65 of 116** (the six new
+capacitors add six pair nets). Getting there took all three halves of one change, and the second and third were
+missing until this morning: the capacitors were in the SCHEMATIC, the PLACEMENT had no seat for them (the
+generator refused the board with "unplaced: C151, C152, C251, C252, C351, C352"), and the BOARD GATE still
+demanded the switch on a net the capacitor separates it from. A part added to a schematic needs its seat and
+its gate in the same change.
+
+**Two attribution defects of the same family as the composite verdict, both fixed.** The SET's paperwork
+verdict was deciding every board's own, so board E5, whose deliverable folder is the ONE that passes, read FAIL
+on both paperwork rules because six other folders are stale: DOC-001 ("this folder names the phase the tree
+declares") is per board and reads a per-board verdict now, OUT-001 ("the order package is built from every
+board's current folder") stays the set's. And **`+5V_D8` is one conductor across the mezzanine that each board
+was measuring against the WHOLE budget**: board A reads 2.68 percent against a 2 percent default while board D
+reads its half against the 3 percent it declares with a reason, so the two halves could sum past the rail's
+real budget and both boards would pass. Each board declares its SHARE of the end-to-end budget now, a new
+cross-board contract adds the shares up, and the finding is sharper rather than smaller: **A's half spends 2.68
+of the 3 percent through a 0.4 mm conductor and D's half measures 2.16, so both boards owe a widening.**
+
+**Rule RET-003 met its first board and was too strict by one law.** Of board A's 35 reference changes between
+GND and VBAT, 34 had no stitching capacitor within three millimetres, and most of those nets are enable and
+inhibit lines. A line that changes state when a person presses a switch has no return loop worth closing: the
+gate reads the same spectral-content declarations that rules RET-001 and RET-004 were rewritten under this
+morning, counts the slow ones rather than hiding them, and judges a net nobody classified as though it were
+fast. **Readiness: NOT_READY, 32.3 percent verified, 12.7 failed, 55.0 inconclusive of 300 pairs.**
