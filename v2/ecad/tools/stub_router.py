@@ -69,6 +69,42 @@ def poly(mask, sps, grow):
         for jj in range(inside.shape[1]):
             if grown.Contains(VECTOR2I(FromMM(X0 + (j0 + jj) * G), FromMM(Y0 + (i0 + ii) * G))): inside[ii, jj] = True
     mask[i0:i1 + 1, j0:j1 + 1] |= inside
+def zpoly(mask, sps, grow):
+    """A FILLED zone rasterised fast, because a pour is board-sized and `poly` asks Contains per cell.
+
+    The pre-router learnt this on 10 September 2026 and the lesson travels with the code: matplotlib fills every
+    sub-path whatever its winding, so a polygon's HOLES cannot be sub-paths of the same Path or the whole
+    outline comes out solid. Outlines and holes are rasterised separately and the holes are subtracted, and the
+    grow is applied by KiCad's own Inflate before any of that, so the geometry stays KiCad's."""
+    try:
+        from matplotlib.path import Path as _Path
+    except Exception:
+        return poly(mask, sps, grow)      # no matplotlib here: correct and slow beats wrong and fast
+    g = pcbnew.SHAPE_POLY_SET(sps)
+    if grow > 0:
+        try: g.Inflate(FromMM(grow), pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, FromMM(0.05))
+        except Exception:
+            try: g.Inflate(FromMM(grow), 16)
+            except Exception: pass
+    bb = g.BBox()
+    i0, i1 = max(0, int((mm(bb.GetTop()) - Y0) / G) - 1), min(NY - 1, int((mm(bb.GetBottom()) - Y0) / G) + 1)
+    j0, j1 = max(0, int((mm(bb.GetLeft()) - X0) / G) - 1), min(NX - 1, int((mm(bb.GetRight()) - X0) / G) + 1)
+    if i1 < i0 or j1 < j0: return
+    ys = np.arange(i0, i1 + 1) * G + Y0; xs = np.arange(j0, j1 + 1) * G + X0
+    XX, YY = np.meshgrid(xs, ys)
+    pts = np.column_stack([XX.ravel(), YY.ravel()])
+    inside = np.zeros(pts.shape[0], dtype=bool)
+    for oi in range(g.OutlineCount()):
+        ring = g.Outline(oi)
+        pv = [(mm(ring.CPoint(k).x), mm(ring.CPoint(k).y)) for k in range(ring.PointCount())]
+        if len(pv) >= 3: inside |= _Path(pv).contains_points(pts)
+        for hi in range(g.HoleCount(oi)):
+            h = g.Hole(oi, hi)
+            hv = [(mm(h.CPoint(k).x), mm(h.CPoint(k).y)) for k in range(h.PointCount())]
+            if len(hv) >= 3: inside &= ~_Path(hv).contains_points(pts)
+    mask[i0:i1 + 1, j0:j1 + 1] |= inside.reshape(XX.shape)
+
+
 # ---- parse the unconnected pairs
 fps = {fp.GetReference(): fp for fp in b.GetFootprints()}
 def item_of(it):
@@ -171,6 +207,24 @@ def build_maps(net):
             for L in LAYERS:
                 if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): poly(trk[L], z.Outline(), CLR + w2)   # a rule area binds only on its own layers (the board-wide In1/In4 track keep-outs must not block In2/In3)
             if z.GetDoNotAllowVias(): poly(via, z.Outline(), CLR + vr)
+            continue
+        # EVERY FILLED POUR OF ANOTHER NET IS AN OBSTACLE, and until 16 September 2026 not one of them was in
+        # this map. Only tracks, vias, pads and rule areas were, so a closure was free to run straight through
+        # a ground plane: on board A that is most of the board. The closures were not silently accepted, which
+        # is why this survived so long. They were laid, KiCad's connectivity was asked, the count went UP
+        # (/POE_EN 13 unconnected to 114, /PD_EN 13 to 79: a short merges clusters and the ratsnest explodes),
+        # and every piece came back off with "the path reached a goal CELL whose copper it does not touch".
+        # The tool had been searching a board it could not see, and its own guard was the only thing standing
+        # between that and a shorted board. Twelve of board A's opens sat behind this.
+        if z.GetFilledArea() <= 0 or netname(z.GetNetname()) == netname(net): continue
+        _c = clr_to(z.GetNetname())
+        for L in LAYERS:
+            if not z.IsOnLayer(L): continue
+            try: fp_ = z.GetFilledPolysList(L)
+            except Exception: fp_ = None
+            if fp_ is None or fp_.OutlineCount() == 0: continue
+            zpoly(trk[L], fp_, _c + w2)
+            zpoly(via, fp_, _c + vr)
     for d in b.GetDrawings():
         if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE:
             c = d.GetCenter(); r = mm(d.GetRadius())
