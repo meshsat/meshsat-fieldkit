@@ -2,12 +2,12 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "boards": 7,
-  "classes": 25,
-  "covered": 111,
+  "boards": 1,
+  "classes": 2,
+  "covered": 9,
   "fail": 0
  },
- "denominator": 136,
+ "denominator": 11,
  "evidence": [],
  "inputs": {
   "list": "pcb_reliability.yaml"
@@ -23,9 +23,9 @@
  "tool": "reliability",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "e30bbb71e47ee7c0"
+  "tools_tree_sha": "549451ba7ccf0670"
  },
- "ts": "2026-09-16T18:08:42Z",
+ "ts": "2026-09-16T18:59:30Z",
  "verdict": "PASS",
  "version": "unknown"
 }

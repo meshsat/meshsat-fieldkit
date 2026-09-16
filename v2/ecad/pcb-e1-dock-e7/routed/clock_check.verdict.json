@@ -10,7 +10,7 @@
  "inputs": {
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "7dcabf9cc8374a58"
+   "sha256_16": "a5449db154dab7a4"
   }
  },
  "note": "every crystal has two matched load capacitors to ground and its own IC alone on its nets; the VALUE against each part's own C_L is not judged here",
@@ -24,9 +24,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "e30bbb71e47ee7c0"
+  "tools_tree_sha": "549451ba7ccf0670"
  },
- "ts": "2026-09-16T18:12:29Z",
+ "ts": "2026-09-16T19:00:51Z",
  "verdict": "PASS",
  "version": "unknown"
 }

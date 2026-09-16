@@ -3,26 +3,22 @@
  "applicable": true,
  "counts": {
   "declared_dissipators": 0,
-  "efficiency_undeclared": 4,
+  "efficiency_undeclared": 0,
   "no_thermal_path": 0,
   "rails": 4,
-  "watts_lost_estimated": 0.0,
+  "watts_lost_all_peaks_at_once": 0.7,
+  "watts_lost_typical": 0.4,
   "watts_peak_sum_not_simultaneous": 383.7
  },
  "denominator": 4,
- "evidence": [
-  "+3V3_E6: 2.0 W out of U13 and no efficiency declared, so its loss is unknown",
-  "+5V_E6: 2.5 W out of L3 and no efficiency declared, so its loss is unknown",
-  "CELL_F: 259.2 W out of F3 and no efficiency declared, so its loss is unknown",
-  "VIN_RAW: 120.0 W out of L2 and no efficiency declared, so its loss is unknown"
- ],
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
    "sha256_16": "5fc1ffce0dc5ab1c"
   }
  },
- "note": "4 rail(s) carry no declared efficiency, so this board's loss is a floor and not an estimate",
+ "note": "a dissipation table exists for this board; the junction temperature needs the envelope's maximum ambient, which is ENV-001 and is not written yet",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -33,9 +29,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "e30bbb71e47ee7c0"
+  "tools_tree_sha": "549451ba7ccf0670"
  },
- "ts": "2026-09-16T18:12:27Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-16T19:00:49Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

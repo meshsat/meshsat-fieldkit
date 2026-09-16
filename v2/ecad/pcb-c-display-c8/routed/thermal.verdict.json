@@ -6,13 +6,14 @@
   "efficiency_undeclared": 2,
   "no_thermal_path": 0,
   "rails": 2,
-  "watts_lost_estimated": 0.0,
+  "watts_lost_all_peaks_at_once": 0.0,
+  "watts_lost_typical": 0.0,
   "watts_peak_sum_not_simultaneous": 5.7
  },
  "denominator": 2,
  "evidence": [
-  "+3V3: 0.7 W out of U5 and no efficiency declared, so its loss is unknown",
-  "+5V: 5.0 W out of J_PANEL and no efficiency declared, so its loss is unknown"
+  "+3V3: 0.7 W out of U5 and the rail does not say whether it converts, so its loss is unknown",
+  "+5V: 5.0 W out of J_PANEL and the rail does not say whether it converts, so its loss is unknown"
  ],
  "inputs": {
   "board": {
@@ -31,9 +32,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4e7275f50f847a15"
+  "tools_tree_sha": "549451ba7ccf0670"
  },
- "ts": "2026-09-16T18:03:09Z",
+ "ts": "2026-09-16T18:59:27Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

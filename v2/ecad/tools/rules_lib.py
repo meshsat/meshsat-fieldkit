@@ -274,13 +274,28 @@ def validate(reg=None, path=None):
     _cov = [None]
 
     def cov_maturity(rid):
-        """The LIVE maturity, from the coverage map, which owns it. Read once, lazily and tolerantly: the
-        validator has to run on a tree where the coverage map is absent or is being rewritten."""
+        """The LIVE maturity, from the coverage map, which owns it. Read once and lazily.
+
+        ABSENT IS TOLERATED AND UNREADABLE IS NOT (16 September 2026). This caught everything with one
+        `except BaseException: {}`, so a coverage file that would not PARSE became an empty map and every
+        maturity read None: the false-positive-analysis policy, which is the only thing standing between an
+        ENFORCED blocker and a board refused for a reason nobody wrote down, quietly stopped being checked and
+        `validate` printed 0 errors. It happened today, on a missing comma in a flow mapping, and the validator
+        said the registry was fine while `rules_status` could not read the file at all. A tree that has no
+        coverage map is a tree being set up; a tree whose coverage map is broken is a tree lying to itself."""
         if _cov[0] is None:
-            try:
-                _cov[0] = (_yaml().safe_load(open(os.path.join(HERE, "pcb_rules_coverage.yaml"))) or {}).get("coverage", {})
-            except BaseException:
+            path_ = os.path.join(HERE, "pcb_rules_coverage.yaml")
+            if not os.path.exists(path_):
                 _cov[0] = {}
+            else:
+                try:
+                    _cov[0] = (_yaml().safe_load(open(path_)) or {}).get("coverage", {})
+                except BaseException as e:
+                    _cov[0] = {}
+                    errs.append("pcb_rules_coverage.yaml exists and does not parse (%s: %s). Every rule's LIVE "
+                                "maturity is read from it, so the policy that an ENFORCED blocker must carry a "
+                                "false-positive analysis cannot be checked at all while this stands"
+                                % (type(e).__name__, str(e).splitlines()[0][:120]))
         return ((_cov[0].get(rid) or {}).get("maturity"))
     for i, r in enumerate(reg.get("rules", [])):
         rid = r.get("id", "<no id at index %d>" % i)

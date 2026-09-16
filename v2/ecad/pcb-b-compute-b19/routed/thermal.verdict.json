@@ -3,42 +3,22 @@
  "applicable": true,
  "counts": {
   "declared_dissipators": 0,
-  "efficiency_undeclared": 35,
+  "efficiency_undeclared": 0,
   "no_thermal_path": 0,
   "rails": 35,
-  "watts_lost_estimated": 0.0,
+  "watts_lost_all_peaks_at_once": 8.0,
+  "watts_lost_typical": 3.9,
   "watts_peak_sum_not_simultaneous": 224.9
  },
  "denominator": 35,
- "evidence": [
-  "+1V0_S1: 1.2 W out of L103 and no efficiency declared, so its loss is unknown",
-  "+1V0_S2: 1.2 W out of L203 and no efficiency declared, so its loss is unknown",
-  "+1V0_S3: 1.2 W out of L303 and no efficiency declared, so its loss is unknown",
-  "+1V1_S1: 0.8 W out of L104 and no efficiency declared, so its loss is unknown",
-  "+1V1_S2: 0.8 W out of L204 and no efficiency declared, so its loss is unknown",
-  "+1V1_S3: 0.8 W out of L304 and no efficiency declared, so its loss is unknown",
-  "+1V2_KSZ: 1.0 W out of L2 and no efficiency declared, so its loss is unknown",
-  "+1V8_CM1: 0.1 W out of U30A and no efficiency declared, so its loss is unknown",
-  "+1V8_CM2: 0.1 W out of U31A and no efficiency declared, so its loss is unknown",
-  "+1V8_CM3: 0.1 W out of U32A and no efficiency declared, so its loss is unknown",
-  "+2V5_KSZ: 0.6 W out of U27 and no efficiency declared, so its loss is unknown",
-  "+3V3_CM1: 0.7 W out of U30A and no efficiency declared, so its loss is unknown",
-  "+3V3_CM2: 0.7 W out of U31A and no efficiency declared, so its loss is unknown",
-  "+3V3_CM3: 0.7 W out of U32A and no efficiency declared, so its loss is unknown",
-  "+3V3_DEV: 6.6 W out of L1 and no efficiency declared, so its loss is unknown",
-  "+3V3_IOCA: 0.8 W out of U40 and no efficiency declared, so its loss is unknown",
-  "+3V3_IOCB: 0.8 W out of U50 and no efficiency declared, so its loss is unknown",
-  "+3V3_IOCC: 0.8 W out of U60 and no efficiency declared, so its loss is unknown",
-  "+3V3_S1A: 4.9 W out of L101 and no efficiency declared, so its loss is unknown",
-  "+3V3_S1B: 5.9 W out of L102 and no efficiency declared, so its loss is unknown"
- ],
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
    "sha256_16": "47262c82041bf4e2"
   }
  },
- "note": "35 rail(s) carry no declared efficiency, so this board's loss is a floor and not an estimate",
+ "note": "a dissipation table exists for this board; the junction temperature needs the envelope's maximum ambient, which is ENV-001 and is not written yet",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -49,9 +29,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "e30bbb71e47ee7c0"
+  "tools_tree_sha": "549451ba7ccf0670"
  },
- "ts": "2026-09-16T18:11:03Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-16T18:58:01Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

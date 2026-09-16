@@ -3,35 +3,22 @@
  "applicable": true,
  "counts": {
   "declared_dissipators": 0,
-  "efficiency_undeclared": 13,
+  "efficiency_undeclared": 0,
   "no_thermal_path": 0,
   "rails": 13,
-  "watts_lost_estimated": 0.0,
+  "watts_lost_all_peaks_at_once": 36.6,
+  "watts_lost_typical": 23.8,
   "watts_peak_sum_not_simultaneous": 1056.1
  },
  "denominator": 13,
- "evidence": [
-  "+12V_HF: 24.0 W out of R65 and no efficiency declared, so its loss is unknown",
-  "+13V8_PA: 82.8 W out of R55 and no efficiency declared, so its loss is unknown",
-  "+3V3: 2.0 W out of L7 and no efficiency declared, so its loss is unknown",
-  "+54V_POE: 32.4 W out of R71 and no efficiency declared, so its loss is unknown",
-  "+5V_D8: 10.0 W out of U23 and no efficiency declared, so its loss is unknown",
-  "+5V_DEV: 30.0 W out of R43 and no efficiency declared, so its loss is unknown",
-  "+5V_S1: 25.5 W out of R31 and no efficiency declared, so its loss is unknown",
-  "+5V_S2: 25.5 W out of R35 and no efficiency declared, so its loss is unknown",
-  "+5V_S3: 25.5 W out of R39 and no efficiency declared, so its loss is unknown",
-  "CELL+: 259.2 W out of J_CP1 and no efficiency declared, so its loss is unknown",
-  "VBAT: 259.2 W out of F1 and no efficiency declared, so its loss is unknown",
-  "VBUS20: 160.0 W out of R11 and no efficiency declared, so its loss is unknown",
-  "VIN_RAW: 120.0 W out of J_DOCK and no efficiency declared, so its loss is unknown"
- ],
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
    "sha256_16": "58e26c67987b1daa"
   }
  },
- "note": "13 rail(s) carry no declared efficiency, so this board's loss is a floor and not an estimate",
+ "note": "a dissipation table exists for this board; the junction temperature needs the envelope's maximum ambient, which is ENV-001 and is not written yet",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -42,9 +29,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "e30bbb71e47ee7c0"
+  "tools_tree_sha": "549451ba7ccf0670"
  },
- "ts": "2026-09-16T18:10:09Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-16T18:57:06Z",
+ "verdict": "PASS",
  "version": "unknown"
 }
