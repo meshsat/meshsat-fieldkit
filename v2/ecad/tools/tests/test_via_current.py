@@ -90,3 +90,23 @@ def t_an_advisory_verdict_does_not_decide_a_rule():
     i = src.index('res = rec.get("result") or rec.get("verdict")')
     seg = src[i:i + 900]
     assert 'rec.get("advisory")' in seg, "rules_status reads an advisory measurement as a verdict"
+
+
+def t_the_generators_via_sizing_report_is_a_measurement_or_silence():
+    """16 September 2026. The first version of the hand-over report divided the RAIL'S WHOLE CURRENT by one
+    barrel's rating at every site and called 29 of board A's 31 sites short. That is the same attribution
+    error that kept this rule advisory all day, moved to generation time: a rail with several hand-overs splits
+    its current between them and a stitch site inside a pour carries almost none of it. A generator cannot know
+    the split and a solved mesh can, so the report names a site only where a barrel MEASURED there is over its
+    own wall's rating, and says nothing at all where the board has never been solved. With the measurement it
+    names 13 sites, and two of them already carry four and six barrels, which is the finding: a via group does
+    not share evenly and more of them is the remedy, not a different number typed into the file."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "gen_pcb_a3.py"),
+               encoding="utf-8").read()
+    body = src[src.index("def _size("):src.index("def row(net")]
+    assert "if not _VIA_MEASURED: return" in body, \
+        "the sizing report speaks about boards it has no measurement for"
+    assert "amps / max(barrel_a" not in body and "ceil(amps /" not in body, \
+        "the rail's whole current is being attributed to a single site again"
+    assert '_b[2]' in body and 'hypot' in body, "the report does not read the measured barrels near the site"

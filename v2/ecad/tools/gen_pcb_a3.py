@@ -310,8 +310,73 @@ def free_run(x0, x1, y0, y1, net, clear=0.55, want=1.0):
         if cur >= y1: break
     if cur < y1 and (best is None or y1 - cur > best[1] - best[0]): best = (cur, y1)
     return best if best and best[1] - best[0] >= want else None
-def row(net, x0, x1, y, n=3): PC.stitch(net, [(x0 + (x1 - x0) * k / (n - 1) if n > 1 else (x0 + x1) / 2, y) for k in range(n)])
-def col(net, x, y0, y1, n=3): PC.stitch(net, [(x, y0 + (y1 - y0) * k / (n - 1) if n > 1 else (y0 + y1) / 2) for k in range(n)])
+# HOW MANY BARRELS A HAND-OVER NEEDS, PRINTED BESIDE HOW MANY IT IS GIVEN (16 September 2026, rule PI-003).
+# `dc_drop` solves the current in every barrel and `via_current` judges each on its own wall, and the first
+# reading with that attribution found the same shape at three hand-overs on this board: VBUS20's 6 A crossing
+# on TWO 0.40 mm barrels at the charger's input shunt (3.40 and 2.60 A against 1.11 each), VIN_RAW's 6 A on
+# THREE at the dock (2.52, 1.87, 1.60), and 1.79 A of VBAT through a single 0.25 mm escape via. A column of
+# three or four was a number typed into this file; the number a rail needs is arithmetic, and it is printed at
+# every hand-over now so a site that is short says so at generation time instead of after a route.
+# The ampacity is the published IPC-2221A internal-conductor model (ECSS-Q-ST-70-12C Annex D, D.4), the same
+# one `dc_drop` and `via_current` use, on the annulus of the fabricator's own 18 um plating.
+import track_current as _tc
+_RAILS_A = {}
+try:
+    _RAILS_A = {k.lstrip("/"): float(v.get("amps_peak") or v.get("amps_typ") or 0)
+                for k, v in (_json.load(open(_ip)).get("rails") or {}).items()} if _osx.path.exists(_ip) else {}
+except Exception as _e:
+    print("placement: no rail currents for the via sizing (%s)" % _e)
+_VIA_SHORT = []
+# The barrel currents `dc_drop` solved for the board that came out of the LAST generation of this design, if
+# they are beside the board. In the case frame, so a site written in this file can be compared with them.
+_VIA_MEASURED = {}
+try:
+    _vcp = _osx.path.join(_osx.path.dirname(_osx.path.abspath(BOARD)), "out",
+                          _osx.path.splitext(_osx.path.basename(BOARD))[0] + "-via-currents.json")
+    if _osx.path.exists(_vcp):
+        for _n, _vs in (_json.load(open(_vcp)).get("nets") or {}).items():
+            _VIA_MEASURED[_n.lstrip("/")] = [(v["x"] - OX, OY - v["y"], float(v.get("amps") or 0)) for v in _vs]
+        print("placement: %d barrel current(s) from the last solved board are beside this one"
+              % sum(len(v) for v in _VIA_MEASURED.values()))
+except Exception as _e:
+    print("placement: the solved barrel currents could not be read (%s)" % _e)
+
+
+def barrel_a(drill_mm, dT=10.0, plating_um=18.0):
+    """The current one plated barrel carries at dT, from its own wall cross-section."""
+    t = plating_um / 1000.0
+    return _tc.rating(math.pi * (drill_mm + t) * t, dT, "IPC-2221A")
+
+
+def _size(net, n, drill, where):
+    """Report, never change, and ONLY where the board has been measured.
+
+    The first version of this divided the rail's whole current by one barrel's rating at EVERY site, and
+    reported 29 of them short. That is the same attribution error that kept `via_current` advisory all day: a
+    rail with several hand-overs splits its current between them and a stitch site inside a pour carries almost
+    none of it, so "if this site carried the whole rail" is a sentence about nothing. A generator cannot know
+    the split; a solved mesh can. Where `dc_drop` has left its barrel currents beside this board, a site is
+    reported when a barrel MEASURED there is over its own wall's rating, and where there is no measurement
+    nothing is said at all.
+    """
+    if not _VIA_MEASURED: return
+    amps = _RAILS_A.get(net.lstrip("/"), 0.0)
+    lim = barrel_a(drill)
+    worst = 0.0
+    for _b in _VIA_MEASURED.get(net.lstrip("/"), []):
+        if math.hypot(_b[0] - where[0], _b[1] - where[1]) <= 2.0: worst = max(worst, _b[2])
+    if worst > lim:
+        _VIA_SHORT.append((net, where, n, int(math.ceil(worst / max(lim, 1e-6))), worst, drill))
+
+
+def row(net, x0, x1, y, n=3, drill=0.4):
+    _size(net, n, drill, (round((x0 + x1) / 2, 1), round(y, 1)))
+    PC.stitch(net, [(x0 + (x1 - x0) * k / (n - 1) if n > 1 else (x0 + x1) / 2, y) for k in range(n)])
+
+
+def col(net, x, y0, y1, n=3, drill=0.4):
+    _size(net, n, drill, (round(x, 1), round((y0 + y1) / 2, 1)))
+    PC.stitch(net, [(x, y0 + (y1 - y0) * k / (n - 1) if n > 1 else (y0 + y1) / 2) for k in range(n)])
 # 1. the four slot rails: converter output island (inductor OUT pad, output caps, shunt pad 1) with a bottom band; the rail after the shunt (shunt pad 2, connector pin 1) the same
 SLOT_CAPS = {"1": ["C29", "C30"], "2": ["C35", "C36"], "3": ["C41", "C42"], "D": ["C47", "C48"]}
 SLOT = [("1", -58, "L3", "R31", "J_5V_S1", "+5V_S1"), ("2", -42, "L4", "R35", "J_5V_S2", "+5V_S2"), ("3", -26, "L5", "R39", "J_5V_S3", "+5V_S3"), ("D", -10, "L6", "R43", "J_5V_DEV", "+5V_DEV")]
@@ -675,6 +740,17 @@ try:
 except Exception as e:
     print("note: net class API:", e)
 # placeholder USB-C plug footprints have 0.12 mm pad gaps: local clearance so DRC reports the real issues (part is an open BOM item)
+# WHAT THE HAND-OVERS ARE SHORT BY, said at generation time (16 September 2026, rule PI-003). It changes no
+# copper: a via field that does not fit is a placement question and the number is the input to it, not the
+# answer. Every site is listed with what it carries and what one barrel of its own drill is rated for.
+if _VIA_SHORT:
+    print("placement: %d via hand-over(s) had a barrel over its rating on the last solved board:" % len(_VIA_SHORT))
+    for _n, _w, _have, _need, _a, _d in sorted(_VIA_SHORT, key=lambda t: -t[4]):
+        print("placement:   %-10s at (%6.1f, %6.1f): %d barrel(s) of %.2f mm here, and the mesh put %.2f A "
+              "through one of them against %.2f A for its wall, so this site wants about %d"
+              % (_n, _w[0], _w[1], _have, _d, _a, barrel_a(_d), _need))
+elif _VIA_MEASURED:
+    print("placement: no via hand-over on the last solved board had a barrel over its rating")
 pcbnew.SaveBoard(BOARD, board)
 print("saved", BOARD, "footprints:", len(list(board.GetFootprints())), "nets:", board.GetNetCount())
 import json, os
