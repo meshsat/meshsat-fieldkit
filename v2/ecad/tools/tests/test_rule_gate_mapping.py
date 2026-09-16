@@ -149,3 +149,28 @@ def t_a_verdict_named_for_one_board_is_not_demanded_of_another():
                 bad.append("%s names %s but applies to %s: %s cannot write it"
                            % (rid, name, ",".join(sorted(on)), ",".join(sorted(on - {named}))))
     assert not bad, "; ".join(bad)
+
+
+def t_a_coverage_entry_does_not_contradict_its_own_gap_category():
+    """The maturity says WHY a rule is not enforced and the gap category says the same thing in one word; six
+    entries said two different things at once.
+
+    ISO-001, PI-003, SI-001, THM-001, RET-001 and RET-003 each carried maturity GENERATED_ONLY, which the
+    status computation reports as "generation intends to comply and nothing verifies it", beside a gap
+    category of SOURCE_OR_APPLICABILITY_UNRESOLVED and a remediation that says "obtain the table", "declare a
+    rise time", "declare an efficiency per rail". A tool verifies every one of them; what is missing is the
+    authority for its number. Reading the wrong reason six times is how a session spends a day writing a tool
+    that already exists (16 September 2026).
+
+    The percentages do not move: both maturities are INCONCLUSIVE. What moves is which sentence the owner
+    reads on six of the seven boards.
+    """
+    cov = S.coverage(); bad = []
+    for rid, c in sorted(cov.items()):
+        gap, mat = c.get("gap_category"), c.get("maturity")
+        if gap == "SOURCE_OR_APPLICABILITY_UNRESOLVED" and mat == "GENERATED_ONLY":
+            bad.append("%s: the gap category says the source or the applicability is unresolved and the "
+                       "maturity says nothing verifies it" % rid)
+        if gap == "NONE" and mat not in ("ENFORCED", "VERIFIED_MANUALLY"):
+            bad.append("%s: gap category NONE with maturity %s" % (rid, mat))
+    assert not bad, "; ".join(bad)
