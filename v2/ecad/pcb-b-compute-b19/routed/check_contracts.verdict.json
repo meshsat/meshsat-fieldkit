@@ -4,23 +4,15 @@
  "counts": {
   "fail": 0,
   "missing_boards": 0,
-  "pass": 61,
-  "rails_unsplit": 7
+  "pass": 68,
+  "rails_unsplit": 0
  },
- "denominator": 61,
- "evidence": [
-  "rail unsplit: +3V3 (A/C/D): no board declares a share",
-  "rail unsplit: +54V_POE (A/B): no board declares a share",
-  "rail unsplit: +5V_DEV (A/B): no board declares a share",
-  "rail unsplit: +5V_S1 (A/B): no board declares a share",
-  "rail unsplit: +5V_S2 (A/B): no board declares a share",
-  "rail unsplit: +5V_S3 (A/B): no board declares a share",
-  "rail unsplit: VIN_RAW (A/E): no board declares a share"
- ],
+ "denominator": 68,
+ "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E"
  },
- "note": "7 rail(s) cross a connector with no share of their budget declared",
+ "note": "",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -32,9 +24,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ee7a06a2236fe1fa"
+  "tools_tree_sha": "868b1e0b2f4fd075"
  },
- "ts": "2026-09-16T13:31:41Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-16T13:53:13Z",
+ "verdict": "PASS",
  "version": "unknown"
 }
