@@ -66,13 +66,44 @@ def main(a):
         p_out = v * i; total_out += p_out
         eff = r.get("efficiency")
         src = r.get("source"); src = src[0] if isinstance(src, (list, tuple)) and src else src
+        # A RAIL WITH NO CONVERTER HAS NO CONVERSION LOSS (16 September 2026). The first reading asked every
+        # rail for an efficiency and 59 of them across five boards had none, but most of those are not
+        # converter outputs at all: board P's PACK_P, CELL4 and FUSED are the pack node behind a fuse, board
+        # E's CELL_F is the same node arriving on a wire, board D's +5V_D8 comes through a connector from
+        # board A, and board A's VBAT and VIN_RAW are distribution. Their loss is the I2R of their own copper,
+        # which `dc_drop` measures and this rule does not duplicate; asking them for an efficiency made the
+        # gap look five times larger than it is and buried the converters that really do owe a number.
+        # A rail declares its converter with `switch=` (rule PWR-002 put that there), so a rail with a switch
+        # is a converted rail and a rail without one is distribution. `source_ic` marks the case where the
+        # source part IS the power path, an LDO for instance, which is also a conversion.
+        # The rail's own declaration first, because `switch` names what turns a rail ON and that is a pass FET
+        # as often as it is a controller: board E's VIN_RAW is switched by a hot-swap FET and board P's PACK_P
+        # by the protector's, and neither converts anything. Where the rail says nothing, a declared switch is
+        # taken as a conversion and the rail is asked for its efficiency, which is the safe direction: it asks
+        # a question that may not apply rather than assuming no heat.
+        # ABSENCE IS NEVER A PASS, HERE TOO (16 September 2026, caught the same hour it was introduced). The
+        # first version INFERRED conversion from `switch`, and that made board E pass with a dissipation of
+        # zero: its 3.3 V and 5 V rails are made by an AP63205 and a linear regulator and declare no `switch`,
+        # because nothing switches them off, so they read as distribution and were asked nothing at all. A
+        # rail that does not SAY whether it converts is unknown, exactly like a rail with no efficiency, and
+        # the verdict is INCONCLUSIVE until it says. `switch` names what turns a rail on and a pass FET is as
+        # common there as a controller; it is not evidence of a conversion in either direction.
+        converted = r.get("converted")
         row = dict(rail=net, volts=v, amps=i, watts_out=round(p_out, 2), source=src, efficiency=eff,
-                   thermal_path=path_of(src) if src else None)
+                   converted=converted, thermal_path=path_of(src) if src else None)
         if eff:
             loss = p_out * (1.0 / float(eff) - 1.0); row["watts_lost"] = round(loss, 2); total_loss += loss
+        elif converted is None:
+            unknown.append("%s: %.1f W out of %s and the rail does not say whether it converts, so its loss is "
+                           "unknown" % (net, p_out, src or "an unnamed source"))
+        elif converted:
+            unknown.append("%s: %.1f W out of %s through %s and no efficiency declared, so its loss is unknown"
+                           % (net, p_out, src or "an unnamed source", r.get("switch") or r.get("source_ic")))
         else:
-            unknown.append("%s: %.1f W out of %s and no efficiency declared, so its loss is unknown"
-                           % (net, p_out, src or "an unnamed source"))
+            row["watts_lost"] = 0.0
+            row["why_no_loss"] = ("distribution or a pass element: this rail declares no conversion, so its "
+                                  "loss is the I2R of its own copper, which dc_drop measures, plus whatever "
+                                  "its pass part dissipates, which belongs in the board's dissipators list")
         rows.append(row)
     for d in declared:
         w = float(d.get("watts") or 0); total_loss += w

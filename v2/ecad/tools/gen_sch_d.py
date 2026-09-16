@@ -28,7 +28,15 @@ import intent as _intent
 # the ferrite FB1, whose transmit pulses are what the 2 A peak is for; the 3.3 V LDO feeds all the logic, and
 # the codec, the headphone amplifier, the bridge and the spare port take the rest. The split apportions the
 # declared 1.0 A typical and is a design estimate of where the current goes, not a measurement.
-_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.06, share=0.02, always_on=True,
+
+# WHICH OF THIS BOARD'S RAILS CONVERT (16 September 2026, rule THM-001). Three of the four do not: +5V_D8 and
+# +3V3 arrive from board A through the mezzanine connectors and +5V_SA is the same 5 V behind a ferrite, so
+# their loss is the I2R of this board's own copper, which dc_drop measures. The fourth is a LINEAR regulator
+# and that is the case where the efficiency is arithmetic rather than a datasheet reading: a TLV75533 dropping
+# 5.0 V to 3.3 V dissipates the difference, so its efficiency is 3.3/5.0 = 0.66 exactly, and the 0.8 W this
+# rail carries costs about 0.4 W in one SOT-23-5. That is the largest single dissipator on this board after
+# the transmitter, and it is the kind of number this rule exists to surface.
+_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.06, share=0.02, always_on=True, converted=False,
              always_on_why="it arrives on the mezzanine behind board A's eFuse U23, which is where it is switched; this board consumes it",
              loads={"FB1": 0.50, "U1": 0.25, "U6": 0.10, "J_USB3": 0.05, "U7": 0.05, "U3": 0.03, "U15": 0.02}, note="BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. This board's share is 2 of the 6 points and it measures 0.58. The mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default: every consumer either regulates this rail or tolerates a wide range (the TLV75533 3.3 V LDO with 1.5 V of headroom, the CP2102N bridge at a 4.0 V minimum, the ESD reference, and the exciter's own boost behind FB1). D10 measures 108 mV at 1.0 A, 2.16 percent, leaving 4.89 V at the tightest consumer (9 September 2026). ONE CONDUCTOR, ONE BUDGET (16 September 2026): this rail starts at board A's eFuse and both boards were measuring their own half against the whole three percent, so the halves could sum past it with both passing. The 3 percent is the rail's, the 1.5 is this board's share of it, and D's own 2.16 percent is over that share: the 108 mV is measured from the connector to the tightest consumer on THIS board, so D owes a widening too, not only A.")
 # DECLARED 16 September 2026. These three were not in the intent file, so `signalnets` could not know they
@@ -36,7 +44,7 @@ _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.06, share=0.02, always_
 # them at all. A rail that is not declared is not excluded: it is silently checked against the wrong question
 # and silently missed by the right one. The currents are design estimates of where the current goes, in the
 # same form as the rails above, and every load is named because a rail without loads is not declarable.
-_intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True,
+_intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True, converted=True, efficiency=0.66,
              always_on_why="U1 is a TLV75533 whose EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
              source_ic="U1 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              # J_HARN1 is NOT on this net: the gated 3.3 V that leaves on the harness is board A's +3V3, and the
@@ -62,13 +70,13 @@ _intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True,
 # and the pre-router still lays them as pairs.
 _intent.pair_class("USB")
 
-_intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05, always_on=True,
+_intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05, always_on=True, converted=False,
              always_on_why="the exciter's rail behind the ferrite FB1: a ferrite is not a switch, so this rail follows +5V_D8. What gates the transmitter is the PTT chain, not this rail",
              loads={"U2": 1.10},
              note="the exciter's own 5 V behind the 600R ferrite FB1: the SA868 draws about 350 mA receiving "
                   "and up to 1 A on a transmit pulse, which is what the bead and its bulk capacitor are for. "
                   "Budget 5 percent because the module's own range is 3.3 to 5.5 V")
-_intent.rail("+3V3", 3.3, 0.06, 0.10, "J_HARN1", budget=0.03, share=0.0075, always_on=True,
+_intent.rail("+3V3", 3.3, 0.06, 0.10, "J_HARN1", budget=0.03, share=0.0075, always_on=True, converted=False,
              always_on_why="board A's gated 3.3 V arriving over the mezzanine harness; it is switched on board A by U12 and this board only consumes it",
              loads={"U16": 0.060},
              note="board A's always-on 3.3 V arriving over the mezzanine harness, which on this board feeds "
