@@ -2252,3 +2252,38 @@ this rail's voltage is in question and nothing about its width is either.
 twenty-seven load pads not reachable from their source through this net's copper. That run generated a CURRENT
 intent file against a board cut days ago, and a rail whose declared loads have moved since is exactly what that
 looks like. It is a question for board E's next routed board, not a defect on this one.
+
+## DECISION 38, OPEN: board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 (17 September 2026)
+
+**The state.** Board B declares `m_MinClearance = 0.127 mm` and its DIFF100 and USB classes declare a
+clearance of **0.100 mm**. KiCad enforces the board minimum as a floor, so the class value is a rule the router
+believes and the board refuses: that is rule IMP-002's only failure in the set, and it is the same shape as the
+25 clearance violations A23's route came back with on 9 September, all reading *"board minimum clearance
+0.1270 mm; actual 0.1017 mm"*, all between the two legs of a pair.
+
+**What the fabricator publishes for this board.** Its capability page, fetched and transcribed on 16 September
+(`v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md`), gives track width and spacing by copper weight:
+
+| row | value |
+|---|---|
+| 1 oz, 1 and 2 layer | 0.10 / 0.10 mm |
+| **1 oz, multilayer** | **0.09 / 0.09 mm** |
+| 2 oz, multilayer | 0.15 / 0.15 mm |
+
+Board B is six layers on JLC06161H-3313, 1 oz outer and 0.5 oz inner, so **0.100 mm is inside what the
+fabricator builds** and the 0.127 mm minimum is this project's own number, not a capability.
+
+**Why the 0.100 is there.** It is pair geometry: the intra-pair gap is what makes the impedance, and both
+classes were drawn to their targets with it. Changing it changes what MET means, which is why the class
+clearances are on the never-auto floor.
+
+### The options
+
+| | what changes | cost |
+|---|---|---|
+| **1. board B's minimum clearance becomes 0.10 mm** (recommended) | one number in `gen_pcb_b.py`, from 0.127 to 0.10, for board B alone | the pair geometry and the impedance stay exactly as designed and the board stops refusing itself. It is 0.01 mm above the fabricator's own floor for this stackup, which is a 10 percent margin on a published capability rather than on a guess. Every other clearance on the board is a class value at or above 0.127 and is untouched |
+| 2. the two classes go to 0.127 mm | the intra-pair gap widens | the differential impedance moves from the 100 ohm target to about 102 (measured by the 2D solver on this stack, 15 September), which is inside a 10 percent tolerance, and **every pair on the board is re-laid**: the pre-router's own numbers are per geometry and B's pair count has been the campaign's hardest measurement all week |
+| 3. leave it | nothing | the board fails IMP-002 for ever and every route it runs carries clearance violations between pair legs, which is where this started |
+
+**The session's reading: option 1.** The number that is wrong is the one this project chose, not the one the
+part and the fabricator agree on. It is one line, it is board B only, and the boards that keep 0.127 keep it.
