@@ -109,13 +109,25 @@ def main(a):
     for x in bad[:20]: print("  FAIL %s" % x)
     for x in no_via[:6]: print("  note %s" % x)
     if "--json" in a: print(json.dumps(rows, indent=1))
+    # ADVISORY UNTIL IT KNOWS WHICH VIA THE CURRENT CROSSES (16 September 2026, its first run on real boards).
+    # It found something on all seven and most of it is the same false shape: a rail's WEAKEST site is often a
+    # lone stitch via at the end of a pour, which carries almost none of the rail's current, while the current
+    # itself travels in a band with a field of vias under it. Board E's CELL_F reads "18 A through 1 via" and
+    # board P's FUSED the same, which is not what that copper does. The arithmetic is right and the ATTRIBUTION
+    # is not: a via of the rail's net is not the same thing as a via the rail's current crosses, and telling
+    # them apart needs the per-element current that `dc_drop`'s solved mesh already computes. So this is a
+    # measurement for the record, not a bar: it is written, listed and hashed like any other verdict, the
+    # collector leaves it out of the stage's worst, and the readiness reads the rule as unverified rather than
+    # failed. A gate that refuses eleven rails on board A for a reason its author already doubts is exactly the
+    # heuristic-as-law this registry exists to remove.
     return _v.write("via_current", _v.FAIL if bad else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"rails": len(rows), "over": len(bad), "no_via": len(no_via)},
-                    denominator=len(rows), evidence=bad[:20],
+                    denominator=len(rows), evidence=bad[:20], advisory=True,
                     inputs={"board": path, "rise_k": rise, "plating_um": plating, "site_mm": reach},
                     note=("no declared rail on this board carries a via, so nothing was judged" if not rows else
                           "every rail's weakest layer transition against IPC-2221 for a barrel of the "
-                          "fabricator's own plating thickness"),
+                          "fabricator's own plating thickness; ADVISORY until it can tell a via the current "
+                          "crosses from a via of the same net that carries almost none"),
                     out_dir=out_dir)
 
 

@@ -178,7 +178,15 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None):
                 r = dict(result=INCONCLUSIVE, why=why, evidence=rec.get("_path"))
             else:
                 res = rec.get("result") or rec.get("verdict")
-                if res == "PASS": r = dict(result=PASS, why="%s PASS of %s" % (name, rec.get("denominator")), evidence=rec.get("_path"))
+                # AN ADVISORY VERDICT IS A MEASUREMENT AND NOT A BAR (16 September 2026). The verdict channel
+                # has carried the flag since 15 September and this reader did not look at it, so a tool whose
+                # own author had marked it "not a bar" would still have failed its rule on every board. A
+                # measurement counts as no verification at all here, which is the honest reading: the rule is
+                # unverified until something decides it.
+                if rec.get("advisory"):
+                    r = dict(result=INCONCLUSIVE, why="%s is advisory: a measurement for the record, not a bar (%s)"
+                             % (name, str(rec.get("counts"))[:90]), evidence=rec.get("_path"))
+                elif res == "PASS": r = dict(result=PASS, why="%s PASS of %s" % (name, rec.get("denominator")), evidence=rec.get("_path"))
                 elif res == "FAIL": r = dict(result=FAIL, why="%s FAIL: %s" % (name, str(rec.get("counts"))[:120]), evidence=rec.get("_path"))
                 else: r = dict(result=INCONCLUSIVE, why="%s %s" % (name, res), evidence=rec.get("_path"))
         order = {FAIL: 0, INCONCLUSIVE: 1, PASS: 2}

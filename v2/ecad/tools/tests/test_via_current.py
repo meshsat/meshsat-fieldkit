@@ -52,3 +52,29 @@ def t_a_site_is_the_group_of_barrels_that_sit_together():
 def t_two_vias_carry_twice_one_via_and_the_weakest_site_decides():
     one, _ = vc.ampacity(0.3, 10)
     assert abs((one * 2) - (vc.ampacity(0.3, 10)[0] + vc.ampacity(0.3, 10)[0])) < 1e-12
+
+
+def t_the_verdict_is_advisory_until_it_knows_which_via_the_current_crosses():
+    """Its first run on real boards found something on all seven, and most of it is one false shape.
+
+    A rail's weakest SITE is often a lone stitch via at the end of a pour, carrying almost none of the rail's
+    current, while the current itself travels in a band with a field of vias under it: board E's CELL_F reads
+    "18 A through 1 via" and board P's FUSED the same, which is not what that copper does. The arithmetic is
+    right and the attribution is not. A gate that refuses eleven rails on board A for a reason its own author
+    doubts is the heuristic-as-law this registry exists to remove, so the verdict is a measurement until the
+    per-via current comes from the solved mesh."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "via_current.py"),
+               encoding="utf-8").read()
+    assert "advisory=True" in src, "via_current decides a rule on an attribution it cannot yet make"
+
+
+def t_an_advisory_verdict_does_not_decide_a_rule():
+    """The verdict channel has carried the flag since 15 September and the readiness reader did not look at it,
+    so a tool whose own author had marked it "not a bar" would still have failed its rule on every board."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "rules_status.py"),
+               encoding="utf-8").read()
+    i = src.index('res = rec.get("result") or rec.get("verdict")')
+    seg = src[i:i + 900]
+    assert 'rec.get("advisory")' in seg, "rules_status reads an advisory measurement as a verdict"

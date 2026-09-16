@@ -124,8 +124,13 @@ coverage:
      GENERATED_ONLY and the number is a calculation this project made rather than a limit a document gave it.
      It lands where the trade's own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the
      check that the expression has no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of
-     5 September is nearly three times the computed figure and cites nothing",
-   remediation: {action: "obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind this number has an authority", owner: SESSION, depends_on: [STK-001], p50_h: 2, p80_h: 8}}
+     5 September is nearly three times the computed figure and cites nothing. Its first run on real boards found
+     something on all seven and most of it is one false shape: a rail's weakest SITE is often a lone stitch via
+     at the end of a pour carrying almost none of the current, while the current travels in a band with a via
+     field under it (board E's CELL_F reads 18 A through one via). The arithmetic is right and the attribution
+     is not, so the verdict is ADVISORY and the rule reads as unverified rather than failed until the per-via
+     current comes from dc_drop's solved mesh",
+   remediation: {action: "read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority", owner: SESSION, depends_on: [STK-001, PI-001], p50_h: 6, p80_h: 16}}
 
  GND-001: {implementation: "gen_pcb_*3.py pours", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
    maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
