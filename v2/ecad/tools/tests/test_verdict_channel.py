@@ -386,3 +386,54 @@ def t_an_inapplicable_rule_does_not_decide_a_stage_and_is_not_a_pass():
     V.write("t_na2", V.INCONCLUSIVE, denominator=0, out_dir=d2, quiet=True, applicable=False)
     worst2, _, _ = V.collect(d2)
     assert worst2 == V.CODE[V.INCONCLUSIVE], "a stage of nothing but inapplicable rules read as a pass"
+
+
+def t_a_check_with_no_input_writes_no_verdict_rather_than_one_about_the_host():
+    """Evidence destroyed by a report, 16 September 2026.
+
+    The cross-board contracts are judged from the NETLISTS the chains write into each project's untracked
+    `out/`, so on the runner every board is absent. `final_gate.py` runs the check to print one summary line,
+    and that incidental run wrote INCONCLUSIVE over board C's contract PASS taken on the box an hour earlier,
+    and over the set's own reading: two rules on six boards moved backwards because of where the command was
+    typed. A host that cannot see the input has nothing to say about it, and absence is INCONCLUSIVE to the
+    readiness computation already, so writing nothing gives the same answer on a fresh tree and keeps the
+    answer on a tree that has one.
+
+    The set verdict is stricter than the per-board one: it means "the seven boards agree", which cannot be
+    read at all with a board absent."""
+    src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
+    per = src[src.index("for _bd in sorted(set(list(per_board)"):src.index('sys.exit(_v.write("check_contracts"')]
+    assert "if _bd in MISSING:" in per and "continue" in per, \
+        "a board whose netlist is absent still gets a verdict written about this host"
+    assert "if not checked or MISSING:" in src, \
+        "the set verdict is still written from a tree that is missing a board's netlist"
+    i = src.index("if not checked or MISSING:")
+    assert "sys.exit(3)" in src[i:i + 900], "the check does not exit INCONCLUSIVE when it judged nothing"
+
+
+def t_that_refusal_is_executed_and_leaves_an_existing_verdict_alone():
+    """Run it: write a PASS where the check writes, run the check on a tree with no netlist, and the PASS must
+    still be there afterwards."""
+    import subprocess, shutil, tempfile, json as _j
+    ecad = os.path.dirname(TOOLS)
+    out = os.path.join(ecad, "out"); os.makedirs(out, exist_ok=True)
+    p = os.path.join(out, "check_contracts_c.verdict.json")
+    keep = tempfile.mkdtemp(); had = os.path.exists(p)
+    if had: shutil.copy(p, os.path.join(keep, "v.json"))
+    try:
+        import verdict
+        verdict.write("check_contracts_c", verdict.PASS, denominator=7, out_dir=out, quiet=True,
+                      note="a fixture standing in for the reading taken where the netlists are")
+        before = _j.load(open(p))
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_contracts.py")],
+                           capture_output=True, text=True, cwd=ecad)
+        assert "no netlist" in (r.stdout + r.stderr), \
+            "this tree has netlists, so the rule was not exercised:\n%s" % (r.stdout or "")[-300:]
+        after = _j.load(open(p))
+        was = before.get("verdict") or before.get("result")
+        now = after.get("verdict") or after.get("result")
+        assert now == was == "PASS", \
+            "the check overwrote a verdict taken where its input existed: %r" % now
+    finally:
+        if had: shutil.copy(os.path.join(keep, "v.json"), p)
+        elif os.path.exists(p): os.remove(p)
