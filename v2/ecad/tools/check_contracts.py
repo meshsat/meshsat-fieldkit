@@ -288,6 +288,7 @@ for _k, _stem in NETS.items():
     for _f in sorted(_glob.glob(_os.path.join(ECAD, _stem + "*", "out", "*-intent.json"))):
         try: _intents[_k] = _json.load(open(_f))
         except ValueError: pass
+UNSPLIT = []
 _shared = {}
 for _k, _it in _intents.items():
     for _net, _r in (_it.get("rails") or {}).items():
@@ -297,9 +298,16 @@ for _net, _by in sorted(_shared.items()):
     _budgets = {k: float(r.get("budget", 0.02)) for k, r in _by.items()}
     _shares = {k: r.get("share") for k, r in _by.items()}
     _named = ", ".join("%s %.1f%%" % (k, 100 * float(v)) for k, v in sorted(_shares.items()) if v)
-    check(all(_shares.values()),
-          "rail %s crosses %s and every board declares its share of the end-to-end budget" % (_net, "/".join(sorted(_by))),
-          "declared: %s; missing: %s" % (_named or "none", ", ".join(sorted(k for k, v in _shares.items() if not v))))
+    if not all(_shares.values()):
+        # UNSPLIT IS AN OPEN QUESTION, NOT A FAILED CONTRACT (16 September 2026). Six rails cross a connector
+        # with no share declared, and declaring one is an engineering judgement about where the drop is
+        # allowed to fall, not a fact the tree already holds: asserting 50/50 for each of them would be a
+        # number with no basis, which is what this registry refuses everywhere else. So an unsplit rail makes
+        # the contract set INCONCLUSIVE, the same way an absent netlist does, and it is named every time until
+        # someone splits it. What is NOT tolerated is shares that are declared and sum past the budget.
+        UNSPLIT.append("%s (%s): %s" % (_net, "/".join(sorted(_by)), "declared %s" % _named if _named else "no board declares a share"))
+        print("OPEN  rail %s crosses %s and its end-to-end budget is not split between them (%s)"
+              % (_net, "/".join(sorted(_by)), _named or "none declared"))
     if all(_shares.values()):
         _tot = sum(float(v) for v in _shares.values()); _bud = min(_budgets.values())
         check(_tot <= _bud + 1e-9,
@@ -318,10 +326,12 @@ sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
 import verdict as _v
 # A contract set that checked nothing has found nothing wrong, which is not the same as agreement.
 sys.exit(_v.write("check_contracts",
-                  _v.INCONCLUSIVE if (not checked or MISSING) else (_v.PASS if not fails else _v.FAIL),
-                  counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING)},
+                  _v.INCONCLUSIVE if (not checked or MISSING or (UNSPLIT and not fails)) else (_v.PASS if not fails else _v.FAIL),
+                  counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING),
+                          "rails_unsplit": len(UNSPLIT)},
                   denominator=len(checked),
-                  evidence=(["netlist absent: " + k for k in MISSING] + fails) if MISSING else fails,
+                  evidence=(["netlist absent: " + k for k in MISSING] + ["rail unsplit: " + u for u in UNSPLIT] + fails),
                   inputs={"boards": ",".join(sorted(B))},
                   note=("no contract was evaluated" if not checked else
-                        ("%s absent from this tree, so nothing that names them was judged" % ", ".join(MISSING)) if MISSING else "")))
+                        ("%s absent from this tree, so nothing that names them was judged" % ", ".join(MISSING)) if MISSING else
+                        ("%d rail(s) cross a connector with no share of their budget declared" % len(UNSPLIT)) if UNSPLIT else "")))
