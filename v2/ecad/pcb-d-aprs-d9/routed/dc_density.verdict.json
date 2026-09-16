@@ -1,7 +1,6 @@
 {
  "advisory": false,
  "counts": {
-  "density_missed": 0,
   "met": 1,
   "missed": 0,
   "undeclared": 0
@@ -10,24 +9,24 @@
  "evidence": [],
  "inputs": {
   "board": {
-   "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "410eeb604ec12c4c"
+   "path": "pcb-d-aprs.kicad_pcb",
+   "sha256_16": "81614025d9446af5"
   }
  },
- "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 0 rail(s) missed",
+ "note": "the conductor and pour current capacity at 10 K, cell 0.50 mm. The LIMIT behind this verdict has no authoritative text in this tree: the registry records it as SOURCE_UNVERIFIED and this is a screen, not a law",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "a453bedd2b5ad14d"
  },
  "rules": [
-  "PI-002"
+  "PI-001"
  ],
- "tool": "dc_drop",
+ "tool": "dc_density",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "cebeb8eb384af39f"
  },
- "ts": "2026-09-16T00:41:13Z",
+ "ts": "2026-09-16T00:41:37Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "counts": {
+  "met": 8,
+  "missed": 4,
+  "undeclared": 0
+ },
+ "denominator": 12,
+ "evidence": [
+  "MISSED VBAT on current density: 0.38% of 14.4 V",
+  "MISSED VIN_RAW on current density: 0.86% of 12.0 V",
+  "MISSED VBUS20 on current density: 0.18% of 20.0 V",
+  "MISSED +13V8_PA on current density: 0.65% of 13.8 V"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  }
+ },
+ "note": "the conductor and pour current capacity at 10 K, cell 0.50 mm. The LIMIT behind this verdict has no authoritative text in this tree: the registry records it as SOURCE_UNVERIFIED and this is a screen, not a law",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a453bedd2b5ad14d"
+ },
+ "rules": [
+  "PI-001"
+ ],
+ "tool": "dc_density",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "cebeb8eb384af39f"
+ },
+ "ts": "2026-09-16T00:40:22Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

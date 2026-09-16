@@ -1,38 +1,33 @@
 {
  "advisory": false,
  "counts": {
-  "met": 8,
-  "missed": 4,
+  "density_missed": 4,
+  "met": 12,
+  "missed": 0,
   "undeclared": 0
  },
  "denominator": 12,
- "evidence": [
-  "MISSED VBAT 0.38% of 14.4 V",
-  "MISSED VIN_RAW 0.86% of 12.0 V",
-  "MISSED VBUS20 0.18% of 20.0 V",
-  "MISSED +13V8_PA 0.65% of 13.8 V"
- ],
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
    "sha256_16": "58e26c67987b1daa"
   }
  },
- "note": "cell 0.50 mm, default budget 2%",
+ "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 4 rail(s) missed",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "a453bedd2b5ad14d"
  },
  "rules": [
-  "PI-001",
   "PI-002"
  ],
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4954c9b46c4e42f0"
+  "tools_tree_sha": "cebeb8eb384af39f"
  },
- "ts": "2026-09-16T00:13:27Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T00:40:22Z",
+ "verdict": "PASS",
  "version": "unknown"
 }
