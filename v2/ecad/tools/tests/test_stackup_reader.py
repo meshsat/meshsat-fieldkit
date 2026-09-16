@@ -77,3 +77,45 @@ def t_a_dielectric_without_epsilon_still_carries_none():
     txt = ONE.replace(' (epsilon_r 4.6)', '')
     core = [x for x in _read(txt) if x[1] == "core"]
     assert core and core[0][3] is None, "a dielectric with no epsilon_r came back with one: %s" % core
+
+
+def t_the_stackup_is_written_after_the_last_pcbnew_save_in_each_chain():
+    """The stackup goes into the board as TEXT, and every pcbnew save after it drops the block.
+
+    16 September 2026: full.sh wrote it at line 99, right after the placement generator, and then ran
+    bypass_place, escape.py, join_adjacent_pins and the pair pre-router, each of which loads and saves the
+    board. Boards A and B reached the router with NO STACKUP AT ALL while their own pre-route log said
+    "stackup_write: JLC06161H-3313 (6 copper layers) written". The impedance check, the fabricator-limit check
+    and the order notes' copper weight all read the stackup, and all three were reading nothing on the two
+    six-layer boards for as long as those boards have existed.
+
+    So: in each chain, no tool that saves a board may run after the LAST stackup_write.
+    """
+    import os as _os, re as _re
+    TOOLSDIR = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    # tools that load a board with pcbnew and save it again
+    SAVERS = ("bypass_place.py", "escape.py", "join_adjacent_pins.py", "pair_preroute.py", "prefanout.py",
+              "cleanup_dangling.py", "stub_router.py", "pour_stitch.py", "zone_pad_via.py", "straighten.py",
+              "return_via.py", "gnd_grid.py", "rail_prune.py", "stitch_prune.py", "direct_close.py")
+    bad = []
+    for chain in ("full.sh", "finish.sh"):
+        p = _os.path.join(TOOLSDIR, chain)
+        if not _os.path.exists(p): continue
+        lines = open(p, errors="replace").read().splitlines()
+        last = max([i for i, l in enumerate(lines) if "stackup_write.py" in l and not l.strip().startswith("#")] or [-1])
+        if last < 0: bad.append("%s never writes a stackup" % chain); continue
+        for i, l in enumerate(lines[last + 1:], last + 2):
+            if l.strip().startswith("#"): continue
+            for t in SAVERS:
+                if t in l:
+                    bad.append("%s line %d runs %s AFTER the last stackup_write, which drops the block" % (chain, i, t))
+    assert not bad, "; ".join(bad)
+
+
+def t_the_pre_route_chain_refuses_a_board_with_no_stackup():
+    """Writing it last is the fix; this is what proves it happened rather than trusting that it did."""
+    import os as _os
+    TOOLSDIR = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    src = open(_os.path.join(TOOLSDIR, "full.sh"), errors="replace").read()
+    assert "the board carries no stackup" in src, "full.sh does not check that the stackup survived"
+    assert "no stackup (rule STK-001)" in src, "the refusal does not name the rule it serves"
