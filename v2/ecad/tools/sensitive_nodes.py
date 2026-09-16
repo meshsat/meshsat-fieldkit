@@ -21,7 +21,7 @@ rule's coverage note rather than hidden here.
 
 Usage: sensitive_nodes.py <board.kicad_pcb> [--board <letter>] [--sensitive pcb_sensitive.yaml] [--json]
 """
-import os, re, sys, json, glob, fnmatch
+import os, re, sys, json, glob, math, fnmatch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -134,10 +134,44 @@ def judge(board_path=None, letter=None, sens=None):
                          "through the dielectric rather than a clearance, and this list sets no number for it"
                          % (net, over_who, abs(over)))
         if best is None: continue
-        measured.append(dict(net=net, nearest_switch=who, gap_mm=round(best, 3), keep_mm=n.get("keep_mm")))
-        if n.get("keep_mm") is not None and best < float(n["keep_mm"]) - 1e-9:
-            fails.append("%s runs %.3f mm from %s and its own list asks for %.2f"
-                         % (net, best, who, float(n["keep_mm"])))
+        # HOW FAR FROM THE PART THAT JOINS THEM, AND FOR HOW LONG (16 September 2026). A current-sense line and
+        # a switching node are adjacent BY CONSTRUCTION at the FET that makes both of them: the LM5176's low
+        # side has its source on CS and its drain on SW, so the first fraction of a millimetre out of those two
+        # pins is close whatever the router does, and a rule that reports only the smallest gap cannot tell
+        # that from a sense line running beside a switch node for twenty millimetres. Both numbers are measured
+        # now: the distance from the violation to the nearest pad of a part that touches BOTH nets, and the
+        # length over which the two run inside the limit. A gap at the shared part's own pins is geometry; a
+        # long parallel run is a routing decision, and only the second is something to fix on this board.
+        _keep = None if n.get("keep_mm") is None else float(n["keep_mm"])
+        _at_part, _run_mm = None, 0.0
+        if _keep is not None and best < _keep - 1e-9:
+            _shared = []
+            for fp in board.GetFootprints():
+                _pn = {str(pd.GetNetname()).lstrip("/") for pd in fp.Pads()}
+                if net in _pn and who in _pn:
+                    for pd in fp.Pads():
+                        _p = pd.GetPosition(); _shared.append((_p.x / 1e6, _p.y / 1e6))
+            for m in mine:
+                for o in sw_copper.get(who, []):
+                    if not (m[3] is None or o[3] is None or m[3] == o[3]): continue
+                    d = _seg_distance(m, o)
+                    if d >= _keep - 1e-9: continue
+                    _len = min(math.hypot(m[1][0] - m[0][0], m[1][1] - m[0][1]),
+                               math.hypot(o[1][0] - o[0][0], o[1][1] - o[0][1]))
+                    _run_mm += _len
+                    _mid = ((m[0][0] + m[1][0]) / 2.0, (m[0][1] + m[1][1]) / 2.0)
+                    for _sp in _shared:
+                        _dd = math.hypot(_mid[0] - _sp[0], _mid[1] - _sp[1])
+                        if _at_part is None or _dd < _at_part: _at_part = _dd
+        measured.append(dict(net=net, nearest_switch=who, gap_mm=round(best, 3), keep_mm=n.get("keep_mm"),
+                             run_within_limit_mm=round(_run_mm, 2),
+                             mm_from_the_part_that_joins_them=None if _at_part is None else round(_at_part, 2)))
+        if _keep is not None and best < _keep - 1e-9:
+            _where = ("%.2f mm from the pads of the part that carries both nets" % _at_part
+                      if _at_part is not None else "with no part carrying both nets on this board")
+            fails.append("%s runs %.3f mm from %s and its own list asks for %.2f; the two are inside that "
+                         "limit over %.2f mm of copper, %s"
+                         % (net, best, who, _keep, _run_mm, _where))
     return dict(declared=len(nodes), fails=fails, notes=notes, measured=measured, applicable=True)
 
 
