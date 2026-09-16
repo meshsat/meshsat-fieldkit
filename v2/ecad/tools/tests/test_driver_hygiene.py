@@ -889,3 +889,35 @@ def t_the_sweep_removes_the_verdicts_of_the_gates_it_is_about_to_run():
         "the removal must happen before the gates run"
     for g in ("derate", "lcsc_fill", "check_contracts", "place_audit"):
         assert g in src[src.index("for _g in"):i], "%s is not in the list the sweep clears" % g
+
+
+# 16 September 2026: A BLOCK THAT DOES NOT CARRY ITS OWN CAUSE COSTS A ROUND TRIP TO THE BOX.
+# A38's pre-route gate printed `BLOCK placement generator exit 1` and stopped. The reason was in the chain's
+# own log four hundred lines up (`unplaced: ['C121', 'C122', 'R146', 'R147', 'R148', 'R149']`, six parts the
+# schematic had gained that morning with no seat in the packer), and `block`'s optional `tail -5` would not
+# have shown it either: KiCad's python prints one "swig/python detected a memory leak of type 'FOOTPRINT *'"
+# line per footprint, so the last five lines of any placement log are five of those.
+def _block_faults(src):
+    """The faults in a chain script's refusal path, as a list. Empty means the script says why it stopped."""
+    bad = []
+    for line in src.splitlines():
+        s = line.strip()
+        if s.startswith("block () ") or s.startswith("block() "):
+            if "memory leak" not in s:
+                bad.append("block() tails a log without filtering the swig leak noise")
+        if 'block "placement generator' in s:
+            why = s.split("exit $GEN3", 1)[-1]
+            if "$" not in why:
+                bad.append("the placement generator's block carries no reason from the log: %s" % s)
+    return bad
+
+
+def t_a_block_that_stops_a_chain_carries_its_own_cause():
+    src = open(os.path.join(TOOLS, "full.sh"), encoding="utf-8").read()
+    assert _block_faults(src) == [], _block_faults(src)
+    # The defective fixture: the two lines as they stood before this change. The rule must refuse them,
+    # or it is a rule that passes on the tree it was written against.
+    before = ('block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $1"; '
+              '[ -n "${2:-}" ] && tail -5 "$2"; echo PREROUTE-DONE BLOCK; exit 1; }\n'
+              '[ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3"\n')
+    assert len(_block_faults(before)) == 2, "the rule does not refuse the text it was written against: %s" % _block_faults(before)

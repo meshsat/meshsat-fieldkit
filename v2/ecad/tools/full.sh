@@ -45,7 +45,11 @@ GENV="$(python3 -c "import json,sys,os; d=json.load(open(sys.argv[1])).get('gen_
 [ -n "$GENV" ] && echo "generator environment declared by the board: $GENV"
 cd "$D" || exit 2
 mkdir -p out
-block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $1"; [ -n "${2:-}" ] && tail -5 "$2"; echo PREROUTE-DONE BLOCK; exit 1; }
+# 16 September 2026: the tail is filtered. KiCad's python prints one "swig/python detected a memory leak of
+# type 'FOOTPRINT *'" line per footprint, so `tail -5` of a placement log is five lines of that and none of
+# the refusal; A38's BLOCK read "placement generator exit 1" and the reason (`unplaced: ['C121', ...]`) was
+# four hundred lines up. A block that does not carry its own cause costs a round trip to the box every time.
+block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $1"; [ -n "${2:-}" ] && grep -av 'memory leak' "$2" | tail -5; echo PREROUTE-DONE BLOCK; exit 1; }
 
 # The compile pre-check every chain must have: a comment appended to a generator line has swallowed a comma twice, and a
 # generator that will not parse used to be found by the placement generator building on the PREVIOUS board (appendix 32.39).
@@ -95,7 +99,8 @@ python3 ../tools/jumper_clearance.py $N.kicad_pcb 2>&1 | grep -E 'jumper_clearan
 python3 ../tools/class_floor.py $N.kicad_pcb > out/class_floor.log 2>&1; CF=$?
 grep -E 'class_floor:|FAIL' out/class_floor.log
 [ "$CF" -eq 0 ] || block "a net class is below the board's own minimum (rule IMP-002, out/class_floor.log)" out/class_floor.log
-[ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3"
+GEN3WHY=$(grep -aE 'unplaced|footprint missing|SystemExit|Traceback|not in the netlist|Error' out/gen3.log | grep -av 'memory leak' | tail -1 | cut -c1-200)
+[ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3: ${GEN3WHY:-see out/gen3.log}" out/gen3.log
 python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1   # the JLC stackup in the board file, so the impedance read-back reads the project
 [ "$BPAFTER" = stackup ] && python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
 rm -f out/check_pcb_$L.verdict.json
