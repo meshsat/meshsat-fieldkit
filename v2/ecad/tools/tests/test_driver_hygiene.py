@@ -971,3 +971,25 @@ def t_no_driver_is_patched_while_a_copy_of_it_is_running():
         src = open(p, encoding="utf-8").read()
         assert "drivers/" in src or "mktemp" in src or "per-launch" in src, \
             "%s launches a driver without giving it its own copy, so patching the template hits a running run" % name
+
+
+def t_a_tool_does_not_default_to_a_mode_its_own_comment_says_does_not_work():
+    """16 September 2026. part_stage2.sh has carried this since 10 September: concurrent region jobs each know
+    only stage 1's locked copper, so their boundaries collide, and on B19 the merge of five concurrent regions
+    carried 1,121 hard violations that three rip passes could only bring to about 400. The flag that selects
+    the working mode read `${PART_SEQ:-0}`, so a launcher that said nothing got the broken one, and three
+    board B partition arms spent about three hours of a rented box each reproducing the predicted result:
+    549, 614 and 760 boundary conflicts on the merged board.
+
+    The rule is general and cheap to keep: where a shell tool's own prose says a mode does not work, the
+    default must not be that mode."""
+    src = open(os.path.join(TOOLS, "part_stage2.sh"), encoding="utf-8").read()
+    # CODE, not prose. The comment beside the fix quotes the defect it removed, and a rule that reads its own
+    # explanation as the defect can never be satisfied; test_order_codes.py carries the same sentence for the
+    # same reason. Only the lines that bash executes are judged.
+    code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith("#"))
+    assert "${PART_SEQ:-1}" in code, "the partition stage defaults to the concurrent mode again"
+    assert "${PART_SEQ:-0}" not in code, "one of the two tests still defaults to the concurrent mode"
+    # and the reason is still written beside it, because a default with no reason is the next thing to drift
+    assert "cannot work" in src or "Concurrent jobs cannot" in src, \
+        "the paragraph explaining why sequential is the default is gone"
