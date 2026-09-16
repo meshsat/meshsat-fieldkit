@@ -58,6 +58,10 @@ import os, sys, json, hashlib, datetime
 HERE = os.path.dirname(os.path.abspath(__file__))
 REGISTRY = os.path.join(HERE, "pcb_rules.yaml")
 FACTS = os.path.join(HERE, "pcb_board_facts.yaml")
+HOLDS = os.path.join(HERE, "pcb_board_holds.yaml")
+# The four fields the owner named on 16 September 2026. A hold that does not carry all four is refused: a
+# partial status line is how "held" turns into "nearly ready" over a few reports.
+HOLD_FIELDS = ("ROUTING_STATUS", "ELECTRICAL_PROTECTION_STATUS", "FAB_READINESS", "PUBLICATION_STATUS")
 
 DOMAINS = (
     "PRODUCT_ENVELOPE", "SCHEMATIC_INTEGRITY", "COMPONENT_SELECTION", "LIFECYCLE_SUPPLY",
@@ -133,6 +137,32 @@ def board_facts(f=None):
     entry beginning with an underscore is product-level rather than a board."""
     f = facts() if f is None else f
     return {k: v for k, v in f.items() if isinstance(v, dict) and not k.startswith("_")}
+
+
+def board_holds(path=None):
+    """{letter: hold} for every board held by an open decision.
+
+    A hold is a PROCESS state and never a rule result: the board may pass every rule it has and still not be
+    promotable, because what holds it is an unanswered question. Refuses an entry that does not carry all four
+    status fields and the decision it waits on, because a hold whose words drift is a hold that stops binding."""
+    path = path or HOLDS
+    if not os.path.exists(path): return {}
+    d = _yaml().safe_load(open(path, encoding="utf-8")) or {}
+    out = {}
+    for letter, h in (d.get("holds") or {}).items():
+        missing = [k for k in HOLD_FIELDS if not (h or {}).get(k)]
+        if missing:
+            raise ValueError("the hold on board %s declares no %s; a partial status is how a hold stops "
+                             "binding" % (letter.upper(), ", ".join(missing)))
+        if not h.get("decision"):
+            raise ValueError("the hold on board %s names no decision, so nothing says what would lift it" % letter.upper())
+        out[str(letter).lower()] = h
+    return out
+
+
+def hold_banner(h):
+    """The four fields as one line, in the owner's own order, for any page or log that reports a held board."""
+    return "   ".join("%s = %s" % (k, h[k]) for k in HOLD_FIELDS)
 
 
 def _leaf(cond, f):

@@ -59,9 +59,28 @@ def required_letters(boards_dir=None):
     return sorted(ls | {"e5"})
 
 
-def main(argv, run=None, boards_dir=None):
+def _holds(path=None):
+    """The boards held by an open decision, and the reason a failure to READ that file is not a pass.
+
+    A hold lives outside the rule results on purpose: a held board can pass every rule it has. If the file
+    exists and cannot be parsed (no PyYAML on this host, a typo, a partial entry), the honest answer is that
+    this gate does not know whether a board is held, which is INCONCLUSIVE and never PASS. Returning an empty
+    map there would release a held board on a host that is missing a library, which is the 16 September
+    defect in a new place."""
+    import rules_lib as R
+    p = path or R.HOLDS
+    if not os.path.exists(p): return {}, None
+    try:
+        return R.board_holds(p), None
+    except Exception as e:
+        return {}, "the hold file exists and could not be read (%s: %s), so this gate cannot say whether a " \
+                   "board is held" % (type(e).__name__, e)
+
+
+def main(argv, run=None, boards_dir=None, holds_path=None):
     run = run or globals()["run"]
     only = set(argv[argv.index("--boards") + 1].split(",")) if "--boards" in argv else None
+    held_boards, holds_unreadable = _holds(holds_path)
     required = required_letters(boards_dir)
     found = newest_folders(only)
     rows = []
@@ -99,8 +118,16 @@ def main(argv, run=None, boards_dir=None):
         stale = bool(declared) and not name.upper().endswith(declared.upper()) and not name.upper().endswith(declared.upper() + "-QUOTE")
         if stale:
             summary = "the tree declares %s and this folder is %s: re-cut it, the folder is judged against itself and cannot know" % (declared, name.split("-")[-1])
+        hold = held_boards.get(letter)
+        v = ("QUOTE" if quote else ("STALE" if stale else ("PASS" if rc == 0 else "FAIL")))
+        if hold:
+            # THE HOLD OUTRANKS THE FOLDER'S OWN VERDICT, in both directions: a held board whose folder passes
+            # is still not releasable, and the reason is named rather than hidden inside a rule result.
+            import rules_lib as R
+            summary = "held by owner decision %s: %s (its folder reads %s)" % (hold["decision"], R.hold_banner(hold), v)
+            v = "HELD"
         rows.append(dict(board=letter.upper(), phase=num, folder=name, quote=quote, stale=stale, declared=declared,
-                         verdict=("QUOTE" if quote else ("STALE" if stale else ("PASS" if rc == 0 else "FAIL"))), summary=summary.strip()))
+                         held=bool(hold), verdict=v, summary=summary.strip()))
     want = [l for l in required if not only or l in only]
     missing = [l for l in want if l not in found]
     subset = bool(only) and set(only) != set(required)
@@ -126,7 +153,7 @@ def main(argv, run=None, boards_dir=None):
     print("  parts     : %s" % certify.strip()[:120])
     print("  claims    : %s" % claims.strip()[:120])
     bad = [r for r in rows if r["verdict"] in ("FAIL", "STALE")]
-    held = [r for r in rows if r["quote"]]
+    held = [r for r in rows if r["quote"] or r.get("held")]
     c_word = "PASS" if rc_c == 0 else ("NOT JUDGED HERE (no netlist in this tree)" if contracts_absent else "FAIL")
     j_word = "PASS" if rc_j == 0 else ("NOT JUDGED (certification could not ask)" if rc_j == 3 else "OPEN")
     print("final_gate: %d of %d folder(s) pass, %d quote-only, %d missing, contracts %s, parts %s%s"
@@ -138,8 +165,9 @@ def main(argv, run=None, boards_dir=None):
     # THE DECISION, fail closed: any failure is FAIL; anything unjudged with no failure is INCONCLUSIVE; PASS is the
     # whole manifest present, every folder passing, no held board, contracts PASS and certification PASS.
     failed = bool(bad or held or missing or (rc_c == 1) or (rc_j == 1) or (rc_m == 1))
-    unjudged = bool(subset or contracts_absent or rc_j == 3 or rc_m == 3
+    unjudged = bool(subset or contracts_absent or rc_j == 3 or rc_m == 3 or holds_unreadable
                     or rc_c not in (0, 1, 3) or rc_j not in (0, 1, 3) or rc_m not in (0, 1, 3))
+    if holds_unreadable: print("  holds     : %s" % holds_unreadable)
     res = _v.FAIL if failed else (_v.INCONCLUSIVE if unjudged else _v.PASS)
     evidence = (["%s %s: %s" % (r["board"], r["folder"], r["summary"][:60]) for r in rows if r["verdict"] != "PASS"]
                 + ["%s: no deliverable folder" % l.upper() for l in missing]
@@ -153,17 +181,21 @@ def main(argv, run=None, boards_dir=None):
     # still decides the release; these say which board's paperwork is actually behind.
     for r in rows:
         _v.write("final_gate_%s" % r["board"].lower(),
-                 _v.PASS if r["verdict"] == "PASS" else (_v.INCONCLUSIVE if r["verdict"] == "QUOTE" else _v.FAIL),
-                 counts={"folder": 1, "stale": int(bool(r["stale"])), "quote": int(bool(r["quote"]))},
+                 _v.PASS if r["verdict"] == "PASS" else (_v.INCONCLUSIVE if r["verdict"] in ("QUOTE", "HELD") else _v.FAIL),
+                 counts={"folder": 1, "stale": int(bool(r["stale"])), "quote": int(bool(r["quote"])),
+                         "held": int(bool(r.get("held")))},
                  denominator=1, evidence=[r["summary"][:160]] if r["summary"] else [],
                  inputs={"folder": r["folder"]}, quiet=True,
-                 note="this board's own deliverable folder, judged on its own; the set's verdict is final_gate")
+                 note=("this board is HELD by an open owner decision, so its paperwork is not current and "
+                       "cannot be made current while the hold stands" if r.get("held") else
+                       "this board's own deliverable folder, judged on its own; the set's verdict is final_gate"))
     for l in missing:
         _v.write("final_gate_%s" % l.lower(), _v.FAIL, counts={"folder": 0}, denominator=1, quiet=True,
                  evidence=["a required board with no deliverable folder"],
                  note="this board has no deliverable folder at all")
     return _v.write("final_gate", res,
-                    counts={"pass": len(rows) - len(bad) - len(held), "fail": len(bad), "quote": len(held), "missing": len(missing),
+                    counts={"pass": len(rows) - len(bad) - len(held), "fail": len(bad), "quote": len(held),
+                            "held": len([r for r in rows if r.get("held")]), "missing": len(missing),
                             "contracts_rc": rc_c, "certify_rc": rc_j, "claims_rc": rc_m},
                     denominator=len(want),
                     evidence=evidence,

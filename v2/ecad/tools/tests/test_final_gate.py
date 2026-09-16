@@ -36,16 +36,21 @@ def _world(folders, sub, phases=None):
         if tool == "claims_check.py":
             return sub.get("claims", (0, "claims_check: 19 claim sentence(s) in 8 document(s), 0 without a qualifier, an evidence reference or a declared reason"))
         raise AssertionError("unexpected command %s" % cmd)
-    return d, bdir, rdir, run
+    # THIS SYNTHETIC SET DECLARES ITS OWN HOLDS, and declares none (16 September 2026). The gate reads
+    # tools/pcb_board_holds.yaml by default, which today holds board E on decision 31, so without this every
+    # fixture below would be judging the real hold instead of the folder logic it is about. The hold itself
+    # has its own fixtures both ways in test_board_hold.py.
+    hold = os.path.join(d, "holds.yaml"); open(hold, "w").write("holds: {}\n")
+    return d, bdir, rdir, run, hold
 
 
 def _verdict(argv, folders, sub, out_dir, phases=None):
     fg = importlib.import_module("final_gate")
-    d, bdir, rdir, run = _world(folders, sub, phases)
+    d, bdir, rdir, run, hold = _world(folders, sub, phases)
     fg.BOARDS = rdir
     cwd = os.getcwd(); os.chdir(d)
     try:
-        rc = fg.main(list(argv), run=run, boards_dir=bdir)
+        rc = fg.main(list(argv), run=run, boards_dir=bdir, holds_path=hold)
     finally:
         os.chdir(cwd)
     v = json.load(open(os.path.join(d, "out", "final_gate.verdict.json")))
