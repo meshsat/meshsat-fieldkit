@@ -2016,3 +2016,29 @@ owner ruling 10.
 **Why recorded rather than asked:** each is a part on a line whose own specification the part violates, which
 is a defect rather than a trade-off, and it follows the precedent of the 24.9 ohm resistor in the PoE feed and
 the 2N7002 whose threshold was above its gate drive. Every one is reversible in one line of its generator.
+
+---
+
+## Decision 34 gets its numbers: the insulation question is now measured against a published table (16 September 2026)
+
+Decision 34 is the operating envelope, and rule ISO-001 (creepage and clearance) has been waiting on it
+because creepage and clearance come from a standard's table for a working voltage, a pollution degree and a
+material group, and no such table was in this tree. One is now, with the same caveat stated twice so it cannot
+be read as settled: **ECSS-Q-ST-70-12C Table 13-3 is a space standard, its own Note 2 says it covers any
+elevation, and it is the conservative envelope rather than the requirement for a sealed terrestrial kit.**
+
+Measured on the boards as they stand, reported and gated on nothing:
+
+| board | net | closest conductor of another net | the table's row | against |
+|---|---|---|---|---|
+| B | +54V_POE, 54 V | **0.900 mm** to GND on F.Cu at (21.5, 202.7) | 31 to 500 V external, no coating | 0.500 mm: **passes with 80 percent to spare** |
+| A | VBUS20, 20 V | **0.129 mm** to FE_FB on F.Cu at (45.8, 69.3) | 11 to 30 V external, no coating | 0.300 mm: **short by a factor of 2.3** |
+
+The 54 V net, which is the one that sounds alarming, is the one with margin. The item is a 20 V bus running a
+tenth of a millimetre from a feedback node on an outer layer with no conformal coating.
+
+**What the envelope decision changes about it.** Under a terrestrial functional-insulation reading of 20 V in
+a sealed box, 0.129 mm is unremarkable and this is not a defect. Under the space table it is short by 171
+micrometres, which on board A is a routing change and not a redesign. The answer depends on which standard the
+kit is built to, which is exactly what decision 34 settles, so this is presented with 34 rather than as its own
+question.
