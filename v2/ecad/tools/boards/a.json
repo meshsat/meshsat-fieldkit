@@ -55,7 +55,9 @@
   "rail_prune": true,
   "_rail_prune_why": "15 September 2026, A32: 0 hard, 0 unrouted, and four rails MISSED where the rail copper alone reads MET, because the router laid its own 0.5 mm inner tracks in parallel with the bands it cannot see (VIN_RAW: a 0.5 mm In2 track the whole west side beside the 6 mm B.Cu band, carrying 0.63 A at ratio 1.60). A router piece on a rail net comes off when the net stays connected without it.",
   "return_via": true,
-  "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one."
+  "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one.",
+  "direct_close_budget_s": 5400,
+  "_direct_close_budget_s_why": "16 September 2026. The re-finish of A35 spent all 1,800 seconds on FIVE of thirteen open pairs and stopped in the middle of a shape, reporting 'the budget ran out' for the eight it never reached. Each candidate costs a design-rule check and this board's DRC is seven seconds (240 by 160 mm, six layers, 5,000 tracks), so thirteen pairs at roughly ten shapes each is an hour of DRC before anything else. Ninety minutes is that with room; it is wall time on a box that is at four percent of its cores, and the alternative is a stage that reports a budget rather than an answer."
  },
  "pair_order": [
   "USB_WALL"
