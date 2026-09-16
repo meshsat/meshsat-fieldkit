@@ -307,7 +307,7 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "driver count, sense and fail-safe pull are checked across three boards"}
 
  INT-001: {implementation: "gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py",
-   verification: {tool: "interfaces.py, check_contracts.py", verdict: "interfaces, check_contracts", fixtures: "tests/test_interfaces.py, tests/test_gate_fixtures.py"},
+   verification: {tool: "interfaces.py, check_contracts.py", verdict: "interfaces_<letter>, check_contracts", fixtures: "tests/test_interfaces.py, tests/test_gate_fixtures.py"},
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it decided
      three things. PCIe on this host is 90 ohm differential with intra-pair match within 0.1 mm, so the class board B already
