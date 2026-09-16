@@ -819,3 +819,23 @@ def t_every_launcher_that_starts_freerouting_under_xvfb_dismisses_its_modal_dial
         if not (shared or inline):
             bad.append("%s launches Freerouting under Xvfb with no dialog watchdog" % os.path.basename(p))
     assert not bad, "; ".join(bad)
+
+
+def t_the_dialog_watchdog_watches_the_jvm_and_not_its_wrapper():
+    """The watchdog read a pid whose CPU never moves, so it could not tell a stall from work.
+
+    `pgrep -f "java .*-de <dsn>"` matches the `timeout` and `xvfb-run` wrappers as well as the JVM. They
+    start first, so they sort first, and `head -1` returns one of them. Its CPU time is static for the
+    whole run, so the stall comparison was true on every poll and the watchdog sent Return every sixty
+    seconds whatever the router was doing: it dismissed dialogs by firing blindly, which is why it read as
+    working. Measured 16 September 2026 on board B's partition run, where the selection returned the
+    `timeout` process and the real JVM sat at 0.0 cores until Return was sent to it by hand.
+
+    A watchdog that cannot observe the thing it guards is a timer with extra steps.
+    """
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh"), errors="replace").read()
+    assert "pgrep -x java" in s, "the watchdog still selects by pattern, which matches the wrappers"
+    assert "/proc/$_P/cmdline" in s, "nothing confirms the JVM it found is routing THIS dsn"
+    assert "/proc/$_J/environ" in s, "the display is guessed rather than read from the process"
+    # and it must not stop watching: Freerouting raises one dialog per failing net, at any pass
+    assert "1200" not in s, "the watchdog still gives up after twenty minutes"
