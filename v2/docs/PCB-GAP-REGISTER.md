@@ -9,7 +9,7 @@ answered yet, made visible so it cannot be forgotten.
 
 **31 of 57 rules carry a gap.**
 
-## absent (10)
+## absent (9)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
@@ -56,11 +56,6 @@ supervisors are already on the same I2C bus as the secure element and depend on 
 no net in this project has ever been classified by edge rate; every impedance and return decision rests on
 that classification  
 *Close it by* a per-driver edge-rate table from the datasheets, the critical length on each stackup, and the net classification. Owner **SESSION**. Effort P50 10h, P80 30h.
-
-**THM-001 every dissipating part has a path** (BLOCKER, OPEN)  
-no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit
-stage  
-*Close it by* a dissipation table per board and a thermal estimate for the sealed enclosure, then a prototype measurement plan. Owner **SESSION**, after ENV-001. Effort P50 10h, P80 30h.
 
 ## generated only (5)
 
@@ -154,7 +149,7 @@ the 3 mm distance is a project number applied to every device; the loop inductan
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (9)
+## source or applicability unresolved (10)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -233,6 +228,20 @@ it is OURS, so the maturity is GENERATED_ONLY until a document states it
 layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
+
+**THM-001 every dissipating part has a path** (BLOCKER, GENERATED_ONLY)  
+16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent
+(rails, currents, the source part) and from what each board declares: a converter's loss is P_out *
+(1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part that
+dissipates for another reason (the power amplifier, a shunt, a linear regulator) is declared in
+boards/<letter>.json with its watts and its sentence. The thermal path is measured off the board, the part's
+own pad area and the vias inside its courtyard, because on a sealed case with no airflow that is what carries
+the heat out. What is MISSING is the second half: a junction temperature needs the envelope's maximum
+ambient, which is ENV-001 and is an owner decision nobody has written, so the rule stays short of its
+acceptance criteria and says which half is absent rather than inventing it. A rail with no declared
+efficiency is listed as unknown and makes the verdict INCONCLUSIVE, so the table is a floor until every
+converter carries its number  
+*Close it by* declare an efficiency per rail and the dissipators per board, then take ENV-001's ambient and estimate a junction temperature for each part above the declared threshold. Owner **SESSION**, after ENV-001. Effort P50 6h, P80 20h.
 
 **VIA-002 the annular ring is one the fabricator makes** (BLOCKER, ENFORCED)  
 the floor arrived on 16 September with the fabricator's own capability page, and reading it carefully split

@@ -308,9 +308,20 @@ coverage:
    note: "an HV net class widens the clearance on the PoE nets; no creepage or clearance distance has ever been measured on any board, and no pollution degree or material group is declared",
    remediation: {action: "declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and pack nets", owner: OWNER, depends_on: [ENV-001], p50_h: 8, p80_h: 24}}
 
- THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit stage",
-   remediation: {action: "a dissipation table per board and a thermal estimate for the sealed enclosure, then a prototype measurement plan", owner: SESSION, depends_on: [ENV-001], p50_h: 10, p80_h: 30}}
+ THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: thermal.py, verdict: thermal, fixtures: tests/test_thermal.py},
+   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own
+     intent (rails, currents, the source part) and from what each board declares: a converter's loss is
+     P_out * (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part
+     that dissipates for another reason (the power amplifier, a shunt, a linear regulator) is declared in
+     boards/<letter>.json with its watts and its sentence. The thermal path is measured off the board, the
+     part's own pad area and the vias inside its courtyard, because on a sealed case with no airflow that is
+     what carries the heat out. What is MISSING is the second half: a junction temperature needs the envelope's
+     maximum ambient, which is ENV-001 and is an owner decision nobody has written, so the rule stays short of
+     its acceptance criteria and says which half is absent rather than inventing it. A rail with no declared
+     efficiency is listed as unknown and makes the verdict INCONCLUSIVE, so the table is a floor until every
+     converter carries its number",
+   remediation: {action: "declare an efficiency per rail and the dissipators per board, then take ENV-001's ambient and estimate a junction temperature for each part above the declared threshold", owner: SESSION, depends_on: [ENV-001], p50_h: 6, p80_h: 20}}
 
  PLC-001: {implementation: "gen_pcb_*3.py, regionfit.py", verification: {tool: "hardset.py, place_audit.py", verdict: "hardset-placed, place_audit", fixtures: "tests/test_region_fit.py, tests/test_board_gates.py"},
    maturity: ENFORCED, gap_category: NONE, note: "the cheap gate runs before the expensive stage and blocks above a declared allowance"}

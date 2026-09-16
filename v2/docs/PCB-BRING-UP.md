@@ -51,17 +51,52 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | GND | 0.00 V | 10.00 A | J_5V_S1 | nothing declared |
-| 2 | +5V_DEV | 5.00 V | 3.80 A | J_5V_DEV | nothing declared |
-| 3 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | nothing declared |
-| 4 | +5V_S2 | 5.10 V | 2.50 A | J_5V_S2 | nothing declared |
-| 5 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | nothing declared |
+| 1 | +5V_DEV | 5.00 V | 3.80 A | J_5V_DEV | F1, F2, F3, U106, U15, U16 |
+| 2 | +5V_HDMI | 5.00 V | 0.10 A | F2 | J_HDMI |
+| 3 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U30A |
+| 4 | +5V_S2 | 5.10 V | 2.50 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
+| 5 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U32A |
+| 6 | +54V_POE | 54.00 V | 0.30 A | J_54V | U5 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | +3V3_DEV | 3.30 V (3.13 to 3.46) | U25 | nothing declared |
+| 1 | GND | 0.00 V (0.00 to 0.00) | ['J_5V_S1', 'J_5V_S2', 'J_5V_S3', 'J_5V_DEV'] | J_FAN1, J_FAN2, J_FAN3, J_PANEL, J_QMX, U103 |
+| 2 | +1V8_CM1 | 1.80 V (1.71 to 1.89) | U30A | U30A |
+| 3 | +1V8_CM2 | 1.80 V (1.71 to 1.89) | U31A | U31A |
+| 4 | +1V8_CM3 | 1.80 V (1.71 to 1.89) | U32A | U32A |
+| 5 | +2V5_KSZ | 2.50 V (2.38 to 2.62) | U27 | U1 |
+| 6 | +3V3_CM1 | 3.30 V (3.13 to 3.46) | U30A | U30A |
+| 7 | +3V3_CM2 | 3.30 V (3.13 to 3.46) | U31A | U31A |
+| 8 | +3V3_CM3 | 3.30 V (3.13 to 3.46) | U32A | U32A |
+| 9 | +3V3_IOCA | 3.30 V (3.13 to 3.46) | U40 | U41, U42, U43, U44 |
+| 10 | +3V3_IOCB | 3.30 V (3.13 to 3.46) | U50 | U51, U52, U53, U54 |
+| 11 | +3V3_IOCC | 3.30 V (3.13 to 3.46) | U60 | U61, U62, U63, U64 |
+| 12 | +3V3_ZB | 3.30 V (3.13 to 3.46) | U22 | J_ZBDBG1, J_ZBDBG2, U13, U14 |
+| 13 | +5V_LORA | 5.00 V (4.75 to 5.25) | U21 | U12 |
+| 14 | +5V_LIME | 5.00 V (4.75 to 5.25) | U23 | J_LIME |
+| 15 | +5V_RB | 5.00 V (4.75 to 5.25) | U24 | J_RB9704 |
+| 16 | +5V_CAM | 5.00 V (4.75 to 5.25) | U28 | J_CAM |
+
+**Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
+
+| rail | volts | current | source | what it feeds |
+|---|---|---|---|---|
+| +1V0_S1 | 1.00 V | 0.80 A | L103 | U101 |
+| +1V0_S2 | 1.00 V | 0.80 A | L203 | U201 |
+| +1V0_S3 | 1.00 V | 0.80 A | L303 | U301 |
+| +1V1_S1 | 1.10 V | 0.40 A | L104 | U102 |
+| +1V1_S2 | 1.10 V | 0.40 A | L204 | U202 |
+| +1V1_S3 | 1.10 V | 0.40 A | L304 | U302 |
+| +1V2_KSZ | 1.20 V | 0.50 A | L2 | U1 |
+| +3V3_DEV | 3.30 V | 1.20 A | L1 | U1, U10, U102, U109, U11, U110 |
+| +3V3_S1A | 3.30 V | 0.50 A | L101 | J_M2C1 |
+| +3V3_S1B | 3.30 V | 0.90 A | L102 | J_M2N1, U101 |
+| +3V3_S2A | 3.30 V | 0.50 A | L201 | J_M2C2 |
+| +3V3_S2B | 3.30 V | 0.90 A | L202 | J_M2N2, U201 |
+| +3V3_S3A | 3.30 V | 0.50 A | L301 | J_M2C3 |
+| +3V3_S3B | 3.30 V | 0.90 A | L302 | J_M2N3, U301 |
 
 ## Board C
 
