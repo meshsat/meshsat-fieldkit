@@ -36,3 +36,14 @@ def t_the_thermal_path_is_measured_off_the_board():
     seg = SRC[i:i + 600]
     assert "GetPads" in seg or "Pads()" in seg, "the pad area is not measured"
     assert "PCB_VIA" in seg, "the vias in the courtyard are not counted"
+
+
+def t_the_sum_of_every_rail_s_peak_is_not_called_a_board_power():
+    """The first run printed 1,056 W for board A and 777 for board P (MESHSAT-862, 16 September 2026).
+
+    That is what adding the peak of every rail gives you when the list includes a pack node's fault-current
+    rating and three slot rails that never peak together. A number like that inside a verdict is worse than no
+    number, because the next reader takes it for the board's power. The board total is the DISSIPATION, which
+    is what this rule is about, and the throughput keeps its name."""
+    assert "watts_peak_sum_not_simultaneous" in SRC, "the counts still call it the board's power"
+    assert "NOT a board power" in SRC, "the printed line does not say what the number is not"
