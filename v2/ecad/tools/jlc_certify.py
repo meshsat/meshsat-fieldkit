@@ -440,7 +440,62 @@ def project_allow():
 PROJECT_ALLOW = None
 
 
+# A VALUE THAT NAMES A FREQUENCY IS PART OF THE PART (16 September 2026). Board D's two crystals read
+# "6 MHz 3225" and carried C448646, which JLCPCB's own catalogue calls NX3225SA-25MHz: a 25 MHz part certified
+# against a 6 MHz line, on both crystals of a board that is otherwise finished. Nothing was wrong with the
+# check that let it through, except its question: `same_part` compares the manufacturer PART NUMBER, and a
+# jellybean row names no part number, so the row was decided on package and stock alone. A hub fed 25 MHz
+# where its PLL wants 6 does not enumerate, and a codec clocked at 25 MHz where the USB audio frame is derived
+# from 6 does not play. The frequency is checked here because it is the one quantity in these rows that both
+# sides state and neither side infers.
+FREQ_IN = __import__("re").compile(r"(\d+(?:\.\d+)?)\s*(k|M|G)?\s?Hz", __import__("re").I)
+_MULT = {None: 1.0, "": 1.0, "K": 1e3, "M": 1e6, "G": 1e9}
+
+
+def frequencies(text):
+    """Every frequency a string names, in hertz. An empty set when it names none, which is most rows."""
+    out = set()
+    for m in FREQ_IN.finditer(text or ""):
+        try: out.add(round(float(m.group(1)) * _MULT[(m.group(2) or "").upper()]))
+        except Exception: pass
+    return out
+
+
+# WHICH ROWS THIS APPLIES TO, and it is deliberately narrow. A ferrite reads "600R@100MHz" and an inductor
+# "68nH 0805 (LPF, 145 MHz 5th order)": both name a frequency that is a CONDITION, not the part, and the
+# catalogue's own line for them may name a different one (a self-resonance) with neither being wrong. A part
+# whose VALUE BEGINS with a frequency is a different thing: for a crystal, a resonator or an oscillator the
+# frequency IS the part, and that is the only case checked here.
+FREQ_IS_THE_PART = __import__("re").compile(r"^\s*\d+(?:\.\d+)?\s*(?:k|M|G)?\s?Hz\b", __import__("re").I)
+
+
+def frequency_conflict(comment, ev):
+    """The message for a row whose value names a frequency the catalogue entry does not, or None."""
+    if not FREQ_IS_THE_PART.match(comment or ""): return None
+    want = frequencies(comment)
+    if not want: return None
+    got = frequencies(" ".join(str(ev.get(k) or "") for k in ("desc", "model", "pkg")))
+    if not got:
+        return None    # the catalogue says nothing about frequency: this check has no evidence and says so by staying silent
+    if want & got: return None
+    fmt = lambda s: ", ".join("%g MHz" % (v / 1e6) if v >= 1e6 else "%g kHz" % (v / 1e3) for v in sorted(s))
+    return "the row asks for %s and the catalogue part is %s (%s %s)" % (
+        fmt(want), fmt(got), ev.get("code") or "?", (ev.get("model") or "")[:40])
+
+
 def certify(rec, cache, handfit, aliases, refresh=False):
+    """One row's verdict, with the evidence that produced it. The frequency guard is applied HERE, to the
+    result, rather than beside each of the four places a CERTIFIED verdict is written: a guard that has to be
+    remembered at every return is a guard that a fifth return will miss."""
+    ev = _certify(rec, cache, handfit, aliases, refresh)
+    if isinstance(ev, dict) and ev.get("verdict") in ("CERTIFIED", "HAND_FIT"):
+        bad = frequency_conflict(rec.get("comment"), ev)
+        if bad:
+            ev = dict(ev); ev.update(verdict="WRONG_MODEL", note=bad)
+    return ev
+
+
+def _certify(rec, cache, handfit, aliases, refresh=False):
     """One row's verdict, with the evidence that produced it."""
     comment, fp, code = rec["comment"], rec["fp"], rec["code"]
     want = intended_part(comment)
@@ -536,7 +591,8 @@ def certify(rec, cache, handfit, aliases, refresh=False):
               and (c.get("stockCount") or 0) >= need]
         if ok:
             top = max(ok, key=lambda c: (c.get("componentLibraryType") == "base", c.get("stockCount") or 0))
-    ev = dict(code=top.get("componentCode"), model=top.get("componentModelEn"),
+    ev = dict(desc=" ".join(str(top.get(_k) or "") for _k in ("erpComponentName", "describe")),
+              code=top.get("componentCode"), model=top.get("componentModelEn"),
               brand=top.get("componentBrandEn"), pkg=top.get("componentSpecificationEn"),
               lib=top.get("componentLibraryType"), stock=top.get("stockCount") or 0,
               price=top.get("initialPrice"), need=need, asked=asked)
@@ -573,7 +629,8 @@ def certify(rec, cache, handfit, aliases, refresh=False):
                 top = max(cand2, key=lambda c: ((c.get("stockCount") or 0) >= need,
                                                 c.get("componentLibraryType") == "base",
                                                 c.get("stockCount") or 0))
-                ev = dict(code=top.get("componentCode"), model=top.get("componentModelEn"),
+                ev = dict(desc=" ".join(str(top.get(_k) or "") for _k in ("erpComponentName", "describe")),
+                          code=top.get("componentCode"), model=top.get("componentModelEn"),
                           brand=top.get("componentBrandEn"), pkg=top.get("componentSpecificationEn"),
                           lib=top.get("componentLibraryType"), stock=top.get("stockCount") or 0,
                           price=top.get("initialPrice"), need=need, asked=asked2)
