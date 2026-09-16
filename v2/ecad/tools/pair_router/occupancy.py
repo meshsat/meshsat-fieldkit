@@ -147,6 +147,17 @@ def _track_stamp(gr, layers, t, trk, via_clr, half, via_r, split):
     if t.GetClass() == "PCB_VIA":
         c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
         for L in layers: gr.disc(trk[L], mm(c.x), mm(c.y), r + _c + half)
+        # AN EXISTING VIA IS AN OBSTACLE TO A NEW VIA, and it was stamped into the TRACK map only
+        # (16 September 2026). A pad is stamped into both maps four lines above and a track into both four
+        # lines below; a via went into `trk` and never into `via_clr`, so the site search for a NEW via
+        # could not see a single via already on the board. Board B's placement pilot measured what that
+        # costs: at every couple gap tried, the DIFF100 pass laid vias of different pairs 0.106 mm apart
+        # against a 0.127 mm class clearance, and in one case two vias 0.0071 mm apart, which is one via
+        # on top of another. Every DIFF100 pair count this board has ever reported was measured on copper
+        # carrying those violations.
+        # The radius is the existing via's own, plus its clearance, plus the NEW via's radius, plus the
+        # split, which is the same expression the track branch and the pad stamp use.
+        gr.disc(via_clr, mm(c.x), mm(c.y), r + _c + via_r + split)
     else:
         a, e = t.GetStart(), t.GetEnd(); r = mm(t.GetWidth()) / 2; L = t.GetLayer()
         if L in trk: gr.seg(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + _c + half)

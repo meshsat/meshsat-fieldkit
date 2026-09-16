@@ -96,3 +96,53 @@ def t_the_hole_to_hole_component_is_never_subtracted():
     holes = np.array([True, False, False, True])
     via = (all_clr > own_clr) | holes
     assert list(via) == [True, True, False, True], list(via)
+
+
+def t_an_existing_via_blocks_a_new_via_site():
+    """DEFECTIVE fixture expects the via map to be stamped; ACCEPTABLE fixture is the track branch beside it.
+
+    `_track_stamp` put a via into the TRACK raster only. A pad is stamped into both rasters and so is a track,
+    but a via went into `trk` and never into `via_clr`, so the site search for a NEW via could not see a single
+    via already on the board.
+
+    Board B's placement pilot measured the cost on 16 September 2026: at every couple gap tried (2.4, 2.6, 3.0)
+    the DIFF100 pass laid vias belonging to DIFFERENT pairs 0.1062 to 0.1075 mm apart against a 0.127 mm class
+    clearance, and in one case two vias 0.0071 mm apart, which is one via on top of another. All three arms
+    graded ILLEGAL against a legal baseline, which is how it surfaced.
+
+    Run with fakes rather than a board: the function needs a recorder for `gr` and an object that answers the
+    four methods it calls. pcbnew is imported by the module, so this skips on a host without it.
+    """
+    try:
+        import pcbnew  # noqa: F401
+    except Exception as e:
+        from harness import Skip
+        raise Skip("the pre-router's occupancy module imports pcbnew (%s)" % type(e).__name__)
+    from pair_router import occupancy
+
+    class Rec:
+        def __init__(self): self.discs = []; self.segs = []; self.polys = []
+        def disc(self, m, x, y, r, **k): self.discs.append((id(m), x, y, r))
+        def seg(self, m, *a, **k): self.segs.append(id(m))
+        def poly(self, m, *a, **k): self.polys.append(id(m))
+
+    class FakePt:
+        def __init__(self, x, y): self.x = int(x * 1e6); self.y = int(y * 1e6)
+
+    class FakeVia:
+        def GetClass(self): return "PCB_VIA"
+        def GetPosition(self): return FakePt(10.0, 20.0)
+        def GetWidth(self, *a): return int(0.7 * 1e6)
+        def GetNetname(self): return "/PAIR_P"
+
+    trk = {pcbnew.F_Cu: object(), pcbnew.B_Cu: object()}
+    via_clr = object()
+    gr = Rec()
+    occupancy._track_stamp(gr, list(trk), FakeVia(), trk, via_clr, 0.0635, 0.35, 0.0)
+
+    into_via_map = [d for d in gr.discs if d[0] == id(via_clr)]
+    assert into_via_map, ("a via was stamped into the track map only, so the search for a new via site cannot "
+                          "see it; discs went to %s, via_clr is %s" % ([d[0] for d in gr.discs], id(via_clr)))
+    # the radius must carry the NEW via's radius too, or two vias may still sit a hole apart
+    r = into_via_map[0][3]
+    assert r >= 0.35 + 0.35, "the via-map radius %.3f does not include the new via's own radius" % r
