@@ -1,0 +1,163 @@
+# WHAT CARRIES LOAD AND WHAT SEES CYCLING (rule REL-001, MESHSAT-862, 16 September 2026).
+#
+# The rule asks for a per-board list of the parts and joints that carry mechanical load or see cycling, the
+# expected cycles or level, and the measure taken. It read "no verification" on seven boards.
+#
+# This kit is CARRIED. Every connector that is mated in the field is a wear item, every board-mounted jack is a
+# lever with the case as its fulcrum, and every solder joint under a heavy part sees vibration in transport.
+# The classes below are the honest grouping: a class covers every part of its kind on that board, with the
+# rating from the part's own datasheet where this tree holds one, and the measure that makes it good enough.
+#
+# WHERE A NUMBER IS NOT KNOWN IT SAYS SO. Several of these parts have no published mating-cycle figure in the
+# documents this repository holds, and no number is invented for them; the entry carries `cycles: null` with
+# the reason, and `reliability.py` accepts that only when a measure is declared that does not depend on the
+# number. Nothing here has been tested: no board exists, and REL-001's own verification phase is PROTOTYPE.
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+
+boards:
+
+ a:
+   classes:
+    - {name: "SMA bulkhead jacks", refs: ["J_RF*"], count_expected: 11, cycles: 500,
+       basis: "the SMA standard's own 500-cycle figure, which every jack in v2/vendor/rf/ quotes",
+       load: "the jack is mounted in the case wall and the board carries only the blind-mate half",
+       measure: "the board-side half is a Radiall SMP-MAX blind-mate that mates by pushing the board home, so
+         the board's joint sees an axial push and never a wrench; the wrench torque lands on the case wall"}
+    - {name: "blind-mate dock contacts", refs: ["J_BM*"], count_expected: 11, cycles: null,
+       basis: "no mating-cycle figure is published for the Mill-Max spring pins in the documents held here",
+       load: "the whole kit's weight is taken by the rods, not by these pins; the pins see spring force only",
+       measure: "the dock block is located by two rods before the pins touch, so the pins never take a side
+         load; the spring travel is 0.6 mm against a 1.0 mm nominal compression"}
+    - {name: "JST-VH power headers", refs: ["J_5V_*", "J_54V", "J_PA", "J_HF", "J_MON", "J_HEAT", "J_MEZZ_PWR1"], cycles: 30,
+       basis: "JST's own VH series specification gives 30 mating cycles",
+       load: "a lead pulled during service",
+       measure: "every VH lead is dressed to a tie point within 40 mm of its header so the joint does not take
+         the pull, and the headers are through-hole"}
+    - {name: "IDC ribbon headers", refs: ["J_AB1", "J_AB2", "J_MEZZ1"], cycles: 25,
+       basis: "the IDC land is this project's own (idc_pads.py) and the mating cycles are the ribbon
+         connector's, 25 in its own specification",
+       load: "the ribbon is mated once at build and again only at service",
+       measure: "through-hole, and the ribbon is captive between the boards it joins"}
+    - {name: "the main switch and USB-C wall leads", refs: ["J_MAINSW", "J_USBW", "J_USBC_OUT"], cycles: null,
+       basis: "the panel switch and the wall receptacle are mounted in the case, not on this board",
+       load: "the board sees the lead, not the connector",
+       measure: "solder lands with a strain relief hole beside each, and the lead is tied to the board's own
+         standoff before it leaves"}
+    - {name: "the blade fuse holder", refs: ["F1"], cycles: null,
+       basis: "Keystone 3568 publishes no cycle figure; a fuse is changed rarely",
+       load: "the pull of extracting a blade fuse, straight up",
+       measure: "through-hole holder with its own pins soldered on both sides of the board"}
+
+ b:
+   classes:
+    - {name: "CM5 module receptacles", refs: ["U30A", "U30B", "U31A", "U31B", "U32A", "U32B"], cycles: 60,
+       basis: "Amphenol's 10164227 series specification gives 60 mating cycles for this receptacle",
+       load: "the module is pushed home and held by four standoffs; the receptacle takes the insertion force",
+       measure: "four M2.5 standoffs per slot take the module's weight and the vibration, so the receptacle
+         carries signal contact force only"}
+    - {name: "M.2 sockets", refs: ["J_M2*"], count_expected: 6, cycles: 60,
+       basis: "the M.2 socket's own specification, 60 cycles",
+       load: "a card pivoted down and screwed at its far end",
+       measure: "each card is screwed to a standoff at the far end, which is what the socket's own drawing
+         requires and is where the cycling load goes"}
+    - {name: "U.FL antenna sockets", refs: ["J_GNSS1", "J_LORA1", "J_W*A", "J_W*B", "J_WOA", "J_WOB"], cycles: 30,
+       basis: "Hirose's U.FL specification is explicit: 30 mating cycles, and it is the lowest figure on this
+         board (v2/vendor/hirose/)",
+       load: "a coax pigtail pulled sideways during service, which is exactly what U.FL does not tolerate",
+       measure: "every pigtail is dressed and tied within 30 mm of its socket so the pull is taken by the tie,
+         and the assembly note says to lift a U.FL with the tool rather than the cable"}
+    - {name: "the coin cell holder", refs: ["BT1"], cycles: null,
+       basis: "Keystone 3034 publishes no cycle figure",
+       load: "a cell pushed in and levered out",
+       measure: "the holder is through-hole and its retention tab is oriented away from the nearest part"}
+    - {name: "fan and flash headers, the panel ribbon, the HDMI and USB receptacles",
+       refs: ["J_FAN*", "J_FLASH*", "J_PANEL", "J_HDMI", "J_LIME", "J_RB9704", "J_AB1", "J_AB2",
+              "J_5V_*", "J_54V"], cycles: 30,
+       basis: "the JST and box-header families on this board all publish 30 cycles or more",
+       load: "service access",
+       measure: "through-hole where the lead is pulled, and every internal lead is tied to a standoff"}
+    - {name: "the PCIe switches' own sockets on the carrier", refs: ["U101", "U201", "U301"], cycles: null,
+       basis: "these are soldered ICs and not connectors: they appear in this list because the search finds
+         their package names, and they carry no mating load at all",
+       load: "none: a soldered QFN",
+       measure: "none needed; recorded so the list is complete rather than filtered"}
+
+ c:
+   classes:
+    - {name: "the panel ribbon header", refs: ["J_PANEL"], cycles: 30,
+       basis: "the box header's own specification",
+       load: "the ribbon to board B, mated at build",
+       measure: "through-hole, and the ribbon is captive inside the case"}
+    - {name: "the face plate's mounting holes", refs: ["H*"], count_expected: 8, cycles: null,
+       basis: "a screw hole has no mating cycle; what it has is a torque and a thread",
+       load: "the face plate carries the display, the e-paper and sixteen light guides, and the whole assembly
+         is screwed to the case's own frame",
+       measure: "the holes are plated and the plate is screwed to standoffs rather than to the board, so the
+         board is not a structural member"}
+
+ d:
+   classes:
+    - {name: "the radio module's sockets", refs: ["J_HS1", "J_HS2"], cycles: 30,
+       basis: "the 1x12 socket strip's own specification",
+       load: "the SA868 module is pushed into two socket strips and held by M2.5 standoffs",
+       measure: "two standoffs take the module's weight; the sockets take contact force only"}
+    - {name: "the antenna jack and the PA ports", refs: ["J_ANT", "J_PAIN", "J_PAOUT", "J_VGG"], cycles: 500,
+       basis: "the SMA standard's 500 cycles",
+       load: "a coax mated at build; the bulkhead is in the case wall",
+       measure: "the board-side connector is an edge-launch SMA whose body is soldered on both sides"}
+    - {name: "the power and harness headers", refs: ["J_PWR1", "J_HARN1", "J_USB3"], cycles: 30,
+       basis: "the JST-VH and IDC families' own figures",
+       load: "service access",
+       measure: "through-hole with the leads tied"}
+
+ e:
+   classes:
+    - {name: "the pack lead connector", refs: ["J_BATT"], cycles: 1000,
+       basis: "v2/vendor/battery/amass-xt60-spec-tme.pdf: the XT60 is specified for 1000 mating cycles",
+       load: "the pack is unplugged whenever it is swapped, which is the most-cycled connector in the kit",
+       measure: "the XT60 is through-hole with 12 AWG leads, and the strip is screwed to the case floor so the
+         pull goes into the case rather than into the joint"}
+    - {name: "the blade fuse holders", refs: ["F1", "F2", "F3"], cycles: null,
+       basis: "Keystone 3568 publishes no cycle figure",
+       load: "extraction force, straight up",
+       measure: "through-hole holders"}
+    - {name: "the DC inlet, the solar input and the SMBus header",
+       refs: ["J_DCIN", "J_SOLAR", "J_SMB"], cycles: 30,
+       basis: "the JST families' own figures; the wall receptacle itself is in the case",
+       load: "the leads from the wall receptacle and from the pack",
+       measure: "each lead is tied within 40 mm of its header"}
+
+ p:
+   classes:
+    - {name: "the pack terminals", refs: ["W_P", "W_N"], cycles: null,
+       basis: "solder lands rather than connectors: the 12 AWG leads are soldered and there is no mating cycle",
+       load: "the whole pack current and the pull of the lead when the pack is handled",
+       measure: "2.5 mm2 lands with a strain relief hole beside each, and the lead is tied to the pack's own
+         enclosure before it leaves the board"}
+    - {name: "the cell tap and thermistor headers", refs: ["J_CELL", "J_TS", "J_SMB"], cycles: 30,
+       basis: "the JST-XH and PH families' own figures",
+       load: "mated once at pack build",
+       measure: "through-hole; the tap harness is dressed inside the pack enclosure"}
+    - {name: "the pack fuse holder", refs: ["F1"], cycles: null,
+       basis: "Keystone 3568 publishes no cycle figure",
+       load: "extraction force",
+       measure: "through-hole holder inside the pack enclosure, reached only when the pack is open"}
+
+ e5:
+   classes:
+    - {name: "the dock block's contact targets", refs: ["TP*", "P_*"], cycles: null,
+       basis: "the targets are gold-plated pads rather than parts, and what has a cycle rating is the SPRING
+         PIN on board A that lands on them; no wear figure for the pad is published anywhere held here",
+       load: "every mate of the kit: the block is what board A's eleven spring pins land on, so this board
+         takes the whole insertion force of the stack and the wiping action of every pin",
+       measure: "ENIG on 2 oz copper, a target 1.8 mm across against a 0.5 mm pin tip so the wipe stays inside
+         the plating, and the two location rods take the alignment before any pin touches. The pad's wear is
+         the open item that the prototype's mate-cycle test is for, and REL-001 is verified at the prototype
+         for exactly this kind of thing"}
+    - {name: "the 12 AWG pack wire lands", refs: ["W_*"], cycles: null,
+       basis: "solder lands, no mating cycle",
+       load: "the pack lead's pull when the block is handled",
+       measure: "plated through-holes sized for 12 AWG with the lead tied to the strip beside them"}
+

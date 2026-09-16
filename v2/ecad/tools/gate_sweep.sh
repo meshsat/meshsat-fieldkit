@@ -54,7 +54,7 @@ for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks i
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
-          energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit; do
+          energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability; do
   rm -f "$P/routed/$_g.verdict.json"
 done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
@@ -132,6 +132,9 @@ run "emc sheet" python3 $T/emc_sheet.py --ecad "$E" --board $L
 # it repairs; three of those classes are prevented by a ground-via grid laid before the route, and whether a
 # board HAS that prevention is a property of the board's own declaration, so this runs per board.
 run "closers" python3 $T/closer_audit.py --board $L
+# WHAT CARRIES LOAD AND WHAT SEES CYCLING (rule REL-001). The kit is carried: every connector mated in the
+# field is a wear item and every board-mounted jack is a lever with the case as its fulcrum.
+run "reliability" python3 $T/reliability.py --ecad "$E" --board $L
 [ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read

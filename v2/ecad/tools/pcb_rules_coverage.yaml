@@ -427,8 +427,8 @@ coverage:
      separately to be decided before powering, rather than choosing. It is a procedure and a person does it, which is
      why this is VERIFIED_MANUALLY and the record is the page"}
 
- REL-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "nothing considers vibration, mating cycles or moisture for any interface",
+ REL-001: {implementation: NONE_YET, verification: {tool: reliability.py, verdict: reliability, fixtures: tests/test_reliability.py}, maturity: ENFORCED, gap_category: ABSENT,
+   note: "nothing considers vibration, mating cycles or moisture for any interface 16 September 2026: THE LIST EXISTS AND IS CHECKED AGAINST THE BOARDS. pcb_reliability.yaml declares 25 classes over the seven boards covering all 111 parts whose value names a connector, a socket, a holder or a jack, each with its cycle figure or the reason none is published, the load it takes and the measure that makes it good enough. reliability.py refuses a wear part that falls in no class, a class that names no load or measure, a class with no cycle figure and no reason, and a declared count that the netlist does not match. The lowest figure in the kit is the U.FL socket at 30 mating cycles and the highest-cycled connector is the pack's XT60 at 1000, which is the one a user touches most. What it does NOT do is test anything: this rule is verified at the PROTOTYPE, no board has been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.",
    remediation: {action: "a reliability sheet per board and the test plan for the prototype", owner: OWNER, execution: OWNER, depends_on: [ENV-001], p50_h: 6, p80_h: 20}}
 
  BAT-001: {implementation: "gen_sch_p.py BQ4050 and protection FETs", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,

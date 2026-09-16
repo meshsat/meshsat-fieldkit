@@ -38,8 +38,16 @@ passives from the rail's own net reached 28 candidate parts on board A, and a se
 twenty-eight' is not an answer.  
 *Close it by* a sequencing sheet per board from the enables in the netlist, reviewed against each module's requirement. Owner **SESSION**. Effort P50 6h, P80 16h.
 
-**REL-001 the build survives its service life** (MUST_JUSTIFY, OPEN)  
-nothing considers vibration, mating cycles or moisture for any interface  
+**REL-001 the build survives its service life** (MUST_JUSTIFY, ENFORCED)  
+nothing considers vibration, mating cycles or moisture for any interface 16 September 2026: THE LIST EXISTS
+AND IS CHECKED AGAINST THE BOARDS. pcb_reliability.yaml declares 25 classes over the seven boards covering
+all 111 parts whose value names a connector, a socket, a holder or a jack, each with its cycle figure or the
+reason none is published, the load it takes and the measure that makes it good enough. reliability.py refuses
+a wear part that falls in no class, a class that names no load or measure, a class with no cycle figure and
+no reason, and a declared count that the netlist does not match. The lowest figure in the kit is the U.FL
+socket at 30 mating cycles and the highest-cycled connector is the pack's XT60 at 1000, which is the one a
+user touches most. What it does NOT do is test anything: this rule is verified at the PROTOTYPE, no board has
+been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.  
 *Close it by* a reliability sheet per board and the test plan for the prototype. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
 
 **SCH-004 a safety line fails safe** (BLOCKER, OWNER_DECISION_REQUIRED)  
