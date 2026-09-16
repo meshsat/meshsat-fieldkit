@@ -35,11 +35,14 @@ _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.03,
 # them at all. A rail that is not declared is not excluded: it is silently checked against the wrong question
 # and silently missed by the right one. The currents are design estimates of where the current goes, in the
 # same form as the rails above, and every load is named because a rail without loads is not declarable.
-_intent.rail("+3V3_D8", 3.3, 0.18, 0.30, "U1", budget=0.03,
+_intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03,
              source_ic="U1 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
-             loads={"U4": 0.055, "U9": 0.002, "U10": 0.002, "U11": 0.002, "U12": 0.002, "U13": 0.002,
-                    "U14": 0.002, "Q3": 0.001, "Q4": 0.001, "Q5": 0.001, "Q6": 0.001, "Q7": 0.001,
-                    "Q8": 0.001, "Q9": 0.001, "U7": 0.020, "J_HARN1": 0.080},
+             # J_HARN1 is NOT on this net: the gated 3.3 V that leaves on the harness is board A's +3V3, and the
+             # intent validator said so on the first run, which is what it is for. U1 is the SOURCE of this rail
+             # and cannot be a load of its own output, which is the same mistake from the other side.
+             loads={"U4": 0.080, "U7": 0.020, "U9": 0.002, "U10": 0.002, "U11": 0.002, "U12": 0.002,
+                    "U13": 0.002, "U14": 0.002, "Q3": 0.001, "Q4": 0.001, "Q5": 0.001, "Q6": 0.001,
+                    "Q7": 0.001, "Q8": 0.001, "Q9": 0.001},
              note="the local 3.3 V from U1: the USB hub's logic, the seven single-gate PTT and inhibit gates, "
                   "their level shifters, the headphone amplifier's logic and the gated 3.3 V leaving on the "
                   "harness. Budget 3 percent: every consumer is a logic part with a wide supply range")
