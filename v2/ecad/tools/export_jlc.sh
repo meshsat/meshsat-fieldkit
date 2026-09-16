@@ -75,7 +75,16 @@ _oz = "%g oz" % round(_cu_mm / 0.035) if _cu else "copper weight NOT DECLARED in
 _pp = re.findall(r'\(material "FR4 prepreg ([0-9]+)"', _st)   # file order: the FIRST is the outer prepreg, which is what names the stack
 stack = ("JLC%02d161H-%s stackup, " % (NL, _pp[0]) if _pp else "") if _cu else ("JLC04161H-7628 stackup, " if NL == 4 else "")
 asm = "none (bare board)" if top + bot == 0 else ("top %d" % top + (", bottom %d" % bot if bot else ""))
+# EVERY NUMBER BELOW IS TRACEABLE TO THE ARTEFACT IT WAS READ FROM (16 September 2026, rule DOC-002). The note
+# said "generated from the board file" and named no board: a reader had no way to tell WHICH board, and a note
+# beside a folder cut three phases ago looks exactly like a note beside the current one. The board's own
+# sha256 and the date it was read go in the header, so every dimension, layer count, copper weight and stackup
+# in this note carries the identity of the file it came from.
+import hashlib as _hl, datetime as _dt
+_bsha = _hl.sha256(open(n + ".kicad_pcb", "rb").read()).hexdigest()
 lines = ["MeshSat field-kit carrier %s Rev A - JLCPCB order notes (generated from the board file)" % title.replace("MeshSat Field Kit carrier - ", ""),
+         "- Generated from %s.kicad_pcb sha256 %s on %s; every number below is read from that file"
+         % (n, _bsha[:16], _dt.date.today().isoformat()),
          "- Gerbers + drill: out/%s-gerbers.zip (KiCad 9, Protel extensions, Excellon mm)" % n,
          "- Board: %.0f x %.0f mm, %d layers, %.1f mm FR-4, %s%s outer copper, ENIG, matte black soldermask, white silkscreen" % (W, H, NL, T, stack, _oz)]
 if usb: lines.append("- Impedance control: USB 2.0 differential pairs (nets USB_*_P/N) designed at %s mm / %s mm on the outer layers; ask JLC to tune for %.0f ohm differential on the %s" % (("%g" % _w) if _w else "the class", ("%g" % _g) if _g else "the class", _zt, (stack.replace(" stackup, ", " stackup") or "stackup this board is built on")))
