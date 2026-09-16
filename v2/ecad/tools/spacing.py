@@ -72,12 +72,22 @@ def main(a):
         else:
             s, e = t.GetStart(), t.GetEnd()
             items.append((n, t.GetLayer(), (mm(s.x), mm(s.y)), (mm(e.x), mm(e.y)), mm(t.GetWidth()) / 2))
+    # A PAD IS A FAT SEGMENT, NOT A CIRCLE OF ITS LONGEST SIDE (16 September 2026). The first run on board A
+    # reported a closest distance of 0.000 mm between its high-voltage nets and everything else, on a board
+    # whose DRC reads hard 0: a 1.7 by 1.0 pad modelled as a circle has a radius of 0.85 where its real half
+    # width across the short axis is 0.5, so it swallowed the tracks beside it. The centre line plus the short
+    # half width is exactly an oval pad and close enough for a rectangle, which is what KiCad draws.
     for f in b.GetFootprints():
         for p in f.Pads():
             n = p.GetNetname().lstrip("/"); c = p.GetPosition(); sz = p.GetSize()
-            r = max(mm(sz.x), mm(sz.y)) / 2
+            sx, sy = mm(sz.x), mm(sz.y)
+            r = min(sx, sy) / 2.0
+            half = max(0.0, (max(sx, sy) - min(sx, sy)) / 2.0)
+            ang = math.radians(p.GetOrientationDegrees() + (0.0 if sx >= sy else 90.0))
+            dx, dy = half * math.cos(ang), -half * math.sin(ang)
+            a_pt = (mm(c.x) - dx, mm(c.y) - dy); b_pt = (mm(c.x) + dx, mm(c.y) + dy)
             for L in (pcbnew.F_Cu, pcbnew.B_Cu):
-                if p.IsOnLayer(L): items.append((n, L, (mm(c.x), mm(c.y)), (mm(c.x), mm(c.y)), r))
+                if p.IsOnLayer(L): items.append((n, L, a_pt, b_pt, r))
     hv_items = [i for i in items if i[0] in hv]
     other = [i for i in items if i[0] not in hv and i[0]]
     pairs = []

@@ -46,3 +46,14 @@ def t_the_evidence_line_formats_the_position_it_carries():
     line = "%.3f mm %s to %s on %s at (%.1f, %.1f)" % (x[0], x[1], x[2], x[3], x[4][0], x[4][1])
     assert line.startswith("0.250 mm VBUS20 to GND on F.Cu at (10.0, 20.0)"), line
     assert "% x for x in" not in SRC, "the evidence line still formats the tuple whole"
+
+
+def t_a_pad_is_a_fat_segment_and_not_a_circle_of_its_longest_side():
+    """Board A's first run reported a closest distance of 0.000 mm on a board whose DRC reads hard 0.
+
+    A 1.7 by 1.0 pad modelled as a circle has a radius of 0.85 where its real half width across the short axis
+    is 0.5, so it swallows the tracks beside it and every measurement near a connector reads zero. The centre
+    line plus the short half width is exactly an oval pad and close enough for a rectangle, which is what KiCad
+    draws (16 September 2026)."""
+    assert "min(sx, sy) / 2.0" in SRC, "the pad radius is still taken from the longest side"
+    assert "GetOrientationDegrees" in SRC, "a rotated pad's centre line is not rotated with it"
