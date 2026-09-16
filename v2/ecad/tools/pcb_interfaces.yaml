@@ -1,0 +1,177 @@
+# WHAT EACH INTERFACE ON THESE BOARDS REQUIRES, FROM THE PART THAT DEFINES IT (rule INT-001, MESHSAT-862,
+# 16 September 2026).
+#
+# The rule asks that every interface be designed to ITS OWN specification rather than to a house number. Until
+# today one interface had a source in this tree: the Compute Module 5's PCIe clauses, read on 16 September. Its
+# datasheet turns out to state the requirement for every high-speed interface this design carries, and the
+# 5G module's hardware design does the same for the M.2 socket's own side, so the numbers below are the
+# HOSTS' and the MODULES' own, each with the document and the section it was read from.
+#
+# WHAT A NUMBER HERE IS. It is the requirement the part states, not a target this project chose. Where two
+# parts at the two ends of one link state different numbers, both are listed and the rule checks that the
+# board satisfies both, which is a real question: the CM5 asks 90 ohm of PCIe and the RM520N-GL asks
+# 85 ohm plus or minus 10 percent, and 90 is inside 76.5 to 93.5, so one class satisfies both ends.
+schema_version: 1
+generated: "2026-09-16"
+
+interfaces:
+  PCIE_CM5:
+    what: "PCIe Gen 2 between a Compute Module 5 and the PCIe switch on board B"
+    impedance_ohm: 90
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.10
+    inter_pair_mm: null            # the datasheet says length matching between pairs is unnecessary
+    max_length_mm: null
+    sources:
+      - {title: "Raspberry Pi Compute Module 5 datasheet", clause: "2.3 PCIe, routing guidance",
+         quote: "PCIe differential signals should be routed as 90 Ohm differential pairs with proper clearances.
+           Length matching between pairs is unnecessary, but the signals within a pair must be length-matched,
+           ideally within 0.1 mm",
+         url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}
+
+  PCIE_M2_MODULE:
+    what: "PCIe from the switch to the M.2 B-key socket, where the RM520N-GL 5G module sits"
+    impedance_ohm: 85
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.70
+    inter_pair_mm: null
+    max_length_mm: 200
+    sources:
+      - {title: "Quectel RM520N-GL hardware design", clause: "PCIe interface design principles",
+         quote: "Keep the maximum trace length less than 200 mm. Keep the intra-pair length matching of each
+           differential data pair (P/M) less than 0.7 mm. Keep the differential impedance of PCIe data trace
+           as 85 Ohm plus or minus 10 percent",
+         url_or_path: "v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf", accessed: "2026-09-16"}
+
+  USB2_CM5:
+    what: "USB 2.0 high speed, 480 Mb/s, on the Compute Module 5"
+    impedance_ohm: 90
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.10
+    inter_pair_mm: null
+    max_length_mm: null
+    sources:
+      - {title: "Raspberry Pi Compute Module 5 datasheet", clause: "2.4 USB interfaces",
+         quote: "Both USB 3.0 and USB 2.0 require 90 Ohm differential impedance, with length matching within
+           each pair",
+         url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}
+
+  USB3_CM5:
+    what: "USB 3.0 SuperSpeed, 5 Gb/s, on the Compute Module 5"
+    impedance_ohm: 90
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.10
+    inter_pair_mm: null
+    max_length_mm: null
+    sources:
+      - {title: "Raspberry Pi Compute Module 5 datasheet", clause: "2.4.1 USB 3.0 (SuperSpeed)",
+         quote: "The USB differential pairs should be routed with 90 Ohm differential impedance. Length
+           matching between separate pairs is unnecessary, but the P and N signals within each differential
+           pair must be length-matched, ideally within 0.1 mm",
+         url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}
+
+  USB_M2_MODULE:
+    what: "USB 2.0 and USB 3.1 at the M.2 B-key socket, the 5G module's own side"
+    impedance_ohm: 90
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.70            # USB 3.1; the module allows 2 mm on USB 2.0, so 0.7 is the binding one
+    inter_pair_mm: 10.0
+    max_length_mm: 225
+    sources:
+      - {title: "Quectel RM520N-GL hardware design", clause: "USB interface design principles",
+         quote: "The impedance of differential trace of USB 2.0 and USB 3.1 are 90 Ohm. For USB 2.0 signal
+           traces, the trace length should be less than 225 mm and the intra-pair length matching (P/M) should
+           be less than 2 mm. For USB 3.1, the intra-pair length matching (P/M) should be less than 0.7 mm,
+           while the inter-pair length matching (Tx/Rx) should be less than 10 mm",
+         url_or_path: "v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf", accessed: "2026-09-16"}
+
+  ETHERNET_CM5:
+    what: "Gigabit Ethernet between a Compute Module 5 and the switch chip on board B"
+    impedance_ohm: 100
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.15
+    inter_pair_mm: 50.0
+    max_length_mm: null
+    sources:
+      - {title: "Raspberry Pi Compute Module 5 datasheet", clause: "2.2 Ethernet, routing guidance",
+         quote: "Route the differential Ethernet signals as 100 Ohm differential pairs with appropriate spacing
+           and clearances. Length matching between different pairs is generally not required if differences
+           are less than 50 mm. However, the signals within each pair need to be length matched for optimal
+           signal integrity, ideally within 0.15 mm",
+         url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}
+
+  HDMI_CM5:
+    what: "HDMI 2.0 out of a Compute Module 5, through the display switch, to the face plate"
+    impedance_ohm: 100
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.15
+    inter_pair_mm: 25.0
+    max_length_mm: null
+    sources:
+      - {title: "Raspberry Pi Compute Module 5 datasheet", clause: "2.5.1 Dual HDMI 2.0",
+         quote: "HDMI signals must be routed as 100 Ohm differential pairs. Within a pair, each signal should
+           be length-matched within 0.15 mm. Between pairs, length matching within 25 mm is sufficient",
+         url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}
+
+  MIPI_CM5:
+    what: "MIPI CSI and DSI on the Compute Module 5"
+    impedance_ohm: 100
+    impedance_tol_percent: 10
+    intra_pair_mm: 0.15
+    inter_pair_mm: null
+    max_length_mm: null
+    sources:
+      - {title: "Raspberry Pi Compute Module 5 datasheet", clause: "2.5.2 MIPI (CSI and DSI)",
+         quote: "The MIPI signals must be routed as 100 Ohm differential pairs. Within a pair, the signals
+           should be length-matched within 0.15 mm",
+         url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}
+
+  USB_FULL_SPEED:
+    what: "USB 1.1 and 2.0 FULL speed, 12 Mb/s, between parts on one board"
+    impedance_ohm: null            # no target: see the note
+    impedance_tol_percent: null
+    intra_pair_mm: null
+    inter_pair_mm: null
+    max_length_mm: null
+    note: "Boards C and D carry USB only at full speed and declare their USB class with NO impedance target,
+      which is the 16 September reading of the parts' own datasheets (a TUSB2046B full-speed hub, a PCM2912A
+      full-speed codec, CP2102N bridges). At 12 Mb/s with the specification's own 4 to 20 ns edges a 30 mm pair
+      is electrically short, so a 90 ohm target is a wrong requirement rather than a strict one. It is listed
+      here so that a board declaring no target is a DECLARED zero with a reason rather than a silence."
+    sources:
+      - {title: "TI TUSB2046B datasheet", clause: "features, first page",
+         quote: "Full-Speed Hub. All Downstream Ports Support Full-Speed and Low-Speed Operations",
+         url_or_path: "v2/vendor/ti/ti-tusb2046b.pdf", accessed: "2026-09-16"}
+      - {title: "TI PCM2912A datasheet", clause: "features",
+         quote: "apply USB revision 2.0, full-speed",
+         url_or_path: "v2/vendor/ti/ti-pcm2912a.pdf", accessed: "2026-09-16"}
+
+# Which nets on which board belong to which interface, by the net-name patterns the placement generators
+# already use for their classes. A pattern that matches nothing on its board is reported, never silent.
+boards:
+  b:
+    name: pcb-b-compute
+    assignments:
+      - {interface: PCIE_CM5, patterns: ["PCIE*"], class: USB}
+      - {interface: PCIE_M2_MODULE, patterns: ["CARD*_RX_*", "CARD*_TX_*", "CARD*_CLK_*"], class: USB}
+      - {interface: PCIE_M2_MODULE, patterns: ["NVME*_RX_*", "NVME*_TX_*", "NVME*_CLK_*"], class: USB}
+      - {interface: USB3_CM5, patterns: ["HOST*", "BANK*", "MUX*", "LIME_SS*"], class: USB}
+      - {interface: USB2_CM5, patterns: ["USB*", "HUB*", "LIME_D*", "CAM_D*", "QMX_D*"], class: USB}
+      - {interface: ETHERNET_CM5, patterns: ["ETH*", "SWP*"], class: DIFF100}
+      - {interface: HDMI_CM5, patterns: ["HDMI*_D*", "HDMI*_CK_*"], class: DIFF100}
+  c:
+    name: pcb-c-display
+    assignments:
+      - {interface: USB_FULL_SPEED, patterns: ["USB*"], class: USB}
+  d:
+    name: pcb-d-aprs
+    assignments:
+      - {interface: USB_FULL_SPEED, patterns: ["USB*", "HUB*"], class: USB}
+  a:
+    name: pcb-a-power
+    assignments:
+      - {interface: USB2_CM5, patterns: ["USB_D8*", "USB_E6*", "USB_WALL*"], class: USB}
+  e:
+    name: pcb-e1-dock
+    assignments:
+      - {interface: USB_FULL_SPEED, patterns: ["USB*"], class: USB}

@@ -307,15 +307,30 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "driver count, sense and fail-safe pull are checked across three boards"}
 
  INT-001: {implementation: "gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py",
-   verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
-   maturity: GENERATED_ONLY, gap_category: PROSE_ONLY,
+   verification: {tool: "interfaces.py, check_contracts.py", verdict: "interfaces, check_contracts", fixtures: "tests/test_interfaces.py, tests/test_gate_fixtures.py"},
+   maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it decided
      three things. PCIe on this host is 90 ohm differential with intra-pair match within 0.1 mm, so the class board B already
      assigns is correct and the PCIe wants 85 note of 9 September is withdrawn for this design. Every PCIe receive line needs
      a 220 nF series capacitor before it enters the IC, and board B had none on three slots: six capacitors added at the
      source and a contract now holds the shape (the module's receive net carries exactly one capacitor and never a second
      device). Ethernet is 100 ohm differential, intra-pair within 0.15 mm. This closes ONE interface of several: USB,
-     M.2 and HDMI have no sheet, which is why the maturity is GENERATED_ONLY and not ENFORCED",
+     M.2 and HDMI have no sheet, which is why the maturity is GENERATED_ONLY and not ENFORCED.
+     16 SEPTEMBER 2026, SECOND PASS: THE SAME DATASHEET STATES ALL OF THEM, and the sentence above was wrong to
+     stop at PCIe. The Compute Module 5's own document gives Ethernet 100 ohm with 0.15 mm intra-pair, PCIe
+     90 ohm with 0.1, USB 2.0 and 3.0 90 ohm with 0.1, HDMI 100 ohm with 0.15 and 25 mm between pairs, and MIPI
+     100 ohm with 0.15; the RM520N-GL hardware design gives the M.2 socket's own side, 85 ohm plus or minus
+     10 percent on PCIe with a 200 mm limit and 90 ohm on USB with 225 mm. `pcb_interfaces.yaml` holds all of
+     it as data with the clause and the quote each was read from, and `interfaces.py` judges every board's
+     classes against it. EVERY IMPEDANCE TARGET ON EVERY BOARD IS CORRECT, including the two ends that state
+     different numbers, because 90 ohm is inside the module's 85 plus or minus 10 percent. What disagrees is
+     one thing, on every high-speed interface of boards A and B: THIS PROJECT JUDGES INTRA-PAIR MISMATCH AT
+     1.0 mm AND THE PARTS ASK FOR 0.1 TO 0.7, six to ten times tighter. The 1 mm is the owner ruling of
+     5 September and tightening it is a decision, so the rule reports the gap with its numbers and the decision
+     is filed. Boards C, D and E carry USB only at full speed and declare no target, which their parts'
+     datasheets say in as many words: a declared zero with a reason, not a silence",
+   false_positive_analysis_note: "an interface nothing in this tree describes is not invented a requirement, and
+     a board that declares NO impedance target is not failed for it where its parts say the interface has none",
    remediation: {action: "per-interface sheets for USB, M.2 and HDMI from their own specifications, the way PCIe was done today",
      owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 10, p80_h: 34}}
 
