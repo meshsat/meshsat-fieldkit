@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "counts": {
+  "declared": 4,
+  "not_on_netlist": 0,
+  "ports": 4,
+  "unprotected": 7
+ },
+ "denominator": 14,
+ "evidence": [
+  "J_PAOUT (the power amplifier output to the antenna path, which reache): 1 conductor(s) reach a chip with nothing between: J_PAOUT.1 on RF_PAOUT",
+  "J_HS1 (a headset jack on the face, which a person plugs a headset i): 3 conductor(s) reach a chip with nothing between: J_HS1.1 on HS1_SPK, J_HS1.3 on HS1_MIC, J_HS1.5 on PTT_HS1_n",
+  "J_HS2 (the second headset jack): 3 conductor(s) reach a chip with nothing between: J_HS2.1 on HS2_SPK, J_HS2.3 on HS2_MIC, J_HS2.5 on PTT_HS2_n"
+ ],
+ "inputs": {
+  "board": "d",
+  "netlist": {
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "c9094df13747623b"
+  }
+ },
+ "note": "a conductor leaves the case and reaches a semiconductor with nothing between",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:13:59Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

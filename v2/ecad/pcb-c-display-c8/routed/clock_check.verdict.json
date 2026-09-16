@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "counts": {
+  "bad": 0,
+  "crystals": 1
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "netlist": {
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "19825ddf300e7a5b"
+  }
+ },
+ "note": "every crystal has two matched load capacitors to ground and its own IC alone on its nets; the VALUE against each part's own C_L is not judged here",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "CLK-001"
+ ],
+ "tool": "clock_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:13:33Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

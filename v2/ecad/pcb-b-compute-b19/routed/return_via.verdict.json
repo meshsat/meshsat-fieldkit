@@ -69,7 +69,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "e590541697c8914f"
+  "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
   "RET-004"
@@ -77,9 +77,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "914d59b06253bedc"
+  "tools_tree_sha": "f309c9db5b5a5378"
  },
- "ts": "2026-09-16T01:43:13Z",
+ "ts": "2026-09-16T03:12:17Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

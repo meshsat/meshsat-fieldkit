@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "counts": {
+  "classes": 4,
+  "under_capability": 5
+ },
+ "denominator": 20,
+ "evidence": [
+  "the board's minimum track width 0.127 mm is under the fabricator's 0.160 mm for 2.0 oz on a two-layer board (track width row)",
+  "the board's minimum clearance 0.127 mm is under the fabricator's 0.160 mm for 2.0 oz on a two-layer board (spacing row)",
+  "class Default clearance 0.127 mm is under the fabricator's 0.160 mm for 2.0 oz on a two-layer board (spacing row)",
+  "class GNDC clearance 0.127 mm is under the fabricator's 0.160 mm for 2.0 oz on a two-layer board (spacing row)",
+  "class SENSE clearance 0.127 mm is under the fabricator's 0.160 mm for 2.0 oz on a two-layer board (spacing row)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  },
+  "copper_layers": 2,
+  "copper_oz": 2.0,
+  "document": "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"
+ },
+ "note": "this board is designed to numbers the chosen process does not make at its copper weight",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RTE-001",
+  "STK-001"
+ ],
+ "tool": "fab_limits",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:14:34Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

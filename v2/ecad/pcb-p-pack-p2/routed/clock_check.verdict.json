@@ -1,0 +1,28 @@
+{
+ "advisory": false,
+ "counts": {},
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "netlist": {
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "8866d2beec6f281f"
+  }
+ },
+ "note": "this board carries no crystal, so nothing was judged",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "CLK-001"
+ ],
+ "tool": "clock_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:14:35Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

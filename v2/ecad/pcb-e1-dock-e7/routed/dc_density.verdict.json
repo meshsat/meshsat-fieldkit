@@ -16,7 +16,7 @@
  "note": "the conductor and pour current capacity at 10 K, cell 0.50 mm. The LIMIT behind this verdict has no authoritative text in this tree: the registry records it as SOURCE_UNVERIFIED and this is a screen, not a law",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "e590541697c8914f"
+  "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
   "PI-001"
@@ -24,9 +24,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "914d59b06253bedc"
+  "tools_tree_sha": "f309c9db5b5a5378"
  },
- "ts": "2026-09-16T01:45:13Z",
+ "ts": "2026-09-16T03:14:15Z",
  "verdict": "PASS",
  "version": "unknown"
 }

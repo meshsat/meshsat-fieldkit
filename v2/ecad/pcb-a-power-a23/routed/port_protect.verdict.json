@@ -1,0 +1,36 @@
+{
+ "advisory": false,
+ "counts": {
+  "declared": 3,
+  "not_on_netlist": 0,
+  "ports": 3,
+  "unprotected": 0
+ },
+ "denominator": 21,
+ "evidence": [
+  "J_USBC_OUT (the USB-C outlet on the connector plate, out of the case): 2 conductor(s) whose clamp is behind an active part: J_USBC_OUT.2 on PD_CC1: the clamp (D4 on PD_VBUS) is behind an active part, which therefore sees the transient itself; J_USBC_OUT.3 on PD_CC2: the clamp (D4 on PD_VBUS) is behind an active part, which therefore sees the transient itself"
+ ],
+ "inputs": {
+  "board": "a",
+  "netlist": {
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "75271be96f3d315d"
+  }
+ },
+ "note": "a conductor leaves the case and reaches a semiconductor with nothing between",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:11:38Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}
