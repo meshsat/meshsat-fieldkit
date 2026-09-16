@@ -52,6 +52,7 @@ run "return vias"       python3 $T/return_via.py $N.kicad_pcb --check
 # The SECOND tool of two rules that need both to agree (16 September 2026). place_audit predicts which escape
 # fans will collide, which the DRC on a placed board cannot say; lcsc_fill refuses a BOM line with no order
 # code, which asking the fabricator about a code cannot say because there is no code to ask about.
+run "via table"         python3 $T/via_audit.py $N.kicad_pcb
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # The order-code gate reads a BOM THAT ALREADY EXISTS and never makes one. Exporting it here would turn this
 # sweep into a producer of a fabrication artefact, which the execution-paths floor refuses and is right to:

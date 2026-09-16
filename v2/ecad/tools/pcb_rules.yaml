@@ -1489,12 +1489,60 @@ rules:
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
    maturity_at_writing: UNASSESSED
 
+ - id: VIA-002
+   domain: VIAS
+   short_name: the annular ring is one the fabricator makes
+   requirement: >
+     The copper left around every drilled hole, (pad or via diameter minus drill) divided by two, is at or
+     above the minimum annular ring the chosen fabricator guarantees for the chosen process and the finished
+     board thickness, and the aspect ratio of every hole is inside the same document's limit.
+   classification: FAB_LIMIT
+   applicability: CONDITIONAL
+   condition: {fact: has_tracks, op: truthy}
+   risk_class: [FABRICATION, RELIABILITY]
+   release_effect: BLOCKER
+   source_status: SOURCE_UNVERIFIED
+   sources:
+    - {title: "fabricator PCB capability page", issuer: "the selected fabricator", revision: "scraped 4 September 2026",
+       clause: "", url_or_path: "v2/vendor/seals/jlcpcb-pcb-capabilities-page.txt", accessed: "2026-09-04",
+       note: "the only fabricator capability file in this tree, and it carries NO capability data: it is a
+         JavaScript-blocked page scrape filed in the wrong folder, and nothing reads it. Until a real document
+         replaces it, no board declares an annular floor and this rule is INCONCLUSIVE on every board, which is
+         the honest state rather than a number this project made up"}
+   acceptance_criteria: >
+     Each board declares annular_min_mm from the fabricator's own document, with the clause cited, and every
+     via and plated hole on the board is at or above it.
+   rationale: >
+     The annular ring is the number a fabricator quotes and the one a via actually fails at: a 0.45 mm via on a
+     0.35 mm drill leaves 0.05 mm per side, and a process guaranteeing 0.075 will not make it reliably. The
+     drill and the diameter can be judged against the board; the ring can only be judged against the process.
+   failure_mode: "A breakout: the hole misses its own pad, and the net is open on a board that passes every check this project can run."
+   verification_method: [SCRIPT, VENDOR_CONFIRMATION]
+   verification_phase: ROUTED_BOARD
+   automation_feasibility: AUTOMATABLE
+   boards_affected: [a, b, c, d, e, p]
+   interfaces_affected: [NONE]
+   implementation_location: via_audit.py
+   evidence_scope: [board_sha256, vendor_capability_revision]
+   owner: SESSION
+   waiver_policy: {allowed: true, authority: OWNER, evidence: "the fabricator's written confirmation for that hole",
+                   scope: "one via class", expiry: "the order", residual_risk: "a breakout found at electrical test"}
+   maturity_at_writing: SOURCE_UNVERIFIED
+
  - id: VIA-001
    domain: VIAS
    short_name: every via is a via the process makes
+   false_positive_analysis: >
+     A false refusal is a via deliberately smaller than the board's own stated minimum, and there is no such
+     thing: the minimums are the board's own design settings, which the DRC already judges every track and via
+     against, so a via under them is a via the board itself says it does not make. The second shape is a VIA IN
+     A PAD read as a defect. It is not one here: it is a deliberate technique on exposed pads and fine-pitch
+     escapes, so those vias are counted and named for the order paperwork and never refused. The annular ring
+     is deliberately NOT in this rule, because it is judged against a fabricator capability this tree does not
+     hold, and refusing a board on it would be the heuristic-as-law this audit exists to remove.
    requirement: >
-     Every via's diameter, drill, aspect ratio, annular ring and treatment (tented, plugged, filled, capped,
-     in pad) is one the chosen process produces, and a via in a pad is declared to the assembler.
+     Every via's diameter and drill is at or above the board's own stated minimum, and every via that sits in a
+     pad is counted and declared to the assembler with the treatment it needs.
    classification: FAB_LIMIT
    applicability: CONDITIONAL
    condition: {fact: has_tracks, op: truthy}
@@ -1503,8 +1551,8 @@ rules:
    source_status: SOURCE_UNVERIFIED
    sources: []
    acceptance_criteria: >
-     A via table per board: sizes used, aspect ratio against the fabricator's limit for the finished
-     thickness, treatment, and the count of vias in pads with the assembly note that accompanies them.
+     A via table per board: every via's diameter and drill against the board's own minimums, and the count of
+     vias in pads with the assembly note that accompanies them.
    rationale: "A via in a pad without a declared treatment is a solder thief the assembler does not expect."
    failure_mode: "Voided joints, open barrels, and a board that passes electrical test and fails in vibration."
    verification_method: [SCRIPT, VENDOR_CONFIRMATION]

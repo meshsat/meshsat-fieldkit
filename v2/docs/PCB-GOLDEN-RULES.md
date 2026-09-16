@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **a453bedd2b5ad14d**, 56 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **e590541697c8914f**, 57 rules over 34 domains.
 
 ## How to read a rule
 
@@ -312,7 +312,7 @@ nothing judges.
 | verified by | SCRIPT at SCHEMATIC (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_*.py via intent.rail() |
-| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one rail, expires the next schematic regeneration |
 
@@ -324,8 +324,12 @@ declaration today, so nothing has ever measured them.
 
 **If violated** A rail droops or overheats and no check ever looked at it.
 
-**Today** the check confirms a DECLARED rail exists on the board; nothing compares the declared set against the power
-nets the board actually carries, and B's per-slot cores and E's downstream rails are undeclared
+**Today** 16 September 2026: the declared set is compared with the power nets the board actually carries. A net whose
+name begins with + is a rail by this project's own generator convention, so intent_checks counts the
+power-symbol nets against the declared ones and names what is missing. It found thirty-eight undeclared rails
+across five boards, thirty of them on board B, and every one of those was invisible three ways at once:
+judged as a SIGNAL by the return-path rule, skipped entirely by dc_drop, and unreachable by derate. All
+thirty-eight are declared with their loads and their real power-path sources
 
 ### PWR-002  sequencing and inrush
 
@@ -1320,10 +1324,46 @@ project's hard rule set.
 
 ## Vias
 
+### VIA-002  the annular ring is one the fabricator makes
+
+The copper left around every drilled hole, (pad or via diameter minus drill) divided by two, is at or above
+the minimum annular ring the chosen fabricator guarantees for the chosen process and the finished board
+thickness, and the aspect ratio of every hole is inside the same document's limit.
+
+| | |
+|---|---|
+| classification | FAB_LIMIT |
+| applies | conditional; boards a, b, c, d, e, p |
+| release effect | **BLOCKER** |
+| risk | FABRICATION, RELIABILITY |
+| verified by | SCRIPT, VENDOR_CONFIRMATION at ROUTED_BOARD (automatable) |
+| source | SOURCE_UNVERIFIED |
+| | fabricator PCB capability page, the selected fabricator -- v2/vendor/seals/jlcpcb-pcb-capabilities-page.txt |
+| implementation | escape.py, prefanout.py, gen_pcb_*.py minimums |
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| owner | SESSION |
+| waiver | by OWNER, scope one via class, expires the order |
+
+**Accept when** Each board declares annular_min_mm from the fabricator's own document, with the clause cited, and every via
+and plated hole on the board is at or above it.
+
+**Why** The annular ring is the number a fabricator quotes and the one a via actually fails at: a 0.45 mm via on a
+0.35 mm drill leaves 0.05 mm per side, and a process guaranteeing 0.075 will not make it reliably. The drill
+and the diameter can be judged against the board; the ring can only be judged against the process.
+
+**If violated** A breakout: the hole misses its own pad, and the net is open on a board that passes every check this project
+can run.
+
+**Today** the copper left around each hole is the number a fabricator quotes and the one a via actually fails at, and
+it is measured on every board. What is missing is the FLOOR: this tree's only fabricator capability file is a
+JavaScript-blocked page scrape with no capability data in it, so no board declares annular_min_mm and the
+verdict is INCONCLUSIVE rather than passing at a figure this project made up. That is the same refusal the
+registry makes of every other unsourced limit
+
 ### VIA-001  every via is a via the process makes
 
-Every via's diameter, drill, aspect ratio, annular ring and treatment (tented, plugged, filled, capped, in
-pad) is one the chosen process produces, and a via in a pad is declared to the assembler.
+Every via's diameter and drill is at or above the board's own stated minimum, and every via that sits in a
+pad is counted and declared to the assembler with the treatment it needs.
 
 | | |
 |---|---|
@@ -1334,19 +1374,23 @@ pad) is one the chosen process produces, and a via in a pad is declared to the a
 | verified by | SCRIPT, VENDOR_CONFIRMATION at ROUTED_BOARD (automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | escape.py, prefanout.py, gen_pcb_*.py minimums |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one via class, expires the order |
 
-**Accept when** A via table per board: sizes used, aspect ratio against the fabricator's limit for the finished thickness,
-treatment, and the count of vias in pads with the assembly note that accompanies them.
+**Accept when** A via table per board: every via's diameter and drill against the board's own minimums, and the count of vias
+in pads with the assembly note that accompanies them.
 
 **Why** A via in a pad without a declared treatment is a solder thief the assembler does not expect.
 
 **If violated** Voided joints, open barrels, and a board that passes electrical test and fails in vibration.
 
-**Today** one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not checked
-anywhere, and several boards carry vias in pads
+**Today** 16 September 2026: every via on the board is judged against the BOARD'S OWN minimum diameter and drill, which
+the board carries and the DRC already believes, and the vias that sit inside a pad are counted and named. A
+via in a pad is NOT a defect here: it is a deliberate technique on exposed pads and fine-pitch escapes, and
+it carries a fabrication cost (filled and capped) that the order paperwork has to name, so reporting it is
+how that note gets written. The ANNULAR RING is a separate verdict under VIA-002 because it is judged against
+a FABRICATOR capability and not against the board
 
 ## Planes Pours
 

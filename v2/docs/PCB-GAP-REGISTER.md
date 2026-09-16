@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**38 of 56 rules carry a gap.**
+**37 of 57 rules carry a gap.**
 
 ## absent (13)
 
@@ -71,7 +71,7 @@ stage
 test points exist; no bring-up sheet exists for any board  
 *Close it by* a bring-up sheet per board. Owner **SESSION**, after PWR-002. Effort P50 5h, P80 14h.
 
-## generated only (9)
+## generated only (7)
 
 **ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, GENERATED_ONLY)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
@@ -98,11 +98,6 @@ phantom-net pours are refused and pour coverage is measured; no check asks wheth
 or where a crossing happens  
 *Close it by* a per-board ground statement and a check that no signal crosses an undeclared split. Owner **SESSION**. Effort P50 6h, P80 16h.
 
-**PWR-001 every rail is declared with its loads** (BLOCKER, GENERATED_ONLY)  
-the check confirms a DECLARED rail exists on the board; nothing compares the declared set against the power
-nets the board actually carries, and B's per-slot cores and E's downstream rails are undeclared  
-*Close it by* count power nets on the board against the declaration and refuse an undeclared one above a current threshold. Owner **SESSION**. Effort P50 4h, P80 10h.
-
 **RF-001 RF paths are designed as RF** (BLOCKER, GENERATED_ONLY)  
 the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
 filter is verified, and the LPF values are flagged for a simulation that has not run  
@@ -112,11 +107,6 @@ filter is verified, and the LPF values are flagged for a simulation that has not
 every external port has a device; no port table exists and no clamping voltage has been compared against a
 protected part's maximum  
 *Close it by* a port table with threat, device, clamping and parasitics. Owner **SESSION**, after ENV-001. Effort P50 5h, P80 14h.
-
-**VIA-001 every via is a via the process makes** (BLOCKER, GENERATED_ONLY)  
-one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not checked
-anywhere, and several boards carry vias in pads  
-*Close it by* a via table per board against the capability record, and the assembly note for vias in pads. Owner **SESSION**, after RTE-001. Effort P50 4h, P80 10h.
 
 ## prose only (3)
 
@@ -180,7 +170,7 @@ computed, and a board declares exceptions in an allow file
 on D, and costs E its route  
 *Close it by* keep as a screen under RET-003; record the grid's per-board measurement. Owner **SESSION**, after RET-003. Effort P50 2h, P80 6h.
 
-## source or applicability unresolved (8)
+## source or applicability unresolved (9)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -242,9 +232,17 @@ layer_judge measures what the router did, not what the board needs, and says so;
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-## covered (18)
+**VIA-002 the annular ring is one the fabricator makes** (BLOCKER, SOURCE_UNVERIFIED)  
+the copper left around each hole is the number a fabricator quotes and the one a via actually fails at, and
+it is measured on every board. What is missing is the FLOOR: this tree's only fabricator capability file is a
+JavaScript-blocked page scrape with no capability data in it, so no board declares annular_min_mm and the
+verdict is INCONCLUSIVE rather than passing at a figure this project made up. That is the same refusal the
+registry makes of every other unsourced limit  
+*Close it by* obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge. Owner **SESSION**. Effort P50 2h, P80 6h.
+
+## covered (20)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RET-002, RF-002, RTE-002, SCH-001, SCH-002,
-SCH-003, SGN-001, SGN-002, SUP-001
+DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RF-002, RTE-002, SCH-001,
+SCH-002, SCH-003, SGN-001, SGN-002, SUP-001, VIA-001
 

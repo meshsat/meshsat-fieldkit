@@ -15,6 +15,6 @@ the boards; each one needs hardware that does not exist yet.
 | REL-001 the build survives its service life | A tall part shears its joints, a connector wears, a coated board traps moisture. | a reliability sheet per board and the test plan for the prototype | OWNER |
 | BAT-001 the cell block is protected in hardware | Thermal runaway from an over-charge, a deep discharge, or an external short. | the cell's datasheet on file, the threshold table derived from it, and the prototype protection test | OWNER |
 
-5 rule(s) of 56 wait on hardware. Nothing has been fabricated or powered, so each of these is UNKNOWN rather
+5 rule(s) of 57 wait on hardware. Nothing has been fabricated or powered, so each of these is UNKNOWN rather
 than passing or failing, and the readiness state says so.
 

@@ -205,6 +205,11 @@ if [ -n "$PRUNED" ]; then
 fi
 
 # every gate below runs ONCE and its exit code is its verdict; the reason comes from its verdict JSON
+# RULE VIA-001: every via against the board's own minimum diameter and drill, and the vias in pads counted for
+# the order paperwork. It runs on the routed board because that is when every via exists: the escapes, the
+# fanout, the router's own, the stitching, the grid and whatever the closers added.
+python3 $T/via_audit.py $N.kicad_pcb > out/via_audit.log 2>&1; VA=$?; grep -E 'via_audit:|FAIL|via in pad' out/via_audit.log | head -6
+[ "$VA" -eq 1 ] && stop "a via is below the board's own minimum (rule VIA-001, out/via_audit.log)" out/via_audit.log
 python3 $T/check_pcb_$L.py $N.kicad_pcb > out/gate-$N.log 2>&1; GATE=$?; grep -E "$GGREP" out/gate-$N.log | tail -14
 [ "$GATE" -eq 0 ] || stop "GATE $(python3 $T/verdict.py read out/check_pcb_$L.verdict.json 2>&1 | tail -1) on the routed board" "out/gate-$N.log"
 python3 $T/dc_drop.py $N.kicad_pcb --json out/$N-dc_drop.json > out/$N-dc_drop.log 2>&1; DC=$?; grep -E 'dc_drop' out/$N-dc_drop.log | tail -14

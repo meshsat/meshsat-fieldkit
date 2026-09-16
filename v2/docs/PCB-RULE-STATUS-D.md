@@ -9,9 +9,9 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 11 | 23.9 |
+| PASS | 9 | 19.6 |
 | FAIL | 8 | 17.4 |
-| INCONCLUSIVE | 27 | 58.7 |
+| INCONCLUSIVE | 29 | 63.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **46** | 100.0 |
 
@@ -25,15 +25,15 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the check confirms a DECLARED rail exists on the board; nothing compares the declared set agains |
-| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 1, 'pass': 155} |
+| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 1, 'pass': 0} |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the conductor measure is implemented and tested; its limit comes from a formula in a code c |
-| PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 1 |
+| PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | dc_drop INCONCLUSIVE |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: via current capacity is asserted in generator comments and measured by nothing |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: phantom-net pours are refused and pour coverage is measured; no check asks whether a partition i |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the stackup is written into the board and read back by the impedance check; the fabricator  |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the principle is implemented and the heuristic is no longer standing in for i |
-| RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 1, 'pass': 155} |
+| RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 1, 'pass': 0} |
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no verification: nothing determines the reference conductor before and after a transition; return_via's same-plane exemption is the nearest thing and  |
 | RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'exempt': 16, 'judged': 89, 'lacking': 79, 'same_plane': 59} |
 | IMP-001 an impedance target is feasible and asked for | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the  |
@@ -49,11 +49,11 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the DRC enforces the board's own rules; those rules were copied from a capability record th |
-| RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
+| RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no pruned_gate verdict for this board |
 | VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not  |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 5 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
-| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_d FAIL: {'fail': 1, 'footprints': 211, 'pass': 323} |
+| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_d FAIL: {'fail': 1, 'footprints': 211, 'pass': 168} |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: test points exist; no bring-up sheet exists for any board |
