@@ -7,20 +7,20 @@
   "report": {
    "silk_over_copper": 4,
    "silk_overlap": 25,
-   "starved_thermal": 2,
-   "track_dangling": 14,
-   "via_dangling": 25
+   "starved_thermal": 1,
+   "track_dangling": 20,
+   "via_dangling": 32
   },
   "stage": "post",
   "types_checked": 15,
-  "unrouted": 0
+  "unrouted": 1
  },
  "denominator": 15,
  "evidence": [],
  "inputs": {
   "drc": {
    "path": "out/pcb-e1-dock-drc.json",
-   "sha256_16": "dad53d0a685b8f20"
+   "sha256_16": "9fd21725972cb13f"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
@@ -35,9 +35,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "df25cbd5ec06a775"
  },
- "ts": "2026-09-16T03:53:47Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T04:11:31Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }

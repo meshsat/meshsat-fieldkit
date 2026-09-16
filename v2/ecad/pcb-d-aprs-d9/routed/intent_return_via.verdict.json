@@ -24,9 +24,9 @@
  "tool": "intent_return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "512c63752dfabdf7"
+  "tools_tree_sha": "df25cbd5ec06a775"
  },
- "ts": "2026-09-16T03:53:26Z",
+ "ts": "2026-09-16T04:11:09Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
