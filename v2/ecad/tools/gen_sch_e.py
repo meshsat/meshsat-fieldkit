@@ -25,8 +25,11 @@ _intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3",
 # backwards through it. The whole of this bus leaves through the block lands J_BLK pins 1 to 4 for board A's
 # front end to regulate; the monitor divider R40 and the indicator LED1 are microamps and milliamps.
 _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2",
-             loads={"J_BLK": 8.0},
-             note="shore and vehicle entry after the filter choke, 10 A fuse")
+             loads={"J_BLK": 8.0}, budget=0.02, share=0.005,
+             note="shore and vehicle entry after the filter choke, 10 A fuse. THIS BOARD'S SHARE is 0.5 of the "
+                  "rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on "
+                  "this strip and measure 0.16 percent, while board A carries the same 8 A from the dock across the "
+                  "power board to its front end and measures 0.86, so the 1.5 points go there")
 # DECLARED 16 September 2026. These two were not in the intent file, so `signalnets` could not know they were
 # rails and the return-path gate judged them as SIGNALS: +3V3_E6 came back 194.7 of 502.0 mm without an
 # adjacent reference, which is what a power net looks like and says nothing about signal integrity. A rail that

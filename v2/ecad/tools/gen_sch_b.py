@@ -46,8 +46,11 @@ _SLOT_LOADS = lambda s: {
     "J_FAN%d" % s: 0.1,              # the slot's IP68 cooler fan
 }
 for _n in (1, 2, 3):
-    _intent.rail("+5V_S%d" % _n, 5.1, 2.5, 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n),
-                 note="slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan")
+    _intent.rail("+5V_S%d" % _n, 5.1, 2.5, 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), budget=0.02, share=0.015,
+                 note="slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. "
+                      "THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and "
+                      "measures 0.07 percent from its shunt to the header, and the long copper is this side, from the "
+                      "VH header across the board to a module receptacle carrying 2.5 A")
 _DEV_LOADS = {"U23": 1.2,            # eFuse -> +5V_LIME, the LimeSDR Mini 2.4 (the eFuse's ILM is 3.0 A)
               "U25": 0.90,           # the AP63203 buck -> +3V3_DEV, 1.4 A at 3.3 V through it
               "U21": 0.60,           # load switch -> +5V_LORA, the E22-900M30S at 1 W transmit
@@ -60,7 +63,7 @@ _DEV_LOADS = {"U23": 1.2,            # eFuse -> +5V_LIME, the LimeSDR Mini 2.4 (
               "U106": 0.10, "U206": 0.10, "U306": 0.10,   # the three 1.1 V hub cores, always on: a bank outlives its module
               "U40": 0.05, "U50": 0.05, "U60": 0.05,      # the three controllers' private 3.3 V LDOs
               "U15": 0.02, "U16": 0.02, "U17": 0.02, "U18": 0.02}   # the four CP2102N bridges
-_intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", loads=_DEV_LOADS,
+_intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", loads=_DEV_LOADS, budget=0.02, share=0.015,
              note="the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)")
 # THE PEAK IS THE SOURCE PART'S RATING. This rail declared 5.0 A peak behind U25, an AP63203 whose rating is
 # 2 A: a peak the source cannot deliver is not a peak, and the density verdict would have judged the copper
@@ -175,7 +178,7 @@ _intent.rail("+5V_HDMI", 5.0, 0.10, 0.50, "F2",
              source_ic="F2 is a polyfuse in series with the rail: the part IS the power path",
              loads={"J_HDMI": 0.50},
              note="the HDMI connector's own 5 V behind the 0.5 A polyfuse F2, which is what the standard asks a source to supply")
-_intent.rail("+54V_POE", 54.0, 0.30, 0.60, "J_54V",
+_intent.rail("+54V_POE", 54.0, 0.30, 0.60, "J_54V", budget=0.02, share=0.015,
              loads={"U5": 0.60},
              note="the Power over Ethernet feed arriving from board A's own +54V_POE stage, into the TPS23861 "
                   "injector U5. It is a rail of board A and a load of this one")
