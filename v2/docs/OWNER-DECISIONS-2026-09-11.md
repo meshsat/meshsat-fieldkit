@@ -2192,6 +2192,32 @@ grid answer RET-004 almost completely (D 1 of 37, E 4 of 60) and the four that d
 (A 32 of 40, B 204 of 245, C 65 of 75, P 10 of 14). The open counts at the two caps are the other half and
 follow tonight.
 
+**BOTH HALVES ARE IN, at their caps, 17 September 2026 00:30 CEST.** Same box, same five-hour cap, one
+declaration between them:
+
+| | A38, grid at 2.1 mm | A39, no grid |
+|---|---|---|
+| passes completed in 5 h | **12** | **64** |
+| minutes a pass | **24.7** | **4.6** |
+| route result | 0 hard, **33 unrouted** of 254 nets, 227 vias | 0 hard, **31 unrouted** of 254, 204 vias |
+| pour islands the finish had to stitch | 1 stitched, 1 left | 1 stitched, 2 left |
+
+**The grid costs about five and a half times the router time per pass and it does not cost open connections.**
+At equal wall clock the two boards are two opens apart, which is inside the scatter this router shows between
+runs of the same board; at equal PASSES the grid arm is ahead, because the control needed sixty-four passes to
+reach what the grid arm reached in twelve. So the honest reading is that the grid buys its return vias with
+TIME and not with routability, and time on a rented box is the cheapest thing this project spends: a five-hour
+route costs about 1.60 USD.
+
+**What it buys, measured on the set:** the two boards that declare the grid answer RET-004 almost completely
+(D 1 of 37 signal vias without a ground via, E 4 of 60) and the four that do not fail it almost completely
+(A 32 of 40, B 204 of 245, C 65 of 75, P 10 of 14). It is also the only candidate prevention for the one closer
+class that still names none, the pour island with no via of its own net.
+
+**The session's reading: board A takes the grid.** A40 is already routing without it as the control, and A41
+runs beside it with it, on the second box, so the deliverable is chosen from the better board rather than from
+the argument.
+
 ## Decision 37, 16 September 2026: board D asks for two crystals that do not exist, and the part it was certified against is four times the frequency
 
 **What was found, and it is on the board closest to finished.** Board D draws two 6 MHz crystals, one for the
