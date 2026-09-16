@@ -95,3 +95,29 @@ def t_every_capability_number_in_the_tool_is_in_the_document_it_cites():
     for v in (fab_limits.MIN_VIA_HOLE, fab_limits.MIN_VIA_DIAM, fab_limits.MIN_NPTH) + fab_limits.VIA_IN_PAD:
         if ("%.2f" % v) not in txt and ("%g" % v) not in txt: missing.append(str(v))
     assert not missing, "numbers in the tool that the cited document does not contain: %s" % missing
+
+
+def t_every_dielectric_constant_the_stackup_writes_is_in_the_capability_document():
+    """The stackup's Dk values decide every impedance this project computes, so each one has to be the
+    fabricator's own figure rather than a number from somewhere.
+
+    16 September 2026: the two-layer stacks carried 4.6 for their core, taken from the fabricator's IMPEDANCE
+    page on 8 September, which is a different page about the multilayer cores; the capability document states
+    4.5 for a 2-layer board. Neither two-layer board carries an impedance target, so nothing computed moved,
+    which is exactly when a number is easiest to leave wrong.
+    """
+    import re as _re
+    # BOTH fabricator documents: the capability page carries the FR-4 rows and the impedance page carries the
+    # two controlled stackups. A number in the stackup table has to be in one of them.
+    fab = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "vendor", "fabricator")
+    txt = ""
+    for f in sorted(os.listdir(fab)):
+        if f.endswith(".md"): txt += open(os.path.join(fab, f), encoding="utf-8").read()
+    src = open(os.path.join(TOOLS, "stackup_write.py"), encoding="utf-8").read()
+    m = _re.search(r"^STACKS\s*=\s*\{(.*?)^\}", src, _re.S | _re.M)
+    assert m, "stackup_write no longer has a STACKS table"
+    dks = sorted({d for d in _re.findall(r',\s*(4\.\d+)\)', m.group(1))})
+    assert dks, "no dielectric constant found in the stackup table"
+    missing = [d for d in dks if d not in txt]
+    assert not missing, ("dielectric constants in the stackup that neither fabricator document states: %s"
+                         % missing)

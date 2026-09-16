@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Write the JLC stackup into a board file (MESHSAT-862, 8 Sep 2026): the six-layer B16 and the four-layer boards carried no dielectric or
 epsilon entry at all, so the 90 and 100 ohm order notes were unconnected to any geometry in the project and no impedance could be read back.
-Numbers from JLCPCB's impedance page (read 8 Sep 2026): JLC04161H-7628 (4 layers, 1.6 mm): Cu 0.035, prepreg 7628 0.2104 Dk 4.4, Cu 0.0152,
+Numbers from JLCPCB's impedance page, transcribed into v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md
+on 16 September 2026 (they had been in this comment alone, citing a reading of 8 September with no file behind it): JLC04161H-7628 (4 layers, 1.6 mm): Cu 0.035, prepreg 7628 0.2104 Dk 4.4, Cu 0.0152,
 core 1.065 Dk 4.6, Cu 0.0152, prepreg 7628 0.2104, Cu 0.035.  JLC06161H-3313 (6 layers, 1.6 mm): Cu 0.035, prepreg 3313 0.0994 Dk 4.1,
 Cu 0.0152, core 0.55 Dk 4.6, Cu 0.0152, prepreg 2116 0.1088 Dk 4.16, Cu 0.0152, core 0.55, Cu 0.0152, prepreg 3313 0.0994, Cu 0.035.
 Two-layer boards: FR-4 core 1.6 (or the board thickness) Dk 4.6 under 1 oz.  The block is written as text into (setup ...) after pcbnew saved
@@ -14,14 +15,20 @@ STACKS = {
     "JLC04161H-7628": [("F.Cu", 0.035), ("pp", "FR4 prepreg 7628", 0.2104, 4.4), ("In1.Cu", 0.0152), ("core", "FR4 core", 1.065, 4.6), ("In2.Cu", 0.0152), ("pp", "FR4 prepreg 7628", 0.2104, 4.4), ("B.Cu", 0.035)],
     "JLC06161H-3313": [("F.Cu", 0.035), ("pp", "FR4 prepreg 3313", 0.0994, 4.1), ("In1.Cu", 0.0152), ("core", "FR4 core", 0.55, 4.6), ("In2.Cu", 0.0152), ("pp", "FR4 prepreg 2116", 0.1088, 4.16),
                        ("In3.Cu", 0.0152), ("core", "FR4 core", 0.55, 4.6), ("In4.Cu", 0.0152), ("pp", "FR4 prepreg 3313", 0.0994, 4.1), ("B.Cu", 0.035)],
-    "2L": [("F.Cu", 0.035), ("core", "FR4 core", 1.51, 4.6), ("B.Cu", 0.035)],
+    # Dk 4.5 AND NOT 4.6 on a two-layer board (16 September 2026). The fabricator's own capability document
+    # states its FR-4 dielectric constants per build, and for a 2-layer board it says 4.5
+    # (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md, the FR-4 dielectric constants row). The 4.6
+    # here came from its impedance page on 8 September, which is a different page about the multilayer cores.
+    # Neither two-layer board carries an impedance target today, so nothing computed moves; the number matches
+    # its source now, which is the point of having one.
+    "2L": [("F.Cu", 0.035), ("core", "FR4 core", 1.51, 4.5), ("B.Cu", 0.035)],
     # OWNER RULING 12 September 2026, decision 7: P and E5 are ordered at 2 oz, which is what their prose has
     # always claimed and what the order set must now say. 2 oz is 0.070 mm of copper against 1 oz's 0.035, and
     # it is the reason the ruling went this way: P's FUSED band measured 193.5 A/mm2 at 1 oz against IPC-2221's
     # 82.7, and doubling the copper halves the density on a board that carries the whole pack current. dc_drop
     # and every current-density check judge against the stackup, so this entry is what makes the ruling real
     # rather than a sentence in a document.
-    "2L-2oz": [("F.Cu", 0.070), ("core", "FR4 core", 1.44, 4.6), ("B.Cu", 0.070)],
+    "2L-2oz": [("F.Cu", 0.070), ("core", "FR4 core", 1.44, 4.5), ("B.Cu", 0.070)],
 }
 LOSS = 0.02
 
