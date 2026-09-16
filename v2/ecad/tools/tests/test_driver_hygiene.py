@@ -921,3 +921,31 @@ def t_a_block_that_stops_a_chain_carries_its_own_cause():
               '[ -n "${2:-}" ] && tail -5 "$2"; echo PREROUTE-DONE BLOCK; exit 1; }\n'
               '[ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3"\n')
     assert len(_block_faults(before)) == 2, "the rule does not refuse the text it was written against: %s" % _block_faults(before)
+
+
+def t_a_finish_refusal_a_route_cannot_change_stops_the_run():
+    """16 September 2026. Board C23 routed 0 hard and 0 unrouted of 133 nets and its finish was refused by rule
+    TRN-001: four conductors on the face jack and the main switch reach a chip with nothing between. That is a
+    property of the SCHEMATIC and owner decision 31, on a board whose copper is finished. The supervisor turned
+    every finish refusal on a clean route into the OPEN signature, whose remedies are a different via cost and
+    thirty percent more passes, and started another route. It would have done that until the round budget ran
+    out, at about half an hour of a rented box per round."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), encoding="utf-8").read()
+    assert 'sig = finish_blocker(flog)' in src, "a refused finish is still read as opens whatever refused it"
+    assert 'if sig == "CLEAN": sig = "OPEN"' not in src, "the unconditional mapping is still there"
+    assert "NOT_A_ROUTE" in src, "the reasons a route cannot change are not named"
+    import importlib.util, tempfile
+    spec = importlib.util.spec_from_file_location("rf_t", os.path.join(TOOLS, "routeflow.py"))
+    rf = importlib.util.module_from_spec(spec); spec.loader.exec_module(rf)
+    d = tempfile.mkdtemp(prefix="rf-blk-")
+    ports = os.path.join(d, "ports.log")
+    open(ports, "w").write("routed-board gate: hard 0 unrouted 0\n"
+                           "C23 PORTS a conductor leaves the case and meets a chip with nothing between "
+                           "(rule TRN-001)\n")
+    sig = rf.finish_blocker(ports)
+    assert sig.startswith("NOT_A_ROUTE:"), sig
+    assert rf.remedy(sig, {"route": {}}, set())[0] is None, "a refusal a route cannot change still gets a remedy"
+    opens = os.path.join(d, "open.log")
+    open(opens, "w").write("routed-board gate: hard 0 unrouted 3\nPRUNED PAD NOT REACHED by the router\n")
+    assert rf.finish_blocker(opens) == "OPEN", "a real open must still be read as one"
+    assert rf.finish_blocker(os.path.join(d, "absent.log")) == "OPEN", "an unreadable log must not stop a run"

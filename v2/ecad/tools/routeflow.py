@@ -158,8 +158,37 @@ def judge_finish(finish_log, clean_flag, stub_log, deliverable):
     m = re.search(r"routed-board gate: hard (\d+) unrouted (\d+)", t)
     return "CLEAN", ("routed-board gate: hard %s unrouted %s" % (m.group(1), m.group(2))) if m else "clean flag set"
 
+# The finish's own stop reasons that no amount of routing can answer, by the words the finish prints. Each is
+# a property of the schematic, the netlist or another board, and the boards they refuse are finished copper.
+NOT_A_ROUTE = (
+    ("PORTS", "rule TRN-001: a conductor leaves the case and meets a chip with nothing between. That is a "
+              "schematic property and owner decision 31; the copper is not what refused this board"),
+    ("BOARD DOES NOT MATCH ITS NETLIST", "the board and the schematic it was placed from are different "
+                                         "designs: regenerate, do not re-route"),
+    ("CONTRACTS FAILED", "a cross-board contract: the disagreement is between two schematics"),
+    ("CONTRACTS NOT JUDGED", "a board this set depends on has not been generated in this tree"),
+)
+
+
+def finish_blocker(flog):
+    """The signature for a finish that refused a board the router left clean.
+
+    OPEN unless the finish's own stop line names a reason no route can change, in which case the run stops and
+    says which. Reading the log rather than the flag is the point: the flag says 'open' for every refusal."""
+    try: t = open(flog, errors="replace").read()
+    except OSError: return "OPEN"
+    for key, _why in NOT_A_ROUTE:
+        if key in t: return "NOT_A_ROUTE:" + key
+    return "OPEN"
+
+
 # ---------------------------------------------------------------- remedies (profile changes, bounded)
 def remedy(sig, prof, applied):
+    if str(sig).startswith("NOT_A_ROUTE:"):
+        key = sig.split(":", 1)[1]
+        why = dict(NOT_A_ROUTE).get(key, "a refusal a route cannot change")
+        return None, ("the finish refused this board for something routing cannot change (%s): %s. The copper "
+                      "this run produced is the best it will produce; the answer is upstream" % (key, why))
     r = dict(prof["route"])
     if sig == "INFRA_FAIL": return None, "the router supervisor failed; fix the host or the invocation, do not change the route"
     if sig == "NO_SESSION":
@@ -595,7 +624,16 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
                     quality(project, repo, prof, rid, rnd, name, mins)
                     status = "CLEAN"; break
                 if fst == "TOOL_CRASH": status = fst; break
-                if sig == "CLEAN": sig = "OPEN"   # the router was clean but the finish refused: treat as opens for the table
+                # A REFUSAL A ROUTE CANNOT CHANGE IS NOT AN OPEN (16 September 2026). This line used to turn
+                # EVERY finish refusal on a clean route into the OPEN signature, whose remedies are a
+                # different via cost and thirty percent more router passes. Board C23 routed 0 hard and 0
+                # unrouted of 133 nets and its finish was refused by rule TRN-001, four conductors on the
+                # face jack and the main switch reaching a chip with nothing between: a property of the
+                # SCHEMATIC, on a board whose copper is finished, and the supervisor answered it by starting
+                # another route. It would have done that until the round budget ran out, and every round is
+                # about half an hour of a rented box. The reasons a route cannot touch are named here and
+                # stop the run instead, with the rule that refused it in the line.
+                if sig == "CLEAN": sig = finish_blocker(flog)
             def _restore_best_and_finish(status):
                 """The run ends on whatever the last remedy produced, which may be the worst board of the run.
                 Put the best one back, so what is left on disk is the best this run reached, and finish it.
