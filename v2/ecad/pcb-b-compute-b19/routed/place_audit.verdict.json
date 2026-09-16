@@ -40,9 +40,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "465a81f6fa3c600d"
+  "tools_tree_sha": "b4c0212a903dd23a"
  },
- "ts": "2026-09-16T05:15:41Z",
+ "ts": "2026-09-16T13:18:38Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

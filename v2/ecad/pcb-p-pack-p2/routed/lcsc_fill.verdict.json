@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "blank_over_allowance": 4,
+  "rejected_code": 2,
+  "rows": 23,
+  "stale_allow_lines": 0
+ },
+ "denominator": 23,
+ "evidence": [
+  "{'Comment': \"cell block B- (12 AWG from the block's negative strip)\", 'Designator': 'W_BN?', 'Footprint': 'SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm', 'LCSC Part #': ''}",
+  "{'Comment': \"cell block B+ (12 AWG from the block's positive strip)\", 'Designator': 'W_BP?', 'Footprint': 'SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm', 'LCSC Part #': ''}",
+  "{'Comment': 'pack lead - (12 AWG to the XT60 on E6 J_BATT pin 1)', 'Designator': 'W_N?', 'Footprint': 'SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm', 'LCSC Part #': ''}",
+  "{'Comment': 'pack lead + (12 AWG to the XT60 on E6 J_BATT pin 2)', 'Designator': 'W_P?', 'Footprint': 'SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm', 'LCSC Part #': ''}",
+  "Q1 C2825431 is blocked, use C529279 (resolves to a lever switch, not a CSD17570Q5B)",
+  "Q2 C2825431 is blocked, use C529279 (resolves to a lever switch, not a CSD17570Q5B)"
+ ],
+ "inputs": {},
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "lcsc_fill",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b4c0212a903dd23a"
+ },
+ "ts": "2026-09-16T13:20:48Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

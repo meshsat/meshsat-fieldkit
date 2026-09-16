@@ -2,30 +2,25 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 12,
+  "fail": 0,
   "missing_boards": 0,
-  "pass": 42,
-  "rails_unsplit": 0
+  "pass": 61,
+  "rails_unsplit": 7
  },
- "denominator": 54,
+ "denominator": 61,
  "evidence": [
-  "B: PCIE1_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE1_RX_P enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE1_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE1_RX_N enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE2_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE2_RX_P enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE2_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE2_RX_N enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE3_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE3_RX_P enters one IC only, so the capacitor is in series and not a stub",
-  "B: PCIE3_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)",
-  "B: PCIE3_RX_N enters one IC only, so the capacitor is in series and not a stub"
+  "rail unsplit: +3V3 (A/C/D): no board declares a share",
+  "rail unsplit: +54V_POE (A/B): no board declares a share",
+  "rail unsplit: +5V_DEV (A/B): no board declares a share",
+  "rail unsplit: +5V_S1 (A/B): no board declares a share",
+  "rail unsplit: +5V_S2 (A/B): no board declares a share",
+  "rail unsplit: +5V_S3 (A/B): no board declares a share",
+  "rail unsplit: VIN_RAW (A/E): no board declares a share"
  ],
  "inputs": {
   "boards": "A,B,C,D,E"
  },
- "note": "",
+ "note": "7 rail(s) cross a connector with no share of their budget declared",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -37,9 +32,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ef840c5c19ae80bd"
+  "tools_tree_sha": "b4c0212a903dd23a"
  },
- "ts": "2026-09-16T09:56:24Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T13:20:00Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
