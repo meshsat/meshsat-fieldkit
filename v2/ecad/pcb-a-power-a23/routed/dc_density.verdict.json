@@ -1,11 +1,11 @@
 {
  "advisory": false,
  "counts": {
-  "met": 8,
+  "met": 9,
   "missed": 4,
   "undeclared": 0
  },
- "denominator": 12,
+ "denominator": 13,
  "evidence": [
   "MISSED VBAT on current density: 0.38% of 14.4 V",
   "MISSED VIN_RAW on current density: 0.86% of 12.0 V",
@@ -29,9 +29,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:40:22Z",
+ "ts": "2026-09-16T00:59:30Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

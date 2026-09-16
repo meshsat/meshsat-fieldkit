@@ -3,11 +3,11 @@
  "counts": {
   "fail": 1,
   "footprints": 211,
-  "pass": 323
+  "pass": 168
  },
- "denominator": 324,
+ "denominator": 169,
  "evidence": [
-  "return via: 10 of 89 signal vias have a ground via within 1.5 mm (16 exempt in fine-pitch fans, 59 on one reference plane); without one: X_PTT_HS1_n at (64.72, 108.30); X_COS_n at (65.55, 107.65); X_PTT_HS2_n at (65.55, 108.95); X_PA_KEY at (65.55, 110.25); LED_RX_A at (67.97, 116.70); SA_PTT_n at (71.05, 112.78); PA_EN at (73.61, 117.32); KEY at (73.73, 115.79) ..."
+  "intent file present (out/<stem>-intent.json from the schematic generator)"
  ],
  "inputs": {
   "board": {
@@ -27,9 +27,9 @@
  "tool": "check_pcb_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:41:35Z",
+ "ts": "2026-09-16T01:00:44Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

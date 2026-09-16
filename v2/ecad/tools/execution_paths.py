@@ -56,6 +56,11 @@ READERS = {
     "build_sch.sh":          "exports the schematic and the netlist, which are not fab artefacts",
     "kb/kb_inventory.py":    "writes its own inventory CSV, which is a report about documents",
     "final_gate.py":         "re-reads every deliverable folder through verify_deliverable and prints one table; writes no artefact in any of them",
+    "gate_sweep.sh":         "re-judges a board under the current rule set and writes only VERDICTS and its own "
+                             "evidence manifest, which are records ABOUT a board; the board's sha256 is compared "
+                             "before and after and the sweep writes nothing at all if it changed. It reads a BOM "
+                             "from a deliverable folder where one exists and exports none, deliberately: an "
+                             "earlier draft called export_jlc.sh and this floor refused it, correctly",
 }
 
 
