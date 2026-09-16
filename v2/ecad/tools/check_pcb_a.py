@@ -18,7 +18,13 @@ segs = [(case(d.GetStart()), case(d.GetEnd())) for d in b.GetDrawings() if d.Get
 pts = [p for s in segs for p in s]
 x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts); y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
 check(abs(x1 - x0 - 240) < 0.005 and abs(y1 - y0 - 160) < 0.005 and abs(x0 + 120) < 0.005 and abs(y1 - 80) < 0.005, "outline 240 x 160, X -120..120 (32.56)")
-check(b.GetCopperLayerCount() == 6, "6 copper layers (A22, JLC06161H-3313; under P0 review 11 Sep 2026)")
+# THE COPPER LAYER COUNT IS A DECLARATION, NEVER A LITERAL (16 September 2026). A literal here meant a
+# layer decision was a gate edit, and twice a measurement came back whose ONLY failure was the gate
+# describing the previous decision: board A four layers on 12 September (510 of 511) and board C six
+# layers on 16 September. Under the P0 ruling every board's count is open, so it lives in the board
+# table with its reason and is read here; a board that declares none keeps the count written below.
+_LAYERS = _bt.value("a", "copper_layers", 6)
+check(b.GetCopperLayerCount() == _LAYERS, "%d copper layers as board A declares them (JLC06161H-3313 at six; under P0 review 11 Sep 2026)" % _LAYERS)
 fps = {fp.GetReference(): fp for fp in b.GetFootprints()}
 def fpc(ref):
     bb = fps[ref].GetBoundingBox(False, False); return ((bb.GetLeft() + bb.GetRight()) / 2e6 - OX, OY - (bb.GetTop() + bb.GetBottom()) / 2e6)

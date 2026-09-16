@@ -117,7 +117,13 @@ ALLOW = {L.STRIP_T: 9.5, L.STRIP_L: 3.5, L.STRIP_B: 3.5, L.STRIP_R: 3.5}   # the
 tall_under = [(name, h, round(L.BACKER_UNDER_Z - ALLOW[st] - (L.B_TOP_Z + h), 1)) for (rx0, ry0, rx1, ry1), h, name in L.B16_TALL for st in STRIPS if rx1 > st[0] and rx0 < st[2] and ry1 > st[1] and ry0 < st[3] and L.BACKER_UNDER_Z - ALLOW[st] - (L.B_TOP_Z + h) < 3.0]
 check(not tall_under, "B16's tall parts under the strips stay 3 mm below the backer's underside parts (3.5 mm allowance, 9.5 under the top strip's ribbon header): %s" % tall_under[:4])
 # 6. board, vias, connectors
-check(b.GetCopperLayerCount() == 4 and b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(L.BACKER_T), "4 copper layers (In1 ground plane), %.1f mm thick" % L.BACKER_T)
+# THE COPPER LAYER COUNT IS A DECLARATION, NEVER A LITERAL (16 September 2026). A literal here meant a
+# layer decision was a gate edit, and twice a measurement came back whose ONLY failure was the gate
+# describing the previous decision: board A four layers on 12 September (510 of 511) and board C six
+# layers on 16 September. Under the P0 ruling every board's count is open, so it lives in the board
+# table with its reason and is read here; a board that declares none keeps the count written below.
+_LAYERS = _bt.value("c", "copper_layers", 4)
+check(b.GetCopperLayerCount() == _LAYERS and b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(L.BACKER_T), "%d copper layers as board C declares them (In1 a ground plane; decision 27 is open on the count), %.1f mm thick" % (_LAYERS, L.BACKER_T))
 check(any(z.GetNetname() == "GND" and not z.GetIsRuleArea() and z.IsOnLayer(pcbnew.In1_Cu) for z in b.Zones()), "In1 carries the GND plane zone")
 check(sum(1 for z in b.Zones() if z.GetIsRuleArea() and z.GetZoneName().startswith("In1 plane")) >= 7, "In1 plane keep-outs present (the clusters are the only windows)")
 vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]

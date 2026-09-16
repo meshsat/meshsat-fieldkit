@@ -16,7 +16,13 @@ def check(c, m):
 fps = {f.GetReference(): f for f in b.GetFootprints()}
 bb = b.GetBoardEdgesBoundingBox(); w, h = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6
 check(abs(w - 70) < 0.3 and abs(h - 44) < 0.3, "outline 70 x 44 (got %.1f x %.1f)" % (w, h))
-check(b.GetCopperLayerCount() == 2, "two copper layers")
+# THE COPPER LAYER COUNT IS A DECLARATION, NEVER A LITERAL (16 September 2026). A literal here meant a
+# layer decision was a gate edit, and twice a measurement came back whose ONLY failure was the gate
+# describing the previous decision: board A four layers on 12 September (510 of 511) and board C six
+# layers on 16 September. Under the P0 ruling every board's count is open, so it lives in the board
+# table with its reason and is read here; a board that declares none keeps the count written below.
+_LAYERS = _bt.value("p", "copper_layers", 2)
+check(b.GetCopperLayerCount() == _LAYERS, "%d copper layers as board P declares them" % _LAYERS)
 for ref, (x, y) in (("H1", (-32, -19)), ("H2", (32, -19)), ("H3", (-32, 19)), ("H4", (32, 19))):
     f = fps.get(ref); p = case(f.GetPosition()) if f else None
     check(f is not None and abs(p[0] - x) < 0.05 and abs(p[1] - y) < 0.05, "hole %s at (%d, %d)%s" % (ref, x, y, "" if f is None else " got %s" % (p,)))
