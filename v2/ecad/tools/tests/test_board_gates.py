@@ -189,3 +189,23 @@ def t_a_board_with_no_project_file_is_inconclusive_and_never_a_pass():
     p = subprocess.run([sys.executable, os.path.join(TOOLS, "class_floor.py"), path],
                        cwd=tmp, capture_output=True, text=True)
     assert p.returncode == 3, "a board with no project file did not come out INCONCLUSIVE:\n%s" % (p.stdout + p.stderr)[-300:]
+
+
+def t_every_check_call_in_the_rules_passes_one_message():
+    """A check that RAISES where it decides leaves no verdict at all, which is worse than deciding wrongly.
+
+    16 September 2026: board E's re-finish printed "return path judged on 75 signal nets, 0 over their limit",
+    the best reading that board has ever had, and then died with `check() takes 2 positional arguments but 3
+    were given` on the very next line. The gate wrote no verdict, the finish read INCONCLUSIVE, and the good
+    result existed only in a log. The board gates' check() takes a message and nothing else; a detail belongs
+    inside that string.
+    """
+    import ast as _ast
+    src = open(os.path.join(TOOLS, "intent_checks.py")).read()
+    tree = _ast.parse(src)
+    bad = []
+    for n in _ast.walk(tree):
+        if isinstance(n, _ast.Call) and isinstance(n.func, _ast.Name) and n.func.id == "check":
+            if len(n.args) != 2 or n.keywords:
+                bad.append("line %d: check() called with %d argument(s)" % (n.lineno, len(n.args)))
+    assert not bad, ("the board gates' check() takes (ok, message) and nothing else: " + "; ".join(bad))

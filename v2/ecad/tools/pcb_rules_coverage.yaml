@@ -73,9 +73,13 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
 
  PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_rail_loads.py},
-   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
-   note: "the check confirms a DECLARED rail exists on the board; nothing compares the declared set against the power nets the board actually carries, and B's per-slot cores and E's downstream rails are undeclared",
-   remediation: {action: "count power nets on the board against the declaration and refuse an undeclared one above a current threshold", owner: SESSION, depends_on: [], p50_h: 4, p80_h: 10}}
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: the declared set is compared with the power nets the board actually carries. A net whose
+     name begins with + is a rail by this project's own generator convention, so intent_checks counts the power-symbol
+     nets against the declared ones and names what is missing. It found thirty-eight undeclared rails across five
+     boards, thirty of them on board B, and every one of those was invisible three ways at once: judged as a SIGNAL by
+     the return-path rule, skipped entirely by dc_drop, and unreachable by derate. All thirty-eight are declared with
+     their loads and their real power-path sources"}
 
  PWR-002: {implementation: "gen_sch_a.py, gen_sch_b.py", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
    note: "sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a check",

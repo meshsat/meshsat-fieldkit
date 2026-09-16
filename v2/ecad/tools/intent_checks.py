@@ -108,9 +108,12 @@ def run(b, check, path=None):
         _nm = _ni.GetNetItem(_code).GetNetname()
         if _nm and _nm.lstrip("/").startswith("+"): _power_nets.add(_nm.lstrip("/"))
     _undeclared = sorted(_power_nets - _declared)
-    check(not _undeclared, "every power-symbol net is a declared rail (%d of %d)"
-          % (len(_power_nets) - len(_undeclared), len(_power_nets)),
-          "not in the intent file: %s" % ", ".join(_undeclared[:12]) if _undeclared else "")
+    # ONE STRING: the board gates' own check() takes a message and nothing else, and passing a third argument
+    # crashed the gate AFTER it had printed its result (board E's re-finish, 16 September 2026). A check that
+    # raises where it decides is worse than one that decides wrongly, because it leaves no verdict at all.
+    check(not _undeclared, "every power-symbol net is a declared rail (%d of %d)%s"
+          % (len(_power_nets) - len(_undeclared), len(_power_nets),
+             ("; not in the intent file: " + ", ".join(_undeclared[:12])) if _undeclared else ""))
     # 4. return via (rule 2 of the same ruling): a ground via beside every signal via, judged by return_via.py
     rv = return_via.judge(b, path)
     check(not rv["lacking"], "return via: %d of %d signal vias have a ground via within %.1f mm (%d exempt in fine-pitch fans, %d on one reference plane); without one: %s" % (
