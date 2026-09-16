@@ -121,9 +121,44 @@
    "basis": "the other direction of the same UART"
   },
   {
+   "pattern": "PCM_XT*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the codec's 24 MHz crystal loop, a continuous periodic source"
+  },
+  {
+   "pattern": "PCM_VCC*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a WM8960 supply pin with its own decoupling: analogue, digital, charge-pump and reference rails"
+  },
+  {
+   "pattern": "PCM_VDD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the codec's digital supply pin node with its decoupling, a local rail"
+  },
+  {
+   "pattern": "PCM_VIN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the codec's supply input node"
+  },
+  {
+   "pattern": "PCM_VCOM*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the codec's mid-rail reference, a DC bias held by a capacitor and the quietest node on the part"
+  },
+  {
+   "pattern": "PCM_VOUT*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the codec's analogue line output, 20 Hz to 20 kHz"
+  },
+  {
+   "pattern": "PCM_?_AC",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an audio output through its coupling capacitor, audio band"
+  },
+  {
    "pattern": "PCM_*",
    "class": "CLOCKED_DIGITAL",
-   "basis": "the codec's I2S and analogue-supply nodes, a 24 MHz master clock at most and audio-band signals under it"
+   "basis": "the codec's remaining digital pins, clocked at 24 MHz at most and audio rates under it"
   },
   {
    "pattern": "EXP_INT",
