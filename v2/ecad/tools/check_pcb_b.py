@@ -153,7 +153,13 @@ def rect_circle_clear(r, c, rad):
 for k, r in R.items():
     if k == "RB9704": continue   # the bracket plate rides on 8 mm standoffs over rod nut R2 (silk note on the board)
     check(all(rect_circle_clear(r, rod, 4.5) for rod in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]), "%s clear of the 9 mm nut keep-outs" % k)
-check(b.GetCopperLayerCount() == 6, "6 copper layers (B16, JLC06161H-3313)")
+# THE COPPER LAYER COUNT IS A DECLARATION, NEVER A LITERAL (16 September 2026). A literal here meant a
+# layer decision was a gate edit, and twice a measurement came back whose ONLY failure was the gate
+# describing the previous decision: board A four layers on 12 September (510 of 511) and board C six
+# layers on 16 September. Under the P0 ruling every board's count is open, so it lives in the board
+# table with its reason and is read here; a board that declares none keeps the count written below.
+_LAYERS = _bt.value("b", "copper_layers", 6)
+check(b.GetCopperLayerCount() == _LAYERS, "%d copper layers as board B declares them (JLC06161H-3313 at six)" % _LAYERS)
 check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
