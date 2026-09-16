@@ -17,7 +17,7 @@
  "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 0 rail(s) missed",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "e590541697c8914f"
+  "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
   "PI-002"
@@ -25,9 +25,9 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "914d59b06253bedc"
+  "tools_tree_sha": "f309c9db5b5a5378"
  },
- "ts": "2026-09-16T01:44:28Z",
+ "ts": "2026-09-16T03:13:30Z",
  "verdict": "PASS",
  "version": "unknown"
 }

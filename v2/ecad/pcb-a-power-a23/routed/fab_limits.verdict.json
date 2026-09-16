@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "counts": {},
+ "denominator": 0,
+ "evidence": [
+  "the board's stackup carries no copper thickness, so no capability row applies"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "document": "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"
+ },
+ "note": "the board's stackup carries no copper thickness, so no capability row applies",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RTE-001",
+  "STK-001"
+ ],
+ "tool": "fab_limits",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:11:38Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

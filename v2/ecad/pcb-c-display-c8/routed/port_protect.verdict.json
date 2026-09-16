@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "counts": {
+  "declared": 2,
+  "not_on_netlist": 0,
+  "ports": 2,
+  "unprotected": 4
+ },
+ "denominator": 4,
+ "evidence": [
+  "J_PIJ2 (the panel's exposed jack on the face): 2 conductor(s) reach a chip with nothing between: J_PIJ2.1 on PIJ2_A2, J_PIJ2.2 on PIJ2_B2",
+  "J_MAINSW (the main switch on the face, which a person touches): 2 conductor(s) reach a chip with nothing between: J_MAINSW.1 on MAINSW_A2, J_MAINSW.2 on MAINSW_B2"
+ ],
+ "inputs": {
+  "board": "c",
+  "netlist": {
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "19825ddf300e7a5b"
+  }
+ },
+ "note": "a conductor leaves the case and reaches a semiconductor with nothing between",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:13:33Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

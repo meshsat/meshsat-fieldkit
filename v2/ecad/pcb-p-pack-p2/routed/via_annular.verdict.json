@@ -2,21 +2,24 @@
  "advisory": false,
  "counts": {
   "below_ring": 0,
+  "npth_holes": 4,
+  "plated_holes": 19,
   "vias": 241
  },
- "denominator": 241,
+ "denominator": 260,
  "evidence": [],
  "inputs": {
   "annular_min_mm": null,
   "board": {
    "path": "pcb-p-pack.kicad_pcb",
    "sha256_16": "d79865e7b1aceb95"
-  }
+  },
+  "via_ring_min_mm": null
  },
- "note": "this board declares no annular floor, so the ring was not judged: the fabricator's capability page is SOURCE_UNVERIFIED in the registry and a floor asserted without it would be the heuristic-as-law this audit exists to remove",
+ "note": "this board declares no floor for the via ring and the plated hole ring, so that ring was not judged: a floor asserted without the fabricator's own row would be the heuristic-as-law this audit exists to remove",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "e590541697c8914f"
+  "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
   "VIA-002"
@@ -24,9 +27,9 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "914d59b06253bedc"
+  "tools_tree_sha": "f309c9db5b5a5378"
  },
- "ts": "2026-09-16T01:45:31Z",
+ "ts": "2026-09-16T03:14:34Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

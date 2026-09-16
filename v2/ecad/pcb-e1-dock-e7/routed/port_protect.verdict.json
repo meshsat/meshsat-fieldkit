@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "counts": {
+  "declared": 3,
+  "not_on_netlist": 0,
+  "ports": 3,
+  "unprotected": 0
+ },
+ "denominator": 8,
+ "evidence": [
+  "J_DCIN (shore and vehicle DC entry from the MIL-DTL-38999 wall recep): 1 conductor(s) whose clamp is behind an active part: J_DCIN.1 on DC_IN: the clamp (D1 on DC_P) is behind an active part, which therefore sees the transient itself",
+  "J_POD (the outside climate and ultraviolet sensor pod, through an M): 3 conductor(s) whose clamp is behind an active part: J_POD.1 on +3V3_E6: the clamp (L2 on DC_HS) is behind an active part, which therefore sees the transient itself; J_POD.3 on SDA1: the clamp (L2 on DC_HS) is behind an active part, which therefore sees the transient itself; J_POD.4 on SCL1: the clamp (L2 on DC_HS) is behind an active part, which therefore sees the transient itself"
+ ],
+ "inputs": {
+  "board": "e",
+  "netlist": {
+   "path": "out/pcb-e1-dock.net",
+   "sha256_16": "ed889acac88e3bbb"
+  }
+ },
+ "note": "a conductor leaves the case and reaches a semiconductor with nothing between",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:14:19Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

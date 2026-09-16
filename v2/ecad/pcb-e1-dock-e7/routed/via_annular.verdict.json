@@ -1,43 +1,25 @@
 {
  "advisory": false,
  "counts": {
-  "below_ring": 404,
+  "below_ring": 0,
+  "npth_holes": 28,
+  "plated_holes": 45,
   "vias": 441
  },
- "denominator": 441,
- "evidence": [
-  "via /+3V3_E6 at (231.23, 201.40): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (232.01, 205.00): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (36.46, 213.90): annular ring 0.150 below the declared 0.200",
-  "via /+3V3_E6 at (240.76, 206.88): annular ring 0.150 below the declared 0.200",
-  "via /+3V3_E6 at (236.39, 208.18): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (238.39, 199.82): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (20.51, 187.28): annular ring 0.150 below the declared 0.200",
-  "via /+3V3_E6 at (248.33, 192.19): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (187.87, 173.27): annular ring 0.150 below the declared 0.200",
-  "via /+3V3_E6 at (29.23, 189.53): annular ring 0.150 below the declared 0.200",
-  "via /+3V3_E6 at (100.93, 211.46): annular ring 0.150 below the declared 0.200",
-  "via /+3V3_E6 at (241.15, 205.00): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (236.39, 199.04): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (193.21, 162.41): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (196.51, 160.51): annular ring 0.100 below the declared 0.200",
-  "via /+3V3_E6 at (240.36, 201.40): annular ring 0.100 below the declared 0.200",
-  "via /+5V_E6 at (5.47, 195.05): annular ring 0.150 below the declared 0.200",
-  "via /BLK_SPARE at (108.78, 221.83): annular ring 0.150 below the declared 0.200",
-  "via /BLK_SPARE at (105.81, 208.50): annular ring 0.150 below the declared 0.200",
-  "via /BLK_SPARE at (83.20, 187.77): annular ring 0.150 below the declared 0.200"
- ],
+ "denominator": 486,
+ "evidence": [],
  "inputs": {
   "annular_min_mm": 0.2,
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
    "sha256_16": "1309202460f2149d"
-  }
+  },
+  "via_ring_min_mm": 0.05
  },
- "note": "the copper left around every hole against the floor this board declares",
+ "note": "the copper left around every hole against the two floors this board declares, the via rows for vias and the annular ring row for plated component holes",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "e590541697c8914f"
+  "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
   "VIA-002"
@@ -45,9 +27,9 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "914d59b06253bedc"
+  "tools_tree_sha": "f309c9db5b5a5378"
  },
- "ts": "2026-09-16T01:45:16Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T03:14:18Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

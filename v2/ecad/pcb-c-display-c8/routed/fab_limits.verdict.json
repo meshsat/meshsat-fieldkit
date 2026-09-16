@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "counts": {
+  "classes": 4,
+  "under_capability": 0
+ },
+ "denominator": 20,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "410eeb604ec12c4c"
+  },
+  "copper_layers": 4,
+  "copper_oz": 1.0,
+  "document": "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"
+ },
+ "note": "every rule this board is designed to is inside the fabricator's capability for its own copper weight",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RTE-001",
+  "STK-001"
+ ],
+ "tool": "fab_limits",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f309c9db5b5a5378"
+ },
+ "ts": "2026-09-16T03:13:33Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
