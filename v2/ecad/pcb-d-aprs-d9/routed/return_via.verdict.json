@@ -2,62 +2,28 @@
  "advisory": false,
  "counts": {
   "exempt": 16,
-  "judged": 89,
-  "lacking": 79,
-  "same_plane": 59
+  "judged": 20,
+  "lacking": 15,
+  "same_plane": 13,
+  "slow": 115
  },
- "denominator": 89,
+ "denominator": 20,
  "evidence": [
-  "X_PTT_HS1_n at (64.72, 108.30)",
-  "X_COS_n at (65.55, 107.65)",
-  "X_PTT_HS2_n at (65.55, 108.95)",
-  "X_PA_KEY at (65.55, 110.25)",
-  "LED_RX_A at (67.97, 116.70)",
-  "SA_PTT_n at (71.05, 112.78)",
-  "PA_EN at (73.61, 117.32)",
-  "KEY at (73.73, 115.79)",
-  "X_PTT_HS1_n at (73.74, 89.95)",
-  "X_COS_n at (75.41, 87.90)",
-  "TR_APRS at (78.25, 103.45)",
-  "LED_PWR_A at (79.46, 70.82)",
-  "X_PA_KEY at (79.65, 74.55)",
-  "RLY_K at (79.96, 130.07)",
-  "PA_KEY at (80.39, 129.27)",
-  "LED_TX_A at (80.92, 113.14)",
-  "SA_AUDIO_ON_n at (82.12, 68.44)",
-  "PA_KEY at (82.19, 120.48)",
-  "RLY_K at (82.63, 113.78)",
-  "PA_KEY at (83.77, 110.95)",
-  "X_PTT_HS2_n at (83.94, 71.41)",
-  "LED_PA_A at (84.42, 112.21)",
-  "X_COS_n at (85.22, 68.33)",
-  "SA_PD at (85.43, 73.82)",
-  "RLY_K at (86.64, 118.94)",
-  "X_SA_PD at (87.92, 74.29)",
-  "X_KEY at (88.04, 71.16)",
-  "KEY at (88.30, 66.85)",
-  "PTT_HS1_n at (88.39, 69.82)",
-  "PTT_SW_n at (89.04, 112.11)",
-  "X_KEY at (89.39, 71.04)",
-  "SA_PD at (90.37, 82.57)",
-  "SA_PD at (90.38, 78.84)",
-  "AMP_EN at (90.49, 73.79)",
-  "X_PTT_HS1_n at (91.09, 66.20)",
-  "SA_PTT_n at (92.05, 85.32)",
-  "X_AMP_EN at (93.25, 74.32)",
-  "PA_KEY at (93.35, 71.80)",
-  "X_AMP_EN at (94.59, 72.09)",
-  "X_PA_KEY at (96.16, 71.83)",
-  "PTT_HS2_n at (102.00, 66.14)",
-  "PTT_HS1_n at (102.30, 64.98)",
-  "AMP_EN at (103.13, 71.25)",
-  "X_MMUTE at (105.69, 110.78)",
   "PCM_VIN at (105.94, 113.05)",
-  "AF_OUT at (106.23, 88.07)",
-  "HS1_MIC at (107.95, 113.52)",
   "PCM_VIN at (108.91, 107.39)",
   "PCM_VOUTL at (109.49, 113.83)",
-  "PCM_L_AC at (110.74, 113.83)"
+  "PCM_L_AC at (110.74, 113.83)",
+  "HUB_DP0 at (115.77, 83.23)",
+  "PCM_VCCR at (117.80, 116.64)",
+  "PCM_VCCP at (117.88, 115.88)",
+  "PCM_VCCP at (118.66, 119.51)",
+  "HUB_DM1 at (121.15, 92.75)",
+  "HUB_DP1 at (121.65, 90.85)",
+  "HUB_RST_n at (121.65, 85.52)",
+  "PCM_VIN at (122.14, 108.03)",
+  "PCM_VOUTR at (126.24, 113.73)",
+  "HUB_DM3 at (128.52, 87.87)",
+  "HUB_DM3 at (130.46, 87.24)"
  ],
  "inputs": {
   "board": {
@@ -68,7 +34,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "RET-004"
@@ -76,9 +42,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "385e7995177e0d96"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T01:00:47Z",
+ "ts": "2026-09-16T01:33:08Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

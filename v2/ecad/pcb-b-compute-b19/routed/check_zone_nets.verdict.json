@@ -15,7 +15,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "GND-001",
@@ -24,9 +24,9 @@
  "tool": "check_zone_nets",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "385e7995177e0d96"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T01:00:01Z",
+ "ts": "2026-09-16T01:31:16Z",
  "verdict": "PASS",
  "version": "unknown"
 }

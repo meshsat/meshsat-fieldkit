@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "counts": {
+  "below_ring": 0,
+  "vias": 241
+ },
+ "denominator": 241,
+ "evidence": [],
+ "inputs": {
+  "annular_min_mm": null,
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  }
+ },
+ "note": "this board declares no annular floor, so the ring was not judged: the fabricator's capability page is SOURCE_UNVERIFIED in the registry and a floor asserted without it would be the heuristic-as-law this audit exists to remove",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "VIA-002"
+ ],
+ "tool": "via_annular",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "dd71612d0b190e2e"
+ },
+ "ts": "2026-09-16T01:33:44Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

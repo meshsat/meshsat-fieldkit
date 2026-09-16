@@ -1,13 +1,12 @@
 {
  "advisory": false,
  "counts": {
-  "fail": 25,
+  "fail": 24,
   "footprints": 189,
-  "pass": 140
+  "pass": 143
  },
- "denominator": 165,
+ "denominator": 167,
  "evidence": [
-  "return path under +3V3_E6 (Default, UNDECLARED so judged at the strictest bar): 194.7 of 502.0 mm without a plane on a neighbouring layer (limit 25.1)",
   "return path under DCF_PULSE (Default, CLOCKED_DIGITAL): 49.5 of 273.6 mm without a plane on a neighbouring layer (limit 41.0) [a counted pulse input (Geiger, DCF77): the rate is low and the edge is]",
   "return path under HS_GATE (Default, HIGH_SPEED_DIGITAL): 21.7 of 25.9 mm without a plane on a neighbouring layer (limit 10.0) [the hot-swap FET gate: slew-limited by design, but it is a gate drive ]",
   "return path under IMU_INT1 (Default, CLOCKED_DIGITAL): 52.2 of 77.9 mm without a plane on a neighbouring layer (limit 30.0) [the IMU's SPI chip select and its interrupt line, both driven by the R]",
@@ -42,7 +41,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "MEC-001"
@@ -50,9 +49,9 @@
  "tool": "check_pcb_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T00:41:50Z",
+ "ts": "2026-09-16T01:33:23Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

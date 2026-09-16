@@ -2,11 +2,12 @@
  "advisory": false,
  "counts": {
   "exempt": 660,
-  "judged": 280,
-  "lacking": 230,
-  "same_plane": 0
+  "judged": 245,
+  "lacking": 204,
+  "same_plane": 0,
+  "slow": 35
  },
- "denominator": 280,
+ "denominator": 245,
  "evidence": [
   "SWP1_B_P at (-11.75, 76.95)",
   "HUBRST1_A at (-9.25, 139.28)",
@@ -68,7 +69,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "RET-004"
@@ -76,9 +77,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "385e7995177e0d96"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T01:00:06Z",
+ "ts": "2026-09-16T01:31:22Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -3,12 +3,12 @@
  "counts": {
   "fail": 2,
   "footprints": 400,
-  "pass": 1050
+  "pass": 1052
  },
- "denominator": 1052,
+ "denominator": 1054,
  "evidence": [
   "pour 'VBUS20 F.Cu' (/VBUS20, F.Cu): every piece anchored by a pad or via of its net (0 of 5 loose), fill 97 of 223 mm2 of its outline (at least 50%)",
-  "return via: 50 of 167 signal vias have a ground via within 1.5 mm (54 exempt in fine-pitch fans, 68 on one reference plane); without one: CHG_ILIM at (39.70, 107.37); FE_HDRV1 at (39.90, 47.80); FE_LDRV2 at (40.81, 60.78); FE_EN at (42.04, 77.35); FE_HDRV2 at (44.49, 62.30); CH_LODRV1 at (44.49, 86.25); POE_COMP at (44.49, 117.62); FE_MODE at (46.60, 77.21) ..."
+  "return via: 8 of 40 signal vias have a ground via within 1.5 mm (54 exempt in fine-pitch fans, 27 on one reference plane, 168 on a net whose declared class has no edge to return); without one: FE_HDRV1 at (39.90, 47.80); FE_LDRV2 at (40.81, 60.78); FE_HDRV2 at (44.49, 62.30); CH_LODRV1 at (44.49, 86.25); PROCHOT at (48.00, 109.84); POE_HDRV1 at (48.42, 148.10); FE_LDRV1 at (49.42, 51.25); CH_BTST1 at (50.75, 93.25) ..."
  ],
  "inputs": {
   "board": {
@@ -19,7 +19,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "MEC-001"
@@ -27,9 +27,9 @@
  "tool": "check_pcb_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T00:40:14Z",
+ "ts": "2026-09-16T01:30:28Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

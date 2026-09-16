@@ -3,7 +3,7 @@
  "counts": {
   "MET": 3,
   "SHORT": 1,
-  "classes_declared": 0,
+  "classes_declared": 5,
   "met": 4,
   "missed": 0,
   "pairs_on_board": 6
@@ -21,7 +21,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "IMP-001",
@@ -31,9 +31,9 @@
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "385e7995177e0d96"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T01:00:46Z",
+ "ts": "2026-09-16T01:33:07Z",
  "verdict": "PASS",
  "version": "unknown"
 }

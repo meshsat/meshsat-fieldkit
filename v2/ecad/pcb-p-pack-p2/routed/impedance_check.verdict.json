@@ -17,7 +17,7 @@
  "note": "the board declares its pair classes and gives none a target, which is its recorded design",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "IMP-001",
@@ -27,9 +27,9 @@
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "385e7995177e0d96"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T01:01:13Z",
+ "ts": "2026-09-16T01:33:43Z",
  "verdict": "PASS",
  "version": "unknown"
 }

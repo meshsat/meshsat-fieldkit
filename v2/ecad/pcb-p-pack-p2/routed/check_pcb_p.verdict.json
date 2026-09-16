@@ -3,9 +3,9 @@
  "counts": {
   "fail": 7,
   "footprints": 60,
-  "pass": 168
+  "pass": 169
  },
- "denominator": 175,
+ "denominator": 176,
  "evidence": [
   "return path under FUSE (Default, UNDECLARED so judged at the strictest bar): 12.6 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
   "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 33.1 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
@@ -13,7 +13,7 @@
   "return path under SMBC_I (Default, CLOCKED_DIGITAL): 42.8 of 47.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
   "return path under SMBD (Default, CLOCKED_DIGITAL): 70.4 of 121.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
   "return path under VC1_F (LOW_SPEED_OR_DC): a reference exists under -0.0 of 37.0 mm [a cell-voltage sense line through its filter, DC by construction]",
-  "return via: 18 of 61 signal vias have a ground via within 1.5 mm (21 exempt in fine-pitch fans, 0 on one reference plane); without one: SMBC at (77.14, 110.88); VC3_F at (77.51, 100.43); SRP_F at (79.50, 100.23); CELL1 at (80.25, 105.59); CELL1 at (80.48, 110.77); VC2_F at (81.78, 87.72); PBI at (82.45, 87.31); PACK_F at (83.29, 105.10) ..."
+  "return via: 4 of 14 signal vias have a ground via within 1.5 mm (21 exempt in fine-pitch fans, 0 on one reference plane, 47 on a net whose declared class has no edge to return); without one: SMBC at (77.14, 110.88); PACK_F at (83.29, 105.10); SMBC_I at (90.02, 94.67); PACK_F at (91.05, 100.33); SMBC_I at (103.16, 96.39); SMBD at (105.91, 80.84); SMBD at (106.59, 103.08); SMBC at (110.67, 89.55) ..."
  ],
  "inputs": {
   "board": {
@@ -24,7 +24,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a453bedd2b5ad14d"
+  "rule_set_fingerprint": "e590541697c8914f"
  },
  "rules": [
   "MEC-001"
@@ -32,9 +32,9 @@
  "tool": "check_pcb_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "dd71612d0b190e2e"
  },
- "ts": "2026-09-16T00:42:05Z",
+ "ts": "2026-09-16T01:33:41Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
