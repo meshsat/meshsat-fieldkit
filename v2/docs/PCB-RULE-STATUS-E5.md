@@ -9,9 +9,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 11 | 55.0 |
+| PASS | 12 | 60.0 |
 | FAIL | 1 | 5.0 |
-| INCONCLUSIVE | 8 | 40.0 |
+| INCONCLUSIVE | 7 | 35.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **20** | 100.0 |
 
@@ -26,7 +26,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 69 |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | impedance_check INCONCLUSIVE |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
-| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
+| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 14 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_e5 PASS of 27 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |

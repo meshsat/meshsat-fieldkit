@@ -9,9 +9,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 20 | 47.6 |
-| FAIL | 5 | 11.9 |
-| INCONCLUSIVE | 17 | 40.5 |
+| PASS | 21 | 50.0 |
+| FAIL | 6 | 14.3 |
+| INCONCLUSIVE | 15 | 35.7 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -42,13 +42,13 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datash |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect FAIL: {'behind_an_active_part': 0, 'declared': 2, 'not_on_netlist': 0, 'ports': 2, 'unprotected': 4} |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
-| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
+| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | closer_audit FAIL: {'declared': 14, 'fail': 0, 'in_finish': 14, 'uncovered_classes': 3} |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no pruned_gate verdict for this board |
 | VIA-002 the annular ring is one the fabricator makes | BLOCKER | ROUTED_BOARD | **PASS** | via_annular PASS of 519 |
 | VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **PASS** | via_audit PASS of 479 |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 4 |
-| EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
+| EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 2 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_c PASS of 130 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
