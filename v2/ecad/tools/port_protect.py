@@ -145,9 +145,20 @@ def main(argv):
     for m in missing: print("  NOTE declared port %s is not on this netlist" % m)
     if "--json" in argv: print(json.dumps(rows, indent=1))
     if not n_declared:
+        # AN EMPTY DECLARATION IS AN ANSWER; A MISSING ONE IS A QUESTION (16 September 2026). Board P carries
+        # nothing out of the case: its cell taps, its thermistor lead and its gauge bus all end inside the
+        # sealed case a few centimetres away, and it says so in `external_ports: []` with the reason beside it.
+        # That is TRN-001 not applying to this board, which is a different thing from nobody having looked, and
+        # board P's route was blocked by the two being indistinguishable. A board with no key at all stays an
+        # unanswered question and still blocks.
+        answered = "external_ports" in (_bt.table(letter) or {})
+        why = (_bt.table(letter) or {}).get("_external_ports_why", "")
         return _v.write("port_protect", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path, "board": letter},
-                        note="this board declares no external port, and no board of this kit is truly internal: "
-                             "the declaration has not been written yet")
+                        applicable=not answered,
+                        note=("this board declares that no conductor of its own leaves the enclosure: %s"
+                              % (why[:180] or "no reason given, which is itself a gap")) if answered else
+                             ("this board declares no external port, and no board of this kit is truly internal: "
+                              "the declaration has not been written yet"))
     # THE COUNTS MUST CARRY WHAT DECIDED. Board A's sweep read FAIL beside "unprotected: 0" on 16 September,
     # because the two conductors that failed are in the other category: their clamp is BEHIND an active part,
     # which therefore takes the transient itself. A verdict whose counts do not contain its own cause is read

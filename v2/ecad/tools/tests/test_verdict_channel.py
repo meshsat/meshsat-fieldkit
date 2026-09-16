@@ -359,3 +359,28 @@ def t_every_gate_in_the_catalogue_maps_to_a_rule_of_the_registry():
     v._BY_TOOL[0] = None
     assert not unmapped, ("these gates decide a board and map to no rule in the registry, so nothing says which "
                           "requirement they serve: %s" % unmapped)
+
+
+def t_an_inapplicable_rule_does_not_decide_a_stage_and_is_not_a_pass():
+    """Board P's route was blocked by two verdicts that were both correct (MESHSAT-862, 16 September 2026).
+
+    Its crystal check said the board carries no crystal and its exposed-port check said no conductor of its own
+    leaves the case. Both are INCONCLUSIVE, because absence is never a pass and a gate that could not judge
+    must never read as one; but neither is a gap, and the pre-route gate could not tell them from a check that
+    failed to run. The record carries `applicable: false` now: the collector skips it, the verdict stays
+    INCONCLUSIVE, and a stage made only of those still reads INCONCLUSIVE rather than passing."""
+    import os, sys, tempfile, json
+    sys.path.insert(0, TOOLS)
+    import verdict as V
+    d = tempfile.mkdtemp(prefix="applicability-")
+    V.write("t_na", V.INCONCLUSIVE, denominator=0, out_dir=d, quiet=True, applicable=False,
+            note="this board carries none of what this rule is about")
+    V.write("t_ok", V.PASS, denominator=3, counts={"pass": 3}, out_dir=d, quiet=True)
+    worst, found, missing = V.collect(d)
+    assert worst == V.CODE[V.PASS], "an inapplicable rule decided the stage: %r" % worst
+    rec = json.load(open(os.path.join(d, "t_na.verdict.json")))
+    assert rec["verdict"] == V.INCONCLUSIVE and rec["applicable"] is False, rec
+    d2 = tempfile.mkdtemp(prefix="applicability-only-")
+    V.write("t_na2", V.INCONCLUSIVE, denominator=0, out_dir=d2, quiet=True, applicable=False)
+    worst2, _, _ = V.collect(d2)
+    assert worst2 == V.CODE[V.INCONCLUSIVE], "a stage of nothing but inapplicable rules read as a pass"

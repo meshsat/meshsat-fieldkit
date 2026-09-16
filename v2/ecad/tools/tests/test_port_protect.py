@@ -164,3 +164,22 @@ def t_the_counts_carry_the_category_that_decided_the_verdict():
     seg = src[i:i + 900]
     assert "behind_an_active_part" in seg, "the counts do not carry the behind-an-active-part category"
     assert "unprotected" in seg
+
+
+def t_an_empty_declaration_is_an_answer_and_a_missing_one_is_a_question():
+    """Board P's route was blocked because the two were indistinguishable (MESHSAT-862, 16 September 2026).
+
+    P carries nothing out of the case: cell taps, a thermistor lead and a gauge bus that all end inside the
+    sealed case a few centimetres away. It says so now in `external_ports: []` with the reason, and the verdict
+    marks TRN-001 inapplicable to that board rather than unanswered. A board with no key at all still blocks,
+    because nobody having looked is not the same as having looked and found nothing."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "port_protect.py"),
+               encoding="utf-8").read()
+    assert 'answered = "external_ports" in' in src, "the tool cannot tell an empty declaration from a missing one"
+    assert "applicable=not answered" in src, "an answered board is still reported as unanswered"
+    import json
+    tbl = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "boards", "p.json")
+    d = json.load(open(tbl, encoding="utf-8"))
+    assert "external_ports" in d and d["external_ports"] == [], "board P no longer declares its ports"
+    assert len((d.get("_external_ports_why") or "")) > 80, "board P's empty declaration carries no reason"
