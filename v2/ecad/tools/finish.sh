@@ -220,6 +220,16 @@ python3 $T/via_audit.py $N.kicad_pcb > out/via_audit.log 2>&1; VA=$?; grep -E 'v
 [ "$VA" -eq 1 ] && stop "a via is below the board's own minimum (rule VIA-001, out/via_audit.log)" out/via_audit.log
 python3 $T/check_pcb_$L.py $N.kicad_pcb > out/gate-$N.log 2>&1; GATE=$?; grep -E "$GGREP" out/gate-$N.log | tail -14
 [ "$GATE" -eq 0 ] || stop "GATE $(python3 $T/verdict.py read out/check_pcb_$L.verdict.json 2>&1 | tail -1) on the routed board" "out/gate-$N.log"
+# THE INTENT RULES BLOCK THROUGH THEIR OWN VERDICTS (16 September 2026). The board gate used to count them in
+# its own failure list, which blocked correctly and attributed wrongly: one composite verdict fails every rule
+# it is mapped to, so board D's single open item, one signal via short of a ground via, failed the MECHANICAL
+# rule on six boards. The gate reports them now and these five decide, so the finish stops in exactly the same
+# places it did and the readiness names the rule that actually failed.
+for _iv in intent_return_path intent_return_via intent_decoupling intent_rails intent_other; do
+  [ -f "out/$_iv.verdict.json" ] || continue
+  python3 $T/verdict.py read "out/$_iv.verdict.json" > out/intent-verdict.txt 2>&1 || \
+    stop "INTENT $(tail -1 out/intent-verdict.txt)" "out/gate-$N.log"
+done
 python3 $T/dc_drop.py $N.kicad_pcb --json out/$N-dc_drop.json > out/$N-dc_drop.log 2>&1; DC=$?; grep -E 'dc_drop' out/$N-dc_drop.log | tail -14
 [ "$DC" -eq 0 ] || stop "DC DROP $(python3 $T/verdict.py read out/dc_drop.verdict.json 2>&1 | tail -1)" "out/$N-dc_drop.log"
 python3 $T/stackup_write.py $N.kicad_pcb 2>&1 | tail -1

@@ -7,7 +7,7 @@ import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<
                            # literal here: six gates carried one, so a layer decision meant editing a
                            # gate, and two experiments came back with their only failure being the gate
                            # describing the previous decision (board A, 12 September; board C, today)
-b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 100.0, 100.0; fails = []; checked = []
+b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 100.0, 100.0; fails = []; checked = []; _intent_reported = []
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 def check(c, m):
     print(("PASS " if c else "FAIL ") + m)
@@ -53,7 +53,19 @@ for ref in ("U2", "K1", "J_HARN1", "J_HS1", "J_HS2"):
     check(not under, "no underside part under %s%s" % (ref, "" if not under else ": " + ",".join(under[:6])))
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
-    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic; print(_ic.run(b, check, sys.argv[1]))
+    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic
+    # THE INTENT ITEMS ARE REPORTED HERE AND DECIDED BY THEIR OWN VERDICTS (16 September 2026). They are five
+    # rules with five authorities (the return path, the return via, the decoupling loop, the rails, the rest)
+    # and `intent_checks` already writes a verdict for each. Counting them in THIS gate's failure list as well
+    # made one composite verdict fail every rule it is mapped to: board D routed 0 hard and 0 unrouted with a
+    # single item open, one signal via short of a ground via, and that EMC item failed the MECHANICAL rule
+    # MEC-001 on six boards through this gate. The same defect must not be counted twice under two authorities.
+    _intent_fails = []
+    def _intent_check(c, m):
+        print(("PASS " if c else "FAIL ") + m)
+        _intent_reported.append(m)
+        if not c: _intent_fails.append(m)
+    print(_ic.run(b, _intent_check, sys.argv[1]))
 # 8 Sep 2026 (MESHSAT-862): the copper checks were wired into the A and P gates only, and they are what finds a pour the router
 # has eaten to islands or a stitch via the fill retreated from. D9 ended a clean route with eleven such islands on its front ground pour.
 import copper_checks as _cc2; print(_cc2.run(b, check))
@@ -67,7 +79,8 @@ import verdict as _v
 _nfp = len(list(b.GetFootprints()))
 _sysv.exit(_v.write("check_pcb_d",
                     _v.INCONCLUSIVE if not _nfp else (_v.PASS if not fails else _v.FAIL),
-                    counts={"fail": len(fails), "pass": len(checked) - len(fails), "footprints": _nfp},
+                    counts={"fail": len(fails), "pass": len(checked) - len(fails), "footprints": _nfp,
+                            "intent_items_reported": len(_intent_reported)},
                     denominator=len(checked),
                     evidence=fails,
                     inputs={"board": sys.argv[1]},
