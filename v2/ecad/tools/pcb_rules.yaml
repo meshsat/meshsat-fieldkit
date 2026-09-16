@@ -360,6 +360,14 @@ rules:
 # 5. POWER TREE   6. DECOUPLING   7. POWER INTEGRITY
 # ---------------------------------------------------------------------------------------------------------
  - id: PWR-001
+   false_positive_analysis: >
+     A false refusal is a net whose name begins with "+" and is NOT a rail: an analogue input called +IN, a
+     differential half, a test point. This project has none today, because the generators write a leading "+"
+     only through a KiCad power symbol, and that is the convention the check reads. If one is ever added, it is
+     declared as a rail with its loads or the convention is broken and this rule has to change with it, and the
+     refusal names the net so the choice is visible. The second shape is a rail the board carries and nothing on
+     it consumes, such as a supply a module generates and hands out: that is still a rail and is declared with
+     the receptacle as its source, which is how board B's six module-supplied rails are written.
    domain: POWER_TREE
    short_name: every rail is declared with its loads
    requirement: >
