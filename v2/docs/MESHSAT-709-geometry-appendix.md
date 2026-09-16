@@ -8027,3 +8027,81 @@ invisible three ways at once: judged as a SIGNAL by the return-path rule, skippe
 unreachable by the new derating check. All are declared with their loads and their real power-path sources,
 and the gate refuses the next one: a net whose name begins with "+" is a rail by this project's own generator
 convention.
+
+### 32.204 A rule pointed at the wrong row refused a finished board, and five gates were describing themselves rather than the boards (16 September 2026, 05:30 CEST; MESHSAT-862)
+
+**Board D12 routes 0 hard and 0 unrouted.** It has done since 23:37 UTC, and every gate but one passed it. The
+one was VIA-002, the annular ring, and it refused the board for a single via: `/+5V_D8` at (110.14, 83.89),
+0.45 mm of copper on a 0.20 mm hole, which leaves 0.125 mm of ring against a declared floor of 0.20.
+
+**The floor was the wrong row.** The fabricator's capability page states two things in two places, and they are
+about two different kinds of hole. Under *Annular ring* it gives the PTH figures this project declared: 0.20 mm
+recommended for a multilayer 1 oz build, absolute minimum 0.15. Under *Holes and vias* it gives the via: a
+minimum via diameter of 0.25 mm on a minimum via hole of 0.15 mm, which is **0.05 mm of ring per side**. The two
+cannot both be about vias, because no via at the document's own minimum could satisfy the annular row. D12's via
+is nearly two and a half times that minimum. `via_audit.py` judges a via against `via_ring_min_mm` now and a
+plated COMPONENT hole against `annular_min_mm`, counts non-plated holes and leaves them unjudged because their
+row is a third one again, and reads INCONCLUSIVE where a board declares only one of the two floors, which is
+what keeps E5 and P honest at a copper weight the rows are not stated for.
+
+**Measured on every board before it was believed, which is the rule for a gate that has never met one.** Across
+all fifteen board files in the box clone: A 860 vias and 218 plated holes, B19 1,465 and 189, C 616 and 40, D
+296 and 44, E 441 and 45, P 241 and 19, E5 12 and 14. **Not one failure on any current board**, and one on a
+superseded one: `pcb-b-compute`'s B15-era board carries `J_RB9603`, a RockBLOCK 9603 header land with 0.150 mm
+of ring, under the recommendation and at the absolute minimum. The registry carries the corrected requirement,
+the corrected clause, its first false-positive analysis with the D12 case written into it, and source status
+PARTIALLY_VERIFIED, because the 2 oz rows are still not stated anywhere.
+
+**D12's last item is now a measured number rather than an absence.** Of its 37 signal vias, 36 carry a ground
+via within the declared 1.5 mm and one does not: `HUB_DM3` at (130.01, 87.42), in the hub port cluster that has
+been this board's tight spot since 11 September, where all 64 candidate sites inside that radius sit on another
+net's copper. `return_via.py` searches outward now and takes the nearest free site, **2.25 mm**, and prints what
+it reached. **The judge was deliberately not moved with it:** the verdict is still taken at 1.5 mm, the board
+still reads FAIL, and the choice is owner decision 32 with the physics written out and three costed options.
+Two suite rules hold that separation, because reaching further is a repair and moving the bar is a ruling.
+
+**Five gates were describing themselves.**
+
+1. **Every board gate carried its copper layer count as a literal**, and all six imported `boardtable` without
+   using it: the import had been added and the literal left, so each file looked fixed. Twice a measurement came
+   back whose only failure was the gate asserting the previous decision, board A's four-layer experiment on
+   12 September at 510 of 511 and board C's six-layer measurement today. Under the P0 ruling every board's layer
+   count is open and will be measured both ways, so the number lives in the board table with its reason.
+2. **The gate sweep could not name board E5 at all.** It is a bare contact interposer generated from board A's
+   own board file, with no schematic, no netlist and no routed copper, so it never needed a chain and never got
+   a `boards/e5.json`. The sweep resolved a board's name through that file alone and stopped at "no board
+   .kicad_pcb", so all twenty of E5's applicable rule-board pairs read INCONCLUSIVE about the script rather
+   than the board. The name falls back to the registry's own applicability data now, which has carried
+   `project: pcb-e5-block` since Phase A. **E5 has eighteen verdicts for the first time.**
+3. **The port-protection verdict printed FAIL beside "unprotected: 0"** on board A, because its two failing
+   conductors are in the other category: the USB-C configuration channels whose only clamp sits behind the
+   Power Delivery controller, so the controller takes the transient itself. A verdict whose counts do not
+   contain its own cause reads as a contradiction to everything downstream.
+4. **The stub router threw away paths it had found**, net after net, with "the path reached a goal CELL whose
+   copper it does not touch". Before giving one up it now lays one short segment from that cell centre to the
+   exact nearest point of the net's own copper, at both ends, kept only if KiCad's unconnected count falls.
+   **The message's own explanation is withdrawn rather than repeated:** these rasterisers mark a cell when its
+   CENTRE is within the shape's half width, so the centre is on the copper and a 0.20 mm closure ending there
+   overlaps a 0.10 mm track. The refusal carries the two end distances and the counts instead, so the next
+   board that meets it says why.
+5. **`cleanup_dangling` skips every net that owns a zone**, which is right for its own job and is exactly why a
+   degenerate track survives on the nets most likely to carry one. Board E11 came back hard 0, unrouted 1, and
+   the open connection was a GND track **0.0002 mm long**. `dot_prune.py` removes a track under five
+   micrometres that no other item of its net touches, keeps and names one that bridges two things (a
+   zero-length track still has a width, so it renders as a copper dot), and refuses outright if the unconnected
+   count rises. **Measured on E11: 71 tracks under the threshold and every one of them a bridge**, so nothing
+   was removed and the board's real open turned out to be elsewhere: `U13` pad 2 on GND, 1.72 mm from the GND
+   track west of it, which the stub router refuses as "pad -> track, no path". Board E declares the direct
+   closure for it now, at 4 mm on the outer layers only, with that connection as its reason.
+
+**The readiness, recomputed under the corrected rule set with fresh evidence from every board.** The sweep ran
+all seven boards read-only, its verdicts travel with each board in `routed/`, and the across-the-set gates were
+re-run on the runner: **NOT_READY, 32.0 percent verified, 13.7 failed, 54.3 inconclusive of 300 applicable
+rule-board pairs**, against 26.7 / 16.7 / 56.7 this morning. The failures fell because a rule stopped judging a
+via by the row that governs a component hole; the verified share rose because a board that could not be named
+and a rule set that had moved under its own evidence were both fixed. Promotion stays frozen.
+
+**Six-layer board C is being finished for decision 27** in its own ECAD directory on current tools, with one
+declaration changed: the six-layer route reached 0 hard and 1 unrouted in 14.7 minutes and routeflow stopped
+before any finish, which is the state the stub router exists for. Four-layer C fails rule 1 on 81 of 127 nets
+by its stack; that is the comparison the decision needs.
