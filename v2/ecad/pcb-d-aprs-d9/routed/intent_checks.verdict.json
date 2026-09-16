@@ -1,38 +1,11 @@
 {
  "advisory": false,
  "counts": {
-  "fail": 28,
-  "pass": 128
+  "fail": 1,
+  "pass": 155
  },
  "denominator": 156,
  "evidence": [
-  "return path under AB_SPARE (Default): 18.0 of 72.3 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under AF_OUT (Default): 12.7 of 107.7 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under AMP_CPN (Default): 14.2 of 29.3 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under AMP_EN (Default): 17.5 of 61.1 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under HS1_MIC (Default): 33.2 of 68.5 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under HS1_MIC_AC (Default): 10.8 of 12.7 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under HS2_MIC (Default): 20.6 of 40.9 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under HS2_MIC_AC (Default): 17.7 of 25.0 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under KEY (Default): 22.9 of 135.3 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under MICAMP_IN_N (Default): 12.9 of 44.9 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under MICAMP_OUT (Default): 23.6 of 48.7 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under MIC_SUM (Default): 12.5 of 107.8 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under PA_EN (Default): 22.5 of 172.7 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under PA_KEY (Default): 16.1 of 195.9 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under PTT_HS1_n (Default): 45.1 of 195.5 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under PTT_HS2_n (Default): 10.9 of 216.9 mm without a plane on a neighbouring layer (limit 10.8)",
-  "return path under RLY_K (Default): 12.4 of 47.4 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under RX_MIX (Default): 12.2 of 69.7 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under SA_PD (Default): 22.7 of 79.4 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under SA_PTT_n (Default): 36.4 of 47.9 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under TX_INHIBIT_n (Default): 64.7 of 124.3 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under VREF (Default): 12.8 of 38.6 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under X_AMP_EN (Default): 39.3 of 54.0 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under X_COS_n (Default): 29.2 of 52.2 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under X_PA_KEY (Default): 47.5 of 68.8 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under X_PTT_HS1_n (Default): 33.3 of 74.5 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under X_PTT_HS2_n (Default): 60.4 of 71.7 mm without a plane on a neighbouring layer (limit 10.0)",
   "return via: 10 of 89 signal vias have a ground via within 1.5 mm (16 exempt in fine-pitch fans, 59 on one reference plane); without one: X_PTT_HS1_n at (64.72, 108.30); X_COS_n at (65.55, 107.65); X_PTT_HS2_n at (65.55, 108.95); X_PA_KEY at (65.55, 110.25); LED_RX_A at (67.97, 116.70); SA_PTT_n at (71.05, 112.78); PA_EN at (73.61, 117.32); KEY at (73.73, 115.79) ..."
  ],
  "inputs": {
@@ -49,14 +22,15 @@
  "rules": [
   "DEC-001",
   "PWR-001",
+  "RET-001",
   "RET-002"
  ],
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4954c9b46c4e42f0"
+  "tools_tree_sha": "cebeb8eb384af39f"
  },
- "ts": "2026-09-16T00:14:44Z",
+ "ts": "2026-09-16T00:41:36Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

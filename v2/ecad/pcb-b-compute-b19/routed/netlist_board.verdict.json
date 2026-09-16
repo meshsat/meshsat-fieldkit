@@ -30,7 +30,7 @@
   },
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "86f7f383900c901c"
+   "sha256_16": "b41654917cf1f6bc"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -44,9 +44,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4954c9b46c4e42f0"
+  "tools_tree_sha": "cebeb8eb384af39f"
  },
- "ts": "2026-09-16T00:14:01Z",
+ "ts": "2026-09-16T00:40:56Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
