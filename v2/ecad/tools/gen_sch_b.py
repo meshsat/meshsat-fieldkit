@@ -100,6 +100,86 @@ _GND_LOADS["J_QMX"] = _DEV_LOADS["F3"]
 _GND_LOADS["U3"] = _GND_LOADS.get("U3", 0.0) + _DEV_LOADS["F2"] / 2
 _GND_LOADS["U4"] = _GND_LOADS.get("U4", 0.0) + _DEV_LOADS["F2"] / 2
 for _n in (1, 2, 3): _GND_LOADS.update(_SLOT_LOADS(_n))
+# THE THIRTY RAILS THIS FILE DID NOT DECLARE (16 September 2026). Six rails were in the intent file and this
+# board has thirty-six. The other thirty were invisible three ways at once: `signalnets` could not know they
+# were rails, so the return-path gate judged each of them as a SIGNAL NET and measured its reference coverage,
+# which says nothing about a power net; `dc_drop` never computed a drop or a current density for any of them;
+# and `derate` could not compare a single part's rating against them. A rail that is not declared is not
+# excluded, it is silently asked the wrong question and silently missed by the right one.
+#
+# THE SOURCE IS THE POWER PATH, NOT THE PART THAT CONTROLS IT: each buck names its INDUCTOR, and a part whose
+# output pin really is a power pin (an LDO, an eFuse, a load switch, a polyfuse) says so with source_ic.
+# The currents are design estimates of where the current goes, in the same form as the rails above.
+for _s in (1, 2, 3):
+    _intent.rail("+3V3_S%dA" % _s, 3.3, 0.5, 1.5, "L%d01" % _s,
+                 loads={"J_M2C%d" % _s: 1.5},
+                 note="slot %d's card-socket 3.3 V from the AP63203 buck U%d03 through L%d01: an M.2 A/E-key "
+                      "radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED" % (_s, _s, _s))
+    _intent.rail("+3V3_S%dB" % _s, 3.3, 0.9, 1.8, "L%d02" % _s,
+                 loads={"J_M2N%d" % _s: 1.2, "U%d01" % _s: 0.55},
+                 note="slot %d's NVMe socket and the PCIe switch's own 3.3 V from U%d04 through L%d02" % (_s, _s, _s))
+    _intent.rail("+1V0_S%d" % _s, 1.0, 0.8, 1.2, "L%d03" % _s,
+                 loads={"U%d01" % _s: 0.8},
+                 note="slot %d's PCIe switch core from the AP63200 buck U%d05 through L%d03" % (_s, _s, _s))
+    _intent.rail("+1V1_S%d" % _s, 1.1, 0.4, 0.7, "L%d04" % _s,
+                 loads={"U%d02" % _s: 0.4},
+                 note="slot %d's USB hub core from U%d06 through L%d04, on the DEVICE rail and always on: the "
+                      "bank outlives the module it is failing away from" % (_s, _s, _s))
+    _intent.rail("+3V3_CM%d" % _s, 3.3, 0.10, 0.20, "U3%dA" % (_s - 1),
+                 source_ic="the module GENERATES this rail and hands it out on its receptacle: the pin IS the source",
+                 loads={"U3%dA" % (_s - 1): 0.10},
+                 note="slot %d's module-supplied 3.3 V. This board only decouples it and level-shifts against "
+                      "it; nothing on the carrier draws from it beyond its own bypass network" % _s)
+    _intent.rail("+1V8_CM%d" % _s, 1.8, 0.02, 0.05, "U3%dA" % (_s - 1),
+                 source_ic="the module GENERATES this rail and hands it out on its receptacle",
+                 loads={"U3%dA" % (_s - 1): 0.02},
+                 note="slot %d's module-supplied 1.8 V, a reference for its GPIO bank and nothing else here" % _s)
+for _t, _u, _n in (("A", "U40", ("U41", "U42", "U43", "U44")), ("B", "U50", ("U51", "U52", "U53", "U54")),
+                   ("C", "U60", ("U61", "U62", "U63", "U64"))):
+    _intent.rail("+3V3_IOC%s" % _t, 3.3, 0.12, 0.25, _u, budget=0.03,
+                 source_ic="%s is an AP2112K-3.3 LDO in SOT-23-5: pin 5 IS its output power pin" % _u,
+                 loads=dict([(_n[0], 0.060), (_n[1], 0.020), (_n[2], 0.020), (_n[3], 0.020)]),
+                 note="controller %s's private 3.3 V, its own branch off the device rail so that one "
+                      "controller's fault cannot pull the other two down. Budget 3 percent: logic only" % _t)
+_intent.rail("+1V2_KSZ", 1.2, 0.5, 0.8, "L2",
+             loads={"U1": 0.5},
+             note="the Ethernet switch's core from the AP63200 buck U26 through L2")
+_intent.rail("+2V5_KSZ", 2.5, 0.15, 0.25, "U27", budget=0.03,
+             source_ic="U27 is an AP2112K-2.5 LDO in SOT-23-5: pin 5 IS its output power pin",
+             loads={"U1": 0.15},
+             note="the Ethernet switch's analogue 2.5 V. Budget 3 percent: the switch's own range is wider")
+_intent.rail("+3V3_ZB", 3.3, 0.10, 0.30, "U22",
+             source_ic="U22 is a TPS22810 load switch: its OUT pin IS the power path, which is what it is for",
+             loads={"U13": 0.04, "U14": 0.04, "J_ZBDBG1": 0.01, "J_ZBDBG2": 0.01},
+             note="the two CC2652P radios behind their load switch, plus the two bench debug headers. 0.3 A "
+                  "peak is both radios transmitting at once, which the fabric never asks for but the copper must carry")
+_intent.rail("+5V_LORA", 5.0, 0.15, 0.70, "U21",
+             source_ic="U21 is a TPS22810 load switch: its OUT pin IS the power path",
+             loads={"U12": 0.70},
+             note="the 1 W LoRa module behind its load switch: 0.7 A on a transmit burst at 30 dBm, milliamps between")
+_intent.rail("+5V_LIME", 5.0, 1.2, 3.0, "U23",
+             source_ic="U23 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
+             loads={"J_LIME": 3.0},
+             note="the software-defined radio bay behind the eFuse U23 (ILM 301R, 3.0 A): a LimeSDR Mini 2.4 "
+                  "on USB 3 draws about 1.2 A and peaks higher while its FPGA configures")
+_intent.rail("+5V_RB", 5.0, 0.15, 2.00, "U24",
+             source_ic="U24 is a TPS2596 eFuse: its OUT pin IS the power path",
+             loads={"J_RB9704": 2.00},
+             note="the satellite modem behind the eFuse U24 (ILM 301R, 3.0 A): the RockBLOCK 9704's burst "
+                  "current on a transmit attempt is the number the copper has to carry, not its average")
+_intent.rail("+5V_CAM", 5.0, 0.25, 0.50, "U28",
+             source_ic="U28 is a TPS2065 switch: its OUT pin IS the power path",
+             loads={"J_CAM": 0.50},
+             note="the camera lead behind its switch, a USB 2.0 device at its port's own 500 mA limit")
+_intent.rail("+5V_HDMI", 5.0, 0.10, 0.50, "F2",
+             source_ic="F2 is a polyfuse in series with the rail: the part IS the power path",
+             loads={"J_HDMI": 0.50},
+             note="the HDMI connector's own 5 V behind the 0.5 A polyfuse F2, which is what the standard asks a source to supply")
+_intent.rail("+54V_POE", 54.0, 0.30, 0.60, "J_54V",
+             loads={"U5": 0.60},
+             note="the Power over Ethernet feed arriving from board A's own +54V_POE stage, into the TPS23861 "
+                  "injector U5. It is a rail of board A and a load of this one")
+
 _intent.rail("GND", 0.0, 10.0, 21.0, ["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV"], loads=_GND_LOADS,
              note="the return of every rail: the three slot rails and the device rail, 19.4 A with all four at their declared peak")
 SYMDIR = "/usr/share/kicad/symbols/"

@@ -26,6 +26,17 @@ _intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.
                   "carried until 8 Sep 2026 22:55: every load tolerates it. The LED rail is PWM'd, the sounder is a buzzer, and the only regulated load is the "
                   "TLV75533 LDO, which has 1.5 V of headroom at 5 V in and 3.3 V out. C8 measures 171 mV (3.41 percent) with 0.6 A over 561 mm of 0.5 mm track, "
                   "half of it on 0.5 oz inner copper; the rail class stays 0.5 mm because 1.0 mm strangled the router in the driver cluster (32.76).")
+
+# DECLARED 16 September 2026. The panel's own 3.3 V was not in the intent file, so `signalnets` could not know
+# it was a rail and the return-path gate judged it as a SIGNAL NET, while `dc_drop` and `derate` could not see
+# it at all. Every load is named because a rail without loads is not declarable.
+_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03,
+             source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
+             loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,
+                    "U8": 0.005, "U9": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},
+             note="the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two "
+                  "expanders, the buffers, the light sensor and the e-paper's supply switch. Budget 3 percent, "
+                  "because every load is a logic part with a wide supply range")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
