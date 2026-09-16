@@ -1617,8 +1617,15 @@ layer case was measured again, this time on a board generated at the 0.16 mm tra
 states for 2 oz on two layers, which is what board P had been designed below. **P6 round one: 0 hard, 45
 connections open of 35 nets, four vias, 21 minutes.** P5 at the old 0.127 mm rules left 44 open of the same 35
 nets. So the design rules were never what stopped this board: **two layers cannot route it**, at either rule
-set, and the four layer arm that routed it 0 and 0 is still the only arm that has. The round two remedy is
-running for completeness; nothing about it can change the shape of that answer.
+set, and the four layer arm that routed it 0 and 0 is still the only arm that has. **Three rounds ran and the
+run ended STOPPED_BUDGET at 05:01 UTC with its best board at 0 hard and 43 open**: round two's via-cost remedy
+was the best of the three and round three was worse, which is the same shape P5 gave at the old rules.
+
+**One thing the ruling changes besides the layer count.** Board P is at 0.16 mm track and clearance because it
+is 2 oz on TWO layers, which is the row the fabricator states for that build. A four-layer P is 1 oz on the
+outer layers by the same page, where the rows read 0.127, so taking four layers gives this board back the finer
+geometry as well as the two extra planes. That is why the four-layer arm routed with the old 0.127 rules and
+was legal doing it.
 
 
 ## Decision 32, board D's last return via, 16 September 2026
