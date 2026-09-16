@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "dots": 93,
+  "kept_as_bridge": 93,
+  "removed": 0
+ },
+ "denominator": 4526,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "d6d3885c3f3f4d59"
+  }
+ },
+ "note": "a track shorter than the process can draw is an island, not a conductor",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [],
+ "tool": "dot_prune",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "572f493cca8aad3d"
+ },
+ "ts": "2026-09-16T23:21:53Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

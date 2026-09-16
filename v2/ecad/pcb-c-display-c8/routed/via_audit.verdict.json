@@ -5,15 +5,15 @@
   "below_floor": 0,
   "below_ring": 0,
   "plated_holes": 40,
-  "via_in_pad": 9,
-  "vias": 502
+  "via_in_pad": 16,
+  "vias": 765
  },
- "denominator": 502,
+ "denominator": 765,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "367ce54a296e20f4"
   }
  },
  "note": "every via at or above the board's own minimum diameter and drill; the annular ring is judged separately in via_annular.verdict.json, and 0 hole(s) are under a floor",
@@ -27,9 +27,9 @@
  "tool": "via_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T19:33:37Z",
+ "ts": "2026-09-16T23:23:46Z",
  "verdict": "PASS",
  "version": "unknown"
 }

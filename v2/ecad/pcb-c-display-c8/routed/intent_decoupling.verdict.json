@@ -10,7 +10,7 @@
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "91156459ee49ab6f"
+   "sha256_16": "410eeb604ec12c4c"
   }
  },
  "note": "the loop from a decoupling capacitor to the pin it serves",
@@ -24,9 +24,9 @@
  "tool": "intent_decoupling",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "465a81f6fa3c600d"
  },
- "ts": "2026-09-16T19:33:32Z",
+ "ts": "2026-09-16T05:16:02Z",
  "verdict": "PASS",
  "version": "unknown"
 }

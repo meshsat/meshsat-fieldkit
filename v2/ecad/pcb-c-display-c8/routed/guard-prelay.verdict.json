@@ -1,0 +1,30 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "exit": 0,
+  "hard_after": 0,
+  "hard_before": 0,
+  "kept": 1,
+  "seconds": 736,
+  "unrouted_after": 272,
+  "unrouted_before": 376
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {},
+ "note": "kept only if neither count rose against the board it was handed",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [],
+ "tool": "guard-prelay",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "2f73f0c1bb69c24e"
+ },
+ "ts": "2026-09-16T20:48:43Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "copper_sliver": 1,
+   "silk_over_copper": 5,
+   "silk_overlap": 14,
+   "starved_thermal": 5,
+   "track_dangling": 17,
+   "via_dangling": 23
+  },
+  "stage": "post",
+  "types_checked": 15,
+  "unrouted": 0
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-c-display-drc.json",
+   "sha256_16": "e6cc7d0b447f2b3c"
+  }
+ },
+ "note": "after stub router (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [],
+ "tool": "hardset-after-stub-router",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "572f493cca8aad3d"
+ },
+ "ts": "2026-09-16T23:21:46Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
