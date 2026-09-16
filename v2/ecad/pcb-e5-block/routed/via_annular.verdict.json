@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "counts": {
+  "below_ring": 0,
+  "npth_holes": 4,
+  "plated_holes": 14,
+  "vias": 12
+ },
+ "denominator": 26,
+ "evidence": [],
+ "inputs": {
+  "annular_min_mm": null,
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "via_ring_min_mm": null
+ },
+ "note": "this board declares no floor for the via ring and the plated hole ring, so that ring was not judged: a floor asserted without the fabricator's own row would be the heuristic-as-law this audit exists to remove",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "VIA-002"
+ ],
+ "tool": "via_annular",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "8acc10d50ab6bbb5"
+ },
+ "ts": "2026-09-16T03:24:48Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}
