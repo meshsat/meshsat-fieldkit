@@ -32,8 +32,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # a schematic connects; these three cannot.
 def generator_files(letter, tools=None):
     t = tools or HERE
-    fs = [os.path.join(t, "gen_sch_%s.py" % letter.lower()), os.path.join(t, "kisch.py"), os.path.join(t, "intent.py")]
-    return [f for f in fs if os.path.exists(f)]
+    own = os.path.join(t, "gen_sch_%s.py" % letter.lower())
+    # THE BOARD'S OWN GENERATOR DECIDES WHETHER THERE IS AN IDENTITY AT ALL. kisch.py and intent.py exist in
+    # every tree, so listing them alone would give board E5, which has no schematic generator, a perfectly
+    # stable "identity" made of two files that say nothing about it.
+    if not os.path.exists(own): return []
+    return [own] + [f for f in (os.path.join(t, "kisch.py"), os.path.join(t, "intent.py")) if os.path.exists(f)]
 
 
 def generator_sha(letter, tools=None):
@@ -46,6 +50,27 @@ def generator_sha(letter, tools=None):
         h.update(os.path.basename(f).encode())
         h.update(open(f, "rb").read())
     return h.hexdigest()[:16]
+
+
+def letter_for(stem, tools=None):
+    """The board letter of a project stem, from the board table rather than from the stem's own spelling.
+
+    `pcb-e1-dock` is board E and the second field of its name is `e1`, so taking that field verbatim asked for
+    a generator `gen_sch_e1.py` that does not exist, recorded a provenance with no generator sha, and made
+    every contract that names board E read UNKNOWN GENERATOR (16 September 2026, the first run of the one-tree
+    sweep). The board table declares `name` per letter, which is the authority; trimming the digits is the
+    fall-back for a tree that has no table."""
+    t = tools or HERE
+    for f in sorted(glob.glob(os.path.join(t, "boards", "*.json"))):
+        try:
+            if json.load(open(f, encoding="utf-8")).get("name") == stem:
+                return os.path.basename(f)[:-5]
+        except Exception: pass
+    # No entry in the table: the second field VERBATIM, digits and all. Trimming them would fold
+    # `pcb-e5-block`, the bare dock block, into board E, and a wrong letter here reads as "current" against
+    # another board's generator, which is worse than the honest answer that this tree cannot say.
+    parts = stem.split("-")
+    return parts[1] if len(parts) > 1 else stem
 
 
 def path_for(netlist):
@@ -90,8 +115,12 @@ def current(netlist, letter, tools=None):
 
 
 def main(argv):
-    if len(argv) >= 3 and argv[0] == "write":
-        rec = write(argv[1], argv[2])
+    if len(argv) >= 2 and argv[0] == "write":
+        # The caller may give the LETTER or the STEM; a stem is resolved through the board table, because a
+        # stem's own second field is not always the letter (`pcb-e1-dock` is board E).
+        who = argv[2] if len(argv) > 2 else os.path.basename(argv[1])[:-4]
+        letter = who if len(who) <= 2 and "-" not in who else letter_for(who.replace(".net", ""))
+        rec = write(argv[1], letter)
         print("sch_prov: %s written by generator %s (%s)" % (rec["netlist"], rec["generator_sha"], ", ".join(rec["generator_files"])))
         return 0
     if len(argv) >= 2 and argv[0] == "read":

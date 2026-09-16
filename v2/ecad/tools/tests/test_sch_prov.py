@@ -92,4 +92,19 @@ def t_the_netlist_export_writes_the_sidecar():
     i = src.index("export netlist")
     j = src.index("sch_prov.py")
     assert i < j, "the sidecar is written before the netlist it describes"
-    assert "cut -d- -f2" in src, "the letter must come from the stem, not from a table that can drift"
+    assert '"$N"' in src[i:src.index("\n", j)], "the stem must be passed whole; sch_prov resolves the letter"
+
+
+def t_the_letter_comes_from_the_board_table_and_not_from_the_stems_spelling():
+    """The first run of the one-tree sweep, 16 September 2026: board E's netlist is `pcb-e1-dock.net`, the
+    second field of the stem is `e1`, and taking it verbatim asked for a `gen_sch_e1.py` that does not exist.
+    The provenance was written with no generator sha and every contract naming board E read UNKNOWN GENERATOR,
+    which is the false-INCONCLUSIVE twin of the false-FAIL this whole change exists to remove."""
+    assert P.letter_for("pcb-e1-dock") == "e", "board E's stem was not resolved through the board table"
+    assert P.generator_sha(P.letter_for("pcb-e1-dock")) is not None, "board E has no generator identity"
+    for stem, want in (("pcb-a-power", "a"), ("pcb-b-compute", "b"), ("pcb-c-display", "c"),
+                       ("pcb-d-aprs", "d"), ("pcb-p-pack", "p")):
+        assert P.letter_for(stem) == want, (stem, P.letter_for(stem))
+    # a stem the table does not carry keeps its field verbatim: the bare dock block is not board E
+    assert P.letter_for("pcb-e5-block") == "e5"
+    assert P.generator_sha("e5") is None, "a board with no schematic generator claimed one"
