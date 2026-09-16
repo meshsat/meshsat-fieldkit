@@ -54,7 +54,7 @@ for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks i
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
-          energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces \
+          energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
           sensitive_nodes assembly_set; do
   rm -f "$P/routed/$_g.verdict.json"
 done
@@ -158,6 +158,9 @@ run "cross-board contracts" python3 $T/check_contracts.py "$E"
 # Set-level like the contracts above and for the same reason: it reads every board's classes and the parts'
 # own requirements out of pcb_interfaces.yaml, and one board's answer is not separable from the set's.
 run "interfaces"        python3 $T/interfaces.py
+# EVERY DOCUMENT THAT ASSERTS A NUMBER ABOUT THE HARDWARE NAMES THE ARTEFACT IT WAS READ FROM (rule DOC-002,
+# 16 September 2026). Set-level: the order notes live under release/revA/order/ and are one document per board.
+run "doc provenance"    python3 $T/doc_provenance.py
 # THE STORED-ENERGY CHAIN (rules BAT-002 and PWR-003, 16 September 2026). It is a property of the SET rather
 # than of one board, like the contracts above: the chain runs from the pack through four boards, and a stage
 # is checked against the netlist of the board it claims to be on. Every board's evidence carries the verdict,

@@ -219,6 +219,27 @@ for folder, stem, prj, title, phase, hand in BOARDS:
     else:
         notes += ["ASSEMBLY", "- None: mechanical board (holes, window, tabs). PCB only.", "- Fitted at the bench: %s" % hand, ""]
     notes += PCB_OPTIONS.get(stem, [])
+    # EVERY NUMBER IN THIS NOTE NAMES THE ARTEFACT IT CAME FROM (16 September 2026, rule DOC-002). The note
+    # asserts a size, a layer count, a thickness, a copper weight and a stackup, and it named no board at all:
+    # a note beside a folder cut three phases ago reads exactly like one beside the current board, which is not
+    # a hypothetical here, three of the seven folders described boards this project was not building on
+    # 12 September. The sha256 of the BOARD these numbers were read from, and of the gerber zip the fabricator
+    # actually receives, go in the note.
+    import hashlib as _hl, datetime as _dtp
+    def _sha(_p):
+        try:
+            _h = _hl.sha256()
+            with open(_p, "rb") as _f:
+                for _b in iter(lambda: _f.read(1 << 20), b""): _h.update(_b)
+            return _h.hexdigest()
+        except OSError:
+            return ""
+    _zip = os.path.join(jd, "%s-gerbers.zip" % stem)
+    notes += ["PROVENANCE",
+              "- These numbers were read from %s.kicad_pcb, sha256 %s" % (stem, _sha(board_file)[:16] or "NOT READABLE"),
+              "- The gerber zip in this folder is sha256 %s" % (_sha(_zip)[:16] or "NOT PRESENT"),
+              "- Written %s by tools/make_handoff.py; nothing in this note is typed by hand" % _dtp.date.today().isoformat(),
+              ""]
     notes += ["SOURCE", "- Deliverable folder: v2/release/%s/boards/%s in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)" % (os.path.basename(RELEASE), folder),
               "- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709"]
     open(os.path.join(jd, "ORDER-NOTES.txt"), "w").write("\n".join(notes) + "\n")

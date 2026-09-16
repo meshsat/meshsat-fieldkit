@@ -499,10 +499,22 @@ coverage:
  DOC-001: {implementation: "full.sh PHASE, silk_fix_all.py", verification: {tool: final_gate.py, verdict: "final_gate_<letter>", fixtures: tests/test_final_gate.py},
    maturity: ENFORCED, gap_category: NONE, note: "added 16 September: a folder that is not the declared phase fails the set, with a truth-table fixture"}
 
- DOC-002: {implementation: "ledger.py, provenance.json", verification: {tool: ledger_verify.py, verdict: ledger_verify, fixtures: tests/test_ledger.py},
-   maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
-   note: "the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the artefacts they came from",
-   remediation: {action: "evidence ids in the record entries, emitted by the same writer", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [SGN-001], p50_h: 4, p80_h: 12}}
+ DOC-002: {implementation: "ledger.py, provenance.json, make_handoff.py's PROVENANCE block, export_jlc.sh's header",
+   verification: {tool: "doc_provenance.py, ledger_verify.py", verdict: "doc_provenance, ledger_verify", fixtures: "tests/test_doc_provenance.py, tests/test_ledger.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: THE DOCUMENT THAT ASSERTS THE NUMBERS IS THE ORDER NOTE, and it named no board.
+     The rule asks that each asserted number carry its artefact hash or be marked an estimate, and its phase is
+     RELEASE_PACKAGE, so the documents in scope are the ones in a deliverable and order folder: ORDER-NOTES.txt
+     states a board's size, layer count, thickness, copper weight and stackup, and said only 'generated from
+     the board file'. A note beside a folder cut three phases ago reads exactly like one beside the current
+     board, which is not hypothetical here: three of the seven folders described boards this project was not
+     building on 12 September. `make_handoff.py` writes a PROVENANCE block naming the board's sha256 and the
+     gerber zip's, `export_jlc.sh` puts the board's sha in its own header, and `doc_provenance.py` checks that
+     every order note names a sha256 and that it IS the artefact in its own folder. All seven notes in the tree
+     today name none, which is a FAIL and the truth; they clear on the next handoff, which waits on the boards
+     being cut. What this does NOT do is read prose for numbers: a claim in a sentence is a manual-review
+     question and the rule's own verification method says MANUAL_REVIEW as well as SCRIPT.",
+   remediation: {action: "rebuild the order set once the boards are cut; the writers are in place and the check passes the moment they run", owner: SESSION, execution: SEQUENTIAL, depends_on: [DOC-001], p50_h: 2, p80_h: 6}}
 
  OUT-001: {implementation: "make_handoff.py", verification: {tool: final_gate.py, verdict: "final_gate", fixtures: tests/test_final_gate.py},
    maturity: ENFORCED, gap_category: DUPLICATED_OR_STALE,
