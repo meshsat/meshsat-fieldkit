@@ -224,9 +224,11 @@ operating mode, including startup, shutdown, hot-plug and the single-fault condi
 | release effect | **BLOCKER** |
 | risk | SAFETY, RELIABILITY, ELECTRICAL_FUNCTION |
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
-| source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_*.py value strings and each board's intent rails |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| source | PARTIALLY_VERIFIED |
+| | the part maker's own reference circuit, where a net's voltage lives inside a part this project does not open: PDI e-paper driving circuit note rev 02, components table and bill of materials, Pervasive Displays (PDI), components table, bill of materials -- v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf |
+| | the stand-off voltage in a transient suppressor's own part number (SMxJnnA), the suppressor makers (Littelfuse, Diodes, Vishay and the rest share the convention), part numbering -- the part number on each row of the BOM |
+| implementation | gen_sch_*.py value strings, each board's intent rails and its declared nodes |
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -239,15 +241,27 @@ on the PoE stage until owner ruling 10.
 
 **If violated** A part fails short on the bench or in the field, often taking the stage with it.
 
-**Today** 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carries a rating
-is compared with the declared voltage of every rail its pins touch, at a 20 percent margin, and board A's 48
-rated pairs come back clean, which is owner ruling 10's fix confirmed rather than re-found. THREE THINGS ARE
-STILL OPEN and the tool says so in its own output rather than implying coverage it does not have: a part
-whose value carries no rating (90 of them on board A) has its absolute maximum in a datasheet nothing reads;
-DC-BIAS CAPACITANCE DERATING is not implemented at all, and it is a different failure (a decoupling network
-that is not there, rather than a part failing short); and a rated part on a net with no declared voltage is
-reported as UNDECLARED, 29 nets on board A, mostly switch and bootstrap nodes. That is why this is
-GENERATED_ONLY and not ENFORCED
+**Today** 16 September 2026, SECOND PASS: THE NETS WHERE THE HIGHEST VOLTAGES LIVE ARE NOT RAILS, and until today none
+of them was declared. A switching node, a bootstrap, a charge pump and a transmitter's output are not
+supplies with a current and loads, so `rail()` could not describe them and `derate` reported them as
+UNDECLARED: 29 such nets on board A, 15 on B, 14 on E, and board C judged NO PART AT ALL. `intent.node()`
+declares a net's peak with the basis for the number, `rides_on` records that a bootstrap sees its driver's
+bias and not the height of the node it rides on, `v_work` records the working maximum where it differs from
+the nominal (VBAT is declared 14.4 and a 4S pack terminates at 16.8; VIN_RAW is declared 12 and the vehicle
+line it comes from is specified 9 to 36), and `vendor_reference` records the one case where the voltage lives
+inside a part this project does not open and the PART MAKER STATES THE PART instead. The seven boards now
+declare 0 undeclared nets and 379 part-on-net comparisons where there were 174. IT FOUND SIX REAL DEFECTS ON
+THREE BOARDS, all of one class and all invisible before: a transient suppressor whose stand-off is BELOW its
+line's own working maximum conducts in normal service rather than only on a transient. Three SMCJ33A sat on
+lines specified to 36 V (board A's VIN_RAW clamp, board E's input and bus clamps) and three SMBJ5.0A on 5.1 V
+slot rails. All six are replaced at the source with the next standard stand-off, and the SMCJ40A's higher
+clamping voltage is paid for where it lands: board A's front-end input capacitors and board E's bus capacitor
+move from 50 V to the 100 V part the set already buys. A seventh item was found the same way and is not a
+stand-off: board E's panel clamp did not begin to conduct until 36.7 V, above the 35 V rating of the bulk
+capacitors it guards, and is now an SMCJ28A that conducts at 31.1. STILL OPEN and said out loud rather than
+implied: DC-bias capacitance derating is not implemented and is a different failure; a part whose value
+states no rating is counted and reported, never assumed good; and the comparison is against the declared
+STEADY voltage, so transients and ringing are outside it
 
 ### CMP-002  the package on the land is the package ordered
 
@@ -470,11 +484,12 @@ that carries a meaningful share of the current.
 | release effect | **BLOCKER** |
 | risk | SAFETY, THERMAL, RELIABILITY |
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (automatable) |
-| source | SOURCE_UNVERIFIED |
-| | IPC-2221 generic standard on printed board design, current-carrying capacity charts, IPC, current capacity charts -- NOT IN THIS TREE |
-| | IPC-2152 standard for determining current-carrying capacity, IPC -- NOT IN THIS TREE |
+| source | PARTIALLY_VERIFIED |
+| | ECSS-Q-ST-70-12C, Design rules for printed circuit boards, Annex D (D.1.2 the formula, D.2 the IPC-2152 fit, D.3 the CNES fit, D.4 the IPC-2221A fit, D.1.3 the worked example), ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, Annex D -- v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md |
+| | IPC-2221 generic standard on printed board design, current-carrying capacity charts, IPC, Figure 6-4 curve C, internal conductors -- NOT IN THIS TREE, cited through the ECSS transcription above |
+| | IPC-2152 standard for determining current-carrying capacity, IPC, chapter 5.2.2, figure 5-14 -- NOT IN THIS TREE, its curve fit is cited through the ECSS transcription above |
 | implementation | power_copper.py, gen_pcb_*3.py bands |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -487,11 +502,20 @@ exceeded the published limit while every one read MET, because the verdict was t
 
 **If violated** A track runs hot, its resin degrades, and the failure is progressive rather than sudden.
 
-**Today** the conductor measure is implemented and tested; its limit comes from a formula in a code comment, no IPC
-document is in the tree, and IPC-2152 has never been considered. 16 September 2026: it reads its OWN verdict
-now (dc_density). One verdict served both power rules, so a density miss failed the board through the drop
-rule and a limit with no source decided a board through a rule that has one. Board A read MISSED VBAT 0.38
-percent of 14.4 V, which looks like a voltage failure and is a density one
+**Today** 16 September 2026, THE LIMIT HAS A DOCUMENT. It had been a formula in a code comment, `I = k dT^0.44 A^0.725`
+with k 0.024 and 0.048, judging every rail on seven boards with nothing behind it anyone could look up.
+ECSS-Q-ST-70-12C (14 July 2014, Annex D) publishes closed-form curve fits of the IPC-2221A, IPC-2152 and CNES
+models with their constants, their validity ranges and a worked example; it is free, it is in the tree as a
+transcription of the clauses cited (v2/vendor/standards/), and `track_current.py` implements it and proves
+itself against the standard's own example (1 A at 5 K on 0.925 by 0.025 mm, reproduced to 1.0002 A). The
+project's internal-conductor bar turns out to BE the published one, to within 0.20 percent over 96
+geometries. Two things the document does not settle are written into the rule rather than left implied: the
+external factor of two is fitted nowhere in the annex, and the two models CROSS at 0.268 mm2 at 10 K, above
+which our bar is the optimistic one (every 2 oz pour wider than 3.8 mm). dc_drop prints the other two numbers
+beside any conductor past that line and gates on neither: moving the bar changes MET on boards already cut,
+which is a decision with a number attached rather than a patch. Earlier: it reads its OWN verdict
+(dc_density), because one verdict served both power rules and a density miss failed the board through the
+drop rule
 
 ### PI-002  rail voltage drop
 
@@ -534,9 +558,11 @@ rail's peak current within the same temperature rise the conductor rule allows.
 | release effect | **MUST_JUSTIFY** |
 | risk | THERMAL, RELIABILITY, SAFETY |
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (automatable) |
-| source | SOURCE_UNVERIFIED |
+| source | PARTIALLY_VERIFIED |
+| | ECSS-Q-ST-70-12C, Design rules for printed circuit boards, Annex D (D.1.2 the formula, D.4 the IPC-2221A internal-conductor fit), ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, Annex D -- v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md |
+| | the fabricator's published average hole plating thickness, 18 um, the selected fabricator, Holes and vias -- v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md |
 | implementation | prefanout.py, gen_pcb_*3.py stitch vias |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: UNASSESSED)
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one transition, expires the next route |
 
@@ -547,16 +573,27 @@ current per via and the total against the rail's peak.
 
 **If violated** Barrel cracking and progressive resistance rise at the transition.
 
-**Today** 16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of that
-net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's peak
-current is compared against the weakest site, because a transition is a series element. The barrel is
-geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published 18 um,
-but the curve is IPC-2221's and that document is not in this tree, so the maturity is GENERATED_ONLY and the
-number is a calculation this project made rather than a limit a document gave it. It lands where the trade's
-own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has
-no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times
-the computed figure and cites nothing. Its first run on real boards found something on all seven and most of
-it is one false shape: a rail's weakest SITE is often a lone stitch via at the end of a pour carrying almost
+**Today** 16 September 2026, SECOND PASS: THE ATTRIBUTION IS A MEASUREMENT AND THE CURVE HAS A DOCUMENT, and both
+halves of the remediation this entry asked for are done. `dc_drop` already solved for the current in every
+barrel on its way to the density verdict and threw it away; it writes them beside the board now, and
+`via_current` judges each barrel on what the mesh puts through it instead of attributing a rail's whole
+current to its weakest cluster of its own vias. The difference is the whole rule: board A went from ELEVEN
+rails refused on the attributed reading to FIVE barrels that really do carry more than their wall is rated
+for, the worst a VBUS20 barrel at (68.5, 82.0) carrying 3.40 A against 0.90. Board C PASSES it for the first
+time. The curve is IPC-2221A's internal-conductor model, published with its constants in ECSS-Q-ST-70-12C
+Annex D and transcribed in v2/vendor/standards/; the plating is the fabricator's own 18 um. The verdict is
+ADVISORY exactly when a judged rail still has no solved barrel current and says how many, which today is
+board B, whose committed board is not routed at all, so no load is reachable from any source and the mesh
+finds nothing. Earlier: each declared rail's vias are grouped into SITES, a cluster of that net's barrels
+within 6 mm, which is what a layer transition looks like on these boards, and the rail's peak current is
+compared against the weakest site, because a transition is a series element. The barrel is geometry (an
+annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published 18 um, but the
+curve is IPC-2221's and that document is not in this tree, so the maturity is GENERATED_ONLY and the number
+is a calculation this project made rather than a limit a document gave it. It lands where the trade's own
+rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has no
+unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times the
+computed figure and cites nothing. Its first run on real boards found something on all seven and most of it
+is one false shape: a rail's weakest SITE is often a lone stitch via at the end of a pour carrying almost
 none of the current, while the current travels in a band with a via field under it (board E's CELL_F reads 18
 A through one via). The arithmetic is right and the attribution is not, so the verdict is ADVISORY and the
 rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh
@@ -612,7 +649,7 @@ leaving the kit, is decided once and implemented the same way everywhere.
 | verified by | MANUAL_REVIEW at PLACED_BOARD (human or lab only) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination |
-| maturity | **DOCUMENTED_ONLY** |  (at writing: UNASSESSED)
+| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope the kit, expires pre-compliance testing |
 
@@ -1171,7 +1208,7 @@ documentation of both ends: impedance, skew, termination, coupling, isolation, p
 | source | PARTIALLY_VERIFIED |
 | | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2.1 connector and design guidance; 2.3 and 2.3.1 PCIe, routing guidance; pin table, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
 | implementation | gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one interface on one board, expires prototype validation |
 
@@ -1191,7 +1228,19 @@ design. Every PCIe receive line needs a 220 nF series capacitor before it enters
 on three slots: six capacitors added at the source and a contract now holds the shape (the module's receive
 net carries exactly one capacitor and never a second device). Ethernet is 100 ohm differential, intra-pair
 within 0.15 mm. This closes ONE interface of several: USB, M.2 and HDMI have no sheet, which is why the
-maturity is GENERATED_ONLY and not ENFORCED
+maturity is GENERATED_ONLY and not ENFORCED. 16 SEPTEMBER 2026, SECOND PASS: THE SAME DATASHEET STATES ALL OF
+THEM, and the sentence above was wrong to stop at PCIe. The Compute Module 5's own document gives Ethernet
+100 ohm with 0.15 mm intra-pair, PCIe 90 ohm with 0.1, USB 2.0 and 3.0 90 ohm with 0.1, HDMI 100 ohm with
+0.15 and 25 mm between pairs, and MIPI 100 ohm with 0.15; the RM520N-GL hardware design gives the M.2
+socket's own side, 85 ohm plus or minus 10 percent on PCIe with a 200 mm limit and 90 ohm on USB with 225 mm.
+`pcb_interfaces.yaml` holds all of it as data with the clause and the quote each was read from, and
+`interfaces.py` judges every board's classes against it. EVERY IMPEDANCE TARGET ON EVERY BOARD IS CORRECT,
+including the two ends that state different numbers, because 90 ohm is inside the module's 85 plus or minus
+10 percent. What disagrees is one thing, on every high-speed interface of boards A and B: THIS PROJECT JUDGES
+INTRA-PAIR MISMATCH AT 1.0 mm AND THE PARTS ASK FOR 0.1 TO 0.7, six to ten times tighter. The 1 mm is the
+owner ruling of 5 September and tightening it is a decision, so the rule reports the gap with its numbers and
+the decision is filed. Boards C, D and E carry USB only at full speed and declare no target, which their
+parts' datasheets say in as many words: a declared zero with a reason, not a silence
 
 ### INT-002  a transformerless Ethernet link is verified at both ends
 
@@ -1290,8 +1339,9 @@ the material group of the laminate.
 | verified by | SCRIPT, MANUAL_REVIEW at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | | IEC 60664-1 insulation coordination for equipment within low-voltage systems, IEC, creepage and clearance tables -- NOT IN THIS TREE |
+| | ECSS-Q-ST-70-12C, Design rules for printed circuit boards, clause 13.8.2 and Table 13-3, minimum insulation distance as a function of voltage, ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 13.8.2, Table 13-3 -- v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md |
 | implementation | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1330,7 +1380,7 @@ its junction temperature at the envelope's maximum ambient is estimated and reco
 | verified by | CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_*3.py copper and thermal vias |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one part, expires prototype thermal measurement |
 
@@ -1920,8 +1970,8 @@ the date and the identity of that artefact.
 | risk | DOCUMENTATION |
 | verified by | MANUAL_REVIEW, SCRIPT at RELEASE_PACKAGE (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | ledger.py, provenance.json |
-| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
+| implementation | ledger.py, provenance.json, make_handoff.py's PROVENANCE block, export_jlc.sh's header |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one claim, expires  |
 
@@ -1931,8 +1981,18 @@ the date and the identity of that artefact.
 
 **If violated** The record describes a board that no longer exists.
 
-**Today** the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the artefacts
-they came from
+**Today** 16 September 2026: THE DOCUMENT THAT ASSERTS THE NUMBERS IS THE ORDER NOTE, and it named no board. The rule
+asks that each asserted number carry its artefact hash or be marked an estimate, and its phase is
+RELEASE_PACKAGE, so the documents in scope are the ones in a deliverable and order folder: ORDER-NOTES.txt
+states a board's size, layer count, thickness, copper weight and stackup, and said only 'generated from the
+board file'. A note beside a folder cut three phases ago reads exactly like one beside the current board,
+which is not hypothetical here: three of the seven folders described boards this project was not building on
+12 September. `make_handoff.py` writes a PROVENANCE block naming the board's sha256 and the gerber zip's,
+`export_jlc.sh` puts the board's sha in its own header, and `doc_provenance.py` checks that every order note
+names a sha256 and that it IS the artefact in its own folder. All seven notes in the tree today name none,
+which is a FAIL and the truth; they clear on the next handoff, which waits on the boards being cut. What this
+does NOT do is read prose for numbers: a claim in a sentence is a manual-review question and the rule's own
+verification method says MANUAL_REVIEW as well as SCRIPT.
 
 ## Manufacturing Outputs
 

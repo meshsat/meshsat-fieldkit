@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**31 of 57 rules carry a gap.**
+**26 of 57 rules carry a gap.**
 
 ## absent (4)
 
@@ -59,7 +59,7 @@ ERASE PIN, so no option is a pure hardware wipe; the fact that makes option 1 ch
 supervisors are already on the same I2C bus as the secure element and depend on no compute module being alive  
 *Close it by* owner decision 30: the supervisors execute the wipe, power removal only, or accept the software path and rename the feature everywhere. Owner **OWNER**. Effort P50 8h, P80 24h.
 
-## generated only (5)
+## generated only (4)
 
 **ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, ENFORCED)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
@@ -82,11 +82,6 @@ the protection is designed and its thresholds are configured in software; no che
 against the cell's own limits, and the cell is not chosen  
 *Close it by* the cell's datasheet on file, the threshold table derived from it, and the prototype protection test. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
 
-**DOC-002 provenance for every claim** (MUST_JUSTIFY, GENERATED_ONLY)  
-the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the artefacts
-they came from  
-*Close it by* evidence ids in the record entries, emitted by the same writer. Owner **SESSION**, after SGN-001. Effort P50 4h, P80 12h.
-
 **GND-001 one deliberate ground system** (MUST_JUSTIFY, ENFORCED)  
 phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate
 or where a crossing happens 16 September 2026: IT IS READ FROM THE NETLIST AND COMPARED WITH THE BOARD'S OWN
@@ -108,9 +103,9 @@ Nothing verifies this rule on either board, and the coverage map says so rather 
 gate  
 *Close it by* compute each RF line on its stackup, simulate the LPF, and record the module keep-out check. Owner **SESSION**, after IMP-001. Effort P50 8h, P80 24h.
 
-## prose only (3)
+## prose only (2)
 
-**GND-002 chassis and cable-shield strategy** (MUST_JUSTIFY, DOCUMENTED_ONLY)  
+**GND-002 chassis and cable-shield strategy** (MUST_JUSTIFY, OWNER_DECISION_REQUIRED)  
 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit
 has no single conductive enclosure: the Peli 1450 is plastic and every piece of metal in it is an island held
 by plastic, so the only thing joining them is whatever this design says joins them. Board B's magnetics
@@ -121,17 +116,6 @@ document; they are schematic changes on three boards and they touch owner decisi
 wait on that ruling rather than being made piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by
 a four-wire measurement and an emissions sweep, neither of which exists until there is hardware  
 *Close it by* make the four changes the strategy names once decision 29 is answered, then the bond resistances and the pre-compliance sweep at the prototype. Owner **SESSION**, after INT-002. Effort P50 4h, P80 12h.
-
-**INT-001 each interface is designed to its own specification** (BLOCKER, GENERATED_ONLY)  
-16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it
-decided three things. PCIe on this host is 90 ohm differential with intra-pair match within 0.1 mm, so the
-class board B already assigns is correct and the PCIe wants 85 note of 9 September is withdrawn for this
-design. Every PCIe receive line needs a 220 nF series capacitor before it enters the IC, and board B had none
-on three slots: six capacitors added at the source and a contract now holds the shape (the module's receive
-net carries exactly one capacitor and never a second device). Ethernet is 100 ohm differential, intra-pair
-within 0.15 mm. This closes ONE interface of several: USB, M.2 and HDMI have no sheet, which is why the
-maturity is GENERATED_ONLY and not ENFORCED  
-*Close it by* per-interface sheets for USB, M.2 and HDMI from their own specifications, the way PCIe was done today. Owner **SESSION**. Effort P50 10h, P80 34h.
 
 **PLC-002 prevention before repair** (MUST_JUSTIFY, ENFORCED)  
 the principle is written in the record and in the plan; the finish still carries ten copper-editing passes
@@ -146,20 +130,6 @@ with a measured cost (board P measured the grid at 21 open connections against 0
 declares none) and board C is measuring it on two arms right now. Board E5 has no chain, so no closer runs on
 it at all.  
 *Close it by* each closer names its class and its prevention attempt; extend the predictor. Owner **SESSION**. Effort P50 6h, P80 20h.
-
-## no behavioural test (1)
-
-**CMP-001 absolute maximum never reached** (BLOCKER, GENERATED_ONLY)  
-16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carries a rating
-is compared with the declared voltage of every rail its pins touch, at a 20 percent margin, and board A's 48
-rated pairs come back clean, which is owner ruling 10's fix confirmed rather than re-found. THREE THINGS ARE
-STILL OPEN and the tool says so in its own output rather than implying coverage it does not have: a part
-whose value carries no rating (90 of them on board A) has its absolute maximum in a datasheet nothing reads;
-DC-BIAS CAPACITANCE DERATING is not implemented at all, and it is a different failure (a decoupling network
-that is not there, rather than a part failing short); and a rated part on a net with no declared voltage is
-reported as UNDECLARED, 29 nets on board A, mostly switch and bootstrap nodes. That is why this is
-GENERATED_ONLY and not ENFORCED  
-*Close it by* declare the switching and bootstrap nodes voltages so their parts can be judged; then the DC-bias curves for the decoupling on the fastest rails. Owner **SESSION**, after PWR-001. Effort P50 6h, P80 18h.
 
 ## no protocol (1)
 
@@ -176,7 +146,7 @@ INCONCLUSIVE with the 41 named, and the list is the checklist for the session th
 also compares the TWO copies of the table, the CSV and the literal in make_handoff.py that actually reaches a
 CPL: that line is on the never-auto floor, so a disagreement is reported for a person to resolve rather than
 edited here.  
-*Close it by* a per-footprint rotation verification protocol with the assembler's preview as the artefact. Owner **SESSION**. Effort P50 4h, P80 12h.
+*Close it by* the assembler's own preview of each polarised footprint, which is the artefact the acceptance criteria names and the ONE thing this session cannot produce: the runner never logs into JLCPCB (a standing rule of this repo) and their preview is behind that login. It belongs to the ordering session on the laptop, which has the browser and the account, and the table it fills in is v2/release/revA/order/jlc-rotations.csv with a date per row. What the session HAS done is the other half of the acceptance criteria, the rotation against each part's own drawing, and what it cannot do is the half that says 'and against the assembler's convention'. Owner **OWNER**. Effort P50 4h, P80 12h.
 
 ## duplicated or stale (1)
 
@@ -192,7 +162,7 @@ the 3 mm distance is a project number applied to every device; the loop inductan
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (14)
+## source or applicability unresolved (12)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, ENFORCED)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end 16
@@ -220,7 +190,7 @@ SOURCE_UNVERIFIED.
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
 with one solved point; no fabricator confirmation and no coupon  
-*Close it by* solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it. Owner **SESSION**, after STK-001. Effort P50 8h, P80 24h.
+*Close it by* solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it. Owner **OWNER**, after STK-001. Effort P50 8h, P80 24h.
 
 **INT-002 a transformerless Ethernet link is verified at both ends** (BLOCKER, OWNER_DECISION_REQUIRED)  
 BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact
@@ -234,7 +204,7 @@ this project can obtain. Owner decision 29, with three costed options; the recom
 magnetics board B already carries on its wall port  
 *Close it by* owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype. Owner **OWNER**. Effort P50 6h, P80 30h.
 
-**ISO-001 creepage and clearance** (BLOCKER, SOURCE_UNVERIFIED)  
+**ISO-001 creepage and clearance** (BLOCKER, OWNER_DECISION_REQUIRED)  
 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the
 router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid piece of
 copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and above: board
@@ -250,30 +220,6 @@ the rule stays unjudged, which is what 'no source' has to mean
 coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew
 budget is not cited beside it  
 *Close it by* cite each interface's skew budget and judge against it. Owner **SESSION**, after INT-001. Effort P50 3h, P80 8h.
-
-**PI-001 conductor current capacity** (BLOCKER, SOURCE_UNVERIFIED)  
-the conductor measure is implemented and tested; its limit comes from a formula in a code comment, no IPC
-document is in the tree, and IPC-2152 has never been considered. 16 September 2026: it reads its OWN verdict
-now (dc_density). One verdict served both power rules, so a density miss failed the board through the drop
-rule and a limit with no source decided a board through a rule that has one. Board A read MISSED VBAT 0.38
-percent of 14.4 V, which looks like a voltage failure and is a density one  
-*Close it by* obtain the standard, pin it under v2/vendor/, cite the clause, and re-judge the four boards. Owner **SESSION**. Effort P50 4h, P80 12h.
-
-**PI-003 via current capacity** (MUST_JUSTIFY, SOURCE_UNVERIFIED)  
-16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of that
-net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's peak
-current is compared against the weakest site, because a transition is a series element. The barrel is
-geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published 18 um,
-but the curve is IPC-2221's and that document is not in this tree, so the maturity is GENERATED_ONLY and the
-number is a calculation this project made rather than a limit a document gave it. It lands where the trade's
-own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has
-no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times
-the computed figure and cites nothing. Its first run on real boards found something on all seven and most of
-it is one false shape: a rail's weakest SITE is often a lone stitch via at the end of a pour carrying almost
-none of the current, while the current travels in a band with a via field under it (board E's CELL_F reads 18
-A through one via). The arithmetic is right and the attribution is not, so the verdict is ADVISORY and the
-rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh  
-*Close it by* read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority. Owner **SESSION**, after STK-001, PI-001. Effort P50 6h, P80 16h.
 
 **PWR-003 protection coordination** (BLOCKER, ENFORCED)  
 two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on
@@ -349,7 +295,7 @@ layer_judge measures what the router did, not what the board needs, and says so;
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-**THM-001 every dissipating part has a path** (BLOCKER, SOURCE_UNVERIFIED)  
+**THM-001 every dissipating part has a path** (BLOCKER, OWNER_DECISION_REQUIRED)  
 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent
 (rails, currents, the source part) and from what each board declares: a converter's loss is P_out *
 (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part that
@@ -361,7 +307,7 @@ ambient, which is ENV-001 and is an owner decision nobody has written, so the ru
 acceptance criteria and says which half is absent rather than inventing it. A rail with no declared
 efficiency is listed as unknown and makes the verdict INCONCLUSIVE, so the table is a floor until every
 converter carries its number  
-*Close it by* declare an efficiency per rail and the dissipators per board, then take ENV-001's ambient and estimate a junction temperature for each part above the declared threshold. Owner **SESSION**, after ENV-001. Effort P50 6h, P80 20h.
+*Close it by* the efficiencies and the dissipators are DECLARED as of 16 September 2026 and five boards carry a dissipation table, about 28 W across the set at the typical load; what is left is ENV-001's maximum ambient, which is the only input a junction temperature still needs. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
 
 **VIA-002 the annular ring is one the fabricator makes** (BLOCKER, ENFORCED)  
 the floor arrived on 16 September with the fabricator's own capability page, and reading it carefully split
@@ -373,9 +319,10 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (26)
+## covered (31)
 
-These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-002,
-DFM-001, DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RET-004, RF-002,
-RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
+These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-001,
+CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, IMP-002, INT-001, MEC-001, PI-001, PI-002, PI-003, PLC-001,
+PLN-001, PWR-001, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002,
+STK-001, SUP-001, TRN-001, TST-001, VIA-001
 

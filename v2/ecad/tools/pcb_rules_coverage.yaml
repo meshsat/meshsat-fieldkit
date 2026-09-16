@@ -259,9 +259,10 @@ coverage:
      verdict, not a silent one, and a net nobody classified is judged as though it were fast"}
 
  IMP-001: {implementation: "gen_pcb_*3.py net classes", verification: {tool: impedance_check.py, verdict: impedance_check, second_opinion: impedance_2d.py},
-   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: SOURCE_UNVERIFIED,
+   _maturity_why: "16 September 2026: the fabricator's impedance page was fetched and transcribed and carries the two stackups and NO impedance-against-width table and no tolerance, so the confirmation this rule asks for is not on any page: it is a question to the fabricator at order time, or a coupon. That is the ordering session's or the owner's, not a session's, and the remediation says so now.", gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricator confirmation and no coupon",
-   remediation: {action: "solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it", owner: SESSION, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [STK-001], p50_h: 8, p80_h: 24}}
+   remediation: {action: "solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it", owner: OWNER, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [STK-001], p50_h: 8, p80_h: 24}}
 
  IMP-002: {implementation: "gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September)",
    verification: {tool: class_floor.py, verdict: class_floor, fixtures: "tests/test_board_gates.py, tests/test_return_rules.py"},
@@ -371,7 +372,8 @@ coverage:
      rail and found a clamp on the other side of the board"}
 
  ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: spacing.py, verdict: spacing, fixtures: tests/test_spacing.py},
-   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: OWNER_DECISION_REQUIRED,
+   _maturity_why: "16 September 2026: a published table is in the tree now (ECSS-Q-ST-70-12C Table 13-3) and the two boards with high-voltage nets are measured against it: board B passes with 80 percent to spare and board A's 20 V bus is short by a factor of 2.3. What is missing is not a table, it is WHICH table governs a sealed terrestrial kit, which is decision 34: the ECSS numbers are a space standard covering any elevation and a terrestrial functional-insulation reading asks for a fraction of them.", gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to
      the router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid
      piece of copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and
@@ -384,7 +386,8 @@ coverage:
    remediation: {action: "declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_mm per board; the measurement is already there to judge against it", owner: OWNER, execution: OWNER, depends_on: [ENV-001], p50_h: 4, p80_h: 16}}
 
  THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: thermal.py, verdict: thermal, fixtures: tests/test_thermal.py},
-   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: OWNER_DECISION_REQUIRED,
+   _maturity_why: "16 September 2026, second reading: the session half is done. Every rail on all five boards declares whether it converts and what that conversion costs, each figure read off the part's own datasheet at the conditions that datasheet states, and the five boards carry a dissipation table: about 28 W across the set at the typical load. What is left is not a source and not a tool, it is the maximum ambient a junction temperature has to be computed against, which is ENV-001 and owner decision 34. Recording it as SOURCE_UNVERIFIED put it in the queue of things a session can close.", gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own
      intent (rails, currents, the source part) and from what each board declares: a converter's loss is
      P_out * (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part
@@ -396,7 +399,7 @@ coverage:
      its acceptance criteria and says which half is absent rather than inventing it. A rail with no declared
      efficiency is listed as unknown and makes the verdict INCONCLUSIVE, so the table is a floor until every
      converter carries its number",
-   remediation: {action: "declare an efficiency per rail and the dissipators per board, then take ENV-001's ambient and estimate a junction temperature for each part above the declared threshold", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [ENV-001], p50_h: 6, p80_h: 20}}
+   remediation: {action: "the efficiencies and the dissipators are DECLARED as of 16 September 2026 and five boards carry a dissipation table, about 28 W across the set at the typical load; what is left is ENV-001's maximum ambient, which is the only input a junction temperature still needs", owner: OWNER, execution: PARALLEL_AGENT, depends_on: [ENV-001], p50_h: 6, p80_h: 20}}
 
  PLC-001: {implementation: "gen_pcb_*3.py, regionfit.py", verification: {tool: "hardset.py, place_audit.py", verdict: "hardset-placed, place_audit", fixtures: "tests/test_region_fit.py, tests/test_board_gates.py"},
    maturity: ENFORCED, gap_category: NONE, note: "the cheap gate runs before the expensive stage and blocks above a declared allowance"}
