@@ -2026,7 +2026,12 @@ which is not hypothetical here: three of the seven folders described boards this
 names a sha256 and that it IS the artefact in its own folder. All seven notes in the tree today name none,
 which is a FAIL and the truth; they clear on the next handoff, which waits on the boards being cut. What this
 does NOT do is read prose for numbers: a claim in a sentence is a manual-review question and the rule's own
-verification method says MANUAL_REVIEW as well as SCRIPT.
+verification method says MANUAL_REVIEW as well as SCRIPT. 16 September 2026, evening: the second tool of this
+rule had never been RUN. ledger_verify.py was written on 11 September to re-walk every routeflow journal in
+the tree, re-hash every row and check each witness, and no chain called it, so the chained record this rule
+rests on was a claim nobody tested. It is in the sweep now and reads 224 rows over four ledgers with no
+problem. That is the same 'written and never run' the closer audit began refusing tonight for copper-changing
+tools, in the verification half of this registry rather than in the boards.
 
 ## Manufacturing Outputs
 

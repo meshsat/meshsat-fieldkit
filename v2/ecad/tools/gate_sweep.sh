@@ -161,6 +161,11 @@ run "interfaces"        python3 $T/interfaces.py
 # EVERY DOCUMENT THAT ASSERTS A NUMBER ABOUT THE HARDWARE NAMES THE ARTEFACT IT WAS READ FROM (rule DOC-002,
 # 16 September 2026). Set-level: the order notes live under release/revA/order/ and are one document per board.
 run "doc provenance"    python3 $T/doc_provenance.py
+# THE JOURNALS THEMSELVES (rule DOC-002's other half, 16 September 2026). Every routeflow run writes a chained
+# ledger and `ledger_verify.py` re-walks all of them, re-hashes every row and checks each witness. It was
+# written on 11 September and NO CHAIN HAS EVER RUN IT, which is the same "written and never run" the closer
+# audit now refuses for a copper-changing tool: a provenance chain nobody re-walks is a claim, not a record.
+run "ledger chains"     python3 $T/ledger_verify.py
 # THE STORED-ENERGY CHAIN (rules BAT-002 and PWR-003, 16 September 2026). It is a property of the SET rather
 # than of one board, like the contracts above: the chain runs from the pack through four boards, and a stage
 # is checked against the netlist of the board it claims to be on. Every board's evidence carries the verdict,
