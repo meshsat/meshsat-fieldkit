@@ -120,10 +120,17 @@ coverage:
    note: "eight standoffs bond C's ground to the plate; no chassis-bond or shield strategy is written for the kit",
    remediation: {action: "write the chassis and shield strategy, then check the bonds against it", owner: SESSION, depends_on: [ENV-001], p50_h: 4, p80_h: 10}}
 
- STK-001: {implementation: "stackup_write.py", verification: {tool: impedance_check.py, verdict: impedance_check},
-   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "the stackup is written into the board and read back by the impedance check; the fabricator capability file in the tree is an empty JavaScript page and nothing reads it",
-   remediation: {action: "obtain the current capability and stackup sheets as documents, pin them, and confirm both stacks with the fabricator", owner: SESSION, depends_on: [], p50_h: 3, p80_h: 10}}
+ STK-001: {implementation: "stackup_write.py, written LAST in full.sh so it survives the chain",
+   verification: {tool: "impedance_check.py, fab_limits.py", verdict: "impedance_check, fab_limits", fixtures: "tests/test_stackup_reader.py, tests/test_fab_limits.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026, and it took three separate findings to get here. The stackup is DECLARED: it is written
+     into the board and the pre-route chain refuses a board whose stackup did not survive, which it had to, because
+     boards A and B reached the router carrying none at all while their logs said one was written (the block goes in as
+     text and every pcbnew save after it drops it). It is FEASIBLE: fab_limits.py compares the board's own minimums
+     against the fabricator's capability for the copper weight the stackup itself carries. And the capability document
+     is in the tree at last, fetched and transcribed on 16 September, which is what makes either statement more than an
+     assertion. What is still owed and is NOT claimed here is the fabricator's CONFIRMATION of the two specific stacks
+     for these boards, which is a question for the order"}
 
  STK-002: {implementation: NONE_YET, verification: {tool: layer_judge.py, verdict: layer_judge},
    maturity: OWNER_DECISION_REQUIRED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
