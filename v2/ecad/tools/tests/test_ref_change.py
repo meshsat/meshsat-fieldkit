@@ -53,3 +53,14 @@ def t_a_slow_net_owes_no_stitching_capacitor():
     assert "LOW_SPEED_OR_DC" in SRC, "the gate judges every signal via whatever its spectral content"
     i = SRC.index("LOW_SPEED_OR_DC")
     assert "slow += 1" in SRC[i:i + 200], "a slow net is skipped without being counted, so the denominator lies"
+
+
+def t_the_refusal_says_how_far_the_nearest_capacitor_is():
+    """The number that decides what to do about it (MESHSAT-862, 16 September 2026).
+
+    "13 vias with no capacitor within 3 mm" does not say whether the board needs parts or a better declaration.
+    A board whose nearest stitching capacitor is 4 mm away is one sentence from being right; a board whose
+    nearest is 30 mm away needs components. The refusal carries the distance, the same way the return-via fixer
+    reports the site it reached rather than the site it wanted."""
+    assert "the nearest capacitor between those" in SRC, "the refusal is still a yes or no"
+    assert "none on the whole board" in SRC, "a board with no such capacitor at all would read as a distance"
