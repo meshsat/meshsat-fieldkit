@@ -2042,3 +2042,39 @@ a sealed box, 0.129 mm is unremarkable and this is not a defect. Under the space
 micrometres, which on board A is a routing change and not a redesign. The answer depends on which standard the
 kit is built to, which is exactly what decision 34 settles, so this is presented with 34 rather than as its own
 question.
+
+---
+
+## Decision 34 gets its second number: the set dissipates about 28 W inside a sealed case (16 September 2026)
+
+The no-vent ruling of 7 September ("ok good then no holes anywhere") was taken on a thermal basis of about
++10 K inside with one module and +16 K with three loaded, lid open, fans on. Until today no board had a
+computed dissipation at all, because no rail declared a converter efficiency and the rule could put no watt
+figure on anything. Every rail on all five boards now declares whether it converts and what that conversion
+costs, each figure read off the part's own datasheet at the conditions that datasheet states and taken at or
+below the low end of what it plots, or, for a linear regulator, taken as arithmetic.
+
+| board | conversion loss at the typical load | with every rail at its peak at once |
+|---|---|---|
+| **A power and I/O** | **23.8 W** | 36.6 W |
+| **B compute** | **3.9 W** | 8.0 W |
+| E dock strip | 0.4 W | 0.7 W |
+| D APRS | 0.2 W | 0.4 W |
+| P pack | 0.0 W | 0.0 W |
+| **set** | **about 28 W** | about 46 W |
+
+**That is the conversion loss ALONE.** It is what the converters throw away, before the loads: three compute
+modules, the 30 W transmitter, the SDR, the radios, the monitor and the e-paper are all on top of it, and all
+of their power ends as heat in the same sealed box. Board A carries 24 W of it by itself, which is the price of
+making six rails from one pack node.
+
+**Why it belongs with decision 34 rather than as its own question.** A dissipation is only half of a
+temperature: the other half is the maximum ambient the kit is specified to work in, which is the operating
+envelope and is what decision 34 settles. Rule THM-001 computes everything up to that point and stops there
+deliberately, and it will close the moment the envelope exists. The numbers are here so the envelope can be
+chosen knowing what has to be got out of the case at the top of it.
+
+**What is NOT claimed.** None of these figures is a measurement of a built board: they are the parts' published
+efficiencies applied to this project's own declared rail currents, and they are deliberately pessimistic, so
+the real loss should be lower. No junction temperature is computed, no rise is claimed, and the five internal
+fans and the plate and wall conduction paths are not modelled anywhere in this project.
