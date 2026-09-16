@@ -1,0 +1,57 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "below_limit": 0,
+  "closest_mm": 0.1287,
+  "hv_nets": 2,
+  "pairs_measured": 4628
+ },
+ "denominator": 4628,
+ "evidence": [
+  "0.129 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.3)",
+  "0.129 mm VBUS20 to FE_FB on F.Cu at (46.5, 68.6)",
+  "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
+  "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
+  "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
+  "0.130 mm VBUS20 to FE_EN on F.Cu at (38.4, 77.2)",
+  "0.130 mm VBUS20 to FE_BOOT1 on F.Cu at (68.2, 68.5)",
+  "0.139 mm VBUS20 to FE_COMP on B.Cu at (50.7, 57.6)",
+  "0.145 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.8)",
+  "0.148 mm VBUS20 to FE_COMP on F.Cu at (62.4, 68.5)",
+  "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
+  "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (37.9, 79.5)",
+  "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (38.4, 79.0)",
+  "0.162 mm VBUS20 to CH_ACN on F.Cu at (50.5, 96.8)",
+  "0.162 mm VBUS20 to CH_ACN on F.Cu at (50.5, 96.8)",
+  "0.163 mm VBUS20 to INA_ALERT on In2.Cu at (50.8, 95.1)",
+  "0.164 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
+  "0.164 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
+  "0.164 mm VBUS20 to FE_PGOOD on F.Cu at (37.9, 79.5)",
+  "0.164 mm VBUS20 to CH_SW2 on F.Cu at (68.5, 83.6)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "hv_spacing_mm": null,
+  "volts": 20.0
+ },
+ "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "ISO-001"
+ ],
+ "tool": "spacing",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "ef840c5c19ae80bd"
+ },
+ "ts": "2026-09-16T09:54:20Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

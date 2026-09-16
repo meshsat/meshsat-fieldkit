@@ -32,16 +32,14 @@
  },
  "rules": [
   "INT-001",
-  "RF-002",
-  "SCH-003",
   "SCH-004"
  ],
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "465a81f6fa3c600d"
+  "tools_tree_sha": "ef840c5c19ae80bd"
  },
- "ts": "2026-09-16T05:17:34Z",
+ "ts": "2026-09-16T09:57:03Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

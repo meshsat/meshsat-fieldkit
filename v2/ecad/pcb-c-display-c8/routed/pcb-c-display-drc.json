@@ -1,0 +1,902 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-09-16T09:55:19+0000",
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "9.0.9",
+    "schematic_parity": [],
+    "source": "pcb-c-display.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)",
+            "items": [
+                {
+                    "description": "Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0",
+                    "pos": {
+                        "x": 125.0,
+                        "y": 324.0
+                    },
+                    "uuid": "70e08281-5753-4039-a67d-3b9d82711382"
+                },
+                {
+                    "description": "Pad 2 [GND] of Y1 on B.Cu",
+                    "pos": {
+                        "x": 445.275,
+                        "y": 281.435
+                    },
+                    "uuid": "52297ca3-c573-4a1f-b388-eae21964afa0"
+                }
+            ],
+            "severity": "error",
+            "type": "starved_thermal"
+        },
+        {
+            "description": "Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)",
+            "items": [
+                {
+                    "description": "Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0",
+                    "pos": {
+                        "x": 125.0,
+                        "y": 324.0
+                    },
+                    "uuid": "70e08281-5753-4039-a67d-3b9d82711382"
+                },
+                {
+                    "description": "Pad 2 [GND] of C11 on B.Cu",
+                    "pos": {
+                        "x": 463.8,
+                        "y": 286.09
+                    },
+                    "uuid": "8c80c611-2a1a-43ea-8519-5012a3d0820b"
+                }
+            ],
+            "severity": "error",
+            "type": "starved_thermal"
+        },
+        {
+            "description": "Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)",
+            "items": [
+                {
+                    "description": "Zone 'GND pour B.Cu' [GND] on B.Cu, priority 0",
+                    "pos": {
+                        "x": 125.0,
+                        "y": 324.0
+                    },
+                    "uuid": "70e08281-5753-4039-a67d-3b9d82711382"
+                },
+                {
+                    "description": "Pad 2 [GND] of C13 on B.Cu",
+                    "pos": {
+                        "x": 424.09,
+                        "y": 290.74
+                    },
+                    "uuid": "344b8a3c-f2f3-43cb-8d07-2c8b324d0e08"
+                }
+            ],
+            "severity": "error",
+            "type": "starved_thermal"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Segment of D12 on F.Silkscreen",
+                    "pos": {
+                        "x": 275.44,
+                        "y": 312.08
+                    },
+                    "uuid": "c27b8115-6120-4b55-ad4b-54bc76b84923"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D12 on F.Silkscreen",
+                    "pos": {
+                        "x": 277.0,
+                        "y": 311.0
+                    },
+                    "uuid": "548f90f7-c570-44e2-b076-d7b03a40d71e"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D12 on F.Silkscreen",
+                    "pos": {
+                        "x": 277.0,
+                        "y": 311.0
+                    },
+                    "uuid": "8519b714-0eab-4b9e-8c18-6ee96756b229"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D13 on F.Silkscreen",
+                    "pos": {
+                        "x": 283.0,
+                        "y": 311.0
+                    },
+                    "uuid": "537b70eb-f3ef-4416-8f0d-82270c41c28c"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Segment of D13 on F.Silkscreen",
+                    "pos": {
+                        "x": 281.44,
+                        "y": 312.08
+                    },
+                    "uuid": "5aee4670-2250-4a62-8c8d-115cfc6c1033"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D13 on F.Silkscreen",
+                    "pos": {
+                        "x": 283.0,
+                        "y": 311.0
+                    },
+                    "uuid": "83db111e-632c-4fa1-93fa-828ae19521e5"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Segment of D14 on F.Silkscreen",
+                    "pos": {
+                        "x": 287.44,
+                        "y": 312.08
+                    },
+                    "uuid": "559489d2-dcaa-4456-914c-f74db65bd6df"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D14 on F.Silkscreen",
+                    "pos": {
+                        "x": 289.0,
+                        "y": 311.0
+                    },
+                    "uuid": "7606e687-7b41-4626-bfc6-310a368a748b"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D14 on F.Silkscreen",
+                    "pos": {
+                        "x": 289.0,
+                        "y": 311.0
+                    },
+                    "uuid": "76057583-d38f-4afb-904b-48d972830215"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D15 on F.Silkscreen",
+                    "pos": {
+                        "x": 295.0,
+                        "y": 311.0
+                    },
+                    "uuid": "7d1c8db3-2d0e-4245-8cb8-e018078b356c"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D15 on F.Silkscreen",
+                    "pos": {
+                        "x": 295.0,
+                        "y": 311.0
+                    },
+                    "uuid": "ee95c3e9-76c0-47d3-bfa1-39900cfef20a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Segment of D16 on F.Silkscreen",
+                    "pos": {
+                        "x": 299.44,
+                        "y": 312.08
+                    },
+                    "uuid": "d2089286-1224-415a-9749-f2f200b4a494"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D16 on F.Silkscreen",
+                    "pos": {
+                        "x": 301.0,
+                        "y": 311.0
+                    },
+                    "uuid": "968626ef-7b18-4b5f-beb8-7aa2b832350d"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen overlap",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                },
+                {
+                    "description": "Arc of D16 on F.Silkscreen",
+                    "pos": {
+                        "x": 301.0,
+                        "y": 311.0
+                    },
+                    "uuid": "c2b21c05-9f50-47f9-a430-237b13d0e3be"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB text 'LEFT: SOS, EMCON, ZEROIZE, LIGHT' on F.Silkscreen",
+                    "pos": {
+                        "x": 148.0,
+                        "y": 101.0
+                    },
+                    "uuid": "16d0d80c-9d6a-4a19-a80e-885055404e62"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB text 'BACKER RING: LEDs under the plate light guides, no face legends here' on F.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 312.0
+                    },
+                    "uuid": "28c1fdd0-56c5-4af8-8f9d-499d0cbcc3df"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB text 'RIGHT: MAIN, PI, TEST, status LEDs' on F.Silkscreen",
+                    "pos": {
+                        "x": 446.0,
+                        "y": 101.0
+                    },
+                    "uuid": "7c52c885-0666-4fe1-9100-edfbfece1644"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "PCB text 'UNDERSIDE: ribbon J_PANEL (top strip), MAIN / PI lands, switch and sounder leads on their lands, the controller and drivers on the right strip; TOP SIDE: e-paper ZIF and boost, camera, light sensor' on B.Silkscreen",
+                    "pos": {
+                        "x": 297.0,
+                        "y": 316.0
+                    },
+                    "uuid": "6e318fce-6ec2-4754-abcf-a9b81b6051ca"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Reference field of U_LIGHT",
+                    "pos": {
+                        "x": 425.0,
+                        "y": 144.5
+                    },
+                    "uuid": "08a3124d-344a-4482-aae7-10997cb81701"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/+3V3] on B.Cu, length 0.2582 mm",
+                    "pos": {
+                        "x": 427.349,
+                        "y": 275.9735
+                    },
+                    "uuid": "a98e59d2-a370-4d7c-a982-8a783c7529c4"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/C_DVDD] on B.Cu, length 0.7375 mm",
+                    "pos": {
+                        "x": 424.93,
+                        "y": 269.5175
+                    },
+                    "uuid": "62fabdce-da26-4097-8663-46680b3fa42f"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/C_DVDD] on B.Cu, length 0.7375 mm",
+                    "pos": {
+                        "x": 426.13,
+                        "y": 276.3925
+                    },
+                    "uuid": "efa33b1d-8967-4b5d-ae11-8c20241ecd4c"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/EPD_DC] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 419.370041,
+                        "y": 273.555
+                    },
+                    "uuid": "ce73ca81-3850-4665-ad0e-6efc1ed6e3be"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/EPD_RST] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 419.370041,
+                        "y": 272.755
+                    },
+                    "uuid": "948d6646-b143-4cae-acd9-d3b47fa9fdd3"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/EPD_SCL] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 419.370041,
+                        "y": 274.355
+                    },
+                    "uuid": "06940338-a81d-4d8f-8ff0-592afc6202a6"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/EPD_SDA] on B.Cu, length 0.7375 mm",
+                    "pos": {
+                        "x": 420.8925,
+                        "y": 273.955
+                    },
+                    "uuid": "fa2fe591-680f-4f70-b2a1-17d0c8392b95"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/EPD_VCC] on F.Cu, length 0.9132 mm",
+                    "pos": {
+                        "x": 226.75,
+                        "y": 118.95
+                    },
+                    "uuid": "981617d4-421e-42f0-b78b-f4b1c8b8fbf2"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/EPD_VCC] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 226.471052,
+                        "y": 118.9
+                    },
+                    "uuid": "8e249ebf-6664-4bb5-9811-644ba82b15f5"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/EPD_VDL] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 231.271052,
+                        "y": 119.7
+                    },
+                    "uuid": "5e560dd8-cdfe-496a-a536-e0b19a449cf6"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/EPD_VGL] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 232.071052,
+                        "y": 119.3
+                    },
+                    "uuid": "35e7afd0-5fdf-4f1a-8cba-bdd8b48ad414"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/HB2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 419.370041,
+                        "y": 270.355
+                    },
+                    "uuid": "baf307bf-d930-4548-a312-c9ae9f418816"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/MESH_K] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 433.835,
+                        "y": 269.15
+                    },
+                    "uuid": "5bb2230c-eac7-48d1-90f4-3c8a23b166f9"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/MSG_K] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 447.56,
+                        "y": 271.75
+                    },
+                    "uuid": "f85e9c1a-e727-404c-8c14-1e6986204d95"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/PIRING_K] on B.Cu, length 2.4672 mm",
+                    "pos": {
+                        "x": 449.1975,
+                        "y": 271.1
+                    },
+                    "uuid": "ff1365a1-fac0-418b-a4ec-d556dc0d188c"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/QSPI_D2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 422.53,
+                        "y": 277.914959
+                    },
+                    "uuid": "e4c2a2d6-4164-4745-87c4-0ca2ebc4bccb"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/RAIL_SENSE] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 429.289959,
+                        "y": 273.955
+                    },
+                    "uuid": "1de36bb3-dfed-496e-8d61-c217c4d351bf"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/SHORE_K] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 446.730292,
+                        "y": 272.4
+                    },
+                    "uuid": "9c1a8d33-9f06-449d-b885-5f982730a3ca"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/SLOT_EN1] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 422.13,
+                        "y": 267.995041
+                    },
+                    "uuid": "07b2a2de-c6c2-47f3-9494-3770e36a9b8e"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/SPARE2] on B.Cu, length 1.6375 mm",
+                    "pos": {
+                        "x": 441.1975,
+                        "y": 269.8
+                    },
+                    "uuid": "7e1f6e17-b517-4f6f-9682-b98532176c05"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/SPARE3] on B.Cu, length 2.4672 mm",
+                    "pos": {
+                        "x": 441.1975,
+                        "y": 270.45
+                    },
+                    "uuid": "e577f992-a90d-4418-8f0a-25e8138f9982"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/SPARE4] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 442.835,
+                        "y": 271.1
+                    },
+                    "uuid": "b9e2752a-0ac5-4d9b-ac63-e57b0104405b"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/SPARE8] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 457.389708,
+                        "y": 269.15
+                    },
+                    "uuid": "f190245d-3bad-45a9-81d0-20c12af2456d"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [/SPARE10] on B.Cu, length 2.4672 mm",
+                    "pos": {
+                        "x": 454.9225,
+                        "y": 270.45
+                    },
+                    "uuid": "30a44943-000f-4a40-a351-89e2ae437069"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/SPARE12] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 457.389708,
+                        "y": 271.75
+                    },
+                    "uuid": "7ac73775-8f6c-46eb-9bed-278042d7401c"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/TX_LAMPTEST] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 456.56,
+                        "y": 267.2
+                    },
+                    "uuid": "6ec96d12-e71c-4a37-af1f-98feb255a1ed"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/XIN] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 423.73,
+                        "y": 267.995041
+                    },
+                    "uuid": "963da07d-b78c-462d-9024-fd1a7ba94cb2"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [/ZEROIZE_HW] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 429.289959,
+                        "y": 272.355
+                    },
+                    "uuid": "3be393b6-38c9-4fc0-ade5-91f3ee6062f2"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        }
+    ]
+}

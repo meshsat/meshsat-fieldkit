@@ -7,7 +7,7 @@
  "inputs": {
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "ddceb8d8ee2a7484"
+   "sha256_16": "3c1a678229e9a137"
   }
  },
  "note": "this board carries no crystal, so CLK-001 has nothing on it to judge",
@@ -21,9 +21,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "465a81f6fa3c600d"
+  "tools_tree_sha": "ef840c5c19ae80bd"
  },
- "ts": "2026-09-16T05:14:06Z",
+ "ts": "2026-09-16T09:54:22Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
