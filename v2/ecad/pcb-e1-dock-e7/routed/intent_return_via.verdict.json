@@ -1,0 +1,29 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 0,
+  "pass": 1
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "1309202460f2149d"
+  }
+ },
+ "note": "a ground via at a signal's reference change",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [],
+ "tool": "intent_return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:45:12Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

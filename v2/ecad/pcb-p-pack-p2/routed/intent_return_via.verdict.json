@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 1,
+  "pass": 0
+ },
+ "denominator": 1,
+ "evidence": [
+  "return via: 4 of 14 signal vias have a ground via within 1.5 mm (21 exempt in fine-pitch fans, 0 on one reference plane, 47 on a net whose declared class has no edge to return); without one: SMBC at (77.14, 110.88); PACK_F at (83.29, 105.10); SMBC_I at (90.02, 94.67); PACK_F at (91.05, 100.33); SMBC_I at (103.16, 96.39); SMBD at (105.91, 80.84); SMBD at (106.59, 103.08); SMBC at (110.67, 89.55) ..."
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  }
+ },
+ "note": "a ground via at a signal's reference change",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [],
+ "tool": "intent_return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:45:28Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

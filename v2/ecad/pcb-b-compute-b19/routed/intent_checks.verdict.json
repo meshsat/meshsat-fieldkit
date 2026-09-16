@@ -2,7 +2,8 @@
  "advisory": false,
  "counts": {
   "fail": 215,
-  "pass": 419
+  "pass": 419,
+  "unclaimed": 0
  },
  "denominator": 634,
  "evidence": [
@@ -63,23 +64,18 @@
    "sha256_16": "47262c82041bf4e2"
   }
  },
- "note": "",
+ "note": "the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "e590541697c8914f"
  },
- "rules": [
-  "DEC-001",
-  "PWR-001",
-  "RET-001",
-  "RET-002"
- ],
+ "rules": [],
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "dd71612d0b190e2e"
+  "tools_tree_sha": "914d59b06253bedc"
  },
- "ts": "2026-09-16T01:31:17Z",
+ "ts": "2026-09-16T01:43:08Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

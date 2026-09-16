@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 6,
+  "pass": 23
+ },
+ "denominator": 29,
+ "evidence": [
+  "return path under FUSE (Default, UNDECLARED so judged at the strictest bar): 12.6 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 33.1 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SMBC (Default, CLOCKED_DIGITAL): 103.6 of 123.0 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
+  "return path under SMBC_I (Default, CLOCKED_DIGITAL): 42.8 of 47.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
+  "return path under SMBD (Default, CLOCKED_DIGITAL): 70.4 of 121.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
+  "return path under VC1_F (LOW_SPEED_OR_DC): a reference exists under -0.0 of 37.0 mm [a cell-voltage sense line through its filter, DC by construction]"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  }
+ },
+ "note": "the reference under a signal net, judged per spectral class",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "RET-001",
+  "RET-002"
+ ],
+ "tool": "intent_return_path",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:45:28Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

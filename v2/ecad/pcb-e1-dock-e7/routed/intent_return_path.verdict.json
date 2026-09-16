@@ -1,0 +1,53 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 24,
+  "pass": 51
+ },
+ "denominator": 75,
+ "evidence": [
+  "return path under DCF_PULSE (Default, CLOCKED_DIGITAL): 49.5 of 273.6 mm without a plane on a neighbouring layer (limit 41.0) [a counted pulse input (Geiger, DCF77): the rate is low and the edge is]",
+  "return path under HS_GATE (Default, HIGH_SPEED_DIGITAL): 21.7 of 25.9 mm without a plane on a neighbouring layer (limit 10.0) [the hot-swap FET gate: slew-limited by design, but it is a gate drive ]",
+  "return path under IMU_INT1 (Default, CLOCKED_DIGITAL): 52.2 of 77.9 mm without a plane on a neighbouring layer (limit 30.0) [the IMU's SPI chip select and its interrupt line, both driven by the R]",
+  "return path under QSPI_D0 (Default, HIGH_SPEED_DIGITAL): 20.8 of 22.8 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_D1 (Default, HIGH_SPEED_DIGITAL): 10.7 of 17.5 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_D2 (Default, HIGH_SPEED_DIGITAL): 14.5 of 16.4 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_D3 (Default, HIGH_SPEED_DIGITAL): 15.6 of 19.3 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_SCLK (Default, HIGH_SPEED_DIGITAL): 25.0 of 26.9 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_SS (Default, HIGH_SPEED_DIGITAL): 31.8 of 38.1 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under SCL0 (Default, CLOCKED_DIGITAL): 67.7 of 283.1 mm without a plane on a neighbouring layer (limit 42.5) [I2C at 100 or 400 kHz with an open-drain pull-up: the edge is set by t]",
+  "return path under SCL1 (Default, CLOCKED_DIGITAL): 84.0 of 310.4 mm without a plane on a neighbouring layer (limit 46.6) [I2C at 100 or 400 kHz with an open-drain pull-up: the edge is set by t]",
+  "return path under SDA1 (Default, CLOCKED_DIGITAL): 163.6 of 354.5 mm without a plane on a neighbouring layer (limit 53.2) [the data half of the same I2C bus]",
+  "return path under SWCLK (Default, CLOCKED_DIGITAL): 31.8 of 34.9 mm without a plane on a neighbouring layer (limit 30.0) [the SWD debug port, a few MHz and used only on a bench with a probe at]",
+  "return path under SWDIO (Default, CLOCKED_DIGITAL): 35.3 of 37.7 mm without a plane on a neighbouring layer (limit 30.0) [the SWD debug port, a few MHz and used only on a bench with a probe at]",
+  "return path under TRK_BG1 (Default, HIGH_SPEED_DIGITAL): 24.0 of 30.9 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bottom gate drives, as above]",
+  "return path under TRK_BG2 (Default, HIGH_SPEED_DIGITAL): 43.9 of 45.4 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bottom gate drives, as above]",
+  "return path under TRK_BOOST1 (Default, HIGH_SPEED_DIGITAL): 20.3 of 45.8 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bootstrap nodes, which ride on the switch nodes and carr]",
+  "return path under TRK_BOOST2 (Default, HIGH_SPEED_DIGITAL): 30.4 of 32.1 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's bootstrap nodes, which ride on the switch nodes and carr]",
+  "return path under TRK_TG1 (Default, HIGH_SPEED_DIGITAL): 16.5 of 58.6 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's top gate drives: amperes into a FET gate in nanoseconds]",
+  "return path under TRK_TG2 (Default, HIGH_SPEED_DIGITAL): 26.6 of 28.1 mm without a plane on a neighbouring layer (limit 10.0) [the tracker's top gate drives: amperes into a FET gate in nanoseconds]"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "1309202460f2149d"
+  }
+ },
+ "note": "the reference under a signal net, judged per spectral class",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "RET-001",
+  "RET-002"
+ ],
+ "tool": "intent_return_path",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:45:11Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "counts": {
+  "fail": 0,
+  "pass": 5
+ },
+ "denominator": 5,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-d-aprs.kicad_pcb",
+   "sha256_16": "81614025d9446af5"
+  }
+ },
+ "note": "every power-symbol net declared with its loads",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "e590541697c8914f"
+ },
+ "rules": [
+  "PWR-001"
+ ],
+ "tool": "intent_rails",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "914d59b06253bedc"
+ },
+ "ts": "2026-09-16T01:44:53Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

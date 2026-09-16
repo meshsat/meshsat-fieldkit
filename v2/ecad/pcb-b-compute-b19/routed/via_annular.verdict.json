@@ -45,9 +45,9 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "dd71612d0b190e2e"
+  "tools_tree_sha": "914d59b06253bedc"
  },
- "ts": "2026-09-16T01:31:25Z",
+ "ts": "2026-09-16T01:43:15Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
