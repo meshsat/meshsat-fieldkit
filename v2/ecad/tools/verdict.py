@@ -116,8 +116,12 @@ def _rules_for_tool(tool):
             cov = (_r._yaml().safe_load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                                           "pcb_rules_coverage.yaml"))) or {}).get("coverage", {})
             for rid, c in cov.items():
-                name = ((c or {}).get("verification") or {}).get("verdict")
-                if name: m.setdefault(name, []).append(rid)
+                # A RULE MAY NAME SEVERAL VERDICTS, comma separated: a placement is judged by the DRC on the
+                # placed board AND by the escape-fan predictor, a part by its code AND by asking the fabricator.
+                # Splitting here is what makes each of those tools able to say which rule it decides.
+                for name in str(((c or {}).get("verification") or {}).get("verdict") or "").split(","):
+                    name = name.strip()
+                    if name: m.setdefault(name, []).append(rid)
         except BaseException: m = {}          # as above: a coverage map this host cannot read is not a failure of the gate
         _BY_TOOL[0] = m
     m = _BY_TOOL[0]; out = set(m.get(tool, []))

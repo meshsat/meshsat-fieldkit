@@ -20,11 +20,11 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42} |
-| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a chec |
+| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carr |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the check confirms a DECLARED rail exists on the board; nothing compares the declared set agains |
-| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 82, 'pass': 66} |
+| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 18, 'pass': 130} |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the conductor measure is implemented and tested; its limit comes from a formula in a code c |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 1 |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: via current capacity is asserted in generator comments and measured by nothing |
@@ -33,7 +33,7 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the stackup is written into the board and read back by the impedance check; the fabricator  |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the principle is implemented and the heuristic is no longer standing in for i |
-| RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 82, 'pass': 66} |
+| RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_checks FAIL: {'fail': 18, 'pass': 130} |
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no verification: nothing determines the reference conductor before and after a transition; return_via's same-plane exemption is the nearest thing and  |
 | RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'exempt': 63, 'judged': 232, 'lacking': 205, 'same_plane': 56} |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
@@ -48,7 +48,7 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: one board checks a drill minimum; aspect ratio, annular ring and via-in-pad declaration are not  |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 4 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
-| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_c FAIL: {'fail': 82, 'footprints': 192, 'pass': 196} |
+| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_c FAIL: {'fail': 18, 'footprints': 192, 'pass': 260} |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: test points exist; no bring-up sheet exists for any board |

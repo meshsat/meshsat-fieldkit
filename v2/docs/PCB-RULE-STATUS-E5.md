@@ -20,7 +20,7 @@ Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts FAIL: {'fail': 12, 'missing_boards': 0, 'pass': 42} |
-| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a chec |
+| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carr |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file |
