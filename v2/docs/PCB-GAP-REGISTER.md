@@ -9,20 +9,15 @@ answered yet, made visible so it cannot be forgotten.
 
 **31 of 57 rules carry a gap.**
 
-## absent (7)
+## absent (6)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
-*Close it by* the chain diagram with ratings and prospective fault current at each stage. Owner **SESSION**, after PWR-003. Effort P50 4h, P80 12h.
+*Close it by* the chain diagram with ratings and prospective fault current at each stage. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 **EMC-001 source, path, victim** (MUST_JUSTIFY, OPEN)  
 no EMC analysis of any kind exists; eleven radios and a sealed metal box  
 *Close it by* an EMC sheet per board and a pre-compliance plan for the kit. Owner **SESSION**, after ENV-001, SI-001. Effort P50 10h, P80 40h.
-
-**ENV-001 operating envelope declared** (BLOCKER, OPEN)  
-no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are
-unwritten, and every derating rule resolves against nothing  
-*Close it by* write the envelope from the owner's use case and the enclosure's own ratings. Owner **OWNER**. Effort P50 3h, P80 8h.
 
 **PWR-002 sequencing and inrush** (MUST_JUSTIFY, OPEN)  
 sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
@@ -71,7 +66,11 @@ or where a crossing happens
 
 **RF-001 RF paths are designed as RF** (BLOCKER, GENERATED_ONLY)  
 the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
-filter is verified, and the LPF values are flagged for a simulation that has not run  
+filter is verified, and the LPF values are flagged for a simulation that has not run. This entry NAMES NO
+VERDICT on purpose (16 September 2026): it named check_pcb_d, board D's own gate, while the rule applies to B
+as well, so the day it was promoted board B would have read a PASS off a gate that looks at no RF line.
+Nothing verifies this rule on either board, and the coverage map says so rather than pointing at the nearest
+gate  
 *Close it by* compute each RF line on its stackup, simulate the LPF, and record the module keep-out check. Owner **SESSION**, after IMP-001. Effort P50 8h, P80 24h.
 
 ## prose only (3)
@@ -158,7 +157,7 @@ this project can obtain. Owner decision 29, with three costed options; the recom
 magnetics board B already carries on its wall port  
 *Close it by* owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype. Owner **OWNER**. Effort P50 6h, P80 30h.
 
-**ISO-001 creepage and clearance** (BLOCKER, GENERATED_ONLY)  
+**ISO-001 creepage and clearance** (BLOCKER, SOURCE_UNVERIFIED)  
 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the
 router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid piece of
 copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and above: board
@@ -183,7 +182,7 @@ rule and a limit with no source decided a board through a rule that has one. Boa
 percent of 14.4 V, which looks like a voltage failure and is a density one  
 *Close it by* obtain the standard, pin it under v2/vendor/, cite the clause, and re-judge the four boards. Owner **SESSION**. Effort P50 4h, P80 12h.
 
-**PI-003 via current capacity** (MUST_JUSTIFY, GENERATED_ONLY)  
+**PI-003 via current capacity** (MUST_JUSTIFY, SOURCE_UNVERIFIED)  
 16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of that
 net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's peak
 current is compared against the weakest site, because a transition is a series element. The barrel is
@@ -199,7 +198,7 @@ A through one via). The arithmetic is right and the attribution is not, so the v
 rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh  
 *Close it by* read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority. Owner **SESSION**, after STK-001, PI-001. Effort P50 6h, P80 16h.
 
-**RET-001 a continuous adjacent return path** (BLOCKER, GENERATED_ONLY)  
+**RET-001 a continuous adjacent return path** (BLOCKER, SOURCE_UNVERIFIED)  
 16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
 gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration
 in boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each
@@ -214,7 +213,7 @@ on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judg
 them, they are a written screen and say so  
 *Close it by* obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are. Owner **SESSION**, after SI-001. Effort P50 8h, P80 26h.
 
-**RET-003 return transition at a reference change** (BLOCKER, GENERATED_ONLY)  
+**RET-003 return transition at a reference change** (BLOCKER, SOURCE_UNVERIFIED)  
 16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING around
 the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the first
 version of this measurement came back with every via undetermined on every board). Measured: board A 86 vias
@@ -226,7 +225,7 @@ board (board A: 3 mm, the same number this project already uses for a decoupling
 it is OURS, so the maturity is GENERATED_ONLY until a document states it  
 *Close it by* find a published figure for how far a plane-stitching capacitor may sit from the transition it serves, or measure one. Owner **SESSION**, after RET-001. Effort P50 3h, P80 12h.
 
-**SI-001 transmission-line classification** (MUST_JUSTIFY, GENERATED_ONLY)  
+**SI-001 transmission-line classification** (MUST_JUSTIFY, SOURCE_UNVERIFIED)  
 16 September 2026: half of this note was already wrong and the other half is now addressed. Every net IS
 classified, by spectral content, 413 declarations across the seven boards; what was missing was the
 arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer from
@@ -237,14 +236,14 @@ compares every signal net's routed length with t_r / (k * t_pd). The criterion k
 its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however carefully it is
 chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated, and the verdict is
 INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project  
-*Close it by* declare a rise time beside each signal-class entry from the driver's own datasheet, and a critical-length criterion per board with its reason; the arithmetic is already there to judge against them. Owner **SESSION**, after RET-001. Effort P50 8h, P80 24h.
+*Close it by* declare a rise time beside each signal-class entry from the driver's own datasheet, and a critical-length criterion per board with its reason; the arithmetic is already there to judge against them. Owner **SESSION**. Effort P50 8h, P80 24h.
 
 **STK-002 a layer count is decided and costed** (BLOCKER, OWNER_DECISION_REQUIRED)  
 layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-**THM-001 every dissipating part has a path** (BLOCKER, GENERATED_ONLY)  
+**THM-001 every dissipating part has a path** (BLOCKER, SOURCE_UNVERIFIED)  
 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent
 (rails, currents, the source part) and from what each board declares: a converter's loss is P_out *
 (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part that
