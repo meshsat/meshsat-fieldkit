@@ -187,6 +187,25 @@ fi
 # lays a 0.5 mm inner track in parallel with a band and the solver takes a share of the rail through it.
 if [ -n "$(cfg x rail_prune)" ]; then python3 $T/rail_prune.py $N.kicad_pcb 2>&1 | grep -E 'rail_prune|Traceback|Error'; fi
 if [ -n "$(cfg x rail_prune)" ] && [ -n "$(cfg x stitch_prune)" ]; then $T/drc.sh $N.kicad_pcb out/$N-drc.json; prune_stitch; fi   # the second pass, on copper the rail prune has just changed
+# 6a. THE TRACKS THAT ARE TOO THIN FOR WHAT THEY CARRY (rule PI-001, 16 September 2026). `widen_net.py` was
+# written this morning for board A's mezzanine 5 V, which the router laid at its class width for 63.9 mm at
+# 1.0 A, and NOTHING RAN IT: it sat in the tools directory with its own tests passing while the rule it was
+# written for went on failing on two boards. The same shape as bypass_place.py, which existed for a day before
+# any chain called it. It is declared per board (`widen` in boards/<letter>.json, a list of {net, to, steps,
+# layers}), it runs AFTER rail_prune so the router copper the rail does not need is already off, and it is
+# guarded like every other copper-editing pass on top of its own trial-and-revert.
+if [ -n "$(python3 -c "import json,sys; print(len(json.load(open(sys.argv[1])).get('finish',{}).get('widen') or []))" "$CFG")" ] \
+   && [ "$(python3 -c "import json,sys; print(len(json.load(open(sys.argv[1])).get('finish',{}).get('widen') or []))" "$CFG")" != "0" ]; then
+  python3 -c "
+import json,sys
+for w in json.load(open(sys.argv[1])).get('finish',{}).get('widen') or []:
+    print('%s\t%s\t%s\t%s' % (w['net'], w.get('to',''), ','.join(w.get('steps',[]) if isinstance(w.get('steps'),list) else [str(w.get('steps',''))]).strip(','), ','.join(w.get('layers',[]))))" "$CFG" |
+  while IFS=$'\t' read -r WNET WTO WSTEPS WLAYERS; do
+    [ -n "$WNET" ] || continue
+    GUARD_QUIET=1 guarded "widen-$(echo "$WNET" | tr -d '/+')" python3 -u $T/widen_net.py $N.kicad_pcb "$WNET" \
+      ${WTO:+--to} ${WTO:+$WTO} ${WSTEPS:+--steps} ${WSTEPS:+$WSTEPS} ${WLAYERS:+--layers} ${WLAYERS:+$WLAYERS}
+  done
+fi
 # 6. a ground via beside every signal via (owner ruling 15 September 2026 20:15 CEST, rule 2): after every stage that lays
 # or removes copper and before the final refill and the routed-board gate, which judges the vias it placed like any other
 # copper. The tool keeps its vias only if neither the hard nor the unrouted count rose against the board it was handed.
