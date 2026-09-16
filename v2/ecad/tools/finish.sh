@@ -27,7 +27,7 @@ print('' if v is None else (sep.join(v) if isinstance(v, list) else ('1' if v is
 N="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['name'])" "$CFG")"
 STUB_L="$(cfg x stub_layers)"; POUR="$(cfg x pour_nets)"; PAIRM="$(cfg x pair_match)"
 AUDIT="$(cfg x pair_audit_nets)"; PFIX="$(cfg x post_fix)"; PRUNED="$(cfg x pruned_gate)"; GGREP="$(cfg x gate_grep)"
-STUB_ENV="$(cfg x stub_env)"; DCL="$(cfg x direct_close_layers)"   # A gives the stub router a wider window and a higher node cap; nothing else does
+STUB_ENV="$(cfg x stub_env)"; DCL="$(cfg x direct_close_layers)"; DCB="$(cfg x direct_close_budget_s)"   # A gives the stub router a wider window and a higher node cap; nothing else does
 CONT="$(python3 -c "import json,sys; c=json.load(open(sys.argv[1])).get('finish',{}).get('cont_route'); print('' if not c else '%d %d %d' % (c['max_opens'], c['passes'], c['timeout_s']))" "$CFG")"
 TAG="$(echo "$PHASE" | tr 'A-Z' 'a-z')"; FLAG="out/$TAG-clean.txt"; DELIV="meshsat-pcb-$L-revA-$PHASE"
 . "$T/guarded.sh"; F_T0=$(date +%s)
@@ -162,7 +162,12 @@ if [ -n "$(cfg x direct_close)" ] || [ -n "$(cfg x direct_close_max)" ]; then
   # `python3 -u`, and the exit status read: on A26 this tool SEGFAULTED after 1,812 lines of output and the
   # finish showed not one of them, because a buffered stdout dies with the process and a pipeline hides
   # the exit code. A stage that crashes has to say so (14 September 2026).
-  GUARD_QUIET=1 guarded direct_close python3 -u $T/direct_close.py $N.kicad_pcb out/$N-drc.json --max="$(cfg x direct_close_max)" ${DCL:+--layers=$DCL}
+  # THE BUDGET IS A DECLARATION, NOT A LITERAL (16 September 2026). Board A's re-finish spent its whole
+  # 1,800 seconds on five of thirteen open pairs and stopped mid-shape: each candidate costs a DRC, and a
+  # 240 by 160 six-layer board's DRC is seven seconds, so a board with a dozen opens needs more than half an
+  # hour or it reports "the budget ran out" for the ones it never reached. `direct_close_budget_s` in
+  # boards/<letter>.json, with the board's own number and its reason.
+  GUARD_QUIET=1 guarded direct_close python3 -u $T/direct_close.py $N.kicad_pcb out/$N-drc.json --max="$(cfg x direct_close_max)" ${DCL:+--layers=$DCL} ${DCB:+--budget-s=$DCB}
   grep -a direct_close out/guard-direct_close.log | tail -12
 fi
 bash $T/quality_pass.sh "$PWD" $N > out/$N-quality-run.log 2>&1 || echo "quality_pass.sh exited $? (out/$N-quality-run.log)"; grep -E "quality:|Traceback" out/$N-quality-run.log | tail -6
