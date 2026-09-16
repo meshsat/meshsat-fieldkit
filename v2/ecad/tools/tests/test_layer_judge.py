@@ -112,8 +112,14 @@ def t_the_power_half_is_measured_and_not_asked_for():
     src = open(os.path.join(TOOLS, "layer_judge.py"), encoding="utf-8").read()
     assert "def _without_inner_pours(" in src, "the pours-deleted measurement is still not implemented"
     i = src.index("def _without_inner_pours(")
-    w = src[i:i + 1800]
+    w = src[i:i + 2600]
     assert "shutil.copy(board, cp)" in w, "it works on the board itself rather than a copy"
     assert ".kicad_pro" in w, "the project file does not travel with the copy, so the copy is judged against the default class"
+    # dc_drop finds a board's intent by its own convention, out/<stem>-intent.json beside the board, so the
+    # copy keeps the STEM and takes its own directory. A copy renamed inside out/ sends dc_drop looking in
+    # out/out/ and it reads no rail at all, and a copy in the project directory is a second board there, which
+    # this project's driver-hygiene rule refuses.
+    assert 'os.path.join(out_dir, "layer-copy")' in w, "the copy has no directory of its own"
+    assert 'stem + ".kicad_pcb"' in w, "the copy is renamed, so its intent will not be found"
     assert "ZONE_FILLER" in w, "the copy is not refilled after the pours are removed"
     assert "rails_met_without_idle_inner" in src, "the second reading never reaches the counts"
