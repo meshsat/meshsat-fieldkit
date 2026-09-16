@@ -210,3 +210,29 @@ def t_every_board_in_the_manifest_can_be_named_by_the_sweep():
             "board %s has neither a board table nor a project in the facts, so no sweep can name it" % letter
     src = open(os.path.join(here, "gate_sweep.sh"), encoding="utf-8").read()
     assert "board_facts()" in src, "the sweep no longer falls back to the registry's facts for a board with no table"
+
+
+def t_a_verdict_taken_on_another_board_is_not_this_board_s_evidence():
+    """A verdict says which board it was taken on and nothing compared it with the board being judged.
+
+    Found by measurement on 16 September 2026: the SET-LEVEL out/, which every board's status reads, held a
+    `fab_limits` verdict carrying board A's sha and a `port_protect` verdict naming board E. Only their
+    timestamps kept each board's own sweep winning. Identity does not depend on who wrote a file where.
+
+    The check costs nothing on the tree it was added to: every one of the 145 committed verdicts that names a
+    board names the board it sits beside. It exists so that the day one does not, it says so.
+    """
+    ident = {"x", "abc123def456aaaa"}
+    vs = _verdict("PASS"); vs["gate_x"]["inputs"] = {"board": {"path": "b.kicad_pcb", "sha256_16": "abc123def456aaaa"}}
+    assert S.result_for(_rule(), "x", _cov(), vs, _manifest(), FP, None, ident)["result"] == S.PASS
+
+    other = _verdict("PASS"); other["gate_x"]["inputs"] = {"board": {"path": "b.kicad_pcb", "sha256_16": "0000deadbeef0000"}}
+    r = S.result_for(_rule(), "x", _cov(), other, _manifest(), FP, None, ident)
+    assert r["result"] == S.INCONCLUSIVE, r
+    assert "not a board this project directory holds" in r["why"], r["why"]
+
+    byletter = _verdict("PASS"); byletter["gate_x"]["inputs"] = {"board": "y"}
+    assert S.result_for(_rule(), "x", _cov(), byletter, _manifest(), FP, None, ident)["result"] == S.INCONCLUSIVE
+
+    # a verdict that names no board at all is judged on its other properties, as the netlist gates are
+    assert S.result_for(_rule(), "x", _cov(), _verdict("PASS"), _manifest(), FP, None, ident)["result"] == S.PASS

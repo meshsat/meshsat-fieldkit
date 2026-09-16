@@ -90,9 +90,40 @@ def _instant(s):
     return d
 
 
-def _fresh(rec, m, fingerprint):
-    """(ok, why): is this verdict current evidence? The epoch and the rule-set fingerprint are the identity;
-    a verdict from before the audit is history, not a decision."""
+def _board_identities(letter, m):
+    """{sha256_16} of every board file this letter's project directories hold, plus the letter itself.
+
+    A verdict says which board it was taken on. Nothing compared it with the board being judged, so a verdict
+    about ANOTHER board counted as this board's evidence: board A's `fab_limits` and board E's `port_protect`
+    are both sitting in the SET-LEVEL out/, which every board reads, and only their timestamps kept the right
+    one winning (16 September 2026). Identity is cheap and does not depend on who wrote a file where.
+    """
+    out = {str(letter).lower()}
+    # The board file is NAMED, never searched for: one project directory holds one board and its name is the
+    # project's, so the path is constructed. A tool that globs a directory for a board is the 11 September
+    # trap (it takes whichever board ran last), and this collects identities rather than picking one, but the
+    # rule that forbids the glob is right to make no exception it cannot see.
+    name = ((R.board_facts().get(letter) or {}).get("project") or "")
+    if not name: return out
+    for d in _project_dirs(letter, m):
+        for f in (os.path.join(os.path.dirname(d), name + ".kicad_pcb"), os.path.join(d, name + ".kicad_pcb")):
+            try: out.add(hashlib.sha256(open(f, "rb").read()).hexdigest()[:16])
+            except OSError: continue
+    return out
+
+
+def _named_board(rec):
+    """What board does this verdict say it was taken on, if it says at all? Either a {path, sha256_16} block
+    or a bare string; a verdict that names none is judged on its other properties."""
+    b = (rec.get("inputs") or {}).get("board")
+    if isinstance(b, dict): return b.get("sha256_16")
+    if isinstance(b, str) and b.strip(): return b.strip().lower()
+    return None
+
+
+def _fresh(rec, m, fingerprint, identities=None):
+    """(ok, why): is this verdict current evidence? The epoch, the rule-set fingerprint and the BOARD are the
+    identity; a verdict from before the audit, or about a different board, is history rather than a decision."""
     ts = str(rec.get("ts", ""))
     epoch_s = str(m.get("evidence", {}).get("epoch", ""))
     if not ts: return False, "the verdict carries no timestamp"
@@ -102,6 +133,9 @@ def _fresh(rec, m, fingerprint):
     got = (rec.get("policy") or {}).get("rule_set_fingerprint") or rec.get("rule_set_fingerprint")
     if fingerprint and got and got != fingerprint: return False, "taken under rule set %s, current is %s" % (got, fingerprint)
     if fingerprint and not got: return False, "the verdict does not name the rule set it was taken under"
+    nb = _named_board(rec)
+    if identities and nb and nb not in identities:
+        return False, "taken on board %s, which is not a board this project directory holds" % str(nb)[:20]
     return True, "current"
 
 
@@ -136,7 +170,7 @@ def _document_current(rel):
     return out
 
 
-def result_for(rule, letter, cov, vs, m, fingerprint, phase=None):
+def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=None):
     """One rule on one board. Everything that is not a positive, current PASS is INCONCLUSIVE or FAIL."""
     rid = rule["id"]; c = cov.get(rid) or {}
     if phase and rule["verification_phase"] not in _phases_up_to(phase):
@@ -173,7 +207,7 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None):
         if rec is None:
             r = dict(result=INCONCLUSIVE, why="no %s verdict for this board" % name, evidence=None)
         else:
-            ok, why = _fresh(rec, m, fingerprint)
+            ok, why = _fresh(rec, m, fingerprint, identities)
             if not ok:
                 r = dict(result=INCONCLUSIVE, why=why, evidence=rec.get("_path"))
             else:
@@ -203,9 +237,10 @@ def board_status(letter, reg=None, facts=None, cov=None, m=None, fingerprint=Non
     reg = reg or R.load(); facts = facts if facts is not None else R.facts(); cov = cov if cov is not None else coverage()
     m = m or manifest(); fingerprint = fingerprint or R.fingerprint(reg)
     vs = _verdicts(letter, m)
+    ident = _board_identities(letter, m)
     rows = []
     for rule, why in R.rules_for(letter, reg, facts):
-        r = result_for(rule, letter, cov, vs, m, fingerprint, phase)
+        r = result_for(rule, letter, cov, vs, m, fingerprint, phase, ident)
         rows.append(dict(rule=rule["id"], domain=rule["domain"], short_name=rule["short_name"],
                          release_effect=rule["release_effect"], verification_phase=rule["verification_phase"],
                          maturity=(cov.get(rule["id"]) or {}).get("maturity", "UNASSESSED"),
