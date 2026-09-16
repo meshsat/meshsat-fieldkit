@@ -3,26 +3,26 @@
 
 # Rule status: board P
 
-Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
-**Readiness: NOT_READY**
+**Readiness: INCONCLUSIVE**
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 7 | 17.1 |
-| FAIL | 2 | 4.9 |
-| INCONCLUSIVE | 32 | 78.0 |
+| PASS | 2 | 4.9 |
+| FAIL | 0 | 0.0 |
+| INCONCLUSIVE | 39 | 95.1 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **41** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts PASS of 42 |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a chec |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the check confirms a DECLARED rail exists on the board; nothing compares the declared set agains |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a check |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file |
@@ -47,14 +47,14 @@ Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-11T14:58:58, before the evidence epoch 2026-09-16T00:35:00 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-11T15:02:29, before the evidence epoch 2026-09-16T00:35:00 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: test points exist; no bring-up sheet exists for any board |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | no verification: nothing considers vibration, mating cycles or moisture for any interface |
 | BAT-001 the cell block is protected in hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the protection is designed and its thresholds are configured in software; no check compares a th |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the  |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 294 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

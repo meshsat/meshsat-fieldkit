@@ -7,9 +7,9 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**39 of 56 rules carry a gap.**
+**38 of 56 rules carry a gap.**
 
-## absent (15)
+## absent (14)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
@@ -51,11 +51,6 @@ file
 **REL-001 the build survives its service life** (MUST_JUSTIFY, OPEN)  
 nothing considers vibration, mating cycles or moisture for any interface  
 *Close it by* a reliability sheet per board and the test plan for the prototype. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
-
-**RET-001 a continuous adjacent return path** (BLOCKER, OPEN)  
-the governing principle is not implemented anywhere: no net is classified by edge rate, and no adequacy
-criterion per class exists. What runs today is the screen RET-002  
-*Close it by* classify every net by edge rate from its driver's datasheet, state the criterion per class, then judge. Owner **SESSION**, after SI-001. Effort P50 10h, P80 30h.
 
 **RET-003 return transition at a reference change** (BLOCKER, OPEN)  
 nothing determines the reference conductor before and after a transition; return_via's same-plane exemption
@@ -164,24 +159,19 @@ the gate refuses a stale or quote-only set correctly; the set on disk is built f
 phases behind and has not been rebuilt  
 *Close it by* rebuild the order set from the current folders once the boards are cut. Owner **SESSION**, after DOC-001. Effort P50 2h, P80 6h.
 
-## heuristic as law (3)
+## heuristic as law (2)
 
 **DEC-001 decoupling loop area** (MUST_JUSTIFY, ENFORCED)  
 the 3 mm distance is a project number applied to every device; the loop inductance it stands for is never
 computed, and a board declares exceptions in an allow file  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-**RET-002 plane-adjacency screen** (MUST_JUSTIFY, ENFORCED)  
-it blocks boards today as though it were RET-001; it counts a net's own via anti-pads as uncovered, which is
-most of D's and E's failures  
-*Close it by* demote to a screen in the finish, keep the report, and let RET-001 decide. Owner **OWNER**, after RET-001. Effort P50 2h, P80 6h.
-
 **RET-004 ground-via proximity screen** (MUST_JUSTIFY, ENFORCED)  
 1.5 mm and the 0.5 mm fan exemption are project calibrations; the grid makes the screen pass by construction
 on D, and costs E its route  
 *Close it by* keep as a screen under RET-003; record the grid's per-board measurement. Owner **SESSION**, after RET-003. Effort P50 2h, P80 6h.
 
-## source or applicability unresolved (7)
+## source or applicability unresolved (8)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -210,6 +200,21 @@ the conductor measure is implemented and tested; its limit comes from a formula 
 document is in the tree, and IPC-2152 has never been considered  
 *Close it by* obtain the standard, pin it under v2/vendor/, cite the clause, and re-judge the four boards. Owner **SESSION**. Effort P50 4h, P80 12h.
 
+**RET-001 a continuous adjacent return path** (BLOCKER, GENERATED_ONLY)  
+16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
+gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration
+in boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each
+class is asked the question it deserves: a fast net for an ADJACENT reference within a tolerance, a slow one
+for whether a return path EXISTS at all. Four properties keep a relaxation from becoming an exemption
+mechanism, each with a rule: a declaration without a reason is refused, an unclassified net is judged at the
+STRICTEST bar and named, a declaration cannot downgrade a net the board itself calls impedance-targeted, and
+the relaxed class asks a different QUESTION rather than a looser number. It is GENERATED_ONLY and not
+ENFORCED for one reason and it is the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS,
+not a standard's. The 10 mm or 5 percent of the fast classes is the 15 September ruling's figure calibrated
+on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judgement. Until a source backs
+them, they are a written screen and say so  
+*Close it by* obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are. Owner **SESSION**, after SI-001. Effort P50 8h, P80 26h.
+
 **RTE-001 geometry a fabricator will build** (BLOCKER, SOURCE_UNVERIFIED)  
 the DRC enforces the board's own rules; those rules were copied from a capability record that is not in the
 tree  
@@ -225,9 +230,9 @@ layer_judge measures what the router did, not what the board needs, and says so;
 four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-## covered (17)
+## covered (18)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RF-002, RTE-002, SCH-001, SCH-002, SCH-003,
-SGN-001, SGN-002, SUP-001
+DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, RET-002, RF-002, RTE-002, SCH-001, SCH-002,
+SCH-003, SGN-001, SGN-002, SUP-001
 

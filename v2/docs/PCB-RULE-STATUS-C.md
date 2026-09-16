@@ -3,26 +3,26 @@
 
 # Rule status: board C
 
-Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **a453bedd2b5ad14d**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
-**Readiness: NOT_READY**
+**Readiness: INCONCLUSIVE**
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 7 | 17.1 |
-| FAIL | 2 | 4.9 |
-| INCONCLUSIVE | 32 | 78.0 |
+| PASS | 2 | 4.9 |
+| FAIL | 0 | 0.0 |
+| INCONCLUSIVE | 39 | 95.1 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **41** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no envelope document exists: temperature, humidity, altitude, vibration and single-fault assumptions are unwritten, and every deratin |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts PASS of 42 |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a chec |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the check confirms a DECLARED rail exists on the board; nothing compares the declared set agains |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | no intent_checks verdict for this board |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the conductor measure is implemented and tested; its limit comes from a formula in a code c |
@@ -39,7 +39,7 @@ Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no class_floor verdict for this board |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification |
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: crystal loads and straps are chosen in the generators; nothing checks a load capacitance against |
-| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: no interface specification is in the tree; the PCIe lanes carry the 90 ohm USB class becaus |
+| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: 16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datash |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: every external port has a device; no port table exists and no clamping voltage has been compared |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers t |
@@ -49,12 +49,12 @@ Manifest **2026-09-16.1**, rule set **88f207606ad2945a**, evidence epoch **2026-
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-11T13:34:18, before the evidence epoch 2026-09-16T00:35:00 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | no verification: no EMC analysis of any kind exists; eleven radios and a sealed metal box |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | PRE_AUDIT: taken 2026-09-11T13:34:05, before the evidence epoch 2026-09-16T00:35:00 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: test points exist; no bring-up sheet exists for any board |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | no verification: nothing considers vibration, mating cycles or moisture for any interface |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the  |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 88f207606ad2945a, current is a453bedd2b5ad14d |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 294 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |
