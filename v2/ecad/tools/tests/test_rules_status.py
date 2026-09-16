@@ -185,3 +185,28 @@ def t_the_completeness_verdict_asks_a_different_question_from_readiness():
     rs = json.load(open(os.path.join(d, "rules_status.verdict.json")))
     assert rs["verdict"] != rec["verdict"], \
         "the completeness verdict is tracking the readiness verdict, so it is asking the same question"
+
+
+def t_every_board_in_the_manifest_can_be_named_by_the_sweep():
+    """A board the sweep cannot name is a board the readiness cannot re-judge (MESHSAT-862, 16 September 2026).
+
+    Board E5 has no `boards/e5.json`, because it is a bare contact interposer generated from board A's own board
+    file: no schematic, no netlist, no routed copper, so it never needed a chain. The sweep resolved a board's
+    name through that file alone and stopped at "no board .kicad_pcb", so all twenty of E5's applicable
+    rule-board pairs stayed INCONCLUSIVE for a reason that was about the script. The name now falls back to the
+    registry's own applicability data, which has carried `project: pcb-e5-block` since Phase A."""
+    import os, sys, json
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, here)
+    import rules_lib
+    facts = rules_lib.board_facts()
+    m = json.load(open(os.path.join(here, "readiness_manifest.json"), encoding="utf-8"))
+    for letter in m["boards"]:
+        tbl = os.path.join(here, "boards", "%s.json" % letter)
+        if os.path.exists(tbl):
+            assert json.load(open(tbl, encoding="utf-8")).get("name"), "%s's board table carries no name" % letter
+            continue
+        assert (facts.get(letter) or {}).get("project"), \
+            "board %s has neither a board table nor a project in the facts, so no sweep can name it" % letter
+    src = open(os.path.join(here, "gate_sweep.sh"), encoding="utf-8").read()
+    assert "board_facts()" in src, "the sweep no longer falls back to the registry's facts for a board with no table"

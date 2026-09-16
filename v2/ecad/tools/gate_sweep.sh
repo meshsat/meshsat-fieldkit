@@ -18,7 +18,28 @@
 set -uo pipefail
 E=${1:?ecad dir}; PD=${2:?phase dir}; L=${3:?letter}; LABEL=${4:-sweep}
 T=$E/tools
-N=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['name'])" $T/boards/$L.json)
+# THE NAME COMES FROM THE BOARD TABLE, AND E5 HAS NONE. Board E5 is a bare contact interposer: it is generated
+# by gen_pcb_e5.py from board A's own board file, it has no schematic, no netlist and no routed copper, so it
+# has never needed a chain and never got a boards/e5.json. The sweep stopped there with "no board .kicad_pcb"
+# and every one of its twenty applicable rule-board pairs stayed INCONCLUSIVE for a reason that was about this
+# script rather than about the board. The registry's own applicability data already carries the answer, so the
+# fall-back reads it there rather than inventing a board table that would claim a chain this board does not
+# have (16 September 2026).
+N=$(python3 - "$T" "$L" <<'PYNAME'
+import json, os, sys
+tools, letter = sys.argv[1], sys.argv[2]
+p = os.path.join(tools, "boards", "%s.json" % letter)
+if os.path.exists(p):
+    print(json.load(open(p, encoding="utf-8"))["name"]); raise SystemExit(0)
+sys.path.insert(0, tools)
+import rules_lib   # the facts file is the registry's, and rules_lib is its only reader
+b = rules_lib.board_facts().get(letter) or {}
+name = b.get("project")
+if not name:
+    sys.stderr.write("gate_sweep: no board table and no project in the facts for %s\n" % letter); raise SystemExit(2)
+print(name)
+PYNAME
+)
 P=$E/$PD
 [ -f "$P/$N.kicad_pcb" ] || { echo "gate_sweep: no board $P/$N.kicad_pcb"; exit 2; }
 S=$P/out/sweep
