@@ -182,12 +182,27 @@ part("D2", "Device", "D_TVS", "SMCJ33A (VIN_RAW clamp behind E6's filter)", "TVS
 # --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET: the battery side IS the system, the pack node CELL+ through RSR): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,
 #     charge inhibited by pulling ILIM_HIZ low through Q6 (the SHORE_INHIBIT function of PANEL.md section 9 becomes CHG_INHIBIT on the expander); cell count set on CELL_BATPRESZ
 ic("U3", 33, "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B", "QFN32_04", {
- "1": "VBUS20", "2": "CH_ACN", "3": "VBUS20", "4": "CHRG_OK", "5": "GND", "6": "CHG_ILIM", "7": "CH_VDDA", "8": "IADPT", "9": "IBAT", "10": "PSYS", "11": "PROCHOT", "12": "SDA", "13": "SCL",
- "14": "GND", "15": "NC", "16": "CH_COMP1", "17": "CH_COMP2", "18": "CH_CELL", "19": "CELL+", "20": "CH_SRP", "21": "NC", "22": "CH_SRP", "23": "CH_SW2", "24": "CH_HIDRV2", "25": "CH_BTST2", "26": "CH_LODRV2",
+ "1": "VBUS20", "2": "CH_ACN_F", "3": "CH_ACP_F", "4": "CHRG_OK", "5": "GND", "6": "CHG_ILIM", "7": "CH_VDDA", "8": "IADPT", "9": "IBAT", "10": "PSYS", "11": "PROCHOT", "12": "SDA", "13": "SCL",
+ "14": "GND", "15": "NC", "16": "CH_COMP1", "17": "CH_COMP2", "18": "CH_CELL", "19": "CH_SRN_F", "20": "CH_SRP_F", "21": "NC", "22": "CH_SRP", "23": "CH_SW2", "24": "CH_HIDRV2", "25": "CH_BTST2", "26": "CH_LODRV2",
  "27": "GND", "28": "REGN", "29": "CH_LODRV1", "30": "CH_BTST1", "31": "CH_HIDRV1", "32": "CH_SW1", "33": "GND"}, "C2871872")
 for _qr, _g, _d, _s in (("Q7", "CH_HIDRV1", "CH_ACN", "CH_SW1"), ("Q8", "CH_LODRV1", "CH_SW1", "GND"), ("Q9", "CH_LODRV2", "CH_SW2", "GND"), ("Q10", "CH_HIDRV2", "CH_SRP", "CH_SW2")): nfet(_qr, "CSD18510Q5B 40 V N-FET", _g, _d, _s)
 part("L2", "Device", "L", "3.3uH XAL6030-332ME (Isat 12.2 A)", "L6060", {"1": "CH_SW1", "2": "CH_SW2"})
 r("R16", "10mOhm 1% 2512 (RAC, input current sense)", "VBUS20", "CH_ACN", "RS2512"); r("R17", "5mOhm 1% 2512 (RSR, charge current sense)", "CH_SRP", "CELL+", "RS2512")
+# THE SENSE FILTERS THE CHARGER'S OWN DATASHEET ASKS FOR, and did not have (16 September 2026, rule ANA-001).
+# The BQ25731's pin table is explicit on both pairs. ACP and ACN: "A RC low-pass filter is required to be
+# placed between the sense resistor and the ACN pin to suppress the high frequency noise in the input current
+# signal", with section 10.2.2.2 asking for a time constant between 47 and 200 ns and 10 nF differential at a
+# 400 kHz switching frequency. SRN: "Connect a 0.1-uF filter cap across battery charging sensing resistor and
+# use 10-Ohm contact resistor between SRN pin and battery charging sensing resistor."
+# Until today both pairs went straight from the shunt to the pin: the amplifier saw the ringing the datasheet
+# warns overwhelms the sensed current, and the note says that can push the average-current loop into
+# oscillation. 10 Ohm into each pin with 10 nF across the input pair is 100 ns, inside the window; the charge
+# pair takes the 0.1 uF the same page asks for. VSYS (pin 22) stays on the system node itself: it is a voltage
+# sense and not part of either current pair.
+r("R146", "10R (ACN filter, BQ25731 10.2.2.2)", "CH_ACN", "CH_ACN_F"); r("R147", "10R (ACP filter)", "VBUS20", "CH_ACP_F")
+c("C121", "10n (CDIFF across the input sense, 100 ns with the 10 R)", "CH_ACP_F", "CH_ACN_F")
+r("R148", "10R (SRN contact resistor, BQ25731 pin 19)", "CELL+", "CH_SRN_F"); r("R149", "10R (SRP contact resistor)", "CH_SRP", "CH_SRP_F")
+c("C122", "100n (across the charge sense resistor, BQ25731 pin 19)", "CH_SRP_F", "CH_SRN_F")
 c("C16", "100n 25V", "CH_BTST1", "CH_SW1"); c("C17", "100n 25V", "CH_BTST2", "CH_SW2"); c("C18", "3.3u", "REGN", "GND", "C10u"); r("R18", "10R", "REGN", "CH_VDDA"); c("C19", "1u", "CH_VDDA", "GND")
 for k in range(3): c("C%d" % (20 + k), "10u 35V 1210", "CH_ACN", "GND", "C1210")
 for k in range(3): c("C%d" % (23 + k), "22u 25V 1210", "CH_SRP", "GND", "C1210")

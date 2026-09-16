@@ -61,9 +61,20 @@ supervisors are already on the same I2C bus as the secure element and depend on 
 
 ## generated only (5)
 
-**ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, GENERATED_ONLY)  
+**ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, ENFORCED)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
-or measures their separation from switching copper  
+or measures their separation from switching copper 16 September 2026: THE LIST EXISTS AND WRITING IT FOUND A
+DEFECT. pcb_sensitive.yaml declares 34 nodes over boards A, D, E and P with each one's filter, its Kelvin
+partner where the measurement is a difference, and the clearance asked of the layout; sensitive_nodes.py
+checks the declaration against the netlist everywhere and, where pcbnew is present, measures the real
+distance from each node's copper to the nearest switching copper on the routed board and reports it beside
+the asked-for number. The defect: board A's BQ25731 had BOTH of its sense pairs wired straight from the shunt
+to the pin, and the part's own table asks for an RC filter on each (10 Ohm with 10 nF differential on the
+input pair for a 47 to 200 ns time constant, section 10.2.2.2; a 10 Ohm contact resistor and 0.1 uF across
+the charge sense resistor, pin 19), warning that without it the ringing 'overwhelms converter sensed inductor
+current information' and can push the average-current loop into oscillation. Six parts were added at the
+source. The clearances themselves are this project's own numbers and no source in this tree sets them, which
+is why the measured distance travels in the verdict beside them.  
 *Close it by* declare sensitive nodes in the intent file and check their clearance and reference. Owner **SESSION**. Effort P50 6h, P80 16h.
 
 **BAT-001 the cell block is protected in hardware** (BLOCKER, GENERATED_ONLY)  

@@ -54,7 +54,8 @@ for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks i
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
-          energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability; do
+          energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability \
+          sensitive_nodes; do
   rm -f "$P/routed/$_g.verdict.json"
 done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
@@ -135,6 +136,10 @@ run "closers" python3 $T/closer_audit.py --board $L
 # WHAT CARRIES LOAD AND WHAT SEES CYCLING (rule REL-001). The kit is carried: every connector mated in the
 # field is a wear item and every board-mounted jack is a lever with the case as its fulcrum.
 run "reliability" python3 $T/reliability.py --ecad "$E" --board $L
+# THE NODES WHERE MILLIVOLTS DECIDE (rule ANA-001). The netlist half runs anywhere; the board half measures the
+# real distance from each sensitive node's copper to the nearest switching copper and reports it beside the
+# clearance the board asked for.
+run "sensitive nodes" python3 $T/sensitive_nodes.py $N.kicad_pcb --board $L
 [ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read

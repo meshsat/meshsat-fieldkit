@@ -1,0 +1,94 @@
+# THE NODES THAT MUST NOT BE DISTURBED (rule ANA-001, MESHSAT-862, 16 September 2026).
+#
+# The rule asks for a list per board of the sensitive nodes with, for each, its reference, its filter and its
+# clearance from switching nodes, and Kelvin connections where the measurement demands it. It read "generation
+# intends to comply and nothing verifies it" on four boards.
+#
+# A sensitive node here is one where a few millivolts change the answer: a feedback divider that sets a rail's
+# voltage, a shunt sense pair that measures a current, a cell tap, a thermistor, a microphone input. Each entry
+# names the FILTER that makes it quiet and, where the measurement is a difference, the KELVIN pair that makes
+# it a measurement rather than an IR drop.
+#
+# `keep_mm` is this project's own number and is stated as such: it is the clearance asked of the layout between
+# that node's copper and the copper of any switching node, and no standard in this tree sets it. The tool
+# measures the real distance on the routed board and reports it beside the asked-for one, so the number can be
+# argued with from evidence rather than defended.
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+
+boards:
+
+ a:
+   switch_nets: ["*_SW", "*_SW1", "*_SW2", "B33_SW"]
+   nodes:
+    - {net: CH_SRP_F, what: "the charger's charge-current sense, positive half of the pair across R17",
+       filter: "10 R into the pin and 100 nF across the pair, which is what the BQ25731's own pin table asks
+         for (pin 19) and what this board did not have until 16 September 2026",
+       kelvin_with: CH_SRN_F, keep_mm: 0.5}
+    - {net: CH_SRN_F, what: "the charger's charge-current sense, negative half of the pair across R17",
+       filter: "10 R into the pin and 100 nF across the pair (BQ25731 pin 19)", kelvin_with: CH_SRP_F, keep_mm: 0.5}
+    - {net: CH_ACP_F, what: "the charger's input-current sense, positive half of the pair across R16",
+       filter: "10 R into the pin and 10 nF across the pair, a 100 ns time constant inside the 47 to 200 ns
+         window the datasheet's section 10.2.2.2 asks for", kelvin_with: CH_ACN_F, keep_mm: 0.5}
+    - {net: CH_ACN_F, what: "the charger's input-current sense, negative half of the pair across R16",
+       filter: "10 R into the pin and 10 nF across the pair (BQ25731 10.2.2.2)", kelvin_with: CH_ACP_F, keep_mm: 0.5}
+    - {net: FE_CS, what: "the front end's current-sense input", filter: "the 5 mOhm CS resistor's own Kelvin pair",
+       kelvin_with: null, keep_mm: 0.5}
+    - {net: PA_CS, what: "the PA stage's current sense", filter: "the CS resistor at the stage's own output",
+       kelvin_with: null, keep_mm: 0.5}
+    - {net: HF_CS, what: "the HF stage's current sense", filter: "the CS resistor", kelvin_with: null, keep_mm: 0.5}
+    - {net: PD_CS, what: "the PD stage's current sense", filter: "the CS resistor", kelvin_with: null, keep_mm: 0.5}
+    - {net: POE_CS, what: "the PoE stage's current sense", filter: "the CS resistor", kelvin_with: null, keep_mm: 0.5}
+    - {net: FE_FB, what: "the front end's feedback divider", filter: "the divider's own top and bottom resistors
+        at the controller, with the tap taken at the output island", kelvin_with: null, keep_mm: 0.5}
+    - {net: PA_FB, what: "the PA rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: HF_FB, what: "the HF rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: PD_FB, what: "the PD rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: POE_FB, what: "the PoE rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: S1_FB, what: "slot rail 1's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: S2_FB, what: "slot rail 2's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: S3_FB, what: "slot rail 3's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: SD_FB, what: "the device rail's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: B33_FB, what: "the 3.3 V logic buck's feedback", filter: "the divider at U12", kelvin_with: null, keep_mm: 0.5}
+
+ d:
+   switch_nets: []
+   _switch_why: "this board carries no switching converter; the disturbance here is the 1 W transmitter, and
+     the clearance that matters is from the exciter's own supply and antenna rather than from a switch node"
+   nodes:
+    - {net: MIC_IN, what: "the microphone summing input, millivolts", filter: "47k/1k divider and the AC
+        coupling capacitor at the codec", kelvin_with: null, keep_mm: 1.0}
+    - {net: MIC_SUM, what: "the summed microphone node", filter: "the summing network's own resistors", kelvin_with: null, keep_mm: 1.0}
+    - {net: MICAMP_IN_N, what: "the microphone amplifier's inverting input", filter: "the feedback network",
+       kelvin_with: null, keep_mm: 1.0}
+    - {net: VREF, what: "the codec's reference", filter: "1 uF at the pin", kelvin_with: null, keep_mm: 1.0}
+    - {net: HS1_MIC, what: "headset 1's microphone input, on a lead that leaves the board",
+       filter: "the AC coupling capacitor and the bias resistor at the jack", kelvin_with: null, keep_mm: 1.0}
+    - {net: HS2_MIC, what: "headset 2's microphone input", filter: "the AC coupling capacitor and the bias
+        resistor at the jack", kelvin_with: null, keep_mm: 1.0}
+
+ e:
+   switch_nets: ["TRK_SW1", "TRK_SW2", "E6_SW", "FAN1_SW", "FAN2_SW"]
+   nodes:
+    - {net: TRK_LSENSE, what: "the solar tracker's inductor current sense", filter: "the sense resistor's own
+        pair at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: WATER_SENSE, what: "the floor water sensor input, a high-impedance node on a lead that leaves the
+        board", filter: "the pull-up and the 100 nF at the controller", kelvin_with: null, keep_mm: 1.0}
+
+ p:
+   switch_nets: []
+   _switch_why: "the pack board is linear: the only edges on it are the SMBus and the FET gate drive, and the
+     disturbance that matters is the pack's own load current in the copper, which is why every entry below is
+     a Kelvin connection rather than a clearance"
+   nodes:
+    - {net: SRP_F, what: "the coulomb counter's positive sense, filtered", filter: "100 R and 100 nF",
+       kelvin_with: SRN_F, keep_mm: 0.5}
+    - {net: SRN_F, what: "the coulomb counter's negative sense, filtered", filter: "100 R and 100 nF",
+       kelvin_with: SRP_F, keep_mm: 0.5}
+    - {net: VC1_F, what: "cell 1's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: VC2_F, what: "cell 2's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: VC3_F, what: "cell 3's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: VC4_F, what: "cell 4's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: TS1, what: "the cell block's thermistor", filter: "10k pull-up and the 100 nF at the gauge",
+       kelvin_with: null, keep_mm: 0.5}

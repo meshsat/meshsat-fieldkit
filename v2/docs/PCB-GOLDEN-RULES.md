@@ -1063,8 +1063,8 @@ reference, its filtering and its distance from switching copper are decided rath
 | risk | ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY |
 | verified by | MANUAL_REVIEW, SCRIPT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_pcb_p3.py Kelvin sense, gen_sch_d.py mic network |
-| maturity | **GENERATED_ONLY** |  (at writing: UNASSESSED)
+| implementation | pcb_sensitive.yaml, the nodes and their filters |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one node, expires prototype measurement |
 
@@ -1078,7 +1078,18 @@ copper as much as the current.
 **If violated** Gauge error that becomes a state-of-charge error, and audio noise beside a 30 W transmitter.
 
 **Today** the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
-or measures their separation from switching copper
+or measures their separation from switching copper 16 September 2026: THE LIST EXISTS AND WRITING IT FOUND A
+DEFECT. pcb_sensitive.yaml declares 34 nodes over boards A, D, E and P with each one's filter, its Kelvin
+partner where the measurement is a difference, and the clearance asked of the layout; sensitive_nodes.py
+checks the declaration against the netlist everywhere and, where pcbnew is present, measures the real
+distance from each node's copper to the nearest switching copper on the routed board and reports it beside
+the asked-for number. The defect: board A's BQ25731 had BOTH of its sense pairs wired straight from the shunt
+to the pin, and the part's own table asks for an RC filter on each (10 Ohm with 10 nF differential on the
+input pair for a 47 to 200 ns time constant, section 10.2.2.2; a 10 Ohm contact resistor and 0.1 uF across
+the charge sense resistor, pin 19), warning that without it the ringing 'overwhelms converter sensed inductor
+current information' and can push the average-current loop into oscillation. Six parts were added at the
+source. The clearances themselves are this project's own numbers and no source in this tree sets them, which
+is why the measured distance travels in the verdict beside them.
 
 ## Rf
 
