@@ -276,6 +276,35 @@ for _bd, _stem in NETS.items():
         check(not _bad, "%s: %s (%s) is in series with a real pin on both sides" % (_bd, _r, _val), "dead net(s) %s" % _bad)
 
 # A board whose netlist is not in this tree has not been checked; every contract that names it then reads as a
+# 13. A RAIL THAT CROSSES A CONNECTOR IS ONE CONDUCTOR, AND ITS BUDGET IS ONE BUDGET (16 September 2026).
+# `+5V_D8` runs from board A's eFuse, out through the mezzanine, into board D's loads. Each board measured its
+# own half against the WHOLE budget: A read 2.68 percent against the 2 percent default while D read its half
+# against the 3 percent it declares with a reason, so the two halves could sum past the rail's real budget and
+# both boards would pass. A rail that appears in more than one board's intent declares what fraction of the
+# end-to-end budget THIS board's copper may spend, and the shares must not sum past the budget.
+import glob as _glob, json as _json, os as _os
+_intents = {}
+for _k, _stem in NETS.items():
+    for _f in sorted(_glob.glob(_os.path.join(ECAD, _stem + "*", "out", "*-intent.json"))):
+        try: _intents[_k] = _json.load(open(_f))
+        except ValueError: pass
+_shared = {}
+for _k, _it in _intents.items():
+    for _net, _r in (_it.get("rails") or {}).items():
+        _shared.setdefault(_net, {})[_k] = _r
+for _net, _by in sorted(_shared.items()):
+    if len(_by) < 2 or _net == "GND": continue
+    _budgets = {k: float(r.get("budget", 0.02)) for k, r in _by.items()}
+    _shares = {k: r.get("share") for k, r in _by.items()}
+    _named = ", ".join("%s %.1f%%" % (k, 100 * float(v)) for k, v in sorted(_shares.items()) if v)
+    check(all(_shares.values()),
+          "rail %s crosses %s and every board declares its share of the end-to-end budget" % (_net, "/".join(sorted(_by))),
+          "declared: %s; missing: %s" % (_named or "none", ", ".join(sorted(k for k, v in _shares.items() if not v))))
+    if all(_shares.values()):
+        _tot = sum(float(v) for v in _shares.values()); _bud = min(_budgets.values())
+        check(_tot <= _bud + 1e-9,
+              "rail %s: the shares sum to %.1f%% within the %.1f%% the rail declares" % (_net, 100 * _tot, 100 * _bud))
+
 # FAIL of the contract, which is a claim about the design. It is a claim about the tree. On a rented box where
 # only one board has been regenerated, P3's finish printed eleven contract FAILs naming A, and A had simply
 # never been generated there (11 September 2026). A missing input is INCONCLUSIVE, and it still blocks.

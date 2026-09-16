@@ -17,10 +17,18 @@ _I = {"bypass": [], "rails": {}, "pair_classes": dict(Z_DEFAULT)}
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
-def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic=""):
+def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
-    budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026)."""
+    budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
+
+    share: THIS BOARD'S PART of a rail that crosses to another board (16 September 2026). `+5V_D8` is one
+    conductor from board A's eFuse, out through the mezzanine connector, into board D's loads, and each board
+    was measuring its own half against the WHOLE budget: A read 2.68 percent against the 2 percent default and
+    D read its half against the 3 percent it declares, so the two halves could sum past the rail's real budget
+    and both boards would pass. A rail that leaves the board declares what fraction of the end-to-end budget
+    this board's copper may spend, `check_contracts` adds the shares up, and `dc_drop` judges this board
+    against its share rather than against the whole."""
     # 13 September 2026 (MESHSAT-862): a rail without loads is not declarable. `dc_drop` used to split the
     # current evenly over every U and J on the net when nothing was declared, and that guess decided boards
     # for five days (A24's CELL+ at 2.21 percent through a SENSE pin; VBUS20's 6 A through two more). The
@@ -49,7 +57,8 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
     _tot = sum(loads.values())
     if _tot > amps_peak * 1.02: raise SystemExit("intent: rail %s declares a %.2f A peak and its loads sum to %.2f A. "
                                                  "The loads are a claim about the same current as the peak: correct one of them." % (net, amps_peak, _tot))
-    _I["rails"][net] = {"volts": volts, "amps_typ": amps_typ, "amps_peak": amps_peak, "source": source, "loads": loads or {}, "note": note, **({"budget": budget} if budget else {})}
+    _I["rails"][net] = {"volts": volts, "amps_typ": amps_typ, "amps_peak": amps_peak, "source": source, "loads": loads or {}, "note": note,
+                        **({"budget": budget} if budget else {}), **({"share": share} if share else {})}
 
 def pair_class(name, z_diff=None, z_se=None):
     _I["pair_classes"][name] = {k: v for k, v in (("z_diff", z_diff), ("z_se", z_se)) if v is not None}

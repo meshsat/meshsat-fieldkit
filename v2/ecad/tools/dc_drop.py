@@ -400,6 +400,11 @@ def main(a):
             miss += 1
             continue
         rb = float(r.get("budget", budget))   # a rail may carry its own budget in the intent (8 Sep 2026)
+        # A RAIL THAT LEAVES THE BOARD IS JUDGED ON ITS SHARE (16 September 2026). `+5V_D8` is one conductor
+        # from board A's eFuse through the mezzanine into board D's loads, and each board was measuring its own
+        # half against the WHOLE budget: the two halves could sum past the rail's real budget with both boards
+        # passing. Where the intent declares a share, that is this board's bar.
+        if r.get("share"): rb = float(r["share"])
         # 8 September 2026 said the density "overstates by the cell-to-width ratio" and left it reported, not
         # gated, until the raster was validated. THE DIRECTION WAS BACKWARDS, measured 13 September 2026.
         # The bar is `ipc_limit(cell*t)` per cell and IPC's law is I = k dT^0.44 A^0.725, which is sublinear in
