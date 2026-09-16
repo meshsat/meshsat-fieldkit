@@ -183,7 +183,7 @@ coverage:
      different QUESTION rather than a looser number. It is GENERATED_ONLY and not ENFORCED for one reason and it is
      the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS, not a standard's. The 10 mm or 5 percent
      of the fast classes is the 15 September ruling's figure calibrated on board A's anti-pad rows; the 30 mm or 15
-     percent of CLOCKED_DIGITAL is a judgement. Until a source backs them, they are a written screen and say so",
+     percent of CLOCKED_DIGITAL is a judgement. Until a source backs them, they are a written screen and say so 16 September 2026, an authority for the PRINCIPLE and not for the numbers: TI SCAA082A section 1.6 (v2/vendor/ti/ti-scaa082a-high-speed-layout-guidelines.pdf) states that at high frequency the return current flows along the lowest impedance path, directly beside the signal, and that a slot in the reference forces a loop whose area is what radiates. That is what this rule rests on and this tree held no source for it until today. It states NO per-class tolerance, so the millimetres here are still this project's own and the maturity does not move.",
    remediation: {action: "obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are",
      owner: SESSION, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [SI-001], p50_h: 8, p80_h: 26}}
 
@@ -191,7 +191,7 @@ coverage:
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
      against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a net's
-     own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they read",
+     own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they read 16 September 2026: TI SCAA082A section 2.5 states the fixer as practice, 'use ground vias around the signal via to make sure that the return current can flow as close as possible to the signal'. It gives no distance, which is the number this rule still wants.",
    remediation: {action: "measure the anti-pad share of each failing net's gap, so RET-003's question can be separated from this one",
      owner: SESSION, execution: PARALLEL_BOX, depends_on: [RET-003], p50_h: 3, p80_h: 8}}
 
@@ -205,7 +205,7 @@ coverage:
      are RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between
      two DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared
      per board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its
-     pin) and it is OURS, so the maturity is GENERATED_ONLY until a document states it",
+     pin) and it is OURS, so the maturity is GENERATED_ONLY until a document states it 16 September 2026: TI SCAA082A section 2.5 asks for ground vias AROUND the signal via and gives no figure for how far away one may sit, so the search radius here remains unsourced.",
    remediation: {action: "find a published figure for how far a plane-stitching capacitor may sit from the transition it serves, or measure one", owner: SESSION, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [RET-001], p50_h: 3, p80_h: 12}}
 
  RET-004: {implementation: "gnd_grid.py, return_via.py fixer",
@@ -244,7 +244,7 @@ coverage:
      bus, and compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per
      board with its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however
      carefully it is chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated,
-     and the verdict is INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project",
+     and the verdict is INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project 16 September 2026: TI SCAA082A Table 2 gives measured propagation delays on FR-4 at er 4.6, microstrip 171.9 mm/ns and stripline 139.8 mm/ns (5.82 and 7.15 ps/mm), which is within 6 percent of the 5.5 and 6.9 ps/mm edge_length.py computes from the board's own stackup: the arithmetic has a second opinion. The criterion k still has none.",
    remediation: {action: "declare a rise time beside each signal-class entry from the driver's own datasheet, and a critical-length criterion per board with its reason; the arithmetic is already there to judge against them", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], _depends_why: "NOT RET-001 (16 September 2026). RET-001 depended on SI-001 and SI-001 on RET-001, a cycle the ETA model absorbed in silence because its walk carries a seen-set and returns zero on a revisit, so the critical path was computed by truncating one of the two edges and nothing said which. The real direction is one way: RET-001's per-class tolerance is to come from a critical-length criterion, which needs the drivers' edge rates, which is SI-001. SI-001 itself needs datasheets and nothing from RET-001.", p50_h: 8, p80_h: 24}}
 
  CLK-001: {implementation: "gen_sch_*.py crystal networks",
