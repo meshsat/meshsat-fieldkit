@@ -8186,3 +8186,45 @@ inhibit lines. A line that changes state when a person presses a switch has no r
 gate reads the same spectral-content declarations that rules RET-001 and RET-004 were rewritten under this
 morning, counts the slow ones rather than hiding them, and judges a net nobody classified as though it were
 fast. **Readiness: NOT_READY, 32.3 percent verified, 12.7 failed, 55.0 inconclusive of 300 pairs.**
+
+### 32.206 Three rules that had nothing now measure something, and the sixth rail crossing a connector (16 September 2026, 07:20 CEST; MESHSAT-862)
+
+Three of the registry's blockers carried the same note in different words: **nothing measures this**. Each now
+has a tool that measures what the board can answer and says plainly which half it cannot.
+
+**PI-003, the via that carries a rail across layers.** "About 2.5 A per 0.4 mm hole" has sat in a generator
+comment since 5 September and nothing ever measured a board against it. `via_current.py` groups each declared
+rail's vias into SITES, a cluster of that net's barrels within 6 mm, and compares the rail's peak current
+against the WEAKEST site, because a transition is a series element. The barrel is an annulus of the
+fabricator's published 18 um plating and the curve is IPC-2221's for an internal conductor; it lands at one
+ampere through a 0.3 mm via at 20 K, which is the trade's own figure and the check that the expression has no
+unit error. Its first run found something on all seven boards and most of it is one false shape: a rail's
+weakest site is often a lone stitch via at the end of a pour carrying almost none of the current, while the
+current travels in a band with a via field under it. **The arithmetic is right and the attribution is not**, so
+the verdict is ADVISORY until the per-via current comes from `dc_drop`'s solved mesh.
+
+**THM-001, what each board turns into heat.** `thermal.py` builds the table from the board's own intent: a
+converter's loss is P_out * (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note,
+any other dissipator is declared per board with its watts and its sentence, and the thermal path is measured
+off the board, the part's pad area and the vias inside its courtyard, because on a sealed case with no airflow
+that is what carries the heat out. A rail with no declared efficiency is listed as unknown and the verdict is
+INCONCLUSIVE while any are, so the table is a floor and not an estimate. **The junction temperature is the
+missing half** and it needs the envelope's maximum ambient, which is ENV-001 and is an owner decision nobody
+has written; the tool names that rather than inventing it.
+
+**ISO-001, how far apart the high-voltage copper actually is.** A net class is an instruction to the router and
+not a fact about the board: it binds the router's tracks and says nothing about a pad, a zone edge or a
+hand-laid piece of copper. `spacing.py` measures the real distance from every conductor of a declared
+high-voltage rail (board A's VBUS20 and +54V_POE, board B's +54V_POE) to the nearest conductor of any other net
+on the same layer, pads and fills included. Whether the number is ENOUGH comes from a standard's table for a
+working voltage, a pollution degree and a material group, and IEC 60664-1 is not in this tree, so a board
+declares `hv_spacing_mm` when it has an authority and the rule stays unjudged where nothing is declared. Its
+own fixture caught a defect before it judged a board: the endpoint-to-segment minimum is the answer only when
+the segments do not cross, and two crossing conductors read 5 mm apart.
+
+**And the shared-rail contract found five more.** Beside `+5V_D8`, the rails `+54V_POE`, `+5V_DEV` and the three
+slot rails cross between A and B, and `VIN_RAW` crosses between A and E: seven conductors in all, every one of
+them measured twice against its whole budget until today. Declaring a share is a judgement about where the drop
+is allowed to fall rather than a fact the tree holds, so an unsplit rail makes the contract set INCONCLUSIVE
+the way an absent netlist does and is named on every run until someone splits it. Shares that ARE declared and
+sum past the budget remain a failure.
