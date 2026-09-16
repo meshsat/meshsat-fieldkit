@@ -2148,3 +2148,37 @@ Nothing else on the set is near either number.
 boards reach finished copper, and the pairs it is too loose for are all on the one board that is not finished.
 Reporting costs nothing and puts the exact list in front of whoever closes board B's route. The tooling for
 option 2 already exists: `meander.py` closed board B14's PCIe pairs to 0.00 mm in 2026 September.
+
+---
+
+## The ground-via grid, measured across the whole set (16 September 2026, evidence for rules RET-004 and PLC-002)
+
+Not a question yet: the two arms that cost it a number are still routing. What is already measured, on the
+seven boards as they stand, is what the grid BUYS, and it is the clearest single number in the rule set.
+
+**Rule RET-004 asks whether each signal via that changes reference has a ground via within 1.5 mm.** Two boards
+declare a ground-via grid laid before the route (`gnd_grid`, pitch 2.1 mm) and four do not:
+
+| board | grid | signal vias judged | without a ground via | |
+|---|---|---|---|---|
+| **D** | **declared** | 37 | **1** | **3 percent** |
+| **E** | **declared** | 60 | **4** | **7 percent** |
+| A | none | 40 | 32 | 80 percent |
+| B | none | 245 | 204 | 83 percent |
+| C | none | 75 | 65 | 87 percent |
+| P | none | 14 | 10 | 71 percent |
+
+The two boards that lay the grid answer the rule almost completely; the four that do not, fail it almost
+completely. Nothing else in this project separates so cleanly.
+
+**What it costs is the other half and it is being measured tonight.** Board A carries two arms whose trees are
+identical except for that one declaration (verified by diffing them: `gnd_grid` is the only key that differs,
+and the only other difference is each arm's own path). The early reading is stark: **A38, with the grid, has
+completed 4 router passes in 1 h 37; A39, without it, has completed 29 in 2 h 05.** The grid is costing board A
+something like five or six times the router time per pass, which is the same shape as board P's earlier
+measurement, 21 open connections with the grid against 0 without, and board C paying more than four hours.
+
+**Why this is not yet a question.** Router time is not a design cost if the board still closes, and open
+connections are. The arms will be compared at the SAME pass number as well as at their caps, because a
+deterministic router given more passes can only improve, and reading a 4-pass board against a 29-pass board
+would measure the clock rather than the grid. The numbers go in the record when they land.
