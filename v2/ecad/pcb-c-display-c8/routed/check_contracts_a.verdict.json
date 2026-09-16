@@ -3,9 +3,9 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 24
+  "pass": 31
  },
- "denominator": 24,
+ "denominator": 31,
  "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E"
@@ -22,9 +22,9 @@
  "tool": "check_contracts_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ee7a06a2236fe1fa"
+  "tools_tree_sha": "868b1e0b2f4fd075"
  },
- "ts": "2026-09-16T13:32:13Z",
+ "ts": "2026-09-16T13:53:46Z",
  "verdict": "PASS",
  "version": "unknown"
 }

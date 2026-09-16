@@ -26,9 +26,9 @@
  "tool": "check_pcb_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ee7a06a2236fe1fa"
+  "tools_tree_sha": "868b1e0b2f4fd075"
  },
- "ts": "2026-09-16T13:31:57Z",
+ "ts": "2026-09-16T13:53:30Z",
  "verdict": "PASS",
  "version": "unknown"
 }

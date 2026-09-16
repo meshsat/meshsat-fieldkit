@@ -28,9 +28,9 @@
  "tool": "check_pcb_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ee7a06a2236fe1fa"
+  "tools_tree_sha": "868b1e0b2f4fd075"
  },
- "ts": "2026-09-16T13:29:33Z",
+ "ts": "2026-09-16T13:51:06Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
