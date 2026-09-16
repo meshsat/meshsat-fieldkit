@@ -51,9 +51,19 @@ coverage:
    note: "the transmit-inhibit chain is checked; ZEROIZE has NO hardware path at all (the secure element carries power and I2C only) and the shore-inhibit and kill lines are not checked for fail-safe direction",
    remediation: {action: "decide ZEROIZE's hardware path (owner), then a fail-safe direction check per safety line", owner: OWNER, depends_on: [SCH-003], p50_h: 6, p80_h: 20}}
 
- CMP-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by a person, not by a check",
-   remediation: {action: "a stress table per board from the intent rails and the part list, with DC-bias derating for MLCCs", owner: SESSION, depends_on: [PWR-001], p50_h: 8, p80_h: 24}}
+ CMP-001: {implementation: "gen_sch_*.py value strings and each board's intent rails",
+   verification: {tool: derate.py, verdict: derate, fixtures: tests/test_gate_fixtures.py},
+   maturity: GENERATED_ONLY, gap_category: NO_BEHAVIOURAL_TEST,
+   note: "16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carries a rating is
+     compared with the declared voltage of every rail its pins touch, at a 20 percent margin, and board A's 48 rated
+     pairs come back clean, which is owner ruling 10's fix confirmed rather than re-found. THREE THINGS ARE STILL OPEN
+     and the tool says so in its own output rather than implying coverage it does not have: a part whose value carries no
+     rating (90 of them on board A) has its absolute maximum in a datasheet nothing reads; DC-BIAS CAPACITANCE DERATING
+     is not implemented at all, and it is a different failure (a decoupling network that is not there, rather than a part
+     failing short); and a rated part on a net with no declared voltage is reported as UNDECLARED, 29 nets on board A,
+     mostly switch and bootstrap nodes. That is why this is GENERATED_ONLY and not ENFORCED",
+   remediation: {action: "declare the switching and bootstrap nodes voltages so their parts can be judged; then the DC-bias curves for the decoupling on the fastest rails",
+     owner: SESSION, depends_on: [PWR-001], p50_h: 6, p80_h: 18}}
 
  CMP-002: {implementation: "lcsc_fill.py", verification: {tool: jlc_certify.py, verdict: jlc_certify, fixtures: tests/test_order_codes.py},
    maturity: ENFORCED, gap_category: NONE, note: "package mismatch is caught against the supplier's own record, with a date"}

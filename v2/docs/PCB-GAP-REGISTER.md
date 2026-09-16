@@ -9,16 +9,11 @@ answered yet, made visible so it cannot be forgotten.
 
 **38 of 56 rules carry a gap.**
 
-## absent (14)
+## absent (13)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, OPEN)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end  
 *Close it by* the chain diagram with ratings and prospective fault current at each stage. Owner **SESSION**, after PWR-003. Effort P50 4h, P80 12h.
-
-**CMP-001 absolute maximum never reached** (BLOCKER, OPEN)  
-no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by
-a person, not by a check  
-*Close it by* a stress table per board from the intent rails and the part list, with DC-bias derating for MLCCs. Owner **SESSION**, after PWR-001. Effort P50 8h, P80 24h.
 
 **EMC-001 source, path, victim** (MUST_JUSTIFY, OPEN)  
 no EMC analysis of any kind exists; eleven radios and a sealed metal box  
@@ -144,6 +139,20 @@ maturity is GENERATED_ONLY and not ENFORCED
 the principle is written in the record and in the plan; the finish still carries ten copper-editing passes
 and the predictor covers two of the classes  
 *Close it by* each closer names its class and its prevention attempt; extend the predictor. Owner **SESSION**. Effort P50 6h, P80 20h.
+
+## no behavioural test (1)
+
+**CMP-001 absolute maximum never reached** (BLOCKER, GENERATED_ONLY)  
+16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carries a rating
+is compared with the declared voltage of every rail its pins touch, at a 20 percent margin, and board A's 48
+rated pairs come back clean, which is owner ruling 10's fix confirmed rather than re-found. THREE THINGS ARE
+STILL OPEN and the tool says so in its own output rather than implying coverage it does not have: a part
+whose value carries no rating (90 of them on board A) has its absolute maximum in a datasheet nothing reads;
+DC-BIAS CAPACITANCE DERATING is not implemented at all, and it is a different failure (a decoupling network
+that is not there, rather than a part failing short); and a rated part on a net with no declared voltage is
+reported as UNDECLARED, 29 nets on board A, mostly switch and bootstrap nodes. That is why this is
+GENERATED_ONLY and not ENFORCED  
+*Close it by* declare the switching and bootstrap nodes voltages so their parts can be judged; then the DC-bias curves for the decoupling on the fastest rails. Owner **SESSION**, after PWR-001. Effort P50 6h, P80 18h.
 
 ## no protocol (1)
 
