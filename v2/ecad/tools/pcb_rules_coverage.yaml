@@ -401,7 +401,7 @@ coverage:
    note: "the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end",
    remediation: {action: "the chain diagram with ratings and prospective fault current at each stage", owner: SESSION, depends_on: [PWR-003], p50_h: 4, p80_h: 12}}
 
- DOC-001: {implementation: "full.sh PHASE, silk_fix_all.py", verification: {tool: final_gate.py, verdict: final_gate, fixtures: tests/test_final_gate.py},
+ DOC-001: {implementation: "full.sh PHASE, silk_fix_all.py", verification: {tool: final_gate.py, verdict: "final_gate_<letter>", fixtures: tests/test_final_gate.py},
    maturity: ENFORCED, gap_category: NONE, note: "added 16 September: a folder that is not the declared phase fails the set, with a truth-table fixture"}
 
  DOC-002: {implementation: "ledger.py, provenance.json", verification: {tool: ledger_verify.py, verdict: ledger_verify, fixtures: tests/test_ledger.py},
@@ -409,7 +409,7 @@ coverage:
    note: "the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the artefacts they came from",
    remediation: {action: "evidence ids in the record entries, emitted by the same writer", owner: SESSION, depends_on: [SGN-001], p50_h: 4, p80_h: 12}}
 
- OUT-001: {implementation: "make_handoff.py", verification: {tool: final_gate.py, verdict: final_gate, fixtures: tests/test_final_gate.py},
+ OUT-001: {implementation: "make_handoff.py", verification: {tool: final_gate.py, verdict: "final_gate", fixtures: tests/test_final_gate.py},
    maturity: ENFORCED, gap_category: DUPLICATED_OR_STALE,
    note: "the gate refuses a stale or quote-only set correctly; the set on disk is built from folders three to five phases behind and has not been rebuilt",
    remediation: {action: "rebuild the order set from the current folders once the boards are cut", owner: SESSION, depends_on: [DOC-001], p50_h: 2, p80_h: 6}}
