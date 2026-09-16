@@ -170,10 +170,19 @@ def main(a):
         caps.append((nets, mm(fp.GetPosition().x), mm(fp.GetPosition().y), fp.GetReference()))
     bad = []
     for (x, y, want, net) in power_vias:
-        near = [c for c in caps if c[0] == want and ((c[1] - x) ** 2 + (c[2] - y) ** 2) ** 0.5 <= r]
+        # THE DISTANCE, not a yes or no (16 September 2026). Board A's first reading was "13 vias with no
+        # capacitor within 3 mm", and the number that decides what to do about it is how far the nearest one
+        # actually is: a board that has them at 4 mm is a declaration to reconsider, a board whose nearest is
+        # 30 mm is a board that needs parts. Same shape as the return-via fixer, which reports the site it
+        # reached rather than the site it wanted.
+        same = [c for c in caps if c[0] == want]
+        near = [c for c in same if ((c[1] - x) ** 2 + (c[2] - y) ** 2) ** 0.5 <= r]
         if not near:
-            bad.append("%s at (%.1f, %.1f): the reference changes %s and no capacitor between those nets is "
-                       "within %.1f mm" % (net, x, y, " to ".join(sorted(want)), r))
+            d = min((((c[1] - x) ** 2 + (c[2] - y) ** 2) ** 0.5, c[3]) for c in same) if same else None
+            bad.append("%s at (%.1f, %.1f): the reference changes %s and the nearest capacitor between those "
+                       "nets is %s against the %.1f mm this board declares"
+                       % (net, x, y, " to ".join(sorted(want)),
+                          ("%s at %.1f mm" % (d[1], d[0])) if d else "none on the whole board", r))
     print("ref_change: %d transition(s) between different reference nets, %d without a stitching capacitor "
           "within %.1f mm" % (len(power_vias), len(bad), r))
     for x in bad[:20]: print("  FAIL %s" % x)
