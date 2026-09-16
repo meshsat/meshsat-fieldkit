@@ -47,6 +47,64 @@ def finish_stages(path=None):
     return {n for n in names if n not in READERS}
 
 
+# WRITTEN AND NEVER RUN, the third time (16 September 2026). `bypass_place.py` existed for a day before any
+# chain called it; `widen_net.py` was written this morning for a rule that went on failing on two boards while
+# it sat in the tools directory with its own tests passing; and `logo_silk.py` draws the mark the owner ruled
+# on to these boards, and no board carries a silkscreen polygon. A tool that changes copper and that nothing
+# invokes is not a tool, it is a plan. Every one of them is either invoked by a chain, a board declaration or
+# another tool, or it is DECLARED here as idle with the reason, and the gate refuses anything else.
+def copper_writers(here=None):
+    """Every tool in this directory that saves a board."""
+    import glob
+    here = here or HERE
+    out = []
+    for f in sorted(glob.glob(os.path.join(here, "*.py"))):
+        try: src = open(f, encoding="utf-8", errors="replace").read()
+        except Exception: continue
+        if "SaveBoard(" in src: out.append(os.path.basename(f))
+    return out
+
+
+def invoked_names(here=None):
+    """The text of everything that could invoke a tool: the shell chains, the routeflow profiles, the board
+    declarations, the arm specifications and the other tools, with shell variables left as wildcards."""
+    import glob
+    here = here or HERE
+    files = []
+    # A DECLARATION IS NOT AN INVOCATION. The yaml files here are data: pcb_closers.yaml names every tool it
+    # declares idle and pcb_rules_coverage.yaml names the tool behind every rule, so counting them turned each
+    # declaration into its own proof that something runs the tool. What can invoke a tool is a chain, a
+    # routeflow profile, a board or arm declaration, or another tool.
+    for pat in ("*.sh", "*.py", "routeflow/*.json", "boards/*.json", "arms/*.json",
+                "pair_router/*.py", "agent/*.py"):
+        files += glob.glob(os.path.join(here, pat))
+    # COMMENTS DO NOT INVOKE ANYTHING, and the first version of this counted them: the paragraph above names
+    # logo_silk.py, which took it off its own list of tools nothing runs. Every # comment is dropped before a
+    # name is looked for, in shell, python and yaml alike.
+    def _code(text):
+        return "\n".join(l.split("#", 1)[0] for l in text.splitlines())
+    return [(os.path.basename(f), _code(open(f, encoding="utf-8", errors="replace").read())) for f in files]
+
+
+def never_invoked(here=None):
+    """Copper-changing tools that nothing in this tree names."""
+    import fnmatch
+    callers = invoked_names(here)
+    tok = re.compile(r"[A-Za-z0-9_${}]+\.(?:py|sh)")
+    out = []
+    for w in copper_writers(here):
+        mod = w[:-3]; hit = False
+        for f, s in callers:
+            if f == w: continue
+            if w in s or re.search(r"\b(?:import|from)\s+%s\b" % re.escape(mod), s): hit = True; break
+            for m in tok.findall(s):
+                if "$" in m and fnmatch.fnmatch(w, re.sub(r"\$\{?[A-Za-z_][A-Za-z0-9_]*\}?", "*", m)):
+                    hit = True; break
+            if hit: break
+        if not hit: out.append(w)
+    return out
+
+
 def board_declares(letter, key):
     """Does this board declare the thing that prevents a class? The declaration is the board's own."""
     import json
@@ -73,6 +131,22 @@ def judge(closers=None, finish=None, letter=None):
                      "stage of the design that nobody has written down" % t)
     for t in sorted(set(decl) - run):
         notes.append("%s is declared and the finish does not invoke it" % t)
+    # the third half of this rule: a tool that changes copper and that NOTHING runs. It is a property of THIS
+    # tools directory, so it is asked only of the real declaration file: a fixture names two closers in a
+    # temporary directory and knows nothing about the tree it is testing.
+    idle = {str(e.get("tool")): e for e in (d.get("idle_tools") or [])}
+    for t in (never_invoked() if os.path.abspath(closers or CLOSERS) == os.path.abspath(CLOSERS) else []):
+        e = idle.get(t)
+        if not e:
+            fails.append("%s changes copper and nothing in this tree invokes it: a tool nobody runs is a plan, "
+                         "not a tool (declare it in pcb_closers.yaml `idle_tools` with the reason, or wire it)" % t)
+        elif not str(e.get("why", "")).strip():
+            fails.append("%s is declared idle and gives no reason" % t)
+        else:
+            notes.append("%s: idle by declaration (%s)" % (t, str(e["why"])[:80]))
+    if os.path.abspath(closers or CLOSERS) == os.path.abspath(CLOSERS):
+        for t in sorted(set(idle) - set(never_invoked())):
+            notes.append("%s is declared idle and something does invoke it now" % t)
     for t, c in sorted(decl.items()):
         if not str(c.get("defect_class", "")).strip():
             fails.append("%s declares no defect class" % t)

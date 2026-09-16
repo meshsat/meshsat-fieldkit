@@ -186,3 +186,48 @@ closers:
      1.46 A against 0.40 A for its cross-section at 10 K, /VIN_RAW 0.63 A and /VBUS20 0.66 A on the same
      0.5 oz inner copper, and /+5V_D8 at 0.4 mm for 63.9 mm on B.Cu at 1.0 A, which is the case the tool was
      written for"
+
+# TOOLS THAT CHANGE COPPER AND THAT NOTHING RUNS (16 September 2026). Three times now a tool has been written,
+# tested and left in this directory while the rule it was written for went on failing: bypass_place.py for a
+# day, widen_net.py for the morning it was written, and logo_silk.py since the mark was traced. Each one is
+# either invoked by a chain, a board declaration or another tool, or it is declared here with the reason, and
+# closer_audit refuses anything else. "Superseded" is an answer; "nobody has wired it yet" is an item.
+idle_tools:
+ - tool: logo_silk.py
+   why: "OWED, not superseded: the owner ruled the mark on to these boards (traced from the sticker master,
+     never redrawn) and no board of the seven carries a silkscreen polygon at all. It needs a declared position
+     per board on copper-free silk, which is a placement decision, and it is queued with the next placement
+     pass rather than guessed at from here"
+ - tool: post_fix.py
+   why: "superseded: the per-board post-route fixes are declared in boards/<letter>.json (`post_fix`), and only
+     board B names one today; this is the original shared version those were split out of"
+ - tool: post_fix_a.py
+   why: "superseded: board A declares post_fix '-' since its rails moved into power_copper.py, which does at
+     generation time what this did on the routed board"
+ - tool: post_fix_d.py
+   why: "superseded: the silk tidy it did is silk_fix_all.py's now, which every finish runs"
+ - tool: fix_a19_node.py
+   why: "a one-off for phase A19, three phases and a power-copper rewrite ago; kept as the record of how the
+     node bars were laid by hand before power_copper.py drew them"
+ - tool: apply_netlist_values.py
+   why: "run by hand, deliberately: it brings a ROUTED board's values and codes up to date with its schematic
+     without touching copper (owner ruling 10, the impossible capacitors on A24), and a value swap that runs
+     itself inside a chain is how a board's copper and its BOM stop being the same design"
+ - tool: retitle.py
+   why: "superseded by the PHASE argument: silk_fix_all.py stamps the phase from the chain, and the gate in
+     verify_deliverable refuses a folder whose legend names a different one"
+ - tool: finish_stubs.py
+   why: "superseded by stub_router.py, which searches rather than guessing a straight run, and by direct_close.py
+     for the DRC-named pairs"
+ - tool: fix_pad_escapes.py
+   why: "superseded by escape.py's own fine-pitch branch and by the pruned-escape report, which names what it
+     stripped and why"
+ - tool: gap_closer_checked.py
+   why: "superseded by direct_close.py, which is the same idea with the DRC's own pair as its input"
+ - tool: ripup_viol.py
+   why: "a hand repair kept for a knot the router leaves: it rips the run behind a clearance violation so the
+     stub router can re-close it. Nothing should run it automatically, because what it removes is a routed
+     connection"
+ - tool: pair_shadow.py
+   why: "an experiment of 8 September that was measured and not adopted (33 hard on its first test); the pair
+     pre-router is the answer that was"
