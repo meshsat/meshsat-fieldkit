@@ -525,7 +525,11 @@ but the curve is IPC-2221's and that document is not in this tree, so the maturi
 number is a calculation this project made rather than a limit a document gave it. It lands where the trade's
 own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has
 no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times
-the computed figure and cites nothing
+the computed figure and cites nothing. Its first run on real boards found something on all seven and most of
+it is one false shape: a rail's weakest SITE is often a lone stitch via at the end of a pour carrying almost
+none of the current, while the current travels in a band with a via field under it (board E's CELL_F reads 18
+A through one via). The arithmetic is right and the attribution is not, so the verdict is ADVISORY and the
+rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh
 
 ## Grounding Shielding
 
@@ -756,8 +760,8 @@ stitching capacitor when they are different potentials, or no transition at all.
 | risk | SIGNAL_INTEGRITY, EMC |
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | NONE_YET |
-| maturity | **OPEN** |  (at writing: OWNER_DECISION_REQUIRED)
+| implementation | gen_pcb_a3.py In2 pours |
+| maturity | **GENERATED_ONLY** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | by OWNER, scope one class of transition on one board, expires prototype EMC measurement |
 
@@ -770,8 +774,15 @@ plane needs no companion; a via that moves a signal from one plane's field to an
 
 **If violated** The return current detours around the anti-pad or through a decoupling capacitor, enlarging the loop.
 
-**Today** nothing determines the reference conductor before and after a transition; return_via's same-plane exemption
-is the nearest thing and is a geometric approximation of it
+**Today** 16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING around
+the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the first
+version of this measurement came back with every via undetermined on every board). Measured: board A 86 vias
+keep their reference, 131 move between two ground planes, 35 move between GND and VBAT because A's In2
+carries both side by side; C 62 and 166 and none; D 145 and none; E 202 and none. The first two cases are
+RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between two
+DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared per
+board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its pin) and
+it is OURS, so the maturity is GENERATED_ONLY until a document states it
 
 ### RET-004  ground-via proximity screen
 
