@@ -114,7 +114,12 @@ python3 ../tools/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.lo
 # RULE TRN-001: every conductor that leaves the enclosure, followed from its connector to a clamp. It runs on
 # the netlist because it is a schematic property: eleven conductors on three boards reach a chip with nothing
 # between them, and nothing had ever asked (owner decision 31).
-python3 ../tools/port_protect.py out/$N.net > out/port_protect.log 2>&1; PP=$?; grep -E 'port_protect:|FAIL' out/port_protect.log | head -6
+# VERDICT_ADVISORY, because at THIS phase the result is a measurement (16 September 2026). Not blocking here
+# was only half the change: routeflow's pre stage collects every verdict and requires PASS, so board E's route
+# was refused a second time by the collector for the same open owner decision. The channel already has the
+# word for "a measurement for the record and not a bar", and the phase is what decides which it is: the finish
+# runs the same tool without this flag and stops on it, before anything is cut.
+VERDICT_ADVISORY=1 python3 ../tools/port_protect.py out/$N.net > out/port_protect.log 2>&1; PP=$?; grep -E 'port_protect:|FAIL' out/port_protect.log | head -6
 # TRN-001 IS A SCHEMATIC PROPERTY AND IT BLOCKS WHAT SHIPS, NOT WHAT ROUTES (16 September 2026). Board E's route
 # was refused here for four conductors whose clamp sits behind an active part, which is owner decision 31 and is
 # open: a routing pass cannot make that better or worse, and blocking it turns an owner decision into a stop on
