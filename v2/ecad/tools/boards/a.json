@@ -56,7 +56,66 @@
   "rail_prune": true,
   "_rail_prune_why": "15 September 2026, A32: 0 hard, 0 unrouted, and four rails MISSED where the rail copper alone reads MET, because the router laid its own 0.5 mm inner tracks in parallel with the bands it cannot see (VIN_RAW: a 0.5 mm In2 track the whole west side beside the 6 mm B.Cu band, carrying 0.63 A at ratio 1.60). A router piece on a rail net comes off when the net stays connected without it.",
   "return_via": true,
-  "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one."
+  "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one.",
+  "widen": [
+   {
+    "net": "/+5V_D8",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu"
+    ],
+    "why": "the case this tool was written for: the router laid this rail at its class width 0.4 mm for 63.9 mm on B.Cu at 1.0 A, 134 mV, 2.68 percent of 5 V against the 1.5 percent this board declares as its share of the rail's end-to-end budget"
+   },
+   {
+    "net": "/VBAT",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6"
+    ],
+    "layers": [
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "16 September 2026, the solved board: a 0.500 mm conductor on In2.Cu at (58.0, 158.5) carries 1.46 A against 0.40 A for its own cross-section at 10 K, ratio 3.69, which is this rail's worst item and the board's"
+   },
+   {
+    "net": "/VIN_RAW",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6"
+    ],
+    "layers": [
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "the same reading: 0.500 mm on In2.Cu at (59.9, 151.4), 8.8 mm long, 0.63 A against 0.40 A"
+   },
+   {
+    "net": "/VBUS20",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6"
+    ],
+    "layers": [
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "the same reading: 0.500 mm on In2.Cu at (68.1, 81.2), 13.3 mm long, 0.66 A against 0.40 A"
+   }
+  ],
+  "_widen_why": "16 September 2026. These are conductors the ROUTER laid, on a rail whose own copper is drawn by power_copper.py, and they carry real current in the solved mesh rather than being the parallel decoration rail_prune takes off. Widening the tracks that are already there changes no topology: same path, same vias, same pads, more copper, kept only if the hard and unrouted counts do not rise. The inner layers are 0.5 oz, which is why 0.5 mm carries 0.40 A there and 1.23 A on an outer layer."
  },
  "pair_order": [
   "USB_WALL"

@@ -168,3 +168,21 @@ closers:
    prevented_by: "the silk phase gate in verify_deliverable, which refuses a folder whose legend names the
      wrong phase; the overlaps themselves are cosmetic and declared so"
    evidence: "the silk-phase finding of 8 September, where P2 shipped stamped P1"
+
+ - tool: widen_net.py
+   changes_copper: true
+   defect_class: "a conductor the router laid at its class width that carries more current than its own
+     cross-section allows"
+   why_prevention_failed: "the class width is SHARED: board A's rail class carries rails that are fine at
+     0.4 mm and one that is not, and widening the class re-routes the board and costs connections elsewhere
+     (board D's 1.2 mm ruling cost 27 of 416, measured). Which path the current takes is a property of the
+     copper the router laid, so it is known only after the route and only from a solved mesh"
+   repeated: true
+   prevented_by: "power_copper.py draws each rail's own copper BEFORE the route and a wire keep-out over every
+     band keeps the router off it, which is why what this widens is a rail's remaining conductors and not its
+     main path; rail_prune.py then takes off the parallel copper the rail does not need. What is left is a
+     track the solver still sends current through"
+   evidence: "16 September 2026, board A's solved board: /VBAT 0.500 mm on In2.Cu at (58.0, 158.5) carrying
+     1.46 A against 0.40 A for its cross-section at 10 K, /VIN_RAW 0.63 A and /VBUS20 0.66 A on the same
+     0.5 oz inner copper, and /+5V_D8 at 0.4 mm for 63.9 mm on B.Cu at 1.0 A, which is the case the tool was
+     written for"
