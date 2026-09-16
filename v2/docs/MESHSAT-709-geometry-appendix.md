@@ -8228,3 +8228,50 @@ them measured twice against its whole budget until today. Declaring a share is a
 is allowed to fall rather than a fact the tree holds, so an unsplit rail makes the contract set INCONCLUSIVE
 the way an absent netlist does and is named on every run until someone splits it. Shares that ARE declared and
 sum past the budget remain a failure.
+
+### 32.207 The pair pass is not deterministic and its LEGALITY is not either, measured by replication (16 September 2026, 12:30 CEST; MESHSAT-862)
+
+Board B's placement pilot ran four configurations three times each on a rented box, twelve arms, one
+placement knob per configuration, against B19's own placement as the baseline. The eight placement cycles
+before it measured each configuration ONCE, and their rows went with a destroyed box; this tree held one
+`PLACE_*` row in total. Replication is the whole design of the pilot and it is what produced the result.
+
+| configuration | replicate a | b | c |
+|---|---|---|---|
+| `PLACE_COUPLE_GAP` 2.4, the declared value | 21 pairs, hard 0 | 24, hard 1 | 22, hard 1 |
+| `PLACE_COUPLE_GAP` 2.6 | 15, hard 2 | 20, hard 1 | 23, hard 1 |
+| `PLACE_COUPLE_GAP` 3.0 | 19, hard 0 | 18, hard 0 | 20, hard 2 |
+| `PLACE_FINE_MARGIN` 2.0 | 8 regions overflow, refused | refused | refused |
+
+**Two readings, and the second is the one that matters.**
+
+**The knob does not distinguish itself.** The spread WITHIN one configuration (2.6 gives 15, 20 and 23) is
+larger than every difference BETWEEN configurations. Any single-sample comparison of these three values is
+reading noise, which is what eight sequential cycles were doing, and what `boards/b.json` already suspected
+when it reverted 2.6's +3 as scatter. That revert was right; it now has a measurement behind it.
+
+**The legality of the pass is a coin flip.** The same configuration produced a legal board once and an
+illegal one twice: 2.4 gave hard 0, then hard 1, then hard 1; 3.0 gave hard 0, hard 0, hard 2. Six of the
+nine measurable arms carry hard violations against a baseline of zero. The record has said since 10 September
+that the pre-route chain is not deterministic (48 lines of board geometry differ across two runs of one
+input, while the log stays identical); nobody had connected that to whether the copper it lays is legal.
+
+**Board B's routing board is not affected and that was checked before this was written.** B21's pre-route
+reads hard 0, and its pair pass laid 34 of 48 DIFF100 and 31 of 68 USB under the board's own declared knobs,
+one of which takes the board's 0.40 mm via instead of the 0.70 mm class via. Two 0.40 mm vias fit where two
+0.70 mm vias collide, which is why the production configuration was insulated from the via-map defect the
+pilot exposed (see below). A re-run of the production pre-route with the corrected map laid 33 of 48 and 33
+of 68 on a board whose placed gate reads ALL PASS, so the fix costs one DIFF100 pair and gains two USB ones.
+
+**The via-map defect the pilot exposed.** `pair_router/occupancy.py` stamped a via into the TRACK raster
+only, where a pad is stamped into both and a track into both, so the search for a new via site could not see
+any via already on the board. Before the fix all three couple gaps returned an identical 26 pairs with hard
+4, 9 and 4; after it they return 21, 15 and 19 with the legality varying as above. An existing via is an
+obstacle to a new via whatever the via size, so the fix stands on its own; its measured effect on the
+shipping configuration is the one pair above.
+
+**What follows for method.** A single sample of this pass is not a measurement, and an arm graded on one is
+not evidence. Where a pass is known to differ from itself, a configuration is run more than once or its
+result is not reported as a difference. Four production-configuration replicates are running to say whether
+the shipping path varies the same way; if it does, the pre-route becomes best-of-K rather than a draw, which
+costs ten minutes of wall clock on a box that admits twenty-four workers.
