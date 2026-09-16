@@ -25,10 +25,15 @@ def _net(d, comps, nets):
     return p
 
 
-def _with_ports(letter, ports):
+def _with_ports(letter, ports, why=None):
+    """Set a board's declaration for the length of one test. `why` None REMOVES the reason, because since
+    16 September an empty list WITH a reason is an answer and an empty list without one is not, and a fixture
+    that leaves the board's own reason in place is testing the other case."""
     p = os.path.join(TOOLS, "boards", "%s.json" % letter)
     original = open(p, encoding="utf-8").read()
     d = json.loads(original); d["external_ports"] = ports
+    if why is None: d.pop("_external_ports_why", None)
+    else: d["_external_ports_why"] = why
     json.dump(d, open(p, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     return lambda: open(p, "w", encoding="utf-8").write(original)
 
@@ -128,7 +133,7 @@ def t_the_search_does_not_walk_out_through_a_power_rail():
 
 
 def t_a_board_that_declares_no_external_port_is_inconclusive():
-    restore = _with_ports("d", [])
+    restore = _with_ports("d", [], why=None)     # no list AND no reason: nobody has looked
     try:
         d = tempfile.mkdtemp(prefix="port-none-")
         p = _net(d, {"J_X": "x"}, {"SIG": [("J_X", "1")]})
@@ -177,7 +182,10 @@ def t_an_empty_declaration_is_an_answer_and_a_missing_one_is_a_question():
     src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "port_protect.py"),
                encoding="utf-8").read()
     assert 'answered = "external_ports" in' in src, "the tool cannot tell an empty declaration from a missing one"
-    assert "applicable=not answered" in src, "an answered board is still reported as unanswered"
+    # 16 September 2026, evening: an answered board is a PASS and not an inapplicability. "Every exposed port
+    # is protected" is true of a board that has none, which is this project's own declared-zero rule, and
+    # INCONCLUSIVE counted board P against the set's readiness as a question nobody had answered.
+    assert "if answered and why:" in src, "an answered board is still reported as unanswered"
     import json
     tbl = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "boards", "p.json")
     d = json.load(open(tbl, encoding="utf-8"))
@@ -234,5 +242,42 @@ def t_the_finding_names_the_active_part_that_takes_the_transient():
         assert "CLAMP D9" in out, "the row does not name the clamp:\n%s" % out[-600:]
         # and the values, because a ruling needs the part, not only the designator
         assert "CSD18510" in out and "SMCJ33A" in out, "the row names designators without their values:\n%s" % out[-600:]
+    finally:
+        restore()
+
+
+def t_a_declared_zero_of_external_ports_is_an_answer():
+    """This project's own rule, applied to this rule (16 September 2026). A board with no impedance-targeted
+    pair class passes the pair gate; a board with nothing pruned passes the pruned gate; and board P, which
+    declares with a reason that no conductor of its own leaves the enclosure, was reading INCONCLUSIVE and
+    counting against the set's readiness as an unanswered question. "Every exposed port is protected" is TRUE
+    of a board that has none. A zero with no reason behind it stays a question, and so does a missing key."""
+    import os
+    src = open(os.path.join(TOOLS, "port_protect.py"), encoding="utf-8").read()
+    i = src.index("if not n_declared:")
+    w = src[i:i + 2200]
+    assert "if answered and why:" in w, "a declared zero cannot pass"
+    assert "_v.PASS" in w, "the declared-zero branch writes no pass"
+    assert "a zero with nothing" in w, "a declaration with no reason is not distinguished from one with"
+
+
+def t_a_declared_zero_with_a_reason_passes_and_without_one_does_not():
+    """The pair of cases, run rather than read. Board D stands in for both because the fixture can give it and
+    take away its reason; board P is the real one."""
+    restore = _with_ports("d", [], why="every conductor of this board ends inside the sealed case, and the "
+                                       "reason is written here so the zero is an answer")
+    try:
+        dd = tempfile.mkdtemp(prefix="port-zero-why-")
+        p = _net(dd, {"J_X": "x"}, {"SIG": [("J_X", "1")]})
+        rc, out = _run(p, dd)
+        assert rc == 0, "a declared zero with its reason did not pass:\n%s" % out[-300:]
+    finally:
+        restore()
+    restore = _with_ports("d", [], why="")
+    try:
+        dd = tempfile.mkdtemp(prefix="port-zero-nowhy-")
+        p = _net(dd, {"J_X": "x"}, {"SIG": [("J_X", "1")]})
+        rc, out = _run(p, dd)
+        assert rc == 3, "a zero with an empty reason passed:\n%s" % out[-300:]
     finally:
         restore()

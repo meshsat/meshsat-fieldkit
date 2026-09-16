@@ -162,11 +162,22 @@ def main(argv):
         # board P's route was blocked by the two being indistinguishable. A board with no key at all stays an
         # unanswered question and still blocks.
         answered = "external_ports" in (_bt.table(letter) or {})
-        why = (_bt.table(letter) or {}).get("_external_ports_why", "")
+        why = str((_bt.table(letter) or {}).get("_external_ports_why", "")).strip()
+        # A DECLARED ZERO IS AN ANSWER (16 September 2026, evening, the project's own rule applied to this one).
+        # It is already how a board with no impedance-targeted pair class passes the pair gate and how a board
+        # with nothing pruned passes the pruned gate. Board P declares that no conductor of its own leaves the
+        # enclosure, with the reason beside it, and "every exposed port is protected" is then TRUE of it: there
+        # are none. Written as INCONCLUSIVE it counted against the set's readiness as an unanswered question,
+        # which is the opposite of what the declaration says. A declaration with no reason stays a question,
+        # and so does a board with no declaration at all.
+        if answered and why:
+            return _v.write("port_protect", _v.PASS, denominator=0, counts={"ports": 0, "unprotected": 0},
+                            inputs={"netlist": path, "board": letter},
+                            note="this board declares that no conductor of its own leaves the enclosure, so the "
+                                 "rule is true of it with nothing to check: %s" % why[:180])
         return _v.write("port_protect", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path, "board": letter},
-                        applicable=not answered,
-                        note=("this board declares that no conductor of its own leaves the enclosure: %s"
-                              % (why[:180] or "no reason given, which is itself a gap")) if answered else
+                        note=("this board declares no external port and gives no reason: a zero with nothing "
+                              "behind it is a question, not an answer") if answered else
                              ("this board declares no external port, and no board of this kit is truly internal: "
                               "the declaration has not been written yet"))
     # THE COUNTS MUST CARRY WHAT DECIDED. Board A's sweep read FAIL beside "unprotected: 0" on 16 September,
