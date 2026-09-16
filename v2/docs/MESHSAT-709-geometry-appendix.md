@@ -8105,3 +8105,58 @@ and a rule set that had moved under its own evidence were both fixed. Promotion 
 declaration changed: the six-layer route reached 0 hard and 1 unrouted in 14.7 minutes and routeflow stopped
 before any finish, which is the state the stub router exists for. Four-layer C fails rule 1 on 81 of 127 nets
 by its stack; that is the comparison the decision needs.
+
+### 32.205 A route stopped at nine and a half hours, and two boards came within one item of clean (16 September 2026, 06:45 CEST; MESHSAT-862)
+
+**Board B's route was routing a design that cannot ship, and the cross-board contract had been saying so all
+night.** SCH-003 failed on all seven boards with the same twelve lines, every one of them about board B:
+*"PCIE1_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)"*. The capacitors went into
+`gen_sch_b.py` at 02:40 this morning, when the module's own datasheet was read; **board B has not been
+regenerated since**, so the netlist the router is working from still runs `PCIE1_RX_P` straight from `U101`
+pin 124 to `U30B` pin 116. The capacitors are IN SERIES in the receive lines, so no amount of routing on the
+old board reaches the new one.
+
+B19's route was stopped by PID at **two passes of twenty, nine and a half hours in**, and board B is **phase
+B21** (B20 was a placement arm that was measured and stopped and never cut). The alternative was thirty more
+hours of box time producing a board that the first gate to read its netlist would refuse. It is the
+three-resistor lesson of 15 September in a bigger place, and the cheapest moment to act on it is the first one.
+
+**Boards D and E are each one item from clean, measured on the boards this repository actually holds.**
+
+| board | routed-board gate | board gate | return path (rule 1) | what is left |
+|---|---|---|---|---|
+| **D12** | **PASS, hard 0, unrouted 0** | **PASS**, 0 of 63 | **PASS, 127 of 127** | one ground via at 2.25 mm (decision 32) |
+| **E11** | hard 0, **unrouted 1** | **PASS**, 0 of 69 | **PASS, 75 of 75** (24 failed on the board committed before tonight) | one 15 mm connection, and five signal vias with no ground-via site inside three millimetres |
+
+**The annular rule passes on both** now that a via is judged by the via rows: D 1,727 vias and 44 plated holes,
+E 2,292 and 45, none under either floor.
+
+**Reading E's five vias found a declaration arguing with itself.** Four are real, a bootstrap node, two gate
+drives and a USB line, all with edges worth a return path. The fifth, `FAN?_TACH`, was declared
+CLOCKED_DIGITAL with the basis *"under a kilohertz with a slow edge"*, which is the definition of the SLOW
+class in the same table. It is corrected because the basis was already right, and a suite rule now refuses any
+declaration whose class contradicts its own reason: a declaration that argues with itself is worse than none,
+because it reads as considered.
+
+**Two more gates stopped describing themselves.** A rule that does not apply to a board no longer blocks its
+route: board P was refused by its crystal check (the board carries no crystal) and its exposed-port check (no
+conductor of P's own leaves the case), both correct, both INCONCLUSIVE, and neither distinguishable from a
+check that failed to run. The verdict record carries `applicable` now, an EMPTY declaration with a reason is an
+answer where a MISSING one is still a question, and board P declares `external_ports: []` with the sentence
+that says why. And TRN-001 blocks the DELIVERABLE rather than the route, because a routing pass cannot change a
+schematic property and decision 31 is open: not blocking in the shell was only half of it, since routeflow's
+pre stage collects every verdict and requires PASS, so the phase has to reach the verdict as well.
+
+**Rule PI-003 has a tool for the first time and it is deliberately advisory.** `via_current.py` groups each
+rail's vias into sites and compares the rail's peak current against the weakest one, with the barrel as an
+annulus of the fabricator's published 18 um plating and IPC-2221's curve for an internal conductor. It lands at
+one ampere through a 0.3 mm via at 20 K, which is the trade's own figure and the check that the expression has
+no unit error; the record's "about 2.5 A per 0.4 mm hole" of 5 September is nearly three times it and cites
+nothing. Its first run found something on all seven boards and most of it is one false shape: a rail's weakest
+SITE is often a lone stitch via at the end of a pour carrying almost none of the current, while the current
+travels in a band with a via field under it. The arithmetic is right and the attribution is not, so it is a
+measurement for the record until the per-via current comes from `dc_drop`'s solved mesh.
+
+**Readiness: NOT_READY, 32.0 percent verified, 16.0 failed, 52.0 inconclusive of 300 applicable rule-board
+pairs**, promotion frozen. Running: B21 from the corrected design, A36's second round, A35's re-finish, P6 at
+the corrected 0.16 mm design rules on its second round, E12 for board E's last connection.
