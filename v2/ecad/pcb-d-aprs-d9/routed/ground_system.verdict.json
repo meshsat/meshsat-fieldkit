@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "crossings": 0,
+  "fail": 0,
+  "grounds": 1,
+  "signals_crossing": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "d",
+  "netlist": "pcb-d-aprs.net"
+ },
+ "note": "one ground declared, or every partition declared with its crossing points and the signals that cross; found from the netlist and compared with the board's own declaration",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "GND-001"
+ ],
+ "tool": "ground_system",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9284cacf93cf36b3"
+ },
+ "ts": "2026-09-16T15:46:28Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

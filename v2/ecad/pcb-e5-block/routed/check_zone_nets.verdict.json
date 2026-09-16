@@ -19,15 +19,14 @@
   "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
-  "GND-001",
   "PLN-001"
  ],
  "tool": "check_zone_nets",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5545137ae86e02ef"
+  "tools_tree_sha": "9284cacf93cf36b3"
  },
- "ts": "2026-09-16T15:20:25Z",
+ "ts": "2026-09-16T15:47:28Z",
  "verdict": "PASS",
  "version": "unknown"
 }
