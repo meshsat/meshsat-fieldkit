@@ -1,0 +1,52 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "always_on": 0,
+  "deadlocks": 0,
+  "rails": 36,
+  "unresolved": 25
+ },
+ "denominator": 36,
+ "evidence": [
+  "+1V0_S1: its source L103 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+1V0_S2: its source L203 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+1V0_S3: its source L303 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+1V1_S1: its source L104 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+1V1_S2: its source L204 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+1V1_S3: its source L304 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+1V2_KSZ: its source L2 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+2V5_KSZ: its source U27 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_DEV: its source L1 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_IOCA: its source U40 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_IOCB: its source U50 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_IOCC: its source U60 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_S1A: its source L101 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_S1B: its source L102 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_S2A: its source L201 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_S2B: its source L202 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_S3A: its source L301 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+3V3_S3B: its source L302 has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+54V_POE: its source J_54V has no enable pin and the board declares neither a switch nor that the rail is always on",
+  "+5V_DEV: its source J_5V_DEV has no enable pin and the board declares neither a switch nor that the rail is always on"
+ ],
+ "inputs": {
+  "netlist": "pcb-b-compute.net"
+ },
+ "note": "each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "PWR-002"
+ ],
+ "tool": "power_sequence",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "5545137ae86e02ef"
+ },
+ "ts": "2026-09-16T15:17:14Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

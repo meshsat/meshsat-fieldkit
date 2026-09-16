@@ -1,0 +1,27 @@
+{
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_over_copper": 4,
+   "silk_overlap": 25,
+   "via_dangling": 193
+  },
+  "stage": "pre",
+  "types_checked": 15,
+  "unrouted": 357
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-e1-dock-placed-drc.json",
+   "sha256_16": "ddfcca3c6d969780"
+  }
+ },
+ "note": "placed (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts)",
+ "tool": "hardset-placed",
+ "ts": "2026-09-13T22:12:06Z",
+ "verdict": "PASS",
+ "version": "d974d581e3a9+dirty"
+}
