@@ -1905,3 +1905,28 @@ cost of option A changes from one board phase to three, which is still one wave 
 outright and one is a button a person presses; board E second, because its two I2C lines reach five devices
 including the pack SMBus; board A last, because its two are CC pins behind a controller that has some
 tolerance of its own, which its datasheet states and which is owed to this packet.
+
+## Taken by the session, 16 September 2026: board D's USB pairs carry no impedance target, because every USB device on that board is FULL SPEED
+
+**What changed.** `gen_sch_d.py` declares the USB pair class with no impedance target, the way board C has
+since 8 September and board E since its own reading. The pair GEOMETRY is untouched: 0.30 mm on 0.20 mm as
+routed, and the pre-router still lays them as pairs.
+
+**The evidence, from two datasheets in this tree.** The hub is a TI TUSB2046B and its own first page says
+"Full-Speed Hub" and "All Downstream Ports Support Full-Speed and Low-Speed Operations", with the differential
+driver at 12 Mb/s (`v2/vendor/ti/ti-tusb2046b.pdf`). The codec is a TI PCM2912A: "apply USB revision 2.0,
+full-speed" (`v2/vendor/ti/ti-pcm2912a.pdf`). The two CP2102N bridges and the spare port header are full speed
+as well. The 90 ohm differential target belongs to USB 2.0 HIGH speed signalling; at 12 Mb/s with the
+specification's own 4 to 20 ns edges a 30 mm pair is electrically short, so the target is a wrong requirement
+rather than a strict one.
+
+**What it closes.** Board D read MISSED on `/USB1` (48 percent of its length within tolerance) and SHORT on
+`/USB2`, which failed rules STK-001 and PAIR-001. The 48 percent is what a pair with a series-resistor station
+at each end looks like: the stations are 4 mm from the hub's pads by the D9 placement rule and the entries at
+each end are not coupled and cannot be.
+
+**Why it is recorded here rather than asked.** It follows the precedent the owner has already seen and left
+standing on board C (8 September, appendix 32.76), and it is a reading of two datasheets rather than a
+trade-off. It is written down so it can be reversed in one line if the owner disagrees: delete
+`_intent.pair_class("USB")` from `gen_sch_d.py` and board D is judged against 90 ohm again.
+
