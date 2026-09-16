@@ -82,6 +82,13 @@ run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
 [ -s out/$N.net ] && run "crystals" python3 $T/clock_check.py out/$N.net
 [ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
+# THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read
+# INCONCLUSIVE on all seven boards for one reason: their evidence was taken under an older rule set and no
+# sweep produced a new one. The contracts need the OTHER boards' netlists, and this tree already has them: the
+# sweep driver copies every sibling's `out/*.net` in before it starts, and this board's own netlist was rebuilt
+# above. It is read-only by construction, like everything else here: check_contracts.py opens netlists and
+# writes a verdict.
+run "cross-board contracts" python3 $T/check_contracts.py "$E"
 # The order-code gate reads a BOM THAT ALREADY EXISTS and never makes one. Exporting it here would turn this
 # sweep into a producer of a fabrication artefact, which the execution-paths floor refuses and is right to:
 # read-only is this tool's whole property, and a producer that writes only into its own copy is still a
