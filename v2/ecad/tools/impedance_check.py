@@ -276,7 +276,30 @@ def main(a):
                   % (_board_frac, _tot_len, _frac_bar, checked - miss, checked, "PASS" if res == _v.PASS else "FAIL"))
         else: res = _v.PASS if not miss else _v.FAIL
     elif declared: res = _v.PASS
-    else: res = _v.INCONCLUSIVE
+    else:
+        # A BOARD THAT CONTROLS NO IMPEDANCE AND SAYS SO IS A DECLARED ZERO (16 September 2026). Board E5 is a
+        # 43 by 26 mm contact interposer with no schematic, no routed track and no differential pair, and its
+        # own entry in pcb_board_facts.yaml says `impedance_controlled: false` and `pair_classes: []`. Reading
+        # only the board file, this tool found no pair class and answered INCONCLUSIVE, which held rule STK-001
+        # open on a board where the question cannot arise. A zero the project DECLARES is an answer and a zero
+        # nobody declared is not, which is the reading board C's pair class established on 11 September.
+        _fact_zero = False
+        try:
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            import rules_lib as _R
+            # THE LETTER COMES FROM THE FACTS' OWN `project` FIELD, not from the board table: board E5 has no
+            # boards/e5.json because it has no chain to drive, so `boardtable.letter_for` answers '' for it and
+            # the one board this branch exists for fell straight through. The facts file is the authority on
+            # which project stem is which board.
+            _stem = os.path.splitext(os.path.basename(a[0]))[0]
+            _facts = _R.board_facts() or {}
+            _letter = next((k for k, v in _facts.items() if (v or {}).get("project") == _stem), "")
+            _f = _facts.get(_letter) or {}
+            _fact_zero = (_f.get("impedance_controlled") is False) and not (_f.get("pair_classes") or [])
+        except Exception:
+            _fact_zero = False
+        res = _v.PASS if _fact_zero else _v.INCONCLUSIVE
+        declared = declared or _fact_zero
     if not checked:
         print("impedance: no pair on this board carries an impedance target (%s)"
               % ("declared that way in the schematic" if declared else "and the board declares no pair class at all"))
@@ -285,7 +308,10 @@ def main(a):
                     denominator=checked,
                     evidence=["%s %s class %s target %s ohm" % (r[6], r[0], r[1], r[2]) for r in results if r[6] != "MET"],
                     inputs={"board": a[0]},
-                    note="" if checked else ("the board declares its pair classes and gives none a target, which is its recorded design"
-                                             if declared else "the board declares no pair class: nothing was judged"))
+                    note="" if checked else ("the board declares its pair classes and gives none a target, or its "
+                                             "own facts declare that it controls no impedance at all, which is "
+                                             "its recorded design" if declared else
+                                             "the board declares no pair class and nothing says it controls no "
+                                             "impedance: nothing was judged"))
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
