@@ -41,17 +41,26 @@ def planes(b, frac):
     return out
 
 
-def net_at(pl, layer, x, y):
-    """The net of the pour that is actually under (x, y) on `layer`, or None where the fill does not reach."""
-    import pcbnew as _p
-    pt = _p.VECTOR2I(int(x * 1e6), int(y * 1e6))
-    for net, z in pl.get(layer, ()):
-        try:
-            if z.HitTestFilledArea(layer, pt, 0): return net
-        except Exception:
-            try:
-                if z.GetFilledPolysList(layer).Contains(pt): return net
-            except Exception: pass
+def net_at(pl, layer, x, y, r=1.0, n=12):
+    """The net of the pour under the copper AROUND (x, y) on `layer`, or None where no fill reaches.
+
+    NOT at the point itself: the fill retreats from a via by its clearance, so the via's own centre sits in an
+    anti-pad hole and every sample there reads "no pour". The first version of this report did exactly that and
+    came back with every via undetermined on every board, which is the shape of a test asking the wrong
+    question rather than a board with no planes. The reference is what the return current rides beside the
+    transition, so the sample is a ring around it and the nearest hit wins."""
+    import pcbnew as _p, math as _m
+    for rad in (r, r * 2):
+        for k in range(n):
+            a = 2 * _m.pi * k / n
+            pt = _p.VECTOR2I(int((x + rad * _m.cos(a)) * 1e6), int((y + rad * _m.sin(a)) * 1e6))
+            for net, z in pl.get(layer, ()):
+                try:
+                    if z.HitTestFilledArea(layer, pt, 0): return net
+                except Exception:
+                    try:
+                        if z.GetFilledPolysList(layer).Contains(pt): return net
+                    except Exception: pass
     return None
 
 
@@ -91,8 +100,13 @@ def main(a):
         if len(attached) < 2: unknown += 1; continue
         refs = [nearest(L, cu, pl) for L in attached]
         # the reference is the pour UNDER THIS VIA, not every pour that shares the layer with it
-        nets = [frozenset(n for L in r for n in ([net_at(pl, L, p[0], p[1])] if net_at(pl, L, p[0], p[1]) else []))
-                for r in refs]
+        nets = []
+        for r in refs:
+            found = set()
+            for L in r:
+                nm = net_at(pl, L, p[0], p[1])
+                if nm: found.add(nm)
+            nets.append(frozenset(found))
         if not all(nets): unknown += 1; continue
         if len(set(nets)) == 1 and len(set(frozenset(r) for r in refs)) == 1: same += 1; continue
         allnets = set().union(*nets)
