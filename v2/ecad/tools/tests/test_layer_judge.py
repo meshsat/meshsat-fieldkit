@@ -44,12 +44,19 @@ def t_not_freed_is_never_presented_as_necessity():
         raise AssertionError("the endorsing word KEEP is still a verdict")
 
 
-def t_the_judge_changes_nothing():
+def t_the_judge_changes_nothing_it_was_given():
+    """It may write a COPY, and since 17 September it does: the power half of its own question is dc_drop on a
+    board with the idle inner pours deleted, which needs a board with them deleted. What it must never do is
+    write the board it was handed, remove anything, or touch a generator: the layer count and the stackup are
+    a reserved class and MEASURING one is what the P0 asked for, ADOPTING one is the owner's."""
     src = open(os.path.join(TOOLS, "layer_judge.py"), errors="replace").read()
     body = src.split('"""', 2)[2]
-    for bad in ("open(board, \"w\")", "shutil.copy", "os.remove", "os.unlink", ".Save(", "SetCopperLayerCount"):
+    for bad in ("open(board, \"w\")", "os.remove", "os.unlink", "SetCopperLayerCount"):
         if bad in body:
             raise AssertionError("layer_judge can write a board or a generator: %s" % bad)
+    assert "shutil.copy(board, cp)" in body, "the copy it measures is not made from the board it was given"
+    assert "pcbnew.SaveBoard(cp, b)" in body and "SaveBoard(board" not in body, \
+        "it saves something other than its own copy"
 
 
 def t_the_judge_refuses_an_unrouted_board():
@@ -93,3 +100,20 @@ def t_the_floor_refuses_a_layer_count_change():
     finally:
         subprocess.run(["git", "-C", REPO, "worktree", "remove", "--force", wt], capture_output=True, timeout=300)
         subprocess.run(["git", "-C", REPO, "worktree", "prune"], capture_output=True, timeout=120)
+
+
+def t_the_power_half_is_measured_and_not_asked_for():
+    """This file's docstring promised dc_drop 'on the board as it stands, and on a copy with the inner power
+    copper deleted' from the day it was written, and the code only ever ran the first: its verdict printed
+    'Run dc_drop with those pours deleted' and left it to a person, which is why board E's 13 mV and 28 mV were
+    measured by hand on 12 September and never again. A tool that names the measurement it will not take is the
+    same shape as a documented option nothing reads."""
+    import os
+    src = open(os.path.join(TOOLS, "layer_judge.py"), encoding="utf-8").read()
+    assert "def _without_inner_pours(" in src, "the pours-deleted measurement is still not implemented"
+    i = src.index("def _without_inner_pours(")
+    w = src[i:i + 1800]
+    assert "shutil.copy(board, cp)" in w, "it works on the board itself rather than a copy"
+    assert ".kicad_pro" in w, "the project file does not travel with the copy, so the copy is judged against the default class"
+    assert "ZONE_FILLER" in w, "the copy is not refilled after the pours are removed"
+    assert "rails_met_without_idle_inner" in src, "the second reading never reaches the counts"

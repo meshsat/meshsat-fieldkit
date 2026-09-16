@@ -68,6 +68,41 @@ def _row(a, board):
     return (a[0] if isinstance(a, list) and a and isinstance(a[0], dict) else {})
 
 
+
+def _without_inner_pours(board, intent, idle, out_dir):
+    """(met, missed, why) for a COPY of this board with every pour on the idle inner layers deleted.
+
+    It writes into out_dir and never touches the board it was given. The project file travels with the copy,
+    because a board without its .kicad_pro is judged against the default net class and that has cost this
+    project an evening before (7 September 2026)."""
+    import shutil
+    try:
+        import pcbnew
+    except Exception as e:
+        return 0, 0, "pcbnew is not importable here (%s)" % e
+    try:
+        stem = os.path.splitext(os.path.basename(board))[0]
+        cp = os.path.join(out_dir, stem + "-no-inner-pours.kicad_pcb")
+        shutil.copy(board, cp)
+        pro = os.path.splitext(board)[0] + ".kicad_pro"
+        if os.path.exists(pro): shutil.copy(pro, os.path.splitext(cp)[0] + ".kicad_pro")
+        b = pcbnew.LoadBoard(cp)
+        names = set(idle)
+        gone = 0
+        for z in list(b.Zones()):
+            if z.GetIsRuleArea(): continue
+            if b.GetLayerName(z.GetFirstLayer()) in names: b.Remove(z); gone += 1
+        if not gone: return 0, 0, "no pour of %s to delete" % ", ".join(idle)
+        pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+        pcbnew.SaveBoard(cp, b)
+        r = _run([sys.executable, os.path.join(HERE, "dc_drop.py"), cp, intent], cwd=os.path.dirname(board) or ".")
+        met = len(re.findall(r"\bMET\b", r.stdout)); missed = len(re.findall(r"\bMISSED|\bNOT MET", r.stdout))
+        if not met and not missed: return 0, 0, "dc_drop said nothing about the copy"
+        return met, missed, ""
+    except Exception as e:
+        return 0, 0, "%s: %s" % (type(e).__name__, e)
+
+
 def judge(board, out_dir="out", intent=None):
     os.makedirs(out_dir, exist_ok=True)
     a, err = audit(board, out_dir)
@@ -109,12 +144,26 @@ def judge(board, out_dir="out", intent=None):
                         "and the pre-routed pairs and nothing else. What its layers carry says nothing about "
                         "what they need. Judge the ROUTED board" % counts["locked_share_pct"])}
 
-    # The power half, where an intent file exists: what the rails read as the board stands.
+    # The power half, where an intent file exists: what the rails read as the board stands, AND what they read
+    # on a copy with the idle inner pours deleted. The second measurement is the one this file's own docstring
+    # promised from the day it was written and the code never made: it printed "Run dc_drop with those pours
+    # deleted" and asked a person to do it, which is how board E's 13 mV and 28 mV came to be measured by hand
+    # on 12 September and never again (17 September 2026). A tool that names the measurement it will not take
+    # is the same shape as a documented option nothing reads.
     if intent and os.path.exists(intent):
         r = _run([sys.executable, os.path.join(HERE, "dc_drop.py"), board, intent], cwd=os.path.dirname(board) or ".")
         met = len(re.findall(r"\bMET\b", r.stdout)); missed = len(re.findall(r"\bMISSED|\bNOT MET", r.stdout))
         counts["rails_met"] = met; counts["rails_missed"] = missed
         ev.append("dc_drop on the board as it stands: %d rail(s) MET, %d not" % (met, missed))
+        if idle:
+            m2, x2, why2 = _without_inner_pours(board, intent, idle, out_dir)
+            if why2:
+                ev.append("the board without its idle inner pours could not be measured: %s" % why2)
+            else:
+                counts["rails_met_without_idle_inner"] = m2
+                counts["rails_missed_without_idle_inner"] = x2
+                ev.append("dc_drop on a COPY with the pours of %s deleted: %d rail(s) MET, %d not"
+                          % (", ".join(idle), m2, x2))
     else:
         ev.append("no intent file given, so the power half of this question is not answered here")
 

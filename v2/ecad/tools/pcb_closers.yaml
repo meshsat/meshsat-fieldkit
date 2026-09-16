@@ -236,3 +236,9 @@ idle_tools:
  - tool: pair_shadow.py
    why: "an experiment of 8 September that was measured and not adopted (33 hard on its first test); the pair
      pre-router is the answer that was"
+ - tool: layer_judge.py
+   why: "a MEASUREMENT, run deliberately and never by a chain: it answers the P0 of 11 September, whether a
+     board needs the layers it has. The only board it saves is a throwaway copy under out/ with the idle inner
+     pours deleted, which is the second half of its own question (dc_drop with and without them) and which
+     nothing else reads. It refuses to say REDUCE in any verdict, because the layer count is a reserved class
+     and measuring one is what the P0 asked for while adopting one is the owner's"
