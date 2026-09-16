@@ -163,13 +163,32 @@ coverage:
  RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
    maturity: ENFORCED, gap_category: NONE, note: "driver count, sense and fail-safe pull are checked across three boards"}
 
- INT-001: {implementation: "gen_sch_*.py", verification: {tool: none}, maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "no interface specification is in the tree; the PCIe lanes carry the 90 ohm USB class because they inherited it",
-   remediation: {action: "per-interface sheets from the official specifications, starting with PCIe/M.2, USB and Ethernet", owner: SESSION, depends_on: [], p50_h: 12, p80_h: 40}}
+ INT-001: {implementation: "gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py",
+   verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
+   maturity: GENERATED_ONLY, gap_category: PROSE_ONLY,
+   note: "16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it decided
+     three things. PCIe on this host is 90 ohm differential with intra-pair match within 0.1 mm, so the class board B already
+     assigns is correct and the PCIe wants 85 note of 9 September is withdrawn for this design. Every PCIe receive line needs
+     a 220 nF series capacitor before it enters the IC, and board B had none on three slots: six capacitors added at the
+     source and a contract now holds the shape (the module's receive net carries exactly one capacitor and never a second
+     device). Ethernet is 100 ohm differential, intra-pair within 0.15 mm. This closes ONE interface of several: USB,
+     M.2 and HDMI have no sheet, which is why the maturity is GENERATED_ONLY and not ENFORCED",
+   remediation: {action: "per-interface sheets for USB, M.2 and HDMI from their own specifications, the way PCIe was done today",
+     owner: SESSION, depends_on: [], p50_h: 10, p80_h: 34}}
 
- INT-002: {implementation: "gen_sch_b.py coupling and termination", verification: {tool: none}, maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "the switch vendor's checklist permits the topology; the compute module's own PHY document is not in the tree and the check the 9 September review asked for has not been done",
-   remediation: {action: "obtain the module PHY's document and compare both ends", owner: SESSION, depends_on: [], p50_h: 3, p80_h: 12}}
+ INT-002: {implementation: "gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics",
+   verification: {tool: "both vendors' documents, read 16 September 2026", document: "docs/OWNER-DECISIONS-2026-09-11.md"},
+   maturity: OWNER_DECISION_REQUIRED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact
+     topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less where the
+     PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight signals, no
+     additional components between the switch and the capacitor). The module's datasheet describes ONE topology, a 1:1 RJ45
+     MagJack, and never discusses capacitive coupling; and the switch vendor's own clause names the gap in a sentence, the
+     other device may require termination or other circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does
+     not publish its datasheet, so this cannot be closed from any document this project can obtain. Owner decision 29, with
+     three costed options; the recommendation is to fit the magnetics board B already carries on its wall port",
+   remediation: {action: "owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype",
+     owner: OWNER, depends_on: [], p50_h: 6, p80_h: 30}}
 
  TRN-001: {implementation: "gen_sch_*.py protection devices", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
    note: "every external port has a device; no port table exists and no clamping voltage has been compared against a protected part's maximum",

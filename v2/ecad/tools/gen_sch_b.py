@@ -265,7 +265,15 @@ def slot(s):
         elif nm in ("VDDC", "VDDCAUX", "AVDD"): m[n] = v10
         elif nm in ("VSS", "CGND", "E_PAD", "REXT_GND"): m[n] = "GND"
         else: m[n] = "NC"
-    m.update({5: "PCIE%d_RST1_n" % s, 6: "PCIE%d_RST2_n" % s, 10: "PCIE%d_nRST" % s, 123: "PCIE%d_RX_N" % s, 124: "PCIE%d_RX_P" % s, 127: "PCIE%d_TX_N" % s, 128: "PCIE%d_TX_P" % s,
+    # PINS 123/124 ARE THE SWITCH'S TRANSMIT (PETN0/PETP0) AND THEY DRIVE THE MODULE'S RECEIVE, which needs a
+    # series AC coupling capacitor that this design did not have. Raspberry Pi, Compute Module 5 datasheet,
+    # section 2.3: "CM5 includes on-board AC coupling capacitors for the PCIe_TX signals. However, external AC
+    # coupling capacitors are required for PCIe_RX signals, close to the driving source (the peripheral's TX)",
+    # and 2.3.1: "Ensure each receive (PCIe-Rx) line has an AC coupling capacitor (220 nF) before it enters the
+    # IC" (v2/vendor/cm5/cm5-datasheet.pdf). The TX and RX pairs ARE correctly swapped for a direct IC
+    # connection, which the same clause requires; only the capacitors were missing. Found 16 September 2026 by
+    # reading the host vendor's own document under rule INT-001, on a board that had passed every gate.
+    m.update({5: "PCIE%d_RST1_n" % s, 6: "PCIE%d_RST2_n" % s, 10: "PCIE%d_nRST" % s, 123: "PCIE%d_RXSW_N" % s, 124: "PCIE%d_RXSW_P" % s, 127: "PCIE%d_TX_N" % s, 128: "PCIE%d_TX_P" % s,
               100: "NVME%d_RX_P" % s, 101: "NVME%d_RX_N" % s, 97: "NVME%d_TX_P" % s, 98: "NVME%d_TX_N" % s, 106: "CARD%d_RX_P" % s, 107: "CARD%d_RX_N" % s, 102: "CARD%d_TX_P" % s, 103: "CARD%d_TX_N" % s,
               73: "PCIE%d_CLK_N" % s, 74: "PCIE%d_CLK_P" % s, 83: "PCIE%d_RCLK0_N" % s, 85: "PCIE%d_RCLK0_P" % s, 110: "PCIE%d_RCLK0_P" % s, 111: "PCIE%d_RCLK0_N" % s,
               80: "NVME%d_CLK_N" % s, 81: "NVME%d_CLK_P" % s, 77: "CARD%d_CLK_N" % s, 78: "CARD%d_CLK_P" % s,
@@ -273,6 +281,8 @@ def slot(s):
               9: "S%d_TEST1" % s, 16: "S%d_TESTL" % s, 17: "S%d_TESTL" % s, 22: "S%d_TESTL" % s, 25: "S%d_TESTL" % s, 51: "S%d_TESTL" % s, 18: "S%d_TESTL" % s, 26: "S%d_SMBCLK" % s, 27: "S%d_SMBDAT" % s,
               71: "S%d_EEPD" % s, 89: "S%d_JTAGL" % s, 92: "S%d_JTAGL" % s, 93: "S%d_JTAGL" % s, 94: "S%d_JTAGL" % s, 67: "S%d_PST0" % s, 68: "S%d_PST1" % s})
     synth(U(1), "PI7C9X2G404SL", "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S%d: up = CM5 lane, port 1 NVMe, port 2 card socket" % s, "LQFP128EP", m, "C500767")
+    c(C(51), "220n 16V (PCIe AC coupling, CM5 datasheet 2.3.1)", "PCIE%d_RXSW_P" % s, "PCIE%d_RX_P" % s, "C0402")
+    c(C(52), "220n 16V (PCIe AC coupling, CM5 datasheet 2.3.1)", "PCIE%d_RXSW_N" % s, "PCIE%d_RX_N" % s, "C0402")
     r(R(17), "475 1% (IREF)", "S%d_IREF" % s, "GND"); r(R(18), "1.43k 1% (REXT)", "S%d_REXT" % s, "GND"); r(R(19), "5.1k", "S%d_SLOTCLK" % s, b33); r(R(20), "5.1k", "S%d_SLOTIMP" % s, b33)
     r(R(21), "5.1k", "S%d_PRSNT3" % s, b33); r(R(22), "330", "S%d_PWRSAV" % s, "GND"); r(R(23), "5.1k", "S%d_TEST1" % s, b33); r(R(24), "330", "S%d_TESTL" % s, "GND"); r(R(25), "5.1k", "S%d_SMBCLK" % s, b33)
     r(R(26), "5.1k", "S%d_SMBDAT" % s, b33); r(R(27), "4.7k", "S%d_EEPD" % s, "GND"); r(R(28), "330", "S%d_JTAGL" % s, "GND"); r(R(29), "1k", "PCIE%d_CLKREQ_n" % s, "GND")   # the switch cannot forward CLKREQ: the module's clock is always requested

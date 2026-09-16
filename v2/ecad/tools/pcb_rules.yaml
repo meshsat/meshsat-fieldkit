@@ -1114,8 +1114,18 @@ rules:
    condition: {fact: interfaces, op: truthy}
    risk_class: [ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY, EMC]
    release_effect: BLOCKER
-   source_status: SOURCE_UNVERIFIED
-   sources: []
+   source_status: PARTIALLY_VERIFIED
+   sources:
+    - {title: "Raspberry Pi Compute Module 5 datasheet", issuer: "Raspberry Pi Ltd", revision: "in this tree",
+       clause: "2.2.1 connector and design guidance; 2.3 and 2.3.1 PCIe, routing guidance; pin table, Ethernet pairs",
+       url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16",
+       note: "READ 16 September 2026 and it decided three open items. PCIe is to be routed as 90 ohm differential
+         with intra-pair match within 0.1 mm, which settles the 85 against 90 ohm question for THIS host in favour
+         of 90. External AC coupling capacitors of 220 nF are required on every PCIe receive line before it enters
+         the IC, and board B had none; TX and RX must be swapped for a direct IC connection, and board B does that
+         correctly. Ethernet: the pin table reads connect to transformer or MagJack and 2.2.1 reads Ethernet
+         connects to CM5 using a standard 1:1 RJ45 MagJack, with the pairs routed as 100 ohm differential and
+         intra-pair match within 0.15 mm."}
    acceptance_criteria: >
      A per-interface sheet naming the specification and revision used, the requirement lines taken from it,
      and where each is implemented. An interface whose specification is not in the tree is SOURCE_UNVERIFIED
@@ -1148,15 +1158,31 @@ rules:
    condition: {fact: interfaces, op: contains, value: ETHERNET}
    risk_class: [ELECTRICAL_FUNCTION, EMC, RELIABILITY]
    release_effect: BLOCKER
-   source_status: CONFLICTING
+   source_status: PARTIALLY_VERIFIED
    sources:
-    - {title: "KSZ989x hardware design checklist", issuer: Microchip, revision: "DS00004151A",
-       clause: "page 12, transformer-less PHY-to-PHY links through 0.1 uF capacitors",
-       url_or_path: "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf", accessed: "2026-09"}
-    - {title: "the compute module PHY's own documentation", issuer: "the module's PHY vendor", revision: "",
-       clause: "", url_or_path: "NOT IN THIS TREE", accessed: "",
-       note: "the other end of the same three links: nothing in this tree states whether it permits a
-              transformerless link, and the 9 September review asked for exactly this check"}
+    - {title: "KSZ989x/KSZ956x/KSZ9477 hardware design checklist", issuer: Microchip, revision: "DS00004151A (2021)",
+       clause: "6.6 Capacitive Coupling Option, page 12",
+       url_or_path: "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf", accessed: "2026-09-16",
+       note: "READ 16 September 2026, and it PERMITS what board B does, in terms that match the implementation
+         exactly: the family may be used in transformer-less applications where the PHY-to-PHY connection is
+         within one PCB or interconnected PCBs and a cable is not needed; a single DC blocking 0.1 uF capacitor
+         in series on each of the eight signals; no additional components between the switch and the capacitor;
+         keep auto-negotiation enabled at 1000M. The same clause states the open half in one sentence: the
+         other device may require termination or other circuitry. Section 6.2 requires 1:1 isolation
+         transformers at the MEDIA interface, which is the RJ45 side and is where board B already fits the
+         Pulse H5007NL on port 4."}
+    - {title: "Raspberry Pi Compute Module 5 datasheet", issuer: "Raspberry Pi Ltd", revision: "in this tree",
+       clause: "2.2.1 connector and design guidance; pin table, Ethernet pairs",
+       url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16",
+       note: "the other end, READ 16 September 2026. It describes ONE topology: Ethernet connects to CM5 using a
+         standard 1:1 RJ45 MagJack, and every Ethernet pin reads connect to transformer or MagJack. It neither
+         permits nor forbids capacitive coupling; it does not discuss it. So one end permits the link and the
+         other has not been asked."}
+    - {title: "BCM54210PE datasheet", issuer: Broadcom, revision: "", clause: "", url_or_path: "NOT IN THIS TREE",
+       accessed: "",
+       note: "the PHY inside the module, named in the CM5 datasheet section 2.2. Broadcom does not publish it, so
+         the termination and bias question the switch vendor's clause 6.6 raises cannot be answered from
+         documents this project can obtain: it needs a vendor answer or a prototype measurement."}
    acceptance_criteria: >
      Both PHYs' documents on file, the permitted topology quoted from each, and the implemented coupling and
      termination compared against both.

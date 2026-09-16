@@ -211,6 +211,33 @@ def _value_of(stem, ref):
     m = re.search(r'\(comp \(ref "%s"\)\s*\(value "([^"]*)"\)' % re.escape(ref), txt)
     return m.group(1) if m else ""
 
+# 12b. PCIe AC coupling (rule INT-001, 16 September 2026). Raspberry Pi, Compute Module 5 datasheet, section
+# 2.3: "CM5 includes on-board AC coupling capacitors for the PCIe_TX signals. However, external AC coupling
+# capacitors are required for PCIe_RX signals, close to the driving source (the peripheral's TX)", and 2.3.1:
+# "Ensure each receive (PCIe-Rx) line has an AC coupling capacitor (220 nF) before it enters the IC"
+# (v2/vendor/cm5/cm5-datasheet.pdf). Board B connected the switch's transmit pins straight to the module's
+# receive pins for three slots, on a design that had passed every gate, because nothing read that clause.
+# The contract is the shape of the fix, not the fix itself: the module's receive net carries a capacitor and
+# never a second IC, so the same defect cannot come back under a different reference designator.
+for _s in (1, 2, 3):
+    for _pn in ("P", "N"):
+        _net = "PCIE%d_RX_%s" % (_s, _pn)
+        _nodes = B["B"][0].get(_net, set())
+        if not _nodes and not B["B"][0]:
+            continue                                     # no netlist for B: already counted as missing above
+        _caps = sorted({r for r, _ in _nodes if r.startswith("C")})
+        _ics = sorted({r for r, _ in _nodes if r.startswith("U") or r.startswith("J_M2") or r.startswith("J_")})
+        check(len(_caps) == 1, "B: %s has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)" % _net,
+              "capacitors on the net: %s" % (_caps or "none"))
+        check(len(_ics) <= 1, "B: %s enters one IC only, so the capacitor is in series and not a stub" % _net,
+              "devices on the net: %s" % _ics)
+        for _c in _caps:
+            # NOT `_v`: that is the name this file imports the verdict writer under, further down, and a loop
+            # variable at module scope would shadow it. The suite caught it, which is what that rule is for.
+            _cv = _value_of("pcb-b-compute", _c)
+            check(_cv.startswith("220n"), "B: %s on %s is the 220 nF the module's datasheet asks for" % (_c, _net),
+                  "value %r" % _cv)
+
 # 13. one driver: the inhibit line is made by the panel toggle and read everywhere else. No gate output may sit on it.
 for _bd, _stem in (("A", "pcb-a-power"), ("B", "pcb-b-compute")):
     _u = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("U")})

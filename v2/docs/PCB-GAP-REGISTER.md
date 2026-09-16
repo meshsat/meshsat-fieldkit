@@ -128,11 +128,22 @@ one board checks a drill minimum; aspect ratio, annular ring and via-in-pad decl
 anywhere, and several boards carry vias in pads  
 *Close it by* a via table per board against the capability record, and the assembly note for vias in pads. Owner **SESSION**, after RTE-001. Effort P50 4h, P80 10h.
 
-## prose only (2)
+## prose only (3)
 
 **GND-002 chassis and cable-shield strategy** (MUST_JUSTIFY, DOCUMENTED_ONLY)  
 eight standoffs bond C's ground to the plate; no chassis-bond or shield strategy is written for the kit  
 *Close it by* write the chassis and shield strategy, then check the bonds against it. Owner **SESSION**, after ENV-001. Effort P50 4h, P80 10h.
+
+**INT-001 each interface is designed to its own specification** (BLOCKER, GENERATED_ONLY)  
+16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it
+decided three things. PCIe on this host is 90 ohm differential with intra-pair match within 0.1 mm, so the
+class board B already assigns is correct and the PCIe wants 85 note of 9 September is withdrawn for this
+design. Every PCIe receive line needs a 220 nF series capacitor before it enters the IC, and board B had none
+on three slots: six capacitors added at the source and a contract now holds the shape (the module's receive
+net carries exactly one capacitor and never a second device). Ethernet is 100 ohm differential, intra-pair
+within 0.15 mm. This closes ONE interface of several: USB, M.2 and HDMI have no sheet, which is why the
+maturity is GENERATED_ONLY and not ENFORCED  
+*Close it by* per-interface sheets for USB, M.2 and HDMI from their own specifications, the way PCIe was done today. Owner **SESSION**. Effort P50 10h, P80 34h.
 
 **PLC-002 prevention before repair** (MUST_JUSTIFY, DOCUMENTED_ONLY)  
 the principle is written in the record and in the plan; the finish still carries ten copper-editing passes
@@ -170,22 +181,24 @@ most of D's and E's failures
 on D, and costs E its route  
 *Close it by* keep as a screen under RET-003; record the grid's per-board measurement. Owner **SESSION**, after RET-003. Effort P50 2h, P80 6h.
 
-## source or applicability unresolved (8)
+## source or applicability unresolved (7)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
 with one solved point; no fabricator confirmation and no coupon  
 *Close it by* solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it. Owner **SESSION**, after STK-001. Effort P50 8h, P80 24h.
 
-**INT-001 each interface is designed to its own specification** (BLOCKER, SOURCE_UNVERIFIED)  
-no interface specification is in the tree; the PCIe lanes carry the 90 ohm USB class because they inherited
-it  
-*Close it by* per-interface sheets from the official specifications, starting with PCIe/M.2, USB and Ethernet. Owner **SESSION**. Effort P50 12h, P80 40h.
-
-**INT-002 a transformerless Ethernet link is verified at both ends** (BLOCKER, SOURCE_UNVERIFIED)  
-the switch vendor's checklist permits the topology; the compute module's own PHY document is not in the tree
-and the check the 9 September review asked for has not been done  
-*Close it by* obtain the module PHY's document and compare both ends. Owner **SESSION**. Effort P50 3h, P80 12h.
+**INT-002 a transformerless Ethernet link is verified at both ends** (BLOCKER, OWNER_DECISION_REQUIRED)  
+BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact
+topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less
+where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight
+signals, no additional components between the switch and the capacitor). The module's datasheet describes ONE
+topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and the switch vendor's own clause
+names the gap in a sentence, the other device may require termination or other circuitry. The module's PHY is
+a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this cannot be closed from any document
+this project can obtain. Owner decision 29, with three costed options; the recommendation is to fit the
+magnetics board B already carries on its wall port  
+*Close it by* owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype. Owner **OWNER**. Effort P50 6h, P80 30h.
 
 **PAIR-001 a pair is coupled and matched** (BLOCKER, ENFORCED)  
 coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew

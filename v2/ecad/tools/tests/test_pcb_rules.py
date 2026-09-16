@@ -101,3 +101,35 @@ def t_the_manifest_and_the_facts_agree():
     reg = _reg(); facts = R.facts()
     boards = set(reg["manifest"]["boards"]); factual = set(R.board_facts(facts))
     assert boards == factual, "manifest %s and facts %s disagree" % (sorted(boards), sorted(factual))
+
+
+def t_the_fingerprint_moves_when_a_rule_changes_what_it_demands_and_not_when_prose_changes():
+    """The identity evidence records is a digest of what the rules DEMAND.
+
+    The first version hashed the whole rule, so writing down which clause of a vendor datasheet a limit comes
+    from marked every board's evidence stale: a tax on the one activity this audit exists to encourage. A board
+    that passed a DRC has not been asked anything different because a rationale was rewritten. What must
+    invalidate evidence is a change to the requirement, its applicability, its acceptance criteria, its release
+    effect, its verification method or phase, or the boards and interfaces it names.
+    """
+    import copy
+    reg = R.load()
+    base = R.fingerprint(reg)
+
+    prose = copy.deepcopy(reg)
+    prose["rules"][0]["rationale"] = "rewritten for clarity, demanding exactly the same thing"
+    prose["rules"][0]["sources"] = [{"title": "a document someone finally read", "issuer": "x"}]
+    prose["rules"][0]["short_name"] = "a better name for the same rule"
+    assert R.fingerprint(prose) == base, "documenting a rule invalidated every board's evidence"
+
+    demand = copy.deepcopy(reg)
+    demand["rules"][0]["acceptance_criteria"] = "a different bar entirely"
+    assert R.fingerprint(demand) != base, "a rule's acceptance criteria changed and the evidence stayed current"
+
+    effect = copy.deepcopy(reg)
+    effect["rules"][0]["release_effect"] = "MUST_JUSTIFY" if reg["rules"][0]["release_effect"] == "BLOCKER" else "BLOCKER"
+    assert R.fingerprint(effect) != base, "a rule stopped blocking and the evidence stayed current"
+
+    # and the whole-text digest still exists, because a generated document has to be able to say which text it
+    # came from even when the demands did not move
+    assert R.documentation_digest(prose) != R.documentation_digest(reg)

@@ -1429,3 +1429,60 @@ gauge's cluster (every candidate on other-net copper). The same board with the g
 measured (`/root/piso4g`). So option 1 is one small step from both rules where two layers are 29 nets and 30 to 100 mm away
 from rule 1 alone.
 
+
+---
+
+## 29. Board B's three compute-module Ethernet links have no magnetics, and one end's maker has never been asked (16 September 2026, 02:10 CEST)
+
+**What was found, and by whom.** Rule INT-002 of the new registry says that where an Ethernet link is built PHY to PHY
+without magnetics, BOTH ends' own documentation has to permit it. Nobody had read either document. Both were read today
+and they do not agree about this link, in a specific way.
+
+**The switch end permits it, and board B matches the clause word for word.** Microchip, KSZ989x/KSZ956x/KSZ9477 Hardware
+Design Checklist DS00004151A, section 6.6 "Capacitive Coupling Option": the family "may be used in transformer-less
+applications where the PHY-to-PHY connection is within one PCB or interconnected PCBs, and a cable is not needed", with
+"a single DC blocking 0.1 uF capacitor placed in series on each of the eight signals" and "no additional components
+between the switch and the capacitor". Board B lays exactly eight 100 nF capacitors per link on one PCB with no cable.
+The same clause also requires auto-negotiation to stay enabled at 1000M, which is a software item for the bridge.
+
+**The module end has never described this topology.** Raspberry Pi, Compute Module 5 datasheet, section 2.2.1: "Ethernet
+connects to CM5 using a standard 1:1 RJ45 MagJack", and every Ethernet pin in its table reads "connect to transformer or
+MagJack". It does not forbid capacitive coupling; it does not mention it. And the switch vendor's own clause names this
+exact gap in one sentence: "the other device may require termination or other circuitry. Refer to Microchip
+documentation for that device." There is no Microchip documentation for that device, because the module's PHY is a
+Broadcom BCM54210PE and Broadcom does not publish its datasheet.
+
+**So the state is: permitted by one end, unexamined by the other, and unobtainable from the third.** That is not a defect
+found in the copper and it is not a clean pass. It is a question that cannot be closed from documents this project can
+get, which makes it yours.
+
+**Options, costed, the recommendation first.**
+
+1. **Fit magnetics on all three module links, RECOMMENDED.** Three more Pulse H5007NL, the same part board B already
+   carries as T1 on the wall port, one per module link, with the switch-side centre taps to signal ground through 0.1 uF
+   each and never tied together (the same checklist, section 6.3, for voltage-mode drivers). Cost: about 3 EUR a part in
+   fives, roughly 3 x (12 x 12 mm) of board area on a board that is already dense, a B regeneration and re-route, and the
+   24 coupling capacitors come out. Buys: the only topology BOTH vendors document, DC isolation between three modules
+   that can be powered independently, and no dependence on an answer nobody will give. It also removes a failure mode
+   nothing else covers: a module hot-swapped or held in reset while its neighbours run.
+2. **Keep the capacitive coupling and ask Raspberry Pi.** Cost: a support question with an unknown answer time, and the
+   board cannot be ordered until it comes back or the risk is accepted anyway. Buys: no board change if the answer is
+   yes, and a documented answer either way.
+3. **Keep the capacitive coupling, fit the magnetics footprints unpopulated, and decide at the prototype.** Cost: the
+   footprints still take the area, so most of option 1's board cost is paid without its benefit, and a link that fails
+   intermittently at 1000M is among the hardest faults to find on a first board. Buys: the cheapest BOM now, and a
+   populated fallback that needs no re-spin.
+
+**What the session does while this is open.** Nothing on this link. Board B routes and is measured as it stands, and its
+INT-002 result reads OWNER_DECISION_REQUIRED rather than pass or fail, so no B folder can be promoted on it either way.
+
+**A second finding from the same reading, which is NOT a decision and is already fixed.** The same CM5 datasheet, section
+2.3: "external AC coupling capacitors are required for PCIe_RX signals, close to the driving source", and 2.3.1: "ensure
+each receive (PCIe-Rx) line has an AC coupling capacitor (220 nF) before it enters the IC". Board B connected the PCIe
+switch's transmit pins straight to the module's receive pins on all three slots, with no capacitor, on a design that had
+passed every gate. Six capacitors are in the generator now (C151/C152, C251/C252, C351/C352, 220 nF 0402, C696846 read
+back from the fabricator's API with its stock), and `check_contracts.py` holds the shape so it cannot come back: the
+module's receive net carries exactly one capacitor and never a second device. The transmit and receive pairs were already
+swapped correctly for a direct IC connection, which the same clause requires. The same page also settles an item open
+since 9 September: PCIe on this host is to be routed as 90 ohm differential, which is the class board B already assigns,
+so the "PCIe wants 85" note is withdrawn for this design.
