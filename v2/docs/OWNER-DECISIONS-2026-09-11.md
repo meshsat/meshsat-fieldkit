@@ -1668,3 +1668,44 @@ the loop, not the number.
 
 **Not asked, because it is not a trade-off:** the ground via goes in whichever option you take. Nothing here
 moves a placed part or a routed track.
+
+## Decision 33, the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement, 16 September 2026
+
+**What was found.** `+5V_D8` is one conductor: board A's eFuse `U23`, out through `J_MEZZ_PWR1` on the
+mezzanine JST-VH, into board D at `J_PWR1`, and on to D's consumers. Until today **each board measured its own
+half against the whole budget**, so nobody ever added them up. Measured, at 1.0 A:
+
+| segment | drop | against |
+|---|---|---|
+| board A, eFuse to connector | **2.68 percent** (134 mV) | the 2 percent default, which board A never declared for this rail |
+| board D, connector to the tightest consumer | **2.16 percent** (108 mV) | the 3 percent board D declares with a reason |
+| **end to end** | **about 4.8 percent, 242 mV** | nothing: no one had written the rail's own requirement down |
+
+Board A's worst conductor on this rail is **0.400 mm wide on B.Cu** at (220.8, 96.2).
+
+**Why this is a decision and not a fix.** The 2 percent is a tool default and the 3 percent is a judgement
+board D wrote down in September. **Neither is a requirement from a part.** The requirement is what the tightest
+consumer needs, and board D's own note names them: the TLV75533 3.3 V regulator, which has 1.5 V of headroom,
+and the CP2102N bridge, whose minimum is 4.0 V. At 242 mV the rail arrives at **4.76 V**, which both parts
+accept with room to spare. So the question is whether to spend copper and a re-route on a number that no part
+asked for.
+
+**Options, costed, the recommendation first.**
+
+1. **Declare the rail's budget from its loads and leave the copper alone, RECOMMENDED.** Write the end-to-end
+   budget as 10 percent (500 mV, arriving at 4.5 V, still half a volt above the CP2102N's minimum and far
+   inside the regulator's headroom), split 5 and 5 between the boards, with the two part minimums quoted as the
+   basis. Cost: nothing but the declaration. Buys: a bar that means something, and both halves pass it with
+   margin. The residual is that a future consumer with a tighter minimum has to be checked against 4.5 V, which
+   is what the declaration says.
+2. **Keep 3 percent end to end and widen both halves.** Board A's 0.4 mm conductor goes to about 0.8 mm and
+   board D's path likewise, each needing a generator change and a re-route of a board that is otherwise
+   finished. Cost: two board phases, perhaps half a day of box time, and D's ruling 9 says its PWR class stays
+   1.2 mm, so the widening is locked copper rather than a class change. Buys: a 150 mV rail instead of a 242 mV
+   one, which no part on it needs.
+3. **Split it unevenly and widen only board A.** A's half is the larger and the easier to widen (its rail is
+   already carried in locked outer copper by the power-copper pass). Declare 1.5 for A and 2.5 for D against a
+   4 percent end-to-end budget. Cost: one board phase. Buys: less than option 2 for most of the same work.
+
+**What does not change whichever you take:** the two halves are now declared as shares, the contract adds them
+up, and no board can quietly spend another board's budget again.
