@@ -19,9 +19,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 17 | 35.4 |
+| PASS | 19 | 39.6 |
 | FAIL | 5 | 10.4 |
-| INCONCLUSIVE | 26 | 54.2 |
+| INCONCLUSIVE | 24 | 50.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
@@ -35,7 +35,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 5 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | no verification: sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a check |
-| PWR-003 protection coordination | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file |
+| PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 69 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 21 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: the conductor measure is implemented and tested; its limit comes from a formula in a code c |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 4 |
@@ -69,7 +69,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the CPL's form is checked; the rotation of each polarised footprint has never been verified agai |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | no verification: nothing considers vibration, mating cycles or moisture for any interface |
-| BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end |
+| BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 69 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate_e FAIL: {'folder': 1, 'quote': 0, 'stale': 1} |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the ledger is tamper-evident and verified; the appendix's numbers are not machine-linked to the  |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 3, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |

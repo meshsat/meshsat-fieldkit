@@ -26,9 +26,14 @@ from kisch import (parse, ser, find_sym, flatten_raw, flatten, rename_units, lib
                    ensure, part, ic, c, r, esd, noconn, q, uq, U, tps22810, usb_c_recept, emit_pwr_flag,
                    place_symbol, wire, label, text, emit_part)
 import intent as _intent
-_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, note="the pack lead")
-_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP", loads={"F1": 10.0}, note="the top cell node from the block strip")
-_intent.rail("FUSED", 14.4, 10.0, 18.0, "F1", loads={"Q1": 10.0}, note="after the blade fuse")
+_intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, switch="U1", enable_net="DSG_R",   # the GAUGE's own pin; R18, 5.1k, sits between it and the FET gate DSG_G
+             note="the pack lead. THE SWITCH IS THE GAUGE: Q2 is the discharge FET and the BQ4050 drives its gate on DSG_G, so the pack terminal is live only while the gauge allows it, which is the first stage of the energy chain")
+_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP", always_on=True, loads={"F1": 10.0},
+             always_on_why="the cell block itself: there is nothing upstream of it to switch, which is why everything downstream is protected rather than enabled",
+             note="the top cell node from the block strip")
+_intent.rail("FUSED", 14.4, 10.0, 18.0, "F1", loads={"Q1": 10.0}, always_on=True,
+             always_on_why="the cell node after the 25 A blade: a fuse is protection and not a switch",
+             note="after the blade fuse")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)

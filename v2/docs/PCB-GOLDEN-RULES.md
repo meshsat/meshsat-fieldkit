@@ -354,8 +354,8 @@ behaviour is bounded by design rather than by luck.
 | risk | ELECTRICAL_FUNCTION, RELIABILITY, SAFETY |
 | verified by | MANUAL_REVIEW, SIMULATION at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_a.py, gen_sch_b.py |
-| maturity | **OPEN** |  (at writing: UNASSESSED)
+| implementation | the switch and always_on declarations in each gen_sch_*.py rail |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope one rail, expires prototype validation |
 
@@ -367,7 +367,17 @@ inrush limit and the device requirement it satisfies (for example a module's rai
 **If violated** A module fails to boot intermittently, or draws current through a protection diode at startup.
 
 **Today** sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
-check
+check 16 September 2026: IT IS DERIVED AND CHECKED, not written. power_sequence.py reads each rail's
+declaration in the intent (the part whose enable pin switches it, or `always_on` with the reason there is no
+such part) and checks it against the netlist: the declared switch exists, it has that enable pin, and the
+parts driving that net are named with the rails they are powered from. What it DECIDES is the deadlock a
+schematic cannot show, a rail whose enable is driven only by a device powered from that same rail, which
+cannot start. What it does not decide is the ORDER between rails, because which order is correct is a
+property of the modules' own datasheets and belongs with INT-001. Boards A (13 rails), C (2), D (4), E (4)
+and P (3) pass; board B declares 36 rails and none of them yet, so it reads INCONCLUSIVE with the list.
+Deriving the switch instead of declaring it was tried and withdrawn the same hour: a walk across two-pin
+passives from the rail's own net reached 28 candidate parts on board A, and a search that answers 'one of
+twenty-eight' is not an answer.
 
 ### PWR-003  protection coordination
 
@@ -384,7 +394,7 @@ legitimate current.
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | pcb_energy_chain.yaml, the chain as data |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -404,7 +414,14 @@ available at that point with its derivation, and the element downstream it prote
 worst fault is printed from the I2t (4.3 ms for the 25 A blades at 480 A, 2.9 ms for the 10 A at 200 A). The
 interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. WHAT REMAINS is the
 authority for the selection criteria themselves, which the fuse's datasheet names as SAE J1284 and ISO 8820-3
-and this tree does not hold; littelfuse.com refuses this host with 403.
+and this tree does not hold; littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED
+(the CLK-001 shape): the gate decides four things that are definitional rather than empirical, that the
+element is at or below the rating of what it protects, at or above the path's own declared peak, able to
+interrupt the fault current declared at its position, and followed by the stage it protects; plus that every
+rating's source file is in this tree and every protective element is in its board's netlist. What it PRINTS
+rather than decides is the melting time from the I2t figure, because a clearing curve is a curve and this
+reads one point of it. The rule's own authority for the SELECTION CRITERIA is still not in the tree, which is
+why the registry keeps source_status SOURCE_UNVERIFIED.
 
 ## Decoupling
 
@@ -1775,7 +1792,7 @@ sized for the conductors and connectors of that stage.
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | pcb_energy_chain.yaml, the chain as data |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1798,7 +1815,14 @@ pack node's 18 A peak while naming a 2 A eFuse as its protection, which was a mo
 stages. WHAT REMAINS is the rule's own authority: the ratings come from the parts' datasheets (Littelfuse
 ATOF, Samsung INR18650-35E, Amass XT60, TI BQ4050 and CSD17570Q5B) but the SELECTION CRITERIA are engineering
 practice, and the standards the fuse cites for them (SAE J1284, ISO 8820-3) are not in this tree.
-littelfuse.com refuses this host with 403.
+littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED (the CLK-001 shape): the gate
+decides four things that are definitional rather than empirical, that the element is at or below the rating
+of what it protects, at or above the path's own declared peak, able to interrupt the fault current declared
+at its position, and followed by the stage it protects; plus that every rating's source file is in this tree
+and every protective element is in its board's netlist. What it PRINTS rather than decides is the melting
+time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own
+authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status
+SOURCE_UNVERIFIED.
 
 ## Documentation Control
 

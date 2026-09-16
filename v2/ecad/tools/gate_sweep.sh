@@ -54,7 +54,7 @@ for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks i
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
-          energy_chain; do
+          energy_chain pruned_gate power_sequence; do
   rm -f "$P/routed/$_g.verdict.json"
 done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
@@ -88,6 +88,22 @@ run "return vias"       python3 $T/return_via.py $N.kicad_pcb --check
 # The SECOND tool of two rules that need both to agree (16 September 2026). place_audit predicts which escape
 # fans will collide, which the DRC on a placed board cannot say; lcsc_fill refuses a BOM line with no order
 # code, which asking the fabricator about a code cannot say because there is no code to ask about.
+# THE PRUNED-ESCAPE LIST TRAVELS WITH THE BOARD, or its rule cannot be decided anywhere but the tree that
+# routed it (16 September 2026). RTE-002 read "no pruned_gate verdict for this board" on five boards for that
+# reason alone: escape_prune writes out/<name>-pruned.txt in the ROUTE tree, the board is committed without it,
+# and every later reading of that board has no way to ask whether a pruned pad was reached. It is the DRC
+# report's lesson from this morning in a second place: an artefact that decides a rule belongs beside the board
+# it describes. Where the list is beside the board it is used; where it is only in this tree's out/ it is used
+# and copied; where there is none, the rule stays INCONCLUSIVE and says which.
+_PRUNED=""
+for _c in "$P/routed/$N-pruned.txt" "$P/out/$N-pruned.txt"; do [ -f "$_c" ] && { _PRUNED="$_c"; break; }; done
+if [ -n "$_PRUNED" ]; then
+  cp "$_PRUNED" "$S/$N-pruned.txt" 2>/dev/null
+  run "pruned escapes" python3 $T/pruned_gate.py $N.kicad_pcb "$S/$N-pruned.txt"
+else
+  echo "--- pruned escapes"
+  echo "gate_sweep: no pruned list beside this board ($N-pruned.txt), so the pruned-escape rule is not judged here"
+fi
 run "via table"         python3 $T/via_audit.py $N.kicad_pcb
 run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
 run "via current"        python3 $T/via_current.py $N.kicad_pcb
@@ -100,6 +116,10 @@ run "electrical length"  python3 $T/edge_length.py $N.kicad_pcb
 # it has been routed.
 [ -s out/$N.net ] && run "derating" python3 $T/derate.py out/$N.net
 [ -s out/$N.net ] && run "crystals" python3 $T/clock_check.py out/$N.net
+# WHAT SWITCHES EACH RAIL (rule PWR-002). It reads the netlist this sweep rebuilt and the intent beside it, so
+# it says what the board itself declares rather than what a document once said; the deadlock it looks for, a
+# rail whose enable is driven only by a device powered from that same rail, cannot be seen on a schematic.
+[ -s out/$N.net ] && run "power sequence" python3 $T/power_sequence.py out/$N.net
 [ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read
@@ -148,6 +168,7 @@ cp out/*.verdict.json $P/routed/ 2>/dev/null
 # measures at one. The report is the artefact a person opens to see WHICH connection is open, and it was
 # describing a different board; the verdict beside it was right the whole time, which is how it survived.
 cp out/$N-drc.json $P/routed/ 2>/dev/null
+[ -n "${_PRUNED:-}" ] && cp "$_PRUNED" $P/routed/$N-pruned.txt 2>/dev/null
 python3 - "$P/routed/sweep.json" "$BEFORE" "$LABEL" "$N" <<'PY'
 import json, sys, subprocess, datetime
 out, sha, label, name = sys.argv[1:5]

@@ -22,6 +22,7 @@ import intent as _intent
 # the LDO feeds the controller, the expanders, the e-paper and the sensor, the sounder is the rest; without them dc_drop split the whole 0.6 A over
 # every U and J pad and asked for a 1.0 mm class, which the router could not lay on this board (two runs with no session, 90 min and 3 h)
 _intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.35, "U5": 0.20, "BZ1": 0.03},
+             always_on=True, always_on_why="it arrives over the panel ribbon from board B, behind B's own fuse F6; nothing on this board switches it",
              note="the panel rail over the ribbon (PANEL_5V on B16, fused F6). Budget 5 percent, not the 2 percent default and not the 3 percent this line "
                   "carried until 8 Sep 2026 22:55: every load tolerates it. The LED rail is PWM'd, the sounder is a buzzer, and the only regulated load is the "
                   "TLV75533 LDO, which has 1.5 V of headroom at 5 V in and 3.3 V out. C8 measures 171 mV (3.41 percent) with 0.6 A over 561 mm of 0.5 mm track, "
@@ -30,7 +31,8 @@ _intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.
 # DECLARED 16 September 2026. The panel's own 3.3 V was not in the intent file, so `signalnets` could not know
 # it was a rail and the return-path gate judged it as a SIGNAL NET, while `dc_drop` and `derate` could not see
 # it at all. Every load is named because a rail without loads is not declarable.
-_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075,
+_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075, always_on=True,
+             always_on_why="U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
              source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,
                     "U8": 0.005, "U9": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},

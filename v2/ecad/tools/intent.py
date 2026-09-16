@@ -17,7 +17,8 @@ _I = {"bypass": [], "rails": {}, "pair_classes": dict(Z_DEFAULT)}
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
-def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None, efficiency=None):
+def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
+         efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
@@ -63,6 +64,16 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                                                  "The loads are a claim about the same current as the peak: correct one of them." % (net, amps_peak, _tot))
     _I["rails"][net] = {"volts": volts, "amps_typ": amps_typ, "amps_peak": amps_peak, "source": source, "loads": loads or {}, "note": note,
                         **({"budget": budget} if budget else {}), **({"share": share} if share else {}),
+                        # WHAT SWITCHES THIS RAIL (rule PWR-002, 16 September 2026). `switch` is the part whose
+                        # enable pin turns it on; `always_on` says there is no such part and WHY, because a rail
+                        # nobody switches is a design statement and not an absence. power_sequence.py checks the
+                        # declaration against the netlist and finds the deadlock a schematic cannot show: a rail
+                        # whose enable is driven only by a device powered from that same rail.
+                        **({"switch": switch} if switch else {}),
+                        # the enable NET, where its name is not EN-shaped: the BQ4050 turns the pack terminal on
+                        # through DSG_G, which no pattern over names would find and which is the truth
+                        **({"enable_net": enable_net} if enable_net else {}),
+                        **({"always_on": True, "always_on_why": always_on_why} if always_on else {}),
                         **({"efficiency": efficiency} if efficiency else {})}
 
 def pair_class(name, z_diff=None, z_se=None):
