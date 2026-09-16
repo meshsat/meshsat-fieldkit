@@ -811,7 +811,9 @@ it can build and test it.
 | risk | SIGNAL_INTEGRITY, FABRICATION |
 | verified by | SCRIPT, SIMULATION, VENDOR_CONFIRMATION at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| | IPC-2141 controlled impedance circuit boards and high speed logic design, IPC, closed-form microstrip and stripline -- NOT IN THIS TREE |
+| | JLCPCB rigid PCB manufacturing capabilities, JLCPCB, FR-4 dielectric constants: 4.5 (2-layer), 4.4 (7628 prepreg), 4.1 (3313 prepreg), 4.16 (2116 prepreg); impedance control tolerance +-10 percent; impedance control layer counts 4 and above -- v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md |
+| | JLCPCB impedance-controlled stackups, JLCPCB, JLC04161H-7628 four layers 1.6 mm, and JLC06161H-3313 six layers 1.6 mm: every layer with its material, thickness and dielectric constant -- v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md |
+| | IPC-2141 controlled impedance circuit boards and high speed logic design, IPC, microstrip and stripline closed forms -- NOT IN THIS TREE |
 | implementation | gen_pcb_*3.py net classes |
 | maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
@@ -1578,8 +1580,8 @@ device can be programmed in circuit, and the signals a bring-up needs are reacha
 | risk | TESTABILITY, SAFETY |
 | verified by | MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | gen_sch_*.py test points |
-| maturity | **OPEN** |  (at writing: UNASSESSED)
+| implementation | rules_render.py bringup_doc, from each board's own intent file |
+| maturity | **VERIFIED_MANUALLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one board, expires prototype bring-up |
 
@@ -1590,7 +1592,15 @@ programming interfaces and the test points that exist for them.
 
 **If violated** A short in one stage destroys parts across the board at first power-up.
 
-**Today** test points exist; no bring-up sheet exists for any board
+**Today** 16 September 2026. A bring-up sheet per board, GENERATED from what the board itself declares, so it cannot
+describe a rail the board does not have and cannot miss one it does. An INPUT is applied from a bench supply
+current-limited to the rail's own typical current; a DERIVED rail is never applied, its step is a
+measurement, and a reading outside plus or minus 5 percent stops the sequence. The order is by DEPENDENCY and
+not by voltage: the first draft sorted by voltage ascending and would have had a supply put 3.3 V onto board
+A's logic rail before the 14.4 V pack node feeding the converter that makes it. Where a rail's declared
+source is an inductor or a ferrite the tool says it CANNOT TELL a filter choke on an incoming feed from a
+converter's output, and lists those separately to be decided before powering, rather than choosing. It is a
+procedure and a person does it, which is why this is VERIFIED_MANUALLY and the record is the page
 
 ## Reliability
 

@@ -63,7 +63,7 @@ appears in the gap register.
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | none |  | **OPEN** |
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection devices | none |  | **GENERATED_ONLY** |
-| TST-001 | TEST_BRINGUP | MUST_JUSTIFY | gen_sch_*.py test points | none |  | **OPEN** |
+| TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |
 | VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py, check_pcb_c.py -> via_audit, check_pcb_c | tests/test_board_gates.py | **ENFORCED** |
 | VIA-002 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py -> via_annular | tests/test_board_gates.py | **SOURCE_UNVERIFIED** |
 
@@ -73,8 +73,8 @@ appears in the gap register.
 |---|---|
 | ENFORCED | 25 |
 | GENERATED_ONLY | 11 |
-| VERIFIED_MANUALLY | 1 |
+| VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 12 |
+| OPEN | 11 |
 | SOURCE_UNVERIFIED | 3 |
 | OWNER_DECISION_REQUIRED | 3 |

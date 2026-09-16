@@ -16,7 +16,7 @@ Documents:
   v2/docs/PCB-PROTOTYPE-UNKNOWNS.md what only hardware can decide, so it never reads as a pass
   v2/docs/PCB-RULE-STATUS-<L>.md   per board, from out/rule-audit/<L>.json when it exists
 """
-import os, sys, json, glob
+import os, re, sys, json, glob
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -184,12 +184,113 @@ def prototype_doc(reg, cov):
     return "\n".join(L) + "\n"
 
 
+def bringup_doc(reg, cov):
+    """TST-001: how each board is brought up the first time, generated from what the boards themselves declare.
+
+    Nothing here has been fabricated or powered. The first time any of these boards has current through it, the
+    order it is brought up in decides whether a wiring error costs a resistor or the board. The sheet is
+    GENERATED from each board's intent file, so it cannot describe a rail the board does not have and cannot
+    miss one the board does.
+
+    THE ORDER IS BY DEPENDENCY AND NOT BY VOLTAGE. A first draft of this page sorted by voltage ascending, which
+    would have had a bench supply put 3.3 V onto board A's logic rail before the 14.4 V pack node that FEEDS the
+    converter making it. A derived rail is not applied at all: it appears when its converter is enabled, and the
+    step for it is a measurement.
+
+    It is a procedure and not a verification: it says what to do and what to expect, and a person does it.
+    """
+    ECAD = os.path.dirname(HERE)
+    L = [HEAD, "# Bring-up, board by board\n",
+         _wrap("Generated from each board's own intent file. NOTHING HERE HAS BEEN FABRICATED OR POWERED: this is "
+               "the procedure for the first time, written before there is anything to do it to."), "",
+         _wrap("AN INPUT IS APPLIED. A DERIVED RAIL APPEARS. Every input below is brought up from a bench supply "
+               "current-limited to the figure in its row, which is the rail's own typical current and not its "
+               "peak: a board that draws its peak on the first power-up is telling you something, and a step that "
+               "trips the limit is a short until proved otherwise. A derived rail is never applied from the "
+               "bench; its step is a measurement at the point named, and a reading outside the tolerance stops "
+               "the sequence there."), "",
+         _wrap("Tolerance for a first power-up: plus or minus 5 percent of the declared voltage, or the part's "
+               "own stated range where that is tighter. A rail that reads zero means its converter is not "
+               "enabled, which is a different fault from one that reads low."), ""]
+    boards = (R.load().get("manifest") or {}).get("boards", [])
+    facts = R.board_facts()
+    n_boards = 0
+    for letter in boards:
+        f = facts.get(letter) or {}
+        proj = (f.get("project") or "")
+        it = None
+        for d in sorted(glob.glob(os.path.join(ECAD, proj + "*", "out", "*-intent.json"))):
+            try: it = json.load(open(d)); break
+            except ValueError: continue
+        L.append("## Board %s" % letter.upper())
+        if not it or not it.get("rails"):
+            L += ["", _wrap("No intent file in this tree for board %s, so no rail can be listed. This section is "
+                            "empty because the data is missing, not because the board has no rails." % letter.upper()), ""]
+            continue
+        n_boards += 1
+        rails = it["rails"]
+
+        def kind(r):
+            """input, derived, or ASK: what a rail's declared source says about where it comes from.
+
+            A connector or a fuse is an input; the board receives that rail. A part is a converter output; the
+            board makes it. AN INDUCTOR OR A FERRITE IS NEITHER, and pretending otherwise is how a first draft
+            of this page told a bench supply to put 3.3 V onto board A's logic rail: L7 is a buck's OUTPUT
+            inductor there, and L2 on board E is a filter choke on the incoming 12 V. The tool cannot tell those
+            apart from the declaration, so it says so instead of choosing.
+            """
+            src = str((r or {}).get("source") or "")
+            if not src: return "input"
+            if src.startswith("J"): return "input"
+            if re.match(r"^F\d", src): return "input"
+            if re.match(r"^(L|FB)\d", src): return "ask"
+            return "derived"
+
+        by = {"input": [], "derived": [], "ask": []}
+        for k, v in rails.items(): by[kind(v)].append((k, v))
+        for g in by.values(): g.sort(key=lambda kv: float((kv[1] or {}).get("volts") or 0))
+        inputs, derived, ask = by["input"], by["derived"], by["ask"]
+        L += ["", "**Applied, in this order.**", "",
+              "| step | rail | apply | current limit | at | what it feeds |", "|---|---|---|---|---|---|"]
+        for n, (net, r) in enumerate(inputs, 1):
+            loads = ", ".join(sorted((r.get("loads") or {}).keys())[:6]) or "nothing declared"
+            L.append("| %d | %s | %.2f V | %.2f A | %s | %s |"
+                     % (n, net.lstrip("/"), float(r.get("volts") or 0), float(r.get("amps_typ") or 0),
+                        r.get("source") or "another board or the pack", loads))
+        if not inputs:
+            L.append("| | | | | | this board receives no rail of its own: it is powered entirely from another board |")
+        L += ["", "**Measured, in this order, after the inputs are up.**", "",
+              "| step | rail | expect | at | what it feeds |", "|---|---|---|---|---|"]
+        for n, (net, r) in enumerate(derived, 1):
+            loads = ", ".join(sorted((r.get("loads") or {}).keys())[:6]) or "nothing declared"
+            v = float(r.get("volts") or 0)
+            L.append("| %d | %s | %.2f V (%.2f to %.2f) | %s | %s |"
+                     % (n, net.lstrip("/"), v, v * 0.95, v * 1.05, r.get("source") or "?", loads))
+        if not derived:
+            L.append("| | | | | this board makes no rail of its own |")
+        if ask:
+            L += ["", "**Decide before powering: the declared source is an inductor or a ferrite, which is a "
+                      "filter on an incoming feed on some boards and a converter's output on others.**", "",
+                  "| rail | volts | current | source | what it feeds |", "|---|---|---|---|---|"]
+            for net, r in ask:
+                loads = ", ".join(sorted((r.get("loads") or {}).keys())[:6]) or "nothing declared"
+                L.append("| %s | %.2f V | %.2f A | %s | %s |"
+                         % (net.lstrip("/"), float(r.get("volts") or 0), float(r.get("amps_typ") or 0),
+                            r.get("source"), loads))
+        L.append("")
+    L += ["", _wrap("%d board(s) have an intent file in this tree and are listed. Every number here is a DESIGN "
+                    "figure from the board's own declaration and not a measurement: there is nothing to measure "
+                    "yet." % n_boards), ""]
+    return "\n".join(L) + "\n"
+
+
 # Documents that are a pure function of the registry and the coverage map, with no board evidence in them.
 # rules_status reads this to judge a VERIFIED_MANUALLY rule whose evidence IS one of these pages: it can
 # rebuild the page in memory and compare, which is what makes "the list has not quietly shrunk" a fact rather
 # than a habit. The board pages are deliberately absent: they are generated FROM the status, so asking the
 # status to check them would be a circle.
 SELF_CONTAINED = {"PCB-PROTOTYPE-UNKNOWNS.md": prototype_doc,
+                  "PCB-BRING-UP.md": bringup_doc,
                   "PCB-GOLDEN-RULES.md": rulebook,
                   "PCB-RULE-COVERAGE.md": coverage_doc,
                   "PCB-GAP-REGISTER.md": gap_register}
@@ -232,7 +333,8 @@ def render(out_dir=None):
              os.path.join(docs, "PCB-RULE-COVERAGE.md"): coverage_doc(reg, cov),
              os.path.join(docs, "PCB-GAP-REGISTER.md"): gap_register(reg, cov),
              os.path.join(docs, "PCB-ETA.md"): eta_doc(),
-             os.path.join(docs, "PCB-PROTOTYPE-UNKNOWNS.md"): prototype_doc(reg, cov)}
+             os.path.join(docs, "PCB-PROTOTYPE-UNKNOWNS.md"): prototype_doc(reg, cov),
+             os.path.join(docs, "PCB-BRING-UP.md"): bringup_doc(reg, cov)}
     audit = os.path.join(os.path.dirname(HERE), "out", "rule-audit")
     for f in sorted(glob.glob(os.path.join(audit, "*.json"))):
         letter = os.path.basename(f)[:-5]
