@@ -21,6 +21,14 @@ import pcbnew, intent, signalnets, return_via, signal_class
 
 SAMPLE = 1.0; GAP_MM = 10.0; NEAR_VIA = 1.5
 
+# THE VERDICTS THIS FILE WRITES, one per rule it runs, named at module scope so a reader and the repository
+# rule that checks every gate maps to a rule can both see them without executing anything. They were one
+# verdict until 16 September, and that meant a single decoupling capacitor 3 mm too far from its pin failed
+# the return-path rule as well, on six boards: eighteen rule-board pairs reported as failures of things that
+# had passed.
+RULE_VERDICTS = ("intent_return_path", "intent_return_via", "intent_decoupling", "intent_rails",
+                 "intent_other", "intent_checks")
+
 def run(b, check, path=None):
     path = path or b.GetFileName(); it = intent.load(path)
     if not it: check(False, "intent file present (out/<stem>-intent.json from the schematic generator)"); return "intent_checks: no intent file, nothing checked"
@@ -171,8 +179,39 @@ if __name__ == "__main__":
     import os as _osv
     sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
     import verdict as _v
+
+    # ONE VERDICT PER RULE, and the reason is the same one that split dc_drop. This file runs FOUR separate
+    # rules: the return path under a signal (RET-001 and its screen RET-002), the return via at a transition
+    # (RET-004), the decoupling loop (DEC-001) and whether every power-symbol net is a declared rail (PWR-001).
+    # They were sharing one verdict, so ONE decoupling capacitor 3 mm too far from its pin failed the
+    # return-path rule on the same board, and on 16 September that single item was failing three rules across
+    # six boards: eighteen rule-board pairs reported as failures of things that had passed.
+    BUCKETS = (("intent_return_path", ("return path",), "the reference under a signal net, judged per spectral class"),
+               ("intent_return_via", ("return via",), "a ground via at a signal's reference change"),
+               ("intent_decoupling", ("bypass", "decoupling"), "the loop from a decoupling capacitor to the pin it serves"),
+               ("intent_rails", ("is a declared rail", "intent rail", "intent file carries"), "every power-symbol net declared with its loads"))
+    claimed = set()
+    for name, keys, note in BUCKETS:
+        mine = [t for t in checked if any(k in t for k in keys)]
+        claimed.update(mine)
+        bad = [t for t in mine if t in fails]
+        _v.write(name, _v.INCONCLUSIVE if not mine else (_v.FAIL if bad else _v.PASS),
+                 counts={"fail": len(bad), "pass": len(mine) - len(bad)}, denominator=len(mine),
+                 evidence=bad[:20], inputs={"board": sys.argv[1]}, quiet=True,
+                 note=note if mine else "nothing of this kind was checked on this board")
+    # anything this file checks that no bucket claims still has to decide something, or a rule could be added
+    # here and silently belong to nothing
+    rest = [t for t in checked if t not in claimed]
+    if rest:
+        _v.write("intent_other", _v.FAIL if [t for t in rest if t in fails] else _v.PASS,
+                 counts={"fail": len([t for t in rest if t in fails]), "pass": len([t for t in rest if t not in fails])},
+                 denominator=len(rest), evidence=[t for t in rest if t in fails][:20],
+                 inputs={"board": sys.argv[1]}, quiet=True,
+                 note="checks this file makes that no rule bucket claims yet")
     sys.exit(_v.write("intent_checks",
                       _v.INCONCLUSIVE if not checked else (_v.PASS if not fails else _v.FAIL),
-                      counts={"fail": len(fails), "pass": len(checked) - len(fails)},
+                      counts={"fail": len(fails), "pass": len(checked) - len(fails), "unclaimed": len(rest)},
                       denominator=len(checked), evidence=fails, inputs={"board": sys.argv[1]},
-                      note="" if checked else "the intent file yielded no check"))
+                      note=("the whole file; each rule also has its own verdict (intent_return_path, "
+                            "intent_return_via, intent_decoupling, intent_rails)" if checked
+                            else "the intent file yielded no check")))

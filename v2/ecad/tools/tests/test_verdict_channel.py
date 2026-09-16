@@ -338,13 +338,23 @@ def t_every_gate_in_the_catalogue_maps_to_a_rule_of_the_registry():
     import importlib
     v = importlib.import_module("verdict")
     v._BY_TOOL[0] = None
+    import re as _re
     unmapped = []
     for g in GATES:
         stem = g[:-3]
-        names = [stem] + ["%s-%s" % (stem, s) for s in ("routed-board-gate", "placed")]
-        # check_pcb_a.py and friends are per board; the coverage map writes them with a <letter> placeholder
+        # The names a gate can write: its own stem, its labelled variants, and every literal it passes to the
+        # verdict writer. Reading the source is what lets a tool SPLIT its verdict by rule without this rule
+        # going off: intent_checks writes four now, one per rule it runs, because one decoupling capacitor
+        # 3 mm too far from its pin was failing the return-path rule on six boards.
+        src = open(os.path.join(TOOLS, g), errors="replace").read()
+        names = [stem] + ["%s-%s" % (stem, x) for x in ("routed-board-gate", "placed")]
+        names += _re.findall(r'(?:verdict|_v)\.write\(\s*"([a-zA-Z0-9_<>-]+)"', src)
+        # a tool that writes its verdict names from a table declares them at module scope, so they can be read
+        # without executing it (intent_checks writes four from a loop)
+        _decl = _re.search(r'^RULE_VERDICTS\s*=\s*\(([^)]*)\)', src, _re.M)
+        if _decl: names += _re.findall(r'"([a-zA-Z0-9_<>-]+)"', _decl.group(1))
         if stem.startswith("check_pcb_"): names.append("check_pcb_<letter>")
-        if not any(v._rules_for_tool(n) for n in names): unmapped.append(g)
+        if not any(v._rules_for_tool(n) for n in set(names)): unmapped.append(g)
     v._BY_TOOL[0] = None
     assert not unmapped, ("these gates decide a board and map to no rule in the registry, so nothing says which "
                           "requirement they serve: %s" % unmapped)
