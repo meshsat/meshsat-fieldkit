@@ -201,6 +201,33 @@ def t_pruned_gate_is_inconclusive_when_the_prune_step_did_not_run():
     assert v["verdict"] == "INCONCLUSIVE" and v["denominator"] == 0, v
 
 
+# 16 September 2026: the two fixtures the declared zero needs, because "no list" means two different things.
+# `escape_prune` runs only where the board declares it, board B is the only board that does, and the other five
+# carried RTE-002 INCONCLUSIVE for ever over a case that cannot arise on them. The pair below is the whole
+# rule: a board that declares no prune stage PASSES with the declaration as its evidence, and a board that
+# declares one and has lost its list stays INCONCLUSIVE, which is where absence really is absence.
+
+def t_pruned_gate_passes_a_board_whose_pipeline_prunes_no_escape():
+    """The acceptable fixture. The board's stem is what names it: `letter_for` reads the board table."""
+    d = tempfile.mkdtemp(prefix="pg-ok-")
+    rc, out = _run([os.path.join(TOOLS, "pruned_gate.py"), os.path.join(d, "pcb-a-power.kicad_pcb"),
+                    os.path.join(d, "absent-pruned.txt")], cwd=d)
+    assert rc == 0, (rc, out)
+    v = _verdict(d, "pruned_gate")
+    assert v["verdict"] == "PASS" and v["denominator"] == 0, v
+    assert "escape_prune_before_audit" in (v.get("note") or ""), v
+
+
+def t_pruned_gate_stays_inconclusive_where_the_board_declares_the_prune_stage():
+    """The defective fixture: board B prunes escapes, so a missing list is a measurement that is gone."""
+    d = tempfile.mkdtemp(prefix="pg-b-")
+    rc, out = _run([os.path.join(TOOLS, "pruned_gate.py"), os.path.join(d, "pcb-b-compute.kicad_pcb"),
+                    os.path.join(d, "absent-pruned.txt")], cwd=d)
+    assert rc == 3, (rc, out)
+    v = _verdict(d, "pruned_gate")
+    assert v["verdict"] == "INCONCLUSIVE" and v["denominator"] == 0, v
+
+
 # ---------------------------------------------------------------- check_contracts
 
 def _netlist(path, nets):

@@ -102,8 +102,10 @@ if [ -n "$_PRUNED" ]; then
   cp "$_PRUNED" "$S/$N-pruned.txt" 2>/dev/null
   run "pruned escapes" python3 $T/pruned_gate.py $N.kicad_pcb "$S/$N-pruned.txt"
 else
-  echo "--- pruned escapes"
-  echo "gate_sweep: no pruned list beside this board ($N-pruned.txt), so the pruned-escape rule is not judged here"
+  # No list beside the board is not automatically "not judged": pruned_gate reads the board table and answers
+  # PASS with its reason where the board declares no prune stage, INCONCLUSIVE where it declares one and the
+  # list is gone. Running it with the path that does not exist is what lets it say which (16 September 2026).
+  run "pruned escapes" python3 $T/pruned_gate.py $N.kicad_pcb "$S/$N-pruned.txt"
 fi
 run "via table"         python3 $T/via_audit.py $N.kicad_pcb
 run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
