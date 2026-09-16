@@ -48,7 +48,16 @@ def _matches(rel, line, classes):
 
 
 def changed_lines(rng=None):
-    """[(path, line)] of every ADDED or REMOVED line, from the working tree or a range."""
+    """[(path, line)] of every ADDED or REMOVED line, from the working tree or a range.
+
+    A PURELY ADDED SECTION OF THE DESIGN RECORD IS NOT A CHANGE TO IT (16 September 2026). The design-record
+    class says what it means in its own words: "the appendix is the record of what was ruled and measured; a
+    machine may ADD a measurement section, never change a number in one". The check could not tell the two
+    apart, because a new heading is an added line like any other, so every night's own record entry was
+    refused by the floor that permits it. An added line is dropped only when the file REMOVED nothing that
+    matches the same class: rewrite a section, or delete one, and both the removal and the replacement are
+    hits again. Every other class keeps both signs, and so does this one the moment anything is taken away.
+    """
     argv = ["git", "-C", HERE, "diff", "-U0"] + ([rng] if rng else [])
     txt = subprocess.run(argv, capture_output=True, text=True, timeout=120).stdout
     if not txt.strip():
@@ -57,8 +66,28 @@ def changed_lines(rng=None):
     for line in txt.splitlines():
         if line.startswith("+++ b/"): cur = line[6:]; continue
         if line.startswith("--- ") or line.startswith("diff ") or line.startswith("@@"): continue
-        if cur and (line.startswith("+") or line.startswith("-")): out.append((cur, line[1:]))
+        if cur and (line.startswith("+") or line.startswith("-")):
+            out.append((cur, line[1:], line[0]))
     return out
+
+
+ADDITIVE = ("the design record",)   # classes whose own words permit a machine to ADD, never to edit
+
+
+def drop_pure_additions(pairs, classes):
+    """Remove added lines of an ADDITIVE class from a file that removed none of that class's lines."""
+    removed = set()
+    for rel, line, sign in pairs:
+        if sign != "-": continue
+        for name, _why in _matches(rel, line, classes):
+            removed.add((rel, name))
+    keep = []
+    for rel, line, sign in pairs:
+        if sign == "+":
+            names = [n for n, _w in _matches(rel, line, classes)]
+            if names and all(n in ADDITIVE and (rel, n) not in removed for n in names): continue
+        keep.append((rel, line))
+    return keep
 
 
 def whole_files(paths):
@@ -78,7 +107,7 @@ def main(a):
     if "--files" in a: pairs = whole_files(a[a.index("--files") + 1:]); what = "%d file(s)" % len(a[a.index("--files") + 1:])
     else:
         rng = a[a.index("--diff") + 1] if "--diff" in a and len(a) > a.index("--diff") + 1 else None
-        pairs = changed_lines(rng); what = rng or "the working tree"
+        pairs = drop_pure_additions(changed_lines(rng), classes); what = rng or "the working tree"
     hits, seen = [], set()
     for path, line in pairs:
         rel = path.replace("v2/ecad/tools/", "")

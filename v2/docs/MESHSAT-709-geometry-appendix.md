@@ -8431,3 +8431,81 @@ the radios, in a sealed case with no vent anywhere**, and it is filed with decis
 ambient it has to be added to is.
 
 **Readiness 55.0 percent verified** (165 of 300), inconclusive 106 to 86 across the evening. Suite 758.
+
+### 32.210 Four tools that change a board and that nothing ran, and the 50 ohm target seven boards declared and none read (16 September 2026, 23:50 CEST; MESHSAT-862)
+
+**THE FAMILY, because it is a family and not four incidents.** A tool that changes a board and that no chain
+invokes is invisible to every gate this project has: the closer audit asks what the FINISH runs, and a tool
+the finish never runs is not in its question. Four of them came out in one evening.
+
+* **`widen_net.py`**, written this morning for exactly the defect rule PI-001 fails on, was in no chain. Board
+  A's `/VBAT` carries 1.46 A through a 0.500 mm conductor on In2.Cu against 0.40 A for its own cross-section
+  at 10 K, `/VIN_RAW` 0.63 A and `/VBUS20` 0.66 A on the same 0.5 oz inner copper, and `/+5V_D8` leaves through
+  the mezzanine at 0.4 mm for 63.9 mm at 1.0 A. It is a declared, guarded finish stage now (`widen` in
+  `boards/<letter>.json`), after `rail_prune` so the parallel copper a rail does not need is already off, and
+  the closer audit caught it the moment it entered the finish: *"widen_net.py changes the board in the finish
+  and is not declared"*.
+* **`ledger_verify.py`**, written on 11 September to re-walk every routeflow journal, re-hash every row and
+  check each witness, had never been run. The chained record rule DOC-002 rests on was a claim nobody tested.
+  It is in the sweep now: 224 rows over four ledgers, no problem.
+* **`logo_silk.py`** draws the mark the owner ruled on to these boards, traced from the sticker master and
+  never redrawn, and **not one of the seven boards carries a silkscreen polygon**. Nothing chose where it
+  goes, so no chain called it. `logo_stage.py` is that stage in `full.sh` and `silk_space.py` reports what a
+  board has free: board A has an 80 by 31 mm rectangle clear of every footprint, which is the sticker's own
+  size, and declares 60 mm so the mark keeps ten millimetres of clear silk either side.
+* **`sensitive_guard.py`** is new and would have joined them: rule ANA-001's six failures are nodes routed
+  0.18 to 0.36 mm from a switch node against their own 0.50, and the only instrument the router honours is the
+  NET CLASS clearance, which applies between every pair of nets on the board. The band is drawn on the
+  TEMPORARY board the DSN is exported from, so it reaches the router and never reaches the real board, its DRC
+  or anything fabricated. It does not cover the net it protects (an annulus), it punches out every foreign pad
+  (a pad inside a track keep-out is an escape that can no longer be made), and it draws nothing where a net
+  has no copper. Proved end to end on board A: 22 bands written, the board re-loads with all 22, and the DSN
+  exported from it carries 59 wire keep-outs against 37 without them.
+
+**The gate that closes the family**: every tool here that saves a board is either invoked by a chain, a
+profile, a board declaration or another tool, or it is declared idle in `pcb_closers.yaml` with its reason.
+Eleven are declared. Two self-references had to be closed first and both are the same mistake: a mention in a
+COMMENT is not an invocation (the paragraph explaining the rule named `logo_silk.py` and took it off its own
+list), and a DECLARATION is not an invocation (reading the yaml made a tool's idle declaration its own proof
+that something runs it).
+
+**EVERY BOARD DECLARES ITS RF PATHS AS 50 OHM AND NOTHING HAS EVER READ THAT NUMBER.** `intent.Z_DEFAULT`
+gives the RF class `z_se: 50`, and `impedance_check.py` judges PAIRS: the string `z_se` does not appear in it.
+Measured for the first time by `rf_line.py`, **all eleven of board A's blind-mate RF paths sit on In2.Cu at the
+RF class's 0.350 mm, which is 25.5 ohm on that stackup against the 50 the class asks for.** The width is not
+wrong. It is about 50 ohm as a microstrip on the OUTER layer the class was drawn for, and the router took
+ten-millimetre runs inside, where the same copper is half the impedance. The remedy is the layer: the eleven
+are pre-laid on F.Cu and B.Cu before the router runs, which needed the pre-lay to carry more than one group
+(`prelay_groups`, each with its own layers, because board A's other four pre-laid nets are local escapes in its
+densest corner and need every layer). The pair calibration is deliberately not borrowed for a single-ended
+line: this project's solver points and its 0.967 correction were measured on differential geometries.
+
+**TWO CLOCK DEFECTS, ONE OF THEM FATAL IF BUILT.** Rule CLK-001 checked that a crystal has two matched
+capacitors and its own IC alone on its nets, and said in its own docstring that the number which decides
+whether the part runs, C_L, was not judged. Each board declares it now with its source and the tool computes
+what the fitted network presents, C1 in series with C2 plus the declared stray, against the datasheet. The
+arithmetic reproduces the RP2040 hardware design guide's own worked example for the exact part on boards C and
+E (two 15 pF capacitors and 3 pF of stray make 10.5 pF against a 10 pF target) to a hundredth of a picofarad.
+It found **board B's three 24 MHz hub crystals loaded to 12 pF by an 18 pF part, about 54 ppm fast** (fixed by
+a code swap to a 12 pF part of the same family, no land change), and **board D's two 6 MHz crystals certified
+against C448646, which JLCPCB's own catalogue calls NX3225SA-25MHz**. A hub whose PLL wants 6 MHz does not
+enumerate at 25. The certification compares a manufacturer part number and a jellybean row names none, so the
+row was decided on package and stock alone; a value that BEGINS with a frequency is compared with the
+catalogue's own now, with the ferrite and inductor cases (a frequency that is a CONDITION) excluded and tested.
+**And the land cannot hold the part at all**: JLCPCB lists no passive 6 MHz crystal in a 3225 package and that
+is physics rather than stock, so board D is decision 37 and is re-placed and re-routed either way.
+
+**TWO ATTRIBUTION FIXES.** Three of board B's RETURN-PATH failures were counted against the DECOUPLING rule,
+because the bucket that splits `intent_checks` into one verdict per rule searched the whole message and a
+return-path line quotes the net's declared basis: board B's STM32 core-regulator nets are declared as *"an
+internal-supply decoupling node"*. The quotation is stripped before the keys are matched and a line two
+buckets claim is named rather than counted twice. And **board P's declared zero was reading as a question**:
+it declares in 850 characters that no conductor of its own leaves the case, and "every exposed port is
+protected" is true of a board that has none. That is this project's own rule, which already decides the pair
+gate for a board with no impedance-targeted class and the pruned gate for a board with nothing pruned.
+
+**Board A's hand-over report, second reading.** Of the thirteen sites it named, three already carry FOUR and
+SIX barrels and still put 3.40 A through one of them. At those sites the count is not the defect: four barrels
+sharing 3.40 A would carry 0.85 A each, inside the 0.90 A their own walls are rated for, so what is wrong is
+the copper that feeds them. The report measures the site's whole current now and says which of the two
+problems it is.

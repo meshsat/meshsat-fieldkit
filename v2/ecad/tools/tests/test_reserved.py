@@ -156,3 +156,21 @@ def t_a_per_board_exclusion_row_is_reserved_not_only_the_tables_first_line():
     prose = ('make_handoff.py', '    "pcb-e1-dock": ["FABRICATION NOTES (E7, the dock strip, appendix 32.125)",')
     assert not reserved._matches(*prose, classes), \
         "the delegated order prose is back on the floor: %s" % prose[1].strip()[:70]
+
+
+def t_an_added_record_section_is_not_a_change_to_the_record():
+    """The design-record class says in its own words that a machine may ADD a measurement section and never
+    change a number in one. The check could not tell the two apart, so every night's own record entry was
+    refused by the floor that permits it. An addition is dropped only when the file removed NOTHING of that
+    class: rewrite a section or delete one and both signs are hits again."""
+    import reserved as R
+    classes = R.load()
+    A = "v2/docs/MESHSAT-709-geometry-appendix.md"
+    add_only = [(A, "### 32.999 A new measurement (16 September 2026)", "+")]
+    assert R.drop_pure_additions(add_only, classes) == [], "an added section is still refused"
+    rewrite = [(A, "### 32.209 the old heading", "-"), (A, "### 32.209 the new heading", "+")]
+    kept = R.drop_pure_additions(rewrite, classes)
+    assert len(kept) == 2, "a rewritten section is no longer the owner's: %s" % kept
+    other = [("v2/ecad/tools/hardset.py", "HARD_POST = {'clearance'}", "+")]
+    assert R.drop_pure_additions(other, classes) == [("v2/ecad/tools/hardset.py", "HARD_POST = {'clearance'}")], \
+        "an addition to another reserved class was dropped"
