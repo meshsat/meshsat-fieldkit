@@ -35,7 +35,7 @@ _intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075, always_on
              always_on_why="U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
              source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,
-                    "U8": 0.005, "U9": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},
+                    "U8": 0.005, "U10": 0.005, "U11": 0.005, "U9": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},
              note="the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two "
                   "expanders, the buffers, the light sensor and the e-paper's supply switch. Budget 3 percent, "
                   "because every load is a logic part with a wide supply range")
@@ -176,6 +176,19 @@ part("J_MAINSW", "Connector_Generic", "Conn_01x02", "MAIN button lead to A22 J_M
 part("FB3", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_A", "2": "PIJ2_A2"}, "C1002"); part("FB4", "Device", "L", "ferrite 600R", "FB", {"1": "PIJ2_B", "2": "PIJ2_B2"}, "C1002")
 c("C27", "100n", "PIJ2_A2", "PIJ2_B2", "C", "C14663")
 part("J_PIJ2", "Connector_Generic", "Conn_01x02", "PI button lead: two solder lands on the underside (the controller reads it as the module shutdown request)", "XH2", {"1": "PIJ2_A2", "2": "PIJ2_B2"})
+# THE TWO BUTTON LEADS LEAVE THE CASE AND HAD NO CLAMP ON THEM (rule TRN-001, 16 September 2026). A person's
+# hand on the MAIN or the PI button is the transient source, and what stood between that hand and the chip at
+# the other end of the lead was a 600 R bead and a 100 nF across the pair, which is an EMI filter: it slows the
+# edge and passes the energy on. Both pairs sit at or below 3.3 V, so the array this board already uses three
+# times is the right standoff and not a new part on the BOM: the LTC2954's PB pin is a current-source pull-up
+# whose OPEN-CIRCUIT voltage is 1.0 to 2.0 V (ltc2954.pdf, VPB(VOC), 1.6 V typical at -1 uA), so MAINSW_A2
+# rides at about 1.6 V and is shorted to its return when the button is pressed; PIJ2_A2 is the same part's
+# open-drain INT output, held at +3V3 by R3 on board A. The B line of each pair is the lead's own return and
+# is GND at the far end, so its diode to this board's ground is what gives the discharge somewhere to go that
+# is not the lead. The LTC2954 declares +-10 kV HBM on PB, which is the part being built for a button and is
+# not a substitute for a clamp: HBM is a 1.5 k / 100 pF hand model and IEC 61000-4-2 contact discharge is a
+# 330 R / 150 pF waveform with several times the energy at the same voltage.
+esd("U10", "MAINSW_A2", "MAINSW_B2", "+3V3"); esd("U11", "PIJ2_A2", "PIJ2_B2", "+3V3")
 # --- e-paper: the bare E2370KS0C1 on a 24-way ZIF (top strip, top side) with the PDi rev 02 driving circuit behind a P-FET power switch (leakage: "connect to a transistor switch")
 synth("J_EPD", "EPD24", "Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way; pin names per the PDi driving circuit note rev 02)", "ZIF24",
      {2: "EPD_GDR", 3: "EPD_RESE", 5: "EPD_VDHR", 8: "GND", 9: "EPD_BUSY", 10: "EPD_RST", 11: "EPD_DC", 12: "EPD_CS", 13: "EPD_SCL", 14: "EPD_SDA", 15: "EPD_VCC", 16: "EPD_VCC", 17: "GND", 18: "EPD_VDDD",
@@ -231,7 +244,7 @@ def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("RIBBON FROM B16, 5 V, 3.3 V LDO, USB AND BUS ESD, FLAGS", ["J_PANEL", "C1", "C2", "U5", "C3", "C4", "U6", "U7", "U8", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05"]),
             ("RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS", ["U3", "U4", "Y1", "C5", "C6", "R1", "R2", "R3", "R4", "R5", "JP1"] + ["C%d" % k for k in range(7, 17)] + ["TP1", "TP2", "TP3", "R6", "D18", "R7", "R8"]),
             ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON INVERTER, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "JP2"]),
-            ("LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS", ["SW_LIGHT", "Q1", "R17", "R18", "Q2", "R19", "R20", "TP4", "TP5"] + [p["ref"] for p in P if p["ref"].startswith("D") and p["ref"][1:].isdigit() and int(p["ref"][1:]) <= 17] + ["R%d" % k for k in range(21, 43)] + ["Q3", "SW_MAIN", "SW_PI", "SW_TEST", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C26", "J_MAINSW", "FB3", "FB4", "C27", "J_PIJ2"]),
+            ("LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS", ["SW_LIGHT", "Q1", "R17", "R18", "Q2", "R19", "R20", "TP4", "TP5"] + [p["ref"] for p in P if p["ref"].startswith("D") and p["ref"][1:].isdigit() and int(p["ref"][1:]) <= 17] + ["R%d" % k for k in range(21, 43)] + ["Q3", "SW_MAIN", "SW_PI", "SW_TEST", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C26", "U10", "J_MAINSW", "FB3", "FB4", "C27", "U11", "J_PIJ2"]),
             ("E-PAPER ZIF AND THE PDi BOOST, SOUNDER, LIGHT SENSOR, CAMERA MOUNT", ["J_EPD", "Q5", "C28", "C29", "L1", "Q6", "D19", "C30", "C31", "D20", "D21", "C32", "C33", "C34", "C35", "C36", "C37", "BZ1", "Q4", "U_LIGHT", "C38", "CAM_H1", "CAM_H2", "J_HSJ1", "J_HSJ2"])]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
 SECTIONS.append(("STANDOFF SCREWS (GND BOND), TEST POINTS, THE REST", [p["ref"] for p in P if p["ref"] not in placed_refs]))
