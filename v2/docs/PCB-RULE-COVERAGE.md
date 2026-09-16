@@ -47,7 +47,7 @@ appears in the gap register.
 | RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_return_path | tests/test_board_gates.py | **ENFORCED** |
 | RET-003 | RETURN_PATH | BLOCKER | gen_pcb_a3.py In2 pours | ref_change.py -> return_stitch | tests/test_ref_change.py | **SOURCE_UNVERIFIED** |
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py, tests/test_signal_class.py | **ENFORCED** |
-| RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | check_pcb_d.py, partial and board D only |  | **GENERATED_ONLY** |
+| RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | rf_line.py, check_pcb_d.py -> rf_line | tests/test_rf_line.py | **ENFORCED** |
 | RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> check_contracts_<letter> | tests/test_gate_fixtures.py | **ENFORCED** |
 | RTE-001 | ROUTING | BLOCKER | gen_pcb_*.py design rules | drc.sh, fab_limits.py -> hardset-routed-board-gate, fab_limits | tests/test_fab_limits.py | **ENFORCED** |
 | RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
@@ -71,8 +71,8 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 42 |
-| GENERATED_ONLY | 2 |
+| ENFORCED | 43 |
+| GENERATED_ONLY | 1 |
 | VERIFIED_MANUALLY | 2 |
 | SOURCE_UNVERIFIED | 4 |
 | OWNER_DECISION_REQUIRED | 7 |

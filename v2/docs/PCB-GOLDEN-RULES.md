@@ -1179,7 +1179,7 @@ keep-outs the modules demand are respected.
 | verified by | SCRIPT, SIMULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at ROUTED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_d3.py, gen_pcb_b3.py keep-outs |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1196,7 +1196,16 @@ filter is verified, and the LPF values are flagged for a simulation that has not
 VERDICT on purpose (16 September 2026): it named check_pcb_d, board D's own gate, while the rule applies to B
 as well, so the day it was promoted board B would have read a PASS off a gate that looks at no RF line.
 Nothing verifies this rule on either board, and the coverage map says so rather than pointing at the nearest
-gate
+gate 16 September 2026, evening: THE FIRST HALF IS MEASURED NOW AND IT FOUND ELEVEN LINES. Every board
+declares an RF class with a 50 ohm single-ended target (intent.Z_DEFAULT) and impedance_check judges PAIRS:
+the string z_se does not appear in it, so the target was declared on every board and read by nothing.
+rf_line.py computes each such net from the width it was ROUTED at on each layer against the board own
+stackup, by the closed form alone because this project two-dimensional solver calibration was measured on
+differential geometries. Board A: all eleven blind-mate RF paths sit on In2.Cu at 0.350 mm, which is 25.5 ohm
+on that stack against the 50 their class asks for. The width is right for the OUTER layer the class was drawn
+for and the router put the lines inside, which is the shape of defect this rule exists to catch. What is
+still not judged is the ground clearance of a coplanar line, the via fence, the launch and the filter, so the
+rule stays GENERATED_ONLY in its gap category while its verdict is now real
 
 ### RF-002  transmit inhibit is hardware
 
