@@ -209,3 +209,30 @@ def t_the_rule_blocks_what_ships_and_not_what_routes():
     i2 = fin.index("port_protect.py")
     assert "VERDICT_ADVISORY" not in fin[max(0, i2 - 200):i2], \
         "the finish's own run is advisory too, which would leave TRN-001 deciding nothing anywhere"
+
+
+def t_the_finding_names_the_active_part_that_takes_the_transient():
+    """DEFECTIVE fixture, expected verdict FAIL, and the row must name BOTH parts of the path.
+
+    The walk carried `crossed_active` as a boolean, so every row read "the clamp (D9 on OUT) is behind an
+    active part" and no row ever said WHICH part. That is the one fact an owner needs in order to rule on the
+    topology: the path is connector -> ACTIVE PART -> clamp, and naming only the clamp describes two thirds of
+    it. Board E's decision 31 could not be written from this evidence on 16 September 2026.
+
+    The acceptable-construction direction is held by t_protection_is_a_chain_through_a_fuse: a clamp behind a
+    FUSE is protection and must not be reported here at all.
+    """
+    restore = _with_ports("d", [{"ref": "J_X", "why": "the shore DC inlet"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-name-")
+        p = _net(d, {"J_X": "inlet", "F9": "10 A blade", "Q9": "CSD18510 pass FET", "D9": "SMCJ33A", "U1": "load"},
+                 {"IN": [("J_X", "1"), ("F9", "1")], "FUSED": [("F9", "2"), ("Q9", "1")],
+                  "OUT": [("Q9", "2"), ("D9", "1"), ("U1", "3")], "GND": [("J_X", "2"), ("D9", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "the defective fixture did not FAIL:\n%s" % out[-600:]
+        assert "ACTIVE Q9" in out, "the row does not name the active part that sees the transient:\n%s" % out[-600:]
+        assert "CLAMP D9" in out, "the row does not name the clamp:\n%s" % out[-600:]
+        # and the values, because a ruling needs the part, not only the designator
+        assert "CSD18510" in out and "SMCJ33A" in out, "the row names designators without their values:\n%s" % out[-600:]
+    finally:
+        restore()
