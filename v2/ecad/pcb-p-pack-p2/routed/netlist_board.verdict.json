@@ -18,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "9846537106eef0c9"
+   "sha256_16": "debf29d6528c4309"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -32,9 +32,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9cbf474537ee9ad0"
+  "tools_tree_sha": "4e7275f50f847a15"
  },
- "ts": "2026-09-16T17:25:26Z",
+ "ts": "2026-09-16T18:04:51Z",
  "verdict": "PASS",
  "version": "unknown"
 }

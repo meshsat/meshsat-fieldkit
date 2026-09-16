@@ -65,7 +65,8 @@ def rated_kind(ref):
     any of those apart. The letters are taken whole and matched EXACTLY against both tables, so a new prefix is
     decided here and in no other place, and an unknown one is not rated rather than guessed at.
     """
-    letters = ref[:len(ref) - len(ref.lstrip("ABCDEFGHIJKLMNOPQRSTUVWXYZ_"))].rstrip("_") if ref else ""
+    import rules_lib as _R                     # the one place a prefix is decided, shared with reliability.py
+    letters = _R.ref_prefix(ref)
     if letters in NOT_RATED: return False
     return letters in RATED
 
