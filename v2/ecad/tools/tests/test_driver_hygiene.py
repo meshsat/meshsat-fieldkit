@@ -993,3 +993,39 @@ def t_a_tool_does_not_default_to_a_mode_its_own_comment_says_does_not_work():
     # and the reason is still written beside it, because a default with no reason is the next thing to drift
     assert "cannot work" in src or "Concurrent jobs cannot" in src, \
         "the paragraph explaining why sequential is the default is gone"
+
+
+def t_no_deliverable_folder_is_AHEAD_of_the_phase_its_board_file_declares():
+    """A cut that took its phase from the command line, 16 September 2026.
+
+    `boards/<letter>.json` declares the phase, and the set gate refuses a folder that names an EARLIER one:
+    that folder is a board this set is no longer building. The reverse says something worse and nothing was
+    reading it. Board C's newest folder was C24, cut and committed from the board this tree holds, while
+    `boards/c.json` still said C18: the cut had been given a phase on the command line, so the current
+    deliverable read STALE against a declaration six phases behind it, and the only way to tell that from a
+    genuinely stale folder was to open the board and look at its silk.
+
+    A folder ahead of the declaration is always a bookkeeping failure, never a state the pipeline can reach on
+    its own, because the generators stamp what this file says."""
+    import json, glob, re
+    from harness import Skip
+    boards = os.path.join(TOOLS, "boards")
+    rel = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "release", "revA", "boards")
+    if not os.path.isdir(rel): raise Skip("no release tree here")
+    bad = []
+    for f in sorted(glob.glob(os.path.join(boards, "*.json"))):
+        letter = os.path.basename(f)[:-5]
+        try: declared = (json.load(open(f, encoding="utf-8")) or {}).get("phase")
+        except ValueError: continue
+        if not declared: continue
+        m = re.match(r"^([A-Z]+)(\d+)$", declared.upper())
+        if not m: continue
+        stem, num = m.group(1), int(m.group(2))
+        for d in sorted(glob.glob(os.path.join(rel, "meshsat-pcb-%s-revA-*" % letter))):
+            n = os.path.basename(d).split("-")[-1].upper()
+            if n == "QUOTE": n = os.path.basename(d).split("-")[-2].upper()
+            mm = re.match(r"^(%s)(\d+)$" % stem, n)
+            if mm and int(mm.group(2)) > num:
+                bad.append("%s: the folder %s is ahead of the phase boards/%s.json declares (%s)"
+                           % (letter.upper(), os.path.basename(d), letter, declared))
+    assert not bad, "; ".join(bad)
