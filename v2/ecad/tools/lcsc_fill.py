@@ -107,7 +107,11 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^2A hold 1812$", "Fuse_1812"): "C210837",
  (r"^2\.5A hold 30V 1812$", "Fuse_1812"): "C52748011",   # LUTE 1812L250/30GR: 2.5 A hold, 5 A trip, 30 V, 40 A fault; the 16 V part it replaces would not survive the clamp on that rail
  (r"^12 MHz 3225$", "Crystal_SMD_3225"): "C9002",   # 20 pF load, paired with the 33 pF caps
- (r"^24 MHz 3225$", "Crystal_SMD_3225"): "C70571",  # 18 pF load, paired with the 27 pF caps
+ (r"^24 MHz 3225$", "Crystal_SMD_3225"): "C164058",  # 24 MHz +-10 ppm, LOAD 12 pF (TAXM24M4RFBCCT2T, stock 75k), which is what
+                                                     # the 18 pF capacitors beside it make: 18 in series with 18 is 9 pF and the pins and
+                                                     # tracks add about 3. C70571 stood here and is an 18 pF part, so the three hub crystals
+                                                     # were loaded a third light and ran about 54 ppm fast (16 September 2026). Same land,
+                                                     # same family as the 25 MHz C164047 already on this board, no layout change.
  (r"^2N7002\b", "SOT-23"): "C8545",
  (r"^BC847\b", "SOT-23"): "C20069135",
  (r"^BC857\b", "SOT-23"): "C556165",

@@ -2182,3 +2182,46 @@ measurement, 21 open connections with the grid against 0 without, and board C pa
 connections are. The arms will be compared at the SAME pass number as well as at their caps, because a
 deterministic router given more passes can only improve, and reading a 4-pass board against a 29-pass board
 would measure the clock rather than the grid. The numbers go in the record when they land.
+
+## Decision 37, 16 September 2026: board D asks for two crystals that do not exist, and the part it was certified against is four times the frequency
+
+**What was found, and it is on the board closest to finished.** Board D draws two 6 MHz crystals, one for the
+TUSB2046B hub (its PLL multiplies 6 MHz to 48) and one for the PCM2912A codec (which needs 6 MHz +-500 ppm for
+both its USB and its audio function). Both sit on a `Crystal_SMD_3225-4Pin` land, 3.2 x 2.5 mm, and both were
+certified against **C448646, which JLCPCB's own catalogue calls NX3225SA-25MHz**: a 25 MHz part. A hub whose
+PLL wants 6 MHz does not enumerate at 25, and a codec whose audio frame is derived from 6 MHz does not play.
+
+**Why the certification said yes.** `same_part` compares the manufacturer PART NUMBER, and a jellybean row
+("6 MHz 3225") names none, so the row was decided on package and stock alone. Fixed at the source the same
+hour: a value that BEGINS with a frequency is checked against the catalogue entry's own frequency, applied to
+what `certify()` returns rather than at each of its four CERTIFIED branches, with the ferrite and inductor
+cases (a frequency that is a CONDITION, not the part) excluded and tested.
+
+**And the land cannot hold the part anyway.** A search of JLCPCB's catalogue for a passive 6 MHz crystal
+returns nothing in a 3225 package: every 6 MHz part in that size is a CMOS oscillator, and the passive 6 MHz
+crystals are HC-49 class, 11.5 x 4.5 mm. That is physics rather than stock: a 6 MHz fundamental blank does not
+fit a 3.2 x 2.5 mm case. So the board as drawn is not buildable at any price, and this is not a code swap.
+
+### The options
+
+| | what it is | cost |
+|---|---|---|
+| **1. two 6 MHz CMOS oscillators** (recommended) | a 3225 4-pin oscillator drops into the SAME land: pin 4 VDD, pin 2 GND, pin 3 OUT into XTAL1 / XTI, pin 1 OE to VDD. XTAL2 and XTO are left open, which both datasheets explicitly permit (TUSB2046B: "a 6-MHz oscillator may be used by connecting the output to the XTAL1 pin and leaving the XTAL2 pin open. The oscillator TTL output must not exceed 3.6 V"; PCM2912A: "An external clock can be supplied through XTI; if an external clock is supplied, XTO must be left open") | about 5 mA each, continuous, including while the hub is suspended (the hub's own oscillator cell powers down and an external one does not); an extended-library part fee per order; +-10 ppm against the +-500 ppm the codec asks for. It DROPS four load capacitors, the 1.5 k damping resistor and the load-capacitance question entirely, and changes no land |
+| 2. two HC-49S-SMD 6 MHz crystals | the reference circuit of both datasheets, 20 pF load, C1 = C2 = 27 pF and Rd 1.5 k as TI's figure 6 gives them, plus the 1 MOhm the codec asks for and does not have today | about 104 mm2 of an 80 x 62 mm board against the 16 mm2 the two 3225 lands use now, on a board with 211 footprints. It keeps the hub's suspend current at the hub's own figure |
+| 3. one oscillator feeding both | one part, one fan-out to two inputs | a shared clock and a track between two ICs; saves 5 mA and one part over option 1 and adds a distribution question to a board that has none today |
+
+**The session's reading.** Option 1. The two datasheets each name it, the land does not change, the part list
+gets shorter, and the thing it costs is milliamps in a kit whose radio draws amps. Option 2 is the textbook
+answer and it wants a hundred square millimetres this board does not have spare. **Either way board D is
+re-placed and re-routed**: its clock parts change, and D12's 0 hard and 0 unrouted are a result about a board
+that cannot be built.
+
+**What is owed with it.** The codec's crystal network has no 1 MOhm feedback resistor, which its datasheet
+asks for ("one high (1-MOhm) resistor and two small capacitors"); under option 1 that disappears with the
+crystal, and under option 2 it is added.
+
+**Board B, found in the same sweep and fixed without a decision** (no land changes and no owner question in
+it): the three 24 MHz hub crystals carried C70571, an 18 pF load part, with 18 pF capacitors beside them,
+which make about 12 pF once the pins and tracks are counted. A third light pulls a 24 MHz crystal roughly
+54 ppm fast, inside USB's +-500 ppm and outside what the part is specified for. The code is now C164058,
++-10 ppm and a 12 pF load, the same family as the 25 MHz part already on that board, 75,000 in stock.

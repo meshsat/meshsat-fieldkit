@@ -476,3 +476,36 @@ def t_every_board_of_the_set_gets_a_contracts_verdict_even_when_nothing_names_it
     # the polarity contract is the one that matters: getting it wrong destroys a board rather than failing a test
     i = src.index("the pack pair is not crossed")
     assert "boards={\"E\", \"P\"}" in src[i - 400:i + 200], "the polarity check does not name both boards"
+
+
+def t_a_value_that_names_a_frequency_is_checked_against_the_part_that_was_found():
+    """Board D's two crystals read "6 MHz 3225" and carried C448646, which JLCPCB's own catalogue calls
+    NX3225SA-25MHz. Both were CERTIFIED, because same_part compares a manufacturer PART NUMBER and a
+    jellybean row names none, so the row was decided on package and stock alone. A hub whose PLL wants 6 MHz
+    does not enumerate at 25."""
+    import jlc_certify as J
+    bad = J.frequency_conflict("6 MHz 3225 (CL 20 pF; C1 = C2 = 27 pF)",
+                               dict(desc="NX3225SA 25MHz 8pF", model="NX3225SA-25MHz-STD-CSR-6", code="C448646"))
+    assert bad and "6 MHz" in bad and "25 MHz" in bad, bad
+    ok = J.frequency_conflict("12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT",
+                              dict(desc="12MHz 30ppm 10pF", model="ABM8-272-T3", code="C20625731"))
+    assert ok is None, ok
+
+
+def t_a_frequency_that_is_a_condition_is_not_a_part_number():
+    """A ferrite is specified AT a frequency and an inductor's catalogue line may name its self-resonance:
+    neither is the part. Only a value that BEGINS with a frequency is one."""
+    import jlc_certify as J
+    assert J.frequency_conflict("600R@100MHz", dict(desc="600Ohm@100MHz 0603", model="X", code="C1002")) is None
+    assert J.frequency_conflict("68nH 0805 (LPF, 145 MHz 5th order)",
+                                dict(desc="68nH 1.2A SRF 1.5GHz", model="LQW2BAN68NG00L", code="C2044803")) is None
+
+
+def t_the_frequency_guard_is_applied_to_the_result_and_not_at_each_return():
+    """certify() has four places that write CERTIFIED. A guard repeated at each of them is one a fifth return
+    will miss, so it is applied once, to what certify returns."""
+    src = open(os.path.join(TOOLS, "jlc_certify.py"), encoding="utf-8").read()
+    assert "def _certify(" in src, "the guarded implementation is not separated from the guard"
+    i = src.index("def certify(")
+    w = src[i:i + 900]
+    assert "_certify(" in w and "frequency_conflict(" in w, "certify does not apply the guard to its result"
