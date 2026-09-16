@@ -193,11 +193,6 @@ closers:
 # either invoked by a chain, a board declaration or another tool, or it is declared here with the reason, and
 # closer_audit refuses anything else. "Superseded" is an answer; "nobody has wired it yet" is an item.
 idle_tools:
- - tool: logo_silk.py
-   why: "OWED, not superseded: the owner ruled the mark on to these boards (traced from the sticker master,
-     never redrawn) and no board of the seven carries a silkscreen polygon at all. It needs a declared position
-     per board on copper-free silk, which is a placement decision, and it is queued with the next placement
-     pass rather than guessed at from here"
  - tool: post_fix.py
    why: "superseded: the per-board post-route fixes are declared in boards/<letter>.json (`post_fix`), and only
      board B names one today; this is the original shared version those were split out of"

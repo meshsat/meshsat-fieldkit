@@ -102,6 +102,11 @@ grep -E 'class_floor:|FAIL' out/class_floor.log
 GEN3WHY=$(grep -aE 'unplaced|footprint missing|SystemExit|Traceback|not in the netlist|Error' out/gen3.log | grep -av 'memory leak' | tail -1 | cut -c1-200)
 [ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3: ${GEN3WHY:-see out/gen3.log}" out/gen3.log
 python3 ../tools/stackup_write.py $N.kicad_pcb 2>&1 | tail -1   # the JLC stackup in the board file, so the impedance read-back reads the project
+# THE MARK (owner ruling: traced from the sticker master, never redrawn). logo_silk.py has been able to draw it
+# since the trace and no board of the seven carried a silkscreen polygon, because nothing chose where it goes
+# and no chain called it. The position is declared per board (`logo` in boards/<letter>.json), silk_space.py
+# reports the free rectangles to choose from, and a board that declares nothing gets nothing and says so.
+python3 ../tools/logo_stage.py $N.kicad_pcb $L 2>&1 | grep -E 'logo_stage' | tail -2
 [ "$BPAFTER" = stackup ] && python3 ../tools/bypass_place.py $N.kicad_pcb 2>&1 | grep -E "bypass_place" | tail -8
 rm -f out/check_pcb_$L.verdict.json
 python3 ../tools/check_pcb_$L.py $N.kicad_pcb > out/check_$L.log 2>&1; GATE=$?; grep -E 'FAIL|RESULT|^verdict:' out/check_$L.log
