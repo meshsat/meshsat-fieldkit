@@ -90,3 +90,22 @@ def t_the_committed_chain_passes_every_check():
     r = E.check()
     assert not r["fails"], r["fails"]
     assert r["stages"] >= 8 and r["checked"] >= 50, r
+
+
+def t_a_tree_without_the_vendor_library_leaves_the_citations_unjudged():
+    """16 September 2026, found in the sweep within minutes of the gate landing: the sweep runs in a tree
+    archived from v2/ecad alone, so every basis file read as missing and eleven TRUE citations were reported as
+    failures. A missing library says nothing about whether a fuse is above its conductor, so the coordination
+    is judged as always and the citations are counted as unjudged, which is neither a pass nor a failure."""
+    r = E.check(vendor="/nonexistent-vendor-library")
+    assert not r["fails"], r["fails"]
+    assert r["unjudged_citations"] > 0 and r["vendor_seen"] is False, r
+    assert any("vendor library is not in this tree" in n for n in r["notes"]), r["notes"]
+
+
+def t_an_empty_vendor_library_is_not_the_same_as_an_absent_one():
+    """A folder that EXISTS and does not hold the file is a citation that does not resolve, which is the thing
+    the check is for. Only the absence of the library itself is unjudgeable."""
+    import tempfile
+    r = E.check(vendor=tempfile.mkdtemp(prefix="empty-vendor-"))
+    assert r["fails"] and r["vendor_seen"] is True, r

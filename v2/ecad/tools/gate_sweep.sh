@@ -53,7 +53,8 @@ rm -rf $S; mkdir -p $S/out
 for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
-          edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill; do
+          edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
+          energy_chain; do
   rm -f "$P/routed/$_g.verdict.json"
 done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
@@ -108,6 +109,11 @@ run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # above. It is read-only by construction, like everything else here: check_contracts.py opens netlists and
 # writes a verdict.
 run "cross-board contracts" python3 $T/check_contracts.py "$E"
+# THE STORED-ENERGY CHAIN (rules BAT-002 and PWR-003, 16 September 2026). It is a property of the SET rather
+# than of one board, like the contracts above: the chain runs from the pack through four boards, and a stage
+# is checked against the netlist of the board it claims to be on. Every board's evidence carries the verdict,
+# because every board the chain crosses is judged by it.
+run "energy chain" python3 $T/energy_chain.py --ecad "$E"
 # The order-code gate reads a BOM THAT ALREADY EXISTS and never makes one. Exporting it here would turn this
 # sweep into a producer of a fabrication artefact, which the execution-paths floor refuses and is right to:
 # read-only is this tool's whole property, and a producer that writes only into its own copy is still a

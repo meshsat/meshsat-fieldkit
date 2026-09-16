@@ -462,6 +462,15 @@ rules:
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
    maturity_at_writing: SOURCE_UNVERIFIED
+   false_positive_analysis: >
+     These tests compare declared numbers, so a false refusal is a wrong DECLARATION rather than a wrong board,
+     and it takes one of three shapes. A peak declared for a whole node while the element protects a branch of
+     it, which is the first run's own error and is now two stages. A conductor rating left blank, which is
+     skipped rather than read as zero, because an absent number must not fail a stage. And an interrupting
+     rating of null, which an eFuse legitimately has, since it limits current rather than breaking a fault:
+     that test is skipped for such an element instead of failing it. Every refusal prints the stage, both
+     numbers and their sources, and the melting time is printed and never asserted, because one point of an
+     I2t figure is not a clearing curve.
 
  - id: DEC-001
    domain: DECOUPLING
@@ -1913,6 +1922,17 @@ rules:
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
    maturity_at_writing: SOURCE_UNVERIFIED
+   false_positive_analysis: >
+     A false refusal here has three shapes and each is answered mechanically. The first is a CITATION refused
+     for its punctuation: the gate's first run rejected two true sources for a trailing colon and a trailing
+     parenthesis, so a basis token is trimmed of sentence punctuation before the file is looked for, and the
+     name it looked for is printed when it still does not resolve. The second is a stage whose protective
+     element is named on a board whose netlist is not in this tree: that is a note and never a failure,
+     because a board that cannot be read says nothing about the chain. The third is a MODELLING error mistaken
+     for a design error, which is what the first run found: a stage carried the pack node's 18 A peak while
+     naming a 2 A eFuse as its protection, and the honest answer was to split the stage, not to loosen the
+     test. What stops a wrong refusal from standing is that every refusal names the stage, the two numbers it
+     compared and the file each came from, so it can be checked in one line.
 
  - id: DOC-001
    false_positive_analysis: >

@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "checks": 69,
+  "citations_unjudged": 0,
+  "fail": 0,
+  "stages": 9
+ },
+ "denominator": 69,
+ "evidence": [],
+ "inputs": {
+  "chain": "pcb_energy_chain.yaml"
+ },
+ "note": "the stored-energy chain end to end: every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "BAT-002",
+  "PWR-003"
+ ],
+ "tool": "energy_chain",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "62751d9695561e0a"
+ },
+ "ts": "2026-09-16T14:48:10Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
