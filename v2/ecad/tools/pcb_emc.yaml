@@ -1,0 +1,219 @@
+# SOURCE, PATH, VICTIM (rule EMC-001, MESHSAT-862, 16 September 2026).
+#
+# The rule asks for an EMC sheet per board: the switching sources with their frequencies and edge rates, the
+# sensitive victims, the coupling paths considered and the measure taken at each, and a pre-compliance
+# measurement plan for what cannot be decided on paper. It read "no verification" on six boards.
+#
+# WHAT IS HERE AND WHAT IS NOT. Every frequency below comes from the part's own datasheet or from the timing
+# resistor this project's generator sets, and `emc_sheet.py` refuses a source whose basis file is not in the
+# tree. EDGE RATES ARE MOSTLY NOT PUBLISHED for these converters, and no number is invented for them: where a
+# datasheet gives none the entry says so, and the measure recorded against that source is the one that does not
+# depend on knowing it, which is the loop area of the switch node and its return. The spectrum of a 500 kHz
+# converter with an unknown edge is bounded below by its harmonics and not bounded above by anything on paper,
+# which is exactly why the pre-compliance plan at the end of each board is not optional.
+#
+# NOTHING HERE IS A MEASUREMENT. No board has been built and no scan has been run. This is the paper half of
+# EMC-001, and the plan names the other half.
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+
+boards:
+
+ a:
+   title: PCB-A POWER + I/O
+   sources:
+    - {ref: U2,  part: LM5176, what: "buck-boost, VIN_RAW to the 20 V charge bus", f_khz: 300, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k in gen_sch_a.py sets 300 kHz"}
+    - {ref: U13, part: LM5176, what: "buck-boost, VBAT to the 13.8 V PA rail at 6 A", f_khz: 300, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
+    - {ref: U15, part: LM5176, what: "buck-boost, VBAT to the 12 V HF rail", f_khz: 300, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
+    - {ref: U16, part: LM5176, what: "buck-boost, VBAT to the 54 V PoE rail", f_khz: 300, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
+    - {ref: U19, part: LM5176, what: "buck-boost, VBAT to the USB-PD supply", f_khz: 300, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
+    - {ref: U4, part: AP64500, what: "5 A buck, slot rail 1", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/diodes/diodes-ap64500.pdf; RT 68k in gen_sch_a.py"}
+    - {ref: U5, part: AP64500, what: "5 A buck, slot rail 2", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U6, part: AP64500, what: "5 A buck, slot rail 3", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U7, part: AP64500, what: "5 A buck, the device rail", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U12, part: TPS62933, what: "3 A buck, this board's 3.3 V logic", f_khz: 500, edge_ns: null,
+       basis: "the RT pin is left open, which the part's own table gives as 500 kHz"}
+   victims:
+    - {what: "the five INA226 rail monitors", refs: [U8, U9, U10, U11, U14],
+       why: "they measure millivolts across 5 mOhm shunts sitting between the converters they monitor"}
+    - {what: "the charger's current-sense inputs", refs: [U3],
+       why: "the BQ25731 regulates on a sense voltage of the same order as the ripple on the node it senses"}
+   paths:
+    - {from: "the five LM5176 switch nodes", to: "the sense pairs of the INA226s and the charger",
+       mechanism: "capacitive and inductive coupling from the switch node into a high-impedance sense pair",
+       measure: "each sense pair is a Kelvin pair routed together from the shunt's own pads, and the rail's
+         current travels in pours and bands rather than in tracks beside the sense pair (power_copper.py)",
+       evidence: "dc_drop's layer share per rail shows the current in the pours; the pair geometry is in gen_pcb_a3.py"}
+    - {from: "every switch node", to: "the mezzanine harness, the panel ribbon and the dock",
+       mechanism: "common-mode current on the cables leaving the board, which are the only antennas this kit has",
+       measure: "each leaving conductor carries its own return in the same connector, and the rails are filtered
+         at the connector; the case is the only shield and the plate is bonded to it",
+       evidence: "the connector pin maps in gen_sch_a.py; GND-002 is where the chassis bond is decided and is
+         still open"}
+   pre_compliance:
+    - "radiated emissions with all five converters loaded and the PA rail at 6 A, which is the worst case this
+       board can present and cannot be predicted from a datasheet with no edge rate in it"
+    - "conducted emissions on the vehicle input with the kit running from shore power"
+    - "the INA226 readings with and without the PA transmitting, which is the coupling this sheet cares about
+       most and the one a scan will not show"
+
+ b:
+   title: PCB-B COMPUTE
+   sources:
+    - {ref: U25, part: AP63203, what: "2 A buck, the shared 3.3 V logic", f_khz: 1100, edge_ns: null,
+       spread_percent: 6,
+       basis: "v2/vendor/diodes/diodes-ap63200-series-buck.pdf: fSW 1100 kHz, frequency spread spectrum +-6%"}
+    - {ref: U26, part: TPS62933, what: "buck, the Ethernet switch's 1.2 V core", f_khz: 500, edge_ns: null,
+       basis: "the RT pin is left open, 500 kHz"}
+    - {ref: U103, part: AP64500, what: "5 A buck, slot 1 card-socket 3.3 V", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U104, part: AP64500, what: "5 A buck, slot 1 switch and NVMe 3.3 V", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U105, part: TPS62933, what: "buck, slot 1 PCIe switch core", f_khz: 500, edge_ns: null, basis: "RT open, 500 kHz"}
+    - {ref: U106, part: TPS62933, what: "buck, slot 1 hub core", f_khz: 500, edge_ns: null, basis: "RT open, 500 kHz"}
+    - {ref: U203, part: AP64500, what: "5 A buck, slot 2 card-socket 3.3 V", f_khz: 500, edge_ns: null, basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U204, part: AP64500, what: "5 A buck, slot 2 switch and NVMe 3.3 V", f_khz: 500, edge_ns: null, basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U205, part: TPS62933, what: "buck, slot 2 PCIe switch core", f_khz: 500, edge_ns: null, basis: "RT open, 500 kHz"}
+    - {ref: U206, part: TPS62933, what: "buck, slot 2 hub core", f_khz: 500, edge_ns: null, basis: "RT open, 500 kHz"}
+    - {ref: U303, part: AP64500, what: "5 A buck, slot 3 card-socket 3.3 V", f_khz: 500, edge_ns: null, basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U304, part: AP64500, what: "5 A buck, slot 3 switch and NVMe 3.3 V", f_khz: 500, edge_ns: null, basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U305, part: TPS62933, what: "buck, slot 3 PCIe switch core", f_khz: 500, edge_ns: null, basis: "RT open, 500 kHz"}
+    - {ref: U306, part: TPS62933, what: "buck, slot 3 hub core", f_khz: 500, edge_ns: null, basis: "RT open, 500 kHz"}
+    - {ref: U5, part: TPS23861, what: "Power over Ethernet source controller, 54 V to the wall jack",
+       f_khz: null, edge_ns: null,
+       basis: "not a converter: it switches a pass FET on and off at the port and its slew is set by the FET's
+         gate drive; its emission is the 54 V cable, which is why it is in this list at all"}
+   victims:
+    - {what: "the GNSS receiver and its active antenna feed", refs: [U11],
+       why: "L1 to L5 reception at -130 dBm beside fourteen converters and three computers"}
+    - {what: "the LoRa module at 868 MHz", refs: [U12], why: "an SX1262 receiver on the same board as its own transmitter's supply"}
+    - {what: "the two 2.4 GHz radios", refs: [U13, U14], why: "the Zigbee coordinator and the Thread RCP, two CC2652P receivers inside the case"}
+    - {what: "the Ethernet PHY and its magnetics-less module links", refs: [U1],
+       why: "capacitively coupled gigabit links, which decision 29 is about"}
+   paths:
+    - {from: "the fourteen buck switch nodes", to: "the GNSS and 868 MHz receivers",
+       mechanism: "harmonics of 500 kHz and 1.1 MHz reaching into the receiver's own band through the shared
+         3.3 V and 5 V rails and through the board's copper",
+       measure: "each converter's input and output capacitors sit at its own pins, the receivers run from their
+         own filtered rails behind load switches, and the antenna feeds leave on coax rather than on the board",
+       evidence: "the decoupling declarations in gen_sch_b.py; DEC-001 measures the loop areas"}
+    - {from: "the PoE port and the module Ethernet links", to: "outside the case",
+       mechanism: "common-mode current on an unshielded twisted pair that leaves the case",
+       measure: "the wall jack is a shielded RJ45 whose shield lands on the case; the module links are internal",
+       evidence: "gen_sch_b.py's jack declaration; decision 29 covers the transformerless links"}
+   pre_compliance:
+    - "radiated emissions with three modules booted, both radios transmitting and the PoE port loaded"
+    - "GNSS sensitivity inside the closed case, measured against the same receiver outside it: the number that
+       decides whether this architecture works at all"
+    - "conducted emissions on the PoE port"
+
+ c:
+   title: PCB-C CONTROL PANEL
+   sources: []
+   _sources_why: "this board carries no switching converter at all: its 3.3 V comes from a TLV75533 linear
+     regulator and everything else on it is a switch, an LED or a sensor. The LED rail is PWM'd by the panel
+     controller at a few hundred hertz, which is named as a source below because it is the only switching edge
+     on the board."
+   victims:
+    - {what: "the panel's analogue sensor inputs and the e-paper", refs: [U3],
+       why: "the RP2040's ADC inputs and a display whose update is a high-impedance node"}
+   paths:
+    - {from: "the LED rail's PWM edge and the sounder drive", to: "the ADC inputs",
+       mechanism: "conducted on the shared 3.3 V and coupled into the analogue inputs beside them",
+       measure: "the LED rail has its own bulk capacitance at the panel, the sounder's FET sits at the sounder
+         rather than beside the controller, and the analogue inputs carry their own RC",
+       evidence: "gen_sch_c.py; the sounder placement is appendix 32.77's finding"}
+   pre_compliance:
+    - "ESD to every face control, which is the exposure this board has and the others do not, at the level
+       decision 34 names"
+
+ d:
+   title: PCB-D APRS
+   sources: []
+   _sources_why: "no converter on this board: the 3.3 V is a TLV75533 linear regulator and the radio's own
+     supply arrives from board A behind a ferrite. The SA868's transmitter is the emission source here and it
+     is a radio rather than a switching supply, so it sits under the victims and paths below."
+   victims:
+    - {what: "the SA868 receiver", refs: [U2],
+       why: "a VHF receiver sharing a board with a USB hub, a codec and four bridges"}
+    - {what: "the codec's analogue inputs", refs: [U6],
+       why: "microphone-level signals beside a 1 W transmitter's supply"}
+   paths:
+    - {from: "the 1 W transmitter's supply current", to: "the codec and the hub",
+       mechanism: "conducted: the transmit key pulls an amp through the shared 5 V",
+       measure: "FB1, a 600 R 2 A ferrite, separates the exciter's rail from the board's, with bulk capacitance
+         on both sides; the PTT chain is opto-isolated from the panel",
+       evidence: "gen_sch_d.py FB1 and the +5V_SA rail declaration"}
+    - {from: "the transmitter's antenna", to: "the board's own digital lines",
+       mechanism: "radiated pickup on any track long enough to be an antenna at 144 MHz",
+       measure: "the RF path is a coax pigtail from the module to the bulkhead and never board copper",
+       evidence: "the SMA declaration in gen_sch_d.py"}
+   pre_compliance:
+    - "transmit into a dummy load with the hub enumerated and the codec streaming, which is the only test that
+       shows whether the ferrite and the decoupling are enough"
+
+ e:
+   title: PCB-E1 DOCK STRIP
+   sources:
+    - {ref: U5, part: LT8705A, what: "buck-boost solar tracker", f_khz: 202, edge_ns: null,
+       basis: "RT 215k in gen_sch_e.py sets 202 kHz; the part's datasheet is not in this tree, which is a gap
+         this sheet records rather than papers over"}
+    - {ref: U12, part: AP63205, what: "2 A buck, the sensor controller's 5 V", f_khz: 1100, edge_ns: null,
+       spread_percent: 6, basis: "v2/vendor/diodes/diodes-ap63200-series-buck.pdf"}
+   victims:
+    - {what: "the outdoor sensor pod's I2C and the Geiger pulse input", refs: [U10],
+       why: "a 400 kHz bus and a pulse counter on a lead that leaves the case, which decision 31 is also about"}
+   paths:
+    - {from: "the tracker's switch node and the vehicle input", to: "the sensor pod lead",
+       mechanism: "common mode, both conducted on the shared ground and radiated inside the case",
+       measure: "the vehicle input is filtered by the SRF1260 common-mode choke, whose second winding is the
+         only place the vehicle-side return meets this board's ground (GND-001 declares that partition)",
+       evidence: "the grounds declaration in boards/e.json; the choke in gen_sch_e.py"}
+   pre_compliance:
+    - "conducted emissions and surge on the vehicle input at the level decision 34 names"
+    - "the Geiger channel's count rate with the tracker switching, which is a susceptibility question no scan
+       of emissions answers"
+
+ p:
+   title: PCB-P PACK BMS
+   sources: []
+   _sources_why: "the pack board is linear: a gauge, two FETs and their gate drive. Its only switching edge is
+     the SMBus, at 100 kHz."
+   victims:
+    - {what: "the cell taps and the coulomb counter", refs: [U1],
+       why: "four cell voltages and a 2 mOhm shunt, all measured in millivolts inside a pack that can deliver
+         hundreds of amps into a fault"}
+   paths:
+    - {from: "the pack's own load current", to: "the cell taps and the shunt sense",
+       mechanism: "IR drop in the copper the taps share with the load, read as a cell voltage",
+       measure: "every tap is a Kelvin connection through a 100 R and 100 nF filter to its own cell node, and
+         the coulomb counter's SRP and SRN are a Kelvin pair at the shunt's own pads",
+       evidence: "gen_sch_p.py's tap network; the BQ4050 datasheet's own recommendation"}
+   pre_compliance:
+    - "the gauge's reading against a reference meter at 10 A, which is the only way to know the Kelvin
+       connections are what the schematic says they are"
+
+ e5:
+   title: PCB-E5 DOCK BLOCK
+   sources: []
+   _sources_why: "the dock block is copper, holes and contact targets: no active part at all."
+   victims: []
+   paths:
+    - {from: "the pack node crossing the block's contacts", to: "the twelve signal contacts beside it",
+       mechanism: "the 10 A pack current and the signals share one contact field 43 by 26 mm",
+       measure: "the four pack contacts and their four returns are adjacent pairs, so the loop is small, and the
+         signal contacts sit on the far side of the block from them",
+       evidence: "gen_pcb_e5.py's target map, which is generated from board A's own pin positions"}
+   pre_compliance:
+    - "contact resistance and its drift over mate cycles, which is a mechanical measurement and belongs with
+       the connector's own qualification"

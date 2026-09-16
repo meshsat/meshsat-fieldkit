@@ -20,7 +20,7 @@ appears in the gap register.
 | DFM-001 | FABRICATION_DFM | BLOCKER | build_pcb.sh, export_jlc.sh | verify_deliverable.py -> verify_deliverable | tests/test_gate_fixtures.py | **ENFORCED** |
 | DOC-001 | DOCUMENTATION_CONTROL | BLOCKER | full.sh PHASE, silk_fix_all.py | final_gate.py -> final_gate_<letter> | tests/test_final_gate.py | **ENFORCED** |
 | DOC-002 | DOCUMENTATION_CONTROL | MUST_JUSTIFY | ledger.py, provenance.json | ledger_verify.py -> ledger_verify | tests/test_ledger.py | **GENERATED_ONLY** |
-| EMC-001 | EMC | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
+| EMC-001 | EMC | MUST_JUSTIFY | NONE_YET | emc_sheet.py -> emc_sheet | tests/test_emc_sheet.py | **ENFORCED** |
 | ENV-001 | PRODUCT_ENVELOPE | BLOCKER | NONE_YET | none |  | **OWNER_DECISION_REQUIRED** |
 | ENV-002 | PRODUCT_ENVELOPE | BLOCKER | claims_check.py plus claims-allow.txt, one declared exemption per line with its reason | claims_check.py -> claims_check | tests/test_gate_fixtures.py | **ENFORCED** |
 | GND-001 | GROUNDING_SHIELDING | MUST_JUSTIFY | the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py | ground_system.py -> ground_system | tests/test_ground_system.py | **ENFORCED** |
@@ -71,10 +71,10 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 32 |
+| ENFORCED | 33 |
 | GENERATED_ONLY | 7 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 2 |
+| OPEN | 1 |
 | SOURCE_UNVERIFIED | 8 |
 | OWNER_DECISION_REQUIRED | 4 |

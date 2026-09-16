@@ -399,8 +399,8 @@ coverage:
  PLN-001: {implementation: "pour_stitch.py, zone_pad_via.py, stitch_prune.py", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
    maturity: ENFORCED, gap_category: NONE, note: "isolated copper is a hard type and pour islands are stitched or removed under a guard"}
 
- EMC-001: {implementation: NONE_YET, verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "no EMC analysis of any kind exists; eleven radios and a sealed metal box",
+ EMC-001: {implementation: NONE_YET, verification: {tool: emc_sheet.py, verdict: emc_sheet, fixtures: tests/test_emc_sheet.py}, maturity: ENFORCED, gap_category: ABSENT,
+   note: "no EMC analysis of any kind exists; eleven radios and a sealed metal box 16 September 2026: THE SHEET IS DATA AND IT IS COMPARED WITH THE BOARDS. pcb_emc.yaml carries, per board, every switching source with its frequency and the datasheet or timing resistor that sets it, the sensitive victims by reference, the coupling paths with the measure taken at each and the evidence for it, and a pre-compliance plan. emc_sheet.py checks it against each board's own netlist, and the check that makes it a gate is completeness: every switching part in the netlist must be declared as a source, because a sheet listing thirteen of a board's fourteen converters reads as complete. 27 sources, 10 paths and a plan on all seven boards; C, D, P and E5 carry no converter at all and each says why. What is NOT decided here is any emission: no edge rate is invented where a datasheet publishes none, and the measurement half of this rule is the laboratory stage.",
    remediation: {action: "an EMC sheet per board and a pre-compliance plan for the kit", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [ENV-001, SI-001], p50_h: 10, p80_h: 40}}
 
  MEC-001: {implementation: "panel1450.py, gen_pcb_*.py", verification: {tool: "check_pcb_*.py", verdict: "check_pcb_<letter>", fixtures: tests/test_board_gates.py},

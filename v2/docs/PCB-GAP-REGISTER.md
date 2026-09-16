@@ -11,8 +11,16 @@ answered yet, made visible so it cannot be forgotten.
 
 ## absent (4)
 
-**EMC-001 source, path, victim** (MUST_JUSTIFY, OPEN)  
-no EMC analysis of any kind exists; eleven radios and a sealed metal box  
+**EMC-001 source, path, victim** (MUST_JUSTIFY, ENFORCED)  
+no EMC analysis of any kind exists; eleven radios and a sealed metal box 16 September 2026: THE SHEET IS DATA
+AND IT IS COMPARED WITH THE BOARDS. pcb_emc.yaml carries, per board, every switching source with its
+frequency and the datasheet or timing resistor that sets it, the sensitive victims by reference, the coupling
+paths with the measure taken at each and the evidence for it, and a pre-compliance plan. emc_sheet.py checks
+it against each board's own netlist, and the check that makes it a gate is completeness: every switching part
+in the netlist must be declared as a source, because a sheet listing thirteen of a board's fourteen
+converters reads as complete. 27 sources, 10 paths and a plan on all seven boards; C, D, P and E5 carry no
+converter at all and each says why. What is NOT decided here is any emission: no edge rate is invented where
+a datasheet publishes none, and the measurement half of this rule is the laboratory stage.  
 *Close it by* an EMC sheet per board and a pre-compliance plan for the kit. Owner **SESSION**, after ENV-001, SI-001. Effort P50 10h, P80 40h.
 
 **PWR-002 sequencing and inrush** (MUST_JUSTIFY, ENFORCED)  
