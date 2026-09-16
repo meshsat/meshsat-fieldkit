@@ -310,5 +310,22 @@
    "why": "the outside climate and ultraviolet sensor pod, through an M8 sealed receptacle on the connector plate"
   }
  ],
- "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes."
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",
+ "grounds": {
+  "GND": {
+   "what": "the board's ground, the reference for everything after the input filter, and the return the dock block carries to board A"
+  },
+  "GND_V": {
+   "what": "the VEHICLE-SIDE return, from the DC inlet through the fuse, the ideal diode and the hot-swap to the input filter. It is NOT an isolation barrier and must not be read as one: it meets GND through the second winding of the SRF1260 common-mode choke, so the two are joined at DC and separated only for common-mode current. The isolated barrier on this kit is the TRACO TEN 40 further down, and it has its own secondary",
+   "crossings": [
+    "L2"
+   ],
+   "signals": [
+    "DCIN_PGD",
+    "SHORE_INHIBIT"
+   ],
+   "_signals_why": "both are referenced across the partition on purpose and both are slow: DCIN_PGD is the LM5069's power-good going to the controller, and SHORE_INHIBIT is the opto inhibit that stops charging in the cold. Each crosses at the choke, which is the one place the two returns meet, so neither makes a loop that the partition exists to prevent"
+  }
+ },
+ "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this."
 }

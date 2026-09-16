@@ -123,5 +123,11 @@
  "copper_layers": 2,
  "_copper_layers_why": "Two layers as built. OWNER DECISION 28 IS OPEN on this: two layers cannot hold the return-path rule and the four-layer arm routes 0 and 0 in 1.4 minutes. If the ruling goes to four, this is the line that changes.",
  "external_ports": [],
- "_external_ports_why": "Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and gauge board and it sits in the case beside the cells: J_CELL is the 4S tap harness to the cell block a few centimetres away, J_TS is the thermistor lead into that same block, J_SMB is the gauge's bus to board E inside the case, and the pack current leaves on W_BP and W_BN, two soldered wire lands to board E's own entry. Every one of those conductors begins and ends inside the sealed case, so the electrostatic and surge argument that TRN-001 is about does not reach them: what reaches them is board E's inlet protection, upstream, which decision 31 covers. If a pack lead is ever brought out to a case connector this declaration is the first thing that has to change."
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and gauge board and it sits in the case beside the cells: J_CELL is the 4S tap harness to the cell block a few centimetres away, J_TS is the thermistor lead into that same block, J_SMB is the gauge's bus to board E inside the case, and the pack current leaves on W_BP and W_BN, two soldered wire lands to board E's own entry. Every one of those conductors begins and ends inside the sealed case, so the electrostatic and surge argument that TRN-001 is about does not reach them: what reaches them is board E's inlet protection, upstream, which decision 31 covers. If a pack lead is ever brought out to a case connector this declaration is the first thing that has to change.",
+ "grounds": {
+  "GND": {
+   "what": "the board's single ground: every return on this board is this net"
+  }
+ },
+ "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this."
 }
