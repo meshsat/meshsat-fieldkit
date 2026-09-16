@@ -159,7 +159,14 @@ phases behind and has not been rebuilt
 
 **DEC-001 decoupling loop area** (MUST_JUSTIFY, ENFORCED)  
 the 3 mm distance is a project number applied to every device; the loop inductance it stands for is never
-computed, and a board declares exceptions in an allow file  
+computed, and a board declares exceptions in an allow file 16 September 2026, evening: THIS RULE'S ONLY
+FAILURE WAS NOT ITS OWN. Board B read FAIL on three items and all three were RETURN-PATH lines: the bucket
+that splits intent_checks into one verdict per rule matched its keys against the whole message, and a
+return-path line quotes the net's declared basis, so board B's three STM32 core-regulator nets, declared as
+an internal-supply DECOUPLING node, were filed under decoupling. The quotation is stripped before the keys
+are matched and a line two buckets claim is named rather than counted twice. It is the composite-verdict
+defect of this morning one level down, and it means no board in this set currently has a decoupling item
+outside its declared exceptions.  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
 ## source or applicability unresolved (12)

@@ -152,3 +152,36 @@ def t_a_board_gate_reports_the_intent_items_and_does_not_count_them():
     f = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
     for name in ("intent_return_path", "intent_return_via", "intent_decoupling", "intent_rails"):
         assert name in f, "the finish does not block on %s, so removing it from the gate weakened a gate" % name
+
+
+def t_a_check_belongs_to_exactly_one_rule_and_a_quotation_cannot_move_it():
+    """16 September 2026, evening. The bucket split was written so that one decoupling capacitor 3 mm too far
+    from its pin could not fail the return-path rule. It then classified by searching the WHOLE message, and
+    every return-path line quotes the net's declared basis in brackets: board B's three STM32 core-regulator
+    nets are declared as "an internal-supply decoupling node, a local rail", so the word decoupling inside that
+    quotation put three RETURN-PATH failures into the DECOUPLING verdict and rule DEC-001 failed on board B for
+    something that is not decoupling. The quotation is stripped before the keys are matched, and a line two
+    buckets claim is named rather than counted twice."""
+    import os
+    src = open(os.path.join(TOOLS, "intent_checks.py"), encoding="utf-8").read()
+    i = src.index("BUCKETS = (")
+    w = src[i:i + 2200]
+    assert 'head = lambda t: t.split("[")[0]' in w, "the bucket keys are matched against the quoted evidence"
+    assert "k in head(t)" in w, "the whole message is still searched"
+    assert "BELONGS TO %d RULES" in src, "a check claimed by two buckets is silently counted in both"
+
+    # the real message shapes, each landing in exactly one bucket
+    BUCKETS = (("intent_return_path", ("return path",)), ("intent_return_via", ("return via",)),
+               ("intent_decoupling", ("bypass", "decoupling")),
+               ("intent_rails", ("is a declared rail", "intent rail", "intent file carries")))
+    head = lambda t: t.split("[")[0]
+    cases = {
+        "return path under IOCA_VCAP (LOW_SPEED_OR_DC): a reference exists under -0.0 of 2.9 mm "
+        "[an internal-supply decoupling node, a local rail]": "intent_return_path",
+        "return via: 41 of 245 signal vias have a ground via within 1.5 mm": "intent_return_via",
+        "bypass C18 to U6 pin 2: 2.1 mm from the pin it serves": "intent_decoupling",
+        "every power-symbol net is a declared rail (30 of 36)": "intent_rails",
+    }
+    for msg, want in cases.items():
+        owners = [n for n, keys in BUCKETS if any(k in head(msg) for k in keys)]
+        assert owners == [want], (msg[:60], owners)
