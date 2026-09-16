@@ -146,6 +146,22 @@ def main(argv, run=None, boards_dir=None):
                 + (["contracts: %s" % contracts.strip()[:80]] if rc_c != 0 else [])
                 + (["parts: %s" % certify.strip()[:80]] if rc_j != 0 else [])
                 + (["claims: %s" % claims.strip()[:80]] if rc_m != 0 else []))
+    # A PER-BOARD VERDICT AS WELL AS THE SET'S (16 September 2026). DOC-001 and OUT-001 are verified by this
+    # gate, and this gate judges the SET, so every board inherited the set's failure: board E5's own folder is
+    # the one folder that passes and it was reading FAIL on both rules because six other folders are stale.
+    # Fourteen rule-board pairs said the wrong thing about the wrong boards. The set verdict is unchanged and
+    # still decides the release; these say which board's paperwork is actually behind.
+    for r in rows:
+        _v.write("final_gate_%s" % r["board"].lower(),
+                 _v.PASS if r["verdict"] == "PASS" else (_v.INCONCLUSIVE if r["verdict"] == "QUOTE" else _v.FAIL),
+                 counts={"folder": 1, "stale": int(bool(r["stale"])), "quote": int(bool(r["quote"]))},
+                 denominator=1, evidence=[r["summary"][:160]] if r["summary"] else [],
+                 inputs={"folder": r["folder"]}, quiet=True,
+                 note="this board's own deliverable folder, judged on its own; the set's verdict is final_gate")
+    for l in missing:
+        _v.write("final_gate_%s" % l.lower(), _v.FAIL, counts={"folder": 0}, denominator=1, quiet=True,
+                 evidence=["a required board with no deliverable folder"],
+                 note="this board has no deliverable folder at all")
     return _v.write("final_gate", res,
                     counts={"pass": len(rows) - len(bad) - len(held), "fail": len(bad), "quote": len(held), "missing": len(missing),
                             "contracts_rc": rc_c, "certify_rc": rc_j, "claims_rc": rc_m},

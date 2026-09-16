@@ -137,3 +137,23 @@ def t_a_rating_claimed_in_a_public_document_fails_the_set():
 def t_an_unreadable_claims_screen_is_inconclusive_and_never_a_pass():
     rc, res, v = _verdict([], FULL, {"claims": (3, "claims_check: INCONCLUSIVE")}, None)
     assert res == "INCONCLUSIVE", "a claims screen that could not judge read as a pass: %s" % v
+
+
+def t_the_set_verdict_does_not_decide_every_board_s_own_paperwork():
+    """Fourteen rule-board pairs said the wrong thing about the wrong boards (MESHSAT-862, 16 September 2026).
+
+    DOC-001 and OUT-001 are verified by the final gate, and the final gate judges the SET, so every board
+    inherited the set's failure: board E5's folder is the ONE that passes and it read FAIL on both rules
+    because six other folders are stale. The set verdict is unchanged and still decides the release; the
+    per-board ones say whose paperwork is actually behind."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "final_gate.py"),
+               encoding="utf-8").read()
+    assert '_v.write("final_gate_%s"' in src, "the gate writes no per-board verdict"
+    i = src.index('_v.write("final_gate_%s"')
+    seg = src[i:i + 700]
+    assert "quiet=True" in seg, "the per-board verdicts drown the set's own line"
+    assert 'for l in missing' in src[i:i + 1400], "a required board with no folder gets no verdict of its own"
+    cov = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "pcb_rules_coverage.yaml"),
+               encoding="utf-8").read()
+    assert "final_gate_<letter>" in cov, "the coverage map still reads only the set verdict for DOC-001 and OUT-001"
