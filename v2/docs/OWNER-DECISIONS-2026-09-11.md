@@ -1709,3 +1709,54 @@ asked for.
 
 **What does not change whichever you take:** the two halves are now declared as shares, the contract adds them
 up, and no board can quietly spend another board's budget again.
+
+## Decision 34, OPEN: the kit has never had a written operating envelope, and four rules resolve against nothing (16 September 2026)
+
+**What was found.** Every derating, spacing, thermal and reliability number in this project resolves
+against an envelope that was never written down. Rule ENV-001 is a BLOCKER on all seven boards for that
+reason, and three more rules cannot close without it: CMP-001 needs the temperature the parts are derated
+at, ISO-001 needs a pollution degree and an altitude before it can pick a spacing table, THM-001 needs an
+ambient. The draft is `v2/docs/OPERATING-ENVELOPE.md`, written from the parts' own datasheets.
+
+**The two narrowest parts in the kit are not the ones anyone would guess.** Not the compute modules
+(-20 to +85 C), not the radios (-40 to +85 C), not the isolated converter (-40 to +75 C):
+
+| part | operating range | where |
+|---|---|---|
+| **Sensirion SGP41 VOC sensor** | **-20 to +55 C** | the battery bay, in the inside air |
+| **Pervasive Displays E2370KS0C1 e-paper** | **-15 to +60 C** | behind the plate lens |
+| 4S pack cells, charge | 0 to +45 C cell surface | the east pocket |
+
+**And the inside is not the outside.** The no-vent ruling of 7 September puts the estimated inside-air
+rise at about 10 K with one module and about 16 K with three loaded, lid open (appendix 32.53, a number
+`TEST-PLAN.md` E3 is owed). So with three modules the VOC sensor reaches its limit at an **outside ambient
+of about +39 C**, with one module at about **+45 C**, and, because a lithium pack may not be charged with
+its cells above +45 C in warm inside air, **charging is limited from an ambient near +25 C** and the
+charger holds off on the pack thermistor it already has. None of that is a fault. It is behaviour that was
+never declared, and a bench in a warm room is where it would otherwise have been discovered.
+
+**Options, costed, the recommendation first.**
+
+1. **Rule the envelope of section 4 of the draft, RECOMMENDED: -20 to +40 C in use with three declared
+   carve-outs** (heat the pack before charge below -10 C; the e-paper is out of range below -15 C and is
+   expected to update slowly or not at all; the reduced mode above +35 C). Cost: nothing but the ruling.
+   Buys: four blocked rules get their numbers, and the panel software and the test plan can both be
+   written against declared behaviour. Residual: the hot end rests on an estimated 16 K rise until E3
+   measures it, and two carve-outs are visible to whoever carries the kit.
+2. **Buy about six degrees of hot end by changing two parts:** a wide-temperature gas sensor for the
+   battery bay and a wider-range display. Cost: two part searches, two footprints, a board E phase and a
+   board C phase, and the e-paper is your own hardware. Buys: the ceiling moves from +39 C to roughly
+   where the pack's own charge limit stops it anyway.
+3. **Declare -10 to +35 C with no carve-outs at all.** Cost: nothing but the ruling. Buys: an envelope
+   with no footnotes, on a field kit that would in fact survive more than it is then declared to. Not
+   recommended.
+
+**One question inside the decision whichever option is taken: the altitude.** The draft proposes 0 to
+3000 m in use and 0 to 4500 m in transport because the kit is carried rather than flown, and the number is
+not free: IEC 60664-1 derates clearance above 2000 m, so the 54 V Power over Ethernet rail and the
+isolated converter's barrier both depend on it and both are copper. If the kit is ever expected in an
+unpressurised aircraft, that has to be said before those boards are cut.
+
+**What does not change whichever you take:** the envelope becomes a dated document that every rule cites,
+and the three measurements it rests on (the inside-air rise, the seal, the bond resistances) stay owed and
+are named in it rather than assumed.

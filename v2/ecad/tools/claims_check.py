@@ -23,7 +23,10 @@ import verdict as _v
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))   # tools -> ecad -> v2 -> the repository root
 ALLOW = os.path.join(HERE, "claims-allow.txt")
 DEFAULT = ["README.md", "v1/README.md", "v1/BUILD.md", "v2/README.md", "v2/BUILD.md",
-           "v2/docs/ASSEMBLY.md", "v2/docs/PANEL.md", "v2/docs/V2-SPEC.md"]
+           "v2/docs/ASSEMBLY.md", "v2/docs/PANEL.md", "v2/docs/V2-SPEC.md",
+           # the envelope names every rating this kit is designed to and is the document most likely to be
+           # read as a promise, so it is screened with the rest (16 September 2026)
+           "v2/docs/OPERATING-ENVELOPE.md"]
 
 # A claim word makes an assertion about the built hardware's behaviour or its rating.
 CLAIM = re.compile(r"\b(IP6[78]|IP\s?6[78]|waterproof|weatherproof|submersible|MIL-STD-\d+|"
