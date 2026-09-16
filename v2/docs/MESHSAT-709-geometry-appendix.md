@@ -7907,3 +7907,75 @@ one `items_not_allowed` inside a rule area whose geometry the tool's own contain
 re-runs the DRC and removes again, up to three rounds, and C's stack is measured without the grid so that the layer count
 is the only variable.
 
+
+### 32.202 The registry meets the boards: a heuristic stops being a law, a missing capacitor the module's own datasheet asks for, and a verdict writer that exited instead of deciding (16 September 2026, 02:40 CEST; MESHSAT-862)
+
+The rule registry of 32.201 was built from sources and then pointed at the seven boards. Five things came back,
+and four of them are defects in this project's own tools rather than in any copper.
+
+**A gate wrote no verdict at all on a host without PyYAML, and exited 1 while doing it.** Found by running the
+new read-only gate sweep on the box rather than by reading the code. `rules_lib` raises `SystemExit` when
+PyYAML is absent; `SystemExit` does not descend from `Exception`; and both best-effort guards in the verdict
+writer caught `Exception`. So every gate on that host printed its result, wrote **no verdict file** and
+returned 1: a passing board read as a failing one and no evidence existed either way. Seven boards were swept
+and not one verdict was written. Stamping the rule set is evidence ABOUT a verdict and can never decide
+whether the verdict exists; the guards catch `BaseException` now, a verdict with no fingerprint records WHY,
+and PyYAML is in the box setup's package list, which is the only correct place for it.
+
+**The fingerprint taxed documentation.** It hashed the whole rule, so writing down which clause of a vendor
+datasheet a limit comes from marked every board's evidence stale. It covers the DECIDING fields now
+(requirement, applicability, acceptance criteria, release effect, verification method and phase, boards and
+interfaces affected); a rationale or a citation no longer invalidates a DRC run about another rule, and a rule
+that changes what it demands still does. Eighteen false-positive analyses and a field rename were written
+afterwards and no board's evidence moved, which is the test of it.
+
+**A plane under every signal stopped being a law.** The owner's instruction named this one: the governing
+principle is return-path adequacy FOR THE SIGNAL'S SPECTRAL CONTENT. Board E's finish failed on
+`SHORE_INHIBIT`, `WATER_SENSE` and `TRK_INTVCC` over anti-pad gaps of one to four millimetres, and those are
+an opto inhibit that changes state a few times a day, a water probe and an LDO output. `signal_class.py` gives
+every net a class from EVIDENCE (the board's own impedance-targeted class, or a declaration naming the part or
+interface that decides it) and each class is asked its own question: a fast net for an adjacent reference
+within a tolerance, a slow one for whether a return path EXISTS at all, which is a different question and not
+a bigger number. **413 declarations across the seven boards**, each with its basis. Four properties stop it
+becoming an exemption mechanism, each with a rule that fails when it is removed: a declaration with no reason
+is refused; an unclassified net is UNKNOWN, judged at the STRICTEST bar and named; a declaration cannot
+downgrade a net the board itself calls impedance-targeted; and the relaxed class asks the different question.
+**RET-001 is GENERATED_ONLY and not ENFORCED**, because the per-class tolerances are this project's own
+numbers and no source backs them yet, and the registry says so.
+
+**The first interface source this tree has ever held was read, and it found a missing part.** Raspberry Pi,
+Compute Module 5 datasheet, section 2.3 and 2.3.1: external AC coupling capacitors of 220 nF are required on
+every PCIe receive line before it enters the IC. **Board B connected the PCIe switch's transmit pins straight
+to the module's receive pins on all three slots with nothing in series**, on a design that had passed every
+gate, because nothing in this project had ever read that page. Six capacitors are in the generator and
+`check_contracts` holds the shape rather than the fix. The same page **withdraws the 9 September note** that
+the PCIe lanes want 85 ohm: this host's own guidance is 90 ohm differential, which is the class board B
+assigns. And it opens **owner decision 29**: the three module Ethernet links are capacitively coupled with no
+magnetics, Microchip DS00004151A section 6.6 PERMITS exactly that and board B matches its clause word for
+word, the module datasheet describes only a 1:1 MagJack and never discusses coupling, and the module's PHY is
+a Broadcom BCM54210PE whose datasheet Broadcom does not publish. One end permits it, the other has not been
+asked, and no document this project can obtain will answer it.
+
+**One verdict was serving two rules with different authorities.** `dc_drop` wrote a single verdict for the
+voltage drop and the conductor's current capacity, so a density miss failed the board through the drop rule:
+board A read `MISSED VBAT 0.38% of 14.4 V`, which looks like a voltage failure and is a density one, and a
+limit with no source in this tree was deciding a board through a rule that has one. Two verdicts now, and
+PI-001 reads `dc_density` while PI-002 reads `dc_drop`.
+
+**The ground-via grid is declared per board from its own measurement.** Board E, one variable: without the
+grid 90 of 130 signal vias satisfy the return-via rule, with a 2.1 mm grid 109 of 130, and the route still
+closes. Board P, same treatment, opposite answer: four layers route 0 hard and 0 unrouted in 1.4 minutes
+without it and end at 3 then 21 unrouted with it, because P is 70 by 44 mm and the grid takes the room the
+router needs. **Prevention that costs the route is not prevention**, and P declares that it was tried, with
+the numbers, rather than declaring nothing.
+
+**And one more of the same family as the letter lookup**: the classifier first read the board's letter from
+the phase directory's name, and the sweep runs every gate in a copy under `out/sweep/`, so the directory was
+called `sweep`, no declarations were found, and all 76 of board E's nets came out UNKNOWN and were held to the
+strictest bar. The gate reported 54 failures on a board with ten. The safe default did exactly what it was
+built to do, which is the better way round; the lookup reads the board table now.
+
+**Where the readiness stands.** With the sweep's evidence current: **NOT_READY, 22.1 percent verified, 16.7
+percent failed, 61.2 percent inconclusive of 294 applicable rule-board pairs**, promotion frozen. The failures
+are visible rather than hidden as inconclusive, which is the point: 12 of them are the PCIe contract that the
+generator already fixes, 14 are the stale folders, and the rest are named per board in `PCB-RULE-STATUS-<L>.md`.
