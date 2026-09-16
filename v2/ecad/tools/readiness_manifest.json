@@ -8,7 +8,7 @@
   "c": {"project": "pcb-c-display", "title": "PCB-C CONTROL PANEL BACKER", "required": true},
   "d": {"project": "pcb-d-aprs", "title": "PCB-D APRS", "required": true},
   "e": {"project": "pcb-e1-dock", "title": "PCB-E1 DOCK STRIP", "required": true},
-  "e5": {"project": "pcb-e2-rfjunction", "title": "PCB-E5 DOCK BLOCK", "required": true, "no_chain": true,
+  "e5": {"project": "pcb-e5-block", "title": "PCB-E5 DOCK BLOCK", "required": true, "no_chain": true,
          "note": "a bare contact board: no schematic chain, no routed copper, built by build_e5.sh"},
   "p": {"project": "pcb-p-pack", "title": "PCB-P PACK BMS", "required": true}
  },

@@ -87,6 +87,28 @@ def t_the_readiness_manifest_matches_the_registry_manifest():
         "the readiness manifest and the registry disagree about the set: %s vs %s" % (sorted(m["boards"]), sorted(reg["manifest"]["boards"]))
 
 
+def t_the_manifest_and_the_registry_name_the_same_project_directory_for_a_board():
+    """The board's project directory is ONE fact and two files carried it, so they drifted.
+
+    The readiness manifest gave board E5 the project `pcb-e2-rfjunction`, the retired wall junction strip,
+    while the registry's own facts said `pcb-e5-block`, which is where the board is. Every gate ran on the
+    right directory, wrote 23 verdicts into it, and the status computation looked in the retired one and found
+    none of them: E5 read INCONCLUSIVE on its board gate, its stackup and its DRC while holding a current
+    verdict for all three (16 September 2026). A board's evidence directory is where its evidence is, and the
+    two files that name it must say the same thing.
+    """
+    m = S.manifest(); facts = R.board_facts()
+    bad = []
+    for letter, b in sorted(m["boards"].items()):
+        want = (facts.get(letter) or {}).get("project")
+        got = b.get("project")
+        if want and got and want != got:
+            bad.append("%s: the manifest says %s, the registry facts say %s" % (letter, got, want))
+        if got and not os.path.isdir(os.path.join(os.path.dirname(TOOLS), got)):
+            bad.append("%s: the manifest names a project directory that does not exist: %s" % (letter, got))
+    assert not bad, "; ".join(bad)
+
+
 def t_the_freeze_is_declared_with_its_authority_and_what_lifts_it():
     m = S.manifest()["promotion"]
     if m.get("frozen"):
