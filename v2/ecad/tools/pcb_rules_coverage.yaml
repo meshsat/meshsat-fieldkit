@@ -298,9 +298,19 @@ coverage:
      datasheet this tool does not read, so the value found is printed for a person to compare. The check shipped with a
      false positive worth recording: it called every series damping resistor a defect, on four boards at once, and board
      D's hub crystal carries the justification in its own value string (Rd 1.5k per SLLS413 figure 6). A guard whose
-     condition is a hypothesis about the data, for the sixth time in this project's record",
-   remediation: {action: "compare each load capacitor against its crystal's own C_L from the part datasheet, and the straps half of this rule",
-     owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 3, p80_h: 8}}
+     condition is a hypothesis about the data, for the sixth time in this project's record 16 September 2026, evening:
+     THE VALUE IS JUDGED NOW, and it found two defects the moment it could see. Each board declares its crystals'
+     C_L with the source it came from (`crystals` in boards/<letter>.json), the tool computes what the fitted
+     capacitors present (C1 in series with C2 plus the declared stray) and compares within 20 percent, which is the
+     error that moves a 10 pF part about 30 ppm at the usual motional numbers, and it reports the implied pull in ppm
+     beside every crystal. The arithmetic reproduces the RP2040 hardware design guide's own worked example for the
+     exact part on boards C and E, 15 pF capacitors and 3 pF of stray making 10.5 pF against a 10 pF target. FOUND:
+     board B's three 24 MHz hub crystals carried an 18 pF load part with 18 pF capacitors beside them, which present
+     12 pF, a third light and about 54 ppm fast (the code is now C164058, a 12 pF part of the same family, no land
+     change); and board D's two 6 MHz crystals were certified against a 25 MHz part on a land no 6 MHz crystal exists
+     in, which is decision 37 and why board D declares no C_L and reads INCONCLUSIVE here rather than passing",
+   remediation: {action: "decision 37 (board D's two clocks: the land cannot hold the part it draws), then the straps half of this rule",
+     owner: OWNER, execution: OWNER, depends_on: [], p50_h: 2, p80_h: 6}}
 
  ANA-001: {implementation: "pcb_sensitive.yaml, the nodes and their filters", verification: {tool: sensitive_nodes.py, verdict: sensitive_nodes, fixtures: tests/test_sensitive_nodes.py}, maturity: ENFORCED, gap_category: GENERATED_ONLY,
    note: "the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes or measures their separation from switching copper 16 September 2026: THE LIST EXISTS AND WRITING IT FOUND A DEFECT. pcb_sensitive.yaml declares 34 nodes over boards A, D, E and P with each one's filter, its Kelvin partner where the measurement is a difference, and the clearance asked of the layout; sensitive_nodes.py checks the declaration against the netlist everywhere and, where pcbnew is present, measures the real distance from each node's copper to the nearest switching copper on the routed board and reports it beside the asked-for number. The defect: board A's BQ25731 had BOTH of its sense pairs wired straight from the shunt to the pin, and the part's own table asks for an RC filter on each (10 Ohm with 10 nF differential on the input pair for a 47 to 200 ns time constant, section 10.2.2.2; a 10 Ohm contact resistor and 0.1 uF across the charge sense resistor, pin 19), warning that without it the ringing 'overwhelms converter sensed inductor current information' and can push the average-current loop into oscillation. Six parts were added at the source. The clearances themselves are this project's own numbers and no source in this tree sets them, which is why the measured distance travels in the verdict beside them.",

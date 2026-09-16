@@ -11,8 +11,8 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 105 h | 316 h |
-| the same at 6 hours a day | 17.5 days | 52.7 days |
+| engineering effort, one worker | 102 h | 308 h |
+| the same at 6 hours a day | 17.0 days | 51.3 days |
 | critical path through the dependencies | 22 h | 72 h |
 
 Read the table above as WORK REMAINING and never as a delivery date. The two are different questions: a
@@ -24,8 +24,8 @@ figures are below.
 
 | class | items | P50 | P80 | what it means |
 |---|---|---|---|---|
-| PARALLEL_AGENT | 14 | 84 h | 256 h | session work with no shared file, so several may run at once in their own worktrees |
-| OWNER | 9 | 38 h | 201 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
+| PARALLEL_AGENT | 13 | 81 h | 248 h | session work with no shared file, so several may run at once in their own worktrees |
+| OWNER | 10 | 40 h | 207 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | VENDOR_OR_STANDARD_WAIT | 5 | 29 h | 134 h | a third party's answer, or a document that has to be obtained and read |
 | PARALLEL_BOX | 3 | 17 h | 48 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
 | SEQUENTIAL | 2 | 4 h | 12 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
@@ -34,27 +34,27 @@ figures are below.
 
 | | P50 | P80 |
 |---|---|---|
-| session pool | 14.7 days | 44.7 days |
+| session pool | 14.2 days | 43.3 days |
 | fleet pool | 0.4 days | 1.0 days |
 | longest dependency chain | 3.3 days | 12.0 days |
-| **design package ready for prototype** | **14.7 days** | **44.7 days** |
+| **design package ready for prototype** | **14.2 days** | **43.3 days** |
 
 ## The programme, cumulative elapsed days from the day this page was generated
 
 | milestone | P50 | P80 | where the number comes from |
 |---|---|---|---|
-| DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 15 days | 45 days | COMPUTED |
-| FABRICATION_AND_ASSEMBLY | 27 days | 75 days | VENDOR_PUBLISHED |
-| BENCH_BRING_UP | 41 days | 120 days | DECLARED_ESTIMATE |
-| LAB_VALIDATION | 62 days | 210 days | DECLARED_ESTIMATE |
-| PRODUCTION_RELEASE_READY | 92 days | 330 days | DECLARED_ESTIMATE |
+| DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 14 days | 43 days | COMPUTED |
+| FABRICATION_AND_ASSEMBLY | 26 days | 73 days | VENDOR_PUBLISHED |
+| BENCH_BRING_UP | 40 days | 118 days | DECLARED_ESTIMATE |
+| LAB_VALIDATION | 61 days | 208 days | DECLARED_ESTIMATE |
+| PRODUCTION_RELEASE_READY | 91 days | 328 days | DECLARED_ESTIMATE |
 
 Only the first milestone is computed from this project's own register. Every stage after it is a vendor's
 published figure or this session's declared estimate, and NONE of them has been measured here, because
 nothing has been ordered. The basis of each is in `v2/ecad/tools/pcb_programme_stages.yaml` beside its
 number.
 
-33 open item(s): 19 are work and 14 are waits on the owner, a vendor or a standard. Waits are not engineering
+33 open item(s): 18 are work and 15 are waits on the owner, a vendor or a standard. Waits are not engineering
 time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens
@@ -62,6 +62,7 @@ time and are listed separately below.
 | rule | what it needs | owner |
 |---|---|---|
 | BAT-001 | the cell's datasheet on file, the threshold table derived from it, and the prototype prote | OWNER |
+| CLK-001 | decision 37 (board D's two clocks: the land cannot hold the part it draws), then the strap | OWNER |
 | DFA-001 | the assembler's own preview of each polarised footprint, which is the artefact the accepta | OWNER |
 | ENV-001 | rule decision 34: the envelope of section 4, the part swaps of option 2, or the narrow env | OWNER |
 | IMP-001 | solve every geometry, pin the standard, and get the fabricator's written confirmation with | OWNER |

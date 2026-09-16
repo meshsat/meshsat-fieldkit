@@ -12,10 +12,25 @@ WHAT THIS CHECKS, from the netlist and nothing else:
   * nothing else shares those two nets except the driving IC and, where the design uses one, a series resistor.
     A crystal node with a third consumer on it is a stub on the most sensitive net of the board.
 
-WHAT IT DOES NOT CHECK, and it is the number that matters most: whether the load capacitor VALUE is the one
-this crystal's own datasheet asks for. That is C_L, it is per part, and it lives in a datasheet this tool does
-not read. The check reports the value it found so a person can compare it, and the rule stays MUST_JUSTIFY
-until each is checked against its own sheet.
+THE VALUE, which is the number that matters most, is checked against the crystal's own C_L (16 September
+2026). C_L lives in the part's datasheet and no tool can read it out of a netlist, so the BOARD declares it:
+`crystals` in `boards/<letter>.json`, one entry per reference with `c_load_pf`, the `stray_pf` this design
+allows for its pins and tracks, and the `source` that says where the number came from. The tool then computes
+what the fitted capacitors actually present, C1 in series with C2 plus the stray, and compares:
+
+    C_presented = C1 * C2 / (C1 + C2) + C_stray        against        C_L from the datasheet
+
+A crystal on the board with no declaration is INCONCLUSIVE and named, never a pass. The bar is 20 percent, and
+it is chosen from what the error DOES rather than from taste: pulling is
+Df/f = C_m / 2 * (1/(C_0 + C_L1) - 1/(C_0 + C_L2)), so with the usual C_m = 5 fF and C_0 = 2 pF, a 20 percent
+load error on a 10 pF crystal moves it about 30 ppm, which is the whole tolerance of a good part and an eighth
+of what USB full speed allows. Anything looser stops being a check; anything tighter starts refusing designs
+whose stray allowance is an estimate, which every stray allowance is.
+
+The Raspberry Pi RP2040 hardware design guide works this arithmetic for the exact part on boards C and E and
+is the worked example this implements: an ABM8-272-T3 has a 10 pF load capacitance, two 15 pF capacitors give
+7.5 pF in series, the pins and tracks add about 3 pF, and the total 10.5 pF is "close enough to the target of
+10 pF".
 
 Usage: clock_check.py <netlist.net> [--json]
 """
@@ -39,7 +54,31 @@ def netlist(path):
     return by_net, values
 
 
-def judge(path):
+_CAP_MULT = {"P": 1.0, "N": 1e3, "U": 1e6}
+
+
+def cap_pf(value):
+    """A capacitor value string in picofarads, or None when it does not name one."""
+    m = CAP.match((value or "").strip())
+    if not m: return None
+    try: return float(m.group(1)) * _CAP_MULT[m.group(2).upper()]
+    except Exception: return None
+
+
+def presented_pf(c1_pf, c2_pf, stray_pf):
+    """What the fitted network presents to the crystal: the two capacitors in SERIES, plus the stray."""
+    if not c1_pf or not c2_pf: return None
+    return (c1_pf * c2_pf) / (c1_pf + c2_pf) + float(stray_pf or 0.0)
+
+
+def pull_ppm(c_l, presented, c_m_ff=5.0, c_0_pf=2.0):
+    """The frequency error a load error makes, at the usual motional numbers. Reported, never used as the bar:
+    C_m and C_0 are per part and these two are typical values, not this crystal's."""
+    if not c_l or not presented: return None
+    return (c_m_ff * 1e-3 / 2.0) * (1.0 / (c_0_pf + presented) - 1.0 / (c_0_pf + c_l)) * 1e6
+
+
+def judge(path, letter=None):
     by_net, values = netlist(path)
     pins_of = {}
     for net, nodes in by_net.items():
@@ -84,7 +123,39 @@ def judge(path):
             bad.append("%s (%s): %d resistors on its nets (%s); one series damping resistor is the most a crystal node carries"
                        % (x, values.get(x, "?"), len(res), ", ".join(res[:6])))
         if res: rows[-1]["damping"] = res[0]
+        # THE VALUE AGAINST THE PART'S OWN C_L. The declaration is the board's, because the number is in a
+        # datasheet and a netlist cannot hold it.
+        d = (_declared(letter) or {}).get(x)
+        if d is None:
+            rows[-1]["undeclared"] = True
+            continue
+        c1 = cap_pf(vals[0]) if vals else None
+        pres = presented_pf(c1, c1, d.get("stray_pf"))
+        rows[-1].update(c_load_pf=d.get("c_load_pf"), stray_pf=d.get("stray_pf"), presented_pf=pres,
+                        source=d.get("source"))
+        if pres is None or not d.get("c_load_pf"):
+            bad.append("%s (%s): its load capacitors read %s, which is not a capacitance this tool can compute with"
+                       % (x, values.get(x, "?"), ", ".join(vals) or "none"))
+            continue
+        cl = float(d["c_load_pf"]); err = (pres - cl) / cl
+        rows[-1]["error_percent"] = round(100.0 * err, 1)
+        rows[-1]["pull_ppm"] = round(pull_ppm(cl, pres) or 0.0, 1)
+        if abs(err) > 0.20:
+            bad.append("%s (%s): its network presents %.1f pF (%s in series with itself plus %.1f pF of stray) "
+                       "and the part asks for %.1f pF, which is %+.0f percent and pulls it about %+.0f ppm [%s]"
+                       % (x, values.get(x, "?"), pres, vals[0], float(d.get("stray_pf") or 0), cl,
+                          100.0 * err, rows[-1]["pull_ppm"], str(d.get("source", ""))[:70]))
     return rows, bad
+
+
+def _declared(letter):
+    """The board's own `crystals` table, or None when the board declares none."""
+    if not letter: return None
+    try:
+        import boardtable as _bt
+        return _bt.value(letter, "crystals", {}) or {}
+    except Exception:
+        return None
 
 
 def main(argv):
@@ -94,13 +165,25 @@ def main(argv):
         print("clock_check: no netlist at %s" % path)
         return _v.write("clock_check", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path},
                         note="no netlist: a crystal's load network cannot be read from nothing")
-    rows, bad = judge(path)
-    print("clock_check: %d crystal(s)" % len(rows))
+    try:
+        import boardtable as _bt
+        letter = _bt.letter_for(path) or (os.path.basename(path).split("-")[1][:1] if "-" in os.path.basename(path) else None)
+    except Exception:
+        letter = None
+    rows, bad = judge(path, letter)
+    print("clock_check: %d crystal(s)%s" % (len(rows), (" on board %s" % letter.upper()) if letter else ""))
     for r in rows:
-        print("  %s %s: nets %s, load capacitors %s"
-              % (r["crystal"], r["value"], ", ".join(r["nets"]) or "none", ", ".join(r["values"]) or "NONE"))
+        line = ("  %s %s: nets %s, load capacitors %s"
+                % (r["crystal"], r["value"], ", ".join(r["nets"]) or "none", ", ".join(r["values"]) or "NONE"))
+        if r.get("c_load_pf"):
+            line += " -> presents %.1f pF against the part's %.1f (%+.0f percent, about %+.0f ppm)" % (
+                r.get("presented_pf") or 0.0, r["c_load_pf"], r.get("error_percent") or 0.0, r.get("pull_ppm") or 0.0)
+        print(line)
     for b in bad: print("  FAIL %s" % b)
-    if rows: print("  the load capacitor VALUE is not judged here: C_L is per part and lives in its own datasheet")
+    undeclared = [r["crystal"] for r in rows if r.get("undeclared")]
+    if undeclared:
+        print("  no declared C_L: %s (boards/<letter>.json `crystals`: the load capacitance is in the part's "
+              "datasheet and a netlist cannot hold it)" % ", ".join(undeclared))
     if "--json" in argv: print(json.dumps(rows, indent=1))
     if not rows:
         # NOT APPLICABLE, which is a different thing from "could not judge" (16 September 2026): board P's
@@ -110,12 +193,16 @@ def main(argv):
         return _v.write("clock_check", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path},
                         applicable=False,
                         note="this board carries no crystal, so CLK-001 has nothing on it to judge")
-    return _v.write("clock_check", _v.FAIL if bad else _v.PASS,
-                    counts={"crystals": len(rows), "bad": len(bad)}, denominator=len(rows),
-                    evidence=bad[:20], inputs={"netlist": path},
-                    note=("every crystal has two matched load capacitors to ground and its own IC alone on its nets; "
-                          "the VALUE against each part's own C_L is not judged here" if not bad else
-                          "a crystal that does not start is a board that is perfectly routed and dead"))
+    res = _v.FAIL if bad else (_v.INCONCLUSIVE if undeclared else _v.PASS)
+    return _v.write("clock_check", res,
+                    counts={"crystals": len(rows), "bad": len(bad), "undeclared": len(undeclared)},
+                    denominator=len(rows),
+                    evidence=(bad + ["no declared C_L: " + u for u in undeclared])[:20], inputs={"netlist": path},
+                    note=("every crystal has two matched load capacitors to ground, its own IC alone on its nets, "
+                          "and a network that presents what the part's own datasheet asks for within 20 percent"
+                          if not bad and not undeclared else
+                          "a crystal that does not start, or starts off frequency, is a board that is perfectly "
+                          "routed and dead"))
 
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

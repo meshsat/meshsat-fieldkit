@@ -1100,7 +1100,17 @@ C_L, which lives in a datasheet this tool does not read, so the value found is p
 compare. The check shipped with a false positive worth recording: it called every series damping resistor a
 defect, on four boards at once, and board D's hub crystal carries the justification in its own value string
 (Rd 1.5k per SLLS413 figure 6). A guard whose condition is a hypothesis about the data, for the sixth time in
-this project's record
+this project's record 16 September 2026, evening: THE VALUE IS JUDGED NOW, and it found two defects the
+moment it could see. Each board declares its crystals' C_L with the source it came from (`crystals` in
+boards/<letter>.json), the tool computes what the fitted capacitors present (C1 in series with C2 plus the
+declared stray) and compares within 20 percent, which is the error that moves a 10 pF part about 30 ppm at
+the usual motional numbers, and it reports the implied pull in ppm beside every crystal. The arithmetic
+reproduces the RP2040 hardware design guide's own worked example for the exact part on boards C and E, 15 pF
+capacitors and 3 pF of stray making 10.5 pF against a 10 pF target. FOUND: board B's three 24 MHz hub
+crystals carried an 18 pF load part with 18 pF capacitors beside them, which present 12 pF, a third light and
+about 54 ppm fast (the code is now C164058, a 12 pF part of the same family, no land change); and board D's
+two 6 MHz crystals were certified against a 25 MHz part on a land no 6 MHz crystal exists in, which is
+decision 37 and why board D declares no C_L and reads INCONCLUSIVE here rather than passing
 
 ## Analog Mixed Signal
 
