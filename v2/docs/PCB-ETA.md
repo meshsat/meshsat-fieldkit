@@ -25,7 +25,7 @@ engineering time and are listed separately below.
 | INT-002 | owner decision 29: fit magnetics on the three module links, ask the module vendor, or defe | OWNER |
 | ISO-001 | declare the envelope's pollution degree, obtain the spacing table, and measure the PoE and | OWNER |
 | REL-001 | a reliability sheet per board and the test plan for the prototype | OWNER |
-| SCH-004 | decide ZEROIZE's hardware path (owner), then a fail-safe direction check per safety line | OWNER |
+| SCH-004 | owner decision 30: the supervisors execute the wipe, power removal only, or accept the sof | OWNER |
 | STK-002 | quotes from the ordering session for both counts on C and P, then the two rulings | OWNER |
 
 ## Measured route history

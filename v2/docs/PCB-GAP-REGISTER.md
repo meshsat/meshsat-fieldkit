@@ -52,10 +52,14 @@ nothing determines the reference conductor before and after a transition; return
 is the nearest thing and is a geometric approximation of it  
 *Close it by* compute the reference layer per track segment from the stackup and the fills, then judge each via's transition. Owner **SESSION**, after RET-001. Effort P50 12h, P80 30h.
 
-**SCH-004 a safety line fails safe** (BLOCKER, OPEN)  
-the transmit-inhibit chain is checked; ZEROIZE has NO hardware path at all (the secure element carries power
-and I2C only) and the shore-inhibit and kill lines are not checked for fail-safe direction  
-*Close it by* decide ZEROIZE's hardware path (owner), then a fail-safe direction check per safety line. Owner **OWNER**, after SCH-003. Effort P50 6h, P80 20h.
+**SCH-004 a safety line fails safe** (BLOCKER, OWNER_DECISION_REQUIRED)  
+the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches
+the connector and a test point on boards A and B and NOTHING ELSE, the ATECC608B carries only power and I2C,
+and the feature as built asks the compute modules to wipe themselves in software. 16 September 2026: written
+up as owner decision 30 with three costed options. The fact that shapes them is that the ATECC608B has NO
+ERASE PIN, so no option is a pure hardware wipe; the fact that makes option 1 cheap is that the three
+supervisors are already on the same I2C bus as the secure element and depend on no compute module being alive  
+*Close it by* owner decision 30: the supervisors execute the wipe, power removal only, or accept the software path and rename the feature everywhere. Owner **OWNER**. Effort P50 8h, P80 24h.
 
 **SI-001 transmission-line classification** (MUST_JUSTIFY, OPEN)  
 no net in this project has ever been classified by edge rate; every impedance and return decision rests on

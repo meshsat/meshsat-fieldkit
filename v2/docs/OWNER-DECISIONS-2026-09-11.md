@@ -1486,3 +1486,50 @@ module's receive net carries exactly one capacitor and never a second device. Th
 swapped correctly for a direct IC connection, which the same clause requires. The same page also settles an item open
 since 9 September: PCIe on this host is to be routed as 90 ohm differential, which is the class board B already assigns,
 so the "PCIe wants 85" note is withdrawn for this design.
+
+---
+
+## DECISION 30, OPEN: ZEROIZE is a switch that is wired to nothing that can act on it (16 September 2026, 03:35 CEST)
+
+**What is actually built.** The panel's locking ZEROIZE toggle drives `ZEROIZE_HW`. On board C the line reaches
+the panel controller's pin 34, which reads it. It crosses the ribbon to board B and to board A, and on both of
+those it lands on the connector and a test point and nothing else. The secure element it is supposed to protect,
+the ATECC608B at U8, carries **only power and I2C**. Nothing on any board acts on that line in hardware.
+
+So the feature as built is: a toggle, read by a microcontroller, which tells the compute modules over the
+network, which are expected to wipe themselves in software. If the modules are dead, hung, or the thing you are
+zeroizing for has already taken them, the switch does nothing at all. The line is also pulled HIGH, so a missing
+or unplugged panel reads as "do not wipe", which is the right way round for accidents and the wrong way round
+for the case the switch exists for.
+
+This has been in the record as an open item since 9 September and has never been put to you as a choice.
+
+**One fact that shapes every option.** The ATECC608B has no erase pin. Its keys can only be destroyed by a
+command over I2C; there is no input that kills them and no way to make one. So no option below is a pure
+hardware wipe of the keys, and any claim that the kit has one would be false.
+
+**A second fact, and it is the useful one.** The three STM32H753 supervisors (U41, U51, U61) are **already on
+the same kit I2C bus as the secure element**, and they are already the parts that hold the voted hardware lines.
+They do not depend on any compute module being alive.
+
+**Options, costed, the recommendation first.**
+
+1. **The supervisors execute the wipe, RECOMMENDED.** Wire `ZEROIZE_HW` to a GPIO on each of the three
+   supervisors (the net exists on the board and reaches the connector; this is three more pins on a net that is
+   already there). On a falling edge, each supervisor independently issues the ATECC608B's key-destroy command
+   over the I2C bus it is already on, and pulls the power to the three NVMe sockets through load switches. Cost:
+   three load switches and their gates on board B (about 5 EUR in fives, a small area on a dense board), one
+   net extended to three pins, and supervisor firmware. Buys: the switch works when every compute module is
+   dead, three independent parts have to fail for it not to, and the keys are genuinely destroyed rather than
+   merely unreachable. This uses hardware that is already on the board for the fabric it already runs.
+2. **Power removal only.** Same load switches, no key-destroy command: the drives and the secure element lose
+   power when the toggle is thrown. Cost: the switches alone, no firmware. Buys: an unpowered drive cannot be
+   read in situ. It does NOT buy a wipe, and the data is intact for anyone who removes the drive, so the
+   feature would have to be renamed on the panel and in every document.
+3. **Accept the software path and say so everywhere.** Cost: nothing to build. The panel legend, PANEL.md, the
+   README and the assembly drawing all have to say that ZEROIZE asks the software to wipe and cannot make it
+   happen. Buys: honesty, and nothing else. This is the option that needs the least work and the most rewriting.
+
+**What the session does while this is open.** Nothing on this line. Rule SCH-004's result stays
+OWNER_DECISION_REQUIRED on boards A, B and C, so no folder can be promoted on it either way, and the boards
+route and are measured as they stand.
