@@ -26,9 +26,9 @@
  "tool": "check_pcb_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5545137ae86e02ef"
+  "tools_tree_sha": "9284cacf93cf36b3"
  },
- "ts": "2026-09-16T15:19:15Z",
+ "ts": "2026-09-16T15:46:16Z",
  "verdict": "PASS",
  "version": "unknown"
 }
