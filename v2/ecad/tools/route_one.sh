@@ -60,7 +60,23 @@ for z in list(b.Zones()):
 if keep_nets: print("planes kept in the DSN:", kept, "zone(s) of", sorted(keep_nets), "on", sorted(keep_layers))
 if rails: print("rail planes kept in the DSN (FR_RAIL_PLANES):", rails_kept, "zone(s) of", sorted(rails))          # the A21 output islands and inductor taps stay as planes (their pads are connected by the fill and the gate checks it); every other plane, band and island out of the DSN: GND/+5V route as ordinary nets (A21 run 8 of 5 Sep 2026: bands exported as planes made the router end tracks at band edges the fill never reached; bands are protected by track keep-outs instead)
 tmp = sys.argv[2].replace(".dsn", "-noplanes.kicad_pcb"); pcbnew.SaveBoard(tmp, b)
-b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[2]))
+PY
+# THE SENSITIVE NODES' KEEP-OUT, ON THE COPY AND NOWHERE ELSE (rule ANA-001, 16 September 2026). Board A
+# declares nineteen nodes with the distance each wants from switching copper and six were routed between
+# 0.18 and 0.36 mm from a switch node, because the only instrument the router honours is the NET CLASS
+# clearance and that applies between every pair of nets on the board. A band drawn here reaches the ROUTER
+# through the DSN and never reaches the real board, its DRC or its fabrication outputs: this temporary file
+# is thrown away after the export. SENSITIVE_GUARD=0 turns it off, and a board that declares no node gets
+# nothing.
+if [ "${SENSITIVE_GUARD:-1}" != "0" ] && [ -f "$_TOOLS/sensitive_guard.py" ]; then
+  # the letter comes from the BOARD NAME (pcb-a-power -> a); $W here is the attempt's scratch directory
+  _SGL="$(echo "$N" | sed -n 's/^pcb-\([a-z0-9]*\)-.*/\1/p')"
+  [ -n "$_SGL" ] && python3 "$_TOOLS/sensitive_guard.py" "$W/$N-noplanes.kicad_pcb" "$_SGL" 2>&1 | grep -a "sensitive_guard" | tail -4
+fi
+python3 - "$W/$N.dsn" <<'PY'
+import sys, pcbnew
+tmp = sys.argv[1].replace(".dsn", "-noplanes.kicad_pcb")
+b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[1]))
 PY
 # Our 1.9.0 build when it is on the host, the stock jar otherwise (10 September 2026). The patch adds a per-pass session write
 # and nothing else, proved: on the same D board DSN with the same options the two jars produced BYTE IDENTICAL final sessions
