@@ -17,7 +17,7 @@ import intent as _intent
 # whole pack node leaves this board through that 12 AWG solder pad to the block's CELL+ targets and on to
 # board A; what stays here is the local 5 V buck and the two mixer fans. The split apportions the declared
 # 10 A typical: it is a design estimate of where the current goes, not a measurement of what it is.
-_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True,
+_intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True, v_work=16.8,
              always_on_why="the pack node after this board's 25 A blade: a fuse is protection and not a switch, and what opens this node is the pack's own gauge two stages upstream",
              loads={"P_CP": 9.0, "U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1},
              note="the pack node after the 25 A blade F3, to the block pads")
@@ -25,7 +25,7 @@ _intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True,
 # diode that ORs the tracker output INTO this bus: it is a SOURCE, so half the rail's current was being pulled
 # backwards through it. The whole of this bus leaves through the block lands J_BLK pins 1 to 4 for board A's
 # front end to regulate; the monitor divider R40 and the indicator LED1 are microamps and milliamps.
-_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", switch="U6", enable_net="HS_UVLO",
+_intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2", switch="U6", enable_net="HS_UVLO", v_work=36.0,
              # the hot-swap controller IS the switch and its enable is the UVLO divider: the rail comes
              # up when the input passes 9 V and drops out above 40 V, which is the LM5069's own gate.
 
@@ -95,13 +95,37 @@ c("C1", "10u 25V 1210", "CELL_F", "GND", "C1210"); part("D3", "Device", "D_TVS",
 #     (SRF1260 dual-winding choke on both lines, X capacitors, transient clamp) -> VIN_RAW to the block lands. Vehicle-side ground GND_V joins the kit ground GND through the choke's second winding.
 part("J_DCIN", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair): + -", "VH2", {"1": "DC_IN", "2": "GND_V"}, "C274411")
 part("F1", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): vehicle input", "FUSE", {"1": "DC_IN", "2": "DC_F"})
+# THE INPUT SIDE'S OWN NETS (16 September 2026, rule CMP-001). Fourteen of this board's nets carried a rated
+# part and no declared voltage, so `derate.py` judged four parts on the whole board. The numbers here are the
+# design's own: the input range is 9 to 36 V, the LM5069's over-voltage lockout turns the pass FET off at 40 V,
+# and the SMCJ40A clamps a transient at about 64.5 V, which is the number a part on this net has to survive.
+# 16 September 2026 (rule CMP-001): the clamp was an SMCJ33A on a line specified to 36 V, so it stood off LESS
+# than the line's own working maximum and would have conducted in normal service at the top of the range. The
+# same part sat on VIN_RAW here and on board A, three places and one defect. The replacement is the next
+# standard standoff in the same land (Littelfuse SMCJ40A, C224052, stock 3,987), and it clamps 11 V higher, so
+# this board's 50 V bus capacitor C8 moves to the 100 V part the set already buys (C5156756).
+for _dcn in ("DC_IN", "DC_F", "DC_P", "DC_HS"):
+    _intent.node(_dcn, 53.3, "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage "
+                 "lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse "
+                 "current. The parts on this line are 100 V ceramics for that reason", v_work=36.0)
+_intent.node("GND_V", 0.0, "the vehicle-side return. It joins the kit ground through the choke's second "
+             "winding and is NOT an isolation barrier, which is what boards/e.json declares to the ground "
+             "system gate; it is a reference, and it is declared so a part across it is judged")
+_intent.node("GND", 0.0, "the board's reference, so a part between a live net and ground is judged against "
+             "the live net rather than reported as sitting on an undeclared one")
 def ideal_diode(uref, qref, cref, rref, anode, cathode, gnd):
     """LM74700-Q1 (ti/ti-lm74700-q1.pdf, SOT-23-6: 1 VCAP, 2 GND, 3 EN, 4 CATHODE, 5 GATE, 6 ANODE) driving an N-FET (source at the anode, drain at the cathode)"""
     part(uref, "Connector_Generic", "Conn_01x06", "LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE", "SOT236", {"1": uref + "_VCAP", "2": gnd, "3": anode, "4": cathode, "5": qref + "_G", "6": anode}, "C2941042")
     part(qref, "Transistor_FET", "IRF7404", "BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)", "TDSON8", {"1": anode, "2": anode, "3": anode, "4": qref + "_G", "5": cathode, "6": cathode, "7": cathode, "8": cathode}, "C534330")
     c(cref, "100n 50V", uref + "_VCAP", anode, "C", "C14663"); r(rref, "100k", qref + "_G", anode, "R", "C25803")
+    # The VCAP capacitor sits between VCAP and the ANODE and both ends move together, so it sees the charge
+    # pump's own bias and not the anode's height above ground: the same shape as a bootstrap capacitor, and the
+    # same reason it is a 50 V part rather than something larger (16 September 2026, rule CMP-001).
+    _intent.node(uref + "_VCAP", _intent.net_volts(anode) + 10.0,
+                 "LM74700-Q1 VCAP: the internal charge pump sits about 10 V above the anode %s" % anode,
+                 rides_on=anode, bias_v=10.0)
 ideal_diode("U3", "Q1", "C4", "R1", "DC_F", "DC_P", "GND_V")
-part("D1", "Device", "D_TVS", "SMCJ33A (input surge, datasheet 50 V 100 ms)", "TVS", {"1": "GND_V", "2": "DC_P"}); c("C2", "100n 100V", "DC_P", "GND_V", "C0805")
+part("D1", "Device", "D_TVS", "SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V)", "TVS", {"1": "GND_V", "2": "DC_P"}, "C224052"); c("C2", "100n 100V", "DC_P", "GND_V", "C0805")
 # LM5069 (ti/ti-lm5069.pdf, VSSOP-10: 1 SENSE 2 VIN 3 UVLO 4 OVLO 5 GND 6 TIMER 7 PWR 8 PGD 9 OUT 10 GATE); the -2 variant restarts after a fault; sense resistor 10 mOhm, pass FET 60 V
 ic("U6", 10, "LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit", "VSSOP10", {"1": "HS_S", "2": "DC_P", "3": "HS_UVLO", "4": "HS_OVLO", "5": "GND_V", "6": "HS_TIMER", "7": "HS_PWR", "8": "DCIN_PGD", "9": "DC_HS", "10": "HS_GATE"}, "C111822")
 r("R19", "10mOhm 1% 2512 (hot-swap sense)", "DC_P", "HS_S", "RS2512"); nfet("Q7", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6), hot-swap pass", "HS_GATE", "HS_S", "DC_HS", lcsc="C473333")
@@ -109,13 +133,28 @@ r("R20", "100k 1%", "DC_P", "HS_UVLO"); r("R21", "38.3k 1% (UVLO: 9 V)", "HS_UVL
 c("C5", "100n (TIMER)", "HS_TIMER", "GND_V"); r("R24", "20k (PWR: power limit)", "HS_PWR", "GND_V"); r("R25", "10k", "DCIN_PGD", "+3V3_E6")
 part("Q8", "Transistor_FET", "2N7002", "2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)", "SOT23", {"1": "SHORE_INHIBIT", "2": "GND_V", "3": "HS_UVLO"}); r("R26", "100k", "SHORE_INHIBIT", "GND")
 part("L2", "Connector_Generic", "Conn_01x04", "Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1 pins 1-2 on the positive line, winding 2 pins 3-4 on the return (pin map per the Bourns drawing, verified 7 Sep 2026)", "CMC", {"1": "DC_HS", "2": "VIN_RAW", "3": "GND_V", "4": "GND"})
-c("C6", "1u 100V 1210 (X, input side)", "DC_HS", "GND_V", "C1210"); c("C7", "1u 100V 1210 (X, bus side)", "VIN_RAW", "GND", "C1210"); c("C8", "10u 50V 1210", "VIN_RAW", "GND", "C1210")
-part("D2", "Device", "D_TVS", "SMCJ33A (bus clamp)", "TVS", {"1": "GND", "2": "VIN_RAW"})
+c("C6", "1u 100V 1210 (X, input side)", "DC_HS", "GND_V", "C1210"); c("C7", "1u 100V 1210 (X, bus side)", "VIN_RAW", "GND", "C1210"); c("C8", "10u 100V X7R 1210", "VIN_RAW", "GND", "C1210")
+part("D2", "Device", "D_TVS", "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus)", "TVS", {"1": "GND", "2": "VIN_RAW"}, "C224052")
 r("R27", "2.2k", "VIN_RAW", "LED_A", "R", "C4190"); part("LED1", "Device", "LED", "green: vehicle input present", "LED", {"2": "LED_A", "1": "GND"})
 # --- panel tracker stage (power/lt8705a.pdf, E4's design kept: LT8705A buck-boost, input regulated at the panel's maximum-power voltage (FBIN 17.6 V), output 15.1 V ORed into the bus; bench-fitted, 32.54)
 part("J_SOLAR", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up to about 22 V open circuit, 100 W): + -", "VH2", {"1": "PV_IN", "2": "GND"}, "C274411")
 part("F2", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): panel input", "FUSE", {"1": "PV_IN", "2": "PV_P"})
-part("D4", "Device", "D_TVS", "SMCJ33A (panel surge)", "TVS", {"1": "GND", "2": "PV_P"})
+# THE PANEL SIDE. A 36-cell 12 V class panel is about 22 V open circuit at 25 degC and about 25 V cold, which
+# is the steady peak a part on this net sees and what it is judged against.
+# THE CLAMP ON THIS NET WAS GUARDING NOTHING, and it is fixed here (16 September 2026). The bulk capacitors
+# are 100 uF 35 V polymer and the SMCJ33A that guarded them does not begin to conduct until 36.7 V at worst
+# case: a sustained over-voltage between 35 and 36.7 V sat on the capacitors with the clamp doing nothing at
+# all about it. `derate` judges the DECLARED STEADY voltage and cannot raise that, which is why it is written
+# here rather than found by a gate. The answer is the lower standoff: an SMCJ28A (Littelfuse C224047, stock
+# 6,072) stands off 28 V, which is still above the 25 V a cold 36-cell panel reaches open circuit, and begins
+# to conduct at 31.1 V, which is BELOW the capacitors' rating. Its clamping voltage at the full 22 A pulse is
+# 45.4 V and no clamp in this class is under 35, so a fast high-current surge still passes the capacitors more
+# than their steady rating for microseconds; what has changed is that a slow over-voltage no longer can.
+for _pvn in ("PV_IN", "PV_P"):
+    _intent.node(_pvn, 25.0, "a 36-cell 12 V class panel: about 22 V open circuit at 25 degC and about 25 V "
+                 "cold. See the note in gen_sch_e.py about the 35 V bulk capacitors behind a 33 V clamp",
+                 v_work=25.0)
+part("D4", "Device", "D_TVS", "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors)", "TVS", {"1": "GND", "2": "PV_P"}, "C224047")
 for k in range(1, 3): part("C%d" % (10 + k), "Device", "C_Polarized", "100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm)", "CPOL63", {"1": "PV_P", "2": "GND"}, "C454360")
 c("C13", "10u 50V", "PV_P", "GND", "C10u50"); c("C14", "10u 50V", "PV_P", "GND", "C10u50"); c("C15", "4.7u 50V", "PV_P", "GND", "C10u50")
 part("U5", "Connector_Generic", "Conn_02x20_Odd_Even", "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted", "QFN38", {
@@ -134,6 +173,17 @@ part("D5", "Device", "D_Schottky", "BAT54 boost diode INTVCC -> BOOST1", "SOD123
 c("C19", "4.7u 25V", "TRK_INTVCC", "GND", "C10u50"); c("C20", "1u", "TRK_LDO33", "GND")
 r("R8", "102k 1% (RFBIN1: panel point 17.6 V)", "PV_P", "TRK_FBIN"); r("R9", "7.50k 1% (RFBIN2)", "TRK_FBIN", "GND")
 r("R10", "115k 1% (RFBOUT1: 15.1 V)", "TRK_OUT", "TRK_FBOUT"); r("R11", "10.0k 1% (RFBOUT2)", "TRK_FBOUT", "GND")
+# THE TRACKER'S OWN NETS. An LT8705A is a four-switch buck-boost like the LM5176 stages on board A, and the
+# same reading applies: SW1 is the buck side and reaches the panel, SW2 is the boost side and reaches the
+# regulated output, and each BOOST capacitor rides on its own SW at INTVCC, which is why they are small parts.
+_intent.node("TRK_OUT", 15.1, "the tracker's regulated output, set by R10 and R11 (115k over 10.0k)")
+_intent.node("TRK_SW1", 25.0, "LT8705A buck-side switching node: it reaches the panel", v_min=-1.0)
+_intent.node("TRK_SW2", 15.1, "LT8705A boost-side switching node: it reaches the regulated output", v_min=-1.0)
+_intent.node("TRK_INTVCC", 6.35, "the LT8705A's own INTVCC regulator, which supplies both gate drivers")
+_intent.node("TRK_BOOST1", 25.0 + 6.35, "the bootstrap rides on TRK_SW1 at INTVCC",
+             rides_on="TRK_SW1", bias_v=6.35)
+_intent.node("TRK_BOOST2", 15.1 + 6.35, "the bootstrap rides on TRK_SW2 at INTVCC",
+             rides_on="TRK_SW2", bias_v=6.35)
 r("R12", "215k 1% (RT: 202 kHz)", "TRK_RT", "GND"); r("R13", "10k", "TRK_VC", "TRK_VCC1"); c("C21", "4.7n", "TRK_VCC1", "GND"); c("C22", "100p", "TRK_VC", "GND"); c("C23", "100n", "TRK_SS", "GND")
 r("R14", "100k 1%", "PV_P", "TRK_SHDN"); r("R15", "15.0k 1% (SHDN: enable above about 9.5 V)", "TRK_SHDN", "GND")
 r("R16", "10k", "TRK_IMONI", "GND"); r("R17", "10k", "TRK_IMONO", "GND")

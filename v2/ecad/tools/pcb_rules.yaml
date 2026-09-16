@@ -267,8 +267,22 @@ rules:
    applicability: UNIVERSAL_FOR_THIS_PROJECT
    risk_class: [SAFETY, RELIABILITY, ELECTRICAL_FUNCTION]
    release_effect: BLOCKER
-   source_status: SOURCE_UNVERIFIED
-   sources: []
+   source_status: PARTIALLY_VERIFIED
+   sources:
+    - {title: "the part maker's own reference circuit, where a net's voltage lives inside a part this project
+         does not open: PDI e-paper driving circuit note rev 02, components table and bill of materials",
+       issuer: "Pervasive Displays (PDI)", revision: "rev 02", clause: "components table, bill of materials",
+       url_or_path: "v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf", accessed: "2026-09-16",
+       note: "'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for the charge pump and stabilising network board C
+         carries. Board C's nine pump nets are judged against this citation rather than against a voltage this
+         project would have had to invent"}
+    - {title: "the stand-off voltage in a transient suppressor's own part number (SMxJnnA)",
+       issuer: "the suppressor makers (Littelfuse, Diodes, Vishay and the rest share the convention)",
+       revision: "", clause: "part numbering", url_or_path: "the part number on each row of the BOM",
+       accessed: "2026-09-16",
+       note: "SMCJ33A stands off 33 V and SMBJ6.0A stands off 6.0. It is what made the six protection defects
+         of 16 September findable at all: three SMCJ33A on lines specified to 36 V and three SMBJ5.0A on 5.1 V
+         rails, every one of them conducting in normal service rather than only on a transient"}
    acceptance_criteria: >
      For every part on a net whose nominal voltage exceeds 80 percent of the part's rating, and for every part
      in a current path above 1 A, a recorded comparison of the applied stress against the datasheet maximum,
@@ -288,6 +302,22 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
    maturity_at_writing: SOURCE_UNVERIFIED
+   false_positive_analysis: >
+     A WRONG REFUSAL here has three shapes and this project has met all three. The first is a value string
+     whose voltage is PROSE rather than a rating: board C's test point carried the net it taps ("+5V") and was
+     read as a 5 V part, and board B's indicators carry "green 5 V S1", the colour and the rail they show. The
+     answer is that the reference prefix is its whole letters matched exactly, so TP is not T and LED is not L,
+     and a prefix nobody has classified is not rated rather than guessed at. The second is judging a part on
+     the POTENTIAL OF ONE END: a bootstrap capacitor sits between BOOT and SW and both ends move together, so
+     it sees the driver's own 7.6 V bias and not the 61 V the node reaches, and every such part on this set is
+     a 25 V part for that reason; a net that rides on another declares the bias and the part is judged against
+     it. The third is asking a PROTECTOR whether it survives the voltage it itself produces, which is circular:
+     a suppressor is asked instead whether its stand-off is above the line's own working maximum, and that
+     question is asked before the value string is read for a rating, because the answer must not depend on
+     whether the part's prose happens to mention a voltage. What is NOT protected against, and is written here
+     rather than hidden: the comparison is against the DECLARED STEADY voltage, so a transient, a ringing
+     switch node or a hot-plug overshoot is outside it; DC-bias capacitance derating is a different failure and
+     is not checked; and a part whose value states no rating is COUNTED and reported rather than assumed good.
 
  - id: CMP-002
    false_positive_analysis: >

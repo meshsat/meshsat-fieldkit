@@ -48,19 +48,35 @@ RATED = ("C", "D", "F", "L", "T")
 # margin over itself. CMP-001 is a BLOCKER, so that one line stopped board C's whole chain at the pre-route
 # gate: "BLOCK a part is rated below the rail it sits on". A test point is a via with a name; it has no
 # rating and nothing to derate.
-NOT_RATED = ("TP", "FID", "LOGO", "DNP", "MH")
+# 16 September 2026, THE SAME DEFECT IN A THIRD PLACE. `LED11`'s prefix is LED, the membership test was on the
+# FIRST CHARACTER, and "L" is an inductor, so every indicator on board B was read as a rated part. Its value
+# string is "green 5 V S1", the colour and the rail it indicates, and the "5 V" in it was read as a rating of
+# 5 V and then judged against the 5 V rail it sits on: three false refusals on a correct design, and a BLOCKER
+# rule, so it would have stopped board B's chain. A value's voltage is a rating only when the value is a
+# rating, and the prefix is the letters, not the first of them. The tables are exact prefixes now.
+NOT_RATED = ("TP", "FID", "LOGO", "DNP", "MH", "LED")
 
 
 def rated_kind(ref):
     """True if this reference designates a part whose value string carries a RATING.
 
     The prefix of a reference is its LETTERS, not its first character. `TP6` is a test point and `T6` is a
-    tantalum capacitor, and a one-character test cannot tell them apart; the letters are taken whole and
-    judged against both tables, so a new prefix is decided here and in no other place.
+    tantalum capacitor, `LED11` is an indicator and `L11` is an inductor, and a one-character test cannot tell
+    any of those apart. The letters are taken whole and matched EXACTLY against both tables, so a new prefix is
+    decided here and in no other place, and an unknown one is not rated rather than guessed at.
     """
     letters = ref[:len(ref) - len(ref.lstrip("ABCDEFGHIJKLMNOPQRSTUVWXYZ_"))].rstrip("_") if ref else ""
     if letters in NOT_RATED: return False
-    return letters[:1] in RATED
+    return letters in RATED
+
+
+# A TRANSIENT SUPPRESSOR IS NOT JUDGED AGAINST THE VOLTAGE IT MAKES (16 September 2026). Board E's D1 is the
+# SMCJ33A that clamps the vehicle input, and the declared peak of that net, 53.3 V, IS its own clamping
+# voltage: comparing the two asks whether the clamp survives what the clamp does, which is circular and read
+# as a failure. The real question about a protector is the opposite one, and it is worth asking: its STANDOFF
+# must be ABOVE the highest voltage the line reaches in normal use, or it conducts in service. The standoff is
+# in the part number (SMCJ33A stands off 33 V), and the working maximum is what the net declares as `v_work`.
+TVS = re.compile(r"\bSM[ABC]J(\d+(?:\.\d+)?)A?\b", re.I)
 
 
 def netlist(path):
@@ -87,25 +103,92 @@ def judge(net_path, intent_path=None, margin=MARGIN):
                                               os.path.basename(net_path).replace(".net", "-intent.json"))
     it = json.load(open(intent_path)) if os.path.exists(intent_path) else {}
     rails = {k.lstrip("/"): v for k, v in (it.get("rails") or {}).items()}
-    judged, bad, unrated, undeclared = 0, [], [], set()
+    # A NET THAT IS NOT A RAIL STILL HAS A VOLTAGE (16 September 2026). A switching node, a bootstrap
+    # capacitor's top plate, a charge pump's output and a power amplifier's drain are where a part meets the
+    # highest voltage on the board, and none of them is a supply with a current and loads. `intent.node()`
+    # declares the peak such a net can reach with the basis for the number; without it derate judged nothing
+    # on board C at all and reported twenty-nine of board A's nets as UNDECLARED.
+    nodes_v = {k.lstrip("/"): v for k, v in (it.get("nodes") or {}).items()}
+    # {ref: {net, ...}} so a two-pin part can be judged on the voltage ACROSS it rather than on one end.
+    on = {}
+    for _n, _nodes in by_net.items():
+        for _r, _p in _nodes: on.setdefault(_r, set()).add(_n)
+
+    def stress(ref, net):
+        """(volts, how) for this part on this net: the largest voltage it can see, and where that came from.
+
+        A part between BOOT and SW sees the bias between them and not the node's height above ground, which is
+        the difference between a correct 25 V bootstrap capacitor and a refusal. A part between a declared net
+        and ground sees the net. A part between two declared nets that do not ride together sees the worst
+        pair of their excursions, which is the conservative reading and is named as such."""
+        others = on.get(ref, set()) - {net}
+        here = rails.get(net) or nodes_v.get(net) or {}
+        peak = lambda d: max(abs(float(d.get("volts") or d.get("v_max") or 0.0) if (d.get("volts") is not None or d.get("v_max") is not None) else 0.0),
+                             abs(float(d.get("v_min") or 0)))
+        for o in others:
+            a, b = nodes_v.get(net) or {}, nodes_v.get(o) or {}
+            if a.get("rides_on") == o: return float(a["bias_v"]), "the declared bias across %s and %s" % (net, o)
+            if b.get("rides_on") == net: return float(b["bias_v"]), "the declared bias across %s and %s" % (o, net)
+        v = peak(here)
+        for o in others:
+            od = rails.get(o) or nodes_v.get(o)
+            if od is None: continue
+            lo_a = float(here.get("v_min") or 0); hi_a = float(here.get("volts") or here.get("v_max") or 0)
+            lo_b = float(od.get("v_min") or 0); hi_b = float(od.get("volts") or od.get("v_max") or 0)
+            v = max(v, abs(hi_a - lo_b), abs(hi_b - lo_a))
+        return v, "the worst excursion between %s and the net(s) at its other pin(s)" % net
+
+    judged, bad, unrated, undeclared, vendor = 0, [], [], set(), []
     for net, nodes in sorted(by_net.items()):
         r = rails.get(net)
+        nd = nodes_v.get(net)
         for ref, _pin in sorted(nodes):
             if not rated_kind(ref): continue
+            # THE PROTECTOR IS ASKED FIRST, and the order is the whole point (16 September 2026). A suppressor
+            # is judged on its STANDOFF against the line's working maximum, not on surviving the voltage it
+            # itself produces, and its standoff is in its part number rather than in a "NN V" the value string
+            # may or may not carry. Asked after the rating test, board A's D2 fell out as "unrated" because
+            # "SMCJ33A (VIN_RAW clamp behind E6's filter)" states no volts, while board E's D1 was caught only
+            # because its note happens to mention "50 V 100 ms": the same part, the same defect, one board
+            # reporting it and the other silent, decided by prose.
+            _tv = TVS.search(values.get(ref, "") or "")
+            if _tv:
+                _work = None
+                for _src in (rails.get(net), nodes_v.get(net)):
+                    if not _src: continue
+                    _work = _src.get("v_work")
+                    if _work is None and _src.get("volts") is not None: _work = float(_src["volts"])
+                    if _work is not None: break
+                if _work is None:
+                    unrated.append(ref); continue        # nothing says what this line runs at in service
+                judged += 1
+                _stand = float(_tv.group(1))
+                if _stand < float(_work):
+                    bad.append("%s (%s) stands off %.1f V and protects %s, which runs to %.1f V in normal "
+                               "service: it conducts in service rather than only on a transient"
+                               % (ref, values.get(ref, "?"), _stand, net, float(_work)))
+                continue
             rated = rating(values.get(ref, ""))
             if rated is None:
                 unrated.append(ref); continue
-            if r is None:
+            if r is None and nd is None:
                 # a part with a rating on a net nobody declared a voltage for: this is not a pass and not a
                 # failure of the part, it is a gap in the intent file, and it is reported as its own class
                 undeclared.add(net); continue
-            volts = float(r.get("volts") or 0)
+            # A net whose voltage nobody can state and whose PART the part's maker states: the comparison is
+            # against that citation, and it is recorded as such rather than counted with the measured ones.
+            if nd is not None and nd.get("vendor_reference") and nd.get("v_max") is None:
+                vendor.append("%s (%s) on %s: %s" % (ref, values.get(ref, "?"), net, nd["vendor_reference"]))
+                judged += 1
+                continue
+            volts, how = stress(ref, net)
             judged += 1
             if rated < volts * (1.0 + margin) - 1e-9:
-                bad.append("%s (%s) is rated %.1f V and sits on %s at %.1f V, which needs %.1f V at a %.0f%% margin"
-                           % (ref, values.get(ref, "?"), rated, net, volts, volts * (1.0 + margin), margin * 100))
+                bad.append("%s (%s) is rated %.1f V and sees %.1f V on %s (%s), which needs %.1f V at a %.0f%% margin"
+                           % (ref, values.get(ref, "?"), rated, volts, net, how,
+                              volts * (1.0 + margin), margin * 100))
     return dict(judged=judged, bad=bad, unrated=sorted(set(unrated)), undeclared=sorted(undeclared),
-                rails=len(rails))
+                rails=len(rails), nodes=len(nodes_v), vendor=sorted(set(vendor)))
 
 
 def main(argv):
@@ -118,22 +201,31 @@ def main(argv):
         return _v.write("derate", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": net},
                         note="no netlist: the rating of a part cannot be compared with a rail that is not there")
     r = judge(net, intent, margin)
-    print("derate: %d rated part-on-rail pair(s) judged at a %.0f%% margin over %d declared rail(s); "
-          "%d part(s) carry no rating in their value and were not judged; %d net(s) carry a rated part and no declared voltage"
-          % (r["judged"], margin * 100, r["rails"], len(r["unrated"]), len(r["undeclared"])))
+    print("derate: %d rated part-on-net pair(s) judged at a %.0f%% margin over %d declared rail(s) and %d declared "
+          "node(s), %d of them against the part maker's own reference circuit; %d part(s) carry no rating in their "
+          "value and were not judged; %d net(s) carry a rated part and no declared voltage"
+          % (r["judged"], margin * 100, r["rails"], r.get("nodes", 0), len(r.get("vendor") or []),
+             len(r["unrated"]), len(r["undeclared"])))
     for b in r["bad"][:20]: print("  FAIL %s" % b)
+    for v in (r.get("vendor") or [])[:8]: print("  BY THE PART MAKER %s" % v)
     if r["undeclared"]: print("  UNDECLARED nets: %s" % ", ".join(r["undeclared"][:12]))
     if "--json" in argv: print(json.dumps(r, indent=1))
-    # Absence is never a pass: a board whose intent file declares no rail at all has been checked against
-    # nothing, however many parts carry ratings.
-    res = _v.INCONCLUSIVE if not r["rails"] else (_v.FAIL if r["bad"] else _v.PASS)
+    # Absence is never a pass: a board whose intent file declares NOTHING has been checked against nothing,
+    # however many parts carry ratings. 16 September 2026: a board can now declare nodes as well as rails, and
+    # a board of nothing but nodes (a passive filter board, or this tool's own fixtures) was reading
+    # INCONCLUSIVE with the words "no rail is declared, so nothing was compared" beside a count of parts that
+    # had just been compared. What makes the answer absent is that neither kind of declaration exists.
+    _declared = r["rails"] + r.get("nodes", 0)
+    res = _v.INCONCLUSIVE if not _declared else (_v.FAIL if r["bad"] else _v.PASS)
     return _v.write("derate", res,
                     counts={"judged": r["judged"], "under_rated": len(r["bad"]), "unrated_parts": len(r["unrated"]),
-                            "undeclared_nets": len(r["undeclared"])},
+                            "undeclared_nets": len(r["undeclared"]),
+                            "by_vendor_reference": len(r.get("vendor") or [])},
                     denominator=r["judged"],
-                    evidence=r["bad"][:20] + ["no declared voltage: %s" % n for n in r["undeclared"][:6]],
+                    evidence=r["bad"][:20] + ["no declared voltage: %s" % n for n in r["undeclared"][:6]]
+                             + ["by the part maker's own reference: %s" % v for v in (r.get("vendor") or [])[:6]],
                     inputs={"netlist": net, "margin": margin},
-                    note=("no rail is declared, so nothing was compared" if not r["rails"] else
+                    note=("no rail and no node is declared, so nothing was compared" if not _declared else
                           "a part's rating against the declared voltage of the rail it is soldered to; DC-bias "
                           "capacitance derating is NOT checked here and is an open gap"))
 

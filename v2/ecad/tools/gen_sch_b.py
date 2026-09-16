@@ -342,11 +342,19 @@ def slot(s):
     part(rb, "Connector_Generic", "CM5B", "Amphenol 10164227-1004A1RLF receptacle B, slot S%d (CM5 pins 101-200, high-speed side)" % s, "CM5B", {str(k): v for k, v in CM5.items() if k > 100}, "C7435219")
     # --- the slot rail: J_5V_Sx from A22 (AP64500 5.1 V, 32.55), bulk at the lead and at the module's 5 V pins
     part("J_5V_S%d" % s, "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: 5 V slot rail S%d from A22 J_5V_S%d, 16 AWG lead: + -" % (s, s), "VH2", {"1": n5, "2": "GND"}, "C274411")
-    part("D%d" % (100 * s + 1), "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": n5, "2": "GND"})
+    # 16 September 2026, rule CMP-001: an SMBJ5.0A stands off 5.0 V and this rail is regulated to 5.1, so the
+    # clamp sat above its own stand-off voltage in normal service and leaked there for ever (up to 800 uA a
+    # part at VWM, three of them). The next standard stand-off up is the right part: SMBJ6.0A (Littelfuse
+    # C83270, DO-214AA, stock 5,910) stands off 6.0 V and breaks down at 6.67 V minimum. Neither part
+    # protects the module from a surge, whose clamping voltage is 9 to 10 V either way; what a stand-off
+    # above the rail buys is that the protector is not a load on the rail it protects.
+    part("D%d" % (100 * s + 1), "Device", "D_TVS", "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)", "TVS", {"1": n5, "2": "GND"}, "C83270")
     for k in (1, 2, 3, 4): c(C(k), "100u 10V", n5, "GND", "C100u")
     for k in (5, 6, 7, 8): c(C(k), "10u", n5, "GND", "C10u")
     c(C(9), "10u", cm33, "GND", "C10u"); c(C(10), "100n", cm33, "GND")
     r(R(1), "1k", n5, "LED_5V_A%d" % s); led("LED%d1" % s, "green 5 V S%d" % s, "LED_5V_A%d" % s, "GND")
+    _intent.node("LED_5V_A%d" % s, 5.0, "the slot %s indicator's anode, behind its 1k series resistor from "
+                 "the 5 V rail: it can only reach that rail" % s)
     # --- 3.3 V bucks: A the card socket (PCIE_PWR_EN, as the B14 WiFi rail), B the switch, hub and NVMe (follows the module's 3.3 V); the two cores from TPS62933 on the 5 V rail
     buck33(U(3), "S%dA" % s, n5, "PCIE_PWR_EN%d" % s, a33, [L(1), C(11), C(12), C(13), C(14), C(15), C(16), R(2), R(3), R(4), R(5), C(17)]); r(R(6), "100k", "PCIE_PWR_EN%d" % s, "GND")
     buck33(U(4), "S%dB" % s, n5, "EN33_S%d" % s, b33, [L(2), C(18), C(19), C(20), C(21), C(22), C(23), R(7), R(8), R(9), R(10), C(24)])
@@ -378,6 +386,14 @@ def slot(s):
     synth(U(1), "PI7C9X2G404SL", "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S%d: up = CM5 lane, port 1 NVMe, port 2 card socket" % s, "LQFP128EP", m, "C500767")
     c(C(51), "220n 16V (PCIe AC coupling, CM5 datasheet 2.3.1)", "PCIE%d_RXSW_P" % s, "PCIE%d_RX_P" % s, "C0402")
     c(C(52), "220n 16V (PCIe AC coupling, CM5 datasheet 2.3.1)", "PCIE%d_RXSW_N" % s, "PCIE%d_RX_N" % s, "C0402")
+    # The six coupling capacitors sit between two PCIe receive lanes and nothing declared what either side
+    # carries, so `derate.py` reported twelve of this board's nets as UNDECLARED (16 September 2026, CMP-001).
+    # A PCIe Gen 2 receiver pair is a differential signal of about 1.2 V peak to peak on a common mode below
+    # 3.6 V; the capacitors are 16 V parts, which is the class the switch vendor's own reference uses.
+    for _pn in ("PCIE%d_RXSW_P" % s, "PCIE%d_RXSW_N" % s, "PCIE%d_RX_P" % s, "PCIE%d_RX_N" % s):
+        _intent.node(_pn, 3.6, "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a "
+                     "common mode the specification holds below 3.6 V, which is what an AC coupling "
+                     "capacitor on it has to stand off")
     r(R(17), "475 1% (IREF)", "S%d_IREF" % s, "GND"); r(R(18), "1.43k 1% (REXT)", "S%d_REXT" % s, "GND"); r(R(19), "5.1k", "S%d_SLOTCLK" % s, b33); r(R(20), "5.1k", "S%d_SLOTIMP" % s, b33)
     r(R(21), "5.1k", "S%d_PRSNT3" % s, b33); r(R(22), "330", "S%d_PWRSAV" % s, "GND"); r(R(23), "5.1k", "S%d_TEST1" % s, b33); r(R(24), "330", "S%d_TESTL" % s, "GND"); r(R(25), "5.1k", "S%d_SMBCLK" % s, b33)
     r(R(26), "5.1k", "S%d_SMBDAT" % s, b33); r(R(27), "4.7k", "S%d_EEPD" % s, "GND"); r(R(28), "330", "S%d_JTAGL" % s, "GND"); r(R(29), "1k", "PCIE%d_CLKREQ_n" % s, "GND")   # the switch cannot forward CLKREQ: the module's clock is always requested

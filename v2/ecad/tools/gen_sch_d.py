@@ -229,6 +229,18 @@ part("D2", "Diode", "1N4148W", "1N4148W coil flyback", "SOD123", {"1": "+5V_D8",
 r("R54", "27 1% 2010", "RF_PAD_IN", "RF_PAD_M", "R2010"); r("R55", "36 1% 2010", "RF_PAD_M", "GND", "R2010"); r("R56", "27 1% 2010", "RF_PAD_M", "RF_DRV", "R2010")   # 10 dB T-pad, 0.5 W in, 50 mW to the PA
 part("J_PAIN", "Connector", "Conn_Coaxial", "U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)", "UFL", {"1": "RF_DRV", "2": "GND"}, "C88373")
 part("J_PAOUT", "Connector", "Conn_Coaxial", "SMA jack: PA output (coax from the RA30H1317M1 output on the plate)", "SMA", {"1": "RF_PAOUT", "2": "GND"}, "C3174425")
+# THE VOLTAGE ON THE FILTER, DECLARED (16 September 2026, rule CMP-001). Three of this board's nets carry the
+# transmitter's whole output and nothing said what that is, so `derate.py` reported them as UNDECLARED and
+# judged no part on any of them: it is the one place on the set where a part meets a voltage above 54 V.
+# 30 W into a matched 50 ohm load is 38.7 V RMS and 54.8 V peak. Into a MISMATCH it is higher: an open or a
+# short at the antenna doubles the standing-wave voltage to about 110 V peak, which is the case the filter's
+# capacitors are chosen for, and they are 500 V NP0 parts for that reason. The declared peak is the mismatch
+# case, because a field kit's antenna port is exactly where a mismatch happens.
+for _rfn in ("RF_PAOUT", "RF_LPF_M", "RF_LPF_OUT"):
+    _intent.node(_rfn, 110.0, "the 30 W transmitter's output: 54.8 V peak into a matched 50 ohm load, and about "
+                 "110 V peak at the voltage maximum of a standing wave if the antenna port is open or shorted")
+_intent.node("GND", 0.0, "the board's reference, so a part between a live net and ground is judged against the "
+             "live net rather than reported as sitting on an undeclared one")
 # L1 and L2 leave the 1812 land. The IMC1812EB68NK they were drawn as is rated 450 mA and the
 # 30 W PA puts about 775 mA RMS through this filter (sqrt(30/50) into a matched load), so the
 # part was under-rated for its own job independently of being out of stock, and every other

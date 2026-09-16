@@ -188,6 +188,25 @@ r("R%d" % rn, "0.47R 1%", "EPD_RESE", "GND"); rn += 1
 part("D19", "Device", "D_Schottky", "SS2040FL: EPD_SW -> VGH", "SOD123F", {"1": "EPD_SW", "2": "EPD_VGH"}); c("C30", "1u 25V", "EPD_VGH", "GND")
 c("C31", "1u 25V", "EPD_SW", "EPD_PUMP"); part("D20", "Device", "D_Schottky", "SS2040FL: pump clamp", "SOD123F", {"1": "EPD_PUMP", "2": "GND"}); part("D21", "Device", "D_Schottky", "SS2040FL: pump -> VGL", "SOD123F", {"1": "EPD_VGL", "2": "EPD_PUMP"}); c("C32", "1u 25V", "EPD_VGL", "GND")
 for i, net in enumerate(("EPD_VDHR", "EPD_VDDD", "EPD_VDH", "EPD_VDL", "EPD_VCOM"), 33): c("C%d" % i, "1u 25V", net, "GND")
+# THE PANEL'S OWN CHARGE PUMPS, JUDGED BY THE PANEL MAKER (16 September 2026, rule CMP-001). These ten nets
+# are the source and gate supplies the driver builds inside the glass, and this board only carries the boost
+# inductor, the pump capacitors and the two Schottkys the reference circuit asks for. Their peaks live in a
+# driver datasheet that is not published, so declaring a voltage here would be inventing one, which is the
+# invention this rule exists to stop; and reporting them as unknown loses a real comparison, because the panel
+# maker STATES THE PART. PDI's driving-circuit note rev 02 (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf)
+# specifies "Capacitors 25V 0603" for this circuit and lists 1 uF 25 V 0603 in its own bill of materials, and
+# every capacitor on these nets here is exactly that. `derate.py` records the citation instead of a number.
+_PDI = ("PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V "
+        "0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network "
+        "(v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is "
+        "the 1 uF 25 V 0603 part the panel maker specifies")
+for _en in ("EPD_VGH", "EPD_VGL", "EPD_VDH", "EPD_VDL", "EPD_VDHR", "EPD_VCOM", "EPD_VDDD",
+            "EPD_SW", "EPD_PUMP"):
+    _intent.node(_en, None, "a charge-pump node of the e-paper driver, inside the panel's own glass: this "
+                 "project states no voltage for it and does not need to, because the panel maker states the "
+                 "part", vendor_reference=_PDI)
+_intent.node("GND", 0.0, "the board's reference, so a part between a live net and ground is judged against "
+             "the live net rather than reported as sitting on an undeclared one")
 # --- sounder: IP67 panel-mount part in its own sealed hole on the face, driven on +5V through Q4 from the controller's PWM1; ACK mutes in firmware
 part("BZ1", "Device", "Buzzer", "IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (Floyd Bell MC-09-530-Q class)", "BZ", {"1": "BZ_K", "2": "+5V"})
 nfet("Q4", "Q4_G", "GND", "BZ_K"); r("R%d" % rn, "100R", "PWM1", "Q4_G", "R", "C22775"); rn += 1; r("R%d" % rn, "100k", "Q4_G", "GND", "R", "C25803"); rn += 1

@@ -12,13 +12,13 @@ import re as _re
 
 Z_DEFAULT = {"USB": {"z_diff": 90.0, "z_se": 50.0}, "DIFF100": {"z_diff": 100.0, "z_se": 50.0}, "PCIE": {"z_diff": 100.0}, "HDMI": {"z_diff": 100.0}, "RF": {"z_se": 50.0}}
 
-_I = {"bypass": [], "rails": {}, "pair_classes": dict(Z_DEFAULT)}
+_I = {"bypass": [], "rails": {}, "nodes": {}, "pair_classes": dict(Z_DEFAULT)}
 
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
-         efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None):
+         efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
@@ -74,7 +74,78 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                         # through DSG_G, which no pattern over names would find and which is the truth
                         **({"enable_net": enable_net} if enable_net else {}),
                         **({"always_on": True, "always_on_why": always_on_why} if always_on else {}),
-                        **({"efficiency": efficiency} if efficiency else {})}
+                        **({"efficiency": efficiency} if efficiency else {}),
+                        # v_work: the highest voltage this rail reaches in NORMAL SERVICE where that differs
+                        # from `volts`. `volts` is the NOMINAL, which is the right number for a drop budget
+                        # and the wrong one for a part's rating: VBAT is declared 14.4 V and a 4S pack
+                        # terminates at 16.8, and VIN_RAW is declared 12 V and the vehicle input it comes
+                        # from is specified 9 to 36. A transient suppressor is judged on this number, because
+                        # a clamp that stands off less than the line's own working maximum conducts in service.
+                        **({"v_work": float(v_work)} if v_work is not None else {})}
+
+def node(net, v_max, basis, v_min=0.0, rides_on=None, bias_v=None, vendor_reference=None, v_work=None):
+    """A NET THAT IS NOT A RAIL, and the largest voltage a part on it can see (rule CMP-001, 16 September 2026).
+
+    `rail()` describes a supply: a voltage, a current, a source and its loads. A switching node, a bootstrap
+    capacitor's top plate, a charge pump's output and a power amplifier's drain are none of those things, and
+    they are exactly where a part meets a voltage higher than any rail on the board. Nothing declared them, so
+    `derate.py` reported them as UNDECLARED and judged nothing: board A had twenty-nine such nets, board C had
+    ten and judged NO part at all, and board D's power amplifier output, which swings to about 55 V peak into
+    50 ohm at 30 W, was one of them.
+
+    v_max is the peak a part on this net can see in normal operation, and `basis` is where that number comes
+    from, in words, because a voltage nobody can trace is the thing this rule exists to stop. v_min is the
+    lowest (a negative charge pump, a node that swings below ground).
+    """
+    if not str(basis).strip(): raise SystemExit("intent: node %s declares no basis for %.1f V" % (net, v_max))
+    # A PART SEES THE VOLTAGE ACROSS IT, NOT THE POTENTIAL OF ONE END. A bootstrap capacitor sits between
+    # BOOT and SW and both ends move together: the node reaches 43 V above ground and the capacitor never sees
+    # more than the driver's own 7.5 V bias, which is why every one of them on this board is a 25 V part and
+    # why judging it against the node's peak would refuse a correct design. A net that RIDES ON another says
+    # so and declares the bias between them; a part whose two nets are that pair is judged against the bias.
+    if (rides_on is None) != (bias_v is None):
+        raise SystemExit("intent: node %s declares rides_on without bias_v or the other way round" % net)
+    # A NET WHOSE VOLTAGE THIS PROJECT CANNOT STATE, ON WHICH THE PART MAKER STATES THE PART. The e-paper's
+    # charge pumps are the case: their peaks live inside a panel driver whose datasheet is not published, and
+    # the panel maker's own driving-circuit note specifies the capacitor instead ("Capacitors 25V 0603", PDI
+    # rev 02). Inventing a voltage to compare against would be the invention this rule exists to stop, and
+    # reporting the net as unknown loses a real, citable comparison. `vendor_reference` records that the part
+    # on this net is the one the part's own maker specifies for that pin, with the citation; derate counts it
+    # as judged by that authority and names it, and it is the only way a part passes without a number.
+    if v_max is None and not vendor_reference:
+        raise SystemExit("intent: node %s declares no voltage and no vendor reference" % net)
+    # v_work: the highest voltage this net reaches in NORMAL SERVICE, where v_max is the peak including the
+    # transient a clamp lets through. The two differ wherever a suppressor is involved, and the difference is
+    # the only honest way to ask whether that suppressor stands the line off instead of conducting in service.
+    _I["nodes"][net] = {"v_max": None if v_max is None else float(v_max), "v_min": float(v_min), "basis": basis,
+                        **({"v_work": float(v_work)} if v_work is not None else {}),
+                        **({"rides_on": rides_on, "bias_v": float(bias_v)} if rides_on else {}),
+                        **({"vendor_reference": vendor_reference} if vendor_reference else {})}
+
+def rail_volts(net, default=None):
+    """The declared voltage of a rail, for a generator that needs to derive a node's peak from it.
+
+    A stage's switching node reaches its input rail and its bootstrap reaches that plus the driver supply, so
+    the numbers belong to the stage's own helper rather than to twenty hand-written lines that can drift from
+    the topology they describe."""
+    r = _I["rails"].get(net.lstrip("/")) or _I["rails"].get("/" + net.lstrip("/"))
+    if r is None:
+        if default is not None: return float(default)
+        raise SystemExit("intent: rail_volts(%s): no such declared rail" % net)
+    return float(r.get("volts") or 0)
+
+def net_volts(net, default=None):
+    """The declared voltage of a net, rail or node, for a stage that derives its own switching nodes.
+
+    A stage's output is not always a rail: the USB-C PD supply is regulated to 5, 9 or 15 V on request and is
+    declared as a node with the profile it can reach. Looking only at rails would make a helper raise on it,
+    and giving the helper a silent default is how a number nobody wrote down gets into a verdict."""
+    n = net.lstrip("/")
+    if n in _I["rails"] or "/" + n in _I["rails"]: return rail_volts(n)
+    d = _I["nodes"].get(n)
+    if d is not None: return max(abs(float(d.get("v_max") or 0)), abs(float(d.get("v_min") or 0)))
+    if default is not None: return float(default)
+    raise SystemExit("intent: net_volts(%s): neither a declared rail nor a declared node" % net)
 
 def pair_class(name, z_diff=None, z_se=None):
     _I["pair_classes"][name] = {k: v for k, v in (("z_diff", z_diff), ("z_se", z_se)) if v is not None}
@@ -89,6 +160,10 @@ def write(sch_path, project, parts=None):
             if b["pin"] not in nets[b["part"]]: raise SystemExit("intent: bypass %s -> %s.%s: the part has no pin %s" % (b["cap"], b["part"], b["pin"], b["pin"]))
             if b["net"] is None: b["net"] = nets[b["part"]][b["pin"]]
             if b["net"] not in nets[b["cap"]].values(): raise SystemExit("intent: bypass %s -> %s.%s: the capacitor is not on that pin's net %s" % (b["cap"], b["part"], b["pin"], b["net"]))
+        for net in _I["nodes"]:
+            # A declared node that is not a net of this schematic is a typo that would read as coverage.
+            if not {p["ref"] for p in parts if net in p["nets"].values()}:
+                raise SystemExit("intent: node %s is not a net of the schematic" % net)
         for net, r in _I["rails"].items():
             on_net = {p["ref"] for p in parts if net in p["nets"].values()}
             if not on_net: raise SystemExit("intent: rail %s is not a net of the schematic" % net)
@@ -98,7 +173,8 @@ def write(sch_path, project, parts=None):
                 if ref not in on_net: raise SystemExit("intent: rail %s names load %s, which is not on that net" % (net, ref))
     d = dict(board=project, written=time.strftime("%Y-%m-%d %H:%M"), **_I)
     json.dump(d, open(out, "w"), indent=1)
-    print("intent: %s (%d bypass, %d rails, %d pair classes)" % (out, len(_I["bypass"]), len(_I["rails"]), len(_I["pair_classes"])))
+    print("intent: %s (%d bypass, %d rails, %d nodes, %d pair classes)"
+          % (out, len(_I["bypass"]), len(_I["rails"]), len(_I["nodes"]), len(_I["pair_classes"])))
     return out
 
 def load(board_path):
