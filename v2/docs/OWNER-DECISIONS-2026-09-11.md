@@ -2281,9 +2281,9 @@ clearances are on the never-auto floor.
 
 | | what changes | cost |
 |---|---|---|
-| **1. board B's minimum clearance becomes 0.10 mm** (recommended) | one number in `gen_pcb_b.py`, from 0.127 to 0.10, for board B alone | the pair geometry and the impedance stay exactly as designed and the board stops refusing itself. It is 0.01 mm above the fabricator's own floor for this stackup, which is a 10 percent margin on a published capability rather than on a guess. Every other clearance on the board is a class value at or above 0.127 and is untouched |
-| 2. the two classes go to 0.127 mm | the intra-pair gap widens | the differential impedance moves from the 100 ohm target to about 102 (measured by the 2D solver on this stack, 15 September), which is inside a 10 percent tolerance, and **every pair on the board is re-laid**: the pre-router's own numbers are per geometry and B's pair count has been the campaign's hardest measurement all week |
-| 3. leave it | nothing | the board fails IMP-002 for ever and every route it runs carries clearance violations between pair legs, which is where this started |
+| **Option 1: board B's minimum clearance becomes 0.10 mm** (recommended) | one number in `gen_pcb_b.py`, from 0.127 to 0.10, for board B alone | the pair geometry and the impedance stay exactly as designed and the board stops refusing itself. It is 0.01 mm above the fabricator's own floor for this stackup, which is a 10 percent margin on a published capability rather than on a guess. Every other clearance on the board is a class value at or above 0.127 and is untouched |
+| Option 2: the two classes go to 0.127 mm | the intra-pair gap widens | the differential impedance moves from the 100 ohm target to about 102 (measured by the 2D solver on this stack, 15 September), which is inside a 10 percent tolerance, and **every pair on the board is re-laid**: the pre-router's own numbers are per geometry and B's pair count has been the campaign's hardest measurement all week |
+| Option 3: leave it | nothing | the board fails IMP-002 for ever and every route it runs carries clearance violations between pair legs, which is where this started |
 
 **The session's reading: option 1.** The number that is wrong is the one this project chose, not the one the
 part and the fabricator agree on. It is one line, it is board B only, and the boards that keep 0.127 keep it.
