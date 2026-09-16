@@ -129,6 +129,14 @@ PY
 }
 guarded stub stub_stage
 python3 $T/cleanup_dangling.py $N.kicad_pcb 2>&1 | grep -vE 'Debug|leak' | tail -1
+# 5a2. A TRACK SHORTER THAN THE PROCESS CAN DRAW IS AN ISLAND, NOT A CONDUCTOR (16 September 2026, board E11).
+# Its re-finish came back hard 0, unrouted 1, and the one open connection was a GND track 0.0002 mm long beside
+# U13 pad 2: two tenths of a micrometre of copper that no fabricator draws, which KiCad's connectivity is right
+# to call a piece of the net that reaches nothing. `cleanup_dangling` cannot see it because its first line skips
+# every net that owns a zone, which is correct for its own job and is exactly why this class survives on plane
+# nets. Guarded like every other pass: a dot that touches two items is a bridge and is kept, and the removal is
+# refused outright if the unconnected count rises.
+guarded dots python3 $T/dot_prune.py $N.kicad_pcb
 # 5b. a locked stitch via the fill no longer covers is dead at its pour end: the router ran a track past it and
 # the fill retreated by its clearance. cleanup_dangling leaves it because a via with a track on it is not
 # dangling by its rule, and the board gate then refuses the board for it (P routed 0 hard and 0 unrouted and was
