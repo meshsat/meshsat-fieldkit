@@ -2183,6 +2183,15 @@ connections are. The arms will be compared at the SAME pass number as well as at
 deterministic router given more passes can only improve, and reading a 4-pass board against a 29-pass board
 would measure the clock rather than the grid. The numbers go in the record when they land.
 
+**The first half landed at 22:00 UTC and it is a factor of five.** Both arms ran the same five-hour cap on the
+same box with one declaration between them. **A38, with the grid, took 24.9 minutes a pass and completed 9;
+A39, without it, took 4.6 minutes a pass and completed 57.** That is the grid's cost in the only currency a
+rented box has, and it is the same shape as board P's 21 open connections against 0 and board C's four hours.
+What it BUYS is already measured and is the cleanest separation in the rule set: the two boards that lay the
+grid answer RET-004 almost completely (D 1 of 37, E 4 of 60) and the four that do not fail it almost completely
+(A 32 of 40, B 204 of 245, C 65 of 75, P 10 of 14). The open counts at the two caps are the other half and
+follow tonight.
+
 ## Decision 37, 16 September 2026: board D asks for two crystals that do not exist, and the part it was certified against is four times the frequency
 
 **What was found, and it is on the board closest to finished.** Board D draws two 6 MHz crystals, one for the
