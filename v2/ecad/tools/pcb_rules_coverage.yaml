@@ -245,10 +245,18 @@ coverage:
    note: "the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers two of the classes",
    remediation: {action: "each closer names its class and its prevention attempt; extend the predictor", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 20}}
 
- RTE-001: {implementation: "gen_pcb_*.py design rules", verification: {tool: drc.sh, verdict: hardset-routed-board-gate},
-   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "the DRC enforces the board's own rules; those rules were copied from a capability record that is not in the tree",
-   remediation: {action: "pin the capability document and compare every board minimum against it", owner: SESSION, depends_on: [STK-001], p50_h: 2, p80_h: 6}}
+ RTE-001: {implementation: "gen_pcb_*.py design rules",
+   verification: {tool: "drc.sh, fab_limits.py", verdict: "hardset-routed-board-gate, fab_limits", fixtures: tests/test_fab_limits.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026. The DRC enforces the board's own rules and nothing had ever asked whether THOSE RULES are
+     inside what the process makes at the board's own copper weight. fab_limits.py asks, against the fabricator's
+     capability document now in the tree, with the copper weight read from the board's own stackup rather than from a
+     literal. It found board P immediately: two layers at 2 oz by owner ruling 7, designed to 0.127 mm track width and
+     clearance where the 2 oz two-layer rows read 0.16, and its Default, SENSE and GNDC classes at 0.127 as well. Five
+     items, on a board every gate in this project had passed, because each of them judges the COPPER against the
+     board's rules and none of them judged the RULES. Fixed at the source in gen_pcb_p.py and gen_pcb_p3.py.
+     Boards A and B come back INCONCLUSIVE because their committed board files carry no stackup at all, which is
+     STK-001's problem and is visible here for the first time"}
 
  RTE-002: {implementation: "routeflow.py, finish.sh", verification: {tool: hardset.py, verdict: "hardset-routed-board-gate, pruned_gate", fixtures: "tests/test_hardset.py, tests/test_gate_fixtures.py"},
    _tool_why: "two tools, and the second is why: escape_prune removes an escape stub that sits in a hard violation and leaves the pad to the router with only a count printed. On a 0.4 mm receptacle row that pad can end with no via site on any layer, and the routed board looks complete because the router simply never reached it (board A19s SDA pin, 8 September 2026)",

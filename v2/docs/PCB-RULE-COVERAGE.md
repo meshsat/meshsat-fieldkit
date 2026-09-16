@@ -49,7 +49,7 @@ appears in the gap register.
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py | **ENFORCED** |
 | RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | check_pcb_d.py -> check_pcb_d |  | **GENERATED_ONLY** |
 | RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> check_contracts | tests/test_gate_fixtures.py | **ENFORCED** |
-| RTE-001 | ROUTING | BLOCKER | gen_pcb_*.py design rules | drc.sh -> hardset-routed-board-gate |  | **SOURCE_UNVERIFIED** |
+| RTE-001 | ROUTING | BLOCKER | gen_pcb_*.py design rules | drc.sh, fab_limits.py -> hardset-routed-board-gate, fab_limits | tests/test_fab_limits.py | **ENFORCED** |
 | RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py | **ENFORCED** |
 | SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py -> netlist_board | tests/test_netlist_board.py | **ENFORCED** |
@@ -71,10 +71,10 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 23 |
+| ENFORCED | 24 |
 | GENERATED_ONLY | 11 |
 | VERIFIED_MANUALLY | 1 |
 | DOCUMENTED_ONLY | 2 |
 | OPEN | 13 |
-| SOURCE_UNVERIFIED | 5 |
+| SOURCE_UNVERIFIED | 4 |
 | OWNER_DECISION_REQUIRED | 2 |

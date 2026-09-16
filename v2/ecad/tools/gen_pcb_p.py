@@ -36,7 +36,13 @@ tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-P PACK B
 tb.SetDate("2026-09-07"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-830. Board-local frame, +X along the pack, the board at the end of the cell block inside the pack enclosure (appendix 32.62). P1: BQ4050 SMBus gauge and protection for the built 4S pack, two layers, 2 oz. tools/gen_pcb_p.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
-for attr, val in (("m_MinClearance", 0.127), ("m_TrackMinWidth", 0.127), ("m_ViasMinSize", 0.5), ("m_MinThroughDrill", 0.3), ("m_HoleToHoleMin", 0.3), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.2), ("m_SolderMaskMinWidth", 0.1)):
+# 0.16 AND NOT 0.127 (16 September 2026, rule RTE-001). This board is TWO LAYERS AT 2 oz by owner ruling 7, and
+# the fabricator's capability for 2 oz on two layers is 0.16 mm track width and 0.16 mm spacing
+# (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md, the track width and spacing rows). The board was
+# designed to 0.127 for both, which is the 1 oz multilayer number, and every gate in this project passed it:
+# each of them judges the COPPER against the board's rules, and none of them judged the RULES. Heavier copper
+# needs MORE room to etch, not less, so the 1 oz figure was not even conservative here.
+for attr, val in (("m_MinClearance", 0.16), ("m_TrackMinWidth", 0.16), ("m_ViasMinSize", 0.5), ("m_MinThroughDrill", 0.3), ("m_HoleToHoleMin", 0.3), ("m_CopperEdgeClearance", 0.3), ("m_HoleClearance", 0.2), ("m_SolderMaskMinWidth", 0.1)):
     try: setattr(ds, attr, FromMM(val))
     except Exception as e: print("note:", attr, e)
 

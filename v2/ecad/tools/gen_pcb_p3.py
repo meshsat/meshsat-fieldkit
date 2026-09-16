@@ -269,12 +269,15 @@ ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)
+# EVERY CLEARANCE ON THIS BOARD IS 0.16 mm, not 0.127: two layers at 2 oz, and the fabricator's own capability
+# for that combination is 0.16 for both track width and spacing (rule RTE-001, 16 September 2026). The widths
+# stay as they are, because every one of them is already above 0.16.
 PATTERNS = [("CELL4", "PWR"), ("FUSED", "PWR"), ("SW", "PWR"), ("PACK_P", "PWR"), ("PACK_N", "PWR"), ("GND", "GNDC"), ("CELL1", "SENSE"), ("CELL2", "SENSE"), ("CELL3", "SENSE")]
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]
 try:
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.3, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)   # P2 (8 Sep 2026): the current runs in the locked 2 oz bands; the class width is for the sense, gate and test-point links the router lays (1.0 mm left three of them open)
-    nsn = pcbnew.NETCLASS("SENSE"); cls(nsn, 0.127, 0.4, 0.6, 0.3); ns.SetNetclass("SENSE", nsn)
-    ng = pcbnew.NETCLASS("GNDC"); cls(ng, 0.127, 0.5, 0.6, 0.3); ns.SetNetclass("GNDC", ng)
+    nsn = pcbnew.NETCLASS("SENSE"); cls(nsn, 0.16, 0.4, 0.6, 0.3); ns.SetNetclass("SENSE", nsn)
+    ng = pcbnew.NETCLASS("GNDC"); cls(ng, 0.16, 0.5, 0.6, 0.3); ns.SetNetclass("GNDC", ng)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
 pcbnew.SaveBoard(BOARD, board)
@@ -285,7 +288,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.2, diff_pair_gap=0.15)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.3, 0.5, 0.8, 0.4), C("SENSE", 1, 0.127, 0.4, 0.6, 0.3), C("GNDC", 2, 0.127, 0.5, 0.6, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.16, 0.25, 0.6, 0.3), C("PWR", 0, 0.3, 0.5, 0.8, 0.4), C("SENSE", 1, 0.16, 0.4, 0.6, 0.3), C("GNDC", 2, 0.16, 0.5, 0.6, 0.3)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     def _class_of(netname):
         bare = netname.lstrip("/")
