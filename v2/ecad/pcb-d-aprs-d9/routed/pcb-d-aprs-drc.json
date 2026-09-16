@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-09-16T16:40:47+0000",
+    "date": "2026-09-16T16:52:50+0000",
     "included_severities": [
         "error",
         "warning",
@@ -82,6 +82,29 @@
             "type": "solder_mask_bridge"
         },
         {
+            "description": "Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)",
+            "items": [
+                {
+                    "description": "Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 50.0,
+                        "y": 140.0
+                    },
+                    "uuid": "a3f258fc-ebc4-4a68-bc55-ff2eed82ad3f"
+                },
+                {
+                    "description": "PTH pad 2 [GND] of J_VGG",
+                    "pos": {
+                        "x": 144.5,
+                        "y": 121.95
+                    },
+                    "uuid": "33b1f096-df34-4f8c-a7d7-c9656941fdaf"
+                }
+            ],
+            "severity": "error",
+            "type": "starved_thermal"
+        },
+        {
             "description": "Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)",
             "items": [
                 {
@@ -122,29 +145,6 @@
                         "y": 86.0
                     },
                     "uuid": "b20820e7-64e0-4496-82e9-bc99b3aa00c2"
-                }
-            ],
-            "severity": "error",
-            "type": "starved_thermal"
-        },
-        {
-            "description": "Thermal relief connection to zone incomplete (layer F.Cu; zone min spoke count 2; actual 1)",
-            "items": [
-                {
-                    "description": "Zone 'GND pour F.Cu' [GND] on F.Cu, priority 0",
-                    "pos": {
-                        "x": 50.0,
-                        "y": 140.0
-                    },
-                    "uuid": "a3f258fc-ebc4-4a68-bc55-ff2eed82ad3f"
-                },
-                {
-                    "description": "PTH pad 2 [GND] of J_VGG",
-                    "pos": {
-                        "x": 144.5,
-                        "y": 121.95
-                    },
-                    "uuid": "33b1f096-df34-4f8c-a7d7-c9656941fdaf"
                 }
             ],
             "severity": "error",

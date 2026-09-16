@@ -27,7 +27,7 @@
   "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 92.6570 mm",
   "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 57.2907 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
   "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 0.4105 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
-  "   clearance | Track [/HOST3_0TX_N] on B.Cu, length 0.5670 mm / Track [/HOST3_0TX_P] on B.Cu, length 1.2105 mm",
+  "   clearance | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
   "   shorting_items | Pad 8 [/BANK2_UPD_P] of U210 on F.Cu / Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm",
   "   shorting_items | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
   "   shorting_items | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu",
@@ -44,7 +44,7 @@
  "inputs": {
   "drc": {
    "path": "out/pcb-b-compute-drc.json",
-   "sha256_16": "4099115cee75be5a"
+   "sha256_16": "8fb551c3d5c560ee"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
@@ -59,9 +59,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccfac7573e3ce1"
+  "tools_tree_sha": "ed2daa46baf29d51"
  },
- "ts": "2026-09-16T16:38:45Z",
+ "ts": "2026-09-16T16:50:48Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

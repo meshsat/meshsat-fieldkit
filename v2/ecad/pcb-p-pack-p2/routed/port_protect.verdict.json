@@ -8,7 +8,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "7f3b761702e160ac"
+   "sha256_16": "7609206f7b2084ca"
   }
  },
  "note": "this board declares that no conductor of its own leaves the enclosure: Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and ",
@@ -22,9 +22,9 @@
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccfac7573e3ce1"
+  "tools_tree_sha": "ed2daa46baf29d51"
  },
- "ts": "2026-09-16T16:42:09Z",
+ "ts": "2026-09-16T16:54:11Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
