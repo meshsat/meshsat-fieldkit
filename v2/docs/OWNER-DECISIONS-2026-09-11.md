@@ -2105,3 +2105,46 @@ outstanding: no open connection, no failing gate, no missing part.
 refused for a SCHEMATIC property as though the board had open connections, and answered it with another route
 at thirty percent more passes. It would have kept doing that until its round budget ran out. A refusal no
 amount of routing can change now ends the run and names the rule that refused it.
+
+---
+
+## Decision 36, 16 September 2026: the intra-pair tolerance a differential pair is judged against
+
+**The ruling in force.** 5 September 2026, 17:00: a differential pair over **1 mm** of intra-pair mismatch
+blocks a chain. It has held every board since and it is the number `check_pcb_b.py` warns above.
+
+**What the parts themselves ask for.** Until today one interface in this project had a document behind it. The
+Compute Module 5's own datasheet states the requirement for every high-speed interface this design carries,
+and the 5G module's hardware design states the M.2 socket's side. They are transcribed clause by clause in
+`tools/pcb_interfaces.yaml` and checked by `tools/interfaces.py`:
+
+| interface | the part | impedance | intra-pair | this project judges at |
+|---|---|---|---|---|
+| PCIe to a CM5 | CM5 datasheet 2.3 | 90 ohm | **0.10 mm** | 1.0 mm, **10 times looser** |
+| USB 3.0 to a CM5 | CM5 datasheet 2.4.1 | 90 ohm | **0.10 mm** | 1.0 mm, **10 times looser** |
+| USB 2.0 to a CM5 | CM5 datasheet 2.4 | 90 ohm | **0.10 mm** | 1.0 mm, **10 times looser** |
+| Ethernet to a CM5 | CM5 datasheet 2.2 | 100 ohm | **0.15 mm** | 1.0 mm, 6.7 times looser |
+| HDMI from a CM5 | CM5 datasheet 2.5.1 | 100 ohm | **0.15 mm** | 1.0 mm, 6.7 times looser |
+| PCIe to the 5G module | RM520N-GL hardware design | 85 ohm +/- 10 % | **0.70 mm** | 1.0 mm, 1.4 times looser |
+
+**The good news first, because it is real.** Every impedance target on every board is CORRECT against the part
+that defines it, including the one link whose two ends state different numbers: the CM5 asks 90 ohm of PCIe and
+the module asks 85 plus or minus 10 percent, and 90 is inside 76.5 to 93.5, so the single class board B assigns
+satisfies both. Boards C, D and E carry USB only at full speed and declare no target at all, which their hub
+and codec datasheets say in as many words.
+
+**What is at stake in the number.** Board B is the only board with pairs that are tight against this: it carries
+PCIe, HDMI and Ethernet to three compute modules. The last measured figures on a B-lineage board were 0.00 mm
+on PCIe TX and RX and **0.25 mm on the PCIe clock**, which passes at 1 mm and fails the datasheet's 0.1 mm.
+Nothing else on the set is near either number.
+
+| | option | what it costs |
+|---|---|---|
+| 1 | **Keep 1 mm as the blocking gate and REPORT every pair against its own interface's figure** (recommended). | Nothing is refused that is not refused today, and every pair that is outside its part's number is named in the record with the clause it fails. The set can be cut; the tight pairs are known and can be closed one at a time. |
+| 2 | **Judge every pair at its interface's own figure.** | Correct by the datasheets, and board B's route becomes a length-matching problem on top of a routing problem that has already taken a day and a half: meanders on PCIe, HDMI and Ethernet to 0.1 and 0.15 mm, on a board whose router passes take about fifty minutes each. |
+| 3 | **Take an intermediate figure, 0.25 mm say, and record it as this project's own.** | Halfway to nobody's specification. It is what the tools would do quietly if nobody decided. |
+
+**Recommendation: option 1 now, option 2 for board B before it is cut.** The 1 mm ruling is what has let six
+boards reach finished copper, and the pairs it is too loose for are all on the one board that is not finished.
+Reporting costs nothing and puts the exact list in front of whoever closes board B's route. The tooling for
+option 2 already exists: `meander.py` closed board B14's PCIe pairs to 0.00 mm in 2026 September.
