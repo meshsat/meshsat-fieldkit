@@ -27,6 +27,25 @@ _intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3",
 _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "L2",
              loads={"J_BLK": 8.0},
              note="shore and vehicle entry after the filter choke, 10 A fuse")
+# DECLARED 16 September 2026. These two were not in the intent file, so `signalnets` could not know they were
+# rails and the return-path gate judged them as SIGNALS: +3V3_E6 came back 194.7 of 502.0 mm without an
+# adjacent reference, which is what a power net looks like and says nothing about signal integrity. A rail that
+# is not declared is not excluded, and the same omission would have hidden its drop and its current density.
+_intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13",
+             source_ic="U13 is a TLV75533 LDO in a SOT-23-5: pin 5 IS its output power pin and the whole rail "
+                       "current really does leave through it, which is what source_ic is for",
+             loads={"U10": 0.06, "U11": 0.05, "U14": 0.04, "U15": 0.04,
+                    "J_DCF": 0.03, "J_LTG": 0.03, "J_POD": 0.10},
+             budget=0.03,
+             note="the sensor controller's own 3.3 V from U13: the RP2040, the sensors and the three sealed "
+                  "sensor headers. A logic rail at a third of an amp over long thin tracks is fine at 3 percent")
+# The source is the INDUCTOR, not the chip. U12 is an AP63205 buck and its output current leaves through L3;
+# naming the controller would hold its SOT-23-6 pin at 0 V and pull 0.3 A down a pin that never carries it,
+# which is the defect board A's VBUS20 had (2.90 A of 6 down a 0.200 mm escape, 13 September 2026).
+_intent.rail("+5V_E6", 5.0, 0.30, 0.50, "L3",
+             loads={"U13": 0.20, "J_GEIGER": 0.10},
+             note="the local 5 V buck U12: the 3.3 V regulator's input and the Geiger tube's high-voltage "
+                  "supply on its own header")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers
