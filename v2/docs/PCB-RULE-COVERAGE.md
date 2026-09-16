@@ -9,7 +9,7 @@ appears in the gap register.
 
 | rule | domain | effect | implementation | verification | fixtures | maturity |
 |---|---|---|---|---|---|---|
-| ANA-001 | ANALOG_MIXED_SIGNAL | MUST_JUSTIFY | gen_pcb_p3.py Kelvin sense, gen_sch_d.py mic network | none |  | **GENERATED_ONLY** |
+| ANA-001 | ANALOG_MIXED_SIGNAL | MUST_JUSTIFY | pcb_sensitive.yaml, the nodes and their filters | sensitive_nodes.py -> sensitive_nodes | tests/test_sensitive_nodes.py | **ENFORCED** |
 | BAT-001 | ENERGY_STORAGE | BLOCKER | gen_sch_p.py BQ4050 and protection FETs | none |  | **GENERATED_ONLY** |
 | BAT-002 | ENERGY_STORAGE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py -> energy_chain | tests/test_energy_chain.py | **ENFORCED** |
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_*.py crystal networks | clock_check.py -> clock_check | tests/test_clock_check.py | **ENFORCED** |
@@ -71,8 +71,8 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 35 |
-| GENERATED_ONLY | 7 |
+| ENFORCED | 36 |
+| GENERATED_ONLY | 6 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 1 |
 | SOURCE_UNVERIFIED | 8 |
