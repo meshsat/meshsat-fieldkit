@@ -81,3 +81,31 @@ def t_a_board_with_no_chain_has_no_closers():
     r = C.judge(letter="e5")
     assert not r["uncovered"] and not r["fails"], r
     assert any("no chain" in n for n in r["notes"]), r["notes"]
+
+
+def t_a_tool_that_changes_copper_and_that_nothing_runs_is_named():
+    """Three times a tool has been written, tested and left in the directory while the rule it was written for
+    went on failing: bypass_place.py for a day, widen_net.py for the morning it was written, and logo_silk.py
+    since the mark was traced, which is why no board of the seven carries a silkscreen polygon. A tool nobody
+    runs is a plan, not a tool."""
+    import closer_audit as C
+    idle = C.never_invoked()
+    assert isinstance(idle, list)
+    import yaml, os
+    d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_closers.yaml"), encoding="utf-8"))
+    declared = {e["tool"] for e in (d.get("idle_tools") or [])}
+    assert not (set(idle) - declared), "copper-changing tools nothing runs and nothing declares: %s" % sorted(set(idle) - declared)
+    assert all(str(e.get("why", "")).strip() for e in (d.get("idle_tools") or [])), "an idle tool with no reason"
+
+
+def t_a_declaration_is_not_an_invocation():
+    """The first version read the yaml files too, so pcb_closers.yaml naming a tool it declares IDLE became its
+    own proof that something runs it, and the same for every tool named in the coverage map. A comment is not
+    an invocation either: the paragraph explaining this rule names logo_silk.py, which took it off its own
+    list."""
+    import os
+    src = open(os.path.join(TOOLS, "closer_audit.py"), encoding="utf-8").read()
+    i = src.index("def invoked_names(")
+    w = src[i:i + 1400]
+    assert '"*.yaml"' not in w, "a yaml declaration still counts as an invocation"
+    assert 'l.split("#", 1)[0]' in w, "a mention in a comment still counts as an invocation"
