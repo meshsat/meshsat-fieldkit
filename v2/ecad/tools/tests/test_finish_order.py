@@ -328,6 +328,18 @@ def t_a_finish_declaration_lives_where_the_finish_looks_for_it():
         for k in sorted(keys & set(d)):
             bad.append("%s declares %r at the top level; finish.sh reads it from the finish block"
                        % (_os.path.basename(path), k))
+    # AND A PREFIXED KEY LIVES INSIDE THE BLOCK ITS PREFIX NAMES (16 September 2026). `cfg` strips a
+    # `cont_route_` or `direct_close_` prefix and looks inside that sub-block, so `direct_close_budget_s`
+    # written at the FINISH level is read as `budget_s` of a block that does not have it: board A's closer
+    # spent 1,809 seconds of an 1,800 second default while its declaration said 5,400, and nothing said a word.
+    # Same silence as the top-level case above, one level down.
+    for path in sorted(_glob.glob(_os.path.join(here, "boards", "*.json"))):
+        d = _json.load(open(path, encoding="utf-8")).get("finish") or {}
+        for pre in ("cont_route", "direct_close"):
+            for k in sorted(d):
+                if k.startswith(pre + "_") and not k.startswith("_"):
+                    bad.append("%s declares %r beside the %s block; cfg reads it from INSIDE that block"
+                               % (_os.path.basename(path), k, pre))
     assert not bad, "\n  ".join(bad)
 
 
