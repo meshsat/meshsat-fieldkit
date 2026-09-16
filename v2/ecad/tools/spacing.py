@@ -102,7 +102,8 @@ def main(a):
                     counts={"hv_nets": len(hv), "pairs_measured": len(pairs),
                             "closest_mm": worst, "below_limit": len(bad)},
                     denominator=len(pairs) or 1,
-                    evidence=["%.3f mm %s to %s on %s at (%.1f, %.1f)" % x for x in (bad or pairs)[:20]],
+                    evidence=["%.3f mm %s to %s on %s at (%.1f, %.1f)" % (x[0], x[1], x[2], x[3], x[4][0], x[4][1])
+                              for x in (bad or pairs)[:20]],
                     inputs={"board": path, "hv_spacing_mm": lim, "volts": vmin},
                     note=("measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance "
                           "come from a standard's table for a working voltage, a pollution degree and a material "

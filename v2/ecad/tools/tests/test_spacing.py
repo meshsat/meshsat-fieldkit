@@ -34,3 +34,15 @@ def t_an_undeclared_limit_is_reported_and_never_passed():
 
 def t_the_measurement_covers_pads_and_not_only_tracks():
     assert "f.Pads()" in SRC and "GetTracks()" in SRC, "the measurement misses a whole class of conductor"
+
+
+def t_the_evidence_line_formats_the_position_it_carries():
+    """The first run on a real board died here, in the verdict's own evidence (16 September 2026).
+
+    Each measured pair is (distance, net, net, layer, position) and the position is itself a pair, so the
+    format string wants six values and the tuple offers five. A gate that measures a board correctly and then
+    crashes writing down what it found has still told nobody anything."""
+    x = (0.25, "VBUS20", "GND", "F.Cu", (10.0, 20.0))
+    line = "%.3f mm %s to %s on %s at (%.1f, %.1f)" % (x[0], x[1], x[2], x[3], x[4][0], x[4][1])
+    assert line.startswith("0.250 mm VBUS20 to GND on F.Cu at (10.0, 20.0)"), line
+    assert "% x for x in" not in SRC, "the evidence line still formats the tuple whole"
