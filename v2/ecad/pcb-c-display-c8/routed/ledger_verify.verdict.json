@@ -2,19 +2,20 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "documents": 0,
-  "folders": 0,
-  "untraceable": 0
+  "ledgers": 1,
+  "problems": 0,
+  "rows": 12,
+  "witnessed": 0
  },
- "denominator": 0,
+ "denominator": 12,
  "evidence": [],
  "inputs": {
-  "release": {
-   "path": "/root/c24/v2/release/revA",
+  "ecad": {
+   "path": "/root/c24/v2/ecad",
    "sha256_16": null
   }
  },
- "note": "no deliverable folder holds a document that asserts hardware numbers",
+ "note": "every chain re-walked, every row re-hashed, every witness beside one checked",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -22,12 +23,12 @@
  "rules": [
   "DOC-002"
  ],
- "tool": "doc_provenance",
+ "tool": "ledger_verify",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "572f493cca8aad3d"
  },
  "ts": "2026-09-16T23:26:27Z",
- "verdict": "INCONCLUSIVE",
+ "verdict": "PASS",
  "version": "unknown"
 }

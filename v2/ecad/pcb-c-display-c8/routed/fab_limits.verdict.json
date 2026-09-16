@@ -10,7 +10,7 @@
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "410eeb604ec12c4c"
+   "sha256_16": "2a273803757c68fb"
   },
   "copper_layers": 4,
   "copper_oz": 1.0,
@@ -28,9 +28,9 @@
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "465a81f6fa3c600d"
+  "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T05:16:06Z",
+ "ts": "2026-09-16T23:26:13Z",
  "verdict": "PASS",
  "version": "unknown"
 }

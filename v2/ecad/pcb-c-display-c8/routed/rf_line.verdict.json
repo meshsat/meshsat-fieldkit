@@ -2,13 +2,9 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "below_floor": 0,
-  "below_ring": 0,
-  "plated_holes": 40,
-  "via_in_pad": 16,
-  "vias": 765
+  "judged": 0
  },
- "denominator": 765,
+ "denominator": 0,
  "evidence": [],
  "inputs": {
   "board": {
@@ -16,20 +12,20 @@
    "sha256_16": "2a273803757c68fb"
   }
  },
- "note": "every via at or above the board's own minimum diameter and drill; the annular ring is judged separately in via_annular.verdict.json, and 0 hole(s) are under a floor",
+ "note": "this board's facts declare it carries no transmitter and no net of its own asks for a single-ended impedance, so there is nothing of this rule on it",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
-  "VIA-001"
+  "RF-001"
  ],
- "tool": "via_audit",
+ "tool": "rf_line",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "572f493cca8aad3d"
  },
- "ts": "2026-09-16T23:26:13Z",
+ "ts": "2026-09-16T23:26:22Z",
  "verdict": "PASS",
  "version": "unknown"
 }
