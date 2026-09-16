@@ -397,3 +397,62 @@ def t_no_placement_generator_writes_a_literal_phase_into_a_legend():
             # a phase token is the BOARD'S OWN letter with digits (C7 on C); F3 on E is a fuse's designator, not a phase
             m = re.search(r'text\("(' + L.upper() + r'\d{1,2}) ', line)
             assert not m, "%s writes the literal phase %s into a legend: %s" % (os.path.basename(p), m.group(1), line.strip()[:90])
+
+
+# 16 September 2026: A VALUE IS THE BOM'S COMMENT COLUMN, AND A COMMENT NOTHING MATCHES IS A BLANK LINE.
+# Board A gained six charger sense filter parts whose values carried their reason: "10n (CDIFF across the
+# input sense, 100 ns with the 10 R)". `lcsc_fill.py` matches its map with `re.match`, so `^10n$` misses that
+# string, and the certified table is keyed on the comment exactly, so it misses it too: six blank BOM lines
+# and a finish that refuses the board, discovered on a rented box rather than here. The reasoning belongs in
+# a comment beside the call. This rule is the general form, and it costs nothing to keep true.
+_PASSIVE = re.compile(r'\b([rc])\(\s*"([^"]+)"\s*,\s*"([^"]*)"(?P<rest>[^\n]*)')
+
+
+def _fill_routes():
+    """The three ways a BOM comment gets a code: the map's regexes, the certified table, an allow line."""
+    src = open(os.path.join(TOOLS, "lcsc_fill.py"), encoding="utf-8").read()
+    body = src[src.index("MAP = {"):src.index("}\npath = sys.argv[1]")]
+    pats = [p for p, _fp in re.findall(r'\(r"([^"]+)"\s*,\s*"([^"]+)"\)', body)]
+    cert = set()
+    table = os.path.join(os.path.dirname(TOOLS), "..", "release", "revA", "order", "JLC-CERTIFIED.tsv")
+    if os.path.exists(table):
+        for row in csv.DictReader(open(table, errors="replace"), delimiter="\t"):
+            if (row.get("verdict") or "").strip() == "CERTIFIED" and (row.get("code") or "").strip():
+                cert.add((row.get("comment") or "").strip())
+    allow = []
+    for f in glob.glob(os.path.join(os.path.dirname(TOOLS), "pcb-*", "lcsc-allow.txt")):
+        for line in open(f, errors="replace"):
+            line = line.split("#")[0].strip()
+            if line:
+                allow.append(line)
+    return pats, cert, allow
+
+
+def _unfillable(src, pats, cert, allow):
+    out = []
+    for m in _PASSIVE.finditer(src):
+        ref, val, rest = m.group(2), m.group(3), m.group("rest")
+        if re.search(r'"C\d{4,}"', rest):            # the call names its own code
+            continue
+        if val in cert or any(re.match(p, val) for p in pats) or any(a in val for a in allow):
+            continue
+        out.append((ref, val))
+    return out
+
+
+def t_every_passive_value_a_generator_writes_can_be_given_a_code():
+    need(os.path.join(os.path.dirname(TOOLS), "..", "release", "revA", "order", "JLC-CERTIFIED.tsv"),
+         "the certified table is not in this tree")
+    pats, cert, allow = _fill_routes()
+    bad = []
+    for path in GEN:
+        bad += [(os.path.basename(path),) + row for row in
+                _unfillable(open(path, encoding="utf-8").read(), pats, cert, allow)]
+    assert bad == [], "values no code rule and no certified row can fill: %s" % bad[:8]
+    # The defective fixture: the six calls as they were written this morning. Every one of them must be
+    # refused, or the rule passes on the tree it was written against.
+    before = ('r("R146", "10R (ACN filter, BQ25731 10.2.2.2)", "CH_ACN", "CH_ACN_F")\n'
+              'c("C121", "10n (CDIFF across the input sense, 100 ns with the 10 R)", "CH_ACP_F", "CH_ACN_F")\n'
+              'c("C122", "100n (across the charge sense resistor, BQ25731 pin 19)", "CH_SRP_F", "CH_SRN_F")\n')
+    caught = _unfillable(before, pats, cert, allow)
+    assert len(caught) >= 2, "the rule does not refuse the values it was written against: %s" % caught

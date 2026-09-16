@@ -65,8 +65,14 @@ def t_board_a_carries_the_charger_sense_filters_the_datasheet_asks_for():
     src = open(os.path.join(TOOLS, "gen_sch_a.py"), encoding="utf-8").read()
     for net in ("CH_ACN_F", "CH_ACP_F", "CH_SRN_F", "CH_SRP_F"):
         assert net in src, "board A no longer filters %s" % net
-    assert "10R (SRN contact resistor" in src, "the SRN contact resistor the datasheet asks for is gone"
-    assert '"10n (CDIFF across the input sense' in src, "the differential capacitor on the input pair is gone"
+    # The parts, by reference and by the nets they join, never by their value prose. The first version of this
+    # rule asserted the strings "10R (SRN contact resistor" and "10n (CDIFF across the input sense", which is
+    # the one thing about these six parts that had to change: a value is the BOM's Comment column, and a
+    # comment no code rule matches is a blank BOM line the finish refuses. The reasoning lives in comments now.
+    for call in ('r("R146", "10R", "CH_ACN", "CH_ACN_F")', 'r("R147", "10R", "VBUS20", "CH_ACP_F")',
+                 'c("C121", "10n", "CH_ACP_F", "CH_ACN_F")', 'r("R148", "10R", "CELL+", "CH_SRN_F")',
+                 'r("R149", "10R", "CH_SRP", "CH_SRP_F")', 'c("C122", "100n", "CH_SRP_F", "CH_SRN_F")'):
+        assert call in src, "the charger sense filter lost %s" % call
     import yaml
     d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_sensitive.yaml"), encoding="utf-8"))
     nets = {n["net"] for n in d["boards"]["a"]["nodes"]}

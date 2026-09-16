@@ -199,10 +199,17 @@ r("R16", "10mOhm 1% 2512 (RAC, input current sense)", "VBUS20", "CH_ACN", "RS251
 # oscillation. 10 Ohm into each pin with 10 nF across the input pair is 100 ns, inside the window; the charge
 # pair takes the 0.1 uF the same page asks for. VSYS (pin 22) stays on the system node itself: it is a voltage
 # sense and not part of either current pair.
-r("R146", "10R (ACN filter, BQ25731 10.2.2.2)", "CH_ACN", "CH_ACN_F"); r("R147", "10R (ACP filter)", "VBUS20", "CH_ACP_F")
-c("C121", "10n (CDIFF across the input sense, 100 ns with the 10 R)", "CH_ACP_F", "CH_ACN_F")
-r("R148", "10R (SRN contact resistor, BQ25731 pin 19)", "CELL+", "CH_SRN_F"); r("R149", "10R (SRP contact resistor)", "CH_SRP", "CH_SRP_F")
-c("C122", "100n (across the charge sense resistor, BQ25731 pin 19)", "CH_SRP_F", "CH_SRN_F")
+# The VALUES are bare. A value is the BOM's Comment column and the key both `lcsc_fill.py`'s map and the
+# certified table are read with, and "10n (CDIFF across the input sense)" matches the rule `^10n$` in neither:
+# the four resistors and two capacitors would have reached the BOM as blank lines and the finish would have
+# refused the board for them. "10R", "10n" and "100n" are CERTIFIED already (C22859, C57112, C14663), so the
+# filter carries the parts the rest of this board carries. The reasoning is the comment above, not the value.
+r("R146", "10R", "CH_ACN", "CH_ACN_F")          # ACN filter, BQ25731 10.2.2.2
+r("R147", "10R", "VBUS20", "CH_ACP_F")          # ACP filter, the same RC into the other input sense pin
+c("C121", "10n", "CH_ACP_F", "CH_ACN_F")        # CDIFF across the input sense: 100 ns with the 10 R, inside the datasheet's 47 to 200 ns
+r("R148", "10R", "CELL+", "CH_SRN_F")           # the contact resistor the SRN pin's own note asks for
+r("R149", "10R", "CH_SRP", "CH_SRP_F")          # the same on SRP, so the pair sees one filter and not a half
+c("C122", "100n", "CH_SRP_F", "CH_SRN_F")       # the 0.1 uF across the charge sense resistor, BQ25731 pin 19
 c("C16", "100n 25V", "CH_BTST1", "CH_SW1"); c("C17", "100n 25V", "CH_BTST2", "CH_SW2"); c("C18", "3.3u", "REGN", "GND", "C10u"); r("R18", "10R", "REGN", "CH_VDDA"); c("C19", "1u", "CH_VDDA", "GND")
 for k in range(3): c("C%d" % (20 + k), "10u 35V 1210", "CH_ACN", "GND", "C1210")
 for k in range(3): c("C%d" % (23 + k), "22u 25V 1210", "CH_SRP", "GND", "C1210")

@@ -81,6 +81,22 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # put the charger's two switching-node capacitors on the inductor (two courtyard overlaps that survived every
          # region move). They are L2's own capacitors: they are placed at it, 0.45 mm clear of its courtyard.
          "C24": (-82.8, 21.8, 0), "C25": (-76.9, 21.8, 0),
+         # 16 September 2026, THE CHARGER'S SENSE FILTERS (rule ANA-001). The six parts gen_sch_a.py added this
+         # morning had no seat: every other passive of the charger block is packed into CHS at (-115, -6) to
+         # (-70, 6), the packer fills a region from its floor by size, and a filter the BQ25731's own pin table
+         # asks to sit AT the pin is worth nothing eight millimetres south of it. So they are placed, like C24
+         # and C25 at L2 and U29 at the port it protects. `gen_pcb_a3.py` refused the board for them (`unplaced:
+         # ['C121', 'C122', 'R146', 'R147', 'R148', 'R149']`, A38's pre-route BLOCK), which is the generator
+         # doing its job: a part in the netlist with nowhere to go is not a board.
+         # U3 is a QFN-32 at (-96, 12) with its pads at x -97.76 (pins 1 to 8, west) and x -93.86 (17 to 24,
+         # east). ACN and ACP are pins 2 and 3, so their filter goes west; SRN and SRP are 19 and 20, so theirs
+         # goes east. Each capacitor sits outboard of its two resistors, across the filtered pair, and the band
+         # between the CHS row (which ends at y 5.4) and the CHQ row (which begins at y 18.7) is empty.
+         # OPEN, and not this change's to close: the ACP tap is a point on the VBUS20 island rather than a
+         # Kelvin pad at R16, so the 6 A rail's own drop across that copper is inside the sensed 60 mV. A
+         # Kelvin pad is a land and a copper change at the shunt, measured against dc_drop, and it is owed.
+         "R146": (-101.0, 13.6, 0), "R147": (-101.0, 11.8, 0), "C121": (-103.6, 12.7, 90),
+         "R148": (-91.2, 11.0, 0), "R149": (-91.2, 12.8, 0), "C122": (-88.6, 11.9, 90),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          # A23: the converters south of their inductors, the rail column runs north to the connector
