@@ -36,23 +36,33 @@ def _nets_of(board):
 
 
 def _copper(board, netname):
-    """Every track and via of a net, as ((x0,y0),(x1,y1),width) in mm; a via is a point with its diameter."""
+    """Every track and via of a net as ((x0,y0),(x1,y1),width,layer) in mm.
+
+    THE LAYER IS PART OF THE ANSWER (16 September 2026). The first version compared every segment with every
+    other and reported board A's FE_CS as running -0.212 mm from the switch node, a negative gap, because the
+    sense line runs UNDER the switch node on another layer. Copper on two layers cannot be 0.2 mm apart in the
+    plane and touching: the clearance question is a same-layer question, and the layers question is a
+    different one (capacitive coupling through the dielectric), which is reported separately rather than
+    folded into a number that cannot mean what it says.
+
+    A via spans layers, so it is given the layer `None`, which matches anything: a via of a switch node beside
+    a sense track is a real clearance case whatever layer the track is on."""
     import pcbnew
     out = []
     for t in board.GetTracks():
         if str(t.GetNetname()).lstrip("/") != netname.lstrip("/"): continue
         if t.Type() == pcbnew.PCB_VIA_T:
-            p = t.GetPosition(); out.append(((p.x / 1e6, p.y / 1e6), (p.x / 1e6, p.y / 1e6), t.GetWidth() / 1e6))
+            p = t.GetPosition(); out.append(((p.x / 1e6, p.y / 1e6), (p.x / 1e6, p.y / 1e6), t.GetWidth() / 1e6, None))
         else:
             a, b = t.GetStart(), t.GetEnd()
-            out.append(((a.x / 1e6, a.y / 1e6), (b.x / 1e6, b.y / 1e6), t.GetWidth() / 1e6))
+            out.append(((a.x / 1e6, a.y / 1e6), (b.x / 1e6, b.y / 1e6), t.GetWidth() / 1e6, t.GetLayer()))
     return out
 
 
 def _seg_distance(s1, s2):
     """Centreline distance between two segments, minus half of each width: the copper-to-copper gap."""
     import math
-    (a, b, w1), (c, d, w2) = s1, s2
+    (a, b, w1, _l1), (c, d, w2, _l2) = s1, s2
 
     def pt_seg(p, q, r):
         px, py = p; qx, qy = q; rx, ry = r
@@ -109,12 +119,20 @@ def judge(board_path=None, letter=None, sens=None):
         net = str(n.get("net"))
         if net not in names: continue
         mine = _copper(board, net)
-        best, who = None, None
+        best, who, over, over_who = None, None, None, None
         for s, segs in sw_copper.items():
             for m in mine:
                 for o in segs:
+                    same = (m[3] is None or o[3] is None or m[3] == o[3])
                     d = _seg_distance(m, o)
-                    if best is None or d < best: best, who = d, s
+                    if same:
+                        if best is None or d < best: best, who = d, s
+                    elif d < 0 and (over is None or d < over):
+                        over, over_who = d, s       # it runs UNDER the switch node: a different question
+        if over is not None:
+            notes.append("%s runs under %s on another layer for at least %.2f mm of overlap: that is coupling "
+                         "through the dielectric rather than a clearance, and this list sets no number for it"
+                         % (net, over_who, abs(over)))
         if best is None: continue
         measured.append(dict(net=net, nearest_switch=who, gap_mm=round(best, 3), keep_mm=n.get("keep_mm")))
         if n.get("keep_mm") is not None and best < float(n["keep_mm"]) - 1e-9:

@@ -79,3 +79,16 @@ def t_the_committed_lists_pass_the_netlist_half():
     for letter in d["boards"]:
         r = S.judge(None, letter)
         assert not r["fails"], (letter, r["fails"])
+
+
+def t_a_clearance_is_a_same_layer_question():
+    """16 September 2026, from the first measured run: board A's FE_CS was reported as running -0.212 mm from
+    the switch node, a negative gap, because the sense line runs UNDER it on another layer. Copper on two
+    layers cannot be 0.2 mm apart in the plane and touching; the layer case is coupling through the
+    dielectric, which is a different question and is reported rather than folded into a number that cannot
+    mean what it says."""
+    src = open(os.path.join(TOOLS, "sensitive_nodes.py"), encoding="utf-8").read()
+    assert "m[3] is None or o[3] is None or m[3] == o[3]" in src, "the clearance test ignores the layer again"
+    assert "runs under" in src, "a cross-layer overlap is no longer reported at all"
+    i, j = src.index("def _copper"), src.index("def _seg_distance")
+    assert "t.GetLayer()" in src[i:j], "the copper is collected without its layer"
