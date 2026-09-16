@@ -115,7 +115,7 @@ coverage:
      VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under PI-001"}
 
  PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py},
-   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of
      that net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's
      peak current is compared against the weakest site, because a transition is a series element. The barrel is
@@ -171,7 +171,7 @@ coverage:
 
  RET-001: {implementation: "signal_class.py plus each board's signal_classes table, judged by intent_checks.py",
    verification: {tool: intent_checks.py, verdict: intent_return_path, fixtures: tests/test_signal_class.py},
-   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
      gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration in
      boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each class is asked
@@ -195,7 +195,7 @@ coverage:
      owner: SESSION, depends_on: [RET-003], p50_h: 3, p80_h: 8}}
 
  RET-003: {implementation: "gen_pcb_a3.py In2 pours", verification: {tool: ref_change.py, verdict: return_stitch, fixtures: tests/test_ref_change.py},
-   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING
      around the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the
      first version of this measurement came back with every via undetermined on every board). Measured: board A
@@ -233,7 +233,7 @@ coverage:
    remediation: {action: "cite each interface's skew budget and judge against it", owner: SESSION, depends_on: [INT-001], p50_h: 3, p80_h: 8}}
 
  SI-001: {implementation: "signal_class.py declarations", verification: {tool: edge_length.py, verdict: edge_length, fixtures: tests/test_edge_length.py},
-   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: half of this note was already wrong and the other half is now addressed. Every net
      IS classified, by spectral content, 413 declarations across the seven boards; what was missing was the
      arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer
@@ -315,7 +315,7 @@ coverage:
      rail and found a clamp on the other side of the board"}
 
  ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: spacing.py, verdict: spacing, fixtures: tests/test_spacing.py},
-   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to
      the router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid
      piece of copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and
@@ -328,7 +328,7 @@ coverage:
    remediation: {action: "declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_mm per board; the measurement is already there to judge against it", owner: OWNER, depends_on: [ENV-001], p50_h: 4, p80_h: 16}}
 
  THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: thermal.py, verdict: thermal, fixtures: tests/test_thermal.py},
-   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own
      intent (rails, currents, the source part) and from what each board declares: a converter's loss is
      P_out * (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part
