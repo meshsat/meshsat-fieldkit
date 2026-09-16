@@ -55,7 +55,7 @@ for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks i
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability \
-          sensitive_nodes; do
+          sensitive_nodes assembly_set; do
   rm -f "$P/routed/$_g.verdict.json"
 done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
@@ -140,6 +140,9 @@ run "reliability" python3 $T/reliability.py --ecad "$E" --board $L
 # real distance from each sensitive node's copper to the nearest switching copper and reports it beside the
 # clearance the board asked for.
 run "sensitive nodes" python3 $T/sensitive_nodes.py $N.kicad_pcb --board $L
+# THE ROTATIONS (rule DFA-001). Every polarised footprint the boards place, against the table the ordering
+# session keeps and the date each row was compared with the assembler's own preview.
+run "assembly set" python3 $T/assembly_set.py --ecad "$E" --board $L
 [ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read

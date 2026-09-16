@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+"""The assembly set is buildable (rule DFA-001, 16 September 2026).
+
+DFA-001 is a BLOCKER and the half that puts parts on a board backwards is the rotation: "every polarised part's
+rotation is verified against its own drawing and against the assembler's convention, with the verification
+dated". It read "generation intends to comply" on six boards.
+
+What the gate found on its first run: the seven boards place 41 distinct polarised or pin-1-sensitive
+footprints that no rotation row matches at all, including three LQFP families, every JST connector and the
+crystals. Those go to the assembler with KiCad's rotation unchanged, which may well be right and has never
+been compared with a preview by anyone.
+
+And there are TWO copies of the rotation table, the CSV the ordering session keeps and a literal in
+make_handoff.py, which is the one that reaches a CPL. That line is on the never-auto floor, so the gate reads
+both and compares rather than editing either.
+"""
+import os, sys, tempfile
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, TOOLS)
+import assembly_set as A
+
+
+def t_the_producer_table_parses_past_a_character_class():
+    """`^SOT-23-[568]` contains brackets, and the first version of the parser stopped inside it and reported
+    every later row as missing: a false alarm of exactly the kind this tool exists to remove."""
+    rows = A.producer_table()
+    assert rows, "the producer's rotation table could not be read at all"
+    pats = {p for p, _o in rows}
+    assert "^SOT-23-[568]" in pats and "^USB_C_Receptacle" in pats, sorted(pats)
+    assert len(rows) >= 13, rows
+
+
+def t_the_two_tables_agree():
+    """The CSV the ordering session keeps and the literal the producer applies must say the same thing; a
+    difference is a silent wrong rotation waiting to happen."""
+    csv_rows = {p: int(o) for p, o, _v in A.rotations()}
+    prod = dict(A.producer_table())
+    assert csv_rows == prod, {k: (csv_rows.get(k), prod.get(k)) for k in set(csv_rows) | set(prod)
+                              if csv_rows.get(k) != prod.get(k)}
+
+
+def t_every_row_carries_the_date_it_was_compared_with_a_preview():
+    rows = A.rotations()
+    undated = [p for p, _o, v in rows if not v]
+    assert not undated, "rows with no verification field at all: %s" % undated
+    unverified = [p for p, _o, v in rows if v.upper() == "UNVERIFIED"]
+    assert len(unverified) <= 2, unverified   # the two the record does not cover, named rather than hidden
+
+
+def t_an_unverified_row_fails_a_board_that_uses_it():
+    d = tempfile.mkdtemp(prefix="dfa-")
+    p = os.path.join(d, "rot.csv")
+    open(p, "w").write("# x\n^LED_0603,180,UNVERIFIED\n")
+    r = A.judge(rot=p)
+    fails = [f for v in r.values() for f in v["fails"]]
+    assert any("nobody has compared" in f for f in fails), fails[:3]
+
+
+def t_a_footprint_with_no_row_is_inconclusive_and_never_a_pass():
+    """Zero can be the right offset; what is not acceptable is that nobody looked."""
+    r = A.judge()
+    unchecked = {x for v in r.values() for x in v["unchecked"]}
+    assert unchecked, "every polarised footprint is covered, which would be a first"
+    assert any("LQFP" in x for x in unchecked), sorted(unchecked)[:5]

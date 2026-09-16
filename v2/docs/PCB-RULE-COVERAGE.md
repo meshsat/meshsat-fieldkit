@@ -16,7 +16,7 @@ appears in the gap register.
 | CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings and each board's intent rails | derate.py -> derate | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
 | CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_decoupling | tests/test_board_gates.py | **ENFORCED** |
-| DFA-001 | ASSEMBLY_DFA | BLOCKER | export_jlc.sh, jlc-rotations.csv | verify_deliverable.py -> verify_deliverable |  | **GENERATED_ONLY** |
+| DFA-001 | ASSEMBLY_DFA | BLOCKER | export_jlc.sh, jlc-rotations.csv | assembly_set.py -> assembly_set | tests/test_assembly_set.py | **ENFORCED** |
 | DFM-001 | FABRICATION_DFM | BLOCKER | build_pcb.sh, export_jlc.sh | verify_deliverable.py -> verify_deliverable | tests/test_gate_fixtures.py | **ENFORCED** |
 | DOC-001 | DOCUMENTATION_CONTROL | BLOCKER | full.sh PHASE, silk_fix_all.py | final_gate.py -> final_gate_<letter> | tests/test_final_gate.py | **ENFORCED** |
 | DOC-002 | DOCUMENTATION_CONTROL | MUST_JUSTIFY | ledger.py, provenance.json | ledger_verify.py -> ledger_verify | tests/test_ledger.py | **GENERATED_ONLY** |
@@ -71,8 +71,8 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 36 |
-| GENERATED_ONLY | 6 |
+| ENFORCED | 37 |
+| GENERATED_ONLY | 5 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 1 |
 | SOURCE_UNVERIFIED | 8 |
