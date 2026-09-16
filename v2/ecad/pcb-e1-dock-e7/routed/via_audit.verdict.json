@@ -6,14 +6,14 @@
   "below_ring": 0,
   "plated_holes": 45,
   "via_in_pad": 29,
-  "vias": 2292
+  "vias": 2296
  },
- "denominator": 2292,
+ "denominator": 2296,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "f7c80ab10705bd16"
+   "sha256_16": "5fc1ffce0dc5ab1c"
   }
  },
  "note": "every via at or above the board's own minimum diameter and drill; the annular ring is judged separately in via_annular.verdict.json, and 0 hole(s) are under a floor",
@@ -29,7 +29,7 @@
   "git_head": "",
   "tools_tree_sha": "ef840c5c19ae80bd"
  },
- "ts": "2026-09-16T09:56:43Z",
+ "ts": "2026-09-16T10:09:51Z",
  "verdict": "PASS",
  "version": "unknown"
 }
