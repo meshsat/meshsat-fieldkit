@@ -132,3 +132,23 @@ def t_the_check_reads_the_declared_radius_and_says_so():
     i = src.index("def check(")
     seg = src[i:i + 1600]
     assert "within %.1f mm" in seg and "radius" in seg, "the check does not print the radius it used"
+
+
+def t_a_board_gate_reports_the_intent_items_and_does_not_count_them():
+    """One composite verdict must not fail every rule it is mapped to (MESHSAT-862, 16 September 2026).
+
+    Board D routed 0 hard and 0 unrouted with one item left, a single signal via short of a ground via. That is
+    an EMC item and RET-004's to decide. Because the board gate counted it in its own failure list as well, the
+    MECHANICAL rule MEC-001 read FAIL on six boards from the same defect: the readiness then names a rule that
+    is not the one that failed, which is worse than a wrong number because it points the work at the wrong
+    place. The gate prints those items and the five intent verdicts decide them; the finish blocks on those
+    verdicts, so it stops in exactly the same places."""
+    import os
+    for L in ("a", "b", "c", "d", "e", "p"):
+        s = open(os.path.join(TOOLS, "check_pcb_%s.py" % L), encoding="utf-8").read()
+        if "intent_checks as _ic" not in s: continue
+        assert "_intent_check" in s, "check_pcb_%s.py still hands the intent run its own failure list" % L
+        assert "_ic.run(b, _intent_check" in s, "check_pcb_%s.py does not pass the reporting wrapper" % L
+    f = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
+    for name in ("intent_return_path", "intent_return_via", "intent_decoupling", "intent_rails"):
+        assert name in f, "the finish does not block on %s, so removing it from the gate weakened a gate" % name
