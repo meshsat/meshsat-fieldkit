@@ -55,7 +55,7 @@ for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks i
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
-          sensitive_nodes assembly_set; do
+          sensitive_nodes assembly_set rf_line ledger_verify; do
   rm -f "$P/routed/$_g.verdict.json"
 done
 BEFORE=$(sha256sum $P/$N.kicad_pcb | cut -c1-64)
