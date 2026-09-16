@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "assignments": 7,
+  "disagreements": 7
+ },
+ "denominator": 7,
+ "evidence": [
+  "B PCIE_CM5: this project judges intra-pair mismatch at 1.00 mm and PCIE_CM5 asks for 0.10 mm, which is 10.0 times tighter",
+  "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
+  "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
+  "B USB3_CM5: this project judges intra-pair mismatch at 1.00 mm and USB3_CM5 asks for 0.10 mm, which is 10.0 times tighter",
+  "B USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.10 mm, which is 10.0 times tighter",
+  "B ETHERNET_CM5: this project judges intra-pair mismatch at 1.00 mm and ETHERNET_CM5 asks for 0.15 mm, which is 6.7 times tighter",
+  "B HDMI_CM5: this project judges intra-pair mismatch at 1.00 mm and HDMI_CM5 asks for 0.15 mm, which is 6.7 times tighter"
+ ],
+ "inputs": {
+  "board": "b",
+  "spec": "pcb_interfaces.yaml"
+ },
+ "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "INT-001"
+ ],
+ "tool": "interfaces_b",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "549451ba7ccf0670"
+ },
+ "ts": "2026-09-16T18:57:20Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}
