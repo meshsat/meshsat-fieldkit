@@ -14,7 +14,7 @@ appears in the gap register.
 | BAT-002 | ENERGY_STORAGE | BLOCKER | gen_sch_a.py, gen_sch_e.py, gen_pcb_e5.py, gen_sch_p.py | none |  | **OPEN** |
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py | none |  | **GENERATED_ONLY** |
 | CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings and each board's intent rails | derate.py -> derate | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
-| CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py -> jlc_certify | tests/test_order_codes.py | **ENFORCED** |
+| CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_checks | tests/test_board_gates.py | **ENFORCED** |
 | DFA-001 | ASSEMBLY_DFA | BLOCKER | export_jlc.sh, jlc-rotations.csv | verify_deliverable.py -> verify_deliverable |  | **GENERATED_ONLY** |
 | DFM-001 | FABRICATION_DFM | BLOCKER | build_pcb.sh, export_jlc.sh | verify_deliverable.py -> verify_deliverable | tests/test_gate_fixtures.py | **ENFORCED** |
@@ -36,7 +36,7 @@ appears in the gap register.
 | PI-001 | POWER_INTEGRITY | BLOCKER | power_copper.py, gen_pcb_*3.py bands | dc_drop.py -> dc_density | tests/test_conductor_current.py | **SOURCE_UNVERIFIED** |
 | PI-002 | POWER_INTEGRITY | BLOCKER | power_copper.py | dc_drop.py -> dc_drop | tests/test_conductor_current.py | **ENFORCED** |
 | PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias | none |  | **OPEN** |
-| PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py -> hardset-placed | tests/test_region_fit.py | **ENFORCED** |
+| PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py | **ENFORCED** |
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | NONE_YET | none |  | **DOCUMENTED_ONLY** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
 | PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_checks | tests/test_rail_loads.py | **GENERATED_ONLY** |
@@ -50,7 +50,7 @@ appears in the gap register.
 | RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | check_pcb_d.py -> check_pcb_d |  | **GENERATED_ONLY** |
 | RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> check_contracts | tests/test_gate_fixtures.py | **ENFORCED** |
 | RTE-001 | ROUTING | BLOCKER | gen_pcb_*.py design rules | drc.sh -> hardset-routed-board-gate |  | **SOURCE_UNVERIFIED** |
-| RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate | tests/test_hardset.py | **ENFORCED** |
+| RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py | **ENFORCED** |
 | SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py -> netlist_board | tests/test_netlist_board.py | **ENFORCED** |
 | SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | check_contracts.py -> check_contracts | tests/test_gate_fixtures.py | **ENFORCED** |
@@ -60,7 +60,7 @@ appears in the gap register.
 | SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
 | STK-001 | STACKUP | BLOCKER | stackup_write.py | impedance_check.py -> impedance_check |  | **SOURCE_UNVERIFIED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
-| SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py -> jlc_certify | tests/test_order_codes.py | **ENFORCED** |
+| SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | none |  | **OPEN** |
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection devices | none |  | **GENERATED_ONLY** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | gen_sch_*.py test points | none |  | **OPEN** |

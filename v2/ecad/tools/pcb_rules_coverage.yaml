@@ -65,10 +65,11 @@ coverage:
    remediation: {action: "declare the switching and bootstrap nodes voltages so their parts can be judged; then the DC-bias curves for the decoupling on the fastest rails",
      owner: SESSION, depends_on: [PWR-001], p50_h: 6, p80_h: 18}}
 
- CMP-002: {implementation: "lcsc_fill.py", verification: {tool: jlc_certify.py, verdict: jlc_certify, fixtures: tests/test_order_codes.py},
+ CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
    maturity: ENFORCED, gap_category: NONE, note: "package mismatch is caught against the supplier's own record, with a date"}
 
- SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt", verification: {tool: jlc_certify.py, verdict: jlc_certify, fixtures: tests/test_order_codes.py},
+ SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt",
+   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
    maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
 
  PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_rail_loads.py},
@@ -233,7 +234,7 @@ coverage:
    note: "no dissipation estimate exists for any board; the enclosure is sealed by ruling and holds a 30 W transmit stage",
    remediation: {action: "a dissipation table per board and a thermal estimate for the sealed enclosure, then a prototype measurement plan", owner: SESSION, depends_on: [ENV-001], p50_h: 10, p80_h: 30}}
 
- PLC-001: {implementation: "gen_pcb_*3.py, regionfit.py", verification: {tool: hardset.py, verdict: hardset-placed, fixtures: tests/test_region_fit.py},
+ PLC-001: {implementation: "gen_pcb_*3.py, regionfit.py", verification: {tool: "hardset.py, place_audit.py", verdict: "hardset-placed, place_audit", fixtures: "tests/test_region_fit.py, tests/test_board_gates.py"},
    maturity: ENFORCED, gap_category: NONE, note: "the cheap gate runs before the expensive stage and blocks above a declared allowance"}
 
  PLC-002: {implementation: NONE_YET, verification: {tool: none}, maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
@@ -245,7 +246,8 @@ coverage:
    note: "the DRC enforces the board's own rules; those rules were copied from a capability record that is not in the tree",
    remediation: {action: "pin the capability document and compare every board minimum against it", owner: SESSION, depends_on: [STK-001], p50_h: 2, p80_h: 6}}
 
- RTE-002: {implementation: "routeflow.py, finish.sh", verification: {tool: hardset.py, verdict: hardset-routed-board-gate, fixtures: tests/test_hardset.py},
+ RTE-002: {implementation: "routeflow.py, finish.sh", verification: {tool: hardset.py, verdict: "hardset-routed-board-gate, pruned_gate", fixtures: "tests/test_hardset.py, tests/test_gate_fixtures.py"},
+   _tool_why: "two tools, and the second is why: escape_prune removes an escape stub that sits in a hard violation and leaves the pad to the router with only a count printed. On a 0.4 mm receptacle row that pad can end with no via site on any layer, and the routed board looks complete because the router simply never reached it (board A19s SDA pin, 8 September 2026)",
    maturity: ENFORCED, gap_category: NONE, note: "fifteen types, two exemptions, denominators, and a report that cannot be read as a pass"}
 
  VIA-001: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums", verification: {tool: check_pcb_c.py, verdict: check_pcb_c},

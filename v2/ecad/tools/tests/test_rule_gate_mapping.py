@@ -52,10 +52,13 @@ def t_every_verdict_the_coverage_map_names_is_written_by_a_tool():
         src += open(f, errors="replace").read()
     missing = []
     for rid, c in sorted(cov.items()):
-        name = (c.get("verification") or {}).get("verdict")
-        if not name: continue
-        stem = name.split("<letter>")[0].split("-")[0]
-        if stem and stem not in src: missing.append("%s -> %s" % (rid, name))
+        raw = (c.get("verification") or {}).get("verdict")
+        if not raw: continue
+        for name in str(raw).split(","):          # a rule may name several verdicts; each must be written
+            name = name.strip()
+            if not name: continue
+            stem = name.split("<letter>")[0].split("-")[0]
+            if stem and stem not in src: missing.append("%s -> %s" % (rid, name))
     assert not missing, "verdicts named in the coverage map that no tool writes: %s" % missing
 
 

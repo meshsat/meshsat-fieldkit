@@ -321,3 +321,30 @@ def t_a_verdict_is_written_even_where_the_registry_cannot_be_read():
     assert rc == 0 and rec["verdict"] == "PASS", (rc, rec)
     assert rec["policy"].get("rule_set_fingerprint_absent"), \
         "the verdict does not say why it carries no rule-set fingerprint: %s" % rec["policy"]
+
+
+def t_every_gate_in_the_catalogue_maps_to_a_rule_of_the_registry():
+    """Process controls 1 and 2 of the owner's instruction of 16 September: new rules enter through the
+    registry, and every gate references the rule ids it decides.
+
+    The argument is the whole reason the registry exists. This project accumulated gates one incident at a
+    time, each defensible on its own, and no document could say which requirement any of them served. A gate
+    that maps to no rule is either a requirement nobody wrote down or a check nobody can justify, and there is
+    no way to tell which from the outside.
+
+    The mapping is not typed into twenty gates: it is the coverage map inverted, so the registry stays the one
+    source and a gate cannot drift from it.
+    """
+    import importlib
+    v = importlib.import_module("verdict")
+    v._BY_TOOL[0] = None
+    unmapped = []
+    for g in GATES:
+        stem = g[:-3]
+        names = [stem] + ["%s-%s" % (stem, s) for s in ("routed-board-gate", "placed")]
+        # check_pcb_a.py and friends are per board; the coverage map writes them with a <letter> placeholder
+        if stem.startswith("check_pcb_"): names.append("check_pcb_<letter>")
+        if not any(v._rules_for_tool(n) for n in names): unmapped.append(g)
+    v._BY_TOOL[0] = None
+    assert not unmapped, ("these gates decide a board and map to no rule in the registry, so nothing says which "
+                          "requirement they serve: %s" % unmapped)

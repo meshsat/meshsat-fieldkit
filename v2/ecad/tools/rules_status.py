@@ -159,20 +159,31 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None):
                 else dict(result=INCONCLUSIVE, why=why, evidence=doc))
     if c.get("maturity") == "GENERATED_ONLY":
         return dict(result=INCONCLUSIVE, why="generation intends to comply and nothing verifies it: %s" % c.get("note", "")[:140], evidence=None)
-    name = (c.get("verification") or {}).get("verdict")
-    if not name:
+    raw = (c.get("verification") or {}).get("verdict")
+    if not raw:
         return dict(result=INCONCLUSIVE, why="the coverage map names no verdict for an enforced rule", evidence=None)
-    name = name.replace("<letter>", letter)
-    rec = vs.get(name)
-    if rec is None:
-        return dict(result=INCONCLUSIVE, why="no %s verdict for this board" % name, evidence=None)
-    ok, why = _fresh(rec, m, fingerprint)
-    if not ok:
-        return dict(result=INCONCLUSIVE, why=why, evidence=rec.get("_path"))
-    res = rec.get("result") or rec.get("verdict")
-    if res == "PASS": return dict(result=PASS, why="%s PASS of %s" % (name, rec.get("denominator")), evidence=rec.get("_path"))
-    if res == "FAIL": return dict(result=FAIL, why="%s FAIL: %s" % (name, str(rec.get("counts"))[:120]), evidence=rec.get("_path"))
-    return dict(result=INCONCLUSIVE, why="%s %s" % (name, res), evidence=rec.get("_path"))
+    # A RULE MAY BE VERIFIED BY MORE THAN ONE TOOL, and several are: a placement is judged both by the DRC on
+    # the placed board and by the escape-fan predictor, and a part is judged both by the code the BOM carries
+    # and by asking the fabricator whether that code is the part. Where a rule names several, the WORST result
+    # decides, because a rule is satisfied only when every tool that verifies it says so.
+    names = [n.strip().replace("<letter>", letter) for n in str(raw).split(",") if n.strip()]
+    worst = None
+    for name in names:
+        rec = vs.get(name)
+        if rec is None:
+            r = dict(result=INCONCLUSIVE, why="no %s verdict for this board" % name, evidence=None)
+        else:
+            ok, why = _fresh(rec, m, fingerprint)
+            if not ok:
+                r = dict(result=INCONCLUSIVE, why=why, evidence=rec.get("_path"))
+            else:
+                res = rec.get("result") or rec.get("verdict")
+                if res == "PASS": r = dict(result=PASS, why="%s PASS of %s" % (name, rec.get("denominator")), evidence=rec.get("_path"))
+                elif res == "FAIL": r = dict(result=FAIL, why="%s FAIL: %s" % (name, str(rec.get("counts"))[:120]), evidence=rec.get("_path"))
+                else: r = dict(result=INCONCLUSIVE, why="%s %s" % (name, res), evidence=rec.get("_path"))
+        order = {FAIL: 0, INCONCLUSIVE: 1, PASS: 2}
+        if worst is None or order[r["result"]] < order[worst["result"]]: worst = r
+    return worst
 
 
 def _phases_up_to(phase):
