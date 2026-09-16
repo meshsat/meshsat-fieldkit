@@ -35,7 +35,7 @@ appears in the gap register.
 | PAIR-001 | DIFFERENTIAL_PAIRS | BLOCKER | pair_preroute.py, meander.py | pair_match.sh -> impedance_check | tests/test_pair_leg_match.py | **ENFORCED** |
 | PI-001 | POWER_INTEGRITY | BLOCKER | power_copper.py, gen_pcb_*3.py bands | dc_drop.py -> dc_density | tests/test_conductor_current.py | **SOURCE_UNVERIFIED** |
 | PI-002 | POWER_INTEGRITY | BLOCKER | power_copper.py | dc_drop.py -> dc_drop | tests/test_conductor_current.py | **ENFORCED** |
-| PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias | none |  | **OPEN** |
+| PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias | via_current.py -> via_current | tests/test_via_current.py | **GENERATED_ONLY** |
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py | **ENFORCED** |
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | NONE_YET | none |  | **DOCUMENTED_ONLY** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
@@ -65,16 +65,16 @@ appears in the gap register.
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts and each board's external_ports declaration | port_protect.py -> port_protect | tests/test_port_protect.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |
 | VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py, check_pcb_c.py -> via_audit, check_pcb_c | tests/test_board_gates.py | **ENFORCED** |
-| VIA-002 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py -> via_annular | tests/test_board_gates.py | **SOURCE_UNVERIFIED** |
+| VIA-002 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums; boards/<letter>.json annular_min_mm and via_ring_min_mm | via_audit.py -> via_annular | tests/test_board_gates.py | **ENFORCED** |
 
 ## Maturity
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 27 |
-| GENERATED_ONLY | 9 |
+| ENFORCED | 28 |
+| GENERATED_ONLY | 10 |
 | VERIFIED_MANUALLY | 2 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 11 |
-| SOURCE_UNVERIFIED | 3 |
+| OPEN | 10 |
+| SOURCE_UNVERIFIED | 2 |
 | OWNER_DECISION_REQUIRED | 3 |

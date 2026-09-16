@@ -114,9 +114,18 @@ coverage:
    note: "the solver's residual is checked before the number is read. Since 16 September the dc_drop verdict carries the
      VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under PI-001"}
 
- PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
-   note: "via current capacity is asserted in generator comments and measured by nothing",
-   remediation: {action: "count vias per rail transition and compare against the barrel's capacity from the plating spec", owner: SESSION, depends_on: [PI-001, STK-001], p50_h: 4, p80_h: 10}}
+ PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py},
+   maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of
+     that net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's
+     peak current is compared against the weakest site, because a transition is a series element. The barrel is
+     geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published
+     18 um, but the curve is IPC-2221's and that document is not in this tree, so the maturity is
+     GENERATED_ONLY and the number is a calculation this project made rather than a limit a document gave it.
+     It lands where the trade's own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the
+     check that the expression has no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of
+     5 September is nearly three times the computed figure and cites nothing",
+   remediation: {action: "obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind this number has an authority", owner: SESSION, depends_on: [STK-001], p50_h: 2, p80_h: 8}}
 
  GND-001: {implementation: "gen_pcb_*3.py pours", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
    maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
