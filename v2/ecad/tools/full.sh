@@ -105,6 +105,12 @@ python3 ../tools/check_pcb_$L.py $N.kicad_pcb > out/check_$L.log 2>&1; GATE=$?; 
 # so a board placed from a STALE netlist passed every gate, and this chain has produced exactly that twice.
 python3 ../tools/netlist_board.py $N.kicad_pcb out/$N.net > out/netlist_board.log 2>&1; NB=$?; tail -3 out/netlist_board.log
 [ "$NB" -eq 0 ] || block "the board does not match its netlist: $(python3 ../tools/verdict.py read out/netlist_board.verdict.json 2>&1 | tail -1)" out/netlist_board.log
+# RULE CMP-001: a part's own rating against the rail it is soldered to. It runs HERE, on the netlist, because
+# it needs no copper and a part rated below its rail is a schematic defect: catching it after a route is a
+# re-route. Board A shipped twenty-five 50 V capacitors on a 54 V output and a person found them by reading a
+# value string while doing something else (12 September 2026).
+python3 ../tools/derate.py out/$N.net > out/derate.log 2>&1; DR=$?; grep -E 'derate:|FAIL|UNDECLARED' out/derate.log | head -8
+[ "$DR" -eq 1 ] && block "a part is rated below the rail it sits on (rule CMP-001, out/derate.log)" out/derate.log
 
 [ -n "${PLACE_JITTER:-}" ] && python3 ../tools/place_jitter.py $N.kicad_pcb "$PLACE_JITTER" 2>&1 | grep place_jitter   # Stage E data campaign
 env $ESCENV python3 ../tools/escape.py $N.kicad_pcb 2>&1 | grep -E 'escape|no escape'

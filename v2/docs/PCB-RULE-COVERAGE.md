@@ -13,7 +13,7 @@ appears in the gap register.
 | BAT-001 | ENERGY_STORAGE | BLOCKER | gen_sch_p.py BQ4050 and protection FETs | none |  | **GENERATED_ONLY** |
 | BAT-002 | ENERGY_STORAGE | BLOCKER | gen_sch_a.py, gen_sch_e.py, gen_pcb_e5.py, gen_sch_p.py | none |  | **OPEN** |
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py | none |  | **GENERATED_ONLY** |
-| CMP-001 | COMPONENT_SELECTION | BLOCKER | NONE_YET | none |  | **OPEN** |
+| CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings and each board's intent rails | derate.py -> derate | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
 | CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py -> jlc_certify | tests/test_order_codes.py | **ENFORCED** |
 | DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_checks | tests/test_board_gates.py | **ENFORCED** |
 | DFA-001 | ASSEMBLY_DFA | BLOCKER | export_jlc.sh, jlc-rotations.csv | verify_deliverable.py -> verify_deliverable |  | **GENERATED_ONLY** |
@@ -71,9 +71,9 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 21 |
-| GENERATED_ONLY | 12 |
+| GENERATED_ONLY | 13 |
 | VERIFIED_MANUALLY | 1 |
 | DOCUMENTED_ONLY | 2 |
-| OPEN | 14 |
+| OPEN | 13 |
 | SOURCE_UNVERIFIED | 4 |
 | OWNER_DECISION_REQUIRED | 2 |

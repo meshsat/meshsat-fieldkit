@@ -643,3 +643,77 @@ def t_the_allow_file_carries_a_reason_on_every_line():
         if not s or s.startswith("#"): continue
         if "#" not in s: bad.append("line %d: %s" % (n, s[:70]))
     assert not bad, "allow entries with no reason: %s" % bad
+
+
+# ---------------------------------------------------------------- derate (rule CMP-001)
+
+def _derate_netlist(d, rows, rails):
+    # NOT _netlist: this file already has one with another signature, forty lines up, and defining a second
+    # under the same name silently replaced it for every caller (the contracts fixture failed on it at once).
+    """A minimal KiCad netlist plus the intent file beside it. `rows` is [(ref, value, net)]."""
+    os.makedirs(d, exist_ok=True)
+    comps = "".join('    (comp (ref "%s") (value "%s"))\n' % (r, v) for r, v, _n in rows)
+    # grouped by NET, because two parts on one net is exactly the case being tested and writing the net twice
+    # loses the first one (which is what the first version of this fixture did, and it passed for the wrong reason)
+    by_net = {}
+    for ref, _v, net in rows: by_net.setdefault(net, []).append(ref)
+    nets = ""
+    for i, (net, refs) in enumerate(sorted(by_net.items()), 1):
+        nodes = "".join('      (node (ref "%s") (pin "1"))\n' % r for r in refs)
+        nets += '    (net (code %d) (name "/%s")\n%s      (node (ref "GND1") (pin "1")))\n' % (i, net, nodes)
+    p = os.path.join(d, "brd.net")
+    open(p, "w").write("(export (version E)\n  (components\n%s  )\n  (nets\n%s  )\n)\n" % (comps, nets))
+    json.dump({"rails": rails}, open(os.path.join(d, "brd-intent.json"), "w"))
+    return p
+
+
+def t_a_part_rated_below_the_rail_it_sits_on_is_refused():
+    """Rule CMP-001, and the finding it exists for.
+
+    Board A carried twenty-five capacitors specified `22u 50V X7R 1210`, and on the Power over Ethernet stage
+    those 50 V parts sat on a 54 VOLT output. Nothing in this project compared a part's rating with the rail it
+    is soldered to, so the only reason it was ever caught is that a person read the value string on
+    12 September while doing something else.
+    """
+    d = tempfile.mkdtemp(prefix="derate-fail-")
+    p = _derate_netlist(d, [("C1", "22u 50V X7R 1210", "P54"), ("C2", "10u 100V X7R 1210", "P54")],
+                 {"P54": {"volts": 54.0, "amps_typ": 1.0}})
+    rc, out = _run([os.path.join(TOOLS, "derate.py"), p], cwd=d)
+    assert rc == 1, "a 50 V part on a 54 V rail passed:\n%s" % out[-500:]
+    v = _verdict(d, "derate")
+    assert v["counts"]["under_rated"] == 1, v
+    assert any("C1" in e and "54" in e for e in v["evidence"]), v["evidence"]
+    assert not any("C2" in e for e in v["evidence"]), "the 100 V part was refused on a 54 V rail"
+
+
+def t_a_rail_with_no_declared_voltage_is_reported_and_never_assumed_zero():
+    """The absence case. A rated part on a net nobody declared a voltage for has been checked against nothing,
+    and a tool that treated the missing number as zero would pass every part on the board."""
+    d = tempfile.mkdtemp(prefix="derate-undecl-")
+    p = _derate_netlist(d, [("C1", "22u 50V X7R 1210", "MYSTERY")], {"OTHER": {"volts": 5.0}})
+    rc, out = _run([os.path.join(TOOLS, "derate.py"), p], cwd=d)
+    v = _verdict(d, "derate")
+    assert v["counts"]["undeclared_nets"] == 1 and v["counts"]["judged"] == 0, v
+    assert rc == 0, "an undeclared net made the board FAIL, which blames the copper for a gap in the intent file"
+    assert any("MYSTERY" in e for e in v["evidence"]), v["evidence"]
+
+
+def t_a_board_whose_intent_declares_no_rail_at_all_is_inconclusive():
+    d = tempfile.mkdtemp(prefix="derate-norail-")
+    p = _derate_netlist(d, [("C1", "22u 50V X7R 1210", "P54")], {})
+    rc, out = _run([os.path.join(TOOLS, "derate.py"), p], cwd=d)
+    assert rc == 3, "a board with no declared rail did not come out INCONCLUSIVE:\n%s" % out[-300:]
+    assert _verdict(d, "derate")["verdict"] == "INCONCLUSIVE"
+
+
+def t_the_rating_reader_does_not_invent_volts():
+    """A number without a unit is not a voltage. `2512` is a land size and `0402` is a land size, and a tool
+    that read either as a rating would refuse the whole board."""
+    sys.path.insert(0, TOOLS)
+    import derate
+    assert derate.rating("22u 50V X7R 1210") == 50.0
+    assert derate.rating("10u 6.3V") == 6.3
+    assert derate.rating("0402") is None and derate.rating("2512") is None
+    assert derate.rating("100R 1% 2512") is None
+    # two ratings in one string: the SMALLER is what the part is good for
+    assert derate.rating("in 60V out 20V") == 20.0

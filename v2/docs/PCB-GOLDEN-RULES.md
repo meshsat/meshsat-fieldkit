@@ -215,8 +215,8 @@ operating mode, including startup, shutdown, hot-plug and the single-fault condi
 | risk | SAFETY, RELIABILITY, ELECTRICAL_FUNCTION |
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | NONE_YET |
-| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
+| implementation | gen_sch_*.py value strings and each board's intent rails |
+| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -229,8 +229,15 @@ on the PoE stage until owner ruling 10.
 
 **If violated** A part fails short on the bench or in the field, often taking the stage with it.
 
-**Today** no derating or absolute-maximum comparison exists anywhere; the 22 uF 50 V part on a 54 V output was found by
-a person, not by a check
+**Today** 16 September 2026: the VOLTAGE half is implemented and gated. Every part whose value string carries a rating
+is compared with the declared voltage of every rail its pins touch, at a 20 percent margin, and board A's 48
+rated pairs come back clean, which is owner ruling 10's fix confirmed rather than re-found. THREE THINGS ARE
+STILL OPEN and the tool says so in its own output rather than implying coverage it does not have: a part
+whose value carries no rating (90 of them on board A) has its absolute maximum in a datasheet nothing reads;
+DC-BIAS CAPACITANCE DERATING is not implemented at all, and it is a different failure (a decoupling network
+that is not there, rather than a part failing short); and a rated part on a net with no declared voltage is
+reported as UNDECLARED, 29 nets on board A, mostly switch and bootstrap nodes. That is why this is
+GENERATED_ONLY and not ENFORCED
 
 ### CMP-002  the package on the land is the package ordered
 
