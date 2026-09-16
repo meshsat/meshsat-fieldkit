@@ -9,13 +9,20 @@ python3 ../tools/ses_import_lock.py out/$N-preroute.kicad_pcb $W/GLOBAL/route.se
 cp $N.kicad_pro $W/stage1.kicad_pro
 bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | grep -v -E "Debug|leak"
 python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json 2>&1 | grep -v -E "Debug|leak" | grep -v "^partition [A-Z]"
+# 16 September 2026: THE DEFAULT IS THE MODE THAT WORKS. This read `${PART_SEQ:-0}`, so a launcher that said
+# nothing got the CONCURRENT mode, which the paragraph below has said since 10 September cannot work, and
+# tonight three board B partition arms spent about three hours of a rented box each reproducing exactly the
+# result it predicts: 549, 614 and 760 boundary conflicts on the merged board, against the 1,121 of the run
+# that taught it. A tool whose own comment says a mode does not work must not hand you that mode by default.
+# PART_SEQ=0 is still there for anyone who wants to measure the concurrent case again, and now has to ask.
+#
 # 10 September 2026 (B19, appendix 32.93): PART_SEQ=1 routes the groups ONE AT A TIME, importing and locking each result
 # before the next job's DSN is exported, so a group sees its predecessors' copper as obstacles. Concurrent jobs cannot:
 # each one only knows the locked copper of stage 1, so their boundaries collide, and on B19 the merge of five concurrent
 # regions carried 1,121 hard violations that three rip passes could only bring to about 400. Sequential costs wall clock
 # (five jobs in a row rather than five at once) and buys a merge that has nothing to reconcile.
 for G in $PARTS; do rm -rf $W/$G $W/route-$G.log; done   # 10 Sep 2026: the merge and the report used to pick up the sessions and logs of a PREVIOUS pass for a group this pass never reached
-if [ "${PART_SEQ:-0}" = 1 ]; then
+if [ "${PART_SEQ:-1}" = 1 ]; then
   for G in $PARTS; do
     echo "stage2: sequential group $G"
     bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1
@@ -33,7 +40,7 @@ for G in $PARTS; do tail -2 $W/route-$G.log; done
 # merging the same sessions again laid each group's copper a second time on top of itself (B19: 1,770 DEVW tracks added to a
 # board that already carried them, and the duplicate pieces read as clearance and shorting violations). The sequential board
 # is stage1 as it stands.
-if [ "${PART_SEQ:-0}" = 1 ]; then
+if [ "${PART_SEQ:-1}" = 1 ]; then
   cp $W/stage1.kicad_pcb $W/merged.kicad_pcb
   echo "stage2: sequential mode, the merged board is stage1 (each group was imported and locked as it finished)"
 else
