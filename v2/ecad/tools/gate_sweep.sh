@@ -62,7 +62,9 @@ $T/drc.sh $N.kicad_pcb out/$N-drc.json > out/drc.log 2>&1
 python3 $T/hardset.py out/$N-drc.json post --label 'routed-board gate' 2>&1 | tail -2
 
 run() { echo "--- $1"; shift; timeout 1800 "$@" 2>&1 | tail -3; }
-run "board gate"        python3 $T/check_pcb_$L.py $N.kicad_pcb
+# board E5 had no gate at all until 16 September 2026, and six boards had one: the sweep runs whichever exists
+if [ -f $T/check_pcb_$L.py ]; then run "board gate"        python3 $T/check_pcb_$L.py $N.kicad_pcb
+else echo "--- board gate"; echo "gate_sweep: there is no check_pcb_$L.py, so nothing asserts a number about this board"; fi
 run "zone nets"         python3 $T/check_zone_nets.py $N.kicad_pcb
 run "intent"            python3 $T/intent_checks.py $N.kicad_pcb
 run "dc drop"           python3 $T/dc_drop.py $N.kicad_pcb
