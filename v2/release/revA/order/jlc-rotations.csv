@@ -1,16 +1,21 @@
 # Rotation offsets added to the KiCad CPL rotation before upload to JLCPCB (degrees, CCW positive).
-# Derived from JLCPCB's placement preview (2D view: KiCad silk pin-1 triangle vs JLC's pink pin-1 dot); re-verify after every change.
-# footprint_regex,offset
-^IDC-Header_2x,270
-^SOIC-8,270
-^SSOP-28,270
-^TSSOP-24,270
-^LQFP-48,270
-^Texas_VQFN,0
-^WSON-6,270
-^SOT-23-[568],270
-^SOT-23,180
-^SOT-223,180
-^LED_0603,180
-^USB_C_Receptacle,180
-^SOP-4,0
+# Derived from JLCPCB's placement preview (2D view: KiCad silk pin-1 triangle vs JLC's pink pin-1 dot).
+# THE THIRD FIELD IS THE DATE THAT PREVIEW WAS READ (rule DFA-001, 16 September 2026). A row marked
+# UNVERIFIED has never been compared with a preview by anyone: the offset is a reasonable guess from the
+# family's convention, and a wrong rotation is a board assembled with a part backwards, which is the
+# failure this rule exists to stop. Verifying one is the ordering session's job, because only it has the
+# preview; re-verify a row after any change to its footprint.
+# footprint_regex,offset,verified
+^IDC-Header_2x,270,2026-09-03
+^SOIC-8,270,2026-09-03
+^SSOP-28,270,2026-09-03
+^TSSOP-24,270,2026-09-03
+^LQFP-48,270,2026-09-03
+^Texas_VQFN,0,UNVERIFIED
+^WSON-6,270,2026-09-03
+^SOT-23-[568],270,2026-09-03
+^SOT-23,180,2026-09-03
+^SOT-223,180,2026-09-03
+^LED_0603,180,2026-09-03
+^USB_C_Receptacle,180,2026-09-03
+^SOP-4,0,UNVERIFIED

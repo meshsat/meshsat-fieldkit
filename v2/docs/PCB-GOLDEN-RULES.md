@@ -1701,7 +1701,7 @@ the part's own datasheet orientation, and excludes every part fitted by hand.
 | verified by | SCRIPT, VENDOR_CONFIRMATION, MANUAL_REVIEW at RELEASE_PACKAGE (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | export_jlc.sh, jlc-rotations.csv |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one footprint family, expires the order |
 
@@ -1715,7 +1715,17 @@ from a table that has never been re-verified per footprint.
 **If violated** Polarised parts placed backwards across a whole batch.
 
 **Today** the CPL's form is checked; the rotation of each polarised footprint has never been verified against its own
-drawing or the assembler's preview, and the rotation table is inherited
+drawing or the assembler's preview, and the rotation table is inherited 16 September 2026: THE ROTATION HALF
+IS MEASURED AND IT IS NOT GOOD. assembly_set.py lists every polarised or pin-1-sensitive footprint the boards
+place and compares it with the rotation table the ordering session keeps, which now carries the DATE each row
+was compared with JLCPCB's own preview. Eleven rows carry 3 September 2026 and two carry UNVERIFIED, and 41
+distinct polarised footprints match NO row at all, including three LQFP families, every JST connector and the
+crystals: those go to the assembler with KiCad's rotation unchanged, which may well be right and has never
+been compared with a preview by anyone. That is an assumption rather than a verification, so the verdict is
+INCONCLUSIVE with the 41 named, and the list is the checklist for the session that has the preview. The tool
+also compares the TWO copies of the table, the CSV and the literal in make_handoff.py that actually reaches a
+CPL: that line is on the never-auto floor, so a disagreement is reported for a person to resolve rather than
+edited here.
 
 ## Test Bringup
 

@@ -1804,6 +1804,18 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the assembler's own preview check",
                    scope: "one footprint family", expiry: "the order", residual_risk: "a whole batch is at stake"}
    maturity_at_writing: SOURCE_UNVERIFIED
+   false_positive_analysis: >
+     A wrong refusal here is a footprint reported as unchecked that does not actually need checking, and the
+     shape it takes is the POLARISED list: the pattern that decides which footprints have an orientation that
+     can be wrong is named in assembly_set.py and errs wide, so a symmetric two-pin land that happens to match
+     one of those prefixes is listed. That costs the ordering session a glance at a preview it is already
+     looking at, which is the cheap direction; the expensive direction is a part placed backwards. The tool
+     also separates the two answers rather than merging them: a footprint with NO rotation row makes the
+     verdict INCONCLUSIVE, because zero can be the right offset and nobody has looked, while a row that exists
+     and carries no date is a FAILURE, because someone wrote an offset down without checking it. And the
+     comparison between the CSV and the literal in make_handoff.py reports a difference rather than resolving
+     it, because that line is on the never-auto floor and only the ordering session may change what is
+     applied to a CPL.
 
  - id: TST-001
    domain: TEST_BRINGUP
