@@ -70,7 +70,11 @@ def judge(net_path, intent_path=None):
         # reason. A declaration is evidence; a pattern match over pin names is a fallback.
         if r.get("always_on"):
             always_on.append(rail)
-            rows.append(dict(rail=rail, source=[r.get("source") or "?"], enable=None, drivers=[],
+            # a rail may declare SEVERAL sources: board B's GND is held at zero at four connectors, and the
+            # first run of this branch joined a list into a string and crashed on it
+            _s0 = r.get("source") or "?"
+            always_srcs = [str(x) for x in (_s0 if isinstance(_s0, list) else [_s0])]
+            rows.append(dict(rail=rail, source=always_srcs, enable=None, drivers=[],
                              note="declared always on: %s" % (r.get("always_on_why") or "no reason given")))
             if not r.get("always_on_why"):
                 unresolved.append("%s: declared always on with no reason; a declaration without a reason is an "

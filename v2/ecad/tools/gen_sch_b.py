@@ -47,6 +47,7 @@ _SLOT_LOADS = lambda s: {
 }
 for _n in (1, 2, 3):
     _intent.rail("+5V_S%d" % _n, 5.1, 2.5, 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), budget=0.02, share=0.015,
+                 always_on=True, always_on_why="it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
                  note="slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. "
                       "THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and "
                       "measures 0.07 percent from its shunt to the header, and the long copper is this side, from the "
@@ -64,6 +65,7 @@ _DEV_LOADS = {"U23": 1.2,            # eFuse -> +5V_LIME, the LimeSDR Mini 2.4 (
               "U40": 0.05, "U50": 0.05, "U60": 0.05,      # the three controllers' private 3.3 V LDOs
               "U15": 0.02, "U16": 0.02, "U17": 0.02, "U18": 0.02}   # the four CP2102N bridges
 _intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", loads=_DEV_LOADS, budget=0.02, share=0.015,
+             always_on=True, always_on_why="it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
              note="the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)")
 # THE PEAK IS THE SOURCE PART'S RATING. This rail declared 5.0 A peak behind U25, an AP63203 whose rating is
 # 2 A: a peak the source cannot deliver is not a peak, and the density verdict would have judged the copper
@@ -84,7 +86,8 @@ for _n in (1, 2, 3):
 for _v in ("U70", "U71", "U72", "U73", "U74", "U75", "U76", "U77", "U78", "U79"): _3V3_LOADS[_v] = 0.01   # the voted logic
 # The source is L1, the buck's inductor, not U25: the AP63203's pin 1 on this net is its feedback sense, and
 # the current leaves through DEV_SW and the inductor. Naming the chip sends 1.4 A out of a sense pin.
-_intent.rail("+3V3_DEV", 3.3, 1.2, 2.0, "L1", loads=_3V3_LOADS,
+_intent.rail("+3V3_DEV", 3.3, 1.2, 2.0, "L1", loads=_3V3_LOADS, always_on=True,
+             always_on_why="U25 is an AP63203 whose EN pin is tied to its own input, so the shared logic rail follows the device rail: the hubs and bridges on it must outlive any one module",
              note="shared logic, the KSZ IO, the three hub VDD33 (99 mA each), the muxes, the three supervisor LDOs; U25 is a 2 A part and that is this rail's peak")
 # THE GROUND HAS FOUR SOURCES AND THE DECLARATION SAID ONE. Holding only J_5V_S1 at 0 V would have returned
 # all 21 A through one connector's ground pin and measured a board that does not exist; `source` takes a list
@@ -114,40 +117,46 @@ for _n in (1, 2, 3): _GND_LOADS.update(_SLOT_LOADS(_n))
 # output pin really is a power pin (an LDO, an eFuse, a load switch, a polyfuse) says so with source_ic.
 # The currents are design estimates of where the current goes, in the same form as the rails above.
 for _s in (1, 2, 3):
-    _intent.rail("+3V3_S%dA" % _s, 3.3, 0.5, 1.5, "L%d01" % _s,
+    _intent.rail("+3V3_S%dA" % _s, 3.3, 0.5, 1.5, "L%d01" % _s, switch="U%d03" % _s,
                  loads={"J_M2C%d" % _s: 1.5},
                  note="slot %d's card-socket 3.3 V from the AP63203 buck U%d03 through L%d01: an M.2 A/E-key "
                       "radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED" % (_s, _s, _s))
-    _intent.rail("+3V3_S%dB" % _s, 3.3, 0.9, 1.8, "L%d02" % _s,
+    _intent.rail("+3V3_S%dB" % _s, 3.3, 0.9, 1.8, "L%d02" % _s, switch="U%d04" % _s,
                  loads={"J_M2N%d" % _s: 1.2, "U%d01" % _s: 0.55},
                  note="slot %d's NVMe socket and the PCIe switch's own 3.3 V from U%d04 through L%d02" % (_s, _s, _s))
-    _intent.rail("+1V0_S%d" % _s, 1.0, 0.8, 1.2, "L%d03" % _s,
+    _intent.rail("+1V0_S%d" % _s, 1.0, 0.8, 1.2, "L%d03" % _s, switch="U%d05" % _s,
                  loads={"U%d01" % _s: 0.8},
                  note="slot %d's PCIe switch core from the AP63200 buck U%d05 through L%d03" % (_s, _s, _s))
-    _intent.rail("+1V1_S%d" % _s, 1.1, 0.4, 0.7, "L%d04" % _s,
+    _intent.rail("+1V1_S%d" % _s, 1.1, 0.4, 0.7, "L%d04" % _s, always_on=True,
+                 always_on_why="U%d06's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer" % _s,
                  loads={"U%d02" % _s: 0.4},
                  note="slot %d's USB hub core from U%d06 through L%d04, on the DEVICE rail and always on: the "
                       "bank outlives the module it is failing away from" % (_s, _s, _s))
-    _intent.rail("+3V3_CM%d" % _s, 3.3, 0.10, 0.20, "U3%dA" % (_s - 1),
+    _intent.rail("+3V3_CM%d" % _s, 3.3, 0.10, 0.20, "U3%dA" % (_s - 1), always_on=True,
+                 always_on_why="the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
                  source_ic="the module GENERATES this rail and hands it out on its receptacle: the pin IS the source",
                  loads={"U3%dA" % (_s - 1): 0.10},
                  note="slot %d's module-supplied 3.3 V. This board only decouples it and level-shifts against "
                       "it; nothing on the carrier draws from it beyond its own bypass network" % _s)
-    _intent.rail("+1V8_CM%d" % _s, 1.8, 0.02, 0.05, "U3%dA" % (_s - 1),
+    _intent.rail("+1V8_CM%d" % _s, 1.8, 0.02, 0.05, "U3%dA" % (_s - 1), always_on=True,
+                 always_on_why="the module's OWN 1.8 V output on its receptacle",
                  source_ic="the module GENERATES this rail and hands it out on its receptacle",
                  loads={"U3%dA" % (_s - 1): 0.02},
                  note="slot %d's module-supplied 1.8 V, a reference for its GPIO bank and nothing else here" % _s)
 for _t, _u, _n in (("A", "U40", ("U41", "U42", "U43", "U44")), ("B", "U50", ("U51", "U52", "U53", "U54")),
                    ("C", "U60", ("U61", "U62", "U63", "U64"))):
-    _intent.rail("+3V3_IOC%s" % _t, 3.3, 0.12, 0.25, _u, budget=0.03,
+    _intent.rail("+3V3_IOC%s" % _t, 3.3, 0.12, 0.25, _u, budget=0.03, always_on=True,
+                 always_on_why="each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
                  source_ic="%s is an AP2112K-3.3 LDO in SOT-23-5: pin 5 IS its output power pin" % _u,
                  loads=dict([(_n[0], 0.060), (_n[1], 0.020), (_n[2], 0.020), (_n[3], 0.020)]),
                  note="controller %s's private 3.3 V, its own branch off the device rail so that one "
                       "controller's fault cannot pull the other two down. Budget 3 percent: logic only" % _t)
-_intent.rail("+1V2_KSZ", 1.2, 0.5, 0.8, "L2",
+_intent.rail("+1V2_KSZ", 1.2, 0.5, 0.8, "L2", always_on=True,
+             always_on_why="U26's EN pin is tied to the device rail it runs from, so the Ethernet switch core follows it",
              loads={"U1": 0.5},
              note="the Ethernet switch's core from the AP63200 buck U26 through L2")
-_intent.rail("+2V5_KSZ", 2.5, 0.15, 0.25, "U27", budget=0.03,
+_intent.rail("+2V5_KSZ", 2.5, 0.15, 0.25, "U27", budget=0.03, always_on=True,
+             always_on_why="U27 is an AP2112K whose EN is tied to its own input: the switch's analogue rail comes up with the switch",
              source_ic="U27 is an AP2112K-2.5 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.15},
              note="the Ethernet switch's analogue 2.5 V. Budget 3 percent: the switch's own range is wider")
@@ -174,16 +183,19 @@ _intent.rail("+5V_CAM", 5.0, 0.25, 0.50, "U28",
              source_ic="U28 is a TPS2065 switch: its OUT pin IS the power path",
              loads={"J_CAM": 0.50},
              note="the camera lead behind its switch, a USB 2.0 device at its port's own 500 mA limit")
-_intent.rail("+5V_HDMI", 5.0, 0.10, 0.50, "F2",
+_intent.rail("+5V_HDMI", 5.0, 0.10, 0.50, "F2", always_on=True,
+             always_on_why="a polyfuse is protection and not a switch: the connector's 5 V follows the device rail, which is what the standard asks a source to supply",
              source_ic="F2 is a polyfuse in series with the rail: the part IS the power path",
              loads={"J_HDMI": 0.50},
              note="the HDMI connector's own 5 V behind the 0.5 A polyfuse F2, which is what the standard asks a source to supply")
 _intent.rail("+54V_POE", 54.0, 0.30, 0.60, "J_54V", budget=0.02, share=0.015,
+             always_on=True, always_on_why="it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
              loads={"U5": 0.60},
              note="the Power over Ethernet feed arriving from board A's own +54V_POE stage, into the TPS23861 "
                   "injector U5. It is a rail of board A and a load of this one")
 
 _intent.rail("GND", 0.0, 10.0, 21.0, ["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV"], loads=_GND_LOADS,
+             always_on=True, always_on_why="the return, which nothing switches",
              note="the return of every rail: the three slot rails and the device rail, 19.4 A with all four at their declared peak")
 SYMDIR = "/usr/share/kicad/symbols/"
 
