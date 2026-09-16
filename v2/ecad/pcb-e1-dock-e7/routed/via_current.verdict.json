@@ -2,14 +2,15 @@
  "advisory": true,
  "applicable": true,
  "counts": {
+  "measured_rails": 3,
   "no_via": 0,
   "over": 2,
   "rails": 4
  },
  "denominator": 4,
  "evidence": [
-  "CELL_F: 18.00 A crosses a transition of 1 via(s) at (50.6, 218.0) rated 0.65 A at 10 K (18 um plating)",
-  "VIN_RAW: 10.00 A crosses a transition of 1 via(s) at (63.1, 208.2) rated 0.65 A at 10 K (18 um plating)"
+  "CELL_F: a barrel at (44.3, 221.8) carries 1.93 A of the solved mesh against 0.74 A for its own wall at 10 K (18 um plating), ratio 2.61",
+  "VIN_RAW: a barrel at (73.1, 183.4) carries 0.80 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.22"
  ],
  "inputs": {
   "board": {
@@ -20,7 +21,7 @@
   "rise_k": 10.0,
   "site_mm": 6.0
  },
- "note": "every rail's weakest layer transition against IPC-2221 for a barrel of the fabricator's own plating thickness; ADVISORY until it can tell a via the current crosses from a via of the same net that carries almost none",
+ "note": "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for a barrel of the fabricator's own plating thickness. ADVISORY: 1 of 4 judged rail(s) have no solved barrel current beside this board, so for those the rail's WHOLE current is attributed to its weakest cluster of vias, which on these boards is often a lone stitch via carrying almost none",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -31,9 +32,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "e30bbb71e47ee7c0"
+  "tools_tree_sha": "f4ca0a150f927f41"
  },
- "ts": "2026-09-16T18:12:25Z",
+ "ts": "2026-09-16T18:19:02Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

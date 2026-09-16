@@ -138,8 +138,19 @@ coverage:
      VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under PI-001"}
 
  PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py},
-   maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "16 September 2026: it is measured now. Each declared rail's vias are grouped into SITES, a cluster of
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026, SECOND PASS: THE ATTRIBUTION IS A MEASUREMENT AND THE CURVE HAS A DOCUMENT, and
+     both halves of the remediation this entry asked for are done. `dc_drop` already solved for the current in
+     every barrel on its way to the density verdict and threw it away; it writes them beside the board now, and
+     `via_current` judges each barrel on what the mesh puts through it instead of attributing a rail's whole
+     current to its weakest cluster of its own vias. The difference is the whole rule: board A went from
+     ELEVEN rails refused on the attributed reading to FIVE barrels that really do carry more than their wall
+     is rated for, the worst a VBUS20 barrel at (68.5, 82.0) carrying 3.40 A against 0.90. Board C PASSES it
+     for the first time. The curve is IPC-2221A's internal-conductor model, published with its constants in
+     ECSS-Q-ST-70-12C Annex D and transcribed in v2/vendor/standards/; the plating is the fabricator's own
+     18 um. The verdict is ADVISORY exactly when a judged rail still has no solved barrel current and says how
+     many, which today is board B, whose committed board is not routed at all, so no load is reachable from any
+     source and the mesh finds nothing. Earlier: each declared rail's vias are grouped into SITES, a cluster of
      that net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's
      peak current is compared against the weakest site, because a transition is a series element. The barrel is
      geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published
@@ -153,7 +164,7 @@ coverage:
      field under it (board E's CELL_F reads 18 A through one via). The arithmetic is right and the attribution
      is not, so the verdict is ADVISORY and the rule reads as unverified rather than failed until the per-via
      current comes from dc_drop's solved mesh",
-   remediation: {action: "read the per-via current from dc_drop's solved mesh so a lone stitch via at the end of a pour stops being read as the rail's transition, then take this off advisory; and obtain IPC-2221 or a fabricator statement of via ampacity, so the curve behind the number has an authority", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [STK-001, PI-001], p50_h: 6, p80_h: 16}}
+   remediation: {action: "close the five barrels board A's mesh puts over their rating, which are the same gaps in the rail's own copper that the density rule reports; board B needs a routed board before it can be judged at all", owner: SESSION, execution: PARALLEL_BOX, depends_on: [], p50_h: 6, p80_h: 16}}
 
  GND-001: {implementation: "the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py", verification: {tool: ground_system.py, verdict: ground_system, fixtures: tests/test_ground_system.py},
    maturity: ENFORCED, gap_category: GENERATED_ONLY,

@@ -1,24 +1,19 @@
 {
- "advisory": true,
+ "advisory": false,
  "applicable": true,
  "counts": {
+  "measured_rails": 13,
   "no_via": 0,
-  "over": 11,
+  "over": 5,
   "rails": 13
  },
  "denominator": 13,
  "evidence": [
-  "+12V_HF: 2.00 A crosses a transition of 1 via(s) at (118.5, 135.4) rated 0.65 A at 10 K (18 um plating)",
-  "+13V8_PA: 6.00 A crosses a transition of 1 via(s) at (110.5, 102.4) rated 0.65 A at 10 K (18 um plating)",
-  "+5V_D8: 2.00 A crosses a transition of 1 via(s) at (242.2, 47.0) rated 1.05 A at 10 K (18 um plating)",
-  "+5V_DEV: 6.00 A crosses a transition of 1 via(s) at (163.8, 43.8) rated 0.65 A at 10 K (18 um plating)",
-  "+5V_S1: 5.00 A crosses a transition of 1 via(s) at (96.0, 64.5) rated 1.05 A at 10 K (18 um plating)",
-  "+5V_S2: 5.00 A crosses a transition of 1 via(s) at (107.7, 73.3) rated 1.05 A at 10 K (18 um plating)",
-  "+5V_S3: 5.00 A crosses a transition of 1 via(s) at (127.5, 64.4) rated 1.05 A at 10 K (18 um plating)",
-  "CELL+: 18.00 A crosses a transition of 1 via(s) at (41.1, 173.4) rated 0.65 A at 10 K (18 um plating)",
-  "VBAT: 18.00 A crosses a transition of 1 via(s) at (215.4, 135.4) rated 0.65 A at 10 K (18 um plating)",
-  "VBUS20: 8.00 A crosses a transition of 1 via(s) at (60.5, 52.4) rated 0.65 A at 10 K (18 um plating)",
-  "VIN_RAW: 10.00 A crosses a transition of 2 via(s) at (50.7, 51.1) rated 1.30 A at 10 K (18 um plating)"
+  "+13V8_PA: a barrel at (157.0, 122.6) carries 2.40 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.67",
+  "+5V_DEV: a barrel at (144.8, 37.4) carries 1.68 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 1.87",
+  "VBAT: a barrel at (85.0, 62.4) carries 1.79 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 2.74",
+  "VBUS20: a barrel at (68.5, 82.0) carries 3.40 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 3.77",
+  "VIN_RAW: a barrel at (51.6, 151.4) carries 2.52 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.80"
  ],
  "inputs": {
   "board": {
@@ -29,7 +24,7 @@
   "rise_k": 10.0,
   "site_mm": 6.0
  },
- "note": "every rail's weakest layer transition against IPC-2221 for a barrel of the fabricator's own plating thickness; ADVISORY until it can tell a via the current crosses from a via of the same net that carries almost none",
+ "note": "every rail's barrels against IPC-2221's curve for a barrel of the fabricator's own plating thickness, on the current dc_drop's solved mesh puts through each of them. The curve is the internal-conductor model published with its constants in ECSS-Q-ST-70-12C Annex D (D.4), transcribed in v2/vendor/standards/ and implemented in tools/track_current.py",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -40,9 +35,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "e30bbb71e47ee7c0"
+  "tools_tree_sha": "f4ca0a150f927f41"
  },
- "ts": "2026-09-16T18:10:07Z",
+ "ts": "2026-09-16T18:18:34Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

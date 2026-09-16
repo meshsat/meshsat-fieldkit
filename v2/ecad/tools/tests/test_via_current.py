@@ -62,11 +62,23 @@ def t_the_verdict_is_advisory_until_it_knows_which_via_the_current_crosses():
     "18 A through 1 via" and board P's FUSED the same, which is not what that copper does. The arithmetic is
     right and the attribution is not. A gate that refuses eleven rails on board A for a reason its own author
     doubts is the heuristic-as-law this registry exists to remove, so the verdict is a measurement until the
-    per-via current comes from the solved mesh."""
+    per-via current comes from the solved mesh.
+
+    16 SEPTEMBER 2026, THE SECOND HALF: it comes from the solved mesh now. `dc_drop.py` computes the current in
+    every barrel on its way to the density verdict and writes them beside the board, and where every judged
+    rail has them the attribution is a measurement and the flag comes off. The rule is no longer "always
+    advisory"; it is "advisory exactly when at least one rail is still attributed rather than measured", which
+    is what this asserts, because a flag that is hard-coded either way cannot express that."""
     import os
     src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "via_current.py"),
                encoding="utf-8").read()
-    assert "advisory=True" in src, "via_current decides a rule on an attribution it cannot yet make"
+    assert "advisory=not _all_measured" in src, \
+        "the advisory flag no longer follows whether the attribution was measured"
+    assert "advisory=True" not in src, "the flag is hard-coded on, so a measured board stays advisory for ever"
+    assert "-via-currents.json" in src, "via_current does not look for the solved barrel currents"
+    dc = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dc_drop.py"),
+              encoding="utf-8").read()
+    assert "-via-currents.json" in dc, "dc_drop does not write the barrel currents it already computes"
 
 
 def t_an_advisory_verdict_does_not_decide_a_rule():

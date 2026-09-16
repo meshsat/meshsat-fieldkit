@@ -655,8 +655,22 @@ rules:
    condition: {all: [{fact: has_tracks, op: truthy}, {fact: layers, op: ge, value: 4}]}
    risk_class: [THERMAL, RELIABILITY, SAFETY]
    release_effect: MUST_JUSTIFY
-   source_status: SOURCE_UNVERIFIED
-   sources: []
+   source_status: PARTIALLY_VERIFIED
+   sources:
+    - {title: "ECSS-Q-ST-70-12C, Design rules for printed circuit boards, Annex D (D.1.2 the formula, D.4 the
+         IPC-2221A internal-conductor fit)",
+       issuer: "ECSS Secretariat, ESA-ESTEC Requirements and Standards Division", revision: "C, 14 July 2014",
+       clause: "Annex D", url_or_path: "v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md",
+       accessed: "2026-09-16",
+       note: "the curve behind the number. It is a function of a CROSS-SECTIONAL AREA and says nothing about
+         the shape of the conductor, so applying it to the annulus of a plated barrel is this project's
+         extension of it and is recorded as such: the geometry is exact, the curve is published, the
+         application of one to the other is an approximation with no source"}
+    - {title: "the fabricator's published average hole plating thickness, 18 um",
+       issuer: "the selected fabricator", revision: "read 16 September 2026", clause: "Holes and vias",
+       url_or_path: "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md", accessed: "2026-09-16",
+       note: "the barrel's wall thickness, which with the drill diameter is the whole cross-section. A board
+         that has its own quotation overrides it with via_plating_um"}
    acceptance_criteria: >
      For each rail transition: via count, barrel cross-section from the plating thickness the fabricator
      quotes, current per via and the total against the rail's peak.
@@ -667,12 +681,26 @@ rules:
    automation_feasibility: AUTOMATABLE
    boards_affected: [a, b, c, d, e]
    interfaces_affected: [NONE]
-   implementation_location: NONE_YET
+   implementation_location: "via_current.py, with the per-barrel current from dc_drop.py's solved mesh"
    evidence_scope: [board_sha256, stackup, stage]
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the measured count and the plating spec",
                    scope: "one transition", expiry: "the next route", residual_risk: "thermal, not functional"}
    maturity_at_writing: UNASSESSED
+   false_positive_analysis: >
+     A WRONG REFUSAL here is an ATTRIBUTION error and it is the one this rule spent the day being held back
+     for: a rail's weakest cluster of its OWN vias is usually a lone stitch via at the end of a pour carrying
+     almost none of its current, while the current travels in a band with a via field under it, and reading the
+     rail's whole current through that one barrel refused eleven of board A's rails and read "18 A through one
+     via" on board E. The answer is not a tolerance, it is a measurement: `dc_drop` solves a resistive mesh over
+     the board's copper and now writes the current it puts through EVERY barrel, and each barrel is judged on
+     what it carries. Where even one judged rail has no solved current the verdict stays ADVISORY and says how
+     many, because the attributed reading is an assumption and not a measurement. The second shape is a rail on
+     an UNROUTED board, where no load pad is reachable from the source and the mesh finds nothing: that is
+     reported as unresolved and judged as nothing, which is why board B contributes no barrels at all today.
+     What is NOT protected against and is written here: the curve is for a cross-sectional area and a barrel is
+     an annulus, which is this project's extension of a published model; and the plating thickness is an
+     AVERAGE from the fabricator's own page, so a thin spot in one hole is outside what this can see.
 
 # ---------------------------------------------------------------------------------------------------------
 # 8. GROUNDING AND SHIELDING   9. STACKUP   10. RETURN PATH

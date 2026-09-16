@@ -86,13 +86,50 @@ def main(a):
         if t.GetClass() != "PCB_VIA": continue
         vias.setdefault(t.GetNetname().lstrip("/"), []).append(
             (mm(t.GetPosition().x), mm(t.GetPosition().y), round(mm(t.GetDrill()), 4)))
+    # THE CURRENT EACH BARREL ACTUALLY CARRIES, WHERE THE MESH HAS BEEN SOLVED (16 September 2026).
+    # `dc_drop.py` solves a resistive mesh over this board's copper and computes the current in every barrel on
+    # the way; it writes them beside the board now. With that file the question stops being "can this rail's
+    # weakest cluster of its own vias carry the whole rail" and becomes "does any barrel carry more than it is
+    # rated for", which is the question, and a lone stitch via at the end of a pour is judged on the almost
+    # nothing it carries instead of on the rail's entire current. Without the file the old reading stands and
+    # the verdict stays ADVISORY, because that reading is an assumption about attribution and not a measurement.
+    measured = {}
+    _mp = os.path.join(out_dir, os.path.splitext(os.path.basename(path))[0] + "-via-currents.json")
+    if os.path.exists(_mp):
+        try:
+            _md = json.load(open(_mp, encoding="utf-8"))
+            for _n, _vs in (_md.get("nets") or {}).items():
+                measured[_n.lstrip("/")] = _vs
+        except Exception as _e:
+            print("via_current: the barrel currents beside this board could not be read (%s)" % _e)
+
     rows, bad, no_via = [], [], []
     for net, r in sorted((it.get("rails") or {}).items()):
         amps = float(r.get("amps_peak") or r.get("amps_typ") or 0)
         if amps <= 0: continue
-        vs = vias.get(net.lstrip("/"), [])
+        key = net.lstrip("/")
+        vs = vias.get(key, [])
         if not vs:
             no_via.append("%s carries %.2f A and has no via: it never changes layer" % (net, amps)); continue
+        if key in measured and measured[key]:
+            # Every barrel against its own rating, on the current the mesh put through it.
+            worst_m = None
+            for _b in measured[key]:
+                _lim = ampacity(float(_b.get("drill_mm") or 0.4), rise, plating)[0]
+                _cur = float(_b.get("amps") or 0.0)
+                if _lim <= 0: continue
+                if worst_m is None or _cur / _lim > worst_m[0]:
+                    worst_m = (_cur / _lim, _cur, _lim, float(_b.get("x") or 0), float(_b.get("y") or 0))
+            if worst_m is not None:
+                _ratio, _cur, _lim, _x, _y = worst_m
+                rows.append(dict(net=net, amps=amps, barrels=len(measured[key]), measured=True,
+                                 worst_barrel_a=round(_cur, 3), worst_barrel_limit_a=round(_lim, 3),
+                                 at=(round(_x, 2), round(_y, 2)), ok=_ratio <= 1.0))
+                if _ratio > 1.0:
+                    bad.append("%s: a barrel at (%.1f, %.1f) carries %.2f A of the solved mesh against %.2f A "
+                               "for its own wall at %.0f K (%.0f um plating), ratio %.2f"
+                               % (net, _x, _y, _cur, _lim, rise, plating, _ratio))
+                continue
         worst = None
         for g in sites([(v[0], v[1]) for v in vs], reach):
             cap = sum(ampacity(vs[i][2], rise, plating)[0] for i in g)
@@ -100,10 +137,11 @@ def main(a):
         cap, n, x, y = worst
         rows.append(dict(net=net, amps=amps, sites=len(sites([(v[0], v[1]) for v in vs], reach)),
                          worst_vias=n, worst_capacity_a=round(cap, 3), at=(round(x, 2), round(y, 2)),
-                         ok=cap >= amps))
+                         measured=False, ok=cap >= amps))
         if cap < amps:
             bad.append("%s: %.2f A crosses a transition of %d via(s) at (%.1f, %.1f) rated %.2f A at %.0f K "
-                       "(%.0f um plating)" % (net, amps, n, x, y, cap, rise, plating))
+                       "(%.0f um plating), attributed rather than measured"
+                       % (net, amps, n, x, y, cap, rise, plating))
     print("via_current: %d rail(s) with vias judged at %.0f K rise and %.0f um plating, %d over their weakest "
           "transition; %d rail(s) carry no via" % (len(rows), rise, plating, len(bad), len(no_via)))
     for x in bad[:20]: print("  FAIL %s" % x)
@@ -120,14 +158,29 @@ def main(a):
     # collector leaves it out of the stage's worst, and the readiness reads the rule as unverified rather than
     # failed. A gate that refuses eleven rails on board A for a reason its author already doubts is exactly the
     # heuristic-as-law this registry exists to remove.
+    # ...AND IT IS A BAR AGAIN ONCE EVERY RAIL IS MEASURED (16 September 2026). The advisory flag was about
+    # ATTRIBUTION and nothing else. Where every judged rail's barrels carry the current `dc_drop`'s solved mesh
+    # put through them, the attribution is a measurement and the reason to hold the verdict back is gone; where
+    # even one rail falls back to the attributed reading, it stays advisory and the note says which.
+    _measured = [r for r in rows if r.get("measured")]
+    _all_measured = bool(rows) and len(_measured) == len(rows)
+    _why = ("every rail's barrels against IPC-2221's curve for a barrel of the fabricator's own plating "
+            "thickness, on the current dc_drop's solved mesh puts through each of them. The curve is the "
+            "internal-conductor model published with its constants in ECSS-Q-ST-70-12C Annex D (D.4), "
+            "transcribed in v2/vendor/standards/ and implemented in tools/track_current.py"
+            if _all_measured else
+            "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for "
+            "a barrel of the fabricator's own plating thickness. ADVISORY: %d of %d judged rail(s) have no "
+            "solved barrel current beside this board, so for those the rail's WHOLE current is attributed to "
+            "its weakest cluster of vias, which on these boards is often a lone stitch via carrying almost none"
+            % (len(rows) - len(_measured), len(rows)))
     return _v.write("via_current", _v.FAIL if bad else (_v.INCONCLUSIVE if not rows else _v.PASS),
-                    counts={"rails": len(rows), "over": len(bad), "no_via": len(no_via)},
-                    denominator=len(rows), evidence=bad[:20], advisory=True,
+                    counts={"rails": len(rows), "over": len(bad), "no_via": len(no_via),
+                            "measured_rails": len(_measured)},
+                    denominator=len(rows), evidence=bad[:20], advisory=not _all_measured,
                     inputs={"board": path, "rise_k": rise, "plating_um": plating, "site_mm": reach},
-                    note=("no declared rail on this board carries a via, so nothing was judged" if not rows else
-                          "every rail's weakest layer transition against IPC-2221 for a barrel of the "
-                          "fabricator's own plating thickness; ADVISORY until it can tell a via the current "
-                          "crosses from a via of the same net that carries almost none"),
+                    note=("no declared rail on this board carries a via, so nothing was judged" if not rows
+                          else _why),
                     out_dir=out_dir)
 
 

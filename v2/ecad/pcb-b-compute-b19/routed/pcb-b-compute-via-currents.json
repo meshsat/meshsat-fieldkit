@@ -1,0 +1,5 @@
+{
+ "board": "pcb-b-compute.kicad_pcb",
+ "rise_k": 10.0,
+ "nets": {}
+}
