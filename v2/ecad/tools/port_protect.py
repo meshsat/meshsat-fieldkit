@@ -148,13 +148,20 @@ def main(argv):
         return _v.write("port_protect", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path, "board": letter},
                         note="this board declares no external port, and no board of this kit is truly internal: "
                              "the declaration has not been written yet")
+    # THE COUNTS MUST CARRY WHAT DECIDED. Board A's sweep read FAIL beside "unprotected: 0" on 16 September,
+    # because the two conductors that failed are in the other category: their clamp is BEHIND an active part,
+    # which therefore takes the transient itself. A verdict whose counts do not contain its own cause is read
+    # as a contradiction by everything downstream, including the person reading the sweep.
+    n_behind = sum(len(r.get("behind") or []) for r in rows)
+    n_unprot = sum(len(r["unprotected"]) for r in rows)
     return _v.write("port_protect", _v.FAIL if bad else _v.PASS,
-                    counts={"ports": len(rows), "declared": n_declared, "unprotected": sum(len(r["unprotected"]) for r in rows),
-                            "not_on_netlist": len(missing)},
+                    counts={"ports": len(rows), "declared": n_declared, "unprotected": n_unprot,
+                            "behind_an_active_part": n_behind, "not_on_netlist": len(missing)},
                     denominator=sum(r["pins"] for r in rows) or 1, evidence=bad[:20],
                     inputs={"netlist": path, "board": letter},
-                    note=("every declared external conductor meets a protection part before a chip"
-                          if not bad else "a conductor leaves the case and reaches a semiconductor with nothing between"))
+                    note=("every declared external conductor meets a protection part before a chip" if not bad else
+                          "%d conductor(s) reach a semiconductor with nothing between, and %d meet their clamp only "
+                          "through an active part, which therefore sees the transient itself" % (n_unprot, n_behind)))
 
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
