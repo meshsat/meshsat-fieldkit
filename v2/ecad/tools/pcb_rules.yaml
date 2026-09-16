@@ -665,6 +665,12 @@ rules:
    maturity_at_writing: UNASSESSED
 
  - id: STK-001
+   false_positive_analysis: >
+     A false refusal is a board whose stackup is deliberately not one of the two this project uses, which would
+     be a new stack and a new order line rather than a defect: the tool names the stack it wrote and the layer
+     count it counted, so the disagreement is visible rather than silent. The second shape is a capability row
+     that does not cover a board's copper weight, where the fabricator-limit half takes the next HEAVIER row
+     and says so, which is the coarser limit and the safe direction.
    domain: STACKUP
    short_name: the stackup is declared, feasible and in the board
    requirement: >

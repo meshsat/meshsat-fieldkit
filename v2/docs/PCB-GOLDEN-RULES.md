@@ -589,8 +589,8 @@ every impedance, current and spacing rule resolves against it rather than agains
 | verified by | SCRIPT, VENDOR_CONFIRMATION at ROUTED_BOARD (automatable) |
 | source | SOURCE_UNVERIFIED |
 | | fabricator PCB capability page, the selected fabricator -- v2/vendor/seals/jlcpcb-pcb-capabilities-page.txt |
-| implementation | stackup_write.py |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| implementation | stackup_write.py, written LAST in full.sh so it survives the chain |
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -601,8 +601,14 @@ the board file and match a named, dated fabricator stackup; the order paperwork 
 
 **If violated** Boards arrive on a different stack and the controlled impedances are wrong.
 
-**Today** the stackup is written into the board and read back by the impedance check; the fabricator capability file in
-the tree is an empty JavaScript page and nothing reads it
+**Today** 16 September 2026, and it took three separate findings to get here. The stackup is DECLARED: it is written
+into the board and the pre-route chain refuses a board whose stackup did not survive, which it had to,
+because boards A and B reached the router carrying none at all while their logs said one was written (the
+block goes in as text and every pcbnew save after it drops it). It is FEASIBLE: fab_limits.py compares the
+board's own minimums against the fabricator's capability for the copper weight the stackup itself carries.
+And the capability document is in the tree at last, fetched and transcribed on 16 September, which is what
+makes either statement more than an assertion. What is still owed and is NOT claimed here is the fabricator's
+CONFIRMATION of the two specific stacks for these boards, which is a question for the order
 
 ### STK-002  a layer count is decided and costed
 
