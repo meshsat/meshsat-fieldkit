@@ -92,3 +92,38 @@ def t_the_freeze_is_declared_with_its_authority_and_what_lifts_it():
     if m.get("frozen"):
         for k in ("why", "lifts_when", "authority", "frozen_at"):
             assert m.get(k), "the promotion freeze does not say %s" % k
+
+
+def t_a_verdict_named_for_one_board_is_not_demanded_of_another():
+    """A verdict name that carries a board letter is that board's own gate, and no other board can write it.
+
+    Found on 16 September 2026: VIA-001 named "via_audit, check_pcb_c". Five boards held a current via_audit
+    PASS and every one of them read INCONCLUSIVE, because the coverage map also demanded board C's gate of
+    them. The worst-result rule then made the missing verdict the answer, so a rule that WAS verified on six
+    boards reported as verified on one.
+
+    The property is not "never name a board gate": a rule that applies to one board may name that board's
+    gate, and several do. It is that the boards a rule applies to must all be able to produce every verdict it
+    names. `<letter>` is the general form and is expanded per board, so it always satisfies this.
+    """
+    import re
+    reg = R.load(); facts = R.facts(); cov = S.coverage(); m = S.manifest()
+    letters = list(m["boards"])
+    applies = {}
+    for letter in letters:
+        for rule, _why in R.rules_for(letter, reg, facts):
+            applies.setdefault(rule["id"], set()).add(letter.lower())
+    bad = []
+    for rid, c in sorted(cov.items()):
+        raw = (c.get("verification") or {}).get("verdict")
+        if not raw: continue
+        for name in [n.strip() for n in str(raw).split(",") if n.strip()]:
+            if "<letter>" in name: continue
+            mm = re.search(r"_(%s)$" % "|".join(sorted((l.lower() for l in letters), key=len, reverse=True)), name)
+            if not mm: continue
+            named = mm.group(1)
+            on = applies.get(rid, set())
+            if on - {named}:
+                bad.append("%s names %s but applies to %s: %s cannot write it"
+                           % (rid, name, ",".join(sorted(on)), ",".join(sorted(on - {named}))))
+    assert not bad, "; ".join(bad)

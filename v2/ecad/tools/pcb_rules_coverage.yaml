@@ -264,9 +264,9 @@ coverage:
    note: "the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes or measures their separation from switching copper",
    remediation: {action: "declare sensitive nodes in the intent file and check their clearance and reference", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 16}}
 
- RF-001: {implementation: "gen_pcb_d3.py, gen_pcb_b3.py keep-outs", verification: {tool: check_pcb_d.py, verdict: check_pcb_d},
+ RF-001: {implementation: "gen_pcb_d3.py, gen_pcb_b3.py keep-outs", verification: {tool: "check_pcb_d.py, partial and board D only"},
    maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
-   note: "the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no filter is verified, and the LPF values are flagged for a simulation that has not run",
+   note: "the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no filter is verified, and the LPF values are flagged for a simulation that has not run. This entry NAMES NO VERDICT on purpose (16 September 2026): it named check_pcb_d, board D's own gate, while the rule applies to B as well, so the day it was promoted board B would have read a PASS off a gate that looks at no RF line. Nothing verifies this rule on either board, and the coverage map says so rather than pointing at the nearest gate",
    remediation: {action: "compute each RF line on its stackup, simulate the LPF, and record the module keep-out check", owner: SESSION, depends_on: [IMP-001], p50_h: 8, p80_h: 24}}
 
  RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: check_contracts, fixtures: tests/test_gate_fixtures.py},
@@ -367,7 +367,14 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "fifteen types, two exemptions, denominators, and a report that cannot be read as a pass"}
 
  VIA-001: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums",
-   verification: {tool: "via_audit.py, check_pcb_c.py", verdict: "via_audit, check_pcb_c", fixtures: tests/test_board_gates.py},
+   verification: {tool: "via_audit.py", verdict: "via_audit", fixtures: tests/test_board_gates.py},
+   _verdict_why: "via_audit alone, and the correction matters (16 September 2026). This entry named check_pcb_c beside
+     it, which is BOARD C'S OWN gate: five boards that carry a current via_audit PASS read INCONCLUSIVE for ever
+     because the evidence demanded of them was a verdict only one board can write. Naming check_pcb_<letter> instead
+     would have been worse than leaving it: only C's gate asserts anything about a via (a literal 0.2 mm drill, which
+     is C's plugged-via number and not the board's own minimum), so the other five gates would have been counted as
+     via evidence while checking no via at all. via_audit judges every via on every board against that board's own
+     declared minimums, which is the rule",
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: every via on the board is judged against the BOARD'S OWN minimum diameter and drill, which
      the board carries and the DRC already believes, and the vias that sit inside a pad are counted and named. A via in
