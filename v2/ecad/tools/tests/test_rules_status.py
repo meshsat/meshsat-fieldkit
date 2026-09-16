@@ -236,3 +236,37 @@ def t_a_verdict_taken_on_another_board_is_not_this_board_s_evidence():
 
     # a verdict that names no board at all is judged on its other properties, as the netlist gates are
     assert S.result_for(_rule(), "x", _cov(), _verdict("PASS"), _manifest(), FP, None, ident)["result"] == S.PASS
+
+
+def t_a_dependency_cycle_is_refused_and_not_absorbed():
+    """DEFECTIVE fixture: a register with a cycle must RAISE. ACCEPTABLE fixture: an acyclic one returns.
+
+    `critical_path`'s walk carries a seen-set, which keeps it from recursing for ever and also makes a cycle
+    invisible: the path is computed by silently truncating one of the two edges, and nothing says which was
+    dropped or that the number is short. The register held two such cycles on 16 September 2026, RET-001
+    against SI-001 and BAT-002 against PWR-003, while the critical path they produced was being reported to
+    the owner every ten minutes. Breaking both moved it from 26 h to 22 h at P50.
+
+    A number computed through a cycle is not a duration, so it is refused rather than returned.
+    """
+    import rules_eta as E
+
+    acyclic = [{"rule": "A", "depends_on": [], "p50": 2.0, "p80": 4.0},
+               {"rule": "B", "depends_on": ["A"], "p50": 3.0, "p80": 6.0}]
+    assert E.cycles(acyclic) == [], "an acyclic register was reported as cyclic"
+    assert E.critical_path(acyclic, "p50") == 5.0, "the chain A then B is not two plus three"
+
+    cyclic = [{"rule": "A", "depends_on": ["B"], "p50": 2.0, "p80": 4.0},
+              {"rule": "B", "depends_on": ["A"], "p50": 3.0, "p80": 6.0}]
+    found = E.cycles(cyclic)
+    assert found, "a two-rule cycle was not detected"
+    assert set(found[0]) >= {"A", "B"}, found
+    try:
+        E.critical_path(cyclic, "p50")
+    except ValueError as e:
+        assert "cycle" in str(e), e
+    else:
+        raise AssertionError("a critical path was returned through a cycle, which is not a duration")
+
+    # and the committed register must itself be acyclic, or the reported ETA is short by an unknown amount
+    assert E.cycles(E.open_items()) == [], "the committed gap register has a dependency cycle"

@@ -245,7 +245,7 @@ coverage:
      board with its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however
      carefully it is chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated,
      and the verdict is INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project",
-   remediation: {action: "declare a rise time beside each signal-class entry from the driver's own datasheet, and a critical-length criterion per board with its reason; the arithmetic is already there to judge against them", owner: SESSION, depends_on: [RET-001], p50_h: 8, p80_h: 24}}
+   remediation: {action: "declare a rise time beside each signal-class entry from the driver's own datasheet, and a critical-length criterion per board with its reason; the arithmetic is already there to judge against them", owner: SESSION, depends_on: [], _depends_why: "NOT RET-001 (16 September 2026). RET-001 depended on SI-001 and SI-001 on RET-001, a cycle the ETA model absorbed in silence because its walk carries a seen-set and returns zero on a revisit, so the critical path was computed by truncating one of the two edges and nothing said which. The real direction is one way: RET-001's per-class tolerance is to come from a critical-length criterion, which needs the drivers' edge rates, which is SI-001. SI-001 itself needs datasheets and nothing from RET-001.", p50_h: 8, p80_h: 24}}
 
  CLK-001: {implementation: "gen_sch_*.py crystal networks",
    verification: {tool: clock_check.py, verdict: clock_check, fixtures: tests/test_clock_check.py},
@@ -437,7 +437,7 @@ coverage:
 
  BAT-002: {implementation: "gen_sch_a.py, gen_sch_e.py, gen_pcb_e5.py, gen_sch_p.py", verification: {tool: none}, maturity: OPEN, gap_category: ABSENT,
    note: "the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end",
-   remediation: {action: "the chain diagram with ratings and prospective fault current at each stage", owner: SESSION, depends_on: [PWR-003], p50_h: 4, p80_h: 12}}
+   remediation: {action: "the chain diagram with ratings and prospective fault current at each stage", owner: SESSION, depends_on: [], _depends_why: "NOT PWR-003 (16 September 2026), the second cycle the register held: BAT-002 depended on PWR-003 and PWR-003 on BAT-002. The direction is one way. This rule DRAWS the pack-to-load chain with its ratings and the prospective fault current at each stage, which is the input a coordination study reads; PWR-003 is that study and rightly waits for this and for the fuse curves.", p50_h: 4, p80_h: 12}}
 
  DOC-001: {implementation: "full.sh PHASE, silk_fix_all.py", verification: {tool: final_gate.py, verdict: "final_gate_<letter>", fixtures: tests/test_final_gate.py},
    maturity: ENFORCED, gap_category: NONE, note: "added 16 September: a folder that is not the declared phase fails the set, with a truth-table fixture"}
