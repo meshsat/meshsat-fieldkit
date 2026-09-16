@@ -123,9 +123,20 @@ coverage:
    note: "phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate or where a crossing happens",
    remediation: {action: "a per-board ground statement and a check that no signal crosses an undeclared split", owner: SESSION, depends_on: [], p50_h: 6, p80_h: 16}}
 
- GND-002: {implementation: "gen_pcb_c3.py standoffs", verification: {tool: none}, maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
-   note: "eight standoffs bond C's ground to the plate; no chassis-bond or shield strategy is written for the kit",
-   remediation: {action: "write the chassis and shield strategy, then check the bonds against it", owner: SESSION, depends_on: [ENV-001], p50_h: 4, p80_h: 10}}
+ GND-002: {implementation: "gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination",
+   verification: {tool: "a written strategy and a bench measurement", document: "docs/GROUNDING-AND-SHIELDS.md"},
+   maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
+   note: "16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has
+     no single conductive enclosure: the Peli 1450 is plastic and every piece of metal in it is an island held by
+     plastic, so the only thing joining them is whatever this design says joins them. Board B's magnetics termination
+     matches the switch vendor's clause exactly except in one respect: the 1 nF 2 kV common-node capacitor and the RJ45
+     shell both land on SIGNAL ground, where the clause says chassis, and THERE IS NO CHASSIS NET ANYWHERE IN THIS KIT.
+     The four board changes that would make the strategy true are listed in the document; they are schematic changes on
+     three boards and they touch owner decision 29's territory, so they wait on that ruling rather than being made
+     piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by a four-wire measurement and an emissions sweep,
+     neither of which exists until there is hardware",
+   remediation: {action: "make the four changes the strategy names once decision 29 is answered, then the bond resistances and the pre-compliance sweep at the prototype",
+     owner: SESSION, depends_on: [INT-002], p50_h: 4, p80_h: 12}}
 
  STK-001: {implementation: "stackup_write.py, written LAST in full.sh so it survives the chain",
    verification: {tool: "impedance_check.py, fab_limits.py", verdict: "impedance_check, fab_limits", fixtures: "tests/test_stackup_reader.py, tests/test_fab_limits.py"},
