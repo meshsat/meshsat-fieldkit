@@ -79,7 +79,7 @@ coverage:
    verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
    maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
 
- PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_rail_loads.py},
+ PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_rails, fixtures: tests/test_rail_loads.py},
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: the declared set is compared with the power nets the board actually carries. A net whose
      name begins with + is a rail by this project's own generator convention, so intent_checks counts the power-symbol
@@ -96,7 +96,7 @@ coverage:
    note: "two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file",
    remediation: {action: "a protection chain study with the fuse curves obtained from the makers", owner: SESSION, depends_on: [ENV-001, BAT-002], p50_h: 8, p80_h: 20}}
 
- DEC-001: {implementation: "bypass_slots.py, bypass_place.py", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_board_gates.py},
+ DEC-001: {implementation: "bypass_slots.py, bypass_place.py", verification: {tool: intent_checks.py, verdict: intent_decoupling, fixtures: tests/test_board_gates.py},
    maturity: ENFORCED, gap_category: HEURISTIC_AS_LAW,
    note: "the 3 mm distance is a project number applied to every device; the loop inductance it stands for is never computed, and a board declares exceptions in an allow file",
    remediation: {action: "derive the distance per device class from the current's spectral content; keep the 3 mm as a screen", owner: SESSION, depends_on: [SI-001], p50_h: 6, p80_h: 16}}
@@ -145,7 +145,7 @@ coverage:
    remediation: {action: "quotes from the ordering session for both counts on C and P, then the two rulings", owner: OWNER, depends_on: [], p50_h: 2, p80_h: 72}}
 
  RET-001: {implementation: "signal_class.py plus each board's signal_classes table, judged by intent_checks.py",
-   verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_signal_class.py},
+   verification: {tool: intent_checks.py, verdict: intent_return_path, fixtures: tests/test_signal_class.py},
    maturity: GENERATED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
      gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration in
@@ -161,7 +161,7 @@ coverage:
    remediation: {action: "obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are",
      owner: SESSION, depends_on: [SI-001], p50_h: 8, p80_h: 26}}
 
- RET-002: {implementation: "gen_pcb_*3.py pours", verification: {tool: intent_checks.py, verdict: intent_checks, fixtures: tests/test_board_gates.py, report: return_gaps.py},
+ RET-002: {implementation: "gen_pcb_*3.py pours", verification: {tool: intent_checks.py, verdict: intent_return_path, fixtures: tests/test_board_gates.py, report: return_gaps.py},
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
      against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a net's

@@ -15,7 +15,7 @@ appears in the gap register.
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py | none |  | **GENERATED_ONLY** |
 | CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings and each board's intent rails | derate.py -> derate | tests/test_gate_fixtures.py | **GENERATED_ONLY** |
 | CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
-| DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_checks | tests/test_board_gates.py | **ENFORCED** |
+| DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_decoupling | tests/test_board_gates.py | **ENFORCED** |
 | DFA-001 | ASSEMBLY_DFA | BLOCKER | export_jlc.sh, jlc-rotations.csv | verify_deliverable.py -> verify_deliverable |  | **GENERATED_ONLY** |
 | DFM-001 | FABRICATION_DFM | BLOCKER | build_pcb.sh, export_jlc.sh | verify_deliverable.py -> verify_deliverable | tests/test_gate_fixtures.py | **ENFORCED** |
 | DOC-001 | DOCUMENTATION_CONTROL | BLOCKER | full.sh PHASE, silk_fix_all.py | final_gate.py -> final_gate | tests/test_final_gate.py | **ENFORCED** |
@@ -39,12 +39,12 @@ appears in the gap register.
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py | **ENFORCED** |
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | NONE_YET | none |  | **DOCUMENTED_ONLY** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
-| PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_checks | tests/test_rail_loads.py | **ENFORCED** |
+| PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_rails | tests/test_rail_loads.py | **ENFORCED** |
 | PWR-002 | POWER_TREE | MUST_JUSTIFY | gen_sch_a.py, gen_sch_b.py | none |  | **OPEN** |
 | PWR-003 | POWER_TREE | BLOCKER | gen_sch_a.py, gen_sch_e.py, gen_sch_p.py | none |  | **OPEN** |
 | REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | none |  | **OPEN** |
-| RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_checks | tests/test_signal_class.py | **GENERATED_ONLY** |
-| RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_checks | tests/test_board_gates.py | **ENFORCED** |
+| RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_return_path | tests/test_signal_class.py | **GENERATED_ONLY** |
+| RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_return_path | tests/test_board_gates.py | **ENFORCED** |
 | RET-003 | RETURN_PATH | BLOCKER | NONE_YET | none |  | **OPEN** |
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py, tests/test_signal_class.py | **ENFORCED** |
 | RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | check_pcb_d.py -> check_pcb_d |  | **GENERATED_ONLY** |
