@@ -37,7 +37,7 @@ appears in the gap register.
 | PI-002 | POWER_INTEGRITY | BLOCKER | power_copper.py | dc_drop.py -> dc_drop | tests/test_conductor_current.py | **ENFORCED** |
 | PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias | via_current.py -> via_current | tests/test_via_current.py | **SOURCE_UNVERIFIED** |
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py | **ENFORCED** |
-| PLC-002 | PLACEMENT | MUST_JUSTIFY | NONE_YET | none |  | **DOCUMENTED_ONLY** |
+| PLC-002 | PLACEMENT | MUST_JUSTIFY | NONE_YET | closer_audit.py -> closer_audit | tests/test_closer_audit.py | **ENFORCED** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
 | PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_rails | tests/test_rail_loads.py | **ENFORCED** |
 | PWR-002 | POWER_TREE | MUST_JUSTIFY | the switch and always_on declarations in each gen_sch_*.py rail | power_sequence.py -> power_sequence | tests/test_power_sequence.py | **ENFORCED** |
@@ -71,10 +71,10 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 33 |
+| ENFORCED | 34 |
 | GENERATED_ONLY | 7 |
 | VERIFIED_MANUALLY | 2 |
-| DOCUMENTED_ONLY | 2 |
+| DOCUMENTED_ONLY | 1 |
 | OPEN | 1 |
 | SOURCE_UNVERIFIED | 8 |
 | OWNER_DECISION_REQUIRED | 4 |

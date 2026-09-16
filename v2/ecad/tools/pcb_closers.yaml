@@ -1,0 +1,170 @@
+# PREVENTION BEFORE REPAIR (rule PLC-002, MESHSAT-862, 16 September 2026).
+#
+# The finish repairs things. Every repair is a defect the placement or the route did not prevent, and the rule
+# asks each closer to name the defect class it repairs and the reason prevention was not possible, and asks the
+# placed-board predictor to cover the classes that have been repaired more than once.
+#
+# WHY THIS IS NOT BOOKKEEPING. A closer that runs on every board, every time, is not a repair any more: it is a
+# stage of the design that nobody has written down. The two that this file made visible are `pour_stitch` and
+# `zone_pad_via`, which run on every board and close the same class every time, and the honest reading is that
+# the placement should be laying those vias, not the finish.
+#
+# `repeated: true` means this class has been repaired on more than one board or more than once on one board.
+# Such a class MUST name the predictor check that now covers it, or the gate refuses the entry: that is the
+# rule's own sentence, "the placed-board predictor covers the classes that have been repaired more than once".
+
+schema_version: "1.0.0"
+
+closers:
+
+ - tool: cont_route.sh
+   changes_copper: true
+   defect_class: "connections the router did not make in its pass budget"
+   why_prevention_failed: "a pass ceiling is a budget, not a property of the board: a connection left open at
+     pass 40 is not a defect of the placement, it is the router stopping. The continuation re-routes from the
+     board's own session with the same rules"
+   repeated: true
+   prevented_by: "routeflow's own remedy rounds pick the pass count per board from a measured pass rate, and
+     the profile's `expect` block records what the board should reach; a board that needs a continuation every
+     time is a board whose pass budget is wrong and the journal shows it"
+   evidence: "boards/<letter>.json cont_route with its own _why; the A21 measurement of 5 September"
+
+ - tool: stub_router.py
+   changes_copper: true
+   defect_class: "a connection whose two ends the router could not join, usually at a pad walled in by its own
+     package or across a corridor the router would not take"
+   why_prevention_failed: "the placement decides whether a corridor exists and the pre-router decides whether a
+     pair takes it; where neither leaves a lane, the stub search is the only thing that can find one, and it
+     searches a grid the router does not have"
+   repeated: true
+   prevented_by: "place_audit predicts escape-fan collisions on the PLACED board, which is the class that used
+     to reach the stub router most often; the pre-lay stage (prelay_nets) lays a named connection before the
+     route, which is what boards C and D now use for the connections the router refuses"
+   evidence: "the pre-lay declarations in boards/c.json and boards/d.json, 16 September 2026"
+
+ - tool: stub_accept.py
+   changes_copper: true
+   defect_class: "the stub router's own work, kept or reverted"
+   why_prevention_failed: "not a repair: it is the judge that decides whether the repair above is kept, and it
+     exists because a closure that adds a hard violation is worse than the open it closed"
+   repeated: false
+   prevented_by: null
+   evidence: "11 September 2026: a closure was refused for how it was written down, 992 tracks instead of 63"
+
+ - tool: direct_close.py
+   changes_copper: true
+   defect_class: "a connection the router stopped short of, close enough that a straight run or one hop closes it"
+   why_prevention_failed: "the router ends a pass where its cost function says to stop; a 1 to 4 mm gap between
+     two pieces of the same net is not something a placement can prevent"
+   repeated: true
+   prevented_by: "the same pre-lay stage as the stub router, and the DRC-named pair it works from means it can
+     only ever close a gap the board itself reports"
+   evidence: "A24's /CELL+ closure of 14 September; on boards C and D it refused every open as beyond its reach,
+     which is how those two were identified as routing gaps rather than closure gaps"
+
+ - tool: pour_stitch.py
+   changes_copper: true
+   defect_class: "a pour island with no via of its own net, which carries nothing"
+   why_prevention_failed: "THIS ONE IS NOT PREVENTED AND SHOULD BE: it runs on every board and finds islands
+     every time, because the placement lays pours and the router then cuts them with tracks. The predictor
+     cannot see it, since the cutting happens after the placement it judges"
+   repeated: true
+   prevented_by: null
+   prevented_by_board_declaration: gnd_grid
+   _prevention_why: "a ground-via grid laid BEFORE the route (gnd_grid.py) puts a via inside every island the
+     router can cut, which is the prevention for this class on the GND pours that are most of it. A board that
+     declares the grid has it; a board that does not is repairing afterwards. Boards D and E declare it, board
+     C is measuring what it costs right now on two arms, and board P measured it as 21 open connections
+     against 0 without, which is why P declares none: the prevention is not free and the measurement decides"
+   evidence: "D9's front ground pour was 57 islands, eleven with no via, one of 222 mm2 (8 September 2026)"
+
+ - tool: zone_pad_via.py
+   changes_copper: true
+   defect_class: "a pad its own plane cannot reach"
+   why_prevention_failed: "same shape as the stitching: the plane is laid at placement time and the pad's
+     access is decided by what the router puts beside it"
+   repeated: true
+   prevented_by: null
+   prevented_by_board_declaration: gnd_grid
+   _prevention_why: "the same grid: a via in the pad's own plane reach at placement time is what this repairs
+     after the route, and the grid is where those vias come from"
+   evidence: "the exposed-pad thermal vias of 12 September, where solder paste was being read as copper"
+
+ - tool: return_via.py
+   changes_copper: true
+   defect_class: "a signal via with no ground via within 1.5 mm at a reference change"
+   why_prevention_failed: "the signal vias do not exist until the router has run, so nothing before it can
+     place their companions"
+   repeated: true
+   prevented_by: "gnd_grid.py lays a ground-via grid BEFORE the route where a board declares one, which is
+     exactly this prevention; boards D and E declare it and board C is measuring what it costs right now
+     (the C19 and C20 arms)"
+   evidence: "the grid declarations in boards/d.json and boards/e.json; owner ruling of 15 September 20:15"
+
+ - tool: rail_prune.py
+   changes_copper: true
+   defect_class: "router copper laid in parallel with a rail's own band, which reads as a rail conductor and
+     is not one"
+   why_prevention_failed: "the router is not told which copper is the rail's: the bands are locked and it
+     routes beside them"
+   repeated: true
+   prevented_by: "the wire keep-outs over each band (power_copper.py), which is the prevention, and this pruner
+     is what catches what the keep-outs do not cover"
+   evidence: "A32: 327 pieces pruned, every conductor under 1 mm (15 September 2026)"
+
+ - tool: stitch_prune.py
+   changes_copper: true
+   defect_class: "a locked stitch via the pour has retreated from, which connects nothing"
+   why_prevention_failed: "the retreat happens when the router lays copper near the via, which is after the
+     stitch was placed"
+   repeated: true
+   prevented_by: null
+   prevented_by_board_declaration: gnd_grid
+   _prevention_why: "the same class as pour_stitch seen from the other end: with the grid laid before the route
+     the fill retreats from fewer vias, because the router works around them instead of past them"
+   evidence: "A24's single pruned via of 621 (12 September 2026)"
+
+ - tool: cleanup_dangling.py
+   changes_copper: true
+   defect_class: "a track or via with a free end, left by the router or by a closer"
+   why_prevention_failed: "an artefact of every stage that adds copper; it is cheaper to remove than to prevent"
+   repeated: true
+   prevented_by: "each closer is judged after it runs (stub_accept and the guarded stages), so a dangling end
+     from a closure is caught in the same pass"
+   evidence: "the three cleanup passes in finish.sh and their order, which is itself a 5 September finding"
+
+ - tool: dot_prune.py
+   changes_copper: true
+   defect_class: "a via whose barrel carries no current because both of its ends are on the same layer"
+   why_prevention_failed: "produced by escape and closure geometry rather than by a decision anybody made"
+   repeated: false
+   prevented_by: null
+   evidence: "the dots kept line in every finish log"
+
+ - tool: unknot.py
+   changes_copper: true
+   defect_class: "a router knot: a region where the router's own tracks cross each other so densely that no
+     further pass improves it"
+   why_prevention_failed: "a property of the router's search, not of the board"
+   repeated: false
+   prevented_by: null
+   evidence: "A22's 33 hard of 11 September turned out to be one knot, which is why the four-layer experiment
+     was re-run"
+
+ - tool: quality_pass.sh
+   changes_copper: true
+   defect_class: "cosmetic and length: straightened tracks and merged vias"
+   why_prevention_failed: "not a defect at all: it is the tidy-up that makes a board readable and shorter, kept
+     only when the hard set does not move"
+   repeated: false
+   prevented_by: null
+   evidence: "straighten.py's budget and its measured 6.5 percent segment reduction (6 September 2026)"
+
+ - tool: silk_fix_all.py
+   changes_copper: false
+   defect_class: "legends over copper or over each other"
+   why_prevention_failed: "the legend is placed before the copper it must avoid exists"
+   repeated: true
+   prevented_by: "the silk phase gate in verify_deliverable, which refuses a folder whose legend names the
+     wrong phase; the overlaps themselves are cosmetic and declared so"
+   evidence: "the silk-phase finding of 8 September, where P2 shipped stamped P1"
