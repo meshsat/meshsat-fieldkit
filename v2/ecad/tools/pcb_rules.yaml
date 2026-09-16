@@ -77,9 +77,15 @@ rules:
    evidence_scope: [manifest_version, rule_set_fingerprint]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: ENV-002
+   false_positive_analysis: >
+     A false refusal is a sentence that quotes a VENDOR's rating for a part this project buys, which is a fact
+     about the bill of materials and not a claim about the kit. Nine such sentences exist and each is declared in
+     claims-allow.txt with its reason. The second shape is a NEGATION: the sentence the project is required to
+     carry, nothing here has been field deployed, contains every word a claim contains, and the first version of
+     the screen refused it. Both are covered by fixtures.
    domain: PRODUCT_ENVELOPE
    short_name: no claim without a test
    requirement: >
@@ -105,12 +111,16 @@ rules:
    evidence_scope: [manifest_version]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
 # ---------------------------------------------------------------------------------------------------------
 # 2. SCHEMATIC INTEGRITY
 # ---------------------------------------------------------------------------------------------------------
  - id: SCH-001
+   false_positive_analysis: >
+     A false refusal is an ERC error that the design intends: an unconnected pin on a part that genuinely has
+     none, a power pin fed from a net the checker cannot see as a source. Each is declared in the board's own
+     erc-allow.txt with a reason, and a declaration with no reason waves nothing through (fixture).
    domain: SCHEMATIC_INTEGRITY
    short_name: ERC clean or explained
    requirement: >
@@ -137,9 +147,14 @@ rules:
    waiver_policy: {allowed: true, authority: SESSION, evidence: "a written reason per allowed violation",
                    scope: "one violation on one board", expiry: "the next schematic regeneration",
                    residual_risk: "the reason is the only thing standing behind it"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: SCH-002
+   false_positive_analysis: >
+     A false refusal came from KiCad's synthetic unconnected-(REF-PIN-PadN) placeholder being read as a net:
+     1,007 of board B's 6,716 comparisons failed on a board every other gate passed (11 September). Both sides
+     strip it now. The second shape is a board-only footprint that carries no net, which is inert copper and is
+     reported rather than blocking.
    domain: SCHEMATIC_INTEGRITY
    short_name: board matches its netlist
    requirement: >
@@ -169,9 +184,14 @@ rules:
    evidence_scope: [board_sha256, schematic_sha256, stage, tools_tree_sha]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: SCH-003
+   false_positive_analysis: >
+     A false refusal is a board whose netlist is absent from this tree, which made eleven contracts read as
+     broken on 11 September. An absent board is INCONCLUSIVE and says so. The second shape is two boards using
+     different names for the two ends of one net, which is a vocabulary difference and not a defect: those are
+     listed as aliases with the reason.
    domain: SCHEMATIC_INTEGRITY
    short_name: cross-board contracts
    requirement: >
@@ -201,7 +221,7 @@ rules:
    evidence_scope: [schematic_sha256, manifest_version, tools_tree_sha]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: SCH-004
    domain: SCHEMATIC_INTEGRITY
@@ -232,7 +252,7 @@ rules:
    evidence_scope: [schematic_sha256, manifest_version]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
 # ---------------------------------------------------------------------------------------------------------
 # 3. COMPONENT SELECTION AND DERATING   4. LIFECYCLE AND SUPPLY
@@ -267,9 +287,13 @@ rules:
    evidence_scope: [schematic_sha256, manifest_version]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: CMP-002
+   false_positive_analysis: >
+     A false refusal is a code that is wrong on one land and right on another: board D's FB1 carries C1017, which
+     is a package mismatch on C's 0603 land and correct on D's 0805 land (11 September). A blocked code may name
+     the land it is wrong on, so the block is per part and not per code.
    domain: COMPONENT_SELECTION
    short_name: the package on the land is the package ordered
    requirement: "Every part's ordered package matches the land pattern it is placed on."
@@ -297,9 +321,13 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "a written purchase route for a hand-fitted part",
                    scope: "one designator on one board", expiry: "the next BOM export",
                    residual_risk: "the part is fitted by hand and is not machine-verified"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: SUP-001
+   false_positive_analysis: >
+     A false refusal is a part this project fits by hand or on the bench, which has no order code by design. Each
+     is declared with its purchase route, and a declaration keyed on a character count rather than a rule once
+     declared one of a matched pair and not the other, which is why the key is the reference.
    domain: LIFECYCLE_SUPPLY
    short_name: every placed part is buyable
    requirement: >
@@ -326,7 +354,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "a purchase route", scope: "one part",
                    expiry: "the order", residual_risk: "a hand-fitted part is a build step and a lead time"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
 # ---------------------------------------------------------------------------------------------------------
 # 5. POWER TREE   6. DECOUPLING   7. POWER INTEGRITY
@@ -363,7 +391,7 @@ rules:
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the measured current of the undeclared rail",
                    scope: "one rail", expiry: "the next schematic regeneration",
                    residual_risk: "an undeclared rail is unmeasured"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: PWR-002
    domain: POWER_TREE
@@ -393,7 +421,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the device requirement being met another way",
                    scope: "one rail", expiry: "prototype validation", residual_risk: "startup behaviour is untested"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: PWR-003
    domain: POWER_TREE
@@ -425,7 +453,7 @@ rules:
    evidence_scope: [schematic_sha256, manifest_version]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: DEC-001
    domain: DECOUPLING
@@ -458,7 +486,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the loop the part actually forms",
                    scope: "one capacitor", expiry: "the next placement", residual_risk: "measured at prototype"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: PI-001
    domain: POWER_INTEGRITY
@@ -497,9 +525,14 @@ rules:
    evidence_scope: [board_sha256, stackup, stage, tools_tree_sha, rule_set_fingerprint]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: PI-002
+   false_positive_analysis: >
+     A false refusal is a rail whose intent file declares no load: the tool would then split the current evenly
+     over every U or J footprint on the net, which on 12 September pushed 10 A through a charger's SENSE pin and
+     its 0.20 mm escape. Such a rail is UNDECLARED, neither criterion is judged, it still blocks, and the verdict
+     is INCONCLUSIVE rather than FAIL because the defect is in the intent file and not in the copper.
    domain: POWER_INTEGRITY
    short_name: rail voltage drop
    requirement: "Every rail arrives at its loads inside the drop budget declared for it."
@@ -527,7 +560,7 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the measured drop and the load's own tolerance",
                    scope: "one rail on one board", expiry: "prototype measurement",
                    residual_risk: "the load's behaviour at the low end is untested"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: PI-003
    domain: POWER_INTEGRITY
@@ -557,7 +590,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the measured count and the plating spec",
                    scope: "one transition", expiry: "the next route", residual_risk: "thermal, not functional"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
 # ---------------------------------------------------------------------------------------------------------
 # 8. GROUNDING AND SHIELDING   9. STACKUP   10. RETURN PATH
@@ -590,7 +623,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the written partition reason", scope: "one board",
                    expiry: "the next placement", residual_risk: "EMC behaviour is untested until pre-compliance"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: GND-002
    domain: GROUNDING_SHIELDING
@@ -621,7 +654,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the written strategy", scope: "the kit",
                    expiry: "pre-compliance testing", residual_risk: "untested until a chamber sees it"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: STK-001
    domain: STACKUP
@@ -654,7 +687,7 @@ rules:
    evidence_scope: [board_sha256, stackup, vendor_capability_revision]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: STK-002
    domain: STACKUP
@@ -684,7 +717,7 @@ rules:
    evidence_scope: [manifest_version, vendor_quote_date]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: OWNER_DECISION_REQUIRED
+   maturity_at_writing: OWNER_DECISION_REQUIRED
 
  - id: RET-001
    domain: RETURN_PATH
@@ -727,7 +760,7 @@ rules:
                    evidence: "the edge rate, the loop the signal actually forms and why it is acceptable here",
                    scope: "one net class on one board", expiry: "prototype EMC measurement",
                    residual_risk: "emission and coupling are unmeasured until a chamber sees the kit"}
-   maturity: OWNER_DECISION_REQUIRED
+   maturity_at_writing: OWNER_DECISION_REQUIRED
 
  - id: RET-002
    domain: RETURN_PATH
@@ -765,7 +798,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the RET-001 judgement for the net",
                    scope: "one net", expiry: "the next route", residual_risk: "none: it is a screen"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: RET-003
    domain: RETURN_PATH
@@ -800,7 +833,7 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the reference structure at the transition",
                    scope: "one class of transition on one board", expiry: "prototype EMC measurement",
                    residual_risk: "unmeasured until a chamber sees it"}
-   maturity: OWNER_DECISION_REQUIRED
+   maturity_at_writing: OWNER_DECISION_REQUIRED
 
  - id: RET-004
    domain: RETURN_PATH
@@ -835,7 +868,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the RET-003 judgement for that transition",
                    scope: "one via", expiry: "the next route", residual_risk: "none: it is a screen"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
 # ---------------------------------------------------------------------------------------------------------
 # 11 to 17. IMPEDANCE, PAIRS, SIGNAL INTEGRITY, CLOCKS, ANALOG, RF, INTERFACE COMPLIANCE
@@ -876,9 +909,13 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the interface's own tolerance and the link budget",
                    scope: "one class on one board", expiry: "prototype measurement",
                    residual_risk: "the link is unverified until a prototype is measured"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: IMP-002
+   false_positive_analysis: >
+     A false refusal would be a class value of 0, which KiCad writes to mean inherit the board default and is not
+     a violation; it is skipped. A board with no project file beside it is INCONCLUSIVE, never a pass, because
+     the classes live in the project file and the router reads them there.
    domain: CONTROLLED_IMPEDANCE
    short_name: a class clearance is never below the board minimum
    requirement: >
@@ -908,9 +945,14 @@ rules:
    evidence_scope: [board_sha256, project_file_sha256, tools_tree_sha]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: PAIR-001
+   false_positive_analysis: >
+     A false refusal is a pair whose two legs are correctly coupled for most of their length and diverge only at
+     the pads, where the geometry is the part's and not the router's. The board declares a coupled fraction with
+     its measurement (board B, 0.80 by length, owner decision 24) rather than a per-pair exception, which would
+     have been 78 copies of one sentence.
    domain: DIFFERENTIAL_PAIRS
    short_name: a pair is coupled and matched
    requirement: >
@@ -941,7 +983,7 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the measured coupled fraction and the interface budget",
                    scope: "one class on one board", expiry: "prototype measurement",
                    residual_risk: "the link margin is unmeasured"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: SI-001
    domain: SIGNAL_INTEGRITY
@@ -975,7 +1017,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the edge rate and the length", scope: "one net class",
                    expiry: "prototype measurement", residual_risk: "measured at the prototype"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: CLK-001
    domain: CLOCKS_RESET_BOOT
@@ -1006,7 +1048,7 @@ rules:
    evidence_scope: [schematic_sha256]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: ANA-001
    domain: ANALOG_MIXED_SIGNAL
@@ -1041,7 +1083,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the node's own measurement budget",
                    scope: "one node", expiry: "prototype measurement", residual_risk: "accuracy unverified"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: RF-001
    domain: RF
@@ -1072,9 +1114,13 @@ rules:
    evidence_scope: [board_sha256, stackup, stage, module_datasheet_revision]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: RF-002
+   false_positive_analysis: >
+     A false refusal is a board whose sibling netlist is missing, since the contract compares two boards; that is
+     INCONCLUSIVE. A real refusal names the device that drives the line, and the rule is that no device may: the
+     panel toggle is the only source.
    domain: RF
    short_name: transmit inhibit is hardware
    requirement: >
@@ -1101,7 +1147,7 @@ rules:
    evidence_scope: [schematic_sha256, manifest_version]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: INT-001
    domain: INTERFACE_COMPLIANCE
@@ -1145,7 +1191,7 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the deviation and its measured consequence",
                    scope: "one interface on one board", expiry: "prototype validation",
                    residual_risk: "the interface may not certify"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: INT-002
    domain: INTERFACE_COMPLIANCE
@@ -1197,7 +1243,7 @@ rules:
    evidence_scope: [schematic_sha256, vendor_document_revision]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
 # ---------------------------------------------------------------------------------------------------------
 # 18 to 25. TRANSIENTS, ISOLATION AND SPACING, THERMAL, PLACEMENT, ROUTING, VIAS, PLANES, EMC
@@ -1235,7 +1281,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the port's exposure and the device's own rating",
                    scope: "one port", expiry: "prototype validation", residual_risk: "untested until a discharge gun sees it"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: ISO-001
    domain: ISOLATION_SPACING
@@ -1271,7 +1317,7 @@ rules:
    evidence_scope: [board_sha256, stage, envelope_version]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: THM-001
    domain: THERMAL
@@ -1305,9 +1351,14 @@ rules:
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the estimate and the measurement plan",
                    scope: "one part", expiry: "prototype thermal measurement",
                    residual_risk: "the sealed enclosure's real rise is unmeasured"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: PLC-001
+   false_positive_analysis: >
+     A false refusal was measured and fixed on 15 September: the predictor's new class refused board A's placed
+     board for 244 plane pads, which is the normal state of a pre-route board. The class is narrowed to a pad
+     with no free via site within 1.5 mm or a track keep-out over it. The second shape is a region overflow that
+     the board has measured and accepted, which is declared with its number.
    domain: PLACEMENT
    short_name: the placement is legal before anything is routed
    requirement: >
@@ -1337,7 +1388,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the allowance with its measured number",
                    scope: "one board", expiry: "the next placement", residual_risk: "named in the allowance"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: PLC-002
    domain: PLACEMENT
@@ -1366,7 +1417,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "why prevention is impossible", scope: "one closer",
                    expiry: "the next phase", residual_risk: "the class recurs"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: RTE-001
    domain: ROUTING
@@ -1396,9 +1447,14 @@ rules:
    evidence_scope: [board_sha256, vendor_capability_revision, kicad_build]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: RTE-002
+   false_positive_analysis: >
+     A false refusal was the whole of 11 September: hardset failed a PRE-ROUTE board for being unrouted, while
+     its own line read hard 0 and the chain read PREROUTE-DONE OK. The judgement is labelled with the stage it
+     belongs to now, and the unrouted count is only read where a routed board is expected. The second shape is
+     KiCad's cap of about 500 unconnected items, which is a cap and never a denominator.
    domain: ROUTING
    short_name: nothing unrouted, nothing shorted
    requirement: >
@@ -1423,7 +1479,7 @@ rules:
    evidence_scope: [board_sha256, stage, hardset_policy_version, kicad_build]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: VIA-001
    domain: VIAS
@@ -1453,9 +1509,14 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the fabricator's confirmation for that treatment",
                    scope: "one via class", expiry: "the order", residual_risk: "assembly yield"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: PLN-001
+   false_positive_analysis: >
+     A false refusal is a pour island that is legitimately isolated because the net is carried by tracks
+     elsewhere, and a locked stitch via the fill has retreated from after the router laid copper past it. The
+     pruner judges on a copy and puts the board back if anything opened, and it refuses to run at all on an
+     unfilled board, where it once offered to remove 366 of 660 locked vias.
    domain: PLANES_POURS
    short_name: no orphan copper
    requirement: >
@@ -1481,7 +1542,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the piece's size and why it is harmless",
                    scope: "one piece", expiry: "the next fill", residual_risk: "EMC only"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: EMC-001
    domain: EMC
@@ -1513,12 +1574,16 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the pre-compliance plan", scope: "the kit",
                    expiry: "pre-compliance testing", residual_risk: "unmeasured until a chamber sees it"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
 # ---------------------------------------------------------------------------------------------------------
 # 26 to 34. MECHANICAL, DFM, DFA, TEST, RELIABILITY, ENERGY, DOCUMENTATION, OUTPUTS, SIGNOFF
 # ---------------------------------------------------------------------------------------------------------
  - id: MEC-001
+   false_positive_analysis: >
+     A false refusal is a pour measured against the rectangle it was drawn in rather than the board it sits on:
+     board C's panel backer is a U with the display window through it, and the gate read 24 failures on a board
+     with none (10 September). The denominator is the outline clipped to the board.
    domain: MECHANICAL
    short_name: the board fits what it is fitted to
    requirement: >
@@ -1545,9 +1610,13 @@ rules:
    evidence_scope: [board_sha256, mechanical_source_sha]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: DFM-001
+   false_positive_analysis: >
+     A false refusal is a gerber set whose layer count differs from the board's because the board is two-layer
+     and the export named four; the count is read off the board. The second shape is a BOM line that is blank by
+     design, a bench-fitted part, which is declared with its route.
    domain: FABRICATION_DFM
    short_name: the fabrication set is complete and consistent
    requirement: >
@@ -1573,7 +1642,7 @@ rules:
    evidence_scope: [gerber_zip_sha256, board_sha256, stackup]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: DFA-001
    domain: ASSEMBLY_DFA
@@ -1605,7 +1674,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the assembler's own preview check",
                    scope: "one footprint family", expiry: "the order", residual_risk: "a whole batch is at stake"}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: TST-001
    domain: TEST_BRINGUP
@@ -1635,7 +1704,7 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the bring-up plan", scope: "one board",
                    expiry: "prototype bring-up", residual_risk: "carried by the person at the bench"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: REL-001
    domain: RELIABILITY
@@ -1664,7 +1733,7 @@ rules:
    owner: OWNER
    waiver_policy: {allowed: true, authority: OWNER, evidence: "the service assumption", scope: "the kit",
                    expiry: "prototype validation", residual_risk: "field failures"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: BAT-001
    domain: ENERGY_STORAGE
@@ -1694,7 +1763,7 @@ rules:
    evidence_scope: [schematic_sha256, cell_datasheet_revision]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: BAT-002
    domain: ENERGY_STORAGE
@@ -1723,9 +1792,13 @@ rules:
    evidence_scope: [manifest_version, schematic_sha256]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: SOURCE_UNVERIFIED
+   maturity_at_writing: SOURCE_UNVERIFIED
 
  - id: DOC-001
+   false_positive_analysis: >
+     A false refusal is a folder deliberately cut as a quote for a held board, which is marked QUOTE ONLY and
+     counted separately. What is NOT a false refusal, and was read as one for weeks, is a folder that is not the
+     phase the tree declares: verify_deliverable judges a folder against itself and cannot know.
    domain: DOCUMENTATION_CONTROL
    short_name: the folder is the board
    requirement: >
@@ -1753,7 +1826,7 @@ rules:
    evidence_scope: [folder_sha256, board_sha256, manifest_version]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: DOC-002
    domain: DOCUMENTATION_CONTROL
@@ -1780,9 +1853,13 @@ rules:
    owner: SESSION
    waiver_policy: {allowed: true, authority: SESSION, evidence: "the estimate marked as one", scope: "one claim",
                    expiry: "", residual_risk: "a reader may take an estimate as a measurement"}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: OUT-001
+   false_positive_analysis: >
+     A false refusal is an order set for a subset of the boards, which is never the set and is INCONCLUSIVE
+     rather than FAIL. A real refusal names the board whose folder the order paperwork describes and the phase
+     the tree actually holds.
    domain: MANUFACTURING_OUTPUTS
    short_name: the order set is the current set
    requirement: >
@@ -1808,9 +1885,13 @@ rules:
    evidence_scope: [order_set_sha256, manifest_version, folder_sha256]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: SGN-001
+   false_positive_analysis: >
+     A false refusal would be a rule that does not apply to a board being counted as unresolved. Applicability is
+     evaluated first and a rule that does not apply is NOT_APPLICABLE and leaves the denominator, so the only way
+     to fail this is a rule that applies and reaches none of the five results.
    domain: VERIFICATION_SIGNOFF
    short_name: every applicable rule has a result
    requirement: >
@@ -1837,7 +1918,7 @@ rules:
    evidence_scope: [rule_set_fingerprint, manifest_version, board_sha256]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED
 
  - id: SGN-002
    domain: VERIFICATION_SIGNOFF
@@ -1863,4 +1944,4 @@ rules:
    evidence_scope: [manifest_version]
    owner: SESSION
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity: UNASSESSED
+   maturity_at_writing: UNASSESSED

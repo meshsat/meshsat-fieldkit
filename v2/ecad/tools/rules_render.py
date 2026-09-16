@@ -76,7 +76,9 @@ def rulebook(reg, cov):
                                                (", " + s["clause"]) if s.get("clause") else "",
                                                " -- " + s.get("url_or_path", "")))
             L.append("| implementation | %s |" % (c.get("implementation") or r.get("implementation_location")))
-            L.append("| maturity | **%s** |" % c.get("maturity", r.get("maturity")))
+            # the coverage map owns the live maturity; the registry keeps only what Phase A assessed before the
+            # gate implementations were opened, and the two are printed as the different things they are
+            L.append("| maturity | **%s** |  (at writing: %s)" % (c.get("maturity", "UNASSESSED"), r.get("maturity_at_writing", "UNASSESSED")))
             L.append("| owner | %s |" % r["owner"])
             w = r.get("waiver_policy") or {}
             L.append("| waiver | %s |" % ("not waivable" if not w.get("allowed") else
