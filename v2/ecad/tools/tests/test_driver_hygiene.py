@@ -764,3 +764,34 @@ def t_the_gate_sweep_is_read_only_by_construction():
     assert "BEFORE" in src and "AFTER" in src and "sha256sum" in src, \
         "the sweep does not take the board's hash before and after"
     assert "no evidence written" in src, "the sweep does not refuse to write evidence when the board changed"
+
+
+def t_a_function_whose_stdout_is_read_as_a_number_lets_nothing_else_write_to_it():
+    """A tool that prints prose on stdout, called inside a function whose stdout is captured as a count.
+
+    On 15 September 2026 drc.sh gained a cost line ("drc: 3 s, 82 violation(s), board f7c80ab"), correctly:
+    the block that printed it had been sitting after `exit 0` and the pipeline could not say what its twelve
+    DRC calls per finish cost. The line went to stdout, and two scoring helpers read their counts off the
+    stdout of a function that calls drc.sh first: `read H0 U0` took "drc:" and "3". `[ "$H1" -eq 0 ]` on a
+    non-numeric string is false, so from that day every continuation route on every board was discarded
+    however much it improved, and the pair matcher compared a multi-line string.
+
+    Neither tool changed. The seam did. So the rule is about the seam: inside a function that returns a
+    number on stdout, every other command redirects its own.
+    """
+    import glob
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
+        src = open(p, errors="replace").read()
+        for m in re.finditer(r"^(\w+)\s*\(\)\s*\{(.*?)^\}", src, re.M | re.S):
+            name, body = m.group(1), m.group(2)
+            # is this function's stdout read as a value anywhere in the file?
+            if not re.search(r"(\$\(\s*%s\b|<\s*<\(\s*%s\b)" % (name, name), src): continue
+            for line in body.splitlines():
+                s = line.strip()
+                if not s or s.startswith("#"): continue
+                if "drc.sh" not in s: continue
+                if ">&2" in s or ">/dev/null" in s or "> /dev/null" in s: continue
+                bad.append("%s: %s() calls drc.sh without redirecting its stdout, which is read as a number"
+                           % (os.path.basename(p), name))
+    assert not bad, "; ".join(bad)

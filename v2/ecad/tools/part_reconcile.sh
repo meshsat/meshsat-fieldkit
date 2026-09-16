@@ -7,7 +7,7 @@ cd "$1"; N="$2"; W=$PWD/out/part; B=$W/reconciled.kicad_pcb; cp $W/merged.kicad_
 cp $N.kicad_pro $W/reconciled.kicad_pro; cp $N.kicad_pro $W/merged.kicad_pro
 # The one hard set scores the reconcile (10 September 2026, round-two red teams C1); it counted six types in a heredoc.
 score() {   # board, report -> "hard unrouted"
-  ../tools/drc.sh "$1" "$2" || { echo "999999 999999"; return; }
+  ../tools/drc.sh "$1" "$2" >&2 || { echo "999999 999999"; return; }   # its cost line is prose and this function returns numbers (16 September 2026)
   local c; c=$(mktemp); python3 ../tools/hardset.py "$2" post --counts "$c" --label "partition reconcile" >/dev/null || { rm -f "$c"; echo "999999 999999"; return; }
   cat "$c"; rm -f "$c"
 }
