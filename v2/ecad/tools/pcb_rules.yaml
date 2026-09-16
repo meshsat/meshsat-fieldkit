@@ -901,8 +901,24 @@ rules:
    release_effect: BLOCKER
    source_status: SOURCE_UNVERIFIED
    sources:
+    - {title: "JLCPCB rigid PCB manufacturing capabilities", issuer: JLCPCB,
+       revision: "the live capability page as it read on 16 September 2026; no revision number is published",
+       clause: "FR-4 dielectric constants: 4.5 (2-layer), 4.4 (7628 prepreg), 4.1 (3313 prepreg), 4.16 (2116 prepreg); impedance control tolerance +-10 percent; impedance control layer counts 4 and above",
+       url_or_path: "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md", accessed: "2026-09-16",
+       note: "this sources the DIELECTRIC CONSTANTS the stackup uses and the tolerance the fabricator holds,
+         which is half of what this rule needs. It does NOT source the closed-form impedance model itself:
+         IPC-2141 is not in this tree and cannot be bought without a licence, and the 2D field solver disagrees
+         with the closed form by 38 percent on the stripline case from one solved point. So the rule stays
+         unverified, and it is unverified for a reason that is now written down precisely rather than generally"}
+    - {title: "JLCPCB impedance-controlled stackups", issuer: JLCPCB,
+       revision: "the live impedance page as it read on 16 September 2026",
+       clause: "JLC04161H-7628 four layers 1.6 mm, and JLC06161H-3313 six layers 1.6 mm: every layer with its material, thickness and dielectric constant",
+       url_or_path: "v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md", accessed: "2026-09-16",
+       note: "the two stackups this project writes into its boards come from here. Until today the numbers
+         were in a code comment citing a reading of 8 September with no file behind it, and the two-layer core
+         had picked up this page's multilayer 4.6 where the capability page says 4.5 for a 2-layer board"}
     - {title: "IPC-2141 controlled impedance circuit boards and high speed logic design", issuer: IPC,
-       revision: "unknown to this tree", clause: "closed-form microstrip and stripline",
+       revision: "unknown to this tree", clause: "microstrip and stripline closed forms",
        url_or_path: "NOT IN THIS TREE", accessed: ""}
    acceptance_criteria: >
      Per controlled class: the target, the tolerance, the geometry as built, the computed impedance from the
