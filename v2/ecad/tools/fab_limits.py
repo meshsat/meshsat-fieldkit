@@ -49,13 +49,12 @@ VIA_IN_PAD = (0.15, 0.55)    # "via in pad ... via diameters 0.15 to 0.55 mm"
 
 
 def copper_oz(path):
-    """The outer copper weight in ounces, from the board's own stackup. None where it carries none."""
-    txt = open(path, encoding="utf-8", errors="replace").read()
-    th = [float(t) for t in re.findall(r'\(layer "[FB]\.Cu" \(type "copper"\) \(thickness ([\d.]+)\)', txt)]
-    if not th: return None
-    mm = max(th)
-    # 1 oz is 0.035 mm of copper and 2 oz is 0.070; anything between is read to the nearer half ounce
-    return round(mm / 0.035 * 2) / 2.0
+    """The outer copper weight in ounces, from the board's own stackup. None where it carries none.
+
+    The reader is `stackup_read.py`, in one place, because the single-line form alone was a false INCONCLUSIVE
+    on three boards and the same regular expression sat in two other files (16 September 2026)."""
+    import stackup_read
+    return stackup_read.outer_copper_oz(path)
 
 
 def classes(path):

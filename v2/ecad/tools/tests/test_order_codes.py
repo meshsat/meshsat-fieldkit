@@ -314,9 +314,14 @@ def t_the_fab_note_reads_the_copper_weight_and_the_stackup_off_the_board():
         b = glob.glob(os.path.join(REPO, "v2", "release", "revA", "boards", folder, "*.kicad_pcb"))
         if not b: continue                                 # a folder not in this clone is not this rule's business
         st = open(b[0], errors="replace").read()
-        cu = re.search(r'\(layer "F\.Cu" \(type "copper"\) \(thickness ([0-9.]+)\)', st)
-        assert cu, "%s carries no stackup, so the note cannot read its copper weight" % folder
-        got = "%g oz" % round(float(cu.group(1)) / 0.035)
+        # BOTH s-expression forms, through the one reader (16 September 2026). KiCad writes a stackup layer
+        # on one line when a tool writes the block and across several when pcbnew saves the file, and this
+        # rule's own single-line expression would have failed on any folder cut from a board in the expanded
+        # form, which boards A, D and E are in today.
+        import stackup_read
+        cu_mm = stackup_read.outer_copper_mm(st)
+        assert cu_mm, "%s carries no stackup, so the note cannot read its copper weight" % folder
+        got = "%g oz" % round(cu_mm / 0.035)
         assert got == oz, "%s reads %s where the record says %s" % (folder, got, oz)
         pp = re.findall(r'\(material "FR4 prepreg ([0-9]+)"', st)
         nl = len(re.findall(r'\(layer "(?:F|B|In\d+)\.Cu" \(type "copper"\)', st))
