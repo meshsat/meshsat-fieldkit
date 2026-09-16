@@ -57,6 +57,21 @@ def load(stem):
               "build_sch) before trusting any contract that names this board."
               % (stem, os.path.relpath(path, ECAD), _f(os.path.getmtime(path)), _f(os.path.getmtime(_sch))))
         return None, None
+    # AND WHICH GENERATOR WROTE IT (16 September 2026). The timestamp guard above compares a netlist with its
+    # OWN schematic, so a whole directory copied from an older generation passes it: both files are old
+    # together. That is exactly what happened today. The set verdict taken inside board A's sweep tree failed
+    # twelve contracts naming board B's six PCIe receive coupling capacitors as absent, while board B's own
+    # netlist carried them and board B's own verdict read PASS on 37 of 37, because A's tree held a copy of B
+    # from before they existed. Seven boards carried that FAIL on rule SCH-003.
+    # A netlist written by a generator this tree does not have is not evidence about this tree's design, in
+    # either direction, so it is reported and counted as missing, which is INCONCLUSIVE and never a pass.
+    _letter = next((l for l, st in NETS.items() if st == stem), "")
+    if _letter:
+        import sch_prov as _prov
+        _ok, _why = _prov.current(path, _letter, os.path.dirname(os.path.abspath(__file__)))
+        if not _ok:
+            print("UNKNOWN GENERATOR for %s: %s" % (stem, _why))
+            return None, None
     txt = open(path, encoding="utf-8", errors="replace").read()
     by_net, by_pin = {}, {}
     for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\n    \(net |\n  \)\n)', txt, re.S):
