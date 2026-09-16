@@ -383,8 +383,8 @@ legitimate current.
 | risk | SAFETY, RELIABILITY |
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_a.py, gen_sch_e.py, gen_sch_p.py |
-| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
+| implementation | pcb_energy_chain.yaml, the chain as data |
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -397,7 +397,14 @@ the conductor does is decoration.
 **If violated** A short in the kit is cleared by a track or a connector instead of by the fuse.
 
 **Today** two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on
-file
+file 16 September 2026: the coordination study exists as data and as a gate, energy_chain.py over
+pcb_energy_chain.yaml, 69 checks passing. For every protective element it carries the rated and peak current
+of the path, the element's rating and its I2t figure with the datasheet it comes from, the fault current
+available at that point with its derivation, and the element downstream it protects; the melting time at the
+worst fault is printed from the I2t (4.3 ms for the 25 A blades at 480 A, 2.9 ms for the 10 A at 200 A). The
+interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. WHAT REMAINS is the
+authority for the selection criteria themselves, which the fuse's datasheet names as SAE J1284 and ISO 8820-3
+and this tree does not hold; littelfuse.com refuses this host with 403.
 
 ## Decoupling
 
@@ -1767,8 +1774,8 @@ sized for the conductors and connectors of that stage.
 | risk | SAFETY |
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_a.py, gen_sch_e.py, gen_pcb_e5.py, gen_sch_p.py |
-| maturity | **OPEN** |  (at writing: SOURCE_UNVERIFIED)
+| implementation | pcb_energy_chain.yaml, the chain as data |
+| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1779,7 +1786,19 @@ rating, and the prospective fault current.
 
 **If violated** A fault in one board is cleared by copper in another.
 
-**Today** the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end
+**Today** the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end 16
+September 2026: THE CHAIN IS DRAWN AND GATED. pcb_energy_chain.yaml carries it end to end, nine stages from
+the 4S cell block to the eFused branches and a second entry for the shore and vehicle input, each with its
+conductor and connector rating, its protective element, the prospective fault current with the derivation,
+and the stage it protects. energy_chain.py judges 69 checks over it: every number's source is a file this
+tree holds, every protective element is in its board's own netlist by reference, and the four coordination
+tests (the element is at or below what it protects, at or above the path's peak, able to interrupt what is
+available, and followed by the stage it protects). It passes. Its first run refused a stage that carried the
+pack node's 18 A peak while naming a 2 A eFuse as its protection, which was a modelling error and is now two
+stages. WHAT REMAINS is the rule's own authority: the ratings come from the parts' datasheets (Littelfuse
+ATOF, Samsung INR18650-35E, Amass XT60, TI BQ4050 and CSD17570Q5B) but the SELECTION CRITERIA are engineering
+practice, and the standards the fuse cites for them (SAE J1284, ISO 8820-3) are not in this tree.
+littelfuse.com refuses this host with 403.
 
 ## Documentation Control
 
