@@ -8366,7 +8366,7 @@ and the finish would have refused the board for them.
 300), with PI-001 moving six boards off INCONCLUSIVE, four to PASS and two to a FAIL that was always there:
 board A has four rails over the published current bar and board E has one. Suite 755.
 
-### 32.209 Board C is finished copper, the current in a via stopped being an assumption, and the set has a watt figure (16 September 2026, 21:00 CEST; MESHSAT-862)
+### 32.209 Board C is finished copper, the current in a via stopped being an assumption, and the set has a watt figure (16 September 2026, 20:45 CEST; MESHSAT-862)
 
 **BOARD C ROUTED 0 HARD AND 0 UNROUTED OF 133 NETS.** C22 ended at three opens, all of one shape and all small:
 `/+5V` was a pad on B.Cu and a 4.9 mm track on F.Cu, a missing layer change, and `/BAT3_K` and `/BAT5_K` were
