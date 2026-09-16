@@ -2078,3 +2078,30 @@ chosen knowing what has to be got out of the case at the top of it.
 efficiencies applied to this project's own declared rail currents, and they are deliberately pessimistic, so
 the real loss should be lower. No junction temperature is computed, no rise is claimed, and the five internal
 fans and the plate and wall conduction paths are not modelled anywhere in this project.
+
+---
+
+## Decision 31 now holds TWO finished boards, not one (16 September 2026, 19:00 CEST)
+
+Decision 31 is the port-protection question: whether a conductor that leaves the case may reach a
+semiconductor with nothing between it and the outside world. It has been described until now as board E's
+blocker. It is board C's as well, and board C reached that state this evening.
+
+**Board C routed 0 hard and 0 unrouted of 133 nets**, with the last three connections pre-laid on the placed
+board before the router ran. Its gate passes 184 of 184, its contracts pass, its DRC is clean of all fifteen
+hard types. **The only thing that refused its finish is rule TRN-001**, and what it names is this:
+
+| board | port | conductors | what they reach |
+|---|---|---|---|
+| C | `J_PIJ2`, the panel's exposed jack on the face | 2 | a chip, with nothing between |
+| C | `J_MAINSW`, the main switch on the face, which a person touches | 2 | a chip, with nothing between |
+| E | the dock and shore entries | 4 | behind an active part, which is a different and weaker objection |
+
+**What this changes about the decision's cost.** Board C is finished copper. Every hour that decision 31 is
+open is an hour in which two of the seven boards are complete and cannot be cut. Nothing else on board C is
+outstanding: no open connection, no failing gate, no missing part.
+
+**It also cost real box time, and that is fixed rather than reported.** The route supervisor read a finish
+refused for a SCHEMATIC property as though the board had open connections, and answered it with another route
+at thirty percent more passes. It would have kept doing that until its round budget ran out. A refusal no
+amount of routing can change now ends the run and names the rule that refused it.
