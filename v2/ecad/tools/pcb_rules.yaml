@@ -1428,6 +1428,13 @@ rules:
    maturity_at_writing: UNASSESSED
 
  - id: RTE-001
+   false_positive_analysis: >
+     A false refusal is a board whose stackup this tool cannot read, which would otherwise be compared against
+     the wrong capability row: that case is INCONCLUSIVE and says so, and boards A and B are in it today. The
+     second shape is a copper weight the document has no row for, where the tool takes the next HEAVIER row,
+     which is the coarser limit and therefore the safe direction, and says in its output that it did. The third
+     is a board rule that is deliberately tighter than the process because a part demands it: that is not a
+     false refusal at all, since this rule only refuses a rule LOOSER than the process.
    domain: ROUTING
    short_name: geometry a fabricator will build
    requirement: >

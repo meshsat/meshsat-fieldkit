@@ -1282,7 +1282,7 @@ chosen fabricator's current published capability for the process being ordered.
 | source | SOURCE_UNVERIFIED |
 | | fabricator capability, current at the order date, the selected fabricator -- NOT USABLY IN THIS TREE |
 | implementation | gen_pcb_*.py design rules |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1293,8 +1293,15 @@ fabricator, and the DRC runs with those rules.
 
 **If violated** The order is rejected, re-quoted at a finer process, or built at reduced yield.
 
-**Today** the DRC enforces the board's own rules; those rules were copied from a capability record that is not in the
-tree
+**Today** 16 September 2026. The DRC enforces the board's own rules and nothing had ever asked whether THOSE RULES are
+inside what the process makes at the board's own copper weight. fab_limits.py asks, against the fabricator's
+capability document now in the tree, with the copper weight read from the board's own stackup rather than
+from a literal. It found board P immediately: two layers at 2 oz by owner ruling 7, designed to 0.127 mm
+track width and clearance where the 2 oz two-layer rows read 0.16, and its Default, SENSE and GNDC classes at
+0.127 as well. Five items, on a board every gate in this project had passed, because each of them judges the
+COPPER against the board's rules and none of them judged the RULES. Fixed at the source in gen_pcb_p.py and
+gen_pcb_p3.py. Boards A and B come back INCONCLUSIVE because their committed board files carry no stackup at
+all, which is STK-001's problem and is visible here for the first time
 
 ### RTE-002  nothing unrouted, nothing shorted
 

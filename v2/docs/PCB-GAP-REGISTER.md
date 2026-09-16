@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**37 of 57 rules carry a gap.**
+**36 of 57 rules carry a gap.**
 
 ## absent (13)
 
@@ -170,7 +170,7 @@ computed, and a board declares exceptions in an allow file
 on D, and costs E its route  
 *Close it by* keep as a screen under RET-003; record the grid's per-board measurement. Owner **SESSION**, after RET-003. Effort P50 2h, P80 6h.
 
-## source or applicability unresolved (9)
+## source or applicability unresolved (8)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -217,11 +217,6 @@ on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judg
 them, they are a written screen and say so  
 *Close it by* obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are. Owner **SESSION**, after SI-001. Effort P50 8h, P80 26h.
 
-**RTE-001 geometry a fabricator will build** (BLOCKER, SOURCE_UNVERIFIED)  
-the DRC enforces the board's own rules; those rules were copied from a capability record that is not in the
-tree  
-*Close it by* pin the capability document and compare every board minimum against it. Owner **SESSION**, after STK-001. Effort P50 2h, P80 6h.
-
 **STK-001 the stackup is declared, feasible and in the board** (BLOCKER, SOURCE_UNVERIFIED)  
 the stackup is written into the board and read back by the impedance check; the fabricator capability file in
 the tree is an empty JavaScript page and nothing reads it  
@@ -240,9 +235,9 @@ verdict is INCONCLUSIVE rather than passing at a figure this project made up. Th
 registry makes of every other unsourced limit  
 *Close it by* obtain the fabricator's capability document, pin it under v2/vendor/, cite the clause, declare annular_min_mm per board and re-judge. Owner **SESSION**. Effort P50 2h, P80 6h.
 
-## covered (20)
+## covered (21)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CMP-002, DFM-001,
-DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RF-002, RTE-002, SCH-001,
-SCH-002, SCH-003, SGN-001, SGN-002, SUP-001, VIA-001
+DOC-001, ENV-002, IMP-002, MEC-001, PI-002, PLC-001, PLN-001, PWR-001, RET-002, RF-002, RTE-001, RTE-002,
+SCH-001, SCH-002, SCH-003, SGN-001, SGN-002, SUP-001, VIA-001
 
