@@ -110,7 +110,7 @@ fault from one that reads low.
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| | | | | this board makes no rail of its own |
+| 1 | +3V3 | 3.30 V (3.13 to 3.46) | U5 | Q5, U1, U10, U11, U2, U3 |
 
 ## Board D
 

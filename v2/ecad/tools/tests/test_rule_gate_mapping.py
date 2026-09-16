@@ -11,7 +11,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 import rules_lib as R
 import rules_status as S
+import rules_render as RR
 from harness import need
+
+# Where the documents live is ONE fact and the renderer owns it. Written out a second time here, as
+# `dirname(TOOLS)/docs`, it pointed at v2/ecad/docs, which does not exist, so the rule that refuses a
+# hand-edited document SKIPPED on every run since it was written (16 September 2026). A rule that skips is
+# not a rule.
+DOCS = RR.DOCS
 
 
 def t_every_rule_has_a_coverage_entry():
@@ -75,7 +82,7 @@ def t_a_verdict_names_the_rules_it_decides_and_the_rule_set_it_was_taken_under()
 
 def t_the_documents_are_generated_and_not_hand_maintained():
     """rules_render --check regenerates every document into memory and refuses one that differs on disk."""
-    need(os.path.join(os.path.dirname(TOOLS), "docs", "PCB-GOLDEN-RULES.md"), "the rulebook has not been rendered yet")
+    need(os.path.join(DOCS, "PCB-GOLDEN-RULES.md"), "the rulebook has not been rendered yet")
     p = subprocess.run([sys.executable, os.path.join(TOOLS, "rules_render.py"), "--check"],
                        capture_output=True, text=True, cwd=os.path.dirname(TOOLS))
     assert p.returncode == 0, "a generated document differs from the registry:\n%s" % (p.stdout + p.stderr)[-800:]
@@ -174,3 +181,46 @@ def t_a_coverage_entry_does_not_contradict_its_own_gap_category():
         if gap == "NONE" and mat not in ("ENFORCED", "VERIFIED_MANUALLY"):
             bad.append("%s: gap category NONE with maturity %s" % (rid, mat))
     assert not bad, "; ".join(bad)
+
+
+def t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes():
+    """A generated page judged against the copy of another generated page that this very run replaced.
+
+    TST-001 and SGN-002 are decided by comparing `PCB-BRING-UP.md` and `PCB-PROTOTYPE-UNKNOWNS.md` with what
+    the registry renders, and the per-board status pages print that decision out of `out/rule-audit/<L>.json`.
+    Rendering both groups from one snapshot meant a run that CORRECTED a stale bring-up page still published
+    seven status pages saying it was stale, and a second identical run was needed to agree with itself
+    (16 September 2026: board C read TST-001 INCONCLUSIVE on a page written the same second as the document
+    that satisfies it). A document set that does not converge in one write is a document set nobody can check.
+
+    Executed against the real tree: the bring-up page is made stale, one write is run, and the result must be
+    a tree `--check` accepts. The fixture is restored whatever happens."""
+    import shutil, tempfile
+    bring = os.path.join(DOCS, "PCB-BRING-UP.md")
+    audit = os.path.join(TOOLS, "out", "rule-audit")
+    need(bring, "the bring-up page has not been rendered yet")
+    keep = tempfile.mkdtemp()
+    shutil.copy(bring, os.path.join(keep, "bring.md"))
+    # Only the page this rule damages is restored. The status pages the run rewrites are left as written,
+    # because a converged tree is the correct outcome and putting an older copy back would un-converge it.
+    try:
+        open(bring, "a", encoding="utf-8").write("\n<!-- a hand edit, which is what this rule exists to catch -->\n")
+        w = subprocess.run([sys.executable, os.path.join(TOOLS, "rules_render.py")],
+                           capture_output=True, text=True, cwd=os.path.dirname(TOOLS))
+        assert w.returncode == 0, (w.stdout + w.stderr)[-600:]
+        c = subprocess.run([sys.executable, os.path.join(TOOLS, "rules_render.py"), "--check"],
+                           capture_output=True, text=True, cwd=os.path.dirname(TOOLS))
+        assert c.returncode == 0, \
+            "one write did not converge: the status pages still disagree with the registry\n%s" % (c.stdout + c.stderr)[-600:]
+    finally:
+        shutil.copy(os.path.join(keep, "bring.md"), bring)
+
+
+def t_the_status_pages_are_rendered_apart_from_the_pages_the_rules_judge():
+    """The mechanism behind the rule above, so a refactor cannot fold the two groups back together."""
+    src = open(os.path.join(TOOLS, "rules_render.py"), encoding="utf-8").read()
+    assert "def render(out_dir=None, board_docs=True, generated=True)" in src, \
+        "render() no longer separates the generated documents from the board status pages"
+    body = src[src.index("def main(argv):"):]
+    assert "board_docs=False" in body and "generated=False" in body, "main renders both groups from one snapshot"
+    assert "_refresh_audit()" in body, "the audit is not refreshed between the two groups"
