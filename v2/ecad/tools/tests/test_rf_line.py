@@ -48,3 +48,21 @@ def t_the_differential_calibration_is_not_borrowed():
 def t_a_board_with_no_rf_and_facts_that_say_so_passes():
     assert 'f.get("rf_transmit") is False' in SRC, "a board with no RF cannot answer with a declared zero"
     assert '"judged": 0' in SRC, "the declared zero carries no count"
+
+
+def t_the_remedy_is_declared_on_the_board_and_not_hidden_in_a_tool():
+    """The fix for board A's eleven lines is the LAYER, not the width: 0.35 mm is about 50 ohm outside and 25
+    inside. They are pre-laid on an outer layer before the router runs, and the declaration carries the
+    measurement that forced it."""
+    import json, os
+    a = json.load(open(os.path.join(TOOLS, "boards", "a.json"), encoding="utf-8"))
+    g = a.get("prelay_groups") or []
+    assert g, "board A declares no pre-lay group for its RF paths"
+    rf = [x for x in g if "RF_" in x.get("nets", "")]
+    assert rf, "the RF paths are not in a pre-lay group"
+    assert rf[0]["layers"] == "F.Cu,B.Cu", "the RF group is not restricted to the outer layers"
+    assert "25.5 ohm" in rf[0].get("why", ""), "the declaration does not carry the measurement"
+    full = open(os.path.join(TOOLS, "full.sh"), encoding="utf-8").read()
+    assert "prelay_groups" in full, "no chain reads the pre-lay groups"
+    i = full.index("prelay_groups")
+    assert "STUB_LAYERS=\"$GLAYERS\"" in full[i:i + 1500], "the group's own layers do not reach the search"
