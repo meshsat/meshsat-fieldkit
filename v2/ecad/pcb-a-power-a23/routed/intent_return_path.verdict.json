@@ -18,16 +18,13 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [
-  "RET-001",
-  "RET-002"
- ],
+ "rules": [],
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "549451ba7ccf0670"
+  "tools_tree_sha": "1db46485306a1462"
  },
- "ts": "2026-09-16T18:56:55Z",
+ "ts": "2026-09-16T19:11:21Z",
  "verdict": "PASS",
  "version": "unknown"
 }

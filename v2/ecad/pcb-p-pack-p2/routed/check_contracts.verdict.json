@@ -4,29 +4,26 @@
  "counts": {
   "fail": 0,
   "missing_boards": 0,
-  "pass": 68,
+  "pass": 72,
   "rails_unsplit": 0
  },
- "denominator": 68,
+ "denominator": 72,
  "evidence": [],
  "inputs": {
-  "boards": "A,B,C,D,E"
+  "boards": "A,B,C,D,E,P"
  },
  "note": "",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [
-  "INT-001",
-  "SCH-004"
- ],
+ "rules": [],
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "549451ba7ccf0670"
+  "tools_tree_sha": "899e45e5644d50cb"
  },
- "ts": "2026-09-16T19:01:19Z",
+ "ts": "2026-09-16T19:15:37Z",
  "verdict": "PASS",
  "version": "unknown"
 }

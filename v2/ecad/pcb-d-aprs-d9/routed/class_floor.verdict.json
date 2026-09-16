@@ -22,15 +22,13 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [
-  "IMP-002"
- ],
+ "rules": [],
  "tool": "class_floor",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "549451ba7ccf0670"
+  "tools_tree_sha": "899e45e5644d50cb"
  },
- "ts": "2026-09-16T19:00:11Z",
+ "ts": "2026-09-16T19:14:32Z",
  "verdict": "PASS",
  "version": "unknown"
 }
