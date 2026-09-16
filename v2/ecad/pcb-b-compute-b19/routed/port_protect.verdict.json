@@ -14,7 +14,7 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "0018d4549a1e1523"
+   "sha256_16": "5ba87af5e641dfb1"
   }
  },
  "note": "every declared external conductor meets a protection part before a chip",
@@ -28,9 +28,9 @@
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ed2daa46baf29d51"
+  "tools_tree_sha": "9cbf474537ee9ad0"
  },
- "ts": "2026-09-16T16:51:05Z",
+ "ts": "2026-09-16T17:22:34Z",
  "verdict": "PASS",
  "version": "unknown"
 }

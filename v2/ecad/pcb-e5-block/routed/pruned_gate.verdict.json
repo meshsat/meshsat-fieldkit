@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "reached": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "note": "no pruned list at /root/sw_all/v2/ecad/pcb-e5-block/out/sweep/pcb-e5-block-pruned.txt, and board E5 declares the prune stage",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RTE-002"
+ ],
+ "tool": "pruned_gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9cbf474537ee9ad0"
+ },
+ "ts": "2026-09-16T17:25:41Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

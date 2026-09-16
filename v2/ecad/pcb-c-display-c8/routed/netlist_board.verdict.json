@@ -18,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "0322db9c15b735c6"
+   "sha256_16": "26a534e4cdc2f8b1"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -32,9 +32,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ed2daa46baf29d51"
+  "tools_tree_sha": "9cbf474537ee9ad0"
  },
- "ts": "2026-09-16T16:52:22Z",
+ "ts": "2026-09-16T17:23:50Z",
  "verdict": "PASS",
  "version": "unknown"
 }

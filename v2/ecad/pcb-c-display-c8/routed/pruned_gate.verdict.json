@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "not_reached": 0,
+  "reached": 0
+ },
+ "denominator": 0,
+ "evidence": [
+  "board C declares escape_prune_before_audit false, so the pipeline prunes no escape on it and no pad is left to the router by the pruner"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "410eeb604ec12c4c"
+  },
+  "board_table": {
+   "path": "/root/sw_all/v2/ecad/tools/boards/c.json",
+   "sha256_16": "98b8b767a499faa5"
+  }
+ },
+ "note": "board C declares escape_prune_before_audit false, so the pipeline prunes no escape on it and no pad is left to the router by the pruner",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RTE-002"
+ ],
+ "tool": "pruned_gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9cbf474537ee9ad0"
+ },
+ "ts": "2026-09-16T17:23:52Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

@@ -478,6 +478,29 @@ def main(a):
             cr, cw, ca, cl, cL, cx, cy, cln = cond[0]
             cond_txt = ("worst CONDUCTOR %.3f mm wide on %s at (%.1f, %.1f), %.1f mm long: %.2f A against IPC's %.2f A "
                         "for its own cross-section at %.0f K, ratio %.2f" % (cw, cL, cx, cy, cln, ca, cl, dT, cr))
+            # THE SECOND OPINION, WHERE THE BAR IS THE OPTIMISTIC ONE (16 September 2026, rule PI-001).
+            # `ipc_limit` is the IPC-2221A internal-conductor model, published as a curve fit with its
+            # constants in ECSS-Q-ST-70-12C Annex D (D.4; transcribed in v2/vendor/standards/). That document
+            # also publishes the IPC-2152 fit which supersedes it, and the two cross: BELOW about 0.268 mm2 of
+            # copper at 10 K the model here is the conservative one, and ABOVE it, which is every 2 oz pour
+            # wider than 3.8 mm, it reads HIGHER than the modern standard. A rail on the wrong side of that
+            # line gets the other two numbers printed beside it. It decides nothing: changing the bar changes
+            # MET on boards that are already cut, and that is a decision with a number attached, not a patch.
+            try:
+                import track_current as _tcur
+            except Exception:
+                _tcur = None
+            if _tcur is not None and cl > 0:
+                # The conductor's own cross-section, recovered from the LIMIT rather than from the current:
+                # `cl` is ipc_limit(area) for this piece, so area_for(cl) is that area back. Inverting the
+                # current instead would answer a different question (the area the current would need).
+                _a2 = _tcur.area_for(cl, dT, "IPC-2221A")
+                if _a2 > _tcur.crossover(dT):
+                    cond_txt += ("; SECOND OPINION: at %.3f mm2 this is past the %.3f mm2 where the IPC-2221A "
+                                 "model stops being the conservative one, and the same copper rates %.2f A under "
+                                 "IPC-2152 and %.2f A under CNES (ECSS-Q-ST-70-12C Annex D). Reported, not gated"
+                                 % (_a2, _tcur.crossover(dT), _tcur.rating(_a2, dT, "IPC-2152"),
+                                    _tcur.rating(_a2, dT, "CNES")))
         else:
             cond_txt = "no track of this net carries a measurable current, so the conductor test judged nothing"
         if short:
@@ -550,9 +573,22 @@ def main(a):
         return out
 
     def _evidence(rows, kind):
-        return [("%s %s NOT JUDGED" % (r[1], r[0])) if r[4] is None else
-                ("%s %s on %s: %.2f%% of %.1f V" % (r[1], r[0], kind, r[4] * 100, rails[r[0]]["volts"]))
-                for r in rows]
+        """EACH VERDICT'S EVIDENCE IS THE NUMBER THAT DECIDED IT (16 September 2026, rule PI-001).
+
+        Both lists used to print the voltage drop, so board A's four current-density misses read "MISSED VBAT
+        on current density: 0.38% of 14.4 V", which is a voltage figure beside the word density and the
+        opposite of a diagnosis: 0.38 percent of 14.4 V is a PASS of the drop criterion. The density verdict
+        prints the ratio against the published bar, which is what its rows failed."""
+        out = []
+        for r in rows:
+            if r[4] is None: out.append("%s %s NOT JUDGED" % (r[1], r[0])); continue
+            if kind == "current density":
+                out.append("%s %s on current density: worst conductor or pour cell at %.2f of its limit "
+                           "(the drop was %.2f%% of %.1f V, which is not what failed)"
+                           % (r[1], r[0], r[5], r[4] * 100, rails[r[0]]["volts"]))
+            else:
+                out.append("%s %s on %s: %.2f%% of %.1f V" % (r[1], r[0], kind, r[4] * 100, rails[r[0]]["volts"]))
+        return out
 
     dens_rows = _rows("density"); dens_undecl = [r for r in dens_rows if r[1] in ("UNDECLARED", "UNMEASURED")]
     dens_miss = len(dens_rows) - len(dens_undecl)
@@ -560,9 +596,13 @@ def main(a):
              counts={"met": len(results) - len(dens_rows), "missed": dens_miss, "undeclared": len(dens_undecl)},
              denominator=len(results), evidence=_evidence(dens_rows, "current density"),
              inputs={"board": a[0]},
-             note="the conductor and pour current capacity at %.0f K, cell %.2f mm. The LIMIT behind this verdict has "
-                  "no authoritative text in this tree: the registry records it as SOURCE_UNVERIFIED and this is a "
-                  "screen, not a law" % (dT, cell),
+             note="the conductor and pour current capacity at %.0f K, cell %.2f mm. THE LIMIT HAS A DOCUMENT since "
+                  "16 September 2026: the internal-conductor model is IPC-2221A figure 6-4 curve C, published as a "
+                  "curve fit with its constants in ECSS-Q-ST-70-12C Annex D (D.4), transcribed in "
+                  "v2/vendor/standards/ and implemented and self-tested in tools/track_current.py. Two gaps are "
+                  "named rather than hidden: the external factor of two is fitted nowhere in that annex, and above "
+                  "0.268 mm2 of copper at 10 K this model reads HIGHER than the IPC-2152 fit that supersedes it, "
+                  "so on the widest pours the bar is the optimistic one" % (dT, cell),
              quiet=True)
 
     drop_rows = _rows("drop"); drop_undecl = [r for r in drop_rows if r[1] in ("UNDECLARED", "UNMEASURED")]
