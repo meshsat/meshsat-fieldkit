@@ -303,12 +303,40 @@ def eta_doc():
          _wrap("Derived from the gap register's remediation entries and the route durations measured in this "
                "tree's own journals. It is regenerated, never typed: change an estimate in the coverage map "
                "and this page changes with it."), "",
+         "## Effort, which is not a date\n",
          "| | P50 | P80 |", "|---|---|---|",
          "| engineering effort, one worker | %.0f h | %.0f h |" % (m["engineering_hours"]["p50"], m["engineering_hours"]["p80"]),
+         "| the same at %.0f hours a day | %.1f days | %.1f days |" % (m["hours_per_day"], m["engineering_days"]["p50"], m["engineering_days"]["p80"]),
          "| critical path through the dependencies | %.0f h | %.0f h |" % (m["critical_path_hours"]["p50"], m["critical_path_hours"]["p80"]),
-         "| at %.0f engineering hours a day | %.1f days | %.1f days |" % (m["hours_per_day"], m["calendar_days"]["p50"], m["calendar_days"]["p80"]),
          "",
-         _wrap("%d open item(s): %d are this session's work and %d are waits on the owner, a vendor or a lab. "
+         _wrap("Read the table above as WORK REMAINING and never as a delivery date. The two are different "
+               "questions: a rented box runs a route through the night while this session sleeps, several "
+               "items that share no file run beside each other, and an owner's ruling takes as long as it "
+               "takes whatever else is happening. The elapsed figures are below."), "",
+         "## How the open work executes\n",
+         "| class | items | P50 | P80 | what it means |", "|---|---|---|---|---|"]
+    for c, v in sorted(m["by_execution"].items(), key=lambda kv: -kv[1]["p50_h"]):
+        if not v["items"]: continue
+        L.append("| %s | %d | %.0f h | %.0f h | %s |" % (c, v["items"], v["p50_h"], v["p80_h"], E.EXECUTION[c]))
+    L += ["",
+         "## Elapsed, at %d session worker(s) and %d rented box(es)\n" % (m["width"]["agents"], m["width"]["boxes"]),
+         "| | P50 | P80 |", "|---|---|---|",
+         "| session pool | %.1f days | %.1f days |" % (m["pools"]["p50"]["session_pool_days"], m["pools"]["p80"]["session_pool_days"]),
+         "| fleet pool | %.1f days | %.1f days |" % (m["pools"]["p50"]["box_pool_days"], m["pools"]["p80"]["box_pool_days"]),
+         "| longest dependency chain | %.1f days | %.1f days |" % (m["critical_path_days"]["p50"], m["critical_path_days"]["p80"]),
+         "| **design package ready for prototype** | **%.1f days** | **%.1f days** |" % (m["design_package_days"]["p50"], m["design_package_days"]["p80"]),
+         "",
+         "## The programme, cumulative elapsed days from the day this page was generated\n",
+         "| milestone | P50 | P80 | where the number comes from |", "|---|---|---|---|"]
+    for st in m["milestones"]:
+        L.append("| %s | %.0f days | %.0f days | %s |" % (st["stage"], st["cumulative_p50_days"],
+                                                          st["cumulative_p80_days"], st["source"]))
+    L += ["",
+         _wrap("Only the first milestone is computed from this project's own register. Every stage after it is "
+               "a vendor's published figure or this session's declared estimate, and NONE of them has been "
+               "measured here, because nothing has been ordered. The basis of each is in "
+               "`v2/ecad/tools/pcb_programme_stages.yaml` beside its number."), "",
+         _wrap("%d open item(s): %d are work and %d are waits on the owner, a vendor or a standard. "
                "Waits are not engineering time and are listed separately below." % (m["open_items"], m["session_items"], m["wait_items"])), "",
          "## Waits, which no amount of engineering shortens\n",
          "| rule | what it needs | owner |", "|---|---|---|"]
