@@ -61,11 +61,21 @@ b = pcbnew.LoadBoard(sys.argv[1]); print("cont: SES import", pcbnew.ImportSpecct
 PYX
 # The one hard set scores the continuation (10 September 2026, round-two red teams C1); it counted six types in a heredoc
 # and it is what decides whether the continuation pass is kept.
+# THIS FUNCTION'S STDOUT IS READ AS TWO NUMBERS, so nothing else may write to it (16 September 2026).
+# drc.sh gained a cost line on 15 September ("drc: 3 s, 82 violation(s), board f7c80ab"), the first line this
+# function then emitted, and `read H0 U0` took it: H0 became "drc:" and U0 became "3". `[ "$H1" -eq 0 ]` on a
+# non-numeric string is false, so from that day EVERY continuation route on EVERY board was discarded however
+# much it improved the board, and the log line said "cont: before hard drc: unrouted 3 s, 82 violation(s)"
+# where a person would have read it if the numbers had ever been looked at. The cost line goes to stderr here,
+# where it is still in the log, and the scores are checked for being numbers before they decide anything.
 score() {   # board, tag -> "hard unrouted"
-  ../tools/drc.sh "$1" "$W/drc-$2.json" || { echo "999999 999999"; return; }
+  ../tools/drc.sh "$1" "$W/drc-$2.json" >&2 || { echo "999999 999999"; return; }
   local c; c=$(mktemp); python3 ../tools/hardset.py "$W/drc-$2.json" post --counts "$c" --label "continuation chunk $2" >/dev/null || { rm -f "$c"; echo "999999 999999"; return; }
   cat "$c"; rm -f "$c"
 }
 read H0 U0 < <(score "$W/$N-before.kicad_pcb" before); read H1 U1 < <(score "$W/$N.kicad_pcb" after)
+case "${H0}${U0}${H1}${U1}" in
+  ""|*[!0-9]*) echo "cont: the scores are not numbers (before hard=$H0 unrouted=$U0, after hard=$H1 unrouted=$U1): something other than the counts reached this function's stdout. The board is kept and this is an infrastructure failure, not a routing result."; exit 0;;
+esac
 echo "cont: before hard $H0 unrouted $U0, after hard $H1 unrouted $U1"
 if [ "$H1" -eq 0 ] && [ "$U1" -lt "$U0" ]; then cp "$W/$N.kicad_pcb" "$N.kicad_pcb"; echo "cont: board replaced (unrouted $U0 -> $U1)"; else echo "cont: board kept"; fi

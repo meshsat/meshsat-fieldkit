@@ -6,8 +6,10 @@ set -uo pipefail; cd "$1"; N="$2"; CHECK="$3"; mkdir -p out
 report() { python3 ../tools/$CHECK $N.kicad_pcb 2>/dev/null | grep -E "pair length"; }
 # The one hard set decides here too (10 September 2026, both round-two red teams C1); this counted six types while the finish
 # refused on fifteen, and it is what says whether a meander hurt. A DRC that does not run is a refusal, not a zero.
+# The same seam as cont_route.sh's score(): this function's stdout is read as ONE number, and drc.sh's cost
+# line of 15 September was landing in it (16 September 2026).
 hard() {   # board, report -> hard + unrouted
-  ../tools/drc.sh "$1" "$2" || { echo 999999; return; }
+  ../tools/drc.sh "$1" "$2" >&2 || { echo 999999; return; }
   local c; c=$(mktemp)
   python3 ../tools/hardset.py "$2" post --counts "$c" --label "pair match trial" >/dev/null || { rm -f "$c"; echo 999999; return; }
   awk '{print $1 + $2}' "$c"; rm -f "$c"
