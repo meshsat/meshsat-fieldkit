@@ -461,3 +461,18 @@ def t_every_passive_value_a_generator_writes_can_be_given_a_code():
               'c("C122", "100n (across the charge sense resistor, BQ25731 pin 19)", "CH_SRP_F", "CH_SRN_F")\n')
     caught = _unfillable(before, pats, cert, allow)
     assert len(caught) >= 2, "the rule does not refuse the values it was written against: %s" % caught
+
+
+def t_every_board_of_the_set_gets_a_contracts_verdict_even_when_nothing_names_it():
+    """16 September 2026. The cross-board contracts were written for the five boards that share connectors, so
+    board P, whose pack leads are two 12 AWG wires to board E's XT60, was not in the set at all and rule
+    SCH-003 read INCONCLUSIVE on it for want of a verdict rather than for want of agreement. A wire is a
+    conductor. And board E5 has no schematic by construction, its targets being generated from board A's own
+    BOARD file, so it cannot be judged here and now says that instead of producing nothing."""
+    src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
+    assert '"P": "pcb-p-pack"' in src, "board P is not in the contract set"
+    assert 'check_contracts_e5' in src, "board E5 gets no verdict at all"
+    assert "W_P" in src and "J_BATT" in src, "the pack's two wires are not checked against the XT60 they land on"
+    # the polarity contract is the one that matters: getting it wrong destroys a board rather than failing a test
+    i = src.index("the pack pair is not crossed")
+    assert "boards={\"E\", \"P\"}" in src[i - 400:i + 200], "the polarity check does not name both boards"
