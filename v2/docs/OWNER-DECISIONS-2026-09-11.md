@@ -1612,8 +1612,13 @@ take option 2 or 3, say whether that move is in or out, because it costs nothing
 vias, 36 carry a ground via within the declared 1.5 mm and one does not. It is `HUB_DM3` at (130.01, 87.42),
 in the hub port cluster that has been the tight place on this board since 11 September. All 64 candidate
 positions inside 1.5 mm sit on another net's copper. The fixer now searches outward and takes the nearest free
-site it can find, recording the distance, and the judge is deliberately NOT moved with it: a via placed at 2 mm
-still reads as lacking, which is why this is on your desk rather than quietly passing.
+site it can find, recording the distance, and the judge is deliberately NOT moved with it: the via placed at
+2.25 mm still reads as lacking, which is why this is on your desk rather than quietly passing.
+
+**Measured, 16 September 2026 03:2x CEST:** the nearest free ground site for that via is **2.25 mm** away and it
+has been taken, on a board that ends the re-finish at hard 0 and unrouted 0. So the question is not whether
+board D gets a return via there. It has one. The question is whether 2.25 mm is accepted and written down, or
+whether the board is changed to get it under 1.5.
 
 **What the rule is for, so the choice is about physics and not about a number.** A via that carries a fast
 signal from one layer to another changes the plane its return current is riding. The return has to cross
@@ -1625,9 +1630,9 @@ the loop, not the number.
 
 **Options, costed, the recommendation first.**
 
-1. **Take the measured return via and record the distance, RECOMMENDED.** Let the fixer place the ground via at
-   the nearest free site, print the distance it achieved, and record that distance in the board's own
-   declaration with this decision beside it. Cost: nothing but the via already placed. Buys: the shortest
+1. **Take the measured return via at 2.25 mm and record it, RECOMMENDED.** The via is placed; this option
+   writes the 2.25 mm into board D's own declaration with this decision beside it, so the number travels with
+   the board instead of living in a log. Cost: nothing but the via already placed. Buys: the shortest
    return loop this copper allows, a board that is otherwise finished, and an honest number in the record
    rather than a rule read as satisfied. The residual is one via of 37 whose return crosses a longer loop than
    the other 36.
