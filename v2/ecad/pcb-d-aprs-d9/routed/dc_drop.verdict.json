@@ -1,12 +1,7 @@
 {
  "advisory": false,
- "counts": {
-  "density_missed": 0,
-  "met": 1,
-  "missed": 0,
-  "undeclared": 0
- },
- "denominator": 1,
+ "counts": {},
+ "denominator": 0,
  "evidence": [],
  "inputs": {
   "board": {
@@ -14,7 +9,7 @@
    "sha256_16": "81614025d9446af5"
   }
  },
- "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 0 rail(s) missed",
+ "note": "no intent file for this board, so no rail budget was known",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "a453bedd2b5ad14d"
@@ -25,9 +20,9 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:41:37Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T01:00:45Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

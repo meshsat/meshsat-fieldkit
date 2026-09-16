@@ -1,10 +1,10 @@
 {
  "advisory": false,
  "counts": {
-  "exempt": 87,
+  "exempt": 76,
   "judged": 0,
   "lacking": 0,
-  "same_plane": 126
+  "same_plane": 121
  },
  "denominator": 0,
  "evidence": [],
@@ -25,9 +25,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:41:55Z",
+ "ts": "2026-09-16T01:01:02Z",
  "verdict": "PASS",
  "version": "unknown"
 }

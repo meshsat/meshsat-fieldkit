@@ -3,7 +3,7 @@
  "counts": {
   "MET": 3,
   "SHORT": 1,
-  "classes_declared": 5,
+  "classes_declared": 0,
   "met": 4,
   "missed": 0,
   "pairs_on_board": 6
@@ -31,9 +31,9 @@
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:41:37Z",
+ "ts": "2026-09-16T01:00:46Z",
  "verdict": "PASS",
  "version": "unknown"
 }

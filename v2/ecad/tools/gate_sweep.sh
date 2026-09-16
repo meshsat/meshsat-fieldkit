@@ -49,6 +49,19 @@ run "impedance"         python3 $T/impedance_check.py $N.kicad_pcb
 run "netlist vs board"  python3 $T/netlist_board.py $N.kicad_pcb out/$N.net
 run "class floor"       python3 $T/class_floor.py $N.kicad_pcb
 run "return vias"       python3 $T/return_via.py $N.kicad_pcb --check
+# The SECOND tool of two rules that need both to agree (16 September 2026). place_audit predicts which escape
+# fans will collide, which the DRC on a placed board cannot say; lcsc_fill refuses a BOM line with no order
+# code, which asking the fabricator about a code cannot say because there is no code to ask about.
+run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
+# The order-code gate reads a BOM THAT ALREADY EXISTS and never makes one. Exporting it here would turn this
+# sweep into a producer of a fabrication artefact, which the execution-paths floor refuses and is right to:
+# read-only is this tool's whole property, and a producer that writes only into its own copy is still a
+# producer. Where the deliverable folder holds a BOM, it is judged; where it does not, the rule stays
+# INCONCLUSIVE, which is the honest reading of "nobody has exported one".
+_BOM=$(ls "$E/../release/revA/boards/"*"-$(echo $L | tr a-z A-Z)"*/$N-bom.csv 2>/dev/null | head -1)
+[ -z "$_BOM" ] && _BOM=$(ls "$E/../release/revA/boards/"*/$N-bom.csv 2>/dev/null | head -1)
+if [ -n "$_BOM" ]; then run "order codes" python3 $T/lcsc_fill.py "$_BOM"
+else echo "--- order codes"; echo "gate_sweep: no BOM in any deliverable folder for $N, so the order-code rule is not judged here"; fi
 # return_gaps.py is a REPORT and not a gate: it says where rule 1's uncovered millimetres are, which is what a
 # person needs to fix them, while intent_checks item 1 is what decides. Its output is kept as a log beside the
 # verdicts, never as evidence.

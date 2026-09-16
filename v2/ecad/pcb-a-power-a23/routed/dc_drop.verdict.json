@@ -3,11 +3,13 @@
  "counts": {
   "density_missed": 4,
   "met": 12,
-  "missed": 0,
+  "missed": 1,
   "undeclared": 0
  },
- "denominator": 12,
- "evidence": [],
+ "denominator": 13,
+ "evidence": [
+  "MISSED +5V_D8 on the voltage drop: 2.68% of 5.0 V"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
@@ -25,9 +27,9 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:40:22Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T00:59:30Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }

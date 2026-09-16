@@ -1,26 +1,15 @@
 {
  "advisory": false,
- "counts": {
-  "agree": 994,
-  "aliased_pins": 0,
-  "board_footprints": 211,
-  "board_only_inert": 0,
-  "fail": 0,
-  "netlist_refs": 207
- },
- "denominator": 994,
+ "counts": {},
+ "denominator": 0,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-d-aprs.kicad_pcb",
    "sha256_16": "81614025d9446af5"
-  },
-  "netlist": {
-   "path": "out/pcb-d-aprs.net",
-   "sha256_16": "907031775dbc3c6a"
   }
  },
- "note": "the board against the schematic it was placed from",
+ "note": "no netlist at out/pcb-d-aprs.net",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "a453bedd2b5ad14d"
@@ -31,9 +20,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:41:38Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T01:00:46Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

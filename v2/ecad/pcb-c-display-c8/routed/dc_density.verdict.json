@@ -1,11 +1,11 @@
 {
  "advisory": false,
  "counts": {
-  "met": 1,
+  "met": 2,
   "missed": 0,
   "undeclared": 0
  },
- "denominator": 1,
+ "denominator": 2,
  "evidence": [],
  "inputs": {
   "board": {
@@ -24,9 +24,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cebeb8eb384af39f"
+  "tools_tree_sha": "385e7995177e0d96"
  },
- "ts": "2026-09-16T00:41:13Z",
+ "ts": "2026-09-16T01:00:26Z",
  "verdict": "PASS",
  "version": "unknown"
 }
