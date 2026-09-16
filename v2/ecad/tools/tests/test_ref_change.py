@@ -41,3 +41,15 @@ def t_board_a_declares_the_distance_with_its_reason():
     assert d.get("stitch_cap_mm") == 3.0, d.get("stitch_cap_mm")
     why = d.get("_stitch_cap_mm_why") or ""
     assert "OURS" in why and "decoupling" in why, "the declared distance does not say where it comes from"
+
+
+def t_a_slow_net_owes_no_stitching_capacitor():
+    """The same law RET-001 and RET-004 were rewritten under, and this gate was missing it on its first run.
+
+    Of board A's 34 transitions without a stitching capacitor, most are enable and inhibit lines: a line that
+    changes state when a person presses a switch has no return loop worth closing, and demanding a capacitor
+    for it is the heuristic-as-law this registry exists to remove. The class comes from the board's own
+    declaration and a net nobody classified is judged as though it were fast."""
+    assert "LOW_SPEED_OR_DC" in SRC, "the gate judges every signal via whatever its spectral content"
+    i = SRC.index("LOW_SPEED_OR_DC")
+    assert "slow += 1" in SRC[i:i + 200], "a slow net is skipped without being counted, so the denominator lies"

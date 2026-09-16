@@ -1,0 +1,54 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "plane_change_to_power": 35,
+  "without_capacitor": 34
+ },
+ "denominator": 35,
+ "evidence": [
+  "B33_FB at (88.6, 96.2): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "B33_FB at (88.4, 98.4): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "CHG_INHIBIT at (75.9, 125.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "CH_BTST2 at (57.0, 94.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "DEV_EN at (137.1, 81.7): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "DEV_EN at (106.0, 134.1): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_HDRV1 at (39.9, 47.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_HDRV1 at (57.6, 50.0): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_HDRV2 at (61.3, 55.7): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_HDRV2 at (44.5, 62.3): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_LDRV2 at (40.8, 60.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_LDRV2 at (61.3, 54.4): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_PGOOD at (61.3, 57.0): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "FE_PGOOD at (104.7, 128.0): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "HF_EN at (86.7, 139.4): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "HF_EN at (108.7, 132.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "HF_HDRV1 at (105.1, 150.2): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "MAIN_PB at (97.5, 137.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "PA_EN at (100.7, 99.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm",
+  "PA_EN at (103.0, 121.8): the reference changes GND to VBAT and no capacitor between those nets is within 3.0 mm"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "stitch_cap_mm": 3.0
+ },
+ "note": "a return current that has to cross between two different reference conductors crosses at a capacitor or it goes the long way round",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RET-003"
+ ],
+ "tool": "return_stitch",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "288dee48fb9918aa"
+ },
+ "ts": "2026-09-16T04:40:51Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

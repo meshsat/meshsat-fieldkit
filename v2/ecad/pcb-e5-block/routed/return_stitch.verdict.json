@@ -2,31 +2,30 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 1,
-  "pass": 0
+  "plane_change_to_power": 0
  },
- "denominator": 1,
- "evidence": [
-  "intent file present (out/<stem>-intent.json from the schematic generator)"
- ],
+ "denominator": 0,
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-e5-block.kicad_pcb",
    "sha256_16": "686b29a734c55b9a"
   }
  },
- "note": "checks this file makes that no rule bucket claims yet",
+ "note": "this board has no transition between two different reference nets, so RET-003 has nothing on it to judge",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [],
- "tool": "intent_other",
+ "rules": [
+  "RET-003"
+ ],
+ "tool": "return_stitch",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "288dee48fb9918aa"
  },
- "ts": "2026-09-16T04:40:12Z",
- "verdict": "FAIL",
+ "ts": "2026-09-16T04:40:15Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
