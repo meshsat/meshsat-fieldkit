@@ -30,7 +30,7 @@ _intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.
 # DECLARED 16 September 2026. The panel's own 3.3 V was not in the intent file, so `signalnets` could not know
 # it was a rail and the return-path gate judged it as a SIGNAL NET, while `dc_drop` and `derate` could not see
 # it at all. Every load is named because a rail without loads is not declarable.
-_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03,
+_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075,
              source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,
                     "U8": 0.005, "U9": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},

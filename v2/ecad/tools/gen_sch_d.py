@@ -51,7 +51,7 @@ _intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05,
              note="the exciter's own 5 V behind the 600R ferrite FB1: the SA868 draws about 350 mA receiving "
                   "and up to 1 A on a transmit pulse, which is what the bead and its bulk capacitor are for. "
                   "Budget 5 percent because the module's own range is 3.3 to 5.5 V")
-_intent.rail("+3V3", 3.3, 0.06, 0.10, "J_HARN1", budget=0.03,
+_intent.rail("+3V3", 3.3, 0.06, 0.10, "J_HARN1", budget=0.03, share=0.0075,
              loads={"U16": 0.060},
              note="board A's always-on 3.3 V arriving over the mezzanine harness, which on this board feeds "
                   "only the PTT inhibit's pull-ups through U16. It is a rail of board A and a load of this one")
