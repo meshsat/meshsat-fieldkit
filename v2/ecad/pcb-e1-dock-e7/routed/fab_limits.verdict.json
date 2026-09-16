@@ -9,7 +9,7 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "f7c80ab10705bd16"
+   "sha256_16": "5fc1ffce0dc5ab1c"
   },
   "document": "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"
  },
@@ -25,9 +25,9 @@
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ef840c5c19ae80bd"
+  "tools_tree_sha": "ee7a06a2236fe1fa"
  },
- "ts": "2026-09-16T09:56:43Z",
+ "ts": "2026-09-16T13:27:34Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

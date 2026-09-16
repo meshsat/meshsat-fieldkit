@@ -12,7 +12,7 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "f7c80ab10705bd16"
+   "sha256_16": "5fc1ffce0dc5ab1c"
   }
  },
  "note": "the board declares its pair classes and gives none a target, which is its recorded design",
@@ -28,9 +28,9 @@
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ef840c5c19ae80bd"
+  "tools_tree_sha": "ee7a06a2236fe1fa"
  },
- "ts": "2026-09-16T09:56:40Z",
+ "ts": "2026-09-16T13:27:31Z",
  "verdict": "PASS",
  "version": "unknown"
 }

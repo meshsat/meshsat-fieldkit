@@ -32,9 +32,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b4c0212a903dd23a"
+  "tools_tree_sha": "ee7a06a2236fe1fa"
  },
- "ts": "2026-09-16T13:19:12Z",
+ "ts": "2026-09-16T13:32:13Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

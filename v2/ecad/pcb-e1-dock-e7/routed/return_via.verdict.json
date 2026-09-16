@@ -18,7 +18,7 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "f7c80ab10705bd16"
+   "sha256_16": "5fc1ffce0dc5ab1c"
   }
  },
  "note": "",
@@ -32,9 +32,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ef840c5c19ae80bd"
+  "tools_tree_sha": "ee7a06a2236fe1fa"
  },
- "ts": "2026-09-16T09:56:42Z",
+ "ts": "2026-09-16T13:27:33Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

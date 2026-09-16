@@ -2,15 +2,17 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 0,
-  "pass": 75
+  "fail": 1,
+  "pass": 74
  },
  "denominator": 75,
- "evidence": [],
+ "evidence": [
+  "return path under USB_E6_N (USB, HIGH_SPEED_DIGITAL): 10.2 of 187.2 mm without a plane on a neighbouring layer (limit 10.0) [USB 1.1 full speed at 12 Mbit/s into the RP2040's own transceiver: the]"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "f7c80ab10705bd16"
+   "sha256_16": "5fc1ffce0dc5ab1c"
   }
  },
  "note": "the reference under a signal net, judged per spectral class",
@@ -25,9 +27,9 @@
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ef840c5c19ae80bd"
+  "tools_tree_sha": "ee7a06a2236fe1fa"
  },
- "ts": "2026-09-16T09:56:38Z",
- "verdict": "PASS",
+ "ts": "2026-09-16T13:27:29Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }
