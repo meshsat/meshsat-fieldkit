@@ -1423,7 +1423,22 @@ rules:
    sources:
     - {title: "IEC 60664-1 insulation coordination for equipment within low-voltage systems", issuer: IEC,
        revision: "unknown to this tree", clause: "creepage and clearance tables",
-       url_or_path: "NOT IN THIS TREE", accessed: ""}
+       url_or_path: "NOT IN THIS TREE", accessed: "",
+       note: "the terrestrial framework this rule's acceptance criteria is written in (pollution degree,
+         material group). It is paywalled and not in this tree, and the pollution degree is owner decision 34"}
+    - {title: "ECSS-Q-ST-70-12C, Design rules for printed circuit boards, clause 13.8.2 and Table 13-3,
+         minimum insulation distance as a function of voltage",
+       issuer: "ECSS Secretariat, ESA-ESTEC Requirements and Standards Division", revision: "C, 14 July 2014",
+       clause: "13.8.2, Table 13-3", url_or_path: "v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md",
+       accessed: "2026-09-16",
+       note: "A published, free table for a question this project could not answer at all, and the CONSERVATIVE
+         envelope rather than the requirement: it is written for space hardware and its own Note 2 says it
+         covers ANY elevation. MEASURED against it on 16 September 2026: board B's +54V_POE is 0.900 mm from
+         another net's conductor against the table's 0.500 mm floor and passes with 80 percent to spare; board
+         A's 20 V VBUS20 runs 0.129 mm from FE_FB on an outer layer against the table's 0.300 mm, short by a
+         factor of 2.3. Whether that is a defect depends on which standard governs a sealed terrestrial kit,
+         which is decision 34, and a terrestrial functional-insulation reading of 20 V asks for a small
+         fraction of 300 um. Nothing is gated on this table"}
    acceptance_criteria: >
      For every net pair above the declared threshold: the working voltage, the required creepage and clearance
      for the declared pollution degree and material group, and the measured minimum spacing on the board,
