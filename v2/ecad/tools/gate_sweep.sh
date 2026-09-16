@@ -117,6 +117,11 @@ if [ "$BEFORE" != "$AFTER" ]; then
 fi
 mkdir -p $P/routed
 cp out/*.verdict.json $P/routed/ 2>/dev/null
+# THE DRC REPORT TRAVELS WITH THE BOARD TOO (16 September 2026). Board E's routed/ held a DRC report saying
+# zero unconnected items, written by the E9 deliverable's finish on 13 September, beside a board this sweep
+# measures at one. The report is the artefact a person opens to see WHICH connection is open, and it was
+# describing a different board; the verdict beside it was right the whole time, which is how it survived.
+cp out/$N-drc.json $P/routed/ 2>/dev/null
 python3 - "$P/routed/sweep.json" "$BEFORE" "$LABEL" "$N" <<'PY'
 import json, sys, subprocess, datetime
 out, sha, label, name = sys.argv[1:5]
