@@ -1050,6 +1050,14 @@ rules:
    maturity_at_writing: UNASSESSED
 
  - id: CLK-001
+   false_positive_analysis: >
+     A SERIES DAMPING RESISTOR on a crystal node is not a stub, it is what the oscillator's own datasheet asks
+     for, and the first version of this check called every one of them a defect on four boards at once. One
+     resistor is allowed and named in the output; a second, or a second driving part, is refused. The other
+     shape is a board with no crystal at all, which is INCONCLUSIVE rather than passing, because "nothing to
+     check" and "everything checked" print the same way otherwise. The load capacitor VALUE is deliberately
+     not judged: C_L is per part, it is in a datasheet this tool does not read, and refusing a board on a
+     guessed value would be the heuristic-as-law this audit exists to remove.
    domain: CLOCKS_RESET_BOOT
    short_name: oscillators, straps and boot pins
    requirement: >

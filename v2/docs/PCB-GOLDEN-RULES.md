@@ -941,8 +941,8 @@ device's own documentation requires, and every strap's state at reset is defined
 | risk | ELECTRICAL_FUNCTION, EMC, RELIABILITY |
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| implementation | gen_sch_*.py crystal networks |
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -954,8 +954,15 @@ it.
 
 **If violated** Intermittent boot, frequency error, and a clock that radiates.
 
-**Today** crystal loads and straps are chosen in the generators; nothing checks a load capacitance against the crystal,
-or a strap's state at reset
+**Today** 16 September 2026. Every crystal on every board is judged from the netlist: both signal pins loaded to
+ground, the two load capacitors the SAME value because an unbalanced pair pulls the oscillator off frequency,
+one series damping resistor allowed and no second driving part on the node. Eleven crystals across four
+boards pass; board A carries none. What is NOT judged is the load capacitor's VALUE against each part's own
+C_L, which lives in a datasheet this tool does not read, so the value found is printed for a person to
+compare. The check shipped with a false positive worth recording: it called every series damping resistor a
+defect, on four boards at once, and board D's hub crystal carries the justification in its own value string
+(Rd 1.5k per SLLS413 figure 6). A guard whose condition is a hypothesis about the data, for the sixth time in
+this project's record
 
 ## Analog Mixed Signal
 

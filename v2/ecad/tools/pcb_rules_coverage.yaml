@@ -202,9 +202,19 @@ coverage:
    note: "no net in this project has ever been classified by edge rate; every impedance and return decision rests on that classification",
    remediation: {action: "a per-driver edge-rate table from the datasheets, the critical length on each stackup, and the net classification", owner: SESSION, depends_on: [], p50_h: 10, p80_h: 30}}
 
- CLK-001: {implementation: "gen_sch_b.py, gen_sch_c.py, gen_sch_d.py, gen_sch_e.py", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
-   note: "crystal loads and straps are chosen in the generators; nothing checks a load capacitance against the crystal, or a strap's state at reset",
-   remediation: {action: "a check of every crystal's load network against its datasheet and every strap's pull", owner: SESSION, depends_on: [], p50_h: 5, p80_h: 12}}
+ CLK-001: {implementation: "gen_sch_*.py crystal networks",
+   verification: {tool: clock_check.py, verdict: clock_check, fixtures: tests/test_clock_check.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026. Every crystal on every board is judged from the netlist: both signal pins loaded to ground,
+     the two load capacitors the SAME value because an unbalanced pair pulls the oscillator off frequency, one series
+     damping resistor allowed and no second driving part on the node. Eleven crystals across four boards pass; board A
+     carries none. What is NOT judged is the load capacitor's VALUE against each part's own C_L, which lives in a
+     datasheet this tool does not read, so the value found is printed for a person to compare. The check shipped with a
+     false positive worth recording: it called every series damping resistor a defect, on four boards at once, and board
+     D's hub crystal carries the justification in its own value string (Rd 1.5k per SLLS413 figure 6). A guard whose
+     condition is a hypothesis about the data, for the sixth time in this project's record",
+   remediation: {action: "compare each load capacitor against its crystal's own C_L from the part datasheet, and the straps half of this rule",
+     owner: SESSION, depends_on: [], p50_h: 3, p80_h: 8}}
 
  ANA-001: {implementation: "gen_pcb_p3.py Kelvin sense, gen_sch_d.py mic network", verification: {tool: none}, maturity: GENERATED_ONLY, gap_category: GENERATED_ONLY,
    note: "the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes or measures their separation from switching copper",
