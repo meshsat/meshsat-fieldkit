@@ -211,16 +211,28 @@ python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('  OPEN', 
 # ONE RUN, ONE DECISION. It ran twice, once to print and once to decide, which is the pattern stage 0
 # removed from every board gate and left here (red team round three L2). On B that is two passes over the
 # pruned list for one boolean, and worse, two runs can disagree.
-if [ -n "$PRUNED" ]; then
-  python3 $T/pruned_gate.py $N.kicad_pcb out/$N-pruned.txt > out/pruned_gate.log 2>&1; PRC=$?
-  grep -E 'pruned_gate' out/pruned_gate.log | tail -6
-  # THE LIST TRAVELS WITH THE BOARD (16 September 2026). escape_prune writes it in the ROUTE tree, the board is
-  # committed without it, and every later reading of that board then has no way to ask whether a pruned pad was
-  # reached: RTE-002 read "no pruned_gate verdict for this board" on five boards for that reason alone. It is
-  # this morning's DRC-report lesson in a second place, an artefact that decides a rule belongs beside the board.
-  mkdir -p routed && cp out/$N-pruned.txt routed/$N-pruned.txt 2>/dev/null || true
-  [ "$PRC" -eq 0 ] || stop "PRUNED PAD NOT REACHED by the router"
-fi
+# ASKED ON EVERY BOARD, not only where the prune stage runs (16 September 2026). Five boards carried RTE-002
+# INCONCLUSIVE because this gate was never even called on them, and its answer for a board that prunes nothing
+# is a PASS with the declaration as its reason. The guard stays on the STOP, which is the part that is about
+# board B: a pruned pad the router never reached is a refusal, and there is no such pad where none was pruned.
+python3 $T/pruned_gate.py $N.kicad_pcb out/$N-pruned.txt > out/pruned_gate.log 2>&1; PRC=$?
+grep -E 'pruned_gate' out/pruned_gate.log | tail -6
+# THE LIST TRAVELS WITH THE BOARD (16 September 2026). escape_prune writes it in the ROUTE tree, the board is
+# committed without it, and every later reading of that board then has no way to ask whether a pruned pad was
+# reached: RTE-002 read "no pruned_gate verdict for this board" on five boards for that reason alone. It is
+# this morning's DRC-report lesson in a second place, an artefact that decides a rule belongs beside the board.
+mkdir -p routed && cp out/$N-pruned.txt routed/$N-pruned.txt 2>/dev/null || true
+# THE PLACEMENT'S EVIDENCE TRAVELS WITH THE BOARD TOO (16 September 2026, the same lesson a third time).
+# PLC-001 asks whether the placement was legal BEFORE anything was routed, and that question can only be
+# answered on the placed board: `full.sh` measures it (the placed-board DRC, `hardset --label placed`, and
+# `place_audit`) and writes the verdicts in the ROUTE tree's out/, which nobody keeps. Three boards read
+# "no hardset-placed verdict for this board" and a fourth read one from three days ago, all of them about
+# boards whose placement WAS measured, in a directory that was thrown away with the tree. The two verdicts
+# are 2 kB and they are the only record that the expensive stage ran on a legal board.
+for _pv in hardset-placed place_audit regionfit; do
+  cp "out/$_pv.verdict.json" "routed/$_pv.verdict.json" 2>/dev/null || true
+done
+[ "$PRC" -ne 1 ] || stop "PRUNED PAD NOT REACHED by the router"
 
 # every gate below runs ONCE and its exit code is its verdict; the reason comes from its verdict JSON
 # RULE VIA-001: every via against the board's own minimum diameter and drill, and the vias in pads counted for
