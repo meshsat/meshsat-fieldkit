@@ -10,7 +10,7 @@
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "410eeb604ec12c4c"
+   "sha256_16": "91156459ee49ab6f"
   }
  },
  "note": "",
@@ -18,13 +18,15 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [],
+ "rules": [
+  "PLN-001"
+ ],
  "tool": "check_zone_nets",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "1db46485306a1462"
+  "tools_tree_sha": "c258dc37b5e2de07"
  },
- "ts": "2026-09-16T19:13:39Z",
+ "ts": "2026-09-16T19:33:27Z",
  "verdict": "PASS",
  "version": "unknown"
 }

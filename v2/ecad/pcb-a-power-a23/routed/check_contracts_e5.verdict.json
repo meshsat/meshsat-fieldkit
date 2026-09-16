@@ -1,0 +1,30 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P"
+ },
+ "note": "board E5 has no schematic and no netlist: gen_pcb_e5.py reads board A's BOARD FILE and puts a target under each spring pin carrying that pin's net, so its contract is between two boards rather than two netlists and this check cannot judge it. It is a gap with a known shape, not an oversight",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "RF-002",
+  "SCH-003"
+ ],
+ "tool": "check_contracts_e5",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "c258dc37b5e2de07"
+ },
+ "ts": "2026-09-16T19:31:34Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

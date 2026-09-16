@@ -34,13 +34,15 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [],
+ "rules": [
+  "PLC-001"
+ ],
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "1db46485306a1462"
+  "tools_tree_sha": "c258dc37b5e2de07"
  },
- "ts": "2026-09-16T19:13:20Z",
+ "ts": "2026-09-16T19:33:08Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

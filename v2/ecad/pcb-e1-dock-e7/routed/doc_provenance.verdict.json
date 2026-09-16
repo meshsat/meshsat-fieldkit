@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "documents": 7,
+  "folders": 7,
+  "untraceable": 7
+ },
+ "denominator": 7,
+ "evidence": [
+  "PCB-A-POWER-A22/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-B-COMPUTE-B16/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-C-DISPLAY-C7/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-D-APRS-D8/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-E1-DOCK-E6/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-E5-BLOCK-E5/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-P-PACK-P1/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about"
+ ],
+ "inputs": {
+  "release": {
+   "path": "/root/sw_all/v2/release/revA",
+   "sha256_16": null
+  }
+ },
+ "note": "every document that asserts hardware numbers names the board it was read from, by sha256, and that board is the one in its own folder",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "DOC-002"
+ ],
+ "tool": "doc_provenance",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "c258dc37b5e2de07"
+ },
+ "ts": "2026-09-16T19:35:10Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

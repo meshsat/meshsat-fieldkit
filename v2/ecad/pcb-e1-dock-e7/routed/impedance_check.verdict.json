@@ -15,18 +15,22 @@
    "sha256_16": "5fc1ffce0dc5ab1c"
   }
  },
- "note": "the board declares its pair classes and gives none a target, which is its recorded design",
+ "note": "the board declares its pair classes and gives none a target, or its own facts declare that it controls no impedance at all, which is its recorded design",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [],
+ "rules": [
+  "IMP-001",
+  "PAIR-001",
+  "STK-001"
+ ],
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "899e45e5644d50cb"
+  "tools_tree_sha": "c258dc37b5e2de07"
  },
- "ts": "2026-09-16T19:15:03Z",
+ "ts": "2026-09-16T19:34:55Z",
  "verdict": "PASS",
  "version": "unknown"
 }
