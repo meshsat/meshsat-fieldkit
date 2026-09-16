@@ -7979,3 +7979,51 @@ built to do, which is the better way round; the lookup reads the board table now
 percent failed, 61.2 percent inconclusive of 294 applicable rule-board pairs**, promotion frozen. The failures
 are visible rather than hidden as inconclusive, which is the point: 12 of them are the PCIe contract that the
 generator already fixes, 14 are the stale folders, and the rest are named per board in `PCB-RULE-STATUS-<L>.md`.
+
+### 32.203 The fabricator's own document arrives, and board P turns out to be designed to numbers the process does not make (16 September 2026, 03:30 CEST; MESHSAT-862)
+
+Gap 3 of the audit's top ten was that not one authoritative source is in this tree, and the only fabricator
+capability file, filed under `seals/` on 4 September, is a JavaScript-blocked page scrape with no capability
+data in it that nothing reads. **The real page is fetchable.** It is in `v2/vendor/fabricator/` now,
+transcribed row by row, with the date it was read and the caution that belongs with it: a capability page is
+not a controlled document and can change without notice, so the date travels with every limit taken from it.
+
+**And it immediately found a board.** Board P is TWO LAYERS AT 2 oz by owner ruling 7. Its design settings say
+0.127 mm track width and 0.127 mm clearance, its Default, SENSE and GNDC classes say 0.127, and the
+fabricator's rows for 2 oz on two layers read **0.16 mm for both**. 0.127 is the 1 oz MULTILAYER number, and
+heavier copper needs more room to etch rather than less, so the figure it had borrowed was not even
+conservative. Every gate in this project passed that board, because **each of them judges the COPPER against
+the board's rules and none of them judged the RULES**. `fab_limits.py` asks that question now, with the copper
+weight read from the board's own stackup rather than from a literal, since a literal disagreeing with a
+stackup is the whole defect. Fixed at the source. Boards E5 and D pass it, and **boards A and B come back
+INCONCLUSIVE because their committed board files carry no stackup at all**, which is STK-001's problem and is
+visible here for the first time.
+
+**The document closed three more rules.** The annular ring has an authority (multilayer 1 oz recommended 0.20
+mm, absolute minimum 0.15; two-layer 1 oz 0.25 and 0.18), so boards A, B, C, D and E declare a 0.20 mm floor
+citing the row, taking the RECOMMENDED figure rather than the absolute minimum because the absolute minimum is
+where yield starts to suffer and these boards are made five at a time. Boards P and E5 deliberately declare
+nothing: the annular rows are stated for 1 oz and both are ordered at 2 oz, so borrowing the number would be
+inventing a limit. Via in pad has its assembly note at last (epoxy or copper paste filled and capped, via
+diameters 0.15 to 0.55 mm), and blind and buried vias are **not supported**, which nothing in this tree had
+ever asserted.
+
+**The two heuristics stop being laws, and two boards come clean.** Rule 1 asks what the signal's spectral
+content deserves (32.202), and rule 2 now reads the same declaration: a return via exists so the return
+current can follow its signal through a reference change, and where the signal has no edge worth speaking of
+there is no loop worth closing. Board D's re-finish went **23 failures to 1**, and that one was fifteen vias
+without a ground via beside them, every one a push-to-talk line or an expander output that changes state when
+a person presses a switch. **Board E11 reads 0 of 75 signal nets over their return-path limit** and **board
+D12 reads 0 of 127**, on boards that read 22 and 9 the same evening.
+
+**Three more defects of this project's own making, each found by running rather than reading.** A gate wrote
+no verdict at all on a host without PyYAML and exited 1 doing it (32.202). The rail check written at 02:00
+crashed the board gate at the moment it decided, so board E's best-ever result existed only in a log. And the
+sweep's first draft exported a BOM, which the execution-paths floor refused: read-only is that tool's whole
+property, and a producer that writes only into its own copy is still a producer.
+
+**Thirty-eight rails across five boards were never declared**, thirty of them on board B, and each was
+invisible three ways at once: judged as a SIGNAL by the return-path rule, skipped entirely by `dc_drop`, and
+unreachable by the new derating check. All are declared with their loads and their real power-path sources,
+and the gate refuses the next one: a net whose name begins with "+" is a rail by this project's own generator
+convention.
