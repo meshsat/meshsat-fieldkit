@@ -15,13 +15,16 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [],
+ "rules": [
+  "RF-002",
+  "SCH-003"
+ ],
  "tool": "check_contracts_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "899e45e5644d50cb"
+  "tools_tree_sha": "c258dc37b5e2de07"
  },
- "ts": "2026-09-16T19:13:55Z",
+ "ts": "2026-09-16T19:33:46Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -14,7 +14,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "3978005e6b1d575c"
+   "sha256_16": "9ba7d672ef9aa77d"
   }
  },
  "note": "a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
@@ -22,13 +22,15 @@
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [],
+ "rules": [
+  "CMP-001"
+ ],
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "899e45e5644d50cb"
+  "tools_tree_sha": "c258dc37b5e2de07"
  },
- "ts": "2026-09-16T19:15:32Z",
+ "ts": "2026-09-16T19:35:27Z",
  "verdict": "PASS",
  "version": "unknown"
 }

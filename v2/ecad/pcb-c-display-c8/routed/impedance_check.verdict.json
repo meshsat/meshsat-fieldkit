@@ -12,21 +12,25 @@
  "inputs": {
   "board": {
    "path": "pcb-c-display.kicad_pcb",
-   "sha256_16": "410eeb604ec12c4c"
+   "sha256_16": "91156459ee49ab6f"
   }
  },
- "note": "the board declares its pair classes and gives none a target, which is its recorded design",
+ "note": "the board declares its pair classes and gives none a target, or its own facts declare that it controls no impedance at all, which is its recorded design",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
- "rules": [],
+ "rules": [
+  "IMP-001",
+  "PAIR-001",
+  "STK-001"
+ ],
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "1db46485306a1462"
+  "tools_tree_sha": "c258dc37b5e2de07"
  },
- "ts": "2026-09-16T19:13:44Z",
+ "ts": "2026-09-16T19:33:33Z",
  "verdict": "PASS",
  "version": "unknown"
 }
