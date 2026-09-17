@@ -837,7 +837,14 @@ against now depends on the net's declared spectral class, so the screen is a scr
 net's own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they
 read 16 September 2026: TI SCAA082A section 2.5 states the fixer as practice, 'use ground vias around the
 signal via to make sure that the return current can flow as close as possible to the signal'. It gives no
-distance, which is the number this rule still wants.
+distance, which is the number this rule still wants. 17 SEPTEMBER 2026: IT NO LONGER COUNTS A NET'S OWN VIA
+ANTI-PADS. The fill retreats around every barrel, so a net that changes layer punches a hole in the plane it
+is judged against, and the reference is continuous either side of it: what the signal needs there is a return
+transition, which is RET-003's and RET-004's question. The anti-pad share is measured, reported and handed to
+them, and an anti-pad is a hole IN a fill, so a point near a via on a board with no pour is still a net with
+no reference. Measured across the set: board E went from one net over its limit to NONE (328.4 mm of its
+uncovered millimetres are its own anti-pads), D stayed at zero with 469.6 mm of them, C went 18 to 15 and P 6
+to 5, which is the point: the real failures do not move.
 
 ### RET-003  return transition at a reference change
 
