@@ -14,7 +14,7 @@
  "note": "no intent file, so no rail current is known and no via could be judged",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "PI-003"
@@ -22,9 +22,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "915bd9d5bf76ddaf"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T19:31:11Z",
+ "ts": "2026-09-17T20:45:14Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "failures": 0,
+  "judged": 206,
+  "merged_pad_pins": 0,
+  "unreadable": 0
+ },
+ "denominator": 206,
+ "evidence": [],
+ "inputs": {
+  "board": "d",
+  "netlist": {
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "d8e7d35bc3385a3f"
+  }
+ },
+ "missing_input": null,
+ "note": "every part's map names every pad of its land",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-005": "7531a598ee0dec90"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "SCH-005"
+ ],
+ "tool": "pin_map_lands_d",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "50a906a771c0ec02"
+ },
+ "ts": "2026-09-17T20:44:02Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

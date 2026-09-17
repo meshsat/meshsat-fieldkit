@@ -15,7 +15,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "d5a754e2f3697e5e"
+   "sha256_16": "9cdcf607fb372090"
   }
  },
  "missing_input": null,
@@ -25,7 +25,7 @@
   "rule_fingerprints": {
    "SCH-004": "0d3209a18476cc88"
   },
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "SCH-004"
@@ -33,9 +33,9 @@
  "tool": "safe_lines",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:53:34Z",
+ "ts": "2026-09-17T20:45:04Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -2,27 +2,22 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "by_vendor_reference": 0,
-  "judged": 162,
-  "undeclared_nets": 0,
-  "under_rated": 0,
-  "unrated_parts": 319
+  "judged": 0,
+  "rated_parts": 0
  },
- "denominator": 162,
+ "denominator": 0,
  "evidence": [],
  "inputs": {
-  "board": "b",
-  "margin": 0.2,
-  "netlist": {
-   "path": "out/pcb-b-compute.net",
-   "sha256_16": "a2363a4eeb7fe283"
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
   }
  },
  "missing_input": null,
- "note": "a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+ "note": "this board carries no rated part to judge: this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes. A declared zero, not an absence",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "CMP-001"
@@ -30,9 +25,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:50:10Z",
+ "ts": "2026-09-17T20:41:40Z",
  "verdict": "PASS",
  "version": "unknown"
 }

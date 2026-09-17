@@ -15,7 +15,7 @@
  "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "INT-001"
@@ -23,9 +23,9 @@
  "tool": "interfaces_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:53:36Z",
+ "ts": "2026-09-17T20:45:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }

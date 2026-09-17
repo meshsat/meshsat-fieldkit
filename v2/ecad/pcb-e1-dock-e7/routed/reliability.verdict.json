@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "REL-001": "d94df1c6a3ff6010"
   },
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "REL-001"
@@ -28,9 +28,9 @@
  "tool": "reliability",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:53:04Z",
+ "ts": "2026-09-17T20:44:34Z",
  "verdict": "PASS",
  "version": "unknown"
 }

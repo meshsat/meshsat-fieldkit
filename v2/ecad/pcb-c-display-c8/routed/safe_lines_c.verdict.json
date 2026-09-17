@@ -19,7 +19,7 @@
   "board": "c",
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "a1a52778ea4166e3"
+   "sha256_16": "d6ed3c937f92acc6"
   }
  },
  "missing_input": null,
@@ -29,7 +29,7 @@
   "rule_fingerprints": {
    "SCH-004": "0d3209a18476cc88"
   },
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "SCH-004"
@@ -37,9 +37,9 @@
  "tool": "safe_lines_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:51:42Z",
+ "ts": "2026-09-17T20:43:12Z",
  "verdict": "PASS",
  "version": "unknown"
 }

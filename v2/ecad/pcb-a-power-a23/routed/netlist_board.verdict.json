@@ -29,14 +29,14 @@
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "55b0964b7db5c17d"
+   "sha256_16": "b1dcf7075f794208"
   }
  },
  "missing_input": null,
  "note": "the board against the schematic it was placed from",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "SCH-002"
@@ -44,9 +44,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:48:14Z",
+ "ts": "2026-09-17T20:40:50Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

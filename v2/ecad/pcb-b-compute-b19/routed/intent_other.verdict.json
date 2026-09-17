@@ -1,0 +1,33 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 1,
+  "pass": 0
+ },
+ "denominator": 1,
+ "evidence": [
+  "intent file present (out/<stem>-intent.json from the schematic generator)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  }
+ },
+ "missing_input": null,
+ "note": "checks this file makes that no rule bucket claims yet",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [],
+ "tool": "intent_other",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "50a906a771c0ec02"
+ },
+ "ts": "2026-09-17T20:41:30Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

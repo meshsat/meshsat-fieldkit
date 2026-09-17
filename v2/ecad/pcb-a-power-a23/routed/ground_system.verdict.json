@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "GND-001": "4ab0f011480d0da5"
   },
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "GND-001"
@@ -28,9 +28,9 @@
  "tool": "ground_system",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:48:23Z",
+ "ts": "2026-09-17T20:40:59Z",
  "verdict": "PASS",
  "version": "unknown"
 }
