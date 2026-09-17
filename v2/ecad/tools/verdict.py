@@ -280,7 +280,13 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "version": _version(),
         "ts": now(),
         "tools": _tools(),         # the code that judged: git head and the tools tree's content hash (a StageResult field, 15 Sep 2026)
-        "policy": _policy(rules),  # the hard set and the digest of each rule this decides, so a verdict from an older policy is not read as today's
+        # THE DIGESTS ARE STAMPED FOR THE RULES THE VERDICT DECIDES, NOT ONLY FOR THE ONES THE GATE TYPED (17
+        # September 2026, the evening's second registry change). `rules` below falls back to the coverage map when a
+        # gate passes none, and most gates pass none; the policy was built from the argument alone, so hardset,
+        # final_gate, jlc_certify and every other gate that relies on the map carried no per-rule digest and went
+        # stale with the whole set on every registry edit: 49 pairs after SCH-005 was added, for readings that
+        # nothing about SCH-005 touched.
+        "policy": _policy(sorted(set(rules or _rules_for_tool(tool)))),
         "verdict": result,
         "advisory": bool(advisory),
         "applicable": bool(applicable),
