@@ -543,3 +543,25 @@ def t_the_per_board_certification_was_written_for_every_board_of_the_manifest():
     import rules_status as _rs
     want = {b.lower() for b in (_rs.manifest().get("boards") or {})}
     assert want <= found, "no certification verdict for %s" % sorted(want - found)
+
+
+def t_a_rotation_is_asked_only_of_a_part_the_assembler_places():
+    """17 September 2026. The first form of the assembly check listed every polarised footprint in the
+    netlist, which is 41 across the seven boards, and many of them are parts JLCPCB never sees: board A's
+    blind-mate receptacles and spring pins, board C's plate switches and sounder and camera, board E's blade
+    holders and pack lands, board P's wire joints. Asking the ordering session to compare those with an
+    assembler's preview is asking it to verify a rotation nobody will apply.
+
+    The bench-fit table is a literal in make_handoff.py, which is on the never-auto floor and needs pcbnew, so
+    it is read by TEXT and never imported, the way the rotation offsets already are."""
+    import sys as _s
+    _s.path.insert(0, TOOLS)
+    import assembly_set as A
+    a = A.bench_fitted("pcb-a-power")
+    assert "J_DOCK" in a and "J_BM11" in a and "J_CP4" in a, sorted(a)[:10]
+    assert "F1" in a, "the blade holder is bench-fitted on board A"
+    assert A.bench_fitted("pcb-b-compute") == set(), "board B declares no bench-fitted part"
+    assert A.bench_fitted("pcb-nonesuch") == set(), "an unknown board must yield nothing, not everything"
+    src = open(os.path.join(TOOLS, "assembly_set.py"), encoding="utf-8").read()
+    assert "import make_handoff" not in src, "the table is imported rather than read, and that file needs pcbnew"
+    assert "are bench-fitted and never reach the" in src, "the exclusion is silent"
