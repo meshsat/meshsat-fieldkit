@@ -9113,3 +9113,24 @@ directory:** gate `RESULT: ALL PASS`, `PREROUTE-DONE PLACED`, **`rf_line` PASS o
 against 50**, hard 0 of the fifteen types with the project file beside the board (a placed board judged without
 its project file reads zero controlled lines, the 12 September trap in another coat). The change reaches copper
 with the generation after A43, which routes on the old class; `boards/a.json` carries the corrected note.
+
+### 32.222 The instrument ANA-001 has been missing: a clearance between two classes, in the DSN (17 September 2026, 23:35 CEST; MESHSAT-862)
+
+**A sense line beside a switching net is what ANA-001 refuses, and nothing this pipeline could give Freerouting
+asked for that.** Board A's two real failures (POE_CS 0.182 mm from POE_SW2 over 10.79 mm, B33_FB 0.350 from
+B33_SW over 8.47) and board E's two are runs the ROUTER laid; KiCad's custom rules never reach the DSN, and a
+class clearance at the declared 0.50 mm was measured and refused on 17 September 16:20 because it cannot escape
+the sense pins themselves (POE_CS is 0.250 mm from its neighbour at U16 pin 16, B33_FB 0.200 at U12 pin 8).
+
+**The DSN's own structure section carries the rule the pipeline needed**: `(class_class (classes A B) (rule
+(clearance X)))` applies BETWEEN two classes and not inside either, so a SENSE class for the declared sensitive
+nets with a 0.50 mm class-pair rule against SW and HV keeps each net's own escape at its own class clearance and
+holds it half a millimetre from a switching net everywhere else. `route_one.sh` writes it from
+`FR_CLASS_CLEAR="SENSE:SW:0.5,SENSE:HV:0.5"`, inside the structure section after the DSN export and before any
+plane edit, off unless set; a class the DSN does not carry is named and skipped rather than invented. Three
+rules on a fixture DSN, all failing on the pre-fix launcher.
+
+**It is an instrument and not yet a result.** Board A's route takes hours and A43 is routing on the old class
+now; the arm is written into `boards/a.json`: read A43's board first (does it repeat the two runs), then one
+route with the class-pair rule against A43, one variable. The SENSE class itself is the placement generator's
+to declare from the intent's sensitive list, which is the half of the change that lands with the arm.
