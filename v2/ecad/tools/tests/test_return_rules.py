@@ -201,3 +201,29 @@ def t_the_gap_report_judges_by_the_same_bar_as_the_gate():
     assert "signal_class.limit(" in src, "the report computes its own limit instead of the gate's"
     assert 'q == "EXISTS"' in src, "a slow net is still failed for a gap rather than for having no reference"
     assert "as the gate judges them" in src, "the report does not say which bar it used"
+
+
+def t_no_tool_asks_a_via_for_its_width_without_a_layer():
+    """KiCad 9 makes a via's width per layer, and the bare `GetWidth()` raises a wxWidgets assertion on every
+    call: on a host built with assertions it prints a line per via and can end the process, which is how it
+    presented on 17 September 2026 when the board-fixture family was first run where KiCad is. It was live in
+    `return_via.py`, on every via of every real board, while the fixer looked for a free site; in
+    `board_diff.py`, which compares two boards via by via; in `fix_a17_node.py`; and in `dot_prune.py`, whose
+    ternary called the SAME method on both branches, so whatever it meant to do for a via it never did.
+
+    The rule reads the code rather than the runtime, because the tools it governs need KiCad and the runner
+    has none: a line that identifies an item as a PCB_VIA may not then ask it for a bare width."""
+    import os, re
+    bad = []
+    for fn in sorted(os.listdir(TOOLS)):
+        if not fn.endswith(".py") or fn == "kicad_compat.py": continue
+        src = open(os.path.join(TOOLS, fn), encoding="utf-8", errors="replace").read()
+        for i, line in enumerate(src.splitlines(), 1):
+            # the identifier this line has just called a via, asked for a bare width on the same line
+            for m in re.finditer(r'(\w+)\.GetClass\(\)\s*==\s*"PCB_VIA"', line):
+                if re.search(r"\b%s\.GetWidth\(\s*\)" % re.escape(m.group(1)), line):
+                    bad.append("%s:%d %s" % (fn, i, line.strip()[:90]))
+            # and the blunt case: a via built or fetched on this line and asked for its width
+            if re.search(r"PCB_VIA\b", line) and re.search(r"\bv\.GetWidth\(\s*\)", line):
+                bad.append("%s:%d %s" % (fn, i, line.strip()[:90]))
+    assert not bad, "a via is asked for its width with no layer, which asserts in KiCad 9: %s" % bad
