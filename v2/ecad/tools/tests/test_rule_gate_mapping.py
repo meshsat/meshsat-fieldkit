@@ -224,3 +224,19 @@ def t_the_status_pages_are_rendered_apart_from_the_pages_the_rules_judge():
     body = src[src.index("def main(argv):"):]
     assert "board_docs=False" in body and "generated=False" in body, "main renders both groups from one snapshot"
     assert "_refresh_audit()" in body, "the audit is not refreshed between the two groups"
+
+
+def t_a_remediation_that_is_done_carries_no_gap():
+    """17 September 2026, the second time: the register counted five finished remediations in the morning, and
+    two more this evening. A remediation whose action begins DONE is finished work, and a gap category other
+    than NONE beside it puts that work back into the register and into the ETA page derived from it. The words
+    and the category have to agree, so this asks them."""
+    import os, sys, yaml
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    cov = yaml.safe_load(open(os.path.join(tools, "pcb_rules_coverage.yaml"), encoding="utf-8"))["coverage"]
+    bad = []
+    for rid, e in sorted(cov.items()):
+        act = str(((e or {}).get("remediation") or {}).get("action") or "").strip()
+        if act.upper().startswith("DONE") and (e or {}).get("gap_category") not in (None, "NONE"):
+            bad.append("%s: its remediation says DONE and its gap category is %s" % (rid, e.get("gap_category")))
+    assert not bad, "the register counts finished work:\n  " + "\n  ".join(bad)
