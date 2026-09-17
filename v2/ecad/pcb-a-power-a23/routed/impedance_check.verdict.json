@@ -20,6 +20,11 @@
  "note": "",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "IMP-001": "b55e6a861a00f8ad",
+   "PAIR-001": "e742b4d58ac642e2",
+   "STK-001": "e90a87c776209eb2"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -30,9 +35,9 @@
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:40:50Z",
+ "ts": "2026-09-17T22:38:39Z",
  "verdict": "PASS",
  "version": "unknown"
 }

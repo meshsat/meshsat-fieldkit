@@ -22,7 +22,7 @@
    "sha256_16": "5fc1ffce0dc5ab1c"
   },
   "measured_board": {
-   "sha256_16": "a332944753c20b8b",
+   "sha256_16": "72f89150e8671436",
    "stage": "placed"
   }
  },
@@ -33,7 +33,7 @@
   "rule_fingerprints": {
    "PLC-001": "51588472a4c8e371"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "PLC-001"
@@ -41,9 +41,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "db432d5bae6d7094"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:49:32Z",
+ "ts": "2026-09-17T22:57:42Z",
  "verdict": "PASS",
  "version": "unknown"
 }

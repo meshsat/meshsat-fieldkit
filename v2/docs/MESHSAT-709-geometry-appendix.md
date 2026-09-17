@@ -9253,7 +9253,7 @@ On the same board WITHOUT that via (the fixture as it stood), the fixer's own vi
 HURT and puts the board back byte for byte, which is the defective case a fixer must refuse rather than a defect in
 the fixer. Both on the hub. The only fixture debt left is `copper_checks`, a library the board gates exercise.
 
-**Addendum, 00:50 CEST: sweep 26 read board B on the adopted tree, and SCH-005 could never have applied to E5.**
+**Addendum, 00:38 CEST: sweep 26 read board B on the adopted tree, and SCH-005 could never have applied to E5.**
 Board B under fingerprint a2d08c6e: **21 PASS, 14 FAIL, 20 INCONCLUSIVE of 55** (from 10, 8, 37). `pin_map_lands_b`
 reads **PASS on 930 of 930** on the regenerated netlist, so the eleven SCH-005 failures of 32.219 (U10's tab, the
 M.2 sockets' mechanical pads, the fan headers' MP) are gone at the source; SCH-002 reads FAIL on ONE comparison of
@@ -9270,3 +9270,34 @@ to **4bc0aa24d836788d**. That move re-staled every reading written before the pe
 from 20 to 12 verified, the set from 58.7 to 31.1 percent), which is the last time it can: **sweep 27** re-takes all
 seven boards under the new writer, whose verdicts carry a digest per rule, so the next registry edit stales only the
 rule it touches.
+
+**Addendum, 00:42 CEST: the placement predictor was being run on routed boards, and it declines them now (commit
+4c93d49d).** Every sweep since 24 ran `place_audit` on whatever board the phase directory holds, which for A, C, D,
+E and P is the routed board and for B since tonight is B21: the router has covered escapes and the closers pruned
+dangling ones, so the fans the predictor counts are not the fans that were placed, and the sweep's fetch wrote that
+reading over the carried placed one (sweep 26: 19 collisions over B21's 10). A placed board's tracks are locked to
+the last one (escapes, joins, pre-laid pairs, spines) and a routed board carries thousands the router laid unlocked
+(B21 12,739 of 17,361, A32 3,928 of 4,854), so the predictor reads INCONCLUSIVE with `missing_input` naming the
+placed snapshot when more than a fifth of a board's segments are unlocked, and `--on-routed` is for a person who
+wants the number anyway. Fixture: the plane-pad board with two hundred unlocked router segments on it reads
+INCONCLUSIVE, on the hub. The fix went into sweep 27's tree while it was on board B, so C, D, E, P and E5 get the
+refusal; A's and B's PLC-001 readings are re-taken from their placed snapshots with `placed_rejudge.sh` after the
+sweep, as every board's should be after any sweep until the sweep itself learns to judge that rule on the snapshot.
+
+**Addendum, 00:43 CEST: B22's finish is armed ahead of its route.** `/root/b22_after_box.sh` on the hub waits for the
+partition driver's B22PART-DONE (48 h ceiling), copies `out/part/reconciled.kicad_pcb` over the phase board, takes its
+hard set, writes the PARALLEL-DONE marker saying what it stands in for and runs the one `finish.sh` as B22 into
+`/root/b22_finish.log` (marker B22AFTER-DONE). B21 ran twenty-eight hours with nobody waiting on it; this route has
+its supervisor before its first session is written.
+
+**Addendum, 00:58 CEST: sweep 27, and PLC-001 judged on the pre-route board. Readiness 60.7 percent verified, 14.1
+failed, 25.2 inconclusive of 333**, the highest reading yet, from 58.1 at the start of the evening and 31.1 in the
+hour the fingerprint moved. Every board's evidence is under 4bc0aa24 with a digest per rule now. Per board: A 29 of
+54, B 21 of 55, C 34 of 47, D 33 of 51, E 32 of 54, E5 20 of 25, P 33 of 47. The placement predictor's subject is
+the PRE-ROUTE board (escapes laid, seats swapped by the pre-router, pairs locked, nothing routed), which every chain
+writes beside its placed snapshot; `placed_rejudge_box.sh` runs `place_audit` on it in its own out dir and
+`carry_placed` proves its footprints are the routed board's before the verdict travels. A, C, D, E and P read 0
+predicted collisions on their own pre-route boards; B21 reads 13 of 75 (its chain's placed reading was 10: the
+locked pair copper of the pre-router takes escape sites the placed board still had), which is the honest PLC-001
+on B21 and what B22's 9 is measured against. ETA from the register: 54 h P50, 164 h P80 of engineering effort at
+one worker, waits excluded; ten items are the owner's.

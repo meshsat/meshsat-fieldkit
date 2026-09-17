@@ -14,6 +14,10 @@
  "note": "",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "CMP-002": "0228f21aeb49073d",
+   "SUP-001": "c1197ffafeee55ed"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -23,9 +27,9 @@
  "tool": "lcsc_fill",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:43:16Z",
+ "ts": "2026-09-17T22:46:48Z",
  "verdict": "PASS",
  "version": "unknown"
 }

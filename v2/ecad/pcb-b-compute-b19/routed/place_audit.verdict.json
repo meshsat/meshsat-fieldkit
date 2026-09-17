@@ -1,48 +1,53 @@
 {
  "advisory": false,
  "applicable": true,
+ "carried": {
+  "by": "carry_placed.py",
+  "footprints_compared": 957,
+  "from": "placed",
+  "moved": 0,
+  "to": "routed"
+ },
  "counts": {
-  "collisions": 19,
+  "collisions": 13,
   "fine_pitch": 75,
   "footprints": 957,
   "measured": 75
  },
  "denominator": 75,
  "evidence": [
-  "FAIL  U7: 14 of 24 fine-pitch pads without an escape (pads 4,5,6,7,8,9,10,11): the fan could not be placed",
-  "FAIL  J_M2C2: 13 of 39 fine-pitch pads without an escape (pads 5,6,8,10,40,42,46,50): the fan could not be placed",
+  "FAIL  U7: 12 of 24 fine-pitch pads without an escape (pads 6,7,8,9,10,11,12,20): the fan could not be placed",
   "FAIL  U301: 34 of 99 fine-pitch pads without an escape (pads 2,3,4,5,8,9,10,11): the fan could not be placed",
   "FAIL  U4: 27 of 41 fine-pitch pads without an escape (pads 1,2,3,4,7,8,12,13): the fan could not be placed",
-  "FAIL  U202: 18 of 35 fine-pitch pads without an escape (pads 1,2,8,9,10,39,41,49): the fan could not be placed",
-  "FAIL  U101: 40 of 99 fine-pitch pads without an escape (pads 5,6,8,9,10,11,15,73): the fan could not be placed",
-  "FAIL  U302: 16 of 35 fine-pitch pads without an escape (pads 2,5,9,10,39,48,49,50): the fan could not be placed",
+  "FAIL  U202: 17 of 35 fine-pitch pads without an escape (pads 2,8,9,10,39,41,49,52): the fan could not be placed",
+  "FAIL  U101: 38 of 99 fine-pitch pads without an escape (pads 8,9,10,11,15,73,74,79): the fan could not be placed",
+  "FAIL  U302: 14 of 35 fine-pitch pads without an escape (pads 5,9,10,39,49,50,51,55): the fan could not be placed",
   "FAIL  U19: 5 of 14 fine-pitch pads without an escape (pads 1,2,5,6,7): the fan could not be placed",
   "FAIL  J_HDMI: 12 of 18 fine-pitch pads without an escape (pads 4,5,6,10,11,12,13,15): the fan could not be placed",
   "FAIL  U20: 3 of 11 fine-pitch pads without an escape (pads 12,13,14): the fan could not be placed",
   "FAIL  U209: 15 of 21 fine-pitch pads without an escape (pads 1,3,4,5,6,8,9,11): the fan could not be placed",
-  "FAIL  U30B: 19 of 66 fine-pitch pads without an escape (pads 102,103,105,106,110,112,122,124): the fan could not be placed",
-  "FAIL  U31B: 19 of 66 fine-pitch pads without an escape (pads 102,104,106,109,110,116,118,122): the fan could not be placed",
   "FAIL  U3: 27 of 41 fine-pitch pads without an escape (pads 1,2,3,4,7,8,10,11): the fan could not be placed",
-  "FAIL  U102: 24 of 41 fine-pitch pads without an escape (pads 1,2,3,4,8,9,10,16): the fan could not be placed",
-  "FAIL  J_M2C1: 8 of 27 fine-pitch pads without an escape (pads 6,35,41,43,52,53,54,56): the fan could not be placed",
-  "FAIL  U61: 14 of 44 fine-pitch pads without an escape (pads 6,10,11,12,13,23,24,25): the fan could not be placed",
-  "FAIL  U51: 17 of 44 fine-pitch pads without an escape (pads 6,10,11,12,22,23,24,25): the fan could not be placed",
-  "FAIL  18 plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper, and no free via site within 1.5 mm or a track keep-out over the pad): U7.12 (GND, no via site), U301.2 (GND, no via site), U301.4 (GND, no via site), U301.120 (GND, no via site), C315.2 (GND, no via site), C119.2 (GND, no via site), U19.7 (GND, no via site), C62.2 (GND, no via site), U10.2 (GND, no via site), U201.90 (GND, no via site), U201.95 (GND, no via site), U201.120 (GND, no via site) ..."
+  "FAIL  U102: 21 of 41 fine-pitch pads without an escape (pads 3,4,8,9,10,16,34,39): the fan could not be placed",
+  "FAIL  3 plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper, and no free via site within 1.5 mm or a track keep-out over the pad): U301.2 (GND, no via site), U201.120 (GND, no via site), U40.1 (+5V_DEV, no via site)"
  ],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
    "sha256_16": "2e64b5bf2d9cd3bc"
+  },
+  "measured_board": {
+   "sha256_16": "62facf0952ff4c01",
+   "stage": "placed"
   }
  },
  "missing_input": null,
- "note": "",
+ "note": "carried to the routed board from the placed board after comparing all 957 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PLC-001": "51588472a4c8e371"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "PLC-001"
@@ -50,9 +55,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f2c67e0684159747"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T22:33:30Z",
+ "ts": "2026-09-17T22:56:39Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

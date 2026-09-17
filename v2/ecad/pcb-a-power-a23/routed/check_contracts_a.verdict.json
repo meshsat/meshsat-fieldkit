@@ -3,39 +3,22 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 0,
-  "unjudged": 31
+  "pass": 31,
+  "unjudged": 0
  },
  "denominator": 31,
- "evidence": [
-  "unjudged, the other board is absent: transmit inhibit present on A (J_AB1)",
-  "unjudged, the other board is absent: rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1",
-  "unjudged, the other board is absent: rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2",
-  "unjudged, the other board is absent: rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3",
-  "unjudged, the other board is absent: rail +5V_DEV leaves A on J_5V_DEV and enters B on J_5V_DEV",
-  "unjudged, the other board is absent: dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)",
-  "unjudged, the other board is absent: A J_DOCK pin 8 is SHORE_INHIBIT",
-  "unjudged, the other board is absent: A22: four CELL+ pins and four return pins (GND, the In1 plane, 32.56) on the dock block",
-  "unjudged, the other board is absent: A: the pre-charge pin lands on a cell node net",
-  "unjudged, the other board is absent: ribbon net PI_SHDN_REQ exists on A and B",
-  "unjudged, the other board is absent: ribbon net PI_KILL exists on A and B",
-  "unjudged, the other board is absent: J_AB1 2x13 map identical on A and B",
-  "unjudged, the other board is absent: J_AB2 2x5 map identical on A and B",
-  "unjudged, the other board is absent: J_AB2 carries the wall pair on its END row (pins 1 and 2)",
-  "unjudged, the other board is absent: J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical",
-  "unjudged, the other board is absent: D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
-  "unjudged, the other board is absent: D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
-  "unjudged, the other board is absent: wall-port pair USB_WALL_P: B16 slot hub -> J_AB2 -> A22 J_USBW",
-  "unjudged, the other board is absent: wall-port pair USB_WALL_N: B16 slot hub -> J_AB2 -> A22 J_USBW",
-  "unjudged, the other board is absent: +3V3 on A J_MEZZ1"
- ],
+ "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "this board's netlist is absent from this tree",
+ "note": "the contracts that name this board; the set's own verdict is check_contracts",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "b4c62839dd113ee3",
+   "SCH-003": "ddf200a8e65c127b"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -45,9 +28,9 @@
  "tool": "check_contracts_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:41:10Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T22:39:02Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

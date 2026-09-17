@@ -8,13 +8,16 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "b1dcf7075f794208"
+   "sha256_16": "733d89dc62a1b783"
   }
  },
  "missing_input": null,
  "note": "this board carries no crystal, so CLK-001 has nothing on it to judge",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "CLK-001": "87aa8102f151ef26"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -23,9 +26,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:40:59Z",
+ "ts": "2026-09-17T22:38:50Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

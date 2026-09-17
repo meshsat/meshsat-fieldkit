@@ -28,11 +28,11 @@
    "sha256_16": "2a273803757c68fb"
   },
   "drc": {
-   "path": "out/pcb-c-display-placed-drc.json",
-   "sha256_16": "81f2f6e85ca802e6"
+   "path": "out/placed-drc.json",
+   "sha256_16": "ec0fef4f77649612"
   },
   "measured_board": {
-   "sha256_16": "3624830e15dc17d9",
+   "sha256_16": "316c5c64895bef17",
    "stage": "placed"
   }
  },
@@ -43,7 +43,7 @@
   "rule_fingerprints": {
    "PLC-001": "51588472a4c8e371"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "PLC-001"
@@ -51,9 +51,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "db432d5bae6d7094"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:49:23Z",
+ "ts": "2026-09-17T22:57:00Z",
  "verdict": "PASS",
  "version": "unknown"
 }

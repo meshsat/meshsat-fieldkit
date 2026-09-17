@@ -19,6 +19,9 @@
  "note": "no fine-pitch part on this board, so nothing was predicted",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "PLC-001": "51588472a4c8e371"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -27,9 +30,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:45:20Z",
+ "ts": "2026-09-17T22:49:07Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

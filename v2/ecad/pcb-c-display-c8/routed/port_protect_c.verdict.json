@@ -14,13 +14,16 @@
   "board": "c",
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "d6ed3c937f92acc6"
+   "sha256_16": "a2d7576d7df04c7c"
   }
  },
  "missing_input": null,
  "note": "every declared external conductor meets a protection part before a chip",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -29,9 +32,9 @@
  "tool": "port_protect_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:43:11Z",
+ "ts": "2026-09-17T22:46:43Z",
  "verdict": "PASS",
  "version": "unknown"
 }

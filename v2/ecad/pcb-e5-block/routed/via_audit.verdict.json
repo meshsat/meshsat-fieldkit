@@ -20,6 +20,9 @@
  "note": "every via at or above the board's own minimum diameter and drill; the annular ring is judged separately in via_annular.verdict.json, and no floor is declared for it",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "VIA-001": "e30d2ff6d03fdb93"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -28,9 +31,9 @@
  "tool": "via_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:45:14Z",
+ "ts": "2026-09-17T22:48:59Z",
  "verdict": "PASS",
  "version": "unknown"
 }

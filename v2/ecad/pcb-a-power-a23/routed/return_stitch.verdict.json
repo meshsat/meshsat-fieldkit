@@ -33,6 +33,9 @@
  "note": "a return current that has to cross between two different reference conductors crosses at a capacitor or it goes the long way round",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RET-003": "829568c8874fe7b6"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -41,9 +44,9 @@
  "tool": "return_stitch",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:40:55Z",
+ "ts": "2026-09-17T22:38:46Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

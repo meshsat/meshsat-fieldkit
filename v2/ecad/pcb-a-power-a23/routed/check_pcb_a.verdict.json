@@ -19,6 +19,9 @@
  "note": "",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "MEC-001": "b6c4a6962ac81e88"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -27,9 +30,9 @@
  "tool": "check_pcb_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:40:41Z",
+ "ts": "2026-09-17T22:38:29Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -30,9 +30,9 @@
  "tool": "erc_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f2c67e0684159747"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T22:28:38Z",
+ "ts": "2026-09-17T22:40:30Z",
  "verdict": "PASS",
  "version": "unknown"
 }

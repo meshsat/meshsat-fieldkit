@@ -4,35 +4,23 @@
  "counts": {
   "boards_without_intent": 0,
   "fail": 0,
-  "missing_boards": 6,
-  "pass": 0,
+  "missing_boards": 0,
+  "pass": 72,
   "rails_unsplit": 0,
-  "unjudged": 47
+  "unjudged": 0
  },
- "denominator": 47,
- "evidence": [
-  "netlist absent: A",
-  "netlist absent: B",
-  "netlist absent: C",
-  "netlist absent: D",
-  "netlist absent: E",
-  "netlist absent: P",
-  "unjudged, a board it names is absent: J_PANEL 2x13 map identical on B and C",
-  "unjudged, a board it names is absent: transmit inhibit present on C (SW_EMCON)",
-  "unjudged, a board it names is absent: transmit inhibit present on B (J_PANEL)",
-  "unjudged, a board it names is absent: transmit inhibit present on A (J_AB1)",
-  "unjudged, a board it names is absent: transmit inhibit present on D (J_HARN1)",
-  "unjudged, a board it names is absent: rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1",
-  "unjudged, a board it names is absent: rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2",
-  "unjudged, a board it names is absent: rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3"
- ],
+ "denominator": 72,
+ "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "no contract was evaluated (47 of the set's contracts name a board absent from this tree)",
+ "note": "",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "INT-001": "6c054dd67edd4099"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -41,9 +29,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:44:05Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T22:47:40Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

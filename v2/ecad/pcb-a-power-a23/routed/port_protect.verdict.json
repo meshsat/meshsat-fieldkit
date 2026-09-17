@@ -16,7 +16,7 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "b1dcf7075f794208"
+   "sha256_16": "733d89dc62a1b783"
   }
  },
  "missing_input": null,
@@ -29,9 +29,9 @@
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:41:06Z",
+ "ts": "2026-09-17T22:38:58Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

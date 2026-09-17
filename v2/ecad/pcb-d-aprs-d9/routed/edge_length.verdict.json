@@ -21,6 +21,9 @@
  "note": "every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-terminated or declared before it is called a defect: being a transmission line is physics, being an uncontrolled one is the finding",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "SI-001": "e67c393563c5d8ce"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -29,9 +32,9 @@
  "tool": "edge_length",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:43:54Z",
+ "ts": "2026-09-17T22:47:30Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
