@@ -15,6 +15,9 @@
  "note": "the stages of the stored-energy chain that sit on this board; the chain as a whole is energy_chain, and whether it is bounded end to end is that verdict's question",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-003": "797d38a9e68a76ac"
+  },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
@@ -22,10 +25,10 @@
  ],
  "tool": "energy_chain_e",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "git_head": "7fbaea83559b",
+  "tools_tree_sha": "078eb01175f91a89"
  },
- "ts": "2026-09-17T16:55:49Z",
+ "ts": "2026-09-17T17:19:05Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "7fbaea83559b+dirty"
 }

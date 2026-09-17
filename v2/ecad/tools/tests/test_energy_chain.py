@@ -53,17 +53,19 @@ def t_the_acceptable_fixture_passes():
 def t_an_element_above_the_conductor_it_protects_is_refused():
     """The coordination, in one line: a fuse above its conductor's rating means the conductor is the fuse."""
     r = _run(GOOD.replace("rating_a: 30.0", "rating_a: 20.0"))
-    assert any("the conductor is the fuse" in f or "only 20.0 A" in f for f in r["fails"]), r["fails"]
+    # the coordination arithmetic is PWR-003's and lands in stage_fails, which is the board's own list
+    assert any("the conductor is the fuse" in f or "only 20.0 A" in f for f in r["stage_fails"]), r["stage_fails"]
+    assert not r["fails"], "a coordination finding must not fail the chain's own end-to-end rule: %s" % r["fails"]
 
 
 def t_an_element_below_the_paths_own_peak_is_refused():
     r = _run(GOOD.replace("rating_a: 25.0, interrupting_a", "rating_a: 12.0, interrupting_a"))
-    assert any("opens in normal use" in f for f in r["fails"]), r["fails"]
+    assert any("opens in normal use" in f for f in r["stage_fails"]), r["stage_fails"]
 
 
 def t_an_element_that_cannot_interrupt_the_fault_is_refused():
     r = _run(GOOD.replace("interrupting_a: 1000.0", "interrupting_a: 100.0"))
-    assert any("interrupts" in f for f in r["fails"]), r["fails"]
+    assert any("interrupts" in f for f in r["stage_fails"]), r["stage_fails"]
 
 
 def t_a_number_whose_source_is_not_in_the_tree_is_refused():
@@ -85,10 +87,32 @@ def t_a_broken_chain_is_refused():
     assert any("not a stage" in f for f in r["fails"]), r["fails"]
 
 
-def t_the_committed_chain_passes_every_check():
-    """The chain this project ships, judged in this tree. It is the acceptable fixture that matters."""
+def _declared_findings():
+    """The failures this tree KNOWS ABOUT, each with its sentence, from the chain file itself.
+
+    17 September 2026: this test used to say the committed chain passes every check, and that was true until a
+    stage was added that does not. Board B's panel 5 V carries a 2.0 A hold polyfuse on a 0.4 mm class track
+    and the gate says so, correctly and loudly: PWR-003 FAILS on board B. What the suite may not do is turn
+    that into a broken test, and what it must not do is let the failure be quietly deleted, so the chain file
+    names the findings it carries and this test accepts exactly those and nothing else."""
+    import yaml
+    d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_energy_chain.yaml"), encoding="utf-8"))
+    return {str(f["stage"]): str(f.get("why") or "") for f in (d.get("known_findings") or [])}
+
+
+def t_the_committed_chain_fails_only_where_this_tree_says_it_does():
+    """The chain this project ships, judged in this tree. Every failure it produces must be one the chain file
+    declares, with its reason; a new one is a finding nobody has written down and this stops it passing."""
     r = E.check()
-    assert not r["fails"], r["fails"]
+    known = _declared_findings()
+    for f in r["fails"] + r["stage_fails"]:
+        sid = f.split(":")[0].strip()
+        assert sid in known, "a failure nobody declared: %s" % f
+        assert len(known[sid]) > 40, "%s is declared with no reason worth reading" % sid
+    for sid in known:
+        assert any(f.startswith(sid + ":") for f in r["fails"] + r["stage_fails"]), \
+            "%s is declared as a finding and the gate no longer reports it: remove the declaration and say in " \
+            "the commit what changed" % sid
     assert r["stages"] >= 8 and r["checked"] >= 50, r
 
 
@@ -98,6 +122,8 @@ def t_a_tree_without_the_vendor_library_leaves_the_citations_unjudged():
     failures. A missing library says nothing about whether a fuse is above its conductor, so the coordination
     is judged as always and the citations are counted as unjudged, which is neither a pass nor a failure."""
     r = E.check(vendor="/nonexistent-vendor-library")
+    r = dict(r, fails=[f for f in r["fails"] if f.split(":")[0].strip() not in _declared_findings()])
+    r = dict(r, stage_fails=[f for f in r["stage_fails"] if f.split(":")[0].strip() not in _declared_findings()])
     assert not r["fails"], r["fails"]
     assert r["unjudged_citations"] > 0 and r["vendor_seen"] is False, r
     assert any("vendor library is not in this tree" in n for n in r["notes"]), r["notes"]
@@ -272,3 +298,36 @@ def t_the_shore_inlet_passes_on_the_maker_s_figure_and_says_it_has_no_margin():
     out = r.stdout
     assert "SHORE_INPUT: F1 carries 8.0 A where atof287 allows 8.0 A at its 65 C column" in out, out[-1500:]
     assert "no margin against the maker's own figure" in out, out[-1500:]
+
+
+def t_a_branch_declares_what_feeds_it_rather_than_being_known_by_name():
+    """17 September 2026. The chain was one line from the cells outward and its only branch, the shore inlet,
+    was exempted from the connectivity rule BY ITS OWN NAME in the tool. Board B's three polyfuses are branches
+    too, off the device rail, and a rule that knows one branch by name cannot see them: all three read as a
+    break in the chain. A stage says what feeds it now, and a stage that names nothing is still a break."""
+    src = open(os.path.join(TOOLS, "energy_chain.py"), encoding="utf-8").read()
+    assert 'o == "SHORE_INPUT"' not in src, "the connectivity rule still knows one branch by its name"
+    assert 'fed_by' in src, "a stage cannot say what feeds it"
+    i = src.index("orphan = [")
+    assert "s.get(\"fed_by\")" in src[i:i + 300], "the orphan test does not read the declaration"
+    import yaml
+    chain = yaml.safe_load(open(os.path.join(TOOLS, "pcb_energy_chain.yaml"), encoding="utf-8"))
+    ids = {s["id"] for s in chain["stages"]}
+    for s in chain["stages"]:
+        fb = s.get("fed_by")
+        if fb: assert fb == "SOURCE" or fb in ids, "%s: fed_by names %s, which is not a stage" % (s["id"], fb)
+
+
+def t_the_panel_branch_is_the_finding_it_should_be():
+    """The reading this stage was added for, kept as a rule so a later change cannot make it quietly disappear:
+    board B's panel 5 V carries a 2.0 A hold polyfuse on a 0.4 mm class track, and IPC-2221 gives that track
+    1.23 A at 10 K. Either the copper widens or the part changes; what may not happen is the pair going
+    unremarked."""
+    import yaml
+    chain = yaml.safe_load(open(os.path.join(TOOLS, "pcb_energy_chain.yaml"), encoding="utf-8"))
+    st = [s for s in chain["stages"] if s["id"] == "B_PANEL_5V"]
+    assert st, "board B's panel branch is not in the chain at all"
+    s = st[0]
+    assert float(s["protection"]["rating_a"]) > float(s["conductor"]["rating_a"]), \
+        "the stage no longer carries the finding: check whether the copper was widened or the part changed, " \
+        "and say which in the note here"

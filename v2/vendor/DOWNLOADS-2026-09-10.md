@@ -101,3 +101,15 @@ in that tool has a second opinion it did not have this morning.
 
 **Vendors that refuse this host, appended to the section 7 list:** analog.com (HTTP/2 stream error on
 every request) and intel.com's literature path (403).
+
+## 17 September 2026, the polyfuse rule PWR-003 asks about
+
+`power/bourns-mf-msmf-pptc.pdf`, Bourns MF-MSMF series (surface-mount PPTC, 1812), fetched from
+`https://www.bourns.com/docs/product-datasheets/mfmsmf.pdf` on 17 September 2026 from Bourns' own server.
+It is the sheet behind board B's three polyfuses, which rule PWR-003 has been unable to judge because a
+rating whose basis file is not in this tree is a claim rather than a rating: **MF-MSMF050** (hold 0.50 A,
+trip 1.00 A, Vmax 15 V, Imax 100 A, 8.0 A trips in 0.15 s) on the display switches and the HF lead, and
+**MF-MSMF200** on the panel rail, whose plain part number does not appear in this sheet at all: the table
+carries /8X, /12X and /16X, which share hold 2.00 A, trip 3.50 A and Imax 100 A and differ only in maximum
+voltage, the lowest being 8 V. The chain is written against that lowest row, which clears the 5 V rail it
+sits on, and the exact suffix is a question for the ordering session rather than for the coordination.

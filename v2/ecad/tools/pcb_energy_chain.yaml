@@ -185,6 +185,7 @@ stages:
      whose own output cannot exceed its programmed limit"
 
  - id: SHORE_INPUT
+   fed_by: SOURCE
    board: E
    from: "J_DCIN, the vehicle and shore DC inlet"
    to: "VIN_RAW"
@@ -212,3 +213,101 @@ stages:
    note: "an ideal-diode FET and an SMCJ33A clamp sit behind this fuse; decision 31 records that the clamp's
      33 V stand-off is wrong against the board's own declared 9 to 36 V input range, which is a part choice
      and not a coordination error"
+
+ - id: B_PANEL_5V
+   fed_by: BOARD_A_CONVERTERS
+   board: B
+   from: "+5V_DEV, board A's device rail, where it arrives on board B"
+   to: "PANEL_5V, board C's own 5 V through the panel ribbon"
+   continuous_a: 0.6
+   peak_a: 1.0
+   conductor:
+     what: "board B's PWR class track, 0.4 mm on 1 oz outer copper; PANEL_5V has no zone of its own on this board"
+     rating_a: 1.23
+     basis: "gen_pcb_b3.py CLASSES PWR track width 0.4 mm; IPC-2221 through dc_drop.ipc_limit at 10 K gives 1.23 A and at 20 K 1.67 A. Which rise this project judges at is owner decision 35"
+   connector:
+     what: "J_PANEL, the 2x13 panel ribbon: PANEL_5V is on pins 1 and 2, two contacts in parallel"
+     rating_a: null
+     basis: "NO CONTACT RATING IS IN THIS TREE. The ribbon shells are made up from cable and IDC parts at build and the BOM line is BENCH_FITTED with no part number, so nobody has stated what one contact carries. Naming it here is the point: it is the conductor a fault at the panel end runs through"
+   prospective_fault_a:
+     low: 6.8
+     high: 9.2
+     basis: "v2/vendor/diodes/diodes-ap64500.pdf, IPEAK_LIMIT 6.8 A minimum, 8 A typical, 9.2 A maximum: the rail's source is board A's AP64500 buck U7 and a short on this rail cannot draw more than the converter's own cycle-by-cycle limit"
+   protection:
+     ref: F1
+     kind: polyfuse
+     what: "Bourns MF-MSMF200, 2.0 A hold, 3.5 A trip, 1812"
+     rating_a: 2.0
+     interrupting_a: null
+     i2t_a2s: null
+     basis: "v2/vendor/power/bourns-mf-msmf-pptc.pdf: the plain MF-MSMF200 is not in the table, whose rows are /8X, /12X and /16X, all of them 2.00 A hold, 3.50 A trip and 100 A maximum fault, differing only in maximum voltage, the lowest of which (8 V) clears this 5 V rail. A PPTC LIMITS rather than interrupts, so it declares no breaking capacity"
+   protects: null
+   note: "the panel's 5 V, and the stage where the fuse is chosen for the lead rather than for the track: 2.0 A of hold against 1.23 A of copper at 10 K"
+
+ - id: B_HDMI_5V
+   fed_by: BOARD_A_CONVERTERS
+   board: B
+   from: "+5V_DEV"
+   to: "+5V_HDMI, the two display switches and the HDMI connector's own 5 V"
+   continuous_a: 0.2
+   peak_a: 0.3
+   conductor:
+     what: "board B's PWR class track, 0.4 mm on 1 oz outer copper"
+     rating_a: 1.23
+     basis: "gen_pcb_b3.py CLASSES PWR track width 0.4 mm; IPC-2221 through dc_drop.ipc_limit at 10 K"
+   prospective_fault_a:
+     low: 6.8
+     high: 9.2
+     basis: "v2/vendor/diodes/diodes-ap64500.pdf, IPEAK_LIMIT: the same source as the panel branch"
+   protection:
+     ref: F2
+     kind: polyfuse
+     what: "Bourns MF-MSMF050, 0.5 A hold, 1.0 A trip, 1812"
+     rating_a: 0.5
+     interrupting_a: null
+     i2t_a2s: null
+     basis: "v2/vendor/power/bourns-mf-msmf-pptc.pdf, the MF-MSMF050 row: hold 0.50 A, trip 1.00 A, Vmax 15 V, Imax 100 A, 8.0 A trips in 0.15 s"
+   protects: null
+   note: "the standard asks a source to supply the connector's 5 V behind protection, and this is it"
+
+ - id: B_QMX_5V
+   fed_by: BOARD_A_CONVERTERS
+   board: B
+   from: "+5V_DEV"
+   to: "VBUS_QMX, the HF unit's USB lead in the lid tray"
+   continuous_a: 0.3
+   peak_a: 0.5
+   conductor:
+     what: "board B's PWR class track, 0.4 mm on 1 oz outer copper"
+     rating_a: 1.23
+     basis: "gen_pcb_b3.py CLASSES PWR track width 0.4 mm; IPC-2221 through dc_drop.ipc_limit at 10 K"
+   connector:
+     what: "J_QMX, a 1x4 pin header carrying the pigtail to the unit's USB-C"
+     rating_a: null
+     basis: "NO CONTACT RATING IS IN THIS TREE: the lead is made up at build and the BOM line is BENCH_FITTED"
+   prospective_fault_a:
+     low: 6.8
+     high: 9.2
+     basis: "v2/vendor/diodes/diodes-ap64500.pdf, IPEAK_LIMIT: the same source as the panel branch"
+   protection:
+     ref: F3
+     kind: polyfuse
+     what: "Bourns MF-MSMF050, 0.5 A hold, 1.0 A trip, 1812"
+     rating_a: 0.5
+     interrupting_a: null
+     i2t_a2s: null
+     basis: "v2/vendor/power/bourns-mf-msmf-pptc.pdf, the MF-MSMF050 row"
+   protects: null
+   note: "a lead that leaves the board into the lid tray, behind its own polyfuse"
+
+# THE FAILURES THIS CHAIN CARRIES, each with its sentence. A gate that fails is doing its job; a failure nobody
+# has written down is a different thing, so the suite accepts exactly the ones named here and refuses a new one.
+known_findings:
+  - stage: B_PANEL_5V
+    why: "board B's panel 5 V carries a 2.0 A hold, 3.5 A trip polyfuse on a 0.4 mm PWR-class track that
+      IPC-2221 rates at 1.23 A at 10 K and 1.67 at 20 K, feeding a 0.6 A rail with a 1.0 A peak: the copper is
+      the weaker element and a fault at the panel end would run at the fuse's trip current through it. Found on
+      17 September 2026, while board B was mid-route on B21, so the copper cannot change in this phase. The two
+      answers are a wider conductor (0.8 mm is 2.03 A at 10 K, which clears the hold) or a smaller part
+      (MF-MSMF110 holds 1.1 A and trips at 2.2, which clears the track and leaves ten percent over board C's
+      declared 1.0 A peak), and B22 is where either lands. Nothing here is waived: PWR-003 fails on board B."

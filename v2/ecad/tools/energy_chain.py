@@ -97,7 +97,12 @@ def check(chain=None, ecad=None, vendor=None):
     # always: a missing library says nothing about whether a fuse is above its conductor.
     stages = y.get("stages") or []
     ids = {s["id"] for s in stages}
-    fails, notes, checked = [], [], 0
+    # A COORDINATION FAILURE IS A STAGE'S AND A BOARD'S, NOT THE SET'S (17 September 2026). BAT-002 asks
+    # whether the chain is bounded end to end: every rating sourced, every element on the board it claims,
+    # every link named. PWR-003 asks whether one element is coordinated with what it protects. Board B's
+    # panel fuse sitting above its own track failed BAT-002 on four boards that have nothing to do with it,
+    # which is the set-verdict shape this project has now corrected four times.
+    fails, stage_fails, notes, checked = [], [], [], 0
     refs_cache = {}
     # THE SELECTION CRITERIA OF ECSS 6.17 ARE PWR-003's, NOT BAT-002's. BAT-002 asks whether the chain is
     # bounded END TO END; a fuse at 80 percent of its rating is a coordination finding about one stage, and
@@ -159,18 +164,18 @@ def check(chain=None, ecad=None, vendor=None):
                 if blk.get("rating_a") is None: continue
                 checked += 1
                 if float(r) > float(blk["rating_a"]) + 1e-9:
-                    fails.append("%s: the protection is rated %.1f A and the %s only %.1f A, so the %s is the "
+                    stage_fails.append("%s: the protection is rated %.1f A and the %s only %.1f A, so the %s is the "
                                  "fuse" % (sid, float(r), what, float(blk["rating_a"]), what))
             if s.get("peak_a") is not None:
                 checked += 1
                 if float(r) < float(s["peak_a"]) - 1e-9:
-                    fails.append("%s: the protection is rated %.1f A and the path's own peak is %.1f A, so it "
+                    stage_fails.append("%s: the protection is rated %.1f A and the path's own peak is %.1f A, so it "
                                  "opens in normal use" % (sid, float(r), float(s["peak_a"])))
         pf = s.get("prospective_fault_a") or {}
         if prot.get("interrupting_a") is not None and pf.get("high") is not None:
             checked += 1
             if float(prot["interrupting_a"]) < float(pf["high"]) - 1e-9:
-                fails.append("%s: the fault current reaches %.0f A and the element interrupts %.0f A"
+                stage_fails.append("%s: the fault current reaches %.0f A and the element interrupts %.0f A"
                              % (sid, float(pf["high"]), float(prot["interrupting_a"])))
         # 7. THE FUSE'S OWN SELECTION CRITERIA, and they have an authority at last (17 September 2026).
         # ECSS-Q-ST-30-11C Rev.2, "Derating - EEE components", 23 June 2021, clause 6.17, transcribed in
@@ -271,11 +276,20 @@ def check(chain=None, ecad=None, vendor=None):
             t = float(prot["i2t_a2s"]) / (float(pf["high"]) ** 2)
             notes.append("%s: %s melts in about %.1f ms at %.0f A (I2t %.0f A2s)"
                          % (sid, prot.get("ref", "the element"), t * 1e3, float(pf["high"]), float(prot["i2t_a2s"])))
-    orphan = [s["id"] for s in stages if s["id"] != stages[0]["id"]
+    # A STAGE THAT IS NOT IN THE PACK'S LINE SAYS WHAT FEEDS IT (17 September 2026). The chain was one line from
+    # the cells outward and its only branch, the shore inlet, was exempted from the connectivity rule by its own
+    # NAME in this file. Board B's three polyfuses are branches too, off the device rail, and a rule that knows
+    # one branch by name cannot see them. A stage declares `fed_by`: the id of the stage upstream of it, or
+    # SOURCE when it is an entry point of its own with the reason in its note.
+    ids = {s["id"] for s in stages}
+    for s in stages:
+        fb = s.get("fed_by")
+        if fb and fb != "SOURCE" and fb not in ids:
+            fails.append("%s: fed_by names %s, which is not a stage" % (s["id"], fb))
+    orphan = [s["id"] for s in stages if s["id"] != stages[0]["id"] and not s.get("fed_by")
               and not any((o.get("protects") == s["id"]) for o in stages)]
     for o in orphan:
-        if o == "SHORE_INPUT": continue   # a second source, not a link in the pack's chain
-        fails.append("%s: no stage protects it, so the chain has a break at it" % o)
+        fails.append("%s: no stage protects it and it names nothing that feeds it, so the chain has a break at it" % o)
     # WHICH BOARD EACH STAGE BELONGS TO, so a failure can be attributed to it. The chain is a set-level object
     # and its COMPLETENESS is a set-level property (BAT-002), but a coordination failure is a property of the
     # stage, and the stage names its board: board E's shore fuse at 80 percent of its rating is not board P's
@@ -286,7 +300,8 @@ def check(chain=None, ecad=None, vendor=None):
         for L in re.findall(r"[A-Z]+[0-9]*", str(st.get("board", "")).upper()):
             if L == "TO": continue          # "P to E" names two boards
             by_board.setdefault(L.lower(), []).append(st["id"])
-    return dict(stages=len(stages), checked=checked, fails=fails, derate_fails=derate_fails, notes=notes,
+    return dict(stages=len(stages), checked=checked, fails=fails, stage_fails=stage_fails,
+                derate_fails=derate_fails, notes=notes,
                 unjudged_citations=unjudged_citations, vendor_seen=bool(have_vendor), by_board=by_board)
 
 
@@ -303,6 +318,7 @@ def main(argv):
     print("energy_chain: %d stage(s), %d check(s)" % (r["stages"], r["checked"]))
     for n in r["notes"]: print("  note %s" % n)
     for f in r["fails"]: print("  FAIL %s" % f)
+    for f in r.get("stage_fails", []): print("  FAIL (coordination, rule PWR-003) %s" % f)
     for f in r.get("derate_fails", []): print("  FAIL (selection, rule PWR-003) %s" % f)
     if "--json" in argv: print(json.dumps(r, indent=1))
     # The coordination is what this rule is about, and it is judged wherever the chain file is. A tree with no
@@ -312,7 +328,8 @@ def main(argv):
     # stage and so to a board; BAT-002 asks whether the chain is bounded END TO END, which is the set's and
     # stays on the set verdict below.
     for _L, _ids in sorted((r.get("by_board") or {}).items()):
-        _mine = [f for f in (r["fails"] + r.get("derate_fails", [])) if f.split(":")[0].strip() in _ids]
+        _mine = [f for f in (r["fails"] + r.get("stage_fails", []) + r.get("derate_fails", []))
+                 if f.split(":")[0].strip() in _ids]
         _v.write("energy_chain_%s" % _L, _v.FAIL if _mine else _v.PASS,
                  counts={"stages": len(_ids), "fail": len(_mine)}, denominator=len(_ids),
                  evidence=_mine[:20], quiet=True, rules=["PWR-003"],
@@ -322,6 +339,7 @@ def main(argv):
     res = _v.FAIL if r["fails"] else _v.PASS
     return _v.write("energy_chain", res,
                     counts={"stages": r["stages"], "checks": r["checked"], "fail": len(r["fails"]),
+                            "coordination_findings": len(r.get("stage_fails", [])),
                             "selection_findings": len(r.get("derate_fails", [])),
                             "citations_unjudged": r.get("unjudged_citations", 0)},
                     denominator=r["checked"], evidence=r["fails"][:20],
