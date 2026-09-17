@@ -13,8 +13,8 @@
  "inputs": {
   "board": "b",
   "netlist": {
-   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "f96408a1a7a9dc22"
+   "path": "out/pcb-b-compute.net",
+   "sha256_16": "5969b335cc3f0bbc"
   }
  },
  "missing_input": null,
@@ -26,10 +26,10 @@
  "rules": [],
  "tool": "port_protect",
  "tools": {
-  "git_head": "a4515e9d8bb7",
-  "tools_tree_sha": "d84cbe39b50a5620"
+  "git_head": "",
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T13:45:11Z",
+ "ts": "2026-09-17T15:44:09Z",
  "verdict": "PASS",
- "version": "a4515e9d8bb7+dirty"
+ "version": "unknown"
 }

@@ -23,7 +23,7 @@
   },
   "drc": {
    "path": "out/pcb-p-pack-drc.json",
-   "sha256_16": "7d13f9bbf032917a"
+   "sha256_16": "4b0cac85637083be"
   }
  },
  "missing_input": null,
@@ -39,9 +39,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:17:11Z",
+ "ts": "2026-09-17T15:47:04Z",
  "verdict": "PASS",
  "version": "unknown"
 }

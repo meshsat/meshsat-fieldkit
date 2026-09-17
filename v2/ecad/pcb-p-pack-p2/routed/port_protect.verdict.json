@@ -10,8 +10,8 @@
  "inputs": {
   "board": "p",
   "netlist": {
-   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "c13c0ab262c7f7e1"
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "6df4e1bda5a3aaa3"
   }
  },
  "missing_input": null,
@@ -23,10 +23,10 @@
  "rules": [],
  "tool": "port_protect",
  "tools": {
-  "git_head": "a4515e9d8bb7",
-  "tools_tree_sha": "d84cbe39b50a5620"
+  "git_head": "",
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T13:45:12Z",
+ "ts": "2026-09-17T15:47:17Z",
  "verdict": "PASS",
- "version": "a4515e9d8bb7+dirty"
+ "version": "unknown"
 }

@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "5669179d63af9d14"
+   "sha256_16": "5cdc4d1612229df7"
   }
  },
  "missing_input": null,
@@ -30,9 +30,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:16:23Z",
+ "ts": "2026-09-17T15:46:14Z",
  "verdict": "PASS",
  "version": "unknown"
 }

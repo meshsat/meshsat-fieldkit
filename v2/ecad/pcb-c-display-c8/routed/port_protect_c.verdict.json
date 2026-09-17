@@ -13,8 +13,8 @@
  "inputs": {
   "board": "c",
   "netlist": {
-   "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "c2f5c6767c819a5a"
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "11a05415ee3839c4"
   }
  },
  "missing_input": null,
@@ -28,10 +28,10 @@
  ],
  "tool": "port_protect_c",
  "tools": {
-  "git_head": "a4515e9d8bb7",
-  "tools_tree_sha": "d84cbe39b50a5620"
+  "git_head": "",
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T13:45:11Z",
+ "ts": "2026-09-17T15:45:32Z",
  "verdict": "PASS",
- "version": "a4515e9d8bb7+dirty"
+ "version": "unknown"
 }

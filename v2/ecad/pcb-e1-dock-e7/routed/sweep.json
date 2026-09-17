@@ -4,6 +4,6 @@
  "board_sha256": "5fc1ffce0dc5ab1caa7a898ac3a006f274f7e40121d0d5a5541f3d496cf14a01",
  "label": "sweep",
  "tools": "",
- "taken": "2026-09-17T12:17:07+00:00",
+ "taken": "2026-09-17T15:47:00+00:00",
  "read_only": "the board sha256 was identical before and after; a sweep that changes a board writes nothing"
 }

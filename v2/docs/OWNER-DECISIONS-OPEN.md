@@ -142,14 +142,14 @@ the ask has to settle.
 
 ### Decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part
 
-**The question:** clamp every exposed conductor at its entry, or accept the four paths that reach their clamp
-through an active part
+**The question:** clamp every exposed conductor at its entry, or accept the three paths that reach their
+clamp through an active part
 
 **Recommended:** rule decision 34 first, then clamp at the entry every conductor that reaches a semiconductor
-with nothing between it, which is board D's seven and is the cheap half: those are parts and board area on a
-board whose copper is finished. The paths that reach their clamp through an active part are the expensive
-half and are worth accepting only where that active part is itself rated for the level the envelope states,
-which is why the envelope comes first
+with nothing between it, which is board D's seven and board E's three and is the cheap half: those are parts
+and board area on boards whose copper is finished. The three paths that reach their clamp through an active
+part are the expensive half and are worth accepting only where that active part is itself rated for the level
+the envelope states, which is why the envelope comes first
 
 **Measured:** BOARD D IS IN THIS DECISION TOO, AND ITS GATE HAD BEEN SAYING SO WHILE THE REGISTRY SAID THE
 RULE DID NOT APPLY TO IT (17 September 2026). Board D declares four connectors whose conductors leave the
@@ -159,7 +159,26 @@ conductors each (speaker, microphone, push to talk), and J_PAOUT, the 30 W power
 antenna jack J_ANT is the one that is answered: it is protected off board by the PolyPhaser GTH-SFF-AL
 arrestor at the bulkhead. The measurement was taken by cutting board D's deliverable folder, which the gate
 refused at that stage, so this is what stands between board D and the folder DOC-001 asks for. Boards A and
-E: three boards and ten conductors, and boards E and D are finished copper held on it.
+E: three boards and ten conductors, and boards E and D are finished copper held on it. THE WHOLE PACKET,
+CONDUCTOR BY CONDUCTOR, AND THREE OF ITS ROWS WERE WRONG UNTIL THIS EVENING (17 September 2026). The chain
+that follows a conductor to its clamp could cross a semiconductor and keep going, step onto a ground, or
+leave a rail through a pull-up, and board E's sensor pod took the SHORE INLET'S SMCJ40A as its protection
+three times over: SDA1 crossed the RP2040 onto SHORE_INHIBIT, crossed a transistor onto GND_V and read the
+clamp sitting there, and the pod's 3.3 V feed left its own rail through a 10k pull-up onto the hot-swap
+controller's power-good net and arrived at the same part. A clamp more than one hop past the first active
+part belongs to another circuit; a ground is where the search stops whatever the board calls it; a rail
+continues through a fuse, a bead, a choke or a series diode and never through a pull-up. No board's result
+moves, and the packet does: THIRTEEN conductors, TEN of them reaching a semiconductor with nothing between
+and THREE meeting their clamp only through an active part. The three: board A J_USBC_OUT.2 and .3, the USB-C
+outlet's two CC conductors, which reach U18 (TPS25740A PD source controller) and whose clamp D4 (SMBJ18A)
+sits on PD_VBUS, a different conductor of the same connector; and board E J_DCIN.1, the shore inlet,
+connector to F1 (10 A) to Q1 (BSC039N06NS ideal-diode FET) to D1 (SMCJ40A on DC_P), which is the textbook
+shape of this question, the fuse and the clamp in the right places with one semiconductor in front of the
+clamp. The ten: board D J_PAOUT.1 (the 30 W amplifier output), J_HS1.1, .3, .5 and J_HS2.1, .3, .5 (both
+headset jacks, speaker, microphone and push to talk each), and board E J_POD.1, .3 and .4, the outside sensor
+pod's 3.3 V feed and its two I2C conductors, which run to the RP2040 with nothing in between. Board B's eight
+Ethernet conductors and board C's four switch conductors are answered where they stand, by T1's magnetics and
+by the optocouplers, and board P declares that nothing of its own leaves the case.
 
 | rule | | boards | result today |
 |---|---|---|---|

@@ -25,7 +25,7 @@
   },
   "drc": {
    "path": "out/pcb-c-display-drc.json",
-   "sha256_16": "211cb5d008f5e9c6"
+   "sha256_16": "de3b56542d9ff498"
   }
  },
  "missing_input": null,
@@ -41,9 +41,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:15:13Z",
+ "ts": "2026-09-17T15:45:04Z",
  "verdict": "PASS",
  "version": "unknown"
 }
