@@ -7,7 +7,7 @@ Manifest **2026-09-16.1**, rule set **f8db9f9b0747ca1b**, evidence epoch **2026-
 
 **Readiness: NOT_READY**
 
-Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B21: THIS TREE HOLDS NO BOARD AT THE DECLARED PHASE.
+Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 
 | result | rules | percent |
 |---|---|---|

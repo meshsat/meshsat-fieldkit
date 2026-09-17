@@ -67,14 +67,36 @@ def load(stem):
     # check compared a current A against a B from before the ribbon split. It is reported here and counted as
     # a missing netlist, which is already INCONCLUSIVE rather than a pass: a comparison against stale data is
     # not a result in either direction.
+    # THE SIDECAR RECORDS WHICH SCHEMATIC IT CAME FROM, AND A TIMESTAMP WAS BEING READ INSTEAD (17 September
+    # 2026). `sch_prov.write` has recorded `schematic_sha256` since 16 September, which is the FACT this guard
+    # wants; the mtime is a proxy for it, and the two disagree in both directions. Board B's schematic was
+    # rewritten with identical content at 05:19 (a checkout), which made the mtime newer and the netlist
+    # "stale" though nothing had changed; and on the same morning ALL SIX netlists had been regenerated and
+    # committed without their schematics, so every one of them came from a schematic this tree does not hold
+    # while five of the six passed the mtime test because their schematics happened to be older. One board
+    # refused and five passed in the identical state is the shape of a guard reading the wrong thing.
+    # Content decides when the sidecar is there; the mtime stays the answer when it is not, because a netlist
+    # with no provenance is exactly the case the 13 September rule was written for.
     _sch = os.path.join(os.path.dirname(os.path.dirname(path)), stem + ".kicad_sch")
-    if os.path.exists(_sch) and os.path.getmtime(path) < os.path.getmtime(_sch) - 1:
-        import datetime as _dt
-        _f = lambda t: _dt.datetime.fromtimestamp(t).strftime("%d %b %H:%M")
-        print("STALE netlist for %s: %s is from %s and its schematic is from %s. Regenerate it (gen_sch then "
-              "build_sch) before trusting any contract that names this board."
-              % (stem, os.path.relpath(path, ECAD), _f(os.path.getmtime(path)), _f(os.path.getmtime(_sch))))
-        return None, None
+    if os.path.exists(_sch):
+        import hashlib as _h, sch_prov as _sp
+        _rec = _sp.read(path) or {}
+        _want = _rec.get("schematic_sha256")
+        _have = _h.sha256(open(_sch, "rb").read()).hexdigest()[:32]
+        if _want:
+            if _want != _have:
+                print("STALE netlist for %s: %s was generated from schematic %s and this tree holds %s. "
+                      "Regenerate it (gen_sch then build_sch) before trusting any contract that names this "
+                      "board." % (stem, os.path.relpath(path, ECAD), _want[:12], _have[:12]))
+                return None, None
+        elif os.path.getmtime(path) < os.path.getmtime(_sch) - 1:
+            import datetime as _dt
+            _f = lambda t: _dt.datetime.fromtimestamp(t).strftime("%d %b %H:%M")
+            print("STALE netlist for %s: %s is from %s and its schematic is from %s, and it carries no "
+                  "provenance sidecar to say which schematic it came from. Regenerate it (gen_sch then "
+                  "build_sch) before trusting any contract that names this board."
+                  % (stem, os.path.relpath(path, ECAD), _f(os.path.getmtime(path)), _f(os.path.getmtime(_sch))))
+            return None, None
     # AND WHICH GENERATOR WROTE IT (16 September 2026). The timestamp guard above compares a netlist with its
     # OWN schematic, so a whole directory copied from an older generation passes it: both files are old
     # together. That is exactly what happened today. The set verdict taken inside board A's sweep tree failed

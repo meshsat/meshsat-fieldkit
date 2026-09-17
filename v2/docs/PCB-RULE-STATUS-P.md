@@ -7,7 +7,7 @@ Manifest **2026-09-16.1**, rule set **f8db9f9b0747ca1b**, evidence epoch **2026-
 
 **Readiness: NOT_READY**
 
-Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P5: THIS TREE HOLDS NO BOARD AT THE DECLARED PHASE.
+Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 
 | result | rules | percent |
 |---|---|---|

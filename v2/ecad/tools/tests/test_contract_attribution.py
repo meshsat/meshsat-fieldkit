@@ -128,3 +128,52 @@ def t_an_absent_board_makes_both_ends_unjudged_and_neither_failed():
     # a contract that names only present boards is judged exactly as before
     ns["check"](False, "C: something of C's own", boards={"C"})
     assert len(ns["per_board"]["C"]["fail"]) == 1 and len(ns["fails"]) == 1
+
+
+def t_the_staleness_guard_reads_the_schematic_it_came_from_and_not_a_timestamp():
+    """A NETLIST BELONGS TO THE SCHEMATIC WHOSE HASH ITS SIDECAR CARRIES (17 September 2026).
+
+    Two failures of the timestamp version, both on the committed tree the same morning:
+
+    - board B's schematic was rewritten with IDENTICAL content by a checkout, which made its mtime newer than
+      the netlist, so the gate called the netlist stale and left every contract naming board B unjudged;
+    - all six netlists had been regenerated and committed WITHOUT their schematics, so every one came from a
+      schematic the tree does not hold, and five of the six passed the mtime test because their schematics
+      happened to be older. One board refused and five passed in the identical state.
+
+    `sch_prov.write` records the schematic's sha256 beside the netlist, so the fact is on disk and the mtime
+    is only a proxy for it. Executed as the script runs, in a temporary ECAD directory holding one board:
+    same content with a newer schematic must NOT be called stale, and a sidecar naming another schematic must
+    be called stale however old that schematic is.
+    """
+    import shutil, time, hashlib
+    d = tempfile.mkdtemp(prefix="stale-guard-")
+    stem = "pcb-p-pack"                                   # a stem check_contracts knows, so the guard is reached
+    try:
+        proj = os.path.join(d, stem + "-t1"); os.makedirs(os.path.join(proj, "out"))
+        sch = os.path.join(proj, stem + ".kicad_sch"); net = os.path.join(proj, "out", stem + ".net")
+        open(sch, "w").write("(kicad_sch (version 20250114))\n")
+        open(net, "w").write('(export (version "E")\n  (components\n    (comp (ref "R1")\n      (value "1k"))'
+                             '\n  )\n  (nets\n    (net (code "1") (name "N1")\n      (node (ref "R1") (pin "1")))\n  )\n)\n')
+        side = net + ".prov.json"
+        sha = hashlib.sha256(open(sch, "rb").read()).hexdigest()[:32]
+
+        def run():
+            env = dict(os.environ, VERDICT_DIR=d)
+            p = subprocess.run([sys.executable, SRC, d], capture_output=True, text=True, timeout=300, env=env)
+            return p.stdout + p.stderr
+
+        json.dump({"schematic_sha256": sha}, open(side, "w"))
+        os.utime(sch, (time.time(), time.time()))          # the schematic is NEWER and its content is the same
+        out = run()
+        assert "STALE netlist for %s" % stem not in out, \
+            ("a netlist whose sidecar names this exact schematic was called stale because the file's mtime is "
+             "newer:\n%s" % "\n".join(l for l in out.splitlines() if "STALE" in l))
+
+        json.dump({"schematic_sha256": "0" * 32}, open(side, "w"))
+        os.utime(sch, (1, 1))                              # and now the schematic is OLD but is not the one
+        out = run()
+        assert "STALE netlist for %s" % stem in out, \
+            "a netlist generated from a schematic this tree does not hold was accepted because its mtime is older"
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
