@@ -152,6 +152,19 @@ VOC sensor and the e-paper
 
 **Recommended:** the most conservative at each area: it never reads higher than any published model
 
+**Measured:** MEASURED FROM THE THREE CURVE FITS ECSS-Q-ST-70-12C ANNEX D PUBLISHES, 17 September 2026, and
+the answer is the opposite of what the word 'newer standard' suggests. At a 10 K rise IPC-2221A stops being
+the conservative model above 0.268 mm2 of cross-section: below that it reads lower than IPC-2152, above it
+HIGHER. At 1 mm2 it allows 1.28 times IPC-2152, at 4 mm2 1.66 times. So for this project's power copper,
+which is pours and bands well above the crossover, moving to IPC-2152 or taking the most conservative model
+makes every failing rail WORSE, not better, and cannot rescue one of them: board A misses on VBAT at 3.69 of
+its limit, VBUS20 2.03, VIN_RAW 2.00, +13V8_PA 1.53, and board E on CELL_F at 1.12. The decision therefore
+does not change whether these five pass; it changes by how much they fail and what the copper must become.
+AND THE BAR IN USE IS OUTSIDE ITS OWN STATED VALIDITY: D.4a states the IPC-2221A fit for conductors up to 1.2
+mm2 at a 10 K rise, and this project's rails run to 18 A, which needs 1.47 mm2 under that fit and 2.68 under
+IPC-2152. What each model asks for at 10 K: 10 A needs 0.65 mm2 (IPC-2221A), 0.90 (IPC-2152) or 1.01 (CNES);
+18 A needs 1.47, 2.68 or 2.98.
+
 | rule | | boards | result today |
 |---|---|---|---|
 | PI-001 | conductor current capacity | A, E | FAIL |
