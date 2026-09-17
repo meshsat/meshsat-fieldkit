@@ -11,9 +11,9 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 21 | 38.2 |
+| PASS | 22 | 40.0 |
 | FAIL | 14 | 25.5 |
-| INCONCLUSIVE | 20 | 36.4 |
+| INCONCLUSIVE | 19 | 34.5 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **55** | 100.0 |
 
@@ -25,7 +25,7 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_b PASS of 42 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_b PASS of 5 |
-| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under a different version of SCH-005 (7531a598ee0dec90, current is 9993ce195b935d6d) |
+| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_b PASS of 930 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 162 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 4bc0aa24d836788d |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 4bc0aa24d836788d |

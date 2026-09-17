@@ -21,9 +21,9 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 32 | 59.3 |
+| PASS | 33 | 61.1 |
 | FAIL | 7 | 13.0 |
-| INCONCLUSIVE | 15 | 27.8 |
+| INCONCLUSIVE | 14 | 25.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
 
@@ -35,7 +35,7 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 814, 'aliased_pins': 18, 'board_footprints': 189, 'board_only_inert': 0, 'fail': 4, 'netlist_refs': 161} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e PASS of 8 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_e PASS of 1 |
-| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under a different version of SCH-005 (7531a598ee0dec90, current is 9993ce195b935d6d) |
+| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_e PASS of 160 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 48 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_e INCONCLUSIVE |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_e INCONCLUSIVE |

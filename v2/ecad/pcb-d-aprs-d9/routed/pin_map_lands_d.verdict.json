@@ -13,7 +13,7 @@
   "board": "d",
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "e76cb5c80970a6c4"
+   "sha256_16": "7fb660a265937b5d"
   }
  },
  "missing_input": null,
@@ -21,9 +21,9 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "SCH-005": "7531a598ee0dec90"
+   "SCH-005": "9993ce195b935d6d"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "SCH-005"
@@ -33,7 +33,7 @@
   "git_head": "",
   "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T22:47:38Z",
+ "ts": "2026-09-17T23:01:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }

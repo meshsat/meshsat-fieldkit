@@ -11,9 +11,9 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 33 | 70.2 |
+| PASS | 34 | 72.3 |
 | FAIL | 5 | 10.6 |
-| INCONCLUSIVE | 9 | 19.1 |
+| INCONCLUSIVE | 8 | 17.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **47** | 100.0 |
 
@@ -25,7 +25,7 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 241 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_p PASS of 4 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_p PASS of 0 |
-| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under a different version of SCH-005 (7531a598ee0dec90, current is 9993ce195b935d6d) |
+| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_p PASS of 55 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 5 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_p PASS of 19 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_p PASS of 19 |
