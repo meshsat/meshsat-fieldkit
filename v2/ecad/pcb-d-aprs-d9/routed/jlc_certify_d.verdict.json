@@ -2,21 +2,21 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "BENCH_FITTED": 2,
-  "CERTIFIED": 62,
-  "HAND_FIT": 2,
-  "WRONG_MODEL": 2
+  "folders": 7
  },
- "denominator": 68,
+ "denominator": 0,
  "evidence": [
-  "WRONG_MODEL: 6 MHz 3225 (CL 20 pF; C1 = C2 = 27 pF and Rd 1.5k per SLLS41 (the row asks for 6 MHz and the catalogue part is 25 MHz (C44)",
-  "WRONG_MODEL: 6 MHz 3225 (codec clock; 18 pF loads, to confirm on the EVM  (the row asks for 6 MHz and the catalogue part is 25 MHz (C44)"
+  "folders that exist: D10, D11, D5, D6, D7, D8, D9"
  ],
- "inputs": {},
- "note": "the rows this board carries; the set's own verdict is jlc_certify",
+ "inputs": {
+  "board": "d",
+  "declared_phase": "D12"
+ },
+ "missing_input": "no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9)",
+ "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "CMP-002",
@@ -24,10 +24,10 @@
  ],
  "tool": "jlc_certify_d",
  "tools": {
-  "git_head": "7431fca209b0",
-  "tools_tree_sha": "52055efbc030c053"
+  "git_head": "a8a1d7bd7198",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T00:41:36Z",
- "verdict": "FAIL",
- "version": "7431fca209b0+dirty"
+ "ts": "2026-09-17T17:01:25Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "a8a1d7bd7198"
 }

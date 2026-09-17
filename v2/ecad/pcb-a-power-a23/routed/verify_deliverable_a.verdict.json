@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "folder": 1
+ },
+ "denominator": 0,
+ "evidence": [
+  "held by owner decision 31: ROUTING_STATUS = OPEN   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD (i"
+ ],
+ "inputs": {
+  "declared_phase": "A32",
+  "folder": "meshsat-pcb-a-revA-A24"
+ },
+ "missing_input": "the folder judged here is meshsat-pcb-a-revA-A24 and this board declares A32, so its properties are a reading of a board this set is not building",
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "4a03222f910fe5f5"
+ },
+ "rules": [
+  "DFM-001"
+ ],
+ "tool": "verify_deliverable_a",
+ "tools": {
+  "git_head": "a8a1d7bd7198",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T17:01:42Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "a8a1d7bd7198"
+}
