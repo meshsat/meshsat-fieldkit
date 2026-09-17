@@ -274,7 +274,11 @@ try:
     # taken was accepting five millivolts over budget on the grounds that the radio only draws it while
     # transmitting, which is a coherent position on a duty-cycled rail and not one to buy boards on.
     nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.127, 0.25, 0.6, 0.3); ns.SetNetclass("SENSE", nse)
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)   # ruling 15: back to 0.5 mm, the rail is in locked inner copper below
+    # THE POWER CLASS VIA IS 1.2/0.6 SINCE D13 (18 September 2026, rule PI-003): D12's +5V_SA crosses layers through
+    # ONE router via at each of two transitions, 1.10 A of the solved mesh through a 0.4 mm drill rated 0.90 A at
+    # 10 K with the fabricator's 18 um plating (via_current, both barrels beside FB1); a 0.6 mm drill is rated
+    # 1.19 A, so the class via answers it at the source where via_parallel found a site for only one of the two.
+    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 1.2, 0.6); ns.SetNetclass("PWR", nc)   # ruling 15: back to 0.5 mm, the rail is in locked inner copper below
     nr = pcbnew.NETCLASS("RF"); cls(nr, 0.3, 0.35, 0.6, 0.3); ns.SetNetclass("RF", nr)
     nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2)); ns.SetNetclass("USB", nu)   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
