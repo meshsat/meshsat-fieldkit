@@ -3,13 +3,13 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "stages": 4
+  "stages": 1
  },
- "denominator": 4,
+ "denominator": 1,
  "evidence": [],
  "inputs": {
   "chain": "pcb_energy_chain.yaml",
-  "stages": "DOCK_BLOCK,BOARD_A_NODE,BOARD_A_CONVERTERS,A_EFUSED_BRANCHES"
+  "stages": "DOCK_BLOCK"
  },
  "note": "the stages of the stored-energy chain that sit on this board; the chain as a whole is energy_chain, and whether it is bounded end to end is that verdict's question",
  "policy": {
@@ -19,7 +19,7 @@
  "rules": [
   "PWR-003"
  ],
- "tool": "energy_chain_a",
+ "tool": "energy_chain_e5",
  "tools": {
   "git_head": "e6b2026b74d9",
   "tools_tree_sha": "284c33e066339223"
