@@ -18,7 +18,6 @@
   "B HDMI_CM5: this project judges intra-pair mismatch at 1.00 mm and HDMI_CM5 asks for 0.15 mm, which is 6.7 times tighter"
  ],
  "inputs": {
-  "board": "p",
   "spec": "pcb_interfaces.yaml"
  },
  "missing_input": null,
@@ -30,10 +29,10 @@
  "rules": [],
  "tool": "interfaces",
  "tools": {
-  "git_head": "fd6fac9b3fd6",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "git_head": "",
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T17:00:41Z",
+ "ts": "2026-09-17T17:46:13Z",
  "verdict": "FAIL",
- "version": "fd6fac9b3fd6+dirty"
+ "version": "unknown"
 }
