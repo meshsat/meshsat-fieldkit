@@ -474,7 +474,7 @@ coverage:
  MEC-001: {implementation: "panel1450.py, gen_pcb_*.py", verification: {tool: "check_pcb_*.py", verdict: "check_pcb_<letter>", fixtures: tests/test_board_gates.py},
    maturity: ENFORCED, gap_category: NONE, note: "every mechanical number is asserted against the single module that owns it"}
 
- DFM-001: {implementation: "build_pcb.sh, export_jlc.sh", verification: {tool: verify_deliverable.py, verdict: verify_deliverable, fixtures: tests/test_gate_fixtures.py},
+ DFM-001: {implementation: "build_pcb.sh, export_jlc.sh", verification: {tool: verify_deliverable.py, verdict: verify_deliverable_<letter>, fixtures: tests/test_gate_fixtures.py},
    maturity: ENFORCED, gap_category: NONE, note: "the gerber zip is counted against the board's copper layer count"}
 
  DFA-001: {implementation: "export_jlc.sh, jlc-rotations.csv", verification: {tool: assembly_set.py, verdict: assembly_set, fixtures: tests/test_assembly_set.py},

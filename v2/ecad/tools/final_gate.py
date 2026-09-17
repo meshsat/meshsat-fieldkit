@@ -103,6 +103,11 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
             except Exception:
                 cu = 0
         args = [sys.executable, os.path.join(HERE, "verify_deliverable.py"), folder, stem, str(cu or 4)]
+        # The board this folder is supposed to be, so the gate writes its reading under that board's name as
+        # well. A folder that is NOT the phase the board declares is overwritten below with the reason: this
+        # run still judges it, because its own properties are worth knowing, but they are not an answer about
+        # a board this set is not building.
+        args += ["--board", letter.lower()]
         # A BARE board carries no BOM and no CPL by design (E5 is the dock block: copper, holes and targets),
         # and a quote folder carries no board file. Both are declared to the gate rather than read as failures
         # of the FOLDER; a quote folder still fails the SET below, because a held board is not a released one.
@@ -127,7 +132,8 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
             summary = "held by owner decision %s: %s (its folder reads %s)" % (hold["decision"], R.hold_banner(hold), v)
             v = "HELD"
         rows.append(dict(board=letter.upper(), phase=num, folder=name, quote=quote, stale=stale, declared=declared,
-                         held=bool(hold), verdict=v, summary=summary.strip()))
+                         held=bool(hold), verdict=v, summary=summary.strip(),
+                         vd_rc=rc, vd_summary=(sm[-1].replace("verify_deliverable: ", "") if sm else "")))
     want = [l for l in required if not only or l in only]
     missing = [l for l in want if l not in found]
     subset = bool(only) and set(only) != set(required)
@@ -174,6 +180,28 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
                 + (["contracts: %s" % contracts.strip()[:80]] if rc_c != 0 else [])
                 + (["parts: %s" % certify.strip()[:80]] if rc_j != 0 else [])
                 + (["claims: %s" % claims.strip()[:80]] if rc_m != 0 else []))
+    # AND THE DELIVERABLE'S OWN READING, PER BOARD (17 September 2026). Rule DFM-001 is verified by
+    # `verify_deliverable`, which writes under ONE name, and this loop runs it once per folder: the last
+    # folder's reading stood as every board's, so six boards read "taken on board p, which is not a board this
+    # project directory holds" and DFM-001 was unanswered on all of them. The run has already happened here,
+    # so each board's own reading is written from it, and a folder that is not the phase the board declares
+    # says that instead of answering for a board this set is not building.
+    for r in rows:
+        _l = r["board"].lower()
+        if r["stale"]:
+            _v.write("verify_deliverable_%s" % _l, _v.INCONCLUSIVE, counts={"folder": 1}, denominator=0, quiet=True,
+                     inputs={"folder": r["folder"], "declared_phase": r.get("declared")},
+                     evidence=[r["summary"][:160]],
+                     missing_input=("the folder judged here is %s and this board declares %s, so its properties "
+                                    "are a reading of a board this set is not building"
+                                    % (r["folder"], r.get("declared") or "nothing")))
+            continue
+        _v.write("verify_deliverable_%s" % _l,
+                 _v.PASS if r.get("vd_rc") == 0 else (_v.INCONCLUSIVE if r.get("vd_rc") == 3 else _v.FAIL),
+                 counts={"folder": 1, "quote": int(bool(r["quote"]))}, denominator=1, quiet=True,
+                 inputs={"folder": r["folder"]},
+                 evidence=[r.get("vd_summary", "")[:160]] if r.get("vd_summary") else [],
+                 note="this board's own deliverable folder, read by verify_deliverable in this run")
     # A PER-BOARD VERDICT AS WELL AS THE SET'S (16 September 2026). DOC-001 and OUT-001 are verified by this
     # gate, and this gate judges the SET, so every board inherited the set's failure: board E5's own folder is
     # the one folder that passes and it was reading FAIL on both rules because six other folders are stale.
@@ -190,6 +218,8 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
                        "cannot be made current while the hold stands" if r.get("held") else
                        "this board's own deliverable folder, judged on its own; the set's verdict is final_gate"))
     for l in missing:
+        _v.write("verify_deliverable_%s" % l.lower(), _v.INCONCLUSIVE, counts={"folder": 0}, denominator=0,
+                 quiet=True, missing_input="this board has no deliverable folder at all, so nothing was read")
         _v.write("final_gate_%s" % l.lower(), _v.FAIL, counts={"folder": 0}, denominator=1, quiet=True,
                  evidence=["a required board with no deliverable folder"],
                  note="this board has no deliverable folder at all")

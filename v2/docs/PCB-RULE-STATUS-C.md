@@ -11,9 +11,9 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 32 | 72.7 |
+| PASS | 33 | 75.0 |
 | FAIL | 4 | 9.1 |
-| INCONCLUSIVE | 8 | 18.2 |
+| INCONCLUSIVE | 7 | 15.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **44** | 100.0 |
 
@@ -54,7 +54,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 4 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 2 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_c PASS of 303 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken on board p, which is not a board this project directory holds |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_c PASS of 1 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 11 |

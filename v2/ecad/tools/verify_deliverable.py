@@ -6,7 +6,7 @@ the JLC form and every designator in it is in the CPL (bench-fitted parts except
 W_ solder wire land, JP solder jumper, none of which JLC places); the CPL has only Top and Bottom in its side
 column and no `?` designator; the DRC report exists. Prints one line per property with its count and the denominator.
 
-Usage: verify_deliverable.py <deliverable dir> <name> <copper layers> [--bench-prefixes H,S_,TP] [--bare]   -> exit 1 on any FAIL."""
+Usage: verify_deliverable.py <deliverable dir> <name> <copper layers> [--bench-prefixes H,S_,TP] [--bare] [--board <letter>]   -> exit 1 on any FAIL."""
 import sys, os, csv, zipfile, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import verdict
@@ -142,12 +142,25 @@ def main(a):
     for l in lines: print("verify_deliverable: " + l)
     judged = len(lines) - sum(1 for l in lines if l.startswith("INFO"))
     print("verify_deliverable: %s (%d of %d properties)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails), judged - len(fails), judged))
-    return verdict.write("verify_deliverable",
-                         verdict.INCONCLUSIVE if not judged else (verdict.PASS if not fails else verdict.FAIL),
-                         counts={"fail": len(fails), "pass": judged - len(fails), "info": len(lines) - judged},
-                         denominator=judged,
-                         evidence=fails,
-                         inputs={"folder": a[0], "name": a[1], "copper_layers": a[2]},
-                         note="" if judged else "no property was judged: the folder yielded nothing to check")
+    _res = verdict.INCONCLUSIVE if not judged else (verdict.PASS if not fails else verdict.FAIL)
+    _counts = {"fail": len(fails), "pass": judged - len(fails), "info": len(lines) - judged}
+    _inputs = {"folder": a[0], "name": a[1], "copper_layers": a[2]}
+    _note = "" if judged else "no property was judged: the folder yielded nothing to check"
+    # AND WHOSE DELIVERABLE THIS IS (17 September 2026). Rule DFM-001 is PER BOARD and this writes under one
+    # name, while the set gate runs it once per folder in a loop: the last folder's reading stood as every
+    # board's, so six boards read "taken on board p, which is not a board this project directory holds" and
+    # DFM-001 was unanswered on all of them. Given the letter, the same reading is written under the board's
+    # own name as well, the pattern check_contracts, jlc_certify and final_gate already use.
+    if "--board" in a:
+        _l = a[a.index("--board") + 1].strip().lower()
+        if _l:
+            # the name is written as the registry spells it, so the catalogue can read the mapping out of
+            # this line: `_rules_for_tool` resolves `verify_deliverable_<letter>` and a `%s` would hide it
+            verdict.write("verify_deliverable_<letter>".replace("<letter>", _l),
+                          _res, counts=_counts, denominator=judged, quiet=True,
+                          evidence=fails, inputs=dict(_inputs, board=_l),
+                          note=_note or "this board's own deliverable folder; the set's own verdict is verify_deliverable")
+    return verdict.write("verify_deliverable", _res, counts=_counts, denominator=judged,
+                         evidence=fails, inputs=_inputs, note=_note)
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
