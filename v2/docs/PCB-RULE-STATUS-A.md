@@ -21,11 +21,11 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 28 | 51.9 |
-| FAIL | 10 | 18.5 |
-| INCONCLUSIVE | 16 | 29.6 |
+| PASS | 28 | 52.8 |
+| FAIL | 10 | 18.9 |
+| INCONCLUSIVE | 15 | 28.3 |
 | WAIVED | 0 | 0.0 |
-| **denominator** | **54** | 100.0 |
+| **denominator** | **53** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
@@ -57,7 +57,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 32 |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 3 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
-| CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | clock_check INCONCLUSIVE |
+| CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **NOT_APPLICABLE** | this board carries no crystal, so CLK-001 has nothing on it to judge |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 19, 'fail': 6, 'measured': 15} |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **FAIL** | rf_line FAIL: {'judged': 11, 'missed': 11} |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **FAIL** | interfaces_a FAIL: {'assignments': 1, 'disagreements': 1} |
