@@ -130,8 +130,25 @@ def _rules_for_tool(tool):
     return sorted(out)
 
 
-def _policy():
+_RULEFPS = [None]
+
+
+def _rule_fingerprints(rules):
+    """The digest of each rule this verdict decides, so staleness can be judged rule by rule rather than by the
+    whole registry (17 September 2026). Same guard as the set fingerprint: BaseException, because a host
+    without PyYAML must still write its verdict."""
+    if not rules: return {}
+    if _RULEFPS[0] is None:
+        try:
+            import rules_lib as _r; _RULEFPS[0] = _r.rule_fingerprints()
+        except BaseException: _RULEFPS[0] = {}
+    return {r: _RULEFPS[0][r] for r in rules if r in (_RULEFPS[0] or {})}
+
+
+def _policy(rules=()):
     d = {}
+    fps = _rule_fingerprints(rules)
+    if fps: d["rule_fingerprints"] = fps
     try:
         import hardset as _h; d["hard_types"] = len(_h.HARD_POST)
     except Exception: pass
@@ -263,7 +280,7 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "version": _version(),
         "ts": now(),
         "tools": _tools(),         # the code that judged: git head and the tools tree's content hash (a StageResult field, 15 Sep 2026)
-        "policy": _policy(),       # the hard set the judgement is under, so a verdict from an older policy is not read as today's
+        "policy": _policy(rules),  # the hard set and the digest of each rule this decides, so a verdict from an older policy is not read as today's
         "verdict": result,
         "advisory": bool(advisory),
         "applicable": bool(applicable),

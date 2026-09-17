@@ -239,6 +239,26 @@ def fingerprint(reg=None):
     return hashlib.sha256(body.encode()).hexdigest()[:16]
 
 
+def rule_fingerprint(rule):
+    """The identity of ONE rule's demands, the same DECIDING fields the set fingerprint is built from.
+
+    WHY A SET FINGERPRINT IS NOT ENOUGH (17 September 2026). Correcting ten rules' board lists this afternoon
+    marked THREE HUNDRED readings stale, and all but fifteen of them were about rules whose demands had not
+    changed: the sweep re-took them in six minutes and the set-level ones by hand in twenty, which is a tax
+    paid every time the registry is corrected, on exactly the activity this audit exists to encourage. A
+    reading is stale when THE RULE IT DECIDES changed, and a verdict names the rules it decides, so it can
+    carry one digest per rule and be judged rule by rule.
+    """
+    return hashlib.sha256(json.dumps({k: rule[k] for k in DECIDING if k in rule},
+                                     sort_keys=True, default=str).encode()).hexdigest()[:16]
+
+
+def rule_fingerprints(reg=None):
+    """{rule id: digest} for the whole registry."""
+    reg = reg or load()
+    return {r["id"]: rule_fingerprint(r) for r in reg.get("rules", []) if r.get("id")}
+
+
 def documentation_digest(reg=None):
     """The whole registry, deciding fields and prose alike. Not an evidence identity: a change marker for the
     record, so a document can say which text it was generated from."""
