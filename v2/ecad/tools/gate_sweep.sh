@@ -118,6 +118,11 @@ run "electrical length"  python3 $T/edge_length.py $N.kicad_pcb
 # and every crystal's load network. Both are schematic properties, so they are true of the board whether or not
 # it has been routed.
 [ -s out/$N.net ] && run "derating" python3 $T/derate.py out/$N.net
+# A BOARD WITH NO NETLIST AND NO PART. Board E5 is the dock block: copper, targets and wire lands, no
+# schematic and nothing to buy, so the derating rule has nothing to judge and must SAY so rather than leave
+# the last verdict anyone wrote standing in for it.
+[ -s out/$N.net ] || run "derating" python3 $T/derate.py $N.kicad_pcb --no-components \
+  "this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes"
 [ -s out/$N.net ] && run "crystals" python3 $T/clock_check.py out/$N.net
 # WHAT SWITCHES EACH RAIL (rule PWR-002). It reads the netlist this sweep rebuilt and the intent beside it, so
 # it says what the board itself declares rather than what a document once said; the deadlock it looks for, a

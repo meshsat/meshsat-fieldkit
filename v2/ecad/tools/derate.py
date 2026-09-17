@@ -197,6 +197,16 @@ def main(argv):
     net = argv[0]
     intent = argv[argv.index("--intent") + 1] if "--intent" in argv else None
     margin = float(argv[argv.index("--margin") + 1]) if "--margin" in argv else MARGIN
+    if "--no-components" in argv:
+        # A DECLARED ZERO IS AN ANSWER. Board E5 is the dock block: copper, plated targets, wire lands and four
+        # mounting holes, generated from board A's board file with no schematic, no netlist and no part to buy
+        # or to derate. Left silent, rule CMP-001 read a verdict taken for another board under an older rule
+        # set and called it E5's evidence (17 September 2026). A board that carries no rated part says so.
+        why = argv[argv.index("--no-components") + 1] if len(argv) > argv.index("--no-components") + 1 else ""
+        print("derate: this board carries no part with a rating: %s" % (why or "declared by the caller"))
+        return _v.write("derate", _v.PASS, denominator=0, counts={"judged": 0, "rated_parts": 0},
+                        inputs={"board": net}, note="this board carries no rated part to judge: %s. A declared "
+                                                    "zero, not an absence" % (why or "declared by the caller"))
     if not os.path.exists(net):
         print("derate: no netlist at %s" % net)
         return _v.write("derate", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": net},
