@@ -222,9 +222,9 @@ stages:
    continuous_a: 0.6
    peak_a: 1.0
    conductor:
-     what: "board B's PWR class track, 0.4 mm on 1 oz outer copper; PANEL_5V has no zone of its own on this board"
+     what: "board B's PWR class track, 0.4 mm on 1 oz outer copper, on the board this tree holds; PANEL_5V has no zone of its own on this board"
      rating_a: 1.23
-     basis: "gen_pcb_b3.py CLASSES PWR track width 0.4 mm; IPC-2221 through dc_drop.ipc_limit at 10 K gives 1.23 A and at 20 K 1.67 A. Which rise this project judges at is owner decision 35"
+     basis: "the board this tree holds (B19, and B21 when it lands) was routed with PANEL_5V in the PWR class at 0.4 mm; IPC-2221 through dc_drop.ipc_limit at 10 K gives 1.23 A and at 20 K 1.67 A. gen_pcb_b3.py carries a PANEL class at 0.8 mm (2.03 A at 10 K) since the evening of 17 September 2026, so B22 is cut wider, and THIS LINE FOLLOWS THE BOARD, not the generator: it moves to 0.8 mm and 2.03 A in the commit that adopts B22, because a declaration ahead of the copper is a reading that answers for a board this tree does not hold. Which rise this project judges at is owner decision 35"
    connector:
      what: "J_PANEL, the 2x13 panel ribbon: PANEL_5V is on pins 1 and 2, two contacts in parallel"
      rating_a: null
