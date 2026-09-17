@@ -8759,3 +8759,52 @@ the last of the thirteen open decisions without a number: board B's three module
 of Microchip's four conditions for a transformer-less link conductor by conductor, the fourth points at the
 module maker's own documentation, and the maker's own carrier answers nothing about it because it uses a
 MagJack. Suite 931 passing, 0 failing, 20 skipped, and the twenty that skip on the runner pass where KiCad is.
+
+### 32.214 A protection chain that walked out through a ground, and board B's floor plan measured to the end of its room (17 September 2026, 18:30 CEST; MESHSAT-862)
+
+**Board E's sensor pod was reported as protected by the shore inlet's clamp, three conductors over, and the
+walk that said so crossed two semiconductors and a ground to get there.** `port_protect` follows a conductor
+from its connector until it meets a suppressor, and the rail stop written yesterday covered only the case where
+the chain ARRIVES at a rail. `SDA1` went RP2040, `SHORE_INHIBIT`, a transistor, `GND_V`, and took the SMCJ40A
+sitting on the inlet; the pod's 3.3 V feed left its own rail through a 10k pull-up onto the hot-swap
+controller's power-good net and arrived at the same part. Three rules, each measured on the seven boards before
+it was written: **a clamp more than ONE hop past the first active part belongs to another circuit**, because
+that part is what meets the transient and only its own nets are still this conductor's chain; **a ground is
+where the search stops whatever the board calls it** (the skip list is exact names and this return is `GND_V`);
+**a rail continues through a fuse, a bead, a choke or a series diode and never through a pull-up.** No board's
+TRN-001 result moves: A, D and E were failing and still fail, B and C are answered by T1's magnetics and by the
+optocouplers. What moves is the packet owner decision 31 is ruled on: **ten conductors become thirteen**, and
+the mix goes from four clamped behind an active part to **three** and from seven reaching a chip with nothing
+between to **ten**, the new three being the pod's 3.3 V feed and its two I2C lines. Every row carries its whole
+path now, connector to clamp, and **the cheap half is priced**: SP0503BAHTG (C7074) once per headset jack on
+board D, PESD1CAN (C15771) across board E's pod I2C pair and ESDA6V1L (C24378) on its 3.3 V feed, twenty parts
+over five boards and about 3.40 USD of silicon. The price of the ruling is not the parts: boards D and E are
+finished copper, so each costs a placement, a route and a folder. Board D's J_PAOUT is the one conductor a
+clamp on the board cannot answer, being 30 W of transmitter output, and wants what J_ANT has.
+
+**Board E's two ANA-001 failures are not the same kind of thing.** TRK_LSENSE runs 0.209 mm from TRK_SW2 and
+WATER_SENSE 0.556 mm from TRK_SW1, both against a class of 0.15 mm, which is what the router was told. Pad
+edge to pad edge, before proposing anything: TRK_LSENSE's three pads clear 1.760, 0.850 and 2.890 mm, so a
+0.50 mm class would escape every one of them; WATER_SENSE's clear 2.000, 0.850, 0.650 and **0.200 mm at U10 pin
+38**, so its declared 1.00 cannot be a class at all. Whether TRK_LSENSE should leave the PWR class is a circuit
+question, because it lands on the tracker inductor's own terminal and may be carrying current rather than
+sensing it, and that belongs to the generation that also carries decision 31's clamps.
+
+**Board B's floor plan has been measured to the end of its room, and the answer to the margin is no.** Owner
+ruling 13's procedure, one region at a time with its overflow before and after: the nine regions the 2.6 mm
+fine-pitch margin overflows all reach zero (ETH 2.92 with 4 mm south, IOCA 1.78 with 3 north, RADE 1.81 with 3
+south, GAP12 2.61 with 2 west and 2.5 north, the two rail pockets 1.01 each by taking height from their SUP
+pocket, and the three switch pockets, 12.74, 5.69 and 3.69, by moving their boundary with SWE east and taking
+height through a chain). Width buys nothing on the rail pockets and everything on S1_SWIC; the switch pockets
+are boxed north by the M.2 socket, and at 2.6 their chain needs the 3 mm band between the SUP pockets and the
+board outline, which would put parts at the edge and is refused. **A region grown all the way to what stops it
+packs worse than before**: S2_SUP2 grown its measured 1 mm north went from 0.55 mm over to 3.57, because the
+obstacle is then inside the rectangle. And the trade, whole chain to the placed board with the predictor on
+each: today's rectangles at 1.6 predict **11** collisions (1465 escapes, 288 pads skipped), the resized ones at
+1.6 predict **13**, and the resized ones at 2.0 buy the escapes (1491 and 264) and produce **29 hard
+violations, every one a front part over the five SWD pins of an underside controller** that the schematic calls
+SWD pads and draws as a through-hole header. **With that one footprint on a surface-mount land the same arm
+reads 259 pads skipped and TEN collisions**, which beats today's eleven, and five hard violations left, all of
+them one part's seat. `PLACE_PTH_OBSTACLE`, refused twice before because the packer had nowhere to step, is
+free on the resized floor plan at 1.6 and costs GAP12 3.49 mm at 2.0. Nothing is applied while B21 routes: the
+rectangles, the margin and the SWD land are one change and they belong to B22.
