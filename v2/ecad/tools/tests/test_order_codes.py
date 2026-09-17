@@ -608,3 +608,30 @@ def t_a_board_is_certified_from_the_folder_it_declares_and_never_from_the_newest
         assert "x" not in miss
     finally:
         shutil.rmtree(d, ignore_errors=True)
+
+
+def t_a_run_about_one_board_does_not_rewrite_the_set_s_certification_table():
+    """`JLC-CERTIFIED.tsv` IS THE ORDER SET'S RECORD AND A SCOPED RUN WAS OVERWRITING IT (17 September 2026).
+
+    The table is 720 rows over every deliverable folder and it is what this project reads to know whether a
+    value can be bought at all. `jlc_certify.py --boards c` wrote 88 rows over it: every other board's parts
+    disappeared from the file a person reads while placing an order, and nothing said so. Same shape as the
+    scoped readiness run of the same morning, same answer: a narrowed run writes its own table beside its own
+    verdicts and leaves the set's alone.
+
+    Executed against the source, because running the real certification needs the network: the guard must be
+    there, keyed on the scope and on the table being the set's own.
+    """
+    import os
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(TOOLS, "jlc_certify.py"), errors="replace").read()
+    i = src.find("def main(")
+    assert i > 0
+    body = src[i:]
+    j = body.find("rows = rows_to_check(")
+    assert j > 0, "the certification no longer builds its rows where this rule looks"
+    head = body[:j]
+    assert "if only and os.path.abspath(a.table) == os.path.abspath(TABLE):" in head, \
+        ("a run scoped with --boards still writes the set's table: %s" % TOOLS)
+    assert "a.table = os.path.join(a.out_dir" in head, \
+        "the scoped run has no table of its own to write instead"
