@@ -182,6 +182,26 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^909R 1%", "R_0603"): "C203878",       # BOURNS CR0603-FX-9090ELF, 1%, stock 24,090 (eFuse ILM, 1.0 A)
  (r"^453R 1%", "R_0603"): "C48136",        # UNI-ROYAL 0603WAF4530T5E, 1%, stock 2,604 (eFuse ILM, 2.0 A)
 }
+# A BOARD THAT PLACES NO PART HAS NO BILL OF MATERIALS, AND THAT IS A DECLARED ZERO (17 September 2026, the
+# door `derate.py` already has for the same board). Board E5 is the dock block: copper, plated targets, wire
+# lands and four mounting holes, generated from board A's own board file. Its deliverable folder carries a CPL
+# with nothing but a header and no BOM at all, so this gate had nothing to open and the sweep reported "no
+# deliverable folder at its declared phase", which is FALSE (the folder is there and it is the one folder in
+# this release that passes its own gate) and left CMP-002 and SUP-001 inconclusive on it. A zero that the board
+# declares is an answer; only an undeclared one is a question.
+if "--no-components" in sys.argv:
+    _i = sys.argv.index("--no-components")
+    _why = sys.argv[_i + 1] if len(sys.argv) > _i + 1 else ""
+    print("lcsc_fill: this board places no part, so it has no bill of materials: %s" % (_why or "declared by the caller"))
+    import os as _os0
+    sys.path.insert(0, _os0.path.dirname(_os0.path.abspath(__file__)))
+    import verdict
+    sys.exit(verdict.write("lcsc_fill", verdict.PASS, denominator=0,
+                           counts={"rows": 0, "blank_over_allowance": 0, "rejected_code": 0, "stale_allow_lines": 0},
+                           inputs={"board": (sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else None)},
+                           note=("this board places no part, so there is no bill of materials to judge: %s. A "
+                                 "declared zero, not an absence" % (_why or "declared by the caller"))))
+
 path = sys.argv[1]; rows = list(csv.DictReader(open(path))); filled = 0
 
 # 11 September 2026 (MESHSAT-862). The MAP above is hand-maintained, 90-odd entries against several

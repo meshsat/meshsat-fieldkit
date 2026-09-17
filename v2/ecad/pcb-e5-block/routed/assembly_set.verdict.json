@@ -11,6 +11,7 @@
  "denominator": 1,
  "evidence": [],
  "inputs": {
+  "board": "e5",
   "rotations": "../release/revA/order/jlc-rotations.csv"
  },
  "missing_input": "there is no rotation table at ../release/revA/order/jlc-rotations.csv in this tree, so no rotation was compared",
@@ -25,9 +26,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "eaafe91e15b758ce"
+  "tools_tree_sha": "49c5dae5cbebd02a"
  },
- "ts": "2026-09-17T05:35:02Z",
+ "ts": "2026-09-17T08:27:58Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

@@ -202,7 +202,22 @@ run "energy chain" python3 $T/energy_chain.py --ecad "$E"
 # blank codes that the board being built does not have. Every board has three or four folders, so every board
 # was reading its oldest. A folder for a phase the tree is not cutting is not evidence about the board, in
 # either direction, so where the declared phase has no folder the rule stays INCONCLUSIVE and says why.
-_PHASE=$(python3 -c "import json,sys;print((json.load(open(sys.argv[1])).get('phase') or '').upper())" "$T/boards/$L.json" 2>/dev/null)
+# THE PHASE COMES FROM THE BOARD TABLE, AND E5 HAS NONE, SO THE FACTS ANSWER FOR IT (17 September 2026, the
+# same shape as the board NAME two screens up). Board E5 is a bare contact interposer with no schematic chain
+# and therefore no boards/e5.json, so this read an empty string, the order-code gate was skipped with "e5
+# declares no phase", and CMP-002 and SUP-001 stayed INCONCLUSIVE on a board whose deliverable folder is the
+# ONE in this release that passes its gate. `pcb_board_facts.yaml` has carried `phase_declared: E5` all along.
+_PHASE=$(python3 - "$T" "$L" <<'PYPHASE'
+import json, os, sys
+tools, letter = sys.argv[1], sys.argv[2]
+p = os.path.join(tools, "boards", "%s.json" % letter)
+if os.path.exists(p):
+    print(str((json.load(open(p, encoding="utf-8")) or {}).get("phase") or "").upper()); raise SystemExit(0)
+sys.path.insert(0, tools)
+import rules_lib
+print(str(((rules_lib.board_facts().get(letter) or {}).get("phase_declared")) or "").upper())
+PYPHASE
+)
 _BOM=""
 if [ -n "$_PHASE" ]; then _BOM=$(ls "$E/../release/revA/boards/"*"-$_PHASE"/$N-bom.csv 2>/dev/null | head -1); fi
 if [ -n "$_BOM" ]; then
@@ -217,6 +232,19 @@ if [ -n "$_BOM" ]; then
   # input never replaces one taken with more, and an allow file nobody could find is exactly that.
   cp "$_BOM" $S/out/$(basename "$_BOM")
   run "order codes" env LCSC_ALLOW="$P/lcsc-allow.txt" python3 $T/lcsc_fill.py "$S/out/$(basename "$_BOM")"
+elif [ -n "$_PHASE" ] && [ -d "$(ls -d "$E/../release/revA/boards/"*"-$_PHASE" 2>/dev/null | head -1)" ]; then
+  # THE FOLDER IS THERE AND IT HAS NO BILL OF MATERIALS, WHICH IS A FACT ABOUT THE BOARD (17 September 2026).
+  # Board E5 is the dock block: copper, plated targets, wire lands and four mounting holes. Its folder carries a
+  # CPL with a header and no row and no BOM at all, and the message here used to say "the folders that exist are
+  # for earlier phases", which is false and left CMP-002 and SUP-001 inconclusive on the one folder in this
+  # release that passes its own gate. A board that places no part says so through the same door derate.py has.
+  _FOLDER=$(ls -d "$E/../release/revA/boards/"*"-$_PHASE" 2>/dev/null | head -1)
+  _CPL="$_FOLDER/$N-cpl.csv"
+  if [ ! -f "$_FOLDER/$N-bom.csv" ] && [ -f "$_CPL" ] && [ "$(grep -cve '^[[:space:]]*$' "$_CPL")" -le 1 ]; then
+    run "order codes" python3 $T/lcsc_fill.py --no-components "board $(echo $L | tr a-z A-Z) places no part: its deliverable folder at $_PHASE carries a CPL with a header and no row, and no bill of materials"
+  else
+    echo "--- order codes"; echo "gate_sweep: the folder for $N at $_PHASE holds no $N-bom.csv and its CPL is not empty either, so the order-code rule is not judged here"
+  fi
 elif [ -n "$_PHASE" ]; then echo "--- order codes"; echo "gate_sweep: no deliverable folder for $N at its declared phase $_PHASE (the folders that exist are for earlier phases), so the order-code rule is not judged here"
 else echo "--- order codes"; echo "gate_sweep: $L declares no phase, so there is no folder to judge"; fi
 # return_gaps.py is a REPORT and not a gate: it says where rule 1's uncovered millimetres are, which is what a

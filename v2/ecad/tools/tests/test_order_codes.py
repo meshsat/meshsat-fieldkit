@@ -416,7 +416,9 @@ _PASSIVE = re.compile(r'\b([rc])\(\s*"([^"]+)"\s*,\s*"([^"]*)"(?P<rest>[^\n]*)')
 def _fill_routes():
     """The three ways a BOM comment gets a code: the map's regexes, the certified table, an allow line."""
     src = open(os.path.join(TOOLS, "lcsc_fill.py"), encoding="utf-8").read()
-    body = src[src.index("MAP = {"):src.index("}\npath = sys.argv[1]")]
+    # the slice ends at the line that reads the BOM path, wherever it now sits: a door added above it for a
+    # board that places no part moved it away from the MAP's closing brace (17 September 2026).
+    body = src[src.index("MAP = {"):src.index("path = sys.argv[1]")]
     pats = [p for p, _fp in re.findall(r'\(r"([^"]+)"\s*,\s*"([^"]+)"\)', body)]
     cert = set()
     table = os.path.join(os.path.dirname(TOOLS), "..", "release", "revA", "order", "JLC-CERTIFIED.tsv")

@@ -20,7 +20,7 @@
   },
   "drc": {
    "path": "out/pcb-e5-block-drc.json",
-   "sha256_16": "dcb218d30ccbe2a2"
+   "sha256_16": "a3e739c36ea05c91"
   }
  },
  "missing_input": null,
@@ -36,9 +36,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "eaafe91e15b758ce"
+  "tools_tree_sha": "49c5dae5cbebd02a"
  },
- "ts": "2026-09-17T05:34:54Z",
+ "ts": "2026-09-17T08:27:50Z",
  "verdict": "PASS",
  "version": "unknown"
 }
