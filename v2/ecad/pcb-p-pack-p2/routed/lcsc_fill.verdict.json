@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "blank_over_allowance": 0,
+  "rejected_code": 0,
+  "rows": 23,
+  "stale_allow_lines": 0
+ },
+ "denominator": 23,
+ "evidence": [],
+ "inputs": {},
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "lcsc_fill",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "5b334fc24ecbc81d"
+ },
+ "ts": "2026-09-17T12:17:27Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
