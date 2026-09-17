@@ -161,7 +161,7 @@ in name, in direction, and in the number of drivers.
 | risk | ELECTRICAL_FUNCTION, SAFETY |
 | verified by | SCRIPT at ROUTED_BOARD (automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | gen_sch_*.py |
+| implementation | gen_sch_*.py, gen_pcb_e5.py |
 | maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | not waivable |
@@ -175,7 +175,12 @@ inverted between two boards, and each board's own gate passed.
 **If violated** Asserting a safety line enables the thing it is meant to inhibit.
 
 **Today** INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written
-list and their completeness is not itself checked
+list and their completeness is not itself checked. 17 September 2026: board E5 is judged now. It has no
+schematic and no netlist, so its contract is between two BOARDS: gen_pcb_e5.py reads board A's board file and
+puts a target under each spring pin carrying that pin's net, and block_contract.py re-derives that match by
+position and compares it, 33 checks on the current A. It is the one blind-mate interface in the kit, where a
+target on the wrong net is invisible until the pack current is on it, and until today nothing checked it at
+all
 
 ### SCH-004  a safety line fails safe
 

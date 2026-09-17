@@ -432,21 +432,14 @@ def _v_out_dir():
 # A PER-BOARD VERDICT BESIDE THE SET ONE (16 September 2026), the pattern final_gate already uses. The set
 # verdict is what the contracts as a whole say and it still blocks; these say what each board's own contracts
 # say, so a board is no longer reported as failing a rule because of a defect on a board it does not touch.
-# BOARD E5 HAS NO NETLIST BY CONSTRUCTION and must still say so here (16 September 2026). The dock block has
-# no schematic: `gen_pcb_e5.py` reads board A's BOARD FILE and puts a target under each of its spring pins,
-# carrying the net of the pin above it. So the contract that matters for E5 is between two BOARDS rather than
-# two netlists, and this file cannot judge it. It writes the board an INCONCLUSIVE that says exactly that,
-# because "no verdict at all" reads as an oversight and this is a known gap with a named shape.
-for _bd in sorted(set(list(per_board) + list(B) + ["E5"])):
-    if _bd == "E5" and _bd not in B:
-        _v.write("check_contracts_e5", _v.INCONCLUSIVE, counts={"fail": 0, "pass": 0}, denominator=0,
-                 inputs={"boards": ",".join(sorted(B))},
-                 note="board E5 has no schematic and no netlist: gen_pcb_e5.py reads board A's BOARD FILE and "
-                      "puts a target under each spring pin carrying that pin's net, so its contract is between "
-                      "two boards rather than two netlists and this check cannot judge it. It is a gap with a "
-                      "known shape, not an oversight",
-                 quiet=True)
-        continue
+# BOARD E5 HAS NO NETLIST BY CONSTRUCTION AND ITS CONTRACT IS JUDGED, 17 September 2026. The dock block has
+# no schematic: gen_pcb_e5.py reads board A's BOARD FILE and puts a target under each spring pin carrying that
+# pin's net. This file wrote E5 an INCONCLUSIVE saying so, which was honest and left the one board of the set
+# whose interface is blind-mate with no check on its pin map at all. `block_contract.py` judges it between the
+# two BOARDS, by position, and writes check_contracts_e5 itself. Nothing is written for E5 here, so the two
+# cannot overwrite each other.
+for _bd in sorted(set(list(per_board) + list(B))):
+    if _bd == "E5": continue          # block_contract.py writes this board's verdict
     # A HOST THAT CANNOT SEE THE NETLIST HAS NOTHING TO SAY ABOUT IT, and saying it anyway DESTROYS the
     # reading taken where the netlist existed (16 September 2026). The netlists are written by the chains into
     # each project's untracked out/, so on the runner every board is absent; one incidental run of this check

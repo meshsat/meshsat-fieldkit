@@ -43,9 +43,9 @@ coverage:
  SCH-002: {implementation: "gen_pcb_*3.py", verification: {tool: netlist_board.py, verdict: netlist_board, fixtures: tests/test_netlist_board.py},
    maturity: ENFORCED, gap_category: NONE, note: "three comparisons with denominators; runs on the placed and on the routed board"}
 
- SCH-003: {implementation: "gen_sch_*.py", verification: {tool: check_contracts.py, verdict: "check_contracts_<letter>", fixtures: tests/test_gate_fixtures.py},
+ SCH-003: {implementation: "gen_sch_*.py, gen_pcb_e5.py", verification: {tool: "check_contracts.py, block_contract.py", verdict: "check_contracts_<letter>", fixtures: "tests/test_gate_fixtures.py, tests/test_block_contract.py"},
    maturity: ENFORCED, gap_category: NONE,
-   note: "INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written list and their completeness is not itself checked"}
+   note: "INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written list and their completeness is not itself checked. 17 September 2026: board E5 is judged now. It has no schematic and no netlist, so its contract is between two BOARDS: gen_pcb_e5.py reads board A's board file and puts a target under each spring pin carrying that pin's net, and block_contract.py re-derives that match by position and compares it, 33 checks on the current A. It is the one blind-mate interface in the kit, where a target on the wrong net is invisible until the pack current is on it, and until today nothing checked it at all"}
 
  SCH-004: {implementation: "gen_sch_b.py, gen_sch_c.py, gen_sch_d.py",
    verification: {tool: check_contracts.py, verdict: check_contracts, document: "docs/OWNER-DECISIONS-2026-09-11.md"},

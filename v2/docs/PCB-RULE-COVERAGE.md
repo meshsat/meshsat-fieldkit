@@ -53,7 +53,7 @@ appears in the gap register.
 | RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py | **ENFORCED** |
 | SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py -> netlist_board | tests/test_netlist_board.py | **ENFORCED** |
-| SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | check_contracts.py -> check_contracts_<letter> | tests/test_gate_fixtures.py | **ENFORCED** |
+| SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py, gen_pcb_e5.py | check_contracts.py, block_contract.py -> check_contracts_<letter> | tests/test_gate_fixtures.py, tests/test_block_contract.py | **ENFORCED** |
 | SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | check_contracts.py -> check_contracts |  | **OWNER_DECISION_REQUIRED** |
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml | rules_status.py -> rules_complete | tests/test_rules_status.py | **ENFORCED** |
 | SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | rules_render.py prototype_doc | rules_render.py | tests/test_rule_gate_mapping.py | **VERIFIED_MANUALLY** |
