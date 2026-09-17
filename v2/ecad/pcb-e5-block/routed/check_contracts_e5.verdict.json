@@ -29,9 +29,9 @@
  "tool": "check_contracts_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "64929b69a44633d2"
+  "tools_tree_sha": "325c41b5b40fcad1"
  },
- "ts": "2026-09-17T01:24:07Z",
+ "ts": "2026-09-17T02:09:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -175,8 +175,8 @@ def _document_current(rel):
 ROUTE_GATE = "hardset-routed-board-gate"
 
 
-def _unrouted(vs):
-    """(n, why) from the routed-board gate's own count, or (0, "") when it has not run.
+def _unrouted(vs, m=None, fingerprint=None, identities=None):
+    """(n, why) from the routed-board gate's own count, or (0, "") when it has not run or is not current.
 
     A BOARD THAT IS NOT ROUTED HAS NOT FAILED THE RULES THAT NEED A ROUTED BOARD (17 September 2026). Board B
     is mid-route: the board committed in its phase directory is the placed one, 499 connections open and every
@@ -192,6 +192,12 @@ def _unrouted(vs):
     because "nothing unrouted" is exactly what they are there to say."""
     rec = vs.get(ROUTE_GATE)
     if not rec: return 0, ""
+    # AND IT HAS TO BE CURRENT EVIDENCE ITSELF. A stale routed-board gate, taken on a board this phase no
+    # longer holds, would otherwise suppress every routed-board rule on a board that IS routed: the guard is
+    # only allowed to speak when the reading it speaks from is one this computation would accept anywhere else.
+    if m is not None:
+        ok, _why = _fresh(rec, m, fingerprint, identities)
+        if not ok: return 0, ""
     n = (rec.get("counts") or {}).get("unrouted")
     if not n: return 0, ""
     return n, ("the board this tree holds for this phase is not routed (%s reports %d unrouted connection(s)), "
@@ -230,7 +236,7 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
     # decides, because a rule is satisfied only when every tool that verifies it says so.
     names = [n.strip().replace("<letter>", letter) for n in str(raw).split(",") if n.strip()]
     if rule["verification_phase"] == "ROUTED_BOARD" and ROUTE_GATE not in names:
-        n_un, why_un = _unrouted(vs)
+        n_un, why_un = _unrouted(vs, m, fingerprint, identities)
         if n_un: return dict(result=INCONCLUSIVE, why=why_un, evidence=(vs.get(ROUTE_GATE) or {}).get("_path"))
     worst = None
     for name in names:

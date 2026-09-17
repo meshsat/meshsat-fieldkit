@@ -8642,3 +8642,14 @@ estimate and a number.
 **Readiness: NOT_READY, 57.7 percent verified, 15.3 failed, 27.0 inconclusive of 300**, every board's evidence
 now taken by the same tools. Suite **838**. Running: **A40 (no grid) and A41 (grid)** on the second box, which
 decide board A's deliverable; **C25**, the same measurement for board C, and **B21** on the hub.
+
+**CORRECTION to 32.211, the same night.** The anti-pad separation's first form accepted a point as a hole in
+the reference if the fill resumed in ANY of four directions from the barrel, which calls a point just OUTSIDE
+a fill's edge an anti-pad when a via of its own net happens to sit inside the fill; and its second form, which
+asked the two ends of the line from the barrel through the point, collapsed both probes onto the barrel's own
+centre for a point sitting ON the barrel, where there is no line to ask about. Both are fixed: the fill must
+resume on BOTH sides along that line, and a point on the barrel itself is asked only whether a fill surrounds
+it. **The numbers are therefore: board E one net over its limit to NONE (266.8 mm of anti-pads), board D
+unchanged at zero (440.5 mm), board C 18 to 16 (497.6 mm) and board P 6 to 5 (17.6 mm).** The finding that
+made it worth doing survives the tightening, which is the only test of it that matters: board E's single
+failing net was its own via holes and nothing else.

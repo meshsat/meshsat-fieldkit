@@ -89,9 +89,27 @@ def run(b, check, path=None):
             dx = q.x - p.x; dy = q.y - p.y
             if dx * dx + dy * dy > r * r: continue
             out = r + 250000          # 0.25 mm beyond the clearance ring: far enough to be off the anti-pad
-            for ox, oy in ((out, 0), (-out, 0), (0, out), (0, -out)):
-                probe = pcbnew.VECTOR2I(int(q.x + ox), int(q.y + oy))
-                if any(pl.Contains(probe) for Ln in Ls for pl in planes.get(Ln, [])): return True
+            # THE FILL MUST RESUME ON BOTH SIDES, along the line from the barrel through this point. Probing
+            # four fixed directions and accepting any one of them calls a point an anti-pad when it lies just
+            # OUTSIDE a fill's edge with a via of its own net inside it: beyond such a point the reference
+            # does not resume, and the gap is real. Asking the two ends of the same line is the difference
+            # between a hole and an edge.
+            dx = p.x - q.x; dy = p.y - q.y
+            m = (dx * dx + dy * dy) ** 0.5
+            if m < 1000:
+                # THE SAMPLE IS ON THE BARREL ITSELF and there is no line through it to ask about: the point
+                # is inside the hole by construction, so the question is only whether a fill surrounds it.
+                # Left as a direction of zero this collapsed both probes onto the via's own centre, which is
+                # never filled, and every anti-pad on every board came back as a real break (17 September).
+                pairs = (((out, 0), (-out, 0)), ((0, out), (0, -out)))
+            else:
+                ux, uy = dx / m, dy / m
+                pairs = (((ux * out, uy * out), (-ux * out, -uy * out)),)
+            for pair in pairs:
+                if all(any(pl.Contains(pcbnew.VECTOR2I(int(q.x + ox), int(q.y + oy)))
+                           for Ln in Ls for pl in planes.get(Ln, []))
+                       for ox, oy in pair):
+                    return True
         return False
     gaps = {}; anti = {}; total = {}; n_nets = 0; n_tracks = 0
     for tr in b.GetTracks():

@@ -7,7 +7,7 @@
  },
  "denominator": 1,
  "evidence": [
-  "A USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.15 mm, which is 6.7 times tighter"
+  "A USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.10 mm, which is 10.0 times tighter"
  ],
  "inputs": {
   "board": "a",
@@ -23,10 +23,10 @@
  ],
  "tool": "interfaces_a",
  "tools": {
-  "git_head": "810470d2401c",
-  "tools_tree_sha": "ae847240cfab6eaa"
+  "git_head": "",
+  "tools_tree_sha": "325c41b5b40fcad1"
  },
- "ts": "2026-09-17T01:58:43Z",
+ "ts": "2026-09-17T02:08:26Z",
  "verdict": "FAIL",
- "version": "810470d2401c+dirty"
+ "version": "unknown"
 }
