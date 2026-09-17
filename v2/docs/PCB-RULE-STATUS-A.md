@@ -7,7 +7,7 @@ Manifest **2026-09-16.1**, rule set **f8db9f9b0747ca1b**, evidence epoch **2026-
 
 **Readiness: NOT_READY**
 
-Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A36: THIS TREE HOLDS NO BOARD AT THE DECLARED PHASE.
+Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 > **HELD BY OWNER DECISION 31.** ROUTING_STATUS = OPEN   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
 >
