@@ -9,7 +9,15 @@ Two exemptions, both about one footprint against itself: a courtyard overlap of 
 receptacle) and a solder-mask bridge inside one footprint (two pads of a fine-pitch part, which JLC gang-masks, or a library mask drawing over its
 own pad; a bridge between different parts or pad to track stays hard).
 
-Usage: hardset.py [measure|gate] <drc.json> [pre|post] [--score FILE] [--counts FILE] [--gate FILE] [--flag FILE] [--label TEXT] [--examples N]
+Usage: hardset.py [measure|gate] <drc.json> [pre|post] [--score FILE] [--counts FILE] [--gate FILE] [--flag FILE] [--label TEXT] [--examples N] [--board FILE]
+
+A VERDICT NAMES THE BOARD IT WAS TAKEN ON (17 September 2026, rule PLC-001). A DRC report is a derived file
+and its path says nothing about which board produced it, so every judgement this tool made was attributable
+only by the directory it happened to sit in. That is how three boards read "no hardset-placed verdict for this
+board" while their placement HAD been measured, in a tree that was thrown away, and why such a verdict could
+not simply be carried beside the board it belongs to: nothing could prove it was about that board. `--board`
+records the board file's own sha256, which is what `rules_status` compares against the boards a project
+directory holds. Without it the behaviour is unchanged and the verdict names only the report.
 
 TWO VERBS, because one exit code meant two things (red team, 12 September 2026). `--score` and `--counts`
 callers read exit 0 as "the report was readable", and the verdict file said PASS or FAIL, so a valid dirty
@@ -109,8 +117,20 @@ def main(a):
     except RuntimeError as e:
         print("hardset: BLOCK %s" % e)
         return verdict.write(_vname(opt("--label")), verdict.INCONCLUSIVE, denominator=0,
-                             inputs={"drc": a[0]}, note=str(e))
+                             inputs=({"drc": a[0], "board": {"path": os.path.basename(opt("--board"))}}
+                                     if opt("--board") else {"drc": a[0]}), note=str(e))
     c = counts(d, which); n = int(opt("--examples") or 4)
+    # The board this judgement is about, by its own content. A board that cannot be read is named and not
+    # guessed at: an unreadable path is recorded as such rather than silently dropping the identity.
+    _inputs = {"drc": a[0]}
+    _bp = opt("--board")
+    if _bp:
+        try:
+            import hashlib
+            _inputs["board"] = {"path": os.path.basename(_bp),
+                                "sha256_16": hashlib.sha256(open(_bp, "rb").read()).hexdigest()[:16]}
+        except OSError as _e:
+            _inputs["board"] = {"path": os.path.basename(_bp), "unreadable": str(_e)[:80]}
     print("hardset: hard %d of %d types %s unrouted %d | report %s%s" % (c["hard"], len(c["types"]), c["by_type"] or "{}", c["unrouted"], c["report"] or "{}",
           (" | exempt %s" % c["exempt"]) if c["exempt"] else ""))
     for line in examples(d, which, n): print(line)
@@ -137,7 +157,7 @@ def main(a):
                           "by_type": c["by_type"], "report": c["report"], "stage": which},
                   denominator=len(c["types"]),
                   evidence=examples(d, which, 6),
-                  inputs={"drc": a[0]},
+                  inputs=_inputs,
                   note=((opt("--label") or "") +
                         (" (pre-route: only the hard set decides, an unrouted board is the expected input)" if not unrouted_counts
                          else " (routed board: hard and unrouted must both be zero)") +

@@ -115,3 +115,82 @@ def t_no_second_hard_set_definition_anywhere_in_the_tools():
                 if sum(1 for t in TYPES if ('"%s"' % t) in s or ("'%s'" % t) in s) >= 2:
                     hits.append("%s:%d %s" % (os.path.relpath(p, TOOLS), n, s[:100]))
     assert not hits, "a second hard-set definition is back (%d line(s)):\n  " % len(hits) + "\n  ".join(hits)
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A JUDGEMENT NAMES THE BOARD IT WAS TAKEN ON (17 September 2026, rule PLC-001).
+#
+# The defect: a DRC report is a derived file, and a hardset verdict named only that report. So a verdict was
+# attributable only by the directory it sat in, and a placement measurement could not be carried beside the
+# board it belongs to, because nothing in it could prove which board it was about. Boards A, D and P read "no
+# hardset-placed verdict for this board" while their placement HAD been measured, in trees that were later
+# thrown away, and the verdicts that survived on the box could not honestly be adopted.
+#
+# `rules_status._named_board` compares `inputs.board.sha256_16` with the boards a project directory holds, so
+# the identity has to be the board's own content and not its path.
+
+def _run(args, cwd):
+    return subprocess.run([sys.executable, os.path.join(TOOLS, "hardset.py")] + args,
+                          cwd=cwd, capture_output=True, text=True)
+
+
+def t_a_labelled_judgement_records_the_board_it_read():
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "out"))
+        drc = os.path.join(d, "r.json"); open(drc, "w").write(json.dumps(_drc()))
+        board = os.path.join(d, "b.kicad_pcb"); open(board, "wb").write(b"(kicad_pcb (version 20240108))\n")
+        import hashlib
+        want = hashlib.sha256(open(board, "rb").read()).hexdigest()[:16]
+        r = _run([drc, "post", "--label", "placed", "--board", board], d)
+        assert r.returncode == 0, r.stderr
+        v = json.load(open(os.path.join(d, "out", "hardset-placed.verdict.json")))
+        got = ((v.get("inputs") or {}).get("board") or {}).get("sha256_16")
+        assert got == want, "the verdict names board %r, the file hashes to %r" % (got, want)
+
+
+def t_without_the_board_the_verdict_is_unchanged():
+    """The identity is an addition, not a demand: every caller that has no board file still writes a verdict,
+    and it names no board rather than naming a wrong one."""
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "out"))
+        drc = os.path.join(d, "r.json"); open(drc, "w").write(json.dumps(_drc()))
+        r = _run([drc, "post", "--label", "placed"], d)
+        assert r.returncode == 0, r.stderr
+        v = json.load(open(os.path.join(d, "out", "hardset-placed.verdict.json")))
+        assert (v.get("inputs") or {}).get("board") is None, v.get("inputs")
+        assert v.get("verdict") == "PASS", v.get("verdict")
+
+
+def t_an_unreadable_board_is_named_and_not_hashed():
+    """A path that cannot be read must not produce an identity: a verdict that claims a board it never read is
+    worse than one that names none, because the comparison would silently pass."""
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "out"))
+        drc = os.path.join(d, "r.json"); open(drc, "w").write(json.dumps(_drc()))
+        r = _run([drc, "post", "--label", "placed", "--board", os.path.join(d, "gone.kicad_pcb")], d)
+        assert r.returncode == 0, r.stderr
+        b = (json.load(open(os.path.join(d, "out", "hardset-placed.verdict.json"))).get("inputs") or {}).get("board")
+        assert b and "sha256_16" not in b and "unreadable" in b, b
+
+
+def _hardset_calls(text):
+    """Every hardset invocation in a shell script, as one logical line each."""
+    out = []
+    for raw in text.splitlines():
+        line = raw.strip()
+        if "hardset.py" in line and not line.startswith("#"):
+            out.append(line)
+    return out
+
+
+def t_every_judgement_on_a_board_this_script_holds_names_that_board():
+    """THE STRUCTURAL HALF. A script that reads `$N-...drc.json` has `$N.kicad_pcb` beside it by construction,
+    so there is no reason for its judgement to be anonymous, and every reason for it not to be: these are the
+    verdicts the registry reads."""
+    import glob as _g
+    bad = []
+    for p in sorted(_g.glob(os.path.join(TOOLS, "*.sh"))):
+        for line in _hardset_calls(open(p, encoding="utf-8", errors="replace").read()):
+            if re.search(r"\$N[A-Za-z_-]*drc\.json", line) and "--board" not in line:
+                bad.append("%s: %s" % (os.path.basename(p), line[:110]))
+    assert not bad, "a judgement about a board the script holds, that does not name it:\n  " + "\n  ".join(bad)

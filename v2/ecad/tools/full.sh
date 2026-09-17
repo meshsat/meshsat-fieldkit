@@ -168,7 +168,7 @@ bash ../tools/drc.sh $N.kicad_pcb out/$N-placed-drc.json >/dev/null 2>&1; DRCRC=
 [ "$DRCRC" -eq 0 ] || block "the placed-board DRC did not run (drc.sh exit $DRCRC): its legality is UNMEASURED and the route below is not a measurement"
 [ -s "out/$N-placed-drc.json" ] || block "the placed-board DRC wrote no report: its legality is UNMEASURED"
 if [ -s "out/$N-placed-drc.json" ]; then
-  python3 ../tools/hardset.py out/$N-placed-drc.json pre --counts out/placed-counts.txt --label placed >/dev/null 2>&1; HSRC=$?
+  python3 ../tools/hardset.py out/$N-placed-drc.json pre --counts out/placed-counts.txt --label placed --board $N.kicad_pcb >/dev/null 2>&1; HSRC=$?
   [ "$HSRC" -eq 0 ] || block "hardset could not read the placed-board DRC report (exit $HSRC)"
   [ -s out/placed-counts.txt ] || block "hardset wrote no counts for the placed board"
   PLACED_HARD="$(cut -d' ' -f1 out/placed-counts.txt 2>/dev/null || echo 0)"
@@ -227,7 +227,7 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # holds a board that declares no coupled fraction, exactly as an unlaid one does.
   ../tools/drc.sh $N.kicad_pcb out/$N-pairs-drc.json >/dev/null 2>&1 || true
   if [ -s out/$N-pairs-drc.json ]; then
-    VERDICT_ADVISORY=1 python3 ../tools/hardset.py out/$N-pairs-drc.json pre --examples 4 --label 'pre-route DRC on the pair copper' | sed 's/^hardset:/pre-route DRC (pair copper):/' || true   # a measurement: the prune acts on it, the chain's own DRC below decides
+    VERDICT_ADVISORY=1 python3 ../tools/hardset.py out/$N-pairs-drc.json pre --examples 4 --label 'pre-route DRC on the pair copper' --board $N.kicad_pcb | sed 's/^hardset:/pre-route DRC (pair copper):/' || true   # a measurement: the prune acts on it, the chain's own DRC below decides
     python3 ../tools/pair_prune.py $N.kicad_pcb out/$N-pairs-drc.json 2>&1 | grep -E "pair_prune|Traceback|Error"; PRUNE=${PIPESTATUS[0]}
     [ "$PRUNE" -ne 2 ] || [ "$PP" -ne 0 ] || PP=2
   fi
@@ -237,7 +237,7 @@ if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # blocks; what changes is that the evidence exists when it does.
   if [ "$PP" -ne 0 ] && [ "${PAIR_GATE:-1}" != 0 ]; then
     ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json >/dev/null 2>&1 || true
-    [ -s out/$N-preroute-drc.json ] && VERDICT_ADVISORY=1 python3 ../tools/hardset.py out/$N-preroute-drc.json pre --examples 4 --label 'pre-route DRC on the refused board' | sed 's/^hardset:/pre-route DRC (refused board):/' || true
+    [ -s out/$N-preroute-drc.json ] && VERDICT_ADVISORY=1 python3 ../tools/hardset.py out/$N-preroute-drc.json pre --examples 4 --board $N.kicad_pcb --label 'pre-route DRC on the refused board' | sed 's/^hardset:/pre-route DRC (refused board):/' || true
   fi
   # 15 September 2026, owner ruling 02:40 CEST (decision 24 delegated to the session, option 2 taken): a board that
   # declares pair_coupled_fraction is held only while the pre-router lays FEWER than that fraction of its pairs;
@@ -334,7 +334,7 @@ PYSTACK
 
 cp $N.kicad_pcb out/$N-preroute.kicad_pcb
 ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
-python3 ../tools/hardset.py out/$N-preroute-drc.json pre --gate out/preroute-gate.txt --examples 6 --label 'pre-route DRC' | sed 's/^hardset:/pre-route DRC:/'
+python3 ../tools/hardset.py out/$N-preroute-drc.json pre --gate out/preroute-gate.txt --examples 6 --label 'pre-route DRC' --board $N.kicad_pcb | sed 's/^hardset:/pre-route DRC:/'
 python3 ../tools/check_zone_nets.py $N.kicad_pcb > out/zone_nets.log 2>&1; ZN=$?; grep -E "FAIL|zone nets" out/zone_nets.log
 [ "$ZN" -eq 0 ] || echo "BLOCK zone-nets (DRC gate said: $(cat out/preroute-gate.txt))" > out/preroute-gate.txt
 V=$(cat out/preroute-gate.txt); echo PREROUTE-DONE $V; [ "$V" = OK ] || exit 1   # a chain run by hand used to exit 0 on its own BLOCK
