@@ -255,7 +255,11 @@ mkdir -p routed && cp out/$N-pruned.txt routed/$N-pruned.txt 2>/dev/null || true
 # placed snapshot and the board being cut, carries the three verdicts with both shas recorded when none
 # moved, and refuses when one did, because then this board's placement was never measured.
 if [ -s "out/$N-placed.kicad_pcb" ]; then
-  python3 $T/carry_placed.py "out/$N-placed.kicad_pcb" "$N.kicad_pcb" out routed 2>&1 | head -6
+  # NON-FATAL BY CONSTRUCTION. This stage carries EVIDENCE and changes no copper, so it must never be able to
+  # end a finish that a five-hour route paid for: its refusal is the honest answer (the placement was not
+  # measured for this board) and the readiness computation already treats an absent verdict as inconclusive.
+  # The pipeline runs under pipefail, so the status is taken and discarded deliberately rather than by luck.
+  python3 $T/carry_placed.py "out/$N-placed.kicad_pcb" "$N.kicad_pcb" out routed 2>&1 | head -6 || true
 else
   echo "carry_placed: no placed snapshot in this tree, so the placement's evidence is not carried (PLC-001 stays unmeasured for this board)"
 fi
