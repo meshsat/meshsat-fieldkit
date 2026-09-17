@@ -350,3 +350,31 @@ def t_a_run_about_one_board_does_not_write_the_set_s_completeness_verdict():
             "the scoped run left the verdict alone and did not say so, which reads as though it had checked the set"
     finally:
         shutil.rmtree(keep, ignore_errors=True)
+
+
+def t_a_verdict_under_an_older_rule_set_does_not_stand_in_front_of_a_current_one():
+    """HISTORY NEVER STANDS IN FRONT OF A CURRENT READING (17 September 2026).
+
+    `_supersedes` protects a reading that HAD its input from being replaced by one that declares its input
+    absent, which is this project's own rule. On 17 September it protected a STALE one: board A's parts were
+    last certified under rule set 8087c341, before that morning's applicability correction, and from the folder
+    of a board this tree does not hold; the fresh reading says so with `missing_input` and was refused for
+    saying it, so six rule-board pairs read "taken under rule set 8087c341" where the true reason is "there is
+    no deliverable folder at the declared phase".
+
+    A verdict taken under a superseded rule set is not evidence at all, since `_fresh` refuses it wherever it
+    is read, so it cannot be the thing that keeps a current reading out. Fingerprint first, then input.
+    """
+    import copy
+    old = {"tool": "t", "ts": "2026-09-17T00:00:00Z", "verdict": "PASS", "denominator": 9,
+           "policy": {"rule_set_fingerprint": "an_older_one"}}
+    new = {"tool": "t", "ts": "2026-09-17T12:00:00Z", "verdict": "INCONCLUSIVE", "denominator": 0,
+           "missing_input": "no deliverable folder at the declared phase",
+           "policy": {"rule_set_fingerprint": S._fingerprint_now()}}
+    assert S._supersedes(new, old), \
+        "a verdict taken under a superseded rule set kept a current reading out, which is how a board comes to " \
+        "report the wrong reason for being inconclusive"
+    # and the input rule still binds among readings of the SAME rule set
+    same_old = copy.deepcopy(old); same_old["policy"]["rule_set_fingerprint"] = S._fingerprint_now()
+    assert not S._supersedes(new, same_old), \
+        "a reading that declares its input absent replaced one that had it, under the same rule set"
