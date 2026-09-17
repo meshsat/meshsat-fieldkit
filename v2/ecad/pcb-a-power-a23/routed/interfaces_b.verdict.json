@@ -11,7 +11,7 @@
   "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
   "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
   "B USB3_CM5: this project judges intra-pair mismatch at 1.00 mm and USB3_CM5 asks for 0.10 mm, which is 10.0 times tighter",
-  "B USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.10 mm, which is 10.0 times tighter",
+  "B USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.15 mm, which is 6.7 times tighter",
   "B ETHERNET_CM5: this project judges intra-pair mismatch at 1.00 mm and ETHERNET_CM5 asks for 0.15 mm, which is 6.7 times tighter",
   "B HDMI_CM5: this project judges intra-pair mismatch at 1.00 mm and HDMI_CM5 asks for 0.15 mm, which is 6.7 times tighter"
  ],
@@ -29,10 +29,10 @@
  ],
  "tool": "interfaces_b",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "64929b69a44633d2"
+  "git_head": "810470d2401c",
+  "tools_tree_sha": "ae847240cfab6eaa"
  },
- "ts": "2026-09-17T01:43:56Z",
+ "ts": "2026-09-17T01:58:42Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "810470d2401c+dirty"
 }

@@ -116,3 +116,25 @@ def t_the_verdict_is_per_board_and_not_one_for_the_set():
     res = interfaces.judge()
     assert not res["c"]["fails"], "board C disagrees with its own parts: %s" % res["c"]["fails"][:2]
     assert res["b"]["fails"], "board B's tolerance gap is no longer reported"
+
+
+def t_every_number_in_the_sheet_appears_in_one_of_its_own_quotes():
+    """A number is only as good as the sentence it was read from (17 September 2026).
+
+    `USB2_CM5` carried an intra-pair tolerance of 0.10 mm and quoted the clause that says "with length
+    matching within each pair", which states no number at all: the 0.10 had come from the USB 3.0 clause
+    beside it. What applies where an interface clause is silent is the datasheet's own general
+    recommendation, 4.2.2, and that says 0.15 mm. The rule is mechanical and it found exactly one entry.
+    """
+    import yaml
+    d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_interfaces.yaml"), encoding="utf-8"))
+    bad = []
+    for name, v in sorted((d.get("interfaces") or {}).items()):
+        quotes = " ".join(str(s.get("quote", "")) for s in (v.get("sources") or []))
+        for field in ("intra_pair_mm", "inter_pair_mm", "max_length_mm", "impedance_ohm"):
+            val = v.get(field)
+            if val is None: continue
+            forms = {("%g" % val), ("%s" % val), ("%.2f" % val).rstrip("0").rstrip(".")}
+            if not any(f in quotes for f in forms):
+                bad.append("%s %s = %s appears in none of its own quotes" % (name, field, val))
+    assert not bad, "; ".join(bad)

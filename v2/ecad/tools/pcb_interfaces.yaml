@@ -47,7 +47,11 @@ interfaces:
     what: "USB 2.0 high speed, 480 Mb/s, on the Compute Module 5"
     impedance_ohm: 90
     impedance_tol_percent: 10
-    intra_pair_mm: 0.10
+    # 0.15 mm, NOT 0.10: the USB 2.0 clause of this datasheet gives no number at all, and the entry carried
+    # 0.10 from the USB 3.0 clause beside it while quoting the clause that says nothing (17 September 2026).
+    # What applies where an interface clause is silent is the datasheet's own general recommendation, 4.2.2,
+    # and it says 0.15 mm. Both are "recommend" and "ideally": guidance from the host, not conformance.
+    intra_pair_mm: 0.15
     inter_pair_mm: null
     max_length_mm: null
     sources:
@@ -55,6 +59,14 @@ interfaces:
          quote: "Both USB 3.0 and USB 2.0 require 90 Ohm differential impedance, with length matching within
            each pair",
          url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}
+      - {title: "Raspberry Pi Compute Module 5 datasheet", clause: "4.2.2 Differential pairs",
+         quote: "We recommend that positive and negative (P/N) signals within a differential pair are
+           length-matched to within 0.15 mm",
+         url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-17"}
+      - {title: "USB 2.0 Specification, the scale this interface tolerates", clause: "7.1.3 Cable Skew",
+         quote: "The maximum skew introduced by the cable between the differential signaling pair (i.e., D+
+           and D- (TSKEW)) must be less than 100 ps",
+         url_or_path: "v2/vendor/standards/usb-2-0-specification-2024-09-27.md", accessed: "2026-09-17"}
 
   USB3_CM5:
     what: "USB 3.0 SuperSpeed, 5 Gb/s, on the Compute Module 5"
