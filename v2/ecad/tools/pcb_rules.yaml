@@ -246,7 +246,7 @@ rules:
    verification_method: [SCRIPT, MANUAL_REVIEW]
    verification_phase: SCHEMATIC
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, b, c, d]
+   boards_affected: [a, b, c, d, e, e5, p]
    interfaces_affected: [IDC_RIBBON]
    implementation_location: "tools/safe_lines.py, each board's safety_lines declaration in tools/boards/<letter>.json"
    false_positive_analysis: >
@@ -499,7 +499,7 @@ rules:
    verification_method: [CALCULATION, MANUAL_REVIEW]
    verification_phase: SCHEMATIC
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, e, e5, p]
+   boards_affected: [a, b, e, e5, p]
    interfaces_affected: [NONE]
    implementation_location: NONE_YET
    evidence_scope: [schematic_sha256, manifest_version]
@@ -1155,7 +1155,7 @@ rules:
    verification_method: [SCRIPT]
    verification_phase: ROUTED_BOARD
    automation_feasibility: AUTOMATABLE
-   boards_affected: [a, b, d]
+   boards_affected: [a, b, c, d, e]
    interfaces_affected: [PCIE, USB2, USB3, HDMI, ETHERNET]
    implementation_location: NONE_YET
    evidence_scope: [board_sha256, stackup, stage]
@@ -1245,7 +1245,7 @@ rules:
    verification_method: [SCRIPT, MANUAL_REVIEW]
    verification_phase: SCHEMATIC
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [b, c, d, e]
+   boards_affected: [a, b, c, d, e]
    interfaces_affected: [CAN, ETHERNET, USB2]
    implementation_location: NONE_YET
    evidence_scope: [schematic_sha256]
@@ -1279,7 +1279,7 @@ rules:
    verification_method: [MANUAL_REVIEW, SCRIPT]
    verification_phase: PLACED_BOARD
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, d, e, p]
+   boards_affected: [a, d, e, e5, p]
    interfaces_affected: [AUDIO_ANALOG, SMBUS]
    implementation_location: NONE_YET
    evidence_scope: [board_sha256, schematic_sha256, stage]
@@ -1324,7 +1324,7 @@ rules:
    verification_method: [SCRIPT, SIMULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
    verification_phase: ROUTED_BOARD
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [b, d]
+   boards_affected: [a, b, d, e]
    interfaces_affected: [RF_TX, RF_RX, BLIND_MATE_RF]
    implementation_location: NONE_YET
    evidence_scope: [board_sha256, stackup, stage, module_datasheet_revision]
@@ -1399,7 +1399,7 @@ rules:
    verification_method: [MANUAL_REVIEW, SCRIPT]
    verification_phase: SCHEMATIC
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, b, c, d, e]
+   boards_affected: [a, b, c, d, e, e5, p]
    interfaces_affected: [PCIE, USB2, USB3, USBC_PD, HDMI, ETHERNET, POE, SMBUS, I2C, SPI, UART, CAN, GNSS, M2_SOCKET]
    implementation_location: "interfaces.py over pcb_interfaces.yaml, with check_contracts.py holding the module's own clauses"
    evidence_scope: [schematic_sha256, spec_revision]
@@ -1526,7 +1526,7 @@ rules:
    verification_method: [MANUAL_REVIEW, SCRIPT]
    verification_phase: SCHEMATIC
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, b, c, d, e, p]
+   boards_affected: [a, b, c, d, e, e5, p]
    interfaces_affected: [ETHERNET, USBC_PD, BLIND_MATE_RF, USB2, SMBUS]
    implementation_location: NONE_YET
    evidence_scope: [schematic_sha256]
@@ -1610,7 +1610,7 @@ rules:
    verification_method: [CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT]
    verification_phase: PLACED_BOARD
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, b, d, e, p]
+   boards_affected: [a, b, c, d, e, p]
    interfaces_affected: [NONE]
    implementation_location: NONE_YET
    evidence_scope: [schematic_sha256, board_sha256, envelope_version]
@@ -2004,7 +2004,7 @@ rules:
    verification_method: [SCRIPT, VENDOR_CONFIRMATION, MANUAL_REVIEW]
    verification_phase: RELEASE_PACKAGE
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, b, c, d, e, p]
+   boards_affected: [a, b, c, d, e, e5, p]
    interfaces_affected: [NONE]
    implementation_location: NONE_YET
    evidence_scope: [cpl_sha256, bom_sha256, rotation_table_sha]

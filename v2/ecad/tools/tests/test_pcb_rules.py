@@ -165,3 +165,24 @@ def t_the_registry_does_not_carry_a_live_maturity():
     bare = [r["id"] for r in reg["rules"] if "maturity" in r]
     assert not bare, "these rules carry a bare `maturity`, which the coverage map owns: %s" % bare[:8]
     assert all("maturity_at_writing" in r for r in reg["rules"]), "a rule lost its Phase A assessment"
+
+
+def t_a_rules_board_list_never_narrows_its_own_condition():
+    """17 September 2026. `boards_affected` reads like documentation and is used as a FILTER: `rules_for` drops a
+    board that is not in the list BEFORE it evaluates the condition, so a list written when a rule was drafted
+    silently decides what the rule is judged on, and the condition, which is the designed mechanism and is
+    resolved against each board's own facts, cannot widen it. Ten rules disagreed with themselves that morning:
+    SCH-004 left out the three boards that carry the pack node, RF-001 left out the two with blind-mate RF
+    interfaces, PAIR-001 the two boards that declare a pair class, PWR-003 the board with three fuses on it.
+    A board that a rule's own condition selects is a board that rule is about."""
+    reg = _reg(); facts = R.board_facts()
+    bad = []
+    for r in reg["rules"]:
+        aff = r.get("boards_affected")
+        if not isinstance(aff, list) or not aff or "ALL" in aff: continue
+        for letter, f in sorted(facts.items()):
+            ok, _why = R.applies_to(r, f)
+            if ok and letter not in aff:
+                bad.append("%s: its condition selects board %s and its boards_affected list does not name it"
+                           % (r["id"], letter))
+    assert not bad, "the registry narrows %d rule(s) below their own condition:\n  %s" % (len(bad), "\n  ".join(bad))
