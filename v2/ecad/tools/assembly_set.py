@@ -135,7 +135,13 @@ def judge(ecad=None, only=None, rot=None):
         nets = [p for p in glob.glob(os.path.join(ecad, stem + "*", "out", stem + ".net")) if os.path.isfile(p)] if stem else []
         fails, notes, unchecked, unverified = [], [], set(), set()
         if rows is None:
-            fails.append("there is no rotation table at %s, so no rotation has been verified at all" % os.path.relpath(ROT, ECAD))
+            # THE TABLE'S ABSENCE IS AN ABSENT INPUT, NOT A FINDING (17 September 2026). This gate ran in a
+            # sweep tree that holds v2/ecad and not v2/release, so the rotation table was not there, and a
+            # FAIL then replaced a reading taken on the runner WITH the table: "a reading taken with less
+            # input never replaces one taken with more", and an absent input is exactly that. Absence is
+            # never a pass either, so it is INCONCLUSIVE and says which file it could not read.
+            notes.append("MISSING_INPUT: there is no rotation table at %s in this tree, so no rotation could "
+                         "be judged here" % os.path.relpath(ROT, ECAD))
         if drift and letter == sorted(facts)[0]:
             fails.extend(drift)   # a set-level disagreement, reported once rather than seven times
         if rows is None:
@@ -184,9 +190,10 @@ def main(argv):
     if "--json" in argv: print(json.dumps(r, indent=1))
     # A footprint with no row is not a failure by itself; it is an unchecked assumption, and the rule asks for
     # a DATED verification, so a set with any unchecked polarised footprint is INCONCLUSIVE rather than PASS.
-    res = _v.FAIL if fails else (_v.INCONCLUSIVE if nch else _v.PASS)
+    _no_table = any("MISSING_INPUT" in n for v in r.values() for n in v.get("notes", []))
+    res = _v.FAIL if fails else (_v.INCONCLUSIVE if (nch or _no_table) else _v.PASS)
     return _v.write("assembly_set", res, rules=["DFA-001"],
-                    counts={"boards": len(r), "unchecked_footprints": len(nch),
+                    counts={"boards": len(r), "unchecked_footprints": len(nch), "table_present": not _no_table,
                             "unverified_rows": len({x for v in r.values() for x in v["unverified"]}),
                             "fail": len(fails)},
                     denominator=max(1, len(nch) + len(fails)),

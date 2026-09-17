@@ -43,6 +43,11 @@ sys.path.insert(0, HERE)
 import verdict as _v
 
 CARRY = ("hardset-placed", "place_audit", "regionfit")
+# GEOMETRY ONLY. A seat exchange between two parts of the same land moves no courtyard, hole or clearance, so
+# the hard set and the region fit are unchanged by it; the escape-fan predictor is NOT, because it reads the
+# NETS at each seat and the exchange puts a different net in each. Board D's placed board predicts no
+# collision and the board that shipped, with R20 and R21 exchanged, predicts one (17 September 2026).
+CARRY_SWAPPED = ("hardset-placed", "regionfit")
 CARRY_PREROUTE = ("hardset-pre-route-drc",)   # measured after every part move, before any routing
 TOL_NM = 1000          # one micrometre: a rewrite of the same file can round, a moved part cannot hide here
 
@@ -150,7 +155,11 @@ def main(argv):
                         note="the placed and routed boards could not both be read, so the placement's evidence "
                              "is not carried: %s" % str(e)[:160], out_dir=out_dir)
     moved = differences(P, R)
-    stage, names_now = "placed", names
+    # What differences() forgave: a pure exchange of seats. It is geometrically neutral and not net-neutral.
+    _moved_refs = [ref for ref in sorted(set(P) & set(R))
+                   if not _same_seat(P[ref][:4], R[ref][:4], TOL_NM)]
+    swapped = swaps(P, R, _moved_refs) if (_moved_refs and not moved) else []
+    stage, names_now = "placed", (tuple(n for n in names if n in CARRY_SWAPPED) if swapped else names)
     pre = argv[argv.index("--preroute") + 1] if "--preroute" in argv else None
     if pre is None:
         _guess = os.path.join(os.path.dirname(placed),
@@ -184,6 +193,11 @@ def main(argv):
             os.makedirs(routed_dir, exist_ok=True)
             json.dump(rec, open(os.path.join(routed_dir, _as + ".verdict.json"), "w"), indent=1, sort_keys=True)
             carried.append("%s as %s" % (n, _as) if _as != n else n)
+    for line in (swapped or [])[:6]:
+        print("  SWAP %s: the same seats, the same land, a different net in each" % line)
+    if swapped:
+        print("  the escape-fan predictor is not carried across a swap: it reads the nets at each seat, and "
+              "the exchange puts a different net in each")
     print("carry_placed: %d footprint(s) compared against the %s board, %d moved; carried %s%s"
           % (len(P), stage, len(moved), ", ".join(carried) or "nothing",
              ("; not written by this chain: " + ", ".join(skipped)) if skipped else ""))
@@ -196,7 +210,7 @@ def main(argv):
     return _v.write("carry_placed", _v.FAIL if moved else (_v.PASS if carried else _v.INCONCLUSIVE),
                     counts={"footprints": len(P), "moved": len(moved), "carried": len(carried),
                             "not_written": len(skipped), "moved_after_the_placement": len(_after_placement),
-                            "stage": stage},
+                            "seats_exchanged": len(swapped or []), "stage": stage},
                     denominator=len(P), evidence=(moved or _after_placement)[:12],
                     inputs={"placed": {"path": os.path.basename(placed), "sha256_16": sha16(placed)},
                             "pre_route": ({"path": os.path.basename(pre), "sha256_16": sha16(pre)} if pre else None),

@@ -17,9 +17,13 @@
  "denominator": 15,
  "evidence": [],
  "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  },
   "drc": {
    "path": "out/pcb-p-pack-drc.json",
-   "sha256_16": "24e64b125c1aa78e"
+   "sha256_16": "4b492054c4d474d7"
   }
  },
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
@@ -34,9 +38,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "325c41b5b40fcad1"
+  "tools_tree_sha": "c063f36cc529b4dc"
  },
- "ts": "2026-09-17T02:08:35Z",
+ "ts": "2026-09-17T03:28:11Z",
  "verdict": "PASS",
  "version": "unknown"
 }

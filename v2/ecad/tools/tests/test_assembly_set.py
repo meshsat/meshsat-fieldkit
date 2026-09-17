@@ -63,3 +63,28 @@ def t_a_footprint_with_no_row_is_inconclusive_and_never_a_pass():
     unchecked = {x for v in r.values() for x in v["unchecked"]}
     assert unchecked, "every polarised footprint is covered, which would be a first"
     assert any("LQFP" in x for x in unchecked), sorted(unchecked)[:5]
+
+
+def t_a_missing_rotation_table_is_an_absent_input_and_not_a_finding():
+    """17 September 2026: this gate ran in a sweep tree that holds v2/ecad and not v2/release, so the rotation
+    table was not there, and its FAIL replaced a reading taken on the runner WITH the table. A reading taken
+    with less input never replaces one taken with more, and an absent input is exactly that; absence is not a
+    pass either, so it is INCONCLUSIVE and names the file it could not read."""
+    import assembly_set as A
+    r = A.judge(rot="/nonexistent/jlc-rotations.csv")
+    fails = [f for v in r.values() for f in v["fails"]]
+    notes = [n for v in r.values() for n in v.get("notes", [])]
+    assert not fails, "an absent table is reported as a finding: %s" % fails[:2]
+    assert any("MISSING_INPUT" in n for n in notes), notes[:3]
+
+
+def t_the_missing_table_reaches_the_verdict_as_inconclusive():
+    import subprocess, sys, os, json, tempfile
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "out"))
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "assembly_set.py"),
+                            "--rot", os.path.join(d, "nope.csv")], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 3, "exit %d, and INCONCLUSIVE is 3" % r.returncode
+        v = json.load(open(os.path.join(d, "out", "assembly_set.verdict.json")))
+        assert v["verdict"] == "INCONCLUSIVE" and v["counts"]["table_present"] is False, v["counts"]
