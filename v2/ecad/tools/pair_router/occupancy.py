@@ -267,7 +267,12 @@ def _via_site_blocked(b, pos, vd, clr, own, fp_own):
     for t in b.GetTracks():
         if t.GetNetname() == own: continue
         if t.GetClass() == "PCB_VIA":
-            if math.hypot(t.GetPosition().x - x, t.GetPosition().y - y) < need + t.GetWidth() / 2.0: return "via [%s]" % t.GetNetname()
+            # KiCad 9 asserts on a via's bare GetWidth() (per-layer width); every via here is a through via, so
+            # the front copper answers, as geometry._via_dia does (18 September 2026, B22's pair pass printed the
+            # assertion once per via)
+            try: _vw = t.GetWidth(pcbnew.F_Cu)
+            except Exception: _vw = t.GetWidth()
+            if math.hypot(t.GetPosition().x - x, t.GetPosition().y - y) < need + _vw / 2.0: return "via [%s]" % t.GetNetname()
         elif seg_d(t) < need + t.GetWidth() / 2.0: return "track [%s] on %s" % (t.GetNetname(), t.GetLayerName())
     return None
 
@@ -353,7 +358,8 @@ def _track_key(t):
     """A stable identity for a track: SWIG hands out a fresh proxy per iteration, so `is` and id() never match (5 Sep 2026)."""
     a, e = t.GetStart(), t.GetEnd()
     return (t.GetClass(), a.x, a.y, e.x, e.y, t.GetLayer(), t.GetNetCode(),
-            t.GetDrillValue() if t.GetClass() == "PCB_VIA" else t.GetWidth())
+            (t.GetDrillValue() if t.GetClass() == "PCB_VIA"
+             else t.GetWidth()))   # the track's width; a via's is its drill here (the ternary once put both on one line, 18 Sep 2026)
 
 
 def _stamp_tracks(gr, b, layers, nets, half, via_r, split, trk, via, seen):
