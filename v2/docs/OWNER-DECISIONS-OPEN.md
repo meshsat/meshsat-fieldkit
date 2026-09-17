@@ -197,17 +197,20 @@ ESDA6V1W5 (C48677, 20,825 at 0.16). Two parts a board, about 0.66 USD over the o
 them is a circuit question for board D's generation, because it turns on the codec's own output swing and the
 microphone bias, and none of them is a choice until decision 34 states the level. So the parts are pennies
 either way, and the price of the ruling is not the parts: it is that boards D and E are FINISHED COPPER, so
-each one costs a placement, a route and a new folder. Board D's J_PAOUT is the one conductor of the ten that
-a clamp on the board cannot answer: it carries 30 W of transmitter output, where a diode array's capacitance
-would spoil the match, and its sibling J_ANT is already answered off board by the PolyPhaser GTH-SFF-AL at
-the bulkhead. Its honest options are a second arrestor of the same kind, declared off board the way J_ANT is,
-or the ruling that it shares J_ANT's. The parts above are candidates with stock and a price, not a choice:
-what clamps at what voltage and what pulse rating is decided by the level in decision 34, which is why that
-one is asked first. And that level had no proposal at all until the evening of 17 September: the envelope
-settled temperature, storage and the carve-outs and said in its own words that it settled no transient level,
-while the approved test plan ran MIL-STD-461's CE102, CS101, CS114, RE102 and RS103 and carried no
-electrostatic discharge method at all, so the one transient a person actually applies to this kit, by
-touching a connector after walking across a floor, was neither specified nor planned for. Section 6 of
+each one costs a placement, a route and a new folder. Board E's is owed whatever this decision says, since 17
+September evening: its hot-swap pass FET Q7 was written with a three-pin map on a five-pad land, gate and
+drain on two SOURCE pins and the drain tab floating (appendix 32.219, rule SCH-005), so the E11 copper is not
+a candidate for anything and the clamps ride the same regeneration. Board D's J_PAOUT is the one conductor of
+the ten that a clamp on the board cannot answer: it carries 30 W of transmitter output, where a diode array's
+capacitance would spoil the match, and its sibling J_ANT is already answered off board by the PolyPhaser
+GTH-SFF-AL at the bulkhead. Its honest options are a second arrestor of the same kind, declared off board the
+way J_ANT is, or the ruling that it shares J_ANT's. The parts above are candidates with stock and a price,
+not a choice: what clamps at what voltage and what pulse rating is decided by the level in decision 34, which
+is why that one is asked first. And that level had no proposal at all until the evening of 17 September: the
+envelope settled temperature, storage and the carve-outs and said in its own words that it settled no
+transient level, while the approved test plan ran MIL-STD-461's CE102, CS101, CS114, RE102 and RS103 and
+carried no electrostatic discharge method at all, so the one transient a person actually applies to this kit,
+by touching a connector after walking across a floor, was neither specified nor planned for. Section 6 of
 v2/docs/OPERATING-ENVELOPE.md now PROPOSES the levels and TEST-PLAN.md carries M7 as the method, and the
 proposal says which of its three rows has an authority: the electrostatic row is traceable to a part this
 design already buys and is the one this decision needs, the surge row describes what is fitted rather than

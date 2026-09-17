@@ -187,7 +187,10 @@ decisions:
       codec's own output swing and the microphone bias, and none of them is a choice until decision 34 states
       the level.
       So the parts are pennies either way, and the price of the ruling is not the parts: it is that boards D and
-      E are FINISHED COPPER, so each one costs a placement, a route and a new folder.
+      E are FINISHED COPPER, so each one costs a placement, a route and a new folder. Board E's is owed whatever
+      this decision says, since 17 September evening: its hot-swap pass FET Q7 was written with a three-pin map
+      on a five-pad land, gate and drain on two SOURCE pins and the drain tab floating (appendix 32.219, rule
+      SCH-005), so the E11 copper is not a candidate for anything and the clamps ride the same regeneration.
       Board D's J_PAOUT is the one conductor of the ten that a clamp on the board cannot answer: it carries 30 W
       of transmitter output, where a diode array's capacitance would spoil the match, and its sibling J_ANT is
       already answered off board by the PolyPhaser GTH-SFF-AL at the bulkhead. Its honest options are a second
