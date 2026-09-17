@@ -129,6 +129,13 @@ def thermal_vias(fp):
         if pad.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or min(pad.GetSize().x, pad.GetSize().y) < FromMM(1.2) \
            or max(pad.GetSize().x, pad.GetSize().y) < FromMM(2.0) or pad.GetNetCode() <= 0: continue
         if any(q.GetNumber() == pad.GetNumber() and q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in fp.Pads()): continue
+        # A TAB IS THE PART'S OWN LARGEST PAD BY A MARGIN, NOT ANY SQUARE-ISH PAD (18 September 2026, B22's first
+        # pre-route). Asked of every footprint, the size test alone read a power inductor's two 3 mm pads and a 2512
+        # resistor's pads as exposed pads wanting a thermal via each. A thermal pad is at least twice the footprint's
+        # median SMD pad and the footprint has at least three pads: a two-terminal part has no tab.
+        _smd = [q for q in fp.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnCopperLayer()]
+        _areas = sorted(q.GetSize().x * q.GetSize().y for q in _smd)
+        if len(_areas) < 3 or pad.GetSize().x * pad.GetSize().y < 2 * _areas[len(_areas) // 2]: continue
         c = pad.GetPosition(); big = min(pad.GetSize().x, pad.GetSize().y) >= FromMM(2.5)
         spots = [(dx, dy) for dx in ((-0.7, 0.7) if big else (0.0,)) for dy in ((-0.7, 0.7) if big else (0.0,))]
         ep_laid, ep_why = 0, []

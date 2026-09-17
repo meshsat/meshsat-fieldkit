@@ -83,3 +83,14 @@ def t_the_thermal_vias_are_asked_of_every_footprint_and_not_only_the_fine_pitch_
     i = s.index("# THE COARSE PARTS")
     assert "if is_fine(fp)" in s[i:i + 600] and "thermal_vias(fp)" in s[i:i + 900], \
         "the coarse-part loop does not skip the fine parts and call thermal_vias"
+
+
+def t_a_two_terminal_part_has_no_tab_and_a_tab_is_the_largest_pad_by_a_margin():
+    """Asked of every footprint (18 September 2026, B22's first pre-route), the size test alone read a power
+    inductor's two pads and a 2512 resistor's pads as exposed pads wanting a thermal via: a tab is at least twice
+    the footprint's median pad and the footprint has at least three."""
+    s = _src("escape.py")
+    i = s.index("def thermal_vias(fp):")
+    body = s[i:i + 6000]
+    assert "len(_areas) < 3" in body and "2 * _areas[len(_areas) // 2]" in body, \
+        "thermal_vias does not require a tab to be the largest pad by a margin on a part with three or more pads"
