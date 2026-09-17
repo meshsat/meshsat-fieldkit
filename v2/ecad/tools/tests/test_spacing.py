@@ -57,3 +57,31 @@ def t_a_pad_is_a_fat_segment_and_not_a_circle_of_its_longest_side():
     draws (16 September 2026)."""
     assert "min(sx, sy) / 2.0" in SRC, "the pad radius is still taken from the longest side"
     assert "GetOrientationDegrees" in SRC, "a rotated pad's centre line is not rotated with it"
+
+
+def t_the_voltage_judged_is_the_working_one_and_not_the_nominal():
+    """17 September 2026. Board E's shore and vehicle inlet is 12 V nominal and 36 V working, its own facts
+    entry says 36, the registry uses that fact to decide ISO-001 APPLIES to board E, and this tool read the
+    nominal and answered `no rail on this board reaches 20 V`. ECSS clause 13.8.2 b, the authority this rule
+    cites, says the rating applies to the worst-case peak: a nominal is what a rail sits at and a working
+    voltage is what the copper has to survive."""
+    i = SRC.index("def _vhi(")
+    seg = SRC[i:i + 400]
+    assert 'r.get("v_work")' in seg and "max(" in seg, \
+        "the high-voltage set is chosen from the nominal voltage alone"
+    j = SRC.index("hv = {")
+    assert "_vhi(r)" in SRC[j:j + 200], "the selection does not use the working voltage"
+
+
+def t_a_board_whose_fact_contradicts_its_intent_is_a_question_and_not_an_exemption():
+    """The other half, and the one that cannot be allowed to read as a pass: if the board's own facts entry
+    declares a maximum at or above the threshold and no rail in its intent reaches it, the two disagree and the
+    rule is unanswered. `applicable=False` would say the rule does not apply to a board the registry says it
+    applies to."""
+    i = SRC.index("if not hv:")
+    seg = SRC[i:i + 1800]
+    assert "max_rail_voltage_v" in seg, "the contradiction with the board's own fact is not looked for"
+    assert "missing_input=" in seg, "a board that contradicts itself would be recorded as an exemption"
+    k = seg.index("missing_input=")
+    assert seg.index("applicable=False") > k, \
+        "the exemption branch is reached before the contradiction is tested"

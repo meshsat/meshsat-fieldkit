@@ -55,9 +55,35 @@ def main(a):
     mm = lambda v: v / 1e6
     b = pcbnew.LoadBoard(path)
     it = intent.load(path) or {}
-    hv = {n.lstrip("/") for n, r in (it.get("rails") or {}).items() if float(r.get("volts") or 0) >= vmin}
+    # THE WORKING VOLTAGE, NEVER THE NOMINAL (17 September 2026). ISO-001 asks for spacing at the voltage a
+    # conductor pair actually stands off, and the standard this project cites says so in as many words: ECSS
+    # clause 13.8.2 b, "voltage rating shall apply to the worst-case peak transient voltage". The intent has
+    # carried `v_work` per rail since it was written, and this read `volts`: board E's shore and vehicle inlet
+    # is 12 V nominal and **36 V working**, so the board whose own fact declares 36 V read "no rail on this
+    # board reaches 20 V" and ISO-001 was answered about nothing on the one board of the three that carries a
+    # wide-range input. A nominal is what a rail sits at; a working voltage is what the copper has to survive.
+    def _vhi(r):
+        return max(float(r.get("volts") or 0), float(r.get("v_work") or 0))
+    hv = {n.lstrip("/") for n, r in (it.get("rails") or {}).items() if _vhi(r) >= vmin}
     out_dir = os.path.join(os.path.dirname(os.path.abspath(path)), "out")
     if not hv:
+        # AND A BOARD'S OWN FACT MAY CONTRADICT ITS INTENT, in which case this is a question and never a pass.
+        # The registry decides that ISO-001 applies to a board from `max_rail_voltage_v` in pcb_board_facts.yaml;
+        # if that says 36 and no rail in the intent reaches the threshold, one of the two is wrong and the rule
+        # is unanswered, which is what INCONCLUSIVE with a missing input is for.
+        declared = 0.0
+        try:
+            import rules_lib as _rl
+            _l = _bt.letter_for(path)
+            declared = float((_rl.board_facts().get(_l) or {}).get("max_rail_voltage_v") or 0)
+        except Exception:
+            declared = 0.0
+        if declared >= vmin:
+            msg = ("this board's facts declare %.0f V and no rail in its intent reaches %.0f: one of the two "
+                   "is wrong and ISO-001 cannot be judged until they agree" % (declared, vmin))
+            print("spacing: " + msg)
+            return _v.write("spacing", _v.INCONCLUSIVE, denominator=0, inputs={"board": path},
+                            missing_input=msg, note=msg, out_dir=out_dir)
         print("spacing: this board declares no rail at or above %.0f V, so ISO-001 has nothing on it to judge" % vmin)
         return _v.write("spacing", _v.INCONCLUSIVE, denominator=0, inputs={"board": path}, applicable=False,
                         note="no rail on this board reaches %.0f V" % vmin, out_dir=out_dir)
