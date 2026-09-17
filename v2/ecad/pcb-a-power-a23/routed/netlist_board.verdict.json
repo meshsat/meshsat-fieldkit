@@ -29,7 +29,7 @@
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "69a1fd20c474ccf0"
+   "sha256_16": "7ae2e0048d0eefad"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -43,9 +43,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T19:31:15Z",
+ "ts": "2026-09-17T01:43:33Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

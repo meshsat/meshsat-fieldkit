@@ -2,16 +2,16 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "ledgers": 1,
+  "ledgers": 4,
   "problems": 0,
-  "rows": 12,
+  "rows": 224,
   "witnessed": 0
  },
- "denominator": 12,
+ "denominator": 224,
  "evidence": [],
  "inputs": {
   "ecad": {
-   "path": "/root/c24/v2/ecad",
+   "path": "/root/sweep4/v2/ecad",
    "sha256_16": null
   }
  },
@@ -26,9 +26,9 @@
  "tool": "ledger_verify",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "572f493cca8aad3d"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T23:26:27Z",
+ "ts": "2026-09-17T01:44:43Z",
  "verdict": "PASS",
  "version": "unknown"
 }

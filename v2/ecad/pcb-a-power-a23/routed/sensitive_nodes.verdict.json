@@ -12,12 +12,12 @@
   "CH_SRN_F is declared sensitive and the board has no such net",
   "CH_ACP_F is declared sensitive and the board has no such net",
   "CH_ACN_F is declared sensitive and the board has no such net",
-  "PA_CS runs 0.220 mm from PA_SW1 and its own list asks for 0.50",
-  "HF_CS runs 0.309 mm from HF_SW1 and its own list asks for 0.50",
-  "PD_CS runs 0.223 mm from PD_SW2 and its own list asks for 0.50",
-  "POE_CS runs 0.182 mm from POE_SW2 and its own list asks for 0.50",
-  "HF_FB runs 0.356 mm from HF_SW1 and its own list asks for 0.50",
-  "B33_FB runs 0.350 mm from B33_SW and its own list asks for 0.50"
+  "PA_CS runs 0.220 mm from PA_SW1 and its own list asks for 0.50; the two are inside that limit over 1.27 mm of copper, 0.63 mm from the pads of the part that carries both nets",
+  "HF_CS runs 0.309 mm from HF_SW1 and its own list asks for 0.50; the two are inside that limit over 1.27 mm of copper, 0.63 mm from the pads of the part that carries both nets",
+  "PD_CS runs 0.223 mm from PD_SW2 and its own list asks for 0.50; the two are inside that limit over 0.00 mm of copper, 1.64 mm from the pads of the part that carries both nets",
+  "POE_CS runs 0.182 mm from POE_SW2 and its own list asks for 0.50; the two are inside that limit over 10.79 mm of copper, 1.64 mm from the pads of the part that carries both nets",
+  "HF_FB runs 0.356 mm from HF_SW1 and its own list asks for 0.50; the two are inside that limit over 0.00 mm of copper, 4.80 mm from the pads of the part that carries both nets",
+  "B33_FB runs 0.350 mm from B33_SW and its own list asks for 0.50; the two are inside that limit over 8.47 mm of copper, 9.31 mm from the pads of the part that carries both nets"
  ],
  "inputs": {
   "board": "a",
@@ -34,9 +34,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T19:31:25Z",
+ "ts": "2026-09-17T01:43:47Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

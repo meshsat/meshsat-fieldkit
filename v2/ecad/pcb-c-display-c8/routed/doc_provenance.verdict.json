@@ -9,10 +9,7 @@
  "denominator": 0,
  "evidence": [],
  "inputs": {
-  "release": {
-   "path": "/root/c24/v2/release/revA",
-   "sha256_16": null
-  }
+  "release": "/root/sweep4/v2/release/revA"
  },
  "note": "no deliverable folder holds a document that asserts hardware numbers",
  "policy": {
@@ -25,9 +22,9 @@
  "tool": "doc_provenance",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "572f493cca8aad3d"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T23:26:27Z",
+ "ts": "2026-09-17T01:44:43Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

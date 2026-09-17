@@ -2,30 +2,28 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 19,
-  "pass": 131,
+  "fail": 17,
+  "pass": 133,
   "unclaimed": 0
  },
  "denominator": 150,
  "evidence": [
-  "return path under EPD_CS (Default, CLOCKED_DIGITAL): 72.7 of 390.3 mm without a plane on a neighbouring layer (limit 58.5) [the e-paper's chip select, an edge per transfer]",
-  "return path under EPD_DC (Default, CLOCKED_DIGITAL): 105.5 of 353.9 mm without a plane on a neighbouring layer (limit 53.1) [the e-paper's data and command select, an edge per transfer]",
-  "return path under EPD_SDA (Default, CLOCKED_DIGITAL): 121.5 of 414.7 mm without a plane on a neighbouring layer (limit 62.2) [the e-paper's SPI data, same rate]",
-  "return path under EXP_INT (Default, CLOCKED_DIGITAL): 118.5 of 481.0 mm without a plane on a neighbouring layer (limit 72.2) [the expander's interrupt, an edge into a GPIO]",
-  "return path under HB2 (Default, CLOCKED_DIGITAL): 130.5 of 489.2 mm without a plane on a neighbouring layer (limit 73.4) [a heartbeat line from a compute module, a slow square wave that must k]",
-  "return path under Q1_G (Default, HIGH_SPEED_DIGITAL): 25.6 of 91.3 mm without a plane on a neighbouring layer (limit 10.0) [a FET gate drive]",
-  "return path under QSPI_D1 (Default, HIGH_SPEED_DIGITAL): 32.6 of 67.9 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_D2 (Default, HIGH_SPEED_DIGITAL): 39.4 of 61.2 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_SCLK (Default, HIGH_SPEED_DIGITAL): 37.0 of 63.8 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under QSPI_SS (Default, HIGH_SPEED_DIGITAL): 33.8 of 103.3 mm without a plane on a neighbouring layer (limit 10.0) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
-  "return path under SCL (Default, CLOCKED_DIGITAL): 259.9 of 488.5 mm without a plane on a neighbouring layer (limit 73.3) [I2C at 100 or 400 kHz, open drain]",
-  "return path under USB_DM_R (USB, HIGH_SPEED_DIGITAL): 16.5 of 92.3 mm without a plane on a neighbouring layer (limit 10.0) [the same USB pair after its series resistors]",
-  "return path under USB_DP_R (USB, HIGH_SPEED_DIGITAL): 16.7 of 71.8 mm without a plane on a neighbouring layer (limit 10.0) [the same USB pair after its series resistors]",
-  "return path under USB_PNL_N (USB, HIGH_SPEED_DIGITAL): 33.4 of 487.8 mm without a plane on a neighbouring layer (limit 24.4) [the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanos]",
-  "return path under USB_PNL_P (USB, HIGH_SPEED_DIGITAL): 131.0 of 456.5 mm without a plane on a neighbouring layer (limit 22.8) [the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanos]",
-  "return path under XIN (Default, HIGH_SPEED_DIGITAL): 45.1 of 167.6 mm without a plane on a neighbouring layer (limit 10.0) [the 12 MHz crystal drive node]",
-  "return path under XOUT (Default, HIGH_SPEED_DIGITAL): 27.8 of 112.1 mm without a plane on a neighbouring layer (limit 10.0) [the other half of the same crystal loop]",
-  "return path under XOUT_R (Default, HIGH_SPEED_DIGITAL): 14.9 of 64.5 mm without a plane on a neighbouring layer (limit 10.0) [the other half of the same crystal loop]",
+  "return path under EPD_CS (Default, CLOCKED_DIGITAL): 65.5 of 390.3 mm without a plane on a neighbouring layer (limit 58.5; 7.2 mm more is this net's own via anti-pads, which RET-003 judges) [the e-paper's chip select, an edge per transfer]",
+  "return path under EPD_DC (Default, CLOCKED_DIGITAL): 103.6 of 353.9 mm without a plane on a neighbouring layer (limit 53.1; 1.8 mm more is this net's own via anti-pads, which RET-003 judges) [the e-paper's data and command select, an edge per transfer]",
+  "return path under EPD_SDA (Default, CLOCKED_DIGITAL): 113.1 of 414.7 mm without a plane on a neighbouring layer (limit 62.2; 8.4 mm more is this net's own via anti-pads, which RET-003 judges) [the e-paper's SPI data, same rate]",
+  "return path under EXP_INT (Default, CLOCKED_DIGITAL): 107.9 of 481.0 mm without a plane on a neighbouring layer (limit 72.2; 10.6 mm more is this net's own via anti-pads, which RET-003 judges) [the expander's interrupt, an edge into a GPIO]",
+  "return path under HB2 (Default, CLOCKED_DIGITAL): 127.5 of 489.2 mm without a plane on a neighbouring layer (limit 73.4; 3.1 mm more is this net's own via anti-pads, which RET-003 judges) [a heartbeat line from a compute module, a slow square wave that must k]",
+  "return path under Q1_G (Default, HIGH_SPEED_DIGITAL): 15.6 of 91.3 mm without a plane on a neighbouring layer (limit 10.0; 10.0 mm more is this net's own via anti-pads, which RET-003 judges) [a FET gate drive]",
+  "return path under QSPI_D1 (Default, HIGH_SPEED_DIGITAL): 23.0 of 67.9 mm without a plane on a neighbouring layer (limit 10.0; 9.6 mm more is this net's own via anti-pads, which RET-003 judges) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_D2 (Default, HIGH_SPEED_DIGITAL): 30.1 of 61.2 mm without a plane on a neighbouring layer (limit 10.0; 9.4 mm more is this net's own via anti-pads, which RET-003 judges) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_SCLK (Default, HIGH_SPEED_DIGITAL): 28.3 of 63.8 mm without a plane on a neighbouring layer (limit 10.0; 8.6 mm more is this net's own via anti-pads, which RET-003 judges) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under QSPI_SS (Default, HIGH_SPEED_DIGITAL): 26.4 of 103.3 mm without a plane on a neighbouring layer (limit 10.0; 7.3 mm more is this net's own via anti-pads, which RET-003 judges) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]",
+  "return path under SCL (Default, CLOCKED_DIGITAL): 246.3 of 488.5 mm without a plane on a neighbouring layer (limit 73.3; 13.6 mm more is this net's own via anti-pads, which RET-003 judges) [I2C at 100 or 400 kHz, open drain]",
+  "return path under USB_DP_R (USB, HIGH_SPEED_DIGITAL): 11.9 of 71.8 mm without a plane on a neighbouring layer (limit 10.0; 4.8 mm more is this net's own via anti-pads, which RET-003 judges) [the same USB pair after its series resistors]",
+  "return path under USB_PNL_P (USB, HIGH_SPEED_DIGITAL): 120.8 of 456.5 mm without a plane on a neighbouring layer (limit 22.8; 10.1 mm more is this net's own via anti-pads, which RET-003 judges) [the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanos]",
+  "return path under XIN (Default, HIGH_SPEED_DIGITAL): 31.8 of 167.6 mm without a plane on a neighbouring layer (limit 10.0; 13.3 mm more is this net's own via anti-pads, which RET-003 judges) [the 12 MHz crystal drive node]",
+  "return path under XOUT (Default, HIGH_SPEED_DIGITAL): 15.8 of 112.1 mm without a plane on a neighbouring layer (limit 10.0; 11.9 mm more is this net's own via anti-pads, which RET-003 judges) [the other half of the same crystal loop]",
+  "return path under XOUT_R (Default, HIGH_SPEED_DIGITAL): 10.7 of 64.5 mm without a plane on a neighbouring layer (limit 10.0; 4.2 mm more is this net's own via anti-pads, which RET-003 judges) [the other half of the same crystal loop]",
   "return via: 53 of 85 signal vias have a ground via within 1.5 mm (61 exempt in fine-pitch fans, 35 on one reference plane, 278 on a net whose declared class has no edge to return); without one: USB_PNL_N at (190.53, 103.06); USB_PNL_P at (198.98, 105.43); EPD_SDA at (216.91, 112.15); EXP_INT at (274.91, 107.52); Q1_G at (419.11, 288.82); SCL at (419.39, 120.99); XOUT_R at (419.44, 277.21); XOUT_R at (420.41, 279.10) ..."
  ],
  "inputs": {
@@ -43,9 +41,9 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "572f493cca8aad3d"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T23:26:08Z",
+ "ts": "2026-09-17T01:44:24Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
