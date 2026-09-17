@@ -8,7 +8,7 @@ edge or a slot). Same sampling and the same plane set as the gate, so the totals
 Usage: return_gaps.py <board.kicad_pcb> [--all] [--top N]     (--all prints every judged net, not only those over the limit)"""
 import os, sys, json, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import pcbnew, intent, netclass, signalnets
+import pcbnew, intent, netclass, signalnets, signal_class
 from intent_checks import SAMPLE, GAP_MM
 
 
@@ -61,15 +61,29 @@ def main(a):
         dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
         u = 0 if L2 == 0 else max(0, min(1, ((px - ax) * dx + (py - ay) * dy) / L2))
         return math.hypot(px - (ax + u * dx), py - (ay + u * dy)) / 1e6
+    # THE SAME BAR THE GATE USES, PER CLASS (17 September 2026). This file's first line says its totals agree
+    # with the gate's, and since 16 September they did not: the gate asks each net the question its spectral
+    # class deserves and this report kept the one uniform limit the gate had before that. On board C it named
+    # 87 nets of 127 where the gate fails 18, which sends a reader to fix copper the gate does not refuse; and
+    # a slow net, whose question is whether a reference EXISTS at all, was being failed for a gap.
+    _cls, _ = signal_class.classify(b, path, targets, lambda n: netclass.class_of(assign, n, "Default"))
     over = []
     for net in sorted(total):
-        g = sum(r[3] for r in runs.get(net, [])); lim = max(GAP_MM, 0.05 * total[net])
-        if g > lim or want_all: over.append((g - lim, net, g, lim))
+        g = sum(r[3] for r in runs.get(net, [])); sc = _cls.get(net, ("UNKNOWN", ""))[0]
+        q = signal_class.QUESTION.get(sc, "UNDECIDED")
+        if q == "EXISTS":
+            lim = total[net] - 1e-9          # only a net with NO reference anywhere is over
+        elif sc == "UNKNOWN":
+            lim = max(GAP_MM, 0.05 * total[net])      # the strictest bar, as the gate holds an undeclared net
+        else:
+            lim = signal_class.limit(sc, total[net])
+        if g > lim or want_all: over.append((g - lim, net, g, lim, sc))
     over.sort(reverse=True)
-    print("return_gaps: %d signal nets judged, %d over their limit" % (len(total), sum(1 for o in over if o[0] > 0)))
-    for excess, net, g, lim in over:
+    print("return_gaps: %d signal nets judged, %d over their limit (per spectral class, as the gate judges them)"
+          % (len(total), sum(1 for o in over if o[0] > 0)))
+    for excess, net, g, lim, sc in over:
         rs = sorted(runs.get(net, []), key=lambda r: -r[3])
-        print("%s: %.1f of %.1f mm uncovered (limit %.1f, %+.1f), %d run(s)" % (net.lstrip("/"), g, total[net], lim, g - lim, len(rs)))
+        print("%s (%s): %.1f of %.1f mm uncovered (limit %.1f, %+.1f), %d run(s)" % (net.lstrip("/"), sc, g, total[net], lim, g - lim, len(rs)))
         for L, p0, p1, ln in rs[:top]:
             mid = pcbnew.VECTOR2I((p0.x + p1.x) // 2, (p0.y + p1.y) // 2)
             print("   %5.1f mm on %-6s (%.1f, %.1f) to (%.1f, %.1f): %s" % (ln, b.GetLayerName(L), p0.x / 1e6, p0.y / 1e6, p1.x / 1e6, p1.y / 1e6, what_at(mid, neighbours(L))))
