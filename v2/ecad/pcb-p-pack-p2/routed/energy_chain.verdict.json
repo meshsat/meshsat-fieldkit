@@ -2,31 +2,31 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "checks": 69,
-  "citations_unjudged": 28,
+  "checks": 78,
+  "citations_unjudged": 0,
   "fail": 0,
+  "selection_findings": 0,
   "stages": 9
  },
- "denominator": 69,
+ "denominator": 78,
  "evidence": [],
  "inputs": {
   "chain": "pcb_energy_chain.yaml"
  },
- "note": "the stored-energy chain end to end: every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+ "note": "THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
-  "BAT-002",
-  "PWR-003"
+  "BAT-002"
  ],
  "tool": "energy_chain",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "325c41b5b40fcad1"
+  "git_head": "e6b2026b74d9",
+  "tools_tree_sha": "284c33e066339223"
  },
- "ts": "2026-09-17T02:08:53Z",
+ "ts": "2026-09-17T02:59:05Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "e6b2026b74d9"
 }
