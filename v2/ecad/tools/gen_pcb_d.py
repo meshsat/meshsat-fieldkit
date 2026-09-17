@@ -124,9 +124,9 @@ for i, (x, y) in enumerate(STANDOFFS, 1):
 # sites for the fit check and the record
 rect((SA868_C[0] - 17.8, SA868_C[1] - 9.5, SA868_C[0] + 17.8, SA868_C[1] + 9.5), pcbnew.Dwgs_User, 0.1)
 text("SA868 VHF exciter (bench-fitted): PTT and audio to the codec set, ANT to the T/R relay", SA868_C[0] + 2.0, SA868_C[1] + 12.5, pcbnew.F_SilkS, 0.85, 0.15)
-text("T/R relay K1 and the 5-pole low-pass filter along the south edge; J_ANT -> A22 VHF jack J_RF1 pigtail", 5.0, -37.5, pcbnew.F_SilkS, 0.85, 0.15)
-text("PA leads on the south edge: J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from A22 J_PA direct", 5.0, 37.5, pcbnew.F_SilkS, 0.85, 0.15)
-text("J_HARN1 <- A22 J_MEZZ1", J_HARN[0] + 2.0, J_HARN[1] + 13.0, pcbnew.F_SilkS, 0.85, 0.15); text("J_PWR1 +5V_D8", J_PWR[0] + 2.0, J_PWR[1] - 6.5, pcbnew.F_SilkS, 0.85, 0.15)
+text("T/R relay K1 and the 5-pole low-pass filter along the south edge; J_ANT -> PCB-A VHF jack J_RF1 pigtail", 5.0, -37.5, pcbnew.F_SilkS, 0.85, 0.15)
+text("PA leads on the south edge: J_PAIN drive U.FL, J_PAOUT output SMA, J_VGG gate bias; VDD 13.8 V from PCB-A J_PA direct", 5.0, 37.5, pcbnew.F_SilkS, 0.85, 0.15)
+text("J_HARN1 <- PCB-A J_MEZZ1", J_HARN[0] + 2.0, J_HARN[1] + 13.0, pcbnew.F_SilkS, 0.85, 0.15); text("J_PWR1 +5V_D8", J_PWR[0] + 2.0, J_PWR[1] - 6.5, pcbnew.F_SilkS, 0.85, 0.15)
 text("headset leads J_HS1 / J_HS2 from the face plate jacks (SPK MIC PTT GND GND)", 30.0, 0.8, pcbnew.F_SilkS, 0.85, 0.15)
 for k, r in ZONES.items(): rect(r, pcbnew.Dwgs_User, 0.12); text(k, (r[0] + r[2]) / 2, r[3] - 1.2, pcbnew.Dwgs_User, 0.9, 0.15)
 line(-3, 0, 3, 0, pcbnew.Dwgs_User); line(0, -3, 0, 3, pcbnew.Dwgs_User); text("BOARD DATUM = CASE (50, 0)", 0, -4.5, pcbnew.Dwgs_User, 0.9, 0.15)

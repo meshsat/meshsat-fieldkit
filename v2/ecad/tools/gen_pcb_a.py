@@ -168,14 +168,14 @@ for zr, label in ((FRONT_ZONE, "FRONT END: LM5176 9-36 V -> 20 V BUS"), (CHARGER
                   (RAILS_ZONE, "SLOT RAILS S1 S2 S3 + DEVICE RAIL: TPS56637 + INA226"), (PA_ZONE, "PA RAIL: LM5176 13.8 V (PA ON THE PLATE)"), (HF_ZONE, "HF RAIL: TPS55288 12 V"),
                   (CTRL_ZONE, "CONTROL: LTC2954, EXPANDERS, EMCON GATES"), (MID_ZONE, "3.3 V BUCK, CONTROL PASSIVES"), (TP_ZONE, "TEST POINTS"), (NE_ZONE, "USB-C PD OUTLET + EFUSES (MONITOR, HEATER, D8)"), (EAST_STRIP, "LEAD CONNECTORS")):
     rect(zr, pcbnew.Dwgs_User, 0.15); text(label, (zr[0] + zr[2]) / 2, zr[3] + 1.8, pcbnew.Dwgs_User, 0.9, 0.16)
-rect(DOCK_BLOCK, pcbnew.Dwgs_User, 0.15); text("DOCK BLOCK (underside): J_DOCK 2x6 + 9 A pins + pre-charge pin, land on E6's block", (DOCK_BLOCK[0] + DOCK_BLOCK[2]) / 2, DOCK_BLOCK[1] - 1.8, pcbnew.Dwgs_User, 0.9, 0.16)
-text("4S SMART PACK IN ITS CRADLE WEST OF THIS BOARD (32.62), ITS CABLE INTO E7, THE NODE OVER THE DOCK PINS", -60.0, -79.0, pcbnew.F_SilkS, 1.0, 0.16)
+rect(DOCK_BLOCK, pcbnew.Dwgs_User, 0.15); text("DOCK BLOCK (underside): J_DOCK 2x6 + 9 A pins + pre-charge pin, land on the PCB-E5 block", (DOCK_BLOCK[0] + DOCK_BLOCK[2]) / 2, DOCK_BLOCK[1] - 1.8, pcbnew.Dwgs_User, 0.9, 0.16)
+text("4S SMART PACK IN ITS CRADLE WEST OF THIS BOARD (32.62), ITS CABLE INTO PCB-E1, THE NODE OVER THE DOCK PINS", -60.0, -79.0, pcbnew.F_SilkS, 1.0, 0.16)
 for x, nm in zip(RF_X, RF_NAMES):
     circle(x, RF_Y, 12.0, pcbnew.Dwgs_User, 0.1); circle(x, RF_Y, 8.3, pcbnew.B_SilkS, 0.12)
     text("BM %s" % nm, x, RF_Y - 8.0, pcbnew.B_SilkS, 0.9, 0.16, mirror=True); text("SMA %s" % nm, x, RF_JY + 6.0, pcbnew.F_SilkS, 0.85, 0.15)
 # ---------------------------------------------------------------- D8 mezzanine site
 rect(MEZZ_RECT, pcbnew.F_SilkS, 0.12)
-text("D8 MEZZANINE SITE  100 x 80", 50.0, 3.0, pcbnew.F_SilkS, 1.4, 0.22)
+text("PCB-D MEZZANINE SITE  100 x 80", 50.0, 3.0, pcbnew.F_SilkS, 1.4, 0.22)
 text("SA868 exciter, LPF, T/R relay, USB codec set, PTT and EMCON logic on 4x M3 (32.56); the PA module is on the face plate", 50.0, 0.0, pcbnew.F_SilkS, 0.9, 0.16)
 for (x, y) in MEZZ_HOLES:
     hole("H%d" % n, x, y, 3.2, "M3 standoff, mezzanine"); n += 1
@@ -186,7 +186,7 @@ _lib, _fp = idc("2x08").split(":")
 place(_lib, _fp, "J_MEZZ1", J_MEZZ[0], J_MEZZ[1], "mezzanine harness 2x8", rot=0)   # along Y beside the mezzanine (its shroud is 29 mm long)
 text("J_MEZZ1", J_MEZZ[0] - 8.0, J_MEZZ[1], pcbnew.F_SilkS, 1.0, 0.18, angle=90)
 text("J_MEZZ_PWR1 VH2 (5 V)", J_MEZZ_PWR[0], J_MEZZ_PWR[1] + 7.0, pcbnew.F_SilkS, 0.9, 0.16)
-rect((J_AB[0] - 5.5, J_AB[1] - 21.0, J_AB[0] + 5.5, J_AB[1] + 21.0), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x13 -> B16 underside (113, -46)", J_AB[0] - 9.0, J_AB[1], pcbnew.Dwgs_User, 0.9, 0.15, angle=90)
+rect((J_AB[0] - 5.5, J_AB[1] - 21.0, J_AB[0] + 5.5, J_AB[1] + 21.0), pcbnew.Dwgs_User, 0.1); text("J_AB1 2x13 -> PCB-B underside (113, -46)", J_AB[0] - 9.0, J_AB[1], pcbnew.Dwgs_User, 0.9, 0.15, angle=90)
 text("F1 25 A", FUSE_SITE[0], FUSE_SITE[1] + 8.0, pcbnew.Dwgs_User, 0.9, 0.15)
 # ---------------------------------------------------------------- datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
@@ -194,6 +194,6 @@ text("MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (%s)" % PHASE, 50, 76.5,
 text("MESHSAT-830  |  240 x 160 x 1.6 mm FR-4, 6 layers JLC06161H-3313  |  matte black  |  2026-09-07", 50, 73.3, pcbnew.F_SilkS, 1.1, 0.18)
 text("BACK WALL (+Y)", -30, 77.0, pcbnew.F_SilkS, 1.4, 0.22); text("FRONT WALL (-Y)   v v v", 30, -78.5, pcbnew.F_SilkS, 1.3, 0.22)
 text("PORT (-X)", -hx + 5.0, 20, pcbnew.F_SilkS, 1.2, 0.2, angle=90); text("STARBOARD (+X)", hx - 5.0, -60, pcbnew.F_SilkS, 1.2, 0.2, angle=90)
-text("PCB-A UNDERSIDE - 13.4 mm above the dock strip E6; the dock block pins and eleven SMP-MAX receptacles land on the dock", 30, -76.0, pcbnew.B_SilkS, 1.4, 0.25, mirror=True)
+text("PCB-A UNDERSIDE - 13.4 mm above the dock strip PCB-E1; the dock block pins and eleven SMP-MAX receptacles land on the dock", 30, -76.0, pcbnew.B_SilkS, 1.4, 0.25, mirror=True)
 pcbnew.SaveBoard(OUT, board)
 print("saved", OUT, "holes:", n - 1)

@@ -114,7 +114,7 @@ pw_, ph_ = L.PA_MOUNT["size"]; px_, py_ = L.PA_MOUNT["c"]; rounded_rect(px_ - pw
 for dx in (-1, 1): circle(px_ + dx * L.PA_MOUNT["holes"] / 2, py_, L.PA_MOUNT["hole_d"], pcbnew.Dwgs_User, 0.1)
 cx_, cy_ = L.CAMERA[1]; circle(cx_, cy_, L.CAMERA[2], pcbnew.Dwgs_User, 0.1); text("camera window", cx_, cy_ + 6.0, pcbnew.Dwgs_User, 1.2, 0.2)
 for (x, y) in L.FRAME_BOSSES: circle(x, y, 5.2, pcbnew.Dwgs_User, 0.1)
-bx0, by0, bx1, by1 = L.B_OUTLINE; rounded_rect(bx0, by0, bx1, by1, 2.0, pcbnew.Dwgs_User, 0.1); text("B16 outline below (330 x 200): the deep parts clear its tall parts (panel1450.clearance_report)", 0, by0 + 4.0, pcbnew.Dwgs_User, 1.6, 0.25)
+bx0, by0, bx1, by1 = L.B_OUTLINE; rounded_rect(bx0, by0, bx1, by1, 2.0, pcbnew.Dwgs_User, 0.1); text("PCB-B outline below (330 x 200): the deep parts clear its tall parts (panel1450.clearance_report)", 0, by0 + 4.0, pcbnew.Dwgs_User, 1.6, 0.25)
 line(-4, 0, 4, 0, pcbnew.Dwgs_User, 0.1); line(0, -4, 0, 4, pcbnew.Dwgs_User, 0.1); text("CASE DATUM (0,0)", 0, -6.5, pcbnew.Dwgs_User, 1.2, 0.2)
 # ---------------------------------------------------------------- legends on the board itself (the face legends are laser marked on the plate)
 PHASE = os.environ.get("PHASE", "C9")   # 8 Sep 2026: the phase comes from the chain, and the silk no longer carries a fixed date that goes stale
