@@ -248,9 +248,17 @@ mkdir -p routed && cp out/$N-pruned.txt routed/$N-pruned.txt 2>/dev/null || true
 # "no hardset-placed verdict for this board" and a fourth read one from three days ago, all of them about
 # boards whose placement WAS measured, in a directory that was thrown away with the tree. The two verdicts
 # are 2 kB and they are the only record that the expensive stage ran on a legal board.
-for _pv in hardset-placed place_audit regionfit; do
-  cp "out/$_pv.verdict.json" "routed/$_pv.verdict.json" 2>/dev/null || true
-done
+# AND THE CARRY IS PROVED, NOT ASSUMED (17 September 2026). Copying those three files moved a verdict about
+# one board into a directory holding another, with nothing but the shared tree tying them together, which is
+# the attribution defect of this week in its smallest form. A route lays copper and moves no part, and that
+# is checkable: `carry_placed.py` compares every footprint's position, orientation and side between the
+# placed snapshot and the board being cut, carries the three verdicts with both shas recorded when none
+# moved, and refuses when one did, because then this board's placement was never measured.
+if [ -s "out/$N-placed.kicad_pcb" ]; then
+  python3 $T/carry_placed.py "out/$N-placed.kicad_pcb" "$N.kicad_pcb" out routed 2>&1 | head -6
+else
+  echo "carry_placed: no placed snapshot in this tree, so the placement's evidence is not carried (PLC-001 stays unmeasured for this board)"
+fi
 [ "$PRC" -ne 1 ] || stop "PRUNED PAD NOT REACHED by the router"
 
 # every gate below runs ONCE and its exit code is its verdict; the reason comes from its verdict JSON
