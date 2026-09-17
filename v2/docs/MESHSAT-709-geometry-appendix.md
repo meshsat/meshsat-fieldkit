@@ -8808,3 +8808,52 @@ reads 259 pads skipped and TEN collisions**, which beats today's eleven, and fiv
 them one part's seat. `PLACE_PTH_OBSTACLE`, refused twice before because the packer had nowhere to step, is
 free on the resized floor plan at 1.6 and costs GAP12 3.49 mm at 2.0. Nothing is applied while B21 routes: the
 rectangles, the margin and the SWD land are one change and they belong to B22.
+
+### 32.215 A rule that had no tool, ten rules judged on fewer boards than their own condition, and evidence that is stale for the right reason (17 September 2026, 19:15 CEST; MESHSAT-862)
+
+**SCH-004 has been a BLOCKER with no implementation since the registry was written**, and the project was
+enforcing part of it by hand: fifteen lines of `check_contracts` that know only about the EMCON net. It asks
+that every line whose assertion inhibits a hazard leave the system safe when a cable is out, a board is
+unpowered or a module is missing, and its acceptance criteria name three things per line, on the netlist: the
+pull direction, the drivers, and the behaviour with the far board absent. Each board declares its own lines
+now, with the hazard, the safe state and the ROLE it plays, and `safe_lines.py` judges them. What it reads:
+board A holds EMCON_HW, PI_KILL and KILL, the last through 100k to VBAT; board B holds EMCON_HW; board D holds
+the inhibit into its key gate; board E holds SHORE_INHIBIT; board C is the source of five, both its toggles
+asserting by shorting to ground with a buffer that does not invert; board P declares, with its reason, that it
+has none. **A declaration is not taken on trust**: a board that calls a line a pass-through while a part of it
+reads that line is refused, and so is a board that says it drives a line and has nothing that does. The rails a
+pull-up may reach come from the board's own intent, which is what the first run got wrong, calling board A's
+kill input floating on a board that holds it up through a resistor named in the same file.
+
+**TEN RULES WERE BEING JUDGED ON FEWER BOARDS THAN THEIR OWN CONDITION SELECTS.** `boards_affected` reads like
+documentation and is used as a filter: `rules_for` drops a board that is not in the list BEFORE it evaluates
+the condition, so a list written when a rule was drafted decides what the rule is judged on and the condition,
+resolved against each board's own facts, cannot widen it. SCH-004 left out the three boards that carry the pack
+node. RF-001 left out board A's seven blind-mate sites and board E's dock clamps. PAIR-001 left out the two
+boards that declare a pair class, PWR-003 the board with three fuses on it, CLK-001 board A, THM-001 board C,
+and INT-001, TRN-001, DFA-001 and ANA-001 each left out the bare contact block or the pack board. Every list is
+the union of what it said and what its condition selects now, and a test holds the two together. **The
+applicable set is 328 pairs rather than 313.**
+
+**And the fingerprint moved, which marked three hundred readings stale for a change to fifteen of them.** That
+is the cost of one identity for the whole registry, paid every time it is corrected, on the one activity this
+audit exists to encourage. A verdict names the rules it decides, so it carries a digest of each of them now and
+`rules_status` asks the question rule by rule; a verdict with no per-rule digest is judged exactly as before,
+which is every verdict written until today. **Readiness under the corrected rule set: 57.0 percent verified,
+12.8 failed, 30.2 inconclusive of 328**, against 59.4 of 313 before the widening, with MORE passes than before
+(187 against 186) over a larger and honest denominator. What is still stale and cannot be re-taken honestly is
+PLC-001 on five boards: a placement's own hard set is produced when a board is placed and cannot be derived
+from the routed board that stands in its place.
+
+**ISO-001 was reading the nominal voltage where the rule asks for the working one.** Board E's inlet is
+specified 9 to 36 V, its facts entry says 36, which is how the registry decides the rule applies to it, and its
+intent declares the rail at 12 V nominal with `v_work` 36: `spacing.py` read the nominal and board E reported
+"no rail on this board reaches 20 V" with the rule marked not applicable. ECSS clause 13.8.2 b, the authority
+this rule cites, says the rating applies to the worst-case peak. At the working voltage the table reads board
+A's VIN_RAW **0.129 mm**, board A's VBUS20 0.130, board B's +54V_POE 0.900 and board E's VIN_RAW **0.128**,
+over 6,739, 32 and 2,860 conductor pairs; against Table 13-3's 31 to 500 V row, which asks 0.500 mm on an outer
+layer with no conformal coating, board B passes with 80 percent to spare and **boards A and E miss by a factor
+of about four**. That table covers any elevation and is written for space hardware, so what it means for a
+sealed terrestrial kit is owner decision 34, which carries the numbers now, and the strict reading costs a
+re-route of two finished boards. A board whose own fact contradicts its intent is a question from here on, not
+an exemption.
