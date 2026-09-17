@@ -506,3 +506,78 @@ def t_a_gate_that_judges_a_pair_of_boards_names_neither_as_the_board():
         assert r.returncode == 0, r.stderr
         ins = json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]
         assert ins["board"] is None, ins
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE, held once for every tool
+# (17 September 2026).
+#
+# This project has re-learnt that sentence five times: the cross-board contracts at both ends, the rotation
+# table, the energy chain, the placement carry, and `doc_provenance`, whose reading taken in a sweep tree that
+# holds no `v2/release/revA/order/` at all (0 documents of 0 folders) was forty minutes newer than the runner's
+# reading of the seven real ones and stood in front of it on boards D, E, E5 and P. Those four boards read
+# "nobody has checked" about documents that are on this disk, untraceable. The declaration is a field of the
+# verdict now, and the reader prefers the verdict that HAD its input whatever the timestamps say.
+
+def t_a_verdict_that_declares_its_input_absent_is_inconclusive_whatever_the_tool_said():
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        prog = ("import sys; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=0,"
+                "                       missing_input='there is no rotation table in this tree'))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 3, (r.returncode, r.stdout, r.stderr)   # 3 is INCONCLUSIVE
+        rec = json.load(open(os.path.join(d, "out", "probe.verdict.json")))
+        assert rec["verdict"] == "INCONCLUSIVE", rec["verdict"]
+        assert "rotation table" in (rec.get("missing_input") or ""), rec.get("missing_input")
+
+
+def t_a_verdict_that_had_its_input_says_so_by_carrying_no_declaration():
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        prog = ("import sys; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.FAIL, denominator=7))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 1, r.stderr
+        rec = json.load(open(os.path.join(d, "out", "probe.verdict.json")))
+        assert rec["missing_input"] is None, rec["missing_input"]
+
+
+def t_the_reading_that_had_its_input_is_the_board_s_reading():
+    """Executed on the shape that caused it: the empty one is newer, and the one that read the seven documents
+    is the one this board is judged on. On the tree before this change the newer empty verdict won."""
+    import sys, os, json, tempfile
+    sys.path.insert(0, TOOLS)
+    import rules_status as S
+    rich = {"tool": "doc_provenance", "verdict": "FAIL", "denominator": 7, "ts": "2026-09-17T01:59:12Z",
+            "counts": {"documents": 7, "untraceable": 7}}
+    empty = {"tool": "doc_provenance", "verdict": "INCONCLUSIVE", "denominator": 0, "ts": "2026-09-17T03:28:03Z",
+             "counts": {"documents": 0}, "missing_input": "this tree holds no order folder"}
+    assert S._supersedes(rich, empty) is True, "the reading with the documents does not displace the empty one"
+    assert S._supersedes(empty, rich) is False, "an empty reading still displaces one taken with the input"
+    # and the ordinary case is untouched: between two readings that both had their input, the newer wins
+    newer = dict(rich, ts="2026-09-17T04:00:00Z", verdict="PASS")
+    assert S._supersedes(newer, rich) is True and S._supersedes(rich, newer) is False
+
+    with tempfile.TemporaryDirectory() as d:
+        a, b = os.path.join(d, "one"), os.path.join(d, "two")
+        os.makedirs(a); os.makedirs(b)
+        json.dump(rich, open(os.path.join(a, "doc_provenance.verdict.json"), "w"))
+        json.dump(empty, open(os.path.join(b, "doc_provenance.verdict.json"), "w"))
+        _orig = S._project_dirs
+        try:
+            S._project_dirs = lambda letter, m: [a, b]
+            got = S._verdicts("d", {"boards": {"d": {}}})["doc_provenance"]
+        finally:
+            S._project_dirs = _orig
+        assert got["denominator"] == 7, got
+
+
+def t_the_two_tools_that_can_run_without_their_input_declare_it():
+    """Static, and specific: these are the two gates whose input is a file the ECAD tree does not contain, so
+    they are the two that run in a sweep tree and read nothing."""
+    import os
+    for name, word in (("doc_provenance.py", "order folder"), ("assembly_set.py", "rotation table")):
+        src = open(os.path.join(TOOLS, name), encoding="utf-8").read()
+        assert "missing_input=" in src, "%s does not declare an absent input" % name
+        assert word in src, "%s does not say which input was absent" % name

@@ -199,6 +199,11 @@ def main(argv):
                     denominator=max(1, len(nch) + len(fails)),
                     evidence=(fails + ["not compared with a preview: " + x for x in nch])[:20],
                     inputs={"rotations": os.path.relpath(rot or ROT, ECAD)},
+                    # The table is this tool's input and a tree without it has read nothing about rotations.
+                    # It was restored by hand on 17 September after a sweep tree's reading displaced the
+                    # runner's on all seven boards; the declaration is what stops that happening again.
+                    missing_input=(("there is no rotation table at %s in this tree, so no rotation was "
+                                    "compared" % os.path.relpath(rot or ROT, ECAD)) if _no_table else None),
                     note="every polarised footprint the boards place, against the rotation table the ordering "
                          "session keeps and the date each row was compared with the assembler's own preview. A "
                          "footprint with no row goes to the assembler with KiCad's rotation unchanged, which is "
