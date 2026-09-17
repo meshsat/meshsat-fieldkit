@@ -8857,3 +8857,41 @@ of about four**. That table covers any elevation and is written for space hardwa
 sealed terrestrial kit is owner decision 34, which carries the numbers now, and the strict reading costs a
 re-route of two finished boards. A board whose own fact contradicts its intent is a question from here on, not
 an exemption.
+
+### 32.216 Board B's floor plan has an answer, and it is three changes that only work together (17 September 2026, 19:50 CEST; MESHSAT-862)
+
+Owner ruling 13's resize was worth doing and worth nothing on its own: at the declared 1.6 mm fine-pitch margin
+the resized rectangles predict THIRTEEN escape-fan collisions where today's predict eleven. What the resize
+buys is the room for a wider margin, and the 2.0 mm margin's first placement was illegal, twenty-nine hard
+violations, every one a front part over the five SWD pins of an underside controller that the schematic calls
+SWD PADS and draws as a through-hole header. With that one footprint on a surface-mount land the count fell to
+five, and the five were one part in one place: **U24, the RockBLOCK eFuse, inside J_WOA's own footprint
+keep-out**, which forbids pads and which the packer could not see, because a footprint's rule areas are FP_ZONEs
+and its obstacle list read `board.Zones()`. It is the third time this year that the packer has been taught
+about something already drawn on the board, after the strap slots and the fixed parts.
+
+**The three together, measured on the whole pre-route chain with the predictor on each:**
+
+| | today's B21 placement | B22 candidate |
+|---|---|---|
+| hard violations | 0 | **0** |
+| region overflow | none | **none** |
+| escapes laid | 1,465 | **1,496** |
+| fine-pitch pads with no escape | 288 | **259** |
+| predicted escape-fan collisions | 11 | **10** |
+
+The keep-out fix costs nothing where nothing lands in one: at 1.6 mm with today's rectangles the placement
+reads eleven collisions and 284 pads without an escape, which is the baseline unchanged. **B22 takes the nine
+rectangles, the 2.0 mm margin and the surface-mount SWD land together**, and the numbers above are what it has
+to beat. Nothing is applied while B21 routes.
+
+**And board B has a protection finding of its own.** PWR-003 applies to it because it has fuses, and the
+stored-energy chain had never carried them. Its three polyfuses are in it now, with Bourns' own sheet in the
+tree and the bound on a fault from board A's AP64500 buck (6.8 A minimum, 9.2 maximum, cycle by cycle): the
+panel's 5 V carries a **2.0 A hold, 3.5 A trip polyfuse on a 0.4 mm class track** that IPC-2221 rates at 1.23 A
+at 10 K, feeding board C's 0.6 A rail. The copper is the weaker element. B22 answers it by widening PANEL_5V to
+0.8 mm, which is 2.03 A at 10 K, or by fitting an MF-MSMF110, which holds 1.1 A and trips at 2.2; the widening
+is the one to prefer, being a pattern in the class table rather than a part number. Two corrections came out of
+writing that stage down: a branch of the chain declares what feeds it rather than being known to the
+connectivity rule by its NAME, and a coordination failure is a stage's and therefore a board's, where routed to
+the end-to-end rule it had failed four boards that have nothing to do with board B's panel fuse.
