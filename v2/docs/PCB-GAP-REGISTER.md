@@ -126,7 +126,7 @@ Boards D and E declare the grid and are covered; A, B, C and P do not and are no
 with a measured cost (board P measured the grid at 21 open connections against 0 without, which is why it
 declares none) and board C is measuring it on two arms right now. Board E5 has no chain, so no closer runs on
 it at all.  
-*Close it by* each closer names its class and its prevention attempt; extend the predictor. Owner **SESSION**. Effort P50 6h, P80 20h.
+*Close it by* The declarations are DONE: all fifteen copper-changing stages name their defect class and why prevention failed, and a prevention MEASURED AND REFUSED counts as an answer since 17 September 2026, which is what board P had done and was being refused for. What remains is two measurements and one tool: boards A and C have never measured the ground-via grid that prevents the pour-island class and both are measuring it now (A41 against A40, C25 against C24), and place_audit does not predict that class. Owner **SESSION**. Effort P50 3h, P80 8h.
 
 ## no protocol (2)
 
