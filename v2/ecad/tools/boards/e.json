@@ -340,5 +340,15 @@
    "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
   }
  },
- "_sense_clearance_why": "BOARD E'S TWO ANA-001 FAILURES, and which of them a class could fix (17 September 2026). TRK_LSENSE runs 0.209 mm from TRK_SW2 over 2.71 mm against a declared 0.50, and WATER_SENSE 0.556 mm from TRK_SW1 over 20.49 mm against a declared 1.00. Both nets sit in class PWR, whose clearance is 0.15 mm, so the router did what it was told. Measured pad edge to pad edge before proposing a class: TRK_LSENSE's three pads are 1.760, 0.850 and 2.890 mm from the nearest other-net pad, so a 0.50 mm class WOULD escape every one of them; WATER_SENSE's are 2.000, 0.850, 0.650 and **0.200 mm at U10 pin 38**, the controller's own fine-pitch pin, so its declared 1.00 mm cannot be a class at all. What is NOT settled here is whether TRK_LSENSE should leave PWR: it lands on L1 pad 2, the tracker inductor's own terminal, so it may be carrying current rather than sensing it, and a class that narrows it to a signal width would be wrong. That is a circuit question for board E's next generation, which is also when decision 31's clamps land, and the measurement above is what it needs."
+ "_sense_clearance_why": "BOARD E'S TWO ANA-001 FAILURES, and which of them a class could fix (17 September 2026). TRK_LSENSE runs 0.209 mm from TRK_SW2 over 2.71 mm against a declared 0.50, and WATER_SENSE 0.556 mm from TRK_SW1 over 20.49 mm against a declared 1.00. Both nets sit in class PWR, whose clearance is 0.15 mm, so the router did what it was told. Measured pad edge to pad edge before proposing a class: TRK_LSENSE's three pads are 1.760, 0.850 and 2.890 mm from the nearest other-net pad, so a 0.50 mm class WOULD escape every one of them; WATER_SENSE's are 2.000, 0.850, 0.650 and **0.200 mm at U10 pin 38**, the controller's own fine-pitch pin, so its declared 1.00 mm cannot be a class at all. What is NOT settled here is whether TRK_LSENSE should leave PWR: it lands on L1 pad 2, the tracker inductor's own terminal, so it may be carrying current rather than sensing it, and a class that narrows it to a signal width would be wrong. That is a circuit question for board E's next generation, which is also when decision 31's clamps land, and the measurement above is what it needs.",
+ "safety_lines": [
+  {
+   "net": "SHORE_INHIBIT",
+   "hazard": "the shore and vehicle input is admitted when the panel would refuse it",
+   "safe_state": "low",
+   "role": "listens",
+   "why": "Q8's gate is on it and its drain holds the hot-swap controller's undervoltage pin, so a high inhibits the input; R26 holds it down, which admits shore power with the panel absent. That is deliberate and it is not the cold-charge protection: the protection that matters is the pack thermistor on the charger's own JEITA input on board A, in hardware, and this line is the panel's convenience over it"
+  }
+ ],
+ "_safety_lines_why": "Board E reads one line of this kind, the shore inhibit, and holds it down itself. The declaration says in as many words why the de-asserted state is the safe one here: this line is a convenience and the cold-charge protection is the charger's own thermistor input on board A."
 }

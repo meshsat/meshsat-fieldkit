@@ -136,6 +136,11 @@ VERDICT_ADVISORY=1 python3 ../tools/port_protect.py out/$N.net > out/port_protec
 # unrelated work. The verdict is written either way, the finish blocks on it before a deliverable is cut, and
 # the registry's own verification_phase for this rule is SCHEMATIC.
 [ "$PP" -eq 1 ] && echo "port_protect: FAIL, and it does not block the route: rule TRN-001 is judged again in the finish, before anything is cut (see out/port_protect.log)"
+# RULE SCH-004: every line whose assertion inhibits a hazard holds its safe state with this board's own copper.
+# It runs here, on the netlist, because it is a schematic property and because a board that loses its pull-down
+# in a generator edit should be stopped before it is routed, not after (17 September 2026).
+python3 ../tools/safe_lines.py out/$N.net > out/safe_lines.log 2>&1; SL=$?; grep -E 'safe_lines:|FAIL' out/safe_lines.log | head -8
+[ "$SL" -eq 1 ] && block "a safety line does not hold its safe state (rule SCH-004, out/safe_lines.log)" out/safe_lines.log
 python3 ../tools/clock_check.py out/$N.net > out/clock_check.log 2>&1; CK=$?; grep -E 'clock_check:|FAIL' out/clock_check.log | head -6
 [ "$CK" -eq 1 ] && block "a crystal's load network (rule CLK-001, out/clock_check.log)" out/clock_check.log
 python3 ../tools/derate.py out/$N.net > out/derate.log 2>&1; DR=$?; grep -E 'derate:|FAIL|UNDECLARED' out/derate.log | head -8

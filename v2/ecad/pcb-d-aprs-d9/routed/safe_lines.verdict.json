@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "floating": 0,
+  "lines": 2,
+  "listened": 1,
+  "on_netlist": 2
+ },
+ "denominator": 2,
+ "evidence": [
+  "TX_INHIBIT_n: safe low, pull down [R2 (100k)], pull up [none], drivers [none], reads [U12.2 (74LVC1G08 AND: KEY = PTT_ANY)], leaves on [J_HARN1.8]",
+  "ZEROIZE_HW: safe high, pull down [none], pull up [none], drivers [none], reads [none], leaves on [J_HARN1.15]"
+ ],
+ "inputs": {
+  "board": "d",
+  "netlist": {
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "f0bb3465dd42d878"
+  }
+ },
+ "missing_input": null,
+ "note": "1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "tool": "safe_lines",
+ "tools": {
+  "git_head": "e36ca03f7422",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T16:45:55Z",
+ "verdict": "PASS",
+ "version": "e36ca03f7422+dirty"
+}

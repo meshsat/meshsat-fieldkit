@@ -248,7 +248,21 @@ rules:
    automation_feasibility: PARTIALLY_AUTOMATABLE
    boards_affected: [a, b, c, d]
    interfaces_affected: [IDC_RIBBON]
-   implementation_location: NONE_YET
+   implementation_location: "tools/safe_lines.py, each board's safety_lines declaration in tools/boards/<letter>.json"
+   false_positive_analysis: >
+     A WRONG REFUSAL WOULD BE A BOARD THAT HOLDS ITS LINE SAFE BY SOMETHING A NETLIST DOES NOT SHOW: an
+     internal pull-down inside the part that reads it, a pull on the far side of a series resistor, or a clamp.
+     Three things stop it. The tool judges only a line the board DECLARES that it reads, so a board that holds
+     its line another way says so in the declaration's own sentence rather than being exempted by silence; the
+     evidence line names every part on the net, the pulls, the drivers, the readers and the connectors, so a
+     reader sees exactly what the tool saw; and a resistor to any rail the board's own intent declares counts
+     as a pull-up, which is what the first run got wrong (board A holds its kill input to VBAT and a rail set
+     built from names beginning with a plus does not contain VBAT).
+     THE SECOND CLASS is a part that only OBSERVES a line being read as one that acts on it: the panel
+     controller reads the EMCON toggle on a GPIO and does not gate anything with it. The role in the
+     declaration carries that (the panel board is the SOURCE of those five lines), and where a board both
+     observes and passes a line on, holding it costs one resistor and every board on this kit's inhibit path
+     already has one, which is the 9 September red team's rule.
    evidence_scope: [schematic_sha256, manifest_version]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}

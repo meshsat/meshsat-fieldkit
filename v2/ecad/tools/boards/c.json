@@ -320,5 +320,43 @@
    "source": "Abracon ABM8-272-T3, load capacitance 10 pF, read from the RP2040 hardware design guide section 2.3.1, which names this exact part and works this exact arithmetic: two 15 pF capacitors give 7.5 pF in series, the pins and tracks add about 3 pF, and 10.5 pF is close enough to the target of 10",
    "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
   }
- }
+ },
+ "safety_lines": [
+  {
+   "net": "TX_INHIBIT_n",
+   "hazard": "every transmitter in the kit is released",
+   "safe_state": "low",
+   "role": "source",
+   "why": "the panel's locking toggle SW_EMCON shorts it to ground and R14 holds it up, so the switch asserts by pulling low and the consumer boards each hold their own pull-down"
+  },
+  {
+   "net": "EMCON_HW",
+   "hazard": "every transmitter in the kit is released",
+   "safe_state": "low",
+   "role": "source",
+   "why": "U9 buffers the toggle into it without inverting, so both consumer boards silence on low"
+  },
+  {
+   "net": "ZEROIZE_HW",
+   "hazard": "the secure element is wiped",
+   "safe_state": "high",
+   "role": "source",
+   "why": "the panel's locking toggle SW_ZERO shorts it to ground and R10 holds it up; the falling edge reaches the panel controller's own GPIO, which is the device that can do the wipe (owner decision 30)"
+  },
+  {
+   "net": "PI_KILL",
+   "hazard": "the modules are powered down",
+   "safe_state": "low",
+   "role": "source",
+   "why": "driven by the panel controller's GPIO and read on board A"
+  },
+  {
+   "net": "SHORE_INHIBIT",
+   "hazard": "shore power is admitted when the panel would refuse it",
+   "safe_state": "low",
+   "role": "source",
+   "why": "driven by the panel controller's GPIO and read on board E"
+  }
+ ],
+ "_safety_lines_why": "Board C is the face: every one of these five lines is driven here, by a locking toggle or by the panel controller, so the fail-safe property belongs to the boards that read them. What this board owes is the sense, and it has it: both toggles assert by shorting to ground, and U9 buffers rather than inverts, so a cut ribbon reads as INHIBIT everywhere it is consumed."
 }

@@ -53,7 +53,7 @@ rm -rf $S; mkdir -p $S/out
 for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
-          edge_length derate clock_check port_protect place_audit check_contracts check_contracts_$L lcsc_fill \
+          edge_length derate clock_check port_protect safe_lines safe_lines_$L place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
           sensitive_nodes assembly_set rf_line ledger_verify; do
   rm -f "$P/routed/$_g.verdict.json"
@@ -155,6 +155,7 @@ run "rf lines" python3 $T/rf_line.py $N.kicad_pcb
 # session keeps and the date each row was compared with the assembler's own preview.
 run "assembly set" python3 $T/assembly_set.py --ecad "$E" --board $L
 [ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
+[ -s out/$N.net ] && run "safety lines" python3 $T/safe_lines.py out/$N.net
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read
 # INCONCLUSIVE on all seven boards for one reason: their evidence was taken under an older rule set and no

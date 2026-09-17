@@ -196,7 +196,7 @@ that a disconnected cable, an unpowered board or a missing module leaves the sys
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py |
-| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: UNASSESSED)
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -213,7 +213,17 @@ the connector and a test point on boards A and B and NOTHING ELSE, the ATECC608B
 and the feature as built asks the compute modules to wipe themselves in software. 16 September 2026: written
 up as owner decision 30 with three costed options. The fact that shapes them is that the ATECC608B has NO
 ERASE PIN, so no option is a pure hardware wipe; the fact that makes option 1 cheap is that the three
-supervisors are already on the same I2C bus as the secure element and depend on no compute module being alive
+supervisors are already on the same I2C bus as the secure element and depend on no compute module being
+alive. 17 September 2026: THE RULE HAS A TOOL OF ITS OWN AT LAST, and the fifteen hand-written EMCON lines in
+check_contracts are no longer the whole of it. Each board declares its safety lines in boards/<letter>.json
+with the hazard, the safe state and the role it plays (listens, source, carries), and safe_lines.py judges on
+the netlist the three things the acceptance criteria ask for: the pull direction on the board that READS the
+line, what drives it, and what happens with the far board absent. All six boards pass today, each holding its
+own line: A on EMCON_HW, PI_KILL and KILL, B on EMCON_HW, D on TX_INHIBIT_n, E on SHORE_INHIBIT, with C the
+source of five and P declaring with its reason that it has none. A declaration is not taken on trust: a board
+that calls a line a pass-through while a part of it reads that line is refused, which is the fixture that
+would have caught the EMCON defect of 9 September. What the tool cannot settle is ZEROIZE, which is decision
+30: the line is held de-asserted everywhere it goes and the question is which device performs the wipe
 
 ## Component Selection
 
