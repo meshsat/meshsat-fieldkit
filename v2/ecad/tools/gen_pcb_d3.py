@@ -273,7 +273,7 @@ try:
     # 1 A with margin. The board is re-routed and its deliverable re-cut; the alternative considered and not
     # taken was accepting five millivolts over budget on the grounds that the radio only draws it while
     # transmitting, which is a coherent position on a duty-cycled rail and not one to buy boards on.
-    nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.127, 0.25, 0.6, 0.3); ns.SetNetclass("SENSE", nse)
+    nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.127, 0.25, 0.7, 0.3)   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026); ns.SetNetclass("SENSE", nse)
     # THE POWER CLASS VIA IS 1.2/0.6 SINCE D13 (18 September 2026, rule PI-003): D12's +5V_SA crosses layers through
     # ONE router via at each of two transitions, 1.10 A of the solved mesh through a 0.4 mm drill rated 0.90 A at
     # 10 K with the fabricator's 18 um plating (via_current, both barrels beside FB1); a 0.6 mm drill is rated
