@@ -157,12 +157,28 @@ def main(argv):
     _note = ("every interface's impedance target and matching tolerance against the specification of the part "
              "that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own "
              "datasheets")
+    # A DECLARED ZERO IS AN ANSWER HERE TOO (17 September 2026). A board may carry no interface with a
+    # specification of its own: board E5 is a contact interposer whose every net is board A's, read off A's
+    # board by position under each spring pin, and its only "interfaces" are plated wire lands. Written as
+    # INCONCLUSIVE that counted as nobody having looked, which is the opposite of what the declaration says. A
+    # zero with its reason in `no_interface_targets_why` passes; a zero without one stays a question.
+    try:
+        import yaml as _yaml
+        _spec = _yaml.safe_load(open(SPEC, encoding="utf-8")) or {}
+    except Exception:
+        _spec = {}
+    _decl = {k: str((v or {}).get("no_interface_targets_why") or "").strip()
+             for k, v in ((_spec.get("boards") or {}).items())}
     for letter, v in sorted(res.items()):
-        _f = v["fails"]; _n = len(v["rows"])
-        _v.write("interfaces_%s" % letter, _v.FAIL if _f else (_v.INCONCLUSIVE if not _n else _v.PASS),
-                 counts={"assignments": _n, "disagreements": len(_f)}, denominator=_n, evidence=_f[:12],
+        _f = v["fails"]; _n = len(v["rows"]); _why = _decl.get(letter, "")
+        _res = _v.FAIL if _f else (_v.PASS if _n or _why else _v.INCONCLUSIVE)
+        _v.write("interfaces_%s" % letter, _res,
+                 counts={"assignments": _n, "disagreements": len(_f)}, denominator=_n,
+                 evidence=(_f[:12] or ([_why] if _why and not _n else [])),
                  inputs={"spec": os.path.basename(SPEC), "board": letter},
-                 note=_note if _n else "board %s declares no interface assignment" % letter.upper(),
+                 note=_note if _n else ("board %s declares that no interface of its own carries a target, with "
+                                        "its reason" % letter.upper() if _why else
+                                        "board %s declares no interface assignment" % letter.upper()),
                  quiet=True)
     return _v.write("interfaces", _v.FAIL if fails else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"assignments": rows, "boards": len(res), "disagreements": len(fails)},
