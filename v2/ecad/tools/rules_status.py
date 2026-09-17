@@ -385,6 +385,17 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
             ok, why = _fresh(rec, m, fingerprint, identities, rule)
             if not ok:
                 r = dict(result=INCONCLUSIVE, why=why, evidence=rec.get("_path"))
+            elif rec.get("applicable") is False:
+                # THE GATE SAYING THE QUESTION CANNOT ARISE HERE IS AN ANSWER, AND NOTHING READ IT (17 September
+                # 2026). `clock_check` writes "this board carries no crystal, so CLK-001 has nothing on it to
+                # judge" with applicable false, and it was written on 16 September precisely so that a reader
+                # could tell "not applicable" from "could not judge"; this reader never looked at the field, so
+                # board A's CLK-001 counted as an unanswered question about a crystal it does not have. The
+                # registry's condition says a rule COULD apply to a board; a current verdict from the tool that
+                # looked says whether the thing it is about is there. The pair leaves the denominator, which is
+                # what NOT_APPLICABLE means everywhere else in this file, and the note travels with it.
+                r = dict(result=NOT_APPLICABLE, why=(rec.get("note") or "the gate reports that this rule does "
+                                                     "not apply to this board"), evidence=rec.get("_path"))
             else:
                 res = rec.get("result") or rec.get("verdict")
                 # AN ADVISORY VERDICT IS A MEASUREMENT AND NOT A BAR (16 September 2026). The verdict channel

@@ -423,3 +423,19 @@ def t_the_writer_stamps_the_digest_of_every_rule_a_verdict_decides():
     fps = (rec.get("policy") or {}).get("rule_fingerprints") or {}
     assert fps.get(rid) == R.rule_fingerprints()[rid], \
         "the verdict does not carry the digest of the rule it decides: %s" % fps
+
+
+def t_a_gate_that_says_the_rule_cannot_arise_here_is_answered_and_not_unanswered():
+    """17 September 2026. `clock_check` writes "this board carries no crystal, so CLK-001 has nothing on it to
+    judge" with `applicable` false, and the comment above that line says it was written so a reader could tell
+    "not applicable" from "could not judge". This reader never looked at the field, so board A's CLK-001 counted
+    as an unanswered question about a crystal the board does not have. The registry's condition says a rule
+    COULD apply to a board; the tool that looked says whether the thing it is about is there."""
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "rules_status.py"),
+               encoding="utf-8").read()
+    i = src.index("ok, why = _fresh(rec, m, fingerprint, identities, rule)")
+    seg = src[i:i + 1400]
+    assert 'rec.get("applicable") is False' in seg, "the verdict's own applicability is still unread"
+    assert "NOT_APPLICABLE" in seg, "a gate's not-applicable answer does not reach the result"
+    j = seg.index('rec.get("applicable") is False')
+    assert seg.index("if not ok:") < j, "the freshness test must come first: a stale verdict says nothing at all"
