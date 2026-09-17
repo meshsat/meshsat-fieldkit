@@ -565,3 +565,77 @@ def t_a_via_site_inside_an_exposed_pad_is_free_and_one_under_another_nets_copper
         "a via does not fit in the middle of its own 2.29 x 3.00 mm ground pad: the paste apertures block it"
     assert _answer("neighbour") == "False", \
         "a real copper pad of another net 0.11 mm away no longer blocks the site: the filter freed copper"
+
+
+# ---------------------------------------------------------------- place_audit's plane-pad class (its declared fixture debt, 18 September 2026)
+
+_PLACE_FIXTURE = r"""
+import os, sys, json, tempfile, subprocess
+sys.path.insert(0, TOOLS)
+import pcbnew
+
+def board(w=40.0, h=30.0):
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    for (x1, y1, x2, y2) in ((0, 0, w, 0), (w, 0, w, h), (w, h, 0, h), (0, h, 0, 0)):
+        sh = pcbnew.PCB_SHAPE(b); sh.SetShape(pcbnew.SHAPE_T_SEGMENT); sh.SetLayer(pcbnew.Edge_Cuts)
+        sh.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1))); sh.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2)))
+        sh.SetWidth(pcbnew.FromMM(0.1)); b.Add(sh)
+    return b
+
+def pad(fp, num, x, y, w, h):
+    p = pcbnew.PAD(fp); p.SetNumber(num); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT)
+    p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(w), pcbnew.FromMM(h))); p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    p.SetLayerSet(pcbnew.LSET.FrontMask()); fp.Add(p); return p
+
+KEEPOUT = sys.argv[1] == "keepout"
+b = board()
+for n in ("GND", "/SIG"): b.Add(pcbnew.NETINFO_ITEM(b, n))
+b.BuildListOfNets(); keep = [b.FindNet("GND"), b.FindNet("/SIG")]; code = {n: b.FindNet(n).GetNetCode() for n in ("GND", "/SIG")}
+# a fine-pitch part: ten pads on a 0.5 mm pitch, so the gate is judged rather than INCONCLUSIVE
+fp = pcbnew.FOOTPRINT(b); fp.SetReference("U1"); fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10.0), pcbnew.FromMM(10.0)))
+pins = [pad(fp, str(i + 1), 8.0 + 0.5 * i, 10.0, 0.25, 1.0) for i in range(10)]
+b.Add(fp)
+for i, p in enumerate(pins): p.SetNetCode(code["/SIG"])
+# the plane pad: GND on F.Cu, its plane a GND pour on B.Cu, no via anywhere near it
+fq = pcbnew.FOOTPRINT(b); fq.SetReference("U2"); fq.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(30.0), pcbnew.FromMM(20.0)))
+pg = pad(fq, "1", 30.0, 20.0, 1.0, 1.0); b.Add(fq); pg.SetNetCode(code["GND"])
+z = pcbnew.ZONE(b); z.SetLayer(pcbnew.B_Cu); z.SetNetCode(code["GND"]); o = z.Outline(); o.NewOutline()
+for x, y in ((1, 1), (39, 1), (39, 29), (1, 29)): o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+b.Add(z)
+if KEEPOUT:
+    k = pcbnew.ZONE(b); k.SetIsRuleArea(True); k.SetDoNotAllowTracks(True); k.SetDoNotAllowVias(False); k.SetLayer(pcbnew.F_Cu)
+    ko = k.Outline(); ko.NewOutline()
+    for x, y in ((27, 17), (33, 17), (33, 23), (27, 23)): ko.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+    b.Add(k)
+d = tempfile.mkdtemp(prefix="place-audit-"); path = os.path.join(d, "fixture.kicad_pcb"); b.Save(path); os.makedirs(os.path.join(d, "out"), exist_ok=True)
+r = subprocess.run([sys.executable, os.path.join(TOOLS, "place_audit.py"), path], cwd=d, capture_output=True, text=True)
+v = json.load(open(os.path.join(d, "out", "place_audit.verdict.json")))
+print("ANSWER", v["verdict"], json.dumps(v.get("counts")))
+print("LINES", [l for l in (r.stdout + r.stderr).split("\n") if "plane pad" in l][:1])
+"""
+
+
+def _place_audit(which):
+    src = "TOOLS = %r\n" % TOOLS + _PLACE_FIXTURE
+    r = subprocess.run([sys.executable, "-c", src, which], capture_output=True, text=True)
+    assert r.returncode == 0, "the %s fixture did not build:\n%s" % (which, (r.stdout + r.stderr)[-900:])
+    ans = [l for l in r.stdout.split("\n") if l.startswith("ANSWER ")]
+    assert ans, "no answer:\n" + r.stdout[-400:]
+    return ans[0].split()[1], r.stdout
+
+
+def t_a_plane_pad_under_a_track_keepout_with_no_via_fails_the_placement_gate():
+    """THE DEFECTIVE FIXTURE for place_audit's plane-pad class (its fixture debt since 11 September): a GND pad on
+    F.Cu whose plane is a B.Cu pour, no via within reach, and a track keep-out over it on its own layer, so the
+    pad has nowhere to go before the route. A fine-pitch part sits on the board so the gate is judged at all."""
+    _pcbnew()
+    verdict, out = _place_audit("keepout")
+    assert verdict == "FAIL", "a plane pad with nowhere to go passed the placement gate: %s" % out[-300:]
+    assert "under a track keep-out" in out, "the failure does not name the keep-out that stops the pad: %s" % out[-300:]
+
+
+def t_the_same_plane_pad_with_free_via_sites_passes_the_placement_gate():
+    """THE ACCEPTABLE FIXTURE: the same board without the keep-out; the site search finds room and the gate passes."""
+    _pcbnew()
+    verdict, out = _place_audit("free")
+    assert verdict == "PASS", "a plane pad with free via sites failed the placement gate: %s" % out[-300:]
