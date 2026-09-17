@@ -17,7 +17,8 @@ Used as a module by the check_pcb_*.py gates: intent_checks.run(board, check)  o
 import sys, os, math, json
 import netclass
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import pcbnew, intent, signalnets, return_via, signal_class
+import pcbnew
+import kicad_compat as _kc, intent, signalnets, return_via, signal_class
 
 SAMPLE = 1.0; GAP_MM = 10.0; NEAR_VIA = 1.5
 
@@ -28,6 +29,13 @@ SAMPLE = 1.0; GAP_MM = 10.0; NEAR_VIA = 1.5
 # had passed.
 RULE_VERDICTS = ("intent_return_path", "intent_return_via", "intent_decoupling", "intent_rails",
                  "intent_other", "intent_checks")
+
+# The last return-path measurement, for a caller that needs the numbers rather than the sentences. A test that
+# captured them by redirecting stdout around this module took KiCad's python down with it (17 September 2026):
+# the C++ layer writes to the file descriptor and Python's redirect swaps the object above it, and with the
+# process's output on a pipe the two disagreed hard enough to segfault. A measurement worth asserting on is
+# worth returning.
+LAST = {}
 
 def run(b, check, path=None):
     path = path or b.GetFileName(); it = intent.load(path)
@@ -52,7 +60,40 @@ def run(b, check, path=None):
         i = cu.index(L); return [cu[j] for j in (i - 1, i + 1) if 0 <= j < len(cu)]
     # 1. return path, under every signal net (and the pair-class nets, which are signals too but keep their own class in the line)
     signals, _why = signalnets.classify(b, path, it.get("rails", {}).keys())
-    gaps = {}; total = {}; n_nets = 0; n_tracks = 0
+    # THE HOLE A NET'S OWN VIA MAKES IN ITS REFERENCE IS RET-003's QUESTION, NOT THIS ONE (17 September 2026).
+    # The fill retreats around every barrel, so a net that changes layer punches a hole in the very plane it is
+    # being judged against, and this measurement counted that hole as a break in the reference. It is not one:
+    # the reference is continuous either side of it and what the signal needs THERE is a return transition,
+    # which is exactly what RET-003 and RET-004 ask about. On board B's placed board, with the zones filled,
+    # the single net over its limit was over it by 0.6 mm and every uncovered run was its own via's anti-pad.
+    # The two are separated here: the anti-pad share is measured, reported and handed to the transition rules,
+    # and the screen judges what is left, which is a slot, another net's copper, or the fill's own edge.
+    _vias = {}
+    for _t in b.GetTracks():
+        if _t.GetClass() != "PCB_VIA": continue
+        # A via's width is per layer in KiCad 9 and the bare call asserts: kicad_compat.via_width.
+        _w = _kc.via_width(_t)
+        _vias.setdefault(_t.GetNetname(), []).append((_t.GetPosition(), _w))
+    _CLEAR = 300000     # 0.3 mm in KiCad units: the fill's own clearance on these boards, and the larger of the
+    # two values any of the seven declares, so this never calls a real slot an anti-pad by being generous.
+    def _antipad(net, p, Ls):
+        """Is this uncovered point a hole in a reference, or is there no reference here at all?
+
+        An anti-pad is a hole IN a fill. Asking only whether a via of this net is close enough would call
+        every point near a via an anti-pad on a board with no pour at all, which is the opposite of the truth
+        and would have excused board B's card-slot nets, whose gap is their whole length. So the fill has to
+        be there to have a hole in it: the ring just outside the barrel's clearance is sampled, and the point
+        counts as an anti-pad only where the reference resumes around it."""
+        for q, w in _vias.get(net, ()):
+            r = w / 2 + _CLEAR
+            dx = q.x - p.x; dy = q.y - p.y
+            if dx * dx + dy * dy > r * r: continue
+            out = r + 250000          # 0.25 mm beyond the clearance ring: far enough to be off the anti-pad
+            for ox, oy in ((out, 0), (-out, 0), (0, out), (0, -out)):
+                probe = pcbnew.VECTOR2I(int(q.x + ox), int(q.y + oy))
+                if any(pl.Contains(probe) for Ln in Ls for pl in planes.get(Ln, [])): return True
+        return False
+    gaps = {}; anti = {}; total = {}; n_nets = 0; n_tracks = 0
     for tr in b.GetTracks():
         if tr.GetClass() != "PCB_TRACK": continue
         n_tracks += 1; net = tr.GetNetname()
@@ -60,7 +101,9 @@ def run(b, check, path=None):
         L = tr.GetLayer(); length = tr.GetLength() / 1e6; n = max(1, int(length / SAMPLE)); total[net] = total.get(net, 0.0) + length
         for k in range(n + 1):
             u = k / n; p = pcbnew.VECTOR2I(int(tr.GetStart().x + u * (tr.GetEnd().x - tr.GetStart().x)), int(tr.GetStart().y + u * (tr.GetEnd().y - tr.GetStart().y)))
-            if not any(pl.Contains(p) for Ln in neighbours(L) for pl in planes.get(Ln, [])): gaps[net] = gaps.get(net, 0.0) + length / (n + 1)
+            if not any(pl.Contains(p) for Ln in neighbours(L) for pl in planes.get(Ln, [])):
+                if _antipad(net, p, neighbours(L)): anti[net] = anti.get(net, 0.0) + length / (n + 1)
+                else: gaps[net] = gaps.get(net, 0.0) + length / (n + 1)
     if n_tracks and not total: check(False, "return path: the board has %d tracks and not one signal net was found to judge (signalnets.classify excluded every net: %s)" % (n_tracks, ", ".join(sorted(set(_why.values())))))
     if not n_tracks: check(True, "return path: 0 of 0 signal nets, the board has no tracks")
     # WHAT IS ASKED OF A RETURN PATH DEPENDS ON WHAT THE SIGNAL IS (rule RET-001, 16 September 2026, owner
@@ -75,7 +118,7 @@ def run(b, check, path=None):
     for x in cls_bad: check(False, "signal class declaration: %s" % x)
     n_over = 0; worst = ("", 0.0); undeclared = []
     for net in sorted(total):
-        n_nets += 1; g = gaps.get(net, 0.0)
+        n_nets += 1; g = gaps.get(net, 0.0); ap = anti.get(net, 0.0)
         if g > worst[1]: worst = (net.lstrip("/"), g)
         sc, basis = sig_cls.get(net, ("UNKNOWN", ""))
         if sc == "UNKNOWN":
@@ -94,14 +137,19 @@ def run(b, check, path=None):
         else:
             lim = signal_class.limit(sc, total[net])
             if g > lim: n_over += 1
-            check(g <= lim, "return path under %s (%s, %s): %.1f of %.1f mm without a plane on a neighbouring layer (limit %.1f) [%s]"
-                  % (net.lstrip("/"), cls_of(net), sc, g, total[net], lim, basis[:70]))
+            check(g <= lim, "return path under %s (%s, %s): %.1f of %.1f mm without a plane on a neighbouring layer (limit %.1f%s) [%s]"
+                  % (net.lstrip("/"), cls_of(net), sc, g, total[net], lim,
+                     ("; %.1f mm more is this net's own via anti-pads, which RET-003 judges" % ap) if ap > 0.05 else "",
+                     basis[:70]))
     # An undeclared net is not a failure of the copper and must not be reported as one: it is a gap in what this
     # project has written down about its own design, and it is named here so it can be closed.
     if undeclared:
         print("intent_checks: %d signal net(s) carry no declared signal class and were judged at the strictest bar: %s%s"
               % (len(undeclared), ", ".join(undeclared[:12]), " ..." if len(undeclared) > 12 else ""))
-    print("intent_checks: return path judged on %d signal nets (%d excluded as ground, rail, zone owner or power class), %d over their limit, worst %s at %.1f mm" % (n_nets, len(_why), n_over, worst[0] or "none", worst[1]))
+    LAST.clear(); LAST.update(nets=n_nets, over=n_over, gap_mm=round(sum(gaps.values()), 3),
+                              antipad_mm=round(sum(anti.values()), 3),
+                              worst_net=worst[0], worst_mm=round(worst[1], 3))
+    print("intent_checks: return path judged on %d signal nets (%d excluded as ground, rail, zone owner or power class), %d over their limit, worst %s at %.1f mm; %.1f mm across the board is the nets' own via anti-pads and is RET-003's question, not this one" % (n_nets, len(_why), n_over, worst[0] or "none", worst[1], sum(anti.values())))
     # 3b. EVERY POWER-SYMBOL NET IS A DECLARED RAIL (16 September 2026). This project writes a rail as a KiCad
     # power symbol, so a net whose name begins with "+" is a rail by the generators' own convention. Board B
     # declared six and has thirty-six; the other thirty were invisible three ways at once: signalnets could not

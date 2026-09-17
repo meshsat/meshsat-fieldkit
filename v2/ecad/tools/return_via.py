@@ -27,7 +27,8 @@ board has tracks and not one signal via to judge), exit 0/1/3.
 Usage: return_via.py <board.kicad_pcb> [--check] [--dry] [--radius=1.5]"""
 import sys, os, math, json, subprocess, shutil
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import pcbnew, signalnets, intent, hardset
+import pcbnew
+import kicad_compat as _kc, signalnets, intent, hardset
 import boardorder
 
 RETURN_MM = 1.5          # centre to centre, signal via to its ground via
@@ -165,7 +166,9 @@ def _site_free(b, x, y, vd, clr, own):
     for t in b.GetTracks():
         if t.GetNetname() == own: continue
         if t.GetClass() == "PCB_VIA":
-            if math.hypot(t.GetPosition().x - X, t.GetPosition().y - Y) < need + t.GetWidth() / 2.0: return False
+            # A via's width is per layer in KiCad 9 and the bare call asserts: kicad_compat.via_width.
+            _vw = _kc.via_width(t)
+            if math.hypot(t.GetPosition().x - X, t.GetPosition().y - Y) < need + _vw / 2.0: return False
         else:
             ax, ay, bx, by = t.GetStart().x, t.GetStart().y, t.GetEnd().x, t.GetEnd().y
             L2 = (bx - ax) ** 2 + (by - ay) ** 2

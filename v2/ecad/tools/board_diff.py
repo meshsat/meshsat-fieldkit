@@ -34,6 +34,7 @@ def _xy(p): return (p.x, p.y)
 
 def summarise(path):
     import pcbnew
+    import kicad_compat as _kc
     b = pcbnew.LoadBoard(path)
     fps = {}
     for f in b.GetFootprints():
@@ -44,7 +45,7 @@ def summarise(path):
     tracks, vias = collections.Counter(), collections.Counter()
     for t in b.GetTracks():
         if t.GetClass() == "PCB_VIA":
-            vias[(_xy(t.GetPosition()), t.GetDrillValue(), t.GetWidth(), t.GetNetname(),
+            vias[(_xy(t.GetPosition()), t.GetDrillValue(), _kc.via_width(t), t.GetNetname(),
                   b.GetLayerName(t.TopLayer()), b.GetLayerName(t.BottomLayer()))] += 1
         else:
             a, z = _xy(t.GetStart()), _xy(t.GetEnd())

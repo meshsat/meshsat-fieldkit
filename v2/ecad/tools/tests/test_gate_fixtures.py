@@ -24,6 +24,11 @@ TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Gates whose fixtures are owed, each with what it needs. A line here is a declaration, not an excuse: it is
 # read by the rule below and printed, so the debt is visible in every test run rather than remembered.
 FIXTURE_DEBT = {
+    "return_via.py (the FIXER; its judge is proved in test_board_gates.py)":
+        "needs a board whose ground net is complete enough for the ratsnest to behave as a real one does: on a "
+        "fixture whose GND is one F.Cu pad and a B.Cu pour, placing the via the rule asks for changes the "
+        "unconnected count and the fixer reverts its own work (measured 17 September 2026). It wants a routed "
+        "fixture board, or a dry run against a committed one",
     "dc_drop.py": "needs pcbnew and numpy and a board with a rail; belongs in test_board_gates.py",
     "place_audit.py": "needs pcbnew and a board with a fine-pitch part; belongs in test_board_gates.py",
     "intent_checks.py": "needs pcbnew and an intent file beside the board; belongs in test_board_gates.py",

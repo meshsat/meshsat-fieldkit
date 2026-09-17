@@ -4,6 +4,7 @@ CELL_N straight between the XT60 pin 2 pads; CELL+ from J_PACK.1 west to X-5.5, 
 CELL_X from F1's other pad east to X+6, south to the XT60 pin 1; MEZZ_CELL from F2's other pad down a clear column to the VH header pin 1.
 Usage: fix_a17_node.py <board.kicad_pcb>"""
 import sys, pcbnew
+import kicad_compat as _kc
 from pcbnew import VECTOR2I, FromMM
 OX, OY = 150.0, 110.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
@@ -14,7 +15,7 @@ for fp in b.GetFootprints():
 existing = {}; vias = []
 for t in b.GetTracks():
     if t.Type() == pcbnew.PCB_VIA_T:
-        vias.append(((t.GetPosition().x / 1e6 - OX, OY - t.GetPosition().y / 1e6), t.GetNetname(), t.GetWidth() / 1e6)); continue   # A17: vias block bars on every layer
+        vias.append(((t.GetPosition().x / 1e6 - OX, OY - t.GetPosition().y / 1e6), t.GetNetname(), _kc.via_width(t) / 1e6)); continue   # A17: vias block bars on every layer
     existing.setdefault(t.GetLayer(), []).append(((t.GetStart().x / 1e6 - OX, OY - t.GetStart().y / 1e6), (t.GetEnd().x / 1e6 - OX, OY - t.GetEnd().y / 1e6), t.GetNetname(), t.GetWidth() / 1e6))
 def segdist(a, b_, c, d):
     """minimum distance between segments ab and cd"""

@@ -37,6 +37,7 @@ def main(a):
     path = a[0]; dry = "--dry" in a
     lim = float(a[a.index("--min-mm") + 1]) if "--min-mm" in a else 0.005
     import pcbnew
+    import kicad_compat as _kc
     mm = lambda v: v / 1e6
     b = pcbnew.LoadBoard(path)
     tracks = [t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]
@@ -53,7 +54,13 @@ def main(a):
 
     # A DOT THAT TOUCHES TWO THINGS IS A BRIDGE, not an artefact: it is kept and named.
     def touches(t, other):
-        r = mm(t.GetWidth()) / 2 + mm(other.GetWidth() if other.GetClass() != "PCB_VIA" else other.GetWidth()) / 2
+        # THE TWO BRANCHES OF THIS TERNARY WERE THE SAME CALL, and on the via branch it is the one KiCad 9
+        # asserts on (17 September 2026). A via's width is per layer; the helper answers for that kind. Written
+        # as two statements so that no line both calls a thing a via and asks it for a bare width, which is
+        # what the rule against this reads.
+        if other.GetClass() == "PCB_VIA": ow = _kc.via_width(other)
+        else: ow = other.GetWidth()
+        r = mm(t.GetWidth()) / 2 + mm(ow) / 2
         p = t.GetStart(); q = other.GetPosition() if other.GetClass() == "PCB_VIA" else None
         pts = [other.GetStart(), other.GetEnd()] if q is None else [q]
         return any(((mm(p.x) - mm(z.x)) ** 2 + (mm(p.y) - mm(z.y)) ** 2) ** 0.5 <= r for z in pts)
