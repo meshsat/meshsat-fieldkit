@@ -431,16 +431,25 @@ pcb_energy_chain.yaml, 69 checks passing. For every protective element it carrie
 of the path, the element's rating and its I2t figure with the datasheet it comes from, the fault current
 available at that point with its derivation, and the element downstream it protects; the melting time at the
 worst fault is printed from the I2t (4.3 ms for the 25 A blades at 480 A, 2.9 ms for the 10 A at 200 A). The
-interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. WHAT REMAINS is the
-authority for the selection criteria themselves, which the fuse's datasheet names as SAE J1284 and ISO 8820-3
-and this tree does not hold; littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED
-(the CLK-001 shape): the gate decides four things that are definitional rather than empirical, that the
-element is at or below the rating of what it protects, at or above the path's own declared peak, able to
-interrupt the fault current declared at its position, and followed by the stage it protects; plus that every
-rating's source file is in this tree and every protective element is in its board's netlist. What it PRINTS
-rather than decides is the melting time from the I2t figure, because a clearing curve is a curve and this
-reads one point of it. The rule's own authority for the SELECTION CRITERIA is still not in the tree, which is
-why the registry keeps source_status SOURCE_UNVERIFIED.
+interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. 17 SEPTEMBER 2026: THE
+SELECTION CRITERIA HAVE AN AUTHORITY. ECSS-Q-ST-30-11C Rev.2, 'Derating - EEE components', 23 June 2021,
+clause 6.17, published free by the ECSS and transcribed in
+v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md. Two of its clauses are about the CIRCUIT and are
+enforced whatever the fuse is made of: 6.17.3b, the largest rating compatible with the source, and 6.17.3c,
+the source must deliver three times the rating for short fusing times, which the chain's own fault currents
+answer (9.6 times at the pack blades). Table 6-17's 65 percent is stated for CERMET fuses and this kit's are
+automotive blades, so it is a SCREEN whose origin is named, and 6.17.1a's own requirement that another
+technology be JUSTIFIED is what the gate asks for: a stage over 65 percent must carry a written
+derating_basis or it fails. It found one, board E's shore inlet at 8.0 A of a 10.0 A fuse, 80 percent, on 10
+A of copper. A verdict per board sits beside the set's, because a coordination failure belongs to the stage
+that has it and BAT-002's end-to-end question is the set's. WHAT IS DECIDED AND WHAT IS PRINTED (the CLK-001
+shape): the gate decides four things that are definitional rather than empirical, that the element is at or
+below the rating of what it protects, at or above the path's own declared peak, able to interrupt the fault
+current declared at its position, and followed by the stage it protects; plus that every rating's source file
+is in this tree and every protective element is in its board's netlist. What it PRINTS rather than decides is
+the melting time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The
+rule's own authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps
+source_status SOURCE_UNVERIFIED.
 
 ## Decoupling
 

@@ -109,3 +109,83 @@ def t_an_empty_vendor_library_is_not_the_same_as_an_absent_one():
     import tempfile
     r = E.check(vendor=tempfile.mkdtemp(prefix="empty-vendor-"))
     assert r["fails"] and r["vendor_seen"] is True, r
+
+
+# ---------------------------------------------------------------- the selection criteria (ECSS-Q-ST-30-11C Rev.2 6.17)
+# Rules PWR-003 and BAT-002 carried "no authority for the SELECTION CRITERIA" from the day the registry was
+# written: the fuses' own datasheets name SAE J1284 and ISO 8820-3, neither is free, and the makers' guides sit
+# behind a host that refuses this one. ECSS publishes a derating standard free, from a body this project
+# already cites twice, and clause 6.17 is the criterion. Transcribed in
+# v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md.
+
+FUSED = GOOD.replace('protection: {ref: F1, what: "25 A blade"',
+                     'protection: {ref: F1, kind: fuse, what: "25 A blade"')
+
+
+def t_a_fuse_inside_the_published_derating_is_a_note_and_not_a_failure():
+    """10 A of a 25 A fuse is 40 percent, inside Table 6-17's 65."""
+    r = _run(FUSED)
+    assert not r["derate_fails"], r["derate_fails"]
+    assert any("inside the 65 percent" in n for n in r["notes"]), r["notes"]
+
+
+def t_a_fuse_past_the_published_derating_with_no_justification_is_refused():
+    """20 A of a 25 A fuse is 80 percent. The standard states its number for CERMET fuses and 6.17.1a requires
+    another technology's derating to be JUSTIFIED, so the gate asks for that justification rather than either
+    failing a blade fuse against a limit the standard does not set for it or passing it against nothing."""
+    r = _run(FUSED.replace("continuous_a: 10.0", "continuous_a: 20.0"))
+    assert any("65 percent" in f and "derating_basis" in f for f in r["derate_fails"]), r["derate_fails"]
+    assert not r["fails"], "a selection finding is PWR-003's and must not fail the chain's own end-to-end rule: %s" % r["fails"]
+
+
+def t_the_same_fuse_with_a_written_justification_passes():
+    r = _run(FUSED.replace("continuous_a: 10.0",
+                           'continuous_a: 20.0\n   derating_basis: "the blade fuse maker rates this holder for '
+                           'continuous duty at 80 percent to 70 C and the case never reaches it"'))
+    assert not r["derate_fails"], r["derate_fails"]
+    assert any("the board declares why" in n for n in r["notes"]), r["notes"]
+
+
+def t_a_source_that_cannot_deliver_three_times_the_rating_is_refused():
+    """ECSS 6.17.3c, and it is technology-independent: a fuse the source cannot blow quickly is not protection.
+    50 A at worst against a 25 A fuse is twice, not three times."""
+    r = _run(FUSED.replace("low: 100,", "low: 50,"))
+    assert any("three times" in f for f in r["derate_fails"]), r["derate_fails"]
+
+
+def t_an_unknown_fault_current_is_named_and_not_assumed():
+    r = _run(FUSED.replace("low: 100,", "low: 0,"))
+    assert any("is not established" in n for n in r["notes"]), r["notes"]
+    assert not r["derate_fails"], r["derate_fails"]
+
+
+def t_each_board_is_judged_on_its_own_stages():
+    """One board's fuse at 80 percent failed two BLOCKER rules on four boards before the split."""
+    two = FUSED + """
+ - id: TWO
+   board: E
+   from: "the inlet"
+   to: "the bus"
+   continuous_a: 8.0
+   peak_a: 10.0
+   conductor: {what: "a band", rating_a: 12.0, basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
+   prospective_fault_a: {low: 100, high: 300, basis: "v2/vendor/battery/samsung-35e-orbtronic.pdf"}
+   protection: {ref: F9, kind: fuse, what: "10 A blade", rating_a: 10.0, interrupting_a: 1000.0,
+                basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
+   protects: ONE
+"""
+    r = _run(two)
+    assert r["by_board"].get("p") == ["ONE"], r["by_board"]
+    assert r["by_board"].get("e") == ["TWO"], r["by_board"]
+    mine = [f for f in r["derate_fails"] if f.split(":")[0].strip() in r["by_board"]["e"]]
+    assert mine and not [f for f in r["derate_fails"] if f.split(":")[0].strip() in r["by_board"]["p"]], r["derate_fails"]
+
+
+def t_the_authority_is_in_the_tree_and_the_gate_names_it():
+    src = open(os.path.join(TOOLS, "energy_chain.py"), encoding="utf-8").read()
+    assert "ECSS-Q-ST-30-11C Rev.2" in src, "the gate does not name the standard its number comes from"
+    doc = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "vendor", "standards",
+                       "ecss-q-st-30-11c-rev2-2021-06-23.md")
+    assert os.path.exists(doc), "the transcribed clauses are not in the tree: %s" % doc
+    t = open(doc, encoding="utf-8").read()
+    assert "65 %" in t and "6.17.3" in t and "sha256" in t, "the transcription is missing its number or its provenance"

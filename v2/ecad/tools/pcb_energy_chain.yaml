@@ -55,7 +55,7 @@ stages:
                            charge that is 350 A and 270 A from the AC impedance; the DC resistance is higher,
                            so the real figure is lower and the range above brackets both configurations with
                            margin"}
-   protection: {ref: F1, what: "25 A ATOF blade fuse in a Keystone 3568 holder", rating_a: 25.0,
+   protection: {ref: F1, kind: fuse, what: "25 A ATOF blade fuse in a Keystone 3568 holder", rating_a: 25.0,
                 interrupting_a: 1000.0, i2t_a2s: 1000.0, cold_resistance_mohm: 2.52,
                 basis: "v2/vendor/battery/littelfuse-287-atof.pdf, Ratings table and Specifications"}
    protects: PACK_FETS
@@ -108,7 +108,7 @@ stages:
    conductor: {what: "board E's 2 oz power bands to the dock block pads", rating_a: 25.0,
                basis: "gen_pcb_e3.py bands; IPC-2221 at 2 oz"}
    prospective_fault_a: {low: 240, high: 480, basis: "the pack is the source and F1 is upstream"}
-   protection: {ref: F3, what: "25 A ATOF blade fuse (Keystone 3568 holder)", rating_a: 25.0,
+   protection: {ref: F3, kind: fuse, what: "25 A ATOF blade fuse (Keystone 3568 holder)", rating_a: 25.0,
                 interrupting_a: 1000.0, i2t_a2s: 1000.0,
                 basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
    protects: DOCK_BLOCK
@@ -140,7 +140,7 @@ stages:
    conductor: {what: "board A's VBAT bands and In2 plane at 1 oz outer and 0.5 oz inner", rating_a: 25.0,
                basis: "gen_pcb_a3.py power copper; dc_drop measures the copper itself on the routed board"}
    prospective_fault_a: {low: 240, high: 480, basis: "the pack, through two blades"}
-   protection: {ref: F1, what: "25 A ATOF blade fuse (Keystone 3568 holder): pack node to VBAT", rating_a: 25.0,
+   protection: {ref: F1, kind: fuse, what: "25 A ATOF blade fuse (Keystone 3568 holder): pack node to VBAT", rating_a: 25.0,
                 interrupting_a: 1000.0, i2t_a2s: 1000.0,
                 basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
    protects: BOARD_A_CONVERTERS
@@ -197,7 +197,7 @@ stages:
                            placeholder for a vehicle battery through 12 AWG and is why ENV-001, the operating
                            envelope, is owner decision 34: the fault current available at a vehicle's own
                            battery is a property of the vehicle"}
-   protection: {ref: F1, what: "10 A ATOF blade fuse (Keystone 3568 holder): vehicle input", rating_a: 10.0,
+   protection: {ref: F1, kind: fuse, what: "10 A ATOF blade fuse (Keystone 3568 holder): vehicle input", rating_a: 10.0,
                 interrupting_a: 1000.0, i2t_a2s: 115.0,
                 basis: "v2/vendor/battery/littelfuse-287-atof.pdf, the 10 A row"}
    protects: null

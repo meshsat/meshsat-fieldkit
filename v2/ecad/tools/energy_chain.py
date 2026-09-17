@@ -25,7 +25,7 @@ battery can deliver, which is why the shore input's row says so and points at ow
 
 Usage: energy_chain.py [--chain pcb_energy_chain.yaml] [--ecad <dir>] [--json]
 """
-import os, sys, json, glob
+import os, re, sys, json, glob
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -53,6 +53,12 @@ def netlist_refs(stem, ecad=None):
     return set(re.findall(r'\(comp \(ref "([^"]+)"\)', txt))
 
 
+# ECSS-Q-ST-30-11C Rev.2 Table 6-17: a fuse's current at or below 85 C case temperature. The same table falls
+# to 50 percent at 110 C; this project's fuses sit in a sealed case whose inside temperature is owner decision
+# 34, so the screen is the 85 C figure and the envelope decides whether it should be the other one.
+FUSE_SCREEN = 0.65
+
+
 def check(chain=None, ecad=None, vendor=None):
     y = _yaml().safe_load(open(chain or CHAIN, encoding="utf-8"))
     # A TREE WITHOUT THE VENDOR FOLDER CANNOT JUDGE A CITATION, and must not report one as false (16 September
@@ -64,6 +70,10 @@ def check(chain=None, ecad=None, vendor=None):
     ids = {s["id"] for s in stages}
     fails, notes, checked = [], [], 0
     refs_cache = {}
+    # THE SELECTION CRITERIA OF ECSS 6.17 ARE PWR-003's, NOT BAT-002's. BAT-002 asks whether the chain is
+    # bounded END TO END; a fuse at 80 percent of its rating is a coordination finding about one stage, and
+    # counting it in the set verdict failed four boards for something that is one board's (17 September 2026).
+    derate_fails = []
     vdir = vendor or VENDOR
     have_vendor = os.path.isdir(vdir)
     unjudged_citations = 0
@@ -132,6 +142,57 @@ def check(chain=None, ecad=None, vendor=None):
             if float(prot["interrupting_a"]) < float(pf["high"]) - 1e-9:
                 fails.append("%s: the fault current reaches %.0f A and the element interrupts %.0f A"
                              % (sid, float(pf["high"]), float(prot["interrupting_a"])))
+        # 7. THE FUSE'S OWN SELECTION CRITERIA, and they have an authority at last (17 September 2026).
+        # ECSS-Q-ST-30-11C Rev.2, "Derating - EEE components", 23 June 2021, clause 6.17, transcribed in
+        # v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md. This rule has carried "no authority for the
+        # SELECTION CRITERIA" since the registry was written, because the fuses' own datasheets name SAE J1284
+        # and ISO 8820-3 and neither is free. The ECSS standard is, from a body this project already cites.
+        #
+        # Two of its clauses are about the CIRCUIT and hold whatever the fuse is made of, so they are enforced:
+        #   6.17.3 b  the largest fuse rating compatible with the source capability shall be used
+        #   6.17.3 c  the power supply shall be capable of delivering three times the specified fuse rated
+        #             current in order to obtain short fusing times
+        # The third is a number for CERMET fuses and this kit's are automotive blades, and the standard's own
+        # 6.17.1a says the application and derating of another technology SHALL BE JUSTIFIED. So Table 6-17's
+        # 65 percent is a screen here, and a stage over it must carry that justification in writing rather
+        # than being failed for a limit the standard does not set for it, or passed as though no limit existed.
+        if prot.get("kind") == "fuse" and r is not None:
+            checked += 1
+            cont = s.get("continuous_a")
+            if cont is None:
+                derate_fails.append("%s: a fuse with no continuous current declared cannot be judged against any "
+                                    "derating criterion" % sid)
+            else:
+                ratio = float(cont) / float(r)
+                if ratio <= FUSE_SCREEN + 1e-9:
+                    notes.append("%s: %s carries %.1f A of its %.1f A rating (%.0f percent), inside the 65 percent "
+                                 "ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C"
+                                 % (sid, prot.get("ref", "the fuse"), float(cont), float(r), 100 * ratio))
+                elif str(s.get("derating_basis", "")).strip():
+                    notes.append("%s: %s carries %.0f percent of its rating, past the 65 percent of Table 6-17, "
+                                 "and the board declares why: %s"
+                                 % (sid, prot.get("ref", "the fuse"), 100 * ratio, str(s["derating_basis"])[:120]))
+                else:
+                    derate_fails.append("%s: %s carries %.1f A of its %.1f A rating (%.0f percent) and the criterion "
+                                 "this project judges a fuse by is 65 percent (ECSS-Q-ST-30-11C Rev.2 Table 6-17, "
+                                 "stated for Cermet; 6.17.1a requires another technology's derating to be "
+                                 "JUSTIFIED, and this stage declares no derating_basis)"
+                                 % (sid, prot.get("ref", "the fuse"), float(cont), float(r), 100 * ratio))
+            # 6.17.3 c: the source has to be able to blow it
+            lo = pf.get("low")
+            checked += 1
+            if lo is None or float(lo) <= 0:
+                notes.append("%s: the fault current available at %s is not established, so ECSS 6.17.3c (the "
+                             "source delivers three times the fuse rating) cannot be judged here; it is part of "
+                             "the operating envelope, owner decision 34"
+                             % (sid, prot.get("ref", "the fuse")))
+            elif float(lo) < 3.0 * float(r) - 1e-9:
+                derate_fails.append("%s: the source delivers %.0f A at worst and the fuse is rated %.1f A, so it cannot "
+                             "reach the three times ECSS-Q-ST-30-11C Rev.2 6.17.3c asks for: the fuse clears "
+                             "slowly or not at all" % (sid, float(lo), float(r)))
+            else:
+                notes.append("%s: the source delivers at least %.0f A against a %.1f A fuse, which is %.1f times "
+                             "its rating (ECSS 6.17.3c asks for three)" % (sid, float(lo), float(r), float(lo) / float(r)))
         # 6. the chain is connected
         nxt = s.get("protects")
         if nxt:
@@ -147,8 +208,18 @@ def check(chain=None, ecad=None, vendor=None):
     for o in orphan:
         if o == "SHORE_INPUT": continue   # a second source, not a link in the pack's chain
         fails.append("%s: no stage protects it, so the chain has a break at it" % o)
-    return dict(stages=len(stages), checked=checked, fails=fails, notes=notes,
-                unjudged_citations=unjudged_citations, vendor_seen=bool(have_vendor))
+    # WHICH BOARD EACH STAGE BELONGS TO, so a failure can be attributed to it. The chain is a set-level object
+    # and its COMPLETENESS is a set-level property (BAT-002), but a coordination failure is a property of the
+    # stage, and the stage names its board: board E's shore fuse at 80 percent of its rating is not board P's
+    # defect, and reading one verdict for all of them is the shape this project has now fixed three times in a
+    # day (17 September 2026).
+    by_board = {}
+    for st in stages:
+        for L in re.findall(r"[A-Z]+[0-9]*", str(st.get("board", "")).upper()):
+            if L == "TO": continue          # "P to E" names two boards
+            by_board.setdefault(L.lower(), []).append(st["id"])
+    return dict(stages=len(stages), checked=checked, fails=fails, derate_fails=derate_fails, notes=notes,
+                unjudged_citations=unjudged_citations, vendor_seen=bool(have_vendor), by_board=by_board)
 
 
 def main(argv):
@@ -164,18 +235,33 @@ def main(argv):
     print("energy_chain: %d stage(s), %d check(s)" % (r["stages"], r["checked"]))
     for n in r["notes"]: print("  note %s" % n)
     for f in r["fails"]: print("  FAIL %s" % f)
+    for f in r.get("derate_fails", []): print("  FAIL (selection, rule PWR-003) %s" % f)
     if "--json" in argv: print(json.dumps(r, indent=1))
     # The coordination is what this rule is about, and it is judged wherever the chain file is. A tree with no
     # vendor library leaves the citations unjudged, which is reported and does not turn a passing chain into a
     # failing one; it is also not silently a pass, because the count travels in the verdict.
+    # A PER-BOARD VERDICT BESIDE THE SET ONE. PWR-003 asks about a protective element, which belongs to a
+    # stage and so to a board; BAT-002 asks whether the chain is bounded END TO END, which is the set's and
+    # stays on the set verdict below.
+    for _L, _ids in sorted((r.get("by_board") or {}).items()):
+        _mine = [f for f in (r["fails"] + r.get("derate_fails", [])) if f.split(":")[0].strip() in _ids]
+        _v.write("energy_chain_%s" % _L, _v.FAIL if _mine else _v.PASS,
+                 counts={"stages": len(_ids), "fail": len(_mine)}, denominator=len(_ids),
+                 evidence=_mine[:20], quiet=True, rules=["PWR-003"],
+                 inputs={"chain": os.path.basename(ch or CHAIN), "stages": ",".join(_ids)},
+                 note="the stages of the stored-energy chain that sit on this board; the chain as a whole is "
+                      "energy_chain, and whether it is bounded end to end is that verdict's question")
     res = _v.FAIL if r["fails"] else _v.PASS
     return _v.write("energy_chain", res,
                     counts={"stages": r["stages"], "checks": r["checked"], "fail": len(r["fails"]),
+                            "selection_findings": len(r.get("derate_fails", [])),
                             "citations_unjudged": r.get("unjudged_citations", 0)},
                     denominator=r["checked"], evidence=r["fails"][:20],
                     inputs={"chain": os.path.basename(ch or CHAIN)},
-                    rules=["BAT-002", "PWR-003"],
-                    note="the stored-energy chain end to end: every rating against its own source document, "
+                    rules=["BAT-002"],
+                    note="THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS "
+                         "6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. "
+                         "Every rating against its own source document, "
                          "every protective element against the board's netlist, and the four coordination "
                          "tests (the element is below what it protects, above the path's peak, able to "
                          "interrupt what is available, and followed by the stage it protects)")
