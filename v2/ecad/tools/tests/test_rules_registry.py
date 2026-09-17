@@ -74,3 +74,43 @@ def t_a_board_with_a_declared_external_port_is_in_scope_for_the_port_rule():
         ids = {r["id"] for r, _why in R.rules_for(letter, reg, f)}
         assert "TRN-001" in ids, ("board %s declares a conductor that leaves the case and TRN-001 does not "
                                  "apply to it" % letter)
+
+
+def t_the_declared_phase_is_one_fact_and_it_names_the_board_this_tree_holds():
+    """THE PHASE IS A FACT ABOUT THE BOARD, WRITTEN TWICE, AND THE TWO COPIES DRIFTED (17 September 2026).
+
+    `boards/<letter>.json` carries `"phase"` and `pcb_board_facts.yaml` carries `phase_declared`; the chain and
+    the sweep read the first, the registry reads the second, and on 17 September board C said C24 in one and
+    C18 in the other while board B said B21 and B19. Worse than the drift is what the field was pointed at: it
+    had been set to the route IN FLIGHT, and every reader that gates on it asks "is this folder the board", so
+    a declaration naming a route that has not landed makes those gates answer about a board that does not
+    exist. Board P's P4 folder holds the board this tree holds byte for byte and was read as stale against a
+    declared P5 that had been measured, refused and abandoned.
+
+    Two properties, both checked on the committed tree: the two copies agree, and the declared phase is a
+    phase the board in the tree actually carries on its silk.
+    """
+    import os, sys, json
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, TOOLS)
+    import rules_lib as R
+    import rules_status as S
+    facts, m = R.facts(), S.manifest()
+    for letter in sorted(m["boards"]):
+        table = os.path.join(TOOLS, "boards", "%s.json" % letter)
+        fact = (facts.get(letter) or {}).get("phase_declared")
+        if os.path.exists(table):
+            decl = (json.load(open(table, encoding="utf-8")) or {}).get("phase")
+            assert decl and fact and decl == fact, \
+                ("board %s declares %r in boards/%s.json and %r in pcb_board_facts.yaml: one fact, one value"
+                 % (letter, decl, letter, fact))
+        else:
+            decl = fact
+            assert decl, "board %s has no board table and no phase_declared, so nothing declares its phase" % letter
+        su = S.subject(letter, m)
+        if not su.get("board"): continue                 # no board file in the tree: a different failure, reported there
+        assert su.get("agrees") is not False, \
+            ("board %s declares %s and the board in %s carries %s: the declaration names a board this tree does "
+             "not hold, and every gate that reads it (the folder rule, the sweep's order-code lookup) is then "
+             "answering about a board that does not exist. The phase of a route in flight belongs to the run, "
+             "not to this field." % (letter, decl, su["dir"], su.get("legend_phase")))
