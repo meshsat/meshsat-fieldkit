@@ -2469,3 +2469,43 @@ for the owner to weigh; it is a number nobody had been able to check until the c
 **What the same clause settles in our favour**, and it is worth saying because it is the half that usually
 fails on a kit like this: 6.17.3c asks that the source be able to deliver three times the fuse's rating so the
 fuse clears quickly, and at the pack blades it delivers **9.6 times**.
+
+---
+
+## Decision 36 gets a number from the specification, and it makes the answer cheap for USB (17 September 2026)
+
+Decision 36 is the intra-pair tolerance a differential pair is judged against: this project uses **1.00 mm**
+of length mismatch and the hosts' own datasheets ask for **0.10 mm** (the compute module's USB 2 and PCIe),
+**0.15 mm** (its HDMI and Ethernet) and **0.70 mm** (the M.2 card slot). Rule INT-001 fails on boards A and B
+for exactly that disagreement, and it is a BLOCKER.
+
+**The USB half of it can be settled with a published number.** The USB 2.0 specification is free, it is in
+this tree as a transcription with its hash, and clause **7.1.3** says what skew the interface was designed to
+tolerate:
+
+| | |
+|---|---|
+| this project's bar | 1.00 mm of intra-pair mismatch |
+| what that is in time, on an outer layer of these stackups | about **5.5 ps** (5.5 ps/mm at er 4.3, microstrip) |
+| what USB 2.0 permits the CABLE alone, clause 7.1.3, TSKEW | **100 ps** |
+| the compute module's design guide | 0.10 mm, about 0.6 ps |
+
+**So for USB 2.0 the project's own 1.00 mm is about one eighteenth of what the specification allows the cable
+by itself**, and the module's 0.10 mm is good practice rather than a conformance requirement. A board matched
+to 1.00 mm is not at risk of failing USB 2.0 for skew.
+
+**What this does not settle, and it is the larger half.** PCIe, HDMI and Ethernet ask for 0.10 and 0.15 mm and
+their specifications are not free and not in this tree, so for those interfaces the only number this project
+has is the HOST's, and the host's number is the one it should be held to. Those pairs are board B's, and board
+B is the board still routing.
+
+**The recommendation is therefore split, which is what the evidence supports:**
+
+| | option | what it costs |
+|---|---|---|
+| 1 | **Judge each interface by its own source** (recommended): USB 2.0 by the specification, which the project's 1.00 mm already satisfies with eighteen times the margin, and every other interface by the host datasheet that asks for it. | INT-001 starts passing on board A, where the only assignment is USB 2.0. Board B's PCIe, HDMI and Ethernet pairs must then be matched to 0.10 and 0.15 mm, which is a meander pass on a board that is routing now, not a re-route. |
+| 2 | **One number for the whole project, 1.00 mm.** | Simple, and it says a 0.15 mm requirement from a host's own datasheet does not apply to us, which is a claim this project cannot source. |
+| 3 | **One number for the whole project, 0.10 mm.** | Safe and expensive: every pair on every board is re-matched to a tolerance only two interfaces ask for. |
+
+Option 1 is the same shape as every other rule in this registry: the limit comes from the document that sets
+it, and where no document sets one, the project says so out loud.
