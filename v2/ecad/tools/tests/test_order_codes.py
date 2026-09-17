@@ -567,3 +567,44 @@ def t_a_rotation_is_asked_only_of_a_part_the_assembler_places():
     src = open(os.path.join(TOOLS, "assembly_set.py"), encoding="utf-8").read()
     assert "import make_handoff" not in src, "the table is imported rather than read, and that file needs pcbnew"
     assert "are bench-fitted and never reach the" in src, "the exclusion is silent"
+
+
+def t_a_board_is_certified_from_the_folder_it_declares_and_never_from_the_newest():
+    """THE NEWEST FOLDER IS NOT THE BOARD (17 September 2026).
+
+    `newest_boms` took the highest phase number per letter, so board A was certified from the A24 folder while
+    the board this tree holds is A32, and board D from D11 against a tree holding D12. CMP-002 and SUP-001 are
+    per-board rules, so both boards were being answered about a board this project is not building: one of
+    them read PASS and the other read a failure, and neither was about the board in the tree. `gate_sweep.sh`
+    already refuses that case in as many words; the set gate supplied it, so the two disagreed.
+
+    Executed on a temporary release tree with a temporary board table: a folder at the declared phase is
+    chosen, a newer folder at another phase is NOT, and a board with no folder at its declared phase comes
+    back named as missing rather than certified from whatever exists.
+    """
+    import os, sys, json, tempfile, shutil
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, TOOLS)
+    import jlc_certify as J
+    d = tempfile.mkdtemp(prefix="certify-folder-")
+    try:
+        boards = os.path.join(d, "boards"); tools = os.path.join(d, "tools", "boards")
+        os.makedirs(tools)
+        for phase in ("X7", "X9"):
+            f = os.path.join(boards, "meshsat-pcb-x-revA-%s" % phase); os.makedirs(f)
+            open(os.path.join(f, "pcb-x-bom.csv"), "w").write("Comment,Designator,Footprint,LCSC Part #\n")
+        f = os.path.join(boards, "meshsat-pcb-y-revA-Y3"); os.makedirs(f)
+        open(os.path.join(f, "pcb-y-bom.csv"), "w").write("Comment,Designator,Footprint,LCSC Part #\n")
+        json.dump({"phase": "X7"}, open(os.path.join(tools, "x.json"), "w"))
+        json.dump({"phase": "Y4"}, open(os.path.join(tools, "y.json"), "w"))   # the tree holds no Y4 folder
+
+        got = J.newest_boms(boards_dir=boards, tools=os.path.dirname(tools))
+        assert "x" in got and got["x"][1].endswith("X7"), \
+            "board x declares X7 and was certified from %r, the newest folder rather than its own" % (got.get("x"),)
+        assert "y" not in got, "board y has no folder at its declared phase Y4 and was certified from Y3 anyway"
+        miss = J.newest_boms.missing
+        assert "y" in miss and miss["y"][0] == "Y4" and "Y3" in miss["y"][1], \
+            "the missing folder is not named with the phase that was wanted and the phases that exist: %r" % (miss,)
+        assert "x" not in miss
+    finally:
+        shutil.rmtree(d, ignore_errors=True)

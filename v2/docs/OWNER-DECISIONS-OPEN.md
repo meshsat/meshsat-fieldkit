@@ -299,8 +299,8 @@ correction of 16 September.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| CMP-002 | the package on the land is the package ordered | D | FAIL |
-| SUP-001 | every placed part is buyable | D | FAIL |
+| CMP-002 | the package on the land is the package ordered | D | INCONCLUSIVE |
+| SUP-001 | every placed part is buyable | D | INCONCLUSIVE |
 
 
 ### Decision 38: board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09
