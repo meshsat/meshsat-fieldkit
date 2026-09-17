@@ -10,8 +10,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | result | rules | percent |
 |---|---|---|
 | PASS | 27 | 64.3 |
-| FAIL | 6 | 14.3 |
-| INCONCLUSIVE | 9 | 21.4 |
+| FAIL | 5 | 11.9 |
+| INCONCLUSIVE | 10 | 23.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -49,7 +49,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 2 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_p PASS of 139 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
-| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **FAIL** | assembly_set FAIL: {'boards': 1, 'fail': 1, 'unchecked_footprints': 0, 'unverified_rows': 0} |
+| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 9 |
 | BAT-001 the cell block is protected in hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the protection is designed and its thresholds are configured in software; no check compares a th |
