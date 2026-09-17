@@ -902,3 +902,82 @@ def t_the_placement_predictor_declines_a_routed_board_and_names_the_input_it_wan
     verdict, out = _place_audit("routed")
     assert verdict == "INCONCLUSIVE", "the predictor judged a routed board: %s" % out[-400:]
     assert "unlocked_segments" in out, "the refusal does not count the router's own copper: %s" % out[-300:]
+
+_VIA_PARALLEL_FIXTURE = r"""
+import os, sys, json, tempfile, subprocess
+sys.path.insert(0, TOOLS)
+import pcbnew
+
+def board(w=70.0, h=30.0):
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    for (x1, y1, x2, y2) in ((0, 0, w, 0), (w, 0, w, h), (w, h, 0, h), (0, h, 0, 0)):
+        sh = pcbnew.PCB_SHAPE(b); sh.SetShape(pcbnew.SHAPE_T_SEGMENT); sh.SetLayer(pcbnew.Edge_Cuts)
+        sh.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1))); sh.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2)))
+        sh.SetWidth(pcbnew.FromMM(0.1)); b.Add(sh)
+    return b
+
+def part(b, ref, x, y, nets, code):
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference(ref); fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    pads = []
+    for i, n in enumerate(nets):
+        p = pcbnew.PAD(fp); p.SetNumber(str(i + 1)); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT)
+        p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(1.5), pcbnew.FromMM(1.5))); p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y + 6.0 * i)))
+        p.SetLayerSet(pcbnew.LSET.FrontMask()); fp.Add(p); pads.append((p, n))
+    b.Add(fp)
+    for p, n in pads: p.SetNetCode(code[n])
+    return fp
+
+def track(b, L, x1, y1, x2, y2, w, nc):
+    t = pcbnew.PCB_TRACK(b); t.SetLayer(L); t.SetWidth(pcbnew.FromMM(w)); t.SetNetCode(nc)
+    t.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1))); t.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2))); b.Add(t)
+
+def via(b, x, y, nc):
+    v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))); v.SetDrill(pcbnew.FromMM(0.3)); v.SetWidth(pcbnew.FromMM(0.6))
+    v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetNetCode(nc); b.Add(v)
+
+b = board()
+for n in ("VRAIL", "GND"): b.Add(pcbnew.NETINFO_ITEM(b, n))
+b.BuildListOfNets(); keep = [b.FindNet("VRAIL"), b.FindNet("GND")]; code = {n: b.FindNet(n).GetNetCode() for n in ("VRAIL", "GND")}
+part(b, "J1", 7.5, 10.0, ["VRAIL", "GND"], code)
+part(b, "U1", 62.5, 10.0, ["VRAIL", "GND"], code)
+# the rail: 1 mm F.Cu from J1 to a single via at x 30, 1 mm B.Cu to a single via at x 45, 1 mm F.Cu on to U1:
+# two layer transitions of ONE 0.3 mm barrel each under 2 A, against 0.90 A a barrel at 10 K
+track(b, pcbnew.F_Cu, 7.5, 10.0, 30.0, 10.0, 1.0, code["VRAIL"]); via(b, 30.0, 10.0, code["VRAIL"])
+track(b, pcbnew.B_Cu, 30.0, 10.0, 45.0, 10.0, 1.0, code["VRAIL"]); via(b, 45.0, 10.0, code["VRAIL"])
+track(b, pcbnew.F_Cu, 45.0, 10.0, 62.5, 10.0, 1.0, code["VRAIL"])
+d = tempfile.mkdtemp(prefix="via-parallel-"); os.makedirs(os.path.join(d, "out")); path = os.path.join(d, "fixture.kicad_pcb"); b.Save(path)
+pro = os.path.join(d, "fixture.kicad_pro")
+pd = json.load(open(pro)) if os.path.exists(pro) else {}
+pd.setdefault("board", {}).setdefault("design_settings", {})["rules"] = {"min_clearance": 0.127, "min_track_width": 0.127, "min_via_diameter": 0.4, "min_through_hole_diameter": 0.2}
+json.dump(pd, open(pro, "w"))
+json.dump({"bypass": [], "nodes": {}, "pair_classes": {},
+           "rails": {"VRAIL": {"volts": 5.0, "amps_typ": 2.0, "amps_peak": 2.0, "source": "J1", "loads": {"U1": 2.0}, "note": "fixture rail", "budget": 0.05}}},
+          open(os.path.join(d, "out", "fixture-intent.json"), "w"))
+subprocess.run([sys.executable, os.path.join(TOOLS, "dc_drop.py"), path], cwd=d, capture_output=True, text=True)
+subprocess.run([sys.executable, os.path.join(TOOLS, "via_current.py"), path], cwd=d, capture_output=True, text=True)
+before = json.load(open(os.path.join(d, "out", "via_current.verdict.json")))
+r = subprocess.run([sys.executable, os.path.join(TOOLS, "via_parallel.py"), path], cwd=d, capture_output=True, text=True)
+after = json.load(open(os.path.join(d, "out", "via_current.verdict.json")))
+b2 = pcbnew.LoadBoard(path)
+nv = sum(1 for t in b2.GetTracks() if t.GetClass() == "PCB_VIA" and t.GetNetname() == "VRAIL")
+print("ANSWER", before["verdict"], after["verdict"], nv, r.returncode)
+print("LINES", [l for l in (r.stdout + r.stderr).split("\n") if l.startswith("via_parallel:")][:6])
+"""
+
+
+def t_a_barrel_over_its_rating_gets_parallel_barrels_and_the_judge_then_passes():
+    """PI-003's fixer, proved on the shape that failed four boards (18 September 2026): a 2 A rail crossing two
+    layer transitions of one 0.3 mm barrel each. Before: via_current FAIL (2.0 A against 0.90). After
+    via_parallel: at least two more barrels at each transition, joined on both layers, the DRC clean, the mesh
+    re-solved, and via_current PASS on the same board."""
+    _pcbnew()
+    src = "TOOLS = %r\n" % TOOLS + _VIA_PARALLEL_FIXTURE
+    r = subprocess.run([sys.executable, "-c", src], capture_output=True, text=True)
+    assert r.returncode == 0, "the fixture did not build:\n%s" % (r.stdout + r.stderr)[-1200:]
+    ans = [l for l in r.stdout.split("\n") if l.startswith("ANSWER ")]
+    assert ans, "no answer:\n" + r.stdout[-400:]
+    before, after, nv, rc = ans[0].split()[1:5]
+    assert before == "FAIL", "the fixture does not start with an over-current barrel: %s" % r.stdout[-600:]
+    assert rc == "0", "via_parallel reverted or refused (rc %s): %s" % (rc, r.stdout[-800:])
+    assert int(nv) >= 6, "fewer than six VRAIL vias after the fixer (two transitions, each wanting two more): %s" % r.stdout[-600:]
+    assert after == "PASS", "the judge still fails after the parallel barrels: %s" % r.stdout[-800:]

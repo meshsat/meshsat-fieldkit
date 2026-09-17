@@ -206,6 +206,16 @@ for w in json.load(open(sys.argv[1])).get('finish',{}).get('widen') or []:
       ${WTO:+--to} ${WTO:+$WTO} ${WSTEPS:+--steps} ${WSTEPS:+$WSTEPS} ${WLAYERS:+--layers} ${WLAYERS:+$WLAYERS}
   done
 fi
+# 5b. PARALLEL BARRELS WHERE ONE CARRIES MORE THAN ITS WALL IS RATED FOR (rule PI-003, 18 September 2026). The router lays
+# one via per layer transition because one via is a connection; dc_drop's solved mesh then puts 3.4 A through a 0.90 A
+# barrel on board A and 1.9 A through 0.74 on board E. via_parallel lays more of the same barrel beside it, joined on
+# every layer the net touches there, under the same trial-and-revert as every copper-editing pass, then re-solves the
+# mesh and re-judges. It runs BEFORE the ground vias, because a power via is what the ground via is placed beside.
+# Declared per board (`via_parallel` in boards/<letter>.json).
+if [ -n "$(cfg x via_parallel)" ]; then
+  GUARD_QUIET=1 guarded via_parallel python3 -u $T/via_parallel.py $N.kicad_pcb
+  grep -a "via_parallel" out/guard-via_parallel.log | head -10
+fi
 # 6. a ground via beside every signal via (owner ruling 15 September 2026 20:15 CEST, rule 2): after every stage that lays
 # or removes copper and before the final refill and the routed-board gate, which judges the vias it placed like any other
 # copper. The tool keeps its vias only if neither the hard nor the unrouted count rose against the board it was handed.
