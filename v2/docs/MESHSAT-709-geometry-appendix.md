@@ -8943,3 +8943,53 @@ chain where the new gate runs. **Board E5 declares that it has no analogue node 
 answered rather than unanswered: the pack node crosses it as four targets and four returns, and the conductors
 that sense anything are board P's and board A's. And **a board's table and its facts must name the same
 project directory**, which nothing held together until E5 had both.
+
+### 32.218 Solder paste is not copper, in the tool that decides where a via can go (17 September 2026, 22:15 CEST; MESHSAT-862)
+
+**Five boards' placement evidence was stale for the fingerprint alone**, the measurement having been taken this
+morning and the rule set having moved this afternoon. Re-taking it is cheap, the placed snapshots and the trees
+that made them still being on the hub, so the same measurement was taken again with today's tools:
+`hardset --label placed`, `place_audit`, and `carry_placed` proving that the snapshot and the board that was cut
+are the same placement. Four boards came back PASS and **board A came back FAIL with one predicted collision**,
+which a stale reading had been carrying as an unknown.
+
+**The collision was the tool.** `place_audit`'s named failure was three plane pads with nowhere to go, and all
+three were `U21.9`, `U22.9` and `U23.9`: pin 9 of the three TPS259631 eFuses, which is the thermal pad, on GND.
+Read on the board that was cut, those three pads have **no via inside them and none within 4.31 mm**, over
+ground plane copper that is filled directly underneath them on In1, In2 and In4. Three identical parts with one
+finding is one generator pattern repeated three times, which is the shape this record has learnt to read.
+
+Asking why no via site was found gave the answer, and it is not about board A. **`return_via._site_free` is the
+one site test behind three rules**: PLC-001 through `place_audit` (has this plane pad anywhere to go), RET-004
+through `return_via` itself, and PLC-002 through `gnd_grid`. It walks every pad of every footprint and skips
+only pads of its own net. A modern exposed pad is drawn by KiCad as one copper pad plus a grid of unnumbered
+solder paste apertures, and **an aperture carries no net at all**, so `p.GetNetname() == own` is false for it
+and one sitting 0.11 mm from the middle of the pad it belongs to refused the site. Every exposed pad on every
+board read as fully blocked, in every one of the three rules.
+
+**This is the second tool with that defect and the first was five days ago** (32.151, the stub router's obstacle
+map, found on board P's gas gauge). Worse, the two halves of this one function disagreed with each other:
+`_in_gnd_fill`, forty lines below, accepts a site inside a ground pad with room for the ring, with a comment
+saying why. The obstacle list takes only pads on a copper layer now.
+
+**Two fixtures and both proofs**, as every rule here is owed: the defective fixture is that pad, a 2.29 x 3.00 mm
+ground pad under nine paste apertures, where the answer must be that a via fits; the acceptable fixture is what
+the filter must not free, a real copper pad of another net 0.11 mm away, where the answer must still be no. On
+the pre-fix tool the first fails with its own sentence; on the fixed tool both pass.
+
+**The fixture cost three attempts and each one is a fact about this SWIG build.** A board built in python and
+left in python took the two DRC fixtures of the same file down with it, so it runs in its own process and loads
+its board from disk. A second board built in the same interpreter after the first was saved came back with its
+pads on no net, so it is one board per run. And **adding a pad rebuilds the net list, which drops a net that has
+no item on it yet**, so the nine apertures took the blocking pad's net off the board and the blocker came back
+on nothing: the neighbour goes on before the apertures.
+
+With the fix, board A's placement reads **0 predicted collisions of 19 fine-pitch parts, ALL PASS**, and PLC-001
+is PASS on A, C, D, E and P. **Readiness 59.9 percent verified, 13.1 failed, 26.9 inconclusive of 327**, from
+58.4 / 13.1 / 28.4 this evening. Suite 956.
+
+**What it does not change, and what it will.** The judge in `return_via` does not use the site test, so no
+board's RET-004 reading moves: what moves is the FIXER's ability to answer it, and `gnd_grid`'s, on the next
+generation of each board. Board A's three eFuse thermal pads are still three pads with no via in them on the
+board that is cut today; the finding is real and it belongs to board A's next phase, where the generator can
+place them, rather than to a tool that could not see the site.
