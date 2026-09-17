@@ -1718,7 +1718,7 @@ shielding where they are needed.
 | risk | EMC, ELECTRICAL_FUNCTION |
 | verified by | MANUAL_REVIEW, SIMULATION, PROTOTYPE_MEASUREMENT at ROUTED_BOARD (human or lab only) |
 | source | SOURCE_UNVERIFIED |
-| implementation | NONE_YET |
+| implementation | pcb_emc.yaml, the sheet as data |
 | maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope the kit, expires pre-compliance testing |

@@ -9,19 +9,7 @@ answered yet, made visible so it cannot be forgotten.
 
 **25 of 57 rules carry a gap.**
 
-## absent (4)
-
-**EMC-001 source, path, victim** (MUST_JUSTIFY, ENFORCED)  
-no EMC analysis of any kind exists; eleven radios and a sealed metal box 16 September 2026: THE SHEET IS DATA
-AND IT IS COMPARED WITH THE BOARDS. pcb_emc.yaml carries, per board, every switching source with its
-frequency and the datasheet or timing resistor that sets it, the sensitive victims by reference, the coupling
-paths with the measure taken at each and the evidence for it, and a pre-compliance plan. emc_sheet.py checks
-it against each board's own netlist, and the check that makes it a gate is completeness: every switching part
-in the netlist must be declared as a source, because a sheet listing thirteen of a board's fourteen
-converters reads as complete. 27 sources, 10 paths and a plan on all seven boards; C, D, P and E5 carry no
-converter at all and each says why. What is NOT decided here is any emission: no edge rate is invented where
-a datasheet publishes none, and the measurement half of this rule is the laboratory stage.  
-*Close it by* an EMC sheet per board and a pre-compliance plan for the kit. Owner **SESSION**, after ENV-001, SI-001. Effort P50 10h, P80 40h.
+## absent (3)
 
 **PWR-002 sequencing and inrush** (MUST_JUSTIFY, ENFORCED)  
 sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
@@ -140,7 +128,7 @@ declares none) and board C is measuring it on two arms right now. Board E5 has n
 it at all.  
 *Close it by* each closer names its class and its prevention attempt; extend the predictor. Owner **SESSION**. Effort P50 6h, P80 20h.
 
-## no protocol (1)
+## no protocol (2)
 
 **DFA-001 the assembly set is buildable** (BLOCKER, ENFORCED)  
 the CPL's form is checked; the rotation of each polarised footprint has never been verified against its own
@@ -156,6 +144,18 @@ also compares the TWO copies of the table, the CSV and the literal in make_hando
 CPL: that line is on the never-auto floor, so a disagreement is reported for a person to resolve rather than
 edited here.  
 *Close it by* the assembler's own preview of each polarised footprint, which is the artefact the acceptance criteria names and the ONE thing this session cannot produce: the runner never logs into JLCPCB (a standing rule of this repo) and their preview is behind that login. It belongs to the ordering session on the laptop, which has the browser and the account, and the table it fills in is v2/release/revA/order/jlc-rotations.csv with a date per row. What the session HAS done is the other half of the acceptance criteria, the rotation against each part's own drawing, and what it cannot do is the half that says 'and against the assembler's convention'. Owner **OWNER**. Effort P50 4h, P80 12h.
+
+**EMC-001 source, path, victim** (MUST_JUSTIFY, ENFORCED)  
+no EMC analysis of any kind exists; eleven radios and a sealed metal box 16 September 2026: THE SHEET IS DATA
+AND IT IS COMPARED WITH THE BOARDS. pcb_emc.yaml carries, per board, every switching source with its
+frequency and the datasheet or timing resistor that sets it, the sensitive victims by reference, the coupling
+paths with the measure taken at each and the evidence for it, and a pre-compliance plan. emc_sheet.py checks
+it against each board's own netlist, and the check that makes it a gate is completeness: every switching part
+in the netlist must be declared as a source, because a sheet listing thirteen of a board's fourteen
+converters reads as complete. 27 sources, 10 paths and a plan on all seven boards; C, D, P and E5 carry no
+converter at all and each says why. What is NOT decided here is any emission: no edge rate is invented where
+a datasheet publishes none, and the measurement half of this rule is the laboratory stage.  
+*Close it by* The SHEET and the PLAN are DONE (16 September 2026, verified again on the 17th): pcb_emc.yaml carries every switching source with the document that sets its frequency, the victims, the coupling paths with the measure taken at each, and a pre-compliance plan, on all seven boards, and emc_sheet.py checks it against each board's netlist for completeness. What remains is not a document: it is the MEASUREMENT, which is a laboratory stage on a built prototype, and the emission levels it is measured against are the operating envelope, owner decision 34. Owner **SESSION**, after ENV-001, SI-001. Effort P50 0h, P80 0h.
 
 ## duplicated or stale (1)
 
