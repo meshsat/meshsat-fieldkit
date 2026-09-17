@@ -53,7 +53,7 @@ rm -rf $S; mkdir -p $S/out
 for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
-          edge_length derate clock_check port_protect safe_lines safe_lines_$L place_audit check_contracts check_contracts_$L lcsc_fill \
+          edge_length derate clock_check port_protect safe_lines safe_lines_$L erc_gate place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
           sensitive_nodes assembly_set rf_line ledger_verify; do
   rm -f "$P/routed/$_g.verdict.json"
@@ -77,6 +77,10 @@ python3 $T/hardset.py out/$N-drc.json post --label 'routed-board gate' --board $
 
 run() { echo "--- $1"; shift; timeout 1800 "$@" 2>&1 | tail -3; }
 # board E5 had no gate at all until 16 September 2026, and six boards had one: the sweep runs whichever exists
+# THE ERC GATE BELONGS TO THE SWEEP TOO (17 September 2026). build_sch.sh above runs the ERC and writes its
+# JSON; the gate over it was the chain's alone, so SCH-001 could only be refreshed by a full chain run and read
+# as stale on seven boards the moment the rule set moved. It judges the file this sweep has just produced.
+[ -s out/$N-erc.json ] && run "ERC" python3 $T/erc_gate.py . $N
 if [ -f $T/check_pcb_$L.py ]; then run "board gate"        python3 $T/check_pcb_$L.py $N.kicad_pcb
 else echo "--- board gate"; echo "gate_sweep: there is no check_pcb_$L.py, so nothing asserts a number about this board"; fi
 run "zone nets"         python3 $T/check_zone_nets.py $N.kicad_pcb
