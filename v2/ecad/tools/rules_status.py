@@ -425,6 +425,22 @@ def main(argv):
     val, _warn = R.validate(reg)          # (errors, warnings): a warning is not a missing decision
     no_cov = sorted({r["rule"] for r in all_rows if r["rule"] not in cov})
     complete = not (unresolved or val or no_cov)
+    # A PARTIAL RUN CANNOT ANSWER THE SET'S QUESTION, AND THIS ONE ANSWERED IT ANYWAY (17 September 2026).
+    # `rules_status.py --board p` judges forty-two pairs and wrote the SET-LEVEL completeness verdict from
+    # them, denominator and all, over the reading taken on all 301. SGN-001 is a BLOCKER on every one of the
+    # seven boards and it is decided by that single file, so one scoped run silently narrowed what every
+    # board's page then claimed to have checked: the generated pages read "rules_complete PASS of 42" on
+    # boards the run never looked at. It is the `missing_input` doctrine one level up, and here the honest
+    # move is not to take the reading at all: a run that was asked about one board has nothing to say about
+    # the set, says so on its own line, and leaves the set's evidence alone. Staleness is already handled,
+    # because the epoch and the rule-set fingerprint refuse an old verdict wherever it is read.
+    scoped = [w for w in ("--board", "--phase") if w in argv]
+    if scoped:
+        print("scoped run (%s): the set-level completeness verdict SGN-001 was NOT written. This run judged "
+              "%d rule-board pair(s) on %d of %d board(s), which cannot answer for the set; the verdict on "
+              "disk stands until a full run replaces it."
+              % (" ".join(scoped), len(all_rows), len(only), len(m["boards"])))
+        return _finish(argv, all_rows, per_board, m, fp, phase, out_dir)
     _v.write("rules_complete", _v.PASS if complete else _v.FAIL,
              counts={"pairs": len(all_rows), "unresolved": len(unresolved),
                      "registry_errors": len(val), "rules_without_coverage": len(no_cov)},
@@ -437,6 +453,13 @@ def main(argv):
                    if complete else "a rule that applies reached no result, which is what the registry exists to prevent"),
              # a SET-LEVEL verdict, so it goes where the set-level gates write and every board can read it
              out_dir=os.path.join(ECAD, "out"), quiet=True)
+    return _finish(argv, all_rows, per_board, m, fp, phase, out_dir)
+
+
+def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):
+    """The run's own summary and its readiness verdict. Split out of `main` so that a scoped run reaches
+    exactly this and nothing else: the set-level completeness verdict above it is written only by a run that
+    saw the whole set."""
     agg = counts(all_rows); state = gate_state(all_rows, m)
     summary = dict(manifest_version=m.get("manifest_version"), rule_set_fingerprint=fp,
                    promotion_frozen=bool(m.get("promotion", {}).get("frozen")), phase=phase or "ALL",

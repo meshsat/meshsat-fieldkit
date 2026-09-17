@@ -310,3 +310,43 @@ def t_a_rule_verified_before_the_route_is_untouched_by_an_unrouted_board():
     vs = dict(_verdict("FAIL")); vs.update(_route_gate(499))
     assert _result(_cov(), vs, rule=_rule(phase="PLACED_BOARD")) == S.FAIL
     assert _result(_cov(), vs, rule=_rule(phase="SCHEMATIC")) == S.FAIL
+
+
+def t_a_run_about_one_board_does_not_write_the_set_s_completeness_verdict():
+    """SGN-001 IS A SET-LEVEL QUESTION AND A SCOPED RUN CANNOT ANSWER IT (17 September 2026).
+
+    `rules_status.py --board p` judges one board's forty-two pairs, and it used to write the SET-LEVEL
+    `rules_complete` verdict from them, denominator and all, on top of the reading taken over all 301. SGN-001
+    is a BLOCKER on every one of the seven boards and every board's generated page reads that one file, so a
+    single scoped run made six boards claim a completeness check that had looked at one board: the pages read
+    `rules_complete PASS of 42`. This is the `missing_input` doctrine one level up, and the honest answer is
+    to take no reading at all rather than a narrower one.
+
+    Executed: record the set-level verdict, run a scoped computation, and require the file to be untouched.
+    """
+    import subprocess, shutil
+    ecad = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    setlevel = os.path.join(ecad, "out", "rules_complete.verdict.json")
+    if not os.path.exists(setlevel):
+        return "no set-level completeness verdict on this tree to protect"
+    before = open(setlevel, "rb").read()
+    keep = tempfile.mkdtemp(prefix="rules-scoped-")
+    shutil.copy(setlevel, os.path.join(keep, "rules_complete.verdict.json"))
+    letter = sorted(S.manifest()["boards"])[0]
+    try:
+        p = subprocess.run([sys.executable, os.path.join(ecad, "tools", "rules_status.py"),
+                            "--board", letter, "--out-dir", keep],
+                           cwd=ecad, capture_output=True, text=True, timeout=900)
+        assert p.returncode in (0, 1, 3), p.stdout[-400:] + p.stderr[-400:]
+        after = open(setlevel, "rb").read()
+        if after != before:
+            # put the full reading back before failing: a test must not leave the tree worse than it found it
+            shutil.copy(os.path.join(keep, "rules_complete.verdict.json"), setlevel)
+            rec = json.loads(after.decode("utf-8"))
+            raise AssertionError("a run about board %s rewrote the SET's completeness verdict "
+                                 "(denominator %s, counts %s): a reading taken with less input never replaces "
+                                 "one taken with more" % (letter, rec.get("denominator"), rec.get("counts")))
+        assert "NOT written" in p.stdout, \
+            "the scoped run left the verdict alone and did not say so, which reads as though it had checked the set"
+    finally:
+        shutil.rmtree(keep, ignore_errors=True)
