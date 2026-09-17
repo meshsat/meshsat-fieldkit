@@ -3,19 +3,16 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 9,
-  "unjudged": 2
+  "pass": 11,
+  "unjudged": 0
  },
  "denominator": 11,
- "evidence": [
-  "unjudged, the other board is absent: D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
-  "unjudged, the other board is absent: D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1"
- ],
+ "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "2 of this board's contracts name a board absent from this tree and were not judged",
+ "note": "the contracts that name this board; the set's own verdict is check_contracts",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
@@ -27,9 +24,9 @@
  "tool": "check_contracts_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "493f3ebd1dd1cbee"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:25:43Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T12:17:03Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

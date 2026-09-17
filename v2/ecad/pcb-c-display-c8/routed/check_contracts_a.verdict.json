@@ -3,35 +3,16 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 13,
-  "unjudged": 18
+  "pass": 31,
+  "unjudged": 0
  },
  "denominator": 31,
- "evidence": [
-  "unjudged, the other board is absent: rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1",
-  "unjudged, the other board is absent: rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2",
-  "unjudged, the other board is absent: rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3",
-  "unjudged, the other board is absent: rail +5V_DEV leaves A on J_5V_DEV and enters B on J_5V_DEV",
-  "unjudged, the other board is absent: ribbon net PI_SHDN_REQ exists on A and B",
-  "unjudged, the other board is absent: ribbon net PI_KILL exists on A and B",
-  "unjudged, the other board is absent: J_AB1 2x13 map identical on A and B",
-  "unjudged, the other board is absent: J_AB2 2x5 map identical on A and B",
-  "unjudged, the other board is absent: J_AB2 carries the wall pair on its END row (pins 1 and 2)",
-  "unjudged, the other board is absent: D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
-  "unjudged, the other board is absent: D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
-  "unjudged, the other board is absent: wall-port pair USB_WALL_P: B16 slot hub -> J_AB2 -> A22 J_USBW",
-  "unjudged, the other board is absent: wall-port pair USB_WALL_N: B16 slot hub -> J_AB2 -> A22 J_USBW",
-  "unjudged, the other board is absent: rail +54V_POE: the shares sum to 2.0% within the 2.0% the rail declares",
-  "unjudged, the other board is absent: rail +5V_DEV: the shares sum to 2.0% within the 2.0% the rail declares",
-  "unjudged, the other board is absent: rail +5V_S1: the shares sum to 2.0% within the 2.0% the rail declares",
-  "unjudged, the other board is absent: rail +5V_S2: the shares sum to 2.0% within the 2.0% the rail declares",
-  "unjudged, the other board is absent: rail +5V_S3: the shares sum to 2.0% within the 2.0% the rail declares"
- ],
+ "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "18 of this board's contracts name a board absent from this tree and were not judged",
+ "note": "the contracts that name this board; the set's own verdict is check_contracts",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
@@ -43,9 +24,9 @@
  "tool": "check_contracts_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "eaafe91e15b758ce"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:34:44Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T12:15:44Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

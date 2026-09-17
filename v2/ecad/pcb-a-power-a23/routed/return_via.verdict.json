@@ -61,9 +61,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "493f3ebd1dd1cbee"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:20:52Z",
+ "ts": "2026-09-17T12:12:21Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

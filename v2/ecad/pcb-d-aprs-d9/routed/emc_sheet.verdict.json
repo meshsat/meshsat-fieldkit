@@ -10,6 +10,7 @@
  "denominator": 3,
  "evidence": [],
  "inputs": {
+  "board": "d",
   "sheet": "pcb_emc.yaml"
  },
  "missing_input": null,
@@ -24,9 +25,9 @@
  "tool": "emc_sheet",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "493f3ebd1dd1cbee"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:25:00Z",
+ "ts": "2026-09-17T12:16:24Z",
  "verdict": "PASS",
  "version": "unknown"
 }

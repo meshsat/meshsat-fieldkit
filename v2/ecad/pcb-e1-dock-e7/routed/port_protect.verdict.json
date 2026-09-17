@@ -17,7 +17,7 @@
   "board": "e",
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "d37a24c789335e0a"
+   "sha256_16": "0813fc4f67016cd0"
   }
  },
  "missing_input": null,
@@ -32,9 +32,9 @@
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "493f3ebd1dd1cbee"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:25:39Z",
+ "ts": "2026-09-17T12:17:01Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
