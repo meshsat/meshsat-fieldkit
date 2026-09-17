@@ -174,11 +174,21 @@ def judge(b, path=None, radius=RETURN_MM, identity=None):
 
 
 def _site_free(b, x, y, vd, clr, own):
-    """The class clearance from every pad, track and via of another net, on every layer (a through via spans them all)."""
+    """The class clearance from every pad, track and via of another net, on every layer (a through via spans them all).
+
+    SOLDER PASTE IS NOT COPPER, and this function was refusing every via site inside every exposed pad on every
+    board (17 September 2026). KiCad draws a modern exposed pad as one copper pad plus a grid of unnumbered
+    F.Paste apertures, and an aperture IS a pad to this loop: it carries no net, so `p.GetNetname() == own` is
+    false for it, and one sits about 0.11 mm from the middle of the pad it belongs to. Board A's three TPS2596
+    eFuses read "no via site" for their own thermal pads because of it, which is a PLC-001 failure about the
+    tool rather than the board. The same lesson was learnt in the stub router's obstacle map on 12 September
+    (appendix 32.151) and this is the second tool with the same defect: an obstacle list takes only pads on a
+    copper layer."""
     X, Y = x * 1e6, y * 1e6; need = (vd / 2 + clr) * 1e6
     for fp in b.GetFootprints():
         for p in fp.Pads():
             if p.GetNetname() == own: continue
+            if p.GetNumber() == "" or not p.IsOnCopperLayer(): continue
             bb = p.GetBoundingBox(); c = bb.GetCenter()
             dx = max(0.0, abs(X - c.x) - bb.GetWidth() / 2.0); dy = max(0.0, abs(Y - c.y) - bb.GetHeight() / 2.0)
             if math.hypot(dx, dy) < need: return False
