@@ -73,7 +73,7 @@ PHASE=$LABEL python3 $T/gen_sch_$L.py $N.kicad_sch $N > out/gen_sch.log 2>&1 \
   || echo "gate_sweep: the schematic could not be rebuilt, netlist-dependent gates will be INCONCLUSIVE (see out/build_sch.log)"
 
 $T/drc.sh $N.kicad_pcb out/$N-drc.json > out/drc.log 2>&1
-python3 $T/hardset.py out/$N-drc.json post --label 'routed-board gate' 2>&1 | tail -2
+python3 $T/hardset.py out/$N-drc.json post --label 'routed-board gate' --board $N.kicad_pcb 2>&1 | tail -2
 
 run() { echo "--- $1"; shift; timeout 1800 "$@" 2>&1 | tail -3; }
 # board E5 had no gate at all until 16 September 2026, and six boards had one: the sweep runs whichever exists

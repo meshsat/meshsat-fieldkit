@@ -42,7 +42,7 @@ if [ -s out/$N-drc-types.txt ]; then echo "deliverable DRC by type (out/$N-drc-t
 # net_tie.py above. Until now the DRC that followed those changes was printed with --label, which returns 0 whatever it counts,
 # so a regression introduced by the last mutation could be packaged and promoted. The board is gated here, on the fifteen types
 # and on unrouted, and the deliverable is built from the file that passed.
-python3 ../tools/hardset.py out/$N-drc.json post --label 'deliverable DRC' --examples 4 --gate out/$N-deliverable-gate.txt --counts out/$N-deliverable-counts.txt
+python3 ../tools/hardset.py out/$N-drc.json post --label 'deliverable DRC' --examples 4 --gate out/$N-deliverable-gate.txt --counts out/$N-deliverable-counts.txt --board $N.kicad_pcb
 read GH GU < out/$N-deliverable-counts.txt
 python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('   unrouted:', ' / '.join(i.get('description', '')[:70] for i in v.get('items', []))) for v in d.get('unconnected_items', [])]"
 # A QUOTE-ONLY deliverable is the project's own idiom for a held board (make_handoff.py accepts `<folder>-quote` and stamps

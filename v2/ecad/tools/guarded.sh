@@ -15,7 +15,7 @@ guarded () {
   local MODE="${GUARD_MODE:-post}" T0=$SECONDS BH BU AH AU KEPT
   cp "$N.kicad_pcb" "out/$N-guard-$LBL.kicad_pcb"
   "$T/drc.sh" "$N.kicad_pcb" "out/$N-drc.json" >/dev/null 2>&1
-  python3 "$T/hardset.py" "out/$N-drc.json" "$MODE" --counts "out/guard-$LBL-before.txt" --label "before $LBL" >/dev/null 2>&1 || true
+  python3 "$T/hardset.py" "out/$N-drc.json" "$MODE" --counts "out/guard-$LBL-before.txt" --label "before $LBL" --board "$N.kicad_pcb" >/dev/null 2>&1 || true
   read BH BU < "out/guard-$LBL-before.txt" 2>/dev/null || { BH=999; BU=999; }
   # the command runs in THIS shell (no pipe): a `stop` inside it ends the finish the way it always did, and the
   # guard's own status is its exit status; the output is teed to out/guard-<label>.log through a process substitution
@@ -23,7 +23,7 @@ guarded () {
   if [ "${GUARD_QUIET:-0}" = 1 ]; then "$@" > "out/guard-$LBL.log" 2>&1; RC=$?
   else "$@" > >(tee "out/guard-$LBL.log") 2>&1; RC=$?; wait 2>/dev/null; fi
   "$T/drc.sh" "$N.kicad_pcb" "out/$N-drc.json" >/dev/null 2>&1
-  python3 "$T/hardset.py" "out/$N-drc.json" "$MODE" --counts "out/guard-$LBL-after.txt" --label "after $LBL" >/dev/null 2>&1 || true
+  python3 "$T/hardset.py" "out/$N-drc.json" "$MODE" --counts "out/guard-$LBL-after.txt" --label "after $LBL" --board "$N.kicad_pcb" >/dev/null 2>&1 || true
   read AH AU < "out/guard-$LBL-after.txt" 2>/dev/null || { AH=999; AU=999; }
   if [ "$AH" -gt "$BH" ] || [ "$AU" -gt "$BU" ]; then
     KEPT=0; echo "$LBL HURT (hard $BH -> $AH, unrouted $BU -> $AU): the board is restored as it was handed in"

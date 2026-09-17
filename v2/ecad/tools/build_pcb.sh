@@ -7,7 +7,7 @@ D="$1"; N="$2"; cd "$D"; mkdir -p out
 # a failed export left the previous out/$N-drc.json in place for finish_board.sh to read. One contract now, in drc.sh: the
 # report is an output, and hardset.py says what it means.
 ../tools/drc.sh "$N.kicad_pcb" "out/$N-drc.json"
-python3 ../tools/hardset.py "out/$N-drc.json" post --label "DRC" | head -2
+python3 ../tools/hardset.py "out/$N-drc.json" post --label "DRC" --board "$N.kicad_pcb" | head -2
 kicad-cli pcb drc --severity-all --format report -o "out/$N-drc.rpt" "$N.kicad_pcb" >/dev/null
 rm -rf out/gerbers; mkdir -p out/gerbers
 CU=$(python3 -c "import pcbnew; b=pcbnew.LoadBoard('$N.kicad_pcb'); n=b.GetCopperLayerCount(); print(','.join(['F.Cu']+['In%d.Cu'%i for i in range(1,n-1)]+['B.Cu']))" 2>/dev/null | tail -1)

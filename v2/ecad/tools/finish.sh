@@ -111,7 +111,7 @@ import pcbnew, sys
 b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b); print('zones refilled after the stub router')
 PY
   $T/drc.sh $N.kicad_pcb out/$N-drc.json
-  python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' | grep -v '^hardset:'
+  python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub router' --board $N.kicad_pcb | grep -v '^hardset:'
   [ -s out/par-score.txt ] || stop "no DRC score after the stub router (hardset refused)"
   read H < out/par-score.txt
   if [ "$H" -ne 0 ]; then
@@ -123,7 +123,7 @@ import pcbnew, sys
 b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b)
 PY
     $T/drc.sh $N.kicad_pcb out/$N-drc.json
-    H=$(python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub_accept' >/dev/null; cat out/par-score.txt)
+    H=$(python3 $T/hardset.py out/$N-drc.json post --score out/par-score.txt --label 'after stub_accept' --board $N.kicad_pcb >/dev/null; cat out/par-score.txt)
     echo "after stub_accept: hard $H"
   fi
 }
@@ -225,7 +225,7 @@ fi
 # stale fill is not a verdict about this board.
 python3 -c "import pcbnew, sys; b = pcbnew.LoadBoard(sys.argv[1] + '.kicad_pcb'); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1] + '.kicad_pcb', b); print('zones refilled before the gate and the rail checks')" $N 2>&1 | grep -vE 'Debug|leak'
 $T/drc.sh $N.kicad_pcb out/$N-drc.json
-python3 $T/hardset.py out/$N-drc.json post --flag "$FLAG" --label 'routed-board gate' | sed 's/^hardset:/routed-board DRC:/'
+python3 $T/hardset.py out/$N-drc.json post --flag "$FLAG" --label 'routed-board gate' --board $N.kicad_pcb | sed 's/^hardset:/routed-board DRC:/'
 python3 -c "import json; d=json.load(open('out/$N-drc.json')); [print('  OPEN', ' ~ '.join(i['description'][:50] for i in u['items'])) for u in d.get('unconnected_items', [])[:6]]"
 # ONE RUN, ONE DECISION. It ran twice, once to print and once to decide, which is the pattern stage 0
 # removed from every board gate and left here (red team round three L2). On B that is two passes over the
