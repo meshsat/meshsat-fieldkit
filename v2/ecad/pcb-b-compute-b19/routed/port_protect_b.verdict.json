@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "behind_an_active_part": 0,
+  "declared": 2,
+  "not_on_netlist": 0,
+  "ports": 2,
+  "unprotected": 0
+ },
+ "denominator": 11,
+ "evidence": [],
+ "inputs": {
+  "board": "b",
+  "netlist": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "f96408a1a7a9dc22"
+  }
+ },
+ "missing_input": null,
+ "note": "every declared external conductor meets a protection part before a chip",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect_b",
+ "tools": {
+  "git_head": "a4515e9d8bb7",
+  "tools_tree_sha": "d84cbe39b50a5620"
+ },
+ "ts": "2026-09-17T13:45:10Z",
+ "verdict": "PASS",
+ "version": "a4515e9d8bb7+dirty"
+}

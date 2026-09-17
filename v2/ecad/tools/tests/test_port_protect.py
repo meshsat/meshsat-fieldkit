@@ -165,7 +165,9 @@ def t_the_counts_carry_the_category_that_decided_the_verdict():
     import os
     src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "port_protect.py"),
                encoding="utf-8").read()
-    i = src.index('_v.write("port_protect", _v.FAIL if bad else _v.PASS')
+    # 17 September 2026: the write goes through `_write_both`, which writes the board's own verdict name
+    # beside the set's, so the rule looks for the decision rather than for one spelling of the call.
+    i = src.index('_write_both(letter, _v.FAIL if bad else _v.PASS')
     seg = src[i:i + 900]
     assert "behind_an_active_part" in seg, "the counts do not carry the behind-an-active-part category"
     assert "unprotected" in seg

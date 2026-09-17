@@ -51,7 +51,7 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 | RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | check_contracts_b PASS of 42 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **FAIL** | interfaces_b FAIL: {'assignments': 7, 'disagreements': 7} |
 | INT-002 a transformerless Ethernet link is verified at both ends | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact topology and  |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect PASS of 11 |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_b PASS of 11 |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the router and not a |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **FAIL** | place_audit FAIL: {'collisions': 13, 'fine_pitch': 75, 'footprints': 951, 'measured': 74} |

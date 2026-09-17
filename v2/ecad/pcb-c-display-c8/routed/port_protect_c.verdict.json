@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "behind_an_active_part": 0,
+  "declared": 2,
+  "not_on_netlist": 0,
+  "ports": 2,
+  "unprotected": 0
+ },
+ "denominator": 4,
+ "evidence": [],
+ "inputs": {
+  "board": "c",
+  "netlist": {
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "c2f5c6767c819a5a"
+  }
+ },
+ "missing_input": null,
+ "note": "every declared external conductor meets a protection part before a chip",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect_c",
+ "tools": {
+  "git_head": "a4515e9d8bb7",
+  "tools_tree_sha": "d84cbe39b50a5620"
+ },
+ "ts": "2026-09-17T13:45:11Z",
+ "verdict": "PASS",
+ "version": "a4515e9d8bb7+dirty"
+}

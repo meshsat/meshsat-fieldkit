@@ -15,8 +15,8 @@
  "inputs": {
   "board": "a",
   "netlist": {
-   "path": "out/pcb-a-power.net",
-   "sha256_16": "b79c3efc6897efdc"
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "c6fd1f8cdfb52241"
   }
  },
  "missing_input": null,
@@ -25,15 +25,13 @@
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
- "rules": [
-  "TRN-001"
- ],
+ "rules": [],
  "tool": "port_protect",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "git_head": "a4515e9d8bb7",
+  "tools_tree_sha": "d84cbe39b50a5620"
  },
- "ts": "2026-09-17T12:12:34Z",
+ "ts": "2026-09-17T13:45:10Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "a4515e9d8bb7+dirty"
 }

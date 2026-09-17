@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "ports": 0,
+  "unprotected": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": "p",
+  "netlist": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "c13c0ab262c7f7e1"
+  }
+ },
+ "missing_input": null,
+ "note": "this board declares that no conductor of its own leaves the enclosure, so the rule is true of it with nothing to check: Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and ",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect_p",
+ "tools": {
+  "git_head": "a4515e9d8bb7",
+  "tools_tree_sha": "d84cbe39b50a5620"
+ },
+ "ts": "2026-09-17T13:45:12Z",
+ "verdict": "PASS",
+ "version": "a4515e9d8bb7+dirty"
+}
