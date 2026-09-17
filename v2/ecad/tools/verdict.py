@@ -144,6 +144,32 @@ def _policy():
     return d
 
 
+def _with_board(inputs):
+    """Record the board this gate was given, when it did not say so itself.
+
+    A VERDICT THAT DOES NOT NAME ITS BOARD CAN ONLY BE ATTRIBUTED BY THE DIRECTORY IT SITS IN (17 September
+    2026), and that is how a reading about one board came to answer for another: `rules_status` compares
+    `inputs.board` with the boards the project directory holds and simply cannot check a verdict that names
+    none. Twenty gates take the board as their first argument and pass it to nobody; this records what the
+    process was actually given, with its sha256 and the fact that it was read off the command line, so a
+    verdict is attributable without every gate having to learn a new argument. A gate that names its board
+    itself is left exactly as it wrote it."""
+    if inputs.get("board") is not None: return inputs
+    try:
+        import hashlib
+        for a in sys.argv[1:]:
+            if not isinstance(a, str) or not a.endswith(".kicad_pcb"): continue
+            if not os.path.isfile(a): continue
+            with open(a, "rb") as f:
+                h = hashlib.sha256()
+                for b in iter(lambda: f.read(1 << 20), b""): h.update(b)
+            inputs["board"] = {"path": os.path.basename(a), "sha256_16": h.hexdigest()[:16], "from": "argv"}
+            break
+    except BaseException:
+        pass                                   # a verdict is never lost because its identity could not be read
+    return inputs
+
+
 def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None, rules=None, applicable=True):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
 
@@ -181,7 +207,7 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "applicable": bool(applicable),
         "counts": dict(counts or {}),
         "denominator": denominator,
-        "inputs": dict(inputs or {}),
+        "inputs": _with_board(dict(inputs or {})),
         "evidence": list(evidence or [])[:50],
         "note": note,
         # THE RULE IDS THIS VERDICT DECIDES (MESHSAT-862, 16 September 2026). A gate with no rule id decides
