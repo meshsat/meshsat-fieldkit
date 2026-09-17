@@ -59,7 +59,7 @@ Antenna and bulkhead materials, per kit:
 | 4G/LTE SMA stubby, wideband | 1 |
 | Nagoya NA-771 VHF/UHF whip | 1 |
 | SMA male to female 90 degree adapter | 1 |
-| USB-C IP67 panel mount with cap | 1 |
+| USB-C IP67 panel mount with cap | 1 | **historical: superseded by the 12 V inlet of MESHSAT-793** |
 | M12 IP68 vent plug (membrane) | 1 |
 | 3 mm waterproof LED holder plus LED | 1 |
 
@@ -76,7 +76,7 @@ Holes to drill per kit (8 or 9):
 | Hole | Size | Where |
 |---|---|---|
 | SMA bulkhead x 5 | 6.5 mm D-hole | one wall, in a row, clear of the plate stack |
-| USB-C panel mount | 12 to 16 mm (check the part) | front wall, reachable with the lid closed |
+| power inlet (was USB-C) | 12 to 16 mm, **never measured** | front wall, reachable with the lid closed. The kits take 12 V since MESHSAT-793 through a DC-099 5.5 x 2.1 threaded panel jack in this hole. **Measure it before ordering any replacement connector:** Weipu SP13 wants 13 mm, SP17 wants 17 mm, and the DC-099's own thread is 12 mm, so the hole could be anything in the range this row records. |
 | M12 vent plug | 12 mm | bottom of the case |
 | LED holder | 3 mm | front wall |
 | Cable gland for the GPS cable | PG7 / PG9 | lid side, the puck mounts outside on the lid |
@@ -150,7 +150,7 @@ The FreeCAD model's component boxes are placeholders; verify fit with the real p
 
 ## 5. Power
 
-The X1202 takes four cells and charges from its USB-C or its barrel input; the case USB-C inlet feeds it. The Pi is powered from the X1202 through the pogo pins. The Sabrent hub runs bus-powered from one Pi USB-A port: with the EEPROM setting of section 7 the Pi's USB budget is 1.6 A and the hub's four devices advertise about 900 mA together (AIOC 100, GPS 100, RTL-SDR 500, ZigBee 100). Keep the hub's barrel-jack aux cable in the spares pouch; it goes back in only if the assembled kit shows USB drops or modem resets in the field. The T-Call and the WiFi dongle sit on the Pi's other USB controller, not behind the hub.
+The X1202 takes four cells and charges from its USB-C or its barrel input. **Since MESHSAT-793 the standard is 12 V into the DC barrel (6 to 18 V, 3 A or more), from a Mean Well GST60A12-P1J brick, never USB-C at the same time; the case inlet is a DC-099 5.5 x 2.1 threaded jack with a rubber cap.** That cap seals only when nothing is plugged in, so **the inlet is not rain-proof while the kit is powered** — an IP68 screw-terminal pair (AOHUA M15) was ordered 17 September 2026 to close that, and the brick, its cord and the splice remain indoor-grade whatever the connector is. The older text, kept because it describes the first build: the case USB-C inlet feeds it. The Pi is powered from the X1202 through the pogo pins. The Sabrent hub runs bus-powered from one Pi USB-A port: with the EEPROM setting of section 7 the Pi's USB budget is 1.6 A and the hub's four devices advertise about 900 mA together (AIOC 100, GPS 100, RTL-SDR 500, ZigBee 100). Keep the hub's barrel-jack aux cable in the spares pouch; it goes back in only if the assembled kit shows USB drops or modem resets in the field. The T-Call and the WiFi dongle sit on the Pi's other USB controller, not behind the hub.
 
 ## 6. Harness (as wired, 19 April 2026 audit, with the later corrections)
 
