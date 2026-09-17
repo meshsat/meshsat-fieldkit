@@ -8667,3 +8667,95 @@ number suggested.
 So board B's return path is not the wall its placed-board reading implied, and the two items it does have are
 one meander's worth and one stub. The number to hold it to is the one taken after its finish fills the board,
 which is what the routed-board rule reads and what B21 will produce.
+
+### 32.213 The subject of a reading was the thing that was wrong: four rules answered about boards this set is not building, and two blockers applied to nobody (17 September 2026, 16:15 CEST; MESHSAT-862)
+
+Nothing routed in this stretch and no copper moved. What moved is what the tools were allowed to read, and
+five of the six findings are one shape: a per-board rule answered by a reading taken on another board.
+
+**The six committed netlists came from schematics this tree does not hold.** `sch_prov` records the sha256 of
+the schematic each netlist was generated from, and on every one of the six boards it named a schematic the repo
+does not carry: the netlists were regenerated and committed at 00:14 that morning without their schematics,
+which are from 15 and 16 September. Board E is the clearest case, its committed netlist carrying the SMCJ40A
+and the 100 V bulk capacitor of the suppressor pass while its committed drawing still showed the SMCJ33A they
+replaced. Only board B tripped the contract gate's staleness guard, because only board B's schematic had been
+rewritten (with identical content, by a checkout) after its netlist, so **one board was refused and five passed
+in the identical state**. The guard compares the sidecar's schematic hash now and keeps the mtime rule only
+where there is no sidecar. The six schematics were regenerated at each board's declared phase and each netlist
+re-exported and compared with the committed one component by component and node by node: 398/262, 931/1852,
+194/144, 207/172, 161/118 and 56/39 components and nets agree on every node, `erc_gate` PASS on all six, and
+the only difference anywhere is board E's two part values, which the netlist already had. **The contract gate
+on this tree went from INCONCLUSIVE of 54 with 24 contracts unjudged to PASS of 72.**
+
+**Three boards declared a phase their tree does not hold.** The declaration is read by everything that asks "is
+this folder the board": the folder rule, the sweep's order-code lookup, the contract gate's phase directory. It
+had been pointed at the route in flight, deliberately, on 16 September. Board P settles it: the folder
+`meshsat-pcb-p-revA-P4` holds the board this tree holds BYTE FOR BYTE, sha256 `d79865e7b1aceb95`, and was being
+read as stale against a declared P5 that had been measured, refused and abandoned under decision 28. Board A
+declared A36, a route that was never cut, while its tree carries A32. They declare A32, B19 and P4 now, the
+same fact in `pcb_board_facts.yaml` agrees with the board table (it had drifted on two boards), and a rule
+holds the declaration to a phase the board carries on its own silk. The phase of a route in flight belongs to
+the RUN, which is what `routeflow`'s own refusal already says.
+
+**A board's parts are certified from the folder it declares, and the newest folder is not that board.**
+`jlc_certify.newest_boms` took the highest phase number per letter, so board A was certified from the A24
+folder while its tree holds A32 and board D from D11 against D12. CMP-002 and SUP-001 are per board: one read
+PASS and the other read a failure and neither was about a board this project is building. A board with no
+folder at its declared phase now reads INCONCLUSIVE carrying `missing_input` with the phase it wanted and the
+phases that exist, and the set's own verdict declares its input absent when boards are missing, which the final
+gate prints as *parts NOT JUDGED (certification could not ask)*. Correcting it broke something else within the
+hour and that is the lesson worth keeping: **the table is knowledge and the verdict is judgement.**
+`JLC-CERTIFIED.tsv` is where this project looks up whether a value can be bought at all, so it is still built
+over every folder and only the verdicts are restricted; and the scan order is load-bearing, because the first
+non-empty code on a (value, footprint) key wins, and in alphabetical order board P's two pack FETs lost the
+code their own folder carries and came back WRONG_MODEL against a search by model name.
+
+**Two more of the same shape, and a scoped run answering for the set, twice.** DFM-001 is per board and
+`verify_deliverable` writes under one name while the set gate runs it once per folder, so six boards read
+"taken on board p, which is not a board this project directory holds". TRN-001 is per board and `port_protect`
+did the same, which is why board E5 was reading board E's FAIL. Both write the board's own verdict now, spelled
+the way the registry spells it so the gate catalogue reads the mapping out of the call itself. And twice in one
+day a narrowed run wrote over a set-level artefact: `rules_status.py --board p` replaced the completeness
+verdict taken over 301 pairs with one taken over 42, on a blocker every board reads, and `jlc_certify.py
+--boards c` wrote 88 rows over the 720-row certification table a person orders from. A scoped run leaves the
+set's artefact alone and says so.
+
+**And the opposite: two BLOCKERS that applied to no board at all.** SCH-001 (the schematic's ERC is clean or
+explained) and SCH-002 (the board is the netlist it was placed from) are conditional on the fact
+`has_schematic`, and only board E5 declared it, false. A condition leaf answers False for a fact a board does
+not carry, which is right for a leaf and wrong for a rule, so both were out of scope on all six boards that
+have a schematic and appeared on nobody's page. **Behind SCH-002 sat this: board A's committed board is not its
+schematic.** `netlist_board` reads ten disagreements of 2,010: the six charger filter parts C121, C122 and R146
+to R149 are in the netlist and not on the board, and four of U3's charger pins land on the pre-filter nets. A32
+was cut before those parts existed and the A4x arms are the phases that carry them; four of board A's six
+ANA-001 failures are the same thing, sensitive nets declared on a board that does not have them. `validate()`
+refuses a condition that reads a fact a board it names does not declare, so the next such rule is an error
+instead of a silence. The set is judged on 313 pairs now rather than 301.
+
+**Board A's grid and its pre-laid nets, one variable each.** A41 declares `gnd_grid` 2.1 mm and A40 does not,
+same tree and the same five hour cap: the grid lays 4,000 locked ground vias (4,650 on the board against 902)
+and takes RET-004 from 46 signal vias without a ground via within 1.5 mm of 58 judged to 33 of 52. It answers
+thirteen and leaves thirty-three, and unlike board C (21 open connections) and board P (its route) it costs
+board A nothing visible: 23 open against 25, and no pour island to repair against four. It stays undeclared,
+with those numbers in `boards/a.json`, because the board this tree holds is 0/0 while both arms are open and
+4,000 drilled holes belong to the ruling on decisions 32 and 39. A42 is A40 with the four pre-laid nets removed
+and nothing else changed: **25 open against 15, and 3.3 minutes a pass against 2.2**, so pre-laid copper costs
+this board ten connections and half again the time per pass. Every board of the set has now measured the grid
+on its own copper, which is PLC-002's second half answered, and `place_audit` predicts the pour-island class as
+far as a placed board can, saying in as many words that the islands a router cuts out of a pour cannot be
+predicted from one.
+
+**A hypothesis measured and refused.** B21's placement predicts ten escape-fan collisions and `escape.py`'s
+debug lines name a via of the pad's own net as the last rejection at several pads, which reads like a false
+refusal. Counted first: 560 fine-pitch pads on that board have no escape and TWELVE have a via of their own net
+within 0.5 mm, 17 within 1.0 and 35 within 2.0. The "last reject" line is the last of many candidate positions
+and says nothing about the pad's neighbourhood. No tool changed; board B's fans do not fit where they are.
+
+**Readiness: NOT_READY, 58.5 percent verified, 13.1 failed, 28.4 inconclusive of 313 pairs**, from 54.8 / 14.6
+/ 30.6 of 301 that morning. Board P's folder passes 38 of 38 and its order codes are judged for the first time;
+boards C, E5 and P pass the set gate; A, D and E are HELD by decision 31; board B is a quote. **OUT-001 is
+blocked by exactly two owner decisions now, 31 and 37, and nothing else.** Decision 29 is measured, which was
+the last of the thirteen open decisions without a number: board B's three module Ethernet links satisfy three
+of Microchip's four conditions for a transformer-less link conductor by conductor, the fourth points at the
+module maker's own documentation, and the maker's own carrier answers nothing about it because it uses a
+MagJack. Suite 931 passing, 0 failing, 20 skipped, and the twenty that skip on the runner pass where KiCad is.
