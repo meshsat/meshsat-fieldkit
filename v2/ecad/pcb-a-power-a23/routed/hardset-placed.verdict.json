@@ -30,7 +30,7 @@
   },
   "drc": {
    "path": "out/pcb-a-power-placed-drc.json",
-   "sha256_16": "fe19215d0c5b9ca2"
+   "sha256_16": "44dd3e9fdf9c4e03"
   },
   "measured_board": {
    "sha256_16": "086e99d663d4a7ea",
@@ -49,9 +49,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "92144c55e415e97b"
+  "tools_tree_sha": "c2e405a768df182f"
  },
- "ts": "2026-09-17T19:58:53Z",
+ "ts": "2026-09-17T20:15:17Z",
  "verdict": "PASS",
  "version": "unknown"
 }

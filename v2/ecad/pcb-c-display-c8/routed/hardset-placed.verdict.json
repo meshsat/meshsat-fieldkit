@@ -29,7 +29,7 @@
   },
   "drc": {
    "path": "out/pcb-c-display-placed-drc.json",
-   "sha256_16": "b6945a134da45228"
+   "sha256_16": "cec7e9a2abaea47f"
   },
   "measured_board": {
    "sha256_16": "3624830e15dc17d9",
@@ -48,9 +48,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "92144c55e415e97b"
+  "tools_tree_sha": "c2e405a768df182f"
  },
- "ts": "2026-09-17T19:58:59Z",
+ "ts": "2026-09-17T20:15:23Z",
  "verdict": "PASS",
  "version": "unknown"
 }
