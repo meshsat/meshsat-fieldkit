@@ -231,9 +231,27 @@ def _named_board(rec):
     return None
 
 
-def _fresh(rec, m, fingerprint, identities=None):
-    """(ok, why): is this verdict current evidence? The epoch, the rule-set fingerprint and the BOARD are the
-    identity; a verdict from before the audit, or about a different board, is history rather than a decision."""
+_RULE_FPS = [None]
+
+
+def _rule_digest(rid):
+    """Today's digest of one rule's demands, or "" if the registry cannot be read."""
+    if _RULE_FPS[0] is None:
+        try:
+            import rules_lib as _r; _RULE_FPS[0] = _r.rule_fingerprints()
+        except BaseException: _RULE_FPS[0] = {}
+    return (_RULE_FPS[0] or {}).get(rid, "")
+
+
+def _fresh(rec, m, fingerprint, identities=None, rule=None):
+    """(ok, why): is this verdict current evidence? The epoch, the rule's own demands and the BOARD are the
+    identity; a verdict from before the audit, or about a different board, is history rather than a decision.
+
+    RULE BY RULE WHERE THE VERDICT ALLOWS IT (17 September 2026). A verdict names the rules it decides and now
+    carries a digest of each of them, so a reading is stale when THE RULE IT DECIDES changed rather than when
+    anything anywhere in the registry did. Correcting ten board lists this afternoon marked three hundred
+    readings stale and fifteen of them were about the rules that moved. A verdict with no per-rule digest is
+    judged by the set fingerprint exactly as before, which is every verdict written before this change."""
     ts = str(rec.get("ts", ""))
     epoch_s = str(m.get("evidence", {}).get("epoch", ""))
     if not ts: return False, "the verdict carries no timestamp"
@@ -241,6 +259,16 @@ def _fresh(rec, m, fingerprint, identities=None):
     if t is None: return False, "the verdict's timestamp %r cannot be read" % ts[:25]
     if e is not None and t < e: return False, "PRE_AUDIT: taken %s, before the evidence epoch %s" % (ts[:19], epoch_s[:19])
     got = (rec.get("policy") or {}).get("rule_set_fingerprint") or rec.get("rule_set_fingerprint")
+    rid = (rule or {}).get("id")
+    mine = ((rec.get("policy") or {}).get("rule_fingerprints") or {}).get(rid) if rid else None
+    if mine:
+        now_d = _rule_digest(rid)
+        if now_d and mine != now_d:
+            return False, "taken under a different version of %s (%s, current is %s)" % (rid, mine, now_d)
+        if now_d:
+            if identities and _named_board(rec) and _named_board(rec) not in identities:
+                return False, "taken on board %s, which is not a board this project directory holds" % str(_named_board(rec))[:20]
+            return True, "current"
     if fingerprint and got and got != fingerprint: return False, "taken under rule set %s, current is %s" % (got, fingerprint)
     if fingerprint and not got: return False, "the verdict does not name the rule set it was taken under"
     nb = _named_board(rec)
@@ -354,7 +382,7 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
         if rec is None:
             r = dict(result=INCONCLUSIVE, why="no %s verdict for this board" % name, evidence=None)
         else:
-            ok, why = _fresh(rec, m, fingerprint, identities)
+            ok, why = _fresh(rec, m, fingerprint, identities, rule)
             if not ok:
                 r = dict(result=INCONCLUSIVE, why=why, evidence=rec.get("_path"))
             else:

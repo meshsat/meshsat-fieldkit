@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 68 rule-board pairs of the 313 the set is judged on.** A pair held by a
+**13 decisions are open and they hold 68 rule-board pairs of the 328 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -137,7 +137,7 @@ the ask has to settle.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| SCH-004 | a safety line fails safe | A, B, C, D, E, P | INCONCLUSIVE, not computed |
+| SCH-004 | a safety line fails safe | A, B, C, D, E, P | PASS, not computed |
 
 
 ### Decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part
@@ -300,7 +300,7 @@ already buys is guaranteed to, and the qualification plan gained the test method
 |---|---|---|---|
 | ENV-001 | operating envelope declared | A, B, C, D, E, E5, P | INCONCLUSIVE |
 | ISO-001 | creepage and clearance | A, B, C, D, E, E5, P | INCONCLUSIVE, not computed |
-| THM-001 | every dissipating part has a path | A, B, C, D, E, P | INCONCLUSIVE, not computed |
+| THM-001 | every dissipating part has a path | A, B, C, D, E, P | INCONCLUSIVE |
 
 
 ### Decision 35: which published current-rating model this project's copper is judged against

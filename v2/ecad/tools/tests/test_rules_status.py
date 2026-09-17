@@ -378,3 +378,48 @@ def t_a_verdict_under_an_older_rule_set_does_not_stand_in_front_of_a_current_one
     same_old = copy.deepcopy(old); same_old["policy"]["rule_set_fingerprint"] = S._fingerprint_now()
     assert not S._supersedes(new, same_old), \
         "a reading that declares its input absent replaced one that had it, under the same rule set"
+
+
+def _rec(fp_set, rule_fps=None, ts="2026-09-17T12:00:00Z"):
+    r = {"tool": "t", "ts": ts, "verdict": "PASS", "policy": {"rule_set_fingerprint": fp_set}}
+    if rule_fps: r["policy"]["rule_fingerprints"] = rule_fps
+    return r
+
+
+def t_a_reading_is_stale_when_its_own_rule_changed_and_not_when_another_did():
+    """17 September 2026. Correcting ten rules' board lists marked THREE HUNDRED readings stale, and all but
+    fifteen were about rules whose demands had not changed: the sweep re-took them in six minutes and the
+    set-level ones by hand in twenty, which is a tax paid every time the registry is corrected. A verdict names
+    the rules it decides and carries a digest of each, so the question is asked rule by rule."""
+    m = {"evidence": {"epoch": "2026-09-01T00:00:00Z"}}
+    rid = R.load()["rules"][0]["id"]
+    mine = R.rule_fingerprints()[rid]
+    rule = {"id": rid}
+    # the whole registry moved, this rule did not: the reading stands
+    ok, why = S._fresh(_rec("an-older-set-fingerprint", {rid: mine}), m, "a-new-set-fingerprint", None, rule)
+    assert ok, "a reading whose own rule is unchanged was called stale: %s" % why
+    # this rule's own demands moved: the reading is history
+    ok, why = S._fresh(_rec("an-older-set-fingerprint", {rid: "0000000000000000"}), m, "a-new-set-fingerprint", None, rule)
+    assert not ok and rid in why, "a reading taken under a different version of its own rule was accepted: %s" % why
+
+
+def t_a_verdict_with_no_per_rule_digest_is_judged_as_it_always_was():
+    """Every verdict written before this change carries only the set fingerprint, and the fallback is the whole
+    of the old behaviour: a change anywhere in the registry makes it stale, which is what it was written under."""
+    m = {"evidence": {"epoch": "2026-09-01T00:00:00Z"}}
+    rule = {"id": R.load()["rules"][0]["id"]}
+    ok, why = S._fresh(_rec("the-set-it-was-taken-under"), m, "the-set-it-was-taken-under", None, rule)
+    assert ok, why
+    ok, why = S._fresh(_rec("the-set-it-was-taken-under"), m, "a-different-set", None, rule)
+    assert not ok and "rule set" in why, why
+
+
+def t_the_writer_stamps_the_digest_of_every_rule_a_verdict_decides():
+    import verdict as V
+    d = tempfile.mkdtemp(prefix="verdict-rulefp-")
+    rid = R.load()["rules"][0]["id"]
+    V.write("t_stamp", V.PASS, counts={"x": 1}, denominator=1, rules=[rid], out_dir=d, quiet=True)
+    rec = json.load(open(os.path.join(d, "t_stamp.verdict.json"), encoding="utf-8"))
+    fps = (rec.get("policy") or {}).get("rule_fingerprints") or {}
+    assert fps.get(rid) == R.rule_fingerprints()[rid], \
+        "the verdict does not carry the digest of the rule it decides: %s" % fps
