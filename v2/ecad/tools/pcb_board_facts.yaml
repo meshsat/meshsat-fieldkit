@@ -37,6 +37,7 @@ a:
   max_rail_current_a: 18
   energy_source: false          # carries the pack node, does not contain cells
   carries_pack_node: true
+  external_ports: true  # the connectors whose conductors leave the case, declared in boards/a.json
   fuses: [F1 25 A mini blade]
   isolation_barrier: false
   poe: sourcing                 # generates +54V_POE for B
@@ -70,6 +71,7 @@ b:
   max_rail_current_a: 21
   energy_source: false
   carries_pack_node: false
+  external_ports: true  # the connectors whose conductors leave the case, declared in boards/b.json
   coin_cell: true
   fuses: [F1 2 A polyfuse, F2 0.5 A, F3 0.5 A]
   isolation_barrier: true       # H5007NL Ethernet magnetics on the wall port, the only galvanic barrier in the product
@@ -105,6 +107,7 @@ c:
   max_rail_current_a: 1
   energy_source: false
   carries_pack_node: false
+  external_ports: true  # the connectors whose conductors leave the case, declared in boards/c.json
   fuses: []
   isolation_barrier: false
   poe: none
@@ -139,6 +142,7 @@ d:
   max_rail_current_a: 2
   energy_source: false
   carries_pack_node: false
+  external_ports: true  # the connectors whose conductors leave the case, declared in boards/d.json
   fuses: []
   isolation_barrier: false
   poe: none
@@ -170,6 +174,7 @@ e:
   max_rail_current_a: 18
   energy_source: false
   carries_pack_node: true
+  external_ports: true  # the connectors whose conductors leave the case, declared in boards/e.json
   fuses: [F3 25 A pack, F1 10 A vehicle, F2 10 A solar]
   isolation_barrier: false      # the isolated TRACO of E4 was removed; the vehicle return joins kit ground
   poe: none
@@ -202,6 +207,7 @@ e5:
   max_rail_current_a: 10
   energy_source: false
   carries_pack_node: true
+  external_ports: false # a bare contact board: its targets mate inside the case
   fuses: []
   isolation_barrier: false
   poe: none
@@ -232,6 +238,7 @@ p:
   max_rail_current_a: 18
   energy_source: true           # THE battery board: 4S block, about 200 Wh
   carries_pack_node: true
+  external_ports: false # declares external_ports: [] with its reason
   cells_series: 4
   pack_energy_wh: 200
   fuses: [F1 25 A mini blade]

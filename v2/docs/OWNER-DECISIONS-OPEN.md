@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 66 rule-board pairs of the 300 the set is judged on.** A pair held by a
+**13 decisions are open and they hold 67 rule-board pairs of the 300 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -17,7 +17,7 @@ rule can be neither passed nor failed.
 | **28** | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, STK-001 | P | 2026-09-15 |
 | **29** | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
 | **30** | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
-| **31** | conductors leave the case and meet a chip with nothing in between, or only through an active part | TRN-001 | A, E | 2026-09-16 |
+| **31** | conductors leave the case and meet a chip with nothing in between, or only through an active part | TRN-001 | A, D, E | 2026-09-16 |
 | **32** | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | RET-004 | D, E | 2026-09-16 |
 | **33** | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | nothing today, see below | - | 2026-09-16 |
 | **34** | the kit has never had a written operating envelope and four rules resolve against nothing | ENV-001, ISO-001, THM-001 | A, B, C, D, E, E5, P | 2026-09-16 |
@@ -43,7 +43,7 @@ the longest is 172.9 mm of SCL
 | rule | | boards | result today |
 |---|---|---|---|
 | RET-001 | a continuous adjacent return path | C | INCONCLUSIVE |
-| RET-002 | plane-adjacency screen | C | FAIL |
+| RET-002 | plane-adjacency screen | C | INCONCLUSIVE |
 
 
 ### Decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route
@@ -59,8 +59,8 @@ build, which is what STK-001 fails on.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-002 | plane-adjacency screen | P | FAIL |
-| STK-001 | the stackup is declared, feasible and in the board | P | FAIL |
+| RET-002 | plane-adjacency screen | P | INCONCLUSIVE |
+| STK-001 | the stackup is declared, feasible and in the board | P | INCONCLUSIVE |
 
 
 ### Decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked
@@ -91,11 +91,19 @@ is built
 **The question:** clamp every exposed conductor at its entry, or accept the four paths that reach their clamp
 through an active part
 
-**Measured:** three boards and ten conductors; boards E and D are finished copper and held on it
+**Measured:** BOARD D IS IN THIS DECISION TOO, AND ITS GATE HAD BEEN SAYING SO WHILE THE REGISTRY SAID THE
+RULE DID NOT APPLY TO IT (17 September 2026). Board D declares four connectors whose conductors leave the
+case and `port_protect` reads SEVEN of its fourteen judged conductors reaching a semiconductor with nothing
+between: J_HS1 and J_HS2, the two headset jacks on the face that a person plugs a headset into, three
+conductors each (speaker, microphone, push to talk), and J_PAOUT, the 30 W power amplifier output. Its
+antenna jack J_ANT is the one that is answered: it is protected off board by the PolyPhaser GTH-SFF-AL
+arrestor at the bulkhead. The measurement was taken by cutting board D's deliverable folder, which the gate
+refused at that stage, so this is what stands between board D and the folder DOC-001 asks for. Boards A and
+E: three boards and ten conductors, and boards E and D are finished copper held on it.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| TRN-001 | every exposed port is protected | A, E | FAIL |
+| TRN-001 | every exposed port is protected | A, D, E | INCONCLUSIVE |
 
 
 ### Decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper
@@ -112,7 +120,7 @@ the same way. The two boards together are five vias.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-004 | ground-via proximity screen | D, E | FAIL |
+| RET-004 | ground-via proximity screen | D, E | INCONCLUSIVE |
 
 
 ### Decision 33: the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement
@@ -146,7 +154,7 @@ VOC sensor and the e-paper
 
 | rule | | boards | result today |
 |---|---|---|---|
-| PI-001 | conductor current capacity | A, E | FAIL |
+| PI-001 | conductor current capacity | A, E | INCONCLUSIVE |
 
 
 ### Decision 36: the intra-pair tolerance a differential pair is judged against
@@ -155,7 +163,7 @@ VOC sensor and the e-paper
 
 | rule | | boards | result today |
 |---|---|---|---|
-| INT-001 | each interface is designed to its own specification | A, B | FAIL |
+| INT-001 | each interface is designed to its own specification | A, B | INCONCLUSIVE |
 
 
 ### Decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency
@@ -186,8 +194,8 @@ correction of 16 September.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| CMP-002 | the package on the land is the package ordered | D | FAIL |
-| SUP-001 | every placed part is buyable | D | FAIL |
+| CMP-002 | the package on the land is the package ordered | D | INCONCLUSIVE |
+| SUP-001 | every placed part is buyable | D | INCONCLUSIVE |
 
 
 ### Decision 38: board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09
@@ -196,7 +204,7 @@ correction of 16 September.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| IMP-002 | a class clearance is never below the board minimum | B | FAIL |
+| IMP-002 | a class clearance is never below the board minimum | B | INCONCLUSIVE |
 
 
 ### Decision 39: the criterion a break in a signal's reference is judged against

@@ -1437,9 +1437,19 @@ rules:
      acceptable to the signal.
    classification: PHYSICS_PRINCIPLE
    applicability: CONDITIONAL
-   condition: {any: [{fact: interfaces, op: contains, value: ETHERNET}, {fact: interfaces, op: contains, value: USBC_PD},
+   condition: {any: [{fact: external_ports, op: truthy}, {fact: interfaces, op: contains, value: ETHERNET},
+                     {fact: interfaces, op: contains, value: USBC_PD},
                      {fact: interfaces, op: contains, value: BLIND_MATE_RF}, {fact: panel_face, op: truthy},
                      {fact: carries_pack_node, op: truthy}]}
+   # THE BOARD THAT DECLARES A CONDUCTOR LEAVING THE CASE IS IN SCOPE (17 September 2026). The condition was a
+   # list of interfaces and board properties, and it missed board D, which carries TWO HEADSET JACKS ON THE
+   # FACE, a VHF antenna SMA and a 30 W power amplifier output. Its gate has been measuring them all along:
+   # `port_protect` reads 7 of 14 conductors reaching a semiconductor with nothing between (J_HS1 and J_HS2
+   # three each, J_PAOUT one; J_ANT is protected off board by the arrestor at the bulkhead) and it REFUSED
+   # board D's deliverable this morning for exactly that. So the gate and the registry disagreed about whether
+   # the rule applies, and the rule's own rationale settles it: "a discharge at a panel switch or an antenna
+   # jack destroys the device behind it". Every board declares which of its connectors leave the enclosure and
+   # why; that declaration is the fact now, so the scope cannot drift from the thing being judged again.
    risk_class: [SAFETY, RELIABILITY, ELECTRICAL_FUNCTION]
    release_effect: BLOCKER
    source_status: SOURCE_UNVERIFIED
@@ -1453,7 +1463,7 @@ rules:
    verification_method: [MANUAL_REVIEW, SCRIPT]
    verification_phase: SCHEMATIC
    automation_feasibility: PARTIALLY_AUTOMATABLE
-   boards_affected: [a, b, c, e, p]
+   boards_affected: [a, b, c, d, e, p]
    interfaces_affected: [ETHERNET, USBC_PD, BLIND_MATE_RF, USB2, SMBUS]
    implementation_location: NONE_YET
    evidence_scope: [schematic_sha256]
