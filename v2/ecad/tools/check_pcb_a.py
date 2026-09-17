@@ -92,7 +92,20 @@ for _pair in sorted(set(n[:-2] for n in _names if n.endswith(("_P", "_N")) and (
     _lp, _ln = _tl.get(_pair + "_P", 0.0), _tl.get(_pair + "_N", 0.0)
     if not _lp and not _ln: continue
     if (_lp > 0) != (_ln > 0): check(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (_pair, _lp, _ln)); continue
-    print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(_lp - _ln) > 1.0 else "PASS ") + _pair, _lp, _ln, abs(_lp - _ln), "" if abs(_lp - _ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
+    # THE INTERFACE'S OWN BUDGET IS CITED BESIDE THE PROJECT'S (rule PAIR-001, 17 September 2026). The 1.00 mm
+    # this gate refuses at is a project decision and no interface's requirement; the sheet carries what each
+    # interface's own host asks for, with the clause it was read from, and a reader of this line sees both.
+    # Which of the two DECIDES is owner decision 36 and nothing here presumes it.
+    try:
+        import os as _osi, sys as _sysi
+        _sysi.path.insert(0, _osi.path.dirname(_osi.path.abspath(__file__)))
+        import interfaces as _ifc
+        _bmm, _iname, _isrc = _ifc.budget_for("a", _pair + "_P")
+    except Exception:
+        _bmm = _iname = _isrc = None
+    _cite = ("" if _bmm is None else
+             "; %s asks for %.2f mm (%s)" % (_iname, _bmm, (_isrc or "").strip()[:60]))
+    print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (("WARN " if abs(_lp - _ln) > 1.0 else "PASS ") + _pair, _lp, _ln, abs(_lp - _ln), "" if abs(_lp - _ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)", _cite))
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
     import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic

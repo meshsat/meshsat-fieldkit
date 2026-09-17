@@ -271,8 +271,8 @@ coverage:
 
  PAIR-001: {implementation: "pair_preroute.py, meander.py", verification: {tool: pair_match.sh, verdict: impedance_check, fixtures: tests/test_pair_leg_match.py},
    maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew budget is not cited beside it",
-   remediation: {action: "cite each interface's skew budget and judge against it", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [INT-001], p50_h: 3, p80_h: 8}}
+   note: "coupling and the 1 mm length gate are enforced; the 1 mm is a project number. 17 September 2026: the interface's own budget IS cited beside it now. interfaces.budget_for reads the sheet per net through each board's assignment, and both board gates that print a pair's mismatch print what that pair's own host asks for and the clause it was read from. Which of the two DECIDES is owner decision 36, which now carries the USB 2.0 specification's own 100 ps of allowed cable skew as the scale: this project's 1.00 mm is about 5.5 ps",
+   remediation: {action: "The CITATION is done (17 September 2026); the JUDGING is owner decision 36, which now has the numbers on both sides", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [INT-001], p50_h: 1, p80_h: 3}}
 
  SI-001: {implementation: "signal_class.py declarations", verification: {tool: edge_length.py, verdict: edge_length, fixtures: tests/test_edge_length.py},
    maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,

@@ -54,6 +54,29 @@ def _classes(project_file):
     return out, byname
 
 
+def budget_for(letter, net, spec_path=None):
+    """(mm, interface, source) for this net on this board, or (None, None, None).
+
+    THE INTERFACE'S OWN SKEW BUDGET, BESIDE THE PROJECT'S NUMBER (rule PAIR-001, 17 September 2026). The pair
+    gate refuses a pair over 1.00 mm of intra-pair mismatch, which is this project's decision and not any
+    interface's requirement, and the rule asks for the interface's own budget to be CITED beside it. This is
+    where a printer reads it: the sheet already carries the number and the clause it was read from, per
+    interface, and the per-board assignment says which interface a net belongs to."""
+    import fnmatch, yaml
+    try: spec = yaml.safe_load(open(spec_path or SPEC, encoding="utf-8"))
+    except Exception: return (None, None, None)
+    b = ((spec.get("boards") or {}).get(str(letter).lower()) or {})
+    bare = str(net).lstrip("/")
+    for a in (b.get("assignments") or []):
+        for pat in (a.get("patterns") or []):
+            if fnmatch.fnmatchcase(bare, pat):
+                i = (spec.get("interfaces") or {}).get(a.get("interface")) or {}
+                src = (i.get("sources") or [{}])[0]
+                return (i.get("intra_pair_mm"), a.get("interface"),
+                        "%s %s" % (src.get("title", ""), src.get("clause", "")))
+    return (None, None, None)
+
+
 def judge(spec_path=None, ecad=None, only=None, board_file=None):
     import yaml
     d = yaml.safe_load(open(spec_path or SPEC, encoding="utf-8"))

@@ -1030,8 +1030,11 @@ decision, and the interface's own budget is cited beside it.
 
 **If violated** Common-mode conversion, radiated emission at the pair's own rate, and link errors.
 
-**Today** coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew
-budget is not cited beside it
+**Today** coupling and the 1 mm length gate are enforced; the 1 mm is a project number. 17 September 2026: the
+interface's own budget IS cited beside it now. interfaces.budget_for reads the sheet per net through each
+board's assignment, and both board gates that print a pair's mismatch print what that pair's own host asks
+for and the clause it was read from. Which of the two DECIDES is owner decision 36, which now carries the USB
+2.0 specification's own 100 ps of allowed cable skew as the scale: this project's 1.00 mm is about 5.5 ps
 
 ## Signal Integrity
 

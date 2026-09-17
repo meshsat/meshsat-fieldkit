@@ -233,9 +233,12 @@ the rule stays unjudged, which is what 'no source' has to mean
 *Close it by* declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_mm per board; the measurement is already there to judge against it. Owner **OWNER**, after ENV-001. Effort P50 4h, P80 16h.
 
 **PAIR-001 a pair is coupled and matched** (BLOCKER, ENFORCED)  
-coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew
-budget is not cited beside it  
-*Close it by* cite each interface's skew budget and judge against it. Owner **SESSION**, after INT-001. Effort P50 3h, P80 8h.
+coupling and the 1 mm length gate are enforced; the 1 mm is a project number. 17 September 2026: the
+interface's own budget IS cited beside it now. interfaces.budget_for reads the sheet per net through each
+board's assignment, and both board gates that print a pair's mismatch print what that pair's own host asks
+for and the clause it was read from. Which of the two DECIDES is owner decision 36, which now carries the USB
+2.0 specification's own 100 ps of allowed cable skew as the scale: this project's 1.00 mm is about 5.5 ps  
+*Close it by* The CITATION is done (17 September 2026); the JUDGING is owner decision 36, which now has the numbers on both sides. Owner **SESSION**, after INT-001. Effort P50 1h, P80 3h.
 
 **RET-001 a continuous adjacent return path** (BLOCKER, SOURCE_UNVERIFIED)  
 16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
