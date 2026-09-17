@@ -218,8 +218,12 @@ def t_no_tool_asks_a_via_for_its_width_without_a_layer():
     has none: a line that identifies an item as a PCB_VIA may not then ask it for a bare width."""
     import os, re
     bad = []
-    for fn in sorted(os.listdir(TOOLS)):
-        if not fn.endswith(".py") or fn == "kicad_compat.py": continue
+    # 18 September 2026: pair_router/ as well, where occupancy.py asked every via for a bare width in its site test
+    # and B22's pair pass printed the assertion once per via.
+    files = [fn for fn in sorted(os.listdir(TOOLS)) if fn.endswith(".py")] + \
+            ["pair_router/" + fn for fn in sorted(os.listdir(os.path.join(TOOLS, "pair_router"))) if fn.endswith(".py")]
+    for fn in files:
+        if fn == "kicad_compat.py": continue
         src = open(os.path.join(TOOLS, fn), encoding="utf-8", errors="replace").read()
         for i, line in enumerate(src.splitlines(), 1):
             # the identifier this line has just called a via, asked for a bare width on the same line
