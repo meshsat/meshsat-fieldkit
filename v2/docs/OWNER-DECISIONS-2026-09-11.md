@@ -2434,3 +2434,38 @@ controller, and none of them is a high-speed interface by its own specification.
 layers, stated in nets, so the decision is taken against a number rather than an impression. The other side of
 that cost is still owed and is the same thing decisions 27 and 28 have been waiting for since 15 September:
 **a like-for-like price, four layers against six, from the ordering session.**
+
+---
+
+## Recorded, not asked: board E's shore fuse carries 80 percent of its rating, on copper rated the same as the fuse (17 September 2026)
+
+Rules PWR-003 and BAT-002 have had no authority for their SELECTION criteria since the registry was written:
+the fuses' own datasheets name SAE J1284 and ISO 8820-3, neither is free, and the makers' selection guides sit
+behind a host that refuses this one. **ECSS-Q-ST-30-11C Rev.2, "Derating, EEE components", 23 June 2021** is
+published free by the ECSS, and its clause 6.17 is a fuse selection criterion with its numbers. It is
+transcribed in `v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md` with the URL, the date and the sha256
+of the file read.
+
+With it enforced, the chain is clean at every stage but one:
+
+| stage | fuse | carries | of its rating | source can deliver |
+|---|---|---:|---:|---|
+| PACK_CELLS, DOCK_ENTRY, BOARD_A_NODE | 25 A ATOF | 10.0 A | **40 %** | 240 A, 9.6 times the rating |
+| **SHORE_INPUT** | **10 A ATOF** | **8.0 A** | **80 %** | not established: it is a vehicle's own battery, which is decision 34 |
+
+**The finding.** Board E's vehicle and shore inlet carries 8 A continuously through a 10 A blade fuse, on
+input copper rated 10 A. Table 6-17 sets 65 percent of the rating for a fuse at or below 85 C case
+temperature, falling to 50 percent at 110 C, and this kit's fuses sit inside a case with no vents by owner
+ruling, about 16 K above ambient with one module running.
+
+**Why it is recorded rather than asked.** The standard states its number for CERMET fuses and these are
+automotive blades, so the 65 percent is a screen rather than a limit this project can say the standard sets
+for it; what the standard does require, in 6.17.1a, is that another technology's derating be JUSTIFIED, and
+this stage justifies nothing. The fix is ordinary: **board E's input bands widen and the fuse goes to 15 A**,
+or **the declared continuous current comes down**, and either is a line in a generator that rides with board
+E's next generation, which is owed anyway because E is held by decision 31. Nothing about it is a trade-off
+for the owner to weigh; it is a number nobody had been able to check until the criterion had a source.
+
+**What the same clause settles in our favour**, and it is worth saying because it is the half that usually
+fails on a kit like this: 6.17.3c asks that the source be able to deliver three times the fuse's rating so the
+fuse clears quickly, and at the pack blades it delivers **9.6 times**.
