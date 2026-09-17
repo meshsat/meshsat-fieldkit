@@ -9159,3 +9159,22 @@ product, the fixture carries a composite class, and E12 was stopped by PID and r
 blocked at `place_audit` for a different reason worth one sentence: the scratch tree had been staged without the
 board's `bypass-allow.txt`, so fourteen declared decoupling distances read as failures. An allow file is part of
 the board's declaration and travels with its phase directory.
+
+### 32.223 The B22 set was in the repo before anyone meant it to be, and its pre-route runs (18 September 2026, 00:00 CEST; MESHSAT-862)
+
+**`b22_apply.py --dry-run` at 22:41 was not a dry run.** The scratch script's check flag was `--check`, so the call
+wrote the sixteen rectangles of 32.216 into `gen_pcb_b3.py`, the underside SWD headers onto the surface-mount
+land in `gen_sch_b.py` and `PLACE_FINE_MARGIN 2.0` into `boards/b.json`, and two later commits (the PANEL class,
+c161b3d8, and the B21 note, b02e2fef) carried them without saying so. Found at 21:57 UTC when the same script,
+run against a scratch tree on the hub, reported every anchor missing: they were missing because they had
+already been replaced. **The state is coherent and it is the B22 design**: 32.216 measured that the three changes
+only work together, and all three are in; `boards/b.json` says how they got there and the script's `--dry-run`
+is a check now. The procedural fault is recorded because a change that enters the tree unannounced is the shape
+of every attribution defect this record carries, whatever its merit.
+
+**B22's pre-route runs on the hub** in `/root/biso22`, a tree from the runner's phase directory with today's tools
+(U10 through `ic()`, the M.2 and fan mechanical pads declared, the PANEL class at 0.8 mm), PHASE=B22, through
+the placement, the escapes, the pairs and the gates. What it has to read against is 32.216's own measurement of
+the set: 0 hard, no overflow, 1,496 escapes, 259 pads without one, 10 predicted collisions, 32 of 68 pairs; and
+what its route has to beat is B21's 0 hard and 416 unrouted at forty hours, which is why the route is the
+partition of 32.91 and not twenty plain passes.
