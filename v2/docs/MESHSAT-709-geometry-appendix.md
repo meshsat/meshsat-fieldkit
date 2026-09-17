@@ -9325,3 +9325,11 @@ close it on its own, which is honest: the rest is the generator's (a wider class
 rail's transition as `power_copper` lays for board A). Declared `finish.via_parallel` on A, B, C, D, E and P; it
 runs before the ground vias in `finish.sh`, and the running trees (A44, A45, E12, B22, A43) carry it for their
 finishes.
+
+**Addendum, 01:20 CEST: decision 38 closed by the copper, and the fixer declared where the suite asks.** B21's
+project file carries every class at or above the board's own 0.127 mm (`class_floor` PASS, 5 classes, none below),
+which is decision 38's recommendation as it stood, so the register's rule that an open decision may not hold a rule
+that passes everywhere closed it with that reading; nothing was lowered. `via_parallel` is declared in
+`pcb_closers.yaml` (defect class, why the prevention failed, what prevents it) and classified as a post-route tool
+that lays from an explicit list, which the two admission rules of the suite ask of anything that creates copper.
+Suite 972 passing after the four declarations.

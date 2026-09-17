@@ -95,6 +95,16 @@ closers:
      after the route, and the grid is where those vias come from"
    evidence: "the exposed-pad thermal vias of 12 September, where solder paste was being read as copper"
 
+ - tool: via_parallel.py
+   changes_copper: true
+   defect_class: "a barrel carrying more than IPC-2221 rates its wall for (PI-003), at a rail's layer transition"
+   why_prevention_failed: "the router lays one via per layer transition because one via is a connection; which
+     barrel the current crosses is known only once dc_drop has solved the routed board's mesh"
+   repeated: true
+   prevented_by: "a via field under the rail's transition laid by the generator (power_copper.py's pattern on
+     board A) or a wider class via; the fixer halves the worst case on E11 and answers one of D12's two, the rest
+     is the generator's (18 September 2026)"
+
  - tool: return_via.py
    changes_copper: true
    defect_class: "a signal via with no ground via within 1.5 mm at a reference change"

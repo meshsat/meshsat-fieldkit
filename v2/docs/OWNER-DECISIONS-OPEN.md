@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 68 rule-board pairs of the 334 the set is judged on.** A pair held by a
+**12 decisions are open and they hold 67 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -24,7 +24,6 @@ rule can be neither passed nor failed.
 | **35** | which published current-rating model this project's copper is judged against | PI-001 | A, E | 2026-09-16 |
 | **36** | the intra-pair tolerance a differential pair is judged against | INT-001 | A, B | 2026-09-16 |
 | **37** | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | CMP-002, SUP-001 | D | 2026-09-16 |
-| **38** | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | IMP-002 | B | 2026-09-17 |
 | **39** | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
 
 ## Each one, with what it holds
@@ -137,7 +136,7 @@ the ask has to settle.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| SCH-004 | a safety line fails safe | A, B, C, D, E, P | INCONCLUSIVE, PASS, not computed |
+| SCH-004 | a safety line fails safe | A, B, C, D, E, P | PASS, not computed |
 
 
 ### Decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part
@@ -402,33 +401,6 @@ correction of 16 September.
 | SUP-001 | every placed part is buyable | D | INCONCLUSIVE |
 
 
-### Decision 38: board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09
-
-**The question:** lower board B's own minimum to the fabricator's floor, or widen the two classes
-
-**Recommended:** widen the two classes to the board's own 0.127 mm minimum: it changes NO pair geometry,
-because DIFF100's pair gap is 0.200 and USB's is 0.127, so both impedances stay exactly where they are, and
-it removes a clearance the router believes and the board does not offer. Lowering the board minimum instead
-would reopen the CM5 receptacle escape scheme, which is where the 0.127 came from
-
-**Measured:** MEASURED FROM THE PROJECT FILE AND THE FABRICATOR'S OWN PAGE, 17 September 2026. Board B
-declares DIFF100 and USB at a clearance of 0.100 mm while the board's own minimum is 0.127, which is what
-`class_floor` refuses in its own words, a class below the board minimum is a lie the router believes.
-Buildability is not the question: the capability page in this tree gives 0.09 / 0.09 mm at 1 oz multilayer
-and board B is six layers at 1 oz, so 0.100 is inside what the fabricator offers. The 0.127 is the CM5 0.4 mm
-receptacle escape scheme's own clearance, which is where that minimum came from. WIDENING THE TWO CLASSES
-CHANGES NO PAIR GEOMETRY: DIFF100's pair gap is 0.200 mm and USB's is 0.127, both at or above 0.127, so
-raising the CLEARANCE to the board's minimum leaves both differential impedances exactly as they are and no
-pair needs re-tuning. What it can cost is routing room between a pair and other nets, and only a route prices
-that; B21 is mid-route and would have to be re-run to say by how much. Lowering the board's minimum instead
-legalises the classes by moving the bar rather than the copper, and it loosens the escape scheme the 0.127
-was taken from, which is the one geometry on this board that three compute modules at 0.4 mm pitch depend on.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| IMP-002 | a class clearance is never below the board minimum | B | INCONCLUSIVE |
-
-
 ### Decision 39: the criterion a break in a signal's reference is judged against
 
 **The question:** rule this project's own per-class tolerances, derive them per net from a declared edge
@@ -461,4 +433,5 @@ SOURCE_UNVERIFIED for exactly that reason.
 | 24 | board B lays 65 of its 113 pairs and the pair hold releases no board under 113 | owner ruling 15 September 02:40: the decision is the session's; option 2 taken, boards/b.json declares pair_coupled_fraction 0.80 by length |
 | 25 | board A's USB_WALL pair is 1.47 mm apart and nothing in the tree can close it | closed the same day and needs nothing: the pair took a ribbon of its own (J_AB2, end row) |
 | 26 | board C is one connection short and no tool in this tree can close it | closed by the route: six-layer C and then C17 reached 0 hard and 0 unrouted |
+| 38 | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered |
 

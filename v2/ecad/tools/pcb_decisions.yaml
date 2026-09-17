@@ -372,7 +372,8 @@ decisions:
   - n: 38
     title: "board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09"
     asked: 2026-09-17
-    status: open
+    status: closed
+    outcome: "answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered"
     ask: "lower board B's own minimum to the fabricator's floor, or widen the two classes"
     recommendation: >-
       widen the two classes to the board's own 0.127 mm minimum: it changes NO pair geometry, because DIFF100's
