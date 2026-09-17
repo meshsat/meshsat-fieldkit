@@ -185,6 +185,19 @@ decisions:
     asked: 2026-09-17
     status: open
     ask: "lower board B's own minimum to the fabricator's floor, or widen the two classes"
+    evidence: "MEASURED FROM THE PROJECT FILE AND THE FABRICATOR'S OWN PAGE, 17 September 2026. Board B declares
+      DIFF100 and USB at a clearance of 0.100 mm while the board's own minimum is 0.127, which is what
+      `class_floor` refuses in its own words, a class below the board minimum is a lie the router believes.
+      Buildability is not the question: the capability page in this tree gives 0.09 / 0.09 mm at 1 oz multilayer
+      and board B is six layers at 1 oz, so 0.100 is inside what the fabricator offers. The 0.127 is the CM5
+      0.4 mm receptacle escape scheme's own clearance, which is where that minimum came from.
+      WIDENING THE TWO CLASSES CHANGES NO PAIR GEOMETRY: DIFF100's pair gap is 0.200 mm and USB's is 0.127, both
+      at or above 0.127, so raising the CLEARANCE to the board's minimum leaves both differential impedances
+      exactly as they are and no pair needs re-tuning. What it can cost is routing room between a pair and other
+      nets, and only a route prices that; B21 is mid-route and would have to be re-run to say by how much.
+      Lowering the board's minimum instead legalises the classes by moving the bar rather than the copper, and it
+      loosens the escape scheme the 0.127 was taken from, which is the one geometry on this board that three
+      compute modules at 0.4 mm pitch depend on."
     blocks:
       IMP-002: [b]
   - n: 39
