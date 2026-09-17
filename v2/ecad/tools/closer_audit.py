@@ -140,7 +140,18 @@ def judge(closers=None, finish=None, letter=None):
     # A BOARD WITH NO CHAIN HAS NO CLOSERS. Board E5 is the bare dock block: copper, holes and contact targets,
     # generated from board A's own board file, with no schematic and no finish. Asking which of its repairs are
     # prevented is asking about repairs that never happen (16 September 2026).
-    if letter and not os.path.exists(os.path.join(HERE, "boards", "%s.json" % letter.lower())):
+    # 17 September 2026: board E5 has a table now, because the rules that ask a BOARD a question need somewhere
+    # to read its answer, and the table says `chain: false`. The discriminator is the declaration, not the
+    # absence of the file.
+    _bt_path = os.path.join(HERE, "boards", "%s.json" % (letter or "").lower())
+    _no_chain = not os.path.exists(_bt_path)
+    if not _no_chain:
+        try:
+            import json as _json
+            _no_chain = _json.load(open(_bt_path, encoding="utf-8")).get("chain") is False
+        except Exception:
+            _no_chain = False
+    if letter and _no_chain:
         notes.append("board %s has no chain and therefore no closer runs on it" % letter.upper())
         return dict(declared=len(decl), in_finish=len(run), fails=[], uncovered=[], notes=notes)
     for t in sorted(run - set(decl)):

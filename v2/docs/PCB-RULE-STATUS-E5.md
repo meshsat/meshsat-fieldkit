@@ -7,13 +7,13 @@ Manifest **2026-09-16.1**, rule set **4a03222f910fe5f5**, evidence epoch **2026-
 
 **Readiness: NOT_READY**
 
-Measured on board E5 (pcb-e5-block, 686b29a734c55b9a).
+Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 16 | 64.0 |
+| PASS | 18 | 72.0 |
 | FAIL | 2 | 8.0 |
-| INCONCLUSIVE | 7 | 28.0 |
+| INCONCLUSIVE | 5 | 20.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **25** | 100.0 |
 
@@ -22,7 +22,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a).
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e5 PASS of 33 |
-| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no safe_lines_e5 verdict for this board |
+| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_e5 PASS of 0 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 0 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e5 PASS of 0 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e5 PASS of 0 |
@@ -31,7 +31,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a).
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | sensitive_nodes INCONCLUSIVE |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no interfaces_e5 verdict for this board |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no port_protect_e5 verdict for this board |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_e5 PASS of 0 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_e5 PASS of 27 |
