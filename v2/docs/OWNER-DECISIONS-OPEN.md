@@ -115,6 +115,11 @@ ports 1 to 3 would break a transformer-less link and nothing would say why.
 
 **The question:** which device performs the wipe, and on what edge
 
+**Recommended:** the panel controller does the wipe on the falling edge, because it is the only device that
+both sees the switch and can reach the secure element, and the drives are erased by the modules on its
+message with the limitation written down: a module that is not running cannot be erased by anything on this
+line. It is firmware and a sentence in the software contract, not a conductor
+
 **Measured:** THE TITLE IS TOO HARSH ON THE HARDWARE AND THE NETLISTS SAY SO (read 17 September 2026). The
 line reaches exactly one processor and that processor can reach the thing to be erased. On board C,
 ZEROIZE_HW carries the panel switch SW_ZERO, its pull R10 and its capacitor C20 to U3 PIN 34, the RP2040
@@ -140,6 +145,12 @@ the ask has to settle.
 **The question:** clamp every exposed conductor at its entry, or accept the four paths that reach their clamp
 through an active part
 
+**Recommended:** rule decision 34 first, then clamp at the entry every conductor that reaches a semiconductor
+with nothing between it, which is board D's seven and is the cheap half: those are parts and board area on a
+board whose copper is finished. The paths that reach their clamp through an active part are the expensive
+half and are worth accepting only where that active part is itself rated for the level the envelope states,
+which is why the envelope comes first
+
 **Measured:** BOARD D IS IN THIS DECISION TOO, AND ITS GATE HAD BEEN SAYING SO WHILE THE REGISTRY SAID THE
 RULE DID NOT APPLY TO IT (17 September 2026). Board D declares four connectors whose conductors leave the
 case and `port_protect` reads SEVEN of its fourteen judged conductors reaching a semiconductor with nothing
@@ -158,6 +169,10 @@ E: three boards and ten conductors, and boards E and D are finished copper held 
 ### Decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper
 
 **The question:** accept the reach beyond 1.5 mm where every nearer site is occupied, or move the parts
+
+**Recommended:** accept the reach beyond 1.5 mm and record the distance per via, because a longer return loop
+is a shorter one than none: it is five vias on boards D and E at 1.75 to 2.25 mm and thirty-two on board C,
+and buying the last 0.75 mm costs a placement and a route on boards that are finished copper
 
 **Measured:** BOARD E IS THE SAME CASE AND IS MEASURED NOW (17 September 2026). Of its 131 signal vias the
 rule judges 60: 79 sit in fine-pitch fans and 65 carry a signal with no edge worth a return loop. Four are
@@ -182,6 +197,10 @@ one left for it.
 ### Decision 33: the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement
 
 **The question:** the budget the rail is judged against, and which board pays for the widening
+
+**Recommended:** leave the split as it is declared, A four points and D two of the six the codec's own
+datasheet asks for: both boards pass their own share today, the total is no longer this project's number, and
+the only thing that would reopen it is a measured drop moving
 
 **Measured:** THE ASK IS NARROWER THAN WHEN IT WAS WRITTEN, because one of the three numbers acquired a
 source on 16 September and the intent files carry it (read 17 September). The rail's TOTAL is 6 percent and
@@ -256,6 +275,10 @@ IPC-2152. What each model asks for at 10 K: 10 A needs 0.65 mm2 (IPC-2221A), 0.9
 
 **The question:** this project's 1.00 mm, or each interface's own number from its host's datasheet
 
+**Recommended:** each interface's own number from its host's datasheet, because on the evidence that exists
+it costs one 0.14 mm meander on one pair of board A, which `pair_match.sh` already runs in every finish,
+while this project's 1.00 mm leaves that pair at twice the budget the compute module states for it
+
 **Measured:** BOARD A'S THREE PAIRS ARE MEASURED AND THE RULING IS NEARLY FREE ON IT (17 September 2026, read
 off both A40 and A41, which give IDENTICAL numbers because the pre-router lays a pair from the PLACEMENT and
 the route does not touch it): USB_D8 P 139.47 mm against N 139.75, mismatch 0.29 mm; USB_E6 0.12 mm; USB_WALL
@@ -306,6 +329,11 @@ correction of 16 September.
 ### Decision 38: board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09
 
 **The question:** lower board B's own minimum to the fabricator's floor, or widen the two classes
+
+**Recommended:** widen the two classes to the board's own 0.127 mm minimum: it changes NO pair geometry,
+because DIFF100's pair gap is 0.200 and USB's is 0.127, so both impedances stay exactly where they are, and
+it removes a clearance the router believes and the board does not offer. Lowering the board minimum instead
+would reopen the CM5 receptacle escape scheme, which is where the 0.127 came from
 
 **Measured:** MEASURED FROM THE PROJECT FILE AND THE FABRICATOR'S OWN PAGE, 17 September 2026. Board B
 declares DIFF100 and USB at a clearance of 0.100 mm while the board's own minimum is 0.127, which is what
