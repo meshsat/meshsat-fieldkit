@@ -287,7 +287,12 @@ is outside it and two are comfortably inside. Closing it is 0.14 mm of length ad
 `meander.py` does and `pair_match.sh` already runs three rounds of in every finish. Board B's number needs
 its routed board and B21 is mid-route. So on the evidence that exists, ruling the interface's own number
 costs one small meander on one pair of one board, and ruling this project's 1.00 mm leaves a pair at twice
-the budget its host states.
+the budget its host states. AND THE SPECIFICATION'S OWN SCALE IS IN THE TREE, which matters because it says
+neither option is unsafe: USB 2.0 section 7.1.3 permits the CABLE ALONE 100 ps of skew between D+ and D-
+(v2/vendor/standards/usb-2-0-specification-2024-09-27.md), and 1.00 mm of trace on these stackups is about
+5.5 ps, eighteen times less. The compute module's 0.15 mm is its design guide's RECOMMENDATION rather than a
+conformance requirement, so the question is whose recommendation this project follows and what it costs,
+which is one 0.14 mm meander today, and not whether a board would work.
 
 | rule | | boards | result today |
 |---|---|---|---|
