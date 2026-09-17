@@ -25,9 +25,9 @@
  "tool": "energy_chain",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "eaafe91e15b758ce"
+  "tools_tree_sha": "49c5dae5cbebd02a"
  },
- "ts": "2026-09-17T05:35:06Z",
+ "ts": "2026-09-17T08:28:02Z",
  "verdict": "PASS",
  "version": "unknown"
 }

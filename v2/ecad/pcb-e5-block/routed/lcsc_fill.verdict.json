@@ -1,0 +1,33 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "blank_over_allowance": 0,
+  "rejected_code": 0,
+  "rows": 0,
+  "stale_allow_lines": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": null
+ },
+ "missing_input": null,
+ "note": "this board places no part, so there is no bill of materials to judge: board E5 places no part: its deliverable folder at E5 carries a CPL with a header and no row, and no bill of materials. A declared zero, not an absence",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "lcsc_fill",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "49c5dae5cbebd02a"
+ },
+ "ts": "2026-09-17T08:28:02Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

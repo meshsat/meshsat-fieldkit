@@ -869,7 +869,11 @@ def t_the_sweep_judges_the_folder_of_the_declared_phase_and_not_the_first_one_a_
     This is the "a tool picks a board by globbing a directory" rule of 11 September, in a tool written after
     it. The phase a board is cutting is declared in boards/<letter>.json and nowhere else."""
     src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
-    assert "boards/$L.json" in src, "the sweep does not read the declared phase for the order-code gate"
+    # the phase comes from the board's own declaration: its table, or the registry's facts for a board that
+    # has no table (board E5). Either is a declaration; a glob over the folders is not.
+    assert ('boards", "%s.json" % letter' in src or "boards/$L.json" in src), \
+        "the sweep does not read the declared phase for the order-code gate"
+    assert "phase_declared" in src, "the sweep has no phase for a board with no board table"
     # COMMENTS DO NOT RESOLVE ANYTHING, and the first version of this read them: the paragraph explaining where
     # the allow file lives names `<project>/out/jlc/<name>-bom.csv` and was read as a resolution without a phase
     # (17 September 2026, the same lesson closer_audit.py carries about counting a tool named in a comment).
@@ -878,7 +882,10 @@ def t_the_sweep_judges_the_folder_of_the_declared_phase_and_not_the_first_one_a_
     assert lines, "no line in the sweep resolves a bill of materials"
     for l in lines:
         if "-bom.csv" not in l: continue
-        assert "$_PHASE" in l, "a bill of materials is resolved without the declared phase: %s" % l.strip()
+        # `$_FOLDER` is the folder AT the declared phase, resolved one line above from `$_PHASE`, so a path
+        # built on it is anchored to the declaration exactly as one built on `$_PHASE` is.
+        assert ("$_PHASE" in l or "$_FOLDER" in l), \
+            "a bill of materials is resolved without the declared phase: %s" % l.strip()
 
 
 def t_the_sweep_removes_the_verdicts_of_the_gates_it_is_about_to_run():
@@ -1064,3 +1071,25 @@ def t_a_phase_on_the_command_line_must_be_the_one_the_board_declares():
     os.environ["ROUTEFLOW_PHASE_UNDECLARED"] = "1"
     try: assert RF.resolve_phase(prof, "C99")["phase"] == "C99"
     finally: os.environ.pop("ROUTEFLOW_PHASE_UNDECLARED", None)
+
+
+def t_the_sweep_finds_a_phase_for_a_board_with_no_board_table():
+    """Board E5 is a bare contact interposer with no schematic chain and therefore no `boards/e5.json`. The
+    sweep read its declared phase from that file alone, got an empty string, skipped the order-code gate with
+    "e5 declares no phase", and left CMP-002 and SUP-001 inconclusive on the board whose deliverable folder is
+    the one in this release that passes its own gate. The registry's facts have carried `phase_declared: E5`
+    since they were written, and the sweep already falls back to them for the board's NAME (17 September 2026).
+    """
+    import os, sys
+    src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
+    body = "\n".join(l for l in src.splitlines() if not l.strip().startswith("#"))
+    assert "phase_declared" in body, "the sweep has no fallback for a board with no board table"
+    sys.path.insert(0, TOOLS)
+    import rules_lib
+    f = rules_lib.board_facts()
+    for letter, fact in sorted(f.items()):
+        if not isinstance(fact, dict) or str(letter).startswith("_"): continue
+        p = os.path.join(TOOLS, "boards", "%s.json" % letter)
+        if os.path.exists(p): continue
+        assert fact.get("phase_declared"), \
+            "board %s has neither a board table nor a declared phase in the facts" % letter

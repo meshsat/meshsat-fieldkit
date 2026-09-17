@@ -10,6 +10,7 @@
  "denominator": 2,
  "evidence": [],
  "inputs": {
+  "board": "e5",
   "list": "pcb_reliability.yaml"
  },
  "missing_input": null,
@@ -24,9 +25,9 @@
  "tool": "reliability",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "eaafe91e15b758ce"
+  "tools_tree_sha": "49c5dae5cbebd02a"
  },
- "ts": "2026-09-17T05:35:02Z",
+ "ts": "2026-09-17T08:27:58Z",
  "verdict": "PASS",
  "version": "unknown"
 }
