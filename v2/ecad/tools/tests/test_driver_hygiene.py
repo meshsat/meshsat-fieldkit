@@ -101,6 +101,7 @@ CLASSIFIED = {
     "power_copper.py": GENERATORS,
     "finish_stubs.py": POST_ROUTE, "fix_pad_escapes.py": POST_ROUTE, "gap_closer_checked.py": POST_ROUTE,
     "stub_router.py": POST_ROUTE, "pair_preroute.py": POST_ROUTE, "pair_shadow.py": POST_ROUTE,
+    "via_parallel.py": POST_ROUTE,   # lays beside the barrels dc_drop's solved mesh names, in the order of that file
     "zone_pad_via.py": POST_ROUTE, "escape_prune.py": POST_ROUTE, "stub_accept.py": POST_ROUTE,
     "rail_prune.py": POST_ROUTE,   # removes the router's parallel copper on a rail; it re-creates a piece only to put back one the net needed (15 Sep 2026)
     "cleanup_dangling.py": POST_ROUTE, "straighten.py": POST_ROUTE, "via_merge.py": POST_ROUTE,
