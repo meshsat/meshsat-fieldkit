@@ -29,7 +29,7 @@
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "f62fab5f77761937"
+   "sha256_16": "55b0964b7db5c17d"
   }
  },
  "missing_input": null,
@@ -44,9 +44,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:50:59Z",
+ "ts": "2026-09-17T17:48:14Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

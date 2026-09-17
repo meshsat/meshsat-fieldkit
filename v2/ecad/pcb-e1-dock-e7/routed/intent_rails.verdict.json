@@ -25,9 +25,9 @@
  "tool": "intent_rails",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:55:29Z",
+ "ts": "2026-09-17T17:52:50Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -24,10 +24,10 @@
  ],
  "tool": "interfaces_a",
  "tools": {
-  "git_head": "fd6fac9b3fd6",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "git_head": "",
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:58:45Z",
+ "ts": "2026-09-17T17:48:34Z",
  "verdict": "FAIL",
- "version": "fd6fac9b3fd6"
+ "version": "unknown"
 }

@@ -30,6 +30,9 @@
  "note": "every net whose class declares a single-ended impedance, judged by the width it was routed at on each layer against the board's own stackup, by the closed form alone because this project's 2D-solver calibration is for a PAIR; the ground clearance, the via fence and the launch are not judged here",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-001": "02283178003e5772"
+  },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
@@ -38,9 +41,9 @@
  "tool": "rf_line",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:51:13Z",
+ "ts": "2026-09-17T17:48:29Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

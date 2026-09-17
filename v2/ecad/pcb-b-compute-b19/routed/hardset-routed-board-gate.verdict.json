@@ -22,8 +22,8 @@
  },
  "denominator": 15,
  "evidence": [
-  "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 6.2310 mm",
   "   clearance | Pad 8 [/BANK2_UPD_P] of U210 on F.Cu / Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm",
+  "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 6.2310 mm",
   "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 92.6570 mm",
   "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 57.2907 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
   "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 0.4105 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
@@ -48,7 +48,7 @@
   },
   "drc": {
    "path": "out/pcb-b-compute-drc.json",
-   "sha256_16": "dc038e616668fc2a"
+   "sha256_16": "58a2422b52da5dee"
   }
  },
  "missing_input": null,
@@ -64,9 +64,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:52:39Z",
+ "ts": "2026-09-17T17:49:53Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -27,9 +27,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:51:16Z",
+ "ts": "2026-09-17T17:48:33Z",
  "verdict": "PASS",
  "version": "unknown"
 }
