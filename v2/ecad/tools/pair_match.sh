@@ -14,12 +14,31 @@ hard() {   # board, report -> hard + unrouted
   python3 ../tools/hardset.py "$2" post --counts "$c" --label "pair match trial" >/dev/null || { rm -f "$c"; echo 999999; return; }
   awk '{print $1 + $2}' "$c"; rm -f "$c"
 }
+# WHAT IS WORTH MEANDERING IS NOT ONLY WHAT FAILS (17 September 2026). The gate refuses a pair over this
+# project's 1.00 mm, which is owner decision 36; the board check already PRINTS the number the interface's own
+# host asks for beside each pair, because rule PAIR-001 asks for the citation. Board A's three pairs read 0.29,
+# 0.12 and 0.01 mm against a compute module that asks for 0.15, so one of them passes the gate and misses the
+# part's own budget by 0.14 mm of copper. Meandering to the TIGHTER number costs a trombone and is neutral to
+# the ruling: if the interface's number is ruled, board A already meets it and needs no rework; if this
+# project's is ruled, a tighter match is not worse. The REFUSAL is unchanged and still the 1.00 mm, because
+# making the gate stricter would decide the owner's question for him.
+actionable() {
+  report | python3 -c '
+import sys, re
+for ln in sys.stdin:
+    m = re.search(r"mismatch ([0-9.]+) mm", ln); a = re.search(r"asks for ([0-9.]+) mm", ln)
+    if not m: continue
+    over_gate = ln.startswith("WARN")
+    over_part = bool(a) and float(m.group(1)) > float(a.group(1)) + 1e-9
+    if over_gate or over_part: sys.stdout.write(ln)
+'
+}
 for round in 1 2 3; do
-  warn=$(report | grep "^WARN" || true); [ -z "$warn" ] && { echo "pair_match: every pair within 1 mm (round $round)"; report | cut -c1-120; exit 0; }
+  warn=$(actionable || true); [ -z "$warn" ] && { echo "pair_match: every pair within 1 mm and within its own interface's budget (round $round)"; report | cut -c1-120; exit 0; }
   echo "$warn" | cut -c1-120
   cp $N.kicad_pcb out/$N-pair-round$round.kicad_pcb; H0=$(hard $N.kicad_pcb out/$N-pair-drc0.json)
   echo "$warn" | while read -r line; do
-    pair=$(echo "$line" | sed -E 's/^WARN ([A-Za-z0-9_]+) pair length.*/\1/'); lp=$(echo "$line" | sed -E 's/.*length P ([0-9.]+) mm.*/\1/'); ln=$(echo "$line" | sed -E 's/.*, N ([0-9.]+) mm.*/\1/')
+    pair=$(echo "$line" | sed -E 's/^(WARN|PASS|FAIL)? *([A-Za-z0-9_]+) pair length.*/\2/'); lp=$(echo "$line" | sed -E 's/.*length P ([0-9.]+) mm.*/\1/'); ln=$(echo "$line" | sed -E 's/.*, N ([0-9.]+) mm.*/\1/')
     short=$(python3 -c "print('${pair}_N' if $ln < $lp else '${pair}_P')"); extra=$(python3 -c "print(round(abs($lp - $ln), 2))")
     # MEANDER_LOCKED: a pair the pre-router laid end to end has no unlocked copper, and this gate then
     # refuses a board nothing can fix. The DRC check below is the guard: a round that raises the hard
@@ -33,5 +52,10 @@ PYY
   H1=$(hard $N.kicad_pcb out/$N-pair-drc1.json); echo "pair_match: round $round, DRC hard+open before $H0 after $H1"
   if [ "$H1" -gt "$H0" ]; then echo "pair_match: the meanders hurt the board, round $round restored"; cp out/$N-pair-round$round.kicad_pcb $N.kicad_pcb; fi
 done
-warn=$(report | grep "^WARN" || true); [ -z "$warn" ] && { echo "pair_match: every pair within 1 mm"; exit 0; }
+# THE REFUSAL IS THE GATE'S NUMBER, NOT THE INTERFACE'S: a pair inside 1.00 mm and outside its part's budget
+# is REPORTED here and does not stop the finish, because which of the two decides is owner decision 36.
+warn=$(report | grep "^WARN" || true)
+near=$(actionable | grep -v "^WARN" || true)
+[ -n "$near" ] && { echo "pair_match: still outside the interface's own budget (reported, not refused):"; echo "$near" | cut -c1-140; }
+[ -z "$warn" ] && { echo "pair_match: every pair within 1 mm"; exit 0; }
 echo "pair_match: STILL OVER 1 mm after 3 rounds:"; echo "$warn" | cut -c1-120; exit 1
