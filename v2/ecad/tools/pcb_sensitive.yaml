@@ -19,6 +19,19 @@ generated: "2026-09-16"
 
 boards:
 
+ e5:
+   switch_nets: []
+   _switch_why: "nothing on this board switches: it is plated contact targets, wire lands and mounting holes,
+     generated from board A's own board file, and every conductor on it belongs to a circuit that lives on
+     another board"
+   nodes: []
+   _nodes_why: "THIS BOARD HAS NO ANALOGUE NODE OF ITS OWN, which is a declared zero and not a gap (17
+     September 2026, when ANA-001 reached it because it carries the pack node). The pack node crosses it as
+     four targets and four returns; the conductors that SENSE anything, the coulomb counter's Kelvin pair and
+     the thermistor, are board P's and are declared there, and the twelve signal targets carry board A's nets
+     and are declared on board A, where the parts that read them live. What this board owes the analogue rule
+     is contact resistance and current, which MEC-001 and PI-001 judge."
+
  a:
    switch_nets: ["*_SW", "*_SW1", "*_SW2", "B33_SW"]
    nodes:
