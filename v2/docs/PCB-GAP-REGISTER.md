@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**26 of 57 rules carry a gap.**
+**25 of 57 rules carry a gap.**
 
 ## absent (4)
 
@@ -178,7 +178,7 @@ defect of this morning one level down, and it means no board in this set current
 outside its declared exceptions.  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (12)
+## source or applicability unresolved (11)
 
 **BAT-002 the energy chain is bounded end to end** (BLOCKER, ENFORCED)  
 the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end 16
@@ -201,7 +201,7 @@ and every protective element is in its board's netlist. What it PRINTS rather th
 time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own
 authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status
 SOURCE_UNVERIFIED.  
-*Close it by* obtain an authority for the SELECTION CRITERIA (SAE J1284 or ISO 8820-3, which the fuse's own datasheet names, or an accessible maker's selection guide; littelfuse.com refuses this host), then the rule's limits are sourced and the gate that already passes decides. Owner **SESSION**. Effort P50 4h, P80 12h.
+*Close it by* DONE 17 September 2026: ECSS-Q-ST-30-11C Rev.2 clause 6.17 is the authority and the gate enforces it. What remains is a DESIGN item rather than a document: board E's shore inlet carries 8.0 A of a 10.0 A fuse on 10 A of copper, which is 80 percent of the fuse rating, and it needs wider input copper and a larger fuse or a lower declared continuous current. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -236,25 +236,6 @@ the rule stays unjudged, which is what 'no source' has to mean
 coupling and the 1 mm length gate are enforced; the 1 mm is a project number and the interface's own skew
 budget is not cited beside it  
 *Close it by* cite each interface's skew budget and judge against it. Owner **SESSION**, after INT-001. Effort P50 3h, P80 8h.
-
-**PWR-003 protection coordination** (BLOCKER, ENFORCED)  
-two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on
-file 16 September 2026: the coordination study exists as data and as a gate, energy_chain.py over
-pcb_energy_chain.yaml, 69 checks passing. For every protective element it carries the rated and peak current
-of the path, the element's rating and its I2t figure with the datasheet it comes from, the fault current
-available at that point with its derivation, and the element downstream it protects; the melting time at the
-worst fault is printed from the I2t (4.3 ms for the 25 A blades at 480 A, 2.9 ms for the 10 A at 200 A). The
-interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. WHAT REMAINS is the
-authority for the selection criteria themselves, which the fuse's datasheet names as SAE J1284 and ISO 8820-3
-and this tree does not hold; littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED
-(the CLK-001 shape): the gate decides four things that are definitional rather than empirical, that the
-element is at or below the rating of what it protects, at or above the path's own declared peak, able to
-interrupt the fault current declared at its position, and followed by the stage it protects; plus that every
-rating's source file is in this tree and every protective element is in its board's netlist. What it PRINTS
-rather than decides is the melting time from the I2t figure, because a clearing curve is a curve and this
-reads one point of it. The rule's own authority for the SELECTION CRITERIA is still not in the tree, which is
-why the registry keeps source_status SOURCE_UNVERIFIED.  
-*Close it by* obtain an authority for the SELECTION CRITERIA (SAE J1284 or ISO 8820-3, which the fuse's own datasheet names, or an accessible maker's selection guide; littelfuse.com refuses this host), then the rule's limits are sourced and the gate that already passes decides. Owner **SESSION**, after ENV-001, BAT-002. Effort P50 8h, P80 20h.
 
 **RET-001 a continuous adjacent return path** (BLOCKER, SOURCE_UNVERIFIED)  
 16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
@@ -352,10 +333,10 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (31)
+## covered (32)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-001,
 CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, IMP-002, INT-001, MEC-001, PI-001, PI-002, PI-003, PLC-001,
-PLN-001, PWR-001, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001, SGN-002,
-STK-001, SUP-001, TRN-001, TST-001, VIA-001
+PLN-001, PWR-001, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001,
+SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
 
