@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 65 rule-board pairs of the 300 the set is judged on.** A pair held by a
+**13 decisions are open and they hold 66 rule-board pairs of the 300 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -18,7 +18,7 @@ rule can be neither passed nor failed.
 | **29** | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
 | **30** | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
 | **31** | conductors leave the case and meet a chip with nothing in between, or only through an active part | TRN-001 | A, E | 2026-09-16 |
-| **32** | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | RET-004 | D | 2026-09-16 |
+| **32** | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | RET-004 | D, E | 2026-09-16 |
 | **33** | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | nothing today, see below | - | 2026-09-16 |
 | **34** | the kit has never had a written operating envelope and four rules resolve against nothing | ENV-001, ISO-001, THM-001 | A, B, C, D, E, E5, P | 2026-09-16 |
 | **35** | which published current-rating model this project's copper is judged against | PI-001 | A, E | 2026-09-16 |
@@ -100,11 +100,19 @@ through an active part
 
 ### Decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper
 
-**The question:** accept the 2.25 mm reach, or move the part
+**The question:** accept the reach beyond 1.5 mm where every nearer site is occupied, or move the parts
+
+**Measured:** BOARD E IS THE SAME CASE AND IS MEASURED NOW (17 September 2026). Of its 131 signal vias the
+rule judges 60: 79 sit in fine-pitch fans and 65 carry a signal with no edge worth a return loop. Four are
+left, and for each one the fixer searched outward and found the nearest FREE ground site beyond the declared
+1.5 mm: E6_BST at 1.75 mm, Q1_G at 1.75, Q2_G at 1.75, USB_E6_N at 2.25. It takes them, because a longer
+return loop is a shorter one than none, and the judge is not moved by a via outside the radius, so they reach
+this decision as a measured choice rather than disappearing into a pass. Board D's single site reads 2.25 mm
+the same way. The two boards together are five vias.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-004 | ground-via proximity screen | D | FAIL |
+| RET-004 | ground-via proximity screen | D, E | FAIL |
 
 
 ### Decision 33: the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement

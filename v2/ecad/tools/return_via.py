@@ -107,13 +107,24 @@ def _reference(layer, cu, planes):
     return frozenset(inner or refs)
 
 
-def judge(b, path=None, radius=RETURN_MM):
+def judge(b, path=None, radius=RETURN_MM, identity=None):
     """Every signal via is judged unless it sits in a fine-pitch fan (exempt) or every layer its net's tracks attach on
     references the SAME ground plane (same_plane: the return current never leaves that plane, so no ground via is owed;
     a via from F.Cu to In2 on a stack whose In1 is the ground plane is that case). A via whose attached layers reference
     different planes, or a power plane, needs a ground via or a plated ground pad within `radius`."""
-    path = path or b.GetFileName(); it = intent.load(path) or {}
-    signals, _ = signalnets.classify(b, path, it.get("rails", {}).keys())
+    path = path or b.GetFileName()
+    # A DERIVED COPY MUST NOT DECIDE A NET'S CLASS BY ITS OWN FILENAME (17 September 2026). The dry run works
+    # on `<board>-return_via-dry.kicad_pcb`, and BOTH lookups that make this rule proportionate are keyed on
+    # the board's name: `intent.load` finds no intent beside a file with that stem, and `signal_class` finds
+    # no letter in the board table for it, so every rail and every declaration disappeared and all 131 of
+    # board E's signal vias were judged as though they were fast. The judge, run on the board itself, judges
+    # 60 and asks for 4. The fixer then placed 22 ground vias for nets the rule does not ask about (a fan
+    # tachometer, an opto inhibit, a Geiger input, a current monitor) and its report could not be compared
+    # with the verdict at all. `identity` is the board this geometry IS, and it is the original path whenever
+    # the caller is working on a copy of it.
+    identity = identity or path
+    it = intent.load(identity) or {}
+    signals, _ = signalnets.classify(b, identity, it.get("rails", {}).keys())
     # WHAT A VIA TRANSITION COSTS DEPENDS ON THE SIGNAL (rule RET-004, 16 September 2026; the owner's
     # instruction of the same day names this rule as a heuristic that must not become a law). A return via
     # exists so the return current can follow its signal through a reference change without going the long way
@@ -126,9 +137,17 @@ def judge(b, path=None, radius=RETURN_MM):
     try:
         import signal_class as _sc
         _targets = {k for k, v in (it.get("pair_classes") or {}).items() if v}
-        _cls = _sc.classify(b, path, _targets, None)[0]
-    except Exception:
-        _cls = {}
+        _cls = _sc.classify(b, identity, _targets, None)[0]
+        _cls_why = ""
+    except Exception as _e:
+        # AND IT SAYS WHEN IT COULD NOT CLASSIFY. An empty classification makes every net UNKNOWN, which this
+        # rule judges at the strictest bar: that is the safe direction and it must never be silent, because a
+        # count taken that way is not the same measurement as one taken with the declarations.
+        _cls, _cls_why = {}, str(_e)[:120] or _e.__class__.__name__
+    if not _cls:
+        print("return_via: NO SIGNAL CLASSIFICATION for %s (%s): every net is judged as though it were fast, "
+              "which is the strict direction and not the same reading as the gate's"
+              % (os.path.basename(identity), _cls_why or "the board table names no letter for this file"))
     fine = _fine_pads(b); gnd = _gnd_points(b)
     cu = list(b.GetEnabledLayers().CuStack()); planes = _plane_layers(b)
     ends = {}
@@ -150,7 +169,7 @@ def judge(b, path=None, radius=RETURN_MM):
         judged += 1
         if not _near(pt, gnd, radius):
             lacking.append("%s at (%.2f, %.2f)" % (net.lstrip("/"), pt[0], pt[1])); positions.append((t, pt))
-    return {"judged": judged, "exempt": exempt, "same_plane": same_plane, "slow": slow,
+    return {"classified": bool(_cls), "judged": judged, "exempt": exempt, "same_plane": same_plane, "slow": slow,
             "lacking": lacking, "positions": positions, "signals": len(signals)}
 
 
@@ -219,6 +238,7 @@ def _own_hard(d, new_pts, tol=0.01):
 
 
 def fix(path, dry=False, radius=RETURN_MM):
+    _identity = path                           # what this geometry IS, whatever a copy of it is called
     if dry:   # work on a copy beside the board, with its project file, so the DRC judges it against the right classes
         tmp = os.path.splitext(path)[0] + "-return_via-dry.kicad_pcb"; shutil.copy(path, tmp)
         for e in (".kicad_pro", ".kicad_prl"):
@@ -232,7 +252,7 @@ def fix(path, dry=False, radius=RETURN_MM):
     clr = max(mm(ds.m_MinClearance), 0.127)
     gnd_net = b.FindNet("GND")
     if gnd_net is None: print("return_via: the board has no GND net; nothing placed"); return 0
-    before = judge(b, path, radius)
+    before = judge(b, path, radius, identity=_identity)
     print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d on a net with no edge to return, %d without a ground via within %.1f mm (%d signal nets)" % (before["judged"], before["exempt"], before["same_plane"], before.get("slow", 0), len(before["lacking"]), radius, before["signals"]))
     if not before["lacking"]: return 0
     keep = path + ".return_via.bak"; shutil.copy(path, keep)
@@ -278,7 +298,7 @@ def fix(path, dry=False, radius=RETURN_MM):
         print("return_via: round %d placed %d, %d refused by the DRC and retried" % (rnd, len([1 for _, s in new if s not in bad]), len(bad)))
         if not bad: break
     b = pcbnew.LoadBoard(path); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(path, b)
-    h1, u1, _ = _measure(path); after = judge(b, path, radius)
+    h1, u1, _ = _measure(path); after = judge(b, path, radius, identity=_identity)
     if h1 > h0 or u1 > u0:
         print("return_via: HURT (hard %d -> %d, unrouted %d -> %d): reverting every ground via" % (h0, h1, u0, u1)); shutil.copy(keep, path); os.remove(keep); return 1
     os.remove(keep)
