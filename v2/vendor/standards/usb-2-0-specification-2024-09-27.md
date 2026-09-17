@@ -14,7 +14,7 @@ redistributed here.
 | sha256 of the package | `5fe9c53c04033818af396e8852b3acbca5c3a76ba92fab549fd81cd0ea7b3692` |
 | sha256 of `usb_20.pdf` inside it | `d39698a33486c399124af92bd02e4f978fd9a836b5cf4e52e6e4633eb1d89f61` |
 | size of `usb_20.pdf` | 5,983,789 bytes |
-| clauses transcribed | 7.1.2.1, 7.1.2.2, Table 7-9 (full speed), Table 7-10 (low speed) |
+| clauses transcribed | 7.1.2.1, 7.1.2.2, 7.1.3, Table 7-9 (full speed), Table 7-10 (low speed), the cable row of Table 7-9 |
 
 ## Why this project reads a specification for a rise time
 
@@ -73,3 +73,30 @@ transceiver may be slower and no conforming one is faster.
   document that is not in this tree, so those nets carry no declared edge and are named as undeclared rather
   than given this one.
 * **Any non-USB net.** The 0.5 ns and 4 ns figures are properties of a USB transceiver and of nothing else.
+
+
+## 7.1.3 Cable Skew, and the number a board is judged against
+
+> The maximum skew introduced by the cable between the differential signaling pair (i.e., D+ and D- (TSKEW))
+> must be less than 100 ps and is measured as described in Section 6.7.
+
+and the same figure in the specification's own table of cable characteristics:
+
+| parameter | symbol | section | max | unit |
+|---|---|---|---|---|
+| Cable Skew | TSKEW | 7.1.3 | **100** | ps |
+
+**What this project takes from it, and it is the only thing it takes.** This is what the SPECIFICATION allows
+the cable alone to contribute between the two halves of a USB 2.0 pair. It is not a board budget and it does
+not license any particular trace mismatch. What it does establish is the SCALE of the skew this interface was
+designed to tolerate, which is the question owner decision 36 asks:
+
+* this project judges a routed pair at **1.00 mm** of intra-pair length mismatch;
+* on an outer layer of the stackups this kit uses, propagation is about **5.5 ps/mm**
+  (`edge_length.t_pd_ps_per_mm`, er 4.3, microstrip), so 1.00 mm is about **5.5 ps**;
+* the specification permits the CABLE, on its own, **100 ps**, eighteen times that.
+
+**What it does NOT settle.** The compute module's own design guide asks for 0.10 mm on the same pair, which is
+good practice and not a conformance requirement, and the tighter numbers in this kit belong to interfaces
+whose specifications are not free and are not in this tree: PCIe at 0.10 mm and HDMI and Ethernet at 0.15 mm,
+each read from the HOST's datasheet. Nothing here says anything about those.
