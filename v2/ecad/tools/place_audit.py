@@ -232,6 +232,56 @@ def main(a):
         bb = z.GetBoundingBox(); c = bb.GetCenter()
         if not any(k.GetFirstLayer() == z.GetFirstLayer() and k.Outline().Contains(c) for k in keepouts): bare.append("%s (%s on %s)" % (z.GetZoneName()[:30], z.GetNetname().lstrip("/"), b.GetLayerName(z.GetFirstLayer())))
     if bare: lines.append("WARN  %d rail pour(s) on an outer layer with no track keep-out on their layer, which the router may slice (A34's PA head): %s" % (len(bare), "; ".join(bare[:8]) + (" ..." if len(bare) > 8 else "")))
+    # 6. THE POUR-ISLAND CLASS, PREDICTED AS FAR AS A PLACED BOARD CAN (17 September 2026, rule PLC-002's last
+    # remaining clause). `pour_stitch` repairs a filled island that carries no via of its own net, on every
+    # board and every round, and the closer register recorded that nothing predicts it before the route is
+    # bought. Half of it can be seen here and half cannot, and the half that cannot is said out loud rather
+    # than implied: an island the ROUTER cuts out of a pour does not exist yet on a placed board, and no
+    # reading of this board can produce it. What does exist is a pour that is born islanded, which is a
+    # generator fact and the cheaper half to fix, because it needs no route to find and no route to prove.
+    # It reads the fill the board already carries and never refills: a stage that runs in every chain must not
+    # buy a minute of zone filling, and a board whose zones are unfilled is told so instead of being passed.
+    # AND IT NEVER TAKES A CHAIN DOWN WITH IT. This stage blocks every placement, so a reading it cannot take
+    # is reported as a reading it cannot take: the KiCad 9 geometry calls below are the ones that differ most
+    # between builds, and a gate that raises here would refuse a board for a reason that has nothing to do with
+    # the board.
+    _isl, _unfilled, _zones = [], 0, 0
+    try:
+      for z in b.Zones():
+         if z.GetIsRuleArea(): continue
+         _zones += 1
+         _net = z.GetNetname().lstrip("/")
+         _lay = z.GetFirstLayer()
+         try: _polys = z.GetFilledPolysList(_lay)
+         except BaseException: _polys = None
+         if _polys is None or _polys.OutlineCount() == 0:
+             _unfilled += 1; continue
+         _sites = [t.GetPosition() for t in b.GetTracks()
+                   if t.GetClass() == "PCB_VIA" and t.GetNetname().lstrip("/") == _net]
+         _sites += [pad.GetPosition() for f in fps for pad in f.Pads()
+                    if pad.GetNetname().lstrip("/") == _net and pad.GetDrillSizeX() > 0]
+         for _i in range(_polys.OutlineCount()):
+             _o = _polys.Outline(_i)
+             _a = abs(_o.Area()) / 1e12
+             if _a < 1.0: continue                     # under a square millimetre is not a pour, it is a sliver
+             if any(_o.PointInside(pcbnew.VECTOR2I(int(pt.x), int(pt.y))) for pt in _sites): continue
+             _c = _o.BBox().Centre()
+             _isl.append("%s on %s, %.0f mm2 at (%.1f, %.1f)"
+                         % (_net or "no net", b.GetLayerName(_lay), _a, _c.x / 1e6, _c.y / 1e6))
+    except BaseException as _e:
+        lines.append("INFO  the pour-island prediction could not be taken on this board (%s: %s); nothing is "
+                     "claimed about that class here" % (type(_e).__name__, str(_e)[:80]))
+    if _unfilled:
+        lines.append("INFO  %d of %d zone(s) carry no fill on this board, so the pour-island class was not "
+                     "predicted for them (fill the board before this stage to have it read)" % (_unfilled, _zones))
+    if _isl:
+        lines.append("WARN  %d pour island(s) already carry no via or plated pad of their own net BEFORE any "
+                     "route, which is the class pour_stitch repairs afterwards: %s"
+                     % (len(_isl), "; ".join(_isl[:6]) + (" ..." if len(_isl) > 6 else "")))
+    elif _zones and not _unfilled:
+        lines.append("INFO  every filled pour on this board reaches a via or a plated pad of its own net; the "
+                     "islands a ROUTER cuts out of a pour cannot be predicted from a placed board and are the "
+                     "other half of this class")
     n_esc = sum(1 for r in env); lines.append("INFO  escapes measured on %d of %d fine-pitch parts (%d parts, %d locked pieces on the board)" % (n_esc, len(fine), len(fps), len(locked)))
     for l in lines: print("place_audit: " + l)
     print("place_audit: %d predicted collision(s) among %d fine-pitch parts of %d; %s" % (coll, len(fine), len(fps), "FAIL" if coll else "ALL PASS"))

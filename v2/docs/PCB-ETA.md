@@ -11,8 +11,8 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 56 h | 169 h |
-| the same at 6 hours a day | 9.3 days | 28.2 days |
+| engineering effort, one worker | 54 h | 164 h |
+| the same at 6 hours a day | 9.0 days | 27.3 days |
 | critical path through the dependencies | 19 h | 72 h |
 
 Read the table above as WORK REMAINING and never as a delivery date. The two are different questions: a
@@ -24,7 +24,7 @@ figures are below.
 
 | class | items | P50 | P80 | what it means |
 |---|---|---|---|---|
-| PARALLEL_AGENT | 13 | 40 h | 123 h | session work with no shared file, so several may run at once in their own worktrees |
+| PARALLEL_AGENT | 13 | 38 h | 118 h | session work with no shared file, so several may run at once in their own worktrees |
 | OWNER | 10 | 34 h | 187 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | VENDOR_OR_STANDARD_WAIT | 5 | 29 h | 134 h | a third party's answer, or a document that has to be obtained and read |
 | PARALLEL_BOX | 3 | 12 h | 34 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
@@ -34,10 +34,10 @@ figures are below.
 
 | | P50 | P80 |
 |---|---|---|
-| session pool | 7.3 days | 22.5 days |
+| session pool | 7.0 days | 21.7 days |
 | fleet pool | 0.2 days | 0.7 days |
 | longest dependency chain | 3.2 days | 12.0 days |
-| **design package ready for prototype** | **7.3 days** | **22.5 days** |
+| **design package ready for prototype** | **7.0 days** | **21.7 days** |
 
 ## The programme, cumulative elapsed days from the day this page was generated
 
@@ -45,9 +45,9 @@ figures are below.
 |---|---|---|---|
 | DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 7 days | 22 days | COMPUTED |
 | FABRICATION_AND_ASSEMBLY | 19 days | 52 days | VENDOR_PUBLISHED |
-| BENCH_BRING_UP | 33 days | 98 days | DECLARED_ESTIMATE |
-| LAB_VALIDATION | 54 days | 188 days | DECLARED_ESTIMATE |
-| PRODUCTION_RELEASE_READY | 84 days | 308 days | DECLARED_ESTIMATE |
+| BENCH_BRING_UP | 33 days | 97 days | DECLARED_ESTIMATE |
+| LAB_VALIDATION | 54 days | 187 days | DECLARED_ESTIMATE |
+| PRODUCTION_RELEASE_READY | 84 days | 307 days | DECLARED_ESTIMATE |
 
 Only the first milestone is computed from this project's own register. Every stage after it is a vendor's
 published figure or this session's declared estimate, and NONE of them has been measured here, because

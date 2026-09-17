@@ -1552,7 +1552,7 @@ only when prevention is shown to be impossible and that is written down.
 | risk | YIELD, DOCUMENTATION |
 | verified by | MANUAL_REVIEW, SCRIPT at ROUTED_BOARD (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
-| implementation | NONE_YET |
+| implementation | closers declared in pcb_closers.yaml; the pour-island half predicted by place_audit.py |
 | maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one closer, expires the next phase |

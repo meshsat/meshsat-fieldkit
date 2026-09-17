@@ -406,3 +406,60 @@ def t_a_hole_a_net_punches_in_its_own_reference_is_not_a_break_in_it():
     assert f and "SIG" in f[0], "30 mm of track with no reference under it must still fail: %s" % f
     assert anti == 0.0, ("with no pour on the board, a point near a via was called an anti-pad: there is no "
                          "fill for it to be a hole in (%.2f mm)" % anti)
+
+
+def _island_board(pcbnew, tmp, name, stitch):
+    """A board with TWO pours of one net: one with a plated pad of that net inside it and one with nothing.
+
+    The second is the class `pour_stitch` repairs after every route, a filled island that reaches no via and no
+    plated pad of its own net, and it is built here without a router because a pour can be born that way.
+    """
+    b = _board(pcbnew, 60.0, 30.0)
+    def _set(x, net):
+        ni = b.FindNet(net)
+        if ni is None:
+            ni = pcbnew.NETINFO_ITEM(b, net); b.Add(ni)
+        x.SetNet(ni)
+    for i, (x0, x1) in enumerate(((2.0, 25.0), (35.0, 58.0))):
+        z = pcbnew.ZONE(b); z.SetLayer(pcbnew.F_Cu); _set(z, "GND"); o = z.Outline(); o.NewOutline()
+        for (x, y) in ((x0, 2.0), (x1, 2.0), (x1, 28.0), (x0, 28.0)): o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        z.SetZoneName("pour%d" % i); b.Add(z)
+    path = os.path.join(tmp, name + ".kicad_pcb"); b.Save(path)
+    b = pcbnew.LoadBoard(path)
+    if stitch:                                   # a via of the pour's own net, inside the FIRST pour only
+        v = pcbnew.PCB_VIA(b)
+        v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10.0), pcbnew.FromMM(15.0)))
+        v.SetDrill(pcbnew.FromMM(0.3)); v.SetWidth(pcbnew.FromMM(0.6))
+        ni = b.FindNet("GND")
+        if ni is not None: v.SetNet(ni)
+        b.Add(v)
+    pcbnew.ZONE_FILLER(b).Fill(b.Zones()); b.Save(path)
+    return path
+
+
+def t_a_pour_born_with_no_via_of_its_own_net_is_predicted_before_the_route():
+    """RULE PLC-002's LAST CLAUSE (17 September 2026). `pour_stitch` repairs a filled island with no via of its
+    own net on every board and every round, and the closer register recorded that nothing predicted that class
+    before a route was bought. Half of it is predictable on a placed board and half is not: an island the
+    ROUTER cuts out of a pour does not exist yet, and `place_audit` says so rather than implying it is clean.
+
+    Two worlds: two pours of one net, one with a via of that net inside it and one with nothing. The bare pour
+    must be named with its area and its layer, and the stitched one must not.
+    """
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="pour-island-")
+    bare = _island_board(pcbnew, tmp, "bare", stitch=True)     # pour0 stitched, pour1 bare
+    out = subprocess.run([sys.executable, os.path.join(TOOLS, "place_audit.py"), bare],
+                         capture_output=True, text=True, timeout=600,
+                         env=dict(os.environ, VERDICT_DIR=tmp)).stdout
+    assert "pour island(s) already carry no via" in out, \
+        "a pour with no via of its own net was not predicted:\n%s" % out[-900:]
+    assert "GND on F.Cu" in out, "the island is named without its net and layer:\n%s" % out[-900:]
+
+    both = _island_board(pcbnew, tmp, "both", stitch=False)    # neither stitched: two islands, not one
+    out2 = subprocess.run([sys.executable, os.path.join(TOOLS, "place_audit.py"), both],
+                          capture_output=True, text=True, timeout=600,
+                          env=dict(os.environ, VERDICT_DIR=tmp)).stdout
+    n1 = [l for l in out.splitlines() if "pour island(s) already carry no via" in l]
+    n2 = [l for l in out2.splitlines() if "pour island(s) already carry no via" in l]
+    assert n1 and n2 and int(n1[0].split("WARN  ")[1].split(" ")[0]) < int(n2[0].split("WARN  ")[1].split(" ")[0]), \
+        "the via inside the first pour changed nothing, so the prediction is not reading the vias:\n%s\n%s" % (n1, n2)
