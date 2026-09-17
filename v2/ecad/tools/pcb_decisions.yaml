@@ -81,9 +81,16 @@ decisions:
     title: "board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper"
     asked: 2026-09-16
     status: open
-    ask: "accept the 2.25 mm reach, or move the part"
+    ask: "accept the reach beyond 1.5 mm where every nearer site is occupied, or move the parts"
+    evidence: "BOARD E IS THE SAME CASE AND IS MEASURED NOW (17 September 2026). Of its 131 signal vias the rule
+      judges 60: 79 sit in fine-pitch fans and 65 carry a signal with no edge worth a return loop. Four are
+      left, and for each one the fixer searched outward and found the nearest FREE ground site beyond the
+      declared 1.5 mm: E6_BST at 1.75 mm, Q1_G at 1.75, Q2_G at 1.75, USB_E6_N at 2.25. It takes them, because
+      a longer return loop is a shorter one than none, and the judge is not moved by a via outside the radius,
+      so they reach this decision as a measured choice rather than disappearing into a pass. Board D's single
+      site reads 2.25 mm the same way. The two boards together are five vias."
     blocks:
-      RET-004: [d]
+      RET-004: [d, e]
   - n: 33
     title: "the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement"
     asked: 2026-09-16

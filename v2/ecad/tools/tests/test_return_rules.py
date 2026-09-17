@@ -117,7 +117,8 @@ def t_the_fixer_may_reach_past_the_target_but_the_judge_may_not():
     assert "OUTER = (" in src, "the outer rings are gone"
     i_outer = src.index("OUTER = (")
     # the judge is called with the radius it was given, never with a widened one
-    for call in ("before = judge(b, path, radius)", "after = judge(b, path, radius)"):
+    for call in ("before = judge(b, path, radius, identity=_identity)",
+                 "after = judge(b, path, radius, identity=_identity)"):
         assert call in src, "the fixer stopped judging at the declared radius: %r" % call
     assert "judge(b, path, radius + " not in src and "judge(b, path, OUTER" not in src, \
         "the judge was widened to match the fixer, which is the bar moving"
@@ -227,3 +228,44 @@ def t_no_tool_asks_a_via_for_its_width_without_a_layer():
             if re.search(r"PCB_VIA\b", line) and re.search(r"\bv\.GetWidth\(\s*\)", line):
                 bad.append("%s:%d %s" % (fn, i, line.strip()[:90]))
     assert not bad, "a via is asked for its width with no layer, which asserts in KiCad 9: %s" % bad
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A DERIVED COPY MUST NOT DECIDE A NET'S CLASS BY ITS OWN FILENAME (17 September 2026, rule RET-004).
+#
+# The fixer's dry run works on `<board>-return_via-dry.kicad_pcb`, and BOTH lookups that make this rule
+# proportionate are keyed on the board's name: `intent.load` finds no intent beside a file with that stem and
+# `signal_class` finds no letter for it in the board table. So every rail and every declaration disappeared,
+# all 131 of board E's signal vias were judged as though they were fast where the judge judges 60 and asks for
+# 4, and the fixer placed 22 ground vias for a fan tachometer, an opto inhibit, a Geiger input and a current
+# monitor. Its report could not be compared with the verdict at all, which is how it went unnoticed.
+
+def _rv_src():
+    """return_via's source, read as text: this file runs where pcbnew is not, and the tool imports it."""
+    return open(os.path.join(TOOLS, "return_via.py"), encoding="utf-8").read()
+
+
+def t_the_judge_takes_an_identity_that_is_not_the_file_it_was_handed():
+    src = _rv_src()
+    assert "def judge(b, path=None, radius=RETURN_MM, identity=None):" in src, "the judge takes no identity"
+    assert "identity = identity or path" in src
+    for call in ("intent.load(identity)", "signalnets.classify(b, identity", "_sc.classify(b, identity"):
+        assert call in src, "the classification still keys on the copy's own path: %s" % call
+
+
+def t_the_fixer_passes_the_original_board_as_the_identity():
+    src = _rv_src()
+    i_fix = src.index("def fix(path, dry=False")
+    body = src[i_fix:src.index("\ndef ", i_fix + 10)] if "\ndef " in src[i_fix + 10:] else src[i_fix:]
+    assert "_identity = path" in body and body.index("_identity = path") < body.index("if dry:"), \
+        "the identity is taken after the path has been replaced by the copy"
+    assert body.count("identity=_identity") >= 2, "a judge call in the fixer still has no identity"
+
+
+def t_an_unclassified_run_says_so_instead_of_reporting_a_measured_zero():
+    """An empty classification makes every net UNKNOWN, which this rule judges at the strictest bar. That is
+    the safe direction and it must never be silent: the printed line used to read '0 on a net with no edge to
+    return', which is what a board with no slow nets also reads."""
+    src = _rv_src()
+    assert "NO SIGNAL CLASSIFICATION" in src, "the empty classification is silent again"
+    assert '"classified": bool(_cls)' in src, "the reading does not say whether it was classified"
