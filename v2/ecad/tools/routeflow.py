@@ -653,6 +653,22 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
                 if not dry: sh(expand(fin["argv"], project, ecad, name), project if fin.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, flog)
                 fst, fnote = judge_finish(flog, os.path.join(project, fin["clean_flag"]), os.path.join(project, fin.get("stub_log", "out/%s-stub.log" % name)), os.path.join(repo, prof.get("deliverable", "")) if prof.get("deliverable") else None)
                 journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status=fst, note=fnote))
+                # THE FINISHED BOARD IS KEPT, NOT ONLY THE ROUTED ONE (17 September 2026). `best-round<N>` is
+                # the board the ROUTER produced; the finish then spends an hour of stub router, direct closure,
+                # pruning and widening on it and usually ends with FEWER open connections. That board lives in
+                # the project directory, and the next round's pre stage regenerates straight over it. Board A's
+                # two arms tonight both lost theirs that way: A40 came out of its router at 25 open and its
+                # finish reached 20, A41 at 23, and after the remedy rounds started only the 25 and the 23
+                # survive. One file copy per round keeps the better artefact, whatever the round is judged.
+                try:
+                    _fb = os.path.join(rdir, "finished-round%d.kicad_pcb" % rnd)
+                    if not dry and os.path.isfile(os.path.join(project, name + ".kicad_pcb")):
+                        shutil.copy2(os.path.join(project, name + ".kicad_pcb"), _fb)
+                        journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="KEPT",
+                                              note="the finished board of this round is kept at %s" % os.path.relpath(_fb, project)))
+                except OSError as _e:
+                    journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="KEEP_FAILED",
+                                          note="the finished board could not be kept: %s" % str(_e)[:90]))
                 if fst == "CLEAN":
                     exp = prof.get("expect", {}); met = all(m is None or m <= exp.get("autoroute_minutes_max", 1e9) for m in mins.values())
                     journal(project, dict(run=rid, round=rnd, board=name, stage="expect", status="MET" if met else "MISSED", note="autoroute minutes %s against max %s" % (mins, exp.get("autoroute_minutes_max"))))

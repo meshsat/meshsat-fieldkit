@@ -1093,3 +1093,20 @@ def t_the_sweep_finds_a_phase_for_a_board_with_no_board_table():
         if os.path.exists(p): continue
         assert fact.get("phase_declared"), \
             "board %s has neither a board table nor a declared phase in the facts" % letter
+
+
+def t_the_finished_board_of_a_round_is_kept_and_not_only_the_routed_one():
+    """`best-round<N>.kicad_pcb` is what the ROUTER produced. The finish then spends an hour of stub router,
+    direct closure, pruning and widening on it and usually ends with FEWER open connections, and that board
+    lives in the project directory where the next round's pre stage regenerates straight over it. Board A's two
+    arms lost theirs that way on 17 September: the router left 25 and 23 open, the finishes reached 20 and 23,
+    and after the remedy rounds started only the router's boards survived. One file copy per round keeps the
+    better artefact."""
+    import os
+    src = open(os.path.join(TOOLS, "routeflow.py"), encoding="utf-8").read()
+    body = "\n".join(l for l in src.splitlines() if not l.strip().startswith("#"))
+    assert 'finished-round%d.kicad_pcb' in body, "routeflow does not keep the finished board of a round"
+    i = body.index("finished-round%d.kicad_pcb")
+    j = body.index("judge_finish(flog")
+    assert i > j, "the finished board is kept before the finish has run"
+    assert "shutil.copy2" in body[i - 400:i + 400], "the finished board is named but not copied"
