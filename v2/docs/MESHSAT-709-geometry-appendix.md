@@ -9232,3 +9232,15 @@ A44 and A45 on the hub at pass 20 each (A45's DSN carries two `class_class` rule
 E12 on the hub at 35 sessions with both class-pair rules in its DSN (`PWR,SENSE` against `SW,Default` and
 `SENSE,Default` against `SW,Default`, the comma-joined class names of 32.222); B22 partition stage 1; sweep 26.
 Suite 971 passing, 1 failing (the decisions page, re-rendered in the same commit), 25 skipped.
+
+**Addendum, 00:45 CEST: the pruned-escape gate would have crashed on its first real list.** Writing `pruned_gate`'s
+fixture pair against B22's own pruned list (seven rows: U101, U202, U302, U203, U204 and two more, each a GND thermal
+via refused for a resistor pad on the underside) found the gate unpacking FIVE fields from rows that have carried
+SEVEN columns since 8 September, when `escape_prune` was made to name the violation and what it hit (32.72). No
+finish had reached the gate with a non-empty list since (board B is the only board that declares the prune stage and
+its two finishes since then stopped earlier), so the defect was live and unmeasured. The gate reads the first five
+now and refuses a row with fewer; the defective fixture (a listed pad whose net's only copper ends 3 mm away) reads
+FAIL, the acceptable one (the track ending on the pad) PASS, both on the hub, and **the defective fixture does not
+even build against the pre-fix gate**, which is the proof recorded. The fix is copied into B22's own tools tree on
+the hub ahead of its finish. Fixture debts left: the return_via FIXER and `copper_checks` (a library, exercised by
+the board gates).
