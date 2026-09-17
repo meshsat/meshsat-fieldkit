@@ -439,3 +439,21 @@ def t_a_gate_that_says_the_rule_cannot_arise_here_is_answered_and_not_unanswered
     assert "NOT_APPLICABLE" in seg, "a gate's not-applicable answer does not reach the result"
     j = seg.index('rec.get("applicable") is False')
     assert seg.index("if not ok:") < j, "the freshness test must come first: a stale verdict says nothing at all"
+
+
+def t_a_gate_that_types_no_rules_still_stamps_the_digests_of_the_rules_the_map_gives_it():
+    """17 September 2026, the evening's second registry change: most gates pass no `rules=` and take theirs from
+    the coverage map, and the policy was built from the argument alone, so hardset, final_gate, jlc_certify and
+    the rest carried no per-rule digest and went stale with the whole set on every registry edit (49 pairs
+    after SCH-005 was added, none of them about SCH-005)."""
+    import verdict as V
+    d = tempfile.mkdtemp(prefix="verdict-rulefp-derived-")
+    tool = "hardset-placed"
+    rids = V._rules_for_tool(tool)
+    assert rids, "the coverage map no longer names %s, pick another verdict name for this rule" % tool
+    V.write(tool, V.PASS, counts={"x": 1}, denominator=1, out_dir=d, quiet=True)
+    rec = json.load(open(os.path.join(d, tool + ".verdict.json"), encoding="utf-8"))
+    fps = (rec.get("policy") or {}).get("rule_fingerprints") or {}
+    for rid in rids:
+        assert fps.get(rid) == R.rule_fingerprints()[rid], \
+            "a verdict that took %s from the coverage map carries no digest for it: %s" % (rid, fps)
