@@ -8885,6 +8885,11 @@ reads eleven collisions and 284 pads without an escape, which is the baseline un
 rectangles, the 2.0 mm margin and the surface-mount SWD land together**, and the numbers above are what it has
 to beat. Nothing is applied while B21 routes.
 
+**And the pair pass agrees, which is the measure the whole campaign is downstream of.** The candidate went
+through the whole pre-route chain rather than the placement alone: DIFF100 lays **35 of 48** on four layers and
+the USB pass takes it to **34 of 68**, against B21's 31, and the chain ends `PREROUTE-DONE OK`. Three measures,
+three improvements, one placed board at zero hard violations.
+
 **And board B has a protection finding of its own.** PWR-003 applies to it because it has fuses, and the
 stored-energy chain had never carried them. Its three polyfuses are in it now, with Bourns' own sheet in the
 tree and the bound on a fault from board A's AP64500 buck (6.8 A minimum, 9.2 maximum, cycle by cycle): the
