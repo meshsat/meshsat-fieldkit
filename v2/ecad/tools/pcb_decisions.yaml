@@ -167,19 +167,31 @@ decisions:
       pod's 3.3 V feed and its two I2C conductors, which run to the RP2040 with nothing in between.
       Board B's eight Ethernet conductors and board C's four switch conductors are answered where they stand,
       by T1's magnetics and by the optocouplers, and board P declares that nothing of its own leaves the case.
-      WHAT THE CHEAP HALF COSTS, PRICED (17 September 2026, JLCPCB's own parts API). Board D's two headset jacks
-      carry three conductors each and one three-line array answers a jack: SP0503BAHTG, Littelfuse, SOT-143,
-      C7074, 19,029 in stock at 0.2624 USD, two parts a board. Board E's pod needs two things, a two-line array
-      on the I2C pair (PESD1CAN, Nexperia, SOT-23, C15771, 236,723 in stock at 0.0687) and a clamp on its 3.3 V
-      feed (ESDA6V1L, ST, SOT-23, C24378, 17,147 at 0.0806). At the owner's five boards that is twenty parts and
-      about 3.40 USD of silicon, and all three are extended parts, so the price of the ruling is not the parts:
-      it is that boards D and E are FINISHED COPPER, so each one costs a placement, a route and a new folder.
+      WHAT THE CHEAP HALF COSTS, AND BOARD E'S THREE ARE ONE PART THIS DESIGN ALREADY BUYS (17 September 2026,
+      prices from JLCPCB's own parts API). The pod's 3.3 V feed and its two I2C conductors are the shape the
+      USBLC6-2SC6 is drawn for, two lines and their supply rail in one SOT-23-6, and this project already uses
+      it through kisch.esd on five USB ports of board B and, conductor for conductor the same case, on board P's
+      SMBus pair. It is C7519, 25,352 in stock at about 0.08 USD, it has its datasheet in the tree
+      (v2/vendor/st/st-usblc6-2-esd-protection.pdf), its footprint is drawn and its net-tie pad groups are
+      handled, so board E's whole pod costs ONE part and no new part number.
+      Board D's two headset jacks are not that case and should not be priced as if they were. Each carries a
+      speaker line, a microphone line and a push to talk, and an audio output that swings below ground wants a
+      BIDIRECTIONAL clamp rather than the rail-referenced array a data line takes: which one is a circuit
+      question for board D's generation, not a catalogue lookup. For scale only, a three-line array in that land
+      is about a quarter of a dollar (SP0503BAHTG, C7074, 19,029 in stock at 0.2624).
+      So the parts are pennies either way, and the price of the ruling is not the parts: it is that boards D and
+      E are FINISHED COPPER, so each one costs a placement, a route and a new folder.
       Board D's J_PAOUT is the one conductor of the ten that a clamp on the board cannot answer: it carries 30 W
       of transmitter output, where a diode array's capacitance would spoil the match, and its sibling J_ANT is
       already answered off board by the PolyPhaser GTH-SFF-AL at the bulkhead. Its honest options are a second
       arrestor of the same kind, declared off board the way J_ANT is, or the ruling that it shares J_ANT's.
       The parts above are candidates with stock and a price, not a choice: what clamps at what voltage and what
-      pulse rating is decided by the level in decision 34, which is why that one is asked first."
+      pulse rating is decided by the level in decision 34, which is why that one is asked first. And that level
+      is the one thing decision 34's draft does NOT yet carry: v2/docs/OPERATING-ENVELOPE.md settles temperature,
+      storage and the carve-outs and says in its own section 5 that it settles no transient level, while the
+      approved test plan runs MIL-STD-461's CE102, CS101, CS114, RE102 and RS103 and has no electrostatic
+      discharge test at all. A clamp is chosen against a level, so that gap is what stands between this decision
+      and a part number."
   - n: 32
     title: "board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper"
     asked: 2026-09-16
