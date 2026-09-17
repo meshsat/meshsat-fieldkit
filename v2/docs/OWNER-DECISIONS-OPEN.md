@@ -426,7 +426,7 @@ was taken from, which is the one geometry on this board that three compute modul
 
 | rule | | boards | result today |
 |---|---|---|---|
-| IMP-002 | a class clearance is never below the board minimum | B | FAIL |
+| IMP-002 | a class clearance is never below the board minimum | B | INCONCLUSIVE |
 
 
 ### Decision 39: the criterion a break in a signal's reference is judged against

@@ -255,7 +255,7 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.1,
+        "clearance": 0.127,
         "diff_pair_gap": 0.2,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.127,
@@ -309,8 +309,8 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.1,
-        "diff_pair_gap": 0.127,
+        "clearance": 0.127,
+        "diff_pair_gap": 0.13,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.127,
         "line_style": 0,
@@ -1141,6 +1141,12 @@
       "/PCIE1_RST2_n": [
         "USB"
       ],
+      "/PCIE1_RXSW_N": [
+        "USB"
+      ],
+      "/PCIE1_RXSW_P": [
+        "USB"
+      ],
       "/PCIE1_RX_N": [
         "USB"
       ],
@@ -1180,6 +1186,12 @@
       "/PCIE2_RST2_n": [
         "USB"
       ],
+      "/PCIE2_RXSW_N": [
+        "USB"
+      ],
+      "/PCIE2_RXSW_P": [
+        "USB"
+      ],
       "/PCIE2_RX_N": [
         "USB"
       ],
@@ -1217,6 +1229,12 @@
         "USB"
       ],
       "/PCIE3_RST2_n": [
+        "USB"
+      ],
+      "/PCIE3_RXSW_N": [
+        "USB"
+      ],
+      "/PCIE3_RXSW_P": [
         "USB"
       ],
       "/PCIE3_RX_N": [

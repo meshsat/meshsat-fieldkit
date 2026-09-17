@@ -267,7 +267,7 @@ FP = {
  "SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
  "IDC16": idc("2x08"), "IDC26": idc("2x13"), "IDC10": idc("2x05"),
  "PH1x2": "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical", "PH1x3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "PH1x4": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
- "PH1x5": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical", "PH2x5": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
+ "PH1x5": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical", "PH1x5S": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left", "PH1x5S": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left", "PH2x5": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
  "USBC": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "USB3A": "Connector_USB:USB3_A_Receptacle_Wuerth_692122030100", "HDMI": "Connector_Video:HDMI_A_Molex_208658-1001_Horizontal",
  "RJ45": "Connector_RJ:RJ45_Amphenol_RJHSE5380", "TP": "TestPoint:TestPoint_Pad_D1.5mm", "UFL": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical", "CR2032": "Battery:BatteryHolder_Keystone_3034_1x20mm",
  "NANOSIM": "Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00",
@@ -783,7 +783,10 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
          {"1": "IOC%s_XI" % _tag, "3": "IOC%s_XO" % _tag, "2": "GND", "4": "GND"}, "C164047")
     c(C_(10), "18p", "IOC%s_XI" % _tag, "GND", "C0402"); c(C_(11), "18p", "IOC%s_XO" % _tag, "GND", "C0402")
     r(R_(2), "1k", v33, "IOC%s_LED_K" % _tag); led("LED%d" % (40 + _k), "green IOCTRL %s alive" % _tag, "IOC%s_LED_A" % _tag, "IOC%s_LED_K" % _tag)
-    ic(U_(2), 5, "SWD pads, controller %s: 3V3 SWDIO SWCLK NRST GND" % _tag, "PH1x5",
+    # A THROUGH-HOLE HEADER ON THE UNDERSIDE IS A KEEP-OUT ON THE FRONT THAT NOTHING DECLARES (17 September
+    # 2026): at a 2.0 mm fine-pitch margin the packer put five front parts over these five pins, 29 hard
+    # violations, and the schematic calls them SWD PADS. A surface-mount land is what the words already said.
+    ic(U_(2), 5, "SWD pads, controller %s: 3V3 SWDIO SWCLK NRST GND" % _tag, "PH1x5S",
        {"1": v33, "2": "IOC%s_SWDIO" % _tag, "3": "IOC%s_SWCLK" % _tag, "4": "IOC%s_RST_n" % _tag, "5": "GND"})
     # two CAN-FD transceivers on two INDEPENDENT fabrics, so neither a broken bus nor a failed transceiver can take both
     # heartbeat paths from a controller. TI TCAN334D, 3.3 V, CAN FD to 5 Mbps: https://www.ti.com/product/TCAN334

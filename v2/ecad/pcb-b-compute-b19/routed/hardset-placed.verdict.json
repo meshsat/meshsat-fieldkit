@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_edge_clearance": 9,
+   "silk_over_copper": 47,
+   "silk_overlap": 69,
+   "via_dangling": 199
+  },
+  "stage": "pre",
+  "types_checked": 15,
+  "unrouted": 499
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-b-compute-placed-drc.json",
+   "sha256_16": "be34ae95aabfc70f"
+  }
+ },
+ "note": "placed (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "PLC-001"
+ ],
+ "tool": "hardset-placed",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9f654e75fee0f986"
+ },
+ "ts": "2026-09-16T04:38:19Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

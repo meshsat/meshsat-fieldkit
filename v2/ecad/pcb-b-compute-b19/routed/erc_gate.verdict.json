@@ -4,22 +4,20 @@
  "counts": {
   "allowed": 6,
   "blocking": 0,
-  "violations": 2077
+  "violations": 2044
  },
- "denominator": 2077,
+ "denominator": 2044,
  "evidence": [],
  "inputs": {
-  "board": "b",
   "project": {
    "path": ".",
    "sha256_16": null
   }
  },
- "missing_input": null,
  "note": "6 error(s) allow-listed with a reason",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "8087c341773d75a1"
  },
  "rules": [
   "SCH-001"
@@ -27,9 +25,9 @@
  "tool": "erc_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "9f654e75fee0f986"
  },
- "ts": "2026-09-17T17:49:54Z",
+ "ts": "2026-09-16T04:34:50Z",
  "verdict": "PASS",
  "version": "unknown"
 }

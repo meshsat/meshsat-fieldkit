@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "board_footprints": 957,
+  "missing_on_board": 0,
+  "netlist_refs": 931,
+  "updated": 3
+ },
+ "denominator": 931,
+ "evidence": [
+  "D101: value 'SMBJ5.0A' -> 'SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)'",
+  "D201: value 'SMBJ5.0A' -> 'SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)'",
+  "D301: value 'SMBJ5.0A' -> 'SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)'"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2ed3eae2d8432413"
+  },
+  "netlist": {
+   "path": "out/pcb-b-compute.net",
+   "sha256_16": "66bc968130289480"
+  }
+ },
+ "missing_input": null,
+ "note": "the schematic's values and codes on the routed board; no copper touched",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [],
+ "tool": "apply_netlist_values",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "db432d5bae6d7094"
+ },
+ "ts": "2026-09-17T20:52:12Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

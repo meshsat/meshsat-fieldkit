@@ -706,3 +706,78 @@ def t_the_same_capacitor_within_three_millimetres_passes_the_loop_rule():
     _pcbnew()
     verdict, out = _intent("near")
     assert verdict == "PASS", "a capacitor 1.5 mm from its pin failed the decoupling rule: %s" % out[-300:]
+
+_RAIL_FIXTURE = r"""
+import os, sys, json, tempfile, subprocess
+sys.path.insert(0, TOOLS)
+import pcbnew
+
+def board(w=90.0, h=30.0):
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    for (x1, y1, x2, y2) in ((0, 0, w, 0), (w, 0, w, h), (w, h, 0, h), (0, h, 0, 0)):
+        sh = pcbnew.PCB_SHAPE(b); sh.SetShape(pcbnew.SHAPE_T_SEGMENT); sh.SetLayer(pcbnew.Edge_Cuts)
+        sh.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1))); sh.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2)))
+        sh.SetWidth(pcbnew.FromMM(0.1)); b.Add(sh)
+    return b
+
+def part(b, ref, x, y, nets, code):
+    # two pads 4 mm apart down the board, so a wide rail track past pad 1 never touches pad 2
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference(ref); fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    pads = []
+    for i, n in enumerate(nets):
+        p = pcbnew.PAD(fp); p.SetNumber(str(i + 1)); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT)
+        p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(1.5), pcbnew.FromMM(1.5))); p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y + 4.0 * i)))
+        p.SetLayerSet(pcbnew.LSET.FrontMask()); fp.Add(p); pads.append((p, n))
+    b.Add(fp)
+    for p, n in pads: p.SetNetCode(code[n])
+    return fp
+
+WIDE = sys.argv[1] == "wide"
+b = board()
+for n in ("VRAIL", "GND"): b.Add(pcbnew.NETINFO_ITEM(b, n))
+b.BuildListOfNets(); keep = [b.FindNet("VRAIL"), b.FindNet("GND")]; code = {n: b.FindNet(n).GetNetCode() for n in ("VRAIL", "GND")}
+part(b, "J1", 7.5, 10.0, ["VRAIL", "GND"], code)     # the connector the rail enters on: the source
+part(b, "U1", 82.5, 10.0, ["VRAIL", "GND"], code)    # the one load
+# the rail's only copper: one 75 mm F.Cu track, 0.2 mm (0.11 ohm, 0.33 V at 3 A, 6.6 percent of 5 V) or 2.0 mm (0.66 percent)
+t = pcbnew.PCB_TRACK(b); t.SetLayer(pcbnew.F_Cu); t.SetWidth(pcbnew.FromMM(2.0 if WIDE else 0.2))
+t.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(7.5), pcbnew.FromMM(10.0))); t.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(82.5), pcbnew.FromMM(10.0)))
+t.SetNetCode(code["VRAIL"]); b.Add(t)
+d = tempfile.mkdtemp(prefix="rail-fixture-"); os.makedirs(os.path.join(d, "out")); path = os.path.join(d, "fixture.kicad_pcb"); b.Save(path)
+json.dump({"bypass": [], "nodes": {}, "pair_classes": {},
+           "rails": {"VRAIL": {"volts": 5.0, "amps_typ": 3.0, "amps_peak": 3.0, "source": "J1", "loads": {"U1": 3.0},
+                               "note": "fixture rail", "budget": 0.02}}},
+          open(os.path.join(d, "out", "fixture-intent.json"), "w"))
+r = subprocess.run([sys.executable, os.path.join(TOOLS, "dc_drop.py"), path], cwd=d, capture_output=True, text=True)
+v = json.load(open(os.path.join(d, "out", "dc_drop.verdict.json")))
+print("ANSWER", v["verdict"], json.dumps(v.get("counts")))
+print("LINES", [l for l in (r.stdout + r.stderr).split("\n") if "VRAIL" in l][:2])
+"""
+
+
+def _rail(which):
+    src = "TOOLS = %r\n" % TOOLS + _RAIL_FIXTURE
+    r = subprocess.run([sys.executable, "-c", src, which], capture_output=True, text=True)
+    assert r.returncode == 0, "the %s fixture did not build:\n%s" % (which, (r.stdout + r.stderr)[-900:])
+    ans = [l for l in r.stdout.split("\n") if l.startswith("ANSWER ")]
+    assert ans, "no answer:\n" + r.stdout[-400:]
+    return ans[0].split()[1], r.stdout
+
+
+def t_a_rail_whose_only_copper_is_a_thin_track_drops_past_its_budget_and_fails():
+    """THE DEFECTIVE FIXTURE for dc_drop (its fixture debt since 11 September, paid 17 September 2026): a 5 V rail
+    declared at 3 A from connector J1 into U1 over 75 mm of 0.2 mm F.Cu, 0.11 ohm at 1 oz, which is 0.33 V and
+    6.6 percent of the rail against a 2 percent budget. The rasteriser reads a track narrower than its cell as
+    the FRACTION of the cell (line 138 of the tool), so the number is the track's and not the cell's."""
+    _pcbnew()
+    verdict, out = _rail("thin")
+    assert verdict == "FAIL", "a 0.2 mm track carrying 3 A over 75 mm passed the drop rule: %s" % out[-400:]
+    assert "VRAIL" in out, "the failure does not name the rail: %s" % out[-300:]
+
+
+def t_the_same_rail_on_a_two_millimetre_track_is_inside_its_budget_and_passes():
+    """THE ACCEPTABLE FIXTURE: the same declaration with the track at 2.0 mm (0.011 ohm, 0.66 percent), which is
+    also inside IPC-2221's 10 K external current for 2 mm at 1 oz (about 3.9 A), so neither verdict has a
+    reason to refuse it."""
+    _pcbnew()
+    verdict, out = _rail("wide")
+    assert verdict == "PASS", "a 2.0 mm track carrying 3 A over 75 mm failed the drop rule: %s" % out[-400:]
