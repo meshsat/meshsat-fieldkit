@@ -3,7 +3,7 @@
  "applicable": true,
  "counts": {
   "checks": 78,
-  "citations_unjudged": 0,
+  "citations_unjudged": 28,
   "fail": 0,
   "selection_findings": 0,
   "stages": 9
@@ -13,20 +13,21 @@
  "inputs": {
   "chain": "pcb_energy_chain.yaml"
  },
+ "missing_input": null,
  "note": "THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "BAT-002"
  ],
  "tool": "energy_chain",
  "tools": {
-  "git_head": "e6b2026b74d9",
-  "tools_tree_sha": "284c33e066339223"
+  "git_head": "",
+  "tools_tree_sha": "eaafe91e15b758ce"
  },
- "ts": "2026-09-17T02:59:05Z",
+ "ts": "2026-09-17T05:35:06Z",
  "verdict": "PASS",
- "version": "e6b2026b74d9"
+ "version": "unknown"
 }

@@ -13,18 +13,19 @@
    "sha256_16": "686b29a734c55b9a"
   }
  },
+ "missing_input": null,
  "note": "nothing of this kind was checked on this board",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [],
  "tool": "intent_return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "325c41b5b40fcad1"
+  "tools_tree_sha": "eaafe91e15b758ce"
  },
- "ts": "2026-09-17T02:08:56Z",
+ "ts": "2026-09-17T05:34:56Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

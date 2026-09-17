@@ -13,10 +13,11 @@
   "board": "d",
   "netlist": "pcb-d-aprs.net"
  },
+ "missing_input": null,
  "note": "one ground declared, or every partition declared with its crossing points and the signals that cross; found from the netlist and compared with the board's own declaration",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "GND-001"
@@ -24,9 +25,9 @@
  "tool": "ground_system",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:27:16Z",
+ "ts": "2026-09-17T05:25:00Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -2,23 +2,22 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "ledgers": 4,
-  "problems": 0,
-  "rows": 224,
-  "witnessed": 0
+  "ledgers": 0,
+  "rows": 0
  },
- "denominator": 224,
+ "denominator": 0,
  "evidence": [],
  "inputs": {
   "ecad": {
-   "path": "/root/sweep4/v2/ecad",
+   "path": "/root/sweep18/v2/ecad",
    "sha256_16": null
   }
  },
- "note": "every chain re-walked, every row re-hashed, every witness beside one checked",
+ "missing_input": null,
+ "note": "no ledger under /root/sweep18/v2/ecad: an empty tree and a sound one look alike to a checker that reports no problems",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "DOC-002"
@@ -26,9 +25,9 @@
  "tool": "ledger_verify",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:27:27Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T05:25:10Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

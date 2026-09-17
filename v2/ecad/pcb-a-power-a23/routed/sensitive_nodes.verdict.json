@@ -3,7 +3,7 @@
  "applicable": true,
  "counts": {
   "declared": 19,
-  "fail": 10,
+  "fail": 6,
   "measured": 15
  },
  "denominator": 19,
@@ -12,21 +12,18 @@
   "CH_SRN_F is declared sensitive and the board has no such net",
   "CH_ACP_F is declared sensitive and the board has no such net",
   "CH_ACN_F is declared sensitive and the board has no such net",
-  "PA_CS runs 0.220 mm from PA_SW1 and its own list asks for 0.50; the two are inside that limit over 1.27 mm of copper, 0.63 mm from the pads of the part that carries both nets",
-  "HF_CS runs 0.309 mm from HF_SW1 and its own list asks for 0.50; the two are inside that limit over 1.27 mm of copper, 0.63 mm from the pads of the part that carries both nets",
-  "PD_CS runs 0.223 mm from PD_SW2 and its own list asks for 0.50; the two are inside that limit over 0.00 mm of copper, 1.64 mm from the pads of the part that carries both nets",
-  "POE_CS runs 0.182 mm from POE_SW2 and its own list asks for 0.50; the two are inside that limit over 10.79 mm of copper, 1.64 mm from the pads of the part that carries both nets",
-  "HF_FB runs 0.356 mm from HF_SW1 and its own list asks for 0.50; the two are inside that limit over 0.00 mm of copper, 4.80 mm from the pads of the part that carries both nets",
-  "B33_FB runs 0.350 mm from B33_SW and its own list asks for 0.50; the two are inside that limit over 8.47 mm of copper, 9.31 mm from the pads of the part that carries both nets"
+  "POE_CS runs 0.182 mm from POE_SW2 and its own list asks for 0.50; they are inside that limit over 10.79 mm of copper, 10.79 mm of it OUTSIDE the courtyard of the part that carries both nets, 1.64 mm from the pads of the part that carries both nets",
+  "B33_FB runs 0.350 mm from B33_SW and its own list asks for 0.50; they are inside that limit over 8.47 mm of copper, 8.47 mm of it OUTSIDE the courtyard of the part that carries both nets, 9.31 mm from the pads of the part that carries both nets"
  ],
  "inputs": {
   "board": "a",
   "list": "pcb_sensitive.yaml"
  },
+ "missing_input": null,
  "note": "every sensitive node declared with its filter and its Kelvin partner where the measurement is a difference, and, where pcbnew is present, the real distance from each one to the nearest switching copper measured on the routed board and reported beside the clearance the board asks for. The clearances are this project's own",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "ANA-001"
@@ -34,9 +31,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "64929b69a44633d2"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T01:43:47Z",
+ "ts": "2026-09-17T05:21:03Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

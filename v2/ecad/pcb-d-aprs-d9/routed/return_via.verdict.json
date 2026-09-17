@@ -18,10 +18,11 @@
    "sha256_16": "929bf82d2bf6eed4"
   }
  },
+ "missing_input": null,
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "RET-004"
@@ -29,9 +30,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:27:10Z",
+ "ts": "2026-09-17T05:24:54Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

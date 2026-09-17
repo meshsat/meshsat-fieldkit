@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "judged": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  }
+ },
+ "missing_input": null,
+ "note": "no single-ended controlled line was found to judge, and this board does not declare that it has none",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "RF-001"
+ ],
+ "tool": "rf_line",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "493f3ebd1dd1cbee"
+ },
+ "ts": "2026-09-17T05:22:52Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

@@ -16,10 +16,11 @@
   "copper_oz": 1.0,
   "document": "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"
  },
+ "missing_input": null,
  "note": "every rule this board is designed to is inside the fabricator's capability for its own copper weight",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "RTE-001",
@@ -28,9 +29,9 @@
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "64929b69a44633d2"
+  "tools_tree_sha": "eaafe91e15b758ce"
  },
- "ts": "2026-09-17T01:44:29Z",
+ "ts": "2026-09-17T05:34:33Z",
  "verdict": "PASS",
  "version": "unknown"
 }

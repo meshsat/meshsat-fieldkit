@@ -205,7 +205,18 @@ run "energy chain" python3 $T/energy_chain.py --ecad "$E"
 _PHASE=$(python3 -c "import json,sys;print((json.load(open(sys.argv[1])).get('phase') or '').upper())" "$T/boards/$L.json" 2>/dev/null)
 _BOM=""
 if [ -n "$_PHASE" ]; then _BOM=$(ls "$E/../release/revA/boards/"*"-$_PHASE"/$N-bom.csv 2>/dev/null | head -1); fi
-if [ -n "$_BOM" ]; then run "order codes" python3 $T/lcsc_fill.py "$_BOM"
+if [ -n "$_BOM" ]; then
+  # A COPY, AND THE BOARD'S OWN ALLOW FILE (17 September 2026). Two things were wrong with judging the folder's
+  # bill of materials in place. `lcsc_fill.py` is a FIXER as well as a judge and it writes the file it is given,
+  # so this sweep, whose read-only property is meant to hold by construction, was the one stage that could
+  # modify a released artefact; it judges a copy now. And the allow file is resolved three directories up from
+  # `<project>/out/jlc/<name>-bom.csv`, which for a BOM inside a deliverable folder is `release/revA`, where
+  # there is none: board C read 34 unallowed blank codes of 71 rows and a FAIL on two rules, and with its own
+  # `lcsc-allow.txt` the same BOM reads 33 allow-listed, 1 filled, PASS. Every one of those 33 is a lead, a
+  # solder land, a bench header or a part bought elsewhere, declared with its reason. A reading taken with less
+  # input never replaces one taken with more, and an allow file nobody could find is exactly that.
+  cp "$_BOM" $S/out/$(basename "$_BOM")
+  run "order codes" env LCSC_ALLOW="$P/lcsc-allow.txt" python3 $T/lcsc_fill.py "$S/out/$(basename "$_BOM")"
 elif [ -n "$_PHASE" ]; then echo "--- order codes"; echo "gate_sweep: no deliverable folder for $N at its declared phase $_PHASE (the folders that exist are for earlier phases), so the order-code rule is not judged here"
 else echo "--- order codes"; echo "gate_sweep: $L declares no phase, so there is no folder to judge"; fi
 # return_gaps.py is a REPORT and not a gate: it says where rule 1's uncovered millimetres are, which is what a

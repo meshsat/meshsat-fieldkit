@@ -3,17 +3,19 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 8
+  "pass": 8,
+  "unjudged": 0
  },
  "denominator": 8,
  "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
+ "missing_input": null,
  "note": "the contracts that name this board; the set's own verdict is check_contracts",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "RF-002",
@@ -22,9 +24,9 @@
  "tool": "check_contracts_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-16T19:33:10Z",
+ "ts": "2026-09-17T05:23:36Z",
  "verdict": "PASS",
  "version": "unknown"
 }

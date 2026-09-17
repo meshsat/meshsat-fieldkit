@@ -21,10 +21,11 @@
   "rise_k": 10.0,
   "site_mm": 6.0
  },
+ "missing_input": null,
  "note": "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for a barrel of the fabricator's own plating thickness. ADVISORY: 1 of 4 judged rail(s) have no solved barrel current beside this board, so for those the rail's WHOLE current is attributed to its weakest cluster of vias, which on these boards is often a lone stitch via carrying almost none",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "PI-003"
@@ -32,9 +33,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:27:49Z",
+ "ts": "2026-09-17T05:25:31Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

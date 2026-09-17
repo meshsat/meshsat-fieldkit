@@ -22,8 +22,8 @@
  },
  "denominator": 15,
  "evidence": [
-  "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 6.2310 mm",
   "   clearance | Pad 8 [/BANK2_UPD_P] of U210 on F.Cu / Track [/BANK2_UPD_N] on F.Cu, length 0.1000 mm",
+  "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 6.2310 mm",
   "   clearance | Track [/SWP2_B_N] on In3.Cu, length 1.3730 mm / Track [/SWP2_B_P] on In3.Cu, length 92.6570 mm",
   "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 57.2907 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
   "   clearance | Track [/HDMI2_CK_N] on In2.Cu, length 0.4105 mm / Track [/HDMI2_CK_P] on In2.Cu, length 0.7601 mm",
@@ -42,15 +42,20 @@
   "   solder_mask_bridge | Track [/BANK2_UPD_P] on F.Cu, length 0.1000 mm / Pad 7 [/BANK2_UPD_N] of U210 on F.Cu"
  ],
  "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "47262c82041bf4e2"
+  },
   "drc": {
    "path": "out/pcb-b-compute-drc.json",
-   "sha256_16": "e2171df3e5a6f26a"
+   "sha256_16": "b5cabca2565efa13"
   }
  },
+ "missing_input": null,
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "RTE-001",
@@ -59,9 +64,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-16T19:31:57Z",
+ "ts": "2026-09-17T05:22:31Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

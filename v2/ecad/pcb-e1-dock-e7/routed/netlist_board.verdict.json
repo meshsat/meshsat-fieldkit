@@ -18,13 +18,14 @@
   },
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "6be0e4a168e025c4"
+   "sha256_16": "d37a24c789335e0a"
   }
  },
+ "missing_input": null,
  "note": "the board against the schematic it was placed from",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "SCH-002"
@@ -32,9 +33,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:27:45Z",
+ "ts": "2026-09-17T05:25:27Z",
  "verdict": "PASS",
  "version": "unknown"
 }

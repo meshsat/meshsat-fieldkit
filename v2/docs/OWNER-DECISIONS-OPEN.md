@@ -43,7 +43,7 @@ the longest is 172.9 mm of SCL
 | rule | | boards | result today |
 |---|---|---|---|
 | RET-001 | a continuous adjacent return path | C | INCONCLUSIVE |
-| RET-002 | plane-adjacency screen | C | INCONCLUSIVE |
+| RET-002 | plane-adjacency screen | C | FAIL |
 
 
 ### Decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route
@@ -59,8 +59,8 @@ build, which is what STK-001 fails on.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-002 | plane-adjacency screen | P | INCONCLUSIVE |
-| STK-001 | the stackup is declared, feasible and in the board | P | INCONCLUSIVE |
+| RET-002 | plane-adjacency screen | P | FAIL |
+| STK-001 | the stackup is declared, feasible and in the board | P | FAIL |
 
 
 ### Decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked
@@ -103,7 +103,7 @@ E: three boards and ten conductors, and boards E and D are finished copper held 
 
 | rule | | boards | result today |
 |---|---|---|---|
-| TRN-001 | every exposed port is protected | A, D, E | INCONCLUSIVE |
+| TRN-001 | every exposed port is protected | A, D, E | FAIL |
 
 
 ### Decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper
@@ -120,7 +120,7 @@ the same way. The two boards together are five vias.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-004 | ground-via proximity screen | D, E | INCONCLUSIVE |
+| RET-004 | ground-via proximity screen | D, E | FAIL |
 
 
 ### Decision 33: the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement
@@ -154,7 +154,7 @@ VOC sensor and the e-paper
 
 | rule | | boards | result today |
 |---|---|---|---|
-| PI-001 | conductor current capacity | A, E | INCONCLUSIVE |
+| PI-001 | conductor current capacity | A, E | FAIL |
 
 
 ### Decision 36: the intra-pair tolerance a differential pair is judged against
@@ -163,7 +163,7 @@ VOC sensor and the e-paper
 
 | rule | | boards | result today |
 |---|---|---|---|
-| INT-001 | each interface is designed to its own specification | A, B | INCONCLUSIVE |
+| INT-001 | each interface is designed to its own specification | A, B | FAIL |
 
 
 ### Decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency
@@ -194,8 +194,8 @@ correction of 16 September.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| CMP-002 | the package on the land is the package ordered | D | INCONCLUSIVE |
-| SUP-001 | every placed part is buyable | D | INCONCLUSIVE |
+| CMP-002 | the package on the land is the package ordered | D | FAIL |
+| SUP-001 | every placed part is buyable | D | FAIL |
 
 
 ### Decision 38: board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09
@@ -204,7 +204,7 @@ correction of 16 September.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| IMP-002 | a class clearance is never below the board minimum | B | INCONCLUSIVE |
+| IMP-002 | a class clearance is never below the board minimum | B | FAIL |
 
 
 ### Decision 39: the criterion a break in a signal's reference is judged against
