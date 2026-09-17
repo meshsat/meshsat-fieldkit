@@ -345,5 +345,17 @@
  "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this.",
  "critical_k": 6,
  "critical_k_why": "l = t_r / (6 t_pd). ECSS-E-HB-20-07A section 6.1.2.3 works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test: that track is ONE rise distance long (t_r / t_pd = 34.5 mm on its microstrip), which is k = 1, and the handbook calls it a textbook radiator. k = 2 is half a known failure and k = 6 is a sixth of it. The number is this project's choice; the handbook is what it was calibrated against, and no standard in this tree states a value for k",
- "_crystals_why": "16 September 2026, decision 37: this board's two 6 MHz crystals are not a part yet. The land it draws them on cannot hold a 6 MHz crystal (JLCPCB lists none in 3225 and a 6 MHz fundamental blank does not fit that case), and the code they were certified against is a 25 MHz part. Until the decision is ruled there is no C_L to declare, and an undeclared crystal reads INCONCLUSIVE, which is what this is."
+ "_crystals_why": "16 September 2026, decision 37: this board's two 6 MHz crystals are not a part yet. The land it draws them on cannot hold a 6 MHz crystal (JLCPCB lists none in 3225 and a 6 MHz fundamental blank does not fit that case), and the code they were certified against is a 25 MHz part. Until the decision is ruled there is no C_L to declare, and an undeclared crystal reads INCONCLUSIVE, which is what this is.",
+ "crystals": {
+  "Y1": {
+   "c_load_pf": 20.0,
+   "stray_pf": 3.0,
+   "source": "TI SLLS413 (TUSB2046B) clause 8.3.2 and figure 6: the reference circuit is a 6 MHz fundamental crystal with a LOAD CAPACITANCE OF 20 pF, shunt capacitance at most 7 pF and ESR at most 50 Ohm, and TI chooses C1 = C2 = 27 pF for it 'in order to insure enough negative resistance', with Rd = 1.5 kOhm to trim the gain. So the 16.5 pF this board presents is the part maker's own under-load and not a miss: the same page is the source of both numbers. The PART is owner decision 37, because no passive 6 MHz crystal exists in the 3225 land this board draws, and whichever is bought must carry this C_L and an ESR its Rd is re-chosen for."
+  },
+  "Y2": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "NOT A DATASHEET, and it says so: this is the load THIS DESIGN presents (two 18 pF capacitors give 9 pF in series and the pins and tracks add about 3), so the codec clock crystal that is bought must be specified at 12 pF. The generator's own comment has read 'to confirm on the EVM sheet' since D8 and it was never confirmed; the part choice is owner decision 37 and this declaration moves with it."
+  }
+ }
 }
