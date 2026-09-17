@@ -82,13 +82,18 @@ def t_the_grid_class_is_covered_where_the_grid_is_declared_and_not_where_it_is_n
     21 unrouted, closed none of them in a further hour of stub routing, and made the very thing the grid is
     supposed to prevent worse (2 islands stitched and 5 left, against 1 and 2 on the control). Board A has the
     measurement as of tonight as well and has not written it down yet, because its arms are still running: it
-    is the one board still named here."""
-    for letter in ("c", "d", "e", "p"):
-        assert not C.judge(letter=letter)["uncovered"], letter
-    for letter in ("a",):
-        u = C.judge(letter=letter)["uncovered"]
-        assert len(u) == 1, (letter, u)
-        assert "pour_stitch" in u[0] and "gnd_grid" in u[0], u
+    is the one board still named here.
+
+    17 September 2026, afternoon: BOARD A IS THE LAST OF THEM AND IT IS WRITTEN DOWN NOW, so the list is
+    empty. A41 declares gnd_grid 2.1 mm and A40 does not, same tree and the same five hour cap: the grid lays
+    4,000 locked ground vias (4,650 on the board against 902) and takes rule RET-004 from 46 signal vias
+    without a ground via within 1.5 mm of 58 judged to 33 of 52. It answers thirteen and leaves thirty-three,
+    it costs this board nothing visible (23 open against 25, and no pour island to repair against four), and it
+    is refused for now with those numbers in boards/a.json: the board this tree holds is 0 hard and 0 unrouted
+    while both arms are open, and 4,000 extra drilled holes belong to the ruling on decisions 32 and 39 rather
+    than to a quiet change. Every board of the set has measured the grid on its own copper now."""
+    for letter in ("a", "c", "d", "e", "p"):
+        assert not C.judge(letter=letter)["uncovered"], (letter, C.judge(letter=letter)["uncovered"])
 
 
 def t_a_board_with_no_chain_has_no_closers():

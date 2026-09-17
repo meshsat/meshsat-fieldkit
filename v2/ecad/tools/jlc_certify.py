@@ -319,31 +319,98 @@ def _first_token(head):
     return None
 
 
-def newest_boms(only=None):
-    """{letter: (bom path, folder)} for the newest phase of each board.
-
-    B is read from the QUOTE folder deliberately: B15 is the newest ROUTED deliverable but B16 is what
-    the order set ships, and certifying the wrong one would certify a parts list nobody is buying."""
-    best = {}
-    for d in sorted(glob.glob(os.path.join(BOARDS_DIR, "meshsat-pcb-*"))):
-        m = re.match(r"meshsat-pcb-([a-z0-9]+)-revA-([A-Z]+)(\d+)", os.path.basename(d))
-        if not m:
-            continue
-        letter, num = m.group(1), int(m.group(3))
-        boms = glob.glob(os.path.join(d, "*bom.csv"))
-        if not boms:
-            continue
-        if letter not in best or num > best[letter][0]:
-            best[letter] = (num, boms[0], os.path.basename(d))
-    if only:
-        best = {k: v for k, v in best.items() if k in only}
-    return {k: (v[1], v[2]) for k, v in best.items()}
+def declared_phase(letter, tools=HERE):
+    """The phase the board itself declares, read the way the sweep reads it: the board table first, the
+    registry's facts for a board that has no table (board E5 has no schematic chain and therefore no
+    boards/e5.json)."""
+    p = os.path.join(tools, "boards", "%s.json" % letter.lower())
+    if os.path.exists(p):
+        try: return str((json.load(open(p, encoding="utf-8")) or {}).get("phase") or "").upper()
+        except ValueError: return ""
+    try:
+        sys.path.insert(0, tools)
+        import rules_lib
+        return str(((rules_lib.board_facts().get(letter.lower()) or {}).get("phase_declared")) or "").upper()
+    except BaseException:
+        return ""
 
 
-def rows_to_check(only=None):
-    """Every distinct (value, footprint) that is a component, with the boards and quantity it carries."""
+def folders_by_letter(boards_dir=None):
+    """{letter: {PHASE: (bom path, folder name)}} over every deliverable folder that carries a BOM."""
     out = {}
-    for letter, (bom, folder) in sorted(newest_boms(only).items()):
+    for d in sorted(glob.glob(os.path.join(boards_dir or BOARDS_DIR, "meshsat-pcb-*"))):
+        m = re.match(r"meshsat-pcb-([a-z0-9]+)-revA-([A-Z]+\d+)", os.path.basename(d))
+        if not m: continue
+        boms = glob.glob(os.path.join(d, "*bom.csv"))
+        if not boms: continue
+        out.setdefault(m.group(1), {})[m.group(2).upper()] = (boms[0], os.path.basename(d))
+    return out
+
+
+def newest_boms(only=None, boards_dir=None, tools=HERE):
+    """{letter: (bom path, folder)} for the folder each board DECLARES, and `newest_boms.missing` names the
+    boards that have no folder at their declared phase.
+
+    THE NEWEST FOLDER IS NOT THE BOARD (17 September 2026). This took the highest phase number per letter, so
+    board A was certified from the A24 folder while the board this tree holds is A32 and board D from D11
+    against a tree holding D12: rules CMP-002 and SUP-001 are per board and were being answered about boards
+    this project is not building. `gate_sweep.sh` already refuses that case and says so; the set gate supplied
+    it, and the two disagreed about the same boards. A board with no folder at its declared phase has nothing
+    to certify, which is INCONCLUSIVE with the reason recorded, never a pass and never a failure.
+
+    B is read from the QUOTE folder deliberately and still is: `meshsat-pcb-b-revA-B19-quote` carries the
+    phase B19 that board B declares, and certifying a parts list nobody is buying would be the same error in
+    the other direction."""
+    have = folders_by_letter(boards_dir)
+    best, missing = {}, {}
+    for letter, phases in sorted(have.items()):
+        if only and letter not in only: continue
+        want = declared_phase(letter, tools)
+        if want and want in phases:
+            best[letter] = phases[want]
+        else:
+            missing[letter] = (want or "nothing", sorted(phases))
+    newest_boms.missing = missing
+    return best
+
+
+newest_boms.missing = {}
+
+
+def all_boms(only=None, boards_dir=None):
+    """{letter: [(bom path, folder)]} for EVERY folder of every board that carries a bill of materials.
+
+    THE TABLE IS KNOWLEDGE AND THE VERDICT IS JUDGEMENT, and they need different inputs (17 September 2026).
+    Narrowing the certification to the folder each board declares fixed the verdicts and immediately broke
+    something else: `JLC-CERTIFIED.tsv` is where this project looks up whether a value can be bought at all,
+    and with four boards' folders dropped, seven passive values on boards D and E had no certified row to draw
+    on and the rule that every value a generator writes can be given a code failed. So the table is built from
+    every folder, as it always was, and only the per-board and set VERDICTS are restricted to the folder the
+    board declares."""
+    out = {}
+    for letter, phases in sorted(folders_by_letter(boards_dir).items()):
+        if only and letter not in only: continue
+        out[letter] = [phases[p] for p in sorted(phases)]
+    return out
+
+
+def rows_to_check(only=None, declared_only=False):
+    """Every distinct (value, footprint) that is a component, with the boards and quantity it carries.
+
+    `declared_only` restricts the scan to the folder each board DECLARES, which is what the verdicts are taken
+    over; the table itself is built over every folder."""
+    out = {}
+    # THE DECLARED FOLDER GOES FIRST, and that ordering is load-bearing: a key is (value, footprint) and the
+    # first non-empty LCSC code on it wins, so scanning an older folder first attributes ITS code to the row.
+    # Measured on board P, 17 September 2026: with the folders in alphabetical order the pack's two charge and
+    # discharge FETs lost the code its own P4 folder carries and came back WRONG_MODEL against a search by
+    # model name. The table may be built over every folder; what a row IS comes from the board's own.
+    _decl_first = newest_boms(only)
+    _src = (sorted(_decl_first.items()) if declared_only else
+            ([(l, _decl_first[l]) for l in sorted(_decl_first)]
+             + [(l, bf) for l, lst in sorted(all_boms(only).items()) for bf in lst
+                if bf != _decl_first.get(l)]))
+    for letter, (bom, folder) in _src:
         for r in csv.DictReader(open(bom, newline="", encoding="utf-8", errors="replace")):
             comment = " ".join((r.get("Comment") or "").split())
             fp = (r.get("Footprint") or "").strip()
@@ -680,7 +747,7 @@ def main(argv):
         rec = rows[k]
         ev = certify(rec, cache, handfit, aliases, a.refresh)
         ev.update(comment=rec["comment"], fp=rec["fp"], bom_code=rec["code"],
-                  boards=",".join(sorted(rec["boards"])), qty=rec["qty"])
+                  boards=",".join(sorted(rec["boards"])), qty=rec["qty"], _key=k)
         results.append(ev)
         counts[ev["verdict"]] = counts.get(ev["verdict"], 0) + 1
         if i % 25 == 0:
@@ -700,21 +767,44 @@ def main(argv):
     # BENCH_FITTED joins CERTIFIED and HAND_FIT as an acceptable, declared outcome: the row is real,
     # its disposition is known, and no purchase at JLCPCB is owed for it.
     bad = [r for r in results if r["verdict"] not in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED")]
+    # THE SET'S OWN NUMBERS ARE THE DECLARED FOLDERS' ROWS. The table may be wider; the judgement is not.
+    _decl_keys = set(rows_to_check(only, declared_only=True))
+    _decl = [r for r in results if r.get("_key") in _decl_keys]
+    _decl_counts = {}
+    for r in _decl: _decl_counts[r["verdict"]] = _decl_counts.get(r["verdict"], 0) + 1
+    _decl_bad = [r for r in _decl if r["verdict"] not in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED")]
     for r in bad[:40]:
         print("%-17s %-42s %s" % (r["verdict"], r["comment"][:42], r.get("note", "")[:70]))
-    print("\njlc_certify: %d components, %s" % (len(results), ", ".join(
-        "%s %d" % (k, counts[k]) for k in sorted(counts))))
+    # AND WHICH BOARDS THIS LINE IS NOT ABOUT (17 September 2026). The set's summary is read by the final gate
+    # and printed where a person decides whether to order, so a count taken over three boards' folders must
+    # not read like a count over seven. A board whose declared phase has no folder is named here every time.
+    _miss = dict(getattr(newest_boms, "missing", {}) or {})
+    print("\njlc_certify: %d components, %s%s" % (len(_decl), ", ".join(
+        "%s %d" % (k, _decl_counts[k]) for k in sorted(_decl_counts)),
+        ("; NOT CERTIFIED: %s (no deliverable folder at the declared phase %s)"
+         % (", ".join(sorted(x.upper() for x in _miss)),
+            ", ".join(sorted(set(v[0] for v in _miss.values()))))) if _miss else ""))
     # A PER-BOARD VERDICT BESIDE THE SET ONE (17 September 2026), the pattern check_contracts and final_gate
     # already use. Rules CMP-002 (the package on the land is the package ordered) and SUP-001 (every placed
     # part is buyable) are PER BOARD, and they were reading the SET's verdict: board D asks for two 6 MHz
     # crystals that do not exist and was certified against a 25 MHz part (owner decision 37), and that one
     # defect failed both rules on all seven boards, including four that carry no crystal at all. A row names
     # the boards it sits on, so each board can be asked about its own rows and nobody else's.
+    # WHICH BOARD A ROW BELONGS TO IS THE BOARD'S DECLARED FOLDER (17 September 2026). The table above is
+    # built over every folder, because it is this project's knowledge of what can be bought; the ATTRIBUTION
+    # is built again over the folder each board declares, because a row that exists only in a folder cut three
+    # phases ago is not a part of the board this tree holds. Before this, board A was certified from A24 while
+    # its tree carries A32 and board D from D11 against D12, and the two rules these verdicts decide (CMP-002
+    # and SUP-001) are per board.
+    _declared = rows_to_check(only, declared_only=True)
+    _ev_by_key = {r.get("_key"): r for r in results}
     _by_board = {}
-    for r in results:
-        for _l in str(r.get("boards") or "").split(","):
+    for _k, _rec in sorted(_declared.items()):
+        _r = _ev_by_key.get(_k)
+        if _r is None: continue
+        for _l in sorted(_rec["boards"]):
             _l = _l.strip().lower()
-            if _l: _by_board.setdefault(_l, []).append(r)
+            if _l: _by_board.setdefault(_l, []).append(_r)
     for _l, _rows in sorted(_by_board.items()):
         _bad = [r for r in _rows if r["verdict"] not in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED")]
         _nc = [r for r in _rows if r["verdict"] == "NOT_CHECKED"]
@@ -732,16 +822,45 @@ def main(argv):
         _set = [x.lower() for x in (_rs.manifest().get("boards") or {})]
     except BaseException:
         _set = [x.lower() for x in newest_boms(only)]
+    _missing = dict(getattr(newest_boms, "missing", {}) or {})
     for _l in sorted(_set):
         if only and _l not in {x.lower() for x in only}: continue
         if _l in _by_board: continue
+        # A BOARD WITH NO FOLDER AT ITS DECLARED PHASE IS NOT A BARE BOARD (17 September 2026). Both states
+        # produce no row here and they are opposite answers: board E5 declares that it has no component to
+        # buy, and board A has plenty and no folder cut at the phase its tree holds. Written as the same PASS,
+        # the second read as "certified" about a board nobody had certified.
+        if _l in _missing:
+            _want, _have = _missing[_l]
+            verdict.write("jlc_certify_%s" % _l, verdict.INCONCLUSIVE, counts={"folders": len(_have)},
+                          denominator=0, quiet=True, out_dir=a.out_dir,
+                          inputs={"board": _l, "declared_phase": _want},
+                          evidence=["folders that exist: %s" % ", ".join(_have)],
+                          missing_input=("no deliverable folder at the declared phase %s, so this board's parts "
+                                         "were not certified against the board this tree holds (the folders "
+                                         "that exist are %s)" % (_want, ", ".join(_have))))
+            continue
         verdict.write("jlc_certify_%s" % _l.lower(), verdict.PASS, counts={}, denominator=0, quiet=True,
                       note="this board's deliverable carries no component row to certify (a bare board: copper, "
                            "holes and targets); a declared zero, not an absence", out_dir=a.out_dir)
-    res = verdict.INCONCLUSIVE if counts.get("NOT_CHECKED") else (verdict.FAIL if bad else verdict.PASS)
-    return verdict.write("jlc_certify", res, counts=counts, denominator=len(results),
+    res = (verdict.INCONCLUSIVE if _decl_counts.get("NOT_CHECKED")
+           else (verdict.FAIL if _decl_bad else verdict.PASS))
+    # A SET VERDICT TAKEN OVER THREE BOARDS IS NOT A VERDICT ABOUT SEVEN (17 September 2026). With the folder
+    # selection corrected, the boards whose declared phase has no folder produce no row at all, and a PASS
+    # over what remains would say the set's parts are certified while four boards' parts were never read.
+    # That is the project's own rule about a reading taken with less input, at set level: it goes out as
+    # INCONCLUSIVE with the boards named, and `rules_status` will not let it stand in front of a reading that
+    # had every board.
+    _miss = dict(getattr(newest_boms, "missing", {}) or {})
+    return verdict.write("jlc_certify", res, counts=_decl_counts, denominator=len(_decl),
                          evidence=["%s: %s (%s)" % (r["verdict"], r["comment"][:60], r.get("note", "")[:60])
-                                   for r in bad[:30]],
+                                   for r in _decl_bad[:30]]
+                                  + (["not certified: %s (declared %s, folders %s)"
+                                      % (l.upper(), v[0], ", ".join(v[1])) for l, v in sorted(_miss.items())]),
+                         missing_input=(("%d board(s) have no deliverable folder at their declared phase (%s), "
+                                         "so the set's parts were judged over the rest"
+                                         % (len(_miss), ", ".join(sorted(x.upper() for x in _miss))))
+                                        if _miss else None),
                          note="table at %s" % os.path.relpath(a.table, ROOT), out_dir=a.out_dir)
 
 
