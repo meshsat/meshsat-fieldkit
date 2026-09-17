@@ -2509,3 +2509,33 @@ B is the board still routing.
 
 Option 1 is the same shape as every other rule in this registry: the limit comes from the document that sets
 it, and where no document sets one, the project says so out loud.
+
+---
+
+## The ground-via grid, measured a third time, and the repair measured beside it (17 September 2026, evidence for RET-004 and PLC-002)
+
+Boards D and E declare the pre-route ground-via grid; board P measured it and refused it (21 open connections
+with it against 0 without); boards A and C had never measured it. Both are measuring it now, each against its
+own control, one variable, on the same host at the same time. **The pass-rate half of the answer is already
+in and it is the same shape on both:**
+
+| board | without the grid | with it | ratio |
+|---|---|---|---|
+| A | A40, **5.7 minutes a pass** | A41, **13.4 minutes a pass** | 2.4x |
+| C | C24, **0.8 minutes a pass** over 103 passes to 0 hard and 0 unrouted | C25, **14.5 minutes a pass** | **18x** |
+
+A router that is deterministic improves with passes, so a grid that costs eighteen times the pass time buys
+its prevention with about one twentieth of the search. Whether either board still closes is the other half and
+it lands with the runs.
+
+**And the REPAIR was measured on board C's cut board, dry, changing nothing.** `return_via.py` on C24:
+
+> 295 signal vias judged, 61 exempt in fine-pitch fans, 103 already on one reference plane, **207 without a
+> ground via within 1.5 mm**. Three rounds placed **143** of them, **hard 0 to 0 and unrouted 0 to 0**, so the
+> repair costs the board nothing. **108 are left and each one is the same refusal**: every candidate site
+> inside the search window is another net's copper, on a board whose underside is dense with the controller's
+> own escape fans.
+
+So on board C the two halves of rule RET-004 are now both measured: the repair closes 143 of 207 on the board
+that exists, and the prevention costs eighteen times the router's time. That is the trade the grid declaration
+is, and board C's next phase should carry whichever of the two the C25 run says is cheaper.
