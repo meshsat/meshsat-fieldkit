@@ -186,3 +186,20 @@ def t_a_rules_board_list_never_narrows_its_own_condition():
                 bad.append("%s: its condition selects board %s and its boards_affected list does not name it"
                            % (r["id"], letter))
     assert not bad, "the registry narrows %d rule(s) below their own condition:\n  %s" % (len(bad), "\n  ".join(bad))
+
+
+def t_every_board_table_and_the_facts_name_the_same_project():
+    """17 September 2026, when board E5 got its first board table. Two files describe a board: the facts, which
+    are DATA about the product and decide which rules apply to it, and the table, which is where the board's own
+    declarations live. They are joined by the project directory's name, and a disagreement would make a rule
+    apply to one board and a tool answer about another. `letter_for` reads the table; `applies_to` reads the
+    facts."""
+    import glob, os
+    facts = R.board_facts()
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for p in sorted(glob.glob(os.path.join(tools, "boards", "*.json"))):
+        L = os.path.basename(p)[:-5]
+        d = json.load(open(p, encoding="utf-8"))
+        assert L in facts, "boards/%s.json has no entry in pcb_board_facts.yaml" % L
+        assert facts[L].get("project") == d.get("name"), \
+            "%s: the table names %r and the facts name %r" % (L, d.get("name"), facts[L].get("project"))
