@@ -47,9 +47,26 @@ PROTECT = re.compile(r"(TVS|ESD|SMBJ|SMCJ|SMAJ|USBLC|PESD|SP\d{4}|GDT|arrest|pol
 # Board E's shore inlet is exactly that shape, so the two cases are reported as different things rather than
 # one of them being called "no protection" and hidden.
 SERIES = re.compile(r"^(F|FB|L|R|D)\d")
+# A POWER CONDUCTOR CONTINUES THROUGH A FUSE, A BEAD, A CHOKE OR A DIODE, NEVER THROUGH A PULL-UP (17 September
+# 2026). Board E's sensor pod takes 3.3 V from `+3V3_E6`, which carries no clamp; the chain left the rail
+# through R25, a pull-up onto the hot-swap controller's power-good net, crossed the controller and reported the
+# SHORE INLET's SMCJ40A as the pod's protection. A resistor between a rail and a logic net is not that rail's
+# conductor, and the physical question a power pin asks is what clamps THIS rail.
+POWER_SERIES = re.compile(r"^(F|FB|L|D)\d")
 ACTIVE = re.compile(r"^(Q|U|M)\d")
 HOPS = 3
 SKIP_NETS = ("GND", "GNDA", "AGND", "NC", "")
+# GROUND IS EVERY NET'S NEIGHBOUR AND IS WHERE THE SEARCH STOPS, for the reason a rail is (17 September 2026).
+# SKIP_NETS is a list of exact names and board E's isolated vehicle return is `GND_V`, which is not one of them:
+# the pod's two I2C conductors walked SDA1 -> U10 -> SHORE_INHIBIT -> Q8 -> GND_V and were reported as protected
+# by the shore inlet's own clamp, on the other side of the board with nothing to do with an I2C pair. A name is
+# what this project has to go on, so the pattern is the families its generators write.
+GROUND = re.compile(r"^(GND|AGND|DGND|PGND|GNDA|VSS|EARTH|CHASSIS)([_\-].*)?$", re.I)
+
+
+def is_ground(name):
+    """Is this net a ground or a return? Ground is skipped as a port conductor and stops a search."""
+    return bool(GROUND.match((name or "").strip()))
 
 
 def netlist(path):
@@ -89,7 +106,7 @@ def judge(net_path, letter=None):
         pins_wanted = entry.get("pins") if isinstance(entry, dict) else None
         off = (entry.get("off_board") if isinstance(entry, dict) else None)
         for pin, net in sorted(by_ref[ref]):
-            if net.upper() in SKIP_NETS: continue
+            if net.upper() in SKIP_NETS or is_ground(net): continue
             if pins_wanted and pin not in [str(x) for x in pins_wanted]: continue
             if off: continue        # protected by a part in the wall, named in the declaration and listed below
             # WHICH active part, not whether one was crossed (16 September 2026). This carried
@@ -98,34 +115,48 @@ def judge(net_path, letter=None):
             # the topology: the protection path is connector -> ACTIVE PART -> clamp, and naming only the
             # clamp describes two thirds of it. The frontier now carries the first active reference it
             # crossed, and the row names it beside the clamp.
-            guards, seen, frontier = [], {net}, [(net, None, True)]
-            crossed_active = None
+            # (net, the first active part crossed, hops since it, the path, is this the starting net)
+            guards, seen, frontier = [], {net}, [(net, None, 0, [net], True)]
+            crossed_active, crossed_path = None, []
             for _hop in range(HOPS + 1):
                 nxt = []
-                for n, was_active, is_start in frontier:
+                for n, was_active, since, path, is_start in frontier:
                     # A RAIL REACHED BY TRAVERSAL IS NOT PART OF THIS PORT'S CHAIN. The starting net may be a
                     # rail, because a connector has power pins and a clamp on that rail is the right answer for
                     # them; a rail arrived at through two hops is the whole rest of the board.
-                    if n in rails and not is_start: continue
+                    if (n in rails or is_ground(n)) and not is_start: continue
+                    on_rail = n in rails
                     for r, _p in sorted(by_net.get(n, ())):
                         if PROTECT.search(values.get(r, "") or "") or PROTECT.search(r):
+                            # A CLAMP MORE THAN ONE HOP PAST THE ACTIVE PART IS SOMETHING ELSE'S CLAMP. Once the
+                            # chain crosses a semiconductor, that part is what the transient meets; a clamp on
+                            # one of ITS OWN nets is the topology owner decision 31 asks about, and anything
+                            # further has left this conductor's circuit. Board E's pod read the shore inlet's
+                            # SMCJ40A two parts away, which is the finding, not the protection.
+                            if was_active and since != 1: continue
                             guards.append(("%s on %s" % (r, n), values.get(r, "") or "", was_active))
-                            if was_active and crossed_active is None: crossed_active = was_active
+                            if was_active and crossed_active is None:
+                                crossed_active, crossed_path = was_active, path + ["%s on %s" % (r, n)]
                             continue
                         act = bool(ACTIVE.match(r))
+                        # on a rail only the power path continues: a fuse, a bead, a choke or a series diode
+                        if on_rail and not POWER_SERIES.match(r): continue
                         if (SERIES.match(r) or act) and len(by_ref.get(r, ())) >= 2:
                             for _q, n2 in by_ref[r]:
-                                if n2 not in seen and n2.upper() not in SKIP_NETS:
+                                if n2 not in seen and n2.upper() not in SKIP_NETS and not is_ground(n2):
                                     # the FIRST active part on this branch is the one that sees the transient
-                                    seen.add(n2); nxt.append((n2, was_active or (("%s on %s" % (r, n)) if act else None), False))
+                                    seen.add(n2)
+                                    nxt.append((n2, was_active or (("%s on %s" % (r, n)) if act else None),
+                                                (since + 1) if (was_active or act) else 0,
+                                                path + ["%s -> %s" % (r, n2)], False))
                 if guards: break
                 frontier = nxt
             if not guards: unprotected.append("%s.%s on %s" % (ref, pin, net))
             elif crossed_active:
                 _g, _gv, _ = guards[0]
-                behind.append("%s.%s on %s: ACTIVE %s (%s) sees the transient; CLAMP %s (%s) is behind it"
+                behind.append("%s.%s on %s: ACTIVE %s (%s) sees the transient; CLAMP %s (%s) is behind it [%s]"
                               % (ref, pin, net, crossed_active, values.get(crossed_active.split(" on ")[0], "") or "value not in the netlist",
-                                 _g, _gv or "value not in the netlist"))
+                                 _g, _gv or "value not in the netlist", " | ".join(crossed_path)))
         rows.append(dict(ref=ref, why=why, pins=len(by_ref[ref]), unprotected=unprotected, behind=behind,
                          off_board=(entry.get("off_board") if isinstance(entry, dict) else None)))
         if behind:
