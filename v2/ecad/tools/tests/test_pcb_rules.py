@@ -194,7 +194,7 @@ def t_every_board_table_and_the_facts_name_the_same_project():
     declarations live. They are joined by the project directory's name, and a disagreement would make a rule
     apply to one board and a tool answer about another. `letter_for` reads the table; `applies_to` reads the
     facts."""
-    import glob, os
+    import glob, os, json
     facts = R.board_facts()
     tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     for p in sorted(glob.glob(os.path.join(tools, "boards", "*.json"))):
