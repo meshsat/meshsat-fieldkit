@@ -203,11 +203,17 @@ would spoil the match, and its sibling J_ANT is already answered off board by th
 the bulkhead. Its honest options are a second arrestor of the same kind, declared off board the way J_ANT is,
 or the ruling that it shares J_ANT's. The parts above are candidates with stock and a price, not a choice:
 what clamps at what voltage and what pulse rating is decided by the level in decision 34, which is why that
-one is asked first. And that level is the one thing decision 34's draft does NOT yet carry:
-v2/docs/OPERATING-ENVELOPE.md settles temperature, storage and the carve-outs and says in its own section 5
-that it settles no transient level, while the approved test plan runs MIL-STD-461's CE102, CS101, CS114,
-RE102 and RS103 and has no electrostatic discharge test at all. A clamp is chosen against a level, so that
-gap is what stands between this decision and a part number.
+one is asked first. And that level had no proposal at all until the evening of 17 September: the envelope
+settled temperature, storage and the carve-outs and said in its own words that it settled no transient level,
+while the approved test plan ran MIL-STD-461's CE102, CS101, CS114, RE102 and RS103 and carried no
+electrostatic discharge method at all, so the one transient a person actually applies to this kit, by
+touching a connector after walking across a floor, was neither specified nor planned for. Section 6 of
+v2/docs/OPERATING-ENVELOPE.md now PROPOSES the levels and TEST-PLAN.md carries M7 as the method, and the
+proposal says which of its three rows has an authority: the electrostatic row is traceable to a part this
+design already buys and is the one this decision needs, the surge row describes what is fitted rather than
+constraining it, and the fast-transient row has no source in this tree and is marked unverified rather than
+required. A clamp is chosen against a level, so what stands between this decision and a part number is a
+RULING on that first row, not a gap.
 
 | rule | | boards | result today |
 |---|---|---|---|
