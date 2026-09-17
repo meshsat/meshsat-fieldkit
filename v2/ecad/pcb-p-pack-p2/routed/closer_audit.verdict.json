@@ -11,7 +11,10 @@
  "evidence": [],
  "inputs": {
   "board": "p",
-  "closers": "pcb_closers.yaml"
+  "closers": {
+   "path": "pcb_closers.yaml",
+   "sha256_16": "41239d5e8bd16cc2"
+  }
  },
  "missing_input": null,
  "note": "every copper-changing stage of the finish declares the defect class it repairs and why prevention was not possible, and a class repaired more than once names what now prevents it. A class that names NOTHING is reported as uncovered and fails this rule, because that is the rule's second half unmet rather than a silence",
@@ -24,10 +27,10 @@
  ],
  "tool": "closer_audit",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "git_head": "f97b9b6f9f65",
+  "tools_tree_sha": "712ced2d45201f31"
  },
- "ts": "2026-09-17T12:17:23Z",
+ "ts": "2026-09-17T12:58:02Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "f97b9b6f9f65"
 }
