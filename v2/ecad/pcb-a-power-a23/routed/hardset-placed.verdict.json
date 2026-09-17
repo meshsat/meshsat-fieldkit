@@ -1,0 +1,57 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "carried": {
+  "by": "carry_placed.py",
+  "footprints_compared": 400,
+  "from": "placed",
+  "moved": 0,
+  "to": "routed"
+ },
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_edge_clearance": 4,
+   "silk_over_copper": 17,
+   "silk_overlap": 37,
+   "via_dangling": 199
+  },
+  "stage": "pre",
+  "types_checked": 15,
+  "unrouted": 499
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "drc": {
+   "path": "out/placed-drc.json",
+   "sha256_16": "855dd7f788257724"
+  },
+  "measured_board": {
+   "sha256_16": "086e99d663d4a7ea",
+   "stage": "placed"
+  }
+ },
+ "missing_input": null,
+ "note": "placed (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts) | carried to the routed board from the placed board after comparing all 400 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "PLC-001"
+ ],
+ "tool": "hardset-placed",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "2699340c90cd4eed"
+ },
+ "ts": "2026-09-17T11:02:01Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
