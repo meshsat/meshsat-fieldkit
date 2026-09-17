@@ -231,9 +231,9 @@ coverage:
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
      against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a net's
-     own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they read 16 September 2026: TI SCAA082A section 2.5 states the fixer as practice, 'use ground vias around the signal via to make sure that the return current can flow as close as possible to the signal'. It gives no distance, which is the number this rule still wants.",
-   remediation: {action: "measure the anti-pad share of each failing net's gap, so RET-003's question can be separated from this one",
-     owner: SESSION, execution: PARALLEL_BOX, depends_on: [RET-003], p50_h: 3, p80_h: 8}}
+     own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they read 16 September 2026: TI SCAA082A section 2.5 states the fixer as practice, 'use ground vias around the signal via to make sure that the return current can flow as close as possible to the signal'. It gives no distance, which is the number this rule still wants. 17 SEPTEMBER 2026: IT NO LONGER COUNTS A NET'S OWN VIA ANTI-PADS. The fill retreats around every barrel, so a net that changes layer punches a hole in the plane it is judged against, and the reference is continuous either side of it: what the signal needs there is a return transition, which is RET-003's and RET-004's question. The anti-pad share is measured, reported and handed to them, and an anti-pad is a hole IN a fill, so a point near a via on a board with no pour is still a net with no reference. Measured across the set: board E went from one net over its limit to NONE (328.4 mm of its uncovered millimetres are its own anti-pads), D stayed at zero with 469.6 mm of them, C went 18 to 15 and P 6 to 5, which is the point: the real failures do not move.",
+   remediation: {action: "DONE 17 September 2026. What remains is RET-003's own number, which is that rule's gap and not this one's",
+     owner: SESSION, execution: PARALLEL_BOX, depends_on: [RET-003], p50_h: 0, p80_h: 0}}
 
  RET-003: {implementation: "gen_pcb_a3.py In2 pours", verification: {tool: ref_change.py, verdict: return_stitch, fixtures: tests/test_ref_change.py},
    maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
