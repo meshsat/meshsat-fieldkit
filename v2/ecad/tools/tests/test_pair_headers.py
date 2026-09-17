@@ -133,3 +133,31 @@ def t_the_board_fraction_is_length_weighted_and_every_pair_is_still_named():
     assert "_cov_len = sum(r[10] * r[4] for r in _judged)" in src, "the board fraction is not weighted by each pair's judged length"
     assert 'evidence=["%s %s class %s target %s ohm" % (r[6], r[0], r[1], r[2]) for r in results if r[6] != "MET"]' in src, (
         "a pair that misses is no longer named in the verdict's evidence")
+
+
+# ---------------------------------------------------------------------------------------------------------
+# MEANDERING TO THE INTERFACE'S OWN BUDGET, WITHOUT DECIDING THE OWNER'S QUESTION (17 September 2026).
+#
+# The gate refuses a pair over this project's 1.00 mm and the board check already PRINTS the number the part's
+# own datasheet asks for beside every pair, because rule PAIR-001 asks for that citation. Board A's three pairs
+# read 0.29, 0.12 and 0.01 mm against a compute module that asks for 0.15: one passes the gate and misses the
+# part's budget by 0.14 mm of copper. `pair_match.sh` now meanders toward the tighter of the two and REFUSES on
+# the looser, which is neutral to owner decision 36 in both directions.
+
+def t_the_pair_matcher_acts_on_the_tighter_number_and_refuses_on_the_looser():
+    import os, subprocess, sys
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(here, "pair_match.sh"), encoding="utf-8").read()
+    body = "\n".join(l for l in src.splitlines() if not l.strip().startswith("#"))
+    assert "asks for" in body, "the matcher does not read the interface's own budget"
+    assert 'grep "^WARN"' in body, "the refusal is no longer the gate's own 1.00 mm"
+    # the selector itself, run on four real report lines
+    sel = body[body.index("actionable() {"):body.index("for round in")]
+    prog = sel[sel.index("python3 -c '") + len("python3 -c '"):sel.rindex("'")]
+    lines = ("PASS USB_D8 pair length P 139.47 mm, N 139.75 mm, mismatch 0.29 mm; USB2_CM5 asks for 0.15 mm\n"
+             "PASS USB_E6 pair length P 199.56 mm, N 199.68 mm, mismatch 0.12 mm; USB2_CM5 asks for 0.15 mm\n"
+             "WARN PCIE1 pair length P 10.0 mm, N 12.0 mm, mismatch 2.00 mm; PCIE_CM5 asks for 0.10 mm\n"
+             "PASS QSPI pair length P 5.0 mm, N 5.1 mm, mismatch 0.10 mm\n")
+    out = subprocess.run([sys.executable, "-c", prog], input=lines, capture_output=True, text=True).stdout
+    got = sorted(l.split()[1] for l in out.splitlines() if l.strip())
+    assert got == ["PCIE1", "USB_D8"], got
