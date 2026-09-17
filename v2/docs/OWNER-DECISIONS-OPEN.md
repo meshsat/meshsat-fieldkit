@@ -158,49 +158,52 @@ between: J_HS1 and J_HS2, the two headset jacks on the face that a person plugs 
 conductors each (speaker, microphone, push to talk), and J_PAOUT, the 30 W power amplifier output. Its
 antenna jack J_ANT is the one that is answered: it is protected off board by the PolyPhaser GTH-SFF-AL
 arrestor at the bulkhead. The measurement was taken by cutting board D's deliverable folder, which the gate
-refused at that stage, so this is what stands between board D and the folder DOC-001 asks for. Boards A and
-E: three boards and ten conductors, and boards E and D are finished copper held on it. THE WHOLE PACKET,
-CONDUCTOR BY CONDUCTOR, AND THREE OF ITS ROWS WERE WRONG UNTIL THIS EVENING (17 September 2026). The chain
-that follows a conductor to its clamp could cross a semiconductor and keep going, step onto a ground, or
-leave a rail through a pull-up, and board E's sensor pod took the SHORE INLET'S SMCJ40A as its protection
-three times over: SDA1 crossed the RP2040 onto SHORE_INHIBIT, crossed a transistor onto GND_V and read the
-clamp sitting there, and the pod's 3.3 V feed left its own rail through a 10k pull-up onto the hot-swap
-controller's power-good net and arrived at the same part. A clamp more than one hop past the first active
-part belongs to another circuit; a ground is where the search stops whatever the board calls it; a rail
-continues through a fuse, a bead, a choke or a series diode and never through a pull-up. No board's result
-moves, and the packet does: THIRTEEN conductors, TEN of them reaching a semiconductor with nothing between
-and THREE meeting their clamp only through an active part. The three: board A J_USBC_OUT.2 and .3, the USB-C
-outlet's two CC conductors, which reach U18 (TPS25740A PD source controller) and whose clamp D4 (SMBJ18A)
-sits on PD_VBUS, a different conductor of the same connector; and board E J_DCIN.1, the shore inlet,
-connector to F1 (10 A) to Q1 (BSC039N06NS ideal-diode FET) to D1 (SMCJ40A on DC_P), which is the textbook
-shape of this question, the fuse and the clamp in the right places with one semiconductor in front of the
-clamp. The ten: board D J_PAOUT.1 (the 30 W amplifier output), J_HS1.1, .3, .5 and J_HS2.1, .3, .5 (both
-headset jacks, speaker, microphone and push to talk each), and board E J_POD.1, .3 and .4, the outside sensor
-pod's 3.3 V feed and its two I2C conductors, which run to the RP2040 with nothing in between. Board B's eight
-Ethernet conductors and board C's four switch conductors are answered where they stand, by T1's magnetics and
-by the optocouplers, and board P declares that nothing of its own leaves the case. WHAT THE CHEAP HALF COSTS,
-AND BOARD E'S THREE ARE ONE PART THIS DESIGN ALREADY BUYS (17 September 2026, prices from JLCPCB's own parts
-API). The pod's 3.3 V feed and its two I2C conductors are the shape the USBLC6-2SC6 is drawn for, two lines
-and their supply rail in one SOT-23-6, and this project already uses it through kisch.esd on five USB ports
-of board B and, conductor for conductor the same case, on board P's SMBus pair. It is C7519, 25,352 in stock
-at about 0.08 USD, it has its datasheet in the tree (v2/vendor/st/st-usblc6-2-esd-protection.pdf), its
-footprint is drawn and its net-tie pad groups are handled, so board E's whole pod costs ONE part and no new
-part number. Board D's two headset jacks are not that case: each carries a speaker line, a microphone line
-and a push to talk, and an audio output that swings below ground wants a BIDIRECTIONAL clamp rather than the
-rail-referenced array a data line takes. The shape that fits is a four-channel bidirectional array, one per
-jack, three conductors and a spare: the Semtech RClamp0524P is C40960, 153,808 in stock at 0.066 USD, rated
-plus and minus 5 V working, and the alternatives are Littelfuse's SP3012-04UTG (C151304, 10,629 at 0.2368)
-and ST's ESDA6V1W5 (C48677, 20,825 at 0.16). Two parts a board, about 0.66 USD over the owner's five boards.
-Which of them is a circuit question for board D's generation, because it turns on the codec's own output
-swing and the microphone bias, and none of them is a choice until decision 34 states the level. So the parts
-are pennies either way, and the price of the ruling is not the parts: it is that boards D and E are FINISHED
-COPPER, so each one costs a placement, a route and a new folder. Board D's J_PAOUT is the one conductor of
-the ten that a clamp on the board cannot answer: it carries 30 W of transmitter output, where a diode array's
-capacitance would spoil the match, and its sibling J_ANT is already answered off board by the PolyPhaser
-GTH-SFF-AL at the bulkhead. Its honest options are a second arrestor of the same kind, declared off board the
-way J_ANT is, or the ruling that it shares J_ANT's. The parts above are candidates with stock and a price,
-not a choice: what clamps at what voltage and what pulse rating is decided by the level in decision 34, which
-is why that one is asked first. And that level is the one thing decision 34's draft does NOT yet carry:
+refused at that stage, so this is what stands between board D and the folder DOC-001 asks for. Boards A and E
+carry the rest: three boards, TWENTY-FIVE judged conductors and THIRTEEN of them failing, and boards E and D
+are finished copper held on it. THE WHOLE PACKET, CONDUCTOR BY CONDUCTOR, AND THREE OF ITS ROWS WERE WRONG
+UNTIL THIS EVENING (17 September 2026). The chain that follows a conductor to its clamp could cross a
+semiconductor and keep going, step onto a ground, or leave a rail through a pull-up, and board E's sensor pod
+took the SHORE INLET'S SMCJ40A as its protection three times over: SDA1 crossed the RP2040 onto
+SHORE_INHIBIT, crossed a transistor onto GND_V and read the clamp sitting there, and the pod's 3.3 V feed
+left its own rail through a 10k pull-up onto the hot-swap controller's power-good net and arrived at the same
+part. A clamp more than one hop past the first active part belongs to another circuit; a ground is where the
+search stops whatever the board calls it; a rail continues through a fuse, a bead, a choke or a series diode
+and never through a pull-up. No board's result moves, and the packet does: of TWENTY-FIVE judged conductors
+(board A thirteen, board D seven, board E five) THIRTEEN fail, TEN of them reaching a semiconductor with
+nothing between and THREE meeting their clamp only through an active part. The other twelve are answered
+where they stand, and one of them is the shape the rest should take: board E's solar input meets its own
+clamp before anything else. The three: board A J_USBC_OUT.2 and .3, the USB-C outlet's two CC conductors,
+which reach U18 (TPS25740A PD source controller) and whose clamp D4 (SMBJ18A) sits on PD_VBUS, a different
+conductor of the same connector; and board E J_DCIN.1, the shore inlet, connector to F1 (10 A) to Q1
+(BSC039N06NS ideal-diode FET) to D1 (SMCJ40A on DC_P), which is the textbook shape of this question, the fuse
+and the clamp in the right places with one semiconductor in front of the clamp. The ten: board D J_PAOUT.1
+(the 30 W amplifier output), J_HS1.1, .3, .5 and J_HS2.1, .3, .5 (both headset jacks, speaker, microphone and
+push to talk each), and board E J_POD.1, .3 and .4, the outside sensor pod's 3.3 V feed and its two I2C
+conductors, which run to the RP2040 with nothing in between. Board B's eight Ethernet conductors and board
+C's four switch conductors are answered where they stand, by T1's magnetics and by the optocouplers, and
+board P declares that nothing of its own leaves the case. WHAT THE CHEAP HALF COSTS, AND BOARD E'S THREE ARE
+ONE PART THIS DESIGN ALREADY BUYS (17 September 2026, prices from JLCPCB's own parts API). The pod's 3.3 V
+feed and its two I2C conductors are the shape the USBLC6-2SC6 is drawn for, two lines and their supply rail
+in one SOT-23-6, and this project already uses it through kisch.esd on five USB ports of board B and,
+conductor for conductor the same case, on board P's SMBus pair. It is C7519, 25,352 in stock at about 0.08
+USD, it has its datasheet in the tree (v2/vendor/st/st-usblc6-2-esd-protection.pdf), its footprint is drawn
+and its net-tie pad groups are handled, so board E's whole pod costs ONE part and no new part number. Board
+D's two headset jacks are not that case: each carries a speaker line, a microphone line and a push to talk,
+and an audio output that swings below ground wants a BIDIRECTIONAL clamp rather than the rail-referenced
+array a data line takes. The shape that fits is a four-channel bidirectional array, one per jack, three
+conductors and a spare: the Semtech RClamp0524P is C40960, 153,808 in stock at 0.066 USD, rated plus and
+minus 5 V working, and the alternatives are Littelfuse's SP3012-04UTG (C151304, 10,629 at 0.2368) and ST's
+ESDA6V1W5 (C48677, 20,825 at 0.16). Two parts a board, about 0.66 USD over the owner's five boards. Which of
+them is a circuit question for board D's generation, because it turns on the codec's own output swing and the
+microphone bias, and none of them is a choice until decision 34 states the level. So the parts are pennies
+either way, and the price of the ruling is not the parts: it is that boards D and E are FINISHED COPPER, so
+each one costs a placement, a route and a new folder. Board D's J_PAOUT is the one conductor of the ten that
+a clamp on the board cannot answer: it carries 30 W of transmitter output, where a diode array's capacitance
+would spoil the match, and its sibling J_ANT is already answered off board by the PolyPhaser GTH-SFF-AL at
+the bulkhead. Its honest options are a second arrestor of the same kind, declared off board the way J_ANT is,
+or the ruling that it shares J_ANT's. The parts above are candidates with stock and a price, not a choice:
+what clamps at what voltage and what pulse rating is decided by the level in decision 34, which is why that
+one is asked first. And that level is the one thing decision 34's draft does NOT yet carry:
 v2/docs/OPERATING-ENVELOPE.md settles temperature, storage and the carve-outs and says in its own section 5
 that it settles no transient level, while the approved test plan runs MIL-STD-461's CE102, CS101, CS114,
 RE102 and RS103 and has no electrostatic discharge test at all. A clamp is chosen against a level, so that

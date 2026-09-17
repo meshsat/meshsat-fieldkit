@@ -145,7 +145,8 @@ decisions:
       antenna jack J_ANT is the one that is answered: it is protected off board by the PolyPhaser GTH-SFF-AL
       arrestor at the bulkhead. The measurement was taken by cutting board D's deliverable folder, which the
       gate refused at that stage, so this is what stands between board D and the folder DOC-001 asks for.
-      Boards A and E: three boards and ten conductors, and boards E and D are finished copper held on it.
+      Boards A and E carry the rest: three boards, TWENTY-FIVE judged conductors and THIRTEEN of them failing,
+      and boards E and D are finished copper held on it.
       THE WHOLE PACKET, CONDUCTOR BY CONDUCTOR, AND THREE OF ITS ROWS WERE WRONG UNTIL THIS EVENING (17
       September 2026). The chain that follows a conductor to its clamp could cross a semiconductor and keep
       going, step onto a ground, or leave a rail through a pull-up, and board E's sensor pod took the SHORE
@@ -155,8 +156,10 @@ decisions:
       than one hop past the first active part belongs to another circuit; a ground is where the search stops
       whatever the board calls it; a rail continues through a fuse, a bead, a choke or a series diode and never
       through a pull-up. No board's result moves, and the packet does:
-      THIRTEEN conductors, TEN of them reaching a semiconductor with nothing between and THREE meeting their
-      clamp only through an active part.
+      of TWENTY-FIVE judged conductors (board A thirteen, board D seven, board E five) THIRTEEN fail, TEN of
+      them reaching a semiconductor with nothing between and THREE meeting their clamp only through an active
+      part. The other twelve are answered where they stand, and one of them is the shape the rest should take:
+      board E's solar input meets its own clamp before anything else.
       The three: board A J_USBC_OUT.2 and .3, the USB-C outlet's two CC conductors, which reach U18 (TPS25740A
       PD source controller) and whose clamp D4 (SMBJ18A) sits on PD_VBUS, a different conductor of the same
       connector; and board E J_DCIN.1, the shore inlet, connector to F1 (10 A) to Q1 (BSC039N06NS ideal-diode
