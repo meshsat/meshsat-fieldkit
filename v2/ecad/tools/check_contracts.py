@@ -353,6 +353,15 @@ for _k, _stem in NETS.items():
     for _f in sorted(_glob.glob(_os.path.join(ECAD, _stem + "*", "out", "*-intent.json"))):
         try: _intents[_k] = _json.load(open(_f))
         except ValueError: pass
+# A BOARD WHOSE INTENT FILE IS NOT IN THIS TREE HAS DECLARED NOTHING HERE, and that is an absent input rather
+# than an absent declaration (17 September 2026). The intent file is written by the schematic generator into
+# the project's untracked out/, so on a tree that holds the netlists but not the intent files every shared
+# rail reads "no board declares a share": the same run that reads 72 of 72 with them read 64 with 7 rails
+# unsplit without them, and wrote that over the fuller reading.
+_NO_INTENT = sorted(k for k in NETS if k not in _intents)
+if _NO_INTENT:
+    print("check_contracts: no intent file in this tree for %s, so what those boards declare about a shared "
+          "rail cannot be read here" % ", ".join(_NO_INTENT))
 UNSPLIT = []
 _shared = {}
 for _k, _it in _intents.items():
@@ -411,7 +420,8 @@ def _richer_on_disk(tool, missing_now=None):
     if missing_now is None:                         # a per-board verdict: was it taken with that netlist?
         return "absent from this tree" not in (rec.get("note") or "")
     was = (rec.get("counts") or {}).get("missing_boards")
-    return was is not None and was < missing_now
+    if was is None: return False
+    return (was + (rec.get("counts") or {}).get("boards_without_intent", 0)) < missing_now
 
 
 def _v_out_dir():
@@ -458,7 +468,7 @@ for _bd in sorted(set(list(per_board) + list(B) + ["E5"])):
                    "no contract of this set names this board" if not _n else
                    "the contracts that name this board; the set's own verdict is check_contracts"),
              quiet=True)
-if (not checked or MISSING) and _richer_on_disk("check_contracts", len(MISSING)):
+if (not checked or MISSING or _NO_INTENT) and _richer_on_disk("check_contracts", len(MISSING) + len(_NO_INTENT)):
     # The same rule for the SET verdict, and it is stricter, because of what this verdict MEANS: the seven
     # boards agree with each other. That cannot be read with a board absent, and an INCONCLUSIVE written from
     # here replaces the set's real reading with a fact about this host. The runner has no netlist for any
@@ -470,7 +480,7 @@ if (not checked or MISSING) and _richer_on_disk("check_contracts", len(MISSING))
 sys.exit(_v.write("check_contracts",
                   _v.INCONCLUSIVE if (not checked or MISSING or (UNSPLIT and not fails)) else (_v.PASS if not fails else _v.FAIL),
                   counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING),
-                          "rails_unsplit": len(UNSPLIT)},
+                          "boards_without_intent": len(_NO_INTENT), "rails_unsplit": len(UNSPLIT)},
                   denominator=len(checked),
                   evidence=(["netlist absent: " + k for k in MISSING] + ["rail unsplit: " + u for u in UNSPLIT] + fails),
                   inputs={"boards": ",".join(sorted(B))},
