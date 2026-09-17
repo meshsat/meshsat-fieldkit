@@ -1029,3 +1029,34 @@ def t_no_deliverable_folder_is_AHEAD_of_the_phase_its_board_file_declares():
                 bad.append("%s: the folder %s is ahead of the phase boards/%s.json declares (%s)"
                            % (letter.upper(), os.path.basename(d), letter, declared))
     assert not bad, "; ".join(bad)
+
+
+def t_a_phase_on_the_command_line_must_be_the_one_the_board_declares():
+    """Board C, 17 September 2026: cut and committed as C24, a folder that passes 38 of its 38 properties,
+    while boards/c.json still said C18, so the set gate read the current deliverable as stale against a
+    declaration six phases behind it. The phase is a fact about the board, not an argument: the generators
+    stamp it on the silk, the finish names the folder after it and the set gate judges the folder by it.
+
+    An arm may still lead the declaration, because an arm's board may never be adopted, and it says so with
+    ROUTEFLOW_PHASE_UNDECLARED=1 rather than by drifting."""
+    import json as _j, tempfile, shutil
+    from harness import Skip
+    sys.path.insert(0, TOOLS)
+    import routeflow as RF
+    prof = {"board": "pcb-c-display", "project": "pcb-c-display-c8", "phase": "<PHASE>"}
+    decl = None
+    bf = os.path.join(TOOLS, "boards", "c.json")
+    if os.path.exists(bf): decl = _j.load(open(bf)).get("phase")
+    if not decl: raise Skip("board C declares no phase in this tree")
+    # the declared phase resolves
+    assert RF.resolve_phase(prof, decl)["phase"] == decl
+    # another one is refused, and the message says what to do
+    try:
+        RF.resolve_phase(prof, "C99")
+        raise AssertionError("a phase the board does not declare was accepted")
+    except SystemExit as e:
+        assert "boards/c.json declares" in str(e) and "ROUTEFLOW_PHASE_UNDECLARED" in str(e), str(e)
+    # an arm may lead the declaration deliberately
+    os.environ["ROUTEFLOW_PHASE_UNDECLARED"] = "1"
+    try: assert RF.resolve_phase(prof, "C99")["phase"] == "C99"
+    finally: os.environ.pop("ROUTEFLOW_PHASE_UNDECLARED", None)
