@@ -62,8 +62,32 @@ def _project_dirs(letter, m):
     return [d for d in out if os.path.isdir(d)]
 
 
+def _had_its_input(rec):
+    """Did this verdict have the thing it judges? `verdict.write(missing_input=...)` is a tool saying it did
+    not: no rotation table in this tree, no order folder, no netlist."""
+    return not (rec.get("missing_input") or "")
+
+
+def _supersedes(new, old):
+    """Does `new` replace `old` as this board's reading of that tool?
+
+    Newest wins, with ONE exception, which is this project's own rule written where every tool meets it: A
+    READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE. A verdict that declares its input absent
+    is a statement about the tree it ran in and not about the boards, and the only reason it ever won was its
+    timestamp: a sweep tree carries no `v2/release/revA/order/`, so `doc_provenance` there reads 0 documents of
+    0 folders and writes an INCONCLUSIVE that is newer than the runner's reading of the seven real ones. It
+    stood in front of it on boards D, E, E5 and P, which read "nobody has checked" about documents that are
+    sitting on this disk being untraceable (17 September 2026).
+
+    It can never turn a failure into a pass: the reading it protects is whatever was measured, pass or fail,
+    and it is still judged for freshness, fingerprint and board identity afterwards like any other."""
+    if _had_its_input(old) and not _had_its_input(new): return False
+    if _had_its_input(new) and not _had_its_input(old): return True
+    return str(new.get("ts", "")) >= str(old.get("ts", ""))
+
+
 def _verdicts(letter, m):
-    """{name: record} of every verdict file the board has, newest wins."""
+    """{name: record} of every verdict file the board has, newest wins (see _supersedes for the one exception)."""
     found = {}
     for d in _project_dirs(letter, m):
         for f in sorted(glob.glob(os.path.join(d, "*.verdict.json"))):
@@ -71,7 +95,7 @@ def _verdicts(letter, m):
             except ValueError: continue
             name = rec.get("name") or os.path.basename(f)[:-len(".verdict.json")]
             prev = found.get(name)
-            if prev is None or str(rec.get("ts", "")) >= str(prev.get("ts", "")): rec["_path"] = f; found[name] = rec
+            if prev is None or _supersedes(rec, prev): rec["_path"] = f; found[name] = rec
     return found
 
 

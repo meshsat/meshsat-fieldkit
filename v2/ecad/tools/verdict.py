@@ -170,7 +170,8 @@ def _with_board(inputs):
     return inputs
 
 
-def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None, quiet=False, advisory=None, rules=None, applicable=True):
+def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None,
+          quiet=False, advisory=None, rules=None, applicable=True, missing_input=None):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
 
     `advisory` (or VERDICT_ADVISORY=1 in the environment) marks a verdict that is a MEASUREMENT for the record and
@@ -188,10 +189,29 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
     authority on applicability; this field is the tool reporting the board fact it observed, and
     `rules_status.py` compares the two.
 
+    `missing_input` says the thing this tool judges was NOT THERE to be judged: no rotation table in this tree,
+    no order folder, no netlist. It is a sentence, and it makes two things true at once. The verdict is
+    INCONCLUSIVE, because a tool that could not read its input has not judged; and the record carries the
+    declaration, so a reader can tell "there was nothing to check" apart from "everything checked was fine".
+
+    WHY IT IS A FIELD AND NOT A NOTE (17 September 2026). A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE
+    TAKEN WITH MORE is this project's own rule and it has been re-learnt five times: the cross-board contracts
+    at both ends, the rotation table, the energy chain, the placement carry, and today `doc_provenance`, whose
+    reading taken in a sweep tree that holds NO release folder at all (0 documents of 0 folders) is newer than
+    the runner's reading of the seven real ones and stands in front of it on four boards. Each of those was
+    fixed where it was found, which is four fixes and one that was missed. Written down here, a consumer can
+    hold the rule once for every tool: `rules_status` prefers the reading that HAD its input, whatever the
+    timestamps say, and a tool declares the absence rather than each reader guessing it from a zero.
+
     `result` must be PASS, FAIL or INCONCLUSIVE; anything else is a usage error, because a verdict this module does not
     recognise must not resolve to a pass by falling through."""
     if result not in CODE:
         print("verdict: %s reported %r, which is not a verdict" % (tool, result)); return USAGE
+    # A tool whose input was absent has not judged, whatever it was about to say.
+    if missing_input and result != INCONCLUSIVE:
+        print("verdict: %s declares its input absent (%s) and reported %s; a judgement needs the thing it "
+              "judges, so this is INCONCLUSIVE" % (tool, str(missing_input)[:70], result))
+        result = INCONCLUSIVE
     # `out` beside the board is the house default; a driver that runs a gate from elsewhere sets VERDICT_DIR
     # rather than teaching every gate an argument it would otherwise never take.
     out_dir = out_dir or os.environ.get("VERDICT_DIR") or "out"
@@ -210,6 +230,9 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "inputs": _with_board(dict(inputs or {})),
         "evidence": list(evidence or [])[:50],
         "note": note,
+        # The sentence saying the input was not there, or None. A reader prefers a verdict that had
+        # its input over one that says it did not, whatever the two timestamps are.
+        "missing_input": (str(missing_input) if missing_input else None),
         # THE RULE IDS THIS VERDICT DECIDES (MESHSAT-862, 16 September 2026). A gate with no rule id decides
         # something the registry does not know about, which is how this project came to enforce rules it had
         # never written down; tests/test_rule_gate_mapping.py holds the list.

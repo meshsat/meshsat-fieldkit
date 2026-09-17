@@ -98,6 +98,15 @@ def main(argv):
     return _v.write("doc_provenance", _v.FAIL if fails else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"documents": len(rows), "folders": len({r[0] for r in rows}), "untraceable": len(fails)},
                     denominator=len(rows), evidence=fails[:20], inputs={"release": rel},
+                    # AND IT SAYS SO IN THE VERDICT, not only on stdout (17 September 2026). The guard above
+                    # protects the file this run would overwrite; it cannot protect a reading in another
+                    # directory, and a sweep writes its verdicts into a fresh one and adopts them afterwards.
+                    # Four boards read this tool's empty INCONCLUSIVE, taken in a tree with no order folder at
+                    # all, in front of the runner's reading of the seven real documents, purely because it was
+                    # forty minutes newer. A verdict that declares its input absent is never preferred now.
+                    missing_input=(None if rows else
+                                   "this tree holds no order folder with a document that asserts hardware "
+                                   "numbers, so no document was read: %s" % os.path.join(rel, "order")),
                     note=("every document that asserts hardware numbers names the board it was read from, by "
                           "sha256, and that board is the one in its own folder" if rows else
                           "no deliverable folder holds a document that asserts hardware numbers"))
