@@ -9351,3 +9351,19 @@ out dir and `carry_placed` proves the snapshot's 211 footprints (board D) are th
 is written as this board's: proved on the hub, `place_audit PASS of 6` carried under the routed board's sha. With
 no snapshot the predictor runs on the board and declines it if routed. Rule `tests/test_sweep_placement.py` holds
 both halves, and `rejudge_all.sh` is no longer needed after a sweep.
+
+**Addendum, 01:47 CEST: the impedance gate had been crashing on board B, and board B's four antenna paths had no
+class.** `impedance_check` built a ten-field row for a pair one of whose legs carries no copper, among eleven-field
+rows, and the first such board (B21, 416 open) crashed it three lines from its writer: no verdict, and PAIR-001 and
+STK-001 read "no impedance_check verdict for this board" through sweeps 26 and 27, which the registry reads as
+nobody having looked. Fixed at the row; the gate's entry point runs under `verdict.guard` now, which turns an
+exception into an INCONCLUSIVE verdict naming it (a crash is a reading too), and its counts take every judged pair
+as the denominator (an unrouted pair is a judged pair that missed: the first run read "met -1, missed 81 of 80").
+B21 reads **impedance_check FAIL, 35 of 116 pairs met** (18 MET, 17 MISSED, 17 SHORT, 9 UNCOUPLED, 19 UNREFERENCED,
+36 UNROUTED), honest on a board that is not routed; board B moves 22 PASS, 16 FAIL, 17 INCONCLUSIVE of 55 and the
+set to 62.5 verified, 14.7 failed, 22.8 inconclusive. Rule `tests/test_gate_crash_guard.py` (every row eleven
+fields, the entry point guarded, the guard proved on a fixture). And RF-001 on board B read "no controlled line
+found": GNSS_ANT (the bias tee to its U.FL), LORA_ANT (the E22 module's pin 21), WA_ANT and WB_ANT (the SKY13351
+switches) sat in the USB pair class or the default with no single-ended target. `gen_pcb_b3.py` carries an RF class
+at 0.14 mm (50 ohm on this six-layer 3313 outer layer, board A's finding) with `*_ANT` ahead of the USB patterns;
+B23 is the first phase that carries it.

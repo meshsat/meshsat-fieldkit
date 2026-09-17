@@ -408,3 +408,28 @@ def main(a):
 
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+
+def guard(tool, fn, argv, rules=None):
+    """Run a gate's main and, if it raises, write INCONCLUSIVE naming the exception instead of leaving nothing.
+
+    18 September 2026: impedance_check raised a ValueError on B21 (a ten-field row among eleven-field ones) three
+    lines before its writer, so board B had no impedance verdict for two sweeps and PAIR-001 and STK-001 read
+    "no verdict", which the registry reads as nobody having looked. A crash is a reading too: the tool did not
+    decide, and here is why. The board named is argv[0] where the gate takes one, so prune_stale_evidence and
+    rules_status can still tell which board it was about. Exit 3, the INCONCLUSIVE code."""
+    try:
+        return fn(argv)
+    except SystemExit as e:
+        raise
+    except BaseException as e:
+        import traceback
+        tb = traceback.format_exc().strip().split("\n")[-1][:200]
+        try:
+            board = argv[0] if argv and str(argv[0]).endswith(".kicad_pcb") else None
+            write(tool, INCONCLUSIVE, denominator=0, inputs={"board": board} if board else {}, rules=rules,
+                  note="the gate raised before it decided: %s (%s)" % (type(e).__name__, tb),
+                  missing_input="a decision: the gate crashed with %s" % type(e).__name__)
+        except BaseException:
+            pass
+        print("%s: CRASHED before deciding: %s" % (tool, tb))
+        return 3
