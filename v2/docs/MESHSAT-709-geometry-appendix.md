@@ -9367,3 +9367,20 @@ found": GNSS_ANT (the bias tee to its U.FL), LORA_ANT (the E22 module's pin 21),
 switches) sat in the USB pair class or the default with no single-ended target. `gen_pcb_b3.py` carries an RF class
 at 0.14 mm (50 ohm on this six-layer 3313 outer layer, board A's finding) with `*_ANT` ahead of the USB patterns;
 B23 is the first phase that carries it.
+
+**Addendum, 01:55 CEST: E12 landed at 0 hard by the router and TEN annular violations by the importer, and the cause is
+KiCad's session import.** E12 routed 200 passes to 4 unrouted of 94 nets and 282 vias; its routed-board gate refused
+it for `annular_width` 10, every one a CELL_F via 0.6 mm wide with a 0.6 mm DRILL. The pre-route board carries those
+vias at 0.6/0.3 (the pre-router's small via) and the session names them `Via[0-3]_600:300_um` at the same positions,
+so nothing of ours had laid a ring of zero: `pcbnew.ImportSpecctraSES` re-creates each via with its drill UNDEFINED
+(reproduced in one python call: drill -0.000001 after the import, drill value 0.6), and KiCad resolves an undefined
+drill to the NET CLASS's via drill, which for CELL_F is BANK's 1.2/0.6. `ses_via_drill.py` reads every via's drill
+back from the session's own padstack names at its position, and the three importers (`route_one.sh`, `routeflow.py`,
+`ses_import_lock.py`) call it on the loaded board before the fill and the save; rule `tests/test_ses_via_drill.py`.
+The same import ran under D13's route (its `route_one.sh` was already running and a running bash script is never
+overwritten), so D13's landing is re-imported with `$SP/reimport_box.sh` the way E12's is being now: the last session
+into the pre-route board with the restore, DRC, then the finish as the phase. The rest of E12's finish held:
+check_pcb_e PASS, netlist_board PASS 818 (Q7 answered), dc_density PASS 4 of 4 (the CELL_F widen trial paid),
+port_protect FAIL (decision 31). Why it never showed before: on every earlier route the pre-laid vias' class drill
+matched their own, or the class was Default; E12 is the first board whose pre-router laid the SMALL via on a net
+whose class carries the LARGE one.
