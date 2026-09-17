@@ -2,32 +2,11 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 214,
-  "pass": 352
+  "fail": 0,
+  "pass": 0
  },
- "denominator": 566,
- "evidence": [
-  "return path under 5G_OFF (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.6 mm [a module power-off request, a static level]",
-  "return path under 5G_PWROFF_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a module power-off line, a static level]",
-  "return path under 5G_RESET (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [a module reset held for milliseconds by an RC]",
-  "return path under 5G_W_DIS_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.8 mm [a wireless-disable pin, a static level]",
-  "return path under 5G_nLED (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [an active-low indicator LED drive]",
-  "return path under BANK2_UPD_N (USB, CONTROLLED_IMPEDANCE): 43.2 of 43.2 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BANK2_UPD_P (USB, CONTROLLED_IMPEDANCE): 42.7 of 42.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BANK2_UPTX_N (USB, CONTROLLED_IMPEDANCE): 15.5 of 15.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BANK2_UPTX_P (USB, CONTROLLED_IMPEDANCE): 15.2 of 15.2 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BT_nDIS1 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.3 mm [a module's Bluetooth-disable pin, a static level]",
-  "return path under BT_nDIS2 (LOW_SPEED_OR_DC): a reference exists under -0.0 of 3.1 mm [a module's Bluetooth-disable pin, a static level]",
-  "return path under BT_nDIS3 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.3 mm [a module's Bluetooth-disable pin, a static level]",
-  "return path under CAM_EN (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an enable, a static level with an RC on it]",
-  "return path under CARD1_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a PCIe clock request, an open-drain static level in this design]",
-  "return path under CARD1_CLK_N (USB, CONTROLLED_IMPEDANCE): 114.3 of 114.3 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD1_CLK_P (USB, CONTROLLED_IMPEDANCE): 116.5 of 116.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD1_RX_N (USB, CONTROLLED_IMPEDANCE): 111.8 of 111.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD1_RX_P (USB, CONTROLLED_IMPEDANCE): 111.7 of 111.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD2_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a PCIe clock request, an open-drain static level in this design]",
-  "return path under CARD3_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a PCIe clock request, an open-drain static level in this design]"
- ],
+ "denominator": 0,
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
@@ -35,10 +14,10 @@
   }
  },
  "missing_input": null,
- "note": "the reference under a signal net, judged per spectral class",
+ "note": "nothing of this kind was checked on this board",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "RET-001",
@@ -47,9 +26,9 @@
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:49:58Z",
- "verdict": "FAIL",
+ "ts": "2026-09-17T20:41:30Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

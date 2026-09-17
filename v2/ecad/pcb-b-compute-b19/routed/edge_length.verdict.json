@@ -3,12 +3,15 @@
  "applicable": true,
  "counts": {
   "judged": 28,
-  "long_and_answered": 2,
+  "long_and_answered": 0,
   "no_declared_edge": 365,
-  "over_critical_length": 0
+  "over_critical_length": 2
  },
  "denominator": 28,
- "evidence": [],
+ "evidence": [
+  "USB_D8_N (HIGH_SPEED_DIGITAL): 81 mm routed against a critical length of 15 mm at a 0.5 ns edge, with no impedance target, no series resistor on it and no declaration",
+  "USB_D8_P (HIGH_SPEED_DIGITAL): 83 mm routed against a critical length of 12 mm at a 0.5 ns edge, with no impedance target, no series resistor on it and no declaration"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
@@ -21,7 +24,7 @@
  "note": "every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-terminated or declared before it is called a defect: being a transmission line is physics, being an uncontrolled one is the finding",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "SI-001"
@@ -29,9 +32,9 @@
  "tool": "edge_length",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:50:10Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T20:41:40Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }

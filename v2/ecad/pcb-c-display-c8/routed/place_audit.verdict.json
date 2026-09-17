@@ -30,7 +30,10 @@
  "note": "carried to the routed board from the placed board after comparing all 194 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_fingerprints": {
+   "PLC-001": "51588472a4c8e371"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "PLC-001"
@@ -38,9 +41,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c2e405a768df182f"
+  "tools_tree_sha": "db432d5bae6d7094"
  },
- "ts": "2026-09-17T20:15:24Z",
+ "ts": "2026-09-17T20:49:24Z",
  "verdict": "PASS",
  "version": "unknown"
 }

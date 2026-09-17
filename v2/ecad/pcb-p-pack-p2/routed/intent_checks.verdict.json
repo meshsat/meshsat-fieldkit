@@ -25,15 +25,15 @@
  "note": "the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [],
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:53:21Z",
+ "ts": "2026-09-17T20:44:51Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

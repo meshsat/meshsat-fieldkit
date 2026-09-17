@@ -17,7 +17,7 @@
  "note": "board E5 declares that no interface of its own carries a target, with its reason",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "INT-001"
@@ -25,9 +25,9 @@
  "tool": "interfaces_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "915bd9d5bf76ddaf"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T19:31:19Z",
+ "ts": "2026-09-17T20:45:22Z",
  "verdict": "PASS",
  "version": "unknown"
 }

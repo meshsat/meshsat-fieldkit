@@ -1,16 +1,8 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "declared_dissipators": 0,
-  "efficiency_undeclared": 0,
-  "no_thermal_path": 0,
-  "rails": 35,
-  "watts_lost_all_peaks_at_once": 8.0,
-  "watts_lost_typical": 3.9,
-  "watts_peak_sum_not_simultaneous": 224.9
- },
- "denominator": 35,
+ "counts": {},
+ "denominator": 0,
  "evidence": [],
  "inputs": {
   "board": {
@@ -19,10 +11,10 @@
   }
  },
  "missing_input": null,
- "note": "a dissipation table exists for this board; the junction temperature needs the envelope's maximum ambient, which is ENV-001 and is not written yet",
+ "note": "no rail and no declared dissipator: nothing to estimate",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "THM-001"
@@ -30,9 +22,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:50:08Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T20:41:38Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

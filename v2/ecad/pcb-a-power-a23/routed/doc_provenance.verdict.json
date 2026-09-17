@@ -18,7 +18,7 @@
  "note": "no deliverable folder holds a document that asserts hardware numbers",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "DOC-002"
@@ -26,9 +26,9 @@
  "tool": "doc_provenance",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:48:34Z",
+ "ts": "2026-09-17T20:41:10Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

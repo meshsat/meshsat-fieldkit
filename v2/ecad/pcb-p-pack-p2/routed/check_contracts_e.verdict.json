@@ -3,19 +3,25 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 8,
-  "unjudged": 0
+  "pass": 0,
+  "unjudged": 5
  },
- "denominator": 8,
- "evidence": [],
+ "denominator": 5,
+ "evidence": [
+  "unjudged, the other board is absent: dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)",
+  "unjudged, the other board is absent: E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)",
+  "unjudged, the other board is absent: E: the 12 AWG lands P_CP and P_CN exist",
+  "unjudged, the other board is absent: E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)",
+  "unjudged, the other board is absent: rail VIN_RAW: the shares sum to 2.0% within the 2.0% the rail declares"
+ ],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "note": "this board's netlist is absent from this tree",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "RF-002",
@@ -24,9 +30,9 @@
  "tool": "check_contracts_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:53:36Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T20:45:06Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

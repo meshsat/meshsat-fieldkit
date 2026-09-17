@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "PWR-003": "797d38a9e68a76ac"
   },
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "PWR-003"
@@ -28,9 +28,9 @@
  "tool": "energy_chain_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:51:00Z",
+ "ts": "2026-09-17T20:42:30Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -3,19 +3,29 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 11,
-  "unjudged": 0
+  "pass": 0,
+  "unjudged": 9
  },
- "denominator": 11,
- "evidence": [],
+ "denominator": 9,
+ "evidence": [
+  "unjudged, the other board is absent: transmit inhibit present on D (J_HARN1)",
+  "unjudged, the other board is absent: J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical",
+  "unjudged, the other board is absent: D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
+  "unjudged, the other board is absent: D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
+  "unjudged, the other board is absent: +3V3 on D J_HARN1",
+  "unjudged, the other board is absent: D8: TX_INHIBIT_n from J_HARN1 into the KEY gate",
+  "unjudged, the other board is absent: D: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits",
+  "unjudged, the other board is absent: rail +3V3: the shares sum to 3.0% within the 3.0% the rail declares",
+  "unjudged, the other board is absent: rail +5V_D8: the shares sum to 6.0% within the 6.0% the rail declares"
+ ],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "note": "this board's netlist is absent from this tree",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "RF-002",
@@ -24,9 +34,9 @@
  "tool": "check_contracts_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:53:36Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T20:45:06Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

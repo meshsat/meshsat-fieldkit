@@ -3,19 +3,27 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 7,
-  "unjudged": 0
+  "pass": 0,
+  "unjudged": 7
  },
  "denominator": 7,
- "evidence": [],
+ "evidence": [
+  "unjudged, the other board is absent: J_PANEL 2x13 map identical on B and C",
+  "unjudged, the other board is absent: transmit inhibit present on C (SW_EMCON)",
+  "unjudged, the other board is absent: panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL",
+  "unjudged, the other board is absent: panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL",
+  "unjudged, the other board is absent: C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL",
+  "unjudged, the other board is absent: C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it",
+  "unjudged, the other board is absent: rail +3V3: the shares sum to 3.0% within the 3.0% the rail declares"
+ ],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "note": "this board's netlist is absent from this tree",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "RF-002",
@@ -24,9 +32,9 @@
  "tool": "check_contracts_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:48:34Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T20:41:10Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

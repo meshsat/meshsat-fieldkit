@@ -2,62 +2,13 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 215,
-  "pass": 419,
-  "unclaimed": 0
+  "fail": 1,
+  "pass": 0,
+  "unclaimed": 1
  },
- "denominator": 634,
+ "denominator": 1,
  "evidence": [
-  "return path under 5G_OFF (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.6 mm [a module power-off request, a static level]",
-  "return path under 5G_PWROFF_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a module power-off line, a static level]",
-  "return path under 5G_RESET (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [a module reset held for milliseconds by an RC]",
-  "return path under 5G_W_DIS_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.8 mm [a wireless-disable pin, a static level]",
-  "return path under 5G_nLED (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [an active-low indicator LED drive]",
-  "return path under BANK2_UPD_N (USB, CONTROLLED_IMPEDANCE): 43.2 of 43.2 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BANK2_UPD_P (USB, CONTROLLED_IMPEDANCE): 42.7 of 42.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BANK2_UPTX_N (USB, CONTROLLED_IMPEDANCE): 15.5 of 15.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BANK2_UPTX_P (USB, CONTROLLED_IMPEDANCE): 15.2 of 15.2 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under BT_nDIS1 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.3 mm [a module's Bluetooth-disable pin, a static level]",
-  "return path under BT_nDIS2 (LOW_SPEED_OR_DC): a reference exists under -0.0 of 3.1 mm [a module's Bluetooth-disable pin, a static level]",
-  "return path under BT_nDIS3 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.3 mm [a module's Bluetooth-disable pin, a static level]",
-  "return path under CAM_EN (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an enable, a static level with an RC on it]",
-  "return path under CARD1_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a PCIe clock request, an open-drain static level in this design]",
-  "return path under CARD1_CLK_N (USB, CONTROLLED_IMPEDANCE): 114.3 of 114.3 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD1_CLK_P (USB, CONTROLLED_IMPEDANCE): 116.5 of 116.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD1_RX_N (USB, CONTROLLED_IMPEDANCE): 111.8 of 111.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD1_RX_P (USB, CONTROLLED_IMPEDANCE): 111.7 of 111.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under CARD2_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a PCIe clock request, an open-drain static level in this design]",
-  "return path under CARD3_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.1 mm [a PCIe clock request, an open-drain static level in this design]",
-  "return path under CC1_F1 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.4 mm [a USB configuration-channel node after its filter]",
-  "return path under CC1_F2 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.4 mm [a USB configuration-channel node after its filter]",
-  "return path under CC1_F3 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.4 mm [a USB configuration-channel node after its filter]",
-  "return path under CC2_F2 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.1 mm [a USB configuration-channel node after its filter]",
-  "return path under CC2_F3 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.1 mm [a USB configuration-channel node after its filter]",
-  "return path under E22_CT (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.3 mm [a radio module's antenna-switch control line, a static level held for a whole pa]",
-  "return path under E22_EN (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an enable, a static level with an RC on it]",
-  "return path under E72_CT (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.3 mm [a radio module's antenna-switch control line, a static level held for a whole pa]",
-  "return path under E72_EN (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an enable, a static level with an RC on it]",
-  "return path under EN33_S3 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.7 mm [a per-slot 3.3 V rail enable, a static level]",
-  "return path under ETH1_P1_N (DIFF100, CONTROLLED_IMPEDANCE): 112.1 of 112.1 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under ETH1_P1_P (DIFF100, CONTROLLED_IMPEDANCE): 113.8 of 113.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under ETH1_P2_N (DIFF100, CONTROLLED_IMPEDANCE): 111.3 of 111.3 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under ETH1_P2_P (DIFF100, CONTROLLED_IMPEDANCE): 113.1 of 113.1 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under ETH1_P3_N (DIFF100, CONTROLLED_IMPEDANCE): 114.7 of 114.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under ETH1_P3_P (DIFF100, CONTROLLED_IMPEDANCE): 115.6 of 115.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under ETH3_P3_N (DIFF100, CONTROLLED_IMPEDANCE): 109.3 of 109.3 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under ETH3_P3_P (DIFF100, CONTROLLED_IMPEDANCE): 107.3 of 107.3 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under EXP_SPARE10 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an unused expander pin, driven by nothing]",
-  "return path under EXP_SPARE4 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an unused expander pin, driven by nothing]",
-  "return path under EXP_SPARE5 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.6 mm [an unused expander pin, driven by nothing]",
-  "return path under EXP_SPARE6 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an unused expander pin, driven by nothing]",
-  "return path under EXP_SPARE7 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.6 mm [an unused expander pin, driven by nothing]",
-  "return path under EXP_SPARE8 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 2.5 mm [an unused expander pin, driven by nothing]",
-  "return path under EXP_SPARE9 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.6 mm [an unused expander pin, driven by nothing]",
-  "return path under GNSS_3V3 (LOW_SPEED_OR_DC): a reference exists under 0.0 of 1.8 mm [a GNSS module supply node]",
-  "return path under HDMI1_CEC (LOW_SPEED_OR_DC): a reference exists under 0.0 of 0.7 mm [the HDMI consumer-electronics control line, a single wire at about 400 bit/s]",
-  "return path under HDMI1_CK_N (DIFF100, CONTROLLED_IMPEDANCE): 167.6 of 167.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under HDMI1_CK_P (DIFF100, CONTROLLED_IMPEDANCE): 166.5 of 166.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under HDMI1_D2_N (DIFF100, CONTROLLED_IMPEDANCE): 168.7 of 168.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]"
+  "intent file present (out/<stem>-intent.json from the schematic generator)"
  ],
  "inputs": {
   "board": {
@@ -69,15 +20,15 @@
  "note": "the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [],
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T17:49:58Z",
+ "ts": "2026-09-17T20:41:30Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -26,7 +26,7 @@
  "note": "the dock block against the board whose spring pins land on it, matched by position; board E5 has no netlist and this contract is between two BOARDS",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4a03222f910fe5f5"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "RF-002",
@@ -35,9 +35,9 @@
  "tool": "check_contracts_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "915bd9d5bf76ddaf"
+  "tools_tree_sha": "50a906a771c0ec02"
  },
- "ts": "2026-09-17T19:31:19Z",
+ "ts": "2026-09-17T20:45:21Z",
  "verdict": "PASS",
  "version": "unknown"
 }
