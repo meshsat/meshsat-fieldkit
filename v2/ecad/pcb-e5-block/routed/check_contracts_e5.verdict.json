@@ -3,14 +3,21 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 0
+  "pass": 33
  },
- "denominator": 0,
+ "denominator": 33,
  "evidence": [],
  "inputs": {
-  "boards": "A,B,C,D,E,P"
+  "block": {
+   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "board_a": {
+   "path": "/root/sweep4/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  }
  },
- "note": "board E5 has no schematic and no netlist: gen_pcb_e5.py reads board A's BOARD FILE and puts a target under each spring pin carrying that pin's net, so its contract is between two boards rather than two netlists and this check cannot judge it. It is a gap with a known shape, not an oversight",
+ "note": "the dock block against the board whose spring pins land on it, matched by position; board E5 has no netlist and this contract is between two BOARDS",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -22,9 +29,9 @@
  "tool": "check_contracts_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "03063ce06e92cec5"
+  "tools_tree_sha": "260ad772c2404bc8"
  },
- "ts": "2026-09-17T00:44:30Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T00:48:33Z",
+ "verdict": "PASS",
  "version": "unknown"
 }
