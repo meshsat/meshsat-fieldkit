@@ -450,3 +450,45 @@ def t_the_document_provenance_check_keeps_a_reading_taken_where_the_folders_are(
     seg = src[i:i + 900]
     assert "doc_provenance.verdict.json" in seg and "counts" in seg, \
         "the tool does not look at what is already on disk before writing its empty answer"
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A VERDICT NAMES THE BOARD IT WAS GIVEN (17 September 2026).
+#
+# `rules_status` compares `inputs.board` with the boards a project directory holds, and a verdict that names
+# none can only be attributed by the directory it sits in. That is how a reading about board B19 sat beside
+# board B21 and answered for it. Twenty gates take the board as their first argument and passed it to nobody.
+
+def t_a_gate_given_a_board_records_it_even_when_it_does_not_say_so():
+    import subprocess, sys, os, json, tempfile, hashlib
+    with tempfile.TemporaryDirectory() as d:
+        b = os.path.join(d, "pcb-x.kicad_pcb")
+        open(b, "wb").write(b"(kicad_pcb (version 20240108))\n")
+        want = hashlib.sha256(open(b, "rb").read()).hexdigest()[:16]
+        prog = ("import sys, os; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, b], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        got = json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]["board"]
+        assert got["sha256_16"] == want and got["from"] == "argv", got
+
+
+def t_a_gate_that_names_its_own_board_is_left_alone():
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        b = os.path.join(d, "pcb-x.kicad_pcb"); open(b, "wb").write(b"(kicad_pcb)\n")
+        prog = ("import sys, os; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1, inputs={'board': 'e5'}))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, b], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        assert json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]["board"] == "e5"
+
+
+def t_a_gate_with_no_board_on_its_command_line_names_none():
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        prog = ("import sys, os; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, "--json"], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        assert "board" not in json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]
