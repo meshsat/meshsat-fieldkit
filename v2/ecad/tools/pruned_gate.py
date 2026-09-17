@@ -59,7 +59,13 @@ def main(a):
     import pcbnew
     b = pcbnew.LoadBoard(a[0]); bad = 0; unreached = []
     pads = {(f.GetReference(), p.GetNumber()): p for f in b.GetFootprints() for p in f.Pads()}
-    for net, ref, num, x, y in rows:
+    # THE LIST HAS SEVEN COLUMNS SINCE 8 SEPTEMBER (escape_prune names the violation and what it hit) and this
+    # loop unpacked FIVE, so the first real list this gate met would have raised ValueError inside a finish;
+    # found 18 September 2026 writing its fixture against B22's own list (7 rows). The five it reads are the
+    # first five; a list with fewer than five columns is refused as not this format.
+    if any(len(r) < 5 for r in rows):
+        raise SystemExit("pruned_gate: %s is not a pruned list (a row has fewer than five tab-separated columns)" % a[1])
+    for net, ref, num, x, y in (r[:5] for r in rows):
         p = pads.get((ref, num))
         if p is None:
             print("pruned_gate: FAIL %s %s.%s not on the board" % (net, ref, num))

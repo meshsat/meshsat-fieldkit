@@ -781,3 +781,65 @@ def t_the_same_rail_on_a_two_millimetre_track_is_inside_its_budget_and_passes():
     _pcbnew()
     verdict, out = _rail("wide")
     assert verdict == "PASS", "a 2.0 mm track carrying 3 A over 75 mm failed the drop rule: %s" % out[-400:]
+
+_PRUNED_FIXTURE = r"""
+import os, sys, json, tempfile, subprocess
+sys.path.insert(0, TOOLS)
+import pcbnew
+
+def board(w=40.0, h=30.0):
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    for (x1, y1, x2, y2) in ((0, 0, w, 0), (w, 0, w, h), (w, h, 0, h), (0, h, 0, 0)):
+        sh = pcbnew.PCB_SHAPE(b); sh.SetShape(pcbnew.SHAPE_T_SEGMENT); sh.SetLayer(pcbnew.Edge_Cuts)
+        sh.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1))); sh.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2)))
+        sh.SetWidth(pcbnew.FromMM(0.1)); b.Add(sh)
+    return b
+
+REACHED = sys.argv[1] == "reached"
+b = board()
+for n in ("GND", "/SIG"): b.Add(pcbnew.NETINFO_ITEM(b, n))
+b.BuildListOfNets(); keep = [b.FindNet("GND"), b.FindNet("/SIG")]; code = {n: b.FindNet(n).GetNetCode() for n in ("GND", "/SIG")}
+fp = pcbnew.FOOTPRINT(b); fp.SetReference("U1"); fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10.0), pcbnew.FromMM(10.0)))
+p = pcbnew.PAD(fp); p.SetNumber("7"); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT)
+p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(0.25), pcbnew.FromMM(1.0))); p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10.0), pcbnew.FromMM(10.0)))
+p.SetLayerSet(pcbnew.LSET.FrontMask()); fp.Add(p); b.Add(fp); p.SetNetCode(code["/SIG"])
+# the router's work: a /SIG track ending on the pad, or (the defective case) a track of the same net 3 mm away
+t = pcbnew.PCB_TRACK(b); t.SetLayer(pcbnew.F_Cu); t.SetWidth(pcbnew.FromMM(0.127)); t.SetNetCode(code["/SIG"])
+t.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(20.0), pcbnew.FromMM(10.0)))
+t.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(10.0 if REACHED else 13.0), pcbnew.FromMM(10.0))); b.Add(t)
+d = tempfile.mkdtemp(prefix="pruned-fixture-"); os.makedirs(os.path.join(d, "out")); path = os.path.join(d, "fixture.kicad_pcb"); b.Save(path)
+lst = os.path.join(d, "out", "fixture-pruned.txt")
+# the list in escape_prune's own SEVEN-column form (net, ref, pad, x, y, violation, what it collided with)
+open(lst, "w").write("# net\tref\tpad\tx\ty\tviolation\twhat it collided with\n/SIG\tU1\t7\t10.000\t10.000\thole_clearance\tPad 1 [GND] of C1 on B.Cu\n")
+r = subprocess.run([sys.executable, os.path.join(TOOLS, "pruned_gate.py"), path, lst], cwd=d, capture_output=True, text=True)
+v = json.load(open(os.path.join(d, "out", "pruned_gate.verdict.json")))
+print("ANSWER", v["verdict"], json.dumps(v.get("counts")))
+print("LINES", [l for l in (r.stdout + r.stderr).split("\n") if "U1.7" in l or "Error" in l][:2])
+"""
+
+
+def _pruned(which):
+    src = "TOOLS = %r\n" % TOOLS + _PRUNED_FIXTURE
+    r = subprocess.run([sys.executable, "-c", src, which], capture_output=True, text=True)
+    assert r.returncode == 0, "the %s fixture did not build:\n%s" % (which, (r.stdout + r.stderr)[-900:])
+    ans = [l for l in r.stdout.split("\n") if l.startswith("ANSWER ")]
+    assert ans, "no answer:\n" + r.stdout[-400:]
+    return ans[0].split()[1], r.stdout
+
+
+def t_a_pruned_pad_the_router_never_reached_fails_the_pruned_gate():
+    """THE DEFECTIVE FIXTURE for pruned_gate (its fixture debt since 11 September, paid 18 September 2026): U1 pad 7
+    is on the pruned list and the only /SIG copper ends 3 mm from it. The list is in escape_prune's own seven-column
+    form, which is what found the gate unpacking five fields: it would have raised inside the first finish that
+    reached it with a real list (B22's has seven rows)."""
+    _pcbnew()
+    verdict, out = _pruned("unreached")
+    assert verdict == "FAIL", "a pruned pad with no track on it passed: %s" % out[-400:]
+    assert "U1.7" in out, "the failure does not name the pad: %s" % out[-300:]
+
+
+def t_a_pruned_pad_with_a_track_of_its_net_ending_on_it_passes_the_pruned_gate():
+    """THE ACCEPTABLE FIXTURE: the same list, the /SIG track ends on the pad."""
+    _pcbnew()
+    verdict, out = _pruned("reached")
+    assert verdict == "PASS", "a pruned pad the router reached failed: %s" % out[-400:]
