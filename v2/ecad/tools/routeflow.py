@@ -40,12 +40,37 @@ def _kicad_version():
 
 
 def now(): return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# THE CHILD THIS SUPERVISOR IS WAITING ON, AND WHY IT IS REMEMBERED (17 September 2026). Every run is launched
+# under `timeout <cap>`; when that cap fires, this process is killed where it stands, inside a blocking wait on
+# a router that is NOT killed with it. Board A's second round was found tonight with its driver three quarters
+# of an hour dead and its router still going, reparented to init, 3 h 04 into a route whose session nobody
+# would ever import: a thread of a rented box held by a job with no supervisor. Killing the direct child is
+# enough, because that child is `timeout`, which takes its own down with it.
+_CHILD = [None]
+
+
+def _stop_child_and_exit(signum, _frame):
+    p = _CHILD[0]
+    if p is not None and p.poll() is None:
+        try:
+            p.terminate()
+            try: p.wait(timeout=20)
+            except Exception: p.kill()
+        except Exception: pass
+    sys.stderr.write("routeflow: signal %d, the running stage was stopped with it\n" % signum)
+    raise SystemExit(143 if signum == 15 else 130)
+
+
 def sh(argv, cwd, log, env=None):
     """Run a fixed argv vector, capture everything to `log`, return the exit code. Never a shell string."""
     e = dict(os.environ); e.update(env or {})
     with open(log, "ab") as f:
         f.write(("\n=== %s  %s  (cwd %s)\n" % (now(), " ".join(argv), cwd)).encode())
-        f.flush(); p = subprocess.run(argv, cwd=cwd, stdout=f, stderr=subprocess.STDOUT, env=e)
+        f.flush()
+        p = subprocess.Popen(argv, cwd=cwd, stdout=f, stderr=subprocess.STDOUT, env=e)
+        _CHILD[0] = p
+        try: p.wait()
+        finally: _CHILD[0] = None
     return p.returncode
 
 # ---------------------------------------------------------------- predicates (each reads an artefact; absence blocks)
@@ -1124,9 +1149,19 @@ def selftest():
     shutil.rmtree(t, ignore_errors=True); ok = sum(1 for _, c in res if c)
     print("selftest: %d of %d predicates block on empty input as required" % (ok, len(res))); return 0 if ok == len(res) else 1
 
+def _install_signal_handlers():
+    """Installed only where this process IS the supervisor: a handler set at import time would surprise a
+    caller that imports routeflow for its predicates, which the tests and `arms.py` both do."""
+    import signal
+    for _s in (signal.SIGTERM, signal.SIGINT):
+        try: signal.signal(_s, _stop_child_and_exit)
+        except (ValueError, OSError): pass
+
+
 if __name__ == "__main__":
     a = sys.argv[1:]
     if not a: print(__doc__); sys.exit(2)
+    _install_signal_handlers()
     if a[0] == "preflight": sys.exit(preflight(a[a.index("--repo") + 1] if "--repo" in a else os.getcwd()))
     if a[0] == "selftest": sys.exit(selftest())
     if a[0] == "status": sys.exit(status(a[1], "--markdown" in a))

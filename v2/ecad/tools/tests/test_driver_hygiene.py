@@ -1110,3 +1110,34 @@ def t_the_finished_board_of_a_round_is_kept_and_not_only_the_routed_one():
     j = body.index("judge_finish(flog")
     assert i > j, "the finished board is kept before the finish has run"
     assert "shutil.copy2" in body[i - 400:i + 400], "the finished board is named but not copied"
+
+
+def t_a_supervisor_killed_by_its_own_cap_takes_its_router_with_it():
+    """Every routeflow run is launched under `timeout <cap>`. When that cap fires the supervisor is killed
+    where it stands, inside a blocking wait on a router that was NOT killed with it: board A's second round was
+    found on 17 September with its driver three quarters of an hour dead and its router still going, reparented
+    to init, 3 h 04 into a route whose session nobody would ever import. A rented box's thread held by a job
+    with no supervisor.
+
+    Executed, not read: a child process runs `routeflow.sh(['sleep', '600'])` under the handler, gets SIGTERM,
+    and the sleep must be gone with it."""
+    import os, sys, time, signal, subprocess, tempfile
+    prog = ("import sys, os; sys.path.insert(0, %r); import routeflow as R;"
+            "R._install_signal_handlers(); open(%r, 'w').write(str(os.getpid()));"
+            "R.sh(['sleep', '600'], '/tmp', %r)")
+    with tempfile.TemporaryDirectory() as d:
+        pidf, log = os.path.join(d, "pid"), os.path.join(d, "log")
+        p = subprocess.Popen([sys.executable, "-c", prog % (TOOLS, pidf, log)])
+        for _ in range(100):
+            time.sleep(0.1)
+            if os.path.exists(pidf): break
+        time.sleep(0.6)
+        kids = subprocess.run(["pgrep", "-P", str(p.pid)], capture_output=True, text=True).stdout.split()
+        assert kids, "the stage never started"
+        child = kids[0]
+        p.send_signal(signal.SIGTERM)
+        p.wait(timeout=30)
+        time.sleep(0.5)
+        alive = subprocess.run(["ps", "-o", "pid=", "-p", child], capture_output=True, text=True).stdout.strip()
+        assert not alive, "the stage outlived the supervisor, which is the defect this rule exists for"
+        assert p.returncode in (143, 130, -15), p.returncode
