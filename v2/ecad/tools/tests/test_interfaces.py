@@ -138,3 +138,21 @@ def t_every_number_in_the_sheet_appears_in_one_of_its_own_quotes():
             if not any(f in quotes for f in forms):
                 bad.append("%s %s = %s appears in none of its own quotes" % (name, field, val))
     assert not bad, "; ".join(bad)
+
+
+def t_the_pair_gate_cites_the_interfaces_own_budget_beside_the_projects():
+    """Rule PAIR-001 asks for the interface's own skew budget to be cited beside the project's 1.00 mm, which
+    is a project decision and no interface's requirement (17 September 2026). The lookup is exercised here and
+    the two board gates that print a pair's mismatch are checked for it."""
+    import sys as _s
+    _s.path.insert(0, TOOLS)
+    import interfaces as I
+    mm, name, src = I.budget_for("b", "/PCIE_TX_P")
+    assert name == "PCIE_CM5" and mm == 0.1 and "Compute Module 5" in src, (mm, name, src)
+    mm, name, _ = I.budget_for("a", "/USB_D8_P")
+    assert name == "USB2_CM5" and mm == 0.15, (mm, name)
+    assert I.budget_for("a", "/NOT_A_PAIR_P") == (None, None, None)
+    for fn in ("check_pcb_a.py", "check_pcb_b.py"):
+        src = open(os.path.join(TOOLS, fn), encoding="utf-8").read()
+        assert "budget_for(" in src, "%s does not cite the interface's own budget" % fn
+        assert "owner decision 36" in src, "%s does not say which of the two numbers decides" % fn

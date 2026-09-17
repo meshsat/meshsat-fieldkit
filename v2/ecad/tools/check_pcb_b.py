@@ -131,7 +131,19 @@ if placed:
     for pair in pairs:
         lp, ln = tl.get(pair + "_P", 0.0), tl.get(pair + "_N", 0.0)
         if (lp > 0) != (ln > 0): check(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (pair, lp, ln)); continue
-        if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s" % (("WARN " if abs(lp - ln) > 1.0 else "PASS ") + pair, lp, ln, abs(lp - ln), "" if abs(lp - ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)"))
+        # THE INTERFACE'S OWN BUDGET IS CITED BESIDE THE PROJECT'S (rule PAIR-001, 17 September 2026). The
+        # 1.00 mm this gate refuses at is a project decision and no interface's requirement; board B is where
+        # that matters most, because its pairs are PCIe, HDMI and Ethernet and their hosts ask 0.10 and 0.15.
+        # Which of the two DECIDES is owner decision 36 and nothing here presumes it.
+        try:
+            import os as _osi, sys as _sysi
+            _sysi.path.insert(0, _osi.path.dirname(_osi.path.abspath(__file__)))
+            import interfaces as _ifc
+            _bmm, _iname, _isrc = _ifc.budget_for("b", pair + "_P")
+        except Exception:
+            _bmm = _iname = _isrc = None
+        _cite = "" if _bmm is None else "; %s asks for %.2f mm (%s)" % (_iname, _bmm, (_isrc or "").strip()[:60])
+        if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (("WARN " if abs(lp - ln) > 1.0 else "PASS ") + pair, lp, ln, abs(lp - ln), "" if abs(lp - ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)", _cite))
 # hole-to-hole webs >= 2 mm between every pair of holes (drill edges), the socket standoffs and the module holes included
 hl = [(v[0], v[1][0], r) for r, v in holes.items()]
 for fp in b.GetFootprints():
