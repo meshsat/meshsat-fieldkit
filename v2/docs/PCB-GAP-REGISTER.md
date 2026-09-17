@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**20 of 57 rules carry a gap.**
+**20 of 58 rules carry a gap.**
 
 ## absent (1)
 
@@ -276,10 +276,10 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (37)
+## covered (38)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: BAT-002, CLK-001,
 CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, GND-001, IMP-002, INT-001, MEC-001, PI-001, PI-002,
 PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002,
-SCH-001, SCH-002, SCH-003, SCH-004, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
+SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
 

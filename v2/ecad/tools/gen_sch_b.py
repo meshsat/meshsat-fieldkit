@@ -418,11 +418,16 @@ def slot(s):
     for k in range(41, 47): c(C(k), "100n", v10, "GND")
     c(C(47), "10u", b33, "GND", "C10u"); c(C(48), "10u", v10, "GND", "C10u")
     # --- NVMe socket (M.2 M-key 2242, Amphenol MDT420M02001) on switch port 1; the card sockets below on port 2
+    # The land's three mechanical pads, none of which the library symbol carries a pin for: S1 and S2 are the
+    # socket's retention tabs and M1 the plated M2.5 standoff hole. Declared NC (17 September 2026, found by judging
+    # every map against its land); tying the standoff to ground is the M.2 convention and is an item for the phase
+    # that draws the socket through a symbol carrying the pad.
+    _M2_MECH = {"M1": "NC", "S1": "NC", "S2": "NC"}
     M = {n: "NC" for n in range(1, 76) if not 59 <= n <= 66}
     M.update({n: b33 for n in (2, 4, 12, 14, 16, 18, 70, 72, 74)}); M.update({n: "GND" for n in (1, 3, 9, 15, 21, 27, 33, 39, 45, 51, 57, 71, 73, 75)})
     M.update({41: "NVME%d_RX_N" % s, 43: "NVME%d_RX_P" % s, 47: "NVME%d_TX_N" % s, 49: "NVME%d_TX_P" % s, 53: "NVME%d_CLK_N" % s, 55: "NVME%d_CLK_P" % s, 50: "PCIE%d_RST1_n" % s, 52: "NVME%d_CLKREQ_n" % s,
               54: "PCIE%d_nWAKE" % s, 38: "NVME%d_DEVSLP" % s, 10: "NVME%d_nLED" % s})
-    part("J_M2N%d" % s, "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S%d (k3s replicated storage)" % s, "M2M", M, "C2927698")
+    part("J_M2N%d" % s, "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S%d (k3s replicated storage)" % s, "M2M", dict(M, **_M2_MECH), "C2927698")
     r(R(35), "10k", "NVME%d_DEVSLP" % s, "GND"); r(R(36), "1k", b33, "LED_NV_A%d" % s); led("LED%d4" % s, "amber NVMe activity", "LED_NV_A%d" % s, "NVME%d_nLED" % s)
     c(C(49), "22u 6.3V", b33, "GND", "C10u"); c(C(50), "100n", b33, "GND")
     if s == 1:   # WiFi link card AW7915-AED on an E-key 2230 (B14 wiring); W_DISABLE1# from the hardware EMCON line through a level stage on the card rail
@@ -430,7 +435,7 @@ def slot(s):
         E.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E.update({n: a33 for n in (2, 4, 72, 74)})
         E.update({3: "NC", 5: "NC", 35: "CARD1_TX_P", 37: "CARD1_TX_N", 41: "CARD1_RX_P", 43: "CARD1_RX_N", 47: "CARD1_CLK_P", 49: "CARD1_CLK_N", 52: "PCIE1_RST2_n", 53: "CARD1_CLKREQ_n",
                   55: "PCIE1_nWAKE", 56: "WIFI_W_DIS_n", 54: "WIFI_W_DIS2_n", 6: "WIFI_nLED"})
-        part("J_M2C1", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)", "M2E", E, "C2977809")
+        part("J_M2C1", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)", "M2E", dict(E, **_M2_MECH), "C2977809")
         r(R(37), "10k", "WIFI_W_DIS_n", a33); r(R(38), "10k", "WIFI_W_DIS2_n", a33); nfet(Q(6), a33, "WIFI_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
         r(R(39), "1k", a33, "LED_WIFI_A"); led("LED15", "blue WiFi link", "LED_WIFI_A", "WIFI_nLED")
     elif s == 2:   # 5G module RM520N-GL on a B-key 3052 (M.2 WWAN socket 2 pinout; TE 1-2199119-5); SIM 1 on the UIM pins, SIM 2 on GPIO_0..3 per the RM5xx series (to confirm from the RM520N-GL hardware design)
@@ -438,7 +443,7 @@ def slot(s):
         B.update({n: "GND" for n in (3, 5, 11, 27, 33, 39, 45, 51, 57, 71, 73)}); B.update({n: a33 for n in (2, 4, 70, 72, 74)})
         B.update({7: "USB_5G_P", 9: "USB_5G_N", 41: "CARD2_RX_N", 43: "CARD2_RX_P", 47: "CARD2_TX_N", 49: "CARD2_TX_P", 53: "CARD2_CLK_N", 55: "CARD2_CLK_P", 50: "PCIE2_RST2_n", 52: "CARD2_CLKREQ_n",
                   54: "PCIE2_nWAKE", 6: "5G_PWROFF_n", 8: "5G_W_DIS_n", 67: "5G_RST_n", 30: "SIM1_RST", 32: "SIM1_CLK", 34: "SIM1_IO", 36: "SIM1_VCC", 40: "SIM2_CLK", 42: "SIM2_IO", 44: "SIM2_RST", 46: "SIM2_VCC", 10: "5G_nLED"})
-        part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)", "M2B", B, "C574849")
+        part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)", "M2B", dict(B, **_M2_MECH), "C574849")
         r(R(37), "10k", "5G_W_DIS_n", a33); nfet(Q(6), a33, "5G_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
         r(R(38), "10k", "5G_PWROFF_n", a33); nfet(Q(7), "5G_OFF", "GND", "5G_PWROFF_n", "2N7002 expander -> FULL_CARD_POWER_OFF#")
         r(R(40), "10k", "5G_RST_n", a33); nfet(Q(8), "5G_RESET", "GND", "5G_RST_n", "2N7002 expander -> RESET#")
@@ -456,7 +461,7 @@ def slot(s):
         E3.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E3.update({n: a33 for n in (2, 4, 72, 74)})
         E3.update({3: "NC", 5: "NC", 35: "CARD3_TX_P", 37: "CARD3_TX_N", 41: "CARD3_RX_P", 43: "CARD3_RX_N", 47: "CARD3_CLK_P", 49: "CARD3_CLK_N", 52: "PCIE3_RST2_n", 53: "CARD3_CLKREQ_n",
                    55: "PCIE3_nWAKE", 56: "WIFI2_W_DIS_n", 54: "WIFI2_W_DIS2_n", 6: "WIFI2_nLED"})
-        part("J_M2C3", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeover U82 and U83)", "M2E", E3, "C2977809")
+        part("J_M2C3", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeover U82 and U83)", "M2E", dict(E3, **_M2_MECH), "C2977809")
         r(R(37), "10k", "WIFI2_W_DIS_n", a33); r(R(38), "10k", "WIFI2_W_DIS2_n", a33); nfet(Q(6), a33, "WIFI2_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
         r(R(39), "1k", a33, "LED_WIFI2_A"); led("LED35", "blue WiFi link, card 2", "LED_WIFI2_A", "WIFI2_nLED")
     c(C(57), "22u 6.3V", a33, "GND", "C10u"); c(C(58), "100n", a33, "GND")
@@ -700,7 +705,9 @@ c("C67", "100n", "+3V3_DEV", "GND"); c("C68", "100n", "+3V3_DEV", "GND"); r("R54
 for i in range(1, 12): part("TP%d" % (40 + i), "Connector", "TestPoint", "EXP_SPARE%d" % i, "TP", {"1": "EXP_SPARE%d" % i})
 ic("U8", 8, "ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE", "SOIC8", {"1": "NC", "2": "NC", "3": "NC", "7": "NC", "4": "GND", "5": "SDA", "6": "SCL", "8": "+3V3_DEV"}, "C1518769"); c("C69", "100n", "+3V3_DEV", "GND")
 ic("U9", 8, "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed", "SOIC8", {"1": "NC", "4": "NC", "2": "+3V3_DEV", "3": "EXP_INT", "5": "GND", "6": "VBAT", "7": "SDA", "8": "SCL"}, "C9866"); c("C70", "100n", "+3V3_DEV", "GND")
-part("U10", "Sensor_Temperature", "TMP117xxDRV", "TMP117AIDRVR board temperature under the coolers (I2C 0x49)", "WSON6", {"1": "SCL", "2": "GND", "3": "EXP_INT", "4": "+3V3_DEV", "5": "+3V3_DEV", "6": "SDA", "7": "GND"}, "C699536"); c("C71", "100n", "+3V3_DEV", "GND")
+# U10 through ic() since 17 Sep 2026: the library TMP117xxDRV symbol has no pin 7, so the "7": "GND" this line always
+# carried reached no wire and the thermal pad floats on B19. A numbered connector symbol carries every pad of the land.
+ic("U10", 7, "TMP117AIDRVR board temperature under the coolers (I2C 0x49; WSON-6: 1 SCL 2 GND 3 ALERT 4 V+ 5 ADD0 6 SDA 7 thermal pad)", "WSON6", {"1": "SCL", "2": "GND", "3": "EXP_INT", "4": "+3V3_DEV", "5": "+3V3_DEV", "6": "SDA", "7": "GND"}, "C699536"); c("C71", "100n", "+3V3_DEV", "GND")
 # ================================================================= the panel ribbon J_PANEL (2x13) to C7's controller and the A22 ribbon J_AB1 (2x13, underside)
 _SEC_MARKS.append(("THE PANEL RIBBON J_PANEL (2X13) TO C7'S CONTROLLER AND THE A22 RIBBON J_AB1 (2X13,..", len(P)))
 part("F1", "Device", "Polyfuse", "2A hold 1812", "F1812", {"1": "+5V_DEV", "2": "PANEL_5V"})

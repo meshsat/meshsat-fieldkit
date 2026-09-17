@@ -70,6 +70,17 @@ coverage:
    remediation: {action: "owner decision 30: the supervisors execute the wipe, power removal only, or accept the software path and rename the feature everywhere",
      owner: OWNER, execution: OWNER, depends_on: [], p50_h: 8, p80_h: 24}}
 
+ SCH-005: {implementation: "kisch.py (check_land, land_pads), schlayout.py (_lands), gen_sch_e.py, gen_sch_b.py",
+   verification: {tool: "kisch.py, pin_map_lands.py", verdict: "pin_map_lands_<letter>", fixtures: "tests/test_pin_map_lands.py",
+     document: "docs/MESHSAT-709-geometry-appendix.md"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "the check runs inside the schematic engine, as part() writes each part, and stops the generator, which stops the
+     chain; pin_map_lands.py judges a COMMITTED netlist the same way, so a board cut before the rule reads as what it is. Run over
+     the six generators on 17 September 2026 it found two things and nothing else: board E's Q7, a PowerPAK SO-8 whose
+     gate and drain nets sat on two SOURCE pins with the drain tab floating, and board B's fan connectors, whose JST-SH
+     land carries two mechanical retention tabs the map never named (declared NC with the reason). Board E's committed
+     board still carries the defect: it is a schematic change and board E is held on decision 31, so the correction
+     reaches copper with the phase that answers it."}
  CMP-001: {implementation: "gen_sch_*.py value strings, each board's intent rails and its declared nodes",
    verification: {tool: derate.py, verdict: derate, fixtures: "tests/test_gate_fixtures.py, tests/test_derate_prefix.py"},
    maturity: ENFORCED, gap_category: NONE,

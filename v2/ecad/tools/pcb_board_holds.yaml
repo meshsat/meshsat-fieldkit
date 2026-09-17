@@ -69,7 +69,11 @@ holds:
      by the shore inlet's own part, which the chain reached by crossing the RP2040 and a ground: a clamp on the
      other side of the board is not this conductor's. The fix is a schematic change, which a route cannot make, and which of the options is
      taken is the owner's to rule because it trades parts, board area and the operating envelope against each
-     other. The envelope itself is decision 34, which is why 31 cannot be ruled before it"
+     other. The envelope itself is decision 34, which is why 31 cannot be ruled before it. AND THE SAME
+     GENERATION CARRIES A SECOND CORRECTION THAT NEEDS NO RULING (17 September 2026, 32.219): Q7, the hot-swap
+     pass FET on the shore and vehicle DC entry, was written with a three-pin map on a five-pad land, so its gate
+     and drain nets sit on two SOURCE pins and its drain tab floats on the E11 that was cut; the generator is
+     corrected and rule SCH-005 reads FAIL on E11 until the board is regenerated"
    permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated, so the board can be read
      and reviewed while it is held"
    forbidden: "any orderable fabrication package, any promotion of the board or its folder, any publication of

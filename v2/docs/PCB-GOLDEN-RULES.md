@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **4a03222f910fe5f5**, 57 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **a2d08c6e5224a5a4**, 58 rules over 34 domains.
 
 ## How to read a rule
 
@@ -224,6 +224,48 @@ source of five and P declaring with its reason that it has none. A declaration i
 that calls a line a pass-through while a part of it reads that line is refused, which is the fixture that
 would have caught the EMCON defect of 9 September. What the tool cannot settle is ZEROIZE, which is decision
 30: the line is held de-asserted everywhere it goes and the question is which device performs the wipe
+
+### SCH-005  every pad of a part's land carries a net or a declared no-connect
+
+Every distinct pad number a part's footprint carries on a copper layer is named in that part's pin map, as a
+net or as an explicit no-connect, and no net of the map lands on a pad the footprint does not have unless the
+same net also sits on a pad it does.
+
+| | |
+|---|---|
+| classification | PROJECT_DECISION |
+| applies | universal for this project |
+| release effect | **BLOCKER** |
+| risk | ELECTRICAL_FUNCTION, SAFETY |
+| verified by | SCRIPT at SCHEMATIC (automatable) |
+| source | NOT_REQUIRED_FOR_PROJECT_DECISION |
+| implementation | kisch.py (check_land, land_pads), schlayout.py (_lands), gen_sch_e.py, gen_sch_b.py |
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
+| owner | SESSION |
+| waiver | not waivable |
+
+**Accept when** The schematic engine judges each part as it is written, against the footprint the part names, and refuses a
+map that misses a pad of its land or puts a net on a pad the land does not carry. The layout stage reports
+how many footprints were judged and refuses when a land could not be read at all.
+
+**Why** A pin map is a claim about a package that nothing checked. Board E's Q7, a CSD19532Q5B on a PowerPAK SO-8
+whose pads are 1, 2, 3 SOURCE, 4 GATE and 5 DRAIN, was written with a three-pin symbol, so the gate net and
+the drain net landed on two SOURCE pins and the drain tab carried nothing: assembled, that part shorts the
+hot-swap controller's gate output to its sense node and to the hot-swap output, and the shore entry's inrush
+and overcurrent protection does not exist. Board A met the same trap on 7 September 2026 and fixed only its
+own helper.
+
+**If violated** A power part is assembled with its terminals on the wrong pads, which no DRC, no netlist comparison and no
+board gate can see, because every one of them judges the board against the netlist and the netlist carries
+the same wrong map.
+
+**Today** the check runs inside the schematic engine, as part() writes each part, and stops the generator, which stops
+the chain; pin_map_lands.py judges a COMMITTED netlist the same way, so a board cut before the rule reads as
+what it is. Run over the six generators on 17 September 2026 it found two things and nothing else: board E's
+Q7, a PowerPAK SO-8 whose gate and drain nets sat on two SOURCE pins with the drain tab floating, and board
+B's fan connectors, whose JST-SH land carries two mechanical retention tabs the map never named (declared NC
+with the reason). Board E's committed board still carries the defect: it is a schematic change and board E is
+held on decision 31, so the correction reaches copper with the phase that answers it.
 
 ## Component Selection
 

@@ -271,6 +271,75 @@ rules:
 # ---------------------------------------------------------------------------------------------------------
 # 3. COMPONENT SELECTION AND DERATING   4. LIFECYCLE AND SUPPLY
 # ---------------------------------------------------------------------------------------------------------
+ - id: SCH-005
+   domain: SCHEMATIC_INTEGRITY
+   short_name: every pad of a part's land carries a net or a declared no-connect
+   requirement: >
+     Every distinct pad number a part's footprint carries on a copper layer is named in that part's pin map, as a
+     net or as an explicit no-connect, and no net of the map lands on a pad the footprint does not have unless the
+     same net also sits on a pad it does.
+   classification: PROJECT_DECISION
+   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   owner: SESSION
+   evidence_scope:
+   - schematic_sha256
+   - manifest_version
+   - tools_tree_sha
+   risk_class:
+   - ELECTRICAL_FUNCTION
+   - SAFETY
+   release_effect: BLOCKER
+   waiver_policy:
+     allowed: false
+     authority: OWNER
+     evidence: ''
+     scope: ''
+     expiry: ''
+     residual_risk: ''
+   source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
+   sources: []
+   acceptance_criteria: >
+     The schematic engine judges each part as it is written, against the footprint the part names, and refuses a
+     map that misses a pad of its land or puts a net on a pad the land does not carry. The layout stage reports
+     how many footprints were judged and refuses when a land could not be read at all.
+   rationale: >
+     A pin map is a claim about a package that nothing checked. Board E's Q7, a CSD19532Q5B on a PowerPAK SO-8
+     whose pads are 1, 2, 3 SOURCE, 4 GATE and 5 DRAIN, was written with a three-pin symbol, so the gate net and
+     the drain net landed on two SOURCE pins and the drain tab carried nothing: assembled, that part shorts the
+     hot-swap controller's gate output to its sense node and to the hot-swap output, and the shore entry's inrush
+     and overcurrent protection does not exist. Board A met the same trap on 7 September 2026 and fixed only its
+     own helper.
+   failure_mode: >
+     A power part is assembled with its terminals on the wrong pads, which no DRC, no netlist comparison and no
+     board gate can see, because every one of them judges the board against the netlist and the netlist carries
+     the same wrong map.
+   verification_method:
+   - SCRIPT
+   verification_phase: SCHEMATIC
+   automation_feasibility: AUTOMATABLE
+   boards_affected:
+   - a
+   - b
+   - c
+   - d
+   - e
+   - e5
+   - p
+   interfaces_affected: []
+   implementation_location: tools/kisch.py (check_land, land_pads), tools/schlayout.py (_lands)
+   false_positive_analysis: >
+     A WRONG REFUSAL WOULD BE A LAND WHOSE PAD NUMBERING IS NOT THE PART'S PIN NUMBERING. Two shapes exist here
+     and both are answered rather than exempted. A mechanical pad, such as the JST-SH retention tabs numbered MP,
+     is named in the map with the word NC, which states that it carries nothing on purpose; leaving it unnamed
+     would be indistinguishable from forgetting it. And a land that MERGES several pins into one number, such as
+     the TDSON-8 whose drain pins 5 to 8 are one pad 5, is written out pin by pin in the map: those extra pins are
+     reported, not refused, because the same net sits on the pad the land does have. The refusal is kept for the
+     case where a net has NO pad on the part at all, which is the only shape that is always wrong.
+   maturity_at_writing: UNASSESSED
+   notes: >
+     17 September 2026. The rule runs where the footprint libraries are, which is where every generator runs; a
+     host without them refuses rather than passing, because a check that did not run is not a pass. This project's
+     own library travels with the tree, so the rule's fixtures run on the runner too.
  - id: CMP-001
    domain: COMPONENT_SELECTION
    short_name: absolute maximum never reached

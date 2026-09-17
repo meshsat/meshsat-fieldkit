@@ -53,7 +53,7 @@ rm -rf $S; mkdir -p $S/out
 for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
           return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
-          edge_length derate clock_check port_protect safe_lines safe_lines_$L erc_gate place_audit check_contracts check_contracts_$L lcsc_fill \
+          edge_length derate clock_check port_protect safe_lines safe_lines_$L pin_map_lands_$L erc_gate place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
           sensitive_nodes assembly_set rf_line ledger_verify; do
   rm -f "$P/routed/$_g.verdict.json"
@@ -161,6 +161,7 @@ run "assembly set" python3 $T/assembly_set.py --ecad "$E" --board $L
 if [ -s out/$N.net ]; then
   run "exposed ports" python3 $T/port_protect.py out/$N.net
   run "safety lines"  python3 $T/safe_lines.py out/$N.net
+  run "pin maps against their lands (SCH-005)"  python3 $T/pin_map_lands.py out/$N.net $L
 else
   # A BOARD WITH NO NETLIST STILL HAS AN ANSWER IF IT DECLARES ONE (17 September 2026): board E5 is generated
   # from board A's board file and has no schematic, so both rules read "no verdict for this board" and counted

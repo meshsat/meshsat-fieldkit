@@ -275,7 +275,7 @@ def land_pads(fpid):
                 if not num: continue                       # an unnumbered paste aperture is not a pin
                 if not re.search(r'"(F|B|In\d+|\*)\.Cu"', body): continue
                 nums.add(num)
-            ans = nums or None
+            ans = nums          # a land with no copper pad at all (a mounting hole, a panel jack's bore) reads as an empty set: judged, nothing to name
             break
     if ans is None: UNCHECKED[fpid] = "no library footprint found for %s" % fpid
     _LANDS[fpid] = ans
@@ -401,6 +401,22 @@ def rect(x0, y0, x1, y1, width=0.25):
 def emit_part(p, x, y):
     _ANCHOR[0] = x
     pins = place_symbol(p["lib"], p["sym"], p["ref"], p["value"], p["fp"], x, y, p["lcsc"], in_bom=p.get("in_bom", True)); seen = set()
+    # A MAP KEY THE SYMBOL DOES NOT HAVE IS DROPPED ON THE FLOOR, and nothing said so (17 September 2026). Board B's
+    # U10, a TMP117 in WSON-6, wrote "7": "GND" for its thermal pad and the library symbol carries no pin 7, so the
+    # entry reached no wire, no label and no netlist node, and the pad floats on the board that was cut. The
+    # symbol is the only road from the map to the netlist: a key it cannot carry is refused here, where the
+    # symbol's pins are known, with the same strictness the loop below applies in the other direction.
+    _have = {num for num, _, _, _, _ in pins}
+    # A key the symbol lacks but the LAND has may be written "NC": that is the declared no-connect for a mechanical
+    # pad (an M.2 socket's standoff and retention tabs, a JST-SH header's tabs) which the land check above asks for
+    # and which no library symbol carries a pin for. Anything else on such a key is a net that would reach nothing.
+    _dead = sorted(k for k, v in p["nets"].items() if k not in _have and v != "NC")
+    if _dead:
+        raise SystemExit("%s (%s): the map names pin%s %s and the symbol %s:%s has no such pin (it has %s), so %s "
+                         "would reach nothing. Use a symbol that carries the pad, or a numbered connector symbol "
+                         "through ic()." % (p["ref"], p["value"], "" if len(_dead) == 1 else "s", ", ".join(_dead),
+                                            p["lib"], p["sym"], ", ".join(sorted(_have, key=lambda v: (len(v), v))),
+                                            "that net" if len(_dead) == 1 else "those nets"))
     for num, nm, px, py, rot in pins:
         sx, sy = x + px, y - py; key = (round(sx, 2), round(sy, 2)); net = p["nets"].get(num)
         if net is None: raise SystemExit("%s pin %s (%s) has no net assignment" % (p["ref"], num, nm))
