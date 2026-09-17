@@ -12,8 +12,8 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 | result | rules | percent |
 |---|---|---|
 | PASS | 14 | 25.9 |
-| FAIL | 10 | 18.5 |
-| INCONCLUSIVE | 30 | 55.6 |
+| FAIL | 11 | 20.4 |
+| INCONCLUSIVE | 29 | 53.7 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
 
@@ -30,7 +30,7 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 8087c341773d75a1, current is 4a03222f910fe5f5 |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 37 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 36 |
-| PWR-003 protection coordination | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no energy_chain_b verdict for this board |
+| PWR-003 protection coordination | BLOCKER | SCHEMATIC | **FAIL** | energy_chain_b FAIL: {'fail': 1, 'stages': 3} |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 30 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
