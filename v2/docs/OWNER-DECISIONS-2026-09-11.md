@@ -2400,3 +2400,37 @@ boards that fail it fail on copper that is missing rather than on a number that 
 proximity screen, carry their own numbers (a via within 2.5 mm) and are asked separately. And option 1 is not
 a claim that the boards are correct: it is what turns "we cannot tell" into "these four boards need more
 reference plane, and here are the nets".
+
+---
+
+## Decision 27 gets board C's return-path number: eighteen nets, one cause, and it is the stackup (17 September 2026)
+
+Decision 27 is board C's layer count, asked on 15 September with the route as its evidence: four-layer C fails
+the return-path rule on 81 of 127 nets, six-layer C routes 0 hard and 0 unrouted. C24 is cut on four layers
+and passes thirty of its forty-two rules. **Its eighteen remaining return-path failures were measured to their
+cause today and they are all the same shape.**
+
+Board C is F.Cu, In1 (a solid ground plane), In2 (routing) and B.Cu. A track on F.Cu has In1 under it and
+passes. **Every one of the eighteen failing runs is on B.Cu, whose only neighbouring layer is In2**, and In2's
+ground pour is cut into fragments by In2's own tracks:
+
+| net | class | uncovered | of | its longest single run |
+|---|---|---:|---:|---|
+| `SCL` | CLOCKED_DIGITAL | 259.9 mm | 488.5 | **172.9 mm** on B.Cu, `EXP_INT` on In2 0.63 mm away |
+| `USB_PNL_P` | HIGH_SPEED_DIGITAL | 131.0 mm | 456.5 | 108.5 mm on B.Cu, `MWARN_A` on In2 0.14 mm away |
+| `EPD_SDA` | CLOCKED_DIGITAL | 121.5 mm | 414.7 | 75.4 mm on B.Cu, no copper on In2 within 1.2 mm |
+| `HB2` | CLOCKED_DIGITAL | 130.5 mm | 489.2 | 73.8 mm on B.Cu, no copper on In2 within 1.2 mm |
+| `EPD_DC` | CLOCKED_DIGITAL | 105.5 mm | 353.9 | 99.8 mm on B.Cu, `MWARN_A` on In2 0.54 mm away |
+
+The panel backer is a 344 x 228 mm ring with its controller and drivers on the underside, so the underside is
+where the long runs are, and the underside is the one side of this board that has no plane to reference.
+**No routing change fixes that**: the router can only put a net on a layer the board has. What fixes it is a
+reference under B.Cu, which is what a six-layer stack gives (F, GND, signal, signal, GND, B) and what
+decision 27 is asking about.
+
+**What this does NOT say.** It is not an argument that C24 is unusable: the failures are MUST_JUSTIFY rather
+than blocking, the nets are an I2C bus, an e-paper SPI bus, two heartbeat lines and one USB pair to the panel
+controller, and none of them is a high-speed interface by its own specification. It is the cost of four
+layers, stated in nets, so the decision is taken against a number rather than an impression. The other side of
+that cost is still owed and is the same thing decisions 27 and 28 have been waiting for since 15 September:
+**a like-for-like price, four layers against six, from the ordering session.**
