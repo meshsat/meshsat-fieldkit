@@ -2348,3 +2348,55 @@ the return path**, and that is what a decision would be trading away.
 **What is still owed, and it is what decisions 27 and 28 asked for:** a like-for-like price. Two quotes per
 board from the ordering session, four layers against six on C, and two against four on P, which is the cost
 side the P0 asked for and the only part of this question that no measurement here can produce.
+
+---
+
+## Decision 39, 17 September 2026: the criterion a break in a signal's reference is judged against, and the measurement that says the number hardly matters
+
+**Why it is being asked.** Rule RET-001, "a continuous adjacent return path", is a BLOCKER on six boards and
+it has read INCONCLUSIVE on every one of them since the registry was written, for one reason: the tolerance
+each signal class is judged against is this project's own number. Ten millimetres or five percent of the run
+for a fast net, thirty or fifteen for a clocked bus. The principle has an authority (TI SCAA082A section 1.6,
+and since yesterday ECSS-E-HB-20-07A clause 6.1.2.5.2, which says a clock runs on a layer adjacent to a solid,
+unsplit plane and that a gap crossed by one is a common-mode source). **Neither publishes a tolerance.** The
+ECSS handbook's position, transcribed in `v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md` under the
+heading of what it does not say, is that for a clock it should not happen at all.
+
+A rule whose number nobody can cite cannot pass and cannot fail: it stays INCONCLUSIVE, and a board with a
+perfect return path is refused exactly as loudly as one without. That is the state all six boards are in.
+
+**The measurement that makes this cheap, taken on the seven routed boards this tree holds.** Every net that
+fails today, with its gap, its length and the limit it was judged against:
+
+| board | signal nets judged | over their limit | the closest call | the worst |
+|---|---:|---:|---|---|
+| A (A35) | 197 | **0** | nothing near it | nothing |
+| B (B19) | 566 | **214** | | `CARD1_CLK_P` 116.5 mm of 116.5, limit 10.0 (**11.7x**) |
+| C (C24) | 127 | **18** | `EPD_CS` 72.7 mm of 390.3, limit 58.5 (1.2x) | `QSPI_D2` 39.4 of 61.2, limit 10.0 (3.9x) |
+| D (D12) | 127 | **0** | nothing near it | nothing |
+| E (E9) | 75 | **1** | `USB_E6_N` 10.2 mm of 187.2, limit 10.0 (**1.02x**) | the same net, it is the only one |
+| P (P4) | 29 | **6** | `FUSE` 12.6 of 17.6, limit 10.0 (1.3x) | `SMBC_I` 42.8 of 47.8, limit 30.0 (1.4x) |
+
+**Of the thirty-two failing nets on record, exactly ONE sits inside a factor of 1.1 of its limit.** Board B's
+card-slot nets read a gap equal to their whole length: 111 to 117 millimetres with no reference on a
+neighbouring layer anywhere along the run, which no tolerance in any standard would pass. Board C's worst runs
+four times its limit. **The number is not what is deciding these boards; the copper is.** Moving the tolerance
+by a factor of two in either direction changes the verdict on one net of thirty-two, and that net is board
+E's `USB_E6_N` at two percent over.
+
+**The options.**
+
+| | option | what it costs |
+|---|---|---|
+| 1 | **Rule the project's own criterion, as a ruling rather than a citation** (recommended): a fast net may lose its adjacent reference for 10 mm or 5 percent of its run, a clocked bus for 30 mm or 15 percent, a slow net is asked only whether a return path exists. Recorded as OWNER_RULED rather than VERIFIED, revisited if a board ever lands within ten percent of the line. | Nothing on any board changes today. RET-001 becomes decidable: A and D pass it, B, C, E and P fail it and the failures are the copper, which is work with a known shape. Board E's single net is the one place the ruling itself decides, and it is 0.2 mm of margin. |
+| 2 | **Derive the tolerance from each net's own edge rate** (the critical length at the handbook's own lambda/6 criterion, from the board's stackup). | Physically the right answer and the tooling for it exists (`edge_length.py`). It needs a declared rise time for every signal net and the boards declare fifteen between them: the RP2040's datasheet publishes pad delays and no transition time at all, so most of the numbers would be assumptions wearing a derivation. It would leave RET-001 INCONCLUSIVE for longer, not shorter. |
+| 3 | **Hold RET-001 INCONCLUSIVE until a standard with a number is obtained.** | Honest and free, and it blocks the set indefinitely: no board can pass a rule whose bar does not exist, so fab readiness cannot reach 100 percent on any board while it stands. |
+
+**Recommendation: option 1**, because the measurement above says the choice is nearly free. The criterion is
+recorded as the owner's ruling with its own number and its own basis, the rule starts deciding, and the four
+boards that fail it fail on copper that is missing rather than on a number that is arguable.
+
+**What it does NOT settle.** RET-003, the return transition at a reference change, and RET-004, the ground-via
+proximity screen, carry their own numbers (a via within 2.5 mm) and are asked separately. And option 1 is not
+a claim that the boards are correct: it is what turns "we cannot tell" into "these four boards need more
+reference plane, and here are the nets".
