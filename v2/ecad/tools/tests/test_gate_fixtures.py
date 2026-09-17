@@ -252,7 +252,12 @@ def t_check_contracts_is_inconclusive_with_no_netlist_at_all():
     rc, out = _run([os.path.join(TOOLS, "check_contracts.py"), d], cwd=d)
     v = _verdict(d, "check_contracts")
     assert rc in (1, 3), (rc, out)
-    assert v["denominator"] == v["counts"]["fail"] + v["counts"]["pass"], v
+    # The three outcomes sum to the denominator: judged and passed, judged and failed, or unjudged because a
+    # board it names is absent. With no netlist at all every contract is unjudged, and the verdict says that
+    # rather than reading as a set with nothing wrong in it.
+    c = v["counts"]
+    assert v["denominator"] == c["fail"] + c["pass"] + c.get("unjudged", 0), v
+    assert v["verdict"] == "INCONCLUSIVE" and c["pass"] == 0 and c["fail"] == 0, v
 
 
 def t_check_contracts_counts_every_contract_it_evaluated():
@@ -262,8 +267,16 @@ def t_check_contracts_counts_every_contract_it_evaluated():
              {"TX_INHIBIT_n": {("Q3", "1"), ("J_MEZZ1", "4")}, "GND": {("Q3", "2")}})
     rc, out = _run([os.path.join(TOOLS, "check_contracts.py"), d], cwd=d)
     v = _verdict(d, "check_contracts")
+    # NOTHING FALLS OFF THE COUNT. A contract is judged and passes, judged and fails, or names a board absent
+    # from this tree and is unjudged; the three sum to the denominator. With only one board's netlist here
+    # every contract is unjudged, so the denominator is what EXISTS rather than zero, and the verdict says so
+    # instead of reading like a clean set (17 September 2026: before, an unjudged contract was counted as a
+    # failure, which put one board's absence on another board's page).
+    c = v["counts"]
     assert v["denominator"] > 0, v
-    assert v["counts"]["fail"] + v["counts"]["pass"] == v["denominator"], v
+    assert c["fail"] + c["pass"] + c.get("unjudged", 0) == v["denominator"], v
+    assert v["verdict"] == "INCONCLUSIVE" and c["fail"] == 0, v
+    assert "absent" in (v.get("note") or ""), v.get("note")
 
 
 # ---------------------------------------------------------------- the admission rule itself
