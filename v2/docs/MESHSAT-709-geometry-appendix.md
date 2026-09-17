@@ -9301,3 +9301,10 @@ predicted collisions on their own pre-route boards; B21 reads 13 of 75 (its chai
 locked pair copper of the pre-router takes escape sites the placed board still had), which is the honest PLC-001
 on B21 and what B22's 9 is measured against. ETA from the register: 54 h P50, 164 h P80 of engineering effort at
 one worker, waits excluded; ten items are the owner's.
+
+**Addendum, 01:01 CEST: SCH-005 PASS on all six boards with a schematic; readiness 62.5 percent verified, 14.1
+failed, 23.4 inconclusive of 333.** Sweep 27 had copied the hub's tools a minute before the registry edit reached
+them, so its six `pin_map_lands` readings carried SCH-005's previous digest and read stale, correctly; re-taken under
+the current registry from the committed netlists alone (no board needed): A 397 of 397, B 930, C 193, D 206, E 160
+(18 pins on merged pads, declared), P 55, **0 failures on every board**. Every SCH-005 failure of 32.219 is answered
+at the source.

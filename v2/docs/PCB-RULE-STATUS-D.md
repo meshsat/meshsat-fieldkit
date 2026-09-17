@@ -21,9 +21,9 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 33 | 64.7 |
+| PASS | 34 | 66.7 |
 | FAIL | 5 | 9.8 |
-| INCONCLUSIVE | 13 | 25.5 |
+| INCONCLUSIVE | 12 | 23.5 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **51** | 100.0 |
 
@@ -35,7 +35,7 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 994 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_d PASS of 11 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_d PASS of 2 |
-| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under a different version of SCH-005 (7531a598ee0dec90, current is 9993ce195b935d6d) |
+| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_d PASS of 206 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 13 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d INCONCLUSIVE |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d INCONCLUSIVE |

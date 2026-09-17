@@ -11,9 +11,9 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 34 | 72.3 |
+| PASS | 35 | 74.5 |
 | FAIL | 4 | 8.5 |
-| INCONCLUSIVE | 9 | 19.1 |
+| INCONCLUSIVE | 8 | 17.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **47** | 100.0 |
 
@@ -24,7 +24,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 308 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 868 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_c PASS of 7 |
-| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under a different version of SCH-005 (7531a598ee0dec90, current is 9993ce195b935d6d) |
+| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_c PASS of 193 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 16 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_c PASS of 67 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_c PASS of 67 |

@@ -13,7 +13,7 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "733d89dc62a1b783"
+   "sha256_16": "0ce77e5b4a350971"
   }
  },
  "missing_input": null,
@@ -21,9 +21,9 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "SCH-005": "7531a598ee0dec90"
+   "SCH-005": "9993ce195b935d6d"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "SCH-005"
@@ -31,9 +31,9 @@
  "tool": "pin_map_lands_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T22:38:59Z",
+ "ts": "2026-09-17T23:01:04Z",
  "verdict": "PASS",
  "version": "unknown"
 }
