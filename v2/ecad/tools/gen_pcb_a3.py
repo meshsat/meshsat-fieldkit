@@ -749,10 +749,23 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
 # clearances at the board minimum (7 Sep 2026: with the explicit net-class assignments the DRC enforces them, and a class clearance above a fine-pitch pad gap of 0.2 fails inside the LM5176 and TPS23861 pads); HV 0.18 for the 54 V nodes
 CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13),   # 8 Sep 2026 (32.71): 0.127/0.127 on the 3313 outer layer computes 94 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds; clearance 0.10 so the gap keeps a margin
-            "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "NODE": (0.127, 0.5, 0.8, 0.4, 0.5, 0.25), "SW": (0.127, 0.5, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.127, 0.4, 1.0, 0.5, 0.5, 0.3), "RF": (0.18, 0.14, 0.7, 0.3, 0.2, 0.15), "HV": (0.18, 0.4, 0.8, 0.4, 0.4, 0.25)}
+            "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "NODE": (0.127, 0.5, 0.8, 0.4, 0.5, 0.25), "SW": (0.127, 0.5, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.127, 0.4, 1.0, 0.5, 0.5, 0.3), "RF": (0.18, 0.14, 0.7, 0.3, 0.2, 0.15), "HV": (0.18, 0.4, 0.8, 0.4, 0.4, 0.25),
+            # SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, so that
+            # the DSN's class-pair clearance (route_one.sh FR_CLASS_CLEAR, appendix 32.222) can hold it off the switching classes
+            # without touching its own escape: POE_CS sat in SW beside the very net it must keep 0.50 mm from, and a class cannot
+            # be kept away from itself (17 September 2026, rule ANA-001).
+            "SENSE": (0.127, 0.25, 0.7, 0.3, 0.2, 0.15)}
 PATTERNS = [("USB_*", "USB"), ("PD_CC*", "USB"), ("CELL+", "NODE"), ("VBAT", "NODE"), ("PRECHG", "PWR"), ("VIN_RAW", "NODE"), ("VBUS20", "NODE"), ("CH_ACN", "NODE"), ("CH_SRP", "NODE"), ("CH_SW*", "SW"), ("FE_SW*", "SW"), ("FE_OUT", "NODE"), ("FE_CS", "SW"),
             ("PA_SW*", "SW"), ("PA_OUT", "NODE"), ("PA_CS", "SW"), ("HF_SW*", "SW"), ("HF_OUT", "PWR"), ("PD_SW*", "SW"), ("PD_OUT", "PWR"), ("PD_PPHV", "PWR"), ("PD_VBUS", "PWR"), ("S?_SW", "SW"), ("SD_SW", "SW"), ("S?_OUT", "RAIL"), ("SD_OUT", "RAIL"), ("PD_VPWR", "PWR"), ("PD_SW", "PWR"),
             ("+5V_*", "RAIL"), ("+13V8_PA", "RAIL"), ("+12V_HF", "RAIL"), ("VMON", "PWR"), ("VHEAT", "PWR"), ("GND", "PWR"), ("+3V3", "PWR"), ("B33_SW", "SW"), ("RF_*", "RF"), ("POE_SW*", "HV"), ("POE_OUT", "HV"), ("+54V_POE", "HV"), ("POE_CS", "SW")]
+try:
+    import yaml as _yaml
+    _sens = ((_yaml.safe_load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "pcb_sensitive.yaml"))) or {}).get("boards") or {}).get("a") or {}
+    _sens_nets = [n["net"] for n in (_sens.get("nodes") if isinstance(_sens, dict) else _sens) or []]
+except BaseException as _e:
+    _sens_nets = []; print("SENSE class: pcb_sensitive.yaml not read (%s), no sensitive net moves class" % type(_e).__name__)
+PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS      # first, so a sensitive net wins over the switching pattern that also names it
+print("SENSE class: %d declared sensitive net(s) take it" % len(_sens_nets))
 # A net class clearance below the board minimum is not a tighter rule, it is a rule that never applies: KiCad enforces the board minimum as a
 # floor, the router takes the class value from the DSN, and every pair it lays at that spacing is a violation. A23's route came back with 25
 # clearance violations reading "board minimum clearance 0.1270 mm; actual 0.1017 mm", all of them between the two legs of a pair, because the

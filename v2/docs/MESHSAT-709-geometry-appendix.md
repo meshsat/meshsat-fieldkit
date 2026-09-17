@@ -9114,7 +9114,7 @@ against 50**, hard 0 of the fifteen types with the project file beside the board
 its project file reads zero controlled lines, the 12 September trap in another coat). The change reaches copper
 with the generation after A43, which routes on the old class; `boards/a.json` carries the corrected note.
 
-### 32.222 The instrument ANA-001 has been missing: a clearance between two classes, in the DSN (17 September 2026, 23:35 CEST; MESHSAT-862)
+### 32.222 The instrument ANA-001 has been missing: a clearance between two classes, in the DSN (17 September 2026, 23:25 CEST; MESHSAT-862)
 
 **A sense line beside a switching net is what ANA-001 refuses, and nothing this pipeline could give Freerouting
 asked for that.** Board A's two real failures (POE_CS 0.182 mm from POE_SW2 over 10.79 mm, B33_FB 0.350 from
@@ -9132,5 +9132,12 @@ rules on a fixture DSN, all failing on the pre-fix launcher.
 
 **It is an instrument and not yet a result.** Board A's route takes hours and A43 is routing on the old class
 now; the arm is written into `boards/a.json`: read A43's board first (does it repeat the two runs), then one
-route with the class-pair rule against A43, one variable. The SENSE class itself is the placement generator's
-to declare from the intent's sensitive list, which is the half of the change that lands with the arm.
+route with the class-pair rule against A43, one variable.
+
+**Addendum, 23:30 CEST: the SENSE class exists and is measured on a placement.** `gen_pcb_a3.py` reads the
+board's sensitive list and puts every declared net in a SENSE class of its own with the default geometry,
+listed ahead of the pattern table so a sensitive net wins over a switching pattern that names it: POE_CS sat in
+SW beside POE_SW2, the very net it must keep 0.50 mm from, and a class cannot be kept away from itself. On the
+regenerated placement all nineteen declared nets take SENSE (POE_CS and B33_FB among them, POE_SW2 in HV), the
+gate reads ALL PASS, RF-001 PASS of 11, hard 0. The arm is now `FR_CLASS_CLEAR="SENSE:SW:0.5,SENSE:HV:0.5"` on
+the next A route and nothing else.
