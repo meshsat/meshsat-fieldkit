@@ -78,6 +78,30 @@ import sys, pcbnew
 tmp = sys.argv[1].replace(".dsn", "-noplanes.kicad_pcb")
 b2 = pcbnew.LoadBoard(tmp); print("DSN export:", pcbnew.ExportSpecctraDSN(b2, sys.argv[1]))
 PY
+# FR_CLASS_CLEAR="SENSE:SW:0.5,SENSE:HV:0.5" (17 September 2026, rule ANA-001, appendix 32.222): a clearance between two
+# CLASSES that leaves each class's own clearance untouched inside it. A per-net-pair keep-away cannot reach Freerouting
+# through KiCad's custom rules, and a class clearance at the declared 0.50 mm cannot escape the sense pins themselves
+# (board A's POE_CS is 0.250 mm from its neighbour at U16 pin 16); the DSN's own structure section carries class-pair
+# rules, `(class_class (classes A B) (rule (clearance X)))`, which is exactly the shape the rule asks for. Off unless set;
+# a class the DSN does not carry is named and skipped rather than invented.
+if [ -n "${FR_CLASS_CLEAR:-}" ]; then python3 - "$W/$N.dsn" "$FR_CLASS_CLEAR" <<'PYCC'
+import re, sys
+fn, spec = sys.argv[1], sys.argv[2]; s = open(fn).read()
+have = set(re.findall(r"\(class\s+(\S+)", s)); added = []; skipped = []
+for item in filter(None, spec.split(",")):
+    a, b, mm = item.split(":"); mm = float(mm)
+    if a not in have or b not in have: skipped.append("%s:%s (%s not in the DSN)" % (a, b, a if a not in have else b)); continue
+    added.append("    (class_class (classes %s %s) (rule (clearance %.4f)))" % (a, b, mm))
+if added:
+    # the structure section ends before "(placement"; the class_class entries belong inside it, after the layers and rules
+    i = s.find("\n  (placement")
+    if i < 0: i = s.find("(placement")
+    j = s.rfind(")", 0, i)                      # the structure's closing bracket
+    s = s[:j] + "\n" + "\n".join(added) + "\n  " + s[j:]
+    open(fn, "w").write(s)
+print("class_class: %d rule(s) written%s" % (len(added), ("; skipped " + "; ".join(skipped)) if skipped else ""))
+PYCC
+fi
 # Our 1.9.0 build when it is on the host, the stock jar otherwise (10 September 2026). The patch adds a per-pass session write
 # and nothing else, proved: on the same D board DSN with the same options the two jars produced BYTE IDENTICAL final sessions
 # (139,311 bytes, cmp clean) and auto-routed in 1 min 23.13 s against 1 min 24.08 s. FR_JAR names another jar, e.g.
