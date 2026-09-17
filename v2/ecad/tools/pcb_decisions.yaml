@@ -102,6 +102,11 @@ decisions:
     asked: 2026-09-16
     status: open
     ask: "which device performs the wipe, and on what edge"
+    recommendation: >-
+      the panel controller does the wipe on the falling edge, because it is the only device that both sees the
+      switch and can reach the secure element, and the drives are erased by the modules on its message with the
+      limitation written down: a module that is not running cannot be erased by anything on this line. It is
+      firmware and a sentence in the software contract, not a conductor
     evidence: "THE TITLE IS TOO HARSH ON THE HARDWARE AND THE NETLISTS SAY SO (read 17 September 2026). The
       line reaches exactly one processor and that processor can reach the thing to be erased. On board C,
       ZEROIZE_HW carries the panel switch SW_ZERO, its pull R10 and its capacitor C20 to U3 PIN 34, the RP2040
@@ -124,6 +129,12 @@ decisions:
     asked: 2026-09-16
     status: open
     ask: "clamp every exposed conductor at its entry, or accept the four paths that reach their clamp through an active part"
+    recommendation: >-
+      rule decision 34 first, then clamp at the entry every conductor that reaches a semiconductor with nothing
+      between it, which is board D's seven and is the cheap half: those are parts and board area on a board whose
+      copper is finished. The paths that reach their clamp through an active part are the expensive half and are
+      worth accepting only where that active part is itself rated for the level the envelope states, which is why
+      the envelope comes first
     blocks:
       TRN-001: [a, d, e]
     evidence: "BOARD D IS IN THIS DECISION TOO, AND ITS GATE HAD BEEN SAYING SO WHILE THE REGISTRY SAID THE RULE
@@ -140,6 +151,10 @@ decisions:
     asked: 2026-09-16
     status: open
     ask: "accept the reach beyond 1.5 mm where every nearer site is occupied, or move the parts"
+    recommendation: >-
+      accept the reach beyond 1.5 mm and record the distance per via, because a longer return loop is a shorter
+      one than none: it is five vias on boards D and E at 1.75 to 2.25 mm and thirty-two on board C, and buying
+      the last 0.75 mm costs a placement and a route on boards that are finished copper
     evidence: "BOARD E IS THE SAME CASE AND IS MEASURED NOW (17 September 2026). Of its 131 signal vias the rule
       judges 60: 79 sit in fine-pitch fans and 65 carry a signal with no edge worth a return loop. Four are
       left, and for each one the fixer searched outward and found the nearest FREE ground site beyond the
@@ -161,6 +176,10 @@ decisions:
     asked: 2026-09-16
     status: open
     ask: "the budget the rail is judged against, and which board pays for the widening"
+    recommendation: >-
+      leave the split as it is declared, A four points and D two of the six the codec's own datasheet asks for:
+      both boards pass their own share today, the total is no longer this project's number, and the only thing
+      that would reopen it is a measured drop moving
     holds_nothing_today: "PI-002 passes on both boards because each declares a share and the two shares sum
       inside it. What is open is whether those numbers are anybody's requirement: two of the three were this
       project's own defaults. A rule passing against a bar nobody set is not the same as a rule satisfied."
@@ -224,6 +243,10 @@ decisions:
     asked: 2026-09-16
     status: open
     ask: "this project's 1.00 mm, or each interface's own number from its host's datasheet"
+    recommendation: >-
+      each interface's own number from its host's datasheet, because on the evidence that exists it costs one 0.14
+      mm meander on one pair of board A, which `pair_match.sh` already runs in every finish, while this project's
+      1.00 mm leaves that pair at twice the budget the compute module states for it
     evidence: "BOARD A'S THREE PAIRS ARE MEASURED AND THE RULING IS NEARLY FREE ON IT (17 September 2026, read
       off both A40 and A41, which give IDENTICAL numbers because the pre-router lays a pair from the PLACEMENT
       and the route does not touch it): USB_D8 P 139.47 mm against N 139.75, mismatch 0.29 mm; USB_E6 0.12 mm;
@@ -267,6 +290,11 @@ decisions:
     asked: 2026-09-17
     status: open
     ask: "lower board B's own minimum to the fabricator's floor, or widen the two classes"
+    recommendation: >-
+      widen the two classes to the board's own 0.127 mm minimum: it changes NO pair geometry, because DIFF100's
+      pair gap is 0.200 and USB's is 0.127, so both impedances stay exactly where they are, and it removes a
+      clearance the router believes and the board does not offer. Lowering the board minimum instead would reopen
+      the CM5 receptacle escape scheme, which is where the 0.127 came from
     evidence: "MEASURED FROM THE PROJECT FILE AND THE FABRICATOR'S OWN PAGE, 17 September 2026. Board B declares
       DIFF100 and USB at a clearance of 0.100 mm while the board's own minimum is 0.127, which is what
       `class_floor` refuses in its own words, a class below the board minimum is a lie the router believes.
