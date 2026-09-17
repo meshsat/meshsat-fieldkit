@@ -279,6 +279,23 @@ def _load_obstacles(board, fixed_refs=()):
             bb = pd.GetBoundingBox()
             _OBSTACLES.append((pcbnew.ToMM(bb.GetLeft()) - OX - GAP, OY - pcbnew.ToMM(bb.GetBottom()) - GAP,
                                pcbnew.ToMM(bb.GetRight()) - OX + GAP, OY - pcbnew.ToMM(bb.GetTop()) + GAP))
+    # A KEEP-OUT DRAWN INSIDE A FOOTPRINT IS INVISIBLE TO board.Zones() (17 September 2026). `J_WOA`, one of the
+    # WiFi antenna changeover connectors, carries its own rule area forbidding pads and tracks, and at a 2.0 mm
+    # fine-pitch margin the packer put U24, an eFuse from another region, inside it: five `items_not_allowed` on
+    # the placed board, which is a hard DRC error and not a preference. The footprint's zones are FP_ZONEs and
+    # this loop never saw them. Only a footprint that is already placed counts, for the reason the fixed-part
+    # rule gives: every other footprint is still at the origin and its keep-out would be a phantom there.
+    for fp in board.GetFootprints():
+        if fp.GetReference() not in fixed_refs and fp.GetReference() not in placed:
+            continue
+        for z in fp.Zones():
+            if not z.GetIsRuleArea(): continue
+            if not (z.GetDoNotAllowPads() or z.GetDoNotAllowFootprints()): continue   # a track keep-out is the router's business
+            bb = z.GetBoundingBox()
+            w, h = pcbnew.ToMM(bb.GetWidth()), pcbnew.ToMM(bb.GetHeight())
+            if w > OBSTACLE_MAX_MM or h > OBSTACLE_MAX_MM: continue
+            _OBSTACLES.append((pcbnew.ToMM(bb.GetLeft()) - OX, OY - pcbnew.ToMM(bb.GetBottom()),
+                               pcbnew.ToMM(bb.GetRight()) - OX, OY - pcbnew.ToMM(bb.GetTop())))
     for z in board.Zones():
         if not z.GetIsRuleArea():
             continue
@@ -438,6 +455,18 @@ for name, (x0, y0, x1, y1), refs, back in REGIONS:
         # hundred new obstacles inside regions that already overflowed by up to 64 mm has nowhere to step.
         # With the regions sized (owner ruling 13, 13 September) the room exists, so it is measured again, one
         # variable, behind a knob that is OFF until the number says otherwise.
+        # AND ITS OWN KEEP-OUT, if the part carries one that forbids pads or footprints. This is not a knob: a
+        # part inside such an area is a hard DRC error on the placed board, which is what J_WOA's antenna keep-out
+        # and U24 were (17 September 2026).
+        for _ref, _fp, _hi in members:
+            for _z in _fp.Zones():
+                if not _z.GetIsRuleArea(): continue
+                if not (_z.GetDoNotAllowPads() or _z.GetDoNotAllowFootprints()): continue
+                _zb = _z.GetBoundingBox()
+                _w, _h = pcbnew.ToMM(_zb.GetWidth()), pcbnew.ToMM(_zb.GetHeight())
+                if _w > OBSTACLE_MAX_MM or _h > OBSTACLE_MAX_MM: continue
+                _OBSTACLES.append((pcbnew.ToMM(_zb.GetLeft()) - OX, OY - pcbnew.ToMM(_zb.GetBottom()),
+                                   pcbnew.ToMM(_zb.GetRight()) - OX, OY - pcbnew.ToMM(_zb.GetTop())))
         if PTH_OBSTACLE:
             for _ref, _fp, _hi in members:
                 for _pd in _fp.Pads():
