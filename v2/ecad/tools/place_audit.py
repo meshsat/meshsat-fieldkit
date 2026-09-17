@@ -72,6 +72,24 @@ def main(a):
     b = pcbnew.LoadBoard(a[0]); lines = []; coll = 0
     fps = list(b.GetFootprints()); fine = [f for f in fps if fine_pitch(f)]
     locked = [t for t in b.GetTracks() if t.IsLocked()]
+    # A PLACEMENT RULE JUDGED ON A ROUTED BOARD IS JUDGED ON THE WRONG ARTEFACT (18 September 2026, sweep 26).
+    # This predictor's subject is the PLACED board after the escape pass: which fans will collide, which pads have
+    # no escape. On a routed board the router has covered escapes and the closers have pruned dangling ones, so
+    # the same predictor read 19 collisions on B21 where its placed board read 10, and the sweep wrote that over
+    # the placed reading. A placed board's tracks are locked to the last one (escapes, joins, pre-laid pairs,
+    # spines); a routed board carries thousands the router laid unlocked (B21 12,739 of 17,361, A32 3,928 of
+    # 4,854). Such a board is not this rule's input: INCONCLUSIVE with the input named, which never replaces the
+    # placed snapshot's reading. `--on-routed` is for a person who wants the number anyway.
+    _segs = [t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]
+    _unlocked = [t for t in _segs if not t.IsLocked()]
+    if "--on-routed" not in a and len(_unlocked) > 100 and len(_unlocked) > 0.2 * len(_segs):
+        print("place_audit: INCONCLUSIVE this is a ROUTED board (%d of %d track segments unlocked, laid by the router): the "
+              "placement predictor is judged on the placed snapshot, not here (--on-routed to force)" % (len(_unlocked), len(_segs)))
+        return verdict.write("place_audit", verdict.INCONCLUSIVE,
+                             counts={"unlocked_segments": len(_unlocked), "segments": len(_segs), "fine_pitch": len(fine), "footprints": len(fps)},
+                             denominator=0, inputs={"board": a[0]},
+                             missing_input="the placed board: this one is routed (%d of %d segments unlocked), and the escapes the "
+                                           "router covered or the closers pruned are not what this rule predicts" % (len(_unlocked), len(_segs)))
     env, escaped = escape_envelopes(b, fine, reach, locked)
     # 1. unescaped pads
     for f in fine:

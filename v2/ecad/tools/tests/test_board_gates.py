@@ -631,6 +631,7 @@ def pad(fp, num, x, y, w, h):
     p.SetLayerSet(pcbnew.LSET.FrontMask()); fp.Add(p); return p
 
 KEEPOUT = sys.argv[1] == "keepout"
+ROUTED = sys.argv[1] == "routed"
 b = board()
 for n in ("GND", "/SIG"): b.Add(pcbnew.NETINFO_ITEM(b, n))
 b.BuildListOfNets(); keep = [b.FindNet("GND"), b.FindNet("/SIG")]; code = {n: b.FindNet(n).GetNetCode() for n in ("GND", "/SIG")}
@@ -650,6 +651,11 @@ if KEEPOUT:
     ko = k.Outline(); ko.NewOutline()
     for x, y in ((27, 17), (33, 17), (33, 23), (27, 23)): ko.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
     b.Add(k)
+if ROUTED:
+    # what a router leaves: hundreds of UNLOCKED segments (a placed board has none of these)
+    for i in range(200):
+        t = pcbnew.PCB_TRACK(b); t.SetLayer(pcbnew.B_Cu); t.SetWidth(pcbnew.FromMM(0.127)); t.SetNetCode(code["/SIG"])
+        t.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(2.0 + 0.15 * i), pcbnew.FromMM(2.0))); t.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(2.0 + 0.15 * i), pcbnew.FromMM(4.0))); b.Add(t)
 d = tempfile.mkdtemp(prefix="place-audit-"); path = os.path.join(d, "fixture.kicad_pcb"); b.Save(path); os.makedirs(os.path.join(d, "out"), exist_ok=True)
 r = subprocess.run([sys.executable, os.path.join(TOOLS, "place_audit.py"), path], cwd=d, capture_output=True, text=True)
 v = json.load(open(os.path.join(d, "out", "place_audit.verdict.json")))
@@ -886,3 +892,13 @@ def t_a_pruned_pad_with_a_track_of_its_net_ending_on_it_passes_the_pruned_gate()
     _pcbnew()
     verdict, out = _pruned("reached")
     assert verdict == "PASS", "a pruned pad the router reached failed: %s" % out[-400:]
+
+
+def t_the_placement_predictor_declines_a_routed_board_and_names_the_input_it_wants():
+    """THE WRONG ARTEFACT (18 September 2026): the plane-pad fixture with two hundred unlocked router segments on it
+    is a routed board; the predictor reads INCONCLUSIVE with `missing_input` naming the placed snapshot, so it never
+    replaces the placed board's own reading (sweep 26 wrote 19 collisions over B21's 10 that way)."""
+    _pcbnew()
+    verdict, out = _place_audit("routed")
+    assert verdict == "INCONCLUSIVE", "the predictor judged a routed board: %s" % out[-400:]
+    assert "unlocked_segments" in out, "the refusal does not count the router's own copper: %s" % out[-300:]
