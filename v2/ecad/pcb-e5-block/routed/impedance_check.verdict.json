@@ -19,7 +19,7 @@
  "note": "the board declares its pair classes and gives none a target, or its own facts declare that it controls no impedance at all, which is its recorded design",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "IMP-001",
@@ -29,9 +29,9 @@
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:47:24Z",
+ "ts": "2026-09-17T16:56:17Z",
  "verdict": "PASS",
  "version": "unknown"
 }

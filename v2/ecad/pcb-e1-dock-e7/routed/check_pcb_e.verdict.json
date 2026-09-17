@@ -19,7 +19,7 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "MEC-001"
@@ -27,9 +27,9 @@
  "tool": "check_pcb_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:46:35Z",
+ "ts": "2026-09-17T16:55:27Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -3,7 +3,7 @@
 
 # Rule status: board P
 
-Manifest **2026-09-16.1**, rule set **f8db9f9b0747ca1b**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **4a03222f910fe5f5**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
@@ -11,22 +11,23 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 31 | 70.5 |
-| FAIL | 5 | 11.4 |
-| INCONCLUSIVE | 8 | 18.2 |
+| PASS | 25 | 54.3 |
+| FAIL | 3 | 6.5 |
+| INCONCLUSIVE | 18 | 39.1 |
 | WAIVED | 0 | 0.0 |
-| **denominator** | **44** | 100.0 |
+| **denominator** | **46** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
-| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 87 |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
+| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 241 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_p PASS of 4 |
+| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_p PASS of 0 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 5 |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_p PASS of 19 |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_p PASS of 19 |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 4 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 3 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_p PASS of 3 |
@@ -41,9 +42,10 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 7 |
+| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no interfaces_p verdict for this board |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_p PASS of 0 |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
-| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
+| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
@@ -52,14 +54,14 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 1 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 2 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_p PASS of 139 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_p PASS of 1 |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 9 |
 | BAT-001 the cell block is protected in hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | generation intends to comply and nothing verifies it: the protection is designed and its thresholds are configured in software; no check compares a th |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 78 |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_p PASS of 1 |
-| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 313 |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
+| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance INCONCLUSIVE |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set f8db9f9b0747ca1b, current is 4a03222f910fe5f5 |
+| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 328 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

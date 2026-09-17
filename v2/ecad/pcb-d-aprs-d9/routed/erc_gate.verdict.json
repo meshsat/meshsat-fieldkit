@@ -4,9 +4,9 @@
  "counts": {
   "allowed": 0,
   "blocking": 0,
-  "violations": 355
+  "violations": 340
  },
- "denominator": 355,
+ "denominator": 340,
  "evidence": [],
  "inputs": {
   "board": "d",
@@ -19,17 +19,17 @@
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "SCH-001"
  ],
  "tool": "erc_gate",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "61c9ad0ec9eb6db8"
+  "git_head": "fd6fac9b3fd6",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T11:59:54Z",
+ "ts": "2026-09-17T16:59:05Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "fd6fac9b3fd6"
 }

@@ -17,7 +17,7 @@
  "note": "each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "PWR-002"
@@ -25,9 +25,9 @@
  "tool": "power_sequence",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:44:03Z",
+ "ts": "2026-09-17T16:52:55Z",
  "verdict": "PASS",
  "version": "unknown"
 }

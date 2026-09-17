@@ -15,24 +15,24 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "c13c0ab262c7f7e1"
+   "sha256_16": "3994f1966b0f7c5f"
   }
  },
  "missing_input": null,
  "note": "this board declares that no line of its own inhibits a hazard, with its reason",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "SCH-004"
  ],
  "tool": "safe_lines_p",
  "tools": {
-  "git_head": "e36ca03f7422",
+  "git_head": "",
   "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T16:45:56Z",
+ "ts": "2026-09-17T16:56:10Z",
  "verdict": "PASS",
- "version": "e36ca03f7422+dirty"
+ "version": "unknown"
 }

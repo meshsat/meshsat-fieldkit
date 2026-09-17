@@ -17,7 +17,7 @@
  "note": "one ground declared, or every partition declared with its crossing points and the signals that cross; found from the netlist and compared with the board's own declaration",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "GND-001"
@@ -25,9 +25,9 @@
  "tool": "ground_system",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:46:14Z",
+ "ts": "2026-09-17T16:55:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }

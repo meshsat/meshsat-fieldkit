@@ -158,6 +158,18 @@ interfaces:
          quote: "apply USB revision 2.0, full-speed",
          url_or_path: "v2/vendor/ti/ti-pcm2912a.pdf", accessed: "2026-09-16"}
 
+  SMBUS_GAUGE:
+    what: "the pack gauge's SMBus, board P's only bus and the one conductor pair that leaves its board"
+    impedance_ohm: null            # a 100 kHz two-wire bus has no transmission-line requirement
+    impedance_tol_percent: null
+    intra_pair_mm: null
+    inter_pair_mm: null
+    max_length_mm: null
+    sources:
+      - {title: "TI BQ4050 datasheet", clause: "SMBus timing, fSMB",
+         quote: "SMBus operating frequency SLAVE mode, SMBC 50% duty cycle: 100 kHz",
+         url_or_path: "v2/vendor/battery/ti-bq4050.pdf", accessed: "2026-09-17"}
+
 # Which nets on which board belong to which interface, by the net-name patterns the placement generators
 # already use for their classes. A pattern that matches nothing on its board is reported, never silent.
 boards:
@@ -187,3 +199,7 @@ boards:
     name: pcb-e1-dock
     assignments:
       - {interface: USB_FULL_SPEED, patterns: ["USB*"], class: USB}
+  p:
+    name: pcb-p-pack
+    assignments:
+      - {interface: SMBUS_GAUGE, patterns: ["SMB*"], class: Default}
