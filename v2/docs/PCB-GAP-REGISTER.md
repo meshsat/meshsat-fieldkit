@@ -75,7 +75,7 @@ the charge sense resistor, pin 19), warning that without it the ringing 'overwhe
 current information' and can push the average-current loop into oscillation. Six parts were added at the
 source. The clearances themselves are this project's own numbers and no source in this tree sets them, which
 is why the measured distance travels in the verdict beside them.  
-*Close it by* declare sensitive nodes in the intent file and check their clearance and reference. Owner **SESSION**. Effort P50 6h, P80 16h.
+*Close it by* The declarations and the check are DONE (17 September 2026): every board that has a sensitive node declares it with the clearance it asks for, and sensitive_nodes.py measures it. What remains is COPPER and rides with those boards' next route: board A has ten clearances under their own asked-for distance, four of which are the charger filter nets its committed board does not yet carry, and board E has two. Owner **SESSION**. Effort P50 2h, P80 6h.
 
 **BAT-001 the cell block is protected in hardware** (BLOCKER, GENERATED_ONLY)  
 the protection is designed and its thresholds are configured in software; no check compares a threshold
@@ -92,7 +92,7 @@ found there is the reason this rule exists: GND_V, the vehicle-side return, meet
 the second winding of the SRF1260 common-mode choke, and DCIN_PGD and SHORE_INHIBIT cross the partition. The
 declaration says in words that this is a FILTER and not an isolation barrier, which is the reading that would
 otherwise be made by anyone designing to it.  
-*Close it by* a per-board ground statement and a check that no signal crosses an undeclared split. Owner **SESSION**. Effort P50 6h, P80 16h.
+*Close it by* DONE 17 September 2026: every board states its ground system in boards/<letter>.json and ground_system.py judges it against the netlist, six of six passing. Board E's two-ground partition is declared with its single crossing, the SRF1260 choke, and the two slow signals that cross it. Owner **SESSION**. Effort P50 0h, P80 0h.
 
 **RF-001 RF paths are designed as RF** (BLOCKER, ENFORCED)  
 the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
