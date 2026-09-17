@@ -9,21 +9,21 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 31 | 66.0 |
-| FAIL | 7 | 14.9 |
-| INCONCLUSIVE | 9 | 19.1 |
+| PASS | 26 | 55.3 |
+| FAIL | 9 | 19.1 |
+| INCONCLUSIVE | 12 | 25.5 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **47** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 19 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_d PASS of 11 |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | check_contracts_d INCONCLUSIVE |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches the connector |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 13 |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify PASS of 517 |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **FAIL** | jlc_certify_d FAIL: {'BENCH_FITTED': 2, 'CERTIFIED': 62, 'HAND_FIT': 2, 'WRONG_MODEL': 2} |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **FAIL** | jlc_certify_d FAIL: {'BENCH_FITTED': 2, 'CERTIFIED': 62, 'HAND_FIT': 2, 'WRONG_MODEL': 2} |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 5 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 32 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **PASS** | dc_density PASS of 4 |
@@ -43,8 +43,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 2 |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 6 |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no rf_line verdict for this board |
-| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | check_contracts_d PASS of 11 |
-| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_d PASS of 1 |
+| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | check_contracts_d INCONCLUSIVE |
+| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | check_contracts INCONCLUSIVE |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **FAIL** | place_audit FAIL: {'collisions': 1, 'fine_pitch': 6, 'footprints': 211, 'measured': 6} |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 14 |
@@ -59,8 +59,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **FAIL** | assembly_set FAIL: {'boards': 1, 'fail': 7, 'unchecked_footprints': 11, 'unverified_rows': 7} |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 12 |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate_d FAIL: {'folder': 1, 'quote': 0, 'stale': 1} |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate_d FAIL: {'folder': 1, 'held': 0, 'quote': 0, 'stale': 1} |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 0, 'claims_rc': 0, 'contracts_rc': 3, 'fail': 5, 'missing': 0, 'pass': 1, 'quote': 1} |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 1, 'claims_rc': 0, 'contracts_rc': 3, 'fail': 3, 'held': 1, 'missing': 0, 'pass': 2, 'quote': 2} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 300 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |
