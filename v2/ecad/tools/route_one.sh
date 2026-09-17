@@ -88,10 +88,19 @@ if [ -n "${FR_CLASS_CLEAR:-}" ]; then python3 - "$W/$N.dsn" "$FR_CLASS_CLEAR" <<
 import re, sys
 fn, spec = sys.argv[1], sys.argv[2]; s = open(fn).read()
 have = set(re.findall(r"\(class\s+(\S+)", s)); added = []; skipped = []
-for item in filter(None, spec.split(",")):
+# A DSN CLASS NAME IS A LIST (17 September 2026, E12's first DSN). KiCad 9 joins a net's class assignments with commas,
+# so the nets this project puts in SENSE arrive as "SENSE,Default" or "PWR,SENSE" and the switching nodes as
+# "SW,Default"; a rule naming SENSE alone reached nothing on board E. Every DSN class whose members include the named
+# class takes the rule, and the pairs are the cross product.
+def members(name): return set(name.split(","))
+for item in filter(None, spec.split(";")) if ";" in spec else filter(None, spec.split(",")):
     a, b, mm = item.split(":"); mm = float(mm)
-    if a not in have or b not in have: skipped.append("%s:%s (%s not in the DSN)" % (a, b, a if a not in have else b)); continue
-    added.append("    (class_class (classes %s %s) (rule (clearance %.4f)))" % (a, b, mm))
+    A = sorted(c for c in have if a in members(c)); B = sorted(c for c in have if b in members(c))
+    if not A or not B: skipped.append("%s:%s (%s not in the DSN)" % (a, b, a if not A else b)); continue
+    for ca in A:
+        for cb in B:
+            if ca == cb: continue
+            added.append("    (class_class (classes %s %s) (rule (clearance %.4f)))" % (ca, cb, mm))
 if added:
     # the structure section ends before "(placement"; the class_class entries belong inside it, after the layers and rules
     i = s.find("\n  (placement")
