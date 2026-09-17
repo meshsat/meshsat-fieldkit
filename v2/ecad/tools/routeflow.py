@@ -463,6 +463,24 @@ def resolve_phase(prof, phase=None):
         ph = json.load(open(bf)).get("phase")
         if not ph: raise SystemExit("routeflow: boards/%s.json declares no phase" % letter)
     if not re.match(r"^[A-Z]+[0-9]+[A-Z0-9]*$", ph): raise SystemExit("routeflow: %r is not a phase (A35, C18, P5)" % ph)
+    # A PHASE GIVEN ON THE COMMAND LINE MUST BE THE ONE THE BOARD FILE DECLARES (17 September 2026). The phase
+    # is a fact about the board: the generators stamp it on the silk, the finish names the folder after it and
+    # the set gate refuses a folder that is not the declared one. When it can also arrive as an argument the
+    # two drift, and they did: board C was cut and committed as C24, a deliverable that passes 38 of its 38
+    # properties, while boards/c.json still said C18, so the set gate read the CURRENT board as stale against
+    # a declaration six phases behind it. The argument may LEAD the declaration, which is what an arm does
+    # before it knows whether its board will be adopted, so the refusal names the one line that fixes it
+    # rather than forbidding the run outright; ROUTEFLOW_PHASE_UNDECLARED=1 is the arm's way of saying so.
+    _letter = str(prof.get("board", "")).split("-")[1][0] if str(prof.get("board", "")).startswith("pcb-") else ""
+    _bf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "boards", "%s.json" % _letter)
+    if phase and os.path.exists(_bf) and not os.environ.get("ROUTEFLOW_PHASE_UNDECLARED"):
+        try: _decl = json.load(open(_bf)).get("phase")
+        except ValueError: _decl = None
+        if _decl and _decl != ph:
+            raise SystemExit("routeflow: --phase %s and boards/%s.json declares %s. The phase is a fact about "
+                             "the board, not an argument: set \"phase\": \"%s\" in boards/%s.json, or pass "
+                             "ROUTEFLOW_PHASE_UNDECLARED=1 if this run is an arm whose board may never be "
+                             "adopted." % (ph, _letter, _decl, ph, _letter))
     return json.loads(text.replace("<PHASE>", ph).replace("<phase>", ph.lower()))
 
 
