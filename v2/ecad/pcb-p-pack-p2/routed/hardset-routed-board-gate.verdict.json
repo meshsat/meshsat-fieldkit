@@ -23,7 +23,7 @@
   },
   "drc": {
    "path": "out/pcb-p-pack-drc.json",
-   "sha256_16": "47541bf746384513"
+   "sha256_16": "4a58428682bee7bb"
   }
  },
  "missing_input": null,
@@ -41,7 +41,7 @@
   "git_head": "",
   "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T17:45:55Z",
+ "ts": "2026-09-17T17:53:19Z",
  "verdict": "PASS",
  "version": "unknown"
 }

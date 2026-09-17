@@ -17,6 +17,9 @@
  "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "REL-001": "d94df1c6a3ff6010"
+  },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
@@ -25,9 +28,9 @@
  "tool": "reliability",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:55:43Z",
+ "ts": "2026-09-17T17:53:04Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -10,11 +10,11 @@
  "evidence": [],
  "inputs": {
   "release": {
-   "path": "/root/sweep23/v2/release/revA",
+   "path": "/root/sweep24/v2/release/revA",
    "sha256_16": null
   }
  },
- "missing_input": "this tree holds no order folder with a document that asserts hardware numbers, so no document was read: /root/sweep23/v2/release/revA/order",
+ "missing_input": "this tree holds no order folder with a document that asserts hardware numbers, so no document was read: /root/sweep24/v2/release/revA/order",
  "note": "no deliverable folder holds a document that asserts hardware numbers",
  "policy": {
   "hard_types": 15,
@@ -26,9 +26,9 @@
  "tool": "doc_provenance",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:54:27Z",
+ "ts": "2026-09-17T17:51:45Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

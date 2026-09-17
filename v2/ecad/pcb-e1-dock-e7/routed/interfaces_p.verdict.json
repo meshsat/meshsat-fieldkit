@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "assignments": 1,
+  "disagreements": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "p",
+  "spec": "pcb_interfaces.yaml"
+ },
+ "missing_input": null,
+ "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "4a03222f910fe5f5"
+ },
+ "rules": [
+  "INT-001"
+ ],
+ "tool": "interfaces_p",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "73b5cba32ea68d0b"
+ },
+ "ts": "2026-09-17T17:53:11Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

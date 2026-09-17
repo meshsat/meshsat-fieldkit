@@ -25,10 +25,10 @@
  ],
  "tool": "energy_chain_a",
  "tools": {
-  "git_head": "7fbaea83559b",
-  "tools_tree_sha": "078eb01175f91a89"
+  "git_head": "",
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T17:19:05Z",
+ "ts": "2026-09-17T17:48:35Z",
  "verdict": "PASS",
- "version": "7fbaea83559b+dirty"
+ "version": "unknown"
 }

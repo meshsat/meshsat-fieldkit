@@ -1,0 +1,36 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 1,
+  "stages": 3
+ },
+ "denominator": 3,
+ "evidence": [
+  "B_PANEL_5V: the protection is rated 2.0 A and the conductor only 1.2 A, so the conductor is the fuse"
+ ],
+ "inputs": {
+  "chain": "pcb_energy_chain.yaml",
+  "stages": "B_PANEL_5V,B_HDMI_5V,B_QMX_5V"
+ },
+ "missing_input": null,
+ "note": "the stages of the stored-energy chain that sit on this board; the chain as a whole is energy_chain, and whether it is bounded end to end is that verdict's question",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-003": "797d38a9e68a76ac"
+  },
+  "rule_set_fingerprint": "4a03222f910fe5f5"
+ },
+ "rules": [
+  "PWR-003"
+ ],
+ "tool": "energy_chain_b",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "73b5cba32ea68d0b"
+ },
+ "ts": "2026-09-17T17:51:46Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

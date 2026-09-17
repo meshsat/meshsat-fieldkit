@@ -11,6 +11,9 @@
  "note": "this board declares no sensitive-node list",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "ANA-001": "1b5e5e32b5e446db"
+  },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
@@ -19,9 +22,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:56:23Z",
+ "ts": "2026-09-17T17:53:48Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

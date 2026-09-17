@@ -17,6 +17,9 @@
  "note": "the EMC sheet against the boards: every switching part in a netlist declared as a source with a basis this tree holds, every victim and source present, every coupling path carrying a measure and its evidence, and a pre-compliance plan per board. It computes no emission and knows no edge rate a datasheet does not publish; the measurement half of the rule is the laboratory stage",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "EMC-001": "c866a74c3041e5e4"
+  },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
@@ -25,9 +28,9 @@
  "tool": "emc_sheet",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:55:39Z",
+ "ts": "2026-09-17T17:53:01Z",
  "verdict": "PASS",
  "version": "unknown"
 }

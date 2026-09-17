@@ -19,6 +19,9 @@
  "note": "every copper-changing stage of the finish declares the defect class it repairs and why prevention was not possible, and a class repaired more than once names what now prevents it. A class that names NOTHING is reported as uncovered and fails this rule, because that is the rule's second half unmet rather than a silence",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "PLC-002": "b4c23ff75d81a174"
+  },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
@@ -27,9 +30,9 @@
  "tool": "closer_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:52:59Z",
+ "ts": "2026-09-17T17:50:14Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -4,9 +4,9 @@
  "counts": {
   "allowed": 0,
   "blocking": 0,
-  "violations": 283
+  "violations": 308
  },
- "denominator": 283,
+ "denominator": 308,
  "evidence": [],
  "inputs": {
   "board": "c",
@@ -26,10 +26,10 @@
  ],
  "tool": "erc_gate",
  "tools": {
-  "git_head": "fd6fac9b3fd6",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "git_head": "",
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:59:05Z",
+ "ts": "2026-09-17T17:51:13Z",
  "verdict": "PASS",
- "version": "fd6fac9b3fd6"
+ "version": "unknown"
 }

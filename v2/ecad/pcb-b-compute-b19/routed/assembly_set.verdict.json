@@ -18,6 +18,9 @@
  "note": "every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "DFA-001": "143ef1ed2ab833e9"
+  },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
@@ -26,9 +29,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "cf42b4be5bfdca7b"
+  "tools_tree_sha": "73b5cba32ea68d0b"
  },
- "ts": "2026-09-17T16:53:00Z",
+ "ts": "2026-09-17T17:50:16Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
