@@ -9,7 +9,7 @@
  "evidence": [],
  "inputs": {
   "block": {
-   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
+   "path": "pcb-e5-block.kicad_pcb",
    "sha256_16": "686b29a734c55b9a"
   },
   "board_a": {
@@ -29,9 +29,9 @@
  "tool": "check_contracts_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "260ad772c2404bc8"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-17T00:48:33Z",
+ "ts": "2026-09-17T01:24:07Z",
  "verdict": "PASS",
  "version": "unknown"
 }

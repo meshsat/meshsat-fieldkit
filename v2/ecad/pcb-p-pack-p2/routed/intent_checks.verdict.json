@@ -2,18 +2,17 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 7,
-  "pass": 30,
+  "fail": 6,
+  "pass": 31,
   "unclaimed": 0
  },
  "denominator": 37,
  "evidence": [
-  "return path under FUSE (Default, UNDECLARED so judged at the strictest bar): 12.6 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 33.1 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under SMBC (Default, CLOCKED_DIGITAL): 103.6 of 123.0 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
-  "return path under SMBC_I (Default, CLOCKED_DIGITAL): 42.8 of 47.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
-  "return path under SMBD (Default, CLOCKED_DIGITAL): 70.4 of 121.8 mm without a plane on a neighbouring layer (limit 30.0) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
-  "return path under VC1_F (LOW_SPEED_OR_DC): a reference exists under -0.0 of 37.0 mm [a cell-voltage sense line through its filter, DC by construction]",
+  "return path under FUSE (Default, UNDECLARED so judged at the strictest bar): 11.1 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 32.7 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under SMBC (Default, CLOCKED_DIGITAL): 102.3 of 123.0 mm without a plane on a neighbouring layer (limit 30.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
+  "return path under SMBC_I (Default, CLOCKED_DIGITAL): 40.6 of 47.8 mm without a plane on a neighbouring layer (limit 30.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
+  "return path under SMBD (Default, CLOCKED_DIGITAL): 67.0 of 121.8 mm without a plane on a neighbouring layer (limit 30.0; 3.4 mm more is this net's own via anti-pads, which RET-003 judges) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
   "return via: 4 of 14 signal vias have a ground via within 1.5 mm (21 exempt in fine-pitch fans, 0 on one reference plane, 47 on a net whose declared class has no edge to return); without one: SMBC at (77.14, 110.88); PACK_F at (83.29, 105.10); SMBC_I at (90.02, 94.67); PACK_F at (91.05, 100.33); SMBC_I at (103.16, 96.39); SMBD at (105.91, 80.84); SMBD at (106.59, 103.08); SMBC at (110.67, 89.55) ..."
  ],
  "inputs": {
@@ -31,9 +30,9 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "03063ce06e92cec5"
+  "tools_tree_sha": "d8ff52d361f72f2a"
  },
- "ts": "2026-09-17T00:44:02Z",
+ "ts": "2026-09-17T01:21:56Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
