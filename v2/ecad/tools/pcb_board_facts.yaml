@@ -10,6 +10,14 @@
 #   v2/ecad/tools/boards/*.json, stackup_write.py, intent.py, make_handoff.py, jlc-handfit.txt, panel1450.py
 #   v2/docs/V2-SPEC.md, OWNER-DECISIONS-2026-09-11.md, LAYER-DECISIONS-2026-09-11.md
 #
+# `phase_declared` IS THE PHASE THE TREE'S BOARD CARRIES, and it is the same fact as `"phase"` in
+# `boards/<letter>.json`, which is the copy every chain reads. Two copies of one fact drift, and these two did:
+# board C was cut and committed as C24 while this file said C18, and board B said B19 here and B21 there. A test
+# holds them in agreement now, and this copy exists only for board E5, which has no board table at all because it
+# has no schematic chain. The phase of a route IN FLIGHT is not this field: it belongs to the run
+# (`routeflow --phase`, with ROUTEFLOW_PHASE_UNDECLARED=1 while its board may never be adopted) and it arrives
+# here in the same commit that brings the board in.
+#
 # `interfaces` uses these names and no others, so a condition can be written against them:
 #   PCIE USB2 USB3 USBC_PD HDMI EPAPER ETHERNET POE SMBUS I2C SPI UART CAN AUDIO_ANALOG RF_TX RF_RX GNSS
 #   M2_SOCKET SIM IDC_RIBBON BLIND_MATE_RF SOLDER_LANDS
@@ -20,7 +28,7 @@ generated: "2026-09-16"
 a:
   title: PCB-A POWER + I/O
   project: pcb-a-power
-  phase_declared: A36
+  phase_declared: A32
   outline_mm: [240, 160]
   layers: 6
   thickness_mm: 1.6
@@ -89,7 +97,7 @@ b:
 c:
   title: PCB-C CONTROL PANEL BACKER
   project: pcb-c-display
-  phase_declared: C18
+  phase_declared: C24
   outline_mm: [344, 228]
   outline_shape: ring           # 240 x 176 void for the monitor and the plate window
   layers: 4
@@ -222,7 +230,7 @@ e5:
 p:
   title: PCB-P PACK BMS
   project: pcb-p-pack
-  phase_declared: P5
+  phase_declared: P4
   outline_mm: [70, 44]
   layers: 2
   thickness_mm: 1.6
