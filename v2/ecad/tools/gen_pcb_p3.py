@@ -288,7 +288,7 @@ PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/"
 try:
     # (a first SENSE class at 0.25 mm was defined here and overwritten two lines below; removed 18 September 2026)
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.3, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)   # P2 (8 Sep 2026): the current runs in the locked 2 oz bands; the class width is for the sense, gate and test-point links the router lays (1.0 mm left three of them open)
-    nsn = pcbnew.NETCLASS("SENSE"); cls(nsn, 0.16, 0.4, 0.7, 0.3)   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026); ns.SetNetclass("SENSE", nsn)
+    nsn = pcbnew.NETCLASS("SENSE"); cls(nsn, 0.16, 0.4, 0.7, 0.3); ns.SetNetclass("SENSE", nsn)   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026)
     ng = pcbnew.NETCLASS("GNDC"); cls(ng, 0.16, 0.5, 0.6, 0.3); ns.SetNetclass("GNDC", ng)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
