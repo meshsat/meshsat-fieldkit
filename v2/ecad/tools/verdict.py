@@ -185,6 +185,19 @@ def _with_board(inputs):
         # takes a board FILE and `closer_audit` takes a letter, and the letter form left `inputs.board` empty,
         # so a run of it in the set-level directory would have answered PLC-002 for all seven boards with one
         # board's reading. That rule is per board: it fails on A and C and passes on D, E and P.
+        # AND A GATE GIVEN THE BOARD'S STEM (17 September 2026). `verify_deliverable` takes a deliverable
+        # FOLDER and the board's name, `pcb-c-display`, which is exactly what `boardtable.letter_for` resolves;
+        # it decides DFM-001, which is per board, and it named none. Three gates were anonymous on this disk
+        # after the sweep and this is the last of them: hardset takes --board <file>, emc_sheet takes
+        # --board <letter>, and this one takes the stem.
+        if "board" not in inputs:
+            import boardtable as _bt2
+            for a in sys.argv[1:]:
+                if not isinstance(a, str) or "/" in a or a.startswith("-"): continue
+                _l = _bt2.letter_for(a + ".kicad_pcb")
+                if _l:
+                    inputs["board"] = _l
+                    break
         if "board" not in inputs and "--board" in sys.argv:
             _i = sys.argv.index("--board")
             if _i + 1 < len(sys.argv):

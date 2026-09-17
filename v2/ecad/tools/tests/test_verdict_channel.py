@@ -609,3 +609,29 @@ def t_a_netlist_no_board_table_names_leaves_the_board_unnamed():
         r = subprocess.run([sys.executable, "-c", prog, n], cwd=d, capture_output=True, text=True)
         assert r.returncode == 0, r.stderr
         assert "board" not in json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]
+
+
+def t_a_gate_given_the_board_s_stem_names_it():
+    """`verify_deliverable` takes a deliverable folder and the board's NAME, `pcb-c-display`, which is what
+    `boardtable.letter_for` resolves. It decides DFM-001, which is per board, and it named none: three gates
+    were board-specific and anonymous on this disk after the 17 September sweep, and this is the last of the
+    three (hardset takes --board <file>, emc_sheet takes --board <letter>, this one takes the stem)."""
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        prog = ("import sys; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1, inputs={'folder': 'x'}))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, "/some/meshsat-pcb-c-revA-C24", "pcb-c-display", "6"],
+                           cwd=d, capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        assert json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]["board"] == "c"
+
+
+def t_a_word_that_is_not_a_board_stem_names_no_board():
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        prog = ("import sys; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1, inputs={'folder': 'x'}))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, "something", "else", "6"], cwd=d,
+                           capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        assert "board" not in json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]
