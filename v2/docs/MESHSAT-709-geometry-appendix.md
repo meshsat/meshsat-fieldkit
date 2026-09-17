@@ -9141,3 +9141,11 @@ SW beside POE_SW2, the very net it must keep 0.50 mm from, and a class cannot be
 regenerated placement all nineteen declared nets take SENSE (POE_CS and B33_FB among them, POE_SW2 in HV), the
 gate reads ALL PASS, RF-001 PASS of 11, hard 0. The arm is now `FR_CLASS_CLEAR="SENSE:SW:0.5,SENSE:HV:0.5"` on
 the next A route and nothing else.
+
+**And the class is every declaring board's, 23:40 CEST.** D (six nets: the microphone chain and VREF), E (two:
+TRK_LSENSE, which sat in PWR beside TRK_SW2, and WATER_SENSE) and P (seven: the cell-sense filters and the
+thermistor) build the same SENSE class from the same list ahead of their pattern tables, each placement
+regenerated on the hub with today's tools: gate ALL PASS on all three, the assignments read back as SENSE. A rule
+holds every board that declares a sensitive net to it. **A44 and A45 route on the hub since 21:31 UTC** (A44 the
+drops and the SENSE class, A45 the same plus the two class-pair rules, which its DSN carries), 250 passes and the
+10 hour cap of A43, which is their control; each wrote its first session inside three minutes.
