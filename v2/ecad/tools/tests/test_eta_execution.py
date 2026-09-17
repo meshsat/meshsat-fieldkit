@@ -96,3 +96,43 @@ def t_the_programme_is_never_shorter_than_the_design_package():
     for a, b in zip(ms, ms[1:]):
         assert b["cumulative_p50_days"] >= a["cumulative_p50_days"], (a, b)
         assert b["cumulative_p80_days"] >= a["cumulative_p80_days"], (a, b)
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A PREDICTION IS GRADED AGAINST THE BOARD THE ROUTER PRODUCED (17 September 2026).
+#
+# `out/<name>-drc.json` is whatever the last stage to run a DRC wrote, and at the end of the route stage that
+# is the PRE-ROUTE report. Board A40 routed 0 hard and 25 unrouted of 254 nets and its prediction was graded
+# "unrouted 499 against 0", 499 being KiCad's own cap on the unconnected list of the PLACED board. Every
+# graded prediction since this was wired on 11 September had been reading the placement.
+
+def t_the_prediction_takes_the_route_stage_s_own_measurement():
+    import os, sys
+    sys.path.insert(0, TOOLS) if "TOOLS" in dir() else None
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, tools)
+    import routeflow as R
+    met, note = R.judge_expect("/nonexistent-drc.json", {"hard": 0, "unrouted": 0}, measured=(0, 25))
+    assert met is False and "unrouted 25 against 0" in note, (met, note)
+    assert "routed board of this round" in note, note
+    met, note = R.judge_expect("/nonexistent-drc.json", {"hard": 0, "unrouted": 30}, measured=(0, 25))
+    assert met is True, (met, note)
+
+
+def t_without_a_measurement_it_still_reads_a_report_and_says_when_it_cannot():
+    import os, sys
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, tools)
+    import routeflow as R
+    met, note = R.judge_expect("/nonexistent-drc.json", {"hard": 0})
+    assert met is None and "no DRC" in note, (met, note)
+    met, note = R.judge_expect("/nonexistent-drc.json", {})
+    assert met is None and "no prediction" in note, (met, note)
+
+
+def t_the_route_stage_passes_it():
+    import os
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    s = open(os.path.join(tools, "routeflow.py"), encoding="utf-8").read()
+    assert "measured=_sc)" in s, "the route stage grades the prediction against a file again"
+    assert s.index("_sc = None") < s.index("measured=_sc)"), "_sc may be unbound when the prediction is graded"

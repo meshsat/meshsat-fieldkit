@@ -127,12 +127,27 @@ def judge_verdicts(project, require=(), since=None):
     return "GATE_BLOCKED", "%d of %d gate verdict(s) not PASS: %s" % (len(bad), len(found) + len(missing), "; ".join(bad[:6]))
 
 
-def judge_expect(drc_path, exp):
+def judge_expect(drc_path, exp, measured=None):
     """The profile's own prediction, which until now was written in every profile and read by nothing.
 
     `expect: {hard, unrouted}` is a prediction in the sense the prediction gate means: written before the run,
-    graded mechanically after it. Twelve profiles carry one."""
+    graded mechanically after it. Twelve profiles carry one.
+
+    IT IS GRADED AGAINST THE BOARD THE ROUTER PRODUCED (17 September 2026). `out/<name>-drc.json` is the file
+    the LAST stage to run a DRC wrote, and at the end of the route stage that is the PRE-ROUTE report: board
+    A40 routed 0 hard and 25 unrouted of 254 nets and its prediction was graded "unrouted 499 against 0", 499
+    being KiCad's own cap on the unconnected list of the placed board. Every graded prediction since this was
+    wired on 11 September read the placement. `measured` is the route stage's own (hard, unrouted) for the
+    winning attempt, taken from that attempt's own report, and it is used whenever the caller has it."""
     if not exp or ("hard" not in exp and "unrouted" not in exp): return None, "no prediction in the profile"
+    if measured is not None:
+        c = {"hard": measured[0], "unrouted": measured[1]}
+        parts, met = [], True
+        for k in ("hard", "unrouted"):
+            if k not in exp: continue
+            parts.append("%s %d against %s" % (k, c[k], exp[k]))
+            if c[k] > exp[k]: met = False
+        return met, ", ".join(parts) + " (the routed board of this round)"
     try: d = load_drc(drc_path)
     except Exception as e: return None, "no DRC to grade the prediction against (%s)" % e
     c = hardset.counts(d, "post")
@@ -594,6 +609,7 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
             # and 1 open in round one, then 0 hard and 23 opens after the via_costs remedy, and the 1-open board
             # was gone. Every other stage in this pipeline already keeps a result only if it improves
             # (cont_route, stub_accept, quality_pass); the supervisor did not (11 September 2026).
+            _sc = None
             if sig not in ("NO_SESSION", "TOOL_CRASH", "INFRA_FAIL"):
                 _sc = (best[1][0], unr if unr is not None else 10 ** 6)
                 if best_board[0] is None or _sc < best_board[0]:
@@ -611,7 +627,8 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
                                                % (best_board[2], _sc[0], _sc[1], best_board[0][0], best_board[0][1])))
             # The profile's own prediction, graded. `expect: {hard, unrouted}` is written in all twelve profiles and
             # was read by nothing until 11 September 2026; a prediction nobody grades is a comment.
-            met, enote = judge_expect(os.path.join(project, "out", name + "-drc.json"), prof.get("expect", {}))
+            met, enote = judge_expect(os.path.join(project, "out", name + "-drc.json"), prof.get("expect", {}),
+                                      measured=_sc)
             if met is not None:
                 journal(project, dict(run=rid, round=rnd, board=name, stage="expect",
                                       status="MET" if met else "MISSED", note="the profile predicted: " + enote))
