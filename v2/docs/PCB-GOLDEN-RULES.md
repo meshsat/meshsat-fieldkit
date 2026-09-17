@@ -1095,7 +1095,14 @@ session could start. AND THE RULE NOW ASKS THE RIGHT QUESTION OF A LONG NET: bei
 physics, not a defect, so a net past its critical length is asked whether it is impedance-controlled,
 series-terminated (a screen that says so: the board file knows neither which end drives nor what the far end
 is) or declared with a reason, and only what is left is the finding. The first version would have failed
-every net on every board at a sub-nanosecond edge and reported physics.
+every net on every board at a sub-nanosecond edge and reported physics. 17 SEPTEMBER 2026, A SECOND ANCHOR
+FOR k, from the same handbook and independent of the first: 6.1.2.3's example track is one rise distance long
+(k = 1) and failed a radiated emission test, and the same clause describes that track as 'approximately
+lambda/6' at F2 = 1/(pi tr). Those two statements are the same length, because lambda/6 at F2 is exactly pi/6
+of v*tr, so the handbook's own radiator sits at k = 6/pi, which is 1.9. This project's k = 6 is 3.1 times
+stricter than the length that failed, by the handbook's own arithmetic rather than by a second opinion about
+it. The criterion is still ours and still without a standard that states one; what it now has is a published
+failure it is a stated distance away from.
 
 ## Clocks Reset Boot
 
