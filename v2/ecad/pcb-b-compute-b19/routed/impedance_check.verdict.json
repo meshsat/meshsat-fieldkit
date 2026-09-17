@@ -1,0 +1,99 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "MET": 18,
+  "MISSED": 17,
+  "SHORT": 17,
+  "UNCOUPLED": 9,
+  "UNREFERENCED": 19,
+  "UNROUTED": 36,
+  "classes_declared": 5,
+  "met": 35,
+  "missed": 81,
+  "pairs_on_board": 120
+ },
+ "denominator": 116,
+ "evidence": [
+  "SHORT /BANK1_UPD class USB target 90.0 ohm",
+  "SHORT /BANK1_UPTX class USB target 90.0 ohm",
+  "UNREFERENCED /BANK2_UPD class USB target 90.0 ohm",
+  "UNROUTED /BANK2_UPRX class USB target 90.0 ohm",
+  "UNROUTED /BANK2_UPTX class USB target 90.0 ohm",
+  "UNROUTED /BANK3_UPRX class USB target 90.0 ohm",
+  "SHORT /BANK3_UPTX class USB target 90.0 ohm",
+  "UNREFERENCED /CARD1_CLK class USB target 90.0 ohm",
+  "UNROUTED /CARD1_RX class USB target 90.0 ohm",
+  "SHORT /CARD1_TX class USB target 90.0 ohm",
+  "UNROUTED /CARD2_CLK class USB target 90.0 ohm",
+  "UNREFERENCED /CARD2_RX class USB target 90.0 ohm",
+  "UNREFERENCED /CARD2_TX class USB target 90.0 ohm",
+  "MISSED /CARD3_CLK class USB target 90.0 ohm",
+  "UNROUTED /CARD3_RX class USB target 90.0 ohm",
+  "UNROUTED /CARD3_TX class USB target 90.0 ohm",
+  "UNROUTED /ETH1_P0 class DIFF100 target 100.0 ohm",
+  "UNROUTED /ETH1_P1 class DIFF100 target 100.0 ohm",
+  "UNREFERENCED /ETH1_P2 class DIFF100 target 100.0 ohm",
+  "UNREFERENCED /ETH1_P3 class DIFF100 target 100.0 ohm",
+  "MISSED /ETH2_P0 class DIFF100 target 100.0 ohm",
+  "UNROUTED /ETH2_P1 class DIFF100 target 100.0 ohm",
+  "MISSED /ETH2_P2 class DIFF100 target 100.0 ohm",
+  "UNCOUPLED /ETH3_P0 class DIFF100 target 100.0 ohm",
+  "UNCOUPLED /ETH3_P1 class DIFF100 target 100.0 ohm",
+  "UNREFERENCED /HDMI1_CK class DIFF100 target 100.0 ohm",
+  "MISSED /HDMI1_D0 class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMI1_D1 class DIFF100 target 100.0 ohm",
+  "MISSED /HDMI1_D2 class DIFF100 target 100.0 ohm",
+  "UNREFERENCED /HDMI2_CK class DIFF100 target 100.0 ohm",
+  "MISSED /HDMI2_D0 class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMI2_D1 class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMI2_D2 class DIFF100 target 100.0 ohm",
+  "MISSED /HDMI3_CK class DIFF100 target 100.0 ohm",
+  "MISSED /HDMI3_D0 class DIFF100 target 100.0 ohm",
+  "MISSED /HDMI3_D1 class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMI3_D2 class DIFF100 target 100.0 ohm",
+  "MISSED /HDMIM_D0 class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMIM_D1 class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMIM_D2 class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMIO_CK class DIFF100 target 100.0 ohm",
+  "UNROUTED /HDMIO_D1 class DIFF100 target 100.0 ohm",
+  "SHORT /HOST1_0D class USB target 90.0 ohm",
+  "SHORT /HOST1_0RX class USB target 90.0 ohm",
+  "UNCOUPLED /HOST1_0TX class USB target 90.0 ohm",
+  "SHORT /HOST1_1D class USB target 90.0 ohm",
+  "SHORT /HOST1_1RX class USB target 90.0 ohm",
+  "UNREFERENCED /HOST1_1TX class USB target 90.0 ohm",
+  "SHORT /HOST2_0D class USB target 90.0 ohm",
+  "UNREFERENCED /HOST2_0RX class USB target 90.0 ohm"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "IMP-001": "b55e6a861a00f8ad",
+   "PAIR-001": "e742b4d58ac642e2",
+   "STK-001": "e90a87c776209eb2"
+  },
+  "rule_set_fingerprint": "4bc0aa24d836788d"
+ },
+ "rules": [
+  "IMP-001",
+  "PAIR-001",
+  "STK-001"
+ ],
+ "tool": "impedance_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "0b4e535631b74e6d"
+ },
+ "ts": "2026-09-17T23:46:28Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

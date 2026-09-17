@@ -172,7 +172,10 @@ def main(a):
         # 11 September 2026 (MESHSAT-862): both UNROUTED exits appended their verdict and `continue`d
         # BEFORE the `miss += 1` below, so a pair with no track on one leg was printed in the summary
         # and did not fail the gate. The exit status is `1 if miss else 0`, so the board passed.
-        if not p or not n: miss += 1; results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0)); continue
+        # ELEVEN FIELDS, LIKE EVERY OTHER ROW (18 September 2026): this row had ten, so the first board with a pair one
+        # of whose legs carried no copper at all (B21, 416 open) crashed the gate at the unpack below and left NO
+        # verdict, which read as "no impedance_check verdict for this board" on PAIR-001 and STK-001 through sweeps 26 and 27.
+        if not p or not n: miss += 1; results.append((pr, cl, target, None, 0.0, 0.0, "UNROUTED", None, 0, 0.0, 0.0)); continue
         tot = 0.0; ok_len = 0.0; unref = 0.0; zs = []; gaps = []; fan = 0.0
         pnets = {pr + "_P", pr + "_N", "/" + pr.lstrip("/") + "_P", "/" + pr.lstrip("/") + "_N"}
         ppads = [q.GetPosition() for f in b.GetFootprints() for q in f.Pads() if q.GetNetname() in pnets]
@@ -304,8 +307,11 @@ def main(a):
         print("impedance: no pair on this board carries an impedance target (%s)"
               % ("declared that way in the schematic" if declared else "and the board declares no pair class at all"))
     return _v.write("impedance_check", res,
-                    counts=dict(by_v, met=checked - miss, missed=miss, pairs_on_board=len(pairs), classes_declared=len((it or {}).get("pair_classes") or {})),
-                    denominator=checked,
+                    # THE DENOMINATOR IS EVERY PAIR JUDGED, the unrouted ones included (18 September 2026): `miss`
+                    # counts an UNROUTED pair and `checked` does not, so on B21 (36 unrouted pairs) the counts read
+                    # "met -1, missed 81 of 80". An unrouted pair is a judged pair that missed.
+                    counts=dict(by_v, met=len(results) - miss, missed=miss, pairs_on_board=len(pairs), classes_declared=len((it or {}).get("pair_classes") or {})),
+                    denominator=len(results),
                     evidence=["%s %s class %s target %s ohm" % (r[6], r[0], r[1], r[2]) for r in results if r[6] != "MET"],
                     inputs={"board": a[0]},
                     note="" if checked else ("the board declares its pair classes and gives none a target, or its "
@@ -314,4 +320,8 @@ def main(a):
                                              "the board declares no pair class and nothing says it controls no "
                                              "impedance: nothing was judged"))
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    # A GATE THAT CRASHES WRITES INCONCLUSIVE, NOT NOTHING (18 September 2026): absence read as "no verdict" for two
+    # sweeps while the cause was a ValueError three lines from the writer.
+    import verdict as _vg
+    sys.exit(_vg.guard("impedance_check", main, sys.argv[1:], rules=["PAIR-001", "STK-001", "IMP-001"]))

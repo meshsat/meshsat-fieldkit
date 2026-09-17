@@ -564,8 +564,13 @@ CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13), "DIFF100": (0.127, 0.12
             # 2.0 A hold, 3.5 A trip polyfuse and the PWR class's 0.4 mm is rated 1.23 A at 10 K, so a fault at the
             # panel end would run at the fuse's trip current through copper weaker than the fuse; 0.8 mm is 2.03 A at
             # 10 K, which clears the hold. B22 is the first phase that carries it.
-            "PANEL": (0.127, 0.8, 0.8, 0.4, 0.8, 0.25)}   # HV 0.18: above the 0.2 pad gap of the TSSOP-28 PoE controller it fails inside the part
-PATTERNS = [("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("HOST*", "USB"), ("BANK*", "USB"), ("MUX*", "USB"), ("SW?_O*", "USB"), ("SW?_IN", "USB"), ("W?*_CARD", "USB"), ("W?_ANT", "USB"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
+            "PANEL": (0.127, 0.8, 0.8, 0.4, 0.8, 0.25),
+            # RF: the four antenna paths (GNSS_ANT bias tee to its U.FL, LORA_ANT from the E22 module, WA_ANT and WB_ANT from
+            # the SKY13351 switches) sat in the USB pair class or the default with no single-ended target, so RF-001 read
+            # "no controlled line found" on board B (18 September 2026, sweep 27). Same class as board A: 0.14 mm is
+            # 50 ohm on this six-layer 3313 outer layer (32.221); first carried by B23.
+            "RF": (0.18, 0.14, 0.7, 0.3, 0.2, 0.15)}   # HV 0.18: above the 0.2 pad gap of the TSSOP-28 PoE controller it fails inside the part
+PATTERNS = [("*_ANT", "RF"), ("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("HOST*", "USB"), ("BANK*", "USB"), ("MUX*", "USB"), ("SW?_O*", "USB"), ("SW?_IN", "USB"), ("W?*_CARD", "USB"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
             ("PCIE*", "USB"), ("NVME*_RX_*", "USB"), ("NVME*_TX_*", "USB"), ("NVME*_CLK_*", "USB"), ("CARD*_RX_*", "USB"), ("CARD*_TX_*", "USB"), ("CARD*_CLK_*", "USB"),
             ("HDMI*_D*", "DIFF100"), ("HDMI*_CK_*", "DIFF100"), ("ETH*", "DIFF100"), ("SWP*", "DIFF100"),
             ("MDI_*", "HV"), ("POE_*", "HV"), ("+54V_POE", "HV"),
