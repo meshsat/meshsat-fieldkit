@@ -114,3 +114,36 @@ def t_the_declared_phase_is_one_fact_and_it_names_the_board_this_tree_holds():
              "not hold, and every gate that reads it (the folder rule, the sweep's order-code lookup) is then "
              "answering about a board that does not exist. The phase of a route in flight belongs to the run, "
              "not to this field." % (letter, decl, su["dir"], su.get("legend_phase")))
+
+
+def t_a_condition_that_names_a_fact_a_board_does_not_declare_is_refused():
+    """AN APPLICABILITY NOBODY CAN SATISFY IS A RULE THAT DOES NOT EXIST (17 September 2026).
+
+    `_leaf` answers False for a fact a board does not carry. That is the safe answer for a leaf and the wrong
+    one for a rule: SCH-001 and SCH-002, both BLOCKERS, are conditional on `has_schematic`, and only board E5
+    declared it (false), so "the schematic's ERC is clean" and "the board is the netlist it was placed from"
+    applied to NO BOARD AT ALL and appeared on no board's page. Board A's committed board is missing the six
+    charger filter parts its own schematic gained on 16 September, and nothing said so, because the rule that
+    compares the two was silently out of scope everywhere.
+
+    It is the TRN-001 shape of the same morning one level down. A board a rule names must DECLARE every fact
+    the rule's condition reads, with the answer, so that "does not apply" is a statement and not an accident.
+    """
+    import os, sys, copy
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, TOOLS)
+    import rules_lib as R
+    reg = R.load()
+    errs, _warns = R.validate(reg)
+    bad = [e for e in errs if "does not declare it" in e]
+    assert not bad, "the committed registry has a condition no board can satisfy: %s" % bad[:4]
+
+    # and the rule fires: a fact nobody declares must be an error, not a silence
+    reg2 = copy.deepcopy(reg)
+    for r in reg2["rules"]:
+        if r["id"] == "SCH-002":
+            r["condition"] = {"fact": "a_fact_no_board_declares", "op": "truthy"}
+            break
+    errs2, _ = R.validate(reg2)
+    named = [e for e in errs2 if "a_fact_no_board_declares" in e]
+    assert named, "a condition reading a fact no board declares was accepted, so the rule would apply to nobody"

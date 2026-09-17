@@ -4,12 +4,12 @@
  "counts": {
   "allowed": 0,
   "blocking": 0,
-  "violations": 335
+  "violations": 355
  },
- "denominator": 335,
+ "denominator": 355,
  "evidence": [],
  "inputs": {
-  "board": "e",
+  "board": "d",
   "project": {
    "path": ".",
    "sha256_16": null
@@ -29,7 +29,7 @@
   "git_head": "",
   "tools_tree_sha": "61c9ad0ec9eb6db8"
  },
- "ts": "2026-09-17T11:59:57Z",
+ "ts": "2026-09-17T11:59:54Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -263,6 +263,17 @@ def rules_for(letter, reg=None, f=None):
     return out
 
 
+def condition_facts(cond, out=None):
+    """Every fact name a condition reads, at any depth. Used by validate to prove a rule can apply at all."""
+    out = set() if out is None else out
+    if not isinstance(cond, dict): return out
+    for k in ("all", "any"):
+        for c in (cond.get(k) or []): condition_facts(c, out)
+    if isinstance(cond.get("not"), dict): condition_facts(cond["not"], out)
+    if cond.get("fact"): out.add(cond["fact"])
+    return out
+
+
 def validate(reg=None, path=None):
     """(errors, warnings). The shape, the allowed values, and the source policy: a BLOCKER that claims a
     VERIFIED source must name one, a CONDITIONAL rule must carry a machine-readable condition, a rule whose
@@ -358,6 +369,26 @@ def validate(reg=None, path=None):
     bf = board_facts()
     for letter in (reg.get("manifest") or {}).get("boards", []):
         if letter not in bf: warns.append("manifest board %s has no facts entry" % letter)
+    # A CONDITION THAT NAMES A FACT NOBODY DECLARES APPLIES TO NOBODY, SILENTLY (17 September 2026).
+    # `_leaf` answers False for a fact a board does not carry, which is the safe answer for a leaf and the
+    # wrong one for a rule: SCH-001 and SCH-002, both BLOCKERS, are conditional on `has_schematic` and only
+    # board E5 declared it (false), so "the schematic's ERC is clean" and "the board is the netlist it was
+    # placed from" applied to NO BOARD AT ALL and neither appeared on any board's page. Board A's committed
+    # board is missing the six charger filter parts its own schematic gained, and nothing said so. It is the
+    # TRN-001 shape of the same morning, one level down: an applicability nobody can satisfy is indistinguishable
+    # from a rule that does not exist. A board that a rule names must DECLARE every fact the rule asks about,
+    # with the answer, so "does not apply" is a statement rather than an accident.
+    for r in reg["rules"]:
+        names = condition_facts(r.get("condition") or {})
+        if not names: continue
+        aff = r.get("boards_affected") or []
+        for letter in sorted(bf):
+            if not isinstance(bf.get(letter), dict) or str(letter).startswith("_"): continue
+            if isinstance(aff, list) and aff and letter not in aff and "ALL" not in aff: continue
+            for n in sorted(names):
+                if n not in bf[letter]:
+                    errs.append("%s: its condition reads fact %r and board %s does not declare it, so the rule "
+                                "cannot apply to that board and its absence is invisible" % (r["id"], n, letter))
     return errs, warns
 
 

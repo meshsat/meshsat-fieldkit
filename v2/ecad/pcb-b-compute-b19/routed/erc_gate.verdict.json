@@ -2,21 +2,21 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "allowed": 0,
+  "allowed": 6,
   "blocking": 0,
-  "violations": 335
+  "violations": 2044
  },
- "denominator": 335,
+ "denominator": 2044,
  "evidence": [],
  "inputs": {
-  "board": "e",
+  "board": "b",
   "project": {
    "path": ".",
    "sha256_16": null
   }
  },
  "missing_input": null,
- "note": "",
+ "note": "6 error(s) allow-listed with a reason",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
@@ -29,7 +29,7 @@
   "git_head": "",
   "tools_tree_sha": "61c9ad0ec9eb6db8"
  },
- "ts": "2026-09-17T11:59:57Z",
+ "ts": "2026-09-17T11:59:46Z",
  "verdict": "PASS",
  "version": "unknown"
 }
