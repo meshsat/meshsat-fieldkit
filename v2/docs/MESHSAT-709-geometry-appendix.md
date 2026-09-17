@@ -9090,7 +9090,7 @@ stub router on those 416 and will be refused at the routed-board gate; what it l
 contracts on B21's own netlist and the rail readings. The number belongs to `boards/b.json` beside the floor
 plan of 32.216, because it is the measurement B22 has to beat: this placement does not route in forty hours.
 
-### 32.221 Board A's eleven RF ports: laid by the generator on the outer layer at the width this stackup makes 50 ohm (17 September 2026, 23:25 CEST; MESHSAT-862)
+### 32.221 Board A's eleven RF ports: laid by the generator on the outer layer at the width this stackup makes 50 ohm (17 September 2026, 23:20 CEST; MESHSAT-862)
 
 **The finding of 32.215 was that every one of board A's eleven RF nets runs exactly 10.0 mm on In2.Cu at 0.35
 mm, a 26 ohm stripline against 50, and its note said the width was right because board D passes RF-001 at the
