@@ -1,0 +1,35 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "allowed": 0,
+  "blocking": 0,
+  "violations": 1214
+ },
+ "denominator": 1214,
+ "evidence": [],
+ "inputs": {
+  "board": "a",
+  "project": {
+   "path": ".",
+   "sha256_16": null
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "SCH-001"
+ ],
+ "tool": "erc_gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "61c9ad0ec9eb6db8"
+ },
+ "ts": "2026-09-17T11:59:38Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
