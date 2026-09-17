@@ -125,4 +125,6 @@ def main(argv):
                           "this board is designed to numbers the chosen process does not make at its copper weight"))
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    import verdict as _vg   # a gate that crashes writes INCONCLUSIVE, never nothing (18 September 2026)
+    sys.exit(_vg.guard("fab_limits", main, sys.argv[1:]))

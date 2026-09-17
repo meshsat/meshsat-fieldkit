@@ -83,4 +83,6 @@ def main(a):
                          denominator=len(rows), evidence=unreached[:30],
                          inputs={"board": a[0], "pruned": a[1]})
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    import verdict as _vg   # a gate that crashes writes INCONCLUSIVE, never nothing (18 September 2026)
+    sys.exit(_vg.guard("pruned_gate", main, sys.argv[1:]))

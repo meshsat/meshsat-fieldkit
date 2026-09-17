@@ -42,3 +42,19 @@ def t_the_guard_writes_inconclusive_for_a_crash_and_passes_a_return_through():
         assert verdict.guard("guard_fixture", lambda a: 0, ["x.kicad_pcb"]) == 0
     finally:
         os.chdir(cwd)
+
+
+# The gates whose entry point is a one-line main and so can be guarded at the door; the board gates
+# (check_pcb_*), check_contracts, check_zone_nets and lcsc_fill run at module level and hardset writes under a
+# label per call, so their guard is the writer's own BaseException handling for now.
+GUARDED = ("impedance_check", "claims_check", "class_floor", "clock_check", "dc_drop", "derate", "erc_gate", "fab_limits",
+           "place_audit", "port_protect", "pruned_gate", "verify_deliverable", "via_audit")
+
+
+def t_every_gate_with_a_one_line_entry_runs_under_the_crash_guard():
+    bad = []
+    for g in GUARDED:
+        src = open(os.path.join(TOOLS, g + ".py"), encoding="utf-8").read()
+        if 'guard("%s", main' % g not in src: bad.append(g)
+    assert not bad, "gates whose entry point is not guarded, so a crash there leaves no verdict: %s" % bad
+

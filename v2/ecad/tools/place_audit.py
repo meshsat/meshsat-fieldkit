@@ -325,4 +325,6 @@ def main(a):
                          inputs={"board": a[0]},
                          note="" if fine else "no fine-pitch part on this board, so nothing was predicted")
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    import verdict as _vg   # a gate that crashes writes INCONCLUSIVE, never nothing (18 September 2026)
+    sys.exit(_vg.guard("place_audit", main, sys.argv[1:]))
