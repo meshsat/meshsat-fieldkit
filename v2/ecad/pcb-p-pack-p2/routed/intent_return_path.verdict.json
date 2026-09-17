@@ -8,9 +8,9 @@
  "denominator": 29,
  "evidence": [
   "return path under FUSE (Default, UNDECLARED so judged at the strictest bar): 11.1 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
-  "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 32.7 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
+  "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 33.1 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
   "return path under SMBC (Default, CLOCKED_DIGITAL): 102.3 of 123.0 mm without a plane on a neighbouring layer (limit 30.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
-  "return path under SMBC_I (Default, CLOCKED_DIGITAL): 40.6 of 47.8 mm without a plane on a neighbouring layer (limit 30.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
+  "return path under SMBC_I (Default, CLOCKED_DIGITAL): 42.4 of 47.8 mm without a plane on a neighbouring layer (limit 30.0; 0.4 mm more is this net's own via anti-pads, which RET-003 judges) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]",
   "return path under SMBD (Default, CLOCKED_DIGITAL): 67.0 of 121.8 mm without a plane on a neighbouring layer (limit 30.0; 3.4 mm more is this net's own via anti-pads, which RET-003 judges) [SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus ]"
  ],
  "inputs": {
@@ -31,9 +31,9 @@
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "d8ff52d361f72f2a"
+  "tools_tree_sha": "325c41b5b40fcad1"
  },
- "ts": "2026-09-17T01:21:56Z",
+ "ts": "2026-09-17T02:08:37Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

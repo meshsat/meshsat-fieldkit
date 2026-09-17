@@ -437,3 +437,16 @@ def t_that_refusal_is_executed_and_leaves_an_existing_verdict_alone():
     was = before.get("verdict") or before.get("result")
     now = after.get("verdict") or after.get("result")
     assert now == was == "PASS", "the check overwrote a verdict taken where its input existed: %r" % now
+
+
+def t_the_document_provenance_check_keeps_a_reading_taken_where_the_folders_are():
+    """The same rule as the contracts', in the tool that judges the release documents (17 September 2026): a
+    sweep tree holds the boards and not the release folders, so this check finds nothing there and would
+    overwrite the reading taken where they exist."""
+    src = open(os.path.join(TOOLS, "doc_provenance.py"), encoding="utf-8").read()
+    assert "A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE" in src, \
+        "the rule is not written down in the tool that needs it"
+    i = src.index("if not rows:")
+    seg = src[i:i + 900]
+    assert "doc_provenance.verdict.json" in seg and "counts" in seg, \
+        "the tool does not look at what is already on disk before writing its empty answer"

@@ -851,9 +851,11 @@ ANTI-PADS. The fill retreats around every barrel, so a net that changes layer pu
 is judged against, and the reference is continuous either side of it: what the signal needs there is a return
 transition, which is RET-003's and RET-004's question. The anti-pad share is measured, reported and handed to
 them, and an anti-pad is a hole IN a fill, so a point near a via on a board with no pour is still a net with
-no reference. Measured across the set: board E went from one net over its limit to NONE (328.4 mm of its
-uncovered millimetres are its own anti-pads), D stayed at zero with 469.6 mm of them, C went 18 to 15 and P 6
-to 5, which is the point: the real failures do not move.
+no reference. Measured across the set, after the test was tightened to ask whether the fill RESUMES on both
+sides of the point (an anti-pad is a hole in a reference, and a point just outside a fill's edge with a via
+inside it is not one): board E goes from one net over its limit to NONE with 266.8 mm of its uncovered
+millimetres in its own anti-pads, D stays at zero with 440.5 mm of them, C goes 18 to 16 and P 6 to 5. The
+real failures do not move, which is the point.
 
 ### RET-003  return transition at a reference change
 

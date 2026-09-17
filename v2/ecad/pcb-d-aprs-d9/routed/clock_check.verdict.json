@@ -14,7 +14,7 @@
  "inputs": {
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "7bc7236d47794c1c"
+   "sha256_16": "11cd388a36ea4d1c"
   }
  },
  "note": "a crystal that does not start, or starts off frequency, is a board that is perfectly routed and dead",
@@ -28,9 +28,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "d8ff52d361f72f2a"
+  "tools_tree_sha": "325c41b5b40fcad1"
  },
- "ts": "2026-09-17T01:20:59Z",
+ "ts": "2026-09-17T02:07:42Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

@@ -81,6 +81,20 @@ def main(argv):
     for f in fails[:20]: print("  FAIL %s" % f)
     for n in notes[:8]: print("  note %s" % n)
     if "--json" in argv: print(json.dumps({"rows": rows, "fails": fails, "notes": notes}, indent=1))
+    # A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE (17 September 2026, the same rule the
+    # cross-board contracts carry). This tool judges the DOCUMENTS in the release folders, and a tree that has
+    # no release folders at all, which is what a sweep tree is, has nothing to say about them: left to write
+    # its INCONCLUSIVE it would overwrite the reading taken where the folders are.
+    if not rows:
+        import json as _j
+        _p = os.path.join(os.environ.get("VERDICT_DIR") or os.path.join(os.getcwd(), "out"),
+                          "doc_provenance.verdict.json")
+        try: _prev = _j.load(open(_p, encoding="utf-8"))
+        except Exception: _prev = None
+        if _prev and (_prev.get("counts") or {}).get("documents"):
+            print("doc_provenance: this tree holds no deliverable folder with a document to check, and the "
+                  "verdict on disk was taken where they are, so it is left as it stands")
+            return _v.INCONCLUSIVE
     return _v.write("doc_provenance", _v.FAIL if fails else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"documents": len(rows), "folders": len({r[0] for r in rows}), "untraceable": len(fails)},
                     denominator=len(rows), evidence=fails[:20], inputs={"release": rel},
