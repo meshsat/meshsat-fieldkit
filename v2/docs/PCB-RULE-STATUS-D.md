@@ -9,6 +9,16 @@ Manifest **2026-09-16.1**, rule set **f8db9f9b0747ca1b**, evidence epoch **2026-
 
 Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 
+> **HELD BY OWNER DECISION 31.** ROUTING_STATUS = PASS   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
+>
+> measured on 17 September by cutting this board's deliverable, which the finish refused at that gate: SEVEN of board D's fourteen judged conductors reach a semiconductor with nothing between them, three each on the two headset jacks a person plugs a headset into and one on the 30 W amplifier output. Its antenna jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to board D until that morning, because its applicability was a list of interfaces this board does not carry
+>
+> Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated.
+>
+> Forbidden while held: any orderable fabrication package, any promotion of the board or its folder.
+>
+> This lifts when decision 31 is ruled and this entry is deleted.
+
 | result | rules | percent |
 |---|---|---|
 | PASS | 28 | 58.3 |
