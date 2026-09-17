@@ -9,9 +9,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 27 | 64.3 |
+| PASS | 28 | 66.7 |
 | FAIL | 5 | 11.9 |
-| INCONCLUSIVE | 10 | 23.8 |
+| INCONCLUSIVE | 9 | 21.4 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -39,7 +39,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 7 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect PASS of 0 |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
-| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
+| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |

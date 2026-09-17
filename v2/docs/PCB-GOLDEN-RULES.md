@@ -1513,7 +1513,18 @@ only be taken on the PLACED board, in a route tree that is later thrown away, so
 board's routed snapshot: 17 September 2026 the carry is PROVED rather than copied (carry_placed.py compares
 every footprint position, orientation and side between the placed snapshot and the board being cut, and a
 part that moved refuses it), and hardset names the board it read, so a carried verdict can be compared with
-the board it is evidence for instead of trusted for sitting in the right directory
+the board it is evidence for instead of trusted for sitting in the right directory. The first run of that
+tool found the thing it was built to find: board D's placed snapshot and its committed board differ by R20
+and R21, 1.600 mm each, which is the pre-router's pair station swap and runs BEFORE the router. So there are
+two boards before the route and the placement that shipped is the one the PRE-ROUTE DRC measured, over the
+same fifteen hard types and after every part move: that verdict is the evidence when the placed snapshot no
+longer matches, carried under the name hardset-placed with its stage and both shas recorded in the verdict
+itself (a second verdict NAME here would make the fallback mandatory for every board and read a stale copy of
+it as this board's evidence, which is how board P came to read PRE_AUDIT from 11 September for ten minutes
+this morning), and place_audit is not carried with it because it was taken before the move. A pure exchange
+of seats between two parts of the same land is not a move at all: board D's R20 and R21 are in each other's
+seats, which is the swap, and the set of occupied seats is identical, so the placement measured is the
+placement that shipped
 
 ### PLC-002  prevention before repair
 

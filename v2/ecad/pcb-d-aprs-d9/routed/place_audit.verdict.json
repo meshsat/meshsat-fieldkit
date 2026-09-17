@@ -3,30 +3,30 @@
  "applicable": true,
  "carried": {
   "by": "carry_placed.py",
-  "footprints_compared": 189,
+  "footprints_compared": 211,
   "from": "placed",
   "moved": 0,
   "to": "routed"
  },
  "counts": {
   "collisions": 0,
-  "fine_pitch": 8,
-  "footprints": 189,
-  "measured": 8
+  "fine_pitch": 6,
+  "footprints": 211,
+  "measured": 6
  },
- "denominator": 8,
+ "denominator": 6,
  "evidence": [],
  "inputs": {
   "board": {
-   "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "path": "pcb-d-aprs.kicad_pcb",
+   "sha256_16": "929bf82d2bf6eed4"
   },
   "measured_board": {
-   "sha256_16": "3f53d1b4df208f4d",
+   "sha256_16": "0976658aa0fd851d",
    "stage": "placed"
   }
  },
- "note": "carried to the routed board from the placed board after comparing all 189 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
+ "note": "carried to the routed board from the placed board after comparing all 211 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -39,7 +39,7 @@
   "git_head": "",
   "tools_tree_sha": "7f15cb4b9c402c97"
  },
- "ts": "2026-09-17T03:13:18Z",
+ "ts": "2026-09-17T03:12:48Z",
  "verdict": "PASS",
  "version": "unknown"
 }
