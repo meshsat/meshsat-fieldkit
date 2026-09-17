@@ -187,6 +187,16 @@ def main(a):
     locked_starts = set()
     for t in locked:
         if t.GetClass() == "PCB_TRACK": locked_starts.add((t.GetStart().x, t.GetStart().y)); locked_starts.add((t.GetEnd().x, t.GetEnd().y))
+    # A PAD WITH COPPER ON IT IS REACHED, WHOEVER LAID THE COPPER (17 September 2026). The locked set above is
+    # the pre-router's and the generator's; a ROUTED board also has the router's tracks, and this class was
+    # reading a routed board as though it were a placed one. Board D's PLC-001 failed on U6.2 and C3.1, two
+    # +5V_D8 pads with no free via site within 1.5 mm, ON A BOARD THAT ROUTES 0 HARD AND 0 UNROUTED: the router
+    # answered the prediction with a track and the predictor did not look. The rule this tool exists for is
+    # that a pad have SOMEWHERE to go; copper already there is the strongest form of that.
+    track_ends = {}
+    for t in b.GetTracks():
+        if t.GetClass() != "PCB_TRACK": continue
+        track_ends.setdefault(t.GetNetname(), []).append((t.GetStart(), t.GetEnd(), t.GetLayer()))
     unreached = []
     track_keepouts = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
     ds = b.GetDesignSettings(); via_d = max(0.4, ds.m_ViasMinSize / 1e6); clr = max(0.127, ds.m_MinClearance / 1e6)
@@ -197,6 +207,10 @@ def main(a):
             c = p.GetPosition()
             if any(math.hypot(v.x - c.x, v.y - c.y) <= 1.5e6 for v in vias_by_net.get(n, [])): continue
             if (c.x, c.y) in locked_starts: continue
+            _r = max(p.GetSize().x, p.GetSize().y) / 2.0
+            if any(lay == (pcbnew.F_Cu if p.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu)
+                   and (math.hypot(e0.x - c.x, e0.y - c.y) <= _r or math.hypot(e1.x - c.x, e1.y - c.y) <= _r)
+                   for e0, e1, lay in track_ends.get(n, [])): continue
             L = pcbnew.F_Cu if p.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
             if any(z.GetFirstLayer() == L and z.GetFilledPolysList(L).Contains(c) for z in zone_nets[n]): continue
             # The pad has no connection YET, which is the normal state of a plane pad before the route (A36's placed board
