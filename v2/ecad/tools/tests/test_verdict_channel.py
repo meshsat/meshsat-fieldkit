@@ -402,13 +402,15 @@ def t_a_check_with_no_input_writes_no_verdict_rather_than_one_about_the_host():
     The set verdict is stricter than the per-board one: it means "the seven boards agree", which cannot be
     read at all with a board absent."""
     src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
-    per = src[src.index("for _bd in sorted(set(list(per_board)"):src.index('sys.exit(_v.write("check_contracts"')]
-    assert "if _bd in MISSING:" in per and "continue" in per, \
-        "a board whose netlist is absent still gets a verdict written about this host"
-    assert "if not checked or MISSING:" in src, \
-        "the set verdict is still written from a tree that is missing a board's netlist"
-    i = src.index("if not checked or MISSING:")
-    assert "sys.exit(3)" in src[i:i + 900], "the check does not exit INCONCLUSIVE when it judged nothing"
+    per = src[src.index("for _bd in sorted(set(list(per_board)"):src.index('if (not checked or MISSING)')]
+    assert "_richer_on_disk(" in per and "continue" in per, \
+        "a board whose netlist is absent still writes over a verdict taken where the netlist was"
+    assert "if (not checked or MISSING) and _richer_on_disk(" in src, \
+        "the set verdict is written from a tree with less input than the reading already on disk"
+    i = src.index("if (not checked or MISSING) and _richer_on_disk(")
+    assert "sys.exit(3)" in src[i:i + 1200], "the check does not exit INCONCLUSIVE when it judged nothing"
+    assert "A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE" in src, \
+        "the rule behind the guard is no longer written down beside it"
 
 
 def t_that_refusal_is_executed_and_leaves_an_existing_verdict_alone():

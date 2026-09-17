@@ -390,6 +390,34 @@ print("\n%d contract(s) FAILED" % len(fails) if fails else ("\nALL CONTRACTS PAS
 import os as _osv
 sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
 import verdict as _v
+
+
+def _richer_on_disk(tool, missing_now=None):
+    """Was the verdict already on disk taken with MORE input than this run has?
+
+    A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE (16 September 2026). The contracts are
+    judged from the netlists the chains write into each project's untracked out/, so on the runner every board
+    is absent; `final_gate.py` runs this check to print one summary line, and that incidental run wrote
+    INCONCLUSIVE over board C's contract PASS taken on the box an hour earlier, and over the set's own reading.
+    Two rules on six boards moved backwards because of where the command was typed.
+
+    It is deliberately not "never overwrite an INCONCLUSIVE": a tree with the same input or more writes its
+    answer whatever that answer is, so a real regression is still recorded, and a tree with no prior verdict
+    writes one, so a fresh checkout still says what it found."""
+    import json as _j, os as _o
+    d = _v_out_dir()
+    try: rec = _j.load(open(_o.path.join(d, "%s.verdict.json" % tool), encoding="utf-8"))
+    except Exception: return False                  # nothing on disk: this run is the only reading there is
+    if missing_now is None:                         # a per-board verdict: was it taken with that netlist?
+        return "absent from this tree" not in (rec.get("note") or "")
+    was = (rec.get("counts") or {}).get("missing_boards")
+    return was is not None and was < missing_now
+
+
+def _v_out_dir():
+    return os.environ.get("VERDICT_DIR") or os.path.join(os.getcwd(), "out")
+
+
 # A contract set that checked nothing has found nothing wrong, which is not the same as agreement.
 # A PER-BOARD VERDICT BESIDE THE SET ONE (16 September 2026), the pattern final_gate already uses. The set
 # verdict is what the contracts as a whole say and it still blocks; these say what each board's own contracts
@@ -416,9 +444,9 @@ for _bd in sorted(set(list(per_board) + list(B) + ["E5"])):
     # INCONCLUSIVE about this host. Absence is already INCONCLUSIVE to the readiness computation ("absence is
     # never a pass"), so writing nothing gives the same answer on a fresh tree and keeps the evidence on a
     # tree that has some. The missing board is named on stdout, which is where a report belongs.
-    if _bd in MISSING:
-        print("check_contracts: %s has no netlist in this tree, so nothing was judged for it and its verdict "
-              "is left as it stands" % _bd)
+    if _bd in MISSING and _richer_on_disk("check_contracts_%s" % _bd.lower()):
+        print("check_contracts: %s has no netlist in this tree and the verdict on disk was taken with one, "
+              "so it is left as it stands" % _bd)
         continue
     _r = per_board.get(_bd) or {"pass": 0, "fail": []}
     _n = _r["pass"] + len(_r["fail"])
@@ -430,7 +458,7 @@ for _bd in sorted(set(list(per_board) + list(B) + ["E5"])):
                    "no contract of this set names this board" if not _n else
                    "the contracts that name this board; the set's own verdict is check_contracts"),
              quiet=True)
-if not checked or MISSING:
+if (not checked or MISSING) and _richer_on_disk("check_contracts", len(MISSING)):
     # The same rule for the SET verdict, and it is stricter, because of what this verdict MEANS: the seven
     # boards agree with each other. That cannot be read with a board absent, and an INCONCLUSIVE written from
     # here replaces the set's real reading with a fact about this host. The runner has no netlist for any
