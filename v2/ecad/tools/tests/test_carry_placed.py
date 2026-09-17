@@ -179,3 +179,14 @@ def t_a_swap_carries_the_geometry_and_not_the_escape_fan_predictor():
     import inspect
     src = inspect.getsource(C.main)
     assert "CARRY_SWAPPED" in src and "swapped = swaps(" in src, "the swap no longer narrows what is carried"
+
+
+def t_the_carry_can_never_end_a_finish():
+    """It carries EVIDENCE and changes no copper, so its refusal must not end a finish that a five-hour route
+    paid for: the readiness computation already treats an absent verdict as inconclusive. finish.sh runs under
+    pipefail, so the status is discarded deliberately rather than by luck."""
+    import os, re
+    s = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
+    line = [l for l in s.splitlines() if "carry_placed.py" in l and not l.strip().startswith("#")]
+    assert line, "the finish no longer runs the carry"
+    assert all(l.rstrip().endswith("|| true") for l in line), line
