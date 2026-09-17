@@ -11,7 +11,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 > **HELD BY OWNER DECISION 31.** ROUTING_STATUS = OPEN   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
 >
-> the same decision, measured on this board: TRN-001 reads FAIL on board A with TWO of its twenty-one judged conductors meeting their clamp only THROUGH an active part, which therefore sees the transient itself. The file listed board E alone until 17 September, and decision 31 names three boards: a hold that names one of them would let the other two into an order set the moment E's is lifted
+> the same decision, measured on this board: TRN-001 reads FAIL on board A with TWO of its THIRTEEN judged conductors (its three declared ports carry twenty-one pins and the rest are ground or a no-connect) meeting their clamp only THROUGH an active part, which therefore sees the transient itself. The file listed board E alone until 17 September, and decision 31 names three boards: a hold that names one of them would let the other two into an order set the moment E's is lifted
 >
 > Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated.
 >
