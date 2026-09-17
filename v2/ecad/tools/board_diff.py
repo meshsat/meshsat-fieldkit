@@ -109,7 +109,7 @@ def main(a):
     except Exception as e:
         print("board_diff: could not read a board (%s)" % e)
         return verdict.write("board_diff", verdict.INCONCLUSIVE, denominator=0,
-                             inputs={"a": a[0], "b": a[1]}, note=str(e))
+                             inputs={"a": a[0], "b": a[1], "board": None}, note=str(e))
     diff, total, counts, ev = compare(A, B, "--verbose" in a)
     for line in (ev if "--verbose" in a else ev[:12]): print("board_diff: " + str(line)[:200])
     print("board_diff: %d of %d board items differ (%s)"
@@ -118,7 +118,10 @@ def main(a):
                                     for k in sorted(counts) if k.endswith("_differing"))))
     return verdict.write("board_diff", verdict.PASS if diff == 0 else verdict.FAIL,
                          counts=counts, denominator=total, evidence=[str(e) for e in ev],
-                         inputs={"a": a[0], "b": a[1]},
+                         # `board: None` says this verdict is about a PAIR of boards and not about one, so the
+                         # command line is not read for an identity: a comparison that named its first
+                         # argument as "the board" would be attributed to half of what it judged.
+                         inputs={"a": a[0], "b": a[1], "board": None},
                          note="uuids, file order and the title block are not properties of the board")
 
 
