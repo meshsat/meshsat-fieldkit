@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**24 of 57 rules carry a gap.**
+**23 of 57 rules carry a gap.**
 
 ## absent (2)
 
@@ -91,7 +91,7 @@ still not judged is the ground clearance of a coplanar line, the via fence, the 
 rule stays GENERATED_ONLY in its gap category while its verdict is now real  
 *Close it by* board A's eleven RF paths take an outer layer at the class width (the A40 placement), then the LPF simulation and the coplanar clearance and via fence. Owner **SESSION**, after IMP-001. Effort P50 6h, P80 18h.
 
-## prose only (2)
+## prose only (1)
 
 **GND-002 chassis and cable-shield strategy** (MUST_JUSTIFY, OWNER_DECISION_REQUIRED)  
 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit
@@ -104,20 +104,6 @@ document; they are schematic changes on three boards and they touch owner decisi
 wait on that ruling rather than being made piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by
 a four-wire measurement and an emissions sweep, neither of which exists until there is hardware  
 *Close it by* make the four changes the strategy names once decision 29 is answered, then the bond resistances and the pre-compliance sweep at the prototype. Owner **SESSION**, after INT-002. Effort P50 4h, P80 12h.
-
-**PLC-002 prevention before repair** (MUST_JUSTIFY, ENFORCED)  
-the principle is written in the record and in the plan; the finish still carries ten copper-editing passes
-and the predictor covers two of the classes 16 September 2026: EVERY REPAIR IN THE FINISH IS DECLARED AND THE
-COVERAGE IS JUDGED PER BOARD. pcb_closers.yaml names all fourteen copper-changing stages with the defect
-class each repairs and why prevention was not possible, and closer_audit.py takes the list of stages from
-finish.sh itself, so a stage added and not declared is a failure rather than a silence. Three classes are
-repaired on every board and prevented by one thing, a ground-via grid laid BEFORE the route: a pour island
-with no via of its own net, a pad its plane cannot reach, and a stitch via the fill has retreated from.
-Boards D and E declare the grid and are covered; A, B, C and P do not and are not, which is a design item
-with a measured cost (board P measured the grid at 21 open connections against 0 without, which is why it
-declares none) and board C is measuring it on two arms right now. Board E5 has no chain, so no closer runs on
-it at all.  
-*Close it by* The declarations are DONE: all fifteen copper-changing stages name their defect class and why prevention failed, and a prevention MEASURED AND REFUSED counts as an answer since 17 September 2026, which is what board P had done and was being refused for. What remains is two measurements and one tool: boards A and C have never measured the ground-via grid that prevents the pour-island class and both are measuring it now (A41 against A40, C25 against C24), and place_audit does not predict that class. Owner **SESSION**. Effort P50 3h, P80 8h.
 
 ## no protocol (2)
 
@@ -334,10 +320,10 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (33)
+## covered (34)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-001,
 CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, IMP-002, INT-001, MEC-001, PI-001, PI-002, PI-003, PLC-001,
-PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003,
-SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
+PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002,
+SCH-003, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
 
