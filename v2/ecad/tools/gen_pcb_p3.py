@@ -268,7 +268,7 @@ print("ground stitch grid: %d locked vias" % _n)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
-cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)
+cls(ns.GetDefaultNetclass(), 0.16, 0.25, 0.6, 0.3)
 # EVERY CLEARANCE ON THIS BOARD IS 0.16 mm, not 0.127: two layers at 2 oz, and the fabricator's own capability
 # for that combination is 0.16 for both track width and spacing (rule RTE-001, 16 September 2026). The widths
 # stay as they are, because every one of them is already above 0.16.
@@ -301,5 +301,11 @@ if os.path.exists(pro):
         if _cl: _assign[str(_name)] = _cl
     d["net_settings"]["netclass_assignments"] = _assign
     d["net_settings"].setdefault("meta", {"version": 4}); d["net_settings"].setdefault("net_colors", None)
-    d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.127
+    # 0.16 HERE TOO, and this is the line that decides (17 September 2026). The board's own minimum was moved
+    # to 0.16 in gen_pcb_p.py on 16 September for the fabricator's 2 oz two-layer rows, and these two lines
+    # were missed: the SWIG default class above and this one, which is the PROJECT file's minimum and the one
+    # KiCad enforces (a board's minimums live in the project file; nothing set through the SWIG design
+    # settings survives a save). So the board said 0.16 and was built to 0.127, which is what fab_limits
+    # reports on P4 as five items under the fabricator's capability.
+    d.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})["min_clearance"] = 0.16
     json.dump(d, open(pro, "w"), indent=2); print("project net classes re-applied, %d assignments" % len(_assign))
