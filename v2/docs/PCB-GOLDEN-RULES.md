@@ -2153,7 +2153,12 @@ rule had never been RUN. ledger_verify.py was written on 11 September to re-walk
 the tree, re-hash every row and check each witness, and no chain called it, so the chained record this rule
 rests on was a claim nobody tested. It is in the sweep now and reads 224 rows over four ledgers with no
 problem. That is the same 'written and never run' the closer audit began refusing tonight for copper-changing
-tools, in the verification half of this registry rather than in the boards.
+tools, in the verification half of this registry rather than in the boards. 18 September 2026 00:20: taken on
+the runner, where the seven order folders are, the rule reads FAIL of 7 (INCONCLUSIVE in a sweep tree that
+holds no folder): every committed ORDER-NOTES.txt predates make_handoff.py's provenance line of 12 September,
+and make_handoff refuses to rebuild the set while the folders describe boards the tree is not building. So
+DOC-002 closes with the order set's rebuild, behind the boards' phases and decisions 31 and 37, and reads as
+the failure it is until then.
 
 ## Manufacturing Outputs
 
@@ -2218,11 +2223,7 @@ applies to a board reached one of the five results at all. The second is the pro
 for, and it is the one that would otherwise be invisible, since a rule missing from the table looks exactly
 like a rule that does not apply. It is FAIL when any pair produces a result outside the five, when the
 registry fails its own validator, or when an applied rule has no coverage entry; 294 of 294 pairs resolve
-today 18 September 2026 00:20: taken on the runner, where the seven order folders are, the rule reads FAIL of
-7 (INCONCLUSIVE in a sweep tree that holds no folder): every committed ORDER-NOTES.txt predates
-make_handoff.py's provenance line of 12 September, and make_handoff refuses to rebuild the set while the
-folders describe boards the tree is not building. So DOC-002 closes with the order set's rebuild, behind the
-boards' phases and decisions 31 and 37, and reads as the failure it is until then.
+today
 
 ### SGN-002  a prototype-only unknown is named
 
