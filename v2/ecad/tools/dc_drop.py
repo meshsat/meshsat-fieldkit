@@ -640,4 +640,6 @@ def main(a):
                          "capacity is judged separately in dc_density.verdict.json, where %d rail(s) missed"
                          % (cell, budget * 100, dens_miss))
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    import verdict as _vg   # a gate that crashes writes INCONCLUSIVE, never nothing (18 September 2026)
+    sys.exit(_vg.guard("dc_drop", main, sys.argv[1:]))

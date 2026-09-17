@@ -241,4 +241,6 @@ def main(argv):
                           "capacitance derating is NOT checked here and is an open gap"))
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    import verdict as _vg   # a gate that crashes writes INCONCLUSIVE, never nothing (18 September 2026)
+    sys.exit(_vg.guard("derate", main, sys.argv[1:]))

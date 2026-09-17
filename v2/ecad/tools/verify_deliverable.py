@@ -163,4 +163,6 @@ def main(a):
     return verdict.write("verify_deliverable", _res, counts=_counts, denominator=judged,
                          evidence=fails, inputs=_inputs, note=_note)
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    import verdict as _vg   # a gate that crashes writes INCONCLUSIVE, never nothing (18 September 2026)
+    sys.exit(_vg.guard("verify_deliverable", main, sys.argv[1:]))

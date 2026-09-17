@@ -267,4 +267,6 @@ def main(argv):
                           "through an active part, which therefore sees the transient itself" % (n_unprot, n_behind)))
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    import verdict as _vg   # a gate that crashes writes INCONCLUSIVE, never nothing (18 September 2026)
+    sys.exit(_vg.guard("port_protect", main, sys.argv[1:]))
