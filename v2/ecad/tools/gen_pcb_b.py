@@ -182,17 +182,17 @@ for i, (x, y) in enumerate(LIME_SLOTS, 1): slot("S_LIME%d" % i, x, y, 5.0, 1.8)
 usb3 = place("Connector_USB", "USB3_A_Receptacle_Wuerth_692122030100", "J_LIME", J_LIME[0], J_LIME[1], "USB 3.0 A receptacle, LimeSDR", rot=180)   # opening north into the bay (the land opens toward local +y); reused by gen_pcb_b3.py, not placed twice
 if usb3 is None: rect((J_LIME[0] - 7, J_LIME[1] - 8, J_LIME[0] + 7, J_LIME[1] + 8), pcbnew.F_SilkS, 0.15)
 text("J_LIME", J_LIME[0] + 12.0, J_LIME[1], pcbnew.F_SilkS, 1.0, 0.18)
-rect(RB9704_RECT, pcbnew.F_SilkS, 0.12); text("ROCKBLOCK 9704 on the GC bracket (4x M4, 32 x 32) on 8 mm standoffs: the plate passes over rod nut R2", RB_C[0], RB_C[1] + 2.0, pcbnew.F_SilkS, 1.0, 0.18); text("pigtail -> A22 IRIDIUM jack; USB via CP2102N", RB_C[0], RB_C[1] - 1.5, pcbnew.F_SilkS, 1.0, 0.18)
+rect(RB9704_RECT, pcbnew.F_SilkS, 0.12); text("ROCKBLOCK 9704 on the GC bracket (4x M4, 32 x 32) on 8 mm standoffs: the plate passes over rod nut R2", RB_C[0], RB_C[1] + 2.0, pcbnew.F_SilkS, 1.0, 0.18); text("pigtail -> PCB-A IRIDIUM jack; USB via CP2102N", RB_C[0], RB_C[1] - 1.5, pcbnew.F_SilkS, 1.0, 0.18)
 for (x, y) in RB9704_HOLES:
     hole("H%d" % n, x, y, 4.3, "M4, GC 9704 bracket"); n += 1
 # ---------------------------------------------------------------- fixed connectors of the bands (footprints come with the netlist; outlines here)
 rect((J_ETH[0] - 8.5, J_ETH[1] - 11, J_ETH[0] + 8.5, J_ETH[1] + 9), pcbnew.Dwgs_User, 0.1); text("J_ETH RJ45 -> sealed wall RJ45 (PoE out)", J_ETH[0], J_ETH[1] - 13.0, pcbnew.Dwgs_User, 0.9, 0.15)
 rect((J_HDMI[0] - 8, J_HDMI[1] - 8, J_HDMI[0] + 8, J_HDMI[1] + 8), pcbnew.Dwgs_User, 0.1); text("J_HDMI -> Xenarc pass-through", J_HDMI[0] + 3.0, J_HDMI[1] - 10.5, pcbnew.Dwgs_User, 0.9, 0.15)
-rect((J_PANEL[0] - 17.5, J_PANEL[1] - 4.5, J_PANEL[0] + 17.5, J_PANEL[1] + 4.5), pcbnew.Dwgs_User, 0.1); text("J_PANEL 2x13 ribbon up to PCB-C C7", J_PANEL[0], J_PANEL[1] - 6.5, pcbnew.F_SilkS, 0.9, 0.16)
-text("J_AB1 2x13 to PCB-A A22 (underside, same case XY)", J_AB[0], J_AB[1] + 19.0, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
+rect((J_PANEL[0] - 17.5, J_PANEL[1] - 4.5, J_PANEL[0] + 17.5, J_PANEL[1] + 4.5), pcbnew.Dwgs_User, 0.1); text("J_PANEL 2x13 ribbon up to PCB-C", J_PANEL[0], J_PANEL[1] - 6.5, pcbnew.F_SilkS, 0.9, 0.16)
+text("J_AB1 2x13 to PCB-A (underside, same case XY)", J_AB[0], J_AB[1] + 19.0, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)
 for k, r in ZONES.items(): rect(r, pcbnew.Dwgs_User, 0.15); text(k, (r[0] + r[2]) / 2, r[3] - 1.5, pcbnew.Dwgs_User, 1.0, 0.18)
-text("E22-900M30S LoRa | E72 x2 (antennas -> north edge) | LG290P + U.FL -> A22 GNSS jack | CP2102N bridges", 130.0, 98.0, pcbnew.F_SilkS, 0.9, 0.16)
-text("KSZ9897R Gigabit switch | H5007NL | PoE TPS23861 (54 V from A22 J_54V)", -142.0, 38.5, pcbnew.F_SilkS, 0.9, 0.16)
+text("E22-900M30S LoRa | E72 x2 (antennas -> north edge) | LG290P + U.FL -> PCB-A GNSS jack | CP2102N bridges", 130.0, 98.0, pcbnew.F_SilkS, 0.9, 0.16)
+text("KSZ9897R Gigabit switch | H5007NL | PoE TPS23861 (54 V from PCB-A J_54V)", -142.0, 38.5, pcbnew.F_SilkS, 0.9, 0.16)
 # datum + legends
 line(-4, 0, 4, 0, pcbnew.Dwgs_User); line(0, -4, 0, 4, pcbnew.Dwgs_User); text("CASE DATUM (0,0)", 0, -6.0, pcbnew.Dwgs_User, 1.1, 0.18)
 text("PCB-B COMPUTE  REV A (%s)" % PHASE, 100, -96.0, pcbnew.F_SilkS, 1.6, 0.26)

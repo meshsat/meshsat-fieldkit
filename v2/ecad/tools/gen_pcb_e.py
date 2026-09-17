@@ -72,7 +72,7 @@ for i, (x, y) in enumerate(ROD_HOLES, 1):
     fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % i); fp.SetValue("M3 rod pass-through, PCB-A standoff stands here"); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, y)); board.Add(fp)
     circle(x, y, STANDOFF_KEEPOUT_D, pcbnew.F_SilkS, 0.15); rule_area_circle(x, y, STANDOFF_KEEPOUT_D, "standoff keep-out H%d" % i, inner_d=ROD_D + 3.0)
 n = 3
-rounded_rect(-106.5, -85.0, -63.5, -59.0, 1.5, pcbnew.Dwgs_User, 0.1); text("RAISED BLOCK pcb-e5-block on 6 mm M3 standoffs: A22 dock pins land here", BLOCK_C[0], BLOCK_C[1] + 8.5, pcbnew.Dwgs_User, 1.0, 0.18)
+rounded_rect(-106.5, -85.0, -63.5, -59.0, 1.5, pcbnew.Dwgs_User, 0.1); text("RAISED BLOCK pcb-e5-block on 6 mm M3 standoffs: PCB-A dock pins land here", BLOCK_C[0], BLOCK_C[1] + 8.5, pcbnew.Dwgs_User, 1.0, 0.18)
 for (x, y) in BLOCK_HOLES:
     fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % n); fp.SetValue("M3 standoff, raised block"); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, y)); board.Add(fp); n += 1
 for (x, nm) in RF_SITES:
@@ -82,7 +82,7 @@ for (x, nm) in RF_SITES:
         fp = pcbnew.FootprintLoad("/usr/share/kicad/footprints/MountingHole.pretty", "MountingHole_3.2mm_M3"); fp.SetReference("H%d" % n); fp.SetValue("M3, float clamp %s" % nm); fp.Reference().SetVisible(False); fp.Value().SetVisible(False); fp.SetPosition(P(x, hy)); board.Add(fp); n += 1
     rule_area_circle(x, cy, 12.0, "clamp %s: no copper under the float clamp (top face)" % nm, layer=pcbnew.F_Cu)
 line(-121.0, UNDER_A_Y, X1, UNDER_A_Y, pcbnew.Dwgs_User, 0.15); line(-121.0, Y0, -121.0, Y1, pcbnew.Dwgs_User, 0.15); text("PCB-A EDGE ABOVE (13.4 mm gap): north of this line and east of X -121 parts at most 12 mm tall", 0, UNDER_A_Y - 2.0, pcbnew.Dwgs_User, 1.0, 0.18)
-text("MESHSAT PCB-E1 DOCK (%s)" % PHASE + "  -  pack 14.4 V and vehicle 9-36 V to the raised block -> A22  -  panel tracker  -  sensor controller on USB  -  eleven blind-mate clamps", 0, -46.3, pcbnew.F_SilkS, 1.2, 0.2)
+text("MESHSAT PCB-E1 DOCK (%s)" % PHASE + "  -  pack 14.4 V and vehicle 9-36 V to the raised block -> PCB-A  -  panel tracker  -  sensor controller on USB  -  eleven blind-mate clamps", 0, -46.3, pcbnew.F_SilkS, 1.2, 0.2)
 text("D38999 DC pair -> J_DCIN -> F1 -> ideal diode -> LM5069 hot-swap -> filter -> raw bus  |  panel pair -> J_SOLAR -> F2 -> LT8705A tracker -> ideal diode  |  4S pack cable XT60 -> F3 -> block  |  VHB pads to the floor", 0, -111.5, pcbnew.F_SilkS, 1.1, 0.18)
 text("PCB-E1 underside: VHB pads at the four corners, no parts", 0, Y0 + 3.0, pcbnew.B_SilkS, 1.4, 0.22, mirror=True)
 pcbnew.SaveBoard(OUT, board); print("saved", OUT, "holes:", n - 1)

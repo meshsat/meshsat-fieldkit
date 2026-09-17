@@ -63,7 +63,7 @@ a22b = pcbnew.LoadBoard(A22_PCB); jd = a22b.FindFootprintByReference("J_DOCK")
 if jd is None: raise SystemExit("A22 board has no J_DOCK")
 jp = jd.GetPosition(); a22 = {}
 for p in jd.Pads(): a22[(round((p.GetPosition().x - jp.x) / 1e4), round((p.GetPosition().y - jp.y) / 1e4))] = (int(p.GetNumber()), p.GetNetname())
-tgt = place("meshsat", "PogoTargets_2x6", "T_SIG", -76.0, -70.0, "signal targets (A22 J_DOCK lands here)")
+tgt = place("meshsat", "PogoTargets_2x6", "T_SIG", -76.0, -70.0, "signal targets (PCB-A J_DOCK lands here)")
 PIN = {}   # block pad number -> (A22 pin number, net)
 for pad in tgt.Pads():
     key = (round((pad.GetPosition().x - tgt.GetPosition().x) / 1e4), round((pad.GetPosition().y - tgt.GetPosition().y) / 1e4))
@@ -114,7 +114,7 @@ for L in (pcbnew.F_Cu, pcbnew.B_Cu):
     pour(L, "CELL+", "CELL+ pour " + board.GetLayerName(L), (-105.5, -84, -85, -71)); pour(L, "CELL_N", "CELL_N pour " + board.GetLayerName(L), (-105.5, -66, -85, -60))
 for x in (-100.0, -96.0): via(x, -80.0, "CELL+", 0.8, 0.4); via(x, -61.5, "CELL_N", 0.8, 0.4)
 for x in (-101.0, -93.0): via(x, -71.8, "CELL+", 0.8, 0.4)
-text("E5 BLOCK  face 7.4 mm", -82.0, -61.0, pcbnew.F_SilkS, 0.9, 0.15); text("A22 pins land here", -76.5, -61.5, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)   # inside the edge (Y1 -59), clear of the corner hole and the wire hole rings
+text("E5 BLOCK  face 7.4 mm", -82.0, -61.0, pcbnew.F_SilkS, 0.9, 0.15); text("PCB-A dock pins land here", -76.5, -61.5, pcbnew.B_SilkS, 0.9, 0.15, mirror=True)   # inside the edge (Y1 -59), clear of the corner hole and the wire hole rings
 text("CELL+ 12 AWG", -96.0, -83.5, pcbnew.F_SilkS, 0.9, 0.15); text("RETURN 12 AWG", -99.0, -63.5, pcbnew.F_SilkS, 0.9, 0.15)
 pcbnew.SaveBoard(OUT, board); b2 = pcbnew.LoadBoard(OUT); pcbnew.ZONE_FILLER(b2).Fill(b2.Zones()); pcbnew.SaveBoard(OUT, b2)
 print("saved", OUT, "footprints:", len(list(b2.GetFootprints())), "nets:", b2.GetNetCount())
