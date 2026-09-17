@@ -17,6 +17,39 @@ schema_version: "1.0.0"
 
 holds:
 
+ a:
+   decision: 31
+   opened: "2026-09-17"
+   title: "board A's exposed-port protection"
+   ROUTING_STATUS: OPEN
+   ELECTRICAL_PROTECTION_STATUS: BLOCKED_DECISION_31
+   FAB_READINESS: NOT_READY
+   PUBLICATION_STATUS: HELD
+   why: "the same decision, measured on this board: TRN-001 reads FAIL on board A with TWO of its twenty-one
+     judged conductors meeting their clamp only THROUGH an active part, which therefore sees the transient
+     itself. The file listed board E alone until 17 September, and decision 31 names three boards: a hold that
+     names one of them would let the other two into an order set the moment E's is lifted"
+   permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated"
+   forbidden: "any orderable fabrication package, any promotion of the board or its folder"
+   lifts_when: "decision 31 is ruled and this entry is deleted"
+
+ d:
+   decision: 31
+   opened: "2026-09-17"
+   title: "board D's exposed-port protection"
+   ROUTING_STATUS: PASS
+   ELECTRICAL_PROTECTION_STATUS: BLOCKED_DECISION_31
+   FAB_READINESS: NOT_READY
+   PUBLICATION_STATUS: HELD
+   why: "measured on 17 September by cutting this board's deliverable, which the finish refused at that gate:
+     SEVEN of board D's fourteen judged conductors reach a semiconductor with nothing between them, three each
+     on the two headset jacks a person plugs a headset into and one on the 30 W amplifier output. Its antenna
+     jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to board D
+     until that morning, because its applicability was a list of interfaces this board does not carry"
+   permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated"
+   forbidden: "any orderable fabrication package, any promotion of the board or its folder"
+   lifts_when: "decision 31 is ruled and this entry is deleted"
+
  e:
    decision: 31
    opened: "2026-09-16"

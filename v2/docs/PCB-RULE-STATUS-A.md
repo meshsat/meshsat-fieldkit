@@ -9,6 +9,16 @@ Manifest **2026-09-16.1**, rule set **f8db9f9b0747ca1b**, evidence epoch **2026-
 
 Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A36: THIS TREE HOLDS NO BOARD AT THE DECLARED PHASE.
 
+> **HELD BY OWNER DECISION 31.** ROUTING_STATUS = OPEN   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
+>
+> the same decision, measured on this board: TRN-001 reads FAIL on board A with TWO of its twenty-one judged conductors meeting their clamp only THROUGH an active part, which therefore sees the transient itself. The file listed board E alone until 17 September, and decision 31 names three boards: a hold that names one of them would let the other two into an order set the moment E's is lifted
+>
+> Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated.
+>
+> Forbidden while held: any orderable fabrication package, any promotion of the board or its folder.
+>
+> This lifts when decision 31 is ruled and this entry is deleted.
+
 | result | rules | percent |
 |---|---|---|
 | PASS | 26 | 52.0 |
