@@ -735,6 +735,16 @@ def main(argv):
     a = ap.parse_args(argv)
     only = set(a.boards.split(",")) if a.boards else None
 
+    # A RUN ABOUT ONE BOARD MUST NOT REWRITE THE SET'S TABLE (17 September 2026). `JLC-CERTIFIED.tsv` is the
+    # order set's own record of what can be bought, 720 rows over every folder, and `--boards c` wrote 88 of
+    # them over it: every other board's parts vanished from the file a person reads while ordering, and
+    # nothing said so. It is the same shape as the scoped readiness run of this morning, and the same answer:
+    # a narrowed run writes its own table beside its own verdicts and leaves the set's alone.
+    if only and os.path.abspath(a.table) == os.path.abspath(TABLE):
+        a.table = os.path.join(a.out_dir, "jlc-certified-%s.tsv" % "-".join(sorted(only)))
+        print("scoped run (--boards %s): the set's table %s is left as it stands; this run writes %s"
+              % (",".join(sorted(only)), os.path.relpath(TABLE, ROOT), a.table))
+
     handfit, aliases = declared(HANDFIT), declared(ALIASES)
     cache = load_cache()
     rows = rows_to_check(only)
