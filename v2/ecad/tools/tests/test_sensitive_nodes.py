@@ -98,3 +98,37 @@ def t_a_clearance_is_a_same_layer_question():
     assert "runs under" in src, "a cross-layer overlap is no longer reported at all"
     i, j = src.index("def _copper"), src.index("def _seg_distance")
     assert "t.GetLayer()" in src[i:j], "the copper is collected without its layer"
+
+
+# ---------------------------------------------------------------------------------------------------------
+# WHERE THE APPROACH HAPPENS DECIDES WHAT IT IS (rule ANA-001, 17 September 2026).
+#
+# A current-sense line and the switching node it measures are adjacent BY CONSTRUCTION at the part that makes
+# both: a FET's source is CS and its drain is SW, two pins of one package, and no router separates them. The
+# gate reported the smallest gap and failed board A on six nodes, four of which were that geometry. The split
+# is the part's own COURTYARD, which is published geometry and not a number this project invented: copper
+# inside it is the package, copper outside it is a routing decision.
+
+def t_a_point_inside_a_courtyard_box_is_inside_it():
+    import sensitive_nodes as S
+    box = (10.0, 20.0, 14.0, 23.0)
+    assert S.inside_any((12.0, 21.0), [box]) is True
+    assert S.inside_any((10.0, 20.0), [box]) is True, "a point on the edge is inside the part"
+    assert S.inside_any((14.5, 21.0), [box]) is False
+    assert S.inside_any((12.0, 21.0), []) is False, "no courtyard means nothing is inside one"
+    assert S.inside_any((12.0, 21.0), [None]) is False, "a part that draws no courtyard contains nothing"
+
+
+def t_a_box_given_in_either_corner_order_still_contains_its_points():
+    import sensitive_nodes as S
+    assert S.inside_any((12.0, 21.0), [(14.0, 23.0, 10.0, 20.0)]) is True
+
+
+def t_the_reported_run_is_split_into_inside_and_outside():
+    """The verdict has to carry both, because the two mean different things and a single number cannot say
+    which one it is. This is the shape the measurement travels in."""
+    import inspect, sensitive_nodes as S
+    src = inspect.getsource(S.judge)
+    for key in ("run_inside_the_shared_part_mm", "run_outside_it_mm"):
+        assert key in src, "the measurement no longer reports %s" % key
+    assert "_run_out > 1e-9" in src, "the failure is no longer decided by the copper outside the part"
