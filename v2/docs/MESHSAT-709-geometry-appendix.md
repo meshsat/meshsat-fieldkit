@@ -8994,6 +8994,15 @@ generation of each board. Board A's three eFuse thermal pads are still three pad
 board that is cut today; the finding is real and it belongs to board A's next phase, where the generator can
 place them, rather than to a tool that could not see the site.
 
+**Addendum, 23:15 CEST: the generator places them now, measured.** `escape.py`'s exposed-pad block sat INSIDE
+its fine-pitch loop, so a PowerPAK SO-8, a SOIC-8 with a tab or a WSON-6 was never asked; on the cut A32 that is
+32 of 39 exposed pads with no via (25 FET drain pads, seven SOIC tabs). The block is a function called from the
+fine-pitch loop and from a loop over the coarse parts, with the same other-side test on every via. On a copy of
+A32's placed board it laid **103 thermal vias in the 31 coarse tabs, 0 refused, hard 0 of the fifteen types
+before and after**, and every one of the 39 exposed pads carries a via of its net. The rule fails on the pre-fix
+tree. Boards D (U15's WSON-6 is 1.0 x 1.6 mm, under the 1.2 mm floor, and stays unanswered) and P (the two pack
+FETs) take it with their next generation as well.
+
 ### 32.219 A pin map is a claim about a package, and board E's hot-swap FET had its gate on a source pin (17 September 2026, 22:40 CEST; MESHSAT-862)
 
 **The thermal-pad survey of 32.218 had one row that was not a thermal question.** Reading every exposed pad on the

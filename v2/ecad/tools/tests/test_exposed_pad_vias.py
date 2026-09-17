@@ -71,3 +71,15 @@ def t_the_via_site_search_also_knows_that_paste_is_not_copper():
     assert "IsOnCopperLayer" in body, \
         "_site_free takes every pad again, paste apertures included, so no exposed pad can hold a via"
     assert 'GetNumber() == ""' in body, "the unnumbered aperture is not named as what it is"
+
+
+def t_the_thermal_vias_are_asked_of_every_footprint_and_not_only_the_fine_pitch_ones():
+    """The exposed-pad block sat INSIDE the fine-pitch loop (17 September 2026, appendix 32.218), so a PowerPAK
+    SO-8, a SOIC-8 with a tab or a WSON-6 was never asked: 32 of board A's 39 exposed pads carried no via on the
+    cut A32. It is a function now, called once in the fine-pitch loop and once in a loop over the coarse parts."""
+    s = _src("escape.py")
+    assert "def thermal_vias(fp):" in s, "the exposed-pad block is not a function any loop can call"
+    assert s.count("    thermal_vias(fp)") >= 2, "thermal_vias is called from fewer than two loops: the coarse parts are not asked"
+    i = s.index("# THE COARSE PARTS")
+    assert "if is_fine(fp)" in s[i:i + 600] and "thermal_vias(fp)" in s[i:i + 900], \
+        "the coarse-part loop does not skip the fine parts and call thermal_vias"
