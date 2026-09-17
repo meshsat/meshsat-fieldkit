@@ -240,6 +240,14 @@ decisions:
     status: open
     ask: "rule this project's own per-class tolerances, derive them per net from a declared edge rate, or hold the rule until a standard publishes a number"
     recommendation: "rule the project's criterion: of the 32 nets failing today exactly one is inside a factor of 1.1 of its limit, so the number decides almost nothing"
+    evidence: "THE MEASUREMENT IS WHY THE RECOMMENDATION IS CHEAP, and it belongs in its own field rather than
+      inside the recommendation (17 September 2026). Across the set 32 signal nets fail this rule and exactly
+      ONE sits inside a factor of 1.1 of its limit: every other failure is over by a margin no plausible
+      criterion moves. So the choice between this project's own per-class tolerances, a per-net figure derived
+      from a declared edge rate, and holding the rule until a standard publishes a number, changes the verdict
+      on ONE net of thirty-two. What it does change is whether the rule has an authority behind it at all, which
+      is why it is asked: RET-001, RET-003 and SI-001 are the three rules this decision holds and all three
+      carry maturity SOURCE_UNVERIFIED for exactly that reason."
     blocks:
       RET-001: [a, b, c, d, e, p]
       RET-003: [a, b, c, d, e, p]
