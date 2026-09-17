@@ -56,3 +56,14 @@ def t_the_knob_is_read_by_the_launcher_and_is_off_by_default():
     assert 'if [ -n "${FR_CLASS_CLEAR:-}" ]' in s, "route_one.sh does not read FR_CLASS_CLEAR, or reads it unconditionally"
     doc = open(os.path.join(TOOLS, "route_one.sh"), encoding="utf-8").read()
     assert "class_class" in doc and "ANA-001" in doc, "the knob does not say which rule it serves"
+
+
+def t_board_a_gives_its_declared_sensitive_nets_a_class_of_their_own_ahead_of_the_switching_patterns():
+    """A class cannot be kept away from itself: POE_CS sat in SW beside POE_SW2, the very net ANA-001 asks it to
+    keep 0.50 mm from. The placement generator reads the board's sensitive list and puts every declared net in a
+    SENSE class, listed BEFORE the pattern table so the sensitive net wins over a switching pattern that names it."""
+    s = open(os.path.join(TOOLS, "gen_pcb_a3.py"), encoding="utf-8").read()
+    assert '"SENSE": (' in s, "gen_pcb_a3.py declares no SENSE class"
+    assert "pcb_sensitive.yaml" in s, "the SENSE class does not take its nets from the board's sensitive list"
+    assert 'PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS' in s, \
+        "the sensitive patterns are not put ahead of the table, so a switching pattern naming the same net would win"
