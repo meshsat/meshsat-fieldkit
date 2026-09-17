@@ -8579,3 +8579,66 @@ deciding these boards; the copper is.
 
 **Readiness under the corrected attribution: NOT_READY, 57.3 percent verified, 17.0 failed, 25.7 inconclusive
 of 300 applicable required rule-board pairs.** Board C stands at 30 of 42, its best. Suite 822.
+
+### 32.212 The board fixtures had never run where KiCad is, the fuses have an authority, and the register stops counting finished work (17 September 2026, 04:15 CEST; MESHSAT-862)
+
+**Eleven rules are proved against a real board file and every one of them needs pcbnew**, so on the runner
+they skip and the suite reports them as skipped. Nobody had ever run them where KiCad is. Run there, the
+family took the interpreter down at the first fixture, and what that was hiding is five defects, three of them
+in tools that judge real boards:
+
+1. **`ZONE_FILLER` segfaults on a BOARD built in python** and fills a saved-then-loaded copy of the same board
+   without complaint. Every fixture in the family filled the constructed one.
+2. **`PCB_VIA::GetWidth()` with no argument is an error in KiCad 9**: a via's width is per layer and the bare
+   call raises a wxWidgets assertion per via, then the process can die. It was live in **`return_via.py`, on
+   every via of every real board** while the fixer looked for a free site, in `board_diff.py`, in
+   `fix_a17_node.py`, and in `dot_prune.py`, whose ternary called the same method on both branches so whatever
+   it meant to do for a via it never did. `kicad_compat.via_width` is the one answer and a rule refuses the
+   bare call.
+3. **A board's manufacturing minimums live in the PROJECT file**, under `board.design_settings.rules`, and
+   nothing written through the SWIG design settings survives a save; they also reach a board only in a fresh
+   interpreter. Two fixtures set them the other way, so the class-floor rule's clearance case never fired at
+   all and the via rule read the fabricator's own smallest via as below a minimum this project never declared.
+4. **Saving a board writes a `.kicad_pro` beside it**, so "a board with no project file" cannot be staged by
+   saving one: that fixture was proving what an empty project file yields.
+5. **A net added in python has no code until `BuildListOfNets()`**, the item goes stale whenever the board's
+   contents change, and **a via placed ON a track takes the track's net**. The ground via of the return-via
+   fixture was a second SIGNAL via, so that rule's own subject had never once been built.
+
+Eleven of eleven pass on the box now. The FIXER's own proof is owed and declared in `FIXTURE_DEBT` with the
+measurement behind it: on a fixture whose ground is one pad and one pour, placing the via the rule asks for
+changes the unconnected count and the fixer reverts its own work.
+
+**THE FUSES HAVE AN AUTHORITY.** Rules PWR-003 and BAT-002 have carried "no authority for the SELECTION
+CRITERIA" since the registry was written: the fuses' own datasheets name SAE J1284 and ISO 8820-3, neither is
+free, and the makers' guides sit behind a host that refuses this one. **ECSS-Q-ST-30-11C Rev.2, "Derating, EEE
+components", 23 June 2021, clause 6.17**, is published free by the ECSS, and it is now in
+`v2/vendor/standards/` with its URL, its date and the sha256 of the file read. Two of its clauses are about
+the CIRCUIT and are enforced whatever the fuse is made of (6.17.3b, the largest rating compatible with the
+source; 6.17.3c, a source able to deliver three times the rating, which this chain answers at **9.6 times** at
+the pack blades). Table 6-17's **65 percent** is stated for CERMET fuses and this kit's are automotive blades,
+so it is a screen whose origin is named, and the standard's own 6.17.1a, which requires another technology's
+derating to be JUSTIFIED, is what the gate asks for.
+
+> It found one: **board E's shore inlet carries 8.0 A of a 10.0 A fuse, 80 percent, on copper rated 10 A**, in
+> a case with no vents. The fix is wider input bands with a 15 A fuse, or a lower declared continuous current,
+> and it rides with board E's next generation, which decision 31 owes anyway.
+
+**A selection finding belongs to the stage that has it**, so the chain writes a verdict per board beside the
+set's: without that split, one board's fuse failed two BLOCKER rules on four boards. That is the **third**
+time in one night that shape has been found, after the parts certification and the cross-board contracts.
+
+**THE REGISTER STOPS COUNTING WORK THAT IS DONE.** Every rule that passes on every board it applies to was
+asked whether its remediation still described work nobody had done. Five did not: GND-001's ground statement
+and its check, ANA-001's sensitive-node declarations, PWR-002's sequencing derivation, REL-001's reliability
+sheet and EMC-001's EMC sheet and pre-compliance plan, whose entry still said `implementation: NONE_YET` while
+`pcb_emc.yaml` had carried exactly that since the day before. Each entry now says what is LEFT, which for
+three of them is a laboratory stage and not a document.
+
+**The computed design package falls from 14.2 days P50 and 43.3 P80 to 9.7 and 29.0.** Not one of those days
+came off a board. They came off a register that was counting finished work, which is the difference between an
+estimate and a number.
+
+**Readiness: NOT_READY, 57.7 percent verified, 15.3 failed, 27.0 inconclusive of 300**, every board's evidence
+now taken by the same tools. Suite **838**. Running: **A40 (no grid) and A41 (grid)** on the second box, which
+decide board A's deliverable; **C25**, the same measurement for board C, and **B21** on the hub.
