@@ -495,10 +495,18 @@ if (not checked or MISSING or _NO_INTENT) and _richer_on_disk("check_contracts",
 sys.exit(_v.write("check_contracts",
                   _v.INCONCLUSIVE if (not checked or MISSING or (UNSPLIT and not fails)) else (_v.PASS if not fails else _v.FAIL),
                   counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING),
+                          # THE CONTRACTS THAT EXIST AND COULD NOT BE JUDGED ARE COUNTED (17 September 2026).
+                          # They are not passes and they are not failures, and leaving them out of the
+                          # denominator would make "0 of 0" out of a set where most of the work is simply not
+                          # readable on this host: the reader needs to see that there are contracts and that
+                          # this run could not reach them.
+                          "unjudged": len(unjudged),
                           "boards_without_intent": len(_NO_INTENT), "rails_unsplit": len(UNSPLIT)},
-                  denominator=len(checked),
-                  evidence=(["netlist absent: " + k for k in MISSING] + ["rail unsplit: " + u for u in UNSPLIT] + fails),
+                  denominator=len(checked) + len(unjudged),
+                  evidence=(["netlist absent: " + k for k in MISSING] + ["rail unsplit: " + u for u in UNSPLIT]
+                            + fails + ["unjudged, a board it names is absent: " + t for t in unjudged[:8]]),
                   inputs={"boards": ",".join(sorted(B))},
-                  note=("no contract was evaluated" if not checked else
+                  note=("no contract was evaluated (%d of the set's contracts name a board absent from this "
+                        "tree)" % len(unjudged) if not checked else
                         ("%s absent from this tree, so nothing that names them was judged" % ", ".join(MISSING)) if MISSING else
                         ("%d rail(s) cross a connector with no share of their budget declared" % len(UNSPLIT)) if UNSPLIT else "")))
