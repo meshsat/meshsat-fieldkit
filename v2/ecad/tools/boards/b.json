@@ -975,5 +975,6 @@
    "source": "TAXM24M4RFBCCT2T (C164058), 24 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry. The code it replaces, C70571, is an 18 pF part, which the same 18 pF capacitors loaded a third light",
    "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
   }
- }
+ },
+ "_escape_gap_why": "MEASURED 17 September 2026, and a hypothesis refused. B21's placement predicts ten escape-fan collisions (U101 38 of 99 pads without an escape, U301 34, U202 17, U302 14, U7 12 of 24, U19 5 of 14), and the escape pass's own debug lines name a via of the PAD'S OWN NET as the last thing it rejected at several of them, which reads like a false refusal: same-net copper needs no clearance and the escape would only have to reach a via that is already there. It is not. Counted over the whole placed board: 560 fine-pitch pads have no escape and only 12 of them have a via of their own net within 0.5 mm, 17 within 1.0 and 35 within 2.0. The 'last reject' line is the last of many candidate positions and not a statement about the pad's neighbourhood, which is the 8 September lesson about a debug print that does not share the predicate it explains. So place_audit is not describing its own limit here and the prediction stands: this board's fine-pitch fans do not fit where they are, which is a PLACEMENT item for B22 and not a tool item."
 }
