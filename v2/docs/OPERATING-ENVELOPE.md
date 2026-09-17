@@ -118,9 +118,36 @@ coordination study exists**: PWR-003 says so and is open.
 ## 5. What this document does NOT settle
 
 The altitude number, the vibration and shock severities, the pollution degree that ISO-001 needs, and the
-expected service life and duty cycle that REL-001 needs. All four are in decision 34.
+expected service life and duty cycle that REL-001 needs. All four are in decision 34. The transient levels
+were in this list until 17 September and are section 6 now, because owner decision 31 cannot be ruled without
+them: a clamp is chosen against a level.
 
-## 6. Decision 34, open: the envelope, and whether to buy a wider one
+## 6. The transient levels, proposed (17 September 2026, part of decision 34)
+
+**Nothing in this tree states one, and one thing in it needs one.** Ten conductors on boards D and E reach a
+semiconductor with nothing between them (decision 31), and the part that would stand in front of each is
+chosen by the level it has to survive. The qualification plan of `TEST-PLAN.md` is an INTENT and nothing in it
+has been run, no kit having been built: it names conducted and radiated susceptibility methods (CE102, CS101,
+CS114, RE102, RS103) and until today carried **no electrostatic discharge method at all**, so the one transient
+a person actually applies to this kit, by touching a connector after walking across a floor, was neither
+specified nor planned for.
+
+| what | proposed level | what it is traceable to here | what it costs |
+|---|---|---|---|
+| Electrostatic discharge, every surface and conductor a person can touch | **IEC 61000-4-2 level 4: 8 kV contact, 15 kV air** | the clamp this design already buys: ST's USBLC6-2SC6 sheet in `v2/vendor/st/` guarantees that level, and five of board B's USB ports and board P's SMBus pair already stand behind it | nothing where a clamp is fitted; it is the number the ten unclamped conductors would be fitted to, and one test method in the plan |
+| Surge on the conductors that leave the case on a long lead (shore and vehicle DC, PoE) | what the fitted part survives: the SMCJ40A on board E's inlet is a **1500 W peak pulse part at 10/1000 us** | the Vishay SMCJ series sheet in `v2/vendor/vishay/` | nothing today: it describes what is fitted. Asking instead for an IEC 61000-4-5 installation level is a ruling, and then the coordination between the fuse, the clamp and the front end has to be computed rather than asserted |
+| Electrical fast transient on the power leads | 2 kV, the common industrial figure | **NOTHING IN THIS TREE.** It is written here as the number a reader would expect and it has no authority behind it, which under this project's own maturity rule makes it unverified rather than a requirement | a standard this project does not hold, or a test house's own statement |
+
+**The honest shape of this section:** the first row is free and is the one decision 31 needs, the second row
+describes the design rather than constraining it, and the third has no source. A ruling that takes the first
+row alone is worth having on its own.
+
+**The test the plan is missing**, written so the ruling has something to point at: the kit powered from its
+pack, every bearer up, discharges applied to the plate, the toggles, the display bezel, every antenna
+bulkhead's shell and every exposed conductor of the two headset jacks, the USB-C outlet, the Ethernet jack and
+the pod lead; pass is no upset, no reset, no loss of a bearer, no lost secure-element key and no damage.
+
+## 7. Decision 34, open: the envelope, and whether to buy a wider one
 
 **Options, costed, the recommendation first.**
 
