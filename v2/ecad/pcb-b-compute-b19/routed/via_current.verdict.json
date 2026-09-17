@@ -1,0 +1,62 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "measured_rails": 19,
+  "no_via": 3,
+  "over": 21,
+  "rails": 33
+ },
+ "denominator": 33,
+ "evidence": [
+  "+1V0_S1: a barrel at (74.8, 147.1) carries 0.80 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 1.43",
+  "+1V0_S2: 1.20 A crosses a transition of 1 via(s) at (119.5, 159.6) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+1V0_S3: 1.20 A crosses a transition of 1 via(s) at (203.4, 136.7) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+1V1_S1: 0.70 A crosses a transition of 1 via(s) at (86.6, 131.4) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+1V1_S2: 0.70 A crosses a transition of 1 via(s) at (144.2, 142.2) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+1V2_KSZ: 0.80 A crosses a transition of 1 via(s) at (7.6, 81.0) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+3V3_DEV: 2.00 A crosses a transition of 1 via(s) at (290.6, 95.3) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+3V3_S1A: 1.50 A crosses a transition of 1 via(s) at (77.3, 164.9) rated 0.90 A at 10 K (18 um plating), attributed rather than measured",
+  "+3V3_S1B: 1.80 A crosses a transition of 1 via(s) at (55.8, 134.7) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+3V3_S2A: 1.50 A crosses a transition of 1 via(s) at (158.0, 178.2) rated 0.90 A at 10 K (18 um plating), attributed rather than measured",
+  "+3V3_S2B: 1.80 A crosses a transition of 1 via(s) at (144.6, 23.3) rated 0.90 A at 10 K (18 um plating), attributed rather than measured",
+  "+3V3_S3A: a barrel at (225.2, 134.3) carries 1.50 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 1.67",
+  "+3V3_S3B: a barrel at (200.1, 149.6) carries 1.53 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 2.73",
+  "+5V_DEV: 6.00 A crosses a transition of 1 via(s) at (147.0, 132.9) rated 0.65 A at 10 K (18 um plating), attributed rather than measured",
+  "+5V_LIME: a barrel at (253.6, 106.8) carries 3.00 A of the solved mesh against 0.74 A for its own wall at 10 K (18 um plating), ratio 4.07",
+  "+5V_LORA: a barrel at (281.7, 96.1) carries 0.70 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 1.25",
+  "+5V_RB: a barrel at (247.1, 110.2) carries 2.00 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.22",
+  "+5V_S1: a barrel at (80.7, 172.7) carries 2.20 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 3.38",
+  "+5V_S2: a barrel at (131.1, 182.7) carries 2.20 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 3.38",
+  "+5V_S3: a barrel at (212.7, 172.7) carries 2.20 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 3.38"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  },
+  "plating_um": 18.0,
+  "rise_k": 10.0,
+  "site_mm": 6.0
+ },
+ "missing_input": null,
+ "note": "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for a barrel of the fabricator's own plating thickness. ADVISORY: 14 of 33 judged rail(s) have no solved barrel current beside this board, so for those the rail's WHOLE current is attributed to its weakest cluster of vias, which on these boards is often a lone stitch via carrying almost none",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PI-003": "b8238bd8e5613e6c"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "PI-003"
+ ],
+ "tool": "via_current",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f2c67e0684159747"
+ },
+ "ts": "2026-09-17T22:32:19Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

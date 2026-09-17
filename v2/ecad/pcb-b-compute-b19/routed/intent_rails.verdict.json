@@ -3,20 +3,23 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 0
+  "pass": 37
  },
- "denominator": 0,
+ "denominator": 37,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
-   "sha256_16": "47262c82041bf4e2"
+   "sha256_16": "2e64b5bf2d9cd3bc"
   }
  },
  "missing_input": null,
- "note": "nothing of this kind was checked on this board",
+ "note": "every power-symbol net declared with its loads",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-001": "6e91133d2ef9dee3"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -25,9 +28,9 @@
  "tool": "intent_rails",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T20:41:30Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T22:31:36Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

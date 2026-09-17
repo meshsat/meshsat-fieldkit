@@ -9245,10 +9245,28 @@ even build against the pre-fix gate**, which is the proof recorded. The fix is c
 the hub ahead of its finish. Fixture debts left: the return_via FIXER and `copper_checks` (a library, exercised by
 the board gates).
 
-**Addendum, 00:40 CEST: the return-via FIXER has its proof, both ways.** The debt of 17 September said the fixer
+**Addendum, 00:33 CEST: the return-via FIXER has its proof, both ways.** The debt of 17 September said the fixer
 needed a ground complete enough for the ratsnest to behave; that is one via in U3's own pad joining the F.Cu pad to
 the B.Cu pour. On that board the fixer lays a locked GND via inside the pour within 1.5 mm of the lacking signal via,
 measures hard 0 to 0 and unrouted 0 to 0 through drc.sh and hardset, keeps it, and the judge reads nothing lacking.
 On the same board WITHOUT that via (the fixture as it stood), the fixer's own via changes unrouted 0 to 1, it prints
 HURT and puts the board back byte for byte, which is the defective case a fixer must refuse rather than a defect in
 the fixer. Both on the hub. The only fixture debt left is `copper_checks`, a library the board gates exercise.
+
+**Addendum, 00:50 CEST: sweep 26 read board B on the adopted tree, and SCH-005 could never have applied to E5.**
+Board B under fingerprint a2d08c6e: **21 PASS, 14 FAIL, 20 INCONCLUSIVE of 55** (from 10, 8, 37). `pin_map_lands_b`
+reads **PASS on 930 of 930** on the regenerated netlist, so the eleven SCH-005 failures of 32.219 (U10's tab, the
+M.2 sockets' mechanical pads, the fan headers' MP) are gone at the source; SCH-002 reads FAIL on ONE comparison of
+6,752 (the same U10 tab, which the B21 board does not carry and the schematic does); the finish stages the box never
+reached are read for the first time on B21: dc_drop 5 of 36 rails missed and 9 over the density bar (PI-001,
+PI-002), RET-002 11 of 658, RET-004 8 lacking of 12 judged with 586 exempt in fans, and the routed-board hard set
+0 hard with 416 unrouted (RTE-001 and RTE-002 FAIL honestly on a board that is not routed). `place_audit` on the
+ROUTED board reads 19 predicted collisions where the placed board read 10: the escapes the router covered are
+counted as collisions on a board that already has them, so that reading is of the wrong artefact and the placed
+snapshot's carried reading is the one PLC-001 should hold; noted, not fixed tonight. SCH-005 was UNIVERSAL and named
+E5, a board that declares `has_schematic: false` and has no netlist to judge, so E5 read INCONCLUSIVE for a rule that
+cannot apply; it is CONDITIONAL on `has_schematic` now like SCH-001, the denominator is 333, and the fingerprint moved
+to **4bc0aa24d836788d**. That move re-staled every reading written before the per-rule digest fix of 32.220 (E5 fell
+from 20 to 12 verified, the set from 58.7 to 31.1 percent), which is the last time it can: **sweep 27** re-takes all
+seven boards under the new writer, whose verdicts carry a digest per rule, so the next registry edit stales only the
+rule it touches.

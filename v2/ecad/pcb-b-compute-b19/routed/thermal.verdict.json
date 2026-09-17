@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "declared_dissipators": 0,
+  "efficiency_undeclared": 0,
+  "no_thermal_path": 0,
+  "rails": 35,
+  "watts_lost_all_peaks_at_once": 8.0,
+  "watts_lost_typical": 3.9,
+  "watts_peak_sum_not_simultaneous": 224.9
+ },
+ "denominator": 35,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
+ },
+ "missing_input": null,
+ "note": "a dissipation table exists for this board; the junction temperature needs the envelope's maximum ambient, which is ENV-001 and is not written yet",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "THM-001": "c2ee6d9135d5bf83"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "THM-001"
+ ],
+ "tool": "thermal",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f2c67e0684159747"
+ },
+ "ts": "2026-09-17T22:32:27Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

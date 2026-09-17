@@ -1,0 +1,46 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "agree": 6752,
+  "aliased_pins": 0,
+  "board_footprints": 957,
+  "board_only_inert": 0,
+  "fail": 1,
+  "netlist_refs": 931
+ },
+ "denominator": 6753,
+ "evidence": [
+  "U10.7 is on net GND in the netlist and has no net on the board"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  },
+  "netlist": {
+   "path": "out/pcb-b-compute.net",
+   "sha256_16": "78a7b872d61d2e70"
+  }
+ },
+ "missing_input": null,
+ "note": "the board against the schematic it was placed from",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-002": "a7f873603faeb223"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "SCH-002"
+ ],
+ "tool": "netlist_board",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f2c67e0684159747"
+ },
+ "ts": "2026-09-17T22:32:04Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

@@ -2,19 +2,21 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 0,
+  "fail": 1,
   "pass": 0
  },
- "denominator": 0,
- "evidence": [],
+ "denominator": 1,
+ "evidence": [
+  "return via: 4 of 12 signal vias have a ground via within 1.5 mm (586 exempt in fine-pitch fans, 687 on one reference plane, 512 on a net whose declared class has no edge to return); without one: SEL2_O1 at (0.57, 144.25); SEL2_O1 at (1.40, 147.50); HUBRST2_AB at (3.72, 139.94); HUBRST2_A at (3.72, 141.24); SEL3_AB at (3.72, 148.15); SDA at (11.07, 27.54); HUBRST1_VOTE at (13.55, 146.20); WSEC_C at (28.02, 141.24)"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
-   "sha256_16": "47262c82041bf4e2"
+   "sha256_16": "2e64b5bf2d9cd3bc"
   }
  },
  "missing_input": null,
- "note": "nothing of this kind was checked on this board",
+ "note": "a ground via at a signal's reference change",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
@@ -23,9 +25,9 @@
  "tool": "intent_return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T20:41:30Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T22:31:36Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }

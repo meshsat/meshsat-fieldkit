@@ -1,0 +1,61 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "below_limit": 0,
+  "closest_mm": 0.1828,
+  "hv_nets": 1,
+  "pairs_measured": 336
+ },
+ "denominator": 336,
+ "evidence": [
+  "0.183 mm +54V_POE to +1V2_KSZ on F.Cu at (59.2, 18.1)",
+  "0.207 mm +54V_POE to +5V_DEV on In2.Cu at (-4.8, 206.4)",
+  "0.217 mm +54V_POE to +5V_DEV on In2.Cu at (-14.0, 197.3)",
+  "0.220 mm +54V_POE to GND on F.Cu at (11.2, 189.7)",
+  "0.239 mm +54V_POE to SWP4_B_P on B.Cu at (-13.9, 97.2)",
+  "0.299 mm +54V_POE to EXP_INT on In2.Cu at (12.2, 33.4)",
+  "0.299 mm +54V_POE to EXP_INT on In2.Cu at (12.2, 45.0)",
+  "0.299 mm +54V_POE to EXP_INT on In2.Cu at (12.2, 45.0)",
+  "0.303 mm +54V_POE to POE_RST_n on B.Cu at (-13.9, 97.2)",
+  "0.303 mm +54V_POE to POE_RST_n on F.Cu at (-13.9, 97.2)",
+  "0.374 mm +54V_POE to BOB on B.Cu at (12.2, 45.0)",
+  "0.379 mm +54V_POE to POE_RST_n on In2.Cu at (-14.0, 97.2)",
+  "0.379 mm +54V_POE to POE_RST_n on In2.Cu at (-14.0, 97.2)",
+  "0.405 mm +54V_POE to POE_P on F.Cu at (11.0, 45.9)",
+  "0.435 mm +54V_POE to +5V_DEV on In2.Cu at (-4.8, 206.4)",
+  "0.446 mm +54V_POE to EXP_INT on In2.Cu at (12.2, 33.4)",
+  "0.449 mm +54V_POE to SEL1_B on In3.Cu at (-13.9, 62.2)",
+  "0.449 mm +54V_POE to SEL1_B on In3.Cu at (-13.9, 62.2)",
+  "0.449 mm +54V_POE to SEL1_B on In3.Cu at (-13.9, 62.2)",
+  "0.498 mm +54V_POE to POE_RST_n on In3.Cu at (-13.9, 62.2)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  },
+  "hv_spacing_mm": null,
+  "volts": 20.0
+ },
+ "missing_input": null,
+ "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "ISO-001": "667f32d6b8d7a34b"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "ISO-001"
+ ],
+ "tool": "spacing",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f2c67e0684159747"
+ },
+ "ts": "2026-09-17T22:32:30Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

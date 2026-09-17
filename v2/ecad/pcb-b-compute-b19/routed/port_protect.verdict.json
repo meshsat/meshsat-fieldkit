@@ -1,5 +1,5 @@
 {
- "advisory": true,
+ "advisory": false,
  "applicable": true,
  "counts": {
   "behind_an_active_part": 0,
@@ -14,23 +14,22 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "dca20fe595d55628"
+   "sha256_16": "78a7b872d61d2e70"
   }
  },
+ "missing_input": null,
  "note": "every declared external conductor meets a protection part before a chip",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
- "rules": [
-  "TRN-001"
- ],
+ "rules": [],
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9f654e75fee0f986"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-16T04:35:23Z",
+ "ts": "2026-09-17T22:32:42Z",
  "verdict": "PASS",
  "version": "unknown"
 }
