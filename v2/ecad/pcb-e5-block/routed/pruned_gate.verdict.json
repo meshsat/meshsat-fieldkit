@@ -13,7 +13,7 @@
   }
  },
  "missing_input": null,
- "note": "no pruned list at /root/sweep18/v2/ecad/pcb-e5-block/out/sweep/pcb-e5-block-pruned.txt, and board E5 declares the prune stage",
+ "note": "no pruned list at /root/sweep20/v2/ecad/pcb-e5-block/out/sweep/pcb-e5-block-pruned.txt, and board E5 declares the prune stage",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
@@ -24,9 +24,9 @@
  "tool": "pruned_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "49c5dae5cbebd02a"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T08:27:54Z",
+ "ts": "2026-09-17T12:17:33Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

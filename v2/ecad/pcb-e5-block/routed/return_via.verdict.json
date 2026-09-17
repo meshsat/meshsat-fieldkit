@@ -35,9 +35,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "49c5dae5cbebd02a"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T08:27:53Z",
+ "ts": "2026-09-17T12:17:32Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

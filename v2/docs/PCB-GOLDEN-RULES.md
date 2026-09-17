@@ -774,7 +774,9 @@ discontinuities it crosses and the interface's own requirement, not from a singl
 | release effect | **BLOCKER** |
 | risk | SIGNAL_INTEGRITY, EMC |
 | verified by | SCRIPT, CALCULATION, MANUAL_REVIEW at ROUTED_BOARD (partially automatable) |
-| source | SOURCE_UNVERIFIED |
+| source | PARTIALLY_VERIFIED |
+| | ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clause 6.1.2.5.2 PCB design techniques: a clock on a layer adjacent to a solid, not split, ground or power plane; a slot or gap in that plane crossed by such a track as a source of common-mode current; and the lateral spread of the return current
+, ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 6.1.2.5.2 -- v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md |
 | implementation | signal_class.py plus each board's signal_classes table, judged by intent_checks.py |
 | maturity | **SOURCE_UNVERIFIED** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
@@ -870,7 +872,9 @@ stitching capacitor when they are different potentials, or no transition at all.
 | release effect | **BLOCKER** |
 | risk | SIGNAL_INTEGRITY, EMC |
 | verified by | SCRIPT, CALCULATION at ROUTED_BOARD (partially automatable) |
-| source | SOURCE_UNVERIFIED |
+| source | PARTIALLY_VERIFIED |
+| | ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clause 6.1.2.5.2 PCB design techniques: minimisation of changes of layer for clock tracks, and the reference plane under a fast track being solid and unsplit
+, ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 6.1.2.5.2 -- v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md |
 | implementation | gen_pcb_a3.py In2 pours |
 | maturity | **SOURCE_UNVERIFIED** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
@@ -1051,7 +1055,9 @@ rate or clock frequency.
 | release effect | **MUST_JUSTIFY** |
 | risk | SIGNAL_INTEGRITY, EMC |
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
-| source | SOURCE_UNVERIFIED |
+| source | PARTIALLY_VERIFIED |
+| | ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clauses 6.1.2.2 (the spectrum of a trapezoidal signal and its break points) and 6.1.2.3 (the worked example)
+, ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 6.1.2.2 and 6.1.2.3 -- v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md |
 | implementation | signal_class.py declarations |
 | maturity | **SOURCE_UNVERIFIED** |  (at writing: UNASSESSED)
 | owner | SESSION |

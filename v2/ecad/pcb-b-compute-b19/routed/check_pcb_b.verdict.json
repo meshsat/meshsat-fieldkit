@@ -35,9 +35,9 @@
  "tool": "check_pcb_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "493f3ebd1dd1cbee"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:22:33Z",
+ "ts": "2026-09-17T12:13:59Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

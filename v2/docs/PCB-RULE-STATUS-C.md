@@ -11,9 +11,9 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 29 | 69.0 |
+| PASS | 31 | 73.8 |
 | FAIL | 4 | 9.5 |
-| INCONCLUSIVE | 9 | 21.4 |
+| INCONCLUSIVE | 7 | 16.7 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -21,7 +21,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | check_contracts_c INCONCLUSIVE |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_c PASS of 7 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 16 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_c PASS of 67 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_c PASS of 67 |
@@ -41,7 +41,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 1 |
-| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | check_contracts INCONCLUSIVE |
+| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_c PASS of 1 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect PASS of 4 |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |

@@ -14,7 +14,7 @@
   "board": "c",
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "4998325150374423"
+   "sha256_16": "206a8204e3518738"
   }
  },
  "missing_input": null,
@@ -29,9 +29,9 @@
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "eaafe91e15b758ce"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:34:42Z",
+ "ts": "2026-09-17T12:15:41Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -849,8 +849,27 @@ rules:
    condition: {fact: has_tracks, op: truthy}
    risk_class: [SIGNAL_INTEGRITY, EMC]
    release_effect: BLOCKER
-   source_status: SOURCE_UNVERIFIED
-   sources: []
+   source_status: PARTIALLY_VERIFIED
+   sources:
+   - title: >
+       ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clause 6.1.2.5.2 PCB design techniques: a
+       clock on a layer adjacent to a solid, not split, ground or power plane; a slot or gap in that plane
+       crossed by such a track as a source of common-mode current; and the lateral spread of the return current
+     issuer: ECSS Secretariat, ESA-ESTEC Requirements and Standards Division
+     revision: A, 5 September 2012
+     clause: '6.1.2.5.2'
+     url_or_path: v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md
+     accessed: '2026-09-16'
+     note: >
+       THE MECHANISM HAS A PUBLISHED AUTHORITY AND THE LIMIT DOES NOT, which is the state PARTIALLY_VERIFIED
+       exists for. The handbook recommends clocks routed on a layer adjacent to a solid (not split) ground or
+       power plane, says slots or gaps crossed by clock tracks lead to common-mode currents which increase the
+       radiated emission dramatically, and gives the lateral spread of the return current (97 percent within
+       plus and minus 20 h for a microstrip and 99 percent within plus and minus 3 h for a stripline, its
+       reference [12], Ott 2009), which is what makes a reference wide enough to BE a reference. What it does
+       not give is a tolerance: its position is that a clock should not run without an adjacent plane at all,
+       so the number an uncovered run is judged against here is this project's own and is owner decision 39.
+       The transcription in this tree records that under 'What this handbook does NOT say'
    acceptance_criteria: >
      Every signal net is classified by edge rate and electrical length. For each class, the adequacy criterion
      is stated (for a fast edge: an uninterrupted reference plane on an adjacent layer for the length of the
@@ -928,8 +947,23 @@ rules:
    condition: {all: [{fact: has_tracks, op: truthy}, {fact: layers, op: ge, value: 4}]}
    risk_class: [SIGNAL_INTEGRITY, EMC]
    release_effect: BLOCKER
-   source_status: SOURCE_UNVERIFIED
-   sources: []
+   source_status: PARTIALLY_VERIFIED
+   sources:
+   - title: >
+       ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clause 6.1.2.5.2 PCB design techniques:
+       minimisation of changes of layer for clock tracks, and the reference plane under a fast track being
+       solid and unsplit
+     issuer: ECSS Secretariat, ESA-ESTEC Requirements and Standards Division
+     revision: A, 5 September 2012
+     clause: '6.1.2.5.2'
+     url_or_path: v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md
+     accessed: '2026-09-16'
+     note: >
+       The same clause, for the other half of the question. A via that moves a signal from one reference
+       conductor to a DIFFERENT one is the change of layer the handbook asks to minimise, and the return
+       current has to cross between the two references somewhere. The handbook gives no distance for that
+       return transition, so the 1.5 mm this project judges against is its own number, measured on the boards
+       and put to the owner as decision 32
    acceptance_criteria: >
      For each signal via, the reference conductor before and after the transition is determined. A transition
      that does not change the reference needs nothing. A transition that changes it carries a return path
@@ -1129,8 +1163,23 @@ rules:
    condition: {fact: has_tracks, op: truthy}
    risk_class: [SIGNAL_INTEGRITY, EMC]
    release_effect: MUST_JUSTIFY
-   source_status: SOURCE_UNVERIFIED
-   sources: []
+   source_status: PARTIALLY_VERIFIED
+   sources:
+   - title: >
+       ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clauses 6.1.2.2 (the spectrum of a trapezoidal
+       signal and its break points) and 6.1.2.3 (the worked example)
+     issuer: ECSS Secretariat, ESA-ESTEC Requirements and Standards Division
+     revision: A, 5 September 2012
+     clause: '6.1.2.2 and 6.1.2.3'
+     url_or_path: v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md
+     accessed: '2026-09-16'
+     note: >
+       THE INPUT TO THIS RULE IS SOURCED AND ITS THRESHOLD IS NOT. The envelope of a trapezoidal signal breaks
+       at F2 = 1/(pi tr), so the highest frequency a signal puts on a conductor comes from its RISE TIME and
+       not from its clock or data rate: a 12 Mbit/s bus on a 1 ns edge carries energy to 318 MHz. The
+       handbook's own worked example is a 35 mm track at about a sixth of the wavelength at that frequency
+       radiating enough to matter from an 872 kHz clock. What it does not give is a critical length: 'a net
+       longer than X is a transmission line' is this project's own criterion and is stated with its reason
    acceptance_criteria: >
      A per-board table: net class, driver edge rate from the device datasheet, the length above which that
      edge rate makes the net a transmission line on this stackup, and the nets that exceed it with their

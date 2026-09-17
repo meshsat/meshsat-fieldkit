@@ -31,7 +31,7 @@
   },
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "e872ed627a57f845"
+   "sha256_16": "a668690697edaa3e"
   }
  },
  "missing_input": null,
@@ -46,9 +46,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "493f3ebd1dd1cbee"
+  "tools_tree_sha": "5b334fc24ecbc81d"
  },
- "ts": "2026-09-17T05:22:38Z",
+ "ts": "2026-09-17T12:14:04Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
