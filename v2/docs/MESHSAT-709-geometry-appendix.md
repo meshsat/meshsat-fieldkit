@@ -9233,7 +9233,7 @@ E12 on the hub at 35 sessions with both class-pair rules in its DSN (`PWR,SENSE`
 `SENSE,Default` against `SW,Default`, the comma-joined class names of 32.222); B22 partition stage 1; sweep 26.
 Suite 971 passing, 1 failing (the decisions page, re-rendered in the same commit), 25 skipped.
 
-**Addendum, 00:45 CEST: the pruned-escape gate would have crashed on its first real list.** Writing `pruned_gate`'s
+**Addendum, 00:30 CEST: the pruned-escape gate would have crashed on its first real list.** Writing `pruned_gate`'s
 fixture pair against B22's own pruned list (seven rows: U101, U202, U302, U203, U204 and two more, each a GND thermal
 via refused for a resistor pad on the underside) found the gate unpacking FIVE fields from rows that have carried
 SEVEN columns since 8 September, when `escape_prune` was made to name the violation and what it hit (32.72). No
@@ -9244,3 +9244,11 @@ FAIL, the acceptable one (the track ending on the pad) PASS, both on the hub, an
 even build against the pre-fix gate**, which is the proof recorded. The fix is copied into B22's own tools tree on
 the hub ahead of its finish. Fixture debts left: the return_via FIXER and `copper_checks` (a library, exercised by
 the board gates).
+
+**Addendum, 00:40 CEST: the return-via FIXER has its proof, both ways.** The debt of 17 September said the fixer
+needed a ground complete enough for the ratsnest to behave; that is one via in U3's own pad joining the F.Cu pad to
+the B.Cu pour. On that board the fixer lays a locked GND via inside the pour within 1.5 mm of the lacking signal via,
+measures hard 0 to 0 and unrouted 0 to 0 through drc.sh and hardset, keeps it, and the judge reads nothing lacking.
+On the same board WITHOUT that via (the fixture as it stood), the fixer's own via changes unrouted 0 to 1, it prints
+HURT and puts the board back byte for byte, which is the defective case a fixer must refuse rather than a defect in
+the fixer. Both on the hub. The only fixture debt left is `copper_checks`, a library the board gates exercise.

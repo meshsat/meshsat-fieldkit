@@ -123,7 +123,7 @@ def t_a_zone_on_a_real_net_passes():
 
 # ---------------------------------------------------------------- the return-current rules (15 September 2026, appendix 32.198)
 
-def _signal_board(pcbnew, tmp, name, plane=True, gnd_via=False, via=True):
+def _signal_board(pcbnew, tmp, name, plane=True, gnd_via=False, via=True, gnd_complete=False):
     """A two-layer board with a signal track on F.Cu and a via, over a B.Cu ground pour or not, with a ground via beside it or not."""
     b = _board(pcbnew)
     b.Add(pcbnew.NETINFO_ITEM(b, "/SIG")); b.Add(pcbnew.NETINFO_ITEM(b, "GND"))
@@ -159,6 +159,13 @@ def _signal_board(pcbnew, tmp, name, plane=True, gnd_via=False, via=True):
         # vias and no ground via: the rule's own subject, a signal via WITH a return via beside it, had never
         # been built (17 September 2026). It is 1.0 mm away, across the track rather than along it.
         v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(20.0), pcbnew.FromMM(16.0))); v.SetDrill(pcbnew.FromMM(0.3)); v.SetWidth(pcbnew.FromMM(0.6)); _set(v, "GND"); b.Add(v)
+    if gnd_complete:
+        # THE GROUND IS COMPLETE: a via in U3's own pad joins the F.Cu pad to the B.Cu pour, so the ratsnest of
+        # GND reads zero before the fixer runs and a ground via it lays inside the pour changes nothing it
+        # measures (18 September 2026: on the fixture without this via, GND was one F.Cu pad and a pour, the
+        # fixer's via changed the unconnected count and it reverted its own work, which was the fixture's
+        # shape and not the tool's; that was the declared debt).
+        v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(20.0), pcbnew.FromMM(25.0))); v.SetDrill(pcbnew.FromMM(0.3)); v.SetWidth(pcbnew.FromMM(0.6)); _set(v, "GND"); b.Add(v)
     if plane:
         z = pcbnew.ZONE(b); z.SetLayer(pcbnew.B_Cu); _set(z, "GND"); o = z.Outline(); o.NewOutline()
         for (x, y) in ((1, 1), (39, 1), (39, 29), (1, 29)): o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
@@ -202,7 +209,43 @@ def t_a_signal_via_without_a_ground_via_beside_it_fails_the_return_via_rule_and_
         % (r, seen, globals().get("LAST_FIXTURE_CODES"))
 
 
-# THE FIXER'S OWN PROOF IS OWED AND IS DECLARED AS DEBT (17 September 2026). Its judge is proved above, both
+def t_the_return_via_fixer_lays_a_ground_via_beside_a_lacking_signal_via_and_keeps_it():
+    """THE FIXER'S OWN PROOF (its debt since 17 September, paid 18 September 2026). The judge above says one signal
+    via lacks a ground via; the fixer runs on the saved board with its project file beside it (drc.sh refuses a board
+    without one), lays a locked GND via inside the pour within 1.5 mm, measures hard and unrouted before and after
+    through the finish's own instruments, and KEEPS it because the ground was complete and nothing got worse."""
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="return-fix-")
+    sys.path.insert(0, TOOLS); import return_via
+    b, p = _signal_board(pcbnew, tmp, "fixme", plane=True, gnd_via=False, gnd_complete=True)
+    _rules(p)
+    r0 = return_via.judge(b, p); assert len(r0["lacking"]) == 1, "the fixture does not start with one lacking via: %s" % r0
+    rc = return_via.fix(p)
+    assert rc == 0, "the fixer reverted or refused on a board whose ground is complete (rc %s)" % rc
+    b2 = pcbnew.LoadBoard(p); r1 = return_via.judge(b2, p)
+    assert not r1["lacking"], "after the fixer a signal via still lacks a ground via: %s" % r1
+    gv = [(round(t.GetPosition().x / 1e6, 2), round(t.GetPosition().y / 1e6, 2)) for t in b2.GetTracks()
+          if t.GetClass() == "PCB_VIA" and t.GetNetname() == "GND" and t.IsLocked()]
+    near = [v for v in gv if ((v[0] - 20.0) ** 2 + (v[1] - 15.0) ** 2) ** 0.5 <= 1.5 + 1e-6]
+    assert near, "no locked GND via within 1.5 mm of the signal via at (20, 15); the locked GND vias are %s" % gv
+
+
+def t_the_return_via_fixer_reverts_when_its_via_would_change_what_the_board_reads():
+    """THE DEFECTIVE CASE the fixer must refuse: the same board with the ground INCOMPLETE (U3's pad alone on F.Cu,
+    the pour on B.Cu, no via between them). A ground via laid in the pour changes the unconnected count the finish
+    reads, the fixer calls that HURT and puts the board back as it was; a fixer that kept it would be reporting a
+    board that does not exist (the 12 September lesson about a trial board at the unconnected cap)."""
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="return-fix-")
+    sys.path.insert(0, TOOLS); import return_via
+    b, p = _signal_board(pcbnew, tmp, "hurt", plane=True, gnd_via=False, gnd_complete=False)
+    _rules(p)
+    before = open(p, "rb").read()
+    rc = return_via.fix(p)
+    after = open(p, "rb").read()
+    assert rc == 1, "the fixer kept a via that changed the board's unconnected count (rc %s)" % rc
+    assert before == after, "the fixer said it reverted and left the board changed"
+
+
+# THE FIXER'S PROOF ABOVE REPLACES THE DEBT DECLARED HERE ON 17 September 2026. Its judge is proved above, both
 # ways, on a real board file. The FIXER needs a board whose ground is complete enough for the ratsnest to
 # behave as a real one does: on this fixture GND is a single F.Cu pad and a B.Cu pour, so placing the ground
 # via the rule asks for CHANGES the unconnected count, the fixer sees its own work as harm and reverts it. That
