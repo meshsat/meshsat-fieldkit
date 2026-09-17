@@ -13,8 +13,8 @@
   "hard": 0,
   "report": {
    "silk_over_copper": 4,
-   "silk_overlap": 30,
-   "via_dangling": 175
+   "silk_overlap": 25,
+   "via_dangling": 193
   },
   "stage": "pre",
   "types_checked": 15,
@@ -28,18 +28,19 @@
    "sha256_16": "5fc1ffce0dc5ab1c"
   },
   "drc": {
-   "path": "out/pcb-e1-dock-placed-drc.json",
-   "sha256_16": "8320848501942ba8"
+   "path": "out/placed-drc.json",
+   "sha256_16": "4cc30aedafc96790"
   },
   "measured_board": {
-   "sha256_16": "3f53d1b4df208f4d",
+   "sha256_16": "a332944753c20b8b",
    "stage": "placed"
   }
  },
+ "missing_input": null,
  "note": "placed (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts) | carried to the routed board from the placed board after comparing all 189 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "PLC-001"
@@ -47,9 +48,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7f15cb4b9c402c97"
+  "tools_tree_sha": "2699340c90cd4eed"
  },
- "ts": "2026-09-17T03:13:17Z",
+ "ts": "2026-09-17T11:00:47Z",
  "verdict": "PASS",
  "version": "unknown"
 }
