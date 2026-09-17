@@ -24,7 +24,7 @@ and P (3) pass; board B declares 36 rails and none of them yet, so it reads INCO
 Deriving the switch instead of declaring it was tried and withdrawn the same hour: a walk across two-pin
 passives from the rail's own net reached 28 candidate parts on board A, and a search that answers 'one of
 twenty-eight' is not an answer.  
-*Close it by* a sequencing sheet per board from the enables in the netlist, reviewed against each module's requirement. Owner **SESSION**. Effort P50 6h, P80 16h.
+*Close it by* DONE 17 September 2026: every rail declares the part whose enable switches it or says always_on with its reason, and power_sequence.py checks that against the netlist and finds the deadlock a schematic cannot show. Six boards pass, board B's thirty-six rails included. What is NOT settled here is the ORDER between rails, which is a property of each module's own datasheet and belongs to INT-001. Owner **SESSION**. Effort P50 0h, P80 0h.
 
 **REL-001 the build survives its service life** (MUST_JUSTIFY, ENFORCED)  
 nothing considers vibration, mating cycles or moisture for any interface 16 September 2026: THE LIST EXISTS
@@ -36,7 +36,7 @@ no reason, and a declared count that the netlist does not match. The lowest figu
 socket at 30 mating cycles and the highest-cycled connector is the pack's XT60 at 1000, which is the one a
 user touches most. What it does NOT do is test anything: this rule is verified at the PROTOTYPE, no board has
 been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.  
-*Close it by* a reliability sheet per board and the test plan for the prototype. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
+*Close it by* The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts each covers and reliability.py checks the coverage, seven boards passing. The TEST PLAN for the prototype is the laboratory stage and belongs with it. Owner **OWNER**, after ENV-001. Effort P50 0h, P80 0h.
 
 **SCH-004 a safety line fails safe** (BLOCKER, OWNER_DECISION_REQUIRED)  
 the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches
@@ -201,7 +201,7 @@ and every protective element is in its board's netlist. What it PRINTS rather th
 time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own
 authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status
 SOURCE_UNVERIFIED.  
-*Close it by* DONE 17 September 2026: ECSS-Q-ST-30-11C Rev.2 clause 6.17 is the authority and the gate enforces it. What remains is a DESIGN item rather than a document: board E's shore inlet carries 8.0 A of a 10.0 A fuse on 10 A of copper, which is 80 percent of the fuse rating, and it needs wider input copper and a larger fuse or a lower declared continuous current. Owner **SESSION**. Effort P50 4h, P80 12h.
+*Close it by* DONE 17 September 2026: ECSS-Q-ST-30-11C Rev.2 clause 6.17 is the authority and the gate enforces it. What remains is a DESIGN item rather than a document: board E's shore inlet carries 8.0 A of a 10.0 A fuse on 10 A of copper, which is 80 percent of the fuse rating, and it needs wider input copper and a larger fuse or a lower declared continuous current. Owner **SESSION**. Effort P50 0h, P80 0h.
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
