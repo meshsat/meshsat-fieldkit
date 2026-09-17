@@ -11,7 +11,7 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 
 > **HELD BY OWNER DECISION 31.** ROUTING_STATUS = PASS   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
 >
-> measured on 17 September by cutting this board's deliverable, which the finish refused at that gate: SEVEN of board D's SEVEN judged conductors reach a semiconductor with nothing between them, which is every one of them (the fourteen this line carried until the evening of 17 September counted the jacks' own grounds, which the rule skips), three each on the two headset jacks a person plugs a headset into and one on the 30 W amplifier output. Its antenna jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to board D until that morning, because its applicability was a list of interfaces this board does not carry
+> measured on 17 September by cutting this board's deliverable, which the finish refused at that gate: SEVEN of board D's SEVEN judged conductors reach a semiconductor with nothing between them, which is EVERY one of them, three each on the two headset jacks a person plugs a headset into and one on the 30 W amplifier output. The fourteen this line carried until that evening counted the jacks' own grounds, which the rule skips by pattern: the numerator was always right and the denominator flattered the board. Its antenna jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to board D until that morning, because its applicability was a list of interfaces this board does not carry
 >
 > Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated.
 >

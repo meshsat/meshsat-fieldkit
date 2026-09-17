@@ -43,10 +43,12 @@ holds:
    FAB_READINESS: NOT_READY
    PUBLICATION_STATUS: HELD
    why: "measured on 17 September by cutting this board's deliverable, which the finish refused at that gate:
-     SEVEN of board D's SEVEN judged conductors reach a semiconductor with nothing between them, which is every one of them (the fourteen this line carried until the evening of 17 September counted the jacks' own grounds, which the rule skips), three each
-     on the two headset jacks a person plugs a headset into and one on the 30 W amplifier output. Its antenna
-     jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to board D
-     until that morning, because its applicability was a list of interfaces this board does not carry"
+     SEVEN of board D's SEVEN judged conductors reach a semiconductor with nothing between them, which is
+     EVERY one of them, three each on the two headset jacks a person plugs a headset into and one on the 30 W
+     amplifier output. The fourteen this line carried until that evening counted the jacks' own grounds, which
+     the rule skips by pattern: the numerator was always right and the denominator flattered the board. Its
+     antenna jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to
+     board D until that morning, because its applicability was a list of interfaces this board does not carry"
    permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated"
    forbidden: "any orderable fabrication package, any promotion of the board or its folder"
    lifts_when: "decision 31 is ruled and this entry is deleted"
@@ -60,9 +62,10 @@ holds:
    FAB_READINESS: NOT_READY
    PUBLICATION_STATUS: HELD
    why: "rule TRN-001 is a BLOCKER and reads FAIL on board E, and the reading was corrected on the evening of
-     17 September: ONE conductor has a clamp behind an active part, the shore inlet, whose path is the fuse F1,
-     the ideal-diode FET Q1 and then the SMCJ40A, and THREE reach a semiconductor with nothing between them at
-     all, the sensor pod's 3.3 V feed and its two I2C lines. Until that evening the pod's three read as clamped
+     17 September: of its FIVE judged conductors ONE has a clamp behind an active part, the shore inlet, whose
+     path is the fuse F1, the ideal-diode FET Q1 and then the SMCJ40A, THREE reach a semiconductor with nothing
+     between them at all, the sensor pod's 3.3 V feed and its two I2C lines, and ONE is answered as it should
+     be, the solar input, which meets its own clamp first. Until that evening the pod's three read as clamped
      by the shore inlet's own part, which the chain reached by crossing the RP2040 and a ground: a clamp on the
      other side of the board is not this conductor's. The fix is a schematic change, which a route cannot make, and which of the options is
      taken is the owner's to rule because it trades parts, board area and the operating envelope against each
