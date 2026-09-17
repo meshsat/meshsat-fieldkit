@@ -3,17 +3,23 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 7
+  "pass": 4,
+  "unjudged": 3
  },
  "denominator": 7,
- "evidence": [],
+ "evidence": [
+  "unjudged, the other board is absent: J_PANEL 2x13 map identical on B and C",
+  "unjudged, the other board is absent: panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL",
+  "unjudged, the other board is absent: panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL"
+ ],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
- "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "missing_input": null,
+ "note": "3 of this board's contracts name a board absent from this tree and were not judged",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "RF-002",
@@ -22,9 +28,9 @@
  "tool": "check_contracts_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:28:02Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T05:25:43Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

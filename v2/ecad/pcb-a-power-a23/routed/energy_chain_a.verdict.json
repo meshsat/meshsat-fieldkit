@@ -11,20 +11,21 @@
   "chain": "pcb_energy_chain.yaml",
   "stages": "DOCK_BLOCK,BOARD_A_NODE,BOARD_A_CONVERTERS,A_EFUSED_BRANCHES"
  },
+ "missing_input": null,
  "note": "the stages of the stored-energy chain that sit on this board; the chain as a whole is energy_chain, and whether it is bounded end to end is that verdict's question",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "PWR-003"
  ],
  "tool": "energy_chain_a",
  "tools": {
-  "git_head": "e6b2026b74d9",
-  "tools_tree_sha": "284c33e066339223"
+  "git_head": "",
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T02:59:05Z",
+ "ts": "2026-09-17T05:21:12Z",
  "verdict": "PASS",
- "version": "e6b2026b74d9"
+ "version": "unknown"
 }

@@ -4,19 +4,31 @@
  "counts": {
   "boards_without_intent": 0,
   "fail": 0,
-  "missing_boards": 0,
-  "pass": 72,
-  "rails_unsplit": 0
+  "missing_boards": 1,
+  "pass": 30,
+  "rails_unsplit": 0,
+  "unjudged": 24
  },
- "denominator": 72,
- "evidence": [],
+ "denominator": 54,
+ "evidence": [
+  "netlist absent: B",
+  "unjudged, a board it names is absent: J_PANEL 2x13 map identical on B and C",
+  "unjudged, a board it names is absent: transmit inhibit present on B (J_PANEL)",
+  "unjudged, a board it names is absent: rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1",
+  "unjudged, a board it names is absent: rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2",
+  "unjudged, a board it names is absent: rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3",
+  "unjudged, a board it names is absent: rail +5V_DEV leaves A on J_5V_DEV and enters B on J_5V_DEV",
+  "unjudged, a board it names is absent: ribbon net PI_SHDN_REQ exists on A and B",
+  "unjudged, a board it names is absent: ribbon net PI_KILL exists on A and B"
+ ],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
- "note": "",
+ "missing_input": null,
+ "note": "B absent from this tree, so nothing that names them was judged",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "INT-001",
@@ -25,9 +37,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "64929b69a44633d2"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T01:43:56Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T05:21:11Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

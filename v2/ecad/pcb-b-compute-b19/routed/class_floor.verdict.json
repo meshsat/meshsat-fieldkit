@@ -20,10 +20,11 @@
    "sha256_16": "787373fe97195b0b"
   }
  },
+ "missing_input": null,
  "note": "a class below the board minimum is a lie the router believes",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "IMP-002"
@@ -31,9 +32,9 @@
  "tool": "class_floor",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-16T19:32:04Z",
+ "ts": "2026-09-17T05:22:39Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

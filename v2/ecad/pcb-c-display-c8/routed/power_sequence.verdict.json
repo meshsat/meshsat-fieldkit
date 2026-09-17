@@ -10,12 +10,14 @@
  "denominator": 2,
  "evidence": [],
  "inputs": {
+  "board": "c",
   "netlist": "pcb-c-display.net"
  },
+ "missing_input": null,
  "note": "each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "PWR-002"
@@ -23,9 +25,9 @@
  "tool": "power_sequence",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "64929b69a44633d2"
+  "tools_tree_sha": "eaafe91e15b758ce"
  },
- "ts": "2026-09-17T01:44:34Z",
+ "ts": "2026-09-17T05:34:37Z",
  "verdict": "PASS",
  "version": "unknown"
 }

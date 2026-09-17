@@ -870,7 +870,11 @@ def t_the_sweep_judges_the_folder_of_the_declared_phase_and_not_the_first_one_a_
     it. The phase a board is cutting is declared in boards/<letter>.json and nowhere else."""
     src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
     assert "boards/$L.json" in src, "the sweep does not read the declared phase for the order-code gate"
-    lines = [l for l in src.splitlines() if l.strip().startswith("_BOM=") or "-bom.csv" in l]
+    # COMMENTS DO NOT RESOLVE ANYTHING, and the first version of this read them: the paragraph explaining where
+    # the allow file lives names `<project>/out/jlc/<name>-bom.csv` and was read as a resolution without a phase
+    # (17 September 2026, the same lesson closer_audit.py carries about counting a tool named in a comment).
+    lines = [l for l in src.splitlines() if not l.strip().startswith("#")
+             and (l.strip().startswith("_BOM=") or "-bom.csv" in l)]
     assert lines, "no line in the sweep resolves a bill of materials"
     for l in lines:
         if "-bom.csv" not in l: continue

@@ -14,20 +14,21 @@
  "inputs": {
   "closers": "pcb_closers.yaml"
  },
+ "missing_input": null,
  "note": "every copper-changing stage of the finish declares the defect class it repairs and why prevention was not possible, and a class repaired more than once names what now prevents it. A class that names NOTHING is reported as uncovered and fails this rule, because that is the rule's second half unmet rather than a silence",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "PLC-002"
  ],
  "tool": "closer_audit",
  "tools": {
-  "git_head": "7431fca209b0",
-  "tools_tree_sha": "52055efbc030c053"
+  "git_head": "",
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T00:41:30Z",
+ "ts": "2026-09-17T05:22:51Z",
  "verdict": "FAIL",
- "version": "7431fca209b0+dirty"
+ "version": "unknown"
 }

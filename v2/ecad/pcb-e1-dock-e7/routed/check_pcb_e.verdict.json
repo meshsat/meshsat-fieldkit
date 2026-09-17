@@ -15,10 +15,11 @@
    "sha256_16": "5fc1ffce0dc5ab1c"
   }
  },
+ "missing_input": null,
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "MEC-001"
@@ -26,9 +27,9 @@
  "tool": "check_pcb_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:27:40Z",
+ "ts": "2026-09-17T05:25:22Z",
  "verdict": "PASS",
  "version": "unknown"
 }

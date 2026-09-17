@@ -10,10 +10,11 @@
    "sha256_16": "929bf82d2bf6eed4"
   }
  },
+ "missing_input": null,
  "note": "no rail on this board reaches 20 V",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "ISO-001"
@@ -21,9 +22,9 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c063f36cc529b4dc"
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T03:27:14Z",
+ "ts": "2026-09-17T05:24:58Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

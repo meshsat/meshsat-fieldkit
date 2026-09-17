@@ -1,0 +1,33 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "ledgers": 0,
+  "rows": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "ecad": {
+   "path": "/root/sweep18/v2/ecad",
+   "sha256_16": null
+  }
+ },
+ "missing_input": null,
+ "note": "no ledger under /root/sweep18/v2/ecad: an empty tree and a sound one look alike to a checker that reports no problems",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "DOC-002"
+ ],
+ "tool": "ledger_verify",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "493f3ebd1dd1cbee"
+ },
+ "ts": "2026-09-17T05:23:36Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

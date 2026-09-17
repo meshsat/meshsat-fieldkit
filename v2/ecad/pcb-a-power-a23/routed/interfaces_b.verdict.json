@@ -19,20 +19,21 @@
   "board": "b",
   "spec": "pcb_interfaces.yaml"
  },
+ "missing_input": null,
  "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "INT-001"
  ],
  "tool": "interfaces_b",
  "tools": {
-  "git_head": "810470d2401c",
-  "tools_tree_sha": "ae847240cfab6eaa"
+  "git_head": "",
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T01:58:42Z",
+ "ts": "2026-09-17T05:21:11Z",
  "verdict": "FAIL",
- "version": "810470d2401c+dirty"
+ "version": "unknown"
 }

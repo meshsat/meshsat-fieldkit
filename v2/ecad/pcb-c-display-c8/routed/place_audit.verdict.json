@@ -15,10 +15,11 @@
    "sha256_16": "2a273803757c68fb"
   }
  },
+ "missing_input": null,
  "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "PLC-001"
@@ -26,9 +27,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "64929b69a44633d2"
+  "tools_tree_sha": "eaafe91e15b758ce"
  },
- "ts": "2026-09-17T01:44:41Z",
+ "ts": "2026-09-17T05:34:44Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -13,10 +13,11 @@
    "sha256_16": "686b29a734c55b9a"
   }
  },
+ "missing_input": null,
  "note": "this board carries no rated part to judge: this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes. A declared zero, not an absence",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "CMP-001"
@@ -24,9 +25,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "325c41b5b40fcad1"
+  "tools_tree_sha": "eaafe91e15b758ce"
  },
- "ts": "2026-09-17T02:09:01Z",
+ "ts": "2026-09-17T05:35:01Z",
  "verdict": "PASS",
  "version": "unknown"
 }

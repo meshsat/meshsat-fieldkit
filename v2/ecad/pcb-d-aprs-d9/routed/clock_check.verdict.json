@@ -9,25 +9,27 @@
  "denominator": 2,
  "evidence": [],
  "inputs": {
+  "board": "d",
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "1438d79c86a3c6d1"
+   "sha256_16": "29535aac18580a1c"
   }
  },
+ "missing_input": null,
  "note": "every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
  "rules": [
   "CLK-001"
  ],
  "tool": "clock_check",
  "tools": {
-  "git_head": "b0eecb48e51c",
-  "tools_tree_sha": "f5d94d97f65eb436"
+  "git_head": "",
+  "tools_tree_sha": "493f3ebd1dd1cbee"
  },
- "ts": "2026-09-17T04:01:06Z",
+ "ts": "2026-09-17T05:24:59Z",
  "verdict": "PASS",
- "version": "b0eecb48e51c+dirty"
+ "version": "unknown"
 }
