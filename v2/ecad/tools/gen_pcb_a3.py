@@ -721,6 +721,27 @@ for fp in board.GetFootprints():
     for pd in fp.Pads():
         if pd.GetNetname().lstrip("/") in RAIL_NETS: pd.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_FULL); _solid += 1
 print("A23 power copper: %d zones and keep-outs; %d rail pads joined solid" % (len(PC.made), _solid))
+# --- the eleven RF drops, laid here and locked (17 September 2026, rule RF-001, appendix 32.221). Every RF port is the
+#     SMA jack J_RF<k> on the top and the SMP-MAX blind-mate J_BM<k> on the underside 10 mm south of it, both through-hole,
+#     and A32's router took every one of those crossings on In2.Cu, where 0.35 mm on this stackup is a 26 ohm stripline
+#     against the class's 50 ohm; board D passes the same rule with the same 0.35 mm because its runs are on an OUTER layer.
+#     THE WIDTH IS THIS BOARD'S, NOT BOARD D'S. Board D passes at 0.35 mm on an outer layer because its 7628 four-layer
+#     stack puts about 0.2 mm of prepreg under F.Cu; this six-layer 3313 stack puts 0.0994 mm (er 4.1) there, and the
+#     tool's own microstrip form with its measured 0.967 correction reads 0.35 mm as 22.8 ohm, 0.15 as 48.2 and 0.14 as
+#     50.1, so the RF class and these drops are 0.14 mm (the board's own minimum is 0.127). The first regeneration with
+#     0.35 mm drops read all eleven at 23.5 ohm, which is what settled it.
+#     The straight F.Cu run from centre pin to centre pin is clear of every other net's copper on the placed board (probed
+#     on A32's placement, all eleven), it is exactly the copper the router laid on the wrong layer, and it costs the route
+#     eleven connections it no longer has to make. Its reference is the solid In1 ground plane directly beneath.
+_rf_laid = 0
+for _k in range(1, 12):
+    _j, _m = board.FindFootprintByReference("J_RF%d" % _k), board.FindFootprintByReference("J_BM%d" % _k)
+    if _j is None or _m is None: continue
+    _pj = next((q for q in _j.Pads() if q.GetNumber() == "1"), None); _pm = next((q for q in _m.Pads() if q.GetNumber() == "1"), None)
+    if _pj is None or _pm is None or _pj.GetNetCode() <= 0 or _pj.GetNetCode() != _pm.GetNetCode(): continue
+    _t = pcbnew.PCB_TRACK(board); _t.SetStart(_pj.GetPosition()); _t.SetEnd(_pm.GetPosition())
+    _t.SetWidth(FromMM(0.14)); _t.SetLayer(pcbnew.F_Cu); _t.SetNet(_pj.GetNet()); _t.SetLocked(True); board.Add(_t); _rf_laid += 1
+print("RF drops: %d of 11 laid on F.Cu at 0.14 mm (50 ohm on this stackup), locked, jack centre pin to blind-mate centre pin" % _rf_laid)
 # --- net classes (API first; the project JSON is re-applied after the save because SaveBoard rewrites it)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
@@ -728,7 +749,7 @@ def cls(nc, clr, tw, vd, vdr, dpw, dpg):
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
 # clearances at the board minimum (7 Sep 2026: with the explicit net-class assignments the DRC enforces them, and a class clearance above a fine-pitch pad gap of 0.2 fails inside the LM5176 and TPS23861 pads); HV 0.18 for the 54 V nodes
 CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13),   # 8 Sep 2026 (32.71): 0.127/0.127 on the 3313 outer layer computes 94 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds; clearance 0.10 so the gap keeps a margin
-            "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "NODE": (0.127, 0.5, 0.8, 0.4, 0.5, 0.25), "SW": (0.127, 0.5, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.127, 0.4, 1.0, 0.5, 0.5, 0.3), "RF": (0.18, 0.35, 0.7, 0.3, 0.2, 0.15), "HV": (0.18, 0.4, 0.8, 0.4, 0.4, 0.25)}
+            "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "NODE": (0.127, 0.5, 0.8, 0.4, 0.5, 0.25), "SW": (0.127, 0.5, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.127, 0.4, 1.0, 0.5, 0.5, 0.3), "RF": (0.18, 0.14, 0.7, 0.3, 0.2, 0.15), "HV": (0.18, 0.4, 0.8, 0.4, 0.4, 0.25)}
 PATTERNS = [("USB_*", "USB"), ("PD_CC*", "USB"), ("CELL+", "NODE"), ("VBAT", "NODE"), ("PRECHG", "PWR"), ("VIN_RAW", "NODE"), ("VBUS20", "NODE"), ("CH_ACN", "NODE"), ("CH_SRP", "NODE"), ("CH_SW*", "SW"), ("FE_SW*", "SW"), ("FE_OUT", "NODE"), ("FE_CS", "SW"),
             ("PA_SW*", "SW"), ("PA_OUT", "NODE"), ("PA_CS", "SW"), ("HF_SW*", "SW"), ("HF_OUT", "PWR"), ("PD_SW*", "SW"), ("PD_OUT", "PWR"), ("PD_PPHV", "PWR"), ("PD_VBUS", "PWR"), ("S?_SW", "SW"), ("SD_SW", "SW"), ("S?_OUT", "RAIL"), ("SD_OUT", "RAIL"), ("PD_VPWR", "PWR"), ("PD_SW", "PWR"),
             ("+5V_*", "RAIL"), ("+13V8_PA", "RAIL"), ("+12V_HF", "RAIL"), ("VMON", "PWR"), ("VHEAT", "PWR"), ("GND", "PWR"), ("+3V3", "PWR"), ("B33_SW", "SW"), ("RF_*", "RF"), ("POE_SW*", "HV"), ("POE_OUT", "HV"), ("+54V_POE", "HV"), ("POE_CS", "SW")]

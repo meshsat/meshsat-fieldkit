@@ -9089,3 +9089,27 @@ without writing; the passes cost two and a half hours at the start and four by t
 stub router on those 416 and will be refused at the routed-board gate; what it leaves is the pair coverage, the
 contracts on B21's own netlist and the rail readings. The number belongs to `boards/b.json` beside the floor
 plan of 32.216, because it is the measurement B22 has to beat: this placement does not route in forty hours.
+
+### 32.221 Board A's eleven RF ports: laid by the generator on the outer layer at the width this stackup makes 50 ohm (17 September 2026, 23:25 CEST; MESHSAT-862)
+
+**The finding of 32.215 was that every one of board A's eleven RF nets runs exactly 10.0 mm on In2.Cu at 0.35
+mm, a 26 ohm stripline against 50, and its note said the width was right because board D passes RF-001 at the
+same 0.35 mm on an outer layer.** Half of that was wrong, and the first regeneration said so: the eleven drops
+laid on F.Cu at 0.35 mm read **23.5 ohm**, worse than the inner layer. Board D's 0.35 mm passes for its
+four-layer 7628 stack's 0.2 mm of prepreg under the top copper; this six-layer 3313 stack puts **0.0994 mm**
+(er 4.1) there, and `rf_line`'s own microstrip form with its measured 0.967 correction reads 0.35 mm as 22.8
+ohm, 0.15 as 48.2 and **0.14 as 50.1**. The RF class on board A is 0.14 mm now (its minimum is 0.127).
+
+**The drops are the generator's, not the router's.** Every port is the SMA jack on the top and the SMP-MAX
+blind-mate receptacle on the underside 10 mm south of it, both through-hole, and the straight F.Cu run from
+centre pin to centre pin was probed clear of every other net's copper on A32's placement, all eleven.
+`gen_pcb_a3.py` lays each one locked, 0.14 mm, jack pin to receptacle pin, over the solid In1 ground. It is the
+copper the router had already laid on the wrong layer, so it costs the route nothing and takes eleven
+connections off it, the opposite of the pre-lay that cost this board ten (32.215): those were crossings of the
+board, these are ten millimetres between two fixed parts at the south edge.
+
+**Measured on a regenerated placement in an isolated tree on the hub, today's tools, from the runner's phase
+directory:** gate `RESULT: ALL PASS`, `PREROUTE-DONE PLACED`, **`rf_line` PASS of 11, every port 51.8 ohm
+against 50**, hard 0 of the fifteen types with the project file beside the board (a placed board judged without
+its project file reads zero controlled lines, the 12 September trap in another coat). The change reaches copper
+with the generation after A43, which routes on the old class; `boards/a.json` carries the corrected note.
