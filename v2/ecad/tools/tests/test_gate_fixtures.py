@@ -787,3 +787,33 @@ def t_a_board_with_no_part_declares_its_zero_rather_than_leaving_the_last_verdic
                    capture_output=True, text=True, env=dict(os.environ, VERDICT_DIR=d2))
     rec2 = _j.load(open(os.path.join(d2, "derate.verdict.json")))
     assert rec2["verdict"] == "INCONCLUSIVE", rec2
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A GUARDED STAGE THAT DID NOT RUN TO COMPLETION IS NOT A PASS (17 September 2026).
+#
+# Board A's `stitch_prune` segfaulted tonight before printing a line. The guard measured the same two counts
+# before and after, reverted nothing (correctly: there was nothing to revert) and wrote PASS. "The board is no
+# worse" is true of a stage that crashed and of a stage that ran and found nothing to do, and those are not the
+# same answer; the exit code was in the verdict's counts while the verdict itself said the stage was fine.
+
+def t_a_guarded_stage_that_crashes_or_times_out_is_inconclusive():
+    import os, re
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"),
+               encoding="utf-8").read()
+    body = "\n".join(l for l in src.splitlines() if not l.strip().startswith("#"))
+    assert '[ "$RC" -eq 124 ] || [ "$RC" -gt 128 ]' in body, \
+        "the guard does not tell a stage that did not run from one that ran"
+    assert "verdict.INCONCLUSIVE if kept == 2" in body, \
+        "a stage that did not run to completion still writes a pass"
+    # and the finish must carry on exactly as before: the board is unchanged, so the guard returns success
+    assert '[ "$KEPT" = 2 ] && return 0' in body, \
+        "a crashed stage now stops the finish, which changes what the guard is for"
+
+
+def t_the_guard_keeps_kept_a_flag():
+    """`kept` is read as a boolean; the new state gets its own field rather than a third value in that one."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"),
+               encoding="utf-8").read()
+    assert '"kept": 1 if kept else 0' in src and '"completed": 0 if kept == 2 else 1' in src, src[-900:]
