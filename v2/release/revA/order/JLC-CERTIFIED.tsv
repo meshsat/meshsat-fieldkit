@@ -567,7 +567,6 @@ CERTIFIED	ferrite 600R	L_0603_1608Metric	C	11	55	C1002	C1002	GZ1608D601TF	Sunlor
 CERTIFIED	green 5 V S1	LED_0603_1608Metric	B	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
 CERTIFIED	green 5 V S2	LED_0603_1608Metric	B	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
 CERTIFIED	green 5 V S3	LED_0603_1608Metric	B	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
-CERTIFIED	green ACT (LED_nACT sinks)	LED_0603_1608Metric	B	6	30	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
 CERTIFIED	green Ethernet port 1 link	LED_0603_1608Metric	B	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
 CERTIFIED	green Ethernet port 2 link	LED_0603_1608Metric	B	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
 CERTIFIED	green Ethernet port 3 link	LED_0603_1608Metric	B	1	5	C12624	C12624	KT-0603G	Hubei KENTO Elec	0603	expand	111741	0.0122	2026-09-13	
@@ -696,6 +695,7 @@ NO_STOCK	WM8960 audio codec QFN-32 (pins per datasheet table: 4 LINPUT1, 11 MCLK
 NO_STOCK	cell thermistor (JST-PH 1x2): the 103AT in the block	JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical	P	2	10		C9900247323	103AT	JLCPCB Assembly	Plugin	expand	0	0.0204	2026-09-17	stock 0 against a need of 10 for 5 boards
 NO_STOCK	green	LED_0603_1608Metric	D	1	5	C72043	C72043	19-217/GHC-YR1S2/3T	Everlight Elec	0603	expand	1	0.0238	2026-09-17	stock 1 against a need of 5 for 5 boards
 NO_STOCK	green 5V	LED_0603_1608Metric	B	4	20	C72043	C72043	19-217/GHC-YR1S2/3T	Everlight Elec	0603	expand	1	0.0238	2026-09-17	stock 1 against a need of 20 for 5 boards
+NO_STOCK	green ACT (LED_nACT sinks)	LED_0603_1608Metric	B	6	30	C72043	C72043	19-217/GHC-YR1S2/3T	Everlight Elec	0603	expand	1	0.0238	2026-09-17	stock 1 against a need of 30 for 5 boards
 NO_STOCK	green ZigBee (DIO_8)	LED_0603_1608Metric	B	3	15	C72043	C72043	19-217/GHC-YR1S2/3T	Everlight Elec	0603	expand	1	0.0238	2026-09-17	stock 1 against a need of 15 for 5 boards
 NO_STOCK	green status (U7 bit 3 sinks)	LED_0603_1608Metric	D	2	10	C72043	C72043	19-217/GHC-YR1S2/3T	Everlight Elec	0603	expand	1	0.0238	2026-09-17	stock 1 against a need of 10 for 5 boards
 NO_STOCK	green: shore 12 V present	LED_0603_1608Metric	E	1	5	C72043	C72043	19-217/GHC-YR1S2/3T	Everlight Elec	0603	expand	1	0.0238	2026-09-17	stock 1 against a need of 5 for 5 boards

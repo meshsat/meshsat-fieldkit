@@ -9178,3 +9178,57 @@ the placement, the escapes, the pairs and the gates. What it has to read against
 the set: 0 hard, no overflow, 1,496 escapes, 259 pads without one, 10 predicted collisions, 32 of 68 pairs; and
 what its route has to beat is B21's 0 hard and 416 unrouted at forty hours, which is why the route is the
 partition of 32.91 and not twenty plain passes.
+
+### 32.224 B21 is adopted at 416 open, the contract gate reads PASS of 72 for the first time with board B in it, and B22 routes as the partition (18 September 2026, 00:30 CEST; MESHSAT-862)
+
+**Board B's phase is B21 in both declarations (commit f2541bea).** The 40 hour route ended at pass 11 with 0 hard and
+416 unrouted of 1,452 connections; its finish imported the last session, applied the three slot-rail suppressor
+values (3 of 931 references, no copper touched), ran the stub router for its hour (416 before, 416 after) and stopped
+at the routed-board gate. That board is in the tree now because a routed board that exists only on a rented box
+exists nowhere (32.106): 16,949 tracks, 3,494 vias, sha256 2e64b5bf2d9cd3bc, check_pcb_b FAIL 21 of 3,102,
+netlist_board PASS 6,752 against the routing tree's netlist, place_audit 10 collisions, 31 of 68 pairs. It is not a
+deliverable and its folder was not fetched: promotion is frozen and a folder is the paperwork an order is placed
+from.
+
+**The schematic and the netlist moved with it, regenerated.** The routing tree's netlist was written by the engine
+of 17 September 11:22 UTC and this tree's `gen_sch_b.py` plus `kisch.py` plus `intent.py` hash 7047363b775085d0, so
+`check_contracts` would have read UNKNOWN GENERATOR and left every contract naming board B unjudged. Regenerated at
+B21 on the hub in a scratch tree with today's tools (`/root/regenb21`): 976 parts, 844 nets, 64 lands judged and
+none refused, and the connectivity diff against the routing tree's netlist is FIFTEEN lines, every one U10 (the
+TMP117 drawn as an `ic()` with its seven pins, 32.219). The sidecar names this tree's generator and the tree's own
+schematic hash, and **`check_contracts` reads ALL CONTRACTS PASS, 72 of 72**, where it read 18 unjudged on A, 3 on C
+and 2 on D for as long as board B's directory held a B19 schematic beside a B21 netlist. The set-level `final_gate`
+now carries contracts PASS (contracts_rc 0, from 3). **One caveat the next reading will show:** the same generator
+file carries the B22 surface-mount SWD land (its one line of `gen_sch_b.py`, staged with the B22 set), so the
+regenerated B21 schematic names `PinHeader_1x05_P2.54mm_Vertical_SMD` for the three SWD lands where the B21 board
+carries the through-hole header; the pads and nets are the same five and SCH-002 will say whatever `netlist_board`
+makes of the footprint name. That reading is being re-taken in sweep 26 (board B alone, read-only, `/root/sweep26`)
+together with the stages the finish never reached: impedance, dc_drop, via_current, the intent items and the
+routed-board hard set under fingerprint a2d08c6e5224a5a4.
+
+**Readiness after the adoption and before the sweep: 58.7 percent verified, 12.3 failed, 29.0 inconclusive of 334**
+(from 58.1). Board B reads 10 of 55 with 37 inconclusive, and the inconclusive causes are named: six stages with no
+verdict on this board (the finish stopped before them), five readings taken under rule set 8087c341 (the placed
+board's own evidence, carried), two on a board the directory no longer holds (pruned, 19 files), one PRE_AUDIT
+netlist_board reading, and decision 34.
+
+**B22's pre-route passed and its route is running as the partition.** In `/root/biso22` with today's tools and the
+set of 32.223: placed board hard 0 of the fifteen types, no overflow, 1,511 escapes and 259 pads skipped, 16 thermal
+vias refused for what is on the other side (U102 and U302 get none of their four, U203 and U204 none of their one),
+**pair pass 36 of 68 against B21's 31** (35 of 48 on DIFF100), **place_audit 9 predicted collisions against 10**,
+PREROUTE-DONE OK at 22:23 UTC. `b22_part_box.sh` started stage 1 (GLOBAL, GND as the one plane net, In1 and In4
+power layers, the one variable against B21) at 22:24 UTC; the region groups follow sequentially under `PART_SEQ=1`,
+then the reconcile. Twenty plain passes at forty hours ended at 416 open; the partition is the only shape that fits
+this board (32.91).
+
+**The dc_drop fixture debt is paid** (`tests/test_board_gates.py`): a 5 V rail declared at 3 A from J1 into U1 over
+75 mm of 0.2 mm F.Cu is 0.11 ohm at 1 oz, 0.33 V and 6.6 percent of the rail against a 2 percent budget, FAIL; the
+same track at 2.0 mm is 0.66 percent and inside IPC-2221's 10 K current for that width, PASS. Both run on the hub
+(the runner has no pcbnew). The rasteriser reads a track narrower than its cell as the fraction of the cell, so the
+number is the track's and not the cell's. Remaining fixture debts: the return_via FIXER, pruned_gate, copper_checks.
+
+**Running at 00:30 CEST:** A43 on the place box at pass 138 of 250 (check_pcb_a PASS 511, netlist_board PASS 2,028);
+A44 and A45 on the hub at pass 20 each (A45's DSN carries two `class_class` rules, A44's none, the one variable);
+E12 on the hub at 35 sessions with both class-pair rules in its DSN (`PWR,SENSE` against `SW,Default` and
+`SENSE,Default` against `SW,Default`, the comma-joined class names of 32.222); B22 partition stage 1; sweep 26.
+Suite 971 passing, 1 failing (the decisions page, re-rendered in the same commit), 25 skipped.
