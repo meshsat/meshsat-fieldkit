@@ -11,9 +11,9 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a).
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 15 | 75.0 |
+| PASS | 16 | 80.0 |
 | FAIL | 2 | 10.0 |
-| INCONCLUSIVE | 3 | 15.0 |
+| INCONCLUSIVE | 2 | 10.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **20** | 100.0 |
 
@@ -31,7 +31,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a).
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_e5 PASS of 27 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken on board p, which is not a board this project directory holds |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_e5 PASS of 1 |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 2 |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 78 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_e5 PASS of 1 |

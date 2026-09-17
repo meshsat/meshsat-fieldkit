@@ -12,8 +12,8 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 | result | rules | percent |
 |---|---|---|
 | PASS | 13 | 24.5 |
-| FAIL | 9 | 17.0 |
-| INCONCLUSIVE | 31 | 58.5 |
+| FAIL | 10 | 18.9 |
+| INCONCLUSIVE | 30 | 56.6 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **53** | 100.0 |
 
@@ -63,7 +63,7 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_b FAIL: {'fail': 7, 'footprints': 951, 'intent_items_reported': 0, 'pass': 2136} |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken on board p, which is not a board this project directory holds |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **FAIL** | verify_deliverable_b FAIL: {'folder': 1, 'quote': 1} |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 47 |
