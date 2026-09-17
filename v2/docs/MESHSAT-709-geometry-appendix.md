@@ -8933,6 +8933,13 @@ the freshness test comes first because a stale verdict says nothing at all, incl
 **Board P's bus has a source.** INT-001 reached board P too, and its answer is a declared zero with a citation:
 the pack gauge's SMBus runs at 100 kHz by the BQ4050's own timing table, so it carries no impedance target.
 
-**Readiness: 58.1 percent verified, 13.1 failed, 28.7 inconclusive of 327 applicable pairs**, from 58.5 percent
+**Readiness: 58.4 percent verified, 13.1 failed, 28.4 inconclusive of 327 applicable pairs**, from 58.5 percent
 of 313 this morning under a rule set that was judging ten rules on fewer boards than their own conditions
-select. Suite 953.
+select. Suite 954.
+
+Three smaller things closed with it. **The finish blocks on SCH-004** now, beside TRN-001 and for the same
+reason: both are decided on the netlist, and a board cut by a re-finish never passes through the pre-route
+chain where the new gate runs. **Board E5 declares that it has no analogue node of its own**, which is ANA-001
+answered rather than unanswered: the pack node crosses it as four targets and four returns, and the conductors
+that sense anything are board P's and board A's. And **a board's table and its facts must name the same
+project directory**, which nothing held together until E5 had both.
