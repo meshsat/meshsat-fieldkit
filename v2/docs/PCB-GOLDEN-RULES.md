@@ -2218,7 +2218,11 @@ applies to a board reached one of the five results at all. The second is the pro
 for, and it is the one that would otherwise be invisible, since a rule missing from the table looks exactly
 like a rule that does not apply. It is FAIL when any pair produces a result outside the five, when the
 registry fails its own validator, or when an applied rule has no coverage entry; 294 of 294 pairs resolve
-today
+today 18 September 2026 00:20: taken on the runner, where the seven order folders are, the rule reads FAIL of
+7 (INCONCLUSIVE in a sweep tree that holds no folder): every committed ORDER-NOTES.txt predates
+make_handoff.py's provenance line of 12 September, and make_handoff refuses to rebuild the set while the
+folders describe boards the tree is not building. So DOC-002 closes with the order set's rebuild, behind the
+boards' phases and decisions 31 and 37, and reads as the failure it is until then.
 
 ### SGN-002  a prototype-only unknown is named
 
