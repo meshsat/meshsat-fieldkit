@@ -6,7 +6,7 @@
  },
  "denominator": 0,
  "evidence": [
-  "This board carries no active part of any kind: it is copper targets, plated wire lands and mounting holes. Nothing on it can assert or read a line, so no line whose assertion inhibits a hazard lives here; SHORE_INHIBIT crosses the dock as a conductor of boards A and E and is judged on those two."
+  "No conductor of this board leaves the enclosure. Every target on its face mates with a spring pin of board A a few millimetres above it, inside the sealed case, and the pack pair arrives on plated wire lands underneath from the battery module, also inside the case. The conductors that DO leave the case are board E's, at the wall receptacle, and board E declares them."
  ],
  "inputs": {
   "board": "e5"
@@ -16,14 +16,14 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "SCH-004": "0d3209a18476cc88"
+   "TRN-001": "5d38bd6db7d4e11f"
   },
   "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
-  "SCH-004"
+  "TRN-001"
  ],
- "tool": "safe_lines_e5",
+ "tool": "port_protect",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "689254046f9e7cff"

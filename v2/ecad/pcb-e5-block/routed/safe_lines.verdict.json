@@ -23,12 +23,12 @@
  "rules": [
   "SCH-004"
  ],
- "tool": "safe_lines_e5",
+ "tool": "safe_lines",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "689254046f9e7cff"
  },
- "ts": "2026-09-17T18:09:32Z",
+ "ts": "2026-09-17T18:09:33Z",
  "verdict": "PASS",
  "version": "unknown"
 }

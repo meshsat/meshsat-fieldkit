@@ -2,18 +2,25 @@
  "advisory": false,
  "applicable": true,
  "counts": {
+  "not_reached": 0,
   "reached": 0
  },
  "denominator": 0,
- "evidence": [],
+ "evidence": [
+  "board E5 declares escape_prune_before_audit false, so the pipeline prunes no escape on it and no pad is left to the router by the pruner"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-e5-block.kicad_pcb",
    "sha256_16": "686b29a734c55b9a"
+  },
+  "board_table": {
+   "path": "/root/sweep24/v2/ecad/tools/boards/e5.json",
+   "sha256_16": "8a526053ccc5cc60"
   }
  },
  "missing_input": null,
- "note": "no pruned list at /root/sweep24/v2/ecad/pcb-e5-block/out/sweep/pcb-e5-block-pruned.txt, and board E5 declares the prune stage",
+ "note": "board E5 declares escape_prune_before_audit false, so the pipeline prunes no escape on it and no pad is left to the router by the pruner",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "4a03222f910fe5f5"
@@ -24,9 +31,9 @@
  "tool": "pruned_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "73b5cba32ea68d0b"
+  "tools_tree_sha": "689254046f9e7cff"
  },
- "ts": "2026-09-17T17:53:43Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T18:09:26Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

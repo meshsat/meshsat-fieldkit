@@ -25,10 +25,10 @@
  ],
  "tool": "port_protect_e5",
  "tools": {
-  "git_head": "7c9ae77cdd66",
-  "tools_tree_sha": "24e940af9fefc359"
+  "git_head": "",
+  "tools_tree_sha": "689254046f9e7cff"
  },
- "ts": "2026-09-17T17:56:20Z",
+ "ts": "2026-09-17T18:09:32Z",
  "verdict": "PASS",
- "version": "7c9ae77cdd66+dirty"
+ "version": "unknown"
 }
