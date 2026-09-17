@@ -283,3 +283,92 @@ def t_a_declared_zero_with_a_reason_passes_and_without_one_does_not():
         assert rc == 3, "a zero with an empty reason passed:\n%s" % out[-300:]
     finally:
         restore()
+
+
+def t_a_clamp_two_parts_past_the_active_one_is_not_this_conductors_protection():
+    """17 September 2026, board E's sensor pod. The chain crossed the RP2040 onto an unrelated logic net, crossed
+    a second transistor and landed on the SHORE INLET's SMCJ40A, and the two I2C conductors of a connector on the
+    outside of the case were reported as protected by it. Once the chain has crossed a semiconductor, that part
+    is what meets the transient; a clamp on one of ITS OWN nets is the topology owner decision 31 asks about, and
+    anything past that belongs to another circuit. The defective fixture is that shape and must read FAIL."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "a sensor pod outside the case, on a sealed lead"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-far-clamp-")
+        p = _net(d, {"J_X": "pod", "U1": "RP2040 controller", "U2": "hot-swap controller", "D9": "SMCJ40A"},
+                 {"SDA": [("J_X", "1"), ("U1", "3")], "PGOOD": [("U1", "4"), ("U2", "2")],
+                  "DCP": [("U2", "1"), ("D9", "1")], "GND": [("J_X", "2"), ("D9", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "a clamp two parts away was accepted as the pod's protection:\n%s" % out[-500:]
+        # the COUNTS, never the summary sentence, which carries both words whatever the answer
+        assert '"unprotected": 1' in out and '"behind_an_active_part": 0' in out, \
+            "the far clamp was reported as this conductor's protection:\n%s" % out[-500:]
+    finally:
+        restore()
+
+
+def t_a_clamp_on_the_active_parts_own_net_is_still_reported_behind_it():
+    """The acceptable half of the same rule, and the case owner decision 31 is actually about: board E's shore
+    inlet is connector -> fuse -> ideal-diode FET -> SMCJ40A, so the clamp sits on a net of the part that meets
+    the transient. That must keep reading as a clamp BEHIND an active part, named, and not become a bare
+    'nothing between': the two are different questions and the decision needs them apart."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "the shore DC inlet on the wall receptacle"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-behind-")
+        p = _net(d, {"J_X": "inlet", "F1": "10 A", "Q1": "ideal diode FET", "D9": "SMCJ40A"},
+                 {"DCIN": [("J_X", "1"), ("F1", "1")], "DCF": [("F1", "2"), ("Q1", "1")],
+                  "DCP": [("Q1", "2"), ("D9", "1")], "GND": [("J_X", "2"), ("D9", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "the behind-an-active-part case no longer refuses:\n%s" % out[-500:]
+        assert "ACTIVE Q1" in out and "CLAMP D9" in out, \
+            "the row must name the part that sees the transient and the clamp behind it:\n%s" % out[-500:]
+        assert '"unprotected": 0' in out and '"behind_an_active_part": 1' in out, \
+            "a clamp on the FET's own net was counted as no protection at all:\n%s" % out[-500:]
+    finally:
+        restore()
+
+
+def t_ground_is_where_the_search_stops_whatever_the_board_calls_it():
+    """`SKIP_NETS` is a list of exact names and board E's isolated vehicle return is `GND_V`. Ground is every
+    net's neighbour, so a chain that steps onto one reaches the whole board: this fixture puts the only clamp on
+    a ground called `GND_V` and the conductor must read as unprotected."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "a jack on the face"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-ground-")
+        p = _net(d, {"J_X": "jack", "U1": "codec", "D9": "SMCJ40A"},
+                 {"SIG": [("J_X", "1"), ("U1", "3")], "GND_V": [("U1", "4"), ("D9", "2"), ("J_X", "2")],
+                  "DCP": [("D9", "1")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "a clamp reached through a ground net was accepted:\n%s" % out[-500:]
+        assert '"unprotected": 1' in out and '"behind_an_active_part": 0' in out, \
+            "a clamp on the other side of a ground net was counted as protection:\n%s" % out[-500:]
+    finally:
+        restore()
+
+
+def t_a_rail_conductor_continues_through_a_fuse_and_not_through_a_pull_up():
+    """Board E's pod takes 3.3 V from a rail that carries no clamp, and the search left that rail through a
+    pull-up onto a power-good net and reported the shore inlet's clamp as the pod's. A resistor between a rail
+    and a logic net is not that rail's conductor; a fuse, a bead or a choke is. Both halves are run: the pull-up
+    fixture must FAIL and the fuse fixture must PASS."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "the sensor pod's power feed, outside the case"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-pullup-")
+        p = _net(d, {"J_X": "pod", "R1": "10k", "U2": "hot-swap controller", "D9": "SMCJ40A"},
+                 {"+3V3_X": [("J_X", "1"), ("R1", "1")], "PGOOD": [("R1", "2"), ("U2", "2")],
+                  "DCP": [("U2", "1"), ("D9", "1")], "GND": [("J_X", "2"), ("D9", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "a rail left through a pull-up and took another circuit's clamp:\n%s" % out[-500:]
+        assert '"unprotected": 1' in out and '"behind_an_active_part": 0' in out, \
+            "the rail's pull-up carried the search into another circuit:\n%s" % out[-500:]
+    finally:
+        restore()
+    restore = _with_ports("d", [{"ref": "J_X", "why": "the sensor pod's power feed, outside the case"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-fuse-")
+        p = _net(d, {"J_X": "pod", "F1": "1 A", "D9": "SMCJ40A"},
+                 {"+3V3_X": [("J_X", "1"), ("F1", "1")], "POD_P": [("F1", "2"), ("D9", "1")],
+                  "GND": [("J_X", "2"), ("D9", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 0, "a clamp behind the rail's own fuse was refused:\n%s" % out[-500:]
+    finally:
+        restore()
