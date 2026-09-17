@@ -402,12 +402,14 @@ def t_a_check_with_no_input_writes_no_verdict_rather_than_one_about_the_host():
     The set verdict is stricter than the per-board one: it means "the seven boards agree", which cannot be
     read at all with a board absent."""
     src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
-    per = src[src.index("for _bd in sorted(set(list(per_board)"):src.index('if (not checked or MISSING)')]
+    per = src[src.index("for _bd in sorted(set(list(per_board)"):src.index("if (not checked or MISSING or _NO_INTENT)")]
     assert "_richer_on_disk(" in per and "continue" in per, \
         "a board whose netlist is absent still writes over a verdict taken where the netlist was"
-    assert "if (not checked or MISSING) and _richer_on_disk(" in src, \
+    assert "if (not checked or MISSING or _NO_INTENT) and _richer_on_disk(" in src, \
         "the set verdict is written from a tree with less input than the reading already on disk"
-    i = src.index("if (not checked or MISSING) and _richer_on_disk(")
+    assert "_NO_INTENT = sorted(" in src, \
+        "an absent intent file is still read as a board that declared nothing rather than as an absent input"
+    i = src.index("if (not checked or MISSING or _NO_INTENT) and _richer_on_disk(")
     assert "sys.exit(3)" in src[i:i + 1200], "the check does not exit INCONCLUSIVE when it judged nothing"
     assert "A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE" in src, \
         "the rule behind the guard is no longer written down beside it"
@@ -416,26 +418,22 @@ def t_a_check_with_no_input_writes_no_verdict_rather_than_one_about_the_host():
 def t_that_refusal_is_executed_and_leaves_an_existing_verdict_alone():
     """Run it: write a PASS where the check writes, run the check on a tree with no netlist, and the PASS must
     still be there afterwards."""
-    import subprocess, shutil, tempfile, json as _j
-    ecad = os.path.dirname(TOOLS)
-    out = os.path.join(ecad, "out"); os.makedirs(out, exist_ok=True)
+    import subprocess, tempfile, json as _j
+    # An EMPTY tree, so the rule is exercised whatever this working copy happens to hold: check_contracts
+    # takes the ecad directory to read, and a fresh one has no netlist for any board.
+    d = tempfile.mkdtemp(prefix="contracts-keeps-")
+    out = os.path.join(d, "out"); os.makedirs(out)
+    import verdict
+    verdict.write("check_contracts_c", verdict.PASS, denominator=7, out_dir=out, quiet=True,
+                  note="a fixture standing in for the reading taken where the netlists are")
     p = os.path.join(out, "check_contracts_c.verdict.json")
-    keep = tempfile.mkdtemp(); had = os.path.exists(p)
-    if had: shutil.copy(p, os.path.join(keep, "v.json"))
-    try:
-        import verdict
-        verdict.write("check_contracts_c", verdict.PASS, denominator=7, out_dir=out, quiet=True,
-                      note="a fixture standing in for the reading taken where the netlists are")
-        before = _j.load(open(p))
-        r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_contracts.py")],
-                           capture_output=True, text=True, cwd=ecad)
-        assert "no netlist" in (r.stdout + r.stderr), \
-            "this tree has netlists, so the rule was not exercised:\n%s" % (r.stdout or "")[-300:]
-        after = _j.load(open(p))
-        was = before.get("verdict") or before.get("result")
-        now = after.get("verdict") or after.get("result")
-        assert now == was == "PASS", \
-            "the check overwrote a verdict taken where its input existed: %r" % now
-    finally:
-        if had: shutil.copy(os.path.join(keep, "v.json"), p)
-        elif os.path.exists(p): os.remove(p)
+    before = _j.load(open(p))
+    env = dict(os.environ, VERDICT_DIR=out)
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_contracts.py"), d],
+                       capture_output=True, text=True, cwd=d, env=env)
+    assert "no netlist" in (r.stdout + r.stderr), \
+        "the rule was not exercised: this tree was expected to have none\n%s" % (r.stdout or "")[-300:]
+    after = _j.load(open(p))
+    was = before.get("verdict") or before.get("result")
+    now = after.get("verdict") or after.get("result")
+    assert now == was == "PASS", "the check overwrote a verdict taken where its input existed: %r" % now

@@ -9,9 +9,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 13 | 25.5 |
+| PASS | 14 | 27.5 |
 | FAIL | 10 | 19.6 |
-| INCONCLUSIVE | 28 | 54.9 |
+| INCONCLUSIVE | 27 | 52.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **51** | 100.0 |
 
@@ -44,7 +44,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 7 |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
-| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | check_contracts_b INCONCLUSIVE |
+| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | check_contracts_b PASS of 42 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **FAIL** | interfaces_b FAIL: {'assignments': 7, 'disagreements': 7} |
 | INT-002 a transformerless Ethernet link is verified at both ends | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact topology and  |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect PASS of 11 |

@@ -24,26 +24,27 @@ fault from one that reads low.
 |---|---|---|---|---|---|
 | 1 | VIN_RAW | 12.00 V | 8.00 A | J_DOCK | C11, C12, Q2 |
 | 2 | VBAT | 14.40 V | 10.00 A | F1 | Q11, U12, U15, U4, U5, U6 |
-| 3 | CELL+ | 14.40 V | 10.00 A | J_CP1 | nothing declared |
+| 3 | CELL+ | 14.40 V | 10.00 A | J_CP1 | F1 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
 | 1 | +5V_DEV | 5.00 V (4.75 to 5.25) | R43 | J_5V_DEV |
-| 2 | +5V_S1 | 5.10 V (4.84 to 5.35) | R31 | J_5V_S1 |
-| 3 | +5V_S2 | 5.10 V (4.84 to 5.35) | R35 | J_5V_S2 |
-| 4 | +5V_S3 | 5.10 V (4.84 to 5.35) | R39 | J_5V_S3 |
-| 5 | +12V_HF | 12.00 V (11.40 to 12.60) | U15 | nothing declared |
-| 6 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
-| 7 | VBUS20 | 20.00 V (19.00 to 21.00) | U2 | nothing declared |
-| 8 | +54V_POE | 54.00 V (51.30 to 56.70) | U16 | nothing declared |
+| 2 | +5V_D8 | 5.00 V (4.75 to 5.25) | U23 | J_MEZZ_PWR1 |
+| 3 | +5V_S1 | 5.10 V (4.84 to 5.35) | R31 | J_5V_S1 |
+| 4 | +5V_S2 | 5.10 V (4.84 to 5.35) | R35 | J_5V_S2 |
+| 5 | +5V_S3 | 5.10 V (4.84 to 5.35) | R39 | J_5V_S3 |
+| 6 | +12V_HF | 12.00 V (11.40 to 12.60) | R65 | J_HF |
+| 7 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
+| 8 | VBUS20 | 20.00 V (19.00 to 21.00) | R11 | R16 |
+| 9 | +54V_POE | 54.00 V (51.30 to 56.70) | R71 | J_54V |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
 | rail | volts | current | source | what it feeds |
 |---|---|---|---|---|
-| +3V3 | 3.30 V | 0.30 A | L7 | nothing declared |
+| +3V3 | 3.30 V | 0.30 A | L7 | J_MEZZ1, U10, U11, U14, U17, U26 |
 
 ## Board B
 
@@ -118,13 +119,20 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | +5V_D8 | 5.00 V | 1.00 A | J_PWR1 | nothing declared |
+| 1 | +3V3 | 3.30 V | 0.06 A | J_HARN1 | U16 |
+| 2 | +5V_D8 | 5.00 V | 1.00 A | J_PWR1 | FB1, J_USB3, U1, U15, U3, U6 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| | | | | this board makes no rail of its own |
+| 1 | +3V3_D8 | 3.30 V (3.13 to 3.46) | U1 | Q3, Q4, Q5, Q6, Q7, Q8 |
+
+**Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
+
+| rail | volts | current | source | what it feeds |
+|---|---|---|---|---|
+| +5V_SA | 5.00 V | 0.35 A | FB1 | U2 |
 
 ## Board E
 
@@ -132,19 +140,20 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | CELL_F | 14.40 V | 10.00 A | F3 | nothing declared |
+| 1 | CELL_F | 14.40 V | 10.00 A | F3 | J_FAN1, J_FAN2, P_CP, U12 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| | | | | this board makes no rail of its own |
+| 1 | +3V3_E6 | 3.30 V (3.13 to 3.46) | U13 | J_DCF, J_LTG, J_POD, U10, U11, U14 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
 | rail | volts | current | source | what it feeds |
 |---|---|---|---|---|
-| VIN_RAW | 12.00 V | 8.00 A | L2 | nothing declared |
+| +5V_E6 | 5.00 V | 0.30 A | L3 | J_GEIGER, U13 |
+| VIN_RAW | 12.00 V | 8.00 A | L2 | J_BLK |
 
 ## Board E5
 

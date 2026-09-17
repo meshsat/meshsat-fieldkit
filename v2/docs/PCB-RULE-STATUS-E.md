@@ -19,9 +19,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 27 | 56.2 |
+| PASS | 29 | 60.4 |
 | FAIL | 8 | 16.7 |
-| INCONCLUSIVE | 13 | 27.1 |
+| INCONCLUSIVE | 11 | 22.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
@@ -29,7 +29,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | check_contracts_e INCONCLUSIVE |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e PASS of 8 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 48 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e PASS of 90 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e PASS of 90 |
@@ -52,7 +52,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 1 |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 2, 'fail': 2, 'measured': 2} |
-| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | check_contracts INCONCLUSIVE |
+| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_e PASS of 1 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect FAIL: {'behind_an_active_part': 4, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 0} |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the router and not a |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
