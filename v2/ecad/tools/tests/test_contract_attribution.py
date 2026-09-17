@@ -45,7 +45,7 @@ def t_a_contract_with_no_board_is_refused_rather_than_attributed_to_none():
     src = open(SRC, errors="replace").read()
     body = src[src.index("fails = []; checked = []"):src.index("def pinmap(")]
     import collections
-    exec("import collections\n" + body, ns)
+    exec("import collections\nMISSING = []\n" + body, ns)   # no board is absent in these fixtures
     ns["check"](True, "B: something", boards={"B"})
     assert ns["per_board"]["B"]["pass"] == 1
     ns["check"](False, "A and B disagree", boards={"A", "B"})
@@ -64,7 +64,7 @@ def t_a_failure_on_one_board_does_not_fail_another():
     ns = {}
     src = open(SRC, errors="replace").read()
     body = src[src.index("fails = []; checked = []"):src.index("def pinmap(")]
-    exec("import collections\n" + body, ns)
+    exec("import collections\nMISSING = []\n" + body, ns)   # no board is absent in these fixtures
     ns["check"](True, "A: the pre-charge pin lands on a cell node net", boards={"A"})
     ns["check"](False, "B: PCIE1_RX_P has exactly one series AC coupling capacitor", boards={"B"})
     assert ns["per_board"]["A"]["fail"] == [], ns["per_board"]["A"]
@@ -77,3 +77,54 @@ def t_the_registry_reads_the_per_board_verdict_for_the_cross_board_rules():
     for rid in ("SCH-003", "RF-002"):
         v = (cov[rid].get("verification") or {}).get("verdict")
         assert v == "check_contracts_<letter>", "%s still reads the set verdict: %r" % (rid, v)
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A CONTRACT THAT NAMES AN ABSENT BOARD IS UNJUDGED, NOT FAILED (17 September 2026).
+#
+# A contract is an agreement between two boards' netlists. With one of them missing from the tree the
+# comparison was never made: its pin map reads as empty and every pin "disagrees". The per-board guard covered
+# the board that is ABSENT and not the board at the other end, so a run on the runner, where no chain has
+# written a netlist, put board B's absence on board C's page as two failed contracts and on board A's as
+# twelve, over readings taken on the box WITH those netlists.
+
+def t_a_contract_whose_other_board_is_absent_is_not_this_board_s_failure():
+    import re, os
+    src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
+    assert "_absent = [b for b in boards if b in MISSING]" in src, "the absent end is not detected"
+    assert 'per_board[_b]["unjudged"].append(text)' in src, "an unjudged contract is not recorded as such"
+    # and it must not also be counted as a failure
+    i = src.index("_absent = [b for b in boards if b in MISSING]")
+    j = src.index("print((\"PASS  \" if ok else \"FAIL  \")")
+    assert "fails.append" not in src[i:j], "an unjudged contract still reaches the failure list"
+
+
+def t_the_guard_covers_both_ends():
+    import os
+    src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
+    assert 'if (_bd in MISSING or _u) and _richer_on_disk(' in src, \
+        "the per-board guard fires only when the board's OWN netlist is absent"
+
+
+def t_a_board_with_unjudged_contracts_is_inconclusive_and_never_passing():
+    """Absence is never a pass here either: a board whose contracts could not all be judged says so."""
+    import os
+    src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
+    assert "_v.INCONCLUSIVE if (not _n or _bd in MISSING or _u)" in src, src[src.index("_v.write(\"check_contracts_%s"):][:300]
+
+
+def t_an_absent_board_makes_both_ends_unjudged_and_neither_failed():
+    """Executed, on the exact shape that caused it: board B is absent, and the contract between B and C is
+    counted against neither."""
+    ns = {}
+    src = open(SRC, errors="replace").read()
+    body = src[src.index("fails = []; checked = []"):src.index("def pinmap(")]
+    exec("import collections\nMISSING = ['B']\n" + body, ns)
+    ns["check"](False, "panel controller USB pair USB_PNL_P on B and C J_PANEL", boards={"B", "C"})
+    assert ns["per_board"]["C"]["fail"] == [], ns["per_board"]["C"]
+    assert ns["per_board"]["B"]["fail"] == [], ns["per_board"]["B"]
+    assert len(ns["per_board"]["C"]["unjudged"]) == 1, ns["per_board"]["C"]
+    assert ns["fails"] == [] and ns["checked"] == [], (ns["fails"], ns["checked"])
+    # a contract that names only present boards is judged exactly as before
+    ns["check"](False, "C: something of C's own", boards={"C"})
+    assert len(ns["per_board"]["C"]["fail"]) == 1 and len(ns["fails"]) == 1

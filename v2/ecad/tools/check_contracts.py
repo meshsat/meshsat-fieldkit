@@ -117,9 +117,23 @@ def same(a, b):
 # their board, because the English article "A" had to be stripped for the inference to work at all. An
 # attribution that is right most of the time puts a board's failure on another board's page.
 fails = []; checked = []
-per_board = collections.defaultdict(lambda: {"pass": 0, "fail": []})
+per_board = collections.defaultdict(lambda: {"pass": 0, "fail": [], "unjudged": []})
+unjudged = []
 def check(ok, text, detail="", boards=None):
     if not boards: raise AssertionError("contract %r declares no board: say which boards it is about" % text[:70])
+    # A CONTRACT THAT NAMES AN ABSENT BOARD IS UNJUDGED, NOT FAILED (17 September 2026). A contract is an
+    # agreement between two boards' netlists, so with one of them missing from this tree the comparison was
+    # never made: its pin map reads as empty and every pin "disagrees". The per-board guard below covers the
+    # board that is ABSENT and not the board at the other end, so a run on the runner, where no chain has
+    # written a netlist, put board B's absence on board C's page as two failed contracts and on board A's as
+    # twelve, over readings taken on the box WITH those netlists. Absence is inconclusive here as everywhere:
+    # the contract is counted as unjudged, both ends say so, and neither is failed for it.
+    _absent = [b for b in boards if b in MISSING]
+    if _absent:
+        print("UNJUDGED  " + text + "   (%s absent from this tree)" % ", ".join(_absent))
+        unjudged.append(text)
+        for _b in boards: per_board[_b]["unjudged"].append(text)
+        return
     print(("PASS  " if ok else "FAIL  ") + text + (("   " + detail) if detail and not ok else ""))
     checked.append(text)
     if not ok: fails.append(text)
@@ -447,18 +461,26 @@ for _bd in sorted(set(list(per_board) + list(B))):
     # INCONCLUSIVE about this host. Absence is already INCONCLUSIVE to the readiness computation ("absence is
     # never a pass"), so writing nothing gives the same answer on a fresh tree and keeps the evidence on a
     # tree that has some. The missing board is named on stdout, which is where a report belongs.
-    if _bd in MISSING and _richer_on_disk("check_contracts_%s" % _bd.lower()):
-        print("check_contracts: %s has no netlist in this tree and the verdict on disk was taken with one, "
-              "so it is left as it stands" % _bd)
+    _r = per_board.get(_bd) or {"pass": 0, "fail": [], "unjudged": []}
+    _u = len(_r.get("unjudged") or [])
+    # THE GUARD COVERS BOTH ENDS NOW. A board is left alone when its OWN netlist is absent, and also when any
+    # contract of its own could not be judged because the board at the other end is absent: in both cases this
+    # run has less input than whatever is already on disk, and less input never replaces more.
+    if (_bd in MISSING or _u) and _richer_on_disk("check_contracts_%s" % _bd.lower()):
+        print("check_contracts: %s has %s in this tree and the verdict on disk was taken with them, so it is "
+              "left as it stands" % (_bd, "no netlist" if _bd in MISSING else
+                                     "%d contract(s) that name an absent board" % _u))
         continue
-    _r = per_board.get(_bd) or {"pass": 0, "fail": []}
     _n = _r["pass"] + len(_r["fail"])
     _v.write("check_contracts_%s" % _bd.lower(),
-             _v.INCONCLUSIVE if (not _n or _bd in MISSING) else (_v.PASS if not _r["fail"] else _v.FAIL),
-             counts={"fail": len(_r["fail"]), "pass": _r["pass"]}, denominator=_n,
-             evidence=_r["fail"][:20], inputs={"boards": ",".join(sorted(B))},
+             _v.INCONCLUSIVE if (not _n or _bd in MISSING or _u) else (_v.PASS if not _r["fail"] else _v.FAIL),
+             counts={"fail": len(_r["fail"]), "pass": _r["pass"], "unjudged": _u}, denominator=_n + _u,
+             evidence=(_r["fail"] + ["unjudged, the other board is absent: " + t for t in (_r.get("unjudged") or [])])[:20],
+             inputs={"boards": ",".join(sorted(B))},
              note=("this board's netlist is absent from this tree" if _bd in MISSING else
-                   "no contract of this set names this board" if not _n else
+                   "no contract of this set names this board" if not _n and not _u else
+                   "%d of this board's contracts name a board absent from this tree and were not judged" % _u
+                   if _u else
                    "the contracts that name this board; the set's own verdict is check_contracts"),
              quiet=True)
 if (not checked or MISSING or _NO_INTENT) and _richer_on_disk("check_contracts", len(MISSING) + len(_NO_INTENT)):
