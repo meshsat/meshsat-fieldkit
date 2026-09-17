@@ -60,6 +60,39 @@ def footprints(net_path):
     return out
 
 
+def bench_fitted(stem, path=None):
+    """The designators this project does NOT send to the assembler, read out of make_handoff.py's own table.
+
+    A ROTATION MATTERS FOR A PART THE ASSEMBLER PLACES (17 September 2026). The first form of this check
+    listed every polarised footprint in the netlist, which is 41 across the seven boards, and most of them are
+    parts JLCPCB never sees: the blind-mate receptacles and spring pins of board A, the plate switches, the
+    sounder and the camera of board C, the blade holders and the pack lands of board E, the wire joints of
+    board P. Asking the ordering session to compare those with an assembler's preview is asking it to check a
+    rotation nobody will apply.
+
+    The table is a literal in `make_handoff.py`, which is on the never-auto floor, so it is READ here by text
+    and never imported: that file needs pcbnew and this gate runs on the runner. `producer_table` below reads
+    the rotation offsets out of the same file for the same reason."""
+    src = open(path or os.path.join(HERE, "make_handoff.py"), encoding="utf-8", errors="replace").read()
+    i = src.find("EXCLUDE = {")
+    if i < 0: return None
+    j = src.find("\nNONPART_PREFIX", i)
+    blk = src[i:j if j > 0 else i + 4000]
+    # the per-board entry, as written: "stem": { ... }  with an optional | {expr} tail
+    out = set()
+    # each board's entry is one LINE of that literal, ending at the comment or the next board's key
+    line = next((l for l in blk.splitlines() if ('"%s":' % stem) in l), "")
+    if not line: return set()
+    m = re.search(r'"%s":\s*(.*)$' % re.escape(stem), line)
+    if not m: return set()
+    for t in re.finditer(r'"([A-Za-z_][A-Za-z0-9_]*)"', m.group(1)): out.add(t.group(1))
+    # the ranges written as comprehensions, e.g. {"J_CP%d" % k for k in range(1, 5)}
+    for c in re.finditer(r'"([A-Za-z_]+)%d"\s*%\s*k\s*for k in range\((\d+),\s*(\d+)\)', m.group(1)):
+        pre, a, b = c.group(1), int(c.group(2)), int(c.group(3))
+        for k in range(a, b): out.add("%s%d" % (pre, k))
+    return out
+
+
 def producer_table(path=None):
     """The offsets the PRODUCER actually applies, read out of make_handoff.py without importing it.
 
@@ -111,13 +144,22 @@ def judge(ecad=None, only=None, rot=None):
             notes.append("board %s has no netlist in this tree, so its footprints could not be listed" % letter.upper())
         else:
             fps = footprints(max(nets, key=os.path.getmtime))
+            # A ROTATION MATTERS FOR A PART THE ASSEMBLER PLACES. The bench-fitted designators of this board
+            # never reach a CPL, so their rotation is nobody's to verify; the count is reported so the
+            # exclusion is visible rather than silent.
+            _bench = bench_fitted(str((facts.get(letter) or {}).get("project") or "")) or set()
+            n_bench = 0
             for ref, fp in sorted(fps.items()):
                 if not POLARISED.search(fp or ""): continue
+                if ref in _bench: n_bench += 1; continue
                 hit = next(((p, o, v) for p, o, v in rows if re.search(p, fp)), None)
                 if hit is None:
                     unchecked.add(fp)
                 elif not hit[2] or hit[2].upper() == "UNVERIFIED":
                     unverified.add("%s (matched by %s)" % (fp, hit[0]))
+            if n_bench:
+                notes.append("board %s: %d polarised footprint(s) are bench-fitted and never reach the "
+                             "assembler, so their rotation is not the assembler's to verify" % (letter.upper(), n_bench))
             for fp in sorted(unverified):
                 fails.append("%s: %s carries a rotation offset nobody has compared with the assembler's preview"
                              % (letter.upper(), fp))
