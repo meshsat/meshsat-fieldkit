@@ -9042,3 +9042,41 @@ thing: the E11 copper is not a candidate for anything. Board B's item reaches co
 from the corrected generator by construction. Six rules, each failing on the pre-fix tree, using this project's
 own footprint library so they run on the runner as well as where KiCad is; the seven boards are being swept
 again under the rule set that carries SCH-005.
+
+### 32.220 The engine change re-took the whole set twice, and both times it was a reading about the reading (17 September 2026, 23:00 CEST; MESHSAT-862)
+
+**Adding SCH-005 moved the rule-set fingerprint and the seven boards were re-swept read-only under it** (sweep
+25, every board's sha identical before and after). The first number afterwards was 47.3 percent verified of
+334 with 148 inconclusive, against 59.9 of 327 an hour before, and 49 of the new inconclusive pairs were
+readings that nothing about SCH-005 touched: hardset's placed-board verdicts, final_gate, jlc_certify,
+verify_deliverable, doc_provenance, assembly_set, claims_check. **The per-rule digests of 32.215 were only
+stamped for the rules a gate TYPED**, and most gates type none and take theirs from the coverage map, so the
+policy was built from the argument alone and every such verdict fell back to the set fingerprint and went stale
+with the whole registry on every edit. The writer stamps the digests of the rules the map gives it now, with a
+rule that fails on the pre-fix writer; the five placed boards were re-taken with digests and the set-level
+readings re-run here.
+
+**Then the contract gate refused the set for a second reason, and it was the same engine change.** `sch_prov`
+hashes a board's generator together with `kisch.py` and `intent.py`, so every committed netlist's sidecar named
+a generator this tree no longer holds, and `check_contracts` correctly left every contract unjudged. The six
+schematics were regenerated on the hub at each board's declared phase and each netlist compared with the
+committed one on every connectivity line: **A, C, D and P identical** (2316, 1067, 1193 and 295 lines), **B
+differs by U10's seven pins and E by Q7's five**, which are exactly the two corrections of 32.219 and nothing
+else. Board E's board reads 4 of 818 comparisons behind its design (Q7's gate on pad 4 and its drain on pad 5,
+which the E11 copper never had) and board B19's 13 of 6735 (U10's pad 7 and the twelve PCIe receive nets that
+B21 carries): SCH-002 FAIL on both, both true, both regenerations already owed.
+
+**And the sidecars had never been committed.** They live in `out/`, which is gitignored, so every clone had six
+netlists with no identity and the contract gate fell back to the mtime rule, the one that refused one board and
+passed five in the identical state this morning (32.213). The six are force-added beside their netlists and a
+rule holds them there.
+
+**Readiness 58.1 percent verified, 11.1 failed, 30.8 inconclusive of 334**, from 59.9 / 13.1 / 26.9 of 327:
+seven new pairs, two of them the honest failures above, and board B's route mid-flight. Suite 963 on the runner.
+
+**B21 landed at its 40 hour cap while this was written: the last session is pass 11 of 20, written at 16:44
+UTC, and the imported board reads 0 hard and 416 unrouted.** The router spent its last four hours on pass 12
+without writing; the passes cost two and a half hours at the start and four by the end. The finish is in the
+stub router on those 416 and will be refused at the routed-board gate; what it leaves is the pair coverage, the
+contracts on B21's own netlist and the rail readings. The number belongs to `boards/b.json` beside the floor
+plan of 32.216, because it is the measurement B22 has to beat: this placement does not route in forty hours.
