@@ -4,18 +4,12 @@
  "counts": {
   "boards": 1,
   "fail": 1,
-  "unchecked_footprints": 6,
-  "unverified_rows": 1
+  "unchecked_footprints": 0,
+  "unverified_rows": 0
  },
- "denominator": 7,
+ "denominator": 1,
  "evidence": [
-  "P: SOT-23-6 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
-  "not compared with a preview: D_SMB",
-  "not compared with a preview: Fuseholder_Blade_Mini_Keystone_3568",
-  "not compared with a preview: JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical",
-  "not compared with a preview: JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
-  "not compared with a preview: JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical",
-  "not compared with a preview: QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm"
+  "there is no rotation table at ../release/revA/order/jlc-rotations.csv, so no rotation has been verified at all"
  ],
  "inputs": {
   "rotations": "../release/revA/order/jlc-rotations.csv"
@@ -31,9 +25,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "03063ce06e92cec5"
  },
- "ts": "2026-09-16T19:35:29Z",
+ "ts": "2026-09-17T00:44:13Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

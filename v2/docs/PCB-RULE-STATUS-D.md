@@ -25,7 +25,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **FAIL** | jlc_certify_d FAIL: {'BENCH_FITTED': 2, 'CERTIFIED': 62, 'HAND_FIT': 2, 'WRONG_MODEL': 2} |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **FAIL** | jlc_certify_d FAIL: {'BENCH_FITTED': 2, 'CERTIFIED': 62, 'HAND_FIT': 2, 'WRONG_MODEL': 2} |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 5 |
-| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 32 |
+| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 27 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **PASS** | dc_density PASS of 4 |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 4 |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 4, 'no_via': 0, 'over': 1, 'rails': 4} |
@@ -40,9 +40,9 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 0 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
-| CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 2 |
+| CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | clock_check INCONCLUSIVE |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 6 |
-| RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | no rf_line verdict for this board |
+| RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **PASS** | rf_line PASS of 12 |
 | RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | check_contracts_d PASS of 11 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_d PASS of 1 |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
@@ -56,11 +56,11 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 3 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_d PASS of 63 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
-| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
+| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **FAIL** | assembly_set FAIL: {'boards': 1, 'fail': 1, 'unchecked_footprints': 0, 'unverified_rows': 0} |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 12 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate_d FAIL: {'folder': 1, 'held': 0, 'quote': 0, 'stale': 1} |
-| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
+| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance INCONCLUSIVE |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 1, 'claims_rc': 0, 'contracts_rc': 3, 'fail': 3, 'held': 1, 'missing': 0, 'pass': 2, 'quote': 2} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 300 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

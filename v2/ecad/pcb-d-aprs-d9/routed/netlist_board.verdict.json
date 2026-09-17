@@ -18,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "ce708758e40414ef"
+   "sha256_16": "99b23ce35984e731"
   }
  },
  "note": "the board against the schematic it was placed from",
@@ -32,9 +32,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "03063ce06e92cec5"
  },
- "ts": "2026-09-16T19:34:22Z",
+ "ts": "2026-09-17T00:42:57Z",
  "verdict": "PASS",
  "version": "unknown"
 }
