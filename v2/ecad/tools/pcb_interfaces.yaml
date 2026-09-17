@@ -203,3 +203,12 @@ boards:
     name: pcb-p-pack
     assignments:
       - {interface: SMBUS_GAUGE, patterns: ["SMB*"], class: Default}
+  e5:
+    name: pcb-e5-block
+    assignments: []
+    no_interface_targets_why: "The dock block carries no interface of its own. Its every net is board A's, read
+      off A's board file by position under each spring pin, and what it holds is twelve plated contact targets,
+      four pack targets, a pre-charge target and the wire lands beneath them. The interfaces those conductors
+      belong to are declared on the boards at their ends, and what this board owes them is contact and current,
+      which MEC-001 and PI-001 judge."
+
