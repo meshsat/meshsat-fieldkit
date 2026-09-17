@@ -7,24 +7,9 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**25 of 57 rules carry a gap.**
+**24 of 57 rules carry a gap.**
 
-## absent (3)
-
-**PWR-002 sequencing and inrush** (MUST_JUSTIFY, ENFORCED)  
-sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a
-check 16 September 2026: IT IS DERIVED AND CHECKED, not written. power_sequence.py reads each rail's
-declaration in the intent (the part whose enable pin switches it, or `always_on` with the reason there is no
-such part) and checks it against the netlist: the declared switch exists, it has that enable pin, and the
-parts driving that net are named with the rails they are powered from. What it DECIDES is the deadlock a
-schematic cannot show, a rail whose enable is driven only by a device powered from that same rail, which
-cannot start. What it does not decide is the ORDER between rails, because which order is correct is a
-property of the modules' own datasheets and belongs with INT-001. Boards A (13 rails), C (2), D (4), E (4)
-and P (3) pass; board B declares 36 rails and none of them yet, so it reads INCONCLUSIVE with the list.
-Deriving the switch instead of declaring it was tried and withdrawn the same hour: a walk across two-pin
-passives from the rail's own net reached 28 candidate parts on board A, and a search that answers 'one of
-twenty-eight' is not an answer.  
-*Close it by* DONE 17 September 2026: every rail declares the part whose enable switches it or says always_on with its reason, and power_sequence.py checks that against the netlist and finds the deadlock a schematic cannot show. Six boards pass, board B's thirty-six rails included. What is NOT settled here is the ORDER between rails, which is a property of each module's own datasheet and belongs to INT-001. Owner **SESSION**. Effort P50 0h, P80 0h.
+## absent (2)
 
 **REL-001 the build survives its service life** (MUST_JUSTIFY, ENFORCED)  
 nothing considers vibration, mating cycles or moisture for any interface 16 September 2026: THE LIST EXISTS
@@ -349,10 +334,10 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (32)
+## covered (33)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-001,
 CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, IMP-002, INT-001, MEC-001, PI-001, PI-002, PI-003, PLC-001,
-PLN-001, PWR-001, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SGN-001,
-SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
+PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003,
+SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
 
