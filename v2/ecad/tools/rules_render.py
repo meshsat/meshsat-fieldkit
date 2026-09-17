@@ -147,7 +147,12 @@ def board_doc(letter, st, reg, cov):
     L = [HEAD, "# Rule status: board %s\n" % letter.upper(),
          "Manifest **%s**, rule set **%s**, evidence epoch **%s**.\n"
          % (st.get("manifest_version"), st.get("rule_set_fingerprint"), st.get("evidence_epoch")),
-         "**Readiness: %s**\n" % S.gate_state(st["rows"], m)]
+         "**Readiness: %s**\n" % S.gate_state(st["rows"], m),
+         # AND THE BOARD THESE NUMBERS ARE ABOUT (17 September 2026). A percentage with no subject is the
+         # defect of this whole night one level up: every verdict names the board it was taken on and the page
+         # that adds them up named none. Boards A, B and P are judged on a board older than the phase they
+         # declare, which is honest evidence about the board this tree holds and unreadable without saying so.
+         "Measured on %s.\n" % S.subject_line(st.get("subject") or S.subject(letter, m))]
     hold = R.board_holds().get(letter.lower())
     if hold:
         L += ["> **HELD BY OWNER DECISION %s.** %s" % (hold["decision"], R.hold_banner(hold)), ">",
