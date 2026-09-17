@@ -1,4 +1,20 @@
 verdict	comment	fp	boards	qty	need	bom_code	code	model	brand	pkg	lib	stock	price	asked	note
+BENCH_FITTED	3 mm BAT1 amber, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm BAT2 green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm BAT3 green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm BAT4 green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm BAT5 green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm CHG white, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm GPS green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm LTE green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm MCAUT amber, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm MESH green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm MSG white, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm MWARN red, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm SAT green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm SHORE green, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm SOSACT red, sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
+BENCH_FITTED	3 mm TX red (RF hazard), sunlight viewable	LED_D3.0mm	C	1	5										declared in pcb-c-display-c8/lcsc-allow.txt: the sixteen panel indicator lamps: 3 mm through-hole LEDs seated in the plate's light guides and beaded at build, never placed by JLCPCB (the lamp ruling of 5 September, route in tools/jlc-handfit.txt)
 BENCH_FITTED	AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ	PinHeader_1x05_P2.54mm_Vertical	E	1	5										a header, test point or solder jumper: fitted by hand, not placed by JLC; the module its comment names as a class is an owner-side purchase, not a JLC line
 BENCH_FITTED	BOOTSEL: short while powering to enter the USB bootloader	SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm	C,E	2	10										a header, test point or solder jumper: fitted by hand, not placed by JLC
 BENCH_FITTED	CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET	PinHeader_1x05_P2.54mm_Vertical	B	1	5										a header, test point or solder jumper: fitted by hand, not placed by JLC
@@ -97,7 +113,7 @@ CERTIFIED	1n NP0	C_0402_1005Metric	D	2	10	C1523	C1523	0402B102K500NT	FH (Guangdo
 CERTIFIED	1u	C_0603_1608Metric	A,B,C,D,E	48	240	C15849	C15849	CL10A105KB8NNNC	Samsung Electro-Mechanics	0603	base	8438641	0.0175	2026-09-11	
 CERTIFIED	1u 100V 1210 (X, bus side)	C_1210_3225Metric	E	1	5	C382212	C382212	FS32X105K101EFG	PSA(Prosperity Dielectrics)	1210	expand	362904	0.0809	2026-09-12	
 CERTIFIED	1u 100V 1210 (X, input side)	C_1210_3225Metric	E	1	5	C382212	C382212	FS32X105K101EFG	PSA(Prosperity Dielectrics)	1210	expand	362904	0.0809	2026-09-12	
-CERTIFIED	1u 25V	C_0603_1608Metric	C	8	40	C5673	C5673	CL10A105KA8NNNC	Samsung Electro-Mechanics	0603	expand	4538374	0.0276	2026-09-15	
+CERTIFIED	1u 25V	C_0603_1608Metric	C	8	40	C106858	C106858	CC0603KRX7R8BB105	YAGEO	0603	expand	134022	0.0376	2026-09-17	
 CERTIFIED	2.2k	R_0603_1608Metric	B,C,D,E	12	60	C4190	C4190	0603WAF2201T5E	UNI-ROYAL(Uniroyal Elec)	0603	base	6577546	0.0022	2026-09-11	
 CERTIFIED	2.2u	C_0603_1608Metric	B	6	30	C57895	C57895	CL10A225KA8NNNC	Samsung Electro-Mechanics	0603	expand	956836	0.0163	2026-09-14	
 CERTIFIED	2.2u	C_0805_2012Metric	P	1	5	C19110	C19110	CL21B225KAFNNNE	Samsung Electro-Mechanics	0805	expand	118525	0.0375	2026-09-12	
@@ -147,22 +163,6 @@ CERTIFIED	2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3
 CERTIFIED	2N7002: the changeover's complement, so a voted WIFI_SEC moves both chains at once	SOT-23	B	1	5	C8545	C8545	2N7002	Jiangsu Changjing Electronics Technology Co., Ltd.	SOT-23	base	2066421	0.0163	2026-09-11	
 CERTIFIED	2m 2512 2W (sense)	R_2512_6332Metric	P	1	5	C154685	C154685	LR2512-23R002F4	RALEC	2512	expand	32802	0.1885	2026-09-12	
 CERTIFIED	2mOhm 1% 2512 (ISNS)	R_2512_6332Metric	A	1	5	C2903471	C2903471	HoJLR2512-3W-2mR-1%	Milliohm	2512	expand	13329	0.1039	2026-09-12	
-CERTIFIED	3 mm BAT1 amber, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm BAT2 green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm BAT3 green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm BAT4 green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm BAT5 green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm CHG white, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm GPS green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm LTE green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm MCAUT amber, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm MESH green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm MSG white, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm MWARN red, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm SAT green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm SHORE green, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm SOSACT red, sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
-CERTIFIED	3 mm TX red (RF hazard), sunlight viewable	LED_D3.0mm	C	1	5	C2089	C2089	8550SS-TA(RANGE:160-300)	Jiangsu Changjing Electronics Technology Co., Ltd.	TO-92-3	expand	1357	0.0321	2026-09-15	
 CERTIFIED	3.3n	C_0603_1608Metric	A,B	10	50	C1613	C1613	CL10B332KB8NNNC	Samsung Electro-Mechanics	0603	base	325929	0.0083	2026-09-11	
 CERTIFIED	3.3u	C_0805_2012Metric	A	1	5	C7393948	C7393948	TCC0805X7R335K250FT	CCTC	0805	expand	194336	0.0313	2026-09-12	
 CERTIFIED	300R	R_0603_1608Metric	C	6	30	C23025	C23025	0603WAF3000T5E	UNI-ROYAL(Uniroyal Elec)	0603	base	1924788	0.0039	2026-09-11	
@@ -203,8 +203,6 @@ CERTIFIED	54 V to the PoE injector on B16 (JST-VH): + -	JST_VH_B2P-VH_1x02_P3.96
 CERTIFIED	5mOhm 1% 2512 (CS)	R_2512_6332Metric	A	4	20	C500739	C500739	LR2512D-3W-5mR-1%	Milliohm	2512	expand	15156	0.12	2026-09-12	
 CERTIFIED	5mOhm 1% 2512 (RSR, charge current sense)	R_2512_6332Metric	A	1	5	C500739	C500739	LR2512D-3W-5mR-1%	Milliohm	2512	expand	15156	0.12	2026-09-12	
 CERTIFIED	5mOhm 1% 2512 (shunt)	R_2512_6332Metric	A	4	20	C500739	C500739	LR2512D-3W-5mR-1%	Milliohm	2512	expand	15156	0.12	2026-09-12	
-CERTIFIED	6 MHz 3225 (CL 20 pF; C1 = C2 = 27 pF and Rd 1.5k per SLLS413 figure 6)	Crystal_SMD_3225-4Pin_3.2x2.5mm	D	1	5	C448646	C448646	NX3225SA-25MHz-STD-CSR-6	NDK	SMD3225-4P	expand	12095	0.459	2026-09-12	
-CERTIFIED	6 MHz 3225 (codec clock; 18 pF loads, to confirm on the EVM sheet)	Crystal_SMD_3225-4Pin_3.2x2.5mm	D	1	5	C448646	C448646	NX3225SA-25MHz-STD-CSR-6	NDK	SMD3225-4P	expand	12095	0.459	2026-09-12	
 CERTIFIED	6.04k 1% (ISET)	R_0603_1608Metric	B	1	5	C25977	C25977	0603WAF6041T5E	UNI-ROYAL(Uniroyal Elec)	0603	expand	91998	0.0013	2026-09-14	
 CERTIFIED	6.65k 1% (OVLO: 40 V)	R_0603_1608Metric	E	1	5	C60344	C60344	0603WAF6651T5E	UNI-ROYAL(Uniroyal Elec)	0603	expand	9980	0.0022	2026-09-12	
 CERTIFIED	6.8uH XAL1010-682ME	L_Coilcraft_XAL1010-XXX	A	2	10	C3911637	C3911637	XAL1010-682MED	Coilcraft	SMD,11.3x10mm	expand	42	19.9532	2026-09-12	
@@ -372,9 +370,9 @@ CERTIFIED	SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software
 CERTIFIED	SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane	TSSOP-14_4.4x5mm_P0.65mm	B	4	20	C352974	C352974	SN74LVC32APWR	Texas Instruments	TSSOP-14	expand	25966	0.2295	2026-09-14	
 CERTIFIED	SS14 flyback across fan 1	D_SMB	E	1	5	C51897884	C51897884	SS14	Zhengxin	SMB(DO-214AA)	expand	4345	0.0236	2026-09-12	
 CERTIFIED	SS14 flyback across fan 2	D_SMB	E	1	5	C51897884	C51897884	SS14	Zhengxin	SMB(DO-214AA)	expand	4345	0.0236	2026-09-12	
-CERTIFIED	SS2040FL: EPD_SW -> VGH	D_SOD-123F	C	1	5	C55259975	C55259975	SS2040FL	FUXINSEMI	SOD-123FL	expand	13997	0.0245	2026-09-15	
-CERTIFIED	SS2040FL: pump -> VGL	D_SOD-123F	C	1	5	C55259975	C55259975	SS2040FL	FUXINSEMI	SOD-123FL	expand	13997	0.0245	2026-09-15	
-CERTIFIED	SS2040FL: pump clamp	D_SOD-123F	C	1	5	C55259975	C55259975	SS2040FL	FUXINSEMI	SOD-123FL	expand	13997	0.0245	2026-09-15	
+CERTIFIED	SS2040FL: EPD_SW -> VGH	D_SOD-123F	C	1	5	C268712	C268712	SS2040FL	PANJIT International	SOD-123FL	expand	10108	0.0794	2026-09-17	
+CERTIFIED	SS2040FL: pump -> VGL	D_SOD-123F	C	1	5	C268712	C268712	SS2040FL	PANJIT International	SOD-123FL	expand	10108	0.0794	2026-09-17	
+CERTIFIED	SS2040FL: pump clamp	D_SOD-123F	C	1	5	C268712	C268712	SS2040FL	PANJIT International	SOD-123FL	expand	10108	0.0794	2026-09-17	
 CERTIFIED	STM32H753VITx I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset	LQFP-100_14x14mm_P0.5mm	B	1	5	C114409	C114409	STM32H743VIT6	STMicroelectronics	LQFP-100(14x14)	expand	67	11.9605	2026-09-14	
 CERTIFIED	STM32H753VITx I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset	LQFP-100_14x14mm_P0.5mm	B	1	5	C114409	C114409	STM32H743VIT6	STMicroelectronics	LQFP-100(14x14)	expand	67	11.9605	2026-09-14	
 CERTIFIED	STM32H753VITx I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset	LQFP-100_14x14mm_P0.5mm	B	1	5	C114409	C114409	STM32H743VIT6	STMicroelectronics	LQFP-100(14x14)	expand	67	11.9605	2026-09-14	
@@ -433,7 +431,7 @@ CERTIFIED	U.FL: pigtail to A22's P2P jack, chain B	U.FL_Hirose_U.FL-R-SMT-1_Vert
 CERTIFIED	USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay	USB3_A_Receptacle_Wuerth_692122030100	B	1	5	C5355286	C5355286	692122030100	Wurth Elektronik	SMD	expand	138	3.2192	2026-09-12	
 CERTIFIED	USB device rail to B16 (JST-VH): + -	JST_VH_B2P-VH_1x02_P3.96mm_Vertical	A	1	5	C274411	C274411	B2P-VH-BL(LF)(SN)	JST	Plugin,P=3.96mm	expand	10946	0.1073	2026-09-12	
 CERTIFIED	USB-C 2.0 receptacle	USB_C_Receptacle_HRO_TYPE-C-31-M-12	B	3	15	C165948	C165948	TYPE-C-31-M-12	Korean Hroparts Elec	SMD	expand	275747	0.1858	2026-09-11	
-CERTIFIED	USBLC6-2SC6	SOT-23-6	A,B,C,D	13	65	C7519	C7519	USBLC6-2SC6	STMicroelectronics	SOT-23-6L	expand	38849	0.1827	2026-09-11	
+CERTIFIED	USBLC6-2SC6	SOT-23-6	A,B,C,D	15	75	C7519	C7519	USBLC6-2SC6	STMicroelectronics	SOT-23-6L	expand	38849	0.1827	2026-09-11	
 CERTIFIED	USBLC6-2SC6 ESD clamp on the SMBus pair	SOT-23-6	P	1	5	C7519	C7519	USBLC6-2SC6	STMicroelectronics	SOT-23-6L	expand	38849	0.1827	2026-09-11	
 CERTIFIED	Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10	Vishay_VEML7700	C	1	5	C504893	C504893	VEML7700-TR	Vishay Intertech	SMD-4P	expand	5979	1.1678	2026-09-11	
 CERTIFIED	W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)	Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm	C,E	2	10	C2843335	C2843335	W25Q16JVUXIQ	Winbond Elec	USON-8-EP(2x3)	expand	1697	1.576	2026-09-11	
@@ -516,3 +514,5 @@ HAND_FIT	U-174/U headset jack 2 (Amphenol Nexus class, drawing owed): 17 mm hole
 HAND_FIT	ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; ZEROIZE_HW low = wipe the secure element and assert the disk-key wipe (32.52)	ToggleBody_SPDT	C	1	5										APEM through Mouser, https://www.mouser.com/c/?q=5636ADKB-2V ; the SOS, EMCON and ZEROIZE locking toggles
 HAND_FIT	pre-charge pin, longer, mates first (32.24 AX)	Mill-Max_0858_power_pin	A	1	5										Mill-Max through Digi-Key, https://www.digikey.com/en/products?keywords=Mill-Max%200858 ; A's dock block pre-charge pin, the one that mates before the power pins. Same family as the 9 A pins above and in A's CPL exclusion list with them
 HAND_FIT	spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare	PogoPins_2x6	A	1	5										Preci-Dip, https://www.preci-dip.com ; 2x6 signal spring pins, sheet in v2/vendor/precidip/
+WRONG_MODEL	6 MHz 3225 (CL 20 pF; C1 = C2 = 27 pF and Rd 1.5k per SLLS413 figure 6)	Crystal_SMD_3225-4Pin_3.2x2.5mm	D	1	5	C448646	C448646	NX3225SA-25MHz-STD-CSR-6	NDK	SMD3225-4P	expand	12095	0.459	2026-09-12	the row asks for 6 MHz and the catalogue part is 25 MHz (C448646 NX3225SA-25MHz-STD-CSR-6)
+WRONG_MODEL	6 MHz 3225 (codec clock; 18 pF loads, to confirm on the EVM sheet)	Crystal_SMD_3225-4Pin_3.2x2.5mm	D	1	5	C448646	C448646	NX3225SA-25MHz-STD-CSR-6	NDK	SMD3225-4P	expand	12095	0.459	2026-09-12	the row asks for 6 MHz and the catalogue part is 25 MHz (C448646 NX3225SA-25MHz-STD-CSR-6)

@@ -2,16 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "declared": 14,
+  "declared": 15,
   "fail": 0,
-  "in_finish": 14,
-  "uncovered_classes": 3
+  "in_finish": 15,
+  "uncovered_classes": 1
  },
- "denominator": 14,
+ "denominator": 15,
  "evidence": [
-  "uncovered: pour_stitch.py on board A: a pour island with no via of its own net, which carries noth (prevented by declaring gnd_grid, which this board does not)",
-  "uncovered: stitch_prune.py on board A: a locked stitch via the pour has retreated from, which conne (prevented by declaring gnd_grid, which this board does not)",
-  "uncovered: zone_pad_via.py on board A: a pad its own plane cannot reach (prevented by declaring gnd_grid, which this board does not)"
+  "uncovered: pour_stitch.py on board A: a pour island with no via of its own net, which carries noth (prevented by declaring gnd_grid, which this board does not)"
  ],
  "inputs": {
   "closers": "pcb_closers.yaml"
@@ -26,10 +24,10 @@
  ],
  "tool": "closer_audit",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "git_head": "7431fca209b0",
+  "tools_tree_sha": "52055efbc030c053"
  },
- "ts": "2026-09-16T19:31:24Z",
+ "ts": "2026-09-17T00:41:19Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "7431fca209b0+dirty"
 }

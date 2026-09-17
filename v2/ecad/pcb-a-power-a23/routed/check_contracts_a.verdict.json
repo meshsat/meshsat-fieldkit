@@ -21,10 +21,10 @@
  ],
  "tool": "check_contracts_a",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "git_head": "a2acab535515",
+  "tools_tree_sha": "c9da12a4d86d5cb1"
  },
- "ts": "2026-09-16T19:31:34Z",
+ "ts": "2026-09-17T00:20:52Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "a2acab535515+dirty"
 }

@@ -1,0 +1,33 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "BENCH_FITTED": 2,
+  "CERTIFIED": 62,
+  "HAND_FIT": 2,
+  "WRONG_MODEL": 2
+ },
+ "denominator": 68,
+ "evidence": [
+  "WRONG_MODEL: 6 MHz 3225 (CL 20 pF; C1 = C2 = 27 pF and Rd 1.5k per SLLS41 (the row asks for 6 MHz and the catalogue part is 25 MHz (C44)",
+  "WRONG_MODEL: 6 MHz 3225 (codec clock; 18 pF loads, to confirm on the EVM  (the row asks for 6 MHz and the catalogue part is 25 MHz (C44)"
+ ],
+ "inputs": {},
+ "note": "the rows this board carries; the set's own verdict is jlc_certify",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "jlc_certify_d",
+ "tools": {
+  "git_head": "7431fca209b0",
+  "tools_tree_sha": "52055efbc030c053"
+ },
+ "ts": "2026-09-17T00:41:36Z",
+ "verdict": "FAIL",
+ "version": "7431fca209b0+dirty"
+}

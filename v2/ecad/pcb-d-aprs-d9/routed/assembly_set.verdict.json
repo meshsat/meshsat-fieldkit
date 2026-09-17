@@ -3,30 +3,13 @@
  "applicable": true,
  "counts": {
   "boards": 1,
-  "fail": 7,
-  "unchecked_footprints": 11,
-  "unverified_rows": 7
+  "fail": 1,
+  "unchecked_footprints": 0,
+  "unverified_rows": 0
  },
- "denominator": 18,
+ "denominator": 1,
  "evidence": [
-  "D: IDC-Header_2x08_P2.54mm_Vertical_NarrowPad (matched by ^IDC-Header_2x) carries a rotation offset nobody has compared with the assembler's preview",
-  "D: LED_0603_1608Metric (matched by ^LED_0603) carries a rotation offset nobody has compared with the assembler's preview",
-  "D: SOT-23 (matched by ^SOT-23) carries a rotation offset nobody has compared with the assembler's preview",
-  "D: SOT-23-5 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
-  "D: SOT-23-6 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
-  "D: TSSOP-24_4.4x7.8mm_P0.65mm (matched by ^TSSOP-24) carries a rotation offset nobody has compared with the assembler's preview",
-  "D: WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm (matched by ^WSON-6) carries a rotation offset nobody has compared with the assembler's preview",
-  "not compared with a preview: Crystal_SMD_3225-4Pin_3.2x2.5mm",
-  "not compared with a preview: D_SMB",
-  "not compared with a preview: D_SOD-123",
-  "not compared with a preview: JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical",
-  "not compared with a preview: JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
-  "not compared with a preview: JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical",
-  "not compared with a preview: JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
-  "not compared with a preview: LQFP-32_7x7mm_P0.8mm",
-  "not compared with a preview: QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm",
-  "not compared with a preview: QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm",
-  "not compared with a preview: VSSOP-8_3x3mm_P0.65mm"
+  "there is no rotation table at ../release/revA/order/jlc-rotations.csv, so no rotation has been verified at all"
  ],
  "inputs": {
   "rotations": "../release/revA/order/jlc-rotations.csv"
@@ -42,9 +25,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "03063ce06e92cec5"
  },
- "ts": "2026-09-16T19:34:31Z",
+ "ts": "2026-09-17T00:43:09Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -8,8 +8,8 @@
  },
  "denominator": 2,
  "evidence": [
-  "TRK_LSENSE runs 0.209 mm from TRK_SW2 and its own list asks for 0.50",
-  "WATER_SENSE runs 0.556 mm from TRK_SW1 and its own list asks for 1.00"
+  "TRK_LSENSE runs 0.209 mm from TRK_SW2 and its own list asks for 0.50; the two are inside that limit over 2.71 mm of copper, 12.90 mm from the pads of the part that carries both nets",
+  "WATER_SENSE runs 0.556 mm from TRK_SW1 and its own list asks for 1.00; the two are inside that limit over 20.49 mm of copper, with no part carrying both nets on this board"
  ],
  "inputs": {
   "board": "e",
@@ -26,9 +26,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "03063ce06e92cec5"
  },
- "ts": "2026-09-16T19:35:05Z",
+ "ts": "2026-09-17T00:43:45Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

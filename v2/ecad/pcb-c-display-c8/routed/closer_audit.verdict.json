@@ -24,10 +24,10 @@
  ],
  "tool": "closer_audit",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "572f493cca8aad3d"
+  "git_head": "7431fca209b0",
+  "tools_tree_sha": "52055efbc030c053"
  },
- "ts": "2026-09-16T23:26:21Z",
+ "ts": "2026-09-17T00:41:21Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "7431fca209b0+dirty"
 }

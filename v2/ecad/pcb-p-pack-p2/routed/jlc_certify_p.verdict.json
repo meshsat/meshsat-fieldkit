@@ -1,0 +1,27 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "CERTIFIED": 19
+ },
+ "denominator": 19,
+ "evidence": [],
+ "inputs": {},
+ "note": "the rows this board carries; the set's own verdict is jlc_certify",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "jlc_certify_p",
+ "tools": {
+  "git_head": "7431fca209b0",
+  "tools_tree_sha": "52055efbc030c053"
+ },
+ "ts": "2026-09-17T00:41:36Z",
+ "verdict": "PASS",
+ "version": "7431fca209b0+dirty"
+}

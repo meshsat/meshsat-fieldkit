@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "ledgers": 4,
+  "problems": 0,
+  "rows": 224,
+  "witnessed": 0
+ },
+ "denominator": 224,
+ "evidence": [],
+ "inputs": {
+  "ecad": {
+   "path": "/root/sweep4/v2/ecad",
+   "sha256_16": null
+  }
+ },
+ "note": "every chain re-walked, every row re-hashed, every witness beside one checked",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [
+  "DOC-002"
+ ],
+ "tool": "ledger_verify",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "03063ce06e92cec5"
+ },
+ "ts": "2026-09-17T00:43:16Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}

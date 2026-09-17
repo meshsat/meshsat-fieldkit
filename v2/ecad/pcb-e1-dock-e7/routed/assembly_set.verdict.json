@@ -3,30 +3,13 @@
  "applicable": true,
  "counts": {
   "boards": 1,
-  "fail": 4,
-  "unchecked_footprints": 14,
-  "unverified_rows": 4
+  "fail": 1,
+  "unchecked_footprints": 0,
+  "unverified_rows": 0
  },
- "denominator": 18,
+ "denominator": 1,
  "evidence": [
-  "E: LED_0603_1608Metric (matched by ^LED_0603) carries a rotation offset nobody has compared with the assembler's preview",
-  "E: SOT-23 (matched by ^SOT-23) carries a rotation offset nobody has compared with the assembler's preview",
-  "E: SOT-23-5 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
-  "E: SOT-23-6 (matched by ^SOT-23-[568]) carries a rotation offset nobody has compared with the assembler's preview",
-  "not compared with a preview: CP_Elec_6.3x7.7",
-  "not compared with a preview: CP_Elec_8x6.7",
-  "not compared with a preview: Crystal_SMD_3225-4Pin_3.2x2.5mm",
-  "not compared with a preview: D_SMB",
-  "not compared with a preview: D_SMC",
-  "not compared with a preview: D_SOD-123",
-  "not compared with a preview: Fuseholder_Blade_Mini_Keystone_3568",
-  "not compared with a preview: JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
-  "not compared with a preview: PinHeader_1x03_P2.54mm_Vertical",
-  "not compared with a preview: PinHeader_1x04_P2.54mm_Vertical",
-  "not compared with a preview: PinHeader_1x05_P2.54mm_Vertical",
-  "not compared with a preview: PinHeader_1x06_P2.54mm_Vertical",
-  "not compared with a preview: QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
-  "not compared with a preview: VSSOP-10_3x3mm_P0.5mm"
+  "there is no rotation table at ../release/revA/order/jlc-rotations.csv, so no rotation has been verified at all"
  ],
  "inputs": {
   "rotations": "../release/revA/order/jlc-rotations.csv"
@@ -42,9 +25,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "03063ce06e92cec5"
  },
- "ts": "2026-09-16T19:35:05Z",
+ "ts": "2026-09-17T00:43:46Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
