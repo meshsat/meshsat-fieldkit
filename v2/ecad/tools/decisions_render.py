@@ -53,9 +53,18 @@ def render():
     pairs = 0
     for d in op:
         for rid, boards in (d.get("blocks") or {}).items(): pairs += len(boards)
-    L += [RR._wrap("**%d decisions are open and they hold %d rule-board pairs of the 300 the set is judged on.** "
+    # THE DENOMINATOR IS COMPUTED, NOT TYPED (17 September 2026). It read "of the 300" while the set was judged
+    # on 313: two BLOCKERS that had applied to no board at all came into scope that afternoon, and a page that
+    # states a total has to state the one the gates are using or it is a claim about a set nobody is measuring.
+    try:
+        import rules_status as _RS
+        _den = _RS.counts([r for b in _RS.manifest()["boards"] for r in _RS.board_status(b)["rows"]])["denominator"]
+    except BaseException:
+        _den = None
+    L += [RR._wrap("**%d decisions are open and they hold %d rule-board pairs of the %s the set is judged on.** "
                    "A pair held by a decision is not a defect in the board: it is a question nobody has answered, "
-                   "and until it is answered the rule can be neither passed nor failed." % (len(op), pairs)), ""]
+                   "and until it is answered the rule can be neither passed nor failed."
+                   % (len(op), pairs, _den if _den else "applicable pairs")), ""]
     L += ["| # | what is being decided | holds | boards | asked |", "|---|---|---|---|---|"]
     for d in op:
         b = sorted({x for v in (d.get("blocks") or {}).values() for x in v})
