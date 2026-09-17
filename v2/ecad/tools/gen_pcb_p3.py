@@ -273,8 +273,20 @@ cls(ns.GetDefaultNetclass(), 0.16, 0.25, 0.6, 0.3)
 # for that combination is 0.16 for both track width and spacing (rule RTE-001, 16 September 2026). The widths
 # stay as they are, because every one of them is already above 0.16.
 PATTERNS = [("CELL4", "PWR"), ("FUSED", "PWR"), ("SW", "PWR"), ("PACK_P", "PWR"), ("PACK_N", "PWR"), ("GND", "GNDC"), ("CELL1", "SENSE"), ("CELL2", "SENSE"), ("CELL3", "SENSE")]
+# SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
+# of the table so a sensitive net wins over a pattern that also names it; the DSN class-pair clearance of route_one.sh
+# (FR_CLASS_CLEAR, appendix 32.222) is what reads it (17 September 2026, rule ANA-001).
+try:
+    import yaml as _yaml, os as _os
+    _sens = ((_yaml.safe_load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "pcb_sensitive.yaml"))) or {}).get("boards") or {}).get("p") or {}
+    _sens_nets = [n["net"] for n in (_sens.get("nodes") if isinstance(_sens, dict) else _sens) or []]
+except BaseException as _e:
+    _sens_nets = []; print("SENSE class: pcb_sensitive.yaml not read (%s), no sensitive net moves class" % type(_e).__name__)
+PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS
+print("SENSE class: %d declared sensitive net(s) take it" % len(_sens_nets))
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]
 try:
+    nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.16, 0.25, 0.6, 0.3); ns.SetNetclass("SENSE", nse)
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.3, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)   # P2 (8 Sep 2026): the current runs in the locked 2 oz bands; the class width is for the sense, gate and test-point links the router lays (1.0 mm left three of them open)
     nsn = pcbnew.NETCLASS("SENSE"); cls(nsn, 0.16, 0.4, 0.6, 0.3); ns.SetNetclass("SENSE", nsn)
     ng = pcbnew.NETCLASS("GNDC"); cls(ng, 0.16, 0.5, 0.6, 0.3); ns.SetNetclass("GNDC", ng)
