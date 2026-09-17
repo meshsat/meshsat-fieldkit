@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**22 of 57 rules carry a gap.**
+**20 of 57 rules carry a gap.**
 
 ## absent (1)
 
@@ -23,7 +23,7 @@ user touches most. What it does NOT do is test anything: this rule is verified a
 been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.  
 *Close it by* The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts each covers and reliability.py checks the coverage, seven boards passing. The TEST PLAN for the prototype is the laboratory stage and belongs with it. Owner **OWNER**, after ENV-001. Effort P50 0h, P80 0h.
 
-## generated only (4)
+## generated only (3)
 
 **ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, ENFORCED)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
@@ -51,18 +51,6 @@ B33_FB at 8.47 mm, and board E keeps both of its own, one of which runs 20.49 mm
 the protection is designed and its thresholds are configured in software; no check compares a threshold
 against the cell's own limits, and the cell is not chosen  
 *Close it by* the cell's datasheet on file, the threshold table derived from it, and the prototype protection test. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
-
-**GND-001 one deliberate ground system** (MUST_JUSTIFY, ENFORCED)  
-phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate
-or where a crossing happens 16 September 2026: IT IS READ FROM THE NETLIST AND COMPARED WITH THE BOARD'S OWN
-DECLARATION. ground_system.py finds every ground net, the parts that touch more than one of them (the
-crossing points) and every net whose parts sit on both sides (the signals that cross), and requires each to
-be declared in boards/<letter>.json. Six boards declare one ground; board E declares two, and what the gate
-found there is the reason this rule exists: GND_V, the vehicle-side return, meets GND at exactly one part,
-the second winding of the SRF1260 common-mode choke, and DCIN_PGD and SHORE_INHIBIT cross the partition. The
-declaration says in words that this is a FILTER and not an isolation barrier, which is the reading that would
-otherwise be made by anyone designing to it.  
-*Close it by* DONE 17 September 2026: every board states its ground system in boards/<letter>.json and ground_system.py judges it against the netlist, six of six passing. Board E's two-ground partition is declared with its single crossing, the SRF1260 choke, and the two slow signals that cross it. Owner **SESSION**. Effort P50 0h, P80 0h.
 
 **RF-001 RF paths are designed as RF** (BLOCKER, ENFORCED)  
 the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
@@ -146,30 +134,7 @@ defect of this morning one level down, and it means no board in this set current
 outside its declared exceptions.  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (11)
-
-**BAT-002 the energy chain is bounded end to end** (BLOCKER, ENFORCED)  
-the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end 16
-September 2026: THE CHAIN IS DRAWN AND GATED. pcb_energy_chain.yaml carries it end to end, nine stages from
-the 4S cell block to the eFused branches and a second entry for the shore and vehicle input, each with its
-conductor and connector rating, its protective element, the prospective fault current with the derivation,
-and the stage it protects. energy_chain.py judges 69 checks over it: every number's source is a file this
-tree holds, every protective element is in its board's own netlist by reference, and the four coordination
-tests (the element is at or below what it protects, at or above the path's peak, able to interrupt what is
-available, and followed by the stage it protects). It passes. Its first run refused a stage that carried the
-pack node's 18 A peak while naming a 2 A eFuse as its protection, which was a modelling error and is now two
-stages. WHAT REMAINS is the rule's own authority: the ratings come from the parts' datasheets (Littelfuse
-ATOF, Samsung INR18650-35E, Amass XT60, TI BQ4050 and CSD17570Q5B) but the SELECTION CRITERIA are engineering
-practice, and the standards the fuse cites for them (SAE J1284, ISO 8820-3) are not in this tree.
-littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED (the CLK-001 shape): the gate
-decides four things that are definitional rather than empirical, that the element is at or below the rating
-of what it protects, at or above the path's own declared peak, able to interrupt the fault current declared
-at its position, and followed by the stage it protects; plus that every rating's source file is in this tree
-and every protective element is in its board's netlist. What it PRINTS rather than decides is the melting
-time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own
-authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status
-SOURCE_UNVERIFIED.  
-*Close it by* DONE 17 September 2026: ECSS-Q-ST-30-11C Rev.2 clause 6.17 is the authority and the gate enforces it. What remains is a DESIGN item rather than a document: board E's shore inlet carries 8.0 A of a 10.0 A fuse on 10 A of copper, which is 80 percent of the fuse rating, and it needs wider input copper and a larger fuse or a lower declared continuous current. Owner **SESSION**. Effort P50 0h, P80 0h.
+## source or applicability unresolved (10)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
@@ -311,10 +276,10 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (35)
+## covered (37)
 
-These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-001,
-CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, IMP-002, INT-001, MEC-001, PI-001, PI-002, PI-003, PLC-001,
-PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002,
-SCH-003, SCH-004, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
+These rules have an executable gate, a machine-readable verdict and behavioural fixtures: BAT-002, CLK-001,
+CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, GND-001, IMP-002, INT-001, MEC-001, PI-001, PI-002,
+PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002,
+SCH-001, SCH-002, SCH-003, SCH-004, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
 
