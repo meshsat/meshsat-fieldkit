@@ -41,7 +41,10 @@ READERS = {"drc.sh", "guarded.sh", "hardset.py", "verdict.py", "via_audit.py", "
            # carry_placed.py reads the placed snapshot and the board being cut and writes verdicts; it never
            # opens either for writing, which is the property that lets it decide whether the placement
            # measurement belongs to this board (17 September 2026).
-           "carry_placed.py"}
+           "carry_placed.py",
+           # safe_lines.py reads the netlist and the board's declaration and writes a verdict: rule SCH-004
+           # blocks the deliverable the way TRN-001 does beside it, and neither touches copper (17 Sep 2026).
+           "safe_lines.py"}
 
 
 def finish_stages(path=None):
