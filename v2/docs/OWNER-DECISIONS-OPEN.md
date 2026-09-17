@@ -173,6 +173,20 @@ project's own defaults. A rule passing against a bar nobody set is not the same 
 **Recommended:** the draft in v2/docs/OPERATING-ENVELOPE.md, whose two narrowest parts are the battery-bay
 VOC sensor and the e-paper
 
+**Measured:** THE DRAFT'S OWN NUMBERS, so the ruling can be read without opening it (17 September 2026). It
+proposes AMBIENT -20 to +40 C in use with three carve-outs, each traceable to a part: below -10 C the pack is
+warmed by its heater mat before charge and discharges to the cells' -10 C surface limit; below -15 C the
+e-paper is outside its range and updates slowly or not at all, which is a degraded display and not a dead
+kit, because it carries identity with the power off; above +35 C the kit runs its reduced mode so the inside
+air stays under the +55 C the battery-bay sensor and the pack need. STORAGE -20 to +45 C for three months and
+-20 to +25 C for a year, at the pack's ex-factory charge, the pack being the only part that makes storage
+narrower than use. The parts that bound it, each with its datasheet in the tree: the Pervasive Displays
+e-paper at -15 to +60, the Sensirion SGP41 in the battery bay at -20 to +55, the cells at 0 to +45 charging
+and -10 to +60 discharging, the Xenarc monitor at -20 to +70. The sharp line is the third: a sealed case with
+three loaded modules puts the pack in air about 16 K over ambient, so charging holds off above about +25 C
+ambient, which the pack thermistor on the charger's JEITA input already does in hardware. Four rules resolve
+against this and nothing else: ENV-001, ISO-001, THM-001 and REL-001.
+
 | rule | | boards | result today |
 |---|---|---|---|
 | ENV-001 | operating envelope declared | A, B, C, D, E, E5, P | INCONCLUSIVE |
