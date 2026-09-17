@@ -744,3 +744,28 @@ def t_the_rating_reader_does_not_invent_volts():
     assert derate.rating("100R 1% 2512") is None
     # two ratings in one string: the SMALLER is what the part is good for
     assert derate.rating("in 60V out 20V") == 20.0
+
+
+def t_a_board_with_no_part_declares_its_zero_rather_than_leaving_the_last_verdict_standing():
+    """Board E5, 17 September 2026. The dock block is copper, plated targets, wire lands and four mounting
+    holes: no schematic, no netlist, no part to buy or to derate. The derating gate runs off a netlist, so it
+    never ran for E5, and rule CMP-001 read a `derate` verdict taken for another board under an older rule set
+    and called it E5's evidence. A declared zero is an answer and an undeclared zero is not.
+
+    Both proofs: the declaration is a PASS with a denominator of nothing and a reason, and a caller that gives
+    no reason still has to give the flag, so a zero can never arrive by accident."""
+    import tempfile, subprocess, json as _j
+    d = tempfile.mkdtemp(prefix="derate-empty-")
+    env = dict(os.environ, VERDICT_DIR=d)
+    p = subprocess.run([sys.executable, os.path.join(TOOLS, "derate.py"), "board.kicad_pcb",
+                        "--no-components", "it is copper and holes"], capture_output=True, text=True, env=env)
+    rec = _j.load(open(os.path.join(d, "derate.verdict.json")))
+    assert rec["verdict"] == "PASS", (rec, (p.stdout + p.stderr)[-300:])
+    assert rec["denominator"] == 0 and "declared zero" in rec["note"], rec
+    assert "copper and holes" in rec["note"], "the reason the caller gave is not in the verdict"
+    # and without the flag, a missing netlist is still INCONCLUSIVE and never a pass
+    d2 = tempfile.mkdtemp(prefix="derate-missing-")
+    subprocess.run([sys.executable, os.path.join(TOOLS, "derate.py"), os.path.join(d2, "nope.net")],
+                   capture_output=True, text=True, env=dict(os.environ, VERDICT_DIR=d2))
+    rec2 = _j.load(open(os.path.join(d2, "derate.verdict.json")))
+    assert rec2["verdict"] == "INCONCLUSIVE", rec2
