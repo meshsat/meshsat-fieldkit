@@ -200,6 +200,14 @@ stages:
    protection: {ref: F1, kind: fuse, what: "10 A ATOF blade fuse (Keystone 3568 holder): vehicle input", rating_a: 10.0,
                 interrupting_a: 1000.0, i2t_a2s: 115.0,
                 basis: "v2/vendor/battery/littelfuse-287-atof.pdf, the 10 A row"}
+   derating: {table: atof287, ambient_c: 56,
+              why: "THE MAKER'S OWN DERATING, which ECSS-Q-ST-30-11C Rev.2 6.17.1a asks for when the element is
+                not the Cermet its Table 6-17 is stated for. The ATOF datasheet publishes the max allowed
+                continuous load per ambient with a 20 percent temperature security margin in it already, and
+                the 10 A row reads 10 A to 20 C and 8 A at 65 C. The ambient here is the INSIDE AIR of the
+                draft operating envelope at its worst declared case: +40 C outside with three modules loaded
+                and the lid open is ambient plus 16 K, so 56 C, which the table reads at its 65 C column. This
+                number moves with owner decision 34 and is declared where the envelope can be seen to move it."}
    protects: null
    note: "an ideal-diode FET and an SMCJ33A clamp sit behind this fuse; decision 31 records that the clamp's
      33 V stand-off is wrong against the board's own declared 9 to 36 V input range, which is a part choice
