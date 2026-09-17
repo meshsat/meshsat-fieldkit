@@ -139,7 +139,7 @@ decisions:
       TRN-001: [a, d, e]
     evidence: "BOARD D IS IN THIS DECISION TOO, AND ITS GATE HAD BEEN SAYING SO WHILE THE REGISTRY SAID THE RULE
       DID NOT APPLY TO IT (17 September 2026). Board D declares four connectors whose conductors leave the case
-      and `port_protect` reads SEVEN of its fourteen judged conductors reaching a semiconductor with nothing
+      and `port_protect` reads SEVEN of its SEVEN judged conductors reaching a semiconductor with nothing
       between: J_HS1 and J_HS2, the two headset jacks on the face that a person plugs a headset into, three
       conductors each (speaker, microphone, push to talk), and J_PAOUT, the 30 W power amplifier output. Its
       antenna jack J_ANT is the one that is answered: it is protected off board by the PolyPhaser GTH-SFF-AL
