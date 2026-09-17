@@ -59,6 +59,41 @@ decisions:
     status: open
     ask: "capacitive coupling as the switch vendor's clause 6.6 permits, or magnetics on all three links"
     recommendation: "ask the module's maker before changing copper; the switch vendor's own clause permits what is built"
+    evidence: "MEASURED ON BOTH SIDES AND ON THE MAKER'S OWN CARRIER (17 September 2026), and the answer is that
+      three of the switch vendor's four conditions are met by the copper as built and the fourth cannot be met by
+      anyone in this project. THE LINK AS BUILT, from board B's netlist: each of the three module links carries
+      eight conductors, and every one of the twenty-four runs from a module receptacle pin (U30A, U31A, U32A) to
+      ONE 100 nF 0402 capacitor and on to a KSZ9897RTXI port pin, with no other node on any of those nets. The
+      fourth switch port is the one that leaves the case and it is not transformer-less: it goes through T1, a
+      Pulse H5007NL 1:1 magnetics module, into the RJ45.
+      THE CLAUSE, quoted from the document in this tree (v2/vendor/cluster/ksz989x-hw-design-checklist.pdf,
+      DS00004151A page 12, section 6.6 'Capacitive Coupling Option'): the family 'may be used in transformer-less
+      applications where the PHY-to-PHY connection is within one PCB or interconnected PCBs, and a cable is not
+      needed', with 'a single DC blocking 0.1 uF capacitor placed in series on each of the eight signals' and 'no
+      additional components between the KSZ989x and the capacitor'. Both are true of this board, conductor by
+      conductor. The third bullet is the open half and it is the vendor pointing away from itself: 'The other
+      device may require termination or other circuitry. Refer to Microchip documentation for that device.' The
+      other device is not Microchip's: it is the Broadcom PHY inside the compute module, whose datasheet is not
+      published, so the document this clause sends the reader to does not exist for this link.
+      WHAT THE MODULE'S OWN MAKER DOES, read today from their design files in this tree
+      (v2/vendor/cm5/cm5io-kicad.zip, sheet CM5_GPIO.kicad_sch): the module's TRD0 to TRD3 pairs run straight into
+      U3, a TRJG0926HENL MagJack with integrated magnetics, with no series capacitor and no termination network on
+      the module side at all. So the maker's own reference is magnetics, and because it is magnetics it says
+      nothing about what their PHY needs when the transformer is removed. That is the question to put to them, and
+      it is one question: does the CM5's PHY support transformer-less operation, and does it need termination.
+      THE COST OF THE FALLBACK, measured rather than estimated: the part is the one this board already carries,
+      Pulse H5007NL (C6384935, 1.75 USD, stock 761 at JLCPCB on 17 September 2026), so three more cost 5.26 USD a
+      board and 982 mm2 of board area (courtyard 18.6 x 17.6 mm each, 327 mm2), and the twenty-four coupling
+      capacitors come off. The checklist itself offers that route in the same clause: 'Another option is to achieve
+      DC isolation using single magnetics, with or without Common-mode chokes.'
+      WHAT THE BOARD IS ASKING THESE LINKS TO DO, from the placed board: the conductors run 96 to 115 mm from the
+      receptacle to the capacitor and 121 to 252 mm from the capacitor to the switch, so the longest of the three
+      links is about 345 mm of gigabit copper end to end on a 330 x 200 mm board. That is inside one PCB, which is
+      the clause's own case, and it is long enough that the loss budget is worth stating whichever way this is
+      ruled.
+      ONE CONDITION IS NOT COPPER AND IS IN NO CONTRACT YET: the same clause requires auto-negotiation to stay
+      enabled when the link runs at 1000M. Nothing in this tree's software contract records that, so a bridge that
+      ever forces a fixed-speed link on ports 1 to 3 would break a transformer-less link and nothing would say why."
     blocks:
       GND-002: [a, b, c, d, e, p]
       INT-002: [b]
