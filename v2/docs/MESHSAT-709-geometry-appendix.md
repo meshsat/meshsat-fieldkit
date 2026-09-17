@@ -9342,3 +9342,12 @@ from D13 (`gen_pcb_d3.py`), a 0.6 mm drill being rated 1.19 A. D13 (`/root/drf`,
 cap, then the finish) also carries the thermal vias in every exposed pad, the SENSE class, the via_parallel and
 widen stages and the land-judged pin maps; its clamps still wait on decision 31, so its folder stays refused and
 the board is the measurement (D12 is 0 hard, 0 unrouted, the number to beat). Suite 972 passing, 0 failing.
+
+**Addendum, 01:42 CEST: the sweep judges PLC-001 on a committed pre-route snapshot.** Every phase directory now
+carries the pre-route board its route was cut from (`routed/<stem>-preroute.kicad_pcb`, the six that
+`placed_rejudge` proved tonight, 17.6 MB in all: a board that exists only on a rented box exists nowhere, and this
+one is the only honest input for the placement predictor). `gate_sweep.sh` runs `place_audit` on it in its own
+out dir and `carry_placed` proves the snapshot's 211 footprints (board D) are the routed board's before the verdict
+is written as this board's: proved on the hub, `place_audit PASS of 6` carried under the routed board's sha. With
+no snapshot the predictor runs on the board and declines it if routed. Rule `tests/test_sweep_placement.py` holds
+both halves, and `rejudge_all.sh` is no longer needed after a sweep.

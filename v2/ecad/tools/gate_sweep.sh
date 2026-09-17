@@ -169,7 +169,19 @@ else
   run "exposed ports (declared)" python3 $T/port_protect.py --board $L
   run "safety lines (declared)"  python3 $T/safe_lines.py --board $L
 fi
-run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
+# PLC-001 IS JUDGED ON THE PRE-ROUTE BOARD, NEVER ON THE ROUTED ONE (18 September 2026). The predictor's subject
+# is the board after the escape pass and the pre-router; on a routed board the router has covered escapes and the
+# closers pruned dangling ones, so it read 19 collisions on B21 where the placed board read 10, and the sweep wrote
+# that over the placed reading. Each phase directory carries its proved pre-route snapshot in routed/ now; the
+# predictor runs on it in its own out dir and carry_placed proves its footprints are the routed board's before the
+# verdict is written as this board's. Where there is no snapshot, place_audit itself declines a routed board.
+if [ -f "$P/routed/$N-preroute.kicad_pcb" ]; then
+  mkdir -p out/pre; cp "$P/routed/$N-preroute.kicad_pcb" out/pre/$N-preroute.kicad_pcb; cp $N.kicad_pro out/pre/$N-preroute.kicad_pro
+  run "placement predictor (pre-route board)" env VERDICT_DIR=$S/out/pre python3 $T/place_audit.py out/pre/$N-preroute.kicad_pcb
+  run "carry the placement reading" python3 $T/carry_placed.py out/pre/$N-preroute.kicad_pcb $N.kicad_pcb out/pre out --verdicts place_audit
+else
+  run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
+fi
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read
 # INCONCLUSIVE on all seven boards for one reason: their evidence was taken under an older rule set and no
 # sweep produced a new one. The contracts need the OTHER boards' netlists, and this tree already has them: the
