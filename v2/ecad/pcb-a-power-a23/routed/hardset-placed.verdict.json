@@ -29,8 +29,8 @@
    "sha256_16": "58e26c67987b1daa"
   },
   "drc": {
-   "path": "out/placed-drc.json",
-   "sha256_16": "855dd7f788257724"
+   "path": "out/pcb-a-power-placed-drc.json",
+   "sha256_16": "fe19215d0c5b9ca2"
   },
   "measured_board": {
    "sha256_16": "086e99d663d4a7ea",
@@ -41,7 +41,7 @@
  "note": "placed (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts) | carried to the routed board from the placed board after comparing all 400 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "PLC-001"
@@ -49,9 +49,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "2699340c90cd4eed"
+  "tools_tree_sha": "92144c55e415e97b"
  },
- "ts": "2026-09-17T11:02:01Z",
+ "ts": "2026-09-17T19:58:53Z",
  "verdict": "PASS",
  "version": "unknown"
 }
