@@ -9384,3 +9384,10 @@ check_pcb_e PASS, netlist_board PASS 818 (Q7 answered), dc_density PASS 4 of 4 (
 port_protect FAIL (decision 31). Why it never showed before: on every earlier route the pre-laid vias' class drill
 matched their own, or the class was Default; E12 is the first board whose pre-router laid the SMALL via on a net
 whose class carries the LARGE one.
+
+**Addendum, 01:56 CEST: the suite caught my own swallowed line.** The SENSE via note of eb5876cc was appended after
+the `cls(...)` call on a line that continued with `; ns.SetNetclass("SENSE", nse)`, so on D, E and P the SENSE class
+would have been built and never registered, the 5 September shape (32.195) once more; `test_swallowed_calls` and
+`test_swallowed_code` refused it in the next full run and the note sits after the registration now. D13 launched
+before that edit and carries the unswallowed line. Rule kept: never append a comment to a generator line without
+reading what follows on it.
