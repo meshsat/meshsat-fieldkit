@@ -23,17 +23,17 @@
  "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "INT-001"
  ],
  "tool": "interfaces_b",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "git_head": "fd6fac9b3fd6",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:47:19Z",
+ "ts": "2026-09-17T16:58:47Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "fd6fac9b3fd6"
 }

@@ -19,24 +19,24 @@
   "board": "c",
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "c2f5c6767c819a5a"
+   "sha256_16": "ae1b4debe13dc129"
   }
  },
  "missing_input": null,
  "note": "0 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "SCH-004"
  ],
  "tool": "safe_lines",
  "tools": {
-  "git_head": "e36ca03f7422",
+  "git_head": "",
   "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T16:45:55Z",
+ "ts": "2026-09-17T16:54:24Z",
  "verdict": "PASS",
- "version": "e36ca03f7422+dirty"
+ "version": "unknown"
 }

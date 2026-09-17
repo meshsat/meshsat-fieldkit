@@ -21,7 +21,7 @@
  "note": "every class at or above the board's minimums",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "IMP-002"
@@ -29,9 +29,9 @@
  "tool": "class_floor",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:45:20Z",
+ "ts": "2026-09-17T16:54:12Z",
  "verdict": "PASS",
  "version": "unknown"
 }

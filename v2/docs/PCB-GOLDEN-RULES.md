@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **f8db9f9b0747ca1b**, 57 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **4a03222f910fe5f5**, 57 rules over 34 domains.
 
 ## How to read a rule
 
@@ -190,7 +190,7 @@ that a disconnected cable, an unpowered board or a missing module leaves the sys
 | | |
 |---|---|
 | classification | PROJECT_DECISION |
-| applies | conditional; boards a, b, c, d |
+| applies | conditional; boards a, b, c, d, e, e5, p |
 | release effect | **BLOCKER** |
 | risk | SAFETY, ELECTRICAL_FUNCTION |
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
@@ -417,7 +417,7 @@ legitimate current.
 | | |
 |---|---|
 | classification | PHYSICS_PRINCIPLE |
-| applies | conditional; boards a, e, e5, p |
+| applies | conditional; boards a, b, e, e5, p |
 | release effect | **BLOCKER** |
 | risk | SAFETY, RELIABILITY |
 | verified by | CALCULATION, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
@@ -1026,7 +1026,7 @@ their lengths match inside the budget the interface allows, and both ends of the
 | | |
 |---|---|
 | classification | INTERFACE_REQUIREMENT |
-| applies | conditional; boards a, b, d |
+| applies | conditional; boards a, b, c, d, e |
 | release effect | **BLOCKER** |
 | risk | SIGNAL_INTEGRITY, EMC |
 | verified by | SCRIPT at ROUTED_BOARD (automatable) |
@@ -1130,7 +1130,7 @@ device's own documentation requires, and every strap's state at reset is defined
 | | |
 |---|---|
 | classification | COMPONENT_REQUIREMENT |
-| applies | conditional; boards b, c, d, e |
+| applies | conditional; boards a, b, c, d, e |
 | release effect | **BLOCKER** |
 | risk | ELECTRICAL_FUNCTION, EMC, RELIABILITY |
 | verified by | SCRIPT, MANUAL_REVIEW at SCHEMATIC (partially automatable) |
@@ -1178,7 +1178,7 @@ reference, its filtering and its distance from switching copper are decided rath
 | | |
 |---|---|
 | classification | PHYSICS_PRINCIPLE |
-| applies | conditional; boards a, d, e, p |
+| applies | conditional; boards a, d, e, e5, p |
 | release effect | **MUST_JUSTIFY** |
 | risk | ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY |
 | verified by | MANUAL_REVIEW, SCRIPT at PLACED_BOARD (partially automatable) |
@@ -1228,7 +1228,7 @@ keep-outs the modules demand are respected.
 | | |
 |---|---|
 | classification | INTERFACE_REQUIREMENT |
-| applies | conditional; boards b, d |
+| applies | conditional; boards a, b, d, e |
 | release effect | **BLOCKER** |
 | risk | ELECTRICAL_FUNCTION, EMC, SAFETY |
 | verified by | SCRIPT, SIMULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at ROUTED_BOARD (partially automatable) |
@@ -1299,7 +1299,7 @@ documentation of both ends: impedance, skew, termination, coupling, isolation, p
 | | |
 |---|---|
 | classification | INTERFACE_REQUIREMENT |
-| applies | conditional; boards a, b, c, d, e |
+| applies | conditional; boards a, b, c, d, e, e5, p |
 | release effect | **BLOCKER** |
 | risk | ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY, EMC |
 | verified by | MANUAL_REVIEW, SCRIPT at SCHEMATIC (partially automatable) |
@@ -1390,7 +1390,7 @@ the signal.
 | | |
 |---|---|
 | classification | PHYSICS_PRINCIPLE |
-| applies | conditional; boards a, b, c, d, e, p |
+| applies | conditional; boards a, b, c, d, e, e5, p |
 | release effect | **BLOCKER** |
 | risk | SAFETY, RELIABILITY, ELECTRICAL_FUNCTION |
 | verified by | MANUAL_REVIEW, SCRIPT at SCHEMATIC (partially automatable) |
@@ -1472,7 +1472,7 @@ its junction temperature at the envelope's maximum ambient is estimated and reco
 | | |
 |---|---|
 | classification | PHYSICS_PRINCIPLE |
-| applies | conditional; boards a, b, d, e, p |
+| applies | conditional; boards a, b, c, d, e, p |
 | release effect | **BLOCKER** |
 | risk | THERMAL, RELIABILITY, SAFETY |
 | verified by | CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD (partially automatable) |

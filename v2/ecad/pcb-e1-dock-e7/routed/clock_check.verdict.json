@@ -12,14 +12,14 @@
   "board": "e",
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "7a21800d95b93e84"
+   "sha256_16": "0caf42aee5ebd21c"
   }
  },
  "missing_input": null,
  "note": "every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "CLK-001"
@@ -27,9 +27,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:46:47Z",
+ "ts": "2026-09-17T16:55:39Z",
  "verdict": "PASS",
  "version": "unknown"
 }

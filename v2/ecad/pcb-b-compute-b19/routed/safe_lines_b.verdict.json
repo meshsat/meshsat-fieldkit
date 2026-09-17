@@ -19,24 +19,24 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "f96408a1a7a9dc22"
+   "sha256_16": "9963176e7feed286"
   }
  },
  "missing_input": null,
  "note": "1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "SCH-004"
  ],
  "tool": "safe_lines_b",
  "tools": {
-  "git_head": "e36ca03f7422",
+  "git_head": "",
   "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T16:45:55Z",
+ "ts": "2026-09-17T16:53:01Z",
  "verdict": "PASS",
- "version": "e36ca03f7422+dirty"
+ "version": "unknown"
 }

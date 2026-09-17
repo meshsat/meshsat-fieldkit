@@ -20,7 +20,7 @@
  "note": "every rule this board is designed to is inside the fabricator's capability for its own copper weight",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "RTE-001",
@@ -29,9 +29,9 @@
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T15:47:26Z",
+ "ts": "2026-09-17T16:56:19Z",
  "verdict": "PASS",
  "version": "unknown"
 }
