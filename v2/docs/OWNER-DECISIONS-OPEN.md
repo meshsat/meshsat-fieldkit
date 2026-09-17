@@ -81,6 +81,21 @@ is built
 
 **The question:** which device performs the wipe, and on what edge
 
+**Measured:** THE TITLE IS TOO HARSH ON THE HARDWARE AND THE NETLISTS SAY SO (read 17 September 2026). The
+line reaches exactly one processor and that processor can reach the thing to be erased. On board C,
+ZEROIZE_HW carries the panel switch SW_ZERO, its pull R10 and its capacitor C20 to U3 PIN 34, the RP2040
+panel controller, so operating the switch is a falling edge ON A GPIO OF A LIVE CONTROLLER. That same
+controller sits on the panel I2C bus (U3.2 and U3.3 on SDA and SCL), the bus leaves board C on J_PANEL pins 4
+and 5, and on board B the SECURE ELEMENT IS ON IT: U8, the ATECC608B at 0x60, whose own value string in the
+schematic reads 'keys behind ZEROIZE'. So the hardware path from the switch to the secure element is complete
+today, through the panel controller and its own bus. What is true of the rest of the line is that it only
+travels: board B carries it from J_AB1 pin 20 to J_PANEL pin 10 with a test point, board A from J_AB1 pin 20
+to J_MEZZ1 pin 15 with a pull, and on board D it arrives at J_HARN1 pin 15 and ends at a test point. No
+device on A, B or D listens to it. So this is a choice and a piece of firmware rather than a missing
+conductor, FOR THE SECURE ELEMENT. The encrypted drives are the other half and they hang off the compute
+modules, which do not see this line at all: erasing those needs a module that is running, which is the part
+the ask has to settle.
+
 | rule | | boards | result today |
 |---|---|---|---|
 | SCH-004 | a safety line fails safe | A, B, C, D, E, P | INCONCLUSIVE, not computed |
