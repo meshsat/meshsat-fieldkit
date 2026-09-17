@@ -7,9 +7,9 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**23 of 57 rules carry a gap.**
+**22 of 57 rules carry a gap.**
 
-## absent (2)
+## absent (1)
 
 **REL-001 the build survives its service life** (MUST_JUSTIFY, ENFORCED)  
 nothing considers vibration, mating cycles or moisture for any interface 16 September 2026: THE LIST EXISTS
@@ -22,15 +22,6 @@ socket at 30 mating cycles and the highest-cycled connector is the pack's XT60 a
 user touches most. What it does NOT do is test anything: this rule is verified at the PROTOTYPE, no board has
 been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.  
 *Close it by* The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts each covers and reliability.py checks the coverage, seven boards passing. The TEST PLAN for the prototype is the laboratory stage and belongs with it. Owner **OWNER**, after ENV-001. Effort P50 0h, P80 0h.
-
-**SCH-004 a safety line fails safe** (BLOCKER, OWNER_DECISION_REQUIRED)  
-the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches
-the connector and a test point on boards A and B and NOTHING ELSE, the ATECC608B carries only power and I2C,
-and the feature as built asks the compute modules to wipe themselves in software. 16 September 2026: written
-up as owner decision 30 with three costed options. The fact that shapes them is that the ATECC608B has NO
-ERASE PIN, so no option is a pure hardware wipe; the fact that makes option 1 cheap is that the three
-supervisors are already on the same I2C bus as the secure element and depend on no compute module being alive  
-*Close it by* owner decision 30: the supervisors execute the wipe, power removal only, or accept the software path and rename the feature everywhere. Owner **OWNER**. Effort P50 8h, P80 24h.
 
 ## generated only (4)
 
@@ -320,10 +311,10 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (34)
+## covered (35)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: CLK-001, CMP-001,
 CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, IMP-002, INT-001, MEC-001, PI-001, PI-002, PI-003, PLC-001,
 PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002,
-SCH-003, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
+SCH-003, SCH-004, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
 

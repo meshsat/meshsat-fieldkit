@@ -11,9 +11,9 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 13 | 24.5 |
+| PASS | 14 | 26.4 |
 | FAIL | 10 | 18.9 |
-| INCONCLUSIVE | 30 | 56.6 |
+| INCONCLUSIVE | 29 | 54.7 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **53** | 100.0 |
 
@@ -24,7 +24,7 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 2044 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 6722, 'aliased_pins': 0, 'board_footprints': 951, 'board_only_inert': 0, 'fail': 12, 'netlist_refs': 931} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
-| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches the connector |
+| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_b PASS of 5 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 162 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 8087c341773d75a1, current is f8db9f9b0747ca1b |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 8087c341773d75a1, current is f8db9f9b0747ca1b |

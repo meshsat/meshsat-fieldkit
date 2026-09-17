@@ -21,9 +21,9 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 32 | 64.0 |
+| PASS | 33 | 66.0 |
 | FAIL | 5 | 10.0 |
-| INCONCLUSIVE | 13 | 26.0 |
+| INCONCLUSIVE | 12 | 24.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **50** | 100.0 |
 
@@ -34,7 +34,7 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 355 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 994 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_d PASS of 11 |
-| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches the connector |
+| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_d PASS of 2 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 13 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d INCONCLUSIVE |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d INCONCLUSIVE |

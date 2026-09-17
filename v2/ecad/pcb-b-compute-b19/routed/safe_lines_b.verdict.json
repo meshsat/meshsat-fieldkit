@@ -1,0 +1,42 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "floating": 0,
+  "lines": 5,
+  "listened": 1,
+  "on_netlist": 5
+ },
+ "denominator": 5,
+ "evidence": [
+  "EMCON_HW: safe low, pull down [R58 (100k)], pull up [none], drivers [none], reads [Q106.3 (2N7002 EMCON -> W_DISABLE1#), Q206.3 (2N7002 EMCON -> W_DISABLE1#), Q306.3 (2N7002 EMCON -> W_DISABLE1#), U19.1 (SN74LVC08APWR quad AND: Lime)], leaves on [J_AB1.15, J_PANEL.8]",
+  "TX_INHIBIT_n: safe low, pull down [R59 (100k)], pull up [none], drivers [none], reads [none], leaves on [J_AB1.16, J_PANEL.11]",
+  "PI_KILL: safe low, pull down [none], pull up [none], drivers [none], reads [Q103.3 (2N7002), Q203.3 (2N7002), Q303.3 (2N7002)], leaves on [J_AB1.10, J_PANEL.25]",
+  "ZEROIZE_HW: safe high, pull down [none], pull up [none], drivers [none], reads [none], leaves on [J_AB1.20, J_PANEL.10]",
+  "SHORE_INHIBIT: safe low, pull down [none], pull up [none], drivers [none], reads [none], leaves on [J_AB1.21, J_PANEL.26]"
+ ],
+ "inputs": {
+  "board": "b",
+  "netlist": {
+   "path": "out/pcb-b-compute.net",
+   "sha256_16": "f96408a1a7a9dc22"
+  }
+ },
+ "missing_input": null,
+ "note": "1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "tool": "safe_lines_b",
+ "tools": {
+  "git_head": "e36ca03f7422",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T16:45:55Z",
+ "verdict": "PASS",
+ "version": "e36ca03f7422+dirty"
+}

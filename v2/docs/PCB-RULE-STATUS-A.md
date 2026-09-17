@@ -21,9 +21,9 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 28 | 53.8 |
+| PASS | 29 | 55.8 |
 | FAIL | 9 | 17.3 |
-| INCONCLUSIVE | 15 | 28.8 |
+| INCONCLUSIVE | 14 | 26.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **52** | 100.0 |
 
@@ -34,7 +34,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 1214 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 2000, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 10, 'netlist_refs': 398} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_a PASS of 31 |
-| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches the connector |
+| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_a PASS of 6 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 143 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE |

@@ -54,7 +54,7 @@ appears in the gap register.
 | SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py | **ENFORCED** |
 | SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py -> netlist_board | tests/test_netlist_board.py | **ENFORCED** |
 | SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py, gen_pcb_e5.py | check_contracts.py, block_contract.py -> check_contracts_<letter> | tests/test_gate_fixtures.py, tests/test_block_contract.py | **ENFORCED** |
-| SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | check_contracts.py -> check_contracts |  | **OWNER_DECISION_REQUIRED** |
+| SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | safe_lines.py -> safe_lines_<letter> | tests/test_safe_lines.py | **ENFORCED** |
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml | rules_status.py -> rules_complete | tests/test_rules_status.py | **ENFORCED** |
 | SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | rules_render.py prototype_doc | rules_render.py | tests/test_rule_gate_mapping.py | **VERIFIED_MANUALLY** |
 | SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | signal_class.py declarations | edge_length.py -> edge_length | tests/test_edge_length.py | **SOURCE_UNVERIFIED** |
@@ -71,8 +71,8 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 43 |
+| ENFORCED | 44 |
 | GENERATED_ONLY | 1 |
 | VERIFIED_MANUALLY | 2 |
 | SOURCE_UNVERIFIED | 4 |
-| OWNER_DECISION_REQUIRED | 7 |
+| OWNER_DECISION_REQUIRED | 6 |

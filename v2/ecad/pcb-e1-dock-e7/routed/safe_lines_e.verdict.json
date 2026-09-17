@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "floating": 0,
+  "lines": 1,
+  "listened": 1,
+  "on_netlist": 1
+ },
+ "denominator": 1,
+ "evidence": [
+  "SHORE_INHIBIT: safe low, pull down [R26 (100k)], pull up [none], drivers [none], reads [Q8.1 (2N7002: SHORE_INHIBIT high p), U10.18 (RP2040 sensor controller (US)], leaves on [J_BLK.8]"
+ ],
+ "inputs": {
+  "board": "e",
+  "netlist": {
+   "path": "out/pcb-e1-dock.net",
+   "sha256_16": "e3707efb23a2570c"
+  }
+ },
+ "missing_input": null,
+ "note": "1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "tool": "safe_lines_e",
+ "tools": {
+  "git_head": "e36ca03f7422",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T16:45:56Z",
+ "verdict": "PASS",
+ "version": "e36ca03f7422+dirty"
+}

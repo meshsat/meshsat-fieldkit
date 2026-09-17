@@ -1,0 +1,42 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "floating": 0,
+  "lines": 5,
+  "listened": 0,
+  "on_netlist": 5
+ },
+ "denominator": 5,
+ "evidence": [
+  "TX_INHIBIT_n: safe low, pull down [C24 (10n)], pull up [R14 (10k to +3V3)], drivers [SW_EMCON (EMCON locking toggle (closed)], reads [U9.2 (74LVC1G34 non-inverting buff)], leaves on [J_PANEL.11]",
+  "EMCON_HW: safe low, pull down [none], pull up [none], drivers [none], reads [U3.32 (RP2040 panel controller (USB), U9.4 (74LVC1G34 non-inverting buff)], leaves on [J_PANEL.8]",
+  "ZEROIZE_HW: safe high, pull down [C20 (10n)], pull up [R10 (10k to +3V3)], drivers [SW_ZERO (ZEROIZE locking toggle, main)], reads [U3.34 (RP2040 panel controller (USB)], leaves on [J_PANEL.10]",
+  "PI_KILL: safe low, pull down [none], pull up [none], drivers [none], reads [U3.30 (RP2040 panel controller (USB)], leaves on [J_PANEL.25]",
+  "SHORE_INHIBIT: safe low, pull down [none], pull up [none], drivers [none], reads [U3.31 (RP2040 panel controller (USB)], leaves on [J_PANEL.26]"
+ ],
+ "inputs": {
+  "board": "c",
+  "netlist": {
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "c2f5c6767c819a5a"
+  }
+ },
+ "missing_input": null,
+ "note": "0 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "tool": "safe_lines",
+ "tools": {
+  "git_head": "e36ca03f7422",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T16:45:55Z",
+ "verdict": "PASS",
+ "version": "e36ca03f7422+dirty"
+}

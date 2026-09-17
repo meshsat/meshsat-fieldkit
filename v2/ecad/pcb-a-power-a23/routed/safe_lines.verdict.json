@@ -1,0 +1,43 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "floating": 0,
+  "lines": 6,
+  "listened": 3,
+  "on_netlist": 6
+ },
+ "denominator": 6,
+ "evidence": [
+  "EMCON_HW: safe low, pull down [R102 (100k)], pull up [none], drivers [none], reads [U26.1 (SN74LVC08APWR quad AND: EMCO), U26.4 (SN74LVC08APWR quad AND: EMCO)], leaves on [J_AB1.15]",
+  "PI_KILL: safe low, pull down [R5 (100k)], pull up [none], drivers [none], reads [Q1.1 (2N7002: panel controller hig)], leaves on [J_AB1.10]",
+  "KILL: safe high, pull down [none], pull up [R4 (100k to VBAT)], drivers [none], reads [Q1.3 (2N7002: panel controller hig), U1.8 (LTC2954CTS8-1 push-button on)], leaves on [none]",
+  "TX_INHIBIT_n: safe low, pull down [R145 (100k)], pull up [none], drivers [none], reads [none], leaves on [J_AB1.16, J_MEZZ1.8]",
+  "ZEROIZE_HW: safe high, pull down [none], pull up [R117 (10k to +3V3)], drivers [none], reads [none], leaves on [J_AB1.20, J_MEZZ1.15]",
+  "SHORE_INHIBIT: safe low, pull down [R118 (100k)], pull up [none], drivers [none], reads [none], leaves on [J_AB1.21, J_DOCK.8]"
+ ],
+ "inputs": {
+  "board": "a",
+  "netlist": {
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "c6fd1f8cdfb52241"
+  }
+ },
+ "missing_input": null,
+ "note": "3 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "tool": "safe_lines",
+ "tools": {
+  "git_head": "e36ca03f7422",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T16:45:54Z",
+ "verdict": "PASS",
+ "version": "e36ca03f7422+dirty"
+}

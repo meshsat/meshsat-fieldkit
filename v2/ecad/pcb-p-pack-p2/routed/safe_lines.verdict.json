@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "floating": 0,
+  "lines": 0,
+  "listened": 0,
+  "on_netlist": 0
+ },
+ "denominator": 0,
+ "evidence": [
+  "The pack board carries no line whose assertion inhibits a hazard: its protection is the pack's own protector and the blade fuse, both of which act without a signal, and nothing on it is inhibited by a conductor from anywhere else."
+ ],
+ "inputs": {
+  "board": "p",
+  "netlist": {
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "c13c0ab262c7f7e1"
+  }
+ },
+ "missing_input": null,
+ "note": "this board declares that no line of its own inhibits a hazard, with its reason",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "f8db9f9b0747ca1b"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "tool": "safe_lines",
+ "tools": {
+  "git_head": "e36ca03f7422",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T16:45:56Z",
+ "verdict": "PASS",
+ "version": "e36ca03f7422+dirty"
+}

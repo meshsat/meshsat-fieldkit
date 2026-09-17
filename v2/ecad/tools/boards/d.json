@@ -358,5 +358,22 @@
    "source": "NOT A DATASHEET, and it says so: this is the load THIS DESIGN presents (two 18 pF capacitors give 9 pF in series and the pins and tracks add about 3), so the codec clock crystal that is bought must be specified at 12 pF. The generator's own comment has read 'to confirm on the EVM sheet' since D8 and it was never confirmed; the part choice is owner decision 37 and this declaration moves with it."
   }
  },
- "_via_sizing_why": "MEASURED ON D12 AND OWED TO THE NEXT GENERATION, 17 September 2026 (rule PI-003). With the barrel currents dc_drop solved beside the board, one barrel of the four measured rails is over its own wall's rating: +5V_SA at (71.4, 74.2) carries 1.10 A of the solved mesh against 0.90 A for a 18 um wall at 10 K, a ratio of 1.22. It is a LAYER TRANSITION that wants a second barrel beside it, not a wider rail: two barrels there carry 0.55 A each. Board A's placement generator already reads `out/<stem>-via-currents.json` and reports a site whose MEASURED barrel is over its rating (gen_pcb_a3.py `_size`); board D's does not, so this note is the handover until it does. Nothing is patched onto D12: the board is held by decision 31, whose ruling is a schematic change at the two headset jacks, so the next D generation carries both."
+ "_via_sizing_why": "MEASURED ON D12 AND OWED TO THE NEXT GENERATION, 17 September 2026 (rule PI-003). With the barrel currents dc_drop solved beside the board, one barrel of the four measured rails is over its own wall's rating: +5V_SA at (71.4, 74.2) carries 1.10 A of the solved mesh against 0.90 A for a 18 um wall at 10 K, a ratio of 1.22. It is a LAYER TRANSITION that wants a second barrel beside it, not a wider rail: two barrels there carry 0.55 A each. Board A's placement generator already reads `out/<stem>-via-currents.json` and reports a site whose MEASURED barrel is over its rating (gen_pcb_a3.py `_size`); board D's does not, so this note is the handover until it does. Nothing is patched onto D12: the board is held by decision 31, whose ruling is a schematic change at the two headset jacks, so the next D generation carries both.",
+ "safety_lines": [
+  {
+   "net": "TX_INHIBIT_n",
+   "hazard": "the 30 W amplifier is keyed with the panel absent",
+   "safe_state": "low",
+   "role": "listens",
+   "why": "U12's AND gate takes it as the second input of KEY = PTT_ANY AND TX_INHIBIT_n and R2 holds it down, so a missing harness cannot key the transmitter"
+  },
+  {
+   "net": "ZEROIZE_HW",
+   "hazard": "the secure element is wiped",
+   "safe_state": "high",
+   "role": "carries",
+   "why": "it arrives on the harness and ends at a test point; nothing on this board acts on it"
+  }
+ ],
+ "_safety_lines_why": "Board D carries the transmitter, so its one judged line is the inhibit into the key gate, and it holds it down itself. The other is a conductor that ends at a test point."
 }
