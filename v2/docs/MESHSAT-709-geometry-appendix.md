@@ -8993,3 +8993,52 @@ board's RET-004 reading moves: what moves is the FIXER's ability to answer it, a
 generation of each board. Board A's three eFuse thermal pads are still three pads with no via in them on the
 board that is cut today; the finding is real and it belongs to board A's next phase, where the generator can
 place them, rather than to a tool that could not see the site.
+
+### 32.219 A pin map is a claim about a package, and board E's hot-swap FET had its gate on a source pin (17 September 2026, 22:40 CEST; MESHSAT-862)
+
+**The thermal-pad survey of 32.218 had one row that was not a thermal question.** Reading every exposed pad on the
+five cut boards for a via of its own net, board E's `Q7` came back with a 14.90 mm2 pad carrying **no net at all**.
+`Q7` is the CSD19532Q5B hot-swap pass FET on the shore and vehicle DC entry, the part the LM5069 drives, on a
+PowerPAK SO-8 land whose pads are 1, 2, 3 SOURCE, 4 GATE and 5 the DRAIN tab. The generator wrote it with the
+three-pin `Q_NMOS_GDS` map, so `HS_GATE` landed on pad 1, `HS_S` on pad 2 and `DC_HS` on pad 3, **three
+different nets on three pins of the same source plate**, with the real gate and the whole drain tab carrying
+nothing. The committed netlist says so in three lines. Assembled, that part ties the controller's gate output
+to its sense node and to the hot-swap output through its own metal, the pass element is a permanent short, and
+the inrush limiting and overcurrent protection on the DC entry do not exist. **Board A met exactly this on 7
+September (32.36, the same land, the same three-pin map) and fixed its own helper.** Nothing held the two
+boards to the same lesson, which is the failure this record keeps describing: a fix in one file where the
+rule belonged in the engine.
+
+**The rule is the engine's now, in both directions, and it found three things on six generators.** `kisch.part`
+judges every part's map against its own LAND as it is written: every distinct pad number the footprint carries
+on copper takes a net or the word NC, which is what `ic()` has asked of a listed pin since 10 September; and a
+map pin the land does not carry is reported where the same net also sits on a pad the land has (board E's
+TDSON-8 FETs name 5, 6, 7 and 8 for a drain the land merges into one pad 5, eighteen pins) and refused where it
+does not, because then the net never reaches the part. `emit_part` judges the map against the SYMBOL as well,
+because the symbol is the only road from the map to the netlist and a key the symbol lacks was being dropped
+on the floor: **board B's `U10`, the TMP117 under the coolers, wrote `"7": "GND"` for its thermal pad and the
+library symbol has no pin 7, so the pad floats on the B19 that was cut.** The third finding is the benign one:
+board B's fan headers and its six M.2 sockets carry mechanical pads (the JST-SH retention tabs, the socket's
+standoff and tabs) that no map named; they are declared NC with the reason, and grounding the standoff is an
+item for the phase that draws the socket through a symbol carrying the pad. `U10` is drawn through `ic()` now,
+the numbered connector symbol this project uses precisely so that every pad of a land has a pin.
+
+**The layout stage says what it judged and refuses what it could not.** `schlayout.run` prints the count of
+footprints judged, names every phantom pin, and stops when a land could not be read, because a check that
+silently did not run is the thing this project keeps finding a week later. A land with no copper pad at all (a
+mounting hole, the panel jack's bore) is read and has nothing to name, which the first version confused with
+unreadable.
+
+**And a board cut before the rule reads as what it is.** `pin_map_lands.py` judges a COMMITTED netlist the same
+way against the library, so the correction in `gen_sch_e.py` does not make board E11 look fixed: rule
+**SCH-005** reads FAIL on board E (Q7) and on board B (U10) and PASS on A, C, D and P, in the gate sweep beside
+`safe_lines`. Its tab rule is kept narrow on purpose: an IC's or a transistor's largest pad, at least twice the
+land's median, with no node, because a connector's shield tab without a node is a choice and a SOT-23's pads are
+all one size.
+
+**What this changes for the held boards.** Board E was held on decision 31 for its clamps and was going to be
+regenerated for them; it now has a second reason in the same generation, which lowers nothing and settles one
+thing: the E11 copper is not a candidate for anything. Board B's item reaches copper with B22, which regenerates
+from the corrected generator by construction. Six rules, each failing on the pre-fix tree, using this project's
+own footprint library so they run on the runner as well as where KiCad is; the seven boards are being swept
+again under the rule set that carries SCH-005.
