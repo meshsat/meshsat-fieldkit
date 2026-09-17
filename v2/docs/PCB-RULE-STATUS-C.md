@@ -33,7 +33,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 0 |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the principle is implemented and the heuristic is no longer standing in  |
-| RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_return_path FAIL: {'fail': 18, 'pass': 109} |
+| RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_return_path FAIL: {'fail': 16, 'pass': 111} |
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the reference conductor is determined now, per via, by sampling the fill |
 | RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'exempt': 61, 'judged': 85, 'lacking': 32, 'same_plane': 35, 'slow': 278} |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
@@ -51,11 +51,11 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 2 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_c PASS of 303 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
-| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
+| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **FAIL** | assembly_set FAIL: {'boards': 1, 'fail': 1, 'unchecked_footprints': 0, 'unverified_rows': 0} |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 11 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_c PASS of 1 |
-| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
+| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance INCONCLUSIVE |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 1, 'claims_rc': 0, 'contracts_rc': 3, 'fail': 3, 'held': 1, 'missing': 0, 'pass': 2, 'quote': 2} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 300 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

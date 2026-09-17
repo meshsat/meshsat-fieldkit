@@ -2,6 +2,7 @@
  "advisory": false,
  "applicable": true,
  "counts": {
+  "boards_without_intent": 0,
   "fail": 0,
   "missing_boards": 0,
   "pass": 72,
@@ -24,9 +25,9 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "572f493cca8aad3d"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T23:26:26Z",
+ "ts": "2026-09-17T01:44:42Z",
  "verdict": "PASS",
  "version": "unknown"
 }

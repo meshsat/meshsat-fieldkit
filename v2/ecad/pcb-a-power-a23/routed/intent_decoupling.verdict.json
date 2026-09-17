@@ -3,9 +3,9 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 37
+  "pass": 30
  },
- "denominator": 37,
+ "denominator": 30,
  "evidence": [],
  "inputs": {
   "board": {
@@ -24,9 +24,9 @@
  "tool": "intent_decoupling",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T19:31:10Z",
+ "ts": "2026-09-17T01:43:29Z",
  "verdict": "PASS",
  "version": "unknown"
 }

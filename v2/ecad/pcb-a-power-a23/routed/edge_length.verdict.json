@@ -2,17 +2,22 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "missing": 2
+  "judged": 6,
+  "long_and_answered": 6,
+  "no_declared_edge": 60,
+  "over_critical_length": 0
  },
- "denominator": 0,
+ "denominator": 6,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
    "sha256_16": "58e26c67987b1daa"
-  }
+  },
+  "critical_k": 6,
+  "epsilon_r": 4.312
  },
- "note": "this board declares no rise_ns anywhere, no critical_k, and an edge nobody wrote down decides nothing",
+ "note": "every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-terminated or declared before it is called a defect: being a transmission line is physics, being an uncontrolled one is the finding",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -23,9 +28,9 @@
  "tool": "edge_length",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c258dc37b5e2de07"
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-16T19:31:22Z",
+ "ts": "2026-09-17T01:43:41Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
