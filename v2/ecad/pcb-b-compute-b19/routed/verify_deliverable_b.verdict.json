@@ -1,0 +1,32 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "folder": 1,
+  "quote": 1
+ },
+ "denominator": 1,
+ "evidence": [
+  "6 FAIL (13 of 19 properties)"
+ ],
+ "inputs": {
+  "folder": "meshsat-pcb-b-revA-B19-quote"
+ },
+ "missing_input": null,
+ "note": "this board's own deliverable folder, read by verify_deliverable in this run",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "4a03222f910fe5f5"
+ },
+ "rules": [
+  "DFM-001"
+ ],
+ "tool": "verify_deliverable_b",
+ "tools": {
+  "git_head": "a8a1d7bd7198",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T17:01:42Z",
+ "verdict": "FAIL",
+ "version": "a8a1d7bd7198"
+}

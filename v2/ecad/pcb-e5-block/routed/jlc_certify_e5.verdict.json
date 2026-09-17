@@ -5,10 +5,11 @@
  "denominator": 0,
  "evidence": [],
  "inputs": {},
+ "missing_input": null,
  "note": "this board's deliverable carries no component row to certify (a bare board: copper, holes and targets); a declared zero, not an absence",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "CMP-002",
@@ -16,10 +17,10 @@
  ],
  "tool": "jlc_certify_e5",
  "tools": {
-  "git_head": "7431fca209b0",
-  "tools_tree_sha": "52055efbc030c053"
+  "git_head": "a8a1d7bd7198",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T00:41:36Z",
+ "ts": "2026-09-17T17:01:25Z",
  "verdict": "PASS",
- "version": "7431fca209b0+dirty"
+ "version": "a8a1d7bd7198"
 }

@@ -2,16 +2,21 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "CERTIFIED": 122,
-  "HAND_FIT": 20
+  "folders": 5
  },
- "denominator": 142,
- "evidence": [],
- "inputs": {},
- "note": "the rows this board carries; the set's own verdict is jlc_certify",
+ "denominator": 0,
+ "evidence": [
+  "folders that exist: A19, A20, A21, A22, A24"
+ ],
+ "inputs": {
+  "board": "a",
+  "declared_phase": "A32"
+ },
+ "missing_input": "no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24)",
+ "note": "",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_set_fingerprint": "4a03222f910fe5f5"
  },
  "rules": [
   "CMP-002",
@@ -19,10 +24,10 @@
  ],
  "tool": "jlc_certify_a",
  "tools": {
-  "git_head": "7431fca209b0",
-  "tools_tree_sha": "52055efbc030c053"
+  "git_head": "a8a1d7bd7198",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
  },
- "ts": "2026-09-17T00:41:35Z",
- "verdict": "PASS",
- "version": "7431fca209b0+dirty"
+ "ts": "2026-09-17T17:01:25Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "a8a1d7bd7198"
 }
