@@ -241,7 +241,7 @@ ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)   # 0.127: the 0.4 mm escape rows of the RP2040 (E6 round 4)
-PATTERNS = [("DC_*", "PWR"), ("HS_S", "PWR"), ("GND", "PWR"), ("GND_V", "PWR"), ("VIN_RAW", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "PWR"), ("TRK_LSENSE", "PWR"), ("+5V_E6", "PWR"), ("E6_SW", "PWR"), ("CELL+", "BANK"), ("CELL_F", "BANK"), ("USB_E6_*", "USB")]
+PATTERNS = [("DC_*", "PWR"), ("HS_S", "PWR"), ("GND", "PWR"), ("GND_V", "PWR"), ("VIN_RAW", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "SW"), ("TRK_LSENSE", "PWR"), ("+5V_E6", "PWR"), ("E6_SW", "SW"), ("CELL+", "BANK"), ("CELL_F", "BANK"), ("USB_E6_*", "USB")]
 # SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
 # of the table so a sensitive net wins over the power pattern that also names it (TRK_LSENSE sat in PWR beside TRK_SW2, the net
 # ANA-001 asks it to keep 0.50 mm from, and a class cannot be kept away from itself). The DSN class-pair clearance of
@@ -259,6 +259,7 @@ try:
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.15, 0.8, 0.8, 0.4); ns.SetNetclass("PWR", nc)
     nb = pcbnew.NETCLASS("BANK"); cls(nb, 0.3, 3.0, 1.2, 0.6); ns.SetNetclass("BANK", nb)
     nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.127, 0.25, 0.6, 0.3); ns.SetNetclass("SENSE", nse)
+    nsw = pcbnew.NETCLASS("SW"); cls(nsw, 0.15, 0.8, 0.8, 0.4); ns.SetNetclass("SW", nsw)   # the tracker's switching nodes, PWR's geometry in a class of their own so the SENSE class-pair rule names them and not every power net (17 Sep 2026)
     nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2)); ns.SetNetclass("USB", nu)   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
