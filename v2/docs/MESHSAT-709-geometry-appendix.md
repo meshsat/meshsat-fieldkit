@@ -9333,3 +9333,12 @@ that passes everywhere closed it with that reading; nothing was lowered. `via_pa
 `pcb_closers.yaml` (defect class, why the prevention failed, what prevents it) and classified as a post-route tool
 that lays from an explicit list, which the two admission rules of the suite ask of anything that creates copper.
 Suite 972 passing after the four declarations.
+
+**Addendum, 01:35 CEST: D13 routes on the hub, with board D's generator answer to PI-003.** D12's +5V_SA (1.10 A
+peak, the exciter's transmit pulses behind FB1) crosses layers through ONE router via at each of two transitions
+beside FB1, a 0.4 mm drill rated 0.90 A at 10 K on the fabricator's 18 um plating, and `via_parallel` found a site
+for a second barrel at only one of the two. The class answers it at the source: board D's PWR class via is 1.2/0.6
+from D13 (`gen_pcb_d3.py`), a 0.6 mm drill being rated 1.19 A. D13 (`/root/drf`, `/root/d13.log`, 200 passes, 1 h
+cap, then the finish) also carries the thermal vias in every exposed pad, the SENSE class, the via_parallel and
+widen stages and the land-judged pin maps; its clamps still wait on decision 31, so its folder stays refused and
+the board is the measurement (D12 is 0 hard, 0 unrouted, the number to beat). Suite 972 passing, 0 failing.
