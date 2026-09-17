@@ -88,3 +88,32 @@ def t_the_missing_table_reaches_the_verdict_as_inconclusive():
         assert r.returncode == 3, "exit %d, and INCONCLUSIVE is 3" % r.returncode
         v = json.load(open(os.path.join(d, "out", "assembly_set.verdict.json")))
         assert v["verdict"] == "INCONCLUSIVE" and v["counts"]["table_present"] is False, v["counts"]
+
+
+def t_the_ordering_session_gets_its_work_list_as_a_document():
+    """DFA-001 IS INCONCLUSIVE FOR ONE REASON AND ONLY ONE PERSON CAN CLOSE IT (17 September 2026).
+
+    Forty-one polarised footprints reach the assembler with KiCad's rotation unchanged because nobody has
+    compared them with the assembler's own 2D preview, and only the ordering session has that preview. A list
+    it has to reconstruct from a gate's stdout is a list it will not work through, so the gate writes it as a
+    document, generated from the same reading the verdict is taken from.
+
+    Executed: generate it into a temporary file from a synthetic result and require every unchecked footprint,
+    its boards and a designator to be in it.
+    """
+    import os, sys, tempfile
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, TOOLS)
+    import assembly_set as A
+    r = {"a": {"unchecked": ["D_SMB", "CP_Elec_8x6.7"], "unverified": ["SOT-23 (matched by SOT)"],
+               "fails": [], "notes": [], "examples": {"D_SMB": "D3", "CP_Elec_8x6.7": "C24"}},
+         "b": {"unchecked": ["D_SMB"], "unverified": [], "fails": [], "notes": [], "examples": {"D_SMB": "D9"}}}
+    d = tempfile.mkdtemp(prefix="rotation-checklist-")
+    path = os.path.join(d, "PCB-ROTATION-CHECKLIST.md")
+    n = A.checklist(r, path)
+    body = open(path, encoding="utf-8").read()
+    assert n == 2, "the checklist counted %r distinct footprints, not the two in the world" % n
+    assert "`D_SMB`" in body and "A, B" in body, "a footprint used by two boards does not name both: %s" % body[-400:]
+    assert "D3" in body and "C24" in body, "the checklist gives no designator to look the part up by"
+    assert "SOT-23 (matched by SOT)" in body, "a row that exists with no date is not listed for checking"
+    assert "GENERATED" in body.splitlines()[0], "the document does not say it is generated"
