@@ -178,7 +178,20 @@ clamp. The ten: board D J_PAOUT.1 (the 30 W amplifier output), J_HS1.1, .3, .5 a
 headset jacks, speaker, microphone and push to talk each), and board E J_POD.1, .3 and .4, the outside sensor
 pod's 3.3 V feed and its two I2C conductors, which run to the RP2040 with nothing in between. Board B's eight
 Ethernet conductors and board C's four switch conductors are answered where they stand, by T1's magnetics and
-by the optocouplers, and board P declares that nothing of its own leaves the case.
+by the optocouplers, and board P declares that nothing of its own leaves the case. WHAT THE CHEAP HALF COSTS,
+PRICED (17 September 2026, JLCPCB's own parts API). Board D's two headset jacks carry three conductors each
+and one three-line array answers a jack: SP0503BAHTG, Littelfuse, SOT-143, C7074, 19,029 in stock at 0.2624
+USD, two parts a board. Board E's pod needs two things, a two-line array on the I2C pair (PESD1CAN, Nexperia,
+SOT-23, C15771, 236,723 in stock at 0.0687) and a clamp on its 3.3 V feed (ESDA6V1L, ST, SOT-23, C24378,
+17,147 at 0.0806). At the owner's five boards that is twenty parts and about 3.40 USD of silicon, and all
+three are extended parts, so the price of the ruling is not the parts: it is that boards D and E are FINISHED
+COPPER, so each one costs a placement, a route and a new folder. Board D's J_PAOUT is the one conductor of
+the ten that a clamp on the board cannot answer: it carries 30 W of transmitter output, where a diode array's
+capacitance would spoil the match, and its sibling J_ANT is already answered off board by the PolyPhaser
+GTH-SFF-AL at the bulkhead. Its honest options are a second arrestor of the same kind, declared off board the
+way J_ANT is, or the ruling that it shares J_ANT's. The parts above are candidates with stock and a price,
+not a choice: what clamps at what voltage and what pulse rating is decided by the level in decision 34, which
+is why that one is asked first.
 
 | rule | | boards | result today |
 |---|---|---|---|
