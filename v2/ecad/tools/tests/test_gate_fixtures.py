@@ -30,7 +30,6 @@ FIXTURE_DEBT = {
         "unconnected count and the fixer reverts its own work (measured 17 September 2026). It wants a routed "
         "fixture board, or a dry run against a committed one",
     "dc_drop.py": "needs pcbnew and numpy and a board with a rail; belongs in test_board_gates.py",
-    "place_audit.py": "needs pcbnew and a board with a fine-pitch part; belongs in test_board_gates.py",
     "intent_checks.py": "needs pcbnew and an intent file beside the board; belongs in test_board_gates.py",
     "pruned_gate.py": "needs pcbnew and a routed board; the no-list path is covered below without it",
     "copper_checks.py": "a library called with the caller's check(), exercised through the board gates",
