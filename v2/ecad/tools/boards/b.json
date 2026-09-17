@@ -66,7 +66,162 @@
   "return_via": true,
   "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one.",
   "via_parallel": true,
-  "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: B21 fails twenty-one barrels, three unmeasured"
+  "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: B21 fails twenty-one barrels, three unmeasured",
+  "widen": [
+   {
+    "net": "/+5V_LIME",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+3V3_S3B",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_RB",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+3V3_S3A",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_S1",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_S2",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_S3",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+1V0_S1",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+54V_POE",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   }
+  ]
  },
  "pair_env": {
   "PAIR_CORRIDOR_SLACK": 0.08,
