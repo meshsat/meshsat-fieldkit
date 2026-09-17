@@ -11,8 +11,8 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 71 h | 214 h |
-| the same at 6 hours a day | 11.8 days | 35.7 days |
+| engineering effort, one worker | 61 h | 186 h |
+| the same at 6 hours a day | 10.2 days | 31.0 days |
 | critical path through the dependencies | 19 h | 72 h |
 
 Read the table above as WORK REMAINING and never as a delivery date. The two are different questions: a
@@ -24,8 +24,8 @@ figures are below.
 
 | class | items | P50 | P80 | what it means |
 |---|---|---|---|---|
-| PARALLEL_AGENT | 13 | 55 h | 168 h | session work with no shared file, so several may run at once in their own worktrees |
-| OWNER | 10 | 40 h | 207 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
+| PARALLEL_AGENT | 13 | 45 h | 140 h | session work with no shared file, so several may run at once in their own worktrees |
+| OWNER | 10 | 34 h | 187 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | VENDOR_OR_STANDARD_WAIT | 5 | 29 h | 134 h | a third party's answer, or a document that has to be obtained and read |
 | PARALLEL_BOX | 3 | 12 h | 34 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
 | SEQUENTIAL | 2 | 4 h | 12 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
@@ -34,20 +34,20 @@ figures are below.
 
 | | P50 | P80 |
 |---|---|---|
-| session pool | 9.8 days | 30.0 days |
+| session pool | 8.2 days | 25.3 days |
 | fleet pool | 0.2 days | 0.7 days |
 | longest dependency chain | 3.2 days | 12.0 days |
-| **design package ready for prototype** | **9.8 days** | **30.0 days** |
+| **design package ready for prototype** | **8.2 days** | **25.3 days** |
 
 ## The programme, cumulative elapsed days from the day this page was generated
 
 | milestone | P50 | P80 | where the number comes from |
 |---|---|---|---|
-| DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 10 days | 30 days | COMPUTED |
-| FABRICATION_AND_ASSEMBLY | 22 days | 60 days | VENDOR_PUBLISHED |
-| BENCH_BRING_UP | 36 days | 105 days | DECLARED_ESTIMATE |
-| LAB_VALIDATION | 57 days | 195 days | DECLARED_ESTIMATE |
-| PRODUCTION_RELEASE_READY | 87 days | 315 days | DECLARED_ESTIMATE |
+| DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 8 days | 25 days | COMPUTED |
+| FABRICATION_AND_ASSEMBLY | 20 days | 55 days | VENDOR_PUBLISHED |
+| BENCH_BRING_UP | 34 days | 100 days | DECLARED_ESTIMATE |
+| LAB_VALIDATION | 55 days | 190 days | DECLARED_ESTIMATE |
+| PRODUCTION_RELEASE_READY | 85 days | 310 days | DECLARED_ESTIMATE |
 
 Only the first milestone is computed from this project's own register. Every stage after it is a vendor's
 published figure or this session's declared estimate, and NONE of them has been measured here, because
@@ -69,7 +69,7 @@ time and are listed separately below.
 | INT-002 | owner decision 29: fit magnetics on the three module links, ask the module vendor, or defe | OWNER |
 | ISO-001 | declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_ | OWNER |
 | PI-001 | put the crossover to the owner as a decision: keep the IPC-2221A bar, take the most conser | OWNER |
-| REL-001 | a reliability sheet per board and the test plan for the prototype | OWNER |
+| REL-001 | The SHEET is DONE (17 September 2026): every board carries its wear-out and environment cl | OWNER |
 | RET-001 | obtain an authoritative basis for the per-class tolerance (a critical-length criterion fro | SESSION |
 | RET-003 | find a published figure for how far a plane-stitching capacitor may sit from the transitio | SESSION |
 | SCH-004 | owner decision 30: the supervisors execute the wipe, power removal only, or accept the sof | OWNER |
