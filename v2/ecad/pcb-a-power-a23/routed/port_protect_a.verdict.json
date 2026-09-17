@@ -25,8 +25,10 @@
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
- "rules": [],
- "tool": "port_protect",
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect_a",
  "tools": {
   "git_head": "a4515e9d8bb7",
   "tools_tree_sha": "d84cbe39b50a5620"

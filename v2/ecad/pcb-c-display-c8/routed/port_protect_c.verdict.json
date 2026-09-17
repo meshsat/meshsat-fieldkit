@@ -8,13 +8,13 @@
   "ports": 2,
   "unprotected": 0
  },
- "denominator": 11,
+ "denominator": 4,
  "evidence": [],
  "inputs": {
-  "board": "b",
+  "board": "c",
   "netlist": {
-   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "f96408a1a7a9dc22"
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "c2f5c6767c819a5a"
   }
  },
  "missing_input": null,
@@ -23,8 +23,10 @@
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
- "rules": [],
- "tool": "port_protect",
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect_c",
  "tools": {
   "git_head": "a4515e9d8bb7",
   "tools_tree_sha": "d84cbe39b50a5620"

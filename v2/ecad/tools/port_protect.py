@@ -137,6 +137,19 @@ def judge(net_path, letter=None):
     return rows, bad, missing_refs, len(ports)
 
 
+def _write_both(letter, result, **kw):
+    """The board's own verdict beside the bare one (17 September 2026).
+
+    TRN-001 is per board and this tool wrote under ONE name, so a board with no reading of its own read
+    whatever the last run left in the set-level `out/`: board E5 reads board E's FAIL there today, and the only
+    reason it costs nothing is that TRN-001 does not apply to a bare contact block. The same shape cost
+    DFM-001 six boards this afternoon. The per-letter name is spelled the way the registry spells it so the
+    gate catalogue can read the mapping out of this line."""
+    if letter:
+        _v.write("port_protect_<letter>".replace("<letter>", str(letter).lower()), result, quiet=True, **kw)
+    return _v.write("port_protect", result, **kw)
+
+
 def main(argv):
     if not argv: print(__doc__); return 2
     path = argv[0]
@@ -171,11 +184,11 @@ def main(argv):
         # which is the opposite of what the declaration says. A declaration with no reason stays a question,
         # and so does a board with no declaration at all.
         if answered and why:
-            return _v.write("port_protect", _v.PASS, denominator=0, counts={"ports": 0, "unprotected": 0},
+            return _write_both(letter, _v.PASS, denominator=0, counts={"ports": 0, "unprotected": 0},
                             inputs={"netlist": path, "board": letter},
                             note="this board declares that no conductor of its own leaves the enclosure, so the "
                                  "rule is true of it with nothing to check: %s" % why[:180])
-        return _v.write("port_protect", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path, "board": letter},
+        return _write_both(letter, _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path, "board": letter},
                         note=("this board declares no external port and gives no reason: a zero with nothing "
                               "behind it is a question, not an answer") if answered else
                              ("this board declares no external port, and no board of this kit is truly internal: "
@@ -186,7 +199,7 @@ def main(argv):
     # as a contradiction by everything downstream, including the person reading the sweep.
     n_behind = sum(len(r.get("behind") or []) for r in rows)
     n_unprot = sum(len(r["unprotected"]) for r in rows)
-    return _v.write("port_protect", _v.FAIL if bad else _v.PASS,
+    return _write_both(letter, _v.FAIL if bad else _v.PASS,
                     counts={"ports": len(rows), "declared": n_declared, "unprotected": n_unprot,
                             "behind_an_active_part": n_behind, "not_on_netlist": len(missing)},
                     denominator=sum(r["pins"] for r in rows) or 1, evidence=bad[:20],

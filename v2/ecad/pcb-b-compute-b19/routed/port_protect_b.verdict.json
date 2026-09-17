@@ -23,13 +23,15 @@
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
  },
- "rules": [],
- "tool": "port_protect",
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect_b",
  "tools": {
   "git_head": "a4515e9d8bb7",
   "tools_tree_sha": "d84cbe39b50a5620"
  },
- "ts": "2026-09-17T13:45:11Z",
+ "ts": "2026-09-17T13:45:10Z",
  "verdict": "PASS",
  "version": "a4515e9d8bb7+dirty"
 }

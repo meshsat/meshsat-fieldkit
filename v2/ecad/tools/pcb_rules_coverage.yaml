@@ -367,7 +367,7 @@ coverage:
      owner: OWNER, execution: OWNER, depends_on: [], p50_h: 6, p80_h: 30}}
 
  TRN-001: {implementation: "gen_sch_*.py protection parts and each board's external_ports declaration",
-   verification: {tool: port_protect.py, verdict: port_protect, fixtures: tests/test_port_protect.py},
+   verification: {tool: port_protect.py, verdict: port_protect_<letter>, fixtures: tests/test_port_protect.py},
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: every conductor that leaves the enclosure is followed from its connector through fuses,
      beads, chokes and resistors until it meets a clamp. Board B passes: its wall Ethernet is behind the H5007NL
