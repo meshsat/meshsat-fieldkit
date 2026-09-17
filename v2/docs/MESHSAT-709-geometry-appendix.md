@@ -8885,10 +8885,15 @@ reads eleven collisions and 284 pads without an escape, which is the baseline un
 rectangles, the 2.0 mm margin and the surface-mount SWD land together**, and the numbers above are what it has
 to beat. Nothing is applied while B21 routes.
 
-**And the pair pass agrees, which is the measure the whole campaign is downstream of.** The candidate went
-through the whole pre-route chain rather than the placement alone: DIFF100 lays **35 of 48** on four layers and
-the USB pass takes it to **34 of 68**, against B21's 31, and the chain ends `PREROUTE-DONE OK`. Three measures,
-three improvements, one placed board at zero hard violations.
+**The pair pass was asked too, and it is the one measure that does not settle.** The first arm read **34 of
+68** against B21's 31, on a rectangle set that turned out to OVERLAP: S2_SWE grown six millimetres south
+crosses S2_RAIL's top edge, which the region-fit gate does not test and `tests/test_region_overlap.py` refuses.
+Two legal ways to give that pocket its room were then measured: three millimetres south alone reads **30 of
+68**, and three south with three north taken from S2_SUP, which has five to the board's own edge, reads **32**.
+All three arms read ten predicted collisions, 1,496 escapes, 259 pads without one and a placed board at zero
+hard. **So what this floor plan buys is the escapes and the fans, solidly; the pair count of 30, 32 and 34
+around B21's 31 is inside the pass's own scatter** (the same board has laid 38 once and 33 thrice, 32.117) and
+is evidence of nothing. The set to apply is the legal one that reads 32.
 
 **And board B has a protection finding of its own.** PWR-003 applies to it because it has fuses, and the
 stored-energy chain had never carried them. Its three polyfuses are in it now, with Bourns' own sheet in the
