@@ -96,9 +96,16 @@ decisions:
       declared 1.5 mm: E6_BST at 1.75 mm, Q1_G at 1.75, Q2_G at 1.75, USB_E6_N at 2.25. It takes them, because
       a longer return loop is a shorter one than none, and the judge is not moved by a via outside the radius,
       so they reach this decision as a measured choice rather than disappearing into a pass. Board D's single
-      site reads 2.25 mm the same way. The two boards together are five vias."
+      site reads 2.25 mm the same way. The two boards together are five vias.
+      BOARD C IS THE SAME CASE AND IT IS THE LARGEST OF THE THREE (17 September 2026). Its cut board C24 has
+      THIRTY-TWO of 85 judged signal vias with no ground via inside the declared 1.5 mm, and the fixer log shows
+      the same sentence over and over: the nearest FREE ground site is 1.50 or 1.75 mm away, beyond the
+      declaration, and it was taken. The ground-via grid was run on this board as the alternative answer and it
+      does move this rule, 32 lacking of 85 down to 12 of 69, but it costs the board its route (21 open
+      connections against zero) and is refused with those numbers in boards/c.json. So board C has no second
+      way to satisfy the 1.5 mm as written, and the question this decision asks is the only one left for it."
     blocks:
-      RET-004: [d, e]
+      RET-004: [c, d, e]
   - n: 33
     title: "the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement"
     asked: 2026-09-16
