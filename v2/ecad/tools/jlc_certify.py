@@ -704,6 +704,40 @@ def main(argv):
         print("%-17s %-42s %s" % (r["verdict"], r["comment"][:42], r.get("note", "")[:70]))
     print("\njlc_certify: %d components, %s" % (len(results), ", ".join(
         "%s %d" % (k, counts[k]) for k in sorted(counts))))
+    # A PER-BOARD VERDICT BESIDE THE SET ONE (17 September 2026), the pattern check_contracts and final_gate
+    # already use. Rules CMP-002 (the package on the land is the package ordered) and SUP-001 (every placed
+    # part is buyable) are PER BOARD, and they were reading the SET's verdict: board D asks for two 6 MHz
+    # crystals that do not exist and was certified against a 25 MHz part (owner decision 37), and that one
+    # defect failed both rules on all seven boards, including four that carry no crystal at all. A row names
+    # the boards it sits on, so each board can be asked about its own rows and nobody else's.
+    _by_board = {}
+    for r in results:
+        for _l in str(r.get("boards") or "").split(","):
+            _l = _l.strip().lower()
+            if _l: _by_board.setdefault(_l, []).append(r)
+    for _l, _rows in sorted(_by_board.items()):
+        _bad = [r for r in _rows if r["verdict"] not in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED")]
+        _nc = [r for r in _rows if r["verdict"] == "NOT_CHECKED"]
+        verdict.write("jlc_certify_%s" % _l,
+                      verdict.INCONCLUSIVE if _nc else (verdict.FAIL if _bad else verdict.PASS),
+                      counts={k: sum(1 for r in _rows if r["verdict"] == k) for k in sorted({r["verdict"] for r in _rows})},
+                      denominator=len(_rows), quiet=True,
+                      evidence=["%s: %s (%s)" % (r["verdict"], r["comment"][:60], r.get("note", "")[:60]) for r in _bad[:20]],
+                      note="the rows this board carries; the set's own verdict is jlc_certify", out_dir=a.out_dir)
+    # A DECLARED ZERO IS AN ANSWER AND AN UNDECLARED ZERO IS NOT. Board E5 is the dock block: copper, holes
+    # and plated targets, with no BOM and no part to buy, so it produces no row here. Left silent it would read
+    # as "no verdict for this board" and both rules would go INCONCLUSIVE on a board that cannot fail them.
+    try:
+        import rules_status as _rs
+        _set = [x.lower() for x in (_rs.manifest().get("boards") or {})]
+    except BaseException:
+        _set = [x.lower() for x in newest_boms(only)]
+    for _l in sorted(_set):
+        if only and _l not in {x.lower() for x in only}: continue
+        if _l in _by_board: continue
+        verdict.write("jlc_certify_%s" % _l.lower(), verdict.PASS, counts={}, denominator=0, quiet=True,
+                      note="this board's deliverable carries no component row to certify (a bare board: copper, "
+                           "holes and targets); a declared zero, not an absence", out_dir=a.out_dir)
     res = verdict.INCONCLUSIVE if counts.get("NOT_CHECKED") else (verdict.FAIL if bad else verdict.PASS)
     return verdict.write("jlc_certify", res, counts=counts, denominator=len(results),
                          evidence=["%s: %s (%s)" % (r["verdict"], r["comment"][:60], r.get("note", "")[:60])

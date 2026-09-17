@@ -170,6 +170,34 @@ def _document_current(rel):
     return out
 
 
+# The verdict that says whether a board IS routed. A rule verified at ROUTED_BOARD is judged on the board this
+# tree holds, and for a board still in its route that board is the PLACED one.
+ROUTE_GATE = "hardset-routed-board-gate"
+
+
+def _unrouted(vs):
+    """(n, why) from the routed-board gate's own count, or (0, "") when it has not run.
+
+    A BOARD THAT IS NOT ROUTED HAS NOT FAILED THE RULES THAT NEED A ROUTED BOARD (17 September 2026). Board B
+    is mid-route: the board committed in its phase directory is the placed one, 499 connections open and every
+    one of its six zones carrying zero filled area, because the fill happens in the finish. Judged against it,
+    the return-path rule read 214 nets of 566 without a reference (the same tool on the same board, with the
+    zones filled in memory, reads ONE net over by 0.6 mm), the return-via rule read 204 signal vias without a
+    ground via, and the via-current rule read 19 rails over their barrels. None of those is a property of the
+    design. They are what a board looks like before it is finished, reported as defects, on the board of the
+    set that most needs an honest reading.
+
+    So a ROUTED_BOARD rule on an unrouted board is INCONCLUSIVE, which still blocks promotion: absence is never
+    a pass, and neither is prematurity a failure. The rules that measure the ROUTE ITSELF keep their result,
+    because "nothing unrouted" is exactly what they are there to say."""
+    rec = vs.get(ROUTE_GATE)
+    if not rec: return 0, ""
+    n = (rec.get("counts") or {}).get("unrouted")
+    if not n: return 0, ""
+    return n, ("the board this tree holds for this phase is not routed (%s reports %d unrouted connection(s)), "
+               "so a rule verified on a routed board has nothing current to be judged against" % (ROUTE_GATE, n))
+
+
 def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=None):
     """One rule on one board. Everything that is not a positive, current PASS is INCONCLUSIVE or FAIL."""
     rid = rule["id"]; c = cov.get(rid) or {}
@@ -201,6 +229,9 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
     # and by asking the fabricator whether that code is the part. Where a rule names several, the WORST result
     # decides, because a rule is satisfied only when every tool that verifies it says so.
     names = [n.strip().replace("<letter>", letter) for n in str(raw).split(",") if n.strip()]
+    if rule["verification_phase"] == "ROUTED_BOARD" and ROUTE_GATE not in names:
+        n_un, why_un = _unrouted(vs)
+        if n_un: return dict(result=INCONCLUSIVE, why=why_un, evidence=(vs.get(ROUTE_GATE) or {}).get("_path"))
     worst = None
     for name in names:
         rec = vs.get(name)

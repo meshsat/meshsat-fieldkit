@@ -18,7 +18,7 @@ defects and one reporting defect sat behind `jlc_certify.py`'s 21 non-certified 
    module that plugs into it was reported the same way, which buried both.
 """
 import os, re, sys, glob, csv, datetime
-from harness import need
+from harness import need, Skip
 
 _today = datetime.date.today().isoformat()
 
@@ -509,3 +509,37 @@ def t_the_frequency_guard_is_applied_to_the_result_and_not_at_each_return():
     i = src.index("def certify(")
     w = src[i:i + 900]
     assert "_certify(" in w and "frequency_conflict(" in w, "certify does not apply the guard to its result"
+
+
+def t_the_certification_decides_each_board_on_its_own_rows():
+    """One board's wrong part was failing two BLOCKER rules on all seven, 17 September 2026.
+
+    Board D asks for two 6 MHz crystals that do not exist in the land it draws and was certified against a
+    25 MHz part (owner decision 37). `jlc_certify` wrote ONE verdict for the whole set, and rules CMP-002 (the
+    package on the land is the package ordered) and SUP-001 (every placed part is buyable) are PER BOARD and
+    read it: four boards that carry no crystal at all failed both. It is the composite-verdict shape the set
+    gate and the contract check were each split for, one rule further on.
+
+    A row already names the boards it sits on, so each board is asked about its own rows and nobody else's.
+    A board in the manifest whose deliverable carries no component row gets a DECLARED zero, because an
+    undeclared zero reads as an absence and both rules would go INCONCLUSIVE on a bare board that cannot fail
+    them."""
+    src = open(os.path.join(TOOLS, "jlc_certify.py"), encoding="utf-8").read()
+    assert 'verdict.write("jlc_certify_%s" % _l' in src, "the certification writes no per-board verdict"
+    assert "a declared zero, not an absence" in src, "a board with no rows is left silent"
+    cov = open(os.path.join(TOOLS, "pcb_rules_coverage.yaml"), encoding="utf-8").read()
+    assert "jlc_certify_<letter>" in cov, "the rules still read the set's certification verdict"
+    assert 'verdict: "jlc_certify,' not in cov, "a rule still names the set verdict directly"
+
+
+def t_the_per_board_certification_was_written_for_every_board_of_the_manifest():
+    """Executed against whatever this tree holds: if the verdicts are there, every manifest board has one."""
+    import json, glob
+    ecad = os.path.dirname(TOOLS)
+    found = {os.path.basename(p)[len("jlc_certify_"):-len(".verdict.json")]
+             for p in glob.glob(os.path.join(ecad, "out", "jlc_certify_*.verdict.json"))}
+    if not found: raise Skip("the certification has not run in this tree")
+    sys.path.insert(0, TOOLS)
+    import rules_status as _rs
+    want = {b.lower() for b in (_rs.manifest().get("boards") or {})}
+    assert want <= found, "no certification verdict for %s" % sorted(want - found)

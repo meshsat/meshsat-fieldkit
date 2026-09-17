@@ -270,3 +270,43 @@ def t_a_dependency_cycle_is_refused_and_not_absorbed():
 
     # and the committed register must itself be acyclic, or the reported ETA is short by an unknown amount
     assert E.cycles(E.open_items()) == [], "the committed gap register has a dependency cycle"
+
+
+def _route_gate(unrouted, ts="2026-09-16T01:00:00Z"):
+    return {S.ROUTE_GATE: {"tool": S.ROUTE_GATE, "ts": ts, "verdict": "FAIL" if unrouted else "PASS",
+                           "denominator": 15, "counts": {"hard": 0, "unrouted": unrouted},
+                           "policy": {"rule_set_fingerprint": FP}}}
+
+
+def t_a_routed_board_rule_on_a_board_that_is_not_routed_is_inconclusive_and_not_a_failure():
+    """Board B, 17 September 2026. The board committed in its phase directory while the route runs is the
+    PLACED one: 499 connections open and all six zones carrying zero filled area, because the fill happens in
+    the finish. Judged against it the return-path rule read 214 nets of 566 without a reference (the same tool
+    on the same board with the zones filled in memory reads ONE net over, by 0.6 mm), the return-via rule read
+    204 signal vias without a ground via, and the via-current rule read 19 rails over their barrels. None of
+    that is a property of the design; it is what a board looks like before it is finished.
+
+    Prematurity is not failure, and it is not a pass either: the rule is INCONCLUSIVE, which still blocks."""
+    vs = dict(_verdict("FAIL")); vs.update(_route_gate(499))
+    assert _result(_cov(), vs) == S.INCONCLUSIVE, "a routed-board rule failed on a board that is not routed"
+
+
+def t_the_same_rule_on_a_routed_board_still_fails():
+    """The guard must not become an exemption: with nothing unrouted the failure stands."""
+    vs = dict(_verdict("FAIL")); vs.update(_route_gate(0))
+    assert _result(_cov(), vs) == S.FAIL, "the guard swallowed a real failure on a routed board"
+
+
+def t_the_rule_that_measures_the_route_itself_keeps_its_result():
+    """RTE-001 and RTE-002 read the routed-board gate as their own verdict, and 'nothing unrouted' is exactly
+    what they are there to say: if they went INCONCLUSIVE on an unrouted board, no board could ever fail them.
+    """
+    cov = {"R-1": {"implementation": "hardset.py",
+                   "verification": {"tool": "hardset.py", "verdict": S.ROUTE_GATE}, "maturity": "ENFORCED"}}
+    assert _result(cov, _route_gate(499)) == S.FAIL
+
+
+def t_a_rule_verified_before_the_route_is_untouched_by_an_unrouted_board():
+    vs = dict(_verdict("FAIL")); vs.update(_route_gate(499))
+    assert _result(_cov(), vs, rule=_rule(phase="PLACED_BOARD")) == S.FAIL
+    assert _result(_cov(), vs, rule=_rule(phase="SCHEMATIC")) == S.FAIL

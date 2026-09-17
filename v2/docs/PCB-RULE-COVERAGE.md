@@ -14,7 +14,7 @@ appears in the gap register.
 | BAT-002 | ENERGY_STORAGE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py -> energy_chain | tests/test_energy_chain.py | **ENFORCED** |
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_*.py crystal networks | clock_check.py -> clock_check | tests/test_clock_check.py | **ENFORCED** |
 | CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings, each board's intent rails and its declared nodes | derate.py -> derate | tests/test_gate_fixtures.py, tests/test_derate_prefix.py | **ENFORCED** |
-| CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
+| CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_decoupling | tests/test_board_gates.py | **ENFORCED** |
 | DFA-001 | ASSEMBLY_DFA | BLOCKER | export_jlc.sh, jlc-rotations.csv | assembly_set.py -> assembly_set | tests/test_assembly_set.py | **ENFORCED** |
 | DFM-001 | FABRICATION_DFM | BLOCKER | build_pcb.sh, export_jlc.sh | verify_deliverable.py -> verify_deliverable | tests/test_gate_fixtures.py | **ENFORCED** |
@@ -60,7 +60,7 @@ appears in the gap register.
 | SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | signal_class.py declarations | edge_length.py -> edge_length | tests/test_edge_length.py | **SOURCE_UNVERIFIED** |
 | STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | impedance_check.py, fab_limits.py -> impedance_check, fab_limits | tests/test_stackup_reader.py, tests/test_fab_limits.py | **ENFORCED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
-| SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
+| SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **OWNER_DECISION_REQUIRED** |
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts and each board's external_ports declaration | port_protect.py -> port_protect | tests/test_port_protect.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |

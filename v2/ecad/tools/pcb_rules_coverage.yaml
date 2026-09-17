@@ -86,11 +86,11 @@ coverage:
    remediation: {action: "the DC-bias curves for the decoupling on the fastest rails, and a rating from the ordered part for the values that state none",
      owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 18}}
 
- CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
+ CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
    maturity: ENFORCED, gap_category: NONE, note: "package mismatch is caught against the supplier's own record, with a date"}
 
  SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt",
-   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
+   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
    maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
 
  PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_rails, fixtures: tests/test_rail_loads.py},
