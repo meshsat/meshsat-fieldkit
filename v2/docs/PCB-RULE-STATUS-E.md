@@ -21,9 +21,9 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 31 | 57.4 |
+| PASS | 33 | 61.1 |
 | FAIL | 6 | 11.1 |
-| INCONCLUSIVE | 17 | 31.5 |
+| INCONCLUSIVE | 15 | 27.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
 
@@ -33,7 +33,7 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 25 |
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 337 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 814, 'aliased_pins': 18, 'board_footprints': 189, 'board_only_inert': 0, 'fail': 4, 'netlist_refs': 161} |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | check_contracts_e INCONCLUSIVE |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e PASS of 8 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_e PASS of 1 |
 | SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_e PASS of 160 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 48 |
@@ -60,7 +60,7 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 1 |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 2, 'fail': 2, 'measured': 2} |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **PASS** | rf_line PASS of 0 |
-| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | check_contracts INCONCLUSIVE |
+| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_e PASS of 1 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_e FAIL: {'behind_an_active_part': 1, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 3} |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the router and not a |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
