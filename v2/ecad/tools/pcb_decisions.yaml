@@ -259,7 +259,23 @@ decisions:
       at 0 to +45 charging and -10 to +60 discharging, the Xenarc monitor at -20 to +70. The sharp line is the
       third: a sealed case with three loaded modules puts the pack in air about 16 K over ambient, so charging
       holds off above about +25 C ambient, which the pack thermistor on the charger's JEITA input already does
-      in hardware. Four rules resolve against this and nothing else: ENV-001, ISO-001, THM-001 and REL-001."
+      in hardware. Four rules resolve against this and nothing else: ENV-001, ISO-001, THM-001 and REL-001.
+      ISO-001 HAS ITS NUMBERS NOW, AND THEY MOVED WHEN THE VOLTAGE DID (17 September 2026). spacing.py measures
+      every conductor of a high-voltage net against the nearest conductor of any other net, and it was choosing
+      those nets by each rail's NOMINAL voltage: board E, whose facts entry declares 36 V because its inlet is
+      specified 9 to 36, read no rail at or above 20 and ISO-001 was answered about nothing on it. At the
+      working voltage the intent has carried all along, the table reads board A's VIN_RAW 0.129 mm, board A's
+      VBUS20 0.130, board B's +54V_POE 0.900 and board E's VIN_RAW 0.128, over 6,739, 32 and 2,860 conductor
+      pairs. Against the only published table this tree holds, ECSS-Q-ST-70-12C Table 13-3, the 31 to 500 V row
+      asks 0.500 mm on an outer layer with no conformal coating: board B passes with 80 percent to spare and
+      boards A and E miss by a factor of about four. That standard covers ANY ELEVATION and is written for
+      space hardware, so what it means for a sealed terrestrial kit is exactly this decision. The cost of the
+      strict reading is a re-route of two finished boards; the cost of the loose one is a sentence naming which
+      terrestrial standard and which pollution degree governs instead.
+      AND THE TRANSIENT LEVELS ARE IN THE DRAFT NOW (section 6), because owner decision 31 cannot be ruled
+      without one: a clamp is chosen against a level. The electrostatic row is free, being the level the part
+      this design already buys is guaranteed to, and the qualification plan gained the test method it had never
+      had."
     blocks:
       ENV-001: [a, b, c, d, e, e5, p]
       ISO-001: [a, b, c, d, e, e5, p]
