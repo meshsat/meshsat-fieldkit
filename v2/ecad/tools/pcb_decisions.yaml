@@ -107,6 +107,18 @@ decisions:
     holds_nothing_today: "PI-002 passes on both boards because each declares a share and the two shares sum
       inside it. What is open is whether those numbers are anybody's requirement: two of the three were this
       project's own defaults. A rule passing against a bar nobody set is not the same as a rule satisfied."
+    evidence: "THE ASK IS NARROWER THAN WHEN IT WAS WRITTEN, because one of the three numbers acquired a source
+      on 16 September and the intent files carry it (read 17 September). The rail's TOTAL is 6 percent and it now
+      comes from the tightest consumer's own datasheet rather than from this project: the PCM2912A USB codec's
+      recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating
+      Conditions), with the CP2102N next, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V. Both
+      boards' intent files carry that sentence and both name the same 6 percent. What is still this project's own
+      is the SPLIT: board A declares a 4 percent share and board D 2 percent, summing to exactly the 6, and the
+      cross-board contract adds them up on every run and passes. Board A's dc_drop meets the voltage criterion on
+      all thirteen of its rails and board D on all four, so nothing is failing on this rail today. The decision
+      left is therefore an allocation between two boards, not a requirement, and the cheapest form of it is to
+      rule the split rather than the budget."
+
   - n: 34
     title: "the kit has never had a written operating envelope and four rules resolve against nothing"
     asked: 2026-09-16
