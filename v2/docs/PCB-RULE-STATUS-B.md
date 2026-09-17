@@ -10,8 +10,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | result | rules | percent |
 |---|---|---|
 | PASS | 14 | 27.5 |
-| FAIL | 10 | 19.6 |
-| INCONCLUSIVE | 27 | 52.9 |
+| FAIL | 9 | 17.6 |
+| INCONCLUSIVE | 28 | 54.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **51** | 100.0 |
 
@@ -60,7 +60,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_b FAIL: {'fail': 7, 'footprints': 951, 'intent_items_reported': 0, 'pass': 2136} |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable PASS of 38 |
-| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **FAIL** | assembly_set FAIL: {'boards': 1, 'fail': 12, 'unchecked_footprints': 18, 'unverified_rows': 12} |
+| DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 47 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_b INCONCLUSIVE |
