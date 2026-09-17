@@ -74,3 +74,17 @@ def t_board_e_gives_its_declared_sensitive_nets_a_class_of_their_own_too():
     assert 'NETCLASS("SENSE")' in s, "gen_pcb_e3.py declares no SENSE class"
     assert "pcb_sensitive.yaml" in s and 'PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS' in s, \
         "board E's sensitive nets do not take the SENSE class ahead of the power patterns (TRK_LSENSE would stay in PWR beside TRK_SW2)"
+
+
+def t_every_board_that_declares_a_sensitive_net_gives_it_the_sense_class():
+    """A, D, E and P declare sensitive nets; each placement generator reads the list and puts them in SENSE ahead of
+    its table. A board declaring none (B, C, E5) needs nothing, and a declaration added later without the class would
+    be caught here."""
+    import yaml
+    y = yaml.safe_load(open(os.path.join(TOOLS, "pcb_sensitive.yaml"), encoding="utf-8")); bs = y.get("boards") or y
+    for L in "a b c d e p".split():
+        e = bs.get(L) or {}; nodes = (e.get("nodes") if isinstance(e, dict) else e) or []
+        if not nodes: continue
+        s = open(os.path.join(TOOLS, "gen_pcb_%s3.py" % L), encoding="utf-8").read()
+        assert "SENSE" in s and "pcb_sensitive.yaml" in s and 'PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS' in s, \
+            "board %s declares %d sensitive net(s) and its placement generator gives them no SENSE class" % (L.upper(), len(nodes))

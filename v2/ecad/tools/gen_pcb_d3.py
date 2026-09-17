@@ -254,6 +254,17 @@ def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)
 PATTERNS = [("+5V_*", "PWR"), ("+3V3*", "PWR"), ("VGG_SW", "PWR"), ("GND", "PWR"), ("RF_*", "RF"), ("USB*", "USB"), ("HUB_D*", "USB")]
+# SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
+# of the table so a sensitive net wins over a pattern that also names it; the DSN class-pair clearance of route_one.sh
+# (FR_CLASS_CLEAR, appendix 32.222) is what reads it (17 September 2026, rule ANA-001).
+try:
+    import yaml as _yaml, os as _os
+    _sens = ((_yaml.safe_load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "pcb_sensitive.yaml"))) or {}).get("boards") or {}).get("d") or {}
+    _sens_nets = [n["net"] for n in (_sens.get("nodes") if isinstance(_sens, dict) else _sens) or []]
+except BaseException as _e:
+    _sens_nets = []; print("SENSE class: pcb_sensitive.yaml not read (%s), no sensitive net moves class" % type(_e).__name__)
+PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS
+print("SENSE class: %d declared sensitive net(s) take it" % len(_sens_nets))
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     # OWNER RULING 12 September 2026, decision 9: PWR goes from 0.5 mm to 1.2 mm. `+5V_D8` carries 1 A and a
@@ -262,6 +273,7 @@ try:
     # 1 A with margin. The board is re-routed and its deliverable re-cut; the alternative considered and not
     # taken was accepting five millivolts over budget on the grounds that the radio only draws it while
     # transmitting, which is a coherent position on a duty-cycled rail and not one to buy boards on.
+    nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.127, 0.25, 0.6, 0.3); ns.SetNetclass("SENSE", nse)
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)   # ruling 15: back to 0.5 mm, the rail is in locked inner copper below
     nr = pcbnew.NETCLASS("RF"); cls(nr, 0.3, 0.35, 0.6, 0.3); ns.SetNetclass("RF", nr)
     nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2)); ns.SetNetclass("USB", nu)   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground
