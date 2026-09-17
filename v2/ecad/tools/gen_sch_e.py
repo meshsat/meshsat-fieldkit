@@ -94,7 +94,15 @@ FP.update({"QFN56": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm", "USON
            "PPAK": "Package_SO:PowerPAK_SO-8_Single", "PH3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "PH4": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
            "PH5": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical", "PH6": "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical", "C1210": "Capacitor_SMD:C_1210_3225Metric",
            "C0805": "Capacitor_SMD:C_0805_2012Metric", "JP2": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm", "SMB": "Diode_SMD:D_SMB"})
-def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""): part(ref, "Transistor_FET", "Q_NMOS_GDS", value, fp, {"1": g, "2": d, "3": s}, lcsc)
+def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""):
+    """PowerPAK SO-8 single / TI 5x6 SON: pads 1, 2, 3 = SOURCE, 4 = GATE, 5 = the DRAIN tab (the tab and the four
+    right-hand pins all carry the number 5). Until 17 September 2026 this wrote the three-pin Q_NMOS_GDS map, so the
+    GATE net and the DRAIN net landed on two SOURCE pins and the real gate and the whole drain tab carried nothing:
+    board E's Q7, the hot-swap pass FET on the shore and vehicle DC entry, would have tied HS_GATE, HS_S and DC_HS
+    together through its own source metal with no gate drive at all, and the LM5069's inrush and overcurrent
+    protection would not have existed. Board A met the same trap on 7 September 2026 (appendix 32.36) and fixed its
+    own helper; nothing held the two together until kisch judged every map against its land."""
+    part(ref, "Connector_Generic", "Conn_01x05", value, fp, {"1": s, "2": s, "3": s, "4": g, "5": d}, lcsc)
 def ph(ref, n, value, nets): part(ref, "Connector_Generic", "Conn_01x%02d" % n, value, "PH%d" % n, nets)
 # --- pack entry: the BTA-70762-2 cable of the BB-2590/U (both 14.4 V sections in parallel) on an XT60, the 25 A blade, the 12 AWG pads to the block; the pack's two SMBus sections on J_SMB
 part("J_BATT", "Connector_Generic", "Conn_01x02", "Amass XT60-M: the BB-2590/U pack cable BTA-70762-2 (pin 2, the pad nearer the fuse F3, is +; pin 1 is the return; the pack's own protection is inside it. E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)", "XT60", {"1": "GND", "2": "CELL+"}, "C98733")

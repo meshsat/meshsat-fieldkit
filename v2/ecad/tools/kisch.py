@@ -222,7 +222,98 @@ def part(ref, lib, sym, value, fp, nets, lcsc="", in_bom=True):
     _m = _UNFORMATTED.search(str(value))
     if _m: raise SystemExit("part %s: its value carries an unformatted placeholder %r and that string reaches the "
                             "silk, the schematic and the BOM: %r" % (ref, _m.group(0), value))
-    P.append(dict(ref=ref, lib=lib, sym=sym, value=value, fp=FP.get(fp, fp), nets={str(k): v for k, v in nets.items()}, lcsc=lcsc, in_bom=in_bom))
+    _fp = FP.get(fp, fp); _nets = {str(k): v for k, v in nets.items()}
+    check_land(ref, value, _fp, _nets)
+    P.append(dict(ref=ref, lib=lib, sym=sym, value=value, fp=_fp, nets=_nets, lcsc=lcsc, in_bom=in_bom))
+
+# ---------------------------------------------------------------- the pin map against the LAND (17 September 2026)
+#
+# `ic()` has refused an unlisted pin since 10 September, and every part that does not go through it was still trusted.
+# Board E's Q7, the hot-swap pass FET on the shore and vehicle DC entry, is a CSD19532Q5B on a PowerPAK SO-8 land,
+# whose pads are 1, 2, 3 SOURCE, 4 GATE and 5 DRAIN (the tab and the four right-hand pins all carry the number 5).
+# It was written with the three-pin Q_NMOS_GDS map, so the gate net and the drain net landed on two SOURCE pins, the
+# real gate and the whole drain tab carried nothing, and the assembled part would tie HS_GATE, HS_S and DC_HS
+# together through its own source metal with no gate drive at all. Board A met the same trap on 7 September (32.36)
+# and fixed its own helper; nothing stopped the next board repeating it.
+#
+# So the map is judged against the land itself: every distinct pad NUMBER the footprint carries on a copper layer
+# must appear in the part's map, as a net or as the word NC, which is exactly what `ic()` asks for a listed pin.
+_LANDS = {}
+UNCHECKED = {}     # footprint id -> why it could not be read, printed and refused by the caller that runs where KiCad is
+
+
+def _fp_dirs():
+    # This project's own library sits beside the tools in the tree (v2/ecad/meshsat.pretty) and a generator runs
+    # from the PROJECT directory beside it, which is what ${KIPRJMOD}/../meshsat.pretty means in fp-lib-table. A
+    # staging copy of the tools (/root/localtools) has neither, so the cwd is asked as well.
+    here = os.path.dirname(os.path.abspath(__file__))
+    d = [os.path.join(here, "meshsat.pretty"), os.path.join(os.path.dirname(here), "meshsat.pretty"),
+         os.path.join(os.getcwd(), "meshsat.pretty"),
+         os.path.join(os.path.dirname(os.path.abspath(os.getcwd())), "meshsat.pretty")]
+    for e in ("KICAD9_FOOTPRINT_DIR", "KICAD8_FOOTPRINT_DIR", "KISCH_FP_DIRS"):
+        for part_ in filter(None, os.environ.get(e, "").split(os.pathsep)): d.append(part_)
+    d += ["/usr/share/kicad/footprints", "/usr/local/share/kicad/footprints"]
+    return d
+
+
+def land_pads(fpid):
+    """The distinct pad numbers a library footprint carries on a copper layer, or None when it cannot be read."""
+    if not fpid: return None              # a power flag has no land and is not a part on the board
+    if fpid in _LANDS: return _LANDS[fpid]
+    ans = None
+    if ":" in fpid:
+        lib, name = fpid.split(":", 1)
+        for d in _fp_dirs():
+            cand = os.path.join(d, lib + ".pretty", name + ".kicad_mod") if os.path.basename(d) != lib + ".pretty" \
+                else os.path.join(d, name + ".kicad_mod")
+            if lib == "meshsat" and d.endswith("meshsat.pretty"): cand = os.path.join(d, name + ".kicad_mod")
+            if not os.path.exists(cand): continue
+            txt = open(cand, errors="replace").read()
+            nums = set()
+            for m in re.finditer(r'\(pad\s+"([^"]*)"\s+\S+\s+\S+(.*?)(?=\n\s*\(pad\s|\n\s*\)\s*$)', txt, re.S):
+                num, body = m.group(1), m.group(2)
+                if not num: continue                       # an unnumbered paste aperture is not a pin
+                if not re.search(r'"(F|B|In\d+|\*)\.Cu"', body): continue
+                nums.add(num)
+            ans = nums or None
+            break
+    if ans is None: UNCHECKED[fpid] = "no library footprint found for %s" % fpid
+    _LANDS[fpid] = ans
+    return ans
+
+
+PHANTOM = []   # (ref, value, fpid, pin, net) for a map pin the land does not carry; a warning, or a refusal below
+
+
+def check_land(ref, value, fpid, nets):
+    pads = land_pads(fpid)
+    if pads is None: return
+    # THE OTHER DIRECTION: a map pin the land does not carry lands nowhere. KiCad drops it silently, so the net
+    # simply has one node fewer than the drawing says. That is harmless where the same net also sits on a pad this
+    # land HAS (board E's TDSON-8 FETs name 5, 6, 7 and 8 for a drain the land merges into one pad 5, appendix
+    # 32.219) and it is a REFUSAL where it does not, because then the net never reaches the part at all.
+    ghost = sorted((k, v) for k, v in nets.items() if k not in pads)
+    for k, v in ghost:
+        if v == "NC": continue
+        if not any(kk in pads for kk, vv in nets.items() if vv == v):
+            raise SystemExit("%s (%s) on %s: pin %s carries %s and the land has no pad %s, so %s never reaches this "
+                             "part. The land's pads are %s."
+                             % (ref, value, fpid, k, v, k, v, ", ".join(sorted(pads))))
+        PHANTOM.append((ref, value, fpid, k, v))
+    missing = sorted(p for p in pads if p not in nets)
+    if missing:
+        raise SystemExit('%s (%s) on %s: its land carries pad%s %s and the map does not name %s. Every numbered '
+                         'pad of the land takes a net or the word "NC" (17 September 2026: board E\'s Q7 put a gate '
+                         'and a drain net on two SOURCE pins of a PowerPAK SO-8 and left the drain tab floating).'
+                         % (ref, value, fpid, "" if len(missing) == 1 else "s", ", ".join(missing),
+                            "it" if len(missing) == 1 else "them"))
+
+
+def lands_report():
+    """What could not be judged, for the caller that runs where the libraries are. Absence is never a pass."""
+    return dict(checked=sum(1 for v in _LANDS.values() if v is not None), unchecked=dict(UNCHECKED),
+                phantom=list(PHANTOM))
+
 
 def c(ref, val, a, b, fp="C", lcsc="", bypass=None):
     part(ref, "Device", "C", val, fp, {"1": a, "2": b}, lcsc)

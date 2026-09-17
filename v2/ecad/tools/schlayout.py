@@ -896,8 +896,29 @@ def verify(eng):
     print("schlayout verify: %d pins in %d nets, every component one name" % (len(pins), len(comp_pins)))
 
 
+def _lands():
+    """What the pin maps were judged against, said out loud (17 September 2026).
+
+    Every part's map is checked against its own land as it is written (kisch.check_land). This reports the count,
+    names the pins that land on a pad the footprint does not carry, and REFUSES when a land could not be read at
+    all, because a check that silently did not run is the failure mode this project keeps meeting. On a host
+    without the KiCad footprint libraries there is nothing to check and nothing to claim: set
+    KISCH_LANDS_STRICT=0 there (the generators run where KiCad is, so the default is strict)."""
+    rep = kisch.lands_report()
+    print("lands: %d footprint(s) judged, %d pin(s) on a pad the land does not carry, %d land(s) unreadable"
+          % (rep["checked"], len(rep["phantom"]), len(rep["unchecked"])))
+    for ref, value, fpid, pin, net in rep["phantom"][:12]:
+        print("lands: %s pin %s (%s) has no pad %s on %s; the same net sits on a pad this land does have"
+              % (ref, pin, net, pin, fpid))
+    if rep["unchecked"] and os.environ.get("KISCH_LANDS_STRICT", "1") != "0":
+        raise SystemExit("lands: %d footprint(s) could not be read, so their pin maps were never judged: %s"
+                         % (len(rep["unchecked"]), ", ".join(sorted(rep["unchecked"]))[:300])
+                         + ". Run where the KiCad libraries are, or set KISCH_LANDS_STRICT=0 and say so.")
+
+
 def run(parts, sections, power, bypass, header, phase, board_title):
     """Lay the whole schematic out into kisch's body; returns (paper, pages, cols, rows)."""
+    _lands()
     kisch.reset_body()
     eng = Engine(parts, sections, power, bypass, header, phase, board_title)
     res = eng.run(); verify(eng); return res
