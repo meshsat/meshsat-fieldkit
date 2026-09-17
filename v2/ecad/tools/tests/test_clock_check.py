@@ -144,3 +144,22 @@ def t_a_crystal_with_no_declared_load_capacitance_is_never_a_pass():
     src = open(os.path.join(TOOLS, "clock_check.py"), encoding="utf-8").read()
     assert "undeclared" in src and "_v.INCONCLUSIVE if undeclared" in src, \
         "a crystal whose C_L nobody wrote down passes silently"
+
+
+def t_board_d_declares_both_of_its_crystals_with_a_source():
+    """Board D read INCONCLUSIVE on CLK-001 with two crystals and no declaration until 17 September 2026. The
+    hub's number has a real authority (TI SLLS413 figure 6: a 20 pF load, C0 at most 7 pF, ESR at most 50 Ohm,
+    and TI's own C1 = C2 = 27 pF for negative-resistance margin, which is why this board presents 16.5 pF on
+    purpose). The codec clock's does NOT, and its declaration says so in its first four words rather than
+    dressing an inference as a datasheet."""
+    import json, os
+    d = json.load(open(os.path.join(TOOLS, "boards", "d.json")))
+    cry = d.get("crystals") or {}
+    assert set(cry) == {"Y1", "Y2"}, cry
+    for ref, row in cry.items():
+        assert row.get("c_load_pf") and row.get("stray_pf"), (ref, row)
+        assert len(row.get("source", "")) > 60, (ref, row.get("source"))
+    assert "SLLS413" in cry["Y1"]["source"], cry["Y1"]["source"][:80]
+    assert cry["Y2"]["source"].startswith("NOT A DATASHEET"), cry["Y2"]["source"][:60]
+    assert "decision 37" in cry["Y1"]["source"] and "decision 37" in cry["Y2"]["source"], \
+        "the part these numbers belong to is an open owner decision and both entries must say so"
