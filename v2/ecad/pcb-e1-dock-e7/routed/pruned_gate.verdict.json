@@ -15,14 +15,17 @@
    "sha256_16": "5fc1ffce0dc5ab1c"
   },
   "board_table": {
-   "path": "/root/sweep24/v2/ecad/tools/boards/e.json",
-   "sha256_16": "03c35652aa950e0e"
+   "path": "/root/sweep27/v2/ecad/tools/boards/e.json",
+   "sha256_16": "c149acd95a164be7"
   }
  },
  "missing_input": null,
  "note": "board E declares escape_prune_before_audit false, so the pipeline prunes no escape on it and no pad is left to the router by the pruner",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RTE-002": "66d69a0c02e07594"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -31,9 +34,9 @@
  "tool": "pruned_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:44:24Z",
+ "ts": "2026-09-17T22:48:02Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -25,6 +25,9 @@
  "note": "2 rail(s) carry no declared efficiency, so this board's loss is a floor and not an estimate",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "THM-001": "c2ee6d9135d5bf83"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -33,9 +36,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:43:03Z",
+ "ts": "2026-09-17T22:46:34Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

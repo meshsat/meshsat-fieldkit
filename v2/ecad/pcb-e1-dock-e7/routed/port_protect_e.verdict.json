@@ -17,13 +17,16 @@
   "board": "e",
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "b7c5b57e7a752ac6"
+   "sha256_16": "c7caf897b20ccedf"
   }
  },
  "missing_input": null,
  "note": "3 conductor(s) reach a semiconductor with nothing between, and 1 meet their clamp only through an active part, which therefore sees the transient itself",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -32,9 +35,9 @@
  "tool": "port_protect_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:44:36Z",
+ "ts": "2026-09-17T22:48:16Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

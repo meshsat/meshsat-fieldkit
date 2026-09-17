@@ -24,13 +24,17 @@
   },
   "drc": {
    "path": "out/pcb-a-power-drc.json",
-   "sha256_16": "21552ffd493d59b1"
+   "sha256_16": "c8dc01222d287c8e"
   }
  },
  "missing_input": null,
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RTE-001": "e5ef726cf2ea32dc",
+   "RTE-002": "66d69a0c02e07594"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -40,9 +44,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:40:32Z",
+ "ts": "2026-09-17T22:38:19Z",
  "verdict": "PASS",
  "version": "unknown"
 }

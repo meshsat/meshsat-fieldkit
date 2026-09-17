@@ -17,6 +17,9 @@
  "note": "this board has no transition between two different reference nets, so RET-003 has nothing on it to judge",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RET-003": "829568c8874fe7b6"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -25,9 +28,9 @@
  "tool": "return_stitch",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:45:15Z",
+ "ts": "2026-09-17T22:49:00Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

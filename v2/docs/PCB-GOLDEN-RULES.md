@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **a2d08c6e5224a5a4**, 58 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **4bc0aa24d836788d**, 58 rules over 34 domains.
 
 ## How to read a rule
 
@@ -234,7 +234,7 @@ same net also sits on a pad it does.
 | | |
 |---|---|
 | classification | PROJECT_DECISION |
-| applies | universal for this project |
+| applies | conditional; boards a, b, c, d, e, p |
 | release effect | **BLOCKER** |
 | risk | ELECTRICAL_FUNCTION, SAFETY |
 | verified by | SCRIPT at SCHEMATIC (automatable) |

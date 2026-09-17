@@ -13,7 +13,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "9cdcf607fb372090"
+   "sha256_16": "ac46585819c50c39"
   }
  },
  "missing_input": null,
@@ -31,9 +31,9 @@
  "tool": "pin_map_lands_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:45:04Z",
+ "ts": "2026-09-17T22:48:47Z",
  "verdict": "PASS",
  "version": "unknown"
 }

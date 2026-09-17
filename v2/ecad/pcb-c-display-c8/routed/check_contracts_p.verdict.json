@@ -3,18 +3,22 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 0,
+  "pass": 4,
   "unjudged": 0
  },
- "denominator": 0,
+ "denominator": 4,
  "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "this board's netlist is absent from this tree",
+ "note": "the contracts that name this board; the set's own verdict is check_contracts",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "b4c62839dd113ee3",
+   "SCH-003": "ddf200a8e65c127b"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -24,9 +28,9 @@
  "tool": "check_contracts_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:43:15Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T22:46:46Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

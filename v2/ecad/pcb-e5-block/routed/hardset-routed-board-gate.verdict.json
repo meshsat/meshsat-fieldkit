@@ -20,13 +20,17 @@
   },
   "drc": {
    "path": "out/pcb-e5-block-drc.json",
-   "sha256_16": "dc5afa38e723be0d"
+   "sha256_16": "63862571af48e948"
   }
  },
  "missing_input": null,
  "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RTE-001": "e5ef726cf2ea32dc",
+   "RTE-002": "66d69a0c02e07594"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -36,9 +40,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:45:09Z",
+ "ts": "2026-09-17T22:48:53Z",
  "verdict": "PASS",
  "version": "unknown"
 }

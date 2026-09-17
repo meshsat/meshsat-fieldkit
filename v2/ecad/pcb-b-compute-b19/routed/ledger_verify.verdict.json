@@ -9,12 +9,12 @@
  "evidence": [],
  "inputs": {
   "ecad": {
-   "path": "/root/sweep26/v2/ecad",
+   "path": "/root/sweep27/v2/ecad",
    "sha256_16": null
   }
  },
  "missing_input": null,
- "note": "no ledger under /root/sweep26/v2/ecad: an empty tree and a sound one look alike to a checker that reports no problems",
+ "note": "no ledger under /root/sweep27/v2/ecad: an empty tree and a sound one look alike to a checker that reports no problems",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -28,9 +28,9 @@
  "tool": "ledger_verify",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f2c67e0684159747"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T22:33:33Z",
+ "ts": "2026-09-17T22:44:39Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

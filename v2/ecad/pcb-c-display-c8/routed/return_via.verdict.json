@@ -53,6 +53,9 @@
  "note": "",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RET-004": "b6b1e4f327ce2d08"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -61,9 +64,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:42:59Z",
+ "ts": "2026-09-17T22:46:30Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

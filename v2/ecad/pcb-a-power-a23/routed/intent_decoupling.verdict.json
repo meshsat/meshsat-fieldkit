@@ -17,6 +17,9 @@
  "note": "the loop from a decoupling capacitor to the pin it serves",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "DEC-001": "c4c7b77158f31d92"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -25,9 +28,9 @@
  "tool": "intent_decoupling",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "7220c1b43176cf2e"
  },
- "ts": "2026-09-17T20:40:46Z",
+ "ts": "2026-09-17T22:38:35Z",
  "verdict": "PASS",
  "version": "unknown"
 }

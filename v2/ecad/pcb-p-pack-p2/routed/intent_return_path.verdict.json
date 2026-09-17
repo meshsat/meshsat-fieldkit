@@ -23,6 +23,10 @@
  "note": "the reference under a signal net, judged per spectral class",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RET-001": "75745aa0a4017ff8",
+   "RET-002": "9603c9b658cd19c0"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -32,9 +36,9 @@
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:44:51Z",
+ "ts": "2026-09-17T22:48:31Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

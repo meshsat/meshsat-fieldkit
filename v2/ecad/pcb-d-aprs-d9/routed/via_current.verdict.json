@@ -24,6 +24,9 @@
  "note": "every rail's barrels against IPC-2221's curve for a barrel of the fabricator's own plating thickness, on the current dc_drop's solved mesh puts through each of them. The curve is the internal-conductor model published with its constants in ECSS-Q-ST-70-12C Annex D (D.4), transcribed in v2/vendor/standards/ and implemented in tools/track_current.py",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "PI-003": "b8238bd8e5613e6c"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -32,9 +35,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:43:52Z",
+ "ts": "2026-09-17T22:47:26Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

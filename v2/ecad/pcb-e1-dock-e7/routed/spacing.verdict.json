@@ -42,6 +42,9 @@
  "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "ISO-001": "667f32d6b8d7a34b"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -50,9 +53,9 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:44:28Z",
+ "ts": "2026-09-17T22:48:07Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

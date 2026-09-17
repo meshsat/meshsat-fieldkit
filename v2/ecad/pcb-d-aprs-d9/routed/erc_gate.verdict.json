@@ -19,6 +19,9 @@
  "note": "",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-001": "64784cfeedc67195"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -27,9 +30,9 @@
  "tool": "erc_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:43:31Z",
+ "ts": "2026-09-17T22:47:04Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -28,8 +28,8 @@
    "sha256_16": "5fc1ffce0dc5ab1c"
   },
   "drc": {
-   "path": "out/pcb-e1-dock-placed-drc.json",
-   "sha256_16": "d31b47673a42dfb5"
+   "path": "out/placed-drc.json",
+   "sha256_16": "34bc2260e71a5356"
   },
   "measured_board": {
    "sha256_16": "a332944753c20b8b",
@@ -43,7 +43,7 @@
   "rule_fingerprints": {
    "PLC-001": "51588472a4c8e371"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "PLC-001"
@@ -51,9 +51,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "db432d5bae6d7094"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:49:30Z",
+ "ts": "2026-09-17T22:57:39Z",
  "verdict": "PASS",
  "version": "unknown"
 }

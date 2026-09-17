@@ -28,9 +28,9 @@
  "tool": "closer_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "27827c56e7c57482"
  },
- "ts": "2026-09-17T20:45:01Z",
+ "ts": "2026-09-17T22:48:44Z",
  "verdict": "PASS",
  "version": "unknown"
 }
