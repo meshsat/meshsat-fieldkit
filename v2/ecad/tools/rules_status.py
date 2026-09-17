@@ -62,6 +62,18 @@ def _project_dirs(letter, m):
     return [d for d in out if os.path.isdir(d)]
 
 
+_FP_NOW = [None]
+
+
+def _fingerprint_now():
+    """The rule set this tree carries, read once. Used to keep a verdict taken under an older one from
+    standing in front of a current reading."""
+    if _FP_NOW[0] is None:
+        try: _FP_NOW[0] = R.fingerprint(R.load()) or ""
+        except BaseException: _FP_NOW[0] = ""
+    return _FP_NOW[0]
+
+
 def _had_its_input(rec):
     """Did this verdict have the thing it judges? `verdict.write(missing_input=...)` is a tool saying it did
     not: no rotation table in this tree, no order folder, no netlist."""
@@ -81,6 +93,17 @@ def _supersedes(new, old):
 
     It can never turn a failure into a pass: the reading it protects is whatever was measured, pass or fail,
     and it is still judged for freshness, fingerprint and board identity afterwards like any other."""
+    # HISTORY NEVER STANDS IN FRONT OF A CURRENT READING (17 September 2026). The rule above protects a
+    # reading that HAD its input, and on 17 September it protected a stale one: board A's parts were last
+    # certified under rule set 8087c341, before the applicability correction, from a folder of a board this
+    # tree does not hold; the fresh reading says so with `missing_input` and was refused for saying it. A
+    # verdict taken under a superseded rule set is not evidence at all (`_fresh` refuses it wherever it is
+    # read), so it cannot be the thing that keeps a current reading out. Fingerprint first, then input.
+    _fp = _fingerprint_now()
+    if _fp:
+        _n_ok = ((new.get("policy") or {}).get("rule_set_fingerprint") or "") == _fp
+        _o_ok = ((old.get("policy") or {}).get("rule_set_fingerprint") or "") == _fp
+        if _n_ok != _o_ok: return _n_ok
     if _had_its_input(old) and not _had_its_input(new): return False
     if _had_its_input(new) and not _had_its_input(old): return True
     return str(new.get("ts", "")) >= str(old.get("ts", ""))
